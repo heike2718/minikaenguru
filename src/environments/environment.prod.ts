@@ -5,7 +5,7 @@ export const environment = {
 	apiUrl: 'http://ip:port/mkadmin-api',
 	authApiUrl: 'https://opa-wetterwachs.de/authprovider',
 	authUrl: 'https://opa-wetterwachs.de/auth-app',
-	assetsUrl: 'assets',
+	assetsUrl: 'mkadmin-app/assets',
 	signupRedirectUrl: 'http://localhost:4200',
 	loginRedirectUrl: 'http://localhost:4200#/dashboard',
 };

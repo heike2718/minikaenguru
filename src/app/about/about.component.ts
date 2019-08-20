@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { environment } from 'src/environments/environment.prod';
+import { environment } from 'src/environments/environment';
 
 @Component({
 	selector: 'mkadm-about',
@@ -8,7 +8,13 @@ import { environment } from 'src/environments/environment.prod';
 })
 export class AboutComponent implements OnInit {
 
+	version = environment.version;
+
 	pathLogo = environment.assetsUrl + '/mja_logo.png';
+
+	envName = environment.envName;
+
+	apiUrl = environment.apiUrl;
 
 	constructor() { }
 
