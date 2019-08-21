@@ -11,7 +11,7 @@ kumuluzee:
   datasources:
     - jndi-name: jdbc/MkadminServiceDS
       connection-url: jdbc:mysql://localhost:3306/mkverwaltung
-      username: chklst
+      username: mkv
       password: hwinkel
       max-pool-size: 20
   jwt-auth:
