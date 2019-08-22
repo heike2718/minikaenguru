@@ -1,6 +1,6 @@
 kumuluzee:
   name: mkadmin-server
-  version: 4.0.0
+  version: 1.0.0
   env:
     name: dev
   server:
@@ -41,9 +41,9 @@ kumuluzee:
       level: INFO
       period-s: 3600
   logs:
-    config-file-location: /home/heike/workspaces/java12+/mkadmin-server/src/config/log4j2.xml
+    config-file-location: /home/heike/git/mkadmin-server/src/config/log4j2.xml
 application-config:
-  config-root: /home/heike/git/konfigurationen/checklistenservice # camelCase muss zu lower + dash umgewandelt werden
+  config-root: /home/heike/git/konfigurationen/mkadmin-server
   name-dynamic-config-file: dynamicConfigProperties.json
   target-origin: localhost:4200
   block-on-missing-origin-referer: false
@@ -51,7 +51,4 @@ application-config:
   client-id: NBptB82KjFkelkF55Aq4SmQSL3DXZHHurbe7l5W9LT7U
   client-secret: start123
   auth-base-uri: http://localhost:9000/authprovider
-checklistentemplate-config:
-  eingaufsliste: /home/heike/git/konfigurationen/checklistenservice/einkaufsliste.txt
-  packliste: /home/heike/git/konfigurationen/checklistenservice/packliste.txt
 

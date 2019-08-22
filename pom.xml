@@ -1,23 +1,24 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>de.egladil.web</groupId>
-  <artifactId>mkadmin-server</artifactId>
-  <version>0.0.1</version>
-  <packaging>jar</packaging>
+	<groupId>de.egladil.web</groupId>
+	<artifactId>mkadmin-server</artifactId>
+	<version>0.0.1</version>
+	<packaging>jar</packaging>
 
-  <name>mkadmin-server</name>
-  <url>https://github.com/heike2718/mkadmin-server</url>
+	<name>mkadmin-server</name>
+	<url>https://github.com/heike2718/mkadmin-server</url>
 
-  <properties>
-    <version.java>1.11</version.java>
+	<properties>
+		<version.java>1.11</version.java>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<org.hibernate.persistence.version>5.3.7.Final</org.hibernate.persistence.version>
 		<kumuluz.version>3.5.0</kumuluz.version>
 		<slf4j.version>1.7.26</slf4j.version>
 		<jetty.version>9.4.19.v20190610</jetty.version>
-  </properties>
+	</properties>
 
 	<dependencyManagement>
 		<dependencies>
@@ -97,7 +98,8 @@
 					<groupId>org.eclipse.jetty.http2</groupId>
 					<artifactId>http2-http-client-transport</artifactId>
 				</exclusion>
-			</exclusions>		</dependency>
+			</exclusions>
+		</dependency>
 
 		<dependency>
 			<groupId>com.kumuluz.ee</groupId>
@@ -167,7 +169,8 @@
 			<version>2.9.9.2</version>
 		</dependency>
 
-		<!-- START eigene Jetty-Version, da die Kumuluzee-Leute etwas lahm im CVE-Fixen sind -->
+		<!-- START eigene Jetty-Version, da die Kumuluzee-Leute etwas lahm im CVE-Fixen
+			sind -->
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-webapp</artifactId>
@@ -213,7 +216,8 @@
 			<artifactId>jetty-alpn-java-client</artifactId>
 			<version>${jetty.version}</version>
 		</dependency>
-		<!-- ENDE eigene Jetty-Version, da die Kumuluzee-Leute etwas lahm im CVE-Fixen sind -->
+		<!-- ENDE eigene Jetty-Version, da die Kumuluzee-Leute etwas lahm im CVE-Fixen
+			sind -->
 
 		<dependency>
 			<groupId>org.hibernate.validator</groupId>
@@ -275,10 +279,18 @@
 
 		<dependency>
 			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>2.0.2-beta</version>
+			<artifactId>mockito-core</artifactId>
+			<version>2.24.0</version>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>net.bytebuddy</groupId>
+			<artifactId>byte-buddy</artifactId>
+			<version>1.10.1</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>
