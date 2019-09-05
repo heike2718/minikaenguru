@@ -6,11 +6,11 @@ Sarten des Servers mit
 
 java -jar mkadmin-server.jar -Dcom.kumuluz.ee.configuration.file=path-to-auth-provider-config.yaml
 
-Root-Resource zum Testen, ob das Backend da ist:
+Resourcen zum Testen, ob das Backend da ist:
 
-http://localhost:9400/mkadmin-server/dev
+http://localhost:9400/mkadmin-api/dev/hello
 
-http://localhost:9400/mkadmin-server/heartbeats?heartbeatId=heartbeat
+http://localhost:9400/mkadmin-api/heartbeats?heartbeatId=heartbeat
 
 
 ### Starten in Eclipse
