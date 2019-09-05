@@ -28,7 +28,7 @@ public class HeartbeatService {
 	private static final Logger LOG = LoggerFactory.getLogger(HeartbeatService.class.getSimpleName());
 
 	@Inject
-	private PacemakerDao pacemakerDao;
+	PacemakerDao pacemakerDao;
 
 	/**
 	 *

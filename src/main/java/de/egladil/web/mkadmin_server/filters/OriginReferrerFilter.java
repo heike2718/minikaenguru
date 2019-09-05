@@ -19,13 +19,12 @@ import javax.ws.rs.core.NoContentException;
 import javax.ws.rs.ext.Provider;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons.error.AuthException;
 import de.egladil.web.commons.utils.CommonHttpUtils;
 import de.egladil.web.commons.utils.CommonStringUtils;
-import de.egladil.web.mkadmin_server.config.ApplicationConfig;
 
 /**
  * OriginReferrerFilter
@@ -35,15 +34,19 @@ import de.egladil.web.mkadmin_server.config.ApplicationConfig;
 @Priority(900)
 public class OriginReferrerFilter implements ContainerRequestFilter {
 
-	private static final Logger LOG = LoggerFactory.getLogger(OriginReferrerFilter.class.getName());
-
 	private static final List<String> NO_CONTENT_PATHS = Arrays.asList(new String[] { "/favicon.ico" });
+
+	@Inject
+	Logger log;
 
 	@Context
 	private HttpServletRequest servletRequest;
 
-	@Inject
-	private ApplicationConfig applicationConfig;
+	@ConfigProperty(name = "filters.origin-referrer-filter.blockOnMissingOriginReferer", defaultValue = "false")
+	boolean blockOnMissingOriginReferer;
+
+	@ConfigProperty(name = "filters.origin-referrer-filter.targetOrigin")
+	String targetOrigin;
 
 	@Override
 	public void filter(final ContainerRequestContext requestContext) throws IOException {
@@ -61,11 +64,11 @@ public class OriginReferrerFilter implements ContainerRequestFilter {
 		final String origin = servletRequest.getHeader("Origin");
 		final String referer = servletRequest.getHeader("Referer");
 
-		LOG.debug("Origin = [{}], Referer = [{]}", origin, referer);
+		log.debug("Origin = [{}], Referer = [{]}", origin, referer);
 
 		if (StringUtils.isBlank(origin) && StringUtils.isBlank(referer)) {
 			final String details = "Header Origin UND Referer fehlen";
-			if (applicationConfig.isBlockOnMissingOriginReferer()) {
+			if (blockOnMissingOriginReferer) {
 				logErrorAndThrow(details);
 			}
 		}
@@ -84,7 +87,6 @@ public class OriginReferrerFilter implements ContainerRequestFilter {
 			return;
 		}
 
-		String targetOrigin = applicationConfig.getTargetOrigin();
 		if (!targetOrigin.equals(extractedValue)) {
 			final String details = "targetOrigin != extractedOrigin: [targetOrigin=" + targetOrigin + ", extractedOriginOrReferer="
 				+ extractedValue + "]";
@@ -94,7 +96,7 @@ public class OriginReferrerFilter implements ContainerRequestFilter {
 
 	private void logErrorAndThrow(final String details) throws IOException {
 		final String dump = CommonHttpUtils.getRequesInfos(servletRequest);
-		LOG.warn("Possible CSRF-Attack: {} - {}", details, dump);
+		log.warn("Possible CSRF-Attack: {} - {}", details, dump);
 		throw new AuthException();
 	}
 

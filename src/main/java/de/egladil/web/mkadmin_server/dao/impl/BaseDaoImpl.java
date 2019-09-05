@@ -33,7 +33,7 @@ public abstract class BaseDaoImpl implements BaseDao {
 	private static final Logger LOG = LoggerFactory.getLogger(BaseDaoImpl.class.getName());
 
 	@PersistenceContext
-	private EntityManager em;
+	EntityManager em;
 
 	/**
 	 *
