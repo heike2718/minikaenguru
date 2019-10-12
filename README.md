@@ -2,28 +2,22 @@
 
 REST-API for admin of the mathematical minikaenguru competition
 
-Sarten des Servers mit
-
-java -jar mkadmin-server.jar -Dcom.kumuluz.ee.configuration.file=path-to-auth-provider-config.yaml
-
 Resourcen zum Testen, ob das Backend da ist:
 
-http://localhost:9400/mkadmin-api/dev/hello
+http://localhost:9400/dev/hello
 
-http://localhost:9400/mkadmin-api/heartbeats?heartbeatId=heartbeat
+http://localhost:9400/version
+
+http://localhost:9400/heartbeats?heartbeatId=heartbeat
 
 
 ### Starten in Eclipse
 
 mit IDEChecklistenAppRunner und VMargs
 
-	-Dcom.kumuluz.ee.configuration.file=/home/heike/git/mkadmin-server/src/config/mkadmin-server-config.yaml
-
-oder
-
-	-Djavax.net.debug=all -Dcom.kumuluz.ee.configuration.file=/home/heike/git/mkadmin-server/src/config/mkadmin-server-config.yaml
+	mvn compile quarkus:dev
 
 
 ## Relesenotes
 
-* __Release x.x.x:__ text
+[Release-Notes](https://github.com/heike2718/mkadmin-server/RELEASE-NOTES.md)

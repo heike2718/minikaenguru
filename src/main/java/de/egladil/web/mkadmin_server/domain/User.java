@@ -1,7 +1,7 @@
-//=====================================================
+// =====================================================
 // Project: mkadmin-server
 // (c) Heike Winkelvoß
-//=====================================================
+// =====================================================
 package de.egladil.web.mkadmin_server.domain;
 
 import javax.persistence.Column;
@@ -14,7 +14,7 @@ import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import de.egladil.web.commons.payload.HateoasPayload;
+import de.egladil.web.commons_validation.payload.HateoasPayload;
 
 /**
  * User
@@ -41,15 +41,18 @@ public class User implements MkadminEntity {
 
 	@Override
 	public Long getId() {
+
 		return id;
 	}
 
 	@Override
 	public void setHateoasPayload(final HateoasPayload hateoasPayload) {
+
 	}
 
 	@Override
 	public HateoasPayload getHateoasPayload() {
+
 		return null;
 	}
 

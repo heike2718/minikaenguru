@@ -5,18 +5,19 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mkadmin-server</artifactId>
-	<version>0.0.1</version>
+	<version>0.1.0</version>
 	<packaging>jar</packaging>
 
 	<name>mkadmin-server</name>
 	<url>https://github.com/heike2718/mkadmin-server</url>
 
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<quarkus.version>0.21.1</quarkus.version>
-		<surefire-plugin.version>2.22.1</surefire-plugin.version>
+		<surefire-plugin.version>2.22.0</surefire-plugin.version>
+		<quarkus.version>0.23.2</quarkus.version>
 		<maven.compiler.source>1.11</maven.compiler.source>
 		<maven.compiler.target>1.11</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
 	<dependencyManagement>
@@ -28,11 +29,29 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+			<dependency>
+				<groupId>de.egladil.web</groupId>
+				<artifactId>commons-bom</artifactId>
+				<version>0.0.9</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
 	<dependencies>
 
+		<dependency>
+			<groupId>de.egladil.web</groupId>
+			<artifactId>commons-validation</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>de.egladil.web</groupId>
+			<artifactId>commons-net</artifactId>
+		</dependency>
+
+		<!-- Quarkus START -->
 		<dependency>
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-hibernate-orm</artifactId>
@@ -47,7 +66,7 @@
 		</dependency>
 		<dependency>
 			<groupId>io.quarkus</groupId>
-			<artifactId>quarkus-resteasy-jsonb</artifactId>
+			<artifactId>quarkus-resteasy-jackson</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>io.quarkus</groupId>
@@ -58,17 +77,12 @@
 			<artifactId>quarkus-smallrye-jwt</artifactId>
 		</dependency>
 
+		<!-- Quarkus END -->
+
 		<dependency>
 			<groupId>org.mariadb.jdbc</groupId>
 			<artifactId>mariadb-java-client</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>de.egladil.web</groupId>
-			<artifactId>commons</artifactId>
-			<version>4.1.0</version>
-		</dependency>
-
 
 		<dependency>
 			<groupId>io.quarkus</groupId>
@@ -114,7 +128,6 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>2.24.0</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -136,17 +149,25 @@
 				<inherited>true</inherited>
 				<configuration>
 					<release>11</release>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
 				</configuration>
 			</plugin>
+
 			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${surefire-plugin.version}</version>
-				<configuration>
-					<systemProperties>
-						<java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-					</systemProperties>
-				</configuration>
+				<groupId>org.owasp</groupId>
+				<artifactId>dependency-check-maven</artifactId>
+				<version>5.0.0-M3</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
+
 			<plugin>
 				<groupId>io.quarkus</groupId>
 				<artifactId>quarkus-maven-plugin</artifactId>
@@ -158,6 +179,15 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${surefire-plugin.version}</version>
+				<configuration>
+					<systemProperties>
+						<java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+					</systemProperties>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
@@ -187,7 +217,6 @@
 						</executions>
 					</plugin>
 					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-failsafe-plugin</artifactId>
 						<version>${surefire-plugin.version}</version>
 						<executions>
@@ -209,5 +238,4 @@
 		</profile>
 	</profiles>
 </project>
-
 
