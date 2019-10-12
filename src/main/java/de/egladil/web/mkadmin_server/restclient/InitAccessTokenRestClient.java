@@ -1,7 +1,7 @@
-//=====================================================
+// =====================================================
 // Project: checklistenserver
 // (c) Heike Winkelvoß
-//=====================================================
+// =====================================================
 package de.egladil.web.mkadmin_server.restclient;
 
 import javax.json.JsonObject;
@@ -13,18 +13,18 @@ import javax.ws.rs.core.MediaType;
 
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
-import de.egladil.web.commons.payload.OAuthClientCredentials;
+import de.egladil.web.commons_validation.payload.OAuthClientCredentials;
 
 /**
- * OAuthRestClient: die URI ist [auth-url]/clients/client/accesstoken
+ * InitAccessTokenRestClient: die URI ist [auth-url]/clients/client/accesstoken/initial
  */
 @RegisterRestClient
 @Path("clients")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface OAuthRestClient {
+public interface InitAccessTokenRestClient {
 
 	@POST
 	@Path("/client/accesstoken")
-	JsonObject orderAccessToken(OAuthClientCredentials clientSecrets);
+	JsonObject authenticateClient(OAuthClientCredentials clientSecrets);
 }

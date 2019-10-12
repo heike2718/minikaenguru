@@ -1,12 +1,12 @@
-//=====================================================
+// =====================================================
 // Project: mkadmin-server
 // (c) Heike Winkelvoß
-//=====================================================
+// =====================================================
 package de.egladil.web.mkadmin_server.domain;
 
 import java.io.Serializable;
 
-import de.egladil.web.commons.payload.HateoasPayload;
+import de.egladil.web.commons_validation.payload.HateoasPayload;
 
 /**
  * MkadminEntity
