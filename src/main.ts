@@ -12,6 +12,6 @@ platformBrowserDynamic().bootstrapModule(AppModule)
 	.then(() => {
 
 		window.addEventListener('pageshow', () => {
-			alert('page shown');
+			console.log('page shown');
 		}, false);
 	});
