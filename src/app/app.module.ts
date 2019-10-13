@@ -14,6 +14,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AboutComponent } from './about/about.component';
+import { AuthModule } from './auth/auth.module';
 
 @NgModule({
 	declarations: [
@@ -32,7 +33,8 @@ import { AboutComponent } from './about/about.component';
 		MatTabsModule,
 		MatSidenavModule,
 		MatListModule,
-		MatToolbarModule
+		MatToolbarModule,
+		AuthModule.forRoot()
 	],
 	providers: [],
 	bootstrap: [AppComponent]
