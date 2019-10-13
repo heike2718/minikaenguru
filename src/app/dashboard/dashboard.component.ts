@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
+import { environment } from 'src/environments/environment';
 
 @Component({
 	selector: 'mkadm-dashboard',
@@ -8,6 +9,9 @@ import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 	styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent {
+
+		pathLogo = environment.assetsUrl + '/mja_logo.png';
+
 	/** Based on the screen size, switch from standard to one column per row */
 	cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
 		map(({ matches }) => {

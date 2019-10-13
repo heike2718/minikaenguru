@@ -8,13 +8,9 @@
         <span>Dashboard</span>
       </a>
 
-     <a mat-list-item routerLink="/about">
+      <a mat-list-item routerLink="/about">
         <mat-icon>question_answer</mat-icon>
         <span>About</span>
-      </a>
-
-     <a mat-list-item routerLink="/heike">
-        <span>Heike</span>
       </a>
 
       <a mat-list-item routerLink="/">
@@ -36,7 +32,7 @@
         *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>Minikänguru Admin</span>
+      <span>Minikänguru Admin App</span>
     </mat-toolbar>
     <main>
       <router-outlet></router-outlet>
