@@ -16,10 +16,10 @@ export class NavigationComponent implements OnInit {
 		this.items = [
 			{
 				label: 'File',
-				icon: 'fa-file-o',
+				icon: 'pi pi-file',
 				items: [{
 					label: 'New',
-					icon: 'fa-plus',
+					icon: 'pi pi-plus',
 					items: [
 						{ label: 'Project' },
 						{ label: 'Other' },
@@ -31,22 +31,22 @@ export class NavigationComponent implements OnInit {
 			},
 			{
 				label: 'Edit',
-				icon: 'fa-edit',
+				icon: 'pi pi-pencil',
 				items: [
-					{ label: 'Undo', icon: 'fa-folder-open' },
-					{ label: 'Redo', icon: 'fas fa-reply' }
+					{ label: 'Undo', icon: 'pi pi-folder-open' },
+					{ label: 'Redo' }
 				]
 			},
 			{
 				label: 'Help',
-				icon: 'fa-question',
+				icon: 'pi pi-question',
 				items: [
 					{
 						label: 'Contents'
 					},
 					{
 						label: 'Search',
-						icon: 'fa-search',
+						icon: 'pi pi-search',
 						items: [
 							{
 								label: 'Text',
@@ -65,27 +65,26 @@ export class NavigationComponent implements OnInit {
 			},
 			{
 				label: 'Actions',
-				icon: 'fa-gear',
+				icon: 'pi pi-cog',
 				items: [
 					{
 						label: 'Edit',
-						icon: 'fa-refresh',
+						icon: 'pi pi-refresh',
 						items: [
-							{ label: 'Save', icon: 'fa-save' },
-							{ label: 'Update', icon: 'fa-save' },
+							{ label: 'Save', icon: 'pi pi-save' },
+							{ label: 'Update', icon: 'pi pi-refresh' },
 						]
 					},
 					{
 						label: 'Other',
-						icon: 'fa-phone',
 						items: [
-							{ label: 'Delete', icon: 'fa-minus' }
+							{ label: 'Delete', icon: 'pi pi-times' }
 						]
 					}
 				]
 			},
 			{
-				label: 'Quit', icon: 'fa-minus'
+				label: 'Quit', icon: 'pi pi-sign-out'
 			}
 		];
 
