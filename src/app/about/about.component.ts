@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { LogService } from 'hewi-ng-lib';
 
 @Component({
 	selector: 'mkadm-about',
@@ -16,9 +17,10 @@ export class AboutComponent implements OnInit {
 
 	apiUrl = environment.apiUrl;
 
-	constructor() { }
+	constructor(private logger: LogService) { }
 
 	ngOnInit() {
+		this.logger.debug('mkadmin-app started', null);
 	}
 
 }

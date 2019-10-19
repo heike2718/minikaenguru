@@ -12,6 +12,9 @@ export const environment = {
   assetsUrl: 'assets',
   signupRedirectUrl: 'http://localhost:4200',
   loginRedirectUrl: 'http://localhost:4200#/dashboard',
+  consoleLogActive: true,
+  serverLogActive: false,
+  loglevel: 2
 };
 
 /*
