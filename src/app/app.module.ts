@@ -16,6 +16,10 @@ import { AuthModule } from './auth/auth.module';
 import { NavigationComponent } from './navigation/navigation.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AppRoutingModule } from './app-routing.module';
+import { StoreModule } from '@ngrx/store';
+import { reducers, metaReducers } from './reducers';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
 
 @NgModule({
 	declarations: [
@@ -33,7 +37,15 @@ import { AppRoutingModule } from './app-routing.module';
 		ButtonModule,
 		GrowlModule,
 		AppRoutingModule,
-		AuthModule.forRoot()
+		AuthModule.forRoot(),
+		StoreModule.forRoot(reducers, {
+			metaReducers,
+			runtimeChecks: {
+				strictStateImmutability: true,
+				strictActionImmutability: true
+			}
+		}),
+		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
 	],
 	providers: [],
 	bootstrap: [AppComponent]
