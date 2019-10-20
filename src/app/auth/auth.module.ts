@@ -1,6 +1,7 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AuthService } from './auth.service';
 
 
 
@@ -15,7 +16,9 @@ export class AuthModule {
 	static forRoot(): ModuleWithProviders {
 		return {
 			ngModule: AuthModule,
-			providers: []
+			providers: [
+				AuthService
+			]
 		};
 	}
 }
