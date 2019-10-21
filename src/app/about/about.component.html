@@ -1,35 +1,20 @@
-<div class="container">
-  <div class="row">
-    <div class="col-3"><img src="{{pathLogo}}" class="logo"></div>
-    <div class="col-9">
-      <h1>Über diese Anwendung</h1>
-    </div>
-  </div>
+<h1>Über diese Anwendung</h1>
+<div class="p-grid">
+  <div class="p-col-fixed" style="width:100px">Umgebung:</div>
+  <div class="p-col">{{envName}}</div>
 </div>
-<mat-card class="mat-elevation-z5">
-  <mat-card-header>
-    <mat-card-title>Details</mat-card-title>
-  </mat-card-header>
 
-  <mat-card-content>
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-12 col-md-2 label">Umgebung:</div>
-        <div class="col-sm-12 col-md-10">{{envName}}</div>
-      </div>
-      <div class="row">
-        <div class="col-sm-12 col-md-2 label">UI-Version:</div>
-        <div class="col-sm-12 col-md-10">{{version}}</div>
-      </div>
-      <div class="row">
-        <div class="col-sm-12 col-md-2 label">API-Url:</div>
-        <div class="col-sm-12 col-md-10">{{apiUrl}}</div>
-      </div>
-      <div class="row">
-        <div class="col-sm-12 col-md-2 label">API-Version:</div>
-        <div class="col-sm-12 col-md-10">0.1.0</div>
-      </div>
+<div class="p-grid">
+  <div class="p-col-fixed" style="width:100px">Version:</div>
+  <div class="p-col">{{version}}</div>
+</div>
 
-    </div>
-  </mat-card-content>
-</mat-card>
+<div class="p-grid">
+  <div class="p-col-fixed" style="width:100px">API-URL:</div>
+  <div class="p-col">{{apiUrl}}</div>
+</div>
+
+<div class="p-grid">
+  <div class="p-col-fixed" style="width:100px">API-Version:</div>
+  <div class="p-col">0.1.0</div>
+</div>
