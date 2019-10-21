@@ -1,13 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { HewiNgLibModule } from 'hewi-ng-lib';
 
 
-import {MenuModule} from 'primeng/components/menu/menu';
-import {ButtonModule} from 'primeng/components/button/button';
-import {GrowlModule} from 'primeng/components/growl/growl';
+import { MenubarModule } from 'primeng/menubar';
+import { ButtonModule } from 'primeng/components/button/button';
+import { MessagesModule } from 'primeng/messages';
 
 
 import { AppComponent } from './app.component';
@@ -20,6 +20,8 @@ import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
+import { MessageService } from 'primeng/api';
+import { GlobalErrorHandlerService } from './error/global-error-handler.service';
 
 @NgModule({
 	declarations: [
@@ -33,9 +35,9 @@ import { environment } from '../environments/environment';
 		BrowserAnimationsModule,
 		HttpClientModule,
 		HewiNgLibModule,
-		MenuModule,
+		MenubarModule,
 		ButtonModule,
-		GrowlModule,
+		MessagesModule,
 		AppRoutingModule,
 		AuthModule.forRoot(),
 		StoreModule.forRoot(reducers, {
@@ -47,7 +49,10 @@ import { environment } from '../environments/environment';
 		}),
 		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
 	],
-	providers: [],
+	providers: [
+		GlobalErrorHandlerService, { provide: ErrorHandler, useClass: GlobalErrorHandlerService },
+		MessageService
+	],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }

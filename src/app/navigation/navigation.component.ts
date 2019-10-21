@@ -1,5 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import {MenuItem} from 'primeng/api';
+import { MenuItem } from 'primeng/api';
+import { AuthService } from '../auth/auth.service';
+import { Store, select } from '@ngrx/store';
+import { noop, Observable } from 'rxjs';
+import { tap, map } from 'rxjs/operators';
+import { AppState } from '../reducers';
+import { login, logout } from '../auth/auth-actions';
+import { Router } from '@angular/router';
+import { LogService } from 'hewi-ng-lib';
+import { HttpErrorHandler } from '../error/http-error-handler.service';
+import { isLoggedIn, isLoggedOut } from '../auth/auth.selectors';
 
 @Component({
 	selector: 'mkadm-navigation',
@@ -11,83 +21,65 @@ export class NavigationComponent implements OnInit {
 	activeIndex = 0;
 	items: MenuItem[];
 
+	isLoggedIn$: Observable<boolean>;
+	isLoggerOut$: Observable<boolean>;
+
+
+	constructor(private authService: AuthService
+		// tslint:disable: align
+		, private store: Store<AppState>
+		, private router: Router
+		, private logger: LogService
+		, private errorHandler: HttpErrorHandler) { }
+
 	ngOnInit() {
 
 		this.items = [
 			{
-				label: 'File',
-				icon: 'pi pi-file',
-				items: [{
-					label: 'New',
-					icon: 'pi pi-plus',
-					items: [
-						{ label: 'Project' },
-						{ label: 'Other' },
-					]
-				},
-				{ label: 'Open' },
-				{ label: 'Quit' }
-				]
+				label: 'Home',
+				icon: 'pi pi-home',
+				routerLink: '/dashboard'
 			},
 			{
-				label: 'Edit',
-				icon: 'pi pi-pencil',
-				items: [
-					{ label: 'Undo', icon: 'pi pi-folder-open' },
-					{ label: 'Redo' }
-				]
-			},
-			{
-				label: 'Help',
+				label: 'About',
 				icon: 'pi pi-question',
-				items: [
-					{
-						label: 'Contents'
-					},
-					{
-						label: 'Search',
-						icon: 'pi pi-search',
-						items: [
-							{
-								label: 'Text',
-								items: [
-									{
-										label: 'Workspace'
-									}
-								]
-							},
-							{
-								label: 'File'
-							}
-						]
-					}
-				]
-			},
-			{
-				label: 'Actions',
-				icon: 'pi pi-cog',
-				items: [
-					{
-						label: 'Edit',
-						icon: 'pi pi-refresh',
-						items: [
-							{ label: 'Save', icon: 'pi pi-save' },
-							{ label: 'Update', icon: 'pi pi-refresh' },
-						]
-					},
-					{
-						label: 'Other',
-						items: [
-							{ label: 'Delete', icon: 'pi pi-times' }
-						]
-					}
-				]
-			},
-			{
-				label: 'Quit', icon: 'pi pi-sign-out'
+				routerLink: '/about'
 			}
 		];
 
+		this.isLoggedIn$ = this.store.pipe(
+			// select eliminates any duplicates
+			select(isLoggedIn)
+		);
+
+		this.isLoggerOut$ = this.store.pipe(
+			select(isLoggedOut)
+		);
+	}
+
+	login() {
+
+		this.logger.debug('login getriggert');
+
+		this.authService.login()
+			.pipe(
+				tap(respPayload => {
+
+					this.logger.debug(JSON.stringify(respPayload));
+					this.store.dispatch(login({ user: respPayload.data }));
+					this.router.navigateByUrl('/about');
+				})
+			)
+			.subscribe(
+				noop,
+				error => this.errorHandler.handleError(error, 'login')
+			);
+
+	}
+
+	logout() {
+		this.store.dispatch(logout());
+		this.router.navigateByUrl('/dashboard');
 	}
 }
 
