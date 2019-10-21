@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AppState } from '../reducers';
 import { Store, select } from '@ngrx/store';
-import { isLoggedIn } from './auth.selectors';
+import { isLoggedIn } from '../client/client.selectors';
 import { tap } from 'rxjs/operators';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
 
 	constructor(
-		private store: Store<AppState>,
-		private router: Router) {
+		private store: Store<AppState>, private authService: AuthService) {
 
 	}
 
@@ -22,10 +22,13 @@ export class AuthGuard implements CanActivate {
 				select(isLoggedIn),
 				tap(loggedIn => {
 					if (!loggedIn) {
-						this.router.navigateByUrl('/dashboard');
+						console.log('[AuthGuard] going to redirect to login');
+						this.authService.login();
+					} else {
+						console.log('[AuthGuard] is logged in');
 					}
 				})
 			);
-
 	}
+
 }
