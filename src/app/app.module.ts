@@ -19,6 +19,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { EffectsModule } from '@ngrx/effects';
 import { environment } from '../environments/environment';
 import { MessageService } from 'primeng/api';
 import { GlobalErrorHandlerService } from './error/global-error-handler.service';
@@ -47,7 +48,8 @@ import { GlobalErrorHandlerService } from './error/global-error-handler.service'
 				strictActionImmutability: true
 			}
 		}),
-		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
+		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+		EffectsModule.forRoot([])
 	],
 	providers: [
 		GlobalErrorHandlerService, { provide: ErrorHandler, useClass: GlobalErrorHandlerService },

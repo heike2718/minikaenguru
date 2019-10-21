@@ -4,6 +4,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from './auth.service';
 import { StoreModule } from '@ngrx/store';
 import * as fromAuth from './reducers';
+import { AuthGuard } from './auth.guard';
+import { EffectsModule } from '@ngrx/effects';
+import { AuthEffects } from './auth.effects';
 
 
 
@@ -12,7 +15,8 @@ import * as fromAuth from './reducers';
 	imports: [
 		CommonModule,
 		ReactiveFormsModule,
-		StoreModule.forFeature(fromAuth.authFeatureKey, fromAuth.authReducer)
+		StoreModule.forFeature(fromAuth.authFeatureKey, fromAuth.authReducer),
+		EffectsModule.forFeature([AuthEffects])
 	]
 })
 export class AuthModule {
@@ -20,7 +24,8 @@ export class AuthModule {
 		return {
 			ngModule: AuthModule,
 			providers: [
-				AuthService
+				AuthService,
+				AuthGuard
 			]
 		};
 	}
