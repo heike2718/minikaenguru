@@ -7,7 +7,7 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-		  "style": "scss",
+          "style": "scss",
           "skipTests": true
         },
         "@schematics/angular:class": {
@@ -47,7 +47,11 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "./node_modules/primeicons/primeicons.css",
+              "./node_modules/primeng/resources/primeng.min.css",
+              "./node_modules/primeflex/primeflex.css",
+              "./node_modules/primeng/resources/themes/luna-green/theme.css",
+              "./src/sass/styles.scss"
             ],
             "scripts": []
           },
@@ -112,7 +116,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.css"
             ],
             "scripts": []
           }

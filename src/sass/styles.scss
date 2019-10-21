@@ -1,0 +1,16 @@
+/* for a coding guideline see https://sass-guidelin.es/#the-7-1-pattern */
+
+@charset 'utf-8';
+@import './variables';
+@import './mixins';
+
+@import '~primeicons/primeicons.css';
+
+
+body {
+  background-color: rgb(239, 242, 245);
+  font-family: "Open Sans", "Helvetica Neue", sans-serif;
+  font-size: 1rem;
+  text-decoration: none;
+}
+
