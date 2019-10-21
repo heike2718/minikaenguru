@@ -11,7 +11,9 @@ export const isLoggedOut = createSelector(
 		if (!state.jwt) {
 			return true;
 		}
-		return jwtExprired(state.jwt.expiresAtSeconds);
+		const expired = jwtExprired(state.jwt.expiresAtSeconds);
+		console.log('[select client state] isLoggedOut=' + expired);
+		return expired;
 	}
 );
 

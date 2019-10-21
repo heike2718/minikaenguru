@@ -20,30 +20,36 @@ export const clientReducer = createReducer(
 	on(ClientActions.initAccessToken, (state, action) => {
 		return {
 			client: action.client,
-			jwt: Object.assign({}, state.jwt)
+			jwt: state.jwt ? Object.assign({}, state.jwt) : undefined
 		};
 	}),
 	on(ClientActions.refereshAccessToken, (state, action) => {
 		return {
 			client: action.client,
-			jwt: Object.assign({}, state.jwt)
+			jwt: state.jwt ? Object.assign({}, state.jwt) : undefined
 		};
 	}),
 	on(ClientActions.initJWT, (state, action) => {
 		return {
-			client: Object.assign({}, state.client),
+			client: state.client ? Object.assign({}, state.client) : undefined,
 			jwt: action.jwt
 		};
 	}),
 	on(ClientActions.refereshJWT, (state, action) => {
 		return {
-			client: Object.assign({}, state.client),
+			client: state.client ? Object.assign({}, state.client) : undefined,
 			jwt: action.jwt
 		};
 	}),
 	on(ClientActions.logout, (state, _action) => {
 		return {
-			client: Object.assign({}, state.client),
+			client: state.client ? Object.assign({}, state.client) : undefined,
+			jwt: undefined
+		};
+	}),
+	on(ClientActions.deleteJWT, (state, _action) => {
+		return {
+			client: state.client ? Object.assign({}, state.client) : undefined,
 			jwt: undefined
 		};
 	})

@@ -1,17 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { Store, select } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { AppState } from './reducers';
-import { LogService, JWTService, STORAGE_KEY_JWT_STATE, AuthResult } from 'hewi-ng-lib';
-import { AuthService } from './auth/auth.service';
+import { LogService, JWTService, AuthResult, STORAGE_KEY_JWT } from 'hewi-ng-lib';
 import { Client, STORAGE_KEY_CLIENT, JWTPayload } from './client/model/client.model';
 import { ClientService } from './client/client.service';
 import { noop } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { HttpErrorHandler } from './error/http-error-handler.service';
-import { initAccessToken, initJWT } from './client/client.actions';
-import { clientAccessTokenExpired } from './client/client.utils';
-import { isLoggedIn } from './client/client.selectors';
-import { userLoaded } from './auth/auth.selectors';
+import { initAccessToken, initJWT, deleteJWT } from './client/client.actions';
+import { clientAccessTokenExpired, jwtExprired } from './client/client.utils';
 
 @Component({
 	selector: 'mkadm-root',
@@ -37,35 +34,17 @@ export class AppComponent implements OnInit {
 			if (!clientAccessTokenExpired(client.expiresAt)) {
 				this.store.dispatch(initAccessToken({ client }));
 			} else {
-				this.clientService.orderClientAccessToken().pipe(
-					tap(responsePayload => {
-						const clientResponse: Client = responsePayload.data;
-						this.store.dispatch(initAccessToken({ client: clientResponse }));
-						this.logger.info('clientAccessToken initialized', clientResponse.accessToken);
-					})
-				).subscribe(
-					noop,
-					error => this.errorHandler.handleError(error, 'order first client access token')
-				);
+				this.orderClientAccessToken();
 			}
 		} else {
-			this.clientService.orderClientAccessToken().pipe(
-				tap(responsePayload => {
-					const clientResponse: Client = responsePayload.data;
-					this.store.dispatch(initAccessToken({ client: clientResponse }));
-					this.logger.info('clientAccessToken initialized', clientResponse.accessToken);
-				})
-			).subscribe(
-				noop,
-				error => this.errorHandler.handleError(error, 'order first client access token')
-			);
+			this.orderClientAccessToken();
 		}
 
 		const hash = window.location.hash;
 
 		if (hash && hash.indexOf('idToken') > 0) {
 
-			this.logger.debug('after redirect from authprovider');
+			this.logger.debug('[App Component] after redirect from authprovider');
 			const authResult: AuthResult = this.jwtService.parseHash(hash);
 
 			if (authResult.state && 'signup' !== authResult.state) {
@@ -77,22 +56,32 @@ export class AppComponent implements OnInit {
 
 				this.store.dispatch(initJWT({ jwt }));
 			}
+		} else {
+			this.logger.debug('[App Component] page refreshed, check the JWT');
+			const jwtVal = localStorage.getItem(STORAGE_KEY_JWT);
 
-			// TODO: hier muss noch der user geholt werden
-			// 	if (this.isLoggedIn()) {
-			// 		this.logger.debug('after redirect from authprovider', clientAccessToken);
-			// 		this.authService.getUserProfile();
-			// 	}
-			// }
-
-			// const userProfile = localStorage.getItem('user');
-
-			// if (userProfile) {
-			// 	this.store.dispatch(login({
-			// 		user: JSON.parse(userProfile)
-			// 	}));
-			// }
+			if (jwtVal) {
+				const jwt: JWTPayload = JSON.parse(jwtVal);
+				if (!jwtExprired(jwt.expiresAtSeconds)) {
+					this.store.dispatch(initJWT({ jwt }));
+				} else {
+					this.store.dispatch(deleteJWT());
+				}
+			}
 		}
+	}
+
+	private orderClientAccessToken() {
+		this.clientService.orderClientAccessToken().pipe(
+			tap(responsePayload => {
+				const clientResponse: Client = responsePayload.data;
+				this.store.dispatch(initAccessToken({ client: clientResponse }));
+				this.logger.info('[App Component] clientAccessToken initialized', clientResponse.accessToken);
+			})
+		).subscribe(
+			noop,
+			error => this.errorHandler.handleError(error, 'order first client access token')
+		);
 	}
 
 }

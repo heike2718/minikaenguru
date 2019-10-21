@@ -20,7 +20,7 @@ export class AboutComponent implements OnInit {
 	constructor(private logger: LogService) { }
 
 	ngOnInit() {
-		this.logger.debug('mkadmin-app started', null);
+		this.logger.debug('[About Component] initialized', null);
 	}
 
 }

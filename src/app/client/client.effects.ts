@@ -4,7 +4,7 @@ import { ClientActions } from './client-action-types';
 import { tap } from 'rxjs/operators';
 import { STORAGE_KEY_CLIENT } from './model/client.model';
 import { AuthService } from '../auth/auth.service';
-
+import { STORAGE_KEY_JWT } from 'hewi-ng-lib';
 
 
 @Injectable()
@@ -28,8 +28,26 @@ export class ClientEffects {
 
 	initJWT$ = createEffect(() =>
 		this.actions$.pipe(
-			ofType(ClientActions.initAccessToken),
-			tap(() => this.authService.getUserProfile())
+			ofType(ClientActions.initJWT),
+			tap(action => localStorage.setItem(STORAGE_KEY_JWT, JSON.stringify(action.jwt)))
+		), { dispatch: false }
+	);
+
+	logout$ = createEffect(() =>
+		this.actions$.pipe(
+			ofType(ClientActions.logout),
+			tap(() => {
+				localStorage.removeItem(STORAGE_KEY_JWT);
+			})
+		), { dispatch: false }
+	);
+
+	deleteJWT$$ = createEffect(() =>
+		this.actions$.pipe(
+			ofType(ClientActions.deleteJWT),
+			tap(() => {
+				localStorage.removeItem(STORAGE_KEY_JWT);
+			})
 		), { dispatch: false }
 	);
 

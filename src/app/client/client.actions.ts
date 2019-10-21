@@ -10,3 +10,5 @@ export const initJWT = createAction('[App Component] Init JWT', props<{ jwt: JWT
 export const refereshJWT = createAction('[Top Menu]', props<{ jwt: JWTPayload}>());
 
 export const logout = createAction('[Top Menu] Logout');
+
+export const deleteJWT = createAction('[App Component] Delete JTW');

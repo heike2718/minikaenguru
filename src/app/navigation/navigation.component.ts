@@ -4,7 +4,6 @@ import { AuthService } from '../auth/auth.service';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AppState } from '../reducers';
-import { Router } from '@angular/router';
 import { LogService } from 'hewi-ng-lib';
 import { HttpErrorHandler } from '../error/http-error-handler.service';
 import { isLoggedIn, isLoggedOut } from '../client/client.selectors';
@@ -27,7 +26,6 @@ export class NavigationComponent implements OnInit {
 	constructor(private authService: AuthService
 		// tslint:disable: align
 		, private store: Store<AppState>
-		, private router: Router
 		, private logger: LogService
 		, private errorHandler: HttpErrorHandler) { }
 
@@ -63,7 +61,7 @@ export class NavigationComponent implements OnInit {
 
 	login() {
 
-		this.logger.debug('login getriggert');
+		this.logger.debug('[Navigation Component] login getriggert');
 		this.authService.login();
 	}
 
