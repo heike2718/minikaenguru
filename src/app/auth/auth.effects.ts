@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, ofType, createEffect } from '@ngrx/effects';
-import { AuthActions } from './action-types';
+import { AuthActions } from './auth-action-types';
 import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
@@ -9,17 +9,17 @@ import { Router } from '@angular/router';
 export class AuthEffects {
 
 	login$ = createEffect(() => this.actions$.pipe(
-		ofType(AuthActions.login),
+		ofType(AuthActions.loadUser),
 		tap(action => localStorage.setItem('user', JSON.stringify(action.user)))
 	), { dispatch: false });
 	// dispatch-property: no further action is goingto be dispatched back to the store.
 	// So infinite dispatch loops are going to be avoided
 
 	logout$ = createEffect(() => this.actions$.pipe(
-		ofType(AuthActions.logout),
+		ofType(AuthActions.removeUser),
 		tap(() => {
 			localStorage.removeItem('user');
-			this.router.navigateByUrl('/dashboard');
+			this.router.navigateByUrl('/home');
 		})
 	), { dispatch: false });
 

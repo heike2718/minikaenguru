@@ -23,13 +23,16 @@ import { EffectsModule } from '@ngrx/effects';
 import { environment } from '../environments/environment';
 import { MessageService } from 'primeng/api';
 import { GlobalErrorHandlerService } from './error/global-error-handler.service';
+import { HomeComponent } from './home/home.component';
+import { ClientModule } from './client/client.module';
 
 @NgModule({
 	declarations: [
 		AppComponent,
 		AboutComponent,
 		NavigationComponent,
-		DashboardComponent
+		DashboardComponent,
+		HomeComponent
 	],
 	imports: [
 		BrowserModule,
@@ -41,6 +44,7 @@ import { GlobalErrorHandlerService } from './error/global-error-handler.service'
 		MessagesModule,
 		AppRoutingModule,
 		AuthModule.forRoot(),
+		ClientModule.forRoot(),
 		StoreModule.forRoot(reducers, {
 			metaReducers,
 			runtimeChecks: {

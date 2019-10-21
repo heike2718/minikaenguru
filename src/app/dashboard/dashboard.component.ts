@@ -1,16 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { environment } from 'src/environments/environment';
+import { LogService } from 'hewi-ng-lib';
 
 @Component({
 	selector: 'mkadm-dashboard',
 	templateUrl: './dashboard.component.html',
 	styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
 
-		pathLogo = environment.assetsUrl + '/mja_logo.png';
+	pathLogo = environment.assetsUrl + '/mja_logo.png';
 
 	/** Based on the screen size, switch from standard to one column per row */
 	cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
@@ -33,5 +34,9 @@ export class DashboardComponent {
 		})
 	);
 
-	constructor(private breakpointObserver: BreakpointObserver) {}
+	constructor(private breakpointObserver: BreakpointObserver, private logger: LogService) { }
+
+	ngOnInit() {
+		this.logger.debug('[Dashboard Component] initialized', null);
+	}
 }
