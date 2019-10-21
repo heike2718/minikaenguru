@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, ofType, createEffect } from '@ngrx/effects';
-import { AuthActions } from './action-types';
+import { AuthActions } from './auth-action-types';
 import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
@@ -19,7 +19,7 @@ export class AuthEffects {
 		ofType(AuthActions.logout),
 		tap(() => {
 			localStorage.removeItem('user');
-			this.router.navigateByUrl('/dashboard');
+			this.router.navigateByUrl('/home');
 		})
 	), { dispatch: false });
 

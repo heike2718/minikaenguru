@@ -3,7 +3,7 @@ import { MenuItem } from 'primeng/api';
 import { AuthService } from '../auth/auth.service';
 import { Store, select } from '@ngrx/store';
 import { noop, Observable } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { AppState } from '../reducers';
 import { login, logout } from '../auth/auth-actions';
 import { Router } from '@angular/router';
@@ -38,6 +38,11 @@ export class NavigationComponent implements OnInit {
 			{
 				label: 'Home',
 				icon: 'pi pi-home',
+				routerLink: '/home'
+			},
+			{
+				label: 'Dashboard',
+				icon: 'pi pi-th-large',
 				routerLink: '/dashboard'
 			},
 			{
@@ -61,7 +66,7 @@ export class NavigationComponent implements OnInit {
 
 		this.logger.debug('login getriggert');
 
-		this.authService.login()
+		this.authService.getUserProfile()
 			.pipe(
 				tap(respPayload => {
 
@@ -79,7 +84,6 @@ export class NavigationComponent implements OnInit {
 
 	logout() {
 		this.store.dispatch(logout());
-		this.router.navigateByUrl('/dashboard');
 	}
 }
 
