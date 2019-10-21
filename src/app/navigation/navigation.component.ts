@@ -2,14 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { AuthService } from '../auth/auth.service';
 import { Store, select } from '@ngrx/store';
-import { noop, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { AppState } from '../reducers';
-import { login, logout } from '../auth/auth-actions';
 import { Router } from '@angular/router';
 import { LogService } from 'hewi-ng-lib';
 import { HttpErrorHandler } from '../error/http-error-handler.service';
-import { isLoggedIn, isLoggedOut } from '../auth/auth.selectors';
+import { isLoggedIn, isLoggedOut } from '../client/client.selectors';
+import { logout } from '../client/client.actions';
 
 @Component({
 	selector: 'mkadm-navigation',
@@ -65,21 +64,7 @@ export class NavigationComponent implements OnInit {
 	login() {
 
 		this.logger.debug('login getriggert');
-
-		this.authService.getUserProfile()
-			.pipe(
-				tap(respPayload => {
-
-					this.logger.debug(JSON.stringify(respPayload));
-					this.store.dispatch(login({ user: respPayload.data }));
-					this.router.navigateByUrl('/about');
-				})
-			)
-			.subscribe(
-				noop,
-				error => this.errorHandler.handleError(error, 'login')
-			);
-
+		this.authService.login();
 	}
 
 	logout() {

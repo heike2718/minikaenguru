@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { AppState } from './reducers';
-import { login } from './auth/auth-actions';
-import { LogService, JWTService, STORAGE_KEY_JWT_STATE } from 'hewi-ng-lib';
+import { LogService, JWTService, STORAGE_KEY_JWT_STATE, AuthResult } from 'hewi-ng-lib';
 import { AuthService } from './auth/auth.service';
-import { STORAGE_KEY_CLIENT_ACCESS_TOKEN, Client } from './client/model/client.model';
+import { Client, STORAGE_KEY_CLIENT, JWTPayload } from './client/model/client.model';
 import { ClientService } from './client/client.service';
-import { noop, Observable } from 'rxjs';
+import { noop } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { HttpErrorHandler } from './error/http-error-handler.service';
-import { initAccessToken } from './client/client.actions';
-import { isClientTokenValid } from './client/client.selectors';
+import { initAccessToken, initJWT } from './client/client.actions';
+import { clientAccessTokenExpired } from './client/client.utils';
+import { isLoggedIn } from './client/client.selectors';
+import { userLoaded } from './auth/auth.selectors';
 
 @Component({
 	selector: 'mkadm-root',
@@ -21,30 +22,38 @@ export class AppComponent implements OnInit {
 
 	title = 'mkadmin-app';
 
-	private clientTokenValid: boolean;
-
 	constructor(private store: Store<AppState>
 		, private logger: LogService
 		, private jwtService: JWTService
-		, private authService: AuthService
 		, private clientService: ClientService
 		, private errorHandler: HttpErrorHandler) { }
 
 	ngOnInit(): void {
 
-		this.store.pipe(
-			select(isClientTokenValid)
-		).subscribe(
-			() => this.clientTokenValid
-		);
+		const clientVal = localStorage.getItem(STORAGE_KEY_CLIENT);
 
-		if (!this.clientTokenValid) {
+		if (clientVal) {
+			const client: Client = JSON.parse(clientVal);
+			if (!clientAccessTokenExpired(client.expiresAt)) {
+				this.store.dispatch(initAccessToken({ client }));
+			} else {
+				this.clientService.orderClientAccessToken().pipe(
+					tap(responsePayload => {
+						const clientResponse: Client = responsePayload.data;
+						this.store.dispatch(initAccessToken({ client: clientResponse }));
+						this.logger.info('clientAccessToken initialized', clientResponse.accessToken);
+					})
+				).subscribe(
+					noop,
+					error => this.errorHandler.handleError(error, 'order first client access token')
+				);
+			}
+		} else {
 			this.clientService.orderClientAccessToken().pipe(
 				tap(responsePayload => {
-					const client: Client = responsePayload.data;
-					this.store.dispatch(initAccessToken({ client }));
-
-					this.logger.info('clientAccessToken initialized', client.accessToken);
+					const clientResponse: Client = responsePayload.data;
+					this.store.dispatch(initAccessToken({ client: clientResponse }));
+					this.logger.info('clientAccessToken initialized', clientResponse.accessToken);
 				})
 			).subscribe(
 				noop,
@@ -52,43 +61,38 @@ export class AppComponent implements OnInit {
 			);
 		}
 
-		// const clientAccessToken = localStorage.getItem(STORAGE_KEY_CLIENT_ACCESS_TOKEN);
-		// const hash = window.location.hash;
-		// if (hash && hash.indexOf('idToken') > 0) {
-		// 	this.logger.debug('after redirect from authprovider', clientAccessToken);
-		// } else {
-		// 	if (!clientAccessToken) {
-		// 		this.clientService.orderClientAccessToken().pipe(
-		// 			tap(responsePayload => {
-		// 				this.store.dispatch(initAccessToken({ client: responsePayload.data }));
-		// 			})
-		// 		).subscribe(
-		// 			noop,
-		// 			error => this.errorHandler.handleError(error, 'order first client access token')
-		// 		);
-		// 	}
-		// 	if (this.isLoggedIn()) {
-		// 		this.logger.debug('after redirect from authprovider', clientAccessToken);
-		// 		this.authService.getUserProfile();
-		// 	}
-		// }
+		const hash = window.location.hash;
 
-		// const userProfile = localStorage.getItem('user');
+		if (hash && hash.indexOf('idToken') > 0) {
 
-		// if (userProfile) {
-		// 	this.store.dispatch(login({
-		// 		user: JSON.parse(userProfile)
-		// 	}));
-		// }
-	}
+			this.logger.debug('after redirect from authprovider');
+			const authResult: AuthResult = this.jwtService.parseHash(hash);
 
+			if (authResult.state && 'signup' !== authResult.state) {
 
-	private isLoggedIn(): boolean {
-		const authState = localStorage.getItem(STORAGE_KEY_JWT_STATE);
-		if (authState && 'signup' === authState) {
-			return false;
+				const jwt: JWTPayload = {
+					jwt: authResult.idToken,
+					expiresAtSeconds: authResult.expiresAt
+				};
+
+				this.store.dispatch(initJWT({ jwt }));
+			}
+
+			// TODO: hier muss noch der user geholt werden
+			// 	if (this.isLoggedIn()) {
+			// 		this.logger.debug('after redirect from authprovider', clientAccessToken);
+			// 		this.authService.getUserProfile();
+			// 	}
+			// }
+
+			// const userProfile = localStorage.getItem('user');
+
+			// if (userProfile) {
+			// 	this.store.dispatch(login({
+			// 		user: JSON.parse(userProfile)
+			// 	}));
+			// }
 		}
-		return !this.jwtService.isJWTExpired();
 	}
 
 }

@@ -1,20 +1,23 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
 import * as fromClient from './client.reducer';
-import * as moment from 'moment';
+import { jwtExprired } from './client.utils';
 
 
 export const selectClientState = createFeatureSelector<fromClient.ClientState>(fromClient.clientFeatureKey);
 
-export const isClientTokenValid = createSelector(
+export const isLoggedOut = createSelector(
 	selectClientState,
 	state => {
-		if (!state.client) {
-			return false;
+		if (!state.jwt) {
+			return true;
 		}
-		const expiration = moment(state.client.expiresAt);
-		// lassen 3,5 Minuten Vorsprung zum refreshen des accessTokens.
-		const expired = moment().add(210, 'seconds').isAfter(expiration);
-		return expired;
+		return jwtExprired(state.jwt.expiresAtSeconds);
 	}
 );
+
+export const isLoggedIn = createSelector(
+	isLoggedOut,
+	loggedOut => !loggedOut
+);
+
 

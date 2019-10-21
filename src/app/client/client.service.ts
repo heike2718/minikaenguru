@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ResponsePayload } from 'hewi-ng-lib';
-import { STORAGE_KEY_CLIENT_ACCESS_TOKEN } from './model/client.model';
+import { STORAGE_KEY_CLIENT, Client } from './model/client.model';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 
@@ -15,12 +15,15 @@ export class ClientService {
 
 	orderClientAccessToken(): Observable<ResponsePayload> {
 
-		const accessToken = localStorage.getItem(STORAGE_KEY_CLIENT_ACCESS_TOKEN);
+		const clientVal = localStorage.getItem(STORAGE_KEY_CLIENT);
+
 
 		let url = environment.apiUrl + '/accesstoken/';
 
-		if (accessToken) {
-			url += accessToken;
+		if (clientVal) {
+			const client: Client = JSON.parse(clientVal);
+
+			url += client.accessToken;
 		} else {
 			url += 'initial';
 		}

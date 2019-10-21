@@ -3,7 +3,7 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angul
 import { Observable } from 'rxjs';
 import { AppState } from '../reducers';
 import { Store, select } from '@ngrx/store';
-import { isLoggedIn } from './auth.selectors';
+import { isLoggedIn } from '../client/client.selectors';
 import { tap } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 

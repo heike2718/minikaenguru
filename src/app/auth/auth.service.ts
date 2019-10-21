@@ -3,7 +3,7 @@ import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs/internal/Observable';
 import { ResponsePayload, JWTService } from 'hewi-ng-lib';
 import { HttpClient } from '@angular/common/http';
-import { STORAGE_KEY_CLIENT_ACCESS_TOKEN } from '../client/model/client.model';
+import { STORAGE_KEY_CLIENT, Client } from '../client/model/client.model';
 
 @Injectable()
 export class AuthService {
@@ -19,9 +19,13 @@ export class AuthService {
 	}
 
 	login() {
-		const accessToken = localStorage.getItem(STORAGE_KEY_CLIENT_ACCESS_TOKEN);
-		if (accessToken) {
-			const authUrl = this.jwtService.getLoginUrl(environment.authUrl, accessToken, environment.loginRedirectUrl, 'login', null);
+		const clientVal = localStorage.getItem(STORAGE_KEY_CLIENT);
+		if (clientVal) {
+
+			const client: Client = JSON.parse(clientVal);
+
+
+			const authUrl = this.jwtService.getLoginUrl(environment.authUrl, client.accessToken, environment.loginRedirectUrl, 'login', null);
 			window.location.href = authUrl;
 		}
 	}
