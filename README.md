@@ -20,4 +20,4 @@ mit IDEChecklistenAppRunner und VMargs
 
 ## Relesenotes
 
-[Release-Notes](https://github.com/heike2718/mkadmin-server/RELEASE-NOTES.md)
+[Release-Notes](RELEASE-NOTES.md)
