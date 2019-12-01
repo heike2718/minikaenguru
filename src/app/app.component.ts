@@ -1,14 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { JWTService } from 'hewi-ng-lib';
+import { AuthService } from './auth/auth.service';
+import { STORAGE_KEY_USER } from './auth/model/user.model';
 import { Store } from '@ngrx/store';
 import { AppState } from './reducers';
-import { LogService, JWTService, AuthResult, STORAGE_KEY_JWT } from 'hewi-ng-lib';
-import { Client, STORAGE_KEY_CLIENT, JWTPayload } from './client/model/client.model';
-import { ClientService } from './client/client.service';
-import { noop } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { HttpErrorHandler } from './error/http-error-handler.service';
-import { initAccessToken, initJWT, deleteJWT } from './client/client.actions';
-import { clientAccessTokenExpired, jwtExprired } from './client/client.utils';
+import { loadUser } from './auth/auth.actions';
 
 @Component({
 	selector: 'mkadm-root',
@@ -19,69 +15,25 @@ export class AppComponent implements OnInit {
 
 	title = 'mkadmin-app';
 
-	constructor(private store: Store<AppState>
-		, private logger: LogService
-		, private jwtService: JWTService
-		, private clientService: ClientService
-		, private errorHandler: HttpErrorHandler) { }
+	constructor(private authService: AuthService
+		, private store: Store<AppState>
+		, private jwtService: JWTService) { }
 
 	ngOnInit(): void {
 
-		const clientVal = localStorage.getItem(STORAGE_KEY_CLIENT);
+		const user = localStorage.getItem(STORAGE_KEY_USER);
 
-		if (clientVal) {
-			const client: Client = JSON.parse(clientVal);
-			if (!clientAccessTokenExpired(client.expiresAt)) {
-				this.store.dispatch(initAccessToken({ client }));
-			} else {
-				this.orderClientAccessToken();
-			}
-		} else {
-			this.orderClientAccessToken();
+		if (user) {
+			this.store.dispatch(loadUser({ user: JSON.parse(user) }));
 		}
 
+		// nach dem redirect vom AuthProvider ist das die Stelle, an der die Anwendung wieder ankommt.
+		// Daher hier redirect-URL parsen
 		const hash = window.location.hash;
 
 		if (hash && hash.indexOf('idToken') > 0) {
-
-			this.logger.debug('[App Component] after redirect from authprovider');
-			const authResult: AuthResult = this.jwtService.parseHash(hash);
-
-			if (authResult.state && 'signup' !== authResult.state) {
-
-				const jwt: JWTPayload = {
-					jwt: authResult.idToken,
-					expiresAtSeconds: authResult.expiresAt
-				};
-
-				this.store.dispatch(initJWT({ jwt }));
-			}
-		} else {
-			this.logger.debug('[App Component] page refreshed, check the JWT');
-			const jwtVal = localStorage.getItem(STORAGE_KEY_JWT);
-
-			if (jwtVal) {
-				const jwt: JWTPayload = JSON.parse(jwtVal);
-				if (!jwtExprired(jwt.expiresAtSeconds)) {
-					this.store.dispatch(initJWT({ jwt }));
-				} else {
-					this.store.dispatch(deleteJWT());
-				}
-			}
+			const authResult = this.jwtService.parseHash(hash);
+			this.authService.createSession(authResult);
 		}
 	}
-
-	private orderClientAccessToken() {
-		this.clientService.orderClientAccessToken().pipe(
-			tap(responsePayload => {
-				const clientResponse: Client = responsePayload.data;
-				this.store.dispatch(initAccessToken({ client: clientResponse }));
-				this.logger.info('[App Component] clientAccessToken initialized', clientResponse.accessToken);
-			})
-		).subscribe(
-			noop,
-			error => this.errorHandler.handleError(error, 'order first client access token')
-		);
-	}
-
 }

@@ -1,7 +1,6 @@
-
+export const STORAGE_KEY_USER = 'mka_user';
 
 export interface User {
-		id: string;
-		name: string;
-		roles: string[];
+		sessionId?: string;
+		idReference: string;
 }

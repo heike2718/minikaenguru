@@ -3,9 +3,9 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angul
 import { Observable } from 'rxjs';
 import { AppState } from '../reducers';
 import { Store, select } from '@ngrx/store';
-import { isLoggedIn } from '../client/client.selectors';
 import { tap } from 'rxjs/operators';
 import { AuthService } from './auth.service';
+import { isLoggedIn } from './auth.selectors';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -23,7 +23,7 @@ export class AuthGuard implements CanActivate {
 				tap(loggedIn => {
 					if (!loggedIn) {
 						console.log('[AuthGuard] going to redirect to login');
-						this.authService.login();
+						this.authService.logIn();
 					} else {
 						console.log('[AuthGuard] is logged in');
 					}

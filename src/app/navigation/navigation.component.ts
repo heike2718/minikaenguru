@@ -5,9 +5,8 @@ import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AppState } from '../reducers';
 import { LogService } from 'hewi-ng-lib';
-import { HttpErrorHandler } from '../error/http-error-handler.service';
-import { isLoggedIn, isLoggedOut } from '../client/client.selectors';
-import { logout } from '../client/client.actions';
+import { isLoggedIn, isLoggedOut } from '../auth/auth.selectors';
+
 
 @Component({
 	selector: 'mkadm-navigation',
@@ -20,14 +19,13 @@ export class NavigationComponent implements OnInit {
 	items: MenuItem[];
 
 	isLoggedIn$: Observable<boolean>;
-	isLoggerOut$: Observable<boolean>;
+	isLoggedOut$: Observable<boolean>;
 
 
 	constructor(private authService: AuthService
 		// tslint:disable: align
 		, private store: Store<AppState>
-		, private logger: LogService
-		, private errorHandler: HttpErrorHandler) { }
+		, private logger: LogService) { }
 
 	ngOnInit() {
 
@@ -37,11 +35,13 @@ export class NavigationComponent implements OnInit {
 				icon: 'pi pi-home',
 				routerLink: '/home'
 			},
+			/*
 			{
 				label: 'Dashboard',
 				icon: 'pi pi-th-large',
 				routerLink: '/dashboard'
 			},
+			*/
 			{
 				label: 'About',
 				icon: 'pi pi-question',
@@ -54,19 +54,20 @@ export class NavigationComponent implements OnInit {
 			select(isLoggedIn)
 		);
 
-		this.isLoggerOut$ = this.store.pipe(
+		this.isLoggedOut$ = this.store.pipe(
 			select(isLoggedOut)
 		);
 	}
 
 	login() {
 
-		this.logger.debug('[Navigation Component] login getriggert');
-		this.authService.login();
+		this.logger.debug('[Navigation Component] logIn getriggert');
+		this.authService.logIn();
 	}
 
 	logout() {
-		this.store.dispatch(logout());
+		this.logger.debug('[Navigation Component] logOut getriggert');
+		this.authService.logOut();
 	}
 }
 

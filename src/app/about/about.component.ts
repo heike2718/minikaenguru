@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { LogService } from 'hewi-ng-lib';
+import { Observable } from 'rxjs';
+import { Store, select } from '@ngrx/store';
+import { AppState } from '../reducers';
+import { isLoggedIn, isLoggedOut } from '../auth/auth.selectors';
+import { getApiVersion } from './about.selectors';
 
 @Component({
 	selector: 'mkadm-about',
@@ -17,10 +21,28 @@ export class AboutComponent implements OnInit {
 
 	apiUrl = environment.apiUrl;
 
-	constructor(private logger: LogService) { }
+	isLoggedIn$: Observable<boolean>;
+	isLoggedOut$: Observable<boolean>;
+
+	apiVersion$: Observable<string>;
+
+
+	constructor(private store: Store<AppState>) { }
 
 	ngOnInit() {
-		this.logger.debug('[About Component] initialized', null);
+
+		this.isLoggedIn$ = this.store.pipe(
+			// select eliminates any duplicates
+			select(isLoggedIn)
+		);
+
+		this.isLoggedOut$ = this.store.pipe(
+			select(isLoggedOut)
+		);
+
+		this.apiVersion$ = this.store.pipe(
+			select(getApiVersion)
+		);
 	}
 
 }

@@ -1,6 +1,6 @@
 <p-menubar [model]="items">
   <button pButton class="ui-button-secondary" label="Login" icon="pi pi-sign-in" (click)="login()"
-    *ngIf="isLoggerOut$ | async"></button>
+    *ngIf="isLoggedOut$ | async"></button>
   <button pButton class="ui-button-secondary" label="Logout" icon="pi pi-sign-out" (click)="logout()"
     *ngIf="isLoggedIn$ | async"></button>
 </p-menubar>
