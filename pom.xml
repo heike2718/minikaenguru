@@ -13,8 +13,8 @@
 
 	<properties>
 		<surefire-plugin.version>2.22.0</surefire-plugin.version>
-		<quarkus.version>0.27.0</quarkus.version>
-		<commons-version>1.3.0</commons-version>
+		<quarkus.version>1.0.1.Final</quarkus.version>
+		<commons-version>1.4.0</commons-version>
 		<maven.compiler.source>1.11</maven.compiler.source>
 		<maven.compiler.target>1.11</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -45,6 +45,11 @@
 		<dependency>
 			<groupId>de.egladil.web</groupId>
 			<artifactId>commons-validation</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>de.egladil.web</groupId>
+			<artifactId>commons-crypto</artifactId>
 		</dependency>
 
 		<dependency>
