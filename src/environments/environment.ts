@@ -6,15 +6,13 @@ export const environment = {
   production: false,
   version: '1.0.0',
   envName: 'DEV',
-  apiUrl: 'http://localhost:9400',
+  apiUrl: 'http://localhost:9400/mkadmin-server',
   authApiUrl: 'http://localhost:9000',
   authUrl: 'http://localhost:4300',
   assetsUrl: 'assets',
-  signupRedirectUrl: 'http://localhost:4200',
-  loginRedirectUrl: 'http://localhost:4200#/dashboard',
   consoleLogActive: true,
   serverLogActive: true,
-  loglevel: 1
+  loglevel: 2
 };
 
 /*

@@ -4,5 +4,5 @@ import { User } from './model/user.model';
 
 export const loadUser = createAction('[Top Menu] User Login', props<{user: User}>());
 
-export const removeUser = createAction('[Top Menu] Logout');
+export const logOut = createAction('[Top Menu] Logout');
 
