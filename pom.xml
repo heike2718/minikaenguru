@@ -5,7 +5,7 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mkadmin-server</artifactId>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
 	<packaging>jar</packaging>
 
 	<name>mkadmin-server</name>
