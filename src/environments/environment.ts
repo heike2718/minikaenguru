@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  version: '1.0.0',
+  version: '0.1.0',
   envName: 'DEV',
   apiUrl: 'http://localhost:9400/mkadmin-server',
   authApiUrl: 'http://localhost:9000',

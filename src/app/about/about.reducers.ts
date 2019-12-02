@@ -1,6 +1,6 @@
 import { AboutInfos } from './model/about.model';
 import { AboutActions } from './about-action-types';
-import { createReducer, on } from '@ngrx/store';
+import { createReducer, on, State, Action } from '@ngrx/store';
 
 export const aboutFeatureKey = 'about';
 
@@ -13,7 +13,8 @@ export const initialAboutInfosState: AboutInfoState = {
 	aboutInfos: undefined
 };
 
-export const authReducer = createReducer(
+// Macht Problem beim AOT build, siehe https://github.com/ngrx/platform/issues/1915
+export const aboutReducer = createReducer(
 	initialAboutInfosState,
 	on(AboutActions.aboutInfosLoaded, (_state, action) => {
 		return {
@@ -21,4 +22,12 @@ export const authReducer = createReducer(
 		};
 	})
 );
+
+// see https://github.com/ngrx/platform/issues/1915
+// and Udemy course comment https://www.udemy.com/course/ngrx-course/learn/lecture/15942130#questions/8441474
+export function aboutReducerWrapper(state, action) {
+	return aboutReducer(state, action);
+}
+
+
 
