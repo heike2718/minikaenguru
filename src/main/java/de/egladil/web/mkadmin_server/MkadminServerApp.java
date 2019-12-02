@@ -4,14 +4,13 @@
 // =====================================================
 package de.egladil.web.mkadmin_server;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
-
 /**
- * MkadminServerApp
+ * MkadminServerApp<br>
+ * <br>
+ * Aus irgendeinem Grund wird die content-root im reverse proxy nicht gefunden, wenn Klasse von Application erbt und
+ * mit @ApplicationPath("/mkadmin-server") annotiert ist. Daher analog zu quarkus-hello keine Application-Klasse mehr.
  */
-@ApplicationPath("/mkadmin-server")
-public class MkadminServerApp extends Application {
+public class MkadminServerApp {
 
 	public static final String CLIENT_COOKIE_PREFIX = "MKA";
 }
