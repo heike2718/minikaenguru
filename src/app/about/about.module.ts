@@ -24,7 +24,7 @@ export const aboutRoutes: Routes = [
 	imports: [
 		CommonModule,
 		RouterModule.forChild(aboutRoutes),
-		StoreModule.forFeature(fromAbout.aboutFeatureKey, fromAbout.authReducer),
+		StoreModule.forFeature(fromAbout.aboutFeatureKey, fromAbout.aboutReducerWrapper),  // important; use the wrapper function here!
 		EffectsModule.forFeature([AboutEffects])
 	],
 	declarations: [
