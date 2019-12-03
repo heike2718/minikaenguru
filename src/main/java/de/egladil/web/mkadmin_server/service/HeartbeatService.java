@@ -25,7 +25,7 @@ public class HeartbeatService {
 
 	private static final String MONITOR_ID = "mkverwaltung-database";
 
-	private static final Logger LOG = LoggerFactory.getLogger(HeartbeatService.class.getSimpleName());
+	private static final Logger LOG = LoggerFactory.getLogger(HeartbeatService.class);
 
 	@Inject
 	PacemakerDao pacemakerDao;

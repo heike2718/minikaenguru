@@ -25,7 +25,7 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 @Provider
 public class MkadminExceptionMapper implements ExceptionMapper<Exception> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(MkadminExceptionMapper.class.getSimpleName());
+	private static final Logger LOG = LoggerFactory.getLogger(MkadminExceptionMapper.class);
 
 	@Override
 	public Response toResponse(final Exception exception) {
