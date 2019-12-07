@@ -48,7 +48,7 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 			this.logService.debug('das sollte nicht vorkommen, da diese Errors von einem der services behandelt werden');
 		} else {
 			// try sending an Error-Log to the Server
-			// this.logService.error(message, this.sessionService.getClientAccessToken());
+			// TODO: hier eine idReference mitsenden analog zu checklistenapp und profil-app
 			this.logService.error('mkadmin-app - ' + message);
 		}
 	}
