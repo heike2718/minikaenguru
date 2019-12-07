@@ -35,7 +35,7 @@ import de.egladil.web.mkadmin_server.service.HeartbeatService;
 @PermitAll
 public class HeartbeatResource {
 
-	private static final Logger LOG = LoggerFactory.getLogger(HeartbeatResource.class.getName());
+	private static final Logger LOG = LoggerFactory.getLogger(HeartbeatResource.class);
 
 	@ConfigProperty(name = "heartbeat.id")
 	String heartbeatId;
