@@ -4,9 +4,9 @@
 
 export const environment = {
   production: false,
-  version: '0.1.0',
+  version: '0.1.1',
   envName: 'DEV',
-  apiUrl: 'http://localhost:9400/mkadmin-server',
+  apiUrl: 'http://localhost:9400',  // hier darf in dev kein mkadmin-server stehen, weil der Pfad sonst nicht gefunden wird
   authApiUrl: 'http://localhost:9000',
   authUrl: 'http://localhost:4300',
   assetsUrl: 'assets',
