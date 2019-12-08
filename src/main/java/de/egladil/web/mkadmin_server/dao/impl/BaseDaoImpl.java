@@ -1,7 +1,7 @@
-//=====================================================
+// =====================================================
 // Project: mkadmin-server
 // (c) Heike Winkelvoß
-//=====================================================
+// =====================================================
 package de.egladil.web.mkadmin_server.dao.impl;
 
 import java.math.BigInteger;
@@ -30,7 +30,7 @@ import de.egladil.web.mkadmin_server.error.MkadminRuntimeException;
  */
 public abstract class BaseDaoImpl implements BaseDao {
 
-	private static final Logger LOG = LoggerFactory.getLogger(BaseDaoImpl.class.getName());
+	private static final Logger LOG = LoggerFactory.getLogger(BaseDaoImpl.class);
 
 	@PersistenceContext
 	EntityManager em;
@@ -39,12 +39,15 @@ public abstract class BaseDaoImpl implements BaseDao {
 	 *
 	 */
 	public BaseDaoImpl() {
+
 	}
 
 	/**
-	 * @param em EntityManager
+	 * @param em
+	 *           EntityManager
 	 */
 	public BaseDaoImpl(final EntityManager em) {
+
 		this.em = em;
 	}
 
@@ -55,10 +58,12 @@ public abstract class BaseDaoImpl implements BaseDao {
 		T persisted = null;
 
 		if (entity.getId() == null) {
+
 			em.persist(entity);
 			persisted = entity;
 			LOG.debug("created: {}, ID={}", persisted, persisted.getId());
 		} else {
+
 			persisted = em.merge(entity);
 			LOG.debug("updated: {}", persisted);
 		}
@@ -69,6 +74,7 @@ public abstract class BaseDaoImpl implements BaseDao {
 	@Override
 	@Transactional(value = TxType.REQUIRED)
 	public <T extends MkadminEntity> void delete(final T entity) {
+
 		getEm().remove(entity);
 	}
 
@@ -83,16 +89,20 @@ public abstract class BaseDaoImpl implements BaseDao {
 		query.setParameter("identifier", identifierValue);
 
 		try {
+
 			final T singleResult = query.getSingleResult();
 			LOG.debug("gefunden: {} - {}", entityClass.getSimpleName(), identifierValue);
 			return Optional.of(singleResult);
 		} catch (NoResultException e) {
+
 			LOG.debug("nicht gefunden: {} - {}", entityClass.getSimpleName(), identifierValue);
 			return Optional.empty();
 		} catch (NonUniqueResultException e) {
+
 			String msg = entityClass.getSimpleName() + ": Trefferliste zu '" + identifierValue + "' nicht eindeutig";
 			throw new MkadminRuntimeException(msg);
 		} catch (PersistenceException e) {
+
 			String msg = "Unerwarteter Fehler beim Suchen der Entity " + entityClass.getSimpleName();
 			LOG.error("{}: {}", e.getMessage(), e);
 			throw new MkadminRuntimeException(msg);
@@ -102,6 +112,7 @@ public abstract class BaseDaoImpl implements BaseDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends MkadminEntity> T findById(final Long id) {
+
 		return (T) getEm().find(getEntityClass(), id);
 	}
 
@@ -135,6 +146,7 @@ public abstract class BaseDaoImpl implements BaseDao {
 		final Object res = query.getSingleResult();
 
 		if (!(res instanceof BigInteger)) {
+
 			throw new MkadminRuntimeException("result ist kein BigInteger, sondern " + res.getClass());
 		}
 
@@ -163,6 +175,7 @@ public abstract class BaseDaoImpl implements BaseDao {
 	protected abstract String getTableName();
 
 	protected EntityManager getEm() {
+
 		return em;
 	}
 
