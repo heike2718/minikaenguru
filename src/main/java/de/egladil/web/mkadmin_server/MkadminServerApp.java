@@ -13,4 +13,7 @@ package de.egladil.web.mkadmin_server;
 public class MkadminServerApp {
 
 	public static final String CLIENT_COOKIE_PREFIX = "MKA";
+
+	public static final String STAGE_DEV = "dev";
+
 }
