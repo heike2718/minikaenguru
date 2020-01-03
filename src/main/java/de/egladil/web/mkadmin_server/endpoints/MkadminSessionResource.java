@@ -43,8 +43,6 @@ public class MkadminSessionResource {
 
 	private static final Logger LOG = LoggerFactory.getLogger(MkadminSessionResource.class);
 
-	private static final String STAGE_DEV = "dev";
-
 	@ConfigProperty(name = "stage")
 	String stage;
 
@@ -91,7 +89,7 @@ public class MkadminSessionResource {
 
 		NewCookie sessionCookie = sessionService.createSessionCookie(userSession.getSessionId());
 
-		if (!STAGE_DEV.equals(stage)) {
+		if (!MkadminServerApp.STAGE_DEV.equals(stage)) {
 
 			userSession.clearSessionId();
 		}
@@ -123,7 +121,7 @@ public class MkadminSessionResource {
 	@PermitAll
 	public Response logoutDev(@PathParam(value = "sessionid") final String sessionId) {
 
-		if (!STAGE_DEV.equals(stage)) {
+		if (!MkadminServerApp.STAGE_DEV.equals(stage)) {
 
 			throw new AuthException("Diese URL darf nur im DEV-Mode aufgerufen werden");
 		}
