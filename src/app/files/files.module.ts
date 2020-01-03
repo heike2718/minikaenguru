@@ -2,13 +2,21 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DownloadComponent } from './download.component';
 import { Routes, RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { HewiNgLibModule } from 'hewi-ng-lib';
+import { UploadComponent } from './upload.component';
+import { UploadService } from './upload.service';
 import { DownloadService } from './download.service';
 
 
 export const filesRoutes: Routes = [
 	{
-		path: '',
+		path: 'download',
 		component: DownloadComponent
+	},
+	{
+		path: 'upload',
+		component: UploadComponent
 	},
 ];
 
@@ -16,14 +24,18 @@ export const filesRoutes: Routes = [
 @NgModule({
 	imports: [
 		CommonModule,
+		FormsModule,
+		HewiNgLibModule,
 		RouterModule.forChild(filesRoutes),
 	],
-	declarations: [DownloadComponent],
+	declarations: [DownloadComponent, UploadComponent],
 	exports: [
-		DownloadComponent
+		DownloadComponent,
+		UploadComponent
 	],
 	providers: [
-		DownloadService
+		DownloadService,
+		UploadService
 	]
 
 })

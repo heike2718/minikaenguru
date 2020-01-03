@@ -24,10 +24,10 @@ export class DownloadService {
 			observe: 'response',
 			responseType: 'text'
 		});
-  }
+	}
 
 
-  downloadPdf(): Observable<HttpResponse<Blob>> {
+	downloadPdf(): Observable<HttpResponse<Blob>> {
 
 		let headers = new HttpHeaders();
 		headers = headers.append('Accept', 'application/pdf');
@@ -43,7 +43,7 @@ export class DownloadService {
 		});
 	}
 
-  downloadExcel(): Observable<HttpResponse<Blob>> {
+	downloadExcel(): Observable<HttpResponse<Blob>> {
 
 		let headers = new HttpHeaders();
 		headers = headers.append('Accept', 'application/vnd.ms-excel');
