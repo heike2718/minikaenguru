@@ -1,0 +1,20 @@
+<h1>Über diese Anwendung</h1>
+<div class="p-grid">
+  <div class="p-col-fixed" style="width:150px">Umgebung:</div>
+  <div class="p-col">{{envName}}</div>
+</div>
+
+<div class="p-grid">
+  <div class="p-col-fixed" style="width:150px">Version:</div>
+  <div class="p-col">{{version}}</div>
+</div>
+
+<div *ngIf="isLoggedIn$ | async" class="p-grid">
+  <div class="p-col-fixed" style="width:150px">API-URL:</div>
+  <div class="p-col">{{apiUrl}}</div>
+</div>
+
+<div class="p-grid">
+  <div class="p-col-fixed" style="width:150px">API-Version:</div>
+  <div class="p-col">{{apiVersion$ | async}}</div>
+</div>
