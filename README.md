@@ -1,2 +1,0 @@
-# minikaenguru
-Minikänguru Monorepo
