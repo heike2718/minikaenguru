@@ -21,9 +21,9 @@ import javax.transaction.Transactional.TxType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.egladil.web.mk_commons.exception.MkRuntimeException;
 import de.egladil.web.mkadmin_server.dao.BaseDao;
 import de.egladil.web.mkadmin_server.domain.MkadminEntity;
-import de.egladil.web.mkadmin_server.error.MkadminRuntimeException;
 
 /**
  * BaseDaoImpl
@@ -100,12 +100,12 @@ public abstract class BaseDaoImpl implements BaseDao {
 		} catch (NonUniqueResultException e) {
 
 			String msg = entityClass.getSimpleName() + ": Trefferliste zu '" + identifierValue + "' nicht eindeutig";
-			throw new MkadminRuntimeException(msg);
+			throw new MkRuntimeException(msg);
 		} catch (PersistenceException e) {
 
 			String msg = "Unerwarteter Fehler beim Suchen der Entity " + entityClass.getSimpleName();
 			LOG.error("{}: {}", e.getMessage(), e);
-			throw new MkadminRuntimeException(msg);
+			throw new MkRuntimeException(msg);
 		}
 	}
 
@@ -147,7 +147,7 @@ public abstract class BaseDaoImpl implements BaseDao {
 
 		if (!(res instanceof BigInteger)) {
 
-			throw new MkadminRuntimeException("result ist kein BigInteger, sondern " + res.getClass());
+			throw new MkRuntimeException("result ist kein BigInteger, sondern " + res.getClass());
 		}
 
 		return (BigInteger) res;

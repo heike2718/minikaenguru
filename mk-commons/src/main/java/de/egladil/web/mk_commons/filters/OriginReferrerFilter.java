@@ -1,8 +1,8 @@
 // =====================================================
-// Project: checklistenserver
+// Project: mk-commons
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mkadmin_server.filters;
+package de.egladil.web.mk_commons.filters;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_net.utils.CommonHttpUtils;
-import de.egladil.web.mkadmin_server.error.AuthException;
+import de.egladil.web.mk_commons.exception.AuthException;
 
 /**
  * OriginReferrerFilter
@@ -36,7 +36,7 @@ public class OriginReferrerFilter implements ContainerRequestFilter {
 
 	private static final Logger LOG = LoggerFactory.getLogger(OriginReferrerFilter.class);
 
-	@ConfigProperty(name = "block.on.missing.origin.referer")
+	@ConfigProperty(name = "block.on.missing.origin.referer", defaultValue = "false")
 	boolean blockOnMissingOriginReferer;
 
 	@ConfigProperty(name = "target.origin")

@@ -1,9 +1,9 @@
 // =====================================================
-// Projekt: de.egladil.mkv.adminservice
+// Projekt: mkadmin-server
 // (c) Heike Winkelvoß
 // =====================================================
 
-package de.egladil.web.mkadmin_server.filters;
+package de.egladil.web.mk_commons.filters;
 
 import java.io.IOException;
 
@@ -15,7 +15,7 @@ import javax.ws.rs.ext.Provider;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import de.egladil.web.mkadmin_server.MkadminServerApp;
+import de.egladil.web.mk_commons.constants.MkConstants;
 
 /**
  * SecureHeadersFilter packt die SecureHeaders in den Response.
@@ -85,7 +85,8 @@ public class SecureHeadersFilter implements ContainerResponseFilter {
 
 		if (headers.get("Access-Control-Allow-Headers") == null) {
 
-			headers.add("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, Authorization");
+			headers.add("Access-Control-Allow-Headers",
+				"Content-Type,Accept,Authorization,Origin,Content-Disposition,X-Requested-With,X-SESSIONID");
 		}
 
 		if (headers.get(CONTENT_SECURITY_POLICY) == null) {
@@ -93,7 +94,7 @@ public class SecureHeadersFilter implements ContainerResponseFilter {
 			responseContext.getHeaders().add(CONTENT_SECURITY_POLICY, "default-src 'self'; ");
 		}
 
-		if (!MkadminServerApp.STAGE_DEV.equals(stage) && headers.get("Strict-Transport-Security") == null) {
+		if (!MkConstants.STAGE_DEV.equals(stage) && headers.get("Strict-Transport-Security") == null) {
 
 			headers.add("Strict-Transport-Security", "max-age=63072000; includeSubdomains");
 

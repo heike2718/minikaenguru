@@ -2,7 +2,7 @@
 // Project: admin-server
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mkadmin_server.error;
+package de.egladil.web.mk_commons.exception;
 
 /**
  * AuthException

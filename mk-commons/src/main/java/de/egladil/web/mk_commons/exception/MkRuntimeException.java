@@ -2,12 +2,12 @@
 // Project: mkadmin-server
 // (c) Heike Winkelvoß
 //=====================================================
-package de.egladil.web.mkadmin_server.error;
+package de.egladil.web.mk_commons.exception;
 
 /**
- * MkadminRuntimeException
+ * MkRuntimeException
  */
-public class MkadminRuntimeException extends RuntimeException {
+public class MkRuntimeException extends RuntimeException {
 
 	/**
 	 *
@@ -18,14 +18,14 @@ public class MkadminRuntimeException extends RuntimeException {
 	 * @param message
 	 * @param cause
 	 */
-	public MkadminRuntimeException(final String message, final Throwable cause) {
+	public MkRuntimeException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param message
 	 */
-	public MkadminRuntimeException(final String message) {
+	public MkRuntimeException(final String message) {
 		super(message);
 	}
 

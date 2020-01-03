@@ -34,11 +34,11 @@ import de.egladil.web.commons_crypto.CryptoService;
 import de.egladil.web.commons_crypto.JWTService;
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.commons_net.utils.CommonHttpUtils;
+import de.egladil.web.mk_commons.exception.AuthException;
+import de.egladil.web.mk_commons.exception.LogmessagePrefixes;
+import de.egladil.web.mk_commons.exception.MkRuntimeException;
 import de.egladil.web.mkadmin_server.MkadminServerApp;
 import de.egladil.web.mkadmin_server.domain.UserSession;
-import de.egladil.web.mkadmin_server.error.AuthException;
-import de.egladil.web.mkadmin_server.error.LogmessagePrefixes;
-import de.egladil.web.mkadmin_server.error.MkadminRuntimeException;
 
 /**
  * MkadminSessionService
@@ -147,7 +147,7 @@ public class MkadminSessionService {
 			return sw.toString().getBytes();
 		} catch (IOException e) {
 
-			throw new MkadminRuntimeException("Konnte jwt-public-key nicht lesen: " + e.getMessage());
+			throw new MkRuntimeException("Konnte jwt-public-key nicht lesen: " + e.getMessage());
 		}
 
 	}

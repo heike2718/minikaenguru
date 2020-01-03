@@ -3,7 +3,7 @@
 // (c) Heike Winkelvoß
 // =====================================================
 
-package de.egladil.web.mkadmin_server.error;
+package de.egladil.web.mk_commons.exception;
 
 /**
  * ConcurrentUpdateException
