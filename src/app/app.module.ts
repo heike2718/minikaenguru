@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, ErrorHandler } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HewiNgLibModule } from 'hewi-ng-lib';
 import { MenubarModule } from 'primeng/menubar';
@@ -30,6 +31,10 @@ const routes: Routes = [
 		loadChildren: () => import('./about/about.module').then(m => m.AboutModule)
 	},
 	{
+		path: 'files',
+		loadChildren: () => import('./files/files.module').then(m => m.FilesModule)
+	},
+	{
 		path: '**',
 		redirectTo: '/home'
 	}
@@ -45,6 +50,7 @@ const routes: Routes = [
 	imports: [
 		BrowserModule,
 		BrowserAnimationsModule,
+		FormsModule,
 		RouterModule.forRoot(routes, {useHash: true}),
 		HttpClientModule,
 		HewiNgLibModule,

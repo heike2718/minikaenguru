@@ -46,6 +46,16 @@ export class NavigationComponent implements OnInit {
 				label: 'About',
 				icon: 'pi pi-question',
 				routerLink: '/about'
+			},
+			{
+				label: 'Download',
+				icon: 'pi pi-download',
+				routerLink: '/files/download'
+			},
+			{
+				label: 'Upload',
+				icon: 'pi pi-upload',
+				routerLink: '/files/upload'
 			}
 		];
 
