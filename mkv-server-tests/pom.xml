@@ -1,16 +1,14 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
+<project
+	xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>de.egladil.web</groupId>
-	<artifactId>mk-commons</artifactId>
+	<artifactId>mkv-server-tests</artifactId>
 	<version>0.0.1</version>
 	<packaging>jar</packaging>
 
-	<name>mk-commons</name>
-	<url>https://github.com/heike2718/minikaenguru</url>
-	<description>gemeinsam genutzte Funktionalität für Minikänguru</description>
 
 	<properties>
 		<maven.compiler.source>1.11</maven.compiler.source>
@@ -27,6 +25,7 @@
 		<log4j.version>2.13.0</log4j.version>
 		<mockito.version>3.1.0</mockito.version>
 	</properties>
+
 
 	<dependencyManagement>
 		<dependencies>
@@ -50,70 +49,30 @@
 	<dependencies>
 
 		<dependency>
-			<groupId>de.egladil.web</groupId>
-			<artifactId>commons-validation</artifactId>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>de.egladil.web</groupId>
-			<artifactId>commons-net</artifactId>
-		</dependency>
-
-		<!-- Quarkus START -->
-		<dependency>
-			<groupId>io.quarkus</groupId>
-			<artifactId>quarkus-hibernate-orm</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.quarkus</groupId>
-			<artifactId>quarkus-resteasy</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.quarkus</groupId>
-			<artifactId>quarkus-rest-client</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.quarkus</groupId>
-			<artifactId>quarkus-resteasy-jackson</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.resteasy</groupId>
-			<artifactId>resteasy-multipart-provider</artifactId>
-		</dependency>
-		<!-- Quarkus END -->
-
-		<dependency>
-			<groupId>org.hibernate.validator</groupId>
-			<artifactId>hibernate-validator</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.mariadb.jdbc</groupId>
-			<artifactId>mariadb-java-client</artifactId>
-		</dependency>
-
-		<!-- Test -->
-		<!-- api muss dabei sein, damit das surefire-plugin die tests findet! -->
+		<!-- Test START -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
+			<version>${junit.jupiter.version}</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
+			<version>${junit.jupiter.version}</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.junit.platform</groupId>
 			<artifactId>junit-platform-runner</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
+			<version>${junit.platform.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -129,27 +88,35 @@
 			<version>${log4j.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>${mockito.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- Test ENDE -->
 
 	</dependencies>
 
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.0</version>
-				<inherited>true</inherited>
 				<configuration>
 					<release>11</release>
 					<source>${maven.compiler.source}</source>
 					<target>${maven.compiler.target}</target>
 				</configuration>
 			</plugin>
-
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${surefire-plugin.version}</version>
+			</plugin>
 			<plugin>
 				<groupId>org.owasp</groupId>
 				<artifactId>dependency-check-maven</artifactId>
-				<version>5.0.0-M3</version>
+				<version>${dependency-check.version}</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -159,28 +126,7 @@
 					</execution>
 				</executions>
 			</plugin>
-
-			<plugin>
-				<groupId>io.quarkus</groupId>
-				<artifactId>quarkus-maven-plugin</artifactId>
-				<version>${quarkus.version}</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>build</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${surefire-plugin.version}</version>
-				<configuration>
-					<systemProperties>
-						<java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-					</systemProperties>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
+
 </project>
