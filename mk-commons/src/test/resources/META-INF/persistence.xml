@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+	version="2.1">
+
+	<persistence-unit name="mk-commons-IntegrationTest-PU" transaction-type="RESOURCE_LOCAL">
+
+	    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+		<class>de.egladil.web.mk_commons.domain.impl.AdvText</class>
+		<class>de.egladil.web.mk_commons.domain.impl.AdvVereinbarung</class>
+		<class>de.egladil.web.mk_commons.domain.impl.AuswertungDownload</class>
+		<class>de.egladil.web.mk_commons.domain.impl.Auswertungsgruppe</class>
+		<class>de.egladil.web.mk_commons.domain.impl.Dateidaten</class>
+		<class>de.egladil.web.mk_commons.domain.impl.Downloaddaten</class>
+		<class>de.egladil.web.mk_commons.domain.impl.Ereignis</class>
+		<class>de.egladil.web.mk_commons.domain.impl.IndividuellesUrkundenmotiv</class>
+		<class>de.egladil.web.mk_commons.domain.impl.Land</class>
+		<class>de.egladil.web.mk_commons.domain.impl.Lehrerdownload</class>
+		<class>de.egladil.web.mk_commons.domain.impl.Lehrerkonto</class>
+		<class>de.egladil.web.mk_commons.domain.impl.Loesungszettel</class>
+		<class>de.egladil.web.mk_commons.domain.impl.LoesungszettelRohdaten</class>
+		<class>de.egladil.web.mk_commons.domain.impl.MailqueueItem</class>
+		<class>de.egladil.web.mk_commons.domain.impl.Ort</class>
+		<class>de.egladil.web.mk_commons.domain.impl.Pacemaker</class>
+		<class>de.egladil.web.mk_commons.domain.impl.Person</class>
+		<class>de.egladil.web.mk_commons.domain.impl.Privatdownload</class>
+		<class>de.egladil.web.mk_commons.domain.impl.Privatkonto</class>
+		<class>de.egladil.web.mk_commons.domain.impl.Privatteilnahme</class>
+		<class>de.egladil.web.mk_commons.domain.impl.Schule</class>
+		<class>de.egladil.web.mk_commons.domain.impl.Schulteilnahme</class>
+		<class>de.egladil.web.mk_commons.domain.impl.TeilnahmeIdentifier</class>
+		<class>de.egladil.web.mk_commons.domain.impl.TeilnahmeIdentifierJahrDescendingComparator</class>
+		<class>de.egladil.web.mk_commons.domain.impl.Teilnehmer</class>
+		<class>de.egladil.web.mk_commons.domain.impl.Upload</class>
+		<class>de.egladil.web.mk_commons.domain.impl.UploadInfo</class>
+		<class>de.egladil.web.mk_commons.domain.impl.User</class>
+		<class>de.egladil.web.mk_commons.domain.impl.Wettbewerbsloesung</class>
+
+
+		<exclude-unlisted-classes>true</exclude-unlisted-classes>
+
+		<properties>
+		    <property name="javax.persistence.jdbc.driver" value="org.mariadb.jdbc.Driver" />
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/mkverwaltung" />
+            <property name="javax.persistence.jdbc.user" value="mkv" />
+            <property name="javax.persistence.jdbc.password" value="hwinkel" />
+			<property name="hibernate.generate_statistics" value="false" />
+			<property name="hibernate.connection.autocommit" value="false"/>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect" />
+			<property name="hibernate.show_sql" value="false"/>
+			<property name="hibernate.expand_sql" value="false"/>
+			<property name="hibernate.generate_statistics" value="false"/>
+		</properties>
+	</persistence-unit>
+</persistence>
