@@ -18,6 +18,9 @@ import de.egladil.web.commons_net.exception.SessionExpiredException;
 import de.egladil.web.commons_validation.exception.InvalidInputException;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_commons.exception.AuthException;
+import de.egladil.web.mk_commons.exception.ConcurrentUpdateException;
+import de.egladil.web.mk_commons.exception.MkRuntimeException;
 
 /**
  * MkadminExceptionMapper
@@ -65,7 +68,7 @@ public class MkadminExceptionMapper implements ExceptionMapper<Exception> {
 			return Response.status(409).entity(payload).build();
 		}
 
-		if (exception instanceof MkadminRuntimeException) {
+		if (exception instanceof MkRuntimeException) {
 
 			// wurde schon geloggt
 		} else {

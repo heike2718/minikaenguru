@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>de.egladil.web</groupId>
-	<artifactId>mkadmin-server</artifactId>
-	<version>0.2.3</version>
+	<artifactId>mkv-server</artifactId>
+	<version>0.0.1</version>
 	<packaging>jar</packaging>
 
-	<name>mkadmin-server</name>
+	<name>mkv-server</name>
 	<url>https://github.com/heike2718/minikaenguru</url>
 
 	<properties>
@@ -246,4 +246,3 @@
 		</profile>
 	</profiles>
 </project>
-

@@ -21,9 +21,9 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.OAuthClientCredentials;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mkadmin_server.error.ClientAuthException;
-import de.egladil.web.mkadmin_server.error.LogmessagePrefixes;
-import de.egladil.web.mkadmin_server.error.MkadminRuntimeException;
+import de.egladil.web.mk_commons.exception.ClientAuthException;
+import de.egladil.web.mk_commons.exception.LogmessagePrefixes;
+import de.egladil.web.mk_commons.exception.MkRuntimeException;
 import de.egladil.web.mkadmin_server.restclient.OrderAccessTokenRestClient;
 
 /**
@@ -71,7 +71,7 @@ public class ClientAccessTokenService {
 
 			String msg = "Unerwarteter Fehler beim Anfordern eines client-accessTokens: " + e.getMessage();
 			LOG.error(msg, e);
-			throw new MkadminRuntimeException(msg, e);
+			throw new MkRuntimeException(msg, e);
 		} catch (ClientAuthException e) {
 
 			// wurde schon geloggt
