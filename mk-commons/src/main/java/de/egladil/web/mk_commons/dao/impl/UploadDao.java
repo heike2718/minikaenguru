@@ -6,7 +6,7 @@ package de.egladil.web.mk_commons.dao.impl;
 
 import javax.persistence.EntityManager;
 
-import de.egladil.web.mk_commons.IUploadDao;
+import de.egladil.web.mk_commons.dao.IUploadDao;
 
 /**
 * UploadDao

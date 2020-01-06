@@ -11,8 +11,8 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import de.egladil.web.mk_commons.IUploadDao;
 import de.egladil.web.mk_commons.dao.AbstractIntegrationTest;
+import de.egladil.web.mk_commons.dao.IUploadDao;
 import de.egladil.web.mk_commons.domain.impl.Upload;
 
 /**
