@@ -9,8 +9,9 @@ import org.apache.commons.lang3.StringUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
- * UserSession
+ * UserSession soll durch die mk-commons.Session ersetzt werden!!!
  */
+@Deprecated(forRemoval = true)
 public class UserSession {
 
 	private String sessionId;

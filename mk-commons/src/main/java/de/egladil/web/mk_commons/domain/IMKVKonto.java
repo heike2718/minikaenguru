@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import de.egladil.web.mk_commons.domain.enums.MKVRolle;
+import de.egladil.web.mk_commons.domain.enums.Rolle;
 import de.egladil.web.mk_commons.domain.impl.Downloaddaten;
 import de.egladil.web.mk_commons.domain.impl.Person;
 import de.egladil.web.mk_commons.domain.impl.TeilnahmeIdentifier;
@@ -29,7 +29,7 @@ public interface IMKVKonto {
 
 	void setPerson(Person kontaktdaten);
 
-	MKVRolle getRole();
+	Rolle getRole();
 
 	/**
 	 * Kuerzel der Kindobjekte: schulzuordnungen bei Lehrerkonten, privatteilnahmen bei Privatkonten.

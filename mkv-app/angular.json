@@ -25,6 +25,7 @@
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/font-awesome/css/font-awesome.min.css",
               "src/styles.css"
             ],
             "scripts": []
@@ -121,6 +122,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "mkv-app"
+    }
+  },
+  "defaultProject": "mkv-app",
+  "cli": {
+    "defaultCollection": "@ngrx/schematics"
+  }
 }

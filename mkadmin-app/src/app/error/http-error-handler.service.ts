@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
-import { LogService, Message, WARN, ERROR } from 'hewi-ng-lib';
+import { LogService, Message, WARN, ERROR, INFO } from 'hewi-ng-lib';
 
 @Injectable(
 	{ providedIn: 'root' }
@@ -13,7 +13,7 @@ export class HttpErrorHandler {
 	handleError(error: HttpErrorResponse, context: string) {
 		if (error instanceof ErrorEvent) {
 			this.logger.error(context + ': ErrorEvent occured - ' + JSON.stringify(error));
-			throw (error);
+			// throw (error);
 		} else {
 
 			const httpError: HttpErrorResponse = error as HttpErrorResponse;
@@ -47,6 +47,9 @@ export class HttpErrorHandler {
 
 	private showServerResponseMessage(msg: Message) {
 		switch (msg.level) {
+			case INFO:
+				this.logger.debug('level INFO ist unerwartet.');
+				break;
 			case WARN:
 				this.messageService.add({ severity: 'warn', summary: msg.message });
 				break;
@@ -54,7 +57,9 @@ export class HttpErrorHandler {
 				this.messageService.add({ severity: 'error', summary: msg.message });
 				break;
 			default:
-				this.messageService.add({ severity: 'error', summary: 'Unbekanntes message.level ' + msg.level + ' vom Server bekommen.' });
+				this.messageService.add({ severity: 'error',
+					summary: 'Unbekanntes message.level ' + msg.level + ' vom Server bekommen.',
+					detail: msg.message });
 		}
 	}
 }

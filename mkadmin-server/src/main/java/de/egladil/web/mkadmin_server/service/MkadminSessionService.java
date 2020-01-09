@@ -4,11 +4,6 @@
 // =====================================================
 package de.egladil.web.mkadmin_server.service;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.nio.charset.Charset;
-import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Map;
@@ -19,7 +14,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.core.NewCookie;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.jwt.Claims;
 import org.slf4j.Logger;
@@ -32,11 +26,10 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 import de.egladil.web.commons_crypto.CryptoService;
 import de.egladil.web.commons_crypto.JWTService;
-import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.commons_net.utils.CommonHttpUtils;
 import de.egladil.web.mk_commons.exception.AuthException;
 import de.egladil.web.mk_commons.exception.LogmessagePrefixes;
-import de.egladil.web.mk_commons.exception.MkRuntimeException;
+import de.egladil.web.mk_commons.session.SessionUtils;
 import de.egladil.web.mkadmin_server.MkadminServerApp;
 import de.egladil.web.mkadmin_server.domain.UserSession;
 
@@ -46,9 +39,9 @@ import de.egladil.web.mkadmin_server.domain.UserSession;
 @ApplicationScoped
 public class MkadminSessionService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(MkadminSessionService.class);
-
 	private static final int SESSION_IDLE_TIMEOUT_MINUTES = 60;
+
+	private static final Logger LOG = LoggerFactory.getLogger(MkadminSessionService.class);
 
 	private Map<String, UserSession> sessions = new ConcurrentHashMap<>();
 
@@ -62,7 +55,7 @@ public class MkadminSessionService {
 
 		try {
 
-			DecodedJWT decodedJWT = jwtService.verify(jwt, getPublicKey());
+			DecodedJWT decodedJWT = jwtService.verify(jwt, SessionUtils.getPublicKey());
 
 			String uuid = decodedJWT.getSubject();
 
@@ -86,7 +79,7 @@ public class MkadminSessionService {
 			String sesionId = new String(sessionIdBase64);
 
 			UserSession userSession = UserSession.create(sesionId, CommonHttpUtils.createUserIdReference(), uuid);
-			userSession.setExpiresAt(getSessionTimeout());
+			userSession.setExpiresAt(SessionUtils.getExpiresAt(SESSION_IDLE_TIMEOUT_MINUTES));
 
 			sessions.put(sesionId, userSession);
 
@@ -120,41 +113,6 @@ public class MkadminSessionService {
 
 		LOG.debug("Erzeugen Cookie mit name={}", name);
 
-		// @formatter:off
-		NewCookie sessionCookie = new NewCookie(name,
-			sessionId,
-			"/", // path
-			null, // domain muss null sein, wird vom Browser anhand des restlichen Responses abgeleitet. Sonst wird das Cookie nicht gesetzt.
-			1,  // version
-			null, // comment
-			7200, // expires (minutes)
-			null,
-			true, // secure
-			true  // httpOnly
-			);
-		// @formatter:on
-
-		return sessionCookie;
-	}
-
-	private byte[] getPublicKey() {
-
-		try (InputStream in = getClass().getResourceAsStream("/META-INF/authprov_public_key.pem");
-			StringWriter sw = new StringWriter()) {
-
-			IOUtils.copy(in, sw, Charset.forName("UTF-8"));
-
-			return sw.toString().getBytes();
-		} catch (IOException e) {
-
-			throw new MkRuntimeException("Konnte jwt-public-key nicht lesen: " + e.getMessage());
-		}
-
-	}
-
-	private long getSessionTimeout() {
-
-		return CommonTimeUtils.getInterval(CommonTimeUtils.now(), SESSION_IDLE_TIMEOUT_MINUTES,
-			ChronoUnit.MINUTES).getEndTime().getTime();
+		return SessionUtils.createSessionCookie(name, sessionId);
 	}
 }

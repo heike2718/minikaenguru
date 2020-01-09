@@ -3,7 +3,16 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  version: '0.0.1',
+  envName: 'DEV',
+  apiUrl: 'http://localhost:9500', // hier darf in dev kein mkv-server stehen, weil der Pfad sonst nicht gefunden wird
+  authApiUrl: 'http://localhost:9000',
+  authUrl: 'http://localhost:4300',
+  assetsUrl: 'assets',
+  consoleLogActive: true,
+  serverLogActive: true,
+  loglevel: 2
 };
 
 /*

@@ -27,10 +27,10 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.commons_net.utils.CommonHttpUtils;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_commons.clientauth.IClientAccessTokenService;
 import de.egladil.web.mk_commons.exception.AuthException;
 import de.egladil.web.mkadmin_server.MkadminServerApp;
 import de.egladil.web.mkadmin_server.domain.UserSession;
-import de.egladil.web.mkadmin_server.service.ClientAccessTokenService;
 import de.egladil.web.mkadmin_server.service.MkadminSessionService;
 
 /**
@@ -53,7 +53,7 @@ public class MkadminSessionResource {
 	String loginRedirectUrl;
 
 	@Inject
-	ClientAccessTokenService clientAccessTokenService;
+	IClientAccessTokenService clientAccessTokenService;
 
 	@Inject
 	MkadminSessionService sessionService;

@@ -35,7 +35,7 @@ import de.egladil.web.mk_commons.domain.IDownload;
 import de.egladil.web.mk_commons.domain.IMKVKonto;
 import de.egladil.web.mk_commons.domain.IMkEntity;
 import de.egladil.web.mk_commons.domain.ITeilnahmeIdentifierProvider;
-import de.egladil.web.mk_commons.domain.enums.MKVRolle;
+import de.egladil.web.mk_commons.domain.enums.Rolle;
 import de.egladil.web.mk_commons.exception.MkRuntimeException;
 
 /**
@@ -182,9 +182,9 @@ public class Lehrerkonto implements IMkEntity, IMKVKonto {
 	}
 
 	@Override
-	public MKVRolle getRole() {
+	public Rolle getRole() {
 
-		return MKVRolle.LEHRER;
+		return Rolle.LEHRER;
 	}
 
 	@Override

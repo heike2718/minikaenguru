@@ -85,4 +85,9 @@ public abstract class BaseDao implements IBaseDao {
 		return true;
 	}
 
+	protected EntityManager getEm() {
+
+		return em;
+	}
+
 }

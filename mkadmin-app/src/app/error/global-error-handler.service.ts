@@ -1,7 +1,7 @@
 import { Injectable, ErrorHandler, Injector, NgZone } from '@angular/core';
 import { LogService } from 'hewi-ng-lib';
 import { LogPublishersService } from '../logging/log-publishers.service';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 
@@ -22,7 +22,6 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 		const logPublishersService = this.injector.get(LogPublishersService);
 		this.logService = this.injector.get(LogService);
 
-		this.logService.initLevel(environment.loglevel);
 		this.logService.registerPublishers(logPublishersService.publishers);
 		this.logService.info('logging initialized: loglevel=' + environment.loglevel);
 
@@ -45,7 +44,7 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 		this.ngZone.run(() => this.messageService.add({ severity: 'error', summary: message }));
 
 		if (error instanceof HttpErrorResponse) {
-			this.logService.debug('das sollte nicht vorkommen, da diese Errors von einem der services behandelt werden');
+			this.logService.debug('HttpErrorResponse sollte nicht vorkommen, da diese Errors vom HttpErrorService behandelt werden.');
 		} else {
 			// try sending an Error-Log to the Server
 			// TODO: hier eine idReference mitsenden analog zu checklistenapp und profil-app
