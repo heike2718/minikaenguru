@@ -1,8 +1,8 @@
 import {
-  ActionReducer,
-  ActionReducerMap,
-  createFeatureSelector,
-  createSelector
+    ActionReducer,
+    ActionReducerMap,
+    createFeatureSelector,
+    createSelector
 } from '@ngrx/store';
 
 export const authFeatureKey = 'auth';

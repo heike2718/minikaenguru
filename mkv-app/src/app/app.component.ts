@@ -8,39 +8,39 @@ import { noop } from 'rxjs';
 import * as AuthActions from './auth/auth.actions';
 
 @Component({
-  selector: 'mkv-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+    selector: 'mkv-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'mkv-app';
+    title = 'mkv-app';
 
-  constructor(private authService: AuthService, private store: Store<fromAppState.AppState>, private jwtService: JWTService) { }
+    constructor(private authService: AuthService, private store: Store<fromAppState.AppState>, private jwtService: JWTService) { }
 
-  ngOnInit() {
+    ngOnInit() {
 
-    // checken, ob das ein redirect vom authprovider war
-    const hash = window.location.hash;
-    if (hash && hash.indexOf('idToken') >= 0) {
-      const authResult = this.jwtService.parseHash(hash);
-      this.fetchSession(authResult);
-    } else {
+        // checken, ob das ein redirect vom authprovider war
+        const hash = window.location.hash;
+        if (hash && hash.indexOf('idToken') >= 0) {
+            const authResult = this.jwtService.parseHash(hash);
+            this.fetchSession(authResult);
+        } else {
 
-      // schauen, ob es noch eine session im localStorage gibt (das ist bei refresh der Fall
+            // schauen, ob es noch eine session im localStorage gibt (das ist bei refresh der Fall)
+        }
     }
-  }
 
-  private fetchSession(authResult: AuthResult) {
+    private fetchSession(authResult: AuthResult) {
 
-    this.authService.createSession(authResult).pipe(
-      tap(session => {
+        this.authService.createSession(authResult).pipe(
+            tap(session => {
 
-        this.store.dispatch(AuthActions.createSession({ session }));
+                this.store.dispatch(AuthActions.createSession({ session }));
 
-      })
-    ).subscribe(
-      noop,
-      () => alert('login Failed')
-    );
-  }
+            })
+        ).subscribe(
+            noop,
+            () => alert('login Failed')
+        );
+    }
 }

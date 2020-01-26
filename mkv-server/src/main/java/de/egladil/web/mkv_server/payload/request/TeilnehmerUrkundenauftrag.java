@@ -17,9 +17,6 @@ import de.egladil.web.mkv_server.validation.annotations.ValidTeilnehmerUrkundena
 @ValidTeilnehmerUrkundenauftrag
 public class TeilnehmerUrkundenauftrag {
 
-	/* serialVersionUID */
-	private static final long serialVersionUID = 1L;
-
 	@NotNull
 	private String farbschemaName;
 

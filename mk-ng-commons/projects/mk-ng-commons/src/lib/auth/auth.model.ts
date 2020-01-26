@@ -1,7 +1,8 @@
 
 
 export interface User {
-	rolle: string;
+	fullName: string;
+	rolle: Rolle;
 }
 
 export interface Session {
@@ -18,5 +19,5 @@ export class StorageKey {
 	}
 }
 
-export type Roles = 'ADMIN' | 'LEHRER' | 'PRIVAT';
+export type Rolle = 'ADMIN' | 'LEHRER' | 'PRIVAT';
 

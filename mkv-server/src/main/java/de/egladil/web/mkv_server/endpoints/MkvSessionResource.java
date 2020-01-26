@@ -27,10 +27,10 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.commons_net.utils.CommonHttpUtils;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_commons.clientauth.IClientAccessTokenService;
 import de.egladil.web.mk_commons.session.Session;
 import de.egladil.web.mk_commons.session.SessionUtils;
 import de.egladil.web.mkv_server.MkvServerApp;
+import de.egladil.web.mkv_server.duplicated.clientauth.IMkvClientAccessTokenService;
 import de.egladil.web.mkv_server.session.MkvSessionService;
 
 /**
@@ -59,8 +59,11 @@ public class MkvSessionResource {
 
 	// wegen https://github.com/quarkusio/quarkus/pull/6411 muss ich leider ersteinmal alle CDIs hierher verschieben und mkvadmin so
 	// lange auf Halde liegen lassen :(
+	// @Inject
+	// IClientAccessTokenService clientAccessTokenService;
+
 	@Inject
-	IClientAccessTokenService clientAccessTokenService;
+	IMkvClientAccessTokenService clientAccessTokenService;
 
 	@Inject
 	MkvSessionService sessionService;

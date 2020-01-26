@@ -6,10 +6,10 @@ import * as fromAuth from './reducers';
 
 
 @NgModule({
-  declarations: [],
-  imports: [
-	CommonModule,
-	StoreModule.forFeature(fromAuth.authFeatureKey, fromAuth.reducers)
-  ]
+    declarations: [],
+    imports: [
+        CommonModule,
+        StoreModule.forFeature(fromAuth.authFeatureKey, fromAuth.reducers)
+    ]
 })
 export class AuthModule { }

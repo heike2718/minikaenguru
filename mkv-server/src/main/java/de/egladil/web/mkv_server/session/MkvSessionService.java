@@ -15,6 +15,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.microprofile.jwt.Claims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,13 +27,13 @@ import de.egladil.web.commons_crypto.CryptoService;
 import de.egladil.web.commons_crypto.JWTService;
 import de.egladil.web.commons_net.exception.SessionExpiredException;
 import de.egladil.web.commons_net.time.CommonTimeUtils;
-import de.egladil.web.mk_commons.dao.IUserDao;
 import de.egladil.web.mk_commons.domain.impl.User;
 import de.egladil.web.mk_commons.exception.AuthException;
 import de.egladil.web.mk_commons.exception.LogmessagePrefixes;
 import de.egladil.web.mk_commons.session.Session;
 import de.egladil.web.mk_commons.session.SessionUser;
 import de.egladil.web.mk_commons.session.SessionUtils;
+import de.egladil.web.mkv_server.duplicated.dao.IMkvUserDao;
 
 /**
  * MkvSessionService
@@ -46,8 +47,11 @@ public class MkvSessionService {
 
 	private Map<String, Session> sessions = new ConcurrentHashMap<>();
 
+	// @Inject
+	// IUserDao userDao;
+
 	@Inject
-	IUserDao userDao;
+	IMkvUserDao userDao;
 
 	@Inject
 	CryptoService cryptoService;
@@ -73,18 +77,20 @@ public class MkvSessionService {
 				throw new AuthException();
 			}
 
+			String fullName = decodedJWT.getClaim(Claims.full_name.name()).asString();
+
 			User user = optUser.get();
 			String sessionId = createSessionId();
 			String idReference = SessionUtils.createIdReference();
 
-			SessionUser sessionUser = SessionUser.create(sessionId, user.getRolle().name(), idReference);
+			SessionUser sessionUser = SessionUser.create(uuid, user.getRolle().name(), fullName, idReference);
 			Session session = Session.create(sessionId, sessionUser);
 			session.setExpiresAt(SessionUtils.getExpiresAt(SESSION_IDLE_TIMEOUT_MINUTES));
 
 			sessions.put(sessionId, session);
 
 			// TODO hier in die DB das Login-Ereignis eintragen
-			LOG.info("User {} eingeloggt", abbreviatedUuid);
+			LOG.info("User {} eingeloggt, idReference={}", abbreviatedUuid, idReference);
 
 			return session;
 		} catch (TokenExpiredException e) {

@@ -8,48 +8,48 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 
 @Injectable({
-	providedIn: 'root'
+    providedIn: 'root'
 })
 export class GlobalErorHandlerService implements ErrorHandler {
 
 
-	private logService: LogService;
+    private logService: LogService;
 
-	private messagesService: MessagesService;
+    private messagesService: MessagesService;
 
-	constructor(private injector: Injector, private readonly ngZone: NgZone) {
+    constructor(private injector: Injector, private readonly ngZone: NgZone) {
 
-		const logPublishersService = this.injector.get(LogPublishersService);
-		this.logService = this.injector.get(LogService);
+        const logPublishersService = this.injector.get(LogPublishersService);
+        this.logService = this.injector.get(LogService);
 
-		this.logService.registerPublishers(logPublishersService.publishers);
-		this.logService.info('logging initialized: loglevel=' + environment.loglevel);
+        this.logService.registerPublishers(logPublishersService.publishers);
+        this.logService.info('logging initialized: loglevel=' + environment.loglevel);
 
-		this.messagesService = this.injector.get(MessagesService);
-		this.logService.info('MessagesService initialized.');
-	}
+        this.messagesService = this.injector.get(MessagesService);
+        this.logService.info('MessagesService initialized.');
+    }
 
 
-	handleError(error: any): void {
+    handleError(error: any): void {
 
-		let message = 'Es ist ein unerwarteter Fehler aufgetreten';
+        let message = 'Es ist ein unerwarteter Fehler aufgetreten';
 
-		if (error.message) {
-			message += ' ' + error.message;
-		}
+        if (error.message) {
+            message += ' ' + error.message;
+        }
 
-		// ErrorHandler läuft außerhalb der Angular-Zone. message ist daher erst bei der nächsten Aktualisierung der Komponente sichtbar.
-		// Das Anzeigen der Message muss daher mit ngZone.run() getriggert werden.
-		// siehe https://t2informatik.de/blog/softwareentwicklung/fehlerbehandlung-in-angular-anwendungen/
-		this.ngZone.run(() => this.messagesService.error(message));
+        // ErrorHandler läuft außerhalb der Angular-Zone. message ist daher erst bei der nächsten Aktualisierung der Komponente sichtbar.
+        // Das Anzeigen der Message muss daher mit ngZone.run() getriggert werden.
+        // siehe https://t2informatik.de/blog/softwareentwicklung/fehlerbehandlung-in-angular-anwendungen/
+        this.ngZone.run(() => this.messagesService.error(message));
 
-		if (error instanceof HttpErrorResponse) {
-			this.logService.debug('HttpErrorResponse sollte nicht vorkommen, da diese Errors vom HttpErrorService behandelt werden.');
-		} else {
-			// try sending an Error-Log to the Server
-			// TODO: hier eine idReference mitsenden analog zu checklistenapp und profil-app
-			this.logService.error('mkadmin-app - ' + message);
-		}
-	}
+        if (error instanceof HttpErrorResponse) {
+            this.logService.debug('HttpErrorResponse sollte nicht vorkommen, da diese Errors vom HttpErrorService behandelt werden.');
+        } else {
+            // try sending an Error-Log to the Server
+            // TODO: hier eine idReference mitsenden analog zu checklistenapp und profil-app
+            this.logService.error('mkadmin-app - ' + message);
+        }
+    }
 }
 

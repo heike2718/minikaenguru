@@ -18,9 +18,6 @@ import de.egladil.web.mkv_server.validation.annotations.ValidSchuleUrkundenauftr
 @ValidSchuleUrkundenauftrag
 public class SchuleUrkundenauftrag {
 
-	/* serialVersionUID */
-	private static final long serialVersionUID = 1L;
-
 	@NotNull
 	private String farbschemaName;
 
