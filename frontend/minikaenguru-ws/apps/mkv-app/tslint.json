@@ -1,0 +1,7 @@
+{
+  "extends": "../../tslint.json",
+  "rules": {
+    "directive-selector": [true, "attribute", "mkv", "camelCase"],
+    "component-selector": [true, "element", "mkv", "kebab-case"]
+  }
+}

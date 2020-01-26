@@ -1,0 +1,191 @@
+{
+  "version": 1,
+  "projects": {
+    "mkv-app": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "apps/mkv-app",
+      "sourceRoot": "apps/mkv-app/src",
+      "prefix": "mkv",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/mkv-app",
+            "index": "apps/mkv-app/src/index.html",
+            "main": "apps/mkv-app/src/main.ts",
+            "polyfills": "apps/mkv-app/src/polyfills.ts",
+            "tsConfig": "apps/mkv-app/tsconfig.app.json",
+            "aot": false,
+            "assets": [
+              "apps/mkv-app/src/favicon.ico",
+              "apps/mkv-app/src/assets"
+            ],
+            "styles": ["apps/mkv-app/src/styles.css"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/mkv-app/src/environments/environment.ts",
+                  "with": "apps/mkv-app/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "mkv-app:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "mkv-app:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "mkv-app:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/mkv-app/tsconfig.app.json",
+              "apps/mkv-app/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/mkv-app/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/mkv-app/jest.config.js",
+            "tsConfig": "apps/mkv-app/tsconfig.spec.json",
+            "setupFile": "apps/mkv-app/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "mkv-app-e2e": {
+      "root": "apps/mkv-app-e2e",
+      "sourceRoot": "apps/mkv-app-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/mkv-app-e2e/cypress.json",
+            "tsConfig": "apps/mkv-app-e2e/tsconfig.e2e.json",
+            "devServerTarget": "mkv-app:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "mkv-app:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["apps/mkv-app-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/mkv-app-e2e/**"]
+          }
+        }
+      }
+    },
+    "schulkatalog-api": {
+      "projectType": "library",
+      "root": "libs/schulkatalog/api",
+      "sourceRoot": "libs/schulkatalog/api/src",
+      "prefix": "minikaenguru-ws",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/schulkatalog/api/tsconfig.lib.json",
+              "libs/schulkatalog/api/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/schulkatalog/api/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/schulkatalog/api/jest.config.js",
+            "tsConfig": "libs/schulkatalog/api/tsconfig.spec.json",
+            "setupFile": "libs/schulkatalog/api/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "schulkatalog-domain": {
+      "projectType": "library",
+      "root": "libs/schulkatalog/domain",
+      "sourceRoot": "libs/schulkatalog/domain/src",
+      "prefix": "minikaenguru-ws",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/schulkatalog/domain/tsconfig.lib.json",
+              "libs/schulkatalog/domain/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/schulkatalog/domain/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/schulkatalog/domain/jest.config.js",
+            "tsConfig": "libs/schulkatalog/domain/tsconfig.spec.json",
+            "setupFile": "libs/schulkatalog/domain/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    }
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/angular"
+  },
+  "schematics": {
+    "@nrwl/angular:application": {
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "unitTestRunner": "jest"
+    }
+  },
+  "defaultProject": "mkv-app"
+}

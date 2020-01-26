@@ -1,0 +1,28 @@
+{
+  "npmScope": "minikaenguru-ws",
+  "implicitDependencies": {
+    "angular.json": "*",
+    "package.json": {
+      "dependencies": "*",
+      "devDependencies": "*"
+    },
+    "tsconfig.json": "*",
+    "tslint.json": "*",
+    "nx.json": "*"
+  },
+  "projects": {
+    "mkv-app": {
+      "tags": ["domain:mkv-app","type:app"]
+    },
+    "mkv-app-e2e": {
+      "tags": [],
+      "implicitDependencies": ["mkv-app"]
+    },
+    "schulkatalog-api": {
+      "tags": ["domain:schulkatalog", "domain:schulkatalog/api", "type:api"]
+    },
+    "schulkatalog-domain": {
+      "tags": ["domain:schulkatalog", "type:domain-logic"]
+    }
+  }
+}
