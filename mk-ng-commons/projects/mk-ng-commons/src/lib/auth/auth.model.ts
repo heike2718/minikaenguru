@@ -11,7 +11,7 @@ export interface Session {
 }
 
 export class StorageKey {
-	constructor(public prefix: string, public name: string) { }
+	constructor(readonly prefix: string, readonly name: string) { }
 
 
 	public getValue() {
