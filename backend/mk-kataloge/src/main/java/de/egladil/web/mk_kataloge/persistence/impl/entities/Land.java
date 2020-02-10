@@ -1,9 +1,9 @@
 // =====================================================
-// Projekt: mk-commons
+// Projekt: Project: mk-kataloge
 // (c) Heike Winkelvoß
 // =====================================================
 
-package de.egladil.web.mk_commons.domain.impl;
+package de.egladil.web.mk_kataloge.persistence.impl.entities;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,14 +24,12 @@ import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import de.egladil.web.mk_commons.domain.IMkEntity;
-
 /**
  * Land
  */
 @Entity
 @Table(name = "kat_laender")
-public class Land implements IMkEntity {
+public class Land {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,7 +53,7 @@ public class Land implements IMkEntity {
 	@Column(name = "FREIGESCHALTET")
 	private boolean freigeschaltet;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "LAND", referencedColumnName = "ID", nullable = false)
 	private List<Ort> orte = new ArrayList<>();
 
@@ -109,15 +107,7 @@ public class Land implements IMkEntity {
 
 	public Optional<Ort> findOrt(final String ortkuerzel) {
 
-		for (final Ort ort : orte) {
-
-			if (ort.getKuerzel().equals(ortkuerzel)) {
-
-				return Optional.of(ort);
-			}
-
-		}
-		return Optional.empty();
+		return orte.stream().filter(o -> ortkuerzel.equals(o.getKuerzel())).findFirst();
 	}
 
 	public String getKuerzel() {

@@ -2,7 +2,7 @@
 // Project: mk-commons
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_commons.payload.response;
+package de.egladil.web.mk_kataloge.domain;
 
 /**
  * Katalogtyp

@@ -2,7 +2,7 @@
 // Project: mkv-server
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mkv_server.duplicated.dao;
+package de.egladil.web.mkv_server.duplicated.dao.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import de.egladil.web.mk_commons.domain.impl.User;
+import de.egladil.web.mkv_server.duplicated.dao.IMkvUserDao;
 
 /**
  * MkvUserDao
