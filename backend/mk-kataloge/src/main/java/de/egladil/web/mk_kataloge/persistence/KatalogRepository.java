@@ -7,8 +7,6 @@ package de.egladil.web.mk_kataloge.persistence;
 import java.util.List;
 
 import de.egladil.web.mk_kataloge.domain.InverseKatalogItem;
-import de.egladil.web.mk_kataloge.domain.KatalogItem;
-import de.egladil.web.mk_kataloge.domain.Katalogtyp;
 
 /**
  * KatalogRepository
@@ -16,25 +14,56 @@ import de.egladil.web.mk_kataloge.domain.Katalogtyp;
 public interface KatalogRepository {
 
 	/**
-	 * Läd die Länder, die angezeigt werden können, aus der Datenbank.
+	 * Gibt alle Orte zurück, deren Name mit searchTerm beginnt.
 	 *
-	 * @return
-	 */
-	List<KatalogItem> loadLaender();
-
-	/**
-	 * @param  landKuerzel
-	 * @return             List
-	 */
-	List<KatalogItem> loadOrte(String landKuerzel);
-
-	/**
-	 * Gibt die KatalogItems zurück, deren Name mit searchTerm beginnt.
-	 *
-	 * @param  typ
 	 * @param  searchTerm
 	 * @return            List
 	 */
-	List<InverseKatalogItem> findKatalogItems(Katalogtyp typ, String searchTerm);
+	List<InverseKatalogItem> findOrte(String searchTerm);
+
+	/**
+	 * Gibt alle Orte im Land mit dem kuerzel landKuerzel zurück, deren Name mit searchTerm beginnt.
+	 *
+	 * @param  landKuerzel
+	 *                     String
+	 * @param  searchTerm
+	 *                     String
+	 * @return             List
+	 */
+	List<InverseKatalogItem> findOrteInLand(String landKuerzel, String searchTerm);
+
+	/**
+	 * Gibt alle Schulen im Ort mit dem kuerzel ortKuerzel zurück, deren Name mit searchTerm beginnt.
+	 *
+	 * @param  ortKuerzel
+	 *                    String
+	 * @param  searchTerm
+	 *                    String
+	 * @return            List
+	 */
+	List<InverseKatalogItem> findSchulenInOrt(String ortKuerzel, String searchTerm);
+
+	/**
+	 * Läd die Länder mit der Anzahl der Orte.
+	 *
+	 * @return List
+	 */
+	List<InverseKatalogItem> loadLaenderInverse();
+
+	/**
+	 * Läd alle Schulen im Ort mit dem kuerzel ortKuerzel.
+	 *
+	 * @param  ortKuerzel
+	 * @return            List
+	 */
+	List<InverseKatalogItem> loadSchulenInOrt(String ortKuerzel);
+
+	/**
+	 * Läd alle Orte im Land mit dem kuerzel landKuerzel.
+	 *
+	 * @param  landKuerzel
+	 * @return             List
+	 */
+	List<InverseKatalogItem> loadOrteInLand(String landKuerzel);
 
 }

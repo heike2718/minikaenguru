@@ -21,6 +21,7 @@ public class OrtInverseToInverseKatalogItemMapper implements Function<OrtInverse
 			ort.getName());
 
 		result.setParent(InverseKatalogItem.createWithTypKuerzelName(Katalogtyp.LAND, ort.getLandKuerzel(), ort.getLandName()));
+		result.setAnzahlKinder(ort.getAnzahlSchulen());
 
 		return result;
 	}

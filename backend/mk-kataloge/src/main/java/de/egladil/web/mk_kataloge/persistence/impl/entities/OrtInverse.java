@@ -32,6 +32,9 @@ public class OrtInverse {
 	@Column(name = "LAND_KUERZEL")
 	private String landKuerzel;
 
+	@Column(name = "ANZAHL_SCHULEN")
+	private int anzahlSchulen;
+
 	/**
 	 *
 	 */
@@ -87,6 +90,16 @@ public class OrtInverse {
 	public void setLandKuerzel(final String landKuerzel) {
 
 		this.landKuerzel = landKuerzel;
+	}
+
+	public int getAnzahlSchulen() {
+
+		return anzahlSchulen;
+	}
+
+	public void setAnzahlSchulen(final int anzahlSchulen) {
+
+		this.anzahlSchulen = anzahlSchulen;
 	}
 
 }

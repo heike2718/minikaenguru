@@ -3,6 +3,7 @@ export interface InverseKatalogItem {
 	readonly kuerzel: string;
 	readonly name: string;
 	readonly parent: InverseKatalogItem;
+	readonly anzahlKinder: number;
 }
 
 

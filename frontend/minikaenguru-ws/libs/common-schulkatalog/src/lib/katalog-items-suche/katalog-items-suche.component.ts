@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Observable, BehaviorSubject, Subject } from 'rxjs';
 import { InverseKatalogItem, Katalogtyp } from '../domain/entities';
 import { KatalogService } from '../katalog.service';
@@ -12,11 +12,27 @@ import { throws } from 'assert';
 export class KatalogItemsSucheComponent implements OnInit {
 
   // todo: als Input-Property übergeben!!!!
-  private katalogtyp: Katalogtyp = 'ORT';
+
+  @Input()
+  typ: string;
+  
   katalogItems$: Observable<InverseKatalogItem[]>;
   searchTerm: BehaviorSubject<string>;
 
-  constructor(private katalogService: KatalogService) { }
+  private katalogtyp: Katalogtyp = 'ORT';
+
+  constructor(private katalogService: KatalogService) { 
+
+    if (this.typ === 'LAND') {
+      this.katalogtyp = 'LAND';
+    }
+    if (this.typ === 'ORT') {
+      this.katalogtyp = 'ORT';
+    }
+    if (this.typ === 'SCHULE') {
+      this.katalogtyp = 'SCHULE';
+    }
+  }
 
   ngOnInit() {
 

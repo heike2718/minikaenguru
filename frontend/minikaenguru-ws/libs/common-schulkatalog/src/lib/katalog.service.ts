@@ -37,14 +37,14 @@ export class KatalogService {
     return terms.pipe(
       debounceTime(400),
       distinctUntilChanged(),
-      switchMap(term => this.searchEntries(url, term))
+      switchMap(term => this.searchEntries(typ, url, term))
     );
   }
 
 
-  private searchEntries(url: string, term: string): Observable<InverseKatalogItem[]> {
+  private searchEntries(typ: Katalogtyp, url: string, term: string): Observable<InverseKatalogItem[]> {
 
-    if (term.length === 0) {
+    if (term.length === 0 && typ !== 'LAND') {
       return empty();
     }
 

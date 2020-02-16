@@ -3,6 +3,6 @@
 
 <ul>
   <li *ngFor="let item of katalogItems$ | async">
-    {{item.name}} <span *ngIf="item.parent">({{item.parent.name}})</span>
+    {{item.name}} <span *ngIf="item.parent">({{item.parent.name}})</span>  <span class="badge badge-dark">{{item.anzahlKinder}}</span>
   </li>
 </ul>
