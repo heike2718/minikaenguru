@@ -1,0 +1,8 @@
+<input
+    (keyup)="searchTerm.next($event.target.value)">
+
+<ul>
+  <li *ngFor="let item of katalogItems$ | async">
+    {{item.name}} <span *ngIf="item.parent">({{item.parent.name}})</span>
+  </li>
+</ul>

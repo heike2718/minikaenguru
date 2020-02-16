@@ -29,12 +29,12 @@ import de.egladil.web.mk_kataloge.persistence.KatalogRepository;
 public class KatalogResource {
 
 	@Inject
-	KatalogRepository katalogFacade;
+	KatalogRepository katalogRepository;
 
 	@GET
 	public Response getLaender() {
 
-		List<KatalogItem> laender = katalogFacade.loadLaender();
+		List<KatalogItem> laender = katalogRepository.loadLaender();
 
 		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.info("OK"), laender);
 
@@ -45,7 +45,7 @@ public class KatalogResource {
 	@Path("/{landKuerzel}/orte")
 	public Response getOrte(@PathParam(value = "landKuerzel") final String landKuerzel) {
 
-		List<KatalogItem> orte = katalogFacade.loadOrte(landKuerzel);
+		List<KatalogItem> orte = katalogRepository.loadOrte(landKuerzel);
 
 		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.info("OK"), orte);
 

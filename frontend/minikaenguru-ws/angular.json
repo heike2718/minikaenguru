@@ -24,7 +24,8 @@
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/font-awesome/css/font-awesome.min.css",
-              "apps/mkv-app/src/styles.css"],
+              "apps/mkv-app/src/styles.css"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -172,6 +173,141 @@
             "jestConfig": "libs/schulkatalog/domain/jest.config.js",
             "tsConfig": "libs/schulkatalog/domain/tsconfig.spec.json",
             "setupFile": "libs/schulkatalog/domain/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "common-schulkatalog": {
+      "projectType": "library",
+      "root": "libs/common-schulkatalog",
+      "sourceRoot": "libs/common-schulkatalog/src",
+      "prefix": "minikaenguru-ws",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/common-schulkatalog/tsconfig.lib.json",
+              "libs/common-schulkatalog/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/common-schulkatalog/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/common-schulkatalog/jest.config.js",
+            "tsConfig": "libs/common-schulkatalog/tsconfig.spec.json",
+            "setupFile": "libs/common-schulkatalog/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "shared-util-messages": {
+      "projectType": "library",
+      "root": "libs/shared/util-messages",
+      "sourceRoot": "libs/shared/util-messages/src",
+      "prefix": "minikaenguru-ws",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/util-messages/tsconfig.lib.json",
+              "libs/shared/util-messages/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/util-messages/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/util-messages/jest.config.js",
+            "tsConfig": "libs/shared/util-messages/tsconfig.spec.json",
+            "setupFile": "libs/shared/util-messages/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "shared-util-logging": {
+      "projectType": "library",
+      "root": "libs/shared/util-logging",
+      "sourceRoot": "libs/shared/util-logging/src",
+      "prefix": "minikaenguru-ws",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/util-logging/tsconfig.lib.json",
+              "libs/shared/util-logging/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/shared/util-logging/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/util-logging/jest.config.js",
+            "tsConfig": "libs/shared/util-logging/tsconfig.spec.json",
+            "setupFile": "libs/shared/util-logging/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "common-messages": {
+      "projectType": "library",
+      "root": "libs/common-messages",
+      "sourceRoot": "libs/common-messages/src",
+      "prefix": "minikaenguru-ws",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/common-messages/tsconfig.lib.json",
+              "libs/common-messages/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/common-messages/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/common-messages/jest.config.js",
+            "tsConfig": "libs/common-messages/tsconfig.spec.json",
+            "setupFile": "libs/common-messages/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
+    },
+    "common-logging": {
+      "projectType": "library",
+      "root": "libs/common-logging",
+      "sourceRoot": "libs/common-logging/src",
+      "prefix": "minikaenguru-ws",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/common-logging/tsconfig.lib.json",
+              "libs/common-logging/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/common-logging/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/common-logging/jest.config.js",
+            "tsConfig": "libs/common-logging/tsconfig.spec.json",
+            "setupFile": "libs/common-logging/src/test-setup.ts"
           }
         }
       },
