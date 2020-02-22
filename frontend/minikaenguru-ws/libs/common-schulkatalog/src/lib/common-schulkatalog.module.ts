@@ -4,15 +4,24 @@ import { HttpClientModule } from '@angular/common/http';
 import { KatalogItemsSucheComponent } from './katalog-items-suche/katalog-items-suche.component';
 import { SchulkatalogConfig, SchulkatalogConfigService } from './configuration/schulkatalog-config';
 import { CommonMessagesModule } from '@minikaenguru-ws/common-messages';
+import { KatalogRoutingModule } from './katalog-routing.module';
+import { SchulkatalogComponent } from './schulkatalog/schulkatalog.component';
+import { KatalogItemComponent } from './katalog-item/katalog-item.component';
 
 @NgModule({
   imports: [
     CommonModule,
     HttpClientModule,
-    CommonMessagesModule
+    CommonMessagesModule,
+    KatalogRoutingModule
   ],
-  declarations: [KatalogItemsSucheComponent],
-  exports: [KatalogItemsSucheComponent]
+  declarations: [
+    KatalogItemsSucheComponent,
+    SchulkatalogComponent,
+    KatalogItemComponent],
+  exports: [
+    SchulkatalogComponent
+  ]
 })
 export class CommonSchulkatalogModule {
 

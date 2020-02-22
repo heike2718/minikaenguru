@@ -1,4 +1,7 @@
 export const environment = {
+  envName: 'PROD',
   production: true,
-  katalogApiUrl: 'http://localhost:9700/mk-kataloge-api' // TODO
+  katalogApiUrl: 'http://localhost:9700/mk-kataloge-api', // TODO,
+  apiUrl: 'fehlt momentan noch',
+  version: '1.0.0'
 };

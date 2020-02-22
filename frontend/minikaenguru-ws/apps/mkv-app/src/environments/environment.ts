@@ -3,8 +3,11 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
+  envName: 'DEV',
   production: false,
-  katalogApiUrl: 'http://localhost:9700/mk-kataloge-api'
+  katalogApiUrl: 'http://localhost:9700/mk-kataloge-api',
+  apiUrl: 'fehlt momentan noch',
+  version: '1.0.0'
 };
 
 /*

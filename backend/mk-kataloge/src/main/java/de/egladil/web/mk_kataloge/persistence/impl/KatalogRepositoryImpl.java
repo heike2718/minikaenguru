@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_kataloge.persistence.impl;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import de.egladil.web.mk_kataloge.domain.InverseKatalogItem;
+import de.egladil.web.mk_kataloge.domain.InverseKatalogItemNameComparator;
 import de.egladil.web.mk_kataloge.persistence.KatalogRepository;
 import de.egladil.web.mk_kataloge.persistence.impl.entities.LandInverse;
 import de.egladil.web.mk_kataloge.persistence.impl.entities.LandToInverseKatalogItemMapper;
@@ -48,7 +50,9 @@ public class KatalogRepositoryImpl implements KatalogRepository {
 
 		List<LandInverse> trefferliste = query.getResultList();
 
-		return trefferliste.stream().map(o -> mapper.apply(o)).collect(Collectors.toList());
+		List<InverseKatalogItem> laender = trefferliste.stream().map(o -> mapper.apply(o)).collect(Collectors.toList());
+		Collections.sort(laender, new InverseKatalogItemNameComparator());
+		return laender;
 	}
 
 	@Override
@@ -91,7 +95,9 @@ public class KatalogRepositoryImpl implements KatalogRepository {
 
 		List<OrtInverse> trefferliste = query.getResultList();
 
-		return trefferliste.stream().map(o -> mapper.apply(o)).collect(Collectors.toList());
+		List<InverseKatalogItem> orte = trefferliste.stream().map(o -> mapper.apply(o)).collect(Collectors.toList());
+		Collections.sort(orte, new InverseKatalogItemNameComparator());
+		return orte;
 
 	}
 
@@ -123,7 +129,9 @@ public class KatalogRepositoryImpl implements KatalogRepository {
 
 		List<SchuleInverse> trefferliste = query.getResultList();
 
-		return trefferliste.stream().map(o -> mapper.apply(o)).collect(Collectors.toList());
+		List<InverseKatalogItem> schulen = trefferliste.stream().map(o -> mapper.apply(o)).collect(Collectors.toList());
+		Collections.sort(schulen, new InverseKatalogItemNameComparator());
+		return schulen;
 
 	}
 

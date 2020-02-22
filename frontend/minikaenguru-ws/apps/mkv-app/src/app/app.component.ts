@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'mkv-root',
@@ -7,4 +8,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Minikänguru Onlineauswertung';
+
+  envName = environment.envName;
+  showEnv = !environment.production;
+  api = environment.apiUrl;
+  version = environment.version;
+
 }

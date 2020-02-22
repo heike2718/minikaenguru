@@ -1,8 +1,21 @@
-<input
-    (keyup)="searchTerm.next($event.target.value)">
-
-<ul>
-  <li *ngFor="let item of katalogItems$ | async">
-    {{item.name}} <span *ngIf="item.parent">({{item.parent.name}})</span>  <span class="badge badge-dark">{{item.anzahlKinder}}</span>
-  </li>
-</ul>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <p *ngIf="devMode">(katalog-items-suche.component)</p>
+      <p>Bitte geben Sie {{sucheDescription}} ein.</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-1">
+      <label for="sucheInput">{{labelForInput}}:</label>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-11 mb-2">
+      <input id="sucheInput" (keyup)="searchTerm.next($event.target.value)" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 mb-2" *ngFor="let item of katalogItems$ | async">
+      <mk-katalog-item [katalogItem]="item" [devMode]="devMode"></mk-katalog-item>
+    </div>
+  </div>
+</div>

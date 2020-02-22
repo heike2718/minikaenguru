@@ -12,16 +12,25 @@ import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
+import { RegistrationComponent } from './registration/registration.component';
+import { NotFoundComponent } from './not-found.component';
+import { LandingComponent } from './landing/landing.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent],
+    NavbarComponent,
+    RegistrationComponent,
+    NotFoundComponent,
+    LandingComponent
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     CommonSchulkatalogModule.forRoot({
-      baseUrl: environment.katalogApiUrl
+      baseUrl: environment.katalogApiUrl,
+      devmode: !environment.production,
+      admin: false      
     }),
     CommonMessagesModule,
     StoreModule.forRoot(reducers, {

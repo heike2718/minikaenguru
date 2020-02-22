@@ -16,15 +16,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@minikaenguru-ws/schulkatalog/api": [
-        "libs/schulkatalog/api/src/index.ts"
-      ],
-      "@minikaenguru-ws/schulkatalog/domain": [
-        "libs/schulkatalog/domain/src/index.ts"
-      ],
-      "@minikaenguru-ws/common-schulkatalog": [
-        "libs/common-schulkatalog/src/index.ts"
-      ],
+      "@minikaenguru-ws/common-schulkatalog": ["libs/common-schulkatalog/src/index.ts"],
       "@minikaenguru-ws/common-messages": ["libs/common-messages/src/index.ts"],
       "@minikaenguru-ws/common-logging": ["libs/common-logging/src/index.ts"]
     }

@@ -1,8 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Inject } from '@angular/core';
 import { Observable, BehaviorSubject, Subject } from 'rxjs';
 import { InverseKatalogItem, Katalogtyp } from '../domain/entities';
 import { KatalogService } from '../katalog.service';
 import { throws } from 'assert';
+import { SchulkatalogConfigService } from '../configuration/schulkatalog-config';
 
 @Component({
   selector: 'mk-katalog-items-suche',
@@ -11,30 +12,40 @@ import { throws } from 'assert';
 })
 export class KatalogItemsSucheComponent implements OnInit {
 
-  // todo: als Input-Property übergeben!!!!
-
   @Input()
   typ: string;
+
+  devMode: boolean;
+
+  labelForInput: string;
+  sucheDescription: string;
   
   katalogItems$: Observable<InverseKatalogItem[]>;
   searchTerm: BehaviorSubject<string>;
 
   private katalogtyp: Katalogtyp = 'ORT';
 
-  constructor(private katalogService: KatalogService) { 
+  constructor(@Inject(SchulkatalogConfigService) private config, private katalogService: KatalogService) { }
+
+  ngOnInit() {
+
+    this.devMode = this.config.devmode;
 
     if (this.typ === 'LAND') {
       this.katalogtyp = 'LAND';
+      this.labelForInput = 'Land';
+      this.sucheDescription = 'das Land';
     }
     if (this.typ === 'ORT') {
       this.katalogtyp = 'ORT';
+      this.labelForInput = 'Ort';
+      this.sucheDescription = 'den Ort';
     }
     if (this.typ === 'SCHULE') {
       this.katalogtyp = 'SCHULE';
+      this.labelForInput = 'Schule';
+      this.sucheDescription = 'die Schule';
     }
-  }
-
-  ngOnInit() {
 
     this.searchTerm = new BehaviorSubject<string>('');
 

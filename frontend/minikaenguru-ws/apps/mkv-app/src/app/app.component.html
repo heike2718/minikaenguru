@@ -1,16 +1,20 @@
 <mkv-navbar></mkv-navbar>
-<div class="container">
-  <div class="row">
-    <div class="col-md-12">
-      <h1>works</h1>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <router-outlet></router-outlet>
-    </div>
-  </div>
-  <div class="row">
-      <mk-katalog-items-suche [typ]="ORT"></mk-katalog-items-suche>
-  </div>
+<cmn-msg></cmn-msg>
+<h1>{{title}}</h1>
+<router-outlet></router-outlet>
+
+<div class="col-md-12 col-sm-12 footer">
+	<div class="row">
+		<div class="col-md-2 col-sm-12 footer-text text-left">&copy; Heike Winkelvo&szlig;</div>
+		<div class="col-md-2 col-sm-12 footer-text text-left">
+		    <a href="https://mathe-jung-alt.de/minikaenguru/datenschutz.html" target="_blank"
+					class="btn btn-link">Datenschutzerkl&auml;rung</a>
+		</div>
+		<div class="col-md-2 col-sm-12 footer-text text-left">
+			<a href="https://mathe-jung-alt.de/impressum.html" target="_blank"
+					class="btn btn-link">Impressum</a>
+		</div>
+		<div class="col-md-4 col-sm-12 footer-text text-left" *ngIf="showEnv">{{envName}}, API: {{api}}</div>
+		<div class="col-md-2 col-sm-12 footer-text text-right">Version {{version}}</div>
+	</div>
 </div>
