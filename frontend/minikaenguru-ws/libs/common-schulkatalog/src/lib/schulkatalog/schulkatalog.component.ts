@@ -17,5 +17,4 @@ export class SchulkatalogComponent implements OnInit {
 
   ngOnInit() {
   }
-
 }

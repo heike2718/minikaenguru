@@ -92,6 +92,13 @@ public class SearchKatalogResource {
 	@Path("/orte")
 	public Response findOrte(@StringLatin @QueryParam("search") final String searchTerm) {
 
+		// try {
+		//
+		// TimeUnit.SECONDS.sleep(2);
+		// } catch (InterruptedException e) {
+		//
+		// }
+
 		if (StringUtils.isBlank(searchTerm)) {
 
 			ResponsePayload payload = new ResponsePayload(MessagePayload.info("Keine Suche: geben leeres Ergebnis zurück"),

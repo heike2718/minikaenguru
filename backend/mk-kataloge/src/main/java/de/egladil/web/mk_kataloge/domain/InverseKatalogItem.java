@@ -19,6 +19,8 @@ public class InverseKatalogItem {
 
 	private int anzahlKinder;
 
+	private boolean leaf;
+
 	public static InverseKatalogItem createWithTypKuerzelName(final Katalogtyp typ, final String kuerzel, final String name) {
 
 		InverseKatalogItem result = new InverseKatalogItem();
@@ -68,6 +70,16 @@ public class InverseKatalogItem {
 	public void setAnzahlKinder(final int anzahlKinder) {
 
 		this.anzahlKinder = anzahlKinder;
+	}
+
+	public boolean isLeaf() {
+
+		return leaf;
+	}
+
+	public void setLeaf(final boolean leaf) {
+
+		this.leaf = leaf;
 	}
 
 }

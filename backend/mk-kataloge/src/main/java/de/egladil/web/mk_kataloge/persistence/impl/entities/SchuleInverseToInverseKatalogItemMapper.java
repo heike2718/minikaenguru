@@ -26,6 +26,7 @@ public class SchuleInverseToInverseKatalogItemMapper implements Function<SchuleI
 		ort.setParent(InverseKatalogItem.createWithTypKuerzelName(Katalogtyp.LAND, schule.getLandKuerzel(), schule.getLandName()));
 
 		result.setParent(ort);
+		result.setLeaf(true);
 
 		return result;
 	}

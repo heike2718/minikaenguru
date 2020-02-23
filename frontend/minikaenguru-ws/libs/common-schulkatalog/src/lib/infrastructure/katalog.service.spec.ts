@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { KatalogService } from './katalog.service';
+import { KatalogService } from "././katalog.service";
 
 describe('KatalogService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));

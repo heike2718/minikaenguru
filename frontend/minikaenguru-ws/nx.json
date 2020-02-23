@@ -38,6 +38,9 @@
     },
     "common-logging": {
       "tags": []
+    },
+    "test-lib": {
+      "tags": []
     }
   }
 }

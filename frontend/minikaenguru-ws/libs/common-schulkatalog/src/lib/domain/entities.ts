@@ -4,6 +4,7 @@ export interface InverseKatalogItem {
 	readonly name: string;
 	readonly parent: InverseKatalogItem;
 	readonly anzahlKinder: number;
+	readonly leaf: boolean;
 }
 
 

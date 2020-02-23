@@ -1,5 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { InverseKatalogItem } from '../domain/entities';
+import { Store } from '@ngrx/store';
+import { SchulkatalogState } from '../+state/schulkatalog.reducer';
+import { selectKatalogItem } from '../+state/schulkatalog.actions';
 
 @Component({
   selector: 'mk-katalog-item',
@@ -16,11 +19,11 @@ export class KatalogItemComponent implements OnInit {
 
   anzahlText: string;
 
-  constructor() { }
+  constructor(private store: Store<SchulkatalogState>) { }
 
   ngOnInit() {
 
-    switch(this.katalogItem.typ) {
+    switch (this.katalogItem.typ) {
       case 'LAND': this.anzahlText = 'Anzahl Orte:'; break;
       case 'ORT': this.anzahlText = 'Anzahl Schulen:'; break;
       default: this.anzahlText = '';
@@ -29,7 +32,7 @@ export class KatalogItemComponent implements OnInit {
   }
 
   selectTheItem() {
-    console.log('KatalogItem ' + this.katalogItem.name + ' selected');
+    this.store.dispatch(selectKatalogItem({data: this.katalogItem}));
   }
-
 }
+

@@ -15,6 +15,8 @@
   </div>
   <div *ngIf="showSchulkatalog" class="row">
     <mk-katalog></mk-katalog>
-    <button type="button" class="btn btn-primary btn-block" (click)="lehrerkontoAnlegen()">Konto anlegen</button>
+
+    <p *ngIf="schulkatalogFacade.selectedKatalogItem$ | async">{{pfadKatalogItem}}</p>
+    <button type="button" class="btn btn-primary btn-block" disabled="submitDisabled()" (click)="lehrerkontoAnlegen()">Konto anlegen</button>
   </div>
 </div>

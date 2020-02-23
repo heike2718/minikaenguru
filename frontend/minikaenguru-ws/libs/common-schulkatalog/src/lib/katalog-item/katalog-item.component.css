@@ -1,0 +1,7 @@
+.clickable {
+  cursor: pointer;
+}
+
+.clickable div:hover {
+  background-color: bisque;
+}
