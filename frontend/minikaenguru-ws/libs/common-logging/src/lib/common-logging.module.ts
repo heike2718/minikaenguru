@@ -14,7 +14,7 @@ import { LoggingConfig, LoggingConfigService } from './configuration/logging-con
 export class CommonLoggingModule {
 
 
-	static forRoot(config: LoggingConfig): ModuleWithProviders {
+	static forRoot(config: LoggingConfig): ModuleWithProviders<CommonLoggingModule> {
 
 		return {
 			ngModule: CommonLoggingModule,

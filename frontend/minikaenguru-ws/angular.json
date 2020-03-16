@@ -16,7 +16,7 @@
             "main": "apps/mkv-app/src/main.ts",
             "polyfills": "apps/mkv-app/src/polyfills.ts",
             "tsConfig": "apps/mkv-app/tsconfig.app.json",
-            "aot": false,
+            "aot": true,
             "assets": [
               "apps/mkv-app/src/favicon.ico",
               "apps/mkv-app/src/assets"
@@ -41,7 +41,6 @@
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,

@@ -33,7 +33,7 @@ import { CommonLoggingModule } from '@minikaenguru-ws/common-logging';
 })
 export class CommonSchulkatalogModule {
 
-  static forRoot(config: SchulkatalogConfig): ModuleWithProviders {
+  static forRoot(config: SchulkatalogConfig): ModuleWithProviders<CommonSchulkatalogModule> {
     return {
       ngModule: CommonSchulkatalogModule,
       providers: [
