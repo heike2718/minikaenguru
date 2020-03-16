@@ -13,23 +13,20 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 
 	private logService: LogService;
 
-	constructor(injector: Injector) {
+	constructor(private injector: Injector) {
+
+        // ErrorHandler wird vor allen anderen Injectables instanziiert,
+		// so dass man benötigte Services nicht im Konstruktor injekten kann !!!
+
+		const logPublishersService = this.injector.get(LogPublishersService);
+		this.logService = this.injector.get(LogService);
+
+		this.logService.initLevel(environment.loglevel);
+		this.logService.registerPublishers(logPublishersService.publishers);
+		this.logService.info('logging initialized: loglevel=' + environment.loglevel);
+
+
 	}
-
-	// constructor(private injector: Injector) {
-
-    //     // ErrorHandler wird vor allen anderen Injectables instanziiert,
-	// 	// so dass man benötigte Services nicht im Konstruktor injekten kann !!!
-
-	// 	const logPublishersService = this.injector.get(LogPublishersService);
-	// 	this.logService = this.injector.get(LogService);
-
-	// 	this.logService.initLevel(environment.loglevel);
-	// 	this.logService.registerPublishers(logPublishersService.publishers);
-	// 	this.logService.info('logging initialized: loglevel=' + environment.loglevel);
-
-
-	// }
 
 	handleError(error: any): void {
 

@@ -68,7 +68,7 @@ export class KatalogItemsSucheComponent implements OnInit {
 
   onKeyup(event) {
 
-    const value = event.value;
+	const value = event.value;
     console.log('[event.value=' + value + ']')
 
   }

@@ -22,13 +22,13 @@ export class KatalogService {
     let url = '';
     switch(typ) {
 	  case 'LAND':
-		url = this.config.baseUrl + '/kataloge/laender';
+		url = this.config.baseUrl + '/katalogsuche/global/land';
 		break;
       case 'ORT':
-        url = this.config.baseUrl + '/kataloge/orte';
+        url = this.config.baseUrl + '/katalogsuche/global/ort';
         break;
       case 'SCHULE':
-        url = this.config.baseUrl + '/kataloge/schulen';
+        url = this.config.baseUrl + '/katalogsuche/global/schule';
         break;
     default:
         throw new Error('unsupported Katalogtyp ' + typ);
