@@ -1,0 +1,22 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Benutzerkonto anlegen <span *ngIf="devMode">(registration.component)</span> </h2>
+
+      <div *ngIf="!showSchulkatalog" class="row">
+        <div class="col-sm-12 col-md-6">
+          <button type="button" class="btn btn-primary btn-block" (click)="toggleSchulkatalog()">Lehrer/Lehrerin</button>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <button type="button" class="btn btn-primary btn-block" (click)="privatkontoAnlegen()">privat</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="showSchulkatalog" class="row">
+    <mk-katalog></mk-katalog>
+
+    <p *ngIf="schulkatalogFacade.selectedKatalogItem$ | async">{{pfadKatalogItem}}</p>
+    <button type="button" class="btn btn-primary btn-block" disabled="submitDisabled()" (click)="lehrerkontoAnlegen()">Konto anlegen</button>
+  </div>
+</div>

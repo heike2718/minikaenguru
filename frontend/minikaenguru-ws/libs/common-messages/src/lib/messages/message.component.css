@@ -1,0 +1,23 @@
+.cmn-message {
+    border: 1px solid;
+    margin: 0px .25em;
+    padding: .25em .5em;
+    display: inline-block;
+	vertical-align: top;
+	width: 99%;
+}
+
+.cmn-message .cmn-message-icon,
+.cmn-message .cmn-message-text {
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.cmn-fluid .cmn-message {
+    display: block;
+}
+
+.fa-left {
+	padding-right: 0.5rem;
+}
+
