@@ -1,15 +1,8 @@
 // =====================================================
-// Project: mk-commons
+// Project: mk-kataloge
 // (c) Heike Winkelvoß
 // =====================================================
 package de.egladil.web.mk_kataloge.domain;
-
-import java.util.List;
-
-import javax.validation.constraints.Size;
-
-import de.egladil.web.commons_validation.annotations.Kuerzel;
-import de.egladil.web.commons_validation.annotations.StringLatin;
 
 /**
  * KatalogItem
@@ -18,35 +11,52 @@ public class KatalogItem {
 
 	private Katalogtyp typ;
 
-	@Kuerzel
-	private String kuerzel;
-
-	@StringLatin
-	@Size(max = 110)
 	private String name;
 
-	private List<KatalogItem> kinder;
+	private String kuerzel;
 
-	public static KatalogItem createLazy(final Katalogtyp typ, final String kuerzel, final String name) {
+	private KatalogItem parent;
+
+	private int anzahlKinder;
+
+	private boolean leaf;
+
+	public static KatalogItem createWithTypKuerzelName(final Katalogtyp typ, final String kuerzel, final String name, final int anzahlKinder) {
 
 		KatalogItem result = new KatalogItem();
 		result.typ = typ;
 		result.kuerzel = kuerzel;
 		result.name = name;
+		result.anzahlKinder = anzahlKinder;
+
+		switch (typ) {
+
+		case SCHULE:
+			result.leaf = true;
+			break;
+
+		default:
+			break;
+		}
+
 		return result;
 	}
 
 	/**
 	 *
 	 */
-	public KatalogItem() {
+	KatalogItem() {
 
 	}
 
-	public KatalogItem withKinder(final List<KatalogItem> kinder) {
+	public KatalogItem getParent() {
 
-		this.kinder = kinder;
-		return this;
+		return parent;
+	}
+
+	public void setParent(final KatalogItem parent) {
+
+		this.parent = parent;
 	}
 
 	public Katalogtyp getTyp() {
@@ -54,19 +64,23 @@ public class KatalogItem {
 		return typ;
 	}
 
-	public String getKuerzel() {
-
-		return kuerzel;
-	}
-
 	public String getName() {
 
 		return name;
 	}
 
-	public List<KatalogItem> getKinder() {
+	public String getKuerzel() {
 
-		return kinder;
+		return kuerzel;
 	}
 
+	public int getAnzahlKinder() {
+
+		return anzahlKinder;
+	}
+
+	public boolean isLeaf() {
+
+		return leaf;
+	}
 }

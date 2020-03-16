@@ -1,8 +1,9 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { LogService } from './log.service';
 import { LogPublisher } from './domain/log-publishers';
+import { LoggingConfig, LoggingConfigService } from './configuration/logging-config';
 
 @NgModule({
   imports: [
@@ -10,4 +11,19 @@ import { LogPublisher } from './domain/log-publishers';
     HttpClientModule
   ]
 })
-export class CommonLoggingModule {}
+export class CommonLoggingModule {
+
+
+	static forRoot(config: LoggingConfig): ModuleWithProviders {
+
+		return {
+			ngModule: CommonLoggingModule,
+			providers: [
+				{
+					provide: LoggingConfigService,
+					useValue: config
+				}
+			]
+		}
+	}
+}

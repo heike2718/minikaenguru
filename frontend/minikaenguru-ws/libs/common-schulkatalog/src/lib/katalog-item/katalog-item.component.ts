@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { InverseKatalogItem } from '../domain/entities';
+import { KatalogItem } from '../domain/entities';
 import { Store } from '@ngrx/store';
 import { SchulkatalogState } from '../+state/schulkatalog.reducer';
 import { selectKatalogItem } from '../+state/schulkatalog.actions';
@@ -12,7 +12,7 @@ import { selectKatalogItem } from '../+state/schulkatalog.actions';
 export class KatalogItemComponent implements OnInit {
 
   @Input()
-  katalogItem: InverseKatalogItem;
+  katalogItem: KatalogItem;
 
   @Input()
   devMode: boolean;

@@ -1,76 +1,75 @@
 // =====================================================
-// Projekt: Project: mk-kataloge
+// Project: mk-kataloge
 // (c) Heike Winkelvoß
 // =====================================================
-
 package de.egladil.web.mk_kataloge.persistence.impl.entities;
+
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.Version;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
-import de.egladil.web.commons_validation.annotations.Kuerzel;
+import org.hibernate.annotations.GenericGenerator;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Schule
  */
 @Entity
-@Table(name = "kat_schulen")
+@Table(name = "SCHULEN")
 public class Schule {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID")
-	private Long id;
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "schule_id_generator")
+	@GenericGenerator(name = "schule_id_generator", strategy = "de.egladil.web.mk_kataloge.persistence.impl.SchuleIdGenerator")
+	@Column(name = "KUERZEL")
+	private String kuerzel;
+
+	@Column(name = "NAME")
+	private String name;
+
+	@Column(name = "ORT_KUERZEL")
+	private String ortKuerzel;
+
+	@Column(name = "ORT_NAME")
+	private String ortName;
+
+	@Column(name = "LAND_KUERZEL")
+	private String landKuerzel;
+
+	@Column(name = "LAND_NAME")
+	private String landName;
 
 	@Version
 	@Column(name = "VERSION")
+	@JsonIgnore
 	private int version;
 
-	@NotNull
-	@Size(min = 1, max = 150)
-	@Column(name = "NAME", length = 150)
-	private String name;
+	@Transient
+	private String importiertesKuerzel;
 
-	@NotNull
-	@Kuerzel
-	@Size(min = 8, max = 8)
-	@Column(name = "KUERZEL", length = 8)
-	private String kuerzel;
+	/**
+	 *
+	 */
+	public Schule() {
 
-	@Column(name = "STRASSE", length = 100)
-	@Size(min = 0, max = 100)
-	private String strasse;
-
-	@Column(name = "URL", length = 2000)
-	@Size(min = 0, max = 2000)
-	private String url;
-
-	@Column(name = "SCHULTYP", length = 100)
-	@Size(min = 0, max = 100)
-	private String schultyp;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ORT", referencedColumnName = "ID")
-	private Ort ort;
+	}
 
 	public String getName() {
 
 		return name;
 	}
 
-	public void setName(final String name) {
+	public void setName(final String schuleName) {
 
-		this.name = name;
+		this.name = schuleName;
 	}
 
 	public String getKuerzel() {
@@ -78,106 +77,98 @@ public class Schule {
 		return kuerzel;
 	}
 
-	public void setKuerzel(final String kuerzel) {
+	public void setKuerzel(final String schuleKuerzel) {
 
-		this.kuerzel = kuerzel;
+		this.kuerzel = schuleKuerzel;
 	}
 
-	public Long getId() {
+	public String getOrtName() {
 
-		return id;
+		return ortName;
 	}
 
-	public void setId(final Long id) {
+	public void setOrtName(final String ortName) {
 
-		this.id = id;
+		this.ortName = ortName;
+	}
+
+	public String getOrtKuerzel() {
+
+		return ortKuerzel;
+	}
+
+	public void setOrtKuerzel(final String ortKuerzel) {
+
+		this.ortKuerzel = ortKuerzel;
+	}
+
+	public String getLandName() {
+
+		return landName;
+	}
+
+	public void setLandName(final String landName) {
+
+		this.landName = landName;
+	}
+
+	public String getLandKuerzel() {
+
+		return landKuerzel;
+	}
+
+	public void setLandKuerzel(final String landKuerzel) {
+
+		this.landKuerzel = landKuerzel;
+	}
+
+	public String getImportiertesKuerzel() {
+
+		return importiertesKuerzel;
+	}
+
+	public void setImportiertesKuerzel(final String importiertesKuerzel) {
+
+		this.importiertesKuerzel = importiertesKuerzel;
 	}
 
 	@Override
 	public int hashCode() {
 
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((kuerzel == null) ? 0 : kuerzel.hashCode());
-		return result;
+		return Objects.hash(kuerzel);
 	}
 
 	@Override
 	public boolean equals(final Object obj) {
 
-		if (this == obj)
+		if (this == obj) {
+
 			return true;
-		if (obj == null)
+		}
+
+		if (obj == null) {
+
 			return false;
-		if (getClass() != obj.getClass())
+		}
+
+		if (getClass() != obj.getClass()) {
+
 			return false;
-		final Schule other = (Schule) obj;
-
-		if (kuerzel == null) {
-
-			if (other.kuerzel != null)
-				return false;
-		} else if (!kuerzel.equals(other.kuerzel))
-			return false;
-		return true;
+		}
+		Schule other = (Schule) obj;
+		return Objects.equals(kuerzel, other.kuerzel);
 	}
 
-	public String getStrasse() {
+	public String printForLog() {
 
-		return strasse;
-	}
-
-	public void setStrasse(final String strasse) {
-
-		this.strasse = strasse;
-	}
-
-	public String getUrl() {
-
-		return url;
-	}
-
-	public void setUrl(final String url) {
-
-		this.url = url;
-	}
-
-	public String getSchultyp() {
-
-		return schultyp;
-	}
-
-	public void setSchultyp(final String schultyp) {
-
-		this.schultyp = schultyp;
+		return "Schule [kuerzel=" + kuerzel + ", name=" + name + ", ortKuerzel=" + ortKuerzel + ", ortName=" + ortName
+			+ ", landKuerzel=" + landKuerzel + ", landName=" + landName + ", importiertesKuerzel=" + importiertesKuerzel + "]";
 	}
 
 	@Override
 	public String toString() {
 
-		final StringBuilder builder = new StringBuilder();
-		builder.append("Schule [kuerzel=");
-		builder.append(kuerzel);
-		builder.append(", name=");
-		builder.append(name);
-		builder.append("]");
-		return builder.toString();
+		return "Schule [kuerzel=" + kuerzel + ", name=" + name + "]";
 	}
 
-	/**
-	 * @return Ort
-	 */
-	public Ort getOrt() {
-
-		return ort;
-	}
-
-	/**
-	 * @param ort
-	 *            Ort
-	 */
-	public void setOrt(final Ort ort) {
-
-		this.ort = ort;
-	}
 }

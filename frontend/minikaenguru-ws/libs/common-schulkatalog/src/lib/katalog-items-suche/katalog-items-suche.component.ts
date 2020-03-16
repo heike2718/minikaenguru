@@ -1,14 +1,15 @@
 import { Component, OnInit, Input, Inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { InverseKatalogItem, Katalogtyp } from '../domain/entities';
+import { KatalogItem, Katalogtyp } from '../domain/entities';
 import { SchulkatalogConfigService } from '../configuration/schulkatalog-config';
 import { SchulkatalogFacade } from '../application-services/schulkatalog.facade';
 import { Store } from '@ngrx/store';
 import { SchulkatalogState } from '../+state/schulkatalog.reducer';
-import { initKatalogtyp, selectKatalogItem } from '../+state/schulkatalog.actions';
+import { initKatalogtyp } from '../+state/schulkatalog.actions';
 import { selectSelectedKatalogItem } from '../+state/schulkatalog.selectors';
 
 @Component({
+  // tslint:disable-next-line: component-selector
   selector: 'mk-katalog-items-suche',
   templateUrl: './katalog-items-suche.component.html',
   styleUrls: ['./katalog-items-suche.component.css']
@@ -25,7 +26,7 @@ export class KatalogItemsSucheComponent implements OnInit {
 
   private selectedKatalogItem$ = this.store.select(selectSelectedKatalogItem);
 
-  //   katalogItems$: Observable<InverseKatalogItem[]>;
+  //   katalogItems$: Observable<KatalogItem[]>;
   searchTerm: BehaviorSubject<string>;
 
   private katalogtyp: Katalogtyp = 'ORT';
@@ -72,7 +73,7 @@ export class KatalogItemsSucheComponent implements OnInit {
 
   }
 
-  private handleItemSelected(selectedItem: InverseKatalogItem) {
+  private handleItemSelected(selectedItem: KatalogItem) {
 
     if (selectedItem && !selectedItem.leaf) {
 

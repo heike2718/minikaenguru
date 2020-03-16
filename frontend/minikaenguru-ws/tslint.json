@@ -56,7 +56,7 @@
         "allow": [],
         "depConstraints": [
           { "sourceTag": "domain:mkv-app", "onlyDependOnLibsWithTags": ["domain:schulkatalog"]},
-          {  "sourceTag": "domain:schulkatalog", "onlyDependsOnLibsWithTags": ["domain:schulkatalog"]}.
+          {  "sourceTag": "domain:schulkatalog", "onlyDependsOnLibsWithTags": ["domain:schulkatalog"]}
         ]
       }
     ],

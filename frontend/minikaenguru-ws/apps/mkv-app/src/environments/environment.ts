@@ -7,7 +7,10 @@ export const environment = {
   production: false,
   katalogApiUrl: 'http://localhost:9700/mk-kataloge-api',
   apiUrl: 'fehlt momentan noch',
-  version: '1.0.0'
+  version: '1.0.0',
+  consoleLogActive: true,
+  serverLogActive: false,
+  loglevel: 1
 };
 
 /*

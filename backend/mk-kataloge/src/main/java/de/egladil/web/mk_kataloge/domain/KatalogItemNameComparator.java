@@ -1,12 +1,10 @@
 // =====================================================
-// Project: mkv-server
+// Project: mk-kataloge
 // (c) Heike Winkelvoß
 // =====================================================
 package de.egladil.web.mk_kataloge.domain;
 
-import java.text.Collator;
 import java.util.Comparator;
-import java.util.Locale;
 
 /**
  * KatalogItemNameComparator
@@ -16,9 +14,20 @@ public class KatalogItemNameComparator implements Comparator<KatalogItem> {
 	@Override
 	public int compare(final KatalogItem o1, final KatalogItem o2) {
 
-		Collator usCollator = Collator.getInstance(Locale.GERMAN); // Your locale here
-		usCollator.setStrength(Collator.PRIMARY);
-		return usCollator.compare(o1.getName(), o2.getName());
-	}
+		if (o1 == o2) {
 
+			return 0;
+		}
+
+		if (o1 == null && o2 != null) {
+
+			return -1;
+		}
+
+		if (o1 != null && o2 == null) {
+
+			return 1;
+		}
+		return new GermanStringComparator().compare(o1.getName(), o2.getName());
+	}
 }

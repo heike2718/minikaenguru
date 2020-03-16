@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { SchulkatalogFacade } from '@minikaenguru-ws/common-schulkatalog';
-import { InverseKatalogItem } from 'libs/common-schulkatalog/src/lib/domain/entities';
+import { KatalogItem } from 'libs/common-schulkatalog/src/lib/domain/entities';
 
 @Component({
   selector: 'mkv-registration',
@@ -15,7 +15,7 @@ export class RegistrationComponent implements OnInit {
 
   showSchulkatalog: boolean;
 
-  selectedKatalogItem: InverseKatalogItem;
+  selectedKatalogItem: KatalogItem;
 
   pfadKatalogItem: string;
 
@@ -31,7 +31,7 @@ export class RegistrationComponent implements OnInit {
     this.schulkatalogFacade.selectedKatalogItem$.subscribe(
       item => {
         if (item ) {
-          this.selectedKatalogItem = item; 
+          this.selectedKatalogItem = item;
 
           switch(item.typ) {
             case 'LAND': this.pfadKatalogItem = item.name; break;

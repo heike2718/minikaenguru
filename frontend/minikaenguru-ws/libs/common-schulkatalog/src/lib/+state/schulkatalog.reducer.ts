@@ -1,13 +1,13 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { Katalogtyp, InverseKatalogItem } from '../domain/entities';
+import { Katalogtyp, KatalogItem } from '../domain/entities';
 import * as SchulkatalogActions from './schulkatalog.actions';
 
 export const schulkatalogFeatureKey = 'schulkatalog';
 
 export interface SchulkatalogState {
   currentKatalogtyp: Katalogtyp,
-  loadedKatalogItems: InverseKatalogItem[],
-  selectedKatalogItem: InverseKatalogItem,
+  loadedKatalogItems: KatalogItem[],
+  selectedKatalogItem: KatalogItem,
   loadingKatalogItems: boolean,
   error: string
 }

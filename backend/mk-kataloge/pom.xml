@@ -10,7 +10,7 @@
 	<version>1.0.0-SNAPSHOT</version>
 
 	<properties>
-		<commons.version>1.4.3</commons.version>
+		<commons.version>1.4.4</commons.version>
 		<compiler-plugin.version>3.8.1</compiler-plugin.version>
 		<maven.compiler.parameters>true</maven.compiler.parameters>
 		<maven.compiler.source>1.11</maven.compiler.source>
@@ -74,16 +74,6 @@
 		</dependency>
 		<dependency>
 			<groupId>io.quarkus</groupId>
-			<artifactId>quarkus-junit5</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.rest-assured</groupId>
-			<artifactId>rest-assured</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-hibernate-orm</artifactId>
 		</dependency>
 		<dependency>
@@ -98,13 +88,26 @@
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-jdbc-mariadb</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-junit5</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+
 	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.0</version>
+				<version>${compiler-plugin.version}</version>
 				<inherited>true</inherited>
 				<configuration>
 					<release>11</release>

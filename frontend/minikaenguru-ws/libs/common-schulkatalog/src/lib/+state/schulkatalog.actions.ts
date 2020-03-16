@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Katalogtyp, InverseKatalogItem } from '../domain/entities';
+import { Katalogtyp, KatalogItem } from '../domain/entities';
 
 
 export const initKatalogtyp = createAction(
@@ -13,7 +13,7 @@ export const startSearch = createAction(
 
 export const katalogItemsLoaded = createAction(
 	'[SchulkatalogFacade] katalogItemsLoaded',
-	props<{data: InverseKatalogItem[]}>()
+	props<{data: KatalogItem[]}>()
 );
 
 export const searchError = createAction(
@@ -27,6 +27,6 @@ export const clearKatalogItems = createAction(
 
 export const selectKatalogItem = createAction(
 	'[KatalogItemComponent] selectKatalogItem',
-	props<{data: InverseKatalogItem}>()
+	props<{data: KatalogItem}>()
 );
 

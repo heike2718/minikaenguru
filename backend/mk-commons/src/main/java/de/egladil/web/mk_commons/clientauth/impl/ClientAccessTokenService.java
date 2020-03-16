@@ -103,5 +103,4 @@ public class ClientAccessTokenService implements IClientAccessTokenService {
 			throw new ClientAuthException();
 		}
 	}
-
 }

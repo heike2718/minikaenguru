@@ -45,6 +45,26 @@ public class KatalogAPIExceptionMapper implements ExceptionMapper<Exception> {
 			return Response.status(404).entity(payload).build();
 		}
 
+		if (exception instanceof IllegalArgumentException) {
+
+			LOG.error(exception.getMessage());
+			ResponsePayload responsePayload = ResponsePayload
+				.messageOnly(MessagePayload.error(exception.getMessage()));
+			return Response.status(400)
+				.entity(responsePayload)
+				.build();
+		}
+
+		if (exception instanceof DuplicateEntityException) {
+
+			LOG.warn(exception.getMessage());
+			ResponsePayload responsePayload = ResponsePayload
+				.messageOnly(MessagePayload.warn(exception.getMessage()));
+			return Response.status(409)
+				.entity(responsePayload)
+				.build();
+		}
+
 		LOG.error(exception.getMessage(), exception);
 
 		ResponsePayload payload = ResponsePayload

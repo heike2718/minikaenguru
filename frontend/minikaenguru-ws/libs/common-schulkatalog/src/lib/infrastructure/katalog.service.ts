@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { SchulkatalogConfigService, SchulkatalogConfig } from '../configuration/schulkatalog-config';
-import { Katalogtyp, InverseKatalogItem } from '../domain/entities';
+import { Katalogtyp, KatalogItem } from '../domain/entities';
 import { Observable, of } from 'rxjs';
 import { map, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
@@ -13,31 +13,25 @@ import { startSearch } from '../+state/schulkatalog.actions';
 })
 export class KatalogService {
 
-  private baseUrl: string;
   private queryParamPrefix = '?search=';
 
-  constructor(@Inject(SchulkatalogConfigService) private config, private http: HttpClient, private store: Store<SchulkatalogState> ) {
+  constructor(@Inject(SchulkatalogConfigService) private config: SchulkatalogConfig, private http: HttpClient, private store: Store<SchulkatalogState> ) {}
 
-    this.baseUrl = config.baseUrl;
-
-    console.log('[KatalogService] ' + this.baseUrl);
-  }
-
-  public searchKatalogItems(typ: Katalogtyp, terms: Observable<string>): Observable<InverseKatalogItem[]> {
+  public searchKatalogItems(typ: Katalogtyp, terms: Observable<string>): Observable<KatalogItem[]> {
 
     let url = '';
     switch(typ) {
 	  case 'LAND':
-		url = this.baseUrl + '/kataloge/laender';
+		url = this.config.baseUrl + '/kataloge/laender';
 		break;
       case 'ORT':
-        url = this.baseUrl + '/kataloge/orte';
+        url = this.config.baseUrl + '/kataloge/orte';
         break;
       case 'SCHULE':
-        url = this.baseUrl + '/kataloge/schulen';
+        url = this.config.baseUrl + '/kataloge/schulen';
         break;
     default:
-        throw 'unsupported Katalogtyp ' + typ;
+        throw new Error('unsupported Katalogtyp ' + typ);
     }
 
     return terms.pipe(
@@ -47,7 +41,7 @@ export class KatalogService {
     );
   }
 
-  private searchEntries(typ: Katalogtyp, url: string, term: string): Observable<InverseKatalogItem[]> {
+  private searchEntries(typ: Katalogtyp, url: string, term: string): Observable<KatalogItem[]> {
 
     if (term.length === 0 && typ !== 'LAND') {
       return of([]);
@@ -63,7 +57,7 @@ export class KatalogService {
 
     return this.http
         .get(finalUrl).pipe(
-          map( body => body['data'] as  InverseKatalogItem[])
+          map( body => body['data'] as  KatalogItem[])
         );
   }
 }
