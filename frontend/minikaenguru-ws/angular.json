@@ -91,7 +91,8 @@
           "options": {
             "jestConfig": "apps/mkv-app/jest.config.js",
             "tsConfig": "apps/mkv-app/tsconfig.spec.json",
-            "setupFile": "apps/mkv-app/src/test-setup.ts"
+            "setupFile": "apps/mkv-app/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       }
@@ -144,7 +145,8 @@
           "options": {
             "jestConfig": "libs/schulkatalog/api/jest.config.js",
             "tsConfig": "libs/schulkatalog/api/tsconfig.spec.json",
-            "setupFile": "libs/schulkatalog/api/src/test-setup.ts"
+            "setupFile": "libs/schulkatalog/api/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -171,7 +173,8 @@
           "options": {
             "jestConfig": "libs/schulkatalog/domain/jest.config.js",
             "tsConfig": "libs/schulkatalog/domain/tsconfig.spec.json",
-            "setupFile": "libs/schulkatalog/domain/src/test-setup.ts"
+            "setupFile": "libs/schulkatalog/domain/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -198,7 +201,8 @@
           "options": {
             "jestConfig": "libs/common-schulkatalog/jest.config.js",
             "tsConfig": "libs/common-schulkatalog/tsconfig.spec.json",
-            "setupFile": "libs/common-schulkatalog/src/test-setup.ts"
+            "setupFile": "libs/common-schulkatalog/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -225,7 +229,8 @@
           "options": {
             "jestConfig": "libs/shared/util-messages/jest.config.js",
             "tsConfig": "libs/shared/util-messages/tsconfig.spec.json",
-            "setupFile": "libs/shared/util-messages/src/test-setup.ts"
+            "setupFile": "libs/shared/util-messages/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -252,7 +257,8 @@
           "options": {
             "jestConfig": "libs/shared/util-logging/jest.config.js",
             "tsConfig": "libs/shared/util-logging/tsconfig.spec.json",
-            "setupFile": "libs/shared/util-logging/src/test-setup.ts"
+            "setupFile": "libs/shared/util-logging/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -279,7 +285,8 @@
           "options": {
             "jestConfig": "libs/common-messages/jest.config.js",
             "tsConfig": "libs/common-messages/tsconfig.spec.json",
-            "setupFile": "libs/common-messages/src/test-setup.ts"
+            "setupFile": "libs/common-messages/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -306,7 +313,8 @@
           "options": {
             "jestConfig": "libs/common-logging/jest.config.js",
             "tsConfig": "libs/common-logging/tsconfig.spec.json",
-            "setupFile": "libs/common-logging/src/test-setup.ts"
+            "setupFile": "libs/common-logging/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -333,7 +341,8 @@
           "options": {
             "jestConfig": "libs/test-lib/jest.config.js",
             "tsConfig": "libs/test-lib/tsconfig.spec.json",
-            "setupFile": "libs/test-lib/src/test-setup.ts"
+            "setupFile": "libs/test-lib/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
