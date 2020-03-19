@@ -27,9 +27,9 @@ export class KatalogItemsSucheComponent implements OnInit {
 
 	private selectedKatalogItem$ = this.store.select(selectSelectedKatalogItem);
 
+	searchFormInputValue: string;
+
 	searchTerm: BehaviorSubject<string>;
-
-
 
 	private katalogtyp: Katalogtyp = 'ORT';
 
@@ -75,10 +75,12 @@ export class KatalogItemsSucheComponent implements OnInit {
 	}
 
 
-	onKeyup(event) {
+	onKeyup($event) {
 
-		const value = event.value;
+
+		const value = $event.target.value;
 		console.log('[event.value=' + value + ']')
+		this.searchTerm.next(value);
 
 	}
 
@@ -95,7 +97,7 @@ export class KatalogItemsSucheComponent implements OnInit {
 		}
 
 		if (selectedItem) {
-			this.searchTerm.next('');
+			this.searchFormInputValue = '';
 			console.log('[KatalogItemsSucheComponent]: [' + selectedItem.name + ',' + selectedItem.kuerzel + '] has been selected');
 		}
 	}

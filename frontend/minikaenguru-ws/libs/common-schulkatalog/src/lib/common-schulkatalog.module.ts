@@ -1,5 +1,6 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { KatalogItemsSucheComponent } from './katalog-items-suche/katalog-items-suche.component';
 import { SchulkatalogConfig, SchulkatalogConfigService } from './configuration/schulkatalog-config';
@@ -15,7 +16,8 @@ import { SchulkatalogEffects } from './+state/schulkatalog.effects';
 
 @NgModule({
   imports: [
-    CommonModule,
+	CommonModule,
+	FormsModule,
     HttpClientModule,
     KatalogRoutingModule,
     StoreModule.forFeature(fromSchulkatalog.schulkatalogFeatureKey, fromSchulkatalog.reducer),

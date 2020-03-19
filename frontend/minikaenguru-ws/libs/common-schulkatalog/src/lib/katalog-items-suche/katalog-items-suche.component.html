@@ -10,7 +10,8 @@
       <label for="sucheInput">{{labelForInput}}:</label>
     </div>
     <div class="col-xs-12 col-sm-12 col-md-11 mb-2">
-      <input id="sucheInput" (keyup)="searchTerm.next($event.target.value)" />
+	<input id="sucheInput" type="text" name="sucheInput" placeholder="{{labelForInput}}" (keyup)="onKeyup($event)"
+	  [ngModel]="searchFormInputValue" />
     </div>
   </div>
   <div class="row mb-2 mt-2" *ngIf="schulkatalogFacade.loading$ | async">
