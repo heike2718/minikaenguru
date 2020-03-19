@@ -1,0 +1,23 @@
+nx global installieren:
+> npm install -g @nrwl/cli
+
+npm init nx-workspace minikaenguru-ws   # hier die option [a workspace with a single Angular application] auswählen
+
+
+cd minikaenguru-ws/
+ng generate library api --directory schulkatalog
+ng generate library domain --directory schulkatalog
+
+npm install --save bootstrap font-awesome
+npm install --save hewi-ng-lib
+
+
+## weitere app hinzufügen
+ng g @nrwl/angular:application mkadmin-app
+
+
+
+# NgRx installieren (im workspace root)
+ng add @ngrx/store --project mkv-app
+ng add @ngrx/store-devtools --project mkv-app
+npm i @ngrx/schematics
