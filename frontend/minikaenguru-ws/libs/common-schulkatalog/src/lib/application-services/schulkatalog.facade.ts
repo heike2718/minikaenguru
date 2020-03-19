@@ -2,9 +2,8 @@ import { Injectable, Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { SchulkatalogState } from '../+state/schulkatalog.reducer';
 import { KatalogService } from '../infrastructure/katalog.service';
-import { selectKatalogItems, selectKatalogtyp, selectLoadingIndicator, selectSelectedKatalogItem } from '../+state/schulkatalog.selectors';
+import { selectKatalogItems, selectKatalogtyp, selectLoadingIndicator, selectSelectedKatalogItem, selectSearchTerm } from '../+state/schulkatalog.selectors';
 import { Katalogtyp } from '../domain/entities';
-import { Observable } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { searchError, katalogItemsLoaded } from '../+state/schulkatalog.actions';
 import { MessageService } from '@minikaenguru-ws/common-messages';
@@ -18,16 +17,17 @@ export class SchulkatalogFacade {
 	public katalogtyp$ = this.store.select(selectKatalogtyp);
 	public loading$ = this.store.select(selectLoadingIndicator);
 	public selectedKatalogItem$ = this.store.select(selectSelectedKatalogItem);
+	public searchTerm$ = this.store.select(selectSearchTerm);
 
 	constructor(@Inject(SchulkatalogConfigService) private config: SchulkatalogConfig, private store: Store<SchulkatalogState>, private katalogService: KatalogService, private messagesService: MessageService
 		, private logger: LogService) { }
 
 
-	public searchKatalogItems(katalogtyp: Katalogtyp, terms: Observable<string>) {
+	public searchKatalogItemsNeu(typ: Katalogtyp, searchTerm: string) {
 
-		this.katalogService.searchKatalogItems(katalogtyp, terms).subscribe(
+		this.katalogService.searchKatalogItemsNeu(typ, searchTerm).subscribe(
 			katalogItems => {
-				this.store.dispatch(katalogItemsLoaded({ data: katalogItems }))
+				this.store.dispatch(katalogItemsLoaded({ data: katalogItems }));
 			},
 			(error => {
 				this.handleError(error, '[SchulkatalogFacade] searchKatalogItems')

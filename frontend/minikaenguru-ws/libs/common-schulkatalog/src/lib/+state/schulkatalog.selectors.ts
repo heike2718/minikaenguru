@@ -9,4 +9,5 @@ export const selectKatalogItems = createSelector(selectSchulkatalogState, s => s
 export const selectKatalogtyp = createSelector(selectSchulkatalogState, s => s.currentKatalogtyp);
 export const selectSelectedKatalogItem = createSelector(selectSchulkatalogState, s => s.selectedKatalogItem);
 export const selectLoadingIndicator = createSelector(selectSchulkatalogState, s => s.loadingKatalogItems);
+export const selectSearchTerm = createSelector(selectSchulkatalogState, s => s.searchTerm);
 

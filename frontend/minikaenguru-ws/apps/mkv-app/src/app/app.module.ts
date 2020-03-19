@@ -11,12 +11,14 @@ import { CommonMessagesModule } from '@minikaenguru-ws/common-messages';
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import {RouterStateSerializer, StoreRouterConnectingModule, RouterState} from "@ngrx/router-store";
 import { environment } from '../environments/environment';
 import { RegistrationComponent } from './registration/registration.component';
 import { NotFoundComponent } from './not-found.component';
 import { LandingComponent } from './landing/landing.component';
 import { CommonLoggingModule } from '@minikaenguru-ws/common-logging';
 import { GlobalErrorHandlerService } from './infrastructure/global-error-handler.service';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
 	declarations: [
@@ -44,8 +46,16 @@ import { GlobalErrorHandlerService } from './infrastructure/global-error-handler
 			metaReducers,
 			runtimeChecks: {
 				strictStateImmutability: true,
-				strictActionImmutability: true
+				strictActionImmutability: true,
+				strictActionSerializability: true,
+				strictStateSerializability: true,
+				strictActionWithinNgZone: true
 			}
+		}),
+		EffectsModule.forRoot([]),
+		StoreRouterConnectingModule.forRoot({
+			stateKey:'router',
+			routerState: RouterState.Minimal
 		}),
 		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
 	],

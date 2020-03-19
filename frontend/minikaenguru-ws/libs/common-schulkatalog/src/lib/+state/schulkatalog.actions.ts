@@ -7,6 +7,11 @@ export const initKatalogtyp = createAction(
 	props<{data: Katalogtyp}>()
 );
 
+export const searchTermChanged = createAction(
+	'[KatalogItemsSucheComponent] search term changed',
+	props<{katalogtyp: Katalogtyp, searchTerm: string}>()
+)
+
 export const startSearch = createAction(
 	'[SchulkatalogFacade] startSearch'
 );
@@ -29,4 +34,5 @@ export const selectKatalogItem = createAction(
 	'[KatalogItemComponent] selectKatalogItem',
 	props<{data: KatalogItem}>()
 );
+
 

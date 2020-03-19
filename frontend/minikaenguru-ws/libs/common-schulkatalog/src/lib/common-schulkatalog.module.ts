@@ -9,9 +9,9 @@ import { KatalogItemComponent } from './katalog-item/katalog-item.component';
 import { StoreModule } from '@ngrx/store';
 import * as fromSchulkatalog from './+state/schulkatalog.reducer';
 import { EffectsModule } from '@ngrx/effects';
-// import { SchulkatalogEffects } from './+state/schulkatalog.effects';
 import { CommonMessagesModule } from '@minikaenguru-ws/common-messages';
 import { CommonLoggingModule } from '@minikaenguru-ws/common-logging';
+import { SchulkatalogEffects } from './+state/schulkatalog.effects';
 
 @NgModule({
   imports: [
@@ -19,7 +19,7 @@ import { CommonLoggingModule } from '@minikaenguru-ws/common-logging';
     HttpClientModule,
     KatalogRoutingModule,
     StoreModule.forFeature(fromSchulkatalog.schulkatalogFeatureKey, fromSchulkatalog.reducer),
-    // EffectsModule.forFeature([SchulkatalogEffects]),
+	EffectsModule.forFeature([SchulkatalogEffects]),
     CommonMessagesModule,
     CommonLoggingModule
   ],
