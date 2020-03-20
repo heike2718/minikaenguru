@@ -3,7 +3,7 @@
         <div class="card-body">
             <h5 class="card-title">{{katalogItem.name}} <span *ngIf="!devMode"> ({{katalogItem.kuerzel}}) </span> </h5>
             <h6 *ngIf="katalogItem.parent" class="card-subtitle mb-2 text-muted">{{katalogItem.parent.name}}</h6>
-            <p class="card-text">{{anzahlText}} {{katalogItem.anzahlKinder}}</p>
+            <p *ngIf="katalogItem.typ !=='SCHULE'" class="card-text">{{anzahlText}} {{katalogItem.anzahlKinder}}</p>
         </div>
     </div>
 </div>

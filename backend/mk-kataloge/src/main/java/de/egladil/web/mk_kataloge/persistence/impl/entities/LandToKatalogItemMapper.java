@@ -20,6 +20,8 @@ public class LandToKatalogItemMapper implements Function<Land, KatalogItem> {
 		KatalogItem result = KatalogItem.createWithTypKuerzelName(Katalogtyp.LAND, land.getKuerzel(), land.getName(),
 			land.getAnzahlOrte());
 
+		result.setLage(land.getName());
+
 		return result;
 	}
 

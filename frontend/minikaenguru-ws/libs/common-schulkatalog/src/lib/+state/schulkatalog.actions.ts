@@ -1,38 +1,37 @@
 import { createAction, props } from '@ngrx/store';
 import { Katalogtyp, KatalogItem } from '../domain/entities';
 
-
-export const initKatalogtyp = createAction(
-	'[KatalogItemsSucheComponent] initKatalogtyp',
-	props<{data: Katalogtyp}>()
-);
-
-export const searchTermChanged = createAction(
-	'[KatalogItemsSucheComponent] search term changed',
-	props<{katalogtyp: Katalogtyp, searchTerm: string}>()
+export const initSucheComponentCompleted = createAction(
+	'[KatalogItemsSucheComponent] initSucheComponentCompleted',
+	props<{katalogtyp: Katalogtyp}>()
 )
 
 export const startSearch = createAction(
-	'[SchulkatalogFacade] startSearch'
+	'[KatalogItemsSucheComponent] startSearch',
+	props<{katalogItem: KatalogItem, searchTerm: string}>()
 );
 
-export const katalogItemsLoaded = createAction(
-	'[SchulkatalogFacade] katalogItemsLoaded',
-	props<{data: KatalogItem[]}>()
+export const searchFinished = createAction(
+	'[SchulkatalogFacade] searchFinished',
+	props<{katalogItems: KatalogItem[]}>()
 );
 
 export const searchError = createAction(
-	'[KatalogService] searchError',
-	props<{data: string}>()
+	'[SchulkatalogFacade] searchError'
 );
 
-export const clearKatalogItems = createAction(
-	'[TODO] clearKatalogItems'
+export const startLoadChildItems = createAction(
+	'[SchulkatalogFacade] startLoadChildItems'
 );
 
-export const selectKatalogItem = createAction(
-	'[KatalogItemComponent] selectKatalogItem',
-	props<{data: KatalogItem}>()
+export const childItemsLoaded = createAction(
+	'[SchulkatalogFacade] childItemsLoaded',
+	props<{katalogItems: KatalogItem[]}>()
+);
+
+export const katalogItemSelected = createAction(
+	'[KatalogItemComponent] katalogItemSelected',
+	props<{katalogItem: KatalogItem}>()
 );
 
 

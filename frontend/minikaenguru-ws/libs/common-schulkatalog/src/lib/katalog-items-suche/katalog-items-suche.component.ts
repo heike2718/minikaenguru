@@ -1,13 +1,12 @@
-import { Component, OnInit, Input, Inject } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, tap, finalize, filter } from 'rxjs/operators';
-import { KatalogItem, Katalogtyp } from '../domain/entities';
+import { Component, OnInit, Input, Inject, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, tap, filter } from 'rxjs/operators';
+import { Katalogtyp, GuiModel, KatalogItem } from '../domain/entities';
 import { SchulkatalogConfigService } from '../configuration/schulkatalog-config';
 import { SchulkatalogFacade } from '../application-services/schulkatalog.facade';
 import { Store } from '@ngrx/store';
 import { SchulkatalogState } from '../+state/schulkatalog.reducer';
-import { initKatalogtyp, searchTermChanged } from '../+state/schulkatalog.actions';
-import { selectSelectedKatalogItem } from '../+state/schulkatalog.selectors';
+import { initSucheComponentCompleted, startSearch, katalogItemSelected } from '../+state/schulkatalog.actions';
 
 @Component({
 	// tslint:disable-next-line: component-selector
@@ -15,21 +14,26 @@ import { selectSelectedKatalogItem } from '../+state/schulkatalog.selectors';
 	templateUrl: './katalog-items-suche.component.html',
 	styleUrls: ['./katalog-items-suche.component.css']
 })
-export class KatalogItemsSucheComponent implements OnInit {
+export class KatalogItemsSucheComponent implements OnInit, OnDestroy {
 
 	@Input()
 	typ: string;
 
 	devMode: boolean;
 
-	labelForInput: string;
-	sucheDescription: string;
+	private guiModelSubscription: Subscription;
 
-	private selectedKatalogItem$ = this.store.select(selectSelectedKatalogItem);
+	guiModel: GuiModel;
+
+	searchTerm: BehaviorSubject<string>;
 
 	searchFormInputValue: string;
 
-	searchTerm: BehaviorSubject<string>;
+	selectedKatalogItem: KatalogItem;
+
+	private selectedKatalogItemSubscription: Subscription;
+
+	private searchTermSubscription: Subscription;
 
 	private katalogtyp: Katalogtyp = 'ORT';
 
@@ -39,66 +43,61 @@ export class KatalogItemsSucheComponent implements OnInit {
 
 	ngOnInit() {
 
+		this.store.dispatch(initSucheComponentCompleted({ katalogtyp: this.katalogtyp }));
+
+		this.searchTermSubscription = this.schulkatalogFacade.searchTerm$.subscribe(
+			term => this.searchFormInputValue = term
+		)
+
+		this.guiModelSubscription = this.schulkatalogFacade.guiModel$.subscribe(
+			model => this.guiModel = model
+		);
+
+		this.selectedKatalogItemSubscription = this.schulkatalogFacade.selectedKatalogItem$.subscribe(
+			item => this.selectedKatalogItem = item
+		);
+
 		this.devMode = this.config.devmode;
 
-		if (this.typ === 'LAND') {
-			this.katalogtyp = 'LAND';
-			this.labelForInput = 'Land';
-			this.sucheDescription = 'das Land';
-		}
-		if (this.typ === 'ORT') {
-			this.katalogtyp = 'ORT';
-			this.labelForInput = 'Ort';
-			this.sucheDescription = 'den Ort';
-		}
-		if (this.typ === 'SCHULE') {
-			this.katalogtyp = 'SCHULE';
-			this.labelForInput = 'Schule';
-			this.sucheDescription = 'die Schule';
-		}
-
-		this.store.dispatch(initKatalogtyp({ data: this.katalogtyp }))
 		this.searchTerm = new BehaviorSubject<string>('');
+
 
 		this.searchTerm.pipe(
 			debounceTime(500),
 			distinctUntilChanged(),
 			filter(term => term.length > 0),
 			tap(term => {
-				this.store.dispatch(searchTermChanged({ katalogtyp: this.katalogtyp, searchTerm: term }));
+
+				if (this.selectedKatalogItem) {
+					this.store.dispatch(startSearch({ katalogItem: this.selectedKatalogItem, searchTerm: term }));
+				} else {
+					const katalogItem = {
+						typ: this.guiModel.currentKatalogtyp
+					} as KatalogItem;
+					this.store.dispatch(startSearch({ katalogItem: katalogItem, searchTerm: term }));
+				}
+
+
 			})
 		).subscribe();
+	}
 
-		this.selectedKatalogItem$.subscribe(
-			item => this.handleItemSelected(item)
-		);
+	ngOnDestroy() {
+		if (this.guiModelSubscription) {
+			this.guiModelSubscription.unsubscribe;
+		}
+		if (this.selectedKatalogItemSubscription) {
+			this.selectedKatalogItemSubscription.unsubscribe();
+		}
+		if (this.searchTermSubscription) {
+			this.searchTermSubscription.unsubscribe();
+		}
 	}
 
 
 	onKeyup($event) {
-
-
 		const value = $event.target.value;
 		console.log('[event.value=' + value + ']')
 		this.searchTerm.next(value);
-
-	}
-
-	private handleItemSelected(selectedItem: KatalogItem) {
-
-		if (selectedItem && !selectedItem.leaf) {
-
-			switch (this.katalogtyp) {
-				case 'LAND': break;
-				case 'ORT': break;
-				case 'SCHULE': break;
-			}
-
-		}
-
-		if (selectedItem) {
-			this.searchFormInputValue = '';
-			console.log('[KatalogItemsSucheComponent]: [' + selectedItem.name + ',' + selectedItem.kuerzel + '] has been selected');
-		}
 	}
 }

@@ -1,57 +1,153 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { Katalogtyp, KatalogItem } from '../domain/entities';
+import { KatalogItem, GuiModel, getInputLabel, getSucheDescription, getAuswahlDescriptiom, getCurrentKatalogtyp } from '../domain/entities';
 import * as SchulkatalogActions from './schulkatalog.actions';
 
 export const schulkatalogFeatureKey = 'schulkatalog';
 
 export interface SchulkatalogState {
-	currentKatalogtyp: Katalogtyp,
+	guiModel: GuiModel,
 	loadedKatalogItems: KatalogItem[],
 	searchTerm: string,
-	selectedKatalogItem: KatalogItem,
-	loadingKatalogItems: boolean,
-	error: string
+	selectedKatalogItem: KatalogItem
+}
+
+export const initialGuiModel: GuiModel = {
+	currentKatalogtyp: undefined, // 1
+	sucheDescription: '', // 5
+	inputLabel: '', // 6
+	auswahlDescription: '', // 7
+	showInputControl: false, // 8
+	showLoadingIndicator: false, // 9
+	katalogItemsAvailable: false // 10
 }
 
 export const initialState: SchulkatalogState = {
-	currentKatalogtyp: undefined,
+	guiModel: initialGuiModel,
 	loadedKatalogItems: [],
 	searchTerm: '',
-	selectedKatalogItem: undefined,
-	loadingKatalogItems: false,
-	error: undefined
+	selectedKatalogItem: undefined
 };
 
 const schulkatalogReducer = createReducer(
 	initialState,
 
-	on(SchulkatalogActions.initKatalogtyp, (_state, action) => {
-		return { ...initialState, currentKatalogtyp: action.data };
+	on(SchulkatalogActions.initSucheComponentCompleted, (_state, action) => {
+		const katalogtyp = action.katalogtyp;
+
+		const inputLabel = getInputLabel(katalogtyp, undefined);
+		const sucheDescription = getSucheDescription(katalogtyp, undefined);
+
+		const guiModel = {
+			...initialGuiModel
+			, currentKatalogtyp: katalogtyp
+			, inputLabel: inputLabel
+			, sucheDescription: sucheDescription
+			, showInputControl: true
+			, showLoadingIndicator: false
+		};
+
+		return { ...initialState, guiModel: guiModel };
 	}),
 
-	on(SchulkatalogActions.startSearch, (state, _action) => {
-		return { ...state, loadingKatalogItems: true }
+	on(SchulkatalogActions.startSearch, (state, action) => {
+		const guiModel = { ...initialGuiModel, showLoadingIndicator: true };
+		return { ...state, searchTerm: action.searchTerm, guiModel: guiModel }
 	}),
 
-	on(SchulkatalogActions.katalogItemsLoaded, (state, action) => {
-		const loadedKatalogItems = action.data;
+	on(SchulkatalogActions.searchFinished, (state, action) => {
 
-		return { ...state
-			, loadedKatalogItems
+		const loadedKatalogItems = action.katalogItems;
+		const auswahlDescription = getAuswahlDescriptiom(loadedKatalogItems);
+		const katalogItemsAvailable = loadedKatalogItems.length > 0;
+
+		let guiModel = {
+			...state.guiModel
+			, showLoadingIndicator: false
+			, auswahlDescription: auswahlDescription
+			, katalogItemsAvailable: katalogItemsAvailable
+		};
+
+		if (loadedKatalogItems.length > 10) {
+
+			const neuerTyp = loadedKatalogItems[0].typ;
+			guiModel = { ...guiModel
+				, showInputControl: true
+				, currentKatalogtyp: neuerTyp
+				, inputLabel: getInputLabel(neuerTyp, undefined)
+				, sucheDescription: getSucheDescription(neuerTyp, undefined) }
+		}
+
+		return {
+			...state
+			, guiModel: guiModel
+			, loadedKatalogItems: loadedKatalogItems
 			, searchTerm: ''
-			, loadingKatalogItems: false
 			, selectedKatalogItem: undefined
-			, error: undefined }
+		}
 	}),
 
-	on(SchulkatalogActions.clearKatalogItems, (state, _action) => {
-		return { ...state, loadedKatalogItems: [], loadingKatalogItems: false, selectedKatalogItem: undefined, error: undefined }
+	on(SchulkatalogActions.startLoadChildItems, (state, _action) => {
+		const guiModel = { ...state.guiModel, showLoadingIndicator: true };
+		return { ...state, guiModel: guiModel }
 	}),
-	on(SchulkatalogActions.searchError, (state, action) => {
-		return { ...state, loadedKatalogItems: [], loadingKatalogItems: false, selectedKatalogItem: undefined, error: action.data }
+
+	on(SchulkatalogActions.searchError, (state, _action) => {
+
+		let guiModel = {
+			...state.guiModel
+			, showInputControl: true
+			, showLoadingIndicator: false
+			, auswahlDescription: ''
+			, katalogItemsAvailable: false
+		};
+
+		return {
+			...state
+			, guiModel: guiModel
+			, loadedKatalogItems: []
+			, searchTerm: ''
+			, selectedKatalogItem: undefined
+		}
 	}),
-	on(SchulkatalogActions.selectKatalogItem, (state, action) => {
-		return { ...state, loadingKatalogItems: false, selectedKatalogItem: action.data, error: undefined }
+
+	on(SchulkatalogActions.katalogItemSelected, (state, action) => {
+
+		const selectedKatalogItem = action.katalogItem;
+		const katalogtyp = state.guiModel.currentKatalogtyp
+
+		if (!selectedKatalogItem) {
+			const inputLabel = getInputLabel(katalogtyp, undefined);
+			const sucheDescription = getSucheDescription(katalogtyp, undefined);
+
+			const guiModel = {
+				...initialGuiModel
+				, currentKatalogtyp: katalogtyp
+				, inputLabel: inputLabel
+				, sucheDescription: sucheDescription
+				, auswahlDescription: ''
+				, showLoadingIndicator: false
+			}
+			return { ...initialState, guiModel: guiModel };
+		}
+
+		const neuerKatalogtyp = getCurrentKatalogtyp(katalogtyp, selectedKatalogItem);
+
+		let guiModel = {
+			...state.guiModel
+			, currentKatalogtyp: neuerKatalogtyp
+			, inputLabel: getInputLabel(neuerKatalogtyp, selectedKatalogItem)
+			, sucheDescription: getSucheDescription(neuerKatalogtyp, selectedKatalogItem)
+			, auswahlDescription: ''
+			, showLoadingIndicator: false
+		};
+
+		if (selectedKatalogItem.anzahlKinder <= 10) {
+			guiModel = { ...guiModel, showInputControl: false }
+		} else {
+			guiModel = { ...guiModel, showInputControl: true }
+		}
+
+		return { ...state, guiModel: guiModel, loadedKatalogItems: [], searchTerm: '', selectedKatalogItem: selectedKatalogItem };
 	})
 );
 

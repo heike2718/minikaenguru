@@ -2,10 +2,10 @@ import { Injectable, Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { SchulkatalogState } from '../+state/schulkatalog.reducer';
 import { KatalogService } from '../infrastructure/katalog.service';
-import { selectKatalogItems, selectKatalogtyp, selectLoadingIndicator, selectSelectedKatalogItem, selectSearchTerm } from '../+state/schulkatalog.selectors';
-import { Katalogtyp } from '../domain/entities';
+import { selectKatalogItems, selectLoadingIndicator, selectSelectedKatalogItem, selectSearchTerm, selectGuiModel } from '../+state/schulkatalog.selectors';
+import { Katalogtyp, KatalogItem } from '../domain/entities';
 import { HttpErrorResponse } from '@angular/common/http';
-import { searchError, katalogItemsLoaded } from '../+state/schulkatalog.actions';
+import { searchError, searchFinished, startLoadChildItems, childItemsLoaded } from '../+state/schulkatalog.actions';
 import { MessageService } from '@minikaenguru-ws/common-messages';
 import { LogService } from '@minikaenguru-ws/common-logging';
 import { SchulkatalogConfig, SchulkatalogConfigService } from '../configuration/schulkatalog-config';
@@ -13,8 +13,10 @@ import { SchulkatalogConfig, SchulkatalogConfigService } from '../configuration/
 @Injectable({ providedIn: 'root' })
 export class SchulkatalogFacade {
 
+
+
+	public guiModel$ = this.store.select(selectGuiModel);
 	public katalogItems$ = this.store.select(selectKatalogItems);
-	public katalogtyp$ = this.store.select(selectKatalogtyp);
 	public loading$ = this.store.select(selectLoadingIndicator);
 	public selectedKatalogItem$ = this.store.select(selectSelectedKatalogItem);
 	public searchTerm$ = this.store.select(selectSearchTerm);
@@ -23,14 +25,41 @@ export class SchulkatalogFacade {
 		, private logger: LogService) { }
 
 
-	public searchKatalogItemsNeu(typ: Katalogtyp, searchTerm: string) {
+	public searchKatalogItems(typ: Katalogtyp, searchTerm: string) {
 
-		this.katalogService.searchKatalogItemsNeu(typ, searchTerm).subscribe(
+		this.katalogService.searchKatalogItems(typ, searchTerm).subscribe(
 			katalogItems => {
-				this.store.dispatch(katalogItemsLoaded({ data: katalogItems }));
+				this.store.dispatch(searchFinished({ katalogItems: katalogItems }));
 			},
 			(error => {
 				this.handleError(error, '[SchulkatalogFacade] searchKatalogItems')
+			})
+		);
+	}
+
+	public searchKindelemente(katalogItem: KatalogItem, searchTerm: string) {
+
+		this.katalogService.searchKindelemente(katalogItem, searchTerm).subscribe(
+			katalogItems => {
+				this.store.dispatch(searchFinished({ katalogItems: katalogItems }));
+			},
+			(error => {
+				this.handleError(error, '[SchulkatalogFacade] searchKatalogItems')
+			})
+		);
+	}
+
+
+	public loadKindelemente(katalogItem: KatalogItem) {
+
+		this.store.dispatch(startLoadChildItems());
+
+		this.katalogService.loadKindelemente(katalogItem).subscribe(
+			katalogItems => {
+				this.store.dispatch(childItemsLoaded({katalogItems: katalogItems}));
+			},
+			(error => {
+				this.handleError(error, '[SchulkatalogFacade] loadKindelemente')
 			})
 		);
 	}
@@ -57,9 +86,9 @@ export class SchulkatalogFacade {
 						this.logger.error(context + ' url=' + httpError.url);
 						if (msg) {
 							this.showServerResponseMessage(msg);
-							this.store.dispatch(searchError({ data: msg.message }));
+							this.store.dispatch(searchError());
 						} else {
-							this.store.dispatch(searchError({ data: 'unerwarteter Fehler ' + httpError.status }));
+							this.store.dispatch(searchError());
 							if (this.config.admin) {
 								this.messagesService.error(context + ' status=' + error.status
 									+ ': OMG +++ Divide By Cucumber Error. Please Reinstall Universe And Reboot +++');

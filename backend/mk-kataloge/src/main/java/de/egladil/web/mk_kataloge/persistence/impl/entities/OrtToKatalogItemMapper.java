@@ -37,6 +37,8 @@ public class OrtToKatalogItemMapper implements Function<Ort, KatalogItem> {
 		KatalogItem land = KatalogItem.createWithTypKuerzelName(Katalogtyp.LAND, ort.getLandKuerzel(), ort.getLandName(),
 			landEntity.getAnzahlOrte());
 
+		result.setLage(ort.getLandName() + "=> " + ort.getName());
+
 		result.setParent(land);
 
 		return result;
