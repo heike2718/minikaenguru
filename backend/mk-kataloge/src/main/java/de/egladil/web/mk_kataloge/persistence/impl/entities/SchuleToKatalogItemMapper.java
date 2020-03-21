@@ -46,7 +46,7 @@ public class SchuleToKatalogItemMapper implements Function<Schule, KatalogItem> 
 		ort.setParent(land);
 		result.setParent(ort);
 
-		result.setLage(schule.getLandName() + "=> " + schule.getOrtName() + "=> " + schule.getName());
+		result.setPfad(schule.getLandName() + " -> " + schule.getOrtName() + " -> " + schule.getName());
 
 		return result;
 	}

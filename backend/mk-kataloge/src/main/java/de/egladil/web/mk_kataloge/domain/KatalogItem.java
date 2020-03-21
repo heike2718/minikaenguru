@@ -13,7 +13,7 @@ public class KatalogItem {
 
 	private String name;
 
-	private String lage;
+	private String pfad;
 
 	private String kuerzel;
 
@@ -86,13 +86,13 @@ public class KatalogItem {
 		return leaf;
 	}
 
-	public String getLage() {
+	public String getPfad() {
 
-		return lage;
+		return pfad;
 	}
 
-	public void setLage(final String lage) {
+	public void setPfad(final String lage) {
 
-		this.lage = lage;
+		this.pfad = lage;
 	}
 }

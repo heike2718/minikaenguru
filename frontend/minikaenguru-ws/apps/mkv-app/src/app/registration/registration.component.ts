@@ -1,8 +1,7 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
-import { SchulkatalogFacade } from '@minikaenguru-ws/common-schulkatalog';
-import { KatalogItem } from 'libs/common-schulkatalog/src/lib/domain/entities';
+import { SchulkatalogFacade, KatalogItem } from '@minikaenguru-ws/common-schulkatalog';
 
 @Component({
   selector: 'mkv-registration',
@@ -15,6 +14,8 @@ export class RegistrationComponent implements OnInit {
 
   showSchulkatalog: boolean;
 
+  wirdLehrerkonto: boolean;
+
   selectedKatalogItem: KatalogItem;
 
   pfadKatalogItem: string;
@@ -22,7 +23,8 @@ export class RegistrationComponent implements OnInit {
   constructor(private router: Router, public schulkatalogFacade: SchulkatalogFacade) {
 
     this.devMode = !environment.production;
-    this.showSchulkatalog = false;
+	this.showSchulkatalog = false;
+	this.wirdLehrerkonto = false;
 
   }
 
@@ -32,12 +34,10 @@ export class RegistrationComponent implements OnInit {
       item => {
         if (item ) {
           this.selectedKatalogItem = item;
-
-          switch(item.typ) {
-            case 'LAND': this.pfadKatalogItem = item.name; break;
-            case 'ORT' : this.pfadKatalogItem = item.parent.name + ' -> ' + item.name; break;
-            case 'SCHULE' : this.pfadKatalogItem = item.parent.parent.name + ' -> ' + item.parent.name + ' -> ' + item.name; break;
-          }
+		  this.pfadKatalogItem = item.pfad;
+		  if (item.typ == 'SCHULE') {
+			  this.showSchulkatalog = false;
+		  }
         }
       }
     );
@@ -47,8 +47,9 @@ export class RegistrationComponent implements OnInit {
     this.router.navigate([]);
   }
 
-  toggleSchulkatalog() {
-    this.showSchulkatalog = !this.showSchulkatalog;
+  modusLehrerkonto() {
+	this.showSchulkatalog = true;
+	this.wirdLehrerkonto = true;
   }
 
   privatkontoAnlegen() {

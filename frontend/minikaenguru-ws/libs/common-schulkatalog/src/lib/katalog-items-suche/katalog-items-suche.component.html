@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container hewi-boardered">
 	<div class="row">
 		<div class="col-md-12">
 			<p *ngIf="devMode">(katalog-items-suche.component)</p>
@@ -8,7 +8,7 @@
 	<div *ngIf="schulkatalogFacade.guiModel$ | async">
 		<div class="row">
 			<div class="col-md-12">
-				<h3 *ngIf="selectedKatalogItem">{{selectedKatalogItem.lage}}</h3>
+				<h3 *ngIf="selectedKatalogItem">{{selectedKatalogItem.pfad}}</h3>
 			</div>
 		</div>
 		<div *ngIf="guiModel.showInputControl" class="row">

@@ -2,7 +2,7 @@ export interface KatalogItem {
 	readonly typ: Katalogtyp;
 	readonly kuerzel: string;
 	readonly name: string;
-	readonly lage: string;
+	readonly pfad: string;
 	readonly parent: KatalogItem;
 	readonly anzahlKinder: number;
 	readonly leaf: boolean;

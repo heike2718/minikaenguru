@@ -91,6 +91,28 @@ const schulkatalogReducer = createReducer(
 		return { ...state, guiModel: guiModel }
 	}),
 
+	on(SchulkatalogActions.childItemsLoaded, (state, action) => {
+
+		const loadedKatalogItems = action.katalogItems;
+		const auswahlDescription = getAuswahlDescriptiom(loadedKatalogItems);
+		const katalogItemsAvailable = loadedKatalogItems.length > 0;
+
+		let guiModel = {
+			...state.guiModel
+			, showLoadingIndicator: false
+			, auswahlDescription: auswahlDescription
+			, katalogItemsAvailable: katalogItemsAvailable
+		};
+
+		return {
+			...state
+			, guiModel: guiModel
+			, loadedKatalogItems: loadedKatalogItems
+			, searchTerm: ''
+			, selectedKatalogItem: undefined
+		}
+	}),
+
 	on(SchulkatalogActions.searchError, (state, _action) => {
 
 		let guiModel = {

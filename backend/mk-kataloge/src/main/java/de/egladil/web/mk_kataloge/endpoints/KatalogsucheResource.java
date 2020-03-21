@@ -58,7 +58,7 @@ public class KatalogsucheResource {
 	public Response findItems(@PathParam(
 		value = "typ") final String typ, @NotBlank @StringLatin @QueryParam("search") final String searchTerm) {
 
-		LOG.info("{} - {}", typ, searchTerm);
+		LOG.debug("{} - {}", typ, searchTerm);
 
 		Response response = validateSearchTerm(searchTerm);
 
