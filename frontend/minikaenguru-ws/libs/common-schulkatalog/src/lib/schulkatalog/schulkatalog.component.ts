@@ -11,11 +11,9 @@ export class SchulkatalogComponent implements OnInit {
 
   devMode: boolean;
 
-  constructor(@Inject(SchulkatalogConfigService) private config) {
-
-    this.devMode = config.devMode;
-  }
+  constructor(@Inject(SchulkatalogConfigService) private config) {}
 
   ngOnInit() {
+	  this.devMode = this.config.devmode;
   }
 }

@@ -60,6 +60,10 @@ export class RegistrationComponent implements OnInit {
 
   }
 
+  cancel() {
+	  this.router.navigateByUrl('/');
+  }
+
   submitDisabled() {
     if (!this.showSchulkatalog) {
       return false;

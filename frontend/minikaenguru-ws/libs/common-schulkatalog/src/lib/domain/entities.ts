@@ -35,9 +35,9 @@ export function getSucheDescription(alterKatalogtyp: Katalogtyp, selectedKatalog
 	if (selectedKatalogItem) {
 		switch (selectedKatalogItem.typ) {
 			case 'LAND':
-				return 'Bitte suchen Sie einen Ort.';
+				return 'Bitte suchen Sie Ihren Ort.';
 			case 'ORT':
-				return 'Bitte suchen Sie eine Schule.';
+				return 'Bitte suchen Sie Ihre Schule.';
 			case 'SCHULE':
 				return '';
 		}
@@ -45,11 +45,11 @@ export function getSucheDescription(alterKatalogtyp: Katalogtyp, selectedKatalog
 
 	switch (alterKatalogtyp) {
 		case 'LAND':
-			return 'Bitte suchen Sie ein Land.';
+			return 'Bitte suchen Sie Ihr Land.';
 		case 'ORT':
-			return 'Bitte suchen Sie einen Ort.';
+			return 'Bitte suchen Sie Ihren Ort.';
 		case 'SCHULE':
-			return 'Bitte suchen Sie eine Schule.';
+			return 'Bitte suchen Sie Ihre Schule.';
 	}
 
 	return '';
@@ -90,11 +90,11 @@ export function getAuswahlDescriptiom(katalogItems: KatalogItem[]): string {
 
 	switch (katalogtyp) {
 		case 'LAND':
-			return 'Bitte wählen Sie ein Land aus.';
+			return 'Bitte wählen Sie Ihr Land aus.';
 		case 'ORT':
-			return 'Bitte wählen Sie einen Ort aus.';
+			return 'Bitte wählen Sie Ihren Ort aus.';
 		case 'SCHULE':
-			return 'Bitte wählen Sie eine Schule aus.';
+			return 'Bitte wählen Sie Ihre Schule aus.';
 	}
 
 	return '';

@@ -1,22 +1,34 @@
-<div class="container">
-  <div class="row">
-    <div class="col-md-12">
-      <h2>Benutzerkonto anlegen <span *ngIf="devMode">(registration.component)</span> </h2>
+<div class="mkv-container mkv-bordered">
+	<div class="col--12">
+		<h2>Benutzerkonto anlegen <span *ngIf="devMode">(registration.component)</span> </h2>
 
-      <div *ngIf="!showSchulkatalog" class="row">
-        <div class="col-sm-12 col-md-6">
-          <button type="button" class="btn btn-primary btn-block" (click)="modusLehrerkonto()">Lehrer/Lehrerin</button>
-        </div>
-        <div class="col-sm-12 col-md-6">
-          <button type="button" class="btn btn-primary btn-block" (click)="privatkontoAnlegen()">privat</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div *ngIf="wirdLehrerkonto" class="row">
-    <mk-katalog *ngIf="showSchulkatalog"></mk-katalog>
+		<div *ngIf="!showSchulkatalog" class="row">
+			<div class="col-sm-12 col-md-3">
+				<button type="button" class="btn btn-primary btn-block"
+					(click)="modusLehrerkonto()">Lehrer/Lehrerin</button>
+			</div>
+			<div class="col-sm-12 col-md-3">
+				<button type="button" class="btn btn-primary btn-block" (click)="privatkontoAnlegen()">privat</button>
+			</div>
+		</div>
+	</div>
 
-    <p *ngIf="schulkatalogFacade.selectedKatalogItem$ | async">{{pfadKatalogItem}}</p>
-    <button type="button" class="btn btn-primary btn-block" disabled="submitDisabled()" (click)="lehrerkontoAnlegen()">Konto anlegen</button>
-  </div>
+
+	<div *ngIf="wirdLehrerkonto" class="col-12">
+		<div *ngIf="showSchulkatalog" class="mkv-container mkv-container-elevated">
+			<mk-katalog></mk-katalog>
+		</div>
+
+		<p *ngIf="schulkatalogFacade.selectedKatalogItem$ | async">{{pfadKatalogItem}}</p>
+		<div class="row">
+			<div class="col-sm-12 col-md-3">
+				<button type="button" class="btn btn-primary btn-block" disabled="submitDisabled()"
+					(click)="lehrerkontoAnlegen()">Konto anlegen</button>
+			</div>
+			<div class="col-sm-12 col-md-3">
+				<button type="button" class="btn btn-primary btn-block" (click)="cancel()">abbrechen</button>
+			</div>
+		</div>
+	</div>
+
 </div>

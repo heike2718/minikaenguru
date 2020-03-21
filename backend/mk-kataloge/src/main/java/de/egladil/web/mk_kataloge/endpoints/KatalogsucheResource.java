@@ -160,7 +160,7 @@ public class KatalogsucheResource {
 	public Response findSchulenInOrt(@Kuerzel @PathParam(
 		value = "ort") final String ortKuerzel, @NotBlank @StringLatin @QueryParam("search") final String searchTerm) {
 
-		LOG.info("{} - {}", ortKuerzel, searchTerm);
+		LOG.debug("{} - {}", ortKuerzel, searchTerm);
 
 		Response response = validateSearchTerm(searchTerm);
 
