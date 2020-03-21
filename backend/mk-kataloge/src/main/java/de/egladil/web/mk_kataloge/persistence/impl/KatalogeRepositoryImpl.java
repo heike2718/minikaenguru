@@ -224,4 +224,28 @@ public class KatalogeRepositoryImpl implements KatalogeRepository {
 			throw new KatalogAPIException(msg);
 		}
 	}
+
+	@Override
+	public int countSchulenInOrt(final String kuerzel) {
+
+		String stmt = "select count(s) from Schule s where s.ortKuerzel = :kuerzel";
+		TypedQuery<Long> query = em.createQuery(stmt, Long.class)
+			.setParameter("kuerzel", kuerzel.trim());
+
+		Long result = query.getSingleResult();
+
+		return result.intValue();
+	}
+
+	@Override
+	public int countOrteInLand(final String kuerzel) {
+
+		String stmt = "select count(o) from Ort o where o.landKuerzel = :kuerzel";
+		TypedQuery<Long> query = em.createQuery(stmt, Long.class)
+			.setParameter("kuerzel", kuerzel.trim());
+
+		Long result = query.getSingleResult();
+
+		return result.intValue();
+	}
 }

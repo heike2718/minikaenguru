@@ -8,8 +8,6 @@ import { environment } from '../environments/environment';
 })
 export class AppComponent {
 
-	title = 'Minikänguru Onlineauswertung';
-
 	envName = environment.envName;
 	showEnv = !environment.production;
 	api = environment.apiUrl;

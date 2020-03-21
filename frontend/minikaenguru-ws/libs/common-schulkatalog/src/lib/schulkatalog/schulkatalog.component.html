@@ -1,6 +1,5 @@
-<p>Schulkatalog <span *ngIf="devMode">(schulkatalog.component)</span> </p>
-<div class="row">
-    <div class="col-12">
-        <mk-katalog-items-suche [typ]="'ORT'"></mk-katalog-items-suche>
-    </div>
+<div class="col-12">
+	<h3>Schulkatalog</h3>
+	<mk-katalog-items-suche [typ]="'ORT'"></mk-katalog-items-suche>
 </div>
+<p *ngIf="devMode">(schulkatalog.component)</p>

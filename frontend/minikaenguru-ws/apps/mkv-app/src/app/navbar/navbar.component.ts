@@ -1,21 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
+import { environment } from '../../environments/environment';
 
 @Component({
-  selector: 'mkv-navbar',
-  templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+	selector: 'mkv-navbar',
+	templateUrl: './navbar.component.html',
+	styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
 
-  collapsed = true;
+	collapsed = true;
+	logo: string;
 
-  constructor() { }
+	@ViewChild(NgbCollapse, { static: true }) navbarToggler: NgbCollapse;
 
-  ngOnInit() {
-  }
+	constructor() { }
 
-  login() {
-    // mal noch nichts
-  }
+	collapseNav() {
+		if (this.navbarToggler) {
+			this.collapsed = true;
+		}
+	}
+
+	ngOnInit() {
+		this.logo = environment.assetsUrl + '/mja-logo.png';
+		console.log(this.logo);
+	}
+
+	login() {
+		// mal noch nichts
+	}
 
 }

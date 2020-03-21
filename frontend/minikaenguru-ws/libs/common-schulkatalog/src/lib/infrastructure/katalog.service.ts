@@ -3,77 +3,102 @@ import { HttpClient } from '@angular/common/http';
 import { SchulkatalogConfigService, SchulkatalogConfig } from '../configuration/schulkatalog-config';
 import { Katalogtyp, KatalogItem } from '../domain/entities';
 import { Observable, of } from 'rxjs';
-import { map, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
-import { SchulkatalogState } from '../+state/schulkatalog.reducer';
-import { startSearch } from '../+state/schulkatalog.actions';
+import { map } from 'rxjs/operators';
+import { LogService } from '@minikaenguru-ws/common-logging';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class KatalogService {
 
-  private queryParamPrefix = '?search=';
+	private queryParamPrefix = '?search=';
 
-  constructor(@Inject(SchulkatalogConfigService) private config: SchulkatalogConfig, private http: HttpClient, private store: Store<SchulkatalogState> ) {}
+	constructor(@Inject(SchulkatalogConfigService) private config: SchulkatalogConfig
+		, private http: HttpClient
+		, private logger: LogService) { }
 
-  public searchKatalogItems(typ: Katalogtyp, terms: Observable<string>): Observable<KatalogItem[]> {
+	public searchKatalogItems(typ: Katalogtyp, serachTerm: string): Observable<KatalogItem[]> {
 
-    let url = '';
-    switch(typ) {
-	  case 'LAND':
-		url = this.config.baseUrl + '/katalogsuche/global/land';
-		break;
-      case 'ORT':
-        url = this.config.baseUrl + '/katalogsuche/global/ort';
-        break;
-      case 'SCHULE':
-        url = this.config.baseUrl + '/katalogsuche/global/schule';
-        break;
-    default:
-        throw new Error('unsupported Katalogtyp ' + typ);
-    }
+		let url = '';
+		switch (typ) {
+			case 'LAND':
+				url = this.config.baseUrl + '/katalogsuche/global/land';
+				break;
+			case 'ORT':
+				url = this.config.baseUrl + '/katalogsuche/global/ort';
+				break;
+			case 'SCHULE':
+				url = this.config.baseUrl + '/katalogsuche/global/schule';
+				break;
+			default:
+				throw new Error('unsupported Katalogtyp ' + typ);
+		}
 
-    return terms.pipe(
-      debounceTime(400),
-      distinctUntilChanged(),
-      switchMap(term => this.searchEntries(typ, url, term))
-    );
-  }
-
-  private searchEntries(typ: Katalogtyp, url: string, term: string): Observable<KatalogItem[]> {
-
-    if (term.length === 0 && typ !== 'LAND') {
-      return of([]);
+		return this.searchEntries(url, serachTerm);
 	}
 
-	this.store.dispatch(startSearch());
+	public searchKindelemente(katalogItem: KatalogItem, serachTerm: string): Observable<KatalogItem[]> {
 
-	let finalUrl = url;
+		let url = '';
+		switch (katalogItem.typ) {
+			case 'LAND':
+				url = this.config.baseUrl + '/katalogsuche/laender/' + katalogItem.kuerzel + '/orte';
+				break;
+			case 'ORT':
+				url = this.config.baseUrl + '/katalogsuche/orte/' + katalogItem.kuerzel + '/schulen';
+				break;
+			case 'SCHULE':
+				break;
+			default:
+				throw new Error('unsupported Katalogtyp ' + katalogItem.typ);
+		}
 
-	if (typ !== 'LAND') {
-		finalUrl += this.queryParamPrefix + term;
+		return this.searchEntries(url, serachTerm);
 	}
 
-    return this.http
-        .get(finalUrl).pipe(
-          map( body => body['data'] as  KatalogItem[])
-        );
-  }
+	public loadKindelemente(katalogItem: KatalogItem): Observable<KatalogItem[]> {
+
+		if (katalogItem.anzahlKinder > 10 || katalogItem.leaf) {
+
+			return of([]);
+		}
+
+		let url = '';
+		switch (katalogItem.typ) {
+			case 'LAND':
+				url = this.config.baseUrl + '/kataloge/laender/' + katalogItem.kuerzel + '/orte';
+				break;
+			case 'ORT':
+				url = this.config.baseUrl + '/kataloge/orte/' + katalogItem.kuerzel + '/schulen';
+				break;
+			default:
+				url = '';
+				this.logger.warn('KatalogService.loadKindelemente() mit unerwartetem KatalogTyp ' + katalogItem.typ + ' aufgerufen');
+		}
+
+		if (url.length > 0) {
+
+			return this.http
+				.get(url).pipe(
+					map(body => body['data'] as KatalogItem[])
+				);
+		}
+
+		return of([]);
+	}
+
+	private searchEntries(url: string, term: string): Observable<KatalogItem[]> {
+
+		if (term.length === 0) {
+			return of([]);
+		}
+
+		const finalUrl = url + this.queryParamPrefix + term;
+
+		return this.http
+			.get(finalUrl).pipe(
+				map(body => body['data'] as KatalogItem[])
+			);
+	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

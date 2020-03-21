@@ -13,6 +13,8 @@ public class KatalogItem {
 
 	private String name;
 
+	private String pfad;
+
 	private String kuerzel;
 
 	private KatalogItem parent;
@@ -82,5 +84,15 @@ public class KatalogItem {
 	public boolean isLeaf() {
 
 		return leaf;
+	}
+
+	public String getPfad() {
+
+		return pfad;
+	}
+
+	public void setPfad(final String lage) {
+
+		this.pfad = lage;
 	}
 }

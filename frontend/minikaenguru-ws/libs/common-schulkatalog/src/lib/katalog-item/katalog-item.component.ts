@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { KatalogItem } from '../domain/entities';
 import { Store } from '@ngrx/store';
 import { SchulkatalogState } from '../+state/schulkatalog.reducer';
-import { selectKatalogItem } from '../+state/schulkatalog.actions';
+import { katalogItemSelected } from '../+state/schulkatalog.actions';
 
 @Component({
   selector: 'mk-katalog-item',
@@ -32,7 +32,7 @@ export class KatalogItemComponent implements OnInit {
   }
 
   selectTheItem() {
-    this.store.dispatch(selectKatalogItem({data: this.katalogItem}));
+    this.store.dispatch(katalogItemSelected({katalogItem: this.katalogItem}));
   }
 }
 
