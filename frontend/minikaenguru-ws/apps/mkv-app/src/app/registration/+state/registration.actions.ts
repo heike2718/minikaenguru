@@ -12,3 +12,7 @@ export const schuleSelected = createAction(
 	props<{schulkuerzel: string}>()
 );
 
+export const resetRegistrationState = createAction(
+	'[RegistrationComponent] resetRegistrationState'
+);
+

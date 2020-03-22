@@ -8,3 +8,4 @@ export const selectRegistrationState = createFeatureSelector<fromRegistration.Re
 
 export const selectRegistrationMode = createSelector(selectRegistrationState, s => s.mode);
 export const selectSubmitStatus = createSelector(selectRegistrationState, s => s.submitEnabled);
+export const selectShowShulkatalog = createSelector(selectRegistrationState, s => s.showSchulkatalog);

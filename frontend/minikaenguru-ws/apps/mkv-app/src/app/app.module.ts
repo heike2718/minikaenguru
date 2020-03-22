@@ -13,18 +13,18 @@ import { reducers, metaReducers } from './reducers';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import {RouterStateSerializer, StoreRouterConnectingModule, RouterState} from "@ngrx/router-store";
 import { environment } from '../environments/environment';
-import { RegistrationComponent } from './registration/registration.component';
 import { NotFoundComponent } from './not-found.component';
 import { LandingComponent } from './landing/landing.component';
 import { CommonLoggingModule } from '@minikaenguru-ws/common-logging';
 import { GlobalErrorHandlerService } from './infrastructure/global-error-handler.service';
 import { EffectsModule } from '@ngrx/effects';
+import { CustomRouterStateSerializer } from './shared/utils';
+import { RegistrationModule } from './registration/registration.module';
 
 @NgModule({
 	declarations: [
 		AppComponent,
 		NavbarComponent,
-		RegistrationComponent,
 		NotFoundComponent,
 		LandingComponent
 	],
@@ -42,6 +42,7 @@ import { EffectsModule } from '@ngrx/effects';
 			serverLogActive: environment.serverLogActive,
 			loglevel: environment.loglevel
 		}),
+		RegistrationModule,
 		StoreModule.forRoot(reducers, {
 			metaReducers,
 			runtimeChecks: {
@@ -62,6 +63,7 @@ import { EffectsModule } from '@ngrx/effects';
 	providers: [
 		GlobalErrorHandlerService,
 		{ provide: ErrorHandler, useClass: GlobalErrorHandlerService },
+		{ provide: RouterStateSerializer, useClass: CustomRouterStateSerializer }
 
 	],
 	bootstrap: [AppComponent]
