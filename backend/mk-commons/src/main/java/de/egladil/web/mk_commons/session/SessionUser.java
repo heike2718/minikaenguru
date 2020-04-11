@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 /**
  * SessionUser. Die idReference dient dazu, Fehler, die auf dem Client auftreten, mit dem Serverlog zu verbinden.
  */
+@Deprecated(forRemoval = true)
 public class SessionUser implements Principal {
 
 	private String idReference;

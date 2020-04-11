@@ -8,6 +8,7 @@ package de.egladil.web.mk_commons.exception;
 /**
  * LogmessagePrefixes
  */
+@Deprecated(forRemoval = true)
 public interface LogmessagePrefixes {
 
 	String DATENMUELL = "Datenmuell bleibt: ";

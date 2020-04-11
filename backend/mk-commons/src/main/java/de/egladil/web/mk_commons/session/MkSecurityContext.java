@@ -11,6 +11,7 @@ import javax.ws.rs.core.SecurityContext;
 /**
  * MkSecurityContext
  */
+@Deprecated(forRemoval = true)
 public class MkSecurityContext implements SecurityContext {
 
 	private final Session session;

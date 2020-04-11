@@ -1,12 +1,13 @@
-//=====================================================
+// =====================================================
 // Project: mkadmin-server
 // (c) Heike Winkelvoß
-//=====================================================
+// =====================================================
 package de.egladil.web.mk_commons.exception;
 
 /**
  * MkRuntimeException
  */
+@Deprecated(forRemoval = true)
 public class MkRuntimeException extends RuntimeException {
 
 	/**
@@ -19,6 +20,7 @@ public class MkRuntimeException extends RuntimeException {
 	 * @param cause
 	 */
 	public MkRuntimeException(final String message, final Throwable cause) {
+
 		super(message, cause);
 	}
 
@@ -26,6 +28,7 @@ public class MkRuntimeException extends RuntimeException {
 	 * @param message
 	 */
 	public MkRuntimeException(final String message) {
+
 		super(message);
 	}
 

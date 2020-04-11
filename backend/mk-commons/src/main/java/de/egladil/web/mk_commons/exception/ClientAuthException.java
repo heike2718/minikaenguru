@@ -7,6 +7,7 @@ package de.egladil.web.mk_commons.exception;
 /**
  * ClientAuthException
  */
+@Deprecated(forRemoval = true)
 public class ClientAuthException extends RuntimeException {
 
 	/**

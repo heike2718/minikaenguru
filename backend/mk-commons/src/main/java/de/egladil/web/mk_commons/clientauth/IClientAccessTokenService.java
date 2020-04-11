@@ -7,6 +7,7 @@ package de.egladil.web.mk_commons.clientauth;
 /**
  * IClientAccessTokenService
  */
+@Deprecated(forRemoval = true)
 public interface IClientAccessTokenService {
 
 	/**

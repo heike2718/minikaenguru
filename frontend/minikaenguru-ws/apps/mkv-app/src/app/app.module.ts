@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { CommonSchulkatalogModule } from '@minikaenguru-ws/common-schulkatalog';
 import { CommonMessagesModule } from '@minikaenguru-ws/common-messages';
+import { CommonAuthModule } from '@minikaenguru-ws/common-auth';
 
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
@@ -41,6 +42,9 @@ import { RegistrationModule } from './registration/registration.module';
 			consoleLogActive: environment.consoleLogActive,
 			serverLogActive: environment.serverLogActive,
 			loglevel: environment.loglevel
+		}),
+		CommonAuthModule.forRoot({
+			baseUrl: environment.apiUrl
 		}),
 		RegistrationModule,
 		StoreModule.forRoot(reducers, {

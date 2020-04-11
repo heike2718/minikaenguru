@@ -41,6 +41,9 @@
     },
     "test-lib": {
       "tags": []
+    },
+    "common-auth": {
+      "tags": []
     }
   }
 }

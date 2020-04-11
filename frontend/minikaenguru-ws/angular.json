@@ -347,6 +347,34 @@
         }
       },
       "schematics": {}
+    },
+    "common-auth": {
+      "projectType": "library",
+      "root": "libs/common-auth",
+      "sourceRoot": "libs/common-auth/src",
+      "prefix": "minikaenguru-ws",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/common-auth/tsconfig.lib.json",
+              "libs/common-auth/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/common-auth/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/common-auth/jest.config.js",
+            "tsConfig": "libs/common-auth/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/common-auth/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
     }
   },
   "cli": {

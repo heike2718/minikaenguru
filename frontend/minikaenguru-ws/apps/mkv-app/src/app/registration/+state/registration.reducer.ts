@@ -10,13 +10,17 @@ export interface RegistrationState {
 	readonly schulkuerzel: string;
 	readonly showSchulkatalog: boolean;
 	readonly submitEnabled: boolean;
+	readonly showRegistrationSuccessDialog: boolean;
+	readonly registrationSuccessMessage: string;
 }
 
 export const initialRegistrationState: RegistrationState = {
 	mode: undefined,
 	schulkuerzel: undefined,
 	showSchulkatalog: false,
-	submitEnabled: false
+	submitEnabled: false,
+	showRegistrationSuccessDialog: false,
+	registrationSuccessMessage: undefined
 }
 
 const registrationReducer = createReducer(initialRegistrationState,
@@ -37,10 +41,14 @@ const registrationReducer = createReducer(initialRegistrationState,
 		return { ...state, schulkuerzel: action.schulkuerzel, submitEnabled: enable }
 	}),
 
-	on(RegistrationActions.resetRegistrationState, (state, action) => {
+	on(RegistrationActions.resetRegistrationState, (_state, _action) => {
 
 		return initialRegistrationState;
 	}),
+
+	on (RegistrationActions.userCreated, (_state, action) => {
+		return { ...initialRegistrationState, showRegistrationSuccessDialog: true, registrationSuccessMessage: action.message }
+	})
 );
 
 export function reducer(state: RegistrationState | undefined, action: Action) {

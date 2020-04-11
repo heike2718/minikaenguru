@@ -6,7 +6,7 @@ import { SchulkatalogConfigService } from '../configuration/schulkatalog-config'
 import { SchulkatalogFacade } from '../application-services/schulkatalog.facade';
 import { Store } from '@ngrx/store';
 import { SchulkatalogState } from '../+state/schulkatalog.reducer';
-import { initSucheComponentCompleted, startSearch, katalogItemSelected } from '../+state/schulkatalog.actions';
+import { initSucheComponentCompleted, startSearch } from '../+state/schulkatalog.actions';
 
 @Component({
 	// tslint:disable-next-line: component-selector

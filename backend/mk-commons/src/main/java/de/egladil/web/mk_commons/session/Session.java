@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 /**
  * Session
  */
+@Deprecated(forRemoval = true)
 public class Session {
 
 	private String sessionId;

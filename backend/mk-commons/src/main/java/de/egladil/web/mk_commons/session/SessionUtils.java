@@ -21,6 +21,7 @@ import de.egladil.web.mk_commons.exception.MkRuntimeException;
 /**
  * SessionUtils
  */
+@Deprecated(forRemoval = true)
 public final class SessionUtils {
 
 	/**

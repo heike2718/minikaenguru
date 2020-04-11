@@ -8,6 +8,7 @@ package de.egladil.web.mk_commons.exception;
 /**
  * DuplicateEntityException
  */
+@Deprecated(forRemoval = true)
 public class DuplicateEntityException extends RuntimeException {
 
 	/* serialVersionUID */

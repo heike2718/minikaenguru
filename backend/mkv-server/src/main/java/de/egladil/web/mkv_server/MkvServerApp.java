@@ -12,7 +12,4 @@ package de.egladil.web.mkv_server;
  */
 public class MkvServerApp {
 
-	public static final String CLIENT_COOKIE_PREFIX = "MKV";
-
-	public static final String STAGE_DEV = "dev";
 }

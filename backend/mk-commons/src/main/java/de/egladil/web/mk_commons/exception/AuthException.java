@@ -7,6 +7,7 @@ package de.egladil.web.mk_commons.exception;
 /**
  * AuthException
  */
+@Deprecated(forRemoval = true)
 public class AuthException extends RuntimeException {
 
 	/**

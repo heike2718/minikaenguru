@@ -8,6 +8,7 @@ package de.egladil.web.mk_commons.exception;
 /**
  * ConcurrentUpdateException
  */
+@Deprecated(forRemoval = true)
 public class ConcurrentUpdateException extends RuntimeException {
 
 	/* serialVersionUID */
