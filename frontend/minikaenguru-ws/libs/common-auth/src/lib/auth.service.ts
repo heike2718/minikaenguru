@@ -24,7 +24,7 @@ export class AuthService {
 		const url = this.config.baseUrl + '/mkv-app/authurls/signup/lehrer/' + schulkuerzel;
 
 		this.http.get(url).pipe(
-			map(body => body['data'] as ResponsePayload)
+			map(body => body as ResponsePayload)
 		).subscribe(
 			payload => {
 				window.location.href = payload.message.message;
@@ -33,6 +33,20 @@ export class AuthService {
 				this.handleError(error, '[AuthService] lehrerkontoAnlegen')
 			}));
 
+	}
+
+	privatkontoAnlegen() {
+		const url = this.config.baseUrl + '/mkv-app/authurls/signup/privat';
+
+		this.http.get(url).pipe(
+			map(body => body as ResponsePayload)
+		).subscribe(
+			payload => {
+				window.location.href = payload.message.message;
+			},
+			(error => {
+				this.handleError(error, '[AuthService] privatkontoAnlegen')
+			}));
 	}
 
 	public createSession(authResult: AuthResult) {
@@ -90,7 +104,7 @@ export class AuthService {
 					default: {
 						this.logger.error(context + ' url=' + httpError.url);
 						if (msg) {
-							this.showServerResponseMessage(msg);
+							this.showServerResponseMessage(msg.level, msg.message);
 						} else {
 								this.messagesService.error('Es ist ein unerwarteter Fehler aufgetreten. Bitte schreiben Sie eine Mail an minikaenguru@egladil.de');
 						}
@@ -102,22 +116,23 @@ export class AuthService {
 	private extractMessageObject(error: HttpErrorResponse): { level: string, message: string } {
 
 		if (error.error && error.error.message) {
-			return { level: 'ERROR', message: error.error.message };
+			return { level: 'ERROR', message: error.error.message['message'] };
 		}
 
 		return null;
 	}
 
-	private showServerResponseMessage(msg: { level: string, message: string }) {
-		switch (msg.level) {
+	private showServerResponseMessage(level: string, message: string) {
+
+		switch (level) {
 			case 'WARN':
-				this.messagesService.error(msg.message);
+				this.messagesService.error(message);
 				break;
 			case 'ERROR':
-				this.messagesService.error(msg.message);
+				this.messagesService.error(message);
 				break;
 			default:
-				this.messagesService.error('Unbekanntes message.level ' + msg.level + ' vom Server bekommen.');
+				this.messagesService.error('Unbekanntes message.level ' + level + ' vom Server bekommen.');
 		}
 	}
 }

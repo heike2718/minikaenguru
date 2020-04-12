@@ -1,3 +1,35 @@
+<div>
+  <!-- Dialog mit Hinweis auf Mailpostfach -->
+  <ng-template #successDialogBody>
+    <div class="container-fluid">
+      <div class="card">
+        <div class="card-header">
+          <h4>Benutzerkonto angelegt</h4>
+        </div>
+        <div class="card-body">
+		<p>{{registrationSuccessMessage$ | async}}</p>
+        </div>
+        <div class="card-footer">
+          <div class="row btn-container">
+            <div class="col-md-12 btn-wrapper">
+              <div class="col-md-12 btn btn-outline-dark" (click)="closeDialog()">
+                OK
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>
+
+<mk-dialog *ngIf="showSuccessDialog$ | async" #dialog [hideOnEscape]="false" [hideOnClickOutside]="false" [body]="successDialogBody">
+  <!--<i class="fa fa-times" (click)="closeDialog()"></i>-->
+</mk-dialog>
+
+
+
+
 <div class="mkv-container mkv-bordered">
 	<div class="col--12">
 		<h2>Benutzerkonto anlegen <span *ngIf="devMode">(registration.component)</span> </h2>

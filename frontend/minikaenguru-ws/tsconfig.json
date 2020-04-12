@@ -21,7 +21,10 @@
       ],
       "@minikaenguru-ws/common-messages": ["libs/common-messages/src/index.ts"],
       "@minikaenguru-ws/common-logging": ["libs/common-logging/src/index.ts"],
-      "@minikaenguru-ws/common-auth": ["libs/common-auth/src/index.ts"]
+      "@minikaenguru-ws/common-auth": ["libs/common-auth/src/index.ts"],
+      "@minikaenguru-ws/common-components": [
+        "libs/common-components/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]

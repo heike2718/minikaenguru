@@ -375,6 +375,34 @@
         }
       },
       "schematics": {}
+    },
+    "common-components": {
+      "projectType": "library",
+      "root": "libs/common-components",
+      "sourceRoot": "libs/common-components/src",
+      "prefix": "minikaenguru-ws",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/common-components/tsconfig.lib.json",
+              "libs/common-components/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/common-components/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/common-components/jest.config.js",
+            "tsConfig": "libs/common-components/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/common-components/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {}
     }
   },
   "cli": {

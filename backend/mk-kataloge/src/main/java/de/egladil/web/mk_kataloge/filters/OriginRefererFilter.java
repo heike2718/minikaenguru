@@ -1,5 +1,5 @@
 // =====================================================
-// Project: mkv-server
+// Project: mk-kataloge
 // (c) Heike Winkelvoß
 // =====================================================
 package de.egladil.web.mk_kataloge.filters;

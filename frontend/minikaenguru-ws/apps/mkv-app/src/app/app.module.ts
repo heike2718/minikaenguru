@@ -21,6 +21,8 @@ import { GlobalErrorHandlerService } from './infrastructure/global-error-handler
 import { EffectsModule } from '@ngrx/effects';
 import { CustomRouterStateSerializer } from './shared/utils';
 import { RegistrationModule } from './registration/registration.module';
+import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
+
 
 @NgModule({
 	declarations: [
@@ -38,6 +40,7 @@ import { RegistrationModule } from './registration/registration.module';
 			admin: false
 		}),
 		CommonMessagesModule,
+		CommonComponentsModule,
 		CommonLoggingModule.forRoot({
 			consoleLogActive: environment.consoleLogActive,
 			serverLogActive: environment.serverLogActive,
