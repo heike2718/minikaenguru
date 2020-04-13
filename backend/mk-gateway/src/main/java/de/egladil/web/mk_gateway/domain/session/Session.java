@@ -6,6 +6,8 @@ package de.egladil.web.mk_gateway.domain.session;
 
 import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Session
  */
@@ -17,17 +19,26 @@ public class Session {
 
 	private LoggedInUser user;
 
-	public Session createAnonymous(final String sessionId) {
+	public static Session createAnonymous(final String sessionId) {
+
+		if (StringUtils.isBlank(sessionId)) {
+
+			throw new IllegalArgumentException("sessionId darf nicht blank sein");
+		}
 
 		Session session = new Session();
-		session.user = user;
+		session.sessionId = sessionId;
 		return session;
 	}
 
 	public static Session create(final String sessionId, final LoggedInUser user) {
 
-		Session session = new Session();
-		session.sessionId = sessionId;
+		if (user == null) {
+
+			throw new IllegalArgumentException("user darf nicht null sein");
+		}
+
+		Session session = createAnonymous(sessionId);
 		session.user = user;
 		return session;
 	}

@@ -44,7 +44,9 @@ public class UserRepositoryHibernate implements UserRepository {
 	@Override
 	public User addUser(final User user) {
 
-		return null;
+		this.em.persist(user);
+
+		return user;
 	}
 
 }

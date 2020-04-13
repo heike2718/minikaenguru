@@ -16,7 +16,7 @@ import javax.ws.rs.core.NewCookie;
 import org.apache.commons.io.IOUtils;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
-import de.egladil.web.mk_gateway.error.MkvApiGatewayRuntimeException;
+import de.egladil.web.mk_gateway.error.MkGatewayRuntimeException;
 
 /**
  * SessionUtils
@@ -40,7 +40,7 @@ public final class SessionUtils {
 			return sw.toString().getBytes();
 		} catch (IOException e) {
 
-			throw new MkvApiGatewayRuntimeException("Konnte jwt-public-key nicht lesen: " + e.getMessage());
+			throw new MkGatewayRuntimeException("Konnte jwt-public-key nicht lesen: " + e.getMessage());
 		}
 
 	}

@@ -15,7 +15,7 @@ import javax.ws.rs.ext.Provider;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import de.egladil.web.mk_gateway.MkvApiGatewayApp;
+import de.egladil.web.mk_gateway.MkGatewayApp;
 
 /**
  * SecureHeadersFilter packt die SecureHeaders in den Response.
@@ -73,7 +73,7 @@ public class SecureHeadersFilter implements ContainerResponseFilter {
 			responseContext.getHeaders().add(CONTENT_SECURITY_POLICY, "default-src 'self'; ");
 		}
 
-		if (!MkvApiGatewayApp.STAGE_DEV.equals(stage) && headers.get("Strict-Transport-Security") == null) {
+		if (!MkGatewayApp.STAGE_DEV.equals(stage) && headers.get("Strict-Transport-Security") == null) {
 
 			headers.add("Strict-Transport-Security", "max-age=63072000; includeSubdomains");
 

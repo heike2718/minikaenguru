@@ -15,12 +15,25 @@ public class MkvSecurityContext implements SecurityContext {
 
 	private final Session session;
 
+	private final boolean secure;
+
 	/**
 	 * @param session
 	 */
-	public MkvSecurityContext(final Session session) {
+	public MkvSecurityContext(final Session session, final boolean secure) {
+
+		if (session == null) {
+
+			throw new IllegalArgumentException("session darf nicht null sein");
+		}
+
+		if (session.user() == null) {
+
+			throw new IllegalStateException("session darf nicht anonym sein");
+		}
 
 		this.session = session;
+		this.secure = secure;
 	}
 
 	@Override
@@ -32,19 +45,20 @@ public class MkvSecurityContext implements SecurityContext {
 	@Override
 	public boolean isUserInRole(final String role) {
 
-		return false;
+		LoggedInUser user = session.user();
+		return user.rolle().toString().equals(role);
 	}
 
 	@Override
 	public boolean isSecure() {
 
-		return false;
+		return this.secure;
 	}
 
 	@Override
 	public String getAuthenticationScheme() {
 
-		return null;
+		return "Bearer";
 	}
 
 }

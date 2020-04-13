@@ -5,6 +5,7 @@
 package de.egladil.web.mk_wettbewerb.domain.model.wettbewerb;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Objects;
 
@@ -42,6 +43,19 @@ public class Wettbewerb {
 	public int hashCode() {
 
 		return Objects.hash(wettbewerbId);
+	}
+
+	/**
+	 * Entscheidet, ob der Wettbewerb zum gegebenen Zeitpunkt aktiv ist.
+	 *
+	 * @param  zeitpunkt
+	 * @return
+	 */
+	public boolean istAktivZumZeitpunkt(final LocalDateTime zeitpunkt) {
+
+		// true, falls jetzt
+		return false;
+
 	}
 
 	@Override

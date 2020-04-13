@@ -5,9 +5,9 @@
 package de.egladil.web.mk_gateway.error;
 
 /**
- * MkvApiGatewayRuntimeException
+ * MkGatewayRuntimeException
  */
-public class MkvApiGatewayRuntimeException extends RuntimeException {
+public class MkGatewayRuntimeException extends RuntimeException {
 
 	/**
 	 *
@@ -18,7 +18,7 @@ public class MkvApiGatewayRuntimeException extends RuntimeException {
 	 * @param message
 	 * @param cause
 	 */
-	public MkvApiGatewayRuntimeException(final String message, final Throwable cause) {
+	public MkGatewayRuntimeException(final String message, final Throwable cause) {
 
 		super(message, cause);
 	}
@@ -26,7 +26,7 @@ public class MkvApiGatewayRuntimeException extends RuntimeException {
 	/**
 	 * @param message
 	 */
-	public MkvApiGatewayRuntimeException(final String message) {
+	public MkGatewayRuntimeException(final String message) {
 
 		super(message);
 	}

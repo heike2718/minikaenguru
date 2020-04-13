@@ -24,7 +24,7 @@ import de.egladil.web.commons_net.utils.CommonHttpUtils;
 import de.egladil.web.commons_validation.exception.InvalidInputException;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_gateway.MkvApiGatewayApp;
+import de.egladil.web.mk_gateway.MkGatewayApp;
 import de.egladil.web.mk_gateway.domain.session.LoggedInUser;
 
 /**
@@ -60,7 +60,7 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 				.messageOnly(MessagePayload.error(applicationMessages.getString("pendingRegistration")));
 
 			return Response.status(412)
-				.cookie(CommonHttpUtils.createSessionInvalidatedCookie(MkvApiGatewayApp.CLIENT_COOKIE_PREFIX)).entity(payload)
+				.cookie(CommonHttpUtils.createSessionInvalidatedCookie(MkGatewayApp.CLIENT_COOKIE_PREFIX)).entity(payload)
 				.build();
 		}
 
@@ -70,7 +70,7 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 				.messageOnly(MessagePayload.error(applicationMessages.getString("general.sessionTimeout")));
 
 			return Response.status(908)
-				.cookie(CommonHttpUtils.createSessionInvalidatedCookie(MkvApiGatewayApp.CLIENT_COOKIE_PREFIX)).entity(payload)
+				.cookie(CommonHttpUtils.createSessionInvalidatedCookie(MkGatewayApp.CLIENT_COOKIE_PREFIX)).entity(payload)
 				.build();
 		}
 
@@ -82,7 +82,7 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 			return Response.status(404).entity(payload).build();
 		}
 
-		if (exception instanceof MkvApiGatewayRuntimeException || exception instanceof ClientAuthException) {
+		if (exception instanceof MkGatewayRuntimeException || exception instanceof ClientAuthException) {
 
 			// nicht loggen, wurde schon
 		} else {

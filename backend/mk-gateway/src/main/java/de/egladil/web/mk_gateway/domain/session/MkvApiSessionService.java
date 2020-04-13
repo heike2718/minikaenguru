@@ -4,10 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.session;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Date;
@@ -17,8 +13,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.apache.commons.io.IOUtils;
-import org.eclipse.microprofile.jwt.Claims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,13 +22,15 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 import de.egladil.web.commons_crypto.CryptoService;
 import de.egladil.web.commons_crypto.JWTService;
+import de.egladil.web.commons_crypto.impl.CryptoServiceImpl;
+import de.egladil.web.commons_crypto.impl.JWTServiceImpl;
 import de.egladil.web.commons_net.exception.SessionExpiredException;
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.commons_net.utils.CommonHttpUtils;
+import de.egladil.web.mk_gateway.domain.services.JwtDecoderService;
 import de.egladil.web.mk_gateway.domain.services.UserRepository;
 import de.egladil.web.mk_gateway.error.AuthException;
 import de.egladil.web.mk_gateway.error.LogmessagePrefixes;
-import de.egladil.web.mk_gateway.error.MkvApiGatewayRuntimeException;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
 
 /**
@@ -58,11 +54,31 @@ public class MkvApiSessionService {
 
 	private ConcurrentHashMap<String, Session> sessions = new ConcurrentHashMap<>();
 
+	static MkvApiSessionService createForTestWithUserRepository(final UserRepository userRepository) {
+
+		MkvApiSessionService result = new MkvApiSessionService();
+		result.jwtService = new JWTServiceImpl();
+		result.userRepository = userRepository;
+		result.cryptoService = new CryptoServiceImpl();
+		return result;
+	}
+
+	static MkvApiSessionService createForTestWithSession(final Session session) {
+
+		MkvApiSessionService result = new MkvApiSessionService();
+		result.jwtService = new JWTServiceImpl();
+		result.cryptoService = new CryptoServiceImpl();
+
+		result.sessions.put(session.sessionId(), session);
+		return result;
+
+	}
+
 	/**
 	 * @param  sessionId
-	 * @return
+	 * @return           Session
 	 */
-	public Session getAndRefreshSessionIfValid(final String sessionId, final String path) {
+	public Session getAndRefreshSessionIfValid(final String sessionId) {
 
 		Session session = sessions.get(sessionId);
 
@@ -93,16 +109,17 @@ public class MkvApiSessionService {
 
 		try {
 
-			DecodedJWT decodedJWT = jwtService.verify(jwt, getPublicKey());
+			JwtDecoderService jwtDecoderService = new JwtDecoderService();
+			DecodedJWT decodedJWT = jwtDecoderService.decodeJwt(jwt, jwtService);
 
 			String uuid = decodedJWT.getSubject();
-			String fullName = Claims.full_name.name();
+			String fullName = jwtDecoderService.getFullName(decodedJWT);
 
 			Optional<User> optUser = userRepository.ofId(uuid);
 
 			if (optUser.isEmpty()) {
 
-				throw new AuthException();
+				throw new AuthException("USER mit UUID " + uuid + " existiert nicht");
 			}
 
 			byte[] sessionIdBase64 = Base64.getEncoder().encode(cryptoService.generateSessionId().getBytes());
@@ -122,26 +139,11 @@ public class MkvApiSessionService {
 		} catch (TokenExpiredException e) {
 
 			LOG.error("JWT expired");
-			throw new AuthException("JWT has expired");
+			throw new AuthException("JWT expired");
 		} catch (JWTVerificationException e) {
 
 			LOG.warn(LogmessagePrefixes.BOT + "JWT invalid: {}", e.getMessage());
-			throw new AuthException("invalid JWT");
-		}
-
-	}
-
-	private byte[] getPublicKey() {
-
-		try (InputStream in = getClass().getResourceAsStream("/META-INF/authprov_public_key.pem");
-			StringWriter sw = new StringWriter()) {
-
-			IOUtils.copy(in, sw, Charset.forName("UTF-8"));
-
-			return sw.toString().getBytes();
-		} catch (IOException e) {
-
-			throw new MkvApiGatewayRuntimeException("Konnte jwt-public-key nicht lesen: " + e.getMessage());
+			throw new AuthException("JWT invalid");
 		}
 
 	}

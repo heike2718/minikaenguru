@@ -24,11 +24,11 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.commons_net.utils.CommonHttpUtils;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_gateway.MkvApiGatewayApp;
-import de.egladil.web.mk_gateway.application.AuthResult;
+import de.egladil.web.mk_gateway.MkGatewayApp;
 import de.egladil.web.mk_gateway.domain.session.MkvApiSessionService;
 import de.egladil.web.mk_gateway.domain.session.Session;
 import de.egladil.web.mk_gateway.domain.session.SessionUtils;
+import de.egladil.web.mk_gateway.domain.signup.AuthResult;
 
 /**
  * MkvApiGatewaySessionResource ist der Endpoint für den Minikänguru-Microservice-Zoo, um sich ein- und auszuloggen.
@@ -38,7 +38,7 @@ import de.egladil.web.mk_gateway.domain.session.SessionUtils;
 @Produces(MediaType.APPLICATION_JSON)
 public class MkvApiGatewaySessionResource {
 
-	private static final String SESSION_COOKIE_NAME = MkvApiGatewayApp.CLIENT_COOKIE_PREFIX
+	private static final String SESSION_COOKIE_NAME = MkGatewayApp.CLIENT_COOKIE_PREFIX
 		+ CommonHttpUtils.NAME_SESSIONID_COOKIE;
 
 	private static final Logger LOG = LoggerFactory.getLogger(MkvApiGatewaySessionResource.class);
@@ -60,7 +60,7 @@ public class MkvApiGatewaySessionResource {
 
 		NewCookie sessionCookie = SessionUtils.createSessionCookie(SESSION_COOKIE_NAME, session.sessionId());
 
-		if (!MkvApiGatewayApp.STAGE_DEV.equals(stage)) {
+		if (!MkGatewayApp.STAGE_DEV.equals(stage)) {
 
 			session.clearSessionId();
 		}
@@ -91,7 +91,7 @@ public class MkvApiGatewaySessionResource {
 			sessionService.invalidateSession(sessionId);
 		}
 
-		if (!MkvApiGatewayApp.STAGE_DEV.equals(stage)) {
+		if (!MkGatewayApp.STAGE_DEV.equals(stage)) {
 
 			LOG.warn("URL wurde auf Umgebung {} aufgerufen, sessionId=", stage, sessionId);
 			return Response.status(401)

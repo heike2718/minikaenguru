@@ -1,0 +1,8 @@
+lehrer created -> mk_wettbewerb: lehrer erzeugen und speichern, betroffenes schulkollegium aktualisieren
+privatperson created -> privatperson erzeugen und speichern
+
+
+
+aus authprovider:
+benutzerkonto deleted -> gateway: user mit UUID löschen, mk-wettbewerb: lehrer löschen, alle betroffenen schulkollegien aktualisieren
+benutzerkonto changed (vorname, nachname, email): mk-wettbewerb: person aktualisieren, alle betroffenen schulkollegien aktualisieren

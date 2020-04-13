@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.application;
+package de.egladil.web.mk_gateway.domain.signup;
 
 /**
  * AuthResult ist das AuthResult vom SignUp / LogIn.

@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.model.Rolle;
-import de.egladil.web.mk_gateway.infrastructure.clientauth.ClientAccessTokenService;
+import de.egladil.web.mk_gateway.infrastructure.clientauth.IClientAccessTokenService;
 
 /**
  * MkvAppAuthUrlsResource stellt für die mkv-app die Login-und Signup-Urls zur Verfügung.
@@ -52,7 +52,7 @@ public class MkvAppAuthUrlsResource {
 	String signupRedirectUrl;
 
 	@Inject
-	ClientAccessTokenService clientAccessTokenService;
+	IClientAccessTokenService clientAccessTokenService;
 
 	@GET
 	@Path("login")

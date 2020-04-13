@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_net.utils.CommonHttpUtils;
-import de.egladil.web.mk_gateway.MkvApiGatewayApp;
+import de.egladil.web.mk_gateway.MkGatewayApp;
 import de.egladil.web.mk_gateway.domain.session.MkvApiSessionService;
 import de.egladil.web.mk_gateway.domain.session.MkvSecurityContext;
 import de.egladil.web.mk_gateway.domain.session.Session;
@@ -71,21 +71,27 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 			return;
 		}
 
-		String sessionId = CommonHttpUtils.getSessionId(requestContext, stage, MkvApiGatewayApp.CLIENT_COOKIE_PREFIX);
+		String sessionId = CommonHttpUtils.getSessionId(requestContext, stage, MkGatewayApp.CLIENT_COOKIE_PREFIX);
 
 		if (sessionId == null) {
 
 			throw new AuthException("Keine Berechtigung");
 		}
 
-		Session session = sessionService.getAndRefreshSessionIfValid(sessionId, path);
+		Session session = sessionService.getAndRefreshSessionIfValid(sessionId);
 
 		if (session == null) {
 
 			throw new AuthException("Keine gültige Session vorhanden");
 		}
 
-		MkvSecurityContext securityContext = new MkvSecurityContext(session);
+		if (session.user() == null) {
+
+			throw new AuthException("nur anonyme Session vorhanden");
+		}
+
+		boolean secure = !stage.equals(MkGatewayApp.STAGE_DEV);
+		MkvSecurityContext securityContext = new MkvSecurityContext(session, secure);
 		requestContext.setSecurityContext(securityContext);
 	}
 

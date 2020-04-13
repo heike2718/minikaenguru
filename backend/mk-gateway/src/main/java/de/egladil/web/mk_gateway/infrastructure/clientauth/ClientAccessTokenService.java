@@ -22,7 +22,7 @@ import de.egladil.web.commons_validation.payload.OAuthClientCredentials;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.error.ClientAuthException;
 import de.egladil.web.mk_gateway.error.LogmessagePrefixes;
-import de.egladil.web.mk_gateway.error.MkvApiGatewayRuntimeException;
+import de.egladil.web.mk_gateway.error.MkGatewayRuntimeException;
 
 /**
  * ClientAccessTokenService
@@ -64,7 +64,7 @@ public class ClientAccessTokenService implements IClientAccessTokenService {
 
 			String msg = "Unerwarteter Fehler beim Anfordern eines client-accessTokens: " + e.getMessage();
 			LOG.error(msg, e);
-			throw new MkvApiGatewayRuntimeException(msg, e);
+			throw new MkGatewayRuntimeException(msg, e);
 		} catch (ClientAuthException e) {
 
 			// wurde schon geloggt

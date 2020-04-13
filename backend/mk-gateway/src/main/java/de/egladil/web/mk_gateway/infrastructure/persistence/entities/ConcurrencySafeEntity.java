@@ -8,8 +8,6 @@ import javax.persistence.Column;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 /**
  * ConcurrencySafeEntity
  */
@@ -17,7 +15,6 @@ public abstract class ConcurrencySafeEntity {
 
 	@Version
 	@Column(name = "VERSION")
-	@JsonIgnore
 	private int version;
 
 	@Transient
