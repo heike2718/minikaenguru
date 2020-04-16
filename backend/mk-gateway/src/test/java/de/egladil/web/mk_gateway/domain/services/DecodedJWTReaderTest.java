@@ -2,10 +2,11 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.service;
+package de.egladil.web.mk_gateway.domain.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -18,7 +19,6 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 import de.egladil.web.commons_crypto.JWTService;
 import de.egladil.web.commons_crypto.impl.JWTServiceImpl;
-import de.egladil.web.mk_gateway.domain.services.DecodedJWTReader;
 import de.egladil.web.mk_gateway.domain.session.SessionUtils;
 
 /**
@@ -84,5 +84,19 @@ public class DecodedJWTReaderTest {
 
 		// Assert
 		assertNull(fullName);
+	}
+
+	@Test
+	void should_ConstructorThrowException_when_DecodedJWTNull() {
+
+		try {
+
+			new DecodedJWTReader(null);
+			fail("keine IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+
+			assertEquals("decodedJWT darf nicht null sein.", e.getMessage());
+		}
+
 	}
 }

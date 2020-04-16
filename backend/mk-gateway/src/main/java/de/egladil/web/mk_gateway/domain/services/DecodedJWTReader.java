@@ -16,13 +16,6 @@ public class DecodedJWTReader {
 	private DecodedJWT decodedJWT;
 
 	/**
-	 * Construktor zum Mocken.
-	 */
-	public DecodedJWTReader() {
-
-	}
-
-	/**
 	 * @param decodedJWT
 	 */
 	public DecodedJWTReader(final DecodedJWT decodedJWT) {
