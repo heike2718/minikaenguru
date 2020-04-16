@@ -13,6 +13,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
 
+import de.egladil.web.mk_gateway.domain.model.Rolle;
+
 /**
  * PrivatmenschCreatedTest
  */
@@ -136,6 +138,7 @@ public class PrivatmenschCreatedTest {
 		assertEquals(uuid, event.uuid());
 		assertEquals(fullName, event.fullName());
 		assertEquals("PrivatmenschCreated", event.typeName());
+		assertEquals(Rolle.PRIVAT, event.rolle());
 
 	}
 

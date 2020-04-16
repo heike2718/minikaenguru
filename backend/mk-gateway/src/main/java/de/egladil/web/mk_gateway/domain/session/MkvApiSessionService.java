@@ -27,7 +27,7 @@ import de.egladil.web.commons_crypto.impl.JWTServiceImpl;
 import de.egladil.web.commons_net.exception.SessionExpiredException;
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.commons_net.utils.CommonHttpUtils;
-import de.egladil.web.mk_gateway.domain.services.JwtDecoderService;
+import de.egladil.web.mk_gateway.domain.services.DecodedJWTReader;
 import de.egladil.web.mk_gateway.domain.services.UserRepository;
 import de.egladil.web.mk_gateway.error.AuthException;
 import de.egladil.web.mk_gateway.error.LogmessagePrefixes;
@@ -109,11 +109,11 @@ public class MkvApiSessionService {
 
 		try {
 
-			JwtDecoderService jwtDecoderService = new JwtDecoderService();
-			DecodedJWT decodedJWT = jwtDecoderService.decodeJwt(jwt, jwtService);
+			DecodedJWT decodedJWT = jwtService.verify(jwt, SessionUtils.getPublicKey());
 
 			String uuid = decodedJWT.getSubject();
-			String fullName = jwtDecoderService.getFullName(decodedJWT);
+
+			String fullName = new DecodedJWTReader(decodedJWT).getFullName();
 
 			Optional<User> optUser = userRepository.ofId(uuid);
 

@@ -4,6 +4,10 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.signup;
 
+import java.util.Objects;
+
+import javax.validation.constraints.NotBlank;
+
 /**
  * AuthResult ist das AuthResult vom SignUp / LogIn.
  */
@@ -13,8 +17,10 @@ public class AuthResult {
 
 	private String state;
 
+	@NotBlank
 	private String nonce;
 
+	@NotBlank
 	private String idToken;
 
 	public long getExpiresAt() {
@@ -55,6 +61,33 @@ public class AuthResult {
 	public void setIdToken(final String idToken) {
 
 		this.idToken = idToken;
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(idToken);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+
+		if (this == obj) {
+
+			return true;
+		}
+
+		if (obj == null) {
+
+			return false;
+		}
+
+		if (getClass() != obj.getClass()) {
+
+			return false;
+		}
+		AuthResult other = (AuthResult) obj;
+		return Objects.equals(idToken, other.idToken);
 	}
 
 }

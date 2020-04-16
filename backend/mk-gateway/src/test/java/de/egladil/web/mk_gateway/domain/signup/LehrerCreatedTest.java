@@ -13,6 +13,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
 
+import de.egladil.web.mk_gateway.domain.model.Rolle;
+
 /**
  * LehrerCreatedTest
  */
@@ -185,6 +187,7 @@ public class LehrerCreatedTest {
 		assertEquals(fullName, event.fullName());
 		assertEquals("LehrerCreated", event.typeName());
 		assertEquals(schulkuerzel, event.schulkuerzel());
+		assertEquals(Rolle.LEHRER, event.rolle());
 
 	}
 }

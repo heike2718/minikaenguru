@@ -79,4 +79,9 @@ public class PrivatmenschCreated implements DomainEvent {
 		return this.uuid;
 	}
 
+	Rolle rolle() {
+
+		return this.rolle;
+	}
+
 }
