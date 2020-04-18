@@ -16,3 +16,8 @@ export const resetRegistrationState = createAction(
 	'[RegistrationComponent] resetRegistrationState'
 );
 
+export const userCreated = createAction(
+	'[RegistrationService] userCreated',
+	props<{message: string}>()
+);
+

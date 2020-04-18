@@ -1,30 +1,18 @@
 # mk-kataloge project
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+Stellt die für Minikänguru erforderlichen Schulen zur Verfügung.
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+__Migration des Schulkatalogs nach mk-kataloge__
 
-## Running the application in dev mode
+Erstbefüllung erfolgt aus dem alten mkvadmin-Service als POST request zu
 
-You can run your application in dev mode that enables live coding using:
-```
-./mvnw quarkus:dev
-```
+http://localhost:9700/mk-kataloge-api/schulen
 
-## Packaging and running the application
+mit SchuleMessage als payload.
 
-The application is packageable using `./mvnw package`.
-It produces the executable `mk-kataloge-1.0.0-SNAPSHOT-runner.jar` file in `/target` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/lib` directory.
+Auf der Client-Seite (mkvadmin) können Schulen schrittweise exportiert werden, indem sie nach
+dem ersten Zeichen ihres Kürzels gruppiert werden.
 
-The application is now runnable using `java -jar target/mk-kataloge-1.0.0-SNAPSHOT-runner.jar`.
+POST als authentisierter ADMIN:
 
-## Creating a native executable
-
-You can create a native executable using: `./mvnw package -Pnative`.
-
-Or you can use Docker to build the native executable using: `./mvnw package -Pnative -Dquarkus.native.container-build=true`.
-
-You can then execute your binary: `./target/mk-kataloge-1.0.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/building-native-image-guide .
+https://mathe-jung-alt.de/admin-app/schulen/{firstLetter}/export

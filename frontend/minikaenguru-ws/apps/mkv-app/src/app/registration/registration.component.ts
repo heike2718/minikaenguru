@@ -1,11 +1,17 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { SchulkatalogFacade, KatalogItem } from '@minikaenguru-ws/common-schulkatalog';
 import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { RegistrationState } from './+state/registration.reducer';
-import { selectSubmitStatus, selectRegistrationMode, selectShowShulkatalog } from './+state/registration.selectors';
+import { selectSubmitStatus
+	, selectRegistrationMode
+	, selectShowShulkatalog
+	, selectShowSuccessDialog
+	, selectSuccessDialogContent } from './+state/registration.selectors';
+import { AuthService } from '@minikaenguru-ws/common-auth';
+import { DialogService } from '@minikaenguru-ws/common-components';
 import * as RegistrationActions from './+state/registration.actions';
 
 @Component({
@@ -23,6 +29,12 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
 	showShulkatalog$ = this.store.select(selectShowShulkatalog);
 
+	showSuccessDialog$ = this.store.select(selectShowSuccessDialog);
+
+	registrationSuccessMessage$ = this.store.select(selectSuccessDialogContent);
+
+
+
 	registrationMode: string;
 
 	submitDisabled: boolean;
@@ -33,7 +45,11 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
 	private registrationModeSubscription: Subscription;
 
-	constructor(private router: Router, public schulkatalogFacade: SchulkatalogFacade, private store: Store<RegistrationState>) {
+	constructor(private router: Router
+		, public schulkatalogFacade: SchulkatalogFacade
+		, private authService: AuthService
+		, private dialogService: DialogService
+		, private store: Store<RegistrationState>) {
 
 		this.devMode = !environment.production;
 
@@ -90,11 +106,19 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
 	privatkontoAnlegen() {
 		this.store.dispatch(RegistrationActions.registrationModeChanged({mode: 'PRIVAT'}));
-
+		this.authService.privatkontoAnlegen();
 	}
 
 	lehrerkontoAnlegen() {
 
+		const schulkuerzel = this.selectedKatalogItem.kuerzel;
+		this.authService.lehrerkontoAnlegen(schulkuerzel)
+	}
+
+	closeDialog() {
+		this.dialogService.close();
+		this.store.dispatch(RegistrationActions.resetRegistrationState());
+		this.router.navigateByUrl('/');
 	}
 
 	cancel() {

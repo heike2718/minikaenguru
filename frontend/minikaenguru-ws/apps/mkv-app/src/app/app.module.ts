@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { CommonSchulkatalogModule } from '@minikaenguru-ws/common-schulkatalog';
 import { CommonMessagesModule } from '@minikaenguru-ws/common-messages';
+import { CommonAuthModule } from '@minikaenguru-ws/common-auth';
 
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
@@ -20,6 +21,8 @@ import { GlobalErrorHandlerService } from './infrastructure/global-error-handler
 import { EffectsModule } from '@ngrx/effects';
 import { CustomRouterStateSerializer } from './shared/utils';
 import { RegistrationModule } from './registration/registration.module';
+import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
+
 
 @NgModule({
 	declarations: [
@@ -37,10 +40,14 @@ import { RegistrationModule } from './registration/registration.module';
 			admin: false
 		}),
 		CommonMessagesModule,
+		CommonComponentsModule,
 		CommonLoggingModule.forRoot({
 			consoleLogActive: environment.consoleLogActive,
 			serverLogActive: environment.serverLogActive,
 			loglevel: environment.loglevel
+		}),
+		CommonAuthModule.forRoot({
+			baseUrl: environment.apiUrl
 		}),
 		RegistrationModule,
 		StoreModule.forRoot(reducers, {

@@ -6,6 +6,7 @@ import * as fromRegistration from './+state/registration.reducer';
 import { StoreModule } from '@ngrx/store';
 import { RegistrationComponent } from './registration.component';
 import { CommonSchulkatalogModule } from '@minikaenguru-ws/common-schulkatalog';
+import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
 
 
 @NgModule({
@@ -14,6 +15,7 @@ import { CommonSchulkatalogModule } from '@minikaenguru-ws/common-schulkatalog';
 		FormsModule,
 		HttpClientModule,
 		CommonSchulkatalogModule,
+		CommonComponentsModule,
 		StoreModule.forFeature(fromRegistration.registrationFeatureKey, fromRegistration.reducer),
 	],
 	declarations: [
