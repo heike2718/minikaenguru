@@ -8,6 +8,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.NoContentException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -63,6 +64,17 @@ public class KatalogAPIExceptionMapper implements ExceptionMapper<Exception> {
 			return Response.status(409)
 				.entity(responsePayload)
 				.build();
+		}
+
+		if (exception instanceof WebApplicationException) {
+
+			WebApplicationException waException = (WebApplicationException) exception;
+			int status = waException.getResponse().getStatus();
+
+			ResponsePayload payload = ResponsePayload
+				.messageOnly(MessagePayload.error(waException.getLocalizedMessage()));
+
+			return Response.status(status).entity(payload).build();
 		}
 
 		LOG.error(exception.getMessage(), exception);

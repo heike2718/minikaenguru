@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import de.egladil.web.mk_kataloge.domain.KatalogItem;
@@ -25,7 +25,7 @@ import de.egladil.web.mk_kataloge.service.KatalogsucheFacade;
 /**
  * KatalogsucheFacadeImpl
  */
-@RequestScoped
+@ApplicationScoped
 public class KatalogsucheFacadeImpl implements KatalogsucheFacade {
 
 	@Inject

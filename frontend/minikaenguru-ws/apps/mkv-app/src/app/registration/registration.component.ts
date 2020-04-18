@@ -1,69 +1,128 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
-import { SchulkatalogFacade } from '@minikaenguru-ws/common-schulkatalog';
-import { KatalogItem } from 'libs/common-schulkatalog/src/lib/domain/entities';
+import { SchulkatalogFacade, KatalogItem } from '@minikaenguru-ws/common-schulkatalog';
+import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { RegistrationState } from './+state/registration.reducer';
+import { selectSubmitStatus
+	, selectRegistrationMode
+	, selectShowShulkatalog
+	, selectShowSuccessDialog
+	, selectSuccessDialogContent } from './+state/registration.selectors';
+import { AuthService } from '@minikaenguru-ws/common-auth';
+import { DialogService } from '@minikaenguru-ws/common-components';
+import * as RegistrationActions from './+state/registration.actions';
 
 @Component({
-  selector: 'mkv-registration',
-  templateUrl: './registration.component.html',
-  styleUrls: ['./registration.component.css']
+	selector: 'mkv-registration',
+	templateUrl: './registration.component.html',
+	styleUrls: ['./registration.component.css']
 })
-export class RegistrationComponent implements OnInit {
+export class RegistrationComponent implements OnInit, OnDestroy {
 
-  devMode: boolean;
+	devMode: boolean;
 
-  showSchulkatalog: boolean;
+	private selectedKatalogItem: KatalogItem;
 
-  selectedKatalogItem: KatalogItem;
+	pfadKatalogItem: string;
 
-  pfadKatalogItem: string;
+	showShulkatalog$ = this.store.select(selectShowShulkatalog);
 
-  constructor(private router: Router, public schulkatalogFacade: SchulkatalogFacade) {
+	showSuccessDialog$ = this.store.select(selectShowSuccessDialog);
 
-    this.devMode = !environment.production;
-    this.showSchulkatalog = false;
+	registrationSuccessMessage$ = this.store.select(selectSuccessDialogContent);
 
-  }
 
-  ngOnInit() {
 
-    this.schulkatalogFacade.selectedKatalogItem$.subscribe(
-      item => {
-        if (item ) {
-          this.selectedKatalogItem = item;
+	registrationMode: string;
 
-          switch(item.typ) {
-            case 'LAND': this.pfadKatalogItem = item.name; break;
-            case 'ORT' : this.pfadKatalogItem = item.parent.name + ' -> ' + item.name; break;
-            case 'SCHULE' : this.pfadKatalogItem = item.parent.parent.name + ' -> ' + item.parent.name + ' -> ' + item.name; break;
-          }
-        }
-      }
-    );
-  }
+	submitDisabled: boolean;
 
-  gotoKatalogsuche() {
-    this.router.navigate([]);
-  }
+	private selectedKatalogItemSubskription: Subscription;
 
-  toggleSchulkatalog() {
-    this.showSchulkatalog = !this.showSchulkatalog;
-  }
+	private submitEnabledSubscription: Subscription;
 
-  privatkontoAnlegen() {
+	private registrationModeSubscription: Subscription;
 
-  }
+	constructor(private router: Router
+		, public schulkatalogFacade: SchulkatalogFacade
+		, private authService: AuthService
+		, private dialogService: DialogService
+		, private store: Store<RegistrationState>) {
 
-  lehrerkontoAnlegen() {
+		this.devMode = !environment.production;
 
-  }
+	}
 
-  submitDisabled() {
-    if (!this.showSchulkatalog) {
-      return false;
-    }
-    return this.selectedKatalogItem && this.selectedKatalogItem.leaf;
-  }
+	ngOnInit() {
+
+		this.store.dispatch(RegistrationActions.resetRegistrationState());
+
+		this.selectedKatalogItemSubskription = this.schulkatalogFacade.selectedKatalogItem$.subscribe(
+			item => {
+				if (item) {
+					this.selectedKatalogItem = item;
+					this.pfadKatalogItem = item.pfad;
+					if (item.typ === 'SCHULE') {
+						this.store.dispatch(RegistrationActions.schuleSelected({ schulkuerzel: item.kuerzel }));
+					}
+				}
+			}
+		);
+
+		this.submitEnabledSubscription = this.store.select(selectSubmitStatus).subscribe(
+			state => this.submitDisabled = !state
+		)
+
+		this.registrationModeSubscription = this.store.select(selectRegistrationMode).subscribe(
+			mode => this.registrationMode = mode
+		);
+	}
+
+	ngOnDestroy() {
+
+		if (this.selectedKatalogItemSubskription) {
+			this.selectedKatalogItemSubskription.unsubscribe();
+		}
+		if (this.submitEnabledSubscription) {
+			this.submitEnabledSubscription.unsubscribe();
+		}
+		if (this.registrationModeSubscription) {
+			this.registrationModeSubscription.unsubscribe();
+		}
+
+		this.store.dispatch(RegistrationActions.resetRegistrationState());
+
+	}
+
+	gotoKatalogsuche() {
+		this.router.navigate([]);
+	}
+
+	modusLehrerkonto() {
+		this.store.dispatch(RegistrationActions.registrationModeChanged({ mode: 'LEHRER' }));
+	}
+
+	privatkontoAnlegen() {
+		this.store.dispatch(RegistrationActions.registrationModeChanged({mode: 'PRIVAT'}));
+		this.authService.privatkontoAnlegen();
+	}
+
+	lehrerkontoAnlegen() {
+
+		const schulkuerzel = this.selectedKatalogItem.kuerzel;
+		this.authService.lehrerkontoAnlegen(schulkuerzel)
+	}
+
+	closeDialog() {
+		this.dialogService.close();
+		this.store.dispatch(RegistrationActions.resetRegistrationState());
+		this.router.navigateByUrl('/');
+	}
+
+	cancel() {
+		this.router.navigateByUrl('/');
+	}
 
 }

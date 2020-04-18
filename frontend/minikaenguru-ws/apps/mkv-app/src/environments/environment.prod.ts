@@ -1,8 +1,9 @@
 export const environment = {
 	envName: 'PROD',
 	production: true,
-	katalogApiUrl: 'http://localhost:9700/mk-kataloge-api', // TODO,
-	apiUrl: 'fehlt momentan noch',
+	assetsUrl: 'mkv-app/assets',
+	katalogApiUrl: 'https://mathe-jung-alt.de/mk-kataloge-api',
+    apiUrl: 'https://mathe-jung-alt.de/mk-gateway',
 	version: '1.0.0',
 	consoleLogActive: false,
 	serverLogActive: true,

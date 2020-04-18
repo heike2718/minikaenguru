@@ -70,12 +70,28 @@ public interface KatalogeRepository {
 	List<Land> loadLaender();
 
 	/**
+	 * Gibt die Anzahl der Schulen im Ort mit dem gegebenen Kürzel zurück
+	 *
+	 * @param  kuerzel
+	 * @return
+	 */
+	int countSchulenInOrt(String kuerzel);
+
+	/**
 	 * Läd alle Schulen im Ort mit dem kuerzel ortKuerzel.
 	 *
 	 * @param  ortKuerzel
 	 * @return            List
 	 */
 	List<Schule> loadSchulenInOrt(String ortKuerzel);
+
+	/**
+	 * Gibt die Anzahl der Orte im Land mit dem gegebenen Kürzel zurück
+	 *
+	 * @param  kuerzel
+	 * @return
+	 */
+	int countOrteInLand(String kuerzel);
 
 	/**
 	 * Läd alle Orte im Land mit dem kuerzel landKuerzel.

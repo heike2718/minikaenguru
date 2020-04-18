@@ -5,8 +5,9 @@
 export const environment = {
   envName: 'DEV',
   production: false,
+  assetsUrl: '/home/heike/git/minikaenguru/frontend/minikaenguru-ws/apps/mkv-app/src/assets',
   katalogApiUrl: 'http://localhost:9700/mk-kataloge-api',
-  apiUrl: 'fehlt momentan noch',
+  apiUrl: 'http://localhost:9500/mk-gateway',
   version: '1.0.0',
   consoleLogActive: true,
   serverLogActive: false,

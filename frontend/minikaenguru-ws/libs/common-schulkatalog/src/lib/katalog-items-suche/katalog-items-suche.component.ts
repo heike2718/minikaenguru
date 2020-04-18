@@ -1,92 +1,103 @@
-import { Component, OnInit, Input, Inject } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { KatalogItem, Katalogtyp } from '../domain/entities';
+import { Component, OnInit, Input, Inject, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, tap, filter } from 'rxjs/operators';
+import { Katalogtyp, GuiModel, KatalogItem } from '../domain/entities';
 import { SchulkatalogConfigService } from '../configuration/schulkatalog-config';
 import { SchulkatalogFacade } from '../application-services/schulkatalog.facade';
 import { Store } from '@ngrx/store';
 import { SchulkatalogState } from '../+state/schulkatalog.reducer';
-import { initKatalogtyp } from '../+state/schulkatalog.actions';
-import { selectSelectedKatalogItem } from '../+state/schulkatalog.selectors';
+import { initSucheComponentCompleted, startSearch } from '../+state/schulkatalog.actions';
 
 @Component({
-  // tslint:disable-next-line: component-selector
-  selector: 'mk-katalog-items-suche',
-  templateUrl: './katalog-items-suche.component.html',
-  styleUrls: ['./katalog-items-suche.component.css']
+	// tslint:disable-next-line: component-selector
+	selector: 'mk-katalog-items-suche',
+	templateUrl: './katalog-items-suche.component.html',
+	styleUrls: ['./katalog-items-suche.component.css']
 })
-export class KatalogItemsSucheComponent implements OnInit {
+export class KatalogItemsSucheComponent implements OnInit, OnDestroy {
 
-  @Input()
-  typ: string;
+	@Input()
+	typ: string;
 
-  devMode: boolean;
+	devMode: boolean;
 
-  labelForInput: string;
-  sucheDescription: string;
+	private guiModelSubscription: Subscription;
 
-  private selectedKatalogItem$ = this.store.select(selectSelectedKatalogItem);
+	guiModel: GuiModel;
 
-  //   katalogItems$: Observable<KatalogItem[]>;
-  searchTerm: BehaviorSubject<string>;
+	searchTerm: BehaviorSubject<string>;
 
-  private katalogtyp: Katalogtyp = 'ORT';
+	searchFormInputValue: string;
 
-  constructor(@Inject(SchulkatalogConfigService) private config,
-    private store: Store<SchulkatalogState>,
-    public schulkatalogFacade: SchulkatalogFacade) { }
+	selectedKatalogItem: KatalogItem;
 
-  ngOnInit() {
+	private selectedKatalogItemSubscription: Subscription;
 
-    this.devMode = this.config.devmode;
+	private searchTermSubscription: Subscription;
 
-    if (this.typ === 'LAND') {
-      this.katalogtyp = 'LAND';
-      this.labelForInput = 'Land';
-      this.sucheDescription = 'das Land';
-    }
-    if (this.typ === 'ORT') {
-      this.katalogtyp = 'ORT';
-      this.labelForInput = 'Ort';
-      this.sucheDescription = 'den Ort';
-    }
-    if (this.typ === 'SCHULE') {
-      this.katalogtyp = 'SCHULE';
-      this.labelForInput = 'Schule';
-      this.sucheDescription = 'die Schule';
-    }
+	private katalogtyp: Katalogtyp = 'ORT';
 
-    this.store.dispatch(initKatalogtyp({ data: this.katalogtyp }))
-    this.searchTerm = new BehaviorSubject<string>('');
+	constructor(@Inject(SchulkatalogConfigService) private config,
+		private store: Store<SchulkatalogState>,
+		public schulkatalogFacade: SchulkatalogFacade) { }
 
-    this.schulkatalogFacade.searchKatalogItems(this.katalogtyp, this.searchTerm);
+	ngOnInit() {
 
-    this.selectedKatalogItem$.subscribe(
-      item => this.handleItemSelected(item)
-    );
-  }
+		this.store.dispatch(initSucheComponentCompleted({ katalogtyp: this.katalogtyp }));
+
+		this.searchTermSubscription = this.schulkatalogFacade.searchTerm$.subscribe(
+			term => this.searchFormInputValue = term
+		)
+
+		this.guiModelSubscription = this.schulkatalogFacade.guiModel$.subscribe(
+			model => this.guiModel = model
+		);
+
+		this.selectedKatalogItemSubscription = this.schulkatalogFacade.selectedKatalogItem$.subscribe(
+			item => this.selectedKatalogItem = item
+		);
+
+		this.devMode = this.config.devmode;
+
+		this.searchTerm = new BehaviorSubject<string>('');
 
 
-  onKeyup(event) {
+		this.searchTerm.pipe(
+			debounceTime(500),
+			distinctUntilChanged(),
+			filter(term => term.length > 0),
+			tap(term => {
 
-	const value = event.value;
-    console.log('[event.value=' + value + ']')
+				if (this.selectedKatalogItem) {
+					this.store.dispatch(startSearch({ katalogItem: this.selectedKatalogItem, searchTerm: term }));
+				} else {
+					const katalogItem = {
+						typ: this.guiModel.currentKatalogtyp
+					} as KatalogItem;
+					this.store.dispatch(startSearch({ katalogItem: katalogItem, searchTerm: term }));
+				}
 
-  }
 
-  private handleItemSelected(selectedItem: KatalogItem) {
+			})
+		).subscribe();
+	}
 
-    if (selectedItem && !selectedItem.leaf) {
+	ngOnDestroy() {
+		if (this.guiModelSubscription) {
+			this.guiModelSubscription.unsubscribe;
+		}
+		if (this.selectedKatalogItemSubscription) {
+			this.selectedKatalogItemSubscription.unsubscribe();
+		}
+		if (this.searchTermSubscription) {
+			this.searchTermSubscription.unsubscribe();
+		}
+	}
 
-      switch (this.katalogtyp) {
-        case 'LAND': break;
-        case 'ORT': break;
-        case 'SCHULE': break;
-      }
 
-    }
-
-    if (selectedItem) {
-      console.log('[KatalogItemsSucheComponent]: [' + selectedItem.name + ',' + selectedItem.kuerzel + '] has been selected');
-    }
-  }
+	onKeyup($event) {
+		const value = $event.target.value;
+		console.log('[event.value=' + value + ']')
+		this.searchTerm.next(value);
+	}
 }
