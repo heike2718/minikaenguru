@@ -2,7 +2,7 @@
 // Project: mk-wettbewerb
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_wettbewerb.infrastructure.entities;
+package de.egladil.web.mk_wettbewerb.infrastructure.persistence.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Transient;

@@ -2,12 +2,10 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.infrastructure.persistence.entities;
+package de.egladil.web.mk_wettbewerb.infrastructure.persistence.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,51 +18,35 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import de.egladil.web.commons_validation.annotations.UuidString;
-import de.egladil.web.mk_gateway.domain.model.Rolle;
 
 /**
- * User
+ * PersistentesSchulkollegium
  */
 @Entity
-@Table(name = "USERS")
-@NamedQueries({
-	@NamedQuery(name = "FIND_BY_UUID", query = "select u from User u where u.uuid = :uuid")
-})
-public class User extends ConcurrencySafeEntity {
+@Table(name = "SCHULKOLLEGIEN")
+@NamedQueries(@NamedQuery(
+	name = "FIND_SCHULKOLLEGIUM_BY_UUID", query = "select sk from PersistentesSchulkollegium sk where sk.uuid = :uuid"))
+public class PersistentesSchulkollegium extends ConcurrencySafeEntity {
 
-	public static final String FIND_USER_BY_UUID_QUERY = "FIND_BY_UUID";
+	public static final String FIND_BY_UUID_QUERY = "FIND_SCHULKOLLEGIUM_BY_UUID";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "uuid_generator")
 	@GenericGenerator(
-		name = "uuid_generator", strategy = "de.egladil.web.mk_gateway.infrastructure.persistence.entities.UuidGenerator")
+		name = "uuid_generator", strategy = "de.egladil.web.mk_wettbewerb.infrastructure.persistence.entities.UuidGenerator")
 	@UuidString
 	@NotNull
 	@Size(min = 1, max = 40)
 	@Column(name = "UUID")
-	@JsonIgnore
 	private String uuid;
 
-	@Column(name = "ROLE")
-	@Enumerated(EnumType.STRING)
-	private Rolle rolle;
+	@Column(name = "KOLLEGIUM")
+	private String kollegium;
 
 	@Version
 	@Column(name = "VERSION")
 	private int version;
-
-	public Rolle getRolle() {
-
-		return rolle;
-	}
-
-	public void setRolle(final Rolle rolle) {
-
-		this.rolle = rolle;
-	}
 
 	public String getUuid() {
 
@@ -75,4 +57,15 @@ public class User extends ConcurrencySafeEntity {
 
 		this.uuid = uuid;
 	}
+
+	public String getKollegium() {
+
+		return kollegium;
+	}
+
+	public void setKollegium(final String kollegium) {
+
+		this.kollegium = kollegium;
+	}
+
 }

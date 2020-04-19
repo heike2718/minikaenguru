@@ -26,7 +26,7 @@ public class EventRepositoryHibernate implements EventRepository {
 
 	@Override
 	@Transactional
-	public void saveEvent(final StoredEvent event) {
+	public void appendEvent(final StoredEvent event) {
 
 		this.em.persist(event);
 

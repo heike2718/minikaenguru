@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_wettbewerb.domain.model.teilnahmen;
 
+import de.egladil.web.mk_wettbewerb.domain.model.Identifier;
 import de.egladil.web.mk_wettbewerb.domain.model.wettbewerb.WettbewerbID;
 
 /**
@@ -15,16 +16,10 @@ public class Privatteilnahme extends Teilnahme {
 	 * @param wettbewerbID
 	 * @param teilnahmekuerzel
 	 */
-	public Privatteilnahme(final WettbewerbID wettbewerbID, final Teilnahmekuerzel teilnahmekuerzel) {
+	public Privatteilnahme(final WettbewerbID wettbewerbID, final Identifier teilnahmekuerzel) {
 
 		super(wettbewerbID, teilnahmekuerzel);
 
-	}
-
-	@Override
-	protected boolean teilnahmekuerzelErlaubt(final Teilnahmekuerzel teilnahmekuerzel) {
-
-		return teilnahmekuerzel instanceof Privatteilnahmekuerzel;
 	}
 
 	@Override

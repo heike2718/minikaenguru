@@ -25,12 +25,12 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_commons.session.SessionUser;
 
 /**
- * MkvServerExceptionMapper
+ * MkWettbewerbExceptionMapper
  */
 @Provider
-public class MkvServerExceptionMapper implements ExceptionMapper<Throwable> {
+public class MkWettbewerbExceptionMapper implements ExceptionMapper<Throwable> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(MkvServerExceptionMapper.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MkWettbewerbExceptionMapper.class);
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 

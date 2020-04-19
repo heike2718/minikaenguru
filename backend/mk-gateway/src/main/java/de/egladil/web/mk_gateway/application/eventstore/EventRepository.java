@@ -15,11 +15,11 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.entities.StoredEvent
 public interface EventRepository {
 
 	/**
-	 * Speichert das event in der Datenbank
+	 * Speichert das event in der Datenbank.
 	 *
 	 * @param event
 	 */
-	void saveEvent(StoredEvent event);
+	void appendEvent(StoredEvent event);
 
 	/**
 	 * Liest alle Events, die neuer sind als der gegebene Zeitpunkt.

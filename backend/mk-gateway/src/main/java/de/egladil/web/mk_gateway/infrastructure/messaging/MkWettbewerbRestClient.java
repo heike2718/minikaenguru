@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.infrastructure.clientauth;
+package de.egladil.web.mk_gateway.infrastructure.messaging;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -13,18 +13,24 @@ import javax.ws.rs.core.Response;
 
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
-import de.egladil.web.commons_validation.payload.OAuthClientCredentials;
+import de.egladil.web.mk_gateway.domain.signup.LehrerCreated;
+import de.egladil.web.mk_gateway.domain.signup.PrivatmenschCreated;
 
 /**
- * InitAccessTokenRestClient wird in application.properties konfiguriert.
+ * MkWettbewerbRestClient wird in application.properties konfiguriert.
  */
 @RegisterRestClient
-@Path("clients")
+@Path("")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface InitAccessTokenRestClient {
+public interface MkWettbewerbRestClient {
 
 	@POST
-	@Path("/client/accesstoken")
-	Response authenticateClient(OAuthClientCredentials clientSecrets);
+	@Path("/personen/lehrer")
+	Response createLehrer(LehrerCreated data);
+
+	@POST
+	@Path("/personen/privat")
+	Response createPrivatmensch(PrivatmenschCreated data);
+
 }

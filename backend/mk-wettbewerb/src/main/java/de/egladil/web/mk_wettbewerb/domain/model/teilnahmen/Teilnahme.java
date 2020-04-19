@@ -6,6 +6,7 @@ package de.egladil.web.mk_wettbewerb.domain.model.teilnahmen;
 
 import java.util.Objects;
 
+import de.egladil.web.mk_wettbewerb.domain.model.Identifier;
 import de.egladil.web.mk_wettbewerb.domain.model.wettbewerb.WettbewerbID;
 
 /**
@@ -15,13 +16,13 @@ public abstract class Teilnahme {
 
 	private final WettbewerbID wettbewerbID;
 
-	private final Teilnahmekuerzel teilnahmekuerzel;
+	private final Identifier teilnahmekuerzel;
 
 	/**
 	 * @param teilnahmekuerzel
 	 * @param jahr
 	 */
-	public Teilnahme(final WettbewerbID wettbewerbID, final Teilnahmekuerzel teilnahmekuerzel) {
+	public Teilnahme(final WettbewerbID wettbewerbID, final Identifier teilnahmekuerzel) {
 
 		if (wettbewerbID == null) {
 
@@ -33,28 +34,16 @@ public abstract class Teilnahme {
 			throw new IllegalArgumentException("teilnahmekuerzel darf nicht null sein");
 		}
 
-		if (!teilnahmekuerzelErlaubt(teilnahmekuerzel)) {
-
-			throw new IllegalArgumentException(teilnahmekuerzel.getClass().getSimpleName() + " ist nicht erlaubt.");
-		}
-
 		this.wettbewerbID = wettbewerbID;
 		this.teilnahmekuerzel = teilnahmekuerzel;
 	}
-
-	/**
-	 * @param  teilnahmekuerzel
-	 *                          Teilnahmekuerzel
-	 * @return                  boolean
-	 */
-	protected abstract boolean teilnahmekuerzelErlaubt(Teilnahmekuerzel teilnahmekuerzel);
 
 	public WettbewerbID wettbewerbID() {
 
 		return this.wettbewerbID;
 	}
 
-	public Teilnahmekuerzel teilnahmekuerzel() {
+	public Identifier teilnahmekuerzel() {
 
 		return this.teilnahmekuerzel;
 	}

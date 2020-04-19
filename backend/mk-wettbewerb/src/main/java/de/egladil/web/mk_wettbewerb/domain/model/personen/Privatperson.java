@@ -4,66 +4,43 @@
 // =====================================================
 package de.egladil.web.mk_wettbewerb.domain.model.personen;
 
-import java.util.Objects;
+import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import de.egladil.web.mk_wettbewerb.domain.model.Identifier;
 
 /**
  * Privatperson
  */
-public class Privatperson {
-
-	@JsonProperty
-	private final Person person;
+public class Privatperson extends Veranstalter {
 
 	/**
 	 * @param person
 	 */
 	public Privatperson(final Person person) {
 
-		if (person == null) {
+		super(person);
 
-			throw new IllegalArgumentException("person darf nicht null sein");
-		}
-
-		this.person = person;
 	}
 
-	public String fullName() {
+	/**
+	 * @param person
+	 * @param teilnahmekuerzel
+	 */
+	public Privatperson(final Person person, final List<Identifier> teilnahmekuerzel) {
 
-		return this.person.fullName();
-	}
+		super(person, teilnahmekuerzel);
 
-	@Override
-	public int hashCode() {
-
-		return Objects.hash(person);
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
+	public Rolle rolle() {
 
-		if (this == obj) {
-
-			return true;
-		}
-
-		if (obj == null) {
-
-			return false;
-		}
-
-		if (getClass() != obj.getClass()) {
-
-			return false;
-		}
-		Privatperson other = (Privatperson) obj;
-		return Objects.equals(person, other.person);
+		return Rolle.PRIVAT;
 	}
 
 	@Override
 	public String toString() {
 
-		return fullName();
+		return fullName() + " (PRIVAT)";
 	}
 }
