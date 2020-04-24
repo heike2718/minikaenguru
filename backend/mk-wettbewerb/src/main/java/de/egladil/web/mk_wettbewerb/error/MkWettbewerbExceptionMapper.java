@@ -15,14 +15,12 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.exception.InvalidInputException;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_commons.session.SessionUser;
 
 /**
  * MkWettbewerbExceptionMapper
@@ -64,16 +62,16 @@ public class MkWettbewerbExceptionMapper implements ExceptionMapper<Throwable> {
 			// nicht loggen, wurde schon
 		} else {
 
-			if (securityContext != null && securityContext.getUserPrincipal() instanceof SessionUser) {
+			// if (securityContext != null && securityContext.getUserPrincipal() instanceof SessionUser) {
 
-				// TODO: MDC stattdessen verwenden und konfigurieren
-				SessionUser sessionUser = (SessionUser) securityContext.getUserPrincipal();
-				LOG.error("idRef={} - uuid={}: {}", sessionUser.getIdReference(),
-					StringUtils.abbreviate(sessionUser.getUuid(), 11), exception.getMessage(), exception);
-			} else {
+			// TODO: MDC stattdessen verwenden und konfigurieren
+			// SessionUser sessionUser = (SessionUser) securityContext.getUserPrincipal();
+			// LOG.error("idRef={} - uuid={}: {}", sessionUser.getIdReference(),
+			// StringUtils.abbreviate(sessionUser.getUuid(), 11), exception.getMessage(), exception);
+			// } else {
 
-				LOG.error(exception.getMessage(), exception);
-			}
+			LOG.error(exception.getMessage(), exception);
+			// }
 		}
 
 		ResponsePayload payload = ResponsePayload
