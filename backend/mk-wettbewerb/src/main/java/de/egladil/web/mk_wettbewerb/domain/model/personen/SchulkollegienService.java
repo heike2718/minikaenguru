@@ -24,12 +24,19 @@ import de.egladil.web.mk_wettbewerb.domain.model.events.SchuleLehrerAdded;
 public class SchulkollegienService {
 
 	@Inject
-	SchulkollegienRepository schulkollegienRepository;
+	SchulkollegienRepository repository;
+
+	static SchulkollegienService createForTest(final SchulkollegienRepository repository) {
+
+		SchulkollegienService result = new SchulkollegienService();
+		result.repository = repository;
+		return result;
+	}
 
 	@Transactional(value = TxType.REQUIRES_NEW)
 	void handleSchuleLehrerAdded(@Observes final SchuleLehrerAdded event) {
 
-		Optional<Schulkollegium> opt = schulkollegienRepository.ofSchulkuerzel(new Identifier(event.schulkuerzel()));
+		Optional<Schulkollegium> opt = repository.ofSchulkuerzel(new Identifier(event.schulkuerzel()));
 
 		Identifier schulkuerzel = new Identifier(event.schulkuerzel());
 		List<Person> alleLehrer = new ArrayList<>();
@@ -39,12 +46,12 @@ public class SchulkollegienService {
 			Schulkollegium schulkollegium = opt.get();
 			alleLehrer.addAll(schulkollegium.alleLehrerUnmodifiable());
 			alleLehrer.add(event.person());
-			this.schulkollegienRepository.replaceKollegen(new Schulkollegium(schulkuerzel, alleLehrer.toArray(new Person[0])));
+			this.repository.replaceKollegen(new Schulkollegium(schulkuerzel, alleLehrer.toArray(new Person[0])));
 		} else {
 
 			alleLehrer.add(event.person());
 			Schulkollegium neuesSchulkollegium = new Schulkollegium(schulkuerzel, alleLehrer.toArray(new Person[0]));
-			this.schulkollegienRepository.addKollegium(neuesSchulkollegium);
+			this.repository.addKollegium(neuesSchulkollegium);
 		}
 	}
 }

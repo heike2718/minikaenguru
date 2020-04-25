@@ -6,6 +6,8 @@ package de.egladil.web.mk_wettbewerb.domain.model.events;
 
 import java.time.LocalDateTime;
 
+import org.apache.commons.lang3.StringUtils;
+
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.mk_wettbewerb.domain.model.personen.Person;
 
@@ -26,6 +28,16 @@ public abstract class LehrerChangedSchulen implements DomainEvent {
 	 * @param neueSchulkuerzel
 	 */
 	public LehrerChangedSchulen(final Person person, final String schulkuerzel) {
+
+		if (person == null) {
+
+			throw new IllegalArgumentException("person darf nicht null sein.");
+		}
+
+		if (StringUtils.isBlank(schulkuerzel)) {
+
+			throw new IllegalArgumentException("schulkuerzel darf nicht blank sein.");
+		}
 
 		this.person = person;
 		this.schulkuerzel = schulkuerzel;

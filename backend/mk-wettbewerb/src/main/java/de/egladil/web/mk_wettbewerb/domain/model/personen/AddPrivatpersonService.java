@@ -22,6 +22,13 @@ public class AddPrivatpersonService {
 	@Inject
 	VeranstalterRepository repository;
 
+	public static AddPrivatpersonService createForTest(final VeranstalterRepository veranstalterRepository) {
+
+		AddPrivatpersonService result = new AddPrivatpersonService();
+		result.repository = veranstalterRepository;
+		return result;
+	}
+
 	/**
 	 * Persistiert eine neue Privatperson.
 	 *

@@ -21,15 +21,20 @@ import de.egladil.web.mk_wettbewerb.domain.model.Identifier;
 public abstract class Veranstalter {
 
 	@JsonProperty
-	private final Person person;
+	private Person person;
 
 	@JsonProperty
-	private final List<Identifier> teilnahmekuerzel;
+	private List<Identifier> teilnahmekuerzel;
 
 	/**
 	 * @param person
 	 */
 	public Veranstalter(final Person person) {
+
+		if (person == null) {
+
+			throw new IllegalArgumentException("person darf nicht null sein.");
+		}
 
 		this.person = person;
 		this.teilnahmekuerzel = new ArrayList<>();
@@ -41,7 +46,14 @@ public abstract class Veranstalter {
 	 */
 	public Veranstalter(final Person person, final List<Identifier> teilnahmekuerzel) {
 
-		this.person = person;
+		this(person);
+
+		if (teilnahmekuerzel == null) {
+
+			throw new IllegalArgumentException("teilnahmekuerzel darf nicht null sein.");
+
+		}
+
 		this.teilnahmekuerzel = teilnahmekuerzel;
 	}
 
