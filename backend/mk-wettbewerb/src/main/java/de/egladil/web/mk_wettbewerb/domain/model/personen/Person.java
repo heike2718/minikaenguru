@@ -8,7 +8,6 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -16,11 +15,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class Person {
 
-	@JsonIgnore
-	private final String uuid;
+	@JsonProperty
+	private String uuid;
 
 	@JsonProperty
-	private final String fullName;
+	private String fullName;
+
+	/**
+	 * Konstruktor für JSON deserialization
+	 */
+	@SuppressWarnings("unused")
+	private Person() {
+
+	}
 
 	/**
 	 * @param uuid

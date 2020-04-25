@@ -52,6 +52,33 @@ LOCK TABLES `SCHULKOLLEGIEN` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `VERANSTALTER`
+--
+
+DROP TABLE IF EXISTS `VERANSTALTER`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `VERANSTALTER` (
+  `UUID` varchar(36) CHARACTER SET utf8 NOT NULL COMMENT 'uuid des Benutzerkontos im authprovider',
+  `ROLLE` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `FULL_NAME` varchar(101) COLLATE utf8_unicode_ci NOT NULL,
+  `TEILNAHMEKUERZEL` varchar(1000) CHARACTER SET utf8 DEFAULT NULL COMMENT 'Kommaseparierte Liste der Kürzel der Schulen oder Privatteilnahmen',
+  `VERSION` int(10) DEFAULT 0,
+  `DATE_MODIFIED` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`UUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `VERANSTALTER`
+--
+
+LOCK TABLES `VERANSTALTER` WRITE;
+/*!40000 ALTER TABLE `VERANSTALTER` DISABLE KEYS */;
+/*!40000 ALTER TABLE `VERANSTALTER` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `schema_version`
 --
 
@@ -80,7 +107,7 @@ CREATE TABLE `schema_version` (
 
 LOCK TABLES `schema_version` WRITE;
 /*!40000 ALTER TABLE `schema_version` DISABLE KEYS */;
-INSERT INTO `schema_version` VALUES (1,'1','<< Flyway Baseline >>','BASELINE','<< Flyway Baseline >>',NULL,'mk_wettbewerb','2020-04-12 11:44:20',0,1),(2,'2','table schulkollegien','SQL','V2__table_schulkollegien.sql',2095858003,'mk_wettbewerb','2020-04-12 11:51:14',18,1);
+INSERT INTO `schema_version` VALUES (1,'1','<< Flyway Baseline >>','BASELINE','<< Flyway Baseline >>',NULL,'mk_wettbewerb','2020-04-12 11:44:20',0,1),(2,'2','table schulkollegien','SQL','V2__table_schulkollegien.sql',2095858003,'mk_wettbewerb','2020-04-12 11:51:14',18,1),(3,'3','table veranstalter','SQL','V3__table_veranstalter.sql',804445355,'mk_wettbewerb','2020-04-19 07:55:14',21,1);
 /*!40000 ALTER TABLE `schema_version` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -93,4 +120,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-04-18  8:39:56
+-- Dump completed on 2020-04-19  9:55:19

@@ -6,6 +6,7 @@ package de.egladil.web.mk_wettbewerb.domain.model.teilnahmen;
 
 import org.apache.commons.lang3.StringUtils;
 
+import de.egladil.web.mk_wettbewerb.domain.model.Identifier;
 import de.egladil.web.mk_wettbewerb.domain.model.wettbewerb.WettbewerbID;
 
 /**
@@ -19,7 +20,7 @@ public class Schulteilnahme extends Teilnahme {
 	 * @param wettbewerbID
 	 * @param teilnahmekuerzel
 	 */
-	public Schulteilnahme(final WettbewerbID wettbewerbID, final Teilnahmekuerzel teilnahmekuerzel, final String nameSchule) {
+	public Schulteilnahme(final WettbewerbID wettbewerbID, final Identifier teilnahmekuerzel, final String nameSchule) {
 
 		super(wettbewerbID, teilnahmekuerzel);
 
@@ -34,12 +35,6 @@ public class Schulteilnahme extends Teilnahme {
 	public String nameSchule() {
 
 		return this.nameSchule;
-	}
-
-	@Override
-	protected boolean teilnahmekuerzelErlaubt(final Teilnahmekuerzel teilnahmekuerzel) {
-
-		return teilnahmekuerzel instanceof Schulkuerzel;
 	}
 
 	@Override

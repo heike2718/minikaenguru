@@ -39,7 +39,7 @@ public class DomainEventHandler {
 
 			StoredEvent storedEvent = StoredEvent.createEvent(event.occuredOn(), event.typeName(), body);
 
-			this.eventRepository.saveEvent(storedEvent);
+			this.eventRepository.appendEvent(storedEvent);
 
 		} catch (JsonProcessingException e) {
 

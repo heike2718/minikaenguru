@@ -4,49 +4,72 @@
 // =====================================================
 package de.egladil.web.mk_wettbewerb.domain.model.personen;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import de.egladil.web.mk_wettbewerb.domain.model.teilnahmen.Schulkuerzel;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import de.egladil.web.mk_wettbewerb.domain.model.Identifier;
+import de.egladil.web.mk_wettbewerb.error.MkWettbewerbRuntimeException;
 
 /**
  * Schulkollegium
  */
 public class Schulkollegium {
 
-	private final Schulkuerzel schulkuerzel;
+	@JsonProperty
+	private final Identifier schulkuerzel;
 
-	private final List<Person> alleLehrerDerSchule;
+	@JsonProperty
+	private final Person[] alleLehrer;
 
 	/**
 	 * @param schulkuerzel
-	 * @param alleLehrerDerSchule
+	 *                     Identifier
+	 * @param personen
+	 *                     Person[]
 	 */
-	public Schulkollegium(final Schulkuerzel schulkuerzel, final List<Person> alleLehrerDerSchule) {
+	public Schulkollegium(final Identifier schulkuerzel, final Person[] personen) {
 
 		if (schulkuerzel == null) {
 
 			throw new IllegalArgumentException("schulkuerzel darf nicht null sein.");
 		}
 
-		if (alleLehrerDerSchule == null) {
+		if (personen == null) {
 
-			throw new IllegalArgumentException("alleLehrerDerSchule darf nicht null sein.");
+			throw new IllegalArgumentException("personen darf nicht null sein.");
 		}
 
 		this.schulkuerzel = schulkuerzel;
-		this.alleLehrerDerSchule = alleLehrerDerSchule;
+		this.alleLehrer = personen;
 	}
 
-	public Schulkuerzel schulkuerzel() {
+	public Identifier schulkuerzel() {
 
 		return this.schulkuerzel;
 	}
 
-	public List<Person> alleLehrerDerSchule() {
+	public List<Person> alleLehrerUnmodifiable() {
 
-		return Collections.unmodifiableList(this.alleLehrerDerSchule);
+		return Collections.unmodifiableList(Arrays.asList(this.alleLehrer));
+	}
+
+	public String personenAlsJSON() {
+
+		try {
+
+			return new ObjectMapper().writeValueAsString(this.alleLehrer);
+
+		} catch (JsonProcessingException e) {
+
+			throw new MkWettbewerbRuntimeException("Konnte personen nicht serialisieren: " + e.getMessage(), e);
+		}
+
 	}
 
 	@Override
@@ -75,5 +98,4 @@ public class Schulkollegium {
 		Schulkollegium other = (Schulkollegium) obj;
 		return Objects.equals(schulkuerzel, other.schulkuerzel);
 	}
-
 }

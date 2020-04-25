@@ -7,57 +7,49 @@ package de.egladil.web.mk_wettbewerb.domain.model.personen;
 import java.util.Collections;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import de.egladil.web.mk_wettbewerb.domain.model.teilnahmen.Schulkuerzel;
+import de.egladil.web.mk_wettbewerb.domain.model.Identifier;
 
 /**
  * Lehrer
  */
-public class Lehrer {
-
-	@JsonProperty
-	private final Person person;
-
-	@JsonProperty
-	private final List<Schulkuerzel> schulen;
+public class Lehrer extends Veranstalter {
 
 	/**
-	 * @param uuid
-	 * @param fullName
+	 * @param person
 	 */
-	public Lehrer(final Person person, final List<Schulkuerzel> schulen) {
+	public Lehrer(final Person person) {
 
-		if (person == null) {
+		super(person);
 
-			throw new IllegalArgumentException("person darf nicht null sein");
-		}
-
-		if (schulen == null) {
-
-			throw new IllegalArgumentException("schulen darf nicht null sein");
-		}
-		this.person = person;
-		this.schulen = schulen;
 	}
 
-	public String fullName() {
+	/**
+	 * @param person
+	 * @param teilnahmekuerzel
+	 */
+	public Lehrer(final Person person, final List<Identifier> teilnahmekuerzel) {
 
-		return this.person.fullName();
+		super(person, teilnahmekuerzel);
+
+	}
+
+	@Override
+	public Rolle rolle() {
+
+		return Rolle.LEHRER;
 	}
 
 	/**
 	 * @return List unmodifiable
 	 */
-	public List<Schulkuerzel> schulen() {
+	public List<Identifier> schulen() {
 
-		return Collections.unmodifiableList(this.schulen);
+		return Collections.unmodifiableList(this.teilnahmekuerzel());
 	}
 
 	@Override
 	public String toString() {
 
-		return fullName();
+		return fullName() + " (LEHRER)";
 	}
-
 }
