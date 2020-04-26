@@ -13,7 +13,7 @@ import java.security.Principal;
 
 import org.junit.jupiter.api.Test;
 
-import de.egladil.web.mk_gateway.domain.model.Rolle;
+import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**
  * MkvSecurityContextTest

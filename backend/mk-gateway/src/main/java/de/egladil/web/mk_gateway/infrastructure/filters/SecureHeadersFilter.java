@@ -3,7 +3,7 @@
 // (c) Heike Winkelvoß
 // =====================================================
 
-package de.egladil.web.mk_gateway.application.filters;
+package de.egladil.web.mk_gateway.infrastructure.filters;
 
 import java.io.IOException;
 

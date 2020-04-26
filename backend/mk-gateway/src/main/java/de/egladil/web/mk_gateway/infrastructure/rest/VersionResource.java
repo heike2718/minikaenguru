@@ -2,7 +2,7 @@
 // Project: mk-wettbewerb
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.application.rest;
+package de.egladil.web.mk_gateway.infrastructure.rest;
 
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.GET;

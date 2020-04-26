@@ -12,10 +12,10 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
-import de.egladil.web.mk_gateway.domain.model.DomainEvent;
-import de.egladil.web.mk_gateway.domain.model.Rolle;
-import de.egladil.web.mk_gateway.domain.services.UserRepository;
-import de.egladil.web.mk_gateway.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.event.DomainEvent;
+import de.egladil.web.mk_gateway.domain.user.Rolle;
+import de.egladil.web.mk_gateway.domain.user.UserRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
 
 /**

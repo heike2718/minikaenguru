@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.services;
+package de.egladil.web.mk_gateway.application;
 
 import org.eclipse.microprofile.jwt.Claims;
 

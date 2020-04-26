@@ -21,9 +21,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import de.egladil.web.commons_net.exception.SessionExpiredException;
-import de.egladil.web.mk_gateway.domain.model.Rolle;
-import de.egladil.web.mk_gateway.domain.services.UserRepository;
-import de.egladil.web.mk_gateway.error.AuthException;
+import de.egladil.web.mk_gateway.domain.error.AuthException;
+import de.egladil.web.mk_gateway.domain.user.Rolle;
+import de.egladil.web.mk_gateway.domain.user.UserRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
 
 /**

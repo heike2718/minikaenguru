@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.application.filters;
+package de.egladil.web.mk_gateway.infrastructure.filters;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -26,10 +26,10 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_net.utils.CommonHttpUtils;
 import de.egladil.web.mk_gateway.MkGatewayApp;
+import de.egladil.web.mk_gateway.domain.error.AuthException;
 import de.egladil.web.mk_gateway.domain.session.MkvApiSessionService;
 import de.egladil.web.mk_gateway.domain.session.MkvSecurityContext;
 import de.egladil.web.mk_gateway.domain.session.Session;
-import de.egladil.web.mk_gateway.error.AuthException;
 
 /**
  * AuthorizationFilter

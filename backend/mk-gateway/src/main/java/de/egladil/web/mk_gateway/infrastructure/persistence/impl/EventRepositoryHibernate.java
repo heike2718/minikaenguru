@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
-import de.egladil.web.mk_gateway.application.eventstore.EventRepository;
+import de.egladil.web.mk_gateway.domain.event.EventRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.StoredEvent;
 
 /**

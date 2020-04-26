@@ -23,7 +23,7 @@ import org.hibernate.annotations.GenericGenerator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import de.egladil.web.commons_validation.annotations.UuidString;
-import de.egladil.web.mk_gateway.domain.model.Rolle;
+import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**
  * User
