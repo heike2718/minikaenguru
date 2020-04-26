@@ -18,13 +18,13 @@ import javax.persistence.TypedQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.egladil.web.mk_wettbewerb.domain.model.Identifier;
-import de.egladil.web.mk_wettbewerb.domain.model.personen.Lehrer;
-import de.egladil.web.mk_wettbewerb.domain.model.personen.Person;
-import de.egladil.web.mk_wettbewerb.domain.model.personen.Privatperson;
-import de.egladil.web.mk_wettbewerb.domain.model.personen.Veranstalter;
-import de.egladil.web.mk_wettbewerb.domain.model.personen.VeranstalterRepository;
-import de.egladil.web.mk_wettbewerb.error.MkWettbewerbRuntimeException;
+import de.egladil.web.mk_wettbewerb.domain.Identifier;
+import de.egladil.web.mk_wettbewerb.domain.error.MkWettbewerbRuntimeException;
+import de.egladil.web.mk_wettbewerb.domain.personen.Lehrer;
+import de.egladil.web.mk_wettbewerb.domain.personen.Person;
+import de.egladil.web.mk_wettbewerb.domain.personen.Privatperson;
+import de.egladil.web.mk_wettbewerb.domain.personen.Veranstalter;
+import de.egladil.web.mk_wettbewerb.domain.personen.VeranstalterRepository;
 import de.egladil.web.mk_wettbewerb.infrastructure.persistence.entities.PersistenterVeranstalter;
 
 /**

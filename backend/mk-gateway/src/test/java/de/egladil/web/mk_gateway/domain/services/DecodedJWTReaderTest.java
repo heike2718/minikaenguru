@@ -19,7 +19,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 import de.egladil.web.commons_crypto.JWTService;
 import de.egladil.web.commons_crypto.impl.JWTServiceImpl;
-import de.egladil.web.mk_gateway.application.DecodedJWTReader;
+import de.egladil.web.mk_gateway.domain.DecodedJWTReader;
 import de.egladil.web.mk_gateway.domain.session.SessionUtils;
 
 /**

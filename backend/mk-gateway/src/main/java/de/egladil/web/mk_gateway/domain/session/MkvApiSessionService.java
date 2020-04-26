@@ -27,7 +27,7 @@ import de.egladil.web.commons_crypto.impl.JWTServiceImpl;
 import de.egladil.web.commons_net.exception.SessionExpiredException;
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.commons_net.utils.CommonHttpUtils;
-import de.egladil.web.mk_gateway.application.DecodedJWTReader;
+import de.egladil.web.mk_gateway.domain.DecodedJWTReader;
 import de.egladil.web.mk_gateway.domain.error.AuthException;
 import de.egladil.web.mk_gateway.domain.error.LogmessagePrefixes;
 import de.egladil.web.mk_gateway.domain.user.UserRepository;
