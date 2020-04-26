@@ -10,9 +10,12 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import de.egladil.web.mk_wettbewerb.domain.semantik.ValueObject;
+
 /**
  * Person
  */
+@ValueObject
 public class Person {
 
 	@JsonProperty

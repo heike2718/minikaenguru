@@ -15,10 +15,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
 import de.egladil.web.mk_wettbewerb.domain.error.MkWettbewerbRuntimeException;
+import de.egladil.web.mk_wettbewerb.domain.semantik.Aggregate;
 
 /**
  * Schulkollegium
  */
+@Aggregate
 public class Schulkollegium {
 
 	@JsonProperty

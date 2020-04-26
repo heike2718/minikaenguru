@@ -9,9 +9,12 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import de.egladil.web.mk_wettbewerb.domain.semantik.DomainCommand;
+
 /**
  * CreateOrUpdatePrivatpersonCommand hat die gleiche Signatur wie der body eines entsprechenden mk-gateway-DomainEvents.
  */
+@DomainCommand
 public class CreateOrUpdatePrivatpersonCommand {
 
 	@JsonIgnore

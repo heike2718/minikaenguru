@@ -9,10 +9,13 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import de.egladil.web.mk_wettbewerb.domain.semantik.DomainCommand;
+
 /**
  * CreateOrUpdateLehrerCommand hat die gleiche Signatur wie der body eines entsprechenden mk-gateway-DomainEvents und entsteht durch
  * Deserialisierung eines REST-Payloads..
  */
+@DomainCommand
 public class CreateOrUpdateLehrerCommand {
 
 	@JsonIgnore

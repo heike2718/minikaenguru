@@ -14,10 +14,12 @@ import org.apache.commons.lang3.StringUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
+import de.egladil.web.mk_wettbewerb.domain.semantik.Aggregate;
 
 /**
  * Veranstalter
  */
+@Aggregate
 public abstract class Veranstalter {
 
 	@JsonProperty

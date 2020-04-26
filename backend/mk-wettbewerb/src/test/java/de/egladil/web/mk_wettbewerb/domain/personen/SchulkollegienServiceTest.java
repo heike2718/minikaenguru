@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
 import de.egladil.web.mk_wettbewerb.domain.personen.Person;
-import de.egladil.web.mk_wettbewerb.domain.personen.SchuleLehrerAdded;
+import de.egladil.web.mk_wettbewerb.domain.personen.LehrerRegisteredForSchule;
 import de.egladil.web.mk_wettbewerb.domain.personen.SchulkollegienRepository;
 import de.egladil.web.mk_wettbewerb.domain.personen.SchulkollegienService;
 import de.egladil.web.mk_wettbewerb.domain.personen.Schulkollegium;
@@ -93,7 +93,7 @@ public class SchulkollegienServiceTest {
 
 		Person person = new Person(uuidLehrer, fullName);
 
-		SchuleLehrerAdded event = new SchuleLehrerAdded(schulkuerzel, person);
+		LehrerRegisteredForSchule event = new LehrerRegisteredForSchule(schulkuerzel, person);
 
 		// Act
 		service.handleSchuleLehrerAdded(event);
@@ -124,7 +124,7 @@ public class SchulkollegienServiceTest {
 
 		Person person = new Person(uuidLehrer, fullName);
 
-		SchuleLehrerAdded event = new SchuleLehrerAdded(SCHULKUERZEL, person);
+		LehrerRegisteredForSchule event = new LehrerRegisteredForSchule(SCHULKUERZEL, person);
 
 		// Act
 		service.handleSchuleLehrerAdded(event);

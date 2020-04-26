@@ -9,12 +9,13 @@ import java.time.LocalDateTime;
 import org.apache.commons.lang3.StringUtils;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
-import de.egladil.web.mk_wettbewerb.domain.DomainEvent;
+import de.egladil.web.mk_wettbewerb.domain.semantik.DomainEvent;
 
 /**
  * LehrerChangedSchulen
  */
-public abstract class LehrerChangedSchulen implements DomainEvent {
+@DomainEvent
+public abstract class LehrerChangedSchulen {
 
 	private final Person person;
 
@@ -44,18 +45,11 @@ public abstract class LehrerChangedSchulen implements DomainEvent {
 		this.occuredOn = CommonTimeUtils.now();
 	}
 
-	@Override
-	public String typeName() {
-
-		return LehrerChangedSchulen.class.getSimpleName();
-	}
-
 	public Person person() {
 
 		return person;
 	}
 
-	@Override
 	public LocalDateTime occuredOn() {
 
 		return this.occuredOn;
@@ -65,5 +59,7 @@ public abstract class LehrerChangedSchulen implements DomainEvent {
 
 		return schulkuerzel;
 	}
+
+	public abstract String typeName();
 
 }

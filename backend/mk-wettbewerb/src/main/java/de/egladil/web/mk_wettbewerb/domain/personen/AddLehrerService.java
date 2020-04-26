@@ -14,22 +14,24 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
+import de.egladil.web.mk_wettbewerb.domain.semantik.DomainService;
 
 /**
  * AddLehrerService
  */
 @RequestScoped
+@DomainService
 public class AddLehrerService {
 
 	@Inject
 	VeranstalterRepository veranstalterRepository;
 
 	@Inject
-	Event<SchuleLehrerAdded> schuleLehrerAdded;
+	Event<LehrerRegisteredForSchule> lehrerRegisteredForSchule;
 
 	private boolean test;
 
-	private SchuleLehrerAdded event;
+	private LehrerRegisteredForSchule event;
 
 	public static AddLehrerService createServiceForTest(final VeranstalterRepository lehrerRepository) {
 
@@ -57,16 +59,16 @@ public class AddLehrerService {
 
 		veranstalterRepository.addVeranstalter(lehrer);
 
-		event = new SchuleLehrerAdded(data.schulkuerzel(), person);
+		event = new LehrerRegisteredForSchule(data.schulkuerzel(), person);
 
 		if (!test) {
 
-			schuleLehrerAdded.fire(event);
+			lehrerRegisteredForSchule.fire(event);
 		}
 
 	}
 
-	SchuleLehrerAdded event() {
+	LehrerRegisteredForSchule event() {
 
 		return event;
 	}

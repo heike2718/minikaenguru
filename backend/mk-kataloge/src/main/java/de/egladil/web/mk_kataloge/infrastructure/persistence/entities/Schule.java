@@ -28,7 +28,8 @@ public class Schule {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "schule_id_generator")
-	@GenericGenerator(name = "schule_id_generator", strategy = "de.egladil.web.mk_kataloge.persistence.impl.SchuleIdGenerator")
+	@GenericGenerator(
+		name = "schule_id_generator", strategy = "de.egladil.web.mk_kataloge.infrastructure.persistence.impl.SchuleIdGenerator")
 	@Column(name = "KUERZEL")
 	private String kuerzel;
 

@@ -15,11 +15,13 @@ import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
+import de.egladil.web.mk_wettbewerb.domain.semantik.DomainService;
 
 /**
  * SchulkollegienService
  */
 @RequestScoped
+@DomainService
 public class SchulkollegienService {
 
 	@Inject
@@ -33,7 +35,7 @@ public class SchulkollegienService {
 	}
 
 	@Transactional(value = TxType.REQUIRES_NEW)
-	void handleSchuleLehrerAdded(@Observes final SchuleLehrerAdded event) {
+	void handleSchuleLehrerAdded(@Observes final LehrerRegisteredForSchule event) {
 
 		Optional<Schulkollegium> opt = repository.ofSchulkuerzel(new Identifier(event.schulkuerzel()));
 

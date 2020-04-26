@@ -11,11 +11,13 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
+import de.egladil.web.mk_wettbewerb.domain.semantik.DomainService;
 
 /**
  * AddPrivatpersonService
  */
 @RequestScoped
+@DomainService
 public class AddPrivatpersonService {
 
 	@Inject

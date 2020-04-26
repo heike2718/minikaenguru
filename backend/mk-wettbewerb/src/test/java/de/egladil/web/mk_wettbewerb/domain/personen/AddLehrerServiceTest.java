@@ -19,7 +19,7 @@ import de.egladil.web.mk_wettbewerb.domain.Identifier;
 import de.egladil.web.mk_wettbewerb.domain.personen.AddLehrerService;
 import de.egladil.web.mk_wettbewerb.domain.personen.Lehrer;
 import de.egladil.web.mk_wettbewerb.domain.personen.Rolle;
-import de.egladil.web.mk_wettbewerb.domain.personen.SchuleLehrerAdded;
+import de.egladil.web.mk_wettbewerb.domain.personen.LehrerRegisteredForSchule;
 import de.egladil.web.mk_wettbewerb.domain.personen.Veranstalter;
 
 /**
@@ -91,12 +91,12 @@ public class AddLehrerServiceTest extends AbstractDomainServiceTest {
 		Lehrer lehrer = (Lehrer) veranstalter;
 		assertEquals(schulkuerzel, lehrer.persistierbareTeilnahmekuerzel());
 
-		SchuleLehrerAdded event = service.event();
+		LehrerRegisteredForSchule event = service.event();
 		assertNotNull(event);
 
 		assertEquals(lehrer.person(), event.person());
 		assertEquals(schulkuerzel, event.schulkuerzel());
-		assertEquals("SchuleLehrerAdded", event.typeName());
+		assertEquals("LehrerRegisteredForSchule", event.typeName());
 	}
 
 }

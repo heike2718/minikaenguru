@@ -2,7 +2,7 @@
 // Project: mk-wettbewerb
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_wettbewerb.domain.events;
+package de.egladil.web.mk_wettbewerb.domain.personen;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -10,19 +10,19 @@ import static org.junit.Assert.fail;
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_wettbewerb.domain.personen.Person;
-import de.egladil.web.mk_wettbewerb.domain.personen.SchuleLehrerAdded;
+import de.egladil.web.mk_wettbewerb.domain.personen.LehrerRegisteredForSchule;
 
 /**
- * SchuleLehrerAddedTest
+ * LehrerRegisteredForSchuleTest
  */
-public class SchuleLehrerAddedTest {
+public class LehrerRegisteredForSchuleTest {
 
 	@Test
 	void should_ConstructorThrowException_when_PersonNull() {
 
 		try {
 
-			new SchuleLehrerAdded("gadsguqi", null);
+			new LehrerRegisteredForSchule("gadsguqi", null);
 
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
@@ -37,7 +37,7 @@ public class SchuleLehrerAddedTest {
 		try {
 
 			Person person = new Person("gqudqgi", "Hans Wurst");
-			new SchuleLehrerAdded(null, person);
+			new LehrerRegisteredForSchule(null, person);
 
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
@@ -52,7 +52,7 @@ public class SchuleLehrerAddedTest {
 		try {
 
 			Person person = new Person("gqudqgi", "Hans Wurst");
-			new SchuleLehrerAdded("   ", person);
+			new LehrerRegisteredForSchule("   ", person);
 
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {

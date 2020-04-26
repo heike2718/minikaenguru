@@ -4,10 +4,13 @@
 // =====================================================
 package de.egladil.web.mk_wettbewerb.domain.personen;
 
+import de.egladil.web.mk_wettbewerb.domain.semantik.DomainEvent;
+
 /**
- * SchuleLehrerAdded
+ * LehrerRegisteredForSchule
  */
-public class SchuleLehrerAdded extends LehrerChangedSchulen {
+@DomainEvent
+public class LehrerRegisteredForSchule extends LehrerChangedSchulen {
 
 	/**
 	 * @param schulkuerzel
@@ -15,7 +18,7 @@ public class SchuleLehrerAdded extends LehrerChangedSchulen {
 	 * @param person
 	 *                     Person
 	 */
-	public SchuleLehrerAdded(final String schulkuerzel, final Person person) {
+	public LehrerRegisteredForSchule(final String schulkuerzel, final Person person) {
 
 		super(person, schulkuerzel);
 
@@ -24,7 +27,7 @@ public class SchuleLehrerAdded extends LehrerChangedSchulen {
 	@Override
 	public String typeName() {
 
-		return SchuleLehrerAdded.class.getSimpleName();
+		return LehrerRegisteredForSchule.class.getSimpleName();
 	}
 
 }
