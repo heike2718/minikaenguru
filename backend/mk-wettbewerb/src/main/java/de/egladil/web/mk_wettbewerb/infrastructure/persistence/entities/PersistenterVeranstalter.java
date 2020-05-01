@@ -21,7 +21,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.GenericGenerator;
 
 import de.egladil.web.commons_validation.annotations.UuidString;
-import de.egladil.web.mk_wettbewerb.domain.model.personen.Rolle;
+import de.egladil.web.mk_wettbewerb.domain.personen.Rolle;
 
 /**
  * PersistenterVeranstalter

@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import de.egladil.web.mk_wettbewerb.domain.model.personen.Person;
+import de.egladil.web.mk_wettbewerb.domain.personen.Person;
 
 /**
  * SchulkollegienHibernateRepositoryTest

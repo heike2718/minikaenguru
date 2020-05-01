@@ -17,11 +17,11 @@ import javax.transaction.Transactional.TxType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import de.egladil.web.mk_wettbewerb.domain.model.Identifier;
-import de.egladil.web.mk_wettbewerb.domain.model.personen.Person;
-import de.egladil.web.mk_wettbewerb.domain.model.personen.SchulkollegienRepository;
-import de.egladil.web.mk_wettbewerb.domain.model.personen.Schulkollegium;
-import de.egladil.web.mk_wettbewerb.error.MkWettbewerbRuntimeException;
+import de.egladil.web.mk_wettbewerb.domain.Identifier;
+import de.egladil.web.mk_wettbewerb.domain.error.MkWettbewerbRuntimeException;
+import de.egladil.web.mk_wettbewerb.domain.personen.Person;
+import de.egladil.web.mk_wettbewerb.domain.personen.SchulkollegienRepository;
+import de.egladil.web.mk_wettbewerb.domain.personen.Schulkollegium;
 import de.egladil.web.mk_wettbewerb.infrastructure.persistence.entities.PersistentesSchulkollegium;
 
 /**
