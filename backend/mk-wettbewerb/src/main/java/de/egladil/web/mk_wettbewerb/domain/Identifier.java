@@ -25,7 +25,7 @@ public class Identifier {
 
 		if (StringUtils.isBlank(identifier)) {
 
-			throw new IllegalArgumentException("identifier darf nicht null sein.");
+			throw new IllegalArgumentException("identifier darf nicht blank sein.");
 		}
 
 		this.identifier = identifier;
