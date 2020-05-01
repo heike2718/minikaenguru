@@ -97,7 +97,7 @@ public class OriginRefererFilter implements ContainerRequestFilter {
 
 		if (targetOrigin != null) {
 
-			List<String> allowedOrigins = Arrays.asList(targetOrigin.split(" "));
+			List<String> allowedOrigins = Arrays.asList(targetOrigin.split(","));
 
 			if (!allowedOrigins.contains(extractedValue)) {
 

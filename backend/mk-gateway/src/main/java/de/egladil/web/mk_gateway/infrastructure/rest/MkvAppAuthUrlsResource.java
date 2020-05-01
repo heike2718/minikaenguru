@@ -75,7 +75,7 @@ public class MkvAppAuthUrlsResource {
 	}
 
 	@GET
-	@Path("signup/lehrer/{schulkuerzel}")
+	@Path("/signup/lehrer/{schulkuerzel}")
 	public Response getSignupLehrerUrl(@PathParam(value = "schulkuerzel") final String schulkuerzel) {
 
 		String accessToken = clientAccessTokenService.orderAccessToken(mkvAppClientId, mkvAppClientSecret);
@@ -96,7 +96,7 @@ public class MkvAppAuthUrlsResource {
 	}
 
 	@GET
-	@Path("signup/privat")
+	@Path("/signup/privat")
 	public Response getSignupPrivatmenschUrl() {
 
 		String accessToken = clientAccessTokenService.orderAccessToken(mkvAppClientId, mkvAppClientSecret);
