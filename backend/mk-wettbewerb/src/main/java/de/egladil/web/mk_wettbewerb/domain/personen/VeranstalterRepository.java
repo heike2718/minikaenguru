@@ -7,10 +7,12 @@ package de.egladil.web.mk_wettbewerb.domain.personen;
 import java.util.Optional;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
+import de.egladil.web.mk_wettbewerb.domain.semantik.Repository;
 
 /**
  * VeranstalterRepository
  */
+@Repository
 public interface VeranstalterRepository {
 
 	/**

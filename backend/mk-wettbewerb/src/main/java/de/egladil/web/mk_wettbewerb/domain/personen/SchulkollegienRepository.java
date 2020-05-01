@@ -8,10 +8,12 @@ import java.util.List;
 import java.util.Optional;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
+import de.egladil.web.mk_wettbewerb.domain.semantik.Repository;
 
 /**
  * SchulkollegienRepository
  */
+@Repository
 public interface SchulkollegienRepository {
 
 	/**
