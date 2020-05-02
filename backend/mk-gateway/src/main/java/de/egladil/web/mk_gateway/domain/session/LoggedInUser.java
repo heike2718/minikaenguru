@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import de.egladil.web.mk_gateway.domain.model.Rolle;
+import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**
  * LoggedInUser

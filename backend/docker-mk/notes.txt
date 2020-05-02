@@ -1,0 +1,2 @@
+docker network create -d bridge --subnet 192.168.0.0/24 --gateway 192.168.0.1 mk-network
+(siehe https://forums.docker.com/t/accessing-host-machine-from-within-docker-container/14248/5)

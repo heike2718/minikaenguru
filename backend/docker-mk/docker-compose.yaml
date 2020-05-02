@@ -1,0 +1,93 @@
+version: "3.7"
+
+services:
+  mk-gateway:
+    image: heik2718/mk-gateway
+    networks:
+      - mk-network
+    volumes:
+      - /home/heike/docker-volumes/mk-gateway:/usr/local/bin/mk-gateway
+    ports:
+      - 7500:7500
+    environment:
+      - "TZ=Europe/Berlin"
+    restart: on-failure:3
+    depends_on:
+      - mk-gateway-database
+    command: ["java","-jar","app.jar"]
+
+  mk-kataloge:
+    image: heik2718/mk-kataloge
+    networks:
+      - mk-network
+    ports:
+      - 7700:7700
+    environment:
+      - "TZ=Europe/Berlin"
+    restart: on-failure:3
+    depends_on:
+      - mk-kataloge-database
+    command: ["java","-jar","app.jar"]
+
+  mk-wettbewerb:
+    image: heik2718/mk-wettbewerb
+    networks:
+      - mk-network
+    ports:
+      - 7750:7750
+    environment:
+      - "TZ=Europe/Berlin"
+    restart: on-failure:3
+    depends_on:
+      - mk-wettbeweb-database
+    command: ["java","-jar","app.jar"]
+
+  mk-gateway-database:
+    image: heik2718/mk-gateway-database
+    networks:
+      - mk-network
+    volumes:
+      - /home/heike/docker-volumes/mk-gateway-database:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-database -e MYSQL_USER_FILE=/run/secrets/mysql-root-pwd
+      - MYSQL_DATABASE_FILE=/run/secrets/mysql-database -e MYSQL_USER_FILE=/run/secrets/mysql-database
+      - MYSQL_USER_FILE=/run/secrets/mysql-database -e MYSQL_USER_FILE=/run/secrets/mysql-user
+      - MYSQL_PASSWORD_FILE=/run/secrets/mysql-database -e MYSQL_USER_FILE=/run/secrets/mysql-user-pwd
+      - "TZ=Europe/Berlin"
+    restart: on-failure:3
+    command: ["mysqld"]
+
+  mk-kataloge-database:
+    image: heik2718/mk-kataloge-database
+    networks:
+      - mk-network
+    volumes:
+      - /home/heike/docker-volumes/mk-kataloge-database:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-database -e MYSQL_USER_FILE=/run/secrets/mysql-root-pwd
+      - MYSQL_DATABASE_FILE=/run/secrets/mysql-database -e MYSQL_USER_FILE=/run/secrets/mysql-database
+      - MYSQL_USER_FILE=/run/secrets/mysql-database -e MYSQL_USER_FILE=/run/secrets/mysql-user
+      - MYSQL_PASSWORD_FILE=/run/secrets/mysql-database -e MYSQL_USER_FILE=/run/secrets/mysql-user-pwd
+      - "TZ=Europe/Berlin"
+    restart: on-failure:3
+    command: ["mysqld"]
+
+  mk-wettbewerb-database:
+    image: heik2718/mk-wettbewerb-database
+    networks:
+      - mk-network
+    volumes:
+      - /home/heike/docker-volumes/mk-wettbewerb-database:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-database -e MYSQL_USER_FILE=/run/secrets/mysql-root-pwd
+      - MYSQL_DATABASE_FILE=/run/secrets/mysql-database -e MYSQL_USER_FILE=/run/secrets/mysql-database
+      - MYSQL_USER_FILE=/run/secrets/mysql-database -e MYSQL_USER_FILE=/run/secrets/mysql-user
+      - MYSQL_PASSWORD_FILE=/run/secrets/mysql-database -e MYSQL_USER_FILE=/run/secrets/mysql-user-pwd
+      - "TZ=Europe/Berlin"
+    restart: on-failure:3
+    command: ["mysqld"]
+
+networks:
+   mk-network:
+      -external: true
+

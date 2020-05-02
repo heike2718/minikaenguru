@@ -8,8 +8,8 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
-import de.egladil.web.mk_gateway.domain.model.Rolle;
-import de.egladil.web.mk_gateway.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**
  * SignUpResourceOwner ist ein Value-Objekt, das die Werte enthält, die für das Anlegen eines Benutzers (Lehrer, Privatmensch) in

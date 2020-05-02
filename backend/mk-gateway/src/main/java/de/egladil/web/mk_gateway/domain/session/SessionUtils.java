@@ -16,7 +16,7 @@ import javax.ws.rs.core.NewCookie;
 import org.apache.commons.io.IOUtils;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
-import de.egladil.web.mk_gateway.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 
 /**
  * SessionUtils

@@ -18,8 +18,8 @@ import org.junit.jupiter.api.Test;
 
 import de.egladil.web.commons_crypto.JWTService;
 import de.egladil.web.commons_crypto.impl.JWTServiceImpl;
-import de.egladil.web.mk_gateway.error.AuthException;
-import de.egladil.web.mk_gateway.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.error.AuthException;
+import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 
 /**
  * AuthResultToResourceOwnerMapperTest

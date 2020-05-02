@@ -20,9 +20,9 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.OAuthClientCredentials;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_gateway.error.ClientAuthException;
-import de.egladil.web.mk_gateway.error.LogmessagePrefixes;
-import de.egladil.web.mk_gateway.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.error.ClientAuthException;
+import de.egladil.web.mk_gateway.domain.error.LogmessagePrefixes;
+import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 
 /**
  * ClientAccessTokenService

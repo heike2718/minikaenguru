@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -22,7 +23,7 @@ import org.hibernate.annotations.GenericGenerator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import de.egladil.web.commons_validation.annotations.UuidString;
-import de.egladil.web.mk_gateway.domain.model.Rolle;
+import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**
  * User
@@ -50,6 +51,10 @@ public class User extends ConcurrencySafeEntity {
 	@Column(name = "ROLE")
 	@Enumerated(EnumType.STRING)
 	private Rolle rolle;
+
+	@Version
+	@Column(name = "VERSION")
+	private int version;
 
 	public Rolle getRolle() {
 

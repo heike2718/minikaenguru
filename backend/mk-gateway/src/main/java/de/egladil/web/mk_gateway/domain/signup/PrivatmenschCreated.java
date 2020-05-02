@@ -10,8 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import de.egladil.web.mk_gateway.domain.model.DomainEvent;
-import de.egladil.web.mk_gateway.domain.model.Rolle;
+import de.egladil.web.mk_gateway.domain.event.DomainEvent;
+import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**
  * PrivatmenschCreated

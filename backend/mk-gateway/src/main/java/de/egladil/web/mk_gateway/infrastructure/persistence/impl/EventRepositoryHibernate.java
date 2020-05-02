@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
-import de.egladil.web.mk_gateway.application.eventstore.EventRepository;
+import de.egladil.web.mk_gateway.domain.event.EventRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.StoredEvent;
 
 /**
@@ -26,7 +26,7 @@ public class EventRepositoryHibernate implements EventRepository {
 
 	@Override
 	@Transactional
-	public void saveEvent(final StoredEvent event) {
+	public void appendEvent(final StoredEvent event) {
 
 		this.em.persist(event);
 
