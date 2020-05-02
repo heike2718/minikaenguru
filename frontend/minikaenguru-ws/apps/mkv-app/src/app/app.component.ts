@@ -35,7 +35,7 @@ export class AppComponent {
 					this.authService.createSession(authResult);
 				}
 				if (authResult.state === 'signup') {
-					this.registrationService.createUser(authResult).pipe(
+					this.registrationService.createVeranstalter(authResult).pipe(
 						map(body => body as ResponsePayload)
 					).subscribe(
 						payload => {

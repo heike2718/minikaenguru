@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.infrastructure.rest;
+package de.egladil.web.mk_gateway.infrastructure.rest.users;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -31,17 +31,16 @@ import de.egladil.web.mk_gateway.domain.session.SessionUtils;
 import de.egladil.web.mk_gateway.domain.signup.AuthResult;
 
 /**
- * MkvApiGatewaySessionResource ist der Endpoint für den Minikänguru-Microservice-Zoo, um sich ein- und auszuloggen.
+ * SessionResource ist der Endpoint für den Minikänguru-Microservice-Zoo, um sich ein- und auszuloggen.
  */
 @RequestScoped
-@Path("auth")
 @Produces(MediaType.APPLICATION_JSON)
-public class MkvApiGatewaySessionResource {
+public class SessionResource {
 
 	private static final String SESSION_COOKIE_NAME = MkGatewayApp.CLIENT_COOKIE_PREFIX
 		+ CommonHttpUtils.NAME_SESSIONID_COOKIE;
 
-	private static final Logger LOG = LoggerFactory.getLogger(MkvApiGatewaySessionResource.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SessionResource.class);
 
 	@ConfigProperty(name = "stage")
 	String stage;
@@ -50,9 +49,9 @@ public class MkvApiGatewaySessionResource {
 	MkvApiSessionService sessionService;
 
 	@POST
-	@Path("login")
+	@Path("/login")
 	@Consumes(MediaType.TEXT_PLAIN)
-	public Response createSession(final AuthResult authResult) {
+	public Response login(final AuthResult authResult) {
 
 		final String jwt = authResult.getIdToken();
 
@@ -70,7 +69,7 @@ public class MkvApiGatewaySessionResource {
 	}
 
 	@DELETE
-	@Path("logout")
+	@Path("/logout")
 	public Response logout(@CookieParam(value = SESSION_COOKIE_NAME) final String sessionId) {
 
 		if (sessionId != null) {
@@ -83,7 +82,7 @@ public class MkvApiGatewaySessionResource {
 	}
 
 	@DELETE
-	@Path("dev/logout/{sessionid}")
+	@Path("/dev/logout/{sessionid}")
 	public Response logoutDev(@PathParam(value = "sessionId") final String sessionId) {
 
 		if (sessionId != null) {

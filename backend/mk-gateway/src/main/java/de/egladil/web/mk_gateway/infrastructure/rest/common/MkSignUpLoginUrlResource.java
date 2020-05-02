@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.infrastructure.rest;
+package de.egladil.web.mk_gateway.infrastructure.rest.common;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -24,14 +24,14 @@ import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.infrastructure.clientauth.IClientAccessTokenService;
 
 /**
- * MkvAppAuthUrlsResource stellt für die mkv-app die Login-und Signup-Urls zur Verfügung.
+ * MkSignUpLoginUrlResource stellt für die mkv-app die Login-und Signup-Urls zur Verfügung.
  */
 @RequestScoped
-@Path("/mkv-app/authurls")
+@Path("/authurls")
 @Produces(MediaType.APPLICATION_JSON)
-public class MkvAppAuthUrlsResource {
+public class MkSignUpLoginUrlResource {
 
-	private static final Logger LOG = LoggerFactory.getLogger(MkvAppAuthUrlsResource.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MkSignUpLoginUrlResource.class);
 
 	@ConfigProperty(name = "stage")
 	String stage;
@@ -55,7 +55,7 @@ public class MkvAppAuthUrlsResource {
 	IClientAccessTokenService clientAccessTokenService;
 
 	@GET
-	@Path("login")
+	@Path("/login")
 	public Response getLoginUrl() {
 
 		String accessToken = clientAccessTokenService.orderAccessToken(mkvAppClientId, mkvAppClientSecret);

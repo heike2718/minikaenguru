@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.infrastructure.rest;
+package de.egladil.web.mk_gateway.infrastructure.rest.users;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -24,12 +24,12 @@ import de.egladil.web.mk_gateway.domain.signup.SignUpResourceOwner;
 import de.egladil.web.mk_gateway.domain.signup.SignUpService;
 
 /**
- * MkvAppUserResource ist die Resource für die Lehrer und Privatmenschen der mkv-app.
+ * WettbewerbVeranstalterResource ist die Resource zum Anlegen von Minikänguru-Veranstaltern.
  */
 @RequestScoped
-@Path("/mkv-app/users")
+@Path("/wettbewerb/veranstalter")
 @Produces(MediaType.APPLICATION_JSON)
-public class MkvAppUserResource {
+public class WettbewerbVeranstalterResource {
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 

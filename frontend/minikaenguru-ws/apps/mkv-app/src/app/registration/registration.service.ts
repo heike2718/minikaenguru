@@ -13,9 +13,9 @@ export class RegistrationService {
 
 	constructor(private http: HttpClient) { }
 
-	public createUser(authResult: AuthResult): Observable<any> {
+	public createVeranstalter(authResult: AuthResult): Observable<any> {
 
-		const url = environment.apiUrl + '/mkv-app/users';
+		const url = environment.apiUrl + '/wettbewerb/veranstalter';
 		window.location.hash = '';
 
 		return this.http.post(url, authResult);

@@ -5,8 +5,6 @@
 package de.egladil.web.mk_gateway.infrastructure.filters;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Priority;
@@ -27,6 +25,9 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.commons_net.utils.CommonHttpUtils;
 import de.egladil.web.mk_gateway.MkGatewayApp;
 import de.egladil.web.mk_gateway.domain.error.AuthException;
+import de.egladil.web.mk_gateway.domain.permissions.RestrictedUrlPath;
+import de.egladil.web.mk_gateway.domain.permissions.RestrictedUrlPathRepository;
+import de.egladil.web.mk_gateway.domain.session.LoggedInUser;
 import de.egladil.web.mk_gateway.domain.session.MkvApiSessionService;
 import de.egladil.web.mk_gateway.domain.session.MkvSecurityContext;
 import de.egladil.web.mk_gateway.domain.session.Session;
@@ -42,8 +43,6 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AuthorizationFilter.class);
 
-	private static final List<String> AUTHORIZED_PATHS = Arrays.asList(new String[] {});
-
 	@ConfigProperty(name = "stage")
 	String stage;
 
@@ -52,6 +51,9 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
 	@Inject
 	MkvApiSessionService sessionService;
+
+	@Inject
+	RestrictedUrlPathRepository restrictedPathsRepository;
 
 	@Override
 	public void filter(final ContainerRequestContext requestContext) throws IOException {
@@ -66,7 +68,9 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 		String path = requestContext.getUriInfo().getPath();
 		LOG.debug("entering AuthorizationFilter: path={}", path);
 
-		if (!needsSession(path)) {
+		final Optional<RestrictedUrlPath> optRestrictedPath = this.getRestirctedPath(path);
+
+		if (!optRestrictedPath.isPresent()) {
 
 			return;
 		}
@@ -75,31 +79,43 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
 		if (sessionId == null) {
 
-			throw new AuthException("Keine Berechtigung");
+			LOG.warn("restricted path {} ohne sessionId aufgerufen", path);
+			throw new AuthException();
 		}
 
 		Session session = sessionService.getAndRefreshSessionIfValid(sessionId);
 
 		if (session == null) {
 
-			throw new AuthException("Keine gültige Session vorhanden");
+			LOG.warn("restricted path {} ohne Session aufgerufen", path);
+			throw new AuthException();
 		}
 
-		if (session.user() == null) {
+		LoggedInUser user = session.user();
 
-			throw new AuthException("nur anonyme Session vorhanden");
+		if (user == null) {
+
+			LOG.warn("restricted path {} mit anonymer Session aufgerufen", path);
+			throw new AuthException();
+		}
+
+		RestrictedUrlPath restrictedPath = optRestrictedPath.get();
+
+		if (!restrictedPath.isAllowedForRolle(user.rolle())) {
+
+			LOG.warn("restricted path {} durch user {} aufgerufen (falsche Rolle?)", path, user);
+			throw new AuthException();
 		}
 
 		boolean secure = !stage.equals(MkGatewayApp.STAGE_DEV);
 		MkvSecurityContext securityContext = new MkvSecurityContext(session, secure);
 		requestContext.setSecurityContext(securityContext);
+
 	}
 
-	private boolean needsSession(final String path) {
+	private Optional<RestrictedUrlPath> getRestirctedPath(final String path) {
 
-		Optional<String> optPath = AUTHORIZED_PATHS.stream().filter(p -> path.toLowerCase().contains(p)).findFirst();
-
-		return optPath.isPresent();
+		return restrictedPathsRepository.ofPath(path);
 	}
 
 }

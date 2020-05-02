@@ -5,7 +5,6 @@ import { ResponsePayload, MessageService } from '@minikaenguru-ws/common-message
 import { map } from 'rxjs/operators';
 import { LogService } from '@minikaenguru-ws/common-logging';
 import { AuthResult } from './domain/entities';
-import { Observable } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root'
@@ -21,7 +20,7 @@ export class AuthService {
 	lehrerkontoAnlegen(schulkuerzel: string) {
 
 
-		const url = this.config.baseUrl + '/mkv-app/authurls/signup/lehrer/' + schulkuerzel;
+		const url = this.config.baseUrl + '/authurls/signup/lehrer/' + schulkuerzel;
 
 		this.http.get(url).pipe(
 			map(body => body as ResponsePayload)
@@ -36,7 +35,7 @@ export class AuthService {
 	}
 
 	privatkontoAnlegen() {
-		const url = this.config.baseUrl + '/mkv-app/authurls/signup/privat';
+		const url = this.config.baseUrl + '/authurls/signup/privat';
 
 		this.http.get(url).pipe(
 			map(body => body as ResponsePayload)

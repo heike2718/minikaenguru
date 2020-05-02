@@ -19,6 +19,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import de.egladil.web.commons_net.exception.SessionExpiredException;
 import de.egladil.web.commons_net.utils.CommonHttpUtils;
 import de.egladil.web.commons_validation.exception.InvalidInputException;
@@ -31,7 +34,12 @@ import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.session.LoggedInUser;
 
 /**
- * MkvApiGatewayExceptionMapper
+ * MkvApiGatewayExceptionMapper.<br>
+ * <br>
+ * <strong>Achtung: </strong> Die Serialisierung des ResponsePayloads muss man selbst vornehmen, da der Response als
+ * Payload einen String ewartet. Wenn man ein
+ * ResponsePayload-Objekt zurückgibt, kommt beim
+ * Client ein OK-Response an.
  */
 @Provider
 public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> {
@@ -54,16 +62,17 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 		if (exception instanceof InvalidInputException) {
 
 			InvalidInputException e = (InvalidInputException) exception;
-			return Response.status(400).entity(e.getResponsePayload()).build();
+			return Response.status(400).entity(serialize(e.getResponsePayload())).build();
 		}
 
 		if (exception instanceof AuthException) {
 
 			ResponsePayload payload = ResponsePayload
-				.messageOnly(MessagePayload.error(applicationMessages.getString("pendingRegistration")));
+				.messageOnly(MessagePayload.error(applicationMessages.getString("general.notAuthorized")));
 
-			return Response.status(412)
-				.cookie(CommonHttpUtils.createSessionInvalidatedCookie(MkGatewayApp.CLIENT_COOKIE_PREFIX)).entity(payload)
+			return Response.status(401)
+				.cookie(CommonHttpUtils.createSessionInvalidatedCookie(MkGatewayApp.CLIENT_COOKIE_PREFIX))
+				.entity(serialize(payload))
 				.build();
 		}
 
@@ -73,7 +82,8 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 				.messageOnly(MessagePayload.error(applicationMessages.getString("general.sessionTimeout")));
 
 			return Response.status(908)
-				.cookie(CommonHttpUtils.createSessionInvalidatedCookie(MkGatewayApp.CLIENT_COOKIE_PREFIX)).entity(payload)
+				.cookie(CommonHttpUtils.createSessionInvalidatedCookie(MkGatewayApp.CLIENT_COOKIE_PREFIX))
+				.entity(serialize(payload))
 				.build();
 		}
 
@@ -82,7 +92,7 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 			ResponsePayload payload = ResponsePayload
 				.messageOnly(MessagePayload.error(applicationMessages.getString("general.notFound")));
 
-			return Response.status(404).entity(payload).build();
+			return Response.status(404).entity(serialize(payload)).build();
 		}
 
 		if (exception instanceof MkGatewayRuntimeException || exception instanceof ClientAuthException) {
@@ -105,7 +115,20 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 		ResponsePayload payload = ResponsePayload
 			.messageOnly(MessagePayload.error(applicationMessages.getString("general.internalServerError")));
 
-		return Response.status(500).entity(payload).build();
+		return Response.status(500).entity(serialize(payload)).build();
+	}
+
+	private String serialize(final ResponsePayload rp) {
+
+		try {
+
+			return new ObjectMapper().writeValueAsString(rp);
+		} catch (JsonProcessingException e) {
+
+			MessagePayload mp = rp.getMessage();
+			return mp.getLevel() + " " + mp.getMessage();
+
+		}
 	}
 
 }

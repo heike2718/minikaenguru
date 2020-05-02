@@ -2,7 +2,7 @@
 // Project: mk-wettbewerb
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.infrastructure.rest;
+package de.egladil.web.mk_gateway.infrastructure.rest.common;
 
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.GET;
@@ -20,7 +20,7 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
  * VersionResource
  */
 @RequestScoped
-@Path("version")
+@Path("/version")
 @Produces(MediaType.APPLICATION_JSON)
 public class VersionResource {
 
