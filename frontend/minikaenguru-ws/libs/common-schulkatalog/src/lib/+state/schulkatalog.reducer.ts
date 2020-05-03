@@ -9,7 +9,7 @@ export interface SchulkatalogState {
 	loadedKatalogItems: KatalogItem[],
 	searchTerm: string,
 	selectedKatalogItem: KatalogItem
-}
+};
 
 export const initialGuiModel: GuiModel = {
 	currentKatalogtyp: undefined, // 1
@@ -19,7 +19,7 @@ export const initialGuiModel: GuiModel = {
 	showInputControl: false, // 8
 	showLoadingIndicator: false, // 9
 	katalogItemsAvailable: false // 10
-}
+};
 
 export const initialState: SchulkatalogState = {
 	guiModel: initialGuiModel,
@@ -97,7 +97,7 @@ const schulkatalogReducer = createReducer(
 		const auswahlDescription = getAuswahlDescriptiom(loadedKatalogItems);
 		const katalogItemsAvailable = loadedKatalogItems.length > 0;
 
-		let guiModel = {
+		const guiModel = {
 			...state.guiModel
 			, showLoadingIndicator: false
 			, auswahlDescription: auswahlDescription
@@ -115,7 +115,7 @@ const schulkatalogReducer = createReducer(
 
 	on(SchulkatalogActions.searchError, (state, _action) => {
 
-		let guiModel = {
+		const guiModel = {
 			...state.guiModel
 			, showInputControl: true
 			, showLoadingIndicator: false

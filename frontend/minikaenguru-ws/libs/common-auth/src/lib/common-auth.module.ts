@@ -3,23 +3,29 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonMessagesModule } from '@minikaenguru-ws/common-messages';
 import { CommonLoggingModule } from '@minikaenguru-ws/common-logging';
-import { MkvAuthConfig, MkvAuthConfigService } from './configuration/mkv-auth-config';
+import { MkAuthConfig, MkAuthConfigService } from './configuration/mk-auth-config';
+import { StoreModule } from '@ngrx/store';
+import * as fromAuth from './+state/auth.reducer';
+import { AuthEffects } from './+state/auth.effects';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   imports: [
 	  CommonModule,
 	  HttpClientModule,
 	  CommonMessagesModule,
-	  CommonLoggingModule
+	  CommonLoggingModule,
+	  StoreModule.forFeature(fromAuth.authFeatureKey, fromAuth.reducer),
+	  EffectsModule.forFeature([AuthEffects])
 	]
 })
 export class CommonAuthModule {
-	  static forRoot(config: MkvAuthConfig): ModuleWithProviders<CommonAuthModule> {
+	  static forRoot(config: MkAuthConfig): ModuleWithProviders<CommonAuthModule> {
     return {
       ngModule: CommonAuthModule,
       providers: [
         {
-          provide: MkvAuthConfigService,
+          provide: MkAuthConfigService,
           useValue: config
         }
       ]

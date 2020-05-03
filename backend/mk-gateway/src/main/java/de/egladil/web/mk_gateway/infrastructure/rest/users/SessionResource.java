@@ -25,7 +25,7 @@ import de.egladil.web.commons_net.utils.CommonHttpUtils;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.MkGatewayApp;
-import de.egladil.web.mk_gateway.domain.session.MkvApiSessionService;
+import de.egladil.web.mk_gateway.domain.session.MkSessionService;
 import de.egladil.web.mk_gateway.domain.session.Session;
 import de.egladil.web.mk_gateway.domain.session.SessionUtils;
 import de.egladil.web.mk_gateway.domain.signup.AuthResult;
@@ -34,6 +34,8 @@ import de.egladil.web.mk_gateway.domain.signup.AuthResult;
  * SessionResource ist der Endpoint für den Minikänguru-Microservice-Zoo, um sich ein- und auszuloggen.
  */
 @RequestScoped
+@Path("/")
+@Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class SessionResource {
 
@@ -46,11 +48,10 @@ public class SessionResource {
 	String stage;
 
 	@Inject
-	MkvApiSessionService sessionService;
+	MkSessionService sessionService;
 
 	@POST
 	@Path("/login")
-	@Consumes(MediaType.TEXT_PLAIN)
 	public Response login(final AuthResult authResult) {
 
 		final String jwt = authResult.getIdToken();
@@ -61,6 +62,7 @@ public class SessionResource {
 
 		if (!MkGatewayApp.STAGE_DEV.equals(stage)) {
 
+			// TODO: schauen, ob dies aufgerufen wird.
 			session.clearSessionId();
 		}
 

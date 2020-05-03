@@ -1,23 +1,29 @@
+import * as moment_ from 'moment';
 import { Injectable, Inject } from '@angular/core';
-import { MkvAuthConfigService, MkvAuthConfig } from './configuration/mkv-auth-config';
+import { MkAuthConfigService, MkAuthConfig } from './configuration/mk-auth-config';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Store } from '@ngrx/store';
 import { ResponsePayload, MessageService } from '@minikaenguru-ws/common-messages';
 import { map } from 'rxjs/operators';
 import { LogService } from '@minikaenguru-ws/common-logging';
-import { AuthResult } from './domain/entities';
+import { AuthResult, STORAGE_KEY_DEV_SESSION_ID, STORAGE_KEY_SESSION_EXPIRES_AT, STORAGE_KEY_USER, Session } from './domain/entities';
+import { AuthState } from './+state/auth.reducer';
+import { login, logout, refreshSession } from './+state/auth.actions';
+const moment = moment_;
 
 @Injectable({
 	providedIn: 'root'
 })
 export class AuthService {
 
-	constructor(@Inject(MkvAuthConfigService) private config: MkvAuthConfig
+	constructor(@Inject(MkAuthConfigService) private config: MkAuthConfig
 		, private http: HttpClient
+		, private store: Store<AuthState>
 		, private messagesService: MessageService
-		, private logger: LogService){}
+		, private logger: LogService) { }
 
 
-	lehrerkontoAnlegen(schulkuerzel: string) {
+	public lehrerkontoAnlegen(schulkuerzel: string) {
 
 
 		const url = this.config.baseUrl + '/authurls/signup/lehrer/' + schulkuerzel;
@@ -34,7 +40,7 @@ export class AuthService {
 
 	}
 
-	privatkontoAnlegen() {
+	public privatkontoAnlegen() {
 		const url = this.config.baseUrl + '/authurls/signup/privat';
 
 		this.http.get(url).pipe(
@@ -48,9 +54,58 @@ export class AuthService {
 			}));
 	}
 
+	public login() {
+		const url = this.config.baseUrl + '/authurls/login';
+
+		this.http.get(url).pipe(
+			map(body => body as ResponsePayload)
+		).subscribe(
+			payload => {
+				window.location.href = payload.message.message;
+			},
+			(error => {
+				this.handleError(error, '[AuthService] login')
+			}));
+	}
+
+
 	public createSession(authResult: AuthResult) {
 
-		// hier vielleicht ein Observable zurückgeben und die Anwendung liest dann die Session ein.
+		const url = this.config.baseUrl + '/login';
+
+		window.location.hash = '';
+
+		this.http.post(url, authResult).pipe(
+			map(body => body as ResponsePayload)
+		).subscribe(
+			payload => {
+				// der auth.effect schiebt die Daten anschließend in den localStorage
+				this.store.dispatch(login({ session: payload.data }))
+			},
+			(error => {
+				this.handleError(error, '[AuthService] createSession')
+			}));
+	}
+
+	public logout() {
+
+		const devSessionId = localStorage.getItem(this.config.storagePrefix + STORAGE_KEY_DEV_SESSION_ID);
+		let url = this.config.baseUrl + '/logout';
+
+		if (devSessionId) {
+			url = this.config.baseUrl + '/dev/logout/' + devSessionId;
+		}
+
+		this.http.delete(url).pipe(
+			map(body => body as ResponsePayload)
+		).subscribe(
+			_payload => {
+				// der auth.effect löscht die Daten anschließend aus dem localStorage
+				this.store.dispatch(logout())
+			},
+			(error => {
+				this.handleError(error, '[AuthService] logout')
+			}));
 	}
 
 	public parseHash(hashStr: string): AuthResult {
@@ -82,7 +137,6 @@ export class AuthService {
 		return result;
 	}
 
-
 	handleError(error: any, context: string) {
 
 		if (error instanceof ErrorEvent) {
@@ -105,13 +159,15 @@ export class AuthService {
 						if (msg) {
 							this.showServerResponseMessage(msg.level, msg.message);
 						} else {
-								this.messagesService.error('Es ist ein unerwarteter Fehler aufgetreten. Bitte schreiben Sie eine Mail an minikaenguru@egladil.de');
+							this.messagesService.error('Es ist ein unerwarteter Fehler aufgetreten. Bitte schreiben Sie eine Mail an minikaenguru@egladil.de');
 						}
 					}
 				}
 			}
 		}
 	}
+
+
 	private extractMessageObject(error: HttpErrorResponse): { level: string, message: string } {
 
 		if (error.error && error.error.message) {
@@ -133,6 +189,66 @@ export class AuthService {
 			default:
 				this.messagesService.error('Unbekanntes message.level ' + level + ' vom Server bekommen.');
 		}
+	}
+
+	public clearOrRestoreSession() {
+
+		if (this.sessionExpired()) {
+			this.clearSession();
+		} else {
+			this.initSessionFromStorage();
+		}
+	}
+
+	private sessionExpired(): boolean {
+
+		this.logger.debug('check session');
+
+		// session expires at ist in Millisekunden seit 01.01.1970
+		const expiration = this.getExpirationAsMoment();
+		if (expiration === null) {
+			return true;
+		}
+		const expired = moment().isAfter(expiration);
+
+		return expired;
+	}
+
+
+
+	private clearSession() {
+
+		this.store.dispatch(logout());
+	}
+
+	private initSessionFromStorage() {
+
+		const expiration = localStorage.getItem(this.config.storagePrefix + STORAGE_KEY_SESSION_EXPIRES_AT);
+		const user = localStorage.getItem(this.config.storagePrefix + STORAGE_KEY_USER);
+		if (expiration) {
+
+			const session: Session = {
+				expiresAt: JSON.parse(expiration),
+				sessionId: localStorage.getItem(this.config.storagePrefix + STORAGE_KEY_DEV_SESSION_ID),
+				user: JSON.parse(user)
+			};
+
+			this.store.dispatch(refreshSession({ session: session }));
+		}
+	}
+
+	private getExpirationAsMoment() {
+
+		const expiration = localStorage.getItem(this.config.storagePrefix + STORAGE_KEY_SESSION_EXPIRES_AT);
+		if (!expiration || expiration === '0') {
+			console.log('no session present');
+			this.logger.debug('no session present');
+			return null;
+		}
+
+		console.log('session present');
+		const expiresAt = JSON.parse(expiration);
+		return moment(expiresAt);
 	}
 }
 

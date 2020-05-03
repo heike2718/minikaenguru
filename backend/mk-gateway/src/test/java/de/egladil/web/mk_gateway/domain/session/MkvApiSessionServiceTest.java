@@ -20,6 +20,8 @@ import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import de.egladil.web.commons_net.exception.SessionExpiredException;
 import de.egladil.web.mk_gateway.domain.error.AuthException;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
@@ -49,7 +51,7 @@ public class MkvApiSessionServiceTest {
 			UserRepository userRepository = Mockito.mock(UserRepository.class);
 			Mockito.when(userRepository.ofId(uuid)).thenReturn(Optional.of(user));
 
-			MkvApiSessionService service = MkvApiSessionService.createForTestWithUserRepository(userRepository);
+			MkSessionService service = MkSessionService.createForTestWithUserRepository(userRepository);
 
 			// Act
 			Session session = service.initSession(jwt);
@@ -62,6 +64,17 @@ public class MkvApiSessionServiceTest {
 			assertEquals(uuid, loggedInUser.getName());
 			assertEquals(Rolle.PRIVAT, loggedInUser.rolle());
 			assertEquals("Max Mustermann", loggedInUser.fullName());
+			assertTrue(loggedInUser.idReference().contains("_4d8ed03a"));
+
+			String serialized = new ObjectMapper().writeValueAsString(session);
+			assertTrue(serialized.contains("sessionId"));
+			assertTrue(serialized.contains("expiresAt"));
+			assertTrue(serialized.contains("user"));
+			assertTrue(serialized.contains("idReference"));
+			assertTrue(serialized.contains("rolle"));
+			assertTrue(serialized.contains("fullName"));
+
+			System.out.println(serialized);
 
 		}
 
@@ -85,7 +98,7 @@ public class MkvApiSessionServiceTest {
 			UserRepository userRepository = Mockito.mock(UserRepository.class);
 			Mockito.when(userRepository.ofId(uuid)).thenReturn(Optional.of(user));
 
-			MkvApiSessionService service = MkvApiSessionService.createForTestWithUserRepository(userRepository);
+			MkSessionService service = MkSessionService.createForTestWithUserRepository(userRepository);
 
 			Session session = service.initSession(jwt);
 
@@ -117,7 +130,7 @@ public class MkvApiSessionServiceTest {
 			UserRepository userRepository = Mockito.mock(UserRepository.class);
 			Mockito.when(userRepository.ofId(uuid)).thenReturn(Optional.of(user));
 
-			MkvApiSessionService service = MkvApiSessionService.createForTestWithUserRepository(userRepository);
+			MkSessionService service = MkSessionService.createForTestWithUserRepository(userRepository);
 
 			// Act
 			try {
@@ -146,7 +159,7 @@ public class MkvApiSessionServiceTest {
 		UserRepository userRepository = Mockito.mock(UserRepository.class);
 		Mockito.when(userRepository.ofId(uuid)).thenReturn(Optional.of(user));
 
-		MkvApiSessionService service = MkvApiSessionService.createForTestWithUserRepository(userRepository);
+		MkSessionService service = MkSessionService.createForTestWithUserRepository(userRepository);
 
 		// Act
 		try {
@@ -178,7 +191,7 @@ public class MkvApiSessionServiceTest {
 			UserRepository userRepository = Mockito.mock(UserRepository.class);
 			Mockito.when(userRepository.ofId(uuid)).thenReturn(Optional.empty());
 
-			MkvApiSessionService service = MkvApiSessionService.createForTestWithUserRepository(userRepository);
+			MkSessionService service = MkSessionService.createForTestWithUserRepository(userRepository);
 
 			// Act
 			try {
@@ -212,7 +225,7 @@ public class MkvApiSessionServiceTest {
 			UserRepository userRepository = Mockito.mock(UserRepository.class);
 			Mockito.when(userRepository.ofId(uuid)).thenReturn(Optional.of(user));
 
-			MkvApiSessionService service = MkvApiSessionService.createForTestWithUserRepository(userRepository);
+			MkSessionService service = MkSessionService.createForTestWithUserRepository(userRepository);
 
 			Session session = service.initSession(jwt);
 
@@ -235,7 +248,7 @@ public class MkvApiSessionServiceTest {
 	void should_GetAndRefreshSessionReturnNull_when_NotPresent() throws Exception {
 
 		// Act + Assert
-		MkvApiSessionService service = MkvApiSessionService.createForTestWithUserRepository(null);
+		MkSessionService service = MkSessionService.createForTestWithUserRepository(null);
 		assertNull(service.getAndRefreshSessionIfValid("hallo"));
 	}
 
@@ -251,7 +264,7 @@ public class MkvApiSessionServiceTest {
 
 		TimeUnit.MILLISECONDS.sleep(200);
 
-		MkvApiSessionService service = MkvApiSessionService.createForTestWithSession(session);
+		MkSessionService service = MkSessionService.createForTestWithSession(session);
 
 		// Act
 		try {
