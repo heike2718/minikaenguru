@@ -4,7 +4,7 @@ import { Katalogtyp, KatalogItem } from '../domain/entities';
 export const initSucheComponentCompleted = createAction(
 	'[KatalogItemsSucheComponent] initSucheComponentCompleted',
 	props<{katalogtyp: Katalogtyp}>()
-)
+);
 
 export const startSearch = createAction(
 	'[KatalogItemsSucheComponent] startSearch',

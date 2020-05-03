@@ -47,7 +47,8 @@ import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
 			loglevel: environment.loglevel
 		}),
 		CommonAuthModule.forRoot({
-			baseUrl: environment.apiUrl
+			baseUrl: environment.apiUrl,
+			storagePrefix: 'mkv_'
 		}),
 		RegistrationModule,
 		StoreModule.forRoot(reducers, {

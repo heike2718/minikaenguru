@@ -1,1 +1,7 @@
-<p>Hier kommen diverse Dinge hinein.</p>
+<div class="mkv-container mkv-bordered">
+	<div class="col--12">
+
+		<h2 *ngIf="isLoggedIn$ | async">Guten Tag {{user.fullName}}</h2>
+		<p>Hier kommen diverse Dinge hinein.</p>
+	</div>
+</div>

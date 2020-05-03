@@ -21,9 +21,8 @@ export class AppComponent {
 		, private registrationService: RegistrationService
 		, private messageService: MessageService) {
 
-		// TODO: müssen nochmal schauen, ob das ein gutes prefix ist
-		const STORAGE_KEY_ID_REFERENCE = 'mkv-app-id-reference';
-		sessionStorage.setItem(STORAGE_KEY_ID_REFERENCE, 'anonym');
+
+		this.authService.clearOrRestoreSession();
 
 		const hash = window.location.hash;
 

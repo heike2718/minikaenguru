@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import { RegistrationState } from './+state/registration.reducer';
 import { selectSubmitStatus
 	, selectRegistrationMode
-	, selectShowShulkatalog
+	, selectShowSchulkatalog
 	, selectShowSuccessDialog
 	, selectSuccessDialogContent } from './+state/registration.selectors';
 import { AuthService } from '@minikaenguru-ws/common-auth';
@@ -27,7 +27,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
 	pfadKatalogItem: string;
 
-	showShulkatalog$ = this.store.select(selectShowShulkatalog);
+	showSchulkatalog$ = this.store.select(selectShowSchulkatalog);
 
 	showSuccessDialog$ = this.store.select(selectShowSuccessDialog);
 

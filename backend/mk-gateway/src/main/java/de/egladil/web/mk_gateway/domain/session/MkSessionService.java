@@ -34,12 +34,12 @@ import de.egladil.web.mk_gateway.domain.user.UserRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
 
 /**
- * MkvApiSessionService
+ * MkSessionService
  */
 @ApplicationScoped
-public class MkvApiSessionService {
+public class MkSessionService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(MkvApiSessionService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MkSessionService.class);
 
 	private static final int SESSION_IDLE_TIMEOUT_MINUTES = 120;
 
@@ -54,18 +54,18 @@ public class MkvApiSessionService {
 
 	private ConcurrentHashMap<String, Session> sessions = new ConcurrentHashMap<>();
 
-	static MkvApiSessionService createForTestWithUserRepository(final UserRepository userRepository) {
+	static MkSessionService createForTestWithUserRepository(final UserRepository userRepository) {
 
-		MkvApiSessionService result = new MkvApiSessionService();
+		MkSessionService result = new MkSessionService();
 		result.jwtService = new JWTServiceImpl();
 		result.userRepository = userRepository;
 		result.cryptoService = new CryptoServiceImpl();
 		return result;
 	}
 
-	static MkvApiSessionService createForTestWithSession(final Session session) {
+	static MkSessionService createForTestWithSession(final Session session) {
 
-		MkvApiSessionService result = new MkvApiSessionService();
+		MkSessionService result = new MkSessionService();
 		result.jwtService = new JWTServiceImpl();
 		result.cryptoService = new CryptoServiceImpl();
 
@@ -127,8 +127,9 @@ public class MkvApiSessionService {
 
 			User user = optUser.get();
 
+			String userIdReference = CommonHttpUtils.createUserIdReference() + "_" + user.getUuid().substring(0, 8);
 			LoggedInUser loggedInUser = LoggedInUser.create(uuid, user.getRolle(), fullName,
-				CommonHttpUtils.createUserIdReference());
+				userIdReference);
 
 			Session session = Session.create(sessionId, loggedInUser);
 			session.setExpiresAt(SessionUtils.getExpiresAt(SESSION_IDLE_TIMEOUT_MINUTES));

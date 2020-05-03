@@ -8,6 +8,6 @@ export const selectRegistrationState = createFeatureSelector<fromRegistration.Re
 
 export const selectRegistrationMode = createSelector(selectRegistrationState, s => s.mode);
 export const selectSubmitStatus = createSelector(selectRegistrationState, s => s.submitEnabled);
-export const selectShowShulkatalog = createSelector(selectRegistrationState, s => s.showSchulkatalog);
+export const selectShowSchulkatalog = createSelector(selectRegistrationState, s => s.showSchulkatalog);
 export const selectShowSuccessDialog = createSelector(selectRegistrationState, s => s.showRegistrationSuccessDialog);
 export const selectSuccessDialogContent = createSelector(selectRegistrationState, s => s.registrationSuccessMessage);

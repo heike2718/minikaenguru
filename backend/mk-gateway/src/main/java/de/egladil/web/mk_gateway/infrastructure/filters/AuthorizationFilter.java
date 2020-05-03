@@ -28,7 +28,7 @@ import de.egladil.web.mk_gateway.domain.error.AuthException;
 import de.egladil.web.mk_gateway.domain.permissions.RestrictedUrlPath;
 import de.egladil.web.mk_gateway.domain.permissions.RestrictedUrlPathRepository;
 import de.egladil.web.mk_gateway.domain.session.LoggedInUser;
-import de.egladil.web.mk_gateway.domain.session.MkvApiSessionService;
+import de.egladil.web.mk_gateway.domain.session.MkSessionService;
 import de.egladil.web.mk_gateway.domain.session.MkvSecurityContext;
 import de.egladil.web.mk_gateway.domain.session.Session;
 
@@ -50,7 +50,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 	ResourceInfo resourceInfo;
 
 	@Inject
-	MkvApiSessionService sessionService;
+	MkSessionService sessionService;
 
 	@Inject
 	RestrictedUrlPathRepository restrictedPathsRepository;

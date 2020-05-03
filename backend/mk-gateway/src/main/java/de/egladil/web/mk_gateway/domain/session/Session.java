@@ -8,15 +8,20 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Session
  */
 public class Session {
 
+	@JsonProperty
 	private String sessionId;
 
+	@JsonProperty
 	private long expiresAt;
 
+	@JsonProperty
 	private LoggedInUser user;
 
 	public static Session createAnonymous(final String sessionId) {
