@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
 import de.egladil.web.mk_wettbewerb.domain.semantik.Aggregate;
+import de.egladil.web.mk_wettbewerb.domain.teilnahmen.ZugangsberechtigungUnterlagen;
 
 /**
  * Veranstalter
@@ -27,6 +28,9 @@ public abstract class Veranstalter {
 
 	@JsonProperty
 	private List<Identifier> teilnahmekuerzel;
+
+	@JsonProperty
+	private ZugangsberechtigungUnterlagen zugangsberechtigungUnterlagen = ZugangsberechtigungUnterlagen.DEFAULT;
 
 	/**
 	 * @param person
@@ -79,6 +83,28 @@ public abstract class Veranstalter {
 	protected List<Identifier> teilnahmekuerzel() {
 
 		return teilnahmekuerzel;
+	}
+
+	public ZugangsberechtigungUnterlagen zugangsberechtigungUnterlagen() {
+
+		return zugangsberechtigungUnterlagen;
+	}
+
+	public void erlaubeZugangUnterlagen() {
+
+		this.zugangsberechtigungUnterlagen = ZugangsberechtigungUnterlagen.ERTEILT;
+
+	}
+
+	public void verwehreZugangUnterlagen() {
+
+		this.zugangsberechtigungUnterlagen = ZugangsberechtigungUnterlagen.ENTZOGEN;
+
+	}
+
+	public void setzeZugangUnterlagenZurueck() {
+
+		this.zugangsberechtigungUnterlagen = ZugangsberechtigungUnterlagen.DEFAULT;
 	}
 
 	/**

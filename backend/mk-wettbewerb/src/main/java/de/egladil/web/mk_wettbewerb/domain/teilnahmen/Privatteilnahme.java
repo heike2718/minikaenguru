@@ -5,11 +5,13 @@
 package de.egladil.web.mk_wettbewerb.domain.teilnahmen;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
+import de.egladil.web.mk_wettbewerb.domain.semantik.Aggregate;
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.WettbewerbID;
 
 /**
  * Privatteilnahme
  */
+@Aggregate
 public class Privatteilnahme extends Teilnahme {
 
 	/**
@@ -20,6 +22,12 @@ public class Privatteilnahme extends Teilnahme {
 
 		super(wettbewerbID, teilnahmekuerzel);
 
+	}
+
+	@Override
+	public Teilnahmeart teilnahmeart() {
+
+		return Teilnahmeart.PRIVAT;
 	}
 
 	@Override

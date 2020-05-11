@@ -5,7 +5,6 @@
 package de.egladil.web.mk_wettbewerb.domain.wettbewerb;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Objects;
 
@@ -15,6 +14,8 @@ import java.util.Objects;
 public class Wettbewerb {
 
 	private final WettbewerbID wettbewerbId;
+
+	private WettbewerbStatus status;
 
 	private LocalDate wettbewerbsbeginn;
 
@@ -37,25 +38,52 @@ public class Wettbewerb {
 		this.wettbewerbId = wettbewerbId;
 
 		this.wettbewerbsende = LocalDate.of(wettbewerbId.jahr(), Month.AUGUST, 1);
+
+		this.status = WettbewerbStatus.PAUSE;
+	}
+
+	public Wettbewerb withWettbewerbsbeginn(final LocalDate wettbewerbsbeginn) {
+
+		this.wettbewerbsbeginn = wettbewerbsbeginn;
+		return this;
+	}
+
+	public Wettbewerb withDatumFreischaltungLehrer(final LocalDate datumFreischaltungLehrer) {
+
+		this.datumFreischaltungLehrer = datumFreischaltungLehrer;
+		return this;
+	}
+
+	public Wettbewerb withDatumFreischaltungPrivat(final LocalDate datumFreischaltungPrivat) {
+
+		this.datumFreischaltungPrivat = datumFreischaltungPrivat;
+		return this;
+	}
+
+	public void anmeldungFreischalten() {
+
+		this.status = WettbewerbStatus.ANMELDUNG;
+	}
+
+	public void downloadFuerLehrerFreischalten() {
+
+		this.status = WettbewerbStatus.DOWNLOAD_LEHRER;
+	}
+
+	public void downloadFuerPrivatpersonenFreischalten() {
+
+		this.status = WettbewerbStatus.DOWNLOAD_PRIVAT;
+	}
+
+	public void pausieren() {
+
+		this.status = WettbewerbStatus.PAUSE;
 	}
 
 	@Override
 	public int hashCode() {
 
 		return Objects.hash(wettbewerbId);
-	}
-
-	/**
-	 * Entscheidet, ob der Wettbewerb zum gegebenen Zeitpunkt aktiv ist.
-	 *
-	 * @param  zeitpunkt
-	 * @return
-	 */
-	public boolean istAktivZumZeitpunkt(final LocalDateTime zeitpunkt) {
-
-		// true, falls jetzt
-		return false;
-
 	}
 
 	@Override
@@ -83,6 +111,66 @@ public class Wettbewerb {
 	public String toString() {
 
 		return this.wettbewerbId.jahr().toString();
+	}
+
+	public WettbewerbStatus status() {
+
+		return status;
+	}
+
+	public void naechsterStatus() {
+
+		WettbewerbStatus naechster = null;
+
+		switch (status) {
+
+		case PAUSE:
+			naechster = WettbewerbStatus.ANMELDUNG;
+			break;
+
+		case ANMELDUNG:
+			naechster = WettbewerbStatus.DOWNLOAD_LEHRER;
+			break;
+
+		case DOWNLOAD_LEHRER:
+			naechster = WettbewerbStatus.DOWNLOAD_PRIVAT;
+			break;
+
+		case DOWNLOAD_PRIVAT:
+			naechster = WettbewerbStatus.PAUSE;
+			break;
+
+		default:
+			throw new IllegalStateException("ubekannter Status " + status);
+		}
+
+		this.status = naechster;
+
+	}
+
+	public WettbewerbID id() {
+
+		return wettbewerbId;
+	}
+
+	public LocalDate wettbewerbsbeginn() {
+
+		return wettbewerbsbeginn;
+	}
+
+	public LocalDate wettbewerbsende() {
+
+		return wettbewerbsende;
+	}
+
+	public LocalDate datumFreischaltungLehrer() {
+
+		return datumFreischaltungLehrer;
+	}
+
+	public LocalDate datumFreischaltungPrivat() {
+
+		return datumFreischaltungPrivat;
 	}
 
 }

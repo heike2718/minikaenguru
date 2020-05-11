@@ -7,11 +7,13 @@ package de.egladil.web.mk_wettbewerb.domain.teilnahmen;
 import java.util.Objects;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
+import de.egladil.web.mk_wettbewerb.domain.semantik.Aggregate;
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.WettbewerbID;
 
 /**
  * Teilnahme
  */
+@Aggregate
 public abstract class Teilnahme {
 
 	private final WettbewerbID wettbewerbID;
@@ -37,6 +39,8 @@ public abstract class Teilnahme {
 		this.wettbewerbID = wettbewerbID;
 		this.teilnahmekuerzel = teilnahmekuerzel;
 	}
+
+	public abstract Teilnahmeart teilnahmeart();
 
 	public WettbewerbID wettbewerbID() {
 
@@ -74,5 +78,4 @@ public abstract class Teilnahme {
 		Teilnahme other = (Teilnahme) obj;
 		return Objects.equals(teilnahmekuerzel, other.teilnahmekuerzel) && Objects.equals(wettbewerbID, other.wettbewerbID);
 	}
-
 }
