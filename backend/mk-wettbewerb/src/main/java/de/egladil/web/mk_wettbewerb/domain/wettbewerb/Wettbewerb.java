@@ -19,7 +19,7 @@ public class Wettbewerb {
 
 	private LocalDate wettbewerbsbeginn;
 
-	private final LocalDate wettbewerbsende;
+	private LocalDate wettbewerbsende;
 
 	private LocalDate datumFreischaltungLehrer;
 
@@ -48,6 +48,12 @@ public class Wettbewerb {
 		return this;
 	}
 
+	public Wettbewerb withWettbewerbsende(final LocalDate wettbewerbsende) {
+
+		this.wettbewerbsende = wettbewerbsende;
+		return this;
+	}
+
 	public Wettbewerb withDatumFreischaltungLehrer(final LocalDate datumFreischaltungLehrer) {
 
 		this.datumFreischaltungLehrer = datumFreischaltungLehrer;
@@ -57,6 +63,12 @@ public class Wettbewerb {
 	public Wettbewerb withDatumFreischaltungPrivat(final LocalDate datumFreischaltungPrivat) {
 
 		this.datumFreischaltungPrivat = datumFreischaltungPrivat;
+		return this;
+	}
+
+	public Wettbewerb withStatus(final WettbewerbStatus status) {
+
+		this.status = status;
 		return this;
 	}
 

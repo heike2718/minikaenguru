@@ -10,6 +10,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.WettbewerbStatus;
@@ -19,7 +21,11 @@ import de.egladil.web.mk_wettbewerb.domain.wettbewerb.WettbewerbStatus;
  */
 @Entity
 @Table(name = "WETTBEWERBE")
+@NamedQueries(@NamedQuery(
+	name = "FIND_WETTBEWERB_BY_ID", query = "select w from PersistenterWettbewerb w where w.uuid = :uuid"))
 public class PersistenterWettbewerb extends ConcurrencySafeEntity {
+
+	public static final String FIND_WETTBEWERB_BY_ID_QUERY = "FIND_WETTBEWERB_BY_ID";
 
 	@Column
 	@Enumerated(EnumType.STRING)

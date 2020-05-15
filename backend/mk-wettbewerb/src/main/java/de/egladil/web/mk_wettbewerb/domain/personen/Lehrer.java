@@ -7,12 +7,17 @@ package de.egladil.web.mk_wettbewerb.domain.personen;
 import java.util.Collections;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
 
 /**
  * Lehrer
  */
 public class Lehrer extends Veranstalter {
+
+	@JsonProperty
+	private List<Identifier> schulen;
 
 	/**
 	 * @param person
@@ -25,11 +30,12 @@ public class Lehrer extends Veranstalter {
 
 	/**
 	 * @param person
-	 * @param teilnahmekuerzel
+	 * @param schulen
 	 */
-	public Lehrer(final Person person, final List<Identifier> teilnahmekuerzel) {
+	public Lehrer(final Person person, final List<Identifier> schulen) {
 
-		super(person, teilnahmekuerzel);
+		super(person);
+		this.schulen = schulen;
 
 	}
 
@@ -44,7 +50,13 @@ public class Lehrer extends Veranstalter {
 	 */
 	public List<Identifier> schulen() {
 
-		return Collections.unmodifiableList(this.teilnahmekuerzel());
+		return Collections.unmodifiableList(schulen);
+	}
+
+	@Override
+	protected List<Identifier> teilnahmeIdentifier() {
+
+		return this.schulen();
 	}
 
 	@Override

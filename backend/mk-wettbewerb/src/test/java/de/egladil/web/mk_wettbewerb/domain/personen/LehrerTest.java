@@ -42,8 +42,8 @@ public class LehrerTest {
 		assertEquals(fullName, lehrer.fullName());
 		assertEquals(person, lehrer.person());
 		assertEquals("bla,blubb", lehrer.persistierbareTeilnahmekuerzel());
-		assertEquals(2, lehrer.teilnahmekuerzel().size());
-		assertEquals(lehrer.teilnahmekuerzel(), lehrer.schulen());
+		assertEquals(2, lehrer.teilnahmeIdentifier().size());
+		assertEquals(lehrer.teilnahmeIdentifier(), lehrer.schulen());
 
 		assertEquals("Grtq Jiesrtzq (LEHRER)", lehrer.toString());
 	}

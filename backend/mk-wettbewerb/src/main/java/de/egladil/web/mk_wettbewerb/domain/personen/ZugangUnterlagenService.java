@@ -15,7 +15,7 @@ import de.egladil.web.mk_wettbewerb.domain.semantik.DomainService;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.TeilnahmenRepository;
-import de.egladil.web.mk_wettbewerb.domain.teilnahmen.ZugangsberechtigungUnterlagen;
+import de.egladil.web.mk_wettbewerb.domain.teilnahmen.ZugangUnterlagen;
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.WettbewerbStatus;
 
@@ -53,12 +53,12 @@ public class ZugangUnterlagenService {
 			return false;
 		}
 
-		if (veranstalter.zugangsberechtigungUnterlagen() == ZugangsberechtigungUnterlagen.ENTZOGEN) {
+		if (veranstalter.zugangUnterlagen() == ZugangUnterlagen.ENTZOGEN) {
 
 			return false;
 		}
 
-		if (veranstalter.zugangsberechtigungUnterlagen() == ZugangsberechtigungUnterlagen.ERTEILT) {
+		if (veranstalter.zugangUnterlagen() == ZugangUnterlagen.ERTEILT) {
 
 			return true;
 		}
@@ -87,7 +87,7 @@ public class ZugangUnterlagenService {
 
 		List<Teilnahme> teilnahmen = new ArrayList<>();
 
-		veranstalter.teilnahmekuerzel().forEach(ident -> {
+		veranstalter.teilnahmeIdentifier().forEach(ident -> {
 
 			Optional<Teilnahme> optTeilnahme = teilnahmenRepository.ofIdentifier(ident.identifier());
 

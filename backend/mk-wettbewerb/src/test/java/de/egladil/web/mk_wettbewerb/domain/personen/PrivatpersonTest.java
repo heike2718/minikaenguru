@@ -16,11 +16,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
-import de.egladil.web.mk_wettbewerb.domain.personen.Lehrer;
-import de.egladil.web.mk_wettbewerb.domain.personen.Person;
-import de.egladil.web.mk_wettbewerb.domain.personen.Privatperson;
-import de.egladil.web.mk_wettbewerb.domain.personen.Rolle;
-import de.egladil.web.mk_wettbewerb.domain.personen.Veranstalter;
 
 /**
  * PrivatpersonTest
@@ -50,7 +45,7 @@ public class PrivatpersonTest {
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
-			assertEquals("teilnahmekuerzel darf nicht null sein.", e.getMessage());
+			assertEquals("teilnahmenummern darf nicht null sein.", e.getMessage());
 		}
 
 	}
@@ -72,7 +67,7 @@ public class PrivatpersonTest {
 		assertEquals(fullName, privatperson.fullName());
 		assertEquals(person, privatperson.person());
 		assertNull(privatperson.persistierbareTeilnahmekuerzel());
-		assertTrue(privatperson.teilnahmekuerzel().isEmpty());
+		assertTrue(privatperson.teilnahmeIdentifier().isEmpty());
 
 	}
 
@@ -100,7 +95,7 @@ public class PrivatpersonTest {
 		assertEquals(fullName, privatperson.fullName());
 		assertEquals(person, privatperson.person());
 		assertEquals("bla,blubb", privatperson.persistierbareTeilnahmekuerzel());
-		assertEquals(2, privatperson.teilnahmekuerzel().size());
+		assertEquals(2, privatperson.teilnahmeIdentifier().size());
 		assertEquals("Grtq Jiesrtzq (PRIVAT)", privatperson.toString());
 
 	}

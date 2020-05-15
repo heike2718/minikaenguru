@@ -55,9 +55,9 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 
 		List<Identifier> teilnahmekuerzel = new ArrayList<>();
 
-		if (treffer.getTeilnahmekuerzel() != null) {
+		if (treffer.getTeilnahmenummern() != null) {
 
-			teilnahmekuerzel = Arrays.asList(treffer.getTeilnahmekuerzel().split(",")).stream()
+			teilnahmekuerzel = Arrays.asList(treffer.getTeilnahmenummern().split(",")).stream()
 				.map(str -> new Identifier(str))
 				.collect(Collectors.toList());
 
@@ -77,6 +77,20 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 
 		default:
 			throw new MkWettbewerbRuntimeException("unerwartete Rolle " + treffer.getRolle());
+		}
+
+		switch (treffer.getZugangsberechtigungUnterlagen()) {
+
+		case ENTZOGEN:
+			veranstalter.verwehreZugangUnterlagen();
+			break;
+
+		case ERTEILT:
+			veranstalter.erlaubeZugangUnterlagen();
+			break;
+
+		default:
+			break;
 		}
 
 		return Optional.of(veranstalter);
@@ -107,13 +121,14 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 	@Override
 	public void addVeranstalter(final Veranstalter veranstalter) {
 
-		PersistenterVeranstalter persistentePrivatperson = new PersistenterVeranstalter();
-		persistentePrivatperson.setImportierteUuid(veranstalter.uuid());
-		persistentePrivatperson.setFullName(veranstalter.fullName());
-		persistentePrivatperson.setTeilnahmekuerzel(veranstalter.persistierbareTeilnahmekuerzel());
-		persistentePrivatperson.setRolle(veranstalter.rolle());
+		PersistenterVeranstalter persistenterVeranstalter = new PersistenterVeranstalter();
+		persistenterVeranstalter.setImportierteUuid(veranstalter.uuid());
+		persistenterVeranstalter.setFullName(veranstalter.fullName());
+		persistenterVeranstalter.setTeilnahmenummern(veranstalter.persistierbareTeilnahmekuerzel());
+		persistenterVeranstalter.setZugangsberechtigungUnterlagen(veranstalter.zugangUnterlagen());
+		persistenterVeranstalter.setRolle(veranstalter.rolle());
 
-		em.persist(persistentePrivatperson);
+		em.persist(persistenterVeranstalter);
 
 		LOG.info("Veranstalter {} erfolgreich gespeichert.", veranstalter);
 	}
@@ -135,7 +150,8 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 		}
 
 		vorhandener.setFullName(veranstalter.fullName());
-		vorhandener.setTeilnahmekuerzel(veranstalter.persistierbareTeilnahmekuerzel());
+		vorhandener.setTeilnahmenummern(veranstalter.persistierbareTeilnahmekuerzel());
+		vorhandener.setZugangsberechtigungUnterlagen(veranstalter.zugangUnterlagen());
 
 		em.persist(vorhandener);
 

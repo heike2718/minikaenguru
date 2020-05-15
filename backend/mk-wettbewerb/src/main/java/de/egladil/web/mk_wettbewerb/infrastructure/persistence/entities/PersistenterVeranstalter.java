@@ -11,11 +11,11 @@ import javax.persistence.Enumerated;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import de.egladil.web.mk_wettbewerb.domain.personen.Rolle;
+import de.egladil.web.mk_wettbewerb.domain.teilnahmen.ZugangUnterlagen;
 
 /**
  * PersistenterVeranstalter
@@ -37,21 +37,21 @@ public class PersistenterVeranstalter extends ConcurrencySafeEntity {
 	@Column(name = "FULL_NAME")
 	private String fullName;
 
-	@Column(name = "TEILNAHMEKUERZEL")
-	private String teilnahmekuerzel;
+	@Column(name = "TEILNAHMENUMMERN")
+	private String teilnahmenummern;
 
-	@Version
-	@Column(name = "VERSION")
-	private int version;
+	@Column(name = "ZUGANG_UNTERLAGEN")
+	@Enumerated(EnumType.STRING)
+	private ZugangUnterlagen zugangUnterlagen;
 
-	public String getTeilnahmekuerzel() {
+	public String getTeilnahmenummern() {
 
-		return teilnahmekuerzel;
+		return teilnahmenummern;
 	}
 
-	public void setTeilnahmekuerzel(final String teilnahmekuerzel) {
+	public void setTeilnahmenummern(final String teilnahmekuerzel) {
 
-		this.teilnahmekuerzel = teilnahmekuerzel;
+		this.teilnahmenummern = teilnahmekuerzel;
 	}
 
 	public String getFullName() {
@@ -72,5 +72,15 @@ public class PersistenterVeranstalter extends ConcurrencySafeEntity {
 	public void setRolle(final Rolle rolle) {
 
 		this.rolle = rolle;
+	}
+
+	public ZugangUnterlagen getZugangsberechtigungUnterlagen() {
+
+		return zugangUnterlagen;
+	}
+
+	public void setZugangsberechtigungUnterlagen(final ZugangUnterlagen zugangUnterlagen) {
+
+		this.zugangUnterlagen = zugangUnterlagen;
 	}
 }

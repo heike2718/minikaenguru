@@ -31,6 +31,8 @@ public class ZugangUnterlagenServiceTest {
 
 	private static final String PRIVATTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB = "TUITITI";
 
+	private static final String SCHULKUERZEL_NICHT_ANGEMELDET = "ZUKGKGK";
+
 	private Lehrer lehrerAngemeldet;
 
 	private Lehrer lehrerSonderzugangsberechtigung;
@@ -57,9 +59,11 @@ public class ZugangUnterlagenServiceTest {
 	void setUp() {
 
 		this.lehrerAngemeldet = new Lehrer(new Person("hsagdiqg", "Knoööe Nase"),
-			Arrays.asList(new Identifier[] { new Identifier(SCHULTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB) }));
+			Arrays.asList(new Identifier[] { new Identifier(SCHULTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB),
+				new Identifier(SCHULKUERZEL_NICHT_ANGEMELDET) }));
 
-		this.lehrerNichtAngemeldet = new Lehrer(new Person("vyxhjcga", "Herr Verpeilt"));
+		this.lehrerNichtAngemeldet = new Lehrer(new Person("vyxhjcga", "Herr Verpeilt"),
+			Arrays.asList(new Identifier[] { new Identifier(SCHULKUERZEL_NICHT_ANGEMELDET) }));
 
 		this.lehrerSonderzugangsberechtigung = new Lehrer(new Person("sabljal", "Extra Wurst"),
 			Arrays.asList(new Identifier[] { new Identifier(SCHULTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB) }));
@@ -101,6 +105,12 @@ public class ZugangUnterlagenServiceTest {
 				new Identifier(PRIVATTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB));
 			Mockito.when(teilnahmenRepository.ofIdentifier(PRIVATTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB))
 				.thenReturn(Optional.of(teilnahme));
+		}
+
+		{
+
+			Mockito.when(teilnahmenRepository.ofIdentifier(SCHULKUERZEL_NICHT_ANGEMELDET))
+				.thenReturn(Optional.empty());
 		}
 
 		this.service = ZugangUnterlagenService.createForTest(teilnahmenRepository);

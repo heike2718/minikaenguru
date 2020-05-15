@@ -5,9 +5,9 @@
 package de.egladil.web.mk_wettbewerb.domain.teilnahmen;
 
 /**
- * ZugangsberechtigungUnterlagen
+ * ZugangUnterlagen
  */
-public enum ZugangsberechtigungUnterlagen {
+public enum ZugangUnterlagen {
 
 	DEFAULT,
 	ERTEILT,
