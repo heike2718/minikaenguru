@@ -4,7 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_wettbewerb.domain.personen;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -15,6 +14,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
 import de.egladil.web.mk_wettbewerb.domain.semantik.Aggregate;
+import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Teilnahmeart;
+import de.egladil.web.mk_wettbewerb.domain.teilnahmen.ZugangUnterlagen;
 
 /**
  * Veranstalter
@@ -26,7 +27,7 @@ public abstract class Veranstalter {
 	private Person person;
 
 	@JsonProperty
-	private List<Identifier> teilnahmekuerzel;
+	private ZugangUnterlagen zugangUnterlagen = ZugangUnterlagen.DEFAULT;
 
 	/**
 	 * @param person
@@ -39,27 +40,18 @@ public abstract class Veranstalter {
 		}
 
 		this.person = person;
-		this.teilnahmekuerzel = new ArrayList<>();
+
 	}
 
 	/**
-	 * @param person
-	 * @param teilnahmekuerzel
+	 * @return Rolle
 	 */
-	public Veranstalter(final Person person, final List<Identifier> teilnahmekuerzel) {
-
-		this(person);
-
-		if (teilnahmekuerzel == null) {
-
-			throw new IllegalArgumentException("teilnahmekuerzel darf nicht null sein.");
-
-		}
-
-		this.teilnahmekuerzel = teilnahmekuerzel;
-	}
-
 	public abstract Rolle rolle();
+
+	/**
+	 * @return Teilnahmeart
+	 */
+	public abstract Teilnahmeart teilnahmeart();
 
 	public String uuid() {
 
@@ -76,25 +68,50 @@ public abstract class Veranstalter {
 		return this.person.fullName();
 	}
 
-	protected List<Identifier> teilnahmekuerzel() {
+	/**
+	 * Gibt die Tielnahme-Identifier zurück, die dieser Veranstalter hat. Bei einem Lehrer sind es die Schulkürzel, bei einer
+	 * Privatperson ein Kürzel, welches beim Registrieren einer Privatperson angelegt wird.
+	 *
+	 * @return List<Identifier>
+	 */
+	protected abstract List<Identifier> teilnahmeIdentifier();
 
-		return teilnahmekuerzel;
+	public ZugangUnterlagen zugangUnterlagen() {
+
+		return zugangUnterlagen;
+	}
+
+	public void erlaubeZugangUnterlagen() {
+
+		this.zugangUnterlagen = ZugangUnterlagen.ERTEILT;
+
+	}
+
+	public void verwehreZugangUnterlagen() {
+
+		this.zugangUnterlagen = ZugangUnterlagen.ENTZOGEN;
+
+	}
+
+	public void setzeZugangUnterlagenZurueck() {
+
+		this.zugangUnterlagen = ZugangUnterlagen.DEFAULT;
 	}
 
 	/**
 	 * Alle Teilnahmekuerzel als kommaseparierter String.
 	 *
-	 * @return
+	 * @return String
 	 */
 	public String persistierbareTeilnahmekuerzel() {
 
-		if (this.teilnahmekuerzel.isEmpty()) {
+		if (this.teilnahmeIdentifier().isEmpty()) {
 
 			return null;
 		}
-		List<String> kuerzel = teilnahmekuerzel.stream().map(k -> k.identifier()).collect(Collectors.toList());
+		List<String> kuerzel = teilnahmeIdentifier().stream().map(k -> k.identifier()).collect(Collectors.toList());
 
-		return StringUtils.join(kuerzel.toArray(new String[0]), ",");
+		return StringUtils.join(kuerzel, ",");
 
 	}
 

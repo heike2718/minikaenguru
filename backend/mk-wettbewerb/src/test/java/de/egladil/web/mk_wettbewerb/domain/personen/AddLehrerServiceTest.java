@@ -16,11 +16,6 @@ import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_wettbewerb.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
-import de.egladil.web.mk_wettbewerb.domain.personen.AddLehrerService;
-import de.egladil.web.mk_wettbewerb.domain.personen.Lehrer;
-import de.egladil.web.mk_wettbewerb.domain.personen.Rolle;
-import de.egladil.web.mk_wettbewerb.domain.personen.LehrerRegisteredForSchule;
-import de.egladil.web.mk_wettbewerb.domain.personen.Veranstalter;
 
 /**
  * AddLehrerServiceTest

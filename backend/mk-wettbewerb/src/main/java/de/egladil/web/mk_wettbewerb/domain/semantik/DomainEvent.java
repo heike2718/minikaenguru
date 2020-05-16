@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 @Retention(CLASS)
 @Target(TYPE)
 /**
- * DomainEvent markiert ein Event.
+ * WettbewerbDomainEvent markiert ein Event.
  */
 public @interface DomainEvent {
 

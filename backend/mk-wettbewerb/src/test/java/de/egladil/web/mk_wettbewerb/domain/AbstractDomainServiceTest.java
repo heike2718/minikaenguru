@@ -5,12 +5,12 @@
 package de.egladil.web.mk_wettbewerb.domain;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import de.egladil.web.mk_wettbewerb.domain.Identifier;
 import de.egladil.web.mk_wettbewerb.domain.personen.Lehrer;
 import de.egladil.web.mk_wettbewerb.domain.personen.Person;
 import de.egladil.web.mk_wettbewerb.domain.personen.Privatperson;
@@ -46,7 +46,8 @@ public abstract class AbstractDomainServiceTest {
 		List<Identifier> teilnahmen = new ArrayList<>();
 		teilnahmen.add(new Identifier(SCHULKUERZEL));
 		Lehrer lehrer = new Lehrer(new Person(UUID_LEHRER, "Hans Wurst"), teilnahmen);
-		Privatperson privatperson = new Privatperson(new Person(UUID_PRIVAT, "Herta Grütze"));
+		Privatperson privatperson = new Privatperson(new Person(UUID_PRIVAT, "Herta Grütze"),
+			Arrays.asList(new Identifier(UUID_PRIVAT)));
 
 		repository = new VeranstalterHibernateRepository() {
 			@Override

@@ -2,9 +2,9 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.event;
+package de.egladil.web.mk_wettbewerb.domain.event;
 
-import de.egladil.web.mk_gateway.infrastructure.persistence.entities.StoredEvent;
+import de.egladil.web.mk_wettbewerb.infrastructure.persistence.entities.StoredEvent;
 
 /**
  * EventRepository

@@ -29,7 +29,7 @@ public interface VeranstalterRepository {
 	 * @param veranstalter
 	 *                     Veranstalter darf nicht null sein.
 	 */
-	void addVeranstalter(Veranstalter veranstalter);
+	void addVeranstalter(Veranstalter veranstalter) throws IllegalStateException;
 
 	/**
 	 * Ändert einen vorhandenen Veranstalter.

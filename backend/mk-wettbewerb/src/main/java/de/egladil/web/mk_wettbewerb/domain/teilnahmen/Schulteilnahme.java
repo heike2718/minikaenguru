@@ -7,22 +7,24 @@ package de.egladil.web.mk_wettbewerb.domain.teilnahmen;
 import org.apache.commons.lang3.StringUtils;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
+import de.egladil.web.mk_wettbewerb.domain.semantik.Aggregate;
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.WettbewerbID;
 
 /**
  * Schulteilnahme
  */
+@Aggregate
 public class Schulteilnahme extends Teilnahme {
 
 	private final String nameSchule;
 
 	/**
 	 * @param wettbewerbID
-	 * @param teilnahmekuerzel
+	 * @param teilnahmenummer
 	 */
-	public Schulteilnahme(final WettbewerbID wettbewerbID, final Identifier teilnahmekuerzel, final String nameSchule) {
+	public Schulteilnahme(final WettbewerbID wettbewerbID, final Identifier teilnahmenummer, final String nameSchule) {
 
-		super(wettbewerbID, teilnahmekuerzel);
+		super(wettbewerbID, teilnahmenummer);
 
 		if (StringUtils.isBlank(nameSchule)) {
 
@@ -30,6 +32,12 @@ public class Schulteilnahme extends Teilnahme {
 		}
 		this.nameSchule = nameSchule;
 
+	}
+
+	@Override
+	public Teilnahmeart teilnahmeart() {
+
+		return Teilnahmeart.SCHULE;
 	}
 
 	public String nameSchule() {
@@ -41,7 +49,7 @@ public class Schulteilnahme extends Teilnahme {
 	public String toString() {
 
 		return "Schulteilnahme [wettbewerbID()=" + wettbewerbID().toString() + ", teilnahmekuerzel()="
-			+ teilnahmekuerzel().toString() + ", name=" + this.nameSchule + "]";
+			+ teilnahmenummer().toString() + ", name=" + this.nameSchule + "]";
 	}
 
 }

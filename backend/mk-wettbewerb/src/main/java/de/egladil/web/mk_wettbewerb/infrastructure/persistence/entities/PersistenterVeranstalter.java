@@ -8,20 +8,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.hibernate.annotations.GenericGenerator;
-
-import de.egladil.web.commons_validation.annotations.UuidString;
 import de.egladil.web.mk_wettbewerb.domain.personen.Rolle;
+import de.egladil.web.mk_wettbewerb.domain.teilnahmen.ZugangUnterlagen;
 
 /**
  * PersistenterVeranstalter
@@ -34,16 +28,6 @@ public class PersistenterVeranstalter extends ConcurrencySafeEntity {
 
 	public static final String FIND_BY_UUID_QUERY = "FIND_VERANSTALTER_BY_UUID";
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "uuid_generator")
-	@GenericGenerator(
-		name = "uuid_generator", strategy = "de.egladil.web.mk_wettbewerb.infrastructure.persistence.entities.UuidGenerator")
-	@UuidString
-	@NotNull
-	@Size(min = 1, max = 40)
-	@Column(name = "UUID")
-	private String uuid;
-
 	@Column(name = "ROLLE")
 	@Enumerated(EnumType.STRING)
 	private Rolle rolle;
@@ -53,31 +37,21 @@ public class PersistenterVeranstalter extends ConcurrencySafeEntity {
 	@Column(name = "FULL_NAME")
 	private String fullName;
 
-	@Column(name = "TEILNAHMEKUERZEL")
-	private String teilnahmekuerzel;
+	@Column(name = "TEILNAHMENUMMERN")
+	private String teilnahmenummern;
 
-	@Version
-	@Column(name = "VERSION")
-	private int version;
+	@Column(name = "ZUGANG_UNTERLAGEN")
+	@Enumerated(EnumType.STRING)
+	private ZugangUnterlagen zugangUnterlagen;
 
-	public String getUuid() {
+	public String getTeilnahmenummern() {
 
-		return uuid;
+		return teilnahmenummern;
 	}
 
-	public void setUuid(final String uuid) {
+	public void setTeilnahmenummern(final String teilnahmekuerzel) {
 
-		this.uuid = uuid;
-	}
-
-	public String getTeilnahmekuerzel() {
-
-		return teilnahmekuerzel;
-	}
-
-	public void setTeilnahmekuerzel(final String teilnahmekuerzel) {
-
-		this.teilnahmekuerzel = teilnahmekuerzel;
+		this.teilnahmenummern = teilnahmekuerzel;
 	}
 
 	public String getFullName() {
@@ -98,5 +72,15 @@ public class PersistenterVeranstalter extends ConcurrencySafeEntity {
 	public void setRolle(final Rolle rolle) {
 
 		this.rolle = rolle;
+	}
+
+	public ZugangUnterlagen getZugangsberechtigungUnterlagen() {
+
+		return zugangUnterlagen;
+	}
+
+	public void setZugangsberechtigungUnterlagen(final ZugangUnterlagen zugangUnterlagen) {
+
+		this.zugangUnterlagen = zugangUnterlagen;
 	}
 }
