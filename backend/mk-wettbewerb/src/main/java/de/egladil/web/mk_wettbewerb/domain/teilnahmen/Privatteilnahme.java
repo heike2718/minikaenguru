@@ -16,11 +16,11 @@ public class Privatteilnahme extends Teilnahme {
 
 	/**
 	 * @param wettbewerbID
-	 * @param teilnahmekuerzel
+	 * @param teilnahmenummer
 	 */
-	public Privatteilnahme(final WettbewerbID wettbewerbID, final Identifier teilnahmekuerzel) {
+	public Privatteilnahme(final WettbewerbID wettbewerbID, final Identifier teilnahmenummer) {
 
-		super(wettbewerbID, teilnahmekuerzel);
+		super(wettbewerbID, teilnahmenummer);
 
 	}
 
@@ -34,7 +34,7 @@ public class Privatteilnahme extends Teilnahme {
 	public String toString() {
 
 		return "Privatteilnahme [wettbewerbID()=" + wettbewerbID().toString() + ", teilnahmekuerzel()="
-			+ teilnahmekuerzel().toString() + "]";
+			+ teilnahmenummer().toString() + "]";
 	}
 
 }

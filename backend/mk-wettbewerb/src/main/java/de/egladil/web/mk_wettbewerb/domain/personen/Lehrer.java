@@ -10,6 +10,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
+import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Teilnahmeart;
 
 /**
  * Lehrer
@@ -18,15 +19,6 @@ public class Lehrer extends Veranstalter {
 
 	@JsonProperty
 	private List<Identifier> schulen;
-
-	/**
-	 * @param person
-	 */
-	public Lehrer(final Person person) {
-
-		super(person);
-
-	}
 
 	/**
 	 * @param person
@@ -43,6 +35,12 @@ public class Lehrer extends Veranstalter {
 	public Rolle rolle() {
 
 		return Rolle.LEHRER;
+	}
+
+	@Override
+	public Teilnahmeart teilnahmeart() {
+
+		return Teilnahmeart.SCHULE;
 	}
 
 	/**

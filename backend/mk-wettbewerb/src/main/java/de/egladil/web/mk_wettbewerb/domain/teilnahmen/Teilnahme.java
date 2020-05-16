@@ -18,10 +18,10 @@ public abstract class Teilnahme {
 
 	private final WettbewerbID wettbewerbID;
 
-	private final Identifier teilnahmekuerzel;
+	private final Identifier teilnahmenummer;
 
 	/**
-	 * @param teilnahmekuerzel
+	 * @param teilnahmenummer
 	 * @param jahr
 	 */
 	public Teilnahme(final WettbewerbID wettbewerbID, final Identifier teilnahmekuerzel) {
@@ -33,13 +33,16 @@ public abstract class Teilnahme {
 
 		if (teilnahmekuerzel == null) {
 
-			throw new IllegalArgumentException("teilnahmekuerzel darf nicht null sein");
+			throw new IllegalArgumentException("teilnahmenummer darf nicht null sein");
 		}
 
 		this.wettbewerbID = wettbewerbID;
-		this.teilnahmekuerzel = teilnahmekuerzel;
+		this.teilnahmenummer = teilnahmekuerzel;
 	}
 
+	/**
+	 * @return Teilnahmeart
+	 */
 	public abstract Teilnahmeart teilnahmeart();
 
 	public WettbewerbID wettbewerbID() {
@@ -47,15 +50,15 @@ public abstract class Teilnahme {
 		return this.wettbewerbID;
 	}
 
-	public Identifier teilnahmekuerzel() {
+	public Identifier teilnahmenummer() {
 
-		return this.teilnahmekuerzel;
+		return this.teilnahmenummer;
 	}
 
 	@Override
 	public int hashCode() {
 
-		return Objects.hash(teilnahmekuerzel, wettbewerbID);
+		return Objects.hash(teilnahmenummer, wettbewerbID);
 	}
 
 	@Override
@@ -76,6 +79,6 @@ public abstract class Teilnahme {
 			return false;
 		}
 		Teilnahme other = (Teilnahme) obj;
-		return Objects.equals(teilnahmekuerzel, other.teilnahmekuerzel) && Objects.equals(wettbewerbID, other.wettbewerbID);
+		return Objects.equals(teilnahmenummer, other.teilnahmenummer) && Objects.equals(wettbewerbID, other.wettbewerbID);
 	}
 }

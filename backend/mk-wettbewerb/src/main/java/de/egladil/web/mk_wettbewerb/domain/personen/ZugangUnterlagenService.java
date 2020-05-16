@@ -44,11 +44,9 @@ public class ZugangUnterlagenService {
 			return false;
 		}
 
-		List<Teilnahme> teilnahmen = this.findTeilnahmen(veranstalter);
+		List<Teilnahme> teilnahmen = this.findTeilnahmen(veranstalter, wettbewerb);
 
-		Optional<Teilnahme> optAktuell = teilnahmen.stream().filter(t -> t.wettbewerbID().equals(wettbewerb.id())).findFirst();
-
-		if (optAktuell.isEmpty()) {
+		if (teilnahmen.isEmpty()) {
 
 			return false;
 		}
@@ -63,15 +61,13 @@ public class ZugangUnterlagenService {
 			return true;
 		}
 
-		Teilnahme teilnahme = optAktuell.get();
-
 		switch (wettbewerb.status()) {
 
 		case ANMELDUNG:
 			return false;
 
 		case DOWNLOAD_LEHRER:
-			return teilnahme.teilnahmeart() == Teilnahmeart.SCHULE;
+			return veranstalter.teilnahmeart() == Teilnahmeart.SCHULE;
 
 		case DOWNLOAD_PRIVAT:
 			return true;
@@ -83,13 +79,14 @@ public class ZugangUnterlagenService {
 		return false;
 	}
 
-	private List<Teilnahme> findTeilnahmen(final Veranstalter veranstalter) {
+	private List<Teilnahme> findTeilnahmen(final Veranstalter veranstalter, final Wettbewerb wettbewerb) {
 
 		List<Teilnahme> teilnahmen = new ArrayList<>();
 
 		veranstalter.teilnahmeIdentifier().forEach(ident -> {
 
-			Optional<Teilnahme> optTeilnahme = teilnahmenRepository.ofIdentifier(ident.identifier());
+			Optional<Teilnahme> optTeilnahme = teilnahmenRepository.ofTeilnahmenummerArtWettbewerb(ident.identifier(),
+				veranstalter.teilnahmeart(), wettbewerb.id());
 
 			if (optTeilnahme.isPresent()) {
 

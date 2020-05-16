@@ -26,6 +26,25 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/ `mk_wettbewerb` /*!40100 DEFAULT CHARAC
 USE `mk_wettbewerb`;
 
 --
+-- Table structure for table `EVENTS`
+--
+
+DROP TABLE IF EXISTS `EVENTS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `EVENTS` (
+  `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `DATE_MODIFIED` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `NAME` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `TIME_OCCURED` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `BODY` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`BODY`)),
+  `VERSION` int(10) DEFAULT 0,
+  PRIMARY KEY (`ID`),
+  CONSTRAINT `CONSTRAINT_1` CHECK (json_valid(`BODY`))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='speichert events aus der domain';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `SCHULKOLLEGIEN`
 --
 
@@ -56,7 +75,9 @@ CREATE TABLE `TEILNAHMEN` (
   `WETTBEWERB_UUID` varchar(36) CHARACTER SET utf8 NOT NULL COMMENT 'uuid des Wettbewerbs zu dieser Teilnahme',
   `VERSION` int(10) DEFAULT 0,
   `DATE_MODIFIED` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`UUID`)
+  `SCHULNAME` varchar(100) CHARACTER SET utf8 DEFAULT NULL COMMENT 'Name der Schule für die Urkunde',
+  PRIMARY KEY (`UUID`),
+  UNIQUE KEY `UK_TEILNAHMEN_1` (`TEILNAHMEART`,`TEILNAHMENUMMER`,`WETTBEWERB_UUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -131,4 +152,4 @@ CREATE TABLE `schema_version` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-05-15 22:05:16
+-- Dump completed on 2020-05-16  9:18:27

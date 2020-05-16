@@ -121,6 +121,13 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 	@Override
 	public void addVeranstalter(final Veranstalter veranstalter) {
 
+		PersistenterVeranstalter vorhandener = this.findByUuid(veranstalter.uuid());
+
+		if (vorhandener != null) {
+
+			throw new IllegalStateException("Es gibt bereits einen persistenten Veranstalter " + veranstalter.toString());
+		}
+
 		PersistenterVeranstalter persistenterVeranstalter = new PersistenterVeranstalter();
 		persistenterVeranstalter.setImportierteUuid(veranstalter.uuid());
 		persistenterVeranstalter.setFullName(veranstalter.fullName());
@@ -130,7 +137,7 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 
 		em.persist(persistenterVeranstalter);
 
-		LOG.info("Veranstalter {} erfolgreich gespeichert.", veranstalter);
+		LOG.info("Veranstalter {} erfolgreich angelegt.", veranstalter);
 	}
 
 	@Override
@@ -154,6 +161,5 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 		vorhandener.setZugangsberechtigungUnterlagen(veranstalter.zugangUnterlagen());
 
 		em.persist(vorhandener);
-
 	}
 }

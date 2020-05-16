@@ -17,6 +17,7 @@ import org.mockito.Mockito;
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Privatteilnahme;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Schulteilnahme;
+import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.TeilnahmenRepository;
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.WettbewerbID;
@@ -84,7 +85,8 @@ public class ZugangUnterlagenServiceTest {
 			Arrays.asList(new Identifier[] { new Identifier(PRIVATTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB) }));
 		this.privatpersonZugangsberechtigungEntzogen.verwehreZugangUnterlagen();
 
-		this.privatpersonNichtAngemeldet = new Privatperson(new Person("hlvhsh", "Frau Verpeilt"));
+		this.privatpersonNichtAngemeldet = new Privatperson(new Person("hlvhsh", "Frau Verpeilt"),
+			Arrays.asList(new Identifier("hlvhsh")));
 
 		WettbewerbID wettbewerbId = new WettbewerbID(Integer.valueOf(2020));
 		this.wettbewerb = new Wettbewerb(wettbewerbId);
@@ -95,7 +97,9 @@ public class ZugangUnterlagenServiceTest {
 
 			Schulteilnahme teilnahme = new Schulteilnahme(wettbewerbId, new Identifier(SCHULTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB),
 				"Baumschule");
-			Mockito.when(teilnahmenRepository.ofIdentifier(SCHULTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB))
+			Mockito
+				.when(teilnahmenRepository.ofTeilnahmenummerArtWettbewerb(SCHULTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB,
+					Teilnahmeart.SCHULE, wettbewerbId))
 				.thenReturn(Optional.of(teilnahme));
 		}
 
@@ -103,13 +107,17 @@ public class ZugangUnterlagenServiceTest {
 
 			Privatteilnahme teilnahme = new Privatteilnahme(wettbewerbId,
 				new Identifier(PRIVATTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB));
-			Mockito.when(teilnahmenRepository.ofIdentifier(PRIVATTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB))
+			Mockito
+				.when(teilnahmenRepository.ofTeilnahmenummerArtWettbewerb(PRIVATTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB,
+					Teilnahmeart.PRIVAT, wettbewerbId))
 				.thenReturn(Optional.of(teilnahme));
 		}
 
 		{
 
-			Mockito.when(teilnahmenRepository.ofIdentifier(SCHULKUERZEL_NICHT_ANGEMELDET))
+			Mockito
+				.when(teilnahmenRepository.ofTeilnahmenummerArtWettbewerb(SCHULKUERZEL_NICHT_ANGEMELDET, Teilnahmeart.SCHULE,
+					wettbewerbId))
 				.thenReturn(Optional.empty());
 		}
 

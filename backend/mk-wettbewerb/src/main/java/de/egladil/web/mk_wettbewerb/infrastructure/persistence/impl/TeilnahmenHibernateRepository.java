@@ -4,12 +4,28 @@
 // =====================================================
 package de.egladil.web.mk_wettbewerb.infrastructure.persistence.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.egladil.web.mk_wettbewerb.domain.Identifier;
+import de.egladil.web.mk_wettbewerb.domain.error.MkWettbewerbRuntimeException;
+import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Privatteilnahme;
+import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Schulteilnahme;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Teilnahme;
+import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.TeilnahmenRepository;
+import de.egladil.web.mk_wettbewerb.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_wettbewerb.infrastructure.persistence.entities.PersistenteTeilnahme;
 
 /**
  * TeilnahmenHibernateRepository
@@ -17,10 +33,143 @@ import de.egladil.web.mk_wettbewerb.domain.teilnahmen.TeilnahmenRepository;
 @RequestScoped
 public class TeilnahmenHibernateRepository implements TeilnahmenRepository {
 
-	@Override
-	public Optional<Teilnahme> ofIdentifier(final String identifier) {
+	private static final Logger LOG = LoggerFactory.getLogger(TeilnahmenHibernateRepository.class);
 
-		return Optional.empty();
+	@Inject
+	EntityManager em;
+
+	@Override
+	public Optional<Teilnahme> ofTeilnahmenummerArtWettbewerb(final String teilnahmenummer, final Teilnahmeart art, final WettbewerbID wettbewerbId) {
+
+		if (art == null) {
+
+			throw new IllegalArgumentException("art darf nicht null sein.");
+		}
+
+		if (wettbewerbId == null) {
+
+			throw new IllegalArgumentException("wettbewerbId darf nicht null sein.");
+		}
+
+		List<PersistenteTeilnahme> teilnahmen = this.findAllByNummer(teilnahmenummer);
+
+		Optional<PersistenteTeilnahme> optTeilnahme = teilnahmen.stream()
+			.filter(t -> t.getTeilnahmeart() == art && t.getWettbewerbUUID().equals(wettbewerbId.jahr().toString()))
+			.findFirst();
+
+		if (optTeilnahme.isEmpty()) {
+
+			return Optional.empty();
+		}
+
+		PersistenteTeilnahme persistente = optTeilnahme.get();
+
+		Teilnahme teilnahme = mapToTeilnahme(persistente);
+
+		return Optional.of(teilnahme);
 	}
 
+	@Override
+	public List<Teilnahme> ofTeilnahmenummerArt(final String teilnahmenummer, final Teilnahmeart art) {
+
+		List<Teilnahme> teilnahmen = this.ofTeilnahmenummer(teilnahmenummer);
+
+		return teilnahmen.stream().filter(t -> art == t.teilnahmeart()).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<Teilnahme> ofTeilnahmenummer(final String teilnahmenummer) {
+
+		List<PersistenteTeilnahme> teilnahmen = this.findAllByNummer(teilnahmenummer);
+
+		List<Teilnahme> result = new ArrayList<>();
+
+		teilnahmen.stream().forEach(t -> result.add(mapToTeilnahme(t)));
+
+		return result;
+	}
+
+	@Override
+	public void addTeilnahme(final Teilnahme teilnahme) {
+
+		Optional<Teilnahme> opt = this.ofTeilnahmenummerArtWettbewerb(teilnahme.teilnahmenummer().identifier(),
+			teilnahme.teilnahmeart(), teilnahme.wettbewerbID());
+
+		if (opt.isPresent()) {
+
+			throw new IllegalStateException("Es gibt diese Teilnahme bereits: " + teilnahme.toString());
+		}
+
+		PersistenteTeilnahme persistenteTeilnahme = new PersistenteTeilnahme();
+		persistenteTeilnahme.setImportierteUuid(teilnahme.teilnahmenummer().identifier());
+
+		if (Teilnahmeart.SCHULE == teilnahme.teilnahmeart()) {
+
+			persistenteTeilnahme.setSchulname(((Schulteilnahme) teilnahme).nameSchule());
+		}
+		persistenteTeilnahme.setTeilnahmeart(teilnahme.teilnahmeart());
+		persistenteTeilnahme.setTeilnahmenummer(teilnahme.teilnahmenummer().identifier());
+		persistenteTeilnahme.setWettbewerbUUID(teilnahme.wettbewerbID().toString());
+
+		em.persist(persistenteTeilnahme);
+
+		LOG.info("Teilnahme {} erfolreich angelegt", teilnahme);
+
+	}
+
+	@Override
+	public void changeTeilnahme(final Schulteilnahme teilnahme, final String uuidAenderer) throws IllegalStateException {
+
+		List<PersistenteTeilnahme> persistenteTeilnahmen = this.findAllByNummer(teilnahme.teilnahmenummer().identifier());
+
+		Optional<PersistenteTeilnahme> opt = persistenteTeilnahmen.stream()
+			.filter(pt -> pt.getTeilnahmeart() == teilnahme.teilnahmeart()
+				&& pt.getWettbewerbUUID().equals(teilnahme.wettbewerbID().toString()))
+			.findFirst();
+
+		if (!opt.isPresent()) {
+
+			throw new IllegalStateException(teilnahme.toString() + " ist noch nicht persistiert");
+		}
+
+		PersistenteTeilnahme vorhandene = opt.get();
+		vorhandene.setSchulname(teilnahme.nameSchule());
+
+		em.merge(vorhandene);
+	}
+
+	private List<PersistenteTeilnahme> findAllByNummer(final String teilnahmenummer) {
+
+		if (StringUtils.isBlank(teilnahmenummer)) {
+
+			throw new IllegalArgumentException("teilnahmenummer darf nicht blank sein");
+		}
+
+		return em.createNamedQuery(PersistenteTeilnahme.FIND_TEILNAHMEN_BY_NUMMER_QUERY, PersistenteTeilnahme.class)
+			.setParameter("", teilnahmenummer).getResultList();
+
+	}
+
+	private Teilnahme mapToTeilnahme(final PersistenteTeilnahme persistente) {
+
+		Teilnahme teilnahme = null;
+
+		WettbewerbID wettbewerbID = new WettbewerbID(Integer.valueOf(persistente.getWettbewerbUUID()));
+		Identifier teilnahmenummer = new Identifier(persistente.getTeilnahmenummer());
+
+		switch (persistente.getTeilnahmeart()) {
+
+		case PRIVAT:
+			teilnahme = new Privatteilnahme(wettbewerbID, teilnahmenummer);
+			break;
+
+		case SCHULE:
+			teilnahme = new Schulteilnahme(wettbewerbID, teilnahmenummer, persistente.getSchulname());
+			break;
+
+		default:
+			throw new MkWettbewerbRuntimeException("unbekannte Teilnahmeart " + persistente.getTeilnahmeart());
+		}
+		return teilnahme;
+	}
 }

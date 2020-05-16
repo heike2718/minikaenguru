@@ -4,11 +4,11 @@
 // =====================================================
 package de.egladil.web.mk_wettbewerb.domain.personen;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
+import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Teilnahmeart;
 
 /**
  * Privatperson
@@ -20,16 +20,6 @@ public class Privatperson extends Veranstalter {
 	// Hat die Person ein Teilnahmekürzel und meldet sich zu einem anderen Wettbewerb an, wird mit diesem Teilnahmekuerzel eine
 	// Teilnahme angelegt.
 	private final List<Identifier> teilnahmenummern;
-
-	/**
-	 * @param person
-	 */
-	public Privatperson(final Person person) {
-
-		super(person);
-		this.teilnahmenummern = new ArrayList<>();
-
-	}
 
 	/**
 	 * @param person
@@ -52,6 +42,12 @@ public class Privatperson extends Veranstalter {
 	public Rolle rolle() {
 
 		return Rolle.PRIVAT;
+	}
+
+	@Override
+	public Teilnahmeart teilnahmeart() {
+
+		return Teilnahmeart.PRIVAT;
 	}
 
 	@Override

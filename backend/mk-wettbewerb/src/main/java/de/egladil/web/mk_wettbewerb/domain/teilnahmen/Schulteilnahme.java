@@ -20,11 +20,11 @@ public class Schulteilnahme extends Teilnahme {
 
 	/**
 	 * @param wettbewerbID
-	 * @param teilnahmekuerzel
+	 * @param teilnahmenummer
 	 */
-	public Schulteilnahme(final WettbewerbID wettbewerbID, final Identifier teilnahmekuerzel, final String nameSchule) {
+	public Schulteilnahme(final WettbewerbID wettbewerbID, final Identifier teilnahmenummer, final String nameSchule) {
 
-		super(wettbewerbID, teilnahmekuerzel);
+		super(wettbewerbID, teilnahmenummer);
 
 		if (StringUtils.isBlank(nameSchule)) {
 
@@ -49,7 +49,7 @@ public class Schulteilnahme extends Teilnahme {
 	public String toString() {
 
 		return "Schulteilnahme [wettbewerbID()=" + wettbewerbID().toString() + ", teilnahmekuerzel()="
-			+ teilnahmekuerzel().toString() + ", name=" + this.nameSchule + "]";
+			+ teilnahmenummer().toString() + ", name=" + this.nameSchule + "]";
 	}
 
 }

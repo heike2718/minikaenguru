@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
 import de.egladil.web.mk_wettbewerb.domain.semantik.Aggregate;
+import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.ZugangUnterlagen;
 
 /**
@@ -42,7 +43,15 @@ public abstract class Veranstalter {
 
 	}
 
+	/**
+	 * @return Rolle
+	 */
 	public abstract Rolle rolle();
+
+	/**
+	 * @return Teilnahmeart
+	 */
+	public abstract Teilnahmeart teilnahmeart();
 
 	public String uuid() {
 
@@ -102,7 +111,7 @@ public abstract class Veranstalter {
 		}
 		List<String> kuerzel = teilnahmeIdentifier().stream().map(k -> k.identifier()).collect(Collectors.toList());
 
-		return StringUtils.join(kuerzel.toArray(new String[0]), ",");
+		return StringUtils.join(kuerzel, ",");
 
 	}
 

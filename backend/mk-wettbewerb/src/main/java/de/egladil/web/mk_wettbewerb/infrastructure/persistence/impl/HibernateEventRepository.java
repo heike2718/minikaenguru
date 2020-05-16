@@ -2,21 +2,21 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.infrastructure.persistence.impl;
+package de.egladil.web.mk_wettbewerb.infrastructure.persistence.impl;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
-import de.egladil.web.mk_gateway.domain.event.EventRepository;
-import de.egladil.web.mk_gateway.infrastructure.persistence.entities.StoredEvent;
+import de.egladil.web.mk_wettbewerb.domain.event.EventRepository;
+import de.egladil.web.mk_wettbewerb.infrastructure.persistence.entities.StoredEvent;
 
 /**
- * EventRepositoryHibernate
+ * HibernateEventRepository
  */
 @RequestScoped
-public class EventRepositoryHibernate implements EventRepository {
+public class HibernateEventRepository implements EventRepository {
 
 	@Inject
 	EntityManager em;
