@@ -19,4 +19,20 @@ public interface WettbewerbRepository {
 	 */
 	Optional<Wettbewerb> wettbewerbMitID(WettbewerbID wettbewerbID);
 
+	/**
+	 * Erzeugt einen neuen Eintrag im Speicher.
+	 *
+	 * @param wettbewerb
+	 *                   Wettbewerb
+	 */
+	void addWettbewerb(Wettbewerb wettbewerb);
+
+	/**
+	 * Ändert die vorhandene Persistierung eines Wettbewerbs.
+	 *
+	 * @param wettbewerb
+	 *                   Wettbewerb
+	 */
+	void changeWettbewerb(Wettbewerb wettbewerb);
+
 }

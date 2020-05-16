@@ -12,9 +12,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
-import de.egladil.web.mk_wettbewerb.domain.personen.Lehrer;
-import de.egladil.web.mk_wettbewerb.domain.personen.Person;
-import de.egladil.web.mk_wettbewerb.domain.personen.Rolle;
 
 /**
  * LehrerTest
@@ -45,8 +42,8 @@ public class LehrerTest {
 		assertEquals(fullName, lehrer.fullName());
 		assertEquals(person, lehrer.person());
 		assertEquals("bla,blubb", lehrer.persistierbareTeilnahmekuerzel());
-		assertEquals(2, lehrer.teilnahmekuerzel().size());
-		assertEquals(lehrer.teilnahmekuerzel(), lehrer.schulen());
+		assertEquals(2, lehrer.teilnahmeIdentifier().size());
+		assertEquals(lehrer.teilnahmeIdentifier(), lehrer.schulen());
 
 		assertEquals("Grtq Jiesrtzq (LEHRER)", lehrer.toString());
 	}

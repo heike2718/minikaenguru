@@ -4,31 +4,37 @@
 // =====================================================
 package de.egladil.web.mk_wettbewerb.domain.personen;
 
+import java.util.Collections;
 import java.util.List;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
+import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Teilnahmeart;
 
 /**
  * Privatperson
  */
 public class Privatperson extends Veranstalter {
 
-	/**
-	 * @param person
-	 */
-	public Privatperson(final Person person) {
-
-		super(person);
-
-	}
+	// wenn sich eine Privatperson registriert, wird noch keine Teilnahme angelegt. Wenn sie sich zu einem Wettbewerb anmeldet, wird
+	// eine Teilnahme angelegt und das Teilnahmekuerzel der Person zugeordnet.
+	// Hat die Person ein Teilnahmekürzel und meldet sich zu einem anderen Wettbewerb an, wird mit diesem Teilnahmekuerzel eine
+	// Teilnahme angelegt.
+	private final List<Identifier> teilnahmenummern;
 
 	/**
 	 * @param person
 	 * @param teilnahmekuerzel
 	 */
-	public Privatperson(final Person person, final List<Identifier> teilnahmekuerzel) {
+	public Privatperson(final Person person, final List<Identifier> teilnahmenummern) {
 
-		super(person, teilnahmekuerzel);
+		super(person);
+
+		if (teilnahmenummern == null) {
+
+			throw new IllegalArgumentException("teilnahmenummern darf nicht null sein.");
+		}
+
+		this.teilnahmenummern = teilnahmenummern;
 
 	}
 
@@ -36,6 +42,19 @@ public class Privatperson extends Veranstalter {
 	public Rolle rolle() {
 
 		return Rolle.PRIVAT;
+	}
+
+	@Override
+	public Teilnahmeart teilnahmeart() {
+
+		return Teilnahmeart.PRIVAT;
+	}
+
+	@Override
+	protected List<Identifier> teilnahmeIdentifier() {
+
+		return Collections.unmodifiableList(this.teilnahmenummern);
+
 	}
 
 	@Override

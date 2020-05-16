@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_wettbewerb.domain.personen;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import javax.enterprise.context.RequestScoped;
@@ -46,7 +47,8 @@ public class AddPrivatpersonService {
 			return;
 		}
 
-		Privatperson privatperson = new Privatperson(new Person(data.uuid(), data.fullName()));
+		Privatperson privatperson = new Privatperson(new Person(data.uuid(), data.fullName()),
+			Arrays.asList(new Identifier(data.uuid())));
 
 		repository.addVeranstalter(privatperson);
 	}
