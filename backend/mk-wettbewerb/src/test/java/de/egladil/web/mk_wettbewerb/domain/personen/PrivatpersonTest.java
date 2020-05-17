@@ -6,8 +6,6 @@ package de.egladil.web.mk_wettbewerb.domain.personen;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
@@ -67,8 +65,8 @@ public class PrivatpersonTest {
 		assertEquals(uuid, privatperson.uuid());
 		assertEquals(fullName, privatperson.fullName());
 		assertEquals(person, privatperson.person());
-		assertNull(privatperson.persistierbareTeilnahmenummern());
-		assertTrue(privatperson.teilnahmeIdentifier().isEmpty());
+		assertEquals(uuid, privatperson.persistierbareTeilnahmenummern());
+		assertEquals(1, privatperson.teilnahmeIdentifier().size());
 
 	}
 

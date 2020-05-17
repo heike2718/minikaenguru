@@ -47,8 +47,11 @@ public class AddPrivatpersonService {
 			return;
 		}
 
+		// Issue minikaenguru#18
+		String teilnahmenummer = data.uuid().substring(27).toUpperCase();
+
 		Privatperson privatperson = new Privatperson(new Person(data.uuid(), data.fullName()),
-			Arrays.asList(new Identifier(data.uuid())));
+			Arrays.asList(new Identifier(teilnahmenummer)));
 
 		repository.addVeranstalter(privatperson);
 	}
