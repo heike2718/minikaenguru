@@ -52,7 +52,7 @@ public class Lehrer extends Veranstalter {
 	}
 
 	@Override
-	protected List<Identifier> teilnahmeIdentifier() {
+	public List<Identifier> teilnahmeIdentifier() {
 
 		return this.schulen();
 	}

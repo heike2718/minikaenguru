@@ -12,7 +12,7 @@ import { CommonAuthModule } from '@minikaenguru-ws/common-auth';
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import {RouterStateSerializer, StoreRouterConnectingModule, RouterState} from "@ngrx/router-store";
+import {RouterStateSerializer, StoreRouterConnectingModule, RouterState, routerReducer} from "@ngrx/router-store";
 import { environment } from '../environments/environment';
 import { NotFoundComponent } from './not-found.component';
 import { LandingComponent } from './landing/landing.component';
@@ -22,6 +22,10 @@ import { EffectsModule } from '@ngrx/effects';
 import { CustomRouterStateSerializer } from './shared/utils';
 import { RegistrationModule } from './registration/registration.module';
 import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
+import { SchulenListComponent } from './schulen/schulen-list/schulen-list.component';
+import { VeranstalterEffects } from './dashboard/+state/veranstalter.effects';
+import { DashboardModule } from './dashboard/dashboard.module';
+
 
 
 @NgModule({
@@ -29,7 +33,8 @@ import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
 		AppComponent,
 		NavbarComponent,
 		NotFoundComponent,
-		LandingComponent
+		LandingComponent,
+		SchulenListComponent
 	],
 	imports: [
 		BrowserModule,
@@ -48,9 +53,12 @@ import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
 		}),
 		CommonAuthModule.forRoot({
 			baseUrl: environment.apiUrl,
-			storagePrefix: 'mkv_'
+			production: environment.production,
+			storagePrefix: environment.storageKeyPrefix,
+			loginSuccessUrl: '/dashboard'
 		}),
 		RegistrationModule,
+		DashboardModule,
 		StoreModule.forRoot(reducers, {
 			metaReducers,
 			runtimeChecks: {

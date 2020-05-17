@@ -131,7 +131,7 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 		PersistenterVeranstalter persistenterVeranstalter = new PersistenterVeranstalter();
 		persistenterVeranstalter.setImportierteUuid(veranstalter.uuid());
 		persistenterVeranstalter.setFullName(veranstalter.fullName());
-		persistenterVeranstalter.setTeilnahmenummern(veranstalter.persistierbareTeilnahmekuerzel());
+		persistenterVeranstalter.setTeilnahmenummern(veranstalter.persistierbareTeilnahmenummern());
 		persistenterVeranstalter.setZugangsberechtigungUnterlagen(veranstalter.zugangUnterlagen());
 		persistenterVeranstalter.setRolle(veranstalter.rolle());
 
@@ -157,7 +157,7 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 		}
 
 		vorhandener.setFullName(veranstalter.fullName());
-		vorhandener.setTeilnahmenummern(veranstalter.persistierbareTeilnahmekuerzel());
+		vorhandener.setTeilnahmenummern(veranstalter.persistierbareTeilnahmenummern());
 		vorhandener.setZugangsberechtigungUnterlagen(veranstalter.zugangUnterlagen());
 
 		em.persist(vorhandener);

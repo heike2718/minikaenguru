@@ -25,12 +25,12 @@ import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Ort;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
 
 /**
- * KatalogeRepositoryImpl
+ * KatalogeHibernateRepository
  */
 @RequestScoped
-public class KatalogeRepositoryImpl implements KatalogeRepository {
+public class KatalogeHibernateRepository implements KatalogeRepository {
 
-	private static final Logger LOG = LoggerFactory.getLogger(KatalogeRepositoryImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(KatalogeHibernateRepository.class);
 
 	@Inject
 	EntityManager em;
@@ -38,7 +38,7 @@ public class KatalogeRepositoryImpl implements KatalogeRepository {
 	/**
 	 *
 	 */
-	public KatalogeRepositoryImpl() {
+	public KatalogeHibernateRepository() {
 
 	}
 
@@ -247,5 +247,13 @@ public class KatalogeRepositoryImpl implements KatalogeRepository {
 		Long result = query.getSingleResult();
 
 		return result.intValue();
+	}
+
+	@Override
+	public List<Schule> findSchulenWithKuerzeln(final List<String> schulkuerzel) {
+
+		String stmt = "select s from Schule s where s.kuerzel IN :kuerzeln";
+
+		return em.createQuery(stmt, Schule.class).setParameter("kuerzeln", schulkuerzel).getResultList();
 	}
 }

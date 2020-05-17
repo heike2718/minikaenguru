@@ -24,7 +24,7 @@ import de.egladil.web.mk_gateway.domain.signup.SignUpResourceOwner;
 import de.egladil.web.mk_gateway.domain.signup.SignUpService;
 
 /**
- * WettbewerbVeranstalterResource ist die Resource zum Anlegen von Minikänguru-Veranstaltern.
+ * WettbewerbVeranstalterResource ist die Resource zu den Minikänguru-Veranstaltern.
  */
 @RequestScoped
 @Path("/wettbewerb/veranstalter")
@@ -49,5 +49,4 @@ public class WettbewerbVeranstalterResource {
 		return Response.ok(ResponsePayload.messageOnly(MessagePayload.info(applicationMessages.getString("createUser.success"))))
 			.build();
 	}
-
 }

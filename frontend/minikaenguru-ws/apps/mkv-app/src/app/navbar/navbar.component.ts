@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../environments/environment';
-import { AuthService, AuthState, selectIsLoggedIn, selectIsLoggedOut } from '@minikaenguru-ws/common-auth';
+import { AuthService, AuthState, isLoggedIn, isLoggedOut, Session, user } from '@minikaenguru-ws/common-auth';
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -14,13 +14,16 @@ export class NavbarComponent implements OnInit {
 	collapsed = true;
 	logo: string;
 
-	isLoggedIn$ = this.store.select(selectIsLoggedIn);
-	isLoggedOut$ = this.store.select(selectIsLoggedOut);
+	isLoggedIn$ = this.authStore.select(isLoggedIn);
+	isLoggedOut$ = this.authStore.select(isLoggedOut);
+	user$ = this.sessionStore.select(user);
+
 
 	@ViewChild(NgbCollapse, { static: true }) navbarToggler: NgbCollapse;
 
 	constructor(private authService: AuthService
-		, private store: Store<AuthState>) { }
+		, private authStore: Store<AuthState>
+		, private sessionStore: Store<Session>) { }
 
 	collapseNav() {
 		if (this.navbarToggler) {

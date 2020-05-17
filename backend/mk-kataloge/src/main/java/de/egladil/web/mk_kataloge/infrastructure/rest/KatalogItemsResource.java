@@ -34,7 +34,7 @@ public class KatalogItemsResource {
 	KatalogFacade katalogFacade;
 
 	@GET
-	@Path("laender/{kuerzel}/orte")
+	@Path("/laender/{kuerzel}/orte")
 	public Response loadOrteInLand(@PathParam(value = "kuerzel") @Kuerzel final String kuerzel) {
 
 		int anzahlTreffer = katalogFacade.countOrteInLand(kuerzel);
@@ -56,7 +56,7 @@ public class KatalogItemsResource {
 	}
 
 	@GET
-	@Path("orte/{kuerzel}/schulen")
+	@Path("/orte/{kuerzel}/schulen")
 	public Response loadSchulenInOrt(@PathParam(value = "kuerzel") @Kuerzel final String kuerzel) {
 
 		int anzahlTreffer = katalogFacade.countSchulenInOrt(kuerzel);
@@ -71,6 +71,18 @@ public class KatalogItemsResource {
 		}
 
 		List<KatalogItem> trefferliste = katalogFacade.loadSchulenInOrt(kuerzel);
+
+		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.info("OK"), trefferliste);
+
+		return Response.ok(responsePayload).build();
+	}
+
+	@GET
+	@Path("/schulen/{commaseparatedKuerzel}")
+	public Response findSchulenMitKuerzeln(@PathParam(
+		value = "commaseparatedKuerzel") @Kuerzel final String commaseparatedKuerzel) {
+
+		List<KatalogItem> trefferliste = katalogFacade.findSchulen(commaseparatedKuerzel);
 
 		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.info("OK"), trefferliste);
 

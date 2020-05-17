@@ -4,6 +4,8 @@ import { AuthService, AuthResult } from '@minikaenguru-ws/common-auth';
 import { RegistrationService } from './registration/registration.service';
 import { map } from 'rxjs/operators';
 import { ResponsePayload, MessageService } from '@minikaenguru-ws/common-messages';
+import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 
 @Component({
 	selector: 'mkv-root',
@@ -32,6 +34,7 @@ export class AppComponent {
 			if (authResult.state) {
 				if (authResult.state === 'login') {
 					this.authService.createSession(authResult);
+
 				}
 				if (authResult.state === 'signup') {
 					this.registrationService.createVeranstalter(authResult).pipe(

@@ -74,7 +74,7 @@ public abstract class Veranstalter {
 	 *
 	 * @return List<Identifier>
 	 */
-	protected abstract List<Identifier> teilnahmeIdentifier();
+	public abstract List<Identifier> teilnahmeIdentifier();
 
 	public ZugangUnterlagen zugangUnterlagen() {
 
@@ -103,7 +103,7 @@ public abstract class Veranstalter {
 	 *
 	 * @return String
 	 */
-	public String persistierbareTeilnahmekuerzel() {
+	public String persistierbareTeilnahmenummern() {
 
 		if (this.teilnahmeIdentifier().isEmpty()) {
 

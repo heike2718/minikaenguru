@@ -21,10 +21,10 @@ import de.egladil.web.mk_kataloge.domain.SchuleRepository;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
 
 /**
- * SchuleDaoImpl
+ * SchuleHibernateRepository
  */
 @RequestScoped
-public class SchuleDaoImpl implements SchuleRepository {
+public class SchuleHibernateRepository implements SchuleRepository {
 
 	@Inject
 	EntityManager em;

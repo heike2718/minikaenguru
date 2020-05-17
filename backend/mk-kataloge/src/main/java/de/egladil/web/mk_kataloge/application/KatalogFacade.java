@@ -25,7 +25,7 @@ public interface KatalogFacade {
 	 * Läd alle Orte in einem Land, sofern es nicht zu viele sind.
 	 *
 	 * @param  kuerzel
-	 * @return             List
+	 * @return         List
 	 */
 	List<KatalogItem> loadOrteInLand(String kuerzel);
 
@@ -41,7 +41,16 @@ public interface KatalogFacade {
 	 * Läd alle Schulen in einem Ort, sofern es nicht zu viele sind.
 	 *
 	 * @param  kuerzel
-	 * @return             List
+	 * @return         List
 	 */
 	List<KatalogItem> loadSchulenInOrt(String kuerzel);
+
+	/**
+	 * Holt alle Schulen mit den gegebenen Kürzeln.
+	 *
+	 * @param  kuerzelliste
+	 *                      List
+	 * @return              String
+	 */
+	List<KatalogItem> findSchulen(String commaseparatedKuerzel);
 }

@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Session, User, selectIsLoggedIn, selectUser } from '@minikaenguru-ws/common-auth';
+import { Session, isLoggedIn } from '@minikaenguru-ws/common-auth';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'mkv-landing',
@@ -11,26 +12,27 @@ import { Subscription } from 'rxjs';
 export class LandingComponent implements OnInit, OnDestroy {
 
 
-	isLoggedIn$ = this.store.select(selectIsLoggedIn);
+	private loggedInSubscription: Subscription;
 
-	user: User;
-
-	private userSubscription: Subscription;
-
-	constructor(private store: Store<Session>) { }
+	constructor(private store: Store<Session>, private router: Router) { }
 
 	ngOnInit() {
 
-		this.userSubscription = this.store.select(selectUser).subscribe(
-			u => this.user = u
+		this.loggedInSubscription = this.store.select(isLoggedIn).subscribe(
+			val => {
+				if (val) {
+					// this.router.navigateByUrl('dashboard');
+					// machen mal nüscht
+				}
+			}
 		);
 
 	}
 
 	ngOnDestroy() {
 
-		if (this.userSubscription) {
-			this.userSubscription.unsubscribe();
+		if (this.loggedInSubscription) {
+			this.loggedInSubscription.unsubscribe();
 		}
 	}
 

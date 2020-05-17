@@ -9,6 +9,7 @@ import { LogService } from '@minikaenguru-ws/common-logging';
 import { AuthResult, STORAGE_KEY_DEV_SESSION_ID, STORAGE_KEY_SESSION_EXPIRES_AT, STORAGE_KEY_USER, Session } from './domain/entities';
 import { AuthState } from './+state/auth.reducer';
 import { login, logout, refreshSession } from './+state/auth.actions';
+import { Router } from '@angular/router';
 const moment = moment_;
 
 @Injectable({
@@ -19,6 +20,7 @@ export class AuthService {
 	constructor(@Inject(MkAuthConfigService) private config: MkAuthConfig
 		, private http: HttpClient
 		, private store: Store<AuthState>
+		, private router: Router
 		, private messagesService: MessageService
 		, private logger: LogService) { }
 
@@ -80,7 +82,8 @@ export class AuthService {
 		).subscribe(
 			payload => {
 				// der auth.effect schiebt die Daten anschließend in den localStorage
-				this.store.dispatch(login({ session: payload.data }))
+				this.store.dispatch(login({ session: payload.data }));
+				this.router.navigateByUrl(this.config.loginSuccessUrl);
 			},
 			(error => {
 				this.handleError(error, '[AuthService] createSession')
@@ -101,7 +104,8 @@ export class AuthService {
 		).subscribe(
 			_payload => {
 				// der auth.effect löscht die Daten anschließend aus dem localStorage
-				this.store.dispatch(logout())
+				this.store.dispatch(logout());
+				this.router.navigateByUrl('/');
 			},
 			(error => {
 				this.handleError(error, '[AuthService] logout')

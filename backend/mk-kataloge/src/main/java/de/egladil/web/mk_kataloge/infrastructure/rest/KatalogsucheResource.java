@@ -54,7 +54,7 @@ public class KatalogsucheResource {
 	}
 
 	@GET
-	@Path("global/{typ}")
+	@Path("/global/{typ}")
 	public Response findItems(@PathParam(
 		value = "typ") final String typ, @NotBlank @StringLatin @QueryParam("search") final String searchTerm) {
 
@@ -106,7 +106,7 @@ public class KatalogsucheResource {
 	}
 
 	@GET
-	@Path("laender/{land}/orte")
+	@Path("/laender/{land}/orte")
 	public Response findOrteInLand(@LandKuerzel @PathParam(
 		value = "land") final String landKuerzel, @NotBlank @StringLatin @QueryParam("search") final String searchTerm) {
 
@@ -156,7 +156,7 @@ public class KatalogsucheResource {
 	}
 
 	@GET
-	@Path("orte/{ort}/schulen")
+	@Path("/orte/{ort}/schulen")
 	public Response findSchulenInOrt(@Kuerzel @PathParam(
 		value = "ort") final String ortKuerzel, @NotBlank @StringLatin @QueryParam("search") final String searchTerm) {
 

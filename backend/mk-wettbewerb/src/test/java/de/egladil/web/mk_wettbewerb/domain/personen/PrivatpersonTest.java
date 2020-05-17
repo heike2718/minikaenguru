@@ -67,7 +67,7 @@ public class PrivatpersonTest {
 		assertEquals(uuid, privatperson.uuid());
 		assertEquals(fullName, privatperson.fullName());
 		assertEquals(person, privatperson.person());
-		assertNull(privatperson.persistierbareTeilnahmekuerzel());
+		assertNull(privatperson.persistierbareTeilnahmenummern());
 		assertTrue(privatperson.teilnahmeIdentifier().isEmpty());
 
 	}
@@ -95,7 +95,7 @@ public class PrivatpersonTest {
 		assertEquals(uuid, privatperson.uuid());
 		assertEquals(fullName, privatperson.fullName());
 		assertEquals(person, privatperson.person());
-		assertEquals("bla,blubb", privatperson.persistierbareTeilnahmekuerzel());
+		assertEquals("bla,blubb", privatperson.persistierbareTeilnahmenummern());
 		assertEquals(2, privatperson.teilnahmeIdentifier().size());
 		assertEquals("Grtq Jiesrtzq (PRIVAT)", privatperson.toString());
 

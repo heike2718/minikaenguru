@@ -124,4 +124,13 @@ public interface KatalogeRepository {
 	 * @return
 	 */
 	Optional<Schule> findSchuleWithKuerzel(String schulkuerzel);
+
+	/**
+	 * Sucht alle Schulen mit den gegebenen Kürzeln.
+	 *
+	 * @param  schulkuerzel
+	 *                      List
+	 * @return
+	 */
+	List<Schule> findSchulenWithKuerzeln(List<String> schulkuerzel);
 }

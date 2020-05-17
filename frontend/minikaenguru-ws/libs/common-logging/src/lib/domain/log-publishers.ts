@@ -1,7 +1,7 @@
 import { Observable, of } from 'rxjs';
 import { LogEntry } from './entities';
 import { HttpClient } from '@angular/common/http';
-import { map, publishLast, refCount } from 'rxjs/operators';
+import { publishLast, refCount } from 'rxjs/operators';
 
 export abstract class LogPublisher {
 	location: string;
@@ -32,6 +32,13 @@ export class LogWebApi extends LogPublisher {
 
 
 	log(entry: LogEntry): Observable<boolean> {
+
+		console.log('[LogWebApi]: ' + this.url);
+
+		if (!this.url) {
+			console.log('[LogWebApi]: muss mal die LogWebApi-Config prüfen');
+			return;
+		}
 
 		this.http.post(this.url, entry).pipe(
 			publishLast(),
