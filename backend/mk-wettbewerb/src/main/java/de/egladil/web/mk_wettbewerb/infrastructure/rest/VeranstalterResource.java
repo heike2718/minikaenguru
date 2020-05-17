@@ -13,12 +13,10 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,8 +42,8 @@ public class VeranstalterResource {
 	VeranstalterRepository veranstalterRepository;
 
 	@GET
-	@Path("/teilnahmenummern")
-	public Response getTeilnahmenummern(@QueryParam(value = "uuid") final String uuid) {
+	@Path("/teilnahmenummern/{uuid}")
+	public Response getTeilnahmenummern(@PathParam(value = "uuid") final String uuid) {
 
 		LOG.info("Holen teilnahmenummern für " + uuid);
 
@@ -62,7 +60,9 @@ public class VeranstalterResource {
 			return Response.ok(responsePayload).build();
 		}
 
-		throw new WebApplicationException(Status.NOT_FOUND);
+		LOG.warn("kein Veranstalter mit UUID={} vorhanden", uuid);
+		return Response.status(404)
+			.entity(ResponsePayload.messageOnly(MessagePayload.error("Konnte die Teilnahmenummern nicht ermitteln."))).build();
 	}
 
 }

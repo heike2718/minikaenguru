@@ -38,6 +38,7 @@ public class TeilnahmenResource {
 
 		Principal principal = securityContext.getUserPrincipal();
 
-		return veranstalterService.getTeilnahmenummern(principal.getName());
+		Response response = veranstalterService.getTeilnahmenummern(principal.getName());
+		return response;
 	}
 }

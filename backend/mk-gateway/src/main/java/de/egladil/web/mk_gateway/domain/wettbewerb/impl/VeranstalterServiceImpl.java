@@ -12,8 +12,11 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.wettbewerb.VeranstalterService;
 import de.egladil.web.mk_gateway.infrastructure.messaging.MkWettbewerbRestClient;
+import de.egladil.web.mk_gateway.infrastructure.messaging.MkWettbewerbRestException;
 
 /**
  * VeranstalterServiceImpl
@@ -30,8 +33,18 @@ public class VeranstalterServiceImpl implements VeranstalterService {
 	@Override
 	public Response getTeilnahmenummern(final String uuid) {
 
-		Response response = restClient.getTeilnahmenummern(uuid);
-		return response;
+		try {
+
+			Response response = restClient.getTeilnahmenummern(uuid);
+			return response;
+		} catch (MkWettbewerbRestException e) {
+
+			LOG.error("Konnte Teilnahmenummern nicht laden: " + e.getMessage());
+			return Response.serverError()
+				.entity(ResponsePayload
+					.messageOnly(MessagePayload.error("unerwarteter Fehler beim Auruf des mk-wettbewerb-endpoints aufgetreten")))
+				.build();
+		}
 	}
 
 }
