@@ -2,9 +2,11 @@
 <cmn-msg></cmn-msg>
 
 <div class="container-fluid">
-	<router-outlet></router-outlet>
+	<div [@routeAnimation]="getAnimationData(routerOutlet)">
+		<router-outlet #routerOutlet="outlet"></router-outlet>
+	</div>
 </div>
-
+<!--
 <footer>
 	<div class="row">
 		<div class="col-md-2 col-sm-12 footer-text text-left">&copy; Heike Winkelvo&szlig;</div>
@@ -19,3 +21,4 @@
 		<div class="col-md-2 col-sm-12 footer-text text-right">Version {{version}}</div>
 	</div>
 </footer>
+-->

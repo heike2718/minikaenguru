@@ -96,7 +96,7 @@ public class ZugangUnterlagenServiceTest {
 		{
 
 			Schulteilnahme teilnahme = new Schulteilnahme(wettbewerbId, new Identifier(SCHULTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB),
-				"Baumschule");
+				"Baumschule", new Person("agsufguagfogqoö", "Herr Mann"));
 			Mockito
 				.when(teilnahmenRepository.ofTeilnahmenummerArtWettbewerb(SCHULTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB,
 					Teilnahmeart.SCHULE, wettbewerbId))

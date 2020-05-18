@@ -35,14 +35,14 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 
 	handleError(error: any): void {
 
-		if (error instanceof ErrorEvent) {
-			console.log('ErrorEvent: ' + JSON.stringify(error));
-			this.logger.error('mkv-app: Unerwarteter Fehler: ' + JSON.stringify(error));
-			throw (error);
-		} else {
+		if (error instanceof HttpErrorResponse) {
 			const httpError = error as HttpErrorResponse;
 			console.log('HttpErrorResponse: ' + httpError.status);
 			this.handleHttpError(httpError, 'mkv-app');
+		} else {
+			console.log('ErrorEvent: ' + error);
+			this.logger.error('mkv-app: Unerwarteter Fehler: ' + error.message);
+			this.showServerResponseMessage('ERROR', 'Unerwarteter GUI-Error: ' + error.message);
 		}
 	}
 

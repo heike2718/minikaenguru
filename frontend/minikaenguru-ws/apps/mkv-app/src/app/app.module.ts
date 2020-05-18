@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, ErrorHandler } from '@angular/core';
 
 import { AppComponent } from './app.component';
@@ -22,9 +23,9 @@ import { EffectsModule } from '@ngrx/effects';
 import { CustomRouterStateSerializer } from './shared/utils';
 import { RegistrationModule } from './registration/registration.module';
 import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
-import { SchulenListComponent } from './schulen/schulen-list/schulen-list.component';
 import { VeranstalterEffects } from './dashboard/+state/veranstalter.effects';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { SchulenModule } from './schulen/schulen.module';
 
 
 
@@ -33,12 +34,11 @@ import { DashboardModule } from './dashboard/dashboard.module';
 		AppComponent,
 		NavbarComponent,
 		NotFoundComponent,
-		LandingComponent,
-		SchulenListComponent
+		LandingComponent
 	],
 	imports: [
 		BrowserModule,
-		AppRoutingModule,
+		BrowserAnimationsModule,
 		CommonSchulkatalogModule.forRoot({
 			baseUrl: environment.katalogApiUrl,
 			devmode: !environment.production,
@@ -59,6 +59,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
 		}),
 		RegistrationModule,
 		DashboardModule,
+		SchulenModule,
 		StoreModule.forRoot(reducers, {
 			metaReducers,
 			runtimeChecks: {
@@ -74,7 +75,8 @@ import { DashboardModule } from './dashboard/dashboard.module';
 			stateKey:'router',
 			routerState: RouterState.Minimal
 		}),
-		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
+		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+		AppRoutingModule, // <-- immer am Ende, damit die wildcard-route als letzte deklariert bleibt
 	],
 	providers: [
 		GlobalErrorHandlerService,

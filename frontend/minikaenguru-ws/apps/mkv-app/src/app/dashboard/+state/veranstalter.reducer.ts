@@ -17,7 +17,6 @@ const veranstalterReducer = createReducer(initialVeranstalterState,
 
 	on(VeranstalterActions.allTeilnahmenummernLoaded, (state, action) => {
 
-		console.log('[veranstalterReducer]: ' + action.teilnahmenummern);
 		return { ...state, teilnahmenummern: action.teilnahmenummern, teilnahmenummernLoaded: true }
 
 	}),

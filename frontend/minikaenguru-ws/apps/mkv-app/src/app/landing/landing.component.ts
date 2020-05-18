@@ -36,4 +36,8 @@ export class LandingComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	gotoSchulen() {
+		this.router.navigateByUrl('/schulen');
+	}
+
 }
