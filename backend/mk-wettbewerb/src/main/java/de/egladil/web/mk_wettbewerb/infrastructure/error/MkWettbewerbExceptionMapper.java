@@ -12,6 +12,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.NoContentException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -25,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.egladil.web.commons_validation.exception.InvalidInputException;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_wettbewerb.domain.error.AccessDeniedException;
 import de.egladil.web.mk_wettbewerb.domain.error.MkWettbewerbRuntimeException;
 
 /**
@@ -80,6 +82,14 @@ public class MkWettbewerbExceptionMapper implements ExceptionMapper<Throwable> {
 			LOG.error(msg);
 
 			return Response.status(status).entity(serialize(payload)).build();
+		}
+
+		if (exception instanceof AccessDeniedException) {
+
+			ResponsePayload payload = ResponsePayload
+				.messageOnly(MessagePayload.error("keine Berechtigung"));
+
+			return Response.status(Status.FORBIDDEN).entity(serialize(payload)).build();
 		}
 
 		if (exception instanceof MkWettbewerbRuntimeException) {

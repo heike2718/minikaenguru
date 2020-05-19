@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.wettbewerb.impl;
+package de.egladil.web.mk_gateway.domain.wettbewerb;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -14,23 +14,21 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_gateway.domain.wettbewerb.VeranstalterService;
 import de.egladil.web.mk_gateway.infrastructure.messaging.MkWettbewerbRestClient;
 import de.egladil.web.mk_gateway.infrastructure.messaging.MkWettbewerbRestException;
 
 /**
- * VeranstalterServiceImpl
+ * MkWettbewerbResourceAdapter
  */
 @ApplicationScoped
-public class VeranstalterServiceImpl implements VeranstalterService {
+public class MkWettbewerbResourceAdapter {
 
-	private static final Logger LOG = LoggerFactory.getLogger(VeranstalterServiceImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MkWettbewerbResourceAdapter.class);
 
 	@Inject
 	@RestClient
 	MkWettbewerbRestClient restClient;
 
-	@Override
 	public Response getTeilnahmenummern(final String uuid) {
 
 		try {
@@ -45,6 +43,23 @@ public class VeranstalterServiceImpl implements VeranstalterService {
 					.messageOnly(MessagePayload.error("unerwarteter Fehler beim Auruf des mk-wettbewerb-endpoints aufgetreten")))
 				.build();
 		}
+	}
+
+	public Response getSchuleDashboardModel(final String schulkuerzel, final String uuid) {
+
+		try {
+
+			Response response = restClient.getSchuleDetails(schulkuerzel, uuid);
+			return response;
+		} catch (MkWettbewerbRestException e) {
+
+			LOG.error("Konnte SchulDashboardModels nicht laden: " + e.getMessage());
+			return Response.serverError()
+				.entity(ResponsePayload
+					.messageOnly(MessagePayload.error("unerwarteter Fehler beim Auruf des mk-wettbewerb-Endpoints aufgetreten")))
+				.build();
+		}
+
 	}
 
 }

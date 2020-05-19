@@ -19,4 +19,6 @@ public class MkGatewayApp extends Application {
 	public static final String CLIENT_COOKIE_PREFIX = "mkv";
 
 	public static final String STAGE_DEV = "dev";
+
+	public static final String UUID_HEADER_NAME = "X-UUID";
 }

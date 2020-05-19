@@ -6,7 +6,7 @@ import { SchuleDashboardComponent } from './schule-dashboard/schule-dashboard.co
 
 const schulenRoutes: Routes = [
 	{
-		path: '',
+		path: 'schulen',
 		component: SchulenListComponent,
 		data: { animation: 'schulen' }
 	}, {

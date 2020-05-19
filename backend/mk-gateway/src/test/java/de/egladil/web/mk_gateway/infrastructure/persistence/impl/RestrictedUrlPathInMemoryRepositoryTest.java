@@ -102,6 +102,22 @@ public class RestrictedUrlPathInMemoryRepositoryTest {
 	}
 
 	@Test
+	void should_OfPathContainSchuldetails() {
+
+		Optional<RestrictedUrlPath> opt = repository.ofPath("/wettbewerb/schulen/FFUFUFUIF/details");
+
+		assertTrue(opt.isPresent());
+
+		RestrictedUrlPath restrictedUrlPath = opt.get();
+
+		assertEquals("/wettbewerb/schulen/*/details", restrictedUrlPath.path());
+
+		assertTrue(restrictedUrlPath.isAllowedForRolle(Rolle.LEHRER));
+		assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.PRIVAT));
+		assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.ADMIN));
+	}
+
+	@Test
 	void should_OfPathNotContainVersion() {
 
 		assertFalse(repository.ofPath("/version").isPresent());

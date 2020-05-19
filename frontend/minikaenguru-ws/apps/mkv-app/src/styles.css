@@ -6,7 +6,7 @@
 html,
 body {
   height: 100%;
-  width: 100%;
+  width: 90%;
 }
 
 body {
@@ -25,8 +25,8 @@ button {
   margin-bottom: 5px;
 }
 
-button > i {
-	margin-right: 5px;
+button>i {
+  margin-right: 5px;
 }
 
 .mkv-bordered {
@@ -71,6 +71,10 @@ footer {
 
 @media (max-width: 768px) {
 
+  body {
+	  width: 100%;
+  }
+
   .h4,
   body {
     font-size: 1rem;
@@ -86,7 +90,7 @@ footer {
   }
 
   .clickable {
-    width: 100%;
+	width: 95%;
   }
 
 }

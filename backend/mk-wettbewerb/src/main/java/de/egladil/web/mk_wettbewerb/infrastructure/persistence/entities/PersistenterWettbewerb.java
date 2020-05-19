@@ -21,9 +21,13 @@ import de.egladil.web.mk_wettbewerb.domain.wettbewerb.WettbewerbStatus;
  */
 @Entity
 @Table(name = "WETTBEWERBE")
-@NamedQueries(@NamedQuery(
-	name = "FIND_WETTBEWERB_BY_ID", query = "select w from PersistenterWettbewerb w where w.uuid = :uuid"))
+@NamedQueries({ @NamedQuery(
+	name = "FIND_WETTBEWERB_BY_ID", query = "select w from PersistenterWettbewerb w where w.uuid = :uuid"),
+	@NamedQuery(
+		name = "LOAD_WETTBEWERBE", query = "select w from PersistenterWettbewerb w") })
 public class PersistenterWettbewerb extends ConcurrencySafeEntity {
+
+	public static final String LOAD_WETTBEWERBE_QUERY = "LOAD_WETTBEWERBE";
 
 	public static final String FIND_WETTBEWERB_BY_ID_QUERY = "FIND_WETTBEWERB_BY_ID";
 

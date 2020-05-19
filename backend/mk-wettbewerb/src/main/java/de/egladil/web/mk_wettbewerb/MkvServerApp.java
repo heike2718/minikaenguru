@@ -10,4 +10,6 @@ import javax.ws.rs.core.Application;
 @ApplicationPath("/mk-wettbewerb")
 public class MkvServerApp extends Application {
 
+	public static final String UUID_HEADER_NAME = "X-UUID";
+
 }

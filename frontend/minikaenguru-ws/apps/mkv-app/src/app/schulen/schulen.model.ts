@@ -3,9 +3,14 @@ export interface Schule {
 	readonly name: string;
 	readonly ort: string;
 	readonly land: string;
-	readonly kollegium: Person[];
 	readonly aktuellAngemeldet : boolean;
-	readonly angemeldetDurch?: string;
+	readonly dashboardModel?: SchuleDashboardModel
+}
+
+export interface SchuleDashboardModel {
+	readonly kollegen?: Person[]; // erfordelich für schule-dashboard.component
+	readonly angemeldetDurch?: Person; // erfordelich für schule-dashboard.component
+	readonly anzahlTeilnahmen?: number; // erfordelich für schule-dashboard.component
 }
 
 export interface Person {
@@ -13,14 +18,13 @@ export interface Person {
 }
 
 
-export function getAndereKollegenAsString(kollegium: Person[], fullName: string): string {
-
-	const andere = kollegium.filter((person, _index, _array) => person.fullName !== fullName);
+// TODO pipe basteln!!!!
+export function kollegenAsString(kollegen: Person[]): string {
 
 	let result = '';
-	for(let i = 0; i < andere.length; i++ ) {
-		result += andere[i].fullName;
-		if (i < andere.length -1 ) {
+	for(let i = 0; i < kollegen.length; i++ ) {
+		result += kollegen[i].fullName;
+		if (i < kollegen.length -1 ) {
 			result += ', ';
 		}
 	}

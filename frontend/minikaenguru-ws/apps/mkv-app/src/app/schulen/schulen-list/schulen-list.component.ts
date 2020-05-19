@@ -23,7 +23,8 @@ export class SchulenListComponent implements OnInit {
 			ort: 'Wiesental',
 			land: 'Bayern',
 			aktuellAngemeldet: false,
-			kuerzel: 'HJFFFIG5'
+			kuerzel: 'HJFFFIG5',
+			anzahlTeilnahmen: 4
 		} as Schule);
 
 		const personen = [];
@@ -38,7 +39,10 @@ export class SchulenListComponent implements OnInit {
 			aktuellAngemeldet: true,
 			kuerzel: 'UIGHDG65',
 			kollegium: personen,
-			angemeldetDurch: 'Darth Vader'
+			angemeldetDurch: {
+				fullName: 'Darth Vader'
+			} as Person,
+			anzahlTeilnahmen: 2
 		} as Schule);
 
 	 }

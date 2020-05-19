@@ -39,7 +39,7 @@ public class Wettbewerb {
 
 		this.wettbewerbsende = LocalDate.of(wettbewerbId.jahr(), Month.AUGUST, 1);
 
-		this.status = WettbewerbStatus.PAUSE;
+		this.status = WettbewerbStatus.ERFASST;
 	}
 
 	public Wettbewerb withWettbewerbsbeginn(final LocalDate wettbewerbsbeginn) {
@@ -72,7 +72,7 @@ public class Wettbewerb {
 		return this;
 	}
 
-	public void anmeldungFreischalten() {
+	public void starten() {
 
 		this.status = WettbewerbStatus.ANMELDUNG;
 	}
@@ -87,9 +87,9 @@ public class Wettbewerb {
 		this.status = WettbewerbStatus.DOWNLOAD_PRIVAT;
 	}
 
-	public void pausieren() {
+	public void beenden() {
 
-		this.status = WettbewerbStatus.PAUSE;
+		this.status = WettbewerbStatus.BEENDET;
 	}
 
 	@Override
@@ -136,7 +136,7 @@ public class Wettbewerb {
 
 		switch (status) {
 
-		case PAUSE:
+		case BEENDET:
 			naechster = WettbewerbStatus.ANMELDUNG;
 			break;
 
@@ -149,7 +149,7 @@ public class Wettbewerb {
 			break;
 
 		case DOWNLOAD_PRIVAT:
-			naechster = WettbewerbStatus.PAUSE;
+			naechster = WettbewerbStatus.BEENDET;
 			break;
 
 		default:

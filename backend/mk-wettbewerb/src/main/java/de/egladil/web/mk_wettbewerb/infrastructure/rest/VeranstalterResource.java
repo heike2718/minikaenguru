@@ -8,12 +8,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -23,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_wettbewerb.MkvServerApp;
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
 import de.egladil.web.mk_wettbewerb.domain.personen.Veranstalter;
 import de.egladil.web.mk_wettbewerb.domain.personen.VeranstalterRepository;
@@ -30,7 +30,6 @@ import de.egladil.web.mk_wettbewerb.domain.personen.VeranstalterRepository;
 /**
  * VeranstalterResource
  */
-@RequestScoped
 @Path("/veranstalter")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -42,8 +41,8 @@ public class VeranstalterResource {
 	VeranstalterRepository veranstalterRepository;
 
 	@GET
-	@Path("/teilnahmenummern/{uuid}")
-	public Response getTeilnahmenummern(@PathParam(value = "uuid") final String uuid) {
+	@Path("/teilnahmenummern")
+	public Response getTeilnahmenummern(@HeaderParam(value = MkvServerApp.UUID_HEADER_NAME) final String uuid) {
 
 		LOG.info("Holen teilnahmenummern für " + uuid);
 
@@ -56,7 +55,7 @@ public class VeranstalterResource {
 			List<String> teilnahmenummern = veranstalter.teilnahmeIdentifier().stream().map(id -> id.identifier())
 				.collect(Collectors.toList());
 
-			ResponsePayload responsePayload = new ResponsePayload(MessagePayload.info("ok"), teilnahmenummern);
+			ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), teilnahmenummern);
 			return Response.ok(responsePayload).build();
 		}
 

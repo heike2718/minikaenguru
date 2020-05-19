@@ -105,7 +105,9 @@ public class TeilnahmenHibernateRepository implements TeilnahmenRepository {
 
 		if (Teilnahmeart.SCHULE == teilnahme.teilnahmeart()) {
 
-			persistenteTeilnahme.setSchulname(((Schulteilnahme) teilnahme).nameSchule());
+			Schulteilnahme schulteilnahme = (Schulteilnahme) teilnahme;
+			persistenteTeilnahme.setSchulname(schulteilnahme.nameSchule());
+			persistenteTeilnahme.setAngemeldetDurch(schulteilnahme.angemeldetDurchVeranstalterId().identifier());
 		}
 		persistenteTeilnahme.setTeilnahmeart(teilnahme.teilnahmeart());
 		persistenteTeilnahme.setTeilnahmenummer(teilnahme.teilnahmenummer().identifier());
@@ -164,7 +166,8 @@ public class TeilnahmenHibernateRepository implements TeilnahmenRepository {
 			break;
 
 		case SCHULE:
-			teilnahme = new Schulteilnahme(wettbewerbID, teilnahmenummer, persistente.getSchulname());
+			teilnahme = new Schulteilnahme(wettbewerbID, teilnahmenummer, persistente.getSchulname(),
+				new Identifier(persistente.getAngemeldetDurch()));
 			break;
 
 		default:
@@ -172,4 +175,5 @@ public class TeilnahmenHibernateRepository implements TeilnahmenRepository {
 		}
 		return teilnahme;
 	}
+
 }
