@@ -62,6 +62,8 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
 		if ("OPTIONS".equals(method)) {
 
+			LOG.info("keine Auth bei OPTIONS");
+
 			return;
 		}
 

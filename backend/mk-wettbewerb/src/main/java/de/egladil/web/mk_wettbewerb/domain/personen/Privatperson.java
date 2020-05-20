@@ -51,7 +51,7 @@ public class Privatperson extends Veranstalter {
 	}
 
 	@Override
-	protected List<Identifier> teilnahmeIdentifier() {
+	public List<Identifier> teilnahmeIdentifier() {
 
 		return Collections.unmodifiableList(this.teilnahmenummern);
 

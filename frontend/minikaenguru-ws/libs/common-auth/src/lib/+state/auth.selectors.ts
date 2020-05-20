@@ -5,8 +5,8 @@ import * as fromAuth from './auth.reducer';
 export const selectAuthState =
     createFeatureSelector<fromAuth.AuthState>(fromAuth.authFeatureKey);
 
-export const selectSession = createSelector(selectAuthState, s => s.session);
-export const selectUser = createSelector(selectSession, s => s.user);
-export const selectIsLoggedIn = createSelector(selectSession, auth =>  auth.user);
-export const selectIsLoggedOut = createSelector(selectSession, auth =>  !auth.user);
+export const session = createSelector(selectAuthState, s => s.session);
+export const user = createSelector(session, s => s.user);
+export const isLoggedIn = createSelector(session, s =>  s.user ? true : false);
+export const isLoggedOut = createSelector(isLoggedIn, loggedIn => !loggedIn);
 

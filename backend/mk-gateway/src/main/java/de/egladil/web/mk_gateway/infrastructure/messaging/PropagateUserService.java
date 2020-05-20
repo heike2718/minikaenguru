@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_gateway.domain.event.DomainEvent;
+import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
 import de.egladil.web.mk_gateway.domain.signup.LehrerCreated;
 import de.egladil.web.mk_gateway.domain.signup.PrivatmenschCreated;
 
@@ -32,7 +32,7 @@ public class PropagateUserService {
 	@RestClient
 	MkWettbewerbRestClient mkWettbewerbRestClient;
 
-	public void handleDomainEvent(@Observes final DomainEvent event) {
+	public void handleDomainEvent(@Observes final MkGatewayDomainEvent event) {
 
 		if (LehrerCreated.class.getSimpleName().equals(event.typeName())) {
 

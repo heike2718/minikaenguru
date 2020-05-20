@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, ErrorHandler } from '@angular/core';
 
 import { AppComponent } from './app.component';
@@ -12,7 +13,7 @@ import { CommonAuthModule } from '@minikaenguru-ws/common-auth';
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import {RouterStateSerializer, StoreRouterConnectingModule, RouterState} from "@ngrx/router-store";
+import {RouterStateSerializer, StoreRouterConnectingModule, RouterState, routerReducer} from "@ngrx/router-store";
 import { environment } from '../environments/environment';
 import { NotFoundComponent } from './not-found.component';
 import { LandingComponent } from './landing/landing.component';
@@ -22,6 +23,9 @@ import { EffectsModule } from '@ngrx/effects';
 import { CustomRouterStateSerializer } from './shared/utils';
 import { RegistrationModule } from './registration/registration.module';
 import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { SchulenModule } from './schulen/schulen.module';
+
 
 
 @NgModule({
@@ -33,7 +37,7 @@ import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
 	],
 	imports: [
 		BrowserModule,
-		AppRoutingModule,
+		BrowserAnimationsModule,
 		CommonSchulkatalogModule.forRoot({
 			baseUrl: environment.katalogApiUrl,
 			devmode: !environment.production,
@@ -48,9 +52,13 @@ import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
 		}),
 		CommonAuthModule.forRoot({
 			baseUrl: environment.apiUrl,
-			storagePrefix: 'mkv_'
+			production: environment.production,
+			storagePrefix: environment.storageKeyPrefix,
+			loginSuccessUrl: '/dashboard'
 		}),
 		RegistrationModule,
+		DashboardModule,
+		SchulenModule,
 		StoreModule.forRoot(reducers, {
 			metaReducers,
 			runtimeChecks: {
@@ -66,7 +74,8 @@ import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
 			stateKey:'router',
 			routerState: RouterState.Minimal
 		}),
-		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
+		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+		AppRoutingModule, // <-- immer am Ende, damit die wildcard-route als letzte deklariert bleibt
 	],
 	providers: [
 		GlobalErrorHandlerService,

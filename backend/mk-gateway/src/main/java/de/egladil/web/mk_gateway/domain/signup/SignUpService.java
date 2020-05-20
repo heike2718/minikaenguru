@@ -13,7 +13,7 @@ import javax.transaction.Transactional;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.event.DomainEvent;
+import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.user.UserRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
@@ -28,11 +28,11 @@ public class SignUpService {
 	UserRepository userRepository;
 
 	@Inject
-	Event<DomainEvent> createdEvent;
+	Event<MkGatewayDomainEvent> createdEvent;
 
 	private boolean test;
 
-	private DomainEvent event;
+	private MkGatewayDomainEvent event;
 
 	public static SignUpService createForTest(final UserRepository userRepository) {
 
@@ -91,7 +91,7 @@ public class SignUpService {
 		return user;
 	}
 
-	DomainEvent event() {
+	MkGatewayDomainEvent event() {
 
 		return event;
 	}

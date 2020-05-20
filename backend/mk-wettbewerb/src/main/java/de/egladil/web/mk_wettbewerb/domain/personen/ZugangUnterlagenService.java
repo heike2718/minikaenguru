@@ -39,7 +39,7 @@ public class ZugangUnterlagenService {
 
 	public boolean hatZugang(final Veranstalter veranstalter, final Wettbewerb wettbewerb) {
 
-		if (wettbewerb.status() == WettbewerbStatus.PAUSE) {
+		if (wettbewerb.status() == WettbewerbStatus.BEENDET || wettbewerb.status() == WettbewerbStatus.ERFASST) {
 
 			return false;
 		}

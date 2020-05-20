@@ -96,7 +96,7 @@ public class ZugangUnterlagenServiceTest {
 		{
 
 			Schulteilnahme teilnahme = new Schulteilnahme(wettbewerbId, new Identifier(SCHULTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB),
-				"Baumschule");
+				"Baumschule", new Identifier("asdgqguwgquogowgfuq"));
 			Mockito
 				.when(teilnahmenRepository.ofTeilnahmenummerArtWettbewerb(SCHULTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB,
 					Teilnahmeart.SCHULE, wettbewerbId))
@@ -129,10 +129,24 @@ public class ZugangUnterlagenServiceTest {
 	class ZugangLehrerTest {
 
 		@Test
-		void should_HatZugangReturnFalse_when_WettbewerbPausiert() {
+		void should_HatZugangReturnFalse_when_WettbewerbErfasst() {
 
 			// Arrange
-			assertEquals(WettbewerbStatus.PAUSE, wettbewerb.status());
+			assertEquals(WettbewerbStatus.ERFASST, wettbewerb.status());
+
+			// Act + Assert
+			assertEquals(false, service.hatZugang(lehrerAngemeldet, wettbewerb));
+			assertEquals(false, service.hatZugang(lehrerNichtAngemeldet, wettbewerb));
+			assertEquals(false, service.hatZugang(lehrerSonderzugangsberechtigung, wettbewerb));
+			assertEquals(false, service.hatZugang(lehrerZugangsberechtigungEntzogen, wettbewerb));
+
+		}
+
+		@Test
+		void should_HatZugangReturnFalse_when_WettbewerbBeendet() {
+
+			// Arrange
+			wettbewerb.beenden();
 
 			// Act + Assert
 			assertEquals(false, service.hatZugang(lehrerAngemeldet, wettbewerb));
@@ -146,7 +160,7 @@ public class ZugangUnterlagenServiceTest {
 		void should_HatZugangReturnFalse_when_WettbewerbAnmeldung() {
 
 			// Arrange
-			wettbewerb.anmeldungFreischalten();
+			wettbewerb.starten();
 
 			// Act + Assert
 			assertEquals(false, service.hatZugang(lehrerAngemeldet, wettbewerb));
@@ -159,7 +173,7 @@ public class ZugangUnterlagenServiceTest {
 		void should_HatZugangReturnTrue_when_WettbewerbAnmeldung() {
 
 			// Arrange
-			wettbewerb.anmeldungFreischalten();
+			wettbewerb.starten();
 
 			// Act + Assert
 			assertEquals(true, service.hatZugang(lehrerSonderzugangsberechtigung, wettbewerb));
@@ -220,10 +234,24 @@ public class ZugangUnterlagenServiceTest {
 	class ZugangPrivatmenschTest {
 
 		@Test
-		void should_HatZugangReturnFalse_when_WettbewerbPausiert() {
+		void should_HatZugangReturnFalse_when_WettbewerbErfasst() {
 
 			// Arrange
-			assertEquals(WettbewerbStatus.PAUSE, wettbewerb.status());
+			assertEquals(WettbewerbStatus.ERFASST, wettbewerb.status());
+
+			// Act + Assert
+			assertEquals(false, service.hatZugang(privatpersonAngemeldet, wettbewerb));
+			assertEquals(false, service.hatZugang(privatpersonNichtAngemeldet, wettbewerb));
+			assertEquals(false, service.hatZugang(privatpersonSonderzugangsberechtigung, wettbewerb));
+			assertEquals(false, service.hatZugang(privatpersonZugangsberechtigungEntzogen, wettbewerb));
+
+		}
+
+		@Test
+		void should_HatZugangReturnFalse_when_WettbewerbBeendet() {
+
+			// Arrange
+			wettbewerb.beenden();
 
 			// Act + Assert
 			assertEquals(false, service.hatZugang(privatpersonAngemeldet, wettbewerb));
@@ -237,7 +265,7 @@ public class ZugangUnterlagenServiceTest {
 		void should_HatZugangReturnFalse_when_WettbewerbAnmeldung() {
 
 			// Arrange
-			wettbewerb.anmeldungFreischalten();
+			wettbewerb.starten();
 
 			// Act + Assert
 			assertEquals(false, service.hatZugang(privatpersonAngemeldet, wettbewerb));
@@ -250,7 +278,7 @@ public class ZugangUnterlagenServiceTest {
 		void should_HatZugangReturnTrue_when_WettbewerbAnmeldung() {
 
 			// Arrange
-			wettbewerb.anmeldungFreischalten();
+			wettbewerb.starten();
 
 			// Act + Assert
 			assertEquals(true, service.hatZugang(privatpersonSonderzugangsberechtigung, wettbewerb));

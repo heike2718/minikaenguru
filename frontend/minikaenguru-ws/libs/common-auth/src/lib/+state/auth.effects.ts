@@ -17,7 +17,6 @@ export class AuthEffects {
 
 					const user = action.session.user;
 					if (user) {
-						console.log('there is a user :D');
 						localStorage.setItem(this.config.storagePrefix + STORAGE_KEY_ID_REFERENCE,
 							JSON.stringify(action.session.user.idReference));
 
@@ -40,11 +39,11 @@ export class AuthEffects {
 			.pipe(
 				ofType(AuthActions.logout),
 				tap(_action => {
-
 					localStorage.removeItem(this.config.storagePrefix + STORAGE_KEY_DEV_SESSION_ID);
 					localStorage.removeItem(this.config.storagePrefix + STORAGE_KEY_ID_REFERENCE);
 					localStorage.removeItem(this.config.storagePrefix + STORAGE_KEY_SESSION_EXPIRES_AT);
 					localStorage.removeItem(this.config.storagePrefix + STORAGE_KEY_USER);
+
 				})
 			)
 		, { dispatch: false });

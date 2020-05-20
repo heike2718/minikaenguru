@@ -84,7 +84,7 @@ public class AddLehrerServiceTest extends AbstractDomainServiceTest {
 		assertEquals(fullName, veranstalter.fullName());
 
 		Lehrer lehrer = (Lehrer) veranstalter;
-		assertEquals(schulkuerzel, lehrer.persistierbareTeilnahmekuerzel());
+		assertEquals(schulkuerzel, lehrer.persistierbareTeilnahmenummern());
 
 		LehrerRegisteredForSchule event = service.event();
 		assertNotNull(event);
