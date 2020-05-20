@@ -148,7 +148,7 @@ public class TeilnahmenHibernateRepository implements TeilnahmenRepository {
 		}
 
 		return em.createNamedQuery(PersistenteTeilnahme.FIND_TEILNAHMEN_BY_NUMMER_QUERY, PersistenteTeilnahme.class)
-			.setParameter("", teilnahmenummer).getResultList();
+			.setParameter("teilnahmenummer", teilnahmenummer).getResultList();
 
 	}
 

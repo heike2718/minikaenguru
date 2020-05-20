@@ -21,6 +21,7 @@ import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_kataloge.application.KatalogFacade;
 import de.egladil.web.mk_kataloge.domain.KatalogItem;
+import de.egladil.web.mk_kataloge.domain.apimodel.SchuleAPIModel;
 
 /**
  * KatalogItemsResource
@@ -78,11 +79,11 @@ public class KatalogItemsResource {
 	}
 
 	@GET
-	@Path("/schulen/{commaseparatedKuerzel}")
+	@Path("/schulen/{kommaseparierteKuerzel}")
 	public Response findSchulenMitKuerzeln(@PathParam(
-		value = "commaseparatedKuerzel") @Kuerzel final String commaseparatedKuerzel) {
+		value = "kommaseparierteKuerzel") @Kuerzel final String kommaseparierteKuerzel) {
 
-		List<KatalogItem> trefferliste = katalogFacade.findSchulen(commaseparatedKuerzel);
+		List<SchuleAPIModel> trefferliste = katalogFacade.findSchulen(kommaseparierteKuerzel);
 
 		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.info("OK"), trefferliste);
 

@@ -2,7 +2,7 @@
 // Project: mk-wettbewerb
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_wettbewerb.domain.teilnahmen;
+package de.egladil.web.mk_gateway.domain.wettbewerb;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import de.egladil.web.mk_gateway.domain.wettbewerb.SchulteilnahmeChanged;
 
 /**
  * SchulteilnahmeChangedTest

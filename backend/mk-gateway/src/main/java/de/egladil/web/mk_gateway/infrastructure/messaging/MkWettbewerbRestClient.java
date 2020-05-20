@@ -51,5 +51,10 @@ public interface MkWettbewerbRestClient {
 	@GET
 	@Path("/schulen/details/{schulkuerzel}")
 	Response getSchuleDetails(@PathParam(value = "schulkuerzel") final String schulkuerzel, @HeaderParam(
-		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName);
+		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName) throws MkWettbewerbRestException;
+
+	@GET
+	@Path("/schulen")
+	Response findSchulen(@HeaderParam(
+		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName) throws MkWettbewerbRestException;
 }

@@ -4,12 +4,10 @@ import * as VeranstalterActions from './veranstalter.actions';
 export const veranstalterFeatureKey = 'mkv-app-veranstalter';
 
 export interface VeranstalterState {
-	teilnahmenummern: string[],
-	teilnahmenummernLoaded: boolean
 };
 
 export const initialVeranstalterState: VeranstalterState = {
-	teilnahmenummern: [],
+	teilnahmenummern: undefined,
 	teilnahmenummernLoaded: false
 };
 

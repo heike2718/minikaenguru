@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { Schule, Person, kollegenAsString, SchuleDashboardModel } from '../schulen.model';
+import { Schule, Person, SchuleDashboardModel } from '../schulen.model';
 import { Router } from '@angular/router';
 
 @Component({
@@ -20,18 +20,10 @@ export class SchuleDashboardComponent implements OnInit {
 
 	constructor(private router: Router) {
 
-		const personen = [];
-		personen.push({
-			fullName: 'Darth Vader'
-		} as Person);
-
-		// wird nachgeladen durch einen Sideeffect.
 		const dashboardModel = {
-			kollegium: personen,
+			kollegen: 'Darth Vader',
 			anzahlTeilnahmen: 4,
-			angemeldetDurch: {
-				fullName: 'Darth Vader'
-			} as Person
+			angemeldetDurch: 'Darth Vader'
 		} as SchuleDashboardModel;
 
 		this.schule = {
@@ -43,7 +35,7 @@ export class SchuleDashboardComponent implements OnInit {
 			dashboardModel: dashboardModel
 		};
 
-		this.kollegium = kollegenAsString(dashboardModel.kollegen);
+		this.kollegium = dashboardModel.kollegen;
 	}
 
 	ngOnInit(): void {

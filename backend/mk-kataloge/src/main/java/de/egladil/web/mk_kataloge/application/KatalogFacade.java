@@ -7,6 +7,7 @@ package de.egladil.web.mk_kataloge.application;
 import java.util.List;
 
 import de.egladil.web.mk_kataloge.domain.KatalogItem;
+import de.egladil.web.mk_kataloge.domain.apimodel.SchuleAPIModel;
 
 /**
  * KatalogFacade
@@ -48,9 +49,9 @@ public interface KatalogFacade {
 	/**
 	 * Holt alle Schulen mit den gegebenen Kürzeln.
 	 *
-	 * @param  kuerzelliste
-	 *                      List
-	 * @return              String
+	 * @param  kommaseparierteKuerzel
+	 *                                String
+	 * @return                        List
 	 */
-	List<KatalogItem> findSchulen(String commaseparatedKuerzel);
+	List<SchuleAPIModel> findSchulen(String kommaseparierteKuerzel);
 }

@@ -45,7 +45,14 @@ public class RestrictedUrlPathInMemoryRepository implements RestrictedUrlPathRep
 
 		{
 
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/schulen/*/details",
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/lehrer/schulen",
+				Arrays.asList(new Rolle[] { Rolle.LEHRER }));
+			paths.add(restrictedPath);
+		}
+
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/lehrer/schulen/*/details",
 				Arrays.asList(new Rolle[] { Rolle.LEHRER }));
 			paths.add(restrictedPath);
 		}
@@ -83,7 +90,14 @@ public class RestrictedUrlPathInMemoryRepository implements RestrictedUrlPathRep
 			return opt;
 		}
 
-		String[] tokens = path.toLowerCase().split("/");
+		String pathWithMappedQueryParameters = path;
+
+		if (path.contains("?")) {
+
+			pathWithMappedQueryParameters = pathWithMappedQueryParameters.replace("?", "/");
+		}
+
+		String[] tokens = pathWithMappedQueryParameters.toLowerCase().split("/");
 
 		List<RestrictedUrlPath> trefferliste = this.paths.stream().filter(key -> key.tokens().length == tokens.length)
 			.collect(Collectors.toList());
@@ -104,13 +118,13 @@ public class RestrictedUrlPathInMemoryRepository implements RestrictedUrlPathRep
 				return Optional.empty();
 			}
 
-			if (sum.equalsIgnoreCase(path)) {
+			if (sum.equalsIgnoreCase(pathWithMappedQueryParameters)) {
 
 				kandidaten.add(urlPath);
 			}
 		}
 
-		String thePath = path.toLowerCase();
+		String thePath = pathWithMappedQueryParameters.toLowerCase();
 
 		for (RestrictedUrlPath up : kandidaten) {
 

@@ -23,7 +23,6 @@ import { EffectsModule } from '@ngrx/effects';
 import { CustomRouterStateSerializer } from './shared/utils';
 import { RegistrationModule } from './registration/registration.module';
 import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
-import { VeranstalterEffects } from './dashboard/+state/veranstalter.effects';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { SchulenModule } from './schulen/schulen.module';
 

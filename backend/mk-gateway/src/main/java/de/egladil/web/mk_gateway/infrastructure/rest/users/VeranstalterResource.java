@@ -24,12 +24,12 @@ import de.egladil.web.mk_gateway.domain.signup.SignUpResourceOwner;
 import de.egladil.web.mk_gateway.domain.signup.SignUpService;
 
 /**
- * WettbewerbVeranstalterResource ist die Resource zu den Minikänguru-Veranstaltern.
+ * VeranstalterResource ist die Resource zu den Minikänguru-Veranstaltern.
  */
 @RequestScoped
-@Path("/wettbewerb/veranstalter")
+@Path("/wettbewerb")
 @Produces(MediaType.APPLICATION_JSON)
-public class WettbewerbVeranstalterResource {
+public class VeranstalterResource {
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
@@ -40,6 +40,7 @@ public class WettbewerbVeranstalterResource {
 	JWTService jwtService;
 
 	@POST
+	@Path("/veranstalter")
 	public Response createUser(final AuthResult authResult) {
 
 		SignUpResourceOwner signUpResourceOwner = new AuthResultToResourceOwnerMapper(jwtService).apply(authResult);

@@ -12,8 +12,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
+import de.egladil.web.mk_wettbewerb.domain.apimodel.SchuleDashboardModel;
 import de.egladil.web.mk_wettbewerb.domain.error.AccessDeniedException;
-import de.egladil.web.mk_wettbewerb.domain.guimodel.SchuleDashboardModel;
 import de.egladil.web.mk_wettbewerb.domain.personen.Person;
 import de.egladil.web.mk_wettbewerb.domain.personen.SchulkollegienRepository;
 import de.egladil.web.mk_wettbewerb.domain.personen.Schulkollegium;
@@ -44,13 +44,13 @@ public class SchuleDetailsService {
 	@Inject
 	VeranstalterRepository veranstalterRepository;
 
-	public SchuleDashboardModel ermittleSchuldetails(final Identifier lehrerID, final Identifier schuleID) throws AccessDeniedException {
+	public SchuleDashboardModel ermittleSchuldetails(final Identifier schuleID, final Identifier lehrerID) throws AccessDeniedException {
 
 		veranstalterAuthService.checkPermissionForTeilnahmenummer(lehrerID, schuleID);
 
 		Optional<Schulkollegium> optKollegium = schulkollegienRepository.ofSchulkuerzel(schuleID);
 
-		SchuleDashboardModel result = new SchuleDashboardModel();
+		SchuleDashboardModel result = new SchuleDashboardModel(schuleID.identifier());
 
 		if (optKollegium.isPresent()) {
 
@@ -82,6 +82,8 @@ public class SchuleDetailsService {
 
 					result.withAngemeldetDurch(optAnmelder.get().person());
 				}
+
+				result.withNameUrkunde(schulteilnahme.nameSchule());
 
 			}
 		}

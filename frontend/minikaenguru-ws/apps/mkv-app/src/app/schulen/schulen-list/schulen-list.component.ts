@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { Schule, Person } from '../schulen.model';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../reducers';
+import { allSchulen } from '../+state/schulen.selectors';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'mkv-schulen-list',
@@ -9,49 +12,22 @@ import { Schule, Person } from '../schulen.model';
 })
 export class SchulenListComponent implements OnInit {
 
-
 	devMode = !environment.production;
 
-	schulen: Schule[];
+	schulen$ = this.appStore.select(allSchulen);
 
-	constructor() {
-
-		this.schulen = [];
-
-		this.schulen.push({
-			name: 'Blümchenschule',
-			ort: 'Wiesental',
-			land: 'Bayern',
-			aktuellAngemeldet: false,
-			kuerzel: 'HJFFFIG5',
-			anzahlTeilnahmen: 4
-		} as Schule);
-
-		const personen = [];
-		personen.push({
-			fullName: 'Darth Vader'
-		} as Person);
-
-		this.schulen.push({
-			name: 'Elefantenschule',
-			ort: 'Zoo',
-			land: 'Bayern',
-			aktuellAngemeldet: true,
-			kuerzel: 'UIGHDG65',
-			kollegium: personen,
-			angemeldetDurch: {
-				fullName: 'Darth Vader'
-			} as Person,
-			anzahlTeilnahmen: 2
-		} as Schule);
-
-	 }
+	constructor(private appStore: Store<AppState>, private router: Router) {
+	}
 
 	ngOnInit(): void {
 	}
 
 	addSchule(): void {
 		console.log('hier neue Schule auswählen lassen')
+	}
+
+	gotoDashboard(): void {
+		this.router.navigateByUrl('/dashboard');
 	}
 
 }

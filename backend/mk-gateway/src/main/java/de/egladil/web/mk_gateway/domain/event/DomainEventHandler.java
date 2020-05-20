@@ -28,7 +28,7 @@ public class DomainEventHandler {
 	@Inject
 	EventRepository eventRepository;
 
-	public void handleDomainEvent(@Observes final DomainEvent event) {
+	public void handleDomainEvent(@Observes final MkGatewayDomainEvent event) {
 
 		try {
 

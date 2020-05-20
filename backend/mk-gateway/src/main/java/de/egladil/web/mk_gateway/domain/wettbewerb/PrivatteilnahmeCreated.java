@@ -2,14 +2,16 @@
 // Project: mk-wettbewerb
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_wettbewerb.domain.teilnahmen;
+package de.egladil.web.mk_gateway.domain.wettbewerb;
 
-import de.egladil.web.mk_wettbewerb.domain.event.WettbewerbDomainEvent;
+import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
+import de.egladil.web.mk_gateway.domain.semantik.DomainEvent;
 
 /**
  * PrivatteilnahmeCreated
  */
-public class PrivatteilnahmeCreated extends AbstractTeilnahmeEvent implements WettbewerbDomainEvent {
+@DomainEvent
+public class PrivatteilnahmeCreated extends AbstractTeilnahmeEvent implements MkGatewayDomainEvent {
 
 	public PrivatteilnahmeCreated(final Integer wettbewerbsjahr, final String teilnahmenummer, final String createdBy) {
 

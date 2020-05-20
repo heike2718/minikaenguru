@@ -7,6 +7,6 @@ export const loadTeilnahmenummern = createAction(
 
 export const allTeilnahmenummernLoaded = createAction(
     "[Load teilnahmenummern Effect] All teilnahmenummern loaded",
-    props<{teilnahmenummern: string[]}>()
+    props<{teilnahmenummern: string}>()
 );
 

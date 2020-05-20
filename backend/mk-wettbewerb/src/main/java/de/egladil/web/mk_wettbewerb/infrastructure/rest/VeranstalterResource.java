@@ -17,6 +17,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +56,7 @@ public class VeranstalterResource {
 			List<String> teilnahmenummern = veranstalter.teilnahmeIdentifier().stream().map(id -> id.identifier())
 				.collect(Collectors.toList());
 
-			ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), teilnahmenummern);
+			ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), StringUtils.join(teilnahmenummern, ","));
 			return Response.ok(responsePayload).build();
 		}
 

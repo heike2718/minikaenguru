@@ -52,7 +52,10 @@ button>i {
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
   -webkit-transition: .25s box-shadow;
   transition: .25s box-shadow;
-  width: 50%;
+}
+
+.clickabe-stacked {
+	width: 50%;
 }
 
 .clickable div:hover {
@@ -89,7 +92,7 @@ footer {
     font-size: 1.2rem;
   }
 
-  .clickable {
+  .clickabe-stacked {
 	width: 95%;
   }
 

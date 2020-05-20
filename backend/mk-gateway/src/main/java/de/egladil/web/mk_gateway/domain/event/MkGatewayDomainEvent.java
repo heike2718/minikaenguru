@@ -7,9 +7,9 @@ package de.egladil.web.mk_gateway.domain.event;
 import java.time.LocalDateTime;
 
 /**
- * DomainEvent
+ * MkGatewayDomainEvent
  */
-public interface DomainEvent {
+public interface MkGatewayDomainEvent {
 
 	/**
 	 * @return LocalDateTime

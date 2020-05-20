@@ -28,12 +28,13 @@ public interface MkKatalogeRestClient {
 	/**
 	 * Response.entity.data hat die Signatur von List<KatalogItem>
 	 *
-	 * @param  commaseparatedKuerzel
-	 * @return
+	 * @param  kommaseparierteKuerzel
+	 *                                String
+	 * @return                        Response Liste von KatalogItems als data.
 	 */
 	@GET
-	@Path("/schulen/{commaseparatedKuerzel}")
+	@Path("/kataloge/schulen/{kommaseparierteKuerzel}")
 	Response findSchulenMitKuerzeln(@PathParam(
-		value = "commaseparatedKuerzel") @Kuerzel final String commaseparatedKuerzel);
+		value = "kommaseparierteKuerzel") @Kuerzel final String kommaseparierteKuerzel) throws MkKatalogeRestException;
 
 }

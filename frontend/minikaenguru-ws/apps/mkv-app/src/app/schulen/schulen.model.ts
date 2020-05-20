@@ -8,29 +8,13 @@ export interface Schule {
 }
 
 export interface SchuleDashboardModel {
-	readonly kollegen?: Person[]; // erfordelich für schule-dashboard.component
-	readonly angemeldetDurch?: Person; // erfordelich für schule-dashboard.component
-	readonly anzahlTeilnahmen?: number; // erfordelich für schule-dashboard.component
+	readonly nameUrkunde?: string;
+	readonly kollegen?: string; // kommaseparierte fullName
+	readonly angemeldetDurch?: string; // fullName
+	readonly anzahlTeilnahmen?: number;
 }
 
 export interface Person {
 	readonly fullName: string;
 }
-
-
-// TODO pipe basteln!!!!
-export function kollegenAsString(kollegen: Person[]): string {
-
-	let result = '';
-	for(let i = 0; i < kollegen.length; i++ ) {
-		result += kollegen[i].fullName;
-		if (i < kollegen.length -1 ) {
-			result += ', ';
-		}
-	}
-
-	return result;
-
-}
-
 

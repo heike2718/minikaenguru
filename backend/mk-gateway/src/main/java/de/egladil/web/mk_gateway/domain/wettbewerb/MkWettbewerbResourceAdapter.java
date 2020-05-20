@@ -45,6 +45,13 @@ public class MkWettbewerbResourceAdapter {
 		}
 	}
 
+	/**
+	 * Läd die Details fürs Schule-Dashboard.
+	 *
+	 * @param  schulkuerzel
+	 * @param  uuid
+	 * @return
+	 */
 	public Response getSchuleDashboardModel(final String schulkuerzel, final String uuid) {
 
 		try {
@@ -60,6 +67,27 @@ public class MkWettbewerbResourceAdapter {
 				.build();
 		}
 
+	}
+
+	/**
+	 * Läd die Schulen des gegebenen Lehrers.
+	 *
+	 * @param  commaseparatedSchulkuerzel
+	 * @param  uuid
+	 *                                    String UUID eines Lehrers.
+	 * @return                            Response
+	 */
+	public Response findSchulen(final String uuid) throws MkWettbewerbRestException {
+
+		try {
+
+			Response response = restClient.findSchulen(uuid);
+			return response;
+		} catch (MkWettbewerbRestException e) {
+
+			LOG.error("Konnte Anmeldeinfos zu Schulen nicht laden: " + e.getMessage());
+			throw e;
+		}
 	}
 
 }

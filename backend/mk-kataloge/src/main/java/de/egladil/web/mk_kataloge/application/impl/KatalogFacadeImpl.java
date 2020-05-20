@@ -20,6 +20,7 @@ import de.egladil.web.mk_kataloge.application.KatalogFacade;
 import de.egladil.web.mk_kataloge.domain.KatalogItem;
 import de.egladil.web.mk_kataloge.domain.KatalogItemNameComparator;
 import de.egladil.web.mk_kataloge.domain.KatalogeRepository;
+import de.egladil.web.mk_kataloge.domain.apimodel.SchuleAPIModel;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Ort;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.OrtToKatalogItemMapper;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
@@ -68,7 +69,7 @@ public class KatalogFacadeImpl implements KatalogFacade {
 	}
 
 	@Override
-	public List<KatalogItem> findSchulen(final String commaseparatedKuerzel) {
+	public List<SchuleAPIModel> findSchulen(final String commaseparatedKuerzel) {
 
 		String[] kuerzeltokens = StringUtils.split(commaseparatedKuerzel, ",");
 
@@ -82,7 +83,12 @@ public class KatalogFacadeImpl implements KatalogFacade {
 		}
 
 		List<Schule> schulen = katalogRepository.findSchulenWithKuerzeln(relevanteKuerzel);
-		return mapSchulenToKatalogItems(schulen);
+
+		List<SchuleAPIModel> result = schulen.stream()
+			.map(s -> new SchuleAPIModel(s.getKuerzel(), s.getName(), s.getOrtName(), s.getLandName()))
+			.collect(Collectors.toList());
+
+		return result;
 	}
 
 	/**
