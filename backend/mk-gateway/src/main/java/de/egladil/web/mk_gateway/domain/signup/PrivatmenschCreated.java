@@ -10,13 +10,13 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import de.egladil.web.mk_gateway.domain.event.DomainEvent;
+import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**
  * PrivatmenschCreated
  */
-public class PrivatmenschCreated implements DomainEvent {
+public class PrivatmenschCreated implements MkGatewayDomainEvent {
 
 	private final LocalDateTime occouredOn;
 

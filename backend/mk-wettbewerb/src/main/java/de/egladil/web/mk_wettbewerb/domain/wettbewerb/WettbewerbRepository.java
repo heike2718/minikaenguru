@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_wettbewerb.domain.wettbewerb;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -34,5 +35,12 @@ public interface WettbewerbRepository {
 	 *                   Wettbewerb
 	 */
 	void changeWettbewerb(Wettbewerb wettbewerb);
+
+	/**
+	 * Läd alle Wettbewerbe.
+	 *
+	 * @return List
+	 */
+	List<Wettbewerb> loadWettbewerbe();
 
 }

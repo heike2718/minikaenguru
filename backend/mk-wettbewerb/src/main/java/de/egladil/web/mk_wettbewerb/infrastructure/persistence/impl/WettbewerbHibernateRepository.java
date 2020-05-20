@@ -10,6 +10,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -31,6 +32,15 @@ public class WettbewerbHibernateRepository implements WettbewerbRepository {
 	EntityManager em;
 
 	@Override
+	public List<Wettbewerb> loadWettbewerbe() {
+
+		List<PersistenterWettbewerb> persistenteWettbewerbe = em
+			.createNamedQuery(PersistenterWettbewerb.LOAD_WETTBEWERBE_QUERY, PersistenterWettbewerb.class).getResultList();
+
+		return persistenteWettbewerbe.stream().map(pw -> mapFromPersistenterWettbewerb(pw)).collect(Collectors.toList());
+	}
+
+	@Override
 	public Optional<Wettbewerb> wettbewerbMitID(final WettbewerbID wettbewerbID) {
 
 		Optional<PersistenterWettbewerb> opt = this.findPersistentenWetbewerbByUUID(wettbewerbID.toString());
@@ -41,15 +51,24 @@ public class WettbewerbHibernateRepository implements WettbewerbRepository {
 		}
 
 		PersistenterWettbewerb persistenterWettbewerb = opt.get();
+		Wettbewerb wettbewerb = mapFromPersistenterWettbewerb(persistenterWettbewerb);
 
-		Wettbewerb wettbewerb = new Wettbewerb(wettbewerbID)
+		return Optional.of(wettbewerb);
+	}
+
+	/**
+	 * @param  persistenterWettbewerb
+	 * @return
+	 */
+	private Wettbewerb mapFromPersistenterWettbewerb(final PersistenterWettbewerb persistenterWettbewerb) {
+
+		Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(Integer.valueOf(persistenterWettbewerb.getUuid())))
 			.withDatumFreischaltungLehrer(transform(persistenterWettbewerb.getDatumFreischaltungLehrer()))
 			.withDatumFreischaltungPrivat(transform(persistenterWettbewerb.getDatumFreischaltungPrivat()))
 			.withWettbewerbsbeginn(transform(persistenterWettbewerb.getWettbewerbsbeginn()))
 			.withWettbewerbsende(transform(persistenterWettbewerb.getWettbewerbsende()))
 			.withStatus(persistenterWettbewerb.getStatus());
-
-		return Optional.of(wettbewerb);
+		return wettbewerb;
 	}
 
 	private Optional<PersistenterWettbewerb> findPersistentenWetbewerbByUUID(final String uuid) {
@@ -79,7 +98,7 @@ public class WettbewerbHibernateRepository implements WettbewerbRepository {
 		}
 
 		PersistenterWettbewerb persistenterWettbewerb = opt.get();
-		map(wettbewerb, persistenterWettbewerb);
+		mapFromWettbewerb(wettbewerb, persistenterWettbewerb);
 
 		em.merge(persistenterWettbewerb);
 
@@ -101,7 +120,7 @@ public class WettbewerbHibernateRepository implements WettbewerbRepository {
 	 * @param wettbewerb
 	 * @param persistenterWettbewerb
 	 */
-	private void map(final Wettbewerb wettbewerb, final PersistenterWettbewerb persistenterWettbewerb) {
+	private void mapFromWettbewerb(final Wettbewerb wettbewerb, final PersistenterWettbewerb persistenterWettbewerb) {
 
 		persistenterWettbewerb.setDatumFreischaltungLehrer(transform(wettbewerb.datumFreischaltungLehrer()));
 		persistenterWettbewerb.setDatumFreischaltungPrivat(transform(wettbewerb.datumFreischaltungPrivat()));

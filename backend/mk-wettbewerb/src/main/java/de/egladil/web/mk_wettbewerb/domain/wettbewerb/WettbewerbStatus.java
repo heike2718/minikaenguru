@@ -9,8 +9,9 @@ package de.egladil.web.mk_wettbewerb.domain.wettbewerb;
  */
 public enum WettbewerbStatus {
 
+	ERFASST,
 	ANMELDUNG,
 	DOWNLOAD_PRIVAT,
 	DOWNLOAD_LEHRER,
-	PAUSE;
+	BEENDET;
 }

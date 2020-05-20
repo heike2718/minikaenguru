@@ -7,6 +7,7 @@ package de.egladil.web.mk_kataloge.application;
 import java.util.List;
 
 import de.egladil.web.mk_kataloge.domain.KatalogItem;
+import de.egladil.web.mk_kataloge.domain.apimodel.SchuleAPIModel;
 
 /**
  * KatalogFacade
@@ -25,7 +26,7 @@ public interface KatalogFacade {
 	 * Läd alle Orte in einem Land, sofern es nicht zu viele sind.
 	 *
 	 * @param  kuerzel
-	 * @return             List
+	 * @return         List
 	 */
 	List<KatalogItem> loadOrteInLand(String kuerzel);
 
@@ -41,7 +42,16 @@ public interface KatalogFacade {
 	 * Läd alle Schulen in einem Ort, sofern es nicht zu viele sind.
 	 *
 	 * @param  kuerzel
-	 * @return             List
+	 * @return         List
 	 */
 	List<KatalogItem> loadSchulenInOrt(String kuerzel);
+
+	/**
+	 * Holt alle Schulen mit den gegebenen Kürzeln.
+	 *
+	 * @param  kommaseparierteKuerzel
+	 *                                String
+	 * @return                        List
+	 */
+	List<SchuleAPIModel> findSchulen(String kommaseparierteKuerzel);
 }

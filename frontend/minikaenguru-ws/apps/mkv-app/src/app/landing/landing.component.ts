@@ -1,37 +1,14 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Session, User, selectIsLoggedIn, selectUser } from '@minikaenguru-ws/common-auth';
-import { Subscription } from 'rxjs';
+import { Component } from '@angular/core';
 
 @Component({
 	selector: 'mkv-landing',
 	templateUrl: './landing.component.html',
 	styleUrls: ['./landing.component.css']
 })
-export class LandingComponent implements OnInit, OnDestroy {
+export class LandingComponent {
 
 
-	isLoggedIn$ = this.store.select(selectIsLoggedIn);
+	constructor() { }
 
-	user: User;
-
-	private userSubscription: Subscription;
-
-	constructor(private store: Store<Session>) { }
-
-	ngOnInit() {
-
-		this.userSubscription = this.store.select(selectUser).subscribe(
-			u => this.user = u
-		);
-
-	}
-
-	ngOnDestroy() {
-
-		if (this.userSubscription) {
-			this.userSubscription.unsubscribe();
-		}
-	}
 
 }

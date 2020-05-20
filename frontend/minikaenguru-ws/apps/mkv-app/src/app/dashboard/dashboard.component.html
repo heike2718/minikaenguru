@@ -1,0 +1,34 @@
+<div class="mkv-container mkv-bordered">
+	<div class="col--12">
+		<h2>Übersicht</h2>
+	</div>
+
+		<div class="row" *ngIf="(user$ | async) as user">
+		<div *ngIf="user.rolle === 'LEHRER'" class="col-md-4 col-sm-12">
+			<div class="card clickable ml-2 mt-4" (click)="gotoSchulen()">
+				<div class="card-body">
+					<div class="card-title">Meine Schulen</div>
+					<div class="mb-2 text-muted">Schulen verwalten</div>
+					<div class="mb-2 text-muted">Wettbewerb auswerten</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4 col-sm-12">
+			<div class="card clickable" (click)="gotoDownloadUnterlagen()">
+				<div class="card-body">
+					<div class="card-title">Unterlagen 2020</div>
+					<div class="mb-2 text-muted">Wettbewerbsunterlagen herunterladen</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4 col-sm-12">
+			<div class="card clickable" (click)="gotoProfil()">
+				<div class="card-body">
+					<div class="card-title">Mein Profil</div>
+					<div class="mb-2 text-muted">Name, Mailadresse, Passwort ändern</div>
+					<div class="mb-2 text-muted">Achtung: hierfür werden Sie ausgeloggt.</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

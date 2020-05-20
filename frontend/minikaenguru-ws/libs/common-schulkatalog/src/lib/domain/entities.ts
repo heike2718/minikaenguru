@@ -25,11 +25,6 @@ export interface GuiModel {
 	readonly katalogItemsAvailable: boolean; // 10
 }
 
-// loadedKatalogItems: KatalogItem[],  // 11
-// 	searchTerm: string, // 12
-// 	selectedKatalogItem: KatalogItem // 13
-
-
 export function getSucheDescription(alterKatalogtyp: Katalogtyp, selectedKatalogItem: KatalogItem): string {
 
 	if (selectedKatalogItem) {

@@ -1,0 +1,21 @@
+<div class="mkv-container mkv-bordered">
+	<div class="col-12">
+		<h2>Meine Schulen</h2>
+		<p *ngIf="devMode">(schulen-list.component)</p>
+		<div *ngIf="(schulen$ | async) as schulen">
+			<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let schule of schulen">
+				<mkv-schule-card [schule]="schule"></mkv-schule-card>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12 col-md-3 ml-3 mb-2">
+			<button class="btn btn-primary" (click)="addSchule()"><i class="fa fa-plus" aria-hidden="true"></i>weitere
+				Schule</button>
+		</div>
+		<div class="col-sm-12 col-md-3 ml-3 mb-2">
+			<button class="btn btn-primary" (click)="gotoDashboard()"><i class="fa fa-arrow-left"
+					aria-hidden="true"></i>zur Übersicht</button>
+		</div>
+	</div>
+</div>

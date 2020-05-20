@@ -15,9 +15,6 @@ import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_wettbewerb.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
-import de.egladil.web.mk_wettbewerb.domain.personen.AddPrivatpersonService;
-import de.egladil.web.mk_wettbewerb.domain.personen.Rolle;
-import de.egladil.web.mk_wettbewerb.domain.personen.Veranstalter;
 
 /**
  * AddPrivatpersonServiceTest
@@ -54,7 +51,7 @@ public class AddPrivatpersonServiceTest extends AbstractDomainServiceTest {
 	void should_AddPrivatperson_when_PrivatpersonUnknown() {
 
 		// Arrange
-		final String uuid = "GIgsgdiqgigdi";
+		final String uuid = "dd97e1bf-f52a-4429-9443-0de9d96dac37";
 		final String fullName = "Herta Kirsch-Grüzte";
 		CreateOrUpdatePrivatpersonCommand command = CreateOrUpdatePrivatpersonCommand.create(uuid,
 			fullName);
@@ -78,6 +75,10 @@ public class AddPrivatpersonServiceTest extends AbstractDomainServiceTest {
 		assertEquals(Rolle.PRIVAT, veranstalter.rolle());
 		assertEquals(uuid, veranstalter.uuid());
 		assertEquals(fullName, veranstalter.fullName());
+		assertEquals(1, veranstalter.teilnahmeIdentifier().size());
+
+		Identifier teilnahmenummer = veranstalter.teilnahmeIdentifier().get(0);
+		assertEquals("9D96DAC37", teilnahmenummer.identifier());
 
 	}
 

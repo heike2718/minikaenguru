@@ -18,11 +18,13 @@ public class Schulteilnahme extends Teilnahme {
 
 	private final String nameSchule;
 
+	private final Identifier angemeldetDurchVeranstalterId;
+
 	/**
 	 * @param wettbewerbID
 	 * @param teilnahmenummer
 	 */
-	public Schulteilnahme(final WettbewerbID wettbewerbID, final Identifier teilnahmenummer, final String nameSchule) {
+	public Schulteilnahme(final WettbewerbID wettbewerbID, final Identifier teilnahmenummer, final String nameSchule, final Identifier veranstalterId) {
 
 		super(wettbewerbID, teilnahmenummer);
 
@@ -30,7 +32,13 @@ public class Schulteilnahme extends Teilnahme {
 
 			throw new IllegalArgumentException("nameSchule darf nicht blank sein");
 		}
+
+		if (veranstalterId == null) {
+
+			throw new IllegalArgumentException("angemeldetDurchVeranstalterId darf nicht null sein");
+		}
 		this.nameSchule = nameSchule;
+		this.angemeldetDurchVeranstalterId = veranstalterId;
 
 	}
 
@@ -52,4 +60,8 @@ public class Schulteilnahme extends Teilnahme {
 			+ teilnahmenummer().toString() + ", name=" + this.nameSchule + "]";
 	}
 
+	public Identifier angemeldetDurchVeranstalterId() {
+
+		return angemeldetDurchVeranstalterId;
+	}
 }

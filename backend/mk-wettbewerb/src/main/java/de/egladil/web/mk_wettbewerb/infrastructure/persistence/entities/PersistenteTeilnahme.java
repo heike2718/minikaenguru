@@ -32,7 +32,7 @@ public class PersistenteTeilnahme extends ConcurrencySafeEntity {
 	private Teilnahmeart teilnahmeart;
 
 	@Column(name = "TEILNAHMENUMMER")
-	@Size(max = 36)
+	@Size(max = 10)
 	private String teilnahmenummer;
 
 	@Column(name = "WETTBEWERB_UUID")
@@ -42,6 +42,10 @@ public class PersistenteTeilnahme extends ConcurrencySafeEntity {
 	@Column(name = "SCHULNAME")
 	@Size(max = 100)
 	private String schulname;
+
+	@Column(name = "ANGEMELDET_DURCH")
+	@Size(max = 36)
+	private String angemeldetDurch;
 
 	public Teilnahmeart getTeilnahmeart() {
 
@@ -81,6 +85,16 @@ public class PersistenteTeilnahme extends ConcurrencySafeEntity {
 	public void setSchulname(final String schulname) {
 
 		this.schulname = schulname;
+	}
+
+	public String getAngemeldetDurch() {
+
+		return angemeldetDurch;
+	}
+
+	public void setAngemeldetDurch(final String angemeldetDurch) {
+
+		this.angemeldetDurch = angemeldetDurch;
 	}
 
 }

@@ -71,11 +71,12 @@ DROP TABLE IF EXISTS `TEILNAHMEN`;
 CREATE TABLE `TEILNAHMEN` (
   `UUID` varchar(36) CHARACTER SET utf8 NOT NULL COMMENT 'uuid',
   `TEILNAHMEART` varchar(10) CHARACTER SET utf8 NOT NULL,
-  `TEILNAHMENUMMER` varchar(36) CHARACTER SET utf8 NOT NULL COMMENT 'Schulkürzel oder Teilnahmenummer eines privaten Veranstalters',
+  `TEILNAHMENUMMER` varchar(10) CHARACTER SET utf8 NOT NULL,
   `WETTBEWERB_UUID` varchar(36) CHARACTER SET utf8 NOT NULL COMMENT 'uuid des Wettbewerbs zu dieser Teilnahme',
   `VERSION` int(10) DEFAULT 0,
   `DATE_MODIFIED` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `SCHULNAME` varchar(100) CHARACTER SET utf8 DEFAULT NULL COMMENT 'Name der Schule für die Urkunde',
+  `ANGEMELDET_DURCH` varchar(36) CHARACTER SET utf8 DEFAULT NULL COMMENT 'UUID des Veranstalters',
   PRIMARY KEY (`UUID`),
   UNIQUE KEY `UK_TEILNAHMEN_1` (`TEILNAHMEART`,`TEILNAHMENUMMER`,`WETTBEWERB_UUID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -152,4 +153,4 @@ CREATE TABLE `schema_version` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-05-16  9:18:27
+-- Dump completed on 2020-05-19  6:23:16

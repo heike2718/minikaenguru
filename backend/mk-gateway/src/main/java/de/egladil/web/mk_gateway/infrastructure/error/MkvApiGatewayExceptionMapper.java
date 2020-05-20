@@ -8,6 +8,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.NoContentException;
 import javax.ws.rs.core.Response;
@@ -93,6 +94,21 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 				.messageOnly(MessagePayload.error(applicationMessages.getString("general.notFound")));
 
 			return Response.status(404).entity(serialize(payload)).build();
+		}
+
+		if (exception instanceof WebApplicationException) {
+
+			WebApplicationException waException = (WebApplicationException) exception;
+
+			String msg = waException.getMessage();
+			int status = waException.getResponse().getStatus();
+
+			ResponsePayload payload = ResponsePayload
+				.messageOnly(MessagePayload.error(msg));
+
+			LOG.error(msg);
+
+			return Response.status(status).entity(serialize(payload)).build();
 		}
 
 		if (exception instanceof MkGatewayRuntimeException || exception instanceof ClientAuthException) {

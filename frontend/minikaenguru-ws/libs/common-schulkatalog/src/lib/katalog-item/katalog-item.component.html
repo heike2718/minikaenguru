@@ -2,7 +2,7 @@
 	<div class="col-12">
 		<div class="card clickable" (click)="selectTheItem()">
 			<div class="card-body">
-				<div class="card-title">{{katalogItem.name}} <span *ngIf="!devMode"> ({{katalogItem.kuerzel}}) </span>
+				<div class="card-title">{{katalogItem.name}} <span *ngIf="devMode"> ({{katalogItem.kuerzel}}) </span>
 					<span *ngIf="katalogItem.typ !=='SCHULE'" class="ml-1 badge badge-dark">{{anzahlText}} {{katalogItem.anzahlKinder}}</span>
 				</div>
 				<div *ngIf="katalogItem.parent" class="card-subtitle mb-2 text-muted">{{katalogItem.parent.name}}</div>

@@ -25,7 +25,7 @@ public abstract class AbstractDomainServiceTest {
 
 	protected static final String UUID_LEHRER = "gudgfoiwo";
 
-	protected static final String UUID_PRIVAT = "sagfigoso";
+	protected static final String UUID_PRIVAT = "8efc761c-83e7-42e3-bd2c-ba29b0db80dc";
 
 	protected static final String SCHULKUERZEL = "AGDFWGJOPJ";
 
