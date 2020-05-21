@@ -22,6 +22,8 @@ import { LandingComponent } from './landing/landing.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { CustomRouterStateSerializer } from './shared/utils';
 import { GlobalErrorHandlerService } from './infrastructure/global-error-handler.service';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
 
 
 @NgModule({
@@ -29,7 +31,9 @@ import { GlobalErrorHandlerService } from './infrastructure/global-error-handler
 		AppComponent,
 		NotFoundComponent,
 		LandingComponent,
-		NavbarComponent],
+		NavbarComponent,
+		DashboardComponent,
+		NotAuthorizedComponent],
 	imports: [
 		BrowserModule,
 		BrowserAnimationsModule,
