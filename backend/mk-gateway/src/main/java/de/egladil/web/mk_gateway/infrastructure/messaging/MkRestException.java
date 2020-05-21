@@ -5,16 +5,13 @@
 package de.egladil.web.mk_gateway.infrastructure.messaging;
 
 /**
- * MkWettbewerbRestException
+ * MkRestException
  */
-public class MkWettbewerbRestException extends MkRestException {
+public class MkRestException extends RuntimeException {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
 
-	public MkWettbewerbRestException(final String message) {
+	public MkRestException(final String message) {
 
 		super(message);
 

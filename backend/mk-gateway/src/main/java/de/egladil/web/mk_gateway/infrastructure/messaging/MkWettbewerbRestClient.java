@@ -39,15 +39,6 @@ public interface MkWettbewerbRestClient {
 	@Path("/personen/privat")
 	Response createPrivatmensch(PrivatmenschCreated data) throws MkWettbewerbRestException;
 
-	// http://192.168.10.176:9550/mk-wettbewerb/veranstalter/teilnahmenummern, X_UUID=2f09da36-07c6-4033-a2f1-5e110c804026
-	@GET
-	@Path("/veranstalter/teilnahmenummern")
-	Response getTeilnahmenummern(@HeaderParam(value = MkGatewayApp.UUID_HEADER_NAME) String uuid) throws MkWettbewerbRestException;
-
-	@GET
-	@Path("/teilnahmen/angemeldet/{teilnahmenummer}")
-	Response getAngemeldet(@PathParam(value = "teilnahmenummer") String teilnahmenummer) throws MkWettbewerbRestException;
-
 	@GET
 	@Path("/schulen/details/{schulkuerzel}")
 	Response getSchuleDetails(@PathParam(value = "schulkuerzel") final String schulkuerzel, @HeaderParam(

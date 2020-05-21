@@ -19,7 +19,8 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(
 	  routes,
-	  { enableTracing: !environment.production, useHash: true })
+	//   { enableTracing: !environment.production, useHash: true })
+	{ enableTracing: false, useHash: true })
 	],
   exports: [RouterModule]
 })

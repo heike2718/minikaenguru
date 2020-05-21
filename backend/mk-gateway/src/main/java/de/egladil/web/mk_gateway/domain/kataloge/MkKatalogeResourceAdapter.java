@@ -12,6 +12,7 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.egladil.web.mk_gateway.domain.AbstractMkResourceAdapter;
 import de.egladil.web.mk_gateway.infrastructure.messaging.MkKatalogeRestClient;
 import de.egladil.web.mk_gateway.infrastructure.messaging.MkKatalogeRestException;
 
@@ -19,7 +20,7 @@ import de.egladil.web.mk_gateway.infrastructure.messaging.MkKatalogeRestExceptio
  * MkKatalogeResourceAdapter
  */
 @ApplicationScoped
-public class MkKatalogeResourceAdapter {
+public class MkKatalogeResourceAdapter extends AbstractMkResourceAdapter {
 
 	private static final Logger LOG = LoggerFactory.getLogger(MkKatalogeResourceAdapter.class);
 
@@ -37,11 +38,15 @@ public class MkKatalogeResourceAdapter {
 
 			Response response = restClient.findSchulenMitKuerzeln(kommaseparierteSchulkuerzel);
 			return response;
-		} catch (MkKatalogeRestException e) {
+		} catch (Exception e) {
 
-			LOG.error("Konnte Schulen nicht laden: " + e.getMessage());
-			throw e;
+			return handleException(e, LOG, "[findSchulen]");
 		}
 	}
 
+	@Override
+	protected String endpointName() {
+
+		return "mk-katalog-api";
+	}
 }

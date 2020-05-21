@@ -86,22 +86,6 @@ public class RestrictedUrlPathInMemoryRepositoryTest {
 	}
 
 	@Test
-	void should_OfPathContainTeilnahmenummern_when_wettbewerbTeilnahmen() {
-
-		Optional<RestrictedUrlPath> opt = repository.ofPath("/wettbewerb/teilnahmen/teilnahmenummern");
-
-		assertTrue(opt.isPresent());
-
-		RestrictedUrlPath restrictedUrlPath = opt.get();
-
-		assertEquals("/wettbewerb/teilnahmen/teilnahmenummern", restrictedUrlPath.path());
-
-		assertTrue(restrictedUrlPath.isAllowedForRolle(Rolle.LEHRER));
-		assertTrue(restrictedUrlPath.isAllowedForRolle(Rolle.PRIVAT));
-		assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.ADMIN));
-	}
-
-	@Test
 	void should_OfPathContainSchulen() {
 
 		Optional<RestrictedUrlPath> opt = repository.ofPath("/wettbewerb/lehrer/schulen");
