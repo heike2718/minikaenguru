@@ -1,11 +1,12 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
+<project
+	xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>de.egladil.web</groupId>
-	<artifactId>mk-gateway</artifactId>
-	<version>1.0.0</version>
+	<artifactId>mk-wettbewerb-admin</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 
@@ -69,12 +70,6 @@
 		</dependency>
 
 		<!-- Quarkus START -->
-
-		<!-- <dependency> <groupId>io.quarkus</groupId> <artifactId>quarkus-vertx</artifactId>
-			</dependency> <dependency> <groupId>io.quarkus</groupId> <artifactId>quarkus-resteasy-mutiny</artifactId>
-			<version>1.3.2.Final</version> </dependency> <dependency> <groupId>io.smallrye.reactive</groupId>
-			<artifactId>smallrye-mutiny-vertx-web-client</artifactId> <version>0.0.15</version>
-			</dependency> -->
 		<dependency>
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-hibernate-orm</artifactId>
@@ -98,10 +93,6 @@
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-multipart-provider</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.quarkus</groupId>
-			<artifactId>quarkus-smallrye-jwt</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>io.quarkus</groupId>
@@ -137,6 +128,7 @@
 		<!-- Test ENDE -->
 
 	</dependencies>
+
 
 	<build>
 		<plugins>
@@ -218,4 +210,5 @@
 			</plugin>
 		</plugins>
 	</build>
+
 </project>

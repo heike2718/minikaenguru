@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -38,6 +39,7 @@ import de.egladil.web.mk_gateway.infrastructure.messaging.MkWettbewerbRestExcept
 @RequestScoped
 @Path("/wettbewerb")
 @Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class WettbewerbResource {
 
 	private static final Logger LOG = LoggerFactory.getLogger(WettbewerbResource.class);
