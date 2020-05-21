@@ -3,9 +3,14 @@ import { Routes, RouterModule } from '@angular/router';
 import { environment } from '../environments/environment';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { LandingComponent } from './landing/landing.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { AuthGuardService } from './infrastructure/auth-guard.service';
+import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
 
 
 const routes: Routes = [
+  {path: 'forbidden', pathMatch: 'full', component: NotAuthorizedComponent},
+  {path: 'dashboard', pathMatch: 'full', component: DashboardComponent, canActivate: [AuthGuardService]},
   {path: '', pathMatch: 'full', component: LandingComponent},
   {path: '**', component: NotFoundComponent},
 ];

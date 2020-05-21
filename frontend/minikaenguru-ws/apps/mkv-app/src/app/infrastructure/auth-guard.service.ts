@@ -22,16 +22,10 @@ export class AuthGuardService implements CanActivate {
 				select(isLoggedIn),
 				tap(loggedIn => {
 					if (!loggedIn) {
-						console.log('AuthGuardService - 1');
 						this.router.navigateByUrl('');
-					} else {
-						console.log('AuthGuardService - 2');
-
 					}
 				})
 			)
-
-
 	}
 
 }

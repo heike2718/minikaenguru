@@ -1,5 +1,5 @@
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Session, isLoggedIn } from '@minikaenguru-ws/common-auth';
+import { Session, isAuthorized } from '@minikaenguru-ws/common-auth';
 import { Injectable } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { tap } from 'rxjs/operators';
@@ -19,14 +19,10 @@ export class AuthGuardService implements CanActivate {
 
 		return this.store
 			.pipe(
-				select(isLoggedIn),
-				tap(loggedIn => {
-					if (!loggedIn) {
-						console.log('AuthGuardService - 1');
-						this.router.navigateByUrl('');
-					} else {
-						console.log('AuthGuardService - 2');
-
+				select(isAuthorized),
+				tap(authorized => {
+					if (!authorized) {
+						this.router.navigateByUrl('/forbidden');
 					}
 				})
 			)
