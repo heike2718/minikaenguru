@@ -52,16 +52,6 @@ public class WettbewerbResource {
 	SecurityContext securityContext;
 
 	@GET
-	@Path("/teilnahmen/teilnahmenummern")
-	public Response getOwnTeilnahmenummern() {
-
-		Principal principal = securityContext.getUserPrincipal();
-
-		Response response = mkWettbewerbResourceAdapter.getTeilnahmenummern(principal.getName());
-		return response;
-	}
-
-	@GET
 	@Path("/lehrer/schulen")
 	public Response findSchulen() {
 

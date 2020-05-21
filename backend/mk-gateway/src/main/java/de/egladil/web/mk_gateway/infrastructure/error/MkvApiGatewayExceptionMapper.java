@@ -33,6 +33,8 @@ import de.egladil.web.mk_gateway.domain.error.AuthException;
 import de.egladil.web.mk_gateway.domain.error.ClientAuthException;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.session.LoggedInUser;
+import de.egladil.web.mk_gateway.infrastructure.messaging.MkKatalogeRestException;
+import de.egladil.web.mk_gateway.infrastructure.messaging.MkWettbewerbRestException;
 
 /**
  * MkvApiGatewayExceptionMapper.<br>
@@ -111,7 +113,8 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 			return Response.status(status).entity(serialize(payload)).build();
 		}
 
-		if (exception instanceof MkGatewayRuntimeException || exception instanceof ClientAuthException) {
+		if (exception instanceof MkGatewayRuntimeException || exception instanceof ClientAuthException
+			|| exception instanceof MkKatalogeRestException || exception instanceof MkWettbewerbRestException) {
 
 			// nicht loggen, wurde schon
 		} else {

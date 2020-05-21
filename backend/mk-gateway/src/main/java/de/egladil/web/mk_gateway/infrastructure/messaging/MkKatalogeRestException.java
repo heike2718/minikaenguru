@@ -7,7 +7,7 @@ package de.egladil.web.mk_gateway.infrastructure.messaging;
 /**
  * MkKatalogeRestException
  */
-public class MkKatalogeRestException extends RuntimeException {
+public class MkKatalogeRestException extends MkRestException {
 
 	/**
 	 *

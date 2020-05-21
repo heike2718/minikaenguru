@@ -19,12 +19,15 @@ import org.apache.commons.lang3.StringUtils;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.apimodel.SchuleAPIModel;
+import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
+import de.egladil.web.mk_gateway.domain.semantik.DomainService;
 
 /**
  * SchulenAnmeldeinfoService
  */
 @ApplicationScoped
+@DomainService
 public class SchulenAnmeldeinfoService {
 
 	@Inject
@@ -33,9 +36,23 @@ public class SchulenAnmeldeinfoService {
 	@Inject
 	MkWettbewerbResourceAdapter wettbewerbAdapter;
 
+	static SchulenAnmeldeinfoService createForTest(final MkKatalogeResourceAdapter katalogeAdapter, final MkWettbewerbResourceAdapter wettbewerbAdapter) {
+
+		SchulenAnmeldeinfoService result = new SchulenAnmeldeinfoService();
+		result.katalogeAdapter = katalogeAdapter;
+		result.wettbewerbAdapter = wettbewerbAdapter;
+		return result;
+
+	}
+
 	public List<SchuleAPIModel> findSchulenMitAnmeldeinfo(final String lehrerUUID) {
 
 		Response schulenWettbewerbResponse = wettbewerbAdapter.findSchulen(lehrerUUID);
+
+		if (schulenWettbewerbResponse.getStatus() >= 400) {
+
+			throw new MkGatewayRuntimeException("Fehler beim Laden der Schulen des Lehrers");
+		}
 
 		final List<SchuleAPIModel> schulenOfLehrer = this.getSchulenFromWettbewerbAPI(schulenWettbewerbResponse);
 
@@ -45,16 +62,17 @@ public class SchulenAnmeldeinfoService {
 
 		Response katalogItemsResponse = katalogeAdapter.findSchulen(kommaseparierteSchulkuerzel);
 
+		if (katalogItemsResponse.getStatus() >= 400) {
+
+			throw new MkGatewayRuntimeException("Fehler beim Laden der Schulen aus dem Katalog");
+		}
+
 		final List<SchuleAPIModel> schulenAusKatalg = this.getSchulenFromKatalogeAPI(katalogItemsResponse);
 
 		return mergeDataFromSchulenOfLehrer(schulenAusKatalg, schulenOfLehrer);
 	}
 
-	/**
-	 * @param schulenAusKatalg
-	 * @param schulenOfLehrer
-	 */
-	private List<SchuleAPIModel> mergeDataFromSchulenOfLehrer(final List<SchuleAPIModel> schulenAusKatalg, final List<SchuleAPIModel> schulenOfLehrer) {
+	List<SchuleAPIModel> mergeDataFromSchulenOfLehrer(final List<SchuleAPIModel> schulenAusKatalg, final List<SchuleAPIModel> schulenOfLehrer) {
 
 		schulenAusKatalg.stream().forEach(schule -> {
 
