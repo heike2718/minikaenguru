@@ -18,6 +18,13 @@
       "tags": [],
       "implicitDependencies": ["mkv-app"]
     },
+    "mk-admin-app": {
+      "tags": ["domain:mk-admin-app", "type:app"]
+    },
+    "mk-admin-app-e2e": {
+      "tags": [],
+      "implicitDependencies": ["mk-admin-app"]
+    },
     "schulkatalog-api": {
       "tags": ["domain:schulkatalog", "domain:schulkatalog/api", "type:api"]
     },
@@ -47,6 +54,13 @@
     },
     "common-components": {
       "tags": []
+    },
+    "mk-admin-app": {
+      "tags": []
+    },
+    "mk-admin-app-e2e": {
+      "tags": [],
+      "implicitDependencies": ["mk-admin-app"]
     }
   }
 }

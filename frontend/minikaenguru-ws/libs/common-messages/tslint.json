@@ -4,13 +4,13 @@
     "directive-selector": [
       true,
       "attribute",
-      "minikaenguruWs",
+      "cmn",
       "camelCase"
     ],
     "component-selector": [
       true,
       "element",
-      "minikaenguru-ws",
+      "cmn",
       "kebab-case"
     ]
   },

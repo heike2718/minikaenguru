@@ -4,13 +4,13 @@
     "directive-selector": [
       true,
       "attribute",
-      "mk-katalog",
+      "mka",
       "camelCase"
     ],
     "component-selector": [
       true,
       "element",
-      "mk-katalog",
+      "mka",
       "kebab-case"
     ]
   },
