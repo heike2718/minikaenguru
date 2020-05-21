@@ -29,26 +29,8 @@ public class RestrictedUrlPathInMemoryRepository implements RestrictedUrlPathRep
 
 	public RestrictedUrlPathInMemoryRepository() {
 
-		{
-
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/anmeldungen/anmeldung",
-				Arrays.asList(new Rolle[] { Rolle.LEHRER, Rolle.PRIVAT }));
-			paths.add(restrictedPath);
-		}
-
-		{
-
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/lehrer/schulen",
-				Arrays.asList(new Rolle[] { Rolle.LEHRER }));
-			paths.add(restrictedPath);
-		}
-
-		{
-
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/lehrer/schulen/*/details",
-				Arrays.asList(new Rolle[] { Rolle.LEHRER }));
-			paths.add(restrictedPath);
-		}
+		addPathInfosForMkWettbewerb();
+		addPathInfosForMkWettbewerbAdmin();
 
 		{
 
@@ -71,6 +53,40 @@ public class RestrictedUrlPathInMemoryRepository implements RestrictedUrlPathRep
 			paths.add(restrictedPath);
 		}
 
+	}
+
+	private void addPathInfosForMkWettbewerb() {
+
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/anmeldungen/anmeldung",
+				Arrays.asList(new Rolle[] { Rolle.LEHRER, Rolle.PRIVAT }));
+			paths.add(restrictedPath);
+		}
+
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/lehrer/schulen",
+				Arrays.asList(new Rolle[] { Rolle.LEHRER }));
+			paths.add(restrictedPath);
+		}
+
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/lehrer/schulen/*/details",
+				Arrays.asList(new Rolle[] { Rolle.LEHRER }));
+			paths.add(restrictedPath);
+		}
+	}
+
+	private void addPathInfosForMkWettbewerbAdmin() {
+
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/wettbewerb",
+				Arrays.asList(new Rolle[] { Rolle.ADMIN }));
+			paths.add(restrictedPath);
+		}
 	}
 
 	@Override
