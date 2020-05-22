@@ -38,15 +38,15 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 		if (error instanceof HttpErrorResponse) {
 			const httpError = error as HttpErrorResponse;
 			console.log('HttpErrorResponse: ' + httpError.status);
-			this.handleHttpError(httpError, 'mkv-app');
+			this.handleHttpError(httpError);
 		} else {
 			console.log('ErrorEvent: ' + error);
-			this.logger.error('mkv-app: Unerwarteter Fehler: ' + error.message);
+			this.logger.error('mk-admin-app: Unerwarteter Fehler: ' + error.message);
 			this.showServerResponseMessage('ERROR', 'Unerwarteter GUI-Error: ' + error.message);
 		}
 	}
 
-	public handleHttpError(httpError: HttpErrorResponse, _context: string) {
+	public handleHttpError(httpError: HttpErrorResponse) {
 		if (httpError.status === 0) {
 			this.messageService.error('Der Server ist nicht erreichbar.');
 		} else {

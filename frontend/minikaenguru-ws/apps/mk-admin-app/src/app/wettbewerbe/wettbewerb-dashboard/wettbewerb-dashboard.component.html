@@ -1,0 +1,43 @@
+<div *ngIf="(wettbewerb$ | async) as wettbewerb" class="mkv-container mkv-bordered">
+	<div class="col-12">
+		<h2>Minikänguru {{wettbewerb.jahr}}</h2>
+		<p *ngIf="devMode">(wettbewerb-dashboard.component)</p>
+		<p class="card-subtitle mb-2 text-muted">Beginn: {{wettbewerb.wettbewerbsbeginn | date}}</p>
+		<p class="card-subtitle mb-2 text-muted">Ende: {{wettbewerb.wettbewerbsende | date}}</p>
+		<p class="card-subtitle mb-2 text-muted">Freischaltung Lehrer: {{wettbewerb.datumFreischaltungLehrer | date}}
+		</p>
+		<p class="card-subtitle mb-2 text-muted">Freischaltung privat: {{wettbewerb.datumFreischaltungPrivat | date}}
+		</p>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6 col-sm-12">
+			<div class="card clickable ml-2 mr-1 mt-4">
+				<div class="card-body">
+					<div class="card-title">Gruppenübersicht</div>
+					<div class="mb-2 text-muted">Länder mit Anzahl Anmeldungen...</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6 col-sm-12">
+			<div class="card clickable ml-2 mr-2 mt-4">
+				<div class="card-body">
+					<div class="card-title">Statistik</div>
+					<div class="mb-2 text-muted">Gesamtauswertung</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<div class="row mt-4">
+	<div class="col-md-6 mt-4">
+		<button class="btn btn-primary" (click)="backToWettbewerbe()"><i class="fa fa-arrow-left"
+				aria-hidden="true"></i>Wettbewerbe</button>
+	</div>
+	<div class="col-md-6 mt-4">
+		<button class="btn btn-primary" (click)="backToDashboard()"><i class="fa fa-arrow-left"
+				aria-hidden="true"></i>Dashboard</button>
+	</div>
+</div>
