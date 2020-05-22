@@ -9,3 +9,12 @@ export const allWettbewerbeLoaded = createAction(
 	'[WettbewerbeService] loadWettbewerbe',
 	props<{wettbewerbe: Wettbewerb[]}>()
 );
+
+export const selectWettbewerb = createAction(
+	'[WettbewerbCardComponent] select wettbewerb',
+	props<{wettbewerb: Wettbewerb}>()
+);
+
+export const unselectWettbewerb = createAction(
+	'[WettbewerbDashboardComponent] back to wettbewerbe'
+);

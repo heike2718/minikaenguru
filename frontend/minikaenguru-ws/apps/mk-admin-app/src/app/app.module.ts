@@ -1,7 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule, ErrorHandler } from '@angular/core';
+import { NgModule, ErrorHandler, LOCALE_ID } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
+
+import { registerLocaleData } from '@angular/common';
+import localeDe from '@angular/common/locales/de';
+import localeExtraDe from '@angular/common/locales/extra/de';
+
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -27,6 +32,7 @@ import { WettbewerbeModule } from './wettbewerbe/wettbewerbe.module';
 import { HttpClientModule } from '@angular/common/http';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
+registerLocaleData(localeDe);
 
 
 @NgModule({
@@ -82,7 +88,11 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 		GlobalErrorHandlerService,
 		{ provide: ErrorHandler, useClass: GlobalErrorHandlerService },
 		{ provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },
+		{ provide: LOCALE_ID, useValue: "de-DE" },
 	],
 	bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+
+
+ }

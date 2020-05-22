@@ -22,6 +22,12 @@ const wettbewerbeReducer = createReducer(initialWettbewerbeState,
 	on(WettbewerbeActions.allWettbewerbeLoaded, (state, action) => {
 		return { ...state, wettbewerbe: action.wettbewerbe, selectedWettbewerb: undefined, wettbewerbeLoaded: true }
 	}),
+	on(WettbewerbeActions.selectWettbewerb, (state, action) => {
+		return { ...state, selectedWettbewerb: action.wettbewerb }
+	}),
+	on (WettbewerbeActions.unselectWettbewerb, (state, _action) => {
+		return {...state, selectedWettbewerb: undefined}
+	})
 
 );
 

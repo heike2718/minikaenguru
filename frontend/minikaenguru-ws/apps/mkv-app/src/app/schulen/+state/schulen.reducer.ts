@@ -22,6 +22,14 @@ const schulenReducer = createReducer(initialSchulenState,
 
 		return { ...state, schulen: action.schulen, selectedSchule: undefined, schulenLoaded: true }
 	}),
+
+	// TODO: hier einen SideEffect implementieren, der die Details der Schule vom Server läd.
+	on(SchulenActions.selectSchule, (state, action) => {
+		return {...state, selectedSchule: action.schule}
+	}),
+	on(SchulenActions.unselectSchule, (state, _action) => {
+		return {...state, selectedSchule: undefined}
+	})
 );
 
 export function reducer(state: SchulenState | undefined, action: Action) {
