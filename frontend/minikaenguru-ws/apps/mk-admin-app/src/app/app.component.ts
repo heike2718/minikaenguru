@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { environment } from '../environments/environment';
 import { AuthService, AuthResult } from '@minikaenguru-ws/common-auth';
-import { ResponsePayload, MessageService } from '@minikaenguru-ws/common-messages';
 
 @Component({
 	selector: 'mka-root',
@@ -15,8 +14,7 @@ export class AppComponent {
 	api = environment.apiUrl;
 	version = environment.version;
 
-	constructor(private authService: AuthService
-		, private messageService: MessageService) {
+	constructor(private authService: AuthService) {
 
 
 		this.authService.clearOrRestoreSession();

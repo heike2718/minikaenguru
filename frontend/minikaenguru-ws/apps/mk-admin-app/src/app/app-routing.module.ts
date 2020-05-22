@@ -9,18 +9,19 @@ import { NotAuthorizedComponent } from './not-authorized/not-authorized.componen
 
 
 const routes: Routes = [
-  {path: 'forbidden', pathMatch: 'full', component: NotAuthorizedComponent},
-  {path: 'dashboard', pathMatch: 'full', component: DashboardComponent, canActivate: [AuthGuardService]},
-  {path: '', pathMatch: 'full', component: LandingComponent},
-  {path: '**', component: NotFoundComponent},
+	{ path: 'forbidden', pathMatch: 'full', component: NotAuthorizedComponent },
+	{ path: 'dashboard', pathMatch: 'full', component: DashboardComponent, canActivate: [AuthGuardService] },
+	{ path: 'wettbewerbe', loadChildren: () => import('./wettbewerbe/wettbewerbe.module').then(m => m.WettbewerbeModule) },
+	{ path: '', pathMatch: 'full', component: LandingComponent },
+	{ path: '**', component: NotFoundComponent },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(
-	  routes,
-	//   { enableTracing: !environment.production, useHash: true })
-	{ enableTracing: false, useHash: true })
+	imports: [RouterModule.forRoot(
+		routes,
+		  { enableTracing: !environment.production, useHash: true })
+		// { enableTracing: false, useHash: true })
 	],
-  exports: [RouterModule]
+	exports: [RouterModule]
 })
 export class AppRoutingModule { }

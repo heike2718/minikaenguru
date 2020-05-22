@@ -18,7 +18,7 @@ import de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb.WettbewerbStatus;
 public class WettbewerbAPIModel {
 
 	@JsonProperty
-	private String jahr;
+	private int jahr;
 
 	@JsonProperty
 	private WettbewerbStatus status;
@@ -39,7 +39,7 @@ public class WettbewerbAPIModel {
 
 		WettbewerbAPIModel result = new WettbewerbAPIModel();
 
-		result.jahr = wettbewerb.id().toString();
+		result.jahr = wettbewerb.id().jahr().intValue();
 		result.status = wettbewerb.status();
 		result.wettbewerbsbeginn = CommonTimeUtils.transformFromLocalDate(wettbewerb.wettbewerbsbeginn());
 		result.wettbewerbsende = CommonTimeUtils.transformFromLocalDate(wettbewerb.wettbewerbsende());

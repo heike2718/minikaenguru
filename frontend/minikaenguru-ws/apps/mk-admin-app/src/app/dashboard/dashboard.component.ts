@@ -1,15 +1,33 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Session, user } from '@minikaenguru-ws/common-auth';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'mka-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+	selector: 'mka-dashboard',
+	templateUrl: './dashboard.component.html',
+	styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
 
-  constructor() { }
+	user$ = this.sessionStore.select(user);
 
-  ngOnInit(): void {
-  }
+	constructor(private sessionStore: Store<Session>, private router: Router) { }
+
+	ngOnInit(): void {
+	}
+
+	gotoWettbewerbe() {
+		console.log('navigate to /wettbewerbe')
+		this.router.navigateByUrl('/wettbewerbe');
+	}
+
+	gotoVeranstalter() {
+		console.log('zu Veranstalter navigieren');
+	}
+
+	gotoKataloge() {
+		console.log('zu Kataloge navigieren');
+	}
 
 }

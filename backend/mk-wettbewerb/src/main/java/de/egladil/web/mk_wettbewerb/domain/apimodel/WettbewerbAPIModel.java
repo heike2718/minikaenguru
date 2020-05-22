@@ -15,7 +15,7 @@ import de.egladil.web.mk_wettbewerb.domain.wettbewerb.Wettbewerb;
 public class WettbewerbAPIModel {
 
 	@JsonProperty
-	private String jahr;
+	private int jahr;
 
 	@JsonProperty
 	private String wettbewerbsende;
@@ -30,7 +30,7 @@ public class WettbewerbAPIModel {
 
 		WettbewerbAPIModel result = new WettbewerbAPIModel();
 
-		result.jahr = wettbewerb.id().toString();
+		result.jahr = wettbewerb.id().jahr().intValue();
 		result.wettbewerbsende = CommonTimeUtils.format(wettbewerb.wettbewerbsende());
 		result.datumFreischaltungLehrer = CommonTimeUtils.format(wettbewerb.datumFreischaltungLehrer());
 		result.datumFreischaltungPrivat = CommonTimeUtils.format(wettbewerb.datumFreischaltungPrivat());

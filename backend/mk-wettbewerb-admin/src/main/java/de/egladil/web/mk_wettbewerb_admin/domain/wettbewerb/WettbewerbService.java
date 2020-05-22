@@ -6,6 +6,7 @@ package de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,6 +36,9 @@ public class WettbewerbService {
 
 		List<Wettbewerb> result = new ArrayList<>();
 
+		// FIXME: hier result nochmal durchsortieren mit dem WettbewerbeDescendingComparator
+
+		System.err.println("WettbewerbService.alleWettbewerbeHolen() ist noch ein Mockup");
 		LocalDate now = LocalDate.now();
 		result.add(new Wettbewerb(new WettbewerbID(2020)).withDatumFreischaltungLehrer(now)
 			.withDatumFreischaltungPrivat(now).withStatus(WettbewerbStatus.ANMELDUNG)
@@ -52,9 +56,14 @@ public class WettbewerbService {
 
 		List<Wettbewerb> wettbewerbe = wettbewerbRepository.loadWettbewerbe();
 
-		Optional<Wettbewerb> optLaufend = wettbewerbe.stream().filter(w -> WettbewerbStatus.BEENDET != w.status()).findFirst();
+		if (wettbewerbe.isEmpty()) {
 
-		return optLaufend;
+			return Optional.empty();
+		}
+
+		Collections.sort(wettbewerbe, new WettbewerbeDescendingComparator());
+
+		return Optional.of(wettbewerbe.get(0));
 	}
 
 	@Transactional

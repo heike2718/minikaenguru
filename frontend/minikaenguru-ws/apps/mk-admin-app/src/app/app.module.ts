@@ -22,8 +22,11 @@ import { LandingComponent } from './landing/landing.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { CustomRouterStateSerializer } from './shared/utils';
 import { GlobalErrorHandlerService } from './infrastructure/global-error-handler.service';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
+import { WettbewerbeModule } from './wettbewerbe/wettbewerbe.module';
+import { HttpClientModule } from '@angular/common/http';
+import { DashboardComponent } from './dashboard/dashboard.component';
+
 
 
 @NgModule({
@@ -36,6 +39,7 @@ import { NotAuthorizedComponent } from './not-authorized/not-authorized.componen
 		NotAuthorizedComponent],
 	imports: [
 		BrowserModule,
+		HttpClientModule,
 		BrowserAnimationsModule,
 		CommonSchulkatalogModule.forRoot({
 			baseUrl: environment.katalogApiUrl,
@@ -71,12 +75,13 @@ import { NotAuthorizedComponent } from './not-authorized/not-authorized.componen
 			routerState: RouterState.Minimal
 		}),
 		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+		WettbewerbeModule,
 		AppRoutingModule, // <-- immer am Ende, damit die wildcard-route als letzte deklariert bleibt
 	],
 	providers: [
 		GlobalErrorHandlerService,
 		{ provide: ErrorHandler, useClass: GlobalErrorHandlerService },
-		{ provide: RouterStateSerializer, useClass: CustomRouterStateSerializer }
+		{ provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },
 	],
 	bootstrap: [AppComponent]
 })

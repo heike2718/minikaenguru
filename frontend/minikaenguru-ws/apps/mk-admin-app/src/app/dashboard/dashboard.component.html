@@ -2,5 +2,30 @@
 	<div class="col--12">
 
 		<h2>Dashboard</h2>
+
+	</div>
+
+	<div class="row" *ngIf="(user$ | async) as user else loading">
+		<div class="card clickable ml-4 mt-4" (click)="gotoWettbewerbe()">
+			<div class="card-body">
+				<div class="card-title">Wettbewerbe</div>
+				<div class="mb-2 text-muted">verwalten</div>
+				<div class="mb-2 text-muted">Statistiken</div>
+			</div>
+		</div>
+		<div class="card clickable ml-4 mt-4" (click)="gotoVeranstalter()">
+			<div class="card-body">
+				<div class="card-title">Veranstalter</div>
+			</div>
+		</div>
+		<div class="card clickable ml-4 mt-4" (click)="gotoKataloge()">
+			<div class="card-body">
+				<div class="card-title">Kataloge</div>
+			</div>
+		</div>
 	</div>
 </div>
+
+<ng-template #loading>
+	Lade Wettbewerbe... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
+</ng-template>
