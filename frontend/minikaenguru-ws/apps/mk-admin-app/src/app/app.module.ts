@@ -1,7 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule, ErrorHandler } from '@angular/core';
+import { NgModule, ErrorHandler, LOCALE_ID } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
+
+import { registerLocaleData } from '@angular/common';
+import localeDe from '@angular/common/locales/de';
+import localeExtraDe from '@angular/common/locales/extra/de';
+
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -22,8 +27,12 @@ import { LandingComponent } from './landing/landing.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { CustomRouterStateSerializer } from './shared/utils';
 import { GlobalErrorHandlerService } from './infrastructure/global-error-handler.service';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
+import { WettbewerbeModule } from './wettbewerbe/wettbewerbe.module';
+import { HttpClientModule } from '@angular/common/http';
+import { DashboardComponent } from './dashboard/dashboard.component';
+
+registerLocaleData(localeDe);
 
 
 @NgModule({
@@ -36,6 +45,7 @@ import { NotAuthorizedComponent } from './not-authorized/not-authorized.componen
 		NotAuthorizedComponent],
 	imports: [
 		BrowserModule,
+		HttpClientModule,
 		BrowserAnimationsModule,
 		CommonSchulkatalogModule.forRoot({
 			baseUrl: environment.katalogApiUrl,
@@ -71,13 +81,18 @@ import { NotAuthorizedComponent } from './not-authorized/not-authorized.componen
 			routerState: RouterState.Minimal
 		}),
 		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+		WettbewerbeModule,
 		AppRoutingModule, // <-- immer am Ende, damit die wildcard-route als letzte deklariert bleibt
 	],
 	providers: [
 		GlobalErrorHandlerService,
 		{ provide: ErrorHandler, useClass: GlobalErrorHandlerService },
-		{ provide: RouterStateSerializer, useClass: CustomRouterStateSerializer }
+		{ provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },
+		{ provide: LOCALE_ID, useValue: "de-DE" },
 	],
 	bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+
+
+ }

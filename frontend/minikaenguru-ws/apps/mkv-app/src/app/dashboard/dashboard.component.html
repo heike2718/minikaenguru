@@ -3,7 +3,7 @@
 		<h2>Übersicht</h2>
 	</div>
 
-		<div class="row" *ngIf="(user$ | async) as user">
+	<div class="row" *ngIf="(user$ | async) as user">
 		<div *ngIf="user.rolle === 'LEHRER'" class="col-md-4 col-sm-12">
 			<div class="card clickable ml-2 mt-4" (click)="gotoSchulen()">
 				<div class="card-body">
