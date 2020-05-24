@@ -58,6 +58,9 @@ const wettbewerbeReducer = createReducer(initialWettbewerbeState,
 		const loaded = state.wettbewerbeMap.length > 0;
 		return { ...state, wettbewerbeMap: neueMap, selectedJahr: jahr, wettbewerbeLoaded: loaded }
 	}),
+	on (WettbewerbeActions.resetWettbewerbe, (_state, _action) => {
+		return initialWettbewerbeState
+	})
 
 );
 

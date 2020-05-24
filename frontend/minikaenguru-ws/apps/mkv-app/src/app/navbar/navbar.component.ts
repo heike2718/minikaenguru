@@ -3,6 +3,8 @@ import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../environments/environment';
 import { AuthService, AuthState, isLoggedIn, isLoggedOut, Session, user } from '@minikaenguru-ws/common-auth';
 import { Store } from '@ngrx/store';
+import { AppState } from '../reducers';
+import { resetSchulen } from '../schulen/+state/schulen.actions';
 
 @Component({
 	selector: 'mkv-navbar',
@@ -23,7 +25,8 @@ export class NavbarComponent implements OnInit {
 
 	constructor(private authService: AuthService
 		, private authStore: Store<AuthState>
-		, private sessionStore: Store<Session>) { }
+		, private sessionStore: Store<Session>
+		, private appStore: Store<AppState>) { }
 
 	collapseNav() {
 		if (this.navbarToggler) {
@@ -36,6 +39,7 @@ export class NavbarComponent implements OnInit {
 	}
 
 	login() {
+		this.appStore.dispatch(resetSchulen());
 		this.authService.login();
 	}
 

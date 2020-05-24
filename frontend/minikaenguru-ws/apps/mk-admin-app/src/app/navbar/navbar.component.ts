@@ -3,6 +3,8 @@ import { AuthService, AuthState, isLoggedIn, isLoggedOut, Session, user } from '
 import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
 import { environment } from '../../environments/environment';
+import { AppState } from '../reducers';
+import { resetWettbewerbe } from '../wettbewerbe/+state/wettbewerbe.actions';
 
 @Component({
 	selector: 'mka-navbar',
@@ -22,7 +24,8 @@ export class NavbarComponent implements OnInit {
 
 	constructor(private authService: AuthService
 		, private authStore: Store<AuthState>
-		, private sessionStore: Store<Session>) { }
+		, private sessionStore: Store<Session>
+		, private appStore: Store<AppState>) { }
 
 	collapseNav() {
 		if (this.navbarToggler) {
@@ -35,6 +38,7 @@ export class NavbarComponent implements OnInit {
 	}
 
 	login() {
+		this.appStore.dispatch(resetWettbewerbe());
 		this.authService.login();
 	}
 

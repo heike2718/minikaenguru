@@ -24,3 +24,7 @@ export const selectedWettbewerbLoaded = createAction(
 	'[WettbewerbeEffects] loadWettbewerbDetails$',
 	props<{wettbewerb: Wettbewerb}>()
 );
+
+export const resetWettbewerbe = createAction (
+	'[NavbarComponent] login'
+);

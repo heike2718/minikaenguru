@@ -13,9 +13,13 @@ export const schulenLoaded = createAction(
 export const selectSchule = createAction(
 	'[SchuleCardComponent] select schule',
 	props<{schule: Schule}>()
-)
+);
 
 export const unselectSchule = createAction(
 	'[SchuleCardComponent] unselect schule'
-)
+);
+
+export const resetSchulen = createAction(
+	'[NavbarComponent] login'
+);
 
