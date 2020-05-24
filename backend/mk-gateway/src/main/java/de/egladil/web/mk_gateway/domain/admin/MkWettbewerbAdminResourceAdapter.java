@@ -7,11 +7,14 @@ package de.egladil.web.mk_gateway.domain.admin;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.AbstractMkResourceAdapter;
 import de.egladil.web.mk_gateway.infrastructure.messaging.MkWettbewerbAdminRestClient;
 
@@ -37,6 +40,26 @@ public class MkWettbewerbAdminResourceAdapter extends AbstractMkResourceAdapter 
 
 			return this.handleException(e, LOG, "[loadWettbewerbe]");
 		}
+	}
+
+	public Response wettbewerbMitJahr(final Integer jahr, final String principalName) {
+
+		if (jahr == null) {
+
+			LOG.warn("Aufruf mit jahr = null. Geben 404 zurück");
+			return Response.status(Status.NOT_FOUND)
+				.entity(ResponsePayload.messageOnly(MessagePayload.error("kein Wettbwerb mit Jahr null bekannt"))).build();
+		}
+
+		try {
+
+			Response response = restClient.getWettbewerbMitJahr(jahr, principalName);
+			return response;
+		} catch (Exception e) {
+
+			return this.handleException(e, LOG, "[wettbewerbMitJahr]");
+		}
+
 	}
 
 	@Override

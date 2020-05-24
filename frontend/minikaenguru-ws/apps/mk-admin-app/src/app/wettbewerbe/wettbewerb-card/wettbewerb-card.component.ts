@@ -4,7 +4,7 @@ import { Wettbewerb } from '../wettbewerbe.model';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../reducers';
-import { selectWettbewerb } from '../+state/wettbewerbe.actions';
+import { selectWettbewerbsjahr } from '../+state/wettbewerbe.actions';
 
 @Component({
 	selector: 'mka-wettbewerb-card',
@@ -18,15 +18,18 @@ export class WettbewerbCardComponent implements OnInit {
 	@Input()
 	wettbewerb: Wettbewerb;
 
+	wettbewerbUndefined: boolean;
+
 	constructor(private router: Router, private store: Store<AppState>) { }
 
 	ngOnInit(): void {
+
+		this.wettbewerbUndefined = !this.wettbewerb;
 	}
 
 
 	selectWettbewerb(): void {
-		this.store.dispatch(selectWettbewerb({ wettbewerb: this.wettbewerb }));
-		this.router.navigateByUrl('/wettbewerbe/wettbewerb-dashboard');
+		this.store.dispatch(selectWettbewerbsjahr({ jahr: this.wettbewerb.jahr }));
+		this.router.navigateByUrl('/wettbewerbe/wettbewerb-dashboard/' + this.wettbewerb.jahr);
 	}
-
 }

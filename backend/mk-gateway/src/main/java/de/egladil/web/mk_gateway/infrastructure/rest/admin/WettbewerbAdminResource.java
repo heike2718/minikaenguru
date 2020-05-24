@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -45,6 +46,20 @@ public class WettbewerbAdminResource {
 		String principalName = securityContext.getUserPrincipal().getName();
 
 		return resourceAdapter.loadWettbewerbe(principalName);
+	}
+
+	@GET
+	@Path("/wettbewerbe/wettbewerb/{jahr}")
+	public Response wettbewerbMitJahr(@PathParam(value = "jahr") final Integer jahr) {
+
+		if (securityContext.getUserPrincipal() == null) {
+
+			throw new AuthException("nicht eingeloggt oder keine gültige session mehr");
+		}
+
+		String principalName = securityContext.getUserPrincipal().getName();
+
+		return resourceAdapter.wettbewerbMitJahr(jahr, principalName);
 	}
 
 }

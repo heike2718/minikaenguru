@@ -1,4 +1,4 @@
-<div class="row">
+<div *ngIf="wettbewerb else loading" class="row">
 	<div class="col-12">
 		<div class="card clickable clickabe-stacked" (click)="selectWettbewerb()">
 			<div class="card-body">
@@ -9,4 +9,9 @@
 		</div>
 	</div>
 </div>
-<p *ngIf="devMode">(wettbewerb-card.component)</p>
+<p *ngIf="devMode">(wettbewerb-card.component: undefined = {{wettbewerbUndefined}})</p>
+
+<ng-template #loading>
+	Lade Wettbewerbe... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
+</ng-template>
+

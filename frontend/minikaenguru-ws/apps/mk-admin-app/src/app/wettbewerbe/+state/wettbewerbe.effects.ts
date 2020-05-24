@@ -10,14 +10,23 @@ export class WettbewerbeEffects {
 
 	loadWettbewerbe$ = createEffect(
 
-
 		() => this.actions$.pipe(
 			ofType(WettbewerbeActions.loadWettbewerbe),
 			concatMap(_action => this.wettbewerbeService.loadWettbewerbe()),
-			map(wettbewerbe => WettbewerbeActions.allWettbewerbeLoaded({wettbewerbe: wettbewerbe}))
+			map(wettbewerbe => WettbewerbeActions.allWettbewerbeLoaded({ wettbewerbe: wettbewerbe }))
 		)
 
 	);
 
-	constructor(private actions$: Actions, private wettbewerbeService: WettbewerbeService){}
+	loadWettbewerbDetails$ = createEffect(
+
+		() => this.actions$.pipe(
+			ofType(WettbewerbeActions.loadWettbewerbDetails),
+			concatMap(action => this.wettbewerbeService.loadWettbewerbDetails(action.jahr)),
+			map(wettbewerb => WettbewerbeActions.selectedWettbewerbLoaded({wettbewerb: wettbewerb}))
+
+		)
+	)
+
+	constructor(private actions$: Actions, private wettbewerbeService: WettbewerbeService) { }
 }

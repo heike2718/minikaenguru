@@ -13,9 +13,9 @@ import de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb.WettbewerbStatus;
 
 /**
- * WettbewerbAPIModel
+ * WettbewerbDetailsAPIModel
  */
-public class WettbewerbAPIModel {
+public class WettbewerbDetailsAPIModel {
 
 	@JsonProperty
 	private int jahr;
@@ -35,9 +35,15 @@ public class WettbewerbAPIModel {
 	@JsonProperty
 	private Date datumFreischaltungPrivat;
 
-	public static WettbewerbAPIModel fromWettbewerb(final Wettbewerb wettbewerb) {
+	@JsonProperty
+	private TeilnahmenuebersichAPIModel teilnahmenuebersicht;
 
-		WettbewerbAPIModel result = new WettbewerbAPIModel();
+	@JsonProperty
+	private boolean completelyLoaded = true;
+
+	public static WettbewerbDetailsAPIModel fromWettbewerb(final Wettbewerb wettbewerb) {
+
+		WettbewerbDetailsAPIModel result = new WettbewerbDetailsAPIModel();
 
 		result.jahr = wettbewerb.id().jahr().intValue();
 		result.status = wettbewerb.status();
@@ -46,6 +52,12 @@ public class WettbewerbAPIModel {
 		result.datumFreischaltungLehrer = CommonTimeUtils.transformFromLocalDate(wettbewerb.datumFreischaltungLehrer());
 		result.datumFreischaltungPrivat = CommonTimeUtils.transformFromLocalDate(wettbewerb.datumFreischaltungPrivat());
 		return result;
+	}
+
+	public WettbewerbDetailsAPIModel withTeilnahmenuebersicht(final TeilnahmenuebersichAPIModel teilnahmenubersicht) {
+
+		this.teilnahmenuebersicht = teilnahmenubersicht;
+		return this;
 	}
 
 }

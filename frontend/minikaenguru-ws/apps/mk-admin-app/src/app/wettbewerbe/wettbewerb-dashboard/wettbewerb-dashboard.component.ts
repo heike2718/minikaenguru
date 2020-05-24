@@ -4,7 +4,6 @@ import { AppState } from '../../reducers';
 import { selectedWettbewerb } from '../+state/wettbewerbe.selectors';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
-import { unselectWettbewerb } from '../+state/wettbewerbe.actions';
 
 @Component({
 	selector: 'mka-wettbewerb-dashboard',
@@ -24,18 +23,12 @@ export class WettbewerbDashboardComponent implements OnInit {
 
 	backToWettbewerbe() {
 
-		this.unselectWettbewerb();
 		this.router.navigateByUrl('/wettbewerbe');
 
 	}
 
 	backToDashboard() {
-		this.unselectWettbewerb();
 		this.router.navigateByUrl('/dashboard');
-	}
-
-	private unselectWettbewerb() {
-		this.store.dispatch(unselectWettbewerb());
 	}
 
 }

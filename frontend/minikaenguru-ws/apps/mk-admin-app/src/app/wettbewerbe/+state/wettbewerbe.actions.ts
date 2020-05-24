@@ -2,19 +2,25 @@ import {createAction, props} from '@ngrx/store';
 import { Wettbewerb } from '../wettbewerbe.model';
 
 export const loadWettbewerbe = createAction(
-	'[Wettbewerbe Resolver] Load all wettbewerbe'
+	'[WettbewerbeListResolver]'
 );
 
 export const allWettbewerbeLoaded = createAction(
-	'[WettbewerbeService] loadWettbewerbe',
+	'[WettbewerbeEffects] loadWettbewerbe$',
 	props<{wettbewerbe: Wettbewerb[]}>()
 );
 
-export const selectWettbewerb = createAction(
-	'[WettbewerbCardComponent] select wettbewerb',
-	props<{wettbewerb: Wettbewerb}>()
+export const loadWettbewerbDetails = createAction(
+	'[WettbewerbDashboardResolver]',
+	props<{jahr: number}>()
 );
 
-export const unselectWettbewerb = createAction(
-	'[WettbewerbDashboardComponent] back to wettbewerbe'
+export const selectWettbewerbsjahr = createAction(
+	'[WettbewerbCardComponent] click',
+	props<{jahr: number}>()
+);
+
+export const selectedWettbewerbLoaded = createAction(
+	'[WettbewerbeEffects] loadWettbewerbDetails$',
+	props<{wettbewerb: Wettbewerb}>()
 );

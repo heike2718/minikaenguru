@@ -10,6 +10,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { WettbewerbeRoutingModule } from './wettbewerbe-routing.module';
 import { WettbewerbCardComponent } from './wettbewerb-card/wettbewerb-card.component';
 import { WettbewerbDashboardComponent } from './wettbewerb-dashboard/wettbewerb-dashboard.component';
+import { WettbewerbDashboardResolver } from './wettbewerb-dashboard/wettbewerb-dashboard.resolver';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { WettbewerbDashboardComponent } from './wettbewerb-dashboard/wettbewerb-
 	exports: [
 		],
 	providers: [
-		WettbewerbeListResolver
+		WettbewerbeListResolver,
+		WettbewerbDashboardResolver
 	]
 })
 export class WettbewerbeModule { }
