@@ -7,6 +7,8 @@ import { ResponsePayload } from '@minikaenguru-ws/common-messages';
 import { Wettbewerb } from '../wettbewerbe/wettbewerbe.model';
 
 import { LogService } from '@minikaenguru-ws/common-logging';
+import { Store } from '@ngrx/store';
+import { AppState } from '../reducers';
 
 @Injectable({
 	providedIn: 'root'
@@ -14,7 +16,7 @@ import { LogService } from '@minikaenguru-ws/common-logging';
 export class WettbewerbeService {
 
 
-	constructor(private http: HttpClient, private logger: LogService) { }
+	constructor(private http: HttpClient, private store: Store<AppState>, private logger: LogService) { }
 
 
 	public loadWettbewerbe(): Observable<Wettbewerb[]> {
@@ -27,5 +29,18 @@ export class WettbewerbeService {
 			map(body => body as ResponsePayload),
 			map(payload => payload.data)
 		)
+	}
+
+	public loadWettbewerbDetails(jahr: number): Observable<Wettbewerb> {
+
+		const url = environment.apiUrl + '/wb-admin/wettbewerbe/wettbewerb/' + jahr;
+
+		this.logger.debug(url);
+
+		return this.http.get(url).pipe(
+			map(body => body as ResponsePayload),
+			map(payload => payload.data)
+		);
+
 	}
 }

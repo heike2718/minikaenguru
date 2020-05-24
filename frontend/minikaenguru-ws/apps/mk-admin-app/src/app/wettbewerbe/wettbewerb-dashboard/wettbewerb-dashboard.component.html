@@ -1,5 +1,5 @@
 <div *ngIf="(wettbewerb$ | async) as wettbewerb" class="mkv-container mkv-bordered">
-	<div class="col-12">
+	<div *ngIf="wettbewerb" class="col-12">
 		<h2>Minikänguru {{wettbewerb.jahr}}</h2>
 		<p *ngIf="devMode">(wettbewerb-dashboard.component)</p>
 		<p class="card-subtitle mb-2 text-muted">Beginn: {{wettbewerb.wettbewerbsbeginn | date}}</p>

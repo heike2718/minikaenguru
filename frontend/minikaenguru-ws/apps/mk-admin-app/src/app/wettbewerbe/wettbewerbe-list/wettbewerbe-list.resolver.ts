@@ -3,14 +3,12 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/r
 import { AppState } from '../../reducers';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { tap, first, finalize, filter } from 'rxjs/operators';
+import { tap, first, filter } from 'rxjs/operators';
 import { wettbewerbeLoaded } from '../+state/wettbewerbe.selectors';
 import { loadWettbewerbe } from '../+state/wettbewerbe.actions';
 
 @Injectable()
 export class WettbewerbeListResolver implements Resolve<any> {
-
-	loading = false;
 
 	constructor(private store: Store<AppState>) { }
 
@@ -22,13 +20,11 @@ export class WettbewerbeListResolver implements Resolve<any> {
 			select(wettbewerbeLoaded),
 			tap(areLoaded => {
 				if (!areLoaded) {
-					this.loading = true;
 					this.store.dispatch(loadWettbewerbe());
 				}
 			}),
 			filter(loaded => loaded),
-			first(),
-			finalize(() => this.loading = false)
+			first()
 		);
 
 	}

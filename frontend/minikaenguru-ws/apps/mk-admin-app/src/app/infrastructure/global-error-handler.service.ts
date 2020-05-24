@@ -42,7 +42,9 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 		} else {
 			console.log('ErrorEvent: ' + error);
 			this.logger.error('mk-admin-app: Unerwarteter Fehler: ' + error.message);
-			this.showServerResponseMessage('ERROR', 'Unerwarteter GUI-Error: ' + error.message);
+			if (!environment.production) {
+				this.showServerResponseMessage('ERROR', 'Unerwarteter GUI-Error: ' + error.message);
+			}
 		}
 	}
 

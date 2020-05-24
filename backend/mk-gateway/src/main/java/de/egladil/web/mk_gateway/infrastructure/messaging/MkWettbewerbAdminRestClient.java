@@ -8,6 +8,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -28,6 +29,11 @@ public interface MkWettbewerbAdminRestClient {
 	@GET
 	@Path("/wettbewerbe")
 	Response loadWettbewerbe(@HeaderParam(
+		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName);
+
+	@GET
+	@Path("/wettbewerbe/wettbewerb/{jahr}")
+	Response getWettbewerbMitJahr(@PathParam(value = "jahr") final Integer jahr, @HeaderParam(
 		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName);
 
 }
