@@ -15,6 +15,11 @@ export const loadWettbewerbDetails = createAction(
 	props<{jahr: number}>()
 );
 
+export const createNewWettbewerb = createAction(
+	'[WettbewerbeListComponent] neuer Wettbewerb',
+	props<{wettbewerb: Wettbewerb}>()
+)
+
 export const selectWettbewerbsjahr = createAction(
 	'[WettbewerbCardComponent] click',
 	props<{jahr: number}>()

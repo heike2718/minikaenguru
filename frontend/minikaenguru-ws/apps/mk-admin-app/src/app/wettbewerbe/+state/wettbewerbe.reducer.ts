@@ -31,7 +31,7 @@ const wettbewerbeReducer = createReducer(initialWettbewerbeState,
 
 	on(WettbewerbeActions.selectWettbewerbsjahr, (state, action) => {
 		const loaded = state.wettbewerbeMap.length > 0;
-		return {...state, selectedJahr: action.jahr, wettbewerbeLoaded: loaded}
+		return { ...state, selectedJahr: action.jahr, wettbewerbeLoaded: loaded }
 	}),
 
 	on(WettbewerbeActions.selectedWettbewerbLoaded, (state, action) => {
@@ -58,8 +58,14 @@ const wettbewerbeReducer = createReducer(initialWettbewerbeState,
 		const loaded = state.wettbewerbeMap.length > 0;
 		return { ...state, wettbewerbeMap: neueMap, selectedJahr: jahr, wettbewerbeLoaded: loaded }
 	}),
-	on (WettbewerbeActions.resetWettbewerbe, (_state, _action) => {
+	on(WettbewerbeActions.resetWettbewerbe, (_state, _action) => {
 		return initialWettbewerbeState
+	}),
+	on(WettbewerbeActions.createNewWettbewerb, (state, action) => {
+		const wettbewerbMitID: WettbewerbWithID = { jahr: action.wettbewerb.jahr, wettbewerb: action.wettbewerb };
+		const neueMap = [...state.wettbewerbeMap, wettbewerbMitID];
+
+		return { ...state, wettbewerbeMap: neueMap, selectedJahr: action.wettbewerb.jahr };
 	})
 
 );

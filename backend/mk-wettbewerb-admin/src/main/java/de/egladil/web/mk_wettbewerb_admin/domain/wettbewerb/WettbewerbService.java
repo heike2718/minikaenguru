@@ -4,9 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -14,11 +11,17 @@ import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.egladil.web.commons_net.time.CommonTimeUtils;
+import de.egladil.web.commons_validation.ValidationDelegate;
+import de.egladil.web.commons_validation.exception.InvalidInputException;
+import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_wettbewerb_admin.domain.apimodel.TeilnahmenuebersichAPIModel;
 import de.egladil.web.mk_wettbewerb_admin.domain.apimodel.WettbewerbDetailsAPIModel;
 import de.egladil.web.mk_wettbewerb_admin.domain.apimodel.WettbewerbListAPIModel;
@@ -32,27 +35,19 @@ public class WettbewerbService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(WettbewerbService.class);
 
-	private List<Wettbewerb> wettbewerbe;
+	private final ValidationDelegate validationDelegate;
 
 	@Inject
 	WettbewerbRepository wettbewerbRepository;
 
 	public WettbewerbService() {
 
-		this.wettbewerbe = new ArrayList<>();
-		LocalDate now = LocalDate.now();
-		now.minus(365, ChronoUnit.DAYS);
-		wettbewerbe.add(new Wettbewerb(new WettbewerbID(2019)).withDatumFreischaltungLehrer(now)
-			.withDatumFreischaltungPrivat(now).withStatus(WettbewerbStatus.BEENDET)
-			.withWettbewerbsbeginn(now));
-
-		now = LocalDate.now();
-		wettbewerbe.add(new Wettbewerb(new WettbewerbID(2020)).withDatumFreischaltungLehrer(now)
-			.withDatumFreischaltungPrivat(now).withStatus(WettbewerbStatus.ANMELDUNG)
-			.withWettbewerbsbeginn(now));
+		this.validationDelegate = new ValidationDelegate();
 	}
 
 	public List<WettbewerbListAPIModel> alleWettbewerbeHolen() {
+
+		List<Wettbewerb> wettbewerbe = this.wettbewerbRepository.loadWettbewerbe();
 
 		Collections.sort(wettbewerbe, new WettbewerbeDescendingComparator());
 
@@ -103,11 +98,7 @@ public class WettbewerbService {
 			return Optional.empty();
 		}
 
-		// Optional<Wettbewerb> optWettbewerb = this.wettbewerbRepository.wettbewerbMitID(new WettbewerbID(jahr));
-
-		System.err.println("WettbewerbService.wettbewerbMitJahr() ist noch ein Mockup");
-
-		Optional<Wettbewerb> optWettbewerb = this.wettbewerbe.stream().filter(w -> w.id().jahr().equals(jahr)).findFirst();
+		Optional<Wettbewerb> optWettbewerb = this.wettbewerbRepository.wettbewerbMitID(new WettbewerbID(jahr));
 
 		if (optWettbewerb.isEmpty()) {
 
@@ -120,6 +111,50 @@ public class WettbewerbService {
 		result = result.withTeilnahmenuebersicht(new TeilnahmenuebersichAPIModel());
 
 		return Optional.of(result);
+
+	}
+
+	public Wettbewerb wettbewerbAnlegen(final WettbewerbDetailsAPIModel data) {
+
+		validationDelegate.check(data, WettbewerbDetailsAPIModel.class);
+
+		if (data.getJahr() < 2005) {
+
+			throw new InvalidInputException(
+				ResponsePayload.messageOnly(MessagePayload.error("Wettbewerbsjahr muss größer als 2004 sein")));
+		}
+
+		WettbewerbStatus status = null;
+
+		try {
+
+			status = WettbewerbStatus.valueOf(data.getStatus());
+		} catch (IllegalArgumentException e) {
+
+			throw new InvalidInputException(
+				ResponsePayload.messageOnly(
+					MessagePayload.error("WettbewerbStatus ist ungültig: erlaubt sind " + WettbewerbStatus.erlaubteStatus())));
+		}
+
+		Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(data.getJahr())).withStatus(status)
+			.withWettbewerbsende(CommonTimeUtils.parseToLocalDate(data.getWettbewerbsende()))
+			.withDatumFreischaltungLehrer(CommonTimeUtils.parseToLocalDate(data.getDatumFreischaltungLehrer()))
+			.withDatumFreischaltungPrivat(CommonTimeUtils.parseToLocalDate(data.getDatumFreischaltungPrivat()));
+
+		if (data.getWettbewerbsbeginn() != null) {
+
+			wettbewerb = wettbewerb.withWettbewerbsbeginn(CommonTimeUtils.parseToLocalDate(data.getWettbewerbsbeginn()));
+		}
+
+		try {
+
+			wettbewerbRepository.addWettbewerb(wettbewerb);
+			return wettbewerb;
+		} catch (PersistenceException e) {
+
+			LOG.error("Der wettbewerb {} konnte nicht gespeichert werden: {}", wettbewerb, e.getMessage(), e);
+			throw new MkWettbewerbAdminRuntimeException("PersistenceException beim Speichern eines neuen Wettbewerbs");
+		}
 
 	}
 }

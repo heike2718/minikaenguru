@@ -6,22 +6,44 @@ export interface Teilnahmenuebersicht {
 	readonly anzahlPrivatanmeldungen: number;
 	readonly anzahlLoesungszettelSchulen: number;
 	readonly anzahlLoesungszettelPrivat: number;
-}
+};
 
 export interface Wettbewerb {
 	readonly jahr: number;
 	readonly status: WettbewerbStatus;
-	readonly wettbewerbsbeginn?: Date;
-	readonly wettbewerbsende?: Date;
-	readonly datumFreischaltungLehrer?: Date;
-	readonly datumFreischaltungPrivat?: Date;
+	readonly wettbewerbsbeginn?: string;
+	readonly wettbewerbsende?: string;
+	readonly datumFreischaltungLehrer?: string;
+	readonly datumFreischaltungPrivat?: string;
 	readonly teilnahmenuebersicht?: Teilnahmenuebersicht;
-}
+};
+
+const initialTeilnahmenuebersicht: Teilnahmenuebersicht = {
+	anzahlPrivatanmeldungen: 0,
+	anzahlSchulanmeldungen: 0,
+	anzahlLoesungszettelPrivat:0,
+	anzahlLoesungszettelSchulen: 0
+};
+
+export const initialWettbewerb: Wettbewerb = {
+	jahr: 0,
+	status: 'ERFASST',
+	teilnahmenuebersicht: initialTeilnahmenuebersicht
+};
 
 export interface WettbewerbWithID {
 	jahr: number;
 	wettbewerb: Wettbewerb;
 }
+
+export interface WettbewerbEditorModel {
+	jahr: number,
+	status: WettbewerbStatus,
+	wettbewerbsbeginn: string
+	wettbewerbsende: string;
+	datumFreischaltungLehrer: string;
+	datumFreischaltungPrivat: string;
+};
 
 export function wettbewerbeWithIDArrayToWettbewerbeArray(wettbewerbeMitID: WettbewerbWithID[]): Wettbewerb[] {
 
@@ -49,7 +71,11 @@ export function indexOfWettbewerbMitId(wettbewerbeMitID: WettbewerbWithID[], jah
 
 export function findWettbewerbMitId(wettbewerbeMitID: WettbewerbWithID[], jahr: number): Wettbewerb {
 
-	if (wettbewerbeMitID === undefined || !jahr) {
+	if (wettbewerbeMitID === undefined) {
+		return null;
+	}
+
+	if (jahr === NaN) {
 		return null;
 	}
 

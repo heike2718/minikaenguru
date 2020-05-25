@@ -4,6 +4,8 @@ import { AppState } from '../../reducers';
 import { wettbewerbe } from '../+state/wettbewerbe.selectors';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
+import { loadWettbewerbDetails, createNewWettbewerb } from '../+state/wettbewerbe.actions';
+import { initialWettbewerb } from '../wettbewerbe.model';
 
 @Component({
 	selector: 'mka-wettbewerbe-list',
@@ -22,7 +24,8 @@ export class WettbewerbeListComponent implements OnInit {
 	}
 
 	addWettbewerb() {
-		console.log('jetzt neuen Wettbewerb anlegen');
+		this.store.dispatch(createNewWettbewerb({wettbewerb: initialWettbewerb}));
+		this.router.navigateByUrl('/wettbewerbe/wettbewerb-editor/neu');
 	}
 
 	gotoDashboard() {
