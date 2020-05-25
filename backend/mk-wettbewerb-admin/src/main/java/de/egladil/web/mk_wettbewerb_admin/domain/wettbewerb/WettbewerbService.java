@@ -23,6 +23,7 @@ import de.egladil.web.commons_validation.exception.InvalidInputException;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_wettbewerb_admin.domain.apimodel.TeilnahmenuebersichAPIModel;
+import de.egladil.web.mk_wettbewerb_admin.domain.apimodel.WettbewerbAPIModel;
 import de.egladil.web.mk_wettbewerb_admin.domain.apimodel.WettbewerbDetailsAPIModel;
 import de.egladil.web.mk_wettbewerb_admin.domain.apimodel.WettbewerbListAPIModel;
 import de.egladil.web.mk_wettbewerb_admin.domain.error.MkWettbewerbAdminRuntimeException;
@@ -114,9 +115,9 @@ public class WettbewerbService {
 
 	}
 
-	public Wettbewerb wettbewerbAnlegen(final WettbewerbDetailsAPIModel data) {
+	public Wettbewerb wettbewerbAnlegen(final WettbewerbAPIModel data) {
 
-		validationDelegate.check(data, WettbewerbDetailsAPIModel.class);
+		validationDelegate.check(data, WettbewerbAPIModel.class);
 
 		if (data.getJahr() < 2005) {
 

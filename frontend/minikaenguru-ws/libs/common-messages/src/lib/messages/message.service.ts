@@ -13,6 +13,19 @@ export class MessageService {
 
 	constructor() { }
 
+	showMessage(message: Message) {
+
+		switch (message.level) {
+			case 'INFO': this.info(message.message);
+				break;
+			case 'WARN': this.warn(message.message);
+				break;
+			case 'ERROR': this.error(message.message);
+				break;
+		}
+
+	}
+
 	info(message: string) {
 		this.messageSubject.next({
 			level: 'INFO',

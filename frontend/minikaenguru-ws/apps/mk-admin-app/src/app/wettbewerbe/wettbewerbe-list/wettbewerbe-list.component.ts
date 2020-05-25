@@ -4,7 +4,7 @@ import { AppState } from '../../reducers';
 import { wettbewerbe } from '../+state/wettbewerbe.selectors';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
-import { loadWettbewerbDetails, createNewWettbewerb } from '../+state/wettbewerbe.actions';
+import { createNewWettbewerb } from '../+state/wettbewerbe.actions';
 import { initialWettbewerb } from '../wettbewerbe.model';
 
 @Component({

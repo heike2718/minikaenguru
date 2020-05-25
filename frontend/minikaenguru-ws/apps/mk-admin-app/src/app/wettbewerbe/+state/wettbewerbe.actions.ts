@@ -1,5 +1,6 @@
 import {createAction, props} from '@ngrx/store';
 import { Wettbewerb } from '../wettbewerbe.model';
+import { Message } from '@minikaenguru-ws/common-messages';
 
 export const loadWettbewerbe = createAction(
 	'[WettbewerbeListResolver]'
@@ -18,7 +19,12 @@ export const loadWettbewerbDetails = createAction(
 export const createNewWettbewerb = createAction(
 	'[WettbewerbeListComponent] neuer Wettbewerb',
 	props<{wettbewerb: Wettbewerb}>()
-)
+);
+
+export const updateWettbewerb = createAction (
+	'[WettbewerbService]: saveWettbewerb',
+	props<{wettbewerb: Wettbewerb, outcome: Message}>()
+);
 
 export const selectWettbewerbsjahr = createAction(
 	'[WettbewerbCardComponent] click',

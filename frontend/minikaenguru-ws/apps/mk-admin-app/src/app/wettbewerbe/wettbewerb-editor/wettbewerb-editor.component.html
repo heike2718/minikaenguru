@@ -93,14 +93,18 @@
 
 	</div>
 	<div class="row mt-4 ml-2">
-		<div class="col-md-6 mt-4">
+		<div class="col-md-4 mt-4">
 			<button class="btn btn-primary" [disabled]="!wettbewerbForm.valid" (click)="onSubmit()"><i
 					class="fa fa-floppy-o" aria-hidden="true"></i>
 				speichern</button>
 		</div>
-		<div class="col-md-6 mt-4">
+		<div class="col-md-4 mt-4">
 			<button class="btn btn-primary" (click)="onCancel()"><i class="fa fa-undo"
 					aria-hidden="true"></i>zurücksetzen</button>
+		</div>
+		<div class="col-md-4 mt-4">
+			<button class="btn btn-primary" (click)="gotoWettbewerbe()"><i class="fa fa-arrow-left"
+					aria-hidden="true"></i>Wettbewerbe</button>
 		</div>
 	</div>
 </div>

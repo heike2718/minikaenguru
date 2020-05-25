@@ -28,6 +28,10 @@ const initialTeilnahmenuebersicht: Teilnahmenuebersicht = {
 export const initialWettbewerb: Wettbewerb = {
 	jahr: 0,
 	status: 'ERFASST',
+	wettbewerbsbeginn: '11.11.2016',
+	wettbewerbsende: '01.08.2017',
+	datumFreischaltungLehrer: '05.03.2017',
+	datumFreischaltungPrivat: '01.06.2017',
 	teilnahmenuebersicht: initialTeilnahmenuebersicht
 };
 

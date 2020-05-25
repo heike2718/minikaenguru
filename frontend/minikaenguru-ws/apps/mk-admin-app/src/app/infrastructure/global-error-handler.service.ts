@@ -1,6 +1,6 @@
 import { ErrorHandler, Injector, Injectable } from '@angular/core';
 import { LogService } from '@minikaenguru-ws/common-logging';
-import { ResponsePayload, MessageService } from '@minikaenguru-ws/common-messages';
+import { MessageService } from '@minikaenguru-ws/common-messages';
 import { environment } from '../../environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LogPublishersService } from './log-publishers.service';
@@ -69,7 +69,8 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 		}
 	}
 
-	private extractMessageObject(error: HttpErrorResponse): { level: string, message: string } {
+
+	public extractMessageObject(error: HttpErrorResponse): { level: string, message: string } {
 
 		if (error.error && error.error.message) {
 			return { level: 'ERROR', message: error.error.message['message'] };

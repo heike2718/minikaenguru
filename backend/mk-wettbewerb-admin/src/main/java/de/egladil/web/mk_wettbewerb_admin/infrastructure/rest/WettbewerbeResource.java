@@ -25,6 +25,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_wettbewerb_admin.MkWettbewerbAdminApp;
+import de.egladil.web.mk_wettbewerb_admin.domain.apimodel.WettbewerbAPIModel;
 import de.egladil.web.mk_wettbewerb_admin.domain.apimodel.WettbewerbDetailsAPIModel;
 import de.egladil.web.mk_wettbewerb_admin.domain.apimodel.WettbewerbListAPIModel;
 import de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb.Wettbewerb;
@@ -76,7 +77,7 @@ public class WettbewerbeResource extends AbstractAdminResource {
 
 	@POST
 	@Path("/wettbewerb")
-	public Response wettbewerbAnlegen(final WettbewerbDetailsAPIModel data, @HeaderParam(
+	public Response wettbewerbAnlegen(final WettbewerbAPIModel data, @HeaderParam(
 		value = MkWettbewerbAdminApp.UUID_HEADER_NAME) final String principalName) {
 
 		this.checkAccess(principalName);

@@ -6,6 +6,10 @@ package de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb;
 
 import java.util.Objects;
 
+import de.egladil.web.commons_validation.exception.InvalidInputException;
+import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.commons_validation.payload.ResponsePayload;
+
 /**
  * WettbewerbID
  */
@@ -25,7 +29,7 @@ public class WettbewerbID {
 
 		if (jahr.intValue() < 2005) {
 
-			throw new IllegalArgumentException("jahr muss größer 2004 sein");
+			throw new InvalidInputException(ResponsePayload.messageOnly(MessagePayload.error("jahr muss größer 2004 sein")));
 		}
 
 		this.jahr = jahr;

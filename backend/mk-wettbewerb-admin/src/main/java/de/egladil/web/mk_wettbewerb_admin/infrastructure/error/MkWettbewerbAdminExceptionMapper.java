@@ -4,8 +4,11 @@
 // =====================================================
 package de.egladil.web.mk_wettbewerb_admin.infrastructure.error;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.WebApplicationException;
@@ -15,12 +18,14 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import de.egladil.web.commons_validation.InvalidProperty;
 import de.egladil.web.commons_validation.exception.InvalidInputException;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
@@ -48,7 +53,22 @@ public class MkWettbewerbAdminExceptionMapper implements ExceptionMapper<Throwab
 		if (exception instanceof InvalidInputException) {
 
 			InvalidInputException e = (InvalidInputException) exception;
-			return Response.status(400).entity(serialize(e.getResponsePayload())).build();
+			ResponsePayload responsePayload = e.getResponsePayload();
+			Object data = responsePayload.getData();
+
+			String msg = "";
+
+			if (data != null && data instanceof InvalidProperty[]) {
+
+				List<String> invalidProperties = Arrays.stream(((InvalidProperty[]) data)).map(p -> p.toString())
+					.collect(Collectors.toList());
+				msg = responsePayload.getMessage().getMessage() + ": " + StringUtils.join(invalidProperties, ",");
+			} else {
+
+				msg = responsePayload.getMessage().getMessage();
+			}
+			LOG.error(msg);
+			return Response.status(400).entity(serialize(responsePayload)).build();
 		}
 
 		if (exception instanceof NotFoundException) {
