@@ -1,6 +1,6 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import * as WettbewerbeActions from './wettbewerbe.actions';
-import { WettbewerbWithID, WettbewerbEditorModel, initialWettbewerbEditorModel } from '../wettbewerbe.model';
+import { WettbewerbWithID, WettbewerbEditorModel, initialWettbewerbEditorModel, Wettbewerb } from '../wettbewerbe.model';
 
 import { Message } from '@minikaenguru-ws/common-messages';
 
@@ -66,9 +66,24 @@ const wettbewerbeReducer = createReducer(initialWettbewerbeState,
 		return { ...state, selectedJahr: modelPart.jahr, saveOutcome: undefined, wettbewerbEditorModel: modelPart };
 	}),
 
-	on (WettbewerbeActions.editWettbewerbFinished, (state, _action) => {
+	on(WettbewerbeActions.startEditingWettbewerb, (state, action) => {
 
-		return {...state, selectedJahr: undefined, saveOutcome: undefined, wettbewerbEditorModel: undefined}
+		const wettbewerb: Wettbewerb = action.wettbewerb;
+		const wettbewerbEditorModel: WettbewerbEditorModel = {
+			jahr: wettbewerb.jahr,
+			status: wettbewerb.status,
+			wettbewerbsbeginn: wettbewerb.wettbewerbsbeginn,
+			wettbewerbsende: wettbewerb.wettbewerbsende,
+			datumFreischaltungLehrer: wettbewerb.datumFreischaltungLehrer,
+			datumFreischaltungPrivat: wettbewerb.datumFreischaltungPrivat
+		};
+
+		return { ...state, wettbewerbEditorModel: wettbewerbEditorModel, saveOutcome: undefined };
+	}),
+
+	on(WettbewerbeActions.editWettbewerbFinished, (state, _action) => {
+
+		return { ...state, selectedJahr: undefined, saveOutcome: undefined, wettbewerbEditorModel: undefined }
 
 	}),
 
@@ -94,7 +109,7 @@ const wettbewerbeReducer = createReducer(initialWettbewerbeState,
 			console.debug('updateWettbewerb: status fertig')
 			return { ...state, wettbewerbeMap: neueMap, selectedJahr: action.wettbewerb.jahr, saveOutcome: outcome };
 		} else {
-			return {...state, saveOutcome: outcome};
+			return { ...state, saveOutcome: outcome };
 		}
 	})
 

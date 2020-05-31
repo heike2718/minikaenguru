@@ -2,9 +2,6 @@ import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 // import { DOCUMENT } from '@angular/common';
 import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 import { environment } from '../../../environments/environment';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../reducers';
-import { wettbewerbEditorModel, saveOutcome } from '../+state/wettbewerbe.selectors';
 import { Subscription } from 'rxjs';
 import { WettbewerbEditorModel } from '../wettbewerbe.model';
 import { WettbewerbFacade } from '../../services/wettbewerb.facade';
@@ -23,7 +20,7 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 
 	wettbewerbForm: FormGroup;
 
-	wettbewerbEditorModel$ = this.store.select(wettbewerbEditorModel);
+	wettbewerbEditorModel$ = this.wettbewerbFacade.wettbewerbEditorModel$;
 
 	private wettbewerbSubscription: Subscription;
 
@@ -32,7 +29,6 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 	private initialWettbewerbGuiModel = {} as WettbewerbEditorModel;
 
 	constructor(private fb: FormBuilder,
-		private store: Store<AppState>,
 		private wettbewerbFacade: WettbewerbFacade,
 		// @Inject(DOCUMENT) private document: Document,
 		private router: Router,
@@ -85,7 +81,7 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 			}
 		);
 
-		this.saveOutcomeSubscription = this.store.select(saveOutcome).subscribe(
+		this.saveOutcomeSubscription = this.wettbewerbFacade.saveOutcome$.subscribe(
 
 			outcome => {
 				if (outcome !== undefined) {
@@ -110,9 +106,9 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 
 	onSubmit() {
 		const neuerWettbewerb = this.wettbewerbForm.value;
-
-		neuerWettbewerb.status = this.initialWettbewerbGuiModel.status;
-
+		if (!neuerWettbewerb.status) {
+			neuerWettbewerb.status = this.initialWettbewerbGuiModel.status;
+		}
 		this.logger.debug(JSON.stringify(neuerWettbewerb));
 		this.wettbewerbFacade.saveWettbewerb(neuerWettbewerb);
 	}
