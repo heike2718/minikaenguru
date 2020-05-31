@@ -15,11 +15,14 @@
 
 		<ul class="nav navbar-nav navbar-right">
 			<li class="nav-link" *ngIf="(user$ | async) as user">Moin,{{user.fullName}}</li>
+			<li *ngIf="isLoggedIn$ | async" routerLinkActive="active"><a routerLink="/dashboard" (click)="collapseNav()" class="nav-link" title="Dashboard">
+					<span class="fa fa-puzzle-piece fa-1x" aria-hidden="true"></span> Dashboard </a></li>
 			<li *ngIf="isLoggedOut$ | async" routerLinkActive="active">
 				<a class="nav-link" (click)="login()"><span class="fa fa-sign-in fa-1x" aria-hidden="true"></span>
 					Einloggen <span class="sr-only">(current)</span></a></li>
 			<li routerLinkActive="active" *ngIf="isLoggedIn$ | async">
-				<a class="nav-link" (click)="logout()"><span class="fa fa-sign-out fa-1x" aria-hidden="true"></span> Ausloggen</a>
+				<a class="nav-link" (click)="logout()"><span class="fa fa-sign-out fa-1x" aria-hidden="true"></span>
+					Ausloggen</a>
 			</li>
 		</ul>
 

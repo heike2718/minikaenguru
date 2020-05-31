@@ -1,0 +1,110 @@
+<div *ngIf="(wettbewerbEditorModel$ | async) as wettbewerb" class="mkv-container mkv-bordered">
+
+	<h2>Wettbewerb Editor</h2>
+
+	<div class="col-12">
+
+		<form class="mb-4" [formGroup]="wettbewerbForm">
+			<div class="row mt-4">
+				<div class="col-md-12">
+					<label for="jahrInput">Jahr*</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<input [class.error]="jahrFormControl.touched && !jahrFormControl.valid" class="form-control" type="text" id="jahrInput" placeholder="Jahr"
+						formControlName="jahr" autocomplete="true">
+				</div>
+			</div>
+
+			<div class="row mt-4">
+				<div class="col-md-12">
+					<label for="statusInput">Status*</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<input  [class.error]="statusFormControl.touched && !statusFormControl.valid" class="form-control" type="text" id="statusInput" placeholder="Status"
+						formControlName="status" autocomplete="true">
+				</div>
+			</div>
+
+			<div class="row mt-4">
+				<div class="col-md-12">
+					<label for="wettbewerbsbeginnInput">Beginn</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<input  [class.error]="wettbewerbsbeginnFormControl.touched && !wettbewerbsbeginnFormControl.valid" class="form-control" type="text" id="wettbewerbsbeginnInput" placeholder="Beginn"
+						formControlName="wettbewerbsbeginn" autocomplete="true">
+				</div>
+			</div>
+
+			<div class="row mt-4">
+				<div class="col-md-12">
+					<label for="wettbewerbsendeInput">Ende*</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<input  [class.error]="wettbewerbsendeFormControl.touched && !wettbewerbsendeFormControl.valid" class="form-control" type="text" id="wettbewerbsendeInput" placeholder="Ende"
+						formControlName="wettbewerbsende" autocomplete="true">
+				</div>
+			</div>
+
+			<div class="row mt-4">
+				<div class="col-md-12">
+					<label for="datumFreischaltungLehrerInput">Freischaltung Lehrer*</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<input  [class.error]="datumFreischaltungLehrerFormControl.touched && !datumFreischaltungLehrerFormControl.valid" class="form-control" type="text" id="datumFreischaltungLehrerInput" placeholder="Freischaltung Lehrer"
+						formControlName="datumFreischaltungLehrer" autocomplete="true">
+				</div>
+			</div>
+
+			<div class="row mt-4">
+				<div class="col-md-12">
+					<label for="datumFreischaltungPrivatInput">Freischaltung privat*</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<input  [class.error]="datumFreischaltungPrivatFormControl.touched && !datumFreischaltungPrivatFormControl.valid" class="form-control" type="text" id="datumFreischaltungPrivatInput" placeholder="Freischaltung privat"
+						formControlName="datumFreischaltungPrivat" autocomplete="true">
+				</div>
+			</div>
+		</form>
+
+		<p *ngIf="devMode">
+			Form Value: {{ wettbewerbForm.value | json }}
+		</p>
+
+
+		<p *ngIf="devMode">
+			Form Status: {{ wettbewerbForm.status }}
+		</p>
+
+		<p *ngIf="devMode">
+			(wettbewerb-editor.component.ts)
+		</p>
+
+	</div>
+	<div class="row mt-4 ml-2">
+		<div class="col-md-4 mt-4">
+			<button class="btn btn-primary" [disabled]="!wettbewerbForm.valid" (click)="onSubmit()"><i
+					class="fa fa-floppy-o" aria-hidden="true"></i>
+				speichern</button>
+		</div>
+		<div class="col-md-4 mt-4">
+			<button class="btn btn-primary" (click)="onCancel()"><i class="fa fa-undo"
+					aria-hidden="true"></i>zurücksetzen</button>
+		</div>
+		<div class="col-md-4 mt-4">
+			<button class="btn btn-primary" (click)="gotoWettbewerbe()"><i class="fa fa-arrow-left"
+					aria-hidden="true"></i>Wettbewerbe</button>
+		</div>
+	</div>
+</div>

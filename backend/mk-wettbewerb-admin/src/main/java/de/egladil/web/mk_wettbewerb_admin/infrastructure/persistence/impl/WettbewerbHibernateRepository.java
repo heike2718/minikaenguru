@@ -12,6 +12,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb.Wettbewerb;
@@ -87,23 +88,18 @@ public class WettbewerbHibernateRepository implements WettbewerbRepository {
 	}
 
 	@Override
+	@Transactional
 	public void addWettbewerb(final Wettbewerb wettbewerb) {
 
-		Optional<PersistenterWettbewerb> opt = this.findPersistentenWetbewerbByUUID(wettbewerb.id().toString());
-
-		if (opt.isPresent()) {
-
-			throw new IllegalStateException("Den Wettbewerb " + wettbewerb.toString() + " gibt es schon");
-		}
-
-		PersistenterWettbewerb persistenterWettbewerb = opt.get();
+		PersistenterWettbewerb persistenterWettbewerb = new PersistenterWettbewerb();
 		mapFromWettbewerb(wettbewerb, persistenterWettbewerb);
+		persistenterWettbewerb.setImportierteUuid(wettbewerb.id().toString());
 
-		em.merge(persistenterWettbewerb);
-
+		em.persist(persistenterWettbewerb);
 	}
 
 	@Override
+	@Transactional
 	public void changeWettbewerb(final Wettbewerb wettbewerb) {
 
 		Optional<Wettbewerb> opt = this.wettbewerbMitID(wettbewerb.id());

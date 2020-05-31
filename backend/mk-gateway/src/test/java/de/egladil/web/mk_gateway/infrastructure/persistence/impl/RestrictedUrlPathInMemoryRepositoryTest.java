@@ -140,6 +140,22 @@ public class RestrictedUrlPathInMemoryRepositoryTest {
 		}
 
 		@Test
+		void should_OfPathContainWettbewerbOhneJahr() {
+
+			Optional<RestrictedUrlPath> opt = repository.ofPath("/wb-admin/wettbewerbe/wettbewerb");
+
+			assertTrue(opt.isPresent());
+
+			RestrictedUrlPath restrictedUrlPath = opt.get();
+
+			assertEquals("/wb-admin/wettbewerbe/wettbewerb", restrictedUrlPath.path());
+
+			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.LEHRER));
+			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.PRIVAT));
+			assertTrue(restrictedUrlPath.isAllowedForRolle(Rolle.ADMIN));
+		}
+
+		@Test
 		void should_OfPathContainWettbewerbMitJahr() {
 
 			Optional<RestrictedUrlPath> opt = repository.ofPath("/wb-admin/wettbewerbe/wettbewerb/2017");

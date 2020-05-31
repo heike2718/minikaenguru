@@ -4,11 +4,15 @@
 // =====================================================
 package de.egladil.web.mk_wettbewerb_admin.infrastructure.rest;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_wettbewerb_admin.domain.error.AccessDeniedException;
+import de.egladil.web.mk_wettbewerb_admin.domain.error.MkWettbewerbAdminRuntimeException;
 
 /**
  * AbstractAdminResource
@@ -37,4 +41,21 @@ public abstract class AbstractAdminResource {
 		}
 	}
 
+	/**
+	 * Wandelt locationString in URI um und dabei eine eventuelle URISyntaxException in eine MkWettbewerbAdminRuntimeException
+	 *
+	 * @param  locationString
+	 * @return                URI
+	 */
+	protected URI createdUri(final String locationString) {
+
+		try {
+
+			return new URI(locationString);
+		} catch (URISyntaxException e) {
+
+			LOG.error("Fehlerhafte URI {}: {} ", locationString, e.getMessage(), e);
+			throw new MkWettbewerbAdminRuntimeException("Fehlerhafte URI: " + locationString, e);
+		}
+	}
 }

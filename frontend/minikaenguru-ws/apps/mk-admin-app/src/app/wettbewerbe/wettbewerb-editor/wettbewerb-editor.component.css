@@ -1,0 +1,10 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  padding-top: 24px;
+}
+
+.error {
+	border: 2px crimson solid;
+	background-color: cornsilk;
+}
