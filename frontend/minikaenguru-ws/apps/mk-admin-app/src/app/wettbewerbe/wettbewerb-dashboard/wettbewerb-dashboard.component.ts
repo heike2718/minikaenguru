@@ -1,10 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../reducers';
-import { selectedWettbewerb } from '../+state/wettbewerbe.selectors';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
+import { WettbewerbFacade } from '../../services/wettbewerb.facade';
 import { Subscription } from 'rxjs';
+import { Wettbewerb } from '../wettbewerbe.model';
 
 @Component({
 	selector: 'mka-wettbewerb-dashboard',
@@ -15,34 +14,35 @@ export class WettbewerbDashboardComponent implements OnInit, OnDestroy {
 
 	devMode = !environment.production;
 
-	wettbewerb$ = this.store.select(selectedWettbewerb);
+	wettbewerb$ = this.wettbewerbFacade.wettbewerb$;
 
-	private id: string;
+	private wettbewerb: Wettbewerb;
 
-	private wettbewerbSubscription: Subscription;
+	private selectedWettbewerbSubscription: Subscription;
 
-	constructor(private store: Store<AppState>, private router: Router) { }
+	constructor(private wettbewerbFacade: WettbewerbFacade, private router: Router) { }
 
 	ngOnInit(): void {
-		this.wettbewerbSubscription = this.wettbewerb$.subscribe(
-			wb => this.id = '' + wb.jahr
+
+		this.selectedWettbewerbSubscription = this.wettbewerb$.subscribe(
+			wb => this.wettbewerb = wb
 		);
 	}
 
 	ngOnDestroy(): void {
-		if (this.wettbewerbSubscription) {
-			this.wettbewerbSubscription.unsubscribe();
+
+		if (this.selectedWettbewerbSubscription) {
+			this.selectedWettbewerbSubscription.unsubscribe();
 		}
+
 	}
 
 	editWettbewerb() {
-		this.router.navigateByUrl('/wettbewerbe/wettbewerb-editor/' + this.id);
+		this.wettbewerbFacade.editWettbewerb(this.wettbewerb);
 	}
 
 	backToWettbewerbe() {
-
 		this.router.navigateByUrl('/wettbewerbe');
-
 	}
 
 	backToDashboard() {

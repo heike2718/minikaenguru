@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../reducers';
-import { wettbewerbe } from '../+state/wettbewerbe.selectors';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
-import { createNewWettbewerb } from '../+state/wettbewerbe.actions';
+import { WettbewerbFacade } from '../../services/wettbewerb.facade';
+import { Observable } from 'rxjs';
+import { Wettbewerb } from '../wettbewerbe.model';
 
 @Component({
 	selector: 'mka-wettbewerbe-list',
@@ -14,16 +13,16 @@ import { createNewWettbewerb } from '../+state/wettbewerbe.actions';
 export class WettbewerbeListComponent implements OnInit {
 
 	devMode = !environment.production;
-	wettbewerbe$ = this.store.select(wettbewerbe);
+	wettbewerbe$: Observable<Wettbewerb[]> = this.wettbewerbFacade.wettbewerbe$;
 
 
-	constructor(private store: Store<AppState>, private router: Router) { }
+	constructor(private wettbewerbFacade: WettbewerbFacade, private router: Router) { }
 
 	ngOnInit(): void {
 	}
 
 	addWettbewerb() {
-		this.store.dispatch(createNewWettbewerb());
+		this.wettbewerbFacade.createNewWettbewerb();
 		this.router.navigateByUrl('/wettbewerbe/wettbewerb-editor/neu');
 	}
 
