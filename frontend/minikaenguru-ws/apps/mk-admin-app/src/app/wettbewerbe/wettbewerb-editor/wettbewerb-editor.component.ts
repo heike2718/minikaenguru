@@ -1,16 +1,16 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+// import { DOCUMENT } from '@angular/common';
 import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../reducers';
-import { selectedWettbewerb, saveOutcome } from '../+state/wettbewerbe.selectors';
+import { wettbewerbEditorModel, saveOutcome } from '../+state/wettbewerbe.selectors';
 import { Subscription } from 'rxjs';
-import { WettbewerbEditorModel, Wettbewerb } from '../wettbewerbe.model';
+import { WettbewerbEditorModel } from '../wettbewerbe.model';
 import { WettbewerbeService } from '../../services/wettbewerbe.service';
 import { LogService } from '@minikaenguru-ws/common-logging';
 import { Router } from '@angular/router';
-import { MessageService, Message } from '@minikaenguru-ws/common-messages';
+import { MessageService } from '@minikaenguru-ws/common-messages';
 
 @Component({
 	selector: 'mka-wettbewerb-editor',
@@ -23,20 +23,18 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 
 	wettbewerbForm: FormGroup;
 
-	wettbewerb$ = this.store.select(selectedWettbewerb);
+	wettbewerbEditorModel$ = this.store.select(wettbewerbEditorModel);
 
 	private wettbewerbSubscription: Subscription;
 
 	private saveOutcomeSubscription: Subscription;
 
-	private wettbewerbGuiModel = {} as WettbewerbEditorModel;
-
-	private wettbewerb: Wettbewerb;
+	private initialWettbewerbGuiModel = {} as WettbewerbEditorModel;
 
 	constructor(private fb: FormBuilder,
 		private store: Store<AppState>,
 		private wettbewerbeService: WettbewerbeService,
-		@Inject(DOCUMENT) private document: Document,
+		// @Inject(DOCUMENT) private document: Document,
 		private router: Router,
 		private messageService: MessageService,
 		private logger: LogService) { }
@@ -55,13 +53,12 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 
-		this.wettbewerbSubscription = this.wettbewerb$.subscribe(
+		this.wettbewerbSubscription = this.wettbewerbEditorModel$.subscribe(
 			wb => {
-				this.wettbewerb = wb;
-				this.initGuiModel(wb);
+				this.initialWettbewerbGuiModel = wb;
 
 				this.jahrFormControl = new FormControl({ value: '' }, Validators.required);
-				if (this.wettbewerb.jahr === 0) {
+				if (this.initialWettbewerbGuiModel.jahr === 0) {
 
 					this.statusFormControl = new FormControl({ value: '', disabled: true }, Validators.required);
 				} else {
@@ -84,7 +81,7 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 				});
 
 
-				this.wettbewerbForm.patchValue(this.wettbewerbGuiModel);
+				this.wettbewerbForm.patchValue(this.initialWettbewerbGuiModel);
 			}
 		);
 
@@ -96,49 +93,6 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 				}
 			}
 		);
-	}
-
-	private initGuiModel(wb: Wettbewerb): void {
-		this.wettbewerbGuiModel.jahr = wb.jahr;
-		this.wettbewerbGuiModel.status = wb.status;
-		if (wb.wettbewerbsbeginn) {
-			this.wettbewerbGuiModel.wettbewerbsbeginn = wb.wettbewerbsbeginn;
-
-		} else {
-			this.wettbewerbGuiModel.wettbewerbsbeginn = '';
-		}
-
-		if (wb.wettbewerbsende) {
-			this.wettbewerbGuiModel.wettbewerbsende = wb.wettbewerbsende;
-		} else {
-
-			this.wettbewerbGuiModel.wettbewerbsende = '';
-		}
-
-		if (wb.datumFreischaltungLehrer) {
-			this.wettbewerbGuiModel.datumFreischaltungLehrer = wb.datumFreischaltungLehrer;
-		} else {
-			this.wettbewerbGuiModel.datumFreischaltungLehrer = '';
-		}
-
-		if (wb.datumFreischaltungPrivat) {
-			this.wettbewerbGuiModel.datumFreischaltungPrivat = wb.datumFreischaltungPrivat;
-		} else {
-			this.wettbewerbGuiModel.datumFreischaltungPrivat = '';
-		}
-	}
-
-	private mergeFormValue(): Wettbewerb {
-
-		const formValue: WettbewerbEditorModel = this.wettbewerbForm.value;
-		return {
-			jahr: formValue.jahr,
-			status: formValue.status !== undefined ? formValue.status : this.wettbewerb.status,
-			wettbewerbsbeginn: formValue.wettbewerbsbeginn ? formValue.wettbewerbsbeginn.trim() : null,
-			wettbewerbsende: formValue.wettbewerbsende.trim(),
-			datumFreischaltungLehrer: formValue.datumFreischaltungLehrer.trim(),
-			datumFreischaltungPrivat: formValue.datumFreischaltungPrivat.trim()
-		};
 	}
 
 	ngOnDestroy(): void {
@@ -155,14 +109,16 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 	}
 
 	onSubmit() {
-		const neuerWettbewerb = this.mergeFormValue();
+		const neuerWettbewerb = this.wettbewerbForm.value;
+
+		neuerWettbewerb.status = this.initialWettbewerbGuiModel.status;
+
 		this.logger.debug(JSON.stringify(neuerWettbewerb));
 		this.wettbewerbeService.saveWettbewerb(neuerWettbewerb);
 	}
 
 	onCancel() {
-		this.initGuiModel(this.wettbewerb);
-		this.wettbewerbForm.patchValue(this.wettbewerbGuiModel);
+		this.wettbewerbForm.patchValue(this.initialWettbewerbGuiModel);
 	}
 
 	gotoWettbewerbe(): void {

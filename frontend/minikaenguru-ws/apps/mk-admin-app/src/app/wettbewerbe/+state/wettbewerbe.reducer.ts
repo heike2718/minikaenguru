@@ -1,8 +1,7 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import * as WettbewerbeActions from './wettbewerbe.actions';
-import { Wettbewerb, WettbewerbWithID } from '../wettbewerbe.model';
+import { WettbewerbWithID, WettbewerbEditorModel, initialWettbewerbEditorModel } from '../wettbewerbe.model';
 
-import { indexOfWettbewerbMitId } from '../wettbewerbe.model';
 import { Message } from '@minikaenguru-ws/common-messages';
 
 export const wettbewerbeFeatureKey = 'mk-admin-app-wettbewerbe';
@@ -12,13 +11,15 @@ export interface WettbewerbeState {
 	selectedJahr: number,
 	wettbewerbeLoaded: boolean;
 	saveOutcome: Message;
+	wettbewerbEditorModel: WettbewerbEditorModel;
 };
 
 export const initialWettbewerbeState = {
 	wettbewerbeMap: [],
 	selectedJahr: undefined,
 	wettbewerbeLoaded: false,
-	saveOutcome: undefined
+	saveOutcome: undefined,
+	wettbewerbEditorModel: undefined
 } as WettbewerbeState;
 
 const wettbewerbeReducer = createReducer(initialWettbewerbeState,
@@ -54,34 +55,47 @@ const wettbewerbeReducer = createReducer(initialWettbewerbeState,
 		const loaded = state.wettbewerbeMap.length > 0;
 		return { ...state, wettbewerbeMap: neueMap, selectedJahr: action.wettbewerb.jahr, wettbewerbeLoaded: loaded, saveOutcome: undefined }
 	}),
+
 	on(WettbewerbeActions.resetWettbewerbe, (_state, _action) => {
 		return initialWettbewerbeState
 	}),
-	on(WettbewerbeActions.createNewWettbewerb, (state, action) => {
-		const wettbewerbMitID: WettbewerbWithID = { jahr: action.wettbewerb.jahr, wettbewerb: action.wettbewerb };
-		const neueMap = [...state.wettbewerbeMap, wettbewerbMitID];
 
-		return { ...state, wettbewerbeMap: neueMap, selectedJahr: action.wettbewerb.jahr, saveOutcome: undefined };
+	on(WettbewerbeActions.createNewWettbewerb, (state, _action) => {
+
+		const modelPart: WettbewerbEditorModel = initialWettbewerbEditorModel;
+		return { ...state, selectedJahr: modelPart.jahr, saveOutcome: undefined, wettbewerbEditorModel: modelPart };
 	}),
-	on(WettbewerbeActions.updateWettbewerb, (state, action) => {
+
+	on (WettbewerbeActions.editWettbewerbFinished, (state, _action) => {
+
+		return {...state, selectedJahr: undefined, saveOutcome: undefined, wettbewerbEditorModel: undefined}
+
+	}),
+
+	on(WettbewerbeActions.wettbewerbSaved, (state, action) => {
 
 		const outcome = action.outcome;
 
-		const alteMap = state.wettbewerbeMap;
-		let neueMap: WettbewerbWithID[] = [];
+		if (outcome.level === 'INFO') {
 
-		const selectedJahr = state.selectedJahr;
-		for (let i: number = 0; i < alteMap.length; i++) {
-			const wbMitId: WettbewerbWithID = alteMap[i];
-			if (wbMitId.jahr !== selectedJahr) {
-				neueMap.push(wbMitId);
+			const alteMap = state.wettbewerbeMap;
+			let neueMap: WettbewerbWithID[] = [];
+
+			const selectedJahr = state.selectedJahr;
+			for (let i: number = 0; i < alteMap.length; i++) {
+				const wbMitId: WettbewerbWithID = alteMap[i];
+				if (wbMitId.jahr !== selectedJahr) {
+					neueMap.push(wbMitId);
+				}
 			}
-		}
-		neueMap.push({ jahr: action.wettbewerb.jahr, wettbewerb: action.wettbewerb });
+			neueMap.push({ jahr: action.wettbewerb.jahr, wettbewerb: action.wettbewerb });
 
-		// const neueMap: WettbewerbWithID[] = mergeWettbewerb(state.wettbewerbeMap, action.wettbewerb);
-		console.debug('updateWettbewerb: status fertig')
-		return { ...state, wettbewerbeMap: neueMap, selectedJahr: action.wettbewerb.jahr, saveOutcome: outcome };
+			// const neueMap: WettbewerbWithID[] = mergeWettbewerb(state.wettbewerbeMap, action.wettbewerb);
+			console.debug('updateWettbewerb: status fertig')
+			return { ...state, wettbewerbeMap: neueMap, selectedJahr: action.wettbewerb.jahr, saveOutcome: outcome };
+		} else {
+			return {...state, saveOutcome: outcome};
+		}
 	})
 
 );

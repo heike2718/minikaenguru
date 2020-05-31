@@ -18,23 +18,6 @@ export interface Wettbewerb {
 	readonly teilnahmenuebersicht?: Teilnahmenuebersicht;
 };
 
-const initialTeilnahmenuebersicht: Teilnahmenuebersicht = {
-	anzahlPrivatanmeldungen: 0,
-	anzahlSchulanmeldungen: 0,
-	anzahlLoesungszettelPrivat:0,
-	anzahlLoesungszettelSchulen: 0
-};
-
-export const initialWettbewerb: Wettbewerb = {
-	jahr: 0,
-	status: 'ERFASST',
-	wettbewerbsbeginn: '11.11.2016',
-	wettbewerbsende: '01.08.2017',
-	datumFreischaltungLehrer: '05.03.2017',
-	datumFreischaltungPrivat: '01.06.2017',
-	teilnahmenuebersicht: initialTeilnahmenuebersicht
-};
-
 export interface WettbewerbWithID {
 	jahr: number;
 	wettbewerb: Wettbewerb;
@@ -48,6 +31,15 @@ export interface WettbewerbEditorModel {
 	datumFreischaltungLehrer: string;
 	datumFreischaltungPrivat: string;
 };
+
+export const initialWettbewerbEditorModel: WettbewerbEditorModel = {
+	jahr: 0,
+	status: 'ERFASST',
+	wettbewerbsbeginn: '11.11.2013',
+	wettbewerbsende: '01.08.2014',
+	datumFreischaltungLehrer: '05.03.2014',
+	datumFreischaltungPrivat: '01.06.2014'
+}
 
 export function wettbewerbeWithIDArrayToWettbewerbeArray(wettbewerbeMitID: WettbewerbWithID[]): Wettbewerb[] {
 

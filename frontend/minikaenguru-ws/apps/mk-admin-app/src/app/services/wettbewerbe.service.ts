@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 import { map, tap } from 'rxjs/operators';
 import { ResponsePayload, MessageService, Message } from '@minikaenguru-ws/common-messages';
 import { Wettbewerb, WettbewerbEditorModel } from '../wettbewerbe/wettbewerbe.model';
-import { updateWettbewerb } from '../wettbewerbe/+state/wettbewerbe.actions';
+import { wettbewerbSaved } from '../wettbewerbe/+state/wettbewerbe.actions';
 
 import { LogService } from '@minikaenguru-ws/common-logging';
 import { Store } from '@ngrx/store';
@@ -50,7 +50,7 @@ export class WettbewerbeService {
 
 	}
 
-	public saveWettbewerb(wettbewerb: Wettbewerb): void {
+	public saveWettbewerb(wettbewerb: WettbewerbEditorModel): void {
 
 		const url = environment.apiUrl + '/wb-admin/wettbewerbe/wettbewerb';
 
@@ -70,14 +70,14 @@ export class WettbewerbeService {
 		).subscribe(
 			(responsePayload) => {
 				this.messageService.info(responsePayload.message.message);
-				this.store.dispatch(updateWettbewerb({ wettbewerb: wettbewerb, outcome: responsePayload.message }));
+				this.store.dispatch(wettbewerbSaved({ wettbewerb: wettbewerb, outcome: responsePayload.message }));
 			},
 			(error) => {
 				const message: Message = {
 					level: 'ERROR',
 					message: this.errorService.extractMessageObject(error).message
 				};
-				this.store.dispatch(updateWettbewerb({ wettbewerb: wettbewerb, outcome: message }));
+				this.store.dispatch(wettbewerbSaved({ wettbewerb: wettbewerb, outcome: message }));
 			}
 		);
 	}
