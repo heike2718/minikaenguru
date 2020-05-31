@@ -17,11 +17,11 @@ export const loadWettbewerbDetails = createAction(
 );
 
 export const createNewWettbewerb = createAction(
-	'[WettbewerbeListComponent] neuer Wettbewerb'
+	'[WettbewerbFacade] createNewWettbewerb'
 );
 
 export const wettbewerbSaved = createAction (
-	'[WettbewerbService]: saveWettbewerb',
+	'[WettbewerbFacade]: saveWettbewerb',
 	props<{wettbewerb: Wettbewerb, outcome: Message}>()
 );
 

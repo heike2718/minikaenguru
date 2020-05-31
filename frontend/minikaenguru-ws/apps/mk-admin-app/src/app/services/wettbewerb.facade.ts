@@ -1,21 +1,24 @@
-import { Injectable, Optional } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { ResponsePayload, MessageService, Message } from '@minikaenguru-ws/common-messages';
 import { Wettbewerb, WettbewerbEditorModel } from '../wettbewerbe/wettbewerbe.model';
-import { wettbewerbSaved } from '../wettbewerbe/+state/wettbewerbe.actions';
+import { createNewWettbewerb, wettbewerbSaved } from '../wettbewerbe/+state/wettbewerbe.actions';
 
 import { LogService } from '@minikaenguru-ws/common-logging';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
+import { wettbewerbe } from '../wettbewerbe/+state/wettbewerbe.selectors';
 
 @Injectable({
 	providedIn: 'root'
 })
-export class WettbewerbeService {
+export class WettbewerbFacade {
+
+	public wettbewerbe$: Observable<Wettbewerb[]> = this.store.select(wettbewerbe);
 
 
 	constructor(private http: HttpClient,
@@ -23,6 +26,11 @@ export class WettbewerbeService {
 		private logger: LogService,
 		private errorService: GlobalErrorHandlerService,
 		private messageService: MessageService) { }
+
+
+	public createNewWettbewerb(): void {
+		this.store.dispatch(createNewWettbewerb());
+	}
 
 
 	public loadWettbewerbe(): Observable<Wettbewerb[]> {

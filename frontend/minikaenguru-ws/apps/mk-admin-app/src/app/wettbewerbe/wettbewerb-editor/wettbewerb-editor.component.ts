@@ -7,7 +7,7 @@ import { AppState } from '../../reducers';
 import { wettbewerbEditorModel, saveOutcome } from '../+state/wettbewerbe.selectors';
 import { Subscription } from 'rxjs';
 import { WettbewerbEditorModel } from '../wettbewerbe.model';
-import { WettbewerbeService } from '../../services/wettbewerbe.service';
+import { WettbewerbFacade } from '../../services/wettbewerb.facade';
 import { LogService } from '@minikaenguru-ws/common-logging';
 import { Router } from '@angular/router';
 import { MessageService } from '@minikaenguru-ws/common-messages';
@@ -33,7 +33,7 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 
 	constructor(private fb: FormBuilder,
 		private store: Store<AppState>,
-		private wettbewerbeService: WettbewerbeService,
+		private wettbewerbFacade: WettbewerbFacade,
 		// @Inject(DOCUMENT) private document: Document,
 		private router: Router,
 		private messageService: MessageService,
@@ -114,7 +114,7 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 		neuerWettbewerb.status = this.initialWettbewerbGuiModel.status;
 
 		this.logger.debug(JSON.stringify(neuerWettbewerb));
-		this.wettbewerbeService.saveWettbewerb(neuerWettbewerb);
+		this.wettbewerbFacade.saveWettbewerb(neuerWettbewerb);
 	}
 
 	onCancel() {
