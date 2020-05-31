@@ -1,48 +1,29 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../reducers';
-import { selectedWettbewerb } from '../+state/wettbewerbe.selectors';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
-import { Subscription } from 'rxjs';
+import { WettbewerbFacade } from '../../services/wettbewerb.facade';
 
 @Component({
 	selector: 'mka-wettbewerb-dashboard',
 	templateUrl: './wettbewerb-dashboard.component.html',
 	styleUrls: ['./wettbewerb-dashboard.component.css']
 })
-export class WettbewerbDashboardComponent implements OnInit, OnDestroy {
+export class WettbewerbDashboardComponent implements OnInit {
 
 	devMode = !environment.production;
 
-	wettbewerb$ = this.store.select(selectedWettbewerb);
+	wettbewerb$ = this.wettbewerbFacade.wettbewerb$;
 
-	private id: string;
+	constructor(private wettbewerbFacade: WettbewerbFacade, private router: Router) { }
 
-	private wettbewerbSubscription: Subscription;
-
-	constructor(private store: Store<AppState>, private router: Router) { }
-
-	ngOnInit(): void {
-		this.wettbewerbSubscription = this.wettbewerb$.subscribe(
-			wb => this.id = '' + wb.jahr
-		);
-	}
-
-	ngOnDestroy(): void {
-		if (this.wettbewerbSubscription) {
-			this.wettbewerbSubscription.unsubscribe();
-		}
-	}
+	ngOnInit(): void {}
 
 	editWettbewerb() {
-		this.router.navigateByUrl('/wettbewerbe/wettbewerb-editor/' + this.id);
+		this.wettbewerbFacade.editWettbewerb();
 	}
 
 	backToWettbewerbe() {
-
 		this.router.navigateByUrl('/wettbewerbe');
-
 	}
 
 	backToDashboard() {
