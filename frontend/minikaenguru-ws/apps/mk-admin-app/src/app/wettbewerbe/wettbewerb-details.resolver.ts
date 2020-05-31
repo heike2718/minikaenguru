@@ -1,0 +1,50 @@
+import { Injectable } from '@angular/core';
+import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { Store, select } from '@ngrx/store';
+import { AppState } from '../reducers';
+import { Observable, combineLatest } from 'rxjs';
+import { wettbewerbe, wettbewerbEditorModel, wettbewerbeState, selectedWettbewerb } from './+state/wettbewerbe.selectors';
+import { tap, filter, first } from 'rxjs/operators';
+import { loadWettbewerbDetails } from './+state/wettbewerbe.actions';
+import { initialWettbewerbEditorModel } from './wettbewerbe.model';
+
+@Injectable()
+export class WettbewerbDetailsResolver implements Resolve<any> {
+
+	constructor(private store: Store<AppState>) { }
+
+	resolve(route: ActivatedRouteSnapshot,
+		_state: RouterStateSnapshot): Observable<any> {
+
+
+		const id = route.params.id;
+		let jahr: number;
+		if (id === 'neu') {
+			jahr = initialWettbewerbEditorModel.jahr;
+
+			return this.store.pipe(
+				select(wettbewerbEditorModel),
+				filter(editorModel => editorModel && editorModel.jahr === jahr),
+				first()
+			);
+		} else {
+			try {
+				jahr = parseInt(route.params.id);
+			} catch {
+				jahr = null;
+			}
+
+			return this.store.pipe(
+				select(selectedWettbewerb),
+				tap(w => {
+					if (jahr !== null && !w.teilnahmenuebersicht) {
+						this.store.dispatch(loadWettbewerbDetails({ jahr: jahr }))
+					}
+				}),
+				filter(wettbewerb => wettbewerb && wettbewerb.jahr === jahr),
+				first()
+			);
+		}
+
+	}
+}

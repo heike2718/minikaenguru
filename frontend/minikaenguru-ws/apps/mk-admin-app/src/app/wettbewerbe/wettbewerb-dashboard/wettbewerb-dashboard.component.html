@@ -1,13 +1,18 @@
 <div *ngIf="(wettbewerb$ | async) as wettbewerb" class="mkv-container mkv-bordered">
 	<div *ngIf="wettbewerb" class="col-12">
-		<h2>Minikänguru {{wettbewerb.jahr}}</h2>
+		<h2>Minikänguru {{wettbewerb.jahr}} <span class="ml-1 badge badge-success">{{wettbewerb.status}}</span></h2>
 		<p *ngIf="devMode">(wettbewerb-dashboard.component)</p>
-		<p class="card-subtitle mb-2 text-muted">Beginn: {{wettbewerb.wettbewerbsbeginn | date}}</p>
-		<p class="card-subtitle mb-2 text-muted">Ende: {{wettbewerb.wettbewerbsende | date}}</p>
-		<p class="card-subtitle mb-2 text-muted">Freischaltung Lehrer: {{wettbewerb.datumFreischaltungLehrer | date}}
+		<p class="card-subtitle mb-2 text-muted">Beginn: {{wettbewerb.wettbewerbsbeginn}}</p>
+		<p class="card-subtitle mb-2 text-muted">Ende: {{wettbewerb.wettbewerbsende}}</p>
+		<p class="card-subtitle mb-2 text-muted">Freischaltung Lehrer: {{wettbewerb.datumFreischaltungLehrer}}
 		</p>
-		<p class="card-subtitle mb-2 text-muted">Freischaltung privat: {{wettbewerb.datumFreischaltungPrivat | date}}
+		<p class="card-subtitle mb-2 text-muted">Freischaltung privat: {{wettbewerb.datumFreischaltungPrivat}}
 		</p>
+
+		<div *ngIf="wettbewerb.status !== 'BEENDET'" class="col-md-6 mt-4">
+			<button class="btn btn-dark" (click)="editWettbewerb()"><i class="fa fa-pencil"
+					aria-hidden="true"></i>bearbeiten</button>
+		</div>
 	</div>
 
 	<div class="row">

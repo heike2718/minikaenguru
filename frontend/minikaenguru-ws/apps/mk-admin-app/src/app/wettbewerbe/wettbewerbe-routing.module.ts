@@ -5,7 +5,8 @@ import { AuthGuardService } from '../infrastructure/auth-guard.service';
 import { WettbewerbeListComponent } from './wettbewerbe-list/wettbewerbe-list.component';
 import { WettbewerbeListResolver } from './wettbewerbe-list/wettbewerbe-list.resolver';
 import { WettbewerbDashboardComponent } from './wettbewerb-dashboard/wettbewerb-dashboard.component';
-import { WettbewerbDashboardResolver } from './wettbewerb-dashboard/wettbewerb-dashboard.resolver';
+import { WettbewerbDetailsResolver } from './wettbewerb-details.resolver';
+import { WettbewerbEditorComponent } from './wettbewerb-editor/wettbewerb-editor.component';
 
 const wettbewerbeRoutes: Routes = [
 
@@ -18,8 +19,14 @@ const wettbewerbeRoutes: Routes = [
 	{
 		path: 'wettbewerb-dashboard/:id',
 		canActivate: [AuthGuardService],
-		resolve: {wettbewerbDashboard: WettbewerbDashboardResolver},
+		resolve: {wettbewerbDashboard: WettbewerbDetailsResolver},
 		component: WettbewerbDashboardComponent
+	},
+	{
+		path: 'wettbewerb-editor/:id',
+		canActivate: [AuthGuardService],
+		resolve: {wettbewerbEditor: WettbewerbDetailsResolver},
+		component: WettbewerbEditorComponent
 	}
 ];
 

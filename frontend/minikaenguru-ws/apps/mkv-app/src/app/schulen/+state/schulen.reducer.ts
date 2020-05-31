@@ -29,6 +29,9 @@ const schulenReducer = createReducer(initialSchulenState,
 	}),
 	on(SchulenActions.unselectSchule, (state, _action) => {
 		return {...state, selectedSchule: undefined}
+	}),
+	on(SchulenActions.resetSchulen,(_state, _action) => {
+		return initialSchulenState;
 	})
 );
 

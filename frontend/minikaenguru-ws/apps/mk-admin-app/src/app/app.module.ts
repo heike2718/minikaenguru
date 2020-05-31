@@ -31,6 +31,7 @@ import { NotAuthorizedComponent } from './not-authorized/not-authorized.componen
 import { WettbewerbeModule } from './wettbewerbe/wettbewerbe.module';
 import { HttpClientModule } from '@angular/common/http';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 registerLocaleData(localeDe);
 
@@ -45,6 +46,7 @@ registerLocaleData(localeDe);
 		NotAuthorizedComponent],
 	imports: [
 		BrowserModule,
+		ReactiveFormsModule,
 		HttpClientModule,
 		BrowserAnimationsModule,
 		CommonSchulkatalogModule.forRoot({

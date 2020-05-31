@@ -1,29 +1,30 @@
-import { RouterReducerState,RouterStateSerializer } from '@ngrx/router-store';
+import { RouterReducerState, RouterStateSerializer } from '@ngrx/router-store';
 import { RouterStateSnapshot, Params } from '@angular/router';
 
-
 export interface RouterStateUrl {
-  url: string;
-  params: Params;
-  queryParams: Params;
+	url: string;
+	params: Params;
+	queryParams: Params;
 }
 
 export interface State {
-  router: RouterReducerState<RouterStateUrl>;
+	router: RouterReducerState<RouterStateUrl>;
 }
 
 export class CustomRouterStateSerializer implements RouterStateSerializer<RouterStateUrl> {
-  serialize(routerState: RouterStateSnapshot): RouterStateUrl {
+	serialize(routerState: RouterStateSnapshot): RouterStateUrl {
 
-	let route = routerState.root;
+		let route = routerState.root;
 
-    while (route.firstChild) {
-      route = route.firstChild;
-    }
+		while (route.firstChild) {
+			route = route.firstChild;
+		}
 
-    const { url, root: { queryParams } } = routerState;
-	const { params } = route;
+		const { url, root: { queryParams } } = routerState;
+		const { params } = route;
 
-    return { url, params, queryParams };
-  }
+		return { url, params, queryParams };
+	}
 }
+
+

@@ -10,26 +10,29 @@ import { EffectsModule } from '@ngrx/effects';
 import { WettbewerbeRoutingModule } from './wettbewerbe-routing.module';
 import { WettbewerbCardComponent } from './wettbewerb-card/wettbewerb-card.component';
 import { WettbewerbDashboardComponent } from './wettbewerb-dashboard/wettbewerb-dashboard.component';
-import { WettbewerbDashboardResolver } from './wettbewerb-dashboard/wettbewerb-dashboard.resolver';
+import { WettbewerbDetailsResolver } from './wettbewerb-details.resolver';
+import { WettbewerbEditorComponent } from './wettbewerb-editor/wettbewerb-editor.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
 	imports: [
 		CommonModule,
+		ReactiveFormsModule,
 		WettbewerbeRoutingModule,
 		StoreModule.forFeature(fromWettbewerbe.wettbewerbeFeatureKey, fromWettbewerbe.reducer),
 		EffectsModule.forFeature([WettbewerbeEffects])
 	],
 	declarations: [
-
 		WettbewerbeListComponent,
 		WettbewerbCardComponent,
-		WettbewerbDashboardComponent],
+		WettbewerbDashboardComponent,
+		WettbewerbEditorComponent],
 	exports: [
 		],
 	providers: [
 		WettbewerbeListResolver,
-		WettbewerbDashboardResolver
+		WettbewerbDetailsResolver
 	]
 })
 export class WettbewerbeModule { }

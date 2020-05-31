@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.AbstractMkResourceAdapter;
+import de.egladil.web.mk_gateway.domain.apimodel.WettbewerbAPIModel;
 import de.egladil.web.mk_gateway.infrastructure.messaging.MkWettbewerbAdminRestClient;
 
 /**
@@ -60,6 +61,18 @@ public class MkWettbewerbAdminResourceAdapter extends AbstractMkResourceAdapter 
 			return this.handleException(e, LOG, "[wettbewerbMitJahr]");
 		}
 
+	}
+
+	public Response createWettbewerb(final WettbewerbAPIModel data, final String principalName) {
+
+		try {
+
+			Response response = restClient.createWettbewerb(data, principalName);
+			return response;
+		} catch (Exception e) {
+
+			return this.handleException(e, LOG, "[createWettbewerb]");
+		}
 	}
 
 	@Override
