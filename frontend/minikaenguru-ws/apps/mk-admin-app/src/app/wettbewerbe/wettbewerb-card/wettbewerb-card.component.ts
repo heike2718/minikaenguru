@@ -1,10 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Wettbewerb } from '../wettbewerbe.model';
-import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../reducers';
-import { selectWettbewerbsjahr } from '../+state/wettbewerbe.actions';
+import { WettbewerbFacade } from '../../services/wettbewerb.facade';
 
 @Component({
 	selector: 'mka-wettbewerb-card',
@@ -20,7 +17,7 @@ export class WettbewerbCardComponent implements OnInit {
 
 	wettbewerbUndefined: boolean;
 
-	constructor(private router: Router, private store: Store<AppState>) { }
+	constructor(private wettbewerbFacade: WettbewerbFacade) { }
 
 	ngOnInit(): void {
 
@@ -29,7 +26,6 @@ export class WettbewerbCardComponent implements OnInit {
 
 
 	selectWettbewerb(): void {
-		this.store.dispatch(selectWettbewerbsjahr({ jahr: this.wettbewerb.jahr }));
-		this.router.navigateByUrl('/wettbewerbe/wettbewerb-dashboard/' + this.wettbewerb.jahr);
+		this.wettbewerbFacade.selectWettbewerb(this.wettbewerb);
 	}
 }
