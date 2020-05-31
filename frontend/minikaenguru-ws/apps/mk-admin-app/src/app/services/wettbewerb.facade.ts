@@ -5,13 +5,14 @@ import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
 import { ResponsePayload, MessageService, Message } from '@minikaenguru-ws/common-messages';
 import { Wettbewerb, WettbewerbEditorModel } from '../wettbewerbe/wettbewerbe.model';
-import { createNewWettbewerb, wettbewerbSaved } from '../wettbewerbe/+state/wettbewerbe.actions';
+import { createNewWettbewerb, wettbewerbSaved, selectWettbewerbsjahr } from '../wettbewerbe/+state/wettbewerbe.actions';
 
 import { LogService } from '@minikaenguru-ws/common-logging';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
 import { wettbewerbe } from '../wettbewerbe/+state/wettbewerbe.selectors';
+import { Router } from '@angular/router';
 
 @Injectable({
 	providedIn: 'root'
@@ -23,6 +24,7 @@ export class WettbewerbFacade {
 
 	constructor(private http: HttpClient,
 		private store: Store<AppState>,
+		private router: Router,
 		private logger: LogService,
 		private errorService: GlobalErrorHandlerService,
 		private messageService: MessageService) { }
@@ -30,6 +32,11 @@ export class WettbewerbFacade {
 
 	public createNewWettbewerb(): void {
 		this.store.dispatch(createNewWettbewerb());
+	}
+
+	public selectWettbewerb(wettbewerb: Wettbewerb): void {
+		this.store.dispatch(selectWettbewerbsjahr({ jahr: wettbewerb.jahr }));
+		this.router.navigateByUrl('/wettbewerbe/wettbewerb-dashboard/' + wettbewerb.jahr);
 	}
 
 
