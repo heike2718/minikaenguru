@@ -5,7 +5,6 @@
 package de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb;
 
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -45,7 +44,7 @@ public class Wettbewerb {
 
 		this.wettbewerbId = wettbewerbId;
 
-		this.wettbewerbsende = LocalDate.of(wettbewerbId.jahr(), Month.AUGUST, 1);
+		// this.wettbewerbsende = LocalDate.of(wettbewerbId.jahr(), Month.AUGUST, 1);
 
 		this.status = WettbewerbStatus.ERFASST;
 	}

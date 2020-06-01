@@ -43,6 +43,13 @@ public class WettbewerbService {
 	@Inject
 	WettbewerbRepository wettbewerbRepository;
 
+	public static WettbewerbService createForTest(final WettbewerbRepository repository) {
+
+		WettbewerbService result = new WettbewerbService();
+		result.wettbewerbRepository = repository;
+		return result;
+	}
+
 	public WettbewerbService() {
 
 		this.validationDelegate = new ValidationDelegate();
@@ -106,7 +113,7 @@ public class WettbewerbService {
 		if (data.getJahr() < 2005) {
 
 			throw new InvalidInputException(
-				ResponsePayload.messageOnly(MessagePayload.error("Wettbewerbsjahr muss größer als 2004 sein")));
+				ResponsePayload.messageOnly(MessagePayload.error("Wettbewerbsjahr muss größer als 2004 sein.")));
 		}
 
 		WettbewerbStatus status = WettbewerbStatus.nextStatus(null);

@@ -2,7 +2,7 @@
 // Project: mk-wettbewerb
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_wettbewerb_admin.infrastructure.persistence.impl;
+package de.egladil.web.mk_wettbewerb_admin.infrastructure.persistence;
 
 import java.util.List;
 import java.util.Optional;
@@ -60,7 +60,7 @@ public class WettbewerbHibernateRepository implements WettbewerbRepository {
 	 * @param  persistenterWettbewerb
 	 * @return
 	 */
-	private Wettbewerb mapFromPersistenterWettbewerb(final PersistenterWettbewerb persistenterWettbewerb) {
+	Wettbewerb mapFromPersistenterWettbewerb(final PersistenterWettbewerb persistenterWettbewerb) {
 
 		Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(Integer.valueOf(persistenterWettbewerb.getUuid())))
 			.withDatumFreischaltungLehrer(
@@ -122,7 +122,7 @@ public class WettbewerbHibernateRepository implements WettbewerbRepository {
 
 	@Override
 	@Transactional
-	public void changeWettbewerbStatus(final WettbewerbID wettbewerbId, final WettbewerbStatus neuerStatus) {
+	public boolean changeWettbewerbStatus(final WettbewerbID wettbewerbId, final WettbewerbStatus neuerStatus) {
 
 		Optional<PersistenterWettbewerb> opt = this.findPersistentenWetbewerbByUUID(wettbewerbId.toString());
 
@@ -134,13 +134,14 @@ public class WettbewerbHibernateRepository implements WettbewerbRepository {
 		PersistenterWettbewerb persistenterWettbewerb = opt.get();
 		persistenterWettbewerb.setStatus(neuerStatus);
 		em.merge(persistenterWettbewerb);
+		return true;
 	}
 
 	/**
 	 * @param wettbewerb
 	 * @param persistenterWettbewerb
 	 */
-	private void mapAllAttributesButStatus(final Wettbewerb wettbewerb, final PersistenterWettbewerb persistenterWettbewerb) {
+	void mapAllAttributesButStatus(final Wettbewerb wettbewerb, final PersistenterWettbewerb persistenterWettbewerb) {
 
 		persistenterWettbewerb
 			.setDatumFreischaltungLehrer(CommonTimeUtils.transformFromLocalDate(wettbewerb.datumFreischaltungLehrer()));

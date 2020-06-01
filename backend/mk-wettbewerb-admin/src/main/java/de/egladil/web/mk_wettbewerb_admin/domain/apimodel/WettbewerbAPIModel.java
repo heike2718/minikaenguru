@@ -39,6 +39,19 @@ public class WettbewerbAPIModel {
 	@Pattern(regexp = "\\d{2}.\\d{2}.\\d{4}")
 	private String datumFreischaltungPrivat;
 
+	public static WettbewerbAPIModel create(final int jahr, final String beginn, final String ende, final String freischaltungLehre, final String freischaltungPrivat) {
+
+		WettbewerbAPIModel result = new WettbewerbAPIModel();
+
+		result.jahr = jahr;
+		result.wettbewerbsbeginn = beginn;
+		result.wettbewerbsende = ende;
+		result.datumFreischaltungLehrer = freischaltungLehre;
+		result.datumFreischaltungPrivat = freischaltungPrivat;
+		return result;
+
+	}
+
 	public static WettbewerbAPIModel create(final int jahr, final String status, final String beginn, final String ende, final String freischaltungLehre, final String freischaltungPrivat) {
 
 		WettbewerbAPIModel result = new WettbewerbAPIModel();

@@ -39,10 +39,11 @@ public interface WettbewerbRepository {
 	/**
 	 * Nur der Status wird aktualisiert.
 	 *
-	 * @param wettbewerbId
-	 * @param neuerStatus
+	 * @param  wettbewerbId
+	 * @param  neuerStatus
+	 * @return              boolean (nicht void wegen Mockito)
 	 */
-	void changeWettbewerbStatus(WettbewerbID wettbewerbId, WettbewerbStatus neuerStatus);
+	boolean changeWettbewerbStatus(WettbewerbID wettbewerbId, WettbewerbStatus neuerStatus);
 
 	/**
 	 * Läd alle Wettbewerbe.
