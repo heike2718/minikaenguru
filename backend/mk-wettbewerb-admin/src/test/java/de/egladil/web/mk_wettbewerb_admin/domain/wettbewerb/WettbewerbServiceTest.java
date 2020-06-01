@@ -23,9 +23,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.commons_validation.exception.InvalidInputException;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_wettbewerb_admin.domain.apimodel.WettbewerbAPIModel;
+import de.egladil.web.mk_wettbewerb_admin.domain.apimodel.EditWettbewerbModel;
 import de.egladil.web.mk_wettbewerb_admin.domain.apimodel.WettbewerbDetailsAPIModel;
 import de.egladil.web.mk_wettbewerb_admin.domain.apimodel.WettbewerbListAPIModel;
 import de.egladil.web.mk_wettbewerb_admin.domain.error.MkWettbewerbAdminRuntimeException;
@@ -52,7 +53,7 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 		List<WettbewerbListAPIModel> wettbewerbe = this.service.alleWettbewerbeHolen();
 
 		// Assert
-		assertEquals(3, wettbewerbe.size());
+		assertEquals(4, wettbewerbe.size());
 
 		{
 
@@ -65,6 +66,14 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 		{
 
 			WettbewerbListAPIModel w = wettbewerbe.get(1);
+			assertEquals(2015, w.jahr());
+			assertEquals(WettbewerbStatus.DOWNLOAD_PRIVAT, w.status());
+			assertFalse(w.completelyLoaded());
+		}
+
+		{
+
+			WettbewerbListAPIModel w = wettbewerbe.get(2);
 			assertEquals(2010, w.jahr());
 			assertEquals(WettbewerbStatus.BEENDET, w.status());
 			assertFalse(w.completelyLoaded());
@@ -72,7 +81,7 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 
 		{
 
-			WettbewerbListAPIModel w = wettbewerbe.get(2);
+			WettbewerbListAPIModel w = wettbewerbe.get(3);
 			assertEquals(2005, w.jahr());
 			assertEquals(WettbewerbStatus.BEENDET, w.status());
 			assertFalse(w.completelyLoaded());
@@ -149,7 +158,7 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 	void should_WettbewerbAnlegenThrowException_when_InputInvalid() {
 
 		// Arrange
-		WettbewerbAPIModel data = WettbewerbAPIModel.create(20010, "01.012006", "31.05.2006", "01.03.2006", "01.06.2006");
+		EditWettbewerbModel data = EditWettbewerbModel.create(20010, "01.012006", "31.05.2006", "01.03.2006", "01.06.2006");
 
 		// Act + Assert
 		try {
@@ -158,6 +167,10 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 			fail("keine InvalidInputException");
 
 		} catch (InvalidInputException e) {
+
+			assertEquals(0, getCountWettbewerbInsert());
+			assertEquals(0, getCountWettbewerbUpdate());
+			assertEquals(0, getCountChangeWettbewerbStatus());
 
 			ResponsePayload response = e.getResponsePayload();
 			assertEquals("Die Eingaben sind nicht korrekt.", response.getMessage().getMessage());
@@ -169,7 +182,7 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 	void should_WettbewerbAnlegenThrowException_when_WettbewerbsjahrInvalid() {
 
 		// Arrange
-		WettbewerbAPIModel data = WettbewerbAPIModel.create(2004, "01.01.2006", "31.05.2006", "01.03.2006", "01.06.2006");
+		EditWettbewerbModel data = EditWettbewerbModel.create(2004, "01.01.2006", "31.05.2006", "01.03.2006", "01.06.2006");
 
 		// Act + Assert
 		try {
@@ -178,6 +191,10 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 			fail("keine InvalidInputException");
 
 		} catch (InvalidInputException e) {
+
+			assertEquals(0, getCountWettbewerbInsert());
+			assertEquals(0, getCountWettbewerbUpdate());
+			assertEquals(0, getCountChangeWettbewerbStatus());
 
 			ResponsePayload response = e.getResponsePayload();
 			assertEquals("Wettbewerbsjahr muss größer als 2004 sein.", response.getMessage().getMessage());
@@ -189,23 +206,19 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 	void should_WettbewerbAnlegen_call_AddOnTheRepo() {
 
 		// Arrange
-		WettbewerbAPIModel data = WettbewerbAPIModel.create(2018, "01.01.2006", "31.05.2006",
+		EditWettbewerbModel data = EditWettbewerbModel.create(2018, "01.01.2006", "31.05.2006",
 			"01.03.2006", "01.06.2006");
 
-		assertEquals(3, service.alleWettbewerbeHolen().size());
+		assertEquals(4, service.alleWettbewerbeHolen().size());
+
 		// Act
-		this.service.wettbewerbAnlegen(data);
+		Wettbewerb neuer = this.service.wettbewerbAnlegen(data);
 
 		// Assert
 		assertEquals(1, getCountWettbewerbInsert());
-		List<WettbewerbListAPIModel> wettbewerbe = service.alleWettbewerbeHolen();
-		assertEquals(4, wettbewerbe.size());
-
-		Optional<WettbewerbDetailsAPIModel> optNeuer = service.wettbewerbMitJahr(2018);
-		assertTrue(optNeuer.isPresent());
-
-		WettbewerbDetailsAPIModel neuer = optNeuer.get();
-		assertEquals(WettbewerbStatus.ERFASST.toString(), neuer.getStatus());
+		assertEquals(0, getCountWettbewerbUpdate());
+		assertEquals(0, getCountChangeWettbewerbStatus());
+		assertEquals(WettbewerbStatus.ERFASST, neuer.status());
 
 	}
 
@@ -213,24 +226,21 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 	void should_WettbewerbAnlegen_when_WettbewerbsbeginnNull() {
 
 		// Arrange
-		WettbewerbAPIModel data = WettbewerbAPIModel.create(2018, null, "31.05.2006",
+		EditWettbewerbModel data = EditWettbewerbModel.create(2018, null, "31.05.2006",
 			"01.03.2006", "01.06.2006");
 
-		assertEquals(3, service.alleWettbewerbeHolen().size());
+		assertEquals(4, service.alleWettbewerbeHolen().size());
+
 		// Act
-		this.service.wettbewerbAnlegen(data);
+		Wettbewerb neuer = this.service.wettbewerbAnlegen(data);
 
 		// Assert
 		assertEquals(1, getCountWettbewerbInsert());
-		List<WettbewerbListAPIModel> wettbewerbe = service.alleWettbewerbeHolen();
-		assertEquals(4, wettbewerbe.size());
+		assertEquals(0, getCountWettbewerbUpdate());
+		assertEquals(0, getCountChangeWettbewerbStatus());
 
-		Optional<WettbewerbDetailsAPIModel> optNeuer = service.wettbewerbMitJahr(2018);
-		assertTrue(optNeuer.isPresent());
-
-		WettbewerbDetailsAPIModel neuer = optNeuer.get();
-		assertEquals(WettbewerbStatus.ERFASST.toString(), neuer.getStatus());
-		assertNull(neuer.getWettbewerbsbeginn());
+		assertEquals(WettbewerbStatus.ERFASST, neuer.status());
+		assertNull(neuer.wettbewerbsbeginn());
 
 	}
 
@@ -238,7 +248,7 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 	void should_WettbewerbAnlegenConvertPersistenceException() {
 
 		// Arrange
-		WettbewerbAPIModel data = WettbewerbAPIModel.create(2011, null, "31.05.2006",
+		EditWettbewerbModel data = EditWettbewerbModel.create(2011, "01.02.2006", "31.05.2006",
 			"01.03.2006", "01.06.2006");
 
 		assertEquals(0, getCountWettbewerbInsert());
@@ -338,4 +348,157 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 		}
 	}
 
+	/// ///////////////////////////////////////////
+
+	@Test
+	void should_WettbewerbAendernThrowException_when_InputInvalid() {
+
+		// Arrange
+		EditWettbewerbModel data = EditWettbewerbModel.create(2005, "01.012006", "31.05.2006", "01.03.2006", "01.06.2006");
+
+		// Act + Assert
+		try {
+
+			service.wettbewerbAendern(data);
+			fail("keine InvalidInputException");
+
+		} catch (InvalidInputException e) {
+
+			assertEquals(0, getCountWettbewerbInsert());
+			assertEquals(0, getCountWettbewerbUpdate());
+			assertEquals(0, getCountChangeWettbewerbStatus());
+
+			ResponsePayload response = e.getResponsePayload();
+			assertEquals("Die Eingaben sind nicht korrekt.", response.getMessage().getMessage());
+			assertEquals("ERROR", response.getMessage().getLevel());
+		}
+	}
+
+	@Test
+	void should_WettbewerbAendern_call_UpdateOnTheRepo() {
+
+		// Arrange
+		EditWettbewerbModel data = EditWettbewerbModel.create(2017, "13.02.2017", "15.08.2017", "23.03.2017",
+			"01.07.2017");
+
+		WettbewerbDetailsAPIModel vorhandener = service.wettbewerbMitJahr(Integer.valueOf(2017)).get();
+		assertEquals("01.01.2017", vorhandener.getWettbewerbsbeginn());
+		assertEquals("01.08.2017", vorhandener.getWettbewerbsende());
+		assertEquals("01.03.2017", vorhandener.getDatumFreischaltungLehrer());
+		assertEquals("01.06.2017", vorhandener.getDatumFreischaltungPrivat());
+
+		// Act
+		Wettbewerb geaenderter = this.service.wettbewerbAendern(data);
+
+		// Assert
+		assertEquals(0, getCountWettbewerbInsert());
+		assertEquals(1, getCountWettbewerbUpdate());
+		assertEquals(0, getCountChangeWettbewerbStatus());
+
+		assertEquals(WettbewerbStatus.ERFASST, geaenderter.status());
+		assertEquals("13.02.2017", CommonTimeUtils.format(geaenderter.wettbewerbsbeginn()));
+		assertEquals("23.03.2017", CommonTimeUtils.format(geaenderter.datumFreischaltungLehrer()));
+		assertEquals("01.07.2017", CommonTimeUtils.format(geaenderter.datumFreischaltungPrivat()));
+		assertEquals("15.08.2017", CommonTimeUtils.format(geaenderter.wettbewerbsende()));
+
+	}
+
+	@Test
+	void should_WettbewerbAendern_when_WettbewerbsbeginnNull() {
+
+		// Arrange
+		EditWettbewerbModel data = EditWettbewerbModel.create(2017, null, "15.08.2017", "23.03.2017",
+			"01.07.2017");
+
+		WettbewerbDetailsAPIModel vorhandener = service.wettbewerbMitJahr(Integer.valueOf(2017)).get();
+		assertEquals("01.01.2017", vorhandener.getWettbewerbsbeginn());
+		assertEquals("01.08.2017", vorhandener.getWettbewerbsende());
+		assertEquals("01.03.2017", vorhandener.getDatumFreischaltungLehrer());
+		assertEquals("01.06.2017", vorhandener.getDatumFreischaltungPrivat());
+
+		// Act
+		Wettbewerb geaenderter = this.service.wettbewerbAendern(data);
+
+		// Assert
+		assertEquals(0, getCountWettbewerbInsert());
+		assertEquals(1, getCountWettbewerbUpdate());
+		assertEquals(0, getCountChangeWettbewerbStatus());
+
+		assertEquals(WettbewerbStatus.ERFASST, geaenderter.status());
+		assertNull(geaenderter.wettbewerbsbeginn());
+		assertEquals("23.03.2017", CommonTimeUtils.format(geaenderter.datumFreischaltungLehrer()));
+		assertEquals("01.07.2017", CommonTimeUtils.format(geaenderter.datumFreischaltungPrivat()));
+		assertEquals("15.08.2017", CommonTimeUtils.format(geaenderter.wettbewerbsende()));
+	}
+
+	@Test
+	void should_WettbewerbAendernConvertPersistenceException() {
+
+		// Arrange
+		EditWettbewerbModel data = EditWettbewerbModel.create(2015, "01.01.2010", "31.03.2010",
+			"01.03.2010", "01.09.2010");
+
+		// Act + Assert
+		try {
+
+			service.wettbewerbAendern(data);
+			fail("keine MkWettbewerbAdminRuntimeException");
+		} catch (MkWettbewerbAdminRuntimeException e) {
+
+			assertEquals(0, getCountWettbewerbInsert());
+			assertEquals(1, getCountWettbewerbUpdate());
+			assertEquals(0, getCountChangeWettbewerbStatus());
+			assertEquals("PersistenceException beim Speichern eines vorhandenen Wettbewerbs", e.getMessage());
+		}
+
+	}
+
+	@Test
+	void should_WettbewerbAendernThrowNotFoundException_when_WettbewerbNotPresent() {
+
+		// Arrange
+		EditWettbewerbModel data = EditWettbewerbModel.create(2012, "01.01.2017", "31.05.2017",
+			"01.03.2017", "01.06.2017");
+
+		// Act + Assert
+		try {
+
+			service.wettbewerbAendern(data);
+			fail("keine MkWettbewerbAdminRuntimeException");
+		} catch (NotFoundException e) {
+
+			assertEquals(0, getCountWettbewerbInsert());
+			assertEquals(0, getCountWettbewerbUpdate());
+			assertEquals(0, getCountChangeWettbewerbStatus());
+			assertEquals("HTTP 404 Not Found", e.getMessage());
+		}
+	}
+
+	@Test
+	void should_WettbewerbAendernThrowWebapplicationException_when_WettbewerbBeendet() {
+
+		// Arrange
+		EditWettbewerbModel data = EditWettbewerbModel.create(2005, "01.01.2017", "31.05.2017",
+			"01.03.2017", "01.06.2017");
+
+		// Act + Assert
+		try {
+
+			service.wettbewerbAendern(data);
+			fail("keine WebApplicationException");
+		} catch (WebApplicationException e) {
+
+			assertEquals(0, getCountWettbewerbInsert());
+			assertEquals(0, getCountWettbewerbUpdate());
+			assertEquals(0, getCountChangeWettbewerbStatus());
+
+			assertEquals("HTTP 412 Precondition Failed", e.getMessage());
+			Object entity = e.getResponse().getEntity();
+			assertTrue(entity instanceof ResponsePayload);
+			ResponsePayload payload = (ResponsePayload) entity;
+			assertEquals("ERROR", payload.getMessage().getLevel());
+			assertEquals("Wettbewerb hat sein Lebensende erreicht und kann nicht mehr geändert werden.",
+				payload.getMessage().getMessage());
+		}
+	}
 }

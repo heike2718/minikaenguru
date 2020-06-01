@@ -29,7 +29,7 @@ public abstract class AbstractDomainServiceTest {
 	protected void setUp() {
 
 		List<Wettbewerb> wettbewerbe = new ArrayList<>();
-		List<Integer> jahre = Arrays.asList(new Integer[] { 2005, 2017, 2010 });
+		List<Integer> jahre = Arrays.asList(new Integer[] { 2005, 2017, 2010, 2015 });
 
 		jahre.forEach(jahr -> {
 
@@ -45,6 +45,16 @@ public abstract class AbstractDomainServiceTest {
 			if (jahr.equals(2010)) {
 
 				wettbewerbe.add(new Wettbewerb(new WettbewerbID(jahr)).withStatus(WettbewerbStatus.BEENDET)
+					.withWettbewerbsbeginn(LocalDate.of(jahr, Month.JANUARY, 1))
+					.withDatumFreischaltungLehrer(LocalDate.of(jahr, Month.MARCH, 1))
+					.withDatumFreischaltungPrivat(LocalDate.of(jahr, Month.JUNE, 1))
+					.withWettbewerbsende(LocalDate.of(jahr, Month.AUGUST, 1)));
+
+			}
+
+			if (jahr.equals(2015)) {
+
+				wettbewerbe.add(new Wettbewerb(new WettbewerbID(jahr)).withStatus(WettbewerbStatus.DOWNLOAD_PRIVAT)
 					.withWettbewerbsbeginn(LocalDate.of(jahr, Month.JANUARY, 1))
 					.withDatumFreischaltungLehrer(LocalDate.of(jahr, Month.MARCH, 1))
 					.withDatumFreischaltungPrivat(LocalDate.of(jahr, Month.JUNE, 1))
@@ -90,7 +100,7 @@ public abstract class AbstractDomainServiceTest {
 
 				countWettbewerbUpdate++;
 
-				if (wettbewerb.id().jahr().equals(Integer.valueOf(2011))) {
+				if (wettbewerb.id().jahr().equals(Integer.valueOf(2011)) || wettbewerb.id().jahr().equals(Integer.valueOf(2015))) {
 
 					throw new PersistenceException("Wettbewerb mit diesem Jahr ist verboten");
 				}

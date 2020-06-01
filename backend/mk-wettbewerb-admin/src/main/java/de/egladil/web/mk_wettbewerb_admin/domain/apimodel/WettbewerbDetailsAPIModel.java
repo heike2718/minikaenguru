@@ -11,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb.Wettbewerb;
-import de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb.WettbewerbStatus;
 
 /**
  * WettbewerbDetailsAPIModel
@@ -45,24 +44,10 @@ public class WettbewerbDetailsAPIModel {
 	private String datumFreischaltungPrivat;
 
 	@JsonProperty
-	private TeilnahmenuebersichAPIModel teilnahmenuebersicht;
+	private TeilnahmenuebersichtAPIModel teilnahmenuebersicht;
 
 	@JsonProperty
 	private boolean completelyLoaded = true;
-
-	public static WettbewerbDetailsAPIModel create(final int jahr, final WettbewerbStatus status, final String beginn, final String ende, final String freischaltungLehre, final String freischaltungPrivat) {
-
-		WettbewerbDetailsAPIModel result = new WettbewerbDetailsAPIModel();
-
-		result.jahr = jahr;
-		result.status = status.toString();
-		result.wettbewerbsbeginn = beginn;
-		result.wettbewerbsende = ende;
-		result.datumFreischaltungLehrer = freischaltungLehre;
-		result.datumFreischaltungPrivat = freischaltungPrivat;
-		return result;
-
-	}
 
 	public static WettbewerbDetailsAPIModel fromWettbewerb(final Wettbewerb wettbewerb) {
 
@@ -77,7 +62,7 @@ public class WettbewerbDetailsAPIModel {
 		return result;
 	}
 
-	public WettbewerbDetailsAPIModel withTeilnahmenuebersicht(final TeilnahmenuebersichAPIModel teilnahmenubersicht) {
+	public WettbewerbDetailsAPIModel withTeilnahmenuebersicht(final TeilnahmenuebersichtAPIModel teilnahmenubersicht) {
 
 		this.teilnahmenuebersicht = teilnahmenubersicht;
 		return this;

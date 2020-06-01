@@ -6,6 +6,7 @@ package de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
@@ -36,8 +37,6 @@ public class WettbewerbTest {
 		// Assert
 		assertEquals(id, wettbewerb.id());
 		assertEquals(WettbewerbStatus.ERFASST, wettbewerb.status());
-		wettbewerb.naechsterStatus();
-		assertEquals(WettbewerbStatus.ANMELDUNG, wettbewerb.status());
 		assertEquals(wettbewerb, wettbewerb);
 		assertFalse(wettbewerb.equals(new Object()));
 		assertFalse(wettbewerb.equals(null));
@@ -127,6 +126,26 @@ public class WettbewerbTest {
 		assertEquals("2010", wettbewerbe.get(1).toString());
 		assertEquals("2005", wettbewerbe.get(2).toString());
 
+	}
+
+	@Test
+	void should_nextStatusInitializeWettbewerbsbeginn_when_moveToAnmeldung() {
+
+		// Arrange
+		Integer jahr = 2006;
+		Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(jahr)).withStatus(WettbewerbStatus.ERFASST)
+			.withDatumFreischaltungLehrer(LocalDate.of(jahr, Month.MARCH, 1))
+			.withDatumFreischaltungPrivat(LocalDate.of(jahr, Month.JUNE, 1))
+			.withWettbewerbsende(LocalDate.of(jahr, Month.AUGUST, 1));
+
+		assertNull(wettbewerb.wettbewerbsbeginn());
+
+		// Act
+		wettbewerb.naechsterStatus();
+
+		// Assert
+		assertEquals(WettbewerbStatus.ANMELDUNG, wettbewerb.status());
+		assertNotNull(wettbewerb.wettbewerbsbeginn());
 	}
 
 }

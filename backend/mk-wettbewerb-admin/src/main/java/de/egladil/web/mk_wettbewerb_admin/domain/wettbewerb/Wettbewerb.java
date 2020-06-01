@@ -9,6 +9,8 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import de.egladil.web.commons_net.time.CommonTimeUtils;
+
 /**
  * Wettbewerb
  */
@@ -121,6 +123,11 @@ public class Wettbewerb {
 
 		this.status = WettbewerbStatus.nextStatus(status);
 
+		if (this.status == WettbewerbStatus.ANMELDUNG && this.wettbewerbsbeginn == null) {
+
+			this.wettbewerbsbeginn = CommonTimeUtils.now().toLocalDate();
+		}
+
 	}
 
 	public WettbewerbID id() {
@@ -146,6 +153,11 @@ public class Wettbewerb {
 	public LocalDate datumFreischaltungPrivat() {
 
 		return datumFreischaltungPrivat;
+	}
+
+	public boolean isBeendet() {
+
+		return this.status == WettbewerbStatus.BEENDET;
 	}
 
 }
