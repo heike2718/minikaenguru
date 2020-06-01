@@ -10,18 +10,18 @@ import javax.validation.constraints.Pattern;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * WettbewerbAPIModel zum Anlegen und Ändern eines Wettbewerbs
+ * EditWettbewerbModel zum Anlegen und Ändern eines Wettbewerbs
  */
-public class WettbewerbAPIModel {
+public class EditWettbewerbModel {
 
 	@JsonProperty
 	private int jahr;
 
 	@JsonProperty
-	@NotBlank
 	private String status;
 
 	@JsonProperty
+	@NotBlank
 	@Pattern(regexp = "\\d{2}.\\d{2}.\\d{4}")
 	private String wettbewerbsbeginn;
 
@@ -40,15 +40,14 @@ public class WettbewerbAPIModel {
 	@Pattern(regexp = "\\d{2}.\\d{2}.\\d{4}")
 	private String datumFreischaltungPrivat;
 
-	public static WettbewerbAPIModel create(final int jahr, final String status, final String beginn, final String ende, final String freischaltungLehre, final String freischaltungPrivat) {
+	public static EditWettbewerbModel create(final int jahr, final String beginn, final String ende, final String freischaltungLehrer, final String freischaltungPrivat) {
 
-		WettbewerbAPIModel result = new WettbewerbAPIModel();
+		EditWettbewerbModel result = new EditWettbewerbModel();
 
 		result.jahr = jahr;
-		result.status = status;
 		result.wettbewerbsbeginn = beginn;
 		result.wettbewerbsende = ende;
-		result.datumFreischaltungLehrer = freischaltungLehre;
+		result.datumFreischaltungLehrer = freischaltungLehrer;
 		result.datumFreischaltungPrivat = freischaltungPrivat;
 		return result;
 
@@ -57,11 +56,6 @@ public class WettbewerbAPIModel {
 	public int getJahr() {
 
 		return jahr;
-	}
-
-	public String getStatus() {
-
-		return status;
 	}
 
 	public String getWettbewerbsbeginn() {

@@ -76,7 +76,11 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 			return { level: 'ERROR', message: error.error.message['message'] };
 		}
 
-		return null;
+		if (error.error && error.message) {
+			return { level: 'ERROR', message: error['message'] };
+		}
+
+		return { level: 'ERROR', message: 'Da ist im Backend irgendwas unerwartetes schiefgelaufen. Gugstu mal ins Log' };
 	}
 
 	private showServerResponseMessage(level: string, message: string) {

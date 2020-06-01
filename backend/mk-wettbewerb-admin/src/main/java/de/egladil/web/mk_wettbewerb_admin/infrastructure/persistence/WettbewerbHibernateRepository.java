@@ -2,7 +2,7 @@
 // Project: mk-wettbewerb
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_wettbewerb_admin.infrastructure.persistence.impl;
+package de.egladil.web.mk_wettbewerb_admin.infrastructure.persistence;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,9 +15,11 @@ import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
+import de.egladil.web.mk_wettbewerb_admin.domain.error.MkWettbewerbAdminRuntimeException;
 import de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb.WettbewerbRepository;
+import de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb.WettbewerbStatus;
 import de.egladil.web.mk_wettbewerb_admin.infrastructure.persistence.entities.PersistenterWettbewerb;
 
 /**
@@ -58,7 +60,7 @@ public class WettbewerbHibernateRepository implements WettbewerbRepository {
 	 * @param  persistenterWettbewerb
 	 * @return
 	 */
-	private Wettbewerb mapFromPersistenterWettbewerb(final PersistenterWettbewerb persistenterWettbewerb) {
+	Wettbewerb mapFromPersistenterWettbewerb(final PersistenterWettbewerb persistenterWettbewerb) {
 
 		Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(Integer.valueOf(persistenterWettbewerb.getUuid())))
 			.withDatumFreischaltungLehrer(
@@ -92,7 +94,9 @@ public class WettbewerbHibernateRepository implements WettbewerbRepository {
 	public void addWettbewerb(final Wettbewerb wettbewerb) {
 
 		PersistenterWettbewerb persistenterWettbewerb = new PersistenterWettbewerb();
-		mapFromWettbewerb(wettbewerb, persistenterWettbewerb);
+		mapAllAttributesButStatus(wettbewerb, persistenterWettbewerb);
+		persistenterWettbewerb.setStatus(wettbewerb.status());
+
 		persistenterWettbewerb.setImportierteUuid(wettbewerb.id().toString());
 
 		em.persist(persistenterWettbewerb);
@@ -102,26 +106,47 @@ public class WettbewerbHibernateRepository implements WettbewerbRepository {
 	@Transactional
 	public void changeWettbewerb(final Wettbewerb wettbewerb) {
 
-		Optional<Wettbewerb> opt = this.wettbewerbMitID(wettbewerb.id());
+		Optional<PersistenterWettbewerb> opt = this.findPersistentenWetbewerbByUUID(wettbewerb.id().toString());
 
 		if (opt.isEmpty()) {
 
-			throw new IllegalStateException("Den Wettbewerb " + wettbewerb.toString() + " gibt es noch nicjt");
+			throw new IllegalStateException("Den Wettbewerb " + wettbewerb.toString() + " gibt es noch nicht");
 		}
 
+		PersistenterWettbewerb persistenterWettbewerb = opt.get();
+		this.mapAllAttributesButStatus(wettbewerb, persistenterWettbewerb);
+
+		em.merge(persistenterWettbewerb);
+
+	}
+
+	@Override
+	@Transactional
+	public boolean changeWettbewerbStatus(final WettbewerbID wettbewerbId, final WettbewerbStatus neuerStatus) {
+
+		Optional<PersistenterWettbewerb> opt = this.findPersistentenWetbewerbByUUID(wettbewerbId.toString());
+
+		if (opt.isEmpty()) {
+
+			throw new MkWettbewerbAdminRuntimeException("Den Wettbewerb " + wettbewerbId.toString() + " gibt es noch nicht");
+		}
+
+		PersistenterWettbewerb persistenterWettbewerb = opt.get();
+		persistenterWettbewerb.setStatus(neuerStatus);
+		em.merge(persistenterWettbewerb);
+		return true;
 	}
 
 	/**
 	 * @param wettbewerb
 	 * @param persistenterWettbewerb
 	 */
-	private void mapFromWettbewerb(final Wettbewerb wettbewerb, final PersistenterWettbewerb persistenterWettbewerb) {
+	void mapAllAttributesButStatus(final Wettbewerb wettbewerb, final PersistenterWettbewerb persistenterWettbewerb) {
 
 		persistenterWettbewerb
 			.setDatumFreischaltungLehrer(CommonTimeUtils.transformFromLocalDate(wettbewerb.datumFreischaltungLehrer()));
 		persistenterWettbewerb
 			.setDatumFreischaltungPrivat(CommonTimeUtils.transformFromLocalDate(wettbewerb.datumFreischaltungPrivat()));
-		persistenterWettbewerb.setStatus(wettbewerb.status());
 		persistenterWettbewerb.setWettbewerbsbeginn(CommonTimeUtils.transformFromLocalDate(wettbewerb.wettbewerbsbeginn()));
 		persistenterWettbewerb.setWettbewerbsende(CommonTimeUtils.transformFromLocalDate(wettbewerb.wettbewerbsende()));
 	}

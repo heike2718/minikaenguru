@@ -31,4 +31,19 @@ public class WettbewerbListAPIModel {
 		return result;
 	}
 
+	public int jahr() {
+
+		return jahr;
+	}
+
+	public WettbewerbStatus status() {
+
+		return status;
+	}
+
+	public boolean completelyLoaded() {
+
+		return completelyLoaded;
+	}
+
 }

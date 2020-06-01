@@ -9,9 +9,15 @@
 		<p class="card-subtitle mb-2 text-muted">Freischaltung privat: {{wettbewerb.datumFreischaltungPrivat}}
 		</p>
 
-		<div *ngIf="wettbewerb.status !== 'BEENDET'" class="col-md-6 mt-4">
-			<button class="btn btn-dark" (click)="editWettbewerb()"><i class="fa fa-pencil"
-					aria-hidden="true"></i>bearbeiten</button>
+		<div class="row" *ngIf="wettbewerb.status !== 'BEENDET'">
+			<div class="col-md-6 mt-4">
+				<button class="btn btn-dark" (click)="editWettbewerb()"><i class="fa fa-pencil-square-o"
+						aria-hidden="true"></i>bearbeiten</button>
+			</div>
+			<div class="col-md-6 mt-4">
+				<button class="btn btn-dark" (click)="moveToNextStatus()"><i class="fa fa-forward"
+						aria-hidden="true"></i>weiterleiern</button>
+			</div>
 		</div>
 	</div>
 

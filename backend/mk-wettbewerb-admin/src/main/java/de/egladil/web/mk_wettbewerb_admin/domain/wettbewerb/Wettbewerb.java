@@ -5,10 +5,11 @@
 package de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb;
 
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import de.egladil.web.commons_net.time.CommonTimeUtils;
 
 /**
  * Wettbewerb
@@ -45,7 +46,7 @@ public class Wettbewerb {
 
 		this.wettbewerbId = wettbewerbId;
 
-		this.wettbewerbsende = LocalDate.of(wettbewerbId.jahr(), Month.AUGUST, 1);
+		// this.wettbewerbsende = LocalDate.of(wettbewerbId.jahr(), Month.AUGUST, 1);
 
 		this.status = WettbewerbStatus.ERFASST;
 	}
@@ -78,26 +79,6 @@ public class Wettbewerb {
 
 		this.status = status;
 		return this;
-	}
-
-	public void starten() {
-
-		this.status = WettbewerbStatus.ANMELDUNG;
-	}
-
-	public void downloadFuerLehrerFreischalten() {
-
-		this.status = WettbewerbStatus.DOWNLOAD_LEHRER;
-	}
-
-	public void downloadFuerPrivatpersonenFreischalten() {
-
-		this.status = WettbewerbStatus.DOWNLOAD_PRIVAT;
-	}
-
-	public void beenden() {
-
-		this.status = WettbewerbStatus.BEENDET;
 	}
 
 	@Override
@@ -138,33 +119,14 @@ public class Wettbewerb {
 		return status;
 	}
 
-	public void naechsterStatus() {
+	public void naechsterStatus() throws IllegalStateException {
 
-		WettbewerbStatus naechster = null;
+		this.status = WettbewerbStatus.nextStatus(status);
 
-		switch (status) {
+		if (this.status == WettbewerbStatus.ANMELDUNG && this.wettbewerbsbeginn == null) {
 
-		case BEENDET:
-			naechster = WettbewerbStatus.ANMELDUNG;
-			break;
-
-		case ANMELDUNG:
-			naechster = WettbewerbStatus.DOWNLOAD_LEHRER;
-			break;
-
-		case DOWNLOAD_LEHRER:
-			naechster = WettbewerbStatus.DOWNLOAD_PRIVAT;
-			break;
-
-		case DOWNLOAD_PRIVAT:
-			naechster = WettbewerbStatus.BEENDET;
-			break;
-
-		default:
-			throw new IllegalStateException("ubekannter Status " + status);
+			this.wettbewerbsbeginn = CommonTimeUtils.now().toLocalDate();
 		}
-
-		this.status = naechster;
 
 	}
 
@@ -191,6 +153,11 @@ public class Wettbewerb {
 	public LocalDate datumFreischaltungPrivat() {
 
 		return datumFreischaltungPrivat;
+	}
+
+	public boolean isBeendet() {
+
+		return this.status == WettbewerbStatus.BEENDET;
 	}
 
 }
