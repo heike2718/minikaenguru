@@ -33,7 +33,7 @@ public class WettbewerbAPIModelTest {
 
 		// Assert
 		assertEquals(
-			"{\"jahr\":2021,\"status\":\"ERFASST\",\"wettbewerbsbeginn\":\"11.11.2020\",\"wettbewerbsende\":\"01.08.2021\",\"datumFreischaltungLehrer\":\"06.03.2021\",\"datumFreischaltungPrivat\":\"01.06.2021\"}",
+			"{\"jahr\":2021,\"wettbewerbsbeginn\":\"11.11.2020\",\"wettbewerbsende\":\"01.08.2021\",\"datumFreischaltungLehrer\":\"06.03.2021\",\"datumFreischaltungPrivat\":\"01.06.2021\",\"status\":\"ERFASST\"}",
 			serialized);
 
 		System.out.println(serialized);

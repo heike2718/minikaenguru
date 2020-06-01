@@ -55,7 +55,7 @@ export function indexOfWettbewerbMitId(wettbewerbeMitID: WettbewerbWithID[], jah
 		return -1;
 	}
 
-	for(let ind: number = 0; wettbewerbeMitID.length; ind++) {
+	for (let ind: number = 0; wettbewerbeMitID.length; ind++) {
 		if (wettbewerbeMitID[ind] && wettbewerbeMitID[ind].jahr === jahr) {
 			return ind;
 		}
@@ -83,4 +83,22 @@ export function findWettbewerbMitId(wettbewerbeMitID: WettbewerbWithID[], jahr: 
 
 	return null;
 }
+
+export function mergeWettbewerbeMap(wettbewerbeMap: WettbewerbWithID[], wettbewerb: Wettbewerb): WettbewerbWithID[] {
+
+	const result: WettbewerbWithID[] = [];
+
+	for (let i: number = 0; i < wettbewerbeMap.length; i++) {
+		const wbMitId: WettbewerbWithID = wettbewerbeMap[i];
+		if (wbMitId.jahr !== wettbewerb.jahr) {
+			result.push(wbMitId);
+		} else {
+			result.push({ jahr: wettbewerb.jahr, wettbewerb: wettbewerb });
+		}
+	}
+
+	return result;
+}
+
+
 

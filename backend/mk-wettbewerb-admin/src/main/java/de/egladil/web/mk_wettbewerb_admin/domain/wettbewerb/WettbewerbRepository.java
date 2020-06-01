@@ -37,6 +37,14 @@ public interface WettbewerbRepository {
 	void changeWettbewerb(Wettbewerb wettbewerb);
 
 	/**
+	 * Nur der Status wird aktualisiert.
+	 *
+	 * @param wettbewerbId
+	 * @param neuerStatus
+	 */
+	void changeWettbewerbStatus(WettbewerbID wettbewerbId, WettbewerbStatus neuerStatus);
+
+	/**
 	 * Läd alle Wettbewerbe.
 	 *
 	 * @return List

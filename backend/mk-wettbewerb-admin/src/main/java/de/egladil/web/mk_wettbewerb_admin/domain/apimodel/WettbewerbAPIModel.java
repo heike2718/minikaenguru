@@ -17,9 +17,8 @@ public class WettbewerbAPIModel {
 	@JsonProperty
 	private int jahr;
 
-	@JsonProperty
-	@NotBlank
-	private String status;
+	@JsonProperty(value = "status")
+	private String readStatus;
 
 	@JsonProperty
 	@Pattern(regexp = "\\d{2}.\\d{2}.\\d{4}")
@@ -45,7 +44,7 @@ public class WettbewerbAPIModel {
 		WettbewerbAPIModel result = new WettbewerbAPIModel();
 
 		result.jahr = jahr;
-		result.status = status;
+		result.readStatus = status;
 		result.wettbewerbsbeginn = beginn;
 		result.wettbewerbsende = ende;
 		result.datumFreischaltungLehrer = freischaltungLehre;
@@ -59,9 +58,9 @@ public class WettbewerbAPIModel {
 		return jahr;
 	}
 
-	public String getStatus() {
+	public String getReadStatus() {
 
-		return status;
+		return readStatus;
 	}
 
 	public String getWettbewerbsbeginn() {

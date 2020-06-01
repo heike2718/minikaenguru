@@ -1,6 +1,6 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import * as WettbewerbeActions from './wettbewerbe.actions';
-import { WettbewerbWithID, WettbewerbEditorModel, initialWettbewerbEditorModel, Wettbewerb } from '../wettbewerbe.model';
+import { WettbewerbWithID, WettbewerbEditorModel, initialWettbewerbEditorModel, Wettbewerb, mergeWettbewerbeMap, WettbewerbStatus } from '../wettbewerbe.model';
 
 import { Message } from '@minikaenguru-ws/common-messages';
 
@@ -39,19 +39,7 @@ const wettbewerbeReducer = createReducer(initialWettbewerbeState,
 
 	on(WettbewerbeActions.selectedWettbewerbLoaded, (state, action) => {
 
-		const alteMap = state.wettbewerbeMap;
-		let neueMap: WettbewerbWithID[] = [];
-
-		const selectedJahr = state.selectedJahr;
-		for (let i: number = 0; i < alteMap.length; i++) {
-			const wbMitId: WettbewerbWithID = alteMap[i];
-			if (wbMitId.jahr !== selectedJahr) {
-				neueMap.push(wbMitId);
-			} else {
-				neueMap.push({ jahr: action.wettbewerb.jahr, wettbewerb: action.wettbewerb });
-			}
-		}
-
+		const neueMap = mergeWettbewerbeMap(state.wettbewerbeMap, action.wettbewerb);
 		const loaded = state.wettbewerbeMap.length > 0;
 		return { ...state, wettbewerbeMap: neueMap, selectedJahr: action.wettbewerb.jahr, wettbewerbeLoaded: loaded, saveOutcome: undefined }
 	}),
@@ -87,30 +75,30 @@ const wettbewerbeReducer = createReducer(initialWettbewerbeState,
 
 	}),
 
-	on(WettbewerbeActions.wettbewerbSaved, (state, action) => {
+	on(WettbewerbeActions.wettbewerbInserted, (state, action) => {
 
 		const outcome = action.outcome;
+		return { ...state, wettbewerbeMap: [...state.wettbewerbeMap, { jahr: action.wettbewerb.jahr, wettbewerb: action.wettbewerb }], selectedJahr: action.wettbewerb.jahr, saveOutcome: outcome };
+	}),
 
-		if (outcome.level === 'INFO') {
+	on(WettbewerbeActions.wettbewerbUpdated, (state, action) => {
 
-			const alteMap = state.wettbewerbeMap;
-			let neueMap: WettbewerbWithID[] = [];
+		const outcome = action.outcome;
+		const neueMap = mergeWettbewerbeMap(state.wettbewerbeMap, action.wettbewerb);
+		return { ...state, wettbewerbeMap: neueMap, selectedJahr: action.wettbewerb.jahr, saveOutcome: outcome };
+	}),
 
-			const selectedJahr = state.selectedJahr;
-			for (let i: number = 0; i < alteMap.length; i++) {
-				const wbMitId: WettbewerbWithID = alteMap[i];
-				if (wbMitId.jahr !== selectedJahr) {
-					neueMap.push(wbMitId);
-				}
-			}
-			neueMap.push({ jahr: action.wettbewerb.jahr, wettbewerb: action.wettbewerb });
+	on(WettbewerbeActions.saveFailed, (state, action) => {
+		return { ...state, saveOutcome: action.outcome };
+	}),
 
-			// const neueMap: WettbewerbWithID[] = mergeWettbewerb(state.wettbewerbeMap, action.wettbewerb);
-			console.debug('updateWettbewerb: status fertig')
-			return { ...state, wettbewerbeMap: neueMap, selectedJahr: action.wettbewerb.jahr, saveOutcome: outcome };
-		} else {
-			return { ...state, saveOutcome: outcome };
-		}
+	on(WettbewerbeActions.wettbewerbMovedOn, (state, action) => {
+		const outcome = action.outcome;
+		const neuerStatus: WettbewerbStatus = action.neuerStatus;
+		const neuerWettbewerb: Wettbewerb = { ...action.wettbewerb, status: neuerStatus };
+		const neueMap = mergeWettbewerbeMap(state.wettbewerbeMap, neuerWettbewerb);
+
+		return { ...state, wettbewerbeMap: neueMap, selectedJahr: action.wettbewerb.jahr, saveOutcome: outcome };
 	})
 
 );

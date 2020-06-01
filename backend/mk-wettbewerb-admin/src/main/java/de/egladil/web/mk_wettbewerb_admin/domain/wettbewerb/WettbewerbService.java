@@ -12,7 +12,9 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
-import javax.transaction.Transactional;
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,24 +76,6 @@ public class WettbewerbService {
 		return Optional.of(wettbewerbe.get(0));
 	}
 
-	@Transactional
-	public void wettbewerbStarten(final WettbewerbID wettbewerbID) {
-
-		List<Wettbewerb> wettbewerbe = wettbewerbRepository.loadWettbewerbe();
-
-		Optional<Wettbewerb> optWettbewerb = wettbewerbe.stream().filter(w -> w.id().equals(wettbewerbID)).findFirst();
-
-		if (optWettbewerb.isEmpty()) {
-
-			LOG.debug("Wettbewerb mit ID {} existiert nicht", wettbewerbID);
-			return;
-		}
-
-		// Alle vorherigen Wettbewerbe müssen beendet werden, damit es höchstens einen mit einem anderen Status gibt.
-		throw new MkWettbewerbAdminRuntimeException("Methode ist noch nicht fertig implementiert");
-
-	}
-
 	public Optional<WettbewerbDetailsAPIModel> wettbewerbMitJahr(final Integer jahr) {
 
 		if (jahr == null) {
@@ -125,17 +109,7 @@ public class WettbewerbService {
 				ResponsePayload.messageOnly(MessagePayload.error("Wettbewerbsjahr muss größer als 2004 sein")));
 		}
 
-		WettbewerbStatus status = null;
-
-		try {
-
-			status = WettbewerbStatus.valueOf(data.getStatus());
-		} catch (IllegalArgumentException e) {
-
-			throw new InvalidInputException(
-				ResponsePayload.messageOnly(
-					MessagePayload.error("WettbewerbStatus ist ungültig: erlaubt sind " + WettbewerbStatus.erlaubteStatus())));
-		}
+		WettbewerbStatus status = WettbewerbStatus.nextStatus(null);
 
 		Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(data.getJahr())).withStatus(status)
 			.withWettbewerbsende(CommonTimeUtils.parseToLocalDate(data.getWettbewerbsende()))
@@ -157,5 +131,40 @@ public class WettbewerbService {
 			throw new MkWettbewerbAdminRuntimeException("PersistenceException beim Speichern eines neuen Wettbewerbs");
 		}
 
+	}
+
+	/**
+	 * @param  jahr
+	 * @return      Wettbewerb
+	 */
+	public WettbewerbStatus starteNaechstePhase(final Integer jahr) {
+
+		Optional<Wettbewerb> optWettbewerb = wettbewerbRepository.wettbewerbMitID(new WettbewerbID(jahr));
+
+		if (!optWettbewerb.isPresent()) {
+
+			throw new NotFoundException();
+
+		}
+
+		Wettbewerb wettbewerb = optWettbewerb.get();
+
+		try {
+
+			wettbewerb.naechsterStatus();
+			wettbewerbRepository.changeWettbewerbStatus(wettbewerb.id(), wettbewerb.status());
+			return wettbewerb.status();
+
+		} catch (IllegalStateException e) {
+
+			LOG.error("{} - {}", e.getMessage(), wettbewerb);
+			ResponsePayload responsePayload = ResponsePayload
+				.messageOnly(MessagePayload.error(e.getMessage()));
+			throw new WebApplicationException(Response.status(412).entity(responsePayload).build());
+		} catch (PersistenceException e) {
+
+			LOG.error("Der wettbewerb {} konnte nicht gespeichert werden: {}", wettbewerb, e.getMessage(), e);
+			throw new MkWettbewerbAdminRuntimeException("PersistenceException beim Speichern eines vorhandenen Wettbewerbs");
+		}
 	}
 }

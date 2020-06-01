@@ -17,6 +17,7 @@ import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.AbstractMkResourceAdapter;
 import de.egladil.web.mk_gateway.domain.apimodel.WettbewerbAPIModel;
+import de.egladil.web.mk_gateway.domain.apimodel.WettbewerbID;
 import de.egladil.web.mk_gateway.infrastructure.messaging.MkWettbewerbAdminRestClient;
 
 /**
@@ -72,6 +73,18 @@ public class MkWettbewerbAdminResourceAdapter extends AbstractMkResourceAdapter 
 		} catch (Exception e) {
 
 			return this.handleException(e, LOG, "[createWettbewerb]");
+		}
+	}
+
+	public Response moveWettbwerbOn(final WettbewerbID data, final String principalName) {
+
+		try {
+
+			Response response = restClient.moveWettbewerbOn(data, principalName);
+			return response;
+		} catch (Exception e) {
+
+			return this.handleException(e, LOG, "[moveWettbwerbOn]");
 		}
 	}
 

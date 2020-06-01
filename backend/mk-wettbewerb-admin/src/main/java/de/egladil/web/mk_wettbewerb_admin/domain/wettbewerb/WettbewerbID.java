@@ -6,6 +6,8 @@ package de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import de.egladil.web.commons_validation.exception.InvalidInputException;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
@@ -15,7 +17,16 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
  */
 public class WettbewerbID {
 
+	@JsonProperty
 	private final Integer jahr;
+
+	/**
+	 * Konstruktor für Serialisierung
+	 */
+	WettbewerbID() {
+
+		this.jahr = 0;
+	}
 
 	/**
 	 * @param jahr

@@ -13,6 +13,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -29,7 +30,9 @@ import de.egladil.web.mk_wettbewerb_admin.domain.apimodel.WettbewerbAPIModel;
 import de.egladil.web.mk_wettbewerb_admin.domain.apimodel.WettbewerbDetailsAPIModel;
 import de.egladil.web.mk_wettbewerb_admin.domain.apimodel.WettbewerbListAPIModel;
 import de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb.Wettbewerb;
+import de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb.WettbewerbService;
+import de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb.WettbewerbStatus;
 
 /**
  * WettbewerbeResource
@@ -98,5 +101,21 @@ public class WettbewerbeResource extends AbstractAdminResource {
 		String locationString = createdUriPrefix + "/wettbewerbe/wettbewerb/" + wettbewerb.id().jahr();
 		URI location = createdUri(locationString);
 		return Response.created(location).entity(payload).build();
+	}
+
+	@PUT
+	@Path("/wettbewerb/status")
+	public Response starteNaechstePhase(final WettbewerbID wettbewerbId, @HeaderParam(
+		value = MkWettbewerbAdminApp.UUID_HEADER_NAME) final String principalName) {
+
+		this.checkAccess(principalName);
+
+		WettbewerbStatus neuerStatus = wettbewerbService.starteNaechstePhase(wettbewerbId.jahr());
+
+		ResponsePayload payload = new ResponsePayload(
+			MessagePayload.info("Wettbewerb " + wettbewerbId.jahr() + " erfolgreich in nächste Phase befördert"),
+			neuerStatus.toString());
+
+		return Response.ok(payload).build();
 	}
 }

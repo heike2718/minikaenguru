@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -19,6 +20,7 @@ import javax.ws.rs.core.SecurityContext;
 
 import de.egladil.web.mk_gateway.domain.admin.MkWettbewerbAdminResourceAdapter;
 import de.egladil.web.mk_gateway.domain.apimodel.WettbewerbAPIModel;
+import de.egladil.web.mk_gateway.domain.apimodel.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.error.AuthException;
 
 /**
@@ -76,6 +78,20 @@ public class WettbewerbAdminResource {
 		String principalName = securityContext.getUserPrincipal().getName();
 
 		return resourceAdapter.createWettbewerb(data, principalName);
+	}
+
+	@PUT
+	@Path("/wettbewerbe/wettbewerb/status")
+	public Response moveWettbewerbOn(final WettbewerbID data) {
+
+		if (securityContext.getUserPrincipal() == null) {
+
+			throw new AuthException("nicht eingeloggt oder keine gültige session mehr");
+		}
+
+		String principalName = securityContext.getUserPrincipal().getName();
+
+		return resourceAdapter.moveWettbwerbOn(data, principalName);
 	}
 
 }

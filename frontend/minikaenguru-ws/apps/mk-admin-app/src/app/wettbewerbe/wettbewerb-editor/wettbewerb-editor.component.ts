@@ -54,13 +54,7 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 				this.initialWettbewerbGuiModel = wb;
 
 				this.jahrFormControl = new FormControl({ value: '' }, Validators.required);
-				if (this.initialWettbewerbGuiModel.jahr === 0) {
-
-					this.statusFormControl = new FormControl({ value: '', disabled: true }, Validators.required);
-				} else {
-					this.statusFormControl = new FormControl({ value: '', disabled: false }, Validators.required);
-				}
-
+				this.statusFormControl = new FormControl({ value: '', disabled: true });
 				this.wettbewerbsbeginnFormControl = new FormControl({ value: '' });
 				this.wettbewerbsendeFormControl = new FormControl({ value: '' }, Validators.required);
 				this.datumFreischaltungLehrerFormControl = new FormControl({ value: '' }, Validators.required);
@@ -110,7 +104,7 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 			neuerWettbewerb.status = this.initialWettbewerbGuiModel.status;
 		}
 		this.logger.debug(JSON.stringify(neuerWettbewerb));
-		this.wettbewerbFacade.saveWettbewerb(neuerWettbewerb);
+		this.wettbewerbFacade.saveWettbewerb(neuerWettbewerb, this.initialWettbewerbGuiModel.jahr === 0);
 	}
 
 	onCancel() {
