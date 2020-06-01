@@ -67,13 +67,17 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 		}
 	}
 
-	private extractMessageObject(error: HttpErrorResponse): { level: string, message: string } {
+	public extractMessageObject(error: HttpErrorResponse): { level: string, message: string } {
 
 		if (error.error && error.error.message) {
 			return { level: 'ERROR', message: error.error.message['message'] };
 		}
 
-		return null;
+		if (error.error && error.message) {
+			return { level: 'ERROR', message: error['message'] };
+		}
+
+		return { level: 'ERROR', message: 'Es ist ein unerwarteter Fehler aufgetreten. Bitte schreiben Sie eine Mail an minikaenguru@egladil.de' };
 	}
 
 	private showServerResponseMessage(level: string, message: string) {

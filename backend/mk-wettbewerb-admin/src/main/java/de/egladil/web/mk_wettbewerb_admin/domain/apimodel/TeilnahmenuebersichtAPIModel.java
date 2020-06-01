@@ -7,9 +7,9 @@ package de.egladil.web.mk_wettbewerb_admin.domain.apimodel;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * TeilnahmenuebersichAPIModel
+ * TeilnahmenuebersichtAPIModel
  */
-public class TeilnahmenuebersichAPIModel {
+public class TeilnahmenuebersichtAPIModel {
 
 	@JsonProperty
 	private int anzahlSchulanmeldungen = 0;

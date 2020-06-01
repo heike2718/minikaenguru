@@ -41,6 +41,10 @@ export class WettbewerbDashboardComponent implements OnInit, OnDestroy {
 		this.wettbewerbFacade.editWettbewerb(this.wettbewerb);
 	}
 
+	moveToNextStatus() {
+		this.wettbewerbFacade.moveWettbewerbOn(this.wettbewerb);
+	}
+
 	backToWettbewerbe() {
 		this.router.navigateByUrl('/wettbewerbe');
 	}

@@ -51,17 +51,11 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 
 		this.wettbewerbSubscription = this.wettbewerbEditorModel$.subscribe(
 			wb => {
-				this.initialWettbewerbGuiModel = wb;
+				this.initialWettbewerbGuiModel = {...wb};
 
 				this.jahrFormControl = new FormControl({ value: '' }, Validators.required);
-				if (this.initialWettbewerbGuiModel.jahr === 0) {
-
-					this.statusFormControl = new FormControl({ value: '', disabled: true }, Validators.required);
-				} else {
-					this.statusFormControl = new FormControl({ value: '', disabled: false }, Validators.required);
-				}
-
-				this.wettbewerbsbeginnFormControl = new FormControl({ value: '' });
+				this.statusFormControl = new FormControl({ value: '', disabled: true });
+				this.wettbewerbsbeginnFormControl = new FormControl({ value: '' }, Validators.required);
 				this.wettbewerbsendeFormControl = new FormControl({ value: '' }, Validators.required);
 				this.datumFreischaltungLehrerFormControl = new FormControl({ value: '' }, Validators.required);
 				this.datumFreischaltungPrivatFormControl = new FormControl({ value: '' }, Validators.required);
@@ -105,12 +99,16 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 	}
 
 	onSubmit() {
-		const neuerWettbewerb = this.wettbewerbForm.value;
-		if (!neuerWettbewerb.status) {
-			neuerWettbewerb.status = this.initialWettbewerbGuiModel.status;
+		const formValue: WettbewerbEditorModel = this.wettbewerbForm.value;
+		const neuerWettbewerb: WettbewerbEditorModel= {...formValue,
+			datumFreischaltungLehrer: formValue.datumFreischaltungLehrer.trim(),
+			datumFreischaltungPrivat: formValue.datumFreischaltungPrivat.trim(),
+			wettbewerbsbeginn: formValue.wettbewerbsbeginn.trim(),
+			wettbewerbsende: formValue.wettbewerbsende.trim(),
+			status: this.initialWettbewerbGuiModel.status // wird sowieso ignorier
 		}
-		this.logger.debug(JSON.stringify(neuerWettbewerb));
-		this.wettbewerbFacade.saveWettbewerb(neuerWettbewerb);
+		this.logger.debug('neuerWettbewerb: ' + JSON.stringify(neuerWettbewerb));
+		this.wettbewerbFacade.saveWettbewerb(neuerWettbewerb, this.initialWettbewerbGuiModel.jahr === 0);
 	}
 
 	onCancel() {

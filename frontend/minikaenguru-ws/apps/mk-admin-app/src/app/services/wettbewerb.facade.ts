@@ -5,14 +5,14 @@ import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
 import { ResponsePayload, MessageService, Message } from '@minikaenguru-ws/common-messages';
 import { Wettbewerb, WettbewerbEditorModel } from '../wettbewerbe/wettbewerbe.model';
-import { createNewWettbewerb, wettbewerbSaved, selectWettbewerbsjahr, startEditingWettbewerb } from '../wettbewerbe/+state/wettbewerbe.actions';
-
 import { LogService } from '@minikaenguru-ws/common-logging';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
 import { wettbewerbe, selectedWettbewerb, wettbewerbEditorModel, saveOutcome } from '../wettbewerbe/+state/wettbewerbe.selectors';
 import { Router } from '@angular/router';
+
+import * as WettbewerbActions from '../wettbewerbe/+state/wettbewerbe.actions';
 
 @Injectable({
 	providedIn: 'root'
@@ -23,9 +23,6 @@ export class WettbewerbFacade {
 	public wettbewerb$: Observable<Wettbewerb> = this.store.select(selectedWettbewerb);
 	public wettbewerbEditorModel$: Observable<WettbewerbEditorModel> = this.store.select(wettbewerbEditorModel);
 	public saveOutcome$: Observable<Message> = this.store.select(saveOutcome);
-	public selectedJahr$: Observable<{ jahr: number }> = this.store.select(selectWettbewerbsjahr);
-
-
 
 	constructor(private http: HttpClient,
 		private store: Store<AppState>,
@@ -36,16 +33,16 @@ export class WettbewerbFacade {
 	}
 
 	public createNewWettbewerb(): void {
-		this.store.dispatch(createNewWettbewerb());
+		this.store.dispatch(WettbewerbActions.createNewWettbewerb());
 	}
 
 	public selectWettbewerb(wettbewerb: Wettbewerb): void {
-		this.store.dispatch(selectWettbewerbsjahr({ jahr: wettbewerb.jahr }));
+		this.store.dispatch(WettbewerbActions.selectWettbewerbsjahr({ jahr: wettbewerb.jahr }));
 		this.router.navigateByUrl('/wettbewerbe/wettbewerb-dashboard/' + wettbewerb.jahr);
 	}
 
 	public editWettbewerb(wettbewerb: Wettbewerb): void {
-		this.store.dispatch(startEditingWettbewerb({ wettbewerb: wettbewerb }))
+		this.store.dispatch(WettbewerbActions.startEditingWettbewerb({ wettbewerb: wettbewerb }))
 		this.logger.debug('navigieren zum Editor für Jahr ' + wettbewerb.jahr);
 		this.router.navigateByUrl('/wettbewerbe/wettbewerb-editor/' + wettbewerb.jahr);
 	}
@@ -76,34 +73,76 @@ export class WettbewerbFacade {
 
 	}
 
-	public saveWettbewerb(wettbewerb: WettbewerbEditorModel): void {
+	public saveWettbewerb(wettbewerb: WettbewerbEditorModel, neu: boolean): void {
+
+		if (neu) {
+			this.insertWettbewerb(wettbewerb);
+		} else {
+			this.updateWettbewerb(wettbewerb);
+		}
+	}
+
+	private insertWettbewerb(wettbewerb: WettbewerbEditorModel): void {
 
 		const url = environment.apiUrl + '/wb-admin/wettbewerbe/wettbewerb';
 
-		const payload = {
-			jahr: wettbewerb.jahr,
-			status: wettbewerb.status.toString(),
-			wettbewerbsbeginn: wettbewerb.wettbewerbsbeginn ? wettbewerb.wettbewerbsbeginn : null,
-			wettbewerbsende: wettbewerb.wettbewerbsende,
-			datumFreischaltungLehrer: wettbewerb.datumFreischaltungLehrer,
-			datumFreischaltungPrivat: wettbewerb.datumFreischaltungPrivat
-		};
-
-		this.logger.debug(JSON.stringify(payload));
-
-		this.http.post(url, payload).pipe(
+		this.http.post(url, wettbewerb).pipe(
 			map(body => body as ResponsePayload),
 		).subscribe(
 			(responsePayload) => {
 				this.messageService.info(responsePayload.message.message);
-				this.store.dispatch(wettbewerbSaved({ wettbewerb: wettbewerb, outcome: responsePayload.message }));
+					this.store.dispatch(WettbewerbActions.wettbewerbInserted({ wettbewerb: wettbewerb, outcome: responsePayload.message }));
 			},
 			(error) => {
 				const message: Message = {
 					level: 'ERROR',
 					message: this.errorService.extractMessageObject(error).message
 				};
-				this.store.dispatch(wettbewerbSaved({ wettbewerb: wettbewerb, outcome: message }));
+				this.store.dispatch(WettbewerbActions.saveFailed({outcome: message}));
+			}
+		);
+	}
+
+		private updateWettbewerb(wettbewerb: WettbewerbEditorModel): void {
+
+		const url = environment.apiUrl + '/wb-admin/wettbewerbe/wettbewerb';
+
+		this.http.put(url, wettbewerb).pipe(
+			map(body => body as ResponsePayload),
+		).subscribe(
+			(responsePayload) => {
+				this.messageService.info(responsePayload.message.message);
+					this.store.dispatch(WettbewerbActions.wettbewerbUpdated({ wettbewerb: wettbewerb, outcome: responsePayload.message }));
+			},
+			(error) => {
+				const message: Message = {
+					level: 'ERROR',
+					message: this.errorService.extractMessageObject(error).message
+				};
+				this.store.dispatch(WettbewerbActions.saveFailed({outcome: message}));
+			}
+		);
+	}
+
+	public moveWettbewerbOn(wettbewerb: Wettbewerb): void {
+
+		const url = environment.apiUrl + '/wb-admin/wettbewerbe/wettbewerb/status';
+
+		const payload = {jahr: wettbewerb.jahr};
+
+		this.http.put(url, payload).pipe(
+			map(body => body as ResponsePayload),
+		).subscribe(
+			(responsePayload) => {
+				this.messageService.info(responsePayload.message.message);
+				this.store.dispatch(WettbewerbActions.wettbewerbMovedOn({ wettbewerb: wettbewerb, neuerStatus: responsePayload.data, outcome: responsePayload.message }));
+			},
+			(error) => {
+				const message: Message = {
+					level: 'ERROR',
+					message: this.errorService.extractMessageObject(error).message
+				};
+				this.store.dispatch(WettbewerbActions.saveFailed({outcome: message}));
 			}
 		);
 	}

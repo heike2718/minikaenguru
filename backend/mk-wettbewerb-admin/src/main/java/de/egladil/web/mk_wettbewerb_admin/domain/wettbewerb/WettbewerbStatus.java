@@ -4,11 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-
 /**
  * WettbewerbStatus
  */
@@ -16,13 +11,37 @@ public enum WettbewerbStatus {
 
 	ERFASST,
 	ANMELDUNG,
-	DOWNLOAD_PRIVAT,
 	DOWNLOAD_LEHRER,
+	DOWNLOAD_PRIVAT,
 	BEENDET;
 
-	public static String erlaubteStatus() {
+	public static WettbewerbStatus nextStatus(final WettbewerbStatus currentStatus) throws IllegalStateException, IllegalArgumentException {
 
-		return StringUtils.join(Arrays.stream(WettbewerbStatus.values()).map(s -> s.toString()).collect(Collectors.toList()), ",");
+		if (currentStatus == null) {
 
+			return ERFASST;
+		}
+
+		switch (currentStatus) {
+
+		case ERFASST:
+
+			return ANMELDUNG;
+
+		case ANMELDUNG:
+			return DOWNLOAD_LEHRER;
+
+		case DOWNLOAD_LEHRER:
+			return DOWNLOAD_PRIVAT;
+
+		case DOWNLOAD_PRIVAT:
+			return BEENDET;
+
+		case BEENDET:
+			throw new IllegalStateException("Wettbewerb hat sein Lebensende erreicht. Es gibt keinen Folgestatus.");
+
+		default:
+			throw new IllegalArgumentException("unbekannter Status " + currentStatus);
+		}
 	}
 }
