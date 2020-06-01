@@ -119,14 +119,10 @@ public class WettbewerbService {
 		WettbewerbStatus status = WettbewerbStatus.nextStatus(null);
 
 		Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(data.getJahr())).withStatus(status)
+			.withWettbewerbsbeginn(CommonTimeUtils.parseToLocalDate(data.getWettbewerbsbeginn()))
 			.withWettbewerbsende(CommonTimeUtils.parseToLocalDate(data.getWettbewerbsende()))
 			.withDatumFreischaltungLehrer(CommonTimeUtils.parseToLocalDate(data.getDatumFreischaltungLehrer()))
 			.withDatumFreischaltungPrivat(CommonTimeUtils.parseToLocalDate(data.getDatumFreischaltungPrivat()));
-
-		if (data.getWettbewerbsbeginn() != null) {
-
-			wettbewerb = wettbewerb.withWettbewerbsbeginn(CommonTimeUtils.parseToLocalDate(data.getWettbewerbsbeginn()));
-		}
 
 		try {
 
@@ -198,14 +194,10 @@ public class WettbewerbService {
 		}
 
 		Wettbewerb geaendert = new Wettbewerb(wettbewerb.id()).withStatus(wettbewerb.status())
+			.withWettbewerbsbeginn(CommonTimeUtils.parseToLocalDate(data.getWettbewerbsbeginn()))
 			.withWettbewerbsende(CommonTimeUtils.parseToLocalDate(data.getWettbewerbsende()))
 			.withDatumFreischaltungLehrer(CommonTimeUtils.parseToLocalDate(data.getDatumFreischaltungLehrer()))
 			.withDatumFreischaltungPrivat(CommonTimeUtils.parseToLocalDate(data.getDatumFreischaltungPrivat()));
-
-		if (data.getWettbewerbsbeginn() != null) {
-
-			geaendert.withWettbewerbsbeginn(CommonTimeUtils.parseToLocalDate(data.getWettbewerbsbeginn()));
-		}
 
 		try {
 

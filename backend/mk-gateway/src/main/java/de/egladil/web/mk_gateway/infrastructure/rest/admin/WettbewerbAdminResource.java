@@ -81,6 +81,20 @@ public class WettbewerbAdminResource {
 	}
 
 	@PUT
+	@Path("/wettbewerbe/wettbewerb")
+	public Response updateWettbewerb(final WettbewerbAPIModel data) {
+
+		if (securityContext.getUserPrincipal() == null) {
+
+			throw new AuthException("nicht eingeloggt oder keine gültige session mehr");
+		}
+
+		String principalName = securityContext.getUserPrincipal().getName();
+
+		return resourceAdapter.updateWettbewerb(data, principalName);
+	}
+
+	@PUT
 	@Path("/wettbewerbe/wettbewerb/status")
 	public Response moveWettbewerbOn(final WettbewerbID data) {
 

@@ -96,11 +96,26 @@ public class WettbewerbeResource extends AbstractAdminResource {
 		Wettbewerb wettbewerb = this.wettbewerbService.wettbewerbAnlegen(data);
 
 		ResponsePayload payload = ResponsePayload
-			.messageOnly(MessagePayload.info("Wettbewerb " + wettbewerb.toString() + " erfolgreich gespeichert"));
+			.messageOnly(MessagePayload.info("Wettbewerb " + wettbewerb.toString() + " erfolgreich angelegt"));
 
 		String locationString = createdUriPrefix + "/wettbewerbe/wettbewerb/" + wettbewerb.id().jahr();
 		URI location = createdUri(locationString);
 		return Response.created(location).entity(payload).build();
+	}
+
+	@PUT
+	@Path("/wettbewerb")
+	public Response wettbewerbAendern(final EditWettbewerbModel data, @HeaderParam(
+		value = MkWettbewerbAdminApp.UUID_HEADER_NAME) final String principalName) {
+
+		this.checkAccess(principalName);
+
+		this.wettbewerbService.wettbewerbAendern(data);
+
+		ResponsePayload payload = ResponsePayload
+			.messageOnly(MessagePayload.info("Wettbewerb " + data.getJahr() + " erfolgreich gespeichert"));
+
+		return Response.ok(payload).build();
 	}
 
 	@PUT

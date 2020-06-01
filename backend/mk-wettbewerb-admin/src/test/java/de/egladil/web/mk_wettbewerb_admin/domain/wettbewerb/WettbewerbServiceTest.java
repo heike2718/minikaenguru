@@ -7,7 +7,6 @@ package de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -223,28 +222,6 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 	}
 
 	@Test
-	void should_WettbewerbAnlegen_when_WettbewerbsbeginnNull() {
-
-		// Arrange
-		EditWettbewerbModel data = EditWettbewerbModel.create(2018, null, "31.05.2006",
-			"01.03.2006", "01.06.2006");
-
-		assertEquals(4, service.alleWettbewerbeHolen().size());
-
-		// Act
-		Wettbewerb neuer = this.service.wettbewerbAnlegen(data);
-
-		// Assert
-		assertEquals(1, getCountWettbewerbInsert());
-		assertEquals(0, getCountWettbewerbUpdate());
-		assertEquals(0, getCountChangeWettbewerbStatus());
-
-		assertEquals(WettbewerbStatus.ERFASST, neuer.status());
-		assertNull(neuer.wettbewerbsbeginn());
-
-	}
-
-	@Test
 	void should_WettbewerbAnlegenConvertPersistenceException() {
 
 		// Arrange
@@ -401,34 +378,6 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 		assertEquals("01.07.2017", CommonTimeUtils.format(geaenderter.datumFreischaltungPrivat()));
 		assertEquals("15.08.2017", CommonTimeUtils.format(geaenderter.wettbewerbsende()));
 
-	}
-
-	@Test
-	void should_WettbewerbAendern_when_WettbewerbsbeginnNull() {
-
-		// Arrange
-		EditWettbewerbModel data = EditWettbewerbModel.create(2017, null, "15.08.2017", "23.03.2017",
-			"01.07.2017");
-
-		WettbewerbDetailsAPIModel vorhandener = service.wettbewerbMitJahr(Integer.valueOf(2017)).get();
-		assertEquals("01.01.2017", vorhandener.getWettbewerbsbeginn());
-		assertEquals("01.08.2017", vorhandener.getWettbewerbsende());
-		assertEquals("01.03.2017", vorhandener.getDatumFreischaltungLehrer());
-		assertEquals("01.06.2017", vorhandener.getDatumFreischaltungPrivat());
-
-		// Act
-		Wettbewerb geaenderter = this.service.wettbewerbAendern(data);
-
-		// Assert
-		assertEquals(0, getCountWettbewerbInsert());
-		assertEquals(1, getCountWettbewerbUpdate());
-		assertEquals(0, getCountChangeWettbewerbStatus());
-
-		assertEquals(WettbewerbStatus.ERFASST, geaenderter.status());
-		assertNull(geaenderter.wettbewerbsbeginn());
-		assertEquals("23.03.2017", CommonTimeUtils.format(geaenderter.datumFreischaltungLehrer()));
-		assertEquals("01.07.2017", CommonTimeUtils.format(geaenderter.datumFreischaltungPrivat()));
-		assertEquals("15.08.2017", CommonTimeUtils.format(geaenderter.wettbewerbsende()));
 	}
 
 	@Test

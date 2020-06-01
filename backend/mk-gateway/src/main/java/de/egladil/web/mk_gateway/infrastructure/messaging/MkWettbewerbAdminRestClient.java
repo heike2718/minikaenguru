@@ -46,6 +46,11 @@ public interface MkWettbewerbAdminRestClient {
 		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName);
 
 	@PUT
+	@Path("/wettbewerbe/wettbewerb")
+	Response updateWettbewerb(WettbewerbAPIModel data, @HeaderParam(
+		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName);
+
+	@PUT
 	@Path("wettbewerbe/wettbewerb/status")
 	Response moveWettbewerbOn(WettbewerbID data, @HeaderParam(
 		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName);

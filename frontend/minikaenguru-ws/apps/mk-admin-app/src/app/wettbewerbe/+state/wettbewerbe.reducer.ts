@@ -71,14 +71,15 @@ const wettbewerbeReducer = createReducer(initialWettbewerbeState,
 
 	on(WettbewerbeActions.editWettbewerbFinished, (state, _action) => {
 
-		return { ...state, selectedJahr: undefined, saveOutcome: undefined, wettbewerbEditorModel: undefined }
+		return { ...state, selectedJahr: undefined, saveOutcome: undefined, wettbewerbEditorModel: undefined };
 
 	}),
 
 	on(WettbewerbeActions.wettbewerbInserted, (state, action) => {
 
 		const outcome = action.outcome;
-		return { ...state, wettbewerbeMap: [...state.wettbewerbeMap, { jahr: action.wettbewerb.jahr, wettbewerb: action.wettbewerb }], selectedJahr: action.wettbewerb.jahr, saveOutcome: outcome };
+		const neueMap = [...state.wettbewerbeMap, { jahr: action.wettbewerb.jahr, wettbewerb: action.wettbewerb }];
+		return { ...state, wettbewerbeMap: neueMap, selectedJahr: action.wettbewerb.jahr, saveOutcome: outcome };
 	}),
 
 	on(WettbewerbeActions.wettbewerbUpdated, (state, action) => {

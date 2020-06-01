@@ -75,24 +75,44 @@ export class WettbewerbFacade {
 
 	public saveWettbewerb(wettbewerb: WettbewerbEditorModel, neu: boolean): void {
 
+		if (neu) {
+			this.insertWettbewerb(wettbewerb);
+		} else {
+			this.updateWettbewerb(wettbewerb);
+		}
+	}
+
+	private insertWettbewerb(wettbewerb: WettbewerbEditorModel): void {
+
 		const url = environment.apiUrl + '/wb-admin/wettbewerbe/wettbewerb';
 
-		const payload = {
-			jahr: wettbewerb.jahr
-		};
-
-		this.logger.debug(JSON.stringify(payload));
-
-		this.http.post(url, payload).pipe(
+		this.http.post(url, wettbewerb).pipe(
 			map(body => body as ResponsePayload),
 		).subscribe(
 			(responsePayload) => {
 				this.messageService.info(responsePayload.message.message);
-				if (neu) {
 					this.store.dispatch(WettbewerbActions.wettbewerbInserted({ wettbewerb: wettbewerb, outcome: responsePayload.message }));
-				} else {
+			},
+			(error) => {
+				const message: Message = {
+					level: 'ERROR',
+					message: this.errorService.extractMessageObject(error).message
+				};
+				this.store.dispatch(WettbewerbActions.saveFailed({outcome: message}));
+			}
+		);
+	}
+
+		private updateWettbewerb(wettbewerb: WettbewerbEditorModel): void {
+
+		const url = environment.apiUrl + '/wb-admin/wettbewerbe/wettbewerb';
+
+		this.http.put(url, wettbewerb).pipe(
+			map(body => body as ResponsePayload),
+		).subscribe(
+			(responsePayload) => {
+				this.messageService.info(responsePayload.message.message);
 					this.store.dispatch(WettbewerbActions.wettbewerbUpdated({ wettbewerb: wettbewerb, outcome: responsePayload.message }));
-				}
 			},
 			(error) => {
 				const message: Message = {

@@ -35,10 +35,10 @@ export interface WettbewerbEditorModel {
 export const initialWettbewerbEditorModel: WettbewerbEditorModel = {
 	jahr: 0,
 	status: 'ERFASST',
-	wettbewerbsbeginn: '11.11.2013',
-	wettbewerbsende: '01.08.2014',
-	datumFreischaltungLehrer: '05.03.2014',
-	datumFreischaltungPrivat: '01.06.2014'
+	wettbewerbsbeginn: '',
+	wettbewerbsende: '',
+	datumFreischaltungLehrer: '',
+	datumFreischaltungPrivat: ''
 }
 
 export function wettbewerbeWithIDArrayToWettbewerbeArray(wettbewerbeMitID: WettbewerbWithID[]): Wettbewerb[] {

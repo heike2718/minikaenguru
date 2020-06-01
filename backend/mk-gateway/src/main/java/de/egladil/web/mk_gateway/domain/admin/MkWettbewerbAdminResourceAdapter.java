@@ -76,6 +76,18 @@ public class MkWettbewerbAdminResourceAdapter extends AbstractMkResourceAdapter 
 		}
 	}
 
+	public Response updateWettbewerb(final WettbewerbAPIModel data, final String principalName) {
+
+		try {
+
+			Response response = restClient.updateWettbewerb(data, principalName);
+			return response;
+		} catch (Exception e) {
+
+			return this.handleException(e, LOG, "[createWettbewerb]");
+		}
+	}
+
 	public Response moveWettbwerbOn(final WettbewerbID data, final String principalName) {
 
 		try {

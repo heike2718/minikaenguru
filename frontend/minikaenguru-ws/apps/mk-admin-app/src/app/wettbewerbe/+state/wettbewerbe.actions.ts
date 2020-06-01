@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Wettbewerb, WettbewerbStatus } from '../wettbewerbe.model';
+import { Wettbewerb, WettbewerbStatus, WettbewerbEditorModel } from '../wettbewerbe.model';
 import { Message } from '@minikaenguru-ws/common-messages';
 
 export const loadWettbewerbe = createAction(
@@ -23,10 +23,10 @@ export const createNewWettbewerb = createAction(
 export const startEditingWettbewerb = createAction(
 	'[WettbewerbFacade] editWettbewerb',
 	props<{ wettbewerb: Wettbewerb }>()
-)
+);
 
 export const wettbewerbInserted = createAction(
-	'[WettbewerbFacade]: saveWettbewerb',
+	'[WettbewerbFacade]: insertWettbewerb',
 	props<{ wettbewerb: Wettbewerb, outcome: Message }>()
 );
 
@@ -36,7 +36,7 @@ export const wettbewerbMovedOn = createAction(
 );
 
 export const wettbewerbUpdated = createAction(
-	'[WettbewerbFacade]: saveWettbewerb',
+	'[WettbewerbFacade]: updateWettbewerb',
 	props<{ wettbewerb: Wettbewerb, outcome: Message }>()
 );
 

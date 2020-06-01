@@ -18,6 +18,10 @@ public class EditWettbewerbModel {
 	private int jahr;
 
 	@JsonProperty
+	private String status;
+
+	@JsonProperty
+	@NotBlank
 	@Pattern(regexp = "\\d{2}.\\d{2}.\\d{4}")
 	private String wettbewerbsbeginn;
 
