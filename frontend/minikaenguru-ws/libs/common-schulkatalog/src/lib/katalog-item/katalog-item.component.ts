@@ -1,38 +1,36 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { KatalogItem } from '../domain/entities';
-import { Store } from '@ngrx/store';
-import { SchulkatalogState } from '../+state/schulkatalog.reducer';
-import { katalogItemSelected } from '../+state/schulkatalog.actions';
+import { InternalFacade } from '../application-services/internal.facade';
 
 @Component({
-  selector: 'mk-katalog-item',
-  templateUrl: './katalog-item.component.html',
-  styleUrls: ['./katalog-item.component.css']
+	selector: 'mk-katalog-item',
+	templateUrl: './katalog-item.component.html',
+	styleUrls: ['./katalog-item.component.css']
 })
 export class KatalogItemComponent implements OnInit {
 
-  @Input()
-  katalogItem: KatalogItem;
+	@Input()
+	katalogItem: KatalogItem;
 
-  @Input()
-  devMode: boolean;
+	@Input()
+	devMode: boolean;
 
-  anzahlText: string;
+	anzahlText: string;
 
-  constructor(private store: Store<SchulkatalogState>) { }
+	constructor(private internalFacade: InternalFacade) { }
 
-  ngOnInit() {
+	ngOnInit() {
 
-    switch (this.katalogItem.typ) {
-      case 'LAND': this.anzahlText = 'Anzahl Orte:'; break;
-      case 'ORT': this.anzahlText = 'Anzahl Schulen:'; break;
-      default: this.anzahlText = '';
-    }
+		switch (this.katalogItem.typ) {
+			case 'LAND': this.anzahlText = 'Anzahl Orte:'; break;
+			case 'ORT': this.anzahlText = 'Anzahl Schulen:'; break;
+			default: this.anzahlText = '';
+		}
 
-  }
+	}
 
-  selectTheItem() {
-    this.store.dispatch(katalogItemSelected({katalogItem: this.katalogItem}));
-  }
+	selectTheItem() {
+		this.internalFacade.selectKatalogItem(this.katalogItem);
+	}
 }
 
