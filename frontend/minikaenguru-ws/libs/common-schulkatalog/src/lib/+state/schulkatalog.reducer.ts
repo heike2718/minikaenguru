@@ -1,4 +1,4 @@
-import { Action, createReducer, on } from '@ngrx/store';
+import { Action, createReducer, on, State } from '@ngrx/store';
 import { KatalogItem, GuiModel, getInputLabel, getSucheDescription, getAuswahlDescriptiom, getCurrentKatalogtyp } from '../domain/entities';
 import * as SchulkatalogActions from './schulkatalog.actions';
 
@@ -31,7 +31,8 @@ export const initialState: SchulkatalogState = {
 const schulkatalogReducer = createReducer(
 	initialState,
 
-	on(SchulkatalogActions.initSucheComponentCompleted, (_state, action) => {
+	on(SchulkatalogActions.initSchulkatalog, (_state, action) => {
+
 		const katalogtyp = action.katalogtyp;
 
 		const inputLabel = getInputLabel(katalogtyp, undefined);
@@ -67,14 +68,16 @@ const schulkatalogReducer = createReducer(
 			, katalogItemsAvailable: katalogItemsAvailable
 		};
 
-		if (loadedKatalogItems.length > 10) {
+		if (loadedKatalogItems.length > action.immediatelyLoadOnNumberChilds) {
 
 			const neuerTyp = loadedKatalogItems[0].typ;
-			guiModel = { ...guiModel
+			guiModel = {
+				...guiModel
 				, showInputControl: true
 				, currentKatalogtyp: neuerTyp
 				, inputLabel: getInputLabel(neuerTyp, undefined)
-				, sucheDescription: getSucheDescription(neuerTyp, undefined) }
+				, sucheDescription: getSucheDescription(neuerTyp, undefined)
+			}
 		}
 
 		return {
@@ -115,11 +118,14 @@ const schulkatalogReducer = createReducer(
 
 	on(SchulkatalogActions.searchError, (state, _action) => {
 
+		const katalogtyp = state.guiModel.currentKatalogtyp;
+
 		const guiModel = {
 			...state.guiModel
+			, inputLabel: getInputLabel(katalogtyp, undefined)
+			, sucheDescription: getSucheDescription(katalogtyp, undefined)
 			, showInputControl: true
 			, showLoadingIndicator: false
-			, auswahlDescription: ''
 			, katalogItemsAvailable: false
 		};
 
@@ -163,7 +169,7 @@ const schulkatalogReducer = createReducer(
 			, showLoadingIndicator: false
 		};
 
-		if (selectedKatalogItem.anzahlKinder <= 10) {
+		if (selectedKatalogItem.anzahlKinder <= action.immediatelyLoadOnNumberChilds) {
 			guiModel = { ...guiModel, showInputControl: false }
 		} else {
 			guiModel = { ...guiModel, showInputControl: true }

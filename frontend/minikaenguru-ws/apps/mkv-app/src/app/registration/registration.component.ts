@@ -33,8 +33,6 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
 	registrationSuccessMessage$ = this.store.select(selectSuccessDialogContent);
 
-
-
 	registrationMode: string;
 
 	submitDisabled: boolean;
@@ -102,6 +100,12 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
 	modusLehrerkonto() {
 		this.store.dispatch(RegistrationActions.registrationModeChanged({ mode: 'LEHRER' }));
+		this.schulkatalogFacade.initSchulkatalog('ORT');
+	}
+
+	neueSchulsuche() {
+		this.schulkatalogFacade.initSchulkatalog('ORT');
+		this.store.dispatch(RegistrationActions.resetSchulsuche());
 	}
 
 	privatkontoAnlegen() {

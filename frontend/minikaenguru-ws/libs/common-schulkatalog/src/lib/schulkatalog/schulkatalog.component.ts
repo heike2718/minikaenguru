@@ -1,19 +1,19 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, Input } from '@angular/core';
 import { SchulkatalogConfigService } from '../configuration/schulkatalog-config';
 
 @Component({
-  // tslint:disable-next-line: component-selector
-  selector: 'mk-katalog',
-  templateUrl: './schulkatalog.component.html',
-  styleUrls: ['./schulkatalog.component.css']
+	// tslint:disable-next-line: component-selector
+	selector: 'mk-katalog',
+	templateUrl: './schulkatalog.component.html',
+	styleUrls: ['./schulkatalog.component.css']
 })
 export class SchulkatalogComponent implements OnInit {
 
-  devMode: boolean;
+	devMode: boolean;
 
-  constructor(@Inject(SchulkatalogConfigService) private config) {}
+	constructor(@Inject(SchulkatalogConfigService) private config) { }
 
-  ngOnInit() {
-	  this.devMode = this.config.devmode;
-  }
+	ngOnInit() {
+		this.devMode = this.config.devmode;
+	}
 }

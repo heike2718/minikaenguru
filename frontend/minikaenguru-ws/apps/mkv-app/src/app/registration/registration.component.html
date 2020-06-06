@@ -1,30 +1,31 @@
 <div>
-  <!-- Dialog mit Hinweis auf Mailpostfach -->
-  <ng-template #successDialogBody>
-    <div class="container-fluid">
-      <div class="card">
-        <div class="card-header">
-          <h4>Benutzerkonto angelegt</h4>
-        </div>
-        <div class="card-body">
-		<p>{{registrationSuccessMessage$ | async}}</p>
-        </div>
-        <div class="card-footer">
-          <div class="row btn-container">
-            <div class="col-md-12 btn-wrapper">
-              <div class="col-md-12 btn btn-outline-dark" (click)="closeDialog()">
-                OK
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </ng-template>
+	<!-- Dialog mit Hinweis auf Mailpostfach -->
+	<ng-template #successDialogBody>
+		<div class="container-fluid">
+			<div class="card">
+				<div class="card-header">
+					<h4>Benutzerkonto angelegt</h4>
+				</div>
+				<div class="card-body">
+					<p>{{registrationSuccessMessage$ | async}}</p>
+				</div>
+				<div class="card-footer">
+					<div class="row btn-container">
+						<div class="col-md-12 btn-wrapper">
+							<div class="col-md-12 btn btn-outline-dark" (click)="closeDialog()">
+								OK
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ng-template>
 </div>
 
-<mk-dialog *ngIf="showSuccessDialog$ | async" #dialog [hideOnEscape]="false" [hideOnClickOutside]="false" [body]="successDialogBody">
-  <!--<i class="fa fa-times" (click)="closeDialog()"></i>-->
+<mk-dialog *ngIf="showSuccessDialog$ | async" #dialog [hideOnEscape]="false" [hideOnClickOutside]="false"
+	[body]="successDialogBody">
+	<!--<i class="fa fa-times" (click)="closeDialog()"></i>-->
 </mk-dialog>
 
 
@@ -52,10 +53,14 @@
 		</div>
 
 		<p *ngIf="schulkatalogFacade.selectedKatalogItem$ | async">{{pfadKatalogItem}}</p>
-		<div *ngIf="!submitDisabled" class="row">
+		<div class="row">
 			<div class="col-sm-12 col-md-3">
-				<button type="button" class="btn btn-primary btn-block"
+				<button type="button" [disabled]="submitDisabled" class="btn btn-primary btn-block"
 					(click)="lehrerkontoAnlegen()">Konto anlegen</button>
+			</div>
+			<div *ngIf="registrationMode && registrationMode === 'LEHRER'" class="col-sm-12 col-md-3">
+				<button type="button" class="btn btn-primary btn-block"
+					(click)="neueSchulsuche()">neue Suche</button>
 			</div>
 			<div class="col-sm-12 col-md-3">
 				<button type="button" class="btn btn-primary btn-block" (click)="cancel()">abbrechen</button>

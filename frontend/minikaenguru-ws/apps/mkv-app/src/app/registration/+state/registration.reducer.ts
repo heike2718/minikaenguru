@@ -38,7 +38,12 @@ const registrationReducer = createReducer(initialRegistrationState,
 	on(RegistrationActions.schuleSelected, (state, action) => {
 
 		const enable = action.schulkuerzel ? true : false;
-		return { ...state, schulkuerzel: action.schulkuerzel, submitEnabled: enable }
+		return { ...state, schulkuerzel: action.schulkuerzel, submitEnabled: enable, showSchulkatalog: false }
+	}),
+
+	on(RegistrationActions.resetSchulsuche, (state, _action) => {
+
+		return {...state, schulkuerzel: undefined, submitEnabled: false, showSchulkatalog: true};
 	}),
 
 	on(RegistrationActions.resetRegistrationState, (_state, _action) => {

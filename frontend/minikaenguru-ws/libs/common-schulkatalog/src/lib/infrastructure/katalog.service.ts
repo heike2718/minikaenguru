@@ -58,7 +58,7 @@ export class KatalogService {
 
 	public loadKindelemente(katalogItem: KatalogItem): Observable<KatalogItem[]> {
 
-		if (katalogItem.anzahlKinder > 10 || katalogItem.leaf) {
+		if (katalogItem.anzahlKinder > this.config.immediatelyLoadOnNumberChilds || katalogItem.leaf) {
 
 			return of([]);
 		}
