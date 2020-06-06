@@ -58,6 +58,10 @@
 				<button type="button" [disabled]="submitDisabled" class="btn btn-primary btn-block"
 					(click)="lehrerkontoAnlegen()">Konto anlegen</button>
 			</div>
+			<div *ngIf="registrationMode && registrationMode === 'LEHRER'" class="col-sm-12 col-md-3">
+				<button type="button" class="btn btn-primary btn-block"
+					(click)="neueSchulsuche()">neue Suche</button>
+			</div>
 			<div class="col-sm-12 col-md-3">
 				<button type="button" class="btn btn-primary btn-block" (click)="cancel()">abbrechen</button>
 			</div>

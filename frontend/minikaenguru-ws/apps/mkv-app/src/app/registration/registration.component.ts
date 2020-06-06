@@ -103,6 +103,11 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 		this.schulkatalogFacade.initSchulkatalog('ORT');
 	}
 
+	neueSchulsuche() {
+		this.schulkatalogFacade.initSchulkatalog('ORT');
+		this.store.dispatch(RegistrationActions.resetSchulsuche());
+	}
+
 	privatkontoAnlegen() {
 		this.store.dispatch(RegistrationActions.registrationModeChanged({mode: 'PRIVAT'}));
 		this.authService.privatkontoAnlegen();
