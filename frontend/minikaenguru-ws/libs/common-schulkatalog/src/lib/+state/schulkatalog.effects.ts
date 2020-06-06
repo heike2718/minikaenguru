@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { tap } from 'rxjs/operators';
 
 import * as SchulkatalogActions from './schulkatalog.actions';
-import { SchulkatalogFacade } from '../application-services/schulkatalog.facade';
+import { InternalFacade } from '../application-services/internal.facade';
 
 @Injectable()
 export class SchulkatalogEffects {
@@ -14,9 +14,9 @@ export class SchulkatalogEffects {
 			ofType(SchulkatalogActions.startSearch),
 			tap((action) => {
 				if (action.selectedItem) {
-					this.schulkatalogFacade.searchKindelemente(action.selectedItem, action.searchTerm);
+					this.internalFacade.searchKindelemente(action.selectedItem, action.searchTerm);
 				} else {
-					this.schulkatalogFacade.searchKatalogItems(action.selectedKatalogtyp, action.searchTerm)
+					this.internalFacade.searchKatalogItems(action.selectedKatalogtyp, action.searchTerm)
 				}
 			})
 
@@ -35,7 +35,7 @@ export class SchulkatalogEffects {
 					// nüscht
 				} else {
 					if (selectedItem.anzahlKinder <= action.immediatelyLoadOnNumberChilds) {
-						this.schulkatalogFacade.loadKindelemente(selectedItem);
+						this.internalFacade.loadKindelemente(selectedItem);
 					}
 				}
 			})
@@ -43,5 +43,5 @@ export class SchulkatalogEffects {
 		{ dispatch: false }
 	);
 
-	constructor(private actions$: Actions, private schulkatalogFacade: SchulkatalogFacade) { }
+	constructor(private actions$: Actions, private internalFacade: InternalFacade) { }
 }

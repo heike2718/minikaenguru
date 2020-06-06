@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { KatalogItem } from '../domain/entities';
-import { SchulkatalogFacade } from '../application-services/schulkatalog.facade';
+import { InternalFacade } from '../application-services/internal.facade';
 
 @Component({
 	selector: 'mk-katalog-item',
@@ -17,7 +17,7 @@ export class KatalogItemComponent implements OnInit {
 
 	anzahlText: string;
 
-	constructor(private schulkatalogFacade: SchulkatalogFacade) { }
+	constructor(private internalFacade: InternalFacade) { }
 
 	ngOnInit() {
 
@@ -30,7 +30,7 @@ export class KatalogItemComponent implements OnInit {
 	}
 
 	selectTheItem() {
-		this.schulkatalogFacade.selectKatalogItem(this.katalogItem);
+		this.internalFacade.selectKatalogItem(this.katalogItem);
 	}
 }
 

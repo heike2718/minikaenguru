@@ -4,9 +4,8 @@ import { debounceTime, distinctUntilChanged, tap, filter } from 'rxjs/operators'
 import { KatalogItem, Katalogtyp } from '../domain/entities';
 import { SchulkatalogConfigService } from '../configuration/schulkatalog-config';
 import { SchulkatalogFacade } from '../application-services/schulkatalog.facade';
-import { Store } from '@ngrx/store';
 import { SchulkatalogState } from '../+state/schulkatalog.reducer';
-import { startSearch } from '../+state/schulkatalog.actions';
+import { InternalFacade } from '../application-services/internal.facade';
 
 @Component({
 	// tslint:disable-next-line: component-selector
@@ -31,8 +30,7 @@ export class KatalogItemsSucheComponent implements OnInit, OnDestroy {
 	private schulkatalogStateSubscription: Subscription;
 
 	constructor(@Inject(SchulkatalogConfigService) private config,
-		private store: Store<SchulkatalogState>,
-		public schulkatalogFacade: SchulkatalogFacade) { }
+		public schulkatalogFacade: InternalFacade) { }
 
 	ngOnInit() {
 
@@ -55,9 +53,13 @@ export class KatalogItemsSucheComponent implements OnInit, OnDestroy {
 			distinctUntilChanged(),
 			filter(term => term.length > 2),
 			tap(term => {
-				this.store.dispatch(startSearch({ selectedKatalogtyp: this.selectedKatalogtyp, selectedItem: this.selectedKatalogItem, searchTerm: term }));
+				this.startSearch(term)
 			})
 		).subscribe();
+	}
+
+	private startSearch(term: string): void {
+		this.schulkatalogFacade.startSearch(this.selectedKatalogtyp, this.selectedKatalogItem, term);
 	}
 
 	ngOnDestroy() {
@@ -67,8 +69,10 @@ export class KatalogItemsSucheComponent implements OnInit, OnDestroy {
 	}
 
 	onKeyup($event) {
+
+		const btn = $event.target;
+
 		const value = $event.target.value;
-		console.log('[event.value=' + value + ']')
 		this.searchTerm.next(value);
 	}
 }
