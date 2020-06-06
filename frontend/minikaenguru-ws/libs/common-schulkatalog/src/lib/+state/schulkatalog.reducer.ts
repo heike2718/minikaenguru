@@ -118,11 +118,14 @@ const schulkatalogReducer = createReducer(
 
 	on(SchulkatalogActions.searchError, (state, _action) => {
 
+		const katalogtyp = state.guiModel.currentKatalogtyp;
+
 		const guiModel = {
 			...state.guiModel
+			, inputLabel: getInputLabel(katalogtyp, undefined)
+			, sucheDescription: getSucheDescription(katalogtyp, undefined)
 			, showInputControl: true
 			, showLoadingIndicator: false
-			, auswahlDescription: ''
 			, katalogItemsAvailable: false
 		};
 
@@ -166,7 +169,7 @@ const schulkatalogReducer = createReducer(
 			, showLoadingIndicator: false
 		};
 
-		if (selectedKatalogItem.anzahlKinder <= 10) {
+		if (selectedKatalogItem.anzahlKinder <= action.immediatelyLoadOnNumberChilds) {
 			guiModel = { ...guiModel, showInputControl: false }
 		} else {
 			guiModel = { ...guiModel, showInputControl: true }

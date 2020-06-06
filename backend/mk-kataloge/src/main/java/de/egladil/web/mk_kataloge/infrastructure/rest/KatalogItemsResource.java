@@ -16,6 +16,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
 import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
@@ -34,13 +36,16 @@ public class KatalogItemsResource {
 	@Inject
 	KatalogFacade katalogFacade;
 
+	@ConfigProperty(name = "maximaleAnzahlTreffer", defaultValue = "25")
+	int maximaleAnzahlTreffer;
+
 	@GET
 	@Path("/laender/{kuerzel}/orte")
 	public Response loadOrteInLand(@PathParam(value = "kuerzel") @Kuerzel final String kuerzel) {
 
 		int anzahlTreffer = katalogFacade.countOrteInLand(kuerzel);
 
-		if (anzahlTreffer > 10) {
+		if (anzahlTreffer > maximaleAnzahlTreffer) {
 
 			ResponsePayload responsePayload = ResponsePayload.messageOnly(MessagePayload
 				.warn("Die Abfrage ergibt zu viele Treffer. Bitte verwenden Sie die Suche /mk-kataloge-api/katalogsuche/laender/"
@@ -62,7 +67,7 @@ public class KatalogItemsResource {
 
 		int anzahlTreffer = katalogFacade.countSchulenInOrt(kuerzel);
 
-		if (anzahlTreffer > 10) {
+		if (anzahlTreffer > maximaleAnzahlTreffer) {
 
 			ResponsePayload responsePayload = ResponsePayload.messageOnly(MessagePayload
 				.warn("Die Abfrage ergibt zu viele Treffer. Bitte verwenden Sie die Suche /mk-kataloge-api/katalogsuche/orte/"

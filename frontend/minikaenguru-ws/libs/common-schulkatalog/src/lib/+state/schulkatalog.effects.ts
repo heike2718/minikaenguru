@@ -36,6 +36,8 @@ export class SchulkatalogEffects {
 				} else {
 					if (selectedItem.anzahlKinder <= action.immediatelyLoadOnNumberChilds) {
 						this.internalFacade.loadKindelemente(selectedItem);
+					} else {
+						//
 					}
 				}
 			})
