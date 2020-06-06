@@ -1,4 +1,4 @@
-import { Action, createReducer, on } from '@ngrx/store';
+import { Action, createReducer, on, State } from '@ngrx/store';
 import { KatalogItem, GuiModel, getInputLabel, getSucheDescription, getAuswahlDescriptiom, getCurrentKatalogtyp } from '../domain/entities';
 import * as SchulkatalogActions from './schulkatalog.actions';
 
@@ -31,7 +31,8 @@ export const initialState: SchulkatalogState = {
 const schulkatalogReducer = createReducer(
 	initialState,
 
-	on(SchulkatalogActions.initSucheComponentCompleted, (_state, action) => {
+	on(SchulkatalogActions.initSchulkatalog, (_state, action) => {
+
 		const katalogtyp = action.katalogtyp;
 
 		const inputLabel = getInputLabel(katalogtyp, undefined);
@@ -48,6 +49,25 @@ const schulkatalogReducer = createReducer(
 
 		return { ...initialState, guiModel: guiModel };
 	}),
+
+	// on(SchulkatalogActions.initSucheComponentCompleted, (_state, action) => {
+
+	// 	const katalogtyp = action.katalogtyp;
+
+	// 	const inputLabel = getInputLabel(katalogtyp, undefined);
+	// 	const sucheDescription = getSucheDescription(katalogtyp, undefined);
+
+	// 	const guiModel = {
+	// 		...initialGuiModel
+	// 		, currentKatalogtyp: katalogtyp
+	// 		, inputLabel: inputLabel
+	// 		, sucheDescription: sucheDescription
+	// 		, showInputControl: true
+	// 		, showLoadingIndicator: false
+	// 	};
+
+	// 	return { ...initialState, guiModel: guiModel };
+	// }),
 
 	on(SchulkatalogActions.startSearch, (state, action) => {
 		const guiModel = { ...initialGuiModel, showLoadingIndicator: true };
@@ -67,14 +87,16 @@ const schulkatalogReducer = createReducer(
 			, katalogItemsAvailable: katalogItemsAvailable
 		};
 
-		if (loadedKatalogItems.length > 10) {
+		if (loadedKatalogItems.length > 25) {
 
 			const neuerTyp = loadedKatalogItems[0].typ;
-			guiModel = { ...guiModel
+			guiModel = {
+				...guiModel
 				, showInputControl: true
 				, currentKatalogtyp: neuerTyp
 				, inputLabel: getInputLabel(neuerTyp, undefined)
-				, sucheDescription: getSucheDescription(neuerTyp, undefined) }
+				, sucheDescription: getSucheDescription(neuerTyp, undefined)
+			}
 		}
 
 		return {

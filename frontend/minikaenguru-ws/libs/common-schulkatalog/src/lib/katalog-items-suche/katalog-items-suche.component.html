@@ -1,4 +1,4 @@
-<div *ngIf="schulkatalogFacade.guiModel$ | async">
+<div *ngIf="schulkatalogFacade.guiModel$ | async as guiModel">
 	<div *ngIf="guiModel.showInputControl">
 		<div class="col-12 description mb-2 ">{{guiModel.sucheDescription}}</div>
 

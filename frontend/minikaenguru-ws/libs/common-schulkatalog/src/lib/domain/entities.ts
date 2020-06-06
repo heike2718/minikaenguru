@@ -32,33 +32,29 @@ export function getSucheDescription(alterKatalogtyp: Katalogtyp, selectedKatalog
 	if (selectedKatalogItem) {
 		switch (selectedKatalogItem.typ) {
 			case 'LAND':
-				result = 'Bitte geben Sie die Anfangsbuchstaben Ihres Ortes ein';
+				result = 'Bitte suchen Sie Ihren Ort (mindestens 3 Buchstaben).';
 				break;
 			case 'ORT':
-				result = 'Bitte geben Sie die Anfangsbuchstaben Ihrer Schule ein';
+				result = 'Bitte suchen Sie Ihre Schule (mindestens 3 Buchstaben).';
 				break
 			case 'SCHULE':
 				return '';
 		}
-
-
-		result += ' (mindestens 3 Buchstaben).';
 		return result;
 	}
 
 	switch (alterKatalogtyp) {
 		case 'LAND':
-			result = 'Bitte geben Sie die Anfangsbuchstaben Ihres Landes ein';
+			result = 'Bitte geben Sie die Anfangsbuchstaben Ihres Landes ein (mindestens 3 Buchstaben).';
 			break;
 		case 'ORT':
-			result = 'Bitte geben Sie die Anfangsbuchstaben Ihres Ortes ein';
+			result = 'Bitte geben Sie die Anfangsbuchstaben Ihres Ortes ein (mindestens 3 Buchstaben).';
 			break;
 		case 'SCHULE':
 			result = 'Bitte geben Sie die Anfangsbuchstaben Ihrer Schule ein';
 			break;
 	}
 
-	result += ' (mindestens 3 Buchstaben).';
 	return result;
 }
 

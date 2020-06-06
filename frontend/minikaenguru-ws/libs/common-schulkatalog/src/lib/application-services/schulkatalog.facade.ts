@@ -2,10 +2,10 @@ import { Injectable, Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { SchulkatalogState } from '../+state/schulkatalog.reducer';
 import { KatalogService } from '../infrastructure/katalog.service';
-import { selectKatalogItems, selectLoadingIndicator, selectSelectedKatalogItem, selectSearchTerm, selectGuiModel } from '../+state/schulkatalog.selectors';
+import { selectKatalogItems, selectLoadingIndicator, selectSelectedKatalogItem, selectSearchTerm, selectGuiModel, selectKatalogtyp } from '../+state/schulkatalog.selectors';
 import { Katalogtyp, KatalogItem } from '../domain/entities';
 import { HttpErrorResponse } from '@angular/common/http';
-import { searchError, searchFinished, startLoadChildItems, childItemsLoaded } from '../+state/schulkatalog.actions';
+import { searchError, searchFinished, startLoadChildItems, childItemsLoaded, initSchulkatalog } from '../+state/schulkatalog.actions';
 import { MessageService } from '@minikaenguru-ws/common-messages';
 import { LogService } from '@minikaenguru-ws/common-logging';
 import { SchulkatalogConfig, SchulkatalogConfigService } from '../configuration/schulkatalog-config';
@@ -13,16 +13,21 @@ import { SchulkatalogConfig, SchulkatalogConfigService } from '../configuration/
 @Injectable({ providedIn: 'root' })
 export class SchulkatalogFacade {
 
-
-
 	public guiModel$ = this.store.select(selectGuiModel);
 	public katalogItems$ = this.store.select(selectKatalogItems);
 	public loading$ = this.store.select(selectLoadingIndicator);
 	public selectedKatalogItem$ = this.store.select(selectSelectedKatalogItem);
+	public selectedKatalogtyp$ = this.store.select(selectKatalogtyp)
 	public searchTerm$ = this.store.select(selectSearchTerm);
 
 	constructor(@Inject(SchulkatalogConfigService) private config: SchulkatalogConfig, private store: Store<SchulkatalogState>, private katalogService: KatalogService, private messagesService: MessageService
 		, private logger: LogService) { }
+
+
+	public initSchulkatalog(typ: Katalogtyp): void {
+
+		this.store.dispatch(initSchulkatalog({ katalogtyp: typ }));
+	}
 
 
 	public searchKatalogItems(typ: Katalogtyp, searchTerm: string) {
@@ -56,7 +61,7 @@ export class SchulkatalogFacade {
 
 		this.katalogService.loadKindelemente(katalogItem).subscribe(
 			katalogItems => {
-				this.store.dispatch(childItemsLoaded({katalogItems: katalogItems}));
+				this.store.dispatch(childItemsLoaded({ katalogItems: katalogItems }));
 			},
 			(error => {
 				this.handleError(error, '[SchulkatalogFacade] loadKindelemente')

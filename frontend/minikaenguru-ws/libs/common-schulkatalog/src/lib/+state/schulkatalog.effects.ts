@@ -13,10 +13,10 @@ export class SchulkatalogEffects {
 
 			ofType(SchulkatalogActions.startSearch),
 			tap((action) => {
-				if (action.katalogItem.kuerzel) {
-					this.schulkatalogFacade.searchKindelemente(action.katalogItem, action.searchTerm);
+				if (action.selectedItem) {
+					this.schulkatalogFacade.searchKindelemente(action.selectedItem, action.searchTerm);
 				} else {
-					this.schulkatalogFacade.searchKatalogItems(action.katalogItem.typ, action.searchTerm)
+					this.schulkatalogFacade.searchKatalogItems(action.selectedKatalogtyp, action.searchTerm)
 				}
 			})
 
