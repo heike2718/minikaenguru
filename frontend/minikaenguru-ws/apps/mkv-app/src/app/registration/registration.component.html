@@ -48,13 +48,13 @@
 
 	<div *ngIf="registrationMode && registrationMode === 'LEHRER'" class="col-12">
 		<div *ngIf="showSchulkatalog$ | async" class="mkv-container mkv-container-elevated">
-			<mk-katalog></mk-katalog>
+			<mk-katalog [initialTyp]="'ORT'"></mk-katalog>
 		</div>
 
 		<p *ngIf="schulkatalogFacade.selectedKatalogItem$ | async">{{pfadKatalogItem}}</p>
-		<div *ngIf="!submitDisabled" class="row">
+		<div class="row">
 			<div class="col-sm-12 col-md-3">
-				<button type="button" class="btn btn-primary btn-block"
+				<button type="button" [disabled]="submitDisabled" class="btn btn-primary btn-block"
 					(click)="lehrerkontoAnlegen()">Konto anlegen</button>
 			</div>
 			<div class="col-sm-12 col-md-3">

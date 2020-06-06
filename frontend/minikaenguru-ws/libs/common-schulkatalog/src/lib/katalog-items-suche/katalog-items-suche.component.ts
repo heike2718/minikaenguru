@@ -65,7 +65,7 @@ export class KatalogItemsSucheComponent implements OnInit, OnDestroy {
 		this.searchTerm.pipe(
 			debounceTime(500),
 			distinctUntilChanged(),
-			filter(term => term.length > 0),
+			filter(term => term.length > 2),
 			tap(term => {
 
 				if (this.selectedKatalogItem) {

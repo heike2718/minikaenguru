@@ -27,27 +27,39 @@ export interface GuiModel {
 
 export function getSucheDescription(alterKatalogtyp: Katalogtyp, selectedKatalogItem: KatalogItem): string {
 
+	let result = '';
+
 	if (selectedKatalogItem) {
 		switch (selectedKatalogItem.typ) {
 			case 'LAND':
-				return 'Bitte suchen Sie Ihren Ort.';
+				result = 'Bitte geben Sie die Anfangsbuchstaben Ihres Ortes ein';
+				break;
 			case 'ORT':
-				return 'Bitte suchen Sie Ihre Schule.';
+				result = 'Bitte geben Sie die Anfangsbuchstaben Ihrer Schule ein';
+				break
 			case 'SCHULE':
 				return '';
 		}
+
+
+		result += ' (mindestens 3 Buchstaben).';
+		return result;
 	}
 
 	switch (alterKatalogtyp) {
 		case 'LAND':
-			return 'Bitte suchen Sie Ihr Land.';
+			result = 'Bitte geben Sie die Anfangsbuchstaben Ihres Landes ein';
+			break;
 		case 'ORT':
-			return 'Bitte suchen Sie Ihren Ort.';
+			result = 'Bitte geben Sie die Anfangsbuchstaben Ihres Ortes ein';
+			break;
 		case 'SCHULE':
-			return 'Bitte suchen Sie Ihre Schule.';
+			result = 'Bitte geben Sie die Anfangsbuchstaben Ihrer Schule ein';
+			break;
 	}
 
-	return '';
+	result += ' (mindestens 3 Buchstaben).';
+	return result;
 }
 
 export function getInputLabel(alterKatalogtyp: Katalogtyp, selectedKatalogItem: KatalogItem): string {
@@ -78,21 +90,25 @@ export function getInputLabel(alterKatalogtyp: Katalogtyp, selectedKatalogItem: 
 export function getAuswahlDescriptiom(katalogItems: KatalogItem[]): string {
 
 	if (katalogItems.length === 0) {
-		return '';
+		return '0 Treffer';
 	}
 
 	const katalogtyp = katalogItems[0].typ;
+	let result = katalogItems.length + ' Treffer. ';
 
 	switch (katalogtyp) {
 		case 'LAND':
-			return 'Bitte wählen Sie Ihr Land aus.';
+			result+= 'Bitte wählen Sie Ihr Land aus.';
+			break;
 		case 'ORT':
-			return 'Bitte wählen Sie Ihren Ort aus.';
+			result+= 'Bitte wählen Sie Ihren Ort aus.';
+			break;
 		case 'SCHULE':
-			return 'Bitte wählen Sie Ihre Schule aus.';
+			result+= 'Bitte wählen Sie Ihre Schule aus.';
+			break;
 	}
 
-	return '';
+	return result;
 }
 
 export function getCurrentKatalogtyp(alterKatalogtyp: Katalogtyp, selectedKatalogItem: KatalogItem): Katalogtyp {

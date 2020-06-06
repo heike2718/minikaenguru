@@ -1,5 +1,6 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, Input } from '@angular/core';
 import { SchulkatalogConfigService } from '../configuration/schulkatalog-config';
+import { Katalogtyp } from '../domain/entities';
 
 @Component({
   // tslint:disable-next-line: component-selector
@@ -10,6 +11,9 @@ import { SchulkatalogConfigService } from '../configuration/schulkatalog-config'
 export class SchulkatalogComponent implements OnInit {
 
   devMode: boolean;
+
+  @Input()
+  initialTyp: Katalogtyp;
 
   constructor(@Inject(SchulkatalogConfigService) private config) {}
 
