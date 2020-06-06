@@ -34,7 +34,7 @@ export class SchulkatalogEffects {
 				if (selectedItem.typ == 'SCHULE') {
 					// nüscht
 				} else {
-					if (selectedItem.anzahlKinder <= 10) {
+					if (selectedItem.anzahlKinder <= action.immediatelyLoadOnNumberChilds) {
 						this.schulkatalogFacade.loadKindelemente(selectedItem);
 					}
 				}

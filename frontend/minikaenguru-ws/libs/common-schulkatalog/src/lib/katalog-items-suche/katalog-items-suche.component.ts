@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription, Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, tap, filter } from 'rxjs/operators';
 import { KatalogItem, Katalogtyp } from '../domain/entities';
 import { SchulkatalogConfigService } from '../configuration/schulkatalog-config';
@@ -26,11 +26,9 @@ export class KatalogItemsSucheComponent implements OnInit, OnDestroy {
 
 	private selectedKatalogItem: KatalogItem;
 
-	private selectedKatalogtypSubscription: Subscription;
+	schulkatalogState$: Observable<SchulkatalogState> = this.schulkatalogFacade.schulkatalogState$;
 
-	private selectedKatalogItemSubscription: Subscription;
-
-	private searchTermSubscription: Subscription;
+	private schulkatalogStateSubscription: Subscription;
 
 	constructor(@Inject(SchulkatalogConfigService) private config,
 		private store: Store<SchulkatalogState>,
@@ -38,16 +36,14 @@ export class KatalogItemsSucheComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 
-		this.searchTermSubscription = this.schulkatalogFacade.searchTerm$.subscribe(
-			term => this.searchFormInputValue = term
-		)
+		this.schulkatalogStateSubscription = this.schulkatalogState$.subscribe(
 
-		this.selectedKatalogtypSubscription = this.schulkatalogFacade.selectedKatalogtyp$.subscribe(
-			typ => this.selectedKatalogtyp = typ
-		);
+			model => {
+				this.selectedKatalogtyp = model.guiModel.currentKatalogtyp;
+				this.selectedKatalogItem = model.selectedKatalogItem;
+				this.searchFormInputValue = model.searchTerm;
+			}
 
-		this.selectedKatalogItemSubscription = this.schulkatalogFacade.selectedKatalogItem$.subscribe(
-			item => this.selectedKatalogItem = item
 		);
 
 		this.devMode = this.config.devmode;
@@ -65,11 +61,8 @@ export class KatalogItemsSucheComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy() {
-		if (this.selectedKatalogItemSubscription) {
-			this.selectedKatalogItemSubscription.unsubscribe();
-		}
-		if (this.searchTermSubscription) {
-			this.searchTermSubscription.unsubscribe();
+		if (this.schulkatalogStateSubscription) {
+			this.schulkatalogStateSubscription.unsubscribe();
 		}
 	}
 

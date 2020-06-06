@@ -3,13 +3,8 @@ import { Katalogtyp, KatalogItem } from '../domain/entities';
 
 export const initSchulkatalog = createAction(
 	'[SchulkatalogFacade] initSchulkatalog',
-	props<{ katalogtyp: Katalogtyp }>()
+	props<{ katalogtyp: Katalogtyp}>()
 );
-
-// export const initSucheComponentCompleted = createAction(
-// 	'[KatalogItemsSucheComponent] initSucheComponentCompleted',
-// 	props<{katalogtyp: Katalogtyp}>()
-// );
 
 export const startSearch = createAction(
 	'[KatalogItemsSucheComponent] startSearch',
@@ -18,7 +13,7 @@ export const startSearch = createAction(
 
 export const searchFinished = createAction(
 	'[SchulkatalogFacade] searchFinished',
-	props<{ katalogItems: KatalogItem[] }>()
+	props<{ katalogItems: KatalogItem[], immediatelyLoadOnNumberChilds: number }>()
 );
 
 export const searchError = createAction(
@@ -35,8 +30,8 @@ export const childItemsLoaded = createAction(
 );
 
 export const katalogItemSelected = createAction(
-	'[KatalogItemComponent] katalogItemSelected',
-	props<{ katalogItem: KatalogItem }>()
+	'[SchulkatalogFacade] selectKatalogItem',
+	props<{ katalogItem: KatalogItem, immediatelyLoadOnNumberChilds: number }>()
 );
 
 

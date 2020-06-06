@@ -50,25 +50,6 @@ const schulkatalogReducer = createReducer(
 		return { ...initialState, guiModel: guiModel };
 	}),
 
-	// on(SchulkatalogActions.initSucheComponentCompleted, (_state, action) => {
-
-	// 	const katalogtyp = action.katalogtyp;
-
-	// 	const inputLabel = getInputLabel(katalogtyp, undefined);
-	// 	const sucheDescription = getSucheDescription(katalogtyp, undefined);
-
-	// 	const guiModel = {
-	// 		...initialGuiModel
-	// 		, currentKatalogtyp: katalogtyp
-	// 		, inputLabel: inputLabel
-	// 		, sucheDescription: sucheDescription
-	// 		, showInputControl: true
-	// 		, showLoadingIndicator: false
-	// 	};
-
-	// 	return { ...initialState, guiModel: guiModel };
-	// }),
-
 	on(SchulkatalogActions.startSearch, (state, action) => {
 		const guiModel = { ...initialGuiModel, showLoadingIndicator: true };
 		return { ...state, searchTerm: action.searchTerm, guiModel: guiModel }
@@ -87,7 +68,7 @@ const schulkatalogReducer = createReducer(
 			, katalogItemsAvailable: katalogItemsAvailable
 		};
 
-		if (loadedKatalogItems.length > 25) {
+		if (loadedKatalogItems.length > action.immediatelyLoadOnNumberChilds) {
 
 			const neuerTyp = loadedKatalogItems[0].typ;
 			guiModel = {
