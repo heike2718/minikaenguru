@@ -37,7 +37,7 @@ export class KatalogItemsSucheComponent implements OnInit, OnDestroy {
 		this.schulkatalogStateSubscription = this.schulkatalogState$.subscribe(
 
 			model => {
-				this.selectedKatalogtyp = model.guiModel.currentKatalogtyp;
+				this.selectedKatalogtyp = model.currentKatalogtyp;
 				this.selectedKatalogItem = model.selectedKatalogItem;
 				this.searchFormInputValue = model.searchTerm;
 			}
@@ -49,7 +49,7 @@ export class KatalogItemsSucheComponent implements OnInit, OnDestroy {
 		this.searchTerm = new BehaviorSubject<string>('');
 
 		this.searchTerm.pipe(
-			debounceTime(500),
+			debounceTime(700),
 			distinctUntilChanged(),
 			filter(term => term.length > 2),
 			tap(term => {

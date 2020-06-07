@@ -7,7 +7,7 @@ export const schulkatalogState = createFeatureSelector<fromSchulkatalog.Schulkat
 
 export const katalogGuiModel = createSelector(schulkatalogState, s => s.guiModel);
 export const katalogItems = createSelector(schulkatalogState, s => s.loadedKatalogItems);
-export const selectedKatalogtyp = createSelector(schulkatalogState, s => s.guiModel.currentKatalogtyp);
+export const selectedKatalogtyp = createSelector(schulkatalogState, s => s.currentKatalogtyp);
 export const selectedKatalogItem = createSelector(schulkatalogState, s => s.selectedKatalogItem);
 export const showLoadingIndicator = createSelector(schulkatalogState, s => s.guiModel.showLoadingIndicator);
 export const searchTerm = createSelector(schulkatalogState, s => s.searchTerm);
