@@ -15,8 +15,6 @@ import { InternalFacade } from '../application-services/internal.facade';
 })
 export class KatalogItemsSucheComponent implements OnInit, OnDestroy {
 
-	devMode: boolean;
-
 	searchTerm: BehaviorSubject<string>;
 
 	searchFormInputValue: string;
@@ -29,7 +27,7 @@ export class KatalogItemsSucheComponent implements OnInit, OnDestroy {
 
 	private schulkatalogStateSubscription: Subscription;
 
-	constructor(@Inject(SchulkatalogConfigService) private config,
+	constructor(@Inject(SchulkatalogConfigService) public readonly config,
 		public schulkatalogFacade: InternalFacade) { }
 
 	ngOnInit() {
@@ -44,12 +42,10 @@ export class KatalogItemsSucheComponent implements OnInit, OnDestroy {
 
 		);
 
-		this.devMode = this.config.devmode;
-
 		this.searchTerm = new BehaviorSubject<string>('');
 
 		this.searchTerm.pipe(
-			debounceTime(700),
+			debounceTime(1000),
 			distinctUntilChanged(),
 			filter(term => term.length > 2),
 			tap(term => {

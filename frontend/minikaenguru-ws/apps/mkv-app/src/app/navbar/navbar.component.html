@@ -14,7 +14,7 @@
 		</ul>
 
 		<ul class="nav navbar-nav navbar-right">
-			<li class="nav-link" *ngIf="(user$ | async) as user">Guten Tag,{{user.fullName}}</li>
+			<li class="nav-link" *ngIf="(user$ | async) as user">Guten Tag, {{user.fullName}}</li>
 			<li *ngIf="isLoggedOut$ | async" routerLinkActive="active"><a routerLink="/registrierung" class="nav-link" title="Konto anlegen">
 					<span class="fa fa-user-o fa-1x" aria-hidden="true"></span> Konto anlegen </a></li>
 

@@ -23,9 +23,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
 	devMode: boolean;
 
-	private selectedKatalogItem: KatalogItem;
-
-	pfadKatalogItem: string;
+	selectedKatalogItem: KatalogItem;
 
 	showSchulkatalog$ = this.store.select(selectShowSchulkatalog);
 
@@ -64,10 +62,11 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 			item => {
 				if (item) {
 					this.selectedKatalogItem = item;
-					this.pfadKatalogItem = item.pfad;
 					if (item.typ === 'SCHULE') {
 						this.store.dispatch(RegistrationActions.schuleSelected({ schulkuerzel: item.kuerzel }));
 					}
+				} else {
+					this.selectedKatalogItem = undefined;
 				}
 			}
 		);
@@ -120,12 +119,6 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
 		const schulkuerzel = this.selectedKatalogItem.kuerzel;
 		this.authService.lehrerkontoAnlegen(schulkuerzel)
-	}
-
-	closeDialog() {
-		this.dialogService.close();
-		this.initState();
-		this.router.navigateByUrl('/');
 	}
 
 	cancel() {

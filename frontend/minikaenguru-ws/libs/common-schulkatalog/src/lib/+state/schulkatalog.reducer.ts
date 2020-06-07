@@ -22,14 +22,14 @@ export interface GuiModel {
 	readonly texte: KatalogSucheTexte;
 	readonly showInputControl: boolean;
 	readonly showLoadingIndicator: boolean;
-	readonly katalogItemsAvailable: boolean;
+	readonly showAuswahlDescription: boolean;
 }
 
 const initialGuiModel: GuiModel = {
 	texte: initialKatalogsucheTexte,
-	showInputControl: false, // 8
-	showLoadingIndicator: false, // 9
-	katalogItemsAvailable: false // 10
+	showInputControl: false,
+	showLoadingIndicator: false,
+	showAuswahlDescription: false
 };
 
 export interface SchulkatalogState {
@@ -78,8 +78,7 @@ const schulkatalogReducer = createReducer(
 	on(SchulkatalogActions.searchFinished, (state, action) => {
 
 		const loadedKatalogItems = action.katalogItems;
-		const katalogItemsAvailable = loadedKatalogItems.length > 0;
-		const typ = katalogItemsAvailable ? loadedKatalogItems[0].typ : state.currentKatalogtyp;
+		const typ = loadedKatalogItems.length > 0 ? loadedKatalogItems[0].typ : state.currentKatalogtyp;
 
 		const texte: KatalogSucheTexte = getKatalogSucheTexte(state.guiModel.texte,
 			typ,
@@ -90,10 +89,10 @@ const schulkatalogReducer = createReducer(
 			...state.guiModel
 			, texte: texte
 			, showLoadingIndicator: false
-			, katalogItemsAvailable: katalogItemsAvailable
+			, showAuswahlDescription: true
 		};
 
-		if (loadedKatalogItems.length > action.immediatelyLoadOnNumberChilds) {
+		if (loadedKatalogItems.length === 0 || loadedKatalogItems.length > action.immediatelyLoadOnNumberChilds) {
 
 			guiModel = {
 				...guiModel
@@ -121,7 +120,6 @@ const schulkatalogReducer = createReducer(
 
 		const loadedKatalogItems = action.katalogItems;
 		const auswahlDescription = getAuswahlDescriptiom(loadedKatalogItems);
-		const katalogItemsAvailable = loadedKatalogItems.length > 0;
 
 		const texte = {
 			...state.guiModel.texte,
@@ -131,8 +129,7 @@ const schulkatalogReducer = createReducer(
 		const guiModel = {
 			...state.guiModel,
 			texte: texte,
-			showLoadingIndicator: false,
-			katalogItemsAvailable: katalogItemsAvailable
+			showLoadingIndicator: false
 		};
 
 		return {
@@ -158,7 +155,6 @@ const schulkatalogReducer = createReducer(
 			, texte: texte
 			, showInputControl: true
 			, showLoadingIndicator: false
-			, katalogItemsAvailable: false
 		};
 
 		return {
@@ -173,7 +169,7 @@ const schulkatalogReducer = createReducer(
 	on(SchulkatalogActions.katalogItemSelected, (state, action) => {
 
 		const selectedKatalogItem = action.katalogItem;
-		let katalogtyp = (selectedKatalogItem === undefined) ?  state.currentKatalogtyp :  selectedKatalogItem.typ;
+		let katalogtyp = (selectedKatalogItem === undefined) ? state.currentKatalogtyp : selectedKatalogItem.typ;
 
 		let texte = getKatalogSucheTexte(state.guiModel.texte, katalogtyp, [], selectedKatalogItem);
 
