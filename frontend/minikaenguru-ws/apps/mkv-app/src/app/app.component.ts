@@ -4,9 +4,9 @@ import { AuthService, AuthResult } from '@minikaenguru-ws/common-auth';
 import { RegistrationService } from './registration/registration.service';
 import { map } from 'rxjs/operators';
 import { ResponsePayload, MessageService } from '@minikaenguru-ws/common-messages';
-import { Router, RouterOutlet } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { RouterOutlet } from '@angular/router';
 import { slideInAnimation } from './animations';
+import { TeilnahmenFacade } from './teilnahmen/teilnahmen.facade';
 
 @Component({
 	selector: 'mkv-root',
@@ -55,7 +55,6 @@ export class AppComponent {
 			}
 		}
 	}
-
 
 	getAnimationData(outlet: RouterOutlet) {
 		return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];

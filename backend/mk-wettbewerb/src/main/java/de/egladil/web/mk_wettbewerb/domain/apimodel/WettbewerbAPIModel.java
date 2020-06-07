@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.Wettbewerb;
+import de.egladil.web.mk_wettbewerb.domain.wettbewerb.WettbewerbStatus;
 
 /**
  * WettbewerbAPIModel
@@ -26,6 +27,9 @@ public class WettbewerbAPIModel {
 	@JsonProperty
 	private String datumFreischaltungPrivat;
 
+	@JsonProperty
+	private WettbewerbStatus status;
+
 	public static WettbewerbAPIModel fromWettbewerb(final Wettbewerb wettbewerb) {
 
 		WettbewerbAPIModel result = new WettbewerbAPIModel();
@@ -34,6 +38,7 @@ public class WettbewerbAPIModel {
 		result.wettbewerbsende = CommonTimeUtils.format(wettbewerb.wettbewerbsende());
 		result.datumFreischaltungLehrer = CommonTimeUtils.format(wettbewerb.datumFreischaltungLehrer());
 		result.datumFreischaltungPrivat = CommonTimeUtils.format(wettbewerb.datumFreischaltungPrivat());
+		result.status = wettbewerb.status();
 		return result;
 
 	}

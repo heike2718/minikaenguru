@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Wettbewerb, WettbewerbStatus, WettbewerbEditorModel } from '../wettbewerbe.model';
+import { Wettbewerb, WettbewerbStatus } from '../wettbewerbe.model';
 import { Message } from '@minikaenguru-ws/common-messages';
 
 export const loadWettbewerbe = createAction(

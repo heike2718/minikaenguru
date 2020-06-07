@@ -94,4 +94,11 @@ public class WettbewerbResource {
 
 		return Response.ok(ResponsePayload.messageOnly(MessagePayload.warn("Diese Methode ist noch nicht fertig"))).build();
 	}
+
+	@GET
+	@Path("/aktueller")
+	public Response getAktuellenWettbewerb() {
+
+		return mkWettbewerbResourceAdapter.getAktuellenWettbewerb();
+	}
 }
