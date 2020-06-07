@@ -25,6 +25,7 @@ import { CustomRouterStateSerializer } from './shared/utils';
 import { RegistrationModule } from './registration/registration.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { SchulenModule } from './schulen/schulen.module';
+import { TeilnahmenModule } from './teilnahmen/teilnahmen.module';
 
 
 
@@ -60,6 +61,7 @@ import { SchulenModule } from './schulen/schulen.module';
 		RegistrationModule,
 		DashboardModule,
 		SchulenModule,
+		TeilnahmenModule,
 		StoreModule.forRoot(reducers, {
 			metaReducers,
 			runtimeChecks: {

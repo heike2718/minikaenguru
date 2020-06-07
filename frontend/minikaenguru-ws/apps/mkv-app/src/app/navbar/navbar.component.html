@@ -9,20 +9,23 @@
 		<ul class="navbar-nav mr-auto">
 
 			<li routerLinkActive="active"><a routerLink="/" (click)="collapseNav()" class="nav-link" title="Startseite">
-					<span class="fa fa-home fa-1x" aria-hidden="true"></span> Minikänguru </a></li>
+					<span class="fa fa-home fa-1x" aria-hidden="true"></span> Minikänguru <span
+						*ngIf="aktuellerWettbewerb$ | async as wettbewerb">{{wettbewerb.jahr}}</span></a></li>
 
 		</ul>
 
 		<ul class="nav navbar-nav navbar-right">
 			<li class="nav-link" *ngIf="(user$ | async) as user">Guten Tag, {{user.fullName}}</li>
-			<li *ngIf="isLoggedOut$ | async" routerLinkActive="active"><a routerLink="/registrierung" class="nav-link" title="Konto anlegen">
+			<li *ngIf="isLoggedOut$ | async" routerLinkActive="active"><a routerLink="/registrierung" class="nav-link"
+					title="Konto anlegen">
 					<span class="fa fa-user-o fa-1x" aria-hidden="true"></span> Konto anlegen </a></li>
 
 			<li *ngIf="isLoggedOut$ | async" routerLinkActive="active">
 				<a class="nav-link" (click)="login()"><span class="fa fa-sign-in fa-1x" aria-hidden="true"></span>
 					Einloggen <span class="sr-only">(current)</span></a></li>
 			<li routerLinkActive="active" *ngIf="isLoggedIn$ | async">
-				<a class="nav-link" (click)="logout()"><span class="fa fa-sign-out fa-1x" aria-hidden="true"></span> Ausloggen</a>
+				<a class="nav-link" (click)="logout()"><span class="fa fa-sign-out fa-1x" aria-hidden="true"></span>
+					Ausloggen</a>
 			</li>
 		</ul>
 

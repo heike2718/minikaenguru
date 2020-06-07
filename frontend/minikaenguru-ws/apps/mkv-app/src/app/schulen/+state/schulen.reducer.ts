@@ -5,12 +5,12 @@ import { Action, createReducer, on } from '@ngrx/store';
 export const schulenFeatureKey = 'mkv-app-schulen';
 
 export interface SchulenState {
-	schulen: Schule[];
-	selectedSchule: Schule;
-	schulenLoaded: boolean;
+	readonly schulen: Schule[];
+	readonly selectedSchule: Schule;
+	readonly schulenLoaded: boolean;
 };
 
-export const initialSchulenState = {
+const initialSchulenState: SchulenState = {
 	schulen: [],
 	selectedSchule: undefined,
 	schulenLoaded: false
