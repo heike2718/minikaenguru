@@ -1,6 +1,6 @@
 import { ErrorHandler, Injector, Injectable } from '@angular/core';
 import { LogService } from '@minikaenguru-ws/common-logging';
-import { ResponsePayload, MessageService } from '@minikaenguru-ws/common-messages';
+import { MessageService } from '@minikaenguru-ws/common-messages';
 import { environment } from '../../environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LogPublishersService } from './log-publishers.service';
@@ -33,7 +33,7 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 	}
 
 
-	handleError(error: any): void {
+	handleError(error: HttpErrorResponse | Error): void {
 
 		if (error instanceof HttpErrorResponse) {
 			const httpError = error as HttpErrorResponse;

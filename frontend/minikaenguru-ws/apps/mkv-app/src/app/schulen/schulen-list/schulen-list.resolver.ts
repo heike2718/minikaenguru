@@ -4,27 +4,26 @@ import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { schulenLoaded } from '../+state/schulen.selectors';
 import { tap, first, finalize, filter } from 'rxjs/operators';
-import { loadSchulen } from '../+state/schulen.actions';
 import { Injectable } from '@angular/core';
+import { SchulenFacade } from '../schulen.facade';
 
 @Injectable()
 export class SchulenListResolver implements Resolve<any> {
 
 	loading = false;
 
-	constructor(private store: Store<AppState>) {
+	constructor(private store: Store<AppState>, private schulenFacade: SchulenFacade) {}
 
-	}
 	resolve(_route: ActivatedRouteSnapshot,
 		_state: RouterStateSnapshot): Observable<any> {
 		return this.store.pipe(
 			select(schulenLoaded),
 			tap(areLoaded => {
 				if (!areLoaded) {
-					// if (!this.loading) {
+					if (!this.loading) {
 						this.loading = true;
-						this.store.dispatch(loadSchulen())
-					// }
+						this.schulenFacade.loadSchulen()
+					}
 				}
 			}),
 			filter(loaded => loaded),

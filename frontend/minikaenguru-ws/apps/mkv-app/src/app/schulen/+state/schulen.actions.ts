@@ -6,7 +6,7 @@ export const loadSchulen = createAction(
 );
 
 export const schulenLoaded = createAction(
-    '[SchulenEffects] loadSchulen',
+    '[SchulenFacade] loadSchulen',
     props<{schulen: Schule[]}>()
 );
 
@@ -20,6 +20,6 @@ export const unselectSchule = createAction(
 );
 
 export const resetSchulen = createAction(
-	'[NavbarComponent] login'
+	'[SchulenFacade] resetState()'
 );
 
