@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../reducers';
-import { allSchulen } from '../+state/schulen.selectors';
 import { Router } from '@angular/router';
+import { SchulenFacade } from '../schulen.facade';
 
 @Component({
 	selector: 'mkv-schulen-list',
@@ -14,9 +12,9 @@ export class SchulenListComponent implements OnInit {
 
 	devMode = !environment.production;
 
-	schulen$ = this.appStore.select(allSchulen);
+	schulen$ = this.schulenFacade.schulen$;
 
-	constructor(private appStore: Store<AppState>, private router: Router) {
+	constructor(private schulenFacade: SchulenFacade, private router: Router) {
 	}
 
 	ngOnInit(): void {

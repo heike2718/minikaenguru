@@ -68,6 +68,19 @@ public class MkWettbewerbResourceAdapter extends AbstractMkResourceAdapter {
 		}
 	}
 
+	public Response getAktuellenWettbewerb() throws MkWettbewerbRestException {
+
+		try {
+
+			Response response = restClient.getAktuellenWettbewerb();
+			return response;
+		} catch (Exception e) {
+
+			return handleException(e, LOG, "[getAktuellenWettbewerb]");
+		}
+
+	}
+
 	@Override
 	protected String endpointName() {
 

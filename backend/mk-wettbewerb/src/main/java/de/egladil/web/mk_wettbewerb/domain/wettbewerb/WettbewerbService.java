@@ -4,7 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_wettbewerb.domain.wettbewerb;
 
-import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -26,9 +25,7 @@ public class WettbewerbService {
 	 */
 	public Optional<Wettbewerb> aktuellerWettbewerb() {
 
-		List<Wettbewerb> wettbewerbe = wettbewerbRepository.loadWettbewerbe();
-
-		Optional<Wettbewerb> optLaufend = wettbewerbe.stream().filter(w -> WettbewerbStatus.BEENDET != w.status()).findFirst();
+		Optional<Wettbewerb> optLaufend = wettbewerbRepository.loadWettbewerbWithMaxJahr();
 
 		return optLaufend;
 	}

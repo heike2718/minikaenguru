@@ -5,11 +5,12 @@
 package de.egladil.web.mk_wettbewerb.infrastructure.persistence.impl;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.Wettbewerb;
@@ -27,12 +28,22 @@ public class WettbewerbHibernateRepository implements WettbewerbRepository {
 	EntityManager em;
 
 	@Override
-	public List<Wettbewerb> loadWettbewerbe() {
+	public Optional<Wettbewerb> loadWettbewerbWithMaxJahr() {
 
-		List<PersistenterWettbewerb> persistenteWettbewerbe = em
-			.createNamedQuery(PersistenterWettbewerb.LOAD_WETTBEWERBE_QUERY, PersistenterWettbewerb.class).getResultList();
+		String stmt = "select * from WETTBEWERBE where UUID = (select MAX(UUID) from WETTBEWERBE)";
 
-		return persistenteWettbewerbe.stream().map(pw -> mapFromPersistenterWettbewerb(pw)).collect(Collectors.toList());
+		Query nativeQuery = em.createNativeQuery(stmt, PersistenterWettbewerb.class);
+
+		@SuppressWarnings("unchecked")
+		List<PersistenterWettbewerb> persistenteWettbewerbe = nativeQuery.getResultList();
+
+		if (persistenteWettbewerbe.isEmpty()) {
+
+			return Optional.empty();
+		}
+
+		Wettbewerb wettbewerb = mapFromPersistenterWettbewerb(persistenteWettbewerbe.get(0));
+		return Optional.of(wettbewerb);
 	}
 
 	/**
