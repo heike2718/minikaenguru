@@ -53,14 +53,10 @@ const schulkatalogReducer = createReducer(
 
 		const katalogtyp = action.katalogtyp;
 
-		const inputLabel = getInputLabel(katalogtyp, undefined);
-		const sucheDescription = getSucheDescription(katalogtyp, undefined);
-
-		const texte: KatalogSucheTexte = {
-			...state.guiModel.texte,
-			inputLabel: inputLabel,
-			sucheDescription: sucheDescription
-		}
+		const texte: KatalogSucheTexte = getKatalogSucheTexte(state.guiModel.texte,
+			katalogtyp,
+			[],
+			undefined)
 
 		const guiModel = {
 			...initialGuiModel
@@ -80,13 +76,13 @@ const schulkatalogReducer = createReducer(
 	on(SchulkatalogActions.searchFinished, (state, action) => {
 
 		const loadedKatalogItems = action.katalogItems;
-		const auswahlDescription = getAuswahlDescriptiom(loadedKatalogItems);
 		const katalogItemsAvailable = loadedKatalogItems.length > 0;
+		const typ = katalogItemsAvailable ? loadedKatalogItems[0].typ : state.currentKatalogtyp;
 
-		let texte: KatalogSucheTexte = {
-			...state.guiModel.texte,
-			auswahlDescription: auswahlDescription
-		};
+		const texte: KatalogSucheTexte = getKatalogSucheTexte(state.guiModel.texte,
+			typ,
+			loadedKatalogItems,
+			undefined);
 
 		let guiModel = {
 			...state.guiModel
@@ -95,17 +91,7 @@ const schulkatalogReducer = createReducer(
 			, katalogItemsAvailable: katalogItemsAvailable
 		};
 
-		let typ = state.currentKatalogtyp;
-
 		if (loadedKatalogItems.length > action.immediatelyLoadOnNumberChilds) {
-
-			typ = loadedKatalogItems[0].typ;
-
-			texte = {
-				...texte,
-				inputLabel: getInputLabel(typ, undefined),
-				sucheDescription: getSucheDescription(typ, undefined)
-			};
 
 			guiModel = {
 				...guiModel
@@ -160,11 +146,10 @@ const schulkatalogReducer = createReducer(
 
 		const katalogtyp = state.currentKatalogtyp;
 
-		const texte: KatalogSucheTexte = {
-			...state.guiModel.texte,
-			inputLabel: getInputLabel(katalogtyp, undefined),
-			sucheDescription: getSucheDescription(katalogtyp, undefined)
-		}
+		const texte = getKatalogSucheTexte(state.guiModel.texte,
+			katalogtyp,
+			[],
+			undefined);
 
 		const guiModel = {
 			...state.guiModel
@@ -188,17 +173,9 @@ const schulkatalogReducer = createReducer(
 		const selectedKatalogItem = action.katalogItem;
 		const katalogtyp = state.currentKatalogtyp
 
+		const texte = getKatalogSucheTexte(state.guiModel.texte, katalogtyp, [], selectedKatalogItem);
+
 		if (!selectedKatalogItem) {
-			const inputLabel = getInputLabel(katalogtyp, undefined);
-			const sucheDescription = getSucheDescription(katalogtyp, undefined);
-
-			const texte: KatalogSucheTexte = {
-				...state.guiModel.texte,
-				inputLabel: inputLabel,
-				sucheDescription: sucheDescription,
-				auswahlDescription: ''
-			}
-
 			const guiModel = {
 				...initialGuiModel,
 				texte: texte,
@@ -209,14 +186,6 @@ const schulkatalogReducer = createReducer(
 		}
 
 		const neuerKatalogtyp = getCurrentKatalogtyp(katalogtyp, selectedKatalogItem);
-
-		const texte: KatalogSucheTexte = {
-			...state.guiModel.texte,
-			inputLabel: getInputLabel(neuerKatalogtyp, selectedKatalogItem),
-			sucheDescription: getSucheDescription(neuerKatalogtyp, selectedKatalogItem),
-			auswahlDescription: ''
-
-		}
 
 		let guiModel = {
 			...state.guiModel,
@@ -239,64 +208,6 @@ export function reducer(state: SchulkatalogState | undefined, action: Action) {
 }
 
 // private functions
-function getSucheDescription(alterKatalogtyp: Katalogtyp, selectedKatalogItem: KatalogItem): string {
-
-	let result = '';
-
-	if (selectedKatalogItem) {
-		switch (selectedKatalogItem.typ) {
-			case 'LAND':
-				result = 'Bitte suchen Sie Ihren Ort (mindestens 3 Buchstaben).';
-				break;
-			case 'ORT':
-				result = 'Bitte suchen Sie Ihre Schule (mindestens 3 Buchstaben).';
-				break
-			case 'SCHULE':
-				return '';
-		}
-		return result;
-	}
-
-	switch (alterKatalogtyp) {
-		case 'LAND':
-			result = 'Bitte geben Sie die Anfangsbuchstaben Ihres Landes ein (mindestens 3 Buchstaben).';
-			break;
-		case 'ORT':
-			result = 'Bitte geben Sie die Anfangsbuchstaben Ihres Ortes ein (mindestens 3 Buchstaben).';
-			break;
-		case 'SCHULE':
-			result = 'Bitte geben Sie die Anfangsbuchstaben Ihrer Schule ein';
-			break;
-	}
-
-	return result;
-}
-
-function getInputLabel(alterKatalogtyp: Katalogtyp, selectedKatalogItem: KatalogItem): string {
-
-	if (selectedKatalogItem) {
-		switch (selectedKatalogItem.typ) {
-			case 'LAND':
-				return 'Ort';
-			case 'ORT':
-				return 'Schule';
-			case 'SCHULE':
-				return '';
-		}
-	}
-
-	switch (alterKatalogtyp) {
-		case 'LAND':
-			return 'Land';
-		case 'ORT':
-			return 'Ort';
-		case 'SCHULE':
-			return 'Schule';
-	}
-
-	return '';
-}
-
 function getAuswahlDescriptiom(katalogItems: KatalogItem[]): string {
 
 	if (katalogItems.length === 0) {
@@ -327,4 +238,47 @@ function getCurrentKatalogtyp(alterKatalogtyp: Katalogtyp, selectedKatalogItem: 
 		return alterKatalogtyp;
 	}
 	return selectedKatalogItem.typ;
+}
+
+function getKatalogSucheTexte(texte: KatalogSucheTexte, katalogtyp: Katalogtyp, katalogItems: KatalogItem[], selectedKatalogItem: KatalogItem): KatalogSucheTexte {
+
+	let neuesInputLabel: string = '';
+	let neueSucheDescription: string = '';
+
+	if (selectedKatalogItem) {
+		switch (selectedKatalogItem.typ) {
+			case 'LAND':
+				neuesInputLabel = 'Ort';
+				neueSucheDescription = 'Bitte suchen Sie Ihren Ort (mindestens 3 Buchstaben).';
+				break;
+			case 'ORT':
+				neuesInputLabel = 'Schule';
+				neueSucheDescription = 'Bitte suchen Sie Ihre Schule (mindestens 3 Buchstaben).';
+				break
+			default:
+				break;
+		}
+	}
+
+	switch (katalogtyp) {
+		case 'LAND':
+			neuesInputLabel = 'Land';
+			neueSucheDescription = 'Bitte geben Sie die Anfangsbuchstaben Ihres Landes ein (mindestens 3 Buchstaben).';
+			break;
+		case 'ORT':
+			neuesInputLabel = 'Ort';
+			neueSucheDescription = 'Bitte geben Sie die Anfangsbuchstaben Ihres Ortes ein (mindestens 3 Buchstaben).';
+			break;
+		case 'SCHULE':
+			neuesInputLabel = 'Schule'
+			neueSucheDescription = 'Bitte geben Sie die Anfangsbuchstaben Ihrer Schule ein';
+			break;
+	}
+
+	return {
+		...texte,
+		auswahlDescription: getAuswahlDescriptiom(katalogItems),
+		inputLabel: neuesInputLabel,
+		sucheDescription: neueSucheDescription
+	};
 }
