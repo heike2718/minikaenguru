@@ -1,13 +1,14 @@
 <div *ngIf="schulkatalogFacade.schulkatalogState$ | async as viewModel">
 	<div *ngIf="viewModel.guiModel.showInputControl">
-		<div class="col-12 description mb-2 ">{{viewModel.guiModel.sucheDescription}}</div>
+		<div class="col-12 subtitle mb-2 ">{{viewModel.guiModel.texte.subtitle}}</div>
+		<div class="col-12 description mb-2 ">{{viewModel.guiModel.texte.sucheDescription}}</div>
 
 		<div class="row ml-3">
 			<div class="col-xs-12 col-sm-12 col-md-1">
-				<label for="sucheInput">{{viewModel.guiModel.inputLabel}}:</label>
+				<label for="sucheInput">{{viewModel.guiModel.texte.inputLabel}}:</label>
 			</div>
 			<div class="col-xs-12 col-sm-12 col-md-11">
-				<input id="sucheInput" type="text" name="sucheInput" placeholder="{{viewModel.guiModel.inputLabel}}"
+				<input id="sucheInput" type="text" name="sucheInput" placeholder="{{viewModel.guiModel.texte.inputLabel}}"
 					(keyup)="onKeyup($event)" [ngModel]="searchFormInputValue" />
 			</div>
 		</div>
@@ -15,11 +16,11 @@
 	<div class="col-12 mb-2 mt-2" *ngIf="viewModel.guiModel.showLoadingIndicator">
 		Suche läuft... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
 	</div>
-	<div class="col-12 description" *ngIf="viewModel.guiModel.katalogItemsAvailable">{{viewModel.guiModel.auswahlDescription}}</div>
-	<div *ngIf="viewModel.guiModel.katalogItemsAvailable" class="row">
+	<div class="col-12 description" *ngIf="viewModel.guiModel.showAuswahlDescription">{{viewModel.guiModel.texte.auswahlDescription}}</div>
+	<div *ngIf="viewModel.loadedKatalogItems.length > 0" class="row">
 		<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let item of schulkatalogFacade.katalogItems$ | async">
-			<mk-katalog-item [katalogItem]="item" [devMode]="devMode"></mk-katalog-item>
+			<mk-katalog-item [katalogItem]="item"></mk-katalog-item>
 		</div>
 	</div>
 </div>
-<p *ngIf="devMode">(katalog-items-suche.component)</p>
+<p *ngIf="config.devMode">(katalog-items-suche.component)</p>
