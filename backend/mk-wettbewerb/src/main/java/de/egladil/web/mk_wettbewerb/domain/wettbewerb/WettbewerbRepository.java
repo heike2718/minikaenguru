@@ -4,7 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_wettbewerb.domain.wettbewerb;
 
-import java.util.List;
+import java.util.Optional;
 
 /**
  * WettbewerbRepository
@@ -12,10 +12,10 @@ import java.util.List;
 public interface WettbewerbRepository {
 
 	/**
-	 * Läd alle Wettbewerbe.
+	 * Holt den Wettbewerb mit dem maximalen Jahr.
 	 *
-	 * @return List
+	 * @return Optional
 	 */
-	List<Wettbewerb> loadWettbewerbe();
+	Optional<Wettbewerb> loadWettbewerbWithMaxJahr();
 
 }
