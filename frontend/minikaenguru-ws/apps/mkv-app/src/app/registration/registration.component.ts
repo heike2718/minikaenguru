@@ -55,7 +55,10 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 
+		this.initState();
+
 		this.store.dispatch(RegistrationActions.resetRegistrationState());
+		this.schulkatalogFacade.initSchulkatalog('ORT');
 
 		this.selectedKatalogItemSubskription = this.schulkatalogFacade.selectedKatalogItem$.subscribe(
 			item => {
@@ -90,7 +93,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 			this.registrationModeSubscription.unsubscribe();
 		}
 
-		this.store.dispatch(RegistrationActions.resetRegistrationState());
+		this.initState();
 
 	}
 
@@ -121,12 +124,17 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
 	closeDialog() {
 		this.dialogService.close();
-		this.store.dispatch(RegistrationActions.resetRegistrationState());
+		this.initState();
 		this.router.navigateByUrl('/');
 	}
 
 	cancel() {
 		this.router.navigateByUrl('/');
+	}
+
+	private initState() {
+		this.store.dispatch(RegistrationActions.resetRegistrationState());
+		this.schulkatalogFacade.initSchulkatalog('ORT');
 	}
 
 }

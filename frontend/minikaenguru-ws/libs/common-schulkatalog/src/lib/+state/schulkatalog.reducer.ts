@@ -5,12 +5,14 @@ import * as SchulkatalogActions from './schulkatalog.actions';
 export const schulkatalogFeatureKey = 'schulkatalog';
 
 export interface KatalogSucheTexte {
+	readonly subtitle: string;
 	readonly inputLabel: string;
 	readonly sucheDescription: string;
 	readonly auswahlDescription: string;
 }
 
 const initialKatalogsucheTexte: KatalogSucheTexte = {
+	subtitle: '',
 	inputLabel: '',
 	sucheDescription: '',
 	auswahlDescription: '',
@@ -171,9 +173,9 @@ const schulkatalogReducer = createReducer(
 	on(SchulkatalogActions.katalogItemSelected, (state, action) => {
 
 		const selectedKatalogItem = action.katalogItem;
-		const katalogtyp = state.currentKatalogtyp
+		let katalogtyp = (selectedKatalogItem === undefined) ?  state.currentKatalogtyp :  selectedKatalogItem.typ;
 
-		const texte = getKatalogSucheTexte(state.guiModel.texte, katalogtyp, [], selectedKatalogItem);
+		let texte = getKatalogSucheTexte(state.guiModel.texte, katalogtyp, [], selectedKatalogItem);
 
 		if (!selectedKatalogItem) {
 			const guiModel = {
@@ -182,10 +184,18 @@ const schulkatalogReducer = createReducer(
 				showLoadingIndicator: false
 			}
 
-			return { ...initialState, guiModel: guiModel };
+			return { ...state, guiModel: guiModel };
 		}
 
-		const neuerKatalogtyp = getCurrentKatalogtyp(katalogtyp, selectedKatalogItem);
+		if (selectedKatalogItem.anzahlKinder > action.immediatelyLoadOnNumberChilds) {
+			switch (selectedKatalogItem.typ) {
+				case 'LAND': katalogtyp = 'ORT'; break;
+				case 'ORT': katalogtyp = 'SCHULE'; break;
+				default: break;
+			}
+			texte = getKatalogSucheTexte(state.guiModel.texte, katalogtyp, [], selectedKatalogItem);
+		}
+
 
 		let guiModel = {
 			...state.guiModel,
@@ -199,7 +209,7 @@ const schulkatalogReducer = createReducer(
 			guiModel = { ...guiModel, showInputControl: true }
 		}
 
-		return { ...state, guiModel: guiModel, loadedKatalogItems: [], searchTerm: '', currentKatalogtyp: neuerKatalogtyp, selectedKatalogItem: selectedKatalogItem };
+		return { ...state, guiModel: guiModel, loadedKatalogItems: [], searchTerm: '', currentKatalogtyp: katalogtyp, selectedKatalogItem: selectedKatalogItem };
 	})
 );
 
@@ -232,26 +242,21 @@ function getAuswahlDescriptiom(katalogItems: KatalogItem[]): string {
 	return result;
 }
 
-function getCurrentKatalogtyp(alterKatalogtyp: Katalogtyp, selectedKatalogItem: KatalogItem): Katalogtyp {
-
-	if (selectedKatalogItem === undefined) {
-		return alterKatalogtyp;
-	}
-	return selectedKatalogItem.typ;
-}
-
 function getKatalogSucheTexte(texte: KatalogSucheTexte, katalogtyp: Katalogtyp, katalogItems: KatalogItem[], selectedKatalogItem: KatalogItem): KatalogSucheTexte {
 
+	let neuerSubtitle: string = '';
 	let neuesInputLabel: string = '';
 	let neueSucheDescription: string = '';
 
 	if (selectedKatalogItem) {
 		switch (selectedKatalogItem.typ) {
 			case 'LAND':
+				neuerSubtitle = 'Ortssuche';
 				neuesInputLabel = 'Ort';
 				neueSucheDescription = 'Bitte suchen Sie Ihren Ort (mindestens 3 Buchstaben).';
 				break;
 			case 'ORT':
+				neuerSubtitle = 'Schulsuche';
 				neuesInputLabel = 'Schule';
 				neueSucheDescription = 'Bitte suchen Sie Ihre Schule (mindestens 3 Buchstaben).';
 				break
@@ -262,21 +267,25 @@ function getKatalogSucheTexte(texte: KatalogSucheTexte, katalogtyp: Katalogtyp, 
 
 	switch (katalogtyp) {
 		case 'LAND':
+			neuerSubtitle = 'Ländersuche';
 			neuesInputLabel = 'Land';
 			neueSucheDescription = 'Bitte geben Sie die Anfangsbuchstaben Ihres Landes ein (mindestens 3 Buchstaben).';
 			break;
 		case 'ORT':
+			neuerSubtitle = 'Ortssuche';
 			neuesInputLabel = 'Ort';
 			neueSucheDescription = 'Bitte geben Sie die Anfangsbuchstaben Ihres Ortes ein (mindestens 3 Buchstaben).';
 			break;
 		case 'SCHULE':
+			neuerSubtitle = 'Schulsuche';
 			neuesInputLabel = 'Schule'
-			neueSucheDescription = 'Bitte geben Sie die Anfangsbuchstaben Ihrer Schule ein';
+			neueSucheDescription = 'Bitte geben Sie mindestens 3 aufeinanderfolgende Buchstaben Ihres Schulnamens ein.';
 			break;
 	}
 
 	return {
 		...texte,
+		subtitle: neuerSubtitle,
 		auswahlDescription: getAuswahlDescriptiom(katalogItems),
 		inputLabel: neuesInputLabel,
 		sucheDescription: neueSucheDescription
