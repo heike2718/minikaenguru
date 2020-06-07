@@ -23,9 +23,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
 	devMode: boolean;
 
-	private selectedKatalogItem: KatalogItem;
-
-	pfadKatalogItem: string;
+	selectedKatalogItem: KatalogItem;
 
 	showSchulkatalog$ = this.store.select(selectShowSchulkatalog);
 
@@ -55,16 +53,20 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 
+		this.initState();
+
 		this.store.dispatch(RegistrationActions.resetRegistrationState());
+		this.schulkatalogFacade.initSchulkatalog('ORT');
 
 		this.selectedKatalogItemSubskription = this.schulkatalogFacade.selectedKatalogItem$.subscribe(
 			item => {
 				if (item) {
 					this.selectedKatalogItem = item;
-					this.pfadKatalogItem = item.pfad;
 					if (item.typ === 'SCHULE') {
 						this.store.dispatch(RegistrationActions.schuleSelected({ schulkuerzel: item.kuerzel }));
 					}
+				} else {
+					this.selectedKatalogItem = undefined;
 				}
 			}
 		);
@@ -90,7 +92,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 			this.registrationModeSubscription.unsubscribe();
 		}
 
-		this.store.dispatch(RegistrationActions.resetRegistrationState());
+		this.initState();
 
 	}
 
@@ -119,14 +121,13 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 		this.authService.lehrerkontoAnlegen(schulkuerzel)
 	}
 
-	closeDialog() {
-		this.dialogService.close();
-		this.store.dispatch(RegistrationActions.resetRegistrationState());
+	cancel() {
 		this.router.navigateByUrl('/');
 	}
 
-	cancel() {
-		this.router.navigateByUrl('/');
+	private initState() {
+		this.store.dispatch(RegistrationActions.resetRegistrationState());
+		this.schulkatalogFacade.initSchulkatalog('ORT');
 	}
 
 }

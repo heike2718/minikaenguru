@@ -5,6 +5,7 @@ import { MessageService, Message } from '@minikaenguru-ws/common-messages';
 import { SchulkatalogState } from '../+state/schulkatalog.reducer';
 import { Store } from '@ngrx/store';
 import { searchError } from '../+state/schulkatalog.actions';
+
 @Injectable(
 	{
 		providedIn: 'root'

@@ -17,7 +17,7 @@ export const resetSchulsuche = createAction(
 );
 
 export const resetRegistrationState = createAction(
-	'[RegistrationComponent] resetRegistrationState'
+	'[RegistrationComponent] initState'
 );
 
 export const userCreated = createAction(

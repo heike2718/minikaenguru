@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Inject } from '@angular/core';
 import { KatalogItem } from '../domain/entities';
 import { InternalFacade } from '../application-services/internal.facade';
+import { SchulkatalogConfigService } from '../configuration/schulkatalog-config';
 
 @Component({
 	selector: 'mk-katalog-item',
@@ -12,12 +13,9 @@ export class KatalogItemComponent implements OnInit {
 	@Input()
 	katalogItem: KatalogItem;
 
-	@Input()
-	devMode: boolean;
-
 	anzahlText: string;
 
-	constructor(private internalFacade: InternalFacade) { }
+	constructor(@Inject(SchulkatalogConfigService) public readonly config, private internalFacade: InternalFacade) { }
 
 	ngOnInit() {
 
