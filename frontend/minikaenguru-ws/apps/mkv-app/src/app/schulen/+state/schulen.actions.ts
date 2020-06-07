@@ -2,11 +2,11 @@ import { createAction, props } from '@ngrx/store';
 import { Schule } from '../schulen.model';
 
 export const loadSchulen = createAction(
-	'[Schulen Resolver] load schulen'
+	'[SchulenResolver] load schulen'
 );
 
 export const schulenLoaded = createAction(
-    '[Load Schulen Effect] All Schulen Loaded',
+    '[SchulenEffects] loadSchulen',
     props<{schulen: Schule[]}>()
 );
 
