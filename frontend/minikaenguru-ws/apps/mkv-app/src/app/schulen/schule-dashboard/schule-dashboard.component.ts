@@ -1,7 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { Schule, Person, SchuleDashboardModel } from '../schulen.model';
 import { Router } from '@angular/router';
+import { SchulenFacade } from '../schulen.facade';
+import { TeilnahmenFacade } from '../../teilnahmen/teilnahmen.facade';
 
 @Component({
 	selector: 'mkv-schule-dashboard',
@@ -10,32 +11,17 @@ import { Router } from '@angular/router';
 })
 export class SchuleDashboardComponent implements OnInit {
 
-
-
-	schule: Schule;
-	kollegium: string;
-
 	devMode = !environment.production;
 
+	schule$ = this.schulenFacade.selectedSchule$;
 
-	constructor(private router: Router) {
+	schuleDetails$ = this.schulenFacade.schuleDashboadModel$;
 
-		const dashboardModel = {
-			kollegen: 'Darth Vader',
-			anzahlTeilnahmen: 4,
-			angemeldetDurch: 'Darth Vader'
-		} as SchuleDashboardModel;
+	aktuellerWettbewerb$ = this.teilnahmenFacade.aktuellerWettbewerb$;
 
-		this.schule = {
-			name: 'Elefantenschule',
-			ort: 'Zoo',
-			land: 'Bayern',
-			aktuellAngemeldet: true,
-			kuerzel: 'UIGHDG65',
-			dashboardModel: dashboardModel
-		};
+	loading$ = this.schulenFacade.loading$;
 
-		this.kollegium = dashboardModel.kollegen;
+	constructor(private router: Router, private schulenFacade: SchulenFacade, private teilnahmenFacade: TeilnahmenFacade) {
 	}
 
 	ngOnInit(): void {

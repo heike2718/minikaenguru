@@ -14,7 +14,8 @@ const schulenRoutes: Routes = [
 		component: SchulenListComponent,
 		data: { animation: 'schulen' }
 	}, {
-		path: 'schule-dashboard',
+		path: 'schule-dashboard/:kuerzel',
+		canActivate: [AuthGuardService],
 		component: SchuleDashboardComponent,
 		data: { animation: 'schule-dashboard' }
 	}

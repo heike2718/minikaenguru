@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LogService } from '@minikaenguru-ws/common-logging';
 import { Observable } from 'rxjs';
-import { Schule } from '../schulen/schulen.model';
+import { Schule, SchuleDashboardModel } from '../schulen/schulen.model';
 import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
 import { ResponsePayload } from '@minikaenguru-ws/common-messages';
@@ -25,6 +25,17 @@ export class SchulenService {
 			map(body => body as ResponsePayload),
 			map(payload => payload.data)
 		);
+	}
+
+	public loadDetails(schule: Schule): Observable<SchuleDashboardModel> {
+
+		const url = environment.apiUrl + '/wettbewerb/lehrer/schulen/' + schule.kuerzel + '/details';
+
+		return this.http.get(url).pipe(
+			map(body => body as ResponsePayload),
+			map(payload => payload.data)
+		);
+
 	}
 
 }

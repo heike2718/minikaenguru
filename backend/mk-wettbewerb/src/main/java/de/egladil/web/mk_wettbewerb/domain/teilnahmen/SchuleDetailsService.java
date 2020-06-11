@@ -44,6 +44,14 @@ public class SchuleDetailsService {
 	@Inject
 	VeranstalterRepository veranstalterRepository;
 
+	/**
+	 * Ermittelt die Details der gegeben Schule.
+	 *
+	 * @param  schuleID
+	 * @param  lehrerID
+	 * @return
+	 * @throws AccessDeniedException
+	 */
 	public SchuleDashboardModel ermittleSchuldetails(final Identifier schuleID, final Identifier lehrerID) throws AccessDeniedException {
 
 		veranstalterAuthService.checkPermissionForTeilnahmenummer(lehrerID, schuleID);

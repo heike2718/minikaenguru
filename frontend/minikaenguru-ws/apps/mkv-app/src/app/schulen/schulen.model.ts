@@ -4,10 +4,10 @@ export interface Schule {
 	readonly ort: string;
 	readonly land: string;
 	readonly aktuellAngemeldet : boolean;
-	readonly dashboardModel?: SchuleDashboardModel
 }
 
 export interface SchuleDashboardModel {
+	readonly kuerzel: string;
 	readonly nameUrkunde?: string;
 	readonly kollegen?: string; // kommaseparierte fullName
 	readonly angemeldetDurch?: string; // fullName

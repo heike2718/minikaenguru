@@ -16,7 +16,19 @@ public class SchuleAPIModel {
 	private String kuerzel;
 
 	@JsonProperty
+	private String name;
+
+	@JsonProperty
+	private String ort;
+
+	@JsonProperty
+	private String land;
+
+	@JsonProperty
 	private boolean aktuellAngemeldet;
+
+	@JsonProperty
+	private SchuleDashboardModel dashboardModel;
 
 	SchuleAPIModel() {
 
