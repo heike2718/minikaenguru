@@ -15,10 +15,10 @@ import de.egladil.web.mk_wettbewerb.domain.personen.Person;
 import de.egladil.web.mk_wettbewerb.domain.semantik.ValueObject;
 
 /**
- * SchuleDashboardModel
+ * SchuleDetails
  */
 @ValueObject
-public class SchuleDashboardModel {
+public class SchuleDetails {
 
 	@JsonProperty
 	private String kuerzel;
@@ -35,22 +35,22 @@ public class SchuleDashboardModel {
 	@JsonProperty
 	private int anzahlTeilnahmen;
 
-	SchuleDashboardModel() {
+	SchuleDetails() {
 
 	}
 
-	public SchuleDashboardModel(final String kuerzel) {
+	public SchuleDetails(final String kuerzel) {
 
 		this.kuerzel = kuerzel;
 	}
 
-	public SchuleDashboardModel withNameUrkunde(final String nameUrkunde) {
+	public SchuleDetails withNameUrkunde(final String nameUrkunde) {
 
 		this.nameUrkunde = nameUrkunde;
 		return this;
 	}
 
-	public SchuleDashboardModel withKollegen(final List<Person> kollegen) {
+	public SchuleDetails withKollegen(final List<Person> kollegen) {
 
 		this.kollegen = StringUtils.join(kollegen.stream().map(p -> p.fullName()).collect(Collectors.toList()),
 			",");
@@ -58,13 +58,13 @@ public class SchuleDashboardModel {
 		return this;
 	}
 
-	public SchuleDashboardModel withAngemeldetDurch(final Person person) {
+	public SchuleDetails withAngemeldetDurch(final Person person) {
 
 		this.angemeldetDurch = person.fullName();
 		return this;
 	}
 
-	public SchuleDashboardModel withAnzahlTeilnahmen(final int anzahlTeilnahmen) {
+	public SchuleDetails withAnzahlTeilnahmen(final int anzahlTeilnahmen) {
 
 		this.anzahlTeilnahmen = anzahlTeilnahmen;
 		return this;

@@ -12,13 +12,12 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
-import de.egladil.web.mk_wettbewerb.domain.apimodel.SchuleDashboardModel;
+import de.egladil.web.mk_wettbewerb.domain.apimodel.SchuleDetails;
 import de.egladil.web.mk_wettbewerb.domain.error.AccessDeniedException;
 import de.egladil.web.mk_wettbewerb.domain.personen.Person;
 import de.egladil.web.mk_wettbewerb.domain.personen.SchulkollegienRepository;
 import de.egladil.web.mk_wettbewerb.domain.personen.Schulkollegium;
 import de.egladil.web.mk_wettbewerb.domain.personen.Veranstalter;
-import de.egladil.web.mk_wettbewerb.domain.personen.VeranstalterAuthorizationService;
 import de.egladil.web.mk_wettbewerb.domain.personen.VeranstalterRepository;
 import de.egladil.web.mk_wettbewerb.domain.semantik.DomainService;
 
@@ -28,9 +27,6 @@ import de.egladil.web.mk_wettbewerb.domain.semantik.DomainService;
 @ApplicationScoped
 @DomainService
 public class SchuleDetailsService {
-
-	@Inject
-	VeranstalterAuthorizationService veranstalterAuthService;
 
 	@Inject
 	AktuelleTeilnahmeService aktuelleTeilnahmeService;
@@ -44,13 +40,19 @@ public class SchuleDetailsService {
 	@Inject
 	VeranstalterRepository veranstalterRepository;
 
-	public SchuleDashboardModel ermittleSchuldetails(final Identifier schuleID, final Identifier lehrerID) throws AccessDeniedException {
-
-		veranstalterAuthService.checkPermissionForTeilnahmenummer(lehrerID, schuleID);
+	/**
+	 * Ermittelt die Details der gegeben Schule.
+	 *
+	 * @param  schuleID
+	 * @param  lehrerID
+	 * @return
+	 * @throws AccessDeniedException
+	 */
+	public SchuleDetails ermittleSchuldetails(final Identifier schuleID, final Identifier lehrerID) throws AccessDeniedException {
 
 		Optional<Schulkollegium> optKollegium = schulkollegienRepository.ofSchulkuerzel(schuleID);
 
-		SchuleDashboardModel result = new SchuleDashboardModel(schuleID.identifier());
+		SchuleDetails result = new SchuleDetails(schuleID.identifier());
 
 		if (optKollegium.isPresent()) {
 

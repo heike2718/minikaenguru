@@ -27,4 +27,15 @@ export class SchulenService {
 		);
 	}
 
+	public loadDetails(schulkuerzel: string): Observable<Schule> {
+
+		const url = environment.apiUrl + '/wettbewerb/lehrer/schulen/' + schulkuerzel + '/details';
+
+		return this.http.get(url).pipe(
+			map(body => body as ResponsePayload),
+			map(payload => payload.data)
+		);
+
+	}
+
 }

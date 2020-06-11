@@ -19,6 +19,9 @@ public class WettbewerbAPIModel {
 	private int jahr;
 
 	@JsonProperty
+	private String wettbewerbsbeginn;
+
+	@JsonProperty
 	private String wettbewerbsende;
 
 	@JsonProperty
@@ -35,6 +38,7 @@ public class WettbewerbAPIModel {
 		WettbewerbAPIModel result = new WettbewerbAPIModel();
 
 		result.jahr = wettbewerb.id().jahr().intValue();
+		result.wettbewerbsbeginn = CommonTimeUtils.format(wettbewerb.wettbewerbsbeginn());
 		result.wettbewerbsende = CommonTimeUtils.format(wettbewerb.wettbewerbsende());
 		result.datumFreischaltungLehrer = CommonTimeUtils.format(wettbewerb.datumFreischaltungLehrer());
 		result.datumFreischaltungPrivat = CommonTimeUtils.format(wettbewerb.datumFreischaltungPrivat());

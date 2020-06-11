@@ -53,8 +53,13 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 			const msg = this.extractMessageObject(httpError);
 			switch (httpError.status) {
 				case 401:
-				case 908:
 					this.messageService.error('Sie haben keine Berechtigung. Bitte loggen Sie sich ein.');
+					break;
+				case 908:
+					this.messageService.error('Ihre Session ist abgelaufen. Bitte loggen Sie sich erneut ein.');
+					break;
+				case 403:
+					this.messageService.error('Sie haben keine Berechtigung, diese Resource aufzurufen.');
 					break;
 				default: {
 					if (msg) {

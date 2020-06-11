@@ -1,69 +1,95 @@
 <div class="mkv-container mkv-bordered">
-	<div class="col-12">
-		<h2>{{schule.name}} <span *ngIf="schule.aktuellAngemeldet" class="ml-1 badge badge-success">angemeldet für
-				2020</span></h2>
-		<p *ngIf="devMode">(schule-dashboard.component)</p>
-		<p>{{schule.ort}} - {{schule.land}}</p>
-		<p *ngIf="schule.aktuellAngemeldet">Anmeldung 2020 durch {{schule.dashboardModel.angemeldetDurch}}</p>
-		<p>Kollegen: {{kollegium}}</p>
-	</div>
-
-	<div class="row">
-		<div *ngIf="schule.aktuellAngemeldet" class="col-md-4 col-sm-12">
-			<div class="card clickable ml-2 mt-4">
-				<div class="card-body">
-					<div class="card-title">Auswertung 2020</div>
-					<div class="mb-2 text-muted">Kinder erfassen und Urkunden generieren</div>
-				</div>
-			</div>
-		</div>
-
-		<div *ngIf="schule.aktuellAngemeldet" class="col-md-4 col-sm-12">
-			<div class="card clickable ml-2 mt-4">
-				<div class="card-body">
-					<div class="card-title">Auswertungstabelle</div>
-					<div class="mb-2 text-muted">Offlineauswertung</div>
-					<div class="mb-2 text-muted">
-						Excel-Auswertungstabelle hochladen</div>
-				</div>
-			</div>
-		</div>
-
-		<div *ngIf="!schule.aktuellAngemeldet" class="col-md-3 col-sm-12">
-			<div class="card clickable ml-2 mt-4">
-				<div class="card-body">
-					<div class="card-title">Anmelden </div>
-					<div class="mb-2 text-muted">für 2020</div>
-				</div>
-			</div>
-		</div>
-
-	</div>
-
-
-	<div class="row">
-		<div class="col-md-4 col-sm-12">
-			<div class="card clickable ml-2 mt-4">
-				<div class="card-body">
-					<div class="card-title">Teilnahmen <span
-							class="ml-1 badge badge-primary">{{schule.dashboardModel.anzahlTeilnahmen}}</span></div>
-					<div class="mb-2 text-muted">Schulstatistiken</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="col-md-4 col-sm-12 mt-4">
-			<div class="card clickable ml-2">
-				<div class="card-body">
-					<div class="card-title">DSGVO</div>
-					<div class="mb-2 text-muted">Vertrag zur Auftragsdatenverarbeitung</div>
-				</div>
-			</div>
+	<div *ngIf="loading$ | async">
+		<h2>Schuldashboard</h2>
+		<div class="col-12">
+			Lade Daten... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
 		</div>
 	</div>
 
+
+	<div *ngIf="schule$ | async as schule">
+		<div *ngIf="schuleDetails$ | async as details">
+			<div *ngIf="aktuellerWettbewerb$ | async as wettbewerb">
+
+				<div class="col-12">
+					<h2>{{schule.name}} <span *ngIf="schule.aktuellAngemeldet"
+							class="ml-1 badge badge-success">angemeldet
+							für {{wettbewerb.jahr}}</span></h2>
+					<p>{{schule.ort}} - {{schule.land}}</p>
+
+					<p *ngIf="details.kollegen && details.kollegen.length > 0">Kollegen:
+						{{details.kollegen}}</p>
+
+					<p *ngIf="wettbewerb.status === 'ERFASST'">Der Anmeldezeitraum für {{wettbewerb.jahr}} beginnt am
+						{{wettbewerb.wettbewerbsbeginn}}</p>
+
+					<p *ngIf="schule.aktuellAngemeldet">Anmeldung {{wettbewerb.jahr}} durch {{details.angemeldetDurch}}
+					</p>
+				</div>
+
+				<div class="row">
+					<div *ngIf="schule.aktuellAngemeldet" class="col-md-4 col-sm-12">
+						<div class="card clickable ml-2 mt-4">
+							<div class="card-body">
+								<div class="card-title">Auswertung <span
+										*ngIf="$aktuellerWettbewerb$ | async as wettbewerb">
+										{{wettbewerb.jahr}}</span></div>
+								<div class="mb-2 text-muted">Kinder erfassen und Urkunden generieren</div>
+							</div>
+						</div>
+					</div>
+
+					<div *ngIf="schule.aktuellAngemeldet" class="col-md-4 col-sm-12">
+						<div class="card clickable ml-2 mt-4">
+							<div class="card-body">
+								<div class="card-title">Auswertungstabelle</div>
+								<div class="mb-2 text-muted">Offlineauswertung</div>
+								<div class="mb-2 text-muted">
+									Excel-Auswertungstabelle hochladen</div>
+							</div>
+						</div>
+					</div>
+
+					<div *ngIf="(wettbewerb.status !== 'ERFASST' && wettbewerb.status !== 'BEENDET' && !schule.aktuellAngemeldet)"
+						class="col-md-3 col-sm-12">
+						<div class="card clickable ml-2 mt-4">
+							<div class="card-body">
+								<div class="card-title">Anmelden</div>
+								<div class="mb-2 text-muted"> für {{wettbewerb.jahr}}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-4 col-sm-12">
+						<div class="card clickable ml-2 mt-4">
+							<div class="card-body">
+								<div class="card-title">Teilnahmen <span
+										class="ml-1 badge badge-primary">{{details.anzahlTeilnahmen}}</span></div>
+								<div class="mb-2 text-muted">Schulstatistiken</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4 col-sm-12 mt-4">
+						<div class="card clickable ml-2">
+							<div class="card-body">
+								<div class="card-title">DSGVO</div>
+								<div class="mb-2 text-muted">Vertrag zur Auftragsdatenverarbeitung</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
 	<div class="col-md-3 mt-4">
-		<button class="btn btn-primary" (click)="backToSchulen()"><i class="fa fa-arrow-left" aria-hidden="true"></i>zurück zu
+		<button class="btn btn-primary" (click)="backToSchulen()"><i class="fa fa-arrow-left"
+				aria-hidden="true"></i>zurück zu
 			Schulen</button>
 	</div>
+	<p *ngIf="devMode">(schule-dashboard.component)</p>
 </div>

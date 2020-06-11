@@ -2,9 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Schule } from '../schulen.model';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../reducers';
-import { selectSchule } from '../+state/schulen.actions';
+import { SchulenFacade } from '../schulen.facade';
 
 @Component({
 	selector: 'mkv-schule-card',
@@ -19,16 +17,15 @@ export class SchuleCardComponent implements OnInit {
 	schule: Schule;
 
 
-	constructor(private router: Router, private store: Store<AppState>) { }
+	constructor(private router: Router, private schulenFacade: SchulenFacade) { }
 
 	ngOnInit(): void {
 	}
 
 
 	selectSchule(): void {
-		// TODO: hier die action loadSchule dispatchen, die im schulen.effects dann die schule läd und schuleSelected dispatched
-		this.store.dispatch(selectSchule({ schule: this.schule }));
-		this.router.navigateByUrl('/schulen/schule-dashboard');
+		this.schulenFacade.selectSchule(this.schule);
+		this.router.navigateByUrl('/schulen/schule-dashboard/' + this.schule.kuerzel);
 	}
 
 }

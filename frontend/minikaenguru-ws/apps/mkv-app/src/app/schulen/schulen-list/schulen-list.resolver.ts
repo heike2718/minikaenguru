@@ -10,12 +10,13 @@ import { SchulenFacade } from '../schulen.facade';
 @Injectable()
 export class SchulenListResolver implements Resolve<any> {
 
-	loading = false;
+	private loading = false;
 
 	constructor(private store: Store<AppState>, private schulenFacade: SchulenFacade) {}
 
 	resolve(_route: ActivatedRouteSnapshot,
 		_state: RouterStateSnapshot): Observable<any> {
+
 		return this.store.pipe(
 			select(schulenLoaded),
 			tap(areLoaded => {
