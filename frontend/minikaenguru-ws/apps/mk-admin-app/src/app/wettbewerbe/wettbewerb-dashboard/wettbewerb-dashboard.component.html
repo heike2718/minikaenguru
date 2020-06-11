@@ -1,4 +1,4 @@
-<div *ngIf="(wettbewerb$ | async) as wettbewerb" class="mkv-container mkv-bordered">
+<div *ngIf="(wettbewerb$ | async) as wettbewerb else loading" class="mkv-container mkv-bordered">
 	<div *ngIf="wettbewerb" class="col-12">
 		<h2>Minikänguru {{wettbewerb.jahr}} <span class="ml-1 badge badge-success">{{wettbewerb.status}}</span></h2>
 		<p *ngIf="devMode">(wettbewerb-dashboard.component)</p>
@@ -52,3 +52,8 @@
 				aria-hidden="true"></i>Dashboard</button>
 	</div>
 </div>
+
+<ng-template #loading>
+	Lade Wettbewerb... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
+</ng-template>
+

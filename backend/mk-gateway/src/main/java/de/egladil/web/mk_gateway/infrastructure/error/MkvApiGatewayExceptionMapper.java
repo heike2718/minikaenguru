@@ -12,6 +12,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.NoContentException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -29,6 +30,7 @@ import de.egladil.web.commons_validation.exception.InvalidInputException;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.MkGatewayApp;
+import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.error.AuthException;
 import de.egladil.web.mk_gateway.domain.error.ClientAuthException;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
@@ -75,6 +77,16 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 
 			return Response.status(401)
 				.cookie(CommonHttpUtils.createSessionInvalidatedCookie(MkGatewayApp.CLIENT_COOKIE_PREFIX))
+				.entity(serialize(payload))
+				.build();
+		}
+
+		if (exception instanceof AccessDeniedException) {
+
+			ResponsePayload payload = ResponsePayload
+				.messageOnly(MessagePayload.error(applicationMessages.getString("general.forbidden")));
+
+			return Response.status(Status.FORBIDDEN)
 				.entity(serialize(payload))
 				.build();
 		}

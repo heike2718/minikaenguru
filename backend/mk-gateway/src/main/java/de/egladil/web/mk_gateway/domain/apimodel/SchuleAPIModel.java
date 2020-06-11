@@ -24,6 +24,8 @@ public class SchuleAPIModel {
 
 	private static final String KEY_ANGEMELDET = "aktuellAngemeldet";
 
+	private static final String KEY_DETAILS = "details";
+
 	@JsonProperty
 	private String kuerzel;
 
@@ -39,39 +41,59 @@ public class SchuleAPIModel {
 	@JsonProperty
 	private boolean aktuellAngemeldet;
 
-	public SchuleAPIModel() {
+	@JsonProperty
+	private SchuleWettbewerbeDetails details;
+
+	SchuleAPIModel() {
 
 	}
 
-	public SchuleAPIModel withAttributes(final Map<String, Object> keyValueMap) {
+	public static SchuleAPIModel withAttributes(final Map<String, Object> keyValueMap) {
 
-		this.kuerzel = (String) keyValueMap.get(KEY_KUERZEL);
+		SchuleAPIModel result = new SchuleAPIModel();
+
+		result.kuerzel = (String) keyValueMap.get(KEY_KUERZEL);
 
 		if (keyValueMap.get(KEY_NAME) != null) {
 
-			this.name = (String) keyValueMap.get(KEY_NAME);
+			result.name = (String) keyValueMap.get(KEY_NAME);
 		}
 
 		if (keyValueMap.get(KEY_ORT) != null) {
 
-			this.ort = (String) keyValueMap.get(KEY_ORT);
+			result.ort = (String) keyValueMap.get(KEY_ORT);
 		}
 
 		if (keyValueMap.get(KEY_LAND) != null) {
 
-			this.land = (String) keyValueMap.get(KEY_LAND);
+			result.land = (String) keyValueMap.get(KEY_LAND);
 		}
 
 		if (keyValueMap.get(KEY_ANGEMELDET) != null) {
 
-			this.aktuellAngemeldet = (boolean) keyValueMap.get(KEY_ANGEMELDET);
+			result.aktuellAngemeldet = (boolean) keyValueMap.get(KEY_ANGEMELDET);
 		}
-		return this;
+
+		if (keyValueMap.get(KEY_DETAILS) != null) {
+
+			@SuppressWarnings("unchecked")
+			Map<String, Object> detailsMap = (Map<String, Object>) keyValueMap.get(KEY_DETAILS);
+
+			result.details = SchuleWettbewerbeDetails.withAttributes(detailsMap);
+		}
+
+		return result;
 	}
 
 	public SchuleAPIModel withAngemeldet(final boolean angemeldet) {
 
 		this.aktuellAngemeldet = angemeldet;
+		return this;
+	}
+
+	public SchuleAPIModel withDetails(final SchuleWettbewerbeDetails details) {
+
+		this.details = details;
 		return this;
 	}
 
@@ -83,5 +105,24 @@ public class SchuleAPIModel {
 	public boolean aktuellAngemeldet() {
 
 		return aktuellAngemeldet;
+	}
+
+	/**
+	 * @param  schuleAusKatalog
+	 * @param  schuleAusWettbewerbAPI
+	 * @return
+	 */
+	public static SchuleAPIModel merge(final SchuleAPIModel schuleAusKatalog, final SchuleAPIModel schuleAusWettbewerbAPI) {
+
+		SchuleAPIModel result = new SchuleAPIModel();
+
+		result.kuerzel = schuleAusKatalog.kuerzel;
+		result.name = schuleAusKatalog.name;
+		result.ort = schuleAusKatalog.ort;
+		result.land = schuleAusKatalog.land;
+
+		result.aktuellAngemeldet = schuleAusWettbewerbAPI.aktuellAngemeldet;
+		result.details = schuleAusWettbewerbAPI.details;
+		return result;
 	}
 }

@@ -8,6 +8,7 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import * as fromSchulen from './+state/schulen.reducer';
 import { SchulenListResolver } from './schulen-list/schulen-list.resolver';
+import { SchuleDashboardResolver } from './schule-dashboard/schule-dashboard.resolver';
 
 
 
@@ -26,7 +27,8 @@ import { SchulenListResolver } from './schulen-list/schulen-list.resolver';
 		SchulenListComponent
 	],
 	providers: [
-		SchulenListResolver
+		SchulenListResolver,
+		SchuleDashboardResolver
 	]
 })
 export class SchulenModule { }

@@ -16,7 +16,19 @@ public class SchuleAPIModel {
 	private String kuerzel;
 
 	@JsonProperty
+	private String name;
+
+	@JsonProperty
+	private String ort;
+
+	@JsonProperty
+	private String land;
+
+	@JsonProperty
 	private boolean aktuellAngemeldet;
+
+	@JsonProperty
+	private SchuleDetails details;
 
 	SchuleAPIModel() {
 
@@ -27,10 +39,22 @@ public class SchuleAPIModel {
 		this.kuerzel = kuerzel;
 	}
 
+	public SchuleAPIModel withDetails(final SchuleDetails details) {
+
+		this.details = details;
+
+		return this;
+	}
+
 	public SchuleAPIModel angemeldet() {
 
 		this.aktuellAngemeldet = true;
 		return this;
+	}
+
+	public String kuerzel() {
+
+		return kuerzel;
 	}
 
 }

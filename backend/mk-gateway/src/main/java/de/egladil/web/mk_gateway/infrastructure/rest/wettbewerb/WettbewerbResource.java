@@ -80,7 +80,9 @@ public class WettbewerbResource {
 
 		Principal principal = securityContext.getUserPrincipal();
 
-		Response response = mkWettbewerbResourceAdapter.getSchuleDashboardModel(schulkuerzel, principal.getName());
+		SchuleAPIModel schule = this.schulenAnmeldeinfoService.getSchuleWithWettbewerbsdetails(schulkuerzel, principal.getName());
+
+		Response response = Response.ok(new ResponsePayload(MessagePayload.ok(), schule)).build();
 		return response;
 	}
 

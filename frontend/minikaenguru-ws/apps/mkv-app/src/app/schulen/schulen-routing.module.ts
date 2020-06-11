@@ -4,6 +4,7 @@ import { SchulenListComponent } from './schulen-list/schulen-list.component';
 import { SchuleDashboardComponent } from './schule-dashboard/schule-dashboard.component';
 import { SchulenListResolver } from './schulen-list/schulen-list.resolver';
 import { AuthGuardService } from '../infrastructure/auth-guard.service';
+import { SchuleDashboardResolver } from './schule-dashboard/schule-dashboard.resolver';
 
 
 const schulenRoutes: Routes = [
@@ -14,7 +15,9 @@ const schulenRoutes: Routes = [
 		component: SchulenListComponent,
 		data: { animation: 'schulen' }
 	}, {
-		path: 'schule-dashboard',
+		path: 'schule-dashboard/:kuerzel',
+		canActivate: [AuthGuardService],
+		resolve: {schuleDashboard: SchuleDashboardResolver},
 		component: SchuleDashboardComponent,
 		data: { animation: 'schule-dashboard' }
 	}

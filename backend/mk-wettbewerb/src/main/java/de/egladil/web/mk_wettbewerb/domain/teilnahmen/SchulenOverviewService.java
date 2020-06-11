@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.ws.rs.NotFoundException;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
 import de.egladil.web.mk_wettbewerb.domain.apimodel.SchuleAPIModel;
@@ -58,5 +59,31 @@ public class SchulenOverviewService {
 		}
 
 		return items;
+	}
+
+	/**
+	 * Zum Nachladen der Schuldetails wird die Schule nochmal benötigt.
+	 *
+	 * @param  lehrerID
+	 * @param  schulkuerzel
+	 * @return              SchuleAPIModel
+	 */
+	public SchuleAPIModel ermittleSchuleMitKuerzelFuerLehrer(final Identifier lehrerID, final String schulkuerzel) {
+
+		List<SchuleAPIModel> schulen = this.ermittleAnmeldedatenFuerSchulen(lehrerID);
+
+		if (schulen.isEmpty()) {
+
+			throw new NotFoundException();
+		}
+
+		Optional<SchuleAPIModel> optSchule = schulen.stream().filter(s -> s.kuerzel().equals(schulkuerzel)).findFirst();
+
+		if (optSchule.isEmpty()) {
+
+			throw new NotFoundException();
+		}
+		return optSchule.get();
+
 	}
 }
