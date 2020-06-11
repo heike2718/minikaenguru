@@ -15,7 +15,7 @@ export class SchuleDashboardComponent implements OnInit {
 
 	schule$ = this.schulenFacade.selectedSchule$;
 
-	schuleDetails$ = this.schulenFacade.schuleDashboadModel$;
+	schuleDetails$ = this.schulenFacade.schuleDetails$;
 
 	aktuellerWettbewerb$ = this.teilnahmenFacade.aktuellerWettbewerb$;
 
@@ -28,6 +28,7 @@ export class SchuleDashboardComponent implements OnInit {
 	}
 
 	backToSchulen(): void {
+		this.schulenFacade.resetSelection();
 		this.router.navigate(['/schulen']);
 	}
 

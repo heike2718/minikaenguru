@@ -28,7 +28,7 @@ public class SchuleAPIModel {
 	private boolean aktuellAngemeldet;
 
 	@JsonProperty
-	private SchuleDashboardModel dashboardModel;
+	private SchuleDetails details;
 
 	SchuleAPIModel() {
 
@@ -39,10 +39,22 @@ public class SchuleAPIModel {
 		this.kuerzel = kuerzel;
 	}
 
+	public SchuleAPIModel withDetails(final SchuleDetails details) {
+
+		this.details = details;
+
+		return this;
+	}
+
 	public SchuleAPIModel angemeldet() {
 
 		this.aktuellAngemeldet = true;
 		return this;
+	}
+
+	public String kuerzel() {
+
+		return kuerzel;
 	}
 
 }

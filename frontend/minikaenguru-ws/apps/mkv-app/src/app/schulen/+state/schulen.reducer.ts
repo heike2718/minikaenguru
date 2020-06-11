@@ -1,13 +1,12 @@
-import { Schule, SchuleDashboardModel } from '../schulen.model';
+import { Schule, SchuleWithID, mergeSchulenMap, findSchuleMitId } from '../schulen.model';
 import * as SchulenActions from './schulen.actions';
 import { Action, createReducer, on } from '@ngrx/store';
 
 export const schulenFeatureKey = 'mkv-app-schulen';
 
 export interface SchulenState {
-	readonly schulen: Schule[];
+	readonly schulen: SchuleWithID[];
 	readonly selectedSchule: Schule;
-	readonly schuleDashboadModel: SchuleDashboardModel;
 	readonly schulenLoaded: boolean;
 	readonly loading: boolean;
 };
@@ -15,7 +14,6 @@ export interface SchulenState {
 const initialSchulenState: SchulenState = {
 	schulen: [],
 	selectedSchule: undefined,
-	schuleDashboadModel: undefined,
 	schulenLoaded: false,
 	loading: false
 };
@@ -23,32 +21,48 @@ const initialSchulenState: SchulenState = {
 const schulenReducer = createReducer(initialSchulenState,
 
 	on(SchulenActions.startLoading, (state, _action) => {
-		return {...state, loading: true};
+		return { ...state, loading: true };
 	}),
 
 	on(SchulenActions.finishedWithError, (state, _action) => {
-		return {...state, loading: false};
+		return { ...state, loading: false };
 	}),
 
 	on(SchulenActions.schulenLoaded, (state, action) => {
 
-		return { ...state, schulen: action.schulen, selectedSchule: undefined, schulenLoaded: true, loading: false }
+		const schulen: Schule[] = action.schulen;
+		const newMap: SchuleWithID[] = [];
+		schulen.forEach(s => newMap.push({ kuerzel: s.kuerzel, schule: s }));
+
+		return { ...state, schulen: newMap, selectedSchule: undefined, schulenLoaded: true, loading: false }
 	}),
 
 	on(SchulenActions.selectSchule, (state, action) => {
-		return {...state, selectedSchule: action.schule}
+		return { ...state, selectedSchule: action.schule }
 	}),
 
 	on(SchulenActions.schuleDetailsLoaded, (state, action) => {
 
-		return {...state, selectedSchule: action.schule, schuleDashboadModel: action.details, loading: false};
+		const neueMap = mergeSchulenMap(state.schulen, action.schule);
+		return { ...state, selectedSchule: action.schule, schulen: neueMap, loading: false };
 	}),
 
-	on(SchulenActions.unselectSchule, (state, _action) => {
-		return {...state, selectedSchule: undefined}
+	on(SchulenActions.restoreDetailsFromCache, (state, action) => {
+
+		const schule = findSchuleMitId(state.schulen, action.kuerzel);
+
+		if (schule != null) {
+			return {...state, selectedSchule: schule};
+		}
+
+		return state;
 	}),
 
-	on(SchulenActions.resetSchulen,(_state, _action) => {
+	on(SchulenActions.deselectSchule, (state, _action) => {
+		return { ...state, selectedSchule: undefined }
+	}),
+
+	on(SchulenActions.resetSchulen, (_state, _action) => {
 		return initialSchulenState;
 	})
 );

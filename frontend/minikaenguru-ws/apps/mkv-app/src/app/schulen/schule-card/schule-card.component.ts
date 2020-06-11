@@ -24,7 +24,7 @@ export class SchuleCardComponent implements OnInit {
 
 
 	selectSchule(): void {
-		this.schulenFacade.loadDetails(this.schule);
+		this.schulenFacade.selectSchule(this.schule);
 		this.router.navigateByUrl('/schulen/schule-dashboard/' + this.schule.kuerzel);
 	}
 

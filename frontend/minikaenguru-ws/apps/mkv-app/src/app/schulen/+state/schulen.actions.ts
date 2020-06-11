@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Schule, SchuleDashboardModel } from '../schulen.model';
+import { Schule } from '../schulen.model';
 
 export const schulenLoaded = createAction(
 	'[SchulenFacade] loadSchulen',
@@ -16,16 +16,21 @@ export const finishedWithError = createAction(
 
 export const schuleDetailsLoaded = createAction(
 	'[SchulenFacade] loadDetails subscription',
-	props<{ schule: Schule, details: SchuleDashboardModel }>()
-);
-
-export const selectSchule = createAction(
-	'[SchuleCardComponent] select schule',
 	props<{ schule: Schule }>()
 );
 
-export const unselectSchule = createAction(
-	'[SchuleCardComponent] unselect schule'
+export const restoreDetailsFromCache = createAction(
+	'[SchulenFacade] restoreDetailsFromCache',
+	props<{ kuerzel: string }>()
+)
+
+export const selectSchule = createAction(
+	'[SchulenFacade] selectSchule',
+	props<{ schule: Schule }>()
+);
+
+export const deselectSchule = createAction(
+	'[SchulenFacade] resetSelection'
 );
 
 export const resetSchulen = createAction(

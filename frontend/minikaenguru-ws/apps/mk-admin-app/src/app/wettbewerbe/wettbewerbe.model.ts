@@ -55,7 +55,7 @@ export function indexOfWettbewerbMitId(wettbewerbeMitID: WettbewerbWithID[], jah
 		return -1;
 	}
 
-	for (let ind: number = 0; wettbewerbeMitID.length; ind++) {
+	for (let ind: number = 0; ind < wettbewerbeMitID.length; ind++) {
 		if (wettbewerbeMitID[ind] && wettbewerbeMitID[ind].jahr === jahr) {
 			return ind;
 		}
