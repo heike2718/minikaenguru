@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.apimodel.SchuleAPIModel;
-import de.egladil.web.mk_gateway.domain.error.AuthException;
+import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
@@ -119,12 +119,12 @@ public class SchulenAnmeldeinfoService {
 
 		if (schuleWettbewerbDetailsResponse.getStatus() >= 400) {
 
-			if (schuleWettbewerbDetailsResponse.getStatus() == 404) {
+			if (schuleWettbewerbDetailsResponse.getStatus() == 403) {
 
 				LOG.warn("mk-wettbewerbe: Status={}, beim Laden der Schuldetails - kuerzel={}, Lehrer-UUID={}",
 					schuleWettbewerbDetailsResponse.getStatus(), schulkuerzel, StringUtils.abbreviate(lehrerUUID, 11));
 
-				throw new AuthException();
+				throw new AccessDeniedException();
 
 			} else {
 

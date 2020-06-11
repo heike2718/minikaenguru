@@ -22,6 +22,7 @@ import de.egladil.web.mk_wettbewerb.MkvServerApp;
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
 import de.egladil.web.mk_wettbewerb.domain.apimodel.SchuleAPIModel;
 import de.egladil.web.mk_wettbewerb.domain.apimodel.SchuleDetails;
+import de.egladil.web.mk_wettbewerb.domain.personen.VeranstalterAuthorizationService;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.SchuleDetailsService;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.SchulenOverviewService;
 
@@ -39,6 +40,9 @@ public class SchulenResource {
 	@Inject
 	SchuleDetailsService schuleDetailsService;
 
+	@Inject
+	VeranstalterAuthorizationService veranstalterAuthService;
+
 	@GET
 	public Response findSchulen(@HeaderParam(
 		value = MkvServerApp.UUID_HEADER_NAME) final String principalName) {
@@ -55,7 +59,12 @@ public class SchulenResource {
 	public Response getSchuleDetails(@PathParam(value = "schulkuerzel") final String schulkuerzel, @HeaderParam(
 		value = MkvServerApp.UUID_HEADER_NAME) final String principalName) {
 
-		SchuleAPIModel schule = schulenOverviewService.ermittleSchuleMitKuerzelFuerLehrer(new Identifier(principalName),
+		final Identifier lehrerID = new Identifier(principalName);
+		final Identifier schuleID = new Identifier(schulkuerzel);
+
+		veranstalterAuthService.checkPermissionForTeilnahmenummer(lehrerID, schuleID);
+
+		SchuleAPIModel schule = schulenOverviewService.ermittleSchuleMitKuerzelFuerLehrer(lehrerID,
 			schulkuerzel);
 
 		SchuleDetails details = schuleDetailsService.ermittleSchuldetails(new Identifier(schulkuerzel),

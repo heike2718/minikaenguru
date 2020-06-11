@@ -18,7 +18,6 @@ import de.egladil.web.mk_wettbewerb.domain.personen.Person;
 import de.egladil.web.mk_wettbewerb.domain.personen.SchulkollegienRepository;
 import de.egladil.web.mk_wettbewerb.domain.personen.Schulkollegium;
 import de.egladil.web.mk_wettbewerb.domain.personen.Veranstalter;
-import de.egladil.web.mk_wettbewerb.domain.personen.VeranstalterAuthorizationService;
 import de.egladil.web.mk_wettbewerb.domain.personen.VeranstalterRepository;
 import de.egladil.web.mk_wettbewerb.domain.semantik.DomainService;
 
@@ -28,9 +27,6 @@ import de.egladil.web.mk_wettbewerb.domain.semantik.DomainService;
 @ApplicationScoped
 @DomainService
 public class SchuleDetailsService {
-
-	@Inject
-	VeranstalterAuthorizationService veranstalterAuthService;
 
 	@Inject
 	AktuelleTeilnahmeService aktuelleTeilnahmeService;
@@ -53,8 +49,6 @@ public class SchuleDetailsService {
 	 * @throws AccessDeniedException
 	 */
 	public SchuleDetails ermittleSchuldetails(final Identifier schuleID, final Identifier lehrerID) throws AccessDeniedException {
-
-		veranstalterAuthService.checkPermissionForTeilnahmenummer(lehrerID, schuleID);
 
 		Optional<Schulkollegium> optKollegium = schulkollegienRepository.ofSchulkuerzel(schuleID);
 
