@@ -43,6 +43,14 @@ public class SchulenResource {
 	@Inject
 	VeranstalterAuthorizationService veranstalterAuthService;
 
+	public static SchulenResource createForPermissionTest(final VeranstalterAuthorizationService authService) {
+
+		SchulenResource result = new SchulenResource();
+		result.veranstalterAuthService = authService;
+		return result;
+
+	}
+
 	@GET
 	public Response findSchulen(@HeaderParam(
 		value = MkvServerApp.UUID_HEADER_NAME) final String principalName) {

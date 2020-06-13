@@ -39,11 +39,15 @@ public abstract class AbstractDomainServiceTest {
 
 	protected static final String UUID_LEHRER_2 = "GAUGGHWQUO";
 
+	protected static final String UUID_LEHRER_3 = "LJGGCBGGU";
+
 	protected static final String UUID_PRIVAT = "8efc761c-83e7-42e3-bd2c-ba29b0db80dc";
 
 	protected static final String SCHULKUERZEL_1 = "AGDFWGJOPJ";
 
 	protected static final String SCHULKUERZEL_2 = "UZTGF65FR3";
+
+	protected static final String SCHULKUERZEL_3 = "TRF65FED7O";
 
 	protected static final Integer WETTBEWERBSJAHR_AKTUELL = 2020;
 
@@ -86,6 +90,11 @@ public abstract class AbstractDomainServiceTest {
 
 		Lehrer lehrer2 = new Lehrer(new Person(UUID_LEHRER_2, "Olle Keule"), teilnahmenLehrer2);
 
+		List<Identifier> teilnahmenLehrer3 = new ArrayList<>();
+		teilnahmenLehrer3.add(new Identifier(SCHULKUERZEL_3));
+
+		Lehrer lehrer3 = new Lehrer(new Person(UUID_LEHRER_3, "Mimi Mimimi"), teilnahmenLehrer2);
+
 		Privatperson privatperson = new Privatperson(new Person(UUID_PRIVAT, "Herta Grütze"),
 			Arrays.asList(new Identifier(UUID_PRIVAT)));
 
@@ -94,6 +103,7 @@ public abstract class AbstractDomainServiceTest {
 		veranstalterRepository.addVeranstalter(privatperson);
 		veranstalterRepository.addVeranstalter(lehrer1);
 		veranstalterRepository.addVeranstalter(lehrer2);
+		veranstalterRepository.addVeranstalter(lehrer3);
 
 		teilnahmenRepository = createTeilnahmenRepo();
 		wettbewerbRepository = createWettbewerbRepo();

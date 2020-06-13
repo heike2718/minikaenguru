@@ -70,4 +70,29 @@ public class SchuleDetails {
 		return this;
 	}
 
+	public String kuerzel() {
+
+		return kuerzel;
+	}
+
+	public String nameUrkunde() {
+
+		return nameUrkunde;
+	}
+
+	public String kollegen() {
+
+		return kollegen;
+	}
+
+	public String angemeldetDurch() {
+
+		return angemeldetDurch;
+	}
+
+	public int anzahlTeilnahmen() {
+
+		return anzahlTeilnahmen;
+	}
+
 }

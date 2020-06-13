@@ -32,6 +32,13 @@ public class WettbewerbResource {
 	@Inject
 	WettbewerbService wettewerbService;
 
+	public static WettbewerbResource createForTest(final WettbewerbService wettewerbService) {
+
+		WettbewerbResource result = new WettbewerbResource();
+		result.wettewerbService = wettewerbService;
+		return result;
+	}
+
 	@GET
 	public Response getAktuellenWettbewerb() {
 

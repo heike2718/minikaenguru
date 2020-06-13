@@ -27,10 +27,6 @@ import de.egladil.web.mk_wettbewerb.domain.wettbewerb.WettbewerbService;
  */
 public class SchulenOverviewServiceTest extends AbstractDomainServiceTest {
 
-	private AktuelleTeilnahmeService aktuelleTeilnahmeService;
-
-	private WettbewerbService wettbewerbService;
-
 	private SchulenOverviewService service;
 
 	@BeforeEach
@@ -38,8 +34,9 @@ public class SchulenOverviewServiceTest extends AbstractDomainServiceTest {
 	protected void setUp() {
 
 		super.setUp();
-		wettbewerbService = WettbewerbService.createForTest(getWettbewerbRepository());
-		aktuelleTeilnahmeService = AktuelleTeilnahmeService.createForTest(getTeilnahmenRepository(), wettbewerbService);
+		WettbewerbService wettbewerbService = WettbewerbService.createForTest(getWettbewerbRepository());
+		AktuelleTeilnahmeService aktuelleTeilnahmeService = AktuelleTeilnahmeService.createForTest(getTeilnahmenRepository(),
+			wettbewerbService);
 
 		service = SchulenOverviewService.createForTest(getVeranstalterRepository(), aktuelleTeilnahmeService);
 	}
