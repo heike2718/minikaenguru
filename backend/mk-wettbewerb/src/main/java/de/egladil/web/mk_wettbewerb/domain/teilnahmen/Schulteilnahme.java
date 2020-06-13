@@ -39,7 +39,6 @@ public class Schulteilnahme extends Teilnahme {
 		}
 		this.nameSchule = nameSchule;
 		this.angemeldetDurchVeranstalterId = veranstalterId;
-
 	}
 
 	@Override
@@ -56,8 +55,9 @@ public class Schulteilnahme extends Teilnahme {
 	@Override
 	public String toString() {
 
-		return "Schulteilnahme [wettbewerbID()=" + wettbewerbID().toString() + ", teilnahmekuerzel()="
-			+ teilnahmenummer().toString() + ", name=" + this.nameSchule + "]";
+		return "Schulteilnahme [wettbewerbID=" + wettbewerbID().toString() + ", teilnahmekuerzel="
+			+ teilnahmenummer().toString() + ", name=" + this.nameSchule + ", angemeldetDurch=" + angemeldetDurchVeranstalterId
+			+ "]";
 	}
 
 	public Identifier angemeldetDurchVeranstalterId() {

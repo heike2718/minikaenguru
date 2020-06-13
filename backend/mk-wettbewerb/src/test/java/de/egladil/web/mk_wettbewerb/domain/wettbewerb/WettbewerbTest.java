@@ -1,21 +1,15 @@
 // =====================================================
-// Project: mk-wettbewerb-admin
+// Project: mk-wettbewerb
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb;
+package de.egladil.web.mk_wettbewerb.domain.wettbewerb;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -23,29 +17,6 @@ import org.junit.jupiter.api.Test;
  * WettbewerbTest
  */
 public class WettbewerbTest {
-
-	@Test
-	void should_ConstructorInitializeStatus() {
-
-		// Arrange
-		Integer jahr = Integer.valueOf(2013);
-		WettbewerbID id = new WettbewerbID(jahr);
-
-		// Act
-		Wettbewerb wettbewerb = new Wettbewerb(id);
-
-		// Assert
-		assertEquals(id, wettbewerb.id());
-		assertEquals(WettbewerbStatus.ERFASST, wettbewerb.status());
-		assertEquals(wettbewerb, wettbewerb);
-		assertFalse(wettbewerb.equals(new Object()));
-		assertFalse(wettbewerb.equals(null));
-		assertNull(wettbewerb.datumFreischaltungLehrer());
-		assertNull(wettbewerb.datumFreischaltungPrivat());
-		assertNull(wettbewerb.wettbewerbsbeginn());
-		assertNull(wettbewerb.wettbewerbsende());
-
-	}
 
 	@Test
 	void should_ConstructorThrowException_when_ParameterNull() {
@@ -104,52 +75,6 @@ public class WettbewerbTest {
 
 		assertFalse(erster.equals(null));
 		assertFalse(erster.equals(new Object()));
-	}
-
-	@Test
-	void should_ComparatorSortDescending() {
-
-		// Arrange
-		List<Wettbewerb> wettbewerbe = new ArrayList<>();
-		List<Integer> jahre = Arrays.asList(new Integer[] { 2005, 2017, 2010 });
-
-		jahre.forEach(jahr -> {
-
-			wettbewerbe.add(new Wettbewerb(new WettbewerbID(jahr)));
-		});
-
-		assertEquals("2005", wettbewerbe.get(0).toString());
-		assertEquals("2017", wettbewerbe.get(1).toString());
-		assertEquals("2010", wettbewerbe.get(2).toString());
-
-		// Act
-		Collections.sort(wettbewerbe, new WettbewerbeDescendingComparator());
-
-		// Assert
-		assertEquals("2017", wettbewerbe.get(0).toString());
-		assertEquals("2010", wettbewerbe.get(1).toString());
-		assertEquals("2005", wettbewerbe.get(2).toString());
-
-	}
-
-	@Test
-	void should_nextStatusInitializeWettbewerbsbeginn_when_moveToAnmeldung() {
-
-		// Arrange
-		Integer jahr = 2006;
-		Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(jahr)).withStatus(WettbewerbStatus.ERFASST)
-			.withDatumFreischaltungLehrer(LocalDate.of(jahr, Month.MARCH, 1))
-			.withDatumFreischaltungPrivat(LocalDate.of(jahr, Month.JUNE, 1))
-			.withWettbewerbsende(LocalDate.of(jahr, Month.AUGUST, 1));
-
-		assertNull(wettbewerb.wettbewerbsbeginn());
-
-		// Act
-		wettbewerb.naechsterStatus();
-
-		// Assert
-		assertEquals(WettbewerbStatus.ANMELDUNG, wettbewerb.status());
-		assertNotNull(wettbewerb.wettbewerbsbeginn());
 	}
 
 }

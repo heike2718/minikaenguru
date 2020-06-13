@@ -18,6 +18,13 @@ public class WettbewerbService {
 	@Inject
 	WettbewerbRepository wettbewerbRepository;
 
+	public static WettbewerbService createForTest(final WettbewerbRepository repo) {
+
+		WettbewerbService result = new WettbewerbService();
+		result.wettbewerbRepository = repo;
+		return result;
+	}
+
 	/**
 	 * Ermittelt den aktuellen Wettbewerb. Es kann auch sein, dass es keinen gibt.
 	 *

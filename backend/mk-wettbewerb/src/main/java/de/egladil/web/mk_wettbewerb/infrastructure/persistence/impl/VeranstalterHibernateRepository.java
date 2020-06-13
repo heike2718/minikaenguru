@@ -128,16 +128,26 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 			throw new IllegalStateException("Es gibt bereits einen persistenten Veranstalter " + veranstalter.toString());
 		}
 
+		PersistenterVeranstalter persistenterVeranstalter = mapFromVeranstalter(veranstalter);
+
+		em.persist(persistenterVeranstalter);
+
+		LOG.info("Veranstalter {} erfolgreich angelegt.", veranstalter);
+	}
+
+	/**
+	 * @param  veranstalter
+	 * @return
+	 */
+	PersistenterVeranstalter mapFromVeranstalter(final Veranstalter veranstalter) {
+
 		PersistenterVeranstalter persistenterVeranstalter = new PersistenterVeranstalter();
 		persistenterVeranstalter.setImportierteUuid(veranstalter.uuid());
 		persistenterVeranstalter.setFullName(veranstalter.fullName());
 		persistenterVeranstalter.setTeilnahmenummern(veranstalter.persistierbareTeilnahmenummern());
 		persistenterVeranstalter.setZugangsberechtigungUnterlagen(veranstalter.zugangUnterlagen());
 		persistenterVeranstalter.setRolle(veranstalter.rolle());
-
-		em.persist(persistenterVeranstalter);
-
-		LOG.info("Veranstalter {} erfolgreich angelegt.", veranstalter);
+		return persistenterVeranstalter;
 	}
 
 	@Override
@@ -150,6 +160,13 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 			throw new IllegalStateException(veranstalter.toString() + " ist noch nicht persistiert.");
 		}
 
+		this.mergeFromVeranstalter(vorhandener, veranstalter);
+
+		em.persist(vorhandener);
+	}
+
+	void mergeFromVeranstalter(final PersistenterVeranstalter vorhandener, final Veranstalter veranstalter) {
+
 		if (veranstalter.rolle() != vorhandener.getRolle()) {
 
 			throw new MkWettbewerbRuntimeException("Die Rolle darf nicht geändert werden! (rolle.persistent="
@@ -159,7 +176,5 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 		vorhandener.setFullName(veranstalter.fullName());
 		vorhandener.setTeilnahmenummern(veranstalter.persistierbareTeilnahmenummern());
 		vorhandener.setZugangsberechtigungUnterlagen(veranstalter.zugangUnterlagen());
-
-		em.persist(vorhandener);
 	}
 }
