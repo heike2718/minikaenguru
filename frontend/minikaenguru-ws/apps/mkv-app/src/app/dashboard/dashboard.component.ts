@@ -13,6 +13,7 @@ export class DashboardComponent {
 
 	user$ = this.authService.user$;
 	aktuellerWettbewerb$ = this.teilnahmenFacade.aktuellerWettbewerb$;
+	hatZugangZuUnterlagen$ = this.teilnahmenFacade.hatZugangZuUnterlagen$;
 
 
 	constructor(private authService: AuthService,
@@ -20,9 +21,11 @@ export class DashboardComponent {
 		private router: Router) { }
 
 	gotoSchulen() {
-
-		console.log('navigate to dashboard');
 		this.router.navigateByUrl('/schulen');
+	}
+
+	gotoDSGVO(): void {
+		console.log('navigate to DSGVO');
 	}
 
 	gotoDownloadUnterlagen() {
@@ -31,5 +34,9 @@ export class DashboardComponent {
 
 	gotoProfil() {
 		console.log('hier gehts zum Profil');
+	}
+
+	gotoInfos(): void {
+		this.router.navigateByUrl('/info');
 	}
 }

@@ -9,10 +9,13 @@ import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import de.egladil.web.mk_wettbewerb.domain.semantik.DomainService;
+
 /**
  * WettbewerbService
  */
 @ApplicationScoped
+@DomainService
 public class WettbewerbService {
 
 	@Inject

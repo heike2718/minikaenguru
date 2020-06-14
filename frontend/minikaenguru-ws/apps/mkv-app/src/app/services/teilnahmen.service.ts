@@ -8,17 +8,17 @@ import { ResponsePayload } from '@minikaenguru-ws/common-messages';
 import { Wettbewerb } from '../teilnahmen/teilnahmen.model';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class TeilnahmenService {
 
-  constructor(private http: HttpClient, private logger: LogService) { }
+	constructor(private http: HttpClient, private logger: LogService) { }
 
 
-  getAktuellenWettbewerb(): Observable<Wettbewerb> {
+	getAktuellenWettbewerb(): Observable<Wettbewerb> {
 
 
-	const url = environment.apiUrl + '/wettbewerb/aktueller';
+		const url = environment.apiUrl + '/wettbewerb/aktueller';
 
 		this.logger.debug('[SchulenService] findSchulen - url = ' + url);
 
@@ -27,6 +27,17 @@ export class TeilnahmenService {
 			map(payload => payload.data)
 		);
 
-  }
+	}
+
+	getZugangsstatusUnterlagen(): Observable<boolean> {
+
+		// TODO andere URL
+		const url = environment.apiUrl + '/wettbewerb/veranstalter/zugangsstatus';
+
+		return this.http.get(url).pipe(
+			map(body => body as ResponsePayload),
+			map(payload => payload.data)
+		);
+	}
 
 }

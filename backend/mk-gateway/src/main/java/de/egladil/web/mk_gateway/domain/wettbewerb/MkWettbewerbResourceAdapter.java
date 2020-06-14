@@ -81,6 +81,19 @@ public class MkWettbewerbResourceAdapter extends AbstractMkResourceAdapter {
 
 	}
 
+	public Response getStatusZugangUnterlagen(final String uuid) {
+
+		try {
+
+			Response response = restClient.getStatusZugangUnterlagen(uuid);
+			return response;
+		} catch (Exception e) {
+
+			return handleException(e, LOG, "[getStatusZugangUnterlagen]");
+		}
+
+	}
+
 	@Override
 	protected String endpointName() {
 

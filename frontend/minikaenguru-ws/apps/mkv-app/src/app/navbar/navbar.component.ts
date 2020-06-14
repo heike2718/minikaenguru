@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../environments/environment';
-import { AuthService, AuthState, isLoggedIn, isLoggedOut, Session, user } from '@minikaenguru-ws/common-auth';
-import { Store } from '@ngrx/store';
+import { AuthService } from '@minikaenguru-ws/common-auth';
 import { SchulenFacade } from '../schulen/schulen.facade';
 import { TeilnahmenFacade } from '../teilnahmen/teilnahmen.facade';
 
@@ -16,17 +15,15 @@ export class NavbarComponent implements OnInit {
 	collapsed = true;
 	logo: string;
 
-	isLoggedIn$ = this.authStore.select(isLoggedIn);
-	isLoggedOut$ = this.authStore.select(isLoggedOut);
-	user$ = this.sessionStore.select(user);
+	isLoggedIn$ = this.authService.isLoggedIn$;
+	isLoggedOut$ = this.authService.isLoggedOut$
+	user$ = this.authService.user$;
 	aktuellerWettbewerb$ = this.teilnahmenFacade.aktuellerWettbewerb$;
 
 
 	@ViewChild(NgbCollapse, { static: true }) navbarToggler: NgbCollapse;
 
 	constructor(private authService: AuthService
-		, private authStore: Store<AuthState>
-		, private sessionStore: Store<Session>
 		, private schulenFacade: SchulenFacade
 		, private teilnahmenFacade: TeilnahmenFacade) { }
 

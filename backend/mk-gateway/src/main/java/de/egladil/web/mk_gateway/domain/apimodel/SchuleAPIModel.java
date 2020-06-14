@@ -9,10 +9,12 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import de.egladil.web.mk_gateway.domain.semantik.ValueObject;
+
 /**
  * SchuleAPIModel
  */
-
+@ValueObject
 public class SchuleAPIModel {
 
 	private static final String KEY_KUERZEL = "kuerzel";

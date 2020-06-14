@@ -11,12 +11,14 @@ import java.util.Optional;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
+import de.egladil.web.mk_wettbewerb.domain.Identifier;
 import de.egladil.web.mk_wettbewerb.domain.semantik.DomainService;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.TeilnahmenRepository;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.ZugangUnterlagen;
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.Wettbewerb;
+import de.egladil.web.mk_wettbewerb.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.WettbewerbStatus;
 
 /**
@@ -29,6 +31,12 @@ public class ZugangUnterlagenService {
 	@Inject
 	TeilnahmenRepository teilnahmenRepository;
 
+	@Inject
+	VeranstalterRepository veranstalterRepository;
+
+	@Inject
+	WettbewerbService wettbewerbSerivice;
+
 	public static ZugangUnterlagenService createForTest(final TeilnahmenRepository teilnahmenRepository) {
 
 		ZugangUnterlagenService result = new ZugangUnterlagenService();
@@ -37,7 +45,33 @@ public class ZugangUnterlagenService {
 
 	}
 
-	public boolean hatZugang(final Veranstalter veranstalter, final Wettbewerb wettbewerb) {
+	/**
+	 * Ermittelt, ob der Veranstalter mit der gegebenen ID Zugang zu den Unterlagen des aktuellen Wettbewerbs hat.
+	 *
+	 * @param  uuid
+	 * @return      boolean
+	 */
+	public boolean hatZugang(final String uuid) {
+
+		Optional<Veranstalter> optVeranstalter = veranstalterRepository.ofId(new Identifier(uuid));
+
+		if (optVeranstalter.isEmpty()) {
+
+			return false;
+		}
+
+		Optional<Wettbewerb> optWettbewerb = wettbewerbSerivice.aktuellerWettbewerb();
+
+		if (optWettbewerb.isEmpty()) {
+
+			return false;
+		}
+
+		return hatZugang(optVeranstalter.get(), optWettbewerb.get());
+
+	}
+
+	boolean hatZugang(final Veranstalter veranstalter, final Wettbewerb wettbewerb) {
 
 		if (wettbewerb.status() == WettbewerbStatus.BEENDET || wettbewerb.status() == WettbewerbStatus.ERFASST) {
 

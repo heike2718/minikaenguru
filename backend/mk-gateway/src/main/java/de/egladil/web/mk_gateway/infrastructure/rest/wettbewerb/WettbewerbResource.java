@@ -103,4 +103,14 @@ public class WettbewerbResource {
 
 		return mkWettbewerbResourceAdapter.getAktuellenWettbewerb();
 	}
+
+	@GET
+	@Path("/veranstalter/zugangsstatus")
+	public Response getStatusZugangUnterlagen() {
+
+		Principal principal = securityContext.getUserPrincipal();
+
+		return mkWettbewerbResourceAdapter.getStatusZugangUnterlagen(principal.getName());
+
+	}
 }

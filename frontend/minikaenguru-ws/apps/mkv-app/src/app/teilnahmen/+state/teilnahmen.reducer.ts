@@ -6,10 +6,12 @@ export const teilnahmenFeatureKey = 'mkv-app-teilnahmen';
 
 export interface TeilnahmenState {
 	readonly aktuellerWettbewerb: Wettbewerb;
+	readonly hatZugangZuUnterlangen: boolean;
 };
 
 const initialTeilnahmenState: TeilnahmenState = {
-	aktuellerWettbewerb: undefined
+	aktuellerWettbewerb: undefined,
+	hatZugangZuUnterlangen: undefined
 };
 
 
@@ -18,6 +20,12 @@ const teilnahmenReducer = createReducer(initialTeilnahmenState,
 	on(TeilnahmenActions.aktuellerWettbewerbGeladen, (state, action) => {
 		return { ...state, aktuellerWettbewerb: action.wettbewerb };
 	}),
+
+	on(TeilnahmenActions.zugangsstatusUnterlagenGeladen, (state, action) => {
+
+		return { ...state, hatZugangZuUnterlangen: action.hatZugang };
+	}),
+
 
 	on(TeilnahmenActions.reset, (_state, _action) => {
 		return initialTeilnahmenState;

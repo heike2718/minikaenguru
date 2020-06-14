@@ -9,9 +9,12 @@ import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import de.egladil.web.mk_gateway.domain.semantik.ValueObject;
+
 /**
  * WettbewerbAPIModel zum Anlegen und Ändern eines Wettbewerbs
  */
+@ValueObject
 public class WettbewerbAPIModel {
 
 	@JsonProperty
