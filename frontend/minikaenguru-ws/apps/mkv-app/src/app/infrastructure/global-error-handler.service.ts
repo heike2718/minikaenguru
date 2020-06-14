@@ -55,11 +55,11 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 				case 401:
 					this.messageService.error('Sie haben keine Berechtigung. Bitte loggen Sie sich ein.');
 					break;
-				case 908:
-					this.messageService.error('Ihre Session ist abgelaufen. Bitte loggen Sie sich erneut ein.');
-					break;
 				case 403:
 					this.messageService.error('Sie haben keine Berechtigung, diese Resource aufzurufen.');
+					break;
+				case 908:
+					this.messageService.error('Ihre Session ist abgelaufen. Bitte loggen Sie sich erneut ein.');
 					break;
 				default: {
 					if (msg) {

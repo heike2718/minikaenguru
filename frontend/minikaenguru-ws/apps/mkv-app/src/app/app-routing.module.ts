@@ -6,9 +6,11 @@ import { LandingComponent } from './landing/landing.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AuthGuardService } from './infrastructure/auth-guard.service';
 import { environment } from '../environments/environment';
+import { WettbewerbInfoComponent } from './teilnahmen/wettbewerb/wettbewerb-info.component';
 
 
 const routes: Routes = [
+  {path: 'info', component: WettbewerbInfoComponent},
   {path: 'registrierung', component: RegistrationComponent},
   {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuardService]},
   {path: 'schulen', loadChildren: ()=> import('./schulen/schulen.module').then(m => m.SchulenModule)},

@@ -8,27 +8,28 @@
 		(window:resize)="collapsed = true">
 		<ul class="navbar-nav mr-auto">
 
-			<li *ngIf="isLoggedOut$ | async" routerLinkActive="active"><a routerLink="/" (click)="collapseNav()"
-					class="nav-link" title="Startseite">
-					<span class="fa fa-home fa-1x" aria-hidden="true"></span> Minikänguru <span
-						*ngIf="aktuellerWettbewerb$ | async as wettbewerb">{{wettbewerb.jahr}}</span></a></li>
-
-			<li *ngIf="isLoggedIn$ | async" routerLinkActive="active"><a routerLink="/dashboard" (click)="collapseNav()"
-					class="nav-link" title="Übersicht">
-					<span class="fa fa-home fa-1x" aria-hidden="true"></span> Minikänguru <span
-						*ngIf="aktuellerWettbewerb$ | async as wettbewerb">{{wettbewerb.jahr}}</span></a></li>
+			<li routerLinkActive="active"><a routerLink="/" (click)="collapseNav()" class="nav-link" title="Startseite">
+					Minikänguru <span *ngIf="aktuellerWettbewerb$ | async as wettbewerb">{{wettbewerb.jahr}}</span></a>
+			</li>
+			<li routerLinkActive="active"><a routerLink="/info" (click)="collapseNav()" class="nav-link"
+					title="Informationen über den Wettbewerb">
+					<span class="fa fa-info fa-1x" aria-hidden="true"></span> Info</a></li>
 
 		</ul>
 
 		<ul class="nav navbar-nav navbar-right">
 			<li class="nav-link" *ngIf="(user$ | async) as user">Guten Tag, {{user.fullName}}</li>
 
+			<div *ngIf="isLoggedIn$ | async">
+				<li routerLinkActive="active"><a routerLink="/dashboard" (click)="collapseNav()" class="nav-link"
+						title="Home">
+						<span class="fa fa-home fa-1x" aria-hidden="true"></span> Übersicht</a></li>
+			</div>
 			<div *ngIf="(user$ | async) as user">
 				<li *ngIf="user.rolle === 'LEHRER'" routerLinkActive="active"><a routerLink="/schulen"
 						(click)="collapseNav()" class="nav-link" title="Schulen">
 						<span class="fa fa-building-o fa-1x" aria-hidden="true"></span> Schulen</a></li>
 			</div>
-
 			<li *ngIf="isLoggedOut$ | async" routerLinkActive="active"><a routerLink="/registrierung" class="nav-link"
 					title="Konto anlegen">
 					<span class="fa fa-user-o fa-1x" aria-hidden="true"></span> Konto anlegen </a></li>

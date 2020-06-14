@@ -53,7 +53,7 @@ public class SchuleDetails {
 	public SchuleDetails withKollegen(final List<Person> kollegen) {
 
 		this.kollegen = StringUtils.join(kollegen.stream().map(p -> p.fullName()).collect(Collectors.toList()),
-			",");
+			", ");
 
 		return this;
 	}
