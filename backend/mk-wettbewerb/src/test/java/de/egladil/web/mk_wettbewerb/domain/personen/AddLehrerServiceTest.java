@@ -37,8 +37,8 @@ public class AddLehrerServiceTest extends AbstractDomainServiceTest {
 	void should_DoNothing_when_LehrerExists() {
 
 		// Arrange
-		CreateOrUpdateLehrerCommand command = CreateOrUpdateLehrerCommand.createForTest(UUID_LEHRER, "Irgendein Name",
-			SCHULKUERZEL);
+		CreateOrUpdateLehrerCommand command = CreateOrUpdateLehrerCommand.createForTest(UUID_LEHRER_1, "Irgendein Name",
+			SCHULKUERZEL_1);
 		int anzahlVorher = getCountLehrerAdded();
 
 		// Act

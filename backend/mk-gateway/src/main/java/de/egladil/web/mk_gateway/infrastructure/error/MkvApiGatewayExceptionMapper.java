@@ -33,6 +33,7 @@ import de.egladil.web.mk_gateway.MkGatewayApp;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.error.AuthException;
 import de.egladil.web.mk_gateway.domain.error.ClientAuthException;
+import de.egladil.web.mk_gateway.domain.error.InaccessableEndpointException;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.session.LoggedInUser;
 import de.egladil.web.mk_gateway.infrastructure.messaging.MkKatalogeRestException;
@@ -100,6 +101,14 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 				.cookie(CommonHttpUtils.createSessionInvalidatedCookie(MkGatewayApp.CLIENT_COOKIE_PREFIX))
 				.entity(serialize(payload))
 				.build();
+		}
+
+		if (exception instanceof InaccessableEndpointException) {
+
+			ResponsePayload payload = ResponsePayload
+				.messageOnly(MessagePayload.error(exception.getMessage() + applicationMessages.getString("sendMail")));
+
+			return Response.status(909).entity(serialize(payload)).build();
 		}
 
 		if (exception instanceof NotFoundException) {

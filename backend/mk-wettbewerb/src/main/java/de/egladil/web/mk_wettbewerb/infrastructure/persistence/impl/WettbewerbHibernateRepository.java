@@ -50,7 +50,7 @@ public class WettbewerbHibernateRepository implements WettbewerbRepository {
 	 * @param  persistenterWettbewerb
 	 * @return
 	 */
-	private Wettbewerb mapFromPersistenterWettbewerb(final PersistenterWettbewerb persistenterWettbewerb) {
+	Wettbewerb mapFromPersistenterWettbewerb(final PersistenterWettbewerb persistenterWettbewerb) {
 
 		Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(Integer.valueOf(persistenterWettbewerb.getUuid())))
 			.withDatumFreischaltungLehrer(

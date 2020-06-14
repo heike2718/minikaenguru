@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
@@ -105,15 +104,18 @@ public class SchulenAnmeldeinfoService {
 
 		final List<SchuleAPIModel> schulenAusKatalg = this.getSchulenFromKatalogeAPI(katalogItemsResponse);
 
+		SchuleAPIModel schuleAusKatalog = null;
+
 		if (schulenAusKatalg.isEmpty()) {
 
 			LOG.error("mk-kataloge: Status={}, Kein Katalogeintrag für Schule - kuerzel={}, Lehrer-UUID={}",
 				katalogItemsResponse.getStatus(), schulkuerzel, StringUtils.abbreviate(lehrerUUID, 11));
 
-			throw new NotFoundException();
-		}
+			schuleAusKatalog = SchuleAPIModel.withKuerzel(schulkuerzel).markKatalogeintragUnknown();
+		} else {
 
-		SchuleAPIModel schuleAusKatalog = schulenAusKatalg.get(0);
+			schuleAusKatalog = schulenAusKatalg.get(0);
+		}
 
 		Response schuleWettbewerbDetailsResponse = wettbewerbAdapter.getSchuleDashboardModel(schulkuerzel, lehrerUUID);
 
@@ -146,7 +148,10 @@ public class SchulenAnmeldeinfoService {
 
 	List<SchuleAPIModel> mergeDataFromSchulenOfLehrer(final List<SchuleAPIModel> schulenAusKatalg, final List<SchuleAPIModel> schulenOfLehrer) {
 
-		schulenAusKatalg.stream().forEach(schule -> {
+		final List<SchuleAPIModel> nurLehrer = schulenAusKatalg.stream().filter(s -> schulenOfLehrer.contains(s))
+			.collect(Collectors.toList());
+
+		nurLehrer.stream().forEach(schule -> {
 
 			Optional<SchuleAPIModel> opt = schulenOfLehrer.stream()
 				.filter(ks -> ks.kuerzel().equals(schule.kuerzel())).findFirst();
@@ -157,52 +162,84 @@ public class SchulenAnmeldeinfoService {
 			}
 		});
 
-		return schulenAusKatalg;
+		if (nurLehrer.size() != schulenOfLehrer.size()) {
+
+			LOG.warn("Nicht alle Schulen auf beiden Seiten gefunden: Kataloge: {}, Lehrer: {}", schulenAusKatalg, schulenOfLehrer);
+		}
+
+		if (schulenOfLehrer.size() > schulenAusKatalg.size()) {
+
+			List<SchuleAPIModel> fehlendeLehrer = schulenOfLehrer.stream().filter(s -> !schulenAusKatalg.contains(s))
+				.collect(Collectors.toList());
+
+			fehlendeLehrer.forEach(s -> {
+
+				s.markKatalogeintragUnknown();
+				nurLehrer.add(s);
+			});
+		}
+
+		return nurLehrer;
 	}
 
-	private SchuleAPIModel getSchuleAusWettbewerbAPIResponse(final Response response) {
+	SchuleAPIModel getSchuleAusWettbewerbAPIResponse(final Response response) {
 
 		ResponsePayload responsePayload = response.readEntity(ResponsePayload.class);
 
-		MessagePayload messagePayliad = responsePayload.getMessage();
+		MessagePayload messagePayload = responsePayload.getMessage();
 
-		if (!messagePayliad.isOk()) {
+		if (!messagePayload.isOk()) {
 
 			return null;
 		}
 
-		@SuppressWarnings("unchecked")
-		Map<String, Object> data = (Map<String, Object>) responsePayload.getData();
+		try {
 
-		return SchuleAPIModel.withAttributes(data);
+			@SuppressWarnings("unchecked")
+			Map<String, Object> data = (Map<String, Object>) responsePayload.getData();
 
+			return SchuleAPIModel.withAttributes(data);
+		} catch (ClassCastException e) {
+
+			LOG.error(e.getMessage(), e);
+			throw new MkGatewayRuntimeException("Konnte ResponsePayload von mk-wettbewerbe nicht verarbeiten");
+
+		}
 	}
 
-	private List<SchuleAPIModel> getSchulenFromWettbewerbAPI(final Response response) {
+	List<SchuleAPIModel> getSchulenFromWettbewerbAPI(final Response response) {
 
 		ResponsePayload responsePayload = response.readEntity(ResponsePayload.class);
 
-		MessagePayload messagePayliad = responsePayload.getMessage();
+		MessagePayload messagePayload = responsePayload.getMessage();
 
 		List<SchuleAPIModel> result = new ArrayList<>();
 
-		if (!messagePayliad.isOk()) {
+		if (!messagePayload.isOk()) {
 
 			return result;
 		}
 
-		@SuppressWarnings("unchecked")
-		List<Map<String, Object>> data = (List<Map<String, Object>>) responsePayload.getData();
+		try {
 
-		for (Map<String, Object> keyValueMap : data) {
+			@SuppressWarnings("unchecked")
+			List<Map<String, Object>> data = (List<Map<String, Object>>) responsePayload.getData();
 
-			result.add(SchuleAPIModel.withAttributes(keyValueMap));
+			for (Map<String, Object> keyValueMap : data) {
+
+				result.add(SchuleAPIModel.withAttributes(keyValueMap));
+			}
+
+			return result;
+		} catch (ClassCastException e) {
+
+			LOG.error(e.getMessage(), e);
+			throw new MkGatewayRuntimeException("Konnte ResponsePayload von mk-wettbewerbe nicht verarbeiten");
+
 		}
-
-		return result;
 	}
 
-	private List<SchuleAPIModel> getSchulenFromKatalogeAPI(final Response response) {
+	List<SchuleAPIModel> getSchulenFromKatalogeAPI(final Response response) {
 
 		List<SchuleAPIModel> result = new ArrayList<>();
 
@@ -212,12 +249,20 @@ public class SchulenAnmeldeinfoService {
 
 		if (messagePayload.isOk()) {
 
-			@SuppressWarnings("unchecked")
-			List<Map<String, Object>> data = (List<Map<String, Object>>) responsePayload.getData();
+			try {
 
-			for (Map<String, Object> keyValueMap : data) {
+				@SuppressWarnings("unchecked")
+				List<Map<String, Object>> data = (List<Map<String, Object>>) responsePayload.getData();
 
-				result.add(SchuleAPIModel.withAttributes(keyValueMap));
+				for (Map<String, Object> keyValueMap : data) {
+
+					result.add(SchuleAPIModel.withAttributes(keyValueMap));
+				}
+			} catch (ClassCastException e) {
+
+				LOG.error(e.getMessage(), e);
+				throw new MkGatewayRuntimeException("Konnte ResponsePayload von mk-kataloge nicht verarbeiten");
+
 			}
 
 		}

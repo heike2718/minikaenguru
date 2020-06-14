@@ -28,7 +28,20 @@ public class VeranstalterAuthorizationService {
 	@Inject
 	VeranstalterRepository veranstalterRepository;
 
-	public void checkPermissionForTeilnahmenummer(final Identifier veranstalterID, final Identifier teilnahmeID) throws AccessDeniedException {
+	public static VeranstalterAuthorizationService createForTest(final VeranstalterRepository repo) {
+
+		VeranstalterAuthorizationService service = new VeranstalterAuthorizationService();
+		service.veranstalterRepository = repo;
+		return service;
+	}
+
+	/**
+	 * @param  veranstalterID
+	 * @param  teilnahmeID
+	 * @return                       boolean - nicht void wegen Mockito.
+	 * @throws AccessDeniedException
+	 */
+	public boolean checkPermissionForTeilnahmenummer(final Identifier veranstalterID, final Identifier teilnahmeID) throws AccessDeniedException {
 
 		Optional<Veranstalter> optVeranstalter = veranstalterRepository.ofId(veranstalterID);
 
@@ -46,5 +59,7 @@ public class VeranstalterAuthorizationService {
 			LOG.warn("Veranstalter {} hat keine Berechtigung für die Teilnahmenummer {}", optVeranstalter.get(), teilnahmeID);
 			throw new AccessDeniedException();
 		}
+
+		return true;
 	}
 }

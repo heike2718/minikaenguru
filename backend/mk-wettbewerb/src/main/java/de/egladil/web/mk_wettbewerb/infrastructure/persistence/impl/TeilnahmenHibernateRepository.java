@@ -100,6 +100,20 @@ public class TeilnahmenHibernateRepository implements TeilnahmenRepository {
 			throw new IllegalStateException("Es gibt diese Teilnahme bereits: " + teilnahme.toString());
 		}
 
+		PersistenteTeilnahme persistenteTeilnahme = mapFromTeilnahme(teilnahme);
+
+		em.persist(persistenteTeilnahme);
+
+		LOG.info("Teilnahme {} erfolreich angelegt", teilnahme);
+
+	}
+
+	/**
+	 * @param teilnahme
+	 * @return
+	 */
+	PersistenteTeilnahme mapFromTeilnahme(final Teilnahme teilnahme) {
+
 		PersistenteTeilnahme persistenteTeilnahme = new PersistenteTeilnahme();
 		persistenteTeilnahme.setImportierteUuid(teilnahme.teilnahmenummer().identifier());
 
@@ -112,11 +126,7 @@ public class TeilnahmenHibernateRepository implements TeilnahmenRepository {
 		persistenteTeilnahme.setTeilnahmeart(teilnahme.teilnahmeart());
 		persistenteTeilnahme.setTeilnahmenummer(teilnahme.teilnahmenummer().identifier());
 		persistenteTeilnahme.setWettbewerbUUID(teilnahme.wettbewerbID().toString());
-
-		em.persist(persistenteTeilnahme);
-
-		LOG.info("Teilnahme {} erfolreich angelegt", teilnahme);
-
+		return persistenteTeilnahme;
 	}
 
 	@Override
@@ -152,7 +162,7 @@ public class TeilnahmenHibernateRepository implements TeilnahmenRepository {
 
 	}
 
-	private Teilnahme mapToTeilnahme(final PersistenteTeilnahme persistente) {
+	Teilnahme mapToTeilnahme(final PersistenteTeilnahme persistente) {
 
 		Teilnahme teilnahme = null;
 

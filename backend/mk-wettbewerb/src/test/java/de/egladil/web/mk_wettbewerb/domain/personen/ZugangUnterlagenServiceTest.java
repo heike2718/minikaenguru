@@ -146,7 +146,7 @@ public class ZugangUnterlagenServiceTest {
 		void should_HatZugangReturnFalse_when_WettbewerbBeendet() {
 
 			// Arrange
-			wettbewerb.beenden();
+			wettbewerb.withStatus(WettbewerbStatus.BEENDET);
 
 			// Act + Assert
 			assertEquals(false, service.hatZugang(lehrerAngemeldet, wettbewerb));
@@ -160,7 +160,7 @@ public class ZugangUnterlagenServiceTest {
 		void should_HatZugangReturnFalse_when_WettbewerbAnmeldung() {
 
 			// Arrange
-			wettbewerb.starten();
+			wettbewerb.withStatus(WettbewerbStatus.ANMELDUNG);
 
 			// Act + Assert
 			assertEquals(false, service.hatZugang(lehrerAngemeldet, wettbewerb));
@@ -173,7 +173,7 @@ public class ZugangUnterlagenServiceTest {
 		void should_HatZugangReturnTrue_when_WettbewerbAnmeldung() {
 
 			// Arrange
-			wettbewerb.starten();
+			wettbewerb.withStatus(WettbewerbStatus.ANMELDUNG);
 
 			// Act + Assert
 			assertEquals(true, service.hatZugang(lehrerSonderzugangsberechtigung, wettbewerb));
@@ -184,7 +184,7 @@ public class ZugangUnterlagenServiceTest {
 		void should_HatZugangReturnFalse_when_DownloadLehrer() {
 
 			// Arrange
-			wettbewerb.downloadFuerLehrerFreischalten();
+			wettbewerb.withStatus(WettbewerbStatus.DOWNLOAD_LEHRER);
 
 			// Act + Assert
 			assertEquals(false, service.hatZugang(lehrerNichtAngemeldet, wettbewerb));
@@ -196,7 +196,7 @@ public class ZugangUnterlagenServiceTest {
 		void should_HatZugangReturnTrue_when_DownloadLehrer() {
 
 			// Arrange
-			wettbewerb.downloadFuerLehrerFreischalten();
+			wettbewerb.withStatus(WettbewerbStatus.DOWNLOAD_LEHRER);
 
 			// Act + Assert
 			assertEquals(true, service.hatZugang(lehrerAngemeldet, wettbewerb));
@@ -208,7 +208,7 @@ public class ZugangUnterlagenServiceTest {
 		void should_HatZugangReturnFalse_when_DownloadPrivat() {
 
 			// Arrange
-			wettbewerb.downloadFuerPrivatpersonenFreischalten();
+			wettbewerb.withStatus(WettbewerbStatus.DOWNLOAD_PRIVAT);
 
 			// Act + Assert
 			assertEquals(false, service.hatZugang(lehrerNichtAngemeldet, wettbewerb));
@@ -220,7 +220,7 @@ public class ZugangUnterlagenServiceTest {
 		void should_HatZugangReturnTrue_when_DownloadPrivat() {
 
 			// Arrange
-			wettbewerb.downloadFuerPrivatpersonenFreischalten();
+			wettbewerb.withStatus(WettbewerbStatus.DOWNLOAD_PRIVAT);
 
 			// Act + Assert
 			assertEquals(true, service.hatZugang(lehrerAngemeldet, wettbewerb));
@@ -251,7 +251,7 @@ public class ZugangUnterlagenServiceTest {
 		void should_HatZugangReturnFalse_when_WettbewerbBeendet() {
 
 			// Arrange
-			wettbewerb.beenden();
+			wettbewerb.withStatus(WettbewerbStatus.BEENDET);
 
 			// Act + Assert
 			assertEquals(false, service.hatZugang(privatpersonAngemeldet, wettbewerb));
@@ -265,7 +265,7 @@ public class ZugangUnterlagenServiceTest {
 		void should_HatZugangReturnFalse_when_WettbewerbAnmeldung() {
 
 			// Arrange
-			wettbewerb.starten();
+			wettbewerb.withStatus(WettbewerbStatus.ANMELDUNG);
 
 			// Act + Assert
 			assertEquals(false, service.hatZugang(privatpersonAngemeldet, wettbewerb));
@@ -278,7 +278,7 @@ public class ZugangUnterlagenServiceTest {
 		void should_HatZugangReturnTrue_when_WettbewerbAnmeldung() {
 
 			// Arrange
-			wettbewerb.starten();
+			wettbewerb.withStatus(WettbewerbStatus.ANMELDUNG);
 
 			// Act + Assert
 			assertEquals(true, service.hatZugang(privatpersonSonderzugangsberechtigung, wettbewerb));
@@ -289,7 +289,7 @@ public class ZugangUnterlagenServiceTest {
 		void should_HatZugangReturnFalse_when_DownloadLehrer() {
 
 			// Arrange
-			wettbewerb.downloadFuerLehrerFreischalten();
+			wettbewerb.withStatus(WettbewerbStatus.DOWNLOAD_LEHRER);
 
 			// Act + Assert
 			assertEquals(false, service.hatZugang(privatpersonAngemeldet, wettbewerb));
@@ -302,7 +302,7 @@ public class ZugangUnterlagenServiceTest {
 		void should_HatZugangReturnTrue_when_DownloadLehrer() {
 
 			// Arrange
-			wettbewerb.downloadFuerLehrerFreischalten();
+			wettbewerb.withStatus(WettbewerbStatus.DOWNLOAD_LEHRER);
 
 			// Act + Assert
 			assertEquals(true, service.hatZugang(privatpersonSonderzugangsberechtigung, wettbewerb));
@@ -313,7 +313,7 @@ public class ZugangUnterlagenServiceTest {
 		void should_HatZugangReturnFalse_when_DownloadPrivat() {
 
 			// Arrange
-			wettbewerb.downloadFuerPrivatpersonenFreischalten();
+			wettbewerb.withStatus(WettbewerbStatus.DOWNLOAD_PRIVAT);
 
 			// Act + Assert
 			assertEquals(false, service.hatZugang(privatpersonNichtAngemeldet, wettbewerb));
@@ -325,7 +325,7 @@ public class ZugangUnterlagenServiceTest {
 		void should_HatZugangReturnTrue_when_DownloadPrivat() {
 
 			// Arrange
-			wettbewerb.downloadFuerPrivatpersonenFreischalten();
+			wettbewerb.withStatus(WettbewerbStatus.DOWNLOAD_PRIVAT);
 
 			// Act + Assert
 			assertEquals(true, service.hatZugang(privatpersonAngemeldet, wettbewerb));

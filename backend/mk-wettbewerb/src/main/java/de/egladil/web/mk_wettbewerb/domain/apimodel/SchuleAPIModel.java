@@ -57,4 +57,34 @@ public class SchuleAPIModel {
 		return kuerzel;
 	}
 
+	public String getKuerzel() {
+
+		return kuerzel;
+	}
+
+	public String getName() {
+
+		return name;
+	}
+
+	public String getOrt() {
+
+		return ort;
+	}
+
+	public String getLand() {
+
+		return land;
+	}
+
+	public boolean isAktuellAngemeldet() {
+
+		return aktuellAngemeldet;
+	}
+
+	public SchuleDetails getDetails() {
+
+		return details;
+	}
+
 }

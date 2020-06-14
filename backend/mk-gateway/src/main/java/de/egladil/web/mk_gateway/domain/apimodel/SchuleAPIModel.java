@@ -5,6 +5,7 @@
 package de.egladil.web.mk_gateway.domain.apimodel;
 
 import java.util.Map;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -46,6 +47,13 @@ public class SchuleAPIModel {
 
 	SchuleAPIModel() {
 
+	}
+
+	public static SchuleAPIModel withKuerzel(final String kuerzel) {
+
+		SchuleAPIModel result = new SchuleAPIModel();
+		result.kuerzel = kuerzel;
+		return result;
 	}
 
 	public static SchuleAPIModel withAttributes(final Map<String, Object> keyValueMap) {
@@ -97,16 +105,6 @@ public class SchuleAPIModel {
 		return this;
 	}
 
-	public String kuerzel() {
-
-		return kuerzel;
-	}
-
-	public boolean aktuellAngemeldet() {
-
-		return aktuellAngemeldet;
-	}
-
 	/**
 	 * @param  schuleAusKatalog
 	 * @param  schuleAusWettbewerbAPI
@@ -124,5 +122,76 @@ public class SchuleAPIModel {
 		result.aktuellAngemeldet = schuleAusWettbewerbAPI.aktuellAngemeldet;
 		result.details = schuleAusWettbewerbAPI.details;
 		return result;
+	}
+
+	public SchuleAPIModel markKatalogeintragUnknown() {
+
+		name = "unbekannter Schulname";
+		ort = "unbekannter Ort";
+		land = "unbekanntes Land / Bundesland";
+		return this;
+	}
+
+	public String kuerzel() {
+
+		return kuerzel;
+	}
+
+	public boolean aktuellAngemeldet() {
+
+		return aktuellAngemeldet;
+	}
+
+	public String name() {
+
+		return name;
+	}
+
+	public String ort() {
+
+		return ort;
+	}
+
+	public String land() {
+
+		return land;
+	}
+
+	public SchuleWettbewerbeDetails getDetails() {
+
+		return details;
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(kuerzel);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+
+		if (this == obj) {
+
+			return true;
+		}
+
+		if (obj == null) {
+
+			return false;
+		}
+
+		if (getClass() != obj.getClass()) {
+
+			return false;
+		}
+		SchuleAPIModel other = (SchuleAPIModel) obj;
+		return Objects.equals(kuerzel, other.kuerzel);
+	}
+
+	@Override
+	public String toString() {
+
+		return "SchuleAPIModel [kuerzel=" + kuerzel + "]";
 	}
 }
