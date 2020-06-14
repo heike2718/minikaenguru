@@ -29,14 +29,14 @@ import de.egladil.web.mk_gateway.domain.signup.PrivatmenschCreated;
 @Consumes(MediaType.APPLICATION_JSON)
 public interface MkWettbewerbRestClient {
 
-	// http://192.168.10.176:9550/mk-wettbewerb/personen/lehrer
+	// http://192.168.10.176:9550/mk-wettbewerb/veranstalter/lehrer
 	@POST
-	@Path("/personen/lehrer")
+	@Path("/veranstalter/lehrer")
 	Response createLehrer(LehrerCreated data) throws MkWettbewerbRestException;
 
-	// http://192.168.10.176:9550/mk-wettbewerb/personen/privat
+	// http://192.168.10.176:9550/mk-wettbewerb/veranstalter/privat
 	@POST
-	@Path("/personen/privat")
+	@Path("/veranstalter/privat")
 	Response createPrivatmensch(PrivatmenschCreated data) throws MkWettbewerbRestException;
 
 	@GET
@@ -52,4 +52,10 @@ public interface MkWettbewerbRestClient {
 	@GET
 	@Path("/wettbewerb")
 	Response getAktuellenWettbewerb() throws MkWettbewerbRestException;
+
+	// http://192.168.10.176:9550/mk-wettbewerb/unterlagen/zugangsstatus
+	@GET
+	@Path("/veranstalter/unterlagen/zugangsstatus")
+	Response getStatusZugangUnterlagen(@HeaderParam(
+		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName) throws MkWettbewerbRestException;
 }

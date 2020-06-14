@@ -53,12 +53,19 @@ export class TeilnahmenFacade {
 
 	public ladeStatusZugangUnterlagen() {
 
+		this.teilnahmenService.getZugangsstatusUnterlagen().subscribe(
+
+			zugang => {
+				this.appStore.dispatch(TeilnahmenActions.zugangsstatusUnterlagenGeladen({ hatZugang: zugang }))
+			},
+			(error => {
+				this.errorHandler.handleError(error);
+			})
+		);
 	}
 
 	public resetState(): void {
-
 		localStorage.removeItem(WETTBEWERB_STORAGE_KEY);
-
-
+		this.appStore.dispatch(TeilnahmenActions.reset());
 	}
 }

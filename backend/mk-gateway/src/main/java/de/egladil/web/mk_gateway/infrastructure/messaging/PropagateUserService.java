@@ -17,12 +17,14 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
+import de.egladil.web.mk_gateway.domain.semantik.InfrastructureService;
 import de.egladil.web.mk_gateway.domain.signup.LehrerCreated;
 import de.egladil.web.mk_gateway.domain.signup.PrivatmenschCreated;
 
 /**
  * PropagateUserService
  */
+@InfrastructureService
 @ApplicationScoped
 public class PropagateUserService {
 
