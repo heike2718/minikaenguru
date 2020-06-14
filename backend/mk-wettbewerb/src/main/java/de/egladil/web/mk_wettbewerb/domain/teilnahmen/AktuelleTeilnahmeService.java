@@ -85,4 +85,11 @@ public class AktuelleTeilnahmeService {
 
 	}
 
+	/**
+	 *
+	 */
+	public void meldePrivatpersonZumAktuellenWettbewerbAn(final String uuid) {
+
+	}
+
 }

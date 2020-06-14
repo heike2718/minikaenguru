@@ -25,19 +25,36 @@ public class RestrictedUrlPathInMemoryRepositoryTest {
 
 	@Nested
 	class MkWettbewerbPathsTest {
-		@Test
-		void should_OfPathContainWettbewerb_when_test1() {
 
-			Optional<RestrictedUrlPath> opt = repository.ofPath("/wettbewerb/anmeldungen/anmeldung");
+		@Test
+		void should_OfPathContainTeilnahmePrivat() {
+
+			Optional<RestrictedUrlPath> opt = repository.ofPath("/wettbewerb/teilnahmen/privat");
 
 			assertTrue(opt.isPresent());
 
 			RestrictedUrlPath restrictedUrlPath = opt.get();
 
-			assertEquals("/wettbewerb/anmeldungen/anmeldung", restrictedUrlPath.path());
+			assertEquals("/wettbewerb/teilnahmen/privat", restrictedUrlPath.path());
+
+			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.LEHRER));
+			assertTrue(restrictedUrlPath.isAllowedForRolle(Rolle.PRIVAT));
+			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.ADMIN));
+		}
+
+		@Test
+		void should_OfPathContainTeilnahmeSchulen() {
+
+			Optional<RestrictedUrlPath> opt = repository.ofPath("/wettbewerb/teilnahmen/schulen/UZHT65GR");
+
+			assertTrue(opt.isPresent());
+
+			RestrictedUrlPath restrictedUrlPath = opt.get();
+
+			assertEquals("/wettbewerb/teilnahmen/schulen/*", restrictedUrlPath.path());
 
 			assertTrue(restrictedUrlPath.isAllowedForRolle(Rolle.LEHRER));
-			assertTrue(restrictedUrlPath.isAllowedForRolle(Rolle.PRIVAT));
+			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.PRIVAT));
 			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.ADMIN));
 		}
 

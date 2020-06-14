@@ -16,7 +16,6 @@ import de.egladil.web.mk_wettbewerb.domain.semantik.DomainService;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.TeilnahmenRepository;
-import de.egladil.web.mk_wettbewerb.domain.teilnahmen.ZugangUnterlagen;
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.WettbewerbStatus;

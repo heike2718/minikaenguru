@@ -58,4 +58,17 @@ public interface MkWettbewerbRestClient {
 	@Path("/veranstalter/unterlagen/zugangsstatus")
 	Response getStatusZugangUnterlagen(@HeaderParam(
 		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName) throws MkWettbewerbRestException;
+
+	// http://192.168.10.176:9550/mk-wettbewerb/teilnahmen/privat
+	@POST
+	@Path("/teilnahmen/privat")
+	Response meldePrivatmenschZumAktuellenWettbewerbAn(@HeaderParam(
+		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName) throws MkWettbewerbRestException;
+
+	// http://192.168.10.176:9550/mk-wettbewerb/teilnahmen/privat
+	@POST
+	@Path("/teilnahmen/schulen/{schulkuerzel}")
+	Response meldeSchuleZumAktuellenWettbewerbAn(@PathParam(value = "schulkuerzel") final String schulkuerzel, @HeaderParam(
+		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName) throws MkWettbewerbRestException;
+
 }
