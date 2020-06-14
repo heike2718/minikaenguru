@@ -13,6 +13,7 @@ export class DashboardComponent {
 
 	user$ = this.authService.user$;
 	aktuellerWettbewerb$ = this.teilnahmenFacade.aktuellerWettbewerb$;
+	hatZugangZuUnterlagen$ = this.teilnahmenFacade.hatZugangZuUnterlagen$;
 
 
 	constructor(private authService: AuthService,

@@ -4,4 +4,5 @@ import * as fromTeilnahmen from './teilnahmen.reducer';
 export const teilnahmenState = createFeatureSelector<fromTeilnahmen.TeilnahmenState>(fromTeilnahmen.teilnahmenFeatureKey);
 
 export const aktuellerWettbewerb = createSelector(teilnahmenState, s => s.aktuellerWettbewerb);
+export const hatZugangZuUnterlagen = createSelector(teilnahmenState, s => s.hatZugangZuUnterlangen);
 

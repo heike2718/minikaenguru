@@ -13,7 +13,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-4 col-sm-12 ml-2 mt-2">
+		<div *ngIf="hatZugangZuUnterlagen$ | async" class="col-md-4 col-sm-12 ml-2 mt-2">
 			<div class="card clickable" (click)="gotoDownloadUnterlagen()">
 				<div class="card-body">
 				<div class="card-title">Unterlagen <span *ngIf="aktuellerWettbewerb$ | async as wettbewerb">{{wettbewerb.jahr}}</span></div>

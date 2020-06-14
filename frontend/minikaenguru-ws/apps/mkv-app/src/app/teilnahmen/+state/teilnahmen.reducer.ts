@@ -1,4 +1,4 @@
-import { Wettbewerb } from '../teilnahmen.model';
+import { Wettbewerb, ZugangUnterlagenStatus } from '../teilnahmen.model';
 import { createReducer, Action, on } from '@ngrx/store';
 import * as TeilnahmenActions from './teilnahmen.actions';
 
@@ -6,10 +6,14 @@ export const teilnahmenFeatureKey = 'mkv-app-teilnahmen';
 
 export interface TeilnahmenState {
 	readonly aktuellerWettbewerb: Wettbewerb;
+	readonly zugangUnterlagen: ZugangUnterlagenStatus;
+	readonly hatZugangZuUnterlangen: boolean;
 };
 
 const initialTeilnahmenState: TeilnahmenState = {
-	aktuellerWettbewerb: undefined
+	aktuellerWettbewerb: undefined,
+	zugangUnterlagen: undefined,
+	hatZugangZuUnterlangen: false
 };
 
 
