@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.error.InaccessableEndpointException;
 import de.egladil.web.mk_gateway.infrastructure.messaging.MkRestException;
 
 /**
@@ -36,16 +37,17 @@ public abstract class AbstractMkResourceAdapter {
 
 			log.error("endpoint " + endpointName() + " ist nicht erreichbar");
 
+			throw new InaccessableEndpointException("Der Endpoint " + endpointName() + " ist nicht erreichbar. ");
+
+		}
+
+		if (e instanceof MkRestException) {
+
+			log.error(context + ": " + e.getMessage());
+
 		} else {
 
-			if (e instanceof MkRestException) {
-
-				log.error(context + ": " + e.getMessage());
-
-			} else {
-
-				log.error(context + ": unerwartete Exception - " + e.getMessage(), e);
-			}
+			log.error(context + ": unerwartete Exception - " + e.getMessage(), e);
 		}
 
 		return Response.serverError()

@@ -33,7 +33,7 @@ public class Privatteilnahme extends Teilnahme {
 	@Override
 	public String toString() {
 
-		return "Privatteilnahme [wettbewerbID()=" + wettbewerbID().toString() + ", teilnahmekuerzel()="
+		return "Privatteilnahme [wettbewerbID=" + wettbewerbID().toString() + ", teilnahmekuerzel="
 			+ teilnahmenummer().toString() + "]";
 	}
 

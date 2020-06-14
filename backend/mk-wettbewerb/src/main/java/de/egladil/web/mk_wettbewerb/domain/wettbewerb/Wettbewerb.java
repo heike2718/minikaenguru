@@ -72,26 +72,6 @@ public class Wettbewerb {
 		return this;
 	}
 
-	public void starten() {
-
-		this.status = WettbewerbStatus.ANMELDUNG;
-	}
-
-	public void downloadFuerLehrerFreischalten() {
-
-		this.status = WettbewerbStatus.DOWNLOAD_LEHRER;
-	}
-
-	public void downloadFuerPrivatpersonenFreischalten() {
-
-		this.status = WettbewerbStatus.DOWNLOAD_PRIVAT;
-	}
-
-	public void beenden() {
-
-		this.status = WettbewerbStatus.BEENDET;
-	}
-
 	@Override
 	public int hashCode() {
 
@@ -128,36 +108,6 @@ public class Wettbewerb {
 	public WettbewerbStatus status() {
 
 		return status;
-	}
-
-	public void naechsterStatus() {
-
-		WettbewerbStatus naechster = null;
-
-		switch (status) {
-
-		case BEENDET:
-			naechster = WettbewerbStatus.ANMELDUNG;
-			break;
-
-		case ANMELDUNG:
-			naechster = WettbewerbStatus.DOWNLOAD_LEHRER;
-			break;
-
-		case DOWNLOAD_LEHRER:
-			naechster = WettbewerbStatus.DOWNLOAD_PRIVAT;
-			break;
-
-		case DOWNLOAD_PRIVAT:
-			naechster = WettbewerbStatus.BEENDET;
-			break;
-
-		default:
-			throw new IllegalStateException("ubekannter Status " + status);
-		}
-
-		this.status = naechster;
-
 	}
 
 	public WettbewerbID id() {

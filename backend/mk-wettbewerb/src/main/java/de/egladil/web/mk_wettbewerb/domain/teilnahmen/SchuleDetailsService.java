@@ -40,6 +40,18 @@ public class SchuleDetailsService {
 	@Inject
 	VeranstalterRepository veranstalterRepository;
 
+	public static SchuleDetailsService createForTest(final AktuelleTeilnahmeService aktuelleTeilnahmeService, final SchulkollegienRepository schulkollegienRepository, final TeilnahmenRepository teilnahmenRepository, final VeranstalterRepository veranstalterRepository) {
+
+		SchuleDetailsService result = new SchuleDetailsService();
+
+		result.aktuelleTeilnahmeService = aktuelleTeilnahmeService;
+		result.schulkollegienRepository = schulkollegienRepository;
+		result.teilnahmenRepository = teilnahmenRepository;
+		result.veranstalterRepository = veranstalterRepository;
+
+		return result;
+	}
+
 	/**
 	 * Ermittelt die Details der gegeben Schule.
 	 *

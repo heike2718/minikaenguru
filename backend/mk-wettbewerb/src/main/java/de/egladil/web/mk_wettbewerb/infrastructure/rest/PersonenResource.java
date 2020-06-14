@@ -56,14 +56,14 @@ public class PersonenResource {
 	@Path("/lehrer")
 	public Response updateLehrer(final CreateOrUpdateLehrerCommand lehrerData) {
 
-		return null;
+		return Response.serverError().entity(ResponsePayload.messageOnly(MessagePayload.error("noch nicht implementiert"))).build();
 	}
 
 	@PUT
 	@Path("/privat")
 	public Response updatePrivatperson(final CreateOrUpdatePrivatpersonCommand lehrerData) {
 
-		return null;
+		return Response.serverError().entity(ResponsePayload.messageOnly(MessagePayload.error("noch nicht implementiert"))).build();
 	}
 
 }
