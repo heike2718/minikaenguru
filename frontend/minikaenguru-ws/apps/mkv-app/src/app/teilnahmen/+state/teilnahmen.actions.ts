@@ -7,6 +7,13 @@ export const aktuellerWettbewerbGeladen = createAction(
 	props<{ wettbewerb: Wettbewerb }>()
 );
 
+export const zugangsstatusUnterlagenGeladen = createAction(
+	'[TeilnahmenFacade] ladeZugangsstatus',
+	props<{ hatZugang: boolean }>()
+);
+
 export const reset = createAction(
 	'[TeilnahmenFacade] resetState'
 );
+
+

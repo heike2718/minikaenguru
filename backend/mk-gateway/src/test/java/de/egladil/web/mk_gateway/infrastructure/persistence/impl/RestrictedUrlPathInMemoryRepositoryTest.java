@@ -119,6 +119,22 @@ public class RestrictedUrlPathInMemoryRepositoryTest {
 			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.PRIVAT));
 			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.ADMIN));
 		}
+
+		@Test
+		void should_OfPathContainZugangsstatus() {
+
+			Optional<RestrictedUrlPath> opt = repository.ofPath("/wettbewerb/veranstalter/zugangsstatus");
+
+			assertTrue(opt.isPresent());
+
+			RestrictedUrlPath restrictedUrlPath = opt.get();
+
+			assertEquals("/wettbewerb/veranstalter/zugangsstatus", restrictedUrlPath.path());
+
+			assertTrue(restrictedUrlPath.isAllowedForRolle(Rolle.LEHRER));
+			assertTrue(restrictedUrlPath.isAllowedForRolle(Rolle.PRIVAT));
+			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.ADMIN));
+		}
 	}
 
 	@Nested

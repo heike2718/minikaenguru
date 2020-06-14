@@ -1,9 +1,10 @@
 <div class="mkv-container mkv-bordered">
 	<div class="col--12">
-		<h2>Minikänguru-Wettbewerb <span *ngIf="aktuellerWettbewerb$ | async as wettbewerb">{{wettbewerb.jahr}}</span></h2>
+		<h2>Minikänguru-Wettbewerb <span *ngIf="aktuellerWettbewerb$ | async as wettbewerb">{{wettbewerb.jahr}}</span>
+		</h2>
 	</div>
 
-	<div *ngIf="aktuellerWettbewerb$ | async as wettbewerb">
+	<div *ngIf="aktuellerWettbewerb$ | async as wettbewerb" class="ml-2">
 		<div class="row">
 			<div class="col-md-6 col-sm-12">
 				Beginn Anmeldezeitraum:
@@ -35,6 +36,12 @@
 			<div class="col-md-6 col-sm-12">
 				{{wettbewerb.wettbewerbsende}}
 			</div>
+		</div>
+	</div>
+	<div *ngIf="isLoggedIn$ | async" class="row">
+		<div class="col-sm-12 col-md-3 ml-2 mb-2 mt-2">
+			<button class="btn btn-primary" (click)="gotoDashboard()"><i class="fa fa-arrow-left"
+					aria-hidden="true"></i>zur Übersicht</button>
 		</div>
 	</div>
 </div>

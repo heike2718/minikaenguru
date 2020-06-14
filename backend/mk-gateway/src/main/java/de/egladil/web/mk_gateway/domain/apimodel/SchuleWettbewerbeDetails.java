@@ -8,9 +8,12 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import de.egladil.web.mk_gateway.domain.semantik.ValueObject;
+
 /**
  * SchuleWettbewerbeDetails
  */
+@ValueObject
 public class SchuleWettbewerbeDetails {
 
 	private static final String KEY_KUERZEL = "kuerzel";
