@@ -10,12 +10,15 @@ import { AuthResult, STORAGE_KEY_DEV_SESSION_ID, STORAGE_KEY_SESSION_EXPIRES_AT,
 import { AuthState } from './+state/auth.reducer';
 import { login, logout, refreshSession } from './+state/auth.actions';
 import { Router } from '@angular/router';
+import { user } from './+state/auth.selectors';
 const moment = moment_;
 
 @Injectable({
 	providedIn: 'root'
 })
 export class AuthService {
+
+	user$ = this.store.select(user);
 
 	constructor(@Inject(MkAuthConfigService) private config: MkAuthConfig
 		, private http: HttpClient

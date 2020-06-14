@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Session, user } from '@minikaenguru-ws/common-auth';
 import { Router } from '@angular/router';
+import { AuthService } from '@minikaenguru-ws/common-auth';
+import { TeilnahmenFacade } from '../teilnahmen/teilnahmen.facade';
 
 @Component({
 	selector: 'mkv-dashboard',
@@ -11,11 +11,13 @@ import { Router } from '@angular/router';
 export class DashboardComponent {
 
 
-	user$ = this.sessionStore.select(user);
+	user$ = this.authService.user$;
+	aktuellerWettbewerb$ = this.teilnahmenFacade.aktuellerWettbewerb$;
 
 
-	constructor(private sessionStore: Store<Session>,
-		 private router: Router) { }
+	constructor(private authService: AuthService,
+		private teilnahmenFacade: TeilnahmenFacade,
+		private router: Router) { }
 
 	gotoSchulen() {
 

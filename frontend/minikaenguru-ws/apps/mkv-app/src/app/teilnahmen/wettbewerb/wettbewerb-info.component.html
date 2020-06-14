@@ -1,1 +1,40 @@
-<p>wettbewerb-info works!</p>
+<div class="mkv-container mkv-bordered">
+	<div class="col--12">
+		<h2>Minikänguru-Wettbewerb <span *ngIf="aktuellerWettbewerb$ | async as wettbewerb">{{wettbewerb.jahr}}</span></h2>
+	</div>
+
+	<div *ngIf="aktuellerWettbewerb$ | async as wettbewerb">
+		<div class="row">
+			<div class="col-md-6 col-sm-12">
+				Beginn Anmeldezeitraum:
+			</div>
+			<div class="col-md-6 col-sm-12">
+				{{wettbewerb.wettbewerbsbeginn}}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6 col-sm-12">
+				Bereitstellung Unterlagen für Lehrerinnen und Lehrer:
+			</div>
+			<div class="col-md-6 col-sm-12">
+				{{wettbewerb.datumFreischaltungLehrer}}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6 col-sm-12">
+				Bereitstellung Unterlagen für privat angemeldete:
+			</div>
+			<div class="col-md-6 col-sm-12">
+				{{wettbewerb.datumFreischaltungPrivat}}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6 col-sm-12">
+				Wettbewerbsende:
+			</div>
+			<div class="col-md-6 col-sm-12">
+				{{wettbewerb.wettbewerbsende}}
+			</div>
+		</div>
+	</div>
+</div>
