@@ -18,18 +18,18 @@ import de.egladil.web.mk_wettbewerb.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
 
 /**
- * AddLehrerServiceTest
+ * LehrerServiceTest
  */
-public class AddLehrerServiceTest extends AbstractDomainServiceTest {
+public class LehrerServiceTest extends AbstractDomainServiceTest {
 
-	private AddLehrerService service;
+	private LehrerService service;
 
 	@BeforeEach
 	@Override
 	protected void setUp() {
 
 		super.setUp();
-		service = AddLehrerService.createServiceForTest(getVeranstalterRepository());
+		service = LehrerService.createServiceForTest(getVeranstalterRepository());
 
 	}
 
@@ -39,14 +39,13 @@ public class AddLehrerServiceTest extends AbstractDomainServiceTest {
 		// Arrange
 		CreateOrUpdateLehrerCommand command = CreateOrUpdateLehrerCommand.createForTest(UUID_LEHRER_1, "Irgendein Name",
 			SCHULKUERZEL_1);
-		int anzahlVorher = getCountLehrerAdded();
 
 		// Act
 		service.addLehrer(command);
 
 		// Assert
-		int anzahlNachher = getCountLehrerAdded();
-		assertEquals(anzahlVorher, anzahlNachher);
+		int anzahlNachher = getVeranstalterRepository().getCountLehrerAdded();
+		assertEquals(0, anzahlNachher);
 
 	}
 
@@ -65,14 +64,12 @@ public class AddLehrerServiceTest extends AbstractDomainServiceTest {
 
 		CreateOrUpdateLehrerCommand command = CreateOrUpdateLehrerCommand.createForTest(uuid, fullName,
 			schulkuerzel);
-		int expectedAnzahl = getCountLehrerAdded() + 1;
-
 		// Act
 		service.addLehrer(command);
 
 		// Assert
-		int anzahlNachher = getCountLehrerAdded();
-		assertEquals(expectedAnzahl, anzahlNachher);
+		int anzahlNachher = getVeranstalterRepository().getCountLehrerAdded();
+		assertEquals(1, anzahlNachher);
 
 		optVeranstalter = getVeranstalterRepository().ofId(identifier);
 		assertTrue(optVeranstalter.isPresent());

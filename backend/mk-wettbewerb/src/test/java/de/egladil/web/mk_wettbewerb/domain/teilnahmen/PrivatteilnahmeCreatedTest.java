@@ -2,7 +2,7 @@
 // Project: mk-wettbewerb
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.wettbewerb;
+package de.egladil.web.mk_wettbewerb.domain.teilnahmen;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -13,12 +13,12 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import de.egladil.web.mk_gateway.domain.wettbewerb.SchulteilnahmeCreated;
+import de.egladil.web.mk_wettbewerb.domain.teilnahmen.PrivatteilnahmeCreated;
 
 /**
- * SchulteilnahmeCreatedTest
+ * PrivatteilnahmeCreatedTest
  */
-public class SchulteilnahmeCreatedTest {
+public class PrivatteilnahmeCreatedTest {
 
 	@Test
 	void should_ConstructorSetAllAttributes_and_SerializationBeOk() throws JsonProcessingException {
@@ -27,65 +27,60 @@ public class SchulteilnahmeCreatedTest {
 		Integer wettbewerbsjahr = Integer.valueOf(2020);
 		String teilnahmenummer = "sahgfqggqu";
 		String createdBy = "xjkcgsjdgfw";
-		String schulname = "Baumschule";
 
 		// Act
-		SchulteilnahmeCreated event = new SchulteilnahmeCreated(wettbewerbsjahr, teilnahmenummer, schulname, createdBy);
+		PrivatteilnahmeCreated event = new PrivatteilnahmeCreated(wettbewerbsjahr, teilnahmenummer, createdBy);
 
 		String serialization = new ObjectMapper().writeValueAsString(event);
 
 		// System.out.println(serialization);
 
 		// Assert
-		assertEquals(
-			"{\"wettbewerbsjahr\":2020,\"teilnahmenummer\":\"sahgfqggqu\",\"triggeringUser\":\"xjkcgsjdgfw\",\"schulname\":\"Baumschule\"}",
+		assertEquals("{\"wettbewerbsjahr\":2020,\"teilnahmenummer\":\"sahgfqggqu\",\"triggeringUser\":\"xjkcgsjdgfw\"}",
 			serialization);
 		assertNotNull(event.occuredOn());
 		assertEquals(createdBy, event.triggeringUser());
 		assertEquals(wettbewerbsjahr, event.wettbewerbsjahr());
 		assertEquals(teilnahmenummer, event.teilnahmenummer());
-		assertEquals(schulname, event.schulname());
-		assertEquals("SchulteilnahmeCreated", event.typeName());
+		assertEquals("PrivatteilnahmeCreated", event.typeName());
 	}
 
 	@Test
-	void should_ContructorThrowException_when_SchulnameNull() {
+	void should_ContructorThrowException_when_TeilnahmenummerNull() {
 
 		// Arrange
 		Integer wettbewerbsjahr = Integer.valueOf(2020);
-		String teilnahmenummer = "bsjfga";
-		String createdBy = "asjkkgqg";
-		String schulname = null;
+		String teilnahmenummer = null;
+		String createdBy = "dhsjhw";
 
 		// Act
 		try {
 
-			new SchulteilnahmeCreated(wettbewerbsjahr, teilnahmenummer, schulname, createdBy);
+			new PrivatteilnahmeCreated(wettbewerbsjahr, teilnahmenummer, createdBy);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
-			assertEquals("schulname darf nicht blank sein.", e.getMessage());
+			assertEquals("teilnahmenummer darf nicht blank sein.", e.getMessage());
 		}
 
 	}
 
 	@Test
-	void should_ContructorThrowException_when_SchulnameBlank() {
+	void should_ContructorThrowException_when_TeilnahmenummerBlank() {
 
 		// Arrange
 		Integer wettbewerbsjahr = Integer.valueOf(2020);
-		String teilnahmenummer = "bsjfga";
-		String createdBy = "asjkkgqg";
-		String schulname = "  ";
+		String teilnahmenummer = "   ";
+		String createdBy = "dhsjhw";
 
 		// Act
 		try {
 
-			new SchulteilnahmeCreated(wettbewerbsjahr, teilnahmenummer, schulname, createdBy);
+			new PrivatteilnahmeCreated(wettbewerbsjahr, teilnahmenummer, createdBy);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
-			assertEquals("schulname darf nicht blank sein.", e.getMessage());
+			assertEquals("teilnahmenummer darf nicht blank sein.", e.getMessage());
 		}
 
 	}
@@ -97,12 +92,11 @@ public class SchulteilnahmeCreatedTest {
 		Integer wettbewerbsjahr = Integer.valueOf(2020);
 		String teilnahmenummer = "bsjfga";
 		String createdBy = null;
-		String schulname = "Baumschule";
 
 		// Act
 		try {
 
-			new SchulteilnahmeCreated(wettbewerbsjahr, teilnahmenummer, schulname, createdBy);
+			new PrivatteilnahmeCreated(wettbewerbsjahr, teilnahmenummer, createdBy);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -117,17 +111,38 @@ public class SchulteilnahmeCreatedTest {
 		// Arrange
 		Integer wettbewerbsjahr = Integer.valueOf(2020);
 		String teilnahmenummer = "bsjfga";
-		String createdBy = " ";
-		String schulname = "Baumschule";
+		String createdBy = "";
 
 		// Act
 		try {
 
-			new SchulteilnahmeCreated(wettbewerbsjahr, teilnahmenummer, schulname, createdBy);
+			new PrivatteilnahmeCreated(wettbewerbsjahr, teilnahmenummer, createdBy);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
 			assertEquals("triggeringUser darf nicht blank sein.", e.getMessage());
 		}
+
 	}
+
+	@Test
+	void should_ContructorThrowException_when_WettbewerbsjahrNull() {
+
+		// Arrange
+		Integer wettbewerbsjahr = null;
+		String teilnahmenummer = "bsjfga";
+		String createdBy = "avhsfguq";
+
+		// Act
+		try {
+
+			new PrivatteilnahmeCreated(wettbewerbsjahr, teilnahmenummer, createdBy);
+			fail("keine IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+
+			assertEquals("wettbewerbsjahr darf nicht null sein.", e.getMessage());
+		}
+
+	}
+
 }

@@ -1,0 +1,84 @@
+{"veranstalter": [
+  {
+    "rolle": "PRIVAT",
+    "person": {
+      "uuid": "UUID_PRIVAT",
+      "fullName": "Herta Grütze"
+    },
+    "zugangUnterlagen": "DEFAULT",
+    "teilnahmenummern": [
+        {
+          "identifier": "TEILNAHMENUMMER_PRIVAT"
+        }
+      ]
+  },
+  {
+    "rolle": "PRIVAT",
+    "person": {
+      "uuid": "UUID_PRIVAT_GESPERRT",
+      "fullName": "Böser Helikoptervater"
+    },
+    "zugangUnterlagen": "ENTZOGEN",
+    "teilnahmenummern": [
+        {
+          "identifier": "TEILNAHMENUMMER_PRIVAT_GESPERRT"
+        }
+      ]
+  },
+ {
+    "rolle": "PRIVAT",
+    "person": {
+      "uuid": "UUID_PRIVAT_NICHT_ANGEMELDET",
+      "fullName": "Bob Pudding"
+    },
+    "zugangUnterlagen": "DEFAULT",
+    "teilnahmenummern": [
+        {
+          "identifier": "TEILNAHMENUMMER_PRIVAT_NICHT_ANGEMELDET"
+        }
+      ]
+  },
+  {
+    "rolle": "LEHRER",
+    "person": {
+      "uuid": "UUID_LEHRER_1",
+      "fullName": "Hans Wurst"
+    },
+    "zugangUnterlagen": "DEFAULT",
+    "teilnahmenummern": [
+      {
+        "identifier": "SCHULKUERZEL_1"
+      },
+      {
+        "identifier": "SCHULKUERZEL_2"
+      }
+    ]
+  },
+  {
+    "rolle": "LEHRER",
+    "person": {
+      "uuid": "UUID_LEHRER_2",
+      "fullName": "Olle Keule"
+    },
+    "zugangUnterlagen": "DEFAULT",
+    "teilnahmenummern": [
+      {
+        "identifier": "SCHULKUERZEL_1"
+      }
+    ]
+  },
+  {
+    "rolle": "LEHRER",
+    "person": {
+      "uuid": "UUID_LEHRER_3",
+      "fullName": "Mimi Mimimi"
+    },
+    "zugangUnterlagen": "DEFAULT",
+    "teilnahmenummern": [
+      {
+        "identifier": "SCHULKUERZEL_1"
+      }
+    ]
+  }
+]
+}

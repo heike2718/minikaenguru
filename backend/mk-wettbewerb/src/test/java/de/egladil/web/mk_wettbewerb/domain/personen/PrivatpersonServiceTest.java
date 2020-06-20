@@ -17,18 +17,18 @@ import de.egladil.web.mk_wettbewerb.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
 
 /**
- * AddPrivatpersonServiceTest
+ * PrivatpersonServiceTest
  */
-public class AddPrivatpersonServiceTest extends AbstractDomainServiceTest {
+public class PrivatpersonServiceTest extends AbstractDomainServiceTest {
 
-	private AddPrivatpersonService service;
+	private PrivatpersonService service;
 
 	@BeforeEach
 	@Override
 	protected void setUp() {
 
 		super.setUp();
-		this.service = AddPrivatpersonService.createForTest(getVeranstalterRepository());
+		this.service = PrivatpersonService.createForTest(getVeranstalterRepository());
 	}
 
 	@Test
@@ -36,13 +36,13 @@ public class AddPrivatpersonServiceTest extends AbstractDomainServiceTest {
 
 		// Arrange
 		CreateOrUpdatePrivatpersonCommand command = CreateOrUpdatePrivatpersonCommand.create(UUID_PRIVAT, "Herta Grütze");
-		int anzahlVorher = getCountPrivatpersonAdded();
+		int anzahlVorher = getVeranstalterRepository().getCountPrivatpersonAdded();
 
 		// Act
 		service.addPrivatperson(command);
 
 		// Assert
-		int anzahlNachher = getCountPrivatpersonAdded();
+		int anzahlNachher = getVeranstalterRepository().getCountPrivatpersonAdded();
 		assertEquals(anzahlVorher, anzahlNachher);
 
 	}
@@ -55,7 +55,6 @@ public class AddPrivatpersonServiceTest extends AbstractDomainServiceTest {
 		final String fullName = "Herta Kirsch-Grüzte";
 		CreateOrUpdatePrivatpersonCommand command = CreateOrUpdatePrivatpersonCommand.create(uuid,
 			fullName);
-		int anzahlExcpected = getCountPrivatpersonAdded() + 1;
 
 		Identifier identifier = new Identifier(uuid);
 		Optional<Veranstalter> optVeranstalter = getVeranstalterRepository().ofId(identifier);
@@ -65,8 +64,8 @@ public class AddPrivatpersonServiceTest extends AbstractDomainServiceTest {
 		service.addPrivatperson(command);
 
 		// Assert
-		int anzahlNachher = getCountPrivatpersonAdded();
-		assertEquals(anzahlExcpected, anzahlNachher);
+		int anzahlNachher = getVeranstalterRepository().getCountPrivatpersonAdded();
+		assertEquals(1, anzahlNachher);
 
 		optVeranstalter = getVeranstalterRepository().ofId(identifier);
 		assertTrue(optVeranstalter.isPresent());

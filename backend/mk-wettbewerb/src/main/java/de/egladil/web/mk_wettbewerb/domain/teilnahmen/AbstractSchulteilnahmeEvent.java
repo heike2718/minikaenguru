@@ -2,13 +2,13 @@
 // Project: mk-wettbewerb
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.wettbewerb;
+package de.egladil.web.mk_wettbewerb.domain.teilnahmen;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import de.egladil.web.mk_gateway.domain.semantik.DomainEvent;
+import de.egladil.web.mk_wettbewerb.domain.semantik.DomainEvent;
 
 /**
  * AbstractSchulteilnahmeEvent

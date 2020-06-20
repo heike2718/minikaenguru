@@ -17,11 +17,11 @@ import de.egladil.web.mk_wettbewerb.domain.Identifier;
 import de.egladil.web.mk_wettbewerb.domain.semantik.DomainService;
 
 /**
- * AddLehrerService
+ * LehrerService
  */
 @RequestScoped
 @DomainService
-public class AddLehrerService {
+public class LehrerService {
 
 	@Inject
 	VeranstalterRepository veranstalterRepository;
@@ -33,9 +33,9 @@ public class AddLehrerService {
 
 	private LehrerRegisteredForSchule event;
 
-	public static AddLehrerService createServiceForTest(final VeranstalterRepository lehrerRepository) {
+	public static LehrerService createServiceForTest(final VeranstalterRepository lehrerRepository) {
 
-		AddLehrerService result = new AddLehrerService();
+		LehrerService result = new LehrerService();
 		result.veranstalterRepository = lehrerRepository;
 		result.test = true;
 		return result;

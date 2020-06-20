@@ -18,7 +18,9 @@ import javax.ws.rs.core.Response;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_wettbewerb.MkvServerApp;
+import de.egladil.web.mk_wettbewerb.domain.apimodel.PrivatteilnahmeAPIModel;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.AktuelleTeilnahmeService;
+import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Privatteilnahme;
 
 /**
  * TeilnahmenResource
@@ -37,11 +39,12 @@ public class TeilnahmenResource {
 	public Response privatpersonZumWettbewerbAnmelden(@HeaderParam(
 		value = MkvServerApp.UUID_HEADER_NAME) final String principalName) {
 
-		this.aktuelleTeilnahmeService.meldePrivatpersonZumAktuellenWettbewerbAn(principalName);
+		Privatteilnahme teilnahme = this.aktuelleTeilnahmeService.privatpersonAnmelden(principalName);
 
 		return Response
-			.ok(ResponsePayload
-				.messageOnly(MessagePayload.info(applicationMessages.getString("teilnahmenResource.anmelden.privat.success"))))
+			.ok(new ResponsePayload(
+				MessagePayload.info(applicationMessages.getString("teilnahmenResource.anmelden.privat.success")),
+				PrivatteilnahmeAPIModel.create(teilnahme)))
 			.build();
 	}
 

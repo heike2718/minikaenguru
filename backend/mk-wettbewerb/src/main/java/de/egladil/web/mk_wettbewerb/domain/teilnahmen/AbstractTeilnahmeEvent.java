@@ -2,7 +2,7 @@
 // Project: mk-wettbewerb
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.wettbewerb;
+package de.egladil.web.mk_wettbewerb.domain.teilnahmen;
 
 import java.time.LocalDateTime;
 
@@ -12,14 +12,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
-import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
-import de.egladil.web.mk_gateway.domain.semantik.DomainEvent;
+import de.egladil.web.mk_wettbewerb.domain.event.WettbewerbDomainEvent;
+import de.egladil.web.mk_wettbewerb.domain.semantik.DomainEvent;
 
 /**
  * AbstractTeilnahmeEvent
  */
 @DomainEvent
-public abstract class AbstractTeilnahmeEvent implements MkGatewayDomainEvent {
+public abstract class AbstractTeilnahmeEvent implements WettbewerbDomainEvent {
 
 	@JsonIgnore
 	private final LocalDateTime occouredOn;

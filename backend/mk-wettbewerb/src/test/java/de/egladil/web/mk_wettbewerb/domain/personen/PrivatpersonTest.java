@@ -95,7 +95,7 @@ public class PrivatpersonTest {
 		assertEquals(person, privatperson.person());
 		assertEquals("bla,blubb", privatperson.persistierbareTeilnahmenummern());
 		assertEquals(2, privatperson.teilnahmeIdentifier().size());
-		assertEquals("Grtq Jiesrtzq (PRIVAT)", privatperson.toString());
+		assertEquals("asuidgquoö - Grtq Jiesrtzq (PRIVAT)", privatperson.toString());
 
 	}
 

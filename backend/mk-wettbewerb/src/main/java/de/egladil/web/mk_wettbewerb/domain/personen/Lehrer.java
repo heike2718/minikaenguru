@@ -60,6 +60,6 @@ public class Lehrer extends Veranstalter {
 	@Override
 	public String toString() {
 
-		return fullName() + " (LEHRER)";
+		return uuid() + " - " + fullName() + " (LEHRER)";
 	}
 }

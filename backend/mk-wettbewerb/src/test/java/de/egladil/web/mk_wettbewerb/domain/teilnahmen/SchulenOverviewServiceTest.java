@@ -34,9 +34,9 @@ public class SchulenOverviewServiceTest extends AbstractDomainServiceTest {
 	protected void setUp() {
 
 		super.setUp();
-		WettbewerbService wettbewerbService = WettbewerbService.createForTest(getWettbewerbRepository());
+		WettbewerbService wettbewerbService = WettbewerbService.createForTest(getMockitoBasedWettbewerbRepository());
 		AktuelleTeilnahmeService aktuelleTeilnahmeService = AktuelleTeilnahmeService.createForTest(getTeilnahmenRepository(),
-			wettbewerbService);
+			wettbewerbService, getVeranstalterRepository());
 
 		service = SchulenOverviewService.createForTest(getVeranstalterRepository(), aktuelleTeilnahmeService);
 	}

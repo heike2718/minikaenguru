@@ -15,18 +15,18 @@ import de.egladil.web.mk_wettbewerb.domain.Identifier;
 import de.egladil.web.mk_wettbewerb.domain.semantik.DomainService;
 
 /**
- * AddPrivatpersonService
+ * PrivatpersonService
  */
 @RequestScoped
 @DomainService
-public class AddPrivatpersonService {
+public class PrivatpersonService {
 
 	@Inject
 	VeranstalterRepository repository;
 
-	public static AddPrivatpersonService createForTest(final VeranstalterRepository veranstalterRepository) {
+	public static PrivatpersonService createForTest(final VeranstalterRepository veranstalterRepository) {
 
-		AddPrivatpersonService result = new AddPrivatpersonService();
+		PrivatpersonService result = new PrivatpersonService();
 		result.repository = veranstalterRepository;
 		return result;
 	}

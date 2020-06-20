@@ -2,16 +2,15 @@
 // Project: mk-wettbewerb
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.wettbewerb;
+package de.egladil.web.mk_wettbewerb.domain.teilnahmen;
 
-import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
-import de.egladil.web.mk_gateway.domain.semantik.DomainEvent;
+import de.egladil.web.mk_wettbewerb.domain.semantik.DomainEvent;
 
 /**
  * SchulteilnahmeCreated
  */
 @DomainEvent
-public class SchulteilnahmeCreated extends AbstractSchulteilnahmeEvent implements MkGatewayDomainEvent {
+public class SchulteilnahmeCreated extends AbstractSchulteilnahmeEvent {
 
 	public SchulteilnahmeCreated(final Integer wettbewerbsjahr, final String teilnahmenummer, final String schulname, final String createdBy) {
 
@@ -21,7 +20,7 @@ public class SchulteilnahmeCreated extends AbstractSchulteilnahmeEvent implement
 	@Override
 	public String typeName() {
 
-		return SchulteilnahmeCreated.class.getSimpleName();
+		return TYPE_SCHULTEILNAHME_CREATED;
 	}
 
 }

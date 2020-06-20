@@ -43,9 +43,6 @@ public class DomainEventHandler {
 		} catch (JsonProcessingException e) {
 
 			throw new MkWettbewerbRuntimeException("konnte event nicht serialisieren: " + e.getMessage(), e);
-
 		}
-
 	}
-
 }

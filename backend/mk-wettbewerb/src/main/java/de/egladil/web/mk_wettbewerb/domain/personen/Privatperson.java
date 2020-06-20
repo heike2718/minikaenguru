@@ -60,6 +60,6 @@ public class Privatperson extends Veranstalter {
 	@Override
 	public String toString() {
 
-		return fullName() + " (PRIVAT)";
+		return uuid() + " - " + fullName() + " (PRIVAT)";
 	}
 }

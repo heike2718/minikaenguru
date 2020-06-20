@@ -140,5 +140,4 @@ public abstract class Veranstalter {
 		Veranstalter other = (Veranstalter) obj;
 		return Objects.equals(person, other.person);
 	}
-
 }
