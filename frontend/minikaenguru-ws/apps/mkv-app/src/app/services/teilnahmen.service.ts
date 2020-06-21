@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
 import { ResponsePayload } from '@minikaenguru-ws/common-messages';
-import { Wettbewerb } from '../teilnahmen/teilnahmen.model';
+import { Wettbewerb } from '../wettbewerb/wettbewerb.model';
 
 @Injectable({
 	providedIn: 'root'
@@ -15,7 +15,7 @@ export class TeilnahmenService {
 	constructor(private http: HttpClient, private logger: LogService) { }
 
 
-	getAktuellenWettbewerb(): Observable<Wettbewerb> {
+	public getAktuellenWettbewerb(): Observable<Wettbewerb> {
 
 
 		const url = environment.apiUrl + '/wettbewerb/aktueller';
@@ -28,16 +28,4 @@ export class TeilnahmenService {
 		);
 
 	}
-
-	getZugangsstatusUnterlagen(): Observable<boolean> {
-
-		// TODO andere URL
-		const url = environment.apiUrl + '/wettbewerb/veranstalter/zugangsstatus';
-
-		return this.http.get(url).pipe(
-			map(body => body as ResponsePayload),
-			map(payload => payload.data)
-		);
-	}
-
 }

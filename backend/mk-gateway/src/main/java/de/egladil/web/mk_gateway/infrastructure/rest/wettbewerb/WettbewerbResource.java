@@ -93,6 +93,14 @@ public class WettbewerbResource {
 		return mkWettbewerbResourceAdapter.meldePrivatmenschZumAktuellenWettbewerbAn(principal.getName());
 	}
 
+	public Response getAktuelleTeilnahmePrivat() {
+
+		Principal principal = securityContext.getUserPrincipal();
+
+		return null;
+
+	}
+
 	@POST
 	@Path("/teilnahmen/schulen/{schulkuerzel}")
 	public Response meldeSchuleZumAktuellenWettbewerbAn(@PathParam(value = "schulkuerzel") final String schulkuerzel) {
@@ -114,6 +122,26 @@ public class WettbewerbResource {
 	@GET
 	@Path("/veranstalter/zugangsstatus")
 	public Response getStatusZugangUnterlagen() {
+
+		Principal principal = securityContext.getUserPrincipal();
+
+		return mkWettbewerbResourceAdapter.getStatusZugangUnterlagen(principal.getName());
+
+	}
+
+	@GET
+	@Path("/veranstalter/lehrer")
+	public Response getLehrer() {
+
+		Principal principal = securityContext.getUserPrincipal();
+
+		return mkWettbewerbResourceAdapter.getStatusZugangUnterlagen(principal.getName());
+
+	}
+
+	@GET
+	@Path("/veranstalter/teilnahmeinfos")
+	public Response getInitialTeilnahmeinfos() {
 
 		Principal principal = securityContext.getUserPrincipal();
 

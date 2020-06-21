@@ -6,7 +6,6 @@ import { map } from 'rxjs/operators';
 import { ResponsePayload, MessageService } from '@minikaenguru-ws/common-messages';
 import { RouterOutlet } from '@angular/router';
 import { slideInAnimation } from './animations';
-import { TeilnahmenFacade } from './teilnahmen/teilnahmen.facade';
 
 @Component({
 	selector: 'mkv-root',

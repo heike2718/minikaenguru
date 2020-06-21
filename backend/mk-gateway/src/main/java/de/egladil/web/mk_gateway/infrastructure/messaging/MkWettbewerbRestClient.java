@@ -53,6 +53,12 @@ public interface MkWettbewerbRestClient {
 	@Path("/wettbewerb")
 	Response getAktuellenWettbewerb() throws MkWettbewerbRestException;
 
+	// http://192.168.10.176:9550/mk-wettbewerb/veranstalter/lehrer
+	@GET
+	@Path("/veranstalter/lehrer")
+	Response getLehrer(@HeaderParam(
+		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName) throws MkWettbewerbRestException;
+
 	// http://192.168.10.176:9550/mk-wettbewerb/unterlagen/zugangsstatus
 	@GET
 	@Path("/veranstalter/unterlagen/zugangsstatus")

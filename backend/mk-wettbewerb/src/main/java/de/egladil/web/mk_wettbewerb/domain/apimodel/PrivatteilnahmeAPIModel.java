@@ -4,9 +4,12 @@
 // =====================================================
 package de.egladil.web.mk_wettbewerb.domain.apimodel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Privatteilnahme;
+import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Teilnahmeart;
 
 /**
  * PrivatteilnahmeAPIModel
@@ -19,13 +22,10 @@ public class PrivatteilnahmeAPIModel {
 	@JsonProperty
 	private String teilnahmenummer;
 
-	public static PrivatteilnahmeAPIModel create(final Privatteilnahme teilnahme) {
+	@JsonProperty
+	private Teilnahmeart teilnahmeart;
 
-		PrivatteilnahmeAPIModel result = new PrivatteilnahmeAPIModel();
-		result.jahr = teilnahme.wettbewerbID().jahr().intValue();
-		result.teilnahmenummer = teilnahme.teilnahmenummer().identifier();
-
-		return result;
-	}
+	@JsonProperty
+	private List<KindAPIModel> kinder = new ArrayList<>();
 
 }
