@@ -14,7 +14,7 @@ export class LehrerDashboardResolver implements Resolve<any> {
 
 	constructor(private store: Store<AppState>, private lehrerFacade: LehrerFacade) { }
 
-	resolve(route: ActivatedRouteSnapshot,
+	resolve(_route: ActivatedRouteSnapshot,
 		_state: RouterStateSnapshot): Observable<any> {
 
 		return this.store.pipe(

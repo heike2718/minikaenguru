@@ -140,12 +140,12 @@ public class WettbewerbResource {
 	}
 
 	@GET
-	@Path("/veranstalter/teilnahmeinfos")
-	public Response getInitialTeilnahmeinfos() {
+	@Path("/veranstalter/privat")
+	public Response getPrivatveranstalter() {
 
 		Principal principal = securityContext.getUserPrincipal();
 
-		return mkWettbewerbResourceAdapter.getStatusZugangUnterlagen(principal.getName());
+		return mkWettbewerbResourceAdapter.getPrivatveranstalter(principal.getName());
 
 	}
 }

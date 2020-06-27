@@ -91,6 +91,13 @@ public class RestrictedUrlPathInMemoryRepository implements RestrictedUrlPathRep
 				Arrays.asList(new Rolle[] { Rolle.LEHRER, Rolle.PRIVAT }));
 			paths.add(restrictedPath);
 		}
+
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/veranstalter/privat",
+				Arrays.asList(new Rolle[] { Rolle.PRIVAT }));
+			paths.add(restrictedPath);
+		}
 	}
 
 	private void addPathInfosForMkWettbewerbAdmin() {

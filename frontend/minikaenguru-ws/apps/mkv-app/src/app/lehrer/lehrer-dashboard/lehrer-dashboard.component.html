@@ -3,10 +3,13 @@
 		<h2>Übersicht</h2>
 	</div>
 
-	<div *ngIf="(user$ | async) as user">
-		<div *ngIf="aktuellerWettbewerb$ | async as wettbewerb" class="row">
-			<div *ngIf="user.rolle === 'LEHRER'" class="col-md-3 col-sm-12 ml-2 mt-2">
-				<div class="card clickable ml-2" (click)="gotoSchulen()">
+	<div *ngIf="aktuellerWettbewerb$ | async as wettbewerb">
+
+
+		<div class="row m-2">
+
+			<div class="col-md-6 col-sm-12 mt-1">
+				<div class="card clickable" (click)="gotoSchulen()">
 					<div class="card-body">
 						<div class="card-title">Meine Schulen</div>
 						<div class="mb-2 text-muted">Schulen verwalten</div>
@@ -14,7 +17,7 @@
 					</div>
 				</div>
 			</div>
-			<div *ngIf="hatZugangZuUnterlagen$ | async" class="col-md-3 col-sm-12 ml-2 mt-2">
+			<div *ngIf="hatZugangZuUnterlagen$ | async" class="col-md-6 col-sm-12 mt-1">
 				<div class="card clickable" (click)="gotoDownloadUnterlagen()">
 					<div class="card-body">
 						<div class="card-title">Unterlagen {{wettbewerb.jahr}}</div>
@@ -22,15 +25,11 @@
 					</div>
 				</div>
 			</div>
-			<div *ngIf="user.rolle === 'LEHRER'" class="col-md-3 col-sm-12 ml-2 mt-2">
-				<div class="card clickable ml-2" (click)="gotoDSGVO()">
-					<div class="card-body">
-						<div class="card-title">DSGVO</div>
-						<div class="mb-2 text-muted">Vertrag zur Auftragsdatenverarbeitung</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-3 col-sm-12 ml-2 mt-2">
+		</div>
+
+		<div class="row m-2">
+
+			<div class="col-md-6 col-sm-12 mt-1">
 				<div class="card clickable" (click)="gotoProfil()">
 					<div class="card-body">
 						<div class="card-title">Mein Profil</div>
@@ -39,12 +38,15 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-3 col-sm-12 ml-2 mt-2">
+
+			<div class="col-md-6 col-sm-12 mt-1">
 				<div class="card clickable" (click)="gotoInfos()">
 					<div class="card-body">
 						<div class="card-title">Infos</div>
 						<div class="mb-2 text-muted">Informationen über den Wettbewerb</div>
-						<div *ngIf="!(hatZugangZuUnterlagen$ | async)" class="mb-2 text-muted">Warum sehe ich die Unterlagen nicht?</div>
+						<div *ngIf="!(hatZugangZuUnterlagen$ | async)" class="mb-2 text-muted">Warum sehe ich die
+							Unterlagen
+							nicht?</div>
 					</div>
 				</div>
 			</div>

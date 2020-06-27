@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '@minikaenguru-ws/common-auth';
 import { Router } from '@angular/router';
 import { LehrerFacade } from '../lehrer.facade';
 import { WettbewerbFacade } from '../../wettbewerb/wettbewerb.facade';
@@ -11,13 +10,11 @@ import { WettbewerbFacade } from '../../wettbewerb/wettbewerb.facade';
 })
 export class LehrerDashboardComponent implements OnInit {
 
-	user$ = this.authService.user$;
 	aktuellerWettbewerb$ = this.wettbewerbFacade.aktuellerWettbewerb$;
 	hatZugangZuUnterlagen$ = this.lehrerFacade.hatZugangZuUnterlagen$;
 
 
-	constructor(private authService: AuthService,
-		private lehrerFacade: LehrerFacade,
+	constructor(private lehrerFacade: LehrerFacade,
 		private wettbewerbFacade: WettbewerbFacade,
 		private router: Router) { }
 

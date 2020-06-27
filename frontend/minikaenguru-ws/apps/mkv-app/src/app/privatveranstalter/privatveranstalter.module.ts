@@ -4,6 +4,7 @@ import { PrivatDashboardComponent } from './privat-dashboard/privat-dashboard.co
 import { StoreModule } from '@ngrx/store';
 import * as fromPrivat from './+state/privatveranstalter.reducer';
 import { PrivatveranstalterRoutingModule } from './privatveranstalter-routing.module';
+import { PrivatDashboardResolver } from './privat-dashboard/privat-dashboard.resolver';
 
 
 
@@ -20,7 +21,7 @@ import { PrivatveranstalterRoutingModule } from './privatveranstalter-routing.mo
 		PrivatDashboardComponent
 	],
 	providers: [
-
+		PrivatDashboardResolver
 	]
 })
 export class PrivatveranstalterModule { }

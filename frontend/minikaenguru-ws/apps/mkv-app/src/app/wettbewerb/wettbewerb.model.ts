@@ -41,9 +41,11 @@ export interface AbstractTeilnahme {
 	readonly jahr: number;
 	readonly teilnahmenummer: string;
 	readonly teilnahmeart: Teilnahmeart;
+	readonly anzahlKinder: number;
 }
 
 export interface Privatteilnahme extends AbstractTeilnahme {
+	readonly kinderGeladen: boolean;
 	readonly kinder: Kind[];
 }
 

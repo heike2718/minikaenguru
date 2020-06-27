@@ -6,6 +6,7 @@
 		</div>
 	</div>
 
+	<h2>Schuldashboard</h2>
 
 	<div *ngIf="schule$ | async as schule">
 		<div *ngIf="schuleDetails$ | async as details">
@@ -31,9 +32,7 @@
 					<div *ngIf="schule.aktuellAngemeldet" class="col-md-4 col-sm-12">
 						<div class="card clickable ml-2 mt-4">
 							<div class="card-body">
-								<div class="card-title">Auswertung <span
-										*ngIf="$aktuellerWettbewerb$ | async as wettbewerb">
-										{{wettbewerb.jahr}}</span></div>
+								<div class="card-title">Auswertung {{wettbewerb.jahr}}</div>
 								<div class="mb-2 text-muted">Kinder erfassen und Urkunden generieren</div>
 							</div>
 						</div>
@@ -65,7 +64,7 @@
 					<div class="col-md-4 col-sm-12">
 						<div class="card clickable ml-2 mt-4">
 							<div class="card-body">
-								<div class="card-title">Teilnahmen <span
+								<div class="card-title">Vergangene Teilnahmen <span
 										class="ml-1 badge badge-primary">{{details.anzahlTeilnahmen}}</span></div>
 								<div class="mb-2 text-muted">Schulstatistiken</div>
 							</div>

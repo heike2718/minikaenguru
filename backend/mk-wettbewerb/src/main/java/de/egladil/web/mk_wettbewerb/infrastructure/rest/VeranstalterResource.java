@@ -18,10 +18,11 @@ import javax.ws.rs.core.Response;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_wettbewerb.MkvServerApp;
-import de.egladil.web.mk_wettbewerb.domain.personen.LehrerService;
-import de.egladil.web.mk_wettbewerb.domain.personen.PrivatpersonService;
+import de.egladil.web.mk_wettbewerb.domain.apimodel.PrivatveranstalterAPIModel;
 import de.egladil.web.mk_wettbewerb.domain.personen.CreateOrUpdateLehrerCommand;
 import de.egladil.web.mk_wettbewerb.domain.personen.CreateOrUpdatePrivatpersonCommand;
+import de.egladil.web.mk_wettbewerb.domain.personen.LehrerService;
+import de.egladil.web.mk_wettbewerb.domain.personen.PrivatpersonService;
 import de.egladil.web.mk_wettbewerb.domain.personen.ZugangUnterlagenService;
 
 /**
@@ -71,6 +72,17 @@ public class VeranstalterResource {
 	public Response updatePrivatperson(final CreateOrUpdatePrivatpersonCommand lehrerData) {
 
 		return Response.serverError().entity(ResponsePayload.messageOnly(MessagePayload.error("noch nicht implementiert"))).build();
+	}
+
+	@GET
+	@Path("/privat")
+	public Response getPrivatveranstalter(@HeaderParam(
+		value = MkvServerApp.UUID_HEADER_NAME) final String principalName) {
+
+		PrivatveranstalterAPIModel privatveranstalter = privatpersonService.findPrivatperson(principalName);
+		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), privatveranstalter);
+
+		return Response.ok(responsePayload).build();
 	}
 
 	@GET

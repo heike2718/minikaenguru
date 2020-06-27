@@ -33,7 +33,7 @@ export class LehrerFacade {
 
 		this.veranstalterService.getZugangsstatusUnterlagen().subscribe(
 			zugang => {
-				this.appStore.dispatch(LehrerActions.zugangsstatusUnterlagenGeladen({ hatZugang: zugang }))
+				this.appStore.dispatch(LehrerActions.zugangsstatusUnterlagenGeladen({ hatZugang: zugang }));
 			},
 			(error => {
 				this.errorHandler.handleError(error);

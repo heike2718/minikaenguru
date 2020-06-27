@@ -9,35 +9,35 @@ export const zugangsstatusUnterlagenGeladen = createAction(
 );
 
 export const schulenLoaded = createAction(
-	'[SchulenFacade] loadSchulen',
+	'[LehrerFacade] loadSchulen',
 	props<{ schulen: Schule[] }>()
 );
 
 export const startLoading = createAction(
-	'[SchulenFacade] before request'
+	'[LehrerFacade] before request'
 );
 
 export const finishedWithError = createAction(
-	'[SchulenFacade] on error'
+	'[LehrerFacade] on error'
 );
 
 export const schuleDetailsLoaded = createAction(
-	'[SchulenFacade] loadDetails subscription',
+	'[LehrerFacade] loadDetails subscription',
 	props<{ schule: Schule }>()
 );
 
 export const restoreDetailsFromCache = createAction(
-	'[SchulenFacade] restoreDetailsFromCache',
+	'[LehrerFacade] restoreDetailsFromCache',
 	props<{ kuerzel: string }>()
 )
 
 export const selectSchule = createAction(
-	'[SchulenFacade] selectSchule',
+	'[LehrerFacade] selectSchule',
 	props<{ schule: Schule }>()
 );
 
 export const deselectSchule = createAction(
-	'[SchulenFacade] resetSelection'
+	'[LehrerFacade] resetSelection'
 );
 
 export const resetLehrer = createAction(
