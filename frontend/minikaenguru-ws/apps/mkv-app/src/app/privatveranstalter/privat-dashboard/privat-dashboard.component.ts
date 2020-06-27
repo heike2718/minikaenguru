@@ -14,9 +14,7 @@ export class PrivatDashboardComponent implements OnInit {
 	devMode = !environment.production;
 
 	aktuellerWettbewerb$ = this.wettbewerbFacade.aktuellerWettbewerb$;
-	hatZugangZuUnterlagen$ = this.veranstalterFacade.hatZugangZuUnterlagen$;
-	aktuelleangemeldet$ = this.veranstalterFacade.aktuelleangemeldet$;
-	aktuelleTeilnahmeGeladen$ = this.veranstalterFacade.aktuelleTeilnahmeGeladen$;
+	veranstalter$ = this.veranstalterFacade.veranstalter$;
 	loading$ = this.veranstalterFacade.loading$;
 
 	constructor(private veranstalterFacade: PrivatveranstalterFacade,
@@ -45,6 +43,10 @@ export class PrivatDashboardComponent implements OnInit {
 
 	gotoInfos(): void {
 		this.router.navigateByUrl('/info');
+	}
+
+	anmelden(): void {
+		this.veranstalterFacade.privatveranstalterAnmelden();
 	}
 
 }

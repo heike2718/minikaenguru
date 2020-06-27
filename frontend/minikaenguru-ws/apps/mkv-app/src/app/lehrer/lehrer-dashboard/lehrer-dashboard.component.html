@@ -5,6 +5,9 @@
 
 	<div *ngIf="aktuellerWettbewerb$ | async as wettbewerb">
 
+		<h3>Beginn Anmeldezeitraum für {{wettbewerb.jahr}}:
+			{{wettbewerb.wettbewerbsbeginn}}</h3>
+
 
 		<div class="row m-2">
 

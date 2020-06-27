@@ -92,6 +92,10 @@ footer {
     font-size: 1.2rem;
   }
 
+  h3 {
+	  font-size: 1.1rem;
+  }
+
   .clickabe-stacked {
 	width: 95%;
   }

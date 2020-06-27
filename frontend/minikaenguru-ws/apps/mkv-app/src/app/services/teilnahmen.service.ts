@@ -28,4 +28,13 @@ export class TeilnahmenService {
 		);
 
 	}
+
+	public privatveranstalterAnmelden(): Observable<ResponsePayload> {
+
+		const url = environment.apiUrl + '/wettbewerb/teilnahmen/privat';
+
+		return this.http.post(url, null).pipe(
+			map(body => body as ResponsePayload)
+		);
+	}
 }

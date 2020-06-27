@@ -16,6 +16,11 @@ export const privatveranstalterGeladen = createAction(
 	props<{ veranstalter: Privatveranstalter }>()
 );
 
+export const privatveranstalterAngemeldet = createAction(
+	'[PrivatveranstalterFacade] privatveranstalterAnmelden',
+	props<{ teilnahme: Privatteilnahme }>()
+)
+
 export const resetPrivatveranstalter = createAction(
 	'[PrivatveranstalterFacade] resetState'
 );

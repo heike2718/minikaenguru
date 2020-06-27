@@ -93,14 +93,6 @@ public class WettbewerbResource {
 		return mkWettbewerbResourceAdapter.meldePrivatmenschZumAktuellenWettbewerbAn(principal.getName());
 	}
 
-	public Response getAktuelleTeilnahmePrivat() {
-
-		Principal principal = securityContext.getUserPrincipal();
-
-		return null;
-
-	}
-
 	@POST
 	@Path("/teilnahmen/schulen/{schulkuerzel}")
 	public Response meldeSchuleZumAktuellenWettbewerbAn(@PathParam(value = "schulkuerzel") final String schulkuerzel) {

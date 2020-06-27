@@ -18,6 +18,9 @@ public class PrivatveranstalterAPIModel {
 	private boolean hatZugangZuUnterlangen;
 
 	@JsonProperty
+	private int anzahlVergangeneTeilnahmen = 0;
+
+	@JsonProperty
 	private boolean aktuellAngemeldet;
 
 	@JsonProperty
@@ -38,6 +41,12 @@ public class PrivatveranstalterAPIModel {
 
 	PrivatveranstalterAPIModel() {
 
+	}
+
+	public PrivatveranstalterAPIModel withAnzahlVergangeneTeilnahmen(final int anzahlVergangeneTeilnahmen) {
+
+		this.anzahlVergangeneTeilnahmen = anzahlVergangeneTeilnahmen;
+		return this;
 	}
 
 	public PrivatveranstalterAPIModel withTeilnahme(final PrivatteilnahmeAPIModel aktuelleTeilnahme) {

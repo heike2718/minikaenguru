@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 import { ResponsePayload } from '@minikaenguru-ws/common-messages';
 import { map } from 'rxjs/operators';
 import { Privatveranstalter } from '../privatveranstalter/privatveranstalter.model';
+import { Privatteilnahme } from '../wettbewerb/wettbewerb.model';
 
 
 @Injectable({

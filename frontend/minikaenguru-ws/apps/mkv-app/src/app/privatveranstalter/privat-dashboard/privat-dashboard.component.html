@@ -6,66 +6,73 @@
 		</div>
 	</div>
 
-	<h2>Übersicht</h2>
 
 	<div *ngIf="aktuellerWettbewerb$ | async as wettbewerb">
+		<div *ngIf="veranstalter$ | async as veranstalter">
 
-		<div class="row ml-2">
-			<div *ngIf="aktuelleangemeldet$ | async" class="col-md-3 col-sm-12">
-				<div *ngIf="aktuelleTeilnahmeGeladen$ | async">
-					<div class="card clickable" (click)="gotoAuswertung()">
+			<h2>Übersicht <span *ngIf="veranstalter.aktuellAngemeldet" class="ml-1 badge badge-success">angemeldet
+					für {{wettbewerb.jahr}}</span></h2>
+
+			<h3 *ngIf="wettbewerb.status === 'ERFASST'">Beginn Anmeldezeitraum für {{wettbewerb.jahr}}: {{wettbewerb.wettbewerbsbeginn}}</h3>
+
+			<div class="row mt-4 ml-2">
+				<div *ngIf="veranstalter.aktuellAngemeldet" class="col-md-3 col-sm-12">
+					<div *ngIf="veranstalter.aktuelleTeilnahmeGeladen">
+						<div class="card clickable" (click)="gotoAuswertung()">
+							<div class="card-body">
+								<div class="card-title">Auswertung {{wettbewerb.jahr}}</div>
+								<div class="mb-2 text-muted">Kind(er) erfassen und Urkunde(n) generieren</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div *ngIf="!veranstalter.aktuellAngemeldet" class="col-md-3 col-sm-12">
+					<div *ngIf="wettbewerb.status !== 'ERFASST' && wettbewerb.status !== 'BEENDET'">
+						<div class="card clickable" (click)="anmelden()">
+							<div class="card-body">
+								<div class="card-title">Anmelden</div>
+								<div class="mb-2 text-muted"> für {{wettbewerb.jahr}}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div *ngIf="veranstalter.hatZugangZuUnterlangen" class="col-md-3 col-sm-12">
+					<div class="card clickable" (click)="gotoDownloadUnterlagen()">
 						<div class="card-body">
-							<div class="card-title">Auswertung {{wettbewerb.jahr}}</div>
-							<div class="mb-2 text-muted">Kind(er) erfassen und Urkunde(n) generieren</div>
+							<div class="card-title">Unterlagen {{wettbewerb.jahr}}</div>
+							<div class="mb-2 text-muted">Aufgaben herunterladen</div>
+						</div>
+					</div>
+				</div>
+				<div *ngIf="veranstalter.anzahlVergangeneTeilnahmen > 0" class="col-md-3 col-sm-12">
+					<div class="card clickable" (click)="gotoTeilnahmen()">
+						<div class="card-body">
+							<div class="card-title">Vergangene Teilnahmen <span
+									class="ml-1 badge badge-primary">{{veranstalter.anzahlVergangeneTeilnahmen}}</span></div>
+							<div class="mb-2 text-muted">Statistiken</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div *ngIf="!(aktuelleangemeldet$ | async)" class="col-md-3 col-sm-12">
-				<div *ngIf="wettbewerb.status !== 'ERFASST' && wettbewerb.status !== 'BEENDET'">
-					<div class="card clickable">
+
+			<div class="row ml-2 mt-2">
+				<div class="col-md-3 col-sm-12">
+					<div class="card clickable" (click)="gotoProfil()">
 						<div class="card-body">
-							<div class="card-title">Anmelden</div>
-							<div class="mb-2 text-muted"> für {{wettbewerb.jahr}}</div>
+							<div class="card-title">Mein Profil</div>
+							<div class="mb-2 text-muted">Name, Mailadresse, Passwort ändern</div>
+							<div class="mb-2 text-danger">Achtung: hierfür werden Sie ausgeloggt.</div>
 						</div>
 					</div>
 				</div>
-			</div>
-			<div *ngIf="hatZugangZuUnterlagen$ | async" class="col-md-3 col-sm-12">
-				<div class="card clickable" (click)="gotoDownloadUnterlagen()">
-					<div class="card-body">
-						<div class="card-title">Unterlagen {{wettbewerb.jahr}}</div>
-						<div class="mb-2 text-muted">Aufgaben herunterladen</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-3 col-sm-12">
-				<div class="card clickable" (click)="gotoTeilnahmen()">
-					<div class="card-body">
-						<div class="card-title">Vergangene Teilnahmen</div>
-						<div class="mb-2 text-muted">Statistiken</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="row ml-2 mt-2">
-			<div class="col-md-3 col-sm-12">
-				<div class="card clickable" (click)="gotoProfil()">
-					<div class="card-body">
-						<div class="card-title">Mein Profil</div>
-						<div class="mb-2 text-muted">Name, Mailadresse, Passwort ändern</div>
-						<div class="mb-2 text-danger">Achtung: hierfür werden Sie ausgeloggt.</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-3 col-sm-12">
-				<div class="card clickable" (click)="gotoInfos()">
-					<div class="card-body">
-						<div class="card-title">Infos</div>
-						<div class="mb-2 text-muted">Informationen über den Wettbewerb</div>
-						<div *ngIf="!(hatZugangZuUnterlagen$ | async)" class="mb-2 text-muted">Warum sehe ich die
-							Aufgaben nicht?</div>
+				<div class="col-md-3 col-sm-12">
+					<div class="card clickable" (click)="gotoInfos()">
+						<div class="card-body">
+							<div class="card-title">Infos</div>
+							<div class="mb-2 text-muted">Informationen über den Wettbewerb</div>
+							<div *ngIf="!veranstalter.hatZugangZuUnterlagen" class="mb-2 text-muted">Warum sehe ich die
+								Aufgaben nicht?</div>
+						</div>
 					</div>
 				</div>
 			</div>
