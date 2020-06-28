@@ -30,6 +30,10 @@ public abstract class AbstractDomainServiceTest {
 
 	protected static final String UUID_LEHRER_3 = "UUID_LEHRER_3";
 
+	protected static final String UUID_LEHRER_GESPERRT = "UUID_LEHRER_GESPERRT";
+
+	protected static final String UUID_LEHRER_ANDERE_SCHULE = "UUID_LEHRER_ANDERE_SCHULE";
+
 	protected static final String UUID_PRIVAT = "UUID_PRIVAT";
 
 	protected static final String UUID_PRIVAT_GESPERRT = "UUID_PRIVAT_GESPERRT";

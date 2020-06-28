@@ -17,6 +17,13 @@ public class SchulteilnahmeCreated extends AbstractSchulteilnahmeEvent {
 		super(wettbewerbsjahr, teilnahmenummer, createdBy, schulname);
 	}
 
+	public static SchulteilnahmeCreated create(final Schulteilnahme teilnahme) {
+
+		return new SchulteilnahmeCreated(teilnahme.wettbewerbID().jahr(), teilnahme.teilnahmenummer().identifier(),
+			teilnahme.nameSchule(), teilnahme.angemeldetDurchVeranstalterId().identifier());
+
+	}
+
 	@Override
 	public String typeName() {
 

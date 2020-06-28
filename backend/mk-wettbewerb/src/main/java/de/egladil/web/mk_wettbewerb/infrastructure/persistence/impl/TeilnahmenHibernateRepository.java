@@ -109,13 +109,12 @@ public class TeilnahmenHibernateRepository implements TeilnahmenRepository {
 	}
 
 	/**
-	 * @param teilnahme
+	 * @param  teilnahme
 	 * @return
 	 */
 	PersistenteTeilnahme mapFromTeilnahme(final Teilnahme teilnahme) {
 
 		PersistenteTeilnahme persistenteTeilnahme = new PersistenteTeilnahme();
-		persistenteTeilnahme.setImportierteUuid(teilnahme.teilnahmenummer().identifier());
 
 		if (Teilnahmeart.SCHULE == teilnahme.teilnahmeart()) {
 
@@ -124,8 +123,8 @@ public class TeilnahmenHibernateRepository implements TeilnahmenRepository {
 			persistenteTeilnahme.setAngemeldetDurch(schulteilnahme.angemeldetDurchVeranstalterId().identifier());
 		}
 		persistenteTeilnahme.setTeilnahmeart(teilnahme.teilnahmeart());
-		persistenteTeilnahme.setTeilnahmenummer(teilnahme.teilnahmenummer().identifier());
 		persistenteTeilnahme.setWettbewerbUUID(teilnahme.wettbewerbID().toString());
+		persistenteTeilnahme.setTeilnahmenummer(teilnahme.teilnahmenummer().identifier());
 		return persistenteTeilnahme;
 	}
 

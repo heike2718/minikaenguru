@@ -104,6 +104,32 @@
         "identifier": "SCHULKUERZEL_1"
       }
     ]
+  },
+  {
+    "rolle": "LEHRER",
+    "person": {
+      "uuid": "UUID_LEHRER_GESPERRT",
+      "fullName": "Gesperrter Lehrer"
+    },
+    "zugangUnterlagen": "ENTZOGEN",
+    "teilnahmenummern": [
+      {
+        "identifier": "SCHULKUERZEL_1"
+      }
+    ]
+  },
+  {
+    "rolle": "LEHRER",
+    "person": {
+      "uuid": "UUID_LEHRER_ANDERE_SCHULE",
+      "fullName": "Lehrer andere Schule"
+    },
+    "zugangUnterlagen": "DEFAULT",
+    "teilnahmenummern": [
+      {
+        "identifier": "SCHULKUERZEL_3"
+      }
+    ]
   }
 ]
 }

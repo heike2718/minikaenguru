@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -24,9 +25,9 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.apimodel.SchulanmeldungRequestPayload;
 import de.egladil.web.mk_gateway.domain.apimodel.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.session.LoggedInUser;
 import de.egladil.web.mk_gateway.domain.wettbewerb.MkWettbewerbResourceAdapter;
 import de.egladil.web.mk_gateway.domain.wettbewerb.SchulenAnmeldeinfoService;
 import de.egladil.web.mk_gateway.infrastructure.messaging.MkKatalogeRestException;
@@ -94,14 +95,13 @@ public class WettbewerbResource {
 	}
 
 	@POST
-	@Path("/teilnahmen/schulen/{schulkuerzel}")
-	public Response meldeSchuleZumAktuellenWettbewerbAn(@PathParam(value = "schulkuerzel") final String schulkuerzel) {
+	@Path("/teilnahmen/schule")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response meldeSchuleZumAktuellenWettbewerbAn(final SchulanmeldungRequestPayload payload) {
 
-		LoggedInUser loggedInUser = (LoggedInUser) securityContext.getUserPrincipal();
+		Principal principal = securityContext.getUserPrincipal();
 
-		LOG.info("Hier jetzt routen zu mk-wettbewerbe mit der uuid und der Rolle des Users {}", loggedInUser);
-
-		return Response.ok(ResponsePayload.messageOnly(MessagePayload.warn("Diese Methode ist noch nicht fertig"))).build();
+		return mkWettbewerbResourceAdapter.meldeSchuleZumAktuellenWettbewerbAn(payload, principal.getName());
 	}
 
 	@GET

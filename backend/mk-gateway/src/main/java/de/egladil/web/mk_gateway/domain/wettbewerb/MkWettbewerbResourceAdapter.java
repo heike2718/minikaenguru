@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.domain.AbstractMkResourceAdapter;
+import de.egladil.web.mk_gateway.domain.apimodel.SchulanmeldungRequestPayload;
 import de.egladil.web.mk_gateway.infrastructure.messaging.MkWettbewerbRestClient;
 import de.egladil.web.mk_gateway.infrastructure.messaging.MkWettbewerbRestException;
 
@@ -117,6 +118,19 @@ public class MkWettbewerbResourceAdapter extends AbstractMkResourceAdapter {
 		} catch (Exception e) {
 
 			return handleException(e, LOG, "[meldePrivatmenschZumAktuellenWettbewerbAn]");
+		}
+
+	}
+
+	public Response meldeSchuleZumAktuellenWettbewerbAn(final SchulanmeldungRequestPayload payload, final String uuid) {
+
+		try {
+
+			Response response = restClient.meldeSchuleZumAktuellenWettbewerbAn(payload, uuid);
+			return response;
+		} catch (Exception e) {
+
+			return handleException(e, LOG, "[meldeSchuleZumAktuellenWettbewerbAn]");
 		}
 
 	}

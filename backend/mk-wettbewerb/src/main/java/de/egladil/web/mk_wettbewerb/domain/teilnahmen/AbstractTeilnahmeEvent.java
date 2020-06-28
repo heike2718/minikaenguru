@@ -33,7 +33,7 @@ public abstract class AbstractTeilnahmeEvent implements WettbewerbDomainEvent {
 	@JsonProperty
 	private final String triggeringUser;
 
-	public AbstractTeilnahmeEvent(final Integer wettbewerbsjahr, final String teilnahmenummer, final String triggeringUser) {
+	protected AbstractTeilnahmeEvent(final Integer wettbewerbsjahr, final String teilnahmenummer, final String triggeringUser) {
 
 		if (wettbewerbsjahr == null) {
 
