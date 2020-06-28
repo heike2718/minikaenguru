@@ -1,42 +1,40 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '@minikaenguru-ws/common-auth';
-import { TeilnahmenFacade } from '../teilnahmen/teilnahmen.facade';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'mkv-dashboard',
 	templateUrl: './dashboard.component.html',
 	styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
 
 
 	user$ = this.authService.user$;
-	aktuellerWettbewerb$ = this.teilnahmenFacade.aktuellerWettbewerb$;
-	hatZugangZuUnterlagen$ = this.teilnahmenFacade.hatZugangZuUnterlagen$;
 
+	constructor(private authService: AuthService, private router: Router) { }
 
-	constructor(private authService: AuthService,
-		private teilnahmenFacade: TeilnahmenFacade,
-		private router: Router) { }
+	ngOnInit(): void {
 
-	gotoSchulen() {
-		this.router.navigateByUrl('/schulen');
-	}
+		this.user$.subscribe(
+			user => {
 
-	gotoDSGVO(): void {
-		console.log('navigate to DSGVO');
-	}
-
-	gotoDownloadUnterlagen() {
-		console.log('hier gehts zu den Unterlagen: Achtung - vorher Status abfragen, ob angemeldet und freigeschaltet!');
-	}
-
-	gotoProfil() {
-		console.log('hier gehts zum Profil');
-	}
-
-	gotoInfos(): void {
-		this.router.navigateByUrl('/info');
+				if (user) {
+					if (user.rolle) {
+						if (user.rolle === 'LEHRER') {
+							this.router.navigateByUrl('/lehrer/dashboard');
+						} else {
+							if (user.rolle === 'PRIVAT') {
+								this.router.navigateByUrl('/privat/dashboard');
+							} else {
+								this.router.navigateByUrl('');
+							}
+						}
+					}
+				} else {
+					this.router.navigateByUrl('');
+				}
+			}
+		)
 	}
 }

@@ -23,9 +23,10 @@ import { GlobalErrorHandlerService } from './infrastructure/global-error-handler
 import { EffectsModule } from '@ngrx/effects';
 import { CustomRouterStateSerializer } from './shared/utils';
 import { RegistrationModule } from './registration/registration.module';
-import { DashboardModule } from './dashboard/dashboard.module';
-import { SchulenModule } from './schulen/schulen.module';
-import { TeilnahmenModule } from './teilnahmen/teilnahmen.module';
+import { LehrerModule } from './lehrer/lehrer.module';
+import { PrivatveranstalterModule } from './privatveranstalter/privatveranstalter.module';
+import { WettbewerbModule } from './wettbewerb/wettbewerb.module';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 
 
@@ -34,7 +35,8 @@ import { TeilnahmenModule } from './teilnahmen/teilnahmen.module';
 		AppComponent,
 		NavbarComponent,
 		NotFoundComponent,
-		LandingComponent
+		LandingComponent,
+		DashboardComponent
 	],
 	imports: [
 		BrowserModule,
@@ -58,10 +60,10 @@ import { TeilnahmenModule } from './teilnahmen/teilnahmen.module';
 			storagePrefix: environment.storageKeyPrefix,
 			loginSuccessUrl: '/dashboard'
 		}),
+		WettbewerbModule,
 		RegistrationModule,
-		DashboardModule,
-		SchulenModule,
-		TeilnahmenModule,
+		LehrerModule,
+		PrivatveranstalterModule,
 		StoreModule.forRoot(reducers, {
 			metaReducers,
 			runtimeChecks: {

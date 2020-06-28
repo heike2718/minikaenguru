@@ -15,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
 import de.egladil.web.mk_wettbewerb.domain.semantik.Aggregate;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Teilnahmeart;
-import de.egladil.web.mk_wettbewerb.domain.teilnahmen.ZugangUnterlagen;
 
 /**
  * Veranstalter
@@ -141,5 +140,4 @@ public abstract class Veranstalter {
 		Veranstalter other = (Veranstalter) obj;
 		return Objects.equals(person, other.person);
 	}
-
 }

@@ -9,7 +9,6 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -39,7 +38,6 @@ import de.egladil.web.mk_gateway.infrastructure.messaging.MkWettbewerbRestExcept
 @RequestScoped
 @Path("/wettbewerb")
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 public class WettbewerbResource {
 
 	private static final Logger LOG = LoggerFactory.getLogger(WettbewerbResource.class);
@@ -87,8 +85,17 @@ public class WettbewerbResource {
 	}
 
 	@POST
-	@Path("/anmeldungen/anmeldung")
-	public Response anmelden() {
+	@Path("/teilnahmen/privat")
+	public Response meldePrivatmenschZumAktuellenWettbewerbAn() {
+
+		Principal principal = securityContext.getUserPrincipal();
+
+		return mkWettbewerbResourceAdapter.meldePrivatmenschZumAktuellenWettbewerbAn(principal.getName());
+	}
+
+	@POST
+	@Path("/teilnahmen/schulen/{schulkuerzel}")
+	public Response meldeSchuleZumAktuellenWettbewerbAn(@PathParam(value = "schulkuerzel") final String schulkuerzel) {
 
 		LoggedInUser loggedInUser = (LoggedInUser) securityContext.getUserPrincipal();
 
@@ -111,6 +118,26 @@ public class WettbewerbResource {
 		Principal principal = securityContext.getUserPrincipal();
 
 		return mkWettbewerbResourceAdapter.getStatusZugangUnterlagen(principal.getName());
+
+	}
+
+	@GET
+	@Path("/veranstalter/lehrer")
+	public Response getLehrer() {
+
+		Principal principal = securityContext.getUserPrincipal();
+
+		return mkWettbewerbResourceAdapter.getStatusZugangUnterlagen(principal.getName());
+
+	}
+
+	@GET
+	@Path("/veranstalter/privat")
+	public Response getPrivatveranstalter() {
+
+		Principal principal = securityContext.getUserPrincipal();
+
+		return mkWettbewerbResourceAdapter.getPrivatveranstalter(principal.getName());
 
 	}
 }

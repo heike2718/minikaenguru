@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import de.egladil.web.mk_wettbewerb.domain.personen.Rolle;
-import de.egladil.web.mk_wettbewerb.domain.teilnahmen.ZugangUnterlagen;
+import de.egladil.web.mk_wettbewerb.domain.personen.ZugangUnterlagen;
 
 /**
  * PersistenterVeranstalter

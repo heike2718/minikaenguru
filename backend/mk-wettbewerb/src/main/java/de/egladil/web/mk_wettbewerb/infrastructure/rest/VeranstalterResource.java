@@ -18,10 +18,11 @@ import javax.ws.rs.core.Response;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_wettbewerb.MkvServerApp;
-import de.egladil.web.mk_wettbewerb.domain.personen.AddLehrerService;
-import de.egladil.web.mk_wettbewerb.domain.personen.AddPrivatpersonService;
+import de.egladil.web.mk_wettbewerb.domain.apimodel.PrivatveranstalterAPIModel;
 import de.egladil.web.mk_wettbewerb.domain.personen.CreateOrUpdateLehrerCommand;
 import de.egladil.web.mk_wettbewerb.domain.personen.CreateOrUpdatePrivatpersonCommand;
+import de.egladil.web.mk_wettbewerb.domain.personen.LehrerService;
+import de.egladil.web.mk_wettbewerb.domain.personen.PrivatpersonService;
 import de.egladil.web.mk_wettbewerb.domain.personen.ZugangUnterlagenService;
 
 /**
@@ -33,10 +34,10 @@ import de.egladil.web.mk_wettbewerb.domain.personen.ZugangUnterlagenService;
 public class VeranstalterResource {
 
 	@Inject
-	AddLehrerService addLehrerService;
+	LehrerService lehrerService;
 
 	@Inject
-	AddPrivatpersonService addPrivatpersonService;
+	PrivatpersonService privatpersonService;
 
 	@Inject
 	ZugangUnterlagenService zugangUnterlagenService;
@@ -45,7 +46,7 @@ public class VeranstalterResource {
 	@Path("/lehrer")
 	public Response createLehrer(final CreateOrUpdateLehrerCommand data) {
 
-		this.addLehrerService.addLehrer(data);
+		this.lehrerService.addLehrer(data);
 
 		return Response.ok(ResponsePayload.messageOnly(MessagePayload.info("Veranstalter (LEHRER) wurde angelegt"))).build();
 	}
@@ -54,7 +55,7 @@ public class VeranstalterResource {
 	@Path("/privat")
 	public Response createPrivatperson(final CreateOrUpdatePrivatpersonCommand data) {
 
-		this.addPrivatpersonService.addPrivatperson(data);
+		this.privatpersonService.addPrivatperson(data);
 
 		return Response.ok(ResponsePayload.messageOnly(MessagePayload.info("Veranstalter (PRIVAT) wurde angelegt"))).build();
 	}
@@ -71,6 +72,17 @@ public class VeranstalterResource {
 	public Response updatePrivatperson(final CreateOrUpdatePrivatpersonCommand lehrerData) {
 
 		return Response.serverError().entity(ResponsePayload.messageOnly(MessagePayload.error("noch nicht implementiert"))).build();
+	}
+
+	@GET
+	@Path("/privat")
+	public Response getPrivatveranstalter(@HeaderParam(
+		value = MkvServerApp.UUID_HEADER_NAME) final String principalName) {
+
+		PrivatveranstalterAPIModel privatveranstalter = privatpersonService.findPrivatperson(principalName);
+		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), privatveranstalter);
+
+		return Response.ok(responsePayload).build();
 	}
 
 	@GET

@@ -1,0 +1,58 @@
+<div class="mkv-container mkv-bordered">
+	<div class="col--12">
+		<h2>Übersicht</h2>
+	</div>
+
+	<div *ngIf="aktuellerWettbewerb$ | async as wettbewerb">
+
+		<h3>Beginn Anmeldezeitraum für {{wettbewerb.jahr}}:
+			{{wettbewerb.wettbewerbsbeginn}}</h3>
+
+
+		<div class="row m-2">
+
+			<div class="col-md-6 col-sm-12 mt-1">
+				<div class="card clickable" (click)="gotoSchulen()">
+					<div class="card-body">
+						<div class="card-title">Meine Schulen</div>
+						<div class="mb-2 text-muted">Schulen verwalten</div>
+						<div class="mb-2 text-muted">Wettbewerb auswerten</div>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="hatZugangZuUnterlagen$ | async" class="col-md-6 col-sm-12 mt-1">
+				<div class="card clickable" (click)="gotoDownloadUnterlagen()">
+					<div class="card-body">
+						<div class="card-title">Unterlagen {{wettbewerb.jahr}}</div>
+						<div class="mb-2 text-muted">Wettbewerbsunterlagen herunterladen</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row m-2">
+
+			<div class="col-md-6 col-sm-12 mt-1">
+				<div class="card clickable" (click)="gotoProfil()">
+					<div class="card-body">
+						<div class="card-title">Mein Profil</div>
+						<div class="mb-2 text-muted">Name, Mailadresse, Passwort ändern</div>
+						<div class="mb-2 text-danger">Achtung: hierfür werden Sie ausgeloggt.</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-6 col-sm-12 mt-1">
+				<div class="card clickable" (click)="gotoInfos()">
+					<div class="card-body">
+						<div class="card-title">Infos</div>
+						<div class="mb-2 text-muted">Informationen über den Wettbewerb</div>
+						<div *ngIf="!(hatZugangZuUnterlagen$ | async)" class="mb-2 text-muted">Warum sehe ich die
+							Unterlagen
+							nicht?</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -3,11 +3,9 @@ import { Routes, RouterModule } from '@angular/router';
 import { RegistrationComponent } from './registration/registration.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { LandingComponent } from './landing/landing.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { AuthGuardService } from './infrastructure/auth-guard.service';
 import { environment } from '../environments/environment';
-import { WettbewerbInfoComponent } from './teilnahmen/wettbewerb/wettbewerb-info.component';
-import { DashboardResolver } from './dashboard/dashboard.resolver';
+import { WettbewerbInfoComponent } from './wettbewerb/wettbewerb-info.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 
 const routes: Routes = [
@@ -17,18 +15,20 @@ const routes: Routes = [
 		component: WettbewerbInfoComponent
 	},
 	{
+		path: 'dashboard',
+		component: DashboardComponent
+	},
+	{
 		path: 'registrierung',
 		component: RegistrationComponent
 	},
 	{
-		path: 'dashboard',
-		component: DashboardComponent,
-		resolve: {dashboard: DashboardResolver},
-		canActivate: [AuthGuardService]
+		path: 'lehrer',
+		loadChildren: () => import('./lehrer/lehrer.module').then(m => m.LehrerModule)
 	},
 	{
-		path: 'schulen',
-		loadChildren: () => import('./schulen/schulen.module').then(m => m.SchulenModule)
+		path: 'privat',
+		loadChildren: () => import('./privatveranstalter/privatveranstalter.module').then(m => m.PrivatveranstalterModule)
 	},
 	{
 		path: '',

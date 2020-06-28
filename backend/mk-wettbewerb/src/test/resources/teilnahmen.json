@@ -1,0 +1,23 @@
+{
+  "teilnahme": [
+    {
+      "wettbewerbJahr": 2020,
+      "teilnahmenummer": {
+        "identifier": "TEILNAHMENUMMER_PRIVAT"
+      },
+      "art": "PRIVAT"
+    },
+    {
+      "wettbewerbJahr": 2020,
+      "teilnahmenummer": {
+        "identifier": "SCHULKUERZEL_1"
+      },
+      "art": "SCHULE",
+      "nameSchule": "Christaschule",
+      "angemeldetDurchVeranstalterId": {
+        "identifier": "UUID_LEHRER_1"
+      }
+    }
+  ]
+}
+

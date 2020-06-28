@@ -8,6 +8,8 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import de.egladil.web.mk_wettbewerb.domain.semantik.ValueObject;
 
 /**
@@ -16,7 +18,12 @@ import de.egladil.web.mk_wettbewerb.domain.semantik.ValueObject;
 @ValueObject
 public class Identifier {
 
-	private final String identifier;
+	@JsonProperty
+	private String identifier;
+
+	Identifier() {
+
+	}
 
 	/**
 	 * @param identifier

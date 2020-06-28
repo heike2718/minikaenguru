@@ -20,13 +20,18 @@
 		<ul class="nav navbar-nav navbar-right">
 			<li class="nav-link" *ngIf="(user$ | async) as user">Guten Tag, {{user.fullName}}</li>
 
-			<div *ngIf="isLoggedIn$ | async">
-				<li routerLinkActive="active"><a routerLink="/dashboard" (click)="collapseNav()" class="nav-link"
-						title="Home">
+			<div *ngIf="(user$ | async) as user">
+				<li *ngIf="user.rolle === 'LEHRER'" routerLinkActive="active"><a routerLink="/lehrer/dashboard"
+						(click)="collapseNav()" class="nav-link" title="Übersicht">
 						<span class="fa fa-home fa-1x" aria-hidden="true"></span> Übersicht</a></li>
 			</div>
 			<div *ngIf="(user$ | async) as user">
-				<li *ngIf="user.rolle === 'LEHRER'" routerLinkActive="active"><a routerLink="/schulen"
+				<li *ngIf="user.rolle === 'PRIVAT'" routerLinkActive="active"><a routerLink="/privat/dashboard"
+						(click)="collapseNav()" class="nav-link" title="Übersicht">
+						<span class="fa fa-home fa-1x" aria-hidden="true"></span> Übersicht</a></li>
+			</div>
+			<div *ngIf="(user$ | async) as user">
+				<li *ngIf="user.rolle === 'LEHRER'" routerLinkActive="active"><a routerLink="/lehrer/schulen"
 						(click)="collapseNav()" class="nav-link" title="Schulen">
 						<span class="fa fa-building-o fa-1x" aria-hidden="true"></span> Schulen</a></li>
 			</div>

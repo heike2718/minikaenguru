@@ -18,7 +18,7 @@ const moment = moment_;
 })
 export class AuthService {
 
-	user$ = this.store.select(user);
+	public user$ = this.store.select(user);
 	isLoggedIn$ = this.store.select(isLoggedIn);
 	isLoggedOut$ = this.store.select(isLoggedOut);
 

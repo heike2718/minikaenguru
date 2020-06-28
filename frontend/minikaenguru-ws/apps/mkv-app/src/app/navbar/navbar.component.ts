@@ -2,8 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../environments/environment';
 import { AuthService } from '@minikaenguru-ws/common-auth';
-import { SchulenFacade } from '../schulen/schulen.facade';
-import { TeilnahmenFacade } from '../teilnahmen/teilnahmen.facade';
+import { LehrerFacade } from '../lehrer/lehrer.facade';
+import { PrivatveranstalterFacade } from '../privatveranstalter/privatveranstalter.facade';
+import { WettbewerbFacade } from '../wettbewerb/wettbewerb.facade';
 
 @Component({
 	selector: 'mkv-navbar',
@@ -18,14 +19,15 @@ export class NavbarComponent implements OnInit {
 	isLoggedIn$ = this.authService.isLoggedIn$;
 	isLoggedOut$ = this.authService.isLoggedOut$
 	user$ = this.authService.user$;
-	aktuellerWettbewerb$ = this.teilnahmenFacade.aktuellerWettbewerb$;
+	aktuellerWettbewerb$ = this.wettbewerbFacade.aktuellerWettbewerb$;
 
 
 	@ViewChild(NgbCollapse, { static: true }) navbarToggler: NgbCollapse;
 
 	constructor(private authService: AuthService
-		, private schulenFacade: SchulenFacade
-		, private teilnahmenFacade: TeilnahmenFacade) { }
+		, private lehrerFacade: LehrerFacade
+		, private privatveranstalterFacade: PrivatveranstalterFacade
+		, private wettbewerbFacade: WettbewerbFacade) { }
 
 	collapseNav() {
 		if (this.navbarToggler) {
@@ -35,7 +37,7 @@ export class NavbarComponent implements OnInit {
 
 	ngOnInit() {
 		this.logo = environment.assetsUrl + '/mja-logo.png';
-		this.teilnahmenFacade.ladeAktuellenWettbewerb();
+		this.wettbewerbFacade.ladeAktuellenWettbewerb();
 	}
 
 	login() {
@@ -43,8 +45,9 @@ export class NavbarComponent implements OnInit {
 	}
 
 	logout() {
-		this.schulenFacade.resetState();
-		this.teilnahmenFacade.resetState();
+		this.lehrerFacade.resetState();
+		this.privatveranstalterFacade.resetState();
+		this.wettbewerbFacade.resetState();
 		this.authService.logout();
 	}
 }

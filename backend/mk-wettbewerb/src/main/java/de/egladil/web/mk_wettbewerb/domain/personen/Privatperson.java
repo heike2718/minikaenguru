@@ -15,10 +15,9 @@ import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Teilnahmeart;
  */
 public class Privatperson extends Veranstalter {
 
-	// wenn sich eine Privatperson registriert, wird noch keine Teilnahme angelegt. Wenn sie sich zu einem Wettbewerb anmeldet, wird
-	// eine Teilnahme angelegt und das Teilnahmekuerzel der Person zugeordnet.
-	// Hat die Person ein Teilnahmekürzel und meldet sich zu einem anderen Wettbewerb an, wird mit diesem Teilnahmekuerzel eine
-	// Teilnahme angelegt.
+	// wenn sich eine Privatperson registriert, wird eine Teilnahmenummer generiert. Wenn sie sich zu einem Wettbewerb anmeldet,
+	// wird
+	// eine Teilnahme mit der Teilnahmenummer angelegt.
 	private final List<Identifier> teilnahmenummern;
 
 	/**
@@ -60,6 +59,6 @@ public class Privatperson extends Veranstalter {
 	@Override
 	public String toString() {
 
-		return fullName() + " (PRIVAT)";
+		return uuid() + " - " + fullName() + " (PRIVAT)";
 	}
 }

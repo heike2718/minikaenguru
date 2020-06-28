@@ -9,13 +9,14 @@ import java.time.LocalDateTime;
 import org.apache.commons.lang3.StringUtils;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
+import de.egladil.web.mk_wettbewerb.domain.event.WettbewerbDomainEvent;
 import de.egladil.web.mk_wettbewerb.domain.semantik.DomainEvent;
 
 /**
  * LehrerChangedSchulen
  */
 @DomainEvent
-public abstract class LehrerChangedSchulen {
+public abstract class LehrerChangedSchulen implements WettbewerbDomainEvent {
 
 	private final Person person;
 
