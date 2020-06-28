@@ -50,10 +50,13 @@ public class PrivatpersonService {
 	@Inject
 	TeilnahmenRepository teilnahmenRepository;
 
-	public static PrivatpersonService createForTest(final VeranstalterRepository veranstalterRepository) {
+	public static PrivatpersonService createForTest(final VeranstalterRepository veranstalterRepository, final ZugangUnterlagenService zugangUnterlagenService, final WettbewerbService wettbewerbSerivice, final TeilnahmenRepository teilnahmenRepository) {
 
 		PrivatpersonService result = new PrivatpersonService();
 		result.repository = veranstalterRepository;
+		result.zugangUnterlagenService = zugangUnterlagenService;
+		result.wettbewerbSerivice = wettbewerbSerivice;
+		result.teilnahmenRepository = teilnahmenRepository;
 		return result;
 	}
 
@@ -61,12 +64,14 @@ public class PrivatpersonService {
 
 		if (StringUtils.isBlank(uuid)) {
 
-			throw new IllegalArgumentException("uuid darf nicht blank sein!");
+			throw new IllegalArgumentException("uuid darf nicht blank sein.");
 		}
 
 		Optional<Veranstalter> optVeranstalter = this.repository.ofId(new Identifier(uuid));
 
 		if (optVeranstalter.isEmpty()) {
+
+			LOG.warn("Versuch, Veranstalter mit UUID={} zu finden", uuid);
 
 			throw new NotFoundException("Kennen keinen Veranstalter mit dieser ID");
 		}
@@ -75,6 +80,7 @@ public class PrivatpersonService {
 
 		if (veranstalter.rolle() != Rolle.PRIVAT) {
 
+			LOG.info("Gefundener Veranstalter ist kein Privatveranstalter: {}", veranstalter);
 			throw new NotFoundException("Kennen keinen Privatveranstalter mit dieser ID");
 		}
 

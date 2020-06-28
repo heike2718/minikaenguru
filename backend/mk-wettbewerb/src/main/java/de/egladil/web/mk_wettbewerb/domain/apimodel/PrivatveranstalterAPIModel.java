@@ -56,4 +56,34 @@ public class PrivatveranstalterAPIModel {
 		return this;
 	}
 
+	public boolean hatZugangZuUnterlangen() {
+
+		return hatZugangZuUnterlangen;
+	}
+
+	public int anzahlVergangeneTeilnahmen() {
+
+		return anzahlVergangeneTeilnahmen;
+	}
+
+	public boolean aktuellAngemeldet() {
+
+		return aktuellAngemeldet;
+	}
+
+	public PrivatteilnahmeAPIModel aktuelleTeilnahme() {
+
+		return aktuelleTeilnahme;
+	}
+
+	public boolean anonymisierteTeilnahmenGeladen() {
+
+		return anonymisierteTeilnahmenGeladen;
+	}
+
+	public List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen() {
+
+		return anonymisierteTeilnahmen;
+	}
+
 }

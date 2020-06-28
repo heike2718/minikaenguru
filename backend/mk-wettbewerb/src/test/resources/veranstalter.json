@@ -38,7 +38,32 @@
         }
       ]
   },
-  {
+{
+    "rolle": "PRIVAT",
+    "person": {
+      "uuid": "UUID_PRIVAT_MEHRERE_TEILNAHMEKURZEL",
+      "fullName": "Karl Düsentrieb"
+    },
+    "zugangUnterlagen": "DEFAULT",
+    "teilnahmenummern": [
+        {
+          "identifier": "TEILNAHMENUMMER_1"
+        },
+        {
+          "identifier": "TEILNAHMENUMMER_2"
+        }
+      ]
+  },
+{
+    "rolle": "PRIVAT",
+    "person": {
+      "uuid": "UUID_PRIVAT_KEIN_TEILNAHMEKURZEL",
+      "fullName": "Gustav Adular"
+    },
+    "zugangUnterlagen": "DEFAULT",
+    "teilnahmenummern": []
+  },
+{
     "rolle": "LEHRER",
     "person": {
       "uuid": "UUID_LEHRER_1",

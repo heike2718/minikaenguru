@@ -36,10 +36,12 @@ public class ZugangUnterlagenService {
 	@Inject
 	WettbewerbService wettbewerbSerivice;
 
-	public static ZugangUnterlagenService createForTest(final TeilnahmenRepository teilnahmenRepository) {
+	public static ZugangUnterlagenService createForTest(final TeilnahmenRepository teilnahmenRepository, final VeranstalterRepository veranstalterRepository, final WettbewerbService wettbewerbSerivice) {
 
 		ZugangUnterlagenService result = new ZugangUnterlagenService();
 		result.teilnahmenRepository = teilnahmenRepository;
+		result.veranstalterRepository = veranstalterRepository;
+		result.wettbewerbSerivice = wettbewerbSerivice;
 		return result;
 
 	}

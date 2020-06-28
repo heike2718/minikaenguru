@@ -10,9 +10,11 @@ import java.util.Optional;
 
 import org.mockito.Mockito;
 
+import de.egladil.web.mk_wettbewerb.domain.personen.ZugangUnterlagenService;
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.WettbewerbRepository;
+import de.egladil.web.mk_wettbewerb.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.WettbewerbStatus;
 import de.egladil.web.mk_wettbewerb.testdaten.InMemoryTeilnahmenRepository;
 import de.egladil.web.mk_wettbewerb.testdaten.InMemoryVeranstalterRepository;
@@ -33,6 +35,10 @@ public abstract class AbstractDomainServiceTest {
 	protected static final String UUID_PRIVAT_GESPERRT = "UUID_PRIVAT_GESPERRT";
 
 	protected static final String UUID_PRIVAT_NICHT_ANGEMELDET = "UUID_PRIVAT_NICHT_ANGEMELDET";
+
+	protected static final String UUID_PRIVAT_MEHRERE_TEILNAHMEKURZEL = "UUID_PRIVAT_MEHRERE_TEILNAHMEKURZEL";
+
+	protected static final String UUID_PRIVAT_KEIN_TEILNAHMEKURZEL = "UUID_PRIVAT_KEIN_TEILNAHMEKURZEL";
 
 	protected static final String SCHULKUERZEL_1 = "SCHULKUERZEL_1";
 
@@ -56,6 +62,10 @@ public abstract class AbstractDomainServiceTest {
 
 	private Wettbewerb aktuellerWettbewerb;
 
+	private ZugangUnterlagenService zugangUnterlagenService;
+
+	private WettbewerbService wettbewerbService;
+
 	protected void setUp() {
 
 		aktuellerWettbewerb = new Wettbewerb(new WettbewerbID(WETTBEWERBSJAHR_AKTUELL)).withStatus(WettbewerbStatus.ANMELDUNG)
@@ -71,6 +81,11 @@ public abstract class AbstractDomainServiceTest {
 		veranstalterRepository = new InMemoryVeranstalterRepository();
 
 		teilnahmenRepository = new InMemoryTeilnahmenRepository();
+
+		wettbewerbService = WettbewerbService.createForTest(wettbewerbRepository);
+
+		zugangUnterlagenService = ZugangUnterlagenService.createForTest(teilnahmenRepository, veranstalterRepository,
+			wettbewerbService);
 
 	}
 
@@ -107,6 +122,21 @@ public abstract class AbstractDomainServiceTest {
 			.withDatumFreischaltungPrivat(LocalDate.of(jahr, Month.JUNE, 1))
 			.withWettbewerbsende(LocalDate.of(jahr, Month.AUGUST, 1));
 
+	}
+
+	protected WettbewerbRepository getWettbewerbRepository() {
+
+		return wettbewerbRepository;
+	}
+
+	protected ZugangUnterlagenService getZugangUnterlagenService() {
+
+		return zugangUnterlagenService;
+	}
+
+	protected WettbewerbService getWettbewerbService() {
+
+		return wettbewerbService;
 	}
 
 }

@@ -17,7 +17,7 @@ http://localhost:9550/mk-wettbewerb/veranstalter/unterlagen/zugangsstatus  heade
 
 http://localhost:9550/mk-wettbewerb/veranstalter/lehrer 
 
-http://localhost:9550/mk-wettbewerb/teilnahmen/privat POST header X-UUID  9bfa4dc8-6251-44d4-87ab-72784123c1e7
+http://localhost:9550/mk-wettbewerb/teilnahmen/privat POST header X-UUID  9bfa4dc8-6251-44d4-87ab-72784123c1e7  (gehört zu pe1@egladil.de)
 
 
 
@@ -37,6 +37,9 @@ curl -X GET -H 'Content-Type: application/json' -H 'X-SESSIONID: S3l4Yzd2S2o5NEd
 http://localhost:9500/mk-gateway/wettbewerb/veranstalter/zugangsstatus   X-SESSIONID aWpaeGlwMlBpOWlzRmdIZXZWNUd3QT09
 
 http://localhost:9500/mk-gateway/wettbewerb/teilnahmen/privat   POST
+
+curl -X GET -H 'Content-Type: application/json' -H 'X-SESSIONID: WXc1L0ZGRnVBdzhYWmZaRHEvWWNMQT09' -i http://192.168.10.176:9500/mk-gateway/wettbewerb/veranstalter/privat  
+
 
 /wettbewerb
 

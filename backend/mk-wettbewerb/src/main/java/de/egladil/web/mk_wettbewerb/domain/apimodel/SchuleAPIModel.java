@@ -57,11 +57,6 @@ public class SchuleAPIModel {
 		return kuerzel;
 	}
 
-	public String getKuerzel() {
-
-		return kuerzel;
-	}
-
 	public String getName() {
 
 		return name;
