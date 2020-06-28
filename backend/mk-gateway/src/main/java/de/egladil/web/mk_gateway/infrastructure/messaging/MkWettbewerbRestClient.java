@@ -53,9 +53,34 @@ public interface MkWettbewerbRestClient {
 	@Path("/wettbewerb")
 	Response getAktuellenWettbewerb() throws MkWettbewerbRestException;
 
+	// http://192.168.10.176:9550/mk-wettbewerb/veranstalter/lehrer
+	@GET
+	@Path("/veranstalter/lehrer")
+	Response getLehrer(@HeaderParam(
+		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName) throws MkWettbewerbRestException;
+
+	// http://192.168.10.176:9550/mk-wettbewerb/veranstalter/lehrer
+	@GET
+	@Path("/veranstalter/privat")
+	Response getPrivatveranstalter(@HeaderParam(
+		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName) throws MkWettbewerbRestException;
+
 	// http://192.168.10.176:9550/mk-wettbewerb/unterlagen/zugangsstatus
 	@GET
 	@Path("/veranstalter/unterlagen/zugangsstatus")
 	Response getStatusZugangUnterlagen(@HeaderParam(
 		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName) throws MkWettbewerbRestException;
+
+	// http://192.168.10.176:9550/mk-wettbewerb/teilnahmen/privat
+	@POST
+	@Path("/teilnahmen/privat")
+	Response meldePrivatmenschZumAktuellenWettbewerbAn(@HeaderParam(
+		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName) throws MkWettbewerbRestException;
+
+	// http://192.168.10.176:9550/mk-wettbewerb/teilnahmen/privat
+	@POST
+	@Path("/teilnahmen/schulen/{schulkuerzel}")
+	Response meldeSchuleZumAktuellenWettbewerbAn(@PathParam(value = "schulkuerzel") final String schulkuerzel, @HeaderParam(
+		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName) throws MkWettbewerbRestException;
+
 }

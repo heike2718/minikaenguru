@@ -1,0 +1,99 @@
+/mkvapi/session/kontext
+/mkvapi/registrierungen/lehrer/confirmation
+/mkvapi/registrierungen/privat/confirmation
+
+https://mathe-jung-alt.de/mkv/
+
+
+=========================================
+mk-wettbewerb
+
+
+http://localhost:9550/mk-wettbewerb/schulen/details/6XOA2A11   header X-UUID  2f09da36-07c6-4033-a2f1-5e110c804026
+
+http://localhost:9550/mk-wettbewerb/schulen/details/S7YZMQ27   header X-UUID  2f09da36-07c6-4033-a2f1-5e110c804026
+
+http://localhost:9550/mk-wettbewerb/veranstalter/unterlagen/zugangsstatus  header X-UUID  2f09da36-07c6-4033-a2f1-5e110c804026
+
+http://localhost:9550/mk-wettbewerb/veranstalter/lehrer 
+
+http://localhost:9550/mk-wettbewerb/teilnahmen/privat POST header X-UUID  9bfa4dc8-6251-44d4-87ab-72784123c1e7  (gehört zu pe1@egladil.de)
+
+
+
+=========================================
+
+mk-gateway
+
+http://192.168.10.176:9500/mk-gateway/wettbewerb/lehrer/schulen header X-SESSIONID=Y1NFRTg5MlR0cEVVUVBWaUQxZWxYQT09
+
+http://localhost:9500/mk-gateway/wettbewerb/lehrer/schulen/6XOA2A11/details   header X-SESSIONID=b2RETVlQZWpNTVFORGVqSlV6dXJoZz09
+
+http://192.168.10.176:9500/mk-gateway/wettbewerb/veranstalter/lehrer
+
+curl -X GET -H 'Content-Type: application/json' -H 'X-SESSIONID: S3l4Yzd2S2o5NEdwdEtBMXlOYmpTZz09' -i http://localhost:9500/mk-gateway/wettbewerb/lehrer/schulen/JPTM15A5/details
+
+
+http://localhost:9500/mk-gateway/wettbewerb/veranstalter/zugangsstatus   X-SESSIONID aWpaeGlwMlBpOWlzRmdIZXZWNUd3QT09
+
+http://localhost:9500/mk-gateway/wettbewerb/teilnahmen/privat   POST
+
+curl -X GET -H 'Content-Type: application/json' -H 'X-SESSIONID: WXc1L0ZGRnVBdzhYWmZaRHEvWWNMQT09' -i http://192.168.10.176:9500/mk-gateway/wettbewerb/veranstalter/privat  
+
+
+/wettbewerb
+
+    GET /wettbewerb/lehrer/schulen/{schulkuerzel}/details
+        Produces: application/json
+    POST /wettbewerb/teilnahmen/privat
+        Produces: application/json
+    POST /wettbewerb/veranstalter
+        Consumes: application/json
+        Produces: application/json
+    GET /wettbewerb/aktueller
+        Produces: application/json
+    GET /wettbewerb/veranstalter/lehrer
+        Produces: application/json
+    POST /wettbewerb/teilnahmen/schulen/{schulkuerzel}
+        Produces: application/json
+    GET /wettbewerb/lehrer/schulen
+        Produces: application/json
+    GET /wettbewerb/veranstalter/teilnahmeinfos
+        Produces: application/json
+
+/version
+
+    GET /version
+        Produces: application/json
+
+/authurls
+
+    GET /authurls/signup/lehrer/{schulkuerzel}
+        Produces: application/json
+    GET /authurls/signup/privat
+        Produces: application/json
+    GET /authurls/login
+        Produces: application/json
+
+/
+
+    POST //login
+        Consumes: application/json
+        Produces: application/json
+    DELETE //logout
+        Consumes: application/json
+        Produces: application/json
+    DELETE //dev/logout/{sessionid}
+        Consumes: application/json
+        Produces: application/json
+
+
+
+
+========================================
+
+browser
+
+http://localhost:4200/#/schulen/schule-dashboard/EEGEECP6
+
+http://localhost:4200/#/schulen/schule-dashboard/S7YZMQ27

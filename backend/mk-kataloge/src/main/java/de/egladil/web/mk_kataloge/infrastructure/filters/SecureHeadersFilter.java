@@ -7,15 +7,15 @@ package de.egladil.web.mk_kataloge.infrastructure.filters;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.Provider;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-
 import de.egladil.web.mk_kataloge.KatalogAPIApp;
+import de.egladil.web.mk_kataloge.infrastructure.config.ConfigService;
 
 /**
  * SecureHeadersFilter
@@ -25,8 +25,8 @@ public class SecureHeadersFilter implements ContainerResponseFilter {
 
 	private static final String CONTENT_SECURITY_POLICY = "Content-Security-Policy";
 
-	@ConfigProperty(name = "stage")
-	String stage;
+	@Inject
+	ConfigService configService;
 
 	@Override
 	public void filter(final ContainerRequestContext requestContext, final ContainerResponseContext responseContext) throws IOException {
@@ -70,7 +70,7 @@ public class SecureHeadersFilter implements ContainerResponseFilter {
 			responseContext.getHeaders().add(CONTENT_SECURITY_POLICY, "default-src 'self'; ");
 		}
 
-		if (!KatalogAPIApp.STAGE_DEV.equals(stage) && headers.get("Strict-Transport-Security") == null) {
+		if (!KatalogAPIApp.STAGE_DEV.equals(configService.getStage()) && headers.get("Strict-Transport-Security") == null) {
 
 			headers.add("Strict-Transport-Security", "max-age=63072000; includeSubdomains");
 

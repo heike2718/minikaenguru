@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -41,6 +42,7 @@ public class VeranstalterResource {
 
 	@POST
 	@Path("/veranstalter")
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createUser(final AuthResult authResult) {
 
 		SignUpResourceOwner signUpResourceOwner = new AuthResultToResourceOwnerMapper(jwtService).apply(authResult);

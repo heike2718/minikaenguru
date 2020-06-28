@@ -33,9 +33,9 @@ public class SchuleDetailsServiceTest extends AbstractDomainServiceTest {
 	protected void setUp() {
 
 		super.setUp();
-		WettbewerbService wettbewerbService = WettbewerbService.createForTest(getWettbewerbRepository());
+		WettbewerbService wettbewerbService = WettbewerbService.createForTest(getMockitoBasedWettbewerbRepository());
 		AktuelleTeilnahmeService aktuelleTeilnahmeService = AktuelleTeilnahmeService.createForTest(getTeilnahmenRepository(),
-			wettbewerbService);
+			wettbewerbService, getVeranstalterRepository());
 
 		SchulkollegienRepository schulkollegienRepository = createSchulkollegienRepo();
 
@@ -99,7 +99,7 @@ public class SchuleDetailsServiceTest extends AbstractDomainServiceTest {
 		assertEquals(1, details.anzahlTeilnahmen());
 		assertEquals("Olle Keule", details.kollegen());
 		assertEquals("Christaschule", details.nameUrkunde());
-		assertEquals("AGDFWGJOPJ", details.kuerzel());
+		assertEquals("SCHULKUERZEL_1", details.kuerzel());
 
 	}
 
@@ -114,7 +114,7 @@ public class SchuleDetailsServiceTest extends AbstractDomainServiceTest {
 		assertEquals(0, details.anzahlTeilnahmen());
 		assertEquals("Hans Wurst", details.kollegen());
 		assertNull(details.nameUrkunde());
-		assertEquals("UZTGF65FR3", details.kuerzel());
+		assertEquals("SCHULKUERZEL_2", details.kuerzel());
 
 	}
 
@@ -129,7 +129,7 @@ public class SchuleDetailsServiceTest extends AbstractDomainServiceTest {
 		assertEquals(0, details.anzahlTeilnahmen());
 		assertNull(details.kollegen());
 		assertNull(details.nameUrkunde());
-		assertEquals("TRF65FED7O", details.kuerzel());
+		assertEquals("SCHULKUERZEL_3", details.kuerzel());
 
 	}
 

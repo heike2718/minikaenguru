@@ -27,7 +27,7 @@ public class LehrerRegisteredForSchule extends LehrerChangedSchulen {
 	@Override
 	public String typeName() {
 
-		return LehrerRegisteredForSchule.class.getSimpleName();
+		return TYPE_LEHRER_REGISTERED_FOR_SCHULE;
 	}
 
 }

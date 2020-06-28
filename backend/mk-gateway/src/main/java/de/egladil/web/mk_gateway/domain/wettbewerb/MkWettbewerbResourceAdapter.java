@@ -94,6 +94,33 @@ public class MkWettbewerbResourceAdapter extends AbstractMkResourceAdapter {
 
 	}
 
+	public Response getPrivatveranstalter(final String uuid) {
+
+		try {
+
+			Response response = restClient.getPrivatveranstalter(uuid);
+			return response;
+
+		} catch (Exception e) {
+
+			return handleException(e, LOG, "[getPrivatveranstalter]");
+		}
+
+	}
+
+	public Response meldePrivatmenschZumAktuellenWettbewerbAn(final String uuid) {
+
+		try {
+
+			Response response = restClient.meldePrivatmenschZumAktuellenWettbewerbAn(uuid);
+			return response;
+		} catch (Exception e) {
+
+			return handleException(e, LOG, "[meldePrivatmenschZumAktuellenWettbewerbAn]");
+		}
+
+	}
+
 	@Override
 	protected String endpointName() {
 

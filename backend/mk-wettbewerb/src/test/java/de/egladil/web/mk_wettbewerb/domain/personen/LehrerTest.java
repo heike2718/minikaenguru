@@ -6,10 +6,15 @@ package de.egladil.web.mk_wettbewerb.domain.personen;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
 
@@ -19,7 +24,7 @@ import de.egladil.web.mk_wettbewerb.domain.Identifier;
 public class LehrerTest {
 
 	@Test
-	void should_ConstructorInitRole() {
+	void should_ConstructorInitRole() throws JsonGenerationException, JsonMappingException, IOException {
 
 		// Arrange
 		String uuid = "asuidgquoö";
@@ -45,7 +50,9 @@ public class LehrerTest {
 		assertEquals(2, lehrer.teilnahmeIdentifier().size());
 		assertEquals(lehrer.teilnahmeIdentifier(), lehrer.schulen());
 
-		assertEquals("Grtq Jiesrtzq (LEHRER)", lehrer.toString());
+		assertEquals("asuidgquoö - Grtq Jiesrtzq (LEHRER)", lehrer.toString());
+
+		new ObjectMapper().writeValue(System.out, lehrer);
 	}
 
 }

@@ -19,7 +19,7 @@ import de.egladil.web.mk_wettbewerb.domain.personen.Lehrer;
 import de.egladil.web.mk_wettbewerb.domain.personen.Person;
 import de.egladil.web.mk_wettbewerb.domain.personen.Privatperson;
 import de.egladil.web.mk_wettbewerb.domain.personen.Rolle;
-import de.egladil.web.mk_wettbewerb.domain.teilnahmen.ZugangUnterlagen;
+import de.egladil.web.mk_wettbewerb.domain.personen.ZugangUnterlagen;
 import de.egladil.web.mk_wettbewerb.infrastructure.persistence.entities.PersistenterVeranstalter;
 
 /**

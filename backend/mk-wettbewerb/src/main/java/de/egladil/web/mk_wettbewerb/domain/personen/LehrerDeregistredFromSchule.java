@@ -25,7 +25,7 @@ public class LehrerDeregistredFromSchule extends LehrerChangedSchulen {
 	@Override
 	public String typeName() {
 
-		return LehrerDeregistredFromSchule.class.getSimpleName();
+		return TYPE_LEHRER_DEREGISTRED_FROM_SCHULE;
 	}
 
 }

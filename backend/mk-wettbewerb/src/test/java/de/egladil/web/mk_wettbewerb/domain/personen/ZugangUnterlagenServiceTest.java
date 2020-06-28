@@ -5,6 +5,7 @@
 package de.egladil.web.mk_wettbewerb.domain.personen;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -21,6 +22,7 @@ import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.TeilnahmenRepository;
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_wettbewerb.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.WettbewerbStatus;
 
 /**
@@ -55,6 +57,10 @@ public class ZugangUnterlagenServiceTest {
 	private Wettbewerb wettbewerb;
 
 	private TeilnahmenRepository teilnahmenRepository;
+
+	private VeranstalterRepository veranstalterRepository;
+
+	private WettbewerbService wettbewerbService;
 
 	@BeforeEach
 	void setUp() {
@@ -121,7 +127,10 @@ public class ZugangUnterlagenServiceTest {
 				.thenReturn(Optional.empty());
 		}
 
-		this.service = ZugangUnterlagenService.createForTest(teilnahmenRepository);
+		veranstalterRepository = Mockito.mock(VeranstalterRepository.class);
+		wettbewerbService = Mockito.mock(WettbewerbService.class);
+
+		this.service = ZugangUnterlagenService.createForTest(teilnahmenRepository, veranstalterRepository, wettbewerbService);
 
 	}
 
@@ -226,6 +235,35 @@ public class ZugangUnterlagenServiceTest {
 			assertEquals(true, service.hatZugang(lehrerAngemeldet, wettbewerb));
 			assertEquals(true, service.hatZugang(lehrerSonderzugangsberechtigung, wettbewerb));
 
+		}
+
+		@Test
+		void should_HatZugangReturnFalse_when_LehrerUnknown() {
+
+			// Arrange
+			String uuid = "57815815";
+			Mockito.when(veranstalterRepository.ofId(new Identifier(uuid))).thenReturn(Optional.empty());
+
+			// Act
+			boolean hat = service.hatZugang(uuid);
+
+			// Assert
+			assertFalse(hat);
+		}
+
+		@Test
+		void should_HatZugangReturnFalse_when_NoWettbewerb() {
+
+			// Arrange
+			Mockito.when(veranstalterRepository.ofId(new Identifier(lehrerAngemeldet.uuid())))
+				.thenReturn(Optional.of(lehrerAngemeldet));
+			Mockito.when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.empty());
+
+			// Act
+			boolean hat = service.hatZugang(lehrerAngemeldet.uuid());
+
+			// Assert
+			assertFalse(hat);
 		}
 
 	}

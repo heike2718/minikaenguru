@@ -69,6 +69,21 @@ public class MkWettbewerbExceptionMapper implements ExceptionMapper<Throwable> {
 			return Response.status(404).entity(serialize(payload)).build();
 		}
 
+		if (exception instanceof IllegalStateException) {
+
+			String msg = exception.getMessage();
+
+			if (msg == null) {
+
+				msg = applicationMessages.getString("general.illegalState");
+			}
+
+			ResponsePayload payload = ResponsePayload
+				.messageOnly(MessagePayload.error(msg));
+
+			return Response.status(412).entity(serialize(payload)).build();
+		}
+
 		if (exception instanceof WebApplicationException) {
 
 			WebApplicationException waException = (WebApplicationException) exception;
