@@ -21,15 +21,27 @@ export class SchuleDashboardComponent implements OnInit {
 
 	loading$ = this.lehrerFacade.loading$;
 
-	constructor(private router: Router, private lehrerFacade: LehrerFacade, private wettbewerbFacade: WettbewerbFacade) {
+	constructor(private router: Router,
+		private lehrerFacade: LehrerFacade,
+		private wettbewerbFacade: WettbewerbFacade) {
 	}
 
 	ngOnInit(): void {
+	}
+
+	anmelden(): void {
+		console.log('gewählte schule anmelden');
+	}
+
+	gotoTeilnahmen(): void {
+
 	}
 
 	backToSchulen(): void {
 		this.lehrerFacade.resetSelection();
 		this.router.navigateByUrl('/lehrer/schulen');
 	}
+
+
 
 }

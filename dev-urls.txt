@@ -20,6 +20,10 @@ http://localhost:9550/mk-wettbewerb/veranstalter/lehrer
 http://localhost:9550/mk-wettbewerb/teilnahmen/privat POST header X-UUID  9bfa4dc8-6251-44d4-87ab-72784123c1e7  (gehört zu pe1@egladil.de)
 
 
+http://localhost:9550/mk-wettbewerb/teilnahmen/schule POST header X-UUID  24f4c507-454a-4cb1-bc0c-4da5df4a4a1b (event lehrer test eins)
+
+{"schulkuerzel":"EEGEECP6","schulname":"Albert-Schweitzer-Schule"}
+
 
 =========================================
 

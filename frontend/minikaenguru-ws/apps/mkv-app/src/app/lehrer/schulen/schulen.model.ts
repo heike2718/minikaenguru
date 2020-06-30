@@ -24,6 +24,12 @@ export interface Person {
 	readonly fullName: string;
 };
 
+
+export interface SchulanmeldungRequestPayload {
+	schulkuerzel: string;
+	schulname: string;
+};
+
 export function indexOfSchuleMitId(schulenWithID: SchuleWithID[], kuerzel: string): number {
 
 	if (!schulenWithID) {

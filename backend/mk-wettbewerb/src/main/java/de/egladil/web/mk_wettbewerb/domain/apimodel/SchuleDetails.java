@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_wettbewerb.domain.apimodel;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +35,18 @@ public class SchuleDetails {
 
 	@JsonProperty
 	private int anzahlTeilnahmen;
+
+	@JsonProperty
+	private SchulteilnahmeAPIModel aktuelleTeilnahme;
+
+	@JsonProperty
+	private int anzahlVergangeneTeilnahmen = 0;
+
+	@JsonProperty
+	private boolean anonymisierteTeilnahmenGeladen;
+
+	@JsonProperty
+	private List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = new ArrayList<>();
 
 	SchuleDetails() {
 
@@ -70,6 +83,18 @@ public class SchuleDetails {
 		return this;
 	}
 
+	public SchuleDetails withTeilnahme(final SchulteilnahmeAPIModel teilnahme) {
+
+		this.aktuelleTeilnahme = teilnahme;
+		return this;
+	}
+
+	public SchuleDetails withAnzahlVergangeneTeilnahmen(final int anzahl) {
+
+		this.anzahlVergangeneTeilnahmen = anzahl;
+		return this;
+	}
+
 	public String kuerzel() {
 
 		return kuerzel;
@@ -85,6 +110,16 @@ public class SchuleDetails {
 		return kollegen;
 	}
 
+	public boolean anonymisierteTeilnahmenGeladen() {
+
+		return anonymisierteTeilnahmenGeladen;
+	}
+
+	public List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen() {
+
+		return anonymisierteTeilnahmen;
+	}
+
 	public String angemeldetDurch() {
 
 		return angemeldetDurch;
@@ -93,6 +128,11 @@ public class SchuleDetails {
 	public int anzahlTeilnahmen() {
 
 		return anzahlTeilnahmen;
+	}
+
+	public SchulteilnahmeAPIModel aktuelleTeilnahme() {
+
+		return aktuelleTeilnahme;
 	}
 
 }

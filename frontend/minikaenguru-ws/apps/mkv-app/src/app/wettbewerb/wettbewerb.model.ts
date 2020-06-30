@@ -49,6 +49,10 @@ export interface Privatteilnahme extends AbstractTeilnahme {
 	readonly kinder: Kind[];
 }
 
+export interface Schulteilnahme extends AbstractTeilnahme {
+	readonly auswertungsgruppen: Auswertungsgruppe[];
+};
+
 export interface AnonymisierteTeilnahme extends AbstractTeilnahme {
 	// hier kommt dann sowas wie Lösungszettelgruppen für jede Klassenstufe
 };
