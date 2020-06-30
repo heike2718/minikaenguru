@@ -502,7 +502,6 @@ public class SchulenAnmeldeinfoServiceTest {
 		assertEquals("Herta Meier", details.kollegen());
 		assertEquals("12345", details.kuerzel());
 		assertEquals("12345-Schule", details.nameUrkunde());
-		assertEquals(1, details.anzahlTeilnahmen());
 
 	}
 
@@ -586,7 +585,6 @@ public class SchulenAnmeldeinfoServiceTest {
 		assertEquals("Hessen", schule.land());
 
 		SchuleWettbewerbeDetails details = schule.getDetails();
-		assertEquals(1, details.anzahlTeilnahmen());
 		assertEquals("John Doe", details.angemeldetDurch());
 		assertEquals("Herta Meier", details.kollegen());
 		assertEquals("12345", details.kuerzel());
@@ -659,7 +657,6 @@ public class SchulenAnmeldeinfoServiceTest {
 		assertEquals("unbekanntes Land / Bundesland", schule.land());
 
 		SchuleWettbewerbeDetails details = schule.getDetails();
-		assertEquals(1, details.anzahlTeilnahmen());
 		assertEquals("John Doe", details.angemeldetDurch());
 		assertEquals("Herta Meier", details.kollegen());
 		assertEquals("12345", details.kuerzel());

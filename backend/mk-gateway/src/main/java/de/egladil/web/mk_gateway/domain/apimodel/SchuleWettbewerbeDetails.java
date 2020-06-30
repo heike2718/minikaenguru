@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.apimodel;
 
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,7 +25,7 @@ public class SchuleWettbewerbeDetails {
 
 	private static final String KEY_ANGEMELDET_DURCH = "angemeldetDurch";
 
-	private static final String KEY_ANZAHL_TEILNAHMEN = "anzahlTeilnahmen";
+	private static final String KEY_ANZAHL_VERGANGENE_TEILNAHMEN = "anzahlVergangeneTeilnahmen";
 
 	@JsonProperty
 	private String kuerzel;
@@ -39,7 +40,13 @@ public class SchuleWettbewerbeDetails {
 	private String angemeldetDurch;
 
 	@JsonProperty
-	private int anzahlTeilnahmen;
+	private int anzahlVergangeneTeilnahmen = 0;
+
+	@JsonProperty
+	private boolean vergangeneTeilnahmenGeladen;
+
+	@JsonProperty
+	private List<AnonymisierteTeilnahmeAPIModel> vergangeneTeilnahmen;
 
 	SchuleWettbewerbeDetails() {
 
@@ -66,9 +73,9 @@ public class SchuleWettbewerbeDetails {
 			result.angemeldetDurch = (String) keyValueMap.get(KEY_ANGEMELDET_DURCH);
 		}
 
-		if (keyValueMap.get(KEY_ANZAHL_TEILNAHMEN) != null) {
+		if (keyValueMap.get(KEY_ANZAHL_VERGANGENE_TEILNAHMEN) != null) {
 
-			result.anzahlTeilnahmen = (Integer) keyValueMap.get(KEY_ANZAHL_TEILNAHMEN);
+			result.anzahlVergangeneTeilnahmen = (Integer) keyValueMap.get(KEY_ANZAHL_VERGANGENE_TEILNAHMEN);
 		}
 
 		return result;
@@ -95,9 +102,19 @@ public class SchuleWettbewerbeDetails {
 		return angemeldetDurch;
 	}
 
-	public int anzahlTeilnahmen() {
+	public boolean vergangeneTeilnahmenGeladen() {
 
-		return anzahlTeilnahmen;
+		return vergangeneTeilnahmenGeladen;
+	}
+
+	public List<AnonymisierteTeilnahmeAPIModel> vergangeneTeilnahmen() {
+
+		return vergangeneTeilnahmen;
+	}
+
+	public int anzahlVergangeneTeilnahmen() {
+
+		return anzahlVergangeneTeilnahmen;
 	}
 
 }

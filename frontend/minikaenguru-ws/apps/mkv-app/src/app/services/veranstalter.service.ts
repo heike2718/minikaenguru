@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Lehrer } from '../lehrer/lehrer.model';
 import { environment } from '../../environments/environment';
 import { ResponsePayload } from '@minikaenguru-ws/common-messages';
 import { map } from 'rxjs/operators';
-import { Privatveranstalter } from '../privatveranstalter/privatveranstalter.model';
-import { Privatteilnahme } from '../wettbewerb/wettbewerb.model';
+import { Privatveranstalter } from '../wettbewerb/wettbewerb.model';
 
 
 @Injectable({
@@ -15,17 +13,6 @@ import { Privatteilnahme } from '../wettbewerb/wettbewerb.model';
 export class VeranstalterService {
 
 	constructor(private http: HttpClient) { }
-
-	public loadLehrer(): Observable<Lehrer> {
-
-		const url = environment.apiUrl + '/wettbewerb/veranstalter/lehrer';
-
-		return this.http.get(url).pipe(
-			map(body => body as ResponsePayload),
-			map(payload => payload.data)
-		);
-
-	}
 
 	getZugangsstatusUnterlagen(): Observable<boolean> {
 

@@ -7,6 +7,10 @@ import * as LehrerActions from './+state/lehrer.actions';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
 import { Schule } from './schulen/schulen.model';
 import { VeranstalterService } from '../services/veranstalter.service';
+import { TeilnahmenService } from '../services/teilnahmen.service';
+import { Schulteilnahme } from '../wettbewerb/wettbewerb.model';
+import { Message, MessageService } from '@minikaenguru-ws/common-messages';
+import { User } from '@minikaenguru-ws/common-auth';
 
 
 @Injectable({ providedIn: 'root' })
@@ -24,6 +28,8 @@ export class LehrerFacade {
 	constructor(private appStore: Store<AppState>,
 		private veranstalterService: VeranstalterService,
 		private schulenService: SchulenService,
+		private teilnahmenService: TeilnahmenService,
+		private messageService: MessageService,
 		private errorHandler: GlobalErrorHandlerService) {
 	}
 
@@ -69,16 +75,35 @@ export class LehrerFacade {
 				this.appStore.dispatch(LehrerActions.finishedWithError());
 				this.errorHandler.handleError(error)
 			})
-		)
+		);
+	}
+
+	public schuleAnmelden(schule: Schule, user: User): void {
+
+		this.teilnahmenService.schuleAnmelden(schule).subscribe(
+			responsePayload => {
+
+				const teilnahme = <Schulteilnahme>responsePayload.data;
+				const message = <Message>responsePayload.message;
+
+				this.messageService.info(message.message);
+
+				this.appStore.dispatch(LehrerActions.schuleAngemeldet({ teilnahme: teilnahme, angemeldetDurch: user.fullName }));
+			},
+			(error => {
+				this.appStore.dispatch(LehrerActions.finishedWithError());
+				this.errorHandler.handleError(error)
+			})
+		);
 	}
 
 	public selectSchule(schule: Schule): void {
 
-		this.appStore.dispatch(LehrerActions.selectSchule({schule: schule}));
+		this.appStore.dispatch(LehrerActions.selectSchule({ schule: schule }));
 	}
 
 	public restoreDetailsFromCache(schulkuerzel: string): void {
-		this.appStore.dispatch(LehrerActions.restoreDetailsFromCache({kuerzel: schulkuerzel}));
+		this.appStore.dispatch(LehrerActions.restoreDetailsFromCache({ kuerzel: schulkuerzel }));
 	}
 
 	public resetSelection(): void {

@@ -1,7 +1,7 @@
 import { createReducer, Action, on } from '@ngrx/store';
-import { SchuleWithID, Schule, mergeSchulenMap, findSchuleMitId } from './../schulen/schulen.model';
+import { SchuleWithID, Schule, mergeSchulenMap, findSchuleMitId, SchuleDetails } from './../schulen/schulen.model';
 import * as LehrerActions from './lehrer.actions';
-
+import { Schulteilnahme } from '../../wettbewerb/wettbewerb.model';
 export const lehrerFeatureKey = 'mkv-app-lehrer';
 
 export interface LehrerState {
@@ -52,6 +52,21 @@ const lehrerReducer = createReducer(initalLehrerState,
 
 		const neueMap = mergeSchulenMap(state.schulen, action.schule);
 		return { ...state, selectedSchule: action.schule, schulen: neueMap, loading: false };
+	}),
+
+	on(LehrerActions.schuleAngemeldet, (state, action) => {
+
+		// TODO: wird noch nicht benötigt, da es noch nicht im schule.state eingebaut wurde
+		const schulteilnahme: Schulteilnahme = action.teilnahme;
+
+		const alteSchule = state.selectedSchule;
+		const alteDetails = alteSchule.details;
+
+		const neueDetails: SchuleDetails = {...alteDetails, angemeldetDurch: action.angemeldetDurch};
+		const neueSchule: Schule = { ...alteSchule, aktuellAngemeldet: true, details: neueDetails };
+		const neueMap = mergeSchulenMap(state.schulen, neueSchule);
+		const neuerState = {...state, schulen: neueMap, selectedSchule: neueSchule};
+		return neuerState;
 	}),
 
 	on(LehrerActions.restoreDetailsFromCache, (state, action) => {

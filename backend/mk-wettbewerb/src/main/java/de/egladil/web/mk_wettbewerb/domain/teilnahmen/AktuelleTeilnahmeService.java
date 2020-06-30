@@ -11,15 +11,16 @@ import javax.enterprise.context.RequestScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.ws.rs.BadRequestException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
+import de.egladil.web.mk_wettbewerb.domain.apimodel.SchulanmeldungRequestPayload;
 import de.egladil.web.mk_wettbewerb.domain.error.AccessDeniedException;
 import de.egladil.web.mk_wettbewerb.domain.error.MkWettbewerbRuntimeException;
-import de.egladil.web.mk_wettbewerb.domain.personen.Privatperson;
 import de.egladil.web.mk_wettbewerb.domain.personen.Rolle;
 import de.egladil.web.mk_wettbewerb.domain.personen.Veranstalter;
 import de.egladil.web.mk_wettbewerb.domain.personen.VeranstalterRepository;
@@ -40,7 +41,12 @@ public class AktuelleTeilnahmeService {
 	@Inject
 	Event<PrivatteilnahmeCreated> privatteilnahmeCreated;
 
+	@Inject
+	Event<SchulteilnahmeCreated> schulteilahmeCreated;
+
 	private PrivatteilnahmeCreated privatteilnahmeCreatedEvent;
+
+	private SchulteilnahmeCreated schulteilnahmeCreatedEvent;
 
 	private boolean test = false;
 
@@ -73,7 +79,7 @@ public class AktuelleTeilnahmeService {
 
 		if (StringUtils.isBlank(teilnahmenummer)) {
 
-			throw new IllegalArgumentException("teilnahmenummer darf nicht blank sein.");
+			throw new BadRequestException("teilnahmenummer darf nicht blank sein.");
 		}
 
 		List<Teilnahme> teilnahmen = teilnahmenRepository.ofTeilnahmenummer(teilnahmenummer);
@@ -92,7 +98,7 @@ public class AktuelleTeilnahmeService {
 
 		if (teilnahmen == null) {
 
-			throw new IllegalArgumentException("teilnahmen darf nicht null sein.");
+			throw new BadRequestException("teilnahmen darf nicht null sein.");
 		}
 
 		Optional<Wettbewerb> optLaufend = wettbewerbService.aktuellerWettbewerb();
@@ -123,28 +129,10 @@ public class AktuelleTeilnahmeService {
 
 		if (StringUtils.isBlank(uuid)) {
 
-			throw new IllegalArgumentException("uuid darf nicht blank sein.");
+			throw new BadRequestException("uuid darf nicht blank sein.");
 		}
 
-		Optional<Wettbewerb> optWettbewerb = wettbewerbService.aktuellerWettbewerb();
-
-		if (optWettbewerb.isEmpty()) {
-
-		}
-
-		Wettbewerb aktuellerWettbewerb = optWettbewerb.get();
-
-		switch (aktuellerWettbewerb.status()) {
-
-		case BEENDET:
-			throw new IllegalStateException("Keine Anmeldung möglich. Der Wettbewerb ist beendet.");
-
-		case ERFASST:
-			throw new IllegalStateException("Keine Anmeldung möglich. Der Anmeldezeitraum hat noch nicht begonnen.");
-
-		default:
-			break;
-		}
+		Wettbewerb aktuellerWettbewerb = wettbewerbService.aktuellerWettbewerbImAnmeldemodus();
 
 		final Identifier identifier = new Identifier(uuid);
 
@@ -152,37 +140,52 @@ public class AktuelleTeilnahmeService {
 
 		if (optVeranstalter.isEmpty()) {
 
-			throw new MkWettbewerbRuntimeException("keinen Veranstalter mit UUID=" + uuid + " gefunden");
+			LOG.warn(
+				"Jemand versucht als Veranstalter mit UUID={} eine Privatanmeldung, aber es gibt keinen Veranstalter mit dieser UUID",
+				uuid);
+			throw new AccessDeniedException("keinen Veranstalter mit UUID=" + uuid + " gefunden");
 		}
 
 		Veranstalter veranstalter = optVeranstalter.get();
 
 		if (Rolle.LEHRER == veranstalter.rolle()) {
 
-			LOG.info("Lehrer {} versucht, eine Privatteilnahme anzulegen", veranstalter.toString());
+			LOG.warn("Lehrer {} versucht, eine Privatteilnahme anzulegen", veranstalter.toString());
 			throw new AccessDeniedException("Der Veranstalter ist ein Lehrer. Nur Privatprsonen dürfen diese Funktion aufrufen.");
 		}
 
 		if (veranstalter.zugangUnterlagen() == ZugangUnterlagen.ENTZOGEN) {
 
-			LOG.info("Veranstalter {} hat keine Berechtigung zur Anmeldung: Zugang Unterlagen {}", veranstalter.toString(),
-				ZugangUnterlagen.ENTZOGEN);
+			LOG.warn("Veranstalter {} hat keine Berechtigung zur Anmeldung: Zugang Unterlagen {}", veranstalter.toString(),
+				veranstalter.zugangUnterlagen());
 			throw new AccessDeniedException("Dem Veranstalter wurde der Zugang zu den Unterlagen entzogen.");
 		}
 
-		Teilnahme vorhandene = this.findVorhandeneTeilnahme((Privatperson) veranstalter, aktuellerWettbewerb);
+		List<Identifier> teilnahmenummern = veranstalter.teilnahmeIdentifier();
 
-		if (vorhandene != null) {
+		if (teilnahmenummern.isEmpty() || teilnahmenummern.size() > 1) {
 
-			return (Privatteilnahme) vorhandene;
+			LOG.warn(
+				"Bei der Migration der Privatkonten ist etwas schiefgegangen: Privatperson {} hat keine oder mehr als eine Teilnahmenummer.",
+				veranstalter);
+			throw new MkWettbewerbRuntimeException("Kann aktuelle Teilnahme nicht ermitteln");
+		}
+
+		Identifier teilnahmenummer = teilnahmenummern.get(0);
+
+		Optional<Teilnahme> optVorhandene = this.findVorhandeneTeilnahme(teilnahmenummer.identifier(), Teilnahmeart.PRIVAT,
+			aktuellerWettbewerb);
+
+		if (optVorhandene.isPresent()) {
+
+			return (Privatteilnahme) optVorhandene.get();
 		}
 
 		Privatteilnahme neue = new Privatteilnahme(aktuellerWettbewerb.id(), veranstalter.teilnahmeIdentifier().get(0));
 
 		teilnahmenRepository.addTeilnahme(neue);
 
-		privatteilnahmeCreatedEvent = new PrivatteilnahmeCreated(neue.wettbewerbID().jahr(), neue.teilnahmenummer().identifier(),
-			uuid);
+		privatteilnahmeCreatedEvent = PrivatteilnahmeCreated.create(neue, uuid);
 
 		if (!test) {
 
@@ -192,27 +195,116 @@ public class AktuelleTeilnahmeService {
 		return neue;
 	}
 
-	private Teilnahme findVorhandeneTeilnahme(final Privatperson veranstalter, final Wettbewerb aktuellerWettbewerb) {
+	/**
+	 * @param  schulkuerzel
+	 *                      String das Schulkuerzel
+	 * @param  uuid
+	 *                      String uuid des anmeldenden Lehrers.
+	 * @return              SchulteilnahmeAPIModel
+	 */
+	@Transactional
+	public Schulteilnahme schuleAnmelden(final SchulanmeldungRequestPayload payload, final String uuid) {
 
-		Teilnahme vorhandene = null;
+		if (payload == null) {
 
-		for (Identifier id : veranstalter.teilnahmeIdentifier()) {
-
-			Optional<Teilnahme> optTeilnahme = teilnahmenRepository.ofTeilnahmenummerArtWettbewerb(id.identifier(),
-				veranstalter.teilnahmeart(), aktuellerWettbewerb.id());
-
-			if (optTeilnahme.isPresent()) {
-
-				vorhandene = optTeilnahme.get();
-				return vorhandene;
-			}
+			throw new BadRequestException("payload darf nicht null sein.");
 		}
 
-		return null;
+		if (StringUtils.isBlank(uuid)) {
+
+			throw new BadRequestException("uuid darf nicht blank sein.");
+		}
+
+		String schulkuerzel = payload.schulkuerzel();
+
+		if (StringUtils.isBlank(schulkuerzel)) {
+
+			throw new BadRequestException("schulkuerzel darf nicht blank sein.");
+		}
+
+		String schulname = payload.schulname();
+
+		if (StringUtils.isBlank(schulname)) {
+
+			throw new BadRequestException("schulname darf nicht blank sein.");
+		}
+
+		Wettbewerb aktuellerWettbewerb = wettbewerbService.aktuellerWettbewerbImAnmeldemodus();
+
+		final Identifier identifier = new Identifier(uuid);
+
+		Optional<Veranstalter> optVeranstalter = veranstalterRepository.ofId(identifier);
+
+		if (optVeranstalter.isEmpty()) {
+
+			LOG.warn(
+				"Jemand versucht als Veranstalter mit UUID={} eine Schulanmeldung: {}, aber es gibt keinen Veranstalter mit dieser UUID.",
+				uuid, payload);
+			throw new AccessDeniedException("keinen Veranstalter mit UUID=" + uuid + " gefunden");
+		}
+
+		Veranstalter veranstalter = optVeranstalter.get();
+
+		if (Rolle.PRIVAT == veranstalter.rolle()) {
+
+			LOG.warn("Privatveranstalter {} versucht, Schulteilnahme anzulegen: {}", veranstalter, payload);
+			throw new AccessDeniedException("Dies ist ein Privatveranstalter. Nur Lehrer dürfen diese Funktion aufrufen.");
+		}
+
+		if (veranstalter.zugangUnterlagen() == ZugangUnterlagen.ENTZOGEN) {
+
+			LOG.warn("Veranstalter {} hat keine Berechtigung zur Anmeldung: Zugang Unterlagen {}", veranstalter.toString(),
+				veranstalter.zugangUnterlagen());
+			throw new AccessDeniedException("Dem Veranstalter wurde der Zugang zu den Unterlagen entzogen.");
+		}
+
+		List<Identifier> teilnahmenummern = veranstalter.teilnahmeIdentifier();
+
+		long anzahlMitSchule = teilnahmenummern.stream().filter(n -> schulkuerzel.equals(n.identifier())).count();
+
+		if (anzahlMitSchule == 0l) {
+
+			LOG.info("Lehrer {} hat keine Berechtigung zur Anmeldung für diese Schule: {}", veranstalter,
+				payload);
+			throw new AccessDeniedException("Der Lehrer gehört nicht zur anzumeldenden Schule.");
+
+		}
+
+		Optional<Teilnahme> optVorhandene = this.findVorhandeneTeilnahme(schulkuerzel, Teilnahmeart.SCHULE, aktuellerWettbewerb);
+
+		if (optVorhandene.isPresent()) {
+
+			return (Schulteilnahme) optVorhandene.get();
+		}
+
+		Schulteilnahme neue = new Schulteilnahme(aktuellerWettbewerb.id(), new Identifier(schulkuerzel), schulname,
+			new Identifier(uuid));
+
+		teilnahmenRepository.addTeilnahme(neue);
+
+		this.schulteilnahmeCreatedEvent = SchulteilnahmeCreated.create(neue);
+
+		if (!test) {
+
+			this.schulteilahmeCreated.fire(schulteilnahmeCreatedEvent);
+		}
+
+		return neue;
+
+	}
+
+	private Optional<Teilnahme> findVorhandeneTeilnahme(final String teilnahmekuerzel, final Teilnahmeart teilnahmeart, final Wettbewerb aktuellerWettbewerb) {
+
+		return teilnahmenRepository.ofTeilnahmenummerArtWettbewerb(teilnahmekuerzel, teilnahmeart, aktuellerWettbewerb.id());
 	}
 
 	PrivatteilnahmeCreated privatteilnahmeCreatedEvent() {
 
 		return privatteilnahmeCreatedEvent;
+	}
+
+	SchulteilnahmeCreated schulteilnahmeCreatedEvent() {
+
+		return schulteilnahmeCreatedEvent;
 	}
 }

@@ -77,7 +77,6 @@ public class SchuleDetailsService {
 		}
 
 		List<Teilnahme> teilnahmen = teilnahmenRepository.ofTeilnahmenummer(schuleID.identifier());
-		result.withAnzahlTeilnahmen(teilnahmen.size());
 
 		Optional<Teilnahme> optTeilnahme = aktuelleTeilnahmeService.aktuelleTeilnahme(teilnahmen);
 
@@ -96,11 +95,12 @@ public class SchuleDetailsService {
 
 					result.withAngemeldetDurch(optAnmelder.get().person());
 				}
-
-				result.withNameUrkunde(schulteilnahme.nameSchule());
-
 			}
 		}
+
+		int anzahlVergangene = optTeilnahme.isPresent() ? teilnahmen.size() - 1 : teilnahmen.size();
+
+		result.withAnzahlVergangeneTeilnahmen(anzahlVergangene);
 
 		return result;
 	}

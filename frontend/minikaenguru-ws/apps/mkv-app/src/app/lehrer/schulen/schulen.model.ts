@@ -1,3 +1,5 @@
+import { AnonymisierteTeilnahme } from '../../wettbewerb/wettbewerb.model';
+
 export interface Schule {
 	readonly kuerzel: string;
 	readonly name: string;
@@ -9,10 +11,11 @@ export interface Schule {
 
 export interface SchuleDetails {
 	readonly kuerzel: string;
-	readonly nameUrkunde?: string;
 	readonly kollegen?: string; // kommaseparierte fullName
 	readonly angemeldetDurch?: string; // fullName
-	readonly anzahlTeilnahmen?: number;
+	readonly anzahlVergangeneTeilnahmen: number;
+	readonly vergangeneTeilnahmenGeladen?: boolean;
+	readonly vergangeneTeilnahmen?: AnonymisierteTeilnahme[];
 };
 
 export interface SchuleWithID {
@@ -22,6 +25,12 @@ export interface SchuleWithID {
 
 export interface Person {
 	readonly fullName: string;
+};
+
+
+export interface SchulanmeldungRequestPayload {
+	schulkuerzel: string;
+	schulname: string;
 };
 
 export function indexOfSchuleMitId(schulenWithID: SchuleWithID[], kuerzel: string): number {

@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
 import { ResponsePayload } from '@minikaenguru-ws/common-messages';
 import { Wettbewerb } from '../wettbewerb/wettbewerb.model';
+import { Schule, SchulanmeldungRequestPayload } from '../lehrer/schulen/schulen.model';
 
 @Injectable({
 	providedIn: 'root'
@@ -34,6 +35,20 @@ export class TeilnahmenService {
 		const url = environment.apiUrl + '/wettbewerb/teilnahmen/privat';
 
 		return this.http.post(url, null).pipe(
+			map(body => body as ResponsePayload)
+		);
+	}
+
+	public schuleAnmelden(schule: Schule): Observable<ResponsePayload> {
+
+		const url = environment.apiUrl + '/wettbewerb/teilnahmen/schule';
+
+		const payload: SchulanmeldungRequestPayload = {
+			schulkuerzel: schule.kuerzel,
+			schulname: schule.name
+		};
+
+		return this.http.post(url, payload).pipe(
 			map(body => body as ResponsePayload)
 		);
 	}

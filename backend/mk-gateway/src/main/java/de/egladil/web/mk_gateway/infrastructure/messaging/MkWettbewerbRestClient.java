@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 import de.egladil.web.mk_gateway.MkGatewayApp;
+import de.egladil.web.mk_gateway.domain.apimodel.SchulanmeldungRequestPayload;
 import de.egladil.web.mk_gateway.domain.signup.LehrerCreated;
 import de.egladil.web.mk_gateway.domain.signup.PrivatmenschCreated;
 
@@ -79,8 +80,8 @@ public interface MkWettbewerbRestClient {
 
 	// http://192.168.10.176:9550/mk-wettbewerb/teilnahmen/privat
 	@POST
-	@Path("/teilnahmen/schulen/{schulkuerzel}")
-	Response meldeSchuleZumAktuellenWettbewerbAn(@PathParam(value = "schulkuerzel") final String schulkuerzel, @HeaderParam(
+	@Path("/teilnahmen/schule")
+	Response meldeSchuleZumAktuellenWettbewerbAn(SchulanmeldungRequestPayload payload, @HeaderParam(
 		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName) throws MkWettbewerbRestException;
 
 }
