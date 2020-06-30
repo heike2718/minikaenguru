@@ -1,29 +1,19 @@
 import { createReducer, Action, on } from '@ngrx/store';
 import * as PrivatveranstalterActions from './privatveranstalter.actions';
-import { Privatteilnahme, AnonymisierteTeilnahme } from '../../wettbewerb/wettbewerb.model';
+import { Privatveranstalter } from '../../wettbewerb/wettbewerb.model';
 
 
 export const privatveranstalterFeatureKey = 'mkv-app-privatveranstalter';
 
 export interface PrivatveranstalterState {
-	readonly hatZugangZuUnterlangen: boolean;
-	readonly aktuellAngemeldet: boolean;
+	readonly veranstalter: Privatveranstalter;
 	readonly aktuelleTeilnahmeGeladen: boolean;
-	readonly anzahlVergangeneTeilnahmen: number;
-	readonly aktuelleTeilnahme: Privatteilnahme;
-	readonly vergangeneTeilnahmenGeladen: boolean;
-	readonly vergangeneTeilnahmen: AnonymisierteTeilnahme[];
 	readonly loading: boolean;
 }
 
 const initialPrivatveranstalterState: PrivatveranstalterState = {
-	hatZugangZuUnterlangen: undefined,
-	aktuellAngemeldet: undefined,
+	veranstalter: undefined,
 	aktuelleTeilnahmeGeladen: false,
-	anzahlVergangeneTeilnahmen: 0,
-	aktuelleTeilnahme: undefined,
-	vergangeneTeilnahmenGeladen: false,
-	vergangeneTeilnahmen: [],
 	loading: false
 };
 
@@ -42,29 +32,25 @@ const privatveranstalterReducer = createReducer(initialPrivatveranstalterState,
 
 
 	on(PrivatveranstalterActions.privatveranstalterGeladen, (state, action) => {
+
 		return {
 			...state,
-			hatZugangZuUnterlangen: action.veranstalter.hatZugangZuUnterlangen,
+			veranstalter: action.veranstalter,
 			aktuelleTeilnahmeGeladen: true,
-			anzahlVergangeneTeilnahmen: action.veranstalter.anzahlVergangeneTeilnahmen,
-			aktuelleTeilnahme: action.veranstalter.aktuelleTeilnahme,
-			aktuellAngemeldet: action.veranstalter.aktuellAngemeldet,
 			loading: false
 		};
 	}),
 
 	on(PrivatveranstalterActions.privatveranstalterAngemeldet, (state, action) => {
 
+		const neuerVeranstalter: Privatveranstalter = { ...state.veranstalter, aktuellAngemeldet: true, aktuelleTeilnahme: action.teilnahme };
+
 		return {
 			...state,
-			aktuellAngemeldet: true,
+			veranstalter: neuerVeranstalter,
 			aktuelleTeilnahmeGeladen: true,
-			aktuelleTeilnahme: action.teilnahme
+			loading: false
 		};
-	}),
-
-	on(PrivatveranstalterActions.privatteilnahmeCreated, (state, action) => {
-		return { ...state, aktuelleTeilnahme: action.teilnahme, aktuelleTeilnahmeGeladen: true };
 	}),
 
 	on(PrivatveranstalterActions.resetPrivatveranstalter, (_state, _action) => {

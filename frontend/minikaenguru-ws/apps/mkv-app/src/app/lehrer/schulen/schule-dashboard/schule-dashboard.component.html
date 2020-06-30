@@ -1,90 +1,86 @@
 <div class="mkv-container mkv-bordered">
 	<div *ngIf="loading$ | async">
-		<h2>Schuldashboard</h2>
+		<h2>Schübersicht</h2>
 		<div class="col-12">
 			Lade Daten... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
 		</div>
 	</div>
 
 	<div *ngIf="aktuellerWettbewerb$ | async as wettbewerb">
-		<div *ngIf="schule$ | async as schule">
-			<div *ngIf="schuleDetails$ | async as details">
+		<div *ngIf="details$ | async">
+			<h2>Schulübersicht</h2>
 
-				<h2>Schuldashboard</h2>
+			<div class="row mt-4 ml-2">
+				<div class="col-12">
+					<h2>{{schule.name}} <span *ngIf="schule.aktuellAngemeldet"
+							class="ml-1 badge badge-success">angemeldet
+							für {{wettbewerb.jahr}}</span></h2>
+					<p>{{schule.ort}} - {{schule.land}}</p>
 
-				<div class="row mt-4 ml-2">
-					<div class="col-12">
-						<h2>{{schule.name}} <span *ngIf="schule.aktuellAngemeldet"
-								class="ml-1 badge badge-success">angemeldet
-								für {{wettbewerb.jahr}}</span></h2>
-						<p>{{schule.ort}} - {{schule.land}}</p>
+					<p *ngIf="schule.details.kollegen && schule.details.kollegen.length > 0">Kollegen:
+						{{schule.details.kollegen}}</p>
 
-						<p *ngIf="details.kollegen && details.kollegen.length > 0">Kollegen:
-							{{details.kollegen}}</p>
+					<p *ngIf="wettbewerb.status === 'ERFASST'">Der Anmeldezeitraum für {{wettbewerb.jahr}} beginnt
+						am
+						{{wettbewerb.wettbewerbsbeginn}}</p>
 
-						<p *ngIf="wettbewerb.status === 'ERFASST'">Der Anmeldezeitraum für {{wettbewerb.jahr}} beginnt
-							am
-							{{wettbewerb.wettbewerbsbeginn}}</p>
-
-						<p *ngIf="schule.aktuellAngemeldet">Anmeldung {{wettbewerb.jahr}} durch
-							{{details.angemeldetDurch}}
-						</p>
-					</div>
+					<p *ngIf="schule.aktuellAngemeldet">Anmeldung {{wettbewerb.jahr}} durch
+						{{schule.details.angemeldetDurch}}
+					</p>
 				</div>
+			</div>
 
-				<div class="row mt-4 ml-2">
-					<div *ngIf="schule.aktuellAngemeldet" class="col-md-6 col-sm-12">
-						<div class="card clickable">
-							<div class="card-body">
-								<div class="card-title">Auswertung {{wettbewerb.jahr}}</div>
-								<div class="mb-2 text-muted">Kinder erfassen und Urkunden generieren</div>
-							</div>
-						</div>
-					</div>
-
-					<div *ngIf="schule.aktuellAngemeldet" class="col-md-6 col-sm-12">
-						<div class="card clickable">
-							<div class="card-body">
-								<div class="card-title">Auswertungstabelle</div>
-								<div class="mb-2 text-muted">Offlineauswertung</div>
-								<div class="mb-2 text-muted">
-									Excel-Auswertungstabelle hochladen</div>
-							</div>
-						</div>
-					</div>
-
-					<div *ngIf="(wettbewerb.status !== 'ERFASST' && wettbewerb.status !== 'BEENDET' && !schule.aktuellAngemeldet)"
-						class="col-md-6 col-sm-12">
-						<div class="card clickable" (click)="anmelden()">
-							<div class="card-body">
-								<div class="card-title">Anmelden</div>
-								<div class="mb-2 text-muted"> für {{wettbewerb.jahr}}</div>
-							</div>
+			<div class="row mt-2 ml-2 mr-2">
+				<div *ngIf="schule.aktuellAngemeldet" class="col-md-6 col-sm-12 mt-2">
+					<div class="card clickable">
+						<div class="card-body">
+							<div class="card-title">Auswertung {{wettbewerb.jahr}}</div>
+							<div class="mb-2 text-muted">Kinder erfassen und Urkunden generieren</div>
 						</div>
 					</div>
 				</div>
 
-				<div class="row mt-4 ml-2">
-					<div class="col-md-6 col-sm-12">
-						<div class="card clickable" (click)="gotoTeilnahmen()">
-							<div class="card-body">
-								<div class="card-title">Vergangene Teilnahmen <span
-										class="ml-1 badge badge-primary">{{details.anzahlTeilnahmen}}</span></div>
-								<div class="mb-2 text-muted">Schulstatistiken</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-md-6 col-sm-12 mt-4">
-						<div class="card clickable">
-							<div class="card-body">
-								<div class="card-title">DSGVO</div>
-								<div class="mb-2 text-muted">Vertrag zur Auftragsdatenverarbeitung</div>
-							</div>
+				<div *ngIf="schule.aktuellAngemeldet" class="col-md-6 col-sm-12 mt-2">
+					<div class="card clickable">
+						<div class="card-body">
+							<div class="card-title">Auswertungstabelle</div>
+							<div class="mb-2  text-danger">Achtung: nur bei Offlineauswertung!</div>
+							<div class="mb-2 text-muted">
+								Excel-Auswertungstabelle hochladen</div>
 						</div>
 					</div>
 				</div>
 
+				<div *ngIf="(wettbewerb.status !== 'ERFASST' && wettbewerb.status !== 'BEENDET' && !schule.aktuellAngemeldet)"
+					class="col-md-6 col-sm-12 mt-2">
+					<div class="card clickable" (click)="anmelden()">
+						<div class="card-body">
+							<div class="card-title">Anmelden</div>
+							<div class="mb-2 text-muted"> für {{wettbewerb.jahr}}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row ml-2 mr-2 ">
+				<div *ngIf="schule.details.anzahlVergangeneTeilnahmen > 0" class="col-md-6 col-sm-12 mt-2">
+					<div class="card clickable" (click)="gotoTeilnahmen()">
+						<div class="card-body">
+							<div class="card-title">Vergangene Teilnahmen <span
+									class="ml-1 badge badge-primary">{{schule.details.anzahlVergangeneTeilnahmen}}</span></div>
+							<div class="mb-2 text-muted">Schulstatistiken</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-6 col-sm-12 mt-2">
+					<div class="card clickable">
+						<div class="card-body">
+							<div class="card-title">DSGVO</div>
+							<div class="mb-2 text-muted">Vertrag zur Auftragsdatenverarbeitung</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 

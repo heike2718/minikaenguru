@@ -64,10 +64,12 @@ public class TeilnahmenResource {
 		String message = MessageFormat.format(applicationMessages.getString("teilnahmenResource.anmelden.schule.success"),
 			new Object[] { schulteilnahme.nameSchule() });
 
+		SchulteilnahmeAPIModel data = SchulteilnahmeAPIModel.create(schulteilnahme).withKlassenGeladen(true);
+
 		return Response
 			.ok(new ResponsePayload(
 				MessagePayload.info(message),
-				SchulteilnahmeAPIModel.create(schulteilnahme)))
+				data))
 			.build();
 	}
 

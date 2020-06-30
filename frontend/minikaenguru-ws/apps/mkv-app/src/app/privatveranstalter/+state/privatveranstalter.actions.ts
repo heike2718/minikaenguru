@@ -1,6 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Privatveranstalter } from '../privatveranstalter.model';
-import { Privatteilnahme } from '../../wettbewerb/wettbewerb.model';
+import { Privatteilnahme, Privatveranstalter } from '../../wettbewerb/wettbewerb.model';
 
 
 export const startLoading = createAction(
@@ -23,10 +22,5 @@ export const privatveranstalterAngemeldet = createAction(
 
 export const resetPrivatveranstalter = createAction(
 	'[PrivatveranstalterFacade] resetState'
-);
-
-export const privatteilnahmeCreated = createAction(
-	'[PrivatveranstalterFacade] createTeilnahme',
-	props<{ teilnahme: Privatteilnahme }>()
 );
 

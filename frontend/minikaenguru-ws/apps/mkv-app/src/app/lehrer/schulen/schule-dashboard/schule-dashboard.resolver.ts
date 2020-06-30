@@ -32,15 +32,17 @@ export class SchuleDashboardResolver implements Resolve<any> {
 					}
 				} else {
 
-					if (details.kuerzel !== kuerzel) {
-						if (!this.loading) {
-							this.loading = true;
-							this.lehrerFacade.loadDetails(kuerzel);
-						}
-					} else {
+					this.lehrerFacade.restoreDetailsFromCache(kuerzel);
 
-						this.lehrerFacade.restoreDetailsFromCache(kuerzel);
-					}
+					// if (details.kuerzel !== kuerzel) {
+					// 	if (!this.loading) {
+					// 		this.loading = true;
+					// 		this.lehrerFacade.loadDetails(kuerzel);
+					// 	}
+					// } else {
+
+					// 	this.lehrerFacade.restoreDetailsFromCache(kuerzel);
+					// }
 				}
 			}),
 			filter(d => d !== undefined),

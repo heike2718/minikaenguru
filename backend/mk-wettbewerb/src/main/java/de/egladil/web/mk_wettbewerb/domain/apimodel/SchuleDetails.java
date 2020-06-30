@@ -4,7 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_wettbewerb.domain.apimodel;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,28 +24,16 @@ public class SchuleDetails {
 	private String kuerzel;
 
 	@JsonProperty
-	private String nameUrkunde;
-
-	@JsonProperty
 	private String kollegen;
 
 	@JsonProperty
 	private String angemeldetDurch;
 
 	@JsonProperty
-	private int anzahlTeilnahmen;
-
-	@JsonProperty
 	private SchulteilnahmeAPIModel aktuelleTeilnahme;
 
 	@JsonProperty
-	private int anzahlVergangeneTeilnahmen = 0;
-
-	@JsonProperty
-	private boolean anonymisierteTeilnahmenGeladen;
-
-	@JsonProperty
-	private List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = new ArrayList<>();
+	private int anzahlVergangeneTeilnahmen = 1;
 
 	SchuleDetails() {
 
@@ -55,12 +42,6 @@ public class SchuleDetails {
 	public SchuleDetails(final String kuerzel) {
 
 		this.kuerzel = kuerzel;
-	}
-
-	public SchuleDetails withNameUrkunde(final String nameUrkunde) {
-
-		this.nameUrkunde = nameUrkunde;
-		return this;
 	}
 
 	public SchuleDetails withKollegen(final List<Person> kollegen) {
@@ -74,12 +55,6 @@ public class SchuleDetails {
 	public SchuleDetails withAngemeldetDurch(final Person person) {
 
 		this.angemeldetDurch = person.fullName();
-		return this;
-	}
-
-	public SchuleDetails withAnzahlTeilnahmen(final int anzahlTeilnahmen) {
-
-		this.anzahlTeilnahmen = anzahlTeilnahmen;
 		return this;
 	}
 
@@ -100,24 +75,9 @@ public class SchuleDetails {
 		return kuerzel;
 	}
 
-	public String nameUrkunde() {
-
-		return nameUrkunde;
-	}
-
 	public String kollegen() {
 
 		return kollegen;
-	}
-
-	public boolean anonymisierteTeilnahmenGeladen() {
-
-		return anonymisierteTeilnahmenGeladen;
-	}
-
-	public List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen() {
-
-		return anonymisierteTeilnahmen;
 	}
 
 	public String angemeldetDurch() {
@@ -125,14 +85,14 @@ public class SchuleDetails {
 		return angemeldetDurch;
 	}
 
-	public int anzahlTeilnahmen() {
-
-		return anzahlTeilnahmen;
-	}
-
 	public SchulteilnahmeAPIModel aktuelleTeilnahme() {
 
 		return aktuelleTeilnahme;
+	}
+
+	public int anzahlVergangeneTeilnahmen() {
+
+		return anzahlVergangeneTeilnahmen;
 	}
 
 }

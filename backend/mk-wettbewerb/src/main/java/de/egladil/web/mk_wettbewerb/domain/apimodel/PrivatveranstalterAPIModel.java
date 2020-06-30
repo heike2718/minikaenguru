@@ -27,10 +27,10 @@ public class PrivatveranstalterAPIModel {
 	private PrivatteilnahmeAPIModel aktuelleTeilnahme;
 
 	@JsonProperty
-	private boolean anonymisierteTeilnahmenGeladen;
+	private boolean vergangeneTeilnahmenGeladen;
 
 	@JsonProperty
-	private List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = new ArrayList<>();
+	private List<AnonymisierteTeilnahmeAPIModel> vergangeneTeilnahmen = new ArrayList<>();
 
 	public static PrivatveranstalterAPIModel create(final boolean zugangZuUnterlagen) {
 
@@ -76,14 +76,14 @@ public class PrivatveranstalterAPIModel {
 		return aktuelleTeilnahme;
 	}
 
-	public boolean anonymisierteTeilnahmenGeladen() {
+	public boolean vergangeneTeilnahmenGeladen() {
 
-		return anonymisierteTeilnahmenGeladen;
+		return vergangeneTeilnahmenGeladen;
 	}
 
-	public List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen() {
+	public List<AnonymisierteTeilnahmeAPIModel> vergangeneTeilnahmen() {
 
-		return anonymisierteTeilnahmen;
+		return vergangeneTeilnahmen;
 	}
 
 }
