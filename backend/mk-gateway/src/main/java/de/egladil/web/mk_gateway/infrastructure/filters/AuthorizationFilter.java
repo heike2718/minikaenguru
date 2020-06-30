@@ -18,7 +18,6 @@ import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.ext.Provider;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +30,7 @@ import de.egladil.web.mk_gateway.domain.session.LoggedInUser;
 import de.egladil.web.mk_gateway.domain.session.MkSessionService;
 import de.egladil.web.mk_gateway.domain.session.MkvSecurityContext;
 import de.egladil.web.mk_gateway.domain.session.Session;
+import de.egladil.web.mk_gateway.infrastructure.config.ConfigService;
 
 /**
  * AuthorizationFilter
@@ -43,8 +43,8 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AuthorizationFilter.class);
 
-	@ConfigProperty(name = "stage")
-	String stage;
+	@Inject
+	ConfigService configService;
 
 	@Context
 	ResourceInfo resourceInfo;
@@ -77,7 +77,8 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 			return;
 		}
 
-		String sessionId = CommonHttpUtils.getSessionId(requestContext, stage, MkGatewayApp.CLIENT_COOKIE_PREFIX);
+		String sessionId = CommonHttpUtils.getSessionId(requestContext, configService.getStage(),
+			MkGatewayApp.CLIENT_COOKIE_PREFIX);
 
 		if (sessionId == null) {
 
@@ -109,7 +110,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 			throw new AuthException();
 		}
 
-		boolean secure = !stage.equals(MkGatewayApp.STAGE_DEV);
+		boolean secure = !configService.getStage().equals(MkGatewayApp.STAGE_DEV);
 		MkvSecurityContext securityContext = new MkvSecurityContext(session, secure);
 		requestContext.setSecurityContext(securityContext);
 

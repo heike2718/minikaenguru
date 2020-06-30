@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
 import * as PrivatveranstalterActions from './+state/privatveranstalter.actions';
-import { loading, privatveranstalterState } from './+state/privatveranstalter.selectors';
+import { loading, privatveranstalterState, privatveranstalter, aktuelleTeilnahmeGeladen } from './+state/privatveranstalter.selectors';
 import { VeranstalterService } from '../services/veranstalter.service';
 import { TeilnahmenService } from '../services/teilnahmen.service';
 import { MessageService, Message } from '@minikaenguru-ws/common-messages';
@@ -14,7 +14,9 @@ import { Privatteilnahme } from '../wettbewerb/wettbewerb.model';
 export class PrivatveranstalterFacade {
 
 	public loading$ = this.appStore.select(loading);
-	public veranstalter$ = this.appStore.select(privatveranstalterState);
+	// public veranstalterState$ = this.appStore.select(privatveranstalterState);
+	public veranstalter$ = this.appStore.select(privatveranstalter);
+	public aktuelleTeilnahmeGeladen$ = this.appStore.select(aktuelleTeilnahmeGeladen);
 
 	constructor(private appStore: Store<AppState>,
 		private veranstalterService: VeranstalterService,

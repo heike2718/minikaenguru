@@ -39,4 +39,37 @@ public class WettbewerbService {
 
 		return optLaufend;
 	}
+
+	/**
+	 * Sucht den aktuellen Wettbewerb und gibt ihn zurück, falls er Anmeldungen erlaubt.
+	 *
+	 * @return                       Wettbewerb
+	 * @throws IllegalStateException
+	 *                               wenn es keinen gibt oder der den falschen Status hat.
+	 */
+	public Wettbewerb aktuellerWettbewerbImAnmeldemodus() throws IllegalStateException {
+
+		Optional<Wettbewerb> optWettbewerb = aktuellerWettbewerb();
+
+		if (optWettbewerb.isEmpty()) {
+
+			throw new IllegalStateException("Keine Anmeldung möglich. Es gibt keinen aktuellen Wettbewerb.");
+		}
+
+		Wettbewerb aktuellerWettbewerb = optWettbewerb.get();
+
+		switch (aktuellerWettbewerb.status()) {
+
+		case BEENDET:
+			throw new IllegalStateException("Keine Anmeldung möglich. Der Wettbewerb ist beendet.");
+
+		case ERFASST:
+			throw new IllegalStateException("Keine Anmeldung möglich. Der Anmeldezeitraum hat noch nicht begonnen.");
+
+		default:
+			break;
+		}
+
+		return aktuellerWettbewerb;
+	}
 }

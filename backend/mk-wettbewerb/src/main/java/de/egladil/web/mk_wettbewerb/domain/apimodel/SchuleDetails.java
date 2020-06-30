@@ -24,16 +24,16 @@ public class SchuleDetails {
 	private String kuerzel;
 
 	@JsonProperty
-	private String nameUrkunde;
-
-	@JsonProperty
 	private String kollegen;
 
 	@JsonProperty
 	private String angemeldetDurch;
 
 	@JsonProperty
-	private int anzahlTeilnahmen;
+	private SchulteilnahmeAPIModel aktuelleTeilnahme;
+
+	@JsonProperty
+	private int anzahlVergangeneTeilnahmen = 1;
 
 	SchuleDetails() {
 
@@ -42,12 +42,6 @@ public class SchuleDetails {
 	public SchuleDetails(final String kuerzel) {
 
 		this.kuerzel = kuerzel;
-	}
-
-	public SchuleDetails withNameUrkunde(final String nameUrkunde) {
-
-		this.nameUrkunde = nameUrkunde;
-		return this;
 	}
 
 	public SchuleDetails withKollegen(final List<Person> kollegen) {
@@ -64,20 +58,21 @@ public class SchuleDetails {
 		return this;
 	}
 
-	public SchuleDetails withAnzahlTeilnahmen(final int anzahlTeilnahmen) {
+	public SchuleDetails withTeilnahme(final SchulteilnahmeAPIModel teilnahme) {
 
-		this.anzahlTeilnahmen = anzahlTeilnahmen;
+		this.aktuelleTeilnahme = teilnahme;
+		return this;
+	}
+
+	public SchuleDetails withAnzahlVergangeneTeilnahmen(final int anzahl) {
+
+		this.anzahlVergangeneTeilnahmen = anzahl;
 		return this;
 	}
 
 	public String kuerzel() {
 
 		return kuerzel;
-	}
-
-	public String nameUrkunde() {
-
-		return nameUrkunde;
 	}
 
 	public String kollegen() {
@@ -90,9 +85,14 @@ public class SchuleDetails {
 		return angemeldetDurch;
 	}
 
-	public int anzahlTeilnahmen() {
+	public SchulteilnahmeAPIModel aktuelleTeilnahme() {
 
-		return anzahlTeilnahmen;
+		return aktuelleTeilnahme;
+	}
+
+	public int anzahlVergangeneTeilnahmen() {
+
+		return anzahlVergangeneTeilnahmen;
 	}
 
 }

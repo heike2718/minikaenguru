@@ -7,6 +7,7 @@ package de.egladil.web.mk_wettbewerb.infrastructure.error;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
@@ -82,6 +83,19 @@ public class MkWettbewerbExceptionMapper implements ExceptionMapper<Throwable> {
 				.messageOnly(MessagePayload.error(msg));
 
 			return Response.status(412).entity(serialize(payload)).build();
+		}
+
+		if (exception instanceof BadRequestException) {
+
+			BadRequestException brException = (BadRequestException) exception;
+
+			String msg = brException.getMessage();
+			LOG.error(msg);
+
+			ResponsePayload payload = ResponsePayload
+				.messageOnly(MessagePayload.error(applicationMessages.getString("general.badRequest")));
+
+			return Response.status(brException.getResponse().getStatus()).entity(payload).build();
 		}
 
 		if (exception instanceof WebApplicationException) {

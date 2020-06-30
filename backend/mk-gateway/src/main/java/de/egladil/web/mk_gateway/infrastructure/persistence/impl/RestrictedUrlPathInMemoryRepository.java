@@ -66,6 +66,13 @@ public class RestrictedUrlPathInMemoryRepository implements RestrictedUrlPathRep
 
 		{
 
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/teilnahmen/schule",
+				Arrays.asList(new Rolle[] { Rolle.LEHRER }));
+			paths.add(restrictedPath);
+		}
+
+		{
+
 			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/teilnahmen/schulen/*",
 				Arrays.asList(new Rolle[] { Rolle.LEHRER }));
 			paths.add(restrictedPath);
