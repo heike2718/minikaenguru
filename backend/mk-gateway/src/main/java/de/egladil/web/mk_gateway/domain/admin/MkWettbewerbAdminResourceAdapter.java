@@ -5,19 +5,20 @@
 package de.egladil.web.mk_gateway.domain.admin;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.egladil.web.commons_validation.payload.MessagePayload;
-import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.AbstractMkResourceAdapter;
 import de.egladil.web.mk_gateway.domain.apimodel.WettbewerbAPIModel;
 import de.egladil.web.mk_gateway.domain.apimodel.WettbewerbID;
+import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
+import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.infrastructure.messaging.MkWettbewerbAdminRestClient;
 
 /**
@@ -31,6 +32,9 @@ public class MkWettbewerbAdminResourceAdapter extends AbstractMkResourceAdapter 
 	@Inject
 	@RestClient
 	MkWettbewerbAdminRestClient restClient;
+
+	@Inject
+	Event<SecurityIncidentRegistered> securityIncidentEvent;
 
 	public Response loadWettbewerbe(final String principalName) {
 
@@ -48,9 +52,12 @@ public class MkWettbewerbAdminResourceAdapter extends AbstractMkResourceAdapter 
 
 		if (jahr == null) {
 
-			LOG.warn("Aufruf mit jahr = null. Geben 404 zurück");
-			return Response.status(Status.NOT_FOUND)
-				.entity(ResponsePayload.messageOnly(MessagePayload.error("kein Wettbwerb mit Jahr null bekannt"))).build();
+			String msg = "Abfrage Wettbewerb mit jahr=null durch " + principalName;
+
+			LOG.warn(msg);
+			new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
+
+			throw new BadRequestException();
 		}
 
 		try {

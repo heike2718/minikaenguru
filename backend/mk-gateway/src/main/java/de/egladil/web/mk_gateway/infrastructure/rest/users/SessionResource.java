@@ -5,6 +5,7 @@
 package de.egladil.web.mk_gateway.infrastructure.rest.users;
 
 import javax.enterprise.context.RequestScoped;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
@@ -25,6 +26,8 @@ import de.egladil.web.commons_net.utils.CommonHttpUtils;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.MkGatewayApp;
+import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
+import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.session.MkSessionService;
 import de.egladil.web.mk_gateway.domain.session.Session;
 import de.egladil.web.mk_gateway.domain.session.SessionUtils;
@@ -49,6 +52,9 @@ public class SessionResource {
 
 	@Inject
 	MkSessionService sessionService;
+
+	@Inject
+	Event<SecurityIncidentRegistered> securityEvent;
 
 	@POST
 	@Path("/login")
@@ -94,7 +100,12 @@ public class SessionResource {
 
 		if (!MkGatewayApp.STAGE_DEV.equals(stage)) {
 
-			LOG.warn("URL wurde auf Umgebung {} aufgerufen, sessionId=", stage, sessionId);
+			String msg = "logoutDev wurde auf der Umgebung " + stage + " aufgerufen. sessionId=" + sessionId;
+
+			LOG.warn(msg);
+
+			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+
 			return Response.status(401)
 				.entity(ResponsePayload.messageOnly(MessagePayload.error("böse böse. Dieser Request wurde geloggt!")))
 				.cookie(CommonHttpUtils.createSessionInvalidatedCookie(SESSION_COOKIE_NAME)).build();

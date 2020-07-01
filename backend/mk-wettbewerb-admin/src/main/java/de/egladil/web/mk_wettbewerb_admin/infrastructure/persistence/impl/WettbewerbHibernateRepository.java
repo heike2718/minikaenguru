@@ -2,7 +2,7 @@
 // Project: mk-wettbewerb
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_wettbewerb_admin.infrastructure.persistence;
+package de.egladil.web.mk_wettbewerb_admin.infrastructure.persistence.impl;
 
 import java.util.List;
 import java.util.Optional;

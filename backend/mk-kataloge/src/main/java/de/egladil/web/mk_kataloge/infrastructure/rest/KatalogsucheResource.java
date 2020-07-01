@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.validation.constraints.NotBlank;
 import javax.ws.rs.GET;
@@ -32,6 +33,9 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_kataloge.application.KatalogsucheFacade;
 import de.egladil.web.mk_kataloge.domain.KatalogItem;
 import de.egladil.web.mk_kataloge.domain.Katalogtyp;
+import de.egladil.web.mk_kataloge.domain.event.DataInconsistencyRegistered;
+import de.egladil.web.mk_kataloge.domain.event.LoggableEventDelegate;
+import de.egladil.web.mk_kataloge.domain.event.SecurityIncidentRegistered;
 
 /**
  * KatalogsucheResource
@@ -45,6 +49,12 @@ public class KatalogsucheResource {
 
 	@Inject
 	KatalogsucheFacade katalogsucheFacade;
+
+	@Inject
+	Event<DataInconsistencyRegistered> dataInconsistencyEvent;
+
+	@Inject
+	Event<SecurityIncidentRegistered> securityEvent;
 
 	/**
 	 *
@@ -88,7 +98,9 @@ public class KatalogsucheResource {
 				break;
 
 			default:
-				LOG.warn("Unerwarteter Katalogtyp {}: geben leeres result zurück", typ);
+				String msg = "Aufruf von findItems mit unerwartetem Katalogtyp " + typ + ": geben leeres result zurück";
+				LOG.warn(msg);
+				new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
 				ResponsePayload responsePayload = ResponsePayload.messageOnly(MessagePayload.error("Unbeannte URL"));
 				return Response.status(Status.NOT_FOUND).entity(responsePayload).build();
 			}
@@ -97,8 +109,9 @@ public class KatalogsucheResource {
 			return Response.ok(responsePayload).build();
 		} catch (IllegalArgumentException e) {
 
-			LOG.warn("ungültiger typ-Parameter {}", typ);
-
+			String msg = "Aufruf von findItems mit ungültigem typ-Parameter " + typ;
+			LOG.warn(msg);
+			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
 			ResponsePayload responsePayload = ResponsePayload.messageOnly(MessagePayload.error("Fehlerhafte URL"));
 			return Response.status(Status.NOT_FOUND).entity(responsePayload).build();
 

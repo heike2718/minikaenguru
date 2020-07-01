@@ -4,6 +4,8 @@
 // =====================================================
 package de.egladil.web.mk_wettbewerb.domain.personen;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -50,7 +52,7 @@ public class VeranstalterAuthorizationServiceTest {
 			fail("keine AccessDeniedException");
 		} catch (AccessDeniedException e) {
 
-			// nüscht
+			assertNotNull(service.getSecurityIncidentRegistered());
 		}
 
 	}
@@ -74,7 +76,7 @@ public class VeranstalterAuthorizationServiceTest {
 			fail("keine AccessDeniedException");
 		} catch (AccessDeniedException e) {
 
-			// nüscht
+			assertNotNull(service.getSecurityIncidentRegistered());
 		}
 
 	}
@@ -93,6 +95,7 @@ public class VeranstalterAuthorizationServiceTest {
 
 		// Act
 		assertTrue(service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId));
+		assertNull(service.getSecurityIncidentRegistered());
 
 	}
 

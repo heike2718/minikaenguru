@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 
@@ -23,6 +24,8 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.apimodel.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
+import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
 
@@ -40,6 +43,11 @@ public class SchulenAnmeldeinfoService {
 
 	@Inject
 	MkWettbewerbResourceAdapter wettbewerbAdapter;
+
+	@Inject
+	Event<DataInconsistencyRegistered> dataInconsistencyEvent;
+
+	private DataInconsistencyRegistered dataInconsistencyRegistered;
 
 	static SchulenAnmeldeinfoService createForTest(final MkKatalogeResourceAdapter katalogeAdapter, final MkWettbewerbResourceAdapter wettbewerbAdapter) {
 
@@ -164,7 +172,12 @@ public class SchulenAnmeldeinfoService {
 
 		if (nurLehrer.size() != schulenOfLehrer.size()) {
 
-			LOG.warn("Nicht alle Schulen auf beiden Seiten gefunden: Kataloge: {}, Lehrer: {}", schulenAusKatalg, schulenOfLehrer);
+			String msg = "Nicht alle Schulen auf beiden Seiten gefunden: Kataloge: " + schulenAusKatalg.toString() + ", Lehrer: "
+				+ schulenOfLehrer.toString();
+
+			LOG.warn(msg);
+
+			this.dataInconsistencyRegistered = new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
 		}
 
 		if (schulenOfLehrer.size() > schulenAusKatalg.size()) {
@@ -269,6 +282,11 @@ public class SchulenAnmeldeinfoService {
 
 		return result;
 
+	}
+
+	DataInconsistencyRegistered getDataInconsistencyRegistered() {
+
+		return dataInconsistencyRegistered;
 	}
 
 }

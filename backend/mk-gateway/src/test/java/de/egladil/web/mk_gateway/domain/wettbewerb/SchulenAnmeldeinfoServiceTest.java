@@ -27,6 +27,7 @@ import de.egladil.web.mk_gateway.domain.apimodel.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.apimodel.SchuleWettbewerbeDetails;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
 
 /**
@@ -466,6 +467,14 @@ public class SchulenAnmeldeinfoServiceTest {
 			assertEquals("unbekanntes Land / Bundesland", schule.land());
 			assertEquals(true, schule.aktuellAngemeldet());
 		}
+
+		DataInconsistencyRegistered event = service.getDataInconsistencyRegistered();
+		assertNotNull(event);
+		assertNotNull(event.occuredOn());
+		assertEquals(
+			"Nicht alle Schulen auf beiden Seiten gefunden: Kataloge: [SchuleAPIModel [kuerzel=98765]], Lehrer: [SchuleAPIModel [kuerzel=12345], SchuleAPIModel [kuerzel=98765]]",
+			event.message());
+		assertEquals("DataInconsistencyRegistered", event.typeName());
 
 	}
 

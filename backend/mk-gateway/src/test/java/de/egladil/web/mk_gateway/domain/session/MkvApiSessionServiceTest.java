@@ -74,7 +74,8 @@ public class MkvApiSessionServiceTest {
 			assertTrue(serialized.contains("rolle"));
 			assertTrue(serialized.contains("fullName"));
 
-			System.out.println(serialized);
+			// System.out.println(serialized);
+			assertNull(service.getSecurityIncident());
 
 		}
 
@@ -107,6 +108,7 @@ public class MkvApiSessionServiceTest {
 
 			// Assert
 			assertNull(service.getAndRefreshSessionIfValid(session.sessionId()));
+			assertNull(service.getSecurityIncident());
 
 		}
 
@@ -140,6 +142,7 @@ public class MkvApiSessionServiceTest {
 			} catch (AuthException e) {
 
 				assertEquals("JWT expired", e.getMessage());
+				assertNull(service.getSecurityIncident());
 			}
 		}
 
@@ -169,6 +172,8 @@ public class MkvApiSessionServiceTest {
 		} catch (AuthException e) {
 
 			assertEquals("JWT invalid", e.getMessage());
+			assertNotNull(service.getSecurityIncident());
+			assertEquals("", service.getSecurityIncident().message());
 		}
 
 	}
@@ -201,6 +206,9 @@ public class MkvApiSessionServiceTest {
 			} catch (AuthException e) {
 
 				assertEquals("USER mit UUID 4d8ed03a-575a-442e-89f4-0e54e51dd0d8 existiert nicht", e.getMessage());
+				assertNotNull(service.getSecurityIncident());
+				assertEquals("USER mit UUID 4d8ed03a-575a-442e-89f4-0e54e51dd0d8 existiert nicht",
+					service.getSecurityIncident().message());
 			}
 
 		}
@@ -240,6 +248,7 @@ public class MkvApiSessionServiceTest {
 			assertEquals(session, refreshedSession);
 			assertEquals(session.user(), refreshedSession.user());
 			assertTrue(refreshedSession.getExpiresAt() > expiresAt);
+			assertNull(service.getSecurityIncident());
 
 		}
 	}

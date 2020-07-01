@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.context.RequestScoped;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +23,9 @@ import de.egladil.web.mk_wettbewerb.domain.Identifier;
 import de.egladil.web.mk_wettbewerb.domain.apimodel.PrivatteilnahmeAPIModel;
 import de.egladil.web.mk_wettbewerb.domain.apimodel.PrivatveranstalterAPIModel;
 import de.egladil.web.mk_wettbewerb.domain.error.MkWettbewerbRuntimeException;
+import de.egladil.web.mk_wettbewerb.domain.event.DataInconsistencyRegistered;
+import de.egladil.web.mk_wettbewerb.domain.event.LoggableEventDelegate;
+import de.egladil.web.mk_wettbewerb.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_wettbewerb.domain.semantik.DomainService;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Privatteilnahme;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Teilnahme;
@@ -50,6 +55,16 @@ public class PrivatpersonService {
 	@Inject
 	TeilnahmenRepository teilnahmenRepository;
 
+	@Inject
+	Event<SecurityIncidentRegistered> securityIncidentEvent;
+
+	@Inject
+	Event<DataInconsistencyRegistered> dataInconsistencyEvent;
+
+	private SecurityIncidentRegistered securityIncidentRegistered;
+
+	private DataInconsistencyRegistered dataInconsistencyRegistered;
+
 	public static PrivatpersonService createForTest(final VeranstalterRepository veranstalterRepository, final ZugangUnterlagenService zugangUnterlagenService, final WettbewerbService wettbewerbSerivice, final TeilnahmenRepository teilnahmenRepository) {
 
 		PrivatpersonService result = new PrivatpersonService();
@@ -64,15 +79,17 @@ public class PrivatpersonService {
 
 		if (StringUtils.isBlank(uuid)) {
 
-			throw new IllegalArgumentException("uuid darf nicht blank sein.");
+			throw new BadRequestException("uuid darf nicht blank sein.");
 		}
 
 		Optional<Veranstalter> optVeranstalter = this.repository.ofId(new Identifier(uuid));
 
 		if (optVeranstalter.isEmpty()) {
 
-			LOG.warn("Versuch, Veranstalter mit UUID={} zu finden", uuid);
+			String msg = "Versuch, nicht vorhandenen Veranstalter mit UUID=" + uuid + " zu finden";
+			LOG.warn(msg);
 
+			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
 			throw new NotFoundException("Kennen keinen Veranstalter mit dieser ID");
 		}
 
@@ -80,7 +97,9 @@ public class PrivatpersonService {
 
 		if (veranstalter.rolle() != Rolle.PRIVAT) {
 
-			LOG.info("Gefundener Veranstalter ist kein Privatveranstalter: {}", veranstalter);
+			String msg = "Falsche Rolle: erwarten Privatveranstalter, war aber " + veranstalter.toString();
+			LOG.warn(msg);
+			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
 			throw new NotFoundException("Kennen keinen Privatveranstalter mit dieser ID");
 		}
 
@@ -102,9 +121,14 @@ public class PrivatpersonService {
 
 			if (teilnahmenummern.isEmpty() || teilnahmenummern.size() > 1) {
 
-				LOG.warn(
-					"Bei der Migration der Privatkonten ist etwas schiefgegangen: Privatperson {} hat keine oder mehr als eine Teilnahmenummer.",
-					privatperson);
+				String msg = "Bei der Migration der Privatkonten ist etwas schiefgegangen: " + privatperson.toString() + " hat "
+					+ teilnahmenummern.size() + " Teilnahmenummern.";
+
+				LOG.warn(msg);
+
+				this.dataInconsistencyRegistered = new LoggableEventDelegate().fireDataInconsistencyEvent(msg,
+					dataInconsistencyEvent);
+
 				throw new MkWettbewerbRuntimeException("Kann aktuelle Teilnahme nicht ermitteln");
 			}
 
@@ -149,5 +173,15 @@ public class PrivatpersonService {
 			Arrays.asList(new Identifier(teilnahmenummer)));
 
 		repository.addVeranstalter(privatperson);
+	}
+
+	SecurityIncidentRegistered getSecurityIncidentRegistered() {
+
+		return securityIncidentRegistered;
+	}
+
+	DataInconsistencyRegistered getDataInconsistencyRegistered() {
+
+		return dataInconsistencyRegistered;
 	}
 }

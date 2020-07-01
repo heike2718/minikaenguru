@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -30,6 +31,8 @@ import de.egladil.web.commons_net.utils.CommonHttpUtils;
 import de.egladil.web.mk_gateway.domain.DecodedJWTReader;
 import de.egladil.web.mk_gateway.domain.error.AuthException;
 import de.egladil.web.mk_gateway.domain.error.LogmessagePrefixes;
+import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
+import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.user.UserRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
 
@@ -51,6 +54,11 @@ public class MkSessionService {
 
 	@Inject
 	CryptoService cryptoService;
+
+	@Inject
+	Event<SecurityIncidentRegistered> securityEvent;
+
+	private SecurityIncidentRegistered securityIncident;
 
 	private ConcurrentHashMap<String, Session> sessions = new ConcurrentHashMap<>();
 
@@ -119,7 +127,10 @@ public class MkSessionService {
 
 			if (optUser.isEmpty()) {
 
-				throw new AuthException("USER mit UUID " + uuid + " existiert nicht");
+				String msg = "USER mit UUID " + uuid + " existiert nicht";
+
+				this.securityIncident = new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+				throw new AuthException(msg);
 			}
 
 			byte[] sessionIdBase64 = Base64.getEncoder().encode(cryptoService.generateSessionId().getBytes());
@@ -143,7 +154,11 @@ public class MkSessionService {
 			throw new AuthException("JWT expired");
 		} catch (JWTVerificationException e) {
 
-			LOG.warn(LogmessagePrefixes.BOT + "JWT invalid: {}", e.getMessage());
+			String msg = LogmessagePrefixes.BOT + "JWT invalid: " + e.getMessage();
+
+			this.securityIncident = new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+
+			LOG.warn(msg);
 			throw new AuthException("JWT invalid");
 		}
 
@@ -161,5 +176,10 @@ public class MkSessionService {
 			LOG.info("Session invalidated: {} - {}", sessionId, session.user().uuid().substring(0, 8));
 		}
 
+	}
+
+	SecurityIncidentRegistered getSecurityIncident() {
+
+		return securityIncident;
 	}
 }

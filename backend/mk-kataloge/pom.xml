@@ -10,8 +10,8 @@
 	<version>1.0.0-SNAPSHOT</version>
 
 	<properties>
-		<quarkus.version>1.5.1.Final</quarkus.version>
-		<commons.version>1.4.6</commons.version>
+		<quarkus.version>1.5.2.Final</quarkus.version>
+		<commons.version>1.4.8</commons.version>
 		<compiler-plugin.version>3.8.1</compiler-plugin.version>
 		<maven.compiler.parameters>true</maven.compiler.parameters>
 		<maven.compiler.source>1.11</maven.compiler.source>

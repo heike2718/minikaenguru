@@ -30,15 +30,12 @@ public class SignUpService {
 	@Inject
 	Event<MkGatewayDomainEvent> createdEvent;
 
-	private boolean test;
-
 	private MkGatewayDomainEvent event;
 
 	public static SignUpService createForTest(final UserRepository userRepository) {
 
 		SignUpService result = new SignUpService();
 		result.userRepository = userRepository;
-		result.test = true;
 		return result;
 	}
 
@@ -83,7 +80,7 @@ public class SignUpService {
 
 		userRepository.addUser(user);
 
-		if (!test) {
+		if (createdEvent != null) {
 
 			createdEvent.fire(event);
 		}

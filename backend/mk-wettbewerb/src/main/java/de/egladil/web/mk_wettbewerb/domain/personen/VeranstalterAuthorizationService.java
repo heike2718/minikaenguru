@@ -7,6 +7,7 @@ package de.egladil.web.mk_wettbewerb.domain.personen;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -14,6 +15,8 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
 import de.egladil.web.mk_wettbewerb.domain.error.AccessDeniedException;
+import de.egladil.web.mk_wettbewerb.domain.event.LoggableEventDelegate;
+import de.egladil.web.mk_wettbewerb.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_wettbewerb.domain.semantik.DomainService;
 
 /**
@@ -27,6 +30,11 @@ public class VeranstalterAuthorizationService {
 
 	@Inject
 	VeranstalterRepository veranstalterRepository;
+
+	@Inject
+	Event<SecurityIncidentRegistered> securityIncidentEvent;
+
+	private SecurityIncidentRegistered securityIncidentRegistered;
 
 	public static VeranstalterAuthorizationService createForTest(final VeranstalterRepository repo) {
 
@@ -47,7 +55,12 @@ public class VeranstalterAuthorizationService {
 
 		if (optVeranstalter.isEmpty()) {
 
-			LOG.warn("Veranstalter {} nicht vorhanden", veranstalterID);
+			String msg = "Unzulaessiger Zugriff auf Teilnahme " + teilnahmeID + " durch " + veranstalterID
+				+ ": Veranstalter existiert nicht";
+
+			LOG.warn(msg);
+
+			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
 			throw new AccessDeniedException();
 		}
 
@@ -56,10 +69,20 @@ public class VeranstalterAuthorizationService {
 
 		if (optTeilnahmeIdentifier.isEmpty()) {
 
-			LOG.warn("Veranstalter {} hat keine Berechtigung für die Teilnahmenummer {}", optVeranstalter.get(), teilnahmeID);
+			String msg = "Unzulaessiger Zugriff auf Teilnahmenummer " + teilnahmeID + " durch " + optVeranstalter.get()
+				+ ": Veranstalter hat keine Berechtigung.";
+
+			LOG.warn(msg);
+
+			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
 			throw new AccessDeniedException();
 		}
 
 		return true;
+	}
+
+	SecurityIncidentRegistered getSecurityIncidentRegistered() {
+
+		return securityIncidentRegistered;
 	}
 }

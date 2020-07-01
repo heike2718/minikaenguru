@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +22,8 @@ import de.egladil.web.mk_kataloge.domain.KatalogItem;
 import de.egladil.web.mk_kataloge.domain.KatalogItemNameComparator;
 import de.egladil.web.mk_kataloge.domain.KatalogeRepository;
 import de.egladil.web.mk_kataloge.domain.apimodel.SchuleAPIModel;
+import de.egladil.web.mk_kataloge.domain.event.DataInconsistencyRegistered;
+import de.egladil.web.mk_kataloge.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Ort;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.OrtToKatalogItemMapper;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
@@ -36,6 +39,9 @@ public class KatalogFacadeImpl implements KatalogFacade {
 
 	@Inject
 	KatalogeRepository katalogRepository;
+
+	@Inject
+	Event<DataInconsistencyRegistered> dataInconcistencyEvent;
 
 	@Override
 	public int countOrteInLand(final String kuerzel) {
@@ -78,8 +84,12 @@ public class KatalogFacadeImpl implements KatalogFacade {
 
 		if (relevanteKuerzel.size() < kuerzeltokens.length) {
 
-			LOG.warn("einige der Schulkürzel waren null oder leer. Diese wurden ignoriert: commaseparatedKuerzel={}",
-				commaseparatedKuerzel);
+			String msg = "einige der Schulkürzel waren null oder leer. Diese wurden ignoriert: commaseparatedKuerzel="
+				+ commaseparatedKuerzel;
+
+			LOG.warn(msg);
+
+			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconcistencyEvent);
 		}
 
 		List<Schule> schulen = katalogRepository.findSchulenWithKuerzeln(relevanteKuerzel);

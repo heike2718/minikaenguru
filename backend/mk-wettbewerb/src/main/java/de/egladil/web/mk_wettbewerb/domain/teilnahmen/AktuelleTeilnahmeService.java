@@ -21,6 +21,9 @@ import de.egladil.web.mk_wettbewerb.domain.Identifier;
 import de.egladil.web.mk_wettbewerb.domain.apimodel.SchulanmeldungRequestPayload;
 import de.egladil.web.mk_wettbewerb.domain.error.AccessDeniedException;
 import de.egladil.web.mk_wettbewerb.domain.error.MkWettbewerbRuntimeException;
+import de.egladil.web.mk_wettbewerb.domain.event.DataInconsistencyRegistered;
+import de.egladil.web.mk_wettbewerb.domain.event.LoggableEventDelegate;
+import de.egladil.web.mk_wettbewerb.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_wettbewerb.domain.personen.Rolle;
 import de.egladil.web.mk_wettbewerb.domain.personen.Veranstalter;
 import de.egladil.web.mk_wettbewerb.domain.personen.VeranstalterRepository;
@@ -44,11 +47,19 @@ public class AktuelleTeilnahmeService {
 	@Inject
 	Event<SchulteilnahmeCreated> schulteilahmeCreated;
 
+	@Inject
+	Event<SecurityIncidentRegistered> securityIncidentEvent;
+
+	@Inject
+	Event<DataInconsistencyRegistered> dataInconsistencyEvent;
+
 	private PrivatteilnahmeCreated privatteilnahmeCreatedEvent;
 
 	private SchulteilnahmeCreated schulteilnahmeCreatedEvent;
 
-	private boolean test = false;
+	private SecurityIncidentRegistered securityIncidentRegistered;
+
+	private DataInconsistencyRegistered dataInconsistencyRegistered;
 
 	@Inject
 	VeranstalterRepository veranstalterRepository;
@@ -65,7 +76,6 @@ public class AktuelleTeilnahmeService {
 		result.teilnahmenRepository = teilnahmenRepository;
 		result.wettbewerbService = wettbewerbService;
 		result.veranstalterRepository = veranstalterRepository;
-		result.test = true;
 		return result;
 	}
 
@@ -140,9 +150,12 @@ public class AktuelleTeilnahmeService {
 
 		if (optVeranstalter.isEmpty()) {
 
-			LOG.warn(
-				"Jemand versucht als Veranstalter mit UUID={} eine Privatanmeldung, aber es gibt keinen Veranstalter mit dieser UUID",
-				uuid);
+			String msg = "Jemand versucht als Veranstalter mit UUID=" + uuid
+				+ " eine Privatteilnahme anzulegen, aber es gibt keinen Veranstalter mit dieser UUID.";
+
+			LOG.warn(msg);
+
+			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
 			throw new AccessDeniedException("keinen Veranstalter mit UUID=" + uuid + " gefunden");
 		}
 
@@ -150,14 +163,22 @@ public class AktuelleTeilnahmeService {
 
 		if (Rolle.LEHRER == veranstalter.rolle()) {
 
-			LOG.warn("Lehrer {} versucht, eine Privatteilnahme anzulegen", veranstalter.toString());
+			String msg = veranstalter.toString() + " versucht, eine Privatteilnahme anzulegen.";
+
+			LOG.warn(msg);
+
+			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
 			throw new AccessDeniedException("Der Veranstalter ist ein Lehrer. Nur Privatprsonen dürfen diese Funktion aufrufen.");
 		}
 
 		if (veranstalter.zugangUnterlagen() == ZugangUnterlagen.ENTZOGEN) {
 
-			LOG.warn("Veranstalter {} hat keine Berechtigung zur Anmeldung: Zugang Unterlagen {}", veranstalter.toString(),
-				veranstalter.zugangUnterlagen());
+			String msg = veranstalter.toString() + " hat keine Berechtigung zur Anmeldung: Zugang Unterlagen "
+				+ veranstalter.zugangUnterlagen();
+
+			LOG.warn(msg);
+
+			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
 			throw new AccessDeniedException("Dem Veranstalter wurde der Zugang zu den Unterlagen entzogen.");
 		}
 
@@ -165,9 +186,14 @@ public class AktuelleTeilnahmeService {
 
 		if (teilnahmenummern.isEmpty() || teilnahmenummern.size() > 1) {
 
-			LOG.warn(
-				"Bei der Migration der Privatkonten ist etwas schiefgegangen: Privatperson {} hat keine oder mehr als eine Teilnahmenummer.",
-				veranstalter);
+			String msg = "Bei der Migration der Privatkonten ist etwas schiefgegangen: " + veranstalter.toString() + " hat "
+				+ teilnahmenummern.size() + " Teilnahmenummern.";
+
+			LOG.warn(msg);
+
+			this.dataInconsistencyRegistered = new LoggableEventDelegate().fireDataInconsistencyEvent(msg,
+				dataInconsistencyEvent);
+
 			throw new MkWettbewerbRuntimeException("Kann aktuelle Teilnahme nicht ermitteln");
 		}
 
@@ -187,7 +213,7 @@ public class AktuelleTeilnahmeService {
 
 		privatteilnahmeCreatedEvent = PrivatteilnahmeCreated.create(neue, uuid);
 
-		if (!test) {
+		if (privatteilnahmeCreated != null) {
 
 			privatteilnahmeCreated.fire(privatteilnahmeCreatedEvent);
 		}
@@ -237,9 +263,13 @@ public class AktuelleTeilnahmeService {
 
 		if (optVeranstalter.isEmpty()) {
 
-			LOG.warn(
-				"Jemand versucht als Veranstalter mit UUID={} eine Schulanmeldung: {}, aber es gibt keinen Veranstalter mit dieser UUID.",
-				uuid, payload);
+			String msg = "Jemand versucht als Veranstalter mit UUID=" + uuid
+				+ " eine Schulteilnahme " + payload + " anzulegen, aber es gibt keinen Veranstalter mit dieser UUID.";
+
+			LOG.warn(msg);
+
+			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
+
 			throw new AccessDeniedException("keinen Veranstalter mit UUID=" + uuid + " gefunden");
 		}
 
@@ -247,14 +277,23 @@ public class AktuelleTeilnahmeService {
 
 		if (Rolle.PRIVAT == veranstalter.rolle()) {
 
-			LOG.warn("Privatveranstalter {} versucht, Schulteilnahme anzulegen: {}", veranstalter, payload);
+			String msg = veranstalter.toString() + " versucht, eine Schulteilnahme " + payload.toString() + " anzulegen.";
+
+			LOG.warn(msg);
+
+			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
 			throw new AccessDeniedException("Dies ist ein Privatveranstalter. Nur Lehrer dürfen diese Funktion aufrufen.");
 		}
 
 		if (veranstalter.zugangUnterlagen() == ZugangUnterlagen.ENTZOGEN) {
 
-			LOG.warn("Veranstalter {} hat keine Berechtigung zur Anmeldung: Zugang Unterlagen {}", veranstalter.toString(),
-				veranstalter.zugangUnterlagen());
+			String msg = veranstalter.toString() + " hat keine Berechtigung zur Anmeldung: Zugang Unterlagen "
+				+ veranstalter.zugangUnterlagen();
+
+			LOG.warn(msg);
+
+			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
+
 			throw new AccessDeniedException("Dem Veranstalter wurde der Zugang zu den Unterlagen entzogen.");
 		}
 
@@ -264,8 +303,13 @@ public class AktuelleTeilnahmeService {
 
 		if (anzahlMitSchule == 0l) {
 
-			LOG.info("Lehrer {} hat keine Berechtigung zur Anmeldung für diese Schule: {}", veranstalter,
-				payload);
+			String msg = veranstalter.toString() + " hat keine Berechtigung zur Anmeldung der Schule " + payload.toString()
+				+ ", da er nicht für diese Schule registriert ist.";
+
+			LOG.warn(msg);
+
+			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
+
 			throw new AccessDeniedException("Der Lehrer gehört nicht zur anzumeldenden Schule.");
 
 		}
@@ -284,7 +328,7 @@ public class AktuelleTeilnahmeService {
 
 		this.schulteilnahmeCreatedEvent = SchulteilnahmeCreated.create(neue);
 
-		if (!test) {
+		if (schulteilahmeCreated != null) {
 
 			this.schulteilahmeCreated.fire(schulteilnahmeCreatedEvent);
 		}
@@ -306,5 +350,15 @@ public class AktuelleTeilnahmeService {
 	SchulteilnahmeCreated schulteilnahmeCreatedEvent() {
 
 		return schulteilnahmeCreatedEvent;
+	}
+
+	SecurityIncidentRegistered getSecurityIncidentRegistered() {
+
+		return securityIncidentRegistered;
+	}
+
+	DataInconsistencyRegistered getDataInconsistencyRegistered() {
+
+		return dataInconsistencyRegistered;
 	}
 }

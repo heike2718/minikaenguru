@@ -29,15 +29,12 @@ public class LehrerService {
 	@Inject
 	Event<LehrerRegisteredForSchule> lehrerRegisteredForSchule;
 
-	private boolean test;
-
 	private LehrerRegisteredForSchule event;
 
 	public static LehrerService createServiceForTest(final VeranstalterRepository lehrerRepository) {
 
 		LehrerService result = new LehrerService();
 		result.veranstalterRepository = lehrerRepository;
-		result.test = true;
 		return result;
 
 	}
@@ -59,9 +56,9 @@ public class LehrerService {
 
 		veranstalterRepository.addVeranstalter(lehrer);
 
-		event = new LehrerRegisteredForSchule(data.schulkuerzel(), person);
+		event = new LehrerRegisteredForSchule(person, data.schulkuerzel());
 
-		if (!test) {
+		if (lehrerRegisteredForSchule != null) {
 
 			lehrerRegisteredForSchule.fire(event);
 		}
