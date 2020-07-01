@@ -1,10 +1,10 @@
 // =====================================================
-// Project: mk-wettbewerb
+// Project: mk-kataloge
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_wettbewerb.domain.event;
+package de.egladil.web.mk_kataloge.domain.event;
 
-import de.egladil.web.mk_wettbewerb.infrastructure.persistence.entities.StoredEvent;
+import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.StoredEvent;
 
 /**
  * EventRepository

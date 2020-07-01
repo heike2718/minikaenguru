@@ -69,8 +69,8 @@ public class VeranstalterAuthorizationService {
 
 		if (optTeilnahmeIdentifier.isEmpty()) {
 
-			String msg = "Unzulaessiger Zugriff auf Teilnahmenummer " + teilnahmeID + " durch " + veranstalterID
-				+ ": Veranstalter existiert, aber hat keine Berechtigung.";
+			String msg = "Unzulaessiger Zugriff auf Teilnahmenummer " + teilnahmeID + " durch " + optVeranstalter.get()
+				+ ": Veranstalter hat keine Berechtigung.";
 
 			LOG.warn(msg);
 

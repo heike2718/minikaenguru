@@ -5,6 +5,7 @@
 package de.egladil.web.mk_kataloge.infrastructure.rest;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -21,6 +22,8 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.mk_kataloge.domain.DuplicateEntityException;
 import de.egladil.web.mk_kataloge.domain.SchuleMessage;
 import de.egladil.web.mk_kataloge.domain.SchuleRepository;
+import de.egladil.web.mk_kataloge.domain.event.LoggableEventDelegate;
+import de.egladil.web.mk_kataloge.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
 
 /**
@@ -40,12 +43,20 @@ public class UpdateSchulenResource {
 	@Inject
 	SchuleRepository schuleRepository;
 
+	@Inject
+	Event<SecurityIncidentRegistered> securityEvent;
+
 	@PUT
 	public Response schuleChanged(final SchuleMessage schuleMessage) {
 
 		if (!expectedSecret.equals(schuleMessage.getSecret())) {
 
-			LOG.warn("Unwissender Mensch versucht Schule zu ändern: {}", schuleMessage);
+			String msg = "Unautorisierter Versuch, eine Schule zu ändern: " + schuleMessage.toString();
+
+			LOG.warn(msg);
+
+			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+
 			return Response.status(401).build();
 		}
 
@@ -81,7 +92,11 @@ public class UpdateSchulenResource {
 
 		if (!expectedSecret.equals(schuleMessage.getSecret())) {
 
-			LOG.warn("Unwissender Mensch versucht Schule anzulegen: {}", schuleMessage);
+			String msg = "Unautorisierter Versuch, eine Schule anzulegen: " + schuleMessage.toString();
+
+			LOG.warn(msg);
+
+			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
 			return Response.status(401).build();
 		}
 

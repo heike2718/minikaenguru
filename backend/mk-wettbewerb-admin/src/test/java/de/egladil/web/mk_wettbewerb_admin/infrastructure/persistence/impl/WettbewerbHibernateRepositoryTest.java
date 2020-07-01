@@ -2,7 +2,7 @@
 // Project: mk-wettbewerb-admin
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_wettbewerb_admin.infrastructure.persistence;
+package de.egladil.web.mk_wettbewerb_admin.infrastructure.persistence.impl;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,6 +19,7 @@ import de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb.WettbewerbStatus;
 import de.egladil.web.mk_wettbewerb_admin.infrastructure.persistence.entities.PersistenterWettbewerb;
+import de.egladil.web.mk_wettbewerb_admin.infrastructure.persistence.impl.WettbewerbHibernateRepository;
 
 /**
  * WettbewerbHibernateRepositoryTest
