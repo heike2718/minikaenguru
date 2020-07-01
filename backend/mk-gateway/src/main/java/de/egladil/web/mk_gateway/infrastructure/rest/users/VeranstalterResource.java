@@ -16,7 +16,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import de.egladil.web.commons_crypto.JWTService;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.signup.AuthResult;
@@ -38,14 +37,14 @@ public class VeranstalterResource {
 	SignUpService signUpService;
 
 	@Inject
-	JWTService jwtService;
+	AuthResultToResourceOwnerMapper authResultMapper;
 
 	@POST
 	@Path("/veranstalter")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createUser(final AuthResult authResult) {
 
-		SignUpResourceOwner signUpResourceOwner = new AuthResultToResourceOwnerMapper(jwtService).apply(authResult);
+		SignUpResourceOwner signUpResourceOwner = authResultMapper.apply(authResult);
 
 		signUpService.createUser(signUpResourceOwner);
 

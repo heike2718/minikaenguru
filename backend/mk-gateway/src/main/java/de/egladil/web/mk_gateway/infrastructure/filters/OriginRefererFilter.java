@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.annotation.Priority;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
@@ -24,6 +25,8 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_net.utils.CommonHttpUtils;
 import de.egladil.web.mk_gateway.domain.error.AuthException;
+import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
+import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.infrastructure.config.ConfigService;
 
 /**
@@ -41,6 +44,9 @@ public class OriginRefererFilter implements ContainerRequestFilter {
 
 	@Inject
 	ConfigService configService;
+
+	@Inject
+	Event<SecurityIncidentRegistered> securityEvent;
 
 	@Override
 	public void filter(final ContainerRequestContext requestContext) throws IOException {
@@ -112,7 +118,12 @@ public class OriginRefererFilter implements ContainerRequestFilter {
 	private void logErrorAndThrow(final String details, final ContainerRequestContext requestContext) throws IOException {
 
 		final String dump = CommonHttpUtils.getRequestInfos(requestContext);
-		LOG.warn("Possible CSRF-Attack: {} - {}", details, dump);
+
+		String msg = "Possible CSRF-Attack: " + details + ", " + dump;
+
+		LOG.warn(msg);
+
+		new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
 		throw new AuthException();
 	}
 

@@ -7,6 +7,7 @@ package de.egladil.web.mk_gateway.infrastructure.error;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
@@ -117,6 +118,16 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 				.messageOnly(MessagePayload.error(applicationMessages.getString("general.notFound")));
 
 			return Response.status(404).entity(serialize(payload)).build();
+		}
+
+		if (exception instanceof BadRequestException) {
+
+			BadRequestException brException = (BadRequestException) exception;
+
+			ResponsePayload payload = ResponsePayload
+				.messageOnly(MessagePayload.error(applicationMessages.getString("general.badRequest")));
+
+			return Response.status(brException.getResponse().getStatus()).entity(payload).build();
 		}
 
 		if (exception instanceof WebApplicationException) {
