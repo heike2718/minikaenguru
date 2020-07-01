@@ -21,6 +21,10 @@ public interface WettbewerbDomainEvent {
 
 	String TYPE_SCHULTEILNAHME_CHANGED = "SchulteilnahmeChanged";
 
+	String TYPE_SECURITY_INCIDENT_REGISTERED = "SecurityIncidentRegistered";
+
+	String TYPE_DATA_INCONSISTENCY_REGISTERED = "DataInconsistencyRegistered";
+
 	/**
 	 * @return LocalDateTime
 	 */

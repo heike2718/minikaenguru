@@ -12,6 +12,12 @@ import de.egladil.web.mk_wettbewerb.domain.semantik.DomainEvent;
 @DomainEvent
 public class PrivatteilnahmeCreated extends AbstractTeilnahmeEvent {
 
+	protected PrivatteilnahmeCreated() {
+
+		super();
+
+	}
+
 	protected PrivatteilnahmeCreated(final Integer wettbewerbsjahr, final String teilnahmenummer, final String createdBy) {
 
 		super(wettbewerbsjahr, teilnahmenummer, createdBy);

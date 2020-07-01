@@ -12,13 +12,18 @@ import de.egladil.web.mk_wettbewerb.domain.semantik.DomainEvent;
 @DomainEvent
 public class LehrerRegisteredForSchule extends LehrerChangedSchulen {
 
+	protected LehrerRegisteredForSchule() {
+
+		super();
+	}
+
 	/**
-	 * @param schulkuerzel
-	 *                     String das Schulkürzel
 	 * @param person
 	 *                     Person
+	 * @param schulkuerzel
+	 *                     String das Schulkürzel
 	 */
-	public LehrerRegisteredForSchule(final String schulkuerzel, final Person person) {
+	public LehrerRegisteredForSchule(final Person person, final String schulkuerzel) {
 
 		super(person, schulkuerzel);
 

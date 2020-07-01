@@ -13,16 +13,17 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * LehrerRegisteredForSchuleTest
+ * LehrerDeregisteredFromSchuleTest
  */
-public class LehrerRegisteredForSchuleTest {
+public class LehrerDeregisteredFromSchuleTest {
 
 	@Test
 	void should_ConstructorThrowException_when_PersonNull() {
 
+		// Arrange
 		try {
 
-			new LehrerRegisteredForSchule(null, "gadsguqi");
+			new LehrerDeregistredFromSchule(null, "gadsguqi");
 
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
@@ -37,7 +38,7 @@ public class LehrerRegisteredForSchuleTest {
 		try {
 
 			Person person = new Person("gqudqgi", "Hans Wurst");
-			new LehrerRegisteredForSchule(person, null);
+			new LehrerDeregistredFromSchule(person, null);
 
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
@@ -52,7 +53,7 @@ public class LehrerRegisteredForSchuleTest {
 		try {
 
 			Person person = new Person("gqudqgi", "Hans Wurst");
-			new LehrerRegisteredForSchule(person, "   ");
+			new LehrerDeregistredFromSchule(person, "   ");
 
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
@@ -68,15 +69,14 @@ public class LehrerRegisteredForSchuleTest {
 		String schulkuerzel = "jasqqh";
 		Person person = new Person("gqudqgi", "Hans Wurst");
 
-		LehrerRegisteredForSchule eventObject = new LehrerRegisteredForSchule(person, schulkuerzel);
+		LehrerDeregistredFromSchule eventObject = new LehrerDeregistredFromSchule(person, schulkuerzel);
 
 		// Act
 		String body = new ObjectMapper().writeValueAsString(eventObject);
 
 		// Assert
 		assertEquals("{\"person\":{\"uuid\":\"gqudqgi\",\"fullName\":\"Hans Wurst\"},\"schulkuerzel\":\"jasqqh\"}", body);
-		assertEquals("LehrerRegisteredForSchule", eventObject.typeName());
+		assertEquals("LehrerDeregistredFromSchule", eventObject.typeName());
 		assertNotNull(eventObject.occuredOn());
 	}
-
 }

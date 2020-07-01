@@ -12,6 +12,7 @@ import static org.junit.Assert.fail;
 
 import java.util.Optional;
 
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -94,8 +95,8 @@ public class PrivatpersonServiceTest extends AbstractDomainServiceTest {
 		try {
 
 			service.findPrivatperson(null);
-			fail("keine IllegalArgumentException");
-		} catch (IllegalArgumentException e) {
+			fail("keine BadRequestException");
+		} catch (BadRequestException e) {
 
 			assertEquals("uuid darf nicht blank sein.", e.getMessage());
 		}
@@ -107,8 +108,8 @@ public class PrivatpersonServiceTest extends AbstractDomainServiceTest {
 		try {
 
 			service.findPrivatperson(" ");
-			fail("keine IllegalArgumentException");
-		} catch (IllegalArgumentException e) {
+			fail("keine BadRequestException");
+		} catch (BadRequestException e) {
 
 			assertEquals("uuid darf nicht blank sein.", e.getMessage());
 		}
@@ -139,10 +140,12 @@ public class PrivatpersonServiceTest extends AbstractDomainServiceTest {
 		try {
 
 			service.findPrivatperson(uuid);
+
 			fail("keine NotFoundException");
 		} catch (NotFoundException e) {
 
 			assertEquals("Kennen keinen Privatveranstalter mit dieser ID", e.getMessage());
+			assertNotNull(service.getSecurityIncidentRegistered());
 		}
 	}
 
@@ -173,6 +176,7 @@ public class PrivatpersonServiceTest extends AbstractDomainServiceTest {
 		} catch (MkWettbewerbRuntimeException e) {
 
 			assertEquals("Kann aktuelle Teilnahme nicht ermitteln", e.getMessage());
+			assertNotNull(service.getDataInconsistencyRegistered());
 		}
 	}
 
@@ -186,6 +190,7 @@ public class PrivatpersonServiceTest extends AbstractDomainServiceTest {
 		} catch (MkWettbewerbRuntimeException e) {
 
 			assertEquals("Kann aktuelle Teilnahme nicht ermitteln", e.getMessage());
+			assertNotNull(service.getDataInconsistencyRegistered());
 		}
 	}
 

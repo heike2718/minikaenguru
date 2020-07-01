@@ -17,7 +17,12 @@ import de.egladil.web.mk_wettbewerb.domain.semantik.DomainEvent;
 public abstract class AbstractSchulteilnahmeEvent extends AbstractTeilnahmeEvent {
 
 	@JsonProperty
-	private final String schulname;
+	private String schulname;
+
+	AbstractSchulteilnahmeEvent() {
+
+		super();
+	}
 
 	public AbstractSchulteilnahmeEvent(final Integer wettbewerbsjahr, final String teilnahmenummer, final String triggerinUser, final String schulname) {
 

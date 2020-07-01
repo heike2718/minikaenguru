@@ -93,7 +93,7 @@ public class SchulkollegienServiceTest {
 
 		Person person = new Person(uuidLehrer, fullName);
 
-		LehrerRegisteredForSchule event = new LehrerRegisteredForSchule(schulkuerzel, person);
+		LehrerRegisteredForSchule event = new LehrerRegisteredForSchule(person, schulkuerzel);
 
 		// Act
 		service.handleSchuleLehrerAdded(event);
@@ -124,7 +124,7 @@ public class SchulkollegienServiceTest {
 
 		Person person = new Person(uuidLehrer, fullName);
 
-		LehrerRegisteredForSchule event = new LehrerRegisteredForSchule(SCHULKUERZEL, person);
+		LehrerRegisteredForSchule event = new LehrerRegisteredForSchule(person, SCHULKUERZEL);
 
 		// Act
 		service.handleSchuleLehrerAdded(event);
