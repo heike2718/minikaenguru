@@ -6,6 +6,7 @@ package de.egladil.web.mk_gateway.domain.signup;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
@@ -33,7 +34,7 @@ public class AuthResultToResourceOwnerMapperTest {
 
 		try {
 
-			new AuthResultToResourceOwnerMapper(null);
+			AuthResultToResourceOwnerMapper.createForTest(null);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -46,7 +47,7 @@ public class AuthResultToResourceOwnerMapperTest {
 	void should_ApplyThrowException_when_ParameterNull() {
 
 		// Arrange
-		AuthResultToResourceOwnerMapper mapper = new AuthResultToResourceOwnerMapper(jwtService);
+		AuthResultToResourceOwnerMapper mapper = AuthResultToResourceOwnerMapper.createForTest(jwtService);
 
 		// Act
 		try {
@@ -56,6 +57,7 @@ public class AuthResultToResourceOwnerMapperTest {
 		} catch (IllegalArgumentException e) {
 
 			assertEquals("authResult darf nicht null sein", e.getMessage());
+			assertNull(mapper.getSecurityIncident());
 		}
 	}
 
@@ -63,7 +65,7 @@ public class AuthResultToResourceOwnerMapperTest {
 	void should_ApplyThrowException_when_FullNameNull() throws IOException {
 
 		// Arrange
-		AuthResultToResourceOwnerMapper mapper = new AuthResultToResourceOwnerMapper(jwtService);
+		AuthResultToResourceOwnerMapper mapper = AuthResultToResourceOwnerMapper.createForTest(jwtService);
 
 		String jwt = null;
 
@@ -88,6 +90,7 @@ public class AuthResultToResourceOwnerMapperTest {
 
 			assertEquals("Fehler in der Konfiguration der MinikänguruApp beim AuthProvider: Vor- und Nachname sind erforderlich",
 				e.getMessage());
+			assertNull(mapper.getSecurityIncident());
 		}
 	}
 
@@ -95,7 +98,7 @@ public class AuthResultToResourceOwnerMapperTest {
 	void should_ApplyWork() throws IOException {
 
 		// Arrange
-		AuthResultToResourceOwnerMapper mapper = new AuthResultToResourceOwnerMapper(jwtService);
+		AuthResultToResourceOwnerMapper mapper = AuthResultToResourceOwnerMapper.createForTest(jwtService);
 
 		String jwt = null;
 
@@ -118,13 +121,14 @@ public class AuthResultToResourceOwnerMapperTest {
 		// Assert
 		assertEquals("4d8ed03a-575a-442e-89f4-0e54e51dd0d8", result.uuid());
 		assertEquals("Max Mustermann", result.fullName());
+		assertNull(mapper.getSecurityIncident());
 	}
 
 	@Test
 	void should_ApplyThrowException_when_TokenExpired() throws IOException {
 
 		// Arrange
-		AuthResultToResourceOwnerMapper mapper = new AuthResultToResourceOwnerMapper(jwtService);
+		AuthResultToResourceOwnerMapper mapper = AuthResultToResourceOwnerMapper.createForTest(jwtService);
 
 		String expiredJwt = null;
 
@@ -148,6 +152,7 @@ public class AuthResultToResourceOwnerMapperTest {
 		} catch (AuthException e) {
 
 			assertEquals("The Token has expired on Mon Apr 13 15:02:32 CEST 2020.", e.getMessage());
+			assertNull(mapper.getSecurityIncident());
 		}
 
 	}
@@ -156,7 +161,7 @@ public class AuthResultToResourceOwnerMapperTest {
 	void should_ApplyThrowException_when_TokenInvalid() throws IOException {
 
 		// Arrange
-		AuthResultToResourceOwnerMapper mapper = new AuthResultToResourceOwnerMapper(jwtService);
+		AuthResultToResourceOwnerMapper mapper = AuthResultToResourceOwnerMapper.createForTest(jwtService);
 
 		String expiredJwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9";
 
@@ -171,6 +176,9 @@ public class AuthResultToResourceOwnerMapperTest {
 		} catch (AuthException e) {
 
 			assertEquals("invalid JWT", e.getMessage());
+			assertNotNull(mapper.getSecurityIncident());
+			assertEquals("Possible BOT Attack: JWT invalid: The token was expected to have 3 parts, but got 1.",
+				mapper.getSecurityIncident().message());
 		}
 
 	}

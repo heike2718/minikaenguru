@@ -12,6 +12,11 @@ import de.egladil.web.mk_wettbewerb.domain.semantik.DomainEvent;
 @DomainEvent
 public class SchulteilnahmeChanged extends AbstractSchulteilnahmeEvent {
 
+	protected SchulteilnahmeChanged() {
+
+		super();
+	}
+
 	protected SchulteilnahmeChanged(final Integer wettbewerbsjahr, final String teilnahmenummer, final String schulname, final String changedBy) {
 
 		super(wettbewerbsjahr, teilnahmenummer, changedBy, schulname);

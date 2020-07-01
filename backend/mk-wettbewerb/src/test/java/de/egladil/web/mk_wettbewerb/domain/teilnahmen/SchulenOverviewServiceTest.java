@@ -6,6 +6,7 @@ package de.egladil.web.mk_wettbewerb.domain.teilnahmen;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -52,6 +53,7 @@ public class SchulenOverviewServiceTest extends AbstractDomainServiceTest {
 
 		// Assert
 		assertEquals(2, schulen.size());
+		assertNull(service.getSecurityIncidentRegistered());
 
 		{
 
@@ -88,6 +90,7 @@ public class SchulenOverviewServiceTest extends AbstractDomainServiceTest {
 
 		// Assert
 		assertEquals(1, schulen.size());
+		assertNull(service.getSecurityIncidentRegistered());
 
 		{
 
@@ -110,10 +113,11 @@ public class SchulenOverviewServiceTest extends AbstractDomainServiceTest {
 
 		// Assert
 		assertEquals(0, schulen.size());
+		assertNotNull(service.getSecurityIncidentRegistered());
 	}
 
 	@Test
-	void should_ermittleSchuleMitKuerzelFuerLehrerThrowNotFound_wheFalschesSchulkuerzel() {
+	void should_ermittleSchuleMitKuerzelFuerLehrerThrowNotFound_when_FalschesSchulkuerzel() {
 
 		// Arrange
 		Identifier lehrerId = new Identifier(UUID_LEHRER_2);
@@ -125,7 +129,7 @@ public class SchulenOverviewServiceTest extends AbstractDomainServiceTest {
 			fail("keine NotFoundException");
 		} catch (NotFoundException e) {
 
-			// nüscht
+			assertNotNull(service.getSecurityIncidentRegistered());
 		}
 
 	}

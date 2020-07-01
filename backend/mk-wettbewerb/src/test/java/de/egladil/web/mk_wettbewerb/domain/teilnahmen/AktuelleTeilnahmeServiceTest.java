@@ -165,6 +165,9 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 
 				assertEquals("payload darf nicht null sein.", e.getMessage());
 				assertNull(service.schulteilnahmeCreatedEvent());
+				assertNull(service.privatteilnahmeCreatedEvent());
+				assertNull(service.getSecurityIncidentRegistered());
+				assertNull(service.getDataInconsistencyRegistered());
 			}
 		}
 
@@ -185,6 +188,9 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 
 				assertEquals("uuid darf nicht blank sein.", e.getMessage());
 				assertNull(service.schulteilnahmeCreatedEvent());
+				assertNull(service.privatteilnahmeCreatedEvent());
+				assertNull(service.getSecurityIncidentRegistered());
+				assertNull(service.getDataInconsistencyRegistered());
 			}
 		}
 
@@ -204,6 +210,9 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 
 				assertEquals("uuid darf nicht blank sein.", e.getMessage());
 				assertNull(service.schulteilnahmeCreatedEvent());
+				assertNull(service.privatteilnahmeCreatedEvent());
+				assertNull(service.getSecurityIncidentRegistered());
+				assertNull(service.getDataInconsistencyRegistered());
 			}
 		}
 
@@ -223,6 +232,9 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 
 				assertEquals("schulkuerzel darf nicht blank sein.", e.getMessage());
 				assertNull(service.schulteilnahmeCreatedEvent());
+				assertNull(service.privatteilnahmeCreatedEvent());
+				assertNull(service.getSecurityIncidentRegistered());
+				assertNull(service.getDataInconsistencyRegistered());
 			}
 		}
 
@@ -242,6 +254,9 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 
 				assertEquals("schulkuerzel darf nicht blank sein.", e.getMessage());
 				assertNull(service.schulteilnahmeCreatedEvent());
+				assertNull(service.privatteilnahmeCreatedEvent());
+				assertNull(service.getSecurityIncidentRegistered());
+				assertNull(service.getDataInconsistencyRegistered());
 			}
 		}
 
@@ -261,6 +276,9 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 
 				assertEquals("schulname darf nicht blank sein.", e.getMessage());
 				assertNull(service.schulteilnahmeCreatedEvent());
+				assertNull(service.privatteilnahmeCreatedEvent());
+				assertNull(service.getSecurityIncidentRegistered());
+				assertNull(service.getDataInconsistencyRegistered());
 			}
 		}
 
@@ -280,6 +298,9 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 
 				assertEquals("schulname darf nicht blank sein.", e.getMessage());
 				assertNull(service.schulteilnahmeCreatedEvent());
+				assertNull(service.privatteilnahmeCreatedEvent());
+				assertNull(service.getSecurityIncidentRegistered());
+				assertNull(service.getDataInconsistencyRegistered());
 			}
 		}
 
@@ -307,7 +328,9 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 
 				assertEquals("keine Anmeldung möglich", e.getMessage());
 				assertNull(service.schulteilnahmeCreatedEvent());
-
+				assertNull(service.privatteilnahmeCreatedEvent());
+				assertNull(service.getSecurityIncidentRegistered());
+				assertNull(service.getDataInconsistencyRegistered());
 			}
 
 		}
@@ -330,6 +353,9 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 
 				assertEquals("keinen Veranstalter mit UUID=basghoqh gefunden", e.getMessage());
 				assertNull(service.schulteilnahmeCreatedEvent());
+				assertNotNull(service.getSecurityIncidentRegistered());
+				assertNull(service.privatteilnahmeCreatedEvent());
+				assertNull(service.getDataInconsistencyRegistered());
 
 			}
 
@@ -353,6 +379,9 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 
 				assertEquals("Dem Veranstalter wurde der Zugang zu den Unterlagen entzogen.", e.getMessage());
 				assertNull(service.schulteilnahmeCreatedEvent());
+				assertNotNull(service.getSecurityIncidentRegistered());
+				assertNull(service.privatteilnahmeCreatedEvent());
+				assertNull(service.getDataInconsistencyRegistered());
 			}
 		}
 
@@ -374,6 +403,9 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 
 				assertEquals("Dies ist ein Privatveranstalter. Nur Lehrer dürfen diese Funktion aufrufen.", e.getMessage());
 				assertNull(service.schulteilnahmeCreatedEvent());
+				assertNotNull(service.getSecurityIncidentRegistered());
+				assertNull(service.privatteilnahmeCreatedEvent());
+				assertNull(service.getDataInconsistencyRegistered());
 			}
 		}
 
@@ -395,6 +427,9 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 
 				assertEquals("Der Lehrer gehört nicht zur anzumeldenden Schule.", e.getMessage());
 				assertNull(service.schulteilnahmeCreatedEvent());
+				assertNotNull(service.getSecurityIncidentRegistered());
+				assertNull(service.privatteilnahmeCreatedEvent());
+				assertNull(service.getDataInconsistencyRegistered());
 			}
 		}
 
@@ -412,6 +447,9 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			// Assert
 			assertEquals("Christaschule", actual.nameSchule());
 			assertNull(service.schulteilnahmeCreatedEvent());
+			assertNull(service.getSecurityIncidentRegistered());
+			assertNull(service.privatteilnahmeCreatedEvent());
+			assertNull(service.getDataInconsistencyRegistered());
 		}
 
 		@Test
@@ -439,6 +477,10 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			assertEquals(SCHULKUERZEL_2, event.teilnahmenummer());
 			assertEquals(UUID_LEHRER_1, event.triggeringUser());
 			assertEquals(Integer.valueOf(2020), event.wettbewerbsjahr());
+
+			assertNull(service.getSecurityIncidentRegistered());
+			assertNull(service.privatteilnahmeCreatedEvent());
+			assertNull(service.getDataInconsistencyRegistered());
 		}
 
 	}
@@ -461,6 +503,8 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 
 				assertEquals("uuid darf nicht blank sein.", e.getMessage());
 				assertNull(service.privatteilnahmeCreatedEvent());
+				assertNull(service.getSecurityIncidentRegistered());
+				assertNull(service.getDataInconsistencyRegistered());
 			}
 
 		}
@@ -478,6 +522,9 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			} catch (BadRequestException e) {
 
 				assertEquals("uuid darf nicht blank sein.", e.getMessage());
+				assertNull(service.privatteilnahmeCreatedEvent());
+				assertNull(service.getSecurityIncidentRegistered());
+				assertNull(service.getDataInconsistencyRegistered());
 			}
 
 		}
@@ -498,7 +545,8 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 
 				assertEquals("keinen Veranstalter mit UUID=basghoqh gefunden", e.getMessage());
 				assertNull(service.privatteilnahmeCreatedEvent());
-
+				assertNotNull(service.getSecurityIncidentRegistered());
+				assertNull(service.getDataInconsistencyRegistered());
 			}
 
 		}
@@ -517,6 +565,8 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 
 				assertEquals("Dem Veranstalter wurde der Zugang zu den Unterlagen entzogen.", e.getMessage());
 				assertNull(service.privatteilnahmeCreatedEvent());
+				assertNotNull(service.getSecurityIncidentRegistered());
+				assertNull(service.getDataInconsistencyRegistered());
 			}
 		}
 
@@ -534,6 +584,8 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 
 				assertEquals("Der Veranstalter ist ein Lehrer. Nur Privatprsonen dürfen diese Funktion aufrufen.", e.getMessage());
 				assertNull(service.privatteilnahmeCreatedEvent());
+				assertNotNull(service.getSecurityIncidentRegistered());
+				assertNull(service.getDataInconsistencyRegistered());
 			}
 		}
 
@@ -557,7 +609,8 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 
 				assertEquals("keine Anmeldung möglich", e.getMessage());
 				assertNull(service.privatteilnahmeCreatedEvent());
-
+				assertNull(service.getSecurityIncidentRegistered());
+				assertNull(service.getDataInconsistencyRegistered());
 			}
 
 		}
@@ -581,6 +634,9 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			assertEquals(UUID_PRIVAT_NICHT_ANGEMELDET, event.triggeringUser());
 			assertEquals(WETTBEWERBSJAHR_AKTUELL, event.wettbewerbsjahr());
 
+			assertNull(service.getSecurityIncidentRegistered());
+			assertNull(service.getDataInconsistencyRegistered());
+
 		}
 
 		@Test
@@ -596,6 +652,8 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			assertEquals(new WettbewerbID(WETTBEWERBSJAHR_AKTUELL), teilnahme.wettbewerbID());
 
 			assertNull(service.privatteilnahmeCreatedEvent());
+			assertNull(service.getSecurityIncidentRegistered());
+			assertNull(service.getDataInconsistencyRegistered());
 		}
 	}
 }

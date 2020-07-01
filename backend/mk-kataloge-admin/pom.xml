@@ -10,7 +10,7 @@
 
 
 	<properties>
-		<commons.version>1.4.5</commons.version>
+		<commons.version>1.4.8</commons.version>
 		<quarkus-plugin.version>1.2.0.Final</quarkus-plugin.version>
 		<quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
 		<quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>

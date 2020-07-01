@@ -8,6 +8,9 @@ import java.time.LocalDateTime;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.mk_wettbewerb.domain.event.WettbewerbDomainEvent;
 import de.egladil.web.mk_wettbewerb.domain.semantik.DomainEvent;
@@ -18,11 +21,19 @@ import de.egladil.web.mk_wettbewerb.domain.semantik.DomainEvent;
 @DomainEvent
 public abstract class LehrerChangedSchulen implements WettbewerbDomainEvent {
 
-	private final Person person;
+	@JsonProperty
+	private Person person;
 
-	private final String schulkuerzel;
+	@JsonProperty
+	private String schulkuerzel;
 
+	@JsonIgnore
 	private final LocalDateTime occuredOn;
+
+	protected LehrerChangedSchulen() {
+
+		this.occuredOn = CommonTimeUtils.now();
+	}
 
 	/**
 	 * @param person
@@ -30,6 +41,8 @@ public abstract class LehrerChangedSchulen implements WettbewerbDomainEvent {
 	 * @param neueSchulkuerzel
 	 */
 	public LehrerChangedSchulen(final Person person, final String schulkuerzel) {
+
+		this();
 
 		if (person == null) {
 
@@ -43,7 +56,6 @@ public abstract class LehrerChangedSchulen implements WettbewerbDomainEvent {
 
 		this.person = person;
 		this.schulkuerzel = schulkuerzel;
-		this.occuredOn = CommonTimeUtils.now();
 	}
 
 	public Person person() {

@@ -12,6 +12,11 @@ import de.egladil.web.mk_wettbewerb.domain.semantik.DomainEvent;
 @DomainEvent
 public class LehrerDeregistredFromSchule extends LehrerChangedSchulen {
 
+	protected LehrerDeregistredFromSchule() {
+
+		super();
+	}
+
 	/**
 	 * @param lehrer
 	 * @param schulkuerzel

@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.enterprise.context.RequestScoped;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -23,6 +24,8 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.error.ClientAuthException;
 import de.egladil.web.mk_gateway.domain.error.LogmessagePrefixes;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
+import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 
 /**
  * ClientAccessTokenService
@@ -35,6 +38,9 @@ public class ClientAccessTokenService implements IClientAccessTokenService {
 	@Inject
 	@RestClient
 	InitAccessTokenRestClient initAccessTokenRestClient;
+
+	@Inject
+	Event<SecurityIncidentRegistered> securityEvent;
 
 	/**
 	 * Holt ein clientAccessToken vom authprovider
@@ -84,7 +90,10 @@ public class ClientAccessTokenService implements IClientAccessTokenService {
 
 			if (!nonce.equals(responseNonce)) {
 
-				LOG.warn(LogmessagePrefixes.BOT + "zurückgesendetes nonce stimmt nicht");
+				String msg = LogmessagePrefixes.BOT + "zurückgesendetes nonce stimmt nicht";
+
+				LOG.warn(msg);
+				new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
 				throw new ClientAuthException();
 			}
 		} else {

@@ -52,7 +52,7 @@ public class WettbewerbeResource extends AbstractAdminResource {
 	public Response loadAllWettbewerbe(@HeaderParam(
 		value = MkWettbewerbAdminApp.UUID_HEADER_NAME) final String principalName) {
 
-		this.checkAccess(principalName);
+		this.checkAccess(principalName, "loadAllWettbewerbe");
 
 		List<WettbewerbListAPIModel> wettbewerbe = this.wettbewerbService.alleWettbewerbeHolen();
 
@@ -65,7 +65,7 @@ public class WettbewerbeResource extends AbstractAdminResource {
 	public Response wettbewerbMitJahr(@PathParam(value = "jahr") final Integer jahr, @HeaderParam(
 		value = MkWettbewerbAdminApp.UUID_HEADER_NAME) final String principalName) {
 
-		this.checkAccess(principalName);
+		this.checkAccess(principalName, "wettbewerbMitJahr");
 
 		Optional<WettbewerbDetailsAPIModel> optDaten = this.wettbewerbService.wettbewerbMitJahr(jahr);
 
@@ -83,7 +83,7 @@ public class WettbewerbeResource extends AbstractAdminResource {
 	public Response wettbewerbAnlegen(final EditWettbewerbModel data, @HeaderParam(
 		value = MkWettbewerbAdminApp.UUID_HEADER_NAME) final String principalName) {
 
-		this.checkAccess(principalName);
+		this.checkAccess(principalName, "wettbewerbAnlegen");
 
 		Optional<WettbewerbDetailsAPIModel> optVorhanden = this.wettbewerbService.wettbewerbMitJahr(data.getJahr());
 
@@ -108,7 +108,7 @@ public class WettbewerbeResource extends AbstractAdminResource {
 	public Response wettbewerbAendern(final EditWettbewerbModel data, @HeaderParam(
 		value = MkWettbewerbAdminApp.UUID_HEADER_NAME) final String principalName) {
 
-		this.checkAccess(principalName);
+		this.checkAccess(principalName, "wettbewerbAendern");
 
 		this.wettbewerbService.wettbewerbAendern(data);
 
@@ -123,7 +123,7 @@ public class WettbewerbeResource extends AbstractAdminResource {
 	public Response starteNaechstePhase(final WettbewerbID wettbewerbId, @HeaderParam(
 		value = MkWettbewerbAdminApp.UUID_HEADER_NAME) final String principalName) {
 
-		this.checkAccess(principalName);
+		this.checkAccess(principalName, "starteNaechstePhase");
 
 		WettbewerbStatus neuerStatus = wettbewerbService.starteNaechstePhase(wettbewerbId.jahr());
 

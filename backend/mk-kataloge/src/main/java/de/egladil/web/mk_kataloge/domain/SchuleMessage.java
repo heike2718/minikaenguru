@@ -35,7 +35,7 @@ public class SchuleMessage {
 	@Override
 	public String toString() {
 
-		return "SchuleMessage [secret=" + StringUtils.abbreviate(secret, 4) + schule.printForLog() + "]";
+		return "SchuleMessage [secret=" + StringUtils.abbreviate(secret, 20) + schule.printForLog() + "]";
 	}
 
 }

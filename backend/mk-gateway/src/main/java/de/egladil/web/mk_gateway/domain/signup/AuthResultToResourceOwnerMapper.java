@@ -6,6 +6,10 @@ package de.egladil.web.mk_gateway.domain.signup;
 
 import java.util.function.Function;
 
+import javax.enterprise.context.RequestScoped;
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,28 +23,47 @@ import de.egladil.web.mk_gateway.domain.DecodedJWTReader;
 import de.egladil.web.mk_gateway.domain.error.AuthException;
 import de.egladil.web.mk_gateway.domain.error.LogmessagePrefixes;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
+import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.session.SessionUtils;
 
 /**
  * AuthResultToResourceOwnerMapper
  */
+@RequestScoped
 public class AuthResultToResourceOwnerMapper implements Function<AuthResult, SignUpResourceOwner> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AuthResultToResourceOwnerMapper.class);
 
-	private final JWTService jwtService;
+	@Inject
+	JWTService jwtService;
+
+	@Inject
+	Event<SecurityIncidentRegistered> securityEvent;
+
+	private SecurityIncidentRegistered securityIncident;
+
+	AuthResultToResourceOwnerMapper() {
+
+		super();
+
+	}
 
 	/**
 	 * @param jwtService
 	 */
-	public AuthResultToResourceOwnerMapper(final JWTService jwtService) {
+	public static AuthResultToResourceOwnerMapper createForTest(final JWTService jwtService) {
 
 		if (jwtService == null) {
 
 			throw new IllegalArgumentException("jwtService darf nicht null sein");
 		}
 
-		this.jwtService = jwtService;
+		AuthResultToResourceOwnerMapper result = new AuthResultToResourceOwnerMapper();
+
+		result.jwtService = jwtService;
+
+		return result;
 	}
 
 	@Override
@@ -74,8 +97,17 @@ public class AuthResultToResourceOwnerMapper implements Function<AuthResult, Sig
 			throw new AuthException(e.getMessage());
 		} catch (JWTVerificationException e) {
 
-			LOG.warn(LogmessagePrefixes.BOT + "JWT invalid: {}", e.getMessage());
+			String msg = LogmessagePrefixes.BOT + "JWT invalid: " + e.getMessage();
+
+			this.securityIncident = new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+
+			LOG.warn(msg);
 			throw new AuthException("invalid JWT");
 		}
+	}
+
+	public SecurityIncidentRegistered getSecurityIncident() {
+
+		return securityIncident;
 	}
 }

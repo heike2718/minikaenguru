@@ -25,15 +25,22 @@ public abstract class AbstractTeilnahmeEvent implements WettbewerbDomainEvent {
 	private final LocalDateTime occouredOn;
 
 	@JsonProperty
-	private final Integer wettbewerbsjahr;
+	private Integer wettbewerbsjahr;
 
 	@JsonProperty
-	private final String teilnahmenummer;
+	private String teilnahmenummer;
 
 	@JsonProperty
-	private final String triggeringUser;
+	private String triggeringUser;
 
-	protected AbstractTeilnahmeEvent(final Integer wettbewerbsjahr, final String teilnahmenummer, final String triggeringUser) {
+	AbstractTeilnahmeEvent() {
+
+		this.occouredOn = CommonTimeUtils.now();
+	}
+
+	public AbstractTeilnahmeEvent(final Integer wettbewerbsjahr, final String teilnahmenummer, final String triggeringUser) {
+
+		this();
 
 		if (wettbewerbsjahr == null) {
 
@@ -50,7 +57,6 @@ public abstract class AbstractTeilnahmeEvent implements WettbewerbDomainEvent {
 			throw new IllegalArgumentException("triggeringUser darf nicht blank sein.");
 		}
 
-		this.occouredOn = CommonTimeUtils.now();
 		this.wettbewerbsjahr = wettbewerbsjahr;
 		this.teilnahmenummer = teilnahmenummer;
 		this.triggeringUser = triggeringUser;

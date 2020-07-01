@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import javax.annotation.Priority;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -24,6 +25,8 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.commons_net.utils.CommonHttpUtils;
 import de.egladil.web.mk_gateway.MkGatewayApp;
 import de.egladil.web.mk_gateway.domain.error.AuthException;
+import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
+import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.permissions.RestrictedUrlPath;
 import de.egladil.web.mk_gateway.domain.permissions.RestrictedUrlPathRepository;
 import de.egladil.web.mk_gateway.domain.session.LoggedInUser;
@@ -55,6 +58,9 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 	@Inject
 	RestrictedUrlPathRepository restrictedPathsRepository;
 
+	@Inject
+	Event<SecurityIncidentRegistered> securityEvent;
+
 	@Override
 	public void filter(final ContainerRequestContext requestContext) throws IOException {
 
@@ -82,7 +88,11 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
 		if (sessionId == null) {
 
-			LOG.warn("restricted path {} ohne sessionId aufgerufen", path);
+			String msg = "restricted path " + path + " ohne sessionId aufgerufen";
+			LOG.warn(msg);
+
+			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+
 			throw new AuthException();
 		}
 
@@ -90,7 +100,11 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
 		if (session == null) {
 
-			LOG.warn("restricted path {} ohne Session aufgerufen", path);
+			String msg = "restricted path " + path + " ohne gueltige Session aufgerufen";
+
+			LOG.warn(msg);
+
+			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
 			throw new AuthException();
 		}
 
@@ -98,7 +112,11 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
 		if (user == null) {
 
-			LOG.warn("restricted path {} mit anonymer Session aufgerufen", path);
+			String msg = "restricted path " + path + " mit anonymer Session aufgerufen";
+
+			LOG.warn(msg);
+
+			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
 			throw new AuthException();
 		}
 
@@ -106,7 +124,11 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
 		if (!restrictedPath.isAllowedForRolle(user.rolle())) {
 
-			LOG.warn("restricted path {} durch user {} aufgerufen (falsche Rolle?)", path, user);
+			String msg = "restricted path " + path + " durch user " + user + " aufgerufen (falsche Rolle)";
+
+			LOG.warn(msg);
+
+			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
 			throw new AuthException();
 		}
 
