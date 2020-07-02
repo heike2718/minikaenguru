@@ -5,12 +5,11 @@ zeitnah bearbeitet. Sobald die Schule eingetragen wurde, erhalten Sie eine weite
 
 Schuldaten:
 ---------------
-Name der Schule:   Blümchenschule
-   Postleitzahl:   -
-            Ort:   Mainz-Kastel
-         Straße:   -
-     Hausnummer:   -
-Land/Bundesland:   Hessen
+  Name der Schule: Blümchenschule
+     Postleitzahl: -
+              Ort: Mainz-Kastel
+Straße Hausnummer: -
+  Land/Bundesland: Hessen
 
 Bitte antworten Sie nicht auf diese Mail. Für Fragen, Anregungen, Lob und Kritik verwenden Sie bitte die Mailadresse minikaenguru@egladil.de.
 

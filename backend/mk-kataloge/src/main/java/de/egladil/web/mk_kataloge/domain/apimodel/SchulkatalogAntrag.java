@@ -43,26 +43,21 @@ public class SchulkatalogAntrag {
 
 	@StringLatin
 	@JsonProperty
-	private String strasse;
-
-	@StringLatin
-	@JsonProperty
-	private String hausnummer;
+	private String strasseUndHausnummer;
 
 	@JsonProperty
-	private String honeypot;
+	private String kleber;
 
-	public static SchulkatalogAntrag createForTest(final String email, final String land, final String ort, final String plz, final String schulname, final String strasse, final String hausnummer, final String honeypot) {
+	public static SchulkatalogAntrag createForTest(final String email, final String land, final String ort, final String plz, final String schulname, final String strasse, final String kleber) {
 
 		SchulkatalogAntrag result = new SchulkatalogAntrag();
 		result.email = email;
-		result.hausnummer = hausnummer;
-		result.honeypot = honeypot;
+		result.kleber = kleber;
 		result.land = land;
 		result.ort = ort;
 		result.plz = plz;
 		result.schulname = schulname;
-		result.strasse = strasse;
+		result.strasseUndHausnummer = strasse;
 		return result;
 	}
 
@@ -91,25 +86,20 @@ public class SchulkatalogAntrag {
 		return schulname;
 	}
 
-	public String strasse() {
+	public String strasseUndHausnummer() {
 
-		return strasse;
+		return strasseUndHausnummer;
 	}
 
-	public String hausnummer() {
+	public String kleber() {
 
-		return hausnummer;
-	}
-
-	public String honeypot() {
-
-		return honeypot;
+		return kleber;
 	}
 
 	public String toSecurityLog() {
 
 		return "SchulkatalogAntrag [email=" + email + ", land=" + land + ", ort=" + ort + ", plz=" + plz + ", schulname="
-			+ schulname + ", strasse=" + strasse + ", hausnummer=" + hausnummer + ", honeypot=" + honeypot + "]";
+			+ schulname + ", strasseUndHausnummer=" + strasseUndHausnummer + ", kleber=" + kleber + "]";
 	}
 
 }

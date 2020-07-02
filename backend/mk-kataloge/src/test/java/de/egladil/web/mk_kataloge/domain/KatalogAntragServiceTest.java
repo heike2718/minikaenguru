@@ -27,8 +27,7 @@ public class KatalogAntragServiceTest {
 	void should_NotSendMail_when_HoneypotNotBlank() {
 
 		// Arrange
-		SchulkatalogAntrag antrag = SchulkatalogAntrag.createForTest("mail@web.de", "land", "ort", null, "schulname", null, null,
-			"hagh");
+		SchulkatalogAntrag antrag = SchulkatalogAntrag.createForTest("mail@web.de", "land", "ort", null, "schulname", null, "hagh");
 		KatalogAntragService service = new KatalogAntragService();
 
 		// Act
@@ -41,7 +40,7 @@ public class KatalogAntragServiceTest {
 		assertNotNull(eventObject.occuredOn());
 		assertEquals("KATALOG:SecurityIncidentRegistered", eventObject.typeName());
 		assertEquals(
-			"Honeypot des Schulkatalogantrags war nicht blank: SchulkatalogAntrag [email=mail@web.de, land=land, ort=ort, plz=null, schulname=schulname, strasse=null, hausnummer=null, honeypot=hagh]",
+			"Honeypot des Schulkatalogantrags war nicht blank: SchulkatalogAntrag [email=mail@web.de, land=land, ort=ort, plz=null, schulname=schulname, strasseUndHausnummer=null, kleber=hagh]",
 			eventObject.message());
 	}
 
@@ -49,7 +48,7 @@ public class KatalogAntragServiceTest {
 	void should_SendMailAndFireEvent_when_AntragValid() throws JsonProcessingException {
 
 		// Arrange
-		SchulkatalogAntrag antrag = SchulkatalogAntrag.createForTest("mail@web.de", "land", "ort", null, "schulname", null, null,
+		SchulkatalogAntrag antrag = SchulkatalogAntrag.createForTest("mail@web.de", "land", "ort", null, "schulname", null,
 			"");
 		KatalogAntragService service = KatalogAntragService.createForTest();
 
@@ -68,7 +67,7 @@ public class KatalogAntragServiceTest {
 		String json = new ObjectMapper().writeValueAsString(eventObject.body());
 
 		assertEquals(
-			"{\"email\":\"mail@web.de\",\"land\":\"land\",\"ort\":\"ort\",\"plz\":null,\"schulname\":\"schulname\",\"strasse\":null,\"hausnummer\":null,\"honeypot\":\"\"}",
+			"{\"email\":\"mail@web.de\",\"land\":\"land\",\"ort\":\"ort\",\"plz\":null,\"schulname\":\"schulname\",\"strasseUndHausnummer\":null,\"kleber\":\"\"}",
 			json);
 
 	}

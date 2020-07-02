@@ -14,9 +14,8 @@ export interface SchulkatalogAntrag {
 	readonly ort: string;
 	readonly plz: string;
 	readonly schulname: string;
-	readonly strasse: string;
-	readonly hausnummer: string;
-	readonly honeypot: string;
+	readonly strasseUndHausnummer: string;
+	readonly kleber: string;
 }
 
 export function compareKatalogItemsByName(ki1: KatalogItem, ki2: KatalogItem): number {

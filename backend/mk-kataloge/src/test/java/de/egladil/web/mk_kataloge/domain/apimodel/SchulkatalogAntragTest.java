@@ -20,7 +20,7 @@ public class SchulkatalogAntragTest {
 
 		// Arrange
 		SchulkatalogAntrag antrag = SchulkatalogAntrag.createForTest("bla@web.de", "Hessen",
-			"Mainz-Kastel", "55252", "Blümchenschule", "Mainzer Straße", "15", "");
+			"Mainz-Kastel", "55252", "Blümchenschule", "Mainzer Straße 15", "");
 
 		// Act
 		String json = new ObjectMapper().writeValueAsString(antrag);
@@ -29,7 +29,7 @@ public class SchulkatalogAntragTest {
 
 		System.out.println(json);
 		assertEquals(
-			"{\"email\":\"bla@web.de\",\"land\":\"Hessen\",\"ort\":\"Mainz-Kastel\",\"plz\":\"55252\",\"schulname\":\"Blümchenschule\",\"strasse\":\"Mainzer Straße\",\"hausnummer\":\"15\",\"honeypot\":\"\"}",
+			"{\"email\":\"bla@web.de\",\"land\":\"Hessen\",\"ort\":\"Mainz-Kastel\",\"plz\":\"55252\",\"schulname\":\"Blümchenschule\",\"strasseUndHausnummer\":\"Mainzer Straße 15\",\"kleber\":\"\"}",
 			json);
 
 	}

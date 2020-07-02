@@ -43,9 +43,8 @@ public class KatalogAntragMailtextGenerator {
 			text = text.replace("#0#", antrag.schulname());
 			text = text.replace("#1#", StringUtils.isBlank(antrag.plz()) ? "-" : antrag.plz());
 			text = text.replace("#2#", antrag.ort());
-			text = text.replace("#3#", StringUtils.isBlank(antrag.strasse()) ? "-" : antrag.strasse());
-			text = text.replace("#4#", StringUtils.isBlank(antrag.hausnummer()) ? "-" : antrag.hausnummer());
-			text = text.replace("#5#", antrag.land());
+			text = text.replace("#3#", StringUtils.isBlank(antrag.strasseUndHausnummer()) ? "-" : antrag.strasseUndHausnummer());
+			text = text.replace("#4#", antrag.land());
 
 			return text;
 

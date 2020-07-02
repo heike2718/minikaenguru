@@ -62,7 +62,7 @@ public class KatalogAntragService {
 	 */
 	public boolean validateAndSend(final SchulkatalogAntrag antrag) {
 
-		if (StringUtils.isNotBlank(antrag.honeypot())) {
+		if (StringUtils.isNotBlank(antrag.kleber())) {
 
 			String msg = "Honeypot des Schulkatalogantrags war nicht blank: " + antrag.toSecurityLog();
 

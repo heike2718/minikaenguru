@@ -8,14 +8,14 @@ export interface KatalogSucheTexte {
 	readonly subtitle: string;
 	readonly inputLabel: string;
 	readonly sucheDescription: string;
-	readonly auswahlDescription: string;
+	readonly auswahlDescription: string
 }
 
 const initialKatalogsucheTexte: KatalogSucheTexte = {
 	subtitle: '',
 	inputLabel: '',
 	sucheDescription: '',
-	auswahlDescription: '',
+	auswahlDescription: ''
 }
 
 export interface GuiModel {
@@ -23,13 +23,15 @@ export interface GuiModel {
 	readonly showInputControl: boolean;
 	readonly showLoadingIndicator: boolean;
 	readonly showAuswahlDescription: boolean;
+	readonly katalogantragSuccess: boolean;
 }
 
 const initialGuiModel: GuiModel = {
 	texte: initialKatalogsucheTexte,
 	showInputControl: false,
 	showLoadingIndicator: false,
-	showAuswahlDescription: false
+	showAuswahlDescription: false,
+	katalogantragSuccess: undefined
 };
 
 export interface SchulkatalogState {
@@ -206,6 +208,16 @@ const schulkatalogReducer = createReducer(
 		}
 
 		return { ...state, guiModel: guiModel, loadedKatalogItems: [], searchTerm: '', currentKatalogtyp: katalogtyp, selectedKatalogItem: selectedKatalogItem };
+	}),
+
+	on(SchulkatalogActions.katalogantragSuccessfullySubmitted, (state, _action) => {
+
+		let guiModel = {
+			...state.guiModel,
+			katalogantragSuccess: true
+		};
+
+		return {...state, guiModel: guiModel};
 	})
 );
 

@@ -25,7 +25,7 @@ public class KatalogAntragMailtextGeneratorTest {
 
 		// Arrange
 		SchulkatalogAntrag antrag = SchulkatalogAntrag.createForTest("bla@web.de", "Hessen",
-			"Mainz-Kastel", "55252", "Blümchenschule", "Mainzer Straße", "15", "");
+			"Mainz-Kastel", "55252", "Blümchenschule", "Mainzer Straße 15", "");
 		String expected = getExpectedText("/expectedKatalogeintragSchuleMailComplete.txt");
 
 		// Act
@@ -41,7 +41,7 @@ public class KatalogAntragMailtextGeneratorTest {
 
 		// Arrange
 		SchulkatalogAntrag antrag = SchulkatalogAntrag.createForTest("bla@web.de", "Hessen",
-			"Mainz-Kastel", " ", "Blümchenschule", "   ", null, "");
+			"Mainz-Kastel", " ", "Blümchenschule", "   ", "");
 		String expected = getExpectedText("/expectedKatalogeintragSchuleMailIncomplete.txt");
 
 		// Act

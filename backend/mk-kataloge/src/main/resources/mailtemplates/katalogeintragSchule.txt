@@ -5,12 +5,11 @@ zeitnah bearbeitet. Sobald die Schule eingetragen wurde, erhalten Sie eine weite
 
 Schuldaten:
 ---------------
-Name der Schule:   #0#
-   Postleitzahl:   #1#
-            Ort:   #2#
-         Straße:   #3#
-     Hausnummer:   #4#
-Land/Bundesland:   #5#
+  Name der Schule: #0#
+     Postleitzahl: #1#
+              Ort: #2#
+Straße Hausnummer: #3#
+  Land/Bundesland: #4#
 
 Bitte antworten Sie nicht auf diese Mail. Für Fragen, Anregungen, Lob und Kritik verwenden Sie bitte die Mailadresse minikaenguru@egladil.de.
 

@@ -23,6 +23,9 @@ public class ConfigService {
 	@ConfigProperty(name = "stage")
 	String stage;
 
+	@ConfigProperty(name = "allowedOrigin", defaultValue = "https://mathe-jung-alt.de")
+	String allowedOrigin;
+
 	public boolean isBlockOnMissingOriginReferer() {
 
 		return blockOnMissingOriginReferer;
@@ -36,6 +39,11 @@ public class ConfigService {
 	public String getStage() {
 
 		return stage;
+	}
+
+	public String getAllowedOrigin() {
+
+		return allowedOrigin;
 	}
 
 }
