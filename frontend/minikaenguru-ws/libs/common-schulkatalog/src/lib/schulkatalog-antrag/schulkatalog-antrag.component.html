@@ -1,0 +1,136 @@
+<div class="container container-fluid ml-3 mt-5">
+	<div class="row ml-2">
+		<div class="col-12">
+			<h2>Schulkatalogantrag</h2>
+			<h4>Bitte senden Sie das Formular ab, um Ihre Schule eintragen zu lassen.</h4>
+		</div>
+	</div>
+
+	<div class="row ml-2">
+
+		<form [formGroup]="antragForm" class="col-12">
+
+			<div class="form-group mt-2">
+				<div class="row">
+					<div class="col-md-12">
+						<label for="schulnameInput">Schulname *</label>
+					</div>
+				</div>
+				<div class="row" [class.error]="schulname.touched && !schulname.valid">
+					<div class="col-md-12">
+						<input class="form-control" type="text" id="schulnameInput" placeholder="Name der Schule"
+							formControlName="schulname" autocomplete="true">
+					</div>
+				</div>
+				<mk-form-error path="schulname" text="Schulname"></mk-form-error>
+			</div>
+
+			<div class="form-group mt-4">
+				<div class="row">
+					<div class="col-md-12">
+						<label for="ortInput">Ort *</label>
+					</div>
+				</div>
+				<div class="row" [class.error]="ort.touched && !ort.valid">
+					<div class="col-md-12">
+						<input class="form-control" type="text" id="ortInput" placeholder="Ort" formControlName="ort"
+							autocomplete="true">
+					</div>
+				</div>
+				<mk-form-error path="ort" text="Ort"></mk-form-error>
+			</div>
+
+			<div class="form-group mt-4">
+				<div class="row">
+					<div class="col-md-12">
+						<label for="plzInput">Postleitzahl</label>
+					</div>
+				</div>
+				<div class="row" [class.error]="plz.touched && !plz.valid">
+					<div class="col-md-12">
+						<input class="form-control" type="text" id="plzInput" placeholder="Postleitzahl"
+							formControlName="plz" autocomplete="true">
+					</div>
+				</div>
+				<mk-form-error path="plz" text="Postleitzahl"></mk-form-error>
+			</div>
+
+			<div class="form-group mt-4">
+				<div class="row">
+					<div class="col-md-12">
+						<label for="strasseInput">Straße und Hausnummer</label>
+					</div>
+				</div>
+				<div class="row" [class.error]="strasseUndHausnummer.touched && !strasseUndHausnummer.valid">
+					<div class="col-md-12">
+						<input class="form-control" type="text" id="strasseInput" placeholder="Straße Hausnummer"
+							formControlName="strasseUndHausnummer" autocomplete="true">
+					</div>
+				</div>
+				<mk-form-error path="strasseUndHausnummer" text="Straße und Hausnummer"></mk-form-error>
+			</div>
+
+			<div class="form-group mt-4">
+				<div class="row">
+					<div class="col-md-12">
+						<label for="landInput">Land / Bundesland *</label>
+					</div>
+				</div>
+				<div class="row" [class.error]="land.touched && !land.valid">
+					<div class="col-xs-12 col-md-10">
+						<input class="form-control" type="text" id="landInput" placeholder="Land / Bundesland"
+							formControlName="land" autocomplete="true">
+					</div>
+					<div class="col-xs-12 col-sm-2 btn-wrapper">
+						<button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom"
+							title="Bitte in der BRD das Bundesland eintragen">
+							<i class="fa fa-info" aria-hidden="true"></i> Info
+						</button>
+					</div>
+				</div>
+				<mk-form-error path="land" text="Land / Bundesland"></mk-form-error>
+			</div>
+
+			<div class="form-group mt-4">
+				<div class="row">
+					<div class="col-md-12">
+						<label for="emailInput">Email *</label>
+					</div>
+				</div>
+				<div class="row" [class.error]="email.touched && !email.valid">
+					<div class="col-md-12">
+						<input class="form-control" type="email" id="emailInput" placeholder="Mailadresse"
+							formControlName="email" autocomplete="true">
+					</div>
+				</div>
+				<mk-form-error path="email" text="Email"></mk-form-error>
+			</div>
+
+			<div class="kleber">
+				<div class="form-group">
+					<div class="row">
+						<div class="col-md-12">
+							<label for="kleber" aria-label="bitte dieses Feld leer lassen">bitte leer lassen!!!</label>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<input class="form-control" type="text" id="kleberInput" placeholder="leer lassen!!!"
+								formControlName="kleber" autocomplete="false">
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-12 col-md-6">
+					<button type="button" [disabled]="!antragForm.valid || submitDisabled"
+						class="btn btn-primary btn-block" (click)="submitForm()">senden</button>
+				</div>
+				<div class="col-sm-12 col-md-6">
+					<button type="button" class="btn btn-primary btn-block" (click)="cancel()">abbrechen</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

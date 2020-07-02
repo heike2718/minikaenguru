@@ -1,8 +1,8 @@
 // =====================================================
-// Project: mk-wettbewerb-admin
+// Project: mk-kataloge
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_kataloge.domain.event;
+package de.egladil.web.mk_kataloge.domain;
 
 import java.time.LocalDateTime;
 
@@ -10,46 +10,48 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
+import de.egladil.web.mk_kataloge.domain.apimodel.SchulkatalogAntrag;
+import de.egladil.web.mk_kataloge.domain.event.KatalogeDomainEvent;
 
 /**
- * SecurityIncidentRegistered
+ * KatalogAntragReceived
  */
-public class SecurityIncidentRegistered implements KatalogeDomainEvent {
+public class KatalogAntragReceived implements KatalogeDomainEvent {
 
 	@JsonIgnore
 	private final LocalDateTime occuredOn;
 
 	@JsonProperty
-	private String message;
+	private SchulkatalogAntrag body;
 
-	SecurityIncidentRegistered() {
+	KatalogAntragReceived() {
 
 		this.occuredOn = CommonTimeUtils.now();
 
 	}
 
-	public SecurityIncidentRegistered(final String message) {
+	public KatalogAntragReceived(final SchulkatalogAntrag body) {
 
 		this();
-		this.message = message;
 
+		this.body = body;
 	}
 
 	@Override
 	public LocalDateTime occuredOn() {
 
-		return this.occuredOn;
+		return occuredOn;
 	}
 
 	@Override
 	public String typeName() {
 
-		return TYPE_SECURITY_INCIDENT_REGISTERED;
+		return TYPE_KATALOG_ANTRAG_RECEIVED;
 	}
 
-	public String message() {
+	public SchulkatalogAntrag body() {
 
-		return message;
+		return body;
 	}
 
 }

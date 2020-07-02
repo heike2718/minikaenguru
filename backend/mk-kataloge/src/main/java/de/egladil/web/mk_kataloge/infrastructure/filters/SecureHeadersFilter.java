@@ -52,7 +52,7 @@ public class SecureHeadersFilter implements ContainerResponseFilter {
 
 		if (headers.get("Server") == null) {
 
-			headers.add("Server", "Hex");
+			headers.add("Server", "Hex oder HAL");
 		}
 
 		if (headers.get("X-Powered-By") == null) {
@@ -94,8 +94,7 @@ public class SecureHeadersFilter implements ContainerResponseFilter {
 
 		if (headers.get("Access-Control-Allow-Origin") == null) {
 
-			// kataloge können von allen domains erreichbar sein, da wir mehr als eine domain haben
-			headers.add("Access-Control-Allow-Origin", "*");
+			headers.add("Access-Control-Allow-Origin", configService.getAllowedOrigin());
 		}
 
 		if (headers.get("Access-Control-Allow-Credentials") == null) {
@@ -114,7 +113,7 @@ public class SecureHeadersFilter implements ContainerResponseFilter {
 		if (headers.get("Access-Control-Allow-Headers") == null) {
 
 			headers.add("Access-Control-Allow-Headers",
-				"X-XSRF-TOKEN, X-SESSIONID");
+				"Content-Type, Accept, X-Requested-With, Content-Disposition");
 		}
 
 		if (headers.get("Access-Control-Max-Age") == null) {

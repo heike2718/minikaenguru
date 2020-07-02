@@ -1,10 +1,11 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { SchulkatalogConfigService, SchulkatalogConfig } from '../configuration/schulkatalog-config';
-import { Katalogtyp, KatalogItem } from '../domain/entities';
+import { Katalogtyp, KatalogItem, SchulkatalogAntrag } from '../domain/entities';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LogService } from '@minikaenguru-ws/common-logging';
+import { ResponsePayload, Message } from '@minikaenguru-ws/common-messages';
 
 @Injectable({
 	providedIn: 'root'
@@ -99,6 +100,15 @@ export class KatalogService {
 			.get(finalUrl).pipe(
 				map(body => body['data'] as KatalogItem[])
 			);
+	}
+
+	public submitSchulkatalogAntrag(antrag: SchulkatalogAntrag): Observable<Message> {
+
+		const url = this.config.baseUrl + '/katalogantrag';
+
+		return this.http.put(url, antrag).pipe(
+			map(body => body['message'] as Message)
+		);
 	}
 }
 

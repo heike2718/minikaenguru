@@ -1,16 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DialogComponent } from './dialog/dialog.component';
+import { FormErrorComponent } from './form-error/form-error.component';
 
 @NgModule({
 	imports: [
 		CommonModule
 	],
 	declarations: [
-		DialogComponent
+		DialogComponent,
+		FormErrorComponent
 	],
 	exports: [
-		DialogComponent
+		DialogComponent,
+		FormErrorComponent
 	]
 })
 export class CommonComponentsModule { }
