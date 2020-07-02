@@ -58,7 +58,17 @@ public class MkSessionService {
 	@Inject
 	Event<SecurityIncidentRegistered> securityEvent;
 
+	@Inject
+	Event<UserLoggedIn> loginEvent;
+
+	@Inject
+	Event<UserLoggedOut> logoutEvent;
+
 	private SecurityIncidentRegistered securityIncident;
+
+	private UserLoggedIn loginEventObject;
+
+	private UserLoggedOut logoutEventObject;
 
 	private ConcurrentHashMap<String, Session> sessions = new ConcurrentHashMap<>();
 
@@ -147,6 +157,13 @@ public class MkSessionService {
 
 			sessions.put(sessionId, session);
 
+			this.loginEventObject = new UserLoggedIn(uuid, user.getRolle());
+
+			if (loginEvent != null) {
+
+				loginEvent.fire(loginEventObject);
+			}
+
 			return session;
 		} catch (TokenExpiredException e) {
 
@@ -174,6 +191,16 @@ public class MkSessionService {
 		if (session != null) {
 
 			LOG.info("Session invalidated: {} - {}", sessionId, session.user().uuid().substring(0, 8));
+
+			logoutEventObject = new UserLoggedOut(session.user().uuid(), session.user().rolle());
+
+			if (logoutEvent != null) {
+
+				logoutEvent.fire(logoutEventObject);
+			}
+		} else {
+
+			LOG.info("session was null");
 		}
 
 	}
@@ -181,5 +208,15 @@ public class MkSessionService {
 	SecurityIncidentRegistered getSecurityIncident() {
 
 		return securityIncident;
+	}
+
+	UserLoggedIn getLoginEventObject() {
+
+		return loginEventObject;
+	}
+
+	UserLoggedOut getLogoutEventObject() {
+
+		return logoutEventObject;
 	}
 }

@@ -76,6 +76,12 @@ public class MkvApiSessionServiceTest {
 
 			// System.out.println(serialized);
 			assertNull(service.getSecurityIncident());
+			assertNull(service.getLogoutEventObject());
+			UserLoggedIn loginEventObject = service.getLoginEventObject();
+			assertNotNull(loginEventObject);
+			assertNotNull(loginEventObject.occuredOn());
+			assertEquals(Rolle.PRIVAT, loginEventObject.rolle());
+			assertEquals("4d8ed03a-575a-442e-89f4-0e54e51dd0d8", loginEventObject.uuid());
 
 		}
 
@@ -109,6 +115,12 @@ public class MkvApiSessionServiceTest {
 			// Assert
 			assertNull(service.getAndRefreshSessionIfValid(session.sessionId()));
 			assertNull(service.getSecurityIncident());
+
+			UserLoggedOut logoutEventObject = service.getLogoutEventObject();
+			assertNotNull(logoutEventObject);
+			assertNotNull(logoutEventObject.occuredOn());
+			assertEquals(Rolle.PRIVAT, logoutEventObject.rolle());
+			assertEquals("4d8ed03a-575a-442e-89f4-0e54e51dd0d8", logoutEventObject.uuid());
 
 		}
 
@@ -173,7 +185,8 @@ public class MkvApiSessionServiceTest {
 
 			assertEquals("JWT invalid", e.getMessage());
 			assertNotNull(service.getSecurityIncident());
-			assertEquals("", service.getSecurityIncident().message());
+			assertEquals("Possible BOT Attack: JWT invalid: The token was expected to have 3 parts, but got 1.",
+				service.getSecurityIncident().message());
 		}
 
 	}

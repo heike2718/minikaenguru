@@ -15,6 +15,10 @@ public interface MkGatewayDomainEvent {
 
 	String TYPE_DATA_INCONSISTENCY_REGISTERED = "DataInconsistencyRegistered";
 
+	String TYPE_USER_LOGGED_IN = "UserLoggedIn";
+
+	String TYPE_USER_LOGGED_OUT = "UserLoggedOut";
+
 	/**
 	 * @return LocalDateTime
 	 */
