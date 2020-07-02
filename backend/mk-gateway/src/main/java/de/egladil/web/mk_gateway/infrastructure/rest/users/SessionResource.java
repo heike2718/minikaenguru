@@ -83,6 +83,9 @@ public class SessionResource {
 		if (sessionId != null) {
 
 			sessionService.invalidateSession(sessionId);
+		} else {
+
+			LOG.info("sessionId was null");
 		}
 
 		return Response.ok().entity(ResponsePayload.messageOnly(MessagePayload.info("Sie haben sich erfolreich ausgeloggt")))
@@ -90,12 +93,15 @@ public class SessionResource {
 	}
 
 	@DELETE
-	@Path("/dev/logout/{sessionid}")
+	@Path("/dev/logout/{sessionId}")
 	public Response logoutDev(@PathParam(value = "sessionId") final String sessionId) {
 
 		if (sessionId != null) {
 
 			sessionService.invalidateSession(sessionId);
+		} else {
+
+			LOG.info("sessionId was null");
 		}
 
 		if (!MkGatewayApp.STAGE_DEV.equals(stage)) {

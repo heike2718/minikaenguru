@@ -34,7 +34,7 @@ public class DomainEventHandler {
 
 			String body = new ObjectMapper().writeValueAsString(event);
 
-			LOG.info("Event body = " + body);
+			LOG.debug("Event body = " + body);
 
 			StoredEvent storedEvent = StoredEvent.createEvent(event.occuredOn(), event.typeName(), body);
 
