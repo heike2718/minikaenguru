@@ -8,6 +8,16 @@ export interface KatalogItem {
 	readonly leaf: boolean;
 }
 
+export interface SchulkatalogAntrag {
+	readonly email: string;
+	readonly land: string;
+	readonly ort: string;
+	readonly plz: string;
+	readonly schulname: string;
+	readonly strasseUndHausnummer: string;
+	readonly kleber: string;
+}
+
 export function compareKatalogItemsByName(ki1: KatalogItem, ki2: KatalogItem): number {
 	return ki1.name.localeCompare(ki2.name);
 }

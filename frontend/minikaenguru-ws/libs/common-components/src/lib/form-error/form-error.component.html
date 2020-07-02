@@ -1,0 +1,6 @@
+<div *ngIf="errorMessages" class="alert alert-danger" aria-describedby="error">
+	<div *ngFor="let errorMessage of errorMessages">
+		{{errorMessage}}
+	</div>
+</div>
+

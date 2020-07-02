@@ -6,6 +6,7 @@ import { SchulkatalogConfigService } from '../configuration/schulkatalog-config'
 import { SchulkatalogFacade } from '../application-services/schulkatalog.facade';
 import { SchulkatalogState } from '../+state/schulkatalog.reducer';
 import { InternalFacade } from '../application-services/internal.facade';
+import { Router } from '@angular/router';
 
 @Component({
 	// tslint:disable-next-line: component-selector
@@ -27,8 +28,10 @@ export class KatalogItemsSucheComponent implements OnInit, OnDestroy {
 
 	private schulkatalogStateSubscription: Subscription;
 
+	btnTextNichtGefunden: string;
+
 	constructor(@Inject(SchulkatalogConfigService) public readonly config,
-		public schulkatalogFacade: InternalFacade) { }
+		public schulkatalogFacade: InternalFacade, private router: Router) { }
 
 	ngOnInit() {
 
@@ -38,6 +41,7 @@ export class KatalogItemsSucheComponent implements OnInit, OnDestroy {
 				this.selectedKatalogtyp = model.currentKatalogtyp;
 				this.selectedKatalogItem = model.selectedKatalogItem;
 				this.searchFormInputValue = model.searchTerm;
+				this.btnTextNichtGefunden = this.selectedKatalogtyp === 'ORT' ? 'Ort nicht gefuden' : 'Schule nicht gefunden';
 			}
 
 		);
@@ -70,5 +74,9 @@ export class KatalogItemsSucheComponent implements OnInit, OnDestroy {
 
 		const value = $event.target.value;
 		this.searchTerm.next(value);
+	}
+
+	gotoAntragsformular() : void {
+		this.router.navigateByUrl('/antragsformular');
 	}
 }

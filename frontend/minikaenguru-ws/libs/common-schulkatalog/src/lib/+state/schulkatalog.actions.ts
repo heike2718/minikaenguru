@@ -34,4 +34,9 @@ export const katalogItemSelected = createAction(
 	props<{ katalogItem: KatalogItem, immediatelyLoadOnNumberChilds: number }>()
 );
 
+export const katalogantragSuccessfullySubmitted = createAction(
+	'[InternalFacade] submitSchulkatalogAntrag'
+)
+
+
 

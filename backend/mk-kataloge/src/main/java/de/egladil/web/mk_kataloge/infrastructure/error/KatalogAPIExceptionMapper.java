@@ -7,10 +7,12 @@ package de.egladil.web.mk_kataloge.infrastructure.error;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import javax.validation.ConstraintViolationException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.NoContentException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
@@ -75,6 +77,17 @@ public class KatalogAPIExceptionMapper implements ExceptionMapper<Exception> {
 			return Response.status(409)
 				.entity(serialize(responsePayload))
 				.build();
+		}
+
+		if (exception instanceof ConstraintViolationException) {
+
+			LOG.error(exception.getMessage());
+
+			ResponsePayload payload = ResponsePayload
+				.messageOnly(MessagePayload.error(applicationMessages.getString("general.badRequest")));
+
+			return Response.status(Status.BAD_REQUEST).entity(serialize(payload)).build();
+
 		}
 
 		if (exception instanceof WebApplicationException) {

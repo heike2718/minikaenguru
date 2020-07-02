@@ -1,6 +1,6 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { KatalogItemsSucheComponent } from './katalog-items-suche/katalog-items-suche.component';
 import { SchulkatalogConfig, SchulkatalogConfigService } from './configuration/schulkatalog-config';
@@ -12,23 +12,29 @@ import * as fromSchulkatalog from './+state/schulkatalog.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { CommonMessagesModule } from '@minikaenguru-ws/common-messages';
 import { CommonLoggingModule } from '@minikaenguru-ws/common-logging';
+import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
 import { SchulkatalogEffects } from './+state/schulkatalog.effects';
+import { SchulkatalogAntragComponent } from './schulkatalog-antrag/schulkatalog-antrag.component';
 
 @NgModule({
   imports: [
 	CommonModule,
 	FormsModule,
+	ReactiveFormsModule,
     HttpClientModule,
     KatalogRoutingModule,
     StoreModule.forFeature(fromSchulkatalog.schulkatalogFeatureKey, fromSchulkatalog.reducer),
 	EffectsModule.forFeature([SchulkatalogEffects]),
     CommonMessagesModule,
-    CommonLoggingModule
+	CommonLoggingModule,
+	CommonComponentsModule
   ],
   declarations: [
     KatalogItemsSucheComponent,
     SchulkatalogComponent,
-    KatalogItemComponent],
+    KatalogItemComponent,
+	SchulkatalogAntragComponent
+  ],
   exports: [
     SchulkatalogComponent
   ]
