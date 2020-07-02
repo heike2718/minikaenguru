@@ -14,18 +14,20 @@ const wettbewerbeRoutes: Routes = [
 		path: 'wettbewerbe',
 		canActivate: [AuthGuardService],
 		resolve: { wettbewerbe: WettbewerbeListResolver },
-		component: WettbewerbeListComponent
+		component: WettbewerbeListComponent,
+		data: { animation: 'wettbewerbe' }
 	},
 	{
 		path: 'wettbewerb-dashboard/:id',
 		canActivate: [AuthGuardService],
-		resolve: {wettbewerbDashboard: WettbewerbDetailsResolver},
-		component: WettbewerbDashboardComponent
+		resolve: { wettbewerbDashboard: WettbewerbDetailsResolver },
+		component: WettbewerbDashboardComponent,
+		data: { animation: 'wettbewerb-dashboard' }
 	},
 	{
 		path: 'wettbewerb-editor/:id',
 		canActivate: [AuthGuardService],
-		resolve: {wettbewerbEditor: WettbewerbDetailsResolver},
+		resolve: { wettbewerbEditor: WettbewerbDetailsResolver },
 		component: WettbewerbEditorComponent
 	}
 ];

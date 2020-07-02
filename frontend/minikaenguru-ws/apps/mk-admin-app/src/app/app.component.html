@@ -2,7 +2,9 @@
 <cmn-msg></cmn-msg>
 
 <div class="container-fluid">
-	<router-outlet></router-outlet>
+	<div [@routeAnimation]="getAnimationData(routerOutlet)">
+		<router-outlet #routerOutlet="outlet"></router-outlet>
+	</div>
 </div>
 <footer>
 	<div class="row">

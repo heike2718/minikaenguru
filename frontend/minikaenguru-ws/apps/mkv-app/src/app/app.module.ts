@@ -1,5 +1,4 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, ErrorHandler } from '@angular/core';
 
 import { AppComponent } from './app.component';
@@ -40,7 +39,6 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 	],
 	imports: [
 		BrowserModule,
-		BrowserAnimationsModule,
 		CommonSchulkatalogModule.forRoot({
 			baseUrl: environment.katalogApiUrl,
 			devmode: !environment.production,

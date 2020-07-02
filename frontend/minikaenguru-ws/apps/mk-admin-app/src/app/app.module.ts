@@ -52,7 +52,8 @@ registerLocaleData(localeDe);
 		CommonSchulkatalogModule.forRoot({
 			baseUrl: environment.katalogApiUrl,
 			devmode: !environment.production,
-			admin: false
+			admin: false,
+			immediatelyLoadOnNumberChilds: 25
 		}),
 		CommonMessagesModule,
 		CommonComponentsModule,
