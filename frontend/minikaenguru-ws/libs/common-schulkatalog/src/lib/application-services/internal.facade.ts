@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { SchulkatalogState } from '../+state/schulkatalog.reducer';
 import { KatalogService } from '../infrastructure/katalog.service';
 import { katalogItems, schulkatalogState, selectedKatalogItem } from '../+state/schulkatalog.selectors';
-import { Katalogtyp, KatalogItem } from '../domain/entities';
+import { Katalogtyp, KatalogItem, SchulkatalogAntrag } from '../domain/entities';
 import { searchFinished, startLoadChildItems, childItemsLoaded, katalogItemSelected, startSearch } from '../+state/schulkatalog.actions';
 import { SchulkatalogConfig, SchulkatalogConfigService } from '../configuration/schulkatalog-config';
 import { ErrorHandlerService } from '../infrastructure/error-handler.service';
@@ -70,5 +70,9 @@ export class InternalFacade {
 
 	public selectKatalogItem(katalogItem: KatalogItem): void {
 		this.store.dispatch(katalogItemSelected({ katalogItem: katalogItem, immediatelyLoadOnNumberChilds: this.config.immediatelyLoadOnNumberChilds }))
+	}
+
+	public submitSchulkatalogAntrag(antrag: SchulkatalogAntrag): void {
+
 	}
 }

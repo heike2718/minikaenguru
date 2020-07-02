@@ -15,6 +15,8 @@ public interface KatalogeDomainEvent {
 
 	String TYPE_DATA_INCONSISTENCY_REGISTERED = "KATALOG:DataInconsistencyRegistered";
 
+	String TYPE_KATALOG_ANTRAG_RECEIVED = "KATALOG:KatalogAntragReceived";
+
 	/**
 	 * @return LocalDateTime
 	 */
