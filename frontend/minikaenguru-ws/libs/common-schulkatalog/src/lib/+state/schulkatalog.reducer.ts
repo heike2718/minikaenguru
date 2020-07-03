@@ -181,7 +181,7 @@ const schulkatalogReducer = createReducer(
 				showLoadingIndicator: false
 			}
 
-			return { ...state, guiModel: guiModel };
+			return { ...state, guiModel: guiModel, selectedKatalogItem: selectedKatalogItem };
 		}
 
 		if (selectedKatalogItem.anzahlKinder > action.immediatelyLoadOnNumberChilds) {
