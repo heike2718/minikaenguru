@@ -29,3 +29,13 @@ export const sucheFinishedWithError = createAction(
 	'[KatalogpflegeFacade] error'
 );
 
+export const selectKatalogItem = createAction(
+	'[KatalogpflegeFacade] prepareEdit',
+	props<{katalogItem: KatalogpflegeItem}>()
+);
+
+export const resetSelection = createAction(
+	'[KatalogpflegeFacade] resetSelection'
+);
+
+

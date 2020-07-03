@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { KatalogpflegeItem } from '../katalogpflege.model';
+import { KatalogpflegeFacade } from '../katalogpflege.facade';
 
 @Component({
 	selector: 'mka-katalogpflege-item',
@@ -14,15 +15,25 @@ export class KatalogpflegeItemComponent implements OnInit {
 
 	anzahlText: string;
 
-	constructor() { }
+	sucheBtnText: string
+
+	constructor(private katalogFacade: KatalogpflegeFacade) { }
 
 	ngOnInit(): void {
 
 		switch (this.katalogItem.typ) {
-			case 'LAND': this.anzahlText = 'Anzahl Orte:'; break;
-			case 'ORT': this.anzahlText = 'Anzahl Schulen:'; break;
-			default: this.anzahlText = '';
+			case 'LAND': this.anzahlText = 'Anzahl Orte:'; this.sucheBtnText = 'Orte'; break;
+			case 'ORT': this.anzahlText = 'Anzahl Schulen:'; this.sucheBtnText = 'Schulen'; break;
+			default: this.anzahlText = ''; this.sucheBtnText = '';
 		}
+	}
+
+	editItem() {
+		this.katalogFacade.prepareEdit(this.katalogItem);
+	}
+
+	openOrSearchChilds() {
+		this.katalogFacade.prepareSucheKinder(this.katalogItem);
 	}
 
 }

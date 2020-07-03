@@ -2,6 +2,7 @@ import { Action, createReducer, on } from '@ngrx/store';
 import { Message } from '@minikaenguru-ws/common-messages';
 import { KatalogpflegeItem, Katalogpflegetyp, mergeKatalogItems, Kataloge } from '../katalogpflege.model';
 import * as KatalogpflegeActions from './katalogpflege.actions';
+import { act } from '@ngrx/effects';
 
 export const katalogpflegeFeatureKey = 'mk-admin-app-kataloge';
 
@@ -48,6 +49,14 @@ const katalogpflegeReducer = createReducer(initialState,
 
 	on(KatalogpflegeActions.sucheFinishedWithError, (state, _action) => {
 		return {...state, showLoadingIndicator: false};
+	}),
+
+	on(KatalogpflegeActions.selectKatalogItem, (state, action) => {
+		return {...state, selectedKatalogItem: action.katalogItem};
+	}),
+
+	on(KatalogpflegeActions.resetSelection, (state, _action) => {
+		return {...state, selectedKatalogItem: undefined, selectedKatalogTyp: undefined};
 	})
 );
 

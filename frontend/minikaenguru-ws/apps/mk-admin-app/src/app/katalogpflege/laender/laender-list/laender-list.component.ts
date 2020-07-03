@@ -22,10 +22,12 @@ export class LaenderListComponent implements OnInit {
 	}
 
 	gotoKataloge(): void {
+		this.katalogFacade.resetSelection();
 		this.router.navigateByUrl('/katalogpflege');
 	}
 
 	gotoDashboard() {
+		this.katalogFacade.resetSelection();
 		this.router.navigateByUrl('/dashboard');
 	}
 

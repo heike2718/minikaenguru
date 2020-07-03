@@ -7,3 +7,5 @@ export const katalogflegeState = createFeatureSelector<fromKatalogpflege.Katalog
 export const laender = createSelector(katalogflegeState, s => katalogpflegeItemWithIDToArray(s.kataloge.laender));
 export const orte = createSelector(katalogflegeState, s => katalogpflegeItemWithIDToArray(s.kataloge.orte));
 export const schulen = createSelector(katalogflegeState, s => katalogpflegeItemWithIDToArray(s.kataloge.schulen));
+
+export const selectedItem = createSelector(katalogflegeState, s => s.selectedKatalogItem);
