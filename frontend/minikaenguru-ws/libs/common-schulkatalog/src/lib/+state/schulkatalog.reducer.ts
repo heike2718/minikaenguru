@@ -103,6 +103,14 @@ const schulkatalogReducer = createReducer(
 			}
 		}
 
+		if (loadedKatalogItems.length === 0 && typ === 'LAND') {
+			guiModel = {
+				...guiModel
+				, showInputControl: false
+				, texte: texte
+			}
+		}
+
 		return {
 			...state
 			, currentKatalogtyp: typ

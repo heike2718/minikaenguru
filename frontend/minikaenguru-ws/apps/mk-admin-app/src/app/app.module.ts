@@ -32,6 +32,7 @@ import { WettbewerbeModule } from './wettbewerbe/wettbewerbe.module';
 import { HttpClientModule } from '@angular/common/http';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { KatalogpflegeModule } from './katalogpflege/katalogpflege.module';
 
 registerLocaleData(localeDe);
 
@@ -53,7 +54,8 @@ registerLocaleData(localeDe);
 			baseUrl: environment.katalogApiUrl,
 			devmode: !environment.production,
 			admin: false,
-			immediatelyLoadOnNumberChilds: 25
+			immediatelyLoadOnNumberChilds: 25,
+			nichtGefundenUrl: '/katalogitem'
 		}),
 		CommonMessagesModule,
 		CommonComponentsModule,
@@ -85,6 +87,7 @@ registerLocaleData(localeDe);
 		}),
 		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
 		WettbewerbeModule,
+		KatalogpflegeModule,
 		AppRoutingModule, // <-- immer am Ende, damit die wildcard-route als letzte deklariert bleibt
 	],
 	providers: [

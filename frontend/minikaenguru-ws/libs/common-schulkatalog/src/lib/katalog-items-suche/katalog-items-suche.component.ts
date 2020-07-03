@@ -73,7 +73,8 @@ export class KatalogItemsSucheComponent implements OnInit, OnDestroy {
 		this.searchTerm.next(value);
 	}
 
-	gotoAntragsformular() : void {
-		this.router.navigateByUrl('/antragsformular');
+	handleNichtGefunden() : void {
+		// this.router.navigateByUrl('/antragsformular');
+		this.router.navigateByUrl(this.config.nichtGefundenUrl);
 	}
 }

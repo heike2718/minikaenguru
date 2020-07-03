@@ -23,7 +23,7 @@
 		</div>
 	</div>
 	<div *ngIf="!viewModel.guiModel.showInputControl" class="col-md-6 mt-4">
-		<button class="btn btn-primary" title="Eintrag in Schulkatalog beantragen" (click)="gotoAntragsformular()">{{viewModel.guiModel.texte.btnNichtGefundenText}}</button>
+		<button class="btn btn-primary" title="Eintrag in Schulkatalog beantragen" (click)="handleNichtGefunden()">{{viewModel.guiModel.texte.btnNichtGefundenText}}</button>
 	</div>
 </div>
 <p *ngIf="config.devMode">(katalog-items-suche.component)</p>

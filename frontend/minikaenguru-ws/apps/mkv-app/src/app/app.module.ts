@@ -43,7 +43,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 			baseUrl: environment.katalogApiUrl,
 			devmode: !environment.production,
 			admin: false,
-			immediatelyLoadOnNumberChilds: 25
+			immediatelyLoadOnNumberChilds: 25,
+			nichtGefundenUrl: '/antragsformular'
 		}),
 		CommonMessagesModule,
 		CommonComponentsModule,
