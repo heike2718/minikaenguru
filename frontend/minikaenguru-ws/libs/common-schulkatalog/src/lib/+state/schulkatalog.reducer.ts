@@ -8,14 +8,16 @@ export interface KatalogSucheTexte {
 	readonly subtitle: string;
 	readonly inputLabel: string;
 	readonly sucheDescription: string;
-	readonly auswahlDescription: string
+	readonly auswahlDescription: string;
+	readonly btnNichtGefundenText: string;
 }
 
 const initialKatalogsucheTexte: KatalogSucheTexte = {
 	subtitle: '',
 	inputLabel: '',
 	sucheDescription: '',
-	auswahlDescription: ''
+	auswahlDescription: '',
+	btnNichtGefundenText: ''
 }
 
 export interface GuiModel {
@@ -59,8 +61,7 @@ const schulkatalogReducer = createReducer(
 
 		const texte: KatalogSucheTexte = getKatalogSucheTexte(state.guiModel.texte,
 			katalogtyp,
-			[],
-			undefined)
+			[])
 
 		const guiModel = {
 			...initialGuiModel
@@ -84,8 +85,7 @@ const schulkatalogReducer = createReducer(
 
 		const texte: KatalogSucheTexte = getKatalogSucheTexte(state.guiModel.texte,
 			typ,
-			loadedKatalogItems,
-			undefined);
+			loadedKatalogItems);
 
 		let guiModel = {
 			...state.guiModel
@@ -121,12 +121,12 @@ const schulkatalogReducer = createReducer(
 	on(SchulkatalogActions.childItemsLoaded, (state, action) => {
 
 		const loadedKatalogItems = action.katalogItems;
-		const auswahlDescription = getAuswahlDescriptiom(loadedKatalogItems);
+		const selectedKatalogItem = state.selectedKatalogItem;
+		const katalogtyp = (selectedKatalogItem === undefined) ? state.currentKatalogtyp : selectedKatalogItem.typ;
 
-		const texte = {
-			...state.guiModel.texte,
-			auswahlDescription: auswahlDescription
-		};
+		const texte: KatalogSucheTexte = getKatalogSucheTexte(state.guiModel.texte,
+			katalogtyp,
+			loadedKatalogItems);
 
 		const guiModel = {
 			...state.guiModel,
@@ -149,8 +149,7 @@ const schulkatalogReducer = createReducer(
 
 		const texte = getKatalogSucheTexte(state.guiModel.texte,
 			katalogtyp,
-			[],
-			undefined);
+			[]);
 
 		const guiModel = {
 			...state.guiModel
@@ -173,7 +172,7 @@ const schulkatalogReducer = createReducer(
 		const selectedKatalogItem = action.katalogItem;
 		let katalogtyp = (selectedKatalogItem === undefined) ? state.currentKatalogtyp : selectedKatalogItem.typ;
 
-		let texte = getKatalogSucheTexte(state.guiModel.texte, katalogtyp, [], selectedKatalogItem);
+		let texte = getKatalogSucheTexte(state.guiModel.texte, katalogtyp, []);
 
 		if (!selectedKatalogItem) {
 			const guiModel = {
@@ -191,7 +190,7 @@ const schulkatalogReducer = createReducer(
 				case 'ORT': katalogtyp = 'SCHULE'; break;
 				default: break;
 			}
-			texte = getKatalogSucheTexte(state.guiModel.texte, katalogtyp, [], selectedKatalogItem);
+			texte = getKatalogSucheTexte(state.guiModel.texte, katalogtyp, []);
 		}
 
 
@@ -217,7 +216,7 @@ const schulkatalogReducer = createReducer(
 			katalogantragSuccess: true
 		};
 
-		return {...state, guiModel: guiModel};
+		return { ...state, guiModel: guiModel };
 	})
 );
 
@@ -226,7 +225,7 @@ export function reducer(state: SchulkatalogState | undefined, action: Action) {
 }
 
 // private functions
-function getAuswahlDescriptiom(katalogItems: KatalogItem[]): string {
+function getAuswahlDescription(katalogItems: KatalogItem[]): string {
 
 	if (katalogItems.length === 0) {
 		return '0 Treffer';
@@ -250,52 +249,44 @@ function getAuswahlDescriptiom(katalogItems: KatalogItem[]): string {
 	return result;
 }
 
-function getKatalogSucheTexte(texte: KatalogSucheTexte, katalogtyp: Katalogtyp, katalogItems: KatalogItem[], selectedKatalogItem: KatalogItem): KatalogSucheTexte {
+function getKatalogSucheTexte(texte: KatalogSucheTexte, katalogtyp: Katalogtyp, katalogItems: KatalogItem[]): KatalogSucheTexte {
 
+	let neueAuswahlDescription: string = getAuswahlDescription(katalogItems);
 	let neuerSubtitle: string = '';
 	let neuesInputLabel: string = '';
 	let neueSucheDescription: string = '';
+	let neuerBtnText: string = '';
 
-	if (selectedKatalogItem) {
-		switch (selectedKatalogItem.typ) {
+	const theKatalogTyp = katalogItems.length > 0 ? katalogItems[0].typ : katalogtyp;
+
+	switch (theKatalogTyp) {
 			case 'LAND':
-				neuerSubtitle = 'Ortssuche';
-				neuesInputLabel = 'Ort';
-				neueSucheDescription = 'Bitte suchen Sie Ihren Ort (mindestens 3 Buchstaben).';
+				neuerSubtitle = 'Ländersuche';
+				neuesInputLabel = 'Land';
+				neueSucheDescription = 'Bitte geben Sie die Anfangsbuchstaben Ihres Landes ein (mindestens 3 Buchstaben).';
+				neuerBtnText = 'Land nicht gefunden';
 				break;
 			case 'ORT':
+				neuerSubtitle = 'Ortssuche';
+				neuesInputLabel = 'Ort';
+				neueSucheDescription = 'Bitte geben Sie die Anfangsbuchstaben Ihres Ortes ein (mindestens 3 Buchstaben).';
+				neuerBtnText = 'Ort nicht gefunden';
+				break;
+			case 'SCHULE':
 				neuerSubtitle = 'Schulsuche';
-				neuesInputLabel = 'Schule';
-				neueSucheDescription = 'Bitte suchen Sie Ihre Schule (mindestens 3 Buchstaben).';
-				break
-			default:
+				neuesInputLabel = 'Schule'
+				neueSucheDescription = 'Bitte geben Sie mindestens 3 aufeinanderfolgende Buchstaben Ihres Schulnamens ein.';
+				neuerBtnText = 'Schule nicht gefunden';
 				break;
 		}
-	}
 
-	switch (katalogtyp) {
-		case 'LAND':
-			neuerSubtitle = 'Ländersuche';
-			neuesInputLabel = 'Land';
-			neueSucheDescription = 'Bitte geben Sie die Anfangsbuchstaben Ihres Landes ein (mindestens 3 Buchstaben).';
-			break;
-		case 'ORT':
-			neuerSubtitle = 'Ortssuche';
-			neuesInputLabel = 'Ort';
-			neueSucheDescription = 'Bitte geben Sie die Anfangsbuchstaben Ihres Ortes ein (mindestens 3 Buchstaben).';
-			break;
-		case 'SCHULE':
-			neuerSubtitle = 'Schulsuche';
-			neuesInputLabel = 'Schule'
-			neueSucheDescription = 'Bitte geben Sie mindestens 3 aufeinanderfolgende Buchstaben Ihres Schulnamens ein.';
-			break;
-	}
+		return {
+			...texte,
+			subtitle: neuerSubtitle,
+			auswahlDescription: neueAuswahlDescription,
+			inputLabel: neuesInputLabel,
+			sucheDescription: neueSucheDescription,
+			btnNichtGefundenText: neuerBtnText
+		};
 
-	return {
-		...texte,
-		subtitle: neuerSubtitle,
-		auswahlDescription: getAuswahlDescriptiom(katalogItems),
-		inputLabel: neuesInputLabel,
-		sucheDescription: neueSucheDescription
-	};
 }
