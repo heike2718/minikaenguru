@@ -16,7 +16,6 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { RouterStateSerializer, StoreRouterConnectingModule, RouterState, routerReducer } from "@ngrx/router-store";
 import { environment } from '../environments/environment';
 
-import { CommonSchulkatalogModule } from '@minikaenguru-ws/common-schulkatalog';
 import { CommonMessagesModule } from '@minikaenguru-ws/common-messages';
 import { CommonAuthModule } from '@minikaenguru-ws/common-auth';
 import { CommonLoggingModule } from '@minikaenguru-ws/common-logging';
@@ -50,13 +49,6 @@ registerLocaleData(localeDe);
 		ReactiveFormsModule,
 		HttpClientModule,
 		BrowserAnimationsModule,
-		CommonSchulkatalogModule.forRoot({
-			baseUrl: environment.katalogApiUrl,
-			devmode: !environment.production,
-			admin: false,
-			immediatelyLoadOnNumberChilds: 25,
-			nichtGefundenUrl: '/katalogitem'
-		}),
 		CommonMessagesModule,
 		CommonComponentsModule,
 		CommonLoggingModule.forRoot({

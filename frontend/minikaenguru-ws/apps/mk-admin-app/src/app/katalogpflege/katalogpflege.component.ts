@@ -1,22 +1,34 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { SchulkatalogFacade } from '@minikaenguru-ws/common-schulkatalog';
+import { KatalogpflegeFacade } from './katalogpflege.facade';
 
 @Component({
-  selector: 'mka-katalogpflege',
-  templateUrl: './katalogpflege.component.html',
-  styleUrls: ['./katalogpflege.component.css']
+	selector: 'mka-katalogpflege',
+	templateUrl: './katalogpflege.component.html',
+	styleUrls: ['./katalogpflege.component.css']
 })
 export class KatalogpflegeComponent implements OnInit, OnDestroy {
 
-  constructor(private schulkatalogFacade: SchulkatalogFacade) { }
+	constructor(private katalogFacade: KatalogpflegeFacade) { }
 
-  ngOnInit(): void {
+	ngOnInit(): void {
 
-	this.schulkatalogFacade.initSchulkatalog('LAND');
-  }
 
-  ngOnDestroy(): void {
-	  this.schulkatalogFacade.initSchulkatalog('LAND');
-  }
+	}
+
+	ngOnDestroy(): void {
+
+	}
+
+	selectLaender(): void {
+		this.katalogFacade.selectKatalogpflegeTyp('LAND');
+	}
+
+	selectOrte(): void {
+		this.katalogFacade.selectKatalogpflegeTyp('ORT');
+	}
+
+	selectSchulen(): void {
+		this.katalogFacade.selectKatalogpflegeTyp('SCHULE');
+	}
 
 }

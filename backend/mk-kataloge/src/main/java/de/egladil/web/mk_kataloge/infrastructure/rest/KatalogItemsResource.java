@@ -7,8 +7,10 @@ package de.egladil.web.mk_kataloge.infrastructure.rest;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -17,13 +19,18 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_kataloge.KatalogAPIApp;
 import de.egladil.web.mk_kataloge.application.KatalogFacade;
 import de.egladil.web.mk_kataloge.domain.KatalogItem;
 import de.egladil.web.mk_kataloge.domain.apimodel.SchuleAPIModel;
+import de.egladil.web.mk_kataloge.domain.event.LoggableEventDelegate;
+import de.egladil.web.mk_kataloge.domain.event.SecurityIncidentRegistered;
 
 /**
  * KatalogItemsResource
@@ -33,11 +40,43 @@ import de.egladil.web.mk_kataloge.domain.apimodel.SchuleAPIModel;
 @Produces(MediaType.APPLICATION_JSON)
 public class KatalogItemsResource {
 
-	@Inject
-	KatalogFacade katalogFacade;
+	private static final Logger LOG = LoggerFactory.getLogger(KatalogItemsResource.class);
+
+	@ConfigProperty(name = "admin.secret")
+	String expectedSecret;
 
 	@ConfigProperty(name = "maximaleAnzahlTreffer", defaultValue = "25")
 	int maximaleAnzahlTreffer;
+
+	@Inject
+	Event<SecurityIncidentRegistered> securityEvent;
+
+	@Inject
+	KatalogFacade katalogFacade;
+
+	@GET
+	@Path("/laender")
+	public Response loadLaender(@HeaderParam(
+		value = KatalogAPIApp.UUID_HEADER_NAME) final String secret) {
+
+		if (!expectedSecret.equals(secret)) {
+
+			String msg = "Unautorisierter Versuch, die Länder zu laden: " + secret;
+
+			LOG.warn(msg);
+
+			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+
+			return Response.status(Status.FORBIDDEN)
+				.entity(ResponsePayload.messageOnly(MessagePayload.error("Netter Versuch, aber leider keine Berechtigung")))
+				.build();
+
+		}
+
+		List<KatalogItem> result = katalogFacade.loadLaender();
+
+		return Response.ok(new ResponsePayload(MessagePayload.ok(), result)).build();
+	}
 
 	@GET
 	@Path("/laender/{kuerzel}/orte")

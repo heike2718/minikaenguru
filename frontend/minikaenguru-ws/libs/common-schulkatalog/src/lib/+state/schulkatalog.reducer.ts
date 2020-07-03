@@ -94,20 +94,21 @@ const schulkatalogReducer = createReducer(
 			, showAuswahlDescription: true
 		};
 
-		if (loadedKatalogItems.length === 0 || loadedKatalogItems.length > action.immediatelyLoadOnNumberChilds) {
-
-			guiModel = {
-				...guiModel
-				, showInputControl: true
-				, texte: texte
-			}
-		}
-
 		if (loadedKatalogItems.length === 0 && typ === 'LAND') {
 			guiModel = {
 				...guiModel
 				, showInputControl: false
 				, texte: texte
+			}
+		} else {
+
+			if (loadedKatalogItems.length === 0 || loadedKatalogItems.length > action.immediatelyLoadOnNumberChilds) {
+
+				guiModel = {
+					...guiModel
+					, showInputControl: true
+					, texte: texte
+				}
 			}
 		}
 
@@ -268,33 +269,33 @@ function getKatalogSucheTexte(texte: KatalogSucheTexte, katalogtyp: Katalogtyp, 
 	const theKatalogTyp = katalogItems.length > 0 ? katalogItems[0].typ : katalogtyp;
 
 	switch (theKatalogTyp) {
-			case 'LAND':
-				neuerSubtitle = 'Ländersuche';
-				neuesInputLabel = 'Land';
-				neueSucheDescription = 'Bitte geben Sie die Anfangsbuchstaben Ihres Landes ein (mindestens 3 Buchstaben).';
-				neuerBtnText = 'Land nicht gefunden';
-				break;
-			case 'ORT':
-				neuerSubtitle = 'Ortssuche';
-				neuesInputLabel = 'Ort';
-				neueSucheDescription = 'Bitte geben Sie die Anfangsbuchstaben Ihres Ortes ein (mindestens 3 Buchstaben).';
-				neuerBtnText = 'Ort nicht gefunden';
-				break;
-			case 'SCHULE':
-				neuerSubtitle = 'Schulsuche';
-				neuesInputLabel = 'Schule'
-				neueSucheDescription = 'Bitte geben Sie mindestens 3 aufeinanderfolgende Buchstaben Ihres Schulnamens ein.';
-				neuerBtnText = 'Schule nicht gefunden';
-				break;
-		}
+		case 'LAND':
+			neuerSubtitle = 'Ländersuche';
+			neuesInputLabel = 'Land';
+			neueSucheDescription = 'Bitte geben Sie die Anfangsbuchstaben Ihres Landes ein (mindestens 3 Buchstaben).';
+			neuerBtnText = 'Land nicht gefunden';
+			break;
+		case 'ORT':
+			neuerSubtitle = 'Ortssuche';
+			neuesInputLabel = 'Ort';
+			neueSucheDescription = 'Bitte geben Sie die Anfangsbuchstaben Ihres Ortes ein (mindestens 3 Buchstaben).';
+			neuerBtnText = 'Ort nicht gefunden';
+			break;
+		case 'SCHULE':
+			neuerSubtitle = 'Schulsuche';
+			neuesInputLabel = 'Schule'
+			neueSucheDescription = 'Bitte geben Sie mindestens 3 aufeinanderfolgende Buchstaben Ihres Schulnamens ein.';
+			neuerBtnText = 'Schule nicht gefunden';
+			break;
+	}
 
-		return {
-			...texte,
-			subtitle: neuerSubtitle,
-			auswahlDescription: neueAuswahlDescription,
-			inputLabel: neuesInputLabel,
-			sucheDescription: neueSucheDescription,
-			btnNichtGefundenText: neuerBtnText
-		};
+	return {
+		...texte,
+		subtitle: neuerSubtitle,
+		auswahlDescription: neueAuswahlDescription,
+		inputLabel: neuesInputLabel,
+		sucheDescription: neueSucheDescription,
+		btnNichtGefundenText: neuerBtnText
+	};
 
 }

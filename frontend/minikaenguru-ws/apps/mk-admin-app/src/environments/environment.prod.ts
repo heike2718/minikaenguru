@@ -2,7 +2,6 @@ export const environment = {
 	envName: 'PROD',
 	production: true,
 	assetsUrl: 'mkv-app/assets',
-	katalogApiUrl: 'https://mathe-jung-alt.de/mk-kataloge-api',
     apiUrl: 'https://mathe-jung-alt.de/mk-gateway',
     storageKeyPrefix: 'mka_',
 	version: '1.0.0',

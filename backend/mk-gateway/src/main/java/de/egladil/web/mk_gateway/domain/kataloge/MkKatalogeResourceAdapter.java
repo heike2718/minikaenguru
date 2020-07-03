@@ -44,6 +44,20 @@ public class MkKatalogeResourceAdapter extends AbstractMkResourceAdapter {
 		}
 	}
 
+	public Response loadLaender(final String secret) {
+
+		try {
+
+			Response response = restClient.loadLaender(secret);
+			return response;
+
+		} catch (Exception e) {
+
+			return handleException(e, LOG, "[loadLaender]");
+		}
+
+	}
+
 	@Override
 	protected String endpointName() {
 

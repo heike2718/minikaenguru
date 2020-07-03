@@ -2,10 +2,13 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthGuardService } from '../infrastructure/auth-guard.service';
 import { KatalogpflegeComponent } from './katalogpflege.component';
 import { NgModule } from '@angular/core';
-import { EditOrtComponent } from './edit-ort/edit-ort.component';
-import { EditLandComponent } from './edit-land/edit-land.component';
-import { EditSchuleComponent } from './edit-schule/edit-schule.component';
-import { EditKatalogitemComponent } from './edit-katalogitem/edit-katalogitem.component';
+import { EditOrtComponent } from './orte/edit-ort/edit-ort.component';
+import { EditLandComponent } from './laender/edit-land/edit-land.component';
+import { EditSchuleComponent } from './schulen/edit-schule/edit-schule.component';
+import { LaenderListComponent } from './laender/laender-list/laender-list.component';
+import { OrteListComponent } from './orte/orte-list/orte-list.component';
+import { SchulenListComponent } from './schulen/schulen-list/schulen-list.component';
+import { LaenderListResolver } from './laender/laender-list/laender-list.resolver';
 
 
 const katalogpflegeRoutes: Routes = [
@@ -15,22 +18,33 @@ const katalogpflegeRoutes: Routes = [
 		component: KatalogpflegeComponent
 	},
 	{
-		path: 'katalogitem',
+		path: 'laender',
 		canActivate: [AuthGuardService],
-		component: EditKatalogitemComponent
+		component: LaenderListComponent,
+		resolve: { laender: LaenderListResolver },
 	},
 	{
-		path: 'land/:id',
+		path: 'orte',
+		canActivate: [AuthGuardService],
+		component: OrteListComponent
+	},
+	{
+		path: 'schulen',
+		canActivate: [AuthGuardService],
+		component: SchulenListComponent
+	},
+	{
+		path: 'land-editor/:id',
 		canActivate: [AuthGuardService],
 		component: EditLandComponent
 	},
 	{
-		path: 'ort/:id',
+		path: 'ort-editor/:id',
 		canActivate: [AuthGuardService],
 		component: EditOrtComponent
 	},
 	{
-		path: 'schule/:id',
+		path: 'schule-editor/:id',
 		canActivate: [AuthGuardService],
 		component: EditSchuleComponent
 	}

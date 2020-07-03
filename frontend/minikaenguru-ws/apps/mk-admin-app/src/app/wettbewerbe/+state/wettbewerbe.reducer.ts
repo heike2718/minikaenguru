@@ -106,4 +106,4 @@ const wettbewerbeReducer = createReducer(initialWettbewerbeState,
 
 export function reducer(state: WettbewerbeState | undefined, action: Action) {
 	return wettbewerbeReducer(state, action);
-}
+};
