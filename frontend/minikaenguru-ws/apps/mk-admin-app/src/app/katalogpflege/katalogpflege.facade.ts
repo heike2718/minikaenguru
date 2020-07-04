@@ -32,9 +32,7 @@ export class KatalogpflegeFacade {
 			case 'ORT': this.router.navigateByUrl('/katalogpflege/orte'); break;
 			case 'SCHULE': this.router.navigateByUrl('/katalogpflege/schulen'); break;
 		}
-
 	}
-
 
 	public ladeLaender(): void {
 
@@ -57,7 +55,7 @@ export class KatalogpflegeFacade {
 
 	}
 
-	public prepareEdit(item: KatalogpflegeItem) {
+	public gotoEditor(item: KatalogpflegeItem) {
 
 		this.store.dispatch(KatalogpflegeActions.selectKatalogItem({ katalogItem: item }));
 
@@ -73,16 +71,19 @@ export class KatalogpflegeFacade {
 		this.router.navigateByUrl(url);
 	}
 
-	public prepareSucheKinder(item: KatalogpflegeItem) {
+	public gotoChildItems(parent: KatalogpflegeItem) {
 
-		this.store.dispatch(KatalogpflegeActions.selectKatalogItem({ katalogItem: item }));
+		if (parent.typ !== 'SCHULE') {
 
-		if (item.typ !== 'SCHULE' && item.anzahlKinder <= 25 && !item.kinderGeladen) {
-			this.ladeKinder(item);
+			if (!parent.kinderGeladen && parent.anzahlKinder <= 25) {
+				this.ladeKinder(parent);
+			} else {
+				this.store.dispatch(KatalogpflegeActions.selectKatalogItem({ katalogItem: parent }));
+			}
 		}
 
 		let url = '/katalogpflege';
-		switch (item.typ) {
+		switch (parent.typ) {
 			case 'LAND': url += '/orte'; break;
 			case 'ORT': url += '/schulen'; break;
 		}
@@ -96,7 +97,8 @@ export class KatalogpflegeFacade {
 
 		this.katalogHttpService.loadChildItems(item).subscribe(
 			items => {
-				this.store.dispatch(KatalogpflegeActions.loadChildItemsFinished({parent: item, katalogItems: items }));
+				this.store.dispatch(KatalogpflegeActions.loadChildItemsFinished({ parent: item, katalogItems: items }));
+				this.store.dispatch(KatalogpflegeActions.selectKatalogItem({ katalogItem: item }));
 			},
 			(error => {
 				this.store.dispatch(KatalogpflegeActions.sucheFinishedWithError());

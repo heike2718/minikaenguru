@@ -32,6 +32,28 @@ export function katalogpflegeItemWithIDToArray(itemsWithID: KatalogpflegeItemWit
 
 };
 
+export function childrenAsArray(parent: KatalogpflegeItem, kataloge: Kataloge): KatalogpflegeItem[] {
+
+	const result: KatalogpflegeItem[] = [];
+
+	let katalog: KatalogpflegeItemWithID[];
+	switch(parent.typ) {
+		case 'LAND': katalog = kataloge.orte; break;
+		case 'ORT': katalog = kataloge.schulen; break;
+		case 'SCHULE': return result;
+	}
+
+	katalog.forEach(
+		itemWithID => {
+			if (itemWithID.katalogItem.parent && itemWithID.katalogItem.parent.kuerzel === parent.kuerzel) {
+				result.push(itemWithID.katalogItem);
+			}
+		}
+	)
+
+	return result;
+}
+
 export function mergeKatalogItems(katalogItems: KatalogpflegeItem[], kataloge: Kataloge): Kataloge {
 
 	let laender: KatalogpflegeItemWithID[] = [...kataloge.laender];

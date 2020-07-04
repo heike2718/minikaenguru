@@ -22,6 +22,11 @@ export class OrteListComponent implements OnInit {
 		// this.router.navigateByUrl('/wettbewerbe/wettbewerb-editor/neu');
 	}
 
+	gotoLaender(): void {
+		this.katalogFacade.resetSelection();
+		this.router.navigateByUrl('/katalogpflege/laender');
+	}
+
 	gotoKataloge(): void {
 		this.katalogFacade.resetSelection();
 		this.router.navigateByUrl('/katalogpflege');

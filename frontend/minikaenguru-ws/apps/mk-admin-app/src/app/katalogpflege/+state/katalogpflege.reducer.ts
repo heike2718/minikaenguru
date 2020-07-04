@@ -1,6 +1,6 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { Message } from '@minikaenguru-ws/common-messages';
-import { KatalogpflegeItem, Katalogpflegetyp, mergeKatalogItems, Kataloge, mergeKatalogItemMap, KatalogpflegeItemWithID } from '../katalogpflege.model';
+import { KatalogpflegeItem, Katalogpflegetyp, mergeKatalogItems, Kataloge, mergeKatalogItemMap, childrenAsArray } from '../katalogpflege.model';
 import * as KatalogpflegeActions from './katalogpflege.actions';
 
 export const katalogpflegeFeatureKey = 'mk-admin-app-kataloge';
@@ -8,6 +8,8 @@ export const katalogpflegeFeatureKey = 'mk-admin-app-kataloge';
 
 export interface KatalogpflegeState {
 	readonly kataloge: Kataloge;
+	readonly filteredOrte: KatalogpflegeItem[],
+	readonly filteredSchulen: KatalogpflegeItem[],
 	readonly selectedKatalogItem: KatalogpflegeItem;
 	readonly selectedKatalogTyp: Katalogpflegetyp;
 	readonly showLoadingIndicator: boolean;
@@ -16,6 +18,8 @@ export interface KatalogpflegeState {
 
 const initialState: KatalogpflegeState = {
 	kataloge: { laender: [], orte: [], schulen: [] },
+	filteredOrte: [],
+	filteredSchulen: [],
 	selectedKatalogItem: undefined,
 	selectedKatalogTyp: undefined,
 	showLoadingIndicator: false,
@@ -68,7 +72,7 @@ const katalogpflegeReducer = createReducer(initialState,
 
 	on(KatalogpflegeActions.loadChildItemsFinished, (state, action) => {
 
-		const parent: KatalogpflegeItem = {...action.parent, kinderGeladen: true};
+		const parent: KatalogpflegeItem = { ...action.parent, kinderGeladen: true };
 		let laenderWithID = [...state.kataloge.laender];
 		let orteWithID = [...state.kataloge.orte];
 		let schulenWithID = [...state.kataloge.schulen];
@@ -89,12 +93,11 @@ const katalogpflegeReducer = createReducer(initialState,
 
 		action.katalogItems.forEach(
 			item => {
-				children.push({...item, parent: parent});
+				children.push({ ...item, parent: parent });
 			}
 		);
 
 		kataloge = mergeKatalogItems(children, kataloge);
-
 		return { ...state, kataloge: kataloge, showLoadingIndicator: false };
 	}),
 
@@ -105,11 +108,23 @@ const katalogpflegeReducer = createReducer(initialState,
 	}),
 
 	on(KatalogpflegeActions.selectKatalogItem, (state, action) => {
-		return { ...state, selectedKatalogItem: action.katalogItem };
+
+		const parent = action.katalogItem;
+
+		let filteredOrte = [];
+		let filteredSchulen = [];
+
+		switch (parent.typ) {
+			case 'LAND': filteredOrte = childrenAsArray(parent, state.kataloge); break;
+			case 'ORT': filteredSchulen = childrenAsArray(parent, state.kataloge); break;
+		}
+
+
+		return { ...state, selectedKatalogItem: parent, filteredOrte: filteredOrte, filteredSchulen: filteredSchulen };
 	}),
 
 	on(KatalogpflegeActions.resetSelection, (state, _action) => {
-		return { ...state, selectedKatalogItem: undefined, selectedKatalogTyp: undefined };
+		return { ...state, selectedKatalogItem: undefined, selectedKatalogTyp: undefined, filteredOrte: [], filteredSchulen: [] };
 	})
 );
 
