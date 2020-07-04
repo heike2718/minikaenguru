@@ -19,9 +19,9 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.egladil.web.mk_kataloge.domain.DuplicateEntityException;
 import de.egladil.web.mk_kataloge.domain.SchuleMessage;
 import de.egladil.web.mk_kataloge.domain.SchuleRepository;
+import de.egladil.web.mk_kataloge.domain.error.DuplicateEntityException;
 import de.egladil.web.mk_kataloge.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_kataloge.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;

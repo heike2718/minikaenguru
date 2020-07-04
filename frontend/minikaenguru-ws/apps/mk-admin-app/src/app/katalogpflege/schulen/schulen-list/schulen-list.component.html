@@ -1,0 +1,50 @@
+<div class="mkv-container mkv-bordered">
+	<div class="col-12">
+		<h2>Schulen <span *ngIf="selectedKatalogItem$ | async as ort">in {{ort.name}}</span></h2>
+		<div *ngIf="schulen$ | async as schulen">
+			<p>Anzahl Schulen: {{schulen.length}}</p>
+
+			<div *ngIf="schulen.length === 0 || schulen.length > 25" class="mkv-container mkv-bordered">
+				<div class="row mt-5 mb-5">
+					<div class="col-xs-12 col-sm-12 col-md-1">
+						<label for="sucheInput">Schule:</label>
+					</div>
+					<div class="col-sm-12 col-md-9">
+						<input id="sucheInput" type="text" name="sucheInput" placeholder="Teile des Schulnamen"
+							[(ngModel)]="inputValue" class="btn-block" />
+					</div>
+					<div class="col-xs-12 col-sm-12 col-md-2">
+						<button class="btn btn-outline-dark btn-block" (click)="startSearch()"
+							[disabled]="inputValue.trim().length < 3"><i class="fa fa-search"
+								aria-hidden="true"></i>suchen</button>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="schulen.length > 0" class="row">
+				<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let schule of schulen">
+					<mka-katalogpflege-item [katalogItem]="schule"></mka-katalogpflege-item>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12 col-md-3">
+			<button class="btn btn-primary btn-block" (click)="addSchule()"><i class="fa fa-plus" aria-hidden="true"></i>neue
+				Schule</button>
+		</div>
+		<div class="col-sm-12 col-md-3">
+			<button class="btn btn-primary btn-block" (click)="gotoKataloge()"><i class="fa fa-arrow-left"
+					aria-hidden="true"></i>Kataloge</button>
+		</div>
+		<div class="col-sm-12 col-md-3">
+			<button class="btn btn-primary btn-block" (click)="gotoDashboard()"><i class="fa fa-puzzle-piece"
+					aria-hidden="true"></i>Dashboard</button>
+		</div>
+		<div *ngIf="schulen$ | async as schulen" class="col-sm-12 col-md-3">
+			<div *ngIf="schulen.length > 0">
+				<button class="btn btn-primary btn-block" (click)="clearRearchResults()"><i class="fa fa-remove"
+						aria-hidden="true"></i>neue Suche</button>
+			</div>
+		</div>
+	</div>
+</div>

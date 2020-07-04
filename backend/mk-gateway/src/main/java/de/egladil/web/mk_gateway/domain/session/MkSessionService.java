@@ -190,7 +190,7 @@ public class MkSessionService {
 
 		if (session != null) {
 
-			LOG.info("Session invalidated: {} - {}", sessionId, session.user().uuid().substring(0, 8));
+			LOG.debug("Session invalidated: {} - {}", sessionId, session.user().uuid().substring(0, 8));
 
 			logoutEventObject = new UserLoggedOut(session.user().uuid(), session.user().rolle());
 

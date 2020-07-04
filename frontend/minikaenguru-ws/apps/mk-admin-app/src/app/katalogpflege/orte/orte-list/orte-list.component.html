@@ -1,0 +1,51 @@
+<div class="mkv-container mkv-bordered">
+	<div class="col-12">
+		<h2>Orte <span *ngIf="selectedKatalogItem$ | async as land">in {{land.name}}</span></h2>
+		<div *ngIf="orte$ | async as orte">
+			<p>Anzahl Orte: {{orte.length}}</p>
+
+			<div *ngIf="orte.length === 0 || orte.length > 25" class="mkv-container mkv-bordered">
+				<div class="row mt-5 mb-5">
+					<div class="col-xs-12 col-sm-12 col-md-1">
+						<label for="sucheInput">Ort:</label>
+					</div>
+					<div class="col-sm-12 col-md-9">
+						<input id="sucheInput" type="text" name="sucheInput" placeholder="Anfangsbuchstaben Ort"
+							[(ngModel)]="inputValue" class="btn-block" />
+					</div>
+					<div class="col-xs-12 col-sm-12 col-md-2">
+						<button class="btn btn-outline-dark btn-block" (click)="startSearch()"
+							[disabled]="inputValue.trim().length < 3"><i class="fa fa-search"
+								aria-hidden="true"></i>suchen</button>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="orte.length > 0" class="row">
+				<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let ort of orte">
+					<mka-katalogpflege-item [katalogItem]="ort"></mka-katalogpflege-item>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12 col-md-3">
+			<button class="btn btn-primary btn-block" (click)="addOrt()"><i class="fa fa-plus"
+					aria-hidden="true"></i>neuer
+				Ort</button>
+		</div>
+		<div class="col-sm-12 col-md-3">
+			<button class="btn btn-primary btn-block" (click)="gotoKataloge()"><i class="fa fa-arrow-left"
+					aria-hidden="true"></i>Kataloge</button>
+		</div>
+		<div class="col-sm-12 col-md-3">
+			<button class="btn btn-primary btn-block" (click)="gotoDashboard()"><i class="fa fa-puzzle-piece"
+					aria-hidden="true"></i>Dashboard</button>
+		</div>
+		<div *ngIf="orte$ | async as orte" class="col-sm-12 col-md-3">
+			<div *ngIf="orte.length > 0">
+				<button class="btn btn-primary btn-block" (click)="clearRearchResults()"><i class="fa fa-remove"
+						aria-hidden="true"></i>neue Suche</button>
+			</div>
+		</div>
+	</div>
+</div>

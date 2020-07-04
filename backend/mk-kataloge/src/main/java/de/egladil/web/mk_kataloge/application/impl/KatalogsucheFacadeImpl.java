@@ -49,7 +49,7 @@ public class KatalogsucheFacadeImpl implements KatalogsucheFacade {
 	}
 
 	@Override
-	public List<KatalogItem> sucheSchulenMitNameBeginnendMit(final String suchbegriff) {
+	public List<KatalogItem> sucheSchulenMitNameEnthaltend(final String suchbegriff) {
 
 		List<Schule> schulen = katalogeRepository.findSchulen(suchbegriff);
 		List<KatalogItem> result = mapAndSortSchulen(schulen);

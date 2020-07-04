@@ -5,13 +5,11 @@ import { RegistrationService } from './registration/registration.service';
 import { map } from 'rxjs/operators';
 import { ResponsePayload, MessageService } from '@minikaenguru-ws/common-messages';
 import { RouterOutlet } from '@angular/router';
-import { slideInAnimation } from './animations';
 
 @Component({
 	selector: 'mkv-root',
 	templateUrl: './app.component.html',
-	styleUrls: ['./app.component.css'],
-	animations: [slideInAnimation]
+	styleUrls: ['./app.component.css']
 })
 export class AppComponent {
 

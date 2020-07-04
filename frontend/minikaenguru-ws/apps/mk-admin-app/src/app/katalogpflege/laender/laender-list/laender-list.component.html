@@ -1,0 +1,28 @@
+<div class="mkv-container mkv-bordered">
+	<div class="col-12">
+		<h2>Länder</h2>
+		<div *ngIf="laender$ | async as laender">
+			<p>Anzahl Länder: {{laender.length}}</p>
+
+			<div *ngIf="laender.length > 0" class="row">
+				<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let land of laender">
+					<mka-katalogpflege-item [katalogItem]="land"></mka-katalogpflege-item>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12 col-md-3 ml-3 mb-2">
+			<button class="btn btn-primary" (click)="addLand()"><i class="fa fa-plus" aria-hidden="true"></i>neues
+				Land</button>
+		</div>
+		<div class="col-sm-12 col-md-3 ml-3 mb-2">
+			<button class="btn btn-primary" (click)="gotoKataloge()"><i class="fa fa-arrow-left"
+					aria-hidden="true"></i>Kataloge</button>
+		</div>
+		<div class="col-sm-12 col-md-3 ml-3 mb-2">
+			<button class="btn btn-primary" (click)="gotoDashboard()"><i class="fa fa-puzzle-piece"
+					aria-hidden="true"></i>Dashboard</button>
+		</div>
+	</div>
+</div>

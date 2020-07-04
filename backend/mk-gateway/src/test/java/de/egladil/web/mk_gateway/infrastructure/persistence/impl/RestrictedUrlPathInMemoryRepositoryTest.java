@@ -196,6 +196,7 @@ public class RestrictedUrlPathInMemoryRepositoryTest {
 
 	@Nested
 	class MkWettbewerbAdminPathsTest {
+
 		@Test
 		void should_OfPathContainWettbewerbe() {
 
@@ -254,6 +255,22 @@ public class RestrictedUrlPathInMemoryRepositoryTest {
 			RestrictedUrlPath restrictedUrlPath = opt.get();
 
 			assertEquals("/wb-admin/wettbewerbe/wettbewerb/status", restrictedUrlPath.path());
+
+			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.LEHRER));
+			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.PRIVAT));
+			assertTrue(restrictedUrlPath.isAllowedForRolle(Rolle.ADMIN));
+		}
+
+		@Test
+		void should_OfPathContainLaender() {
+
+			Optional<RestrictedUrlPath> opt = repository.ofPath("/wb-admin/kataloge/laender");
+
+			assertTrue(opt.isPresent());
+
+			RestrictedUrlPath restrictedUrlPath = opt.get();
+
+			assertEquals("/wb-admin/kataloge/laender", restrictedUrlPath.path());
 
 			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.LEHRER));
 			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.PRIVAT));

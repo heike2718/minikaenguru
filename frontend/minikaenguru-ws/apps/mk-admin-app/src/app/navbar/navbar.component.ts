@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import { environment } from '../../environments/environment';
 import { AppState } from '../reducers';
 import { resetWettbewerbe } from '../wettbewerbe/+state/wettbewerbe.actions';
+import { resetKataloge} from '../katalogpflege/+state/katalogpflege.actions';
 
 @Component({
 	selector: 'mka-navbar',
@@ -39,10 +40,13 @@ export class NavbarComponent implements OnInit {
 
 	login() {
 		this.appStore.dispatch(resetWettbewerbe());
+		this.appStore.dispatch(resetKataloge());
 		this.authService.login();
 	}
 
 	logout() {
+		this.appStore.dispatch(resetWettbewerbe());
+		this.appStore.dispatch(resetKataloge());
 		this.authService.logout();
 	}
 }

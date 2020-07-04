@@ -15,9 +15,9 @@ import javax.transaction.Transactional;
 
 import org.apache.commons.lang3.StringUtils;
 
-import de.egladil.web.mk_kataloge.domain.DuplicateEntityException;
 import de.egladil.web.mk_kataloge.domain.KatalogeRepository;
 import de.egladil.web.mk_kataloge.domain.SchuleRepository;
+import de.egladil.web.mk_kataloge.domain.error.DuplicateEntityException;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
 
 /**

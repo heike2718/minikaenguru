@@ -27,7 +27,7 @@ import de.egladil.web.mk_gateway.domain.error.AuthException;
  * WettbewerbAdminResource .../mk-gateway/wb-admin/...
  */
 @RequestScoped
-@Path("/wb-admin")
+@Path("/wb-admin/wettbewerbe")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class WettbewerbAdminResource {
@@ -39,7 +39,6 @@ public class WettbewerbAdminResource {
 	MkWettbewerbAdminResourceAdapter resourceAdapter;
 
 	@GET
-	@Path("/wettbewerbe")
 	public Response loadWettbewerbe() {
 
 		if (securityContext.getUserPrincipal() == null) {
@@ -53,7 +52,7 @@ public class WettbewerbAdminResource {
 	}
 
 	@GET
-	@Path("/wettbewerbe/wettbewerb/{jahr}")
+	@Path("/wettbewerb/{jahr}")
 	public Response wettbewerbMitJahr(@PathParam(value = "jahr") final Integer jahr) {
 
 		if (securityContext.getUserPrincipal() == null) {
@@ -67,7 +66,7 @@ public class WettbewerbAdminResource {
 	}
 
 	@POST
-	@Path("/wettbewerbe/wettbewerb")
+	@Path("/wettbewerb")
 	public Response createWettbewerb(final WettbewerbAPIModel data) {
 
 		if (securityContext.getUserPrincipal() == null) {
@@ -81,7 +80,7 @@ public class WettbewerbAdminResource {
 	}
 
 	@PUT
-	@Path("/wettbewerbe/wettbewerb")
+	@Path("/wettbewerb")
 	public Response updateWettbewerb(final WettbewerbAPIModel data) {
 
 		if (securityContext.getUserPrincipal() == null) {
@@ -95,7 +94,7 @@ public class WettbewerbAdminResource {
 	}
 
 	@PUT
-	@Path("/wettbewerbe/wettbewerb/status")
+	@Path("/wettbewerb/status")
 	public Response moveWettbewerbOn(final WettbewerbID data) {
 
 		if (securityContext.getUserPrincipal() == null) {

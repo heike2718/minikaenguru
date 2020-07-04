@@ -22,14 +22,12 @@ const lehrerRoutes: Routes = [
 				path: 'schulen',
 				canActivate: [LehrerGuardService],
 				component: SchulenListComponent,
-				resolve: {schulen: SchulenListResolver },
-				data: { animation: 'schulen' }
+				resolve: {schulen: SchulenListResolver }
 			}, {
 				path: 'schule-dashboard/:kuerzel',
 				canActivate: [LehrerGuardService],
 				resolve: { schuleDashboard: SchuleDashboardResolver },
-				component: SchuleDashboardComponent,
-				data: { animation: 'schule-dashboard' }
+				component: SchuleDashboardComponent
 			}
 		]
 	}

@@ -86,7 +86,7 @@ public class KatalogsucheResource {
 			switch (katalogtyp) {
 
 			case SCHULE:
-				result = katalogsucheFacade.sucheSchulenMitNameBeginnendMit(searchTerm);
+				result = katalogsucheFacade.sucheSchulenMitNameEnthaltend(searchTerm);
 				break;
 
 			case ORT:

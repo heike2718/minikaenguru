@@ -7,7 +7,7 @@ import {
 // https://angular.io/guide/router
 export const slideInAnimation =
 	trigger('routeAnimation', [
-		transition('schulen <=> schule-dashboard', [
+		transition('wettbewerbe <=> wettbewerb-dashboard', [
 			style({ position: 'relative' }),
 			query(':enter, :leave', [
 				style({
