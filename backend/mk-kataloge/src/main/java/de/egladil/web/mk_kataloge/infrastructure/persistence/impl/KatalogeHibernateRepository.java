@@ -18,8 +18,8 @@ import javax.persistence.TypedQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.egladil.web.mk_kataloge.domain.KatalogAPIException;
 import de.egladil.web.mk_kataloge.domain.KatalogeRepository;
+import de.egladil.web.mk_kataloge.domain.error.KatalogAPIException;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Land;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Ort;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
@@ -103,7 +103,7 @@ public class KatalogeHibernateRepository implements KatalogeRepository {
 		String stmt = "select s from Schule s where lower(s.name) like :name";
 
 		TypedQuery<Schule> query = em.createQuery(stmt, Schule.class);
-		query.setParameter("name", searchTerm.toLowerCase() + "%");
+		query.setParameter("name", "%" + searchTerm.toLowerCase() + "%");
 
 		return query.getResultList();
 	}

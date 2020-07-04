@@ -44,6 +44,62 @@ public class MkKatalogeResourceAdapter extends AbstractMkResourceAdapter {
 		}
 	}
 
+	public Response loadLaender(final String secret) {
+
+		try {
+
+			Response response = restClient.loadLaender(secret);
+			return response;
+
+		} catch (Exception e) {
+
+			return handleException(e, LOG, "[loadLaender]");
+		}
+
+	}
+
+	public Response loadOrteInLand(final String kuerzel) {
+
+		try {
+
+			Response response = restClient.loadOrteInLand(kuerzel);
+			return response;
+
+		} catch (Exception e) {
+
+			return handleException(e, LOG, "[loadOrteInLand]");
+		}
+
+	}
+
+	public Response loadSchulenInOrt(final String kuerzel) {
+
+		try {
+
+			Response response = restClient.loadSchulenInOrt(kuerzel);
+			return response;
+
+		} catch (Exception e) {
+
+			return handleException(e, LOG, "[loadSchulenInOrt]");
+		}
+
+	}
+
+	public Response sucheItems(final String typ, final String searchTerm) {
+
+		try {
+
+			Response response = restClient.searchItems(typ, searchTerm);
+			return response;
+
+		} catch (Exception e) {
+
+			return handleException(e, LOG, "[sucheItems]");
+		}
+
+	}
+
 	@Override
 	protected String endpointName() {
 

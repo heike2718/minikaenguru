@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_kataloge.domain.apimodel.SchulkatalogAntrag;
+import de.egladil.web.mk_kataloge.domain.error.KatalogAPIException;
 
 /**
  * KatalogAntragMailtextGenerator

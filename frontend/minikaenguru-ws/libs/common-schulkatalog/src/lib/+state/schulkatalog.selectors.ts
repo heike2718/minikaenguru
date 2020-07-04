@@ -1,5 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import * as fromSchulkatalog from './schulkatalog.reducer';
+import { KatalogItem, Katalogtyp } from '../domain/entities';
 
 export const schulkatalogState = createFeatureSelector<fromSchulkatalog.SchulkatalogState>(
   fromSchulkatalog.schulkatalogFeatureKey
@@ -13,4 +14,6 @@ export const showLoadingIndicator = createSelector(schulkatalogState, s => s.gui
 export const searchTerm = createSelector(schulkatalogState, s => s.searchTerm);
 
 export const katalogAntragSuccess = createSelector(katalogGuiModel, m => m.katalogantragSuccess);
+
+export const selectedItemAndSelectedTyp = createSelector(selectedKatalogItem, selectedKatalogtyp, (i: KatalogItem, t: Katalogtyp) => {return {'item': i, 'typ': t}});
 

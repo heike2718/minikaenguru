@@ -24,6 +24,8 @@ import de.egladil.web.mk_kataloge.domain.KatalogeRepository;
 import de.egladil.web.mk_kataloge.domain.apimodel.SchuleAPIModel;
 import de.egladil.web.mk_kataloge.domain.event.DataInconsistencyRegistered;
 import de.egladil.web.mk_kataloge.domain.event.LoggableEventDelegate;
+import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Land;
+import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.LandToKatalogItemMapper;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Ort;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.OrtToKatalogItemMapper;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
@@ -42,6 +44,18 @@ public class KatalogFacadeImpl implements KatalogFacade {
 
 	@Inject
 	Event<DataInconsistencyRegistered> dataInconcistencyEvent;
+
+	@Override
+	public List<KatalogItem> loadLaender() {
+
+		List<Land> laender = katalogRepository.loadLaender();
+
+		final LandToKatalogItemMapper mapper = new LandToKatalogItemMapper();
+
+		final List<KatalogItem> result = laender.stream().map(land -> mapper.apply(land)).collect(Collectors.toList());
+		Collections.sort(result, new KatalogItemNameComparator());
+		return result;
+	}
 
 	@Override
 	public int countOrteInLand(final String kuerzel) {

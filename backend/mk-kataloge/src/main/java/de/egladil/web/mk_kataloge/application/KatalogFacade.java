@@ -15,6 +15,13 @@ import de.egladil.web.mk_kataloge.domain.apimodel.SchuleAPIModel;
 public interface KatalogFacade {
 
 	/**
+	 * Läd alle Länder.
+	 *
+	 * @return
+	 */
+	List<KatalogItem> loadLaender();
+
+	/**
 	 * Gibt die Anzahl der Orte im Land mit dem gegebenen Kürzel zurück
 	 *
 	 * @param  kuerzel

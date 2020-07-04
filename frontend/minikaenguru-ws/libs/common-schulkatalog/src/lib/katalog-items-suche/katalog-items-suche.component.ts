@@ -28,8 +28,6 @@ export class KatalogItemsSucheComponent implements OnInit, OnDestroy {
 
 	private schulkatalogStateSubscription: Subscription;
 
-	btnTextNichtGefunden: string;
-
 	constructor(@Inject(SchulkatalogConfigService) public readonly config,
 		public schulkatalogFacade: InternalFacade, private router: Router) { }
 
@@ -41,7 +39,6 @@ export class KatalogItemsSucheComponent implements OnInit, OnDestroy {
 				this.selectedKatalogtyp = model.currentKatalogtyp;
 				this.selectedKatalogItem = model.selectedKatalogItem;
 				this.searchFormInputValue = model.searchTerm;
-				this.btnTextNichtGefunden = this.selectedKatalogtyp === 'ORT' ? 'Ort nicht gefuden' : 'Schule nicht gefunden';
 			}
 
 		);
@@ -76,7 +73,7 @@ export class KatalogItemsSucheComponent implements OnInit, OnDestroy {
 		this.searchTerm.next(value);
 	}
 
-	gotoAntragsformular() : void {
+	handleNichtGefunden(): void {
 		this.router.navigateByUrl('/antragsformular');
 	}
 }

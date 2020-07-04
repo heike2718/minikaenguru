@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_kataloge.domain.DuplicateEntityException;
+import de.egladil.web.mk_kataloge.domain.error.DuplicateEntityException;
 
 /**
  * KatalogAPIExceptionMapper<br>

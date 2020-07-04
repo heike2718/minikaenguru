@@ -37,7 +37,7 @@ public interface KatalogsucheFacade {
 	 *                     String
 	 * @return             List
 	 */
-	List<KatalogItem> sucheSchulenMitNameBeginnendMit(String suchbegriff);
+	List<KatalogItem> sucheSchulenMitNameEnthaltend(String suchbegriff);
 
 	/**
 	 * Gibt alle Orte im Land mit dem Kuerzel landkuerzel zurück, deren Name mit suchbegriff beginnt.

@@ -18,7 +18,6 @@ export class DashboardComponent implements OnInit {
 	}
 
 	gotoWettbewerbe() {
-		console.log('navigate to /wettbewerbe')
 		this.router.navigateByUrl('/wettbewerbe');
 	}
 
@@ -27,7 +26,7 @@ export class DashboardComponent implements OnInit {
 	}
 
 	gotoKataloge() {
-		console.log('zu Kataloge navigieren');
+		this.router.navigateByUrl('/katalogpflege');
 	}
 
 }
