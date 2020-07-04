@@ -9,6 +9,7 @@ import { NotAuthorizedComponent } from './not-authorized/not-authorized.componen
 
 
 const routes: Routes = [
+	{ path: 'landing', pathMatch: 'full', component: LandingComponent },
 	{ path: 'forbidden', pathMatch: 'full', component: NotAuthorizedComponent },
 	{ path: 'dashboard', pathMatch: 'full', component: DashboardComponent, canActivate: [AuthGuardService] },
 	{ path: 'wettbewerbe', loadChildren: () => import('./wettbewerbe/wettbewerbe.module').then(m => m.WettbewerbeModule) },

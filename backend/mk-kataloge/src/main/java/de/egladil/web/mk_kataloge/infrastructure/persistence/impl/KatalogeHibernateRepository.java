@@ -30,6 +30,8 @@ import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
 @RequestScoped
 public class KatalogeHibernateRepository implements KatalogeRepository {
 
+	private static final String UNBEKANNT = "Unbekannt";
+
 	private static final Logger LOG = LoggerFactory.getLogger(KatalogeHibernateRepository.class);
 
 	@Inject
@@ -45,9 +47,9 @@ public class KatalogeHibernateRepository implements KatalogeRepository {
 	@Override
 	public List<Land> loadLaender() {
 
-		String stmt = "select l from Land l";
+		String stmt = "select l from Land l where l.name != :excluded";
 
-		TypedQuery<Land> query = em.createQuery(stmt, Land.class);
+		TypedQuery<Land> query = em.createQuery(stmt, Land.class).setParameter("excluded", UNBEKANNT);
 
 		return getLaender(query);
 	}
@@ -66,10 +68,10 @@ public class KatalogeHibernateRepository implements KatalogeRepository {
 	@Override
 	public List<Ort> loadOrteInLand(final String landKuerzel) {
 
-		String stmt = "select o from Ort o where o.landKuerzel = :landKuerzel";
+		String stmt = "select o from Ort o where o.landKuerzel = :landKuerzel and o.name != :excluded";
 
 		TypedQuery<Ort> query = em.createQuery(stmt, Ort.class);
-		query.setParameter("landKuerzel", landKuerzel);
+		query.setParameter("landKuerzel", landKuerzel).setParameter("excluded", UNBEKANNT);
 
 		return query.getResultList();
 	}
@@ -77,11 +79,11 @@ public class KatalogeHibernateRepository implements KatalogeRepository {
 	@Override
 	public List<Ort> findOrteInLand(final String landKuerzel, final String searchTerm) {
 
-		String stmt = "select o from Ort o where o.landKuerzel = :landKuerzel and lower(o.name) like :name";
+		String stmt = "select o from Ort o where o.landKuerzel = :landKuerzel and lower(o.name) like :name and o.name != :excluded";
 
 		TypedQuery<Ort> query = em.createQuery(stmt, Ort.class);
-		query.setParameter("name", searchTerm.toLowerCase() + "%");
-		query.setParameter("landKuerzel", landKuerzel);
+		query.setParameter("name", searchTerm.toLowerCase() + "%").setParameter("landKuerzel", landKuerzel).setParameter("excluded",
+			UNBEKANNT);
 
 		return query.getResultList();
 	}
@@ -89,10 +91,11 @@ public class KatalogeHibernateRepository implements KatalogeRepository {
 	@Override
 	public List<Land> findLander(final String searchTerm) {
 
-		String stmt = "select l from Land l where lower(l.name) like :name";
+		String stmt = "select l from Land l where lower(l.name) like :name and l.name != :excluded";
 
 		TypedQuery<Land> query = em.createQuery(stmt, Land.class);
-		query.setParameter("name", searchTerm.toLowerCase() + "%");
+		query.setParameter("name", searchTerm.toLowerCase() + "%")
+			.setParameter("excluded", UNBEKANNT);
 
 		return getLaender(query);
 	}
@@ -100,10 +103,10 @@ public class KatalogeHibernateRepository implements KatalogeRepository {
 	@Override
 	public List<Schule> findSchulen(final String searchTerm) {
 
-		String stmt = "select s from Schule s where lower(s.name) like :name";
+		String stmt = "select s from Schule s where lower(s.name) like :name and s.name != :excluded";
 
 		TypedQuery<Schule> query = em.createQuery(stmt, Schule.class);
-		query.setParameter("name", "%" + searchTerm.toLowerCase() + "%");
+		query.setParameter("name", "%" + searchTerm.toLowerCase() + "%").setParameter("excluded", UNBEKANNT);
 
 		return query.getResultList();
 	}
@@ -111,10 +114,10 @@ public class KatalogeHibernateRepository implements KatalogeRepository {
 	@Override
 	public List<Ort> findOrte(final String searchTerm) {
 
-		String stmt = "select o from Ort o where lower(o.name) like :name";
+		String stmt = "select o from Ort o where lower(o.name) like :name and o.name != :excluded";
 
 		TypedQuery<Ort> query = em.createQuery(stmt, Ort.class);
-		query.setParameter("name", searchTerm.toLowerCase() + "%");
+		query.setParameter("name", searchTerm.toLowerCase() + "%").setParameter("excluded", UNBEKANNT);
 
 		return query.getResultList();
 	}
@@ -122,21 +125,23 @@ public class KatalogeHibernateRepository implements KatalogeRepository {
 	@Override
 	public List<Schule> loadSchulenInOrt(final String ortKuerzel) {
 
-		String stmt = "select s from Schule s where s.ortKuerzel = :ortKuerzel";
+		String stmt = "select s from Schule s where s.ortKuerzel = :ortKuerzel and s.name != :excluded";
 
-		TypedQuery<Schule> query = em.createQuery(stmt, Schule.class);
-		query.setParameter("ortKuerzel", ortKuerzel);
+		TypedQuery<Schule> query = em.createQuery(stmt, Schule.class)
+			.setParameter("ortKuerzel", ortKuerzel)
+			.setParameter("excluded", UNBEKANNT);
 
 		return query.getResultList();
 	}
 
 	public List<Schule> findSchulenInOrt(final String ortKuerzel, final String searchTerm) {
 
-		String stmt = "select s from Schule s where s.ortKuerzel = :ortKuerzel and lower(s.name) like :name";
+		String stmt = "select s from Schule s where s.ortKuerzel = :ortKuerzel and lower(s.name) like :name and s.name != :excluded";
 
 		TypedQuery<Schule> query = em.createQuery(stmt, Schule.class);
-		query.setParameter("name", "%" + searchTerm.toLowerCase() + "%");
-		query.setParameter("ortKuerzel", ortKuerzel);
+		query.setParameter("name", "%" + searchTerm.toLowerCase() + "%")
+			.setParameter("ortKuerzel", ortKuerzel)
+			.setParameter("excluded", UNBEKANNT);
 
 		return query.getResultList();
 	}
@@ -228,9 +233,9 @@ public class KatalogeHibernateRepository implements KatalogeRepository {
 	@Override
 	public int countSchulenInOrt(final String kuerzel) {
 
-		String stmt = "select count(s) from Schule s where s.ortKuerzel = :kuerzel";
+		String stmt = "select count(s) from Schule s where s.ortKuerzel = :kuerzel and s.name != :excluded";
 		TypedQuery<Long> query = em.createQuery(stmt, Long.class)
-			.setParameter("kuerzel", kuerzel.trim());
+			.setParameter("kuerzel", kuerzel.trim()).setParameter("excluded", UNBEKANNT);
 
 		Long result = query.getSingleResult();
 
@@ -240,9 +245,9 @@ public class KatalogeHibernateRepository implements KatalogeRepository {
 	@Override
 	public int countOrteInLand(final String kuerzel) {
 
-		String stmt = "select count(o) from Ort o where o.landKuerzel = :kuerzel";
+		String stmt = "select count(o) from Ort o where o.landKuerzel = :kuerzel and o.name != :excluded";
 		TypedQuery<Long> query = em.createQuery(stmt, Long.class)
-			.setParameter("kuerzel", kuerzel.trim());
+			.setParameter("kuerzel", kuerzel.trim()).setParameter("excluded", UNBEKANNT);
 
 		Long result = query.getSingleResult();
 
