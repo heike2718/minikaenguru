@@ -17,8 +17,8 @@ export class LaenderListComponent implements OnInit {
 	}
 
 	addLand() {
-		// this.wettbewerbFacade.createNewWettbewerb();
-		// this.router.navigateByUrl('/wettbewerbe/wettbewerb-editor/neu');
+		// this.katalogFacade.createNewLand();
+		// this.router.navigateByUrl('/katalogpflege/land-editor/neu');
 	}
 
 	gotoKataloge(): void {

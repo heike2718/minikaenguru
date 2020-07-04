@@ -44,4 +44,14 @@ public interface MkKatalogeRestClient {
 	Response loadLaender(@HeaderParam(
 		value = MkGatewayApp.UUID_HEADER_NAME) final String secret);
 
+	@GET
+	@Path("/kataloge/laender/{kuerzel}/orte")
+	Response loadOrteInLand(@PathParam(
+		value = "kuerzel") final String kuerzel);
+
+	@GET
+	@Path("/kataloge/orte/{kuerzel}/schulen")
+	Response loadSchulenInOrt(@PathParam(
+		value = "kuerzel") final String kuerzel);
+
 }

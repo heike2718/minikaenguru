@@ -42,7 +42,7 @@ export class KatalogpflegeFacade {
 
 		this.katalogHttpService.loadLaender().subscribe(
 			laender => {
-				this.store.dispatch(KatalogpflegeActions.sucheFinished({ katalogItems: laender }));
+				this.store.dispatch(KatalogpflegeActions.loadLaenderFinished({ laender: laender }));
 			},
 			(error => {
 				this.store.dispatch(KatalogpflegeActions.sucheFinishedWithError());
@@ -77,6 +77,10 @@ export class KatalogpflegeFacade {
 
 		this.store.dispatch(KatalogpflegeActions.selectKatalogItem({ katalogItem: item }));
 
+		if (item.typ !== 'SCHULE' && item.anzahlKinder <= 25 && !item.kinderGeladen) {
+			this.ladeKinder(item);
+		}
+
 		let url = '/katalogpflege';
 		switch (item.typ) {
 			case 'LAND': url += '/orte'; break;
@@ -86,5 +90,19 @@ export class KatalogpflegeFacade {
 		this.router.navigateByUrl(url);
 	}
 
+	ladeKinder(item: KatalogpflegeItem) {
+
+		this.store.dispatch(KatalogpflegeActions.startSuche());
+
+		this.katalogHttpService.loadChildItems(item).subscribe(
+			items => {
+				this.store.dispatch(KatalogpflegeActions.loadChildItemsFinished({parent: item, katalogItems: items }));
+			},
+			(error => {
+				this.store.dispatch(KatalogpflegeActions.sucheFinishedWithError());
+				this.errorHandler.handleError(error)
+			})
+		);
+	}
 }
 

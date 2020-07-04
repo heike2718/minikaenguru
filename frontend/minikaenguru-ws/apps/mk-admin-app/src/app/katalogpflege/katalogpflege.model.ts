@@ -6,9 +6,10 @@ export interface KatalogpflegeItem {
 	readonly kuerzel: string;
 	readonly name: string;
 	readonly pfad: string;
-	readonly parent: KatalogpflegeItem;
+	readonly parent?: KatalogpflegeItem;
 	readonly anzahlKinder: number;
 	readonly leaf: boolean;
+	readonly kinderGeladen?: boolean;
 };
 
 
@@ -55,16 +56,7 @@ export function mergeKatalogItems(katalogItems: KatalogpflegeItem[], kataloge: K
 	};
 }
 
-// ================= private functions =======================================//
-
-function containsItem(itemsWithID: KatalogpflegeItemWithID[], katalogItem: KatalogpflegeItem): boolean {
-
-	const matching = itemsWithID.filter(itemMitID => { itemMitID.kuerzel === katalogItem.kuerzel });
-
-	return matching.length > 0;
-}
-
-function mergeKatalogItemMap(itemsWithID: KatalogpflegeItemWithID[], katalogItem: KatalogpflegeItem): KatalogpflegeItemWithID[] {
+export function mergeKatalogItemMap(itemsWithID: KatalogpflegeItemWithID[], katalogItem: KatalogpflegeItem): KatalogpflegeItemWithID[] {
 
 	let result: KatalogpflegeItemWithID[];
 
@@ -84,6 +76,25 @@ function mergeKatalogItemMap(itemsWithID: KatalogpflegeItemWithID[], katalogItem
 	}
 
 	return result;
+}
+
+
+// ================= private functions =======================================//
+
+function containsItem(itemsWithID: KatalogpflegeItemWithID[], katalogItem: KatalogpflegeItem): boolean {
+
+	if (!itemsWithID || itemsWithID.length === 0) {
+		return false;
+	}
+
+	for (let ind: number = 0; ind < itemsWithID.length; ind++) {
+
+		if (itemsWithID[ind] && itemsWithID[ind].kuerzel === katalogItem.kuerzel) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 

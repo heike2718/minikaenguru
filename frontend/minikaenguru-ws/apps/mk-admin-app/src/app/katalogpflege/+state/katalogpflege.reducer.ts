@@ -1,8 +1,7 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { Message } from '@minikaenguru-ws/common-messages';
-import { KatalogpflegeItem, Katalogpflegetyp, mergeKatalogItems, Kataloge } from '../katalogpflege.model';
+import { KatalogpflegeItem, Katalogpflegetyp, mergeKatalogItems, Kataloge, mergeKatalogItemMap, KatalogpflegeItemWithID } from '../katalogpflege.model';
 import * as KatalogpflegeActions from './katalogpflege.actions';
-import { act } from '@ngrx/effects';
 
 export const katalogpflegeFeatureKey = 'mk-admin-app-kataloge';
 
@@ -16,7 +15,7 @@ export interface KatalogpflegeState {
 }
 
 const initialState: KatalogpflegeState = {
-	kataloge: {laender: [], orte: [], schulen: []},
+	kataloge: { laender: [], orte: [], schulen: [] },
 	selectedKatalogItem: undefined,
 	selectedKatalogTyp: undefined,
 	showLoadingIndicator: false,
@@ -47,16 +46,70 @@ const katalogpflegeReducer = createReducer(initialState,
 		return { ...state, kataloge: kataloge, showLoadingIndicator: false };
 	}),
 
+	on(KatalogpflegeActions.loadLaenderFinished, (state, action) => {
+
+		const alle: KatalogpflegeItem[] = action.laender;
+		let laenderWithID = [...state.kataloge.laender];
+
+		alle.forEach(
+			item => {
+				laenderWithID = mergeKatalogItemMap(laenderWithID, item);
+			}
+		)
+
+		const kataloge = {
+			laender: laenderWithID,
+			orte: [...state.kataloge.orte],
+			schulen: [...state.kataloge.schulen]
+		};
+
+		return { ...state, kataloge: kataloge, showLoadingIndicator: false };
+	}),
+
+	on(KatalogpflegeActions.loadChildItemsFinished, (state, action) => {
+
+		const parent: KatalogpflegeItem = {...action.parent, kinderGeladen: true};
+		let laenderWithID = [...state.kataloge.laender];
+		let orteWithID = [...state.kataloge.orte];
+		let schulenWithID = [...state.kataloge.schulen];
+
+		switch (parent.typ) {
+			case 'LAND': laenderWithID = mergeKatalogItemMap(laenderWithID, parent); break;
+			case 'ORT': orteWithID = mergeKatalogItemMap(orteWithID, parent); break;
+		}
+
+		let kataloge: Kataloge = {
+			laender: laenderWithID,
+			orte: orteWithID,
+			schulen: schulenWithID
+		};
+
+		const children: KatalogpflegeItem[] = [];
+
+
+		action.katalogItems.forEach(
+			item => {
+				children.push({...item, parent: parent});
+			}
+		);
+
+		kataloge = mergeKatalogItems(children, kataloge);
+
+		return { ...state, kataloge: kataloge, showLoadingIndicator: false };
+	}),
+
+
+
 	on(KatalogpflegeActions.sucheFinishedWithError, (state, _action) => {
-		return {...state, showLoadingIndicator: false};
+		return { ...state, showLoadingIndicator: false };
 	}),
 
 	on(KatalogpflegeActions.selectKatalogItem, (state, action) => {
-		return {...state, selectedKatalogItem: action.katalogItem};
+		return { ...state, selectedKatalogItem: action.katalogItem };
 	}),
 
 	on(KatalogpflegeActions.resetSelection, (state, _action) => {
-		return {...state, selectedKatalogItem: undefined, selectedKatalogTyp: undefined};
+		return { ...state, selectedKatalogItem: undefined, selectedKatalogTyp: undefined };
 	})
 );
 

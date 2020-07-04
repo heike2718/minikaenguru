@@ -25,6 +25,16 @@ export const sucheFinished = createAction(
 	props<{katalogItems: KatalogpflegeItem[]}>()
 );
 
+export const loadLaenderFinished = createAction(
+	'[KatalogpflegeFacade] ladeLaender',
+	props<{laender: KatalogpflegeItem[]}>()
+);
+
+export const loadChildItemsFinished = createAction(
+	'[KatalogpflegeFacade] ladeKinder',
+	props<{parent: KatalogpflegeItem, katalogItems: KatalogpflegeItem[]}>()
+);
+
 export const sucheFinishedWithError = createAction(
 	'[KatalogpflegeFacade] error'
 );

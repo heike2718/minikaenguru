@@ -1,1 +1,33 @@
-<p>schulen-list works!</p>
+<div class="mkv-container mkv-bordered">
+	<div class="col-12">
+		<h2>Schulen <span *ngIf="selectedKatalogItem$ | async as ort">in {{ort.name}}</span></h2>
+		<div *ngIf="schulen$ | async as schulen">
+			<p>Anzahl Schulen: {{schulen.length}}</p>
+
+			<div *ngIf="schulen.length > 0" class="row">
+				<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let schule of schulen">
+					<mka-katalogpflege-item [katalogItem]="schule"></mka-katalogpflege-item>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12 col-md-3">
+			<button class="btn btn-primary" (click)="addSchule()"><i class="fa fa-plus" aria-hidden="true"></i>neue
+				Schule</button>
+		</div>
+		<div class="col-sm-12 col-md-3">
+			<button class="btn btn-primary" (click)="gotoLaender()"><i class="fa fa-arrow-left"
+					aria-hidden="true"></i><i class="fa fa-arrow-left"
+					aria-hidden="true"></i>Länder</button>
+		</div>
+		<div class="col-sm-12 col-md-3">
+			<button class="btn btn-primary" (click)="gotoOrte()"><i class="fa fa-arrow-left"
+					aria-hidden="true"></i>Orte</button>
+		</div>
+		<div class="col-sm-12 col-md-3">
+			<button class="btn btn-primary" (click)="gotoDashboard()"><i class="fa fa-puzzle-piece"
+					aria-hidden="true"></i>Dashboard</button>
+		</div>
+	</div>
+</div>

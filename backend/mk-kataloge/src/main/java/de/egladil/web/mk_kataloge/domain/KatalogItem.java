@@ -4,23 +4,32 @@
 // =====================================================
 package de.egladil.web.mk_kataloge.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * KatalogItem
  */
 public class KatalogItem {
 
+	@JsonProperty
 	private Katalogtyp typ;
 
+	@JsonProperty
 	private String name;
 
+	@JsonProperty
 	private String pfad;
 
+	@JsonProperty
 	private String kuerzel;
 
+	@JsonProperty
 	private KatalogItem parent;
 
+	@JsonProperty
 	private int anzahlKinder;
 
+	@JsonProperty
 	private boolean leaf;
 
 	public static KatalogItem createWithTypKuerzelName(final Katalogtyp typ, final String kuerzel, final String name, final int anzahlKinder) {
