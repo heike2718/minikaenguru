@@ -91,6 +91,27 @@ export class KatalogpflegeFacade {
 		this.router.navigateByUrl(url);
 	}
 
+	public searchKatalogItems(typ: Katalogpflegetyp, searchTerm: string) {
+		this.store.dispatch(KatalogpflegeActions.startSuche());
+
+		this.katalogHttpService.searchKatalogItems(typ, searchTerm).subscribe(
+			items => {
+				this.store.dispatch(KatalogpflegeActions.sucheFinished({typ: typ, katalogItems: items }));
+			},
+			(error => {
+				this.store.dispatch(KatalogpflegeActions.sucheFinishedWithError());
+				this.errorHandler.handleError(error)
+			})
+		);
+
+	}
+
+	public clearRearchResults(): void {
+
+		this.store.dispatch(KatalogpflegeActions.clearRearchResults());
+
+	}
+
 	ladeKinder(item: KatalogpflegeItem) {
 
 		this.store.dispatch(KatalogpflegeActions.startSuche());

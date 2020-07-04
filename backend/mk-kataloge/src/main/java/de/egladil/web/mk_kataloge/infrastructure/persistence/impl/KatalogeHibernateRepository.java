@@ -103,7 +103,7 @@ public class KatalogeHibernateRepository implements KatalogeRepository {
 		String stmt = "select s from Schule s where lower(s.name) like :name";
 
 		TypedQuery<Schule> query = em.createQuery(stmt, Schule.class);
-		query.setParameter("name", searchTerm.toLowerCase() + "%");
+		query.setParameter("name", "%" + searchTerm.toLowerCase() + "%");
 
 		return query.getResultList();
 	}

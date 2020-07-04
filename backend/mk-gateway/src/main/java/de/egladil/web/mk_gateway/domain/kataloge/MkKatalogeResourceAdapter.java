@@ -86,6 +86,20 @@ public class MkKatalogeResourceAdapter extends AbstractMkResourceAdapter {
 
 	}
 
+	public Response sucheItems(final String typ, final String searchTerm) {
+
+		try {
+
+			Response response = restClient.searchItems(typ, searchTerm);
+			return response;
+
+		} catch (Exception e) {
+
+			return handleException(e, LOG, "[sucheItems]");
+		}
+
+	}
+
 	@Override
 	protected String endpointName() {
 

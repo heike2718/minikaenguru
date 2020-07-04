@@ -47,7 +47,22 @@ const katalogpflegeReducer = createReducer(initialState,
 
 		const alle: KatalogpflegeItem[] = action.katalogItems;
 		const kataloge: Kataloge = mergeKatalogItems(alle, state.kataloge);
-		return { ...state, kataloge: kataloge, showLoadingIndicator: false };
+
+		let filteredOrte = [];
+		let filteredSchulen = [];
+
+		switch (action.typ) {
+			case 'ORT': filteredOrte = alle; break;
+			case 'SCHULE': filteredSchulen = alle; break;
+		}
+
+		return { ...state, kataloge: kataloge, filteredOrte: filteredOrte, filteredSchulen: filteredSchulen, showLoadingIndicator: false };
+	}),
+
+	on(KatalogpflegeActions.clearRearchResults, (state, _action) => {
+
+		return { ...state, filteredOrte: [], filteredSchulen: [], selectedKatalogItem: undefined };
+
 	}),
 
 	on(KatalogpflegeActions.loadLaenderFinished, (state, action) => {

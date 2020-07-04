@@ -12,9 +12,12 @@ export class SchulenListComponent implements OnInit {
 	schulen$ = this.katalogFacade.schulen$;
 	selectedKatalogItem$ = this.katalogFacade.selectedKatalogItem$;
 
+	inputValue: string;
+
 	constructor(private katalogFacade: KatalogpflegeFacade, private router: Router) { }
 
 	ngOnInit(): void {
+		this.inputValue = '';
 	}
 
 
@@ -41,5 +44,18 @@ export class SchulenListComponent implements OnInit {
 	gotoDashboard() {
 		this.katalogFacade.resetSelection();
 		this.router.navigateByUrl('/dashboard');
+	}
+
+	startSearch(): void {
+
+		this.katalogFacade.searchKatalogItems('SCHULE', this.inputValue.trim());
+
+	}
+
+	clearRearchResults(): void {
+
+		this.inputValue = '';
+		this.katalogFacade.clearRearchResults();
+
 	}
 }

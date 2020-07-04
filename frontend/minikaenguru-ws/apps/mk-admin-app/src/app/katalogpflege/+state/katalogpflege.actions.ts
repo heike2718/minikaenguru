@@ -22,7 +22,11 @@ export const startSuche = createAction(
 
 export const sucheFinished = createAction(
 	'[KatalogpflegeFacade]',
-	props<{katalogItems: KatalogpflegeItem[]}>()
+	props<{typ: Katalogpflegetyp, katalogItems: KatalogpflegeItem[]}>()
+);
+
+export const clearRearchResults = createAction(
+	'[KatalogpflegeFacade] clearRearchResults'
 );
 
 export const loadLaenderFinished = createAction(

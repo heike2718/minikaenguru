@@ -12,9 +12,12 @@ export class OrteListComponent implements OnInit {
 	orte$ = this.katalogFacade.orte$;
 	selectedKatalogItem$ = this.katalogFacade.selectedKatalogItem$;
 
+	inputValue: string;
+
 	constructor(private katalogFacade: KatalogpflegeFacade, private router: Router) { }
 
 	ngOnInit(): void {
+		this.inputValue = '';
 	}
 
 	addOrt() {
@@ -35,5 +38,18 @@ export class OrteListComponent implements OnInit {
 	gotoDashboard() {
 		this.katalogFacade.resetSelection();
 		this.router.navigateByUrl('/dashboard');
+	}
+
+	startSearch(): void {
+
+		this.katalogFacade.searchKatalogItems('ORT', this.inputValue.trim());
+
+	}
+
+	clearRearchResults(): void {
+
+		this.inputValue = '';
+		this.katalogFacade.clearRearchResults();
+
 	}
 }

@@ -42,7 +42,10 @@ export class KatalogHttpService {
 		);
 	}
 
+	public searchKatalogItems(typ: Katalogpflegetyp, searchTerm: string): Observable<KatalogpflegeItem[]> {
 
-
+		let url = environment.apiUrl + '/wb-admin/katalogsuche/global/' + typ + '?search=' + searchTerm;
+		return this.loadKatalogItems(url);
+	}
 }
 
