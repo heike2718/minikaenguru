@@ -20,10 +20,8 @@ export class SchulenListComponent implements OnInit {
 		this.inputValue = '';
 	}
 
-
 	addSchule() {
-		// this.katalogFacade.createNewLand();
-		// this.router.navigateByUrl('/katalogpflege/land-editor/neu');
+		this.router.navigateByUrl('/katalogpflege/schule-editor/neu');
 	}
 
 	gotoLaender(): void {

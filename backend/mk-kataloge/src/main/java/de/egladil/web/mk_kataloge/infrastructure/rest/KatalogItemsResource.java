@@ -9,8 +9,11 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.validation.constraints.NotBlank;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -28,6 +31,8 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_kataloge.KatalogAPIApp;
 import de.egladil.web.mk_kataloge.application.KatalogFacade;
 import de.egladil.web.mk_kataloge.domain.KatalogItem;
+import de.egladil.web.mk_kataloge.domain.apimodel.NeueSchulePayload;
+import de.egladil.web.mk_kataloge.domain.apimodel.RenameKatalogItemPayload;
 import de.egladil.web.mk_kataloge.domain.apimodel.SchuleAPIModel;
 import de.egladil.web.mk_kataloge.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_kataloge.domain.event.SecurityIncidentRegistered;
@@ -76,6 +81,42 @@ public class KatalogItemsResource {
 		List<KatalogItem> result = katalogFacade.loadLaender();
 
 		return Response.ok(new ResponsePayload(MessagePayload.ok(), result)).build();
+	}
+
+	@POST
+	@Path("/laender/{kuerzel}")
+	public Response renameLand(@HeaderParam(
+		value = KatalogAPIApp.UUID_HEADER_NAME) final String secret, @PathParam(
+			value = "kuerzel") @NotBlank @Kuerzel final String kuerzel, final RenameKatalogItemPayload requestPayload) {
+
+		return null;
+	}
+
+	@POST
+	@Path("/orte/{kuerzel}")
+	public Response renameOrt(@HeaderParam(
+		value = KatalogAPIApp.UUID_HEADER_NAME) final String secret, @PathParam(
+			value = "kuerzel") @NotBlank @Kuerzel final String kuerzel, final RenameKatalogItemPayload requestPayload) {
+
+		return null;
+	}
+
+	@POST
+	@Path("/schulen/{kuerzel}")
+	public Response renameSchule(@HeaderParam(
+		value = KatalogAPIApp.UUID_HEADER_NAME) final String secret, @PathParam(
+			value = "kuerzel") @NotBlank @Kuerzel final String kuerzel, final RenameKatalogItemPayload requestPayload) {
+
+		return null;
+	}
+
+	@PUT
+	@Path("/schulen")
+	public Response createSchule(@HeaderParam(
+		value = KatalogAPIApp.UUID_HEADER_NAME) final String secret, final NeueSchulePayload requestPayload) {
+
+		return null;
+
 	}
 
 	@GET

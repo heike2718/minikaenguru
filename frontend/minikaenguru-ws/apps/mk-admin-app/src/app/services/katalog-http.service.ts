@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
 import { ResponsePayload, MessageService, Message } from '@minikaenguru-ws/common-messages';
 
-import { KatalogpflegeItem, Katalogpflegetyp } from '../katalogpflege/katalogpflege.model';
+import { KatalogpflegeItem, Katalogpflegetyp, KuerzelAPIModel } from '../katalogpflege/katalogpflege.model';
 
 @Injectable({
 	providedIn: 'root'
@@ -46,6 +46,17 @@ export class KatalogHttpService {
 
 		let url = environment.apiUrl + '/wb-admin/katalogsuche/global/' + typ + '?search=' + searchTerm;
 		return this.loadKatalogItems(url);
+	}
+
+	public getKuerzel(): Observable<KuerzelAPIModel> {
+
+
+		let url = environment.apiUrl + '/wb-admin/kuerzel';
+
+		return this.http.get(url).pipe(
+			map(body => body as ResponsePayload),
+			map(payload => payload.data)
+		);
 	}
 }
 

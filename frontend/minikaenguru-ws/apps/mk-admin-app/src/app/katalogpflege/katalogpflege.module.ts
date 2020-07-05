@@ -14,12 +14,15 @@ import { EditOrtComponent } from './orte/edit-ort/edit-ort.component';
 import { EditLandComponent } from './laender/edit-land/edit-land.component';
 import { EditSchuleComponent } from './schulen/edit-schule/edit-schule.component';
 import { KatalogpflegeItemComponent } from './katalogpflege-item/katalogpflege-item.component';
+import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
+import { EditSchuleResolver } from './schulen/edit-schule/edit-schule.resolver';
 
 @NgModule({
 	imports: [
 		CommonModule,
 		FormsModule,
 		ReactiveFormsModule,
+		CommonComponentsModule,
 		KatalogpflegeRoutingModule,
 		StoreModule.forFeature(fromKatalogpflege.katalogpflegeFeatureKey, fromKatalogpflege.reducer),
 	],
@@ -37,7 +40,8 @@ import { KatalogpflegeItemComponent } from './katalogpflege-item/katalogpflege-i
 		],
 	providers: [
 		KatalogpflegeFacade,
-		LaenderListResolver
+		LaenderListResolver,
+		EditSchuleResolver
 	]
 })
 export class KatalogpflegeModule {}

@@ -24,6 +24,20 @@ export interface Kataloge {
 	readonly schulen: KatalogpflegeItemWithID[];
 };
 
+export interface SchulePayload {
+	readonly name: string;
+	readonly kuerzel: string;
+	readonly kuerzelOrt: string;
+	readonly nameOrt: string;
+	readonly kuerzelLand: string;
+	readonly nameLand: string;
+};
+
+export interface KuerzelAPIModel {
+	readonly kuerzelSchule: string;
+	readonly kuerzelOrt: string;
+};
+
 export function katalogpflegeItemWithIDToArray(itemsWithID: KatalogpflegeItemWithID[]): KatalogpflegeItem[] {
 
 	const result: KatalogpflegeItem[] = [];

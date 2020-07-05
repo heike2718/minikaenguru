@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Katalogpflegetyp, KatalogpflegeItem } from '../katalogpflege.model';
+import { Katalogpflegetyp, KatalogpflegeItem, SchulePayload } from '../katalogpflege.model';
 
 
 export const resetKataloge = createAction(
@@ -46,6 +46,25 @@ export const sucheFinishedWithError = createAction(
 export const selectKatalogItem = createAction(
 	'[KatalogpflegeFacade] prepareEdit',
 	props<{katalogItem: KatalogpflegeItem}>()
+);
+
+export const neueSchulePayloadCreated = createAction(
+	'[KatalogpflegeFacade] createNeueSchulePayload',
+	props<{payload: SchulePayload}>()
+);
+
+export const editSchulePayloadCreated = createAction(
+	'[KatalogpflegeFacade] createEditSchulePayload',
+	props<{payload: SchulePayload}>()
+);
+
+export const neueSchuleSaved = createAction(
+	'[KatalogpflegeFacade] sendCreateSchule',
+	props<{katalogItem: KatalogpflegeItem}>()
+);
+
+export const editSchuleFinished = createAction(
+	'[KatalogpflegeFacade] finishEditSchule'
 );
 
 export const resetSelection = createAction(

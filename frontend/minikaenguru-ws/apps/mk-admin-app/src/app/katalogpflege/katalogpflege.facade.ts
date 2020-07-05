@@ -5,9 +5,11 @@ import { GlobalErrorHandlerService } from '../infrastructure/global-error-handle
 
 import * as KatalogpflegeActions from '../katalogpflege/+state/katalogpflege.actions';
 import { KatalogHttpService } from '../services/katalog-http.service';
-import { Katalogpflegetyp, KatalogpflegeItem } from './katalogpflege.model';
+import { Katalogpflegetyp, KatalogpflegeItem, SchulePayload, KuerzelAPIModel, mergeKatalogItemMap } from './katalogpflege.model';
 import { Router } from '@angular/router';
-import { laender, orte, schulen, selectedItem } from './+state/katalogpflege.selectors';
+import { laender, orte, schulen, selectedItem, editSchuleInput } from './+state/katalogpflege.selectors';
+import { tap, concat, mergeMap, concatMap } from 'rxjs/operators';
+import { MessageService } from '@minikaenguru-ws/common-messages';
 
 
 @Injectable()
@@ -17,8 +19,10 @@ export class KatalogpflegeFacade {
 	public orte$ = this.store.select(orte);
 	public schulen$ = this.store.select(schulen);
 	public selectedKatalogItem$ = this.store.select(selectedItem);
+	public editSchuleInput$ = this.store.select(editSchuleInput);
 
 	constructor(private katalogHttpService: KatalogHttpService,
+		private messageService: MessageService,
 		private errorHandler: GlobalErrorHandlerService,
 		private store: Store<AppState>,
 		private router: Router) { }
@@ -96,7 +100,7 @@ export class KatalogpflegeFacade {
 
 		this.katalogHttpService.searchKatalogItems(typ, searchTerm).subscribe(
 			items => {
-				this.store.dispatch(KatalogpflegeActions.sucheFinished({typ: typ, katalogItems: items }));
+				this.store.dispatch(KatalogpflegeActions.sucheFinished({ typ: typ, katalogItems: items }));
 			},
 			(error => {
 				this.store.dispatch(KatalogpflegeActions.sucheFinishedWithError());
@@ -110,6 +114,99 @@ export class KatalogpflegeFacade {
 
 		this.store.dispatch(KatalogpflegeActions.clearRearchResults());
 
+	}
+
+	public createNeueSchulePayload(): void {
+
+		this.store.dispatch(KatalogpflegeActions.startSuche());
+
+		this.katalogHttpService.getKuerzel().subscribe(
+			kuerzelAPIModel => {
+				this.selectedKatalogItem$.pipe(
+					tap(
+						item => {
+							let payload: SchulePayload = this.createTheNeueSchulePayload(kuerzelAPIModel, item);
+							this.store.dispatch(KatalogpflegeActions.neueSchulePayloadCreated({ payload: payload }));
+						}
+					)
+				).subscribe();
+			},
+			(error => {
+				this.store.dispatch(KatalogpflegeActions.sucheFinishedWithError());
+				this.errorHandler.handleError(error)
+			})
+		);
+	}
+
+	public createEditSchulePayload(katalogItem: KatalogpflegeItem) {
+
+		this.store.dispatch(KatalogpflegeActions.startSuche());
+
+		if (katalogItem) {
+			const payload: SchulePayload = {
+				name: katalogItem.name,
+				kuerzel: katalogItem.kuerzel,
+				kuerzelOrt: katalogItem.parent.kuerzel,
+				nameOrt: katalogItem.parent.name,
+				kuerzelLand: katalogItem.parent.parent.kuerzel,
+				nameLand: katalogItem.parent.parent.name
+			}
+
+			this.store.dispatch(KatalogpflegeActions.editSchulePayloadCreated({payload: payload}));
+
+		}
+	}
+
+	public sendCreateSchule(payload: SchulePayload): void {
+
+		this.store.dispatch(KatalogpflegeActions.startSuche());
+
+		// TODO
+		this.store.dispatch(KatalogpflegeActions.neueSchuleSaved({katalogItem: undefined}));
+		this.messageService.info('Neue Schule wurde erfolgreich angelegt');
+	}
+
+	public finishEditSchule(): void {
+		this.store.dispatch(KatalogpflegeActions.editSchuleFinished());
+		this.router.navigateByUrl('/katalogpflege/schulen');
+	}
+
+	// ================= private methods ========================================//
+
+	createTheNeueSchulePayload(kuerzelAPIModel: KuerzelAPIModel, item: KatalogpflegeItem): SchulePayload {
+
+		let payload: SchulePayload = {
+			name: '',
+			kuerzel: kuerzelAPIModel.kuerzelSchule,
+			kuerzelOrt: kuerzelAPIModel.kuerzelOrt,
+			nameOrt: '',
+			kuerzelLand: '',
+			nameLand: ''
+		};
+
+		if (item) {
+			switch (item.typ) {
+				case 'LAND':
+					payload = {
+						...payload,
+						kuerzelLand: item.kuerzel,
+						nameLand: item.name
+					};
+					break;
+				case 'ORT': payload = {
+					...payload,
+					kuerzelLand: item.parent.kuerzel,
+					nameLand: item.parent.name,
+					kuerzelOrt: item.kuerzel,
+					nameOrt: item.name
+				};
+					break;
+				case 'SCHULE':
+					break;
+			}
+		}
+
+		return payload;
 	}
 
 	ladeKinder(item: KatalogpflegeItem) {

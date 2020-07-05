@@ -9,6 +9,7 @@ import { LaenderListComponent } from './laender/laender-list/laender-list.compon
 import { OrteListComponent } from './orte/orte-list/orte-list.component';
 import { SchulenListComponent } from './schulen/schulen-list/schulen-list.component';
 import { LaenderListResolver } from './laender/laender-list/laender-list.resolver';
+import { EditSchuleResolver } from './schulen/edit-schule/edit-schule.resolver';
 
 
 const katalogpflegeRoutes: Routes = [
@@ -34,19 +35,20 @@ const katalogpflegeRoutes: Routes = [
 		component: SchulenListComponent
 	},
 	{
-		path: 'land-editor/:id',
+		path: 'land-editor',
 		canActivate: [AuthGuardService],
 		component: EditLandComponent
 	},
 	{
-		path: 'ort-editor/:id',
+		path: 'ort-editor',
 		canActivate: [AuthGuardService],
 		component: EditOrtComponent
 	},
 	{
 		path: 'schule-editor/:id',
 		canActivate: [AuthGuardService],
-		component: EditSchuleComponent
+		component: EditSchuleComponent,
+		resolve: {editSchule: EditSchuleResolver}
 	}
 ];
 

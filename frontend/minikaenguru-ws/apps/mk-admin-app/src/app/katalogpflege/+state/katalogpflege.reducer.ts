@@ -1,7 +1,8 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { Message } from '@minikaenguru-ws/common-messages';
-import { KatalogpflegeItem, Katalogpflegetyp, mergeKatalogItems, Kataloge, mergeKatalogItemMap, childrenAsArray } from '../katalogpflege.model';
+import { KatalogpflegeItem, Katalogpflegetyp, mergeKatalogItems, Kataloge, mergeKatalogItemMap, childrenAsArray, SchulePayload } from '../katalogpflege.model';
 import * as KatalogpflegeActions from './katalogpflege.actions';
+import { FormGroup } from '@angular/forms';
 
 export const katalogpflegeFeatureKey = 'mk-admin-app-kataloge';
 
@@ -13,7 +14,9 @@ export interface KatalogpflegeState {
 	readonly selectedKatalogItem: KatalogpflegeItem;
 	readonly selectedKatalogTyp: Katalogpflegetyp;
 	readonly showLoadingIndicator: boolean;
-	readonly sucheBeendet: boolean
+	readonly sucheBeendet: boolean;
+	readonly schulePayload: SchulePayload;
+	readonly modusCreate: boolean;
 }
 
 const initialState: KatalogpflegeState = {
@@ -23,7 +26,9 @@ const initialState: KatalogpflegeState = {
 	selectedKatalogItem: undefined,
 	selectedKatalogTyp: undefined,
 	showLoadingIndicator: false,
-	sucheBeendet: false
+	sucheBeendet: false,
+	schulePayload: undefined,
+	modusCreate: false
 };
 
 const katalogpflegeReducer = createReducer(initialState,
@@ -136,6 +141,30 @@ const katalogpflegeReducer = createReducer(initialState,
 
 
 		return { ...state, selectedKatalogItem: parent, filteredOrte: filteredOrte, filteredSchulen: filteredSchulen };
+	}),
+
+	on(KatalogpflegeActions.neueSchulePayloadCreated, (state, action) => {
+
+		return { ...state, schulePayload: action.payload, modusCreate: true, showLoadingIndicator: false };
+
+	}),
+
+	on(KatalogpflegeActions.editSchulePayloadCreated, (state, action) => {
+
+		return { ...state, schulePayload: action.payload, modusCreate: false, showLoadingIndicator: false };
+
+	}),
+
+	on(KatalogpflegeActions.neueSchuleSaved, (state, action) => {
+
+		// TODO: das katalogItem in den Katalog mergen
+		return { ...state, showLoadingIndicator: false, sucheBeendet: true };
+	}),
+
+	on(KatalogpflegeActions.editSchuleFinished, (state, _action) => {
+
+		// TODO: das katalogItem in den Katalog mergen
+		return { ...state, modusCreate: false, schulePayload: undefined, selectedKatalogItem: undefined, sucheBeendet: true };
 	}),
 
 	on(KatalogpflegeActions.resetSelection, (state, _action) => {

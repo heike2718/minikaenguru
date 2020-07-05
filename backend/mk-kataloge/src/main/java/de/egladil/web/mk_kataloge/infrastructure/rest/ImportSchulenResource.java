@@ -27,15 +27,15 @@ import de.egladil.web.mk_kataloge.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
 
 /**
- * UpdateSchulenResource
+ * ImportSchulenResource ist die Schnittstelle von der Altanwendung, um die Katalogänderungen von dort hierher zu propagieren.
  */
 @ApplicationScoped
-@Path("/schulen")
+@Path("/import/schulen")
 @Produces(MediaType.TEXT_PLAIN)
 @Consumes(MediaType.APPLICATION_JSON)
-public class UpdateSchulenResource {
+public class ImportSchulenResource {
 
-	private static final Logger LOG = LoggerFactory.getLogger(UpdateSchulenResource.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ImportSchulenResource.class);
 
 	@ConfigProperty(name = "admin.secret")
 	String expectedSecret;
