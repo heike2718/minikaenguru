@@ -12,14 +12,9 @@ import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.annotations.StringLatin;
 
 /**
- * NeueSchulePayload
+ * OrtPayload
  */
-public class NeueSchulePayload {
-
-	@JsonProperty
-	@StringLatin
-	@NotBlank
-	private String name;
+public class OrtPayload {
 
 	@JsonProperty
 	@Kuerzel
@@ -27,14 +22,9 @@ public class NeueSchulePayload {
 	private String kuerzel;
 
 	@JsonProperty
-	@Kuerzel
-	@NotBlank
-	private String kuerzelOrt;
-
-	@JsonProperty
 	@StringLatin
 	@NotBlank
-	private String nameOrt;
+	private String name;
 
 	@JsonProperty
 	@Kuerzel
@@ -46,38 +36,14 @@ public class NeueSchulePayload {
 	@NotBlank
 	private String nameLand;
 
-	public static NeueSchulePayload create(final String name, final String kuerzel, final String kuerzelOrt, final String nameOrt, final String kuerzelLand, final String nameLand) {
+	public String kuerzel() {
 
-		NeueSchulePayload result = new NeueSchulePayload();
-		result.name = name;
-		result.kuerzel = kuerzel;
-		result.kuerzelOrt = kuerzelOrt;
-		result.nameOrt = nameOrt;
-		result.kuerzelLand = kuerzelLand;
-		result.nameLand = nameLand;
-		return result;
-
-	}
-
-	public NeueSchulePayload() {
-
-		super();
-
+		return kuerzel;
 	}
 
 	public String name() {
 
 		return name;
-	}
-
-	public String kuerzelOrt() {
-
-		return kuerzelOrt;
-	}
-
-	public String nameOrt() {
-
-		return nameOrt;
 	}
 
 	public String kuerzelLand() {
@@ -90,8 +56,4 @@ public class NeueSchulePayload {
 		return nameLand;
 	}
 
-	public String kuerzel() {
-
-		return kuerzel;
-	}
 }

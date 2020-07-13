@@ -1,11 +1,17 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { Message } from '@minikaenguru-ws/common-messages';
-import { KatalogpflegeItem, Katalogpflegetyp, mergeKatalogItems, Kataloge, mergeKatalogItemMap, childrenAsArray, SchulePayload } from '../katalogpflege.model';
+import { KatalogpflegeItem, Katalogpflegetyp, mergeKatalogItems, Kataloge, mergeKatalogItemMap, childrenAsArray, SchulePayload, KatalogpflegeItemWithID, OrtPayload, LandPayload } from '../katalogpflege.model';
 import * as KatalogpflegeActions from './katalogpflege.actions';
-import { FormGroup } from '@angular/forms';
 
 export const katalogpflegeFeatureKey = 'mk-admin-app-kataloge';
 
+export interface SchuleEditorModel {
+	readonly schulePayload: SchulePayload;
+	readonly modusCreate: boolean;
+	readonly kuerzelLandDisabled: boolean;
+	readonly nameLandDisabled: boolean;
+	readonly nameOrtDisabled: boolean;
+};
 
 export interface KatalogpflegeState {
 	readonly kataloge: Kataloge;
@@ -15,9 +21,18 @@ export interface KatalogpflegeState {
 	readonly selectedKatalogTyp: Katalogpflegetyp;
 	readonly showLoadingIndicator: boolean;
 	readonly sucheBeendet: boolean;
-	readonly schulePayload: SchulePayload;
-	readonly modusCreate: boolean;
-}
+	readonly schuleEditorModel: SchuleEditorModel;
+	readonly ortEditorPayload: OrtPayload;
+	readonly landEditorPayload: LandPayload;
+};
+
+const initialSchuleEditorModelState: SchuleEditorModel = {
+	schulePayload: undefined,
+	modusCreate: false,
+	kuerzelLandDisabled: true,
+	nameLandDisabled: true,
+	nameOrtDisabled: true
+};
 
 const initialState: KatalogpflegeState = {
 	kataloge: { laender: [], orte: [], schulen: [] },
@@ -27,8 +42,9 @@ const initialState: KatalogpflegeState = {
 	selectedKatalogTyp: undefined,
 	showLoadingIndicator: false,
 	sucheBeendet: false,
-	schulePayload: undefined,
-	modusCreate: false
+	schuleEditorModel: initialSchuleEditorModelState,
+	ortEditorPayload: undefined,
+	landEditorPayload: undefined
 };
 
 const katalogpflegeReducer = createReducer(initialState,
@@ -43,7 +59,7 @@ const katalogpflegeReducer = createReducer(initialState,
 
 	}),
 
-	on(KatalogpflegeActions.startSuche, (state, _action) => {
+	on(KatalogpflegeActions.showLoadingIndicator, (state, _action) => {
 
 		return { ...state, showLoadingIndicator: true };
 	}),
@@ -64,9 +80,19 @@ const katalogpflegeReducer = createReducer(initialState,
 		return { ...state, kataloge: kataloge, filteredOrte: filteredOrte, filteredSchulen: filteredSchulen, showLoadingIndicator: false };
 	}),
 
-	on(KatalogpflegeActions.clearRearchResults, (state, _action) => {
+	on(KatalogpflegeActions.katalogDashboardSelected, (state, _action) => {
 
-		return { ...state, filteredOrte: [], filteredSchulen: [], selectedKatalogItem: undefined };
+		return { ...state,
+			filteredOrte: [],
+			filteredSchulen: [],
+			selectedKatalogItem: undefined,
+			landEditorPayload: undefined,
+			ortEditorPayload: undefined,
+			schuleEditorModel: undefined,
+			selectedKatalogTyp: undefined,
+			showLoadingIndicator: false,
+			sucheBeendet: true
+		};
 
 	}),
 
@@ -129,46 +155,77 @@ const katalogpflegeReducer = createReducer(initialState,
 
 	on(KatalogpflegeActions.selectKatalogItem, (state, action) => {
 
-		const parent = action.katalogItem;
+		const selectedItem = action.katalogItem;
 
 		let filteredOrte = [];
 		let filteredSchulen = [];
 
-		switch (parent.typ) {
-			case 'LAND': filteredOrte = childrenAsArray(parent, state.kataloge); break;
-			case 'ORT': filteredSchulen = childrenAsArray(parent, state.kataloge); break;
+		switch (selectedItem.typ) {
+			case 'LAND': filteredOrte = childrenAsArray(selectedItem, state.kataloge); break;
+			case 'ORT': filteredSchulen = childrenAsArray(selectedItem, state.kataloge); break;
 		}
 
 
-		return { ...state, selectedKatalogItem: parent, filteredOrte: filteredOrte, filteredSchulen: filteredSchulen };
+		return { ...state, selectedKatalogItem: selectedItem, selectedKatalogTyp: selectedItem.typ, filteredOrte: filteredOrte, filteredSchulen: filteredSchulen, schuleEditorModel: initialSchuleEditorModelState };
 	}),
 
-	on(KatalogpflegeActions.neueSchulePayloadCreated, (state, action) => {
+	on(KatalogpflegeActions.schulePayloadCreated, (state, action) => {
 
-		return { ...state, schulePayload: action.payload, modusCreate: true, showLoadingIndicator: false };
-
-	}),
-
-	on(KatalogpflegeActions.editSchulePayloadCreated, (state, action) => {
-
-		return { ...state, schulePayload: action.payload, modusCreate: false, showLoadingIndicator: false };
+		return { ...state, schuleEditorModel: action.schuleEditorModel, showLoadingIndicator: false };
 
 	}),
 
-	on(KatalogpflegeActions.neueSchuleSaved, (state, action) => {
+	on(KatalogpflegeActions.ortPayloadCreated, (state, action) => {
 
-		// TODO: das katalogItem in den Katalog mergen
-		return { ...state, showLoadingIndicator: false, sucheBeendet: true };
+		return { ...state,
+			schuleEditorModel: initialSchuleEditorModelState,
+			ortEditorPayload: action.ortPayload,
+			landEditorPayload: undefined,
+			showLoadingIndicator: false };
+
 	}),
 
-	on(KatalogpflegeActions.editSchuleFinished, (state, _action) => {
+	on(KatalogpflegeActions.landPayloadCreated, (state, action) => {
 
-		// TODO: das katalogItem in den Katalog mergen
-		return { ...state, modusCreate: false, schulePayload: undefined, selectedKatalogItem: undefined, sucheBeendet: true };
+		return { ...state,
+			schuleEditorModel: initialSchuleEditorModelState,
+			ortEditorPayload: undefined,
+			landEditorPayload: action.landPayload,
+			showLoadingIndicator: false };
+
 	}),
 
-	on(KatalogpflegeActions.resetSelection, (state, _action) => {
-		return { ...state, selectedKatalogItem: undefined, selectedKatalogTyp: undefined, filteredOrte: [], filteredSchulen: [] };
+	on(KatalogpflegeActions.editSchuleFinished, (state, action) => {
+
+		const schuleEditorModel: SchuleEditorModel = { ...state.schuleEditorModel, schulePayload: action.schulePayload };
+
+		// es ist zu kompliziert, das hier korrekt hineinzumergen. Daher einfach kataloge und filter wieder zurücksetzen.
+		// die Länder werden dann beim Navigieren neu geladen, ebenso Orte und Schulen.
+		const kataloge: Kataloge = {
+			laender: [],
+			orte: [],
+			schulen: []
+		};
+
+		return {
+			...state,
+			showLoadingIndicator: false,
+			sucheBeendet: true,
+			schuleEditorModel: schuleEditorModel,
+			kataloge: kataloge, filteredOrte: [],
+			filteredSchulen: []
+		};
+	}),
+
+	on(KatalogpflegeActions.clearSearchResults, (state, _action) => {
+
+		return { ...state,
+			filteredOrte: [],
+			filteredSchulen: [],
+			selectedKatalogItem: undefined,
+			showLoadingIndicator: false,
+			sucheBeendet: true
+		};
 	})
 );
 

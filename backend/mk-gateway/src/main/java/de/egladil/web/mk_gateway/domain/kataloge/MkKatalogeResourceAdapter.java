@@ -13,8 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.domain.AbstractMkResourceAdapter;
-import de.egladil.web.mk_gateway.domain.apimodel.NeueSchulePayload;
-import de.egladil.web.mk_gateway.domain.apimodel.RenameKatalogItemPayload;
+import de.egladil.web.mk_gateway.domain.apimodel.LandPayload;
+import de.egladil.web.mk_gateway.domain.apimodel.OrtPayload;
+import de.egladil.web.mk_gateway.domain.apimodel.SchulePayload;
 import de.egladil.web.mk_gateway.infrastructure.messaging.MkKatalogeRestClient;
 import de.egladil.web.mk_gateway.infrastructure.messaging.MkKatalogeRestException;
 
@@ -46,11 +47,11 @@ public class MkKatalogeResourceAdapter extends AbstractMkResourceAdapter {
 		}
 	}
 
-	public Response loadLaender(final String secret) {
+	public Response loadLaender(final String uuid, final String secret) {
 
 		try {
 
-			Response response = restClient.loadLaender(secret);
+			Response response = restClient.loadLaender(uuid, secret);
 			return response;
 
 		} catch (Exception e) {
@@ -102,11 +103,11 @@ public class MkKatalogeResourceAdapter extends AbstractMkResourceAdapter {
 
 	}
 
-	public Response renameLand(final String kuerzel, final RenameKatalogItemPayload payload, final String secret) {
+	public Response renameLand(final String uuid, final String secret, final LandPayload payload) {
 
 		try {
 
-			Response response = restClient.renameLand(kuerzel, payload, secret);
+			Response response = restClient.renameLand(uuid, secret, payload);
 			return response;
 
 		} catch (Exception e) {
@@ -115,11 +116,11 @@ public class MkKatalogeResourceAdapter extends AbstractMkResourceAdapter {
 		}
 	}
 
-	public Response renameOrt(final String kuerzel, final RenameKatalogItemPayload payload, final String secret) {
+	public Response renameOrt(final String uuid, final String secret, final OrtPayload payload) {
 
 		try {
 
-			Response response = restClient.renameOrt(kuerzel, payload, secret);
+			Response response = restClient.renameOrt(uuid, secret, payload);
 			return response;
 
 		} catch (Exception e) {
@@ -128,11 +129,11 @@ public class MkKatalogeResourceAdapter extends AbstractMkResourceAdapter {
 		}
 	}
 
-	public Response renameSchule(final String kuerzel, final RenameKatalogItemPayload payload, final String secret) {
+	public Response renameSchule(final String uuid, final String secret, final SchulePayload payload) {
 
 		try {
 
-			Response response = restClient.renameSchule(kuerzel, payload, secret);
+			Response response = restClient.renameSchule(uuid, secret, payload);
 			return response;
 
 		} catch (Exception e) {
@@ -141,11 +142,11 @@ public class MkKatalogeResourceAdapter extends AbstractMkResourceAdapter {
 		}
 	}
 
-	public Response createSchule(final NeueSchulePayload payload, final String secret) {
+	public Response createSchule(final String uuid, final String secret, final SchulePayload payload) {
 
 		try {
 
-			Response response = restClient.createSchule(payload, secret);
+			Response response = restClient.createSchule(uuid, secret, payload);
 			return response;
 
 		} catch (Exception e) {

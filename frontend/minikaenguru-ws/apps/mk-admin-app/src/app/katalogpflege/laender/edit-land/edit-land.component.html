@@ -1,2 +1,57 @@
-<p>edit-land works!</p>
-<p>ID {{theId}}</p>
+<div class="container container-fluid ml-3 mt-5">
+	<div class="row ml-2">
+		<div class="col-12">
+			<h2>Landeditor</h2>
+			<h4>Land ändern</h4>
+		</div>
+	</div>
+
+	<div *ngIf="edtitLandInput$ | async as editInput">
+
+		<form [formGroup]="editLandForm" class="col-12">
+
+			<div class="form-group mt-2">
+				<div class="row">
+					<div class="col-md-12">
+						<label for="nameInput">Name *</label>
+					</div>
+				</div>
+				<div class="row" [class.error]="name.touched && !name.valid">
+					<div class="col-md-12">
+						<input class="form-control" type="text" id="nameInput" placeholder="Name des Landes"
+							formControlName="name" autocomplete="true">
+					</div>
+				</div>
+				<mk-form-error path="name" text="Name Land"></mk-form-error>
+			</div>
+
+			<div class="form-group mt-2">
+				<div class="row">
+					<div class="col-md-12">
+						<label for="kuerzelInput">Kürzel</label>
+					</div>
+				</div>
+				<div class="row" [class.error]="kuerzel.touched && !kuerzel.valid">
+					<div class="col-md-12">
+						<input class="form-control" type="text" id="kuerzelInput" placeholder="Landkürzel"
+							formControlName="kuerzel" autocomplete="true">
+					</div>
+				</div>
+				<mk-form-error path="kuerzel" text="Landkürzel"></mk-form-error>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-12 col-md-4">
+					<button type="button" [disabled]="!submited && (!editLandForm.valid || submitDisabled)"
+						class="btn btn-primary btn-block" (click)="submitForm()">senden</button>
+				</div>
+				<div class="col-sm-12 col-md-4">
+					<button type="button" class="btn btn-primary btn-block" (click)="cancel()">zurücksetzen</button>
+				</div>
+				<div class="col-sm-12 col-md-4">
+					<button type="button" class="btn btn-primary btn-block" (click)="gotoKataloge()">Kataloge</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

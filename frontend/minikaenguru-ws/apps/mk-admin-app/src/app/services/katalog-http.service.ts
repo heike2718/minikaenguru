@@ -58,5 +58,7 @@ export class KatalogHttpService {
 			map(payload => payload.data)
 		);
 	}
+
+	public
 }
 

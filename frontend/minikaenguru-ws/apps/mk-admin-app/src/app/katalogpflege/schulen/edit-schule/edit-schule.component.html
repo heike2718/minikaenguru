@@ -7,9 +7,24 @@
 	</div>
 
 	<div *ngIf="editSchuleInput$ | async as editInput">
-		<div *ngIf="editInput.payload !== undefined" class="row ml-2">
+		<div *ngIf="editInput.schuleEditorModel.schulePayload !== undefined" class="row ml-2">
 
 			<form [formGroup]="editSchuleForm" class="col-12">
+
+				<div class="form-group mt-4">
+					<div class="row">
+						<div class="col-md-12">
+							<label for="emailInput">Email</label>
+						</div>
+					</div>
+					<div class="row" [class.error]="emailAuftraggeber.touched && !emailAuftraggeber.valid">
+						<div class="col-md-12">
+							<input class="form-control" type="text" id="emailInput" placeholder="Mailadresse des Auftraggebers"
+								formControlName="emailAuftraggeber" autocomplete="true">
+						</div>
+					</div>
+					<mk-form-error path="emailAuftraggeber" text="Email"></mk-form-error>
+				</div>
 
 				<div class="form-group mt-2">
 					<div class="row">
@@ -83,7 +98,7 @@
 								formControlName="nameLand" autocomplete="true">
 						</div>
 					</div>
-					<mk-form-error path="kuerzelOrt" text="Kürzel Ort"></mk-form-error>
+					<mk-form-error path="kuerzelOrt" text="Land"></mk-form-error>
 				</div>
 
 				<div class="form-group mt-4">
@@ -101,14 +116,13 @@
 					<mk-form-error path="kuerzelLand" text="Kürzel Land"></mk-form-error>
 				</div>
 
-
 				<div class="row">
 					<div class="col-sm-12 col-md-4">
 						<button type="button" [disabled]="!submited && (!editSchuleForm.valid || submitDisabled)"
 							class="btn btn-primary btn-block" (click)="submitForm()">senden</button>
 					</div>
 					<div class="col-sm-12 col-md-4">
-						<button type="button" class="btn btn-primary btn-block" (click)="cancel()">abbrechen</button>
+						<button type="button" class="btn btn-primary btn-block" (click)="cancel()">zurücksetzen</button>
 					</div>
 					<div class="col-sm-12 col-md-4">
 						<button type="button" class="btn btn-primary btn-block" (click)="gotoKataloge()">Kataloge</button>

@@ -22,8 +22,9 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.annotations.StringLatin;
 import de.egladil.web.mk_gateway.MkGatewayApp;
-import de.egladil.web.mk_gateway.domain.apimodel.NeueSchulePayload;
-import de.egladil.web.mk_gateway.domain.apimodel.RenameKatalogItemPayload;
+import de.egladil.web.mk_gateway.domain.apimodel.LandPayload;
+import de.egladil.web.mk_gateway.domain.apimodel.OrtPayload;
+import de.egladil.web.mk_gateway.domain.apimodel.SchulePayload;
 
 /**
  * MkKatalogeRestClient
@@ -49,7 +50,8 @@ public interface MkKatalogeRestClient {
 	@GET
 	@Path("/kataloge/laender")
 	Response loadLaender(@HeaderParam(
-		value = MkGatewayApp.UUID_HEADER_NAME) final String secret);
+		value = MkGatewayApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
+			value = MkGatewayApp.SECRET_HEADER_NAME) final String secret);
 
 	@GET
 	@Path("/kataloge/laender/{kuerzel}/orte")
@@ -62,27 +64,28 @@ public interface MkKatalogeRestClient {
 		value = "kuerzel") final String kuerzel);
 
 	@POST
-	@Path("/kataloge/laender/{kuerzel}")
-	public Response renameLand(@PathParam(
-		value = "kuerzel") @NotBlank @Kuerzel final String kuerzel, final RenameKatalogItemPayload requestPayload, @HeaderParam(
-			value = MkGatewayApp.UUID_HEADER_NAME) final String secret);
+	@Path("/kataloge/laender")
+	Response renameLand(@HeaderParam(
+		value = MkGatewayApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
+			value = MkGatewayApp.SECRET_HEADER_NAME) final String secret, final LandPayload requestPayload);
 
 	@POST
-	@Path("/kataloge/orte/{kuerzel}")
-	public Response renameOrt(@PathParam(
-		value = "kuerzel") @NotBlank @Kuerzel final String kuerzel, final RenameKatalogItemPayload requestPayload, @HeaderParam(
-			value = MkGatewayApp.UUID_HEADER_NAME) final String secret);
+	@Path("/kataloge/orte")
+	public Response renameOrt(@HeaderParam(
+		value = MkGatewayApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
+			value = MkGatewayApp.SECRET_HEADER_NAME) final String secret, final OrtPayload requestPayload);
 
 	@POST
-	@Path("/kataloge/schulen/{kuerzel}")
-	public Response renameSchule(@PathParam(
-		value = "kuerzel") @NotBlank @Kuerzel final String kuerzel, final RenameKatalogItemPayload requestPayload, @HeaderParam(
-			value = MkGatewayApp.UUID_HEADER_NAME) final String secret);
+	@Path("/kataloge/schulen")
+	public Response renameSchule(@HeaderParam(
+		value = MkGatewayApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
+			value = MkGatewayApp.SECRET_HEADER_NAME) final String secret, SchulePayload requestPayload);
 
 	@PUT
 	@Path("/kataloge/schulen")
-	public Response createSchule(final NeueSchulePayload requestPayload, @HeaderParam(
-		value = MkGatewayApp.UUID_HEADER_NAME) final String secret);
+	public Response createSchule(@HeaderParam(
+		value = MkGatewayApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
+			value = MkGatewayApp.SECRET_HEADER_NAME) final String secret, SchulePayload requestPayload);
 
 	@GET
 	@Path("/katalogsuche/global/{typ}")

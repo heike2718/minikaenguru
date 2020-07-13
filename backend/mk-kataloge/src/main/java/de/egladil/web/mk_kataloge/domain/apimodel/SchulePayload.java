@@ -1,9 +1,10 @@
 // =====================================================
-// Project: mk-gateway
+// Project: mk-kataloge
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.apimodel;
+package de.egladil.web.mk_kataloge.domain.apimodel;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,9 +13,9 @@ import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.annotations.StringLatin;
 
 /**
- * NeueSchulePayload
+ * SchulePayload
  */
-public class NeueSchulePayload {
+public class SchulePayload {
 
 	@JsonProperty
 	@StringLatin
@@ -41,9 +42,13 @@ public class NeueSchulePayload {
 	@NotBlank
 	private String nameLand;
 
-	public static NeueSchulePayload create(final String name, final String kuerzelOrt, final String nameOrt, final String kuerzelLand, final String nameLand) {
+	@JsonProperty
+	@Email
+	private String emailAuftraggeber;
 
-		NeueSchulePayload result = new NeueSchulePayload();
+	public static SchulePayload create(final String name, final String kuerzelOrt, final String nameOrt, final String kuerzelLand, final String nameLand) {
+
+		SchulePayload result = new SchulePayload();
 		result.name = name;
 		result.kuerzelOrt = kuerzelOrt;
 		result.nameOrt = nameOrt;
@@ -53,10 +58,16 @@ public class NeueSchulePayload {
 
 	}
 
-	public NeueSchulePayload() {
+	public SchulePayload() {
 
 		super();
 
+	}
+
+	public SchulePayload withEmailAuftraggeber(final String email) {
+
+		this.emailAuftraggeber = email;
+		return this;
 	}
 
 	public String name() {
@@ -82,5 +93,10 @@ public class NeueSchulePayload {
 	public String nameLand() {
 
 		return nameLand;
+	}
+
+	public String emailAuftraggeber() {
+
+		return emailAuftraggeber;
 	}
 }

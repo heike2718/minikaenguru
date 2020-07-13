@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.session.MkSessionService;
 import de.egladil.web.mk_gateway.domain.session.Session;
 import de.egladil.web.mk_gateway.domain.session.SessionUtils;
+import de.egladil.web.mk_gateway.domain.session.TokenExchangeService;
 import de.egladil.web.mk_gateway.domain.signup.AuthResult;
 
 /**
@@ -56,11 +58,18 @@ public class SessionResource {
 	@Inject
 	Event<SecurityIncidentRegistered> securityEvent;
 
+	@Inject
+	TokenExchangeService tokenExchangeService;
+
 	@POST
 	@Path("/login")
 	public Response login(final AuthResult authResult) {
 
-		final String jwt = authResult.getIdToken();
+		final String oneTimeToken = authResult.getIdToken();
+
+		LOG.debug("idToken={}", StringUtils.abbreviate(oneTimeToken, 11));
+
+		String jwt = this.tokenExchangeService.exchangeTheOneTimeToken(oneTimeToken);
 
 		Session session = sessionService.initSession(jwt);
 

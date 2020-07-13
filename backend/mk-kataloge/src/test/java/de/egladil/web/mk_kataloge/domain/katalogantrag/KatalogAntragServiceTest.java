@@ -2,7 +2,7 @@
 // Project: mk-kataloge
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_kataloge.domain;
+package de.egladil.web.mk_kataloge.domain.katalogantrag;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -17,6 +17,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.egladil.web.mk_kataloge.domain.apimodel.SchulkatalogAntrag;
 import de.egladil.web.mk_kataloge.domain.event.SecurityIncidentRegistered;
+import de.egladil.web.mk_kataloge.domain.katalogantrag.KatalogAntragReceived;
+import de.egladil.web.mk_kataloge.domain.katalogantrag.KatalogAntragService;
 
 /**
  * KatalogAntragServiceTest

@@ -15,7 +15,6 @@ import { EditLandComponent } from './laender/edit-land/edit-land.component';
 import { EditSchuleComponent } from './schulen/edit-schule/edit-schule.component';
 import { KatalogpflegeItemComponent } from './katalogpflege-item/katalogpflege-item.component';
 import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
-import { EditSchuleResolver } from './schulen/edit-schule/edit-schule.resolver';
 
 @NgModule({
 	imports: [
@@ -40,8 +39,7 @@ import { EditSchuleResolver } from './schulen/edit-schule/edit-schule.resolver';
 		],
 	providers: [
 		KatalogpflegeFacade,
-		LaenderListResolver,
-		EditSchuleResolver
+		LaenderListResolver
 	]
 })
 export class KatalogpflegeModule {}

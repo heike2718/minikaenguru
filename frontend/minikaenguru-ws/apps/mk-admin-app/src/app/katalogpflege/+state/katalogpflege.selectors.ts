@@ -11,17 +11,17 @@ export const schulen = createSelector(katalogflegeState, s => s.filteredSchulen)
 export const selectedItem = createSelector(katalogflegeState, s => s.selectedKatalogItem);
 export const loading = createSelector(katalogflegeState, s => s.showLoadingIndicator);
 
-const schulePayload = createSelector(katalogflegeState, s => s.schulePayload);
-const isModusCreate = createSelector(katalogflegeState, s => s.modusCreate);
+const schuleEditorModel = createSelector(katalogflegeState, s => s.schuleEditorModel);
 
-export const editSchuleInput = createSelector(schulePayload, isModusCreate, selectedItem, loading, (p, m, it, loading) => combineSchulePayloadWithModus(p, m, it, loading));
+export const editSchuleInput = createSelector(schuleEditorModel, selectedItem, loading, (e, it, loading) => combineSchulePayloadWithModus(e, it, loading));
+export const editOrtInput = createSelector(katalogflegeState, s => s.ortEditorPayload);
+export const editLandInput = createSelector(katalogflegeState, s => s.landEditorPayload);
 
 
 
-function combineSchulePayloadWithModus(p: SchulePayload, m: boolean, it: KatalogpflegeItem, loading: boolean): { 'payload': SchulePayload, 'isModusCreate': boolean, 'selectedItem': KatalogpflegeItem, 'loading': boolean } {
+function combineSchulePayloadWithModus(e: fromKatalogpflege.SchuleEditorModel, it: KatalogpflegeItem, loading: boolean): { 'schuleEditorModel': fromKatalogpflege.SchuleEditorModel, 'selectedItem': KatalogpflegeItem, 'loading': boolean } {
 	return {
-		payload: p,
-		isModusCreate: m,
+		schuleEditorModel: e,
 		selectedItem: it,
 		loading: loading
 	};

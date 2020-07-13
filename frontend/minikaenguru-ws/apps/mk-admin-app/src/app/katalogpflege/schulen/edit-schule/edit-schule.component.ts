@@ -3,6 +3,8 @@ import { KatalogpflegeFacade } from '../../katalogpflege.facade';
 import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { SchulePayload } from '../../katalogpflege.model';
 import { Subscription } from 'rxjs';
+import { SchuleEditorModel } from '../../+state/katalogpflege.reducer';
+import { emailValidator } from '@minikaenguru-ws/common-components';
 
 @Component({
 	selector: 'mka-edit-schule',
@@ -27,15 +29,15 @@ export class EditSchuleComponent implements OnInit, OnDestroy {
 
 	kuerzelLand: AbstractControl;
 
+	emailAuftraggeber: AbstractControl;
+
 	submitDisabled: boolean;
 
 	headlineText: string;
 
 	submited: boolean = false;
 
-	private initialPayload: SchulePayload;
-
-	private modusCreate: boolean;
+	private schuleEditorModel: SchuleEditorModel;
 
 	private editSchuleInputSubscription: Subscription;
 
@@ -49,9 +51,8 @@ export class EditSchuleComponent implements OnInit, OnDestroy {
 
 		this.editSchuleInputSubscription = this.editSchuleInput$.subscribe(
 			input => {
-				if (input.payload !== undefined) {
-					this.initialPayload = input.payload;
-					this.modusCreate = input.isModusCreate;
+				if (input.schuleEditorModel !== undefined) {
+					this.schuleEditorModel = input.schuleEditorModel;
 					this.setFormValues();
 				}
 			}
@@ -73,26 +74,36 @@ export class EditSchuleComponent implements OnInit, OnDestroy {
 			'kuerzelOrt': this.fb.control({ value: '', disabled: true }),
 			'nameLand': this.fb.control({ value: '' }, { validators: [Validators.required, Validators.maxLength(100)] }),
 			'kuerzelLand': this.fb.control({ value: '' }, { validators: [Validators.required, Validators.maxLength(10)] }),
+			'emailAuftraggeber': this.fb.control({value: ''}, {validators: [emailValidator]}),
 		});
 
 		this.name = this.editSchuleForm.controls['name'];
 		this.kuerzel = this.editSchuleForm.controls['kuerzel'];
-		this.nameOrt = this.editSchuleForm.controls['nameOrt'];
 		this.kuerzelOrt = this.editSchuleForm.controls['kuerzelOrt'];
-		this.nameLand = this.editSchuleForm.controls['nameLand'];
+		this.nameOrt = this.editSchuleForm.controls['nameOrt'];
 		this.kuerzelLand = this.editSchuleForm.controls['kuerzelLand'];
+		this.nameLand = this.editSchuleForm.controls['nameLand'];
+		this.emailAuftraggeber = this.editSchuleForm.controls['emailAuftraggeber'];
 
 	}
 
 	private setFormValues() {
 
-		this.headlineText = this.modusCreate ? 'Schule anlegen' : 'Schule ändern';
-		this.editSchuleForm.setValue(this.initialPayload);
+		if (this.schuleEditorModel.schulePayload === undefined) {
+			return;
+		}
 
-		if (!this.modusCreate) {
-			this.editSchuleForm.get('nameOrt').disable();
-			this.editSchuleForm.get('nameLand').disable();
+		this.headlineText = this.schuleEditorModel.modusCreate ? 'Schule anlegen' : 'Schule ändern';
+		this.editSchuleForm.setValue(this.schuleEditorModel.schulePayload);
+
+		if (this.schuleEditorModel.kuerzelLandDisabled) {
 			this.editSchuleForm.get('kuerzelLand').disable();
+		}
+		if (this.schuleEditorModel.nameLandDisabled) {
+			this.editSchuleForm.get('nameLand').disable();
+		}
+		if (this.schuleEditorModel.nameOrtDisabled) {
+			this.editSchuleForm.get('nameOrt').disable();
 		}
 	}
 
@@ -107,10 +118,15 @@ export class EditSchuleComponent implements OnInit, OnDestroy {
 			nameOrt: this.nameOrt.value.trim(),
 			kuerzelOrt: this.kuerzelOrt.value,
 			nameLand: this.nameLand.value.trim(),
-			kuerzelLand: this.kuerzelLand.value
+			kuerzelLand: this.kuerzelLand.value,
+			emailAuftraggeber: this.emailAuftraggeber.value !== '' ? this.emailAuftraggeber.value.trim() : null
 		};
 
-		// TODO:
+		if (this.schuleEditorModel.modusCreate) {
+			this.katalogFacade.sendCreateSchule(schulePayload);
+		} else {
+			this.katalogFacade.sendRenameSchule(schulePayload);
+		}
 	}
 
 	cancel(): void {
@@ -122,8 +138,6 @@ export class EditSchuleComponent implements OnInit, OnDestroy {
 	}
 
 	gotoKataloge(): void {
-		this.katalogFacade.finishEditSchule();
+		this.katalogFacade.switchToKataloge();
 	}
-
-
 }

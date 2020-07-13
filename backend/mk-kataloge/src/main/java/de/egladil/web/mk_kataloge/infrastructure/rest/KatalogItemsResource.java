@@ -9,7 +9,6 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import javax.validation.constraints.NotBlank;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -31,9 +30,10 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_kataloge.KatalogAPIApp;
 import de.egladil.web.mk_kataloge.application.KatalogFacade;
 import de.egladil.web.mk_kataloge.domain.KatalogItem;
-import de.egladil.web.mk_kataloge.domain.apimodel.NeueSchulePayload;
-import de.egladil.web.mk_kataloge.domain.apimodel.RenameKatalogItemPayload;
+import de.egladil.web.mk_kataloge.domain.apimodel.LandPayload;
+import de.egladil.web.mk_kataloge.domain.apimodel.OrtPayload;
 import de.egladil.web.mk_kataloge.domain.apimodel.SchuleAPIModel;
+import de.egladil.web.mk_kataloge.domain.apimodel.SchulePayload;
 import de.egladil.web.mk_kataloge.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_kataloge.domain.event.SecurityIncidentRegistered;
 
@@ -62,11 +62,12 @@ public class KatalogItemsResource {
 	@GET
 	@Path("/laender")
 	public Response loadLaender(@HeaderParam(
-		value = KatalogAPIApp.UUID_HEADER_NAME) final String secret) {
+		value = KatalogAPIApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
+			value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret) {
 
 		if (!expectedSecret.equals(secret)) {
 
-			String msg = "Unautorisierter Versuch, die Länder zu laden: " + secret;
+			String msg = "Unautorisierter Versuch, die Länder zu laden: angemeldeter ADMIN=" + adminUuid + ", secret=" + secret;
 
 			LOG.warn(msg);
 
@@ -83,37 +84,86 @@ public class KatalogItemsResource {
 		return Response.ok(new ResponsePayload(MessagePayload.ok(), result)).build();
 	}
 
+	/**
+	 * Ändert den Namen des gegebenen Landes und gibt das geänderte LandPayload zurück. Bei einem konkurrierenden Update wird
+	 * das aktuell neueste Item zurückgegeben, damit es sofort im Editor angezeigt werden kann.
+	 *
+	 * @param  adminUuid
+	 *                        String: die UUID des angemeldeten ADMINs
+	 * @param  secret
+	 *                        String teilen sich mk-gateway und mk-kataloge, da mk-kataloge keine Benutzerverwaltung hat.
+	 * @param  requestPayload
+	 *                        LandPayload
+	 * @return                Response mit LandPayload
+	 */
 	@POST
-	@Path("/laender/{kuerzel}")
+	@Path("/laender")
 	public Response renameLand(@HeaderParam(
-		value = KatalogAPIApp.UUID_HEADER_NAME) final String secret, @PathParam(
-			value = "kuerzel") @NotBlank @Kuerzel final String kuerzel, final RenameKatalogItemPayload requestPayload) {
+		value = KatalogAPIApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
+			value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret, final LandPayload requestPayload) {
 
 		return null;
 	}
 
+	/**
+	 * Benennt den Ort im gegebenen Land um und gibt das geänderte OrtPayload zurück. Bei einem konkurrierenden Update wird
+	 * das aktuell neueste Item zurückgegeben, damit es sofort im Editor angezeigt werden kann.
+	 *
+	 * @param  adminUuid
+	 *                        String: die UUID des angemeldeten ADMINs
+	 * @param  secret
+	 *                        String teilen sich mk-gateway und mk-kataloge, da mk-kataloge keine Benutzerverwaltung hat.
+	 * @param  requestPayload
+	 *                        OrtPayload
+	 * @return                Response mit OrtPayload
+	 */
 	@POST
-	@Path("/orte/{kuerzel}")
+	@Path("/orte")
 	public Response renameOrt(@HeaderParam(
-		value = KatalogAPIApp.UUID_HEADER_NAME) final String secret, @PathParam(
-			value = "kuerzel") @NotBlank @Kuerzel final String kuerzel, final RenameKatalogItemPayload requestPayload) {
+		value = KatalogAPIApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
+			value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret, final OrtPayload requestPayload) {
 
 		return null;
 	}
 
+	/**
+	 * Benennt die gegebene Schule um und gibt sie als SchulePayload zurück. Bei einem konkurrierenden Update wird
+	 * das aktuell neueste Item zurückgegeben, damit es sofort im Editor angezeigt werden kann.
+	 *
+	 * @param  adminUuid
+	 *                        String: die UUID des angemeldeten ADMINs
+	 * @param  secret
+	 *                        String teilen sich mk-gateway und mk-kataloge, da mk-kataloge keine Benutzerverwaltung hat.
+	 * @param  requestPayload
+	 *                        SchulePayload
+	 * @return                Response mit SchulePayload
+	 */
 	@POST
-	@Path("/schulen/{kuerzel}")
+	@Path("/schulen")
 	public Response renameSchule(@HeaderParam(
-		value = KatalogAPIApp.UUID_HEADER_NAME) final String secret, @PathParam(
-			value = "kuerzel") @NotBlank @Kuerzel final String kuerzel, final RenameKatalogItemPayload requestPayload) {
+		value = KatalogAPIApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
+			value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret, final SchulePayload requestPayload) {
 
 		return null;
 	}
 
+	/**
+	 * Legt eine neue Schule an, ggf. mit neuem Ort / Land und gibt die neue Schule so zurück. Bei einem konkurrierenden Update wird
+	 * das aktuell neueste Item zurückgegeben, damit es sofort im Editor angezeigt werden kann.
+	 *
+	 * @param  adminUuid
+	 *                        String: die UUID des angemeldeten ADMINs
+	 * @param  secret
+	 *                        String teilen sich mk-gateway und mk-kataloge, da mk-kataloge keine Benutzerverwaltung hat.
+	 * @param  requestPayload
+	 *                        SchulePayload
+	 * @return                Response mit SchulePayload
+	 */
 	@PUT
 	@Path("/schulen")
 	public Response createSchule(@HeaderParam(
-		value = KatalogAPIApp.UUID_HEADER_NAME) final String secret, final NeueSchulePayload requestPayload) {
+		value = KatalogAPIApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
+			value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret, final SchulePayload requestPayload) {
 
 		return null;
 

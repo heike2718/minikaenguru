@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { KatalogpflegeFacade } from '../../katalogpflege.facade';
 
 @Component({
@@ -14,34 +13,24 @@ export class SchulenListComponent implements OnInit {
 
 	inputValue: string;
 
-	constructor(private katalogFacade: KatalogpflegeFacade, private router: Router) { }
+	constructor(private katalogFacade: KatalogpflegeFacade) { }
 
 	ngOnInit(): void {
 		this.inputValue = '';
 	}
 
 	addSchule() {
-		this.router.navigateByUrl('/katalogpflege/schule-editor/neu');
-	}
-
-	gotoLaender(): void {
-		this.katalogFacade.resetSelection();
-		this.router.navigateByUrl('/katalogpflege/laender');
-	}
-
-	gotoOrte(): void {
-		this.katalogFacade.resetSelection();
-		this.router.navigateByUrl('/katalogpflege/orte');
+		this.katalogFacade.switchToCreateNeueSchuleEditor();
 	}
 
 	gotoKataloge(): void {
-		this.katalogFacade.resetSelection();
-		this.router.navigateByUrl('/katalogpflege');
+		this.katalogFacade.switchToKataloge();
+
 	}
 
 	gotoDashboard() {
-		this.katalogFacade.resetSelection();
-		this.router.navigateByUrl('/dashboard');
+		this.katalogFacade.switchToDashboard();
+
 	}
 
 	startSearch(): void {
@@ -51,9 +40,8 @@ export class SchulenListComponent implements OnInit {
 	}
 
 	clearRearchResults(): void {
-
 		this.inputValue = '';
-		this.katalogFacade.clearRearchResults();
+		this.katalogFacade.clearSearchResults();
 
 	}
 }

@@ -57,3 +57,30 @@ browser
 http://localhost:4200/#/schulen/schule-dashboard/EEGEECP6
 
 http://localhost:4200/#/schulen/schule-dashboard/S7YZMQ27
+
+
+========================================
+authprovider
+
+http://192.168.10.176:9000/authprovider
+
+http://192.168.10.176:9000/authprovider/session  GET => CSRF-TOKEN    ZWhQN1d1RWorQ2c4WFUwd09ZZnZMQT09,  SESSIONID WWlsaldXT2N6VFliOUt0WjRXdGY4Zz09
+
+
+
+
+http://192.168.10.176:9000/authprovider/token/exchange/abcdefg  PUT {"clientId": "T73pF0WTZLuFTv0nbXgqIiXAxyl935c4WCBNwq32uvfQ", "clientSecret": "start123", "nonce": "noncenoncenonce"}
+
+
+========================================
+
+
+
+
+
+
+
+
+
+
+

@@ -2,34 +2,41 @@
 // Project: mk-kataloge
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_kataloge.domain.apimodel;
+package de.egladil.web.mk_gateway.domain.apimodel;
 
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.annotations.StringLatin;
 
 /**
- * RenameKatalogItemPayload zum Umbenennen von Land, Ort oder Schule. Alle Umbenennungen ändern ein bis viele Einträge in der
+ * LandPayload zum Umbenennen von Land, Ort oder Schule. Alle Umbenennungen ändern ein bis viele Einträge in der
  * denormalsierten SCHULEN-Tabelle.
  */
-public class RenameKatalogItemPayload {
+public class LandPayload {
+
+	@JsonProperty
+	@Kuerzel
+	@NotBlank
+	private String kuerzel;
 
 	@JsonProperty
 	@StringLatin
 	@NotBlank
 	private String name;
 
-	public static RenameKatalogItemPayload create(final String name) {
+	public static LandPayload create(final String kuerzel, final String name) {
 
-		RenameKatalogItemPayload result = new RenameKatalogItemPayload();
+		LandPayload result = new LandPayload();
+		result.kuerzel = kuerzel;
 		result.name = name;
 		return result;
 
 	}
 
-	public RenameKatalogItemPayload() {
+	public LandPayload() {
 
 		super();
 
@@ -38,6 +45,11 @@ public class RenameKatalogItemPayload {
 	public String name() {
 
 		return name;
+	}
+
+	public String kuerzel() {
+
+		return kuerzel;
 	}
 
 }
