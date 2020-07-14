@@ -16,13 +16,13 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<quarkus.version>1.5.2.Final</quarkus.version>
-		<commons.version>1.4.8</commons.version>
+		<commons.version>1.4.9</commons.version>
 		<junit.jupiter.version>5.5.0</junit.jupiter.version>
 		<junit.platform.version>1.5.0</junit.platform.version>
 		<surefire-plugin.version>2.22.0</surefire-plugin.version>
 		<dependency-check.version>5.0.0-M3</dependency-check.version>
 		<slf4j.version>1.7.25</slf4j.version>
-		<log4j.version>2.13.0</log4j.version>
+		<log4j.version>2.13.3</log4j.version>
 		<mockito.version>3.1.0</mockito.version>
 	</properties>
 

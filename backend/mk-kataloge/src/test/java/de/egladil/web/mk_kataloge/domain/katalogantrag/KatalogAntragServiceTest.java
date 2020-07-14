@@ -2,7 +2,7 @@
 // Project: mk-kataloge
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_kataloge.domain;
+package de.egladil.web.mk_kataloge.domain.katalogantrag;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -41,7 +41,7 @@ public class KatalogAntragServiceTest {
 		assertEquals("KATALOG:SecurityIncidentRegistered", eventObject.typeName());
 		assertEquals(
 			"Honeypot des Schulkatalogantrags war nicht blank: SchulkatalogAntrag [email=mail@web.de, land=land, ort=ort, plz=null, schulname=schulname, strasseUndHausnummer=null, kleber=hagh]",
-			eventObject.message());
+			eventObject.toString());
 	}
 
 	@Test

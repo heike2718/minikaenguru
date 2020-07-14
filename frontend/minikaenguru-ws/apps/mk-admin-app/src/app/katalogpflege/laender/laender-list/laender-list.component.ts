@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { KatalogpflegeFacade } from '../../katalogpflege.facade';
-import { Router } from '@angular/router';
 
 @Component({
 	selector: 'mka-laender-list',
@@ -11,24 +10,21 @@ export class LaenderListComponent implements OnInit {
 
 	laender$ = this.katalogFacade.laender$;
 
-	constructor(private katalogFacade: KatalogpflegeFacade, private router: Router) { }
+	constructor(private katalogFacade: KatalogpflegeFacade) { }
 
 	ngOnInit(): void {
 	}
 
-	addLand() {
-		// this.katalogFacade.createNewLand();
-		// this.router.navigateByUrl('/katalogpflege/land-editor/neu');
+	addLandOrtUndSchule() {
+		this.katalogFacade.switchToCreateNeueSchuleEditor();
 	}
 
 	gotoKataloge(): void {
-		this.katalogFacade.resetSelection();
-		this.router.navigateByUrl('/katalogpflege');
+		this.katalogFacade.switchToKataloge();
 	}
 
 	gotoDashboard() {
-		this.katalogFacade.resetSelection();
-		this.router.navigateByUrl('/dashboard');
+		this.katalogFacade.switchToDashboard();
 	}
 
 }

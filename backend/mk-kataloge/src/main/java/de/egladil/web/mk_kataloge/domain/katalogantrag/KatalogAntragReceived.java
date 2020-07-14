@@ -2,7 +2,7 @@
 // Project: mk-kataloge
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_kataloge.domain;
+package de.egladil.web.mk_kataloge.domain.katalogantrag;
 
 import java.time.LocalDateTime;
 
@@ -53,5 +53,4 @@ public class KatalogAntragReceived implements KatalogeDomainEvent {
 
 		return body;
 	}
-
 }

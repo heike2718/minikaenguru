@@ -53,4 +53,24 @@ public class LoggableEventDelegate {
 
 		return securityIncidentRegistered;
 	}
+
+	/**
+	 * Erzeugt MailNotSent- Objekt und feuert, falls der EventBus zur Verfügung steht.
+	 *
+	 * @param  msg
+	 * @param  event
+	 * @return       MailNotSent
+	 */
+	public MailNotSent fireMailNotSentEvent(final String msg, final Event<MailNotSent> event) {
+
+		MailNotSent result = new MailNotSent(msg);
+
+		if (event != null) {
+
+			event.fire(result);
+		}
+
+		return result;
+
+	}
 }

@@ -24,6 +24,33 @@ export interface Kataloge {
 	readonly schulen: KatalogpflegeItemWithID[];
 };
 
+export interface LandPayload {
+	readonly name: string;
+	readonly kuerzel: string;
+};
+
+export interface OrtPayload {
+	readonly name: string;
+	readonly kuerzel: string;
+	readonly kuerzelLand: string;
+	readonly nameLand: string;
+};
+
+export interface SchulePayload {
+	readonly name: string;
+	readonly kuerzel: string;
+	readonly kuerzelOrt: string;
+	readonly nameOrt: string;
+	readonly kuerzelLand: string;
+	readonly nameLand: string;
+	readonly emailAuftraggeber?: string;
+};
+
+export interface KuerzelAPIModel {
+	readonly kuerzelSchule: string;
+	readonly kuerzelOrt: string;
+};
+
 export function katalogpflegeItemWithIDToArray(itemsWithID: KatalogpflegeItemWithID[]): KatalogpflegeItem[] {
 
 	const result: KatalogpflegeItem[] = [];
@@ -37,7 +64,7 @@ export function childrenAsArray(parent: KatalogpflegeItem, kataloge: Kataloge): 
 	const result: KatalogpflegeItem[] = [];
 
 	let katalog: KatalogpflegeItemWithID[];
-	switch(parent.typ) {
+	switch (parent.typ) {
 		case 'LAND': katalog = kataloge.orte; break;
 		case 'ORT': katalog = kataloge.schulen; break;
 		case 'SCHULE': return result;
@@ -83,7 +110,7 @@ export function mergeKatalogItemMap(itemsWithID: KatalogpflegeItemWithID[], kata
 	let result: KatalogpflegeItemWithID[];
 
 	if (!containsItem(itemsWithID, katalogItem)) {
-		result = [ ...itemsWithID ];
+		result = [...itemsWithID];
 		result.push({ kuerzel: katalogItem.kuerzel, katalogItem: katalogItem });
 	} else {
 		result = [];

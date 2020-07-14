@@ -39,8 +39,6 @@ export class SchulkatalogAntragComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 
-
-
 		this.katalogantragSuccessSubscription = this.internalFacade.katalogAntragSuccess$.subscribe(
 
 			success => {
@@ -48,8 +46,7 @@ export class SchulkatalogAntragComponent implements OnInit, OnDestroy {
 					this.antragForm.reset();
 				}
 			}
-
-		)
+		);
 
 		this.submitDisabled = false;
 

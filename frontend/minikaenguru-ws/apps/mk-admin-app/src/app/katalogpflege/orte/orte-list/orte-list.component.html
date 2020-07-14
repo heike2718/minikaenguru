@@ -28,10 +28,10 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-sm-12 col-md-3">
-			<button class="btn btn-primary btn-block" (click)="addOrt()"><i class="fa fa-plus"
-					aria-hidden="true"></i>neuer
-				Ort</button>
+		<div *ngIf="selectedKatalogItem$ | async" class="col-sm-12 col-md-3">
+			<button class="btn btn-primary btn-block" (click)="addOrtUndSchule()"><i class="fa fa-plus"
+					aria-hidden="true" title="neuer Ort und neue Schule im gleichen Land"></i>neue
+				Schule</button>
 		</div>
 		<div class="col-sm-12 col-md-3">
 			<button class="btn btn-primary btn-block" (click)="gotoKataloge()"><i class="fa fa-arrow-left"
@@ -41,11 +41,9 @@
 			<button class="btn btn-primary btn-block" (click)="gotoDashboard()"><i class="fa fa-puzzle-piece"
 					aria-hidden="true"></i>Dashboard</button>
 		</div>
-		<div *ngIf="orte$ | async as orte" class="col-sm-12 col-md-3">
-			<div *ngIf="orte.length > 0">
-				<button class="btn btn-primary btn-block" (click)="clearRearchResults()"><i class="fa fa-remove"
-						aria-hidden="true"></i>neue Suche</button>
-			</div>
+		<div class="col-sm-12 col-md-3">
+			<button class="btn btn-primary btn-block" (click)="clearRearchResults()"><i class="fa fa-remove"
+					aria-hidden="true"></i>neue Suche</button>
 		</div>
 	</div>
 </div>

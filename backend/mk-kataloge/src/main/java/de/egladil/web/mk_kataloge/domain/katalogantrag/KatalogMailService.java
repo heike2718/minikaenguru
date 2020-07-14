@@ -2,7 +2,7 @@
 // Project: mk-kataloge
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_kataloge.domain;
+package de.egladil.web.mk_kataloge.domain.katalogantrag;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -30,10 +30,22 @@ public class KatalogMailService {
 	@Inject
 	CommonEmailService commonMailService;
 
+	private boolean mailSent;
+
+	private boolean shouldThrowMailException = false;
+
 	public static KatalogMailService createForTest() {
 
 		KatalogMailService result = new KatalogMailService();
 		result.mockTheMailserver = true;
+		return result;
+	}
+
+	public static KatalogMailService createForTestWithMailException() {
+
+		KatalogMailService result = new KatalogMailService();
+		result.mockTheMailserver = true;
+		result.shouldThrowMailException = true;
 		return result;
 	}
 
@@ -51,9 +63,21 @@ public class KatalogMailService {
 			this.commonMailService.sendMail(maildaten, emailServiceCredentials);
 		} else {
 
+			if (shouldThrowMailException) {
+
+				throw new EmailException("Das ist eine gemockte Mailexception");
+			}
+
 			System.out.println("Mail mit Betreff " + maildaten.getBetreff() + " wurde an "
 				+ maildaten.alleEmpfaengerFuersLog() + " gesendet (TO=" + maildaten.getEmpfaenger() + "):\n" + maildaten.getText());
 		}
+
+		mailSent = true;
+	}
+
+	public boolean isMailSent() {
+
+		return mailSent;
 	}
 
 }

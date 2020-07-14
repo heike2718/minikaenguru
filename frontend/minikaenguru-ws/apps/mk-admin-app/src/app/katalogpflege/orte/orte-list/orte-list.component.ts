@@ -20,24 +20,16 @@ export class OrteListComponent implements OnInit {
 		this.inputValue = '';
 	}
 
-	addOrt() {
-		// this.wettbewerbFacade.createNewWettbewerb();
-		// this.router.navigateByUrl('/wettbewerbe/wettbewerb-editor/neu');
-	}
-
-	gotoLaender(): void {
-		this.katalogFacade.resetSelection();
-		this.router.navigateByUrl('/katalogpflege/laender');
+	addOrtUndSchule() {
+		this.katalogFacade.switchToCreateNeueSchuleEditor();
 	}
 
 	gotoKataloge(): void {
-		this.katalogFacade.resetSelection();
-		this.router.navigateByUrl('/katalogpflege');
+		this.katalogFacade.switchToKataloge();
 	}
 
 	gotoDashboard() {
-		this.katalogFacade.resetSelection();
-		this.router.navigateByUrl('/dashboard');
+		this.katalogFacade.switchToDashboard();
 	}
 
 	startSearch(): void {
@@ -49,7 +41,7 @@ export class OrteListComponent implements OnInit {
 	clearRearchResults(): void {
 
 		this.inputValue = '';
-		this.katalogFacade.clearRearchResults();
+		this.katalogFacade.clearSearchResults();
 
 	}
 }

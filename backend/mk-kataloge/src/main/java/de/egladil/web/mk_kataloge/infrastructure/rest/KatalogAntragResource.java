@@ -18,8 +18,8 @@ import javax.ws.rs.core.Response;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_kataloge.domain.KatalogAntragService;
 import de.egladil.web.mk_kataloge.domain.apimodel.SchulkatalogAntrag;
+import de.egladil.web.mk_kataloge.domain.katalogantrag.KatalogAntragService;
 
 /**
  * KatalogAntragResource

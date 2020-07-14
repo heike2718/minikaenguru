@@ -7,6 +7,8 @@ package de.egladil.web.mk_kataloge.infrastructure.persistence.entities;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -14,7 +16,36 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "VW_ORTE")
+@NamedQueries({
+	@NamedQuery(
+		name = "ORT_QUERY_LOAD_ORTE_IN_LAND",
+		query = "select o from Ort o where o.landKuerzel = :landKuerzel and o.name != :excluded"),
+	@NamedQuery(
+		name = "ORT_QUERY_FIND_ORTE_IN_LAND",
+		query = "select o from Ort o where o.landKuerzel = :landKuerzel and lower(o.name) like :name and o.name != :excluded"),
+	@NamedQuery(
+		name = "ORT_QUERY_FIND_ORTE_MIT_NAME",
+		query = "select o from Ort o where lower(o.name) like :name and o.name != :excluded"),
+	@NamedQuery(
+		name = "ORT_FIND_BY_KUERZEL", query = "select o from Ort o where o.kuerzel = :kuerzel"),
+	@NamedQuery(
+		name = "ORT_COUNT_WITH_KUERZEL", query = "select count(o) from Ort o where o.kuerzel = :kuerzel"),
+	@NamedQuery(
+		name = "ORT_COUNT_IN_LAND", query = "select count(o) from Ort o where o.landKuerzel = :kuerzel and o.name != :excluded")
+})
 public class Ort {
+
+	public static final String QUERY_LOAD_ORTE_IN_LAND = "ORT_QUERY_LOAD_ORTE_IN_LAND";
+
+	public static final String QUERY_FIND_ORTE_IN_LAND = "ORT_QUERY_FIND_ORTE_IN_LAND";
+
+	public static final String QUERY_FIND_ORTE_MIT_NAME = "ORT_QUERY_FIND_ORTE_MIT_NAME";
+
+	public static final String QUERY_FIND_ORT_BY_KUERZEL = "ORT_FIND_BY_KUERZEL";
+
+	public static final String QUERY_COUNT_IN_LAND = "ORT_COUNT_IN_LAND";
+
+	public static final String QUERY_COUNT_WITH_KUERZEL = "ORT_COUNT_WITH_KUERZEL";
 
 	@Id
 	@Column(name = "KUERZEL")
