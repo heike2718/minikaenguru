@@ -42,7 +42,12 @@ http://localhost:9500/mk-gateway/wettbewerb/veranstalter/zugangsstatus   X-SESSI
 
 http://localhost:9500/mk-gateway/wettbewerb/teilnahmen/privat   POST
 
-curl -X GET -H 'Content-Type: application/json' -H 'X-SESSIONID: WXc1L0ZGRnVBdzhYWmZaRHEvWWNMQT09' -i http://192.168.10.176:9500/mk-gateway/wettbewerb/veranstalter/privat  
+curl -X GET -H 'Content-Type: application/json' -H 'X-SESSIONID: WXc1L0ZGRnVBdzhYWmZaRHEvWWNMQT09' -i http://192.168.10.176:9500/mk-gateway/wettbewerb/veranstalter/privat  X-SESSIONID = RXpwUCtIempETEcySkxKNGQ2RUMwZz09
+
+
+Schule anlegen:
+
+http://192.168.10.176:9500/mk-gateway/wb-admin/kataloge/schulen  PUT
 
 
 ========================================

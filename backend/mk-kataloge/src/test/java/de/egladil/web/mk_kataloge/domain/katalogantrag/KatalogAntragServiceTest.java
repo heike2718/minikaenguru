@@ -17,8 +17,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.egladil.web.mk_kataloge.domain.apimodel.SchulkatalogAntrag;
 import de.egladil.web.mk_kataloge.domain.event.SecurityIncidentRegistered;
-import de.egladil.web.mk_kataloge.domain.katalogantrag.KatalogAntragReceived;
-import de.egladil.web.mk_kataloge.domain.katalogantrag.KatalogAntragService;
 
 /**
  * KatalogAntragServiceTest
@@ -43,7 +41,7 @@ public class KatalogAntragServiceTest {
 		assertEquals("KATALOG:SecurityIncidentRegistered", eventObject.typeName());
 		assertEquals(
 			"Honeypot des Schulkatalogantrags war nicht blank: SchulkatalogAntrag [email=mail@web.de, land=land, ort=ort, plz=null, schulname=schulname, strasseUndHausnummer=null, kleber=hagh]",
-			eventObject.message());
+			eventObject.toString());
 	}
 
 	@Test

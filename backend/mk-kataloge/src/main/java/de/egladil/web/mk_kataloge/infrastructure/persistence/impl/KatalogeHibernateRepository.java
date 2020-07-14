@@ -260,4 +260,14 @@ public class KatalogeHibernateRepository implements KatalogeRepository {
 
 		return result.intValue();
 	}
+
+	@Override
+	public int countLaenderMitKuerzel(final String kuerzel) {
+
+		TypedQuery<Long> query = em.createNamedQuery(Land.QUERY_COUNT_WITH_KUERZEL, Long.class).setParameter("kuerzel", kuerzel);
+
+		Long result = query.getSingleResult();
+
+		return result.intValue();
+	}
 }

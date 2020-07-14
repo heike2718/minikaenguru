@@ -68,32 +68,33 @@ public class KatalogAdminResource {
 		return katalogResourceAdapter.loadSchulenInOrt(kuerzel);
 	}
 
-	@POST
+	@PUT
 	@Path("/kataloge/laender")
 	public Response renameLand(final LandPayload requestPayload) {
 
 		return null;
 	}
 
-	@POST
+	@PUT
 	@Path("/kataloge/orte")
 	public Response renameOrt(final OrtPayload requestPayload) {
 
 		return null;
 	}
 
-	@POST
+	@PUT
 	@Path("/kataloge/schulen")
 	public Response renameSchule(final SchulePayload requestPayload) {
 
 		return null;
 	}
 
-	@PUT
+	@POST
 	@Path("/kataloge/schulen")
 	public Response createSchule(final SchulePayload requestPayload) {
 
-		return null;
+		String uuid = securityContext.getUserPrincipal().getName();
+		return katalogResourceAdapter.createSchule(uuid, katalogAdminSecret, requestPayload);
 
 	}
 

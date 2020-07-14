@@ -20,6 +20,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_kataloge.KatalogAPIApp;
 import de.egladil.web.mk_kataloge.application.KatalogFacade;
 import de.egladil.web.mk_kataloge.domain.KatalogItem;
+import de.egladil.web.mk_kataloge.domain.admin.CreateSchuleService;
 import de.egladil.web.mk_kataloge.domain.apimodel.LandPayload;
 import de.egladil.web.mk_kataloge.domain.apimodel.OrtPayload;
 import de.egladil.web.mk_kataloge.domain.apimodel.SchuleAPIModel;
@@ -58,6 +60,9 @@ public class KatalogItemsResource {
 
 	@Inject
 	KatalogFacade katalogFacade;
+
+	@Inject
+	CreateSchuleService createSchuleService;
 
 	@GET
 	@Path("/laender")
@@ -96,7 +101,7 @@ public class KatalogItemsResource {
 	 *                        LandPayload
 	 * @return                Response mit LandPayload
 	 */
-	@POST
+	@PUT
 	@Path("/laender")
 	public Response renameLand(@HeaderParam(
 		value = KatalogAPIApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
@@ -117,7 +122,7 @@ public class KatalogItemsResource {
 	 *                        OrtPayload
 	 * @return                Response mit OrtPayload
 	 */
-	@POST
+	@PUT
 	@Path("/orte")
 	public Response renameOrt(@HeaderParam(
 		value = KatalogAPIApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
@@ -138,7 +143,7 @@ public class KatalogItemsResource {
 	 *                        SchulePayload
 	 * @return                Response mit SchulePayload
 	 */
-	@POST
+	@PUT
 	@Path("/schulen")
 	public Response renameSchule(@HeaderParam(
 		value = KatalogAPIApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
@@ -159,14 +164,32 @@ public class KatalogItemsResource {
 	 *                        SchulePayload
 	 * @return                Response mit SchulePayload
 	 */
-	@PUT
+	@POST
 	@Path("/schulen")
 	public Response createSchule(@HeaderParam(
 		value = KatalogAPIApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
 			value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret, final SchulePayload requestPayload) {
 
-		return null;
+		if (!expectedSecret.equals(secret)) {
 
+			String msg = "Unautorisierter Versuch, eine Schule anzulegen: angemeldeter ADMIN=" + adminUuid + ", secret=" + secret;
+
+			LOG.warn(msg);
+
+			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+
+			return Response.status(Status.FORBIDDEN)
+				.entity(ResponsePayload.messageOnly(MessagePayload.error("Netter Versuch, aber leider keine Berechtigung")))
+				.build();
+
+		}
+
+		ResponsePayload responsePayload = createSchuleService.schuleAnlegen(requestPayload);
+
+		LOG.info("ADMIN {} hat Schule {} angelegt: Erfolg = {}", StringUtils.abbreviate(adminUuid, 11), requestPayload,
+			responsePayload.getMessage().getMessage());
+
+		return Response.ok(responsePayload).build();
 	}
 
 	@GET

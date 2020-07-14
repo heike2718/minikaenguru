@@ -93,6 +93,8 @@ export class EditSchuleComponent implements OnInit, OnDestroy {
 			return;
 		}
 
+		this.editSchuleForm.reset();
+
 		this.headlineText = this.schuleEditorModel.modusCreate ? 'Schule anlegen' : 'Schule ändern';
 		this.editSchuleForm.setValue(this.schuleEditorModel.schulePayload);
 

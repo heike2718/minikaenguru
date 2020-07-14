@@ -110,6 +110,14 @@ public interface KatalogeRepository {
 	int countOrteMitKuerzel(String kuerzel);
 
 	/**
+	 * Gibt die Anzahl der Länder mit dem gegebenen Kürzel zurück
+	 *
+	 * @param  kuerzel
+	 * @return         int
+	 */
+	int countLaenderMitKuerzel(String kuerzel);
+
+	/**
 	 * Läd alle Orte im Land mit dem kuerzel landKuerzel.
 	 *
 	 * @param  landKuerzel

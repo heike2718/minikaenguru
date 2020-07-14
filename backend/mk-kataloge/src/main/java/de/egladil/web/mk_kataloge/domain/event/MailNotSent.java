@@ -2,7 +2,7 @@
 // Project: mk-kataloge
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_kataloge.domain.katalogantrag;
+package de.egladil.web.mk_kataloge.domain.event;
 
 import java.time.LocalDateTime;
 
@@ -10,47 +10,46 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
-import de.egladil.web.mk_kataloge.domain.apimodel.SchulkatalogAntrag;
-import de.egladil.web.mk_kataloge.domain.event.KatalogeDomainEvent;
 
 /**
- * KatalogAntragReceived
+ * MailNotSent
  */
-public class KatalogAntragReceived implements KatalogeDomainEvent {
+public class MailNotSent implements KatalogeDomainEvent {
 
 	@JsonIgnore
 	private final LocalDateTime occuredOn;
 
 	@JsonProperty
-	private SchulkatalogAntrag body;
+	private String message;
 
-	KatalogAntragReceived() {
+	MailNotSent() {
 
 		this.occuredOn = CommonTimeUtils.now();
 
 	}
 
-	public KatalogAntragReceived(final SchulkatalogAntrag body) {
+	public MailNotSent(final String message) {
 
 		this();
-
-		this.body = body;
+		this.message = message;
 	}
 
 	@Override
 	public LocalDateTime occuredOn() {
 
-		return occuredOn;
+		return this.occuredOn;
 	}
 
 	@Override
 	public String typeName() {
 
-		return TYPE_KATALOG_ANTRAG_RECEIVED;
+		return TYPE_MAIL_NOT_SENT;
 	}
 
-	public SchulkatalogAntrag body() {
+	@Override
+	public String toString() {
 
-		return body;
+		return message;
 	}
+
 }

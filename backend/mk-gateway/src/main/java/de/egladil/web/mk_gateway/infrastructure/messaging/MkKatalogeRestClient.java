@@ -63,25 +63,25 @@ public interface MkKatalogeRestClient {
 	Response loadSchulenInOrt(@PathParam(
 		value = "kuerzel") final String kuerzel);
 
-	@POST
+	@PUT
 	@Path("/kataloge/laender")
 	Response renameLand(@HeaderParam(
 		value = MkGatewayApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
 			value = MkGatewayApp.SECRET_HEADER_NAME) final String secret, final LandPayload requestPayload);
 
-	@POST
+	@PUT
 	@Path("/kataloge/orte")
 	public Response renameOrt(@HeaderParam(
 		value = MkGatewayApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
 			value = MkGatewayApp.SECRET_HEADER_NAME) final String secret, final OrtPayload requestPayload);
 
-	@POST
+	@PUT
 	@Path("/kataloge/schulen")
 	public Response renameSchule(@HeaderParam(
 		value = MkGatewayApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
 			value = MkGatewayApp.SECRET_HEADER_NAME) final String secret, SchulePayload requestPayload);
 
-	@PUT
+	@POST
 	@Path("/kataloge/schulen")
 	public Response createSchule(@HeaderParam(
 		value = MkGatewayApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(

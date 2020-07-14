@@ -47,7 +47,8 @@ public class SecurityIncidentRegistered implements KatalogeDomainEvent {
 		return TYPE_SECURITY_INCIDENT_REGISTERED;
 	}
 
-	public String message() {
+	@Override
+	public String toString() {
 
 		return message;
 	}

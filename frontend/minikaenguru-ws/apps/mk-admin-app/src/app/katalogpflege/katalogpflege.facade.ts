@@ -9,7 +9,7 @@ import { Katalogpflegetyp, KatalogpflegeItem, SchulePayload, KuerzelAPIModel, Or
 import { Router } from '@angular/router';
 import { laender, orte, schulen, selectedItem, editSchuleInput, editOrtInput, editLandInput } from './+state/katalogpflege.selectors';
 import { tap, take } from 'rxjs/operators';
-import { MessageService } from '@minikaenguru-ws/common-messages';
+import { MessageService, Message } from '@minikaenguru-ws/common-messages';
 import { SchuleEditorModel } from './+state/katalogpflege.reducer';
 
 
@@ -187,10 +187,24 @@ export class KatalogpflegeFacade {
 
 		this.store.dispatch(KatalogpflegeActions.showLoadingIndicator());
 
-		// TODO: http
+		this.katalogHttpService.createSchule(payload).subscribe(
+			responsePayload => {
+				this.store.dispatch(KatalogpflegeActions.editSchuleFinished({ schulePayload: responsePayload.data }));
 
-		this.store.dispatch(KatalogpflegeActions.editSchuleFinished({ schulePayload: payload }));
-		this.messageService.info('Neue Schule wurde erfolgreich angelegt');
+				const message: Message = responsePayload.message;
+
+				switch (message.level) {
+					case 'INFO': this.messageService.info(message.message); break;
+					case 'WARN': this.messageService.warn(message.message); break;
+				}
+			},
+			(error => {
+				this.store.dispatch(KatalogpflegeActions.sucheFinishedWithError());
+				this.errorHandler.handleError(error)
+			})
+		);
+
+
 	}
 
 	public sendRenameSchule(schulePayload: SchulePayload): void {

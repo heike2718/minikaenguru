@@ -18,6 +18,11 @@ import de.egladil.web.commons_validation.annotations.StringLatin;
 public class SchulePayload {
 
 	@JsonProperty
+	@Kuerzel
+	@NotBlank
+	private String kuerzel;
+
+	@JsonProperty
 	@StringLatin
 	@NotBlank
 	private String name;
@@ -46,9 +51,10 @@ public class SchulePayload {
 	@Email
 	private String emailAuftraggeber;
 
-	public static SchulePayload create(final String name, final String kuerzelOrt, final String nameOrt, final String kuerzelLand, final String nameLand) {
+	public static SchulePayload create(final String kuerzel, final String name, final String kuerzelOrt, final String nameOrt, final String kuerzelLand, final String nameLand) {
 
 		SchulePayload result = new SchulePayload();
+		result.kuerzel = kuerzel;
 		result.name = name;
 		result.kuerzelOrt = kuerzelOrt;
 		result.nameOrt = nameOrt;
@@ -98,5 +104,17 @@ public class SchulePayload {
 	public String emailAuftraggeber() {
 
 		return emailAuftraggeber;
+	}
+
+	@Override
+	public String toString() {
+
+		return "SchulePayload [kuerzel=" + kuerzel + ", name=" + name + ", kuerzelOrt=" + kuerzelOrt + ", nameOrt=" + nameOrt
+			+ ", kuerzelLand=" + kuerzelLand + ", nameLand=" + nameLand + "]";
+	}
+
+	public String kuerzel() {
+
+		return kuerzel;
 	}
 }
