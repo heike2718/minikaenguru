@@ -1,5 +1,4 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { Message } from '@minikaenguru-ws/common-messages';
 import { KatalogpflegeItem, Katalogpflegetyp, mergeKatalogItems, Kataloge, mergeKatalogItemMap, childrenAsArray, SchulePayload, KatalogpflegeItemWithID, OrtPayload, LandPayload } from '../katalogpflege.model';
 import * as KatalogpflegeActions from './katalogpflege.actions';
 
@@ -82,17 +81,7 @@ const katalogpflegeReducer = createReducer(initialState,
 
 	on(KatalogpflegeActions.katalogDashboardSelected, (state, _action) => {
 
-		return { ...state,
-			filteredOrte: [],
-			filteredSchulen: [],
-			selectedKatalogItem: undefined,
-			landEditorPayload: undefined,
-			ortEditorPayload: undefined,
-			schuleEditorModel: undefined,
-			selectedKatalogTyp: undefined,
-			showLoadingIndicator: false,
-			sucheBeendet: true
-		};
+		return initialState;
 
 	}),
 

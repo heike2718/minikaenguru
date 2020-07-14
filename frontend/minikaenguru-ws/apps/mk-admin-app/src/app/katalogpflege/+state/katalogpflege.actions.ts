@@ -17,7 +17,7 @@ export const showLoadingIndicator = createAction(
 );
 
 export const sucheFinished = createAction(
-	'[KatalogpflegeFacade]',
+	'[KatalogpflegeFacade] searchKatalogItems',
 	props<{ typ: Katalogpflegetyp, katalogItems: KatalogpflegeItem[] }>()
 );
 
