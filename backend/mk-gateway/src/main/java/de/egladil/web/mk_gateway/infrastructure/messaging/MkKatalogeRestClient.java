@@ -8,6 +8,8 @@ import javax.validation.constraints.NotBlank;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -20,6 +22,9 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.annotations.StringLatin;
 import de.egladil.web.mk_gateway.MkGatewayApp;
+import de.egladil.web.mk_gateway.domain.apimodel.LandPayload;
+import de.egladil.web.mk_gateway.domain.apimodel.OrtPayload;
+import de.egladil.web.mk_gateway.domain.apimodel.SchulePayload;
 
 /**
  * MkKatalogeRestClient
@@ -45,7 +50,8 @@ public interface MkKatalogeRestClient {
 	@GET
 	@Path("/kataloge/laender")
 	Response loadLaender(@HeaderParam(
-		value = MkGatewayApp.UUID_HEADER_NAME) final String secret);
+		value = MkGatewayApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
+			value = MkGatewayApp.SECRET_HEADER_NAME) final String secret);
 
 	@GET
 	@Path("/kataloge/laender/{kuerzel}/orte")
@@ -57,9 +63,38 @@ public interface MkKatalogeRestClient {
 	Response loadSchulenInOrt(@PathParam(
 		value = "kuerzel") final String kuerzel);
 
+	@PUT
+	@Path("/kataloge/laender")
+	Response renameLand(@HeaderParam(
+		value = MkGatewayApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
+			value = MkGatewayApp.SECRET_HEADER_NAME) final String secret, final LandPayload requestPayload);
+
+	@PUT
+	@Path("/kataloge/orte")
+	public Response renameOrt(@HeaderParam(
+		value = MkGatewayApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
+			value = MkGatewayApp.SECRET_HEADER_NAME) final String secret, final OrtPayload requestPayload);
+
+	@PUT
+	@Path("/kataloge/schulen")
+	public Response renameSchule(@HeaderParam(
+		value = MkGatewayApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
+			value = MkGatewayApp.SECRET_HEADER_NAME) final String secret, SchulePayload requestPayload);
+
+	@POST
+	@Path("/kataloge/schulen")
+	public Response createSchule(@HeaderParam(
+		value = MkGatewayApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
+			value = MkGatewayApp.SECRET_HEADER_NAME) final String secret, SchulePayload requestPayload);
+
 	@GET
 	@Path("/katalogsuche/global/{typ}")
 	Response searchItems(@PathParam(
 		value = "typ") final String typ, @NotBlank @StringLatin @QueryParam("search") final String searchTerm);
+
+	@GET
+	@Path("/kuerzel")
+	Response generateKuerzel(@HeaderParam(
+		value = MkGatewayApp.UUID_HEADER_NAME) final String secret);
 
 }

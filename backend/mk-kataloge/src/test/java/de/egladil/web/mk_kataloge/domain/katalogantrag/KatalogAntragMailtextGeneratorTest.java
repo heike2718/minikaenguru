@@ -2,7 +2,7 @@
 // Project: mk-kataloge
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_kataloge.domain;
+package de.egladil.web.mk_kataloge.domain.katalogantrag;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -14,6 +14,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_kataloge.domain.apimodel.SchulkatalogAntrag;
+import de.egladil.web.mk_kataloge.domain.katalogantrag.KatalogAntragMailtextGenerator;
 
 /**
  * KatalogAntragMailtextGeneratorTest

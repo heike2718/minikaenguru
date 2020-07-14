@@ -1,1 +1,134 @@
-<p>edit-schule works!</p>
+<div class="container container-fluid ml-3 mt-5">
+	<div class="row ml-2">
+		<div class="col-12">
+			<h2>Schuleditor</h2>
+			<h4 *ngIf="editSchuleInput$ | async">{{headlineText}}</h4>
+		</div>
+	</div>
+
+	<div *ngIf="editSchuleInput$ | async as editInput">
+		<div *ngIf="editInput.schuleEditorModel.schulePayload !== undefined" class="row ml-2">
+
+			<form [formGroup]="editSchuleForm" class="col-12">
+
+				<div class="form-group mt-4">
+					<div class="row">
+						<div class="col-md-12">
+							<label for="emailInput">Email</label>
+						</div>
+					</div>
+					<div class="row" [class.error]="emailAuftraggeber.touched && !emailAuftraggeber.valid">
+						<div class="col-md-12">
+							<input class="form-control" type="text" id="emailInput" placeholder="Mailadresse des Auftraggebers"
+								formControlName="emailAuftraggeber" autocomplete="true">
+						</div>
+					</div>
+					<mk-form-error path="emailAuftraggeber" text="Email"></mk-form-error>
+				</div>
+
+				<div class="form-group mt-2">
+					<div class="row">
+						<div class="col-md-12">
+							<label for="nameInput">Schulname *</label>
+						</div>
+					</div>
+					<div class="row" [class.error]="name.touched && !name.valid">
+						<div class="col-md-12">
+							<input class="form-control" type="text" id="nameInput" placeholder="Name der Schule"
+								formControlName="name" autocomplete="true">
+						</div>
+					</div>
+					<mk-form-error path="name" text="Schulname"></mk-form-error>
+				</div>
+
+				<div class="form-group mt-2">
+					<div class="row">
+						<div class="col-md-12">
+							<label for="kuerzelInput">Kürzel *</label>
+						</div>
+					</div>
+					<div class="row" [class.error]="kuerzel.touched && !kuerzel.valid">
+						<div class="col-md-12">
+							<input class="form-control" type="text" id="kuerzelInput" placeholder="Schulkürzel"
+								formControlName="kuerzel" autocomplete="true">
+						</div>
+					</div>
+					<mk-form-error path="kuerzel" text="Schulkürzel"></mk-form-error>
+				</div>
+
+				<div class="form-group mt-4">
+					<div class="row">
+						<div class="col-md-12">
+							<label for="nameOrtInput">Ort *</label>
+						</div>
+					</div>
+					<div class="row" [class.error]="nameOrt.touched && !nameOrt.valid">
+						<div class="col-md-12">
+							<input class="form-control" type="text" id="nameOrtInput" placeholder="Ort"
+								formControlName="nameOrt" autocomplete="true">
+						</div>
+					</div>
+					<mk-form-error path="nameOrt" text="Ort"></mk-form-error>
+				</div>
+
+				<div class="form-group mt-4">
+					<div class="row">
+						<div class="col-md-12">
+							<label for="kuerzelOrtInput">Kürzel Ort *</label>
+						</div>
+					</div>
+					<div class="row" [class.error]="kuerzelOrt.touched && !kuerzelOrt.valid">
+						<div class="col-md-12">
+							<input class="form-control" type="text" id="kuerzelOrtInput" placeholder="Kürzel Ort"
+								formControlName="kuerzelOrt" autocomplete="true">
+						</div>
+					</div>
+					<mk-form-error path="kuerzelOrt" text="Kürzel Ort"></mk-form-error>
+				</div>
+
+				<div class="form-group mt-4">
+					<div class="row">
+						<div class="col-md-12">
+							<label for="nameLandInput">Land *</label>
+						</div>
+					</div>
+					<div class="row" [class.error]="nameLand.touched && !nameLand.valid">
+						<div class="col-md-12">
+							<input class="form-control" type="text" id="nameLandInput" placeholder="Land"
+								formControlName="nameLand" autocomplete="true">
+						</div>
+					</div>
+					<mk-form-error path="kuerzelOrt" text="Land"></mk-form-error>
+				</div>
+
+				<div class="form-group mt-4">
+					<div class="row">
+						<div class="col-md-12">
+							<label for="kuerzelLandInput">Kürzel Land *</label>
+						</div>
+					</div>
+					<div class="row" [class.error]="kuerzelLand.touched && !kuerzelLand.valid">
+						<div class="col-md-12">
+							<input class="form-control" type="text" id="kuerzelLandInput" placeholder="Land"
+								formControlName="kuerzelLand" autocomplete="true">
+						</div>
+					</div>
+					<mk-form-error path="kuerzelLand" text="Kürzel Land"></mk-form-error>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-12 col-md-4">
+						<button type="button" [disabled]="!submited && (!editSchuleForm.valid || submitDisabled)"
+							class="btn btn-primary btn-block" (click)="submitForm()">senden</button>
+					</div>
+					<div class="col-sm-12 col-md-4">
+						<button type="button" class="btn btn-primary btn-block" (click)="cancel()">zurücksetzen</button>
+					</div>
+					<div class="col-sm-12 col-md-4">
+						<button type="button" class="btn btn-primary btn-block" (click)="gotoKataloge()">Kataloge</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

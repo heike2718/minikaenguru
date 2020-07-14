@@ -24,7 +24,6 @@ public class DataInconsistencyRegistered implements KatalogeDomainEvent {
 
 	DataInconsistencyRegistered() {
 
-		super();
 		this.occuredOn = CommonTimeUtils.now();
 
 	}
@@ -48,7 +47,13 @@ public class DataInconsistencyRegistered implements KatalogeDomainEvent {
 		return TYPE_DATA_INCONSISTENCY_REGISTERED;
 	}
 
-	String message() {
+	public String message() {
+
+		return message;
+	}
+
+	@Override
+	public String toString() {
 
 		return message;
 	}

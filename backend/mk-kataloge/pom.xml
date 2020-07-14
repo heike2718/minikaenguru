@@ -11,7 +11,7 @@
 
 	<properties>
 		<quarkus.version>1.5.2.Final</quarkus.version>
-		<commons.version>1.4.8</commons.version>
+		<commons.version>1.4.9</commons.version>
 		<compiler-plugin.version>3.8.1</compiler-plugin.version>
 		<maven.compiler.parameters>true</maven.compiler.parameters>
 		<maven.compiler.source>1.11</maven.compiler.source>
@@ -19,6 +19,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<surefire-plugin.version>2.22.1</surefire-plugin.version>
+		<slf4j.version>1.7.25</slf4j.version>
+		<log4j.version>2.13.3</log4j.version>
+		<mockito.version>3.1.0</mockito.version>
 	</properties>
 
 	<dependencyManagement>
@@ -97,17 +100,48 @@
 			<version>2.7</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+
+		<!-- Test START -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<scope>test</scope>
+		</dependency>
 
 		<dependency>
-			<groupId>io.quarkus</groupId>
-			<artifactId>quarkus-junit5</artifactId>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-runner</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>io.rest-assured</groupId>
-			<artifactId>rest-assured</artifactId>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>${log4j.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- Test ENDE -->
 
 
 	</dependencies>

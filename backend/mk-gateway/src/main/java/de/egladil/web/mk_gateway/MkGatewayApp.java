@@ -18,4 +18,6 @@ public class MkGatewayApp extends Application {
 	public static final String STAGE_DEV = "dev";
 
 	public static final String UUID_HEADER_NAME = "X-UUID";
+
+	public static final String SECRET_HEADER_NAME = "X-SECRET";
 }

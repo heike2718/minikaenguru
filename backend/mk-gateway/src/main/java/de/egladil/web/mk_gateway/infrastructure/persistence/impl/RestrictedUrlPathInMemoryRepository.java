@@ -143,6 +143,42 @@ public class RestrictedUrlPathInMemoryRepository implements RestrictedUrlPathRep
 				Arrays.asList(new Rolle[] { Rolle.ADMIN }));
 			paths.add(restrictedPath);
 		}
+
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/kataloge/schulen",
+				Arrays.asList(new Rolle[] { Rolle.ADMIN }));
+			paths.add(restrictedPath);
+		}
+
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/kataloge/laender/*",
+				Arrays.asList(new Rolle[] { Rolle.ADMIN }));
+			paths.add(restrictedPath);
+		}
+
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/kataloge/orte/*",
+				Arrays.asList(new Rolle[] { Rolle.ADMIN }));
+			paths.add(restrictedPath);
+		}
+
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/kataloge/schulen/*",
+				Arrays.asList(new Rolle[] { Rolle.ADMIN }));
+			paths.add(restrictedPath);
+		}
+
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/kuerzel",
+				Arrays.asList(new Rolle[] { Rolle.ADMIN }));
+			paths.add(restrictedPath);
+		}
+
 	}
 
 	@Override

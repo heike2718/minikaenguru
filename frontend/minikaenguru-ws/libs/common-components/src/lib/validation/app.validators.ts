@@ -2,38 +2,33 @@ import { AbstractControl, FormGroup, FormControl } from '@angular/forms';
 
 
 export function emailValidator(control: AbstractControl): {
-	[key: string]: any} {
+	[key: string]: any
+} {
 
-	if (!control.value || control.value.trim() === '') {
+	const theValue: string = extractTheValueAsString(control);
+
+	if (theValue === '') {
+		return null;
+	}
+
+	const re = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
+	if (re.test(theValue)) {
 		return null;
 	} else {
-
-		const re = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
-		const value = control.value.trim();
-
-		if (re.test(value)) {
-			return null;
-		} else {
-			return { 'invalidEMail': true };
-		}
+		return { 'invalidEMail': true };
 	}
+
 };
 
 export function landValidator(control: AbstractControl): {
 	[key: string]: any
 } {
-	if (!control.value || control.value.trim() === '') {
-		return null;
-	} else {
+	const value: string = extractTheValueAsString(control).toLowerCase();
 
-		const value = control.value.trim().toLowerCase();
-
-		if (value.includes('deutsch') || value.includes('bundesrepublik') || value === 'brd') {
-			return { 'invalidLandDeutschland': true };
-		}
-		return null;
-
+	if (value.includes('deutsch') || value.includes('bundesrepublik') || value === 'brd') {
+		return { 'invalidLandDeutschland': true };
 	}
+	return null;
 };
 
 export function validateAllFormFields(formGroup: FormGroup): void {
@@ -46,3 +41,21 @@ export function validateAllFormFields(formGroup: FormGroup): void {
 		}
 	});
 };
+
+// =============================  private functions =========================
+
+function extractTheValueAsString(control: AbstractControl): string {
+
+
+	if (control) {
+		if (control.value) {
+			if (control.value.value) {
+				return control.value.value;
+			} else {
+				return control.value;
+			}
+		}
+	}
+
+	return '';
+}

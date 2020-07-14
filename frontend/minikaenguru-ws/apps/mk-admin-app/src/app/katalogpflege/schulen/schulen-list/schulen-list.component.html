@@ -28,8 +28,8 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-sm-12 col-md-3">
-			<button class="btn btn-primary btn-block" (click)="addSchule()"><i class="fa fa-plus" aria-hidden="true"></i>neue
+		<div *ngIf="selectedKatalogItem$ | async" class="col-sm-12 col-md-3">
+			<button class="btn btn-primary btn-block" (click)="addSchule()"><i class="fa fa-plus" aria-hidden="true" title="neue Schule im gleichen Ort"></i>neue
 				Schule</button>
 		</div>
 		<div class="col-sm-12 col-md-3">
@@ -40,11 +40,9 @@
 			<button class="btn btn-primary btn-block" (click)="gotoDashboard()"><i class="fa fa-puzzle-piece"
 					aria-hidden="true"></i>Dashboard</button>
 		</div>
-		<div *ngIf="schulen$ | async as schulen" class="col-sm-12 col-md-3">
-			<div *ngIf="schulen.length > 0">
-				<button class="btn btn-primary btn-block" (click)="clearRearchResults()"><i class="fa fa-remove"
+		<div class="col-sm-12 col-md-3">
+			<button class="btn btn-primary btn-block" (click)="clearRearchResults()"><i class="fa fa-remove"
 						aria-hidden="true"></i>neue Suche</button>
-			</div>
 		</div>
 	</div>
 </div>

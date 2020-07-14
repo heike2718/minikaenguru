@@ -29,7 +29,7 @@ export class KatalogpflegeItemComponent implements OnInit {
 	}
 
 	editItem() {
-		this.katalogFacade.gotoEditor(this.katalogItem);
+		this.katalogFacade.switchToRenameKatalogItemEditor(this.katalogItem);
 	}
 
 	openOrSearchChilds() {

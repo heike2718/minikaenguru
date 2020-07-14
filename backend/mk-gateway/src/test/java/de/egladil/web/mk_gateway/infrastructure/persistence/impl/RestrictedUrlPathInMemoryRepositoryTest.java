@@ -277,6 +277,86 @@ public class RestrictedUrlPathInMemoryRepositoryTest {
 			assertTrue(restrictedUrlPath.isAllowedForRolle(Rolle.ADMIN));
 		}
 
+		@Test
+		void should_OfPathContainSchulen() {
+
+			Optional<RestrictedUrlPath> opt = repository.ofPath("/wb-admin/kataloge/schulen");
+
+			assertTrue(opt.isPresent());
+
+			RestrictedUrlPath restrictedUrlPath = opt.get();
+
+			assertEquals("/wb-admin/kataloge/schulen", restrictedUrlPath.path());
+
+			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.LEHRER));
+			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.PRIVAT));
+			assertTrue(restrictedUrlPath.isAllowedForRolle(Rolle.ADMIN));
+		}
+
+		@Test
+		void should_OfPathContainLaenderWithKuerzel() {
+
+			Optional<RestrictedUrlPath> opt = repository.ofPath("/wb-admin/kataloge/laender/DE-BY");
+
+			assertTrue(opt.isPresent());
+
+			RestrictedUrlPath restrictedUrlPath = opt.get();
+
+			assertEquals("/wb-admin/kataloge/laender/*", restrictedUrlPath.path());
+
+			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.LEHRER));
+			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.PRIVAT));
+			assertTrue(restrictedUrlPath.isAllowedForRolle(Rolle.ADMIN));
+		}
+
+		@Test
+		void should_OfPathContainOrteWithKuerzel() {
+
+			Optional<RestrictedUrlPath> opt = repository.ofPath("/wb-admin/kataloge/orte/Z7TFRTZ6");
+
+			assertTrue(opt.isPresent());
+
+			RestrictedUrlPath restrictedUrlPath = opt.get();
+
+			assertEquals("/wb-admin/kataloge/orte/*", restrictedUrlPath.path());
+
+			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.LEHRER));
+			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.PRIVAT));
+			assertTrue(restrictedUrlPath.isAllowedForRolle(Rolle.ADMIN));
+		}
+
+		@Test
+		void should_OfPathContainSchulenWithKuerzel() {
+
+			Optional<RestrictedUrlPath> opt = repository.ofPath("/wb-admin/kataloge/schulen/Z7TFRTZ6");
+
+			assertTrue(opt.isPresent());
+
+			RestrictedUrlPath restrictedUrlPath = opt.get();
+
+			assertEquals("/wb-admin/kataloge/schulen/*", restrictedUrlPath.path());
+
+			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.LEHRER));
+			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.PRIVAT));
+			assertTrue(restrictedUrlPath.isAllowedForRolle(Rolle.ADMIN));
+		}
+
+		@Test
+		void should_OfPathContainKuerzel() {
+
+			Optional<RestrictedUrlPath> opt = repository.ofPath("/wb-admin/kuerzel");
+
+			assertTrue(opt.isPresent());
+
+			RestrictedUrlPath restrictedUrlPath = opt.get();
+
+			assertEquals("/wb-admin/kuerzel", restrictedUrlPath.path());
+
+			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.LEHRER));
+			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.PRIVAT));
+			assertTrue(restrictedUrlPath.isAllowedForRolle(Rolle.ADMIN));
+		}
+
 	}
 
 	@Test

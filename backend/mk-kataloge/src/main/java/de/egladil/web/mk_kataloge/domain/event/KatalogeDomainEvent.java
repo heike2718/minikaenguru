@@ -17,6 +17,8 @@ public interface KatalogeDomainEvent {
 
 	String TYPE_KATALOG_ANTRAG_RECEIVED = "KATALOG:KatalogAntragReceived";
 
+	String TYPE_MAIL_NOT_SENT = "KATALOG:MailNotSent";
+
 	/**
 	 * @return LocalDateTime
 	 */

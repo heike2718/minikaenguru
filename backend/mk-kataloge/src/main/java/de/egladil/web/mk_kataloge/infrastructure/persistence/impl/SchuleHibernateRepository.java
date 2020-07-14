@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import de.egladil.web.mk_kataloge.domain.KatalogeRepository;
 import de.egladil.web.mk_kataloge.domain.SchuleRepository;
+import de.egladil.web.mk_kataloge.domain.error.DataInconsistencyException;
 import de.egladil.web.mk_kataloge.domain.error.DuplicateEntityException;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
 
@@ -34,7 +35,7 @@ public class SchuleHibernateRepository implements SchuleRepository {
 
 	@Transactional
 	@Override
-	public void addSchule(final Schule schule) {
+	public boolean addSchule(final Schule schule) {
 
 		if (schule == null) {
 
@@ -59,6 +60,8 @@ public class SchuleHibernateRepository implements SchuleRepository {
 		}
 
 		em.persist(schule);
+
+		return true;
 	}
 
 	@Override
@@ -104,6 +107,35 @@ public class SchuleHibernateRepository implements SchuleRepository {
 			.setParameter("ortKuerzel", schule.getOrtKuerzel());
 
 		return query.getResultList();
+	}
+
+	@Override
+	public Optional<Schule> findSchuleInOrtMitName(final String kuerzelOrt, final String name) {
+
+		if (StringUtils.isBlank(kuerzelOrt)) {
+
+			throw new IllegalArgumentException("kuerzelOrt darf nicht blank sein.");
+		}
+
+		if (StringUtils.isBlank(name)) {
+
+			throw new IllegalArgumentException("name darf nicht blank sein.");
+		}
+
+		TypedQuery<Schule> query = em.createNamedQuery(Schule.QUERY_FIND_SCHULE_IN_ORT_MIT_NAME, Schule.class)
+			.setParameter("ortKuerzel", kuerzelOrt).setParameter("name", name.trim().toLowerCase());
+
+		List<Schule> trefferliste = query.getResultList();
+
+		if (trefferliste.size() > 1) {
+
+			Schule schule = trefferliste.get(0);
+			throw new DataInconsistencyException("Es gibt mehr als eine Schule mit dem Namen '" + name + "' im Ort '" + kuerzelOrt
+				+ "', '" + schule.getOrtName() + "', Land '" + schule.getLandName() + "'.");
+
+		}
+
+		return trefferliste.isEmpty() ? Optional.empty() : Optional.of(trefferliste.get(0));
 	}
 
 }

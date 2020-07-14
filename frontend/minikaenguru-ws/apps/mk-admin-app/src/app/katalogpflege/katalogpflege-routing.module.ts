@@ -34,17 +34,17 @@ const katalogpflegeRoutes: Routes = [
 		component: SchulenListComponent
 	},
 	{
-		path: 'land-editor/:id',
+		path: 'land-editor',
 		canActivate: [AuthGuardService],
 		component: EditLandComponent
 	},
 	{
-		path: 'ort-editor/:id',
+		path: 'ort-editor',
 		canActivate: [AuthGuardService],
 		component: EditOrtComponent
 	},
 	{
-		path: 'schule-editor/:id',
+		path: 'schule-editor',
 		canActivate: [AuthGuardService],
 		component: EditSchuleComponent
 	}
