@@ -64,7 +64,7 @@ public class RenameOrtService {
 			if (optOrt.isEmpty()) {
 
 				throw new NotFoundException(Response.status(404)
-					.entity(ResponsePayload.messageOnly(MessagePayload.error("Diesen Ort gibt es nicht."))).build());
+					.entity(new ResponsePayload(MessagePayload.error("Diesen Ort gibt es nicht."), ortPayload)).build());
 			}
 
 			Ort ort = optOrt.get();
@@ -97,12 +97,16 @@ public class RenameOrtService {
 
 			schuleRepository.replaceSchulen(schulen);
 
-			return new ResponsePayload(MessagePayload.info("Der Ort wurde erfolgreich geändert."), ortPayload);
+			LOG.info("Anzahl geänderter Schulen: {}", schulen.size());
+
+			return new ResponsePayload(
+				MessagePayload.info("Der Ort wurde erfolgreich umbenannt. Anzahl geänderter Schulen: " + schulen.size()),
+				ortPayload);
 
 		} catch (PersistenceException e) {
 
 			LOG.error("Die Schulen zum Ort {} konnten nicht geändert werden: {}", ortPayload, e.getMessage(), e);
-			throw new KatalogAPIException("Die Orte von Schulen konnten wegen eines Serverfehlers nicht umbenannt werden.");
+			throw new KatalogAPIException("Der Ort konnte wegen eines Serverfehlers nicht umbenannt werden.");
 		}
 
 	}

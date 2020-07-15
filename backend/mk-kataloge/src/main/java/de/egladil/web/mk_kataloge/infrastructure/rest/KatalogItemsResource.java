@@ -32,6 +32,7 @@ import de.egladil.web.mk_kataloge.KatalogAPIApp;
 import de.egladil.web.mk_kataloge.application.KatalogFacade;
 import de.egladil.web.mk_kataloge.domain.KatalogItem;
 import de.egladil.web.mk_kataloge.domain.admin.CreateSchuleService;
+import de.egladil.web.mk_kataloge.domain.admin.RenameLandService;
 import de.egladil.web.mk_kataloge.domain.admin.RenameOrtService;
 import de.egladil.web.mk_kataloge.domain.admin.RenameSchuleService;
 import de.egladil.web.mk_kataloge.domain.apimodel.LandPayload;
@@ -71,6 +72,9 @@ public class KatalogItemsResource {
 
 	@Inject
 	RenameOrtService renameOrtService;
+
+	@Inject
+	RenameLandService renameLandService;
 
 	@GET
 	@Path("/laender")
@@ -115,7 +119,28 @@ public class KatalogItemsResource {
 		value = KatalogAPIApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
 			value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret, final LandPayload requestPayload) {
 
-		return null;
+		if (!expectedSecret.equals(secret)) {
+
+			String msg = "Unautorisierter Versuch, das Land " + requestPayload.kuerzel()
+				+ " umzubenennen: angemeldeter ADMIN=" + adminUuid + ", secret="
+				+ secret;
+
+			LOG.warn(msg);
+
+			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+
+			return Response.status(Status.FORBIDDEN)
+				.entity(ResponsePayload.messageOnly(MessagePayload.error("Netter Versuch, aber leider keine Berechtigung")))
+				.build();
+
+		}
+
+		ResponsePayload responsePayload = renameLandService.landUmbenennen(requestPayload);
+
+		LOG.info("ADMIN {} hat Land {} umbenannt: Erfolg = {}", StringUtils.abbreviate(adminUuid, 11), requestPayload,
+			responsePayload.getMessage().getMessage());
+
+		return Response.ok(responsePayload).build();
 	}
 
 	/**

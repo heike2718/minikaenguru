@@ -4,6 +4,8 @@
 // =====================================================
 package de.egladil.web.mk_kataloge.domain.apimodel;
 
+import java.util.Objects;
+
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -79,6 +81,33 @@ public class OrtPayload {
 	public String nameLand() {
 
 		return nameLand;
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(kuerzel);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+
+		if (this == obj) {
+
+			return true;
+		}
+
+		if (obj == null) {
+
+			return false;
+		}
+
+		if (getClass() != obj.getClass()) {
+
+			return false;
+		}
+		OrtPayload other = (OrtPayload) obj;
+		return Objects.equals(kuerzel, other.kuerzel);
 	}
 
 }

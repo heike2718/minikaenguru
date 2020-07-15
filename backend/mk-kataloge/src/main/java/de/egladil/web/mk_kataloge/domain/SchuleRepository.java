@@ -7,6 +7,7 @@ package de.egladil.web.mk_kataloge.domain;
 import java.util.List;
 import java.util.Optional;
 
+import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Land;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Ort;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
 
@@ -46,6 +47,11 @@ public interface SchuleRepository {
 	Optional<Ort> getOrt(String kuerzel);
 
 	/**
+	 * @return
+	 */
+	List<Land> loadLaender();
+
+	/**
 	 * @param  ortKuerzel
 	 * @return            List
 	 */
@@ -57,5 +63,11 @@ public interface SchuleRepository {
 	 * @return             List
 	 */
 	List<Ort> findOrteInLand(String landKuerzel);
+
+	/**
+	 * @param  landKuerzel
+	 * @return
+	 */
+	List<Schule> findSchulenInLand(String landKuerzel);
 
 }
