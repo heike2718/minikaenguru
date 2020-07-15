@@ -4,9 +4,10 @@
 // =====================================================
 package de.egladil.web.mk_kataloge.domain;
 
+import java.util.List;
 import java.util.Optional;
 
-import de.egladil.web.mk_kataloge.domain.error.DataInconsistencyException;
+import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Ort;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
 
 /**
@@ -23,23 +24,38 @@ public interface SchuleRepository {
 	boolean addSchule(Schule schule);
 
 	/**
-	 * Name einer Schule wird geändert.
+	 * @param  schulen
+	 * @return         List
 	 */
-	boolean replaceSchule(Schule schule);
+	boolean replaceSchulen(List<Schule> schulen);
 
 	/**
-	 * Sucht eine Schule gleichen Namens im gegebenen Ort.
+	 * Sucht die Schule mit dem gegeben kuerzel.
 	 *
-	 * @param  kuerzelOrt
-	 * @param  name
-	 * @return            Optional
-	 */
-	Optional<Schule> findSchuleInOrtMitName(String kuerzelOrt, String name) throws DataInconsistencyException;
-
-	/**
 	 * @param  kuerzel
 	 * @return         Optional
 	 */
-	Optional<Schule> findSchuleByKuerzel(String kuerzel);
+	Optional<Schule> getSchule(String kuerzel);
+
+	/**
+	 * Sucht den Ort mit dem gegebenen kuerzel.
+	 *
+	 * @param  kuerzel
+	 * @return         Optional
+	 */
+	Optional<Ort> getOrt(String kuerzel);
+
+	/**
+	 * @param  ortKuerzel
+	 * @return            List
+	 */
+	List<Schule> findSchulenInOrt(String ortKuerzel);
+
+	/**
+	 * @param  landKuerzel
+	 *                     String
+	 * @return             List
+	 */
+	List<Ort> findOrteInLand(String landKuerzel);
 
 }

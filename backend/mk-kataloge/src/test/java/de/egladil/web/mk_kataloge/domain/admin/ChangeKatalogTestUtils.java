@@ -4,7 +4,9 @@
 // =====================================================
 package de.egladil.web.mk_kataloge.domain.admin;
 
+import de.egladil.web.mk_kataloge.domain.apimodel.OrtPayload;
 import de.egladil.web.mk_kataloge.domain.apimodel.SchulePayload;
+import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Ort;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
 
 /**
@@ -19,7 +21,7 @@ public final class ChangeKatalogTestUtils {
 
 	}
 
-	static SchulePayload createPayloadForTest() {
+	static SchulePayload createSchulePayloadForTest() {
 
 		String kuerzel = "GHKGKGK";
 		String name = "Baumschule";
@@ -45,6 +47,28 @@ public final class ChangeKatalogTestUtils {
 		result.setOrtName(schulePayload.nameOrt());
 
 		return result;
+	}
+
+	static OrtPayload createOrtPayloadForTest() {
+
+		String kuerzel = "TFFFVHVH";
+		String name = "Brasilia";
+		String kuerzelLand = "BR";
+		String nameLand = "Brasilien";
+
+		return OrtPayload.create(kuerzel, name, kuerzelLand, nameLand);
+
+	}
+
+	static Ort mapFromOrtPayload(final OrtPayload ortPayload) {
+
+		Ort result = new Ort();
+		result.setKuerzel(ortPayload.kuerzel());
+		result.setName(ortPayload.name());
+		result.setLandKuerzel(ortPayload.kuerzelLand());
+		result.setLandName(ortPayload.nameLand());
+		return result;
+
 	}
 
 }

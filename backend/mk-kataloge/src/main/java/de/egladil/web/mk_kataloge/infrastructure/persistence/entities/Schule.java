@@ -39,6 +39,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 		name = "SCHULE_FIND_SCHULE_IN_ORT_MIT_NAME",
 		query = "select s from Schule s where s.ortKuerzel = :ortKuerzel and lower(s.name) = :name"),
 	@NamedQuery(
+		name = "SCHULE_FIND_WITH_ORTKUERZEL",
+		query = "select s from Schule s where s.ortKuerzel = :ortKuerzel"),
+	@NamedQuery(
 		name = "SCHULE_FIND_BY_KUERZEL", query = "select s from Schule s where s.kuerzel = :kuerzel"),
 	@NamedQuery(
 		name = "SCHULE_FIND_WITH_KUERZELN", query = "select s from Schule s where s.kuerzel IN :kuerzeln"),
@@ -64,6 +67,8 @@ public class Schule {
 	public static final String QUERY_COUNT_WITH_KUERZEL = "SCHULE_COUNT_WITH_KUERZEL";
 
 	public static final String QUERY_FIND_SCHULE_IN_ORT_MIT_NAME = "SCHULE_FIND_SCHULE_IN_ORT_MIT_NAME";
+
+	public static final String QUERY_FIND_SCHULEN_WITH_ORTKUERZEL = "SCHULE_FIND_WITH_ORTKUERZEL";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "schule_id_generator")

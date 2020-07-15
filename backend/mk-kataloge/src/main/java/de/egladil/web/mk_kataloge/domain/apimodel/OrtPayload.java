@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.annotations.StringLatin;
+import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Ort;
 
 /**
  * OrtPayload
@@ -35,6 +36,30 @@ public class OrtPayload {
 	@StringLatin
 	@NotBlank
 	private String nameLand;
+
+	public static OrtPayload create(@NotBlank final String kuerzel, @NotBlank final String name, @NotBlank final String kuerzelLand, @NotBlank final String nameLand) {
+
+		OrtPayload result = new OrtPayload();
+		result.kuerzel = kuerzel;
+		result.name = name;
+		result.kuerzelLand = kuerzelLand;
+		result.nameLand = nameLand;
+		return result;
+	}
+
+	/**
+	 * @param  ort
+	 * @return
+	 */
+	public static OrtPayload create(final Ort ort) {
+
+		OrtPayload result = new OrtPayload();
+		result.kuerzel = ort.getKuerzel();
+		result.name = ort.getName();
+		result.kuerzelLand = ort.getLandKuerzel();
+		result.nameLand = ort.getLandName();
+		return result;
+	}
 
 	public String kuerzel() {
 

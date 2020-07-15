@@ -32,6 +32,7 @@ import de.egladil.web.mk_kataloge.KatalogAPIApp;
 import de.egladil.web.mk_kataloge.application.KatalogFacade;
 import de.egladil.web.mk_kataloge.domain.KatalogItem;
 import de.egladil.web.mk_kataloge.domain.admin.CreateSchuleService;
+import de.egladil.web.mk_kataloge.domain.admin.RenameOrtService;
 import de.egladil.web.mk_kataloge.domain.admin.RenameSchuleService;
 import de.egladil.web.mk_kataloge.domain.apimodel.LandPayload;
 import de.egladil.web.mk_kataloge.domain.apimodel.OrtPayload;
@@ -67,6 +68,9 @@ public class KatalogItemsResource {
 
 	@Inject
 	RenameSchuleService renameSchuleService;
+
+	@Inject
+	RenameOrtService renameOrtService;
 
 	@GET
 	@Path("/laender")
@@ -132,7 +136,28 @@ public class KatalogItemsResource {
 		value = KatalogAPIApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
 			value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret, final OrtPayload requestPayload) {
 
-		return null;
+		if (!expectedSecret.equals(secret)) {
+
+			String msg = "Unautorisierter Versuch, den Ort " + requestPayload.kuerzel()
+				+ " umzubenennen: angemeldeter ADMIN=" + adminUuid + ", secret="
+				+ secret;
+
+			LOG.warn(msg);
+
+			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+
+			return Response.status(Status.FORBIDDEN)
+				.entity(ResponsePayload.messageOnly(MessagePayload.error("Netter Versuch, aber leider keine Berechtigung")))
+				.build();
+
+		}
+
+		ResponsePayload responsePayload = renameOrtService.ortUmbenennen(requestPayload);
+
+		LOG.info("ADMIN {} hat Ort {} umbenannt: Erfolg = {}", StringUtils.abbreviate(adminUuid, 11), requestPayload,
+			responsePayload.getMessage().getMessage());
+
+		return Response.ok(responsePayload).build();
 	}
 
 	/**
@@ -155,7 +180,7 @@ public class KatalogItemsResource {
 
 		if (!expectedSecret.equals(secret)) {
 
-			String msg = "Unautorisierter Versuch, eine die Schule " + requestPayload.kuerzel()
+			String msg = "Unautorisierter Versuch, die Schule " + requestPayload.kuerzel()
 				+ " umzubenennen: angemeldeter ADMIN=" + adminUuid + ", secret="
 				+ secret;
 

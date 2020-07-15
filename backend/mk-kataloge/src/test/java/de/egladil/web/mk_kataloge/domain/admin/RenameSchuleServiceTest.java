@@ -6,10 +6,12 @@ package de.egladil.web.mk_kataloge.domain.admin;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.PersistenceException;
@@ -24,9 +26,7 @@ import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_kataloge.domain.SchuleRepository;
 import de.egladil.web.mk_kataloge.domain.apimodel.SchulePayload;
-import de.egladil.web.mk_kataloge.domain.error.DataInconsistencyException;
 import de.egladil.web.mk_kataloge.domain.error.KatalogAPIException;
-import de.egladil.web.mk_kataloge.domain.event.DataInconsistencyRegistered;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
 
 /**
@@ -52,10 +52,10 @@ public class RenameSchuleServiceTest {
 	void should_ThrowNotFoundException_when_NichtVorhanden() {
 
 		// Arrange
-		SchulePayload schulePayload = ChangeKatalogTestUtils.createPayloadForTest();
+		SchulePayload schulePayload = ChangeKatalogTestUtils.createSchulePayloadForTest();
 		schulePayload = schulePayload.withEmailAuftraggeber("heike@web.de");
 
-		Mockito.when(schuleRepository.findSchuleByKuerzel(schulePayload.kuerzel()))
+		Mockito.when(schuleRepository.getSchule(schulePayload.kuerzel()))
 			.thenReturn(Optional.empty());
 
 		// Act + Assert
@@ -75,8 +75,6 @@ public class RenameSchuleServiceTest {
 			assertNull(responsePayload.getData());
 
 			Mockito.verify(mailDelegate, Mockito.times(0)).sendSchuleCreatedMailQuietly(schulePayload);
-
-			assertNull(service.getRegisteredDataInconsistency());
 		}
 
 	}
@@ -85,7 +83,7 @@ public class RenameSchuleServiceTest {
 	void should_throwWebApplicationException_when_OrtkuerzelFalsch() {
 
 		// Arrange
-		SchulePayload schulePayload = ChangeKatalogTestUtils.createPayloadForTest();
+		SchulePayload schulePayload = ChangeKatalogTestUtils.createSchulePayloadForTest();
 		schulePayload = schulePayload.withEmailAuftraggeber("heike@web.de");
 		Schule schule = ChangeKatalogTestUtils.mapFromSchulePayload(schulePayload);
 		schule.setKuerzel(schulePayload.kuerzel());
@@ -94,7 +92,7 @@ public class RenameSchuleServiceTest {
 		assertFalse(schulePayload.kuerzelOrt().equals(schule.getOrtKuerzel()));
 		assertEquals(schulePayload.kuerzelLand(), schule.getLandKuerzel());
 
-		Mockito.when(schuleRepository.findSchuleByKuerzel(schulePayload.kuerzel()))
+		Mockito.when(schuleRepository.getSchule(schulePayload.kuerzel()))
 			.thenReturn(Optional.of(schule));
 
 		// Act + Assert
@@ -110,12 +108,10 @@ public class RenameSchuleServiceTest {
 			ResponsePayload responsePayload = (ResponsePayload) e.getResponse().getEntity();
 			MessagePayload messagePayload = responsePayload.getMessage();
 			assertEquals("ERROR", messagePayload.getLevel());
-			assertEquals("Änderung abgelehnt: Ort oder Land passt nicht.", messagePayload.getMessage());
+			assertEquals("Umbenennung abgelehnt: Ort oder Land passt nicht.", messagePayload.getMessage());
 			assertNull(responsePayload.getData());
 
 			Mockito.verify(mailDelegate, Mockito.times(0)).sendSchuleCreatedMailQuietly(schulePayload);
-
-			assertNull(service.getRegisteredDataInconsistency());
 		}
 
 	}
@@ -124,7 +120,7 @@ public class RenameSchuleServiceTest {
 	void should_throwWebApplicationException_when_LandkuerzelFalsch() {
 
 		// Arrange
-		SchulePayload schulePayload = ChangeKatalogTestUtils.createPayloadForTest();
+		SchulePayload schulePayload = ChangeKatalogTestUtils.createSchulePayloadForTest();
 		schulePayload = schulePayload.withEmailAuftraggeber("heike@web.de");
 		Schule schule = ChangeKatalogTestUtils.mapFromSchulePayload(schulePayload);
 		schule.setKuerzel(schulePayload.kuerzel());
@@ -133,7 +129,7 @@ public class RenameSchuleServiceTest {
 		assertFalse(schulePayload.kuerzelLand().equals(schule.getLandKuerzel()));
 		assertEquals(schulePayload.kuerzelOrt(), schule.getOrtKuerzel());
 
-		Mockito.when(schuleRepository.findSchuleByKuerzel(schulePayload.kuerzel()))
+		Mockito.when(schuleRepository.getSchule(schulePayload.kuerzel()))
 			.thenReturn(Optional.of(schule));
 
 		// Act + Assert
@@ -149,12 +145,10 @@ public class RenameSchuleServiceTest {
 			ResponsePayload responsePayload = (ResponsePayload) e.getResponse().getEntity();
 			MessagePayload messagePayload = responsePayload.getMessage();
 			assertEquals("ERROR", messagePayload.getLevel());
-			assertEquals("Änderung abgelehnt: Ort oder Land passt nicht.", messagePayload.getMessage());
+			assertEquals("Umbenennung abgelehnt: Ort oder Land passt nicht.", messagePayload.getMessage());
 			assertNull(responsePayload.getData());
 
 			Mockito.verify(mailDelegate, Mockito.times(0)).sendSchuleCreatedMailQuietly(schulePayload);
-
-			assertNull(service.getRegisteredDataInconsistency());
 		}
 
 	}
@@ -163,7 +157,7 @@ public class RenameSchuleServiceTest {
 	void should_notPersistSchuleAndSendMail_when_AndereGleichenNamensVorhanden() {
 
 		// Arrange
-		SchulePayload schulePayload = ChangeKatalogTestUtils.createPayloadForTest().withEmailAuftraggeber("heike@web.de");
+		SchulePayload schulePayload = ChangeKatalogTestUtils.createSchulePayloadForTest().withEmailAuftraggeber("heike@web.de");
 
 		Schule dieSchule = ChangeKatalogTestUtils.mapFromSchulePayload(schulePayload);
 		dieSchule.setKuerzel(schulePayload.kuerzel());
@@ -171,10 +165,14 @@ public class RenameSchuleServiceTest {
 		Schule andereSchule = ChangeKatalogTestUtils.mapFromSchulePayload(schulePayload);
 		andereSchule.setKuerzel("GJLFUFUFU");
 
-		Mockito.when(schuleRepository.findSchuleByKuerzel(schulePayload.kuerzel())).thenReturn(Optional.of(dieSchule));
+		Mockito.when(schuleRepository.getSchule(schulePayload.kuerzel())).thenReturn(Optional.of(dieSchule));
 
-		Mockito.when(schuleRepository.findSchuleInOrtMitName(andereSchule.getOrtKuerzel(), andereSchule.getName()))
-			.thenReturn(Optional.of(andereSchule));
+		List<Schule> trefferliste = new ArrayList<>();
+		trefferliste.add(dieSchule);
+		trefferliste.add(andereSchule);
+
+		Mockito.when(schuleRepository.findSchulenInOrt(andereSchule.getOrtKuerzel()))
+			.thenReturn(trefferliste);
 
 		// Act
 		ResponsePayload responsePayload = service.schuleUmbenennen(schulePayload);
@@ -182,21 +180,21 @@ public class RenameSchuleServiceTest {
 		// Assert
 		MessagePayload messagePayload = responsePayload.getMessage();
 		assertEquals("WARN", messagePayload.getLevel());
-		assertEquals("Es gibt im gleichen Ort bereits eine andere Schule mit dem Namen Baumschule.", messagePayload.getMessage());
+		assertEquals(
+			"Umbenennung abgelehnt: Es gibt im gleichen Ort bereits eine andere Schule mit dem Namen Baumschule. Diese wurde zurückgegeben.",
+			messagePayload.getMessage());
 
 		SchulePayload responseData = (SchulePayload) responsePayload.getData();
 		assertEquals("GJLFUFUFU", responseData.kuerzel());
 
 		Mockito.verify(mailDelegate, Mockito.times(1)).sendSchuleCreatedMailQuietly(schulePayload);
-
-		assertNull(service.getRegisteredDataInconsistency());
 	}
 
 	@Test
 	void should_notPersistSchuleAndNotSendMail_when_AndereGleichenNamensVorhanden() {
 
 		// Arrange
-		SchulePayload schulePayload = ChangeKatalogTestUtils.createPayloadForTest();
+		SchulePayload schulePayload = ChangeKatalogTestUtils.createSchulePayloadForTest();
 
 		Schule dieSchule = ChangeKatalogTestUtils.mapFromSchulePayload(schulePayload);
 		dieSchule.setKuerzel(schulePayload.kuerzel());
@@ -204,10 +202,14 @@ public class RenameSchuleServiceTest {
 		Schule andereSchule = ChangeKatalogTestUtils.mapFromSchulePayload(schulePayload);
 		andereSchule.setKuerzel("GJLFUFUFU");
 
-		Mockito.when(schuleRepository.findSchuleByKuerzel(schulePayload.kuerzel())).thenReturn(Optional.of(dieSchule));
+		Mockito.when(schuleRepository.getSchule(schulePayload.kuerzel())).thenReturn(Optional.of(dieSchule));
 
-		Mockito.when(schuleRepository.findSchuleInOrtMitName(andereSchule.getOrtKuerzel(), andereSchule.getName()))
-			.thenReturn(Optional.of(andereSchule));
+		List<Schule> trefferliste = new ArrayList<>();
+		trefferliste.add(dieSchule);
+		trefferliste.add(andereSchule);
+
+		Mockito.when(schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt()))
+			.thenReturn(trefferliste);
 
 		// Act
 		ResponsePayload responsePayload = service.schuleUmbenennen(schulePayload);
@@ -215,63 +217,33 @@ public class RenameSchuleServiceTest {
 		// Assert
 		MessagePayload messagePayload = responsePayload.getMessage();
 		assertEquals("WARN", messagePayload.getLevel());
-		assertEquals("Es gibt im gleichen Ort bereits eine andere Schule mit dem Namen Baumschule.", messagePayload.getMessage());
+		assertEquals(
+			"Umbenennung abgelehnt: Es gibt im gleichen Ort bereits eine andere Schule mit dem Namen Baumschule. Diese wurde zurückgegeben.",
+			messagePayload.getMessage());
 
 		SchulePayload responseData = (SchulePayload) responsePayload.getData();
 		assertEquals("GJLFUFUFU", responseData.kuerzel());
 
 		Mockito.verify(mailDelegate, Mockito.times(0)).sendSchuleCreatedMailQuietly(schulePayload);
-
-		assertNull(service.getRegisteredDataInconsistency());
 	}
 
 	@Test
-	void should_createDataInconsistencyEventAndNotSendMail_when_DataInconsistencyDetected() {
+	void should_throwKatalogAPIExceptionAndNotSendMail_when_PersistenceException() {
 
 		// Arrange
-		SchulePayload schulePayload = ChangeKatalogTestUtils.createPayloadForTest().withEmailAuftraggeber("heike@web.de");
+		SchulePayload schulePayload = ChangeKatalogTestUtils.createSchulePayloadForTest().withEmailAuftraggeber("heike@web.de");
 		Schule schule = ChangeKatalogTestUtils.mapFromSchulePayload(schulePayload);
 		schule.setKuerzel(schulePayload.kuerzel());
 
-		Mockito.when(schuleRepository.findSchuleByKuerzel(schulePayload.kuerzel())).thenReturn(Optional.of(schule));
+		Mockito.when(schuleRepository.getSchule(schulePayload.kuerzel())).thenReturn(Optional.of(schule));
 
-		Mockito.when(schuleRepository.findSchuleInOrtMitName(schule.getOrtKuerzel(), schule.getName()))
-			.thenThrow(new DataInconsistencyException("Mehrere gleichnamige Schulen im Ort."));
+		List<Schule> trefferliste = new ArrayList<>();
+		trefferliste.add(schule);
 
-		// Act + Assert
-		try {
+		Mockito.when(schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt()))
+			.thenReturn(trefferliste);
 
-			service.schuleUmbenennen(schulePayload);
-
-			fail("keine KatalogAPIException");
-		} catch (KatalogAPIException e) {
-
-			assertEquals("schuleUmbenennen: Mehrere gleichnamige Schulen im Ort.", e.getMessage());
-
-			Mockito.verify(mailDelegate, Mockito.times(0)).sendSchuleCreatedMailQuietly(schulePayload);
-			DataInconsistencyRegistered eventObject = service.getRegisteredDataInconsistency();
-
-			assertNotNull(eventObject);
-			assertNotNull(eventObject.occuredOn());
-			assertEquals("schuleUmbenennen: Mehrere gleichnamige Schulen im Ort.", eventObject.toString());
-		}
-
-	}
-
-	@Test
-	void should_createDataInconsistencyEventAndNotSendMail_when_PersistenceException() {
-
-		// Arrange
-		SchulePayload schulePayload = ChangeKatalogTestUtils.createPayloadForTest().withEmailAuftraggeber("heike@web.de");
-		Schule schule = ChangeKatalogTestUtils.mapFromSchulePayload(schulePayload);
-		schule.setKuerzel(schulePayload.kuerzel());
-
-		Mockito.when(schuleRepository.findSchuleByKuerzel(schulePayload.kuerzel())).thenReturn(Optional.of(schule));
-
-		Mockito.when(schuleRepository.findSchuleInOrtMitName(schule.getOrtKuerzel(), schule.getName()))
-			.thenReturn(Optional.empty());
-
-		Mockito.when(schuleRepository.replaceSchule(schule))
+		Mockito.when(schuleRepository.replaceSchulen(Arrays.asList(new Schule[] { schule })))
 			.thenThrow(new PersistenceException("DB-Exception beim Speichern."));
 
 		// Act + Assert
@@ -285,9 +257,6 @@ public class RenameSchuleServiceTest {
 			assertEquals("Die Schule konnte wegen eines Serverfehlers nicht geändert werden.", e.getMessage());
 
 			Mockito.verify(mailDelegate, Mockito.times(0)).sendSchuleCreatedMailQuietly(schulePayload);
-			DataInconsistencyRegistered eventObject = service.getRegisteredDataInconsistency();
-
-			assertNull(eventObject);
 		}
 
 	}
@@ -296,7 +265,7 @@ public class RenameSchuleServiceTest {
 	void should_persistSchuleAndSendMail_when_VorhandenUndMailadresseVorhanden() {
 
 		// Arrange
-		SchulePayload schulePayload = ChangeKatalogTestUtils.createPayloadForTest().withEmailAuftraggeber("heike@web.de");
+		SchulePayload schulePayload = ChangeKatalogTestUtils.createSchulePayloadForTest().withEmailAuftraggeber("heike@web.de");
 
 		Schule schule = ChangeKatalogTestUtils.mapFromSchulePayload(schulePayload);
 		schule.setKuerzel(schulePayload.kuerzel());
@@ -304,12 +273,15 @@ public class RenameSchuleServiceTest {
 
 		assertFalse("Baumschule".equals(schule.getName()));
 
-		Mockito.when(schuleRepository.findSchuleByKuerzel(schulePayload.kuerzel())).thenReturn(Optional.of(schule));
+		Mockito.when(schuleRepository.getSchule(schulePayload.kuerzel())).thenReturn(Optional.of(schule));
 
-		Mockito.when(schuleRepository.findSchuleInOrtMitName(schule.getOrtKuerzel(), schule.getName()))
-			.thenReturn(Optional.of(schule));
+		List<Schule> trefferliste = new ArrayList<>();
+		trefferliste.add(schule);
 
-		Mockito.when(schuleRepository.replaceSchule(schule))
+		Mockito.when(schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt()))
+			.thenReturn(trefferliste);
+
+		Mockito.when(schuleRepository.replaceSchulen(Arrays.asList(new Schule[] { schule })))
 			.thenReturn(Boolean.TRUE);
 
 		// Act
@@ -327,16 +299,15 @@ public class RenameSchuleServiceTest {
 		assertEquals(schulePayload, responseData);
 
 		Mockito.verify(mailDelegate, Mockito.times(1)).sendSchuleCreatedMailQuietly(schulePayload);
-		assertNull(service.getRegisteredDataInconsistency());
 	}
 
 	@Test
 	void should_persistSchuleAndNotSendMail_when_VorhandenUndMailadresseNichtVorhanden() {
 
 		// Arrange
-		SchulePayload schulePayload = ChangeKatalogTestUtils.createPayloadForTest();
+		SchulePayload schulePayload = ChangeKatalogTestUtils.createSchulePayloadForTest();
 
-		assertNull(schulePayload.emailAuftraggeber());
+		assertEquals("", schulePayload.emailAuftraggeber());
 
 		Schule schule = ChangeKatalogTestUtils.mapFromSchulePayload(schulePayload);
 		schule.setKuerzel(schulePayload.kuerzel());
@@ -344,12 +315,15 @@ public class RenameSchuleServiceTest {
 
 		assertFalse("Baumschule".equals(schule.getName()));
 
-		Mockito.when(schuleRepository.findSchuleByKuerzel(schulePayload.kuerzel())).thenReturn(Optional.of(schule));
+		Mockito.when(schuleRepository.getSchule(schulePayload.kuerzel())).thenReturn(Optional.of(schule));
 
-		Mockito.when(schuleRepository.findSchuleInOrtMitName(schule.getOrtKuerzel(), schule.getName()))
-			.thenReturn(Optional.of(schule));
+		List<Schule> trefferliste = new ArrayList<>();
+		trefferliste.add(schule);
 
-		Mockito.when(schuleRepository.replaceSchule(schule))
+		Mockito.when(schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt()))
+			.thenReturn(trefferliste);
+
+		Mockito.when(schuleRepository.replaceSchulen(Arrays.asList(new Schule[] { schule })))
 			.thenReturn(Boolean.TRUE);
 
 		// Act
@@ -367,7 +341,6 @@ public class RenameSchuleServiceTest {
 		assertEquals(schulePayload, responseData);
 
 		Mockito.verify(mailDelegate, Mockito.times(0)).sendSchuleCreatedMailQuietly(schulePayload);
-		assertNull(service.getRegisteredDataInconsistency());
 	}
 
 }

@@ -4,10 +4,11 @@
 // =====================================================
 package de.egladil.web.mk_kataloge.domain.admin;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.NotFoundException;
@@ -22,10 +23,7 @@ import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_kataloge.domain.SchuleRepository;
 import de.egladil.web.mk_kataloge.domain.apimodel.SchulePayload;
-import de.egladil.web.mk_kataloge.domain.error.DataInconsistencyException;
 import de.egladil.web.mk_kataloge.domain.error.KatalogAPIException;
-import de.egladil.web.mk_kataloge.domain.event.DataInconsistencyRegistered;
-import de.egladil.web.mk_kataloge.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
 
 /**
@@ -41,11 +39,6 @@ public class RenameSchuleService {
 
 	@Inject
 	ChangeSchulenMailDelegate mailDelegate;
-
-	@Inject
-	Event<DataInconsistencyRegistered> dataInconsistencyEvent;
-
-	private DataInconsistencyRegistered registeredDataInconsistency;
 
 	private boolean test;
 
@@ -72,7 +65,7 @@ public class RenameSchuleService {
 
 		try {
 
-			Optional<Schule> optSchule = schuleRepository.findSchuleByKuerzel(schulePayload.kuerzel());
+			Optional<Schule> optSchule = schuleRepository.getSchule(schulePayload.kuerzel());
 
 			if (optSchule.isEmpty()) {
 
@@ -85,15 +78,18 @@ public class RenameSchuleService {
 			if (!schule.getOrtKuerzel().equals(schulePayload.kuerzelOrt())
 				|| !schule.getLandKuerzel().equals(schulePayload.kuerzelLand())) {
 
-				String msg = "Änderung abgelehnt: Ort oder Land passt nicht.";
+				String msg = "Umbenennung abgelehnt: Ort oder Land passt nicht.";
 				LOG.warn(msg + " - " + schule.printForLog() + ", " + schulePayload.toString());
 				throw new WebApplicationException(
 					Response.status(412).entity(ResponsePayload.messageOnly(MessagePayload.error(msg))).build());
 			}
 
-			optSchule = schuleRepository.findSchuleInOrtMitName(schulePayload.kuerzelOrt(), schulePayload.name());
+			List<Schule> schulen = schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt());
+			optSchule = schulen.stream()
+				.filter(s -> !s.getKuerzel().equals(schulePayload.kuerzel()) && s.getName().equalsIgnoreCase(schulePayload.name()))
+				.findFirst();
 
-			if (optSchule.isPresent() && !optSchule.get().getKuerzel().equals(schulePayload.kuerzel())) {
+			if (optSchule.isPresent()) {
 
 				SchulePayload result = SchulePayload.create(optSchule.get());
 
@@ -102,7 +98,10 @@ public class RenameSchuleService {
 					this.mailDelegate.sendSchuleCreatedMailQuietly(schulePayload);
 				}
 				return new ResponsePayload(MessagePayload.warn(
-					"Es gibt im gleichen Ort bereits eine andere Schule mit dem Namen " + schulePayload.name() + "."), result);
+					"Umbenennung abgelehnt: Es gibt im gleichen Ort bereits eine andere Schule mit dem Namen "
+						+ schulePayload.name()
+						+ ". Diese wurde zurückgegeben."),
+					result);
 			}
 
 			if (test) {
@@ -113,7 +112,7 @@ public class RenameSchuleService {
 
 			schule.setName(schulePayload.name());
 
-			boolean replaced = schuleRepository.replaceSchule(schule);
+			boolean replaced = schuleRepository.replaceSchulen(Arrays.asList(new Schule[] { schule }));
 			LOG.debug("Schule replaced=" + replaced);
 
 			if (StringUtils.isNotBlank(schulePayload.emailAuftraggeber())) {
@@ -125,21 +124,11 @@ public class RenameSchuleService {
 			}
 
 			return new ResponsePayload(MessagePayload.info("Die Schule wurde erfolgreich geändert."), schulePayload);
-		} catch (DataInconsistencyException e) {
-
-			String msg = "schuleUmbenennen: " + e.getMessage();
-			registeredDataInconsistency = new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
-			throw new KatalogAPIException(registeredDataInconsistency.message());
 		} catch (PersistenceException e) {
 
 			LOG.error("Die Schule {} konnte nicht geändert werden: {}", schulePayload, e.getMessage(), e);
 			throw new KatalogAPIException("Die Schule konnte wegen eines Serverfehlers nicht geändert werden.");
 		}
-	}
-
-	DataInconsistencyRegistered getRegisteredDataInconsistency() {
-
-		return registeredDataInconsistency;
 	}
 
 }

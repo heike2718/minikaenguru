@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
 import { ResponsePayload, MessageService, Message } from '@minikaenguru-ws/common-messages';
 
-import { KatalogpflegeItem, Katalogpflegetyp, KuerzelAPIModel, SchulePayload } from '../katalogpflege/katalogpflege.model';
+import { KatalogpflegeItem, Katalogpflegetyp, KuerzelAPIModel, SchulePayload, OrtPayload, LandPayload } from '../katalogpflege/katalogpflege.model';
 
 @Injectable({
 	providedIn: 'root'
@@ -74,6 +74,26 @@ export class KatalogHttpService {
 		let url = environment.apiUrl + '/wb-admin/kataloge/schulen';
 
 		return this.http.put(url, schulePayload).pipe(
+			map(body => body as ResponsePayload)
+		);
+
+	}
+
+	public renameOrt(ortPayload: OrtPayload): Observable<ResponsePayload> {
+
+		let url = environment.apiUrl + '/wb-admin/kataloge/orte';
+
+		return this.http.put(url, ortPayload).pipe(
+			map(body => body as ResponsePayload)
+		);
+
+	}
+
+	public renameLand(landPayload: LandPayload): Observable<ResponsePayload> {
+
+		let url = environment.apiUrl + '/wb-admin/kataloge/laender';
+
+		return this.http.put(url, landPayload).pipe(
 			map(body => body as ResponsePayload)
 		);
 

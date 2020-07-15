@@ -21,6 +21,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.annotations.StringLatin;
@@ -37,6 +39,8 @@ import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class KatalogAdminResource {
+
+	private static final Logger LOG = LoggerFactory.getLogger(KatalogAdminResource.class);
 
 	@Context
 	SecurityContext securityContext;
@@ -81,6 +85,8 @@ public class KatalogAdminResource {
 	public Response renameOrt(final OrtPayload requestPayload) {
 
 		String uuid = securityContext.getUserPrincipal().getName();
+
+		LOG.debug("Start: uuid={}, {}", uuid, requestPayload);
 		return katalogResourceAdapter.renameOrt(uuid, katalogAdminSecret, requestPayload);
 	}
 
