@@ -52,7 +52,7 @@ public class SchulePayload {
 
 	@JsonProperty
 	@Email
-	private String emailAuftraggeber;
+	private String emailAuftraggeber = "";
 
 	public static SchulePayload create(final String kuerzel, final String name, final String kuerzelOrt, final String nameOrt, final String kuerzelLand, final String nameLand) {
 

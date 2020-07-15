@@ -5,10 +5,8 @@
 package de.egladil.web.mk_kataloge.domain.admin;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.Optional;
@@ -24,10 +22,9 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_kataloge.domain.SchuleRepository;
 import de.egladil.web.mk_kataloge.domain.apimodel.SchulePayload;
 import de.egladil.web.mk_kataloge.domain.error.DataInconsistencyException;
+import de.egladil.web.mk_kataloge.domain.error.DuplicateEntityException;
 import de.egladil.web.mk_kataloge.domain.error.KatalogAPIException;
 import de.egladil.web.mk_kataloge.domain.event.DataInconsistencyRegistered;
-import de.egladil.web.mk_kataloge.domain.event.MailNotSent;
-import de.egladil.web.mk_kataloge.domain.katalogantrag.KatalogMailService;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
 
 /**
@@ -37,23 +34,23 @@ public class CreateSchuleServiceTest {
 
 	private SchuleRepository schuleRepository;
 
-	private KatalogMailService mailService;
+	private ChangeSchulenMailDelegate mailDelegate;
 
 	private CreateSchuleService service;
 
 	@BeforeEach
 	void setUp() {
 
+		mailDelegate = Mockito.mock(ChangeSchulenMailDelegate.class);
 		schuleRepository = Mockito.mock(SchuleRepository.class);
-		mailService = KatalogMailService.createForTest();
-		service = CreateSchuleService.createForTest(schuleRepository, mailService);
+		service = CreateSchuleService.createForTest(schuleRepository, mailDelegate);
 	}
 
 	@Test
 	void should_mapSchulePayloadToSchule() {
 
 		// Arrange
-		SchulePayload schulePayload = createPayloadForTest();
+		SchulePayload schulePayload = ChangeKatalogTestUtils.createPayloadForTest();
 
 		// Act
 		Schule schule = service.mapFromSchulePayload(schulePayload);
@@ -73,7 +70,7 @@ public class CreateSchuleServiceTest {
 	void should_notPersistSchuleAndSendMail_when_Vorhanden() {
 
 		// Arrange
-		SchulePayload schulePayload = this.createPayloadForTest();
+		SchulePayload schulePayload = ChangeKatalogTestUtils.createPayloadForTest();
 		schulePayload = schulePayload.withEmailAuftraggeber("heike@web.de");
 		Schule schule = service.mapFromSchulePayload(schulePayload);
 		schule.setKuerzel(schulePayload.kuerzel());
@@ -91,17 +88,18 @@ public class CreateSchuleServiceTest {
 		SchulePayload responseData = (SchulePayload) responsePayload.getData();
 		assertEquals(schulePayload, responseData);
 
-		assertNull(service.getMailNotSent());
+		Mockito.verify(mailDelegate, Mockito.times(1)).sendSchuleCreatedMailQuietly(schulePayload);
+
 		assertNull(service.getRegisteredDataInconsistency());
 
-		assertTrue(mailService.isMailSent());
+		Mockito.verify(mailDelegate, Mockito.times(1)).sendSchuleCreatedMailQuietly(schulePayload);
 	}
 
 	@Test
 	void should_notPersistSchuleAndNotSendMail_when_VorhandenAberKeineAuftraggeberMail() {
 
 		// Arrange
-		SchulePayload schulePayload = this.createPayloadForTest();
+		SchulePayload schulePayload = ChangeKatalogTestUtils.createPayloadForTest();
 		Schule schule = service.mapFromSchulePayload(schulePayload);
 		schule.setKuerzel(schulePayload.kuerzel());
 		Mockito.when(schuleRepository.findSchuleInOrtMitName(schule.getOrtKuerzel(), schule.getName()))
@@ -118,10 +116,8 @@ public class CreateSchuleServiceTest {
 		SchulePayload responseData = (SchulePayload) responsePayload.getData();
 		assertEquals(schulePayload, responseData);
 
-		assertNull(service.getMailNotSent());
+		Mockito.verify(mailDelegate, Mockito.times(0)).sendSchuleCreatedMailQuietly(schulePayload);
 		assertNull(service.getRegisteredDataInconsistency());
-
-		assertFalse(mailService.isMailSent());
 
 	}
 
@@ -129,7 +125,7 @@ public class CreateSchuleServiceTest {
 	void should_persistSchuleAndSendMail_when_NichtVorhanden() {
 
 		// Arrange
-		SchulePayload schulePayload = this.createPayloadForTest();
+		SchulePayload schulePayload = ChangeKatalogTestUtils.createPayloadForTest();
 		schulePayload = schulePayload.withEmailAuftraggeber("heike@web.de");
 		Schule schule = service.mapFromSchulePayload(schulePayload);
 		schule.setKuerzel(schulePayload.kuerzel());
@@ -149,17 +145,15 @@ public class CreateSchuleServiceTest {
 		SchulePayload responseData = (SchulePayload) responsePayload.getData();
 		assertEquals(schulePayload, responseData);
 
-		assertNull(service.getMailNotSent());
+		Mockito.verify(mailDelegate, Mockito.times(1)).sendSchuleCreatedMailQuietly(schulePayload);
 		assertNull(service.getRegisteredDataInconsistency());
-
-		assertTrue(mailService.isMailSent());
 	}
 
 	@Test
 	void should_persistSchuleAndNotSendMail_when_NichtVorhandenUndKeineEmpfaengermail() {
 
 		// Arrange
-		SchulePayload schulePayload = this.createPayloadForTest();
+		SchulePayload schulePayload = ChangeKatalogTestUtils.createPayloadForTest();
 		Schule schule = service.mapFromSchulePayload(schulePayload);
 		schule.setKuerzel(schulePayload.kuerzel());
 		Mockito.when(schuleRepository.findSchuleInOrtMitName(schule.getOrtKuerzel(), schule.getName()))
@@ -178,17 +172,15 @@ public class CreateSchuleServiceTest {
 		SchulePayload responseData = (SchulePayload) responsePayload.getData();
 		assertEquals(schulePayload, responseData);
 
-		assertNull(service.getMailNotSent());
+		Mockito.verify(mailDelegate, Mockito.times(0)).sendSchuleCreatedMailQuietly(schulePayload);
 		assertNull(service.getRegisteredDataInconsistency());
-
-		assertFalse(mailService.isMailSent());
 	}
 
 	@Test
 	void should_mailserverExceptionNotPreventOk_when_NichtVorhanden() {
 
 		// Arrange
-		SchulePayload schulePayload = this.createPayloadForTest();
+		SchulePayload schulePayload = ChangeKatalogTestUtils.createPayloadForTest();
 		schulePayload = schulePayload.withEmailAuftraggeber("heike@web.de");
 		Schule schule = service.mapFromSchulePayload(schulePayload);
 		schule.setKuerzel(schulePayload.kuerzel());
@@ -197,12 +189,11 @@ public class CreateSchuleServiceTest {
 
 		Mockito.when(schuleRepository.addSchule(schule)).thenReturn(Boolean.TRUE);
 
-		mailService = KatalogMailService.createForTestWithMailException();
-
-		CreateSchuleService theService = CreateSchuleService.createForTest(schuleRepository, mailService);
+		Mockito.when(mailDelegate.sendSchuleCreatedMailQuietly(schulePayload))
+			.thenReturn(Boolean.FALSE);
 
 		// Act
-		ResponsePayload responsePayload = theService.schuleAnlegen(schulePayload);
+		ResponsePayload responsePayload = service.schuleAnlegen(schulePayload);
 
 		// Assert
 		MessagePayload messagePayload = responsePayload.getMessage();
@@ -212,26 +203,20 @@ public class CreateSchuleServiceTest {
 		SchulePayload responseData = (SchulePayload) responsePayload.getData();
 		assertEquals(schulePayload, responseData);
 
-		assertNotNull(theService.getMailNotSent());
-		assertNull(theService.getRegisteredDataInconsistency());
-
-		MailNotSent eventObject = theService.getMailNotSent();
-		assertNotNull(eventObject.occuredOn());
-		assertEquals("Die Mail konnte nicht gesendet werden: Das ist eine gemockte Mailexception", eventObject.toString());
-
-		assertFalse(mailService.isMailSent());
+		Mockito.verify(mailDelegate, Mockito.times(1)).sendSchuleCreatedMailQuietly(schulePayload);
+		assertNull(service.getRegisteredDataInconsistency());
 	}
 
 	@Test
 	void should_createDataInconsistencyEventAndNotSendMail_when_DataInconsistencyDetected() {
 
 		// Arrange
-		SchulePayload schulePayload = this.createPayloadForTest();
+		SchulePayload schulePayload = ChangeKatalogTestUtils.createPayloadForTest();
 		schulePayload = schulePayload.withEmailAuftraggeber("heike@web.de");
 		Schule schule = service.mapFromSchulePayload(schulePayload);
 		schule.setKuerzel(schulePayload.kuerzel());
 		Mockito.when(schuleRepository.findSchuleInOrtMitName(schule.getOrtKuerzel(), schule.getName()))
-			.thenReturn(Optional.empty());
+			.thenThrow(new DataInconsistencyException("irgendwas in der DB ist falsch."));
 
 		Mockito.when(schuleRepository.addSchule(schule))
 			.thenThrow(new DataInconsistencyException("irgendwas in der DB ist falsch."));
@@ -246,15 +231,46 @@ public class CreateSchuleServiceTest {
 
 			assertEquals("schuleAnlegen: irgendwas in der DB ist falsch.", e.getMessage());
 
-			assertNull(service.getMailNotSent());
+			Mockito.verify(mailDelegate, Mockito.times(0)).sendSchuleCreatedMailQuietly(schulePayload);
 			DataInconsistencyRegistered eventObject = service.getRegisteredDataInconsistency();
 
 			assertNotNull(eventObject);
 			assertNotNull(eventObject.occuredOn());
 			assertEquals("schuleAnlegen: irgendwas in der DB ist falsch.", eventObject.toString());
+		}
 
-			assertFalse(mailService.isMailSent());
+	}
 
+	@Test
+	void should_createDataInconsistencyEventAndNotSendMail_when_DuplicateEntryDetected() {
+
+		// Arrange
+		SchulePayload schulePayload = ChangeKatalogTestUtils.createPayloadForTest();
+		schulePayload = schulePayload.withEmailAuftraggeber("heike@web.de");
+		Schule schule = service.mapFromSchulePayload(schulePayload);
+		schule.setKuerzel(schulePayload.kuerzel());
+		Mockito.when(schuleRepository.findSchuleInOrtMitName(schule.getOrtKuerzel(), schule.getName()))
+			.thenReturn(Optional.empty());
+
+		Mockito.when(schuleRepository.addSchule(schule))
+			.thenThrow(new DuplicateEntityException("Das Schulkürzel gibet schon."));
+
+		// Act + Assert
+		try {
+
+			service.schuleAnlegen(schulePayload);
+
+			fail("keine KatalogAPIException");
+		} catch (KatalogAPIException e) {
+
+			assertEquals("schuleAnlegen: Das Schulkürzel gibet schon.", e.getMessage());
+
+			Mockito.verify(mailDelegate, Mockito.times(0)).sendSchuleCreatedMailQuietly(schulePayload);
+			DataInconsistencyRegistered eventObject = service.getRegisteredDataInconsistency();
+
+			assertNotNull(eventObject);
+			assertNotNull(eventObject.occuredOn());
+			assertEquals("schuleAnlegen: Das Schulkürzel gibet schon.", eventObject.toString());
 		}
 
 	}
@@ -263,7 +279,7 @@ public class CreateSchuleServiceTest {
 	void should_throwExceptionAndNotSendMail_when_PersistenceException() {
 
 		// Arrange
-		SchulePayload schulePayload = this.createPayloadForTest();
+		SchulePayload schulePayload = ChangeKatalogTestUtils.createPayloadForTest();
 		schulePayload = schulePayload.withEmailAuftraggeber("heike@web.de");
 		Schule schule = service.mapFromSchulePayload(schulePayload);
 		schule.setKuerzel(schulePayload.kuerzel());
@@ -283,27 +299,10 @@ public class CreateSchuleServiceTest {
 
 			assertEquals("Die Schule konnte wegen eines Serverfehlers nicht angelegt werden.", e.getMessage());
 
-			assertNull(service.getMailNotSent());
+			Mockito.verify(mailDelegate, Mockito.times(0)).sendSchuleCreatedMailQuietly(schulePayload);
 			DataInconsistencyRegistered eventObject = service.getRegisteredDataInconsistency();
 			assertNull(eventObject);
-
-			assertFalse(mailService.isMailSent());
 		}
-
-	}
-
-	private SchulePayload createPayloadForTest() {
-
-		String kuerzel = "GHKGKGK";
-		String name = "Baumschule";
-		String kuerzelOrt = "TFFFVHVH";
-		String nameOrt = "Brasilia";
-		String kuerzelLand = "BR";
-		String nameLand = "Brasilien";
-
-		SchulePayload schulePayload = SchulePayload.create(kuerzel, name, kuerzelOrt, nameOrt, kuerzelLand, nameLand);
-
-		return schulePayload;
 
 	}
 
