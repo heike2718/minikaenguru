@@ -12,21 +12,18 @@ import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.egladil.web.commons_mailer.DefaultEmailDaten;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_kataloge.domain.SchuleRepository;
 import de.egladil.web.mk_kataloge.domain.apimodel.SchulePayload;
 import de.egladil.web.mk_kataloge.domain.error.DataInconsistencyException;
+import de.egladil.web.mk_kataloge.domain.error.DuplicateEntityException;
 import de.egladil.web.mk_kataloge.domain.error.KatalogAPIException;
 import de.egladil.web.mk_kataloge.domain.event.DataInconsistencyRegistered;
 import de.egladil.web.mk_kataloge.domain.event.LoggableEventDelegate;
-import de.egladil.web.mk_kataloge.domain.event.MailNotSent;
-import de.egladil.web.mk_kataloge.domain.katalogantrag.KatalogMailService;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
 
 /**
@@ -37,31 +34,24 @@ public class CreateSchuleService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CreateSchuleService.class);
 
-	@ConfigProperty(name = "bccEmpfaengerSchulkatalogantrag", defaultValue = "minikaenguru@egladil.de")
-	String bccEmpfaenger;
-
 	@Inject
 	SchuleRepository schuleRepository;
 
 	@Inject
-	KatalogMailService mailService;
+	ChangeSchulenMailDelegate mailDelegate;
 
 	@Inject
 	Event<DataInconsistencyRegistered> dataInconsistencyEvent;
 
-	Event<MailNotSent> mailNotSentEvent;
-
 	private DataInconsistencyRegistered registeredDataInconsistency;
-
-	private MailNotSent mailNotSent;
 
 	private boolean test;
 
-	public static CreateSchuleService createForTest(final SchuleRepository schuleRepo, final KatalogMailService mailService) {
+	public static CreateSchuleService createForTest(final SchuleRepository schuleRepo, final ChangeSchulenMailDelegate mailDelegate) {
 
 		CreateSchuleService result = new CreateSchuleService();
 		result.schuleRepository = schuleRepo;
-		result.mailService = mailService;
+		result.mailDelegate = mailDelegate;
 		result.test = true;
 		return result;
 	}
@@ -86,7 +76,7 @@ public class CreateSchuleService {
 
 				if (StringUtils.isNotBlank(schulePayload.emailAuftraggeber())) {
 
-					this.sendSchuleCreatedMailQuietly(schulePayload);
+					this.mailDelegate.sendSchuleCreatedMailQuietly(schulePayload);
 				}
 				return new ResponsePayload(MessagePayload.warn("Diese Schule gibt es bereits."), result);
 			}
@@ -104,15 +94,15 @@ public class CreateSchuleService {
 
 			if (StringUtils.isNotBlank(schulePayload.emailAuftraggeber())) {
 
-				this.sendSchuleCreatedMailQuietly(schulePayload);
+				this.mailDelegate.sendSchuleCreatedMailQuietly(schulePayload);
 			} else {
 
-				LOG.info("emailAuftraggeber war blank - keine Mail gesendet.");
+				LOG.debug("emailAuftraggeber war blank - keine Mail gesendet.");
 			}
 
 			return new ResponsePayload(MessagePayload.info("Die Schule wurde erfolgreich angelegt."), schulePayload);
 
-		} catch (DataInconsistencyException e) {
+		} catch (DataInconsistencyException | DuplicateEntityException e) {
 
 			String msg = "schuleAnlegen: " + e.getMessage();
 			registeredDataInconsistency = new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
@@ -137,40 +127,9 @@ public class CreateSchuleService {
 		return result;
 	}
 
-	private void sendSchuleCreatedMailQuietly(final SchulePayload schulePayload) {
-
-		try {
-
-			DefaultEmailDaten emailDaten = createMailDaten(schulePayload);
-			this.mailService.sendMail(emailDaten);
-		} catch (Exception e) {
-
-			String msg = "Die Mail konnte nicht gesendet werden: " + e.getMessage();
-			LOG.warn(msg);
-
-			this.mailNotSent = new LoggableEventDelegate().fireMailNotSentEvent(msg, mailNotSentEvent);
-		}
-	}
-
-	private DefaultEmailDaten createMailDaten(final SchulePayload schulePayload) {
-
-		DefaultEmailDaten result = new DefaultEmailDaten();
-		result.setBetreff("Minikänguru: Schulkatalog");
-		result.setText(new SchuleEingetragenMailtextGenerator().getSchuleEingetragenText(schulePayload));
-		result.setEmpfaenger(schulePayload.emailAuftraggeber());
-		result.addHiddenEmpfaenger(bccEmpfaenger);
-		return result;
-
-	}
-
 	DataInconsistencyRegistered getRegisteredDataInconsistency() {
 
 		return registeredDataInconsistency;
-	}
-
-	MailNotSent getMailNotSent() {
-
-		return mailNotSent;
 	}
 
 }

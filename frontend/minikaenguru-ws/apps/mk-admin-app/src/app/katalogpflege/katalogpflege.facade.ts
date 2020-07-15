@@ -169,11 +169,25 @@ export class KatalogpflegeFacade {
 			}
 			case 'SCHULE':
 				{
-					const kuerzelAPIModel: KuerzelAPIModel = {
+					const schulePayload: SchulePayload = {
+						emailAuftraggeber: '',
+						kuerzel: item.kuerzel,
+						name: item.name,
+						kuerzelLand: item.parent.parent.kuerzel,
+						nameLand: item.parent.parent.name,
 						kuerzelOrt: item.parent.kuerzel,
-						kuerzelSchule: item.kuerzel
-					}
-					this.store.dispatch(KatalogpflegeActions.schulePayloadCreated({ schuleEditorModel: this.createTheNeueSchuleEditorModel(kuerzelAPIModel, item) }));
+						nameOrt: item.parent.name
+					};
+
+					const schuleEditorModel: SchuleEditorModel = {
+						kuerzelLandDisabled: true,
+						modusCreate: false,
+						nameLandDisabled: true,
+						nameOrtDisabled: true,
+						schulePayload: schulePayload
+					};
+
+					this.store.dispatch(KatalogpflegeActions.schulePayloadCreated({ schuleEditorModel: schuleEditorModel}));
 					break;
 				}
 		}
@@ -211,9 +225,22 @@ export class KatalogpflegeFacade {
 
 		this.store.dispatch(KatalogpflegeActions.showLoadingIndicator());
 
-		// TODO: http
-		this.store.dispatch(KatalogpflegeActions.editSchuleFinished({ schulePayload: schulePayload }));
-		this.messageService.info('Schule wurde erfolgreich geändert');
+		this.katalogHttpService.renameSchule(schulePayload).subscribe(
+			responsePayload => {
+				this.store.dispatch(KatalogpflegeActions.editSchuleFinished({ schulePayload: responsePayload.data }));
+
+				const message: Message = responsePayload.message;
+
+				switch (message.level) {
+					case 'INFO': this.messageService.info(message.message); break;
+					case 'WARN': this.messageService.warn(message.message); break;
+				}
+			},
+			(error => {
+				this.store.dispatch(KatalogpflegeActions.sucheFinishedWithError());
+				this.errorHandler.handleError(error)
+			})
+		);
 	}
 
 	public sendRenameOrt(ortPayload: OrtPayload) {

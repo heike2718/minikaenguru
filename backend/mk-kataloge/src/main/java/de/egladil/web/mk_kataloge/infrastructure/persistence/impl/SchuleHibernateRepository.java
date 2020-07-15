@@ -66,7 +66,7 @@ public class SchuleHibernateRepository implements SchuleRepository {
 
 	@Override
 	@Transactional
-	public Schule updateSchule(final Schule schule) {
+	public boolean replaceSchule(final Schule schule) {
 
 		if (schule == null) {
 
@@ -78,25 +78,23 @@ public class SchuleHibernateRepository implements SchuleRepository {
 			throw new IllegalArgumentException("Schulen ohne Kürzel können nicht geändert werden.");
 		}
 
-		Optional<Schule> optSchule = katalogRepository.findSchuleWithKuerzel(schule.getKuerzel());
+		// if (!schule.getOrtName().equals(persistedSchule.getOrtName())) {
+		//
+		// List<Schule> andereSchulen = this.findAllOtherSchulenWithOrtKuerzel(persistedSchule);
+		//
+		// for (Schule s : andereSchulen) {
+		//
+		// s.setOrtName(schule.getOrtName());
+		// em.merge(s);
+		// }
+		// }
+		//
+		// persistedSchule.setName(schule.getName());
+		// persistedSchule.setOrtName(schule.getOrtName());
 
-		Schule persistedSchule = optSchule.get();
+		em.merge(schule);
 
-		if (!schule.getOrtName().equals(persistedSchule.getOrtName())) {
-
-			List<Schule> andereSchulen = this.findAllOtherSchulenWithOrtKuerzel(persistedSchule);
-
-			for (Schule s : andereSchulen) {
-
-				s.setOrtName(schule.getOrtName());
-				em.merge(s);
-			}
-		}
-
-		persistedSchule.setName(schule.getName());
-		persistedSchule.setOrtName(schule.getOrtName());
-
-		return em.merge(persistedSchule);
+		return true;
 	}
 
 	private List<Schule> findAllOtherSchulenWithOrtKuerzel(final Schule schule) {
@@ -134,6 +132,15 @@ public class SchuleHibernateRepository implements SchuleRepository {
 				+ "', '" + schule.getOrtName() + "', Land '" + schule.getLandName() + "'.");
 
 		}
+
+		return trefferliste.isEmpty() ? Optional.empty() : Optional.of(trefferliste.get(0));
+	}
+
+	@Override
+	public Optional<Schule> findSchuleByKuerzel(final String kuerzel) {
+
+		List<Schule> trefferliste = em.createNamedQuery(Schule.QUERY_FIND_BY_KUERZEL, Schule.class).setParameter("kuerzel", kuerzel)
+			.getResultList();
 
 		return trefferliste.isEmpty() ? Optional.empty() : Optional.of(trefferliste.get(0));
 	}

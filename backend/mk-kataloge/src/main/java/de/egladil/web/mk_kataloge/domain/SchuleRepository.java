@@ -23,10 +23,9 @@ public interface SchuleRepository {
 	boolean addSchule(Schule schule);
 
 	/**
-	 * Daten einer neuen Schule werden geändert. Bezieht sich ich Änderung auf den Ortnamen, dann werden gleichzeitig alle Schulen
-	 * geändert, die das gleiche Ortkuerzel haben.
+	 * Name einer Schule wird geändert.
 	 */
-	Schule updateSchule(Schule schule);
+	boolean replaceSchule(Schule schule);
 
 	/**
 	 * Sucht eine Schule gleichen Namens im gegebenen Ort.
@@ -36,5 +35,11 @@ public interface SchuleRepository {
 	 * @return            Optional
 	 */
 	Optional<Schule> findSchuleInOrtMitName(String kuerzelOrt, String name) throws DataInconsistencyException;
+
+	/**
+	 * @param  kuerzel
+	 * @return         Optional
+	 */
+	Optional<Schule> findSchuleByKuerzel(String kuerzel);
 
 }

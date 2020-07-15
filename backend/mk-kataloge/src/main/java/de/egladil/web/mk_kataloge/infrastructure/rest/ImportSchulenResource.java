@@ -24,7 +24,6 @@ import de.egladil.web.mk_kataloge.domain.error.DuplicateEntityException;
 import de.egladil.web.mk_kataloge.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_kataloge.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_kataloge.domain.schulimport.SchuleMessage;
-import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
 
 /**
  * ImportSchulenResource ist die Schnittstelle von der Altanwendung, um die Katalogänderungen von dort hierher zu propagieren.
@@ -62,9 +61,7 @@ public class ImportSchulenResource {
 
 		try {
 
-			Schule result = schuleRepository.updateSchule(schuleMessage.getSchule());
-
-			LOG.info("Schule aktualisiert: {}", result.printForLog());
+			schuleRepository.replaceSchule(schuleMessage.getSchule());
 
 			return Response.ok("Alles fein! Schule " + schuleMessage.getSchule().getKuerzel() + " geändert.").build();
 

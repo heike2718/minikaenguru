@@ -68,5 +68,15 @@ export class KatalogHttpService {
 		);
 
 	}
+
+	public renameSchule(schulePayload: SchulePayload): Observable<ResponsePayload> {
+
+		let url = environment.apiUrl + '/wb-admin/kataloge/schulen';
+
+		return this.http.put(url, schulePayload).pipe(
+			map(body => body as ResponsePayload)
+		);
+
+	}
 }
 

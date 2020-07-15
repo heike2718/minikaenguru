@@ -93,12 +93,24 @@ public class KatalogAPIExceptionMapper implements ExceptionMapper<Exception> {
 		if (exception instanceof WebApplicationException) {
 
 			WebApplicationException waException = (WebApplicationException) exception;
-			int status = waException.getResponse().getStatus();
 
-			ResponsePayload payload = ResponsePayload
-				.messageOnly(MessagePayload.error(waException.getLocalizedMessage()));
+			if (waException.getResponse() != null) {
 
-			return Response.status(status).entity(serialize(payload)).build();
+				int status = waException.getResponse().getStatus();
+
+				ResponsePayload payload = ResponsePayload
+					.messageOnly(MessagePayload.error(waException.getLocalizedMessage()));
+
+				return Response.status(status).entity(serialize(payload)).build();
+			} else {
+
+				LOG.error("WebApplicationException hat kein Response - generieren ein generisches ServerError-Response");
+
+				ResponsePayload payload = ResponsePayload
+					.messageOnly(MessagePayload.error(applicationMessages.getString("general.internalServerError")));
+
+				return Response.status(500).entity(serialize(payload)).build();
+			}
 		}
 
 		LOG.error(exception.getMessage(), exception);
