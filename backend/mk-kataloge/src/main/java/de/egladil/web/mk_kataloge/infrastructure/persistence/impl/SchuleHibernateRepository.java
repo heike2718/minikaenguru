@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import de.egladil.web.mk_kataloge.domain.KatalogeRepository;
 import de.egladil.web.mk_kataloge.domain.SchuleRepository;
 import de.egladil.web.mk_kataloge.domain.error.DuplicateEntityException;
+import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Land;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Ort;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
 
@@ -96,7 +97,7 @@ public class SchuleHibernateRepository implements SchuleRepository {
 	@Override
 	public List<Schule> findSchulenInOrt(final String ortKuerzel) {
 
-		return em.createNamedQuery(Schule.QUERY_FIND_SCHULEN_WITH_ORTKUERZEL, Schule.class).setParameter("ortKuerzel", ortKuerzel)
+		return em.createNamedQuery(Schule.QUERY_LOAD_SCHULEN_WITH_ORTKUERZEL, Schule.class).setParameter("ortKuerzel", ortKuerzel)
 			.getResultList();
 	}
 
@@ -105,6 +106,20 @@ public class SchuleHibernateRepository implements SchuleRepository {
 
 		return em.createNamedQuery(Ort.QUERY_LOAD_ORTE_WITH_LANDKUERZEL, Ort.class).setParameter("landKuerzel", landKuerzel)
 			.getResultList();
+	}
+
+	@Override
+	public List<Schule> findSchulenInLand(final String landKuerzel) {
+
+		return em.createNamedQuery(Schule.QUERY_LOAD_SCHULEN_WITH_LANDKUERZEL, Schule.class)
+			.setParameter("landKuerzel", landKuerzel)
+			.getResultList();
+	}
+
+	@Override
+	public List<Land> loadLaender() {
+
+		return katalogRepository.loadLaender();
 	}
 
 }

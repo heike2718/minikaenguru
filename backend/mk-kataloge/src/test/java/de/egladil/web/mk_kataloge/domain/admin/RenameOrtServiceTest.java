@@ -67,7 +67,7 @@ public class RenameOrtServiceTest {
 			MessagePayload messagePayload = responsePayload.getMessage();
 			assertEquals("ERROR", messagePayload.getLevel());
 			assertEquals("Diesen Ort gibt es nicht.", messagePayload.getMessage());
-			assertNull(responsePayload.getData());
+			assertEquals(ortPayload, responsePayload.getData());
 		}
 	}
 
@@ -161,11 +161,10 @@ public class RenameOrtServiceTest {
 			Schule vorhandene = new Schule();
 			vorhandene.setKuerzel("SCHULE-1");
 			vorhandene.setName("Erste Schule");
-			vorhandene.setOrtKuerzel(ortPayload.kuerzel());
+			vorhandene.setOrtKuerzel("TFFFVHVH");
 			vorhandene.setOrtName("Alter Name");
-			vorhandene.setLandKuerzel(ortPayload.kuerzelLand());
-			vorhandene.setLandName(ortPayload.nameLand());
-			vorhandene.setLandName("Hessen");
+			vorhandene.setLandKuerzel("BR");
+			vorhandene.setLandName("Brasilien");
 			schulen.add(vorhandene);
 		}
 
@@ -174,11 +173,10 @@ public class RenameOrtServiceTest {
 			Schule vorhandene = new Schule();
 			vorhandene.setKuerzel("SCHULE-2");
 			vorhandene.setName("Zweite Schule");
-			vorhandene.setOrtKuerzel(ortPayload.kuerzel());
+			vorhandene.setOrtKuerzel("TFFFVHVH");
 			vorhandene.setOrtName("Alter Name");
-			vorhandene.setLandKuerzel(ortPayload.kuerzelLand());
-			vorhandene.setLandName(ortPayload.nameLand());
-			vorhandene.setLandName("Hessen");
+			vorhandene.setLandKuerzel("BR");
+			vorhandene.setLandName("Brasilien");
 			schulen.add(vorhandene);
 		}
 
@@ -195,14 +193,35 @@ public class RenameOrtServiceTest {
 		MessagePayload messagePayload = responsePayload.getMessage();
 		assertEquals("INFO", messagePayload.getLevel());
 		assertEquals(
-			"Der Ort wurde erfolgreich geändert.",
+			"Der Ort wurde erfolgreich umbenannt. Anzahl geänderter Schulen: 2",
 			messagePayload.getMessage());
 
 		OrtPayload result = (OrtPayload) responsePayload.getData();
 		assertEquals(result, ortPayload);
 
-		assertEquals(ortPayload.name(), schulen.get(0).getOrtName());
-		assertEquals(ortPayload.name(), schulen.get(1).getOrtName());
+		{
+
+			Schule schule = schulen.get(0);
+			assertEquals("BR", schule.getLandKuerzel());
+			assertEquals("Brasilien", schule.getLandName());
+			assertEquals("Erste Schule", schule.getName());
+			assertEquals("SCHULE-1", schule.getKuerzel());
+			assertEquals("Brasilia", schule.getOrtName());
+			assertEquals("TFFFVHVH", schule.getOrtKuerzel());
+
+		}
+
+		{
+
+			Schule schule = schulen.get(1);
+			assertEquals("BR", schule.getLandKuerzel());
+			assertEquals("Brasilien", schule.getLandName());
+			assertEquals("Zweite Schule", schule.getName());
+			assertEquals("SCHULE-2", schule.getKuerzel());
+			assertEquals("Brasilia", schule.getOrtName());
+			assertEquals("TFFFVHVH", schule.getOrtKuerzel());
+
+		}
 
 	}
 
@@ -262,7 +281,9 @@ public class RenameOrtServiceTest {
 			fail("keine KatalogAPIException");
 		} catch (KatalogAPIException e) {
 
-			assertEquals("Die Orte von Schulen konnten wegen eines Serverfehlers nicht umbenannt werden.", e.getMessage());
+			Mockito.verify(schuleRepository, Mockito.times(1)).replaceSchulen(schulen);
+
+			assertEquals("Der Ort konnte wegen eines Serverfehlers nicht umbenannt werden.", e.getMessage());
 		}
 	}
 }

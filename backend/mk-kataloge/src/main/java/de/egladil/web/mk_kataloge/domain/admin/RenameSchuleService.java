@@ -70,7 +70,7 @@ public class RenameSchuleService {
 			if (optSchule.isEmpty()) {
 
 				throw new NotFoundException(Response.status(404)
-					.entity(ResponsePayload.messageOnly(MessagePayload.error("Diese Schule gibt es nicht."))).build());
+					.entity(new ResponsePayload(MessagePayload.error("Diese Schule gibt es nicht."), schulePayload)).build());
 			}
 
 			Schule schule = optSchule.get();

@@ -4,12 +4,15 @@
 // =====================================================
 package de.egladil.web.mk_kataloge.domain.apimodel;
 
+import java.util.Objects;
+
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.annotations.StringLatin;
+import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Land;
 
 /**
  * LandPayload zum Umbenennen von Land, Ort oder Schule. Alle Umbenennungen ändern ein bis viele Einträge in der
@@ -36,6 +39,16 @@ public class LandPayload {
 
 	}
 
+	public static LandPayload create(final Land land) {
+
+		LandPayload result = new LandPayload();
+		result.kuerzel = land.getKuerzel();
+		result.name = land.getName();
+
+		return result;
+
+	}
+
 	public LandPayload() {
 
 		super();
@@ -50,6 +63,39 @@ public class LandPayload {
 	public String kuerzel() {
 
 		return kuerzel;
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(kuerzel);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+
+		if (this == obj) {
+
+			return true;
+		}
+
+		if (obj == null) {
+
+			return false;
+		}
+
+		if (getClass() != obj.getClass()) {
+
+			return false;
+		}
+		LandPayload other = (LandPayload) obj;
+		return Objects.equals(kuerzel, other.kuerzel);
+	}
+
+	@Override
+	public String toString() {
+
+		return "LandPayload [kuerzel=" + kuerzel + ", name=" + name + "]";
 	}
 
 }

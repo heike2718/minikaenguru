@@ -72,7 +72,7 @@ public class RenameSchuleServiceTest {
 			MessagePayload messagePayload = responsePayload.getMessage();
 			assertEquals("ERROR", messagePayload.getLevel());
 			assertEquals("Diese Schule gibt es nicht.", messagePayload.getMessage());
-			assertNull(responsePayload.getData());
+			assertEquals(schulePayload, responsePayload.getData());
 
 			Mockito.verify(mailDelegate, Mockito.times(0)).sendSchuleCreatedMailQuietly(schulePayload);
 		}

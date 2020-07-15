@@ -4,8 +4,10 @@
 // =====================================================
 package de.egladil.web.mk_kataloge.domain.admin;
 
+import de.egladil.web.mk_kataloge.domain.apimodel.LandPayload;
 import de.egladil.web.mk_kataloge.domain.apimodel.OrtPayload;
 import de.egladil.web.mk_kataloge.domain.apimodel.SchulePayload;
+import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Land;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Ort;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
 
@@ -67,6 +69,23 @@ public final class ChangeKatalogTestUtils {
 		result.setName(ortPayload.name());
 		result.setLandKuerzel(ortPayload.kuerzelLand());
 		result.setLandName(ortPayload.nameLand());
+		return result;
+
+	}
+
+	static LandPayload createLandPayloadForTest() {
+
+		String kuerzel = "BR";
+		String name = "Brasilien";
+
+		return LandPayload.create(kuerzel, name);
+	}
+
+	static Land mapFromLandPayload(final LandPayload landPayload) {
+
+		Land result = new Land();
+		result.setKuerzel(landPayload.kuerzel());
+		result.setName(landPayload.name());
 		return result;
 
 	}
