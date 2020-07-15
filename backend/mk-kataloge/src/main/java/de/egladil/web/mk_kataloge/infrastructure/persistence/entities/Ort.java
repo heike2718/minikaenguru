@@ -21,6 +21,9 @@ import javax.persistence.Table;
 		name = "ORT_QUERY_LOAD_ORTE_IN_LAND",
 		query = "select o from Ort o where o.landKuerzel = :landKuerzel and o.name != :excluded"),
 	@NamedQuery(
+		name = "ORT_QUERY_LOAD_ORTE_WITH_LANDKUERZEL",
+		query = "select o from Ort o where o.landKuerzel = :landKuerzel"),
+	@NamedQuery(
 		name = "ORT_QUERY_FIND_ORTE_IN_LAND",
 		query = "select o from Ort o where o.landKuerzel = :landKuerzel and lower(o.name) like :name and o.name != :excluded"),
 	@NamedQuery(
@@ -36,6 +39,8 @@ import javax.persistence.Table;
 public class Ort {
 
 	public static final String QUERY_LOAD_ORTE_IN_LAND = "ORT_QUERY_LOAD_ORTE_IN_LAND";
+
+	public static final String QUERY_LOAD_ORTE_WITH_LANDKUERZEL = "ORT_QUERY_LOAD_ORTE_WITH_LANDKUERZEL";
 
 	public static final String QUERY_FIND_ORTE_IN_LAND = "ORT_QUERY_FIND_ORTE_IN_LAND";
 
@@ -118,5 +123,17 @@ public class Ort {
 	public void setAnzahlSchulen(final int anzahlSchulen) {
 
 		this.anzahlSchulen = anzahlSchulen;
+	}
+
+	public String printForLog() {
+
+		return "Ort [kuerzel=" + kuerzel + ", name=" + name + ", anzahlSchulen=" + anzahlSchulen + ", landKuerzel=" + landKuerzel
+			+ ", landName=" + landName + "]";
+	}
+
+	@Override
+	public String toString() {
+
+		return "Ort [kuerzel=" + kuerzel + ", name=" + name + "]";
 	}
 }

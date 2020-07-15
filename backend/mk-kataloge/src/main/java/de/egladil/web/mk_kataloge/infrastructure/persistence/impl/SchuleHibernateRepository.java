@@ -10,15 +10,14 @@ import java.util.Optional;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
 import org.apache.commons.lang3.StringUtils;
 
 import de.egladil.web.mk_kataloge.domain.KatalogeRepository;
 import de.egladil.web.mk_kataloge.domain.SchuleRepository;
-import de.egladil.web.mk_kataloge.domain.error.DataInconsistencyException;
 import de.egladil.web.mk_kataloge.domain.error.DuplicateEntityException;
+import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Ort;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
 
 /**
@@ -66,83 +65,46 @@ public class SchuleHibernateRepository implements SchuleRepository {
 
 	@Override
 	@Transactional
-	public boolean replaceSchule(final Schule schule) {
+	public boolean replaceSchulen(final List<Schule> schulen) {
 
-		if (schule == null) {
+		for (Schule schule : schulen) {
 
-			throw new IllegalArgumentException("schule");
+			em.merge(schule);
 		}
-
-		if (StringUtils.isBlank(schule.getKuerzel())) {
-
-			throw new IllegalArgumentException("Schulen ohne Kürzel können nicht geändert werden.");
-		}
-
-		// if (!schule.getOrtName().equals(persistedSchule.getOrtName())) {
-		//
-		// List<Schule> andereSchulen = this.findAllOtherSchulenWithOrtKuerzel(persistedSchule);
-		//
-		// for (Schule s : andereSchulen) {
-		//
-		// s.setOrtName(schule.getOrtName());
-		// em.merge(s);
-		// }
-		// }
-		//
-		// persistedSchule.setName(schule.getName());
-		// persistedSchule.setOrtName(schule.getOrtName());
-
-		em.merge(schule);
 
 		return true;
 	}
 
-	private List<Schule> findAllOtherSchulenWithOrtKuerzel(final Schule schule) {
-
-		String stmt = "select s from Schule s where s.ortKuerzel=:ortKuerzel and s.kuerzel != :kuerzel";
-
-		TypedQuery<Schule> query = em.createQuery(stmt, Schule.class).setParameter("kuerzel", schule.getKuerzel())
-			.setParameter("ortKuerzel", schule.getOrtKuerzel());
-
-		return query.getResultList();
-	}
-
 	@Override
-	public Optional<Schule> findSchuleInOrtMitName(final String kuerzelOrt, final String name) {
-
-		if (StringUtils.isBlank(kuerzelOrt)) {
-
-			throw new IllegalArgumentException("kuerzelOrt darf nicht blank sein.");
-		}
-
-		if (StringUtils.isBlank(name)) {
-
-			throw new IllegalArgumentException("name darf nicht blank sein.");
-		}
-
-		TypedQuery<Schule> query = em.createNamedQuery(Schule.QUERY_FIND_SCHULE_IN_ORT_MIT_NAME, Schule.class)
-			.setParameter("ortKuerzel", kuerzelOrt).setParameter("name", name.trim().toLowerCase());
-
-		List<Schule> trefferliste = query.getResultList();
-
-		if (trefferliste.size() > 1) {
-
-			Schule schule = trefferliste.get(0);
-			throw new DataInconsistencyException("Es gibt mehr als eine Schule mit dem Namen '" + name + "' im Ort '" + kuerzelOrt
-				+ "', '" + schule.getOrtName() + "', Land '" + schule.getLandName() + "'.");
-
-		}
-
-		return trefferliste.isEmpty() ? Optional.empty() : Optional.of(trefferliste.get(0));
-	}
-
-	@Override
-	public Optional<Schule> findSchuleByKuerzel(final String kuerzel) {
+	public Optional<Schule> getSchule(final String kuerzel) {
 
 		List<Schule> trefferliste = em.createNamedQuery(Schule.QUERY_FIND_BY_KUERZEL, Schule.class).setParameter("kuerzel", kuerzel)
 			.getResultList();
 
 		return trefferliste.isEmpty() ? Optional.empty() : Optional.of(trefferliste.get(0));
+	}
+
+	@Override
+	public Optional<Ort> getOrt(final String kuerzel) {
+
+		List<Ort> trefferliste = em.createNamedQuery(Ort.QUERY_FIND_ORT_BY_KUERZEL, Ort.class).setParameter("kuerzel", kuerzel)
+			.getResultList();
+
+		return trefferliste.isEmpty() ? Optional.empty() : Optional.of(trefferliste.get(0));
+	}
+
+	@Override
+	public List<Schule> findSchulenInOrt(final String ortKuerzel) {
+
+		return em.createNamedQuery(Schule.QUERY_FIND_SCHULEN_WITH_ORTKUERZEL, Schule.class).setParameter("ortKuerzel", ortKuerzel)
+			.getResultList();
+	}
+
+	@Override
+	public List<Ort> findOrteInLand(final String landKuerzel) {
+
+		return em.createNamedQuery(Ort.QUERY_LOAD_ORTE_WITH_LANDKUERZEL, Ort.class).setParameter("landKuerzel", landKuerzel)
+			.getResultList();
 	}
 
 }

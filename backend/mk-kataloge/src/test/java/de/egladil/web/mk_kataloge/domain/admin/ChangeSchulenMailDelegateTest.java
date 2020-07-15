@@ -27,7 +27,7 @@ public class ChangeSchulenMailDelegateTest {
 		// Arrange
 		KatalogMailService mailService = KatalogMailService.createForTest();
 		ChangeSchulenMailDelegate delegate = ChangeSchulenMailDelegate.createForTest(mailService);
-		SchulePayload schulePayload = ChangeKatalogTestUtils.createPayloadForTest().withEmailAuftraggeber("hh@gmx.de");
+		SchulePayload schulePayload = ChangeKatalogTestUtils.createSchulePayloadForTest().withEmailAuftraggeber("hh@gmx.de");
 
 		// Act
 		boolean mailSent = delegate.sendSchuleCreatedMailQuietly(schulePayload);
@@ -45,7 +45,7 @@ public class ChangeSchulenMailDelegateTest {
 		// Arrange
 		KatalogMailService mailService = KatalogMailService.createForTestWithMailException();
 		ChangeSchulenMailDelegate delegate = ChangeSchulenMailDelegate.createForTest(mailService);
-		SchulePayload schulePayload = ChangeKatalogTestUtils.createPayloadForTest().withEmailAuftraggeber("hh@gmx.de");
+		SchulePayload schulePayload = ChangeKatalogTestUtils.createSchulePayloadForTest().withEmailAuftraggeber("hh@gmx.de");
 
 		// Act
 		boolean mailSent = delegate.sendSchuleCreatedMailQuietly(schulePayload);

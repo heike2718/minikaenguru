@@ -4,10 +4,10 @@
 // =====================================================
 package de.egladil.web.mk_kataloge.domain.admin;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 
@@ -19,11 +19,8 @@ import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_kataloge.domain.SchuleRepository;
 import de.egladil.web.mk_kataloge.domain.apimodel.SchulePayload;
-import de.egladil.web.mk_kataloge.domain.error.DataInconsistencyException;
 import de.egladil.web.mk_kataloge.domain.error.DuplicateEntityException;
 import de.egladil.web.mk_kataloge.domain.error.KatalogAPIException;
-import de.egladil.web.mk_kataloge.domain.event.DataInconsistencyRegistered;
-import de.egladil.web.mk_kataloge.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
 
 /**
@@ -39,11 +36,6 @@ public class CreateSchuleService {
 
 	@Inject
 	ChangeSchulenMailDelegate mailDelegate;
-
-	@Inject
-	Event<DataInconsistencyRegistered> dataInconsistencyEvent;
-
-	private DataInconsistencyRegistered registeredDataInconsistency;
 
 	private boolean test;
 
@@ -68,7 +60,10 @@ public class CreateSchuleService {
 
 		try {
 
-			Optional<Schule> optSchule = schuleRepository.findSchuleInOrtMitName(schulePayload.kuerzelOrt(), schulePayload.name());
+			List<Schule> schulen = schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt());
+			Optional<Schule> optSchule = schulen.stream()
+				.filter(s -> !s.getKuerzel().equals(schulePayload.kuerzel()) && s.getName().equalsIgnoreCase(schulePayload.name()))
+				.findFirst();
 
 			if (optSchule.isPresent()) {
 
@@ -102,11 +97,10 @@ public class CreateSchuleService {
 
 			return new ResponsePayload(MessagePayload.info("Die Schule wurde erfolgreich angelegt."), schulePayload);
 
-		} catch (DataInconsistencyException | DuplicateEntityException e) {
+		} catch (DuplicateEntityException e) {
 
 			String msg = "schuleAnlegen: " + e.getMessage();
-			registeredDataInconsistency = new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
-			throw new KatalogAPIException(registeredDataInconsistency.message());
+			throw new KatalogAPIException(msg);
 		} catch (PersistenceException e) {
 
 			LOG.error("Die Schule {} konnte nicht angelegt werden: {}", schulePayload, e.getMessage(), e);
@@ -126,10 +120,4 @@ public class CreateSchuleService {
 
 		return result;
 	}
-
-	DataInconsistencyRegistered getRegisteredDataInconsistency() {
-
-		return registeredDataInconsistency;
-	}
-
 }

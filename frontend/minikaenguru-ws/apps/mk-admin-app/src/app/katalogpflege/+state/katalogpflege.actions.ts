@@ -31,7 +31,7 @@ export const loadChildItemsFinished = createAction(
 	props<{ parent: KatalogpflegeItem, katalogItems: KatalogpflegeItem[] }>()
 );
 
-export const sucheFinishedWithError = createAction(
+export const finishedWithError = createAction(
 	'[KatalogpflegeFacade] error'
 );
 
@@ -50,8 +50,18 @@ export const ortPayloadCreated = createAction(
 	props<{ ortPayload: OrtPayload }>()
 );
 
+export const editOrtFinished = createAction(
+	'[KatalogpflegeFacade] sendRenameOrt',
+	props<{ ortPayload: OrtPayload }>()
+);
+
 export const landPayloadCreated = createAction(
 	'[KatalogpflegeFacade] switchToRenameKatalogItemEditor (land)',
+	props<{ landPayload: LandPayload }>()
+);
+
+export const editLandFinished = createAction(
+	'[KatalogpflegeFacade] sendRenameLand',
 	props<{ landPayload: LandPayload }>()
 );
 

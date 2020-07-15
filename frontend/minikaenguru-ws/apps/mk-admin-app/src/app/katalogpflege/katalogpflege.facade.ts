@@ -50,7 +50,7 @@ export class KatalogpflegeFacade {
 				this.store.dispatch(KatalogpflegeActions.loadLaenderFinished({ laender: laender }));
 			},
 			(error => {
-				this.store.dispatch(KatalogpflegeActions.sucheFinishedWithError());
+				this.store.dispatch(KatalogpflegeActions.finishedWithError());
 				this.errorHandler.handleError(error)
 			})
 		);
@@ -84,7 +84,7 @@ export class KatalogpflegeFacade {
 				this.store.dispatch(KatalogpflegeActions.sucheFinished({ typ: typ, katalogItems: items }));
 			},
 			(error => {
-				this.store.dispatch(KatalogpflegeActions.sucheFinishedWithError());
+				this.store.dispatch(KatalogpflegeActions.finishedWithError());
 				this.errorHandler.handleError(error)
 			})
 		);
@@ -128,7 +128,7 @@ export class KatalogpflegeFacade {
 				).subscribe();
 			},
 			(error => {
-				this.store.dispatch(KatalogpflegeActions.sucheFinishedWithError());
+				this.store.dispatch(KatalogpflegeActions.finishedWithError());
 				this.errorHandler.handleError(error)
 			})
 		);
@@ -213,7 +213,7 @@ export class KatalogpflegeFacade {
 				}
 			},
 			(error => {
-				this.store.dispatch(KatalogpflegeActions.sucheFinishedWithError());
+				this.store.dispatch(KatalogpflegeActions.finishedWithError());
 				this.errorHandler.handleError(error)
 			})
 		);
@@ -237,7 +237,7 @@ export class KatalogpflegeFacade {
 				}
 			},
 			(error => {
-				this.store.dispatch(KatalogpflegeActions.sucheFinishedWithError());
+				this.store.dispatch(KatalogpflegeActions.finishedWithError());
 				this.errorHandler.handleError(error)
 			})
 		);
@@ -245,9 +245,47 @@ export class KatalogpflegeFacade {
 
 	public sendRenameOrt(ortPayload: OrtPayload) {
 
+		this.store.dispatch(KatalogpflegeActions.showLoadingIndicator());
+
+		this.katalogHttpService.renameOrt(ortPayload).subscribe(
+			responsePayload => {
+				this.store.dispatch(KatalogpflegeActions.editOrtFinished({ ortPayload: responsePayload.data }));
+
+				const message: Message = responsePayload.message;
+
+				switch (message.level) {
+					case 'INFO': this.messageService.info(message.message); break;
+					case 'WARN': this.messageService.warn(message.message); break;
+				}
+			},
+			(error => {
+				this.store.dispatch(KatalogpflegeActions.finishedWithError());
+				this.errorHandler.handleError(error)
+			})
+		);
+
 	}
 
 	public sendRenameLand(landPayload: LandPayload) {
+
+		this.store.dispatch(KatalogpflegeActions.showLoadingIndicator());
+
+		this.katalogHttpService.renameLand(landPayload).subscribe(
+			responsePayload => {
+				this.store.dispatch(KatalogpflegeActions.editLandFinished({ landPayload: responsePayload.data }));
+
+				const message: Message = responsePayload.message;
+
+				switch (message.level) {
+					case 'INFO': this.messageService.info(message.message); break;
+					case 'WARN': this.messageService.warn(message.message); break;
+				}
+			},
+			(error => {
+				this.store.dispatch(KatalogpflegeActions.finishedWithError());
+				this.errorHandler.handleError(error)
+			})
+		);
 
 	}
 
@@ -318,7 +356,7 @@ export class KatalogpflegeFacade {
 				this.store.dispatch(KatalogpflegeActions.selectKatalogItem({ katalogItem: item }));
 			},
 			(error => {
-				this.store.dispatch(KatalogpflegeActions.sucheFinishedWithError());
+				this.store.dispatch(KatalogpflegeActions.finishedWithError());
 				this.errorHandler.handleError(error)
 			})
 		);

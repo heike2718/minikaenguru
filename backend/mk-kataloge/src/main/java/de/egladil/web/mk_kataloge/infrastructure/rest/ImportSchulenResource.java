@@ -4,10 +4,14 @@
 // =====================================================
 package de.egladil.web.mk_kataloge.infrastructure.rest;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -19,11 +23,14 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_kataloge.domain.SchuleRepository;
 import de.egladil.web.mk_kataloge.domain.error.DuplicateEntityException;
 import de.egladil.web.mk_kataloge.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_kataloge.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_kataloge.domain.schulimport.SchuleMessage;
+import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
 
 /**
  * ImportSchulenResource ist die Schnittstelle von der Altanwendung, um die Katalogänderungen von dort hierher zu propagieren.
@@ -59,9 +66,23 @@ public class ImportSchulenResource {
 			return Response.status(401).build();
 		}
 
+		Schule schule = schuleMessage.getSchule();
+		Optional<Schule> optSchule = schuleRepository.getSchule(schule.getKuerzel());
+
+		if (optSchule.isEmpty()) {
+
+			Response response = Response.status(404)
+				.entity(ResponsePayload.messageOnly(MessagePayload.error("Konnte passende Schule nicht finden"))).build();
+
+			throw new NotFoundException(response);
+		}
+
 		try {
 
-			schuleRepository.replaceSchule(schuleMessage.getSchule());
+			Schule persistenteSchule = optSchule.get();
+			persistenteSchule.setName(schule.getName());
+
+			schuleRepository.replaceSchulen(Arrays.asList(new Schule[] { persistenteSchule }));
 
 			return Response.ok("Alles fein! Schule " + schuleMessage.getSchule().getKuerzel() + " geändert.").build();
 

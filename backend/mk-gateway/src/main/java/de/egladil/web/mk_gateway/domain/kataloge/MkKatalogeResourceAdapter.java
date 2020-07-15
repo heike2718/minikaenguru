@@ -121,6 +121,8 @@ public class MkKatalogeResourceAdapter extends AbstractMkResourceAdapter {
 		try {
 
 			Response response = restClient.renameOrt(uuid, secret, payload);
+
+			LOG.debug("Ort umbenannt: {}", payload);
 			return response;
 
 		} catch (Exception e) {

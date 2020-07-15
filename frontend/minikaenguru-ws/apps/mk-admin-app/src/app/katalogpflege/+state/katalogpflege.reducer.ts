@@ -79,7 +79,7 @@ const katalogpflegeReducer = createReducer(initialState,
 		return { ...state, kataloge: kataloge, filteredOrte: filteredOrte, filteredSchulen: filteredSchulen, showLoadingIndicator: false };
 	}),
 
-	on(KatalogpflegeActions.katalogDashboardSelected, (state, _action) => {
+	on(KatalogpflegeActions.katalogDashboardSelected, (_state, _action) => {
 
 		return initialState;
 
@@ -138,7 +138,7 @@ const katalogpflegeReducer = createReducer(initialState,
 
 
 
-	on(KatalogpflegeActions.sucheFinishedWithError, (state, _action) => {
+	on(KatalogpflegeActions.finishedWithError, (state, _action) => {
 		return { ...state, showLoadingIndicator: false };
 	}),
 
@@ -202,7 +202,53 @@ const katalogpflegeReducer = createReducer(initialState,
 			sucheBeendet: true,
 			schuleEditorModel: schuleEditorModel,
 			kataloge: kataloge, filteredOrte: [],
-			filteredSchulen: []
+			filteredSchulen: [],
+			ortEditorPayload: undefined,
+			landEditorPayload: undefined
+		};
+	}),
+
+	on(KatalogpflegeActions.editOrtFinished, (state, action) => {
+
+		// es ist zu kompliziert, das hier korrekt hineinzumergen. Daher einfach kataloge und filter wieder zurücksetzen.
+		// die Länder werden dann beim Navigieren neu geladen, ebenso Orte und Schulen.
+		const kataloge: Kataloge = {
+			laender: [],
+			orte: [],
+			schulen: []
+		};
+
+		return {
+			...state,
+			showLoadingIndicator: false,
+			sucheBeendet: true,
+			schuleEditorModel: initialSchuleEditorModelState,
+			kataloge: kataloge, filteredOrte: [],
+			filteredSchulen: [],
+			ortEditorPayload: action.ortPayload,
+			landEditorPayload: undefined
+		};
+	}),
+
+	on(KatalogpflegeActions.editLandFinished, (state, action) => {
+
+		// es ist zu kompliziert, das hier korrekt hineinzumergen. Daher einfach kataloge und filter wieder zurücksetzen.
+		// die Länder werden dann beim Navigieren neu geladen, ebenso Orte und Schulen.
+		const kataloge: Kataloge = {
+			laender: [],
+			orte: [],
+			schulen: []
+		};
+
+		return {
+			...state,
+			showLoadingIndicator: false,
+			sucheBeendet: true,
+			schuleEditorModel: initialSchuleEditorModelState,
+			kataloge: kataloge, filteredOrte: [],
+			filteredSchulen: [],
+			ortEditorPayload: undefined,
+			landEditorPayload: action.landPayload
 		};
 	}),
 
