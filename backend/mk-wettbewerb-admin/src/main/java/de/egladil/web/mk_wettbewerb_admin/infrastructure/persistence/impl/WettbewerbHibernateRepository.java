@@ -69,7 +69,10 @@ public class WettbewerbHibernateRepository implements WettbewerbRepository {
 				CommonTimeUtils.transformToLocalDateFromDate(persistenterWettbewerb.getDatumFreischaltungPrivat()))
 			.withWettbewerbsbeginn(CommonTimeUtils.transformToLocalDateFromDate(persistenterWettbewerb.getWettbewerbsbeginn()))
 			.withWettbewerbsende(CommonTimeUtils.transformToLocalDateFromDate(persistenterWettbewerb.getWettbewerbsende()))
-			.withStatus(persistenterWettbewerb.getStatus());
+			.withStatus(persistenterWettbewerb.getStatus())
+			.withLoesungsbuchstabenIKids(persistenterWettbewerb.getLoesungsbuchstabenIkids())
+			.withLoesungsbuchstabenKlasse1(persistenterWettbewerb.getLoesungsbuchstabenKlasse1())
+			.withLoesungsbuchstabenKlasse2(persistenterWettbewerb.getLoesungsbuchstabenKlasse2());
 		return wettbewerb;
 	}
 
@@ -149,6 +152,9 @@ public class WettbewerbHibernateRepository implements WettbewerbRepository {
 			.setDatumFreischaltungPrivat(CommonTimeUtils.transformFromLocalDate(wettbewerb.datumFreischaltungPrivat()));
 		persistenterWettbewerb.setWettbewerbsbeginn(CommonTimeUtils.transformFromLocalDate(wettbewerb.wettbewerbsbeginn()));
 		persistenterWettbewerb.setWettbewerbsende(CommonTimeUtils.transformFromLocalDate(wettbewerb.wettbewerbsende()));
+		persistenterWettbewerb.setLoesungsbuchstabenIkids(wettbewerb.loesungsbuchstabenIkids());
+		persistenterWettbewerb.setLoesungsbuchstabenKlasse1(wettbewerb.loesungsbuchstabenKlasse1());
+		persistenterWettbewerb.setLoesungsbuchstabenKlasse2(wettbewerb.loesungsbuchstabenKlasse2());
 	}
 
 }

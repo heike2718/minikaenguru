@@ -7,8 +7,6 @@ package de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb;
 import java.time.LocalDate;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 
 /**
@@ -16,23 +14,23 @@ import de.egladil.web.commons_net.time.CommonTimeUtils;
  */
 public class Wettbewerb {
 
-	@JsonProperty
 	private final WettbewerbID wettbewerbId;
 
-	@JsonProperty
 	private WettbewerbStatus status;
 
-	@JsonProperty
 	private LocalDate wettbewerbsbeginn;
 
-	@JsonProperty
 	private LocalDate wettbewerbsende;
 
-	@JsonProperty
 	private LocalDate datumFreischaltungLehrer;
 
-	@JsonProperty
 	private LocalDate datumFreischaltungPrivat;
+
+	private String loesungsbuchstabenIkids;
+
+	private String loesungsbuchstabenKlasse1;
+
+	private String loesungsbuchstabenKlasse2;
 
 	/**
 	 * @param wettbewerbId
@@ -78,6 +76,24 @@ public class Wettbewerb {
 	public Wettbewerb withStatus(final WettbewerbStatus status) {
 
 		this.status = status;
+		return this;
+	}
+
+	public Wettbewerb withLoesungsbuchstabenIKids(final String value) {
+
+		this.loesungsbuchstabenIkids = value;
+		return this;
+	}
+
+	public Wettbewerb withLoesungsbuchstabenKlasse1(final String value) {
+
+		this.loesungsbuchstabenKlasse1 = value;
+		return this;
+	}
+
+	public Wettbewerb withLoesungsbuchstabenKlasse2(final String value) {
+
+		this.loesungsbuchstabenKlasse2 = value;
 		return this;
 	}
 
@@ -153,6 +169,21 @@ public class Wettbewerb {
 	public LocalDate datumFreischaltungPrivat() {
 
 		return datumFreischaltungPrivat;
+	}
+
+	public String loesungsbuchstabenIkids() {
+
+		return loesungsbuchstabenIkids;
+	}
+
+	public String loesungsbuchstabenKlasse1() {
+
+		return loesungsbuchstabenKlasse1;
+	}
+
+	public String loesungsbuchstabenKlasse2() {
+
+		return loesungsbuchstabenKlasse2;
 	}
 
 	public boolean isBeendet() {

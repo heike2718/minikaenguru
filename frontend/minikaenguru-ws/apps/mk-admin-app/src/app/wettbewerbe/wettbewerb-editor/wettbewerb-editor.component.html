@@ -76,6 +76,43 @@
 						formControlName="datumFreischaltungPrivat" autocomplete="true">
 				</div>
 			</div>
+
+			<div class="row mt-4">
+				<div class="col-md-12">
+					<label for="loesungIKIDsInput">Lösungen IKIDs</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<input [class.error]="loesungsbuchstabenIkidsFormControl.touched && !loesungsbuchstabenIkidsFormControl.valid" class="form-control" type="text" id="loesungIKIDsInput" placeholder="Lösungsbuchstaben Inklusionskinder"
+						formControlName="loesungsbuchstabenIkids" autocomplete="true">
+				</div>
+			</div>
+
+			<div class="row mt-4">
+				<div class="col-md-12">
+					<label for="loesungKlasse1Input">Lösungen Klasse 1</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<input [class.error]="loesungsbuchstabenKlasse1FormControl.touched && !loesungsbuchstabenKlasse1FormControl.valid" class="form-control" type="text" id="loesungKlasse1Input" placeholder="Lösungsbuchstaben Klasse 1"
+						formControlName="loesungsbuchstabenKlasse1" autocomplete="true">
+				</div>
+			</div>
+
+			<div class="row mt-4">
+				<div class="col-md-12">
+					<label for="loesungKlasse2Input">Lösungen Klasse 2</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<input [class.error]="loesungsbuchstabenKlasse2FormControl.touched && !loesungsbuchstabenKlasse2FormControl.valid" class="form-control" type="text" id="loesungKlasse2Input" placeholder="Lösungsbuchstaben Klasse 2"
+						formControlName="loesungsbuchstabenKlasse2" autocomplete="true">
+				</div>
+			</div>
+
 		</form>
 
 		<p *ngIf="devMode">

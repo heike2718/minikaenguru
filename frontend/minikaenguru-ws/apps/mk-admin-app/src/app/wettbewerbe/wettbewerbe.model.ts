@@ -15,6 +15,9 @@ export interface Wettbewerb {
 	readonly wettbewerbsende?: string;
 	readonly datumFreischaltungLehrer?: string;
 	readonly datumFreischaltungPrivat?: string;
+	readonly loesungsbuchstabenIkids: string;
+	readonly loesungsbuchstabenKlasse1: string;
+	readonly loesungsbuchstabenKlasse2: string;
 	readonly teilnahmenuebersicht?: Teilnahmenuebersicht;
 };
 
@@ -30,6 +33,9 @@ export interface WettbewerbEditorModel {
 	wettbewerbsende: string;
 	datumFreischaltungLehrer: string;
 	datumFreischaltungPrivat: string;
+	loesungsbuchstabenIkids: string;
+	loesungsbuchstabenKlasse1: string;
+	loesungsbuchstabenKlasse2: string;
 };
 
 export const initialWettbewerbEditorModel: WettbewerbEditorModel = {
@@ -38,7 +44,10 @@ export const initialWettbewerbEditorModel: WettbewerbEditorModel = {
 	wettbewerbsbeginn: '',
 	wettbewerbsende: '',
 	datumFreischaltungLehrer: '',
-	datumFreischaltungPrivat: ''
+	datumFreischaltungPrivat: '',
+	loesungsbuchstabenIkids: '',
+	loesungsbuchstabenKlasse1: '',
+	loesungsbuchstabenKlasse2: ''
 }
 
 export function wettbewerbeWithIDArrayToWettbewerbeArray(wettbewerbeMitID: WettbewerbWithID[]): Wettbewerb[] {

@@ -47,6 +47,12 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 
 	datumFreischaltungPrivatFormControl: FormControl;
 
+	loesungsbuchstabenIkidsFormControl: FormControl;
+
+	loesungsbuchstabenKlasse1FormControl: FormControl;
+
+	loesungsbuchstabenKlasse2FormControl: FormControl;
+
 	ngOnInit(): void {
 
 		this.wettbewerbSubscription = this.wettbewerbEditorModel$.subscribe(
@@ -59,6 +65,9 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 				this.wettbewerbsendeFormControl = new FormControl({ value: '' }, Validators.required);
 				this.datumFreischaltungLehrerFormControl = new FormControl({ value: '' }, Validators.required);
 				this.datumFreischaltungPrivatFormControl = new FormControl({ value: '' }, Validators.required);
+				this.loesungsbuchstabenIkidsFormControl = new FormControl({ value: '' });
+				this.loesungsbuchstabenKlasse1FormControl = new FormControl({ value: '' });
+				this.loesungsbuchstabenKlasse2FormControl = new FormControl({ value: '' });
 
 
 				this.wettbewerbForm = this.fb.group({
@@ -67,7 +76,10 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 					wettbewerbsbeginn: this.wettbewerbsbeginnFormControl,
 					wettbewerbsende: this.wettbewerbsendeFormControl,
 					datumFreischaltungLehrer: this.datumFreischaltungLehrerFormControl,
-					datumFreischaltungPrivat: this.datumFreischaltungPrivatFormControl
+					datumFreischaltungPrivat: this.datumFreischaltungPrivatFormControl,
+					loesungsbuchstabenIkids: this.loesungsbuchstabenIkidsFormControl,
+					loesungsbuchstabenKlasse1: this.loesungsbuchstabenKlasse1FormControl,
+					loesungsbuchstabenKlasse2: this.loesungsbuchstabenKlasse2FormControl
 				});
 
 
@@ -105,7 +117,10 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 			datumFreischaltungPrivat: formValue.datumFreischaltungPrivat.trim(),
 			wettbewerbsbeginn: formValue.wettbewerbsbeginn.trim(),
 			wettbewerbsende: formValue.wettbewerbsende.trim(),
-			status: this.initialWettbewerbGuiModel.status // wird sowieso ignorier
+			status: this.initialWettbewerbGuiModel.status, // wird sowieso ignoriert
+			loesungsbuchstabenIkids: formValue.loesungsbuchstabenIkids.trim(),
+			loesungsbuchstabenKlasse1: formValue.loesungsbuchstabenKlasse1.trim(),
+			loesungsbuchstabenKlasse2: formValue.loesungsbuchstabenKlasse2.trim()
 		}
 		this.logger.debug('neuerWettbewerb: ' + JSON.stringify(neuerWettbewerb));
 		this.wettbewerbFacade.saveWettbewerb(neuerWettbewerb, this.initialWettbewerbGuiModel.jahr === 0);
