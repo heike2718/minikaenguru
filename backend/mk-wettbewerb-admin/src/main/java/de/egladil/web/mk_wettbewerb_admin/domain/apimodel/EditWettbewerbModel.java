@@ -40,7 +40,16 @@ public class EditWettbewerbModel {
 	@Pattern(regexp = "\\d{2}.\\d{2}.\\d{4}")
 	private String datumFreischaltungPrivat;
 
-	public static EditWettbewerbModel create(final int jahr, final String beginn, final String ende, final String freischaltungLehrer, final String freischaltungPrivat) {
+	@JsonProperty
+	private String loesungsbuchstabenIkids;
+
+	@JsonProperty
+	private String loesungsbuchstabenKlasse1;
+
+	@JsonProperty
+	private String loesungsbuchstabenKlasse2;
+
+	public static EditWettbewerbModel createForTest(final int jahr, final String beginn, final String ende, final String freischaltungLehrer, final String freischaltungPrivat) {
 
 		EditWettbewerbModel result = new EditWettbewerbModel();
 
@@ -49,6 +58,18 @@ public class EditWettbewerbModel {
 		result.wettbewerbsende = ende;
 		result.datumFreischaltungLehrer = freischaltungLehrer;
 		result.datumFreischaltungPrivat = freischaltungPrivat;
+		return result;
+
+	}
+
+	public static EditWettbewerbModel createForTest(final int jahr, final String beginn, final String ende, final String freischaltungLehrer, final String freischaltungPrivat, final String loesungsbuchstabenIkids, final String loesungsbuchstabenKlasse1, final String loesungsbuchstabenKlasse2) {
+
+		EditWettbewerbModel result = EditWettbewerbModel.createForTest(jahr, beginn, ende, freischaltungLehrer,
+			freischaltungPrivat);
+
+		result.loesungsbuchstabenIkids = loesungsbuchstabenIkids;
+		result.loesungsbuchstabenKlasse1 = loesungsbuchstabenKlasse1;
+		result.loesungsbuchstabenKlasse2 = loesungsbuchstabenKlasse2;
 		return result;
 
 	}
@@ -76,5 +97,20 @@ public class EditWettbewerbModel {
 	public String getDatumFreischaltungPrivat() {
 
 		return datumFreischaltungPrivat;
+	}
+
+	public String getLoesungsbuchstabenIkids() {
+
+		return loesungsbuchstabenIkids;
+	}
+
+	public String getLoesungsbuchstabenKlasse1() {
+
+		return loesungsbuchstabenKlasse1;
+	}
+
+	public String getLoesungsbuchstabenKlasse2() {
+
+		return loesungsbuchstabenKlasse2;
 	}
 }

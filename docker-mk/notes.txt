@@ -1,2 +1,22 @@
 docker network create -d bridge --subnet 192.168.0.0/24 --gateway 192.168.0.1 mk-network
 (siehe https://forums.docker.com/t/accessing-host-machine-from-within-docker-container/14248/5)
+
+docker image build -t heik2718/mk-gateway .
+docker image build -t heik2718/mk_gateway-mariadb .
+
+docker image build -t heik2718/mk-kataloge .
+docker image build -t heik2718/mk_kataloge-mariadb .
+
+docker image build -t heik2718/mk-wettbewerb-admin .
+docker image build -t heik2718/mk-wettbewerb .
+docker image build -t heik2718/mk_wettbewerb-mariadb .
+
+
+docker container run -v /home/heike/docker-volumes/mk_gateway-database:/var/lib/mysql --name mk-gateway_database -e MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-root-pwd -e MYSQL_DATABASE_FILE=/run/secrets/mysql-database -e MYSQL_USER_FILE=/run/secrets/mysql-user -e MYSQL_PASSWORD_FILE=/run/secrets/mysql-user-pwd -d --rm heik2718/mk_gateway-mariadb
+
+docker container run -v /home/heike/docker-volumes/mk_kataloge-database:/var/lib/mysql --name mk-kataloge_database -e MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-root-pwd -e MYSQL_DATABASE_FILE=/run/secrets/mysql-database -e MYSQL_USER_FILE=/run/secrets/mysql-user -e MYSQL_PASSWORD_FILE=/run/secrets/mysql-user-pwd -d --rm heik2718/mk_kataloge-mariadb
+
+docker container run -v /home/heike/docker-volumes/mk_wettbewerb-database:/var/lib/mysql --name mk-wettbewerb_database -e MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-root-pwd -e MYSQL_DATABASE_FILE=/run/secrets/mysql-database -e MYSQL_USER_FILE=/run/secrets/mysql-user -e MYSQL_PASSWORD_FILE=/run/secrets/mysql-user-pwd -d --rm heik2718/mk_wettbewerb-mariadb
+
+docker container exec -it minikaenguru_mk-gateway-database_1 bash
+

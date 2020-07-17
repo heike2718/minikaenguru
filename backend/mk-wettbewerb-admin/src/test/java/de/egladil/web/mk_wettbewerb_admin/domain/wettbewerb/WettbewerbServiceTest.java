@@ -7,6 +7,7 @@ package de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -157,7 +158,7 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 	void should_WettbewerbAnlegenThrowException_when_InputInvalid() {
 
 		// Arrange
-		EditWettbewerbModel data = EditWettbewerbModel.create(20010, "01.012006", "31.05.2006", "01.03.2006", "01.06.2006");
+		EditWettbewerbModel data = EditWettbewerbModel.createForTest(20010, "01.012006", "31.05.2006", "01.03.2006", "01.06.2006");
 
 		// Act + Assert
 		try {
@@ -181,7 +182,7 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 	void should_WettbewerbAnlegenThrowException_when_WettbewerbsjahrInvalid() {
 
 		// Arrange
-		EditWettbewerbModel data = EditWettbewerbModel.create(2004, "01.01.2006", "31.05.2006", "01.03.2006", "01.06.2006");
+		EditWettbewerbModel data = EditWettbewerbModel.createForTest(2004, "01.01.2006", "31.05.2006", "01.03.2006", "01.06.2006");
 
 		// Act + Assert
 		try {
@@ -205,7 +206,30 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 	void should_WettbewerbAnlegen_call_AddOnTheRepo() {
 
 		// Arrange
-		EditWettbewerbModel data = EditWettbewerbModel.create(2018, "01.01.2006", "31.05.2006",
+		EditWettbewerbModel data = EditWettbewerbModel.createForTest(2018, "01.01.2006", "31.05.2006",
+			"01.03.2006", "01.06.2006", "AA-AA-AA", "BBBB-BBBB-BBBB", "CCCCC-CCCCC-CCCCC");
+
+		assertEquals(4, service.alleWettbewerbeHolen().size());
+
+		// Act
+		Wettbewerb neuer = this.service.wettbewerbAnlegen(data);
+
+		// Assert
+		assertEquals(1, getCountWettbewerbInsert());
+		assertEquals(0, getCountWettbewerbUpdate());
+		assertEquals(0, getCountChangeWettbewerbStatus());
+		assertEquals(WettbewerbStatus.ERFASST, neuer.status());
+		assertEquals("AA-AA-AA", neuer.loesungsbuchstabenIkids());
+		assertEquals("BBBB-BBBB-BBBB", neuer.loesungsbuchstabenKlasse1());
+		assertEquals("CCCCC-CCCCC-CCCCC", neuer.loesungsbuchstabenKlasse2());
+
+	}
+
+	@Test
+	void should_WettbewerbAnlegen_save_handleMissingLoesunsgbuchstaben() {
+
+		// Arrange
+		EditWettbewerbModel data = EditWettbewerbModel.createForTest(2018, "01.01.2006", "31.05.2006",
 			"01.03.2006", "01.06.2006");
 
 		assertEquals(4, service.alleWettbewerbeHolen().size());
@@ -218,6 +242,9 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 		assertEquals(0, getCountWettbewerbUpdate());
 		assertEquals(0, getCountChangeWettbewerbStatus());
 		assertEquals(WettbewerbStatus.ERFASST, neuer.status());
+		assertNull(neuer.loesungsbuchstabenIkids());
+		assertNull(neuer.loesungsbuchstabenKlasse1());
+		assertNull(neuer.loesungsbuchstabenKlasse2());
 
 	}
 
@@ -225,7 +252,7 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 	void should_WettbewerbAnlegenConvertPersistenceException() {
 
 		// Arrange
-		EditWettbewerbModel data = EditWettbewerbModel.create(2011, "01.02.2006", "31.05.2006",
+		EditWettbewerbModel data = EditWettbewerbModel.createForTest(2011, "01.02.2006", "31.05.2006",
 			"01.03.2006", "01.06.2006");
 
 		assertEquals(0, getCountWettbewerbInsert());
@@ -331,7 +358,7 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 	void should_WettbewerbAendernThrowException_when_InputInvalid() {
 
 		// Arrange
-		EditWettbewerbModel data = EditWettbewerbModel.create(2005, "01.012006", "31.05.2006", "01.03.2006", "01.06.2006");
+		EditWettbewerbModel data = EditWettbewerbModel.createForTest(2005, "01.012006", "31.05.2006", "01.03.2006", "01.06.2006");
 
 		// Act + Assert
 		try {
@@ -355,14 +382,17 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 	void should_WettbewerbAendern_call_UpdateOnTheRepo() {
 
 		// Arrange
-		EditWettbewerbModel data = EditWettbewerbModel.create(2017, "13.02.2017", "15.08.2017", "23.03.2017",
-			"01.07.2017");
+		EditWettbewerbModel data = EditWettbewerbModel.createForTest(2017, "13.02.2017", "15.08.2017", "23.03.2017",
+			"01.07.2017", "AA-AA-AA", "BBBB-BBBB-BBBB", "CCCCC-CCCCC-CCCCC");
 
 		WettbewerbDetailsAPIModel vorhandener = service.wettbewerbMitJahr(Integer.valueOf(2017)).get();
 		assertEquals("01.01.2017", vorhandener.getWettbewerbsbeginn());
 		assertEquals("01.08.2017", vorhandener.getWettbewerbsende());
 		assertEquals("01.03.2017", vorhandener.getDatumFreischaltungLehrer());
 		assertEquals("01.06.2017", vorhandener.getDatumFreischaltungPrivat());
+		assertNull(vorhandener.getLoesungsbuchstabenIkids());
+		assertNull(vorhandener.getLoesungsbuchstabenKlasse1());
+		assertNull(vorhandener.getLoesungsbuchstabenKlasse2());
 
 		// Act
 		Wettbewerb geaenderter = this.service.wettbewerbAendern(data);
@@ -377,6 +407,9 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 		assertEquals("23.03.2017", CommonTimeUtils.format(geaenderter.datumFreischaltungLehrer()));
 		assertEquals("01.07.2017", CommonTimeUtils.format(geaenderter.datumFreischaltungPrivat()));
 		assertEquals("15.08.2017", CommonTimeUtils.format(geaenderter.wettbewerbsende()));
+		assertEquals("AA-AA-AA", geaenderter.loesungsbuchstabenIkids());
+		assertEquals("BBBB-BBBB-BBBB", geaenderter.loesungsbuchstabenKlasse1());
+		assertEquals("CCCCC-CCCCC-CCCCC", geaenderter.loesungsbuchstabenKlasse2());
 
 	}
 
@@ -384,7 +417,7 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 	void should_WettbewerbAendernConvertPersistenceException() {
 
 		// Arrange
-		EditWettbewerbModel data = EditWettbewerbModel.create(2015, "01.01.2010", "31.03.2010",
+		EditWettbewerbModel data = EditWettbewerbModel.createForTest(2015, "01.01.2010", "31.03.2010",
 			"01.03.2010", "01.09.2010");
 
 		// Act + Assert
@@ -406,7 +439,7 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 	void should_WettbewerbAendernThrowNotFoundException_when_WettbewerbNotPresent() {
 
 		// Arrange
-		EditWettbewerbModel data = EditWettbewerbModel.create(2012, "01.01.2017", "31.05.2017",
+		EditWettbewerbModel data = EditWettbewerbModel.createForTest(2012, "01.01.2017", "31.05.2017",
 			"01.03.2017", "01.06.2017");
 
 		// Act + Assert
@@ -427,7 +460,7 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 	void should_WettbewerbAendernThrowWebapplicationException_when_WettbewerbBeendet() {
 
 		// Arrange
-		EditWettbewerbModel data = EditWettbewerbModel.create(2005, "01.01.2017", "31.05.2017",
+		EditWettbewerbModel data = EditWettbewerbModel.createForTest(2005, "01.01.2017", "31.05.2017",
 			"01.03.2017", "01.06.2017");
 
 		// Act + Assert

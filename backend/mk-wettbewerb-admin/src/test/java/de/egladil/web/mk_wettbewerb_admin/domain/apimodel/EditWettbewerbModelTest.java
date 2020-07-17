@@ -25,25 +25,26 @@ public class EditWettbewerbModelTest {
 	void should_Serialize() throws JsonProcessingException {
 
 		// Arrange
-		EditWettbewerbModel model = EditWettbewerbModel.create(2021, "11.11.2020",
+		EditWettbewerbModel model = EditWettbewerbModel.createForTest(2021, "11.11.2020",
 			"01.08.2021", "06.03.2021", "01.06.2021");
 
 		// Act
 		String serialized = new ObjectMapper().writeValueAsString(model);
 
 		// Assert
+		System.out.println(serialized);
+
 		assertEquals(
-			"{\"jahr\":2021,\"wettbewerbsbeginn\":\"11.11.2020\",\"wettbewerbsende\":\"01.08.2021\",\"datumFreischaltungLehrer\":\"06.03.2021\",\"datumFreischaltungPrivat\":\"01.06.2021\"}",
+			"{\"jahr\":2021,\"status\":null,\"wettbewerbsbeginn\":\"11.11.2020\",\"wettbewerbsende\":\"01.08.2021\",\"datumFreischaltungLehrer\":\"06.03.2021\",\"datumFreischaltungPrivat\":\"01.06.2021\",\"loesungsbuchstabenIkids\":null,\"loesungsbuchstabenKlasse1\":null,\"loesungsbuchstabenKlasse2\":null}",
 			serialized);
 
-		System.out.println(serialized);
 	}
 
 	@Test
 	void should_checkThrowException_whenCompletelyInvalid() {
 
 		// Arrange
-		EditWettbewerbModel completelyInvalidModel = EditWettbewerbModel.create(0, "11112020",
+		EditWettbewerbModel completelyInvalidModel = EditWettbewerbModel.createForTest(0, "11112020",
 			"1820", "2802.2021", "01.062021");
 
 		// Act

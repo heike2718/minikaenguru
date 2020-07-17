@@ -48,7 +48,7 @@ public class SessionUtilsTest {
 	void should_GetPublicKeyWork() {
 
 		assertTrue(
-			new String(SessionUtils.getPublicKey()).contains("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1csTKiAv4N3SwLNCA9r7"));
+			new String(SessionUtils.getPublicKey()).contains("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwT4s/a90Wst40aAReBhm"));
 	}
 
 	@Test
