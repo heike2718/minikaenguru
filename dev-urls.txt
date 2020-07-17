@@ -24,6 +24,11 @@ http://localhost:9550/mk-wettbewerb/teilnahmen/schule POST header X-UUID  24f4c5
 
 {"schulkuerzel":"EEGEECP6","schulname":"Albert-Schweitzer-Schule"}
 
+=========================================
+mk-wettbewerb-admin
+
+http://192.168.10.176:9570/mk-wettbewerb-admin/wettbewerbe X-UUID 20721575-8c45-4201-a025-7a9fece1f2aa
+
 
 =========================================
 

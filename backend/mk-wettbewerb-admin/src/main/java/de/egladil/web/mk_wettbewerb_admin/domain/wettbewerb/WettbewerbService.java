@@ -122,7 +122,10 @@ public class WettbewerbService {
 			.withWettbewerbsbeginn(CommonTimeUtils.parseToLocalDate(data.getWettbewerbsbeginn()))
 			.withWettbewerbsende(CommonTimeUtils.parseToLocalDate(data.getWettbewerbsende()))
 			.withDatumFreischaltungLehrer(CommonTimeUtils.parseToLocalDate(data.getDatumFreischaltungLehrer()))
-			.withDatumFreischaltungPrivat(CommonTimeUtils.parseToLocalDate(data.getDatumFreischaltungPrivat()));
+			.withDatumFreischaltungPrivat(CommonTimeUtils.parseToLocalDate(data.getDatumFreischaltungPrivat()))
+			.withLoesungsbuchstabenIKids(data.getLoesungsbuchstabenIkids())
+			.withLoesungsbuchstabenKlasse1(data.getLoesungsbuchstabenKlasse1())
+			.withLoesungsbuchstabenKlasse2(data.getLoesungsbuchstabenKlasse2());
 
 		try {
 
@@ -197,7 +200,10 @@ public class WettbewerbService {
 			.withWettbewerbsbeginn(CommonTimeUtils.parseToLocalDate(data.getWettbewerbsbeginn()))
 			.withWettbewerbsende(CommonTimeUtils.parseToLocalDate(data.getWettbewerbsende()))
 			.withDatumFreischaltungLehrer(CommonTimeUtils.parseToLocalDate(data.getDatumFreischaltungLehrer()))
-			.withDatumFreischaltungPrivat(CommonTimeUtils.parseToLocalDate(data.getDatumFreischaltungPrivat()));
+			.withDatumFreischaltungPrivat(CommonTimeUtils.parseToLocalDate(data.getDatumFreischaltungPrivat()))
+			.withLoesungsbuchstabenIKids(data.getLoesungsbuchstabenIkids())
+			.withLoesungsbuchstabenKlasse1(data.getLoesungsbuchstabenKlasse1())
+			.withLoesungsbuchstabenKlasse2(data.getLoesungsbuchstabenKlasse2());
 
 		try {
 

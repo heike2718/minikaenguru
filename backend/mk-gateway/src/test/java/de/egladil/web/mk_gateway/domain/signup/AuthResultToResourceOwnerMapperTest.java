@@ -151,7 +151,7 @@ public class AuthResultToResourceOwnerMapperTest {
 			fail("keine AuthException");
 		} catch (AuthException e) {
 
-			assertEquals("The Token has expired on Mon Apr 13 15:02:32 CEST 2020.", e.getMessage());
+			assertEquals("The Token has expired on Tue Jun 30 06:46:57 CEST 2020.", e.getMessage());
 			assertNull(mapper.getSecurityIncident());
 		}
 
