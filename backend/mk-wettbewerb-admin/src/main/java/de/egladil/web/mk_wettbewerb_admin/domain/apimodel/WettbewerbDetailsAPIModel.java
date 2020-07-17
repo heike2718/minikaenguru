@@ -7,6 +7,8 @@ package de.egladil.web.mk_wettbewerb_admin.domain.apimodel;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
@@ -44,6 +46,15 @@ public class WettbewerbDetailsAPIModel {
 	private String datumFreischaltungPrivat;
 
 	@JsonProperty
+	private String loesungsbuchstabenIkids = "";
+
+	@JsonProperty
+	private String loesungsbuchstabenKlasse1 = "";
+
+	@JsonProperty
+	private String loesungsbuchstabenKlasse2 = "";
+
+	@JsonProperty
 	private TeilnahmenuebersichtAPIModel teilnahmenuebersicht;
 
 	@JsonProperty
@@ -59,6 +70,22 @@ public class WettbewerbDetailsAPIModel {
 		result.wettbewerbsende = CommonTimeUtils.format(wettbewerb.wettbewerbsende());
 		result.datumFreischaltungLehrer = CommonTimeUtils.format(wettbewerb.datumFreischaltungLehrer());
 		result.datumFreischaltungPrivat = CommonTimeUtils.format(wettbewerb.datumFreischaltungPrivat());
+
+		if (wettbewerb.loesungsbuchstabenIkids() != null) {
+
+			result.loesungsbuchstabenIkids = wettbewerb.loesungsbuchstabenIkids();
+		}
+
+		if (wettbewerb.loesungsbuchstabenKlasse1() != null) {
+
+			result.loesungsbuchstabenKlasse1 = wettbewerb.loesungsbuchstabenKlasse1();
+		}
+
+		if (wettbewerb.loesungsbuchstabenKlasse2() != null) {
+
+			result.loesungsbuchstabenKlasse2 = wettbewerb.loesungsbuchstabenKlasse2();
+		}
+
 		return result;
 	}
 
@@ -96,6 +123,21 @@ public class WettbewerbDetailsAPIModel {
 	public String getDatumFreischaltungPrivat() {
 
 		return datumFreischaltungPrivat;
+	}
+
+	public String getLoesungsbuchstabenIkids() {
+
+		return StringUtils.isBlank(loesungsbuchstabenIkids) ? null : loesungsbuchstabenIkids;
+	}
+
+	public String getLoesungsbuchstabenKlasse1() {
+
+		return StringUtils.isBlank(loesungsbuchstabenKlasse1) ? null : loesungsbuchstabenKlasse1;
+	}
+
+	public String getLoesungsbuchstabenKlasse2() {
+
+		return StringUtils.isBlank(loesungsbuchstabenKlasse2) ? null : loesungsbuchstabenKlasse2;
 	}
 
 }

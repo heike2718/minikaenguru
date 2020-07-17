@@ -47,6 +47,15 @@ public class PersistenterWettbewerb extends ConcurrencySafeEntity {
 	@Column(name = "FREISCHALTUNG_PRIVAT")
 	private Date datumFreischaltungPrivat;
 
+	@Column(name = "IKID")
+	private String loesungsbuchstabenIkids;
+
+	@Column(name = "EINS")
+	private String loesungsbuchstabenKlasse1;
+
+	@Column(name = "ZWEI")
+	private String loesungsbuchstabenKlasse2;
+
 	public WettbewerbStatus getStatus() {
 
 		return status;
@@ -95,6 +104,36 @@ public class PersistenterWettbewerb extends ConcurrencySafeEntity {
 	public void setDatumFreischaltungPrivat(final Date datumFreischaltungPrivat) {
 
 		this.datumFreischaltungPrivat = datumFreischaltungPrivat;
+	}
+
+	public String getLoesungsbuchstabenIkids() {
+
+		return loesungsbuchstabenIkids;
+	}
+
+	public void setLoesungsbuchstabenIkids(final String loesungsbuchstabenIkids) {
+
+		this.loesungsbuchstabenIkids = loesungsbuchstabenIkids;
+	}
+
+	public String getLoesungsbuchstabenKlasse1() {
+
+		return loesungsbuchstabenKlasse1;
+	}
+
+	public void setLoesungsbuchstabenKlasse1(final String loesungsbuchstabenKlasse1) {
+
+		this.loesungsbuchstabenKlasse1 = loesungsbuchstabenKlasse1;
+	}
+
+	public String getLoesungsbuchstabenKlasse2() {
+
+		return loesungsbuchstabenKlasse2;
+	}
+
+	public void setLoesungsbuchstabenKlasse2(final String loesungsbuchstabenKlasse2) {
+
+		this.loesungsbuchstabenKlasse2 = loesungsbuchstabenKlasse2;
 	}
 
 }
