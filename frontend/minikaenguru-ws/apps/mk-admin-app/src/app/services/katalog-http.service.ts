@@ -16,7 +16,7 @@ export class KatalogHttpService {
 
 	public loadLaender(): Observable<KatalogpflegeItem[]> {
 
-		const url = environment.apiUrl + '/wb-admin/kataloge/laender';
+		const url = environment.apiUrl + '/kataloge/laender';
 
 		return this.loadKatalogItems(url);
 	}
@@ -24,7 +24,7 @@ export class KatalogHttpService {
 	public loadChildItems(item: KatalogpflegeItem): Observable<KatalogpflegeItem[]> {
 
 
-		let url = environment.apiUrl + '/wb-admin/kataloge/';
+		let url = environment.apiUrl + '/kataloge/';
 
 		switch (item.typ) {
 			case 'LAND': url += 'laender/' + item.kuerzel + '/orte'; break;
@@ -44,14 +44,14 @@ export class KatalogHttpService {
 
 	public searchKatalogItems(typ: Katalogpflegetyp, searchTerm: string): Observable<KatalogpflegeItem[]> {
 
-		let url = environment.apiUrl + '/wb-admin/katalogsuche/global/' + typ + '?search=' + searchTerm;
+		let url = environment.apiUrl + '/katalogsuche/global/' + typ + '?search=' + searchTerm;
 		return this.loadKatalogItems(url);
 	}
 
 	public getKuerzel(): Observable<KuerzelAPIModel> {
 
 
-		let url = environment.apiUrl + '/wb-admin/kuerzel';
+		let url = environment.apiUrl + '/kuerzel';
 
 		return this.http.get(url).pipe(
 			map(body => body as ResponsePayload),
@@ -61,7 +61,7 @@ export class KatalogHttpService {
 
 	public createSchule(schulePayload: SchulePayload): Observable<ResponsePayload> {
 
-		let url = environment.apiUrl + '/wb-admin/kataloge/schulen';
+		let url = environment.apiUrl + '/kataloge/schulen';
 
 		return this.http.post(url, schulePayload).pipe(
 			map(body => body as ResponsePayload)
@@ -71,7 +71,7 @@ export class KatalogHttpService {
 
 	public renameSchule(schulePayload: SchulePayload): Observable<ResponsePayload> {
 
-		let url = environment.apiUrl + '/wb-admin/kataloge/schulen';
+		let url = environment.apiUrl + '/kataloge/schulen';
 
 		return this.http.put(url, schulePayload).pipe(
 			map(body => body as ResponsePayload)
@@ -81,7 +81,7 @@ export class KatalogHttpService {
 
 	public renameOrt(ortPayload: OrtPayload): Observable<ResponsePayload> {
 
-		let url = environment.apiUrl + '/wb-admin/kataloge/orte';
+		let url = environment.apiUrl + '/kataloge/orte';
 
 		return this.http.put(url, ortPayload).pipe(
 			map(body => body as ResponsePayload)
@@ -91,7 +91,7 @@ export class KatalogHttpService {
 
 	public renameLand(landPayload: LandPayload): Observable<ResponsePayload> {
 
-		let url = environment.apiUrl + '/wb-admin/kataloge/laender';
+		let url = environment.apiUrl + '/kataloge/laender';
 
 		return this.http.put(url, landPayload).pipe(
 			map(body => body as ResponsePayload)

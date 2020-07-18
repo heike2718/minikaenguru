@@ -25,12 +25,6 @@
       "tags": [],
       "implicitDependencies": ["mk-admin-app"]
     },
-    "schulkatalog-api": {
-      "tags": ["domain:schulkatalog", "domain:schulkatalog/api", "type:api"]
-    },
-    "schulkatalog-domain": {
-      "tags": ["domain:schulkatalog", "type:domain-logic"]
-    },
     "common-schulkatalog": {
       "tags": []
     },

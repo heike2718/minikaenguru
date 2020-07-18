@@ -50,7 +50,7 @@ export class WettbewerbFacade {
 
 	public loadWettbewerbe(): Observable<Wettbewerb[]> {
 
-		const url = environment.apiUrl + '/wb-admin/wettbewerbe';
+		const url = environment.apiUrl + '/wettbewerbe';
 
 		this.logger.debug(url);
 
@@ -62,7 +62,7 @@ export class WettbewerbFacade {
 
 	public loadWettbewerbDetails(jahr: number): Observable<Wettbewerb> {
 
-		const url = environment.apiUrl + '/wb-admin/wettbewerbe/wettbewerb/' + jahr;
+		const url = environment.apiUrl + '/wettbewerbe/wettbewerb/' + jahr;
 
 		this.logger.debug(url);
 
@@ -84,7 +84,7 @@ export class WettbewerbFacade {
 
 	private insertWettbewerb(wettbewerb: WettbewerbEditorModel): void {
 
-		const url = environment.apiUrl + '/wb-admin/wettbewerbe/wettbewerb';
+		const url = environment.apiUrl + '/wettbewerbe/wettbewerb';
 
 		this.http.post(url, wettbewerb).pipe(
 			map(body => body as ResponsePayload),
@@ -105,7 +105,7 @@ export class WettbewerbFacade {
 
 		private updateWettbewerb(wettbewerb: WettbewerbEditorModel): void {
 
-		const url = environment.apiUrl + '/wb-admin/wettbewerbe/wettbewerb';
+		const url = environment.apiUrl + '/wettbewerbe/wettbewerb';
 
 		this.http.put(url, wettbewerb).pipe(
 			map(body => body as ResponsePayload),
@@ -126,7 +126,7 @@ export class WettbewerbFacade {
 
 	public moveWettbewerbOn(wettbewerb: Wettbewerb): void {
 
-		const url = environment.apiUrl + '/wb-admin/wettbewerbe/wettbewerb/status';
+		const url = environment.apiUrl + '/wettbewerbe/wettbewerb/status';
 
 		const payload = {jahr: wettbewerb.jahr};
 

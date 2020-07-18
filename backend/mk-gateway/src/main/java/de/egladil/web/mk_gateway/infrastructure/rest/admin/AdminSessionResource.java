@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.infrastructure.rest.users;
+package de.egladil.web.mk_gateway.infrastructure.rest.admin;
 
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.event.Event;
@@ -27,27 +27,27 @@ import de.egladil.web.commons_net.utils.CommonHttpUtils;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.MkGatewayApp;
+import de.egladil.web.mk_gateway.domain.admin.AdminTokenExchangeService;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.session.MkSessionService;
 import de.egladil.web.mk_gateway.domain.session.Session;
 import de.egladil.web.mk_gateway.domain.session.SessionUtils;
-import de.egladil.web.mk_gateway.domain.session.TokenExchangeService;
 import de.egladil.web.mk_gateway.domain.signup.AuthResult;
 
 /**
- * SessionResource ist der Endpoint für mkv-app, um sich ein- und auszuloggen.
+ * AdminSessionResource ist der Endpoint für mk-admin-app, um sich einzuloggen.
  */
 @RequestScoped
-@Path("/")
+@Path("/wb-admin")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class SessionResource {
+public class AdminSessionResource {
 
 	private static final String SESSION_COOKIE_NAME = MkGatewayApp.CLIENT_COOKIE_PREFIX
 		+ CommonHttpUtils.NAME_SESSIONID_COOKIE;
 
-	private static final Logger LOG = LoggerFactory.getLogger(SessionResource.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AdminSessionResource.class);
 
 	@ConfigProperty(name = "stage")
 	String stage;
@@ -59,35 +59,11 @@ public class SessionResource {
 	Event<SecurityIncidentRegistered> securityEvent;
 
 	@Inject
-	TokenExchangeService tokenExchangeService;
-
-	@POST
-	@Path("/wb-admin/login")
-	public Response loginAsAdmin(final AuthResult authResult) {
-
-		final String oneTimeToken = authResult.getIdToken();
-
-		LOG.debug("idToken={}", StringUtils.abbreviate(oneTimeToken, 11));
-
-		String jwt = this.tokenExchangeService.exchangeTheOneTimeToken(oneTimeToken);
-
-		Session session = sessionService.initSession(jwt);
-
-		NewCookie sessionCookie = SessionUtils.createSessionCookie(SESSION_COOKIE_NAME, session.sessionId());
-
-		if (!MkGatewayApp.STAGE_DEV.equals(stage)) {
-
-			// TODO: schauen, ob dies aufgerufen wird.
-			session.clearSessionId();
-		}
-
-		ResponsePayload payload = new ResponsePayload(MessagePayload.info("OK"), session);
-		return Response.ok(payload).cookie(sessionCookie).build();
-	}
+	AdminTokenExchangeService tokenExchangeService;
 
 	@POST
 	@Path("/login")
-	public Response login(final AuthResult authResult) {
+	public Response loginAsAdmin(final AuthResult authResult) {
 
 		final String oneTimeToken = authResult.getIdToken();
 

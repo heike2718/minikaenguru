@@ -1,8 +1,8 @@
 export const environment = {
 	envName: 'PROD',
 	production: true,
-	assetsUrl: 'mkv-app/assets',
-    apiUrl: 'https://mathe-jung-alt.de/mk-gateway',
+	assetsUrl: 'https://mathe-jung-alt.de/mk-admin-app/assets',
+    apiUrl: 'https://mathe-jung-alt.de/mk-gateway/wb-admin',
     storageKeyPrefix: 'mka_',
 	version: '1.0.0',
 	consoleLogActive: false,

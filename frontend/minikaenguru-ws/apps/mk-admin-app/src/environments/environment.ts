@@ -6,8 +6,8 @@
 export const environment = {
         envName: 'DEV',
         production: false,
-        assetsUrl: '/home/heike/git/minikaenguru/frontend/minikaenguru-ws/apps/mkv-app/src/assets',
-        apiUrl: 'http://192.168.10.176:9500/mk-gateway',
+        assetsUrl: '/home/heike/git/minikaenguru/frontend/minikaenguru-ws/apps/mk-admin-app/src/assets',
+        apiUrl: 'http://192.168.10.176:9510/mk-gateway/wb-admin',
         storageKeyPrefix: 'mka_',
         version: '1.0.0',
         consoleLogActive: true,
