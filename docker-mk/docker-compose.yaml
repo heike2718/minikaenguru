@@ -7,7 +7,7 @@ services:
     networks:
       - mk-network
     ports:
-      - 9500:9500
+      - xxxx:xxxx
     environment:
       - TZ=Europe/Berlin
     restart: on-failure:3
@@ -35,7 +35,7 @@ services:
     networks:
       - mk-network
     ports:
-      - 9700:9700
+      - xxxx:xxxx
     environment:
       - TZ=Europe/Berlin
     restart: on-failure:3
@@ -62,8 +62,6 @@ services:
     image: heik2718/mk-wettbewerb-admin
     networks:
       - mk-network
-    ports:
-      - 9570:9570
     environment:
       - TZ=Europe/Berlin
     restart: on-failure:3
@@ -75,8 +73,6 @@ services:
     image: heik2718/mk-wettbewerb
     networks:
       - mk-network
-    ports:
-      - 9550:9550
     environment:
       - TZ=Europe/Berlin
     restart: on-failure:3

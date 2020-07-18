@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.session;
+package de.egladil.web.mk_gateway.domain.admin;
 
 import java.util.Map;
 import java.util.UUID;
@@ -25,19 +25,20 @@ import de.egladil.web.mk_gateway.domain.error.ClientAuthException;
 import de.egladil.web.mk_gateway.domain.error.InaccessableEndpointException;
 import de.egladil.web.mk_gateway.domain.error.LogmessagePrefixes;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.session.TokenExchangeRestClient;
 
 /**
  * AdminTokenExchangeService
  */
 @ApplicationScoped
-public class TokenExchangeService {
+public class AdminTokenExchangeService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(TokenExchangeService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AdminTokenExchangeService.class);
 
-	@ConfigProperty(name = "mkv-app.client-id")
+	@ConfigProperty(name = "mk-admin-app.client-id")
 	String clientId;
 
-	@ConfigProperty(name = "mkv-app.client-secret")
+	@ConfigProperty(name = "mk-admin-app.client-secret")
 	String clientSecret;
 
 	@Inject
