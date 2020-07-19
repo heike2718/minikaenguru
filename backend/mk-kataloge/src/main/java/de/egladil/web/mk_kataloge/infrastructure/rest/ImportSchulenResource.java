@@ -39,6 +39,7 @@ import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
 @Path("/import/schulen")
 @Produces(MediaType.TEXT_PLAIN)
 @Consumes(MediaType.APPLICATION_JSON)
+@Deprecated(forRemoval = true)
 public class ImportSchulenResource {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ImportSchulenResource.class);
