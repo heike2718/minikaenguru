@@ -5,14 +5,14 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mk-wettbewerb</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>0.1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>mk-wettbewerb</name>
 	<url>https://github.com/heike2718/minikaenguru</url>
 
 	<properties>
-		<quarkus.version>1.5.2.Final</quarkus.version>
+		<quarkus.version>1.6.1.Final</quarkus.version>
 		<commons.version>1.4.9</commons.version>
 		<maven.compiler.source>1.11</maven.compiler.source>
 		<maven.compiler.target>1.11</maven.compiler.target>

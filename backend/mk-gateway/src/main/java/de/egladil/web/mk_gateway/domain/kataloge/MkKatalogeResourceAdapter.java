@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.domain.AbstractMkResourceAdapter;
+import de.egladil.web.mk_gateway.domain.apimodel.FileResource;
 import de.egladil.web.mk_gateway.domain.apimodel.LandPayload;
 import de.egladil.web.mk_gateway.domain.apimodel.OrtPayload;
 import de.egladil.web.mk_gateway.domain.apimodel.SchulePayload;
@@ -168,6 +169,20 @@ public class MkKatalogeResourceAdapter extends AbstractMkResourceAdapter {
 
 			return handleException(e, LOG, "[generateKuerzel]");
 		}
+	}
+
+	public Response uploadSchulkatalog(final String secret, final FileResource input) {
+
+		try {
+
+			Response response = restClient.uploadSchulkatalog(secret, input);
+			return response;
+
+		} catch (Exception e) {
+
+			return handleException(e, LOG, "[uploadSchulkatalog]");
+		}
+
 	}
 
 	@Override

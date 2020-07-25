@@ -35,7 +35,7 @@ public abstract class AbstractMkResourceAdapter {
 
 		if (e instanceof ProcessingException) {
 
-			log.error("endpoint " + endpointName() + " ist nicht erreichbar");
+			log.error("endpoint " + endpointName() + " ist nicht erreichbar: {}", e.getMessage(), e);
 
 			throw new InaccessableEndpointException("Der Endpoint " + endpointName() + " ist nicht erreichbar. ");
 

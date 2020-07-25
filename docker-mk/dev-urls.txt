@@ -15,7 +15,7 @@ http://localhost:9550/mk-wettbewerb/schulen/details/S7YZMQ27   header X-UUID  2f
 
 http://localhost:9550/mk-wettbewerb/veranstalter/unterlagen/zugangsstatus  header X-UUID  2f09da36-07c6-4033-a2f1-5e110c804026
 
-http://localhost:9550/mk-wettbewerb/veranstalter/lehrer 
+http://localhost:9550/mk-wettbewerb/veranstalter/lehrer
 
 http://localhost:9550/mk-wettbewerb/teilnahmen/privat POST header X-UUID  9bfa4dc8-6251-44d4-87ab-72784123c1e7  (gehört zu pe1@egladil.de)
 
@@ -38,6 +38,8 @@ http://192.168.10.176:9510/mk-gateway/wettbewerb/lehrer/schulen header X-SESSION
 
 http://localhost:9510/mk-gateway/wettbewerb/lehrer/schulen/6XOA2A11/details   header X-SESSIONID=b2RETVlQZWpNTVFORGVqSlV6dXJoZz09
 
+http://localhost:9510/mk-gateway/wb-admin/upload/schulen
+
 http://192.168.10.176:9510/mk-gateway/wettbewerb/veranstalter/lehrer
 
 curl -X GET -H 'Content-Type: application/json' -H 'X-SESSIONID: S3l4Yzd2S2o5NEdwdEtBMXlOYmpTZz09' -i http://localhost:9510/mk-gateway/wettbewerb/lehrer/schulen/JPTM15A5/details
@@ -58,7 +60,7 @@ http://192.168.10.176:9510/mk-gateway/wb-admin/kataloge/schulen  PUT
 ========================================
 mk-katalog-api
 
-http://192.168.10.176:9700/mk-kataloge-api
+http://192.168.10.176:9530/mk-kataloge-api
 
 ========================================
 

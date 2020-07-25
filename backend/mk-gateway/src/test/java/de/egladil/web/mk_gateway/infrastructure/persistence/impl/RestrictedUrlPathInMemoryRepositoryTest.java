@@ -373,6 +373,22 @@ public class RestrictedUrlPathInMemoryRepositoryTest {
 			assertTrue(restrictedUrlPath.isAllowedForRolle(Rolle.ADMIN));
 		}
 
+		@Test
+		void should_OfPathContainUploadSchulen() {
+
+			Optional<RestrictedUrlPath> opt = repository.ofPath("/wb-admin/upload/schulen");
+
+			assertTrue(opt.isPresent());
+
+			RestrictedUrlPath restrictedUrlPath = opt.get();
+
+			assertEquals("/wb-admin/upload/schulen", restrictedUrlPath.path());
+
+			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.LEHRER));
+			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.PRIVAT));
+			assertTrue(restrictedUrlPath.isAllowedForRolle(Rolle.ADMIN));
+		}
+
 	}
 
 	@Test

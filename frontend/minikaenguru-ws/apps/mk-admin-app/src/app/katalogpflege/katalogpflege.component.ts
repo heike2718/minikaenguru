@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { KatalogpflegeFacade } from './katalogpflege.facade';
+import { environment} from '../../environments/environment';
 
 @Component({
 	selector: 'mka-katalogpflege',
@@ -7,6 +8,8 @@ import { KatalogpflegeFacade } from './katalogpflege.facade';
 	styleUrls: ['./katalogpflege.component.css']
 })
 export class KatalogpflegeComponent implements OnInit, OnDestroy {
+
+	uploadUrl = environment.apiUrl + '/upload/schulen/csv';
 
 	constructor(private katalogFacade: KatalogpflegeFacade) { }
 
