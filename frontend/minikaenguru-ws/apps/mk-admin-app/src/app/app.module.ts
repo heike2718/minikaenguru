@@ -50,7 +50,9 @@ registerLocaleData(localeDe);
 		HttpClientModule,
 		BrowserAnimationsModule,
 		CommonMessagesModule,
-		CommonComponentsModule,
+		CommonComponentsModule.forRoot({
+			baseUrl: environment.apiUrl
+		}) ,
 		CommonLoggingModule.forRoot({
 			consoleLogActive: environment.consoleLogActive,
 			serverLogActive: environment.serverLogActive,

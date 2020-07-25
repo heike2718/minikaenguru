@@ -9,7 +9,7 @@ export const environment = {
   katalogApiUrl: 'http://192.168.10.176:9530/mk-kataloge-api',
   apiUrl: 'http://192.168.10.176:9510/mk-gateway',
   storageKeyPrefix: 'mkv_',
-  version: '1.0.0',
+  version: '0.1.0',
   consoleLogActive: true,
   serverLogActive: false,
   loglevel: 1

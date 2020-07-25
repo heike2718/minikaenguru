@@ -21,8 +21,10 @@ import { AuthInterceptor } from './auth.interceptor';
 	]
 })
 export class CommonAuthModule {
+
 	  static forRoot(config: MkAuthConfig): ModuleWithProviders<CommonAuthModule> {
-    return {
+
+		return {
       ngModule: CommonAuthModule,
       providers: [
         {

@@ -186,6 +186,13 @@ public class RestrictedUrlPathInMemoryRepository implements RestrictedUrlPathRep
 			paths.add(restrictedPath);
 		}
 
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/upload/schulen",
+				Arrays.asList(new Rolle[] { Rolle.ADMIN }));
+			paths.add(restrictedPath);
+		}
+
 	}
 
 	@Override

@@ -20,6 +20,7 @@ import javax.persistence.Version;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Schule
@@ -80,21 +81,27 @@ public class Schule {
 	@GenericGenerator(
 		name = "schule_id_generator", strategy = "de.egladil.web.mk_kataloge.infrastructure.persistence.impl.SchuleIdGenerator")
 	@Column(name = "KUERZEL")
+	@JsonProperty
 	private String kuerzel;
 
 	@Column(name = "NAME")
+	@JsonProperty
 	private String name;
 
 	@Column(name = "ORT_KUERZEL")
+	@JsonProperty
 	private String ortKuerzel;
 
 	@Column(name = "ORT_NAME")
+	@JsonProperty
 	private String ortName;
 
 	@Column(name = "LAND_KUERZEL")
+	@JsonProperty
 	private String landKuerzel;
 
 	@Column(name = "LAND_NAME")
+	@JsonProperty
 	private String landName;
 
 	@Version
