@@ -10,7 +10,7 @@ import javax.ws.rs.core.Application;
 /**
  * KatalogAPIApp
  */
-@ApplicationPath("/mk-kataloge-api")
+@ApplicationPath("/mk-kataloge")
 public class KatalogAPIApp extends Application {
 
 	public static final String CLIENT_COOKIE_PREFIX = "KAT";

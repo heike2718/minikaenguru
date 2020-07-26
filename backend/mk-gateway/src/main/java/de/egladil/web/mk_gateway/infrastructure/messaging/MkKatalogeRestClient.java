@@ -21,6 +21,7 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import de.egladil.web.commons_validation.annotations.Kuerzel;
+import de.egladil.web.commons_validation.annotations.LandKuerzel;
 import de.egladil.web.commons_validation.annotations.StringLatin;
 import de.egladil.web.mk_gateway.MkGatewayApp;
 import de.egladil.web.mk_gateway.domain.apimodel.FileResource;
@@ -32,9 +33,24 @@ import de.egladil.web.mk_gateway.domain.apimodel.SchulePayload;
  * MkKatalogeRestClient
  */
 @RegisterRestClient
-@Path("/mk-kataloge-api")
+@Path("/mk-kataloge")
 @Produces(MediaType.APPLICATION_JSON)
 public interface MkKatalogeRestClient {
+
+	@GET
+	@Path("/katalogsuche/global/{typ}")
+	public Response findItems(@PathParam(
+		value = "typ") final String typ, @NotBlank @StringLatin @QueryParam("search") final String searchTerm);
+
+	@GET
+	@Path("/katalogsuche/laender/{land}/orte")
+	public Response findOrteInLand(@LandKuerzel @PathParam(
+		value = "land") final String landKuerzel, @NotBlank @StringLatin @QueryParam("search") final String searchTerm);
+
+	@GET
+	@Path("/katalogsuche/orte/{ort}/schulen")
+	public Response findSchulenInOrt(@Kuerzel @PathParam(
+		value = "ort") final String ortKuerzel, @NotBlank @StringLatin @QueryParam("search") final String searchTerm);
 
 	/**
 	 * Response.entity.data hat die Signatur von List<KatalogItem>
@@ -47,7 +63,7 @@ public interface MkKatalogeRestClient {
 	@Path("/kataloge/schulen/{kommaseparierteKuerzel}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	Response findSchulenMitKuerzeln(@PathParam(
-		value = "kommaseparierteKuerzel") @Kuerzel final String kommaseparierteKuerzel) throws MkKatalogeRestException;
+		value = "kommaseparierteKuerzel") @Kuerzel final String kommaseparierteKuerzel);
 
 	@GET
 	@Path("/kataloge/laender")

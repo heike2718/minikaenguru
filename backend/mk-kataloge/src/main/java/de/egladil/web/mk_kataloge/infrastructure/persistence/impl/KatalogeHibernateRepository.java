@@ -14,6 +14,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,12 +103,15 @@ public class KatalogeHibernateRepository implements KatalogeRepository {
 	}
 
 	@Override
+	@Transactional
 	public List<Ort> findOrte(final String searchTerm) {
 
 		TypedQuery<Ort> query = em.createNamedQuery(Ort.QUERY_FIND_ORTE_MIT_NAME, Ort.class);
 		query.setParameter("name", searchTerm.toLowerCase() + "%").setParameter("excluded", UNBEKANNT);
 
-		return query.getResultList();
+		List<Ort> resultList = query.getResultList();
+		LOG.info("searchTearm={}, Anzahl Orte={}", searchTerm, resultList.size());
+		return resultList;
 	}
 
 	@Override

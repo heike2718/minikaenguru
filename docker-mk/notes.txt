@@ -12,6 +12,9 @@ docker image build -t heik2718/mk-wettbewerb .
 docker image build -t heik2718/mk_wettbewerb-mariadb .
 
 
+docker container run -p 9530:9530 -v /var/log/quarkus/http:/var/log/quarkus/http --name mk-kataloge -e TZ=Europe/Berlin -d --rm heik2718/mk-kataloge
+
+
 docker container run -v /home/heike/docker-volumes/mk_gateway-database:/var/lib/mysql --name mk-gateway_database -e MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-root-pwd -e MYSQL_DATABASE_FILE=/run/secrets/mysql-database -e MYSQL_USER_FILE=/run/secrets/mysql-user -e MYSQL_PASSWORD_FILE=/run/secrets/mysql-user-pwd -d --rm heik2718/mk_gateway-mariadb
 
 docker container run -v /home/heike/docker-volumes/mk_kataloge-database:/var/lib/mysql --name mk-kataloge_database -e MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-root-pwd -e MYSQL_DATABASE_FILE=/run/secrets/mysql-database -e MYSQL_USER_FILE=/run/secrets/mysql-user -e MYSQL_PASSWORD_FILE=/run/secrets/mysql-user-pwd -d --rm heik2718/mk_kataloge-mariadb

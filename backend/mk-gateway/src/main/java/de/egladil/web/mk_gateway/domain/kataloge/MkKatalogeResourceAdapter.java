@@ -18,7 +18,6 @@ import de.egladil.web.mk_gateway.domain.apimodel.LandPayload;
 import de.egladil.web.mk_gateway.domain.apimodel.OrtPayload;
 import de.egladil.web.mk_gateway.domain.apimodel.SchulePayload;
 import de.egladil.web.mk_gateway.infrastructure.messaging.MkKatalogeRestClient;
-import de.egladil.web.mk_gateway.infrastructure.messaging.MkKatalogeRestException;
 
 /**
  * MkKatalogeResourceAdapter
@@ -32,11 +31,48 @@ public class MkKatalogeResourceAdapter extends AbstractMkResourceAdapter {
 	@RestClient
 	MkKatalogeRestClient restClient;
 
+	public Response findItems(final String katalogTyp, final String searchTerm) {
+
+		try {
+
+			Response response = restClient.findItems(katalogTyp, searchTerm);
+			return response;
+		} catch (Exception e) {
+
+			return handleException(e, LOG, "[findItems]");
+		}
+	}
+
+	public Response findOrteInLand(final String landKuerzel, final String searchTerm) {
+
+		try {
+
+			Response response = restClient.findOrteInLand(landKuerzel, searchTerm);
+			return response;
+		} catch (Exception e) {
+
+			return handleException(e, LOG, "[findOrteInLand]");
+		}
+
+	}
+
+	public Response findSchulenInOrt(final String ortkuerzel, final String searchTerm) {
+
+		try {
+
+			Response response = restClient.findSchulenInOrt(ortkuerzel, searchTerm);
+			return response;
+		} catch (Exception e) {
+
+			return handleException(e, LOG, "[findSchulenInOrt]");
+		}
+	}
+
 	/**
 	 * @param  kommaseparierteSchulkuerzel
 	 * @return
 	 */
-	public Response findSchulen(final String kommaseparierteSchulkuerzel) throws MkKatalogeRestException {
+	public Response findSchulen(final String kommaseparierteSchulkuerzel) {
 
 		try {
 
@@ -188,6 +224,6 @@ public class MkKatalogeResourceAdapter extends AbstractMkResourceAdapter {
 	@Override
 	protected String endpointName() {
 
-		return "mk-katalog-api";
+		return "mk-kataloge";
 	}
 }
