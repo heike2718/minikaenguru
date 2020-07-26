@@ -30,10 +30,10 @@ import de.egladil.web.mk_kataloge.domain.schulimport.FileResource;
 import de.egladil.web.mk_kataloge.domain.schulimport.ImportSchulenService;
 
 /**
- * UploadSchulenCsvResource
+ * UploadSchulenCsvResource. Wird als showcase aufgehoben, bis andere permanente upload-services eingebaut sind.
  */
 @RequestScoped
-@Path("/upload/schulen")
+@Deprecated(forRemoval = true)
 public class UploadSchulenCsvResource {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UploadSchulenCsvResource.class);

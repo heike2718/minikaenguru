@@ -8,7 +8,7 @@ export const environment = {
   assetsUrl: '/home/heike/git/minikaenguru/frontend/minikaenguru-ws/apps/mkv-app/src/assets',
   apiUrl: 'http://192.168.10.176:9510/mk-gateway',
   storageKeyPrefix: 'mkv_',
-  version: '0.2.0',
+  version: '0.3.0-SNAPSHOT',
   consoleLogActive: true,
   serverLogActive: false,
   loglevel: 1
