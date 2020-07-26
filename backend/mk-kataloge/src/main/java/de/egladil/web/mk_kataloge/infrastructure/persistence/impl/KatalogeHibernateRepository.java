@@ -110,7 +110,7 @@ public class KatalogeHibernateRepository implements KatalogeRepository {
 		query.setParameter("name", searchTerm.toLowerCase() + "%").setParameter("excluded", UNBEKANNT);
 
 		List<Ort> resultList = query.getResultList();
-		LOG.info("searchTearm={}, Anzahl Orte={}", searchTerm, resultList.size());
+		LOG.debug("searchTearm={}, Anzahl Orte={}", searchTerm, resultList.size());
 		return resultList;
 	}
 

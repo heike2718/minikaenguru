@@ -1,26 +1,14 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { KatalogpflegeFacade } from './katalogpflege.facade';
-import { environment} from '../../environments/environment';
 
 @Component({
 	selector: 'mka-katalogpflege',
 	templateUrl: './katalogpflege.component.html',
 	styleUrls: ['./katalogpflege.component.css']
 })
-export class KatalogpflegeComponent implements OnInit, OnDestroy {
-
-	uploadUrl = environment.apiUrl + '/upload/schulen/csv';
+export class KatalogpflegeComponent {
 
 	constructor(private katalogFacade: KatalogpflegeFacade) { }
-
-	ngOnInit(): void {
-
-
-	}
-
-	ngOnDestroy(): void {
-
-	}
 
 	selectLaender(): void {
 		this.katalogFacade.selectKatalogpflegeTyp('LAND');

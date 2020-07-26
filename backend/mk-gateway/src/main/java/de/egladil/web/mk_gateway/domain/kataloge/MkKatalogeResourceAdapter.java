@@ -207,6 +207,7 @@ public class MkKatalogeResourceAdapter extends AbstractMkResourceAdapter {
 		}
 	}
 
+	@Deprecated(forRemoval = true)
 	public Response uploadSchulkatalog(final String secret, final FileResource input) {
 
 		try {

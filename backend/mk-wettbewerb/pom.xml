@@ -5,8 +5,7 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mk-wettbewerb</artifactId>
-	<version>0.2.0</version>
-	<packaging>jar</packaging>
+	<version>0.3.0-SNAPSHOT</version>
 
 	<name>mk-wettbewerb</name>
 	<url>https://github.com/heike2718/minikaenguru</url>
