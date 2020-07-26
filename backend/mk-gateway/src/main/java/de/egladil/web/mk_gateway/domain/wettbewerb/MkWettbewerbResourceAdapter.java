@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.mk_gateway.domain.AbstractMkResourceAdapter;
 import de.egladil.web.mk_gateway.domain.apimodel.SchulanmeldungRequestPayload;
 import de.egladil.web.mk_gateway.infrastructure.messaging.MkWettbewerbRestClient;
-import de.egladil.web.mk_gateway.infrastructure.messaging.MkWettbewerbRestException;
 
 /**
  * MkWettbewerbResourceAdapter
@@ -57,7 +56,7 @@ public class MkWettbewerbResourceAdapter extends AbstractMkResourceAdapter {
 	 *                                    String UUID eines Lehrers.
 	 * @return                            Response
 	 */
-	public Response findSchulen(final String uuid) throws MkWettbewerbRestException {
+	public Response findSchulen(final String uuid) {
 
 		try {
 
@@ -69,7 +68,7 @@ public class MkWettbewerbResourceAdapter extends AbstractMkResourceAdapter {
 		}
 	}
 
-	public Response getAktuellenWettbewerb() throws MkWettbewerbRestException {
+	public Response getAktuellenWettbewerb() {
 
 		try {
 

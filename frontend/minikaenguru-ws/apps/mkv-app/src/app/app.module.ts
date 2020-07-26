@@ -40,7 +40,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 	imports: [
 		BrowserModule,
 		CommonSchulkatalogModule.forRoot({
-			baseUrl: environment.katalogApiUrl,
+			baseUrl: environment.apiUrl,
 			devmode: !environment.production,
 			admin: false,
 			immediatelyLoadOnNumberChilds: 25

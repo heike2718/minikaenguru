@@ -33,55 +33,55 @@ public interface MkWettbewerbRestClient {
 	// http://192.168.10.176:9550/mk-wettbewerb/veranstalter/lehrer
 	@POST
 	@Path("/veranstalter/lehrer")
-	Response createLehrer(LehrerCreated data) throws MkWettbewerbRestException;
+	Response createLehrer(LehrerCreated data);
 
 	// http://192.168.10.176:9550/mk-wettbewerb/veranstalter/privat
 	@POST
 	@Path("/veranstalter/privat")
-	Response createPrivatmensch(PrivatmenschCreated data) throws MkWettbewerbRestException;
+	Response createPrivatmensch(PrivatmenschCreated data);
 
 	@GET
 	@Path("/schulen/details/{schulkuerzel}")
 	Response getSchuleDetails(@PathParam(value = "schulkuerzel") final String schulkuerzel, @HeaderParam(
-		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName) throws MkWettbewerbRestException;
+		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName);
 
 	@GET
 	@Path("/schulen")
 	Response findSchulen(@HeaderParam(
-		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName) throws MkWettbewerbRestException;
+		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName);
 
 	@GET
 	@Path("/wettbewerb")
-	Response getAktuellenWettbewerb() throws MkWettbewerbRestException;
+	Response getAktuellenWettbewerb();
 
 	// http://192.168.10.176:9550/mk-wettbewerb/veranstalter/lehrer
 	@GET
 	@Path("/veranstalter/lehrer")
 	Response getLehrer(@HeaderParam(
-		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName) throws MkWettbewerbRestException;
+		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName);
 
 	// http://192.168.10.176:9550/mk-wettbewerb/veranstalter/lehrer
 	@GET
 	@Path("/veranstalter/privat")
 	Response getPrivatveranstalter(@HeaderParam(
-		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName) throws MkWettbewerbRestException;
+		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName);
 
 	// http://192.168.10.176:9550/mk-wettbewerb/unterlagen/zugangsstatus
 	@GET
 	@Path("/veranstalter/unterlagen/zugangsstatus")
 	Response getStatusZugangUnterlagen(@HeaderParam(
-		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName) throws MkWettbewerbRestException;
+		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName);
 
 	// http://192.168.10.176:9550/mk-wettbewerb/teilnahmen/privat
 	@POST
 	@Path("/teilnahmen/privat")
 	Response meldePrivatmenschZumAktuellenWettbewerbAn(@HeaderParam(
-		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName) throws MkWettbewerbRestException;
+		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName);
 
 	// http://192.168.10.176:9550/mk-wettbewerb/teilnahmen/privat
 	@POST
 	@Path("/teilnahmen/schule")
 	Response meldeSchuleZumAktuellenWettbewerbAn(SchulanmeldungRequestPayload payload, @HeaderParam(
-		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName) throws MkWettbewerbRestException;
+		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName);
 
 }
