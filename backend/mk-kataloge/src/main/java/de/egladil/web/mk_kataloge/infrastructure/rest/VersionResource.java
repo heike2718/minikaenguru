@@ -1,8 +1,8 @@
 // =====================================================
-// Project: mk-gateway
+// Project: mk-kataloge
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.infrastructure.rest.common;
+package de.egladil.web.mk_kataloge.infrastructure.rest;
 
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.GET;
@@ -27,10 +27,13 @@ public class VersionResource {
 	@ConfigProperty(name = "quarkus.application.version")
 	String version;
 
+	@ConfigProperty(name = "stage")
+	String stage;
+
 	@GET
 	public Response getVersion() {
 
-		return Response.ok(ResponsePayload.messageOnly(MessagePayload.info(version))).build();
+		return Response.ok(ResponsePayload.messageOnly(MessagePayload.info(version + " - " + stage))).build();
 
 	}
 

@@ -34,6 +34,8 @@ http://192.168.10.176:9570/mk-wettbewerb-admin/wettbewerbe X-UUID 20721575-8c45-
 
 mk-gateway
 
+http://192.168.10.176:9510/mk-gateway/schulkatalog/ort?search="hal"
+
 http://192.168.10.176:9510/mk-gateway/wettbewerb/lehrer/schulen header X-SESSIONID=Y1NFRTg5MlR0cEVVUVBWaUQxZWxYQT09
 
 http://localhost:9510/mk-gateway/wettbewerb/lehrer/schulen/6XOA2A11/details   header X-SESSIONID=b2RETVlQZWpNTVFORGVqSlV6dXJoZz09
@@ -58,9 +60,13 @@ http://192.168.10.176:9510/mk-gateway/wb-admin/kataloge/schulen  PUT
 
 
 ========================================
-mk-katalog-api
+mk-kataloge
 
-http://192.168.10.176:9530/mk-kataloge-api
+http://192.168.10.176:9530/mk-kataloge/katalogsuche/global/ort?search=halle
+
+http://localhost:9530/mk-kataloge/katalogsuche/global/ort?search=halle
+
+http://192.168.10.176:9530/mk-kataloge/version
 
 ========================================
 

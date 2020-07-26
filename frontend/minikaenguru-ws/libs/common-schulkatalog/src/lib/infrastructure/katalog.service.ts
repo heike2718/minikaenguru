@@ -23,13 +23,13 @@ export class KatalogService {
 		let url = '';
 		switch (typ) {
 			case 'LAND':
-				url = this.config.baseUrl + '/katalogsuche/global/land';
+				url = this.config.baseUrl + '/schulkatalog/land';
 				break;
 			case 'ORT':
-				url = this.config.baseUrl + '/katalogsuche/global/ort';
+				url = this.config.baseUrl + '/schulkatalog/ort';
 				break;
 			case 'SCHULE':
-				url = this.config.baseUrl + '/katalogsuche/global/schule';
+				url = this.config.baseUrl + '/schulkatalog/schule';
 				break;
 			default:
 				throw new Error('unsupported Katalogtyp ' + typ);
@@ -43,10 +43,10 @@ export class KatalogService {
 		let url = '';
 		switch (katalogItem.typ) {
 			case 'LAND':
-				url = this.config.baseUrl + '/katalogsuche/laender/' + katalogItem.kuerzel + '/orte';
+				url = this.config.baseUrl + '/schulkatalog/laender/' + katalogItem.kuerzel + '/orte';
 				break;
 			case 'ORT':
-				url = this.config.baseUrl + '/katalogsuche/orte/' + katalogItem.kuerzel + '/schulen';
+				url = this.config.baseUrl + '/schulkatalog/orte/' + katalogItem.kuerzel + '/schulen';
 				break;
 			case 'SCHULE':
 				break;

@@ -6,7 +6,7 @@ __Migration des Schulkatalogs nach mk-kataloge__
 
 Erstbefüllung erfolgt aus dem alten mkvadmin-Service als POST request zu
 
-http://localhost:9700/mk-kataloge-api/schulen
+http://localhost:9530/mk-kataloge/schulen
 
 mit SchuleMessage als payload.
 

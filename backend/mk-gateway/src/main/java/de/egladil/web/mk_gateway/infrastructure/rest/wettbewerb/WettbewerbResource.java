@@ -30,8 +30,6 @@ import de.egladil.web.mk_gateway.domain.apimodel.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.wettbewerb.MkWettbewerbResourceAdapter;
 import de.egladil.web.mk_gateway.domain.wettbewerb.SchulenAnmeldeinfoService;
-import de.egladil.web.mk_gateway.infrastructure.messaging.MkKatalogeRestException;
-import de.egladil.web.mk_gateway.infrastructure.messaging.MkWettbewerbRestException;
 
 /**
  * WettbewerbResource
@@ -66,7 +64,7 @@ public class WettbewerbResource {
 			ResponsePayload payload = new ResponsePayload(MessagePayload.ok(), schulen);
 
 			return Response.ok(payload).build();
-		} catch (MkKatalogeRestException | MkWettbewerbRestException e) {
+		} catch (Exception e) {
 
 			LOG.error(e.getMessage(), e);
 			throw new MkGatewayRuntimeException(e.getMessage());
