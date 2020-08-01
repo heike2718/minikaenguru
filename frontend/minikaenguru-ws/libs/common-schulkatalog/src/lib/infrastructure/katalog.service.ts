@@ -104,9 +104,9 @@ export class KatalogService {
 
 	public submitSchulkatalogAntrag(antrag: SchulkatalogAntrag): Observable<Message> {
 
-		const url = this.config.baseUrl + '/katalogantrag';
+		const url = this.config.baseUrl + '/schulkatalog/katalogantrag';
 
-		return this.http.put(url, antrag).pipe(
+		return this.http.post(url, antrag).pipe(
 			map(body => body['message'] as Message)
 		);
 	}
