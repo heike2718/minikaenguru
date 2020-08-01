@@ -1,5 +1,5 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { KatalogpflegeItem, Katalogpflegetyp, mergeKatalogItems, Kataloge, mergeKatalogItemMap, childrenAsArray, SchulePayload, KatalogpflegeItemWithID, OrtPayload, LandPayload } from '../katalogpflege.model';
+import { KatalogpflegeItem, Katalogpflegetyp, mergeKatalogItems, Kataloge, childrenAsArray, SchulePayload, KatalogpflegeItemWithID, OrtPayload, LandPayload, KatalogPflegeItemsMap } from '../katalogpflege.model';
 import * as KatalogpflegeActions from './katalogpflege.actions';
 
 export const katalogpflegeFeatureKey = 'mk-admin-app-kataloge';
@@ -88,11 +88,11 @@ const katalogpflegeReducer = createReducer(initialState,
 	on(KatalogpflegeActions.loadLaenderFinished, (state, action) => {
 
 		const alle: KatalogpflegeItem[] = action.laender;
-		let laenderWithID = [...state.kataloge.laender];
+		let laenderWithID = state.kataloge.laender !== undefined ? [...state.kataloge.laender] : [];
 
 		alle.forEach(
 			item => {
-				laenderWithID = mergeKatalogItemMap(laenderWithID, item);
+				laenderWithID = new KatalogPflegeItemsMap(laenderWithID).merge(item);
 			}
 		)
 
@@ -108,13 +108,13 @@ const katalogpflegeReducer = createReducer(initialState,
 	on(KatalogpflegeActions.loadChildItemsFinished, (state, action) => {
 
 		const parent: KatalogpflegeItem = { ...action.parent, kinderGeladen: true };
-		let laenderWithID = [...state.kataloge.laender];
-		let orteWithID = [...state.kataloge.orte];
-		let schulenWithID = [...state.kataloge.schulen];
+		let laenderWithID = state.kataloge.laender !== undefined ? [...state.kataloge.laender]: [];
+		let orteWithID = state.kataloge.orte !== undefined ? [...state.kataloge.orte] : [];
+		const schulenWithID = state.kataloge.schulen !== undefined ? [...state.kataloge.schulen] : [];
 
 		switch (parent.typ) {
-			case 'LAND': laenderWithID = mergeKatalogItemMap(laenderWithID, parent); break;
-			case 'ORT': orteWithID = mergeKatalogItemMap(orteWithID, parent); break;
+			case 'LAND': laenderWithID = new KatalogPflegeItemsMap(laenderWithID).merge(parent); break;
+			case 'ORT': orteWithID = new KatalogPflegeItemsMap(orteWithID).merge(parent); break;
 		}
 
 		let kataloge: Kataloge = {
@@ -166,21 +166,25 @@ const katalogpflegeReducer = createReducer(initialState,
 
 	on(KatalogpflegeActions.ortPayloadCreated, (state, action) => {
 
-		return { ...state,
+		return {
+			...state,
 			schuleEditorModel: initialSchuleEditorModelState,
 			ortEditorPayload: action.ortPayload,
 			landEditorPayload: undefined,
-			showLoadingIndicator: false };
+			showLoadingIndicator: false
+		};
 
 	}),
 
 	on(KatalogpflegeActions.landPayloadCreated, (state, action) => {
 
-		return { ...state,
+		return {
+			...state,
 			schuleEditorModel: initialSchuleEditorModelState,
 			ortEditorPayload: undefined,
 			landEditorPayload: action.landPayload,
-			showLoadingIndicator: false };
+			showLoadingIndicator: false
+		};
 
 	}),
 
@@ -254,7 +258,8 @@ const katalogpflegeReducer = createReducer(initialState,
 
 	on(KatalogpflegeActions.clearSearchResults, (state, _action) => {
 
-		return { ...state,
+		return {
+			...state,
 			filteredOrte: [],
 			filteredSchulen: [],
 			selectedKatalogItem: undefined,

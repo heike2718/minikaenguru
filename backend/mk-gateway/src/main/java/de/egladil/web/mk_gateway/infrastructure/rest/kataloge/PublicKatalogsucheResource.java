@@ -7,7 +7,9 @@ package de.egladil.web.mk_gateway.infrastructure.rest.kataloge;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.validation.constraints.NotBlank;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -18,6 +20,7 @@ import javax.ws.rs.core.Response;
 import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.annotations.LandKuerzel;
 import de.egladil.web.commons_validation.annotations.StringLatin;
+import de.egladil.web.mk_gateway.domain.apimodel.SchulkatalogAntrag;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
 
 /**
@@ -54,6 +57,14 @@ public class PublicKatalogsucheResource {
 
 		return katalogResourceAdapter.findSchulenInOrt(ortKuerzel, searchTerm);
 
+	}
+
+	@POST
+	@Path("/katalogantrag")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response sendeKatalogantrag(final SchulkatalogAntrag antrag) {
+
+		return this.katalogResourceAdapter.sendeSchulkatalogAntrag(antrag);
 	}
 
 }

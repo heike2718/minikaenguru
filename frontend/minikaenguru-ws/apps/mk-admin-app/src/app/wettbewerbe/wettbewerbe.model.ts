@@ -1,4 +1,3 @@
-
 export type WettbewerbStatus = 'ERFASST' | 'ANMELDUNG' | 'DOWNLOAD_PRIVAT' | 'DOWNLOAD_LEHRER' | 'BEENDET';
 
 export interface Teilnahmenuebersicht {
@@ -50,64 +49,52 @@ export const initialWettbewerbEditorModel: WettbewerbEditorModel = {
 	loesungsbuchstabenKlasse2: ''
 }
 
-export function wettbewerbeWithIDArrayToWettbewerbeArray(wettbewerbeMitID: WettbewerbWithID[]): Wettbewerb[] {
+// verpackt häufig erforderliche Operationen auf einem WettbewerbWithID[] etwas handhabbarer.
+export class WettbewerbeMap {
 
-	const result: Wettbewerb[] = [];
-	wettbewerbeMitID.forEach(wmi => result.push(wmi.wettbewerb));
-	return result;
+	private wettbewerbe: Map<number, Wettbewerb> = new Map();
 
-}
-
-export function indexOfWettbewerbMitId(wettbewerbeMitID: WettbewerbWithID[], jahr: number): number {
-
-	if (!wettbewerbeMitID) {
-		return -1;
-	}
-
-	for (let ind: number = 0; ind < wettbewerbeMitID.length; ind++) {
-		if (wettbewerbeMitID[ind] && wettbewerbeMitID[ind].jahr === jahr) {
-			return ind;
+	constructor(readonly items: WettbewerbWithID[]) {
+		if (items !== undefined) {
+			for (const wb of items) {
+				this.wettbewerbe.set(wb.jahr, wb.wettbewerb);
+			}
 		}
 	}
 
-	return -1;
+	public has(jahr: number): boolean {
 
-}
-
-export function findWettbewerbMitId(wettbewerbeMitID: WettbewerbWithID[], jahr: number): Wettbewerb {
-
-	if (wettbewerbeMitID === undefined) {
-		return null;
-	}
-
-	if (jahr === NaN) {
-		return null;
-	}
-
-	const index = indexOfWettbewerbMitId(wettbewerbeMitID, jahr);
-
-	if (index >= 0) {
-		return wettbewerbeMitID[index].wettbewerb;
-	}
-
-	return null;
-}
-
-export function mergeWettbewerbeMap(wettbewerbeMap: WettbewerbWithID[], wettbewerb: Wettbewerb): WettbewerbWithID[] {
-
-	const result: WettbewerbWithID[] = [];
-
-	for (let i: number = 0; i < wettbewerbeMap.length; i++) {
-		const wbMitId: WettbewerbWithID = wettbewerbeMap[i];
-		if (wbMitId.jahr !== wettbewerb.jahr) {
-			result.push(wbMitId);
-		} else {
-			result.push({ jahr: wettbewerb.jahr, wettbewerb: wettbewerb });
+		if (jahr === NaN) {
+			return false;
 		}
+		return this.wettbewerbe.has(jahr);
 	}
 
-	return result;
+	public get(jahr: number): Wettbewerb {
+
+		if (!this.has(jahr)) {
+			return null;
+		}
+
+		return this.wettbewerbe.get(jahr);
+	}
+
+	public toArray(): Wettbewerb[] {
+
+		return [...this.wettbewerbe.values()];
+	}
+
+	public merge(wettbewerb: Wettbewerb): WettbewerbWithID[] {
+
+		const result: WettbewerbWithID[] = [];
+		for (const item of this.items) {
+			if (item.jahr !== wettbewerb.jahr) {
+				result.push(item);
+			} else {
+				result.push({ jahr: wettbewerb.jahr, wettbewerb: wettbewerb });
+			}
+		}
+		return result;
+	}
 }
-
-
 
