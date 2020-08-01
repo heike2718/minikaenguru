@@ -5,22 +5,31 @@
 
 	</div>
 
-	<div class="row" *ngIf="(user$ | async) as user else loading">
-		<div class="card clickable ml-4 mt-4" (click)="gotoWettbewerbe()">
-			<div class="card-body">
-				<div class="card-title">Wettbewerbe</div>
-				<div class="mb-2 text-muted">verwalten</div>
-				<div class="mb-2 text-muted">Statistiken</div>
+	<div class="row ml-1 mt-1" *ngIf="(user$ | async) as user else loading">
+		<div class=" ml-1 col-3">
+			<div class="card clickable" (click)="gotoWettbewerbe()">
+				<div class="card-body">
+					<div class="card-title"><i class="fa fa-files-o fa-1x"
+					aria-hidden="true"></i> Wettbewerbe</div>
+					<div class="mb-2 text-muted">verwalten</div>
+					<div class="mb-2 text-muted">Statistiken</div>
+				</div>
 			</div>
 		</div>
-		<div class="card clickable ml-4 mt-4" (click)="gotoVeranstalter()">
-			<div class="card-body">
-				<div class="card-title">Veranstalter</div>
+		<div class=" ml-1 col-3">
+			<div class="card clickable" (click)="gotoVeranstalter()">
+				<div class="card-body">
+					<div class="card-title"><i class="fa fa-users fa-1x"
+					aria-hidden="true"></i> Veranstalter</div>
+				</div>
 			</div>
 		</div>
-		<div class="card clickable ml-4 mt-4" (click)="gotoKataloge()">
-			<div class="card-body">
-				<div class="card-title">Kataloge</div>
+		<div class=" ml-1 col-3">
+			<div class="card clickable" (click)="gotoKataloge()">
+				<div class="card-body">
+					<div class="card-title"><i class="fa fa-map-marker fa-1x"
+					aria-hidden="true"></i> Schulkatalog</div>
+				</div>
 			</div>
 		</div>
 	</div>
