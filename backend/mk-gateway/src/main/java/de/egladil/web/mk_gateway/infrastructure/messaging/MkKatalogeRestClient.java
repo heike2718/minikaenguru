@@ -28,6 +28,7 @@ import de.egladil.web.mk_gateway.domain.apimodel.FileResource;
 import de.egladil.web.mk_gateway.domain.apimodel.LandPayload;
 import de.egladil.web.mk_gateway.domain.apimodel.OrtPayload;
 import de.egladil.web.mk_gateway.domain.apimodel.SchulePayload;
+import de.egladil.web.mk_gateway.domain.apimodel.SchulkatalogAntrag;
 
 /**
  * MkKatalogeRestClient
@@ -130,4 +131,8 @@ public interface MkKatalogeRestClient {
 	Response uploadSchulkatalog(@HeaderParam(
 		value = MkGatewayApp.SECRET_HEADER_NAME) final String secret, @MultipartForm final FileResource input);
 
+	@POST
+	@Path("/katalogantrag")
+	@Consumes(MediaType.APPLICATION_JSON)
+	Response sendeSchulkatalogAntrag(final SchulkatalogAntrag antrag);
 }

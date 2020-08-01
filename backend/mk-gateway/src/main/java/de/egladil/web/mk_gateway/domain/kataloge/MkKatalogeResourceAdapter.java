@@ -17,6 +17,7 @@ import de.egladil.web.mk_gateway.domain.apimodel.FileResource;
 import de.egladil.web.mk_gateway.domain.apimodel.LandPayload;
 import de.egladil.web.mk_gateway.domain.apimodel.OrtPayload;
 import de.egladil.web.mk_gateway.domain.apimodel.SchulePayload;
+import de.egladil.web.mk_gateway.domain.apimodel.SchulkatalogAntrag;
 import de.egladil.web.mk_gateway.infrastructure.messaging.MkKatalogeRestClient;
 
 /**
@@ -220,6 +221,19 @@ public class MkKatalogeResourceAdapter extends AbstractMkResourceAdapter {
 			return handleException(e, LOG, "[uploadSchulkatalog]");
 		}
 
+	}
+
+	public Response sendeSchulkatalogAntrag(final SchulkatalogAntrag antrag) {
+
+		try {
+
+			Response response = restClient.sendeSchulkatalogAntrag(antrag);
+			return response;
+
+		} catch (Exception e) {
+
+			return handleException(e, LOG, "[sendeSchulkatalogAntrag]");
+		}
 	}
 
 	@Override
