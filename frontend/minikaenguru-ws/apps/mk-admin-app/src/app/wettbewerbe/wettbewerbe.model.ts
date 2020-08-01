@@ -1,3 +1,4 @@
+import { wettbewerbMovedOn } from './+state/wettbewerbe.actions';
 
 export type WettbewerbStatus = 'ERFASST' | 'ANMELDUNG' | 'DOWNLOAD_PRIVAT' | 'DOWNLOAD_LEHRER' | 'BEENDET';
 
@@ -58,23 +59,8 @@ export function wettbewerbeWithIDArrayToWettbewerbeArray(wettbewerbeMitID: Wettb
 
 }
 
-export function indexOfWettbewerbMitId(wettbewerbeMitID: WettbewerbWithID[], jahr: number): number {
-
-	if (!wettbewerbeMitID) {
-		return -1;
-	}
-
-	for (let ind: number = 0; ind < wettbewerbeMitID.length; ind++) {
-		if (wettbewerbeMitID[ind] && wettbewerbeMitID[ind].jahr === jahr) {
-			return ind;
-		}
-	}
-
-	return -1;
-
-}
-
 export function findWettbewerbMitId(wettbewerbeMitID: WettbewerbWithID[], jahr: number): Wettbewerb {
+
 
 	if (wettbewerbeMitID === undefined) {
 		return null;
@@ -84,10 +70,10 @@ export function findWettbewerbMitId(wettbewerbeMitID: WettbewerbWithID[], jahr: 
 		return null;
 	}
 
-	const index = indexOfWettbewerbMitId(wettbewerbeMitID, jahr);
+	const realMap = transformToMap(wettbewerbeMitID);
 
-	if (index >= 0) {
-		return wettbewerbeMitID[index].wettbewerb;
+	if (realMap.has(jahr)) {
+		return realMap.get(jahr).wettbewerb;
 	}
 
 	return null;
@@ -97,17 +83,28 @@ export function mergeWettbewerbeMap(wettbewerbeMap: WettbewerbWithID[], wettbewe
 
 	const result: WettbewerbWithID[] = [];
 
-	for (let i: number = 0; i < wettbewerbeMap.length; i++) {
-		const wbMitId: WettbewerbWithID = wettbewerbeMap[i];
+	for (const wbMitId of wettbewerbeMap) {
 		if (wbMitId.jahr !== wettbewerb.jahr) {
 			result.push(wbMitId);
 		} else {
 			result.push({ jahr: wettbewerb.jahr, wettbewerb: wettbewerb });
 		}
 	}
-
 	return result;
 }
+
+/////// private functions
+
+function transformToMap(wettbewerbeMap: WettbewerbWithID[]): Map<number, WettbewerbWithID> {
+
+	const result = new Map();
+
+	for (const element of wettbewerbeMap) {
+		result.set(element.jahr, element);
+	}
+	return result;
+}
+
 
 
 

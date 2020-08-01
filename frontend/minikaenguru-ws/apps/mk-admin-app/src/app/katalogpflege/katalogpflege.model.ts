@@ -114,8 +114,7 @@ export function mergeKatalogItemMap(itemsWithID: KatalogpflegeItemWithID[], kata
 		result.push({ kuerzel: katalogItem.kuerzel, katalogItem: katalogItem });
 	} else {
 		result = [];
-		for (let i: number = 0; i < itemsWithID.length; i++) {
-			const itemMitID: KatalogpflegeItemWithID = itemsWithID[i];
+		for (const itemMitID of itemsWithID) {
 			if (itemMitID.kuerzel !== katalogItem.kuerzel) {
 				result.push(itemMitID);
 			} else {
@@ -136,13 +135,11 @@ function containsItem(itemsWithID: KatalogpflegeItemWithID[], katalogItem: Katal
 		return false;
 	}
 
-	for (let ind: number = 0; ind < itemsWithID.length; ind++) {
-
-		if (itemsWithID[ind] && itemsWithID[ind].kuerzel === katalogItem.kuerzel) {
+	for (const itemWithId of itemsWithID) {
+		if (itemWithId.kuerzel === katalogItem.kuerzel) {
 			return true;
 		}
 	}
-
 	return false;
 }
 
