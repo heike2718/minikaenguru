@@ -16,6 +16,8 @@ import de.egladil.web.mk_kataloge.domain.apimodel.KuerzelAPIModel;
 @ApplicationScoped
 public class KuerzelGeneratorService {
 
+	private static final String ALGORITHM = "SHA-256";
+
 	private static final int LAENGE = 8;
 
 	private static final String CHARS = "ABCDEFGHJKLMNOPQRSTUVWXYZ0123456789";
@@ -63,7 +65,7 @@ public class KuerzelGeneratorService {
 
 	private String generiereKuerzel() {
 
-		return cryptoService.generateKuerzel(LAENGE, CHARS.toCharArray());
+		return cryptoService.generateRandomString(ALGORITHM, LAENGE, CHARS.toCharArray());
 	}
 
 }
