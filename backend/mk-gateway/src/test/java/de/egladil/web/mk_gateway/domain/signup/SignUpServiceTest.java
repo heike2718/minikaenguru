@@ -28,7 +28,7 @@ public class SignUpServiceTest {
 
 		try {
 
-			SignUpService.createForTest(Mockito.mock(UserRepository.class)).createUser(null);
+			SignUpService.createForTest(Mockito.mock(UserRepository.class)).createUser(null, false);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -52,7 +52,7 @@ public class SignUpServiceTest {
 		SignUpService signupService = SignUpService.createForTest(userRepository);
 
 		// Act
-		User resultingUser = signupService.createUser(resourceOwner);
+		User resultingUser = signupService.createUser(resourceOwner, false);
 
 		// Assert
 		assertNull(signupService.event());
@@ -74,7 +74,7 @@ public class SignUpServiceTest {
 		SignUpService signupService = SignUpService.createForTest(userRepository);
 
 		// Act
-		User resultingUser = signupService.createUser(resourceOwner);
+		User resultingUser = signupService.createUser(resourceOwner, false);
 
 		// Assert
 		assertEquals(uuid, resultingUser.getImportierteUuid());
@@ -102,7 +102,7 @@ public class SignUpServiceTest {
 		SignUpService signupService = SignUpService.createForTest(userRepository);
 
 		// Act
-		User resultingUser = signupService.createUser(resourceOwner);
+		User resultingUser = signupService.createUser(resourceOwner, false);
 
 		// Assert
 		assertEquals(uuid, resultingUser.getImportierteUuid());

@@ -81,7 +81,7 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 				.build();
 		}
 
-		if (exception instanceof AccessDeniedException) {
+		if (exception instanceof AccessDeniedException || exception instanceof SecurityException) {
 
 			ResponsePayload payload = ResponsePayload
 				.messageOnly(MessagePayload.error(applicationMessages.getString("general.forbidden")));

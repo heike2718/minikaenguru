@@ -46,7 +46,7 @@ public class VeranstalterResource {
 
 		SignUpResourceOwner signUpResourceOwner = authResultMapper.apply(authResult);
 
-		signUpService.createUser(signUpResourceOwner);
+		signUpService.createUser(signUpResourceOwner, false);
 
 		return Response.ok(ResponsePayload.messageOnly(MessagePayload.info(applicationMessages.getString("createUser.success"))))
 			.build();

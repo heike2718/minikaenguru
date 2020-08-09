@@ -24,9 +24,9 @@ public class Lehrer extends Veranstalter {
 	 * @param person
 	 * @param schulen
 	 */
-	public Lehrer(final Person person, final List<Identifier> schulen) {
+	public Lehrer(final Person person, final boolean newsletterEmpfaenger, final List<Identifier> schulen) {
 
-		super(person);
+		super(person, newsletterEmpfaenger);
 		this.schulen = schulen;
 
 	}

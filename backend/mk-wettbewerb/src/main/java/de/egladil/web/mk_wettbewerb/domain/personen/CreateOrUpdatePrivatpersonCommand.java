@@ -29,6 +29,9 @@ public class CreateOrUpdatePrivatpersonCommand {
 	@JsonProperty
 	private String fullName;
 
+	@JsonProperty
+	private boolean newsletterEmpfaenger;
+
 	public static CreateOrUpdatePrivatpersonCommand create(final String uuid, final String fullName) {
 
 		CreateOrUpdatePrivatpersonCommand result = new CreateOrUpdatePrivatpersonCommand();
@@ -49,6 +52,17 @@ public class CreateOrUpdatePrivatpersonCommand {
 	public String fullName() {
 
 		return fullName;
+	}
+
+	public boolean newsletterEmpfaenger() {
+
+		return newsletterEmpfaenger;
+	}
+
+	public CreateOrUpdatePrivatpersonCommand withNewsletterEmpfaenger(final boolean newsletterEmpfaenger) {
+
+		this.newsletterEmpfaenger = newsletterEmpfaenger;
+		return this;
 	}
 
 }

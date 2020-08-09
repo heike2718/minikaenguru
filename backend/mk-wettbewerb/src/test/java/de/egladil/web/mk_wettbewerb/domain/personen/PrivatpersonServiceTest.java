@@ -36,7 +36,7 @@ public class PrivatpersonServiceTest extends AbstractDomainServiceTest {
 
 		super.setUp();
 		this.service = PrivatpersonService.createForTest(getVeranstalterRepository(), getZugangUnterlagenService(),
-			getWettbewerbService(), getTeilnahmenRepository());
+			getWettbewerbService(), getTeilnahmenRepository(), getPrivatteilnameKuerzelService());
 	}
 
 	@Test
@@ -85,8 +85,7 @@ public class PrivatpersonServiceTest extends AbstractDomainServiceTest {
 		assertEquals(1, veranstalter.teilnahmeIdentifier().size());
 
 		Identifier teilnahmenummer = veranstalter.teilnahmeIdentifier().get(0);
-		assertEquals("9D96DAC37", teilnahmenummer.identifier());
-
+		assertEquals(10, teilnahmenummer.identifier().length());
 	}
 
 	@Test

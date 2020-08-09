@@ -40,19 +40,19 @@ public class LehrerService {
 	}
 
 	@Transactional
-	public void addLehrer(final CreateOrUpdateLehrerCommand data) {
+	public boolean addLehrer(final CreateOrUpdateLehrerCommand data) {
 
 		Optional<Veranstalter> optLehrer = veranstalterRepository.ofId(new Identifier(data.uuid()));
 
 		if (optLehrer.isPresent()) {
 
-			return;
+			return false;
 		}
 
 		List<Identifier> schulkuerzel = Arrays.asList(new Identifier[] { new Identifier(data.schulkuerzel()) });
 		Person person = new Person(data.uuid(), data.fullName());
 
-		Lehrer lehrer = new Lehrer(person, schulkuerzel);
+		Lehrer lehrer = new Lehrer(person, data.newsletterEmpfaenger(), schulkuerzel);
 
 		veranstalterRepository.addVeranstalter(lehrer);
 
@@ -62,6 +62,8 @@ public class LehrerService {
 
 			lehrerRegisteredForSchule.fire(event);
 		}
+
+		return true;
 
 	}
 

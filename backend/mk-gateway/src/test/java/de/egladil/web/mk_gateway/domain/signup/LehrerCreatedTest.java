@@ -32,7 +32,7 @@ public class LehrerCreatedTest {
 		// Act
 		try {
 
-			new LehrerCreated(occouredOn, uuid, fullName, schulkuerzel);
+			new LehrerCreated(occouredOn, uuid, fullName, schulkuerzel, true);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -53,7 +53,7 @@ public class LehrerCreatedTest {
 		// Act
 		try {
 
-			new LehrerCreated(occouredOn, uuid, fullName, schulkuerzel);
+			new LehrerCreated(occouredOn, uuid, fullName, schulkuerzel, false);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -74,7 +74,7 @@ public class LehrerCreatedTest {
 		// Act
 		try {
 
-			new LehrerCreated(occouredOn, uuid, fullName, schulkuerzel);
+			new LehrerCreated(occouredOn, uuid, fullName, schulkuerzel, false);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -95,7 +95,7 @@ public class LehrerCreatedTest {
 		// Act
 		try {
 
-			new LehrerCreated(occouredOn, uuid, fullName, schulkuerzel);
+			new LehrerCreated(occouredOn, uuid, fullName, schulkuerzel, true);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -116,7 +116,7 @@ public class LehrerCreatedTest {
 		// Act
 		try {
 
-			new LehrerCreated(occouredOn, uuid, fullName, schulkuerzel);
+			new LehrerCreated(occouredOn, uuid, fullName, schulkuerzel, false);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -137,7 +137,7 @@ public class LehrerCreatedTest {
 		// Act
 		try {
 
-			new LehrerCreated(occouredOn, uuid, fullName, schulkuerzel);
+			new LehrerCreated(occouredOn, uuid, fullName, schulkuerzel, true);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -158,7 +158,7 @@ public class LehrerCreatedTest {
 		// Act
 		try {
 
-			new LehrerCreated(occouredOn, uuid, fullName, schulkuerzel);
+			new LehrerCreated(occouredOn, uuid, fullName, schulkuerzel, false);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -179,7 +179,7 @@ public class LehrerCreatedTest {
 		TimeUnit.MILLISECONDS.sleep(200);
 
 		// Act
-		LehrerCreated event = new LehrerCreated(occouredOn, uuid, fullName, schulkuerzel);
+		LehrerCreated event = new LehrerCreated(occouredOn, uuid, fullName, schulkuerzel, true);
 
 		// Assert
 		assertTrue(LocalDateTime.now().isAfter(event.occuredOn()));
@@ -188,6 +188,7 @@ public class LehrerCreatedTest {
 		assertEquals("LehrerCreated", event.typeName());
 		assertEquals(schulkuerzel, event.schulkuerzel());
 		assertEquals(Rolle.LEHRER, event.rolle());
+		assertTrue(event.isNewsletterEmpfaenger());
 
 	}
 }

@@ -33,6 +33,9 @@ public class CreateOrUpdateLehrerCommand {
 	@JsonProperty
 	private String schulkuerzel;
 
+	@JsonProperty
+	private boolean newsletterEmpfaenger;
+
 	public static CreateOrUpdateLehrerCommand createForTest(final String uuid, final String fullName, final String schulkuerzel) {
 
 		CreateOrUpdateLehrerCommand result = new CreateOrUpdateLehrerCommand();
@@ -42,6 +45,15 @@ public class CreateOrUpdateLehrerCommand {
 		result.occouredOn = LocalDateTime.now();
 		result.uuid = uuid;
 
+		return result;
+
+	}
+
+	public static CreateOrUpdateLehrerCommand newInstance() {
+
+		CreateOrUpdateLehrerCommand result = new CreateOrUpdateLehrerCommand();
+		result.rolle = Rolle.LEHRER.name();
+		result.occouredOn = LocalDateTime.now();
 		return result;
 
 	}
@@ -59,6 +71,35 @@ public class CreateOrUpdateLehrerCommand {
 	public String schulkuerzel() {
 
 		return schulkuerzel;
+	}
+
+	public CreateOrUpdateLehrerCommand withUuid(final String uuid) {
+
+		this.uuid = uuid;
+		return this;
+	}
+
+	public CreateOrUpdateLehrerCommand withFullName(final String fullName) {
+
+		this.fullName = fullName;
+		return this;
+	}
+
+	public CreateOrUpdateLehrerCommand withSchulkuerzel(final String schulkuerzel) {
+
+		this.schulkuerzel = schulkuerzel;
+		return this;
+	}
+
+	public boolean newsletterEmpfaenger() {
+
+		return newsletterEmpfaenger;
+	}
+
+	public CreateOrUpdateLehrerCommand withNewsletterEmpfaenger(final boolean newsletterEmpfaenger) {
+
+		this.newsletterEmpfaenger = newsletterEmpfaenger;
+		return this;
 	}
 
 }

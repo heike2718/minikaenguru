@@ -29,12 +29,15 @@ public class PrivatmenschCreated implements MkGatewayDomainEvent {
 	@JsonProperty
 	private final String fullName;
 
+	@JsonProperty
+	private final boolean newsletterEmpfaenger;
+
 	/**
 	 * @param occouredOn
 	 * @param uuid
 	 * @param fullName
 	 */
-	public PrivatmenschCreated(final LocalDateTime occouredOn, final String uuid, final String fullName) {
+	public PrivatmenschCreated(final LocalDateTime occouredOn, final String uuid, final String fullName, final boolean newsletterEmpfaenger) {
 
 		if (occouredOn == null) {
 
@@ -55,6 +58,7 @@ public class PrivatmenschCreated implements MkGatewayDomainEvent {
 		this.fullName = fullName;
 		this.uuid = uuid;
 		this.rolle = Rolle.PRIVAT;
+		this.newsletterEmpfaenger = newsletterEmpfaenger;
 	}
 
 	@Override
@@ -82,6 +86,11 @@ public class PrivatmenschCreated implements MkGatewayDomainEvent {
 	Rolle rolle() {
 
 		return this.rolle;
+	}
+
+	public boolean isNewsletterEmpfaenger() {
+
+		return newsletterEmpfaenger;
 	}
 
 }

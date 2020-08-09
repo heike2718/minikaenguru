@@ -75,4 +75,10 @@ public class User extends ConcurrencySafeEntity {
 
 		this.uuid = uuid;
 	}
+
+	@Override
+	public String toString() {
+
+		return "User [uuid=" + uuid + ", rolle=" + rolle + "]";
+	}
 }

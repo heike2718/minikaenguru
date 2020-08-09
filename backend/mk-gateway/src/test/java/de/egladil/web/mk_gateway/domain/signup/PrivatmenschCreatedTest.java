@@ -31,7 +31,7 @@ public class PrivatmenschCreatedTest {
 		// Act
 		try {
 
-			new PrivatmenschCreated(occouredOn, uuid, fullName);
+			new PrivatmenschCreated(occouredOn, uuid, fullName, true);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -51,7 +51,7 @@ public class PrivatmenschCreatedTest {
 		// Act
 		try {
 
-			new PrivatmenschCreated(occouredOn, uuid, fullName);
+			new PrivatmenschCreated(occouredOn, uuid, fullName, false);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -71,7 +71,7 @@ public class PrivatmenschCreatedTest {
 		// Act
 		try {
 
-			new PrivatmenschCreated(occouredOn, uuid, fullName);
+			new PrivatmenschCreated(occouredOn, uuid, fullName, false);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -91,7 +91,7 @@ public class PrivatmenschCreatedTest {
 		// Act
 		try {
 
-			new PrivatmenschCreated(occouredOn, uuid, fullName);
+			new PrivatmenschCreated(occouredOn, uuid, fullName, true);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -111,7 +111,7 @@ public class PrivatmenschCreatedTest {
 		// Act
 		try {
 
-			new PrivatmenschCreated(occouredOn, uuid, fullName);
+			new PrivatmenschCreated(occouredOn, uuid, fullName, true);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -131,7 +131,7 @@ public class PrivatmenschCreatedTest {
 		TimeUnit.MILLISECONDS.sleep(200);
 
 		// Act
-		PrivatmenschCreated event = new PrivatmenschCreated(occouredOn, uuid, fullName);
+		PrivatmenschCreated event = new PrivatmenschCreated(occouredOn, uuid, fullName, true);
 
 		// Assert
 		assertTrue(LocalDateTime.now().isAfter(event.occuredOn()));
@@ -139,6 +139,7 @@ public class PrivatmenschCreatedTest {
 		assertEquals(fullName, event.fullName());
 		assertEquals("PrivatmenschCreated", event.typeName());
 		assertEquals(Rolle.PRIVAT, event.rolle());
+		assertTrue(event.isNewsletterEmpfaenger());
 
 	}
 

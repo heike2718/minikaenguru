@@ -44,6 +44,9 @@ public class PersistenterVeranstalter extends ConcurrencySafeEntity {
 	@Enumerated(EnumType.STRING)
 	private ZugangUnterlagen zugangUnterlagen;
 
+	@Column(name = "NEWSLETTER")
+	private boolean newsletterEmpfaenger;
+
 	public String getTeilnahmenummern() {
 
 		return teilnahmenummern;
@@ -82,5 +85,15 @@ public class PersistenterVeranstalter extends ConcurrencySafeEntity {
 	public void setZugangsberechtigungUnterlagen(final ZugangUnterlagen zugangUnterlagen) {
 
 		this.zugangUnterlagen = zugangUnterlagen;
+	}
+
+	public boolean isNewsletterEmpfaenger() {
+
+		return newsletterEmpfaenger;
+	}
+
+	public void setNewsletterEmpfaenger(final boolean newsletter) {
+
+		this.newsletterEmpfaenger = newsletter;
 	}
 }

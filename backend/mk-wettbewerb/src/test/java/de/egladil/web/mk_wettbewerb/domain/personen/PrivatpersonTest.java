@@ -6,6 +6,7 @@ package de.egladil.web.mk_wettbewerb.domain.personen;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class PrivatpersonTest {
 
 		try {
 
-			new Privatperson(null, Arrays.asList(new Identifier("jsal")));
+			new Privatperson(null, false, Arrays.asList(new Identifier("jsal")));
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -40,7 +41,7 @@ public class PrivatpersonTest {
 
 		try {
 
-			new Privatperson(new Person("bhqgwhdq", "khdeih"), null);
+			new Privatperson(new Person("bhqgwhdq", "khdeih"), false, null);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -58,7 +59,7 @@ public class PrivatpersonTest {
 		Person person = new Person(uuid, fullName);
 
 		// Act
-		Privatperson privatperson = new Privatperson(person, Arrays.asList(new Identifier(uuid)));
+		Privatperson privatperson = new Privatperson(person, false, Arrays.asList(new Identifier(uuid)));
 
 		// Assert
 		assertEquals(Rolle.PRIVAT, privatperson.rolle());
@@ -67,6 +68,7 @@ public class PrivatpersonTest {
 		assertEquals(person, privatperson.person());
 		assertEquals(uuid, privatperson.persistierbareTeilnahmenummern());
 		assertEquals(1, privatperson.teilnahmeIdentifier().size());
+		assertFalse(privatperson.isNewsletterEmpfaenger());
 
 	}
 
@@ -86,7 +88,7 @@ public class PrivatpersonTest {
 		teilnahmekuerzel.add(new Identifier(id2));
 
 		// Act
-		Privatperson privatperson = new Privatperson(person, teilnahmekuerzel);
+		Privatperson privatperson = new Privatperson(person, true, teilnahmekuerzel);
 
 		// Assert
 		assertEquals(Rolle.PRIVAT, privatperson.rolle());
@@ -96,6 +98,7 @@ public class PrivatpersonTest {
 		assertEquals("bla,blubb", privatperson.persistierbareTeilnahmenummern());
 		assertEquals(2, privatperson.teilnahmeIdentifier().size());
 		assertEquals("asuidgquoö - Grtq Jiesrtzq (PRIVAT)", privatperson.toString());
+		assertTrue(privatperson.isNewsletterEmpfaenger());
 
 	}
 
@@ -111,11 +114,11 @@ public class PrivatpersonTest {
 		teilnahmekuerzel.add(new Identifier(id1));
 		teilnahmekuerzel.add(new Identifier(id2));
 
-		Privatperson person1 = new Privatperson(new Person("u1", "n 1"), teilnahmekuerzel);
-		Privatperson person2 = new Privatperson(new Person("u1", "n 1"), Arrays.asList(new Identifier("u1")));
-		Privatperson person3 = new Privatperson(new Person("u2", "n 1"), teilnahmekuerzel);
+		Privatperson person1 = new Privatperson(new Person("u1", "n 1"), false, teilnahmekuerzel);
+		Privatperson person2 = new Privatperson(new Person("u1", "n 1"), true, Arrays.asList(new Identifier("u1")));
+		Privatperson person3 = new Privatperson(new Person("u2", "n 1"), false, teilnahmekuerzel);
 
-		Veranstalter lehrer = new Lehrer(new Person("u1", "j s"), Arrays.asList(new Identifier("GHGFFIF")));
+		Veranstalter lehrer = new Lehrer(new Person("u1", "j s"), true, Arrays.asList(new Identifier("GHGFFIF")));
 
 		// Assert
 		assertEquals(person1, person1);

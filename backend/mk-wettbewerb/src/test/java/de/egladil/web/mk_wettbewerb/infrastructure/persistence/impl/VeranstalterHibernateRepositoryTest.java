@@ -5,7 +5,9 @@
 package de.egladil.web.mk_wettbewerb.infrastructure.persistence.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.Arrays;
@@ -35,7 +37,7 @@ public class VeranstalterHibernateRepositoryTest {
 		String uuid = "HUugaugduo";
 		String fullName = "Hans Wurst";
 		List<Identifier> schulen = Arrays.asList(new Identifier[] { new Identifier("1"), new Identifier("2") });
-		Lehrer lehrer = new Lehrer(new Person(uuid, fullName), schulen);
+		Lehrer lehrer = new Lehrer(new Person(uuid, fullName), true, schulen);
 
 		// Act
 		PersistenterVeranstalter persistenter = new VeranstalterHibernateRepository().mapFromVeranstalter(lehrer);
@@ -46,6 +48,7 @@ public class VeranstalterHibernateRepositoryTest {
 		assertEquals(Rolle.LEHRER, persistenter.getRolle());
 		assertEquals("1,2", persistenter.getTeilnahmenummern());
 		assertEquals(ZugangUnterlagen.DEFAULT, persistenter.getZugangsberechtigungUnterlagen());
+		assertTrue(persistenter.isNewsletterEmpfaenger());
 
 	}
 
@@ -57,7 +60,7 @@ public class VeranstalterHibernateRepositoryTest {
 		String uuid = "HUugaugduo";
 		String fullName = "Hans Wurst";
 		List<Identifier> teilnahmeIds = Arrays.asList(new Identifier[] { new Identifier("1"), new Identifier("2") });
-		Privatperson lehrer = new Privatperson(new Person(uuid, fullName), teilnahmeIds);
+		Privatperson lehrer = new Privatperson(new Person(uuid, fullName), true, teilnahmeIds);
 
 		// Act
 		PersistenterVeranstalter persistenter = new VeranstalterHibernateRepository().mapFromVeranstalter(lehrer);
@@ -68,6 +71,7 @@ public class VeranstalterHibernateRepositoryTest {
 		assertEquals(Rolle.PRIVAT, persistenter.getRolle());
 		assertEquals("1,2", persistenter.getTeilnahmenummern());
 		assertEquals(ZugangUnterlagen.DEFAULT, persistenter.getZugangsberechtigungUnterlagen());
+		assertTrue(persistenter.isNewsletterEmpfaenger());
 
 	}
 
@@ -84,9 +88,11 @@ public class VeranstalterHibernateRepositoryTest {
 		vorhandener.setUuid(uuid);
 		vorhandener.setZugangsberechtigungUnterlagen(ZugangUnterlagen.ERTEILT);
 
+		assertFalse(vorhandener.isNewsletterEmpfaenger());
+
 		List<Identifier> schulen = Arrays.asList(new Identifier[] { new Identifier("1"), new Identifier("3") });
 
-		Lehrer lehrer = new Lehrer(new Person("OIOIOI", "Erna"), schulen);
+		Lehrer lehrer = new Lehrer(new Person("OIOIOI", "Erna"), true, schulen);
 		lehrer.verwehreZugangUnterlagen();
 
 		// Act
@@ -99,6 +105,7 @@ public class VeranstalterHibernateRepositoryTest {
 		assertEquals("1,3", vorhandener.getTeilnahmenummern());
 		assertEquals("Erna", vorhandener.getFullName());
 		assertEquals(ZugangUnterlagen.ENTZOGEN, vorhandener.getZugangsberechtigungUnterlagen());
+		assertTrue(vorhandener.isNewsletterEmpfaenger());
 
 	}
 
@@ -117,7 +124,7 @@ public class VeranstalterHibernateRepositoryTest {
 
 		List<Identifier> schulen = Arrays.asList(new Identifier[] { new Identifier("1"), new Identifier("3") });
 
-		Privatperson lehrer = new Privatperson(new Person("OIOIOI", "Erna"), schulen);
+		Privatperson lehrer = new Privatperson(new Person("OIOIOI", "Erna"), true, schulen);
 		lehrer.verwehreZugangUnterlagen();
 
 		// Act
