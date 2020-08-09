@@ -24,9 +24,9 @@ public class Privatperson extends Veranstalter {
 	 * @param person
 	 * @param teilnahmekuerzel
 	 */
-	public Privatperson(final Person person, final List<Identifier> teilnahmenummern) {
+	public Privatperson(final Person person, final boolean newsletterEmpfaenger, final List<Identifier> teilnahmenummern) {
 
-		super(person);
+		super(person, newsletterEmpfaenger);
 
 		if (teilnahmenummern == null) {
 

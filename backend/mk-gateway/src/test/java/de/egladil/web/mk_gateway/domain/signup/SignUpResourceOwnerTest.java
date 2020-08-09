@@ -7,6 +7,7 @@ package de.egladil.web.mk_gateway.domain.signup;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.junit.jupiter.api.Test;
@@ -162,9 +163,49 @@ public class SignUpResourceOwnerTest {
 		} catch (MkGatewayRuntimeException e) {
 
 			assertEquals(
-				"Das nonce für ein Lehrerkonto muss die Form 'LEHRER-SCHULKUERZEL' haben, war aber LEHRER",
+				"Das nonce für ein Lehrerkonto muss die Form 'LEHRER-SCHULKUERZEL' oder 'LEHRER-SCHULKUERZEL-TRUE' haben, war aber LEHRER",
 				e.getMessage());
 		}
+	}
+
+	@Test
+	void should_ConstructorHandleNewsletterToken_when_NonceLehrerLastTokenNotTRUE() {
+
+		// Arrange
+		final String uuid = "dgggigcqig";
+		final String fullName = "Maxe Meier";
+		final String nonce = "LEHRER-BLA-BLUBB";
+
+		// Act
+		SignUpResourceOwner owner = new SignUpResourceOwner(uuid, fullName, nonce);
+
+		// Assert
+		assertFalse(owner.isNewsletterEmpfaenger());
+		assertEquals("Maxe Meier", owner.fullName());
+		assertEquals("dgggigcqig", owner.uuid());
+		assertEquals(Rolle.LEHRER, owner.rolle());
+		assertEquals("BLA", owner.schulkuerzel());
+
+	}
+
+	@Test
+	void should_ConstructorHandleNewsletterToken_when_NonceLehrerLastTokenTRUE() {
+
+		// Arrange
+		final String uuid = "dgggigcqig";
+		final String fullName = "Maxe Meier";
+		final String nonce = "LEHRER-BLA-TRUE";
+
+		// Act
+		SignUpResourceOwner owner = new SignUpResourceOwner(uuid, fullName, nonce);
+
+		// Assert
+		assertTrue(owner.isNewsletterEmpfaenger());
+		assertEquals("Maxe Meier", owner.fullName());
+		assertEquals("dgggigcqig", owner.uuid());
+		assertEquals(Rolle.LEHRER, owner.rolle());
+		assertEquals("BLA", owner.schulkuerzel());
+
 	}
 
 	@Test
@@ -173,7 +214,7 @@ public class SignUpResourceOwnerTest {
 		// Arrange
 		final String uuid = "dgggigcqig";
 		final String fullName = "Maxe Meier";
-		final String nonce = "LEHRER-BLA-BLUBB";
+		final String nonce = "LEHRER-BLA-TRUE-BLUBB";
 
 		try {
 
@@ -182,7 +223,7 @@ public class SignUpResourceOwnerTest {
 		} catch (MkGatewayRuntimeException e) {
 
 			assertEquals(
-				"Das nonce für ein Lehrerkonto muss die Form 'LEHRER-SCHULKUERZEL' haben, war aber LEHRER-BLA-BLUBB",
+				"Das nonce für ein Lehrerkonto muss die Form 'LEHRER-SCHULKUERZEL' oder 'LEHRER-SCHULKUERZEL-TRUE' haben, war aber LEHRER-BLA-TRUE-BLUBB",
 				e.getMessage());
 		}
 	}
@@ -202,7 +243,7 @@ public class SignUpResourceOwnerTest {
 		} catch (MkGatewayRuntimeException e) {
 
 			assertEquals(
-				"Das nonce für ein Lehrerkonto muss die Form 'LEHRER-SCHULKUERZEL' haben, war aber LEHRER-",
+				"Das nonce für ein Lehrerkonto muss die Form 'LEHRER-SCHULKUERZEL' oder 'LEHRER-SCHULKUERZEL-TRUE' haben, war aber LEHRER-",
 				e.getMessage());
 		}
 	}
@@ -222,6 +263,26 @@ public class SignUpResourceOwnerTest {
 		assertEquals(uuid, result.uuid());
 		assertEquals(fullName, result.fullName());
 		assertEquals(Rolle.PRIVAT, result.rolle());
+		assertFalse(result.isNewsletterEmpfaenger());
+		assertNull(result.schulkuerzel());
+	}
+
+	@Test
+	void should_ConstructorInitializeRollePrivat_when_newsletter() {
+
+		// Arrange
+		final String uuid = "dgggigcqig";
+		final String fullName = "Maxe Meier";
+		final String nonce = "PRIVAT-TRUE";
+
+		// Act
+		SignUpResourceOwner result = new SignUpResourceOwner(uuid, fullName, nonce);
+
+		// Assert
+		assertEquals(uuid, result.uuid());
+		assertEquals(fullName, result.fullName());
+		assertEquals(Rolle.PRIVAT, result.rolle());
+		assertTrue(result.isNewsletterEmpfaenger());
 		assertNull(result.schulkuerzel());
 	}
 

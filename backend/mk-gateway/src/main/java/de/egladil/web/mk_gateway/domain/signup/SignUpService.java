@@ -40,7 +40,7 @@ public class SignUpService {
 	}
 
 	@Transactional
-	public User createUser(final SignUpResourceOwner signUpResourceOwner) {
+	public User createUser(final SignUpResourceOwner signUpResourceOwner, final boolean anonym) {
 
 		if (signUpResourceOwner == null) {
 
@@ -63,11 +63,12 @@ public class SignUpService {
 
 		case LEHRER:
 			final String schulkuerzel = signUpResourceOwner.schulkuerzel();
-			event = new LehrerCreated(CommonTimeUtils.now(), uuid, fullName, schulkuerzel);
+			event = new LehrerCreated(CommonTimeUtils.now(), uuid, fullName, schulkuerzel,
+				signUpResourceOwner.isNewsletterEmpfaenger());
 			break;
 
 		case PRIVAT:
-			event = new PrivatmenschCreated(CommonTimeUtils.now(), uuid, fullName);
+			event = new PrivatmenschCreated(CommonTimeUtils.now(), uuid, fullName, signUpResourceOwner.isNewsletterEmpfaenger());
 			break;
 
 		default:
@@ -78,7 +79,10 @@ public class SignUpService {
 		user.setImportierteUuid(uuid);
 		user.setRolle(rolle);
 
-		userRepository.addUser(user);
+		if (!anonym) {
+
+			userRepository.addUser(user);
+		}
 
 		if (createdEvent != null) {
 

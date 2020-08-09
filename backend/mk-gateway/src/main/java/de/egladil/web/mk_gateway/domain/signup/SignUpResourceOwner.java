@@ -25,6 +25,8 @@ public class SignUpResourceOwner {
 
 	private String schulkuerzel;
 
+	private boolean newsletterEmpfaenger;
+
 	/**
 	 * @param uuid
 	 * @param fullName
@@ -62,21 +64,48 @@ public class SignUpResourceOwner {
 				"Fehler in der Integration mit AuthProvider: das nonce muss entweder den String 'PRIVAT' oder den String 'LEHRER' enthalten");
 		}
 
+		String newsletterToken = null;
+
 		if (theNonce.contains(Rolle.LEHRER.name())) {
 
 			this.rolle = Rolle.LEHRER;
 			String[] tokens = theNonce.split("-");
 
-			if (tokens.length != 2) {
+			if (tokens.length != 2 && tokens.length != 3) {
 
 				throw new MkGatewayRuntimeException(
-					"Das nonce für ein Lehrerkonto muss die Form 'LEHRER-SCHULKUERZEL' haben, war aber " + theNonce);
+					"Das nonce für ein Lehrerkonto muss die Form 'LEHRER-SCHULKUERZEL' oder 'LEHRER-SCHULKUERZEL-TRUE' haben, war aber "
+						+ theNonce);
 			}
 			this.schulkuerzel = tokens[1];
 
+			if (tokens.length == 3) {
+
+				newsletterToken = tokens[2];
+			}
+
 		} else {
 
+			String[] tokens = theNonce.split("-");
+
+			if (tokens.length != 1 && tokens.length != 2) {
+
+				throw new MkGatewayRuntimeException(
+					"Das nonce für ein Lehrerkonto muss die Form 'PRIVAT' oder 'PRIVAT-TRUE' haben, war aber "
+						+ theNonce);
+			}
+
 			this.rolle = Rolle.PRIVAT;
+
+			if (tokens.length == 2) {
+
+				newsletterToken = tokens[1];
+			}
+		}
+
+		if ("TRUE".equalsIgnoreCase(newsletterToken)) {
+
+			this.newsletterEmpfaenger = true;
 		}
 	}
 
@@ -132,6 +161,11 @@ public class SignUpResourceOwner {
 		}
 		SignUpResourceOwner other = (SignUpResourceOwner) obj;
 		return Objects.equals(uuid, other.uuid);
+	}
+
+	public boolean isNewsletterEmpfaenger() {
+
+		return newsletterEmpfaenger;
 	}
 
 }

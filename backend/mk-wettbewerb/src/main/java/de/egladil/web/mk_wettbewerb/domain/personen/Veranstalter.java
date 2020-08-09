@@ -28,10 +28,13 @@ public abstract class Veranstalter {
 	@JsonProperty
 	private ZugangUnterlagen zugangUnterlagen = ZugangUnterlagen.DEFAULT;
 
+	@JsonProperty
+	private boolean newsletterEmpfaenger;
+
 	/**
 	 * @param person
 	 */
-	public Veranstalter(final Person person) {
+	public Veranstalter(final Person person, final boolean newsletterEmpfaenger) {
 
 		if (person == null) {
 
@@ -39,6 +42,7 @@ public abstract class Veranstalter {
 		}
 
 		this.person = person;
+		this.newsletterEmpfaenger = newsletterEmpfaenger;
 
 	}
 
@@ -139,5 +143,10 @@ public abstract class Veranstalter {
 		}
 		Veranstalter other = (Veranstalter) obj;
 		return Objects.equals(person, other.person);
+	}
+
+	public boolean isNewsletterEmpfaenger() {
+
+		return newsletterEmpfaenger;
 	}
 }

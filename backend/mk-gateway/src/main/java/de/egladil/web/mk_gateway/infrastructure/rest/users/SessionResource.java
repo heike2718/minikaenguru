@@ -62,7 +62,7 @@ public class SessionResource {
 	TokenExchangeService tokenExchangeService;
 
 	@POST
-	@Path("/wb-admin/login")
+	@Path("wb-admin/login")
 	public Response loginAsAdmin(final AuthResult authResult) {
 
 		final String oneTimeToken = authResult.getIdToken();
@@ -86,7 +86,7 @@ public class SessionResource {
 	}
 
 	@POST
-	@Path("/login")
+	@Path("login")
 	public Response login(final AuthResult authResult) {
 
 		final String oneTimeToken = authResult.getIdToken();
@@ -110,7 +110,7 @@ public class SessionResource {
 	}
 
 	@DELETE
-	@Path("/logout")
+	@Path("logout")
 	public Response logout(@CookieParam(value = SESSION_COOKIE_NAME) final String sessionId) {
 
 		if (sessionId != null) {
@@ -126,7 +126,7 @@ public class SessionResource {
 	}
 
 	@DELETE
-	@Path("/dev/logout/{sessionId}")
+	@Path("dev/logout/{sessionId}")
 	public Response logoutDev(@PathParam(value = "sessionId") final String sessionId) {
 
 		if (sessionId != null) {

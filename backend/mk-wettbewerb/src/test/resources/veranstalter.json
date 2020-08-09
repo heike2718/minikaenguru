@@ -6,6 +6,7 @@
       "fullName": "Herta Grütze"
     },
     "zugangUnterlagen": "DEFAULT",
+    "newsletterEmpfaenger": "true",
     "teilnahmenummern": [
         {
           "identifier": "TEILNAHMENUMMER_PRIVAT"
@@ -19,6 +20,7 @@
       "fullName": "Böser Helikoptervater"
     },
     "zugangUnterlagen": "ENTZOGEN",
+    "newsletterEmpfaenger": "false",
     "teilnahmenummern": [
         {
           "identifier": "TEILNAHMENUMMER_PRIVAT_GESPERRT"
@@ -32,6 +34,7 @@
       "fullName": "Bob Pudding"
     },
     "zugangUnterlagen": "DEFAULT",
+    "newsletterEmpfaenger": "true",
     "teilnahmenummern": [
         {
           "identifier": "TEILNAHMENUMMER_PRIVAT_NICHT_ANGEMELDET"
@@ -45,6 +48,7 @@
       "fullName": "Karl Düsentrieb"
     },
     "zugangUnterlagen": "DEFAULT",
+    "newsletterEmpfaenger": "false",
     "teilnahmenummern": [
         {
           "identifier": "TEILNAHMENUMMER_1"
@@ -61,6 +65,7 @@
       "fullName": "Gustav Adular"
     },
     "zugangUnterlagen": "DEFAULT",
+    "newsletterEmpfaenger": "false",
     "teilnahmenummern": []
   },
 {
@@ -70,6 +75,7 @@
       "fullName": "Hans Wurst"
     },
     "zugangUnterlagen": "DEFAULT",
+    "newsletterEmpfaenger": "true",
     "teilnahmenummern": [
       {
         "identifier": "SCHULKUERZEL_1"
@@ -86,6 +92,7 @@
       "fullName": "Olle Keule"
     },
     "zugangUnterlagen": "DEFAULT",
+    "newsletterEmpfaenger": "true",
     "teilnahmenummern": [
       {
         "identifier": "SCHULKUERZEL_1"
@@ -99,6 +106,7 @@
       "fullName": "Mimi Mimimi"
     },
     "zugangUnterlagen": "DEFAULT",
+    "newsletterEmpfaenger": "false",
     "teilnahmenummern": [
       {
         "identifier": "SCHULKUERZEL_1"
@@ -112,6 +120,7 @@
       "fullName": "Gesperrter Lehrer"
     },
     "zugangUnterlagen": "ENTZOGEN",
+    "newsletterEmpfaenger": "true",
     "teilnahmenummern": [
       {
         "identifier": "SCHULKUERZEL_1"
@@ -125,6 +134,7 @@
       "fullName": "Lehrer andere Schule"
     },
     "zugangUnterlagen": "DEFAULT",
+    "newsletterEmpfaenger": "false",
     "teilnahmenummern": [
       {
         "identifier": "SCHULKUERZEL_3"

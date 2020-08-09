@@ -65,33 +65,33 @@ public class ZugangUnterlagenServiceTest {
 	@BeforeEach
 	void setUp() {
 
-		this.lehrerAngemeldet = new Lehrer(new Person("hsagdiqg", "Knoööe Nase"),
+		this.lehrerAngemeldet = new Lehrer(new Person("hsagdiqg", "Knoööe Nase"), false,
 			Arrays.asList(new Identifier[] { new Identifier(SCHULTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB),
 				new Identifier(SCHULKUERZEL_NICHT_ANGEMELDET) }));
 
-		this.lehrerNichtAngemeldet = new Lehrer(new Person("vyxhjcga", "Herr Verpeilt"),
+		this.lehrerNichtAngemeldet = new Lehrer(new Person("vyxhjcga", "Herr Verpeilt"), true,
 			Arrays.asList(new Identifier[] { new Identifier(SCHULKUERZEL_NICHT_ANGEMELDET) }));
 
-		this.lehrerSonderzugangsberechtigung = new Lehrer(new Person("sabljal", "Extra Wurst"),
+		this.lehrerSonderzugangsberechtigung = new Lehrer(new Person("sabljal", "Extra Wurst"), false,
 			Arrays.asList(new Identifier[] { new Identifier(SCHULTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB) }));
 		this.lehrerSonderzugangsberechtigung.erlaubeZugangUnterlagen();
 
-		this.lehrerZugangsberechtigungEntzogen = new Lehrer(new Person("bjkabjdb", "Ausge Schlossen"),
+		this.lehrerZugangsberechtigungEntzogen = new Lehrer(new Person("bjkabjdb", "Ausge Schlossen"), true,
 			Arrays.asList(new Identifier[] { new Identifier(SCHULTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB) }));
 		this.lehrerZugangsberechtigungEntzogen.verwehreZugangUnterlagen();
 
-		this.privatpersonAngemeldet = new Privatperson(new Person("chkggd", "Schrumpf Nase"),
+		this.privatpersonAngemeldet = new Privatperson(new Person("chkggd", "Schrumpf Nase"), false,
 			Arrays.asList(new Identifier[] { new Identifier(PRIVATTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB) }));
 
-		this.privatpersonSonderzugangsberechtigung = new Privatperson(new Person("bsjjas", "Extra Nase"),
+		this.privatpersonSonderzugangsberechtigung = new Privatperson(new Person("bsjjas", "Extra Nase"), true,
 			Arrays.asList(new Identifier[] { new Identifier(PRIVATTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB) }));
 		this.privatpersonSonderzugangsberechtigung.erlaubeZugangUnterlagen();
 
-		this.privatpersonZugangsberechtigungEntzogen = new Privatperson(new Person("assddsfdf", "Augeschlossen Nase"),
+		this.privatpersonZugangsberechtigungEntzogen = new Privatperson(new Person("assddsfdf", "Augeschlossen Nase"), false,
 			Arrays.asList(new Identifier[] { new Identifier(PRIVATTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB) }));
 		this.privatpersonZugangsberechtigungEntzogen.verwehreZugangUnterlagen();
 
-		this.privatpersonNichtAngemeldet = new Privatperson(new Person("hlvhsh", "Frau Verpeilt"),
+		this.privatpersonNichtAngemeldet = new Privatperson(new Person("hlvhsh", "Frau Verpeilt"), true,
 			Arrays.asList(new Identifier("hlvhsh")));
 
 		WettbewerbID wettbewerbId = new WettbewerbID(Integer.valueOf(2020));

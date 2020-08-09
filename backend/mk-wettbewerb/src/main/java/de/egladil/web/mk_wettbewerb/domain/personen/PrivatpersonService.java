@@ -56,6 +56,9 @@ public class PrivatpersonService {
 	TeilnahmenRepository teilnahmenRepository;
 
 	@Inject
+	PrivatteilnahmeKuerzelService teilnahmenKuerzelService;
+
+	@Inject
 	Event<SecurityIncidentRegistered> securityIncidentEvent;
 
 	@Inject
@@ -65,13 +68,14 @@ public class PrivatpersonService {
 
 	private DataInconsistencyRegistered dataInconsistencyRegistered;
 
-	public static PrivatpersonService createForTest(final VeranstalterRepository veranstalterRepository, final ZugangUnterlagenService zugangUnterlagenService, final WettbewerbService wettbewerbSerivice, final TeilnahmenRepository teilnahmenRepository) {
+	public static PrivatpersonService createForTest(final VeranstalterRepository veranstalterRepository, final ZugangUnterlagenService zugangUnterlagenService, final WettbewerbService wettbewerbSerivice, final TeilnahmenRepository teilnahmenRepository, final PrivatteilnahmeKuerzelService teilnahmeKuerzelService) {
 
 		PrivatpersonService result = new PrivatpersonService();
 		result.repository = veranstalterRepository;
 		result.zugangUnterlagenService = zugangUnterlagenService;
 		result.wettbewerbSerivice = wettbewerbSerivice;
 		result.teilnahmenRepository = teilnahmenRepository;
+		result.teilnahmenKuerzelService = teilnahmeKuerzelService;
 		return result;
 	}
 
@@ -157,22 +161,24 @@ public class PrivatpersonService {
 	 *             CreateOrUpdatePrivatpersonCommand
 	 */
 	@Transactional
-	public void addPrivatperson(final CreateOrUpdatePrivatpersonCommand data) {
+	public boolean addPrivatperson(final CreateOrUpdatePrivatpersonCommand data) {
 
 		Optional<Veranstalter> optPrivatperson = repository.ofId(new Identifier(data.uuid()));
 
 		if (optPrivatperson.isPresent()) {
 
-			return;
+			return false;
 		}
 
 		// Issue minikaenguru#18
-		String teilnahmenummer = data.uuid().substring(27).toUpperCase();
+		String teilnahmenummer = this.teilnahmenKuerzelService.neuesKuerzel();
 
-		Privatperson privatperson = new Privatperson(new Person(data.uuid(), data.fullName()),
+		Person person = new Person(data.uuid(), data.fullName());
+		Privatperson privatperson = new Privatperson(person, data.newsletterEmpfaenger(),
 			Arrays.asList(new Identifier(teilnahmenummer)));
 
 		repository.addVeranstalter(privatperson);
+		return true;
 	}
 
 	SecurityIncidentRegistered getSecurityIncidentRegistered() {

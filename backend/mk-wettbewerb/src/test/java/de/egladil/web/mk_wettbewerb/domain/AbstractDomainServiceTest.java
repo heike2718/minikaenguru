@@ -7,9 +7,11 @@ package de.egladil.web.mk_wettbewerb.domain;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.mockito.Mockito;
 
+import de.egladil.web.mk_wettbewerb.domain.personen.PrivatteilnahmeKuerzelService;
 import de.egladil.web.mk_wettbewerb.domain.personen.ZugangUnterlagenService;
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.WettbewerbID;
@@ -70,6 +72,8 @@ public abstract class AbstractDomainServiceTest {
 
 	private WettbewerbService wettbewerbService;
 
+	private PrivatteilnahmeKuerzelService privatteilnameKuerzelService;
+
 	protected void setUp() {
 
 		aktuellerWettbewerb = new Wettbewerb(new WettbewerbID(WETTBEWERBSJAHR_AKTUELL)).withStatus(WettbewerbStatus.ANMELDUNG)
@@ -90,6 +94,16 @@ public abstract class AbstractDomainServiceTest {
 
 		zugangUnterlagenService = ZugangUnterlagenService.createForTest(teilnahmenRepository, veranstalterRepository,
 			wettbewerbService);
+
+		privatteilnameKuerzelService = new PrivatteilnahmeKuerzelService() {
+
+			@Override
+			public String neuesKuerzel() {
+
+				return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 10).toUpperCase();
+			}
+
+		};
 
 	}
 
@@ -141,6 +155,11 @@ public abstract class AbstractDomainServiceTest {
 	protected WettbewerbService getWettbewerbService() {
 
 		return wettbewerbService;
+	}
+
+	protected PrivatteilnahmeKuerzelService getPrivatteilnameKuerzelService() {
+
+		return privatteilnameKuerzelService;
 	}
 
 }

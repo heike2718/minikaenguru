@@ -68,11 +68,11 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 		switch (treffer.getRolle()) {
 
 		case PRIVAT:
-			veranstalter = new Privatperson(person, teilnahmekuerzel);
+			veranstalter = new Privatperson(person, treffer.isNewsletterEmpfaenger(), teilnahmekuerzel);
 			break;
 
 		case LEHRER:
-			veranstalter = new Lehrer(person, teilnahmekuerzel);
+			veranstalter = new Lehrer(person, treffer.isNewsletterEmpfaenger(), teilnahmekuerzel);
 			break;
 
 		default:
@@ -147,6 +147,7 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 		persistenterVeranstalter.setTeilnahmenummern(veranstalter.persistierbareTeilnahmenummern());
 		persistenterVeranstalter.setZugangsberechtigungUnterlagen(veranstalter.zugangUnterlagen());
 		persistenterVeranstalter.setRolle(veranstalter.rolle());
+		persistenterVeranstalter.setNewsletterEmpfaenger(veranstalter.isNewsletterEmpfaenger());
 		return persistenterVeranstalter;
 	}
 
@@ -176,5 +177,6 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 		vorhandener.setFullName(veranstalter.fullName());
 		vorhandener.setTeilnahmenummern(veranstalter.persistierbareTeilnahmenummern());
 		vorhandener.setZugangsberechtigungUnterlagen(veranstalter.zugangUnterlagen());
+		vorhandener.setNewsletterEmpfaenger(veranstalter.isNewsletterEmpfaenger());
 	}
 }

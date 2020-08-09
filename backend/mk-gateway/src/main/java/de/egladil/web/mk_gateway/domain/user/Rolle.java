@@ -11,5 +11,5 @@ public enum Rolle {
 
 	ADMIN,
 	LEHRER,
-	PRIVAT
+	PRIVAT;
 }

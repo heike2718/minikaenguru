@@ -31,6 +31,9 @@ public class InMemoryVeranstalter {
 	@JsonProperty
 	private List<Identifier> teilnahmenummern;
 
+	@JsonProperty
+	private boolean newsletterEmpfaenger;
+
 	public static InMemoryVeranstalter createForTest(final String uuid) {
 
 		InMemoryVeranstalter result = new InMemoryVeranstalter();
@@ -59,6 +62,11 @@ public class InMemoryVeranstalter {
 	public ZugangUnterlagen getZugangUnterlagen() {
 
 		return zugangUnterlagen;
+	}
+
+	public boolean isNewsletterEmpfaenger() {
+
+		return newsletterEmpfaenger;
 	}
 
 }

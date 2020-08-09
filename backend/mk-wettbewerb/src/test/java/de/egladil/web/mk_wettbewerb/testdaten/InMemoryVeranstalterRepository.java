@@ -67,7 +67,7 @@ public class InMemoryVeranstalterRepository implements VeranstalterRepository {
 
 		if (ver.getRolle() == Rolle.PRIVAT) {
 
-			Privatperson privatperson = new Privatperson(ver.getPerson(), ver.getTeilnahmenummern());
+			Privatperson privatperson = new Privatperson(ver.getPerson(), true, ver.getTeilnahmenummern());
 
 			switch (ver.getZugangUnterlagen()) {
 
@@ -88,7 +88,7 @@ public class InMemoryVeranstalterRepository implements VeranstalterRepository {
 
 		if (ver.getRolle() == Rolle.LEHRER) {
 
-			Lehrer lehrer = new Lehrer(ver.getPerson(), ver.getTeilnahmenummern());
+			Lehrer lehrer = new Lehrer(ver.getPerson(), true, ver.getTeilnahmenummern());
 
 			switch (ver.getZugangUnterlagen()) {
 
