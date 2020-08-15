@@ -75,8 +75,9 @@ public class MkSignUpLoginUrlResource {
 	}
 
 	@GET
-	@Path("/signup/lehrer/{schulkuerzel}")
-	public Response getSignupLehrerUrl(@PathParam(value = "schulkuerzel") final String schulkuerzel) {
+	@Path("/signup/lehrer/{schulkuerzel}/{newsletterAbonnieren}")
+	public Response getSignupLehrerUrl(@PathParam(value = "schulkuerzel") final String schulkuerzel, @PathParam(
+		value = "newsletterAbonnieren") final String newsletterAbonnieren) {
 
 		String accessToken = clientAccessTokenService.orderAccessToken(mkvAppClientId, mkvAppClientSecret);
 
@@ -87,6 +88,13 @@ public class MkSignUpLoginUrlResource {
 
 		String nonce = Rolle.LEHRER + "-" + schulkuerzel;
 
+		boolean abonnieren = Boolean.valueOf(newsletterAbonnieren);
+
+		if (abonnieren) {
+
+			nonce += "-" + abonnieren;
+		}
+
 		String redirectUrl = authAppUrl + "#/signup?accessToken=" + accessToken + "&state=signup&nonce=" + nonce + "&redirectUrl="
 			+ signupRedirectUrl;
 
@@ -96,8 +104,9 @@ public class MkSignUpLoginUrlResource {
 	}
 
 	@GET
-	@Path("/signup/privat")
-	public Response getSignupPrivatmenschUrl() {
+	@Path("/signup/privat/{newsletterAbonnieren}")
+	public Response getSignupPrivatmenschUrl(@PathParam(
+		value = "newsletterAbonnieren") final String newsletterAbonnieren) {
 
 		String accessToken = clientAccessTokenService.orderAccessToken(mkvAppClientId, mkvAppClientSecret);
 
@@ -107,6 +116,13 @@ public class MkSignUpLoginUrlResource {
 		}
 
 		String nonce = Rolle.PRIVAT.name();
+
+		boolean abonnieren = Boolean.valueOf(newsletterAbonnieren);
+
+		if (abonnieren) {
+
+			nonce += "-" + abonnieren;
+		}
 
 		String redirectUrl = authAppUrl + "#/signup?accessToken=" + accessToken + "&state=signup&nonce=" + nonce + "&redirectUrl="
 			+ signupRedirectUrl;

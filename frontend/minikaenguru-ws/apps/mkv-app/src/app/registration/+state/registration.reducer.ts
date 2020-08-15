@@ -7,6 +7,7 @@ export const registrationFeatureKey = 'mkv-app-registration';
 
 export interface RegistrationState {
 	readonly mode: RegistrationMode;
+	readonly newsletterAbonieren: boolean;
 	readonly schulkuerzel: string;
 	readonly showSchulkatalog: boolean;
 	readonly submitEnabled: boolean;
@@ -16,6 +17,7 @@ export interface RegistrationState {
 
 export const initialRegistrationState: RegistrationState = {
 	mode: undefined,
+	newsletterAbonieren: false,
 	schulkuerzel: undefined,
 	showSchulkatalog: false,
 	submitEnabled: false,
@@ -32,7 +34,11 @@ const registrationReducer = createReducer(initialRegistrationState,
 			showSchulkatalog = true;
 		}
 
-		return { mode: action.mode, schulkuerzel: state.schulkuerzel, showSchulkatalog: showSchulkatalog, submitEnabled: false }
+		return { mode: action.mode, schulkuerzel: state.schulkuerzel, showSchulkatalog: showSchulkatalog, submitEnabled: false, newsletterAbonieren: state.newsletterAbonieren }
+	}),
+
+	on(RegistrationActions.newsletterAbonierenChanged, (state, action) => {
+		return {...state, newsletterAbonieren: action.flag};
 	}),
 
 	on(RegistrationActions.schuleSelected, (state, action) => {

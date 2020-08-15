@@ -26,6 +26,7 @@ import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.session.SessionUtils;
+import de.egladil.web.mk_gateway.domain.session.TokenExchangeService;
 
 /**
  * AuthResultToResourceOwnerMapper
@@ -34,6 +35,9 @@ import de.egladil.web.mk_gateway.domain.session.SessionUtils;
 public class AuthResultToResourceOwnerMapper implements Function<AuthResult, SignUpResourceOwner> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AuthResultToResourceOwnerMapper.class);
+
+	@Inject
+	TokenExchangeService tokenExchangeService;
 
 	@Inject
 	JWTService jwtService;
@@ -74,7 +78,8 @@ public class AuthResultToResourceOwnerMapper implements Function<AuthResult, Sig
 			throw new IllegalArgumentException("authResult darf nicht null sein");
 		}
 
-		String jwt = authResult.getIdToken();
+		String oneTimeToken = authResult.getIdToken();
+		String jwt = this.tokenExchangeService.exchangeTheOneTimeToken(oneTimeToken);
 
 		try {
 
@@ -97,7 +102,7 @@ public class AuthResultToResourceOwnerMapper implements Function<AuthResult, Sig
 			throw new AuthException(e.getMessage());
 		} catch (JWTVerificationException e) {
 
-			String msg = LogmessagePrefixes.BOT + "JWT invalid: " + e.getMessage();
+			String msg = LogmessagePrefixes.BOT + "JWT " + StringUtils.abbreviate(jwt, 20) + " invalid: " + e.getMessage();
 
 			this.securityIncident = new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
 

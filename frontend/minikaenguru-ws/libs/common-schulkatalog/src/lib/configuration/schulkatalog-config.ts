@@ -5,6 +5,7 @@ export interface SchulkatalogConfig {
     readonly devmode: boolean;
 	readonly admin: boolean;
 	readonly immediatelyLoadOnNumberChilds: number;
+	readonly cancelKatalogantragRedirectPath: string;
 }
 
 export const SchulkatalogConfigService = new InjectionToken<SchulkatalogConfig>('SchulkatalogConfig');

@@ -1,9 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, AbstractControl, Validators } from '@angular/forms';
 import { InternalFacade } from '../application-services/internal.facade';
 import { SchulkatalogAntrag } from '../domain/entities';
 import { emailValidator, landValidator } from '@minikaenguru-ws/common-components';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
+import { SchulkatalogConfigService, SchulkatalogConfig } from '../configuration/schulkatalog-config';
 
 @Component({
 	selector: 'mk-katalog-schulkatalog-antrag',
@@ -31,11 +33,13 @@ export class SchulkatalogAntragComponent implements OnInit, OnDestroy {
 
 	submitDisabled: boolean;
 
+	showInfoLand: boolean;
+
 	private submitted: boolean = false;
 
 	private katalogantragSuccessSubscription: Subscription;
 
-	constructor(private fb: FormBuilder, private internalFacade: InternalFacade) { }
+	constructor(@Inject(SchulkatalogConfigService) private config: SchulkatalogConfig, private fb: FormBuilder, private internalFacade: InternalFacade, private router: Router) { }
 
 	ngOnInit(): void {
 
@@ -75,6 +79,10 @@ export class SchulkatalogAntragComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	toggleInfoLand() {
+		this.showInfoLand = !this.showInfoLand;
+	}
+
 	submitForm(): void {
 
 		this.submitDisabled = true;
@@ -101,6 +109,7 @@ export class SchulkatalogAntragComponent implements OnInit, OnDestroy {
 		this.antragForm.reset();
 		this.submitDisabled = false;
 		this.submitted = false;
+		this.router.navigateByUrl(this.config.cancelKatalogantragRedirectPath);
 
 	}
 

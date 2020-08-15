@@ -14,6 +14,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -171,7 +172,7 @@ public class MkSessionService {
 			throw new AuthException("JWT expired");
 		} catch (JWTVerificationException e) {
 
-			String msg = LogmessagePrefixes.BOT + "JWT invalid: " + e.getMessage();
+			String msg = LogmessagePrefixes.BOT + "JWT " + StringUtils.abbreviate(jwt, 20) + " invalid: " + e.getMessage();
 
 			this.securityIncident = new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
 

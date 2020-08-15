@@ -35,7 +35,7 @@ public class PublicKatalogsucheResource {
 	MkKatalogeResourceAdapter katalogResourceAdapter;
 
 	@GET
-	@Path("/{typ}")
+	@Path("/suche/{typ}")
 	public Response findItems(@PathParam(
 		value = "typ") final String typ, @NotBlank @StringLatin @QueryParam("search") final String searchTerm) {
 
@@ -43,7 +43,7 @@ public class PublicKatalogsucheResource {
 	}
 
 	@GET
-	@Path("/laender/{land}/orte")
+	@Path("/suche/laender/{land}/orte")
 	public Response findOrteInLand(@LandKuerzel @PathParam(
 		value = "land") final String landKuerzel, @NotBlank @StringLatin @QueryParam("search") final String searchTerm) {
 
@@ -51,11 +51,28 @@ public class PublicKatalogsucheResource {
 	}
 
 	@GET
-	@Path("/orte/{ort}/schulen")
+	@Path("/suche/orte/{ort}/schulen")
 	public Response findSchulenInOrt(@Kuerzel @PathParam(
 		value = "ort") final String ortKuerzel, @NotBlank @StringLatin @QueryParam("search") final String searchTerm) {
 
 		return katalogResourceAdapter.findSchulenInOrt(ortKuerzel, searchTerm);
+
+	}
+
+	@GET
+	@Path("/orte/{ort}/schulen")
+	public Response loadSchulenInOrt(@Kuerzel @PathParam(
+		value = "ort") final String ortKuerzel) {
+
+		return katalogResourceAdapter.loadSchulenInOrt(ortKuerzel);
+	}
+
+	@GET
+	@Path("/laender/{land}/orte")
+	public Response loadOrteInLand(@LandKuerzel @PathParam(
+		value = "land") final String landKuerzel) {
+
+		return katalogResourceAdapter.loadOrteInLand(landKuerzel);
 
 	}
 
