@@ -22,7 +22,7 @@
 			<mk-katalog-item [katalogItem]="item"></mk-katalog-item>
 		</div>
 	</div>
-	<div *ngIf="!viewModel.guiModel.showInputControl" class="col-md-6 mt-4">
+	<div *ngIf="!viewModel.guiModel.showLoadingIndicator" class="col-md-6 mt-4">
 		<button class="btn btn-primary" title="Eintrag in Schulkatalog beantragen" (click)="handleNichtGefunden()">{{viewModel.guiModel.texte.btnNichtGefundenText}}</button>
 	</div>
 </div>

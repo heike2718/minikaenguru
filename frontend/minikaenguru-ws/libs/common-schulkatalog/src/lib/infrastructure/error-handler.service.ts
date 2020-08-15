@@ -56,7 +56,7 @@ export class ErrorHandlerService {
 			return { level: 'ERROR', message: error['message'] };
 		}
 
-		return { level: 'ERROR', message: 'Da ist im Backend irgendwas unerwartetes schiefgelaufen. Gugstu mal ins Log' };
+		return { level: 'ERROR', message: 'Es ist ein unerwarteter Fehler aufgetreten. Bitte schreiben Sie eine Mail an minikaenguru@egladil.de' };
 	}
 
 	private showServerResponseMessage(level: string, message: string) {

@@ -3,16 +3,7 @@ import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { SchulkatalogFacade, KatalogItem } from '@minikaenguru-ws/common-schulkatalog';
 import { Subscription } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { RegistrationState } from './+state/registration.reducer';
-import { selectSubmitStatus
-	, selectRegistrationMode
-	, selectShowSchulkatalog
-	, selectShowSuccessDialog
-	, selectSuccessDialogContent } from './+state/registration.selectors';
-import { AuthService } from '@minikaenguru-ws/common-auth';
-import { DialogService } from '@minikaenguru-ws/common-components';
-import * as RegistrationActions from './+state/registration.actions';
+import { RegistrationFacade } from './registration.facade';
 
 @Component({
 	selector: 'mkv-registration',
@@ -24,30 +15,22 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 	devMode: boolean;
 
 	selectedKatalogItem: KatalogItem;
+	newsletterAbonnieren: boolean;
+	textNewsletter: string;
+	showInfoNewsletter: boolean;
 
-	showSchulkatalog$ = this.store.select(selectShowSchulkatalog);
+	private selectedKatalogItemSubscription: Subscription;
 
-	showSuccessDialog$ = this.store.select(selectShowSuccessDialog);
-
-	registrationSuccessMessage$ = this.store.select(selectSuccessDialogContent);
-
-	registrationMode: string;
-
-	submitDisabled: boolean;
-
-	private selectedKatalogItemSubskription: Subscription;
-
-	private submitEnabledSubscription: Subscription;
-
-	private registrationModeSubscription: Subscription;
+	private newsletterAboStateSubscription: Subscription;
 
 	constructor(private router: Router
-		, public schulkatalogFacade: SchulkatalogFacade
-		, private authService: AuthService
-		, private dialogService: DialogService
-		, private store: Store<RegistrationState>) {
+		, public registrationFacade: RegistrationFacade
+		, public schulkatalogFacade: SchulkatalogFacade) {
 
 		this.devMode = !environment.production;
+
+		this.textNewsletter = `In diesem Fall werden Sie über den Wettbewerb betreffende Änderungen per E-Mail informiert. Ihre Daten werden ausschließlich zu diesem Zweck genutzt. Eine Weitergabe an Dritte erfolgt nicht.
+		  Sie können die Einwilligung jederzeit per E-Mail an minikaenguru@egladil.de oder durch Änderung Ihres Profils widerrufen.`
 
 	}
 
@@ -55,45 +38,44 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
 		this.initState();
 
-		this.store.dispatch(RegistrationActions.resetRegistrationState());
+		this.registrationFacade.resetRegistrationState();
+
 		this.schulkatalogFacade.initSchulkatalog('ORT');
 
-		this.selectedKatalogItemSubskription = this.schulkatalogFacade.selectedKatalogItem$.subscribe(
+		this.newsletterAboStateSubscription = this.registrationFacade.newsletterAboState$.subscribe(
+			flag => this.newsletterAbonnieren = flag
+		);
+
+		this.selectedKatalogItemSubscription = this.schulkatalogFacade.selectedKatalogItem$.subscribe(
 			item => {
 				if (item) {
 					this.selectedKatalogItem = item;
 					if (item.typ === 'SCHULE') {
-						this.store.dispatch(RegistrationActions.schuleSelected({ schulkuerzel: item.kuerzel }));
+						this.registrationFacade.schuleSelected(item.kuerzel);
 					}
 				} else {
 					this.selectedKatalogItem = undefined;
 				}
 			}
 		);
-
-		this.submitEnabledSubscription = this.store.select(selectSubmitStatus).subscribe(
-			state => this.submitDisabled = !state
-		)
-
-		this.registrationModeSubscription = this.store.select(selectRegistrationMode).subscribe(
-			mode => this.registrationMode = mode
-		);
 	}
 
 	ngOnDestroy() {
 
-		if (this.selectedKatalogItemSubskription) {
-			this.selectedKatalogItemSubskription.unsubscribe();
+		if (this.newsletterAboStateSubscription) {
+			this.newsletterAboStateSubscription.unsubscribe();
 		}
-		if (this.submitEnabledSubscription) {
-			this.submitEnabledSubscription.unsubscribe();
-		}
-		if (this.registrationModeSubscription) {
-			this.registrationModeSubscription.unsubscribe();
+
+		if (this.selectedKatalogItemSubscription) {
+			this.selectedKatalogItemSubscription.unsubscribe();
 		}
 
 		this.initState();
 
+	}
+
+	onNewsletterChanged(isChecked: boolean) {
+		this.registrationFacade.setNewsletterAboState(isChecked);
 	}
 
 	gotoKatalogsuche() {
@@ -101,32 +83,33 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 	}
 
 	modusLehrerkonto() {
-		this.store.dispatch(RegistrationActions.registrationModeChanged({ mode: 'LEHRER' }));
-		this.schulkatalogFacade.initSchulkatalog('ORT');
+		this.registrationFacade.activateModusLehrerkonto();
 	}
 
 	neueSchulsuche() {
 		this.schulkatalogFacade.initSchulkatalog('ORT');
-		this.store.dispatch(RegistrationActions.resetSchulsuche());
+		this.registrationFacade.resetSchulsuche();
+
 	}
 
 	privatkontoAnlegen() {
-		this.store.dispatch(RegistrationActions.registrationModeChanged({mode: 'PRIVAT'}));
-		this.authService.privatkontoAnlegen();
+		this.registrationFacade.privatkontoAnlegen(this.newsletterAbonnieren);
 	}
 
 	lehrerkontoAnlegen() {
-
-		const schulkuerzel = this.selectedKatalogItem.kuerzel;
-		this.authService.lehrerkontoAnlegen(schulkuerzel)
+		this.registrationFacade.lehrerkontoAnlegen(this.selectedKatalogItem.kuerzel, this.newsletterAbonnieren);
 	}
 
 	cancel() {
 		this.router.navigateByUrl('/');
 	}
 
+	toggleInfoNewsletter() {
+		this.showInfoNewsletter = !this.showInfoNewsletter;
+	}
+
 	private initState() {
-		this.store.dispatch(RegistrationActions.resetRegistrationState());
+		this.registrationFacade.resetRegistrationState();
 		this.schulkatalogFacade.initSchulkatalog('ORT');
 	}
 

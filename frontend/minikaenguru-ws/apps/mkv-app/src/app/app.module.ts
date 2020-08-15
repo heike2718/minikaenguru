@@ -43,7 +43,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 			baseUrl: environment.apiUrl,
 			devmode: !environment.production,
 			admin: false,
-			immediatelyLoadOnNumberChilds: 25
+			immediatelyLoadOnNumberChilds: 25,
+			cancelKatalogantragRedirectPath: '/landing'
 		}),
 		CommonMessagesModule,
 		CommonComponentsModule,

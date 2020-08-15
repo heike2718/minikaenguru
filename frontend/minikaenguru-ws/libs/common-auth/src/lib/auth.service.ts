@@ -30,10 +30,10 @@ export class AuthService {
 		, private logger: LogService) { }
 
 
-	public lehrerkontoAnlegen(schulkuerzel: string) {
+	public lehrerkontoAnlegen(schulkuerzel: string, newsletterAbo: boolean) {
 
 
-		const url = this.config.baseUrl + '/authurls/signup/lehrer/' + schulkuerzel;
+		const url = this.config.baseUrl + '/authurls/signup/lehrer/' + schulkuerzel + '/' + newsletterAbo;
 
 		this.http.get(url).pipe(
 			map(body => body as ResponsePayload)
@@ -47,8 +47,8 @@ export class AuthService {
 
 	}
 
-	public privatkontoAnlegen() {
-		const url = this.config.baseUrl + '/authurls/signup/privat';
+	public privatkontoAnlegen(newsletterAbo: boolean) {
+		const url = this.config.baseUrl + '/authurls/signup/privat/' + newsletterAbo;
 
 		this.http.get(url).pipe(
 			map(body => body as ResponsePayload)

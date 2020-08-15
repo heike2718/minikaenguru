@@ -1,5 +1,5 @@
-<div class="container container-fluid ml-3 mt-5">
-	<div class="row ml-2">
+<div class="container container-fluid ml-3 mt-5 mkv-bordered">
+	<div class="row mt-2 ml-2">
 		<div class="col-12">
 			<h2>Schulkatalogantrag</h2>
 			<h4>Bitte senden Sie das Formular ab, um Ihre Schule eintragen zu lassen.</h4>
@@ -81,15 +81,28 @@
 						<input class="form-control" type="text" id="landInput" placeholder="Land / Bundesland"
 							formControlName="land" autocomplete="true">
 					</div>
-					<div class="col-xs-12 col-sm-2 btn-wrapper">
-						<button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom"
-							title="Bitte in der BRD das Bundesland eintragen">
+					<div *ngIf="!showInfoLand" class="col-2">
+						<button type="button" class="btn btn-primary" data-placement="bottom"
+							title="Bitte in der BRD das Bundesland eintragen - mehr Information" (click)="toggleInfoLand()">
 							<i class="fa fa-info" aria-hidden="true"></i> Info
 						</button>
 					</div>
 				</div>
 				<mk-form-error path="land" text="Land / Bundesland"></mk-form-error>
 			</div>
+
+			<div *ngIf="showInfoLand" class="row">
+				<div class="col-10">
+					<p>Bitte in der BRD das Bundesland eintragen</p>
+				</div>
+				<div class="col-2">
+					<button type="button" class="btn btn-primary" data-placement="bottom" title="weniger Informationen"
+						(click)="toggleInfoLand()">
+						<i class="fa fa-close" aria-hidden="true"></i> Info
+					</button>
+				</div>
+			</div>
+
 
 			<div class="form-group mt-4">
 				<div class="row">

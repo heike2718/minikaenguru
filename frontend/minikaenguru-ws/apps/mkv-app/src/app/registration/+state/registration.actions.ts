@@ -7,6 +7,11 @@ export const registrationModeChanged = createAction(
 	props<{mode: RegistrationMode}>()
 );
 
+export const newsletterAbonierenChanged = createAction(
+	'[RegistrationComponent] newsletterAboChanged',
+	props<{flag: boolean}>()
+)
+
 export const schuleSelected = createAction(
 	'[RegistrationComponent] schuleSelected',
 	props<{schulkuerzel: string}>()
@@ -24,4 +29,6 @@ export const userCreated = createAction(
 	'[RegistrationService] userCreated',
 	props<{message: string}>()
 );
+
+
 

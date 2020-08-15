@@ -2,7 +2,33 @@
 	<div class="col--12">
 		<h2>Benutzerkonto anlegen <span *ngIf="devMode">(registration.component)</span> </h2>
 
-		<div *ngIf="!registrationMode" class="row">
+		<div class="row">
+			<div class="col-1">
+				<input type="checkbox" class="form-control" id="newsletterAbonieren"
+					title="bitte wählen, wenn Sie Mailbenachrichtigungen wünschen" [(ngModel)]="newsletterAbonnieren"
+					name="newsletter" (change)="onNewsletterChanged($event.target.checked)">
+			</div>
+			<div class="col-9">
+				<label for="newsletterAbonieren" class="checkboxlabel form-control">Ja, ich möchte Informationen per Mail erhalten.</label>
+			</div>
+			<div *ngIf="!showInfoNewsletter" class="col-2">
+				<button type="button" class="btn btn-primary" data-placement="bottom" title="mehr Informationen" (click)="toggleInfoNewsletter()">
+					<i class="fa fa-info" aria-hidden="true"></i> Info
+				</button>
+			</div>
+		</div>
+		<div *ngIf="showInfoNewsletter" class="row mt-3 ml-1 mr-1 mb-3">
+			<div class="col-10">
+				<p>{{textNewsletter}}</p>
+			</div>
+			<div class="col-2">
+				<button type="button" class="btn btn-primary" data-placement="bottom" title="weniger Informationen" (click)="toggleInfoNewsletter()" >
+					<i class="fa fa-close" aria-hidden="true"></i> Info
+				</button>
+			</div>
+		</div>
+
+		<div *ngIf="!(registrationFacade.registrationMode$ | async)" class="row">
 			<div class="col-sm-12 col-md-3">
 				<button type="button" class="btn btn-primary btn-block"
 					(click)="modusLehrerkonto()">Lehrer/Lehrerin</button>
@@ -14,20 +40,19 @@
 	</div>
 
 
-	<div *ngIf="registrationMode && registrationMode === 'LEHRER'" class="col-12">
-		<div *ngIf="showSchulkatalog$ | async" class="mkv-container mkv-container-elevated">
+	<div *ngIf="(registrationFacade.registrationMode$ | async) && (registrationFacade.registrationMode$ | async) === 'LEHRER'" class="col-12">
+		<div *ngIf="registrationFacade.showSchulkatalog$ | async" class="mkv-container mkv-container-elevated">
 			<mk-katalog></mk-katalog>
 		</div>
 
 		<p *ngIf="selectedKatalogItem">{{selectedKatalogItem.pfad}}</p>
 		<div class="row">
 			<div class="col-sm-12 col-md-3">
-				<button type="button" [disabled]="submitDisabled" class="btn btn-primary btn-block"
+				<button type="button" [disabled]="registrationFacade.submitState$ | async" class="btn btn-primary btn-block"
 					(click)="lehrerkontoAnlegen()">Konto anlegen</button>
 			</div>
-			<div *ngIf="registrationMode && registrationMode === 'LEHRER'" class="col-sm-12 col-md-3">
-				<button type="button" class="btn btn-primary btn-block"
-					(click)="neueSchulsuche()">neue Suche</button>
+			<div *ngIf="(registrationFacade.registrationMode$ | async) && (registrationFacade.registrationMode$ | async) === 'LEHRER'" class="col-sm-12 col-md-3">
+				<button type="button" class="btn btn-primary btn-block" (click)="neueSchulsuche()">neue Suche</button>
 			</div>
 			<div class="col-sm-12 col-md-3">
 				<button type="button" class="btn btn-primary btn-block" (click)="cancel()">abbrechen</button>

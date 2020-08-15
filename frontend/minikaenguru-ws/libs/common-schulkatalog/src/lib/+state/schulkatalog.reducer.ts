@@ -112,6 +112,8 @@ const schulkatalogReducer = createReducer(
 			}
 		}
 
+
+
 		return {
 			...state
 			, currentKatalogtyp: typ
