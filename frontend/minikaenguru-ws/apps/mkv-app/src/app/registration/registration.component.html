@@ -48,7 +48,7 @@
 		<p *ngIf="selectedKatalogItem">{{selectedKatalogItem.pfad}}</p>
 		<div class="row">
 			<div class="col-sm-12 col-md-3">
-				<button type="button" [disabled]="registrationFacade.submitState$ | async" class="btn btn-primary btn-block"
+				<button type="button" [disabled]="!(registrationFacade.submitState$ | async)" class="btn btn-primary btn-block"
 					(click)="lehrerkontoAnlegen()">Konto anlegen</button>
 			</div>
 			<div *ngIf="(registrationFacade.registrationMode$ | async) && (registrationFacade.registrationMode$ | async) === 'LEHRER'" class="col-sm-12 col-md-3">

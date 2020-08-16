@@ -160,9 +160,6 @@ export class AuthService {
 			} else {
 				const msg = this.extractMessageObject(httpError);
 				switch (httpError.status) {
-					case 401:
-					case 908:
-						break;
 					default: {
 						this.logger.error(context + ' url=' + httpError.url);
 						if (msg) {
