@@ -2,14 +2,15 @@
 // Project: mk-wettbewerb
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_wettbewerb.domain.personen;
+package de.egladil.web.mk_gateway.domain.apimodel;
 
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import de.egladil.web.mk_wettbewerb.domain.semantik.DomainCommand;
+import de.egladil.web.mk_gateway.domain.semantik.DomainCommand;
+import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**
  * CreateOrUpdateLehrerCommand hat die gleiche Signatur wie der body eines entsprechenden mk-gateway-DomainEvents und entsteht durch
@@ -36,12 +37,12 @@ public class CreateOrUpdateLehrerCommand {
 	@JsonProperty
 	private boolean newsletterEmpfaenger;
 
-	public static CreateOrUpdateLehrerCommand createForTest(final String uuid, final String fullName, final String alteSchulkuerze) {
+	public static CreateOrUpdateLehrerCommand createForTest(final String uuid, final String fullName, final String schulkuerzel) {
 
 		CreateOrUpdateLehrerCommand result = new CreateOrUpdateLehrerCommand();
 		result.rolle = Rolle.LEHRER.name();
 		result.fullName = fullName;
-		result.schulkuerzel = alteSchulkuerze;
+		result.schulkuerzel = schulkuerzel;
 		result.occouredOn = LocalDateTime.now();
 		result.uuid = uuid;
 
@@ -68,10 +69,6 @@ public class CreateOrUpdateLehrerCommand {
 		return fullName;
 	}
 
-	/**
-	 * @return String die aktuellen Schulkuerzel. kann mehr als ein Schulkürzel enthalten. Die Schulkürzel sind in diesem Fall
-	 *         kommasepariert.
-	 */
 	public String schulkuerzel() {
 
 		return schulkuerzel;
@@ -89,7 +86,7 @@ public class CreateOrUpdateLehrerCommand {
 		return this;
 	}
 
-	public CreateOrUpdateLehrerCommand withAlteSchulkuerzel(final String schulkuerzel) {
+	public CreateOrUpdateLehrerCommand withSchulkuerzel(final String schulkuerzel) {
 
 		this.schulkuerzel = schulkuerzel;
 		return this;

@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.ws.rs.HttpMethod;
+
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.user.Rolle;
@@ -28,7 +30,8 @@ public class RestrictedUrlPathTest {
 		try {
 
 			List<Rolle> erlaubteRollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
-			new RestrictedUrlPath(null, erlaubteRollen);
+			new RestrictedUrlPath(null, erlaubteRollen,
+				Arrays.asList(new String[] { HttpMethod.GET }));
 			fail("keine IllegalArgumentException");
 
 		} catch (IllegalArgumentException e) {
@@ -43,7 +46,8 @@ public class RestrictedUrlPathTest {
 		try {
 
 			List<Rolle> erlaubteRollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
-			new RestrictedUrlPath("  ", erlaubteRollen);
+			new RestrictedUrlPath("  ", erlaubteRollen,
+				Arrays.asList(new String[] { HttpMethod.GET }));
 			fail("keine IllegalArgumentException");
 
 		} catch (IllegalArgumentException e) {
@@ -53,11 +57,12 @@ public class RestrictedUrlPathTest {
 	}
 
 	@Test
-	void should_ConstructorThrowException_when_ErlaupteRollenNull() {
+	void should_ConstructorThrowException_when_ErlaubteRollenLeer() {
 
 		try {
 
-			new RestrictedUrlPath("/wettbewerb", new ArrayList<>());
+			new RestrictedUrlPath("/wettbewerb", new ArrayList<>(),
+				Arrays.asList(new String[] { HttpMethod.GET }));
 			fail("keine IllegalArgumentException");
 
 		} catch (IllegalArgumentException e) {
@@ -67,16 +72,51 @@ public class RestrictedUrlPathTest {
 	}
 
 	@Test
-	void should_ConstructorThrowException_when_ErlaupteRollenLeer() {
+	void should_ConstructorThrowException_when_ErlaubteRollenNull() {
 
 		try {
 
-			new RestrictedUrlPath("/wettbewerb", null);
+			new RestrictedUrlPath("/wettbewerb", null,
+				Arrays.asList(new String[] { HttpMethod.GET }));
 			fail("keine IllegalArgumentException");
 
 		} catch (IllegalArgumentException e) {
 
 			assertEquals("erlaubteRollen darf nicht null oder leer sein.", e.getMessage());
+		}
+	}
+
+	@Test
+	void should_ConstructorThrowException_when_ErlaubteHttpVerbenLeer() {
+
+		List<Rolle> erlaubteRollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
+
+		try {
+
+			new RestrictedUrlPath("/wettbewerb", erlaubteRollen,
+				new ArrayList<>());
+			fail("keine IllegalArgumentException");
+
+		} catch (IllegalArgumentException e) {
+
+			assertEquals("erlaubteHttpVerben darf nicht null oder leer sein.", e.getMessage());
+		}
+	}
+
+	@Test
+	void should_ConstructorThrowException_when_ErlaubteHttpVerbenNull() {
+
+		List<Rolle> erlaubteRollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
+
+		try {
+
+			new RestrictedUrlPath("/wettbewerb", erlaubteRollen,
+				null);
+			fail("keine IllegalArgumentException");
+
+		} catch (IllegalArgumentException e) {
+
+			assertEquals("erlaubteHttpVerben darf nicht null oder leer sein.", e.getMessage());
 		}
 	}
 
@@ -85,9 +125,10 @@ public class RestrictedUrlPathTest {
 
 		String path = "/wettbewerb";
 		List<Rolle> erlaubteRollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
+		List<String> erlaubteHttpVerben = Arrays.asList(new String[] { HttpMethod.GET, HttpMethod.PUT });
 
 		// Act
-		RestrictedUrlPath result = new RestrictedUrlPath(path, erlaubteRollen);
+		RestrictedUrlPath result = new RestrictedUrlPath(path, erlaubteRollen, erlaubteHttpVerben);
 
 		// Assert
 		assertEquals(path, result.path());
@@ -95,15 +136,23 @@ public class RestrictedUrlPathTest {
 		assertTrue(result.isAllowedForRolle(Rolle.LEHRER));
 		assertFalse(result.isAllowedForRolle(Rolle.PRIVAT));
 		assertFalse(result.isAllowedForRolle(Rolle.ADMIN));
+
+		assertTrue(result.isRestrictedForMethod(HttpMethod.GET));
+		assertFalse(result.isRestrictedForMethod(HttpMethod.DELETE));
+		assertFalse(result.isRestrictedForMethod(HttpMethod.POST));
+		assertTrue(result.isRestrictedForMethod(HttpMethod.PUT));
 	}
 
 	@Test
 	void should_EqualsAndHashCodeUseThePath() {
 
 		String path = "/wettbewerb";
-		RestrictedUrlPath urlPath1 = new RestrictedUrlPath(path, Arrays.asList(new Rolle[] { Rolle.LEHRER }));
-		RestrictedUrlPath urlPath2 = new RestrictedUrlPath(path, Arrays.asList(new Rolle[] { Rolle.ADMIN }));
-		RestrictedUrlPath urlPath3 = new RestrictedUrlPath("/wettbewerb/bla/*/blub/*", Arrays.asList(new Rolle[] { Rolle.LEHRER }));
+		RestrictedUrlPath urlPath1 = new RestrictedUrlPath(path, Arrays.asList(new Rolle[] { Rolle.LEHRER }),
+			Arrays.asList(new String[] { HttpMethod.GET, HttpMethod.PUT }));
+		RestrictedUrlPath urlPath2 = new RestrictedUrlPath(path, Arrays.asList(new Rolle[] { Rolle.ADMIN }),
+			Arrays.asList(new String[] { HttpMethod.GET, HttpMethod.PUT }));
+		RestrictedUrlPath urlPath3 = new RestrictedUrlPath("/wettbewerb/bla/*/blub/*", Arrays.asList(new Rolle[] { Rolle.LEHRER }),
+			Arrays.asList(new String[] { HttpMethod.GET, HttpMethod.PUT }));
 
 		// Assert
 		assertEquals(urlPath1, urlPath2);

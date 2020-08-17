@@ -8,6 +8,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -17,6 +18,7 @@ import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 import de.egladil.web.mk_gateway.MkGatewayApp;
+import de.egladil.web.mk_gateway.domain.apimodel.CreateOrUpdateLehrerCommand;
 import de.egladil.web.mk_gateway.domain.apimodel.SchulanmeldungRequestPayload;
 import de.egladil.web.mk_gateway.domain.signup.LehrerCreated;
 import de.egladil.web.mk_gateway.domain.signup.PrivatmenschCreated;
@@ -83,5 +85,9 @@ public interface MkWettbewerbRestClient {
 	@Path("/teilnahmen/schule")
 	Response meldeSchuleZumAktuellenWettbewerbAn(SchulanmeldungRequestPayload payload, @HeaderParam(
 		value = MkGatewayApp.UUID_HEADER_NAME) final String principalName);
+
+	@PUT
+	@Path("/veranstalter/lehrer")
+	public Response updateLehrer(final CreateOrUpdateLehrerCommand lehrerData);
 
 }

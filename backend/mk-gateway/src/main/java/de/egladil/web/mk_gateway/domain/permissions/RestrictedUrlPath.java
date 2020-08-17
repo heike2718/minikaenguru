@@ -24,6 +24,8 @@ public class RestrictedUrlPath {
 
 	private final List<Rolle> erlaubteRollen;
 
+	private final List<String> erlaubteHttpVerben;
+
 	/**
 	 * Erkaubt alle RestVerbs.
 	 *
@@ -32,7 +34,7 @@ public class RestrictedUrlPath {
 	 * @param erlaubteRollen
 	 *                       List
 	 */
-	public RestrictedUrlPath(final String path, final List<Rolle> erlaubteRollen) {
+	public RestrictedUrlPath(final String path, final List<Rolle> erlaubteRollen, final List<String> erlaubteHttpVerben) {
 
 		if (StringUtils.isBlank(path)) {
 
@@ -44,8 +46,13 @@ public class RestrictedUrlPath {
 			throw new IllegalArgumentException("erlaubteRollen darf nicht null oder leer sein.");
 		}
 
+		if (erlaubteHttpVerben == null || erlaubteHttpVerben.isEmpty()) {
+
+			throw new IllegalArgumentException("erlaubteHttpVerben darf nicht null oder leer sein.");
+		}
 		this.path = path;
 		this.erlaubteRollen = erlaubteRollen;
+		this.erlaubteHttpVerben = erlaubteHttpVerben;
 	}
 
 	public boolean isAllowedForRolle(final Rolle rolle) {
@@ -55,6 +62,15 @@ public class RestrictedUrlPath {
 			throw new IllegalArgumentException("rolle muss bekannt sein");
 		}
 		return this.erlaubteRollen.stream().filter(r -> r == rolle).findFirst().isPresent();
+	}
+
+	public boolean isRestrictedForMethod(final String method) {
+
+		if (method == null) {
+
+			throw new IllegalArgumentException("method muss bekannt sein");
+		}
+		return this.erlaubteHttpVerben.stream().filter(v -> v == method).findFirst().isPresent();
 	}
 
 	@Override

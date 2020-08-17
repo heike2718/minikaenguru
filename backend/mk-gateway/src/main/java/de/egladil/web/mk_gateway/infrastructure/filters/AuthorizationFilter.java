@@ -132,6 +132,17 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 			throw new AuthException();
 		}
 
+		if (restrictedPath.isRestrictedForMethod(method)) {
+
+			String msg = method + " " + path + " durch user " + user + " aufgerufen (falsche HttpMethod)";
+
+			LOG.warn(msg);
+
+			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+			throw new AuthException();
+
+		}
+
 		boolean secure = !configService.getStage().equals(MkGatewayApp.STAGE_DEV);
 		MkvSecurityContext securityContext = new MkvSecurityContext(session, secure);
 		requestContext.setSecurityContext(securityContext);

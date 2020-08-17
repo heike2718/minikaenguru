@@ -11,8 +11,6 @@ import static org.junit.Assert.fail;
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
-import de.egladil.web.mk_wettbewerb.domain.personen.Person;
-import de.egladil.web.mk_wettbewerb.domain.personen.Schulkollegium;
 
 /**
  * SchulkollegiumTest

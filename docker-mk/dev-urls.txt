@@ -24,6 +24,9 @@ http://localhost:9550/mk-wettbewerb/teilnahmen/schule POST header X-UUID  24f4c5
 
 {"schulkuerzel":"EEGEECP6","schulname":"Albert-Schweitzer-Schule"}
 
+http://localhost:9550/mk-wettbewerb/veranstalter/lehrer PUT CreateOrUpdateLehrerCommand
+{"person":{"uuid":"hklhasshdiha","fullName":"Professor Proton"},"alteSchulkuerzel":"","neueSchulkuerzel":"ZZGVZYY6","newsletterAbonnieren":false}
+
 =========================================
 mk-wettbewerb-admin
 

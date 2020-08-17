@@ -14,6 +14,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -152,6 +153,7 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 	}
 
 	@Override
+	@Transactional
 	public void changeVeranstalter(final Veranstalter veranstalter) throws IllegalStateException {
 
 		PersistenterVeranstalter vorhandener = this.findByUuid(veranstalter.uuid());

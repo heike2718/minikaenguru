@@ -10,6 +10,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Optional;
 
+import javax.ws.rs.HttpMethod;
+
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -186,11 +188,22 @@ public class RestrictedUrlPathInMemoryRepositoryTest {
 		}
 
 		@Test
-		void should_OfPathNotContainVeranstalterLehrer() {
+		void should_OfPathContainVeranstalterLehrer() {
 
 			Optional<RestrictedUrlPath> opt = repository.ofPath("/wettbewerb/veranstalter/lehrer");
 
-			assertTrue(opt.isEmpty());
+			assertTrue(opt.isPresent());
+
+			RestrictedUrlPath restrictedUrlPath = opt.get();
+
+			assertEquals("/wettbewerb/veranstalter/lehrer", restrictedUrlPath.path());
+
+			assertTrue(restrictedUrlPath.isAllowedForRolle(Rolle.LEHRER));
+			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.PRIVAT));
+			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.ADMIN));
+
+			assertTrue(restrictedUrlPath.isRestrictedForMethod(HttpMethod.PUT));
+			assertFalse(restrictedUrlPath.isRestrictedForMethod(HttpMethod.POST));
 		}
 	}
 
@@ -342,22 +355,6 @@ public class RestrictedUrlPathInMemoryRepositoryTest {
 		}
 
 		@Test
-		void should_OfPathContainSchulenWithKuerzel() {
-
-			Optional<RestrictedUrlPath> opt = repository.ofPath("/wb-admin/kataloge/schulen/Z7TFRTZ6");
-
-			assertTrue(opt.isPresent());
-
-			RestrictedUrlPath restrictedUrlPath = opt.get();
-
-			assertEquals("/wb-admin/kataloge/schulen/*", restrictedUrlPath.path());
-
-			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.LEHRER));
-			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.PRIVAT));
-			assertTrue(restrictedUrlPath.isAllowedForRolle(Rolle.ADMIN));
-		}
-
-		@Test
 		void should_OfPathContainKuerzel() {
 
 			Optional<RestrictedUrlPath> opt = repository.ofPath("/wb-admin/kuerzel");
@@ -376,13 +373,13 @@ public class RestrictedUrlPathInMemoryRepositoryTest {
 		@Test
 		void should_OfPathContainUploadSchulen() {
 
-			Optional<RestrictedUrlPath> opt = repository.ofPath("/wb-admin/upload/schulen");
+			Optional<RestrictedUrlPath> opt = repository.ofPath("/wb-admin/upload/schulen/csv");
 
 			assertTrue(opt.isPresent());
 
 			RestrictedUrlPath restrictedUrlPath = opt.get();
 
-			assertEquals("/wb-admin/upload/schulen", restrictedUrlPath.path());
+			assertEquals("/wb-admin/upload/schulen/csv", restrictedUrlPath.path());
 
 			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.LEHRER));
 			assertFalse(restrictedUrlPath.isAllowedForRolle(Rolle.PRIVAT));

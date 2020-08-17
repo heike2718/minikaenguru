@@ -16,21 +16,32 @@ import de.egladil.web.mk_wettbewerb.domain.event.WettbewerbDomainEvent;
 import de.egladil.web.mk_wettbewerb.domain.semantik.DomainEvent;
 
 /**
- * LehrerChangedSchulen
+ * LehrerChanged
  */
 @DomainEvent
-public abstract class LehrerChangedSchulen implements WettbewerbDomainEvent {
+public class LehrerChanged implements WettbewerbDomainEvent {
 
 	@JsonProperty
 	private Person person;
 
 	@JsonProperty
-	private String schulkuerzel;
+	private String alteSchulkuerzel;
+
+	public String neueSchulkuerzel() {
+
+		return neueSchulkuerzel;
+	}
+
+	@JsonProperty
+	private String neueSchulkuerzel;
+
+	@JsonProperty
+	private boolean newsletterAbonnieren;
 
 	@JsonIgnore
 	private final LocalDateTime occuredOn;
 
-	protected LehrerChangedSchulen() {
+	protected LehrerChanged() {
 
 		this.occuredOn = CommonTimeUtils.now();
 	}
@@ -40,7 +51,7 @@ public abstract class LehrerChangedSchulen implements WettbewerbDomainEvent {
 	 * @param alteSchulkuerzel
 	 * @param neueSchulkuerzel
 	 */
-	public LehrerChangedSchulen(final Person person, final String schulkuerzel) {
+	public LehrerChanged(final Person person, final String alteSchulkuerzel, final String neueSchulkuerzel, final boolean newsletter) {
 
 		this();
 
@@ -49,13 +60,15 @@ public abstract class LehrerChangedSchulen implements WettbewerbDomainEvent {
 			throw new IllegalArgumentException("person darf nicht null sein.");
 		}
 
-		if (StringUtils.isBlank(schulkuerzel)) {
+		if (StringUtils.isBlank(neueSchulkuerzel)) {
 
-			throw new IllegalArgumentException("schulkuerzel darf nicht blank sein.");
+			throw new IllegalArgumentException("neueSchulkuerzel darf nicht blank sein.");
 		}
 
 		this.person = person;
-		this.schulkuerzel = schulkuerzel;
+		this.alteSchulkuerzel = alteSchulkuerzel;
+		this.neueSchulkuerzel = neueSchulkuerzel;
+		this.newsletterAbonnieren = newsletter;
 	}
 
 	public Person person() {
@@ -68,11 +81,23 @@ public abstract class LehrerChangedSchulen implements WettbewerbDomainEvent {
 		return this.occuredOn;
 	}
 
-	public String schulkuerzel() {
+	/**
+	 * @return String das kann eins oder mehrere Schulkürzel sein. Mehrere Kürzel werden durch ein Komma voneinander getrennt.
+	 */
+	public String alteSchulkuerzel() {
 
-		return schulkuerzel;
+		return alteSchulkuerzel;
 	}
 
-	public abstract String typeName();
+	public boolean newsletterAbonnieren() {
+
+		return newsletterAbonnieren;
+	}
+
+	@Override
+	public String typeName() {
+
+		return TYPE_LEHRER_CHANGED;
+	}
 
 }

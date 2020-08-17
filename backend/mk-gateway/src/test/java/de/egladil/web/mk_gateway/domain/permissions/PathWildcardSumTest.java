@@ -9,6 +9,8 @@ import static org.junit.Assert.assertNull;
 
 import java.util.Arrays;
 
+import javax.ws.rs.HttpMethod;
+
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.user.Rolle;
@@ -22,7 +24,8 @@ public class PathWildcardSumTest {
 	void should_ApplyReturnNull_when_TokensNull() {
 
 		// Arrange
-		RestrictedUrlPath urlPath = new RestrictedUrlPath("/statistik/laender/*/*", Arrays.asList(new Rolle[] { Rolle.ADMIN }));
+		RestrictedUrlPath urlPath = new RestrictedUrlPath("/statistik/laender/*/*", Arrays.asList(new Rolle[] { Rolle.ADMIN }),
+			Arrays.asList(new String[] { HttpMethod.GET }));
 
 		// Act
 		String result = new PathWildcardSum().apply(urlPath, null);
@@ -35,7 +38,8 @@ public class PathWildcardSumTest {
 	void should_ApplyReturnNull_when_DifferentArrayLength() {
 
 		// Arrange
-		RestrictedUrlPath urlPath = new RestrictedUrlPath("/statistik/laender/*/*", Arrays.asList(new Rolle[] { Rolle.ADMIN }));
+		RestrictedUrlPath urlPath = new RestrictedUrlPath("/statistik/laender/*/*", Arrays.asList(new Rolle[] { Rolle.ADMIN }),
+			Arrays.asList(new String[] { HttpMethod.GET }));
 
 		// Act
 		String result = new PathWildcardSum().apply(urlPath, new String[] { "statistik", "laender", "de-he" });
@@ -48,7 +52,8 @@ public class PathWildcardSumTest {
 	void should_ApplyLetWinToken_when_UrlTokenWildcard() {
 
 		// Arrange
-		RestrictedUrlPath urlPath = new RestrictedUrlPath("/statistik/laender/*/*", Arrays.asList(new Rolle[] { Rolle.ADMIN }));
+		RestrictedUrlPath urlPath = new RestrictedUrlPath("/statistik/laender/*/*", Arrays.asList(new Rolle[] { Rolle.ADMIN }),
+			Arrays.asList(new String[] { HttpMethod.GET }));
 
 		// Act
 		String result = new PathWildcardSum().apply(urlPath, new String[] { "", "statistik", "laender", "DE-HE", "2018" });
@@ -61,7 +66,8 @@ public class PathWildcardSumTest {
 	void should_ApplyLetWinUrl_when_UrlTokenNotWildcard() {
 
 		// Arrange
-		RestrictedUrlPath urlPath = new RestrictedUrlPath("/statistik/laender/*/*", Arrays.asList(new Rolle[] { Rolle.ADMIN }));
+		RestrictedUrlPath urlPath = new RestrictedUrlPath("/statistik/laender/*/*", Arrays.asList(new Rolle[] { Rolle.ADMIN }),
+			Arrays.asList(new String[] { HttpMethod.GET }));
 
 		// Act
 		String result = new PathWildcardSum().apply(urlPath, new String[] { "", "statistik", "schulen", "H635FRZ6", "2018" });

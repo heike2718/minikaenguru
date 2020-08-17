@@ -7,12 +7,15 @@ package de.egladil.web.mk_wettbewerb.domain.personen;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.egladil.web.mk_wettbewerb.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
@@ -34,7 +37,7 @@ public class LehrerServiceTest extends AbstractDomainServiceTest {
 	}
 
 	@Test
-	void should_DoNothing_when_LehrerExists() {
+	void should_doNothing_when_LehrerExists() throws Exception {
 
 		// Arrange
 		CreateOrUpdateLehrerCommand command = CreateOrUpdateLehrerCommand.createForTest(UUID_LEHRER_1, "Irgendein Name",
@@ -47,10 +50,12 @@ public class LehrerServiceTest extends AbstractDomainServiceTest {
 		int anzahlNachher = getVeranstalterRepository().getCountLehrerAdded();
 		assertEquals(0, anzahlNachher);
 
+		LehrerChanged event = service.event();
+		assertNull(event);
 	}
 
 	@Test
-	void should_AddLehrerAndCreateEvent_when_NeuerLehrer() {
+	void should_AddLehrerAndCreateEvent_when_NeuerLehrer() throws Exception {
 
 		// Arrange
 		final String uuid = "hklhasshdiha";
@@ -64,6 +69,7 @@ public class LehrerServiceTest extends AbstractDomainServiceTest {
 
 		CreateOrUpdateLehrerCommand command = CreateOrUpdateLehrerCommand.createForTest(uuid, fullName,
 			schulkuerzel);
+
 		// Act
 		service.addLehrer(command);
 
@@ -83,12 +89,16 @@ public class LehrerServiceTest extends AbstractDomainServiceTest {
 		Lehrer lehrer = (Lehrer) veranstalter;
 		assertEquals(schulkuerzel, lehrer.persistierbareTeilnahmenummern());
 
-		LehrerRegisteredForSchule event = service.event();
+		LehrerChanged event = service.event();
 		assertNotNull(event);
 
 		assertEquals(lehrer.person(), event.person());
-		assertEquals(schulkuerzel, event.schulkuerzel());
-		assertEquals("LehrerRegisteredForSchule", event.typeName());
+		assertEquals("", event.alteSchulkuerzel());
+		assertEquals(schulkuerzel, event.neueSchulkuerzel());
+		assertEquals("LehrerChanged", event.typeName());
+
+		System.out.println("event: " + new ObjectMapper().writeValueAsString(event));
+		System.out.println("command: " + new ObjectMapper().writeValueAsString(command));
 	}
 
 }

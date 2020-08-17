@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
  */
 public interface WettbewerbDomainEvent {
 
-	String TYPE_LEHRER_REGISTERED_FOR_SCHULE = "LehrerRegisteredForSchule";
+	String TYPE_LEHRER_CHANGED = "LehrerChanged";
 
 	String TYPE_LEHRER_DEREGISTRED_FROM_SCHULE = "LehrerDeregistredFromSchule";
 
