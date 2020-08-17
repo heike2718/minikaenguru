@@ -9,18 +9,24 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 
+import de.egladil.web.mk_gateway.domain.apimodel.CreateOrUpdateLehrerCommand;
 import de.egladil.web.mk_gateway.domain.apimodel.migration.ZuMigrierenderBenutzer;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
+import de.egladil.web.mk_gateway.domain.wettbewerb.MkWettbewerbResourceAdapter;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
 
 /**
  * MigrationService
  */
 @ApplicationScoped
+@Deprecated(forRemoval = true)
 public class MigrationService {
 
 	@Inject
 	SignUpService signupService;
+
+	@Inject
+	MkWettbewerbResourceAdapter wettbewerbAdapter;
 
 	/**
 	 * Importiert den gegebenen veranstalter.
@@ -59,5 +65,14 @@ public class MigrationService {
 		SignUpResourceOwner resourceOwner = new SignUpResourceOwner(veranstalter.uuid(), veranstalter.fullName(), nonce);
 		User user = signupService.createUser(resourceOwner, veranstalter.isAnonym());
 		return user;
+	}
+
+	/**
+	 * @param  requestPayload
+	 * @return
+	 */
+	public void lehrerAendern(final CreateOrUpdateLehrerCommand requestPayload) {
+
+		wettbewerbAdapter.updateLehrer(requestPayload);
 	}
 }

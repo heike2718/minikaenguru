@@ -13,16 +13,16 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * LehrerRegisteredForSchuleTest
+ * LehrerChangedTest
  */
-public class LehrerRegisteredForSchuleTest {
+public class LehrerChangedTest {
 
 	@Test
 	void should_ConstructorThrowException_when_PersonNull() {
 
 		try {
 
-			new LehrerRegisteredForSchule(null, "gadsguqi");
+			new LehrerChanged(null, "", "gadsguqi", false);
 
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
@@ -37,12 +37,12 @@ public class LehrerRegisteredForSchuleTest {
 		try {
 
 			Person person = new Person("gqudqgi", "Hans Wurst");
-			new LehrerRegisteredForSchule(person, null);
+			new LehrerChanged(person, "", null, false);
 
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
-			assertEquals("schulkuerzel darf nicht blank sein.", e.getMessage());
+			assertEquals("neueSchulkuerzel darf nicht blank sein.", e.getMessage());
 		}
 	}
 
@@ -52,12 +52,12 @@ public class LehrerRegisteredForSchuleTest {
 		try {
 
 			Person person = new Person("gqudqgi", "Hans Wurst");
-			new LehrerRegisteredForSchule(person, "   ");
+			new LehrerChanged(person, "", "   ", false);
 
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
-			assertEquals("schulkuerzel darf nicht blank sein.", e.getMessage());
+			assertEquals("neueSchulkuerzel darf nicht blank sein.", e.getMessage());
 		}
 	}
 
@@ -68,14 +68,16 @@ public class LehrerRegisteredForSchuleTest {
 		String schulkuerzel = "jasqqh";
 		Person person = new Person("gqudqgi", "Hans Wurst");
 
-		LehrerRegisteredForSchule eventObject = new LehrerRegisteredForSchule(person, schulkuerzel);
+		LehrerChanged eventObject = new LehrerChanged(person, "", schulkuerzel, false);
 
 		// Act
 		String body = new ObjectMapper().writeValueAsString(eventObject);
 
 		// Assert
-		assertEquals("{\"person\":{\"uuid\":\"gqudqgi\",\"fullName\":\"Hans Wurst\"},\"schulkuerzel\":\"jasqqh\"}", body);
-		assertEquals("LehrerRegisteredForSchule", eventObject.typeName());
+		assertEquals(
+			"{\"person\":{\"uuid\":\"gqudqgi\",\"fullName\":\"Hans Wurst\"},\"alteSchulkuerzel\":\"\",\"neueSchulkuerzel\":\"jasqqh\",\"newsletterAbonnieren\":false}",
+			body);
+		assertEquals("LehrerChanged", eventObject.typeName());
 		assertNotNull(eventObject.occuredOn());
 	}
 

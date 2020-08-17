@@ -5,12 +5,15 @@
 package de.egladil.web.mk_gateway.infrastructure.rest.wettbewerb;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -28,6 +31,8 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.apimodel.SchulanmeldungRequestPayload;
 import de.egladil.web.mk_gateway.domain.apimodel.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.permissions.RestrictedUrlPath;
+import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.wettbewerb.MkWettbewerbResourceAdapter;
 import de.egladil.web.mk_gateway.domain.wettbewerb.SchulenAnmeldeinfoService;
 
@@ -137,5 +142,68 @@ public class WettbewerbResource {
 
 		return mkWettbewerbResourceAdapter.getPrivatveranstalter(principal.getName());
 
+	}
+
+	public static List<RestrictedUrlPath> getRestrictedPathInfos() {
+
+		List<RestrictedUrlPath> paths = new ArrayList<>();
+
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/teilnahmen/privat",
+				Arrays.asList(new Rolle[] { Rolle.PRIVAT }), Arrays.asList(new String[] { HttpMethod.POST }));
+			paths.add(restrictedPath);
+		}
+
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/teilnahmen/schule",
+				Arrays.asList(new Rolle[] { Rolle.LEHRER }), Arrays.asList(new String[] { HttpMethod.POST }));
+			paths.add(restrictedPath);
+		}
+
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/teilnahmen/schulen/*",
+				Arrays.asList(new Rolle[] { Rolle.LEHRER }), Arrays.asList(new String[] { HttpMethod.GET }));
+			paths.add(restrictedPath);
+		}
+
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/lehrer/schulen",
+				Arrays.asList(new Rolle[] { Rolle.LEHRER }), Arrays.asList(new String[] { HttpMethod.GET }));
+			paths.add(restrictedPath);
+		}
+
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/lehrer/schulen/*/details",
+				Arrays.asList(new Rolle[] { Rolle.LEHRER }), Arrays.asList(new String[] { HttpMethod.GET }));
+			paths.add(restrictedPath);
+		}
+
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/veranstalter/zugangsstatus",
+				Arrays.asList(new Rolle[] { Rolle.LEHRER, Rolle.PRIVAT }), Arrays.asList(new String[] { HttpMethod.GET }));
+			paths.add(restrictedPath);
+		}
+
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/veranstalter/privat",
+				Arrays.asList(new Rolle[] { Rolle.PRIVAT }), Arrays.asList(new String[] { HttpMethod.GET }));
+			paths.add(restrictedPath);
+		}
+
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/veranstalter/lehrer",
+				Arrays.asList(new Rolle[] { Rolle.LEHRER }), Arrays.asList(new String[] { HttpMethod.GET }));
+			paths.add(restrictedPath);
+		}
+
+		return paths;
 	}
 }

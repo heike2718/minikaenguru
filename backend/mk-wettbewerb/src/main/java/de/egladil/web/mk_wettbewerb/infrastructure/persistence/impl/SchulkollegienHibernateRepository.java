@@ -11,8 +11,6 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -111,25 +109,24 @@ public class SchulkollegienHibernateRepository implements SchulkollegienReposito
 
 		PersistentesSchulkollegium persistentes = this.findByUuid(uuid);
 
-		if (persistentes == null) {
+		if (persistentes != null) {
 
-			throw new IllegalStateException(
-				"Ein Schulkollegium mit der UUID '" + uuid + "' gibt es noch nict");
+			persistentes.setKollegium(schulkollegium.personenAlsJSON());
+			em.persist(persistentes);
 		}
-
-		persistentes.setKollegium(schulkollegium.personenAlsJSON());
-		em.persist(persistentes);
 	}
 
 	@Override
-	@Transactional(value = TxType.REQUIRES_NEW)
-	public void replaceKollegien(final List<Schulkollegium> geaenderteSchulkollegien) {
+	public void deleteKollegium(final Schulkollegium schulkollegium) {
 
-		for (Schulkollegium schulkollegium : geaenderteSchulkollegien) {
+		String uuid = schulkollegium.schulkuerzel().identifier();
 
-			this.replaceKollegen(schulkollegium);
+		PersistentesSchulkollegium persistentes = this.findByUuid(uuid);
+
+		if (persistentes != null) {
+
+			em.remove(persistentes);
 		}
-
 	}
 
 }

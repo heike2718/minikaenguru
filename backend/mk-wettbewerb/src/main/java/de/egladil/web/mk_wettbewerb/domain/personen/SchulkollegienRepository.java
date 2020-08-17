@@ -4,7 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_wettbewerb.domain.personen;
 
-import java.util.List;
 import java.util.Optional;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
@@ -27,7 +26,7 @@ public interface SchulkollegienRepository {
 	/**
 	 * @param schulkollegium
 	 */
-	void addKollegium(Schulkollegium schulkollegium);
+	void addKollegium(Schulkollegium schulkollegium) throws IllegalStateException;
 
 	/**
 	 * Tauscht das gesamte Schulkollegium aus.
@@ -37,9 +36,9 @@ public interface SchulkollegienRepository {
 	void replaceKollegen(Schulkollegium schulkollegium);
 
 	/**
-	 * Tauscht in allen Schulkollegien das Kollegium-Objekt aus.
+	 * Entfernt das Schulkollegium.
 	 *
-	 * @param geaenderteSchulkollegien
+	 * @param kollegium
 	 */
-	void replaceKollegien(List<Schulkollegium> geaenderteSchulkollegien);
+	void deleteKollegium(Schulkollegium kollegium);
 }

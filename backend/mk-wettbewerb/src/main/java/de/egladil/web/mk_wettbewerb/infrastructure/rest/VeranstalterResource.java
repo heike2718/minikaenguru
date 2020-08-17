@@ -4,6 +4,9 @@
 // =====================================================
 package de.egladil.web.mk_wettbewerb.infrastructure.rest;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -32,6 +35,8 @@ import de.egladil.web.mk_wettbewerb.domain.personen.ZugangUnterlagenService;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class VeranstalterResource {
+
+	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
 	@Inject
 	LehrerService lehrerService;
@@ -64,7 +69,12 @@ public class VeranstalterResource {
 	@Path("/lehrer")
 	public Response updateLehrer(final CreateOrUpdateLehrerCommand lehrerData) {
 
-		return Response.serverError().entity(ResponsePayload.messageOnly(MessagePayload.error("noch nicht implementiert"))).build();
+		lehrerService.changeLehrer(lehrerData);
+
+		ResponsePayload payload = ResponsePayload
+			.messageOnly(MessagePayload.info(applicationMessages.getString("veranstalterResource.updateLehrer.success")));
+
+		return Response.ok(payload).build();
 	}
 
 	@PUT

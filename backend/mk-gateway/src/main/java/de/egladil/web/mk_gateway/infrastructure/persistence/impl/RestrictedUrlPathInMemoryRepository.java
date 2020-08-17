@@ -13,11 +13,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.ws.rs.HttpMethod;
 
 import de.egladil.web.mk_gateway.domain.permissions.PathWildcardSum;
 import de.egladil.web.mk_gateway.domain.permissions.RestrictedUrlPath;
 import de.egladil.web.mk_gateway.domain.permissions.RestrictedUrlPathRepository;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
+import de.egladil.web.mk_gateway.infrastructure.rest.admin.KatalogAdminResource;
+import de.egladil.web.mk_gateway.infrastructure.rest.admin.WettbewerbAdminResource;
+import de.egladil.web.mk_gateway.infrastructure.rest.wettbewerb.WettbewerbResource;
 
 /**
  * RestrictedUrlPathInMemoryRepository
@@ -34,22 +38,15 @@ public class RestrictedUrlPathInMemoryRepository implements RestrictedUrlPathRep
 
 		{
 
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/statistik/laender/*/*",
-				Arrays.asList(new Rolle[] { Rolle.ADMIN }));
-			paths.add(restrictedPath);
-		}
-
-		{
-
 			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/statistik/schulen/*/*",
-				Arrays.asList(new Rolle[] { Rolle.ADMIN, Rolle.LEHRER }));
+				Arrays.asList(new Rolle[] { Rolle.ADMIN, Rolle.LEHRER }), Arrays.asList(new String[] { HttpMethod.GET }));
 			paths.add(restrictedPath);
 		}
 
 		{
 
 			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/statistik/privat/*/*",
-				Arrays.asList(new Rolle[] { Rolle.ADMIN, Rolle.PRIVAT }));
+				Arrays.asList(new Rolle[] { Rolle.ADMIN, Rolle.PRIVAT }), Arrays.asList(new String[] { HttpMethod.GET }));
 			paths.add(restrictedPath);
 		}
 
@@ -57,141 +54,28 @@ public class RestrictedUrlPathInMemoryRepository implements RestrictedUrlPathRep
 
 	private void addPathInfosForMkWettbewerb() {
 
-		{
+		paths.addAll(WettbewerbResource.getRestrictedPathInfos());
 
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/teilnahmen/privat",
-				Arrays.asList(new Rolle[] { Rolle.PRIVAT }));
-			paths.add(restrictedPath);
-		}
-
-		{
-
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/teilnahmen/schule",
-				Arrays.asList(new Rolle[] { Rolle.LEHRER }));
-			paths.add(restrictedPath);
-		}
-
-		{
-
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/teilnahmen/schulen/*",
-				Arrays.asList(new Rolle[] { Rolle.LEHRER }));
-			paths.add(restrictedPath);
-		}
-
-		{
-
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/lehrer/schulen",
-				Arrays.asList(new Rolle[] { Rolle.LEHRER }));
-			paths.add(restrictedPath);
-		}
-
-		{
-
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/lehrer/schulen/*/details",
-				Arrays.asList(new Rolle[] { Rolle.LEHRER }));
-			paths.add(restrictedPath);
-		}
-
-		{
-
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/veranstalter/zugangsstatus",
-				Arrays.asList(new Rolle[] { Rolle.LEHRER, Rolle.PRIVAT }));
-			paths.add(restrictedPath);
-		}
-
-		{
-
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/veranstalter/privat",
-				Arrays.asList(new Rolle[] { Rolle.PRIVAT }));
-			paths.add(restrictedPath);
-		}
 	}
 
 	private void addPathInfosForMkWettbewerbAdmin() {
 
 		{
 
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/wettbewerbe",
-				Arrays.asList(new Rolle[] { Rolle.ADMIN }));
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/statistik/laender/*/*",
+				Arrays.asList(new Rolle[] { Rolle.ADMIN }), Arrays.asList(new String[] { HttpMethod.GET }));
 			paths.add(restrictedPath);
 		}
 
 		{
 
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/wettbewerbe/wettbewerb",
-				Arrays.asList(new Rolle[] { Rolle.ADMIN }));
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/upload/schulen/csv",
+				Arrays.asList(new Rolle[] { Rolle.ADMIN }), Arrays.asList(new String[] { HttpMethod.POST }));
 			paths.add(restrictedPath);
 		}
 
-		{
-
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/wettbewerbe/wettbewerb/status",
-				Arrays.asList(new Rolle[] { Rolle.ADMIN }));
-			paths.add(restrictedPath);
-		}
-
-		{
-
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/wettbewerbe/wettbewerb/*",
-				Arrays.asList(new Rolle[] { Rolle.ADMIN }));
-			paths.add(restrictedPath);
-		}
-
-		{
-
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/kataloge/laender",
-				Arrays.asList(new Rolle[] { Rolle.ADMIN }));
-			paths.add(restrictedPath);
-		}
-
-		{
-
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/kataloge/orte",
-				Arrays.asList(new Rolle[] { Rolle.ADMIN }));
-			paths.add(restrictedPath);
-		}
-
-		{
-
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/kataloge/schulen",
-				Arrays.asList(new Rolle[] { Rolle.ADMIN }));
-			paths.add(restrictedPath);
-		}
-
-		{
-
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/kataloge/laender/*",
-				Arrays.asList(new Rolle[] { Rolle.ADMIN }));
-			paths.add(restrictedPath);
-		}
-
-		{
-
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/kataloge/orte/*",
-				Arrays.asList(new Rolle[] { Rolle.ADMIN }));
-			paths.add(restrictedPath);
-		}
-
-		{
-
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/kataloge/schulen/*",
-				Arrays.asList(new Rolle[] { Rolle.ADMIN }));
-			paths.add(restrictedPath);
-		}
-
-		{
-
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/kuerzel",
-				Arrays.asList(new Rolle[] { Rolle.ADMIN }));
-			paths.add(restrictedPath);
-		}
-
-		{
-
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/upload/schulen",
-				Arrays.asList(new Rolle[] { Rolle.ADMIN }));
-			paths.add(restrictedPath);
-		}
+		paths.addAll(WettbewerbAdminResource.getRestrictedPathInfos());
+		paths.addAll(KatalogAdminResource.getRestrictedPathInfos());
 
 	}
 

@@ -14,6 +14,7 @@ import de.egladil.web.mk_gateway.domain.user.Rolle;
 /**
  * ZuMigrierenderBenutzer
  */
+@Deprecated(forRemoval = true)
 public class ZuMigrierenderBenutzer implements Serializable {
 
 	@JsonIgnore

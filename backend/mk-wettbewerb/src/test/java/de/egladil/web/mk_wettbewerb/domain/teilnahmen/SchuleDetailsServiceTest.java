@@ -7,7 +7,6 @@ package de.egladil.web.mk_wettbewerb.domain.teilnahmen;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -51,11 +50,6 @@ public class SchuleDetailsServiceTest extends AbstractDomainServiceTest {
 		return new SchulkollegienRepository() {
 
 			@Override
-			public void replaceKollegien(final List<Schulkollegium> geaenderteSchulkollegien) {
-
-			}
-
-			@Override
 			public void replaceKollegen(final Schulkollegium schulkollegium) {
 
 			}
@@ -83,6 +77,11 @@ public class SchuleDetailsServiceTest extends AbstractDomainServiceTest {
 
 			@Override
 			public void addKollegium(final Schulkollegium schulkollegium) {
+
+			}
+
+			@Override
+			public void deleteKollegium(final Schulkollegium kollegium) {
 
 			}
 		};

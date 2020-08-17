@@ -4,11 +4,16 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.admin;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.validation.constraints.NotBlank;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -30,6 +35,8 @@ import de.egladil.web.mk_gateway.domain.apimodel.LandPayload;
 import de.egladil.web.mk_gateway.domain.apimodel.OrtPayload;
 import de.egladil.web.mk_gateway.domain.apimodel.SchulePayload;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
+import de.egladil.web.mk_gateway.domain.permissions.RestrictedUrlPath;
+import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**
  * KatalogAdminResource
@@ -120,5 +127,69 @@ public class KatalogAdminResource {
 	public Response generateKuerzel() {
 
 		return katalogResourceAdapter.generateKuerzel(katalogAdminSecret);
+	}
+
+	public static List<RestrictedUrlPath> getRestrictedPathInfos() {
+
+		List<RestrictedUrlPath> paths = new ArrayList<>();
+
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/kataloge/laender",
+				Arrays.asList(new Rolle[] { Rolle.ADMIN }),
+				Arrays.asList(new String[] { HttpMethod.GET, HttpMethod.PUT }));
+			paths.add(restrictedPath);
+		}
+
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/kataloge/orte",
+				Arrays.asList(new Rolle[] { Rolle.ADMIN }),
+				Arrays.asList(new String[] { HttpMethod.PUT }));
+			paths.add(restrictedPath);
+		}
+
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/kataloge/schulen",
+				Arrays.asList(new Rolle[] { Rolle.ADMIN }),
+				Arrays.asList(new String[] { HttpMethod.POST, HttpMethod.PUT }));
+			paths.add(restrictedPath);
+		}
+
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/kataloge/laender/*",
+				Arrays.asList(new Rolle[] { Rolle.ADMIN }),
+				Arrays.asList(new String[] { HttpMethod.GET }));
+			paths.add(restrictedPath);
+		}
+
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/kataloge/orte/*",
+				Arrays.asList(new Rolle[] { Rolle.ADMIN }),
+				Arrays.asList(new String[] { HttpMethod.GET }));
+			paths.add(restrictedPath);
+		}
+
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/katalogsuche/global/*",
+				Arrays.asList(new Rolle[] { Rolle.ADMIN }),
+				Arrays.asList(new String[] { HttpMethod.GET }));
+			paths.add(restrictedPath);
+		}
+
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/kuerzel",
+				Arrays.asList(new Rolle[] { Rolle.ADMIN }),
+				Arrays.asList(new String[] { HttpMethod.GET }));
+			paths.add(restrictedPath);
+		}
+
+		return paths;
+
 	}
 }
