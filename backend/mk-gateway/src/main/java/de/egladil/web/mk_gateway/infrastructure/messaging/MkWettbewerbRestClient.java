@@ -95,4 +95,9 @@ public interface MkWettbewerbRestClient {
 	@Deprecated(forRemoval = true)
 	public Response triggerImportPrivatteilnahmen();
 
+	@GET
+	@Path("/auswertungen/import/loesungszettel")
+	@Deprecated(forRemoval = true)
+	public Response triggerImportLoesungszettel();
+
 }

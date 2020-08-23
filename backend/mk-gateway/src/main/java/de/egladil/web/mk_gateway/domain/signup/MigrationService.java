@@ -81,4 +81,10 @@ public class MigrationService {
 		wettbewerbAdapter.triggerImportPrivatteilnahmen();
 
 	}
+
+	public void triggerImportLoesungszettel() {
+
+		wettbewerbAdapter.triggerImportLoesungszettel();
+
+	}
 }

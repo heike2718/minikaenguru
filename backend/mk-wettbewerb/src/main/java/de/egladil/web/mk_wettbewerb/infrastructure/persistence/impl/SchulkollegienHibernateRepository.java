@@ -51,7 +51,7 @@ public class SchulkollegienHibernateRepository implements SchulkollegienReposito
 	private PersistentesSchulkollegium findByUuid(final String uuid) {
 
 		TypedQuery<PersistentesSchulkollegium> query = em
-			.createNamedQuery(PersistentesSchulkollegium.FIND_BY_UUID_QUERY, PersistentesSchulkollegium.class)
+			.createNamedQuery(PersistentesSchulkollegium.FIND_BY_UUID, PersistentesSchulkollegium.class)
 			.setParameter("uuid", uuid);
 
 		List<PersistentesSchulkollegium> trefferliste = query.getResultList();

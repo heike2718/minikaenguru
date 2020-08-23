@@ -16,10 +16,10 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "SCHULKOLLEGIEN")
 @NamedQueries(@NamedQuery(
-	name = "FIND_SCHULKOLLEGIUM_BY_UUID", query = "select sk from PersistentesSchulkollegium sk where sk.uuid = :uuid"))
+	name = "SCHULKOLLEGIEN.FIND_BY_UUID", query = "select sk from PersistentesSchulkollegium sk where sk.uuid = :uuid"))
 public class PersistentesSchulkollegium extends ConcurrencySafeEntity {
 
-	public static final String FIND_BY_UUID_QUERY = "FIND_SCHULKOLLEGIUM_BY_UUID";
+	public static final String FIND_BY_UUID = "SCHULKOLLEGIEN.FIND_BY_UUID";
 
 	@Column(name = "KOLLEGIUM")
 	private String kollegium;
