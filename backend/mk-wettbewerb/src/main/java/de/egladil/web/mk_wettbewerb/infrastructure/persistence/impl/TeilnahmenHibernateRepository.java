@@ -26,6 +26,7 @@ import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.TeilnahmenRepository;
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_wettbewerb.infrastructure.persistence.entities.PersistenteTeilnahme;
+import de.egladil.web.mk_wettbewerb.infrastructure.persistence.entities.TemporaerePersistentePrivatteilnahme;
 
 /**
  * TeilnahmenHibernateRepository
@@ -90,7 +91,7 @@ public class TeilnahmenHibernateRepository implements TeilnahmenRepository {
 	}
 
 	@Override
-	public void addTeilnahme(final Teilnahme teilnahme) {
+	public boolean addTeilnahme(final Teilnahme teilnahme) {
 
 		Optional<Teilnahme> opt = this.ofTeilnahmenummerArtWettbewerb(teilnahme.teilnahmenummer().identifier(),
 			teilnahme.teilnahmeart(), teilnahme.wettbewerbID());
@@ -105,6 +106,8 @@ public class TeilnahmenHibernateRepository implements TeilnahmenRepository {
 		em.persist(persistenteTeilnahme);
 
 		LOG.info("Teilnahme {} erfolreich angelegt", teilnahme);
+
+		return true;
 
 	}
 
@@ -183,6 +186,30 @@ public class TeilnahmenHibernateRepository implements TeilnahmenRepository {
 			throw new MkWettbewerbRuntimeException("unbekannte Teilnahmeart " + persistente.getTeilnahmeart());
 		}
 		return teilnahme;
+	}
+
+	@Override
+	public List<TemporaerePersistentePrivatteilnahme> loadAllTemporaryPrivatteilnahmen() {
+
+		return em.createQuery("select t from TemporaerePersistentePrivatteilnahme t", TemporaerePersistentePrivatteilnahme.class)
+			.getResultList();
+	}
+
+	@Override
+	public TemporaerePersistentePrivatteilnahme save(final TemporaerePersistentePrivatteilnahme teilnahme) {
+
+		return em.merge(teilnahme);
+	}
+
+	@Override
+	public List<Teilnahme> loadAllPrivatteilnahmen() {
+
+		String stmt = "select t from PersistenteTeilnahme t where t.teilnahmeart = :teilnahmeart";
+
+		List<PersistenteTeilnahme> persistente = em.createQuery(stmt, PersistenteTeilnahme.class)
+			.setParameter("teilnahmeart", Teilnahmeart.PRIVAT).getResultList();
+
+		return null;
 	}
 
 }

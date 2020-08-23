@@ -148,6 +148,20 @@ public class MkWettbewerbResourceAdapter extends AbstractMkResourceAdapter {
 
 	}
 
+	@Deprecated(forRemoval = true)
+	public Response triggerImportPrivatteilnahmen() {
+
+		try {
+
+			Response response = restClient.triggerImportPrivatteilnahmen();
+			return response;
+		} catch (Exception e) {
+
+			return handleException(e, LOG, "[triggerImportPrivatteilnahmen]");
+		}
+
+	}
+
 	@Override
 	protected String endpointName() {
 

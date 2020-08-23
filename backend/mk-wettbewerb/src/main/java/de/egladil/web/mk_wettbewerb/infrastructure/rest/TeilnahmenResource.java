@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -25,6 +26,7 @@ import de.egladil.web.mk_wettbewerb.domain.apimodel.SchulanmeldungRequestPayload
 import de.egladil.web.mk_wettbewerb.domain.apimodel.SchulteilnahmeAPIModel;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.AktuelleTeilnahmeService;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Privatteilnahme;
+import de.egladil.web.mk_wettbewerb.domain.teilnahmen.PrivatteilnahmenMigrationService;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Schulteilnahme;
 
 /**
@@ -38,6 +40,9 @@ public class TeilnahmenResource {
 
 	@Inject
 	AktuelleTeilnahmeService aktuelleTeilnahmeService;
+
+	@Inject
+	PrivatteilnahmenMigrationService privatteilnahmenMigrationService;
 
 	@POST
 	@Path("/privat")
@@ -71,6 +76,17 @@ public class TeilnahmenResource {
 				MessagePayload.info(message),
 				data))
 			.build();
+	}
+
+	@GET
+	@Path("/import/privat")
+	@Deprecated(forRemoval = true)
+	public Response triggerImportPrivatteilnahmen() {
+
+		privatteilnahmenMigrationService.run();
+
+		return Response.ok().build();
+
 	}
 
 }

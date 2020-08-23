@@ -24,6 +24,7 @@ import de.egladil.web.mk_wettbewerb.domain.error.MkWettbewerbRuntimeException;
 import de.egladil.web.mk_wettbewerb.domain.personen.Lehrer;
 import de.egladil.web.mk_wettbewerb.domain.personen.Person;
 import de.egladil.web.mk_wettbewerb.domain.personen.Privatperson;
+import de.egladil.web.mk_wettbewerb.domain.personen.Rolle;
 import de.egladil.web.mk_wettbewerb.domain.personen.Veranstalter;
 import de.egladil.web.mk_wettbewerb.domain.personen.VeranstalterRepository;
 import de.egladil.web.mk_wettbewerb.infrastructure.persistence.entities.PersistenterVeranstalter;
@@ -152,6 +153,26 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 		return persistenterVeranstalter;
 	}
 
+	Veranstalter mapFromPersistenterVeranstalter(final PersistenterVeranstalter persistenter) {
+
+		Person person = new Person(persistenter.getUuid(), persistenter.getFullName());
+		List<Identifier> teilnahmenummern = Arrays.stream(persistenter.getTeilnahmenummern().split(",")).map(n -> new Identifier(n))
+			.collect(Collectors.toList());
+
+		switch (persistenter.getRolle()) {
+
+		case PRIVAT:
+			return new Privatperson(person, persistenter.isNewsletterEmpfaenger(), teilnahmenummern);
+
+		case LEHRER:
+			return new Lehrer(person, persistenter.isNewsletterEmpfaenger(), teilnahmenummern);
+
+		default:
+			throw new MkWettbewerbRuntimeException("Unzulässige Rolle!");
+		}
+
+	}
+
 	@Override
 	@Transactional
 	public void changeVeranstalter(final Veranstalter veranstalter) throws IllegalStateException {
@@ -180,5 +201,16 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 		vorhandener.setTeilnahmenummern(veranstalter.persistierbareTeilnahmenummern());
 		vorhandener.setZugangsberechtigungUnterlagen(veranstalter.zugangUnterlagen());
 		vorhandener.setNewsletterEmpfaenger(veranstalter.isNewsletterEmpfaenger());
+	}
+
+	@Override
+	public List<Veranstalter> loadPrivatveranstalter() {
+
+		String stmt = "select v from PersistenterVeranstalter v where v.rolle = :rolle";
+
+		List<PersistenterVeranstalter> trefferliste = em.createQuery(stmt, PersistenterVeranstalter.class)
+			.setParameter("rolle", Rolle.PRIVAT).getResultList();
+
+		return trefferliste.stream().map(pv -> mapFromPersistenterVeranstalter(pv)).collect(Collectors.toList());
 	}
 }

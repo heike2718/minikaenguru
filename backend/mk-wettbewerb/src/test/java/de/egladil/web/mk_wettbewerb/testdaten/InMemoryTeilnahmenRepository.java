@@ -18,6 +18,7 @@ import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.TeilnahmenRepository;
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_wettbewerb.infrastructure.persistence.entities.TemporaerePersistentePrivatteilnahme;
 import de.egladil.web.mk_wettbewerb.testdaten.entities.InMemoryTeilnahme;
 import de.egladil.web.mk_wettbewerb.testdaten.entities.InMemoryTeilnahmeList;
 
@@ -108,11 +109,12 @@ public class InMemoryTeilnahmenRepository implements TeilnahmenRepository {
 	}
 
 	@Override
-	public void addTeilnahme(final Teilnahme teilnahme) {
+	public boolean addTeilnahme(final Teilnahme teilnahme) {
 
 		this.teilnahmen.add(teilnahme);
 
 		teilnahmeAdded++;
+		return true;
 	}
 
 	@Override
@@ -130,6 +132,24 @@ public class InMemoryTeilnahmenRepository implements TeilnahmenRepository {
 	public int getTeilnahmeChanged() {
 
 		return teilnahmeChanged;
+	}
+
+	@Override
+	public List<TemporaerePersistentePrivatteilnahme> loadAllTemporaryPrivatteilnahmen() {
+
+		return null;
+	}
+
+	@Override
+	public TemporaerePersistentePrivatteilnahme save(final TemporaerePersistentePrivatteilnahme teilnahme) {
+
+		return null;
+	}
+
+	@Override
+	public List<Teilnahme> loadAllPrivatteilnahmen() {
+
+		return null;
 	}
 
 }

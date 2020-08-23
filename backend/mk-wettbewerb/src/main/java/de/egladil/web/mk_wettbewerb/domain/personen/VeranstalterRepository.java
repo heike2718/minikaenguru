@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_wettbewerb.domain.personen;
 
+import java.util.List;
 import java.util.Optional;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
@@ -39,5 +40,8 @@ public interface VeranstalterRepository {
 	 *                     geben.
 	 */
 	void changeVeranstalter(Veranstalter veranstalter) throws IllegalStateException;
+
+	@Deprecated(forRemoval = true)
+	List<Veranstalter> loadPrivatveranstalter();
 
 }
