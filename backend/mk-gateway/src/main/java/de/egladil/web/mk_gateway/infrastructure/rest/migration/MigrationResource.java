@@ -99,4 +99,22 @@ public class MigrationResource {
 
 	}
 
+	@GET
+	@Path("/loesungszettel")
+	public Response loesungszettelImportieren(@HeaderParam(
+		value = MkGatewayApp.SECRET_HEADER_NAME) final String secret) {
+
+		if (!expectedSecret.equals(secret)) {
+
+			throw new SecurityException("loesungszettel migrieren, ohne das secret zu kennen, ist verboten");
+		}
+
+		migrationService.triggerImportLoesungszettel();
+
+		LOG.info("success");
+
+		return Response.ok("mk-gateway: success").build();
+
+	}
+
 }
