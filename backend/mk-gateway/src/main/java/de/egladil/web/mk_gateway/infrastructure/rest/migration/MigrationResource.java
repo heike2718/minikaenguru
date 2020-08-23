@@ -7,6 +7,7 @@ package de.egladil.web.mk_gateway.infrastructure.rest.migration;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -79,4 +80,23 @@ public class MigrationResource {
 
 		return Response.ok("mk-gateway: success").build();
 	}
+
+	@GET
+	@Path("/privatteilnahmen")
+	public Response privatteilnahmenImportieren(@HeaderParam(
+		value = MkGatewayApp.SECRET_HEADER_NAME) final String secret) {
+
+		if (!expectedSecret.equals(secret)) {
+
+			throw new SecurityException("privatteilnahmen migrieren, ohne das secret zu kennen, ist verboten");
+		}
+
+		migrationService.triggerImportPrivatteilnahmen();
+
+		LOG.info("success");
+
+		return Response.ok("mk-gateway: success").build();
+
+	}
+
 }

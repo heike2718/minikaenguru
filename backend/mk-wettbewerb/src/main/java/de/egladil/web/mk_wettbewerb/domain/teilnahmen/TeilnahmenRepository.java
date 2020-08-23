@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import de.egladil.web.mk_wettbewerb.domain.semantik.Repository;
 import de.egladil.web.mk_wettbewerb.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_wettbewerb.infrastructure.persistence.entities.TemporaerePersistentePrivatteilnahme;
 
 /**
  * TeilnahmenRepository
@@ -49,9 +50,10 @@ public interface TeilnahmenRepository {
 	/**
 	 * Persistiert eine neue Teilnahme.
 	 *
-	 * @param teilnahme
+	 * @param  teilnahme
+	 * @return           boolean
 	 */
-	void addTeilnahme(Teilnahme teilnahme);
+	boolean addTeilnahme(Teilnahme teilnahme);
 
 	/**
 	 * Ändert eine vorhandene Teilnahme.
@@ -65,5 +67,19 @@ public interface TeilnahmenRepository {
 	 *                               falls es noch keine Teilnahme gibt.
 	 */
 	void changeTeilnahme(Schulteilnahme teilnahme, String uuidAenderer) throws IllegalStateException;
+
+	/**
+	 * @return
+	 */
+	@Deprecated(forRemoval = true)
+	List<TemporaerePersistentePrivatteilnahme> loadAllTemporaryPrivatteilnahmen();
+
+	@Deprecated(forRemoval = true)
+	TemporaerePersistentePrivatteilnahme save(TemporaerePersistentePrivatteilnahme teilnahme);
+
+	/**
+	 * @return
+	 */
+	List<Teilnahme> loadAllPrivatteilnahmen();
 
 }

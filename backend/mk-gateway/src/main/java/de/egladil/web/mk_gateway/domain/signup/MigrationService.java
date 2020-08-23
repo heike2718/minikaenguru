@@ -75,4 +75,10 @@ public class MigrationService {
 
 		wettbewerbAdapter.updateLehrer(requestPayload);
 	}
+
+	public void triggerImportPrivatteilnahmen() {
+
+		wettbewerbAdapter.triggerImportPrivatteilnahmen();
+
+	}
 }

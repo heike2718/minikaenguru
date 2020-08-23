@@ -175,4 +175,10 @@ public class InMemoryVeranstalterRepository implements VeranstalterRepository {
 		return countLehrerChanged;
 	}
 
+	@Override
+	public List<Veranstalter> loadPrivatveranstalter() {
+
+		return null;
+	}
+
 }
