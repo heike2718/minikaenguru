@@ -162,6 +162,20 @@ public class MkWettbewerbResourceAdapter extends AbstractMkResourceAdapter {
 
 	}
 
+	@Deprecated(forRemoval = true)
+	public Response triggerImportLoesungszettel() {
+
+		try {
+
+			Response response = restClient.triggerImportLoesungszettel();
+			return response;
+		} catch (Exception e) {
+
+			return handleException(e, LOG, "[triggerImportLoesungszettel]");
+		}
+
+	}
+
 	@Override
 	protected String endpointName() {
 

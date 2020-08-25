@@ -23,10 +23,10 @@ import de.egladil.web.mk_wettbewerb.domain.personen.ZugangUnterlagen;
 @Entity
 @Table(name = "VERANSTALTER")
 @NamedQueries(@NamedQuery(
-	name = "FIND_VERANSTALTER_BY_UUID", query = "select v from PersistenterVeranstalter v where v.uuid = :uuid"))
+	name = "VERANSTALTER.FIND_BY_UUID", query = "select v from PersistenterVeranstalter v where v.uuid = :uuid"))
 public class PersistenterVeranstalter extends ConcurrencySafeEntity {
 
-	public static final String FIND_BY_UUID_QUERY = "FIND_VERANSTALTER_BY_UUID";
+	public static final String FIND_BY_UUID_QUERY = "VERANSTALTER.FIND_BY_UUID";
 
 	@Column(name = "ROLLE")
 	@Enumerated(EnumType.STRING)

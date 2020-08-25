@@ -159,7 +159,7 @@ public class TeilnahmenHibernateRepository implements TeilnahmenRepository {
 			throw new IllegalArgumentException("teilnahmenummer darf nicht blank sein");
 		}
 
-		return em.createNamedQuery(PersistenteTeilnahme.FIND_TEILNAHMEN_BY_NUMMER_QUERY, PersistenteTeilnahme.class)
+		return em.createNamedQuery(PersistenteTeilnahme.FIND_BY_NUMMER, PersistenteTeilnahme.class)
 			.setParameter("teilnahmenummer", teilnahmenummer).getResultList();
 
 	}
@@ -209,7 +209,7 @@ public class TeilnahmenHibernateRepository implements TeilnahmenRepository {
 		List<PersistenteTeilnahme> persistente = em.createQuery(stmt, PersistenteTeilnahme.class)
 			.setParameter("teilnahmeart", Teilnahmeart.PRIVAT).getResultList();
 
-		return null;
+		return persistente.stream().map(t -> mapToTeilnahme(t)).collect(Collectors.toList());
 	}
 
 }

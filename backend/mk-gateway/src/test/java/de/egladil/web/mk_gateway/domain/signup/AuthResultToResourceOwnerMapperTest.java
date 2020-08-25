@@ -16,11 +16,13 @@ import java.nio.charset.Charset;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import de.egladil.web.commons_crypto.JWTService;
 import de.egladil.web.commons_crypto.impl.JWTServiceImpl;
 import de.egladil.web.mk_gateway.domain.error.AuthException;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.session.TokenExchangeService;
 
 /**
  * AuthResultToResourceOwnerMapperTest
@@ -34,7 +36,7 @@ public class AuthResultToResourceOwnerMapperTest {
 
 		try {
 
-			AuthResultToResourceOwnerMapper.createForTest(null);
+			AuthResultToResourceOwnerMapper.createForTest(null, Mockito.mock(TokenExchangeService.class));
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -47,7 +49,8 @@ public class AuthResultToResourceOwnerMapperTest {
 	void should_ApplyThrowException_when_ParameterNull() {
 
 		// Arrange
-		AuthResultToResourceOwnerMapper mapper = AuthResultToResourceOwnerMapper.createForTest(jwtService);
+		AuthResultToResourceOwnerMapper mapper = AuthResultToResourceOwnerMapper.createForTest(jwtService,
+			Mockito.mock(TokenExchangeService.class));
 
 		// Act
 		try {
@@ -65,7 +68,11 @@ public class AuthResultToResourceOwnerMapperTest {
 	void should_ApplyThrowException_when_FullNameNull() throws IOException {
 
 		// Arrange
-		AuthResultToResourceOwnerMapper mapper = AuthResultToResourceOwnerMapper.createForTest(jwtService);
+		TokenExchangeService tokenExchangeService = Mockito.mock(TokenExchangeService.class);
+		AuthResultToResourceOwnerMapper mapper = AuthResultToResourceOwnerMapper.createForTest(jwtService,
+			tokenExchangeService);
+
+		String idToken = "ashqiidhpi";
 
 		String jwt = null;
 
@@ -79,7 +86,9 @@ public class AuthResultToResourceOwnerMapperTest {
 		assertNotNull(jwt);
 
 		AuthResult authResult = new AuthResult();
-		authResult.setIdToken(jwt);
+		authResult.setIdToken(idToken);
+
+		Mockito.when(tokenExchangeService.exchangeTheOneTimeToken(idToken)).thenReturn(jwt);
 
 		// Act
 		try {
@@ -98,7 +107,11 @@ public class AuthResultToResourceOwnerMapperTest {
 	void should_ApplyWork() throws IOException {
 
 		// Arrange
-		AuthResultToResourceOwnerMapper mapper = AuthResultToResourceOwnerMapper.createForTest(jwtService);
+		TokenExchangeService tokenExchangeService = Mockito.mock(TokenExchangeService.class);
+		AuthResultToResourceOwnerMapper mapper = AuthResultToResourceOwnerMapper.createForTest(jwtService,
+			tokenExchangeService);
+
+		String idToken = "ashqiidhpi";
 
 		String jwt = null;
 
@@ -112,8 +125,10 @@ public class AuthResultToResourceOwnerMapperTest {
 		assertNotNull(jwt);
 
 		AuthResult authResult = new AuthResult();
-		authResult.setIdToken(jwt);
+		authResult.setIdToken(idToken);
 		authResult.setNonce("LEHRER-26TZ54HE");
+
+		Mockito.when(tokenExchangeService.exchangeTheOneTimeToken(idToken)).thenReturn(jwt);
 
 		// Act
 		SignUpResourceOwner result = mapper.apply(authResult);
@@ -128,7 +143,11 @@ public class AuthResultToResourceOwnerMapperTest {
 	void should_ApplyThrowException_when_TokenExpired() throws IOException {
 
 		// Arrange
-		AuthResultToResourceOwnerMapper mapper = AuthResultToResourceOwnerMapper.createForTest(jwtService);
+		TokenExchangeService tokenExchangeService = Mockito.mock(TokenExchangeService.class);
+		AuthResultToResourceOwnerMapper mapper = AuthResultToResourceOwnerMapper.createForTest(jwtService,
+			tokenExchangeService);
+
+		String idToken = "ashqiidhpi";
 
 		String expiredJwt = null;
 
@@ -142,8 +161,10 @@ public class AuthResultToResourceOwnerMapperTest {
 		assertNotNull(expiredJwt);
 
 		AuthResult authResult = new AuthResult();
-		authResult.setIdToken(expiredJwt);
+		authResult.setIdToken(idToken);
 		authResult.setNonce("LEHRER-26TZ54HE");
+
+		Mockito.when(tokenExchangeService.exchangeTheOneTimeToken(idToken)).thenReturn(expiredJwt);
 
 		try {
 
@@ -161,9 +182,13 @@ public class AuthResultToResourceOwnerMapperTest {
 	void should_ApplyThrowException_when_TokenInvalid() throws IOException {
 
 		// Arrange
-		AuthResultToResourceOwnerMapper mapper = AuthResultToResourceOwnerMapper.createForTest(jwtService);
+		TokenExchangeService tokenExchangeService = Mockito.mock(TokenExchangeService.class);
+		AuthResultToResourceOwnerMapper mapper = AuthResultToResourceOwnerMapper.createForTest(jwtService,
+			tokenExchangeService);
 
 		String expiredJwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9";
+
+		Mockito.when(tokenExchangeService.exchangeTheOneTimeToken(expiredJwt)).thenReturn(expiredJwt);
 
 		AuthResult authResult = new AuthResult();
 		authResult.setIdToken(expiredJwt);
@@ -177,7 +202,8 @@ public class AuthResultToResourceOwnerMapperTest {
 
 			assertEquals("invalid JWT", e.getMessage());
 			assertNotNull(mapper.getSecurityIncident());
-			assertEquals("Possible BOT Attack: JWT invalid: The token was expected to have 3 parts, but got 1.",
+			assertEquals(
+				"Possible BOT Attack: JWT eyJ0eXAiOiJKV1QiL... invalid: The token was expected to have 3 parts, but got 1.",
 				mapper.getSecurityIncident().message());
 		}
 
