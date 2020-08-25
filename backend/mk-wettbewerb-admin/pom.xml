@@ -6,7 +6,7 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mk-wettbewerb-admin</artifactId>
-	<version>0.2.5-SNAPSHOT</version>
+	<version>0.2.5</version>
 
 
 	<properties>
