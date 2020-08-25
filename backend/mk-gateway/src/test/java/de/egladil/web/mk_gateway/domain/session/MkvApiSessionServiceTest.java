@@ -185,7 +185,8 @@ public class MkvApiSessionServiceTest {
 
 			assertEquals("JWT invalid", e.getMessage());
 			assertNotNull(service.getSecurityIncident());
-			assertEquals("Possible BOT Attack: JWT invalid: The token was expected to have 3 parts, but got 1.",
+			assertEquals(
+				"Possible BOT Attack: JWT eyJ0eXAiOiJKV1QiL... invalid: The token was expected to have 3 parts, but got 1.",
 				service.getSecurityIncident().message());
 		}
 

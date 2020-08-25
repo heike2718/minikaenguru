@@ -56,7 +56,7 @@ public class AuthResultToResourceOwnerMapper implements Function<AuthResult, Sig
 	/**
 	 * @param jwtService
 	 */
-	public static AuthResultToResourceOwnerMapper createForTest(final JWTService jwtService) {
+	public static AuthResultToResourceOwnerMapper createForTest(final JWTService jwtService, final TokenExchangeService tokenExchangeService) {
 
 		if (jwtService == null) {
 
@@ -66,6 +66,7 @@ public class AuthResultToResourceOwnerMapper implements Function<AuthResult, Sig
 		AuthResultToResourceOwnerMapper result = new AuthResultToResourceOwnerMapper();
 
 		result.jwtService = jwtService;
+		result.tokenExchangeService = tokenExchangeService;
 
 		return result;
 	}

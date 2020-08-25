@@ -200,7 +200,7 @@ public class WettbewerbResource {
 		{
 
 			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/veranstalter/lehrer",
-				Arrays.asList(new Rolle[] { Rolle.LEHRER }), Arrays.asList(new String[] { HttpMethod.GET }));
+				Arrays.asList(new Rolle[] { Rolle.LEHRER }), Arrays.asList(new String[] { HttpMethod.GET, HttpMethod.PUT }));
 			paths.add(restrictedPath);
 		}
 
