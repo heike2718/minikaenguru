@@ -74,6 +74,13 @@ public class RestrictedUrlPathInMemoryRepository implements RestrictedUrlPathRep
 			paths.add(restrictedPath);
 		}
 
+		{
+
+			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/meldungen/admin/aktuelle-meldung",
+				Arrays.asList(new Rolle[] { Rolle.ADMIN }), Arrays.asList(new String[] { HttpMethod.POST }));
+			paths.add(restrictedPath);
+		}
+
 		paths.addAll(WettbewerbAdminResource.getRestrictedPathInfos());
 		paths.addAll(KatalogAdminResource.getRestrictedPathInfos());
 
