@@ -4,9 +4,10 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.admin;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -27,7 +28,7 @@ import de.egladil.web.mk_gateway.domain.admin.MkWettbewerbAdminResourceAdapter;
 import de.egladil.web.mk_gateway.domain.apimodel.WettbewerbAPIModel;
 import de.egladil.web.mk_gateway.domain.apimodel.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.error.AuthException;
-import de.egladil.web.mk_gateway.domain.permissions.RestrictedUrlPath;
+import de.egladil.web.mk_gateway.domain.permissions.PathWithMethod;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**
@@ -114,38 +115,40 @@ public class WettbewerbAdminResource {
 		return resourceAdapter.moveWettbwerbOn(data, principalName);
 	}
 
-	public static List<RestrictedUrlPath> getRestrictedPathInfos() {
+	public static Map<PathWithMethod, List<Rolle>> getPathWithMethod2Rollen() {
 
-		List<RestrictedUrlPath> paths = new ArrayList<>();
+		Map<PathWithMethod, List<Rolle>> result = new HashMap<>();
 
 		{
 
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/wettbewerbe",
-				Arrays.asList(new Rolle[] { Rolle.ADMIN }), Arrays.asList(new String[] { HttpMethod.GET }));
-			paths.add(restrictedPath);
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			result.put(new PathWithMethod("/wb-admin/wettbewerbe", HttpMethod.GET), rollen);
+
 		}
 
 		{
 
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/wettbewerbe/wettbewerb",
-				Arrays.asList(new Rolle[] { Rolle.ADMIN }), Arrays.asList(new String[] { HttpMethod.POST, HttpMethod.PUT }));
-			paths.add(restrictedPath);
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			result.put(new PathWithMethod("/wb-admin/wettbewerbe/wettbewerb", HttpMethod.POST), rollen);
+			result.put(new PathWithMethod("/wb-admin/wettbewerbe/wettbewerb", HttpMethod.PUT), rollen);
+
 		}
 
 		{
 
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/wettbewerbe/wettbewerb/status",
-				Arrays.asList(new Rolle[] { Rolle.ADMIN }), Arrays.asList(new String[] { HttpMethod.PUT }));
-			paths.add(restrictedPath);
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			result.put(new PathWithMethod("/wb-admin/wettbewerbe/wettbewerb/status", HttpMethod.PUT), rollen);
+
 		}
 
 		{
 
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/wettbewerbe/wettbewerb/*",
-				Arrays.asList(new Rolle[] { Rolle.ADMIN }), Arrays.asList(new String[] { HttpMethod.GET }));
-			paths.add(restrictedPath);
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			result.put(new PathWithMethod("/wb-admin/wettbewerbe/wettbewerb/*", HttpMethod.GET), rollen);
+
 		}
-		return paths;
+
+		return result;
 
 	}
 

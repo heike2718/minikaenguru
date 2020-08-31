@@ -35,6 +35,9 @@ public class SchuleDetails {
 	@JsonProperty
 	private int anzahlVergangeneTeilnahmen = 1;
 
+	@JsonProperty
+	private boolean hatAdv;
+
 	SchuleDetails() {
 
 	}
@@ -93,6 +96,17 @@ public class SchuleDetails {
 	public int anzahlVergangeneTeilnahmen() {
 
 		return anzahlVergangeneTeilnahmen;
+	}
+
+	public boolean hatAdv() {
+
+		return hatAdv;
+	}
+
+	public SchuleDetails withHatAdv(final boolean hatAdv) {
+
+		this.hatAdv = hatAdv;
+		return this;
 	}
 
 }

@@ -5,9 +5,10 @@
 package de.egladil.web.mk_gateway.infrastructure.rest.wettbewerb;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -31,7 +32,7 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.apimodel.SchulanmeldungRequestPayload;
 import de.egladil.web.mk_gateway.domain.apimodel.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.permissions.RestrictedUrlPath;
+import de.egladil.web.mk_gateway.domain.permissions.PathWithMethod;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.wettbewerb.MkWettbewerbResourceAdapter;
 import de.egladil.web.mk_gateway.domain.wettbewerb.SchulenAnmeldeinfoService;
@@ -144,66 +145,71 @@ public class WettbewerbResource {
 
 	}
 
-	public static List<RestrictedUrlPath> getRestrictedPathInfos() {
+	public static Map<PathWithMethod, List<Rolle>> getPathWithMethod2Rollen() {
 
-		List<RestrictedUrlPath> paths = new ArrayList<>();
+		Map<PathWithMethod, List<Rolle>> result = new HashMap<>();
 
 		{
 
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/teilnahmen/privat",
-				Arrays.asList(new Rolle[] { Rolle.PRIVAT }), Arrays.asList(new String[] { HttpMethod.POST }));
-			paths.add(restrictedPath);
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.PRIVAT });
+			result.put(new PathWithMethod("/wettbewerb/teilnahmen/privat", HttpMethod.GET), rollen);
+			result.put(new PathWithMethod("/wettbewerb/teilnahmen/privat", HttpMethod.POST), rollen);
+
 		}
 
 		{
 
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/teilnahmen/schule",
-				Arrays.asList(new Rolle[] { Rolle.LEHRER }), Arrays.asList(new String[] { HttpMethod.POST }));
-			paths.add(restrictedPath);
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
+			result.put(new PathWithMethod("/wettbewerb/teilnahmen/schulen/*", HttpMethod.GET), rollen);
+			result.put(new PathWithMethod("/wettbewerb/teilnahmen/schulen/*", HttpMethod.POST), rollen);
+
 		}
 
 		{
 
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/teilnahmen/schulen/*",
-				Arrays.asList(new Rolle[] { Rolle.LEHRER }), Arrays.asList(new String[] { HttpMethod.GET }));
-			paths.add(restrictedPath);
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
+			result.put(new PathWithMethod("/wettbewerb/lehrer/schulen", HttpMethod.GET), rollen);
+
 		}
 
 		{
 
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/lehrer/schulen",
-				Arrays.asList(new Rolle[] { Rolle.LEHRER }), Arrays.asList(new String[] { HttpMethod.GET }));
-			paths.add(restrictedPath);
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
+			result.put(new PathWithMethod("/wettbewerb/lehrer/schulen/*", HttpMethod.POST), rollen);
+			result.put(new PathWithMethod("/wettbewerb/lehrer/schulen/*", HttpMethod.DELETE), rollen);
+
 		}
 
 		{
 
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/lehrer/schulen/*/details",
-				Arrays.asList(new Rolle[] { Rolle.LEHRER }), Arrays.asList(new String[] { HttpMethod.GET }));
-			paths.add(restrictedPath);
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
+			result.put(new PathWithMethod("/wettbewerb/lehrer/schulen/*/details", HttpMethod.GET), rollen);
+
 		}
 
 		{
 
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/veranstalter/zugangsstatus",
-				Arrays.asList(new Rolle[] { Rolle.LEHRER, Rolle.PRIVAT }), Arrays.asList(new String[] { HttpMethod.GET }));
-			paths.add(restrictedPath);
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER, Rolle.PRIVAT });
+			result.put(new PathWithMethod("/wettbewerb/veranstalter/zugangsstatus", HttpMethod.GET), rollen);
+
 		}
 
 		{
 
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/veranstalter/privat",
-				Arrays.asList(new Rolle[] { Rolle.PRIVAT }), Arrays.asList(new String[] { HttpMethod.GET }));
-			paths.add(restrictedPath);
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.PRIVAT });
+			result.put(new PathWithMethod("/wettbewerb/veranstalter/privat", HttpMethod.GET), rollen);
+
 		}
 
 		{
 
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wettbewerb/veranstalter/lehrer",
-				Arrays.asList(new Rolle[] { Rolle.LEHRER }), Arrays.asList(new String[] { HttpMethod.GET, HttpMethod.PUT }));
-			paths.add(restrictedPath);
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
+			result.put(new PathWithMethod("/wettbewerb/veranstalter/lehrer", HttpMethod.GET), rollen);
+			result.put(new PathWithMethod("/wettbewerb/veranstalter/lehrer", HttpMethod.PUT), rollen);
+
 		}
 
-		return paths;
+		return result;
+
 	}
 }

@@ -16,6 +16,7 @@ export interface SchuleDetails {
 	readonly anzahlVergangeneTeilnahmen: number;
 	readonly vergangeneTeilnahmenGeladen?: boolean;
 	readonly vergangeneTeilnahmen?: AnonymisierteTeilnahme[];
+	readonly hatAdv: boolean;
 };
 
 export interface SchuleWithID {

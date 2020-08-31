@@ -4,8 +4,11 @@
 // =====================================================
 package de.egladil.web.mk_wettbewerb.domain.personen;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
 import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Teilnahmeart;
@@ -15,10 +18,15 @@ import de.egladil.web.mk_wettbewerb.domain.teilnahmen.Teilnahmeart;
  */
 public class Privatperson extends Veranstalter {
 
-	// wenn sich eine Privatperson registriert, wird eine Teilnahmenummer generiert. Wenn sie sich zu einem Wettbewerb anmeldet,
-	// wird
-	// eine Teilnahme mit der Teilnahmenummer angelegt.
-	private final List<Identifier> teilnahmenummern;
+	// wenn sich eine Privatperson registriert, wird genau eine Teilnahmenummer generiert.
+	@JsonProperty
+	private List<Identifier> teilnahmenummern = new ArrayList<>();
+
+	Privatperson() {
+
+		super();
+
+	}
 
 	/**
 	 * @param person

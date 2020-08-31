@@ -4,9 +4,10 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.admin;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -35,7 +36,7 @@ import de.egladil.web.mk_gateway.domain.apimodel.LandPayload;
 import de.egladil.web.mk_gateway.domain.apimodel.OrtPayload;
 import de.egladil.web.mk_gateway.domain.apimodel.SchulePayload;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
-import de.egladil.web.mk_gateway.domain.permissions.RestrictedUrlPath;
+import de.egladil.web.mk_gateway.domain.permissions.PathWithMethod;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**
@@ -129,67 +130,62 @@ public class KatalogAdminResource {
 		return katalogResourceAdapter.generateKuerzel(katalogAdminSecret);
 	}
 
-	public static List<RestrictedUrlPath> getRestrictedPathInfos() {
+	public static Map<PathWithMethod, List<Rolle>> getPathWithMethod2Rollen() {
 
-		List<RestrictedUrlPath> paths = new ArrayList<>();
+		Map<PathWithMethod, List<Rolle>> result = new HashMap<>();
 
 		{
 
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/kataloge/laender",
-				Arrays.asList(new Rolle[] { Rolle.ADMIN }),
-				Arrays.asList(new String[] { HttpMethod.GET, HttpMethod.PUT }));
-			paths.add(restrictedPath);
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			result.put(new PathWithMethod("/wb-admin/kataloge/laender", HttpMethod.GET), rollen);
+			result.put(new PathWithMethod("/wb-admin/kataloge/laender", HttpMethod.PUT), rollen);
+
 		}
 
 		{
 
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/kataloge/orte",
-				Arrays.asList(new Rolle[] { Rolle.ADMIN }),
-				Arrays.asList(new String[] { HttpMethod.PUT }));
-			paths.add(restrictedPath);
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			result.put(new PathWithMethod("/wb-admin/kataloge/orte", HttpMethod.PUT), rollen);
+
 		}
 
 		{
 
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/kataloge/schulen",
-				Arrays.asList(new Rolle[] { Rolle.ADMIN }),
-				Arrays.asList(new String[] { HttpMethod.POST, HttpMethod.PUT }));
-			paths.add(restrictedPath);
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			result.put(new PathWithMethod("/wb-admin/kataloge/schulen", HttpMethod.POST), rollen);
+			result.put(new PathWithMethod("/wb-admin/kataloge/schulen", HttpMethod.PUT), rollen);
+
 		}
 
 		{
 
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/kataloge/laender/*",
-				Arrays.asList(new Rolle[] { Rolle.ADMIN }),
-				Arrays.asList(new String[] { HttpMethod.GET }));
-			paths.add(restrictedPath);
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			result.put(new PathWithMethod("/wb-admin/kataloge/laender/*/orte", HttpMethod.GET), rollen);
+
 		}
 
 		{
 
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/kataloge/orte/*",
-				Arrays.asList(new Rolle[] { Rolle.ADMIN }),
-				Arrays.asList(new String[] { HttpMethod.GET }));
-			paths.add(restrictedPath);
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			result.put(new PathWithMethod("/wb-admin/kataloge/orte/*/schulen", HttpMethod.GET), rollen);
+
 		}
 
 		{
 
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/katalogsuche/global/*",
-				Arrays.asList(new Rolle[] { Rolle.ADMIN }),
-				Arrays.asList(new String[] { HttpMethod.GET }));
-			paths.add(restrictedPath);
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			result.put(new PathWithMethod("/wb-admin/katalogsuche/global/*", HttpMethod.GET), rollen);
+
 		}
 
 		{
 
-			RestrictedUrlPath restrictedPath = new RestrictedUrlPath("/wb-admin/kuerzel",
-				Arrays.asList(new Rolle[] { Rolle.ADMIN }),
-				Arrays.asList(new String[] { HttpMethod.GET }));
-			paths.add(restrictedPath);
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			result.put(new PathWithMethod("/wb-admin/kuerzel", HttpMethod.GET), rollen);
+
 		}
 
-		return paths;
+		return result;
 
 	}
 }

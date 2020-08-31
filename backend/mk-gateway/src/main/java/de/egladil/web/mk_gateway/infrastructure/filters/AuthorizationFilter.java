@@ -5,6 +5,7 @@
 package de.egladil.web.mk_gateway.infrastructure.filters;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Priority;
@@ -24,15 +25,16 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_net.utils.CommonHttpUtils;
 import de.egladil.web.mk_gateway.MkGatewayApp;
+import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.error.AuthException;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
-import de.egladil.web.mk_gateway.domain.permissions.RestrictedUrlPath;
-import de.egladil.web.mk_gateway.domain.permissions.RestrictedUrlPathRepository;
+import de.egladil.web.mk_gateway.domain.permissions.PermittedRolesRepository;
 import de.egladil.web.mk_gateway.domain.session.LoggedInUser;
 import de.egladil.web.mk_gateway.domain.session.MkSessionService;
 import de.egladil.web.mk_gateway.domain.session.MkvSecurityContext;
 import de.egladil.web.mk_gateway.domain.session.Session;
+import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.infrastructure.config.ConfigService;
 
 /**
@@ -56,7 +58,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 	MkSessionService sessionService;
 
 	@Inject
-	RestrictedUrlPathRepository restrictedPathsRepository;
+	PermittedRolesRepository permittedRolesRepository;
 
 	@Inject
 	Event<SecurityIncidentRegistered> securityEvent;
@@ -76,9 +78,9 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 		String path = requestContext.getUriInfo().getPath();
 		LOG.debug("entering AuthorizationFilter: path={}", path);
 
-		final Optional<RestrictedUrlPath> optRestrictedPath = this.getRestirctedPath(path);
+		List<Rolle> rollen = permittedRolesRepository.permittedRollen(path, method);
 
-		if (!optRestrictedPath.isPresent()) {
+		if (rollen.isEmpty()) {
 
 			return;
 		}
@@ -120,27 +122,15 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 			throw new AuthException();
 		}
 
-		RestrictedUrlPath restrictedPath = optRestrictedPath.get();
+		Optional<Rolle> optPermittedRolle = rollen.stream().filter(r -> r == user.rolle()).findFirst();
 
-		if (!restrictedPath.isAllowedForRolle(user.rolle())) {
+		if (optPermittedRolle.isEmpty()) {
 
-			String msg = "restricted path " + path + " durch user " + user + " aufgerufen (falsche Rolle)";
-
+			String msg = "[" + method + " " + path + "] durch user " + user + " aufgerufen. Das ist nicht erlaubt";
 			LOG.warn(msg);
 
 			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
-			throw new AuthException();
-		}
-
-		if (restrictedPath.isRestrictedForMethod(method)) {
-
-			String msg = method + " " + path + " durch user " + user + " aufgerufen (falsche HttpMethod)";
-
-			LOG.warn(msg);
-
-			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
-			throw new AuthException();
-
+			throw new AccessDeniedException("keine Berechtigung, diese API aufzurufen");
 		}
 
 		boolean secure = !configService.getStage().equals(MkGatewayApp.STAGE_DEV);
@@ -148,10 +138,4 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 		requestContext.setSecurityContext(securityContext);
 
 	}
-
-	private Optional<RestrictedUrlPath> getRestirctedPath(final String path) {
-
-		return restrictedPathsRepository.ofPath(path);
-	}
-
 }

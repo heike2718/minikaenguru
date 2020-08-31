@@ -9,11 +9,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
 
@@ -73,7 +76,7 @@ public class PrivatpersonTest {
 	}
 
 	@Test
-	void should_ConstructorWithTeilnahmekuerzelInitAttributes() {
+	void should_ConstructorWithTeilnahmekuerzelInitAttributes() throws Exception {
 
 		// Arrange
 		String uuid = "asuidgquoö";
@@ -99,6 +102,8 @@ public class PrivatpersonTest {
 		assertEquals(2, privatperson.teilnahmeIdentifier().size());
 		assertEquals("asuidgquoö - Grtq Jiesrtzq (PRIVAT)", privatperson.toString());
 		assertTrue(privatperson.isNewsletterEmpfaenger());
+
+		new ObjectMapper().writeValue(System.out, privatperson);
 
 	}
 
@@ -131,6 +136,28 @@ public class PrivatpersonTest {
 		assertFalse(person1.hashCode() == person3.hashCode());
 		assertFalse(person1.equals(lehrer));
 
+	}
+
+	@Test
+	void should_Deserialize() throws Exception {
+
+		try (InputStream in = getClass().getResourceAsStream("/privatperson.json")) {
+
+			Privatperson privatperson = new ObjectMapper().readValue(in, Privatperson.class);
+
+			Person person = privatperson.person();
+			assertEquals("asuidgquoö", person.uuid());
+			assertEquals("Grtq Jiesrtzq", person.fullName());
+
+			assertTrue(privatperson.isNewsletterEmpfaenger());
+			assertEquals(ZugangUnterlagen.DEFAULT, privatperson.zugangUnterlagen());
+
+			List<Identifier> teilnahmenummern = privatperson.teilnahmeIdentifier();
+			assertEquals(2, teilnahmenummern.size());
+			assertEquals("bla", teilnahmenummern.get(0).identifier());
+			assertEquals("blubb", teilnahmenummern.get(1).identifier());
+
+		}
 	}
 
 }
