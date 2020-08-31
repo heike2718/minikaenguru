@@ -31,6 +31,10 @@ public abstract class Veranstalter {
 	@JsonProperty
 	private boolean newsletterEmpfaenger;
 
+	Veranstalter() {
+
+	}
+
 	/**
 	 * @param person
 	 */

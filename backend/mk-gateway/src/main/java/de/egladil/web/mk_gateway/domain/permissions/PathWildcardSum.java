@@ -9,14 +9,14 @@ import java.util.function.BiFunction;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * PathWildcardSum kombiniert die token eines RestrictedUrlPaths mit einem gegebenen String-Array der gleichen Länge, indem
+ * PathWildcardSum kombiniert die token eines TokenizablePath mit einem gegebenen String-Array der gleichen Länge, indem
  * Wildcards
  * im String-Array durch das token im RestrictedUrlPath an der gleichen Stelle ersetzt wird.
  */
-public class PathWildcardSum implements BiFunction<RestrictedUrlPath, String[], String> {
+public class PathWildcardSum implements BiFunction<TokenizablePath, String[], String> {
 
 	@Override
-	public String apply(final RestrictedUrlPath urlPath, final String[] tokens) {
+	public String apply(final TokenizablePath urlPath, final String[] tokens) {
 
 		if (tokens == null || tokens.length != urlPath.tokens().length) {
 

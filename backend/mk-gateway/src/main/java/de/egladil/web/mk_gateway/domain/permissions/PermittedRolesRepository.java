@@ -4,16 +4,17 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.permissions;
 
-import java.util.Optional;
+import java.util.List;
 
 import de.egladil.web.mk_gateway.domain.semantik.Repository;
+import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**
- * RestrictedUrlPathRepository
+ * PermittedRolesRepository
  */
 @Repository
-public interface RestrictedUrlPathRepository {
+public interface PermittedRolesRepository {
 
-	Optional<RestrictedUrlPath> ofPath(String path);
+	List<Rolle> permittedRollen(String path, String method);
 
 }

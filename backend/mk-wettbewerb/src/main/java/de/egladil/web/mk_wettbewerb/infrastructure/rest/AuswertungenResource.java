@@ -4,14 +4,14 @@
 // =====================================================
 package de.egladil.web.mk_wettbewerb.infrastructure.rest;
 
-import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import de.egladil.web.mk_wettbewerb.domain.auswertungen.ImportLoesungszettelService;
+import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.commons_validation.payload.ResponsePayload;
 
 /**
  * AuswertungenResource
@@ -20,18 +20,10 @@ import de.egladil.web.mk_wettbewerb.domain.auswertungen.ImportLoesungszettelServ
 @Produces(MediaType.APPLICATION_JSON)
 public class AuswertungenResource {
 
-	@Inject
-	ImportLoesungszettelService importLoesungszettelService;
-
 	@GET
-	@Path("/import/loesungszettel")
-	@Deprecated(forRemoval = true)
-	public Response triggerImportLoesungszettel() {
+	public Response hello() {
 
-		importLoesungszettelService.run();
-
-		return Response.ok().build();
-
+		return Response.ok(ResponsePayload.messageOnly(MessagePayload.info("es gibt nichts zu sehen. Gehen Sie weiter"))).build();
 	}
 
 }

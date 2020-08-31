@@ -90,14 +90,4 @@ public interface MkWettbewerbRestClient {
 	@Path("/veranstalter/lehrer")
 	public Response updateLehrer(final CreateOrUpdateLehrerCommand lehrerData);
 
-	@GET
-	@Path("/teilnahmen/import/privat")
-	@Deprecated(forRemoval = true)
-	public Response triggerImportPrivatteilnahmen();
-
-	@GET
-	@Path("/auswertungen/import/loesungszettel")
-	@Deprecated(forRemoval = true)
-	public Response triggerImportLoesungszettel();
-
 }

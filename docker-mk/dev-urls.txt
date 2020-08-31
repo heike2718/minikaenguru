@@ -49,6 +49,7 @@ http://192.168.10.176:9510/mk-gateway/wettbewerb/veranstalter/lehrer
 
 curl -X GET -H 'Content-Type: application/json' -H 'X-SESSIONID: S3l4Yzd2S2o5NEdwdEtBMXlOYmpTZz09' -i http://localhost:9510/mk-gateway/wettbewerb/lehrer/schulen/JPTM15A5/details
 
+curl -X POST -H 'Accept: application/json' -H 'Content-Type: application/json' -i http://localhost:9510/mk-gateway/meldungen/admin/aktuelle-meldung --data '{"text":"Text wurde geändert"}'
 
 http://localhost:9510/mk-gateway/wettbewerb/veranstalter/zugangsstatus   X-SESSIONID aWpaeGlwMlBpOWlzRmdIZXZWNUd3QT09
 

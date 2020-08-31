@@ -12,6 +12,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
+import de.egladil.web.mk_wettbewerb.domain.adv.VertragAuftragsdatenverarbeitung;
+import de.egladil.web.mk_wettbewerb.domain.adv.VertragAuftragsverarbeitungRepository;
 import de.egladil.web.mk_wettbewerb.domain.apimodel.SchuleDetails;
 import de.egladil.web.mk_wettbewerb.domain.error.AccessDeniedException;
 import de.egladil.web.mk_wettbewerb.domain.personen.Person;
@@ -40,7 +42,10 @@ public class SchuleDetailsService {
 	@Inject
 	VeranstalterRepository veranstalterRepository;
 
-	public static SchuleDetailsService createForTest(final AktuelleTeilnahmeService aktuelleTeilnahmeService, final SchulkollegienRepository schulkollegienRepository, final TeilnahmenRepository teilnahmenRepository, final VeranstalterRepository veranstalterRepository) {
+	@Inject
+	VertragAuftragsverarbeitungRepository advRepository;
+
+	public static SchuleDetailsService createForTest(final AktuelleTeilnahmeService aktuelleTeilnahmeService, final SchulkollegienRepository schulkollegienRepository, final TeilnahmenRepository teilnahmenRepository, final VeranstalterRepository veranstalterRepository, final VertragAuftragsverarbeitungRepository advRepository) {
 
 		SchuleDetailsService result = new SchuleDetailsService();
 
@@ -48,6 +53,7 @@ public class SchuleDetailsService {
 		result.schulkollegienRepository = schulkollegienRepository;
 		result.teilnahmenRepository = teilnahmenRepository;
 		result.veranstalterRepository = veranstalterRepository;
+		result.advRepository = advRepository;
 
 		return result;
 	}
@@ -101,6 +107,10 @@ public class SchuleDetailsService {
 		int anzahlVergangene = optTeilnahme.isPresent() ? teilnahmen.size() - 1 : teilnahmen.size();
 
 		result.withAnzahlVergangeneTeilnahmen(anzahlVergangene);
+
+		Optional<VertragAuftragsdatenverarbeitung> optVertrag = advRepository.findVertragForSchule(schuleID);
+
+		result.withHatAdv(optVertrag.isPresent());
 
 		return result;
 	}
