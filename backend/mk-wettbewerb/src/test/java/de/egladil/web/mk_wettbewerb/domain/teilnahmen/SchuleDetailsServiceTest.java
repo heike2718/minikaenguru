@@ -8,12 +8,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_wettbewerb.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_wettbewerb.domain.Identifier;
+import de.egladil.web.mk_wettbewerb.domain.adv.VertragAuftragsdatenverarbeitung;
+import de.egladil.web.mk_wettbewerb.domain.adv.VertragAuftragsverarbeitungRepository;
+import de.egladil.web.mk_wettbewerb.domain.adv.Vertragstext;
 import de.egladil.web.mk_wettbewerb.domain.apimodel.SchuleDetails;
 import de.egladil.web.mk_wettbewerb.domain.personen.Person;
 import de.egladil.web.mk_wettbewerb.domain.personen.SchulkollegienRepository;
@@ -38,8 +42,65 @@ public class SchuleDetailsServiceTest extends AbstractDomainServiceTest {
 
 		SchulkollegienRepository schulkollegienRepository = createSchulkollegienRepo();
 
+		VertragAuftragsverarbeitungRepository advRepository = createAdvRepository();
+
 		service = SchuleDetailsService.createForTest(aktuelleTeilnahmeService, schulkollegienRepository, getTeilnahmenRepository(),
-			getVeranstalterRepository());
+			getVeranstalterRepository(), advRepository);
+	}
+
+	/**
+	 * @return
+	 */
+	private VertragAuftragsverarbeitungRepository createAdvRepository() {
+
+		return new VertragAuftragsverarbeitungRepository() {
+
+			private static final String ADV_UUID_SCHULE_1 = "guqgwugdq";
+
+			private static final String ADVTEXT_CHECKSUMME = "aslhkah";
+
+			private static final String ADVTEXT_VERSIONSNUMMER = "1.1";
+
+			private static final String ADVTEXT_DATEINAME = "adv-vereinbarung-1.1.pdf";
+
+			@Override
+			public Optional<VertragAuftragsdatenverarbeitung> ofUuid(final String uuid) {
+
+				if (ADV_UUID_SCHULE_1.equals(uuid)) {
+
+					Vertragstext vertragstext = new Vertragstext().withChecksumme(ADVTEXT_CHECKSUMME)
+						.withDateiname(ADVTEXT_DATEINAME)
+						.withIdentifier(new Identifier(ADV_UUID_SCHULE_1)).withVersionsnummer(ADVTEXT_VERSIONSNUMMER);
+					VertragAuftragsdatenverarbeitung result = new VertragAuftragsdatenverarbeitung()
+						.withIdentifier(new Identifier(""))
+						.withSchulkuerzel(new Identifier(SCHULKUERZEL_1)).withUnterzeichnenderLehrer(new Identifier(UUID_LEHRER_1))
+						.withUnterzeichnetAm("14.08.2020").withVertragstext(vertragstext.identifier());
+
+					return Optional.of(result);
+				}
+
+				return Optional.empty();
+			}
+
+			@Override
+			public Optional<VertragAuftragsdatenverarbeitung> findVertragForSchule(final Identifier schuleIdentity) {
+
+				Vertragstext vertragstext = new Vertragstext().withChecksumme(ADVTEXT_CHECKSUMME).withDateiname(ADVTEXT_DATEINAME)
+					.withIdentifier(new Identifier(ADV_UUID_SCHULE_1)).withVersionsnummer(ADVTEXT_VERSIONSNUMMER);
+				VertragAuftragsdatenverarbeitung result = new VertragAuftragsdatenverarbeitung()
+					.withIdentifier(new Identifier(ADV_UUID_SCHULE_1))
+					.withSchulkuerzel(schuleIdentity).withUnterzeichnenderLehrer(new Identifier(UUID_LEHRER_1))
+					.withUnterzeichnetAm("14.08.2020").withVertragstext(vertragstext.identifier());
+
+				return SCHULKUERZEL_1.equals(schuleIdentity.identifier()) ? Optional.of(result) : Optional.empty();
+			}
+
+			@Override
+			public Identifier addVertrag(final VertragAuftragsdatenverarbeitung vertrag) {
+
+				return new Identifier(UUID.randomUUID().toString());
+			}
+		};
 	}
 
 	/**
