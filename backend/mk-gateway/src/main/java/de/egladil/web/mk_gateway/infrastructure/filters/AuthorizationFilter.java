@@ -25,15 +25,15 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_net.utils.CommonHttpUtils;
 import de.egladil.web.mk_gateway.MkGatewayApp;
+import de.egladil.web.mk_gateway.domain.auth.session.LoggedInUser;
+import de.egladil.web.mk_gateway.domain.auth.session.MkSessionService;
+import de.egladil.web.mk_gateway.domain.auth.session.MkvSecurityContext;
+import de.egladil.web.mk_gateway.domain.auth.session.Session;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.error.AuthException;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.permissions.PermittedRolesRepository;
-import de.egladil.web.mk_gateway.domain.session.LoggedInUser;
-import de.egladil.web.mk_gateway.domain.session.MkSessionService;
-import de.egladil.web.mk_gateway.domain.session.MkvSecurityContext;
-import de.egladil.web.mk_gateway.domain.session.Session;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.infrastructure.config.ConfigService;
 

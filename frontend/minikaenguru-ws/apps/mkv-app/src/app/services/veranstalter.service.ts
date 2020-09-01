@@ -16,7 +16,7 @@ export class VeranstalterService {
 
 	getZugangsstatusUnterlagen(): Observable<boolean> {
 
-		const url = environment.apiUrl + '/wettbewerb/veranstalter/zugangsstatus';
+		const url = environment.apiUrl + '/veranstalter/zugangsstatus';
 
 		return this.http.get(url).pipe(
 			map(body => body as ResponsePayload),
@@ -26,7 +26,7 @@ export class VeranstalterService {
 
 	public loadPrivatveranstalter(): Observable<Privatveranstalter> {
 
-		const url = environment.apiUrl + '/wettbewerb/veranstalter/privat';
+		const url = environment.apiUrl + '/veranstalter/privat';
 
 		return this.http.get(url).pipe(
 			map(body => body as ResponsePayload),

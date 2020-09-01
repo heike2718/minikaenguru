@@ -21,9 +21,8 @@ import de.egladil.web.mk_gateway.domain.permissions.PathWithMethod;
 import de.egladil.web.mk_gateway.domain.permissions.PermittedRolesRepository;
 import de.egladil.web.mk_gateway.domain.permissions.TokenizablePath;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
-import de.egladil.web.mk_gateway.infrastructure.rest.admin.KatalogAdminResource;
-import de.egladil.web.mk_gateway.infrastructure.rest.admin.WettbewerbAdminResource;
-import de.egladil.web.mk_gateway.infrastructure.rest.wettbewerb.WettbewerbResource;
+import de.egladil.web.mk_gateway.infrastructure.rest.admin.PermittedRolesForAdminProvider;
+import de.egladil.web.mk_gateway.infrastructure.rest.veranstalter.PermittedRolesForVeranstalterProvider;
 
 /**
  * PermittedRolesInMemoryRepository
@@ -35,9 +34,10 @@ public class PermittedRolesInMemoryRepository implements PermittedRolesRepositor
 
 	public PermittedRolesInMemoryRepository() {
 
-		addPathInfosForMkWettbewerb();
-		addPathInfosForMkWettbewerbAdmin();
+		addPathInfosForVeranstalter();
+		addPathInfosForAdmin();
 
+		// TODO: das muss man sich noch überlegen
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN, Rolle.LEHRER });
@@ -54,9 +54,9 @@ public class PermittedRolesInMemoryRepository implements PermittedRolesRepositor
 
 	}
 
-	private void addPathInfosForMkWettbewerb() {
+	private void addPathInfosForVeranstalter() {
 
-		final Map<PathWithMethod, List<Rolle>> map = WettbewerbResource.getPathWithMethod2Rollen();
+		final Map<PathWithMethod, List<Rolle>> map = PermittedRolesForVeranstalterProvider.getPathWithMethod2Rollen();
 
 		map.keySet().forEach(key -> {
 
@@ -66,22 +66,11 @@ public class PermittedRolesInMemoryRepository implements PermittedRolesRepositor
 
 	}
 
-	private void addPathInfosForMkWettbewerbAdmin() {
+	private void addPathInfosForAdmin() {
 
 		{
 
-			final Map<PathWithMethod, List<Rolle>> map = WettbewerbAdminResource.getPathWithMethod2Rollen();
-
-			map.keySet().forEach(key -> {
-
-				List<Rolle> rollen = map.get(key);
-				pathWithMethods2Rollen.put(key, rollen);
-			});
-		}
-
-		{
-
-			final Map<PathWithMethod, List<Rolle>> map = KatalogAdminResource.getPathWithMethod2Rollen();
+			final Map<PathWithMethod, List<Rolle>> map = PermittedRolesForAdminProvider.getPathWithMethod2Rollen();
 
 			map.keySet().forEach(key -> {
 
@@ -100,14 +89,14 @@ public class PermittedRolesInMemoryRepository implements PermittedRolesRepositor
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			pathWithMethods2Rollen.put(new PathWithMethod("/wb-admin/upload/schulen/csv", HttpMethod.POST), rollen);
+			pathWithMethods2Rollen.put(new PathWithMethod("/admin/upload/schulen/csv", HttpMethod.POST), rollen);
 
 		}
 
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			pathWithMethods2Rollen.put(new PathWithMethod("/meldungen/admin/aktuelle-meldung", HttpMethod.POST), rollen);
+			pathWithMethods2Rollen.put(new PathWithMethod("/admin/meldungen/aktuelle-meldung", HttpMethod.POST), rollen);
 
 		}
 	}
