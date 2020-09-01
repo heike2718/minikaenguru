@@ -178,8 +178,12 @@ public class TeilnahmenHibernateRepository implements TeilnahmenRepository {
 			break;
 
 		case SCHULE:
-			teilnahme = new Schulteilnahme(wettbewerbID, teilnahmenummer, persistente.getSchulname(),
-				new Identifier(persistente.getAngemeldetDurch()));
+			String angemeldetDurch = persistente.getAngemeldetDurch();
+			teilnahme = angemeldetDurch != null
+				? teilnahme = new Schulteilnahme(wettbewerbID, teilnahmenummer, persistente.getSchulname(),
+					new Identifier(angemeldetDurch))
+				: new Schulteilnahme(wettbewerbID, teilnahmenummer, persistente.getSchulname(),
+					null);
 			break;
 
 		default:
