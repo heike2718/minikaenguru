@@ -5,11 +5,8 @@
 package de.egladil.web.mk_gateway.infrastructure.rest.veranstalter;
 
 import java.security.Principal;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.enterprise.context.RequestScoped;
@@ -17,7 +14,6 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.HttpMethod;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -44,8 +40,6 @@ import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
-import de.egladil.web.mk_gateway.domain.permissions.PathWithMethod;
-import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.wettbewerb.MkWettbewerbResourceAdapter;
 import de.egladil.web.mk_gateway.domain.wettbewerb.SchulenAnmeldeinfoService;
 
@@ -53,7 +47,7 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.SchulenAnmeldeinfoService;
  * VeranstalterResource ist die Resource zu den Minikänguru-Veranstaltern.
  */
 @RequestScoped
-@Path("/wettbewerb")
+@Path("/veranstalter")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class VeranstalterResource {
@@ -83,7 +77,7 @@ public class VeranstalterResource {
 	private SecurityIncidentRegistered securityIncidentRegistered;
 
 	@POST
-	@Path("/veranstalter")
+	@Path("")
 	public Response createUser(final AuthResult authResult) {
 
 		SignUpResourceOwner signUpResourceOwner = authResultMapper.apply(authResult);
@@ -94,7 +88,7 @@ public class VeranstalterResource {
 			.build();
 	}
 
-	@Path("/veranstalter/lehrer")
+	@Path("/lehrer")
 	@PUT
 	public Response updateLehrer(final CreateOrUpdateLehrerCommand updateLehrerCommand) {
 
@@ -167,14 +161,7 @@ public class VeranstalterResource {
 	}
 
 	@GET
-	@Path("/aktueller")
-	public Response getAktuellenWettbewerb() {
-
-		return mkWettbewerbResourceAdapter.getAktuellenWettbewerb();
-	}
-
-	@GET
-	@Path("/veranstalter/zugangsstatus")
+	@Path("/zugangsstatus")
 	public Response getStatusZugangUnterlagen() {
 
 		Principal principal = securityContext.getUserPrincipal();
@@ -184,7 +171,7 @@ public class VeranstalterResource {
 	}
 
 	@GET
-	@Path("/veranstalter/lehrer")
+	@Path("/lehrer")
 	public Response getLehrer() {
 
 		Principal principal = securityContext.getUserPrincipal();
@@ -194,80 +181,12 @@ public class VeranstalterResource {
 	}
 
 	@GET
-	@Path("/veranstalter/privat")
+	@Path("/privat")
 	public Response getPrivatveranstalter() {
 
 		Principal principal = securityContext.getUserPrincipal();
 
 		return mkWettbewerbResourceAdapter.getPrivatveranstalter(principal.getName());
-
-	}
-
-	public static Map<PathWithMethod, List<Rolle>> getPathWithMethod2Rollen() {
-
-		Map<PathWithMethod, List<Rolle>> result = new HashMap<>();
-
-		{
-
-			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.PRIVAT });
-			result.put(new PathWithMethod("/wettbewerb/teilnahmen/privat", HttpMethod.GET), rollen);
-			result.put(new PathWithMethod("/wettbewerb/teilnahmen/privat", HttpMethod.POST), rollen);
-
-		}
-
-		{
-
-			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
-			result.put(new PathWithMethod("/wettbewerb/teilnahmen/schulen/*", HttpMethod.GET), rollen);
-			result.put(new PathWithMethod("/wettbewerb/teilnahmen/schulen/*", HttpMethod.POST), rollen);
-
-		}
-
-		{
-
-			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
-			result.put(new PathWithMethod("/wettbewerb/lehrer/schulen", HttpMethod.GET), rollen);
-
-		}
-
-		{
-
-			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
-			result.put(new PathWithMethod("/wettbewerb/lehrer/schulen/*", HttpMethod.POST), rollen);
-			result.put(new PathWithMethod("/wettbewerb/lehrer/schulen/*", HttpMethod.DELETE), rollen);
-
-		}
-
-		{
-
-			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
-			result.put(new PathWithMethod("/wettbewerb/lehrer/schulen/*/details", HttpMethod.GET), rollen);
-
-		}
-
-		{
-
-			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER, Rolle.PRIVAT });
-			result.put(new PathWithMethod("/wettbewerb/veranstalter/zugangsstatus", HttpMethod.GET), rollen);
-
-		}
-
-		{
-
-			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.PRIVAT });
-			result.put(new PathWithMethod("/wettbewerb/veranstalter/privat", HttpMethod.GET), rollen);
-
-		}
-
-		{
-
-			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
-			result.put(new PathWithMethod("/wettbewerb/veranstalter/lehrer", HttpMethod.GET), rollen);
-			result.put(new PathWithMethod("/wettbewerb/veranstalter/lehrer", HttpMethod.PUT), rollen);
-
-		}
-
-		return result;
 
 	}
 

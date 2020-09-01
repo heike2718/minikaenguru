@@ -4,17 +4,11 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.admin;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.validation.constraints.NotBlank;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.HttpMethod;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -36,8 +30,6 @@ import de.egladil.web.mk_gateway.domain.apimodel.LandPayload;
 import de.egladil.web.mk_gateway.domain.apimodel.OrtPayload;
 import de.egladil.web.mk_gateway.domain.apimodel.SchulePayload;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
-import de.egladil.web.mk_gateway.domain.permissions.PathWithMethod;
-import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**
  * KatalogAdminResource
@@ -128,64 +120,5 @@ public class KatalogAdminResource {
 	public Response generateKuerzel() {
 
 		return katalogResourceAdapter.generateKuerzel(katalogAdminSecret);
-	}
-
-	public static Map<PathWithMethod, List<Rolle>> getPathWithMethod2Rollen() {
-
-		Map<PathWithMethod, List<Rolle>> result = new HashMap<>();
-
-		{
-
-			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			result.put(new PathWithMethod("/admin/kataloge/laender", HttpMethod.GET), rollen);
-			result.put(new PathWithMethod("/admin/kataloge/laender", HttpMethod.PUT), rollen);
-
-		}
-
-		{
-
-			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			result.put(new PathWithMethod("/admin/kataloge/orte", HttpMethod.PUT), rollen);
-
-		}
-
-		{
-
-			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			result.put(new PathWithMethod("/admin/kataloge/schulen", HttpMethod.POST), rollen);
-			result.put(new PathWithMethod("/admin/kataloge/schulen", HttpMethod.PUT), rollen);
-
-		}
-
-		{
-
-			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			result.put(new PathWithMethod("/admin/kataloge/laender/*/orte", HttpMethod.GET), rollen);
-
-		}
-
-		{
-
-			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			result.put(new PathWithMethod("/admin/kataloge/orte/*/schulen", HttpMethod.GET), rollen);
-
-		}
-
-		{
-
-			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			result.put(new PathWithMethod("/admin/kataloge/suche/global/*", HttpMethod.GET), rollen);
-
-		}
-
-		{
-
-			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			result.put(new PathWithMethod("/admin/kataloge/kuerzel", HttpMethod.GET), rollen);
-
-		}
-
-		return result;
-
 	}
 }

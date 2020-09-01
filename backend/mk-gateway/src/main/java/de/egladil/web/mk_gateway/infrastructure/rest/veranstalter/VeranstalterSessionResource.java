@@ -28,7 +28,7 @@ import de.egladil.web.mk_gateway.domain.auth.urls.AuthLoginSignupUrlService;
  * VeranstalterSessionResource ist der Endpoint für mkv-app, um sich ein- und auszuloggen.
  */
 @RequestScoped
-@Path("/wettbewerb/session")
+@Path("/veranstalter/session")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class VeranstalterSessionResource {

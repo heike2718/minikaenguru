@@ -17,7 +17,7 @@ export class SchulenService {
 
 	findSchulen(): Observable<Schule[]> {
 
-		const url = environment.apiUrl + '/wettbewerb/lehrer/schulen';
+		const url = environment.apiUrl + '/veranstalter/lehrer/schulen';
 
 		return this.http.get(url).pipe(
 			map(body => body as ResponsePayload),
@@ -27,7 +27,7 @@ export class SchulenService {
 
 	public loadDetails(schulkuerzel: string): Observable<Schule> {
 
-		const url = environment.apiUrl + '/wettbewerb/lehrer/schulen/' + schulkuerzel + '/details';
+		const url = environment.apiUrl + '/veranstalter/lehrer/schulen/' + schulkuerzel + '/details';
 
 		return this.http.get(url).pipe(
 			map(body => body as ResponsePayload),

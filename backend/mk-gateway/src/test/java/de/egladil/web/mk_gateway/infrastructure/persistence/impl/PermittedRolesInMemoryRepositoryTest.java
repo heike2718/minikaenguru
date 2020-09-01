@@ -30,7 +30,7 @@ public class PermittedRolesInMemoryRepositoryTest {
 		void should_permittedRollen_forLoadPrivatteilnahmen_beOk() {
 
 			// Act
-			List<Rolle> rollen = repository.permittedRollen("/wettbewerb/teilnahmen/privat", HttpMethod.GET);
+			List<Rolle> rollen = repository.permittedRollen("/veranstalter/teilnahmen/privat", HttpMethod.GET);
 
 			// Assert
 			assertEquals(1, rollen.size());
@@ -42,7 +42,7 @@ public class PermittedRolesInMemoryRepositoryTest {
 		void should_permittedRollen_forAddPrivatteilnahme_beOk() {
 
 			// Act
-			List<Rolle> rollen = repository.permittedRollen("/wettbewerb/teilnahmen/privat", HttpMethod.POST);
+			List<Rolle> rollen = repository.permittedRollen("/veranstalter/teilnahmen/privat", HttpMethod.POST);
 
 			// Assert
 			assertEquals(1, rollen.size());
@@ -54,7 +54,7 @@ public class PermittedRolesInMemoryRepositoryTest {
 		void should_permittedRollen_forLoadSchulteilnahmen_beOk() {
 
 			// Act
-			List<Rolle> rollen = repository.permittedRollen("/wettbewerb/teilnahmen/schulen/ABCDEFGH", HttpMethod.GET);
+			List<Rolle> rollen = repository.permittedRollen("/veranstalter/teilnahmen/schulen/ABCDEFGH", HttpMethod.GET);
 
 			// Assert
 			assertEquals(1, rollen.size());
@@ -66,7 +66,7 @@ public class PermittedRolesInMemoryRepositoryTest {
 		void should_permittedRollen_forAddSchulteilnahme_beOk() {
 
 			// Act
-			List<Rolle> rollen = repository.permittedRollen("/wettbewerb/teilnahmen/schulen/ABCDEFGH", HttpMethod.POST);
+			List<Rolle> rollen = repository.permittedRollen("/veranstalter/teilnahmen/schulen/ABCDEFGH", HttpMethod.POST);
 
 			// Assert
 			assertEquals(1, rollen.size());
@@ -78,7 +78,7 @@ public class PermittedRolesInMemoryRepositoryTest {
 		void should_permittedRollen_forLoadSpecialSchulteilnahme_beOk() {
 
 			// Act
-			List<Rolle> rollen = repository.permittedRollen("/wettbewerb/teilnahmen/schulen/UZHT65GR", HttpMethod.GET);
+			List<Rolle> rollen = repository.permittedRollen("/veranstalter/teilnahmen/schulen/UZHT65GR", HttpMethod.GET);
 
 			// Assert
 			assertEquals(1, rollen.size());
@@ -116,7 +116,7 @@ public class PermittedRolesInMemoryRepositoryTest {
 		void should_permittedRollen_loadSchulen_beOk() {
 
 			// Act
-			List<Rolle> rollen = repository.permittedRollen("/wettbewerb/lehrer/schulen", HttpMethod.GET);
+			List<Rolle> rollen = repository.permittedRollen("/veranstalter/lehrer/schulen", HttpMethod.GET);
 
 			// Assert
 			assertEquals(1, rollen.size());
@@ -128,7 +128,7 @@ public class PermittedRolesInMemoryRepositoryTest {
 		void should_permittedRollen_addSchule_beOk() {
 
 			// Act
-			List<Rolle> rollen = repository.permittedRollen("/wettbewerb/lehrer/schulen/ABCDEFGH", HttpMethod.POST);
+			List<Rolle> rollen = repository.permittedRollen("/veranstalter/lehrer/schulen/ABCDEFGH", HttpMethod.POST);
 
 			// Assert
 			assertEquals(1, rollen.size());
@@ -140,7 +140,7 @@ public class PermittedRolesInMemoryRepositoryTest {
 		void should_permittedRollen_removeSchule_beOk() {
 
 			// Act
-			List<Rolle> rollen = repository.permittedRollen("/wettbewerb/lehrer/schulen/ABCDEFGK", HttpMethod.DELETE);
+			List<Rolle> rollen = repository.permittedRollen("/veranstalter/lehrer/schulen/ABCDEFGK", HttpMethod.DELETE);
 
 			// Assert
 			assertEquals(1, rollen.size());
@@ -152,7 +152,7 @@ public class PermittedRolesInMemoryRepositoryTest {
 		void should_permittedRollen_getSchuleDetails_beOk() {
 
 			// Act
-			List<Rolle> rollen = repository.permittedRollen("/wettbewerb/lehrer/schulen/FFUFUFUIF/details", HttpMethod.GET);
+			List<Rolle> rollen = repository.permittedRollen("/veranstalter/lehrer/schulen/FFUFUFUIF/details", HttpMethod.GET);
 
 			// Assert
 			assertEquals(1, rollen.size());
@@ -164,7 +164,7 @@ public class PermittedRolesInMemoryRepositoryTest {
 		void should_permittedRollen_getWettbewerbZugangsstatus_beOk() {
 
 			// Act
-			List<Rolle> rollen = repository.permittedRollen("/wettbewerb/veranstalter/zugangsstatus", HttpMethod.GET);
+			List<Rolle> rollen = repository.permittedRollen("/veranstalter/zugangsstatus", HttpMethod.GET);
 
 			// Assert
 			assertEquals(2, rollen.size());
@@ -177,7 +177,7 @@ public class PermittedRolesInMemoryRepositoryTest {
 		void should_permittedRollen_getVeranstalterPrivat_beOk() {
 
 			// Act
-			List<Rolle> rollen = repository.permittedRollen("/wettbewerb/veranstalter/privat", HttpMethod.GET);
+			List<Rolle> rollen = repository.permittedRollen("/veranstalter/privat", HttpMethod.GET);
 
 			// Assert
 			assertEquals(1, rollen.size());
@@ -189,7 +189,7 @@ public class PermittedRolesInMemoryRepositoryTest {
 		void should_permittedRollen_getVeranstalterLehrer_beOk() {
 
 			// Act
-			List<Rolle> rollen = repository.permittedRollen("/wettbewerb/veranstalter/lehrer", HttpMethod.GET);
+			List<Rolle> rollen = repository.permittedRollen("/veranstalter/lehrer", HttpMethod.GET);
 
 			// Assert
 			assertEquals(1, rollen.size());
@@ -397,7 +397,7 @@ public class PermittedRolesInMemoryRepositoryTest {
 		void should_permittedRollen_changeAktuelleMeldung_beOk() {
 
 			// Act
-			List<Rolle> rollen = repository.permittedRollen("/meldungen/admin/aktuelle-meldung", HttpMethod.POST);
+			List<Rolle> rollen = repository.permittedRollen("/admin/meldungen/aktuelle-meldung", HttpMethod.POST);
 
 			// Assert
 			assertEquals(1, rollen.size());

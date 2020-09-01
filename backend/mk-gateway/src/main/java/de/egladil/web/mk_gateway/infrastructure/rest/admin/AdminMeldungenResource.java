@@ -2,11 +2,11 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.infrastructure.rest.general.meldungen;
+package de.egladil.web.mk_gateway.infrastructure.rest.admin;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -18,24 +18,24 @@ import de.egladil.web.mk_gateway.domain.meldungen.Meldung;
 import de.egladil.web.mk_gateway.domain.meldungen.MeldungenService;
 
 /**
- * MeldungenResource
+ * AdminMeldungenResource
  */
-@Path("/meldungen")
+@Path("/admin/meldungen")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class MeldungenResource {
+public class AdminMeldungenResource {
 
 	@Inject
 	MeldungenService meldungenService;
 
 	@Path("/aktuelle-meldung")
-	@GET
-	public Response getMeldung() {
+	@POST
+	public Response postMeldung(final Meldung meldung) {
 
-		Meldung meldung = meldungenService.loadMeldung();
+		meldungenService.saveMeldng(meldung);
 
-		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), meldung);
-		return Response.ok(responsePayload).build();
+		return Response.ok(ResponsePayload.messageOnly(MessagePayload.info("aktuelle Meldung erfolgreich gespeichert"))).build();
+
 	}
 
 }

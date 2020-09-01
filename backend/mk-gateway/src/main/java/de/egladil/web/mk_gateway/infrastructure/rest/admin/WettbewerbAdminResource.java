@@ -4,16 +4,10 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.admin;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.HttpMethod;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -28,8 +22,6 @@ import de.egladil.web.mk_gateway.domain.admin.MkWettbewerbAdminResourceAdapter;
 import de.egladil.web.mk_gateway.domain.apimodel.WettbewerbAPIModel;
 import de.egladil.web.mk_gateway.domain.apimodel.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.error.AuthException;
-import de.egladil.web.mk_gateway.domain.permissions.PathWithMethod;
-import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**
  * WettbewerbAdminResource .../mk-gateway/admin/...
@@ -114,42 +106,4 @@ public class WettbewerbAdminResource {
 
 		return resourceAdapter.moveWettbwerbOn(data, principalName);
 	}
-
-	public static Map<PathWithMethod, List<Rolle>> getPathWithMethod2Rollen() {
-
-		Map<PathWithMethod, List<Rolle>> result = new HashMap<>();
-
-		{
-
-			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			result.put(new PathWithMethod("/admin/wettbewerbe", HttpMethod.GET), rollen);
-
-		}
-
-		{
-
-			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			result.put(new PathWithMethod("/admin/wettbewerbe/wettbewerb", HttpMethod.POST), rollen);
-			result.put(new PathWithMethod("/admin/wettbewerbe/wettbewerb", HttpMethod.PUT), rollen);
-
-		}
-
-		{
-
-			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			result.put(new PathWithMethod("/admin/wettbewerbe/wettbewerb/status", HttpMethod.PUT), rollen);
-
-		}
-
-		{
-
-			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			result.put(new PathWithMethod("/admin/wettbewerbe/wettbewerb/*", HttpMethod.GET), rollen);
-
-		}
-
-		return result;
-
-	}
-
 }
