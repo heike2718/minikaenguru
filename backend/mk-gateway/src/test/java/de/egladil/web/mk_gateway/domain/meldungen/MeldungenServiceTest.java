@@ -11,8 +11,6 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
-import de.egladil.web.mk_gateway.infrastructure.rest.meldungen.Meldung;
-
 /**
  * MeldungenServiceTest
  */

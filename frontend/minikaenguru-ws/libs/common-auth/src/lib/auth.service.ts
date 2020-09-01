@@ -22,18 +22,23 @@ export class AuthService {
 	isLoggedIn$ = this.store.select(isLoggedIn);
 	isLoggedOut$ = this.store.select(isLoggedOut);
 
+	sessionUrl: string;
+
 	constructor(@Inject(MkAuthConfigService) private config: MkAuthConfig
 		, private http: HttpClient
 		, private store: Store<AuthState>
 		, private router: Router
 		, private messagesService: MessageService
-		, private logger: LogService) { }
+		, private logger: LogService) {
+
+			this.sessionUrl = this.config.baseUrl + '/session';
+		}
 
 
 	public lehrerkontoAnlegen(schulkuerzel: string, newsletterAbo: boolean) {
 
 
-		const url = this.config.baseUrl + '/authurls/signup/lehrer/' + schulkuerzel + '/' + newsletterAbo;
+		const url = this.sessionUrl + '/authurls/signup/lehrer/' + schulkuerzel + '/' + newsletterAbo;
 
 		this.http.get(url).pipe(
 			map(body => body as ResponsePayload)
@@ -48,7 +53,7 @@ export class AuthService {
 	}
 
 	public privatkontoAnlegen(newsletterAbo: boolean) {
-		const url = this.config.baseUrl + '/authurls/signup/privat/' + newsletterAbo;
+		const url = this.sessionUrl + '/authurls/signup/privat/' + newsletterAbo;
 
 		this.http.get(url).pipe(
 			map(body => body as ResponsePayload)
@@ -62,7 +67,7 @@ export class AuthService {
 	}
 
 	public login() {
-		const url = this.config.baseUrl + '/authurls/login';
+		const url = this.sessionUrl + '/authurls/login';
 
 		this.http.get(url).pipe(
 			map(body => body as ResponsePayload)
@@ -78,7 +83,7 @@ export class AuthService {
 
 	public createSession(authResult: AuthResult) {
 
-		const url = this.config.baseUrl + '/login';
+		const url = this.sessionUrl + '/login';
 
 		window.location.hash = '';
 
@@ -98,10 +103,10 @@ export class AuthService {
 	public logout() {
 
 		const devSessionId = localStorage.getItem(this.config.storagePrefix + STORAGE_KEY_DEV_SESSION_ID);
-		let url = this.config.baseUrl + '/logout';
+		let url = this.sessionUrl + '/logout';
 
 		if (devSessionId) {
-			url = this.config.baseUrl + '/dev/logout/' + devSessionId;
+			url = this.sessionUrl + '/dev/logout/' + devSessionId;
 		}
 
 		this.http.delete(url).pipe(

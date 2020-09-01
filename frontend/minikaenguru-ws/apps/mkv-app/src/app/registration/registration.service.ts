@@ -15,7 +15,7 @@ export class RegistrationService {
 
 	public createVeranstalter(authResult: AuthResult): Observable<any> {
 
-		const url = environment.apiUrl + '/wettbewerb/veranstalter';
+		const url = environment.apiUrl + '/veranstalter';
 		window.location.hash = '';
 
 		return this.http.post(url, authResult);

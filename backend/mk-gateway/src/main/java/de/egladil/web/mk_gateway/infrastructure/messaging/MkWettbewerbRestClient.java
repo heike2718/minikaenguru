@@ -20,8 +20,8 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import de.egladil.web.mk_gateway.MkGatewayApp;
 import de.egladil.web.mk_gateway.domain.apimodel.CreateOrUpdateLehrerCommand;
 import de.egladil.web.mk_gateway.domain.apimodel.SchulanmeldungRequestPayload;
-import de.egladil.web.mk_gateway.domain.signup.LehrerCreated;
-import de.egladil.web.mk_gateway.domain.signup.PrivatmenschCreated;
+import de.egladil.web.mk_gateway.domain.auth.signup.LehrerCreated;
+import de.egladil.web.mk_gateway.domain.auth.signup.PrivatmenschCreated;
 
 /**
  * MkWettbewerbRestClient wird in application.properties konfiguriert.

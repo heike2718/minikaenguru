@@ -44,14 +44,14 @@ export class KatalogHttpService {
 
 	public searchKatalogItems(typ: Katalogpflegetyp, searchTerm: string): Observable<KatalogpflegeItem[]> {
 
-		let url = environment.apiUrl + '/katalogsuche/global/' + typ + '?search=' + searchTerm;
+		let url = environment.apiUrl + '/kataloge/suche/global/' + typ + '?search=' + searchTerm;
 		return this.loadKatalogItems(url);
 	}
 
 	public getKuerzel(): Observable<KuerzelAPIModel> {
 
 
-		let url = environment.apiUrl + '/kuerzel';
+		let url = environment.apiUrl + '/kataloge/kuerzel';
 
 		return this.http.get(url).pipe(
 			map(body => body as ResponsePayload),
