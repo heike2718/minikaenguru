@@ -7,9 +7,11 @@ package de.egladil.web.mk_gateway.infrastructure.rest.users;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -34,12 +36,14 @@ import de.egladil.web.mk_gateway.domain.session.Session;
 import de.egladil.web.mk_gateway.domain.session.SessionUtils;
 import de.egladil.web.mk_gateway.domain.session.TokenExchangeService;
 import de.egladil.web.mk_gateway.domain.signup.AuthResult;
+import de.egladil.web.mk_gateway.domain.user.Rolle;
+import de.egladil.web.mk_gateway.infrastructure.clientauth.IClientAccessTokenService;
 
 /**
  * SessionResource ist der Endpoint für mkv-app, um sich ein- und auszuloggen.
  */
 @RequestScoped
-@Path("/")
+@Path("/wettbewerb/session")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class SessionResource {
@@ -61,33 +65,114 @@ public class SessionResource {
 	@Inject
 	TokenExchangeService tokenExchangeService;
 
-	@POST
-	@Path("wb-admin/login")
-	public Response loginAsAdmin(final AuthResult authResult) {
+	@ConfigProperty(name = "mkv-app.client-id")
+	String mkvAppClientId;
 
-		final String oneTimeToken = authResult.getIdToken();
+	@ConfigProperty(name = "mkv-app.client-secret")
+	String mkvAppClientSecret;
 
-		LOG.debug("idToken={}", StringUtils.abbreviate(oneTimeToken, 11));
+	@ConfigProperty(name = "auth-app.url")
+	String authAppUrl;
 
-		String jwt = this.tokenExchangeService.exchangeTheOneTimeToken(oneTimeToken);
+	@ConfigProperty(name = "mkv-app.redirect-url.login")
+	String loginRedirectUrl;
 
-		Session session = sessionService.initSession(jwt);
+	@ConfigProperty(name = "mkv-app.redirect-url.signup")
+	String signupRedirectUrl;
 
-		NewCookie sessionCookie = SessionUtils.createSessionCookie(SESSION_COOKIE_NAME, session.sessionId());
+	@Inject
+	IClientAccessTokenService clientAccessTokenService;
 
-		if (!MkGatewayApp.STAGE_DEV.equals(stage)) {
+	@GET
+	@Path("/authurls/login")
+	public Response getLoginUrl() {
 
-			// TODO: schauen, ob dies aufgerufen wird.
-			session.clearSessionId();
+		String accessToken = clientAccessTokenService.orderAccessToken(mkvAppClientId, mkvAppClientSecret);
+
+		if (StringUtils.isBlank(accessToken)) {
+
+			return Response.serverError().entity("Fehler beim Authentisieren des Clients").build();
 		}
 
-		ResponsePayload payload = new ResponsePayload(MessagePayload.info("OK"), session);
-		return Response.ok(payload).cookie(sessionCookie).build();
+		String redirectUrl = authAppUrl + "#/login?accessToken=" + accessToken + "&state=login&nonce=null&redirectUrl="
+			+ loginRedirectUrl;
+
+		LOG.debug(redirectUrl);
+
+		return Response.ok(ResponsePayload.messageOnly(MessagePayload.info(redirectUrl))).build();
+
+	}
+
+	@GET
+	@Path("/authurls/signup/lehrer/{schulkuerzel}/{newsletterAbonnieren}")
+	public Response getSignupLehrerUrl(@PathParam(value = "schulkuerzel") final String schulkuerzel, @PathParam(
+		value = "newsletterAbonnieren") final String newsletterAbonnieren) {
+
+		String accessToken = clientAccessTokenService.orderAccessToken(mkvAppClientId, mkvAppClientSecret);
+
+		if (StringUtils.isBlank(accessToken)) {
+
+			return Response.serverError().entity("Fehler beim Authentisieren des Clients").build();
+		}
+
+		String nonce = Rolle.LEHRER + "-" + schulkuerzel;
+
+		boolean abonnieren = Boolean.valueOf(newsletterAbonnieren);
+
+		if (abonnieren) {
+
+			nonce += "-" + abonnieren;
+		}
+
+		String redirectUrl = authAppUrl + "#/signup?accessToken=" + accessToken + "&state=signup&nonce=" + nonce + "&redirectUrl="
+			+ signupRedirectUrl;
+
+		LOG.debug(redirectUrl);
+
+		return Response.ok(ResponsePayload.messageOnly(MessagePayload.info(redirectUrl))).build();
+	}
+
+	@GET
+	@Path("/authurls/signup/privat/{newsletterAbonnieren}")
+	public Response getSignupPrivatmenschUrl(@PathParam(
+		value = "newsletterAbonnieren") final String newsletterAbonnieren) {
+
+		String accessToken = clientAccessTokenService.orderAccessToken(mkvAppClientId, mkvAppClientSecret);
+
+		if (StringUtils.isBlank(accessToken)) {
+
+			return Response.serverError().entity("Fehler beim Authentisieren des Clients").build();
+		}
+
+		String nonce = Rolle.PRIVAT.name();
+
+		boolean abonnieren = Boolean.valueOf(newsletterAbonnieren);
+
+		if (abonnieren) {
+
+			nonce += "-" + abonnieren;
+		}
+
+		String redirectUrl = authAppUrl + "#/signup?accessToken=" + accessToken + "&state=signup&nonce=" + nonce + "&redirectUrl="
+			+ signupRedirectUrl;
+
+		LOG.debug(redirectUrl);
+
+		return Response.ok(ResponsePayload.messageOnly(MessagePayload.info(redirectUrl))).build();
 	}
 
 	@POST
-	@Path("login")
+	@Path("/login")
 	public Response login(final AuthResult authResult) {
+
+		if (authResult == null) {
+
+			String msg = "login wurde ohne payload aufgerufen";
+
+			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+
+			throw new BadRequestException("erwarte payload");
+		}
 
 		final String oneTimeToken = authResult.getIdToken();
 
@@ -110,7 +195,7 @@ public class SessionResource {
 	}
 
 	@DELETE
-	@Path("logout")
+	@Path("/logout")
 	public Response logout(@CookieParam(value = SESSION_COOKIE_NAME) final String sessionId) {
 
 		if (sessionId != null) {
@@ -126,7 +211,7 @@ public class SessionResource {
 	}
 
 	@DELETE
-	@Path("dev/logout/{sessionId}")
+	@Path("/dev/logout/{sessionId}")
 	public Response logoutDev(@PathParam(value = "sessionId") final String sessionId) {
 
 		if (sessionId != null) {

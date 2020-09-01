@@ -43,7 +43,7 @@ import de.egladil.web.mk_gateway.domain.user.Rolle;
  * KatalogAdminResource
  */
 @RequestScoped
-@Path("/wb-admin")
+@Path("/admin/kataloge")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class KatalogAdminResource {
@@ -60,28 +60,28 @@ public class KatalogAdminResource {
 	MkKatalogeResourceAdapter katalogResourceAdapter;
 
 	@GET
-	@Path("/kataloge/laender")
+	@Path("/laender")
 	public Response loadLaender() {
 
 		return katalogResourceAdapter.loadLaender(securityContext.getUserPrincipal().getName(), katalogAdminSecret);
 	}
 
 	@GET
-	@Path("/kataloge/laender/{kuerzel}/orte")
+	@Path("/laender/{kuerzel}/orte")
 	public Response loadOrteInLand(@PathParam(value = "kuerzel") @Kuerzel final String kuerzel) {
 
 		return katalogResourceAdapter.loadOrteInLand(kuerzel);
 	}
 
 	@GET
-	@Path("/kataloge/orte/{kuerzel}/schulen")
+	@Path("/orte/{kuerzel}/schulen")
 	public Response loadSchulenInOrt(@PathParam(value = "kuerzel") @Kuerzel final String kuerzel) {
 
 		return katalogResourceAdapter.loadSchulenInOrt(kuerzel);
 	}
 
 	@PUT
-	@Path("/kataloge/laender")
+	@Path("/laender")
 	public Response renameLand(final LandPayload requestPayload) {
 
 		String uuid = securityContext.getUserPrincipal().getName();
@@ -89,7 +89,7 @@ public class KatalogAdminResource {
 	}
 
 	@PUT
-	@Path("/kataloge/orte")
+	@Path("/orte")
 	public Response renameOrt(final OrtPayload requestPayload) {
 
 		String uuid = securityContext.getUserPrincipal().getName();
@@ -99,7 +99,7 @@ public class KatalogAdminResource {
 	}
 
 	@PUT
-	@Path("/kataloge/schulen")
+	@Path("/schulen")
 	public Response renameSchule(final SchulePayload requestPayload) {
 
 		String uuid = securityContext.getUserPrincipal().getName();
@@ -107,7 +107,7 @@ public class KatalogAdminResource {
 	}
 
 	@POST
-	@Path("/kataloge/schulen")
+	@Path("/schulen")
 	public Response createSchule(final SchulePayload requestPayload) {
 
 		String uuid = securityContext.getUserPrincipal().getName();
@@ -116,7 +116,7 @@ public class KatalogAdminResource {
 	}
 
 	@GET
-	@Path("/katalogsuche/global/{typ}")
+	@Path("/suche/global/{typ}")
 	public Response sucheItems(@PathParam(
 		value = "typ") final String typ, @NotBlank @StringLatin @QueryParam("search") final String searchTerm) {
 
@@ -137,51 +137,51 @@ public class KatalogAdminResource {
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			result.put(new PathWithMethod("/wb-admin/kataloge/laender", HttpMethod.GET), rollen);
-			result.put(new PathWithMethod("/wb-admin/kataloge/laender", HttpMethod.PUT), rollen);
+			result.put(new PathWithMethod("/admin/kataloge/laender", HttpMethod.GET), rollen);
+			result.put(new PathWithMethod("/admin/kataloge/laender", HttpMethod.PUT), rollen);
 
 		}
 
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			result.put(new PathWithMethod("/wb-admin/kataloge/orte", HttpMethod.PUT), rollen);
+			result.put(new PathWithMethod("/admin/kataloge/orte", HttpMethod.PUT), rollen);
 
 		}
 
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			result.put(new PathWithMethod("/wb-admin/kataloge/schulen", HttpMethod.POST), rollen);
-			result.put(new PathWithMethod("/wb-admin/kataloge/schulen", HttpMethod.PUT), rollen);
+			result.put(new PathWithMethod("/admin/kataloge/schulen", HttpMethod.POST), rollen);
+			result.put(new PathWithMethod("/admin/kataloge/schulen", HttpMethod.PUT), rollen);
 
 		}
 
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			result.put(new PathWithMethod("/wb-admin/kataloge/laender/*/orte", HttpMethod.GET), rollen);
+			result.put(new PathWithMethod("/admin/kataloge/laender/*/orte", HttpMethod.GET), rollen);
 
 		}
 
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			result.put(new PathWithMethod("/wb-admin/kataloge/orte/*/schulen", HttpMethod.GET), rollen);
+			result.put(new PathWithMethod("/admin/kataloge/orte/*/schulen", HttpMethod.GET), rollen);
 
 		}
 
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			result.put(new PathWithMethod("/wb-admin/katalogsuche/global/*", HttpMethod.GET), rollen);
+			result.put(new PathWithMethod("/admin/kataloge/suche/global/*", HttpMethod.GET), rollen);
 
 		}
 
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			result.put(new PathWithMethod("/wb-admin/kuerzel", HttpMethod.GET), rollen);
+			result.put(new PathWithMethod("/admin/kataloge/kuerzel", HttpMethod.GET), rollen);
 
 		}
 

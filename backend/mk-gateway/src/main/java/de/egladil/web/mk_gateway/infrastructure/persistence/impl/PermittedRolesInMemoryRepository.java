@@ -93,6 +93,13 @@ public class PermittedRolesInMemoryRepository implements PermittedRolesRepositor
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			pathWithMethods2Rollen.put(new PathWithMethod("/admin/kataloge/suche/global/*/search", HttpMethod.GET), rollen);
+
+		}
+
+		{
+
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
 			pathWithMethods2Rollen.put(new PathWithMethod("/statistik/laender/*/*", HttpMethod.GET), rollen);
 
 		}
@@ -100,7 +107,7 @@ public class PermittedRolesInMemoryRepository implements PermittedRolesRepositor
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			pathWithMethods2Rollen.put(new PathWithMethod("/wb-admin/upload/schulen/csv", HttpMethod.POST), rollen);
+			pathWithMethods2Rollen.put(new PathWithMethod("/admin/upload/schulen/csv", HttpMethod.POST), rollen);
 
 		}
 

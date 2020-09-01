@@ -54,7 +54,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 			loglevel: environment.loglevel
 		}),
 		CommonAuthModule.forRoot({
-			baseUrl: environment.apiUrl,
+			baseUrl: environment.apiUrl + '/wettbewerb',
 			production: environment.production,
 			storagePrefix: environment.storageKeyPrefix,
 			loginSuccessUrl: '/dashboard'

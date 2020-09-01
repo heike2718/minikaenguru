@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -34,12 +35,13 @@ import de.egladil.web.mk_gateway.domain.session.MkSessionService;
 import de.egladil.web.mk_gateway.domain.session.Session;
 import de.egladil.web.mk_gateway.domain.session.SessionUtils;
 import de.egladil.web.mk_gateway.domain.signup.AuthResult;
+import de.egladil.web.mk_gateway.infrastructure.clientauth.IClientAccessTokenService;
 
 /**
  * AdminSessionResource ist der Endpoint für mk-admin-app, um sich einzuloggen.
  */
 @RequestScoped
-@Path("/wb-admin")
+@Path("/admin/session")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class AdminSessionResource {
@@ -60,6 +62,41 @@ public class AdminSessionResource {
 
 	@Inject
 	AdminTokenExchangeService tokenExchangeService;
+
+	@ConfigProperty(name = "mk-admin-app.client-id")
+	String mkAdminAppClientId;
+
+	@ConfigProperty(name = "mk-admin-app.client-secret")
+	String mkAdminAppClientSecret;
+
+	@ConfigProperty(name = "auth-app.url")
+	String authAppUrl;
+
+	@ConfigProperty(name = "mk-admin-app.redirect-url.login")
+	String adminLoginRedirectUrl;
+
+	@Inject
+	IClientAccessTokenService clientAccessTokenService;
+
+	@GET
+	@Path("/authurls/login")
+	public Response getAdminLoginUrl() {
+
+		String accessToken = clientAccessTokenService.orderAccessToken(mkAdminAppClientId, mkAdminAppClientSecret);
+
+		if (StringUtils.isBlank(accessToken)) {
+
+			return Response.serverError().entity("Fehler beim Authentisieren des Clients").build();
+		}
+
+		String redirectUrl = authAppUrl + "#/login?accessToken=" + accessToken + "&state=login&nonce=null&redirectUrl="
+			+ adminLoginRedirectUrl;
+
+		LOG.debug(redirectUrl);
+
+		return Response.ok(ResponsePayload.messageOnly(MessagePayload.info(redirectUrl))).build();
+
+	}
 
 	@POST
 	@Path("/login")

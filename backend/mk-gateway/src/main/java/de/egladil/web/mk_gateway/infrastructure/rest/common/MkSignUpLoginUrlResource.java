@@ -27,7 +27,7 @@ import de.egladil.web.mk_gateway.infrastructure.clientauth.IClientAccessTokenSer
  * MkSignUpLoginUrlResource stellt für die mkv-app die Login-und Signup-Urls zur Verfügung.
  */
 @RequestScoped
-@Path("/authurls")
+// @Path("/authurls")
 @Produces(MediaType.APPLICATION_JSON)
 public class MkSignUpLoginUrlResource {
 

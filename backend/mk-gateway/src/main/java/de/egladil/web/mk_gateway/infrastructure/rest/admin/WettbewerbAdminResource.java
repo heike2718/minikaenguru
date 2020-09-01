@@ -32,10 +32,10 @@ import de.egladil.web.mk_gateway.domain.permissions.PathWithMethod;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**
- * WettbewerbAdminResource .../mk-gateway/wb-admin/...
+ * WettbewerbAdminResource .../mk-gateway/admin/...
  */
 @RequestScoped
-@Path("/wb-admin/wettbewerbe")
+@Path("/admin/wettbewerbe")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class WettbewerbAdminResource {
@@ -122,29 +122,29 @@ public class WettbewerbAdminResource {
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			result.put(new PathWithMethod("/wb-admin/wettbewerbe", HttpMethod.GET), rollen);
+			result.put(new PathWithMethod("/admin/wettbewerbe", HttpMethod.GET), rollen);
 
 		}
 
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			result.put(new PathWithMethod("/wb-admin/wettbewerbe/wettbewerb", HttpMethod.POST), rollen);
-			result.put(new PathWithMethod("/wb-admin/wettbewerbe/wettbewerb", HttpMethod.PUT), rollen);
+			result.put(new PathWithMethod("/admin/wettbewerbe/wettbewerb", HttpMethod.POST), rollen);
+			result.put(new PathWithMethod("/admin/wettbewerbe/wettbewerb", HttpMethod.PUT), rollen);
 
 		}
 
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			result.put(new PathWithMethod("/wb-admin/wettbewerbe/wettbewerb/status", HttpMethod.PUT), rollen);
+			result.put(new PathWithMethod("/admin/wettbewerbe/wettbewerb/status", HttpMethod.PUT), rollen);
 
 		}
 
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			result.put(new PathWithMethod("/wb-admin/wettbewerbe/wettbewerb/*", HttpMethod.GET), rollen);
+			result.put(new PathWithMethod("/admin/wettbewerbe/wettbewerb/*", HttpMethod.GET), rollen);
 
 		}
 
