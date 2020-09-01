@@ -95,11 +95,14 @@ public class SchuleDetailsService {
 				Schulteilnahme schulteilnahme = (Schulteilnahme) aktuelle;
 				Identifier veranstalterID = schulteilnahme.angemeldetDurchVeranstalterId();
 
-				Optional<Veranstalter> optAnmelder = veranstalterRepository.ofId(veranstalterID);
+				if (veranstalterID != null) {
 
-				if (optAnmelder.isPresent()) {
+					Optional<Veranstalter> optAnmelder = veranstalterRepository.ofId(veranstalterID);
 
-					result.withAngemeldetDurch(optAnmelder.get().person());
+					if (optAnmelder.isPresent()) {
+
+						result.withAngemeldetDurch(optAnmelder.get().person());
+					}
 				}
 			}
 		}

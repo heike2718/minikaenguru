@@ -33,10 +33,6 @@ public class Schulteilnahme extends Teilnahme {
 			throw new IllegalArgumentException("nameSchule darf nicht blank sein");
 		}
 
-		if (veranstalterId == null) {
-
-			throw new IllegalArgumentException("angemeldetDurchVeranstalterId darf nicht null sein");
-		}
 		this.nameSchule = nameSchule;
 		this.angemeldetDurchVeranstalterId = veranstalterId;
 	}

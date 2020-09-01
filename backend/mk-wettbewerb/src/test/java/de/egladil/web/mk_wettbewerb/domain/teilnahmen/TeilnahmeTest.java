@@ -6,6 +6,7 @@ package de.egladil.web.mk_wettbewerb.domain.teilnahmen;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import org.junit.jupiter.api.Test;
@@ -91,18 +92,13 @@ public class TeilnahmeTest {
 	}
 
 	@Test
-	void should_ConstructorThrowException_when_VeranstalterIdNull() {
+	void should_ConstructorNotThrowException_when_VeranstalterIdNull() {
 
-		try {
+		// Act
+		Schulteilnahme schulteilnahme = new Schulteilnahme(new WettbewerbID(2020), new Identifier("bjksgwk"), "Had Fae", null);
 
-			new Schulteilnahme(new WettbewerbID(2020), new Identifier("bjksgwk"), "Had Fae", null);
-
-			fail("keine IllegalArgumentException");
-		} catch (IllegalArgumentException e) {
-
-			assertEquals("angemeldetDurchVeranstalterId darf nicht null sein", e.getMessage());
-		}
-
+		// Assert
+		assertNull(schulteilnahme.angemeldetDurchVeranstalterId());
 	}
 
 	@Test
