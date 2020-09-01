@@ -12,8 +12,8 @@ public interface IClientAccessTokenService {
 	/**
 	 * Holt ein clientAccessToken vom authprovider
 	 *
-	 * @param  clientId
-	 * @param  clientSecret
+	 * @param  veranstalterClientId
+	 * @param  veranstalterClientSecret
 	 * @return              String das accessToken oder null!
 	 */
 	String orderAccessToken(final String clientId, final String clientSecret);

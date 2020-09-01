@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.infrastructure.rest.admin;
+package de.egladil.web.mk_gateway.infrastructure.rest.veranstalter;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -22,52 +22,68 @@ import de.egladil.web.mk_gateway.MkGatewayApp;
 import de.egladil.web.mk_gateway.domain.auth.AuthMode;
 import de.egladil.web.mk_gateway.domain.auth.AuthResult;
 import de.egladil.web.mk_gateway.domain.auth.session.loginlogout.LoginLogoutService;
-import de.egladil.web.mk_gateway.domain.auth.urls.AuthLoginUrlService;
+import de.egladil.web.mk_gateway.domain.auth.urls.AuthLoginSignupUrlService;
 
 /**
- * AdminSessionResource ist der Endpoint für mk-admin-app, um sich einzuloggen.
+ * VeranstalterSessionResource ist der Endpoint für mkv-app, um sich ein- und auszuloggen.
  */
 @RequestScoped
-@Path("/admin/session")
+@Path("/wettbewerb/session")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class AdminSessionResource {
+public class VeranstalterSessionResource {
 
 	private static final String SESSION_COOKIE_NAME = MkGatewayApp.CLIENT_COOKIE_PREFIX
 		+ CommonHttpUtils.NAME_SESSIONID_COOKIE;
 
 	@Inject
-	AuthLoginUrlService authLoginUrlService;
+	AuthLoginSignupUrlService authUrlService;
 
 	@Inject
 	LoginLogoutService loginLogoutService;
 
 	@GET
 	@Path("/authurls/login")
-	public Response getAdminLoginUrl() {
+	public Response getLoginUrl() {
 
-		return authLoginUrlService.getLoginUrl();
+		return authUrlService.getLoginUrl();
 
+	}
+
+	@GET
+	@Path("/authurls/signup/lehrer/{schulkuerzel}/{newsletterAbonnieren}")
+	public Response getSignupLehrerUrl(@PathParam(value = "schulkuerzel") final String schulkuerzel, @PathParam(
+		value = "newsletterAbonnieren") final String newsletterAbonnieren) {
+
+		return authUrlService.getSignupLehrerUrl(schulkuerzel, newsletterAbonnieren);
+	}
+
+	@GET
+	@Path("/authurls/signup/privat/{newsletterAbonnieren}")
+	public Response getSignupPrivatmenschUrl(@PathParam(
+		value = "newsletterAbonnieren") final String newsletterAbonnieren) {
+
+		return authUrlService.getSignupPrivatUrl(newsletterAbonnieren);
 	}
 
 	@POST
 	@Path("/login")
 	public Response login(final AuthResult authResult) {
 
-		return loginLogoutService.login(authResult, AuthMode.ADMIN);
+		return loginLogoutService.login(authResult, AuthMode.VERANSTALTER);
 	}
 
 	@DELETE
 	@Path("/logout")
 	public Response logout(@CookieParam(value = SESSION_COOKIE_NAME) final String sessionId) {
 
-		return this.loginLogoutService.logout(sessionId);
+		return loginLogoutService.logout(sessionId);
 	}
 
 	@DELETE
 	@Path("/dev/logout/{sessionId}")
 	public Response logoutDev(@PathParam(value = "sessionId") final String sessionId) {
 
-		return this.loginLogoutService.logoutDev(sessionId);
+		return loginLogoutService.logoutDev(sessionId);
 	}
 }

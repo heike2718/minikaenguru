@@ -23,7 +23,7 @@ import de.egladil.web.mk_gateway.domain.permissions.TokenizablePath;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.infrastructure.rest.admin.KatalogAdminResource;
 import de.egladil.web.mk_gateway.infrastructure.rest.admin.WettbewerbAdminResource;
-import de.egladil.web.mk_gateway.infrastructure.rest.wettbewerb.WettbewerbResource;
+import de.egladil.web.mk_gateway.infrastructure.rest.veranstalter.VeranstalterResource;
 
 /**
  * PermittedRolesInMemoryRepository
@@ -56,7 +56,7 @@ public class PermittedRolesInMemoryRepository implements PermittedRolesRepositor
 
 	private void addPathInfosForMkWettbewerb() {
 
-		final Map<PathWithMethod, List<Rolle>> map = WettbewerbResource.getPathWithMethod2Rollen();
+		final Map<PathWithMethod, List<Rolle>> map = VeranstalterResource.getPathWithMethod2Rollen();
 
 		map.keySet().forEach(key -> {
 

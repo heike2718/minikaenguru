@@ -35,8 +35,8 @@ public class UrlServiceDelegate {
 	/**
 	 * Authentisiert den Client beim authprovider und gibt die login-Url für den Browser-Redirect zurück.
 	 *
-	 * @param  clientId
-	 * @param  clientSecret
+	 * @param  veranstalterClientId
+	 * @param  veranstalterClientSecret
 	 * @param  loginRedirectUrl
 	 * @return                  Resposne
 	 */
