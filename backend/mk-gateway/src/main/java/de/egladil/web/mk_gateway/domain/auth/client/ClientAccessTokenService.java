@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.infrastructure.clientauth;
+package de.egladil.web.mk_gateway.domain.auth.client;
 
 import java.util.Map;
 import java.util.UUID;
@@ -48,6 +48,7 @@ public class ClientAccessTokenService implements IClientAccessTokenService {
 	 * @return String das accessToken oder null!
 	 */
 	@Override
+	@Deprecated
 	public String orderAccessToken(final String clientId, final String clientSecret) {
 
 		String nonce = UUID.randomUUID().toString();

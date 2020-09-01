@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.infrastructure.clientauth;
+package de.egladil.web.mk_gateway.domain.auth.client;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;

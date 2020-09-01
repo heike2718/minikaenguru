@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.infrastructure.rest.meldungen;
+package de.egladil.web.mk_gateway.domain.meldungen;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

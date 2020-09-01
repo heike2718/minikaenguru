@@ -29,6 +29,7 @@ import de.egladil.web.commons_net.utils.CommonHttpUtils;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.MkGatewayApp;
+import de.egladil.web.mk_gateway.domain.auth.urls.AuthLoginSignupUrlService;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.session.MkSessionService;
@@ -36,8 +37,6 @@ import de.egladil.web.mk_gateway.domain.session.Session;
 import de.egladil.web.mk_gateway.domain.session.SessionUtils;
 import de.egladil.web.mk_gateway.domain.session.TokenExchangeService;
 import de.egladil.web.mk_gateway.domain.signup.AuthResult;
-import de.egladil.web.mk_gateway.domain.user.Rolle;
-import de.egladil.web.mk_gateway.infrastructure.clientauth.IClientAccessTokenService;
 
 /**
  * SessionResource ist der Endpoint für mkv-app, um sich ein- und auszuloggen.
@@ -65,41 +64,14 @@ public class SessionResource {
 	@Inject
 	TokenExchangeService tokenExchangeService;
 
-	@ConfigProperty(name = "mkv-app.client-id")
-	String mkvAppClientId;
-
-	@ConfigProperty(name = "mkv-app.client-secret")
-	String mkvAppClientSecret;
-
-	@ConfigProperty(name = "auth-app.url")
-	String authAppUrl;
-
-	@ConfigProperty(name = "mkv-app.redirect-url.login")
-	String loginRedirectUrl;
-
-	@ConfigProperty(name = "mkv-app.redirect-url.signup")
-	String signupRedirectUrl;
-
 	@Inject
-	IClientAccessTokenService clientAccessTokenService;
+	AuthLoginSignupUrlService authUrlService;
 
 	@GET
 	@Path("/authurls/login")
 	public Response getLoginUrl() {
 
-		String accessToken = clientAccessTokenService.orderAccessToken(mkvAppClientId, mkvAppClientSecret);
-
-		if (StringUtils.isBlank(accessToken)) {
-
-			return Response.serverError().entity("Fehler beim Authentisieren des Clients").build();
-		}
-
-		String redirectUrl = authAppUrl + "#/login?accessToken=" + accessToken + "&state=login&nonce=null&redirectUrl="
-			+ loginRedirectUrl;
-
-		LOG.debug(redirectUrl);
-
-		return Response.ok(ResponsePayload.messageOnly(MessagePayload.info(redirectUrl))).build();
+		return authUrlService.getLoginUrl();
 
 	}
 
@@ -108,28 +80,7 @@ public class SessionResource {
 	public Response getSignupLehrerUrl(@PathParam(value = "schulkuerzel") final String schulkuerzel, @PathParam(
 		value = "newsletterAbonnieren") final String newsletterAbonnieren) {
 
-		String accessToken = clientAccessTokenService.orderAccessToken(mkvAppClientId, mkvAppClientSecret);
-
-		if (StringUtils.isBlank(accessToken)) {
-
-			return Response.serverError().entity("Fehler beim Authentisieren des Clients").build();
-		}
-
-		String nonce = Rolle.LEHRER + "-" + schulkuerzel;
-
-		boolean abonnieren = Boolean.valueOf(newsletterAbonnieren);
-
-		if (abonnieren) {
-
-			nonce += "-" + abonnieren;
-		}
-
-		String redirectUrl = authAppUrl + "#/signup?accessToken=" + accessToken + "&state=signup&nonce=" + nonce + "&redirectUrl="
-			+ signupRedirectUrl;
-
-		LOG.debug(redirectUrl);
-
-		return Response.ok(ResponsePayload.messageOnly(MessagePayload.info(redirectUrl))).build();
+		return authUrlService.getSignupLehrerUrl(schulkuerzel, newsletterAbonnieren);
 	}
 
 	@GET
@@ -137,28 +88,7 @@ public class SessionResource {
 	public Response getSignupPrivatmenschUrl(@PathParam(
 		value = "newsletterAbonnieren") final String newsletterAbonnieren) {
 
-		String accessToken = clientAccessTokenService.orderAccessToken(mkvAppClientId, mkvAppClientSecret);
-
-		if (StringUtils.isBlank(accessToken)) {
-
-			return Response.serverError().entity("Fehler beim Authentisieren des Clients").build();
-		}
-
-		String nonce = Rolle.PRIVAT.name();
-
-		boolean abonnieren = Boolean.valueOf(newsletterAbonnieren);
-
-		if (abonnieren) {
-
-			nonce += "-" + abonnieren;
-		}
-
-		String redirectUrl = authAppUrl + "#/signup?accessToken=" + accessToken + "&state=signup&nonce=" + nonce + "&redirectUrl="
-			+ signupRedirectUrl;
-
-		LOG.debug(redirectUrl);
-
-		return Response.ok(ResponsePayload.messageOnly(MessagePayload.info(redirectUrl))).build();
+		return authUrlService.getSignupPrivatUrl(newsletterAbonnieren);
 	}
 
 	@POST

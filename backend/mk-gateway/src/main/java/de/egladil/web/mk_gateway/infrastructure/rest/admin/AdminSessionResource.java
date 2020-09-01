@@ -29,13 +29,13 @@ import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.MkGatewayApp;
 import de.egladil.web.mk_gateway.domain.admin.AdminTokenExchangeService;
+import de.egladil.web.mk_gateway.domain.auth.urls.AuthLoginUrlService;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.session.MkSessionService;
 import de.egladil.web.mk_gateway.domain.session.Session;
 import de.egladil.web.mk_gateway.domain.session.SessionUtils;
 import de.egladil.web.mk_gateway.domain.signup.AuthResult;
-import de.egladil.web.mk_gateway.infrastructure.clientauth.IClientAccessTokenService;
 
 /**
  * AdminSessionResource ist der Endpoint für mk-admin-app, um sich einzuloggen.
@@ -63,38 +63,14 @@ public class AdminSessionResource {
 	@Inject
 	AdminTokenExchangeService tokenExchangeService;
 
-	@ConfigProperty(name = "mk-admin-app.client-id")
-	String mkAdminAppClientId;
-
-	@ConfigProperty(name = "mk-admin-app.client-secret")
-	String mkAdminAppClientSecret;
-
-	@ConfigProperty(name = "auth-app.url")
-	String authAppUrl;
-
-	@ConfigProperty(name = "mk-admin-app.redirect-url.login")
-	String adminLoginRedirectUrl;
-
 	@Inject
-	IClientAccessTokenService clientAccessTokenService;
+	AuthLoginUrlService authLoginUrlService;
 
 	@GET
 	@Path("/authurls/login")
 	public Response getAdminLoginUrl() {
 
-		String accessToken = clientAccessTokenService.orderAccessToken(mkAdminAppClientId, mkAdminAppClientSecret);
-
-		if (StringUtils.isBlank(accessToken)) {
-
-			return Response.serverError().entity("Fehler beim Authentisieren des Clients").build();
-		}
-
-		String redirectUrl = authAppUrl + "#/login?accessToken=" + accessToken + "&state=login&nonce=null&redirectUrl="
-			+ adminLoginRedirectUrl;
-
-		LOG.debug(redirectUrl);
-
-		return Response.ok(ResponsePayload.messageOnly(MessagePayload.info(redirectUrl))).build();
+		return authLoginUrlService.getLoginUrl();
 
 	}
 
