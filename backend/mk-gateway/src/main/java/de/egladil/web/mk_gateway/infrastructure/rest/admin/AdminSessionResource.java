@@ -100,7 +100,7 @@ public class AdminSessionResource {
 
 	@POST
 	@Path("/login")
-	public Response loginAsAdmin(final AuthResult authResult) {
+	public Response login(final AuthResult authResult) {
 
 		final String oneTimeToken = authResult.getIdToken();
 
