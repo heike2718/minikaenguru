@@ -7,19 +7,15 @@ package de.egladil.web.mk_gateway.infrastructure.messaging;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
 
-import org.eclipse.microprofile.rest.client.inject.RestClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import de.egladil.web.commons_validation.payload.MessagePayload;
-import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.auth.signup.LehrerCreated;
 import de.egladil.web.mk_gateway.domain.auth.signup.PrivatmenschCreated;
 import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
 import de.egladil.web.mk_gateway.domain.semantik.InfrastructureService;
+import de.egladil.web.mk_gateway.domain.veranstalter.CreateOrUpdateLehrerCommand;
+import de.egladil.web.mk_gateway.domain.veranstalter.CreateOrUpdatePrivatpersonCommand;
+import de.egladil.web.mk_gateway.domain.veranstalter.LehrerService;
+import de.egladil.web.mk_gateway.domain.veranstalter.PrivatpersonService;
 
 /**
  * PropagateUserService
@@ -28,11 +24,11 @@ import de.egladil.web.mk_gateway.domain.semantik.InfrastructureService;
 @ApplicationScoped
 public class PropagateUserService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(PropagateUserService.class);
+	@Inject
+	LehrerService lehrerService;
 
 	@Inject
-	@RestClient
-	MkWettbewerbRestClient mkWettbewerbRestClient;
+	PrivatpersonService privatpersonService;
 
 	public void handleDomainEvent(@Observes final MkGatewayDomainEvent event) {
 
@@ -59,27 +55,12 @@ public class PropagateUserService {
 	 */
 	private void propagate(final PrivatmenschCreated privatmenschCreated) {
 
-		Response response = null;
+		CreateOrUpdatePrivatpersonCommand command = CreateOrUpdatePrivatpersonCommand.create(privatmenschCreated.fullName(),
+			privatmenschCreated.fullName());
 
-		try {
-
-			response = mkWettbewerbRestClient.createPrivatmensch(privatmenschCreated);
-
-		} catch (WebApplicationException e) {
-
-			if (response != null) {
-
-				ResponsePayload responsePayload = response.readEntity(ResponsePayload.class);
-				MessagePayload messagePayload = responsePayload.getMessage();
-
-				LOG.error("Senden des CreateOrUpdatePrivatpersonCommands war nicht erfolgreich: " + messagePayload.getMessage());
-			}
-		} catch (Exception e) {
-
-			String msg = "Unerwarteter Fehler beim Senden des CreateOrUpdatePrivatpersonCommands: " + e.getMessage();
-			LOG.error(msg, e);
-
-		}
+		// TODO: ist nicht klar, ob es nicht auch ein update ist
+		// Außerdem könnte der Handler direkt der Service sein!!!
+		this.privatpersonService.addPrivatperson(command);
 	}
 
 	/**
@@ -87,27 +68,13 @@ public class PropagateUserService {
 	 */
 	private void propagate(final LehrerCreated lehrerCreated) {
 
-		Response response = null;
+		CreateOrUpdateLehrerCommand command = CreateOrUpdateLehrerCommand.newInstance().withFullName(lehrerCreated.fullName())
+			.withNewsletterEmpfaenger(lehrerCreated.isNewsletterEmpfaenger()).withAlteSchulkuerzel(lehrerCreated.schulkuerzel())
+			.withUuid(lehrerCreated.uuid());
 
-		try {
-
-			response = mkWettbewerbRestClient.createLehrer(lehrerCreated);
-
-		} catch (WebApplicationException e) {
-
-			if (response != null) {
-
-				ResponsePayload responsePayload = response.readEntity(ResponsePayload.class);
-				MessagePayload messagePayload = responsePayload.getMessage();
-
-				LOG.error("Senden des CreateOrUpdatePrivatpersonCommands war nicht erfolgreich: " + messagePayload.getMessage());
-			}
-		} catch (Exception e) {
-
-			String msg = "Unerwarteter Fehler beim Senden des CreateOrUpdatePrivatpersonCommands: " + e.getMessage();
-			LOG.error(msg, e);
-
-		}
+		// TODO: ist nicht klar, ob es nicht auch ein update ist
+		// Außerdem könnte der Handler direkt der Service sein!!!
+		this.lehrerService.addLehrer(command);
 
 	}
 

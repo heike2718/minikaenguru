@@ -5,6 +5,7 @@
 package de.egladil.web.mk_gateway.infrastructure.rest.veranstalter;
 
 import java.security.Principal;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -29,19 +30,27 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_gateway.domain.apimodel.CreateOrUpdateLehrerCommand;
+import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.apimodel.PrivatteilnahmeAPIModel;
+import de.egladil.web.mk_gateway.domain.apimodel.PrivatveranstalterAPIModel;
 import de.egladil.web.mk_gateway.domain.apimodel.SchulanmeldungRequestPayload;
 import de.egladil.web.mk_gateway.domain.apimodel.SchuleAPIModel;
+import de.egladil.web.mk_gateway.domain.apimodel.SchulteilnahmeAPIModel;
+import de.egladil.web.mk_gateway.domain.apimodel.UserAPIModel;
 import de.egladil.web.mk_gateway.domain.auth.AuthResult;
 import de.egladil.web.mk_gateway.domain.auth.signup.AuthResultToResourceOwnerMapper;
 import de.egladil.web.mk_gateway.domain.auth.signup.SignUpResourceOwner;
 import de.egladil.web.mk_gateway.domain.auth.signup.SignUpService;
-import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
-import de.egladil.web.mk_gateway.domain.wettbewerb.MkWettbewerbResourceAdapter;
-import de.egladil.web.mk_gateway.domain.wettbewerb.SchulenAnmeldeinfoService;
+import de.egladil.web.mk_gateway.domain.teilnahmen.AktuelleTeilnahmeService;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Privatteilnahme;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Schulteilnahme;
+import de.egladil.web.mk_gateway.domain.veranstalter.LehrerService;
+import de.egladil.web.mk_gateway.domain.veranstalter.PrivatpersonService;
+import de.egladil.web.mk_gateway.domain.veranstalter.SchulenAnmeldeinfoService;
+import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterAuthorizationService;
+import de.egladil.web.mk_gateway.domain.veranstalter.ZugangUnterlagenService;
 
 /**
  * VeranstalterResource ist die Resource zu den Minikänguru-Veranstaltern.
@@ -56,14 +65,23 @@ public class VeranstalterResource {
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
+	@Context
+	SecurityContext securityContext;
+
 	@Inject
-	MkWettbewerbResourceAdapter mkWettbewerbResourceAdapter;
+	AktuelleTeilnahmeService aktuelleTeilnahmeService;
+
+	@Inject
+	ZugangUnterlagenService zugangUnterlagenService;
 
 	@Inject
 	SchulenAnmeldeinfoService schulenAnmeldeinfoService;
 
-	@Context
-	SecurityContext securityContext;
+	@Inject
+	PrivatpersonService privatpersonService;
+
+	@Inject
+	LehrerService lehrerService;
 
 	@Inject
 	SignUpService signUpService;
@@ -72,9 +90,20 @@ public class VeranstalterResource {
 	AuthResultToResourceOwnerMapper authResultMapper;
 
 	@Inject
+	VeranstalterAuthorizationService veranstalterAuthService;
+
+	@Inject
 	Event<SecurityIncidentRegistered> securityIncidentEvent;
 
 	private SecurityIncidentRegistered securityIncidentRegistered;
+
+	static VeranstalterResource createForPermissionTest(final VeranstalterAuthorizationService veranstalterAuthService, final SecurityContext securityContext) {
+
+		VeranstalterResource result = new VeranstalterResource();
+		result.veranstalterAuthService = veranstalterAuthService;
+		result.securityContext = securityContext;
+		return result;
+	}
 
 	@POST
 	@Path("")
@@ -88,24 +117,16 @@ public class VeranstalterResource {
 			.build();
 	}
 
-	@Path("/lehrer")
 	@PUT
-	public Response updateLehrer(final CreateOrUpdateLehrerCommand updateLehrerCommand) {
+	@Path("")
+	public Response updateUser(final UserAPIModel user) {
 
-		Principal principal = securityContext.getUserPrincipal();
+		// die wird vom authprovider aufgerufen, wenn ein Benutzer sein Profil ändert (Name, Vorname) oder konto löscht, dann update
+		// mit anonymisiertem Namen
+		// dann müssen die Schulkollegien aktualisiert werden!
+		// Vor allem muss ein Event erzeugt und gespeichert und gefeuert werden.
+		return Response.status(987).entity(ResponsePayload.messageOnly(MessagePayload.error("API ist noch nicht fertig"))).build();
 
-		if (!updateLehrerCommand.uuid().equals(principal.getName())) {
-
-			String msg = "Unzulaessiger Versuch durch " + principal.getName() + ",  Veranstalter " + updateLehrerCommand.uuid()
-				+ " zu ändern.";
-
-			LOG.warn(msg);
-
-			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
-			throw new AccessDeniedException();
-		}
-		// FIXME: das ist eine API, für die man autorisiert sein muss!
-		return null;
 	}
 
 	@GET
@@ -135,6 +156,11 @@ public class VeranstalterResource {
 
 		Principal principal = securityContext.getUserPrincipal();
 
+		final Identifier lehrerID = new Identifier(principal.getName());
+		final Identifier schuleID = new Identifier(schulkuerzel);
+
+		veranstalterAuthService.checkPermissionForTeilnahmenummer(lehrerID, schuleID);
+
 		SchuleAPIModel schule = this.schulenAnmeldeinfoService.getSchuleWithWettbewerbsdetails(schulkuerzel, principal.getName());
 
 		Response response = Response.ok(new ResponsePayload(MessagePayload.ok(), schule)).build();
@@ -145,9 +171,15 @@ public class VeranstalterResource {
 	@Path("/teilnahmen/privat")
 	public Response meldePrivatmenschZumAktuellenWettbewerbAn() {
 
-		Principal principal = securityContext.getUserPrincipal();
+		final String principalName = securityContext.getUserPrincipal().getName();
 
-		return mkWettbewerbResourceAdapter.meldePrivatmenschZumAktuellenWettbewerbAn(principal.getName());
+		Privatteilnahme teilnahme = this.aktuelleTeilnahmeService.privatpersonAnmelden(principalName);
+
+		return Response
+			.ok(new ResponsePayload(
+				MessagePayload.info(applicationMessages.getString("teilnahmenResource.anmelden.privat.success")),
+				PrivatteilnahmeAPIModel.createFromPrivatteilnahme(teilnahme)))
+			.build();
 	}
 
 	@POST
@@ -155,28 +187,30 @@ public class VeranstalterResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response meldeSchuleZumAktuellenWettbewerbAn(final SchulanmeldungRequestPayload payload) {
 
-		Principal principal = securityContext.getUserPrincipal();
+		final String principalName = securityContext.getUserPrincipal().getName();
 
-		return mkWettbewerbResourceAdapter.meldeSchuleZumAktuellenWettbewerbAn(payload, principal.getName());
+		Schulteilnahme schulteilnahme = aktuelleTeilnahmeService.schuleAnmelden(payload, principalName);
+
+		String message = MessageFormat.format(applicationMessages.getString("teilnahmenResource.anmelden.schule.success"),
+			new Object[] { schulteilnahme.nameSchule() });
+
+		SchulteilnahmeAPIModel data = SchulteilnahmeAPIModel.create(schulteilnahme).withKlassenGeladen(true);
+
+		return Response
+			.ok(new ResponsePayload(
+				MessagePayload.info(message),
+				data))
+			.build();
 	}
 
 	@GET
 	@Path("/zugangsstatus")
 	public Response getStatusZugangUnterlagen() {
 
-		Principal principal = securityContext.getUserPrincipal();
+		final String principalName = securityContext.getUserPrincipal().getName();
+		boolean hat = zugangUnterlagenService.hatZugang(principalName);
 
-		return mkWettbewerbResourceAdapter.getStatusZugangUnterlagen(principal.getName());
-
-	}
-
-	@GET
-	@Path("/lehrer")
-	public Response getLehrer() {
-
-		Principal principal = securityContext.getUserPrincipal();
-
-		return mkWettbewerbResourceAdapter.getStatusZugangUnterlagen(principal.getName());
+		return Response.ok(new ResponsePayload(MessagePayload.ok(), Boolean.valueOf(hat))).build();
 
 	}
 
@@ -186,7 +220,10 @@ public class VeranstalterResource {
 
 		Principal principal = securityContext.getUserPrincipal();
 
-		return mkWettbewerbResourceAdapter.getPrivatveranstalter(principal.getName());
+		PrivatveranstalterAPIModel privatveranstalter = privatpersonService.findPrivatperson(principal.getName());
+		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), privatveranstalter);
+
+		return Response.ok(responsePayload).build();
 
 	}
 

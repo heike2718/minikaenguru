@@ -4,42 +4,47 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.apimodel;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import de.egladil.web.mk_gateway.domain.semantik.ValueObject;
+import de.egladil.web.commons_net.time.CommonTimeUtils;
+import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
 
 /**
- * WettbewerbAPIModel zum Anlegen und Ändern eines Wettbewerbs
+ * WettbewerbAPIModel
  */
-@ValueObject
 public class WettbewerbAPIModel {
 
 	@JsonProperty
 	private int jahr;
 
 	@JsonProperty
-	@NotBlank
-	private String status;
-
-	@JsonProperty
-	@Pattern(regexp = "\\d{2}.\\d{2}.\\d{4}")
 	private String wettbewerbsbeginn;
 
 	@JsonProperty
-	@NotBlank
-	@Pattern(regexp = "\\d{2}.\\d{2}.\\d{4}")
 	private String wettbewerbsende;
 
 	@JsonProperty
-	@NotBlank
-	@Pattern(regexp = "\\d{2}.\\d{2}.\\d{4}")
 	private String datumFreischaltungLehrer;
 
 	@JsonProperty
-	@NotBlank
-	@Pattern(regexp = "\\d{2}.\\d{2}.\\d{4}")
 	private String datumFreischaltungPrivat;
+
+	@JsonProperty
+	private WettbewerbStatus status;
+
+	public static WettbewerbAPIModel fromWettbewerb(final Wettbewerb wettbewerb) {
+
+		WettbewerbAPIModel result = new WettbewerbAPIModel();
+
+		result.jahr = wettbewerb.id().jahr().intValue();
+		result.wettbewerbsbeginn = CommonTimeUtils.format(wettbewerb.wettbewerbsbeginn());
+		result.wettbewerbsende = CommonTimeUtils.format(wettbewerb.wettbewerbsende());
+		result.datumFreischaltungLehrer = CommonTimeUtils.format(wettbewerb.datumFreischaltungLehrer());
+		result.datumFreischaltungPrivat = CommonTimeUtils.format(wettbewerb.datumFreischaltungPrivat());
+		result.status = wettbewerb.status();
+		return result;
+
+	}
+
 }

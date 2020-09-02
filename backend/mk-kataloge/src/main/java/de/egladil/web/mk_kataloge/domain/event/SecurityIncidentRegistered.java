@@ -1,5 +1,5 @@
 // =====================================================
-// Project: mk-wettbewerb-admin
+// Project: mk-gateway-admin
 // (c) Heike Winkelvoß
 // =====================================================
 package de.egladil.web.mk_kataloge.domain.event;
