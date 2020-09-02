@@ -13,7 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import de.egladil.web.mk_gateway.domain.wettbewerb.MkWettbewerbResourceAdapter;
+import de.egladil.web.mk_gateway.domain.veranstalter.MkWettbewerbResourceAdapter;
 
 /**
  * PublicWettbewerbResource
