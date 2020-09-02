@@ -40,8 +40,8 @@ import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
-import de.egladil.web.mk_gateway.domain.wettbewerb.MkWettbewerbResourceAdapter;
-import de.egladil.web.mk_gateway.domain.wettbewerb.SchulenAnmeldeinfoService;
+import de.egladil.web.mk_gateway.domain.veranstalter.MkWettbewerbResourceAdapter;
+import de.egladil.web.mk_gateway.domain.veranstalter.SchulenAnmeldeinfoService;
 
 /**
  * VeranstalterResource ist die Resource zu den Minikänguru-Veranstaltern.

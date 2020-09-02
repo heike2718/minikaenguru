@@ -4,6 +4,10 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.admin;
 
+import java.net.URI;
+import java.util.List;
+import java.util.Optional;
+
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -13,15 +17,19 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.Response.Status;
 
-import de.egladil.web.mk_gateway.domain.admin.MkWettbewerbAdminResourceAdapter;
-import de.egladil.web.mk_gateway.domain.apimodel.WettbewerbAPIModel;
-import de.egladil.web.mk_gateway.domain.apimodel.WettbewerbID;
-import de.egladil.web.mk_gateway.domain.error.AuthException;
+import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
+import de.egladil.web.mk_gateway.domain.wettbewerb.api.EditWettbewerbModel;
+import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbDetailsAPIModel;
+import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbListAPIModel;
 
 /**
  * WettbewerbAdminResource .../mk-gateway/admin/...
@@ -30,80 +38,79 @@ import de.egladil.web.mk_gateway.domain.error.AuthException;
 @Path("/admin/wettbewerbe")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class WettbewerbAdminResource {
-
-	@Context
-	SecurityContext securityContext;
+public class WettbewerbAdminResource extends AbstractAdminResource {
 
 	@Inject
-	MkWettbewerbAdminResourceAdapter resourceAdapter;
+	WettbewerbService wettbewerbService;
 
 	@GET
 	public Response loadWettbewerbe() {
 
-		if (securityContext.getUserPrincipal() == null) {
+		List<WettbewerbListAPIModel> wettbewerbe = this.wettbewerbService.alleWettbewerbeHolen();
 
-			throw new AuthException("nicht eingeloggt oder keine gültige session mehr");
-		}
-
-		String principalName = securityContext.getUserPrincipal().getName();
-
-		return resourceAdapter.loadWettbewerbe(principalName);
+		ResponsePayload payload = new ResponsePayload(MessagePayload.ok(), wettbewerbe);
+		return Response.ok(payload).build();
 	}
 
 	@GET
 	@Path("/wettbewerb/{jahr}")
 	public Response wettbewerbMitJahr(@PathParam(value = "jahr") final Integer jahr) {
 
-		if (securityContext.getUserPrincipal() == null) {
+		Optional<WettbewerbDetailsAPIModel> optDaten = this.wettbewerbService.wettbewerbMitJahr(jahr);
 
-			throw new AuthException("nicht eingeloggt oder keine gültige session mehr");
+		if (optDaten.isEmpty()) {
+
+			return Response.status(Status.NOT_FOUND)
+				.entity(ResponsePayload.messageOnly(MessagePayload.error("kein Wettbwerb mit Jahr " + jahr + " bekannt"))).build();
 		}
 
-		String principalName = securityContext.getUserPrincipal().getName();
-
-		return resourceAdapter.wettbewerbMitJahr(jahr, principalName);
+		return Response.ok(new ResponsePayload(MessagePayload.ok(), optDaten.get())).build();
 	}
 
 	@POST
 	@Path("/wettbewerb")
-	public Response createWettbewerb(final WettbewerbAPIModel data) {
+	public Response wettbewerbAnlegen(final EditWettbewerbModel data) {
 
-		if (securityContext.getUserPrincipal() == null) {
+		Optional<WettbewerbDetailsAPIModel> optVorhanden = this.wettbewerbService.wettbewerbMitJahr(data.getJahr());
 
-			throw new AuthException("nicht eingeloggt oder keine gültige session mehr");
+		if (optVorhanden.isPresent()) {
+
+			return Response.status(409).entity(ResponsePayload.messageOnly(MessagePayload.warn("Diesen Wettbewerb gibt es schon")))
+				.build();
 		}
 
-		String principalName = securityContext.getUserPrincipal().getName();
+		Wettbewerb wettbewerb = this.wettbewerbService.wettbewerbAnlegen(data);
 
-		return resourceAdapter.createWettbewerb(data, principalName);
+		ResponsePayload payload = ResponsePayload
+			.messageOnly(MessagePayload.info("Wettbewerb " + wettbewerb.toString() + " erfolgreich angelegt"));
+
+		String locationString = createdUriPrefix + "/wettbewerbe/wettbewerb/" + wettbewerb.id().jahr();
+		URI location = createdUri(locationString);
+		return Response.created(location).entity(payload).build();
 	}
 
 	@PUT
 	@Path("/wettbewerb")
-	public Response updateWettbewerb(final WettbewerbAPIModel data) {
+	public Response wettbewerbAendern(final EditWettbewerbModel data) {
 
-		if (securityContext.getUserPrincipal() == null) {
+		this.wettbewerbService.wettbewerbAendern(data);
 
-			throw new AuthException("nicht eingeloggt oder keine gültige session mehr");
-		}
+		ResponsePayload payload = ResponsePayload
+			.messageOnly(MessagePayload.info("Wettbewerb " + data.getJahr() + " erfolgreich gespeichert"));
 
-		String principalName = securityContext.getUserPrincipal().getName();
-
-		return resourceAdapter.updateWettbewerb(data, principalName);
+		return Response.ok(payload).build();
 	}
 
 	@PUT
 	@Path("/wettbewerb/status")
-	public Response moveWettbewerbOn(final WettbewerbID data) {
+	public Response starteNaechstePhase(final WettbewerbID wettbewerbId) {
 
-		if (securityContext.getUserPrincipal() == null) {
+		WettbewerbStatus neuerStatus = wettbewerbService.starteNaechstePhase(wettbewerbId.jahr());
 
-			throw new AuthException("nicht eingeloggt oder keine gültige session mehr");
-		}
+		ResponsePayload payload = new ResponsePayload(
+			MessagePayload.info("Wettbewerb " + wettbewerbId.jahr() + " erfolgreich in nächste Phase befördert"),
+			neuerStatus.toString());
 
-		String principalName = securityContext.getUserPrincipal().getName();
-
-		return resourceAdapter.moveWettbwerbOn(data, principalName);
+		return Response.ok(payload).build();
 	}
 }

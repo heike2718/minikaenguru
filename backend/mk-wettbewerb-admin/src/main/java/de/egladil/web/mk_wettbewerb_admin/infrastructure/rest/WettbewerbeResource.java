@@ -25,14 +25,14 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.apimodel.EditWettbewerbModel;
+import de.egladil.web.mk_gateway.domain.apimodel.WettbewerbDetailsAPIModel;
+import de.egladil.web.mk_gateway.domain.apimodel.WettbewerbListAPIModel;
+import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
 import de.egladil.web.mk_wettbewerb_admin.MkWettbewerbAdminApp;
-import de.egladil.web.mk_wettbewerb_admin.domain.apimodel.EditWettbewerbModel;
-import de.egladil.web.mk_wettbewerb_admin.domain.apimodel.WettbewerbDetailsAPIModel;
-import de.egladil.web.mk_wettbewerb_admin.domain.apimodel.WettbewerbListAPIModel;
-import de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb.Wettbewerb;
-import de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb.WettbewerbID;
-import de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb.WettbewerbService;
-import de.egladil.web.mk_wettbewerb_admin.domain.wettbewerb.WettbewerbStatus;
 
 /**
  * WettbewerbeResource
@@ -45,7 +45,7 @@ public class WettbewerbeResource extends AbstractAdminResource {
 	@Inject
 	WettbewerbService wettbewerbService;
 
-	@ConfigProperty(name = "created.uri.prefix", defaultValue = "https://mathe-jung-alt.de/mk-gateway/wb-admin")
+	@ConfigProperty(name = "created.uri.prefix", defaultValue = "https://mathe-jung-alt.de/mk-gateway/admin")
 	String createdUriPrefix;
 
 	@GET
