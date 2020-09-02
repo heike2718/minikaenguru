@@ -17,14 +17,9 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.SecurityContext;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
@@ -45,18 +40,11 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbListAPIModel;
 @Consumes(MediaType.APPLICATION_JSON)
 public class WettbewerbAdminResource extends AbstractAdminResource {
 
-	private static final Logger LOG = LoggerFactory.getLogger(WettbewerbAdminResource.class);
-
-	@Context
-	SecurityContext securityContext;
-
 	@Inject
 	WettbewerbService wettbewerbService;
 
 	@GET
 	public Response loadWettbewerbe() {
-
-		this.checkAccess("loadWettbewerbe");
 
 		List<WettbewerbListAPIModel> wettbewerbe = this.wettbewerbService.alleWettbewerbeHolen();
 
@@ -67,8 +55,6 @@ public class WettbewerbAdminResource extends AbstractAdminResource {
 	@GET
 	@Path("/wettbewerb/{jahr}")
 	public Response wettbewerbMitJahr(@PathParam(value = "jahr") final Integer jahr) {
-
-		this.checkAccess("wettbewerbMitJahr");
 
 		Optional<WettbewerbDetailsAPIModel> optDaten = this.wettbewerbService.wettbewerbMitJahr(jahr);
 
@@ -84,8 +70,6 @@ public class WettbewerbAdminResource extends AbstractAdminResource {
 	@POST
 	@Path("/wettbewerb")
 	public Response wettbewerbAnlegen(final EditWettbewerbModel data) {
-
-		this.checkAccess("wettbewerbAnlegen");
 
 		Optional<WettbewerbDetailsAPIModel> optVorhanden = this.wettbewerbService.wettbewerbMitJahr(data.getJahr());
 
@@ -109,8 +93,6 @@ public class WettbewerbAdminResource extends AbstractAdminResource {
 	@Path("/wettbewerb")
 	public Response wettbewerbAendern(final EditWettbewerbModel data) {
 
-		this.checkAccess("wettbewerbAendern");
-
 		this.wettbewerbService.wettbewerbAendern(data);
 
 		ResponsePayload payload = ResponsePayload
@@ -122,8 +104,6 @@ public class WettbewerbAdminResource extends AbstractAdminResource {
 	@PUT
 	@Path("/wettbewerb/status")
 	public Response starteNaechstePhase(final WettbewerbID wettbewerbId) {
-
-		this.checkAccess("starteNaechstePhase");
 
 		WettbewerbStatus neuerStatus = wettbewerbService.starteNaechstePhase(wettbewerbId.jahr());
 
