@@ -22,23 +22,32 @@ public class SchulanmeldungRequestPayload {
 	@DeutscherName
 	private String schulname;
 
-	public String getSchulkuerzel() {
+	public static SchulanmeldungRequestPayload create(final String schulkuerzel, final String schulname) {
+
+		SchulanmeldungRequestPayload result = new SchulanmeldungRequestPayload();
+		result.schulkuerzel = schulkuerzel;
+		result.schulname = schulname;
+		return result;
+
+	}
+
+	SchulanmeldungRequestPayload() {
+
+	}
+
+	public String schulkuerzel() {
 
 		return schulkuerzel;
 	}
 
-	public void setSchulkuerzel(final String schulkuerzel) {
-
-		this.schulkuerzel = schulkuerzel;
-	}
-
-	public String getSchulname() {
+	public String schulname() {
 
 		return schulname;
 	}
 
-	public void setSchulname(final String schulname) {
+	@Override
+	public String toString() {
 
-		this.schulname = schulname;
+		return "SchulanmeldungRequestPayload [schulkuerzel=" + schulkuerzel + ", schulname=" + schulname + "]";
 	}
 }

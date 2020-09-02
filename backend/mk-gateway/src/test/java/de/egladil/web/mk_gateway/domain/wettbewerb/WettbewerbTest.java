@@ -1,5 +1,5 @@
 // =====================================================
-// Project: mk-wettbewerb-admin
+// Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
 package de.egladil.web.mk_gateway.domain.wettbewerb;
@@ -18,11 +18,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-
-import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbeDescendingComparator;
 
 /**
  * WettbewerbTest

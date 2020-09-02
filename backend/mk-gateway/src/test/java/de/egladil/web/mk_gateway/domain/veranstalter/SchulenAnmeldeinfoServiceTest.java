@@ -23,14 +23,17 @@ import org.mockito.Mockito;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.apimodel.SchuleAPIModel;
-import de.egladil.web.mk_gateway.domain.apimodel.SchuleWettbewerbeDetails;
-import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
+import de.egladil.web.mk_gateway.domain.apimodel.SchuleDetails;
+import de.egladil.web.mk_gateway.domain.apimodel.SchulteilnahmeAPIModel;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
-import de.egladil.web.mk_gateway.domain.veranstalter.MkWettbewerbResourceAdapter;
-import de.egladil.web.mk_gateway.domain.veranstalter.SchulenAnmeldeinfoService;
+import de.egladil.web.mk_gateway.domain.teilnahmen.SchuleDetailsService;
+import de.egladil.web.mk_gateway.domain.teilnahmen.SchulenOverviewService;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Schulteilnahme;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 
 /**
  * SchulenAnmeldeinfoServiceTest
@@ -41,7 +44,9 @@ public class SchulenAnmeldeinfoServiceTest {
 
 	private MkKatalogeResourceAdapter katalogeAdapter;
 
-	private MkWettbewerbResourceAdapter wettbewerbAdapter;
+	private SchulenOverviewService schulenOverviewService;
+
+	private SchuleDetailsService schuleDetailsService;
 
 	private SchulenAnmeldeinfoService service;
 
@@ -49,46 +54,20 @@ public class SchulenAnmeldeinfoServiceTest {
 	void setUp() {
 
 		katalogeAdapter = Mockito.mock(MkKatalogeResourceAdapter.class);
-		wettbewerbAdapter = Mockito.mock(MkWettbewerbResourceAdapter.class);
-		service = SchulenAnmeldeinfoService.createForTest(katalogeAdapter, wettbewerbAdapter);
-	}
-
-	@Test
-	void should_FindSchulenMitAnmeldeinfoThrowMkGatewayRuntimeException_when_WettbewerbEndpointNotPresent() {
-
-		// Arrange
-		Response response = Response.status(404).entity(ResponsePayload.messageOnly(MessagePayload.error("ResourceNotFound")))
-			.build();
-
-		Mockito.when(wettbewerbAdapter.findSchulen(LEHRER_UUID)).thenReturn(response);
-
-		// Act
-		try {
-
-			service.findSchulenMitAnmeldeinfo(LEHRER_UUID);
-			fail("keine MkGatewayRuntimeException");
-		} catch (MkGatewayRuntimeException e) {
-
-			assertEquals("Fehler beim Laden der Schulen des Lehrers", e.getMessage());
-		}
-
+		schulenOverviewService = Mockito.mock(SchulenOverviewService.class);
+		schuleDetailsService = Mockito.mock(SchuleDetailsService.class);
+		service = SchulenAnmeldeinfoService.createForTest(katalogeAdapter, schulenOverviewService, schuleDetailsService);
 	}
 
 	@Test
 	void should_FindSchulenMitAnmeldeinfoThrowMkGatewayRuntimeException_when_KatalogEndpointNotPresent() {
 
 		// Arrange
-		Map<String, Object> schuleWettbewerbMap = new HashMap<>();
+		List<SchuleAPIModel> schulenWettbewerb = new ArrayList<>();
+		schulenWettbewerb.add(SchuleAPIModel.withKuerzel("12345").withAngemeldet(false));
 
-		schuleWettbewerbMap.put("kuerzel", "12345");
-		schuleWettbewerbMap.put("aktuellAngemeldet", Boolean.FALSE);
-
-		List<Map<String, Object>> data = new ArrayList<>();
-		data.add(schuleWettbewerbMap);
-
-		Response responseWettbewerb = Response.ok(new ResponsePayload(MessagePayload.ok(), data)).build();
-
-		Mockito.when(wettbewerbAdapter.findSchulen(LEHRER_UUID)).thenReturn(responseWettbewerb);
+		Mockito.when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID)))
+			.thenReturn(schulenWettbewerb);
 
 		Response responseKataloge = Response.status(400)
 			.entity(ResponsePayload.messageOnly(MessagePayload.error("Bad Request")))
@@ -130,52 +109,9 @@ public class SchulenAnmeldeinfoServiceTest {
 	}
 
 	@Test
-	void should_getSchulenFromWettbewerbAPIThrowException_when_PayloadNotAList() {
-
-		Map<String, Object> schuleWettbewerbMap = new HashMap<>();
-
-		schuleWettbewerbMap.put("kuerzel", "12345");
-		schuleWettbewerbMap.put("aktuellAngemeldet", Boolean.FALSE);
-
-		Response response = Response.ok(new ResponsePayload(MessagePayload.ok(), schuleWettbewerbMap)).build();
-
-		try {
-
-			service.getSchulenFromWettbewerbAPI(response);
-			fail("keine MkGatewayRuntimeException");
-		} catch (MkGatewayRuntimeException e) {
-
-			assertEquals("Konnte ResponsePayload von mk-wettbewerbe nicht verarbeiten", e.getMessage());
-		}
-
-	}
-
-	@Test
 	void should_FindSchulenMitAnmeldeinfo_work() {
 
 		// Arrange
-		List<Map<String, Object>> dataWettbewerb = new ArrayList<>();
-
-		{
-
-			Map<String, Object> schuleWettbewerbMap = new HashMap<>();
-
-			schuleWettbewerbMap.put("kuerzel", "12345");
-			schuleWettbewerbMap.put("aktuellAngemeldet", Boolean.TRUE);
-
-			dataWettbewerb.add(schuleWettbewerbMap);
-		}
-
-		{
-
-			Map<String, Object> schuleWettbewerbMap = new HashMap<>();
-
-			schuleWettbewerbMap.put("kuerzel", "98765");
-			schuleWettbewerbMap.put("aktuellAngemeldet", Boolean.FALSE);
-
-			dataWettbewerb.add(schuleWettbewerbMap);
-		}
-
 		List<Map<String, Object>> dataKataloge = new ArrayList<>();
 
 		{
@@ -202,9 +138,12 @@ public class SchulenAnmeldeinfoServiceTest {
 			dataKataloge.add(schuleKatalogeMap);
 		}
 
-		Response responseWettbewerb = Response.ok(new ResponsePayload(MessagePayload.ok(), dataWettbewerb)).build();
+		List<SchuleAPIModel> schulenWettbewerb = new ArrayList<>();
+		schulenWettbewerb.add(SchuleAPIModel.withKuerzel("12345").withAngemeldet(true));
+		schulenWettbewerb.add(SchuleAPIModel.withKuerzel("98765").withAngemeldet(false));
 
-		Mockito.when(wettbewerbAdapter.findSchulen(LEHRER_UUID)).thenReturn(responseWettbewerb);
+		Mockito.when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID)))
+			.thenReturn(schulenWettbewerb);
 
 		Response responseKataloge = Response.ok(new ResponsePayload(MessagePayload.ok(), dataKataloge)).build();
 
@@ -481,95 +420,15 @@ public class SchulenAnmeldeinfoServiceTest {
 	}
 
 	@Test
-	void should_getSchuleAusWettbewerbAPIResponse_Work() {
-
-		// Arrange
-		Map<String, Object> schuleWettbewerbMap = new HashMap<>();
-
-		schuleWettbewerbMap.put("kuerzel", "12345");
-		schuleWettbewerbMap.put("aktuellAngemeldet", Boolean.TRUE);
-
-		Map<String, Object> detailsMap = new HashMap<>();
-		detailsMap.put("kuerzel", "12345");
-		detailsMap.put("nameUrkunde", "12345-Schule");
-		detailsMap.put("kollegen", "Herta Meier");
-		detailsMap.put("angemeldetDurch", "John Doe");
-		detailsMap.put("anzahlTeilnahmen", Integer.valueOf(1));
-
-		schuleWettbewerbMap.put("details", detailsMap);
-
-		Response response = Response.ok(new ResponsePayload(MessagePayload.ok(), schuleWettbewerbMap)).build();
-
-		// Act
-		SchuleAPIModel schule = service.getSchuleAusWettbewerbAPIResponse(response);
-
-		// Assert
-		assertEquals(true, schule.aktuellAngemeldet());
-		assertEquals("12345", schule.kuerzel());
-
-		SchuleWettbewerbeDetails details = schule.getDetails();
-		assertNotNull(details);
-		assertEquals("John Doe", details.angemeldetDurch());
-		assertEquals("Herta Meier", details.kollegen());
-		assertEquals("12345", details.kuerzel());
-		assertEquals("12345-Schule", details.nameUrkunde());
-
-	}
-
-	@Test
-	void should_getSchuleAusWettbewerbAPIResponseThrowException_when_PayloadNotAMap() {
-
-		// Arrange
-		Map<String, Object> schuleWettbewerbMap = new HashMap<>();
-
-		schuleWettbewerbMap.put("kuerzel", "12345");
-		schuleWettbewerbMap.put("aktuellAngemeldet", Boolean.TRUE);
-
-		Map<String, Object> detailsMap = new HashMap<>();
-		detailsMap.put("kuerzel", "12345");
-		detailsMap.put("nameUrkunde", "12345-Schule");
-		detailsMap.put("kollegen", "Herta Meier");
-		detailsMap.put("angemeldetDurch", "John Doe");
-		detailsMap.put("anzahlTeilnahmen", Integer.valueOf(1));
-
-		schuleWettbewerbMap.put("details", detailsMap);
-
-		List<Map<String, Object>> list = new ArrayList<>();
-		list.add(schuleWettbewerbMap);
-
-		Response response = Response.ok(new ResponsePayload(MessagePayload.ok(), list)).build();
-
-		// Act
-		try {
-
-			service.getSchuleAusWettbewerbAPIResponse(response);
-			fail("Keine MkGatewayRuntimeException");
-		} catch (MkGatewayRuntimeException e) {
-
-			assertEquals(
-				"Konnte ResponsePayload von mk-wettbewerbe nicht verarbeiten",
-				e.getMessage());
-		}
-
-	}
-
-	@Test
 	void should_getSchuleWithWettbewerbsdetails_work() {
 
 		// Arrange
-		Map<String, Object> schuleWettbewerbMap = new HashMap<>();
+		List<Person> kollegen = Arrays.asList(new Person[] { new Person("ajhdqh", "Herta Meier") });
+		Schulteilnahme schulteilnahme = new Schulteilnahme(new WettbewerbID(2020), new Identifier("12345"), "12345-Schule",
+			new Identifier(LEHRER_UUID));
 
-		schuleWettbewerbMap.put("kuerzel", "12345");
-		schuleWettbewerbMap.put("aktuellAngemeldet", Boolean.TRUE);
-
-		Map<String, Object> detailsMap = new HashMap<>();
-		detailsMap.put("kuerzel", "12345");
-		detailsMap.put("nameUrkunde", "12345-Schule");
-		detailsMap.put("kollegen", "Herta Meier");
-		detailsMap.put("angemeldetDurch", "John Doe");
-		detailsMap.put("anzahlTeilnahmen", Integer.valueOf(1));
-
-		schuleWettbewerbMap.put("details", detailsMap);
+		SchuleDetails schuleDetails = new SchuleDetails("12345").withAngemeldetDurch(new Person("ghagdqg", "John Doe"))
+			.withAnzahlVergangeneTeilnahmen(1).withKollegen(kollegen).withTeilnahme(SchulteilnahmeAPIModel.create(schulteilnahme));
 
 		Map<String, Object> schuleKatalogeMap = new HashMap<>();
 
@@ -578,11 +437,14 @@ public class SchulenAnmeldeinfoServiceTest {
 		schuleKatalogeMap.put("ort", "Darmstadt");
 		schuleKatalogeMap.put("land", "Hessen");
 
-		Response wettbewerbeResponse = Response.ok(new ResponsePayload(MessagePayload.ok(), schuleWettbewerbMap)).build();
 		Response katalogeResponse = Response
 			.ok(new ResponsePayload(MessagePayload.ok(), Arrays.asList(new Map[] { schuleKatalogeMap }))).build();
 
-		Mockito.when(wettbewerbAdapter.getSchuleDashboardModel("12345", LEHRER_UUID)).thenReturn(wettbewerbeResponse);
+		Mockito.when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID)))
+			.thenReturn(Arrays.asList(new SchuleAPIModel[] { SchuleAPIModel.withKuerzel("12345").withAngemeldet(true) }));
+		Mockito.when(schuleDetailsService.ermittleSchuldetails(new Identifier("12345"), new Identifier(LEHRER_UUID)))
+			.thenReturn(schuleDetails);
+
 		Mockito.when(katalogeAdapter.findSchulen("12345")).thenReturn(katalogeResponse);
 
 		// Act
@@ -595,11 +457,10 @@ public class SchulenAnmeldeinfoServiceTest {
 		assertEquals("Darmstadt", schule.ort());
 		assertEquals("Hessen", schule.land());
 
-		SchuleWettbewerbeDetails details = schule.getDetails();
+		SchuleDetails details = schule.getDetails();
 		assertEquals("John Doe", details.angemeldetDurch());
 		assertEquals("Herta Meier", details.kollegen());
 		assertEquals("12345", details.kuerzel());
-		assertEquals("12345-Schule", details.nameUrkunde());
 
 	}
 
@@ -610,7 +471,8 @@ public class SchulenAnmeldeinfoServiceTest {
 		Response katalogeResponse = Response
 			.status(400).entity(ResponsePayload.messageOnly(MessagePayload.error("bad request"))).build();
 
-		Mockito.when(wettbewerbAdapter.getSchuleDashboardModel("12345", LEHRER_UUID)).thenReturn(null);
+		Mockito.when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID)))
+			.thenReturn(new ArrayList<>());
 		Mockito.when(katalogeAdapter.findSchulen("12345")).thenReturn(katalogeResponse);
 
 		// Act
@@ -629,19 +491,17 @@ public class SchulenAnmeldeinfoServiceTest {
 	void should_getSchuleWithWettbewerbsdetailsReturnIncompleteObject_when_KatalogeintragFehlt() {
 
 		// Arrange
-		Map<String, Object> schuleWettbewerbMap = new HashMap<>();
+		List<Person> kollegen = Arrays.asList(new Person[] { new Person("ajhdqh", "Herta Meier") });
+		Schulteilnahme schulteilnahme = new Schulteilnahme(new WettbewerbID(2020), new Identifier("12345"), "12345-Schule",
+			new Identifier(LEHRER_UUID));
 
-		schuleWettbewerbMap.put("kuerzel", "12345");
-		schuleWettbewerbMap.put("aktuellAngemeldet", Boolean.TRUE);
+		SchuleDetails schuleDetails = new SchuleDetails("12345").withAngemeldetDurch(new Person("ghagdqg", "John Doe"))
+			.withAnzahlVergangeneTeilnahmen(1).withKollegen(kollegen).withTeilnahme(SchulteilnahmeAPIModel.create(schulteilnahme));
 
-		Map<String, Object> detailsMap = new HashMap<>();
-		detailsMap.put("kuerzel", "12345");
-		detailsMap.put("nameUrkunde", "12345-Schule");
-		detailsMap.put("kollegen", "Herta Meier");
-		detailsMap.put("angemeldetDurch", "John Doe");
-		detailsMap.put("anzahlTeilnahmen", Integer.valueOf(1));
-
-		schuleWettbewerbMap.put("details", detailsMap);
+		Mockito.when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID)))
+			.thenReturn(Arrays.asList(new SchuleAPIModel[] { SchuleAPIModel.withKuerzel("12345").withAngemeldet(true) }));
+		Mockito.when(schuleDetailsService.ermittleSchuldetails(new Identifier("12345"), new Identifier(LEHRER_UUID)))
+			.thenReturn(schuleDetails);
 
 		Map<String, Object> schuleKatalogeMap = new HashMap<>();
 
@@ -650,11 +510,9 @@ public class SchulenAnmeldeinfoServiceTest {
 		schuleKatalogeMap.put("ort", "Darmstadt");
 		schuleKatalogeMap.put("land", "Hessen");
 
-		Response wettbewerbeResponse = Response.ok(new ResponsePayload(MessagePayload.ok(), schuleWettbewerbMap)).build();
 		Response katalogeResponse = Response
 			.ok(new ResponsePayload(MessagePayload.ok(), new ArrayList<>())).build();
 
-		Mockito.when(wettbewerbAdapter.getSchuleDashboardModel("12345", LEHRER_UUID)).thenReturn(wettbewerbeResponse);
 		Mockito.when(katalogeAdapter.findSchulen("12345")).thenReturn(katalogeResponse);
 
 		// Act
@@ -667,73 +525,14 @@ public class SchulenAnmeldeinfoServiceTest {
 		assertEquals("unbekannter Ort", schule.ort());
 		assertEquals("unbekanntes Land / Bundesland", schule.land());
 
-		SchuleWettbewerbeDetails details = schule.getDetails();
+		SchuleDetails details = schule.getDetails();
 		assertEquals("John Doe", details.angemeldetDurch());
 		assertEquals("Herta Meier", details.kollegen());
 		assertEquals("12345", details.kuerzel());
-		assertEquals("12345-Schule", details.nameUrkunde());
 
-	}
+		SchulteilnahmeAPIModel teilnahme = details.aktuelleTeilnahme();
 
-	@Test
-	void should_getSchuleWithWettbewerbsdetailsThrowAccessDenied_when_SchuleWettbewerbsdetailsStatus403() {
-
-		// Arrange
-		Map<String, Object> schuleKatalogeMap = new HashMap<>();
-
-		schuleKatalogeMap.put("kuerzel", "12345");
-		schuleKatalogeMap.put("name", "Schule 12345");
-		schuleKatalogeMap.put("ort", "Darmstadt");
-		schuleKatalogeMap.put("land", "Hessen");
-
-		Response wettbewerbeResponse = Response.status(403)
-			.entity(ResponsePayload.messageOnly(MessagePayload.error("Keine Berechrigung"))).build();
-		Response katalogeResponse = Response
-			.ok(new ResponsePayload(MessagePayload.ok(), Arrays.asList(new Map[] { schuleKatalogeMap }))).build();
-
-		Mockito.when(wettbewerbAdapter.getSchuleDashboardModel("12345", LEHRER_UUID)).thenReturn(wettbewerbeResponse);
-		Mockito.when(katalogeAdapter.findSchulen("12345")).thenReturn(katalogeResponse);
-
-		// Act
-		try {
-
-			service.getSchuleWithWettbewerbsdetails("12345", LEHRER_UUID);
-			fail("keine AccessDeniedException");
-		} catch (AccessDeniedException e) {
-
-			// nüscht
-		}
-
-	}
-
-	@Test
-	void should_getSchuleWithWettbewerbsdetailsThrowException_when_SchuleWettbewerbsdetailsStatus400() {
-
-		// Arrange
-		Map<String, Object> schuleKatalogeMap = new HashMap<>();
-
-		schuleKatalogeMap.put("kuerzel", "12345");
-		schuleKatalogeMap.put("name", "Schule 12345");
-		schuleKatalogeMap.put("ort", "Darmstadt");
-		schuleKatalogeMap.put("land", "Hessen");
-
-		Response wettbewerbeResponse = Response.status(400)
-			.entity(ResponsePayload.messageOnly(MessagePayload.error("bad request"))).build();
-		Response katalogeResponse = Response
-			.ok(new ResponsePayload(MessagePayload.ok(), Arrays.asList(new Map[] { schuleKatalogeMap }))).build();
-
-		Mockito.when(wettbewerbAdapter.getSchuleDashboardModel("12345", LEHRER_UUID)).thenReturn(wettbewerbeResponse);
-		Mockito.when(katalogeAdapter.findSchulen("12345")).thenReturn(katalogeResponse);
-
-		// Act
-		try {
-
-			service.getSchuleWithWettbewerbsdetails("12345", LEHRER_UUID);
-			fail("keine MkGatewayRuntimeException");
-		} catch (MkGatewayRuntimeException e) {
-
-			assertEquals("Fehler beim Laden Schulwettbewerbdetails des Lehrers", e.getMessage());
-		}
+		assertEquals("12345-Schule", teilnahme.nameUrkunde());
 
 	}
 

@@ -27,8 +27,6 @@ public class SchuleAPIModel {
 
 	private static final String KEY_ANGEMELDET = "aktuellAngemeldet";
 
-	private static final String KEY_DETAILS = "details";
-
 	@JsonProperty
 	private String kuerzel;
 
@@ -45,7 +43,7 @@ public class SchuleAPIModel {
 	private boolean aktuellAngemeldet;
 
 	@JsonProperty
-	private SchuleWettbewerbeDetails details;
+	private SchuleDetails details;
 
 	SchuleAPIModel() {
 
@@ -84,14 +82,6 @@ public class SchuleAPIModel {
 			result.aktuellAngemeldet = (boolean) keyValueMap.get(KEY_ANGEMELDET);
 		}
 
-		if (keyValueMap.get(KEY_DETAILS) != null) {
-
-			@SuppressWarnings("unchecked")
-			Map<String, Object> detailsMap = (Map<String, Object>) keyValueMap.get(KEY_DETAILS);
-
-			result.details = SchuleWettbewerbeDetails.withAttributes(detailsMap);
-		}
-
 		return result;
 	}
 
@@ -101,7 +91,7 @@ public class SchuleAPIModel {
 		return this;
 	}
 
-	public SchuleAPIModel withDetails(final SchuleWettbewerbeDetails details) {
+	public SchuleAPIModel withDetails(final SchuleDetails details) {
 
 		this.details = details;
 		return this;
@@ -112,7 +102,7 @@ public class SchuleAPIModel {
 	 * @param  schuleAusWettbewerbAPI
 	 * @return
 	 */
-	public static SchuleAPIModel merge(final SchuleAPIModel schuleAusKatalog, final SchuleAPIModel schuleAusWettbewerbAPI) {
+	public static SchuleAPIModel merge(final SchuleAPIModel schuleAusKatalog, final SchuleDetails schuleAusWettbewerbAPI) {
 
 		SchuleAPIModel result = new SchuleAPIModel();
 
@@ -121,8 +111,8 @@ public class SchuleAPIModel {
 		result.ort = schuleAusKatalog.ort;
 		result.land = schuleAusKatalog.land;
 
-		result.aktuellAngemeldet = schuleAusWettbewerbAPI.aktuellAngemeldet;
-		result.details = schuleAusWettbewerbAPI.details;
+		result.aktuellAngemeldet = schuleAusWettbewerbAPI.aktuelleTeilnahme() != null;
+		result.details = schuleAusWettbewerbAPI;
 		return result;
 	}
 
@@ -159,7 +149,7 @@ public class SchuleAPIModel {
 		return land;
 	}
 
-	public SchuleWettbewerbeDetails getDetails() {
+	public SchuleDetails getDetails() {
 
 		return details;
 	}

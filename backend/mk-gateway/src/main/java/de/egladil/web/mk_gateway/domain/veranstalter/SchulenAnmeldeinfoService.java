@@ -21,13 +21,16 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.apimodel.SchuleAPIModel;
-import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
+import de.egladil.web.mk_gateway.domain.apimodel.SchuleDetails;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
+import de.egladil.web.mk_gateway.domain.teilnahmen.SchuleDetailsService;
+import de.egladil.web.mk_gateway.domain.teilnahmen.SchulenOverviewService;
 
 /**
  * SchulenAnmeldeinfoService
@@ -39,38 +42,33 @@ public class SchulenAnmeldeinfoService {
 	private static final Logger LOG = LoggerFactory.getLogger(SchulenAnmeldeinfoService.class);
 
 	@Inject
-	MkKatalogeResourceAdapter katalogeAdapter;
+	SchulenOverviewService schulenOverviewService;
 
 	@Inject
-	MkWettbewerbResourceAdapter wettbewerbAdapter;
+	SchuleDetailsService schuleDetailsService;
+
+	@Inject
+	MkKatalogeResourceAdapter katalogeAdapter;
 
 	@Inject
 	Event<DataInconsistencyRegistered> dataInconsistencyEvent;
 
 	private DataInconsistencyRegistered dataInconsistencyRegistered;
 
-	static SchulenAnmeldeinfoService createForTest(final MkKatalogeResourceAdapter katalogeAdapter, final MkWettbewerbResourceAdapter wettbewerbAdapter) {
+	static SchulenAnmeldeinfoService createForTest(final MkKatalogeResourceAdapter katalogeAdapter, final SchulenOverviewService schulenOverviewService, final SchuleDetailsService schuleDetailsService) {
 
 		SchulenAnmeldeinfoService result = new SchulenAnmeldeinfoService();
 		result.katalogeAdapter = katalogeAdapter;
-		result.wettbewerbAdapter = wettbewerbAdapter;
+		result.schulenOverviewService = schulenOverviewService;
+		result.schuleDetailsService = schuleDetailsService;
 		return result;
 
 	}
 
 	public List<SchuleAPIModel> findSchulenMitAnmeldeinfo(final String lehrerUUID) {
 
-		Response schulenWettbewerbResponse = wettbewerbAdapter.findSchulen(lehrerUUID);
-
-		if (schulenWettbewerbResponse.getStatus() >= 400) {
-
-			LOG.error("mk-wettbewerb: Status={}, beim Laden der Schulen - Lehrer-UUID={}",
-				schulenWettbewerbResponse.getStatus(), StringUtils.abbreviate(lehrerUUID, 11));
-
-			throw new MkGatewayRuntimeException("Fehler beim Laden der Schulen des Lehrers");
-		}
-
-		final List<SchuleAPIModel> schulenOfLehrer = this.getSchulenFromWettbewerbAPI(schulenWettbewerbResponse);
+		List<SchuleAPIModel> schulenOfLehrer = this.schulenOverviewService
+			.ermittleAnmeldedatenFuerSchulen(new Identifier(lehrerUUID));
 
 		List<String> kuerzel = schulenOfLehrer.stream().map(s -> s.kuerzel()).collect(Collectors.toList());
 
@@ -125,30 +123,10 @@ public class SchulenAnmeldeinfoService {
 			schuleAusKatalog = schulenAusKatalg.get(0);
 		}
 
-		Response schuleWettbewerbDetailsResponse = wettbewerbAdapter.getSchuleDashboardModel(schulkuerzel, lehrerUUID);
+		SchuleDetails schuleDetails = schuleDetailsService.ermittleSchuldetails(new Identifier(schulkuerzel),
+			new Identifier(lehrerUUID));
 
-		if (schuleWettbewerbDetailsResponse.getStatus() >= 400) {
-
-			if (schuleWettbewerbDetailsResponse.getStatus() == 403) {
-
-				LOG.warn("mk-wettbewerbe: Status={}, beim Laden der Schuldetails - kuerzel={}, Lehrer-UUID={}",
-					schuleWettbewerbDetailsResponse.getStatus(), schulkuerzel, StringUtils.abbreviate(lehrerUUID, 11));
-
-				throw new AccessDeniedException();
-
-			} else {
-
-				LOG.error("mk-wettbewerbe: Status={}, beim Laden der Schuldetails - kuerzel={}, Lehrer-UUID={}",
-					schuleWettbewerbDetailsResponse.getStatus(), schulkuerzel, StringUtils.abbreviate(lehrerUUID, 11));
-
-				throw new MkGatewayRuntimeException("Fehler beim Laden Schulwettbewerbdetails des Lehrers");
-			}
-
-		}
-
-		SchuleAPIModel schuleAusWettbewerbAPI = this.getSchuleAusWettbewerbAPIResponse(schuleWettbewerbDetailsResponse);
-
-		SchuleAPIModel result = SchuleAPIModel.merge(schuleAusKatalog, schuleAusWettbewerbAPI);
+		SchuleAPIModel result = SchuleAPIModel.merge(schuleAusKatalog, schuleDetails);
 
 		return result;
 
@@ -212,38 +190,6 @@ public class SchulenAnmeldeinfoService {
 			Map<String, Object> data = (Map<String, Object>) responsePayload.getData();
 
 			return SchuleAPIModel.withAttributes(data);
-		} catch (ClassCastException e) {
-
-			LOG.error(e.getMessage(), e);
-			throw new MkGatewayRuntimeException("Konnte ResponsePayload von mk-wettbewerbe nicht verarbeiten");
-
-		}
-	}
-
-	List<SchuleAPIModel> getSchulenFromWettbewerbAPI(final Response response) {
-
-		ResponsePayload responsePayload = response.readEntity(ResponsePayload.class);
-
-		MessagePayload messagePayload = responsePayload.getMessage();
-
-		List<SchuleAPIModel> result = new ArrayList<>();
-
-		if (!messagePayload.isOk()) {
-
-			return result;
-		}
-
-		try {
-
-			@SuppressWarnings("unchecked")
-			List<Map<String, Object>> data = (List<Map<String, Object>>) responsePayload.getData();
-
-			for (Map<String, Object> keyValueMap : data) {
-
-				result.add(SchuleAPIModel.withAttributes(keyValueMap));
-			}
-
-			return result;
 		} catch (ClassCastException e) {
 
 			LOG.error(e.getMessage(), e);

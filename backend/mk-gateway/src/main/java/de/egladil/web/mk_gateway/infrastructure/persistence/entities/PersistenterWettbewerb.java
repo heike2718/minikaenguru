@@ -1,5 +1,5 @@
 // =====================================================
-// Project: mk-wettbewerb-admin
+// Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.persistence.entities;

@@ -1,5 +1,5 @@
 // =====================================================
-// Project: mk-wettbewerb
+// Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.persistence.impl;
@@ -156,5 +156,4 @@ public class WettbewerbHibernateRepository implements WettbewerbRepository {
 		persistenterWettbewerb.setLoesungsbuchstabenKlasse1(wettbewerb.loesungsbuchstabenKlasse1());
 		persistenterWettbewerb.setLoesungsbuchstabenKlasse2(wettbewerb.loesungsbuchstabenKlasse2());
 	}
-
 }

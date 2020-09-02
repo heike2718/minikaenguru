@@ -1,5 +1,5 @@
 // =====================================================
-// Project: mk-wettbewerb-admin
+// Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
 package de.egladil.web.mk_gateway.domain.wettbewerb;
@@ -12,6 +12,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,11 +29,6 @@ import de.egladil.web.commons_validation.exception.InvalidInputException;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbRepository;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.EditWettbewerbModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbDetailsAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbListAPIModel;
@@ -64,8 +60,8 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 		{
 
 			WettbewerbListAPIModel w = wettbewerbe.get(0);
-			assertEquals(2017, w.jahr());
-			assertEquals(WettbewerbStatus.ERFASST, w.status());
+			assertEquals(2020, w.jahr());
+			assertEquals(WettbewerbStatus.ANMELDUNG, w.status());
 			assertFalse(w.completelyLoaded());
 		}
 
@@ -103,8 +99,8 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 
 		// Assert
 		Wettbewerb aktueller = optAktueller.get();
-		assertEquals(2017, aktueller.id().jahr().intValue());
-		assertEquals(WettbewerbStatus.ERFASST, aktueller.status());
+		assertEquals(2020, aktueller.id().jahr().intValue());
+		assertEquals(WettbewerbStatus.ANMELDUNG, aktueller.status());
 		assertNotNull(aktueller.wettbewerbsbeginn());
 		assertNotNull(aktueller.wettbewerbsende());
 		assertNotNull(aktueller.datumFreischaltungLehrer());
@@ -144,7 +140,7 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 	void should_WettbewerbMitJahrReturnEmpty_when_NotExists() {
 
 		// Act
-		Optional<WettbewerbDetailsAPIModel> opt = service.wettbewerbMitJahr(Integer.valueOf(2020));
+		Optional<WettbewerbDetailsAPIModel> opt = service.wettbewerbMitJahr(Integer.valueOf(2017));
 
 		// Assert
 		assertFalse(opt.isPresent());
@@ -298,14 +294,14 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 	void should_StarteNaechstePhaseWork_when_WettbewerbPresent() {
 
 		// Arrange
-		WettbewerbID id = new WettbewerbID(2017);
+		WettbewerbID id = new WettbewerbID(2020);
 
 		// Act
 		WettbewerbStatus neuerStatus = service.starteNaechstePhase(id.jahr());
 
 		// Assert
 		assertEquals(1, getCountChangeWettbewerbStatus());
-		assertEquals(WettbewerbStatus.ANMELDUNG, neuerStatus);
+		assertEquals(WettbewerbStatus.DOWNLOAD_LEHRER, neuerStatus);
 
 	}
 
@@ -388,14 +384,14 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 	void should_WettbewerbAendern_call_UpdateOnTheRepo() {
 
 		// Arrange
-		EditWettbewerbModel data = EditWettbewerbModel.createForTest(2017, "13.02.2017", "15.08.2017", "23.03.2017",
-			"01.07.2017", "AA-AA-AA", "BBBB-BBBB-BBBB", "CCCCC-CCCCC-CCCCC");
+		EditWettbewerbModel data = EditWettbewerbModel.createForTest(2020, "13.02.2020", "15.08.2020", "23.03.2020",
+			"01.07.2020", "AA-AA-AA", "BBBB-BBBB-BBBB", "CCCCC-CCCCC-CCCCC");
 
-		WettbewerbDetailsAPIModel vorhandener = service.wettbewerbMitJahr(Integer.valueOf(2017)).get();
-		assertEquals("01.01.2017", vorhandener.getWettbewerbsbeginn());
-		assertEquals("01.08.2017", vorhandener.getWettbewerbsende());
-		assertEquals("01.03.2017", vorhandener.getDatumFreischaltungLehrer());
-		assertEquals("01.06.2017", vorhandener.getDatumFreischaltungPrivat());
+		WettbewerbDetailsAPIModel vorhandener = service.wettbewerbMitJahr(Integer.valueOf(2020)).get();
+		assertEquals("01.01.2020", vorhandener.getWettbewerbsbeginn());
+		assertEquals("01.08.2020", vorhandener.getWettbewerbsende());
+		assertEquals("01.03.2020", vorhandener.getDatumFreischaltungLehrer());
+		assertEquals("01.06.2020", vorhandener.getDatumFreischaltungPrivat());
 		assertNull(vorhandener.getLoesungsbuchstabenIkids());
 		assertNull(vorhandener.getLoesungsbuchstabenKlasse1());
 		assertNull(vorhandener.getLoesungsbuchstabenKlasse2());
@@ -408,11 +404,11 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 		assertEquals(1, getCountWettbewerbUpdate());
 		assertEquals(0, getCountChangeWettbewerbStatus());
 
-		assertEquals(WettbewerbStatus.ERFASST, geaenderter.status());
-		assertEquals("13.02.2017", CommonTimeUtils.format(geaenderter.wettbewerbsbeginn()));
-		assertEquals("23.03.2017", CommonTimeUtils.format(geaenderter.datumFreischaltungLehrer()));
-		assertEquals("01.07.2017", CommonTimeUtils.format(geaenderter.datumFreischaltungPrivat()));
-		assertEquals("15.08.2017", CommonTimeUtils.format(geaenderter.wettbewerbsende()));
+		assertEquals(WettbewerbStatus.ANMELDUNG, geaenderter.status());
+		assertEquals("13.02.2020", CommonTimeUtils.format(geaenderter.wettbewerbsbeginn()));
+		assertEquals("23.03.2020", CommonTimeUtils.format(geaenderter.datumFreischaltungLehrer()));
+		assertEquals("01.07.2020", CommonTimeUtils.format(geaenderter.datumFreischaltungPrivat()));
+		assertEquals("15.08.2020", CommonTimeUtils.format(geaenderter.wettbewerbsende()));
 		assertEquals("AA-AA-AA", geaenderter.loesungsbuchstabenIkids());
 		assertEquals("BBBB-BBBB-BBBB", geaenderter.loesungsbuchstabenKlasse1());
 		assertEquals("CCCCC-CCCCC-CCCCC", geaenderter.loesungsbuchstabenKlasse2());
@@ -488,5 +484,137 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 			assertEquals("Wettbewerb hat sein Lebensende erreicht und kann nicht mehr geändert werden.",
 				payload.getMessage().getMessage());
 		}
+	}
+
+	@Test
+	void should_AktuellerWettbewerbImAnmeldemodusThrowException_when_NoWettbewerbAtAll() {
+
+		// Arrange
+		WettbewerbRepository repo = Mockito.mock(WettbewerbRepository.class);
+		Mockito.when(repo.loadWettbewerbe())
+			.thenReturn(Arrays.asList(new Wettbewerb[] {}));
+
+		WettbewerbService wettbewerbService = WettbewerbService.createForTest(repo);
+
+		// Act
+		try {
+
+			wettbewerbService.aktuellerWettbewerbImAnmeldemodus();
+			fail("keine IllegalStateException");
+
+		} catch (IllegalStateException e) {
+
+			assertEquals("Keine Anmeldung möglich. Es gibt keinen aktuellen Wettbewerb.", e.getMessage());
+		}
+
+	}
+
+	@Test
+	void should_AktuellerWettbewerbImAnmeldemodusThrowException_when_WettbewerbBeendet() {
+
+		// Arrange
+		WettbewerbRepository repo = Mockito.mock(WettbewerbRepository.class);
+		Wettbewerb expected = createWettbewerb(2019, WettbewerbStatus.BEENDET);
+		Mockito.when(repo.loadWettbewerbe())
+			.thenReturn(Arrays.asList(new Wettbewerb[] { expected }));
+
+		WettbewerbService wettbewerbService = WettbewerbService.createForTest(repo);
+
+		// Act
+		try {
+
+			wettbewerbService.aktuellerWettbewerbImAnmeldemodus();
+			fail("keine IllegalStateException");
+
+		} catch (IllegalStateException e) {
+
+			assertEquals("Keine Anmeldung möglich. Der Wettbewerb ist beendet.", e.getMessage());
+		}
+
+	}
+
+	@Test
+	void should_AktuellerWettbewerbImAnmeldemodusThrowException_when_WettbewerbErfasst() {
+
+		// Arrange
+		WettbewerbRepository repo = Mockito.mock(WettbewerbRepository.class);
+		Wettbewerb expected = createWettbewerb(2019, WettbewerbStatus.ERFASST);
+
+		Mockito.when(repo.loadWettbewerbe())
+			.thenReturn(Arrays.asList(new Wettbewerb[] { expected }));
+
+		WettbewerbService wettbewerbService = WettbewerbService.createForTest(repo);
+
+		// Act
+		try {
+
+			wettbewerbService.aktuellerWettbewerbImAnmeldemodus();
+			fail("keine IllegalStateException");
+
+		} catch (IllegalStateException e) {
+
+			assertEquals("Keine Anmeldung möglich. Der Anmeldezeitraum hat noch nicht begonnen.", e.getMessage());
+		}
+
+	}
+
+	@Test
+	void should_AktuellerWettbewerbImAnmeldemodus_returnWettbewerb_when_StatusAnmeldung() {
+
+		// Arrange
+		WettbewerbRepository repo = Mockito.mock(WettbewerbRepository.class);
+
+		Wettbewerb expected = createWettbewerb(2019, WettbewerbStatus.ANMELDUNG);
+
+		Mockito.when(repo.loadWettbewerbe())
+			.thenReturn(Arrays.asList(new Wettbewerb[] { expected }));
+
+		WettbewerbService wettbewerbService = WettbewerbService.createForTest(repo);
+
+		// Act
+		Wettbewerb actual = wettbewerbService.aktuellerWettbewerbImAnmeldemodus();
+
+		// Assert
+		assertEquals(expected, actual);
+
+	}
+
+	@Test
+	void should_AktuellerWettbewerbImAnmeldemodus_returnWettbewerb_when_StatusDowloadLehrer() {
+
+		// Arrange
+		WettbewerbRepository repo = Mockito.mock(WettbewerbRepository.class);
+		Wettbewerb expected = createWettbewerb(2019, WettbewerbStatus.DOWNLOAD_LEHRER);
+
+		Mockito.when(repo.loadWettbewerbe())
+			.thenReturn(Arrays.asList(new Wettbewerb[] { expected }));
+
+		WettbewerbService wettbewerbService = WettbewerbService.createForTest(repo);
+
+		// Act
+		Wettbewerb actual = wettbewerbService.aktuellerWettbewerbImAnmeldemodus();
+
+		// Assert
+		assertEquals(expected, actual);
+
+	}
+
+	@Test
+	void should_AktuellerWettbewerbImAnmeldemodus_returnWettbewerb_when_StatusDowloadPrivat() {
+
+		// Arrange
+		WettbewerbRepository repo = Mockito.mock(WettbewerbRepository.class);
+		Wettbewerb expected = createWettbewerb(2019, WettbewerbStatus.DOWNLOAD_PRIVAT);
+		Mockito.when(repo.loadWettbewerbe())
+			.thenReturn(Arrays.asList(new Wettbewerb[] { expected }));
+
+		WettbewerbService wettbewerbService = WettbewerbService.createForTest(repo);
+
+		// Act
+		Wettbewerb actual = wettbewerbService.aktuellerWettbewerbImAnmeldemodus();
+
+		// Assert
+		assertEquals(expected, actual);
+
 	}
 }

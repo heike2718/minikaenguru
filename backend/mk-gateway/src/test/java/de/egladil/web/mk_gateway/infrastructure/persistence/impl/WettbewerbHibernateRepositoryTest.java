@@ -1,5 +1,5 @@
 // =====================================================
-// Project: mk-wettbewerb-admin
+// Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.persistence.impl;
@@ -20,7 +20,6 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterWettbewerb;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.WettbewerbHibernateRepository;
 
 /**
  * WettbewerbHibernateRepositoryTest
@@ -153,6 +152,33 @@ public class WettbewerbHibernateRepositoryTest {
 		assertNull(wettbewerb.loesungsbuchstabenIkids());
 		assertEquals("CDAD-ECCC-BCDE", wettbewerb.loesungsbuchstabenKlasse1());
 		assertEquals("EACDD-CDCCE-BACBA", wettbewerb.loesungsbuchstabenKlasse2());
+
+	}
+
+	@Test
+	void should_MapFromPersistenterWettbewerb_MapAllArttributes() throws ParseException {
+
+		final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+
+		// Arrange
+		PersistenterWettbewerb persistenterWettbewerb = new PersistenterWettbewerb();
+		persistenterWettbewerb.setUuid("2025");
+		persistenterWettbewerb.setStatus(WettbewerbStatus.ERFASST);
+		persistenterWettbewerb.setWettbewerbsbeginn(sdf.parse("01.01.2025"));
+		persistenterWettbewerb.setWettbewerbsende(sdf.parse("01.08.2025"));
+		persistenterWettbewerb.setDatumFreischaltungLehrer(sdf.parse("01.03.2025"));
+		persistenterWettbewerb.setDatumFreischaltungPrivat(sdf.parse("01.06.2025"));
+
+		// Act
+		Wettbewerb wettbewerb = new WettbewerbHibernateRepository().mapFromPersistenterWettbewerb(persistenterWettbewerb);
+
+		// Assert
+		assertEquals(Integer.valueOf(2025), wettbewerb.id().jahr());
+		assertEquals(WettbewerbStatus.ERFASST, wettbewerb.status());
+		assertEquals("01.01.2025", CommonTimeUtils.format(wettbewerb.wettbewerbsbeginn()));
+		assertEquals("01.03.2025", CommonTimeUtils.format(wettbewerb.datumFreischaltungLehrer()));
+		assertEquals("01.06.2025", CommonTimeUtils.format(wettbewerb.datumFreischaltungPrivat()));
+		assertEquals("01.08.2025", CommonTimeUtils.format(wettbewerb.wettbewerbsende()));
 
 	}
 
