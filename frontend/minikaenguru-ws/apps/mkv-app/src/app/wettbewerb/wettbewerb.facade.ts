@@ -50,7 +50,7 @@ export class WettbewerbFacade {
 		}
 	}
 
-		public resetState(): void {
+	public resetState(): void {
 		localStorage.removeItem(WETTBEWERB_STORAGE_KEY);
 		this.appStore.dispatch(WettbewerbActions.reset());
 	}

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WettbewerbFacade } from '../wettbewerb/wettbewerb.facade';
+import { AktuelleMeldungFacade } from '../aktuelle-meldung/aktuelle-meldung.facade';
 
 @Component({
 	selector: 'mkv-landing',
@@ -8,11 +9,12 @@ import { WettbewerbFacade } from '../wettbewerb/wettbewerb.facade';
 })
 export class LandingComponent implements OnInit {
 
-	constructor(private wettbewerbFacade: WettbewerbFacade) { }
+	aktuelleMeldungNichtLeer$ = this.aktuelleMeldungFacade.aktuelleMeldungNichtLeer$;
+
+	constructor(private wettbewerbFacade: WettbewerbFacade, private aktuelleMeldungFacade: AktuelleMeldungFacade) { }
 
 	ngOnInit(): void {
 		this.wettbewerbFacade.ladeAktuellenWettbewerb();
+		this.aktuelleMeldungFacade.ladeAktuelleMeldung();
 	}
-
-
 }

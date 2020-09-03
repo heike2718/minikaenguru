@@ -29,6 +29,11 @@ button>i {
   margin-right: 5px;
 }
 
+.hinweis {
+	background-color: #ffffcc;
+	font-size: 1.1rem;
+}
+
 .mkv-bordered {
   border: 1px solid gray;
   border-radius: 4px;
@@ -83,8 +88,7 @@ footer {
     font-size: 1rem;
   }
 
-  .header-3,
-  .hinweis {
+  .header-3 {
     font-size: 1.1rem;
   }
 
