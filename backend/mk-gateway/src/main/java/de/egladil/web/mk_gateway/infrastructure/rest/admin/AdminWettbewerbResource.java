@@ -32,13 +32,13 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbDetailsAPIModel
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbListAPIModel;
 
 /**
- * WettbewerbAdminResource .../mk-gateway/admin/...
+ * AdminWettbewerbResource .../mk-gateway/admin/...
  */
 @RequestScoped
 @Path("/admin/wettbewerbe")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class WettbewerbAdminResource extends AbstractAdminResource {
+public class AdminWettbewerbResource extends AbstractAdminResource {
 
 	@Inject
 	WettbewerbService wettbewerbService;

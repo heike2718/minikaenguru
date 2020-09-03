@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import de.egladil.web.mk_gateway.domain.auth.signup.PrivatmenschCreated;
 import de.egladil.web.mk_gateway.domain.semantik.DomainCommand;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 
@@ -32,6 +33,16 @@ public class CreateOrUpdatePrivatpersonCommand {
 
 	@JsonProperty
 	private boolean newsletterEmpfaenger;
+
+	public static CreateOrUpdatePrivatpersonCommand create(final PrivatmenschCreated event) {
+
+		CreateOrUpdatePrivatpersonCommand result = new CreateOrUpdatePrivatpersonCommand();
+		result.fullName = event.fullName();
+		result.newsletterEmpfaenger = event.isNewsletterEmpfaenger();
+		result.rolle = Rolle.PRIVAT.toString();
+		result.uuid = event.uuid();
+		return result;
+	}
 
 	public static CreateOrUpdatePrivatpersonCommand create(final String uuid, final String fullName) {
 

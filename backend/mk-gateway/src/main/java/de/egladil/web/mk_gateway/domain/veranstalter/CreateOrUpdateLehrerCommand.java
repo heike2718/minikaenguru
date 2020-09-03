@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import de.egladil.web.mk_gateway.domain.auth.signup.LehrerCreated;
 import de.egladil.web.mk_gateway.domain.semantik.DomainCommand;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 
@@ -36,6 +37,18 @@ public class CreateOrUpdateLehrerCommand {
 
 	@JsonProperty
 	private boolean newsletterEmpfaenger;
+
+	public static CreateOrUpdateLehrerCommand create(final LehrerCreated event) {
+
+		CreateOrUpdateLehrerCommand result = new CreateOrUpdateLehrerCommand();
+		result.fullName = event.fullName();
+		result.newsletterEmpfaenger = event.isNewsletterEmpfaenger();
+		result.rolle = Rolle.LEHRER.toString();
+		result.schulkuerzel = event.schulkuerzel();
+		result.uuid = event.uuid();
+		return result;
+
+	}
 
 	public static CreateOrUpdateLehrerCommand createForTest(final String uuid, final String fullName, final String alteSchulkuerze) {
 

@@ -35,6 +35,9 @@ public class LehrerService {
 	VeranstalterRepository veranstalterRepository;
 
 	@Inject
+	SchulkollegienService schulkollegienService;
+
+	@Inject
 	Event<LehrerChanged> lehrerChanged;
 
 	private LehrerChanged lehrerChangedEventPayload;

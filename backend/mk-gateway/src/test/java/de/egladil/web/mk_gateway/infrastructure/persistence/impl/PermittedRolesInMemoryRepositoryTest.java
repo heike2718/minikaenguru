@@ -24,17 +24,54 @@ public class PermittedRolesInMemoryRepositoryTest {
 	private PermittedRolesInMemoryRepository repository = new PermittedRolesInMemoryRepository();
 
 	@Nested
-	class MkWettbewerbPathsTest {
+	class VeranstalterAPITest {
 
 		@Test
-		void should_permittedRollen_forLoadPrivatteilnahmen_beOk() {
+		void should_permittedRollen_getWettbewerbZugangsstatus_beOk() {
 
 			// Act
-			List<Rolle> rollen = repository.permittedRollen("/veranstalter/teilnahmen/privat", HttpMethod.GET);
+			List<Rolle> rollen = repository.permittedRollen("/veranstalter/zugangsstatus", HttpMethod.GET);
+
+			// Assert
+			assertEquals(2, rollen.size());
+			assertTrue(rollen.contains(Rolle.LEHRER));
+			assertTrue(rollen.contains(Rolle.PRIVAT));
+
+		}
+
+		@Test
+		void should_permittedRollen_getVeranstalterPrivat_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/veranstalter/privat", HttpMethod.GET);
 
 			// Assert
 			assertEquals(1, rollen.size());
 			assertTrue(rollen.contains(Rolle.PRIVAT));
+
+		}
+
+		@Test
+		void should_permittedRollen_loadSchulen_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/veranstalter/lehrer/schulen", HttpMethod.GET);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.LEHRER));
+
+		}
+
+		@Test
+		void should_permittedRollen_getSchuleDetails_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/veranstalter/lehrer/schulen/FFUFUFUIF/details", HttpMethod.GET);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.LEHRER));
 
 		}
 
@@ -51,10 +88,10 @@ public class PermittedRolesInMemoryRepositoryTest {
 		}
 
 		@Test
-		void should_permittedRollen_forLoadSchulteilnahmen_beOk() {
+		void should_permittedRollen_forAddSchulteilnahme_beOk() {
 
 			// Act
-			List<Rolle> rollen = repository.permittedRollen("/veranstalter/teilnahmen/schulen/ABCDEFGH", HttpMethod.GET);
+			List<Rolle> rollen = repository.permittedRollen("/veranstalter/teilnahmen/schule", HttpMethod.POST);
 
 			// Assert
 			assertEquals(1, rollen.size());
@@ -62,11 +99,25 @@ public class PermittedRolesInMemoryRepositoryTest {
 
 		}
 
+		// ///////////////////////////////////////////////
+
 		@Test
-		void should_permittedRollen_forAddSchulteilnahme_beOk() {
+		void should_permittedRollen_forLoadPrivatteilnahmen_beOk() {
 
 			// Act
-			List<Rolle> rollen = repository.permittedRollen("/veranstalter/teilnahmen/schulen/ABCDEFGH", HttpMethod.POST);
+			List<Rolle> rollen = repository.permittedRollen("/veranstalter/teilnahmen/privat", HttpMethod.GET);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.PRIVAT));
+
+		}
+
+		@Test
+		void should_permittedRollen_forLoadSchulteilnahmen_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/veranstalter/teilnahmen/schulen/ABCDEFGH", HttpMethod.GET);
 
 			// Assert
 			assertEquals(1, rollen.size());
@@ -113,18 +164,6 @@ public class PermittedRolesInMemoryRepositoryTest {
 		}
 
 		@Test
-		void should_permittedRollen_loadSchulen_beOk() {
-
-			// Act
-			List<Rolle> rollen = repository.permittedRollen("/veranstalter/lehrer/schulen", HttpMethod.GET);
-
-			// Assert
-			assertEquals(1, rollen.size());
-			assertTrue(rollen.contains(Rolle.LEHRER));
-
-		}
-
-		@Test
 		void should_permittedRollen_addSchule_beOk() {
 
 			// Act
@@ -145,43 +184,6 @@ public class PermittedRolesInMemoryRepositoryTest {
 			// Assert
 			assertEquals(1, rollen.size());
 			assertTrue(rollen.contains(Rolle.LEHRER));
-
-		}
-
-		@Test
-		void should_permittedRollen_getSchuleDetails_beOk() {
-
-			// Act
-			List<Rolle> rollen = repository.permittedRollen("/veranstalter/lehrer/schulen/FFUFUFUIF/details", HttpMethod.GET);
-
-			// Assert
-			assertEquals(1, rollen.size());
-			assertTrue(rollen.contains(Rolle.LEHRER));
-
-		}
-
-		@Test
-		void should_permittedRollen_getWettbewerbZugangsstatus_beOk() {
-
-			// Act
-			List<Rolle> rollen = repository.permittedRollen("/veranstalter/zugangsstatus", HttpMethod.GET);
-
-			// Assert
-			assertEquals(2, rollen.size());
-			assertTrue(rollen.contains(Rolle.LEHRER));
-			assertTrue(rollen.contains(Rolle.PRIVAT));
-
-		}
-
-		@Test
-		void should_permittedRollen_getVeranstalterPrivat_beOk() {
-
-			// Act
-			List<Rolle> rollen = repository.permittedRollen("/veranstalter/privat", HttpMethod.GET);
-
-			// Assert
-			assertEquals(1, rollen.size());
-			assertTrue(rollen.contains(Rolle.PRIVAT));
 
 		}
 
@@ -211,7 +213,7 @@ public class PermittedRolesInMemoryRepositoryTest {
 	}
 
 	@Nested
-	class MkWettbewerbAdminPathsTest {
+	class AdminAPITest {
 
 		@Test
 		void should_permittedRollen_getWettbewerbe_beOk() {
