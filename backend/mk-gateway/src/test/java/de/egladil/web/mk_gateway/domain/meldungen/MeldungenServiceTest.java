@@ -6,7 +6,6 @@ package de.egladil.web.mk_gateway.domain.meldungen;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
@@ -20,10 +19,7 @@ public class MeldungenServiceTest {
 	void should_write_and_read() throws IOException {
 
 		// Arrange
-		File file = File.createTempFile("meldung-", ".json");
-		file.deleteOnExit();
-
-		MeldungenService service = MeldungenService.createForTest(file.getAbsolutePath());
+		MeldungenService service = MeldungenService.createForTest(System.getProperty("java.io.tmpdir"));
 
 		long currentTime = System.currentTimeMillis();
 		Meldung meldung = new Meldung("Aktuelle Zeit = " + currentTime);

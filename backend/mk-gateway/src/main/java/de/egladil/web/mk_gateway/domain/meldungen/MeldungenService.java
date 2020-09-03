@@ -27,28 +27,41 @@ import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 @ApplicationScoped
 public class MeldungenService {
 
+	private static final String FILENAME = "aktuelle-meldung.json";
+
 	private static final Logger LOG = LoggerFactory.getLogger(MeldungenService.class);
 
-	@ConfigProperty(name = "mk.gateway.meldung.path")
-	String pfadMeldung;
+	@ConfigProperty(name = "path.external.files")
+	String pathExternalFiles;
 
 	public static final MeldungenService createForTest(final String path) {
 
 		MeldungenService service = new MeldungenService();
-		service.pfadMeldung = path;
+		service.pathExternalFiles = path;
 		return service;
 	}
 
+	/**
+	 * Liest die Meldung ein.
+	 *
+	 * @return Meldung
+	 */
 	public Meldung loadMeldung() {
 
-		File file = new File(pfadMeldung);
+		File file = getMeldungenFile();
+
+		if (!file.isFile() || !file.canRead()) {
+
+			LOG.debug("Es gibt anscheinend keine Meldung");
+			return new Meldung("");
+		}
 
 		try (InputStream in = new FileInputStream(file)) {
 
 			return new ObjectMapper().readValue(in, Meldung.class);
 		} catch (IOException e) {
 
-			LOG.debug("Es gibt anscheinend keine Meldung: {} ", e.getMessage());
+			LOG.warn("Meldung kann nicht gelesen werden: {} ", e.getMessage());
 
 		}
 
@@ -56,9 +69,15 @@ public class MeldungenService {
 
 	}
 
+	/**
+	 * Überschreibt die Meldung
+	 *
+	 * @param meldung
+	 *                Meldung
+	 */
 	public void saveMeldng(final Meldung meldung) {
 
-		File file = new File(pfadMeldung);
+		File file = getMeldungenFile();
 
 		try (OutputStream out = new FileOutputStream(file)) {
 
@@ -73,6 +92,14 @@ public class MeldungenService {
 			throw new MkGatewayRuntimeException("Konnte meldung nicht speichern: " + e.getMessage(), e);
 
 		}
+
+	}
+
+	private File getMeldungenFile() {
+
+		String path = pathExternalFiles + File.separator + FILENAME;
+
+		return new File(path);
 
 	}
 

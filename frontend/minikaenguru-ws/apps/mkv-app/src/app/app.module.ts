@@ -26,6 +26,7 @@ import { LehrerModule } from './lehrer/lehrer.module';
 import { PrivatveranstalterModule } from './privatveranstalter/privatveranstalter.module';
 import { WettbewerbModule } from './wettbewerb/wettbewerb.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { AktuelleMeldungModule } from './aktuelle-meldung/aktuelle-meldung.module';
 
 
 
@@ -59,6 +60,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 			storagePrefix: environment.storageKeyPrefix,
 			loginSuccessUrl: '/dashboard'
 		}),
+		AktuelleMeldungModule,
 		WettbewerbModule,
 		RegistrationModule,
 		LehrerModule,
