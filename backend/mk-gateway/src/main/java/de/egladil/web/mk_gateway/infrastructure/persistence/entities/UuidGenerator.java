@@ -19,7 +19,7 @@ public class UuidGenerator implements IdentifierGenerator {
 	@Override
 	public Serializable generate(final SharedSessionContractImplementor session, final Object object) throws HibernateException {
 
-		if (object instanceof User) {
+		if (object instanceof ConcurrencySafeEntity) {
 
 			ConcurrencySafeEntity entity = (ConcurrencySafeEntity) object;
 

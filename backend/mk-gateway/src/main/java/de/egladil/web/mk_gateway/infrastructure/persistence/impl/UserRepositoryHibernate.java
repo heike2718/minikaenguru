@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 
 import de.egladil.web.mk_gateway.domain.user.UserRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
@@ -42,6 +43,7 @@ public class UserRepositoryHibernate implements UserRepository {
 	}
 
 	@Override
+	@Transactional
 	public User addUser(final User user) {
 
 		this.em.persist(user);

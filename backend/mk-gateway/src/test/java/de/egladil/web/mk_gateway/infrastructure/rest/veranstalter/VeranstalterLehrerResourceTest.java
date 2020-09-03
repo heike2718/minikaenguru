@@ -19,9 +19,9 @@ import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterAuthorizationService;
 
 /**
- * VeranstalterResourceTest
+ * VeranstalterLehrerResourceTest
  */
-public class VeranstalterResourceTest {
+public class VeranstalterLehrerResourceTest {
 
 	/**
 	 *
@@ -30,7 +30,7 @@ public class VeranstalterResourceTest {
 
 	private VeranstalterAuthorizationService authService;
 
-	private VeranstalterResource resource;
+	private VeranstalterLehrerResource resource;
 
 	@BeforeEach
 	void setUp() {
@@ -41,7 +41,7 @@ public class VeranstalterResourceTest {
 		LoggedInUser loggedInUser = LoggedInUser.create(LEHRER_UUID, Rolle.LEHRER, "Alter Verwalter", "dgqwudugö");
 		Mockito.when(securityContext.getUserPrincipal()).thenReturn(loggedInUser);
 
-		resource = VeranstalterResource.createForPermissionTest(authService, securityContext);
+		resource = VeranstalterLehrerResource.createForPermissionTest(authService, securityContext);
 
 	}
 

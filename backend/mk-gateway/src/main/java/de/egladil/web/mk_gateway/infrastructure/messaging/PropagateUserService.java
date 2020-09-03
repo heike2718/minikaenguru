@@ -55,8 +55,7 @@ public class PropagateUserService {
 	 */
 	private void propagate(final PrivatmenschCreated privatmenschCreated) {
 
-		CreateOrUpdatePrivatpersonCommand command = CreateOrUpdatePrivatpersonCommand.create(privatmenschCreated.fullName(),
-			privatmenschCreated.fullName());
+		CreateOrUpdatePrivatpersonCommand command = CreateOrUpdatePrivatpersonCommand.create(privatmenschCreated);
 
 		// TODO: ist nicht klar, ob es nicht auch ein update ist
 		// Außerdem könnte der Handler direkt der Service sein!!!
@@ -68,9 +67,7 @@ public class PropagateUserService {
 	 */
 	private void propagate(final LehrerCreated lehrerCreated) {
 
-		CreateOrUpdateLehrerCommand command = CreateOrUpdateLehrerCommand.newInstance().withFullName(lehrerCreated.fullName())
-			.withNewsletterEmpfaenger(lehrerCreated.isNewsletterEmpfaenger()).withAlteSchulkuerzel(lehrerCreated.schulkuerzel())
-			.withUuid(lehrerCreated.uuid());
+		CreateOrUpdateLehrerCommand command = CreateOrUpdateLehrerCommand.create(lehrerCreated);
 
 		// TODO: ist nicht klar, ob es nicht auch ein update ist
 		// Außerdem könnte der Handler direkt der Service sein!!!

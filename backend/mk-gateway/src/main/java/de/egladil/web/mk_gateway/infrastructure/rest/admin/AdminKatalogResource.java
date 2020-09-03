@@ -32,15 +32,15 @@ import de.egladil.web.mk_gateway.domain.apimodel.SchulePayload;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
 
 /**
- * KatalogAdminResource
+ * AdminKatalogResource
  */
 @RequestScoped
 @Path("/admin/kataloge")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class KatalogAdminResource {
+public class AdminKatalogResource {
 
-	private static final Logger LOG = LoggerFactory.getLogger(KatalogAdminResource.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AdminKatalogResource.class);
 
 	@Context
 	SecurityContext securityContext;

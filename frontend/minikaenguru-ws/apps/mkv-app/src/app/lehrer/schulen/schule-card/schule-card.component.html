@@ -5,6 +5,7 @@
 				<div class="card-title">{{schule.name}}
 					<span *ngIf="devMode">({{schule.kuerzel}})</span>
 					<span *ngIf="schule.aktuellAngemeldet" class="ml-1 badge badge-success">angemeldet für 2020</span>
+					<span *ngIf="!schule.aktuellAngemeldet" class="ml-1 badge badge-secondary">noch nicht angemeldet für 2020</span>
 				</div>
 				<div class="card-subtitle mb-2 text-muted">{{schule.ort}}</div>
 				<div class="card-subtitle mb-2 text-muted">

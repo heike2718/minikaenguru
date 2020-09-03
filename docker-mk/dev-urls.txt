@@ -5,36 +5,6 @@
 https://mathe-jung-alt.de/mkv/
 
 
-=========================================
-mk-wettbewerb
-
-
-http://localhost:9550/mk-wettbewerb/schulen/details/6XOA2A11   header X-UUID  2f09da36-07c6-4033-a2f1-5e110c804026
-
-http://localhost:9550/mk-wettbewerb/schulen/details/S7YZMQ27   header X-UUID  2f09da36-07c6-4033-a2f1-5e110c804026
-
-http://localhost:9550/mk-wettbewerb/veranstalter/unterlagen/zugangsstatus  header X-UUID  2f09da36-07c6-4033-a2f1-5e110c804026
-
-http://localhost:9550/mk-wettbewerb/veranstalter/lehrer
-
-http://localhost:9550/mk-wettbewerb/teilnahmen/privat POST header X-UUID  9bfa4dc8-6251-44d4-87ab-72784123c1e7  (gehört zu pe1@egladil.de)
-
-
-http://localhost:9550/mk-wettbewerb/teilnahmen/schule POST header X-UUID  24f4c507-454a-4cb1-bc0c-4da5df4a4a1b (event lehrer test eins)
-
-{"schulkuerzel":"EEGEECP6","schulname":"Albert-Schweitzer-Schule"}
-
-http://localhost:9550/mk-wettbewerb/veranstalter/lehrer PUT CreateOrUpdateLehrerCommand
-{"person":{"uuid":"hklhasshdiha","fullName":"Professor Proton"},"alteSchulkuerzel":"","neueSchulkuerzel":"ZZGVZYY6","newsletterAbonnieren":false}
-
-=========================================
-mk-wettbewerb-admin
-
-http://192.168.10.176:9570/mk-wettbewerb-admin/wettbewerbe X-UUID 20721575-8c45-4201-a025-7a9fece1f2aa
-
-
-=========================================
-
 mk-gateway
 
 http://192.168.10.176:9510/mk-gateway/schulkatalog/ort?search="hal"
