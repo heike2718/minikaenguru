@@ -3,24 +3,28 @@ version: "3.7"
 services:
 
   mk-gateway:
+    build: ./mk-gateway/server
     image: heik2718/mk-gateway
     networks:
       - mk-network
     ports:
       - xxxx:xxxx
+    volumes:
+      - /var/log/quarkus/http:/var/log/quarkus/http
+      - /home/heike/docker-volumes/mk-gateway/files:/usr/local/bin/mk-gateway/files
     environment:
       - TZ=Europe/Berlin
     restart: on-failure:3
     depends_on:
-      - mk-gateway-database
+      - mk-wettbewerb-database
     command: ["java","-jar","app.jar"]
 
-  mk-gateway-database:
-    image: heik2718/mk_gateway-mariadb
+  mk-wettbewerb-database:
+    image: heik2718/mk_wettbewerb-mariadb
     networks:
       - mk-network
     volumes:
-      - /home/heike/docker-volumes/mk_gateway-database:/var/lib/mysql
+      - /home/heike/docker-volumes/mk_wettbewerb-database:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-database -e MYSQL_USER_FILE=/run/secrets/mysql-root-pwd
       - MYSQL_DATABASE_FILE=/run/secrets/mysql-database -e MYSQL_USER_FILE=/run/secrets/mysql-database
@@ -32,10 +36,11 @@ services:
 
   mk-kataloge:
     image: heik2718/mk-kataloge
+    build: ./mk-kataloge/server
     networks:
       - mk-network
-    ports:
-      - xxxx:xxxx
+    volumes:
+      - /var/log/quarkus/http:/var/log/quarkus/http
     environment:
       - TZ=Europe/Berlin
     restart: on-failure:3
@@ -58,42 +63,6 @@ services:
     restart: on-failure:3
     command: ["mysqld"]
 
-  mk-wettbewerb-admin:
-    image: heik2718/mk-wettbewerb-admin
-    networks:
-      - mk-network
-    environment:
-      - TZ=Europe/Berlin
-    restart: on-failure:3
-    depends_on:
-      - mk-wettbewerb-database
-    command: ["java","-jar","app.jar"]
-
-  mk-wettbewerb:
-    image: heik2718/mk-wettbewerb
-    networks:
-      - mk-network
-    environment:
-      - TZ=Europe/Berlin
-    restart: on-failure:3
-    depends_on:
-      - mk-wettbewerb-database
-    command: ["java","-jar","app.jar"]
-
-  mk-wettbewerb-database:
-    image: heik2718/mk_wettbewerb-mariadb
-    networks:
-      - mk-network
-    volumes:
-      - /home/heike/docker-volumes/mk_wettbewerb-database:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql-database -e MYSQL_USER_FILE=/run/secrets/mysql-root-pwd
-      - MYSQL_DATABASE_FILE=/run/secrets/mysql-database -e MYSQL_USER_FILE=/run/secrets/mysql-database
-      - MYSQL_USER_FILE=/run/secrets/mysql-database -e MYSQL_USER_FILE=/run/secrets/mysql-user
-      - MYSQL_PASSWORD_FILE=/run/secrets/mysql-database -e MYSQL_USER_FILE=/run/secrets/mysql-user-pwd
-      - TZ=Europe/Berlin
-    restart: on-failure:3
-    command: ["mysqld"]
 
 networks:
    mk-network:
