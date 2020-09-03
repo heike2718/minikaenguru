@@ -8,7 +8,6 @@ import { WettbewerbFacade } from '../wettbewerb/wettbewerb.facade';
 })
 export class LandingComponent implements OnInit {
 
-
 	constructor(private wettbewerbFacade: WettbewerbFacade) { }
 
 	ngOnInit(): void {
