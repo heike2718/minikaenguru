@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 public class MeldungenServiceTest {
 
 	@Test
-	void should_write_and_read() throws IOException {
+	void should_write_and_read_and_remove() throws IOException {
 
 		// Arrange
 		MeldungenService service = MeldungenService.createForTest(System.getProperty("java.io.tmpdir"));
@@ -25,12 +25,15 @@ public class MeldungenServiceTest {
 		Meldung meldung = new Meldung("Aktuelle Zeit = " + currentTime);
 
 		// Act
-		service.saveMeldng(meldung);
+		service.saveMeldung(meldung);
 
 		// Assert
 		Meldung persistent = service.loadMeldung();
 
 		assertEquals("Aktuelle Zeit = " + currentTime, persistent.getText());
+
+		// Act 2
+		service.deleteMeldung();
 
 	}
 

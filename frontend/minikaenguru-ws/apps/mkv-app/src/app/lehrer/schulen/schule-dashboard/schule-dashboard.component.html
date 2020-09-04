@@ -32,7 +32,7 @@
 
 			<div class="row mt-2 ml-2 mr-2">
 				<div *ngIf="schule.aktuellAngemeldet" class="col-md-6 col-sm-12 mt-2">
-					<div class="card clickable">
+					<div class="card clickable" (click)="gotoAuswertung()">
 						<div class="card-body">
 							<div class="card-title">Auswertung {{wettbewerb.jahr}}</div>
 							<div class="mb-2 text-muted">Kinder erfassen und Urkunden generieren</div>
@@ -74,7 +74,7 @@
 				</div>
 
 				<div class="col-md-6 col-sm-12 mt-2">
-					<div class="card clickable">
+					<div class="card clickable" (click)="gotoDSGVO()">
 						<div class="card-body">
 							<div class="card-title">DSGVO</div>
 							<div class="mb-2 text-muted">Vertrag zur Auftragsdatenverarbeitung</div>
@@ -85,6 +85,17 @@
 		</div>
 
 	</div>
+		<div *ngIf="textFeatureFlagAnzeigen" class="row ml-3 mr-3 mt-3 hinweis">
+			<div class="col-11">
+				<div class="mkv-boardered">{{textFeatureFlag}}</div>
+			</div>
+			<div class="col-1">
+				<button type="button" class="btn btn-dark" data-placement="bottom" title="Hinweis schließen"
+					(click)="toggleTextFeatureFlagAnzeigen()">
+					<i class="fa fa-close" aria-hidden="true"></i>
+				</button>
+			</div>
+		</div>
 	<div class="col-md-3 mt-4">
 		<button class="btn btn-primary" (click)="backToSchulen()"><i class="fa fa-arrow-left"
 				aria-hidden="true"></i>zurück zu

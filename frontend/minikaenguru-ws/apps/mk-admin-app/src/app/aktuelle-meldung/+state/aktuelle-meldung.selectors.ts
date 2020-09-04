@@ -9,3 +9,6 @@ export const habenAktuelleMeldung = createSelector(aktuelleMeldungState, s => s.
 
 export const aktuelleMeldung = createSelector(aktuelleMeldungState, s => s.aktuelleMeldung);
 
+
+
+

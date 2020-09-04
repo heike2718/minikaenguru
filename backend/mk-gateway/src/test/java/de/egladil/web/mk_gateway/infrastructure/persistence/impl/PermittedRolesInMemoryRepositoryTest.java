@@ -406,6 +406,18 @@ public class PermittedRolesInMemoryRepositoryTest {
 			assertTrue(rollen.contains(Rolle.ADMIN));
 
 		}
+
+		@Test
+		void should_permittedRollen_deleteAktuelleMeldung_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/admin/meldungen/aktuelle-meldung", HttpMethod.DELETE);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.ADMIN));
+
+		}
 	}
 
 	@Nested

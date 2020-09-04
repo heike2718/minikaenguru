@@ -23,6 +23,10 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 
 	loading$ = this.lehrerFacade.loading$;
 
+	textFeatureFlagAnzeigen = false;
+	textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
+
+
 	private user: User;
 
 	schule: Schule;
@@ -62,13 +66,24 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	gotoDSGVO(): void {
+		this.textFeatureFlag = 'DSGVO im Moment noch nicht möglich, kommt aber im Herbst 2020.';
+		this.textFeatureFlagAnzeigen = true;
+	}
+
 	anmelden(): void {
 		this.lehrerFacade.schuleAnmelden(this.schule, this.user);
 		this.router.navigateByUrl('/lehrer/schule-dashboard/' + this.schule.kuerzel);
 	}
 
 	gotoTeilnahmen(): void {
+		this.textFeatureFlagAnzeigen = true;
+		this.textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
+	}
 
+	gotoAuswertung(): void {
+		this.textFeatureFlagAnzeigen = true;
+		this.textFeatureFlag = 'Auswertungen sind im Moment noch nicht möglich, kommt aber Anfang 2021.';
 	}
 
 	backToSchulen(): void {
@@ -76,6 +91,10 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 		this.router.navigateByUrl('/lehrer/schulen');
 	}
 
+	toggleTextFeatureFlagAnzeigen(): void {
+		this.textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
+		this.textFeatureFlagAnzeigen = !this.textFeatureFlagAnzeigen;
+	}
 
 
 }

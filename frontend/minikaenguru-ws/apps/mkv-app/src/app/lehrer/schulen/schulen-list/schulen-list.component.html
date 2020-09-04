@@ -18,4 +18,16 @@
 					aria-hidden="true"></i>zur Übersicht</button>
 		</div>
 	</div>
+
+	<div *ngIf="textFeatureFlagAnzeigen" class="row ml-3 mr-3 hinweis">
+		<div class="col-11">
+			<div class="mkv-boardered">{{textFeatureFlag}}</div>
+		</div>
+		<div class="col-1">
+			<button type="button" class="btn btn-dark" data-placement="bottom" title="Hinweis schließen"
+				(click)="toggleTextFeatureFlagAnzeigen()">
+				<i class="fa fa-close" aria-hidden="true"></i>
+			</button>
+		</div>
+	</div>
 </div>

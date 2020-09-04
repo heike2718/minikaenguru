@@ -96,6 +96,14 @@ public final class PermittedRolesForAdminProvider {
 			result.put(new PathWithMethod("/admin/kataloge/kuerzel", HttpMethod.GET), rollen);
 
 		}
+
+		{
+
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			result.put(new PathWithMethod("/admin/upload/schulen/csv", HttpMethod.POST), rollen);
+
+		}
+
 	}
 
 	/**
@@ -129,6 +137,20 @@ public final class PermittedRolesForAdminProvider {
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
 			result.put(new PathWithMethod("/admin/wettbewerbe/wettbewerb/*", HttpMethod.GET), rollen);
+
+		}
+
+		{
+
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			result.put(new PathWithMethod("/admin/meldungen/aktuelle-meldung", HttpMethod.POST), rollen);
+
+		}
+
+		{
+
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			result.put(new PathWithMethod("/admin/meldungen/aktuelle-meldung", HttpMethod.DELETE), rollen);
 
 		}
 	}

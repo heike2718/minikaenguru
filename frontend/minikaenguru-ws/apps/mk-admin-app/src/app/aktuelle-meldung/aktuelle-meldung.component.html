@@ -1,0 +1,39 @@
+<div class="mkv-container mkv-bordered">
+
+	<h2>Aktuelle Meldung Editor</h2>
+
+	<div class="col-12">
+
+		<div class="form-group mb-4">
+			<div class="row mt-4">
+				<div class="col-md-12">
+					<label for="text">Text*</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<input class="form-control" type="text" id="textInput" placeholder="Text"
+						[(ngModel)]="aktuelleMeldung.text" name="text" #text="ngModel" required autocomplete="true">
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row mt-4 ml-2">
+		<div class="col-md-4 mt-4">
+			<button class="btn btn-primary" [disabled]="submitDisabled()" (click)="onSubmit()"><i class="fa fa-floppy-o"
+					aria-hidden="true"></i>
+				speichern</button>
+		</div>
+		<div class="col-md-4 mt-4">
+			<button class="btn btn-primary" (click)="onCancel()"><i class="fa fa-undo"
+					aria-hidden="true"></i>zurücksetzen</button>
+		</div>
+		<div class="col-md-4 mt-4">
+			<button class="btn btn-primary" [disabled]="deleteDisabled()" (click)="onDelete()"><i class="fa fa-trash-o"
+					aria-hidden="true"></i>
+				löschen</button>
+		</div>
+	</div>
+
+</div>

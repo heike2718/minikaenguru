@@ -86,19 +86,6 @@ public class PermittedRolesInMemoryRepository implements PermittedRolesRepositor
 
 		}
 
-		{
-
-			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			pathWithMethods2Rollen.put(new PathWithMethod("/admin/upload/schulen/csv", HttpMethod.POST), rollen);
-
-		}
-
-		{
-
-			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			pathWithMethods2Rollen.put(new PathWithMethod("/admin/meldungen/aktuelle-meldung", HttpMethod.POST), rollen);
-
-		}
 	}
 
 	@Override

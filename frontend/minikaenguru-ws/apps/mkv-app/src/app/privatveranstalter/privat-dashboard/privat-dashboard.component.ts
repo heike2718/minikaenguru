@@ -21,17 +21,22 @@ export class PrivatDashboardComponent {
 
 	loading$ = this.veranstalterFacade.loading$;
 
+	textFeatureFlagAnzeigen = false;
+	textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
+
 	constructor(private veranstalterFacade: PrivatveranstalterFacade,
 		private wettbewerbFacade: WettbewerbFacade,
 		private router: Router
 	) { }
 
 	gotoTeilnahmen(): void {
-		console.log('navigate to teilnahmen');
+		this.textFeatureFlagAnzeigen = true;
+		this.textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
 	}
 
 	gotoAuswertung(): void {
-		console.log('navigate to auswertung');
+		this.textFeatureFlagAnzeigen = true;
+		this.textFeatureFlag = 'Auswertungen sind im Moment noch nicht möglich, kommt aber Anfang 2021.';
 	}
 
 	gotoDownloadUnterlagen() {
@@ -39,7 +44,8 @@ export class PrivatDashboardComponent {
 	}
 
 	gotoProfil() {
-		console.log('hier gehts zum Profil');
+		this.textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
+		this.textFeatureFlagAnzeigen = true;
 	}
 
 	gotoInfos(): void {
@@ -48,6 +54,10 @@ export class PrivatDashboardComponent {
 
 	anmelden(): void {
 		this.veranstalterFacade.privatveranstalterAnmelden();
+	}
+
+	toggleTextFeatureFlagAnzeigen(): void {
+		this.textFeatureFlagAnzeigen = !this.textFeatureFlagAnzeigen;
 	}
 
 }

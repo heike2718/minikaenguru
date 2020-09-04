@@ -14,6 +14,9 @@ export class SchulenListComponent implements OnInit {
 
 	schulen$ = this.lehrerFacade.schulen$;
 
+	textFeatureFlagAnzeigen = false;
+	textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber Anfang 2021.';
+
 	constructor(private lehrerFacade: LehrerFacade, private router: Router) {
 	}
 
@@ -21,11 +24,15 @@ export class SchulenListComponent implements OnInit {
 	}
 
 	addSchule(): void {
-		console.log('hier neue Schule auswählen lassen')
+		this.textFeatureFlagAnzeigen = true;
 	}
 
 	gotoDashboard(): void {
 		this.router.navigateByUrl('/lehrer/dashboard');
+	}
+
+	toggleTextFeatureFlagAnzeigen() {
+		this.textFeatureFlagAnzeigen = !this.textFeatureFlagAnzeigen;
 	}
 
 }
