@@ -75,7 +75,7 @@ public class MeldungenService {
 	 * @param meldung
 	 *                Meldung
 	 */
-	public void saveMeldng(final Meldung meldung) {
+	public void saveMeldung(final Meldung meldung) {
 
 		File file = getMeldungenFile();
 
@@ -92,7 +92,21 @@ public class MeldungenService {
 			throw new MkGatewayRuntimeException("Konnte meldung nicht speichern: " + e.getMessage(), e);
 
 		}
+	}
 
+	/**
+	 * Löscht die Meldung.
+	 */
+	public void deleteMeldung() {
+
+		File file = getMeldungenFile();
+
+		if (file.isFile() && file.canWrite()) {
+
+			file.delete();
+
+			LOG.info("aktuelle Meldung {} geloescht", file.getAbsolutePath());
+		}
 	}
 
 	private File getMeldungenFile() {

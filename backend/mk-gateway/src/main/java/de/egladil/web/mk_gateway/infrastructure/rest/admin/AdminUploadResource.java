@@ -22,7 +22,7 @@ import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
  * AdminUploadResource. Wird als showcase aufgehoben, bis andere permanente upload-services eingebaut sind.
  */
 @RequestScoped
-@Deprecated(forRemoval = true)
+@Deprecated
 public class AdminUploadResource {
 
 	@Inject

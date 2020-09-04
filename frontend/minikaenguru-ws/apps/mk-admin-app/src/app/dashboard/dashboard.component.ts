@@ -17,6 +17,10 @@ export class DashboardComponent implements OnInit {
 	ngOnInit(): void {
 	}
 
+	gotoAktuelleMeldung() {
+		this.router.navigateByUrl('/aktuelle-meldung');
+	}
+
 	gotoWettbewerbe() {
 		this.router.navigateByUrl('/wettbewerbe');
 	}

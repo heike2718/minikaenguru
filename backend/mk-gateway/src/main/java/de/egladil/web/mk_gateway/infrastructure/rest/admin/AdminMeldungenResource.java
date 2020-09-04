@@ -6,6 +6,8 @@ package de.egladil.web.mk_gateway.infrastructure.rest.admin;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -29,12 +31,33 @@ public class AdminMeldungenResource {
 	MeldungenService meldungenService;
 
 	@Path("/aktuelle-meldung")
+	@GET
+	public Response getMeldung() {
+
+		Meldung meldung = meldungenService.loadMeldung();
+
+		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), meldung);
+		return Response.ok(responsePayload).build();
+	}
+
+	@Path("/aktuelle-meldung")
 	@POST
 	public Response postMeldung(final Meldung meldung) {
 
-		meldungenService.saveMeldng(meldung);
+		meldungenService.saveMeldung(meldung);
 
 		return Response.ok(ResponsePayload.messageOnly(MessagePayload.info("aktuelle Meldung erfolgreich gespeichert"))).build();
+
+	}
+
+	@Path("/aktuelle-meldung")
+	@DELETE
+	public Response deleteMeldung() {
+
+		meldungenService.deleteMeldung();
+
+		return Response.ok(ResponsePayload
+			.messageOnly(MessagePayload.info("aktuelle Meldung erfolgreich geloescht (sofern es sie überhaupt gab)"))).build();
 
 	}
 

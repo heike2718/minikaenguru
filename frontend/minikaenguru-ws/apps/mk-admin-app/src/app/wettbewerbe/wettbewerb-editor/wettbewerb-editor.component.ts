@@ -22,19 +22,6 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 
 	wettbewerbEditorModel$ = this.wettbewerbFacade.wettbewerbEditorModel$;
 
-	private wettbewerbSubscription: Subscription;
-
-	private saveOutcomeSubscription: Subscription;
-
-	private initialWettbewerbGuiModel = {} as WettbewerbEditorModel;
-
-	constructor(private fb: FormBuilder,
-		private wettbewerbFacade: WettbewerbFacade,
-		// @Inject(DOCUMENT) private document: Document,
-		private router: Router,
-		private messageService: MessageService,
-		private logger: LogService) { }
-
 	jahrFormControl: FormControl;
 
 	statusFormControl: FormControl;
@@ -52,6 +39,19 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 	loesungsbuchstabenKlasse1FormControl: FormControl;
 
 	loesungsbuchstabenKlasse2FormControl: FormControl;
+
+	private wettbewerbSubscription: Subscription;
+
+	private saveOutcomeSubscription: Subscription;
+
+	private initialWettbewerbGuiModel = {} as WettbewerbEditorModel;
+
+	constructor(private fb: FormBuilder,
+		private wettbewerbFacade: WettbewerbFacade,
+		// @Inject(DOCUMENT) private document: Document,
+		private router: Router,
+		private messageService: MessageService,
+		private logger: LogService) { }
 
 	ngOnInit(): void {
 

@@ -32,6 +32,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { KatalogpflegeModule } from './katalogpflege/katalogpflege.module';
+import { AktuelleMeldungModule } from './aktuelle-meldung/aktuelle-meldung.module';
 
 registerLocaleData(localeDe);
 
@@ -80,6 +81,7 @@ registerLocaleData(localeDe);
 			routerState: RouterState.Minimal
 		}),
 		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+		AktuelleMeldungModule,
 		WettbewerbeModule,
 		KatalogpflegeModule,
 		AppRoutingModule, // <-- immer am Ende, damit die wildcard-route als letzte deklariert bleibt
