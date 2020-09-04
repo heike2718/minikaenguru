@@ -7,11 +7,11 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mk-kataloge</artifactId>
-	<version>0.2.7</version>
+	<version>0.2.8</version>
 
 	<properties>
 		<quarkus.version>1.7.2.Final</quarkus.version>
-		<commons.version>1.4.9</commons.version>
+		<commons.version>1.4.10</commons.version>
 		<compiler-plugin.version>3.8.1</compiler-plugin.version>
 		<maven.compiler.parameters>true</maven.compiler.parameters>
 		<maven.compiler.source>1.11</maven.compiler.source>

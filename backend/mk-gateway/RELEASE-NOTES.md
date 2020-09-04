@@ -1,5 +1,12 @@
 # authprovider Release Notes
 
+__Release 0.2.8__:
+
+* Anzeigen aktuelle Meldungen in mkv-app
+* Editieren aktueller Meldung in mk-admin-app
+* Hinweistexte für unfertige Funktionen
+
+
 __Release 0.2.7__:
 
 * mk-wettbewerb und mk-wettbewerb-admin eingespart. Alles findet jetzt in mk-gateway

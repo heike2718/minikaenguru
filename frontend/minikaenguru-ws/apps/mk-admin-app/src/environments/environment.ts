@@ -9,7 +9,7 @@ export const environment = {
         assetsUrl: '/home/heike/git/minikaenguru/frontend/minikaenguru-ws/apps/mk-admin-app/src/assets',
         apiUrl: 'http://192.168.10.176:9510/mk-gateway/admin',
         storageKeyPrefix: 'mka_',
-        version: '0.2.7',
+        version: '0.2.8',
         consoleLogActive: true,
         serverLogActive: false,
         loglevel: 1
