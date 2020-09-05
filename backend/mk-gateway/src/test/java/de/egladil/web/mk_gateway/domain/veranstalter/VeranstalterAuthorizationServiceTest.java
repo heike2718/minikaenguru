@@ -64,7 +64,7 @@ public class VeranstalterAuthorizationServiceTest {
 		Identifier veranstalterId = new Identifier("agdqiqq");
 		Identifier teilnahmeId = new Identifier("vhyxaksgk");
 
-		Privatperson veranstalter = new Privatperson(new Person("azdqi", "Karl"), true,
+		Privatveranstalter veranstalter = new Privatveranstalter(new Person("azdqi", "Karl"), true,
 			Arrays.asList(new Identifier[] { new Identifier("gagdgq") }));
 
 		Mockito.when(veranstalterRepository.ofId(veranstalterId)).thenReturn(Optional.of(veranstalter));
@@ -88,7 +88,7 @@ public class VeranstalterAuthorizationServiceTest {
 		Identifier veranstalterId = new Identifier("agdqiqq");
 		Identifier teilnahmeId = new Identifier("vhyxaksgk");
 
-		Privatperson veranstalter = new Privatperson(new Person("azdqi", "Karl"), false,
+		Privatveranstalter veranstalter = new Privatveranstalter(new Person("azdqi", "Karl"), false,
 			Arrays.asList(new Identifier[] { teilnahmeId }));
 
 		Mockito.when(veranstalterRepository.ofId(veranstalterId)).thenReturn(Optional.of(veranstalter));

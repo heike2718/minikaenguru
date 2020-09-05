@@ -5,6 +5,7 @@
 package de.egladil.web.mk_gateway.domain.auth.signup;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -13,13 +14,12 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
 
-import de.egladil.web.mk_gateway.domain.auth.signup.PrivatmenschCreated;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**
- * PrivatmenschCreatedTest
+ * PrivatveranstalterCreatedTest
  */
-public class PrivatmenschCreatedTest {
+public class PrivatveranstalterCreatedTest {
 
 	@Test
 	void should_ConstructorThrowException_when_OccuredOnNull() {
@@ -28,11 +28,12 @@ public class PrivatmenschCreatedTest {
 		final LocalDateTime occouredOn = null;
 		final String uuid = "cskjags";
 		final String fullName = "Maxe Malle";
+		final String email = "maxe@malle.de";
 
 		// Act
 		try {
 
-			new PrivatmenschCreated(occouredOn, uuid, fullName, true);
+			new PrivatveranstalterCreated(occouredOn, uuid, fullName, email, true);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -48,11 +49,12 @@ public class PrivatmenschCreatedTest {
 		final LocalDateTime occouredOn = LocalDateTime.now();
 		final String uuid = null;
 		final String fullName = "Maxe Malle";
+		final String email = "maxe@malle.de";
 
 		// Act
 		try {
 
-			new PrivatmenschCreated(occouredOn, uuid, fullName, false);
+			new PrivatveranstalterCreated(occouredOn, uuid, fullName, email, false);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -68,11 +70,12 @@ public class PrivatmenschCreatedTest {
 		final LocalDateTime occouredOn = LocalDateTime.now();
 		final String uuid = " ";
 		final String fullName = "Maxe Malle";
+		final String email = "maxe@malle.de";
 
 		// Act
 		try {
 
-			new PrivatmenschCreated(occouredOn, uuid, fullName, false);
+			new PrivatveranstalterCreated(occouredOn, uuid, fullName, email, false);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -88,11 +91,12 @@ public class PrivatmenschCreatedTest {
 		final LocalDateTime occouredOn = LocalDateTime.now();
 		final String uuid = "asbjkhq";
 		final String fullName = null;
+		final String email = "maxe@malle.de";
 
 		// Act
 		try {
 
-			new PrivatmenschCreated(occouredOn, uuid, fullName, true);
+			new PrivatveranstalterCreated(occouredOn, uuid, fullName, email, true);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -108,11 +112,12 @@ public class PrivatmenschCreatedTest {
 		final LocalDateTime occouredOn = LocalDateTime.now();
 		final String uuid = "asbjkhq";
 		final String fullName = "";
+		final String email = "maxe@malle.de";
 
 		// Act
 		try {
 
-			new PrivatmenschCreated(occouredOn, uuid, fullName, true);
+			new PrivatveranstalterCreated(occouredOn, uuid, fullName, email, true);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -128,17 +133,69 @@ public class PrivatmenschCreatedTest {
 		final LocalDateTime occouredOn = LocalDateTime.now();
 		final String uuid = "asbjkhq";
 		final String fullName = "Maxe Malle";
+		final String email = "maxe@malle.de";
 
 		TimeUnit.MILLISECONDS.sleep(200);
 
 		// Act
-		PrivatmenschCreated event = new PrivatmenschCreated(occouredOn, uuid, fullName, true);
+		PrivatveranstalterCreated event = new PrivatveranstalterCreated(occouredOn, uuid, fullName, email, true);
 
 		// Assert
 		assertTrue(LocalDateTime.now().isAfter(event.occuredOn()));
 		assertEquals(uuid, event.uuid());
 		assertEquals(fullName, event.fullName());
-		assertEquals("PrivatmenschCreated", event.typeName());
+		assertEquals(email, event.email());
+		assertEquals("PrivatveranstalterCreated", event.typeName());
+		assertEquals(Rolle.PRIVAT, event.rolle());
+		assertTrue(event.isNewsletterEmpfaenger());
+
+	}
+
+	@Test
+	void should_ConstructorCreate_when_emailNull() throws Exception {
+
+		// Arrange
+		final LocalDateTime occouredOn = LocalDateTime.now();
+		final String uuid = "asbjkhq";
+		final String fullName = "Maxe Malle";
+		final String email = null;
+
+		TimeUnit.MILLISECONDS.sleep(200);
+
+		// Act
+		PrivatveranstalterCreated event = new PrivatveranstalterCreated(occouredOn, uuid, fullName, email, true);
+
+		// Assert
+		assertTrue(LocalDateTime.now().isAfter(event.occuredOn()));
+		assertEquals(uuid, event.uuid());
+		assertEquals(fullName, event.fullName());
+		assertNull(event.email());
+		assertEquals("PrivatveranstalterCreated", event.typeName());
+		assertEquals(Rolle.PRIVAT, event.rolle());
+		assertTrue(event.isNewsletterEmpfaenger());
+
+	}
+
+	@Test
+	void should_ConstructorCreate_when_emailBlank() throws Exception {
+
+		// Arrange
+		final LocalDateTime occouredOn = LocalDateTime.now();
+		final String uuid = "asbjkhq";
+		final String fullName = "Maxe Malle";
+		final String email = "   ";
+
+		TimeUnit.MILLISECONDS.sleep(200);
+
+		// Act
+		PrivatveranstalterCreated event = new PrivatveranstalterCreated(occouredOn, uuid, fullName, email, true);
+
+		// Assert
+		assertTrue(LocalDateTime.now().isAfter(event.occuredOn()));
+		assertEquals(uuid, event.uuid());
+		assertEquals(fullName, event.fullName());
+		assertNull(event.email());
+		assertEquals("PrivatveranstalterCreated", event.typeName());
 		assertEquals(Rolle.PRIVAT, event.rolle());
 		assertTrue(event.isNewsletterEmpfaenger());
 

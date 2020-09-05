@@ -44,13 +44,13 @@ public class ZugangUnterlagenServiceTest {
 
 	private Lehrer lehrerNichtAngemeldet;
 
-	private Privatperson privatpersonSonderzugangsberechtigung;
+	private Privatveranstalter privatpersonSonderzugangsberechtigung;
 
-	private Privatperson privatpersonZugangsberechtigungEntzogen;
+	private Privatveranstalter privatpersonZugangsberechtigungEntzogen;
 
-	private Privatperson privatpersonAngemeldet;
+	private Privatveranstalter privatpersonAngemeldet;
 
-	private Privatperson privatpersonNichtAngemeldet;
+	private Privatveranstalter privatpersonNichtAngemeldet;
 
 	private ZugangUnterlagenService service;
 
@@ -80,18 +80,18 @@ public class ZugangUnterlagenServiceTest {
 			Arrays.asList(new Identifier[] { new Identifier(SCHULTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB) }));
 		this.lehrerZugangsberechtigungEntzogen.verwehreZugangUnterlagen();
 
-		this.privatpersonAngemeldet = new Privatperson(new Person("chkggd", "Schrumpf Nase"), false,
+		this.privatpersonAngemeldet = new Privatveranstalter(new Person("chkggd", "Schrumpf Nase"), false,
 			Arrays.asList(new Identifier[] { new Identifier(PRIVATTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB) }));
 
-		this.privatpersonSonderzugangsberechtigung = new Privatperson(new Person("bsjjas", "Extra Nase"), true,
+		this.privatpersonSonderzugangsberechtigung = new Privatveranstalter(new Person("bsjjas", "Extra Nase"), true,
 			Arrays.asList(new Identifier[] { new Identifier(PRIVATTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB) }));
 		this.privatpersonSonderzugangsberechtigung.erlaubeZugangUnterlagen();
 
-		this.privatpersonZugangsberechtigungEntzogen = new Privatperson(new Person("assddsfdf", "Augeschlossen Nase"), false,
+		this.privatpersonZugangsberechtigungEntzogen = new Privatveranstalter(new Person("assddsfdf", "Augeschlossen Nase"), false,
 			Arrays.asList(new Identifier[] { new Identifier(PRIVATTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB) }));
 		this.privatpersonZugangsberechtigungEntzogen.verwehreZugangUnterlagen();
 
-		this.privatpersonNichtAngemeldet = new Privatperson(new Person("hlvhsh", "Frau Verpeilt"), true,
+		this.privatpersonNichtAngemeldet = new Privatveranstalter(new Person("hlvhsh", "Frau Verpeilt"), true,
 			Arrays.asList(new Identifier("hlvhsh")));
 
 		WettbewerbID wettbewerbId = new WettbewerbID(Integer.valueOf(2020));

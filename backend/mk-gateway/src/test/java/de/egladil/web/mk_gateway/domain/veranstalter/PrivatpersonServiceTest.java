@@ -29,14 +29,14 @@ import de.egladil.web.mk_gateway.domain.user.Rolle;
  */
 public class PrivatpersonServiceTest extends AbstractDomainServiceTest {
 
-	private PrivatpersonService service;
+	private PrivatveranstalterService service;
 
 	@BeforeEach
 	@Override
 	protected void setUp() {
 
 		super.setUp();
-		this.service = PrivatpersonService.createForTest(getVeranstalterRepository(), getZugangUnterlagenService(),
+		this.service = PrivatveranstalterService.createForTest(getVeranstalterRepository(), getZugangUnterlagenService(),
 			getWettbewerbService(), getTeilnahmenRepository(), getPrivatteilnameKuerzelService());
 	}
 
@@ -44,7 +44,7 @@ public class PrivatpersonServiceTest extends AbstractDomainServiceTest {
 	void should_NotAddPrivatperson_when_PrivatpersonExists() {
 
 		// Arrange
-		CreateOrUpdatePrivatpersonCommand command = CreateOrUpdatePrivatpersonCommand.create(UUID_PRIVAT, "Herta Grütze");
+		CreateOrUpdatePrivatveranstalterCommand command = CreateOrUpdatePrivatveranstalterCommand.create(UUID_PRIVAT, "Herta Grütze");
 		int anzahlVorher = getVeranstalterRepository().getCountPrivatpersonAdded();
 
 		// Act
@@ -62,7 +62,7 @@ public class PrivatpersonServiceTest extends AbstractDomainServiceTest {
 		// Arrange
 		final String uuid = "dd97e1bf-f52a-4429-9443-0de9d96dac37";
 		final String fullName = "Herta Kirsch-Grüzte";
-		CreateOrUpdatePrivatpersonCommand command = CreateOrUpdatePrivatpersonCommand.create(uuid,
+		CreateOrUpdatePrivatveranstalterCommand command = CreateOrUpdatePrivatveranstalterCommand.create(uuid,
 			fullName);
 
 		Identifier identifier = new Identifier(uuid);

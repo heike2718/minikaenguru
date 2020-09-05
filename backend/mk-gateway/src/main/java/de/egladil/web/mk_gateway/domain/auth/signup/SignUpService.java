@@ -63,12 +63,13 @@ public class SignUpService {
 
 		case LEHRER:
 			final String schulkuerzel = signUpResourceOwner.schulkuerzel();
-			event = new LehrerCreated(CommonTimeUtils.now(), uuid, fullName, schulkuerzel,
+			event = new LehrerCreated(CommonTimeUtils.now(), uuid, fullName, signUpResourceOwner.email(), schulkuerzel,
 				signUpResourceOwner.isNewsletterEmpfaenger());
 			break;
 
 		case PRIVAT:
-			event = new PrivatmenschCreated(CommonTimeUtils.now(), uuid, fullName, signUpResourceOwner.isNewsletterEmpfaenger());
+			event = new PrivatveranstalterCreated(CommonTimeUtils.now(), uuid, fullName, signUpResourceOwner.email(),
+				signUpResourceOwner.isNewsletterEmpfaenger());
 			break;
 
 		default:

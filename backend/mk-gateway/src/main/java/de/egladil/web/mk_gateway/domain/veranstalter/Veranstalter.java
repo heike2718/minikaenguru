@@ -36,6 +36,8 @@ public abstract class Veranstalter {
 
 	}
 
+	public abstract Veranstalter merge(Person person);
+
 	/**
 	 * @param person
 	 */
@@ -76,9 +78,14 @@ public abstract class Veranstalter {
 		return this.person.fullName();
 	}
 
+	public String email() {
+
+		return this.person.email();
+	}
+
 	/**
 	 * Gibt die Tielnahme-Identifier zurück, die dieser Veranstalter hat. Bei einem Lehrer sind es die Schulkürzel, bei einer
-	 * Privatperson ein Kürzel, welches beim Registrieren einer Privatperson angelegt wird.
+	 * Privatveranstalter ein Kürzel, welches beim Registrieren einer Privatveranstalter angelegt wird.
 	 *
 	 * @return List<Identifier>
 	 */

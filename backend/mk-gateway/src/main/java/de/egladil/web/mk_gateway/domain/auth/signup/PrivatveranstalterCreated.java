@@ -14,9 +14,9 @@ import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**
- * PrivatmenschCreated
+ * PrivatveranstalterCreated
  */
-public class PrivatmenschCreated implements MkGatewayDomainEvent {
+public class PrivatveranstalterCreated implements MkGatewayDomainEvent {
 
 	private final LocalDateTime occouredOn;
 
@@ -30,6 +30,9 @@ public class PrivatmenschCreated implements MkGatewayDomainEvent {
 	private final String fullName;
 
 	@JsonProperty
+	private final String email;
+
+	@JsonProperty
 	private final boolean newsletterEmpfaenger;
 
 	/**
@@ -37,7 +40,7 @@ public class PrivatmenschCreated implements MkGatewayDomainEvent {
 	 * @param uuid
 	 * @param fullName
 	 */
-	public PrivatmenschCreated(final LocalDateTime occouredOn, final String uuid, final String fullName, final boolean newsletterEmpfaenger) {
+	public PrivatveranstalterCreated(final LocalDateTime occouredOn, final String uuid, final String fullName, final String email, final boolean newsletterEmpfaenger) {
 
 		if (occouredOn == null) {
 
@@ -56,6 +59,7 @@ public class PrivatmenschCreated implements MkGatewayDomainEvent {
 
 		this.occouredOn = occouredOn;
 		this.fullName = fullName;
+		this.email = StringUtils.isBlank(email) ? null : email;
 		this.uuid = uuid;
 		this.rolle = Rolle.PRIVAT;
 		this.newsletterEmpfaenger = newsletterEmpfaenger;
@@ -70,7 +74,7 @@ public class PrivatmenschCreated implements MkGatewayDomainEvent {
 	@Override
 	public String typeName() {
 
-		return PrivatmenschCreated.class.getSimpleName();
+		return PrivatveranstalterCreated.class.getSimpleName();
 	}
 
 	public String fullName() {
@@ -91,6 +95,11 @@ public class PrivatmenschCreated implements MkGatewayDomainEvent {
 	public boolean isNewsletterEmpfaenger() {
 
 		return newsletterEmpfaenger;
+	}
+
+	public String email() {
+
+		return email;
 	}
 
 }

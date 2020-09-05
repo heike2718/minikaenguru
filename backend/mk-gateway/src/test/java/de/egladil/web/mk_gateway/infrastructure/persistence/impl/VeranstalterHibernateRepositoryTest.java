@@ -20,7 +20,7 @@ import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.veranstalter.Lehrer;
 import de.egladil.web.mk_gateway.domain.veranstalter.Person;
-import de.egladil.web.mk_gateway.domain.veranstalter.Privatperson;
+import de.egladil.web.mk_gateway.domain.veranstalter.Privatveranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.ZugangUnterlagen;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterVeranstalter;
 
@@ -60,7 +60,7 @@ public class VeranstalterHibernateRepositoryTest {
 		String uuid = "HUugaugduo";
 		String fullName = "Hans Wurst";
 		List<Identifier> teilnahmeIds = Arrays.asList(new Identifier[] { new Identifier("1"), new Identifier("2") });
-		Privatperson lehrer = new Privatperson(new Person(uuid, fullName), true, teilnahmeIds);
+		Privatveranstalter lehrer = new Privatveranstalter(new Person(uuid, fullName), true, teilnahmeIds);
 
 		// Act
 		PersistenterVeranstalter persistenter = new VeranstalterHibernateRepository().mapFromVeranstalter(lehrer);
@@ -124,7 +124,7 @@ public class VeranstalterHibernateRepositoryTest {
 
 		List<Identifier> schulen = Arrays.asList(new Identifier[] { new Identifier("1"), new Identifier("3") });
 
-		Privatperson lehrer = new Privatperson(new Person("OIOIOI", "Erna"), true, schulen);
+		Privatveranstalter lehrer = new Privatveranstalter(new Person("OIOIOI", "Erna"), true, schulen);
 		lehrer.verwehreZugangUnterlagen();
 
 		// Act

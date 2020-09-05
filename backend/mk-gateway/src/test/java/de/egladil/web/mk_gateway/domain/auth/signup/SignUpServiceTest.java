@@ -14,10 +14,6 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import de.egladil.web.mk_gateway.domain.auth.signup.LehrerCreated;
-import de.egladil.web.mk_gateway.domain.auth.signup.PrivatmenschCreated;
-import de.egladil.web.mk_gateway.domain.auth.signup.SignUpResourceOwner;
-import de.egladil.web.mk_gateway.domain.auth.signup.SignUpService;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.user.UserRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
@@ -45,7 +41,7 @@ public class SignUpServiceTest {
 
 		// Arrange
 		final String uuid = "hldshach";
-		SignUpResourceOwner resourceOwner = new SignUpResourceOwner(uuid, "Kalle", "PRIVAT");
+		SignUpResourceOwner resourceOwner = new SignUpResourceOwner(uuid, "Kalle", "kalle@malle.es", "PRIVAT");
 
 		User user = new User();
 		user.setUuid(uuid);
@@ -69,7 +65,7 @@ public class SignUpServiceTest {
 		// Arrange
 		final String uuid = "hldshach";
 		String fullName = "Kalle";
-		SignUpResourceOwner resourceOwner = new SignUpResourceOwner(uuid, fullName, "PRIVAT");
+		SignUpResourceOwner resourceOwner = new SignUpResourceOwner(uuid, fullName, "kalle@malle.es", "PRIVAT");
 
 		User user = new User();
 		user.setUuid(uuid);
@@ -83,9 +79,10 @@ public class SignUpServiceTest {
 		// Assert
 		assertEquals(uuid, resultingUser.getImportierteUuid());
 
-		PrivatmenschCreated event = (PrivatmenschCreated) signupService.event();
+		PrivatveranstalterCreated event = (PrivatveranstalterCreated) signupService.event();
 		assertEquals(fullName, event.fullName());
-		assertEquals("PrivatmenschCreated", event.typeName());
+		assertEquals("kalle@malle.es", event.email());
+		assertEquals("PrivatveranstalterCreated", event.typeName());
 		assertEquals(uuid, event.uuid());
 		assertNotNull(event.occuredOn());
 		assertEquals(Rolle.PRIVAT, event.rolle());
@@ -97,7 +94,7 @@ public class SignUpServiceTest {
 		// Arrange
 		final String uuid = "hldshach";
 		String fullName = "Kalle";
-		SignUpResourceOwner resourceOwner = new SignUpResourceOwner(uuid, fullName, "LEHRER-NUGT6Z90");
+		SignUpResourceOwner resourceOwner = new SignUpResourceOwner(uuid, fullName, "kalle@malle.es", "LEHRER-NUGT6Z90");
 
 		User user = new User();
 		user.setUuid(uuid);
@@ -113,6 +110,7 @@ public class SignUpServiceTest {
 
 		LehrerCreated event = (LehrerCreated) signupService.event();
 		assertEquals(fullName, event.fullName());
+		assertEquals("kalle@malle.es", event.email());
 		assertEquals("LehrerCreated", event.typeName());
 		assertEquals(uuid, event.uuid());
 		assertNotNull(event.occuredOn());

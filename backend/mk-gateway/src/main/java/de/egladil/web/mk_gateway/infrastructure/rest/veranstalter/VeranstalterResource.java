@@ -32,7 +32,7 @@ import de.egladil.web.mk_gateway.domain.auth.signup.SignUpResourceOwner;
 import de.egladil.web.mk_gateway.domain.auth.signup.SignUpService;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.veranstalter.LehrerService;
-import de.egladil.web.mk_gateway.domain.veranstalter.PrivatpersonService;
+import de.egladil.web.mk_gateway.domain.veranstalter.PrivatveranstalterService;
 import de.egladil.web.mk_gateway.domain.veranstalter.ZugangUnterlagenService;
 
 /**
@@ -53,7 +53,7 @@ public class VeranstalterResource {
 	ZugangUnterlagenService zugangUnterlagenService;
 
 	@Inject
-	PrivatpersonService privatpersonService;
+	PrivatveranstalterService privatveranstalterService;
 
 	@Inject
 	LehrerService lehrerService;
@@ -110,7 +110,7 @@ public class VeranstalterResource {
 
 		Principal principal = securityContext.getUserPrincipal();
 
-		PrivatveranstalterAPIModel privatveranstalter = privatpersonService.findPrivatperson(principal.getName());
+		PrivatveranstalterAPIModel privatveranstalter = privatveranstalterService.findPrivatperson(principal.getName());
 		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), privatveranstalter);
 
 		return Response.ok(responsePayload).build();

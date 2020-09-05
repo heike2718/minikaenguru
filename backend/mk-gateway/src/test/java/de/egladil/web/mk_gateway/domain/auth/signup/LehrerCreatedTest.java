@@ -5,6 +5,7 @@
 package de.egladil.web.mk_gateway.domain.auth.signup;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -13,7 +14,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
 
-import de.egladil.web.mk_gateway.domain.auth.signup.LehrerCreated;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**
@@ -28,12 +28,13 @@ public class LehrerCreatedTest {
 		final LocalDateTime occouredOn = null;
 		final String uuid = "cskjags";
 		final String fullName = "Maxe Malle";
+		final String email = "alfons@gmx.de";
 		final String schulkuerzel = "H7GDGHJ";
 
 		// Act
 		try {
 
-			new LehrerCreated(occouredOn, uuid, fullName, schulkuerzel, true);
+			new LehrerCreated(occouredOn, uuid, fullName, email, schulkuerzel, true);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -48,13 +49,14 @@ public class LehrerCreatedTest {
 		// Arrange
 		final LocalDateTime occouredOn = LocalDateTime.now();
 		final String uuid = null;
+		final String email = "alfons@gmx.de";
 		final String fullName = "Maxe Malle";
 		final String schulkuerzel = "H7GDGHJ";
 
 		// Act
 		try {
 
-			new LehrerCreated(occouredOn, uuid, fullName, schulkuerzel, false);
+			new LehrerCreated(occouredOn, uuid, fullName, email, schulkuerzel, false);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -70,12 +72,13 @@ public class LehrerCreatedTest {
 		final LocalDateTime occouredOn = LocalDateTime.now();
 		final String uuid = " ";
 		final String fullName = "Maxe Malle";
+		final String email = "alfons@gmx.de";
 		final String schulkuerzel = "H7GDGHJ";
 
 		// Act
 		try {
 
-			new LehrerCreated(occouredOn, uuid, fullName, schulkuerzel, false);
+			new LehrerCreated(occouredOn, uuid, fullName, email, schulkuerzel, false);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -91,12 +94,13 @@ public class LehrerCreatedTest {
 		final LocalDateTime occouredOn = LocalDateTime.now();
 		final String uuid = "asbjkhq";
 		final String fullName = null;
+		final String email = "alfons@gmx.de";
 		final String schulkuerzel = "H7GDGHJ";
 
 		// Act
 		try {
 
-			new LehrerCreated(occouredOn, uuid, fullName, schulkuerzel, true);
+			new LehrerCreated(occouredOn, uuid, fullName, email, schulkuerzel, true);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -112,12 +116,13 @@ public class LehrerCreatedTest {
 		final LocalDateTime occouredOn = LocalDateTime.now();
 		final String uuid = "asbjkhq";
 		final String fullName = "";
+		final String email = "alfons@gmx.de";
 		final String schulkuerzel = "H7GDGHJ";
 
 		// Act
 		try {
 
-			new LehrerCreated(occouredOn, uuid, fullName, schulkuerzel, false);
+			new LehrerCreated(occouredOn, uuid, fullName, email, schulkuerzel, false);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -133,12 +138,13 @@ public class LehrerCreatedTest {
 		final LocalDateTime occouredOn = LocalDateTime.now();
 		final String uuid = "asbjkhq";
 		final String fullName = "Maxe Malle";
+		final String email = "alfons@gmx.de";
 		final String schulkuerzel = null;
 
 		// Act
 		try {
 
-			new LehrerCreated(occouredOn, uuid, fullName, schulkuerzel, true);
+			new LehrerCreated(occouredOn, uuid, fullName, email, schulkuerzel, true);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -154,12 +160,13 @@ public class LehrerCreatedTest {
 		final LocalDateTime occouredOn = LocalDateTime.now();
 		final String uuid = "asbjkhq";
 		final String fullName = "Maxe Malle";
+		final String email = "alfons@gmx.de";
 		final String schulkuerzel = "  ";
 
 		// Act
 		try {
 
-			new LehrerCreated(occouredOn, uuid, fullName, schulkuerzel, false);
+			new LehrerCreated(occouredOn, uuid, fullName, email, schulkuerzel, false);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -175,17 +182,73 @@ public class LehrerCreatedTest {
 		final LocalDateTime occouredOn = LocalDateTime.now();
 		final String uuid = "asbjkhq";
 		final String fullName = "Maxe Malle";
+		final String email = "alfons@gmx.de";
 		final String schulkuerzel = "H7GDGHJ";
 
 		TimeUnit.MILLISECONDS.sleep(200);
 
 		// Act
-		LehrerCreated event = new LehrerCreated(occouredOn, uuid, fullName, schulkuerzel, true);
+		LehrerCreated event = new LehrerCreated(occouredOn, uuid, fullName, email, schulkuerzel, true);
 
 		// Assert
 		assertTrue(LocalDateTime.now().isAfter(event.occuredOn()));
 		assertEquals(uuid, event.uuid());
 		assertEquals(fullName, event.fullName());
+		assertEquals(email, event.email());
+		assertEquals("LehrerCreated", event.typeName());
+		assertEquals(schulkuerzel, event.schulkuerzel());
+		assertEquals(Rolle.LEHRER, event.rolle());
+		assertTrue(event.isNewsletterEmpfaenger());
+
+	}
+
+	@Test
+	void should_ConstructorCreate_when_emailNull() throws Exception {
+
+		// Arrange
+		final LocalDateTime occouredOn = LocalDateTime.now();
+		final String uuid = "asbjkhq";
+		final String fullName = "Maxe Malle";
+		final String email = null;
+		final String schulkuerzel = "H7GDGHJ";
+
+		TimeUnit.MILLISECONDS.sleep(200);
+
+		// Act
+		LehrerCreated event = new LehrerCreated(occouredOn, uuid, fullName, email, schulkuerzel, true);
+
+		// Assert
+		assertTrue(LocalDateTime.now().isAfter(event.occuredOn()));
+		assertEquals(uuid, event.uuid());
+		assertEquals(fullName, event.fullName());
+		assertNull(event.email());
+		assertEquals("LehrerCreated", event.typeName());
+		assertEquals(schulkuerzel, event.schulkuerzel());
+		assertEquals(Rolle.LEHRER, event.rolle());
+		assertTrue(event.isNewsletterEmpfaenger());
+
+	}
+
+	@Test
+	void should_ConstructorCreate_when_emailBlank() throws Exception {
+
+		// Arrange
+		final LocalDateTime occouredOn = LocalDateTime.now();
+		final String uuid = "asbjkhq";
+		final String fullName = "Maxe Malle";
+		final String email = "  ";
+		final String schulkuerzel = "H7GDGHJ";
+
+		TimeUnit.MILLISECONDS.sleep(200);
+
+		// Act
+		LehrerCreated event = new LehrerCreated(occouredOn, uuid, fullName, email, schulkuerzel, true);
+
+		// Assert
+		assertTrue(LocalDateTime.now().isAfter(event.occuredOn()));
+		assertEquals(uuid, event.uuid());
+		assertEquals(fullName, event.fullName());
+		assertNull(event.email());
 		assertEquals("LehrerCreated", event.typeName());
 		assertEquals(schulkuerzel, event.schulkuerzel());
 		assertEquals(Rolle.LEHRER, event.rolle());

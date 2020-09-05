@@ -24,6 +24,8 @@ public class Person {
 	@JsonProperty
 	private String fullName;
 
+	private String email;
+
 	/**
 	 * Konstruktor für JSON deserialization
 	 */
@@ -93,6 +95,17 @@ public class Person {
 	public String toString() {
 
 		return "Person [uuid=" + uuid + ", fullName=" + fullName + "]";
+	}
+
+	public String email() {
+
+		return email;
+	}
+
+	public Person withEmail(final String email) {
+
+		this.email = email;
+		return this;
 	}
 
 }
