@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import de.egladil.web.commons_crypto.JWTService;
@@ -97,7 +98,15 @@ public class AuthResultToResourceOwnerMapper implements Function<AuthResult, Sig
 			DecodedJWT decodedJWT = jwtService.verify(jwt, SessionUtils.getPublicKey());
 
 			String uuid = decodedJWT.getSubject();
-			String fullName = new DecodedJWTReader(decodedJWT).getFullName();
+			DecodedJWTReader decodedJWTReader = new DecodedJWTReader(decodedJWT);
+			String fullName = decodedJWTReader.getFullName();
+			String email = null;
+			Claim emailClaim = decodedJWT.getClaim("email");
+
+			if (emailClaim != null) {
+
+				email = emailClaim.asString();
+			}
 
 			if (StringUtils.isBlank(fullName)) {
 
@@ -105,7 +114,7 @@ public class AuthResultToResourceOwnerMapper implements Function<AuthResult, Sig
 					"Fehler in der Konfiguration der MinikänguruApp beim AuthProvider: Vor- und Nachname sind erforderlich");
 			}
 
-			return new SignUpResourceOwner(uuid, fullName, authResult.getNonce());
+			return new SignUpResourceOwner(uuid, fullName, email, authResult.getNonce());
 
 		} catch (TokenExpiredException e) {
 

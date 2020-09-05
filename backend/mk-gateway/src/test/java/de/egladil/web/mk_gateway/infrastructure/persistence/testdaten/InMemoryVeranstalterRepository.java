@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.veranstalter.Lehrer;
-import de.egladil.web.mk_gateway.domain.veranstalter.Privatperson;
+import de.egladil.web.mk_gateway.domain.veranstalter.Privatveranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.entities.InMemoryVeranstalter;
@@ -67,7 +67,7 @@ public class InMemoryVeranstalterRepository implements VeranstalterRepository {
 
 		if (ver.getRolle() == Rolle.PRIVAT) {
 
-			Privatperson privatperson = new Privatperson(ver.getPerson(), true, ver.getTeilnahmenummern());
+			Privatveranstalter privatveranstalter = new Privatveranstalter(ver.getPerson(), true, ver.getTeilnahmenummern());
 
 			switch (ver.getZugangUnterlagen()) {
 
@@ -75,15 +75,15 @@ public class InMemoryVeranstalterRepository implements VeranstalterRepository {
 				break;
 
 			case ENTZOGEN:
-				privatperson.verwehreZugangUnterlagen();
+				privatveranstalter.verwehreZugangUnterlagen();
 				break;
 
 			case ERTEILT:
-				privatperson.erlaubeZugangUnterlagen();
+				privatveranstalter.erlaubeZugangUnterlagen();
 			default:
 				break;
 			}
-			return privatperson;
+			return privatveranstalter;
 		}
 
 		if (ver.getRolle() == Rolle.LEHRER) {

@@ -12,7 +12,6 @@ import static org.junit.Assert.fail;
 
 import org.junit.jupiter.api.Test;
 
-import de.egladil.web.mk_gateway.domain.auth.signup.SignUpResourceOwner;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 
@@ -28,10 +27,11 @@ public class SignUpResourceOwnerTest {
 		final String uuid = null;
 		final String fullName = "Maxe Meier";
 		final String nonce = "LEHRER-26TZ54HE";
+		final String email = "maxe@web.de";
 
 		try {
 
-			new SignUpResourceOwner(uuid, fullName, nonce);
+			new SignUpResourceOwner(uuid, fullName, email, nonce);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -45,11 +45,12 @@ public class SignUpResourceOwnerTest {
 		// Arrange
 		final String uuid = " ";
 		final String fullName = "Maxe Meier";
+		final String email = "maxe@web.de";
 		final String nonce = "LEHRER-26TZ54HE";
 
 		try {
 
-			new SignUpResourceOwner(uuid, fullName, nonce);
+			new SignUpResourceOwner(uuid, fullName, email, nonce);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -63,11 +64,12 @@ public class SignUpResourceOwnerTest {
 		// Arrange
 		final String uuid = "hhalsh";
 		final String fullName = null;
+		final String email = "maxe@web.de";
 		final String nonce = "LEHRER-26TZ54HE";
 
 		try {
 
-			new SignUpResourceOwner(uuid, fullName, nonce);
+			new SignUpResourceOwner(uuid, fullName, email, nonce);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -81,11 +83,12 @@ public class SignUpResourceOwnerTest {
 		// Arrange
 		final String uuid = "dgggigcqig";
 		final String fullName = " ";
+		final String email = "maxe@web.de";
 		final String nonce = "LEHRER-26TZ54HE";
 
 		try {
 
-			new SignUpResourceOwner(uuid, fullName, nonce);
+			new SignUpResourceOwner(uuid, fullName, email, nonce);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -99,11 +102,12 @@ public class SignUpResourceOwnerTest {
 		// Arrange
 		final String uuid = "hhalsh";
 		final String fullName = "Maxe Meier";
+		final String email = "maxe@web.de";
 		final String nonce = null;
 
 		try {
 
-			new SignUpResourceOwner(uuid, fullName, nonce);
+			new SignUpResourceOwner(uuid, fullName, email, nonce);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -117,11 +121,12 @@ public class SignUpResourceOwnerTest {
 		// Arrange
 		final String uuid = "dgggigcqig";
 		final String fullName = "Maxe Meier";
+		final String email = "maxe@web.de";
 		final String nonce = "  ";
 
 		try {
 
-			new SignUpResourceOwner(uuid, fullName, nonce);
+			new SignUpResourceOwner(uuid, fullName, email, nonce);
 			fail("keine IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
 
@@ -135,11 +140,12 @@ public class SignUpResourceOwnerTest {
 		// Arrange
 		final String uuid = "dgggigcqig";
 		final String fullName = "Maxe Meier";
+		final String email = "maxe@web.de";
 		final String nonce = "aguqgo";
 
 		try {
 
-			new SignUpResourceOwner(uuid, fullName, nonce);
+			new SignUpResourceOwner(uuid, fullName, email, nonce);
 			fail("keine MkGatewayRuntimeException");
 		} catch (MkGatewayRuntimeException e) {
 
@@ -155,11 +161,12 @@ public class SignUpResourceOwnerTest {
 		// Arrange
 		final String uuid = "dgggigcqig";
 		final String fullName = "Maxe Meier";
+		final String email = "maxe@web.de";
 		final String nonce = "LEHRER";
 
 		try {
 
-			new SignUpResourceOwner(uuid, fullName, nonce);
+			new SignUpResourceOwner(uuid, fullName, email, nonce);
 			fail("keine MkGatewayRuntimeException");
 		} catch (MkGatewayRuntimeException e) {
 
@@ -175,14 +182,16 @@ public class SignUpResourceOwnerTest {
 		// Arrange
 		final String uuid = "dgggigcqig";
 		final String fullName = "Maxe Meier";
+		final String email = "maxe@web.de";
 		final String nonce = "LEHRER-BLA-BLUBB";
 
 		// Act
-		SignUpResourceOwner owner = new SignUpResourceOwner(uuid, fullName, nonce);
+		SignUpResourceOwner owner = new SignUpResourceOwner(uuid, fullName, email, nonce);
 
 		// Assert
 		assertFalse(owner.isNewsletterEmpfaenger());
 		assertEquals("Maxe Meier", owner.fullName());
+		assertEquals("maxe@web.de", owner.email());
 		assertEquals("dgggigcqig", owner.uuid());
 		assertEquals(Rolle.LEHRER, owner.rolle());
 		assertEquals("BLA", owner.schulkuerzel());
@@ -195,14 +204,16 @@ public class SignUpResourceOwnerTest {
 		// Arrange
 		final String uuid = "dgggigcqig";
 		final String fullName = "Maxe Meier";
+		final String email = "maxe@web.de";
 		final String nonce = "LEHRER-BLA-TRUE";
 
 		// Act
-		SignUpResourceOwner owner = new SignUpResourceOwner(uuid, fullName, nonce);
+		SignUpResourceOwner owner = new SignUpResourceOwner(uuid, fullName, email, nonce);
 
 		// Assert
 		assertTrue(owner.isNewsletterEmpfaenger());
 		assertEquals("Maxe Meier", owner.fullName());
+		assertEquals("maxe@web.de", owner.email());
 		assertEquals("dgggigcqig", owner.uuid());
 		assertEquals(Rolle.LEHRER, owner.rolle());
 		assertEquals("BLA", owner.schulkuerzel());
@@ -215,11 +226,12 @@ public class SignUpResourceOwnerTest {
 		// Arrange
 		final String uuid = "dgggigcqig";
 		final String fullName = "Maxe Meier";
+		final String email = "maxe@web.de";
 		final String nonce = "LEHRER-BLA-TRUE-BLUBB";
 
 		try {
 
-			new SignUpResourceOwner(uuid, fullName, nonce);
+			new SignUpResourceOwner(uuid, fullName, email, nonce);
 			fail("keine MkGatewayRuntimeException");
 		} catch (MkGatewayRuntimeException e) {
 
@@ -235,11 +247,12 @@ public class SignUpResourceOwnerTest {
 		// Arrange
 		final String uuid = "dgggigcqig";
 		final String fullName = "Maxe Meier";
+		final String email = "maxe@web.de";
 		final String nonce = "LEHRER-";
 
 		try {
 
-			new SignUpResourceOwner(uuid, fullName, nonce);
+			new SignUpResourceOwner(uuid, fullName, email, nonce);
 			fail("keine MkGatewayRuntimeException");
 		} catch (MkGatewayRuntimeException e) {
 
@@ -255,10 +268,11 @@ public class SignUpResourceOwnerTest {
 		// Arrange
 		final String uuid = "dgggigcqig";
 		final String fullName = "Maxe Meier";
+		final String email = "maxe@web.de";
 		final String nonce = "PRIVAT";
 
 		// Act
-		SignUpResourceOwner result = new SignUpResourceOwner(uuid, fullName, nonce);
+		SignUpResourceOwner result = new SignUpResourceOwner(uuid, fullName, email, nonce);
 
 		// Assert
 		assertEquals(uuid, result.uuid());
@@ -274,14 +288,16 @@ public class SignUpResourceOwnerTest {
 		// Arrange
 		final String uuid = "dgggigcqig";
 		final String fullName = "Maxe Meier";
+		final String email = "maxe@web.de";
 		final String nonce = "PRIVAT-TRUE";
 
 		// Act
-		SignUpResourceOwner result = new SignUpResourceOwner(uuid, fullName, nonce);
+		SignUpResourceOwner result = new SignUpResourceOwner(uuid, fullName, email, nonce);
 
 		// Assert
 		assertEquals(uuid, result.uuid());
 		assertEquals(fullName, result.fullName());
+		assertEquals(email, result.email());
 		assertEquals(Rolle.PRIVAT, result.rolle());
 		assertTrue(result.isNewsletterEmpfaenger());
 		assertNull(result.schulkuerzel());
@@ -293,14 +309,40 @@ public class SignUpResourceOwnerTest {
 		// Arrange
 		final String uuid = "dgggigcqig";
 		final String fullName = "Maxe Meier";
+		final String email = "maxe@web.de";
 		final String nonce = "LEHRER-26TZ54HE";
 
 		// Act
-		SignUpResourceOwner result = new SignUpResourceOwner(uuid, fullName, nonce);
+		SignUpResourceOwner result = new SignUpResourceOwner(uuid, fullName, email, nonce);
 
 		// Assert
 		assertEquals(uuid, result.uuid());
 		assertEquals(fullName, result.fullName());
+		assertEquals(email, result.email());
+		assertEquals(Rolle.LEHRER, result.rolle());
+		assertEquals("26TZ54HE", result.schulkuerzel());
+
+		assertEquals(result, result);
+		assertFalse(result.equals(new Object()));
+		assertFalse(result.equals(null));
+	}
+
+	@Test
+	void should_ConstructorTransformBlankEmail() {
+
+		// Arrange
+		final String uuid = "dgggigcqig";
+		final String fullName = "Maxe Meier";
+		final String email = " ";
+		final String nonce = "LEHRER-26TZ54HE";
+
+		// Act
+		SignUpResourceOwner result = new SignUpResourceOwner(uuid, fullName, email, nonce);
+
+		// Assert
+		assertEquals(uuid, result.uuid());
+		assertEquals(fullName, result.fullName());
+		assertNull(result.email());
 		assertEquals(Rolle.LEHRER, result.rolle());
 		assertEquals("26TZ54HE", result.schulkuerzel());
 
@@ -315,12 +357,13 @@ public class SignUpResourceOwnerTest {
 		// Arrange
 		final String uuid = "dgggigcqig";
 		final String fullName = "Maxe Meier";
+		final String email = "maxe@web.de";
 		final String nonceLehrer = "LEHRER-26TZ54HE";
 		final String noncePrivat = "PRIVAT";
 
 		// Act
-		SignUpResourceOwner lehrer = new SignUpResourceOwner(uuid, fullName, nonceLehrer);
-		SignUpResourceOwner privat = new SignUpResourceOwner(uuid, fullName, noncePrivat);
+		SignUpResourceOwner lehrer = new SignUpResourceOwner(uuid, fullName, email, nonceLehrer);
+		SignUpResourceOwner privat = new SignUpResourceOwner(uuid, fullName, email, noncePrivat);
 
 		// Assert
 		assertEquals(Rolle.LEHRER, lehrer.rolle());

@@ -485,7 +485,7 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 	}
 
 	@Nested
-	@DisplayName("Privatperson anmelden")
+	@DisplayName("Privatveranstalter anmelden")
 	class PrivatpersonAnmeldenFeature {
 
 		@Test

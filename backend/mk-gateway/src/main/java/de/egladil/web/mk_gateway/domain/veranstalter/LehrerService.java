@@ -65,7 +65,7 @@ public class LehrerService {
 
 		List<Identifier> schulen = Arrays.stream(neueSchulkuerzel.split(",")).map(s -> new Identifier(s))
 			.collect(Collectors.toList());
-		Person person = new Person(data.uuid(), data.fullName());
+		Person person = new Person(data.uuid(), data.fullName()).withEmail(data.email());
 
 		Lehrer lehrer = new Lehrer(person, data.newsletterEmpfaenger(), schulen);
 

@@ -33,6 +33,9 @@ public class CreateOrUpdateLehrerCommand {
 	private String fullName;
 
 	@JsonProperty
+	private String email;
+
+	@JsonProperty
 	private String schulkuerzel;
 
 	@JsonProperty
@@ -42,6 +45,7 @@ public class CreateOrUpdateLehrerCommand {
 
 		CreateOrUpdateLehrerCommand result = new CreateOrUpdateLehrerCommand();
 		result.fullName = event.fullName();
+		result.email = event.email();
 		result.newsletterEmpfaenger = event.isNewsletterEmpfaenger();
 		result.rolle = Rolle.LEHRER.toString();
 		result.schulkuerzel = event.schulkuerzel();
@@ -118,6 +122,11 @@ public class CreateOrUpdateLehrerCommand {
 
 		this.newsletterEmpfaenger = newsletterEmpfaenger;
 		return this;
+	}
+
+	public String email() {
+
+		return email;
 	}
 
 	@Override

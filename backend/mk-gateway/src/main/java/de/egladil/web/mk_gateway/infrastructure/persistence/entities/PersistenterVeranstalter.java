@@ -47,6 +47,9 @@ public class PersistenterVeranstalter extends ConcurrencySafeEntity {
 	@Column(name = "NEWSLETTER")
 	private boolean newsletterEmpfaenger;
 
+	@Column(name = "EMAIL")
+	private String email;
+
 	public String getTeilnahmenummern() {
 
 		return teilnahmenummern;
@@ -95,5 +98,15 @@ public class PersistenterVeranstalter extends ConcurrencySafeEntity {
 	public void setNewsletterEmpfaenger(final boolean newsletter) {
 
 		this.newsletterEmpfaenger = newsletter;
+	}
+
+	public String getEmail() {
+
+		return email;
+	}
+
+	public void setEmail(final String email) {
+
+		this.email = email;
 	}
 }

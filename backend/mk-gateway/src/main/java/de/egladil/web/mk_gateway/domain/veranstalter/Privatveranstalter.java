@@ -7,6 +7,7 @@ package de.egladil.web.mk_gateway.domain.veranstalter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -15,15 +16,15 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**
- * Privatperson
+ * Privatveranstalter
  */
-public class Privatperson extends Veranstalter {
+public class Privatveranstalter extends Veranstalter {
 
-	// wenn sich eine Privatperson registriert, wird genau eine Teilnahmenummer generiert.
+	// wenn sich eine Privatveranstalter registriert, wird genau eine Teilnahmenummer generiert.
 	@JsonProperty
 	private List<Identifier> teilnahmenummern = new ArrayList<>();
 
-	Privatperson() {
+	Privatveranstalter() {
 
 		super();
 
@@ -33,7 +34,7 @@ public class Privatperson extends Veranstalter {
 	 * @param person
 	 * @param teilnahmekuerzel
 	 */
-	public Privatperson(final Person person, final boolean newsletterEmpfaenger, final List<Identifier> teilnahmenummern) {
+	public Privatveranstalter(final Person person, final boolean newsletterEmpfaenger, final List<Identifier> teilnahmenummern) {
 
 		super(person, newsletterEmpfaenger);
 
@@ -69,5 +70,13 @@ public class Privatperson extends Veranstalter {
 	public String toString() {
 
 		return uuid() + " - " + fullName() + " (PRIVAT)";
+	}
+
+	@Override
+	public Veranstalter merge(final Person person) {
+
+		List<Identifier> kopieTeilnahmenummern = this.teilnahmenummern.stream().map(i -> new Identifier(i.identifier()))
+			.collect(Collectors.toList());
+		return new Privatveranstalter(person, this.isNewsletterEmpfaenger(), kopieTeilnahmenummern);
 	}
 }

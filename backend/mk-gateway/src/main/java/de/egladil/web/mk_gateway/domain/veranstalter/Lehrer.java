@@ -6,6 +6,9 @@ package de.egladil.web.mk_gateway.domain.veranstalter;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -62,5 +65,20 @@ public class Lehrer extends Veranstalter {
 	public String toString() {
 
 		return uuid() + " - " + fullName() + " (LEHRER)";
+	}
+
+	@Override
+	public Veranstalter merge(final Person person) {
+
+		List<Identifier> kopieTeilnahmenummern = this.schulen.stream().map(i -> new Identifier(i.identifier()))
+			.collect(Collectors.toList());
+		return new Lehrer(person, this.isNewsletterEmpfaenger(), kopieTeilnahmenummern);
+	}
+
+	public String joinedSchulen() {
+
+		String schulkuerzel = StringUtils.join(schulen.stream().map(i -> i.identifier()).collect(Collectors.toList()),
+			",");
+		return schulkuerzel;
 	}
 }

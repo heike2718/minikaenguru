@@ -32,6 +32,9 @@ public class LehrerCreated implements MkGatewayDomainEvent {
 	private final String fullName;
 
 	@JsonProperty
+	private final String email;
+
+	@JsonProperty
 	private final String schulkuerzel;
 
 	@JsonProperty
@@ -43,7 +46,7 @@ public class LehrerCreated implements MkGatewayDomainEvent {
 	 * @param fullName
 	 * @param schulkuerzel
 	 */
-	public LehrerCreated(final LocalDateTime occouredOn, final String uuid, final String fullName, final String schulkuerzel, final boolean newsletterEmpfaenger) {
+	public LehrerCreated(final LocalDateTime occouredOn, final String uuid, final String fullName, final String email, final String schulkuerzel, final boolean newsletterEmpfaenger) {
 
 		if (occouredOn == null) {
 
@@ -68,6 +71,7 @@ public class LehrerCreated implements MkGatewayDomainEvent {
 		this.occouredOn = occouredOn;
 		this.uuid = uuid;
 		this.fullName = fullName;
+		this.email = StringUtils.isBlank(email) ? null : email;
 		this.schulkuerzel = schulkuerzel;
 		this.rolle = Rolle.LEHRER;
 		this.newsletterEmpfaenger = newsletterEmpfaenger;
@@ -108,5 +112,10 @@ public class LehrerCreated implements MkGatewayDomainEvent {
 	public boolean isNewsletterEmpfaenger() {
 
 		return newsletterEmpfaenger;
+	}
+
+	public String email() {
+
+		return email;
 	}
 }

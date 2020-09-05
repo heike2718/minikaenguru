@@ -36,13 +36,13 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 
 /**
- * PrivatpersonService
+ * PrivatveranstalterService
  */
 @ApplicationScoped
 @DomainService
-public class PrivatpersonService {
+public class PrivatveranstalterService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(PrivatpersonService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(PrivatveranstalterService.class);
 
 	@Inject
 	VeranstalterRepository repository;
@@ -69,9 +69,9 @@ public class PrivatpersonService {
 
 	private DataInconsistencyRegistered dataInconsistencyRegistered;
 
-	public static PrivatpersonService createForTest(final VeranstalterRepository veranstalterRepository, final ZugangUnterlagenService zugangUnterlagenService, final WettbewerbService wettbewerbSerivice, final TeilnahmenRepository teilnahmenRepository, final PrivatteilnahmeKuerzelService teilnahmeKuerzelService) {
+	public static PrivatveranstalterService createForTest(final VeranstalterRepository veranstalterRepository, final ZugangUnterlagenService zugangUnterlagenService, final WettbewerbService wettbewerbSerivice, final TeilnahmenRepository teilnahmenRepository, final PrivatteilnahmeKuerzelService teilnahmeKuerzelService) {
 
-		PrivatpersonService result = new PrivatpersonService();
+		PrivatveranstalterService result = new PrivatveranstalterService();
 		result.repository = veranstalterRepository;
 		result.zugangUnterlagenService = zugangUnterlagenService;
 		result.wettbewerbSerivice = wettbewerbSerivice;
@@ -110,23 +110,24 @@ public class PrivatpersonService {
 
 		Optional<Wettbewerb> optWettbewerb = wettbewerbSerivice.aktuellerWettbewerb();
 
-		Privatperson privatperson = (Privatperson) veranstalter;
+		Privatveranstalter privatveranstalter = (Privatveranstalter) veranstalter;
 		boolean hatZugang = false;
 
 		if (optWettbewerb.isPresent()) {
 
-			hatZugang = zugangUnterlagenService.hatZugang(privatperson, optWettbewerb.get());
+			hatZugang = zugangUnterlagenService.hatZugang(privatveranstalter, optWettbewerb.get());
 		}
 
 		PrivatveranstalterAPIModel result = PrivatveranstalterAPIModel.create(hatZugang);
 
 		if (optWettbewerb.isPresent()) {
 
-			List<Identifier> teilnahmenummern = privatperson.teilnahmeIdentifier();
+			List<Identifier> teilnahmenummern = privatveranstalter.teilnahmeIdentifier();
 
 			if (teilnahmenummern.isEmpty() || teilnahmenummern.size() > 1) {
 
-				String msg = "Bei der Migration der Privatkonten ist etwas schiefgegangen: " + privatperson.toString() + " hat "
+				String msg = "Bei der Migration der Privatkonten ist etwas schiefgegangen: " + privatveranstalter.toString()
+					+ " hat "
 					+ teilnahmenummern.size() + " Teilnahmenummern.";
 
 				LOG.warn(msg);
@@ -156,13 +157,13 @@ public class PrivatpersonService {
 	}
 
 	/**
-	 * Persistiert eine neue Privatperson.
+	 * Persistiert eine neue Privatveranstalter.
 	 *
 	 * @param data
-	 *             CreateOrUpdatePrivatpersonCommand
+	 *             CreateOrUpdatePrivatveranstalterCommand
 	 */
 	@Transactional
-	public boolean addPrivatperson(final CreateOrUpdatePrivatpersonCommand data) {
+	public boolean addPrivatperson(final CreateOrUpdatePrivatveranstalterCommand data) {
 
 		Optional<Veranstalter> optPrivatperson = repository.ofId(new Identifier(data.uuid()));
 
@@ -174,11 +175,11 @@ public class PrivatpersonService {
 		// Issue minikaenguru#18
 		String teilnahmenummer = this.teilnahmenKuerzelService.neuesKuerzel();
 
-		Person person = new Person(data.uuid(), data.fullName());
-		Privatperson privatperson = new Privatperson(person, data.newsletterEmpfaenger(),
+		Person person = new Person(data.uuid(), data.fullName()).withEmail(data.email());
+		Privatveranstalter privatveranstalter = new Privatveranstalter(person, data.newsletterEmpfaenger(),
 			Arrays.asList(new Identifier(teilnahmenummer)));
 
-		repository.addVeranstalter(privatperson);
+		repository.addVeranstalter(privatveranstalter);
 		return true;
 	}
 

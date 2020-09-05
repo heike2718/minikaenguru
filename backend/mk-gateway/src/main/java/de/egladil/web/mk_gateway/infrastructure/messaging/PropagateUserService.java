@@ -9,13 +9,13 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import de.egladil.web.mk_gateway.domain.auth.signup.LehrerCreated;
-import de.egladil.web.mk_gateway.domain.auth.signup.PrivatmenschCreated;
+import de.egladil.web.mk_gateway.domain.auth.signup.PrivatveranstalterCreated;
 import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
 import de.egladil.web.mk_gateway.domain.semantik.InfrastructureService;
 import de.egladil.web.mk_gateway.domain.veranstalter.CreateOrUpdateLehrerCommand;
-import de.egladil.web.mk_gateway.domain.veranstalter.CreateOrUpdatePrivatpersonCommand;
+import de.egladil.web.mk_gateway.domain.veranstalter.CreateOrUpdatePrivatveranstalterCommand;
 import de.egladil.web.mk_gateway.domain.veranstalter.LehrerService;
-import de.egladil.web.mk_gateway.domain.veranstalter.PrivatpersonService;
+import de.egladil.web.mk_gateway.domain.veranstalter.PrivatveranstalterService;
 
 /**
  * PropagateUserService
@@ -28,7 +28,7 @@ public class PropagateUserService {
 	LehrerService lehrerService;
 
 	@Inject
-	PrivatpersonService privatpersonService;
+	PrivatveranstalterService privatveranstalterService;
 
 	public void handleDomainEvent(@Observes final MkGatewayDomainEvent event) {
 
@@ -40,26 +40,26 @@ public class PropagateUserService {
 			return;
 		}
 
-		if (PrivatmenschCreated.class.getSimpleName().equals(event.typeName())) {
+		if (PrivatveranstalterCreated.class.getSimpleName().equals(event.typeName())) {
 
-			PrivatmenschCreated privatmenschCreated = (PrivatmenschCreated) event;
+			PrivatveranstalterCreated privatveranstalterCreated = (PrivatveranstalterCreated) event;
 
-			this.propagate(privatmenschCreated);
+			this.propagate(privatveranstalterCreated);
 			return;
 		}
 
 	}
 
 	/**
-	 * @param privatmenschCreated
+	 * @param privatveranstalterCreated
 	 */
-	private void propagate(final PrivatmenschCreated privatmenschCreated) {
+	private void propagate(final PrivatveranstalterCreated privatveranstalterCreated) {
 
-		CreateOrUpdatePrivatpersonCommand command = CreateOrUpdatePrivatpersonCommand.create(privatmenschCreated);
+		CreateOrUpdatePrivatveranstalterCommand command = CreateOrUpdatePrivatveranstalterCommand.create(privatveranstalterCreated);
 
 		// TODO: ist nicht klar, ob es nicht auch ein update ist
 		// Außerdem könnte der Handler direkt der Service sein!!!
-		this.privatpersonService.addPrivatperson(command);
+		this.privatveranstalterService.addPrivatperson(command);
 	}
 
 	/**

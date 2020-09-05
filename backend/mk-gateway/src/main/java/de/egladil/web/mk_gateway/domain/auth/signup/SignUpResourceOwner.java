@@ -21,6 +21,8 @@ public class SignUpResourceOwner {
 
 	private final String fullName;
 
+	private final String email;
+
 	private Rolle rolle;
 
 	private String schulkuerzel;
@@ -31,7 +33,7 @@ public class SignUpResourceOwner {
 	 * @param uuid
 	 * @param fullName
 	 */
-	public SignUpResourceOwner(final String uuid, final String fullName, final String nonce) {
+	public SignUpResourceOwner(final String uuid, final String fullName, final String email, final String nonce) {
 
 		if (StringUtils.isBlank(uuid)) {
 
@@ -45,6 +47,7 @@ public class SignUpResourceOwner {
 
 		this.uuid = uuid;
 		this.fullName = fullName;
+		this.email = StringUtils.isBlank(email) ? null : email;
 		this.checkAndInit(nonce);
 	}
 
@@ -166,6 +169,11 @@ public class SignUpResourceOwner {
 	public boolean isNewsletterEmpfaenger() {
 
 		return newsletterEmpfaenger;
+	}
+
+	public String email() {
+
+		return email;
 	}
 
 }

@@ -24,7 +24,7 @@ import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.veranstalter.Lehrer;
 import de.egladil.web.mk_gateway.domain.veranstalter.Person;
-import de.egladil.web.mk_gateway.domain.veranstalter.Privatperson;
+import de.egladil.web.mk_gateway.domain.veranstalter.Privatveranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterVeranstalter;
@@ -70,7 +70,7 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 		switch (treffer.getRolle()) {
 
 		case PRIVAT:
-			veranstalter = new Privatperson(person, treffer.isNewsletterEmpfaenger(), teilnahmekuerzel);
+			veranstalter = new Privatveranstalter(person, treffer.isNewsletterEmpfaenger(), teilnahmekuerzel);
 			break;
 
 		case LEHRER:
@@ -146,6 +146,7 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 		PersistenterVeranstalter persistenterVeranstalter = new PersistenterVeranstalter();
 		persistenterVeranstalter.setImportierteUuid(veranstalter.uuid());
 		persistenterVeranstalter.setFullName(veranstalter.fullName());
+		persistenterVeranstalter.setEmail(veranstalter.email());
 		persistenterVeranstalter.setTeilnahmenummern(veranstalter.persistierbareTeilnahmenummern());
 		persistenterVeranstalter.setZugangsberechtigungUnterlagen(veranstalter.zugangUnterlagen());
 		persistenterVeranstalter.setRolle(veranstalter.rolle());
@@ -155,14 +156,14 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 
 	Veranstalter mapFromPersistenterVeranstalter(final PersistenterVeranstalter persistenter) {
 
-		Person person = new Person(persistenter.getUuid(), persistenter.getFullName());
+		Person person = new Person(persistenter.getUuid(), persistenter.getFullName()).withEmail(persistenter.getEmail());
 		List<Identifier> teilnahmenummern = Arrays.stream(persistenter.getTeilnahmenummern().split(",")).map(n -> new Identifier(n))
 			.collect(Collectors.toList());
 
 		switch (persistenter.getRolle()) {
 
 		case PRIVAT:
-			return new Privatperson(person, persistenter.isNewsletterEmpfaenger(), teilnahmenummern);
+			return new Privatveranstalter(person, persistenter.isNewsletterEmpfaenger(), teilnahmenummern);
 
 		case LEHRER:
 			return new Lehrer(person, persistenter.isNewsletterEmpfaenger(), teilnahmenummern);
@@ -198,6 +199,7 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 		}
 
 		vorhandener.setFullName(veranstalter.fullName());
+		vorhandener.setEmail(veranstalter.email());
 		vorhandener.setTeilnahmenummern(veranstalter.persistierbareTeilnahmenummern());
 		vorhandener.setZugangsberechtigungUnterlagen(veranstalter.zugangUnterlagen());
 		vorhandener.setNewsletterEmpfaenger(veranstalter.isNewsletterEmpfaenger());
