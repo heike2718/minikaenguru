@@ -18,7 +18,7 @@ import javax.ws.rs.core.Response;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_gateway.domain.apimodel.WettbewerbAPIModel;
+import de.egladil.web.mk_gateway.domain.apimodel.wettbewerb.WettbewerbAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 

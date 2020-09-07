@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.apimodel.PrivatveranstalterAPIModel;
+import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.PrivatveranstalterAPIModel;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 

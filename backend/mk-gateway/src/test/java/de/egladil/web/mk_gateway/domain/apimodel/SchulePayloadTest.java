@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import de.egladil.web.mk_gateway.domain.apimodel.kataloge.SchulePayload;
+
 /**
  * SchulePayloadTest
  */

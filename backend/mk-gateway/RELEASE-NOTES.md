@@ -1,5 +1,9 @@
 # authprovider Release Notes
 
+__Release 0.2.9__:
+
+[Status Schulanmeldung geht beim Laden der Details verloren](https://github.com/heike2718/minikaenguru/issues/148)
+
 __Release 0.2.8__:
 
 * Anzeigen aktuelle Meldungen in mkv-app

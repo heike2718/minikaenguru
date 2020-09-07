@@ -25,10 +25,10 @@ import de.egladil.web.commons_validation.annotations.LandKuerzel;
 import de.egladil.web.commons_validation.annotations.StringLatin;
 import de.egladil.web.mk_gateway.MkGatewayApp;
 import de.egladil.web.mk_gateway.domain.apimodel.FileResource;
-import de.egladil.web.mk_gateway.domain.apimodel.LandPayload;
-import de.egladil.web.mk_gateway.domain.apimodel.OrtPayload;
-import de.egladil.web.mk_gateway.domain.apimodel.SchulePayload;
-import de.egladil.web.mk_gateway.domain.apimodel.SchulkatalogAntrag;
+import de.egladil.web.mk_gateway.domain.apimodel.kataloge.LandPayload;
+import de.egladil.web.mk_gateway.domain.apimodel.kataloge.OrtPayload;
+import de.egladil.web.mk_gateway.domain.apimodel.kataloge.SchulePayload;
+import de.egladil.web.mk_gateway.domain.apimodel.kataloge.SchulkatalogAntrag;
 
 /**
  * MkKatalogeRestClient

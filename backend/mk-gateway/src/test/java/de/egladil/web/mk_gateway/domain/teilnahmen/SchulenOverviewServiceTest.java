@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.apimodel.SchuleAPIModel;
+import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 
 /**
