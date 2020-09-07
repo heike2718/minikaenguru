@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.apimodel;
+package de.egladil.web.mk_gateway.domain.apimodel.kataloge;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

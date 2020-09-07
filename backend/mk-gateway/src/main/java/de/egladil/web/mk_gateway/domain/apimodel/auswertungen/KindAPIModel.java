@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.apimodel;
+package de.egladil.web.mk_gateway.domain.apimodel.auswertungen;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

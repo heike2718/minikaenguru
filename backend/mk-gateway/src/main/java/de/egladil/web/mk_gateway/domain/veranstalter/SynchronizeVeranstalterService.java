@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.apimodel.ChangeUserCommand;
+import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.ChangeUserCommand;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**

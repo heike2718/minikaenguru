@@ -24,8 +24,8 @@ import javax.ws.rs.core.SecurityContext;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_gateway.domain.apimodel.PrivatveranstalterAPIModel;
-import de.egladil.web.mk_gateway.domain.apimodel.UserAPIModel;
+import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.PrivatveranstalterAPIModel;
+import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.UserAPIModel;
 import de.egladil.web.mk_gateway.domain.auth.AuthResult;
 import de.egladil.web.mk_gateway.domain.auth.signup.AuthResultToResourceOwnerMapper;
 import de.egladil.web.mk_gateway.domain.auth.signup.SignUpResourceOwner;

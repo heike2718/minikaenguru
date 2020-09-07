@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.apimodel;
+package de.egladil.web.mk_gateway.domain.apimodel.veranstalter;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import de.egladil.web.mk_gateway.domain.apimodel.teilnahmen.SchulteilnahmeAPIModel;
 import de.egladil.web.mk_gateway.domain.semantik.ValueObject;
 import de.egladil.web.mk_gateway.domain.veranstalter.Person;
 

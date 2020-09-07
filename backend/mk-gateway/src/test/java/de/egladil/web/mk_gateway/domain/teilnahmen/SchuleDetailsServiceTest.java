@@ -5,6 +5,7 @@
 package de.egladil.web.mk_gateway.domain.teilnahmen;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.util.Optional;
@@ -18,7 +19,7 @@ import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.adv.VertragAuftragsdatenverarbeitung;
 import de.egladil.web.mk_gateway.domain.adv.VertragAuftragsverarbeitungRepository;
 import de.egladil.web.mk_gateway.domain.adv.Vertragstext;
-import de.egladil.web.mk_gateway.domain.apimodel.SchuleDetails;
+import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.SchuleDetails;
 import de.egladil.web.mk_gateway.domain.veranstalter.Person;
 import de.egladil.web.mk_gateway.domain.veranstalter.SchulkollegienRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.Schulkollegium;
@@ -159,6 +160,7 @@ public class SchuleDetailsServiceTest extends AbstractDomainServiceTest {
 		assertEquals(0, details.anzahlVergangeneTeilnahmen());
 		assertEquals("Olle Keule", details.kollegen());
 		assertEquals("SCHULKUERZEL_1", details.kuerzel());
+		assertNotNull(details.aktuelleTeilnahme());
 
 	}
 
@@ -173,11 +175,12 @@ public class SchuleDetailsServiceTest extends AbstractDomainServiceTest {
 		assertEquals(0, details.anzahlVergangeneTeilnahmen());
 		assertEquals("Hans Wurst", details.kollegen());
 		assertEquals("SCHULKUERZEL_2", details.kuerzel());
+		assertNull(details.aktuelleTeilnahme());
 
 	}
 
 	@Test
-	void should_ermittleSchuldetailsWork_when_NichAngemeldetUNdKeineKollegen() {
+	void should_ermittleSchuldetailsWork_when_NichAngemeldetUndKeineKollegen() {
 
 		// Act
 		SchuleDetails details = service.ermittleSchuldetails(new Identifier(SCHULKUERZEL_3), new Identifier(UUID_LEHRER_3));
@@ -187,7 +190,7 @@ public class SchuleDetailsServiceTest extends AbstractDomainServiceTest {
 		assertEquals(0, details.anzahlVergangeneTeilnahmen());
 		assertNull(details.kollegen());
 		assertEquals("SCHULKUERZEL_3", details.kuerzel());
-
+		assertNull(details.aktuelleTeilnahme());
 	}
 
 }

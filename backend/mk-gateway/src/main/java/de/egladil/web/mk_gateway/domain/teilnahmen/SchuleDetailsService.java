@@ -14,7 +14,8 @@ import javax.inject.Inject;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.adv.VertragAuftragsdatenverarbeitung;
 import de.egladil.web.mk_gateway.domain.adv.VertragAuftragsverarbeitungRepository;
-import de.egladil.web.mk_gateway.domain.apimodel.SchuleDetails;
+import de.egladil.web.mk_gateway.domain.apimodel.teilnahmen.SchulteilnahmeAPIModel;
+import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.SchuleDetails;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
 import de.egladil.web.mk_gateway.domain.veranstalter.Person;
@@ -108,6 +109,8 @@ public class SchuleDetailsService {
 					}
 				}
 			}
+
+			result.withTeilnahme(SchulteilnahmeAPIModel.create((Schulteilnahme) aktuelle));
 		}
 
 		int anzahlVergangene = optTeilnahme.isPresent() ? teilnahmen.size() - 1 : teilnahmen.size();

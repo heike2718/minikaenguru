@@ -14,10 +14,10 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.domain.AbstractMkResourceAdapter;
 import de.egladil.web.mk_gateway.domain.apimodel.FileResource;
-import de.egladil.web.mk_gateway.domain.apimodel.LandPayload;
-import de.egladil.web.mk_gateway.domain.apimodel.OrtPayload;
-import de.egladil.web.mk_gateway.domain.apimodel.SchulePayload;
-import de.egladil.web.mk_gateway.domain.apimodel.SchulkatalogAntrag;
+import de.egladil.web.mk_gateway.domain.apimodel.kataloge.LandPayload;
+import de.egladil.web.mk_gateway.domain.apimodel.kataloge.OrtPayload;
+import de.egladil.web.mk_gateway.domain.apimodel.kataloge.SchulePayload;
+import de.egladil.web.mk_gateway.domain.apimodel.kataloge.SchulkatalogAntrag;
 import de.egladil.web.mk_gateway.infrastructure.messaging.MkKatalogeRestClient;
 
 /**
