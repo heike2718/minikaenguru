@@ -14,7 +14,7 @@ export interface PrivatveranstalterState {
 const initialPrivatveranstalterState: PrivatveranstalterState = {
 	veranstalter: undefined,
 	aktuelleTeilnahmeGeladen: false,
-	loading: false
+	loading: false,
 };
 
 const privatveranstalterReducer = createReducer(initialPrivatveranstalterState,
@@ -51,13 +51,6 @@ const privatveranstalterReducer = createReducer(initialPrivatveranstalterState,
 			aktuelleTeilnahmeGeladen: true,
 			loading: false
 		};
-	}),
-
-	on(PrivatveranstalterActions.vergangeneTeilnahmenGeladen, (state, action) => {
-
-		const neuerVeranstalter = {...state.veranstalter, vergangeneTeilnahmenGeladen: true, vergangeneTeilnahmen: action.anonymeTeilnahmen};
-
-		return {...state, veranstalter: neuerVeranstalter, loading: false};
 	}),
 
 	on(PrivatveranstalterActions.resetPrivatveranstalter, (_state, _action) => {

@@ -24,8 +24,3 @@ export const resetPrivatveranstalter = createAction(
 	'[PrivatveranstalterFacade] resetState'
 );
 
-export const vergangeneTeilnahmenGeladen = createAction(
-	'[PrivatteilnahmenFacade] ladeVergangeneTeilnahmen',
-	props<{ anonymeTeilnahmen: AnonymisierteTeilnahme[] }>()
-);
-

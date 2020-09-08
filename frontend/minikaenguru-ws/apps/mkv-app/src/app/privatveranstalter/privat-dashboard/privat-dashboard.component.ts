@@ -30,8 +30,7 @@ export class PrivatDashboardComponent {
 	) { }
 
 	gotoTeilnahmen(): void {
-		this.textFeatureFlagAnzeigen = true;
-		this.textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
+		this.router.navigateByUrl('/privat/teilnahmen');
 	}
 
 	gotoAuswertung(): void {

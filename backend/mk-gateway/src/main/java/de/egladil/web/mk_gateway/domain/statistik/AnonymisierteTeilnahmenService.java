@@ -6,6 +6,7 @@ package de.egladil.web.mk_gateway.domain.statistik;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,6 +75,8 @@ public class AnonymisierteTeilnahmenService {
 			result.add(AnonymisierteTeilnahmeAPIModel.create(identifier).withAnzahlKinder(anzahlLoesungszettel));
 
 		});
+
+		Collections.sort(result, new AnonymisierteTeilnahmenDescendingComparator());
 
 		return result;
 	}

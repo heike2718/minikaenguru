@@ -4,12 +4,8 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.apimodel.veranstalter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import de.egladil.web.mk_gateway.domain.apimodel.teilnahmen.AnonymisierteTeilnahmeAPIModel;
 import de.egladil.web.mk_gateway.domain.apimodel.teilnahmen.PrivatteilnahmeAPIModel;
 
 /**
@@ -18,22 +14,19 @@ import de.egladil.web.mk_gateway.domain.apimodel.teilnahmen.PrivatteilnahmeAPIMo
 public class PrivatveranstalterAPIModel {
 
 	@JsonProperty
+	private String teilnahmenummer;
+
+	@JsonProperty
 	private boolean hatZugangZuUnterlangen;
 
 	@JsonProperty
-	private int anzahlVergangeneTeilnahmen = 0;
+	private int anzahlTeilnahmen = 0;
 
 	@JsonProperty
 	private boolean aktuellAngemeldet;
 
 	@JsonProperty
 	private PrivatteilnahmeAPIModel aktuelleTeilnahme;
-
-	@JsonProperty
-	private boolean vergangeneTeilnahmenGeladen;
-
-	@JsonProperty
-	private List<AnonymisierteTeilnahmeAPIModel> vergangeneTeilnahmen = new ArrayList<>();
 
 	public static PrivatveranstalterAPIModel create(final boolean zugangZuUnterlagen) {
 
@@ -46,9 +39,9 @@ public class PrivatveranstalterAPIModel {
 
 	}
 
-	public PrivatveranstalterAPIModel withAnzahlVergangeneTeilnahmen(final int anzahlVergangeneTeilnahmen) {
+	public PrivatveranstalterAPIModel withAnzahlTeilnahmen(final int anzahlTeilnahmen) {
 
-		this.anzahlVergangeneTeilnahmen = anzahlVergangeneTeilnahmen;
+		this.anzahlTeilnahmen = anzahlTeilnahmen;
 		return this;
 	}
 
@@ -66,7 +59,7 @@ public class PrivatveranstalterAPIModel {
 
 	public int anzahlVergangeneTeilnahmen() {
 
-		return anzahlVergangeneTeilnahmen;
+		return anzahlTeilnahmen;
 	}
 
 	public boolean aktuellAngemeldet() {
@@ -79,14 +72,14 @@ public class PrivatveranstalterAPIModel {
 		return aktuelleTeilnahme;
 	}
 
-	public boolean vergangeneTeilnahmenGeladen() {
+	public String teilnahmenummer() {
 
-		return vergangeneTeilnahmenGeladen;
+		return teilnahmenummer;
 	}
 
-	public List<AnonymisierteTeilnahmeAPIModel> vergangeneTeilnahmen() {
+	public PrivatveranstalterAPIModel withTeilnahmenummer(final String teilnahmenummer) {
 
-		return vergangeneTeilnahmen;
+		this.teilnahmenummer = teilnahmenummer;
+		return this;
 	}
-
 }

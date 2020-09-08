@@ -118,7 +118,8 @@ public class PrivatveranstalterService {
 			hatZugang = zugangUnterlagenService.hatZugang(privatveranstalter, optWettbewerb.get());
 		}
 
-		PrivatveranstalterAPIModel result = PrivatveranstalterAPIModel.create(hatZugang);
+		PrivatveranstalterAPIModel result = PrivatveranstalterAPIModel.create(hatZugang)
+			.withTeilnahmenummer(privatveranstalter.persistierbareTeilnahmenummern());
 
 		if (optWettbewerb.isPresent()) {
 
@@ -149,13 +150,11 @@ public class PrivatveranstalterService {
 			if (optAktuelle.isPresent()) {
 
 				Teilnahme aktuelle = optAktuelle.get();
-				result.withTeilnahme(PrivatteilnahmeAPIModel.createFromPrivatteilnahme((Privatteilnahme) aktuelle))
-					.withAnzahlVergangeneTeilnahmen(teilnahmen.size() - 1);
+				result.withTeilnahme(PrivatteilnahmeAPIModel.createFromPrivatteilnahme((Privatteilnahme) aktuelle));
 
-			} else {
-
-				result.withAnzahlVergangeneTeilnahmen(teilnahmen.size());
 			}
+
+			result.withAnzahlTeilnahmen(teilnahmen.size());
 		}
 
 		return result;

@@ -44,7 +44,8 @@ public class PrivatpersonServiceTest extends AbstractDomainServiceTest {
 	void should_NotAddPrivatperson_when_PrivatpersonExists() {
 
 		// Arrange
-		CreateOrUpdatePrivatveranstalterCommand command = CreateOrUpdatePrivatveranstalterCommand.create(UUID_PRIVAT, "Herta Grütze");
+		CreateOrUpdatePrivatveranstalterCommand command = CreateOrUpdatePrivatveranstalterCommand.create(UUID_PRIVAT,
+			"Herta Grütze");
 		int anzahlVorher = getVeranstalterRepository().getCountPrivatpersonAdded();
 
 		// Act
@@ -162,7 +163,6 @@ public class PrivatpersonServiceTest extends AbstractDomainServiceTest {
 		assertFalse(veranstalter.hatZugangZuUnterlangen());
 		assertTrue(veranstalter.aktuellAngemeldet());
 		assertEquals(0, veranstalter.anzahlVergangeneTeilnahmen());
-		assertEquals(0, veranstalter.vergangeneTeilnahmen().size());
 		assertNotNull(veranstalter.aktuelleTeilnahme());
 	}
 

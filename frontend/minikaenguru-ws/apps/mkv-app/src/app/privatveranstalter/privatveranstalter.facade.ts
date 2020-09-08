@@ -8,6 +8,7 @@ import { VeranstalterService } from '../services/veranstalter.service';
 import { TeilnahmenService } from '../services/teilnahmen.service';
 import { MessageService, Message } from '@minikaenguru-ws/common-messages';
 import { Privatteilnahme } from '../wettbewerb/wettbewerb.model';
+import { Observable } from 'rxjs';
 
 
 @Injectable({ providedIn: 'root' })
@@ -63,5 +64,7 @@ export class PrivatveranstalterFacade {
 			})
 		);
 	}
+
+
 
 }
