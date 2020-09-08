@@ -28,7 +28,7 @@ public class UuidGenerator implements IdentifierGenerator {
 				return entity.getImportierteUuid();
 			}
 		}
-		return UUID.randomUUID().toString().substring(0, 8);
+		return UUID.randomUUID().toString();
 	}
 
 }

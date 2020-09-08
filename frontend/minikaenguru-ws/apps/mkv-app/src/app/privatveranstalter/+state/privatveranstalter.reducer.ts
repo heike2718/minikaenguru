@@ -53,6 +53,13 @@ const privatveranstalterReducer = createReducer(initialPrivatveranstalterState,
 		};
 	}),
 
+	on(PrivatveranstalterActions.vergangeneTeilnahmenGeladen, (state, action) => {
+
+		const neuerVeranstalter = {...state.veranstalter, vergangeneTeilnahmenGeladen: true, vergangeneTeilnahmen: action.anonymeTeilnahmen};
+
+		return {...state, veranstalter: neuerVeranstalter, loading: false};
+	}),
+
 	on(PrivatveranstalterActions.resetPrivatveranstalter, (_state, _action) => {
 		return initialPrivatveranstalterState;
 	})

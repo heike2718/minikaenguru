@@ -36,22 +36,16 @@ public class PermittedRolesInMemoryRepository implements PermittedRolesRepositor
 
 		addPathInfosForVeranstalter();
 		addPathInfosForAdmin();
+		addPathInfosUebergreifend();
 
-		// TODO: das muss man sich noch überlegen
-		{
+	}
 
-			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN, Rolle.LEHRER });
-			pathWithMethods2Rollen.put(new PathWithMethod("/statistik/schulen/*/*", HttpMethod.GET), rollen);
+	private void addPathInfosUebergreifend() {
 
-		}
+		pathWithMethods2Rollen.put(new PathWithMethod("/teilnahmen/*", HttpMethod.GET), Arrays.asList(Rolle.values()));
 
-		{
-
-			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN, Rolle.PRIVAT });
-			pathWithMethods2Rollen.put(new PathWithMethod("/statistik/privat/*/*", HttpMethod.GET), rollen);
-
-		}
-
+		pathWithMethods2Rollen.put((new PathWithMethod("/statistik/*/*/*", HttpMethod.GET)),
+			Arrays.asList(Rolle.values()));
 	}
 
 	private void addPathInfosForVeranstalter() {
