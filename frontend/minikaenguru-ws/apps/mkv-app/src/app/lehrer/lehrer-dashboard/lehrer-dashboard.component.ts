@@ -14,7 +14,7 @@ import { environment } from '../../../environments/environment';
 export class LehrerDashboardComponent implements OnInit {
 
 	aktuellerWettbewerb$ = this.wettbewerbFacade.aktuellerWettbewerb$;
-	hatZugangZuUnterlagen$ = this.lehrerFacade.hatZugangZuUnterlagen$;
+	lehrer$ = this.lehrerFacade.lehrer$;
 
 	textFeatureFlagAnzeigen = false;
 	textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
@@ -48,5 +48,9 @@ export class LehrerDashboardComponent implements OnInit {
 	toggleTextFeatureFlagAnzeigen(): void {
 		this.textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
 		this.textFeatureFlagAnzeigen = !this.textFeatureFlagAnzeigen;
+	}
+
+	changeAboNewsletter(): void {
+		this.lehrerFacade.changeAboNewsletter();
 	}
 }

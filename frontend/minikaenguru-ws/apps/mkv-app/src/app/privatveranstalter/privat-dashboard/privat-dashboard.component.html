@@ -61,7 +61,26 @@
 			</div>
 
 			<div class="row ml-2 mr-2 ">
-				<div class="col-md-6 col-sm-12 mt-2">
+				<div class="col-md-4 col-sm-12 mt-1">
+					<div class="card clickable" (click)="changeAboNewsletter()">
+						<div class="card-body">
+							<div *ngIf="veranstalter.newsletterAbonniert">
+								<div class="card-title">Newsletter <span
+										class="ml-1 badge badge-success">abonniert</span></div>
+								<div class="mb-2 text-muted">Newsletter
+									abbestellen</div>
+							</div>
+							<div *ngIf="!veranstalter.newsletterAbonniert">
+								<div class="card-title">Newsletter <span class="ml-1 badge badge-secondary">nicht
+										abonniert</span></div>
+								<div class="mb-2 text-muted">Newsletter
+									abonnieren</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-4 col-sm-12 mt-2">
 					<div class="card clickable" (click)="gotoProfil()">
 						<div class="card-body">
 							<div class="card-title">Mein Profil</div>
@@ -70,7 +89,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-6 col-sm-12 mt-2">
+				<div class="col-md-4 col-sm-12 mt-2">
 					<div class="card clickable" (click)="gotoInfos()">
 						<div class="card-body">
 							<div class="card-title">Infos</div>

@@ -1,11 +1,11 @@
 import { createReducer, Action, on } from '@ngrx/store';
 import { SchuleWithID, Schule, mergeSchulenMap, findSchuleMitId, SchuleDetails } from './../schulen/schulen.model';
 import * as LehrerActions from './lehrer.actions';
-import { Schulteilnahme } from '../../wettbewerb/wettbewerb.model';
+import { Schulteilnahme, Lehrer } from '../../wettbewerb/wettbewerb.model';
 export const lehrerFeatureKey = 'mkv-app-lehrer';
 
 export interface LehrerState {
-	readonly hatZugangZuUnterlangen: boolean;
+	readonly lehrer: Lehrer;
 	readonly schulen: SchuleWithID[];
 	readonly selectedSchule: Schule;
 	readonly schulenLoaded: boolean;
@@ -14,7 +14,7 @@ export interface LehrerState {
 };
 
 const initalLehrerState: LehrerState = {
-	hatZugangZuUnterlangen: undefined,
+	lehrer: undefined,
 	schulen: [],
 	selectedSchule: undefined,
 	schulenLoaded: false,
@@ -23,8 +23,15 @@ const initalLehrerState: LehrerState = {
 
 const lehrerReducer = createReducer(initalLehrerState,
 
-	on(LehrerActions.zugangsstatusUnterlagenGeladen, (state, action) => {
-		return { ...state, hatZugangZuUnterlangen: action.hatZugang, loading: false }
+	on(LehrerActions.datenLehrerGeladen, (state, action) => {
+		return { ...state, lehrer: action.lehrer, loading: false }
+	}),
+
+	on(LehrerActions.aboNewsletterChanged, (state, _action) => {
+
+		const abonniert = !state.lehrer.newsletterAbonniert;
+		const lehrer = {...state.lehrer, newsletterAbonniert: abonniert};
+		return { ...state, loading: false, lehrer: lehrer };
 	}),
 
 	on(LehrerActions.startLoading, (state, _action) => {

@@ -102,17 +102,6 @@ public class VeranstalterResource {
 	}
 
 	@GET
-	@Path("/zugangsstatus")
-	public Response getStatusZugangUnterlagen() {
-
-		final String principalName = securityContext.getUserPrincipal().getName();
-		boolean hat = zugangUnterlagenService.hatZugang(principalName);
-
-		return Response.ok(new ResponsePayload(MessagePayload.ok(), Boolean.valueOf(hat))).build();
-
-	}
-
-	@GET
 	@Path("/privat")
 	public Response getPrivatveranstalter() {
 

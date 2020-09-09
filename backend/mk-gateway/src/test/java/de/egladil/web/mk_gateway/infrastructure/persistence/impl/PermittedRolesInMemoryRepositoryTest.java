@@ -30,12 +30,11 @@ public class PermittedRolesInMemoryRepositoryTest {
 		void should_permittedRollen_getWettbewerbZugangsstatus_beOk() {
 
 			// Act
-			List<Rolle> rollen = repository.permittedRollen("/veranstalter/zugangsstatus", HttpMethod.GET);
+			List<Rolle> rollen = repository.permittedRollen("/veranstalter/lehrer", HttpMethod.GET);
 
 			// Assert
-			assertEquals(2, rollen.size());
+			assertEquals(1, rollen.size());
 			assertTrue(rollen.contains(Rolle.LEHRER));
-			assertTrue(rollen.contains(Rolle.PRIVAT));
 
 		}
 

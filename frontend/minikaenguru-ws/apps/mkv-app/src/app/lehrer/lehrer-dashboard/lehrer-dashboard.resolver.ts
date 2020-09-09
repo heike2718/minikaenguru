@@ -5,7 +5,7 @@ import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { tap, filter, first, finalize } from 'rxjs/operators';
 import { LehrerFacade } from '../lehrer.facade';
-import { hatZugangZuUnterlagen } from '../+state/lehrer.selectors';
+import { lehrer } from '../+state/lehrer.selectors';
 
 @Injectable()
 export class LehrerDashboardResolver implements Resolve<any> {
@@ -19,14 +19,14 @@ export class LehrerDashboardResolver implements Resolve<any> {
 
 		return this.store.pipe(
 
-			select(hatZugangZuUnterlagen),
+			select(lehrer),
 			tap(
 				value => {
 
 					if (!value) {
 						if (!this.loading) {
 							this.loading = true;
-							this.lehrerFacade.ladeZugangUnterlagen();
+							this.lehrerFacade.ladeLehrer();
 						}
 					}
 				}

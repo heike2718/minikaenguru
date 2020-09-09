@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
-import { alleSchulen, selectedSchule, loading, schuleDetails, hatZugangZuUnterlagen } from './+state/lehrer.selectors';
+import { alleSchulen, selectedSchule, loading, schuleDetails, lehrer } from './+state/lehrer.selectors';
 import { SchulenService } from '../services/schulen.service';
 import * as LehrerActions from './+state/lehrer.actions';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
@@ -18,11 +18,10 @@ import { first, take } from 'rxjs/operators';
 export class LehrerFacade {
 
 
-	public hatZugangZuUnterlagen$ = this.appStore.select(hatZugangZuUnterlagen);
-
 	public schulen$ = this.appStore.select(alleSchulen);
 	public selectedSchule$ = this.appStore.select(selectedSchule);
 	public schuleDetails$ = this.appStore.select(schuleDetails);
+	public lehrer$ = this.appStore.select(lehrer);
 
 	public loading$ = this.appStore.select(loading);
 
@@ -34,15 +33,15 @@ export class LehrerFacade {
 		private errorHandler: GlobalErrorHandlerService) {
 	}
 
-	public ladeZugangUnterlagen(): void {
+	public ladeLehrer(): void {
 
 		this.appStore.dispatch(LehrerActions.startLoading());
 
-		this.veranstalterService.getZugangsstatusUnterlagen().pipe(
+		this.veranstalterService.getLehrer().pipe(
 			take(1)
 		).subscribe(
-			zugang => {
-				this.appStore.dispatch(LehrerActions.zugangsstatusUnterlagenGeladen({ hatZugang: zugang }));
+			data => {
+				this.appStore.dispatch(LehrerActions.datenLehrerGeladen({ lehrer: data }));
 			},
 			(error => {
 				this.errorHandler.handleError(error);
@@ -101,7 +100,24 @@ export class LehrerFacade {
 			},
 			(error => {
 				this.appStore.dispatch(LehrerActions.finishedWithError());
-				this.errorHandler.handleError(error)
+				this.errorHandler.handleError(error);
+			})
+		);
+	}
+	public changeAboNewsletter(): void {
+
+		this.appStore.dispatch(LehrerActions.startLoading());
+
+		this.veranstalterService.toggleAboNewsletter().pipe(
+			take(1)
+		).subscribe(
+			message => {
+				this.appStore.dispatch(LehrerActions.aboNewsletterChanged());
+				this.messageService.showMessage(message);
+			},
+			(error => {
+				this.appStore.dispatch(LehrerActions.finishedWithError());
+				this.errorHandler.handleError(error);
 			})
 		);
 	}

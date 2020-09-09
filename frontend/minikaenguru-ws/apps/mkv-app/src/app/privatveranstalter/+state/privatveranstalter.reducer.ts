@@ -41,6 +41,14 @@ const privatveranstalterReducer = createReducer(initialPrivatveranstalterState,
 		};
 	}),
 
+	on(PrivatveranstalterActions.aboNewsletterChanged, (state, _action) => {
+
+		const abonniert = !state.veranstalter.newsletterAbonniert;
+		const neuerVeranstalter = {...state.veranstalter, newsletterAbonniert: abonniert};
+		return { ...state, loading: false, veranstalter: neuerVeranstalter };
+	}),
+
+
 	on(PrivatveranstalterActions.privatveranstalterAngemeldet, (state, action) => {
 
 		const neuerVeranstalter: Privatveranstalter = { ...state.veranstalter, aktuellAngemeldet: true, aktuelleTeilnahme: action.teilnahme };

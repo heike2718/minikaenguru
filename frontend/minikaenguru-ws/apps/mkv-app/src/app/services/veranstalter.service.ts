@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { ResponsePayload } from '@minikaenguru-ws/common-messages';
+import { ResponsePayload, Message } from '@minikaenguru-ws/common-messages';
 import { map } from 'rxjs/operators';
-import { Privatveranstalter } from '../wettbewerb/wettbewerb.model';
+import { Privatveranstalter, Lehrer } from '../wettbewerb/wettbewerb.model';
 
 
 @Injectable({
@@ -14,9 +14,9 @@ export class VeranstalterService {
 
 	constructor(private http: HttpClient) { }
 
-	getZugangsstatusUnterlagen(): Observable<boolean> {
+	getLehrer(): Observable<Lehrer> {
 
-		const url = environment.apiUrl + '/veranstalter/zugangsstatus';
+		const url = environment.apiUrl + '/veranstalter/lehrer';
 
 		return this.http.get(url).pipe(
 			map(body => body as ResponsePayload),
@@ -33,5 +33,15 @@ export class VeranstalterService {
 			map(payload => payload.data)
 		);
 
+	}
+
+	public toggleAboNewsletter(): Observable<Message> {
+
+		const url = environment.apiUrl + '/veranstalter/newsletter';
+
+		return this.http.put(url, {}).pipe(
+			map(body => body as ResponsePayload),
+			map(payload => payload.message)
+		);
 	}
 }

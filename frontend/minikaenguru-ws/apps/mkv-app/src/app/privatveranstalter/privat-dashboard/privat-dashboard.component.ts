@@ -110,4 +110,8 @@ export class PrivatDashboardComponent implements OnInit, OnDestroy {
 		this.textFeatureFlagAnzeigen = !this.textFeatureFlagAnzeigen;
 	}
 
+	changeAboNewsletter(): void {
+		this.veranstalterFacade.changeAboNewsletter();
+	}
+
 }
