@@ -1,16 +1,23 @@
 import { createAction, props } from '@ngrx/store';
 import { AnonymisierteTeilnahme } from '../../wettbewerb/wettbewerb.model';
 
+export const teilnahmenummerSelected = createAction(
+
+	'[TeilnahmenFacade] selectTeilnahmenummer',
+	props<{teilnahmenummer: string, nameSchule: string}>()
+
+);
+
 export const startLoading = createAction(
-	'[PrivatteilnahmenFacade] ladeAnonymisierteTeilnahmen - start'
+	'[TeilnahmenFacade] ladeAnonymisierteTeilnahmen - start'
 );
 
 export const loadFinishedWithError = createAction(
-	'[PrivatteilnahmenFacade] ladeAnonymisierteTeilnahmen - error'
+	'[TeilnahmenFacade] ladeAnonymisierteTeilnahmen - error'
 );
 
 export const anonymeTeilnahmenGeladen = createAction(
-	'[PrivatteilnahmenFacade] ladeAnonymisierteTeilnahmen - finished',
+	'[TeilnahmenFacade] ladeAnonymisierteTeilnahmen - finished',
 	props<{ anonymeTeilnahmen: AnonymisierteTeilnahme[] }>()
 );
 

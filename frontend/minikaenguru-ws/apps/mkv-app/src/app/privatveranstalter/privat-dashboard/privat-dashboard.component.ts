@@ -1,15 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PrivatveranstalterFacade } from '../privatveranstalter.facade';
 import { WettbewerbFacade } from '../../wettbewerb/wettbewerb.facade';
 import { Router } from '@angular/router';
-import { environment } from 'apps/mkv-app/src/environments/environment';
+import { environment } from '../../../environments/environment';
+import { TeilnahmenFacade } from '../../teilnahmen/teilnahmen.facade';
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'mkv-privat-dashboard',
 	templateUrl: './privat-dashboard.component.html',
 	styleUrls: ['./privat-dashboard.component.css']
 })
-export class PrivatDashboardComponent {
+export class PrivatDashboardComponent implements OnInit, OnDestroy {
 
 	devMode = !environment.production;
 
@@ -24,13 +26,59 @@ export class PrivatDashboardComponent {
 	textFeatureFlagAnzeigen = false;
 	textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
 
+	private veranstalterSubscription: Subscription;
+
+	private teilnahmenummerSubscription: Subscription;
+
+	private teilnahmenummer: string;
+
+	private teilnahmenSelected: boolean;
+
 	constructor(private veranstalterFacade: PrivatveranstalterFacade,
+		private teilnahmenFacade: TeilnahmenFacade,
 		private wettbewerbFacade: WettbewerbFacade,
 		private router: Router
 	) { }
 
+	ngOnInit(): void {
+
+		this.teilnahmenSelected = false;
+
+		this.veranstalterSubscription = this.privatveranstalter$.subscribe(
+			veranstalter => {
+				if (veranstalter) {
+					this.teilnahmenummer = veranstalter.teilnahmenummer;
+				}
+			}
+		);
+
+		this.teilnahmenummerSubscription = this.teilnahmenFacade.teilnahmenummerAndName$.subscribe(
+
+			theNummer => {
+				if (this.teilnahmenSelected && theNummer !== undefined) {
+					this.teilnahmenSelected = false;
+					this.router.navigateByUrl('teilnahmen');
+				}
+			}
+
+		);
+
+	}
+
+	ngOnDestroy(): void {
+		if (this.veranstalterSubscription) {
+			this.veranstalterSubscription.unsubscribe();
+		}
+
+		if (this.teilnahmenummerSubscription) {
+			this.teilnahmenummerSubscription.unsubscribe();
+		}
+
+	}
+
 	gotoTeilnahmen(): void {
-		this.router.navigateByUrl('/privat/teilnahmen');
+		this.teilnahmenSelected = true;
+		this.teilnahmenFacade.selectTeilnahmenummer(this.teilnahmenummer, '');
 	}
 
 	gotoAuswertung(): void {

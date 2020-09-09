@@ -34,7 +34,7 @@ public class SchuleDetails {
 	private SchulteilnahmeAPIModel aktuelleTeilnahme;
 
 	@JsonProperty
-	private int anzahlVergangeneTeilnahmen;
+	private int anzahlTeilnahmen;
 
 	@JsonProperty
 	private boolean hatAdv;
@@ -68,9 +68,9 @@ public class SchuleDetails {
 		return this;
 	}
 
-	public SchuleDetails withAnzahlVergangeneTeilnahmen(final int anzahl) {
+	public SchuleDetails withAnzahlTeilnahmen(final int anzahl) {
 
-		this.anzahlVergangeneTeilnahmen = anzahl;
+		this.anzahlTeilnahmen = anzahl;
 		return this;
 	}
 
@@ -94,9 +94,9 @@ public class SchuleDetails {
 		return aktuelleTeilnahme;
 	}
 
-	public int anzahlVergangeneTeilnahmen() {
+	public int anzahlTeilnahmen() {
 
-		return anzahlVergangeneTeilnahmen;
+		return anzahlTeilnahmen;
 	}
 
 	public boolean hatAdv() {

@@ -113,9 +113,7 @@ public class SchuleDetailsService {
 			result.withTeilnahme(SchulteilnahmeAPIModel.create((Schulteilnahme) aktuelle));
 		}
 
-		int anzahlVergangene = optTeilnahme.isPresent() ? teilnahmen.size() - 1 : teilnahmen.size();
-
-		result.withAnzahlVergangeneTeilnahmen(anzahlVergangene);
+		result.withAnzahlTeilnahmen(teilnahmen.size());
 
 		Optional<VertragAuftragsdatenverarbeitung> optVertrag = advRepository.findVertragForSchule(schuleID);
 

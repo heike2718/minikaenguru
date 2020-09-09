@@ -1,7 +1,7 @@
 <div class="mkv-container mkv-bordered">
 	<div class="col-12">
 		<h2>Orte <span *ngIf="selectedKatalogItem$ | async as land">in {{land.name}}</span></h2>
-		<div *ngIf="orte$ | async as orte">
+		<ng-container *ngIf="orte$ | async as orte">
 			<p>Anzahl Orte: {{orte.length}}</p>
 
 			<div *ngIf="orte.length === 0 || orte.length > 25" class="mkv-container mkv-bordered">
@@ -25,7 +25,7 @@
 					<mka-katalogpflege-item [katalogItem]="ort"></mka-katalogpflege-item>
 				</div>
 			</div>
-		</div>
+		</ng-container>
 	</div>
 	<div class="row">
 		<div *ngIf="selectedKatalogItem$ | async" class="col-sm-12 col-md-3">

@@ -13,7 +13,7 @@ export interface SchuleDetails {
 	readonly kuerzel: string;
 	readonly kollegen?: string; // kommaseparierte fullName
 	readonly angemeldetDurch?: string; // fullName
-	readonly anzahlVergangeneTeilnahmen: number;
+	readonly anzahlTeilnahmen: number;
 	readonly vergangeneTeilnahmenGeladen?: boolean;
 	readonly vergangeneTeilnahmen?: AnonymisierteTeilnahme[];
 	readonly hatAdv: boolean;

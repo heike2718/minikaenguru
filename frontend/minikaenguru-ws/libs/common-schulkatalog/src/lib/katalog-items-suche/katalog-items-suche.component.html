@@ -1,5 +1,5 @@
 <div *ngIf="schulkatalogFacade.schulkatalogState$ | async as viewModel">
-	<div *ngIf="viewModel.guiModel.showInputControl">
+	<ng-container *ngIf="viewModel.guiModel.showInputControl">
 		<div class="col-12 subtitle mb-2 ">{{viewModel.guiModel.texte.subtitle}}</div>
 		<div class="col-12 description mb-2 ">{{viewModel.guiModel.texte.sucheDescription}}</div>
 
@@ -12,7 +12,7 @@
 					(keyup)="onKeyup($event)" [ngModel]="searchFormInputValue" />
 			</div>
 		</div>
-	</div>
+	</ng-container>
 	<div class="col-12 mb-2 mt-2" *ngIf="viewModel.guiModel.showLoadingIndicator">
 		Suche läuft... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
 	</div>

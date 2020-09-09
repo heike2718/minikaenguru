@@ -57,7 +57,7 @@ public class PrivatveranstalterAPIModel {
 		return hatZugangZuUnterlangen;
 	}
 
-	public int anzahlVergangeneTeilnahmen() {
+	public int anzahlTeilnahmen() {
 
 		return anzahlTeilnahmen;
 	}

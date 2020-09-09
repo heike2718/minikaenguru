@@ -21,7 +21,7 @@ export class TeilnahmenService {
 
 		const url = environment.apiUrl + '/wettbewerb/aktueller';
 
-		this.logger.debug('[SchulenService] findSchulen - url = ' + url);
+		this.logger.debug('[TeilnahmenService] getAktuellenWettbewerb - url = ' + url);
 
 		return this.http.get(url).pipe(
 			map(body => body as ResponsePayload),

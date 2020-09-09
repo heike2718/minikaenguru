@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
 import { LogService } from '@minikaenguru-ws/common-logging';
 import { AuthResult, STORAGE_KEY_DEV_SESSION_ID, STORAGE_KEY_SESSION_EXPIRES_AT, STORAGE_KEY_USER, Session } from './domain/entities';
 import { AuthState } from './+state/auth.reducer';
-import { login, logout, refreshSession } from './+state/auth.actions';
+import { login, logout, refreshSession, startLoggingOut } from './+state/auth.actions';
 import { Router } from '@angular/router';
 import { user, isLoggedIn, isLoggedOut } from './+state/auth.selectors';
 const moment = moment_;
@@ -101,6 +101,8 @@ export class AuthService {
 	}
 
 	public logout() {
+
+		this.store.dispatch(startLoggingOut());
 
 		const devSessionId = localStorage.getItem(this.config.storagePrefix + STORAGE_KEY_DEV_SESSION_ID);
 		let url = this.sessionUrl + '/logout';

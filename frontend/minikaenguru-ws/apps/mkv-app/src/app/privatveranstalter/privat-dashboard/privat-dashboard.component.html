@@ -1,10 +1,10 @@
 <div class="mkv-container mkv-bordered">
-	<div *ngIf="loading$ | async">
+	<ng-container *ngIf="loading$ | async">
 		<h2>Übersicht</h2>
 		<div class="col-12">
 			Lade Daten... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
 		</div>
-	</div>
+	</ng-container>
 
 
 	<div *ngIf="aktuellerWettbewerb$ | async as wettbewerb">
@@ -19,16 +19,16 @@
 			<div class="row mt-2 ml-2 mr-2">
 
 				<div *ngIf="veranstalter.aktuellAngemeldet" class="col-md-4 col-sm-12 mt-2">
-					<div *ngIf="aktuelleTeilnahmeGeladen$ | async as geladen">
-						<div *ngIf="geladen">
+					<ng-container *ngIf="aktuelleTeilnahmeGeladen$ | async as geladen">
+						<ng-container *ngIf="geladen">
 							<div class="card clickable" (click)="gotoAuswertung()">
 								<div class="card-body">
 									<div class="card-title">Auswertung {{wettbewerb.jahr}}</div>
 									<div class="mb-2 text-muted">Kind(er) erfassen und Urkunde(n) generieren</div>
 								</div>
 							</div>
-						</div>
-					</div>
+						</ng-container>
+					</ng-container>
 				</div>
 				<div *ngIf="!veranstalter.aktuellAngemeldet" class="col-md-4 col-sm-12 mt-2">
 					<div *ngIf="wettbewerb.status !== 'ERFASST' && wettbewerb.status !== 'BEENDET'">

@@ -9,6 +9,7 @@ import { TeilnahmenService } from '../services/teilnahmen.service';
 import { MessageService, Message } from '@minikaenguru-ws/common-messages';
 import { Privatteilnahme } from '../wettbewerb/wettbewerb.model';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 
 @Injectable({ providedIn: 'root' })
@@ -36,7 +37,9 @@ export class PrivatveranstalterFacade {
 
 		this.appStore.dispatch(PrivatveranstalterActions.startLoading());
 
-		this.veranstalterService.loadPrivatveranstalter().subscribe(
+		this.veranstalterService.loadPrivatveranstalter().pipe(
+			take(1)
+		).subscribe(
 			veranstalter => {
 				this.appStore.dispatch(PrivatveranstalterActions.privatveranstalterGeladen({ veranstalter: veranstalter }));
 			},
@@ -49,7 +52,9 @@ export class PrivatveranstalterFacade {
 
 	public privatveranstalterAnmelden(): void {
 
-		this.teilnahmenService.privatveranstalterAnmelden().subscribe(
+		this.teilnahmenService.privatveranstalterAnmelden().pipe(
+			take(1)
+		).subscribe(
 			responsePayload => {
 
 				const teilnahme = <Privatteilnahme>responsePayload.data;
@@ -64,7 +69,4 @@ export class PrivatveranstalterFacade {
 			})
 		);
 	}
-
-
-
 }

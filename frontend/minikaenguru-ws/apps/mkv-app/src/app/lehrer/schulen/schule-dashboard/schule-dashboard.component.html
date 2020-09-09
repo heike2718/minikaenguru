@@ -6,7 +6,7 @@
 		</div>
 	</div>
 
-	<div *ngIf="aktuellerWettbewerb$ | async as wettbewerb">
+	<ng-container *ngIf="aktuellerWettbewerb$ | async as wettbewerb">
 		<div *ngIf="details$ | async">
 			<h2>Schulübersicht</h2>
 
@@ -63,11 +63,12 @@
 			</div>
 
 			<div class="row ml-2 mr-2 ">
-				<div *ngIf="schule.details.anzahlVergangeneTeilnahmen > 0" class="col-md-6 col-sm-12 mt-2">
+				<div *ngIf="schule.details.anzahlTeilnahmen > 0" class="col-md-6 col-sm-12 mt-2">
 					<div class="card clickable" (click)="gotoTeilnahmen()">
 						<div class="card-body">
-							<div class="card-title">Vergangene Teilnahmen <span
-									class="ml-1 badge badge-primary">{{schule.details.anzahlVergangeneTeilnahmen}}</span></div>
+							<div class="card-title">alle Teilnahmen <span
+									class="ml-1 badge badge-primary">{{schule.details.anzahlTeilnahmen}}</span>
+							</div>
 							<div class="mb-2 text-muted">Schulstatistiken</div>
 						</div>
 					</div>
@@ -84,18 +85,18 @@
 			</div>
 		</div>
 
-	</div>
-		<div *ngIf="textFeatureFlagAnzeigen" class="row ml-3 mr-3 mt-3 hinweis">
-			<div class="col-11">
-				<div class="mkv-boardered">{{textFeatureFlag}}</div>
-			</div>
-			<div class="col-1">
-				<button type="button" class="btn btn-dark" data-placement="bottom" title="Hinweis schließen"
-					(click)="toggleTextFeatureFlagAnzeigen()">
-					<i class="fa fa-close" aria-hidden="true"></i>
-				</button>
-			</div>
+	</ng-container>
+	<div *ngIf="textFeatureFlagAnzeigen" class="row ml-3 mr-3 mt-3 hinweis">
+		<div class="col-11">
+			<div class="mkv-boardered">{{textFeatureFlag}}</div>
 		</div>
+		<div class="col-1">
+			<button type="button" class="btn btn-dark" data-placement="bottom" title="Hinweis schließen"
+				(click)="toggleTextFeatureFlagAnzeigen()">
+				<i class="fa fa-close" aria-hidden="true"></i>
+			</button>
+		</div>
+	</div>
 	<div class="col-md-3 mt-4">
 		<button class="btn btn-primary" (click)="backToSchulen()"><i class="fa fa-arrow-left"
 				aria-hidden="true"></i>zurück zu
