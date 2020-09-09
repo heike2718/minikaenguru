@@ -56,6 +56,11 @@ const teilnahmenReducer = createReducer(initialTeilnahmenState,
 			loading: false
 		};
 	}),
+
+	on(TeilnahmenActions.resetState, (_state, _action) => {
+
+		return initialTeilnahmenState;
+	}),
 );
 
 export function reducer(state: TeilnahmenState | undefined, action: Action) {

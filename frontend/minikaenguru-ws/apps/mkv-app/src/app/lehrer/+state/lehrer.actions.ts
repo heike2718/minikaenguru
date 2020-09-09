@@ -1,11 +1,11 @@
 import { createAction, props } from '@ngrx/store';
 import { Schule } from './../schulen/schulen.model';
-import { Schulteilnahme } from '../../wettbewerb/wettbewerb.model';
+import { Schulteilnahme, Lehrer } from '../../wettbewerb/wettbewerb.model';
 
 
-export const zugangsstatusUnterlagenGeladen = createAction(
-	'[LehrerFacade] ladeZugangUnterlagen',
-	props<{hatZugang: boolean}>()
+export const datenLehrerGeladen = createAction(
+	'[LehrerFacade] ladeLehrer',
+	props<{lehrer: Lehrer}>()
 );
 
 export const schulenLoaded = createAction(
@@ -43,6 +43,10 @@ export const deselectSchule = createAction(
 export const schuleAngemeldet = createAction(
 	'[LehrerFacade] schuleAnmelden',
 	props<{ teilnahme: Schulteilnahme, angemeldetDurch: string}>()
+);
+
+export const aboNewsletterChanged = createAction(
+	'[LehrerFacade] changeAboNewsletter'
 );
 
 export const resetLehrer = createAction(

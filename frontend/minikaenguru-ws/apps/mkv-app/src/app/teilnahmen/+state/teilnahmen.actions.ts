@@ -21,4 +21,8 @@ export const anonymeTeilnahmenGeladen = createAction(
 	props<{ anonymeTeilnahmen: AnonymisierteTeilnahme[] }>()
 );
 
+export const resetState = createAction(
+	'[LogoutService] logout reset Teilnahmen-State'
+);
+
 

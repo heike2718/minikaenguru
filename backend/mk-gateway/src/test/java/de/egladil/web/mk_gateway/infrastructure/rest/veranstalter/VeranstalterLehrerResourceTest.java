@@ -16,6 +16,7 @@ import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.auth.session.LoggedInUser;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
+import de.egladil.web.mk_gateway.domain.veranstalter.LehrerService;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterAuthorizationService;
 
 /**
@@ -30,6 +31,8 @@ public class VeranstalterLehrerResourceTest {
 
 	private VeranstalterAuthorizationService authService;
 
+	private LehrerService lehrerService;
+
 	private VeranstalterLehrerResource resource;
 
 	@BeforeEach
@@ -38,10 +41,12 @@ public class VeranstalterLehrerResourceTest {
 		authService = Mockito.mock(VeranstalterAuthorizationService.class);
 		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
 
+		lehrerService = Mockito.mock(LehrerService.class);
+
 		LoggedInUser loggedInUser = LoggedInUser.create(LEHRER_UUID, Rolle.LEHRER, "Alter Verwalter", "dgqwudugö");
 		Mockito.when(securityContext.getUserPrincipal()).thenReturn(loggedInUser);
 
-		resource = VeranstalterLehrerResource.createForPermissionTest(authService, securityContext);
+		resource = VeranstalterLehrerResource.createForPermissionTest(authService, lehrerService, securityContext);
 
 	}
 

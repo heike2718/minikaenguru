@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { LehrerFacade } from '../lehrer.facade';
 import { WettbewerbFacade } from '../../wettbewerb/wettbewerb.facade';
 import { ThrowStmt } from '@angular/compiler';
+import { LogoutService } from '../../services/logout.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
 	selector: 'mkv-lehrer-dashboard',
@@ -12,7 +14,7 @@ import { ThrowStmt } from '@angular/compiler';
 export class LehrerDashboardComponent implements OnInit {
 
 	aktuellerWettbewerb$ = this.wettbewerbFacade.aktuellerWettbewerb$;
-	hatZugangZuUnterlagen$ = this.lehrerFacade.hatZugangZuUnterlagen$;
+	lehrer$ = this.lehrerFacade.lehrer$;
 
 	textFeatureFlagAnzeigen = false;
 	textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
@@ -20,6 +22,7 @@ export class LehrerDashboardComponent implements OnInit {
 
 	constructor(private lehrerFacade: LehrerFacade,
 		private wettbewerbFacade: WettbewerbFacade,
+		private logoutService: LogoutService,
 		private router: Router) { }
 
 	ngOnInit(): void {
@@ -34,7 +37,8 @@ export class LehrerDashboardComponent implements OnInit {
 	}
 
 	gotoProfil() {
-		this.textFeatureFlagAnzeigen = true;
+		this.logoutService.logout();
+		window.location.href = environment.profileUrl;
 	}
 
 	gotoInfos(): void {
@@ -44,5 +48,9 @@ export class LehrerDashboardComponent implements OnInit {
 	toggleTextFeatureFlagAnzeigen(): void {
 		this.textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
 		this.textFeatureFlagAnzeigen = !this.textFeatureFlagAnzeigen;
+	}
+
+	changeAboNewsletter(): void {
+		this.lehrerFacade.changeAboNewsletter();
 	}
 }

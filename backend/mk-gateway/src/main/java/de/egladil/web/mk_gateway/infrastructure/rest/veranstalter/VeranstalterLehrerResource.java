@@ -25,8 +25,10 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.LehrerAPIModel;
 import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.veranstalter.LehrerService;
 import de.egladil.web.mk_gateway.domain.veranstalter.SchulenAnmeldeinfoService;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterAuthorizationService;
 
@@ -50,12 +52,28 @@ public class VeranstalterLehrerResource {
 	@Inject
 	VeranstalterAuthorizationService veranstalterAuthService;
 
-	static VeranstalterLehrerResource createForPermissionTest(final VeranstalterAuthorizationService veranstalterAuthService, final SecurityContext securityContext) {
+	@Inject
+	LehrerService lehrerService;
+
+	static VeranstalterLehrerResource createForPermissionTest(final VeranstalterAuthorizationService veranstalterAuthService, final LehrerService lehrerService, final SecurityContext securityContext) {
 
 		VeranstalterLehrerResource result = new VeranstalterLehrerResource();
 		result.veranstalterAuthService = veranstalterAuthService;
+		result.lehrerService = lehrerService;
 		result.securityContext = securityContext;
 		return result;
+	}
+
+	@GET
+	public Response getLehrer() {
+
+		Principal principal = securityContext.getUserPrincipal();
+
+		LehrerAPIModel lehrer = lehrerService.findLehrer(principal.getName());
+		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), lehrer);
+
+		return Response.ok(responsePayload).build();
+
 	}
 
 	@GET
