@@ -16,3 +16,7 @@ export const refreshSession = createAction(
 	props<{session: Session}>()
 );
 
+export const startLoggingOut = createAction(
+	'[AuthService] logout start'
+);
+

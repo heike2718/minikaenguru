@@ -11,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.KindAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Privatteilnahme;
-import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 
 /**
  * PrivatteilnahmeAPIModel
@@ -19,13 +18,7 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 public class PrivatteilnahmeAPIModel {
 
 	@JsonProperty
-	private int jahr;
-
-	@JsonProperty
-	private String teilnahmenummer;
-
-	@JsonProperty
-	private Teilnahmeart teilnahmeart;
+	private TeilnahmeIdentifier identifier;
 
 	@JsonProperty
 	private boolean kinderGeladen;
@@ -39,9 +32,7 @@ public class PrivatteilnahmeAPIModel {
 	public static PrivatteilnahmeAPIModel createFromPrivatteilnahme(final Privatteilnahme privatteilnahme) {
 
 		PrivatteilnahmeAPIModel result = new PrivatteilnahmeAPIModel();
-		result.jahr = privatteilnahme.wettbewerbID().jahr();
-		result.teilnahmeart = privatteilnahme.teilnahmeart();
-		result.teilnahmenummer = privatteilnahme.teilnahmenummer().identifier();
+		result.identifier = TeilnahmeIdentifier.createFromTeilnahme(privatteilnahme);
 		result.kinderGeladen = false;
 
 		return result;

@@ -6,7 +6,7 @@
 		</div>
 	</div>
 
-	<div *ngIf="editOrtInput$ | async as editInput">
+	<ng-container *ngIf="editOrtInput$ | async as editInput">
 
 		<form [formGroup]="editOrtForm" class="col-12">
 
@@ -83,5 +83,5 @@
 				</div>
 			</div>
 		</form>
-	</div>
+	</ng-container>
 </div>

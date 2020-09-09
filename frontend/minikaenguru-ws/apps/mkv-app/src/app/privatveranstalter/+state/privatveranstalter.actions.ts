@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Privatteilnahme, Privatveranstalter } from '../../wettbewerb/wettbewerb.model';
+import { Privatteilnahme, Privatveranstalter, AnonymisierteTeilnahme } from '../../wettbewerb/wettbewerb.model';
 
 
 export const startLoading = createAction(

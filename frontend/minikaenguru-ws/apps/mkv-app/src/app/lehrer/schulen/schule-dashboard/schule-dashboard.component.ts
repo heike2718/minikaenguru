@@ -7,6 +7,7 @@ import { AuthService, User } from '@minikaenguru-ws/common-auth';
 import { Subscription } from 'rxjs';
 import { Schule } from '../schulen.model';
 import { LogService } from '@minikaenguru-ws/common-logging';
+import { TeilnahmenFacade } from '../../../teilnahmen/teilnahmen.facade';
 
 @Component({
 	selector: 'mkv-schule-dashboard',
@@ -35,14 +36,21 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 
 	private schuleSubscription: Subscription;
 
+	private teilnahmenummerSubscription: Subscription;
+
+	private teilnahmenSelected: boolean;
+
 	constructor(private router: Router,
 		private lehrerFacade: LehrerFacade,
 		private authService: AuthService,
 		private wettbewerbFacade: WettbewerbFacade,
+		private teilnahmenFacade: TeilnahmenFacade,
 		private logger: LogService) {
 	}
 
 	ngOnInit(): void {
+
+		this.teilnahmenSelected = false;
 
 		this.userSubscription = this.authService.user$.subscribe(
 			u => this.user = u
@@ -54,6 +62,16 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 				this.logger.debug(JSON.stringify(this.schule));
 			}
 		);
+
+		this.teilnahmenummerSubscription = this.teilnahmenFacade.teilnahmenummerAndName$.subscribe(
+
+			theNummer => {
+				if (this.teilnahmenSelected && theNummer !== undefined) {
+					this.router.navigateByUrl('teilnahmen');
+				}
+			}
+
+		);
 	}
 
 	ngOnDestroy(): void {
@@ -63,6 +81,10 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 
 		if (this.schuleSubscription) {
 			this.schuleSubscription.unsubscribe();
+		}
+
+		if (this.teilnahmenummerSubscription) {
+			this.teilnahmenummerSubscription.unsubscribe();
 		}
 	}
 
@@ -77,8 +99,8 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 	}
 
 	gotoTeilnahmen(): void {
-		this.textFeatureFlagAnzeigen = true;
-		this.textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
+		this.teilnahmenSelected = true;
+		this.teilnahmenFacade.selectTeilnahmenummer(this.schule.kuerzel, this.schule.name);
 	}
 
 	gotoAuswertung(): void {

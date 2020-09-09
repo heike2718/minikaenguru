@@ -6,7 +6,7 @@
 		</div>
 	</div>
 
-	<div *ngIf="editSchuleInput$ | async as editInput">
+	<ng-container *ngIf="editSchuleInput$ | async as editInput">
 		<div *ngIf="editInput.schuleEditorModel.schulePayload !== undefined" class="row ml-2">
 
 			<form [formGroup]="editSchuleForm" class="col-12">
@@ -130,5 +130,5 @@
 				</div>
 			</form>
 		</div>
-	</div>
+	</ng-container>
 </div>

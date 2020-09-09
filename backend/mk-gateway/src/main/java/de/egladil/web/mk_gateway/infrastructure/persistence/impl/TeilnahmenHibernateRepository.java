@@ -38,6 +38,13 @@ public class TeilnahmenHibernateRepository implements TeilnahmenRepository {
 	@Inject
 	EntityManager em;
 
+	public static TeilnahmenHibernateRepository createForIntegrationTest(final EntityManager em) {
+
+		TeilnahmenHibernateRepository result = new TeilnahmenHibernateRepository();
+		result.em = em;
+		return result;
+	}
+
 	@Override
 	public Optional<Teilnahme> ofTeilnahmenummerArtWettbewerb(final String teilnahmenummer, final Teilnahmeart art, final WettbewerbID wettbewerbId) {
 

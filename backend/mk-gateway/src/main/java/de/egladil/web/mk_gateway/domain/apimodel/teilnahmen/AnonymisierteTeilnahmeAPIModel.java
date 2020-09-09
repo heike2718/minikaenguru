@@ -12,13 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class AnonymisierteTeilnahmeAPIModel {
 
 	@JsonProperty
-	private int jahr;
-
-	@JsonProperty
-	private String teilnahmenummer;
-
-	@JsonProperty
-	private String teilnahmeart;
+	private TeilnahmeIdentifier identifier;
 
 	@JsonProperty
 	private int anzahlKinder;
@@ -27,23 +21,26 @@ public class AnonymisierteTeilnahmeAPIModel {
 
 	}
 
-	public int jahr() {
+	public static AnonymisierteTeilnahmeAPIModel create(final TeilnahmeIdentifier identifier) {
 
-		return jahr;
+		AnonymisierteTeilnahmeAPIModel result = new AnonymisierteTeilnahmeAPIModel();
+		result.identifier = identifier;
+		return result;
 	}
 
-	public String teilnahmenummer() {
+	public TeilnahmeIdentifier identifier() {
 
-		return teilnahmenummer;
-	}
-
-	public String teilnahmeart() {
-
-		return teilnahmeart;
+		return identifier;
 	}
 
 	public int anzahlKinder() {
 
 		return anzahlKinder;
+	}
+
+	public AnonymisierteTeilnahmeAPIModel withAnzahlKinder(final int anzahlKinder) {
+
+		this.anzahlKinder = anzahlKinder;
+		return this;
 	}
 }

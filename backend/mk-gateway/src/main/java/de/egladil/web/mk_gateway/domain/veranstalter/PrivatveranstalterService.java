@@ -29,10 +29,10 @@ import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Privatteilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
-import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 
 /**
@@ -118,7 +118,8 @@ public class PrivatveranstalterService {
 			hatZugang = zugangUnterlagenService.hatZugang(privatveranstalter, optWettbewerb.get());
 		}
 
-		PrivatveranstalterAPIModel result = PrivatveranstalterAPIModel.create(hatZugang);
+		PrivatveranstalterAPIModel result = PrivatveranstalterAPIModel.create(hatZugang)
+			.withTeilnahmenummer(privatveranstalter.persistierbareTeilnahmenummern());
 
 		if (optWettbewerb.isPresent()) {
 
@@ -140,9 +141,11 @@ public class PrivatveranstalterService {
 
 			Identifier teilnahmenummer = teilnahmenummern.get(0);
 
-			Optional<Teilnahme> optAktuelle = teilnahmenRepository.ofTeilnahmenummerArtWettbewerb(teilnahmenummer.identifier(),
-				Teilnahmeart.PRIVAT,
-				optWettbewerb.get().id());
+			List<Teilnahme> teilnahmen = teilnahmenRepository.ofTeilnahmenummer(teilnahmenummer.identifier());
+
+			WettbewerbID wettbewerbId = optWettbewerb.get().id();
+
+			Optional<Teilnahme> optAktuelle = teilnahmen.stream().filter(t -> t.wettbewerbID().equals(wettbewerbId)).findFirst();
 
 			if (optAktuelle.isPresent()) {
 
@@ -150,6 +153,8 @@ public class PrivatveranstalterService {
 				result.withTeilnahme(PrivatteilnahmeAPIModel.createFromPrivatteilnahme((Privatteilnahme) aktuelle));
 
 			}
+
+			result.withAnzahlTeilnahmen(teilnahmen.size());
 		}
 
 		return result;

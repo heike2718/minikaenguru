@@ -13,7 +13,7 @@ http://192.168.10.176:9510/mk-gateway/wettbewerb/lehrer/schulen header X-SESSION
 
 http://localhost:9510/mk-gateway/wettbewerb/lehrer/schulen/6XOA2A11/details   header X-SESSIONID=b2RETVlQZWpNTVFORGVqSlV6dXJoZz09
 
-http://localhost:9510/mk-gateway/wb-admin/upload/schulen
+http://localhost:9510/mk-gateway/admin/upload/schulen
 
 http://192.168.10.176:9510/mk-gateway/wettbewerb/veranstalter/lehrer
 
@@ -31,6 +31,9 @@ curl -X GET -H 'Content-Type: application/json' -H 'X-SESSIONID: WXc1L0ZGRnVBdzh
 Schule anlegen:
 
 http://192.168.10.176:9510/mk-gateway/wb-admin/kataloge/schulen  PUT
+
+
+curl -X GET -H 'Accept: application/json' -H 'X-SESSIONID: MGdwVkJGWTB0ZnZVSHVSZU1ZbjdHdz09' -i 'http://192.168.10.176:9510/mk-gateway/teilnahmen/AUFNUR0WEG'
 
 
 ========================================

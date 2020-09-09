@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
 import { ResponsePayload } from '@minikaenguru-ws/common-messages';
-import { Wettbewerb } from '../wettbewerb/wettbewerb.model';
+import { Wettbewerb, AnonymisierteTeilnahme } from '../wettbewerb/wettbewerb.model';
 import { Schule, SchulanmeldungRequestPayload } from '../lehrer/schulen/schulen.model';
 
 @Injectable({
@@ -21,7 +21,7 @@ export class TeilnahmenService {
 
 		const url = environment.apiUrl + '/wettbewerb/aktueller';
 
-		this.logger.debug('[SchulenService] findSchulen - url = ' + url);
+		this.logger.debug('[TeilnahmenService] getAktuellenWettbewerb - url = ' + url);
 
 		return this.http.get(url).pipe(
 			map(body => body as ResponsePayload),
@@ -50,6 +50,16 @@ export class TeilnahmenService {
 
 		return this.http.post(url, payload).pipe(
 			map(body => body as ResponsePayload)
+		);
+	}
+
+	public ladeAnonymisierteTeilnahmen(teilnahmenummer: string): Observable<AnonymisierteTeilnahme[]> {
+
+		const url = environment.apiUrl + '/teilnahmen/' + teilnahmenummer;
+
+		return this.http.get(url, {observe: 'body'}).pipe(
+			map(body => body as ResponsePayload),
+			map(responsePayload => responsePayload.data as AnonymisierteTeilnahme[])
 		);
 	}
 }

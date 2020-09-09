@@ -441,6 +441,48 @@ public class PermittedRolesInMemoryRepositoryTest {
 			assertTrue(repository.permittedRollen("/wettbewerb/aktueller", HttpMethod.GET).isEmpty());
 		}
 
+		@Test
+		void should_permittedRollen_loadAnonymeTeilnahmen_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/teilnahmen/FRTGZ76G3", HttpMethod.GET);
+
+			// Assert
+			assertEquals(3, rollen.size());
+			assertTrue(rollen.contains(Rolle.LEHRER));
+			assertTrue(rollen.contains(Rolle.PRIVAT));
+			assertTrue(rollen.contains(Rolle.ADMIN));
+
+		}
+
+		@Test
+		void should_permittedRollen_getStatistikPrivat_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/statistik/PRIVAT/FRTGZ76G3/2017", HttpMethod.GET);
+
+			// Assert
+			assertEquals(3, rollen.size());
+			assertTrue(rollen.contains(Rolle.LEHRER));
+			assertTrue(rollen.contains(Rolle.PRIVAT));
+			assertTrue(rollen.contains(Rolle.ADMIN));
+
+		}
+
+		@Test
+		void should_permittedRollen_getStatistikSchule_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/statistik/SCHULE/FRTGZG3/2017", HttpMethod.GET);
+
+			// Assert
+			assertEquals(3, rollen.size());
+			assertTrue(rollen.contains(Rolle.LEHRER));
+			assertTrue(rollen.contains(Rolle.PRIVAT));
+			assertTrue(rollen.contains(Rolle.ADMIN));
+
+		}
+
 	}
 
 }
