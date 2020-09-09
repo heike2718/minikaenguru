@@ -51,7 +51,7 @@ public class LehrerServiceTest extends AbstractDomainServiceTest {
 		int anzahlNachher = getVeranstalterRepository().getCountLehrerAdded();
 		assertEquals(0, anzahlNachher);
 
-		LehrerChanged event = service.event();
+		LehrerChanged event = service.lehrerChangedEventPayload();
 		assertNull(event);
 	}
 
@@ -90,7 +90,7 @@ public class LehrerServiceTest extends AbstractDomainServiceTest {
 		Lehrer lehrer = (Lehrer) veranstalter;
 		assertEquals(schulkuerzel, lehrer.persistierbareTeilnahmenummern());
 
-		LehrerChanged event = service.event();
+		LehrerChanged event = service.lehrerChangedEventPayload();
 		assertNotNull(event);
 
 		assertEquals(lehrer.person(), event.person());

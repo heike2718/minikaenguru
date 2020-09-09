@@ -19,6 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
+import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 
@@ -38,9 +40,14 @@ public class LehrerService {
 	SchulkollegienService schulkollegienService;
 
 	@Inject
+	Event<SecurityIncidentRegistered> securityEventRegistered;
+
+	@Inject
 	Event<LehrerChanged> lehrerChanged;
 
 	private LehrerChanged lehrerChangedEventPayload;
+
+	private SecurityIncidentRegistered securityIncidentEventPayload;
 
 	public static LehrerService createServiceForTest(final VeranstalterRepository lehrerRepository) {
 
@@ -88,7 +95,12 @@ public class LehrerService {
 
 		if (optLehrer.isEmpty()) {
 
-			LOG.warn("Versuch, einen nicht existierenden Lehrer zu ändern: {}", data);
+			String msg = "Versuch, einen nicht existierenden Lehrer zu ändern: " + data.toString();
+
+			this.securityIncidentEventPayload = new SecurityIncidentRegistered(msg);
+			new LoggableEventDelegate().fireSecurityEvent(msg, securityEventRegistered);
+
+			LOG.warn(msg);
 
 			return false;
 		}
@@ -126,9 +138,14 @@ public class LehrerService {
 		return true;
 	}
 
-	LehrerChanged event() {
+	LehrerChanged lehrerChangedEventPayload() {
 
 		return lehrerChangedEventPayload;
+	}
+
+	SecurityIncidentRegistered securityIncidentEventPayload() {
+
+		return securityIncidentEventPayload;
 	}
 
 }
