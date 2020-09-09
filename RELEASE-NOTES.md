@@ -2,6 +2,14 @@
 
 __Release 0.2.9__:
 
+* [mkv-app: Anzeige der vergangenen Teilnahmen](https://github.com/heike2718/minikaenguru/issues/75)
+* [Umleitung zur Profil-App aktivieren](https://github.com/heike2718/minikaenguru/issues/146)
+* [Newsletter: abonnieren / deabonnieren](https://github.com/heike2718/minikaenguru/issues/155)
+
+
+
+__Release 0.2.9__:
+
 [Status Schulanmeldung geht beim Laden der Details verloren](https://github.com/heike2718/minikaenguru/issues/148)
 
 __Release 0.2.8__:
