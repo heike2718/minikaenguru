@@ -162,7 +162,7 @@ public class PrivatpersonServiceTest extends AbstractDomainServiceTest {
 		// Assert
 		assertFalse(veranstalter.hatZugangZuUnterlangen());
 		assertTrue(veranstalter.aktuellAngemeldet());
-		assertEquals(0, veranstalter.anzahlTeilnahmen());
+		assertEquals(1, veranstalter.anzahlTeilnahmen());
 		assertNotNull(veranstalter.aktuelleTeilnahme());
 	}
 

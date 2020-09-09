@@ -157,7 +157,7 @@ public class SchuleDetailsServiceTest extends AbstractDomainServiceTest {
 
 		// Assert
 		assertEquals("Hans Wurst", details.angemeldetDurch());
-		assertEquals(0, details.anzahlTeilnahmen());
+		assertEquals(1, details.anzahlTeilnahmen());
 		assertEquals("Olle Keule", details.kollegen());
 		assertEquals("SCHULKUERZEL_1", details.kuerzel());
 		assertNotNull(details.aktuelleTeilnahme());
