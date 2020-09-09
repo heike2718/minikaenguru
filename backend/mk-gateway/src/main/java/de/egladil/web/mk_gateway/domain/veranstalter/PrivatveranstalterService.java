@@ -44,6 +44,10 @@ public class PrivatveranstalterService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(PrivatveranstalterService.class);
 
+	private SecurityIncidentRegistered securityIncidentRegistered;
+
+	private DataInconsistencyRegistered dataInconsistencyRegistered;
+
 	@Inject
 	VeranstalterRepository repository;
 
@@ -51,7 +55,7 @@ public class PrivatveranstalterService {
 	ZugangUnterlagenService zugangUnterlagenService;
 
 	@Inject
-	WettbewerbService wettbewerbSerivice;
+	WettbewerbService wettbewerbService;
 
 	@Inject
 	TeilnahmenRepository teilnahmenRepository;
@@ -65,16 +69,12 @@ public class PrivatveranstalterService {
 	@Inject
 	Event<DataInconsistencyRegistered> dataInconsistencyEvent;
 
-	private SecurityIncidentRegistered securityIncidentRegistered;
-
-	private DataInconsistencyRegistered dataInconsistencyRegistered;
-
 	public static PrivatveranstalterService createForTest(final VeranstalterRepository veranstalterRepository, final ZugangUnterlagenService zugangUnterlagenService, final WettbewerbService wettbewerbSerivice, final TeilnahmenRepository teilnahmenRepository, final PrivatteilnahmeKuerzelService teilnahmeKuerzelService) {
 
 		PrivatveranstalterService result = new PrivatveranstalterService();
 		result.repository = veranstalterRepository;
 		result.zugangUnterlagenService = zugangUnterlagenService;
-		result.wettbewerbSerivice = wettbewerbSerivice;
+		result.wettbewerbService = wettbewerbSerivice;
 		result.teilnahmenRepository = teilnahmenRepository;
 		result.teilnahmenKuerzelService = teilnahmeKuerzelService;
 		return result;
@@ -108,7 +108,7 @@ public class PrivatveranstalterService {
 			throw new NotFoundException("Kennen keinen Privatveranstalter mit dieser ID");
 		}
 
-		Optional<Wettbewerb> optWettbewerb = wettbewerbSerivice.aktuellerWettbewerb();
+		Optional<Wettbewerb> optWettbewerb = wettbewerbService.aktuellerWettbewerb();
 
 		Privatveranstalter privatveranstalter = (Privatveranstalter) veranstalter;
 		boolean hatZugang = false;
@@ -118,7 +118,8 @@ public class PrivatveranstalterService {
 			hatZugang = zugangUnterlagenService.hatZugang(privatveranstalter, optWettbewerb.get());
 		}
 
-		PrivatveranstalterAPIModel result = PrivatveranstalterAPIModel.create(hatZugang)
+		PrivatveranstalterAPIModel result = PrivatveranstalterAPIModel
+			.create(hatZugang, privatveranstalter.isNewsletterEmpfaenger())
 			.withTeilnahmenummer(privatveranstalter.persistierbareTeilnahmenummern());
 
 		if (optWettbewerb.isPresent()) {

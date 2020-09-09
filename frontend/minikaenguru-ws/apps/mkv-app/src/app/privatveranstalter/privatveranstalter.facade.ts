@@ -16,7 +16,6 @@ import { take } from 'rxjs/operators';
 export class PrivatveranstalterFacade {
 
 	public loading$ = this.appStore.select(loading);
-	// public veranstalterState$ = this.appStore.select(privatveranstalterState);
 	public veranstalter$ = this.appStore.select(privatveranstalter);
 	public aktuelleTeilnahmeGeladen$ = this.appStore.select(aktuelleTeilnahmeGeladen);
 
@@ -69,4 +68,23 @@ export class PrivatveranstalterFacade {
 			})
 		);
 	}
+
+	public changeAboNewsletter(): void {
+
+		this.appStore.dispatch(PrivatveranstalterActions.startLoading());
+
+		this.veranstalterService.toggleAboNewsletter().pipe(
+			take(1)
+		).subscribe(
+			message => {
+				this.appStore.dispatch(PrivatveranstalterActions.aboNewsletterChanged());
+				this.messageService.showMessage(message);
+			},
+			(error => {
+				this.appStore.dispatch(PrivatveranstalterActions.finishedWithError());
+				this.errorHandler.handleError(error);
+			})
+		);
+	}
+
 }

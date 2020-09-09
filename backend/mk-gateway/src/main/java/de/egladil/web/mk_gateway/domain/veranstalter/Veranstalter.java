@@ -83,6 +83,11 @@ public abstract class Veranstalter {
 		return this.person.email();
 	}
 
+	public void toggleAboNewsletter() {
+
+		this.newsletterEmpfaenger = !this.newsletterEmpfaenger;
+	}
+
 	/**
 	 * Gibt die Tielnahme-Identifier zurück, die dieser Veranstalter hat. Bei einem Lehrer sind es die Schulkürzel, bei einer
 	 * Privatveranstalter ein Kürzel, welches beim Registrieren einer Privatveranstalter angelegt wird.

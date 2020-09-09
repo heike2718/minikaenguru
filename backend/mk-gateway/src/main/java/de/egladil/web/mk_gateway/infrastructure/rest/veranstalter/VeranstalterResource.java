@@ -25,14 +25,15 @@ import javax.ws.rs.core.SecurityContext;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.PrivatveranstalterAPIModel;
-import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.UserAPIModel;
 import de.egladil.web.mk_gateway.domain.auth.AuthResult;
 import de.egladil.web.mk_gateway.domain.auth.signup.AuthResultToResourceOwnerMapper;
 import de.egladil.web.mk_gateway.domain.auth.signup.SignUpResourceOwner;
 import de.egladil.web.mk_gateway.domain.auth.signup.SignUpService;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
+import de.egladil.web.mk_gateway.domain.veranstalter.ChangeNewsletterAboService;
 import de.egladil.web.mk_gateway.domain.veranstalter.LehrerService;
 import de.egladil.web.mk_gateway.domain.veranstalter.PrivatveranstalterService;
+import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.ZugangUnterlagenService;
 
 /**
@@ -54,6 +55,9 @@ public class VeranstalterResource {
 
 	@Inject
 	PrivatveranstalterService privatveranstalterService;
+
+	@Inject
+	ChangeNewsletterAboService changeNewsletterAboService;
 
 	@Inject
 	LehrerService lehrerService;
@@ -82,25 +86,18 @@ public class VeranstalterResource {
 	}
 
 	@PUT
-	@Path("")
-	public Response updateUser(final UserAPIModel user) {
+	@Path("/newsletter")
+	public Response changeStatusNewsletter() {
 
-		// die wird vom authprovider aufgerufen, wenn ein Benutzer sein Profil ändert (Name, Vorname) oder konto löscht, dann update
-		// mit anonymisiertem Namen
-		// dann müssen die Schulkollegien aktualisiert werden!
-		// Vor allem muss ein Event erzeugt und gespeichert und gefeuert werden.
-		return Response.status(987).entity(ResponsePayload.messageOnly(MessagePayload.error("API ist noch nicht fertig"))).build();
+		Veranstalter veranstalter = this.changeNewsletterAboService
+			.changeStatusNewsletter(securityContext.getUserPrincipal().getName());
 
-	}
+		String msg = veranstalter.isNewsletterEmpfaenger() ? applicationMessages.getString("registerForNewsletterSuccess")
+			: applicationMessages.getString("deregisterForNewsletterSuccess");
 
-	@GET
-	@Path("/zugangsstatus")
-	public Response getStatusZugangUnterlagen() {
-
-		final String principalName = securityContext.getUserPrincipal().getName();
-		boolean hat = zugangUnterlagenService.hatZugang(principalName);
-
-		return Response.ok(new ResponsePayload(MessagePayload.ok(), Boolean.valueOf(hat))).build();
+		return Response.ok()
+			.entity(ResponsePayload.messageOnly(MessagePayload.info(msg)))
+			.build();
 
 	}
 

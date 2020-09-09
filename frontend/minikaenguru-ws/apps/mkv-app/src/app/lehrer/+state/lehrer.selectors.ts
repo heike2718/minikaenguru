@@ -13,5 +13,6 @@ export const schulenLoaded = createSelector(lehrerState, s => s.schulenLoaded);
 
 export const loading = createSelector(lehrerState, s => s.loading);
 
-export const hatZugangZuUnterlagen = createSelector(lehrerState, s => s.hatZugangZuUnterlangen);
+export const lehrer = createSelector(lehrerState, s => s.lehrer);
+
 

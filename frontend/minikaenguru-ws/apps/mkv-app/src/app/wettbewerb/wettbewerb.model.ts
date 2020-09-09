@@ -15,8 +15,14 @@ export interface Wettbewerb {
 	readonly datumFreischaltungPrivat: string;
 };
 
+export interface Lehrer {
+	readonly hatZugangZuUnterlangen: boolean;
+	readonly newsletterAbonniert: boolean;
+}
+
 export interface Privatveranstalter {
 	readonly hatZugangZuUnterlangen: boolean;
+	readonly newsletterAbonniert: boolean;
 	readonly anzahlTeilnahmen: number;
 	readonly aktuellAngemeldet: boolean;
 	readonly aktuelleTeilnahme?: Privatteilnahme;
