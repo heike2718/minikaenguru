@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { LehrerFacade } from '../lehrer.facade';
 import { WettbewerbFacade } from '../../wettbewerb/wettbewerb.facade';
 import { ThrowStmt } from '@angular/compiler';
+import { LogoutService } from '../../services/logout.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
 	selector: 'mkv-lehrer-dashboard',
@@ -20,6 +22,7 @@ export class LehrerDashboardComponent implements OnInit {
 
 	constructor(private lehrerFacade: LehrerFacade,
 		private wettbewerbFacade: WettbewerbFacade,
+		private logoutService: LogoutService,
 		private router: Router) { }
 
 	ngOnInit(): void {
@@ -34,7 +37,8 @@ export class LehrerDashboardComponent implements OnInit {
 	}
 
 	gotoProfil() {
-		this.textFeatureFlagAnzeigen = true;
+		this.logoutService.logout();
+		window.location.href = environment.profileUrl;
 	}
 
 	gotoInfos(): void {

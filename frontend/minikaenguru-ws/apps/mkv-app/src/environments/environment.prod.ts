@@ -3,6 +3,7 @@ export const environment = {
 	production: true,
 	assetsUrl: 'https://mathe-jung-alt.de/mkv-app/assets',
     apiUrl: 'https://mathe-jung-alt.de/mk-gateway',
+	profileUrl: 'https://opa-wetterwachs.de/profil-app',
     storageKeyPrefix: 'mkv_',
 	version: '0.2.8',
 	consoleLogActive: false,

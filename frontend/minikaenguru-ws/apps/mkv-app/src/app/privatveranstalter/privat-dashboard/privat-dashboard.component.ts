@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { TeilnahmenFacade } from '../../teilnahmen/teilnahmen.facade';
 import { Subscription } from 'rxjs';
+import { LogoutService } from '../../services/logout.service';
 
 @Component({
 	selector: 'mkv-privat-dashboard',
@@ -37,6 +38,7 @@ export class PrivatDashboardComponent implements OnInit, OnDestroy {
 	constructor(private veranstalterFacade: PrivatveranstalterFacade,
 		private teilnahmenFacade: TeilnahmenFacade,
 		private wettbewerbFacade: WettbewerbFacade,
+		private logoutService: LogoutService,
 		private router: Router
 	) { }
 
@@ -91,9 +93,10 @@ export class PrivatDashboardComponent implements OnInit, OnDestroy {
 	}
 
 	gotoProfil() {
-		this.textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
-		this.textFeatureFlagAnzeigen = true;
+		this.logoutService.logout();
+		window.location.href = environment.profileUrl;
 	}
+
 
 	gotoInfos(): void {
 		this.router.navigateByUrl('/info');

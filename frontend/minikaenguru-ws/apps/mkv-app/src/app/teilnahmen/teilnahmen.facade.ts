@@ -92,5 +92,10 @@ export class TeilnahmenFacade {
 			})
 		);
 	}
+
+	public resetState(): void {
+		this.appStore.dispatch(TeilnahmenActions.resetState());
+	}
+
 }
 

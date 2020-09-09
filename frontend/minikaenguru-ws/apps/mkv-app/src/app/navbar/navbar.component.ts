@@ -5,6 +5,7 @@ import { AuthService } from '@minikaenguru-ws/common-auth';
 import { LehrerFacade } from '../lehrer/lehrer.facade';
 import { PrivatveranstalterFacade } from '../privatveranstalter/privatveranstalter.facade';
 import { WettbewerbFacade } from '../wettbewerb/wettbewerb.facade';
+import { LogoutService } from '../services/logout.service';
 
 @Component({
 	selector: 'mkv-navbar',
@@ -25,8 +26,7 @@ export class NavbarComponent implements OnInit {
 	@ViewChild(NgbCollapse, { static: true }) navbarToggler: NgbCollapse;
 
 	constructor(private authService: AuthService
-		, private lehrerFacade: LehrerFacade
-		, private privatveranstalterFacade: PrivatveranstalterFacade
+		, private logoutService: LogoutService
 		, private wettbewerbFacade: WettbewerbFacade) { }
 
 	collapseNav() {
@@ -45,9 +45,11 @@ export class NavbarComponent implements OnInit {
 	}
 
 	logout() {
-		this.lehrerFacade.resetState();
-		this.privatveranstalterFacade.resetState();
-		this.wettbewerbFacade.resetState();
-		this.authService.logout();
+		this.logoutService.logout();
+	}
+
+	gotProfilApp(): void {
+		this.logout();
+		window.location.href = environment.profileUrl;
 	}
 }

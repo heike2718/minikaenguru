@@ -9,7 +9,8 @@
 		<ul class="navbar-nav mr-auto">
 
 			<li routerLinkActive="active"><a routerLink="/" (click)="collapseNav()" class="nav-link" title="Startseite">
-					Minikänguru <ng-container *ngIf="aktuellerWettbewerb$ | async as wettbewerb">{{wettbewerb.jahr}}</ng-container></a>
+					Minikänguru <ng-container *ngIf="aktuellerWettbewerb$ | async as wettbewerb">{{wettbewerb.jahr}}
+					</ng-container></a>
 			</li>
 			<li routerLinkActive="active"><a routerLink="/info" (click)="collapseNav()" class="nav-link"
 					title="Informationen über den Wettbewerb">
@@ -34,6 +35,9 @@
 						(click)="collapseNav()" class="nav-link" title="Schulen">
 						<span class="fa fa-building-o fa-1x" aria-hidden="true"></span> Schulen</a></li>
 			</ng-container>
+			<li *ngIf="isLoggedIn$ | async" routerLinkActive="active">
+				<a class="nav-link" (click)="gotProfilApp()" title="Hierfür werden Sie ausgelogged!"><span class="fa fa-gear fa-1x" aria-hidden="true"></span>
+					Benutzerdaten <span class="sr-only">(current)</span></a></li>
 			<li *ngIf="isLoggedOut$ | async" routerLinkActive="active"><a routerLink="/registrierung" class="nav-link"
 					title="Konto anlegen">
 					<span class="fa fa-user-o fa-1x" aria-hidden="true"></span> Konto anlegen </a></li>
