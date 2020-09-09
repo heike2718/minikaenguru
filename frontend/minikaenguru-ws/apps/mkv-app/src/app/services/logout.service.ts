@@ -19,11 +19,10 @@ export class LogoutService {
 
 
 	logout(): void {
+		this.authService.logout();
 		this.lehrerFacade.resetState();
 		this.privatveranstalterFacade.resetState();
 		this.wettbewerbFacade.resetState();
 		this.teinahmenFacade.resetState();
-		this.authService.logout();
 	}
-
 }
