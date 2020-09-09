@@ -5,7 +5,7 @@ import { AppState } from '../reducers';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
 import * as WettbewerbActions from './+state/wettbewerb.actions';
 import { aktuellerWettbewerb } from './+state/wettbewerb.selectors';
-import { tap, first } from 'rxjs/operators';
+import { tap, first, take } from 'rxjs/operators';
 import { Wettbewerb } from './wettbewerb.model';
 
 const WETTBEWERB_STORAGE_KEY = 'mkv_wettbewerb';
@@ -33,10 +33,12 @@ export class WettbewerbFacade {
 				tap(
 					wettbewerb => {
 						if (!wettbewerb) {
-							this.teilnahmenService.getAktuellenWettbewerb().subscribe(
-								w => {
-									localStorage.setItem(WETTBEWERB_STORAGE_KEY, JSON.stringify(w));
-									this.appStore.dispatch(WettbewerbActions.aktuellerWettbewerbGeladen({ wettbewerb: w }))
+							this.teilnahmenService.getAktuellenWettbewerb().pipe(
+								take(1)
+							).subscribe(
+								wb => {
+									localStorage.setItem(WETTBEWERB_STORAGE_KEY, JSON.stringify(wb));
+									this.appStore.dispatch(WettbewerbActions.aktuellerWettbewerbGeladen({ wettbewerb: wb }))
 								},
 								(error => {
 									this.errorHandler.handleError(error);
@@ -44,8 +46,7 @@ export class WettbewerbFacade {
 							)
 						}
 					}
-				),
-				first()
+				)
 			).subscribe();
 		}
 	}

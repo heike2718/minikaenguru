@@ -1,0 +1,28 @@
+<div class="mkv-container mkv-bordered">
+	<div class="col-12">
+		<h2>{{name}} <span *ngIf="name && name.length > 0">: </span> Teilnahmen</h2>
+		<p *ngIf="devMode">(teilnahmen-list.component)</p>
+		<ng-container *ngIf="(teilnahmen$ | async) as teilnahmen">
+			<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let teilnahme of teilnahmen">
+				<mkv-teilnahme-card [teilnahme]="teilnahme"></mkv-teilnahme-card>
+			</div>
+		</ng-container>
+	</div>
+	<div *ngIf="user$ | async as user" class="row">
+		<div *ngIf="user.rolle === 'LEHRER' && teilnahmenummer !== 'unbekannt'" class="col-md-3 mt-4">
+			<button class="btn btn-primary" (click)="backToSchule()"><i class="fa fa-arrow-left"
+					aria-hidden="true"></i>zurück zur
+				Schule</button>
+		</div>
+		<div *ngIf="user.rolle === 'LEHRER' && teilnahmenummer === 'unbekannt'" class="col-md-3 mt-4">
+			<button class="btn btn-primary" (click)="backToLehrerDashboard()"><i class="fa fa-arrow-left"
+					aria-hidden="true"></i>zurück zur
+				Übersicht</button>
+		</div>
+		<div *ngIf="user.rolle === 'PRIVAT'" class="col-md-3 mt-4">
+			<button class="btn btn-primary" (click)="backToPrivatDashboard()"><i class="fa fa-arrow-left"
+					aria-hidden="true"></i>zurück zur
+				Übersicht</button>
+		</div>
+	</div>
+</div>

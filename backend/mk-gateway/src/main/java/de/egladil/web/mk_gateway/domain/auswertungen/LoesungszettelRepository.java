@@ -6,6 +6,7 @@ package de.egladil.web.mk_gateway.domain.auswertungen;
 
 import java.util.List;
 
+import de.egladil.web.mk_gateway.domain.apimodel.teilnahmen.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterLoesungszettel;
 
 /**
@@ -13,7 +14,23 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.entities.Persistente
  */
 public interface LoesungszettelRepository {
 
-	List<PersistenterLoesungszettel> loadAll();
+	/**
+	 * Läd alle Lösungszettel mit dem gegebenen TeilnahmeIdentifier.
+	 *
+	 * @param  teilnahmeIdentifier
+	 *                             TeilnahmeIdentifier
+	 * @return                     List
+	 */
+	List<PersistenterLoesungszettel> loadAll(TeilnahmeIdentifier teilnahmeIdentifier);
+
+	/**
+	 * Ermittelt die Anzahl der Lösungszettel mit dem gegebenen TeilnahmeIdentifier.
+	 *
+	 * @param  teilnahmeIdentifier
+	 *                             TeilnahmeIdentifier
+	 * @return                     int
+	 */
+	int anzahlLoesungszettel(TeilnahmeIdentifier teilnahmeIdentifier);
 
 	/**
 	 * Wird später abgelöst durch eine Methode, die einen Loesungszettel, also das domain-Objekt entgegennimmt

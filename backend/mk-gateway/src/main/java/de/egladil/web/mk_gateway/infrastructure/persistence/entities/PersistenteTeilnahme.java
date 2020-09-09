@@ -21,11 +21,11 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 @Entity
 @Table(name = "TEILNAHMEN")
 @NamedQueries({ @NamedQuery(
-	name = "TEILNAHMEN.FIND_BY_NUMMER",
+	name = "PersistenteTeilnahme.FIND_BY_NUMMER",
 	query = "select t from PersistenteTeilnahme t where t.teilnahmenummer = :teilnahmenummer") })
 public class PersistenteTeilnahme extends ConcurrencySafeEntity {
 
-	public static final String FIND_BY_NUMMER = "TEILNAHMEN.FIND_BY_NUMMER";
+	public static final String FIND_BY_NUMMER = "PersistenteTeilnahme.FIND_BY_NUMMER";
 
 	@Column(name = "TEILNAHMEART")
 	@Enumerated(EnumType.STRING)

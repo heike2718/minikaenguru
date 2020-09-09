@@ -23,11 +23,14 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 @Entity
 @Table(name = "LOESUNGSZETTEL")
 @NamedQueries({
-	@NamedQuery(name = "LOESUNGSZETTEL.LOAD_ALL", query = "select z from PersistenterLoesungszettel z ")
+	@NamedQuery(
+		name = "PersistenterLoesungszettel.LOAD_ALL_WITH_IDENTIFIER",
+		query = "select l from PersistenterLoesungszettel l where l.teilnahmenummer = :teilnahmenummer and l.wettbewerbUuid = :wettbewerbUuid and l.teilnahmeart = :teilnahmeart")
+
 })
 public class PersistenterLoesungszettel extends ConcurrencySafeEntity {
 
-	public static final String LOAD_ALL = "LOESUNGSZETTEL.LOAD_ALL";
+	public static final String LOAD_ALL_WITH_IDENTIFIER = "PersistenterLoesungszettel.LOAD_ALL_WITH_IDENTIFIER";
 
 	@Column(name = "NUMMER")
 	private int nummer;

@@ -6,6 +6,7 @@ import { GlobalErrorHandlerService } from '../infrastructure/global-error-handle
 import { aktuelleMeldung, aktuelleMeldungGeladen, habenAktuelleMeldung } from './+state/aktuelle-meldung.selectors';
 import * as AktuelleMeldungActions from './+state/aktuelle-meldung.actions';
 import { ResponsePayload, MessageService, Message } from '@minikaenguru-ws/common-messages';
+import { first } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class AktuelleMeldungFacade {
@@ -24,7 +25,9 @@ export class AktuelleMeldungFacade {
 
 	public ladeAktuelleMeldung(): void {
 
-		this.aktuelleMeldungService.loadAktuelleMeldung().subscribe(
+		this.aktuelleMeldungService.loadAktuelleMeldung().pipe(
+			first()
+		).subscribe(
 
 			m => this.appStore.dispatch(AktuelleMeldungActions.aktuelleMeldungGeladen({ aktuelleMeldung: m })),
 			(error => this.errorHandler.handleError(error))

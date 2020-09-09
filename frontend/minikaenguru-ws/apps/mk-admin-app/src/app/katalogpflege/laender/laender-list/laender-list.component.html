@@ -1,7 +1,7 @@
 <div class="mkv-container mkv-bordered">
 	<div class="col-12">
 		<h2>Länder</h2>
-		<div *ngIf="laender$ | async as laender">
+		<ng-container *ngIf="laender$ | async as laender">
 			<p>Anzahl Länder: {{laender.length}}</p>
 
 			<div *ngIf="laender.length > 0" class="row">
@@ -9,7 +9,7 @@
 					<mka-katalogpflege-item [katalogItem]="land"></mka-katalogpflege-item>
 				</div>
 			</div>
-		</div>
+		</ng-container>
 	</div>
 	<div class="row">
 		<div class="col-sm-12 col-md-3 ml-3 mb-2">

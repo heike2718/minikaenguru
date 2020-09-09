@@ -428,7 +428,7 @@ public class SchulenAnmeldeinfoServiceTest {
 			new Identifier(LEHRER_UUID));
 
 		SchuleDetails schuleDetails = new SchuleDetails("12345").withAngemeldetDurch(new Person("ghagdqg", "John Doe"))
-			.withAnzahlVergangeneTeilnahmen(1).withKollegen(kollegen).withTeilnahme(SchulteilnahmeAPIModel.create(schulteilnahme));
+			.withAnzahlTeilnahmen(1).withKollegen(kollegen).withTeilnahme(SchulteilnahmeAPIModel.create(schulteilnahme));
 
 		Map<String, Object> schuleKatalogeMap = new HashMap<>();
 
@@ -496,7 +496,7 @@ public class SchulenAnmeldeinfoServiceTest {
 			new Identifier(LEHRER_UUID));
 
 		SchuleDetails schuleDetails = new SchuleDetails("12345").withAngemeldetDurch(new Person("ghagdqg", "John Doe"))
-			.withAnzahlVergangeneTeilnahmen(1).withKollegen(kollegen).withTeilnahme(SchulteilnahmeAPIModel.create(schulteilnahme));
+			.withAnzahlTeilnahmen(1).withKollegen(kollegen).withTeilnahme(SchulteilnahmeAPIModel.create(schulteilnahme));
 
 		Mockito.when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID)))
 			.thenReturn(Arrays.asList(new SchuleAPIModel[] { SchuleAPIModel.withKuerzel("12345").withAngemeldet(true) }));

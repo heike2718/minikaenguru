@@ -6,7 +6,8 @@ import * as AuthActions from './auth.actions';
 export const authFeatureKey = 'auth';
 
 export interface AuthState {
-	session: Session
+	session: Session,
+	loggingOut: boolean
 };
 
 export const initialAuthState: AuthState = {
@@ -14,24 +15,28 @@ export const initialAuthState: AuthState = {
 		sessionId: undefined,
 		expiresAt: 0,
 		user: undefined
-	}
+	},
+	loggingOut: false
 };
 
 
 const authReducer = createReducer(initialAuthState,
 
 	on(AuthActions.login, (state, action) => {
-		console.log('logged in');
-		return { ...state, session: action.session }
+		return { ...state, session: action.session, loggingOut: false };
 	}),
 
 	on(AuthActions.logout, (_state, _action) => {
-		return initialAuthState
+		return initialAuthState;
 	}),
 
 	on(AuthActions.refreshSession, (state, action) => {
-		return { ...state, session: action.session }
+		return { ...state, session: action.session };
 	}),
+
+	on(AuthActions.startLoggingOut, (state,_action) => {
+		return {...state, loggingOut: true};
+	})
 
 );
 

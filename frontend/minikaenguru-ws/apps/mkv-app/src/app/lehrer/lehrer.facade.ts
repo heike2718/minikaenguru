@@ -11,6 +11,7 @@ import { TeilnahmenService } from '../services/teilnahmen.service';
 import { Schulteilnahme } from '../wettbewerb/wettbewerb.model';
 import { Message, MessageService } from '@minikaenguru-ws/common-messages';
 import { User } from '@minikaenguru-ws/common-auth';
+import { first, take } from 'rxjs/operators';
 
 
 @Injectable({ providedIn: 'root' })
@@ -37,7 +38,9 @@ export class LehrerFacade {
 
 		this.appStore.dispatch(LehrerActions.startLoading());
 
-		this.veranstalterService.getZugangsstatusUnterlagen().subscribe(
+		this.veranstalterService.getZugangsstatusUnterlagen().pipe(
+			take(1)
+		).subscribe(
 			zugang => {
 				this.appStore.dispatch(LehrerActions.zugangsstatusUnterlagenGeladen({ hatZugang: zugang }));
 			},
@@ -51,7 +54,9 @@ export class LehrerFacade {
 
 		this.appStore.dispatch(LehrerActions.startLoading());
 
-		this.schulenService.findSchulen().subscribe(
+		this.schulenService.findSchulen().pipe(
+			take(1)
+		).subscribe(
 			schulen => {
 				this.appStore.dispatch(LehrerActions.schulenLoaded({ schulen: schulen }));
 			},
@@ -67,7 +72,9 @@ export class LehrerFacade {
 
 		this.appStore.dispatch(LehrerActions.startLoading());
 
-		this.schulenService.loadDetails(schulkuerzel).subscribe(
+		this.schulenService.loadDetails(schulkuerzel).pipe(
+			take(1)
+		).subscribe(
 			data => {
 				this.appStore.dispatch(LehrerActions.schuleDetailsLoaded({ schule: data }))
 			},
@@ -80,7 +87,9 @@ export class LehrerFacade {
 
 	public schuleAnmelden(schule: Schule, user: User): void {
 
-		this.teilnahmenService.schuleAnmelden(schule).subscribe(
+		this.teilnahmenService.schuleAnmelden(schule).pipe(
+			take(1)
+		).subscribe(
 			responsePayload => {
 
 				const teilnahme = <Schulteilnahme>responsePayload.data;

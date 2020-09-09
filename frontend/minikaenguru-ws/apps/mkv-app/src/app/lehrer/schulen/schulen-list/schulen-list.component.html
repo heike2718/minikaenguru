@@ -2,11 +2,11 @@
 	<div class="col-12">
 		<h2>Meine Schulen</h2>
 		<p *ngIf="devMode">(schulen-list.component)</p>
-		<div *ngIf="(schulen$ | async) as schulen">
+		<ng-container *ngIf="(schulen$ | async) as schulen">
 			<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let schule of schulen">
 				<mkv-schule-card [schule]="schule.schule"></mkv-schule-card>
 			</div>
-		</div>
+		</ng-container>
 	</div>
 	<div class="row">
 		<div class="col-sm-12 col-md-3 ml-3 mb-2">

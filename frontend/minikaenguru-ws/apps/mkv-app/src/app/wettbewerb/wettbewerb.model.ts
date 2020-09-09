@@ -17,11 +17,10 @@ export interface Wettbewerb {
 
 export interface Privatveranstalter {
 	readonly hatZugangZuUnterlangen: boolean;
-	readonly anzahlVergangeneTeilnahmen: number;
+	readonly anzahlTeilnahmen: number;
 	readonly aktuellAngemeldet: boolean;
 	readonly aktuelleTeilnahme?: Privatteilnahme;
-	readonly vergangeneTeilnahmenGeladen?: boolean;
-	readonly vergangeneTeilnahmen: AnonymisierteTeilnahme[];
+	readonly teilnahmenummer: string;
 }
 
 export interface Klassenstufe {
@@ -48,10 +47,14 @@ export interface Auswertungsgruppe {
 	readonly kinder: Kind[];
 }
 
-export interface AbstractTeilnahme {
+export interface TeilnahmeIdentifier {
 	readonly jahr: number;
 	readonly teilnahmenummer: string;
 	readonly teilnahmeart: Teilnahmeart;
+}
+
+export interface AbstractTeilnahme {
+	readonly identifier: TeilnahmeIdentifier;
 	readonly anzahlKinder: number;
 }
 
@@ -70,5 +73,6 @@ export interface Schulteilnahme extends AbstractTeilnahme {
 
 export interface AnonymisierteTeilnahme extends AbstractTeilnahme {
 	// hier kommt dann sowas wie Lösungszettelgruppen für jede Klassenstufe
+	readonly nameSchule?: string;
 };
 

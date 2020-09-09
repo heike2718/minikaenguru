@@ -14,7 +14,7 @@ export interface PrivatveranstalterState {
 const initialPrivatveranstalterState: PrivatveranstalterState = {
 	veranstalter: undefined,
 	aktuelleTeilnahmeGeladen: false,
-	loading: false
+	loading: false,
 };
 
 const privatveranstalterReducer = createReducer(initialPrivatveranstalterState,

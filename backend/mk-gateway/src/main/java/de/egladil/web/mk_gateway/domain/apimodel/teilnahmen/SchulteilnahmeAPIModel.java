@@ -11,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.AuswertungsgruppeAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Schulteilnahme;
-import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 
 /**
  * SchulteilnahmeAPIModel
@@ -19,13 +18,7 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 public class SchulteilnahmeAPIModel {
 
 	@JsonProperty
-	private int jahr;
-
-	@JsonProperty
-	private String teilnahmenummer;
-
-	@JsonProperty
-	private Teilnahmeart teilnahmeart;
+	private TeilnahmeIdentifier identifier;
 
 	@JsonProperty
 	private String nameUrkunde;
@@ -45,9 +38,7 @@ public class SchulteilnahmeAPIModel {
 	public static SchulteilnahmeAPIModel create(final Schulteilnahme teilnahme) {
 
 		SchulteilnahmeAPIModel result = new SchulteilnahmeAPIModel();
-		result.jahr = teilnahme.wettbewerbID().jahr().intValue();
-		result.teilnahmenummer = teilnahme.teilnahmenummer().identifier();
-		result.teilnahmeart = Teilnahmeart.SCHULE;
+		result.identifier = TeilnahmeIdentifier.createFromTeilnahme(teilnahme);
 		result.nameUrkunde = teilnahme.nameSchule();
 
 		return result;
@@ -81,19 +72,9 @@ public class SchulteilnahmeAPIModel {
 
 	}
 
-	public int getJahr() {
+	public TeilnahmeIdentifier identifier() {
 
-		return jahr;
-	}
-
-	public String teilnahmenummer() {
-
-		return teilnahmenummer;
-	}
-
-	public Teilnahmeart teilnahmeart() {
-
-		return teilnahmeart;
+		return this.identifier;
 	}
 
 	public String nameUrkunde() {

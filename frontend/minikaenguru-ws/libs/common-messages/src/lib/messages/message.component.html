@@ -1,8 +1,8 @@
 <div aria-live="polite" class="cmn-message" *ngIf="msg" [ngClass]="getClasses()" (click)="close()">
             <span class="cmn-message-icon fa fa-times fa-1x fa-left"></span>
-            <div *ngIf="!escape; else escapeOut">
+            <ng-container *ngIf="!escape; else escapeOut">
                 <span *ngIf="!escape" class="cmn-message-text" [innerHTML]="msg.message"></span>
-            </div>
+            </ng-container>
             <ng-template #escapeOut>
                 <span *ngIf="escape" class="cmn-message-text">{{msg.message}}</span>
             </ng-template>

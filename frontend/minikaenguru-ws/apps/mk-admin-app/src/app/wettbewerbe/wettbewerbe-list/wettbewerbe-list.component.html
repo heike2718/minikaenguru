@@ -2,11 +2,11 @@
 	<div class="col-12">
 		<h2>Wettbewerbe</h2>
 		<p *ngIf="devMode">(wettbewerbe-list.component)</p>
-		<div *ngIf="(wettbewerbe$ | async) as wettbewerbe">
+		<ng-container *ngIf="(wettbewerbe$ | async) as wettbewerbe">
 			<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let wettbewerb of wettbewerbe">
 				<mka-wettbewerb-card [wettbewerb]="wettbewerb"></mka-wettbewerb-card>
 			</div>
-		</div>
+		</ng-container>
 	</div>
 	<div class="row">
 		<div class="col-sm-12 col-md-3 ml-3 mb-2">
