@@ -4,7 +4,7 @@ export const environment = {
 	assetsUrl: 'https://mathe-jung-alt.de/mk-admin-app/assets',
     apiUrl: 'https://mathe-jung-alt.de/mk-gateway/admin',
     storageKeyPrefix: 'mka_',
-	version: '0.2.8',
+	version: '0.2.10',
 	consoleLogActive: false,
 	serverLogActive: true,
 	loglevel: 4
