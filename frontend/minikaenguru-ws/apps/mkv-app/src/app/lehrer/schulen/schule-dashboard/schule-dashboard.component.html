@@ -5,7 +5,6 @@
 			Lade Daten... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
 		</div>
 	</div>
-
 	<ng-container *ngIf="aktuellerWettbewerb$ | async as wettbewerb">
 		<div *ngIf="details$ | async">
 			<h2>Schulübersicht</h2>
@@ -74,11 +73,16 @@
 					</div>
 				</div>
 
-				<div class="col-md-6 col-sm-12 mt-2">
-					<div class="card clickable" (click)="gotoDSGVO()">
+				<div *ngIf="schule.details.hatAdv" class="col-md-6 col-sm-12 mt-2">
+					<mk-download-card [url]="vertragAdvUrl" [cardTitle]="vertragAdvCardTitle"
+						[subtext]="vertragAdvSubtext" [dateiname]="vertragAdvDateiname" [mimetype]="vertragAdvMimetype"></mk-download-card>
+				</div>
+
+				<div *ngIf="!schule.details.hatAdv" class="col-md-6 col-sm-12 mt-2">
+					<div class="card clickable" (click)="gotoVertragAdv()">
 						<div class="card-body">
 							<div class="card-title">DSGVO</div>
-							<div class="mb-2 text-muted">Vertrag zur Auftragsdatenverarbeitung</div>
+							<div class="mb-2 text-muted">Vertrag zur Auftragsdatenverarbeitung abschließen</div>
 						</div>
 					</div>
 				</div>

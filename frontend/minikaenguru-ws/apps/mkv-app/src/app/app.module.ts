@@ -9,7 +9,7 @@ import { CommonSchulkatalogModule } from '@minikaenguru-ws/common-schulkatalog';
 import { CommonMessagesModule } from '@minikaenguru-ws/common-messages';
 import { CommonAuthModule } from '@minikaenguru-ws/common-auth';
 import { CommonLoggingModule } from '@minikaenguru-ws/common-logging';
-import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
+import { CommonComponentsModule  } from '@minikaenguru-ws/common-components';
 
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';

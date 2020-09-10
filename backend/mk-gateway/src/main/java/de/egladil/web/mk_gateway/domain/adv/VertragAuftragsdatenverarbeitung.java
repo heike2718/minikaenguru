@@ -105,4 +105,12 @@ public class VertragAuftragsdatenverarbeitung {
 		return this;
 	}
 
+	public String filename() {
+
+		String name = anschrift.schulname().trim().replaceAll(" ", "_");
+
+		return "Vertrag-Auftragsdatenverarbeitung-" + name + ".pdf";
+
+	}
+
 }

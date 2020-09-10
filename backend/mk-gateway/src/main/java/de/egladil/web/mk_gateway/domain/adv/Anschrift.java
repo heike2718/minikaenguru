@@ -34,7 +34,7 @@ public class Anschrift {
 
 	public Anschrift withSchulname(final String schulname) {
 
-		if (StringUtils.isNotBlank(schulname)) {
+		if (StringUtils.isNotBlank(this.schulname)) {
 
 			throw new ImmutableObjectException("schulname darf nicht geaendert werden");
 		}
@@ -55,7 +55,7 @@ public class Anschrift {
 
 	public Anschrift withStrasse(final String strasse) {
 
-		if (StringUtils.isNotBlank(strasse)) {
+		if (StringUtils.isNotBlank(this.strasse)) {
 
 			throw new ImmutableObjectException("strasse darf nicht geaendert werden");
 		}
@@ -75,7 +75,7 @@ public class Anschrift {
 
 	public Anschrift withHausnummer(final String hausnummer) {
 
-		if (StringUtils.isNotBlank(hausnummer)) {
+		if (StringUtils.isNotBlank(this.hausnummer)) {
 
 			throw new ImmutableObjectException("hausnummer darf nicht geaendert werden");
 		}
@@ -95,7 +95,7 @@ public class Anschrift {
 
 	public Anschrift withOrt(final String ort) {
 
-		if (StringUtils.isNotBlank(ort)) {
+		if (StringUtils.isNotBlank(this.ort)) {
 
 			throw new ImmutableObjectException("ort darf nicht geaendert werden");
 		}
@@ -115,7 +115,7 @@ public class Anschrift {
 
 	public Anschrift withPlz(final String plz) {
 
-		if (StringUtils.isNotBlank(plz)) {
+		if (StringUtils.isNotBlank(this.plz)) {
 
 			throw new ImmutableObjectException("plz darf nicht geaendert werden");
 		}
@@ -136,7 +136,7 @@ public class Anschrift {
 
 	public Anschrift withLaendercode(final String laendercode) {
 
-		if (StringUtils.isNotBlank(laendercode)) {
+		if (StringUtils.isNotBlank(this.laendercode)) {
 
 			throw new ImmutableObjectException("laendercode darf nicht geaendert werden");
 		}

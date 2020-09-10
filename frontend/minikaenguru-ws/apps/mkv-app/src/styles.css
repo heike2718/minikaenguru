@@ -30,8 +30,8 @@ button>i {
 }
 
 .hinweis {
-	background-color: #ffffcc;
-	font-size: 1.1rem;
+  background-color: #ffffcc;
+  font-size: 1.1rem;
 }
 
 .mkv-bordered {
@@ -60,13 +60,12 @@ button>i {
 }
 
 .clickabe-stacked {
-	width: 50%;
+  width: 50%;
 }
 
 .clickable div:hover {
   background-color: #e6e6e6;
 }
-
 
 footer {
   position: relative;
@@ -80,7 +79,7 @@ footer {
 @media (max-width: 768px) {
 
   body {
-	  width: 100%;
+    width: 100%;
   }
 
   h4,
@@ -97,11 +96,11 @@ footer {
   }
 
   h3 {
-	  font-size: 1.1rem;
+    font-size: 1.1rem;
   }
 
   .clickabe-stacked {
-	width: 95%;
+    width: 95%;
   }
 
 }

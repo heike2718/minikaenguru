@@ -166,8 +166,14 @@ public class VertragAuftragsverarbeitungHibernateRepository implements VertragAu
 
 		PersistenterVertragAdvText persistenterVertragstext = persistenterVertrag.getAdvText();
 
+		Anschrift anschrift = new Anschrift().withHausnummer(persistenterVertrag.getHausnummer())
+			.withLaendercode(persistenterVertrag.getLaendercode()).withOrt(persistenterVertrag.getOrt())
+			.withPlz(persistenterVertrag.getPlz()).withSchulname(persistenterVertrag.getSchulname())
+			.withStrasse(persistenterVertrag.getStrasse());
+
 		return new VertragAuftragsdatenverarbeitung()
 			.withIdentifier(new Identifier(persistenterVertrag.getUuid()))
+			.withAnschrift(anschrift)
 			.withSchulkuerzel(new Identifier(persistenterVertrag.getSchulkuerzel()))
 			.withUnterzeichnenderLehrer(new Identifier(persistenterVertrag.getAbgeschlossenDurch()))
 			.withUnterzeichnetAm(persistenterVertrag.getAbgeschlossenAm())
