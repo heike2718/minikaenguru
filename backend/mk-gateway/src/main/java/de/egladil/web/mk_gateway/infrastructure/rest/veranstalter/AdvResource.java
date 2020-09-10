@@ -4,8 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.veranstalter;
 
-import java.util.concurrent.TimeUnit;
-
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -41,16 +39,9 @@ public class AdvResource {
 	public Response downloadVertragAuftragsdatenverarbeitung(@PathParam(value = "schulkuerzel") final String schulkuerzel) {
 
 		final DownloadData data = advService.getVertragAuftragsdatenverarbeitung(schulkuerzel,
-			"2f09da36-07c6-4033-a2f1-5e110c804026");
+			securityContext.getUserPrincipal().getName());
 
 		String contentDisposition = "attachement; filename=" + data.filename();
-
-		try {
-
-			TimeUnit.SECONDS.sleep(3);
-		} catch (InterruptedException e) {
-
-		}
 
 		return Response.ok(data.data()).header("Content-Type", "application/octet-stream")
 			.header("Content-Disposition", contentDisposition).build();

@@ -177,7 +177,9 @@ public class VertragAuftragsverarbeitungHibernateRepository implements VertragAu
 			.withSchulkuerzel(new Identifier(persistenterVertrag.getSchulkuerzel()))
 			.withUnterzeichnenderLehrer(new Identifier(persistenterVertrag.getAbgeschlossenDurch()))
 			.withUnterzeichnetAm(persistenterVertrag.getAbgeschlossenAm())
-			.withVertragstext(new Identifier(persistenterVertragstext.getUuid()));
+			.withVertragstext(new Identifier(persistenterVertragstext.getUuid()))
+			.withVersionsnummer(persistenterVertragstext.getVersionsnummer())
+			.withDateinameVertragstext(persistenterVertragstext.getDateiname());
 
 	}
 

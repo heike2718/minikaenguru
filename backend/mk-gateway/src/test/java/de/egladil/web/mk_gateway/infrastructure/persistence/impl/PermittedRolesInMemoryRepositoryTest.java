@@ -194,6 +194,30 @@ public class PermittedRolesInMemoryRepositoryTest {
 			assertTrue(rollen.contains(Rolle.ADMIN));
 
 		}
+
+		@Test
+		void should_permittedRollen_downloadAdv_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/adv/6XOA2A11", HttpMethod.GET);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.LEHRER));
+
+		}
+
+		@Test
+		void should_permittedRollen_createAdv_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/adv", HttpMethod.POST);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.LEHRER));
+
+		}
 	}
 
 	@Nested

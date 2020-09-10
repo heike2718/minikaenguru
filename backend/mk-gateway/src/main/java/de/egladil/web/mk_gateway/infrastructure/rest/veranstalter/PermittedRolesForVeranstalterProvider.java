@@ -94,6 +94,14 @@ public final class PermittedRolesForVeranstalterProvider {
 
 		}
 
+		{
+
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
+			result.put(new PathWithMethod("/adv/*", HttpMethod.GET), rollen);
+			result.put(new PathWithMethod("/adv", HttpMethod.POST), rollen);
+
+		}
+
 		return result;
 
 	}
