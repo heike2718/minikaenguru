@@ -4,6 +4,7 @@ import { TeilnahmenFacade } from '../../teilnahmen/teilnahmen.facade';
 import { Subscription } from 'rxjs';
 import { AuthService } from '@minikaenguru-ws/common-auth';
 import { Router } from '@angular/router';
+import { DownloadFacade } from '@minikaenguru-ws/common-components';
 
 @Component({
 	selector: 'mkv-teilnahmen-list',
@@ -18,13 +19,15 @@ export class TeilnahmenListComponent implements OnInit, OnDestroy {
 
 	user$ = this.authService.user$;
 
+	downloadInProgress$ = this.downloadFacade.downloadInProgress$;
+
 	teilnahmenummer: string;
 
 	name: string;
 
 	private teilnahmeIdSubscription: Subscription;
 
-	constructor(private teilnahmenFacade: TeilnahmenFacade, private authService: AuthService, private router: Router) {
+	constructor(private teilnahmenFacade: TeilnahmenFacade, private downloadFacade: DownloadFacade, private authService: AuthService, private router: Router) {
 
 		this.teilnahmenummer = 'unbekannt';
 	}

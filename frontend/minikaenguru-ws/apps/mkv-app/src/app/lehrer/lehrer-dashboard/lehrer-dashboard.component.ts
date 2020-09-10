@@ -19,7 +19,6 @@ export class LehrerDashboardComponent implements OnInit {
 	textFeatureFlagAnzeigen = false;
 	textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
 
-
 	constructor(private lehrerFacade: LehrerFacade,
 		private wettbewerbFacade: WettbewerbFacade,
 		private logoutService: LogoutService,

@@ -9,6 +9,8 @@ mk-gateway
 
 http://192.168.10.176:9510/mk-gateway/schulkatalog/ort?search="hal"
 
+http://192.168.10.176:9510/mk-gateway/adv/6XOA2A11
+
 http://192.168.10.176:9510/mk-gateway/wettbewerb/lehrer/schulen header X-SESSIONID=Y1NFRTg5MlR0cEVVUVBWaUQxZWxYQT09
 
 http://localhost:9510/mk-gateway/wettbewerb/lehrer/schulen/6XOA2A11/details   header X-SESSIONID=b2RETVlQZWpNTVFORGVqSlV6dXJoZz09

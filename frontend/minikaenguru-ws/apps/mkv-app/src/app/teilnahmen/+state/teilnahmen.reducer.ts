@@ -60,7 +60,7 @@ const teilnahmenReducer = createReducer(initialTeilnahmenState,
 	on(TeilnahmenActions.resetState, (_state, _action) => {
 
 		return initialTeilnahmenState;
-	}),
+	})
 );
 
 export function reducer(state: TeilnahmenState | undefined, action: Action) {

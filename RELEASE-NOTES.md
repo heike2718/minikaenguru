@@ -27,7 +27,7 @@ __Release 0.2.7__:
 
 __Release 0.2.6__:
 
-* Datenbank mk_gateway wird durchmk_wettbewerb ersetzt.
+* Datenbank mk_gateway wird durch mk_wettbewerb ersetzt.
 * API sortiert für admin, veranstalter, general und kataloge
 
 __Release 0.2.5__:

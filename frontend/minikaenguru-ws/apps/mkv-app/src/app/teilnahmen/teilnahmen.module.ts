@@ -6,11 +6,13 @@ import { TeilnahmenRoutingModule } from './teilnahmen-routing.module';
 import { TeilnahmenListComponent } from './teilnahmen-list/teilnahmen-list.component';
 import { TeilnahmeCardComponent } from './teilnahme-card/teilnahme-card.component';
 import { TeilnahmenListResolver } from './teilnahmen-list/teilnahmen-list.resolver';
+import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
 
 
 @NgModule({
 	imports: [
 		CommonModule,
+		CommonComponentsModule,
 		StoreModule.forFeature(fromTeilnahmen.teilnahmenFeatureKey, fromTeilnahmen.reducer),
 		TeilnahmenRoutingModule
 	],

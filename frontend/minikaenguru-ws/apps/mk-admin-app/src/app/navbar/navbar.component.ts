@@ -45,8 +45,8 @@ export class NavbarComponent implements OnInit {
 	}
 
 	logout() {
+		this.authService.logout();
 		this.appStore.dispatch(resetWettbewerbe());
 		this.appStore.dispatch(resetKataloge());
-		this.authService.logout();
 	}
 }
