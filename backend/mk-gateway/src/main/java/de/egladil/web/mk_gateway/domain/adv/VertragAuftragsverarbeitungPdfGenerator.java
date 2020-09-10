@@ -5,19 +5,13 @@
 package de.egladil.web.mk_gateway.domain.adv;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
@@ -29,6 +23,7 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.pdfutils.PdfMerger;
 import de.egladil.web.mk_gateway.domain.pdfutils.UebersichtFontProvider;
 
@@ -37,8 +32,6 @@ import de.egladil.web.mk_gateway.domain.pdfutils.UebersichtFontProvider;
  */
 @ApplicationScoped
 public class VertragAuftragsverarbeitungPdfGenerator {
-
-	private static final Logger LOG = LoggerFactory.getLogger(VertragAuftragsverarbeitungPdfGenerator.class);
 
 	private static final String PATH_SUBDIR_ADV_TEXTE = "/adv/";
 
@@ -62,31 +55,20 @@ public class VertragAuftragsverarbeitungPdfGenerator {
 	 */
 	public byte[] generatePdf(final VertragAuftragsdatenverarbeitung vertrag) {
 
-		String path = pathAdvTexteDir + PATH_SUBDIR_ADV_TEXTE + vertrag.dateinameVertragstext();
+		String path = pathAdvTexteDir + PATH_SUBDIR_ADV_TEXTE + vertrag.vertragstext().dateiname();
 
-		try (InputStream in = new FileInputStream(new File(path)); ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+		final byte[] pdfAllgemein = MkGatewayFileUtils.readBytesFromFile(path);
+		final byte[] deckblatt = generiereDeckblatt(vertrag, vertrag.vertragstext().versionsnummer());
+		final List<byte[]> seiten = new ArrayList<>();
+		seiten.add(deckblatt);
+		seiten.add(pdfAllgemein);
 
-			IOUtils.copy(in, bos);
+		final byte[] pdfs = new PdfMerger().concatPdf(seiten);
 
-			final byte[] deckblatt = generiereDeckblatt(vertrag);
-			final byte[] pdfAllgemein = bos.toByteArray();
-			bos.flush();
-
-			final List<byte[]> seiten = new ArrayList<>();
-			seiten.add(deckblatt);
-			seiten.add(pdfAllgemein);
-
-			final byte[] pdfs = new PdfMerger().concatPdf(seiten);
-
-			return pdfs;
-		} catch (IOException e) {
-
-			LOG.error(e.getMessage(), e);
-			throw new MkGatewayRuntimeException("Konnte ADV-template nicht laden");
-		}
+		return pdfs;
 	}
 
-	private byte[] generiereDeckblatt(final VertragAuftragsdatenverarbeitung vertrag) {
+	private byte[] generiereDeckblatt(final VertragAuftragsdatenverarbeitung vertrag, final String textVersionsnummer) {
 
 		final Document doc = new Document(PageSize.A4);
 
@@ -110,7 +92,7 @@ public class VertragAuftragsverarbeitungPdfGenerator {
 
 			font = fontProvider.getFontNormal();
 
-			doc.add(new Paragraph("Version " + vertrag.versionsnummer(), font));
+			doc.add(new Paragraph("Version " + textVersionsnummer, font));
 
 			doc.add(Chunk.NEWLINE);
 

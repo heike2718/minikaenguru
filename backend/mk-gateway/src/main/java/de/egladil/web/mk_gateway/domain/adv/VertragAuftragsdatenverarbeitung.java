@@ -5,6 +5,7 @@
 package de.egladil.web.mk_gateway.domain.adv;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.VertragAuftragsdatenverarbeitungAPIModel;
 import de.egladil.web.mk_gateway.domain.semantik.Aggregate;
 
 /**
@@ -17,17 +18,19 @@ public class VertragAuftragsdatenverarbeitung {
 
 	private Identifier schulkuerzel;
 
-	private String versionsnummer;
-
-	private String dateinameVertragstext;
-
 	private Anschrift anschrift;
 
 	private String unterzeichnetAm;
 
 	private Identifier unterzeichnenderLehrer;
 
-	private Identifier idVertragstext;
+	private Vertragstext vertragstext;
+
+	public static VertragAuftragsdatenverarbeitung createFromPayload(final VertragAuftragsdatenverarbeitungAPIModel payload) {
+
+		return new VertragAuftragsdatenverarbeitung()
+			.withAnschrift(Anschrift.createFromPayload(payload));
+	}
 
 	public String uuid() {
 
@@ -78,17 +81,6 @@ public class VertragAuftragsdatenverarbeitung {
 		return this;
 	}
 
-	public Identifier idVertragstext() {
-
-		return idVertragstext;
-	}
-
-	public VertragAuftragsdatenverarbeitung withVertragstext(final Identifier idVertragstext) {
-
-		this.idVertragstext = idVertragstext;
-		return this;
-	}
-
 	public Anschrift anschrift() {
 
 		return anschrift;
@@ -100,33 +92,22 @@ public class VertragAuftragsdatenverarbeitung {
 		return this;
 	}
 
+	public Vertragstext vertragstext() {
+
+		return vertragstext;
+	}
+
+	public VertragAuftragsdatenverarbeitung withVertragstext(final Vertragstext vertragstext) {
+
+		this.vertragstext = vertragstext;
+		return this;
+	}
+
 	public String filename() {
 
 		String name = anschrift.schulname().trim().replaceAll(" ", "_");
 
 		return "Vertrag-Auftragsdatenverarbeitung-" + name + ".pdf";
 
-	}
-
-	public String versionsnummer() {
-
-		return versionsnummer;
-	}
-
-	public VertragAuftragsdatenverarbeitung withVersionsnummer(final String versionsnummer) {
-
-		this.versionsnummer = versionsnummer;
-		return this;
-	}
-
-	public String dateinameVertragstext() {
-
-		return dateinameVertragstext;
-	}
-
-	public VertragAuftragsdatenverarbeitung withDateinameVertragstext(final String textDateiname) {
-
-		this.dateinameVertragstext = textDateiname;
-		return this;
 	}
 }

@@ -4,7 +4,7 @@ import { take } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { DownloadState } from './+state/download.reducer';
 import * as DownloadActions from './+state/download.actions';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { MessageService } from '@minikaenguru-ws/common-messages';
 import { LogService } from '@minikaenguru-ws/common-logging';
 import { downloadInProgress } from './+state/download.selectors';
@@ -23,7 +23,7 @@ export class DownloadFacade {
 
 	public downloadFile(url: string, dateiname: string, mimetype: string): void {
 
-		const filename = this.getFilename(dateiname, mimetype);
+		const defaultFilename = this.getDefaultFilename(dateiname, mimetype);
 
 		this.appStore.dispatch(DownloadActions.startDownload());
 
@@ -31,7 +31,7 @@ export class DownloadFacade {
 			take(1)
 		).subscribe(
 			blob => {
-				this.saveAs(blob, filename);
+				this.saveAs(blob, defaultFilename);
 				this.appStore.dispatch(DownloadActions.downloadFinished());
 			},
 			(error => {
@@ -41,16 +41,38 @@ export class DownloadFacade {
 		);
 	}
 
-	private saveAs(blob: Blob, filename: string): void {
+	private saveAs(httpResponse: HttpResponse<any>, defaultFilename: string): void {
+
+		const contentDispositionHeader = httpResponse.headers.get('Content-Disposition');
+		const filename = this.getFilenameFromContentDispositionHeader(contentDispositionHeader, defaultFilename);
+
 		const a = document.createElement('a')
-		const objectUrl = URL.createObjectURL(blob)
+		const objectUrl = URL.createObjectURL(httpResponse.body)
 		a.href = objectUrl
 		a.download = filename;
 		a.click();
 		URL.revokeObjectURL(objectUrl);
 	}
 
-	private getFilename(dateiname: string, mimetype: string): string {
+	private getFilenameFromContentDispositionHeader(contentDispositionHeader: string, defaultFilename: string) {
+
+		if (!contentDispositionHeader) {
+			return defaultFilename;
+		}
+
+		const indexOfFilenameSubstring = contentDispositionHeader.indexOf('filename=');
+
+		if (indexOfFilenameSubstring < 0) {
+			return defaultFilename;
+		}
+
+		const startIndex = indexOfFilenameSubstring + 'filename='.length;
+
+		return contentDispositionHeader.substr(startIndex, contentDispositionHeader.length -1);
+
+	}
+
+	private getDefaultFilename(dateiname: string, mimetype: string): string {
 
 		if (dateiname && mimetype) {
 			return dateiname + '.' + mimetype;

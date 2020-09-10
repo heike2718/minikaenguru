@@ -25,7 +25,7 @@ public interface VertragAuftragsverarbeitungRepository {
 	 * Persistiert einen neuen Vertrag
 	 *
 	 * @param  vertrag
-	 * @return         Identifier die neue ID
+	 * @return              Identifier die neue ID
 	 */
 	Identifier addVertrag(VertragAuftragsdatenverarbeitung vertrag);
 
@@ -36,5 +36,4 @@ public interface VertragAuftragsverarbeitungRepository {
 	 * @return                Optional
 	 */
 	Optional<VertragAuftragsdatenverarbeitung> findVertragForSchule(Identifier schuleIdentity);
-
 }

@@ -107,7 +107,11 @@ public class VertragAuftragsverarbeitungHibernateRepository implements VertragAu
 	@Transactional
 	public Identifier addVertrag(final VertragAuftragsdatenverarbeitung vertrag) {
 
+		PersistenterVertragAdvText persistenterVertragstext = em.find(PersistenterVertragAdvText.class,
+			vertrag.vertragstext().identifier().identifier());
+
 		PersistenterVertragAdv persistenterVertrag = mapFromAggregate(vertrag);
+		persistenterVertrag.setAdvText(persistenterVertragstext);
 
 		if (persistenterVertrag.getUuid() == null) {
 
@@ -123,7 +127,7 @@ public class VertragAuftragsverarbeitungHibernateRepository implements VertragAu
 
 	PersistenterVertragAdv mapFromAggregate(final VertragAuftragsdatenverarbeitung vertrag) {
 
-		String idVertragstext = vertrag.idVertragstext().identifier();
+		String idVertragstext = vertrag.vertragstext().identifier().identifier();
 		PersistenterVertragAdvText persistenterText = em.find(PersistenterVertragAdvText.class,
 			idVertragstext);
 
@@ -171,15 +175,18 @@ public class VertragAuftragsverarbeitungHibernateRepository implements VertragAu
 			.withPlz(persistenterVertrag.getPlz()).withSchulname(persistenterVertrag.getSchulname())
 			.withStrasse(persistenterVertrag.getStrasse());
 
+		Vertragstext vertragstext = new Vertragstext().withChecksumme(persistenterVertragstext.getChecksumme())
+			.withDateiname(persistenterVertragstext.getDateiname())
+			.withIdentifier(new Identifier(persistenterVertragstext.getUuid()))
+			.withVersionsnummer(persistenterVertragstext.getVersionsnummer());
+
 		return new VertragAuftragsdatenverarbeitung()
 			.withIdentifier(new Identifier(persistenterVertrag.getUuid()))
 			.withAnschrift(anschrift)
 			.withSchulkuerzel(new Identifier(persistenterVertrag.getSchulkuerzel()))
 			.withUnterzeichnenderLehrer(new Identifier(persistenterVertrag.getAbgeschlossenDurch()))
 			.withUnterzeichnetAm(persistenterVertrag.getAbgeschlossenAm())
-			.withVertragstext(new Identifier(persistenterVertragstext.getUuid()))
-			.withVersionsnummer(persistenterVertragstext.getVersionsnummer())
-			.withDateinameVertragstext(persistenterVertragstext.getDateiname());
+			.withVertragstext(vertragstext);
 
 	}
 
