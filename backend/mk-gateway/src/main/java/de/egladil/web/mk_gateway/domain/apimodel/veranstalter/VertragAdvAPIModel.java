@@ -11,14 +11,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_validation.annotations.Hausnummer;
 import de.egladil.web.commons_validation.annotations.Kuerzel;
-import de.egladil.web.commons_validation.annotations.LandKuerzel;
 import de.egladil.web.commons_validation.annotations.Plz;
 import de.egladil.web.commons_validation.annotations.StringLatin;
 
 /**
- * VertragAuftragsdatenverarbeitungAPIModel
+ * VertragAdvAPIModel
  */
-public class VertragAuftragsdatenverarbeitungAPIModel {
+public class VertragAdvAPIModel {
 
 	@JsonProperty
 	@Kuerzel
@@ -29,12 +28,6 @@ public class VertragAuftragsdatenverarbeitungAPIModel {
 	@Size(min = 1, max = 100)
 	@JsonProperty
 	private String schulname;
-
-	@NotBlank
-	@LandKuerzel
-	@Size(min = 2, max = 2)
-	@JsonProperty
-	private String laendercode;
 
 	@NotBlank
 	@Size(min = 1, max = 10)
@@ -70,11 +63,6 @@ public class VertragAuftragsdatenverarbeitungAPIModel {
 		return schulname;
 	}
 
-	public String laendercode() {
-
-		return laendercode;
-	}
-
 	public String plz() {
 
 		return plz;
@@ -98,7 +86,7 @@ public class VertragAuftragsdatenverarbeitungAPIModel {
 	@Override
 	public String toString() {
 
-		return "VertragAuftragsdatenverarbeitungAPIModel [schulkuerzel=" + schulkuerzel + ", schulname=" + schulname
-			+ ", laendercode=" + laendercode + ", ort=" + ort + "]";
+		return "VertragAdvAPIModel [schulkuerzel=" + schulkuerzel + ", schulname=" + schulname
+			+ ", ort=" + ort + "]";
 	}
 }

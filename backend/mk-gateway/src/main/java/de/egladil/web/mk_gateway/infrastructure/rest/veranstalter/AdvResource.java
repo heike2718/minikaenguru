@@ -21,7 +21,7 @@ import javax.ws.rs.core.SecurityContext;
 
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.adv.AdvService;
-import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.VertragAuftragsdatenverarbeitungAPIModel;
+import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.VertragAdvAPIModel;
 
 /**
  * AdvResource
@@ -79,7 +79,7 @@ public class AdvResource {
 	}
 
 	@POST
-	public Response createVertragAuftragsdatenverarbeitung(final VertragAuftragsdatenverarbeitungAPIModel requestPayload) {
+	public Response createVertragAuftragsdatenverarbeitung(final VertragAdvAPIModel requestPayload) {
 
 		return null;
 	}

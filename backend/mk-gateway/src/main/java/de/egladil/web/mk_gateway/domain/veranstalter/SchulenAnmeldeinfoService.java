@@ -4,7 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.veranstalter;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -84,7 +83,8 @@ public class SchulenAnmeldeinfoService {
 			throw new MkGatewayRuntimeException("Fehler beim Laden der Schulen aus dem Katalog");
 		}
 
-		final List<SchuleAPIModel> schulenAusKatalg = this.getSchulenFromKatalogeAPI(katalogItemsResponse);
+		final List<SchuleAPIModel> schulenAusKatalg = new SchuleKatalogResponseMapper()
+			.getSchulenFromKatalogeAPI(katalogItemsResponse);
 
 		return mergeDataFromSchulenOfLehrer(schulenAusKatalg, schulenOfLehrer);
 	}
@@ -108,7 +108,8 @@ public class SchulenAnmeldeinfoService {
 			throw new MkGatewayRuntimeException("Fehler beim Laden der Schulen aus dem Katalog");
 		}
 
-		final List<SchuleAPIModel> schulenAusKatalg = this.getSchulenFromKatalogeAPI(katalogItemsResponse);
+		final List<SchuleAPIModel> schulenAusKatalg = new SchuleKatalogResponseMapper()
+			.getSchulenFromKatalogeAPI(katalogItemsResponse);
 
 		SchuleAPIModel schuleAusKatalog = null;
 
@@ -196,38 +197,6 @@ public class SchulenAnmeldeinfoService {
 			throw new MkGatewayRuntimeException("Konnte ResponsePayload von mk-wettbewerbe nicht verarbeiten");
 
 		}
-	}
-
-	List<SchuleAPIModel> getSchulenFromKatalogeAPI(final Response response) {
-
-		List<SchuleAPIModel> result = new ArrayList<>();
-
-		ResponsePayload responsePayload = response.readEntity(ResponsePayload.class);
-
-		MessagePayload messagePayload = responsePayload.getMessage();
-
-		if (messagePayload.isOk()) {
-
-			try {
-
-				@SuppressWarnings("unchecked")
-				List<Map<String, Object>> data = (List<Map<String, Object>>) responsePayload.getData();
-
-				for (Map<String, Object> keyValueMap : data) {
-
-					result.add(SchuleAPIModel.withAttributes(keyValueMap));
-				}
-			} catch (ClassCastException e) {
-
-				LOG.error(e.getMessage(), e);
-				throw new MkGatewayRuntimeException("Konnte ResponsePayload von mk-kataloge nicht verarbeiten");
-
-			}
-
-		}
-
-		return result;
-
 	}
 
 	DataInconsistencyRegistered getDataInconsistencyRegistered() {

@@ -5,7 +5,7 @@
 package de.egladil.web.mk_gateway.domain.adv;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.VertragAuftragsdatenverarbeitungAPIModel;
+import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.VertragAdvAPIModel;
 import de.egladil.web.mk_gateway.domain.semantik.Aggregate;
 
 /**
@@ -26,10 +26,10 @@ public class VertragAuftragsdatenverarbeitung {
 
 	private Vertragstext vertragstext;
 
-	public static VertragAuftragsdatenverarbeitung createFromPayload(final VertragAuftragsdatenverarbeitungAPIModel payload) {
+	public static VertragAuftragsdatenverarbeitung createFromPayload(final VertragAdvAPIModel payload, final PostleitzahlLand plzLand) {
 
 		return new VertragAuftragsdatenverarbeitung()
-			.withAnschrift(Anschrift.createFromPayload(payload));
+			.withAnschrift(Anschrift.createFromPayload(payload, plzLand));
 	}
 
 	public String uuid() {
