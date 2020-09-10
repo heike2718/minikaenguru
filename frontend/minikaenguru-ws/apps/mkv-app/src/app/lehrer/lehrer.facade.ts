@@ -11,7 +11,7 @@ import { TeilnahmenService } from '../services/teilnahmen.service';
 import { Schulteilnahme } from '../wettbewerb/wettbewerb.model';
 import { Message, MessageService } from '@minikaenguru-ws/common-messages';
 import { User } from '@minikaenguru-ws/common-auth';
-import { first, take } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 
 
 @Injectable({ providedIn: 'root' })

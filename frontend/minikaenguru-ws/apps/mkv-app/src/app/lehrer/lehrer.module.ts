@@ -10,12 +10,14 @@ import * as fromLehrer from './+state/lehrer.reducer';
 import { LehrerRoutingModule } from './lehrer-routing.module';
 import { SchulenListResolver } from './schulen/schulen-list/schulen-list.resolver';
 import { SchuleDashboardResolver } from './schulen/schule-dashboard/schule-dashboard.resolver';
+import { CommonComponentsModule  } from '@minikaenguru-ws/common-components';
 
 
 
 @NgModule({
 	imports: [
 		CommonModule,
+		CommonComponentsModule,
 		LehrerRoutingModule,
 		StoreModule.forFeature(fromLehrer.lehrerFeatureKey, fromLehrer.reducer),
 	],

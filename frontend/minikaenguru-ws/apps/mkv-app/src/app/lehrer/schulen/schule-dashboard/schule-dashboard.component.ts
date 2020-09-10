@@ -27,6 +27,12 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 	textFeatureFlagAnzeigen = false;
 	textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
 
+	vertragAdvUrl: string;
+	vertragAdvDateiname = 'Vertrag-Auftragsdatenverarbeitung-Minikaenguru';
+	vertragAdvMimetype = 'pdf';
+	vertragAdvCardTitle = 'DSGVO';
+	vertragAdvSubtext = 'Vertrag Auftragsdatenverarbeitung herunterladen';
+
 
 	private user: User;
 
@@ -59,7 +65,13 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 		this.schuleSubscription = this.lehrerFacade.selectedSchule$.subscribe(
 			s => {
 				this.schule = s;
-				this.logger.debug(JSON.stringify(this.schule));
+
+				if (this.schule) {
+					this.vertragAdvUrl = environment.apiUrl + '/adv/' + this.schule.kuerzel;
+					this.logger.debug(JSON.stringify(this.schule));
+				} else {
+					this.vertragAdvUrl = '';
+				}
 			}
 		);
 
@@ -88,7 +100,7 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	gotoDSGVO(): void {
+	gotoVertragAdv(): void {
 		this.textFeatureFlag = 'DSGVO im Moment noch nicht möglich, kommt aber im Herbst 2020.';
 		this.textFeatureFlagAnzeigen = true;
 	}

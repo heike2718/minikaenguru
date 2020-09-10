@@ -8,8 +8,13 @@
 					</div>
 
 					<div *ngIf="teilnahme.anzahlKinder > 0" class="col-sm-12 col-md-3">
+						<mk-download-button [url]="downloadUrl" [buttonLabel]="downloadLabel"
+							[mimetype]="downloadMimetype" [dateiname]="downloadDateiname" [tooltip]="downloadTooltip">
+						</mk-download-button>
+						<!--
 						<button class="btn btn-block btn-primary" (click)="getStatistic()"
 							title="Statistik erstellen">Statistik</button>
+						-->
 					</div>
 					<div *ngIf="textFeatureFlagAnzeigen" class="row ml-3 mr-3 mt-3 hinweis">
 						<div class="col-11">

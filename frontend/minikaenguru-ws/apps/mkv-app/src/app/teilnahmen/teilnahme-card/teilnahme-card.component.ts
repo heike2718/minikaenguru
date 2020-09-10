@@ -9,15 +9,25 @@ import { environment } from '../../../environments/environment';
 })
 export class TeilnahmeCardComponent implements OnInit {
 
+
+
 	devMode = !environment.production;
 	textFeatureFlagAnzeigen = false;
 	textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
+
+	downloadUrl: string;
+	downloadDateiname = 'test';
+	downloadMimetype = 'pdf';
+	downloadLabel = 'Statistik';
+	downloadTooltip = 'Statistik generieren und herunterladen';
 
 
 	@Input() teilnahme: AnonymisierteTeilnahme;
 	constructor() { }
 
 	ngOnInit(): void {
+
+		this.downloadUrl = environment.apiUrl + '/adv/6XOA2A11';
 	}
 
 	getStatistic(): void {

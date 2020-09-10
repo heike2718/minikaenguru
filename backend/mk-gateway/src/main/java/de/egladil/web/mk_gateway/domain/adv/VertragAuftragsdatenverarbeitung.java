@@ -4,9 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.adv;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.semantik.Aggregate;
 
@@ -16,22 +13,20 @@ import de.egladil.web.mk_gateway.domain.semantik.Aggregate;
 @Aggregate
 public class VertragAuftragsdatenverarbeitung {
 
-	@NotNull
 	private Identifier identifier;
 
-	@NotNull
 	private Identifier schulkuerzel;
 
-	@NotNull
+	private String versionsnummer;
+
+	private String dateinameVertragstext;
+
 	private Anschrift anschrift;
 
-	@NotBlank
 	private String unterzeichnetAm;
 
-	@NotNull
 	private Identifier unterzeichnenderLehrer;
 
-	@NotNull
 	private Identifier idVertragstext;
 
 	public String uuid() {
@@ -63,7 +58,7 @@ public class VertragAuftragsdatenverarbeitung {
 
 	public String unterzeichnetAm() {
 
-		return unterzeichnetAm;
+		return unterzeichnetAm.substring(0, 10);
 	}
 
 	public VertragAuftragsdatenverarbeitung withUnterzeichnetAm(final String unterzeichnetAm) {
@@ -105,4 +100,33 @@ public class VertragAuftragsdatenverarbeitung {
 		return this;
 	}
 
+	public String filename() {
+
+		String name = anschrift.schulname().trim().replaceAll(" ", "_");
+
+		return "Vertrag-Auftragsdatenverarbeitung-" + name + ".pdf";
+
+	}
+
+	public String versionsnummer() {
+
+		return versionsnummer;
+	}
+
+	public VertragAuftragsdatenverarbeitung withVersionsnummer(final String versionsnummer) {
+
+		this.versionsnummer = versionsnummer;
+		return this;
+	}
+
+	public String dateinameVertragstext() {
+
+		return dateinameVertragstext;
+	}
+
+	public VertragAuftragsdatenverarbeitung withDateinameVertragstext(final String textDateiname) {
+
+		this.dateinameVertragstext = textDateiname;
+		return this;
+	}
 }
