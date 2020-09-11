@@ -31,12 +31,12 @@ public class KuerzelAPIModel {
 
 	}
 
-	String kuerzelSchule() {
+	public String kuerzelSchule() {
 
 		return kuerzelSchule;
 	}
 
-	String kuerzelOrt() {
+	public String kuerzelOrt() {
 
 		return kuerzelOrt;
 	}

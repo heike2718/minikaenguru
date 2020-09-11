@@ -88,27 +88,6 @@ public class SchulenAnmeldeinfoServiceTest {
 	}
 
 	@Test
-	void should_getSchulenFromKatalogeAPIThrowException_when_PayloadNotAList() {
-
-		Map<String, Object> schuleWettbewerbMap = new HashMap<>();
-
-		schuleWettbewerbMap.put("kuerzel", "12345");
-		schuleWettbewerbMap.put("aktuellAngemeldet", Boolean.FALSE);
-
-		Response response = Response.ok(new ResponsePayload(MessagePayload.ok(), schuleWettbewerbMap)).build();
-
-		try {
-
-			service.getSchulenFromKatalogeAPI(response);
-			fail("keine MkGatewayRuntimeException");
-		} catch (MkGatewayRuntimeException e) {
-
-			assertEquals("Konnte ResponsePayload von mk-kataloge nicht verarbeiten", e.getMessage());
-		}
-
-	}
-
-	@Test
 	void should_FindSchulenMitAnmeldeinfo_work() {
 
 		// Arrange

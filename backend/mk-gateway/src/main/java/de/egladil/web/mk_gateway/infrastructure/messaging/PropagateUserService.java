@@ -10,8 +10,11 @@ import javax.inject.Inject;
 
 import de.egladil.web.mk_gateway.domain.auth.signup.LehrerCreated;
 import de.egladil.web.mk_gateway.domain.auth.signup.PrivatveranstalterCreated;
+import de.egladil.web.mk_gateway.domain.auth.signup.VeranstalterAnonymisiert;
 import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
 import de.egladil.web.mk_gateway.domain.semantik.InfrastructureService;
+import de.egladil.web.mk_gateway.domain.user.Rolle;
+import de.egladil.web.mk_gateway.domain.veranstalter.AnonymisiereVeranstalterCommand;
 import de.egladil.web.mk_gateway.domain.veranstalter.CreateOrUpdateLehrerCommand;
 import de.egladil.web.mk_gateway.domain.veranstalter.CreateOrUpdatePrivatveranstalterCommand;
 import de.egladil.web.mk_gateway.domain.veranstalter.LehrerService;
@@ -46,6 +49,24 @@ public class PropagateUserService {
 
 			this.propagate(privatveranstalterCreated);
 			return;
+		}
+
+		if (VeranstalterAnonymisiert.class.getSimpleName().contentEquals(event.typeName())) {
+
+			VeranstalterAnonymisiert veranstalterAnonymisiert = (VeranstalterAnonymisiert) event;
+
+			AnonymisiereVeranstalterCommand command = new AnonymisiereVeranstalterCommand(veranstalterAnonymisiert);
+
+			if (veranstalterAnonymisiert.rollen().contains(Rolle.LEHRER.toString())) {
+
+				this.lehrerService.lehrerAnonymisieren(command);
+			}
+
+			if (veranstalterAnonymisiert.rollen().contains(Rolle.PRIVAT.toString())) {
+
+				this.privatveranstalterService.privatveranstalterAnonymisieren(command);
+			}
+
 		}
 
 	}

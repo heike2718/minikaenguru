@@ -75,7 +75,7 @@ public class SchuleDetailsServiceTest extends AbstractDomainServiceTest {
 					VertragAuftragsdatenverarbeitung result = new VertragAuftragsdatenverarbeitung()
 						.withIdentifier(new Identifier(""))
 						.withSchulkuerzel(new Identifier(SCHULKUERZEL_1)).withUnterzeichnenderLehrer(new Identifier(UUID_LEHRER_1))
-						.withUnterzeichnetAm("14.08.2020").withVertragstext(vertragstext.identifier());
+						.withUnterzeichnetAm("14.08.2020").withVertragstext(vertragstext);
 
 					return Optional.of(result);
 				}
@@ -91,7 +91,7 @@ public class SchuleDetailsServiceTest extends AbstractDomainServiceTest {
 				VertragAuftragsdatenverarbeitung result = new VertragAuftragsdatenverarbeitung()
 					.withIdentifier(new Identifier(ADV_UUID_SCHULE_1))
 					.withSchulkuerzel(schuleIdentity).withUnterzeichnenderLehrer(new Identifier(UUID_LEHRER_1))
-					.withUnterzeichnetAm("14.08.2020").withVertragstext(vertragstext.identifier());
+					.withUnterzeichnetAm("14.08.2020").withVertragstext(vertragstext);
 
 				return SCHULKUERZEL_1.equals(schuleIdentity.identifier()) ? Optional.of(result) : Optional.empty();
 			}

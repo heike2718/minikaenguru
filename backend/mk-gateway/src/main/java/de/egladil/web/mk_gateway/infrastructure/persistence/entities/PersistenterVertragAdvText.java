@@ -6,6 +6,8 @@ package de.egladil.web.mk_gateway.infrastructure.persistence.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -15,7 +17,14 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "VERTRAEGE_ADV_TEXTE")
+@NamedQueries({
+	@NamedQuery(
+		name = "PersistenterVertragAdvText.LOAD",
+		query = "select t from PersistenterVertragAdvText t")
+})
 public class PersistenterVertragAdvText extends ConcurrencySafeEntity {
+
+	public static final String LOAD = "PersistenterVertragAdvText.LOAD";
 
 	@NotNull
 	@Size(max = 20)

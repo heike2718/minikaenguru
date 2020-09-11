@@ -14,7 +14,7 @@ export interface WettbewerbeState {
 	wettbewerbEditorModel: WettbewerbEditorModel;
 };
 
-export const initialWettbewerbeState = {
+const initialWettbewerbeState = {
 	wettbewerbeMap: [],
 	selectedJahr: undefined,
 	wettbewerbeLoaded: false,

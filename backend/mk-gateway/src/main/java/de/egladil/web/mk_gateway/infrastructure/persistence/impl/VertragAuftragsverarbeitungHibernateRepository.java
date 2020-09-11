@@ -107,7 +107,18 @@ public class VertragAuftragsverarbeitungHibernateRepository implements VertragAu
 	@Transactional
 	public Identifier addVertrag(final VertragAuftragsdatenverarbeitung vertrag) {
 
-		PersistenterVertragAdv persistenterVertrag = mapFromAggregate(vertrag);
+		String idVertragstext = vertrag.vertragstext().identifier().identifier();
+		PersistenterVertragAdvText persistenterVertragstext = em.find(PersistenterVertragAdvText.class,
+			idVertragstext);
+
+		if (persistenterVertragstext == null) {
+
+			throw new MkGatewayRuntimeException(
+				"Vertragstext mit UUID='" + idVertragstext + "' existiert nicht");
+		}
+
+		PersistenterVertragAdv persistenterVertrag = mapFromAggregate(vertrag, persistenterVertragstext);
+		persistenterVertrag.setAdvText(persistenterVertragstext);
 
 		if (persistenterVertrag.getUuid() == null) {
 
@@ -121,19 +132,14 @@ public class VertragAuftragsverarbeitungHibernateRepository implements VertragAu
 		}
 	}
 
-	PersistenterVertragAdv mapFromAggregate(final VertragAuftragsdatenverarbeitung vertrag) {
+	PersistenterVertragAdv mapFromAggregate(final VertragAuftragsdatenverarbeitung vertrag, final PersistenterVertragAdvText persistenterText) {
 
-		String idVertragstext = vertrag.idVertragstext().identifier();
-		PersistenterVertragAdvText persistenterText = em.find(PersistenterVertragAdvText.class,
-			idVertragstext);
+		PersistenterVertragAdv persistenterVertrag = null;
 
-		if (persistenterText == null) {
+		if (vertrag.identifier() != null) {
 
-			throw new MkGatewayRuntimeException(
-				"Vertragstext mit UUID='" + idVertragstext + "' existiert nicht");
+			persistenterVertrag = em.find(PersistenterVertragAdv.class, vertrag.identifier().identifier());
 		}
-
-		PersistenterVertragAdv persistenterVertrag = em.find(PersistenterVertragAdv.class, vertrag.identifier().identifier());
 
 		if (persistenterVertrag == null) {
 
@@ -152,14 +158,7 @@ public class VertragAuftragsverarbeitungHibernateRepository implements VertragAu
 		persistenterVertrag.setStrasse(anschrift.strasse());
 		persistenterVertrag.setSchulkuerzel(vertrag.schulkuerzel().identifier());
 		persistenterVertrag.setSchulname(anschrift.schulname());
-
-		if (persistenterVertrag.getUuid() == null) {
-
-			persistenterVertrag.setImportierteUuid(vertrag.identifier().identifier());
-		}
-
 		return persistenterVertrag;
-
 	}
 
 	VertragAuftragsdatenverarbeitung mapFromDb(final PersistenterVertragAdv persistenterVertrag) {
@@ -171,15 +170,18 @@ public class VertragAuftragsverarbeitungHibernateRepository implements VertragAu
 			.withPlz(persistenterVertrag.getPlz()).withSchulname(persistenterVertrag.getSchulname())
 			.withStrasse(persistenterVertrag.getStrasse());
 
+		Vertragstext vertragstext = new Vertragstext().withChecksumme(persistenterVertragstext.getChecksumme())
+			.withDateiname(persistenterVertragstext.getDateiname())
+			.withIdentifier(new Identifier(persistenterVertragstext.getUuid()))
+			.withVersionsnummer(persistenterVertragstext.getVersionsnummer());
+
 		return new VertragAuftragsdatenverarbeitung()
 			.withIdentifier(new Identifier(persistenterVertrag.getUuid()))
 			.withAnschrift(anschrift)
 			.withSchulkuerzel(new Identifier(persistenterVertrag.getSchulkuerzel()))
 			.withUnterzeichnenderLehrer(new Identifier(persistenterVertrag.getAbgeschlossenDurch()))
 			.withUnterzeichnetAm(persistenterVertrag.getAbgeschlossenAm())
-			.withVertragstext(new Identifier(persistenterVertragstext.getUuid()))
-			.withVersionsnummer(persistenterVertragstext.getVersionsnummer())
-			.withDateinameVertragstext(persistenterVertragstext.getDateiname());
+			.withVertragstext(vertragstext);
 
 	}
 

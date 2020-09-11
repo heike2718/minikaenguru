@@ -26,6 +26,11 @@ export const schuleDetailsLoaded = createAction(
 	props<{ schule: Schule }>()
 );
 
+export const vertragAdvCreated= createAction(
+	'[VertragAdvFacade] submitVertrag success',
+	props<{schulkuerzel: string}>()
+);
+
 export const restoreDetailsFromCache = createAction(
 	'[LehrerFacade] restoreDetailsFromCache',
 	props<{ kuerzel: string }>()

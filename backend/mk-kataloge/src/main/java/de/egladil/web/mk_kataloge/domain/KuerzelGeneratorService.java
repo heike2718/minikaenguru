@@ -16,7 +16,7 @@ import de.egladil.web.mk_kataloge.domain.apimodel.KuerzelAPIModel;
 @ApplicationScoped
 public class KuerzelGeneratorService {
 
-	private static final String ALGORITHM = "SHA-256";
+	private static final String ALGORITHM = "SHA1PRNG";
 
 	private static final int LAENGE = 8;
 
@@ -27,6 +27,14 @@ public class KuerzelGeneratorService {
 
 	@Inject
 	CryptoService cryptoService;
+
+	public static KuerzelGeneratorService createForTest(final KatalogeRepository katalogeRepository, final CryptoService cryptoService) {
+
+		KuerzelGeneratorService result = new KuerzelGeneratorService();
+		result.katalogRepository = katalogeRepository;
+		result.cryptoService = cryptoService;
+		return result;
+	}
 
 	public KuerzelAPIModel generateKuerzel() {
 

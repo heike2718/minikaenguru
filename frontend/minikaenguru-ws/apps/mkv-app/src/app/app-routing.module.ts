@@ -35,6 +35,14 @@ const routes: Routes = [
 		loadChildren: () => import('./privatveranstalter/privatveranstalter.module').then(m => m.PrivatveranstalterModule)
 	},
 	{
+		path: 'teilnahmen',
+		loadChildren: () => import('./teilnahmen/teilnahmen.module').then(m => m.TeilnahmenModule)
+	},
+	{
+		path: 'adv',
+		loadChildren: () => import('./vertrag-adv/vertrag-adv.module').then(m => m.VertragAdvModule)
+	},
+	{
 		path: '',
 		pathMatch: 'full',
 		component: LandingComponent

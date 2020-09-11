@@ -8,6 +8,8 @@ import { Subscription } from 'rxjs';
 import { Schule } from '../schulen.model';
 import { LogService } from '@minikaenguru-ws/common-logging';
 import { TeilnahmenFacade } from '../../../teilnahmen/teilnahmen.facade';
+import { VertragAdvFacade } from '../../../vertrag-adv/vertrag-adv.facade';
+import { DownloadCardModel } from '@minikaenguru-ws/common-components';
 
 @Component({
 	selector: 'mkv-schule-dashboard',
@@ -27,12 +29,7 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 	textFeatureFlagAnzeigen = false;
 	textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
 
-	vertragAdvUrl: string;
-	vertragAdvDateiname = 'Vertrag-Auftragsdatenverarbeitung-Minikaenguru';
-	vertragAdvMimetype = 'pdf';
-	vertragAdvCardTitle = 'DSGVO';
-	vertragAdvSubtext = 'Vertrag Auftragsdatenverarbeitung herunterladen';
-
+	vertragAdvModel: DownloadCardModel;
 
 	private user: User;
 
@@ -51,6 +48,7 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 		private authService: AuthService,
 		private wettbewerbFacade: WettbewerbFacade,
 		private teilnahmenFacade: TeilnahmenFacade,
+		private vertragAdvFacade: VertragAdvFacade,
 		private logger: LogService) {
 	}
 
@@ -67,10 +65,25 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 				this.schule = s;
 
 				if (this.schule) {
-					this.vertragAdvUrl = environment.apiUrl + '/adv/' + this.schule.kuerzel;
+
 					this.logger.debug(JSON.stringify(this.schule));
+
+
+					this.vertragAdvModel = {
+						url: environment.apiUrl + '/adv/' + this.schule.kuerzel,
+						cardTitle: 'DSGVO',
+						subtext: 'Vertrag Auftragsdatenverarbeitung herunterladen (PDF)',
+						dateiname: 'Vertrag-Auftragsdatenverarbeitung-Minikaenguru',
+						mimetype: 'pdf'
+					};
 				} else {
-					this.vertragAdvUrl = '';
+					this.vertragAdvModel = {
+						url: '',
+						cardTitle: 'DSGVO',
+						subtext: 'Vertrag Auftragsdatenverarbeitung herunterladen (PDF)',
+						dateiname: 'Vertrag-Auftragsdatenverarbeitung-Minikaenguru',
+						mimetype: 'pdf'
+					};
 				}
 			}
 		);
@@ -101,8 +114,8 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 	}
 
 	gotoVertragAdv(): void {
-		this.textFeatureFlag = 'DSGVO im Moment noch nicht möglich, kommt aber im Herbst 2020.';
-		this.textFeatureFlagAnzeigen = true;
+		this.vertragAdvFacade.setSelectedSchule(this.schule);
+		this.router.navigateByUrl('/adv');
 	}
 
 	anmelden(): void {

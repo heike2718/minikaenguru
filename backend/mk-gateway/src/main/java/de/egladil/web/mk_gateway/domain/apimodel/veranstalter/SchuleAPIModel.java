@@ -25,6 +25,8 @@ public class SchuleAPIModel {
 
 	private static final String KEY_LAND = "land";
 
+	private static final String KEY_KUERZEL_LAND = "kuerzelLand";
+
 	private static final String KEY_ANGEMELDET = "aktuellAngemeldet";
 
 	@JsonProperty
@@ -40,6 +42,9 @@ public class SchuleAPIModel {
 	private String land;
 
 	@JsonProperty
+	private String kuerzelLand;
+
+	@JsonProperty
 	private boolean aktuellAngemeldet;
 
 	@JsonProperty
@@ -47,6 +52,13 @@ public class SchuleAPIModel {
 
 	SchuleAPIModel() {
 
+	}
+
+	public static SchuleAPIModel withKuerzelLand(final String kuerzelLand) {
+
+		SchuleAPIModel result = new SchuleAPIModel();
+		result.kuerzelLand = kuerzelLand;
+		return result;
 	}
 
 	public static SchuleAPIModel withKuerzel(final String kuerzel) {
@@ -75,6 +87,11 @@ public class SchuleAPIModel {
 		if (keyValueMap.get(KEY_LAND) != null) {
 
 			result.land = (String) keyValueMap.get(KEY_LAND);
+		}
+
+		if (keyValueMap.get(KEY_KUERZEL_LAND) != null) {
+
+			result.kuerzelLand = (String) keyValueMap.get(KEY_KUERZEL_LAND);
 		}
 
 		if (keyValueMap.get(KEY_ANGEMELDET) != null) {
@@ -147,6 +164,11 @@ public class SchuleAPIModel {
 	public String land() {
 
 		return land;
+	}
+
+	public String kuerzelLand() {
+
+		return kuerzelLand;
 	}
 
 	public SchuleDetails getDetails() {

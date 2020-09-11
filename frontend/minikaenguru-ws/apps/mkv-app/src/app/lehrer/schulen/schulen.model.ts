@@ -76,7 +76,7 @@ export function mergeSchulenMap(schulenMap: SchuleWithID[], schule: Schule): Sch
 		return result;
 	}
 
-	for (let i: number = 0; i < schulenMap.length; i++) {
+	for (let i = 0; i < schulenMap.length; i++) {
 		const schuleMitId: SchuleWithID = schulenMap[i];
 
 		if (schuleMitId.kuerzel !== schule.kuerzel) {

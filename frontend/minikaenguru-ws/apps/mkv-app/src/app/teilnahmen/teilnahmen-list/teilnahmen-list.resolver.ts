@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable, forkJoin, Subscription } from 'rxjs';
-import { tap, filter, first, finalize } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { tap, first, finalize } from 'rxjs/operators';
 import { TeilnahmenFacade } from '../teilnahmen.facade';
 import { AuthService } from '@minikaenguru-ws/common-auth';
 
@@ -28,17 +28,19 @@ export class TeilnahmenListResolver implements Resolve<any> {
 						if (!this.loading) {
 							this.loading = true;
 
-							this.userSubscription = this.authService.user$.subscribe(user => {
+							this.userSubscription = this.authService.user$.subscribe(
 
-								if (user) {
+								user => {
 
-									this.teilnahmenFacade.initTeilnahmen(user.rolle);
+									if (user) {
+
+										this.teilnahmenFacade.initTeilnahmen(user.rolle);
+
+									}
 
 								}
 
-							}
-
-							)
+							);
 						}
 
 					}
@@ -48,6 +50,9 @@ export class TeilnahmenListResolver implements Resolve<any> {
 			first(),
 			finalize(() => {
 				this.loading = false;
+				if (this.userSubscription) {
+					this.userSubscription.unsubscribe();
+				}
 			})
 		);
 
