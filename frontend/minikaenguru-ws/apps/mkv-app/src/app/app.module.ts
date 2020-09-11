@@ -28,6 +28,7 @@ import { WettbewerbModule } from './wettbewerb/wettbewerb.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AktuelleMeldungModule } from './aktuelle-meldung/aktuelle-meldung.module';
 import { TeilnahmenModule } from './teilnahmen/teilnahmen.module';
+import { VertragAdvModule } from './vertrag-adv/vertrag-adv.module';
 
 
 
@@ -67,6 +68,7 @@ import { TeilnahmenModule } from './teilnahmen/teilnahmen.module';
 		LehrerModule,
 		PrivatveranstalterModule,
 		TeilnahmenModule,
+		VertragAdvModule,
 		StoreModule.forRoot(reducers, {
 			metaReducers,
 			runtimeChecks: {

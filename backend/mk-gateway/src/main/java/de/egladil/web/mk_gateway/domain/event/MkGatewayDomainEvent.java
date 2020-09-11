@@ -29,6 +29,8 @@ public interface MkGatewayDomainEvent {
 
 	String TYPE_SCHULTEILNAHME_CHANGED = "SchulteilnahmeChanged";
 
+	String TYPE_VERANSTALTER_ANONYMISIERT = "VeranstalterAnonymisiert";
+
 	/**
 	 * @return LocalDateTime
 	 */

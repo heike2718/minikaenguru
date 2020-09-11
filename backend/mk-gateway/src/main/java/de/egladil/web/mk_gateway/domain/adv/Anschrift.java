@@ -6,6 +6,7 @@ package de.egladil.web.mk_gateway.domain.adv;
 
 import org.apache.commons.lang3.StringUtils;
 
+import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.VertragAdvAPIModel;
 import de.egladil.web.mk_gateway.domain.error.ImmutableObjectException;
 import de.egladil.web.mk_gateway.domain.semantik.ValueObject;
 
@@ -26,6 +27,16 @@ public class Anschrift {
 	private String plz;
 
 	private String laendercode;
+
+	public static Anschrift createFromPayload(final VertragAdvAPIModel payload, final PostleitzahlLand plzLand) {
+
+		return new Anschrift().withHausnummer(payload.hausnummer().trim())
+			.withLaendercode(plzLand.landkuerzel())
+			.withOrt(payload.ort().trim())
+			.withPlz(plzLand.postleitzahl().trim())
+			.withStrasse(payload.strasse())
+			.withSchulname(payload.schulname().trim());
+	}
 
 	public String schulname() {
 

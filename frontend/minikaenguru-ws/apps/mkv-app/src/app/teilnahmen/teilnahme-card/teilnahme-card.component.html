@@ -8,8 +8,7 @@
 					</div>
 
 					<div *ngIf="teilnahme.anzahlKinder > 0" class="col-sm-12 col-md-3">
-						<mk-download-button [url]="downloadUrl" [buttonLabel]="downloadLabel"
-							[mimetype]="downloadMimetype" [dateiname]="downloadDateiname" [tooltip]="downloadTooltip">
+						<mk-download-button [model]="vertragstextBtnModel">
 						</mk-download-button>
 						<!--
 						<button class="btn btn-block btn-primary" (click)="getStatistic()"

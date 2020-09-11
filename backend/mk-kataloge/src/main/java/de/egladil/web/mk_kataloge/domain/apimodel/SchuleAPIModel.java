@@ -23,16 +23,20 @@ public class SchuleAPIModel {
 	@JsonProperty
 	private String land;
 
+	@JsonProperty
+	private String kuerzelLand;
+
 	SchuleAPIModel() {
 
 	}
 
-	public SchuleAPIModel(final String kuerzel, final String name, final String ort, final String land) {
+	public SchuleAPIModel(final String kuerzel, final String name, final String ort, final String land, final String kuerzelLand) {
 
 		this.kuerzel = kuerzel;
 		this.name = name;
 		this.ort = ort;
 		this.land = land;
+		this.kuerzelLand = kuerzelLand;
 	}
 
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { DownloadFacade } from '../download.facade';
+import { DownloadButtonModel } from '../download.model';
 
 @Component({
 	selector: 'mk-download-button',
@@ -11,19 +12,22 @@ export class DownloadButtonComponent implements OnInit {
 	downloadInProgress$ = this.downloadFacade.downloadInProgress$;
 
 	@Input()
-	url: string;
+	model: DownloadButtonModel;
 
-	@Input()
-	dateiname: string;
+	// @Input()
+	// url: string;
 
-	@Input()
-	mimetype: string;
+	// @Input()
+	// dateiname: string;
 
-	@Input()
-	buttonLabel: string;
+	// @Input()
+	// mimetype: string;
 
-	@Input()
-	tooltip: string;
+	// @Input()
+	// buttonLabel: string;
+
+	// @Input()
+	// tooltip: string;
 
 	constructor(private downloadFacade: DownloadFacade) { }
 
@@ -31,7 +35,7 @@ export class DownloadButtonComponent implements OnInit {
 	}
 
 	startDownload(): void {
-		this.downloadFacade.downloadFile(this.url, this.dateiname, this.mimetype);
+		this.downloadFacade.downloadFile(this.model.url, this.model.dateiname, this.model.mimetype);
 	}
 
 }

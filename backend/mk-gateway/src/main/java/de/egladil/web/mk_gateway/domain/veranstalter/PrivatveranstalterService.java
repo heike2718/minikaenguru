@@ -198,4 +198,12 @@ public class PrivatveranstalterService {
 
 		return dataInconsistencyRegistered;
 	}
+
+	/**
+	 * @param command
+	 */
+	public void privatveranstalterAnonymisieren(final AnonymisiereVeranstalterCommand command) {
+
+		// TODO
+	}
 }

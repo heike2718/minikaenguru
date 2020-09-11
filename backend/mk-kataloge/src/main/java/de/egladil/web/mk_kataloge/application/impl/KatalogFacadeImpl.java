@@ -109,7 +109,7 @@ public class KatalogFacadeImpl implements KatalogFacade {
 		List<Schule> schulen = katalogRepository.findSchulenWithKuerzeln(relevanteKuerzel);
 
 		List<SchuleAPIModel> result = schulen.stream()
-			.map(s -> new SchuleAPIModel(s.getKuerzel(), s.getName(), s.getOrtName(), s.getLandName()))
+			.map(s -> new SchuleAPIModel(s.getKuerzel(), s.getName(), s.getOrtName(), s.getLandName(), s.getLandKuerzel()))
 			.collect(Collectors.toList());
 
 		return result;

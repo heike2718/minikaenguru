@@ -8,8 +8,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
@@ -20,12 +18,7 @@ import de.egladil.web.mk_gateway.domain.user.Rolle;
  */
 @Entity
 @Table(name = "USERS")
-@NamedQueries({
-	@NamedQuery(name = "FIND_BY_UUID", query = "select u from User u where u.uuid = :uuid")
-})
 public class User extends ConcurrencySafeEntity {
-
-	public static final String FIND_USER_BY_UUID_QUERY = "FIND_BY_UUID";
 
 	@Column(name = "ROLE")
 	@Enumerated(EnumType.STRING)

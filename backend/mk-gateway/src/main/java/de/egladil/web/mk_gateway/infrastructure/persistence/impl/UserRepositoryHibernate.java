@@ -9,8 +9,6 @@ import java.util.Optional;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
 import de.egladil.web.mk_gateway.domain.user.UserRepository;
@@ -28,17 +26,9 @@ public class UserRepositoryHibernate implements UserRepository {
 	@Override
 	public Optional<User> ofId(final String uuid) {
 
-		TypedQuery<User> query = em.createNamedQuery(User.FIND_USER_BY_UUID_QUERY, User.class).setParameter("uuid", uuid);
+		User user = em.find(User.class, uuid);
 
-		try {
-
-			User user = query.getSingleResult();
-			return Optional.of(user);
-
-		} catch (NoResultException e) {
-
-			return Optional.empty();
-		}
+		return user == null ? Optional.empty() : Optional.of(user);
 
 	}
 

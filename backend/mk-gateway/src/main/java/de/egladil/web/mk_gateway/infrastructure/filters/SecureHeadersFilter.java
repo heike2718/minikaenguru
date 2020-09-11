@@ -125,5 +125,11 @@ public class SecureHeadersFilter implements ContainerResponseFilter {
 
 			headers.add("Access-Control-Max-Age", "3600");
 		}
+
+		if (headers.get("Access-Control-Expose-Headers") == null) {
+
+			headers.add("Access-Control-Expose-Headers",
+				"Content-Type, Content-Disposition, X-SESSIONID");
+		}
 	}
 }
