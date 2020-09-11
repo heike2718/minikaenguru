@@ -222,4 +222,12 @@ public class LehrerService {
 		return dataInconsistencyRegistered;
 	}
 
+	/**
+	 * @param command
+	 */
+	public void lehrerAnonymisieren(final AnonymisiereVeranstalterCommand command) {
+
+		// TODO
+	}
+
 }

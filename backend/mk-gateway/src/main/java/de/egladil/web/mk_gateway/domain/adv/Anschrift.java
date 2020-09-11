@@ -34,6 +34,7 @@ public class Anschrift {
 			.withLaendercode(plzLand.landkuerzel())
 			.withOrt(payload.ort().trim())
 			.withPlz(plzLand.postleitzahl().trim())
+			.withStrasse(payload.strasse())
 			.withSchulname(payload.schulname().trim());
 	}
 

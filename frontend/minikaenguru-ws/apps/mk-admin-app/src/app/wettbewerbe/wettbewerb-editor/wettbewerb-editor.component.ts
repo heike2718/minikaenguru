@@ -40,7 +40,7 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 
 	loesungsbuchstabenKlasse2FormControl: FormControl;
 
-	private wettbewerbSubscription: Subscription;
+	private wettbewerbEditorModelSubscription: Subscription;
 
 	private saveOutcomeSubscription: Subscription;
 
@@ -55,7 +55,7 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 
-		this.wettbewerbSubscription = this.wettbewerbEditorModel$.subscribe(
+		this.wettbewerbEditorModelSubscription = this.wettbewerbEditorModel$.subscribe(
 			wb => {
 				this.initialWettbewerbGuiModel = {...wb};
 
@@ -98,8 +98,8 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		if (this.wettbewerbSubscription) {
-			this.wettbewerbSubscription.unsubscribe();
+		if (this.wettbewerbEditorModelSubscription) {
+			this.wettbewerbEditorModelSubscription.unsubscribe();
 		}
 		if (this.saveOutcomeSubscription) {
 			this.saveOutcomeSubscription.unsubscribe();

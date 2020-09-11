@@ -88,6 +88,22 @@ const lehrerReducer = createReducer(initalLehrerState,
 		return state;
 	}),
 
+	on(LehrerActions.vertragAdvCreated, (state, action) => {
+
+		const schule = findSchuleMitId(state.schulen, action.schulkuerzel);
+
+		if (schule != null) {
+
+			const changedSchuleDetails = {...schule.details, hatAdv: true};
+			const changedSchule = {...state.selectedSchule, details: changedSchuleDetails};
+			const neueSchuleMap = mergeSchulenMap(state.schulen, changedSchule);
+
+			return {...state, schulen: neueSchuleMap, selectedSchule: changedSchule};
+		}
+
+		return state;
+	}),
+
 	on(LehrerActions.deselectSchule, (state, _action) => {
 		return { ...state, selectedSchule: undefined }
 	}),

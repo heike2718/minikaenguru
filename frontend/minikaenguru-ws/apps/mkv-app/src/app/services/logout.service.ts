@@ -4,6 +4,7 @@ import { PrivatveranstalterFacade } from '../privatveranstalter/privatveranstalt
 import { WettbewerbFacade } from '../wettbewerb/wettbewerb.facade';
 import { TeilnahmenFacade } from '../teilnahmen/teilnahmen.facade';
 import { Injectable } from '@angular/core';
+import { VertragAdvFacade } from '../vertrag-adv/vertrag-adv.facade';
 
 
 @Injectable({
@@ -15,7 +16,8 @@ export class LogoutService {
 		, private lehrerFacade: LehrerFacade
 		, private privatveranstalterFacade: PrivatveranstalterFacade
 		, private wettbewerbFacade: WettbewerbFacade
-		, private teinahmenFacade: TeilnahmenFacade) { }
+		, private teinahmenFacade: TeilnahmenFacade
+		, private vertragAdvFacade: VertragAdvFacade) { }
 
 
 	logout(): void {
@@ -24,5 +26,6 @@ export class LogoutService {
 		this.privatveranstalterFacade.resetState();
 		this.wettbewerbFacade.resetState();
 		this.teinahmenFacade.resetState();
+		this.vertragAdvFacade.resetState();
 	}
 }

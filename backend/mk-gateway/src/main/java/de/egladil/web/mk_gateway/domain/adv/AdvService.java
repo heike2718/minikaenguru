@@ -137,6 +137,7 @@ public class AdvService {
 		String unterzeichnetAm = CommonTimeUtils.format(CommonTimeUtils.now());
 
 		VertragAuftragsdatenverarbeitung vertrag = VertragAuftragsdatenverarbeitung.createFromPayload(daten, plzLand)
+			.withSchulkuerzel(schuleIdentifier)
 			.withVertragstext(vertragstext)
 			.withUnterzeichnenderLehrer(new Identifier(lehrerUuid)).withUnterzeichnetAm(unterzeichnetAm);
 

@@ -74,8 +74,7 @@
 				</div>
 
 				<div *ngIf="schule.details.hatAdv" class="col-md-6 col-sm-12 mt-2">
-					<mk-download-card [url]="vertragAdvUrl" [cardTitle]="vertragAdvCardTitle"
-						[subtext]="vertragAdvSubtext" [dateiname]="vertragAdvDateiname" [mimetype]="vertragAdvMimetype"></mk-download-card>
+					<mk-download-card [model]="vertragAdvModel"></mk-download-card>
 				</div>
 
 				<div *ngIf="!schule.details.hatAdv" class="col-md-6 col-sm-12 mt-2">

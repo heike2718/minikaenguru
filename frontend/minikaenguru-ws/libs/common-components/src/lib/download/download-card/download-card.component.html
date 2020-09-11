@@ -1,8 +1,8 @@
 <div class="card clickable" (click)="startDownload()">
 	<div class="card-body">
-		<div class="card-title">{{cardTitle}}
+		<div class="card-title">{{model.cardTitle}}
 		</div>
-		<div class="mb-2 text-muted">{{subtext}}</div>
+		<div class="mb-2 text-muted">{{model.subtext}}</div>
 		<div *ngIf="downloadInProgress$ | async">
 			<div class="col-12">
 				Download... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>

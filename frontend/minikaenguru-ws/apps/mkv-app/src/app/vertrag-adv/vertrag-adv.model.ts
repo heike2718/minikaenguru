@@ -1,4 +1,4 @@
-export interface VertragAdvAPIModel {
+export interface VertragAdvEditorModel {
 	readonly schulkuerzel: string;
 	readonly schulname: string;
 	readonly plz: string;

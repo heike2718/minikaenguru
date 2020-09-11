@@ -1,1 +1,105 @@
-<p>vertrag-adv works!</p>
+<div *ngIf="vertragAdvEditorModel$ | async as vertrag" class="mkv-container mkv-bordered col-12">
+
+	<h2>Vertrag zur Auftragsdatenverarbeitung</h2>
+	<h3>zwischen {{vertrag.schulname}} und Heike Winkelvoß</h3>
+
+	<p>Bitte füllen Sie das Formular korrekt aus. Die Angaben werden in den Vertrag übernommen.</p>
+	<p>Sollte der Schulname nicht stimmen, nehmen Sie bitte per Mail Kontakt zu mir auf.</p>
+	<p>Ihr Name erscheint <b>nicht</b> im Vertrag.</p>
+
+	<div *ngIf="selectedSchule$ | async as schule">
+
+		<div *ngIf="!schule.details.hatAdv" class="col-12">
+			<mk-download-button [model]="vertragstextBtnModel">
+			</mk-download-button>
+
+			<form class="mb-4" [formGroup]="vertragAdvForm">
+				<div class="row mt-4">
+					<div class="col-md-12">
+						<label for="schulnameInput">Schulname*</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<input [class.error]="schulnameFormControl.touched && !schulnameFormControl.valid"
+							class="form-control" type="text" id="schulnameInput" placeholder="Name der Schule"
+							formControlName="schulname" autocomplete="true">
+					</div>
+				</div>
+
+				<div class="row mt-4">
+					<div class="col-md-12">
+						<label for="ortInput">Ort*</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<input [class.error]="ortFormControl.touched && !ortFormControl.valid" class="form-control"
+							type="text" id="ortInput" placeholder="Ort" formControlName="ort" autocomplete="true">
+					</div>
+				</div>
+
+				<div class="row mt-4">
+					<div class="col-md-12">
+						<label for="plzInput">Postleitzahl*</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<input [class.error]="plzFormControl.touched && !plzFormControl.valid" class="form-control"
+							type="text" id="plzInput" placeholder="Postleitzahl" formControlName="plz"
+							autocomplete="true">
+					</div>
+				</div>
+
+				<div class="row mt-4">
+					<div class="col-md-12">
+						<label for="strasseInput">Straße*</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<input [class.error]="strasseFormControl.touched && !strasseFormControl.valid"
+							class="form-control" type="text" id="strasseInput" placeholder="Straße"
+							formControlName="strasse" autocomplete="true">
+					</div>
+				</div>
+
+				<div class="row mt-4">
+					<div class="col-md-12">
+						<label for="hausnummerInput">Hausnummer*</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<input [class.error]="hausnummerFormControl.touched && !hausnummerFormControl.valid"
+							class="form-control" type="text" id="hausnummerInput" placeholder="Hausnummer"
+							formControlName="hausnummer" autocomplete="true">
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="row mt-4 ml-2">
+			<div class="col-md-4 mt-4">
+				<button class="btn btn-primary" [disabled]="submitDisabled$ | async" (click)="submit()"><i
+						class="fa fa-floppy-o" aria-hidden="true"></i>
+					Vertrag abschließen</button>
+			</div>
+			<div *ngIf="!schule.details.hatAdv" class="col-md-4 mt-4">
+				<button class="btn btn-primary" (click)="cancel()"><i class="fa fa-undo"
+						aria-hidden="true"></i>zurücksetzen</button>
+			</div>
+			<div class="col-md-4 mt-4">
+				<button class="btn btn-primary" (click)="gotoSchule()"><i class="fa fa-arrow-left"
+						aria-hidden="true"></i>zurück zur Schule</button>
+			</div>
+		</div>
+
+		<div *ngIf="schule.details.hatAdv" class="col-12">
+			<mk-download-button [model]="vertragBtnModel">
+			</mk-download-button>
+		</div>
+
+	</div>
+
+</div>

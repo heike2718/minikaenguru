@@ -5,6 +5,8 @@
 package de.egladil.web.mk_gateway.infrastructure.rest.veranstalter;
 
 import java.text.MessageFormat;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -19,6 +21,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.adv.AdvService;
 import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.VertragAdvAPIModel;
@@ -31,14 +35,13 @@ import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.VertragAdvAPIModel
 @Consumes(MediaType.APPLICATION_JSON)
 public class AdvResource {
 
-	/**
-	 *
-	 */
 	private static final String CONTENT_TYPE_HEADER = "Content-Type";
 
 	private static final String CONTENT_DISPOSITION_HEADER_NAME = "Content-Disposition";
 
 	private static final String CONTENT_DISPOSITION_MF = "attachement; filename={0}";
+
+	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
 	@Context
 	SecurityContext securityContext;
@@ -81,7 +84,12 @@ public class AdvResource {
 	@POST
 	public Response createVertragAuftragsdatenverarbeitung(final VertragAdvAPIModel requestPayload) {
 
-		return null;
+		this.advService.createVertragAuftragsdatenverarbeitung(requestPayload,
+			securityContext.getUserPrincipal().getName());
+
+		return Response
+			.ok(ResponsePayload.messageOnly(MessagePayload.info(applicationMessages.getString("vertragAdv.create.success"))))
+			.build();
 	}
 
 }

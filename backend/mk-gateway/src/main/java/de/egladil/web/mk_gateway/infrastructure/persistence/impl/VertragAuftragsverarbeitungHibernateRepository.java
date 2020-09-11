@@ -137,7 +137,12 @@ public class VertragAuftragsverarbeitungHibernateRepository implements VertragAu
 				"Vertragstext mit UUID='" + idVertragstext + "' existiert nicht");
 		}
 
-		PersistenterVertragAdv persistenterVertrag = em.find(PersistenterVertragAdv.class, vertrag.identifier().identifier());
+		PersistenterVertragAdv persistenterVertrag = null;
+
+		if (vertrag.identifier() != null) {
+
+			persistenterVertrag = em.find(PersistenterVertragAdv.class, vertrag.identifier().identifier());
+		}
 
 		if (persistenterVertrag == null) {
 
@@ -156,14 +161,7 @@ public class VertragAuftragsverarbeitungHibernateRepository implements VertragAu
 		persistenterVertrag.setStrasse(anschrift.strasse());
 		persistenterVertrag.setSchulkuerzel(vertrag.schulkuerzel().identifier());
 		persistenterVertrag.setSchulname(anschrift.schulname());
-
-		if (persistenterVertrag.getUuid() == null) {
-
-			persistenterVertrag.setImportierteUuid(vertrag.identifier().identifier());
-		}
-
 		return persistenterVertrag;
-
 	}
 
 	VertragAuftragsdatenverarbeitung mapFromDb(final PersistenterVertragAdv persistenterVertrag) {
