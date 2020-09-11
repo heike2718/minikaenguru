@@ -29,6 +29,7 @@ public class VertragAuftragsdatenverarbeitung {
 	public static VertragAuftragsdatenverarbeitung createFromPayload(final VertragAdvAPIModel payload, final PostleitzahlLand plzLand) {
 
 		return new VertragAuftragsdatenverarbeitung()
+			.withSchulkuerzel(new Identifier(payload.schulkuerzel()))
 			.withAnschrift(Anschrift.createFromPayload(payload, plzLand));
 	}
 
@@ -60,6 +61,11 @@ public class VertragAuftragsdatenverarbeitung {
 	}
 
 	public String unterzeichnetAm() {
+
+		return unterzeichnetAm;
+	}
+
+	public String unterzeichnetAmDruck() {
 
 		return unterzeichnetAm.substring(0, 10);
 	}

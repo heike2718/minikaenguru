@@ -136,14 +136,29 @@ public class AdvService {
 
 		String unterzeichnetAm = CommonTimeUtils.format(CommonTimeUtils.now());
 
-		VertragAuftragsdatenverarbeitung vertrag = VertragAuftragsdatenverarbeitung.createFromPayload(daten, plzLand)
-			.withSchulkuerzel(schuleIdentifier)
-			.withVertragstext(vertragstext)
-			.withUnterzeichnenderLehrer(new Identifier(lehrerUuid)).withUnterzeichnetAm(unterzeichnetAm);
+		VertragAuftragsdatenverarbeitung vertrag = initVertrag(daten, lehrerUuid, plzLand, vertragstext, unterzeichnetAm);
 
 		Identifier identifierVertrag = vertragRepository.addVertrag(vertrag);
 
 		return identifierVertrag.identifier();
+	}
+
+	/**
+	 * Nur zu Testzwecken public.
+	 *
+	 * @param  daten
+	 * @param  lehrerUuid
+	 * @param  plzLand
+	 * @param  vertragstext
+	 * @param  unterzeichnetAm
+	 * @return
+	 */
+	public VertragAuftragsdatenverarbeitung initVertrag(final VertragAdvAPIModel daten, final String lehrerUuid, final PostleitzahlLand plzLand, final Vertragstext vertragstext, final String unterzeichnetAm) {
+
+		return VertragAuftragsdatenverarbeitung.createFromPayload(daten, plzLand)
+			.withVertragstext(vertragstext)
+			.withUnterzeichnenderLehrer(new Identifier(lehrerUuid))
+			.withUnterzeichnetAm(unterzeichnetAm);
 	}
 
 	private Optional<SchuleAPIModel> findSchuleQuietly(final String schulkuerzel) {

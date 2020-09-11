@@ -140,7 +140,7 @@ public class VertragAuftragsverarbeitungPdfGenerator {
 
 			doc.add(Chunk.NEWLINE);
 
-			doc.add(new Paragraph("abgeschlossen am " + vertrag.unterzeichnetAm(), font));
+			doc.add(new Paragraph("abgeschlossen am " + vertrag.unterzeichnetAmDruck(), font));
 
 			doc.close();
 			return out.toByteArray();

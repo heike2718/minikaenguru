@@ -107,10 +107,17 @@ public class VertragAuftragsverarbeitungHibernateRepository implements VertragAu
 	@Transactional
 	public Identifier addVertrag(final VertragAuftragsdatenverarbeitung vertrag) {
 
+		String idVertragstext = vertrag.vertragstext().identifier().identifier();
 		PersistenterVertragAdvText persistenterVertragstext = em.find(PersistenterVertragAdvText.class,
-			vertrag.vertragstext().identifier().identifier());
+			idVertragstext);
 
-		PersistenterVertragAdv persistenterVertrag = mapFromAggregate(vertrag);
+		if (persistenterVertragstext == null) {
+
+			throw new MkGatewayRuntimeException(
+				"Vertragstext mit UUID='" + idVertragstext + "' existiert nicht");
+		}
+
+		PersistenterVertragAdv persistenterVertrag = mapFromAggregate(vertrag, persistenterVertragstext);
 		persistenterVertrag.setAdvText(persistenterVertragstext);
 
 		if (persistenterVertrag.getUuid() == null) {
@@ -125,17 +132,7 @@ public class VertragAuftragsverarbeitungHibernateRepository implements VertragAu
 		}
 	}
 
-	PersistenterVertragAdv mapFromAggregate(final VertragAuftragsdatenverarbeitung vertrag) {
-
-		String idVertragstext = vertrag.vertragstext().identifier().identifier();
-		PersistenterVertragAdvText persistenterText = em.find(PersistenterVertragAdvText.class,
-			idVertragstext);
-
-		if (persistenterText == null) {
-
-			throw new MkGatewayRuntimeException(
-				"Vertragstext mit UUID='" + idVertragstext + "' existiert nicht");
-		}
+	PersistenterVertragAdv mapFromAggregate(final VertragAuftragsdatenverarbeitung vertrag, final PersistenterVertragAdvText persistenterText) {
 
 		PersistenterVertragAdv persistenterVertrag = null;
 

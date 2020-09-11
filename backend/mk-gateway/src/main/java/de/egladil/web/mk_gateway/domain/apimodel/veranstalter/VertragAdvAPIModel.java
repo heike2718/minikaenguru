@@ -89,4 +89,70 @@ public class VertragAdvAPIModel {
 		return "VertragAdvAPIModel [schulkuerzel=" + schulkuerzel + ", schulname=" + schulname
 			+ ", ort=" + ort + "]";
 	}
+
+	public VertragAdvAPIModel withSchulkuerzel(final String schulkuerzel) {
+
+		if (this.schulkuerzel != null) {
+
+			throw new IllegalStateException("VertragAdvAPIModel ist immutable");
+		}
+
+		this.schulkuerzel = schulkuerzel;
+		return this;
+	}
+
+	public VertragAdvAPIModel withSchulname(final String schulname) {
+
+		if (this.schulname != null) {
+
+			throw new IllegalStateException("VertragAdvAPIModel ist immutable");
+		}
+
+		this.schulname = schulname;
+		return this;
+	}
+
+	public VertragAdvAPIModel withPlz(final String plz) {
+
+		if (this.plz != null) {
+
+			throw new IllegalStateException("VertragAdvAPIModel ist immutable");
+		}
+
+		this.plz = plz;
+		return this;
+	}
+
+	public VertragAdvAPIModel withOrt(final String ort) {
+
+		if (this.ort != null) {
+
+			throw new IllegalStateException("VertragAdvAPIModel ist immutable");
+		}
+
+		this.ort = ort;
+		return this;
+	}
+
+	public VertragAdvAPIModel withStrasse(final String strasse) {
+
+		if (this.strasse != null) {
+
+			throw new IllegalStateException("VertragAdvAPIModel ist immutable");
+		}
+
+		this.strasse = strasse;
+		return this;
+	}
+
+	public VertragAdvAPIModel withHausnummer(final String hausnummer) {
+
+		if (this.hausnummer != null) {
+
+			throw new IllegalStateException("VertragAdvAPIModel ist immutable");
+		}
+
+		this.hausnummer = hausnummer;
+		return this;
+	}
 }
