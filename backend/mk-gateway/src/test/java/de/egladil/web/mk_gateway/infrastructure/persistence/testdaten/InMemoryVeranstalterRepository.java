@@ -181,4 +181,11 @@ public class InMemoryVeranstalterRepository implements VeranstalterRepository {
 		return null;
 	}
 
+	@Override
+	public void removeVeranstalter(final Veranstalter veranstalter) {
+
+		alleVeranstalter.remove(veranstalter);
+
+	}
+
 }

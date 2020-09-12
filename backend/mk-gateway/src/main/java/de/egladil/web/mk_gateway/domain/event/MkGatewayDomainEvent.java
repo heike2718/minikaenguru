@@ -29,7 +29,9 @@ public interface MkGatewayDomainEvent {
 
 	String TYPE_SCHULTEILNAHME_CHANGED = "SchulteilnahmeChanged";
 
-	String TYPE_VERANSTALTER_ANONYMISIERT = "VeranstalterAnonymisiert";
+	String TYPE_DELETE_VERANSTALTER_FAILED = "DeleteVeranstalterFailed";
+
+	String TYPE_SYNCHRONIZE_VERANSTALTER_FAILED = "SynchronizeVeranstalterFailed";
 
 	/**
 	 * @return LocalDateTime
