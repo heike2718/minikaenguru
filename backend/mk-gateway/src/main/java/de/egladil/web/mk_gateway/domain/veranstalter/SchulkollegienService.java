@@ -60,6 +60,22 @@ public class SchulkollegienService {
 
 	}
 
+	/**
+	 * @param Lehrer
+	 *               lehrer
+	 */
+	public void entferneSpurenDesLehrers(final Lehrer lehrer) {
+
+		final Person person = new Person(lehrer.person().uuid(), "ANONYM");
+
+		List<Identifier> alteSchulen = StringUtils.isBlank(lehrer.persistierbareTeilnahmenummern()) ? new ArrayList<>()
+			: Arrays.stream(lehrer.persistierbareTeilnahmenummern().split(",")).map(k -> new Identifier(k))
+				.collect(Collectors.toList());
+
+		this.handleDeregisteredSchulen(person, alteSchulen, new ArrayList<>());
+
+	}
+
 	private void handleDeregisteredSchulen(final Person derLehrer, final List<Identifier> alteSchulen, final List<Identifier> neueSchulen) {
 
 		List<Identifier> deregisteredFromSchulen = this.getDeregisterList(alteSchulen, neueSchulen);

@@ -41,4 +41,16 @@ public class UserRepositoryHibernate implements UserRepository {
 		return user;
 	}
 
+	@Override
+	public void removeUser(final String uuid) {
+
+		User persistenterUser = em.find(User.class, uuid);
+
+		if (persistenterUser != null) {
+
+			em.remove(persistenterUser);
+		}
+
+	}
+
 }

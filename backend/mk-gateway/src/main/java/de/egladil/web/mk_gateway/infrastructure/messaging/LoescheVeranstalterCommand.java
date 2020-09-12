@@ -2,18 +2,19 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.veranstalter;
+package de.egladil.web.mk_gateway.infrastructure.messaging;
 
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import de.egladil.web.mk_gateway.domain.auth.signup.VeranstalterAnonymisiert;
-
 /**
- * AnonymisiereVeranstalterCommand
+ * LoescheVeranstalterCommand
  */
-public class AnonymisiereVeranstalterCommand {
+public class LoescheVeranstalterCommand {
+
+	@JsonProperty
+	private String syncToken;
 
 	@JsonProperty
 	private String uuid;
@@ -23,19 +24,10 @@ public class AnonymisiereVeranstalterCommand {
 		return uuid;
 	}
 
-	/**
-	 *
-	 */
-	public AnonymisiereVeranstalterCommand(final VeranstalterAnonymisiert event) {
-
-		this.uuid = event.uuid();
-
-	}
-
 	@Override
 	public String toString() {
 
-		return "AnonymisiereVeranstalterCommand [uuid=" + uuid + "]";
+		return "LoescheVeranstalterCommand [uuid=" + uuid + "]";
 	}
 
 	@Override
@@ -61,8 +53,13 @@ public class AnonymisiereVeranstalterCommand {
 
 			return false;
 		}
-		AnonymisiereVeranstalterCommand other = (AnonymisiereVeranstalterCommand) obj;
+		LoescheVeranstalterCommand other = (LoescheVeranstalterCommand) obj;
 		return Objects.equals(uuid, other.uuid);
+	}
+
+	public String syncToken() {
+
+		return syncToken;
 	}
 
 }

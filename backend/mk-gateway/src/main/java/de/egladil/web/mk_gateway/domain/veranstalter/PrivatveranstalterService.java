@@ -34,6 +34,7 @@ import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
+import de.egladil.web.mk_gateway.infrastructure.messaging.LoescheVeranstalterCommand;
 
 /**
  * PrivatveranstalterService
@@ -202,7 +203,7 @@ public class PrivatveranstalterService {
 	/**
 	 * @param command
 	 */
-	public void privatveranstalterAnonymisieren(final AnonymisiereVeranstalterCommand command) {
+	public void privatveranstalterAnonymisieren(final LoescheVeranstalterCommand command) {
 
 		// TODO
 	}

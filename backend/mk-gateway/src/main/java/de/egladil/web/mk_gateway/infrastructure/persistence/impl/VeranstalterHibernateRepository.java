@@ -215,4 +215,15 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 
 		return trefferliste.stream().map(pv -> mapFromPersistenterVeranstalter(pv)).collect(Collectors.toList());
 	}
+
+	@Override
+	public void removeVeranstalter(final Veranstalter veranstalter) {
+
+		PersistenterVeranstalter persistenterVeranstalter = em.find(PersistenterVeranstalter.class, veranstalter.person().uuid());
+
+		if (persistenterVeranstalter != null) {
+
+			em.remove(persistenterVeranstalter);
+		}
+	}
 }

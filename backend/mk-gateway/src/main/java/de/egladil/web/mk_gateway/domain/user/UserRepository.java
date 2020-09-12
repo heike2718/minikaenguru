@@ -30,4 +30,9 @@ public interface UserRepository {
 	 */
 	User addUser(User user);
 
+	/**
+	 * @param String
+	 */
+	void removeUser(String uuid);
+
 }

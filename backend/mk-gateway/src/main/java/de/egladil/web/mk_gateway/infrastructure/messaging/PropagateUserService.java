@@ -10,11 +10,8 @@ import javax.inject.Inject;
 
 import de.egladil.web.mk_gateway.domain.auth.signup.LehrerCreated;
 import de.egladil.web.mk_gateway.domain.auth.signup.PrivatveranstalterCreated;
-import de.egladil.web.mk_gateway.domain.auth.signup.VeranstalterAnonymisiert;
 import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
 import de.egladil.web.mk_gateway.domain.semantik.InfrastructureService;
-import de.egladil.web.mk_gateway.domain.user.Rolle;
-import de.egladil.web.mk_gateway.domain.veranstalter.AnonymisiereVeranstalterCommand;
 import de.egladil.web.mk_gateway.domain.veranstalter.CreateOrUpdateLehrerCommand;
 import de.egladil.web.mk_gateway.domain.veranstalter.CreateOrUpdatePrivatveranstalterCommand;
 import de.egladil.web.mk_gateway.domain.veranstalter.LehrerService;
@@ -51,24 +48,6 @@ public class PropagateUserService {
 			return;
 		}
 
-		if (VeranstalterAnonymisiert.class.getSimpleName().contentEquals(event.typeName())) {
-
-			VeranstalterAnonymisiert veranstalterAnonymisiert = (VeranstalterAnonymisiert) event;
-
-			AnonymisiereVeranstalterCommand command = new AnonymisiereVeranstalterCommand(veranstalterAnonymisiert);
-
-			if (veranstalterAnonymisiert.rollen().contains(Rolle.LEHRER.toString())) {
-
-				this.lehrerService.lehrerAnonymisieren(command);
-			}
-
-			if (veranstalterAnonymisiert.rollen().contains(Rolle.PRIVAT.toString())) {
-
-				this.privatveranstalterService.privatveranstalterAnonymisieren(command);
-			}
-
-		}
-
 	}
 
 	/**
@@ -79,7 +58,6 @@ public class PropagateUserService {
 		CreateOrUpdatePrivatveranstalterCommand command = CreateOrUpdatePrivatveranstalterCommand.create(privatveranstalterCreated);
 
 		// TODO: ist nicht klar, ob es nicht auch ein update ist
-		// Außerdem könnte der Handler direkt der Service sein!!!
 		this.privatveranstalterService.addPrivatperson(command);
 	}
 
@@ -91,9 +69,7 @@ public class PropagateUserService {
 		CreateOrUpdateLehrerCommand command = CreateOrUpdateLehrerCommand.create(lehrerCreated);
 
 		// TODO: ist nicht klar, ob es nicht auch ein update ist
-		// Außerdem könnte der Handler direkt der Service sein!!!
 		this.lehrerService.addLehrer(command);
-
 	}
 
 }

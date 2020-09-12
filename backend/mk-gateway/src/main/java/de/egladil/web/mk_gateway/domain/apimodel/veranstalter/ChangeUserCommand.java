@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ChangeUserCommand {
 
 	@JsonProperty
-	private String sendingClientId;
+	private String syncToken;
 
 	@JsonProperty
 	private String uuid;
@@ -32,9 +32,9 @@ public class ChangeUserCommand {
 
 	}
 
-	public String sendingClientId() {
+	public String syncToken() {
 
-		return sendingClientId;
+		return syncToken;
 	}
 
 	public String uuid() {

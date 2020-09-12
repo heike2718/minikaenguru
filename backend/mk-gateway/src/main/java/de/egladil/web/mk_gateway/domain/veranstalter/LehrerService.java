@@ -29,6 +29,7 @@ import de.egladil.web.mk_gateway.domain.semantik.DomainService;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
+import de.egladil.web.mk_gateway.infrastructure.messaging.LoescheVeranstalterCommand;
 
 /**
  * LehrerService
@@ -225,7 +226,7 @@ public class LehrerService {
 	/**
 	 * @param command
 	 */
-	public void lehrerAnonymisieren(final AnonymisiereVeranstalterCommand command) {
+	public void lehrerAnonymisieren(final LoescheVeranstalterCommand command) {
 
 		// TODO
 	}

@@ -41,6 +41,13 @@ public interface VeranstalterRepository {
 	 */
 	void changeVeranstalter(Veranstalter veranstalter) throws IllegalStateException;
 
+	/**
+	 * Löscht den gegebenen Veranstalter ersatzlos. Das ist unkritisch, da Daten nicht mit dem Veranstalter verknüft sind.
+	 *
+	 * @param veranstalter
+	 */
+	void removeVeranstalter(Veranstalter veranstalter);
+
 	@Deprecated(forRemoval = true)
 	List<Veranstalter> loadPrivatveranstalter();
 
