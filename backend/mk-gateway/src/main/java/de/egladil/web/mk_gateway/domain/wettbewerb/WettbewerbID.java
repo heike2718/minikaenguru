@@ -46,6 +46,11 @@ public class WettbewerbID {
 		this.jahr = jahr;
 	}
 
+	public WettbewerbID(final String jahr) {
+
+		this(Integer.valueOf(jahr));
+	}
+
 	public Integer jahr() {
 
 		return this.jahr;

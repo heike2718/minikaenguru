@@ -21,7 +21,7 @@ public interface LoesungszettelRepository {
 	 *                             TeilnahmeIdentifier
 	 * @return                     List
 	 */
-	List<PersistenterLoesungszettel> loadAll(TeilnahmeIdentifier teilnahmeIdentifier);
+	List<Loesungszettel> loadAll(TeilnahmeIdentifier teilnahmeIdentifier);
 
 	/**
 	 * Ermittelt die Anzahl der Lösungszettel mit dem gegebenen TeilnahmeIdentifier.

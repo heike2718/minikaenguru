@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 
 import de.egladil.web.commons_validation.exception.InvalidInputException;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 
 /**
  * WettbewerbIDTest
@@ -24,9 +23,11 @@ public class WettbewerbIDTest {
 	@Test
 	void should_ConstructorThrowException_when_JahrNull() {
 
+		Integer jahr = null;
+
 		try {
 
-			new WettbewerbID(null);
+			new WettbewerbID(jahr);
 			fail("keine IllegalArgumentException");
 
 		} catch (IllegalArgumentException e) {

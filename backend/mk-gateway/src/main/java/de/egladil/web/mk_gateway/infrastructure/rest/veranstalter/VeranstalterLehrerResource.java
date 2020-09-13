@@ -24,13 +24,13 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.LehrerAPIModel;
 import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.veranstalter.LehrerService;
 import de.egladil.web.mk_gateway.domain.veranstalter.SchulenAnmeldeinfoService;
-import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterAuthorizationService;
 
 /**
  * VeranstalterLehrerResource
@@ -50,12 +50,12 @@ public class VeranstalterLehrerResource {
 	SchulenAnmeldeinfoService schulenAnmeldeinfoService;
 
 	@Inject
-	VeranstalterAuthorizationService veranstalterAuthService;
+	AuthorizationService veranstalterAuthService;
 
 	@Inject
 	LehrerService lehrerService;
 
-	static VeranstalterLehrerResource createForPermissionTest(final VeranstalterAuthorizationService veranstalterAuthService, final LehrerService lehrerService, final SecurityContext securityContext) {
+	static VeranstalterLehrerResource createForPermissionTest(final AuthorizationService veranstalterAuthService, final LehrerService lehrerService, final SecurityContext securityContext) {
 
 		VeranstalterLehrerResource result = new VeranstalterLehrerResource();
 		result.veranstalterAuthService = veranstalterAuthService;
@@ -106,7 +106,7 @@ public class VeranstalterLehrerResource {
 		final Identifier lehrerID = new Identifier(principal.getName());
 		final Identifier schuleID = new Identifier(schulkuerzel);
 
-		veranstalterAuthService.checkPermissionForTeilnahmenummer(lehrerID, schuleID);
+		veranstalterAuthService.checkPermissionForTeilnahmenummer(lehrerID, schuleID, true);
 
 		SchuleAPIModel schule = this.schulenAnmeldeinfoService.getSchuleWithWettbewerbsdetails(schulkuerzel, principal.getName());
 

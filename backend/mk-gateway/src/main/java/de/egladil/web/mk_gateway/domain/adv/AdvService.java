@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
+import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.SchuleAPIModel;
@@ -29,7 +30,6 @@ import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
 import de.egladil.web.mk_gateway.domain.veranstalter.SchuleKatalogResponseMapper;
-import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterAuthorizationService;
 
 /**
  * AdvService
@@ -57,10 +57,17 @@ public class AdvService {
 	VertragstextRepository vertragstextRepository;
 
 	@Inject
-	VeranstalterAuthorizationService authorizationService;
+	AuthorizationService authorizationService;
 
 	@Inject
 	VertragAuftragsverarbeitungPdfGenerator pdfGenerator;
+
+	public static AdvService createForTest(final AuthorizationService authService) {
+
+		AdvService result = new AdvService();
+		result.authorizationService = authService;
+		return result;
+	}
 
 	/**
 	 * Falls die Schule einen Vertrag abgeschlossen hat und der gegebene Lehrer dieser Schule angehört, wird das PDF generiert und
@@ -74,7 +81,7 @@ public class AdvService {
 
 		Identifier schuleIdentifier = new Identifier(schulkuerzel);
 		authorizationService.checkPermissionForTeilnahmenummer(new Identifier(lehrerUuid),
-			schuleIdentifier);
+			schuleIdentifier, true);
 
 		Optional<VertragAuftragsdatenverarbeitung> optVertrag = vertragRepository.findVertragForSchule(schuleIdentifier);
 
@@ -119,7 +126,7 @@ public class AdvService {
 		Identifier schuleIdentifier = new Identifier(daten.schulkuerzel());
 
 		authorizationService.checkPermissionForTeilnahmenummer(new Identifier(lehrerUuid),
-			schuleIdentifier);
+			schuleIdentifier, false);
 
 		Optional<VertragAuftragsdatenverarbeitung> optVertrag = vertragRepository.findVertragForSchule(schuleIdentifier);
 

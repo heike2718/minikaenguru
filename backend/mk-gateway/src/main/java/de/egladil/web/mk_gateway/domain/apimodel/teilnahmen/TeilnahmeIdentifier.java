@@ -4,9 +4,12 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.apimodel.teilnahmen;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 
 /**
@@ -82,11 +85,49 @@ public class TeilnahmeIdentifier {
 		return this;
 	}
 
+	public TeilnahmeIdentifier withTeilnahmeart(final Teilnahmeart teilnahmeart) {
+
+		if (this.teilnahmeart != null) {
+
+			throw new IllegalStateException("TeilnahmeIdentifier ist immutable: teilnahmeart darf nicht geändert werden.");
+		}
+		this.teilnahmeart = teilnahmeart.toString();
+		return this;
+	}
+
 	@Override
 	public String toString() {
 
 		return "TeilnahmeIdentifier [teilnahmenummer=" + teilnahmenummer + ", teilnahmeart=" + teilnahmeart + ", jahr=" + jahr
 			+ "]";
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(jahr, teilnahmeart, teilnahmenummer);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+
+		if (this == obj) {
+
+			return true;
+		}
+
+		if (obj == null) {
+
+			return false;
+		}
+
+		if (getClass() != obj.getClass()) {
+
+			return false;
+		}
+		TeilnahmeIdentifier other = (TeilnahmeIdentifier) obj;
+		return jahr == other.jahr && Objects.equals(teilnahmeart, other.teilnahmeart)
+			&& Objects.equals(teilnahmenummer, other.teilnahmenummer);
 	}
 
 }
