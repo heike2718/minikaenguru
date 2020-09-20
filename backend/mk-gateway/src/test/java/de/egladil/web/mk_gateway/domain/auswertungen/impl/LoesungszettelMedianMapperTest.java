@@ -12,8 +12,9 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import de.egladil.web.mk_gateway.domain.auswertungen.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.auswertungen.StatistikTestUtils;
+import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
+import de.egladil.web.mk_gateway.domain.statistik.impl.LoesungszettelMedianMapper;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 
 /**

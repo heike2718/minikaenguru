@@ -106,7 +106,7 @@ public class VeranstalterLehrerResource {
 		final Identifier lehrerID = new Identifier(principal.getName());
 		final Identifier schuleID = new Identifier(schulkuerzel);
 
-		veranstalterAuthService.checkPermissionForTeilnahmenummer(lehrerID, schuleID, true);
+		veranstalterAuthService.checkPermissionForTeilnahmenummer(lehrerID, schuleID);
 
 		SchuleAPIModel schule = this.schulenAnmeldeinfoService.getSchuleWithWettbewerbsdetails(schulkuerzel, principal.getName());
 

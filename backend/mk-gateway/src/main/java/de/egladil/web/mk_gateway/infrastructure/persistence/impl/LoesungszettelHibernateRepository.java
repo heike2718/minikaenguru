@@ -14,10 +14,10 @@ import javax.persistence.EntityManager;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.apimodel.teilnahmen.TeilnahmeIdentifier;
-import de.egladil.web.mk_gateway.domain.auswertungen.Loesungszettel;
-import de.egladil.web.mk_gateway.domain.auswertungen.LoesungszettelRepository;
-import de.egladil.web.mk_gateway.domain.auswertungen.LoesungszettelRohdaten;
-import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
+import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
+import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
+import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRohdaten;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterLoesungszettel;
 
@@ -46,11 +46,34 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 		List<BigInteger> trefferliste = em.createNativeQuery(stmt)
 			.setParameter("teilnahmenummer", teilnahmeIdentifier.teilnahmenummer())
 			.setParameter("wettbewerbUuid", teilnahmeIdentifier.wettbewerbID())
-			.setParameter("teilnahmeart", teilnahmeIdentifier.teilnahmeart()).getResultList();
+			.setParameter("teilnahmeart", teilnahmeIdentifier.teilnahmeart().toString()).getResultList();
 
 		int anzahl = trefferliste.get(0).intValue();
 
 		return anzahl;
+	}
+
+	@Override
+	public List<Loesungszettel> loadAllForWettbewerb(final WettbewerbID wettbewerbID) {
+
+		List<PersistenterLoesungszettel> trefferliste = em
+			.createNamedQuery(PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID, PersistenterLoesungszettel.class)
+			.setParameter("wettbewerbUuid", wettbewerbID.toString())
+			.getResultList();
+
+		return trefferliste.stream().map(pl -> mapFromDB(pl)).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<Loesungszettel> loadAllForWettbewerbAndKlassenstufe(final WettbewerbID wettbewerbID, final Klassenstufe klassenstufe) {
+
+		List<PersistenterLoesungszettel> trefferliste = em
+			.createNamedQuery(PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID_KLASSENSTUFE, PersistenterLoesungszettel.class)
+			.setParameter("wettbewerbUuid", wettbewerbID.toString())
+			.setParameter("klassenstufe", klassenstufe)
+			.getResultList();
+
+		return trefferliste.stream().map(pl -> mapFromDB(pl)).collect(Collectors.toList());
 	}
 
 	@Override
@@ -60,7 +83,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 			.createNamedQuery(PersistenterLoesungszettel.LOAD_ALL_WITH_IDENTIFIER, PersistenterLoesungszettel.class)
 			.setParameter("teilnahmenummer", teilnahmeIdentifier.teilnahmenummer())
 			.setParameter("wettbewerbUuid", teilnahmeIdentifier.wettbewerbID())
-			.setParameter("teilnahmeart", Teilnahmeart.valueOf(teilnahmeIdentifier.teilnahmeart()))
+			.setParameter("teilnahmeart", teilnahmeIdentifier.teilnahmeart())
 			.getResultList();
 
 		return trefferliste.stream().map(pl -> mapFromDB(pl)).collect(Collectors.toList());

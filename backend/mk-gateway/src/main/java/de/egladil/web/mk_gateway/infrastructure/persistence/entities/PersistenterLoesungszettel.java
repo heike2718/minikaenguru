@@ -12,7 +12,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import de.egladil.web.mk_gateway.domain.auswertungen.Auswertungsquelle;
+import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
@@ -25,12 +25,22 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 @NamedQueries({
 	@NamedQuery(
 		name = "PersistenterLoesungszettel.LOAD_ALL_WITH_IDENTIFIER",
-		query = "select l from PersistenterLoesungszettel l where l.teilnahmenummer = :teilnahmenummer and l.wettbewerbUuid = :wettbewerbUuid and l.teilnahmeart = :teilnahmeart")
+		query = "select l from PersistenterLoesungszettel l where l.teilnahmenummer = :teilnahmenummer and l.wettbewerbUuid = :wettbewerbUuid and l.teilnahmeart = :teilnahmeart"),
+	@NamedQuery(
+		name = "PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID",
+		query = "select l from PersistenterLoesungszettel l where l.wettbewerbUuid = :wettbewerbUuid"),
+	@NamedQuery(
+		name = "PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID_KLASSENSTUFE",
+		query = "select l from PersistenterLoesungszettel l where l.wettbewerbUuid = :wettbewerbUuid and l.klassenstufe = :klassenstufe"),
 
 })
 public class PersistenterLoesungszettel extends ConcurrencySafeEntity {
 
 	public static final String LOAD_ALL_WITH_IDENTIFIER = "PersistenterLoesungszettel.LOAD_ALL_WITH_IDENTIFIER";
+
+	public static final String LOAD_ALL_WITH_WETTBEWERBID = "PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID";
+
+	public static final String LOAD_ALL_WITH_WETTBEWERBID_KLASSENSTUFE = "PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID_KLASSENSTUFE";
 
 	@Column(name = "NUMMER")
 	private int nummer;

@@ -65,7 +65,7 @@ public class AuthorizationServiceTest {
 		// Act + Assert
 		try {
 
-			service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId, true);
+			service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId);
 			fail("keine AccessDeniedException");
 		} catch (AccessDeniedException e) {
 
@@ -91,7 +91,7 @@ public class AuthorizationServiceTest {
 		// Act + Assert
 		try {
 
-			service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId, false);
+			service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId);
 			fail("keine AccessDeniedException");
 		} catch (AccessDeniedException e) {
 
@@ -117,7 +117,7 @@ public class AuthorizationServiceTest {
 		// Act + Assert
 		try {
 
-			service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId, true);
+			service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId);
 			fail("keine AccessDeniedException");
 		} catch (AccessDeniedException e) {
 
@@ -147,7 +147,7 @@ public class AuthorizationServiceTest {
 		// Act + Assert
 		try {
 
-			service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId, true);
+			service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId);
 			fail("keine AccessDeniedException");
 		} catch (AccessDeniedException e) {
 
@@ -175,7 +175,7 @@ public class AuthorizationServiceTest {
 		Mockito.when(veranstalterRepository.ofId(veranstalterId)).thenReturn(Optional.of(veranstalter));
 
 		// Act
-		assertTrue(service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId, true));
+		assertTrue(service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId));
 		assertNull(service.getSecurityIncidentRegistered());
 	}
 
@@ -192,7 +192,7 @@ public class AuthorizationServiceTest {
 		Mockito.when(userRepository.ofId(USER_UUID)).thenReturn(Optional.of(user));
 		Mockito.when(veranstalterRepository.ofId(veranstalterId)).thenReturn(Optional.empty());
 
-		assertTrue(service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId, true));
+		assertTrue(service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId));
 		assertNull(service.getSecurityIncidentRegistered());
 	}
 

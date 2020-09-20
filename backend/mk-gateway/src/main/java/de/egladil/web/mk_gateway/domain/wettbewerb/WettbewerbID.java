@@ -31,7 +31,7 @@ public class WettbewerbID {
 	/**
 	 * @param jahr
 	 */
-	public WettbewerbID(final Integer jahr) {
+	public WettbewerbID(final Integer jahr) throws InvalidInputException {
 
 		if (jahr == null) {
 
@@ -40,13 +40,13 @@ public class WettbewerbID {
 
 		if (jahr.intValue() < 2005) {
 
-			throw new InvalidInputException(ResponsePayload.messageOnly(MessagePayload.error("jahr muss größer 2004 sein")));
+			throw new InvalidInputException(ResponsePayload.messageOnly(MessagePayload.error("Es liegen nur Daten ab 2005 vor")));
 		}
 
 		this.jahr = jahr;
 	}
 
-	public WettbewerbID(final String jahr) {
+	public WettbewerbID(final String jahr) throws NumberFormatException, InvalidInputException {
 
 		this(Integer.valueOf(jahr));
 	}

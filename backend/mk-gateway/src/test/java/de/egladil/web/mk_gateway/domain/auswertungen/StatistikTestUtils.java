@@ -9,6 +9,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
+
 /**
  * StatistikTestUtils
  */

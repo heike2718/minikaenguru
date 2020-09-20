@@ -97,7 +97,7 @@ public class AdvServiceTest {
 
 		AuthorizationService authService = Mockito.mock(AuthorizationService.class);
 
-		Mockito.when(authService.checkPermissionForTeilnahmenummer(lehrerId, teilnahmeId, true))
+		Mockito.when(authService.checkPermissionForTeilnahmenummer(lehrerId, teilnahmeId))
 			.thenThrow(new AccessDeniedException());
 
 		AdvService advService = AdvService.createForTest(authService);
@@ -139,7 +139,7 @@ public class AdvServiceTest {
 
 		AuthorizationService authService = Mockito.mock(AuthorizationService.class);
 
-		Mockito.when(authService.checkPermissionForTeilnahmenummer(lehrerId, teilnahmeId, false))
+		Mockito.when(authService.checkPermissionForTeilnahmenummer(lehrerId, teilnahmeId))
 			.thenThrow(new AccessDeniedException());
 
 		AdvService advService = AdvService.createForTest(authService);

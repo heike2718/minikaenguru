@@ -81,7 +81,7 @@ public class AdvService {
 
 		Identifier schuleIdentifier = new Identifier(schulkuerzel);
 		authorizationService.checkPermissionForTeilnahmenummer(new Identifier(lehrerUuid),
-			schuleIdentifier, true);
+			schuleIdentifier);
 
 		Optional<VertragAuftragsdatenverarbeitung> optVertrag = vertragRepository.findVertragForSchule(schuleIdentifier);
 
@@ -126,7 +126,7 @@ public class AdvService {
 		Identifier schuleIdentifier = new Identifier(daten.schulkuerzel());
 
 		authorizationService.checkPermissionForTeilnahmenummer(new Identifier(lehrerUuid),
-			schuleIdentifier, false);
+			schuleIdentifier);
 
 		Optional<VertragAuftragsdatenverarbeitung> optVertrag = vertragRepository.findVertragForSchule(schuleIdentifier);
 

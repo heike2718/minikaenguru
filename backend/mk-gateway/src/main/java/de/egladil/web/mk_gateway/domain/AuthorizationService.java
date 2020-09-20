@@ -54,12 +54,10 @@ public class AuthorizationService {
 	/**
 	 * @param  veranstalterID
 	 * @param  teilnahmeID
-	 * @param  allowedForAdmin
-	 *                               boolean
 	 * @return                       boolean - nicht void wegen Mockito.
 	 * @throws AccessDeniedException
 	 */
-	public boolean checkPermissionForTeilnahmenummer(final Identifier veranstalterID, final Identifier teilnahmeID, final boolean allowedForAdmin) throws AccessDeniedException {
+	public boolean checkPermissionForTeilnahmenummer(final Identifier veranstalterID, final Identifier teilnahmeID) throws AccessDeniedException {
 
 		Optional<User> optUser = userRepository.ofId(veranstalterID.identifier());
 
@@ -78,46 +76,35 @@ public class AuthorizationService {
 
 		if (Rolle.ADMIN.equals(user.getRolle())) {
 
-			if (allowedForAdmin) {
+			return true;
 
-				return true;
-			}
+		}
+
+		Optional<Veranstalter> optVeranstalter = veranstalterRepository.ofId(veranstalterID);
+
+		if (optVeranstalter.isEmpty()) {
 
 			String msg = "Unzulaessiger Zugriff auf Teilnahme " + teilnahmeID + " durch " + veranstalterID
-				+ ": Dies ist für ADMIN nicht erlaubt";
+				+ ": Veranstalter existiert nicht";
 
 			LOG.warn(msg);
 
 			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
 			throw new AccessDeniedException();
-		} else {
+		}
 
-			Optional<Veranstalter> optVeranstalter = veranstalterRepository.ofId(veranstalterID);
+		Optional<Identifier> optTeilnahmeIdentifier = optVeranstalter.get().teilnahmeIdentifier().stream()
+			.filter(tID -> tID.equals(teilnahmeID)).findFirst();
 
-			if (optVeranstalter.isEmpty()) {
+		if (optTeilnahmeIdentifier.isEmpty()) {
 
-				String msg = "Unzulaessiger Zugriff auf Teilnahme " + teilnahmeID + " durch " + veranstalterID
-					+ ": Veranstalter existiert nicht";
+			String msg = "Unzulaessiger Zugriff auf Teilnahmenummer " + teilnahmeID + " durch " + optVeranstalter.get()
+				+ ": Veranstalter hat keine Berechtigung.";
 
-				LOG.warn(msg);
+			LOG.warn(msg);
 
-				this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
-				throw new AccessDeniedException();
-			}
-
-			Optional<Identifier> optTeilnahmeIdentifier = optVeranstalter.get().teilnahmeIdentifier().stream()
-				.filter(tID -> tID.equals(teilnahmeID)).findFirst();
-
-			if (optTeilnahmeIdentifier.isEmpty()) {
-
-				String msg = "Unzulaessiger Zugriff auf Teilnahmenummer " + teilnahmeID + " durch " + optVeranstalter.get()
-					+ ": Veranstalter hat keine Berechtigung.";
-
-				LOG.warn(msg);
-
-				this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
-				throw new AccessDeniedException();
-			}
+			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
+			throw new AccessDeniedException();
 		}
 
 		return true;

@@ -35,7 +35,7 @@ public class StatistikResource {
 	@GET
 	@Path("/{teilnahmeart}/{teilnahmenummer}/{jahr}")
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_JSON })
-	public Response getStatistik(@PathParam(value = "teilnahmeart") final String teilnahmeart, @PathParam(
+	public Response downloadStatistik(@PathParam(value = "teilnahmeart") final String teilnahmeart, @PathParam(
 		value = "teilnahmenummer") final String teilnahmenummer, @PathParam(value = "jahr") final String jahr) {
 
 		WettbewerbID wettbewerbID = null;

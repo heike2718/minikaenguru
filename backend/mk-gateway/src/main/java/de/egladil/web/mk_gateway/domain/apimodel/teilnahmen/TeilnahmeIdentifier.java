@@ -45,9 +45,9 @@ public class TeilnahmeIdentifier {
 		return teilnahmenummer;
 	}
 
-	public String teilnahmeart() {
+	public Teilnahmeart teilnahmeart() {
 
-		return teilnahmeart;
+		return Teilnahmeart.valueOf(teilnahmeart);
 	}
 
 	public String wettbewerbID() {
