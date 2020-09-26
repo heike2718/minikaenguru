@@ -24,18 +24,18 @@ public class StatistikKlassenstufeService {
 	 * Erstellt aus der gegebenen Liste von Lösungszetteln die Gesamtpunktverteilung.
 	 *
 	 * @param  klassenstufe
-	 * @param  alleLoesungszettel
+	 * @param  loesungszettelKlassenstufe
 	 * @return
 	 */
-	public GesamtpunktverteilungKlassenstufe generiereGesamtpunktverteilung(final WettbewerbID wettbewerbID, final Klassenstufe klassenstufe, final List<Loesungszettel> alleLoesungszettel) {
+	public GesamtpunktverteilungKlassenstufe generiereGesamtpunktverteilung(final WettbewerbID wettbewerbID, final Klassenstufe klassenstufe, final List<Loesungszettel> loesungszettelKlassenstufe) {
 
 		GesamtpunktverteilungKlassenstufeDaten daten = new VerteilungRechner().berechne(wettbewerbID, klassenstufe,
-			alleLoesungszettel);
+			loesungszettelKlassenstufe);
 
 		GesamtpunktverteilungTexte texte = new GesamtpunktverteilungTexte()
 			.withBasis(
 				MessageFormat.format(applicationMessages.getString("statistik.gesamtpunktverteilung.grundlage.description"),
-					new Object[] { Integer.toString(alleLoesungszettel.size()) }))
+					new Object[] { Integer.toString(loesungszettelKlassenstufe.size()) }))
 			.withBewertung(
 				MessageFormat.format(applicationMessages.getString("statistik.gesamtpunktverteilung.bewertung.description"),
 					new Object[] { klassenstufe.getStartguthaben(wettbewerbID.jahr()) }))

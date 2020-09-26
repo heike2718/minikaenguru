@@ -20,7 +20,7 @@ import javax.ws.rs.core.SecurityContext;
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.apimodel.teilnahmen.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
-import de.egladil.web.mk_gateway.domain.statistik.StatistikService;
+import de.egladil.web.mk_gateway.domain.statistik.StatistikAnonymisierteEinzelteilnahmeService;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 
 /**
@@ -35,7 +35,7 @@ public class StatistikResource {
 	SecurityContext securityContext;
 
 	@Inject
-	StatistikService statistikService;
+	StatistikAnonymisierteEinzelteilnahmeService statistikAnonymisierteEinzelteilnahmeService;
 
 	@GET
 	@Path("{teilnahmeart}/{teilnahmenummer}/{jahr}")
@@ -56,7 +56,7 @@ public class StatistikResource {
 		TeilnahmeIdentifier identifier = new TeilnahmeIdentifier().withTeilnahmeart(teilnahmeart)
 			.withTeilnahmenummer(teilnahmenummer).withWettbewerbID(wettbewerbID);
 
-		DownloadData data = this.statistikService.erstelleStatistikPDFEinzelteilnahme(identifier,
+		DownloadData data = this.statistikAnonymisierteEinzelteilnahmeService.erstelleStatistikPDFEinzelteilnahme(identifier,
 			securityContext.getUserPrincipal().getName());
 
 		return MkGatewayFileUtils.createDownloadResponse(data);

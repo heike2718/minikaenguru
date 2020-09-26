@@ -21,40 +21,47 @@ public class AufgabeErgebnisRechner {
 	 * Zählt die Anzahl richtig, falsch und nicht gelöster Aufgaben der gegebenen Aufgabennummer
 	 *
 	 * @param  aufgabennummer
-	 *                               String die Nummer der Aufgabe.
+	 *                                    String die Nummer der Aufgabe.
 	 * @param  wertungscodePosition:
-	 *                               int die Position des Zeichens im Wertungscode-String.
-	 * @param  alleLoesungszettel
-	 *                               List die Lösungszettel einer Klassenstufe im Auswertungsjahr
-	 * @return                       AufgabeErgebnisItem
+	 *                                    int die Position des Zeichens im Wertungscode-String.
+	 * @param  loesungszettelKlassenstufe
+	 *                                    List die Lösungszettel einer Klassenstufe im Auswertungsjahr
+	 * @return                            AufgabeErgebnisItem
 	 */
-	public AufgabeErgebnisItem berechneAufgabeErgebnisItem(final String aufgabennummer, final int wertungscodePosition, final List<Loesungszettel> alleLoesungszettel) {
+	public AufgabeErgebnisItem berechneAufgabeErgebnisItem(final String aufgabennummer, final int wertungscodePosition, final List<Loesungszettel> loesungszettelKlassenstufe) {
 
 		int anzahlRichtig = 0;
 		int anzahlNicht = 0;
 		int anzahlFalsch = 0;
 
-		for (Loesungszettel loesungszettel : alleLoesungszettel) {
+		for (Loesungszettel loesungszettel : loesungszettelKlassenstufe) {
 
 			String wertungscode = loesungszettel.rohdaten().wertungscode();
-			Wertung wertung = Wertung.valueOfStringIgnoringCase(String.valueOf(wertungscode.toCharArray()[wertungscodePosition]));
+			char[] wertungscodeChars = wertungscode.toCharArray();
 
-			switch (wertung) {
+			if (wertungscodePosition <= wertungscodeChars.length) {
 
-			case f:
-				anzahlFalsch++;
-				break;
+				Wertung wertung = Wertung
+					.valueOfStringIgnoringCase(String.valueOf(wertungscodeChars[wertungscodePosition]));
 
-			case n:
-				anzahlNicht++;
-				break;
+				switch (wertung) {
 
-			case r:
-				anzahlRichtig++;
-				break;
+				case f:
+					anzahlFalsch++;
+					break;
 
-			default:
-				break;
+				case n:
+					anzahlNicht++;
+					break;
+
+				case r:
+					anzahlRichtig++;
+					break;
+
+				default:
+					break;
+				}
+
 			}
 
 		}
@@ -66,7 +73,7 @@ public class AufgabeErgebnisRechner {
 			.withAnzahlNichtGeloest(anzahlNicht)
 			.withAnzahlRichtigGeloest(anzahlRichtig);
 
-		return this.addAnteile(item, alleLoesungszettel.size());
+		return this.addAnteile(item, loesungszettelKlassenstufe.size());
 	}
 
 	private AufgabeErgebnisItem addAnteile(final AufgabeErgebnisItem item, final int anzahlLoesungszettel) {

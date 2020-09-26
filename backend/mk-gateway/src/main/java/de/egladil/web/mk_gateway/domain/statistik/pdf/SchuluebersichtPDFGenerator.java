@@ -88,10 +88,18 @@ public class SchuluebersichtPDFGenerator {
 			PdfWriter.getInstance(doc, out);
 			doc.open();
 
-			final String titel = getTitel(wettbewerbID, optSchule);
+			final String titel = getTitel(wettbewerbID);
 			Paragraph element = new Paragraph(titel, fontProvider.getFont(FontTyp.BOLD, 14));
 			element.setAlignment(Element.ALIGN_CENTER);
 			doc.add(element);
+
+			if (optSchule.isPresent()) {
+
+				doc.add(Chunk.NEWLINE);
+				element = new Paragraph(optSchule.get().name(), fontProvider.getFont(FontTyp.BOLD, 14));
+				element.setAlignment(Element.ALIGN_CENTER);
+				doc.add(element);
+			}
 
 			Font fontNormal = fontProvider.getFont(FontTyp.NORMAL, 11);
 			doc.add(Chunk.NEWLINE);
@@ -147,17 +155,10 @@ public class SchuluebersichtPDFGenerator {
 	 * @param  optSchule
 	 * @return
 	 */
-	private String getTitel(final WettbewerbID wettbewerbID, final Optional<SchuleAPIModel> optSchule) {
+	private String getTitel(final WettbewerbID wettbewerbID) {
 
-		if (optSchule.isEmpty()) {
-
-			return MessageFormat.format(applicationMessages.getString("statistik.pdf.ueberschrift.schule.nameUnbekannt"),
-				new Object[] { wettbewerbID.toString() });
-		}
-		SchuleAPIModel schule = optSchule.get();
-
-		return MessageFormat.format(applicationMessages.getString("statistik.pdf.ueberschrift.schule.normal"),
-			new Object[] { wettbewerbID.toString(), schule.name() });
+		return MessageFormat.format(applicationMessages.getString("statistik.pdf.ueberschrift.schule.nameUnbekannt"),
+			new Object[] { wettbewerbID.toString() });
 	}
 
 }

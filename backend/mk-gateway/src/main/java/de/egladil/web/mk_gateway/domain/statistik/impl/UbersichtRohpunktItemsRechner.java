@@ -20,13 +20,15 @@ import de.egladil.web.mk_gateway.domain.statistik.comparators.RohpunktItemDescen
 public class UbersichtRohpunktItemsRechner {
 
 	/**
+	 * @param  loesungszettelKlassenstufe
+	 *                            List
 	 * @return
 	 */
-	public List<RohpunktItem> berechneRohpunktItems(final List<Loesungszettel> alleLoesungszettel) {
+	public List<RohpunktItem> berechneRohpunktItems(final List<Loesungszettel> loesungszettelKlassenstufe) {
 
 		final List<RohpunktItem> result = new ArrayList<>();
 
-		final Map<Integer, List<Loesungszettel>> punktklassen = soriereNachPunktklassen(alleLoesungszettel);
+		final Map<Integer, List<Loesungszettel>> punktklassen = soriereNachPunktklassen(loesungszettelKlassenstufe);
 
 		for (Integer punkte : punktklassen.keySet()) {
 
@@ -41,14 +43,14 @@ public class UbersichtRohpunktItemsRechner {
 	}
 
 	/**
-	 * @param  alleLoesungszettel
+	 * @param  loesungszettelKlassenstufe
 	 * @return
 	 */
-	Map<Integer, List<Loesungszettel>> soriereNachPunktklassen(final List<Loesungszettel> alleLoesungszettel) {
+	Map<Integer, List<Loesungszettel>> soriereNachPunktklassen(final List<Loesungszettel> loesungszettelKlassenstufe) {
 
 		final Map<Integer, List<Loesungszettel>> result = new HashMap<>();
 
-		for (Loesungszettel loesungszettel : alleLoesungszettel) {
+		for (Loesungszettel loesungszettel : loesungszettelKlassenstufe) {
 
 			Integer punkte = loesungszettel.punkte();
 

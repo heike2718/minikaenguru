@@ -27,7 +27,7 @@ import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.apimodel.statistik.MedianeAPIModel;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.statistik.GesamtpunktverteilungKlassenstufe;
-import de.egladil.web.mk_gateway.domain.statistik.StatistikService;
+import de.egladil.web.mk_gateway.domain.statistik.StatistikWettbewerbService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 
@@ -42,7 +42,7 @@ public class OpenDataResource {
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
 	@Inject
-	StatistikService statistikService;
+	StatistikWettbewerbService statistikWettbewerbService;
 
 	@GET
 	@Produces({ MediaType.APPLICATION_XML })
@@ -112,7 +112,7 @@ public class OpenDataResource {
 
 		WettbewerbID wettbewerbID = new WettbewerbID(jahr);
 
-		DownloadData file = this.statistikService.erstelleStatistikPDFWettbewerb(wettbewerbID);
+		DownloadData file = this.statistikWettbewerbService.erstelleStatistikPDFWettbewerb(wettbewerbID);
 
 		return MkGatewayFileUtils.createDownloadResponse(file);
 	}
@@ -132,7 +132,7 @@ public class OpenDataResource {
 
 		WettbewerbID wettbewerbID = new WettbewerbID(jahr);
 
-		Map<Klassenstufe, String> mediane = statistikService.berechneGesamtmedianeWettbewerb(wettbewerbID);
+		Map<Klassenstufe, String> mediane = statistikWettbewerbService.berechneGesamtmedianeWettbewerb(wettbewerbID);
 
 		if (mediane.size() == 0) {
 
@@ -175,7 +175,7 @@ public class OpenDataResource {
 
 	private Response getGesamtstatistikWettbewerbKlassenstufeAlsXml(final WettbewerbID wettbewerbID, final Klassenstufe klassenstufe) {
 
-		Optional<GesamtpunktverteilungKlassenstufe> optVerteilung = statistikService
+		Optional<GesamtpunktverteilungKlassenstufe> optVerteilung = statistikWettbewerbService
 			.erstelleStatistikWettbewerbKlassenstufe(wettbewerbID, klassenstufe);
 
 		if (optVerteilung.isEmpty()) {

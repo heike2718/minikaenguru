@@ -78,7 +78,14 @@ public class StatistikPDFGenerator {
 
 		List<byte[]> result = new ArrayList<>();
 
-		result.add(generiereDeckblatt(wettbewerbID));
+		if (verteilungenNachKlassenstufe.isEmpty()) {
+
+			result.add(generiereDeckblattKeineDaten(wettbewerbID));
+
+		} else {
+
+			result.add(generiereDeckblatt(wettbewerbID));
+		}
 
 		for (Klassenstufe klassenstufe : Klassenstufe.valuesSorted()) {
 
@@ -98,6 +105,41 @@ public class StatistikPDFGenerator {
 		return pdfMerger.concatPdf(result);
 	}
 
+	byte[] generiereDeckblattKeineDaten(final WettbewerbID wettbewerbID) {
+
+		final FontProviderWrapper fontProvider = new FontProviderWrapper();
+		final Document doc = new Document(PageSize.A4);
+
+		try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+
+			PdfWriter.getInstance(doc, out);
+			doc.open();
+
+			addUeberschrift(wettbewerbID, fontProvider, doc);
+
+			Font fontNormal = fontProvider.getFont(FontTyp.NORMAL, 11);
+			doc.add(Chunk.NEWLINE);
+
+			doc.add(new Paragraph(applicationMessages.getString("statistik.pdf.gesamtverteilung.keineDaten"),
+				fontNormal));
+
+			doc.close();
+			return out.toByteArray();
+
+		} catch (IOException e) {
+
+			String msg = "konnte keinen ByteArrayOutputStream erzeugen: " + e.getMessage();
+			LOG.error(msg, e);
+
+			throw new MkGatewayRuntimeException(msg, e);
+		} catch (DocumentException e) {
+
+			String msg = "konnte keinen PdfWriter erzeugen: " + e.getMessage();
+			LOG.error(msg, e);
+			throw new MkGatewayRuntimeException(msg, e);
+		}
+	}
+
 	byte[] generiereDeckblatt(final WettbewerbID wettbewerbID) {
 
 		final FontProviderWrapper fontProvider = new FontProviderWrapper();
@@ -108,17 +150,7 @@ public class StatistikPDFGenerator {
 			PdfWriter.getInstance(doc, out);
 			doc.open();
 
-			final String link = applicationMessages.getString("statistik.pdf.autorin_und_url");
-			Paragraph element = new Paragraph(link, fontProvider.getFont(FontTyp.NORMAL, 11));
-			element.setAlignment(Element.ALIGN_LEFT);
-			doc.add(element);
-			doc.add(Chunk.NEWLINE);
-
-			final String titel = MessageFormat.format(applicationMessages.getString("statistik.pdf.ueberschrift.wettbewerb"),
-				new Object[] { wettbewerbID.toString() });
-			element = new Paragraph(titel, fontProvider.getFont(FontTyp.BOLD, 14));
-			element.setAlignment(Element.ALIGN_CENTER);
-			doc.add(element);
+			addUeberschrift(wettbewerbID, fontProvider, doc);
 
 			Font fontNormal = fontProvider.getFont(FontTyp.NORMAL, 11);
 			doc.add(Chunk.NEWLINE);
@@ -149,5 +181,26 @@ public class StatistikPDFGenerator {
 			LOG.error(msg, e);
 			throw new MkGatewayRuntimeException(msg, e);
 		}
+	}
+
+	/**
+	 * @param  wettbewerbID
+	 * @param  fontProvider
+	 * @param  doc
+	 * @throws DocumentException
+	 */
+	private void addUeberschrift(final WettbewerbID wettbewerbID, final FontProviderWrapper fontProvider, final Document doc) throws DocumentException {
+
+		final String link = applicationMessages.getString("statistik.pdf.autorin_und_url");
+		Paragraph element = new Paragraph(link, fontProvider.getFont(FontTyp.NORMAL, 11));
+		element.setAlignment(Element.ALIGN_LEFT);
+		doc.add(element);
+		doc.add(Chunk.NEWLINE);
+
+		final String titel = MessageFormat.format(applicationMessages.getString("statistik.pdf.ueberschrift.wettbewerb"),
+			new Object[] { wettbewerbID.toString() });
+		element = new Paragraph(titel, fontProvider.getFont(FontTyp.BOLD, 14));
+		element.setAlignment(Element.ALIGN_CENTER);
+		doc.add(element);
 	}
 }

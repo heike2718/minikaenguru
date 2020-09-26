@@ -162,4 +162,11 @@ public class Loesungszettel {
 		return this;
 	}
 
+	@Override
+	public String toString() {
+
+		return "Loesungszettel [identifier=" + identifier + ", klassenstufe=" + klassenstufe + ", teilnahmeIdentifier="
+			+ teilnahmeIdentifier + "]";
+	}
+
 }

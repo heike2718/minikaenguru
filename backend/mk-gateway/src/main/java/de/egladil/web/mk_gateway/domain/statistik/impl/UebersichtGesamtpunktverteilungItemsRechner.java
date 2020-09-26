@@ -29,10 +29,10 @@ public class UebersichtGesamtpunktverteilungItemsRechner {
 	 *
 	 * @return List
 	 */
-	public List<GesamtpunktverteilungItem> berechneGesamtpunktverteilungItems(final WettbewerbID wettbewerbId, final Klassenstufe klassenstufe, final List<Loesungszettel> alleLoesungszettel) {
+	public List<GesamtpunktverteilungItem> berechneGesamtpunktverteilungItems(final WettbewerbID wettbewerbId, final Klassenstufe klassenstufe, final List<Loesungszettel> loesungszettelKLassenstufe) {
 
 		Map<Punktintervall, Integer> punktintervallKlassen = getPunktintervallklassen(wettbewerbId, klassenstufe,
-			alleLoesungszettel);
+			loesungszettelKLassenstufe);
 
 		List<GesamtpunktverteilungItem> result = new ArrayList<>();
 
@@ -53,7 +53,7 @@ public class UebersichtGesamtpunktverteilungItemsRechner {
 		return result;
 	}
 
-	Map<Punktintervall, Integer> getPunktintervallklassen(final WettbewerbID wettbewerbId, final Klassenstufe klassenstufe, final List<Loesungszettel> alleLoesungszettel) {
+	Map<Punktintervall, Integer> getPunktintervallklassen(final WettbewerbID wettbewerbId, final Klassenstufe klassenstufe, final List<Loesungszettel> loesungszettelKlassenstufe) {
 
 		PunktintervallStrategy punktintervalStrategy = PunktintervallStrategy.createStrategy(klassenstufe, wettbewerbId);
 
@@ -63,7 +63,7 @@ public class UebersichtGesamtpunktverteilungItemsRechner {
 
 		punktintervalle.forEach(intervall -> {
 
-			List<Loesungszettel> loesungszettelInIntervall = alleLoesungszettel.stream()
+			List<Loesungszettel> loesungszettelInIntervall = loesungszettelKlassenstufe.stream()
 				.filter(lz -> intervall.contains(lz.punkte())).collect(Collectors.toList());
 
 			punktintervallklassen.put(intervall, Integer.valueOf(loesungszettelInIntervall.size()));

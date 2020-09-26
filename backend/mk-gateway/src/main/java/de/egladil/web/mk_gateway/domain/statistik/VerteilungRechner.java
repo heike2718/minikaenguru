@@ -35,27 +35,28 @@ public class VerteilungRechner {
 	 *
 	 * @param  wettbewerbId
 	 * @param  klassenstufe
-	 * @param  alleLoesungszettel
-	 * @return                    GesamtpunktverteilungKlassenstufeDaten
+	 * @param  loesungszettelKlassenstufe
+	 * @return                            GesamtpunktverteilungKlassenstufeDaten
 	 */
-	public GesamtpunktverteilungKlassenstufeDaten berechne(final WettbewerbID wettbewerbId, final Klassenstufe klassenstufe, final List<Loesungszettel> alleLoesungszettel) {
+	public GesamtpunktverteilungKlassenstufeDaten berechne(final WettbewerbID wettbewerbId, final Klassenstufe klassenstufe, final List<Loesungszettel> loesungszettelKlassenstufe) {
 
-		validateParameters(wettbewerbId, klassenstufe, alleLoesungszettel);
+		validateParameters(wettbewerbId, klassenstufe, loesungszettelKlassenstufe);
 
-		String median = new MedianRechner().berechneMedian(alleLoesungszettel);
+		String median = new MedianRechner().berechneMedian(loesungszettelKlassenstufe);
 
 		GesamtpunktverteilungKlassenstufeDaten result = new GesamtpunktverteilungKlassenstufeDaten()
 			.withKlassenstufe(klassenstufe)
-			.withAnzahlTeilnehmer(alleLoesungszettel.size())
+			.withAnzahlTeilnehmer(loesungszettelKlassenstufe.size())
 			.withMedian(median)
 			.withGesamtpunktverteilungItems(
-				gesamtpunktverteilungRechner.berechneGesamtpunktverteilungItems(wettbewerbId, klassenstufe, alleLoesungszettel))
+				gesamtpunktverteilungRechner.berechneGesamtpunktverteilungItems(wettbewerbId, klassenstufe,
+					loesungszettelKlassenstufe))
 			.withAufgabeErgebnisItems(
-				aufgabenErgebnisseRechner.berechneAufgabeErgebnisItems(wettbewerbId, klassenstufe, alleLoesungszettel))
-			.withRohpunktItems(rohpunktItemsRechner.berechneRohpunktItems(alleLoesungszettel));
+				aufgabenErgebnisseRechner.berechneAufgabeErgebnisItems(wettbewerbId, klassenstufe, loesungszettelKlassenstufe))
+			.withRohpunktItems(rohpunktItemsRechner.berechneRohpunktItems(loesungszettelKlassenstufe));
 
-		this.addProzentraengeToGesamtpunktverteilungItems(result.gesamtpunktverteilungItems(), alleLoesungszettel.size());
-		this.addProzentraengeToRohpunktItems(result.rohpunktItems(), alleLoesungszettel.size());
+		this.addProzentraengeToGesamtpunktverteilungItems(result.gesamtpunktverteilungItems(), loesungszettelKlassenstufe.size());
+		this.addProzentraengeToRohpunktItems(result.rohpunktItems(), loesungszettelKlassenstufe.size());
 
 		return result;
 	}

@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.teilnahmen;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -75,11 +76,19 @@ public enum Klassenstufe {
 	 */
 	private List<String> getAufgabennummern(final Integer jahr) {
 
+		if (this == Klassenstufe.IKID) {
+
+			if (jahr <= 2017) {
+
+				return new ArrayList<>();
+			}
+		}
+
 		if (this == Klassenstufe.EINS) {
 
 			if (jahr >= 2010 && jahr <= 2013) {
 
-				throw new IllegalArgumentException("Im Jahr " + jahr + " gibt es keine Auswertung für " + this.label);
+				return new ArrayList<>();
 			}
 
 			if (jahr >= 2014 && jahr <= 2016) {
@@ -101,7 +110,6 @@ public enum Klassenstufe {
 	public Map<String, Integer> getAufgabennummernWithWertungscodeIndex(final Integer jahr) {
 
 		List<String> aufgabennummern = this.getAufgabennummern(jahr);
-
 		Map<String, Integer> result = new HashMap<>();
 
 		for (int index = 0; index < aufgabennummern.size(); index++) {
@@ -115,7 +123,13 @@ public enum Klassenstufe {
 
 	public String getStartguthaben(final Integer jahr) {
 
-		return this.getAufgabennummern(jahr).size() + ",00";
+		List<String> aufgabennummern = this.getAufgabennummern(jahr);
+
+		if (aufgabennummern.isEmpty()) {
+
+			return null;
+		}
+		return aufgabennummern.size() + ",00";
 	}
 
 }

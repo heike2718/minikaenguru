@@ -44,7 +44,7 @@ public class TeilnahmenResource {
 	public Response getAnonymisierteTeilnahmen(@PathParam(value = "teilnahmenummer") final String teilnahmenummer) {
 
 		List<AnonymisierteTeilnahmeAPIModel> teilnahmen = anonTeilnahmenService.loadAnonymisierteTeilnahmen(teilnahmenummer,
-			securityContext);
+			securityContext.getUserPrincipal().getName());
 
 		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), teilnahmen);
 		return Response.ok(responsePayload).build();

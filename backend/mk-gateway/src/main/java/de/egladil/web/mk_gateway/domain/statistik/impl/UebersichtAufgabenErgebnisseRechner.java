@@ -24,10 +24,10 @@ public class UebersichtAufgabenErgebnisseRechner {
 	 *
 	 * @param  wettbewerbId
 	 * @param  klassenstufe
-	 * @param  alleLoesungszettel
+	 * @param  loesungszettelKlassenstufe
 	 * @return
 	 */
-	public List<AufgabeErgebnisItem> berechneAufgabeErgebnisItems(final WettbewerbID wettbewerbId, final Klassenstufe klassenstufe, final List<Loesungszettel> alleLoesungszettel) {
+	public List<AufgabeErgebnisItem> berechneAufgabeErgebnisItems(final WettbewerbID wettbewerbId, final Klassenstufe klassenstufe, final List<Loesungszettel> loesungszettelKlassenstufe) {
 
 		final List<AufgabeErgebnisItem> result = new ArrayList<>();
 
@@ -39,8 +39,8 @@ public class UebersichtAufgabenErgebnisseRechner {
 		for (String aufgabennummer : aufgabennummernWithWertungscodeIndex.keySet()) {
 
 			Integer index = aufgabennummernWithWertungscodeIndex.get(aufgabennummer);
-			result.add(aufgabeErgebnsRechner.berechneAufgabeErgebnisItem(aufgabennummer, index.intValue(), alleLoesungszettel));
-
+			result.add(
+				aufgabeErgebnsRechner.berechneAufgabeErgebnisItem(aufgabennummer, index.intValue(), loesungszettelKlassenstufe));
 		}
 
 		return result;
