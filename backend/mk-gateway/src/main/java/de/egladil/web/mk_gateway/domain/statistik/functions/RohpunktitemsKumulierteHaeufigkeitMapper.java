@@ -17,9 +17,9 @@ import de.egladil.web.mk_gateway.domain.statistik.RohpunktItem;
 public class RohpunktitemsKumulierteHaeufigkeitMapper implements BiFunction<Integer, List<RohpunktItem>, Integer> {
 
 	@Override
-	public Integer apply(final Integer punkte, final List<RohpunktItem> items) {
+	public Integer apply(final Integer referenzpunkte, final List<RohpunktItem> items) {
 
-		List<RohpunktItem> itemsKleinerOderGleich = items.stream().filter(item -> punkte >= item.getPunkte())
+		List<RohpunktItem> itemsKleinerOderGleich = items.stream().filter(item -> referenzpunkte >= item.getPunkte())
 			.collect(Collectors.toList());
 
 		IntSummaryStatistics stats = itemsKleinerOderGleich.stream()

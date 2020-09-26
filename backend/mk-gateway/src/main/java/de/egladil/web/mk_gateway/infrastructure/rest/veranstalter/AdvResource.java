@@ -4,7 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.veranstalter;
 
-import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -26,6 +25,7 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.adv.AdvService;
 import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.VertragAdvAPIModel;
+import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 
 /**
  * AdvResource
@@ -34,12 +34,6 @@ import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.VertragAdvAPIModel
 @Path("/adv")
 @Consumes(MediaType.APPLICATION_JSON)
 public class AdvResource {
-
-	private static final String CONTENT_TYPE_HEADER = "Content-Type";
-
-	private static final String CONTENT_DISPOSITION_HEADER_NAME = "Content-Disposition";
-
-	private static final String CONTENT_DISPOSITION_MF = "attachement; filename={0}";
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
@@ -50,35 +44,26 @@ public class AdvResource {
 	AdvService advService;
 
 	@GET
-	@Path("/{schulkuerzel}")
+	@Path("{schulkuerzel}")
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_JSON })
 	public Response downloadVertragAuftragsdatenverarbeitung(@PathParam(value = "schulkuerzel") final String schulkuerzel) {
 
 		final DownloadData data = advService.getVertragAuftragsdatenverarbeitung(schulkuerzel,
 			securityContext.getUserPrincipal().getName());
 
-		return this.createResponse(data);
+		return MkGatewayFileUtils.createDownloadResponse(data);
 
 	}
 
 	@GET
-	@Path("/vertragstext")
+	@Path("vertragstext")
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_JSON })
 	public Response downloadVertragstext() {
 
 		final DownloadData data = advService.getAktuellenVertragstextAlsPdf();
 
-		return this.createResponse(data);
+		return MkGatewayFileUtils.createDownloadResponse(data);
 
-	}
-
-	private Response createResponse(final DownloadData data) {
-
-		String filename = data.filename();
-		String contentDisposition = MessageFormat.format(CONTENT_DISPOSITION_MF, filename);
-
-		return Response.ok(data.data()).header(CONTENT_TYPE_HEADER, MediaType.APPLICATION_OCTET_STREAM)
-			.header(CONTENT_DISPOSITION_HEADER_NAME, contentDisposition).build();
 	}
 
 	@POST

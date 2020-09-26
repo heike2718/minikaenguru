@@ -65,12 +65,14 @@ public class SchuluebersichtPDFGenerator {
 		byte[] deckblatt = this.generiereDeckblatt(wettbewerbID, optSchule, verteilungenNachKlassenstufe, gesamtmediane);
 		seiten.add(deckblatt);
 
-		List<byte[]> statistiken = new StatistikPDFGenerator().generiereStatistikUebersicht(verteilungenNachKlassenstufe);
+		List<byte[]> statistiken = new StatistikPDFGenerator()
+			.generiereStatistikUebersichtVeranstalter(verteilungenNachKlassenstufe);
 		seiten.addAll(statistiken);
 
 		final byte[] result = new PdfMerger().concatPdf(seiten);
 
-		String dateiname = applicationMessages.getString("statistik.pdf.dateiname.schule");
+		String dateiname = MessageFormat.format(applicationMessages.getString("statistik.pdf.dateiname.schule"),
+			new Object[] { wettbewerbID.toString() });
 
 		return new DownloadData(dateiname, result);
 
@@ -107,6 +109,7 @@ public class SchuluebersichtPDFGenerator {
 
 					if (!gesamtmedian.isBlank()) {
 
+						text += " ";
 						text += MessageFormat.format(applicationMessages.getString("statistik.pdf.median.wettbewerb"),
 							new Object[] { wettbewerbID.toString(), gesamtmedian });
 					}
@@ -115,11 +118,11 @@ public class SchuluebersichtPDFGenerator {
 			}
 
 			doc.add(Chunk.NEWLINE);
-			doc.add(new Paragraph(applicationMessages.getString("statistik.pdf.definitionen.median"),
+			doc.add(new Paragraph(applicationMessages.getString("statistik.definitionen.median.veranstalter"),
 				fontNormal));
 
 			doc.add(Chunk.NEWLINE);
-			doc.add(new Paragraph(applicationMessages.getString("statistik.pdf.definitionen.inhaltDokument"),
+			doc.add(new Paragraph(applicationMessages.getString("statistik.pdf.definitionen.inhaltDokument.veranstalter"),
 				fontNormal));
 
 			doc.close();

@@ -7,26 +7,10 @@
 					<div class="card-subtitle text-muted col-sm-12 col-md-9">Anzahl Kinder: {{teilnahme.anzahlKinder}}
 					</div>
 
-					<div *ngIf="teilnahme.anzahlKinder > 0" class="col-sm-12 col-md-3">
-						<!--
-						<mk-download-button [model]="vertragstextBtnModel">
+					<div *ngIf="showDownloadButton" class="col-sm-12 col-md-3">
+						<mk-download-button [model]="statistikBtnModel">
 						</mk-download-button>
-						-->
-						<button class="btn btn-block btn-primary" (click)="getStatistic()"
-							title="Statistik erstellen">Statistik</button>
 					</div>
-					<div *ngIf="textFeatureFlagAnzeigen" class="row ml-3 mr-3 mt-3 hinweis">
-						<div class="col-11">
-							<div class="mkv-boardered">{{textFeatureFlag}}</div>
-						</div>
-						<div class="col-1">
-							<button type="button" class="btn btn-dark" data-placement="bottom" title="Hinweis schließen"
-								(click)="toggleTextFeatureFlagAnzeigen()">
-								<i class="fa fa-close" aria-hidden="true"></i>
-							</button>
-						</div>
-					</div>
-
 				</div>
 			</div>
 		</div>

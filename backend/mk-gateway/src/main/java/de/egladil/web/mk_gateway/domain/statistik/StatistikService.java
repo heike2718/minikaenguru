@@ -31,6 +31,7 @@ import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.statistik.pdf.PrivatteilnahmenuebersichtPDFGenerator;
 import de.egladil.web.mk_gateway.domain.statistik.pdf.SchuluebersichtPDFGenerator;
+import de.egladil.web.mk_gateway.domain.statistik.pdf.StatistikPDFGenerator;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.veranstalter.SchuleKatalogResponseMapper;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
@@ -87,12 +88,34 @@ public class StatistikService {
 
 		case PRIVAT:
 
-			return new PrivatteilnahmenuebersichtPDFGenerator().generierePdf(wettbewerbID, verteilungenNachKlassenstufe);
+			return new PrivatteilnahmenuebersichtPDFGenerator().generierePdf(wettbewerbID, verteilungenNachKlassenstufe,
+				gesamtmediane);
 
 		default:
 			throw new BadRequestException("unerwartete Teilnahmeart " + teilnahmeIdentifier.teilnahmeart());
 		}
 
+	}
+
+	public DownloadData erstelleStatistikPDFWettbewerb(final WettbewerbID wettbewerbID) {
+
+		Map<Klassenstufe, GesamtpunktverteilungKlassenstufe> gesamtpunktverteilungenNachKlassenstufe = new HashMap<>();
+
+		for (Klassenstufe klassenstufe : Klassenstufe.valuesSorted()) {
+
+			Optional<GesamtpunktverteilungKlassenstufe> opt = this.erstelleStatistikWettbewerbKlassenstufe(wettbewerbID,
+				klassenstufe);
+
+			if (opt.isPresent()) {
+
+				gesamtpunktverteilungenNachKlassenstufe.put(klassenstufe, opt.get());
+			}
+		}
+
+		byte[] pdf = new StatistikPDFGenerator().generiereGesamtpunktverteilungWettbewerb(wettbewerbID,
+			gesamtpunktverteilungenNachKlassenstufe);
+
+		return new DownloadData("minikaenguru_" + wettbewerbID.toString() + "_gesamptunktverteilung.pdf", pdf);
 	}
 
 	/**
@@ -107,10 +130,15 @@ public class StatistikService {
 		List<Loesungszettel> zettelKlassenstufe = loesungszettelRepository.loadAllForWettbewerbAndKlassenstufe(wettbewerbID,
 			klassenstufe);
 
-		Optional<GesamtpunktverteilungKlassenstufe> optVerteilung = this.erstelleStatistik(wettbewerbID, klassenstufe,
-			zettelKlassenstufe);
+		if (zettelKlassenstufe.isEmpty()) {
 
-		return optVerteilung;
+			return Optional.empty();
+		}
+
+		GesamtpunktverteilungKlassenstufe verteilung = new StatistikKlassenstufeService()
+			.generiereGesamtpunktverteilung(wettbewerbID, klassenstufe, zettelKlassenstufe);
+
+		return Optional.of(verteilung);
 
 	}
 
@@ -175,14 +203,18 @@ public class StatistikService {
 
 			List<Loesungszettel> zettel = loesungszettelNachKlassenstufen.get(klassenstufe);
 
-			Optional<GesamtpunktverteilungKlassenstufe> optVerteilung = this.erstelleStatistik(wettbewerbID, klassenstufe, zettel);
+			if (zettel != null) {
 
-			if (optVerteilung.isPresent()) {
+				Optional<GesamtpunktverteilungKlassenstufe> optVerteilung = this.erstelleStatistik(wettbewerbID, klassenstufe,
+					zettel);
 
-				GesamtpunktverteilungKlassenstufe verteilungKlassenstufe = new StatistikKlassenstufeService()
-					.generiereGesamtpunktverteilung(wettbewerbID, klassenstufe, zettel);
+				if (optVerteilung.isPresent()) {
 
-				verteilungenNachKlassenstufe.put(klassenstufe, verteilungKlassenstufe);
+					GesamtpunktverteilungKlassenstufe verteilungKlassenstufe = new StatistikKlassenstufeService()
+						.generiereGesamtpunktverteilung(wettbewerbID, klassenstufe, zettel);
+
+					verteilungenNachKlassenstufe.put(klassenstufe, verteilungKlassenstufe);
+				}
 			}
 
 		}

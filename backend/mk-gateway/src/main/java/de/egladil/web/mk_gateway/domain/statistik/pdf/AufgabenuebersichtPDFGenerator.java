@@ -13,10 +13,13 @@ import java.util.ResourceBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -47,7 +50,7 @@ public class AufgabenuebersichtPDFGenerator {
 	 * @param  verteilung
 	 * @return
 	 */
-	public byte[] generiereAufgabenuebersichtKlassenstufe(final GesamtpunktverteilungKlassenstufe verteilung) {
+	public byte[] generiereAufgabenuebersichtKlassenstufe(final GesamtpunktverteilungKlassenstufe verteilung, final boolean fuerGesamtstatistik) {
 
 		final Document doc = new Document(PageSize.A4);
 		final int numCols = 7;
@@ -57,10 +60,29 @@ public class AufgabenuebersichtPDFGenerator {
 			PdfWriter.getInstance(doc, out);
 			doc.open();
 
+			if (fuerGesamtstatistik) {
+
+				final String titel = MessageFormat.format(applicationMessages.getString("statistik.pdf.ueberschrift.klassenstufe"),
+					new Object[] { verteilung.klassenstufe().getLabel() });
+				Paragraph element = new Paragraph(titel, fontProvider.getFont(FontTyp.BOLD, 14));
+				element.setAlignment(Element.ALIGN_CENTER);
+				doc.add(element);
+
+				Font fontNormal = fontProvider.getFont(FontTyp.NORMAL, 11);
+				doc.add(Chunk.NEWLINE);
+
+				String gesamtmedian = verteilung.getMedian();
+
+				String text = MessageFormat.format(applicationMessages.getString("statistik.pdf.median.klassenstufe.text"),
+					new Object[] { verteilung.klassenstufe().getLabel(), gesamtmedian });
+				doc.add(new Paragraph(text, fontNormal));
+				doc.add(Chunk.NEWLINE);
+			}
+
 			final PdfPTable table = new PdfPTable(numCols);
 
 			String text = MessageFormat.format(applicationMessages.getString("statistik.pdf.aufgabenuebersicht.header"),
-				new Object[] { verteilung.klassenstufe().getLabel() });
+				new Object[] { verteilung.klassenstufe().getLabel(), "" + verteilung.anzahlTeilnehmer() });
 			PdfPCell cell = new PdfCellCenteredTextRenderer().createCell(fontProvider.getFont(FontTyp.BOLD, 11), text, numCols);
 			table.addCell(cell);
 

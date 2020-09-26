@@ -3,7 +3,7 @@ feature/#127-statistik-teilnahme
 
 quarkus
 ----------------------
-Wechsel zu 1.8.1-Final
+Wechsel zu 1.8.1-Final --> fertig
 
 
 commons-validator

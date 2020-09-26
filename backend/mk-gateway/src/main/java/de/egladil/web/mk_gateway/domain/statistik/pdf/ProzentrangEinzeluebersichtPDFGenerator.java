@@ -31,11 +31,11 @@ import de.egladil.web.mk_gateway.domain.statistik.GesamtpunktverteilungKlassenst
 import de.egladil.web.mk_gateway.domain.statistik.RohpunktItem;
 
 /**
- * RohpunkteuebersichtPDFGenerator
+ * ProzentrangEinzeluebersichtPDFGenerator
  */
-public class RohpunkteuebersichtPDFGenerator {
+public class ProzentrangEinzeluebersichtPDFGenerator {
 
-	private static final Logger LOG = LoggerFactory.getLogger(RohpunkteuebersichtPDFGenerator.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ProzentrangEinzeluebersichtPDFGenerator.class);
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
@@ -43,11 +43,7 @@ public class RohpunkteuebersichtPDFGenerator {
 
 	private final PdfCellRenderer cellRendererRight = new PdfCellRightTextRenderer();
 
-	/**
-	 * @param  verteilung
-	 * @return
-	 */
-	public byte[] generiereRohpunktuebersichtKlassenstufe(final GesamtpunktverteilungKlassenstufe verteilung) {
+	public byte[] generiereProzentrangUebersicht(final GesamtpunktverteilungKlassenstufe verteilung) {
 
 		final Document doc = new Document(PageSize.A4);
 		final int numCols = 2;
@@ -58,8 +54,7 @@ public class RohpunkteuebersichtPDFGenerator {
 			doc.open();
 
 			final PdfPTable table = new PdfPTable(numCols);
-
-			String text = MessageFormat.format(applicationMessages.getString("statistik.pdf.rohpunktuebersicht.header"),
+			String text = MessageFormat.format(applicationMessages.getString("statistik.pdf.prozentranguebersicht.header"),
 				new Object[] { verteilung.klassenstufe().getLabel() });
 			PdfPCell cell = new PdfCellCenteredTextRenderer().createCell(fontProvider.getFont(FontTyp.BOLD, 11), text, numCols);
 			table.addCell(cell);
@@ -70,8 +65,6 @@ public class RohpunkteuebersichtPDFGenerator {
 
 				this.addRow(table, item);
 			}
-
-			this.addRowGesamt(table, verteilung);
 
 			doc.add(table);
 			doc.close();
@@ -96,7 +89,7 @@ public class RohpunkteuebersichtPDFGenerator {
 
 		final Font font = fontProvider.getFont(FontTyp.BOLD, 11);
 
-		final String[] headings = new String[] { "Punkte", "Anzahl Kinder" };
+		final String[] headings = new String[] { "Punkte", "Prozentrang" };
 
 		for (final String text : headings) {
 
@@ -109,14 +102,7 @@ public class RohpunkteuebersichtPDFGenerator {
 
 		final Font font = fontProvider.getFont(FontTyp.NORMAL, 11);
 		table.addCell(cellRendererRight.createCell(font, item.getPunkteText(), 1));
-		table.addCell(cellRendererRight.createCell(font, String.valueOf(item.getAnzahl()), 1));
+		table.addCell(cellRendererRight.createCell(font, String.valueOf(item.getProzentrangText()), 1));
 	}
 
-	private void addRowGesamt(final PdfPTable table, final GesamtpunktverteilungKlassenstufe verteilung) {
-
-		final Font font = fontProvider.getFont(FontTyp.BOLD, 11);
-		table.addCell(cellRendererRight.createCell(font, "Anzahl Kinder", 1));
-		table.addCell(cellRendererRight.createCell(font, String.valueOf(verteilung.anzahlTeilnehmer()), 1));
-
-	}
 }

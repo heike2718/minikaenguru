@@ -48,7 +48,7 @@ public class WettbewerbIDTest {
 		} catch (InvalidInputException e) {
 
 			ResponsePayload response = e.getResponsePayload();
-			assertEquals("jahr muss größer 2004 sein", response.getMessage().getMessage());
+			assertEquals("Es liegen nur Daten ab 2005 vor", response.getMessage().getMessage());
 			assertEquals("ERROR", response.getMessage().getLevel());
 		}
 

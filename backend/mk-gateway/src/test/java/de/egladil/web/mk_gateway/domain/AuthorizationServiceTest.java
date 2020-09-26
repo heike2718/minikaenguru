@@ -16,8 +16,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import de.egladil.web.mk_gateway.domain.AuthorizationService;
-import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.user.UserRepository;
@@ -60,32 +58,6 @@ public class AuthorizationServiceTest {
 		Identifier teilnahmeId = new Identifier("vhyxaksgk");
 
 		Mockito.when(userRepository.ofId(USER_UUID)).thenReturn(Optional.empty());
-		Mockito.when(veranstalterRepository.ofId(veranstalterId)).thenReturn(Optional.empty());
-
-		// Act + Assert
-		try {
-
-			service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId);
-			fail("keine AccessDeniedException");
-		} catch (AccessDeniedException e) {
-
-			assertNotNull(service.getSecurityIncidentRegistered());
-		}
-
-	}
-
-	@Test
-	void should_checkPermissionForTeilnahmenummerThrowException_when_adminButNotAllowedForAdmin() {
-
-		// Arrange
-
-		Identifier veranstalterId = new Identifier(USER_UUID);
-		Identifier teilnahmeId = new Identifier("vhyxaksgk");
-		User user = new User();
-		user.setUuid(USER_UUID);
-		user.setRolle(Rolle.ADMIN);
-
-		Mockito.when(userRepository.ofId(USER_UUID)).thenReturn(Optional.of(user));
 		Mockito.when(veranstalterRepository.ofId(veranstalterId)).thenReturn(Optional.empty());
 
 		// Act + Assert

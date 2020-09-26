@@ -13,31 +13,31 @@ export class TeilnahmeCardComponent implements OnInit {
 
 
 	devMode = !environment.production;
-	textFeatureFlagAnzeigen = false;
-	textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
 
-	vertragstextBtnModel: DownloadButtonModel = {
-		url: environment.apiUrl + '/adv/vertragstext',
-		dateiname: 'test',
-		mimetype: 'pdf',
-		buttonLabel: 'Statistik',
-		tooltip: 'Statistik generieren und herunterladen (PDF)'
-	};
+	@Input()
+	teilnahme: AnonymisierteTeilnahme;
 
+	statistikBtnModel: DownloadButtonModel;
 
-	@Input() teilnahme: AnonymisierteTeilnahme;
+	showDownloadButton = false;
+
 	constructor() { }
 
 	ngOnInit(): void {
+
+		if (this.teilnahme && this.teilnahme.anzahlKinder > 0) {
+
+			this.statistikBtnModel = {
+				url: environment.apiUrl + '/statistik/' + this.teilnahme.identifier.teilnahmeart + '/' + this.teilnahme.identifier.teilnahmenummer + '/' + this.teilnahme.identifier.jahr,
+				dateiname: 'test',
+				mimetype: 'pdf',
+				buttonLabel: 'Statistik',
+				tooltip: 'Statistik generieren und herunterladen (PDF)'
+			};
+
+			this.showDownloadButton = true;
+		}
 	}
 
-	getStatistic(): void {
-		console.log('jetzt Statistik für die Teilnahme mit identifier erstellen: ' + JSON.stringify(this.teilnahme.identifier));
-		this.textFeatureFlagAnzeigen = true;
-	}
 
-	toggleTextFeatureFlagAnzeigen(): void {
-		this.textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
-		this.textFeatureFlagAnzeigen = !this.textFeatureFlagAnzeigen;
-	}
 }

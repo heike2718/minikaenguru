@@ -75,11 +75,6 @@ public enum Klassenstufe {
 	 */
 	private List<String> getAufgabennummern(final Integer jahr) {
 
-		if (this == Klassenstufe.IKID && jahr < 2019) {
-
-			throw new IllegalArgumentException("Im Jahr " + jahr + " gibt es keine Auswertung für " + this.label);
-		}
-
 		if (this == Klassenstufe.EINS) {
 
 			if (jahr >= 2010 && jahr <= 2013) {

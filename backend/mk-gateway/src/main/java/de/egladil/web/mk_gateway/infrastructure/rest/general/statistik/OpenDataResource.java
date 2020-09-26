@@ -23,7 +23,9 @@ import javax.ws.rs.core.Response;
 import de.egladil.web.commons_validation.exception.InvalidInputException;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.apimodel.statistik.MedianeAPIModel;
+import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.statistik.GesamtpunktverteilungKlassenstufe;
 import de.egladil.web.mk_gateway.domain.statistik.StatistikService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
@@ -101,17 +103,18 @@ public class OpenDataResource {
 	@Path("/statistik/{jahr}/pdf")
 	public Response downloadGesamtstatistikFuerJahr(@PathParam(value = "jahr") final String jahr) {
 
-		Response checkResponse = this.checkJahr(jahr, "/open-data/statistik/{jahr}/pdf");
+		Response checkJahrResponse = this.checkJahr(jahr, "/open-data/statistik/{jahr}/pdf");
 
-		if (checkResponse.getStatus() != 200) {
+		if (checkJahrResponse.getStatus() != 200) {
 
-			return checkResponse;
+			return checkJahrResponse;
 		}
 
 		WettbewerbID wettbewerbID = new WettbewerbID(jahr);
 
-		return Response.status(404).entity(ResponsePayload.messageOnly(MessagePayload.error("API steht noch nicht zur Verfügung")))
-			.build();
+		DownloadData file = this.statistikService.erstelleStatistikPDFWettbewerb(wettbewerbID);
+
+		return MkGatewayFileUtils.createDownloadResponse(file);
 	}
 
 	@GET

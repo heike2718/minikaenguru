@@ -6,6 +6,7 @@ package de.egladil.web.mk_gateway.domain.auswertungen.impl;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,7 +43,7 @@ public class LoesungszettelMedianMapperTest {
 		// Act
 		Double actual = new LoesungszettelMedianMapper().apply(ungeradeLoesungszettel);
 
-		// Arrange
+		// Assert
 		assertEquals(expected, actual);
 
 	}
@@ -59,9 +60,42 @@ public class LoesungszettelMedianMapperTest {
 		// Act
 		Double actual = new LoesungszettelMedianMapper().apply(geradeLoesungszettel);
 
-		// Arrange
+		// Assert
 		assertEquals(expected, actual);
 
 	}
 
+	@Test
+	void should_applyGetTheCorrectResult_when_twoEqual() {
+
+		// Arrange
+		List<Loesungszettel> zweiLoesungszettel = Arrays
+			.asList(new Loesungszettel[] { new Loesungszettel().withPunkte(2000), new Loesungszettel().withPunkte(2000) });
+
+		Double expected = Double.valueOf(20.0);
+
+		// Act
+		Double actual = new LoesungszettelMedianMapper().apply(zweiLoesungszettel);
+
+		// Assert
+		assertEquals(expected, actual);
+
+	}
+
+	@Test
+	void should_applyGetTheCorrectResult_when_twoEqualAndThirdGreater() {
+
+		// Arrange
+		List<Loesungszettel> zweiLoesungszettel = Arrays
+			.asList(new Loesungszettel[] { new Loesungszettel().withPunkte(2000), new Loesungszettel().withPunkte(2000),
+				new Loesungszettel().withPunkte(3000) });
+
+		Double expected = Double.valueOf(20.0);
+
+		// Act
+		Double actual = new LoesungszettelMedianMapper().apply(zweiLoesungszettel);
+
+		// Assert
+		assertEquals(expected, actual);
+	}
 }

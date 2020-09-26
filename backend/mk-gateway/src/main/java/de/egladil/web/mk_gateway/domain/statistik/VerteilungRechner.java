@@ -6,8 +6,6 @@ package de.egladil.web.mk_gateway.domain.statistik;
 
 import java.util.List;
 
-import javax.ws.rs.NotFoundException;
-
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.statistik.functions.ProzentRechner;
 import de.egladil.web.mk_gateway.domain.statistik.functions.PunktintervallKumulierteHaufigkeitMapper;
@@ -32,6 +30,14 @@ public class VerteilungRechner {
 
 	private final UbersichtRohpunktItemsRechner rohpunktItemsRechner = new UbersichtRohpunktItemsRechner();
 
+	/**
+	 * Berechnet die GesamtpunktverteilungKlassenstufeDaten
+	 *
+	 * @param  wettbewerbId
+	 * @param  klassenstufe
+	 * @param  alleLoesungszettel
+	 * @return                    GesamtpunktverteilungKlassenstufeDaten
+	 */
 	public GesamtpunktverteilungKlassenstufeDaten berechne(final WettbewerbID wettbewerbId, final Klassenstufe klassenstufe, final List<Loesungszettel> alleLoesungszettel) {
 
 		validateParameters(wettbewerbId, klassenstufe, alleLoesungszettel);
@@ -93,7 +99,8 @@ public class VerteilungRechner {
 
 			int anzahlGleichSchlechter = rohpunktitemsKumulierteHaeufigkeitMapper.apply(item.getPunkte(), items);
 
-			Double prozentrang = runder.apply(prozentRechner.apply(anzahlGleichSchlechter, items.size()), ANZAHL_NACHKOMMASTELLEN);
+			Double prozentrang = runder.apply(prozentRechner.apply(anzahlGleichSchlechter, anzahlTeilnehmer),
+				ANZAHL_NACHKOMMASTELLEN);
 
 			item.withProzentrang(prozentrang);
 		}
@@ -115,36 +122,5 @@ public class VerteilungRechner {
 
 			throw new IllegalArgumentException("alleLoeungszettel darf nicht null sein");
 		}
-
-		int jahr = wettbewerbId.jahr();
-
-		switch (klassenstufe) {
-
-		case IKID:
-			if (jahr < 2019) {
-
-				throw new NotFoundException("Im Jahr " + jahr + " gibt es keine Auswertung für " + klassenstufe.getLabel());
-			}
-			break;
-
-		case EINS:
-			if (jahr < 2014) {
-
-				throw new NotFoundException("Im Jahr " + jahr + " gibt es keine Auswertung für " + klassenstufe.getLabel());
-			}
-			break;
-
-		case ZWEI:
-			if (jahr < 2010) {
-
-				throw new NotFoundException("Im Jahr " + jahr + " gibt es keine Auswertung für " + klassenstufe.getLabel());
-			}
-			break;
-
-		default:
-			break;
-		}
-
 	}
-
 }
