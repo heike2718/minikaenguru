@@ -171,7 +171,7 @@ public class SchuleAPIModel {
 		return kuerzelLand;
 	}
 
-	public SchuleDetails getDetails() {
+	public SchuleDetails details() {
 
 		return details;
 	}

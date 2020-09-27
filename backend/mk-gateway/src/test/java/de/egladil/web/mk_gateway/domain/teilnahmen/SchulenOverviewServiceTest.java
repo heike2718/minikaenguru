@@ -63,7 +63,7 @@ public class SchulenOverviewServiceTest extends AbstractDomainServiceTest {
 			assertNull(schule.land());
 			assertNull(schule.ort());
 			assertNull(schule.name());
-			assertNull(schule.getDetails());
+			assertNull(schule.details());
 		}
 
 		{
@@ -74,7 +74,7 @@ public class SchulenOverviewServiceTest extends AbstractDomainServiceTest {
 			assertNull(schule.land());
 			assertNull(schule.ort());
 			assertNull(schule.name());
-			assertNull(schule.getDetails());
+			assertNull(schule.details());
 		}
 
 	}
@@ -100,7 +100,7 @@ public class SchulenOverviewServiceTest extends AbstractDomainServiceTest {
 			assertNull(schule.land());
 			assertNull(schule.ort());
 			assertNull(schule.name());
-			assertNull(schule.getDetails());
+			assertNull(schule.details());
 		}
 
 	}
@@ -149,7 +149,7 @@ public class SchulenOverviewServiceTest extends AbstractDomainServiceTest {
 		assertNull(schule.land());
 		assertNull(schule.ort());
 		assertNull(schule.name());
-		assertNull(schule.getDetails());
+		assertNull(schule.details());
 
 	}
 

@@ -11,6 +11,7 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NoContentException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -19,6 +20,7 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jboss.resteasy.core.NoMessageBodyWriterFoundFailure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +40,8 @@ import de.egladil.web.mk_gateway.domain.error.ClientAuthException;
 import de.egladil.web.mk_gateway.domain.error.InaccessableEndpointException;
 import de.egladil.web.mk_gateway.domain.error.MessagingAuthException;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.error.StatistikKeineDatenException;
+import de.egladil.web.mk_gateway.infrastructure.rest.XmlSerializer;
 
 /**
  * MkvApiGatewayExceptionMapper.<br>
@@ -68,7 +72,7 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 		if (exception instanceof InvalidInputException) {
 
 			InvalidInputException e = (InvalidInputException) exception;
-			return Response.status(400).entity(serialize(e.getResponsePayload())).build();
+			return Response.status(Status.BAD_REQUEST).entity(serializeAsJson(e.getResponsePayload())).build();
 		}
 
 		if (exception instanceof AuthException) {
@@ -78,7 +82,7 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 
 			return Response.status(401)
 				.cookie(CommonHttpUtils.createSessionInvalidatedCookie(MkGatewayApp.CLIENT_COOKIE_PREFIX))
-				.entity(serialize(payload))
+				.entity(serializeAsJson(payload))
 				.build();
 		}
 
@@ -96,7 +100,7 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 				.messageOnly(MessagePayload.error(applicationMessages.getString("general.forbidden")));
 
 			return Response.status(Status.FORBIDDEN)
-				.entity(serialize(payload))
+				.entity(serializeAsJson(payload))
 				.build();
 		}
 
@@ -107,7 +111,7 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 
 			return Response.status(908)
 				.cookie(CommonHttpUtils.createSessionInvalidatedCookie(MkGatewayApp.CLIENT_COOKIE_PREFIX))
-				.entity(serialize(payload))
+				.entity(serializeAsJson(payload))
 				.build();
 		}
 
@@ -116,7 +120,15 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 			ResponsePayload payload = ResponsePayload
 				.messageOnly(MessagePayload.error(exception.getMessage() + applicationMessages.getString("sendMail")));
 
-			return Response.status(909).entity(serialize(payload)).build();
+			return Response.status(909).entity(serializeAsJson(payload)).build();
+		}
+
+		if (exception instanceof StatistikKeineDatenException) {
+
+			ResponsePayload payload = ResponsePayload
+				.messageOnly(MessagePayload.error(applicationMessages.getString("statistik.keineDaten")));
+
+			return Response.status(404).entity(serializeAsJson(payload)).build();
 		}
 
 		if (exception instanceof NotFoundException) {
@@ -124,7 +136,7 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 			ResponsePayload payload = ResponsePayload
 				.messageOnly(MessagePayload.error(applicationMessages.getString("general.notFound")));
 
-			return Response.status(404).entity(serialize(payload)).build();
+			return Response.status(404).entity(serializeAsJson(payload)).build();
 		}
 
 		if (exception instanceof BadRequestException) {
@@ -149,7 +161,21 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 
 			LOG.error(msg);
 
-			return Response.status(status).entity(serialize(payload)).build();
+			return Response.status(status).entity(serializeAsJson(payload)).build();
+		}
+
+		if (exception instanceof NoMessageBodyWriterFoundFailure) {
+
+			NoMessageBodyWriterFoundFailure failure = (NoMessageBodyWriterFoundFailure) exception;
+
+			if (failure.getMessage().contains(MediaType.APPLICATION_XML)) {
+
+				ResponsePayload payload = ResponsePayload
+					.messageOnly(MessagePayload.error(applicationMessages.getString("general.internalServerError")));
+
+				return Response.status(500).entity(serializeAsXml(payload)).build();
+
+			}
 		}
 
 		if (exception instanceof MkGatewayRuntimeException || exception instanceof ClientAuthException) {
@@ -172,10 +198,16 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 		ResponsePayload payload = ResponsePayload
 			.messageOnly(MessagePayload.error(applicationMessages.getString("general.internalServerError")));
 
-		return Response.status(500).entity(serialize(payload)).build();
+		return Response.status(500).entity(serializeAsJson(payload)).build();
 	}
 
-	private String serialize(final ResponsePayload rp) {
+	private String serializeAsXml(final ResponsePayload rp) {
+
+		return XmlSerializer.getInstance().writeAsString(ResponsePayload.class, rp);
+
+	}
+
+	private String serializeAsJson(final ResponsePayload rp) {
 
 		try {
 
