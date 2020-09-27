@@ -30,7 +30,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 		this.devMode = !environment.production;
 
 		this.textNewsletter = `In diesem Fall werden Sie über den Wettbewerb betreffende Änderungen per E-Mail informiert. Ihre Daten werden ausschließlich zu diesem Zweck genutzt. Eine Weitergabe an Dritte erfolgt nicht.
-		  Sie können die Einwilligung jederzeit per E-Mail an minikaenguru@egladil.de oder durch Änderung Ihres Profils widerrufen.`
+		  Sie können die Einwilligung jederzeit per E-Mail an minikaenguru@egladil.de oder nach dem Einloggen widerrufen.`
 
 	}
 

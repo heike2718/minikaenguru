@@ -1,5 +1,11 @@
 # authprovider Release Notes
 
+__Release 1.0.0__:
+
+* [mkv-app: Statistik für eine Teilnahme generieren und anzeigen](https://github.com/heike2718/minikaenguru/issues/127)
+* quarkus bumped to 1.8.1-Final
+* hewi-java-commons buped to 1.4.10
+
 __Release 0.2.9__:
 
 * [mkv-app: Anzeige der vergangenen Teilnahmen](https://github.com/heike2718/minikaenguru/issues/75)
