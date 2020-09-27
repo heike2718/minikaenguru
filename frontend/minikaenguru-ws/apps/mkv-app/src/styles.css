@@ -39,6 +39,11 @@ button>i {
   border-radius: 4px;
 }
 
+.conditionally-bordered {
+  border: 0px solid gray;
+  border-radius: 4px;
+}
+
 .mkv-container-elevated {
   border: 1px solid gray;
   border-radius: 4px;
@@ -102,5 +107,12 @@ footer {
   .clickabe-stacked {
     width: 95%;
   }
+
+  .conditionally-bordered {
+    border: 1px solid gray;
+    border-radius: 4px;
+  }
+
+
 
 }

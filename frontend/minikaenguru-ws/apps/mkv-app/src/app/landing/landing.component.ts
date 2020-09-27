@@ -10,6 +10,7 @@ import { AktuelleMeldungFacade } from '../aktuelle-meldung/aktuelle-meldung.faca
 export class LandingComponent implements OnInit {
 
 	aktuelleMeldungNichtLeer$ = this.aktuelleMeldungFacade.aktuelleMeldungNichtLeer$;
+	aktuellerWettbewerb$ = this.wettbewerbFacade.aktuellerWettbewerb$;
 
 	constructor(private wettbewerbFacade: WettbewerbFacade, private aktuelleMeldungFacade: AktuelleMeldungFacade) { }
 

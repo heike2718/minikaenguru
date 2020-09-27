@@ -1,9 +1,4 @@
-<div class="mkv-container mkv-bordered">
-	<div class="col--12">
-		<h2>Minikänguru-Wettbewerb <ng-container *ngIf="aktuellerWettbewerb$ | async as wettbewerb">{{wettbewerb.jahr}}</ng-container>
-		</h2>
-	</div>
-
+<div class="mkv-container mt-5 conditionally-bordered">
 	<ng-container *ngIf="aktuellerWettbewerb$ | async as wettbewerb" class="ml-2 mt-3">
 		<div class="row">
 			<div class="col-md-6 col-sm-12">
