@@ -3,7 +3,7 @@
 // (c) Heike Winkelvoß
 // =====================================================
 
-package de.egladil.web.mk_gateway.domain.auswertungen;
+package de.egladil.web.mk_gateway.domain.statistik;
 
 /**
  * Auswertungsquelle ist die Quelle, aus der die Auswertung stammt.

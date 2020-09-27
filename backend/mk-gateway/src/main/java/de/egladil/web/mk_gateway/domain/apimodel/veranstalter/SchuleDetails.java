@@ -5,6 +5,7 @@
 package de.egladil.web.mk_gateway.domain.apimodel.veranstalter;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -108,6 +109,33 @@ public class SchuleDetails {
 
 		this.hatAdv = hatAdv;
 		return this;
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(kuerzel);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+
+		if (this == obj) {
+
+			return true;
+		}
+
+		if (obj == null) {
+
+			return false;
+		}
+
+		if (getClass() != obj.getClass()) {
+
+			return false;
+		}
+		SchuleDetails other = (SchuleDetails) obj;
+		return Objects.equals(kuerzel, other.kuerzel);
 	}
 
 }

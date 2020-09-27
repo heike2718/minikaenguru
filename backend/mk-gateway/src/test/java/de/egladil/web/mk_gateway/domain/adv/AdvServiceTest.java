@@ -6,21 +6,27 @@ package de.egladil.web.mk_gateway.domain.adv;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
+import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.VertragAdvAPIModel;
+import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 
 /**
  * AdvServiceTest
  */
 public class AdvServiceTest {
+
+	private static final String LEHRER_UUID = "guowdgqog";
 
 	@Test
 	void should_initVertrag_initAllAttributes() {
@@ -77,6 +83,76 @@ public class AdvServiceTest {
 		assertEquals(plz, anschrift.plz());
 		assertEquals(schulname, anschrift.schulname());
 		assertEquals("DE", anschrift.laendercode());
+
+	}
+
+	@Test
+	void should_getVertragAuftragsdatenverarbeitung_callAuthService() {
+
+		// Arrange
+		String schulkuerzel = "bjkasgca";
+
+		Identifier lehrerId = new Identifier(LEHRER_UUID);
+		Identifier teilnahmeId = new Identifier(schulkuerzel);
+
+		AuthorizationService authService = Mockito.mock(AuthorizationService.class);
+
+		Mockito.when(authService.checkPermissionForTeilnahmenummer(lehrerId, teilnahmeId))
+			.thenThrow(new AccessDeniedException());
+
+		AdvService advService = AdvService.createForTest(authService);
+
+		// Act
+		try {
+
+			advService.getVertragAuftragsdatenverarbeitung(schulkuerzel, LEHRER_UUID);
+			fail("keine AccessDeniedException");
+		} catch (AccessDeniedException e) {
+
+			// nüscht
+		}
+
+	}
+
+	@Test
+	void should_createVertragAuftragsdatenverarbeitung_callAuthService() {
+
+		// Arrange
+		String schulname = "Hijahsdho";
+		String plz = "76545";
+		String ort = "Ggagdu";
+		String strasse = "Ggu-Htfzu-Straße";
+		String hausnummer = "13-15";
+
+		String schulkuerzel = "ASDERS";
+
+		VertragAdvAPIModel apiModel = new VertragAdvAPIModel()
+			.withHausnummer(hausnummer)
+			.withOrt(ort)
+			.withPlz(plz)
+			.withSchulkuerzel(schulkuerzel)
+			.withSchulname(schulname)
+			.withStrasse(strasse);
+
+		Identifier lehrerId = new Identifier(LEHRER_UUID);
+		Identifier teilnahmeId = new Identifier(schulkuerzel);
+
+		AuthorizationService authService = Mockito.mock(AuthorizationService.class);
+
+		Mockito.when(authService.checkPermissionForTeilnahmenummer(lehrerId, teilnahmeId))
+			.thenThrow(new AccessDeniedException());
+
+		AdvService advService = AdvService.createForTest(authService);
+
+		// Act
+		try {
+
+			advService.createVertragAuftragsdatenverarbeitung(apiModel, LEHRER_UUID);
+			fail("keine AccessDeniedException");
+		} catch (AccessDeniedException e) {
+
+			// nüscht
+		}
 
 	}
 

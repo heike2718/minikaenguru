@@ -1,0 +1,56 @@
+feature/#127-statistik-teilnahme
+==================================
+
+quarkus
+----------------------
+Wechsel zu 1.8.1-Final --> fertig
+
+
+commons-validator
+-----------------------
+
+ResponsePayload mit JAXB-Annotationen --> hewi-java-commons muss released werden.
+
+
+OpenDataResource
+------------------------
+
+GET /open-data/statistik/{jahr}/ZWEI/xml
+        Consumes: application/json
+        Produces: application/xml             --> fertig
+
+GET /open-data/statistik/{jahr}/IKID/xml
+        Consumes: application/json
+        Produces: application/xml             --> fertig
+
+GET /open-data/statistik/{jahr}/pdf
+        Consumes: application/json
+        Produces: application/octet-stream     --> noch nicht angebunden, Gesamtpunktverteilung ist fertig, aber PDF-Generierung fehlt
+
+GET /open-data/statistik/{jahr}/mediane
+        Consumes: application/json
+        Produces: application/json             --> fertig
+
+GET /open-data/statistik/{jahr}/EINS/xml
+        Consumes: application/json
+        Produces: application/xml              --> fertig
+
+StatistikResource
+------------------------
+
+GET /statistik/{teilnahmeart}/{teilnahmenummer}/{jahr}
+
+    Consumes: application/json
+    Produces: application/octet-stream         --> PDF-Generator fertig. Anbindung an Angular offen. Noch nicht getestet
+
+
+
+Admin-Resource
+------------------------
+
+GET /admin/statistik/{teilnahmeart}/{teilnahmenummer}/{jahr}
+
+    Consumes: application/json
+    Produces: application/octet-stream         --> geplant. Ruft gleiche Funktion wie StatistikResource. Anbindung Frontend fehlt
+
+

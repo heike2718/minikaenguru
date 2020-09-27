@@ -12,12 +12,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.auth.session.LoggedInUser;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.veranstalter.LehrerService;
-import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterAuthorizationService;
 
 /**
  * VeranstalterLehrerResourceTest
@@ -29,7 +29,7 @@ public class VeranstalterLehrerResourceTest {
 	 */
 	private static final String LEHRER_UUID = "hklahcha";
 
-	private VeranstalterAuthorizationService authService;
+	private AuthorizationService authService;
 
 	private LehrerService lehrerService;
 
@@ -38,7 +38,7 @@ public class VeranstalterLehrerResourceTest {
 	@BeforeEach
 	void setUp() {
 
-		authService = Mockito.mock(VeranstalterAuthorizationService.class);
+		authService = Mockito.mock(AuthorizationService.class);
 		SecurityContext securityContext = Mockito.mock(SecurityContext.class);
 
 		lehrerService = Mockito.mock(LehrerService.class);

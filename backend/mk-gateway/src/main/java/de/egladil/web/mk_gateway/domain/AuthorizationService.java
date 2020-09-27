@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.veranstalter;
+package de.egladil.web.mk_gateway.domain;
 
 import java.util.Optional;
 
@@ -13,33 +13,41 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
+import de.egladil.web.mk_gateway.domain.user.Rolle;
+import de.egladil.web.mk_gateway.domain.user.UserRepository;
+import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
+import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
 
 /**
- * VeranstalterAuthorizationService
+ * AuthorizationService
  */
 @ApplicationScoped
 @DomainService
-public class VeranstalterAuthorizationService {
+public class AuthorizationService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(VeranstalterAuthorizationService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AuthorizationService.class);
 
 	@Inject
 	VeranstalterRepository veranstalterRepository;
+
+	@Inject
+	UserRepository userRepository;
 
 	@Inject
 	Event<SecurityIncidentRegistered> securityIncidentEvent;
 
 	private SecurityIncidentRegistered securityIncidentRegistered;
 
-	public static VeranstalterAuthorizationService createForTest(final VeranstalterRepository repo) {
+	public static AuthorizationService createForTest(final VeranstalterRepository veranstalterRepository, final UserRepository userRepository) {
 
-		VeranstalterAuthorizationService service = new VeranstalterAuthorizationService();
-		service.veranstalterRepository = repo;
+		AuthorizationService service = new AuthorizationService();
+		service.userRepository = userRepository;
+		service.veranstalterRepository = veranstalterRepository;
 		return service;
 	}
 
@@ -50,6 +58,27 @@ public class VeranstalterAuthorizationService {
 	 * @throws AccessDeniedException
 	 */
 	public boolean checkPermissionForTeilnahmenummer(final Identifier veranstalterID, final Identifier teilnahmeID) throws AccessDeniedException {
+
+		Optional<User> optUser = userRepository.ofId(veranstalterID.identifier());
+
+		if (optUser.isEmpty()) {
+
+			String msg = "Unzulaessiger Zugriff auf Teilnahme " + teilnahmeID + " durch " + veranstalterID
+				+ ": User existiert nicht";
+
+			LOG.warn(msg);
+
+			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
+			throw new AccessDeniedException();
+		}
+
+		User user = optUser.get();
+
+		if (Rolle.ADMIN.equals(user.getRolle())) {
+
+			return true;
+
+		}
 
 		Optional<Veranstalter> optVeranstalter = veranstalterRepository.ofId(veranstalterID);
 

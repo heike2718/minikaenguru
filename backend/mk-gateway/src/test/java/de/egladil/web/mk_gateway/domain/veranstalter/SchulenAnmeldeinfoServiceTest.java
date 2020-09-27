@@ -436,7 +436,7 @@ public class SchulenAnmeldeinfoServiceTest {
 		assertEquals("Darmstadt", schule.ort());
 		assertEquals("Hessen", schule.land());
 
-		SchuleDetails details = schule.getDetails();
+		SchuleDetails details = schule.details();
 		assertEquals("John Doe", details.angemeldetDurch());
 		assertEquals("Herta Meier", details.kollegen());
 		assertEquals("12345", details.kuerzel());
@@ -504,7 +504,7 @@ public class SchulenAnmeldeinfoServiceTest {
 		assertEquals("unbekannter Ort", schule.ort());
 		assertEquals("unbekanntes Land / Bundesland", schule.land());
 
-		SchuleDetails details = schule.getDetails();
+		SchuleDetails details = schule.details();
 		assertEquals("John Doe", details.angemeldetDurch());
 		assertEquals("Herta Meier", details.kollegen());
 		assertEquals("12345", details.kuerzel());
