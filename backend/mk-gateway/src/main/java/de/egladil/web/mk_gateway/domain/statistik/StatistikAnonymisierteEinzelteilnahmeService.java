@@ -125,6 +125,11 @@ public class StatistikAnonymisierteEinzelteilnahmeService {
 		List<Loesungszettel> loesungszettelKlassenstufe = alleLoesungszettel.stream().filter(l -> l.klassenstufe() == klassenstufe)
 			.collect(Collectors.toList());
 
+		if (loesungszettelKlassenstufe.isEmpty()) {
+
+			return Optional.empty();
+		}
+
 		GesamtpunktverteilungKlassenstufe verteilungKlassenstufe = new StatistikKlassenstufeService()
 			.generiereGesamtpunktverteilung(wettbewerbID, klassenstufe, loesungszettelKlassenstufe);
 

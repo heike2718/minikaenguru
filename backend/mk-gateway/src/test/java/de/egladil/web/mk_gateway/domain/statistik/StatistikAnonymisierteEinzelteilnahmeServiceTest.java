@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.core.Response;
 
@@ -166,6 +167,23 @@ public class StatistikAnonymisierteEinzelteilnahmeServiceTest {
 		assertEquals(219491, downloadData.data().length);
 
 		StatistikTestUtils.print(downloadData, false);
+	}
+
+	@Test
+	void should_erstelleStatistikEinzelteilnahmeKlassenstufeReturnEmpty_when_KeineLoesungszettelMitKlassenstufe() {
+
+		// Arrange
+		Klassenstufe klassenstufe = Klassenstufe.EINS;
+		List<Loesungszettel> alleLoesungszettel = wettbewerbLoesungszettel.stream().filter(l -> l.klassenstufe() != klassenstufe)
+			.collect(Collectors.toList());
+		WettbewerbID wettbewerbID = new WettbewerbID(2018);
+
+		// Act
+		Optional<GesamtpunktverteilungKlassenstufe> opt = statistikService
+			.erstelleStatistikEinzelteilnahmeKlassenstufe(wettbewerbID, klassenstufe, alleLoesungszettel);
+
+		// Assert
+		assertTrue(opt.isEmpty());
 	}
 
 	@Test
