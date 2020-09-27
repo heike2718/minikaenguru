@@ -238,21 +238,6 @@ public class AufgabeErgebnisItem implements Comparable<AufgabeErgebnisItem> {
 	}
 
 	/**
-	 * @param zuLeicht
-	 */
-	public AufgabeErgebnisItem withZuLeicht(final boolean aufgabenkategoriePasstNicht) {
-
-		this.zuLeicht = aufgabenkategoriePasstNicht;
-		return this;
-	}
-
-	public final AufgabeErgebnisItem withZuSchwer(final boolean zuSchwer) {
-
-		this.zuSchwer = zuSchwer;
-		return this;
-	}
-
-	/**
 	 * @return the nummer
 	 */
 	public String getNummer() {
@@ -303,6 +288,16 @@ public class AufgabeErgebnisItem implements Comparable<AufgabeErgebnisItem> {
 
 		this.anzahlNichtGeloest = anzahlNichtGeloest;
 		return this;
+	}
+
+	public boolean isZuLeicht() {
+
+		return zuLeicht;
+	}
+
+	public boolean isZuSchwer() {
+
+		return zuSchwer;
 	}
 
 }

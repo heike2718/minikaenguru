@@ -143,6 +143,32 @@ public class StatistikAnonymisierteEinzelteilnahmeServiceTest {
 	}
 
 	@Test
+	void should_erstelleStatistikPDF_fuerPrivatteilnahme_generateThePDF_whenDatenVollstaendig() throws Exception {
+
+		// Arrange
+		String schulkuerzel = "12345";
+		String veranstalterUUID = "aaaaa";
+
+		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.PRIVAT.toString())
+			.withTeilnahmenummer(schulkuerzel).withWettbewerbID(new WettbewerbID(2018));
+
+		Mockito.when(authService.checkPermissionForTeilnahmenummer(new Identifier(veranstalterUUID), new Identifier(schulkuerzel)))
+			.thenReturn(Boolean.TRUE);
+
+		Mockito.when(loesungszettelRepository.loadAll(teilnahmeIdentifier)).thenReturn(wettbewerbLoesungszettel);
+
+		// Act
+		DownloadData downloadData = statistikService.erstelleStatistikPDFEinzelteilnahme(teilnahmeIdentifier,
+			veranstalterUUID.toString());
+
+		// Assert
+		assertEquals("minikaenguru_2018_statistik.pdf", downloadData.filename());
+		assertEquals(219491, downloadData.data().length);
+
+		StatistikTestUtils.print(downloadData, false);
+	}
+
+	@Test
 	void should_sortByKlassenstufe_work() throws Exception {
 
 		// Arrange
