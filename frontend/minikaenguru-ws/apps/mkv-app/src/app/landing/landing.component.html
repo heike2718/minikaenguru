@@ -1,8 +1,21 @@
-<mkv-aktuelle-meldung *ngIf = "aktuelleMeldungNichtLeer$ | async"></mkv-aktuelle-meldung>
+<mkv-aktuelle-meldung *ngIf="aktuelleMeldungNichtLeer$ | async"></mkv-aktuelle-meldung>
+
+<div class="row mt-5">
+	<div class="col-12 text-center">
+		<h1>Minikänguru-Wettbewerb <ng-container *ngIf="aktuellerWettbewerb$ | async as wettbewerb">{{wettbewerb.jahr}}
+			</ng-container>
+		</h1>
+	</div>
+</div>
+<div class="row">
+	<div class="col-12 text-center">
+		<img src="https://mathe-jung-alt.de/img/mja_logo_2.svg" alt="" aria-role="logo">
+	</div>
+</div>
 
 <mkv-wettbewerb-info></mkv-wettbewerb-info>
 
-<div class="mkv-container mkv-bordered">
+<div class="mkv-container conditionally-bordered">
 
 	<div class="col-md-12 mb-2 ml-0 pl-1">
 		Um sich zum Minikänguru-Wettbewerb zu registrieren: Wenn Sie bereits ein Konto haben, loggen Sie sich bitte ein.
@@ -19,15 +32,17 @@
 		Bei Privatteilnahmen genügt ein einziges Privatkonto. Es kann für mehrere Kinder verwendet werden.
 	</div>
 	<div class="col-md-12  mb-2 ml-0 pl-1">
-		Bitte nutzen Sie die <a href="https://mathe-jung-alt.de/minikaenguru/archiv.html" target="_blank">Aufgaben</a> der vergangenen Jahre, um die Kinder auf den Wettbewerb vorzubereiten.
+		Bitte nutzen Sie die <a href="https://mathe-jung-alt.de/minikaenguru/archiv.html" target="_blank">Aufgaben</a>
+		der vergangenen Jahre, um die Kinder auf den Wettbewerb vorzubereiten.
 	</div>
 
 
 </div>
 
-<div class="mkv-container mkv-bordered">
+<div class="mkv-container">
 
-	<div class="col-md-12 mb-2 ml-0 pl-1">
-		Aktuelle Version ist 1.0.0. Bitte einmal die Seite komplett neu laden (Strg + F5), falls Sie in der Fußleiste eine andere Version angezeigt bekommen.
+	<div class="col-md-12 mb-2 ml-0 pl-1 mt-5">
+		Aktuelle Version ist 1.0.0. Bitte einmal die Seite komplett neu laden (Strg + F5), falls Sie in der Fußleiste
+		eine andere Version angezeigt bekommen.
 	</div>
 </div>
