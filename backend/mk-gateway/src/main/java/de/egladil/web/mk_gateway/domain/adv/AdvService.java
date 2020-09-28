@@ -22,14 +22,14 @@ import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.SchuleAPIModel;
-import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.VertragAdvAPIModel;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
 import de.egladil.web.mk_gateway.domain.veranstalter.SchuleKatalogResponseMapper;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.VertragAdvAPIModel;
 
 /**
  * AdvService

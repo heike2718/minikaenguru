@@ -17,9 +17,9 @@ import org.mockito.Mockito;
 
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.SchuleAPIModel;
-import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.VertragAdvAPIModel;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.VertragAdvAPIModel;
 
 /**
  * AdvServiceTest

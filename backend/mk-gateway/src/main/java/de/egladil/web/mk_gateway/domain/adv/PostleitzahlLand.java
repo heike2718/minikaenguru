@@ -6,8 +6,8 @@ package de.egladil.web.mk_gateway.domain.adv;
 
 import java.util.Optional;
 
-import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.semantik.ValueObject;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 
 /**
  * PostleitzahlLand

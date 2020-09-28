@@ -21,8 +21,6 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.SchuleAPIModel;
-import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.SchuleDetails;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
@@ -30,6 +28,8 @@ import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.SchuleDetailsService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.SchulenOverviewService;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleDetails;
 
 /**
  * SchulenAnmeldeinfoService

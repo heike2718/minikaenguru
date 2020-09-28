@@ -24,8 +24,8 @@ import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.adv.AdvService;
-import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.VertragAdvAPIModel;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.VertragAdvAPIModel;
 
 /**
  * AdvResource

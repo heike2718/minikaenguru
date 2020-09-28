@@ -19,8 +19,8 @@ import org.junit.jupiter.api.Test;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 
 /**
  * SchuleKatalogResponseMapperTest

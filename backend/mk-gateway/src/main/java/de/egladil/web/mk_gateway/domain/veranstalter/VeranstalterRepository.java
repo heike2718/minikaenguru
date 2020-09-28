@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.semantik.Repository;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.VeranstalterSuchanfrage;
 
 /**
  * VeranstalterRepository
@@ -47,6 +48,12 @@ public interface VeranstalterRepository {
 	 * @param veranstalter
 	 */
 	void removeVeranstalter(Veranstalter veranstalter);
+
+	/**
+	 * @param  suchkriterium
+	 * @return               List
+	 */
+	List<Veranstalter> findVeranstalter(VeranstalterSuchanfrage suchanfrage);
 
 	@Deprecated(forRemoval = true)
 	List<Veranstalter> loadPrivatveranstalter();

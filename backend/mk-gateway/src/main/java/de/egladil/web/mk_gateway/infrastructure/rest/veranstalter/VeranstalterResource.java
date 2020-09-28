@@ -24,7 +24,6 @@ import javax.ws.rs.core.SecurityContext;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.PrivatveranstalterAPIModel;
 import de.egladil.web.mk_gateway.domain.auth.AuthResult;
 import de.egladil.web.mk_gateway.domain.auth.signup.AuthResultToResourceOwnerMapper;
 import de.egladil.web.mk_gateway.domain.auth.signup.SignUpResourceOwner;
@@ -35,6 +34,7 @@ import de.egladil.web.mk_gateway.domain.veranstalter.LehrerService;
 import de.egladil.web.mk_gateway.domain.veranstalter.PrivatveranstalterService;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.ZugangUnterlagenService;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.PrivatveranstalterAPIModel;
 
 /**
  * VeranstalterResource ist die Resource zu den Minikänguru-Veranstaltern.

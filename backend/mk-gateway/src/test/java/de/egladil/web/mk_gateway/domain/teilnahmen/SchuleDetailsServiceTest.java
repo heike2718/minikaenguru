@@ -19,10 +19,10 @@ import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.adv.VertragAuftragsdatenverarbeitung;
 import de.egladil.web.mk_gateway.domain.adv.VertragAuftragsverarbeitungRepository;
 import de.egladil.web.mk_gateway.domain.adv.Vertragstext;
-import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.SchuleDetails;
 import de.egladil.web.mk_gateway.domain.veranstalter.Person;
 import de.egladil.web.mk_gateway.domain.veranstalter.SchulkollegienRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.Schulkollegium;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleDetails;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 
 /**

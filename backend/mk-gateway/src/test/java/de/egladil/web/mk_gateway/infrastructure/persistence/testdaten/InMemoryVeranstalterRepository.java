@@ -17,6 +17,7 @@ import de.egladil.web.mk_gateway.domain.veranstalter.Lehrer;
 import de.egladil.web.mk_gateway.domain.veranstalter.Privatveranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.VeranstalterSuchanfrage;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.entities.InMemoryVeranstalter;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.entities.InMemoryVeranstalterList;
 
@@ -186,6 +187,12 @@ public class InMemoryVeranstalterRepository implements VeranstalterRepository {
 
 		alleVeranstalter.remove(veranstalter);
 
+	}
+
+	@Override
+	public List<Veranstalter> findVeranstalter(final VeranstalterSuchanfrage suchanfrage) {
+
+		return null;
 	}
 
 }
