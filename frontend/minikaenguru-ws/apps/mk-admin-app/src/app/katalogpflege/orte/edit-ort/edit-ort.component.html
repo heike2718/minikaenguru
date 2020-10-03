@@ -70,17 +70,13 @@
 				<mk-form-error path="kuerzelLand" text="Kürzel Land"></mk-form-error>
 			</div>
 
-			<div class="row">
-				<div class="col-sm-12 col-md-4">
-					<button type="button" [disabled]="!submited && (!editOrtForm.valid || submitDisabled)"
-						class="btn btn-primary btn-block" (click)="submitForm()">senden</button>
-				</div>
-				<div class="col-sm-12 col-md-4">
-					<button type="button" class="btn btn-primary btn-block" (click)="cancel()">zurücksetzen</button>
-				</div>
-				<div class="col-sm-12 col-md-4">
-					<button type="button" class="btn btn-primary btn-block" (click)="gotoKataloge()">Kataloge</button>
-				</div>
+			<div class="btn-group d-flex" role="group">
+				<button type="button" [disabled]="!submited && (!editOrtForm.valid || submitDisabled)"
+					class="btn btn-primary w-100 ml-1" (click)="submitForm()">senden</button>
+
+				<button type="button" class="btn btn-primary w-100 ml-1" (click)="cancel()">zurücksetzen</button>
+
+				<button type="button" class="btn btn-primary w-100 ml-1" (click)="gotoKataloge()">Kataloge</button>
 			</div>
 		</form>
 	</ng-container>

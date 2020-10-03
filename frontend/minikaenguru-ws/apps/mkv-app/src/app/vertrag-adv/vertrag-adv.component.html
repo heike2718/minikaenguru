@@ -1,4 +1,4 @@
-<div *ngIf="vertragAdvEditorModel$ | async as vertrag" class="mkv-container mkv-bordered col-12">
+<div *ngIf="vertragAdvEditorModel$ | async as vertrag" class="mkv-container mt-1 col-12">
 
 	<h2>Vertrag zur Auftragsdatenverarbeitung</h2>
 	<h3>zwischen {{vertrag.schulname}} und Heike Winkelvoß</h3>
@@ -79,20 +79,14 @@
 				</div>
 			</form>
 		</div>
-		<div class="row mt-4 ml-2">
-			<div class="col-md-4 mt-4">
-				<button class="btn btn-primary" [disabled]="submitDisabled$ | async" (click)="submit()"><i
-						class="fa fa-floppy-o" aria-hidden="true"></i>
-					Vertrag abschließen</button>
-			</div>
-			<div *ngIf="!schule.details.hatAdv" class="col-md-4 mt-4">
-				<button class="btn btn-primary" (click)="cancel()"><i class="fa fa-undo"
-						aria-hidden="true"></i>zurücksetzen</button>
-			</div>
-			<div class="col-md-4 mt-4">
-				<button class="btn btn-primary" (click)="gotoSchule()"><i class="fa fa-arrow-left"
-						aria-hidden="true"></i>zurück zur Schule</button>
-			</div>
+		<div class="btn-group d-flex" role="group">
+
+			<button class="btn btn-primary w-100 ml-1" [disabled]="submitDisabled$ | async" (click)="submit()"><i
+					class="fa fa-floppy-o" aria-hidden="true"></i>
+				Vertrag abschließen</button>
+
+			<button class="btn btn-primary w-100 ml-1" (click)="gotoSchule()"><i class="fa fa-arrow-left"
+					aria-hidden="true"></i>zurück zur Schule</button>
 		</div>
 
 		<div *ngIf="schule.details.hatAdv" class="col-12">

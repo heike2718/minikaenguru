@@ -6,13 +6,15 @@ import { StoreModule } from '@ngrx/store';
 import { VeranstalterRoutingModule } from './veranstalter-routing.module';
 import * as fromVeranstalter from './+state/veranstalter.reducer';
 import { VeranstalterCardComponent } from './veranstalter-card/veranstalter-card.component';
+import { VeranstalterSucheComponent } from './veranstalter-suche/veranstalter-suche.component';
 
 
 
 @NgModule({
 	declarations: [
 		VeranstalterListComponent,
-		VeranstalterCardComponent
+		VeranstalterCardComponent,
+		VeranstalterSucheComponent
 	],
 	imports: [
 		CommonModule,
