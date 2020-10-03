@@ -28,7 +28,7 @@ public class VeranstalterVeranstalterUserAPIModelMapper implements Function<Vera
 			.withNewsletterAbonniert(veranstalter.isNewsletterEmpfaenger())
 			.withRolle(veranstalter.rolle())
 			.withTeilnahmenummern(teilnahmenummern)
-			.withUuid(veranstalter.uuid())
+			.withUuid(veranstalter.uuid().substring(0, 8))
 			.withZugangsstatusUnterlagen(veranstalter.zugangUnterlagen());
 
 		return result;

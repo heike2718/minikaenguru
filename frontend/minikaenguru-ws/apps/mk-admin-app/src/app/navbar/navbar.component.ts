@@ -6,6 +6,8 @@ import { environment } from '../../environments/environment';
 import { AppState } from '../reducers';
 import { resetWettbewerbe } from '../wettbewerbe/+state/wettbewerbe.actions';
 import { resetKataloge} from '../katalogpflege/+state/katalogpflege.actions';
+import { resetVeranstalters } from '../veranstalter/+state/veranstalter.actions';
+import { resetAktuelleMeldung } from '../aktuelle-meldung/+state/aktuelle-meldung.actions';
 
 @Component({
 	selector: 'mka-navbar',
@@ -41,6 +43,8 @@ export class NavbarComponent implements OnInit {
 	login() {
 		this.appStore.dispatch(resetWettbewerbe());
 		this.appStore.dispatch(resetKataloge());
+		this.appStore.dispatch(resetVeranstalters());
+		this.appStore.dispatch(resetAktuelleMeldung());
 		this.authService.login();
 	}
 
@@ -48,5 +52,7 @@ export class NavbarComponent implements OnInit {
 		this.authService.logout();
 		this.appStore.dispatch(resetWettbewerbe());
 		this.appStore.dispatch(resetKataloge());
+		this.appStore.dispatch(resetVeranstalters());
+		this.appStore.dispatch(resetAktuelleMeldung());
 	}
 }

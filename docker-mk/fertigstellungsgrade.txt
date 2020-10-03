@@ -1,3 +1,6 @@
+
+
+
 feature/#127-statistik-teilnahme
 ==================================
 
@@ -25,8 +28,7 @@ GET /open-data/statistik/{jahr}/IKID/xml
 
 GET /open-data/statistik/{jahr}/pdf
         Consumes: application/json
-        Produces: application/octet-stream     --> noch nicht angebunden, Gesamtpunktverteilung ist fertig, aber PDF-Generierung fehlt
-
+        Produces: application/octet-stream     --> fertig
 GET /open-data/statistik/{jahr}/mediane
         Consumes: application/json
         Produces: application/json             --> fertig
@@ -41,8 +43,7 @@ StatistikResource
 GET /statistik/{teilnahmeart}/{teilnahmenummer}/{jahr}
 
     Consumes: application/json
-    Produces: application/octet-stream         --> PDF-Generator fertig. Anbindung an Angular offen. Noch nicht getestet
-
+    Produces: application/octet-stream         --> fertig
 
 
 Admin-Resource

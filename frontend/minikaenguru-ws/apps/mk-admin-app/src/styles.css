@@ -57,8 +57,8 @@ button>i {
 }
 
 .mkv-container {
-  margin: 10px 5px 10px 5px;
-  padding: 10px 5px 10px 5px;
+  margin-top: 10px;
+  align-content: center;
 }
 
 .clickable {
@@ -67,10 +67,6 @@ button>i {
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
   -webkit-transition: .25s box-shadow;
   transition: .25s box-shadow;
-}
-
-.clickabe-stacked {
-	width: 50%;
 }
 
 .clickable div:hover {
@@ -85,9 +81,20 @@ footer {
   padding: 5px 10px 5px 10px;
 }
 
+/* =========== zu Testzwecken ================= */
+.irgendwas-bordered-red {
+  border: 1px solid red;
+};
+
+.irgendwas-bordered-blue {
+  border: 1px solid blue;
+};
+
+
 /* ===== small devices ==== */
 
-@media (max-width: 768px) {
+
+@media (min-width: 576px) {
 
   body {
 	  width: 100%;

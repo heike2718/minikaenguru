@@ -43,6 +43,9 @@ http://192.168.10.176:9510/mk-gateway/wb-admin/kataloge/schulen  PUT
 curl -X GET -H 'Accept: application/json' -H 'X-SESSIONID: MGdwVkJGWTB0ZnZVSHVSZU1ZbjdHdz09' -i 'http://192.168.10.176:9510/mk-gateway/teilnahmen/AUFNUR0WEG'
 
 
+VeranstalterSuchanfrage {"suchkriterium":"EMAIL","suchstring":"hallo"}
+
+
 ========================================
 mk-kataloge
 

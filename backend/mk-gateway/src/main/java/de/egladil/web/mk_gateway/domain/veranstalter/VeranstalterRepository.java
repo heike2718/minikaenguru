@@ -55,7 +55,4 @@ public interface VeranstalterRepository {
 	 */
 	List<Veranstalter> findVeranstalter(VeranstalterSuchanfrage suchanfrage);
 
-	@Deprecated(forRemoval = true)
-	List<Veranstalter> loadPrivatveranstalter();
-
 }

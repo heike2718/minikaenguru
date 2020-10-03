@@ -177,12 +177,6 @@ public class InMemoryVeranstalterRepository implements VeranstalterRepository {
 	}
 
 	@Override
-	public List<Veranstalter> loadPrivatveranstalter() {
-
-		return null;
-	}
-
-	@Override
 	public void removeVeranstalter(final Veranstalter veranstalter) {
 
 		alleVeranstalter.remove(veranstalter);

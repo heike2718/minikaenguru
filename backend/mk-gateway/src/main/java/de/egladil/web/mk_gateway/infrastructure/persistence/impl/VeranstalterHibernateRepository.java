@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.veranstalter.Lehrer;
 import de.egladil.web.mk_gateway.domain.veranstalter.Person;
 import de.egladil.web.mk_gateway.domain.veranstalter.Privatveranstalter;
@@ -198,17 +197,6 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 		vorhandener.setTeilnahmenummern(veranstalter.persistierbareTeilnahmenummern());
 		vorhandener.setZugangsberechtigungUnterlagen(veranstalter.zugangUnterlagen());
 		vorhandener.setNewsletterEmpfaenger(veranstalter.isNewsletterEmpfaenger());
-	}
-
-	@Override
-	public List<Veranstalter> loadPrivatveranstalter() {
-
-		String stmt = "select v from PersistenterVeranstalter v where v.rolle = :rolle";
-
-		List<PersistenterVeranstalter> trefferliste = em.createQuery(stmt, PersistenterVeranstalter.class)
-			.setParameter("rolle", Rolle.PRIVAT).getResultList();
-
-		return trefferliste.stream().map(pv -> mapper.apply(pv)).collect(Collectors.toList());
 	}
 
 	@Override
