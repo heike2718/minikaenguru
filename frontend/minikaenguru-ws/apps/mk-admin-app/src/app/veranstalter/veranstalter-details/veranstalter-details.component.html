@@ -26,8 +26,8 @@
 				<div class="col-sm-12 col-md-3">Teilnahmen:</div>
 			</div>
 			<div class="btn-group d-flex" role="group">
-				<ng-container *ngFor="let tn of veranstalter.teilnahmenummern">
-					<button type="submit" class="btn btn-dark" (click)="gotoTeilnahmen(tn)">{{tn}}</button>
+				<ng-container *ngFor="let teilnahmenummer of veranstalter.teilnahmenummern">
+					<button type="submit" class="btn btn-dark w-100 ml-1" (click)="gotoTeilnahmen(teilnahmenummer)" title="Teilnhahmen laden">{{teilnahmenummer}}</button>
 				</ng-container>
 			</div>
 		</ng-container>

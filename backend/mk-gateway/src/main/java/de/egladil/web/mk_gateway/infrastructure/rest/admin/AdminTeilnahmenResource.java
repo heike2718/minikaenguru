@@ -13,6 +13,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.commons_validation.payload.ResponsePayload;
+
 /**
  * AdminTeilnahmenResource
  */
@@ -26,7 +29,10 @@ public class AdminTeilnahmenResource {
 	@Path("{teilnahmenummer}")
 	public Response getTeilnahmenuebersicht(@PathParam(value = "teilnahmenummer") final String teilnahmenummer) {
 
-		return null;
+		return Response
+			.ok(ResponsePayload
+				.messageOnly(MessagePayload.warn("GET /admin/teilnahmen/teilnahmenummet ist noch nicht implementiert")))
+			.build();
 	}
 
 }
