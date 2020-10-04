@@ -1,7 +1,8 @@
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuardService } from '../infrastructure/auth-guard.service';
 import { NgModule } from '@angular/core';
-import { VeranstalterListComponent } from './veranstalter-list/veranstalter-list.component';
+import { VeranstalterComponent } from './veranstalter/veranstalter.component';
+import { VeranstalterDetailsComponent } from './veranstalter-details/veranstalter-details.component';
 
 
 const veranstalterRoutes: Routes = [
@@ -9,7 +10,12 @@ const veranstalterRoutes: Routes = [
 	{
 		path: 'veranstalter',
 		canActivate: [AuthGuardService],
-		component: VeranstalterListComponent
+		component: VeranstalterComponent
+	},
+	{
+		path: 'details',
+		canActivate: [AuthGuardService],
+		component: VeranstalterDetailsComponent
 	}
 
 ]

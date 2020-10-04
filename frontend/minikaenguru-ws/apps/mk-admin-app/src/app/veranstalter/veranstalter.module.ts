@@ -7,6 +7,8 @@ import { VeranstalterRoutingModule } from './veranstalter-routing.module';
 import * as fromVeranstalter from './+state/veranstalter.reducer';
 import { VeranstalterCardComponent } from './veranstalter-card/veranstalter-card.component';
 import { VeranstalterSucheComponent } from './veranstalter-suche/veranstalter-suche.component';
+import { VeranstalterComponent } from './veranstalter/veranstalter.component';
+import { VeranstalterDetailsComponent } from './veranstalter-details/veranstalter-details.component';
 
 
 
@@ -14,13 +16,15 @@ import { VeranstalterSucheComponent } from './veranstalter-suche/veranstalter-su
 	declarations: [
 		VeranstalterListComponent,
 		VeranstalterCardComponent,
-		VeranstalterSucheComponent
+		VeranstalterSucheComponent,
+		VeranstalterComponent,
+		VeranstalterDetailsComponent
 	],
 	imports: [
 		CommonModule,
 		FormsModule,
 		VeranstalterRoutingModule,
-		StoreModule.forFeature(fromVeranstalter.veranstalterFeatureKey, fromVeranstalter.reducer)
+		StoreModule.forFeature(fromVeranstalter.veranstalterFeatureKey, fromVeranstalter.reducer),
 	]
 })
 export class VeranstalterModule { }

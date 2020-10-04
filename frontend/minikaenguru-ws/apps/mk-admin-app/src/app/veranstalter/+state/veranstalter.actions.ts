@@ -23,5 +23,15 @@ export const resetVeranstalters = createAction(
 	'[NavbarComponent] - veranstalter login/logout'
 );
 
+export const loadVeranstalterDetails = createAction(
+	'[VeranstalterEffect] onLoadDetails',
+	props<{uuid: string}>()
+);
+
+export const selectedVeranstalterLoaded = createAction(
+	'[VeranstalterEffect] afterLoadDetails',
+	props<{veranstalter: Veranstalter}>()
+);
+
 
 

@@ -1,1 +1,29 @@
-<p>veranstalter-suche works!</p>
+<h4>Suche</h4>
+<div class="form-group">
+	<form (ngSubmit)="onSubmit()" #sucheForm="ngForm">
+
+		<div class="form-group">
+			<label for="suchkriterium">Suchkriterium*</label>
+			<select class="form-control" id="suchkriterium" required [(ngModel)]="model.suchkriterium"
+				name="suchkriterium" #suchkriterium="ngModel">
+				<option *ngFor="let krit of suchkriterien" [value]="krit">{{krit}}</option>
+			</select>
+			<div [hidden]="suchkriterium.valid || suchkriterium.pristine" class="alert alert-danger">
+				Suchkriterium ist ein Pflichtfeld
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="suchstring">Suchstring*</label>
+			<input type="text" class="form-control" id="suchstring" required [(ngModel)]="model.suchstring"
+				name="suchstring" #suchstring="ngModel">
+			<div [hidden]="suchstring.valid || suchstring.pristine" class="alert alert-danger">
+				Suchtring ist ein Pflichtfeld
+			</div>
+		</div>
+
+		<button type="submit" class="btn btn-success" [disabled]="!sucheForm.form.valid">suchen</button>
+	</form>
+
+
+</div>

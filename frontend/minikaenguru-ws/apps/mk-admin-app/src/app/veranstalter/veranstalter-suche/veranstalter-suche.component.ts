@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { VeranstalterFacade } from '../veranstalter.facade';
+import { VeranstalterSuchkriterium, VeranstalterSuchanfrage } from '../veranstalter.model';
 
 @Component({
 	selector: 'mka-veranstalter-suche',
@@ -8,9 +9,18 @@ import { VeranstalterFacade } from '../veranstalter.facade';
 })
 export class VeranstalterSucheComponent implements OnInit {
 
-	constructor(veranstalterFacade: VeranstalterFacade) { }
+	suchkriterien: VeranstalterSuchkriterium[] = ['EMAIL', 'NAME', 'TEILNAHMENUMMER', 'UUID'];
+
+	model: VeranstalterSuchanfrage = {suchkriterium: undefined, suchstring: undefined};
+
+	constructor(private veranstalterFacade: VeranstalterFacade) { }
 
 	ngOnInit(): void {
+	}
+
+	onSubmit(): void {
+
+		this.veranstalterFacade.sucheVeranstalter(this.model);
 	}
 
 }

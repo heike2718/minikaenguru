@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { VeranstalterCardComponent } from './veranstalter-card.component';
+import { VeranstalterComponent } from './veranstalter.component';
 
-describe('VeranstalterCardComponent', () => {
-  let component: VeranstalterCardComponent;
-  let fixture: ComponentFixture<VeranstalterCardComponent>;
+describe('VeranstalterComponent', () => {
+  let component: VeranstalterComponent;
+  let fixture: ComponentFixture<VeranstalterComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ VeranstalterCardComponent ]
+      declarations: [ VeranstalterComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(VeranstalterCardComponent);
+    fixture = TestBed.createComponent(VeranstalterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

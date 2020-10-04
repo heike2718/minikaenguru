@@ -21,15 +21,10 @@ export class VeranstalterListComponent implements OnInit {
 
 	constructor(private veranstalterFacade: VeranstalterFacade) { }
 
-	ngOnInit(): void {
+	ngOnInit(): void { }
 
-		const suchanfrage: VeranstalterSuchanfrage = {
-			suchkriterium: 'EMAIL',
-			suchstring: 'tl'
-		};
-
-		this.veranstalterFacade.sucheVeranstalter(suchanfrage);
-
+	listeLeeren() {
+		this.veranstalterFacade.trefferlisteLeeren();
 	}
 
 }

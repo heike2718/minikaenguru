@@ -26,5 +26,15 @@ export class VeranstalterService {
 		);
 	}
 
+	public loadVeranstalterDetails(uuid: string): Observable<Veranstalter> {
+
+
+		const url = environment.apiUrl + '/veranstalter/' + uuid;
+
+		return this.http.get(url).pipe(
+			map(body => body as ResponsePayload),
+			map(payload => payload.data)
+		);
+	}
 
 }
