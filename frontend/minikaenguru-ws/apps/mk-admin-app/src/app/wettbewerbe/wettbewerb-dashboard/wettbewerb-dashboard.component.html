@@ -1,4 +1,4 @@
-<div *ngIf="(wettbewerb$ | async) as wettbewerb else loading" class="mkv-container mkv-bordered">
+<div *ngIf="(wettbewerb$ | async) as wettbewerb else loading" class="mkv-container mt-1">
 	<div *ngIf="wettbewerb" class="col-12">
 		<h2>Minikänguru {{wettbewerb.jahr}} <span class="ml-1 badge badge-success">{{wettbewerb.status}}</span></h2>
 		<p *ngIf="devMode">(wettbewerb-dashboard.component)</p>
@@ -16,13 +16,15 @@
 		</p>
 
 		<div class="row" *ngIf="wettbewerb.status !== 'BEENDET'">
-			<div class="col-md-6 mt-4">
-				<button class="btn btn-dark" (click)="editWettbewerb()"><i class="fa fa-pencil-square-o"
+
+			<div class="btn-group d-flex" role="group">
+
+				<button class="btn btn-dark w-100 ml-1" (click)="editWettbewerb()"><i class="fa fa-pencil-square-o"
 						aria-hidden="true"></i>bearbeiten</button>
-			</div>
-			<div class="col-md-6 mt-4">
-				<button class="btn btn-dark" (click)="moveToNextStatus()"><i class="fa fa-forward"
+
+				<button class="btn btn-dark w-100 ml-1" (click)="moveToNextStatus()"><i class="fa fa-forward"
 						aria-hidden="true"></i>weiterleiern</button>
+
 			</div>
 		</div>
 	</div>
@@ -48,18 +50,13 @@
 
 </div>
 
-<div class="row mt-4">
-	<div class="col-md-6 mt-4">
-		<button class="btn btn-primary" (click)="backToWettbewerbe()"><i class="fa fa-arrow-left"
-				aria-hidden="true"></i>Wettbewerbe</button>
-	</div>
-	<div class="col-md-6 mt-4">
-		<button class="btn btn-primary" (click)="backToDashboard()"><i class="fa fa-arrow-left"
-				aria-hidden="true"></i>Dashboard</button>
-	</div>
+<div class="btn-group d-flex mt-4" role="group">
+	<button class="btn btn-primary w-100 ml-1" (click)="backToWettbewerbe()"><i class="fa fa-arrow-left"
+			aria-hidden="true"></i>Wettbewerbe</button>
+	<button class="btn btn-primary w-100 ml-1" (click)="backToDashboard()"><i class="fa fa-arrow-left"
+			aria-hidden="true"></i>Dashboard</button>
 </div>
 
 <ng-template #loading>
 	Lade Wettbewerb... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
 </ng-template>
-

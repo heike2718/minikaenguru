@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.ChangeUserCommand;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
@@ -29,6 +28,7 @@ import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.veranstalter.DeleteVeranstalterFailed;
 import de.egladil.web.mk_gateway.domain.veranstalter.SynchronizeVeranstalterFailed;
 import de.egladil.web.mk_gateway.domain.veranstalter.SynchronizeVeranstalterService;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.ChangeUserCommand;
 import de.egladil.web.mk_gateway.infrastructure.messaging.HandshakeAck;
 import de.egladil.web.mk_gateway.infrastructure.messaging.LoescheVeranstalterCommand;
 import de.egladil.web.mk_gateway.infrastructure.messaging.SyncHandshake;

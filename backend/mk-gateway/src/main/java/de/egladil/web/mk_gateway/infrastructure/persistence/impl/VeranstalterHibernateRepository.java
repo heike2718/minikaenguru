@@ -21,13 +21,14 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.veranstalter.Lehrer;
 import de.egladil.web.mk_gateway.domain.veranstalter.Person;
 import de.egladil.web.mk_gateway.domain.veranstalter.Privatveranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.VeranstalterSuchanfrage;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterVeranstalter;
+import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterVeranstalterVeranstalterMapper;
 
 /**
  * VeranstalterHibernateRepository
@@ -37,8 +38,21 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VeranstalterHibernateRepository.class);
 
+	private final PersistenterVeranstalterVeranstalterMapper mapper = new PersistenterVeranstalterVeranstalterMapper();
+
 	@Inject
 	EntityManager em;
+
+	/**
+	 * @param  entityManager
+	 * @return
+	 */
+	public static VeranstalterHibernateRepository createForIntegrationTest(final EntityManager entityManager) {
+
+		VeranstalterHibernateRepository result = new VeranstalterHibernateRepository();
+		result.em = entityManager;
+		return result;
+	}
 
 	@Override
 	public Optional<Veranstalter> ofId(final Identifier identifier) {
@@ -154,26 +168,6 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 		return persistenterVeranstalter;
 	}
 
-	Veranstalter mapFromPersistenterVeranstalter(final PersistenterVeranstalter persistenter) {
-
-		Person person = new Person(persistenter.getUuid(), persistenter.getFullName()).withEmail(persistenter.getEmail());
-		List<Identifier> teilnahmenummern = Arrays.stream(persistenter.getTeilnahmenummern().split(",")).map(n -> new Identifier(n))
-			.collect(Collectors.toList());
-
-		switch (persistenter.getRolle()) {
-
-		case PRIVAT:
-			return new Privatveranstalter(person, persistenter.isNewsletterEmpfaenger(), teilnahmenummern);
-
-		case LEHRER:
-			return new Lehrer(person, persistenter.isNewsletterEmpfaenger(), teilnahmenummern);
-
-		default:
-			throw new MkGatewayRuntimeException("unerwartete Rolle " + persistenter.getRolle());
-		}
-
-	}
-
 	@Override
 	@Transactional
 	public void changeVeranstalter(final Veranstalter veranstalter) throws IllegalStateException {
@@ -206,17 +200,6 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 	}
 
 	@Override
-	public List<Veranstalter> loadPrivatveranstalter() {
-
-		String stmt = "select v from PersistenterVeranstalter v where v.rolle = :rolle";
-
-		List<PersistenterVeranstalter> trefferliste = em.createQuery(stmt, PersistenterVeranstalter.class)
-			.setParameter("rolle", Rolle.PRIVAT).getResultList();
-
-		return trefferliste.stream().map(pv -> mapFromPersistenterVeranstalter(pv)).collect(Collectors.toList());
-	}
-
-	@Override
 	public void removeVeranstalter(final Veranstalter veranstalter) {
 
 		PersistenterVeranstalter persistenterVeranstalter = em.find(PersistenterVeranstalter.class, veranstalter.person().uuid());
@@ -226,4 +209,40 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 			em.remove(persistenterVeranstalter);
 		}
 	}
+
+	@Override
+	public List<Veranstalter> findVeranstalter(final VeranstalterSuchanfrage suchanfrage) {
+
+		TypedQuery<PersistenterVeranstalter> query = null;
+
+		switch (suchanfrage.getSuchkriterium()) {
+
+		case EMAIL:
+			query = em.createNamedQuery(PersistenterVeranstalter.FIND_BY_PARTIAL_EMAIL_QUERY, PersistenterVeranstalter.class);
+			break;
+
+		case NAME:
+			query = em.createNamedQuery(PersistenterVeranstalter.FIND_BY_PARTIAL_NAME_QUERY, PersistenterVeranstalter.class);
+			break;
+
+		case TEILNAHMENUMMER:
+			query = em.createNamedQuery(PersistenterVeranstalter.FIND_BY_TEILNAHMENUMMER_QUERY, PersistenterVeranstalter.class);
+			break;
+
+		case UUID:
+			query = em.createNamedQuery(PersistenterVeranstalter.FIND_BY_PARTIAL_UUID_QUERY, PersistenterVeranstalter.class);
+			break;
+
+		default:
+			LOG.error("Unbekanntes Suchkriterium: geben leere Liste zurueck");
+			return new ArrayList<>();
+		}
+
+		String value = "%" + suchanfrage.getSuchstring().trim().toLowerCase() + "%";
+
+		List<PersistenterVeranstalter> trefferliste = query.setParameter("suchstring", value).getResultList();
+
+		return trefferliste.stream().map(pv -> mapper.apply(pv)).collect(Collectors.toList());
+	}
+
 }

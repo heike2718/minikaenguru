@@ -6,9 +6,9 @@ package de.egladil.web.mk_gateway.domain.adv;
 
 import org.apache.commons.lang3.StringUtils;
 
-import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.VertragAdvAPIModel;
 import de.egladil.web.mk_gateway.domain.error.ImmutableObjectException;
 import de.egladil.web.mk_gateway.domain.semantik.ValueObject;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.VertragAdvAPIModel;
 
 /**
  * Anschrift

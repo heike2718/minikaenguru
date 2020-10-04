@@ -20,8 +20,8 @@ import javax.ws.rs.core.Response;
 import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.annotations.LandKuerzel;
 import de.egladil.web.commons_validation.annotations.StringLatin;
-import de.egladil.web.mk_gateway.domain.apimodel.kataloge.SchulkatalogAntrag;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
+import de.egladil.web.mk_gateway.domain.kataloge.api.SchulkatalogAntrag;
 
 /**
  * PublicKatalogsucheResource

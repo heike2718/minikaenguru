@@ -14,15 +14,15 @@ import javax.inject.Inject;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.adv.VertragAuftragsdatenverarbeitung;
 import de.egladil.web.mk_gateway.domain.adv.VertragAuftragsverarbeitungRepository;
-import de.egladil.web.mk_gateway.domain.apimodel.teilnahmen.SchulteilnahmeAPIModel;
-import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.SchuleDetails;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.SchulteilnahmeAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.Person;
 import de.egladil.web.mk_gateway.domain.veranstalter.SchulkollegienRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.Schulkollegium;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleDetails;
 
 /**
  * SchuleDetailsService

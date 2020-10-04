@@ -57,8 +57,4 @@ export class AktuelleMeldungFacade {
 		);
 
 	}
-
-	public resetState(): void {
-		this.appStore.dispatch(AktuelleMeldungActions.aktuelleMeldungReset());
-	}
 }

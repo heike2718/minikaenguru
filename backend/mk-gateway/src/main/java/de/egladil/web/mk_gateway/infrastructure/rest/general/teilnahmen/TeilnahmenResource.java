@@ -20,8 +20,8 @@ import javax.ws.rs.core.SecurityContext;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_gateway.domain.apimodel.teilnahmen.AnonymisierteTeilnahmeAPIModel;
 import de.egladil.web.mk_gateway.domain.statistik.AnonymisierteTeilnahmenService;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.AnonymisierteTeilnahmeAPIModel;
 
 /**
  * TeilnahmenResource

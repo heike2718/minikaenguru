@@ -14,20 +14,20 @@ export class LaenderListResolver implements Resolve<any> {
 
 	constructor(private store: Store<AppState>, private katalogFacade: KatalogpflegeFacade) { }
 
-	resolve(route: ActivatedRouteSnapshot,
+	resolve(_route: ActivatedRouteSnapshot,
 		_state: RouterStateSnapshot): Observable<any> {
 
 	   return this.store.pipe(
 		   select(laender),
-		   tap(laender => {
-			   if (laender.length === 0) {
+		   tap(theLaender => {
+			   if (theLaender.length === 0) {
 				   if (!this.loading) {
 					   this.loading = true;
 					   this.katalogFacade.ladeLaender();
 				   }
 			   }
 		   }),
-		   filter(laender => laender.length > 0),
+		   filter(theLaender => theLaender.length > 0),
 		   first(),
 		   finalize(() => this.loading = false)
 	   );
