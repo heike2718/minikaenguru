@@ -23,8 +23,6 @@ export class VeranstalterFacade {
 	public selectedVeranstalter$: Observable<Veranstalter> = this.store.select(VeranstalterSelectors.selectedVeranstalter);
 
 
-	private veranstalterSubscription: Subscription;
-
 	private loadedVeranstalter: Veranstalter[];
 
 	constructor(private veranstalterService: VeranstalterService,
@@ -34,7 +32,7 @@ export class VeranstalterFacade {
 		private errorService: GlobalErrorHandlerService,
 	) {
 
-		this.veranstalterSubscription = this.veranstalters$.subscribe(
+		this.veranstalters$.subscribe(
 			alleVeranstalter => {
 				this.loadedVeranstalter = alleVeranstalter;
 			}

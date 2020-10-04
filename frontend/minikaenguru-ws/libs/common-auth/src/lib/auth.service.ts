@@ -10,7 +10,7 @@ import { AuthResult, STORAGE_KEY_DEV_SESSION_ID, STORAGE_KEY_SESSION_EXPIRES_AT,
 import { AuthState } from './+state/auth.reducer';
 import { login, logout, refreshSession, startLoggingOut } from './+state/auth.actions';
 import { Router } from '@angular/router';
-import { user, isLoggedIn, isLoggedOut } from './+state/auth.selectors';
+import { user, isLoggedIn, isLoggedOut, onLoggingOut } from './+state/auth.selectors';
 const moment = moment_;
 
 @Injectable({
@@ -21,6 +21,7 @@ export class AuthService {
 	public user$ = this.store.select(user);
 	isLoggedIn$ = this.store.select(isLoggedIn);
 	isLoggedOut$ = this.store.select(isLoggedOut);
+	onLoggingOut$ = this.store.select(onLoggingOut);
 
 	sessionUrl: string;
 

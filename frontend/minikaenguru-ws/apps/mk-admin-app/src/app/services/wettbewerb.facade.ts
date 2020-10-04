@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
 import { ResponsePayload, MessageService, Message } from '@minikaenguru-ws/common-messages';
@@ -13,6 +13,7 @@ import { wettbewerbe, selectedWettbewerb, wettbewerbEditorModel, saveOutcome } f
 import { Router } from '@angular/router';
 
 import * as WettbewerbActions from '../wettbewerbe/+state/wettbewerbe.actions';
+import { AuthService } from '@minikaenguru-ws/common-auth';
 
 @Injectable({
 	providedIn: 'root'
@@ -24,12 +25,19 @@ export class WettbewerbFacade {
 	public wettbewerbEditorModel$: Observable<WettbewerbEditorModel> = this.store.select(wettbewerbEditorModel);
 	public saveOutcome$: Observable<Message> = this.store.select(saveOutcome);
 
+	private loggingOut: boolean;
+
 	constructor(private http: HttpClient,
+		private authService: AuthService,
 		private store: Store<AppState>,
 		private router: Router,
 		private logger: LogService,
 		private errorService: GlobalErrorHandlerService,
 		private messageService: MessageService) {
+
+		this.authService.onLoggingOut$.subscribe(
+			loggingOut => this.loggingOut = loggingOut
+		);
 	}
 
 	public createNewWettbewerb(): void {
@@ -50,6 +58,10 @@ export class WettbewerbFacade {
 
 	public loadWettbewerbe(): Observable<Wettbewerb[]> {
 
+		if (this.loggingOut) {
+			return of([]);
+		}
+
 		const url = environment.apiUrl + '/wettbewerbe';
 
 		this.logger.debug(url);
@@ -61,6 +73,11 @@ export class WettbewerbFacade {
 	}
 
 	public loadWettbewerbDetails(jahr: number): Observable<Wettbewerb> {
+
+		if (this.loggingOut) {
+			return of(undefined);
+		}
+
 
 		const url = environment.apiUrl + '/wettbewerbe/wettbewerb/' + jahr;
 

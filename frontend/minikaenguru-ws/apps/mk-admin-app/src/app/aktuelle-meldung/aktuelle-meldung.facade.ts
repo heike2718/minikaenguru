@@ -7,6 +7,7 @@ import { aktuelleMeldung, aktuelleMeldungGeladen, habenAktuelleMeldung } from '.
 import * as AktuelleMeldungActions from './+state/aktuelle-meldung.actions';
 import { AktuelleMeldung } from './aktuelle-meldung.model';
 import { ResponsePayload, MessageService } from '@minikaenguru-ws/common-messages';
+import { AuthService } from '@minikaenguru-ws/common-auth';
 
 @Injectable({ providedIn: 'root' })
 export class AktuelleMeldungFacade {
@@ -15,15 +16,26 @@ export class AktuelleMeldungFacade {
 	public aktuelleMeldungGeladen$ = this.appStore.select(aktuelleMeldungGeladen);
 	public aktuelleMeldungNichtLeer$ = this.appStore.select(habenAktuelleMeldung);
 
+	private loggingOut: boolean;
+
 	constructor(private appStore: Store<AppState>,
+		private authService: AuthService,
 		private aktuelleMeldungService: AktuelleMeldungService,
 		private messageService: MessageService,
 		private errorHandler: GlobalErrorHandlerService) {
+
+			this.authService.onLoggingOut$.subscribe(
+				loggingOut => this.loggingOut = loggingOut
+			);
 
 	}
 
 
 	public ladeAktuelleMeldung(): void {
+
+		if (this.loggingOut) {
+			return;
+		}
 
 		this.aktuelleMeldungService.loadAktuelleMeldung().subscribe(
 
