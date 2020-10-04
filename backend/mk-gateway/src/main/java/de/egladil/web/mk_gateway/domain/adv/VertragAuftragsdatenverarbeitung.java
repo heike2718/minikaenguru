@@ -5,8 +5,8 @@
 package de.egladil.web.mk_gateway.domain.adv;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.VertragAdvAPIModel;
 import de.egladil.web.mk_gateway.domain.semantik.Aggregate;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.VertragAdvAPIModel;
 
 /**
  * VertragAuftragsdatenverarbeitung

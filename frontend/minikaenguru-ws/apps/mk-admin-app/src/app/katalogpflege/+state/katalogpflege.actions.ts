@@ -4,7 +4,7 @@ import { SchuleEditorModel } from './katalogpflege.reducer';
 
 
 export const resetKataloge = createAction(
-	'[NavbarComponent] login'
+	'[NavbarComponent] - kataloge login/logout'
 );
 
 export const selectKatalogTyp = createAction(

@@ -1,4 +1,4 @@
-<div class="container container-fluid ml-3 mt-5 mkv-bordered">
+<div class="container container-fluid ml-3 mt-5 mt-1">
 	<div class="row mt-2 ml-2">
 		<div class="col-12">
 			<h2>Schulkatalogantrag</h2>
@@ -83,7 +83,8 @@
 					</div>
 					<div *ngIf="!showInfoLand" class="col-2">
 						<button type="button" class="btn btn-primary" data-placement="bottom"
-							title="Bitte in der BRD das Bundesland eintragen - mehr Information" (click)="toggleInfoLand()">
+							title="Bitte in der BRD das Bundesland eintragen - mehr Information"
+							(click)="toggleInfoLand()">
 							<i class="fa fa-info" aria-hidden="true"></i> Info
 						</button>
 					</div>
@@ -135,14 +136,10 @@
 				</div>
 			</div>
 
-			<div class="row">
-				<div class="col-sm-12 col-md-6">
-					<button type="button" [disabled]="!antragForm.valid || submitDisabled"
-						class="btn btn-primary btn-block" (click)="submitForm()">senden</button>
-				</div>
-				<div class="col-sm-12 col-md-6">
-					<button type="button" class="btn btn-primary btn-block" (click)="cancel()">abbrechen</button>
-				</div>
+			<div class="btn-group d-flex" role="group">
+				<button type="button" [disabled]="!antragForm.valid || submitDisabled" class="btn btn-primary w-100 ml-1"
+					(click)="submitForm()">senden</button>
+				<button type="button" class="btn btn-primary w-100 ml-1" (click)="cancel()">abbrechen</button>
 			</div>
 		</form>
 	</div>

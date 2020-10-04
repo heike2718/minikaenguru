@@ -22,11 +22,33 @@ import de.egladil.web.mk_gateway.domain.veranstalter.ZugangUnterlagen;
  */
 @Entity
 @Table(name = "VERANSTALTER")
-@NamedQueries(@NamedQuery(
-	name = "VERANSTALTER.FIND_BY_UUID", query = "select v from PersistenterVeranstalter v where v.uuid = :uuid"))
+@NamedQueries({
+	@NamedQuery(
+		name = "PersistenterVeranstalter.FIND_BY_UUID", query = "select v from PersistenterVeranstalter v where v.uuid = :uuid"),
+	@NamedQuery(
+		name = "PersistenterVeranstalter.FIND_BY_PARTIAL_UUID",
+		query = "select v from PersistenterVeranstalter v where v.uuid like :suchstring"),
+	@NamedQuery(
+		name = "PersistenterVeranstalter.FIND_BY_PARTIAL_NAME",
+		query = "select v from PersistenterVeranstalter v where lower(v.fullName) like :suchstring"),
+	@NamedQuery(
+		name = "PersistenterVeranstalter.FIND_BY_PARTIAL_EMAIL",
+		query = "select v from PersistenterVeranstalter v where lower(v.email) like :suchstring"),
+	@NamedQuery(
+		name = "PersistenterVeranstalter.FIND_BY_TEILNAHMENUMMER",
+		query = "select v from PersistenterVeranstalter v where lower(v.teilnahmenummern) like :suchstring"),
+})
 public class PersistenterVeranstalter extends ConcurrencySafeEntity {
 
-	public static final String FIND_BY_UUID_QUERY = "VERANSTALTER.FIND_BY_UUID";
+	public static final String FIND_BY_UUID_QUERY = "PersistenterVeranstalter.FIND_BY_UUID";
+
+	public static final String FIND_BY_PARTIAL_UUID_QUERY = "PersistenterVeranstalter.FIND_BY_PARTIAL_UUID";
+
+	public static final String FIND_BY_PARTIAL_NAME_QUERY = "PersistenterVeranstalter.FIND_BY_PARTIAL_NAME";
+
+	public static final String FIND_BY_PARTIAL_EMAIL_QUERY = "PersistenterVeranstalter.FIND_BY_PARTIAL_EMAIL";
+
+	public static final String FIND_BY_TEILNAHMENUMMER_QUERY = "PersistenterVeranstalter.FIND_BY_TEILNAHMENUMMER";
 
 	@Column(name = "ROLLE")
 	@Enumerated(EnumType.STRING)

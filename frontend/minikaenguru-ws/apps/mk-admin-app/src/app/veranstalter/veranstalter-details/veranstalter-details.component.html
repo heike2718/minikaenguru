@@ -1,0 +1,46 @@
+<div class="mkv-container mt-1">
+
+	<div *ngIf="(selectedVeranstalter$ | async) as veranstalter">
+		<ng-container *ngIf="veranstalter !== undefined else loading">
+
+			<h3>{{veranstalter.fullName}} - {{veranstalter.rolle}}</h3>
+
+			<div class="row">
+				<div class="col-sm-12 col-md-3">UUID:</div>
+				<div class="col-sm-12 col-md-9">{{veranstalter.uuid}}</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12 col-md-3">Name:</div>
+				<div class="col-sm-12 col-md-9">{{veranstalter.fullName}}</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12 col-md-3">Email:</div>
+				<div class="col-sm-12 col-md-9">{{veranstalter.email}}</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12 col-md-3">Zugang Unterlagen:</div>
+				<div class="col-sm-12 col-md-9">{{veranstalter.zugangsstatusUnterlagen}}</div>
+			</div>
+			<div class="row">
+				<div *ngIf="veranstalter.rolle==='LEHRER'" class="col-sm-12 col-md-3">Schulen:</div>
+				<div *ngIf="veranstalter.rolle==='PRIVAT'" class="col-sm-12 col-md-3">Teilnahmenummer:</div>
+				<div class="col-sm-12 col-md-9">{{teilnahmenummernAsString}}</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-12 col-md-3">Teilnahmen:</div>
+			</div>
+			<div class="btn-group d-flex" role="group">
+				<ng-container *ngFor="let teilnahmenummer of veranstalter.teilnahmenummern">
+					<button type="submit" class="btn btn-link w-100 ml-1" (click)="gotoTeilnahmen(teilnahmenummer)"
+						title="Teilnhahmen laden">{{teilnahmenummer}}</button>
+				</ng-container>
+			</div>
+		</ng-container>
+	</div>
+</div>
+
+<ng-template #loading>
+	<h3>Veranstalter</h3>
+	Lade Details... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
+</ng-template>

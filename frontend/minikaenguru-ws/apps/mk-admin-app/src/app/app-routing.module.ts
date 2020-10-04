@@ -6,6 +6,7 @@ import { LandingComponent } from './landing/landing.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AuthGuardService } from './infrastructure/auth-guard.service';
 import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
+import { IrgendwasListComponent } from './layouttests/irgendwas-list/irgendwas-list.component';
 
 
 const routes: Routes = [
@@ -15,6 +16,8 @@ const routes: Routes = [
 	{ path: 'aktuelle-meldung', loadChildren: () => import('./aktuelle-meldung/aktuelle-meldung.module').then(m => m.AktuelleMeldungModule) },
 	{ path: 'wettbewerbe', loadChildren: () => import('./wettbewerbe/wettbewerbe.module').then(m => m.WettbewerbeModule) },
 	{ path: 'katalogpflege', loadChildren: () => import('./katalogpflege/katalogpflege.module').then(m => m.KatalogpflegeModule) },
+	{ path: 'veranstalter', loadChildren: () => import('./veranstalter/veranstalter.module').then(m => m.VeranstalterModule) },
+	{ path: 'irgendwas', pathMatch: 'full', component: IrgendwasListComponent },
 	{ path: '', pathMatch: 'full', component: LandingComponent },
 	{ path: '**', component: NotFoundComponent },
 ];

@@ -33,6 +33,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { KatalogpflegeModule } from './katalogpflege/katalogpflege.module';
 import { AktuelleMeldungModule } from './aktuelle-meldung/aktuelle-meldung.module';
+import { VeranstalterModule } from './veranstalter/veranstalter.module';
+import { LayouttestsModule } from './layouttests/layouttests.module';
 
 registerLocaleData(localeDe);
 
@@ -84,6 +86,8 @@ registerLocaleData(localeDe);
 		AktuelleMeldungModule,
 		WettbewerbeModule,
 		KatalogpflegeModule,
+		VeranstalterModule,
+		LayouttestsModule,
 		AppRoutingModule, // <-- immer am Ende, damit die wildcard-route als letzte deklariert bleibt
 	],
 	providers: [

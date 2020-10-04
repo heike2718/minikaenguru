@@ -224,6 +224,18 @@ public class PermittedRolesInMemoryRepositoryTest {
 	class AdminAPITest {
 
 		@Test
+		void should_permittedRollen_sucheVeranstalter_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/admin/veranstalter/suche", HttpMethod.POST);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.ADMIN));
+
+		}
+
+		@Test
 		void should_permittedRollen_getWettbewerbe_beOk() {
 
 			// Act

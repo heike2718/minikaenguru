@@ -18,8 +18,8 @@ import de.egladil.web.mk_gateway.domain.adv.AdvService;
 import de.egladil.web.mk_gateway.domain.adv.PostleitzahlLand;
 import de.egladil.web.mk_gateway.domain.adv.VertragAuftragsdatenverarbeitung;
 import de.egladil.web.mk_gateway.domain.adv.Vertragstext;
-import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.SchuleAPIModel;
-import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.VertragAdvAPIModel;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.VertragAdvAPIModel;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterVertragAdv;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterVertragAdvText;
 

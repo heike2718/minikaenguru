@@ -26,7 +26,7 @@ export class DashboardComponent implements OnInit {
 	}
 
 	gotoVeranstalter() {
-		console.log('zu Veranstalter navigieren');
+		this.router.navigateByUrl('/veranstalter');
 	}
 
 	gotoKataloge() {

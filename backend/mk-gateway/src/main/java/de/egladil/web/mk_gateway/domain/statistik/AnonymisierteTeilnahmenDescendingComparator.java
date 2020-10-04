@@ -6,7 +6,7 @@ package de.egladil.web.mk_gateway.domain.statistik;
 
 import java.util.Comparator;
 
-import de.egladil.web.mk_gateway.domain.apimodel.teilnahmen.AnonymisierteTeilnahmeAPIModel;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.AnonymisierteTeilnahmeAPIModel;
 
 /**
  * AnonymisierteTeilnahmenDescendingComparator

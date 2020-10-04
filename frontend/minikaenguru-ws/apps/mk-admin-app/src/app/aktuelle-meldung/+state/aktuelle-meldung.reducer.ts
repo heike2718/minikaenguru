@@ -41,7 +41,7 @@ const aktuelleMeldungReducer = createReducer(initialAktuelleMeldungState,
 		return { ...state, aktuelleMeldung: meldung, aktuelleMeldungLoaded: true, aktuelleMeldungNotEmpty: false }
 	}),
 
-	on(AktuelleMeldungActions.aktuelleMeldungReset, (_state, _action) => {
+	on(AktuelleMeldungActions.resetAktuelleMeldung, (_state, _action) => {
 
 		return initialAktuelleMeldungState;
 	})
