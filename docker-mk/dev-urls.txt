@@ -4,6 +4,9 @@
 
 https://mathe-jung-alt.de/mkv/
 
+https://mathe-jung-alt.de/mk-gateway/open-data/statistik/2020/pdf
+https://mathe-jung-alt.de/mk-gateway/open-data/statistik/2020/mediane
+
 
 mk-gateway
 
@@ -38,6 +41,9 @@ http://192.168.10.176:9510/mk-gateway/wb-admin/kataloge/schulen  PUT
 
 
 curl -X GET -H 'Accept: application/json' -H 'X-SESSIONID: MGdwVkJGWTB0ZnZVSHVSZU1ZbjdHdz09' -i 'http://192.168.10.176:9510/mk-gateway/teilnahmen/AUFNUR0WEG'
+
+
+VeranstalterSuchanfrage {"suchkriterium":"EMAIL","suchstring":"hallo"}
 
 
 ========================================

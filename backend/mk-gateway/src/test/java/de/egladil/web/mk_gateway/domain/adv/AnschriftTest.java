@@ -12,8 +12,8 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
-import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.SchuleAPIModel;
-import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.VertragAdvAPIModel;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.VertragAdvAPIModel;
 
 /**
  * AnschriftTest

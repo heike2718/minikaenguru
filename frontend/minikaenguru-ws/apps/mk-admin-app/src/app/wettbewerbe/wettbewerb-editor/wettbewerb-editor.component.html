@@ -1,4 +1,4 @@
-<div *ngIf="(wettbewerbEditorModel$ | async) as wettbewerb" class="mkv-container mkv-bordered">
+<div *ngIf="(wettbewerbEditorModel$ | async) as wettbewerb" class="mkv-container mt-1">
 
 	<h2>Wettbewerb Editor</h2>
 
@@ -12,8 +12,8 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					<input [class.error]="jahrFormControl.touched && !jahrFormControl.valid" class="form-control" type="text" id="jahrInput" placeholder="Jahr"
-						formControlName="jahr" autocomplete="true">
+					<input [class.error]="jahrFormControl.touched && !jahrFormControl.valid" class="form-control"
+						type="text" id="jahrInput" placeholder="Jahr" formControlName="jahr" autocomplete="true">
 				</div>
 			</div>
 
@@ -24,8 +24,8 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					<input  [class.error]="statusFormControl.touched && !statusFormControl.valid" class="form-control" type="text" id="statusInput" placeholder="Status"
-						formControlName="status" autocomplete="true">
+					<input [class.error]="statusFormControl.touched && !statusFormControl.valid" class="form-control"
+						type="text" id="statusInput" placeholder="Status" formControlName="status" autocomplete="true">
 				</div>
 			</div>
 
@@ -36,7 +36,8 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					<input  [class.error]="wettbewerbsbeginnFormControl.touched && !wettbewerbsbeginnFormControl.valid" class="form-control" type="text" id="wettbewerbsbeginnInput" placeholder="Beginn"
+					<input [class.error]="wettbewerbsbeginnFormControl.touched && !wettbewerbsbeginnFormControl.valid"
+						class="form-control" type="text" id="wettbewerbsbeginnInput" placeholder="Beginn"
 						formControlName="wettbewerbsbeginn" autocomplete="true">
 				</div>
 			</div>
@@ -48,7 +49,8 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					<input  [class.error]="wettbewerbsendeFormControl.touched && !wettbewerbsendeFormControl.valid" class="form-control" type="text" id="wettbewerbsendeInput" placeholder="Ende"
+					<input [class.error]="wettbewerbsendeFormControl.touched && !wettbewerbsendeFormControl.valid"
+						class="form-control" type="text" id="wettbewerbsendeInput" placeholder="Ende"
 						formControlName="wettbewerbsende" autocomplete="true">
 				</div>
 			</div>
@@ -60,8 +62,11 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					<input  [class.error]="datumFreischaltungLehrerFormControl.touched && !datumFreischaltungLehrerFormControl.valid" class="form-control" type="text" id="datumFreischaltungLehrerInput" placeholder="Freischaltung Lehrer"
-						formControlName="datumFreischaltungLehrer" autocomplete="true">
+					<input
+						[class.error]="datumFreischaltungLehrerFormControl.touched && !datumFreischaltungLehrerFormControl.valid"
+						class="form-control" type="text" id="datumFreischaltungLehrerInput"
+						placeholder="Freischaltung Lehrer" formControlName="datumFreischaltungLehrer"
+						autocomplete="true">
 				</div>
 			</div>
 
@@ -72,8 +77,11 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					<input  [class.error]="datumFreischaltungPrivatFormControl.touched && !datumFreischaltungPrivatFormControl.valid" class="form-control" type="text" id="datumFreischaltungPrivatInput" placeholder="Freischaltung privat"
-						formControlName="datumFreischaltungPrivat" autocomplete="true">
+					<input
+						[class.error]="datumFreischaltungPrivatFormControl.touched && !datumFreischaltungPrivatFormControl.valid"
+						class="form-control" type="text" id="datumFreischaltungPrivatInput"
+						placeholder="Freischaltung privat" formControlName="datumFreischaltungPrivat"
+						autocomplete="true">
 				</div>
 			</div>
 
@@ -84,8 +92,11 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					<input [class.error]="loesungsbuchstabenIkidsFormControl.touched && !loesungsbuchstabenIkidsFormControl.valid" class="form-control" type="text" id="loesungIKIDsInput" placeholder="Lösungsbuchstaben Inklusionskinder"
-						formControlName="loesungsbuchstabenIkids" autocomplete="true">
+					<input
+						[class.error]="loesungsbuchstabenIkidsFormControl.touched && !loesungsbuchstabenIkidsFormControl.valid"
+						class="form-control" type="text" id="loesungIKIDsInput"
+						placeholder="Lösungsbuchstaben Inklusionskinder" formControlName="loesungsbuchstabenIkids"
+						autocomplete="true">
 				</div>
 			</div>
 
@@ -96,8 +107,11 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					<input [class.error]="loesungsbuchstabenKlasse1FormControl.touched && !loesungsbuchstabenKlasse1FormControl.valid" class="form-control" type="text" id="loesungKlasse1Input" placeholder="Lösungsbuchstaben Klasse 1"
-						formControlName="loesungsbuchstabenKlasse1" autocomplete="true">
+					<input
+						[class.error]="loesungsbuchstabenKlasse1FormControl.touched && !loesungsbuchstabenKlasse1FormControl.valid"
+						class="form-control" type="text" id="loesungKlasse1Input"
+						placeholder="Lösungsbuchstaben Klasse 1" formControlName="loesungsbuchstabenKlasse1"
+						autocomplete="true">
 				</div>
 			</div>
 
@@ -108,8 +122,11 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					<input [class.error]="loesungsbuchstabenKlasse2FormControl.touched && !loesungsbuchstabenKlasse2FormControl.valid" class="form-control" type="text" id="loesungKlasse2Input" placeholder="Lösungsbuchstaben Klasse 2"
-						formControlName="loesungsbuchstabenKlasse2" autocomplete="true">
+					<input
+						[class.error]="loesungsbuchstabenKlasse2FormControl.touched && !loesungsbuchstabenKlasse2FormControl.valid"
+						class="form-control" type="text" id="loesungKlasse2Input"
+						placeholder="Lösungsbuchstaben Klasse 2" formControlName="loesungsbuchstabenKlasse2"
+						autocomplete="true">
 				</div>
 			</div>
 
@@ -129,19 +146,15 @@
 		</p>
 
 	</div>
-	<div class="row mt-4 ml-2">
-		<div class="col-md-4 mt-4">
-			<button class="btn btn-primary" [disabled]="!wettbewerbForm.valid" (click)="onSubmit()"><i
-					class="fa fa-floppy-o" aria-hidden="true"></i>
-				speichern</button>
-		</div>
-		<div class="col-md-4 mt-4">
-			<button class="btn btn-primary" (click)="onCancel()"><i class="fa fa-undo"
-					aria-hidden="true"></i>zurücksetzen</button>
-		</div>
-		<div class="col-md-4 mt-4">
-			<button class="btn btn-primary" (click)="gotoWettbewerbe()"><i class="fa fa-arrow-left"
-					aria-hidden="true"></i>Wettbewerbe</button>
-		</div>
+	<div class="btn-group d-flex" role="group">
+		<button class="btn btn-primary w-100 ml-1" [disabled]="!wettbewerbForm.valid" (click)="onSubmit()"><i
+				class="fa fa-floppy-o" aria-hidden="true"></i>
+			speichern</button>
+
+		<button class="btn btn-primary w-100 ml-1" (click)="onCancel()"><i class="fa fa-undo"
+				aria-hidden="true"></i>zurücksetzen</button>
+
+		<button class="btn btn-primary w-100 ml-1" (click)="gotoWettbewerbe()"><i class="fa fa-arrow-left"
+				aria-hidden="true"></i>Wettbewerbe</button>
 	</div>
 </div>

@@ -16,8 +16,8 @@ export const aktuelleMeldungGeloescht = createAction(
 	'[AktuelleMeldungFacade] aktuelleMeldungLoeschen'
 );
 
-export const aktuelleMeldungReset = createAction(
-	'[AktuelleMeldungFacade] aktuelleMeldungLoeschen'
+export const resetAktuelleMeldung = createAction(
+	'[NavbarComponent] - aktMeldung login/logout'
 );
 
 

@@ -10,8 +10,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
-import de.egladil.web.mk_gateway.domain.apimodel.veranstalter.ChangeUserCommand;
 import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.ChangeUserCommand;
 
 /**
  * SynchronizeVeranstalterFailed

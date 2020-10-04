@@ -9,12 +9,13 @@
 		</div>
 		<div *ngIf="katalogItem.parent && katalogItem.parent.parent" class="card-subtitle mb-2 text-muted col-12">
 		{{katalogItem.parent.parent.name}} ({{katalogItem.parent.parent.kuerzel}}) <span class="ml-1 badge badge-dark">{{katalogItem.parent.parent.anzahlKinder}}</span></div>
-		<div class="row">
-			<div class="col-6">
-				<button class="btn btn-outline-dark btn-block" (click)="editItem()">ändern</button>
-			</div>
-			<div *ngIf="katalogItem.typ !== 'SCHULE'" class="col-6">
-				<button class="btn btn-outline-dark btn-block" (click)="openOrSearchChilds()">{{sucheBtnText}}</button>
+
+		<div class="btn-group d-flex" role="group">
+
+			<button class="btn btn-outline-dark w-100 ml-1" (click)="editItem()">ändern</button>
+
+			<div *ngIf="katalogItem.typ !== 'SCHULE'">
+				<button class="btn btn-outline-dark w-100 ml-1" (click)="openOrSearchChilds()">{{sucheBtnText}}</button>
 			</div>
 		</div>
 	</div>

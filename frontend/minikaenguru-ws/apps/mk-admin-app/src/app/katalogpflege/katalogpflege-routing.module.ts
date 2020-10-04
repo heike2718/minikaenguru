@@ -1,7 +1,7 @@
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuardService } from '../infrastructure/auth-guard.service';
-import { KatalogpflegeComponent } from './katalogpflege.component';
 import { NgModule } from '@angular/core';
+import { KatalogpflegeComponent } from './katalogpflege.component';
 import { EditOrtComponent } from './orte/edit-ort/edit-ort.component';
 import { EditLandComponent } from './laender/edit-land/edit-land.component';
 import { EditSchuleComponent } from './schulen/edit-schule/edit-schule.component';

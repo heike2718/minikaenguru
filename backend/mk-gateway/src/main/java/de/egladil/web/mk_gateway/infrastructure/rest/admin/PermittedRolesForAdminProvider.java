@@ -29,6 +29,7 @@ public final class PermittedRolesForAdminProvider {
 
 		addPathsAndMethodsForWettbewerb(result);
 		addPathsAndMethodsForKataloge(result);
+		addPathsAndMethodsForVeranstalter(result);
 
 		return result;
 
@@ -155,4 +156,16 @@ public final class PermittedRolesForAdminProvider {
 		}
 	}
 
+	/**
+	 * @param result
+	 */
+	private static void addPathsAndMethodsForVeranstalter(final Map<PathWithMethod, List<Rolle>> result) {
+
+		{
+
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			result.put(new PathWithMethod("/admin/veranstalter/suche", HttpMethod.POST), rollen);
+
+		}
+	}
 }

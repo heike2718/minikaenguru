@@ -114,10 +114,6 @@ export class VertragAdvComponent implements OnInit, OnDestroy {
 		this.vertragAdvFacade.submitVertrag(vertrag);
 	}
 
-	cancel(): void {
-		this.vertragAdvForm.patchValue(this.initialEditorModel);
-	}
-
 	gotoSchule(): void {
 		this.router.navigateByUrl('/lehrer/schule-dashboard/' + this.initialEditorModel.schulkuerzel);
 	}
