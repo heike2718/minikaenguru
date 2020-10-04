@@ -15,18 +15,37 @@ export class VeranstalterDetailsComponent implements OnInit, OnDestroy {
 
 	private veranstalterSubscription: Subscription;
 
+	teilnahmenummernAsString: string;
+
 	constructor(private router: Router, private veranstalterFacade: VeranstalterFacade) { }
 
 	ngOnInit(): void {
+
+		this.teilnahmenummernAsString = '';
 
 		this.veranstalterSubscription = this.selectedVeranstalter$.subscribe(
 			veranstalter => {
 				if (!veranstalter) {
 					this.router.navigateByUrl('/veranstalter');
+				} else {
+					this.teilnahmenummernAsString = this.getTeilnahmenummernAsString(veranstalter);
 				}
 			}
 		);
 
+	}
+
+	private getTeilnahmenummernAsString(veranstalter: Veranstalter): string {
+
+		let result = '';
+		veranstalter.teilnahmenummern.forEach(
+			t => {
+				result+=t;
+				result+= ' ';
+			}
+		);
+
+		return result;
 	}
 
 	ngOnDestroy(): void {
