@@ -21,13 +21,19 @@
 				<div class="col-sm-12 col-md-3">Zugang Unterlagen:</div>
 				<div class="col-sm-12 col-md-9">{{veranstalter.zugangsstatusUnterlagen}}</div>
 			</div>
+			<div class="row">
+				<div *ngIf="veranstalter.rolle==='LEHRER'" class="col-sm-12 col-md-3">Schulen:</div>
+				<div *ngIf="veranstalter.rolle==='PRIVAT'" class="col-sm-12 col-md-3">Teilnahmenummer:</div>
+				<div class="col-sm-12 col-md-9">{{teilnahmenummernAsString}}</div>
+			</div>
 
 			<div class="row">
 				<div class="col-sm-12 col-md-3">Teilnahmen:</div>
 			</div>
 			<div class="btn-group d-flex" role="group">
 				<ng-container *ngFor="let teilnahmenummer of veranstalter.teilnahmenummern">
-					<button type="submit" class="btn btn-dark w-100 ml-1" (click)="gotoTeilnahmen(teilnahmenummer)" title="Teilnhahmen laden">{{teilnahmenummer}}</button>
+					<button type="submit" class="btn btn-link w-100 ml-1" (click)="gotoTeilnahmen(teilnahmenummer)"
+						title="Teilnhahmen laden">{{teilnahmenummer}}</button>
 				</ng-container>
 			</div>
 		</ng-container>

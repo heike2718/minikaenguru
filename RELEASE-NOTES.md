@@ -1,5 +1,10 @@
 # authprovider Release Notes
 
+__Release 1.0.1__:
+
+* Veranstaltersuche in mk-admin-app mit Anzeige details
+* layout bei buttons verbessert
+
 __Release 1.0.0__:
 
 * [mkv-app: Statistik für eine Teilnahme generieren und anzeigen](https://github.com/heike2718/minikaenguru/issues/127)
