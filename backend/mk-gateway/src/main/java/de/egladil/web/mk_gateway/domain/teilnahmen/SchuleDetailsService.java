@@ -32,9 +32,6 @@ import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleDetails;
 public class SchuleDetailsService {
 
 	@Inject
-	SchulenOverviewService schulenOverviewService;
-
-	@Inject
 	AktuelleTeilnahmeService aktuelleTeilnahmeService;
 
 	@Inject
@@ -66,58 +63,64 @@ public class SchuleDetailsService {
 	 * Ermittelt die Details der gegeben Schule.
 	 *
 	 * @param  schuleID
-	 * @param  lehrerID
+	 *                               Identifier der Schule
+	 * @param  lehrerIdentifier
+	 *                               Identifier die UUID eines Lehrers. Kann null sein, wenn die Methode durch ADMIN-Resource
+	 *                               aufgerufen wird.
 	 * @return
 	 * @throws AccessDeniedException
 	 */
-	public SchuleDetails ermittleSchuldetails(final Identifier schuleID, final Identifier lehrerID) throws AccessDeniedException {
+	public SchuleDetails ermittleSchuldetails(final Identifier schuleID, final Identifier lehrerIdentifier) throws AccessDeniedException {
 
 		Optional<Schulkollegium> optKollegium = schulkollegienRepository.ofSchulkuerzel(schuleID);
 
-		SchuleDetails result = new SchuleDetails(schuleID.identifier());
+		SchuleDetails result = null;
 
 		if (optKollegium.isPresent()) {
 
+			result = new SchuleDetails(schuleID.identifier());
+
 			Schulkollegium kollegium = optKollegium.get();
 
-			List<Person> andere = kollegium.alleLehrerUnmodifiable().stream().filter(p -> !p.uuid().equals(lehrerID.identifier()))
+			List<Person> andere = kollegium.alleLehrerUnmodifiable().stream()
+				.filter(p -> lehrerIdentifier == null || !p.uuid().equals(lehrerIdentifier.identifier()))
 				.collect(Collectors.toList());
 
 			result.withKollegen(andere);
-		}
 
-		List<Teilnahme> teilnahmen = teilnahmenRepository.ofTeilnahmenummer(schuleID.identifier());
+			List<Teilnahme> teilnahmen = teilnahmenRepository.ofTeilnahmenummer(schuleID.identifier());
 
-		Optional<Teilnahme> optTeilnahme = aktuelleTeilnahmeService.aktuelleTeilnahme(teilnahmen);
+			Optional<Teilnahme> optTeilnahme = aktuelleTeilnahmeService.aktuelleTeilnahme(teilnahmen);
 
-		if (optTeilnahme.isPresent()) {
+			if (optTeilnahme.isPresent()) {
 
-			Teilnahme aktuelle = optTeilnahme.get();
+				Teilnahme aktuelle = optTeilnahme.get();
 
-			if (aktuelle.teilnahmeart() == Teilnahmeart.SCHULE) {
+				if (aktuelle.teilnahmeart() == Teilnahmeart.SCHULE) {
 
-				Schulteilnahme schulteilnahme = (Schulteilnahme) aktuelle;
-				Identifier veranstalterID = schulteilnahme.angemeldetDurchVeranstalterId();
+					Schulteilnahme schulteilnahme = (Schulteilnahme) aktuelle;
+					Identifier veranstalterID = schulteilnahme.angemeldetDurchVeranstalterId();
 
-				if (veranstalterID != null) {
+					if (veranstalterID != null) {
 
-					Optional<Veranstalter> optAnmelder = veranstalterRepository.ofId(veranstalterID);
+						Optional<Veranstalter> optAnmelder = veranstalterRepository.ofId(veranstalterID);
 
-					if (optAnmelder.isPresent()) {
+						if (optAnmelder.isPresent()) {
 
-						result.withAngemeldetDurch(optAnmelder.get().person());
+							result.withAngemeldetDurch(optAnmelder.get().person());
+						}
 					}
 				}
+
+				result.withTeilnahme(SchulteilnahmeAPIModel.create((Schulteilnahme) aktuelle));
 			}
 
-			result.withTeilnahme(SchulteilnahmeAPIModel.create((Schulteilnahme) aktuelle));
+			result.withAnzahlTeilnahmen(teilnahmen.size());
+
+			Optional<VertragAuftragsdatenverarbeitung> optVertrag = advRepository.findVertragForSchule(schuleID);
+
+			result.withHatAdv(optVertrag.isPresent());
 		}
-
-		result.withAnzahlTeilnahmen(teilnahmen.size());
-
-		Optional<VertragAuftragsdatenverarbeitung> optVertrag = advRepository.findVertragForSchule(schuleID);
-
-		result.withHatAdv(optVertrag.isPresent());
 
 		return result;
 	}

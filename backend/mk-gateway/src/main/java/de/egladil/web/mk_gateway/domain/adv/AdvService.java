@@ -12,7 +12,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.Response;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
@@ -26,8 +25,7 @@ import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
-import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
-import de.egladil.web.mk_gateway.domain.veranstalter.SchuleKatalogResponseMapper;
+import de.egladil.web.mk_gateway.domain.kataloge.SchulkatalogService;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.VertragAdvAPIModel;
 
@@ -48,7 +46,7 @@ public class AdvService {
 	Event<DataInconsistencyRegistered> dataInconsistencyEvent;
 
 	@Inject
-	MkKatalogeResourceAdapter katalogeResourceAdapter;
+	SchulkatalogService schulkatalogService;
 
 	@Inject
 	VertragAuftragsverarbeitungRepository vertragRepository;
@@ -135,7 +133,7 @@ public class AdvService {
 			return optVertrag.get().uuid();
 		}
 
-		Optional<SchuleAPIModel> optSchule = this.findSchuleQuietly(daten.schulkuerzel());
+		Optional<SchuleAPIModel> optSchule = this.schulkatalogService.findSchuleQuietly(daten.schulkuerzel());
 
 		PostleitzahlLand plzLand = new PostleitzahlLand(daten.plz(), optSchule);
 
@@ -166,23 +164,6 @@ public class AdvService {
 			.withVertragstext(vertragstext)
 			.withUnterzeichnenderLehrer(new Identifier(lehrerUuid))
 			.withUnterzeichnetAm(unterzeichnetAm);
-	}
-
-	private Optional<SchuleAPIModel> findSchuleQuietly(final String schulkuerzel) {
-
-		try {
-
-			Response katalogeResponse = katalogeResourceAdapter.findSchulen(schulkuerzel);
-
-			List<SchuleAPIModel> trefferliste = new SchuleKatalogResponseMapper().getSchulenFromKatalogeAPI(katalogeResponse);
-
-			return trefferliste.isEmpty() ? Optional.empty() : Optional.of(trefferliste.get(0));
-
-		} catch (MkGatewayRuntimeException e) {
-
-			LOG.warn("Können Schule nicht ermitteln: {}", e.getMessage());
-			return Optional.empty();
-		}
 	}
 
 	private Vertragstext getAktuellenVertragstext() {

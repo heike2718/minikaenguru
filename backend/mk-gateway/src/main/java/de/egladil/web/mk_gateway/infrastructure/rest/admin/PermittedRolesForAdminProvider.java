@@ -30,6 +30,7 @@ public final class PermittedRolesForAdminProvider {
 		addPathsAndMethodsForWettbewerb(result);
 		addPathsAndMethodsForKataloge(result);
 		addPathsAndMethodsForVeranstalter(result);
+		addPathsAndMethodsForSchulen(result);
 
 		return result;
 
@@ -167,5 +168,19 @@ public final class PermittedRolesForAdminProvider {
 			result.put(new PathWithMethod("/admin/veranstalter/suche", HttpMethod.POST), rollen);
 
 		}
+	}
+
+	/**
+	 * @param result
+	 */
+	private static void addPathsAndMethodsForSchulen(final Map<PathWithMethod, List<Rolle>> result) {
+
+		{
+
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			result.put(new PathWithMethod("/admin/schulen/*", HttpMethod.GET), rollen);
+
+		}
+
 	}
 }

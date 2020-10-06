@@ -9,11 +9,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.List;
-
-import javax.ws.rs.NotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -115,42 +112,4 @@ public class SchulenOverviewServiceTest extends AbstractDomainServiceTest {
 		assertEquals(0, schulen.size());
 		assertNotNull(service.getSecurityIncidentRegistered());
 	}
-
-	@Test
-	void should_ermittleSchuleMitKuerzelFuerLehrerThrowNotFound_when_FalschesSchulkuerzel() {
-
-		// Arrange
-		Identifier lehrerId = new Identifier(UUID_LEHRER_2);
-
-		// Act + Assert
-		try {
-
-			service.ermittleSchuleMitKuerzelFuerLehrer(lehrerId, SCHULKUERZEL_2);
-			fail("keine NotFoundException");
-		} catch (NotFoundException e) {
-
-			assertNotNull(service.getSecurityIncidentRegistered());
-		}
-
-	}
-
-	@Test
-	void should_ermittleSchuleMitKuerzelFuerLehrerWork() {
-
-		// Arrange
-		Identifier lehrerId = new Identifier(UUID_LEHRER_2);
-
-		// Act
-		SchuleAPIModel schule = service.ermittleSchuleMitKuerzelFuerLehrer(lehrerId, SCHULKUERZEL_1);
-
-		// Assert
-		assertEquals(SCHULKUERZEL_1, schule.kuerzel());
-		assertTrue(schule.aktuellAngemeldet());
-		assertNull(schule.land());
-		assertNull(schule.ort());
-		assertNull(schule.name());
-		assertNull(schule.details());
-
-	}
-
 }

@@ -28,14 +28,13 @@ import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.auswertungen.StatistikTestUtils;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
-import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
+import de.egladil.web.mk_gateway.domain.kataloge.SchulkatalogService;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
-import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 
 /**
@@ -65,7 +64,7 @@ public class StatistikAnonymisierteEinzelteilnahmeServiceTest {
 		statistikWettbewerbService = StatistikWettbewerbService.createForTest(loesungszettelRepository);
 
 		statistikService = StatistikAnonymisierteEinzelteilnahmeService.createForTest(authService, loesungszettelRepository,
-			katalogeResourceAdapter, statistikWettbewerbService);
+			SchulkatalogService.createForTest(katalogeResourceAdapter), statistikWettbewerbService);
 
 		wettbewerbLoesungszettel = StatistikTestUtils.loadTheLoesungszettel();
 
@@ -208,75 +207,6 @@ public class StatistikAnonymisierteEinzelteilnahmeServiceTest {
 
 		List<Loesungszettel> zettelZWEI = klassenstufeLoesungszettelMap.get(Klassenstufe.ZWEI);
 		assertEquals(4, zettelZWEI.size());
-
-	}
-
-	@Test
-	void should_findSchuleQuietlyReturnOptionalNotEmpty_when_mkKatalogeReturnsTheSchule() {
-
-		// Arrange
-		String schulkuerzel = "12345";
-		List<Map<String, Object>> data = new ArrayList<>();
-
-		{
-
-			Map<String, Object> schuleWettbewerbMap = new HashMap<>();
-
-			schuleWettbewerbMap.put("kuerzel", schulkuerzel);
-			schuleWettbewerbMap.put("name", "David-Hilbert-Schule");
-			schuleWettbewerbMap.put("ort", "Göttingen");
-			schuleWettbewerbMap.put("land", "Niedersachsen");
-			schuleWettbewerbMap.put("kuerzelLand", "DE-NI");
-			schuleWettbewerbMap.put("aktuellAngemeldet", Boolean.FALSE);
-
-			data.add(schuleWettbewerbMap);
-		}
-
-		Response response = Response.ok(new ResponsePayload(MessagePayload.ok(), data)).build();
-
-		Mockito.when(katalogeResourceAdapter.findSchulen(schulkuerzel)).thenReturn(response);
-
-		// Act
-		Optional<SchuleAPIModel> opt = statistikService.findSchuleQuietly(schulkuerzel);
-
-		// Assert
-		assertTrue(opt.isPresent());
-
-	}
-
-	@Test
-	void should_findSchuleQuietlyReturnOptionalEmpty_when_mkKatalogeReturnsEmptyList() {
-
-		// Arrange
-		String schulkuerzel = "12345";
-		List<Map<String, Object>> data = new ArrayList<>();
-
-		Response response = Response.ok(new ResponsePayload(MessagePayload.ok(), data)).build();
-
-		Mockito.when(katalogeResourceAdapter.findSchulen(schulkuerzel)).thenReturn(response);
-
-		// Act
-		Optional<SchuleAPIModel> opt = statistikService.findSchuleQuietly(schulkuerzel);
-
-		// Assert
-		assertTrue(opt.isEmpty());
-
-	}
-
-	@Test
-	void should_findSchuleQuietlyReturnOptionalEmpty_when_mkKatalogeReturnsThrowsException() {
-
-		// Arrange
-		String schulkuerzel = "12345";
-
-		Mockito.when(katalogeResourceAdapter.findSchulen(schulkuerzel))
-			.thenThrow(new MkGatewayRuntimeException("schlimm schlim schlimm"));
-
-		// Act
-		Optional<SchuleAPIModel> opt = statistikService.findSchuleQuietly(schulkuerzel);
-
-		// Assert
-		assertTrue(opt.isEmpty());
 
 	}
 
