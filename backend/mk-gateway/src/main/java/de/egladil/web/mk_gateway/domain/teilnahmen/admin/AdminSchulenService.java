@@ -81,7 +81,8 @@ public class AdminSchulenService {
 		if (schuleMinikaenguruData.aktuellAngemeldet()) {
 
 			result = result.withAktuelleTeilnahme(
-				AktuelleSchulteilnahmeData.createFromSchulteilnahmeAPIModel(schuleDetails.aktuelleTeilnahme()));
+				AktuelleSchulteilnahmeData.createFromSchulteilnahmeAPIModel(schuleDetails.aktuelleTeilnahme())
+					.withAngemeldetDurch(schuleDetails.angemeldetDurch()));
 		}
 		return Optional.of(result);
 	}

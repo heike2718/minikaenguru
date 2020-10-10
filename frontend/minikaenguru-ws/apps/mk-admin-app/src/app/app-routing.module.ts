@@ -17,6 +17,7 @@ const routes: Routes = [
 	{ path: 'wettbewerbe', loadChildren: () => import('./wettbewerbe/wettbewerbe.module').then(m => m.WettbewerbeModule) },
 	{ path: 'katalogpflege', loadChildren: () => import('./katalogpflege/katalogpflege.module').then(m => m.KatalogpflegeModule) },
 	{ path: 'veranstalter', loadChildren: () => import('./veranstalter/veranstalter.module').then(m => m.VeranstalterModule) },
+	{ path: 'schulteilnahme', loadChildren: () => import('./schulteilnahmen/schulteilnahmen.module').then(m => m.SchulteilnahmenModule) },
 	{ path: 'irgendwas', pathMatch: 'full', component: IrgendwasListComponent },
 	{ path: '', pathMatch: 'full', component: LandingComponent },
 	{ path: '**', component: NotFoundComponent },

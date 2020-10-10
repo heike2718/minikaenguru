@@ -33,6 +33,9 @@ public class SchulteilnahmeAPIModel {
 	private boolean klassenGeladen = false;
 
 	@JsonProperty
+	private String angemeldetDurch;
+
+	@JsonProperty
 	private List<AuswertungsgruppeAPIModel> auswertungsgruppen = new ArrayList<>();
 
 	public static SchulteilnahmeAPIModel create(final Schulteilnahme teilnahme) {
@@ -100,6 +103,17 @@ public class SchulteilnahmeAPIModel {
 	public List<AuswertungsgruppeAPIModel> getAuswertungsgruppen() {
 
 		return auswertungsgruppen;
+	}
+
+	public String angemeldetDurch() {
+
+		return angemeldetDurch;
+	}
+
+	public SchulteilnahmeAPIModel withAngemeldetDurch(final String angemeldetDurch) {
+
+		this.angemeldetDurch = angemeldetDurch;
+		return this;
 	}
 
 }

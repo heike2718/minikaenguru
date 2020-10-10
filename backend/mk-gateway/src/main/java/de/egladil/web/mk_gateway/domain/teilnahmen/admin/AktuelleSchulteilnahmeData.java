@@ -36,6 +36,7 @@ public class AktuelleSchulteilnahmeData {
 		result.anzahlKlassen = schulteilnahme.anzahlKlassen();
 		result.identifier = schulteilnahme.identifier();
 		result.nameUrkunde = schulteilnahme.nameUrkunde();
+		result.angemeldetDurch = schulteilnahme.angemeldetDurch();
 		return result;
 	}
 

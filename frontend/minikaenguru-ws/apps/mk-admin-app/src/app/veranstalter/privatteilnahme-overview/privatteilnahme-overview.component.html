@@ -1,0 +1,49 @@
+<div class="mkv-container mt-1">
+	<div *ngIf="(veranstalter$ | async) as veranstalter">
+		<ng-container *ngIf="veranstalter !== undefined else loading">
+
+			<h3>{{veranstalter.fullName}} - {{veranstalter.teilnahmenummern[0]}}</h3>
+
+			<div class="card mt-2">
+				<div class="card-body">
+					<div class="card-title">Wettbewerbsdaten<span *ngIf="veranstalter.privatOverview.aktuellAngemeldet"
+							class="ml-1 badge badge-success">angemeldet</span></div>
+					<div class="card-text">
+						<div class="row">
+							<div class="col-sm-12 col-md-3">Anzahl Teilnahmen:</div>
+							<div class="col-sm-12 col-md-9">{{veranstalter.privatOverview.anzahlTeilnahmen}}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<ng-container *ngIf="veranstalter.privatOverview.aktuelleTeilnahme">
+				<div class="card mt-2">
+					<div class="card-body">
+						<div class="card-title">Aktuelle Teilnahme</div>
+						<div class="card-text">
+							<div class="row">
+								<div class="col-sm-12 col-md-3">Anzahl Kinder:</div>
+								<div class="col-sm-12 col-md-9">
+									{{veranstalter.privatOverview.aktuelleTeilnahme.anzahlKinder}}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</ng-container>
+
+			<ng-container *ngIf="veranstalter.privatOverview.privatteilnahmen && veranstalter.privatOverview.privatteilnahmen.length > 0" class="mt-2">
+
+				<div *ngFor="let teilnahme of veranstalter.privatOverview.privatteilnahmen">
+					<mk-anonymisierte-teilnahme [teilnahme]="teilnahme"></mk-anonymisierte-teilnahme>
+				</div>
+			</ng-container>
+		</ng-container>
+	</div>
+
+	<mka-veranstalter-nav></mka-veranstalter-nav>
+</div>
+<ng-template #loading>
+	<h3>Teilnahme</h3>
+	Lade Overview... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
+</ng-template>

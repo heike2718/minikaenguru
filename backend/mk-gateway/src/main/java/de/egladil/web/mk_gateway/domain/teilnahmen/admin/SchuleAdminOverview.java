@@ -16,6 +16,9 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.api.AnonymisierteTeilnahmeAPI
 public class SchuleAdminOverview {
 
 	@JsonProperty
+	private String kuerzel;
+
+	@JsonProperty
 	private SchuleKatalogData katalogData;
 
 	@JsonProperty
@@ -35,6 +38,7 @@ public class SchuleAdminOverview {
 	public SchuleAdminOverview withKatalogData(final SchuleKatalogData katalogData) {
 
 		this.katalogData = katalogData;
+		this.kuerzel = katalogData.kuerzel();
 		return this;
 	}
 

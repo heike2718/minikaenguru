@@ -1,0 +1,93 @@
+<div class="mkv-container mt-1">
+	<div *ngIf="(schuleOverview$ | async) as schule">
+		<ng-container *ngIf="schule !== undefined else loading">
+
+			<h3>{{schule.katalogData.name}} - {{schule.katalogData.kuerzel}}</h3>
+
+			<div class="card">
+				<div class="card-body">
+					<div class="card-title">Katalogdaten</div>
+					<div class="card-text">
+						<div class="row">
+							<div class="col-sm-12 col-md-3">Ort:</div>
+							<div class="col-sm-12 col-md-9">{{schule.katalogData.ort}}</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12 col-md-3">Land:</div>
+							<div class="col-sm-12 col-md-9">{{schule.katalogData.land}}
+								({{schule.katalogData.kuerzelLand}})</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="card mt-2">
+				<div class="card-body">
+					<div class="card-title">Wettbewerbsdaten<span *ngIf="schule.minikaenguruData.aktuellAngemeldet"
+							class="ml-1 badge badge-success">angemeldet</span>
+						<span *ngIf="schule.minikaenguruData.hatAdv" class="ml-1 badge badge-warning">ADV</span></div>
+					<div class="card-text">
+						<div class="row">
+							<div class="col-sm-12 col-md-3">Kollegen:</div>
+							<div class="col-sm-12 col-md-9">{{schule.minikaenguruData.kollegen}}</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12 col-md-3">Anzahl Teilnahmen:</div>
+							<div class="col-sm-12 col-md-9">{{schule.minikaenguruData.anzahlTeilnahmen}}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<ng-container *ngIf="schule.aktuelleTeilnahme">
+				<div class="card mt-2">
+					<div class="card-body">
+						<div class="card-title">Aktuelle Teilnahme</div>
+						<div class="card-text">
+							<div class="row">
+								<div class="col-sm-12 col-md-3">Name auf Urkunde:</div>
+								<div class="col-sm-12 col-md-9">{{schule.aktuelleTeilnahme.nameUrkunde}}</div>
+							</div>
+
+							<div class="row">
+								<div class="col-sm-12 col-md-3">Angemeldet durch:</div>
+								<div class="col-sm-12 col-md-9">{{schule.aktuelleTeilnahme.angemeldetDurch}}</div>
+							</div>
+
+							<div class="row">
+								<div class="col-sm-12 col-md-3">Anzahl Klassen:</div>
+								<div class="col-sm-12 col-md-9">{{schule.aktuelleTeilnahme.anzahlKlassen}}</div>
+							</div>
+
+							<div class="row">
+								<div class="col-sm-12 col-md-3">Anzahl Kinder:</div>
+								<div class="col-sm-12 col-md-9">{{schule.aktuelleTeilnahme.anzahlKinder}}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</ng-container>
+
+			<ng-container *ngIf="schule.schulteilnahmen && schule.schulteilnahmen.length > 0" class="mt-2">
+
+				<div *ngFor="let teilnahme of schule.schulteilnahmen">
+					<mk-anonymisierte-teilnahme [teilnahme]="teilnahme"></mk-anonymisierte-teilnahme>
+				</div>
+			</ng-container>
+		</ng-container>
+	</div>
+
+	<div class="btn-group d-flex mt-2" role="group">
+		<button class="btn btn-primary w-100 ml-1" (click)="gotoSelectedVeranstalter()"><i class="fa fa-arrow-left"
+				aria-hidden="true"></i>zurück</button>
+
+		<button class="btn btn-primary w-100 ml-1" (click)="gotoVeranstalterList()"><i class="fa fa-users"
+				aria-hidden="true"></i>Veranstalterliste</button>
+	</div>
+</div>
+
+
+<ng-template #loading>
+	<h3>Schule</h3>
+	Lade Schule... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
+</ng-template>

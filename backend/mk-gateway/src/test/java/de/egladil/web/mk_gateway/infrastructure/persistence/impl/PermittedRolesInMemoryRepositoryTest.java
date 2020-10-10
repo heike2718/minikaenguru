@@ -450,6 +450,18 @@ public class PermittedRolesInMemoryRepositoryTest {
 			assertTrue(rollen.contains(Rolle.ADMIN));
 
 		}
+
+		@Test
+		void should_permittedRollen_getPrivatteilnahmen_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/admin/privatteilnahmen/KUERZEL", HttpMethod.GET);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.ADMIN));
+
+		}
 	}
 
 	@Nested

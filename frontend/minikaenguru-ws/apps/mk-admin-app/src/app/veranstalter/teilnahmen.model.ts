@@ -1,40 +1,22 @@
-export interface TeilnahmeIdentifier {
-	readonly jahr: number;
-	readonly teilnahmenummer: string;
-	readonly teilnahmeart: string;
+import { TeilnahmeIdentifier, Teilnahme } from '@minikaenguru-ws/common-components';
+
+
+export interface AktuellePrivatteilnahme {
+	readonly identifier: TeilnahmeIdentifier;
+	readonly anzahlKinder: number;
+	readonly kinderGeladen?: boolean;
+	readonly kinder?: []; // TODO das wird noch ein API-Model und kommt nach commons
+
 }
 
-export interface SchulkatalogData {
-	readonly kuerzel: string;
-	readonly name: string;
-	readonly ort: string;
-	readonly land: string;
-	readonly kuerzelLand: string;
-};
-
-export interface SchuleMinikaenguruData {
+export interface PrivatteilnahmeAdminOverview {
 	readonly aktuellAngemeldet: boolean;
-	readonly kollegen: string;
 	readonly anzahlTeilnahmen: number;
-	readonly hatAdv: boolean;
+	readonly aktuelleTeilnahme? : AktuellePrivatteilnahme;
+	readonly privatteilnahmen: Teilnahme[];
 };
 
 
-export interface AktuelleSchulteilnahme {
-	readonly identifier: TeilnahmeIdentifier;
-	readonly nameUrkunde: string;
-	readonly anzahlKlassen: number;
-	readonly anzahlKinder: number;
-};
 
-export interface Teilnahme {
-	readonly identifier: TeilnahmeIdentifier;
-	readonly anzahlKinder: number;
-};
 
-export interface SchuleAdminOverview {
-	readonly katalogData: SchulkatalogData;
-	readonly minikaenguruData: SchuleMinikaenguruData;
-	readonly aktuelleTeilnahme?: AktuelleSchulteilnahme;
-	readonly schulteilnahmen: Teilnahme[];
-};
+

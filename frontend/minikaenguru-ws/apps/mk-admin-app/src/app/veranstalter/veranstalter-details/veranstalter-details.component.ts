@@ -3,6 +3,7 @@ import { VeranstalterFacade } from '../veranstalter.facade';
 import { Veranstalter } from '../veranstalter.model';
 import { Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { SchulteilnahmenFacade } from '../../schulteilnahmen/schulteilnahmen.facade';
 
 @Component({
 	selector: 'mka-veranstalter-details',
@@ -17,7 +18,9 @@ export class VeranstalterDetailsComponent implements OnInit, OnDestroy {
 
 	teilnahmenummernAsString: string;
 
-	constructor(private router: Router, private veranstalterFacade: VeranstalterFacade) { }
+	private rolle: string;
+
+	constructor(private router: Router, private veranstalterFacade: VeranstalterFacade, private schulteilnahmenFacade: SchulteilnahmenFacade) { }
 
 	ngOnInit(): void {
 
@@ -29,23 +32,11 @@ export class VeranstalterDetailsComponent implements OnInit, OnDestroy {
 					this.router.navigateByUrl('/veranstalter');
 				} else {
 					this.teilnahmenummernAsString = this.getTeilnahmenummernAsString(veranstalter);
+					this.rolle = veranstalter.rolle;
 				}
 			}
 		);
 
-	}
-
-	private getTeilnahmenummernAsString(veranstalter: Veranstalter): string {
-
-		let result = '';
-		veranstalter.teilnahmenummern.forEach(
-			t => {
-				result+=t;
-				result+= ' ';
-			}
-		);
-
-		return result;
 	}
 
 	ngOnDestroy(): void {
@@ -56,7 +47,27 @@ export class VeranstalterDetailsComponent implements OnInit, OnDestroy {
 
 	}
 
+	private getTeilnahmenummernAsString(veranstalter: Veranstalter): string {
+
+		let result = '';
+		veranstalter.teilnahmenummern.forEach(
+			t => {
+				result += t;
+				result += ' ';
+			}
+		);
+
+		return result;
+	}
+
 	gotoTeilnahmen(teilnahmenummer: string): void {
-		console.log('jetzt Teilnahmen mit Nummer ' + teilnahmenummer + ' laden');
+
+		if (this.rolle && this.rolle === 'LEHRER') {
+			this.schulteilnahmenFacade.findOrLoadSchuleAdminOverview(teilnahmenummer);
+		} else {
+			this.veranstalterFacade.findOrLoadPrivatteilnahmeAdminOverview(teilnahmenummer);
+		}
 	}
 }
+
+

@@ -61,6 +61,16 @@ button>i {
   align-content: center;
 }
 
+.card-title {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.card-text {
+	margin-left: 10px;
+}
+
 .clickable {
   cursor: pointer;
   overflow: hidden;
@@ -84,11 +94,15 @@ footer {
 /* =========== zu Testzwecken ================= */
 .irgendwas-bordered-red {
   border: 1px solid red;
-};
+}
+
+;
 
 .irgendwas-bordered-blue {
   border: 1px solid blue;
-};
+}
+
+;
 
 
 /* ===== small devices ==== */
@@ -97,7 +111,7 @@ footer {
 @media (min-width: 576px) {
 
   body {
-	  width: 100%;
+    width: 100%;
   }
 
   .h4,
@@ -115,7 +129,7 @@ footer {
   }
 
   .clickabe-stacked {
-	width: 95%;
+    width: 95%;
   }
 
 }

@@ -35,6 +35,7 @@ public class SchuleKatalogData {
 		result.kuerzelLand = schuleAPIModel.kuerzelLand();
 		result.name = schuleAPIModel.name();
 		result.ort = schuleAPIModel.ort();
+		result.land = schuleAPIModel.land();
 
 		return result;
 

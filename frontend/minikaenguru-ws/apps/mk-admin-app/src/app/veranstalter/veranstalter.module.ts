@@ -9,6 +9,9 @@ import { VeranstalterCardComponent } from './veranstalter-card/veranstalter-card
 import { VeranstalterSucheComponent } from './veranstalter-suche/veranstalter-suche.component';
 import { VeranstalterComponent } from './veranstalter/veranstalter.component';
 import { VeranstalterDetailsComponent } from './veranstalter-details/veranstalter-details.component';
+import { VeranstalterNavComponent } from './veranstalter-nav/veranstalter-nav.component';
+import { PrivatteilnahmeOverviewComponent } from './privatteilnahme-overview/privatteilnahme-overview.component';
+import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
 
 
 
@@ -18,11 +21,14 @@ import { VeranstalterDetailsComponent } from './veranstalter-details/veranstalte
 		VeranstalterCardComponent,
 		VeranstalterSucheComponent,
 		VeranstalterComponent,
-		VeranstalterDetailsComponent
+		VeranstalterDetailsComponent,
+		VeranstalterNavComponent,
+		PrivatteilnahmeOverviewComponent
 	],
 	imports: [
 		CommonModule,
 		FormsModule,
+		CommonComponentsModule,
 		VeranstalterRoutingModule,
 		StoreModule.forFeature(fromVeranstalter.veranstalterFeatureKey, fromVeranstalter.reducer),
 	]
