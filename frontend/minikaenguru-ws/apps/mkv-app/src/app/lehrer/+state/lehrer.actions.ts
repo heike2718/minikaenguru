@@ -4,7 +4,7 @@ import { Schulteilnahme, Lehrer } from '../../wettbewerb/wettbewerb.model';
 
 
 export const datenLehrerGeladen = createAction(
-	'[LehrerFacade] ladeLehrer',
+	'[LehrerFacade] loadLehrer',
 	props<{lehrer: Lehrer}>()
 );
 

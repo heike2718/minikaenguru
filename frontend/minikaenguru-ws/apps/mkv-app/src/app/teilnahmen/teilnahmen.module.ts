@@ -4,7 +4,6 @@ import { StoreModule } from '@ngrx/store';
 import * as fromTeilnahmen from './+state/teilnahmen.reducer';
 import { TeilnahmenRoutingModule } from './teilnahmen-routing.module';
 import { TeilnahmenListComponent } from './teilnahmen-list/teilnahmen-list.component';
-import { TeilnahmeCardComponent } from './teilnahme-card/teilnahme-card.component';
 import { TeilnahmenListResolver } from './teilnahmen-list/teilnahmen-list.resolver';
 import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
 
@@ -17,8 +16,7 @@ import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
 		TeilnahmenRoutingModule
 	],
 	declarations: [
-		TeilnahmenListComponent,
-		TeilnahmeCardComponent
+		TeilnahmenListComponent
 	],
 	exports: [
 		TeilnahmenListComponent

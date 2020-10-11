@@ -31,13 +31,13 @@ import de.egladil.web.mk_gateway.domain.veranstalter.api.VeranstalterUserAPIMode
 public class AdminVeranstalterResource {
 
 	@Inject
-	VeranstalterSucheService sucheService;
+	VeranstalterSucheService veranstalterSucheService;
 
 	@POST
 	@Path("suche")
 	public Response findVeranstalter(final VeranstalterSuchanfrage suchanfrage) {
 
-		List<VeranstalterUserAPIModel> treffer = sucheService.findVeranstalter(suchanfrage);
+		List<VeranstalterUserAPIModel> treffer = veranstalterSucheService.findVeranstalter(suchanfrage);
 
 		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), treffer);
 		return Response.ok(responsePayload).build();

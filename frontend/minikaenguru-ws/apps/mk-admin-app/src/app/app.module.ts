@@ -35,6 +35,7 @@ import { KatalogpflegeModule } from './katalogpflege/katalogpflege.module';
 import { AktuelleMeldungModule } from './aktuelle-meldung/aktuelle-meldung.module';
 import { VeranstalterModule } from './veranstalter/veranstalter.module';
 import { LayouttestsModule } from './layouttests/layouttests.module';
+import { SchulteilnahmenModule } from './schulteilnahmen/schulteilnahmen.module';
 
 registerLocaleData(localeDe);
 
@@ -87,6 +88,7 @@ registerLocaleData(localeDe);
 		WettbewerbeModule,
 		KatalogpflegeModule,
 		VeranstalterModule,
+		SchulteilnahmenModule,
 		LayouttestsModule,
 		AppRoutingModule, // <-- immer am Ende, damit die wildcard-route als letzte deklariert bleibt
 	],

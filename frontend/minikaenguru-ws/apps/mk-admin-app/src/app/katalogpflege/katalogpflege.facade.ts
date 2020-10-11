@@ -11,6 +11,7 @@ import { laender, orte, schulen, selectedItem, editSchuleInput, editOrtInput, ed
 import { tap, take } from 'rxjs/operators';
 import { MessageService, Message } from '@minikaenguru-ws/common-messages';
 import { SchuleEditorModel } from './+state/katalogpflege.reducer';
+import { AuthService } from '@minikaenguru-ws/common-auth';
 
 
 @Injectable()
@@ -24,11 +25,19 @@ export class KatalogpflegeFacade {
 	public editOrtInput$ = this.store.select(editOrtInput);
 	public editLandInput$ = this.store.select(editLandInput);
 
+	private loggingOut: boolean;
+
 	constructor(private katalogHttpService: KatalogHttpService,
+		private authService: AuthService,
 		private messageService: MessageService,
 		private errorHandler: GlobalErrorHandlerService,
 		private store: Store<AppState>,
-		private router: Router) { }
+		private router: Router) {
+
+			this.authService.onLoggingOut$.subscribe(
+				loggingOut => this.loggingOut = loggingOut
+			);
+		}
 
 
 	public selectKatalogpflegeTyp(typ: Katalogpflegetyp): void {
@@ -43,11 +52,15 @@ export class KatalogpflegeFacade {
 
 	public ladeLaender(): void {
 
+		if (this.loggingOut) {
+			return;
+		}
+
 		this.store.dispatch(KatalogpflegeActions.showLoadingIndicator());
 
 		this.katalogHttpService.loadLaender().subscribe(
-			laender => {
-				this.store.dispatch(KatalogpflegeActions.loadLaenderFinished({ laender: laender }));
+			theLaender => {
+				this.store.dispatch(KatalogpflegeActions.loadLaenderFinished({ laender: theLaender }));
 			},
 			(error => {
 				this.store.dispatch(KatalogpflegeActions.finishedWithError());
@@ -295,9 +308,9 @@ export class KatalogpflegeFacade {
 
 	createTheNeueSchuleEditorModel(kuerzelAPIModel: KuerzelAPIModel, item: KatalogpflegeItem): SchuleEditorModel {
 
-		let kuerzelLandDisabled: boolean = false;
-		let nameLandDisabled: boolean = false;
-		let nameOrtDisabled: boolean = false;
+		let kuerzelLandDisabled = false;
+		let nameLandDisabled = false;
+		let nameOrtDisabled = false;
 
 		let payload: SchulePayload = {
 			name: '',
@@ -347,6 +360,10 @@ export class KatalogpflegeFacade {
 	}
 
 	ladeKinder(item: KatalogpflegeItem) {
+
+		if (this.loggingOut) {
+			return;
+		}
 
 		this.store.dispatch(KatalogpflegeActions.showLoadingIndicator());
 

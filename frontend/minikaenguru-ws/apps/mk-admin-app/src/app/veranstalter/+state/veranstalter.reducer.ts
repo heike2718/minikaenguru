@@ -1,7 +1,6 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import * as VeranstalterActions from './veranstalter.actions';
 import { VeranstalterWithID, VeranstalterMap, Veranstalter } from '../veranstalter.model';
-import { asapScheduler } from 'rxjs';
 
 export const veranstalterFeatureKey = 'mk-admin-app-veranstalter';
 
@@ -23,7 +22,6 @@ const veranstalterReducer = createReducer(initialVeranstalterState,
 
 	on(VeranstalterActions.resetVeranstalters, (_state, _action) => {
 
-
 		return initialVeranstalterState;
 
 	}),
@@ -44,6 +42,10 @@ const veranstalterReducer = createReducer(initialVeranstalterState,
 
 	}),
 
+	on(VeranstalterActions.sucheFinishedWithError, (_state, _action) => {
+		return initialVeranstalterState;
+	}),
+
 	on(VeranstalterActions.veranstalterSelected, (state, action) => {
 
 
@@ -51,12 +53,26 @@ const veranstalterReducer = createReducer(initialVeranstalterState,
 
 	}),
 
-	on(VeranstalterActions.selectedVeranstalterLoaded, (state, action) => {
+	on(VeranstalterActions.startLoadDetails, (state, _action) => {
+		return { ...state, loading: true };
+	}),
 
-		const added: Veranstalter[] = [];
-		added.push(action.veranstalter);
-		const neueMap: VeranstalterWithID[] = new VeranstalterMap(state.veranstalterMap).add(added);
-		return { ...state, loading: false, selectedVeranstalter: action.veranstalter, sucheFinished: true, veranstalterMap: neueMap };
+	on(VeranstalterActions.loadDetailsFinishedWithError, (state, _action) => {
+		return { ...state, loading: false };
+	}),
+
+	on(VeranstalterActions.privatteilnahmeOverviewLoaded, (state, action) => {
+
+		const veranstalterMapAktuell = new VeranstalterMap(state.veranstalterMap);
+		const newSelectedVeranstalter = { ...state.selectedVeranstalter, schuleAdminOverview: undefined, privatOverview: action.privatteilnahmeOverview };
+		const veranstalterArray: Veranstalter[] = [];
+		veranstalterArray.push(newSelectedVeranstalter);
+		const neueVeranstalterMap = veranstalterMapAktuell.merge(veranstalterArray);
+
+		return {
+			...state, loading: false, sucheFinished: true, veranstalterMap: neueVeranstalterMap
+			, selectedVeranstalter: newSelectedVeranstalter
+		};
 
 	})
 );

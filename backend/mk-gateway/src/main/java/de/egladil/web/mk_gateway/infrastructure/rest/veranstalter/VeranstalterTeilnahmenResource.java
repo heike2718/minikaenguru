@@ -21,6 +21,7 @@ import javax.ws.rs.core.SecurityContext;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.AktuelleTeilnahmeService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Privatteilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Schulteilnahme;
@@ -44,6 +45,9 @@ public class VeranstalterTeilnahmenResource {
 
 	@Inject
 	AktuelleTeilnahmeService aktuelleTeilnahmeService;
+
+	@Inject
+	AuthorizationService veranstalterAuthService;
 
 	@POST
 	@Path("/privat")

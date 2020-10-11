@@ -1,3 +1,5 @@
+import { PrivatteilnahmeAdminOverview } from './teilnahmen.model';
+
 export type VeranstalterSuchkriterium = 'EMAIL' | 'NAME' | 'TEILNAHMENUMMER' | 'UUID';
 export type VeranstalterRolle = 'LEHRER' | 'PRIVAT';
 export type ZugangUnterlagen = 'DEFAULT' | 'ERTEILT' | 'ENTZOGEN';
@@ -15,6 +17,7 @@ export interface Veranstalter {
 	readonly rolle: VeranstalterRolle;
 	readonly zugangsstatusUnterlagen: ZugangUnterlagen;
 	readonly teilnahmenummern: string[];
+	readonly privatOverview?: PrivatteilnahmeAdminOverview;
 };
 
 export interface VeranstalterWithID {

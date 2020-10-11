@@ -26,7 +26,7 @@ export class LehrerDashboardResolver implements Resolve<any> {
 					if (!value) {
 						if (!this.loading) {
 							this.loading = true;
-							this.lehrerFacade.ladeLehrer();
+							this.lehrerFacade.loadLehrer();
 						}
 					}
 				}

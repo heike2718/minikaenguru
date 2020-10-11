@@ -10,6 +10,8 @@ import { DownloadButtonComponent } from './download/download-button/download-but
 import { DownloadCardComponent } from './download/download-card/download-card.component';
 import * as fromDownload from './download/+state/download.reducer';
 import { StoreModule } from '@ngrx/store';
+import { AnonymisierteTeilnahmeComponent } from './anonymisierte-teilnahme/anonymisierte-teilnahme.component';
+
 
 @NgModule({
 	imports: [
@@ -23,13 +25,15 @@ import { StoreModule } from '@ngrx/store';
 		DownloadCardComponent,
 		FormErrorComponent,
 		UploadComponent,
+		AnonymisierteTeilnahmeComponent
 	],
 	exports: [
 		DialogComponent,
 		DownloadButtonComponent,
 		DownloadCardComponent,
 		FormErrorComponent,
-		UploadComponent
+		UploadComponent,
+		AnonymisierteTeilnahmeComponent
 	]
 })
 export class CommonComponentsModule {

@@ -3,6 +3,7 @@ import { AuthGuardService } from '../infrastructure/auth-guard.service';
 import { NgModule } from '@angular/core';
 import { VeranstalterComponent } from './veranstalter/veranstalter.component';
 import { VeranstalterDetailsComponent } from './veranstalter-details/veranstalter-details.component';
+import { PrivatteilnahmeOverviewComponent } from './privatteilnahme-overview/privatteilnahme-overview.component';
 
 
 const veranstalterRoutes: Routes = [
@@ -16,9 +17,14 @@ const veranstalterRoutes: Routes = [
 		path: 'details',
 		canActivate: [AuthGuardService],
 		component: VeranstalterDetailsComponent
+	},
+	{
+		path: 'privatteilnahme',
+		canActivate: [AuthGuardService],
+		component: PrivatteilnahmeOverviewComponent
 	}
 
-]
+];
 
 @NgModule({
 	imports: [
@@ -28,4 +34,4 @@ const veranstalterRoutes: Routes = [
 		RouterModule
 	]
 })
-export class VeranstalterRoutingModule {}
+export class VeranstalterRoutingModule { }
