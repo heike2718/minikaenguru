@@ -35,6 +35,10 @@
 					(click)="collapseNav()" class="nav-link" title="Schulkatalog">
 					<span class="fa fa-map-marker fa-1x" aria-hidden="true"></span> Schulkatalog </a></li>
 
+			<li *ngIf="isLoggedIn$ | async" routerLinkActive="active"><a routerLink="/eventlog"
+					(click)="collapseNav()" class="nav-link" title="Schulkatalog">
+					<span class="fa fa-history fa-1x" aria-hidden="true"></span> Eventlog </a></li>
+
 			<li *ngIf="isLoggedOut$ | async" routerLinkActive="active">
 				<a class="nav-link" (click)="login()"><span class="fa fa-sign-in fa-1x" aria-hidden="true"></span>
 					Einloggen <span class="sr-only">(current)</span></a></li>

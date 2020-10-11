@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
@@ -19,7 +21,12 @@ import javax.persistence.Version;
  */
 @Entity
 @Table(name = "EVENTS")
+@NamedQueries({
+	@NamedQuery(name = "StoredEvent.EVENTS_AFTER_DATE", query = "select e from StoredEvent e where e.occuredOn >= :date")
+})
 public class StoredEvent {
+
+	public static final String EVENTS_AFTER_DATE = "StoredEvent.EVENTS_AFTER_DATE";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

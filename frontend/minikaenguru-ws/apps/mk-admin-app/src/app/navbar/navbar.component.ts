@@ -5,10 +5,11 @@ import { Store } from '@ngrx/store';
 import { environment } from '../../environments/environment';
 import { AppState } from '../reducers';
 import { resetWettbewerbe } from '../wettbewerbe/+state/wettbewerbe.actions';
-import { resetKataloge} from '../katalogpflege/+state/katalogpflege.actions';
+import { resetKataloge } from '../katalogpflege/+state/katalogpflege.actions';
 import { resetVeranstalters } from '../veranstalter/+state/veranstalter.actions';
 import { resetAktuelleMeldung } from '../aktuelle-meldung/+state/aktuelle-meldung.actions';
-import {  resetSchulteilnahmen } from '../schulteilnahmen/+state/schulteilnahmen.actions';
+import { resetSchulteilnahmen } from '../schulteilnahmen/+state/schulteilnahmen.actions';
+import { dateCleared } from '../eventlog/+state/eventlog.actions';
 
 @Component({
 	selector: 'mka-navbar',
@@ -47,6 +48,7 @@ export class NavbarComponent implements OnInit {
 		this.appStore.dispatch(resetVeranstalters());
 		this.appStore.dispatch(resetAktuelleMeldung());
 		this.appStore.dispatch(resetSchulteilnahmen());
+		this.appStore.dispatch(dateCleared());
 		this.authService.login();
 	}
 
@@ -57,5 +59,6 @@ export class NavbarComponent implements OnInit {
 		this.appStore.dispatch(resetVeranstalters());
 		this.appStore.dispatch(resetAktuelleMeldung());
 		this.appStore.dispatch(resetSchulteilnahmen());
+		this.appStore.dispatch(dateCleared());
 	}
 }

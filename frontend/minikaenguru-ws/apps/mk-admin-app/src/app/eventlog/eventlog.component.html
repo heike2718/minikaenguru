@@ -1,0 +1,17 @@
+<div class="mkv-container mt-1">
+
+	<h3>Das mk-gateway-eventlog</h3>
+
+	<h4>Datum, ab wann das Eventlog erstellt werden soll</h4>
+
+	<ngb-datepicker #dp [(ngModel)]="model" (dateSelect)="onDateSelect($event)" [minDate]="minDate" [maxDate]="maxDate"
+		(navigate)="date = $event.next">
+	</ngb-datepicker>
+
+
+	<ng-container *ngIf="selectedDatum$ | async as datum">
+		<mk-download-button [model]="downloadButtonModel">
+		</mk-download-button>
+	</ng-container>
+
+</div>
