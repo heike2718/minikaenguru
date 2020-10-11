@@ -1,4 +1,4 @@
-import { Schule } from '../lehrer/schulen/schulen.model';
+import { TeilnahmeIdentifier } from '@minikaenguru-ws/common-components';
 
 export type WettbewerbStatus = 'ERFASST' | 'ANMELDUNG' | 'DOWNLOAD_PRIVAT' | 'DOWNLOAD_LEHRER' | 'BEENDET';
 export type Teilnahmeart = 'PRIVAT' | 'SCHULE';
@@ -51,12 +51,6 @@ export interface Auswertungsgruppe {
 	readonly name: string;
 	readonly klassenstufe: Klassenstufe;
 	readonly kinder: Kind[];
-}
-
-export interface TeilnahmeIdentifier {
-	readonly jahr: number;
-	readonly teilnahmenummer: string;
-	readonly teilnahmeart: Teilnahmeart;
 }
 
 export interface AbstractTeilnahme {

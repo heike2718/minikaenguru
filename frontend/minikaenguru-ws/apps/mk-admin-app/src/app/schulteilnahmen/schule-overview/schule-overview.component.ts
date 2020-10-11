@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 import { SchulteilnahmenFacade } from '../schulteilnahmen.facade';
 import { VeranstalterFacade } from '../../veranstalter/veranstalter.facade';
 
@@ -12,6 +13,8 @@ import { VeranstalterFacade } from '../../veranstalter/veranstalter.facade';
 export class SchuleOverviewComponent implements OnInit, OnDestroy {
 
 	schuleOverview$ = this.schulteilnahmenFacade.schuleOverview$;
+
+	statistikUrlPrefix  = environment.apiUrl + '/statistik/';
 
 	private schuleSubscription: Subscription;
 

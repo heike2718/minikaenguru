@@ -19,6 +19,8 @@ export class TeilnahmenListComponent implements OnInit, OnDestroy {
 
 	user$ = this.authService.user$;
 
+	statistikUrlPrefix  = environment.apiUrl + '/statistik/';
+
 	downloadInProgress$ = this.downloadFacade.downloadInProgress$;
 
 	teilnahmenummer: string;

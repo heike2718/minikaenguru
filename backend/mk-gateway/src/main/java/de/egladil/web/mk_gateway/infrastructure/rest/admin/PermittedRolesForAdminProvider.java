@@ -32,6 +32,7 @@ public final class PermittedRolesForAdminProvider {
 		addPathsAndMethodsForVeranstalter(result);
 		addPathsAndMethodsForSchulen(result);
 		addPathsAndMethodsForPrivatteilnahmen(result);
+		addPathsAndMethodsForStatistik(result);
 
 		return result;
 
@@ -194,6 +195,18 @@ public final class PermittedRolesForAdminProvider {
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
 			result.put(new PathWithMethod("/admin/privatteilnahmen/*", HttpMethod.GET), rollen);
+
+		}
+
+	}
+
+	private static void addPathsAndMethodsForStatistik(final Map<PathWithMethod, List<Rolle>> result) {
+
+		{
+
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			result.put((new PathWithMethod("/admin/statistik/*/*/*", HttpMethod.GET)),
+				rollen);
 
 		}
 
