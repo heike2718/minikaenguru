@@ -13,7 +13,7 @@ const vertragAdvRoutes: Routes = [
 			{
 				path: '',
 				canActivate: [LehrerGuardService],
-				resolve: {vertragEditor: VertragAdvResolver},
+				resolve: { vertragEditor: VertragAdvResolver },
 				component: VertragAdvComponent
 			}
 		]
@@ -29,4 +29,4 @@ const vertragAdvRoutes: Routes = [
 		RouterModule
 	]
 })
-export class VertragAdvRoutingModule {}
+export class VertragAdvRoutingModule { }

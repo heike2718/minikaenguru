@@ -33,4 +33,7 @@ export class DashboardComponent implements OnInit {
 		this.router.navigateByUrl('/katalogpflege');
 	}
 
+	gotoEventlog() {
+		this.router.navigateByUrl('/eventlog');
+	}
 }

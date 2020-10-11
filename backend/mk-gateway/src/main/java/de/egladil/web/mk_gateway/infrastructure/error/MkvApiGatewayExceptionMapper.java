@@ -139,6 +139,17 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 			return Response.status(404).entity(serializeAsJson(payload)).build();
 		}
 
+		if (exception instanceof IllegalArgumentException) {
+
+			LOG.error(exception.getMessage(), exception);
+
+			ResponsePayload payload = ResponsePayload
+				.messageOnly(MessagePayload.error(applicationMessages.getString("general.badRequest")));
+
+			return Response.status(Status.BAD_REQUEST).entity(payload).build();
+
+		}
+
 		if (exception instanceof BadRequestException) {
 
 			BadRequestException brException = (BadRequestException) exception;

@@ -10,6 +10,7 @@
 		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenteTeilnahme</class>
 		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterLoesungszettel</class>
 		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterVeranstalter</class>
+		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.StoredEvent</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 
 		<properties>

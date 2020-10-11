@@ -5,12 +5,11 @@
 
 	</div>
 
-	<div class="row ml-1 mt-1 mr-1" *ngIf="(user$ | async) as user else loading">
+	<div *ngIf="(user$ | async) as user" class="row ml-1 mt-1 mr-1">
 		<div class="col-3">
 			<div class="card clickable" (click)="gotoWettbewerbe()">
 				<div class="card-body">
-					<div class="card-title"><i class="fa fa-files-o fa-1x"
-					aria-hidden="true"></i> Wettbewerbe</div>
+					<div class="card-title"><i class="fa fa-files-o fa-1x" aria-hidden="true"></i> Wettbewerbe</div>
 					<div class="mb-2 text-muted">verwalten</div>
 					<div class="mb-2 text-muted">Statistiken</div>
 				</div>
@@ -19,30 +18,36 @@
 		<div class="col-3">
 			<div class="card clickable" (click)="gotoVeranstalter()">
 				<div class="card-body">
-					<div class="card-title"><i class="fa fa-users fa-1x"
-					aria-hidden="true"></i> Veranstalter</div>
+					<div class="card-title"><i class="fa fa-users fa-1x" aria-hidden="true"></i> Veranstalter</div>
 				</div>
 			</div>
 		</div>
 		<div class="col-3">
 			<div class="card clickable" (click)="gotoKataloge()">
 				<div class="card-body">
-					<div class="card-title"><i class="fa fa-map-marker fa-1x"
-					aria-hidden="true"></i> Schulkatalog</div>
+					<div class="card-title"><i class="fa fa-map-marker fa-1x" aria-hidden="true"></i> Schulkatalog
+					</div>
 				</div>
 			</div>
 		</div>
 		<div class="col-3">
 			<div class="card clickable" (click)="gotoAktuelleMeldung()">
 				<div class="card-body">
-					<div class="card-title"><i class="fa fa-bell-o fa-1x"
-					aria-hidden="true"></i> aktuelle Meldung</div>
+					<div class="card-title"><i class="fa fa-bell-o fa-1x" aria-hidden="true"></i> aktuelle Meldung
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
+	<div *ngIf="(user$ | async) as user" class="row ml-1 mt-1 mr-1">
 
-<ng-template #loading>
-	Lade Wettbewerbe... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
-</ng-template>
+		<div class="col-3">
+			<div class="card clickable" (click)="gotoEventlog()">
+				<div class="card-body">
+					<div class="card-title"><i class="fa fa-history fa-1x" aria-hidden="true"></i> Eventlog</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
