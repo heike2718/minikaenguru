@@ -1,5 +1,10 @@
 # authprovider Release Notes
 
+__Release 1.1.0__:
+
+* [ADMIN: Veranstalter und Teilnahmen anzeigen](https://github.com/heike2718/minikaenguru/issues/35)
+* [ADMIN: Statistkik Einzelteilnahme generieren](https://github.com/heike2718/minikaenguru/issues/180)
+
 __Release 1.0.1__:
 
 * Veranstaltersuche in mk-admin-app mit Anzeige details

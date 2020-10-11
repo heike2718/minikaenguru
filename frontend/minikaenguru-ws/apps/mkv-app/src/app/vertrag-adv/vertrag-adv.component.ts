@@ -23,6 +23,7 @@ export class VertragAdvComponent implements OnInit, OnDestroy {
 	selectedSchule$ = this.lehrerFacade.selectedSchule$;
 
 	vertragstextBtnModel: DownloadButtonModel = {
+		id: '',
 		url: environment.apiUrl + '/adv/vertragstext',
 		dateiname: 'vertrag-auftragsdatenverarbeitung',
 		mimetype: 'pdf',
@@ -80,6 +81,7 @@ export class VertragAdvComponent implements OnInit, OnDestroy {
 
 
 					this.vertragBtnModel = {
+						id: vertrag.schulkuerzel,
 						url: environment.apiUrl + '/adv/' + vertrag.schulkuerzel,
 						dateiname: 'Vertrag-Auftragsdatenverarbeitung-Minikaenguru',
 						mimetype: 'pdf',
