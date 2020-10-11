@@ -7,7 +7,7 @@ import * as DownloadActions from './+state/download.actions';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { MessageService } from '@minikaenguru-ws/common-messages';
 import { LogService } from '@minikaenguru-ws/common-logging';
-import { downloadInProgress } from './+state/download.selectors';
+import { downloadId, downloadInProgress } from './+state/download.selectors';
 
 @Injectable({
 	providedIn: 'root'
@@ -15,17 +15,19 @@ import { downloadInProgress } from './+state/download.selectors';
 export class DownloadFacade {
 
 	public downloadInProgress$ = this.appStore.select(downloadInProgress);
+	public downloadId$ = this.appStore.select(downloadId);
+
 
 	constructor(private downloadService: DownloadService,
 		private appStore: Store<DownloadState>,
 		private messageService: MessageService,
 		private logger: LogService) { }
 
-	public downloadFile(url: string, dateiname: string, mimetype: string): void {
+	public downloadFile(id: string, url: string, dateiname: string, mimetype: string): void {
 
 		const defaultFilename = this.getDefaultFilename(dateiname, mimetype);
 
-		this.appStore.dispatch(DownloadActions.startDownload());
+		this.appStore.dispatch(DownloadActions.startDownload({id: id}));
 
 		this.downloadService.downloadFile(url).pipe(
 			take(1)

@@ -70,6 +70,7 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 
 
 					this.vertragAdvModel = {
+						id: this.schule.kuerzel,
 						url: environment.apiUrl + '/adv/' + this.schule.kuerzel,
 						cardTitle: 'DSGVO',
 						subtext: 'Vertrag Auftragsdatenverarbeitung herunterladen (PDF)',
@@ -78,6 +79,7 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 					};
 				} else {
 					this.vertragAdvModel = {
+						id: '',
 						url: '',
 						cardTitle: 'DSGVO',
 						subtext: 'Vertrag Auftragsdatenverarbeitung herunterladen (PDF)',
