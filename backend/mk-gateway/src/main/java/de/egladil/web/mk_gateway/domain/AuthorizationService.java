@@ -52,18 +52,18 @@ public class AuthorizationService {
 	}
 
 	/**
-	 * @param  veranstalterID
+	 * @param  userIdentifier
 	 * @param  teilnahmeID
 	 * @return                       boolean - nicht void wegen Mockito.
 	 * @throws AccessDeniedException
 	 */
-	public boolean checkPermissionForTeilnahmenummer(final Identifier veranstalterID, final Identifier teilnahmeID) throws AccessDeniedException {
+	public boolean checkPermissionForTeilnahmenummer(final Identifier userIdentifier, final Identifier teilnahmeID) throws AccessDeniedException {
 
-		Optional<User> optUser = userRepository.ofId(veranstalterID.identifier());
+		Optional<User> optUser = userRepository.ofId(userIdentifier.identifier());
 
 		if (optUser.isEmpty()) {
 
-			String msg = "Unzulaessiger Zugriff auf Teilnahme " + teilnahmeID + " durch " + veranstalterID
+			String msg = "Unzulaessiger Zugriff auf Teilnahme " + teilnahmeID + " durch " + userIdentifier
 				+ ": User existiert nicht";
 
 			LOG.warn(msg);
@@ -80,11 +80,11 @@ public class AuthorizationService {
 
 		}
 
-		Optional<Veranstalter> optVeranstalter = veranstalterRepository.ofId(veranstalterID);
+		Optional<Veranstalter> optVeranstalter = veranstalterRepository.ofId(userIdentifier);
 
 		if (optVeranstalter.isEmpty()) {
 
-			String msg = "Unzulaessiger Zugriff auf Teilnahme " + teilnahmeID + " durch " + veranstalterID
+			String msg = "Unzulaessiger Zugriff auf Teilnahme " + teilnahmeID + " durch " + userIdentifier
 				+ ": Veranstalter existiert nicht";
 
 			LOG.warn(msg);

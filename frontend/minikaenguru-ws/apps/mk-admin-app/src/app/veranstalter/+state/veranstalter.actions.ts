@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { Veranstalter } from '../veranstalter.model';
+import { PrivatteilnahmeAdminOverview } from '../teilnahmen.model';
 
 export const startSuche = createAction(
 	'[VeranstalterFacade] sucheVeranstalter load'
@@ -23,14 +24,18 @@ export const resetVeranstalters = createAction(
 	'[NavbarComponent] - veranstalter login/logout'
 );
 
-export const loadVeranstalterDetails = createAction(
-	'[VeranstalterEffect] onLoadDetails',
-	props<{uuid: string}>()
+export const startLoadDetails = createAction(
+	'[VeranstalterFacade] findOrLoad beforeLoad'
 );
 
-export const selectedVeranstalterLoaded = createAction(
-	'[VeranstalterEffect] afterLoadDetails',
-	props<{veranstalter: Veranstalter}>()
+export const loadDetailsFinishedWithError = createAction(
+	'[VeranstalterFacade] findOrLoad error'
+);
+
+
+export const privatteilnahmeOverviewLoaded = createAction(
+	'[VeranstalterFacade] findOrLoadPrivatteilnahmeAdminOverview',
+	props<{privatteilnahmeOverview: PrivatteilnahmeAdminOverview}>()
 );
 
 

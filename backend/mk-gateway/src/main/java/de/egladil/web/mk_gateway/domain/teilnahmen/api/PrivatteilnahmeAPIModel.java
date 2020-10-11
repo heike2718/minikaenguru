@@ -49,4 +49,14 @@ public class PrivatteilnahmeAPIModel {
 		return this;
 	}
 
+	public TeilnahmeIdentifier identifier() {
+
+		return identifier;
+	}
+
+	public int anzahlKinder() {
+
+		return anzahlKinder;
+	}
+
 }

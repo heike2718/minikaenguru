@@ -93,17 +93,18 @@ public class SchulenAnmeldeinfoService {
 	 * Läd die Details für die Schule des gegebenen Lehrers aus den Katalogen und aus der Wettbewerbe-API.
 	 *
 	 * @param  schulkuerzel
-	 * @param  lehrerUUID
+	 * @param  lehrerId
+	 *                      String UUID eines Lehrers.
 	 * @return              SchuleAPIModel
 	 */
-	public SchuleAPIModel getSchuleWithWettbewerbsdetails(final String schulkuerzel, final String lehrerUUID) {
+	public SchuleAPIModel getSchuleWithWettbewerbsdetails(final String schulkuerzel, final String lehrerId) {
 
 		Response katalogItemsResponse = katalogeAdapter.findSchulen(schulkuerzel);
 
 		if (katalogItemsResponse.getStatus() >= 400) {
 
 			LOG.error("mk-kataloge: Status={}, beim Laden der Schule - kuerzel={}, Lehrer-UUID={}",
-				katalogItemsResponse.getStatus(), schulkuerzel, StringUtils.abbreviate(lehrerUUID, 11));
+				katalogItemsResponse.getStatus(), schulkuerzel, StringUtils.abbreviate(lehrerId, 11));
 
 			throw new MkGatewayRuntimeException("Fehler beim Laden der Schulen aus dem Katalog");
 		}
@@ -116,7 +117,7 @@ public class SchulenAnmeldeinfoService {
 		if (schulenAusKatalg.isEmpty()) {
 
 			LOG.error("mk-kataloge: Status={}, Kein Katalogeintrag für Schule - kuerzel={}, Lehrer-UUID={}",
-				katalogItemsResponse.getStatus(), schulkuerzel, StringUtils.abbreviate(lehrerUUID, 11));
+				katalogItemsResponse.getStatus(), schulkuerzel, StringUtils.abbreviate(lehrerId, 11));
 
 			schuleAusKatalog = SchuleAPIModel.withKuerzel(schulkuerzel).markKatalogeintragUnknown();
 		} else {
@@ -125,7 +126,7 @@ public class SchulenAnmeldeinfoService {
 		}
 
 		SchuleDetails schuleDetails = schuleDetailsService.ermittleSchuldetails(new Identifier(schulkuerzel),
-			new Identifier(lehrerUUID));
+			new Identifier(lehrerId));
 
 		SchuleAPIModel result = SchuleAPIModel.merge(schuleAusKatalog, schuleDetails);
 

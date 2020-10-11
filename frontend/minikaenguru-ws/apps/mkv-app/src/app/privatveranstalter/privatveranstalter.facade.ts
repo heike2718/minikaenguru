@@ -10,6 +10,8 @@ import { MessageService, Message } from '@minikaenguru-ws/common-messages';
 import { Privatteilnahme } from '../wettbewerb/wettbewerb.model';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { AuthService } from '@minikaenguru-ws/common-auth';
+import { TeilnahmenListComponent } from '../teilnahmen/teilnahmen-list/teilnahmen-list.component';
 
 
 @Injectable({ providedIn: 'root' })
@@ -19,11 +21,19 @@ export class PrivatveranstalterFacade {
 	public veranstalter$ = this.appStore.select(privatveranstalter);
 	public aktuelleTeilnahmeGeladen$ = this.appStore.select(aktuelleTeilnahmeGeladen);
 
+	private loggingOut: boolean;
+
 	constructor(private appStore: Store<AppState>,
+		private authService: AuthService,
 		private veranstalterService: VeranstalterService,
 		private teilnahmenService: TeilnahmenService,
 		private messageService: MessageService,
-		private errorHandler: GlobalErrorHandlerService) { }
+		private errorHandler: GlobalErrorHandlerService) {
+
+			this.authService.onLoggingOut$.subscribe(
+				loggingOut => this.loggingOut = loggingOut
+			);
+		}
 
 
 	public resetState(): void {
@@ -33,6 +43,10 @@ export class PrivatveranstalterFacade {
 	}
 
 	public loadInitialTeilnahmeinfos(): void {
+
+		if (this.loggingOut) {
+			return;
+		}
 
 		this.appStore.dispatch(PrivatveranstalterActions.startLoading());
 

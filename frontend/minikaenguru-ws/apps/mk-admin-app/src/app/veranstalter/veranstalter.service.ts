@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
 import { ResponsePayload } from '@minikaenguru-ws/common-messages';
 import { Veranstalter, VeranstalterSuchanfrage } from './veranstalter.model';
+import { PrivatteilnahmeAdminOverview } from './teilnahmen.model';
 
 @Injectable({
 	providedIn: 'root'
@@ -20,7 +21,7 @@ export class VeranstalterService {
 
 		const url = environment.apiUrl + '/veranstalter/suche';
 
-		return this.http.post(url, suchanfrage, {observe: 'body'}).pipe(
+		return this.http.post(url, suchanfrage, { observe: 'body' }).pipe(
 			map(body => body as ResponsePayload),
 			map(payload => payload.data)
 		);
@@ -30,6 +31,17 @@ export class VeranstalterService {
 
 
 		const url = environment.apiUrl + '/veranstalter/' + uuid;
+
+		return this.http.get(url).pipe(
+			map(body => body as ResponsePayload),
+			map(payload => payload.data)
+		);
+	}
+
+
+	public loadPrivatteilnahmeAdminOverview(teilnahmenummer: string): Observable<PrivatteilnahmeAdminOverview> {
+
+		const url = environment.apiUrl + '/privatteilnahmen/' + teilnahmenummer;
 
 		return this.http.get(url).pipe(
 			map(body => body as ResponsePayload),

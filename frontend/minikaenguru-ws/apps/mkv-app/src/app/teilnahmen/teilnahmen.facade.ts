@@ -21,13 +21,21 @@ export class TeilnahmenFacade {
 	public anonymisierteTeilnahmenGeladen$ = this.appStore.select(anonymisierteTeilnahmenGeladen);
 	public anonymisierteTeilnahmen$ = this.appStore.select(anonymisierteTeilnahmen);
 
+
+	private loggingOut: boolean;
+
 	constructor(private appStore: Store<AppState>,
 		private authService: AuthService,
 		private teilnahmenService: TeilnahmenService,
 		private lehrerFacade: LehrerFacade,
 		private privatveranstalterFacade: PrivatveranstalterFacade,
 		private router: Router,
-		private errorHandler: GlobalErrorHandlerService) { }
+		private errorHandler: GlobalErrorHandlerService) {
+
+			this.authService.onLoggingOut$.subscribe(
+				loggingOut => this.loggingOut = loggingOut
+			);
+		}
 
 	public selectTeilnahmenummer(nummer: string, name: string): void {
 
@@ -36,6 +44,10 @@ export class TeilnahmenFacade {
 	}
 
 	public initTeilnahmen(rolle: string): void {
+
+		if (this.loggingOut) {
+			return;
+		}
 
 		if (rolle === 'PRIVAT') {
 			this.initPrivatteilnahmen();

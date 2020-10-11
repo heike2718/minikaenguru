@@ -14,23 +14,17 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
-import javax.ws.rs.core.Response;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
+import de.egladil.web.mk_gateway.domain.kataloge.SchulkatalogService;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.statistik.pdf.PrivatteilnahmenuebersichtPDFGenerator;
 import de.egladil.web.mk_gateway.domain.statistik.pdf.SchuluebersichtPDFGenerator;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
-import de.egladil.web.mk_gateway.domain.veranstalter.SchuleKatalogResponseMapper;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 
@@ -40,8 +34,6 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 @ApplicationScoped
 public class StatistikAnonymisierteEinzelteilnahmeService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(StatistikAnonymisierteEinzelteilnahmeService.class);
-
 	@Inject
 	AuthorizationService authorizationService;
 
@@ -49,17 +41,17 @@ public class StatistikAnonymisierteEinzelteilnahmeService {
 	LoesungszettelRepository loesungszettelRepository;
 
 	@Inject
-	MkKatalogeResourceAdapter katalogeResourceAdapter;
-
-	@Inject
 	StatistikWettbewerbService statistikWettbewerbService;
 
-	static StatistikAnonymisierteEinzelteilnahmeService createForTest(final AuthorizationService authService, final LoesungszettelRepository loesungszettelRepository, final MkKatalogeResourceAdapter katalogeResourceAdapter, final StatistikWettbewerbService statistikWettbewerbService) {
+	@Inject
+	SchulkatalogService schulkatalogService;
+
+	static StatistikAnonymisierteEinzelteilnahmeService createForTest(final AuthorizationService authService, final LoesungszettelRepository loesungszettelRepository, final SchulkatalogService schulkatalogService, final StatistikWettbewerbService statistikWettbewerbService) {
 
 		StatistikAnonymisierteEinzelteilnahmeService result = new StatistikAnonymisierteEinzelteilnahmeService();
 		result.authorizationService = authService;
 		result.loesungszettelRepository = loesungszettelRepository;
-		result.katalogeResourceAdapter = katalogeResourceAdapter;
+		result.schulkatalogService = schulkatalogService;
 		result.statistikWettbewerbService = statistikWettbewerbService;
 		return result;
 	}
@@ -99,7 +91,7 @@ public class StatistikAnonymisierteEinzelteilnahmeService {
 
 		case SCHULE:
 
-			Optional<SchuleAPIModel> optSchule = this.findSchuleQuietly(teilnahmeIdentifier.teilnahmenummer());
+			Optional<SchuleAPIModel> optSchule = this.schulkatalogService.findSchuleQuietly(teilnahmeIdentifier.teilnahmenummer());
 
 			return new SchuluebersichtPDFGenerator().generierePdf(wettbewerbID, optSchule, verteilungenNachKlassenstufe,
 				gesamtmediane);
@@ -156,23 +148,6 @@ public class StatistikAnonymisierteEinzelteilnahmeService {
 		});
 
 		return result;
-	}
-
-	Optional<SchuleAPIModel> findSchuleQuietly(final String schulkuerzel) {
-
-		try {
-
-			Response katalogeResponse = katalogeResourceAdapter.findSchulen(schulkuerzel);
-
-			List<SchuleAPIModel> trefferliste = new SchuleKatalogResponseMapper().getSchulenFromKatalogeAPI(katalogeResponse);
-
-			return trefferliste.isEmpty() ? Optional.empty() : Optional.of(trefferliste.get(0));
-
-		} catch (MkGatewayRuntimeException e) {
-
-			LOG.warn("Können Schule nicht ermitteln: {}", e.getMessage());
-			return Optional.empty();
-		}
 	}
 
 }

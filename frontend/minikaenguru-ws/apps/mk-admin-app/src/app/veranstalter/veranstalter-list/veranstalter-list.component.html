@@ -3,7 +3,7 @@
 	<div *ngIf="sucheFinished$ | async">
 		<ng-container *ngIf="(veranstalters$ | async) as veranstalters">
 
-		<p>Anzahl Treffer: {{veranstalters.length}}</p>
+			<p>Anzahl Treffer: {{veranstalters.length}}</p>
 			<div class="row">
 				<div *ngFor="let veranstalter of veranstalters" class="col-sm-12 col-md-4 mb-3">
 					<mka-veranstalter-card [veranstalter]="veranstalter"></mka-veranstalter-card>
@@ -14,4 +14,5 @@
 				(click)="listeLeeren()">leeren</button>
 		</ng-container>
 	</div>
+	<mka-veranstalter-nav></mka-veranstalter-nav>
 </div>

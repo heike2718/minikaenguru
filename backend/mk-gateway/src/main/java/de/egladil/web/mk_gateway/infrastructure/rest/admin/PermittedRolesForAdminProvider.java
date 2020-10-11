@@ -30,6 +30,9 @@ public final class PermittedRolesForAdminProvider {
 		addPathsAndMethodsForWettbewerb(result);
 		addPathsAndMethodsForKataloge(result);
 		addPathsAndMethodsForVeranstalter(result);
+		addPathsAndMethodsForSchulen(result);
+		addPathsAndMethodsForPrivatteilnahmen(result);
+		addPathsAndMethodsForStatistik(result);
 
 		return result;
 
@@ -167,5 +170,45 @@ public final class PermittedRolesForAdminProvider {
 			result.put(new PathWithMethod("/admin/veranstalter/suche", HttpMethod.POST), rollen);
 
 		}
+	}
+
+	/**
+	 * @param result
+	 */
+	private static void addPathsAndMethodsForSchulen(final Map<PathWithMethod, List<Rolle>> result) {
+
+		{
+
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			result.put(new PathWithMethod("/admin/schulen/*", HttpMethod.GET), rollen);
+
+		}
+
+	}
+
+	/**
+	 * @param result
+	 */
+	private static void addPathsAndMethodsForPrivatteilnahmen(final Map<PathWithMethod, List<Rolle>> result) {
+
+		{
+
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			result.put(new PathWithMethod("/admin/privatteilnahmen/*", HttpMethod.GET), rollen);
+
+		}
+
+	}
+
+	private static void addPathsAndMethodsForStatistik(final Map<PathWithMethod, List<Rolle>> result) {
+
+		{
+
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			result.put((new PathWithMethod("/admin/statistik/*/*/*", HttpMethod.GET)),
+				rollen);
+
+		}
+
 	}
 }

@@ -10,7 +10,7 @@ import { VeranstalterService } from '../services/veranstalter.service';
 import { TeilnahmenService } from '../services/teilnahmen.service';
 import { Schulteilnahme } from '../wettbewerb/wettbewerb.model';
 import { Message, MessageService } from '@minikaenguru-ws/common-messages';
-import { User } from '@minikaenguru-ws/common-auth';
+import { User, AuthService } from '@minikaenguru-ws/common-auth';
 import { take } from 'rxjs/operators';
 
 
@@ -25,15 +25,26 @@ export class LehrerFacade {
 
 	public loading$ = this.appStore.select(loading);
 
+	private loggingOut: boolean;
+
 	constructor(private appStore: Store<AppState>,
 		private veranstalterService: VeranstalterService,
+		private authService: AuthService,
 		private schulenService: SchulenService,
 		private teilnahmenService: TeilnahmenService,
 		private messageService: MessageService,
 		private errorHandler: GlobalErrorHandlerService) {
+
+		this.authService.onLoggingOut$.subscribe(
+			loggingOut => this.loggingOut = loggingOut
+		);
 	}
 
-	public ladeLehrer(): void {
+	public loadLehrer(): void {
+
+		if (this.loggingOut) {
+			return;
+		}
 
 		this.appStore.dispatch(LehrerActions.startLoading());
 
@@ -50,6 +61,10 @@ export class LehrerFacade {
 	}
 
 	public loadSchulen(): void {
+
+		if (this.loggingOut) {
+			return;
+		}
 
 		this.appStore.dispatch(LehrerActions.startLoading());
 
@@ -68,6 +83,10 @@ export class LehrerFacade {
 
 
 	public loadDetails(schulkuerzel: string): void {
+
+		if (this.loggingOut) {
+			return;
+		}
 
 		this.appStore.dispatch(LehrerActions.startLoading());
 

@@ -10,6 +10,7 @@ import * as VeranstalterActions from './+state/veranstalter.actions';
 import * as VeranstalterSelectors from './+state/veranstalter.selectors';
 import { take } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { PrivatteilnahmeAdminOverview } from './teilnahmen.model';
 
 
 @Injectable({
@@ -22,10 +23,7 @@ export class VeranstalterFacade {
 	public loading$: Observable<boolean> = this.store.select(VeranstalterSelectors.veranstalterLoading);
 	public selectedVeranstalter$: Observable<Veranstalter> = this.store.select(VeranstalterSelectors.selectedVeranstalter);
 
-
-	private veranstalterSubscription: Subscription;
-
-	private loadedVeranstalter: Veranstalter[];
+	private selectedVeranstalter: Veranstalter;
 
 	constructor(private veranstalterService: VeranstalterService,
 		private store: Store<AppState>,
@@ -34,10 +32,8 @@ export class VeranstalterFacade {
 		private errorService: GlobalErrorHandlerService,
 	) {
 
-		this.veranstalterSubscription = this.veranstalters$.subscribe(
-			alleVeranstalter => {
-				this.loadedVeranstalter = alleVeranstalter;
-			}
+		this.selectedVeranstalter$.subscribe(
+			v => this.selectedVeranstalter = v
 		);
 	}
 
@@ -69,12 +65,38 @@ export class VeranstalterFacade {
 		this.router.navigateByUrl('/veranstalter/details');
 	}
 
-	public findOrLoadVeranstalterDetails(uuid: string): Observable<Veranstalter> {
+	public clearVeranstalterSelection(): void {
+		this.store.dispatch(VeranstalterActions.veranstalterSelected({ veranstalter: undefined }));
+		this.router.navigateByUrl('/veranstalter');
+	}
 
-		const treffer: Veranstalter[] = this.loadedVeranstalter.filter(veranstalter => veranstalter.uuid === uuid);
-		if (treffer.length === 1) {
-			return of(treffer[0]);
+
+	public findOrLoadPrivatteilnahmeAdminOverview(teilnahmenummer: string) {
+
+
+		if (this.selectedVeranstalter !== undefined) {
+
+			if (this.selectedVeranstalter.privatOverview !== undefined) {
+				this.store.dispatch(VeranstalterActions.privatteilnahmeOverviewLoaded({ privatteilnahmeOverview: this.selectedVeranstalter.privatOverview }));
+				this.router.navigateByUrl('/veranstalter/privatteilnahme');
+
+			} else {
+
+				this.store.dispatch(VeranstalterActions.startLoadDetails());
+
+				this.veranstalterService.loadPrivatteilnahmeAdminOverview(teilnahmenummer).pipe(
+					take(1)
+				).subscribe(
+					(overview: PrivatteilnahmeAdminOverview) => {
+						this.store.dispatch(VeranstalterActions.privatteilnahmeOverviewLoaded({ privatteilnahmeOverview: overview }));
+						this.router.navigateByUrl('/veranstalter/privatteilnahme');
+					},
+					(error => {
+						this.store.dispatch(VeranstalterActions.loadDetailsFinishedWithError());
+						this.errorService.handleError(error);
+					})
+				)
+			}
 		}
-		return this.veranstalterService.loadVeranstalterDetails(uuid);
 	}
 }

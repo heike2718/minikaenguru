@@ -1,0 +1,16 @@
+<div class="card mt-2">
+	<div class="card-body">
+		<div class="card-title">Teilnahme {{teilnahme.identifier.jahr}}</div>
+		<div class="card-text">
+			<div class="row">
+				<div class="card-subtitle text-muted col-sm-12 col-md-9">Anzahl Kinder: {{teilnahme.anzahlKinder}}
+				</div>
+
+				<div *ngIf="showDownloadButton" class="col-sm-12 col-md-3">
+					<mk-download-button [model]="statistikBtnModel">
+					</mk-download-button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

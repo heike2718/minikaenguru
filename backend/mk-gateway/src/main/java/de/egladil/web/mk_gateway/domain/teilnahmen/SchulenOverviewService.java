@@ -11,7 +11,6 @@ import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import javax.ws.rs.NotFoundException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,33 +87,6 @@ public class SchulenOverviewService {
 		}
 
 		return items;
-	}
-
-	/**
-	 * Zum Nachladen der Schuldetails wird die Schule nochmal benötigt.
-	 *
-	 * @param  lehrerID
-	 * @param  schulkuerzel
-	 * @return              SchuleAPIModel
-	 */
-	public SchuleAPIModel ermittleSchuleMitKuerzelFuerLehrer(final Identifier lehrerID, final String schulkuerzel) {
-
-		List<SchuleAPIModel> schulen = this.ermittleAnmeldedatenFuerSchulen(lehrerID);
-
-		Optional<SchuleAPIModel> optSchule = schulen.stream().filter(s -> s.kuerzel().equals(schulkuerzel)).findFirst();
-
-		if (optSchule.isEmpty()) {
-
-			String msg = "Unzulässige Abfrage der Schule " + schulkuerzel + " durch UUID " + lehrerID
-				+ ": der Lehrer ist nicht für diese Schule registriert.";
-
-			LOG.warn(msg);
-
-			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
-
-			throw new NotFoundException();
-		}
-		return optSchule.get();
 	}
 
 	SecurityIncidentRegistered getSecurityIncidentRegistered() {

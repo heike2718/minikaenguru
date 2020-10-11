@@ -12,6 +12,8 @@ mk-gateway
 
 http://192.168.10.176:9510/mk-gateway/schulkatalog/ort?search="hal"
 
+http://192.168.10.176:9510/mk-gateway/admin/schulen/6XOA2A11
+
 http://192.168.10.176:9510/mk-gateway/open-data/statistik/2018/pdf
 
 http://192.168.10.176:9510/mk-gateway/adv/6XOA2A11
