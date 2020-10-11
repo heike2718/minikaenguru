@@ -72,13 +72,11 @@ public class SchuleDetailsService {
 	 */
 	public SchuleDetails ermittleSchuldetails(final Identifier schuleID, final Identifier lehrerIdentifier) throws AccessDeniedException {
 
+		SchuleDetails result = new SchuleDetails(schuleID.identifier());
+
 		Optional<Schulkollegium> optKollegium = schulkollegienRepository.ofSchulkuerzel(schuleID);
 
-		SchuleDetails result = null;
-
 		if (optKollegium.isPresent()) {
-
-			result = new SchuleDetails(schuleID.identifier());
 
 			Schulkollegium kollegium = optKollegium.get();
 
@@ -87,40 +85,40 @@ public class SchuleDetailsService {
 				.collect(Collectors.toList());
 
 			result.withKollegen(andere);
+		}
 
-			List<Teilnahme> teilnahmen = teilnahmenRepository.ofTeilnahmenummer(schuleID.identifier());
+		List<Teilnahme> teilnahmen = teilnahmenRepository.ofTeilnahmenummer(schuleID.identifier());
 
-			Optional<Teilnahme> optTeilnahme = aktuelleTeilnahmeService.aktuelleTeilnahme(teilnahmen);
+		Optional<Teilnahme> optTeilnahme = aktuelleTeilnahmeService.aktuelleTeilnahme(teilnahmen);
 
-			if (optTeilnahme.isPresent()) {
+		if (optTeilnahme.isPresent()) {
 
-				Teilnahme aktuelle = optTeilnahme.get();
+			Teilnahme aktuelle = optTeilnahme.get();
 
-				if (aktuelle.teilnahmeart() == Teilnahmeart.SCHULE) {
+			if (aktuelle.teilnahmeart() == Teilnahmeart.SCHULE) {
 
-					Schulteilnahme schulteilnahme = (Schulteilnahme) aktuelle;
-					Identifier veranstalterID = schulteilnahme.angemeldetDurchVeranstalterId();
+				Schulteilnahme schulteilnahme = (Schulteilnahme) aktuelle;
+				Identifier veranstalterID = schulteilnahme.angemeldetDurchVeranstalterId();
 
-					if (veranstalterID != null) {
+				if (veranstalterID != null) {
 
-						Optional<Veranstalter> optAnmelder = veranstalterRepository.ofId(veranstalterID);
+					Optional<Veranstalter> optAnmelder = veranstalterRepository.ofId(veranstalterID);
 
-						if (optAnmelder.isPresent()) {
+					if (optAnmelder.isPresent()) {
 
-							result.withAngemeldetDurch(optAnmelder.get().person());
-						}
+						result.withAngemeldetDurch(optAnmelder.get().person());
 					}
 				}
-
-				result.withTeilnahme(SchulteilnahmeAPIModel.create((Schulteilnahme) aktuelle));
 			}
 
-			result.withAnzahlTeilnahmen(teilnahmen.size());
-
-			Optional<VertragAuftragsdatenverarbeitung> optVertrag = advRepository.findVertragForSchule(schuleID);
-
-			result.withHatAdv(optVertrag.isPresent());
+			result.withTeilnahme(SchulteilnahmeAPIModel.create((Schulteilnahme) aktuelle));
 		}
+
+		result.withAnzahlTeilnahmen(teilnahmen.size());
+
+		Optional<VertragAuftragsdatenverarbeitung> optVertrag = advRepository.findVertragForSchule(schuleID);
+
+		result.withHatAdv(optVertrag.isPresent());
 
 		return result;
 	}

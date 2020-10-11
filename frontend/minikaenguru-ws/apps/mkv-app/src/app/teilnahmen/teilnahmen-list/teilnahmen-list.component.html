@@ -3,13 +3,6 @@
 		<h2>{{name}} <span *ngIf="name && name.length > 0">: </span> Teilnahmen</h2>
 		<p *ngIf="devMode">(teilnahmen-list.component)</p>
 
-		<div *ngIf="downloadInProgress$ | async">
-			<div class="col-12">
-				Download... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
-			</div>
-		</div>
-
-
 		<ng-container *ngIf="(teilnahmen$ | async) as teilnahmen">
 			<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let teilnahme of teilnahmen">
 				<mk-anonymisierte-teilnahme [teilnahme]="teilnahme" [statistikUrlPrefix]="statistikUrlPrefix">

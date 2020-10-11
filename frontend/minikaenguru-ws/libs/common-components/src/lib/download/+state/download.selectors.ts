@@ -4,4 +4,6 @@ import * as fromDownload from './download.reducer';
 export const downloadState = createFeatureSelector<fromDownload.DownloadState>(fromDownload.downloadFeatureKey);
 
 export const downloadInProgress = createSelector(downloadState, s => s.downloadInProgress);
+export const downloadId = createSelector(downloadState, s => s.id);
+
 
