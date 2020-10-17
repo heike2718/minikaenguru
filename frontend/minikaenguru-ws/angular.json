@@ -56,6 +56,34 @@
                   "maximumError": "10kb"
                 }
               ]
+			},
+            "a300": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/mkv-app/src/environments/environment.ts",
+                  "with": "build-env/mkv-app/environment-a300.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
             }
           }
         },
@@ -381,6 +409,34 @@
                 {
                   "replace": "apps/mk-admin-app/src/environments/environment.ts",
                   "with": "apps/mk-admin-app/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+			},
+            "a300": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/mk-admin-app/src/environments/environment.ts",
+                  "with": "build-env/mk-admin-app/environment-a300.ts"
                 }
               ],
               "optimization": true,
