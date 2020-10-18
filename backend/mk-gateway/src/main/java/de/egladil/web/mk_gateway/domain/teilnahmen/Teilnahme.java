@@ -7,13 +7,13 @@ package de.egladil.web.mk_gateway.domain.teilnahmen;
 import java.util.Objects;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.semantik.Aggregate;
+import de.egladil.web.mk_gateway.domain.semantik.AggregateRoot;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 
 /**
  * Teilnahme
  */
-@Aggregate
+@AggregateRoot
 public abstract class Teilnahme {
 
 	private final WettbewerbID wettbewerbID;

@@ -47,7 +47,7 @@ public class DataInconsistencyRegistered implements MkGatewayDomainEvent {
 	@Override
 	public String typeName() {
 
-		return TYPE_DATA_INCONSISTENCY_REGISTERED;
+		return EventType.DATA_INCONSISTENCY_REGISTERED.getLabel();
 	}
 
 	public String message() {

@@ -12,8 +12,8 @@ import java.lang.annotation.Target;
 @Documented
 @Target({ TYPE })
 /**
- * Aggregate markiert die Wurzel eines DDD-Aggregats.
+ * AggregateRoot markiert die Wurzel eines DDD-Aggregats.
  */
-public @interface Aggregate {
+public @interface AggregateRoot {
 
 }

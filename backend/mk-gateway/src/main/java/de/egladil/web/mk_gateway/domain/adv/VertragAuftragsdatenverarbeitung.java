@@ -5,13 +5,13 @@
 package de.egladil.web.mk_gateway.domain.adv;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.semantik.Aggregate;
+import de.egladil.web.mk_gateway.domain.semantik.AggregateRoot;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.VertragAdvAPIModel;
 
 /**
  * VertragAuftragsdatenverarbeitung
  */
-@Aggregate
+@AggregateRoot
 public class VertragAuftragsdatenverarbeitung {
 
 	private Identifier identifier;
