@@ -6,9 +6,12 @@ package de.egladil.web.mk_gateway.domain.kinder;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,8 +20,6 @@ import org.mockito.Mockito;
 import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.KlassenstufeAPIModel;
-import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.SpracheAPIModel;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindAPIModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.PrivatkindRequestData;
@@ -38,6 +39,29 @@ public class PrivatkinderServiceTest extends AbstractDomainServiceTest {
 	private KinderRepository kinderRepository;
 
 	private AuthorizationService authService;
+
+	class TestKinderRepository implements KinderRepository {
+
+		private final Kind expectedKind;
+
+		TestKinderRepository(final Kind expectedKind) {
+
+			this.expectedKind = expectedKind;
+		}
+
+		@Override
+		public List<Kind> findKinderWithTeilnahme(final TeilnahmeIdentifier teilnahmeIdentifier) {
+
+			return Arrays.asList(new Kind[] { expectedKind });
+		}
+
+		@Override
+		public Kind addKind(final Kind kind) {
+
+			return expectedKind;
+		}
+
+	}
 
 	@Override
 	@BeforeEach
@@ -98,12 +122,56 @@ public class PrivatkinderServiceTest extends AbstractDomainServiceTest {
 
 	}
 
+	@Test
+	void should_privatkindAnlegen_triggerEvent() {
+
+		// Arrange
+		PrivatkindRequestData data = createTestData();
+		Kind gespeichertesKind = new Kind(new Identifier("UUID-UUID"))
+			.withKlassenstufe(Klassenstufe.EINS)
+			.withNachname("Paschulke")
+			.withVorname("Heinz")
+			.withSprache(Sprache.de);
+
+		String veranstalterUuid = "ggggiiozioio";
+
+		Mockito.when(authService.checkPermissionForTeilnahmenummer(new Identifier(veranstalterUuid),
+			new Identifier(data.teilnahmeIdentifier().teilnahmenummer()))).thenReturn(Boolean.TRUE);
+
+		PrivatkinderService theService = PrivatkinderService.createForTest(new TestKinderRepository(gespeichertesKind),
+			getTeilnahmenRepository(), authService);
+
+		// Act
+		theService.privatkindAnlegen(data, veranstalterUuid);
+
+		// Assert
+		assertNotNull(theService.getKindCreated());
+
+	}
+
+	void should_koennteDubletteSein_work_whenGleicheUuid() {
+
+		// Arrange
+		Kind kind = new Kind(new Identifier("UUID-UUID"))
+			.withKlassenstufe(Klassenstufe.EINS)
+			.withNachname("Paschulke")
+			.withVorname("Heinz")
+			.withSprache(Sprache.de);
+
+		List<Kind> kinder = Arrays.asList(new Kind[] { kind });
+
+		// Act
+		boolean koennte = service.koennteDubletteSein(kind, kinder);
+
+		// Assert
+		assertFalse(koennte);
+
+	}
+
 	private PrivatkindRequestData createTestData() {
 
-		KindAPIModel kind = new KindAPIModel()
-			.withKlassenstufe(KlassenstufeAPIModel.create(Klassenstufe.EINS))
+		KindAPIModel kind = KindAPIModel.create(Klassenstufe.EINS, Sprache.de)
 			.withNachname("Paschulke")
-			.withSprache(SpracheAPIModel.create(Sprache.de))
 			.withVorname("Heinz");
 
 		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.PRIVAT)
@@ -111,4 +179,5 @@ public class PrivatkinderServiceTest extends AbstractDomainServiceTest {
 
 		return new PrivatkindRequestData().withKind(kind).withTeilnahmeIdentifier(teilnahmeIdentifier);
 	}
+
 }

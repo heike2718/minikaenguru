@@ -44,7 +44,7 @@ public class Kind {
 		result.nachname = apiModel.nachname() == null ? null : apiModel.nachname().trim();
 		result.zusatz = apiModel.zusatz() == null ? null : apiModel.zusatz().trim();
 		result.identifier = apiModel.uuid() == null ? null : new Identifier(apiModel.uuid());
-		result.loesungszettelID = apiModel.loesingszettelId() == null ? null : new Identifier(apiModel.loesingszettelId());
+		result.loesungszettelID = apiModel.loesungszettelId() == null ? null : new Identifier(apiModel.loesungszettelId());
 		result.sprache = apiModel.sprache().sprache();
 		result.klassenstufe = apiModel.klassenstufe().klassenstufe();
 		return result;

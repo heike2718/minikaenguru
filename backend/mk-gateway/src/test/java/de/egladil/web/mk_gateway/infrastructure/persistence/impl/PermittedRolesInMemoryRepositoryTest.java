@@ -243,6 +243,50 @@ public class PermittedRolesInMemoryRepositoryTest {
 			assertTrue(rollen.contains(Rolle.LEHRER));
 			assertTrue(rollen.contains(Rolle.PRIVAT));
 		}
+
+		@Test
+		void should_permittedRollen_privatkinderDelete_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/privatkinder/FRTGZ76G3", HttpMethod.DELETE);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.PRIVAT));
+		}
+
+		@Test
+		void should_permittedRollen_privatkinderGet_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/privatkinder", HttpMethod.GET);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.PRIVAT));
+		}
+
+		@Test
+		void should_permittedRollen_privatkinderPost_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/privatkinder", HttpMethod.POST);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.PRIVAT));
+		}
+
+		@Test
+		void should_permittedRollen_privatkinderPut_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/privatkinder", HttpMethod.PUT);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.PRIVAT));
+		}
 	}
 
 	@Nested

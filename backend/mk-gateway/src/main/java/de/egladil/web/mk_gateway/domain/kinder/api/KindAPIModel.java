@@ -15,6 +15,7 @@ import de.egladil.web.commons_validation.annotations.StringLatin;
 import de.egladil.web.commons_validation.annotations.UuidString;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.KlassenstufeAPIModel;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.SpracheAPIModel;
+import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 
@@ -50,13 +51,30 @@ public class KindAPIModel {
 
 	@JsonProperty
 	@UuidString
-	private String loesingszettelId;
+	private String loesungszettelId;
 
 	public static KindAPIModel create(final Klassenstufe klassenstufe, final Sprache sprache) {
 
 		KindAPIModel result = new KindAPIModel();
 		result.klassenstufe = KlassenstufeAPIModel.create(klassenstufe);
 		result.sprache = SpracheAPIModel.create(sprache);
+
+		return result;
+	}
+
+	public static KindAPIModel createFromKind(final Kind kind) {
+
+		KindAPIModel result = KindAPIModel.create(kind.klassenstufe(), kind.sprache())
+			.withNachname(kind.nachname())
+			.withUuid(kind.identifier().identifier())
+			.withVorname(kind.vorname())
+			.withZusatz(kind.zusatz());
+
+		if (kind.loesungszettelID() != null) {
+
+			result = result.withLoesungszettelId(kind.loesungszettelID().identifier());
+
+		}
 
 		return result;
 	}
@@ -110,38 +128,26 @@ public class KindAPIModel {
 		return klassenstufe;
 	}
 
-	public KindAPIModel withKlassenstufe(final KlassenstufeAPIModel klassenstufe) {
-
-		this.klassenstufe = klassenstufe;
-		return this;
-	}
-
 	public SpracheAPIModel sprache() {
 
 		return sprache;
 	}
 
-	public KindAPIModel withSprache(final SpracheAPIModel sprache) {
+	public String loesungszettelId() {
 
-		this.sprache = sprache;
-		return this;
+		return loesungszettelId;
 	}
 
-	public String loesingszettelId() {
+	public KindAPIModel withLoesungszettelId(final String loesungszettelId) {
 
-		return loesingszettelId;
-	}
-
-	public KindAPIModel withLoesingszettelId(final String loesingszettelId) {
-
-		this.loesingszettelId = loesingszettelId;
+		this.loesungszettelId = loesungszettelId;
 		return this;
 	}
 
 	@Override
 	public int hashCode() {
 
-		return Objects.hash(klassenstufe, loesingszettelId, nachname, sprache, uuid, vorname, zusatz);
+		return Objects.hash(uuid);
 	}
 
 	@Override
@@ -162,8 +168,6 @@ public class KindAPIModel {
 			return false;
 		}
 		KindAPIModel other = (KindAPIModel) obj;
-		return Objects.equals(klassenstufe, other.klassenstufe) && Objects.equals(loesingszettelId, other.loesingszettelId)
-			&& Objects.equals(nachname, other.nachname) && Objects.equals(sprache, other.sprache)
-			&& Objects.equals(uuid, other.uuid) && Objects.equals(vorname, other.vorname) && Objects.equals(zusatz, other.zusatz);
+		return Objects.equals(uuid, other.uuid);
 	}
 }

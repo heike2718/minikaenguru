@@ -109,7 +109,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 			.withKlassenstufe(persistenter.getKlassenstufe())
 			.withLaengeKaengurusprung(persistenter.getKaengurusprung())
 			.withLandkuerzel(persistenter.getLandkuerzel())
-			.withNummer(persistenter.getNummer())
+			.withNummer(persistenter.getKindID())
 			.withPunkte(persistenter.getPunkte())
 			.withRohdaten(rohdaten)
 			.withSprache(persistenter.getSprache())

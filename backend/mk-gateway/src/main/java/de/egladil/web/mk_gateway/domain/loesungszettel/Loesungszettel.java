@@ -23,7 +23,7 @@ public class Loesungszettel {
 	private Identifier identifier;
 
 	@JsonProperty
-	private int nummer;
+	private String kindID;
 
 	@JsonProperty
 	private Klassenstufe klassenstufe;
@@ -63,14 +63,14 @@ public class Loesungszettel {
 		return identifier;
 	}
 
-	public int nummer() {
+	public String kindID() {
 
-		return nummer;
+		return kindID;
 	}
 
-	public Loesungszettel withNummer(final int nummer) {
+	public Loesungszettel withNummer(final String kindID) {
 
-		this.nummer = nummer;
+		this.kindID = kindID;
 		return this;
 	}
 

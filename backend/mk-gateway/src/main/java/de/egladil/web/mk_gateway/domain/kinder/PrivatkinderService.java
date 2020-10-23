@@ -12,8 +12,8 @@ import javax.inject.Inject;
 
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.kinder.api.PrivatkindRequestData;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindAPIModel;
+import de.egladil.web.mk_gateway.domain.kinder.api.PrivatkindRequestData;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 
@@ -73,6 +73,11 @@ public class PrivatkinderService {
 
 		Kind kind = Kind.createFromAPIModelWithoutKlasseID(daten.kind());
 
+		return this.koennteDubletteSein(kind, kinder);
+	}
+
+	boolean koennteDubletteSein(final Kind kind, final List<Kind> kinder) {
+
 		for (Kind k : kinder) {
 
 			if (Boolean.TRUE == dublettenpruefer.apply(k, kind)) {
@@ -104,11 +109,7 @@ public class PrivatkinderService {
 
 		Kind gespeichertesKind = kinderRepository.addKind(kind);
 
-		KindAPIModel result = KindAPIModel.create(gespeichertesKind.klassenstufe(), gespeichertesKind.sprache())
-			.withNachname(kind.nachname())
-			.withUuid(gespeichertesKind.identifier().identifier())
-			.withVorname(gespeichertesKind.vorname())
-			.withZusatz(gespeichertesKind.zusatz());
+		KindAPIModel result = KindAPIModel.createFromKind(gespeichertesKind);
 
 		kindCreated = (KindCreated) new KindCreated(veranstalterUuid).withKindID(result.uuid())
 			.withKlassenstufe(gespeichertesKind.klassenstufe())

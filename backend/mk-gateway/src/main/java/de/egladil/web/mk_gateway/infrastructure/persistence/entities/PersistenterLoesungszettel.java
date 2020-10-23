@@ -42,8 +42,8 @@ public class PersistenterLoesungszettel extends ConcurrencySafeEntity {
 
 	public static final String LOAD_ALL_WITH_WETTBEWERBID_KLASSENSTUFE = "PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID_KLASSENSTUFE";
 
-	@Column(name = "NUMMER")
-	private int nummer;
+	@Column(name = "KIND_ID")
+	private String kindID;
 
 	@Column(name = "KLASSENSTUFE")
 	@Enumerated(EnumType.STRING)
@@ -99,14 +99,14 @@ public class PersistenterLoesungszettel extends ConcurrencySafeEntity {
 	@Enumerated(EnumType.STRING)
 	private Sprache sprache;
 
-	public int getNummer() {
+	public String getKindID() {
 
-		return nummer;
+		return kindID;
 	}
 
-	public PersistenterLoesungszettel withNummer(final int nummer) {
+	public PersistenterLoesungszettel withKindID(final String kindID) {
 
-		this.nummer = nummer;
+		this.kindID = kindID;
 		return this;
 	}
 
@@ -258,7 +258,7 @@ public class PersistenterLoesungszettel extends ConcurrencySafeEntity {
 
 		return "PersistenterLoesungszettel [uuid=" + getUuid() + ", wettbewerbUuid=" + wettbewerbUuid + ", teilnahmeart="
 			+ teilnahmeart
-			+ ", teilnahmenummer=" + teilnahmenummer + ", nummer=" + nummer + "]";
+			+ ", teilnahmenummer=" + teilnahmenummer + ", kindID=" + kindID + "]";
 	}
 
 }

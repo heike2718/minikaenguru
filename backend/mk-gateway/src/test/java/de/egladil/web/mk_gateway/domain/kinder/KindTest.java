@@ -6,10 +6,14 @@ package de.egladil.web.mk_gateway.domain.kinder;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.kinder.api.KindAPIModel;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 
 /**
  * KindTest
@@ -32,6 +36,27 @@ public class KindTest {
 		assertEquals(kind1.hashCode(), kind3.hashCode());
 		assertFalse(kind1.equals(kind2));
 		assertFalse(kind1.hashCode() == kind2.hashCode());
+	}
+
+	@Test
+	void should_createFromAPIModelWithoutKlasseID_initAllAttributes() {
+
+		// Arrange
+		KindAPIModel apiModel = KindAPIModel.create(Klassenstufe.ZWEI, Sprache.en)
+			.withNachname("Paschulke")
+			.withVorname("Heinz")
+			.withZusatz("Zusatz");
+
+		// Act
+		Kind kind = Kind.createFromAPIModelWithoutKlasseID(apiModel);
+
+		// Assert
+		assertNull(kind.identifier());
+		assertEquals(Klassenstufe.ZWEI, kind.klassenstufe());
+		assertEquals(Sprache.en, kind.sprache());
+		assertEquals("Paschulke", kind.nachname());
+		assertEquals("Heinz", kind.vorname());
+		assertEquals("Zusatz", kind.zusatz());
 	}
 
 }
