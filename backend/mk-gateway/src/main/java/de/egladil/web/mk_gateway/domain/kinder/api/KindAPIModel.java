@@ -4,11 +4,13 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.kinder.api;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_validation.annotations.StringLatin;
@@ -22,7 +24,10 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 /**
  * KindAPIModel
  */
-public class KindAPIModel {
+public class KindAPIModel implements Serializable {
+
+	@JsonIgnore
+	private static final long serialVersionUID = 1356650815146560419L;
 
 	@JsonProperty
 	@UuidString

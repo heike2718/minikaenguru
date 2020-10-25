@@ -2,7 +2,7 @@
 // Project: mk-wettbewerb-tests
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mkv_server_tests;
+package de.egladil.web.mkv_server_tests.dao;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -22,6 +22,8 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
+import de.egladil.web.mkv_server_tests.AbstractIT;
+import de.egladil.web.mkv_server_tests.LoesungszettelList;
 
 /**
  * LoesungszettelHibernateRepositoryTest

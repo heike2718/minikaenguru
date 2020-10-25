@@ -24,8 +24,10 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
 @NamedQueries({ @NamedQuery(
 	name = "FIND_WETTBEWERB_BY_ID", query = "select w from PersistenterWettbewerb w where w.uuid = :uuid"),
 	@NamedQuery(
-		name = "LOAD_WETTBEWERBE", query = "select w from PersistenterWettbewerb w") })
+		name = "LOAD_WETTBEWERBE", query = "select w from PersistenterWettbewerb w order by w.uuid") })
 public class PersistenterWettbewerb extends ConcurrencySafeEntity {
+
+	private static final long serialVersionUID = -9054131483715063984L;
 
 	public static final String LOAD_WETTBEWERBE_QUERY = "LOAD_WETTBEWERBE";
 

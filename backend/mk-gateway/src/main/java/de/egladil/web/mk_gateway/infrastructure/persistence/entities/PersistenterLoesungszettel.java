@@ -25,16 +25,18 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 @NamedQueries({
 	@NamedQuery(
 		name = "PersistenterLoesungszettel.LOAD_ALL_WITH_IDENTIFIER",
-		query = "select l from PersistenterLoesungszettel l where l.teilnahmenummer = :teilnahmenummer and l.wettbewerbUuid = :wettbewerbUuid and l.teilnahmeart = :teilnahmeart"),
+		query = "select l from PersistenterLoesungszettel l where l.teilnahmenummer = :teilnahmenummer and l.wettbewerbUuid = :wettbewerbUuid and l.teilnahmeart = :teilnahmeart order by l.uuid"),
 	@NamedQuery(
 		name = "PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID",
-		query = "select l from PersistenterLoesungszettel l where l.wettbewerbUuid = :wettbewerbUuid"),
+		query = "select l from PersistenterLoesungszettel l where l.wettbewerbUuid = :wettbewerbUuid order by l.uuid"),
 	@NamedQuery(
 		name = "PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID_KLASSENSTUFE",
-		query = "select l from PersistenterLoesungszettel l where l.wettbewerbUuid = :wettbewerbUuid and l.klassenstufe = :klassenstufe"),
+		query = "select l from PersistenterLoesungszettel l where l.wettbewerbUuid = :wettbewerbUuid and l.klassenstufe = :klassenstufe order by l.uuid"),
 
 })
 public class PersistenterLoesungszettel extends ConcurrencySafeEntity {
+
+	private static final long serialVersionUID = 6846868705303269825L;
 
 	public static final String LOAD_ALL_WITH_IDENTIFIER = "PersistenterLoesungszettel.LOAD_ALL_WITH_IDENTIFIER";
 

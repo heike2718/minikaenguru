@@ -20,6 +20,8 @@ import de.egladil.web.mk_gateway.domain.user.Rolle;
 @Table(name = "USERS")
 public class User extends ConcurrencySafeEntity {
 
+	private static final long serialVersionUID = -1456196031075014971L;
+
 	@Column(name = "ROLE")
 	@Enumerated(EnumType.STRING)
 	private Rolle rolle;

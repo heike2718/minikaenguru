@@ -34,6 +34,8 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
  */
 public class PrivatkinderServiceTest extends AbstractDomainServiceTest {
 
+	private static final WettbewerbID WETTBEWERB_ID = new WettbewerbID(2018);
+
 	private PrivatkinderService service;
 
 	private KinderRepository kinderRepository;
@@ -50,15 +52,15 @@ public class PrivatkinderServiceTest extends AbstractDomainServiceTest {
 		}
 
 		@Override
-		public List<Kind> findKinderWithTeilnahme(final TeilnahmeIdentifier teilnahmeIdentifier) {
-
-			return Arrays.asList(new Kind[] { expectedKind });
-		}
-
-		@Override
 		public Kind addKind(final Kind kind) {
 
 			return expectedKind;
+		}
+
+		@Override
+		public List<Kind> findKinderWithTeilnahme(final TeilnahmeIdentifier teilnahmeIdentifier, final WettbewerbID wettbewerbID) {
+
+			return Arrays.asList(new Kind[] { expectedKind });
 		}
 
 	}
@@ -87,7 +89,8 @@ public class PrivatkinderServiceTest extends AbstractDomainServiceTest {
 		Mockito.when(authService.checkPermissionForTeilnahmenummer(userIdentifier, teilnahmeID))
 			.thenReturn(Boolean.TRUE);
 
-		Mockito.when(kinderRepository.findKinderWithTeilnahme(data.teilnahmeIdentifier())).thenReturn(new ArrayList<>());
+		Mockito.when(kinderRepository.findKinderWithTeilnahme(data.teilnahmeIdentifier(), WETTBEWERB_ID))
+			.thenReturn(new ArrayList<>());
 
 		// Act
 		boolean result = service.pruefeDublettePrivat(data, veranstalterUuid);
@@ -95,7 +98,8 @@ public class PrivatkinderServiceTest extends AbstractDomainServiceTest {
 		// Assert
 		assertFalse(result);
 		Mockito.verify(authService, Mockito.times(1)).checkPermissionForTeilnahmenummer(userIdentifier, teilnahmeID);
-		Mockito.verify(kinderRepository, Mockito.times(1)).findKinderWithTeilnahme(data.teilnahmeIdentifier());
+		Mockito.verify(kinderRepository, Mockito.times(1)).findKinderWithTeilnahme(data.teilnahmeIdentifier(),
+			WETTBEWERB_ID);
 	}
 
 	@Test

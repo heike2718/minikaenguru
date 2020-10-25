@@ -64,6 +64,16 @@ public class Kind {
 		return identifier;
 	}
 
+	public void setIdentifier(final Identifier identifier) {
+
+		if (this.identifier != null) {
+
+			throw new IllegalStateException("Der identifier darf nicht geändert werden");
+		}
+		this.identifier = identifier;
+
+	}
+
 	public TeilnahmeIdentifier teilnahmeIdentifier() {
 
 		return teilnahmeIdentifier;

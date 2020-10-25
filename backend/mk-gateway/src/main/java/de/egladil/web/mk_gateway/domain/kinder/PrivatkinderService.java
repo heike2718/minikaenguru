@@ -16,6 +16,8 @@ import de.egladil.web.mk_gateway.domain.kinder.api.KindAPIModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.PrivatkindRequestData;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 
 /**
  * PrivatkinderService
@@ -35,7 +37,12 @@ public class PrivatkinderService {
 	TeilnahmenRepository teilnahmenRepository;
 
 	@Inject
+	WettbewerbService wettbewerbService;
+
+	@Inject
 	Event<KindCreated> kindCreatedEvent;
+
+	private WettbewerbID wettbewerbID;
 
 	private KindCreated kindCreated;
 
@@ -45,6 +52,7 @@ public class PrivatkinderService {
 		result.authService = authService;
 		result.kinderRepository = kinderRepository;
 		result.teilnahmenRepository = teilnahmenRepository;
+		result.wettbewerbID = new WettbewerbID(2018);
 		return result;
 	}
 
@@ -59,12 +67,17 @@ public class PrivatkinderService {
 	 */
 	public boolean pruefeDublettePrivat(final PrivatkindRequestData daten, final String veranstalterUuid) {
 
+		if (this.wettbewerbID == null) {
+
+			this.wettbewerbID = this.wettbewerbService.aktuellerWettbewerb().get().id();
+		}
+
 		TeilnahmeIdentifier teilnahmeIdentifier = daten.teilnahmeIdentifier();
 
 		this.authService.checkPermissionForTeilnahmenummer(new Identifier(veranstalterUuid),
 			new Identifier(teilnahmeIdentifier.teilnahmenummer()));
 
-		List<Kind> kinder = kinderRepository.findKinderWithTeilnahme(teilnahmeIdentifier);
+		List<Kind> kinder = kinderRepository.findKinderWithTeilnahme(teilnahmeIdentifier, this.wettbewerbID);
 
 		if (kinder.isEmpty()) {
 

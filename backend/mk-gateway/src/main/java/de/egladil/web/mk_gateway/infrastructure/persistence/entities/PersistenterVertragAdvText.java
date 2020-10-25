@@ -24,6 +24,8 @@ import javax.validation.constraints.Size;
 })
 public class PersistenterVertragAdvText extends ConcurrencySafeEntity {
 
+	private static final long serialVersionUID = 1040338551434619409L;
+
 	public static final String LOAD = "PersistenterVertragAdvText.LOAD";
 
 	@NotNull

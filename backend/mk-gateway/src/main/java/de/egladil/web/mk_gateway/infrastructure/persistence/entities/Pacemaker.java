@@ -19,6 +19,8 @@ import javax.validation.constraints.Size;
 @Table(name = "PACEMAKERS")
 public class Pacemaker extends ConcurrencySafeEntity {
 
+	private static final long serialVersionUID = 784193470370623531L;
+
 	@Column(name = "WERT")
 	@NotBlank
 	@Size(max = 36)

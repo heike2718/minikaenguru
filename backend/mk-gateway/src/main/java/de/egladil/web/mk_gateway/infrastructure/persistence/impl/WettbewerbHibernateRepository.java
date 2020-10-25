@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -25,7 +25,7 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.entities.Persistente
 /**
  * WettbewerbHibernateRepository
  */
-@RequestScoped
+@ApplicationScoped
 public class WettbewerbHibernateRepository implements WettbewerbRepository {
 
 	@Inject

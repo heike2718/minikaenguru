@@ -19,6 +19,8 @@ import javax.persistence.Table;
 	name = "SCHULKOLLEGIEN.FIND_BY_UUID", query = "select sk from PersistentesSchulkollegium sk where sk.uuid = :uuid"))
 public class PersistentesSchulkollegium extends ConcurrencySafeEntity {
 
+	private static final long serialVersionUID = 7765477655501550508L;
+
 	public static final String FIND_BY_UUID = "SCHULKOLLEGIEN.FIND_BY_UUID";
 
 	@Column(name = "KOLLEGIUM")

@@ -4,8 +4,10 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.kinder.api;
 
+import java.io.Serializable;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
@@ -13,7 +15,10 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 /**
  * PrivatkindRequestData
  */
-public class PrivatkindRequestData {
+public class PrivatkindRequestData implements Serializable {
+
+	@JsonIgnore
+	private static final long serialVersionUID = 1L;
 
 	@JsonProperty
 	private KindAPIModel kind;
