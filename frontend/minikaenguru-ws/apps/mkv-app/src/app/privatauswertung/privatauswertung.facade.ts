@@ -3,12 +3,13 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
 import * as PrivatauswertungSelectors from './+state/privatauswertung.selectors';
 import * as PrivatauswertungActions from './+state/privatauswertung.actions';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { Kind, KindEditorModel } from '@minikaenguru-ws/common-components';
 import { AuthService } from '@minikaenguru-ws/common-auth';
 import { PrivatauswertungService } from './privatauswertung.service';
 import { take } from 'rxjs/operators';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
+import { KindWithID } from './privatauswertung.model';
 
 
 
@@ -20,6 +21,7 @@ export class PrivatauswertungFacade {
 	public kindEditorModel$: Observable<KindEditorModel> = this.store.select(PrivatauswertungSelectors.kindEditorModel);
 	public kinder$: Observable<Kind[]> = this.store.select(PrivatauswertungSelectors.kinder);
 	public kinderGeladen$: Observable<boolean> = this.store.select(PrivatauswertungSelectors.kinderGeladen);
+	public anzahlKinder$: Observable<number> = this.store.select(PrivatauswertungSelectors.anzahlKinder);
 
 
 	private loggingOut: boolean;
@@ -57,10 +59,8 @@ export class PrivatauswertungFacade {
 
 		this.store.dispatch(PrivatauswertungActions.startLoading());
 
-		this.privatauswertungService.loadKinder().pipe(
-			take(1)
-		).subscribe(
-			kinder => this.store.dispatch(PrivatauswertungActions.allKinderLoaded({kinder: kinder})),
+		this.privatauswertungService.loadKinder().subscribe(
+			kinder => this.store.dispatch(PrivatauswertungActions.allKinderLoaded({ kinder: kinder })),
 			(error => {
 				this.store.dispatch(PrivatauswertungActions.finishedWithError());
 				this.errorHandler.handleError(error);

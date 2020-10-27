@@ -5,11 +5,14 @@
 			<div class="row">
 				<div class="card-subtitle text-muted col-sm-12 col-md-9">{{kind.klassenstufe.label}}</div>
 				<div class="card-subtitle text-muted col-sm-12 col-md-9">Sprache: {{kind.sprache.label}}</div>
-				<div *ngIf="veranstalter.hatZugangZuUnterlangen" class="card-subtitle text-muted col-sm-12 col-md-9">
+				<div *ngIf="veranstalter.hatZugangZuUnterlangen else loesungenBlockiert" class="card-subtitle text-muted col-sm-12 col-md-9">
 					Können Lösungszettel erfassen</div>
-				<div *ngIf="!veranstalter.hatZugangZuUnterlangen" class="card-subtitle text-muted col-sm-12 col-md-9">
-					Lösungen können noch nicht erfasst werden.</div>
 			</div>
 		</div>
 	</div>
 </div>
+
+<ng-template #loesungenBlockiert>
+	<div class="card-subtitle text-muted col-sm-12 col-md-9">
+		Lösungen können noch nicht erfasst werden.</div>
+</ng-template>

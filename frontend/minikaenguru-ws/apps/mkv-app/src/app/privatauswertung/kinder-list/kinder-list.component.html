@@ -1,14 +1,15 @@
 <div class="mkv-container mt-1">
 	<div class="col-12">
-		<h2>Kinder</h2>
+		<h2>Kinder <span *ngIf="anzahlKinder$ | async as anzahl" class="badge badge-secondary">{{anzahl}}</span></h2>
 		<p *ngIf="devMode">(kinder-list.component)</p>
 
-		<ng-container *ngIf="veranstalter$ | async as veranstalter">
-			<ng-container *ngIf="(kinder$ | async) as kinder">
+		<ng-container *ngIf="(kinder$ | async) as kinder">
+			<ng-container *ngIf="(veranstalter$ | async) as veranstalter">
 				<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let kind of kinder">
 					<mkv-kind-details [kind]="kind" [veranstalter]="veranstalter"></mkv-kind-details>
 				</div>
 			</ng-container>
 		</ng-container>
+
 	</div>
 </div>

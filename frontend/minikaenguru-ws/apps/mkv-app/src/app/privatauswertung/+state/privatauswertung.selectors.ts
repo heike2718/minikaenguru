@@ -8,5 +8,5 @@ export const kindEditorModel = createSelector(privatauswertungState, s => s.edit
 export const kinderMap = createSelector(privatauswertungState, s => s.kinderMap);
 export const kinder = createSelector(privatauswertungState, s => new KinderMap(s.kinderMap).toArray());
 export const kinderGeladen = createSelector(privatauswertungState, s => s.kinderLoaded);
-
+export const anzahlKinder = createSelector(privatauswertungState, s => s.kinderMap.length);
 
