@@ -29,6 +29,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { AktuelleMeldungModule } from './aktuelle-meldung/aktuelle-meldung.module';
 import { TeilnahmenModule } from './teilnahmen/teilnahmen.module';
 import { VertragAdvModule } from './vertrag-adv/vertrag-adv.module';
+import { PrivatauswertungModule } from './privatauswertung/privatauswertung.module';
 
 
 
@@ -67,6 +68,7 @@ import { VertragAdvModule } from './vertrag-adv/vertrag-adv.module';
 		RegistrationModule,
 		LehrerModule,
 		PrivatveranstalterModule,
+		PrivatauswertungModule,
 		TeilnahmenModule,
 		VertragAdvModule,
 		StoreModule.forRoot(reducers, {

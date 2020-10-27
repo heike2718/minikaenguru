@@ -29,13 +29,20 @@ public class KinderHibernateRepository implements KinderRepository {
 	@Inject
 	EntityManager em;
 
+	public static KinderHibernateRepository createForIntegrationTest(final EntityManager em) {
+
+		KinderHibernateRepository result = new KinderHibernateRepository();
+		result.em = em;
+		return result;
+	}
+
 	@Override
 	public List<Kind> findKinderWithTeilnahme(final TeilnahmeIdentifier teilnahmeIdentifier, final WettbewerbID wettbewerbID) {
 
 		final PersistentesKindKindMapper mapper = new PersistentesKindKindMapper(wettbewerbID);
 
 		List<PersistentesKind> trefferliste = em.createNamedQuery(PersistentesKind.FIND_BY_TEILNAHME, PersistentesKind.class)
-			.setParameter("", teilnahmeIdentifier.teilnahmenummer()).getResultList();
+			.setParameter("teilnahmenummer", teilnahmeIdentifier.teilnahmenummer()).getResultList();
 
 		if (trefferliste.isEmpty()) {
 

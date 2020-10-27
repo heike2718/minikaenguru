@@ -50,7 +50,7 @@ public class Kind {
 		return result;
 	}
 
-	private Kind() {
+	public Kind() {
 
 	}
 

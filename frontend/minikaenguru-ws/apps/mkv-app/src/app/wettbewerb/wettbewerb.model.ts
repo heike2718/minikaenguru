@@ -1,10 +1,6 @@
-import { TeilnahmeIdentifier } from '@minikaenguru-ws/common-components';
+import { TeilnahmeIdentifier, Kind, Klasse } from '@minikaenguru-ws/common-components';
 
 export type WettbewerbStatus = 'ERFASST' | 'ANMELDUNG' | 'DOWNLOAD_PRIVAT' | 'DOWNLOAD_LEHRER' | 'BEENDET';
-export type Teilnahmeart = 'PRIVAT' | 'SCHULE';
-export type Klassenstufenart = 'IKID' | 'EINS' | 'ZWEI';
-export type Sprachtyp = 'de' | 'en';
-
 
 export interface Wettbewerb {
 	readonly jahr: number;
@@ -29,46 +25,23 @@ export interface Privatveranstalter {
 	readonly teilnahmenummer: string;
 }
 
-export interface Klassenstufe {
-	readonly klassenstufe: Klassenstufenart;
-	readonly label: string;
-};
-
-export interface Sprache {
-	readonly sprache: Sprachtyp;
-	readonly label: string;
-};
-
-export interface Kind {
-	readonly vorname: string;
-	readonly nachname?: string;
-	readonly zusatz?: string;
-	readonly klassenstufe: Klassenstufe;
-	readonly sprache: Sprache;
-};
-
-export interface Auswertungsgruppe {
-	readonly name: string;
-	readonly klassenstufe: Klassenstufe;
-	readonly kinder: Kind[];
-}
-
 export interface AbstractTeilnahme {
 	readonly identifier: TeilnahmeIdentifier;
 	readonly anzahlKinder: number;
 }
 
+// tslint:disable-next-line:no-empty-interface
 export interface Privatteilnahme extends AbstractTeilnahme {
-	readonly kinderGeladen: boolean;
-	readonly kinder: Kind[];
+	// readonly kinderGeladen: boolean;
+	// readonly kinder: Kind[];
 }
 
 export interface Schulteilnahme extends AbstractTeilnahme {
 	readonly nameUrkunde: string;
 	readonly anzahlKlassen: number;
-	readonly klassenGeladen: boolean;
+	// readonly klassenGeladen: boolean;
 	readonly angemeldetDurch: string;
-	readonly auswertungsgruppen: Auswertungsgruppe[];
+	// readonly klassen: Klasse[];
 };
 
 export interface AnonymisierteTeilnahme extends AbstractTeilnahme {

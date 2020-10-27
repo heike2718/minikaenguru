@@ -69,7 +69,7 @@ export class WettbewerbFacade {
 		return this.http.get(url).pipe(
 			map(body => body as ResponsePayload),
 			map(payload => payload.data)
-		)
+		);
 	}
 
 	public loadWettbewerbDetails(jahr: number): Observable<Wettbewerb> {
@@ -163,4 +163,5 @@ export class WettbewerbFacade {
 			}
 		);
 	}
-}
+};
+
