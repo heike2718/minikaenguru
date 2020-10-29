@@ -278,6 +278,17 @@ public class PermittedRolesInMemoryRepositoryTest {
 		}
 
 		@Test
+		void should_permittedRollen_privatkinderDuplikatePost_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/privatkinder/duplikate", HttpMethod.POST);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.PRIVAT));
+		}
+
+		@Test
 		void should_permittedRollen_privatkinderPut_beOk() {
 
 			// Act

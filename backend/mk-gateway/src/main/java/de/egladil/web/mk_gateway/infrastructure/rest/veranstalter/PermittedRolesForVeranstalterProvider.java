@@ -128,7 +128,10 @@ public final class PermittedRolesForVeranstalterProvider {
 			result.put((new PathWithMethod("/privatkinder", HttpMethod.POST)),
 				rollen);
 
-			result.put((new PathWithMethod("/privatkinder}", HttpMethod.PUT)),
+			result.put((new PathWithMethod("/privatkinder/duplikate", HttpMethod.POST)),
+				rollen);
+
+			result.put((new PathWithMethod("/privatkinder", HttpMethod.PUT)),
 				rollen);
 
 			result.put((new PathWithMethod("/privatkinder/*", HttpMethod.DELETE)),

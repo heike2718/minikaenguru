@@ -30,6 +30,7 @@ import { AktuelleMeldungModule } from './aktuelle-meldung/aktuelle-meldung.modul
 import { TeilnahmenModule } from './teilnahmen/teilnahmen.module';
 import { VertragAdvModule } from './vertrag-adv/vertrag-adv.module';
 import { PrivatauswertungModule } from './privatauswertung/privatauswertung.module';
+import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
 
 
 
@@ -39,7 +40,8 @@ import { PrivatauswertungModule } from './privatauswertung/privatauswertung.modu
 		NavbarComponent,
 		NotFoundComponent,
 		LandingComponent,
-		DashboardComponent
+		DashboardComponent,
+		ConfirmDialogComponent,
 	],
 	imports: [
 		BrowserModule,

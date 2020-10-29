@@ -15,8 +15,7 @@ import javax.persistence.EntityManager;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
-import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistentesKind;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistentesKindKindMapper;
 
@@ -37,12 +36,12 @@ public class KinderHibernateRepository implements KinderRepository {
 	}
 
 	@Override
-	public List<Kind> findKinderWithTeilnahme(final TeilnahmeIdentifier teilnahmeIdentifier, final WettbewerbID wettbewerbID) {
+	public List<Kind> findKinderWithTeilnahme(final Teilnahme teilnahme) {
 
-		final PersistentesKindKindMapper mapper = new PersistentesKindKindMapper(wettbewerbID);
+		final PersistentesKindKindMapper mapper = new PersistentesKindKindMapper(teilnahme.wettbewerbID());
 
 		List<PersistentesKind> trefferliste = em.createNamedQuery(PersistentesKind.FIND_BY_TEILNAHME, PersistentesKind.class)
-			.setParameter("teilnahmenummer", teilnahmeIdentifier.teilnahmenummer()).getResultList();
+			.setParameter("teilnahmenummer", teilnahme.teilnahmenummer().identifier()).getResultList();
 
 		if (trefferliste.isEmpty()) {
 

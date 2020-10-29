@@ -1,7 +1,8 @@
 import { createReducer, Action, on } from '@ngrx/store';
 import * as PrivatauswertungActions from './privatauswertung.actions';
-import { KindWithID } from '../privatauswertung.model';
-import { initialKindEditorModel, KindEditorModel } from 'libs/common-components/src/lib/common-components.model';
+import { KindWithID, KinderMap } from '../privatauswertung.model';
+import { initialKindEditorModel, KindEditorModel, Duplikatwarnung } from 'libs/common-components/src/lib/common-components.model';
+import { Message } from '@minikaenguru-ws/common-messages';
 
 export const privatauswertungFeatureKey = 'mkv-app-privatauswertung';
 
@@ -10,6 +11,8 @@ export interface PrivatauswertungState {
 	selectedKindUUID: string;
 	kinderLoaded: boolean;
 	loading: boolean;
+	saveOutcome: Message;
+	duplikatwarnung: Duplikatwarnung;
 	editorModel: KindEditorModel;
 };
 
@@ -18,6 +21,8 @@ const initialPrivatauswertungState: PrivatauswertungState = {
 	selectedKindUUID: undefined,
 	kinderLoaded: false,
 	loading: false,
+	saveOutcome: undefined,
+	duplikatwarnung: undefined,
 	editorModel: undefined
 };
 
@@ -51,16 +56,28 @@ const privatauswertungReducer = createReducer(initialPrivatauswertungState,
 		};
 
 
-		return {...state, editorModel: kindEditorModel};
+		return { ...state, editorModel: kindEditorModel, saveOutcome: undefined };
 	}),
 
 	on(PrivatauswertungActions.createNewKind, (state, _action) => {
-		return {...state, editorModel: initialKindEditorModel}
+		return { ...state, editorModel: initialKindEditorModel }
 	}),
 
 	on(PrivatauswertungActions.finishedWithError, (state, _action) => {
 
-		return {...state, loading: false, kinderLoaded: false};
+		return { ...state, loading: false, kinderLoaded: false };
+
+	}),
+
+	on(PrivatauswertungActions.kindSaved, (state, action) => {
+		const outcome = action.outcome;
+		const neueMap = new KinderMap(state.kinderMap).merge(action.kind);
+		return { ...state, kinderMap: neueMap, saveOutcome: outcome, loading: false };
+	}),
+
+	on(PrivatauswertungActions.duplikatGeprueft, (state, action) => {
+
+		return { ...state, loading: false, duplikatwarnung: action.duplikatwarnung };
 
 	})
 );

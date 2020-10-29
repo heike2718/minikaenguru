@@ -7,7 +7,7 @@ package de.egladil.web.mk_gateway.domain.kinder;
 import java.util.Objects;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.kinder.api.KindAPIModel;
+import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
 import de.egladil.web.mk_gateway.domain.semantik.AggregateRoot;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
@@ -37,14 +37,12 @@ public class Kind {
 
 	private Identifier klasseID;
 
-	public static Kind createFromAPIModelWithoutKlasseID(final KindAPIModel apiModel) {
+	public static Kind createFromKindEditorModel(final KindEditorModel apiModel) {
 
 		Kind result = new Kind();
 		result.vorname = apiModel.vorname() == null ? null : apiModel.vorname().trim();
 		result.nachname = apiModel.nachname() == null ? null : apiModel.nachname().trim();
 		result.zusatz = apiModel.zusatz() == null ? null : apiModel.zusatz().trim();
-		result.identifier = apiModel.uuid() == null ? null : new Identifier(apiModel.uuid());
-		result.loesungszettelID = apiModel.loesungszettelId() == null ? null : new Identifier(apiModel.loesungszettelId());
 		result.sprache = apiModel.sprache().sprache();
 		result.klassenstufe = apiModel.klassenstufe().klassenstufe();
 		return result;

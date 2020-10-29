@@ -7,10 +7,12 @@ package de.egladil.web.mk_gateway.domain.kinder.api;
 import java.io.Serializable;
 import java.util.Objects;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
+import de.egladil.web.commons_validation.annotations.UuidString;
 
 /**
  * PrivatkindRequestData
@@ -20,38 +22,33 @@ public class PrivatkindRequestData implements Serializable {
 	@JsonIgnore
 	private static final long serialVersionUID = 1L;
 
-	@JsonProperty
-	private KindAPIModel kind;
+	@JsonIgnore
+	public static final String KEINE_UUID = "neu";
 
 	@JsonProperty
-	private TeilnahmeIdentifier teilnahmeIdentifier;
+	@UuidString
+	@NotNull
+	private String uuid;
 
-	public KindAPIModel kind() {
+	@JsonProperty
+	@NotNull
+	private KindEditorModel kind;
+
+	public KindEditorModel kind() {
 
 		return kind;
 	}
 
-	public PrivatkindRequestData withKind(final KindAPIModel kind) {
+	public PrivatkindRequestData withKind(final KindEditorModel kind) {
 
 		this.kind = kind;
-		return this;
-	}
-
-	public TeilnahmeIdentifier teilnahmeIdentifier() {
-
-		return teilnahmeIdentifier;
-	}
-
-	public PrivatkindRequestData withTeilnahmeIdentifier(final TeilnahmeIdentifier teilnahmeIdentifier) {
-
-		this.teilnahmeIdentifier = teilnahmeIdentifier;
 		return this;
 	}
 
 	@Override
 	public int hashCode() {
 
-		return Objects.hash(kind, teilnahmeIdentifier);
+		return Objects.hash(kind, uuid);
 	}
 
 	@Override
@@ -72,7 +69,7 @@ public class PrivatkindRequestData implements Serializable {
 			return false;
 		}
 		PrivatkindRequestData other = (PrivatkindRequestData) obj;
-		return Objects.equals(kind, other.kind) && Objects.equals(teilnahmeIdentifier, other.teilnahmeIdentifier);
+		return Objects.equals(kind, other.kind) && Objects.equals(uuid, other.uuid);
 	}
 
 }

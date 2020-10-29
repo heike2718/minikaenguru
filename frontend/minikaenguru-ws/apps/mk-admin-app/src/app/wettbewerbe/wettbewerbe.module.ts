@@ -16,6 +16,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
+	declarations: [
+		WettbewerbeListComponent,
+		WettbewerbCardComponent,
+		WettbewerbDashboardComponent,
+		WettbewerbEditorComponent
+	],
 	imports: [
 		CommonModule,
 		ReactiveFormsModule,
@@ -23,13 +29,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 		StoreModule.forFeature(fromWettbewerbe.wettbewerbeFeatureKey, fromWettbewerbe.reducer),
 		EffectsModule.forFeature([WettbewerbeEffects])
 	],
-	declarations: [
-		WettbewerbeListComponent,
-		WettbewerbCardComponent,
-		WettbewerbDashboardComponent,
-		WettbewerbEditorComponent],
-	exports: [
-		],
 	providers: [
 		WettbewerbeListResolver,
 		WettbewerbDetailsResolver

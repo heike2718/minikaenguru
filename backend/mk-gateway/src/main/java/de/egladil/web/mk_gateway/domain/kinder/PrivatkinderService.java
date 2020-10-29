@@ -13,14 +13,14 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
 
-import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
+import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindAPIModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.PrivatkindRequestData;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
-import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.veranstalter.Privatveranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.PrivatveranstalterService;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
@@ -33,9 +33,6 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 public class PrivatkinderService {
 
 	private final KindDublettenpruefer dublettenpruefer = new KindDublettenpruefer();
-
-	@Inject
-	AuthorizationService authService;
 
 	@Inject
 	KinderRepository kinderRepository;
@@ -52,17 +49,20 @@ public class PrivatkinderService {
 	@Inject
 	Event<KindCreated> kindCreatedEvent;
 
+	@Inject
+	Event<DataInconsistencyRegistered> dataInconsistencyEvent;
+
 	private WettbewerbID wettbewerbID;
 
 	private KindCreated kindCreated;
 
-	public static PrivatkinderService createForTest(final KinderRepository kinderRepository, final TeilnahmenRepository teilnahmenRepository, final AuthorizationService authService) {
+	public static PrivatkinderService createForTest(final KinderRepository kinderRepository, final TeilnahmenRepository teilnahmenRepository, final PrivatveranstalterService privatveranstalterService, final Integer jahrAktuellerWettbewerb) {
 
 		PrivatkinderService result = new PrivatkinderService();
-		result.authService = authService;
+		result.privatveranstalterService = privatveranstalterService;
 		result.kinderRepository = kinderRepository;
 		result.teilnahmenRepository = teilnahmenRepository;
-		result.wettbewerbID = new WettbewerbID(2018);
+		result.wettbewerbID = new WettbewerbID(jahrAktuellerWettbewerb);
 		return result;
 	}
 
@@ -77,24 +77,16 @@ public class PrivatkinderService {
 	 */
 	public boolean pruefeDublettePrivat(final PrivatkindRequestData daten, final String veranstalterUuid) {
 
-		if (this.wettbewerbID == null) {
+		Teilnahme teilnahme = getAktuelleTeilnahme(veranstalterUuid, "pruefeDublettePrivat");
 
-			this.wettbewerbID = this.wettbewerbService.aktuellerWettbewerb().get().id();
-		}
-
-		TeilnahmeIdentifier teilnahmeIdentifier = daten.teilnahmeIdentifier();
-
-		this.authService.checkPermissionForTeilnahmenummer(new Identifier(veranstalterUuid),
-			new Identifier(teilnahmeIdentifier.teilnahmenummer()));
-
-		List<Kind> kinder = kinderRepository.findKinderWithTeilnahme(teilnahmeIdentifier, this.wettbewerbID);
+		List<Kind> kinder = kinderRepository.findKinderWithTeilnahme(teilnahme);
 
 		if (kinder.isEmpty()) {
 
 			return false;
 		}
 
-		Kind kind = Kind.createFromAPIModelWithoutKlasseID(daten.kind());
+		Kind kind = Kind.createFromKindEditorModel(daten.kind());
 
 		return this.koennteDubletteSein(kind, kinder);
 	}
@@ -123,12 +115,9 @@ public class PrivatkinderService {
 	 */
 	public KindAPIModel privatkindAnlegen(final PrivatkindRequestData daten, final String veranstalterUuid) {
 
-		TeilnahmeIdentifier teilnahmeIdentifier = daten.teilnahmeIdentifier();
+		Teilnahme teilnahme = getAktuelleTeilnahme(veranstalterUuid, "privatkindAnlegen");
 
-		this.authService.checkPermissionForTeilnahmenummer(new Identifier(veranstalterUuid),
-			new Identifier(teilnahmeIdentifier.teilnahmenummer()));
-
-		Kind kind = Kind.createFromAPIModelWithoutKlasseID(daten.kind());
+		Kind kind = Kind.createFromKindEditorModel(daten.kind());
 
 		Kind gespeichertesKind = kinderRepository.addKind(kind);
 
@@ -137,7 +126,7 @@ public class PrivatkinderService {
 		kindCreated = (KindCreated) new KindCreated(veranstalterUuid).withKindID(result.uuid())
 			.withKlassenstufe(gespeichertesKind.klassenstufe())
 			.withSprache(gespeichertesKind.sprache())
-			.withTeilnahmenummer(teilnahmeIdentifier.teilnahmenummer());
+			.withTeilnahmenummer(teilnahme.teilnahmenummer().identifier());
 
 		if (this.kindCreatedEvent != null) {
 
@@ -148,6 +137,18 @@ public class PrivatkinderService {
 	}
 
 	public List<KindAPIModel> loadAllKinder(final String veranstalterUuid) {
+
+		Teilnahme teilnahme = getAktuelleTeilnahme(veranstalterUuid, "loadAllKinder");
+
+		List<Kind> kinder = this.kinderRepository.findKinderWithTeilnahme(teilnahme);
+		final List<KindAPIModel> result = new ArrayList<>();
+
+		kinder.forEach(kind -> result.add(KindAPIModel.createFromKind(kind)));
+
+		return result;
+	}
+
+	private Teilnahme getAktuelleTeilnahme(final String veranstalterUuid, final String callingMethod) {
 
 		if (this.wettbewerbID == null) {
 
@@ -163,18 +164,15 @@ public class PrivatkinderService {
 
 		if (optTeilnahme.isEmpty()) {
 
+			String msg = this.getClass().getSimpleName() + "." + callingMethod + "(...): " + "Privatveranstalter mit UUID="
+				+ veranstalterUuid + " ist nicht zum aktuellen Wettbewerb (" + wettbewerbID + ") angemeldet";
+
+			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
 			throw new NotFoundException(
-				"Privatveranstalter mit UUID=" + veranstalterUuid + " ist nicht zum aktuellen Wettbewerb angemeldet");
+				msg);
 		}
 
-		Teilnahme teilnahme = optTeilnahme.get();
-
-		List<Kind> kinder = this.kinderRepository.findKinderWithTeilnahme(teilnahme.teilnahmeIdentifier(), wettbewerbID);
-		final List<KindAPIModel> result = new ArrayList<>();
-
-		kinder.forEach(kind -> result.add(KindAPIModel.createFromKind(kind)));
-
-		return result;
+		return optTeilnahme.get();
 	}
 
 	KindCreated getKindCreated() {

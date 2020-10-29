@@ -11,7 +11,7 @@ import static org.junit.Assert.assertNull;
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.kinder.api.KindAPIModel;
+import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 
@@ -42,13 +42,13 @@ public class KindTest {
 	void should_createFromAPIModelWithoutKlasseID_initAllAttributes() {
 
 		// Arrange
-		KindAPIModel apiModel = KindAPIModel.create(Klassenstufe.ZWEI, Sprache.en)
+		KindEditorModel apiModel = KindEditorModel.create(Klassenstufe.ZWEI, Sprache.en)
 			.withNachname("Paschulke")
 			.withVorname("Heinz")
 			.withZusatz("Zusatz");
 
 		// Act
-		Kind kind = Kind.createFromAPIModelWithoutKlasseID(apiModel);
+		Kind kind = Kind.createFromKindEditorModel(apiModel);
 
 		// Assert
 		assertNull(kind.identifier());

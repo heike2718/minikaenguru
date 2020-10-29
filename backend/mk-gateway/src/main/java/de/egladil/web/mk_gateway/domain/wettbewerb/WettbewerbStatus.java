@@ -9,25 +9,11 @@ package de.egladil.web.mk_gateway.domain.wettbewerb;
  */
 public enum WettbewerbStatus {
 
-	ERFASST {
-
-		@Override
-		public boolean manKannSichAnmelden() {
-
-			return false;
-		}
-
-	},
+	ERFASST,
 	ANMELDUNG,
 	DOWNLOAD_LEHRER,
 	DOWNLOAD_PRIVAT,
-	BEENDET {
-		@Override
-		public boolean manKannSichAnmelden() {
-
-			return false;
-		}
-	};
+	BEENDET;
 
 	public static WettbewerbStatus nextStatus(final WettbewerbStatus currentStatus) throws IllegalStateException, IllegalArgumentException {
 
@@ -57,10 +43,5 @@ public enum WettbewerbStatus {
 		default:
 			throw new IllegalArgumentException("unbekannter Status " + currentStatus);
 		}
-	}
-
-	public boolean manKannSichAnmelden() {
-
-		return true;
 	}
 }

@@ -4,10 +4,10 @@ import { AppState } from '../reducers';
 import * as PrivatauswertungSelectors from './+state/privatauswertung.selectors';
 import * as PrivatauswertungActions from './+state/privatauswertung.actions';
 import { Observable, of, Subscription } from 'rxjs';
-import { Kind, KindEditorModel } from '@minikaenguru-ws/common-components';
+import { Kind, KindEditorModel, Duplikatwarnung, PrivatkindRequestData, getKlassenstufeByLabel, getSpracheByLabel } from '@minikaenguru-ws/common-components';
 import { AuthService } from '@minikaenguru-ws/common-auth';
 import { PrivatauswertungService } from './privatauswertung.service';
-import { take } from 'rxjs/operators';
+import { take, map } from 'rxjs/operators';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
 import { KindWithID } from './privatauswertung.model';
 
@@ -22,7 +22,7 @@ export class PrivatauswertungFacade {
 	public kinder$: Observable<Kind[]> = this.store.select(PrivatauswertungSelectors.kinder);
 	public kinderGeladen$: Observable<boolean> = this.store.select(PrivatauswertungSelectors.kinderGeladen);
 	public anzahlKinder$: Observable<number> = this.store.select(PrivatauswertungSelectors.anzahlKinder);
-
+	public duplikatwarnung$: Observable<Duplikatwarnung> = this.store.select(PrivatauswertungSelectors.duplikatwarnung);
 
 	private loggingOut: boolean;
 
@@ -47,8 +47,6 @@ export class PrivatauswertungFacade {
 	public editKind(kind: Kind): void {
 
 		this.store.dispatch(PrivatauswertungActions.startEditingKind({ kind: kind }));
-		//TODO navigate to the Editor
-
 	}
 
 	public loadKinder(): void {
@@ -67,4 +65,70 @@ export class PrivatauswertungFacade {
 			})
 		);
 	}
+
+	public pruefeDuplikat(uuid: string, editorModel: KindEditorModel): void {
+
+		this.store.dispatch(PrivatauswertungActions.startLoading());
+
+		const data = this.mapFromEditorModel(uuid, editorModel) as PrivatkindRequestData;
+
+		this.privatauswertungService.checkDuplikat(data).subscribe(
+			warnung => this.store.dispatch(PrivatauswertungActions.duplikatGeprueft({duplikatwarnung: warnung})),
+			(error => {
+				this.store.dispatch(PrivatauswertungActions.finishedWithError());
+				this.errorHandler.handleError(error);
+			})
+		);
+	}
+
+	public insertKind(uuid: string, editorModel: KindEditorModel): void {
+
+		this.store.dispatch(PrivatauswertungActions.startLoading());
+
+		const data = this.mapFromEditorModel(uuid, editorModel) as PrivatkindRequestData;
+
+		// this.privatauswertungService.insertKind(data).pipe(
+		// 	map(
+		// 		respnsePayload => {
+		// 			const kind: Kind = respnsePayload.data;
+
+		// 			{
+		// 				kind: kind,
+		// 				outcome: respnsePayload.message.message
+		// 			}
+		// 		}
+		// 	)
+		// ).subscribe(
+		// 	responsePayload => this.store.dispatch(PrivatauswertungActions.kindSaved({kind: responsePayload.data as Kind, }))),
+		// 	(error => {
+		// 		this.store.dispatch(PrivatauswertungActions.finishedWithError());
+		// 		this.errorHandler.handleError(error);
+		// 	})
+		// );
+
+	}
+
+	public updateKind(kind: Kind): void {
+
+		this.store.dispatch(PrivatauswertungActions.startLoading());
+
+
+
+	}
+
+
+	// ////////////////////////////////////// private members //////////////////
+
+	private mapFromEditorModel(uuid: string, editorModel: KindEditorModel): PrivatkindRequestData {
+
+		const data: PrivatkindRequestData = {
+			uuid: uuid,
+			kind: editorModel
+		};
+
+		return data
+	}
 };
+
+
+

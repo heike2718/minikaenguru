@@ -6,21 +6,29 @@ import { PrivatauswertungRoutingModule } from './privatauswertung-routing.module
 import { KindDetailsComponent } from './kind-details/kind-details.component';
 import { KinderListComponent } from './kinder-list/kinder-list.component';
 import { KinderListResolver } from './kinder-list/kinder-list.resolver';
+import { KindEditorComponent } from './kind-editor/kind-editor.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ReactiveFormsModule } from '@angular/forms';
+import { KindEditorResolver } from './kind-editor/kind-editor.resolver';
 
 
 
 @NgModule({
 	declarations: [
 		KindDetailsComponent,
-		KinderListComponent
+		KinderListComponent,
+		KindEditorComponent
 	],
 	imports: [
 		CommonModule,
+		ReactiveFormsModule,
+		PrivatauswertungRoutingModule,
+		NgbModule,
 		StoreModule.forFeature(fromPrivatauswertung.privatauswertungFeatureKey, fromPrivatauswertung.reducer),
-		PrivatauswertungRoutingModule
 	],
 	providers: [
-		KinderListResolver
+		KinderListResolver,
+		KindEditorResolver
 	]
 })
 export class PrivatauswertungModule { }

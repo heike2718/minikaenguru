@@ -1,0 +1,104 @@
+<div class="mkv-container mt-1">
+	<h2>Kind eintragen oder ändern</h2>
+
+	<div *ngIf="editorInitialized">
+
+		<div class="col-12">
+
+			<form class="mb-4" [formGroup]="kindForm">
+
+				<div class="row mt-4">
+					<div class="col-12">
+						<label for="vornameInput">Vorname*</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						<input [class.error]="vornameFormControl.touched && !vornameFormControl.valid"
+							class="form-control" type="text" id="vornameInput" placeholder="Vorname"
+							formControlName="vorname" autocomplete="true">
+					</div>
+				</div>
+
+				<div class="row mt-4">
+					<div class="col-12">
+						<label for="nachnameInput">Nachname</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						<input [class.error]="nachnameFormControl.touched && !nachnameFormControl.valid"
+							class="form-control" type="text" id="nachnameInput" placeholder="Nachname"
+							formControlName="nachname" autocomplete="true">
+					</div>
+				</div>
+
+				<div class="row mt-4">
+					<div class="col-12">
+						<label for="zusatzInput">Zusatz</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						<input [class.error]="zusatzFormControl.touched && !zusatzFormControl.valid"
+							class="form-control" type="text" id="zusatzInput" placeholder="Zusatz"
+							formControlName="zusatz" autocomplete="true">
+					</div>
+				</div>
+
+				<div class="row mt-4">
+					<div class="col-12">
+						<label for="klassenstufeSelect">Klassenstufe*</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						<select  id="klassenstufeSelect" class="custom-select" formControlName="klassenstufe">
+							<option [ngValue]="null" disabled>Bitte Klassenstufe wählen</option>
+							<option *ngFor="let ks of klassenstufen" [ngValue]="ks">
+								{{ ks }}
+							</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="row mt-4">
+					<div class="col-12">
+						<label for="spracheSelect">Sprache*</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						<select  id="spracheSelect" class="custom-select" formControlName="sprache">
+							<option *ngFor="let spr of sprachen" [ngValue]="spr">
+								{{ spr }}
+							</option>
+						</select>
+					</div>
+				</div>
+			</form>
+
+			<p *ngIf="devMode">
+				Form Value: {{ kindForm.value | json }}
+			</p>
+
+
+			<p *ngIf="devMode">
+				Form Status: {{ kindForm.status }}
+			</p>
+
+			<p *ngIf="devMode">
+				(kind-editor.component.ts)
+			</p>
+		</div>
+
+		<div class="btn-group d-flex" role="group">
+			<button class="btn btn-primary w-100 ml-1" [disabled]="!kindForm.valid || saveInProgress"
+				(click)="onSubmit()"><i class="fa fa-floppy-o" aria-hidden="true"></i>
+				speichern</button>
+
+			<button class="btn btn-primary w-100 ml-1" (click)="onCancel()"><i class="fa fa-undo"
+					aria-hidden="true"></i>zurücksetzen</button>
+		</div>
+	</div>
+</div>

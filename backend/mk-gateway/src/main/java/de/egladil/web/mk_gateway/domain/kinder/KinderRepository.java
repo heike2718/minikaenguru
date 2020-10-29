@@ -6,8 +6,7 @@ package de.egladil.web.mk_gateway.domain.kinder;
 
 import java.util.List;
 
-import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 
 /**
  * KinderRepository
@@ -15,14 +14,15 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 public interface KinderRepository {
 
 	/**
-	 * Gibt alle Kinder mit dem gleichen TeilnahmeIdentifier zurück.
+	 * Gibt alle Kinder mit der gleichen Teilnahmenummer zurück.
 	 *
-	 * @param  teilnahmeIdentifier
+	 * @param  teilnahmenummer
+	 *                         String
 	 * @param  wettbewerbID
-	 *                             WettbewerbID
-	 * @return                     List
+	 *                         WettbewerbID
+	 * @return                 List
 	 */
-	List<Kind> findKinderWithTeilnahme(TeilnahmeIdentifier teilnahmeIdentifier, WettbewerbID wettbewerbID);
+	List<Kind> findKinderWithTeilnahme(Teilnahme teilnahme);
 
 	/**
 	 * Fügt ein neues Kind hinzu

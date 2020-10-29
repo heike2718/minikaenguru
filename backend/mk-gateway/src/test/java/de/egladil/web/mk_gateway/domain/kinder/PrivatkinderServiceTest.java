@@ -7,26 +7,28 @@ package de.egladil.web.mk_gateway.domain.kinder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.ws.rs.NotFoundException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
-import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
-import de.egladil.web.mk_gateway.domain.kinder.api.KindAPIModel;
+import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.PrivatkindRequestData;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Privatteilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
-import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
-import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
+import de.egladil.web.mk_gateway.domain.veranstalter.PrivatveranstalterService;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 
 /**
@@ -34,13 +36,11 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
  */
 public class PrivatkinderServiceTest extends AbstractDomainServiceTest {
 
-	private static final WettbewerbID WETTBEWERB_ID = new WettbewerbID(2018);
-
 	private PrivatkinderService service;
 
 	private KinderRepository kinderRepository;
 
-	private AuthorizationService authService;
+	private PrivatveranstalterService privatveranstalterService;
 
 	class TestKinderRepository implements KinderRepository {
 
@@ -58,7 +58,7 @@ public class PrivatkinderServiceTest extends AbstractDomainServiceTest {
 		}
 
 		@Override
-		public List<Kind> findKinderWithTeilnahme(final TeilnahmeIdentifier teilnahmeIdentifier, final WettbewerbID wettbewerbID) {
+		public List<Kind> findKinderWithTeilnahme(final Teilnahme teilnahme) {
 
 			return Arrays.asList(new Kind[] { expectedKind });
 		}
@@ -72,9 +72,10 @@ public class PrivatkinderServiceTest extends AbstractDomainServiceTest {
 		super.setUp();
 
 		kinderRepository = Mockito.mock(KinderRepository.class);
-		authService = Mockito.mock(AuthorizationService.class);
-
-		service = PrivatkinderService.createForTest(kinderRepository, getTeilnahmenRepository(), authService);
+		privatveranstalterService = PrivatveranstalterService.createForTest(getVeranstalterRepository(),
+			getZugangUnterlagenService(), getWettbewerbService(), getTeilnahmenRepository(), getPrivatteilnameKuerzelService());
+		service = PrivatkinderService.createForTest(kinderRepository, getTeilnahmenRepository(), privatveranstalterService,
+			WETTBEWERBSJAHR_AKTUELL);
 	}
 
 	@Test
@@ -83,47 +84,38 @@ public class PrivatkinderServiceTest extends AbstractDomainServiceTest {
 		// Arrange
 		PrivatkindRequestData data = createTestData();
 
-		String veranstalterUuid = "gduqgugug";
-		Identifier userIdentifier = new Identifier(veranstalterUuid);
-		Identifier teilnahmeID = new Identifier("AAAAAAAAAA");
-		Mockito.when(authService.checkPermissionForTeilnahmenummer(userIdentifier, teilnahmeID))
-			.thenReturn(Boolean.TRUE);
+		Teilnahme teilnahme = new Privatteilnahme(new WettbewerbID(WETTBEWERBSJAHR_AKTUELL),
+			new Identifier(TEILNAHMENUMMER_PRIVAT));
 
-		Mockito.when(kinderRepository.findKinderWithTeilnahme(data.teilnahmeIdentifier(), WETTBEWERB_ID))
+		Mockito.when(kinderRepository.findKinderWithTeilnahme(teilnahme))
 			.thenReturn(new ArrayList<>());
 
 		// Act
-		boolean result = service.pruefeDublettePrivat(data, veranstalterUuid);
+		boolean result = service.pruefeDublettePrivat(data, UUID_PRIVAT);
 
 		// Assert
 		assertFalse(result);
-		Mockito.verify(authService, Mockito.times(1)).checkPermissionForTeilnahmenummer(userIdentifier, teilnahmeID);
-		Mockito.verify(kinderRepository, Mockito.times(1)).findKinderWithTeilnahme(data.teilnahmeIdentifier(),
-			WETTBEWERB_ID);
+		Mockito.verify(kinderRepository, Mockito.times(1)).findKinderWithTeilnahme(teilnahme);
 	}
 
 	@Test
-	void should_privatkindAnlegen_callAuthService() {
+	void should_pruefeDublettePrivatThrowNotFound_when_VeranstalterNichtAngemeldet() {
 
 		// Arrange
 		PrivatkindRequestData data = createTestData();
-		String veranstalterUuid = "gduqgugug";
-		Identifier userIdentifier = new Identifier(veranstalterUuid);
-		Identifier teilnahmeID = new Identifier("AAAAAAAAAA");
-		Mockito.when(authService.checkPermissionForTeilnahmenummer(userIdentifier, teilnahmeID))
-			.thenThrow(new AccessDeniedException("Tja"));
 
-		// Act + Assert
+		PrivatkinderService theService = PrivatkinderService.createForTest(kinderRepository,
+			getTeilnahmenRepository(), privatveranstalterService, 2018);
+
+		// Act
 		try {
 
-			service.privatkindAnlegen(data, veranstalterUuid);
-			fail("keine AccessDeniedException");
-		} catch (AccessDeniedException e) {
+			theService.pruefeDublettePrivat(data, UUID_PRIVAT);
+			fail("keine NotFoundException");
+		} catch (NotFoundException e) {
 
-			assertEquals("Tja", e.getMessage());
-
+			assertEquals("Privatveranstalter mit UUID=UUID_PRIVAT ist nicht zum aktuellen Wettbewerb angemeldet", e.getMessage());
 		}
-
 	}
 
 	@Test
@@ -137,20 +129,42 @@ public class PrivatkinderServiceTest extends AbstractDomainServiceTest {
 			.withVorname("Heinz")
 			.withSprache(Sprache.de);
 
-		String veranstalterUuid = "ggggiiozioio";
+		Teilnahme teilnahme = new Privatteilnahme(new WettbewerbID(WETTBEWERBSJAHR_AKTUELL),
+			new Identifier(TEILNAHMENUMMER_PRIVAT));
 
-		Mockito.when(authService.checkPermissionForTeilnahmenummer(new Identifier(veranstalterUuid),
-			new Identifier(data.teilnahmeIdentifier().teilnahmenummer()))).thenReturn(Boolean.TRUE);
+		Mockito.when(kinderRepository.findKinderWithTeilnahme(teilnahme))
+			.thenReturn(new ArrayList<>());
 
 		PrivatkinderService theService = PrivatkinderService.createForTest(new TestKinderRepository(gespeichertesKind),
-			getTeilnahmenRepository(), authService);
+			getTeilnahmenRepository(), privatveranstalterService, WETTBEWERBSJAHR_AKTUELL);
 
 		// Act
-		theService.privatkindAnlegen(data, veranstalterUuid);
+		theService.privatkindAnlegen(data, UUID_PRIVAT);
 
 		// Assert
 		assertNotNull(theService.getKindCreated());
 
+	}
+
+	@Test
+	void should_privatkindAnlegenThrowNotFound_when_VeranstalterNichtAngemeldet() {
+
+		// Arrange
+		PrivatkindRequestData data = createTestData();
+
+		PrivatkinderService theService = PrivatkinderService.createForTest(kinderRepository,
+			getTeilnahmenRepository(), privatveranstalterService, 2018);
+
+		// Act
+		try {
+
+			theService.privatkindAnlegen(data, UUID_PRIVAT);
+			fail("keine NotFoundException");
+		} catch (NotFoundException e) {
+
+			assertNull(theService.getKindCreated());
+			assertEquals("Privatveranstalter mit UUID=UUID_PRIVAT ist nicht zum aktuellen Wettbewerb angemeldet", e.getMessage());
+		}
 	}
 
 	void should_koennteDubletteSein_work_whenGleicheUuid() {
@@ -174,14 +188,11 @@ public class PrivatkinderServiceTest extends AbstractDomainServiceTest {
 
 	private PrivatkindRequestData createTestData() {
 
-		KindAPIModel kind = KindAPIModel.create(Klassenstufe.EINS, Sprache.de)
+		KindEditorModel kind = KindEditorModel.create(Klassenstufe.EINS, Sprache.de)
 			.withNachname("Paschulke")
 			.withVorname("Heinz");
 
-		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.PRIVAT)
-			.withTeilnahmenummer("AAAAAAAAAA").withWettbewerbID(new WettbewerbID(2020));
-
-		return new PrivatkindRequestData().withKind(kind).withTeilnahmeIdentifier(teilnahmeIdentifier);
+		return new PrivatkindRequestData().withKind(kind);
 	}
 
 }

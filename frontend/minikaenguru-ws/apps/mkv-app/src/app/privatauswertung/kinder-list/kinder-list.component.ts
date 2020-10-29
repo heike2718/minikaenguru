@@ -3,6 +3,7 @@ import { environment } from '../../../environments/environment';
 import { PrivatauswertungFacade } from '../privatauswertung.facade';
 import { PrivatveranstalterFacade } from '../../privatveranstalter/privatveranstalter.facade';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'mkv-kinder-list',
@@ -22,7 +23,8 @@ export class KinderListComponent implements OnInit, OnDestroy {
 	private veranstalterSubscription: Subscription;
 
 	constructor(private privatauswertungFacade: PrivatauswertungFacade,
-		private veranstalterFacade: PrivatveranstalterFacade) { }
+		private veranstalterFacade: PrivatveranstalterFacade,
+		private router: Router) { }
 
 	ngOnInit(): void {
 
@@ -39,6 +41,16 @@ export class KinderListComponent implements OnInit, OnDestroy {
 		if (this.veranstalterSubscription) {
 			this.veranstalterSubscription.unsubscribe();
 		}
+	}
+
+
+	addKind(): void {
+		this.privatauswertungFacade.createNewKind();
+		this.router.navigateByUrl('/privatauswertung/kind-editor/neu');
+	}
+
+	gotoDashboard(): void {
+		this.router.navigateByUrl('/privat/dashboard');
 	}
 
 }

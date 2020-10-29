@@ -21,7 +21,9 @@ public class KindDublettenpruefer implements BiFunction<Kind, Kind, Boolean> {
 			return Boolean.FALSE;
 		}
 
-		boolean b = new EqualsBuilder().append(kind1.getLowerVornameNullSafe(), kind2.getLowerVornameNullSafe())
+		boolean b = new EqualsBuilder().append(kind1.klasseID(), kind2.klasseID())
+			.append(kind1.klassenstufe(), kind2.klassenstufe())
+			.append(kind1.getLowerVornameNullSafe(), kind2.getLowerVornameNullSafe())
 			.append(kind1.getLowerNachnameNullSafe(), kind2.getLowerNachnameNullSafe())
 			.append(kind1.getLowerZusatzNullSafe(), kind2.getLowerZusatzNullSafe()).isEquals();
 

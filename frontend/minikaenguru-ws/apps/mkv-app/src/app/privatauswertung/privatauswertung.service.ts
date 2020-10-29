@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
 import { ResponsePayload, MessageService, Message } from '@minikaenguru-ws/common-messages';
-import { Kind } from '@minikaenguru-ws/common-components';
+import { Kind, Duplikatwarnung, PrivatkindRequestData } from '@minikaenguru-ws/common-components';
 
 
 @Injectable({
@@ -21,6 +21,36 @@ export class PrivatauswertungService {
 		const url = environment.apiUrl + '/privatkinder';
 
 		return this.http.get(url).pipe(
+			map(body => body as ResponsePayload),
+			map(payload => payload.data)
+		);
+	}
+
+	public checkDuplikat(data: PrivatkindRequestData): Observable<Duplikatwarnung> {
+
+		const url = environment.apiUrl + '/privatkinder/duplikate';
+
+		return this.http.post(url, data, { observe: 'body' }).pipe(
+			map(body => body as ResponsePayload),
+			map(payload => payload.data)
+		);
+	}
+
+	public insertKind(data: PrivatkindRequestData): Observable<ResponsePayload> {
+
+		const url = environment.apiUrl + '/privatkinder';
+
+		return this.http.post(url, data, { observe: 'body' }).pipe(
+			map(body => body as ResponsePayload)
+		);
+
+	}
+
+	public updateKind(data: PrivatkindRequestData): Observable<Kind> {
+
+		const url = environment.apiUrl + '/privatkinder';
+
+		return this.http.put(url, data, { observe: 'body' }).pipe(
 			map(body => body as ResponsePayload),
 			map(payload => payload.data)
 		);

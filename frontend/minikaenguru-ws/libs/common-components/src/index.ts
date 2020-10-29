@@ -13,11 +13,19 @@ export {
 	Teilnahme,
 	Klassenstufenart,
 	Sprachtyp,
+	Duplikatkontext,
 	Klassenstufe,
 	Sprache,
 	Kind,
 	Klasse,
-	KindEditorModel
+	KindEditorModel,
+	Duplikatwarnung,
+	PrivatkindRequestData,
+	KEINE_UUID,
+	ALL_KLASSENSTUFEN,
+	ALL_SPRACHEN,
+	getKlassenstufeByLabel,
+	getSpracheByLabel
 } from './lib/common-components.model';
 
 export { AnonymisierteTeilnahmeComponent } from './lib/anonymisierte-teilnahme/anonymisierte-teilnahme.component';
