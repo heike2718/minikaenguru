@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import { PrivatauswertungFacade } from '../privatauswertung.facade';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from '../../../environments/environment';
@@ -16,6 +16,7 @@ import {
 	getSpracheByLabel
 } from '@minikaenguru-ws/common-components';
 import { Subscription } from 'rxjs';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
 	selector: 'mkv-kind-editor',
@@ -23,6 +24,9 @@ import { Subscription } from 'rxjs';
 	styleUrls: ['./kind-editor.component.css']
 })
 export class KindEditorComponent implements OnInit, OnDestroy {
+
+	@ViewChild('dialogContent')
+	dialogContent: TemplateRef<HTMLElement>;
 
 	devMode = !environment.production;
 
@@ -52,6 +56,8 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	editorInitialized = false;
 
+	showWarndialog = true;
+
 	private uuid: string;
 
 	private initialGuiModel: KindEditorModel;
@@ -65,6 +71,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 	private routeParamsSubcription: Subscription;
 
 	constructor(private fb: FormBuilder,
+		private modalService: NgbModal,
 		private privatauswertungFacade: PrivatauswertungFacade,
 		private router: Router,
 		private route: ActivatedRoute,
@@ -102,11 +109,11 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 			ke => {
 
 				this.initialGuiModel = { ...ke };
-				this.kindForm.get('vorname').setValue(this.initialGuiModel.vorname, {onlySelf: true});
-				this.kindForm.get('nachname').setValue(this.initialGuiModel.nachname, {onlySelf: true});
-				this.kindForm.get('zusatz').setValue(this.initialGuiModel.zusatz, {onlySelf: true});
-				this.kindForm.get('klassenstufe').setValue(this.initialGuiModel.klassenstufe?this.initialGuiModel.klassenstufe.label: null, {onlySelf: true});
-				this.kindForm.get('sprache').setValue(this.initialGuiModel.sprache.label, {onlySelf: true});
+				this.kindForm.get('vorname').setValue(this.initialGuiModel.vorname, { onlySelf: true });
+				this.kindForm.get('nachname').setValue(this.initialGuiModel.nachname, { onlySelf: true });
+				this.kindForm.get('zusatz').setValue(this.initialGuiModel.zusatz, { onlySelf: true });
+				this.kindForm.get('klassenstufe').setValue(this.initialGuiModel.klassenstufe ? this.initialGuiModel.klassenstufe.label : null, { onlySelf: true });
+				this.kindForm.get('sprache').setValue(this.initialGuiModel.sprache.label, { onlySelf: true });
 
 
 				this.editorInitialized = true;
@@ -118,14 +125,17 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 				if (warnung && warnung.kontext === 'KIND') {
 					if (warnung.warnungstext === '') {
+
 						this.saveKind();
 					} else {
-						this.duplikatwarnung = this.duplikatwarnung;
+						this.showWarndialog = true;
+						this.duplikatwarnung = warnung;
+
+						this.open(this.dialogContent);
 					}
 				}
 			}
 		);
-
 	}
 
 	ngOnDestroy(): void {
@@ -159,6 +169,33 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 	}
 
 
+
+	open(dialogContent: TemplateRef<HTMLElement>) {
+
+		this.saveInProgress = false;
+		this.modalService.open(dialogContent, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+
+			if (result === 'ja') {
+				this.saveKind();
+			}
+
+		}, (reason) => {
+			this.logger.debug('closed with reason=' + reason);
+		});
+
+	}
+
+
+	decided($event: string): void {
+		this.showWarndialog = false;
+		if ($event === 'ok') {
+			this.saveKind();
+		} else {
+			this.saveInProgress = false;
+		}
+	}
+
+
 	onCancel(): void {
 
 	}
@@ -169,6 +206,17 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 			this.privatauswertungFacade.insertKind(this.uuid, this.kindDaten);
 		} finally {
 			this.saveInProgress = false;
+		}
+	}
+
+
+	private getDismissReason(reason: any): string {
+		if (reason === ModalDismissReasons.ESC) {
+			return 'by pressing ESC';
+		} else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+			return 'by clicking on a backdrop';
+		} else {
+			return `with: ${reason}`;
 		}
 	}
 

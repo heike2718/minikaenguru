@@ -53,7 +53,7 @@
 				</div>
 				<div class="row">
 					<div class="col-12">
-						<select  id="klassenstufeSelect" class="custom-select" formControlName="klassenstufe">
+						<select id="klassenstufeSelect" class="custom-select" formControlName="klassenstufe">
 							<option [ngValue]="null" disabled>Bitte Klassenstufe wählen</option>
 							<option *ngFor="let ks of klassenstufen" [ngValue]="ks">
 								{{ ks }}
@@ -69,7 +69,7 @@
 				</div>
 				<div class="row">
 					<div class="col-12">
-						<select  id="spracheSelect" class="custom-select" formControlName="sprache">
+						<select id="spracheSelect" class="custom-select" formControlName="sprache">
 							<option *ngFor="let spr of sprachen" [ngValue]="spr">
 								{{ spr }}
 							</option>
@@ -102,3 +102,25 @@
 		</div>
 	</div>
 </div>
+
+<ng-template #dialogContent let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">Mehrfacherfassung?</h4>
+		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+	<p>{{duplikatwarnung.warnungstext}}</p>
+	<p> Möchten Sie das Kind trotzdem speichern?</p>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('nein')">nein</button>
+		<button type="button" class="btn btn-outline-secondary" (click)="modal.close('ja')">ja</button>
+	</div>
+</ng-template>
+
+
+
+
+

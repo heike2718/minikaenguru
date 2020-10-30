@@ -75,19 +75,19 @@ public class PrivatveranstalterKinderResource {
 
 			if (StringUtils.isNotBlank(kind.nachname()) && StringUtils.isNotBlank(kind.zusatz())) {
 
-				msg = MessageFormat.format(applicationMessages.getString("checkKindDuplikat.vornameNachnameZusatz"),
-					new Object[] { kind.vorname(), kind.nachname(), kind.zusatz() });
+				msg = MessageFormat.format(applicationMessages.getString("checkKindDuplikat.privat.vornameNachnameZusatz"),
+					new Object[] { kind.klassenstufe().label(), kind.vorname(), kind.nachname(), kind.zusatz() });
 
 			} else {
 
 				if (StringUtils.isNotBlank(data.kind().nachname())) {
 
-					msg = MessageFormat.format(applicationMessages.getString("checkKindDuplikat.vornameNachname"),
-						new Object[] { kind.vorname(), kind.nachname() });
+					msg = MessageFormat.format(applicationMessages.getString("checkKindDuplikat.privat.vornameNachname"),
+						new Object[] { kind.klassenstufe().label(), kind.vorname(), kind.nachname() });
 				} else {
 
-					msg = MessageFormat.format(applicationMessages.getString("checkKindDuplikat.nurVorname"),
-						new Object[] { kind.vorname() });
+					msg = MessageFormat.format(applicationMessages.getString("checkKindDuplikat.privat.nurVorname"),
+						new Object[] { kind.klassenstufe().label(), kind.vorname() });
 				}
 			}
 
