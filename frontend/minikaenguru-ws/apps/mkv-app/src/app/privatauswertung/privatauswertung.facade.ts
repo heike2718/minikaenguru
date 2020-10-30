@@ -10,6 +10,8 @@ import { PrivatauswertungService } from './privatauswertung.service';
 import { take, map } from 'rxjs/operators';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
 import { KindWithID } from './privatauswertung.model';
+import { ThrowStmt } from '@angular/compiler';
+import { Message } from '@minikaenguru-ws/common-messages';
 
 
 
@@ -23,6 +25,7 @@ export class PrivatauswertungFacade {
 	public kinderGeladen$: Observable<boolean> = this.store.select(PrivatauswertungSelectors.kinderGeladen);
 	public anzahlKinder$: Observable<number> = this.store.select(PrivatauswertungSelectors.anzahlKinder);
 	public duplikatwarnung$: Observable<Duplikatwarnung> = this.store.select(PrivatauswertungSelectors.duplikatwarnung);
+	public saveOutcome$: Observable<Message> = this.store.select(PrivatauswertungSelectors.saveOutcome);
 
 	private loggingOut: boolean;
 
@@ -73,7 +76,7 @@ export class PrivatauswertungFacade {
 		const data = this.mapFromEditorModel(uuid, editorModel) as PrivatkindRequestData;
 
 		this.privatauswertungService.checkDuplikat(data).subscribe(
-			warnung => this.store.dispatch(PrivatauswertungActions.duplikatGeprueft({duplikatwarnung: warnung})),
+			warnung => this.store.dispatch(PrivatauswertungActions.duplikatGeprueft({ duplikatwarnung: warnung })),
 			(error => {
 				this.store.dispatch(PrivatauswertungActions.finishedWithError());
 				this.errorHandler.handleError(error);
@@ -87,32 +90,28 @@ export class PrivatauswertungFacade {
 
 		const data = this.mapFromEditorModel(uuid, editorModel) as PrivatkindRequestData;
 
-		// this.privatauswertungService.insertKind(data).pipe(
-		// 	map(
-		// 		respnsePayload => {
-		// 			const kind: Kind = respnsePayload.data;
-
-		// 			{
-		// 				kind: kind,
-		// 				outcome: respnsePayload.message.message
-		// 			}
-		// 		}
-		// 	)
-		// ).subscribe(
-		// 	responsePayload => this.store.dispatch(PrivatauswertungActions.kindSaved({kind: responsePayload.data as Kind, }))),
-		// 	(error => {
-		// 		this.store.dispatch(PrivatauswertungActions.finishedWithError());
-		// 		this.errorHandler.handleError(error);
-		// 	})
-		// );
-
+		this.privatauswertungService.insertKind(data).subscribe(
+			responsePayload => this.store.dispatch(PrivatauswertungActions.kindSaved({ kind: responsePayload.data, outcome: responsePayload.message })),
+			(error) => {
+				this.store.dispatch(PrivatauswertungActions.finishedWithError());
+				this.errorHandler.handleError(error);
+			}
+		);
 	}
 
-	public updateKind(kind: Kind): void {
+	public updateKind(uuid: string, editorModel: KindEditorModel): void {
 
 		this.store.dispatch(PrivatauswertungActions.startLoading());
 
+		const data = this.mapFromEditorModel(uuid, editorModel) as PrivatkindRequestData;
 
+		this.privatauswertungService.updateKind(data).subscribe(
+			responsePayload => this.store.dispatch(PrivatauswertungActions.kindSaved({ kind: responsePayload.data, outcome: responsePayload.message })),
+			(error) => {
+				this.store.dispatch(PrivatauswertungActions.finishedWithError());
+				this.errorHandler.handleError(error);
+			}
+		);
 
 	}
 

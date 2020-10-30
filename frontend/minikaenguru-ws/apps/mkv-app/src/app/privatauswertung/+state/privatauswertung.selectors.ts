@@ -10,5 +10,6 @@ export const kinder = createSelector(privatauswertungState, s => new KinderMap(s
 export const kinderGeladen = createSelector(privatauswertungState, s => s.kinderLoaded);
 export const anzahlKinder = createSelector(privatauswertungState, s => s.kinderMap.length);
 export const duplikatwarnung = createSelector(privatauswertungState, s => s.duplikatwarnung);
+export const saveOutcome = createSelector(privatauswertungState, s => s.saveOutcome);
 
 

@@ -117,7 +117,7 @@ public class PrivatkinderService {
 
 		Teilnahme teilnahme = getAktuelleTeilnahme(veranstalterUuid, "privatkindAnlegen");
 
-		Kind kind = Kind.createFromKindEditorModel(daten.kind());
+		Kind kind = Kind.createFromKindEditorModel(daten.kind()).withTeilnahmeIdentifier(teilnahme.teilnahmeIdentifier());
 
 		Kind gespeichertesKind = kinderRepository.addKind(kind);
 

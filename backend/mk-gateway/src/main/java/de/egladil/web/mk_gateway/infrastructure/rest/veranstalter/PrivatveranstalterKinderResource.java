@@ -61,7 +61,7 @@ public class PrivatveranstalterKinderResource {
 
 	@POST
 	@Path("/duplikate")
-	public Response checkDuplikat(final PrivatkindRequestData data) {
+	public Response pruefeMehrfacherfassung(final PrivatkindRequestData data) {
 
 		String uuid = securityContext.getUserPrincipal().getName();
 
@@ -99,7 +99,7 @@ public class PrivatveranstalterKinderResource {
 	}
 
 	@POST
-	public Response createKind(final PrivatkindRequestData data) {
+	public Response kindAnlegen(final PrivatkindRequestData data) {
 
 		String uuid = securityContext.getUserPrincipal().getName();
 

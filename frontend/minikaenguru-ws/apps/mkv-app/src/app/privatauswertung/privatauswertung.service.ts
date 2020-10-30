@@ -46,13 +46,12 @@ export class PrivatauswertungService {
 
 	}
 
-	public updateKind(data: PrivatkindRequestData): Observable<Kind> {
+	public updateKind(data: PrivatkindRequestData): Observable<ResponsePayload> {
 
 		const url = environment.apiUrl + '/privatkinder';
 
 		return this.http.put(url, data, { observe: 'body' }).pipe(
-			map(body => body as ResponsePayload),
-			map(payload => payload.data)
+			map(body => body as ResponsePayload)
 		);
 	}
 

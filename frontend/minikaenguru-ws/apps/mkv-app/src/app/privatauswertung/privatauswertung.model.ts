@@ -34,12 +34,18 @@ export class KinderMap {
 
 	public toArray(): Kind[] {
 
-		return [...this.kinder.values()];
+		const array = [...this.kinder.values()];
+		array.sort((kind1, kind2) => kind1.vorname.localeCompare(kind2.vorname));
+		return array;
 	}
 
 	public merge(kind: Kind): KindWithID[] {
 
 		const result: KindWithID[] = [];
+
+		if (!this.has(kind.uuid)) {
+			result.push({ uuid: kind.uuid, kind: kind });
+		}
 		for (const item of this.items) {
 			if (item.uuid !== kind.uuid) {
 				result.push(item);

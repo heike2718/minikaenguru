@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { PrivatauswertungFacade } from '../privatauswertung.facade';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 import { LogService } from '@minikaenguru-ws/common-logging';
-import { Router, ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { MessageService } from '@minikaenguru-ws/common-messages';
 import {
 	KindEditorModel,
@@ -44,11 +44,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	klassenstufen: string[];
 
-	// klassenstufen: Klassenstufe[];
-
 	sprachen: string[];
-
-	// sprachen: Sprache[];
 
 	saveInProgress = false;
 
@@ -57,6 +53,8 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 	editorInitialized = false;
 
 	showWarndialog = true;
+
+	private showSaveMessage = false;
 
 	private uuid: string;
 
@@ -69,6 +67,8 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 	private kindDaten: KindEditorModel;
 
 	private routeParamsSubcription: Subscription;
+
+	private saveOutcomeSubscription: Subscription;
 
 	constructor(private fb: FormBuilder,
 		private modalService: NgbModal,
@@ -136,6 +136,15 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 				}
 			}
 		);
+
+		this.saveOutcomeSubscription = this.privatauswertungFacade.saveOutcome$.subscribe(
+			message => {
+				if (this.showSaveMessage) {
+					this.messageService.showMessage(message);
+					this.showSaveMessage = false;
+				}
+			}
+		)
 	}
 
 	ngOnDestroy(): void {
@@ -149,6 +158,9 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 		if (this.routeParamsSubcription) {
 			this.routeParamsSubcription.unsubscribe();
+		}
+		if (this.saveOutcomeSubscription) {
+			this.saveOutcomeSubscription.unsubscribe();
 		}
 	}
 
@@ -182,42 +194,19 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 		}, (reason) => {
 			this.logger.debug('closed with reason=' + reason);
 		});
-
 	}
-
-
-	decided($event: string): void {
-		this.showWarndialog = false;
-		if ($event === 'ok') {
-			this.saveKind();
-		} else {
-			this.saveInProgress = false;
-		}
-	}
-
 
 	onCancel(): void {
-
+		this.messageService.clear();
+		this.router.navigateByUrl('/privatauswertung');
 	}
 
 	saveKind(): void {
-
-		try {
+		this.showSaveMessage = true;
+		if (this.uuid === 'neu') {
 			this.privatauswertungFacade.insertKind(this.uuid, this.kindDaten);
-		} finally {
-			this.saveInProgress = false;
-		}
-	}
-
-
-	private getDismissReason(reason: any): string {
-		if (reason === ModalDismissReasons.ESC) {
-			return 'by pressing ESC';
-		} else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-			return 'by clicking on a backdrop';
 		} else {
-			return `with: ${reason}`;
+			this.privatauswertungFacade.updateKind(this.uuid, this.kindDaten);
 		}
 	}
-
 }

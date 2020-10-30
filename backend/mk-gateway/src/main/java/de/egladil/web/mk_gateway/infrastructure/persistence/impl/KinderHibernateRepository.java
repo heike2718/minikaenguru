@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
@@ -52,13 +53,14 @@ public class KinderHibernateRepository implements KinderRepository {
 	}
 
 	@Override
+	@Transactional
 	public Kind addKind(final Kind kind) {
 
 		if (kind.identifier() != null) {
 
 			throw new IllegalStateException("Das Kind wurde bereits hinzugefuegt mit UUID=" + kind.identifier().identifier());
 		}
-		PersistentesKind persistentesKind = this.mapFromKindWithoitUuid(kind);
+		PersistentesKind persistentesKind = this.mapFromKindWithoutUuid(kind);
 
 		em.persist(persistentesKind);
 
@@ -67,7 +69,7 @@ public class KinderHibernateRepository implements KinderRepository {
 		return kind;
 	}
 
-	PersistentesKind mapFromKindWithoitUuid(final Kind kind) {
+	PersistentesKind mapFromKindWithoutUuid(final Kind kind) {
 
 		PersistentesKind result = new PersistentesKind();
 
