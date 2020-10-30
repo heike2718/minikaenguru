@@ -90,6 +90,7 @@ public class KinderHibernateRepository implements KinderRepository {
 		result.setTeilnahmeart(kind.teilnahmeIdentifier().teilnahmeart());
 		result.setTeilnahmenummer(kind.teilnahmeIdentifier().teilnahmenummer());
 		result.setVorname(kind.vorname());
+		result.setZusatz(kind.zusatz());
 
 		return result;
 

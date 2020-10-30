@@ -22,14 +22,14 @@ export interface Klassenstufe {
 export const KEINE_UUID = 'neu';
 
 export const ALL_KLASSENSTUFEN: Klassenstufe[] = [
-	{klassenstufe: 'EINS', label: 'Klasse 1'},
-	{klassenstufe: 'ZWEI', label: 'Klasse 2'},
-	{klassenstufe: 'IKID', label: 'Inklusion'}
+	{ klassenstufe: 'EINS', label: 'Klasse 1' },
+	{ klassenstufe: 'ZWEI', label: 'Klasse 2' },
+	{ klassenstufe: 'IKID', label: 'Inklusion' }
 ];
 
 export const ALL_SPRACHEN: Sprache[] = [
-	{sprache: 'de', label: 'deutsch'},
-	{sprache: 'en', label: 'englisch'}
+	{ sprache: 'de', label: 'deutsch' },
+	{ sprache: 'en', label: 'englisch' }
 ];
 
 export interface Duplikatwarnung {
@@ -77,7 +77,7 @@ export const initialKindEditorModel: KindEditorModel = {
 	nachname: '',
 	zusatz: '',
 	klassenstufe: null,
-	sprache: {sprache: 'de', label: 'deutsch'}
+	sprache: { sprache: 'de', label: 'deutsch' }
 };
 
 export function getKlassenstufeByLabel(label: string): Klassenstufe {
@@ -106,5 +106,50 @@ export function getSpracheByLabel(label: string): Sprache {
 	return undefined;
 }
 
+function compareKlassenstufen(klassenstufe1: Klassenstufe, klassenstufe2: Klassenstufe): number {
 
+	const indexKlassenstufe1 = ALL_KLASSENSTUFEN.findIndex(kl => kl.klassenstufe === klassenstufe1.klassenstufe);
+	const indexKlassenstufe2 = ALL_KLASSENSTUFEN.findIndex(kl => kl.klassenstufe === klassenstufe2.klassenstufe);
+
+	return indexKlassenstufe1 - indexKlassenstufe2;
+
+}
+
+function compareStrings(str1: string, str2: string): number {
+
+	const result = str1 && str2 ? str1.localeCompare(str2) : 0;
+	if (result !== 0) {
+		return result;
+	}
+	if (!str1 && str2) {
+		return -1;
+	}
+	if (str1 && !str2) {
+		return 1;
+	}
+	return 0;
+}
+
+export function compareKinder(kind1: Kind, kind2: Kind): number {
+
+	const vornameResult = kind1.vorname.localeCompare(kind2.vorname);
+
+	if (vornameResult !== 0) {
+		return vornameResult;
+	}
+
+	const nachnameResult = compareStrings(kind1.nachname, kind2.nachname);
+
+	if (nachnameResult !== 0) {
+		return nachnameResult;
+	}
+
+	const zusatzResult = compareStrings(kind1.zusatz, kind2.zusatz);
+
+	if (zusatzResult !== 0) {
+		return zusatzResult;
+	}
+
+	return compareKlassenstufen(kind1.klassenstufe, kind2.klassenstufe);
+}
 

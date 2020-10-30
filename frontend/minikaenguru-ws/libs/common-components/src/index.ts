@@ -25,7 +25,8 @@ export {
 	ALL_KLASSENSTUFEN,
 	ALL_SPRACHEN,
 	getKlassenstufeByLabel,
-	getSpracheByLabel
+	getSpracheByLabel,
+	compareKinder
 } from './lib/common-components.model';
 
 export { AnonymisierteTeilnahmeComponent } from './lib/anonymisierte-teilnahme/anonymisierte-teilnahme.component';

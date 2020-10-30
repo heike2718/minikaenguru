@@ -6,6 +6,8 @@ package de.egladil.web.mk_gateway.domain.kinder;
 
 import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
+
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
 import de.egladil.web.mk_gateway.domain.semantik.AggregateRoot;
@@ -96,7 +98,7 @@ public class Kind {
 
 	public String nachname() {
 
-		return nachname;
+		return StringUtils.isBlank(nachname) ? null : nachname;
 	}
 
 	public Kind withNachname(final String nachname) {
@@ -107,7 +109,7 @@ public class Kind {
 
 	public String zusatz() {
 
-		return zusatz;
+		return StringUtils.isBlank(zusatz) ? null : zusatz;
 	}
 
 	public Kind withZusatz(final String zusatz) {

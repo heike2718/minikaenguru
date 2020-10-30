@@ -1,4 +1,4 @@
-import { TeilnahmeIdentifier, Klassenstufe, Sprache, Kind } from '@minikaenguru-ws/common-components';
+import { TeilnahmeIdentifier, Klassenstufe, Sprache, Kind, compareKinder } from '@minikaenguru-ws/common-components';
 
 export interface KindWithID {
 	readonly uuid: string;
@@ -35,7 +35,7 @@ export class KinderMap {
 	public toArray(): Kind[] {
 
 		const array = [...this.kinder.values()];
-		array.sort((kind1, kind2) => kind1.vorname.localeCompare(kind2.vorname));
+		array.sort((kind1, kind2) => compareKinder(kind1, kind2));
 		return array;
 	}
 
