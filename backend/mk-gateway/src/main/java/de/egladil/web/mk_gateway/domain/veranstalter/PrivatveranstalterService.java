@@ -83,35 +83,10 @@ public class PrivatveranstalterService {
 
 	public PrivatveranstalterAPIModel findPrivatperson(final String uuid) {
 
-		if (StringUtils.isBlank(uuid)) {
-
-			throw new BadRequestException("uuid darf nicht blank sein.");
-		}
-
-		Optional<Veranstalter> optVeranstalter = this.repository.ofId(new Identifier(uuid));
-
-		if (optVeranstalter.isEmpty()) {
-
-			String msg = "Versuch, nicht vorhandenen Veranstalter mit UUID=" + uuid + " zu finden";
-			LOG.warn(msg);
-
-			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
-			throw new NotFoundException("Kennen keinen Veranstalter mit dieser ID");
-		}
-
-		Veranstalter veranstalter = optVeranstalter.get();
-
-		if (veranstalter.rolle() != Rolle.PRIVAT) {
-
-			String msg = "Falsche Rolle: erwarten Privatveranstalter, war aber " + veranstalter.toString();
-			LOG.warn(msg);
-			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
-			throw new NotFoundException("Kennen keinen Privatveranstalter mit dieser ID");
-		}
+		Privatveranstalter privatveranstalter = this.findPrivatveranstalter(uuid);
 
 		Optional<Wettbewerb> optWettbewerb = wettbewerbService.aktuellerWettbewerb();
 
-		Privatveranstalter privatveranstalter = (Privatveranstalter) veranstalter;
 		boolean hatZugang = false;
 
 		if (optWettbewerb.isPresent()) {
@@ -161,6 +136,43 @@ public class PrivatveranstalterService {
 
 		return result;
 
+	}
+
+	/**
+	 * Sucht den Privatveranstalter mit der gegebenen UUID.
+	 *
+	 * @param  uuid
+	 * @return
+	 */
+	public Privatveranstalter findPrivatveranstalter(final String uuid) {
+
+		if (StringUtils.isBlank(uuid)) {
+
+			throw new BadRequestException("uuid darf nicht blank sein.");
+		}
+
+		Optional<Veranstalter> optVeranstalter = this.repository.ofId(new Identifier(uuid));
+
+		if (optVeranstalter.isEmpty()) {
+
+			String msg = "Versuch, nicht vorhandenen Veranstalter mit UUID=" + uuid + " zu finden";
+			LOG.warn(msg);
+
+			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
+			throw new NotFoundException("Kennen keinen Veranstalter mit dieser ID");
+		}
+
+		Veranstalter veranstalter = optVeranstalter.get();
+
+		if (veranstalter.rolle() != Rolle.PRIVAT) {
+
+			String msg = "Falsche Rolle: erwarten Privatveranstalter, war aber " + veranstalter.toString();
+			LOG.warn(msg);
+			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
+			throw new NotFoundException("Kennen keinen Privatveranstalter mit dieser ID");
+		}
+
+		return (Privatveranstalter) veranstalter;
 	}
 
 	/**

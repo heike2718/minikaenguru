@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.persistence.entities;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -26,7 +27,12 @@ import de.egladil.web.commons_validation.annotations.UuidString;
  * ConcurrencySafeEntity
  */
 @MappedSuperclass
-public abstract class ConcurrencySafeEntity {
+public abstract class ConcurrencySafeEntity implements Serializable {
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "uuid_generator")

@@ -84,8 +84,8 @@ export class PrivatDashboardComponent implements OnInit, OnDestroy {
 	}
 
 	gotoAuswertung(): void {
-		this.textFeatureFlagAnzeigen = true;
-		this.textFeatureFlag = 'Auswertungen sind im Moment noch nicht möglich, kommt aber Anfang 2021.';
+		this.textFeatureFlagAnzeigen = false;
+		this.router.navigateByUrl('/privatauswertung');
 	}
 
 	gotoDownloadUnterlagen() {

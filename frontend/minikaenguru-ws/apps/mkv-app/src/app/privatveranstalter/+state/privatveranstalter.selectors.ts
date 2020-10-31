@@ -9,6 +9,4 @@ export const aktuelleTeilnahmeGeladen = createSelector(privatveranstalterState, 
 export const aktuellePrivatteilnahme = createSelector(privatveranstalter, s => s.aktuelleTeilnahme);
 export const loading = createSelector(privatveranstalterState, s => s.loading);
 
-export const kinderGeladen = createSelector(aktuellePrivatteilnahme, t => t.kinderGeladen);
-
 

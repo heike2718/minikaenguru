@@ -13,14 +13,14 @@ import org.apache.commons.lang3.StringUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.semantik.Aggregate;
+import de.egladil.web.mk_gateway.domain.semantik.AggregateRoot;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**
  * Veranstalter
  */
-@Aggregate
+@AggregateRoot
 public abstract class Veranstalter {
 
 	@JsonProperty

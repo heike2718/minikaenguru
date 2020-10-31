@@ -97,7 +97,9 @@ public class AdvServiceTest {
 
 		AuthorizationService authService = Mockito.mock(AuthorizationService.class);
 
-		Mockito.when(authService.checkPermissionForTeilnahmenummer(lehrerId, teilnahmeId))
+		Mockito
+			.when(authService.checkPermissionForTeilnahmenummer(lehrerId, teilnahmeId,
+				"[getVertragAuftragsdatenverarbeitung - " + schulkuerzel + "]"))
 			.thenThrow(new AccessDeniedException());
 
 		AdvService advService = AdvService.createForTest(authService);
@@ -139,7 +141,9 @@ public class AdvServiceTest {
 
 		AuthorizationService authService = Mockito.mock(AuthorizationService.class);
 
-		Mockito.when(authService.checkPermissionForTeilnahmenummer(lehrerId, teilnahmeId))
+		Mockito
+			.when(authService.checkPermissionForTeilnahmenummer(lehrerId, teilnahmeId,
+				"[createVertragAuftragsdatenverarbeitung - " + schulkuerzel + "]"))
 			.thenThrow(new AccessDeniedException());
 
 		AdvService advService = AdvService.createForTest(authService);

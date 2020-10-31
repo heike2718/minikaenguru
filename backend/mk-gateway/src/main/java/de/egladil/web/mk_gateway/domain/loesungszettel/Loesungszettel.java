@@ -7,7 +7,7 @@ package de.egladil.web.mk_gateway.domain.loesungszettel;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.semantik.Aggregate;
+import de.egladil.web.mk_gateway.domain.semantik.AggregateRoot;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
@@ -16,14 +16,14 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 /**
  * Loesungszettel
  */
-@Aggregate
+@AggregateRoot
 public class Loesungszettel {
 
 	@JsonProperty
 	private Identifier identifier;
 
 	@JsonProperty
-	private int nummer;
+	private String kindID;
 
 	@JsonProperty
 	private Klassenstufe klassenstufe;
@@ -63,14 +63,14 @@ public class Loesungszettel {
 		return identifier;
 	}
 
-	public int nummer() {
+	public String kindID() {
 
-		return nummer;
+		return kindID;
 	}
 
-	public Loesungszettel withNummer(final int nummer) {
+	public Loesungszettel withNummer(final String kindID) {
 
-		this.nummer = nummer;
+		this.kindID = kindID;
 		return this;
 	}
 
@@ -168,5 +168,4 @@ public class Loesungszettel {
 		return "Loesungszettel [identifier=" + identifier + ", klassenstufe=" + klassenstufe + ", teilnahmeIdentifier="
 			+ teilnahmeIdentifier + "]";
 	}
-
 }

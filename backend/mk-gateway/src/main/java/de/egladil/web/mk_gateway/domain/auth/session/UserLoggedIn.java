@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
+import de.egladil.web.mk_gateway.domain.event.EventType;
 import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 
@@ -49,7 +50,7 @@ public class UserLoggedIn implements MkGatewayDomainEvent {
 	@Override
 	public String typeName() {
 
-		return TYPE_USER_LOGGED_IN;
+		return EventType.USER_LOGGED_IN.getLabel();
 	}
 
 	public Rolle rolle() {

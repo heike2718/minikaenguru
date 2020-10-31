@@ -2,7 +2,7 @@
 // Project: mk-wettbewerb-tests
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mkv_server_tests;
+package de.egladil.web.mkv_server_tests.dao;
 
 import static org.junit.Assert.assertTrue;
 
@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.TeilnahmenHibernateRepository;
+import de.egladil.web.mkv_server_tests.AbstractIT;
 
 /**
  * TeilnahmenHibernateRepositoryTest

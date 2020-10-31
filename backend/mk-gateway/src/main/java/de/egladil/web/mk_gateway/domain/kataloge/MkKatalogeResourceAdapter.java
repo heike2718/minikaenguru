@@ -236,6 +236,19 @@ public class MkKatalogeResourceAdapter extends AbstractMkResourceAdapter {
 		}
 	}
 
+	public Response getHeartbeat(final String heartbeatSecret) {
+
+		try {
+
+			Response response = restClient.getHeartbeat(heartbeatSecret);
+			return response;
+		} catch (Exception e) {
+
+			return handleException(e, LOG, "[getHeartbeat]");
+		}
+
+	}
+
 	@Override
 	protected String endpointName() {
 

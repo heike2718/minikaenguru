@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.teilnahmen;
 
+import de.egladil.web.mk_gateway.domain.event.EventType;
 import de.egladil.web.mk_gateway.domain.semantik.DomainEvent;
 
 /**
@@ -31,7 +32,7 @@ public class PrivatteilnahmeCreated extends AbstractTeilnahmeEvent {
 	@Override
 	public String typeName() {
 
-		return TYPE_PRIVATTEILNAHME_CREATED;
+		return EventType.PRIVATTEILNAHME_CREATED.getLabel();
 	}
 
 }
