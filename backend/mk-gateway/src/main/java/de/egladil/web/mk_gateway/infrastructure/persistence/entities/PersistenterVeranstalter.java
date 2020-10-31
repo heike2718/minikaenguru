@@ -27,18 +27,20 @@ import de.egladil.web.mk_gateway.domain.veranstalter.ZugangUnterlagen;
 		name = "PersistenterVeranstalter.FIND_BY_UUID", query = "select v from PersistenterVeranstalter v where v.uuid = :uuid"),
 	@NamedQuery(
 		name = "PersistenterVeranstalter.FIND_BY_PARTIAL_UUID",
-		query = "select v from PersistenterVeranstalter v where v.uuid like :suchstring"),
+		query = "select v from PersistenterVeranstalter v where v.uuid like :suchstring order by v.uuid"),
 	@NamedQuery(
 		name = "PersistenterVeranstalter.FIND_BY_PARTIAL_NAME",
-		query = "select v from PersistenterVeranstalter v where lower(v.fullName) like :suchstring"),
+		query = "select v from PersistenterVeranstalter v where lower(v.fullName) like :suchstring order by v.uuid"),
 	@NamedQuery(
 		name = "PersistenterVeranstalter.FIND_BY_PARTIAL_EMAIL",
-		query = "select v from PersistenterVeranstalter v where lower(v.email) like :suchstring"),
+		query = "select v from PersistenterVeranstalter v where lower(v.email) like :suchstring order by v.uuid"),
 	@NamedQuery(
 		name = "PersistenterVeranstalter.FIND_BY_TEILNAHMENUMMER",
-		query = "select v from PersistenterVeranstalter v where lower(v.teilnahmenummern) like :suchstring"),
+		query = "select v from PersistenterVeranstalter v where lower(v.teilnahmenummern) like :suchstring order by v.uuid"),
 })
 public class PersistenterVeranstalter extends ConcurrencySafeEntity {
+
+	private static final long serialVersionUID = 6012887050926370489L;
 
 	public static final String FIND_BY_UUID_QUERY = "PersistenterVeranstalter.FIND_BY_UUID";
 

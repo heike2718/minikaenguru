@@ -6,17 +6,21 @@ package de.egladil.web.mk_gateway.infrastructure.persistence.impl;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.RequestScoped;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.auswertungen.LoesungszettelDeleted;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRohdaten;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterLoesungszettel;
@@ -29,6 +33,11 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 
 	@Inject
 	EntityManager em;
+
+	@Inject
+	Event<LoesungszettelDeleted> loesungszettelDeletedEvent;
+
+	private LoesungszettelDeleted loesungszettelDeleted;
 
 	public static LoesungszettelHibernateRepository createForIntegrationTest(final EntityManager em) {
 
@@ -80,13 +89,21 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 	public List<Loesungszettel> loadAll(final TeilnahmeIdentifier teilnahmeIdentifier) {
 
 		List<PersistenterLoesungszettel> trefferliste = em
-			.createNamedQuery(PersistenterLoesungszettel.LOAD_ALL_WITH_IDENTIFIER, PersistenterLoesungszettel.class)
+			.createNamedQuery(PersistenterLoesungszettel.LOAD_ALL_WITH_TEILNAHME_IDENTIFIER, PersistenterLoesungszettel.class)
 			.setParameter("teilnahmenummer", teilnahmeIdentifier.teilnahmenummer())
 			.setParameter("wettbewerbUuid", teilnahmeIdentifier.wettbewerbID())
 			.setParameter("teilnahmeart", teilnahmeIdentifier.teilnahmeart())
 			.getResultList();
 
 		return trefferliste.stream().map(pl -> mapFromDB(pl)).collect(Collectors.toList());
+	}
+
+	@Override
+	public Optional<PersistenterLoesungszettel> findByIdentifier(final Identifier identifier) {
+
+		PersistenterLoesungszettel result = em.find(PersistenterLoesungszettel.class, identifier.identifier());
+
+		return result == null ? Optional.empty() : Optional.of(result);
 	}
 
 	Loesungszettel mapFromDB(final PersistenterLoesungszettel persistenter) {
@@ -109,7 +126,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 			.withKlassenstufe(persistenter.getKlassenstufe())
 			.withLaengeKaengurusprung(persistenter.getKaengurusprung())
 			.withLandkuerzel(persistenter.getLandkuerzel())
-			.withNummer(persistenter.getNummer())
+			.withNummer(persistenter.getKindID())
 			.withPunkte(persistenter.getPunkte())
 			.withRohdaten(rohdaten)
 			.withSprache(persistenter.getSprache())
@@ -118,10 +135,115 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 		return result;
 	}
 
-	@Override
-	public boolean addLosungszettel(final PersistenterLoesungszettel loesungszettel) {
+	PersistenterLoesungszettel mapFromDomainObject(final Loesungszettel loesungszettel) {
 
-		em.persist(loesungszettel);
+		LoesungszettelRohdaten rohdaten = loesungszettel.rohdaten();
+		PersistenterLoesungszettel result = new PersistenterLoesungszettel()
+			.withAntwortcode(rohdaten.antwortcode())
+			.withAuswertungsquelle(loesungszettel.auswertungsquelle())
+			.withKaengurusprung(loesungszettel.laengeKaengurusprung())
+			.withKindID(loesungszettel.kindID())
+			.withKlassenstufe(loesungszettel.klassenstufe())
+			.withLandkuerzel("") // TODO
+			.withNutzereingabe(rohdaten.nutzereingabe())
+			.withPunkte(loesungszettel.punkte())
+			.withSprache(loesungszettel.sprache())
+			.withTeilnahmeart(loesungszettel.teilnahmeIdentifier().teilnahmeart())
+			.withTeilnahmenummer(loesungszettel.teilnahmeIdentifier().teilnahmenummer())
+			.withTypo(rohdaten.hatTypo())
+			.withWertungscode(rohdaten.wertungscode())
+			.withWettbewerbUuid(loesungszettel.teilnahmeIdentifier().wettbewerbID());
+
+		if (loesungszettel.identifier() != null) {
+
+			result.setUuid(loesungszettel.identifier().identifier());
+		}
+		return result;
+
+	}
+
+	@Override
+	public Identifier addLosungszettel(final Loesungszettel loesungszettel) {
+
+		if (loesungszettel.identifier() != null) {
+
+			throw new IllegalStateException("loesungszettel hat bereits die UUID " + loesungszettel.identifier().identifier()
+				+ " und kann hinzugefügt werden!");
+		}
+
+		PersistenterLoesungszettel zuPeristierenderLoesungszettel = this.mapFromDomainObject(loesungszettel);
+
+		em.persist(zuPeristierenderLoesungszettel);
+
+		return new Identifier(zuPeristierenderLoesungszettel.getUuid());
+	}
+
+	@Override
+	public boolean updateLoesungszettel(final Loesungszettel loesungszettel) {
+
+		if (loesungszettel.identifier() == null) {
+
+			throw new IllegalStateException("loesungszettel hat keine UUID und kann geändert werden!");
+		}
+
+		PersistenterLoesungszettel neuerLoesungszettel = this.mapFromDomainObject(loesungszettel);
+		this.removeLoesungszettel(loesungszettel.identifier(), null);
+		neuerLoesungszettel.setImportierteUuid(loesungszettel.identifier().identifier());
+
+		em.persist(neuerLoesungszettel);
+
+		return true;
+	}
+
+	@Override
+	public PersistenterLoesungszettel updateLoesungszettelInTransaction(final PersistenterLoesungszettel persistenterLoesungszettel) {
+
+		return em.merge(persistenterLoesungszettel);
+	}
+
+	@Override
+	public boolean removeLoesungszettel(final Identifier identifier, final String veranstalterUuid) {
+
+		Optional<PersistenterLoesungszettel> optExisting = this.findByIdentifier(identifier);
+
+		if (optExisting.isEmpty()) {
+
+			return false;
+		}
+
+		PersistenterLoesungszettel persistenterLoesungszettel = optExisting.get();
+
+		em.remove(persistenterLoesungszettel);
+
+		if (veranstalterUuid != null) {
+
+			Sprache sprache = persistenterLoesungszettel.getSprache();
+
+			LoesungszettelRohdaten rohdaten = new LoesungszettelRohdaten()
+				.withAntwortcode(persistenterLoesungszettel.getAntwortcode())
+				.withNutzereingabe(persistenterLoesungszettel.getNutzereingabe())
+				.withTypo(persistenterLoesungszettel.isTypo())
+				.withWertungscode(persistenterLoesungszettel.getWertungscode());
+
+			TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier()
+				.withTeilnahmeart(persistenterLoesungszettel.getTeilnahmeart())
+				.withTeilnahmenummer(persistenterLoesungszettel.getTeilnahmenummer())
+				.withWettbewerbID(new WettbewerbID(persistenterLoesungszettel.getWettbewerbUuid()));
+
+			loesungszettelDeleted = (LoesungszettelDeleted) new LoesungszettelDeleted(veranstalterUuid)
+				.withKindID(persistenterLoesungszettel.getKindID())
+				.withRohdatenAlt(rohdaten)
+				.withRohdatenNeu(null)
+				.withSpracheAlt(sprache)
+				.withSpracheNeu(null)
+				.withTeilnahmeIdentifier(teilnahmeIdentifier)
+				.withUuid(persistenterLoesungszettel.getUuid());
+
+			if (loesungszettelDeletedEvent != null) {
+
+				loesungszettelDeletedEvent.fire(loesungszettelDeleted);
+			}
+		}
 
 		return true;
 	}

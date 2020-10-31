@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { environment } from '../environments/environment';
 import { AuthService, AuthResult } from '@minikaenguru-ws/common-auth';
 import { RegistrationService } from './registration/registration.service';
@@ -12,6 +12,8 @@ import { RouterOutlet } from '@angular/router';
 	styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+
+
 
 	envName = environment.envName;
 	showEnv = !environment.production;
@@ -51,8 +53,8 @@ export class AppComponent {
 				window.location.hash = '';
 			}
 		}
-	}
 
+	}
 	getAnimationData(outlet: RouterOutlet) {
 		return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
 	}

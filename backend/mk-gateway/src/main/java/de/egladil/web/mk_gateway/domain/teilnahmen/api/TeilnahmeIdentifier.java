@@ -8,6 +8,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import de.egladil.web.mk_gateway.domain.semantik.ValueObject;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
@@ -15,6 +16,7 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 /**
  * TeilnahmeIdentifier
  */
+@ValueObject
 public class TeilnahmeIdentifier {
 
 	@JsonProperty

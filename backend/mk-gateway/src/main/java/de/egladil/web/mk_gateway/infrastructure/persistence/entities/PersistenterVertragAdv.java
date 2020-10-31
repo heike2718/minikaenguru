@@ -29,6 +29,8 @@ import javax.validation.constraints.Size;
 })
 public class PersistenterVertragAdv extends ConcurrencySafeEntity {
 
+	private static final long serialVersionUID = 7323501865208010275L;
+
 	public static final String FIND_BY_UUID = "PersistenterVertragAdv.FIND_BY_UUID";
 
 	public static final String FIND_BY_SCHULKUERZEL = "PersistenterVertragAdv.FIND_BY_SCHULKUERZEL";

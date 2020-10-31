@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
+import de.egladil.web.mk_gateway.domain.event.EventType;
 import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.ChangeUserCommand;
 
@@ -53,7 +54,7 @@ public class SynchronizeVeranstalterFailed implements MkGatewayDomainEvent {
 	@Override
 	public String typeName() {
 
-		return TYPE_SYNCHRONIZE_VERANSTALTER_FAILED;
+		return EventType.SYNCHRONIZE_VERANSTALTER_FAILED.getLabel();
 	}
 
 }

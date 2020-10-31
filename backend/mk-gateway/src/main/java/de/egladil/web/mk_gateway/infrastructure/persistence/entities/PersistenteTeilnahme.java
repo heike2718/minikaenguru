@@ -22,8 +22,10 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 @Table(name = "TEILNAHMEN")
 @NamedQueries({ @NamedQuery(
 	name = "PersistenteTeilnahme.FIND_BY_NUMMER",
-	query = "select t from PersistenteTeilnahme t where t.teilnahmenummer = :teilnahmenummer") })
+	query = "select t from PersistenteTeilnahme t where t.teilnahmenummer = :teilnahmenummer order by t.wettbewerbUUID") })
 public class PersistenteTeilnahme extends ConcurrencySafeEntity {
+
+	private static final long serialVersionUID = -226547081588693602L;
 
 	public static final String FIND_BY_NUMMER = "PersistenteTeilnahme.FIND_BY_NUMMER";
 

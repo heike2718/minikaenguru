@@ -29,7 +29,7 @@ export class WettbewerbDetailsResolver implements Resolve<any> {
 			);
 		} else {
 			try {
-				jahr = parseInt(route.params.id);
+				jahr = parseInt(route.params.id, 0);
 			} catch {
 				jahr = null;
 			}
@@ -45,6 +45,5 @@ export class WettbewerbDetailsResolver implements Resolve<any> {
 				first()
 			);
 		}
-
 	}
 }

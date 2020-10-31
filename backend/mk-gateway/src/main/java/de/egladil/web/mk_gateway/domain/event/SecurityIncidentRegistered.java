@@ -46,7 +46,7 @@ public class SecurityIncidentRegistered implements MkGatewayDomainEvent {
 	@Override
 	public String typeName() {
 
-		return TYPE_SECURITY_INCIDENT_REGISTERED;
+		return EventType.SECURITY_INCIDENT_REGISTERED.getLabel();
 	}
 
 	public String message() {

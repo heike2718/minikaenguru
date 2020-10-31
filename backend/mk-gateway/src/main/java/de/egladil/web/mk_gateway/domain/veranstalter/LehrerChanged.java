@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
+import de.egladil.web.mk_gateway.domain.event.EventType;
 import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
 import de.egladil.web.mk_gateway.domain.semantik.DomainEvent;
 
@@ -97,7 +98,7 @@ public class LehrerChanged implements MkGatewayDomainEvent {
 	@Override
 	public String typeName() {
 
-		return TYPE_LEHRER_CHANGED;
+		return EventType.LEHRER_CHANGED.getLabel();
 	}
 
 }

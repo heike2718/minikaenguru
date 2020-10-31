@@ -15,13 +15,20 @@ import de.egladil.web.mk_gateway.domain.user.UserRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
 
 /**
- * UserRepositoryHibernate
+ * UserHibernateRepository
  */
 @RequestScoped
-public class UserRepositoryHibernate implements UserRepository {
+public class UserHibernateRepository implements UserRepository {
 
 	@Inject
 	EntityManager em;
+
+	public static UserHibernateRepository createForIntegrationTest(final EntityManager em) {
+
+		UserHibernateRepository result = new UserHibernateRepository();
+		result.em = em;
+		return result;
+	}
 
 	@Override
 	public Optional<User> ofId(final String uuid) {

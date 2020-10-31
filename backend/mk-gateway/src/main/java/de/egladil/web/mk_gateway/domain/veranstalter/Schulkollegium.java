@@ -15,12 +15,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.semantik.Aggregate;
+import de.egladil.web.mk_gateway.domain.semantik.AggregateRoot;
 
 /**
  * Schulkollegium
  */
-@Aggregate
+@AggregateRoot
 public class Schulkollegium {
 
 	@JsonProperty

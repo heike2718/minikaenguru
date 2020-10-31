@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.teilnahmen;
 
+import de.egladil.web.mk_gateway.domain.event.EventType;
 import de.egladil.web.mk_gateway.domain.semantik.DomainEvent;
 
 /**
@@ -32,7 +33,7 @@ public class SchulteilnahmeChanged extends AbstractSchulteilnahmeEvent {
 	@Override
 	public String typeName() {
 
-		return TYPE_SCHULTEILNAHME_CHANGED;
+		return EventType.SCHULTEILNAHME_CHANGED.getLabel();
 	}
 
 }

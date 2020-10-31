@@ -39,6 +39,10 @@ import de.egladil.web.mk_gateway.domain.kataloge.api.SchulkatalogAntrag;
 public interface MkKatalogeRestClient {
 
 	@GET
+	@Path("/heartbeats")
+	public Response getHeartbeat(@NotBlank @StringLatin @QueryParam("heartbeatId") final String searchTerm);
+
+	@GET
 	@Path("/katalogsuche/global/{typ}")
 	public Response findItems(@PathParam(
 		value = "typ") final String typ, @NotBlank @StringLatin @QueryParam("search") final String searchTerm);
@@ -135,4 +139,5 @@ public interface MkKatalogeRestClient {
 	@Path("/katalogantrag")
 	@Consumes(MediaType.APPLICATION_JSON)
 	Response sendeSchulkatalogAntrag(final SchulkatalogAntrag antrag);
+
 }

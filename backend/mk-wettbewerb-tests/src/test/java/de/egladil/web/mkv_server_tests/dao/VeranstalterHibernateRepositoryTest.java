@@ -2,7 +2,7 @@
 // Project: mk-wettbewerb-tests
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mkv_server_tests;
+package de.egladil.web.mkv_server_tests.dao;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,6 +15,7 @@ import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.admin.VeranstalterSuchkriterium;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.VeranstalterSuchanfrage;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.VeranstalterHibernateRepository;
+import de.egladil.web.mkv_server_tests.AbstractIT;
 
 /**
  * VeranstalterHibernateRepositoryTest

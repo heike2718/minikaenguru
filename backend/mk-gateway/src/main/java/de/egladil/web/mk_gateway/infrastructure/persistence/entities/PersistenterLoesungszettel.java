@@ -24,26 +24,28 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 @Table(name = "LOESUNGSZETTEL")
 @NamedQueries({
 	@NamedQuery(
-		name = "PersistenterLoesungszettel.LOAD_ALL_WITH_IDENTIFIER",
-		query = "select l from PersistenterLoesungszettel l where l.teilnahmenummer = :teilnahmenummer and l.wettbewerbUuid = :wettbewerbUuid and l.teilnahmeart = :teilnahmeart"),
+		name = "PersistenterLoesungszettel.LOAD_ALL_WITH_TEILNAHME_IDENTIFIER",
+		query = "select l from PersistenterLoesungszettel l where l.teilnahmenummer = :teilnahmenummer and l.wettbewerbUuid = :wettbewerbUuid and l.teilnahmeart = :teilnahmeart order by l.uuid"),
 	@NamedQuery(
 		name = "PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID",
-		query = "select l from PersistenterLoesungszettel l where l.wettbewerbUuid = :wettbewerbUuid"),
+		query = "select l from PersistenterLoesungszettel l where l.wettbewerbUuid = :wettbewerbUuid order by l.uuid"),
 	@NamedQuery(
 		name = "PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID_KLASSENSTUFE",
-		query = "select l from PersistenterLoesungszettel l where l.wettbewerbUuid = :wettbewerbUuid and l.klassenstufe = :klassenstufe"),
+		query = "select l from PersistenterLoesungszettel l where l.wettbewerbUuid = :wettbewerbUuid and l.klassenstufe = :klassenstufe order by l.uuid"),
 
 })
 public class PersistenterLoesungszettel extends ConcurrencySafeEntity {
 
-	public static final String LOAD_ALL_WITH_IDENTIFIER = "PersistenterLoesungszettel.LOAD_ALL_WITH_IDENTIFIER";
+	private static final long serialVersionUID = 6846868705303269825L;
+
+	public static final String LOAD_ALL_WITH_TEILNAHME_IDENTIFIER = "PersistenterLoesungszettel.LOAD_ALL_WITH_TEILNAHME_IDENTIFIER";
 
 	public static final String LOAD_ALL_WITH_WETTBEWERBID = "PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID";
 
 	public static final String LOAD_ALL_WITH_WETTBEWERBID_KLASSENSTUFE = "PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID_KLASSENSTUFE";
 
-	@Column(name = "NUMMER")
-	private int nummer;
+	@Column(name = "KIND_ID")
+	private String kindID;
 
 	@Column(name = "KLASSENSTUFE")
 	@Enumerated(EnumType.STRING)
@@ -99,14 +101,14 @@ public class PersistenterLoesungszettel extends ConcurrencySafeEntity {
 	@Enumerated(EnumType.STRING)
 	private Sprache sprache;
 
-	public int getNummer() {
+	public String getKindID() {
 
-		return nummer;
+		return kindID;
 	}
 
-	public PersistenterLoesungszettel withNummer(final int nummer) {
+	public PersistenterLoesungszettel withKindID(final String kindID) {
 
-		this.nummer = nummer;
+		this.kindID = kindID;
 		return this;
 	}
 
@@ -258,7 +260,7 @@ public class PersistenterLoesungszettel extends ConcurrencySafeEntity {
 
 		return "PersistenterLoesungszettel [uuid=" + getUuid() + ", wettbewerbUuid=" + wettbewerbUuid + ", teilnahmeart="
 			+ teilnahmeart
-			+ ", teilnahmenummer=" + teilnahmenummer + ", nummer=" + nummer + "]";
+			+ ", teilnahmenummer=" + teilnahmenummer + ", kindID=" + kindID + "]";
 	}
 
 }

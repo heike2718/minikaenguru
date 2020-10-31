@@ -8,6 +8,7 @@ import { WettbewerbInfoComponent } from './wettbewerb/wettbewerb-info.component'
 import { DashboardComponent } from './dashboard/dashboard.component';
 
 
+
 const routes: Routes = [
 
 	{
@@ -37,6 +38,10 @@ const routes: Routes = [
 	{
 		path: 'teilnahmen',
 		loadChildren: () => import('./teilnahmen/teilnahmen.module').then(m => m.TeilnahmenModule)
+	},
+	{
+		path: 'privatauswertung',
+		loadChildren: () => import('./privatauswertung/privatauswertung.module').then(m => m.PrivatauswertungModule)
 	},
 	{
 		path: 'adv',

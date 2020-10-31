@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
+import de.egladil.web.mk_gateway.domain.event.EventType;
 import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
 
 /**
@@ -43,7 +44,7 @@ public class DeleteVeranstalterFailed implements MkGatewayDomainEvent {
 	@Override
 	public String typeName() {
 
-		return TYPE_DELETE_VERANSTALTER_FAILED;
+		return EventType.DELETE_VERANSTALTER_FAILED.getLabel();
 	}
 
 	public String uuid() {
