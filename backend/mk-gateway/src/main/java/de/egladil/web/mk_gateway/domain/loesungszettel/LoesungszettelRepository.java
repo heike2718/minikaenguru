@@ -5,7 +5,9 @@
 package de.egladil.web.mk_gateway.domain.loesungszettel;
 
 import java.util.List;
+import java.util.Optional;
 
+import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
@@ -54,12 +56,41 @@ public interface LoesungszettelRepository {
 	int anzahlLoesungszettel(TeilnahmeIdentifier teilnahmeIdentifier);
 
 	/**
-	 * Wird später abgelöst durch eine Methode, die einen Loesungszettel, also das domain-Objekt entgegennimmt
+	 * Sucht den Lösungszettel anhand des Identifiers.
+	 *
+	 * @param  identifier
+	 * @return            PersistenterLoesungszettel
+	 */
+	Optional<PersistenterLoesungszettel> findByIdentifier(Identifier identifier);
+
+	/**
+	 * Fügt einen neuen Löungszettel hinzu.
 	 *
 	 * @param  loesungszettel
-	 * @return
+	 *                        Lösungszettel
+	 * @return                Identifier
 	 */
-	@Deprecated(forRemoval = true)
-	boolean addLosungszettel(PersistenterLoesungszettel loesungszettel);
+	Identifier addLosungszettel(Loesungszettel loesungszettel);
+
+	/**
+	 * Ändert einen vorhandenen Lösungszettel in der DB.
+	 *
+	 * @param  loesungszettel
+	 * @return                boolean
+	 */
+	boolean updateLoesungszettel(Loesungszettel loesungszettel);
+
+	/**
+	 * @param  persistenterLoesungszettel
+	 *                                    PersistenterLoesungszettel
+	 * @return                            PersistenterLoesungszettel
+	 */
+	PersistenterLoesungszettel updateLoesungszettelInTransaction(PersistenterLoesungszettel persistenterLoesungszettel);
+
+	/**
+	 * @param  identifier
+	 * @return            boolean
+	 */
+	boolean removeLoesungszettel(Identifier identifier, String veranstalterUuid);
 
 }

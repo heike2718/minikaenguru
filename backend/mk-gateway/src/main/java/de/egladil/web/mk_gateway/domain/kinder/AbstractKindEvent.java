@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
@@ -81,15 +83,22 @@ public abstract class AbstractKindEvent implements MkGatewayDomainEvent {
 		return this;
 	}
 
-	public AbstractKindEvent withTriggeringUser(final String triggeringUser) {
-
-		this.triggeringUser = triggeringUser;
-		return this;
-	}
-
 	public AbstractKindEvent withKlasseID(final String klasseID) {
 
 		this.klasseID = klasseID;
 		return this;
+	}
+
+	public String serializeQuietly() {
+
+		try {
+
+			String body = new ObjectMapper().writeValueAsString(this);
+			return body;
+		} catch (JsonProcessingException e) {
+
+			e.printStackTrace();
+			return e.getMessage();
+		}
 	}
 }

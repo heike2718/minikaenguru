@@ -168,5 +168,4 @@ public class Loesungszettel {
 		return "Loesungszettel [identifier=" + identifier + ", klassenstufe=" + klassenstufe + ", teilnahmeIdentifier="
 			+ teilnahmeIdentifier + "]";
 	}
-
 }

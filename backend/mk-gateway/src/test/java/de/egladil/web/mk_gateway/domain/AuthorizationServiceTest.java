@@ -63,7 +63,7 @@ public class AuthorizationServiceTest {
 		// Act + Assert
 		try {
 
-			service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId);
+			service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId, "kontext");
 			fail("keine AccessDeniedException");
 		} catch (AccessDeniedException e) {
 
@@ -89,7 +89,7 @@ public class AuthorizationServiceTest {
 		// Act + Assert
 		try {
 
-			service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId);
+			service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId, "kontext");
 			fail("keine AccessDeniedException");
 		} catch (AccessDeniedException e) {
 
@@ -119,7 +119,7 @@ public class AuthorizationServiceTest {
 		// Act + Assert
 		try {
 
-			service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId);
+			service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId, "kontext");
 			fail("keine AccessDeniedException");
 		} catch (AccessDeniedException e) {
 
@@ -147,7 +147,7 @@ public class AuthorizationServiceTest {
 		Mockito.when(veranstalterRepository.ofId(veranstalterId)).thenReturn(Optional.of(veranstalter));
 
 		// Act
-		assertTrue(service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId));
+		assertTrue(service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId, "kontext"));
 		assertNull(service.getSecurityIncidentRegistered());
 	}
 
@@ -164,7 +164,7 @@ public class AuthorizationServiceTest {
 		Mockito.when(userRepository.ofId(USER_UUID)).thenReturn(Optional.of(user));
 		Mockito.when(veranstalterRepository.ofId(veranstalterId)).thenReturn(Optional.empty());
 
-		assertTrue(service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId));
+		assertTrue(service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId, "kontext"));
 		assertNull(service.getSecurityIncidentRegistered());
 	}
 

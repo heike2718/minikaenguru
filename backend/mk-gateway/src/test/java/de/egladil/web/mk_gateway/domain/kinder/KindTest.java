@@ -42,13 +42,13 @@ public class KindTest {
 	void should_createFromAPIModelWithoutKlasseID_initAllAttributes() {
 
 		// Arrange
-		KindEditorModel apiModel = KindEditorModel.create(Klassenstufe.ZWEI, Sprache.en)
+		KindEditorModel apiModel = new KindEditorModel(Klassenstufe.ZWEI, Sprache.en)
 			.withNachname("Paschulke")
 			.withVorname("Heinz")
 			.withZusatz("Zusatz");
 
 		// Act
-		Kind kind = Kind.createFromKindEditorModel(apiModel);
+		Kind kind = new Kind().withDaten(apiModel);
 
 		// Assert
 		assertNull(kind.identifier());

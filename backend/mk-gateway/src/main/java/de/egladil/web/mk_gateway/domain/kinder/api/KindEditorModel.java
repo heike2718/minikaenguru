@@ -43,13 +43,16 @@ public class KindEditorModel {
 	@NotNull
 	private SpracheAPIModel sprache;
 
-	public static KindEditorModel create(final Klassenstufe klassenstufe, final Sprache sprache) {
+	KindEditorModel() {
 
-		KindEditorModel result = new KindEditorModel();
-		result.klassenstufe = KlassenstufeAPIModel.create(klassenstufe);
-		result.sprache = SpracheAPIModel.create(sprache);
+		super();
 
-		return result;
+	}
+
+	public KindEditorModel(final Klassenstufe klassenstufe, final Sprache sprache) {
+
+		this.klassenstufe = KlassenstufeAPIModel.create(klassenstufe);
+		this.sprache = SpracheAPIModel.create(sprache);
 	}
 
 	public String vorname() {
@@ -92,18 +95,6 @@ public class KindEditorModel {
 	public KindEditorModel withZusatz(final String zusatz) {
 
 		this.zusatz = zusatz;
-		return this;
-	}
-
-	public KindEditorModel withKlassenstufe(final KlassenstufeAPIModel klassenstufe) {
-
-		this.klassenstufe = klassenstufe;
-		return this;
-	}
-
-	public KindEditorModel withSprache(final SpracheAPIModel sprache) {
-
-		this.sprache = sprache;
 		return this;
 	}
 

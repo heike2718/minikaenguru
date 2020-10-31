@@ -11,12 +11,19 @@ import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.auswertungen.LoesungszettelService;
 import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindAPIModel;
+import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.PrivatkindRequestData;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
@@ -32,7 +39,12 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 @ApplicationScoped
 public class PrivatkinderService {
 
+	private static final Logger LOG = LoggerFactory.getLogger(PrivatkinderService.class);
+
 	private final KindDublettenpruefer dublettenpruefer = new KindDublettenpruefer();
+
+	@Inject
+	AuthorizationService authService;
 
 	@Inject
 	KinderRepository kinderRepository;
@@ -47,7 +59,16 @@ public class PrivatkinderService {
 	WettbewerbService wettbewerbService;
 
 	@Inject
+	LoesungszettelService loesungszettelService;
+
+	@Inject
 	Event<KindCreated> kindCreatedEvent;
+
+	@Inject
+	Event<KindChanged> kindChangedEvent;
+
+	@Inject
+	Event<KindDeleted> kindDeletedEvent;
 
 	@Inject
 	Event<DataInconsistencyRegistered> dataInconsistencyEvent;
@@ -56,13 +77,19 @@ public class PrivatkinderService {
 
 	private KindCreated kindCreated;
 
-	public static PrivatkinderService createForTest(final KinderRepository kinderRepository, final TeilnahmenRepository teilnahmenRepository, final PrivatveranstalterService privatveranstalterService, final Integer jahrAktuellerWettbewerb) {
+	private KindChanged kindChanged;
+
+	private KindDeleted kindDeleted;
+
+	public static PrivatkinderService createForTest(final AuthorizationService authService, final KinderRepository kinderRepository, final TeilnahmenRepository teilnahmenRepository, final PrivatveranstalterService privatveranstalterService, final WettbewerbService wettbewerbService, final LoesungszettelService loesungszettelService) {
 
 		PrivatkinderService result = new PrivatkinderService();
-		result.privatveranstalterService = privatveranstalterService;
+		result.authService = authService;
 		result.kinderRepository = kinderRepository;
 		result.teilnahmenRepository = teilnahmenRepository;
-		result.wettbewerbID = new WettbewerbID(jahrAktuellerWettbewerb);
+		result.privatveranstalterService = privatveranstalterService;
+		result.wettbewerbService = wettbewerbService;
+		result.loesungszettelService = loesungszettelService;
 		return result;
 	}
 
@@ -86,7 +113,7 @@ public class PrivatkinderService {
 			return false;
 		}
 
-		Kind kind = Kind.createFromKindEditorModel(daten.kind());
+		Kind kind = new Kind().withDaten(daten.kind());
 
 		return this.koennteDubletteSein(kind, kinder);
 	}
@@ -117,7 +144,7 @@ public class PrivatkinderService {
 
 		Teilnahme teilnahme = getAktuelleTeilnahme(veranstalterUuid, "privatkindAnlegen");
 
-		Kind kind = Kind.createFromKindEditorModel(daten.kind()).withTeilnahmeIdentifier(teilnahme.teilnahmeIdentifier());
+		Kind kind = new Kind().withDaten(daten.kind()).withTeilnahmeIdentifier(teilnahme.teilnahmeIdentifier());
 
 		Kind gespeichertesKind = kinderRepository.addKind(kind);
 
@@ -131,9 +158,126 @@ public class PrivatkinderService {
 		if (this.kindCreatedEvent != null) {
 
 			this.kindCreatedEvent.fire(kindCreated);
+		} else {
+
+			System.out.println("kindCreated: " + kindCreated.serializeQuietly());
 		}
 
 		return result;
+	}
+
+	@Transactional
+	public KindAPIModel privatkindAendern(final PrivatkindRequestData daten, final String veranstalterUuid) {
+
+		Optional<Kind> optKind = kinderRepository.findKindWithIdentifier(new Identifier(daten.uuid()), getWettbewerbID());
+
+		if (optKind.isEmpty()) {
+
+			LOG.warn("{} versucht Kind zu ändern, das es nicht gibt", veranstalterUuid);
+			throw new NotFoundException();
+		}
+
+		Kind kind = optKind.get();
+
+		authService.checkPermissionForTeilnahmenummer(new Identifier(veranstalterUuid),
+			new Identifier(kind.teilnahmeIdentifier().teilnahmenummer()), "[privatkindAendern - " + daten.uuid() + "]");
+
+		KindEditorModel kindDaten = daten.kind();
+
+		if (kind.loesungszettelID() != null) {
+
+			if (kind.klassenstufe() != kindDaten.klassenstufe().klassenstufe()) {
+
+				this.loesungszettelService.loesungszettelLoeschenWithoutAuthorizationCheck(kind.loesungszettelID(),
+					veranstalterUuid);
+			} else {
+
+				if (kind.sprache() != kindDaten.sprache().sprache()) {
+
+					this.loesungszettelService.spracheLoesungszettelAendern(kind.loesungszettelID(), kindDaten.sprache().sprache(),
+						veranstalterUuid);
+				}
+			}
+		}
+
+		Kind geaendertesKind = new Kind(new Identifier(daten.uuid())).withDaten(daten.kind())
+			.withTeilnahmeIdentifier(kind.teilnahmeIdentifier())
+			.withLoesungszettelID(kind.loesungszettelID());
+
+		boolean changed = this.kinderRepository.changeKind(geaendertesKind);
+
+		KindAPIModel result = KindAPIModel.createFromKind(geaendertesKind);
+
+		if (changed) {
+
+			kindChanged = (KindChanged) new KindChanged(veranstalterUuid)
+				.withKlassenstufe(geaendertesKind.klassenstufe())
+				.withSprache(geaendertesKind.sprache())
+				.withTeilnahmenummer(geaendertesKind.teilnahmeIdentifier().teilnahmenummer())
+				.withKindID(geaendertesKind.identifier().identifier());
+
+			if (kindChangedEvent != null) {
+
+				kindChangedEvent.fire(kindChanged);
+			} else {
+
+				System.out.println("kindChanged: " + kindChanged.serializeQuietly());
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * Löscht das gegebene Kind.
+	 *
+	 * @param  uuid
+	 *                          String UUID des Kindes
+	 * @param  veranstalterUuid
+	 *                          UUID des Veranstalters
+	 * @return                  boolean true, falls gelöscht, false sonst.
+	 */
+	@Transactional
+	public boolean privatkindLoeschen(final String uuid, final String veranstalterUuid) {
+
+		Optional<Kind> optKind = kinderRepository.findKindWithIdentifier(new Identifier(uuid), getWettbewerbID());
+
+		if (optKind.isEmpty()) {
+
+			LOG.warn("{} versucht Kind zu löschen, das es nicht gibt", veranstalterUuid);
+			throw new NotFoundException();
+		}
+
+		Kind kind = optKind.get();
+
+		authService.checkPermissionForTeilnahmenummer(new Identifier(veranstalterUuid),
+			new Identifier(kind.teilnahmeIdentifier().teilnahmenummer()), "[privatkindLoeschen - " + uuid + "]");
+
+		if (kind.loesungszettelID() != null) {
+
+			this.loesungszettelService.loesungszettelLoeschenWithoutAuthorizationCheck(kind.loesungszettelID(), veranstalterUuid);
+		}
+
+		boolean removed = this.kinderRepository.removeKind(kind);
+
+		if (removed) {
+
+			kindDeleted = (KindDeleted) new KindDeleted(veranstalterUuid)
+				.withKindID(kind.identifier().identifier())
+				.withKlassenstufe(kind.klassenstufe())
+				.withSprache(kind.sprache())
+				.withTeilnahmenummer(kind.teilnahmeIdentifier().teilnahmenummer());
+
+			if (this.kindDeletedEvent != null) {
+
+				this.kindDeletedEvent.fire(kindDeleted);
+			} else {
+
+				System.out.println("kindDeleted: " + kindDeleted.serializeQuietly());
+			}
+		}
+
+		return removed;
 	}
 
 	public List<KindAPIModel> loadAllKinder(final String veranstalterUuid) {
@@ -150,17 +294,12 @@ public class PrivatkinderService {
 
 	private Teilnahme getAktuelleTeilnahme(final String veranstalterUuid, final String callingMethod) {
 
-		if (this.wettbewerbID == null) {
-
-			this.wettbewerbID = this.wettbewerbService.aktuellerWettbewerb().get().id();
-		}
-
 		Privatveranstalter veranstalter = this.privatveranstalterService.findPrivatveranstalter(veranstalterUuid);
 
 		List<Identifier> teilnahmeIdentifiers = veranstalter.teilnahmeIdentifier();
 
 		Optional<Teilnahme> optTeilnahme = this.teilnahmenRepository
-			.ofTeilnahmenummerArtWettbewerb(teilnahmeIdentifiers.get(0).identifier(), Teilnahmeart.PRIVAT, wettbewerbID);
+			.ofTeilnahmenummerArtWettbewerb(teilnahmeIdentifiers.get(0).identifier(), Teilnahmeart.PRIVAT, getWettbewerbID());
 
 		if (optTeilnahme.isEmpty()) {
 
@@ -178,6 +317,16 @@ public class PrivatkinderService {
 	KindCreated getKindCreated() {
 
 		return kindCreated;
+	}
+
+	public WettbewerbID getWettbewerbID() {
+
+		if (wettbewerbID == null) {
+
+			this.wettbewerbID = this.wettbewerbService.aktuellerWettbewerb().get().id();
+		}
+
+		return wettbewerbID;
 	}
 
 }

@@ -45,6 +45,17 @@ public class PrivatkindRequestData implements Serializable {
 		return this;
 	}
 
+	public String uuid() {
+
+		return uuid;
+	}
+
+	public PrivatkindRequestData withUuid(final String uuid) {
+
+		this.uuid = uuid;
+		return this;
+	}
+
 	@Override
 	public int hashCode() {
 
@@ -71,5 +82,4 @@ public class PrivatkindRequestData implements Serializable {
 		PrivatkindRequestData other = (PrivatkindRequestData) obj;
 		return Objects.equals(kind, other.kind) && Objects.equals(uuid, other.uuid);
 	}
-
 }

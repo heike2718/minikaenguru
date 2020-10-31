@@ -71,7 +71,7 @@ public class StatistikAnonymisierteEinzelteilnahmeServiceTest {
 	}
 
 	@Test
-	void should_erstelleStatistikFuerEinzelteilnahme_call_AuthService() {
+	void should_erstelleStatistikPDFEinzelteilnahme_call_AuthService() {
 
 		// Arrange
 		String teilnahmenummer = "ashichw";
@@ -82,7 +82,9 @@ public class StatistikAnonymisierteEinzelteilnahmeServiceTest {
 		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE.toString())
 			.withTeilnahmenummer(teilnahmenummer).withWettbewerbID(new WettbewerbID(2018));
 
-		Mockito.when(authService.checkPermissionForTeilnahmenummer(userIdentifier, teilnahmeID))
+		Mockito
+			.when(authService.checkPermissionForTeilnahmenummer(userIdentifier, teilnahmeID,
+				"[erstelleStatistikPDFEinzelteilnahme - " + teilnahmenummer + "]"))
 			.thenThrow(new AccessDeniedException());
 
 		// Act
@@ -107,7 +109,9 @@ public class StatistikAnonymisierteEinzelteilnahmeServiceTest {
 		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE.toString())
 			.withTeilnahmenummer(schulkuerzel).withWettbewerbID(new WettbewerbID(2018));
 
-		Mockito.when(authService.checkPermissionForTeilnahmenummer(new Identifier(veranstalterUUID), new Identifier(schulkuerzel)))
+		Mockito
+			.when(authService.checkPermissionForTeilnahmenummer(new Identifier(veranstalterUUID), new Identifier(schulkuerzel),
+				"[erstelleStatistikPDFEinzelteilnahme - " + schulkuerzel + "]"))
 			.thenReturn(Boolean.TRUE);
 
 		List<Map<String, Object>> data = new ArrayList<>();
@@ -152,7 +156,9 @@ public class StatistikAnonymisierteEinzelteilnahmeServiceTest {
 		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.PRIVAT.toString())
 			.withTeilnahmenummer(schulkuerzel).withWettbewerbID(new WettbewerbID(2018));
 
-		Mockito.when(authService.checkPermissionForTeilnahmenummer(new Identifier(veranstalterUUID), new Identifier(schulkuerzel)))
+		Mockito
+			.when(authService.checkPermissionForTeilnahmenummer(new Identifier(veranstalterUUID), new Identifier(schulkuerzel),
+				"[erstelleStatistikPDFEinzelteilnahme - " + schulkuerzel + "]"))
 			.thenReturn(Boolean.TRUE);
 
 		Mockito.when(loesungszettelRepository.loadAll(teilnahmeIdentifier)).thenReturn(wettbewerbLoesungszettel);

@@ -31,6 +31,13 @@ public class WettbewerbHibernateRepository implements WettbewerbRepository {
 	@Inject
 	EntityManager em;
 
+	public static WettbewerbHibernateRepository createForIntegrationTest(final EntityManager em) {
+
+		WettbewerbHibernateRepository result = new WettbewerbHibernateRepository();
+		result.em = em;
+		return result;
+	}
+
 	@Override
 	public List<Wettbewerb> loadWettbewerbe() {
 

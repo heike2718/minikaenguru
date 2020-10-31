@@ -39,17 +39,6 @@ public class Kind {
 
 	private Identifier klasseID;
 
-	public static Kind createFromKindEditorModel(final KindEditorModel apiModel) {
-
-		Kind result = new Kind();
-		result.vorname = apiModel.vorname() == null ? null : apiModel.vorname().trim();
-		result.nachname = apiModel.nachname() == null ? null : apiModel.nachname().trim();
-		result.zusatz = apiModel.zusatz() == null ? null : apiModel.zusatz().trim();
-		result.sprache = apiModel.sprache().sprache();
-		result.klassenstufe = apiModel.klassenstufe().klassenstufe();
-		return result;
-	}
-
 	public Kind() {
 
 	}
@@ -59,19 +48,19 @@ public class Kind {
 		this.identifier = identifier;
 	}
 
+	public Kind withDaten(final KindEditorModel kindEditorModel) {
+
+		this.vorname = kindEditorModel.vorname() == null ? null : kindEditorModel.vorname().trim();
+		this.nachname = kindEditorModel.nachname() == null ? null : kindEditorModel.nachname().trim();
+		this.zusatz = kindEditorModel.zusatz() == null ? null : kindEditorModel.zusatz().trim();
+		this.sprache = kindEditorModel.sprache().sprache();
+		this.klassenstufe = kindEditorModel.klassenstufe().klassenstufe();
+		return this;
+	}
+
 	public Identifier identifier() {
 
 		return identifier;
-	}
-
-	public void setIdentifier(final Identifier identifier) {
-
-		if (this.identifier != null) {
-
-			throw new IllegalStateException("Der identifier darf nicht geändert werden");
-		}
-		this.identifier = identifier;
-
 	}
 
 	public TeilnahmeIdentifier teilnahmeIdentifier() {

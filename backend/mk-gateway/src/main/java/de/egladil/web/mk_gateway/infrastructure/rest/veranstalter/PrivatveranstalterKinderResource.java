@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -109,11 +110,33 @@ public class PrivatveranstalterKinderResource {
 
 		if (StringUtils.isNotBlank(result.nachname())) {
 
-			msg = MessageFormat.format(applicationMessages.getString("createKindSuccess.vornameNachname"),
+			msg = MessageFormat.format(applicationMessages.getString("saveKindSuccess.vornameNachname"),
 				new Object[] { result.vorname(), result.nachname() });
 		} else {
 
-			msg = MessageFormat.format(applicationMessages.getString("createKindSuccess.nurVorname"),
+			msg = MessageFormat.format(applicationMessages.getString("saveKindSuccess.nurVorname"),
+				new Object[] { result.vorname() });
+		}
+
+		return Response.ok(new ResponsePayload(MessagePayload.info(msg), result)).build();
+	}
+
+	@PUT
+	public Response kindAendern(final PrivatkindRequestData data) {
+
+		String uuid = securityContext.getUserPrincipal().getName();
+
+		KindAPIModel result = this.privatkinderService.privatkindAendern(data, uuid);
+
+		String msg = "";
+
+		if (StringUtils.isNotBlank(result.nachname())) {
+
+			msg = MessageFormat.format(applicationMessages.getString("saveKindSuccess.vornameNachname"),
+				new Object[] { result.vorname(), result.nachname() });
+		} else {
+
+			msg = MessageFormat.format(applicationMessages.getString("saveKindSuccess.nurVorname"),
 				new Object[] { result.vorname() });
 		}
 
