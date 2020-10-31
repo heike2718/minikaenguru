@@ -12,10 +12,12 @@ import java.util.ResourceBundle;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -23,6 +25,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
@@ -41,6 +45,8 @@ import de.egladil.web.mk_gateway.domain.kinder.api.PrivatkindRequestData;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class PrivatveranstalterKinderResource {
+
+	private static final Logger LOG = LoggerFactory.getLogger(PrivatveranstalterKinderResource.class);
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
@@ -61,7 +67,7 @@ public class PrivatveranstalterKinderResource {
 	}
 
 	@POST
-	@Path("/duplikate")
+	@Path("duplikate")
 	public Response pruefeMehrfacherfassung(final PrivatkindRequestData data) {
 
 		String uuid = securityContext.getUserPrincipal().getName();
@@ -141,6 +147,31 @@ public class PrivatveranstalterKinderResource {
 		}
 
 		return Response.ok(new ResponsePayload(MessagePayload.info(msg), result)).build();
+	}
+
+	@DELETE
+	@Path("{uuid}")
+	public Response kindLoeschen(@PathParam(value = "uuid") final String uuid) {
+
+		LOG.debug("Kind mit uuid = {} soll gelöscht werden.", uuid);
+
+		String veranstalterUuid = securityContext.getUserPrincipal().getName();
+
+		KindAPIModel geloeschtesKind = this.privatkinderService.privatkindLoeschen(uuid, veranstalterUuid);
+
+		String msg = "";
+
+		if (StringUtils.isNotBlank(geloeschtesKind.nachname())) {
+
+			msg = MessageFormat.format(applicationMessages.getString("deleteKindSuccess.vornameNachname"),
+				new Object[] { geloeschtesKind.vorname(), geloeschtesKind.nachname() });
+		} else {
+
+			msg = MessageFormat.format(applicationMessages.getString("deleteKindSuccess.nurVorname"),
+				new Object[] { geloeschtesKind.vorname() });
+		}
+
+		return Response.ok(new ResponsePayload(MessagePayload.info(msg), geloeschtesKind)).build();
 	}
 
 }

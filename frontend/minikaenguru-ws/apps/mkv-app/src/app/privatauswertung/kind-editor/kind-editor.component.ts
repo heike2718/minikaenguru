@@ -144,7 +144,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 					this.showSaveMessage = false;
 				}
 			}
-		)
+		);
 	}
 
 	ngOnDestroy(): void {
@@ -182,10 +182,10 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 
 
-	open(dialogContent: TemplateRef<HTMLElement>) {
+	private open(content: TemplateRef<HTMLElement>) {
 
 		this.saveInProgress = false;
-		this.modalService.open(dialogContent, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+		this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
 
 			if (result === 'ja') {
 				this.saveKind();

@@ -55,4 +55,17 @@ export class KinderMap {
 		}
 		return result;
 	}
+
+	public remove(uuid: string): KindWithID[] {
+
+		const result: KindWithID[] = [];
+
+		for (const item of this.items) {
+			if (item.uuid !== uuid) {
+				result.push(item);
+			}
+		}
+
+		return result;
+	}
 }

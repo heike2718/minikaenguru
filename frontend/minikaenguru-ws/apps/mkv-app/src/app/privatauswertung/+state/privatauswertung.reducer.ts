@@ -79,7 +79,15 @@ const privatauswertungReducer = createReducer(initialPrivatauswertungState,
 
 		return { ...state, loading: false, duplikatwarnung: action.duplikatwarnung };
 
-	})
+	}),
+
+	on(PrivatauswertungActions.kindDeleted, (state, action) => {
+		const outcome = action.outcome;
+		const neueMap = new KinderMap(state.kinderMap).remove(action.kind.uuid)
+		return { ...state, kinderMap: neueMap, saveOutcome: outcome, loading: false };
+	}),
+
+
 );
 
 export function reducer(state: PrivatauswertungState | undefined, action: Action) {

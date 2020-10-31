@@ -238,7 +238,7 @@ public class PrivatkinderService {
 	 * @return                  boolean true, falls gelöscht, false sonst.
 	 */
 	@Transactional
-	public boolean privatkindLoeschen(final String uuid, final String veranstalterUuid) {
+	public KindAPIModel privatkindLoeschen(final String uuid, final String veranstalterUuid) {
 
 		Optional<Kind> optKind = kinderRepository.findKindWithIdentifier(new Identifier(uuid), getWettbewerbID());
 
@@ -277,7 +277,7 @@ public class PrivatkinderService {
 			}
 		}
 
-		return removed;
+		return KindAPIModel.createFromKind(kind);
 	}
 
 	public List<KindAPIModel> loadAllKinder(final String veranstalterUuid) {

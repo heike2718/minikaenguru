@@ -11,7 +11,7 @@ import { take, map } from 'rxjs/operators';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
 import { KindWithID } from './privatauswertung.model';
 import { ThrowStmt } from '@angular/compiler';
-import { Message } from '@minikaenguru-ws/common-messages';
+import { Message, MessageService } from '@minikaenguru-ws/common-messages';
 
 
 
@@ -32,6 +32,7 @@ export class PrivatauswertungFacade {
 	constructor(private store: Store<AppState>,
 		private authService: AuthService,
 		private privatauswertungService: PrivatauswertungService,
+		private messageService: MessageService,
 		private errorHandler: GlobalErrorHandlerService) {
 
 		this.authService.onLoggingOut$.subscribe(
@@ -107,6 +108,24 @@ export class PrivatauswertungFacade {
 
 		this.privatauswertungService.updateKind(data).subscribe(
 			responsePayload => this.store.dispatch(PrivatauswertungActions.kindSaved({ kind: responsePayload.data, outcome: responsePayload.message })),
+			(error) => {
+				this.store.dispatch(PrivatauswertungActions.finishedWithError());
+				this.errorHandler.handleError(error);
+			}
+		);
+
+	}
+
+	public deleteKind(uuid: string): void {
+
+		this.store.dispatch(PrivatauswertungActions.startLoading());
+
+		this.privatauswertungService.deleteKind(uuid).subscribe(
+			responsePayload => {
+
+				this.store.dispatch(PrivatauswertungActions.kindDeleted({ kind: responsePayload.data, outcome: responsePayload.message }));
+				this.messageService.showMessage(responsePayload.message);
+			},
 			(error) => {
 				this.store.dispatch(PrivatauswertungActions.finishedWithError());
 				this.errorHandler.handleError(error);

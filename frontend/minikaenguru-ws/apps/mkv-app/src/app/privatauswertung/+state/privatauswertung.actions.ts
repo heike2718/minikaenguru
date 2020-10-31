@@ -27,7 +27,7 @@ export const startEditingKind = createAction(
 );
 
 export const kindSaved = createAction(
-	'[PrivatauswertungFacade] saveKind',
+	'[PrivatauswertungFacade] insert or update kind',
 	props<{ kind: Kind, outcome: Message }>()
 );
 
@@ -35,5 +35,10 @@ export const duplikatGeprueft = createAction(
 	'[PrivatauswertungFacade] pruefeDuplikat',
 	props<{ duplikatwarnung: Duplikatwarnung }>()
 
+);
+
+export const kindDeleted = createAction(
+	'[PrivatauswertungFacade] deleteKind',
+	props<{ kind: Kind, outcome: Message }>()
 );
 

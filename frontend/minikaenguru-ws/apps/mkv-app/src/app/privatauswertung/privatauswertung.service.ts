@@ -55,4 +55,14 @@ export class PrivatauswertungService {
 		);
 	}
 
+
+	public deleteKind(uuid: string): Observable<ResponsePayload> {
+
+		const url = environment.apiUrl + '/privatkinder/' + uuid;
+
+		return this.http.delete(url, { observe: 'body' }).pipe(
+			map(body => body as ResponsePayload)
+		);
+	}
+
 };
