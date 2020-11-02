@@ -40,8 +40,8 @@ const routes: Routes = [
 		loadChildren: () => import('./teilnahmen/teilnahmen.module').then(m => m.TeilnahmenModule)
 	},
 	{
-		path: 'privatauswertung',
-		loadChildren: () => import('./privatauswertung/privatauswertung.module').then(m => m.PrivatauswertungModule)
+		path: 'kinder',
+		loadChildren: () => import('./kinder/kinder.module').then(m => m.KinderModule)
 	},
 	{
 		path: 'adv',

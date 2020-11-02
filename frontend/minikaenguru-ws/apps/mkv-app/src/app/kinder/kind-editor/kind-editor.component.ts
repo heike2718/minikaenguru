@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { PrivatauswertungFacade } from '../privatauswertung.facade';
+import { KinderFacade } from '../kinder.facade';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 import { LogService } from '@minikaenguru-ws/common-logging';
@@ -76,7 +76,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	constructor(private fb: FormBuilder,
 		private modalService: NgbModal,
-		private privatauswertungFacade: PrivatauswertungFacade,
+		private kinderFacade: KinderFacade,
 		private router: Router,
 		private route: ActivatedRoute,
 		private messageService: MessageService,
@@ -108,7 +108,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 			}
 		);
 
-		this.editorModelSubscription = this.privatauswertungFacade.kindEditorModel$.subscribe(
+		this.editorModelSubscription = this.kinderFacade.kindEditorModel$.subscribe(
 
 			ke => {
 
@@ -127,7 +127,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 			}
 		);
 
-		this.duplikatwarnungSubscription = this.privatauswertungFacade.duplikatwarnung$.subscribe(
+		this.duplikatwarnungSubscription = this.kinderFacade.duplikatwarnung$.subscribe(
 			warnung => {
 
 				if (warnung && warnung.kontext === 'KIND') {
@@ -144,7 +144,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 			}
 		);
 
-		this.saveOutcomeSubscription = this.privatauswertungFacade.saveOutcome$.subscribe(
+		this.saveOutcomeSubscription = this.kinderFacade.saveOutcome$.subscribe(
 			message => {
 				if (this.showSaveMessage) {
 					this.messageService.showMessage(message);
@@ -153,7 +153,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 			}
 		);
 
-		this.teilnahmenummerSubscription = this.privatauswertungFacade.teilnahmenummer$.subscribe(
+		this.teilnahmenummerSubscription = this.kinderFacade.teilnahmenummer$.subscribe(
 			tn => this.teilnahmenummer = tn
 		);
 	}
@@ -191,7 +191,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 			klassenstufe: getKlassenstufeByLabel(formValue.klassenstufe)
 		};
 
-		this.privatauswertungFacade.pruefeDuplikat(this.uuid, this.kindDaten);
+		this.kinderFacade.pruefeDuplikat(this.uuid, this.kindDaten);
 	}
 
 
@@ -212,10 +212,10 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	onCancel(): void {
 		this.messageService.clear();
-		this.privatauswertungFacade.cancelEditKind();
+		this.kinderFacade.cancelEditKind();
 
 		if (this.teilnahmenummer) {
-			this.router.navigateByUrl('/privatauswertung/' + this.teilnahmenummer);
+			this.router.navigateByUrl('/kinder/' + this.teilnahmenummer);
 		} else {
 			this.router.navigateByUrl('/privat/dashboard');
 
@@ -227,9 +227,9 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 	saveKind(): void {
 		this.showSaveMessage = true;
 		if (this.uuid === 'neu') {
-			this.privatauswertungFacade.insertKind(this.uuid, this.kindDaten);
+			this.kinderFacade.insertKind(this.uuid, this.kindDaten);
 		} else {
-			this.privatauswertungFacade.updateKind(this.uuid, this.kindDaten);
+			this.kinderFacade.updateKind(this.uuid, this.kindDaten);
 		}
 	}
 }

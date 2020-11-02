@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
-import * as fromPrivatauswertung from './+state/privatauswertung.reducer';
-import { PrivatauswertungRoutingModule } from './privatauswertung-routing.module';
+import * as fromKinder from './+state/kinder.reducer';
+import { KinderRoutingModule } from './kinder-routing.module';
 import { KindDetailsComponent } from './kind-details/kind-details.component';
 import { KinderListComponent } from './kinder-list/kinder-list.component';
 import { KinderListResolver } from './kinder-list/kinder-list.resolver';
@@ -22,13 +22,13 @@ import { KindEditorResolver } from './kind-editor/kind-editor.resolver';
 	imports: [
 		CommonModule,
 		ReactiveFormsModule,
-		PrivatauswertungRoutingModule,
+		KinderRoutingModule,
 		NgbModule,
-		StoreModule.forFeature(fromPrivatauswertung.privatauswertungFeatureKey, fromPrivatauswertung.reducer),
+		StoreModule.forFeature(fromKinder.kinderFeatureKey, fromKinder.reducer),
 	],
 	providers: [
 		KinderListResolver,
 		KindEditorResolver
 	]
 })
-export class PrivatauswertungModule { }
+export class KinderModule { }

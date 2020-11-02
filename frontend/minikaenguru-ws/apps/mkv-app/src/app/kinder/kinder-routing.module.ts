@@ -5,19 +5,21 @@ import { KinderListComponent } from './kinder-list/kinder-list.component';
 import { KinderListResolver } from './kinder-list/kinder-list.resolver';
 import { KindEditorResolver } from './kind-editor/kind-editor.resolver';
 import { KindEditorComponent } from './kind-editor/kind-editor.component';
+import { LehrerGuardService } from '../infrastructure/lehrer-guard.service';
+import { VeranstalterGuardService } from '../infrastructure/veranstalter-guard.service';
 
 
-const privatauswertungRoutes: Routes = [
+const kinderRoutes: Routes = [
 
 	{
-		path: 'privatauswertung/:teilnahmenummer',
-		canActivate: [PrivatveranstalterGuardService],
+		path: 'kinder/:teilnahmenummer',
+		canActivate: [VeranstalterGuardService],
 		resolve: {kinderList: KinderListResolver},
 		component: KinderListComponent
 	},
 	{
 		path: 'kind-editor/:id',
-		canActivate: [PrivatveranstalterGuardService],
+		canActivate: [VeranstalterGuardService],
 		resolve: {kindEditor: KindEditorResolver},
 		component: KindEditorComponent
 	}
@@ -25,10 +27,10 @@ const privatauswertungRoutes: Routes = [
 
 @NgModule({
 	imports: [
-		RouterModule.forChild(privatauswertungRoutes)
+		RouterModule.forChild(kinderRoutes)
 	],
 	exports: [
 		RouterModule
 	]
 })
-export class PrivatauswertungRoutingModule {}
+export class KinderRoutingModule {}

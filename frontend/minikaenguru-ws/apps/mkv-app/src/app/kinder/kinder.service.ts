@@ -10,7 +10,7 @@ import { Kind, Duplikatwarnung, PrivatkindRequestData } from '@minikaenguru-ws/c
 @Injectable({
 	providedIn: 'root'
 })
-export class PrivatauswertungService {
+export class KinderService {
 
 
 	constructor(private http: HttpClient) { }
