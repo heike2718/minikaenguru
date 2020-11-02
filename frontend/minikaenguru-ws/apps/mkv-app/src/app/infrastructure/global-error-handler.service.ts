@@ -4,6 +4,7 @@ import { MessageService } from '@minikaenguru-ws/common-messages';
 import { environment } from '../../environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LogPublishersService } from './log-publishers.service';
+import { LogoutService } from '../services/logout.service';
 
 @Injectable(
 	{
@@ -14,6 +15,7 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 
 	private logger: LogService;
 	private messageService: MessageService;
+	private logoutService: LogoutService;
 
 	constructor(private injector: Injector) {
 
@@ -22,6 +24,7 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 
 		const logPublishersService = this.injector.get(LogPublishersService);
 		this.logger = this.injector.get(LogService);
+		this.logoutService = this.injector.get(LogoutService);
 
 		this.logger.initLevel(environment.loglevel);
 		this.logger.registerPublishers(logPublishersService.publishers);
@@ -46,7 +49,7 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 		}
 	}
 
-	public handleHttpError(httpError: HttpErrorResponse, context: string) {
+	public handleHttpError(httpError: HttpErrorResponse, _context: string) {
 		if (httpError.status === 0) {
 			this.messageService.error('Der Server ist nicht erreichbar.');
 		} else {
@@ -59,7 +62,8 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 					this.messageService.error('Sie haben keine Berechtigung, diese Resource aufzurufen.');
 					break;
 				case 908:
-					this.messageService.error('Ihre Session ist abgelaufen. Bitte loggen Sie sich erneut ein.');
+					this.messageService.warn('Ihre Session ist abgelaufen. Bitte loggen Sie sich erneut ein.');
+					this.logoutService.logout();
 					break;
 				default: {
 					if (msg) {

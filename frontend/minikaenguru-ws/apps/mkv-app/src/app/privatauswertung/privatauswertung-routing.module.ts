@@ -10,7 +10,7 @@ import { KindEditorComponent } from './kind-editor/kind-editor.component';
 const privatauswertungRoutes: Routes = [
 
 	{
-		path: 'privatauswertung',
+		path: 'privatauswertung/:teilnahmenummer',
 		canActivate: [PrivatveranstalterGuardService],
 		resolve: {kinderList: KinderListResolver},
 		component: KinderListComponent

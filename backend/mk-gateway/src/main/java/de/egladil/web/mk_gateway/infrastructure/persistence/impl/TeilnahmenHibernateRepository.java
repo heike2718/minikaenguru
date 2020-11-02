@@ -24,6 +24,7 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Schulteilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenteTeilnahme;
 
@@ -77,6 +78,33 @@ public class TeilnahmenHibernateRepository implements TeilnahmenRepository {
 	}
 
 	@Override
+	public Optional<Teilnahme> ofTeilnahmeIdentifier(final TeilnahmeIdentifier teilnahmeIdentifier) {
+
+		if (teilnahmeIdentifier == null) {
+
+			throw new IllegalArgumentException("teilnahmeIdentifier darf nicht null sein.");
+		}
+
+		List<PersistenteTeilnahme> teilnahmen = this.findAllByNummer(teilnahmeIdentifier.teilnahmenummer());
+
+		Optional<PersistenteTeilnahme> optTeilnahme = teilnahmen.stream()
+			.filter(t -> t.getTeilnahmeart() == teilnahmeIdentifier.teilnahmeart()
+				&& t.getWettbewerbUUID().equals(teilnahmeIdentifier.wettbewerbID()))
+			.findFirst();
+
+		if (optTeilnahme.isEmpty()) {
+
+			return Optional.empty();
+		}
+
+		PersistenteTeilnahme persistente = optTeilnahme.get();
+
+		Teilnahme teilnahme = mapToTeilnahme(persistente);
+
+		return Optional.of(teilnahme);
+	}
+
+	@Override
 	public List<Teilnahme> ofTeilnahmenummerArt(final String teilnahmenummer, final Teilnahmeart art) {
 
 		List<Teilnahme> teilnahmen = this.ofTeilnahmenummer(teilnahmenummer);
@@ -99,8 +127,9 @@ public class TeilnahmenHibernateRepository implements TeilnahmenRepository {
 	@Override
 	public boolean addTeilnahme(final Teilnahme teilnahme) {
 
-		Optional<Teilnahme> opt = this.ofTeilnahmenummerArtWettbewerb(teilnahme.teilnahmenummer().identifier(),
-			teilnahme.teilnahmeart(), teilnahme.wettbewerbID());
+		TeilnahmeIdentifier teilnahmeIdentifier = TeilnahmeIdentifier.createFromTeilnahme(teilnahme);
+
+		Optional<Teilnahme> opt = this.ofTeilnahmeIdentifier(teilnahmeIdentifier);
 
 		if (opt.isPresent()) {
 

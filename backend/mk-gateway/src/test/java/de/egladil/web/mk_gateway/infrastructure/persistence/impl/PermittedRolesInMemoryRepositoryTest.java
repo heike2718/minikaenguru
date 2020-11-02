@@ -245,60 +245,67 @@ public class PermittedRolesInMemoryRepositoryTest {
 		}
 
 		@Test
-		void should_permittedRollen_privatkinderDelete_beOk() {
+		void should_permittedRollen_kinderDelete_beOk() {
 
 			// Act
-			List<Rolle> rollen = repository.permittedRollen("/privatkinder/FRTGZ76G3", HttpMethod.DELETE);
+			List<Rolle> rollen = repository.permittedRollen("/kinder/FRTGZ76G3", HttpMethod.DELETE);
 
 			// Assert
-			assertEquals(1, rollen.size());
+			assertEquals(2, rollen.size());
+			assertTrue(rollen.contains(Rolle.LEHRER));
 			assertTrue(rollen.contains(Rolle.PRIVAT));
 		}
 
 		@Test
-		void should_permittedRollen_privatkinderGet_beOk() {
+		void should_permittedRollen_kinderGet_beOk() {
 
 			// Act
-			List<Rolle> rollen = repository.permittedRollen("/privatkinder", HttpMethod.GET);
+			List<Rolle> rollen = repository.permittedRollen("/kinder/GGUIIFGTU", HttpMethod.GET);
 
 			// Assert
-			assertEquals(1, rollen.size());
+			assertEquals(2, rollen.size());
+			assertTrue(rollen.contains(Rolle.LEHRER));
 			assertTrue(rollen.contains(Rolle.PRIVAT));
 		}
 
 		@Test
-		void should_permittedRollen_privatkinderPost_beOk() {
+		void should_permittedRollen_kinderPost_beOk() {
 
 			// Act
-			List<Rolle> rollen = repository.permittedRollen("/privatkinder", HttpMethod.POST);
+			List<Rolle> rollen = repository.permittedRollen("/kinder", HttpMethod.POST);
 
 			// Assert
-			assertEquals(1, rollen.size());
+			assertEquals(2, rollen.size());
+			assertTrue(rollen.contains(Rolle.LEHRER));
 			assertTrue(rollen.contains(Rolle.PRIVAT));
 		}
 
 		@Test
-		void should_permittedRollen_privatkinderDuplikatePost_beOk() {
+		void should_permittedRollen_kinderDuplikatePost_beOk() {
 
 			// Act
-			List<Rolle> rollen = repository.permittedRollen("/privatkinder/duplikate", HttpMethod.POST);
+			List<Rolle> rollen = repository.permittedRollen("/kinder/duplikate", HttpMethod.POST);
 
 			// Assert
-			assertEquals(1, rollen.size());
+			assertEquals(2, rollen.size());
+			assertTrue(rollen.contains(Rolle.LEHRER));
 			assertTrue(rollen.contains(Rolle.PRIVAT));
 		}
 
 		@Test
-		void should_permittedRollen_privatkinderPut_beOk() {
+		void should_permittedRollen_kinderPut_beOk() {
 
 			// Act
-			List<Rolle> rollen = repository.permittedRollen("/privatkinder", HttpMethod.PUT);
+			List<Rolle> rollen = repository.permittedRollen("/kinder", HttpMethod.PUT);
 
 			// Assert
-			assertEquals(1, rollen.size());
+			assertEquals(2, rollen.size());
+			assertTrue(rollen.contains(Rolle.LEHRER));
 			assertTrue(rollen.contains(Rolle.PRIVAT));
 		}
 	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	@Nested
 	class AdminAPITest {

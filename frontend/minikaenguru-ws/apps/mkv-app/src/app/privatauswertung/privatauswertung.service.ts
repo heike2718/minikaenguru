@@ -16,9 +16,9 @@ export class PrivatauswertungService {
 	constructor(private http: HttpClient) { }
 
 
-	public loadKinder(): Observable<Kind[]> {
+	public loadKinder(teilnahmenummer: string): Observable<Kind[]> {
 
-		const url = environment.apiUrl + '/privatkinder';
+		const url = environment.apiUrl + '/kinder/' + teilnahmenummer;
 
 		return this.http.get(url).pipe(
 			map(body => body as ResponsePayload),
@@ -28,7 +28,7 @@ export class PrivatauswertungService {
 
 	public checkDuplikat(data: PrivatkindRequestData): Observable<Duplikatwarnung> {
 
-		const url = environment.apiUrl + '/privatkinder/duplikate';
+		const url = environment.apiUrl + '/kinder/duplikate';
 
 		return this.http.post(url, data, { observe: 'body' }).pipe(
 			map(body => body as ResponsePayload),
@@ -38,7 +38,7 @@ export class PrivatauswertungService {
 
 	public insertKind(data: PrivatkindRequestData): Observable<ResponsePayload> {
 
-		const url = environment.apiUrl + '/privatkinder';
+		const url = environment.apiUrl + '/kinder';
 
 		return this.http.post(url, data, { observe: 'body' }).pipe(
 			map(body => body as ResponsePayload)
@@ -48,7 +48,7 @@ export class PrivatauswertungService {
 
 	public updateKind(data: PrivatkindRequestData): Observable<ResponsePayload> {
 
-		const url = environment.apiUrl + '/privatkinder';
+		const url = environment.apiUrl + '/kinder';
 
 		return this.http.put(url, data, { observe: 'body' }).pipe(
 			map(body => body as ResponsePayload)
@@ -58,7 +58,7 @@ export class PrivatauswertungService {
 
 	public deleteKind(uuid: string): Observable<ResponsePayload> {
 
-		const url = environment.apiUrl + '/privatkinder/' + uuid;
+		const url = environment.apiUrl + '/kinder/' + uuid;
 
 		return this.http.delete(url, { observe: 'body' }).pipe(
 			map(body => body as ResponsePayload)

@@ -7,6 +7,7 @@ import { Message } from '@minikaenguru-ws/common-messages';
 export const privatauswertungFeatureKey = 'mkv-app-privatauswertung';
 
 export interface PrivatauswertungState {
+	teilnahmenummer: string;
 	kinderMap: KindWithID[];
 	selectedKindUUID: string;
 	kinderLoaded: boolean;
@@ -17,6 +18,7 @@ export interface PrivatauswertungState {
 };
 
 const initialPrivatauswertungState: PrivatauswertungState = {
+	teilnahmenummer: undefined,
 	kinderMap: [],
 	selectedKindUUID: undefined,
 	kinderLoaded: false,
@@ -27,6 +29,12 @@ const initialPrivatauswertungState: PrivatauswertungState = {
 };
 
 const privatauswertungReducer = createReducer(initialPrivatauswertungState,
+
+	on(PrivatauswertungActions.teilnahmenummerInitialized, (state, action) => {
+
+		return { ...state, teilnahmenummer: action.teilnahmenummer };
+	}),
+
 
 	on(PrivatauswertungActions.startLoading, (state, _action) => {
 

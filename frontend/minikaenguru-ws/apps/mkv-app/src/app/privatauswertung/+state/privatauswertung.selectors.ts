@@ -4,6 +4,7 @@ import { KinderMap } from '../privatauswertung.model';
 
 export const privatauswertungState = createFeatureSelector<fromPrivatauswertung.PrivatauswertungState>(fromPrivatauswertung.privatauswertungFeatureKey);
 
+export const teilnahmenummer = createSelector(privatauswertungState, s => s.teilnahmenummer);
 export const kindEditorModel = createSelector(privatauswertungState, s => s.editorModel);
 export const kinderMap = createSelector(privatauswertungState, s => s.kinderMap);
 export const kinder = createSelector(privatauswertungState, s => new KinderMap(s.kinderMap).toArray());

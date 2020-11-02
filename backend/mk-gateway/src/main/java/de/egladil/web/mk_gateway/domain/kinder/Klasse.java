@@ -11,7 +11,6 @@ import java.util.Objects;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.semantik.AggregateRoot;
-import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 
 /**
  * Klasse
@@ -23,7 +22,7 @@ public class Klasse {
 
 	private String name;
 
-	private TeilnahmeIdentifier teilnahmeIdentifier;
+	private Identifier schuleID;
 
 	private List<Kind> kinder = new ArrayList<>();
 
@@ -40,6 +39,17 @@ public class Klasse {
 	public Klasse withName(final String name) {
 
 		this.name = name;
+		return this;
+	}
+
+	public Identifier schuleID() {
+
+		return schuleID;
+	}
+
+	public Klasse withSchuleID(final Identifier schuleID) {
+
+		this.schuleID = schuleID;
 		return this;
 	}
 
@@ -74,17 +84,6 @@ public class Klasse {
 	public List<Kind> kinder() {
 
 		return Collections.unmodifiableList(kinder);
-	}
-
-	public TeilnahmeIdentifier teilnahmeIdentifier() {
-
-		return teilnahmeIdentifier;
-	}
-
-	public Klasse withTeilnahmeIdentifier(final TeilnahmeIdentifier teilnahmeIdentifier) {
-
-		this.teilnahmeIdentifier = teilnahmeIdentifier;
-		return this;
 	}
 
 	public boolean kindKoennteDuplikatSein(final Kind kind) {

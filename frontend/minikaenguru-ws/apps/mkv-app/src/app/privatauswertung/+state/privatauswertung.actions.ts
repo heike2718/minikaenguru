@@ -2,9 +2,13 @@ import { createAction, props } from '@ngrx/store';
 import { Kind, Duplikatwarnung } from '@minikaenguru-ws/common-components';
 import { Message } from '@minikaenguru-ws/common-messages';
 
+export const teilnahmenummerInitialized = createAction(
+	'[PrivatauswertungFacade] on loadKinder',
+	props<{teilnahmenummer: string}>()
+);
 
 export const startLoading = createAction(
-	'[PrivatauswertungFacade] before load privatkinder'
+	'[PrivatauswertungFacade] before backendCall'
 );
 
 export const finishedWithError = createAction(

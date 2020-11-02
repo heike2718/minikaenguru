@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import de.egladil.web.mk_gateway.domain.semantik.Repository;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 
 /**
@@ -17,6 +18,12 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 public interface TeilnahmenRepository {
 
 	/**
+	 * @param  teilnahmeIdentifier
+	 * @return
+	 */
+	Optional<Teilnahme> ofTeilnahmeIdentifier(TeilnahmeIdentifier teilnahmeIdentifier);
+
+	/**
 	 * Gibt die Teilnahme mit den 3 genannten Merkmalen zurück, falls sie existiert.
 	 *
 	 * @param  teilnahmenummer
@@ -24,6 +31,7 @@ public interface TeilnahmenRepository {
 	 * @param  wettbewerbId
 	 * @return                 Optional
 	 */
+	@Deprecated
 	Optional<Teilnahme> ofTeilnahmenummerArtWettbewerb(String teilnahmenummer, Teilnahmeart art, WettbewerbID wettbewerbId);
 
 	/**

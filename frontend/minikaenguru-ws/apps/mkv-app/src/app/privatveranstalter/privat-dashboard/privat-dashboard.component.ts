@@ -85,7 +85,7 @@ export class PrivatDashboardComponent implements OnInit, OnDestroy {
 
 	gotoAuswertung(): void {
 		this.textFeatureFlagAnzeigen = false;
-		this.router.navigateByUrl('/privatauswertung');
+		this.router.navigateByUrl('/privatauswertung/' + this.teilnahmenummer);
 	}
 
 	gotoDownloadUnterlagen() {

@@ -12,9 +12,10 @@ export class KinderListResolver implements Resolve<any> {
 
 	constructor(private privatauswertungFacade: PrivatauswertungFacade) { }
 
-	resolve(_route: ActivatedRouteSnapshot,
+	resolve(route: ActivatedRouteSnapshot,
 		_state: RouterStateSnapshot): Observable<any> {
 
+		const teilnahmenummer = route.paramMap.get('teilnahmenummer');
 
 		return this.privatauswertungFacade.kinderGeladen$.pipe(
 
@@ -26,7 +27,7 @@ export class KinderListResolver implements Resolve<any> {
 						if (!this.loading) {
 							this.loading = true;
 
-							this.privatauswertungFacade.loadKinder();
+							this.privatauswertungFacade.loadKinder(teilnahmenummer);
 						}
 					}
 				}

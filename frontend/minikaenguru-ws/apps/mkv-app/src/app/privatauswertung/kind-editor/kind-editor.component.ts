@@ -58,6 +58,8 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	private uuid: string;
 
+	private teilnahmenummer: string;
+
 	private initialGuiModel: KindEditorModel;
 
 	private editorModelSubscription: Subscription;
@@ -69,6 +71,8 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 	private routeParamsSubcription: Subscription;
 
 	private saveOutcomeSubscription: Subscription;
+
+	private teilnahmenummerSubscription: Subscription;
 
 	constructor(private fb: FormBuilder,
 		private modalService: NgbModal,
@@ -148,6 +152,10 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 				}
 			}
 		);
+
+		this.teilnahmenummerSubscription = this.privatauswertungFacade.teilnahmenummer$.subscribe(
+			tn => this.teilnahmenummer = tn
+		);
 	}
 
 	ngOnDestroy(): void {
@@ -164,6 +172,9 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 		}
 		if (this.saveOutcomeSubscription) {
 			this.saveOutcomeSubscription.unsubscribe();
+		}
+		if (this.teilnahmenummerSubscription) {
+			this.teilnahmenummerSubscription.unsubscribe();
 		}
 	}
 
@@ -202,7 +213,15 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 	onCancel(): void {
 		this.messageService.clear();
 		this.privatauswertungFacade.cancelEditKind();
-		this.router.navigateByUrl('/privatauswertung');
+
+		if (this.teilnahmenummer) {
+			this.router.navigateByUrl('/privatauswertung/' + this.teilnahmenummer);
+		} else {
+			this.router.navigateByUrl('/privat/dashboard');
+
+		}
+
+
 	}
 
 	saveKind(): void {

@@ -20,6 +20,7 @@ import { Message, MessageService } from '@minikaenguru-ws/common-messages';
 })
 export class PrivatauswertungFacade {
 
+	public teilnahmenummer$: Observable<string> = this.store.select(PrivatauswertungSelectors.teilnahmenummer);
 	public kindEditorModel$: Observable<KindEditorModel> = this.store.select(PrivatauswertungSelectors.kindEditorModel);
 	public kinder$: Observable<Kind[]> = this.store.select(PrivatauswertungSelectors.kinder);
 	public kinderGeladen$: Observable<boolean> = this.store.select(PrivatauswertungSelectors.kinderGeladen);
@@ -58,15 +59,16 @@ export class PrivatauswertungFacade {
 		this.store.dispatch(PrivatauswertungActions.editCancelled());
 	}
 
-	public loadKinder(): void {
+	public loadKinder(teilnahmenummer: string): void {
 
 		if (this.loggingOut) {
 			return;
 		}
 
+		this.store.dispatch(PrivatauswertungActions.teilnahmenummerInitialized({teilnahmenummer: teilnahmenummer}));
 		this.store.dispatch(PrivatauswertungActions.startLoading());
 
-		this.privatauswertungService.loadKinder().subscribe(
+		this.privatauswertungService.loadKinder(teilnahmenummer).subscribe(
 			kinder => this.store.dispatch(PrivatauswertungActions.allKinderLoaded({ kinder: kinder })),
 			(error => {
 				this.store.dispatch(PrivatauswertungActions.finishedWithError());
