@@ -122,6 +122,7 @@ public class KinderHibernateRepository implements KinderRepository {
 
 		Kind result = new Kind(new Identifier(persistentesKind.getUuid()))
 			.withKlassenstufe(persistentesKind.getKlassenstufe())
+			.withLandkuerzel(persistentesKind.getLandkuerzel())
 			.withNachname(persistentesKind.getNachname())
 			.withSprache(persistentesKind.getSprache())
 			.withTeilnahmeIdentifier(teilnahmeIdentifier)
@@ -161,6 +162,7 @@ public class KinderHibernateRepository implements KinderRepository {
 		target.setTeilnahmenummer(source.teilnahmeIdentifier().teilnahmenummer());
 		target.setVorname(source.vorname());
 		target.setZusatz(source.zusatz());
+		target.setLandkuerzel(source.landkuerzel());
 	}
 
 }

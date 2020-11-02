@@ -62,6 +62,9 @@ public class PersistentesKind extends ConcurrencySafeEntity {
 	@Column(name = "LOESUNGSZETTEL_UUID")
 	private String loesungszettelUUID;
 
+	@Column(name = "LANDKUERZEL")
+	private String landkuerzel;
+
 	public Klassenstufe getKlassenstufe() {
 
 		return klassenstufe;
@@ -150,6 +153,16 @@ public class PersistentesKind extends ConcurrencySafeEntity {
 	public void setLoesungszettelUUID(final String loesungszettelUUID) {
 
 		this.loesungszettelUUID = loesungszettelUUID;
+	}
+
+	public String getLandkuerzel() {
+
+		return landkuerzel;
+	}
+
+	public void setLandkuerzel(final String landkuerzel) {
+
+		this.landkuerzel = landkuerzel;
 	}
 
 }

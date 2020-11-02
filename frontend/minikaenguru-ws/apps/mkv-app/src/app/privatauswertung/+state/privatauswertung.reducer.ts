@@ -81,6 +81,10 @@ const privatauswertungReducer = createReducer(initialPrivatauswertungState,
 
 	}),
 
+	on(PrivatauswertungActions.editCancelled, (state, _action) => {
+		return { ...state, editorModel: undefined, saveOutcome: undefined, loading: false };
+	}),
+
 	on(PrivatauswertungActions.kindDeleted, (state, action) => {
 		const outcome = action.outcome;
 		const neueMap = new KinderMap(state.kinderMap).remove(action.kind.uuid)

@@ -37,6 +37,10 @@ export const duplikatGeprueft = createAction(
 
 );
 
+export const editCancelled = createAction(
+	'[PrivatauswertungFacade] cancelEditKind'
+);
+
 export const kindDeleted = createAction(
 	'[PrivatauswertungFacade] deleteKind',
 	props<{ kind: Kind, outcome: Message }>()

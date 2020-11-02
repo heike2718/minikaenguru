@@ -108,15 +108,18 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 			ke => {
 
-				this.initialGuiModel = { ...ke };
-				this.kindForm.get('vorname').setValue(this.initialGuiModel.vorname, { onlySelf: true });
-				this.kindForm.get('nachname').setValue(this.initialGuiModel.nachname, { onlySelf: true });
-				this.kindForm.get('zusatz').setValue(this.initialGuiModel.zusatz, { onlySelf: true });
-				this.kindForm.get('klassenstufe').setValue(this.initialGuiModel.klassenstufe ? this.initialGuiModel.klassenstufe.label : null, { onlySelf: true });
-				this.kindForm.get('sprache').setValue(this.initialGuiModel.sprache.label, { onlySelf: true });
+				if (ke) {
+
+					this.initialGuiModel = { ...ke };
+					this.kindForm.get('vorname').setValue(this.initialGuiModel.vorname, { onlySelf: true });
+					this.kindForm.get('nachname').setValue(this.initialGuiModel.nachname, { onlySelf: true });
+					this.kindForm.get('zusatz').setValue(this.initialGuiModel.zusatz, { onlySelf: true });
+					this.kindForm.get('klassenstufe').setValue(this.initialGuiModel.klassenstufe ? this.initialGuiModel.klassenstufe.label : null, { onlySelf: true });
+					this.kindForm.get('sprache').setValue(this.initialGuiModel.sprache.label, { onlySelf: true });
 
 
-				this.editorInitialized = true;
+					this.editorInitialized = true;
+				}
 			}
 		);
 
@@ -198,6 +201,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	onCancel(): void {
 		this.messageService.clear();
+		this.privatauswertungFacade.cancelEditKind();
 		this.router.navigateByUrl('/privatauswertung');
 	}
 

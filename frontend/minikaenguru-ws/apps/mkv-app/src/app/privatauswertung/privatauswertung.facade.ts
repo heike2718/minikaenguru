@@ -53,6 +53,11 @@ export class PrivatauswertungFacade {
 		this.store.dispatch(PrivatauswertungActions.startEditingKind({ kind: kind }));
 	}
 
+	public cancelEditKind(): void {
+
+		this.store.dispatch(PrivatauswertungActions.editCancelled());
+	}
+
 	public loadKinder(): void {
 
 		if (this.loggingOut) {
