@@ -5,7 +5,7 @@ import * as KinderSelectors from './+state/kinder.selectors';
 import * as KinderActions from './+state/kinder.actions';
 import { Observable, of, Subscription, from } from 'rxjs';
 import { Kind, KindEditorModel, Duplikatwarnung, PrivatkindRequestData, getKlassenstufeByLabel, getSpracheByLabel, TeilnahmeIdentifier } from '@minikaenguru-ws/common-components';
-import { AuthService } from '@minikaenguru-ws/common-auth';
+import { AuthService, User, STORAGE_KEY_USER } from '@minikaenguru-ws/common-auth';
 import { KinderService } from './kinder.service';
 import { take, map } from 'rxjs/operators';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
@@ -35,6 +35,8 @@ export class KinderFacade {
 
 	private wettbewerb: Wettbewerb;
 
+	private user: User;
+
 	constructor(private store: Store<AppState>,
 		private authService: AuthService,
 		private kinderService: KinderService,
@@ -46,6 +48,7 @@ export class KinderFacade {
 		);
 
 		this.wettbewerb = JSON.parse(localStorage.getItem(environment.storageKeyPrefix + 'wettbewerb'));
+		this.user = JSON.parse(localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_USER));
 	}
 
 	public createNewKind(): void {
@@ -66,11 +69,13 @@ export class KinderFacade {
 		this.store.dispatch(KinderActions.editCancelled());
 	}
 
-	public loadKinder(teilnahmenummer: string, teilnahmeart: Teilnahmeart): void {
+	public loadKinder(teilnahmenummer: string): void {
 
 		if (this.loggingOut) {
 			return;
 		}
+
+		const teilnahmeart: Teilnahmeart = this.user.rolle === 'PRIVAT' ? 'PRIVAT' : 'SCHULE';
 
 		const teilnahmeIdentifier: TeilnahmeIdentifier = {
 			jahr: this.wettbewerb.jahr,

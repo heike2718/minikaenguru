@@ -13,7 +13,8 @@ import {
 	ALL_SPRACHEN,
 	getKlassenstufeByLabel,
 	Duplikatwarnung,
-	getSpracheByLabel
+	getSpracheByLabel,
+	TeilnahmeIdentifier
 } from '@minikaenguru-ws/common-components';
 import { Subscription } from 'rxjs';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
@@ -58,7 +59,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	private uuid: string;
 
-	private teilnahmenummer: string;
+	private teilnahmeIdentifier: TeilnahmeIdentifier;
 
 	private initialGuiModel: KindEditorModel;
 
@@ -72,7 +73,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	private saveOutcomeSubscription: Subscription;
 
-	private teilnahmenummerSubscription: Subscription;
+	private teilnahmeIdentifierSubscription: Subscription;
 
 	constructor(private fb: FormBuilder,
 		private modalService: NgbModal,
@@ -153,8 +154,8 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 			}
 		);
 
-		this.teilnahmenummerSubscription = this.kinderFacade.teilnahmenummer$.subscribe(
-			tn => this.teilnahmenummer = tn
+		this.teilnahmeIdentifierSubscription = this.kinderFacade.teilnahmeIdentifier$.subscribe(
+			ti => this.teilnahmeIdentifier = ti
 		);
 	}
 
@@ -173,8 +174,8 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 		if (this.saveOutcomeSubscription) {
 			this.saveOutcomeSubscription.unsubscribe();
 		}
-		if (this.teilnahmenummerSubscription) {
-			this.teilnahmenummerSubscription.unsubscribe();
+		if (this.teilnahmeIdentifierSubscription) {
+			this.teilnahmeIdentifierSubscription.unsubscribe();
 		}
 	}
 
@@ -214,8 +215,8 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 		this.messageService.clear();
 		this.kinderFacade.cancelEditKind();
 
-		if (this.teilnahmenummer) {
-			this.router.navigateByUrl('/kinder/' + this.teilnahmenummer);
+		if (this.teilnahmeIdentifier.teilnahmenummer) {
+			this.router.navigateByUrl('/kinder/' + this.teilnahmeIdentifier.teilnahmenummer);
 		} else {
 			this.router.navigateByUrl('/privat/dashboard');
 
