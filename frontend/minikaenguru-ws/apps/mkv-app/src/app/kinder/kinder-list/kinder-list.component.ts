@@ -4,7 +4,7 @@ import { KinderFacade } from '../kinder.facade';
 import { PrivatveranstalterFacade } from '../../privatveranstalter/privatveranstalter.facade';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
-import { STORAGE_KEY_USER, User } from '@minikaenguru-ws/common-auth';
+import { STORAGE_KEY_USER, User, Rolle } from '@minikaenguru-ws/common-auth';
 import { LehrerFacade } from '../../lehrer/lehrer.facade';
 import { TeilnahmeIdentifier } from '@minikaenguru-ws/common-components';
 

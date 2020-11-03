@@ -51,3 +51,8 @@ export const kindDeleted = createAction(
 	props<{ kind: Kind, outcome: Message }>()
 );
 
+export const resetModule = createAction(
+	'[KinderFacade] reset'
+);
+
+

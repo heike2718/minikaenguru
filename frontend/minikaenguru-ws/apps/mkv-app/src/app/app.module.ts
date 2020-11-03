@@ -31,6 +31,7 @@ import { TeilnahmenModule } from './teilnahmen/teilnahmen.module';
 import { VertragAdvModule } from './vertrag-adv/vertrag-adv.module';
 import { KinderModule } from './kinder/kinder.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SessionTimeoutComponent } from './session-timeout/session-timeout.component';
 
 
 
@@ -40,7 +41,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 		NavbarComponent,
 		NotFoundComponent,
 		LandingComponent,
-		DashboardComponent
+		DashboardComponent,
+		SessionTimeoutComponent
 	],
 	imports: [
 		BrowserModule,

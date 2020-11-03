@@ -99,6 +99,10 @@ const kinderReducer = createReducer(initialKinderState,
 		return { ...state, kinderMap: neueMap, saveOutcome: outcome, loading: false };
 	}),
 
+	on(KinderActions.resetModule, (_state, _action) => {
+		return initialKinderState;
+	}),
+
 
 );
 

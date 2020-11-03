@@ -3,9 +3,9 @@ import { Routes, RouterModule } from '@angular/router';
 import { RegistrationComponent } from './registration/registration.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { LandingComponent } from './landing/landing.component';
-import { environment } from '../environments/environment';
 import { WettbewerbInfoComponent } from './wettbewerb/wettbewerb-info.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { SessionTimeoutComponent } from './session-timeout/session-timeout.component';
 
 
 
@@ -13,19 +13,28 @@ const routes: Routes = [
 
 	{
 		path: 'landing',
+		pathMatch: 'full',
 		component: LandingComponent
 	},
 	{
 		path: 'info',
+		pathMatch: 'full',
 		component: WettbewerbInfoComponent
 	},
 	{
 		path: 'dashboard',
+		pathMatch: 'full',
 		component: DashboardComponent
 	},
 	{
 		path: 'registrierung',
+		pathMatch: 'full',
 		component: RegistrationComponent
+	},
+	{
+		path: 'timeout',
+		pathMatch: 'full',
+		component: SessionTimeoutComponent
 	},
 	{
 		path: 'lehrer',
@@ -45,6 +54,7 @@ const routes: Routes = [
 	},
 	{
 		path: 'adv',
+		pathMatch: 'full',
 		loadChildren: () => import('./vertrag-adv/vertrag-adv.module').then(m => m.VertragAdvModule)
 	},
 	{
