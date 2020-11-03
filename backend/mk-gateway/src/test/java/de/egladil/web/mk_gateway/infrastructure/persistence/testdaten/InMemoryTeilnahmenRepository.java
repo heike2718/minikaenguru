@@ -82,15 +82,6 @@ public class InMemoryTeilnahmenRepository implements TeilnahmenRepository {
 	}
 
 	@Override
-	public Optional<Teilnahme> ofTeilnahmenummerArtWettbewerb(final String teilnahmenummer, final Teilnahmeart art, final WettbewerbID wettbewerbId) {
-
-		return this.teilnahmen.stream()
-			.filter(tn -> teilnahmenummer
-				.equals(tn.teilnahmenummer().identifier()) && art == tn.teilnahmeart() && wettbewerbId.equals(tn.wettbewerbID()))
-			.findFirst();
-	}
-
-	@Override
 	public Optional<Teilnahme> ofTeilnahmeIdentifier(final TeilnahmeIdentifier teilnahmeIdentifier) {
 
 		return this.teilnahmen.stream()
