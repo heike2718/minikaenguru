@@ -29,8 +29,9 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { AktuelleMeldungModule } from './aktuelle-meldung/aktuelle-meldung.module';
 import { TeilnahmenModule } from './teilnahmen/teilnahmen.module';
 import { VertragAdvModule } from './vertrag-adv/vertrag-adv.module';
-import { PrivatauswertungModule } from './privatauswertung/privatauswertung.module';
+import { KinderModule } from './kinder/kinder.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SessionTimeoutComponent } from './session-timeout/session-timeout.component';
 
 
 
@@ -40,7 +41,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 		NavbarComponent,
 		NotFoundComponent,
 		LandingComponent,
-		DashboardComponent
+		DashboardComponent,
+		SessionTimeoutComponent
 	],
 	imports: [
 		BrowserModule,
@@ -70,7 +72,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 		RegistrationModule,
 		LehrerModule,
 		PrivatveranstalterModule,
-		PrivatauswertungModule,
+		KinderModule,
 		TeilnahmenModule,
 		VertragAdvModule,
 		StoreModule.forRoot(reducers, {

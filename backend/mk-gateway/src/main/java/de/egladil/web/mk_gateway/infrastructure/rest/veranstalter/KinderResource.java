@@ -28,51 +28,53 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.egladil.web.commons_validation.annotations.UuidString;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.DuplikatWarnungModel;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.Duplikatkontext;
-import de.egladil.web.mk_gateway.domain.kinder.PrivatkinderService;
+import de.egladil.web.mk_gateway.domain.kinder.KinderService;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindAPIModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
-import de.egladil.web.mk_gateway.domain.kinder.api.PrivatkindRequestData;
+import de.egladil.web.mk_gateway.domain.kinder.api.KindRequestData;
 
 /**
- * PrivatveranstalterKinderResource
+ * KinderResource
  */
 @RequestScoped
-@Path("/privatkinder")
+@Path("/kinder")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class PrivatveranstalterKinderResource {
+public class KinderResource {
 
-	private static final Logger LOG = LoggerFactory.getLogger(PrivatveranstalterKinderResource.class);
+	private static final Logger LOG = LoggerFactory.getLogger(KinderResource.class);
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
 	@Inject
-	PrivatkinderService privatkinderService;
+	KinderService kinderService;
 
 	@Context
 	SecurityContext securityContext;
 
 	@GET
-	public Response loadKinder() {
+	@Path("{teilnahmenummer}")
+	public Response getKinderMitTeilnahmenummer(@PathParam(value = "teilnahmenummer") @UuidString final String teilnahmenummer) {
 
 		String uuid = securityContext.getUserPrincipal().getName();
 
-		List<KindAPIModel> kinder = privatkinderService.loadAllKinder(uuid);
+		List<KindAPIModel> kinder = kinderService.kinderZuTeilnahmeLaden(teilnahmenummer, uuid);
 
 		return Response.ok(new ResponsePayload(MessagePayload.ok(), kinder)).build();
 	}
 
 	@POST
 	@Path("duplikate")
-	public Response pruefeMehrfacherfassung(final PrivatkindRequestData data) {
+	public Response pruefeMehrfacherfassung(final KindRequestData data) {
 
-		String uuid = securityContext.getUserPrincipal().getName();
+		String veranstalterUuid = securityContext.getUserPrincipal().getName();
 
-		boolean moeglichesDuplikat = privatkinderService.pruefeDublettePrivat(data, uuid);
+		boolean moeglichesDuplikat = kinderService.pruefeDublette(data, veranstalterUuid);
 
 		String msg = "";
 
@@ -106,11 +108,11 @@ public class PrivatveranstalterKinderResource {
 	}
 
 	@POST
-	public Response kindAnlegen(final PrivatkindRequestData data) {
+	public Response kindAnlegen(final KindRequestData data) {
 
 		String uuid = securityContext.getUserPrincipal().getName();
 
-		KindAPIModel result = this.privatkinderService.privatkindAnlegen(data, uuid);
+		KindAPIModel result = this.kinderService.kindAnlegen(data, uuid);
 
 		String msg = "";
 
@@ -128,11 +130,11 @@ public class PrivatveranstalterKinderResource {
 	}
 
 	@PUT
-	public Response kindAendern(final PrivatkindRequestData data) {
+	public Response kindAendern(final KindRequestData data) {
 
 		String uuid = securityContext.getUserPrincipal().getName();
 
-		KindAPIModel result = this.privatkinderService.privatkindAendern(data, uuid);
+		KindAPIModel result = this.kinderService.kindAendern(data, uuid);
 
 		String msg = "";
 
@@ -151,13 +153,13 @@ public class PrivatveranstalterKinderResource {
 
 	@DELETE
 	@Path("{uuid}")
-	public Response kindLoeschen(@PathParam(value = "uuid") final String uuid) {
+	public Response kindLoeschen(@PathParam(value = "uuid") @UuidString final String uuid) {
 
 		LOG.debug("Kind mit uuid = {} soll gelöscht werden.", uuid);
 
 		String veranstalterUuid = securityContext.getUserPrincipal().getName();
 
-		KindAPIModel geloeschtesKind = this.privatkinderService.privatkindLoeschen(uuid, veranstalterUuid);
+		KindAPIModel geloeschtesKind = this.kinderService.kindLoeschen(uuid, veranstalterUuid);
 
 		String msg = "";
 

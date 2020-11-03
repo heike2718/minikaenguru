@@ -1,9 +1,10 @@
-import { ErrorHandler, Injector, Injectable } from '@angular/core';
+import { ErrorHandler, Injector, Injectable, Inject } from '@angular/core';
 import { LogService } from '@minikaenguru-ws/common-logging';
 import { MessageService } from '@minikaenguru-ws/common-messages';
 import { environment } from '../../environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LogPublishersService } from './log-publishers.service';
+import { Router } from '@angular/router';
 
 @Injectable(
 	{
@@ -14,6 +15,7 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 
 	private logger: LogService;
 	private messageService: MessageService;
+	private router: Router;
 
 	constructor(private injector: Injector) {
 
@@ -28,6 +30,8 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 		this.logger.info('logging initialized: loglevel=' + environment.loglevel);
 
 		this.messageService = this.injector.get(MessageService);
+
+		this.router = this.injector.get(Router);
 
 
 	}
@@ -55,8 +59,12 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 			const msg = this.extractMessageObject(httpError);
 			switch (httpError.status) {
 				case 401:
-				case 908:
+				case 403:
 					this.messageService.error('Sie haben keine Berechtigung. Bitte loggen Sie sich ein.');
+					break;
+				case 908:
+					this.messageService.warn('Tja, warste zu lange lazy. Session ist abgelaufen. Log dich einfach wieder ein.');
+					this.router.navigateByUrl('/timeout');
 					break;
 				default: {
 					if (msg) {

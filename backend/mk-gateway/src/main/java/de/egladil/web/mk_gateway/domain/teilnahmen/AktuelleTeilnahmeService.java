@@ -25,6 +25,7 @@ import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.SchulanmeldungRequestPayload;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
@@ -339,7 +340,9 @@ public class AktuelleTeilnahmeService {
 
 	private Optional<Teilnahme> findVorhandeneTeilnahme(final String teilnahmekuerzel, final Teilnahmeart teilnahmeart, final Wettbewerb aktuellerWettbewerb) {
 
-		return teilnahmenRepository.ofTeilnahmenummerArtWettbewerb(teilnahmekuerzel, teilnahmeart, aktuellerWettbewerb.id());
+		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(teilnahmeart)
+			.withTeilnahmenummer(teilnahmekuerzel).withWettbewerbID(aktuellerWettbewerb.id());
+		return teilnahmenRepository.ofTeilnahmeIdentifier(teilnahmeIdentifier);
 	}
 
 	PrivatteilnahmeCreated privatteilnahmeCreatedEvent() {

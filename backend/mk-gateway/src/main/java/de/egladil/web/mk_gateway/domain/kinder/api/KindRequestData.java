@@ -15,9 +15,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import de.egladil.web.commons_validation.annotations.UuidString;
 
 /**
- * PrivatkindRequestData
+ * KindRequestData
  */
-public class PrivatkindRequestData implements Serializable {
+public class KindRequestData implements Serializable {
 
 	@JsonIgnore
 	private static final long serialVersionUID = 1L;
@@ -31,6 +31,10 @@ public class PrivatkindRequestData implements Serializable {
 	private String uuid;
 
 	@JsonProperty
+	@UuidString
+	private String klasseUuid;
+
+	@JsonProperty
 	@NotNull
 	private KindEditorModel kind;
 
@@ -39,7 +43,7 @@ public class PrivatkindRequestData implements Serializable {
 		return kind;
 	}
 
-	public PrivatkindRequestData withKind(final KindEditorModel kind) {
+	public KindRequestData withKind(final KindEditorModel kind) {
 
 		this.kind = kind;
 		return this;
@@ -50,9 +54,20 @@ public class PrivatkindRequestData implements Serializable {
 		return uuid;
 	}
 
-	public PrivatkindRequestData withUuid(final String uuid) {
+	public KindRequestData withUuid(final String uuid) {
 
 		this.uuid = uuid;
+		return this;
+	}
+
+	public String klasseUuid() {
+
+		return klasseUuid;
+	}
+
+	public KindRequestData withKlasseUuid(final String klasseUuid) {
+
+		this.klasseUuid = klasseUuid;
 		return this;
 	}
 
@@ -79,7 +94,8 @@ public class PrivatkindRequestData implements Serializable {
 
 			return false;
 		}
-		PrivatkindRequestData other = (PrivatkindRequestData) obj;
+		KindRequestData other = (KindRequestData) obj;
 		return Objects.equals(kind, other.kind) && Objects.equals(uuid, other.uuid);
 	}
+
 }

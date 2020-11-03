@@ -3,7 +3,7 @@ import { Kind } from '@minikaenguru-ws/common-components';
 import { Privatveranstalter } from '../../wettbewerb/wettbewerb.model';
 import { Router } from '@angular/router';
 import { PrivatveranstalterFacade } from '../../privatveranstalter/privatveranstalter.facade';
-import { PrivatauswertungFacade } from '../privatauswertung.facade';
+import { KinderFacade } from '../kinder.facade';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LogService } from '@minikaenguru-ws/common-logging';
 
@@ -27,7 +27,7 @@ export class KindDetailsComponent implements OnInit {
 
 	constructor(private router: Router,
 		private modalService: NgbModal,
-		private privatauswertungFacade: PrivatauswertungFacade,
+		private kinderFacade: KinderFacade,
 		private logger: LogService
 	) { }
 
@@ -53,8 +53,8 @@ export class KindDetailsComponent implements OnInit {
 
 
 	editKind(): void {
-		this.privatauswertungFacade.editKind(this.kind);
-		const url = '/privatauswertung/kind-editor/' + this.kind.uuid;
+		this.kinderFacade.editKind(this.kind);
+		const url = '/kinder/kind-editor/' + this.kind.uuid;
 		this.router.navigateByUrl(url);
 	}
 
@@ -63,7 +63,7 @@ export class KindDetailsComponent implements OnInit {
 		this.modalService.open(this.loeschenWarndialog, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
 
 			if (result === 'ja') {
-				this.privatauswertungFacade.deleteKind(this.kind.uuid);
+				this.kinderFacade.deleteKind(this.kind.uuid);
 			}
 
 		}, (reason) => {

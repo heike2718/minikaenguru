@@ -17,6 +17,7 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Schulteilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.entities.InMemoryTeilnahme;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.entities.InMemoryTeilnahmeList;
@@ -86,6 +87,16 @@ public class InMemoryTeilnahmenRepository implements TeilnahmenRepository {
 		return this.teilnahmen.stream()
 			.filter(tn -> teilnahmenummer
 				.equals(tn.teilnahmenummer().identifier()) && art == tn.teilnahmeart() && wettbewerbId.equals(tn.wettbewerbID()))
+			.findFirst();
+	}
+
+	@Override
+	public Optional<Teilnahme> ofTeilnahmeIdentifier(final TeilnahmeIdentifier teilnahmeIdentifier) {
+
+		return this.teilnahmen.stream()
+			.filter(tn -> teilnahmeIdentifier.teilnahmenummer()
+				.equals(tn.teilnahmenummer().identifier()) && teilnahmeIdentifier.teilnahmeart() == tn.teilnahmeart()
+				&& tn.wettbewerbID().jahr().toString().equals(teilnahmeIdentifier.wettbewerbID()))
 			.findFirst();
 	}
 

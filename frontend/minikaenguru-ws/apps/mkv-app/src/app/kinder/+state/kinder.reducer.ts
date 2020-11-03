@@ -1,12 +1,13 @@
 import { createReducer, Action, on } from '@ngrx/store';
-import * as PrivatauswertungActions from './privatauswertung.actions';
-import { KindWithID, KinderMap } from '../privatauswertung.model';
-import { initialKindEditorModel, KindEditorModel, Duplikatwarnung } from 'libs/common-components/src/lib/common-components.model';
+import * as KinderActions from './kinder.actions';
+import { KindWithID, KinderMap } from '../kinder.model';
+import { initialKindEditorModel, KindEditorModel, Duplikatwarnung, Teilnahmeart, TeilnahmeIdentifier } from 'libs/common-components/src/lib/common-components.model';
 import { Message } from '@minikaenguru-ws/common-messages';
 
-export const privatauswertungFeatureKey = 'mkv-app-privatauswertung';
+export const kinderFeatureKey = 'mkv-app-kinder';
 
-export interface PrivatauswertungState {
+export interface KinderState {
+	teilnahmeIdentifier: TeilnahmeIdentifier;
 	kinderMap: KindWithID[];
 	selectedKindUUID: string;
 	kinderLoaded: boolean;
@@ -16,7 +17,8 @@ export interface PrivatauswertungState {
 	editorModel: KindEditorModel;
 };
 
-const initialPrivatauswertungState: PrivatauswertungState = {
+const initialKinderState: KinderState = {
+	teilnahmeIdentifier: undefined,
 	kinderMap: [],
 	selectedKindUUID: undefined,
 	kinderLoaded: false,
@@ -26,14 +28,20 @@ const initialPrivatauswertungState: PrivatauswertungState = {
 	editorModel: undefined
 };
 
-const privatauswertungReducer = createReducer(initialPrivatauswertungState,
+const kinderReducer = createReducer(initialKinderState,
 
-	on(PrivatauswertungActions.startLoading, (state, _action) => {
+	on(KinderActions.teilnahmenummerInitialized, (state, action) => {
+
+		return { ...state, teilnahmeIdentifier: action.teilnahmeIdentifier };
+	}),
+
+
+	on(KinderActions.startLoading, (state, _action) => {
 
 		return { ...state, loading: true }
 	}),
 
-	on(PrivatauswertungActions.allKinderLoaded, (state, action) => {
+	on(KinderActions.allKinderLoaded, (state, action) => {
 
 		const alle = action.kinder;
 		const newMap = [];
@@ -43,7 +51,7 @@ const privatauswertungReducer = createReducer(initialPrivatauswertungState,
 
 	}),
 
-	on(PrivatauswertungActions.startEditingKind, (state, action) => {
+	on(KinderActions.startEditingKind, (state, action) => {
 
 		const kind = action.kind;
 		const kindEditorModel: KindEditorModel = {
@@ -59,38 +67,46 @@ const privatauswertungReducer = createReducer(initialPrivatauswertungState,
 		return { ...state, editorModel: kindEditorModel, saveOutcome: undefined };
 	}),
 
-	on(PrivatauswertungActions.createNewKind, (state, _action) => {
+	on(KinderActions.createNewKind, (state, _action) => {
 		return { ...state, editorModel: initialKindEditorModel }
 	}),
 
-	on(PrivatauswertungActions.finishedWithError, (state, _action) => {
+	on(KinderActions.finishedWithError, (state, _action) => {
 
 		return { ...state, loading: false, kinderLoaded: false };
 
 	}),
 
-	on(PrivatauswertungActions.kindSaved, (state, action) => {
+	on(KinderActions.kindSaved, (state, action) => {
 		const outcome = action.outcome;
 		const neueMap = new KinderMap(state.kinderMap).merge(action.kind);
 		return { ...state, kinderMap: neueMap, saveOutcome: outcome, loading: false };
 	}),
 
-	on(PrivatauswertungActions.duplikatGeprueft, (state, action) => {
+	on(KinderActions.duplikatGeprueft, (state, action) => {
 
 		return { ...state, loading: false, duplikatwarnung: action.duplikatwarnung };
 
 	}),
 
-	on(PrivatauswertungActions.kindDeleted, (state, action) => {
+	on(KinderActions.editCancelled, (state, _action) => {
+		return { ...state, editorModel: undefined, saveOutcome: undefined, loading: false };
+	}),
+
+	on(KinderActions.kindDeleted, (state, action) => {
 		const outcome = action.outcome;
 		const neueMap = new KinderMap(state.kinderMap).remove(action.kind.uuid)
 		return { ...state, kinderMap: neueMap, saveOutcome: outcome, loading: false };
 	}),
 
+	on(KinderActions.resetModule, (_state, _action) => {
+		return initialKinderState;
+	}),
+
 
 );
 
-export function reducer(state: PrivatauswertungState | undefined, action: Action) {
-	return privatauswertungReducer(state, action);
+export function reducer(state: KinderState | undefined, action: Action) {
+	return kinderReducer(state, action);
 };
 

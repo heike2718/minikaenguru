@@ -18,25 +18,22 @@ import javax.persistence.PersistenceException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import de.egladil.web.commons_crypto.impl.CryptoServiceImpl;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.auswertungen.LoesungszettelService;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
-import de.egladil.web.mk_gateway.domain.kinder.PrivatkinderService;
+import de.egladil.web.mk_gateway.domain.kinder.KinderService;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindAPIModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
-import de.egladil.web.mk_gateway.domain.kinder.api.PrivatkindRequestData;
+import de.egladil.web.mk_gateway.domain.kinder.api.KindRequestData;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
-import de.egladil.web.mk_gateway.domain.veranstalter.PrivatteilnahmeKuerzelService;
-import de.egladil.web.mk_gateway.domain.veranstalter.PrivatveranstalterService;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
-import de.egladil.web.mk_gateway.domain.veranstalter.ZugangUnterlagenService;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KinderHibernateRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KlassenHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.TeilnahmenHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UserHibernateRepository;
@@ -45,15 +42,15 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.impl.WettbewerbHiber
 import de.egladil.web.mkv_server_tests.AbstractIT;
 
 /**
- * PrivatkinderServiceTest
+ * KinderServiceTest
  */
-public class PrivatkinderServiceTest extends AbstractIT {
+public class KinderServiceTest extends AbstractIT {
 
 	private static final String VERANSTALTER_UUID = "5d89c2e1-5d35-4e1b-b5a5-c56defd8ba43";
 
 	private KinderRepository kinderRepository;
 
-	private PrivatkinderService privatkinderService;
+	private KinderService kinderService;
 
 	@Override
 	@BeforeEach
@@ -71,23 +68,14 @@ public class PrivatkinderServiceTest extends AbstractIT {
 			UserHibernateRepository.createForIntegrationTest(entityManager));
 		TeilnahmenRepository teilnahmenRepository = TeilnahmenHibernateRepository.createForIntegrationTest(entityManager);
 
-		PrivatteilnahmeKuerzelService kuerzelService = PrivatteilnahmeKuerzelService.createForTest(new CryptoServiceImpl(),
-			teilnahmenRepository);
-
 		VeranstalterRepository veranstalterRepository = VeranstalterHibernateRepository.createForIntegrationTest(entityManager);
-
-		ZugangUnterlagenService zugangUnterlagenService = ZugangUnterlagenService.createForTest(teilnahmenRepository,
-			veranstalterRepository, wettbewerbService);
-
-		PrivatveranstalterService privatveranstalterService = PrivatveranstalterService.createForTest(
-			veranstalterRepository, zugangUnterlagenService, wettbewerbService,
-			teilnahmenRepository, kuerzelService);
 
 		LoesungszettelService loesungszettelService = LoesungszettelService
 			.createForTest(authService, LoesungszettelHibernateRepository.createForIntegrationTest(entityManager));
 
-		privatkinderService = PrivatkinderService.createForTest(authService, kinderRepository, teilnahmenRepository,
-			privatveranstalterService, wettbewerbService, loesungszettelService);
+		kinderService = KinderService.createForTest(authService, kinderRepository, teilnahmenRepository,
+			veranstalterRepository, wettbewerbService, loesungszettelService,
+			KlassenHibernateRepository.createForIntegrationTest(entityManager));
 
 	}
 
@@ -104,8 +92,8 @@ public class PrivatkinderServiceTest extends AbstractIT {
 			KindEditorModel kindEditorModel = new KindEditorModel(Klassenstufe.ZWEI, Sprache.de).withNachname(nachname)
 				.withVorname("Fiona").withZusatz("blond");
 
-			PrivatkindRequestData requestData = new PrivatkindRequestData().withKind(kindEditorModel)
-				.withUuid(PrivatkindRequestData.KEINE_UUID);
+			KindRequestData requestData = new KindRequestData().withKind(kindEditorModel)
+				.withUuid(KindRequestData.KEINE_UUID);
 
 			EntityTransaction trx = entityManager.getTransaction();
 
@@ -114,7 +102,7 @@ public class PrivatkinderServiceTest extends AbstractIT {
 				trx.begin();
 
 				// Act
-				KindAPIModel result = privatkinderService.privatkindAnlegen(requestData, VERANSTALTER_UUID);
+				KindAPIModel result = kinderService.kindAnlegen(requestData, VERANSTALTER_UUID);
 
 				trx.commit();
 
@@ -124,7 +112,7 @@ public class PrivatkinderServiceTest extends AbstractIT {
 				neueUuid = result.uuid();
 
 				Optional<Kind> optKind = kinderRepository.findKindWithIdentifier(new Identifier(neueUuid),
-					privatkinderService.getWettbewerbID());
+					kinderService.getWettbewerbID());
 
 				assertTrue(optKind.isPresent());
 
@@ -152,7 +140,7 @@ public class PrivatkinderServiceTest extends AbstractIT {
 			KindEditorModel kindEditorModel = new KindEditorModel(Klassenstufe.ZWEI, Sprache.de).withNachname(nachname)
 				.withVorname("Fiona").withZusatz("brünett");
 
-			PrivatkindRequestData requestData = new PrivatkindRequestData().withKind(kindEditorModel)
+			KindRequestData requestData = new KindRequestData().withKind(kindEditorModel)
 				.withUuid(neueUuid);
 
 			EntityTransaction trx = entityManager.getTransaction();
@@ -162,7 +150,7 @@ public class PrivatkinderServiceTest extends AbstractIT {
 				trx.begin();
 
 				// Act
-				KindAPIModel result = privatkinderService.privatkindAendern(requestData, VERANSTALTER_UUID);
+				KindAPIModel result = kinderService.kindAendern(requestData, VERANSTALTER_UUID);
 
 				trx.commit();
 
@@ -172,7 +160,7 @@ public class PrivatkinderServiceTest extends AbstractIT {
 				neueUuid = result.uuid();
 
 				Optional<Kind> optKind = kinderRepository.findKindWithIdentifier(new Identifier(neueUuid),
-					privatkinderService.getWettbewerbID());
+					kinderService.getWettbewerbID());
 
 				assertTrue(optKind.isPresent());
 
@@ -201,12 +189,12 @@ public class PrivatkinderServiceTest extends AbstractIT {
 				trx.begin();
 
 				// Act
-				privatkinderService.privatkindLoeschen(neueUuid, VERANSTALTER_UUID);
+				kinderService.kindLoeschen(neueUuid, VERANSTALTER_UUID);
 
 				trx.commit();
 
 				Optional<Kind> optKind = kinderRepository.findKindWithIdentifier(new Identifier(neueUuid),
-					privatkinderService.getWettbewerbID());
+					kinderService.getWettbewerbID());
 
 				// Assert
 				assertTrue(optKind.isEmpty());

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '@minikaenguru-ws/common-auth';
+import { AuthService, Rolle } from '@minikaenguru-ws/common-auth';
 import { Router } from '@angular/router';
 
 @Component({

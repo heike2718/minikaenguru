@@ -37,6 +37,7 @@ import { VeranstalterModule } from './veranstalter/veranstalter.module';
 import { LayouttestsModule } from './layouttests/layouttests.module';
 import { SchulteilnahmenModule } from './schulteilnahmen/schulteilnahmen.module';
 import { EventlogModule } from './eventlog/eventlog.module';
+import { SessionTimeoutComponent } from './session-timeout/session-timeout.component';
 
 registerLocaleData(localeDe);
 
@@ -48,7 +49,8 @@ registerLocaleData(localeDe);
 		LandingComponent,
 		NavbarComponent,
 		DashboardComponent,
-		NotAuthorizedComponent],
+		NotAuthorizedComponent,
+		SessionTimeoutComponent],
 	imports: [
 		BrowserModule,
 		ReactiveFormsModule,

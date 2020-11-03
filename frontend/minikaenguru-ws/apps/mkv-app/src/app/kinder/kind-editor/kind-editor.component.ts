@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { PrivatauswertungFacade } from '../privatauswertung.facade';
+import { KinderFacade } from '../kinder.facade';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 import { LogService } from '@minikaenguru-ws/common-logging';
@@ -13,7 +13,8 @@ import {
 	ALL_SPRACHEN,
 	getKlassenstufeByLabel,
 	Duplikatwarnung,
-	getSpracheByLabel
+	getSpracheByLabel,
+	TeilnahmeIdentifier
 } from '@minikaenguru-ws/common-components';
 import { Subscription } from 'rxjs';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
@@ -58,6 +59,8 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	private uuid: string;
 
+	private teilnahmeIdentifier: TeilnahmeIdentifier;
+
 	private initialGuiModel: KindEditorModel;
 
 	private editorModelSubscription: Subscription;
@@ -70,9 +73,11 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	private saveOutcomeSubscription: Subscription;
 
+	private teilnahmeIdentifierSubscription: Subscription;
+
 	constructor(private fb: FormBuilder,
 		private modalService: NgbModal,
-		private privatauswertungFacade: PrivatauswertungFacade,
+		private kinderFacade: KinderFacade,
 		private router: Router,
 		private route: ActivatedRoute,
 		private messageService: MessageService,
@@ -104,23 +109,26 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 			}
 		);
 
-		this.editorModelSubscription = this.privatauswertungFacade.kindEditorModel$.subscribe(
+		this.editorModelSubscription = this.kinderFacade.kindEditorModel$.subscribe(
 
 			ke => {
 
-				this.initialGuiModel = { ...ke };
-				this.kindForm.get('vorname').setValue(this.initialGuiModel.vorname, { onlySelf: true });
-				this.kindForm.get('nachname').setValue(this.initialGuiModel.nachname, { onlySelf: true });
-				this.kindForm.get('zusatz').setValue(this.initialGuiModel.zusatz, { onlySelf: true });
-				this.kindForm.get('klassenstufe').setValue(this.initialGuiModel.klassenstufe ? this.initialGuiModel.klassenstufe.label : null, { onlySelf: true });
-				this.kindForm.get('sprache').setValue(this.initialGuiModel.sprache.label, { onlySelf: true });
+				if (ke) {
+
+					this.initialGuiModel = { ...ke };
+					this.kindForm.get('vorname').setValue(this.initialGuiModel.vorname, { onlySelf: true });
+					this.kindForm.get('nachname').setValue(this.initialGuiModel.nachname, { onlySelf: true });
+					this.kindForm.get('zusatz').setValue(this.initialGuiModel.zusatz, { onlySelf: true });
+					this.kindForm.get('klassenstufe').setValue(this.initialGuiModel.klassenstufe ? this.initialGuiModel.klassenstufe.label : null, { onlySelf: true });
+					this.kindForm.get('sprache').setValue(this.initialGuiModel.sprache.label, { onlySelf: true });
 
 
-				this.editorInitialized = true;
+					this.editorInitialized = true;
+				}
 			}
 		);
 
-		this.duplikatwarnungSubscription = this.privatauswertungFacade.duplikatwarnung$.subscribe(
+		this.duplikatwarnungSubscription = this.kinderFacade.duplikatwarnung$.subscribe(
 			warnung => {
 
 				if (warnung && warnung.kontext === 'KIND') {
@@ -137,13 +145,17 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 			}
 		);
 
-		this.saveOutcomeSubscription = this.privatauswertungFacade.saveOutcome$.subscribe(
+		this.saveOutcomeSubscription = this.kinderFacade.saveOutcome$.subscribe(
 			message => {
 				if (this.showSaveMessage) {
 					this.messageService.showMessage(message);
 					this.showSaveMessage = false;
 				}
 			}
+		);
+
+		this.teilnahmeIdentifierSubscription = this.kinderFacade.teilnahmeIdentifier$.subscribe(
+			ti => this.teilnahmeIdentifier = ti
 		);
 	}
 
@@ -162,6 +174,9 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 		if (this.saveOutcomeSubscription) {
 			this.saveOutcomeSubscription.unsubscribe();
 		}
+		if (this.teilnahmeIdentifierSubscription) {
+			this.teilnahmeIdentifierSubscription.unsubscribe();
+		}
 	}
 
 	onSubmit(): void {
@@ -177,7 +192,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 			klassenstufe: getKlassenstufeByLabel(formValue.klassenstufe)
 		};
 
-		this.privatauswertungFacade.pruefeDuplikat(this.uuid, this.kindDaten);
+		this.kinderFacade.pruefeDuplikat(this.uuid, this.kindDaten);
 	}
 
 
@@ -198,15 +213,24 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	onCancel(): void {
 		this.messageService.clear();
-		this.router.navigateByUrl('/privatauswertung');
+		this.kinderFacade.cancelEditKind();
+
+		if (this.teilnahmeIdentifier.teilnahmenummer) {
+			this.router.navigateByUrl('/kinder/' + this.teilnahmeIdentifier.teilnahmenummer);
+		} else {
+			this.router.navigateByUrl('/privat/dashboard');
+
+		}
+
+
 	}
 
 	saveKind(): void {
 		this.showSaveMessage = true;
 		if (this.uuid === 'neu') {
-			this.privatauswertungFacade.insertKind(this.uuid, this.kindDaten);
+			this.kinderFacade.insertKind(this.uuid, this.kindDaten);
 		} else {
-			this.privatauswertungFacade.updateKind(this.uuid, this.kindDaten);
+			this.kinderFacade.updateKind(this.uuid, this.kindDaten);
 		}
 	}
 }

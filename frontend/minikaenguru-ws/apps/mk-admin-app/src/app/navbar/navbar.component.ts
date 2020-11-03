@@ -10,6 +10,7 @@ import { resetVeranstalters } from '../veranstalter/+state/veranstalter.actions'
 import { resetAktuelleMeldung } from '../aktuelle-meldung/+state/aktuelle-meldung.actions';
 import { resetSchulteilnahmen } from '../schulteilnahmen/+state/schulteilnahmen.actions';
 import { dateCleared } from '../eventlog/+state/eventlog.actions';
+import { LogoutService } from '../services/logout.service';
 
 @Component({
 	selector: 'mka-navbar',
@@ -30,7 +31,7 @@ export class NavbarComponent implements OnInit {
 	constructor(private authService: AuthService
 		, private authStore: Store<AuthState>
 		, private sessionStore: Store<Session>
-		, private appStore: Store<AppState>) { }
+		, private logoutService: LogoutService) { }
 
 	collapseNav() {
 		if (this.navbarToggler) {
@@ -43,22 +44,10 @@ export class NavbarComponent implements OnInit {
 	}
 
 	login() {
-		this.appStore.dispatch(resetWettbewerbe());
-		this.appStore.dispatch(resetKataloge());
-		this.appStore.dispatch(resetVeranstalters());
-		this.appStore.dispatch(resetAktuelleMeldung());
-		this.appStore.dispatch(resetSchulteilnahmen());
-		this.appStore.dispatch(dateCleared());
 		this.authService.login();
 	}
 
 	logout() {
-		this.authService.logout();
-		this.appStore.dispatch(resetWettbewerbe());
-		this.appStore.dispatch(resetKataloge());
-		this.appStore.dispatch(resetVeranstalters());
-		this.appStore.dispatch(resetAktuelleMeldung());
-		this.appStore.dispatch(resetSchulteilnahmen());
-		this.appStore.dispatch(dateCleared());
+		this.logoutService.logout();
 	}
 }

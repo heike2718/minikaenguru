@@ -12,9 +12,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
-import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 
 /**
  * KlasseTest
@@ -25,15 +22,14 @@ public class KlasseTest {
 	void should_equalsAndHashCode_baseOnIdentifier() {
 
 		// Arrange
-		TeilnahmeIdentifier teilnahmeID1 = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE)
-			.withTeilnahmenummer("AAAAAAAA").withWettbewerbID(new WettbewerbID(2006));
+		Identifier schuleID = new Identifier("AAAAAAAA");
 
-		TeilnahmeIdentifier teilnahmeID2 = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE)
-			.withTeilnahmenummer("AAAAAAAA").withWettbewerbID(new WettbewerbID(2006));
-
-		Klasse klasse1 = new Klasse(new Identifier("eins")).withName("Rudi").withTeilnahmeIdentifier(teilnahmeID1);
-		Klasse klasse2 = new Klasse(new Identifier("zwei")).withName("Rudi").withTeilnahmeIdentifier(teilnahmeID1);
-		Klasse klasse3 = new Klasse(new Identifier("eins")).withName("Harald").withTeilnahmeIdentifier(teilnahmeID2);
+		Klasse klasse1 = new Klasse(new Identifier("eins")).withName("Rudi")
+			.withSchuleID(schuleID);
+		Klasse klasse2 = new Klasse(new Identifier("zwei")).withName("Rudi")
+			.withSchuleID(schuleID);
+		Klasse klasse3 = new Klasse(new Identifier("eins")).withName("Harald")
+			.withSchuleID(schuleID);
 
 		// Assert
 		assertEquals(klasse1, klasse1);
@@ -49,11 +45,9 @@ public class KlasseTest {
 	void should_AddKindInitReferenceInKind() {
 
 		// Arrange
-		TeilnahmeIdentifier teilnahmeID = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE)
-			.withTeilnahmenummer("AAAAAAAA").withWettbewerbID(new WettbewerbID(2006));
+		Identifier schuleID = new Identifier("AAAAAAAA");
 
-		Klasse klasse = new Klasse(new Identifier("eins")).withName("Rudi").withTeilnahmeIdentifier(teilnahmeID);
-
+		Klasse klasse = new Klasse(new Identifier("eins")).withName("Rudi").withSchuleID(schuleID);
 		Kind kind = new Kind(new Identifier("FZFZIFIF"));
 
 		// Act
@@ -69,10 +63,9 @@ public class KlasseTest {
 	void should_RemoveKindRemoveKlasseId_when_KindIsPartOfKlasse() {
 
 		// Arrange
-		TeilnahmeIdentifier teilnahmeID = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE)
-			.withTeilnahmenummer("AAAAAAAA").withWettbewerbID(new WettbewerbID(2006));
+		Identifier schuleID = new Identifier("AAAAAAAA");
 
-		Klasse klasse = new Klasse(new Identifier("eins")).withName("Rudi").withTeilnahmeIdentifier(teilnahmeID);
+		Klasse klasse = new Klasse(new Identifier("eins")).withName("Rudi").withSchuleID(schuleID);
 		Kind kind = new Kind(new Identifier("FZFZIFIF"));
 		klasse.addKind(kind);
 
@@ -90,10 +83,9 @@ public class KlasseTest {
 	void should_RemoveKindPreserveKlasseId_when_KindIsNotPartOfKlasse() {
 
 		// Arrange
-		TeilnahmeIdentifier teilnahmeID = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE)
-			.withTeilnahmenummer("AAAAAAAA").withWettbewerbID(new WettbewerbID(2006));
+		Identifier schuleID = new Identifier("AAAAAAAA");
 
-		Klasse klasse = new Klasse(new Identifier("eins")).withName("Rudi").withTeilnahmeIdentifier(teilnahmeID);
+		Klasse klasse = new Klasse(new Identifier("eins")).withName("Rudi").withSchuleID(schuleID);
 		Kind kind1 = new Kind(new Identifier("FZFZIFIF"));
 		klasse.addKind(kind1);
 

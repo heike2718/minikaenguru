@@ -64,6 +64,7 @@ export interface KindEditorModel {
 	zusatz: string;
 	klassenstufe: Klassenstufe,
 	sprache: Sprache;
+	land?: string;
 };
 
 export interface PrivatkindRequestData {
@@ -77,7 +78,8 @@ export const initialKindEditorModel: KindEditorModel = {
 	nachname: '',
 	zusatz: '',
 	klassenstufe: null,
-	sprache: { sprache: 'de', label: 'deutsch' }
+	sprache: { sprache: 'de', label: 'deutsch' },
+	land: undefined
 };
 
 export function getKlassenstufeByLabel(label: string): Klassenstufe {
