@@ -80,19 +80,21 @@ public class KinderServiceTest extends AbstractIT {
 	}
 
 	@Test
-	void testKindAnlegenUndAendernUndLoeschen() {
+	void testKindAnlegenUndDublettePruefenUndAendernUndLoeschen() {
 
 		String neueUuid = "";
+
+		String initialerNachname = "Walter " + System.currentTimeMillis();
+
+		KindEditorModel initialesKindEditorModel = new KindEditorModel(Klassenstufe.ZWEI, Sprache.de)
+			.withNachname(initialerNachname)
+			.withVorname("Fiona").withZusatz("blond");
 
 		{
 
 			// Arrange
-			String nachname = "Walter " + System.currentTimeMillis();
 
-			KindEditorModel kindEditorModel = new KindEditorModel(Klassenstufe.ZWEI, Sprache.de).withNachname(nachname)
-				.withVorname("Fiona").withZusatz("blond");
-
-			KindRequestData requestData = new KindRequestData().withKind(kindEditorModel)
+			KindRequestData requestData = new KindRequestData().withKind(initialesKindEditorModel)
 				.withUuid(KindRequestData.KEINE_UUID);
 
 			EntityTransaction trx = entityManager.getTransaction();
@@ -120,7 +122,7 @@ public class KinderServiceTest extends AbstractIT {
 				assertEquals(new Identifier(neueUuid), kind.identifier());
 				assertNull(kind.klasseID());
 				assertNull(kind.loesungszettelID());
-				assertEquals(nachname, kind.nachname());
+				assertEquals(initialerNachname, kind.nachname());
 				assertEquals("Fiona", kind.vorname());
 				assertEquals("blond", kind.zusatz());
 
@@ -130,6 +132,17 @@ public class KinderServiceTest extends AbstractIT {
 				e.printStackTrace();
 				fail(e.getMessage());
 			}
+		}
+
+		{
+
+			// Arrange
+			KindRequestData requestData = new KindRequestData().withKind(initialesKindEditorModel)
+				.withUuid(KindRequestData.KEINE_UUID);
+
+			// Act + Assert
+			assertTrue(kinderService.pruefeDublette(requestData, VERANSTALTER_UUID));
+
 		}
 
 		{

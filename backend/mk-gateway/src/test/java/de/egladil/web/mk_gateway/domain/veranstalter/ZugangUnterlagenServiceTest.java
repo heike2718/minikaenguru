@@ -20,6 +20,7 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Privatteilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Schulteilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
@@ -38,7 +39,9 @@ public class ZugangUnterlagenServiceTest {
 
 	private Lehrer lehrerAngemeldet;
 
-	private Lehrer lehrerSonderzugangsberechtigung;
+	private Lehrer lehrerSonderzugangsberechtigungAngemeldet;
+
+	private Lehrer lehrerSonderzugangsberechtigungNichtAngemeldet;
 
 	private Lehrer lehrerZugangsberechtigungEntzogen;
 
@@ -72,9 +75,13 @@ public class ZugangUnterlagenServiceTest {
 		this.lehrerNichtAngemeldet = new Lehrer(new Person("vyxhjcga", "Herr Verpeilt"), true,
 			Arrays.asList(new Identifier[] { new Identifier(SCHULKUERZEL_NICHT_ANGEMELDET) }));
 
-		this.lehrerSonderzugangsberechtigung = new Lehrer(new Person("sabljal", "Extra Wurst"), false,
+		this.lehrerSonderzugangsberechtigungNichtAngemeldet = new Lehrer(new Person("sabljal", "Extra Wurst"), false,
+			Arrays.asList(new Identifier[] { new Identifier(SCHULKUERZEL_NICHT_ANGEMELDET) }));
+		this.lehrerSonderzugangsberechtigungNichtAngemeldet.erlaubeZugangUnterlagen();
+
+		this.lehrerSonderzugangsberechtigungAngemeldet = new Lehrer(new Person("sabljal", "Extra Wurst"), false,
 			Arrays.asList(new Identifier[] { new Identifier(SCHULTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB) }));
-		this.lehrerSonderzugangsberechtigung.erlaubeZugangUnterlagen();
+		this.lehrerSonderzugangsberechtigungAngemeldet.erlaubeZugangUnterlagen();
 
 		this.lehrerZugangsberechtigungEntzogen = new Lehrer(new Person("bjkabjdb", "Ausge Schlossen"), true,
 			Arrays.asList(new Identifier[] { new Identifier(SCHULTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB) }));
@@ -103,9 +110,11 @@ public class ZugangUnterlagenServiceTest {
 
 			Schulteilnahme teilnahme = new Schulteilnahme(wettbewerbId, new Identifier(SCHULTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB),
 				"Baumschule", new Identifier("asdgqguwgquogowgfuq"));
+
+			TeilnahmeIdentifier teilnahmeIdentifier = TeilnahmeIdentifier.createFromTeilnahme(teilnahme);
+
 			Mockito
-				.when(teilnahmenRepository.ofTeilnahmenummerArtWettbewerb(SCHULTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB,
-					Teilnahmeart.SCHULE, wettbewerbId))
+				.when(teilnahmenRepository.ofTeilnahmeIdentifier(teilnahmeIdentifier))
 				.thenReturn(Optional.of(teilnahme));
 		}
 
@@ -113,17 +122,21 @@ public class ZugangUnterlagenServiceTest {
 
 			Privatteilnahme teilnahme = new Privatteilnahme(wettbewerbId,
 				new Identifier(PRIVATTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB));
+
+			TeilnahmeIdentifier teilnahmeIdentifier = TeilnahmeIdentifier.createFromTeilnahme(teilnahme);
+
 			Mockito
-				.when(teilnahmenRepository.ofTeilnahmenummerArtWettbewerb(PRIVATTEILNAHMEKUERZEL_AKTUELLER_WETTBEWERB,
-					Teilnahmeart.PRIVAT, wettbewerbId))
+				.when(teilnahmenRepository.ofTeilnahmeIdentifier(teilnahmeIdentifier))
 				.thenReturn(Optional.of(teilnahme));
 		}
 
 		{
 
+			TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE)
+				.withTeilnahmenummer(SCHULKUERZEL_NICHT_ANGEMELDET).withWettbewerbID(wettbewerbId);
+
 			Mockito
-				.when(teilnahmenRepository.ofTeilnahmenummerArtWettbewerb(SCHULKUERZEL_NICHT_ANGEMELDET, Teilnahmeart.SCHULE,
-					wettbewerbId))
+				.when(teilnahmenRepository.ofTeilnahmeIdentifier(teilnahmeIdentifier))
 				.thenReturn(Optional.empty());
 		}
 
@@ -146,7 +159,7 @@ public class ZugangUnterlagenServiceTest {
 			// Act + Assert
 			assertEquals(false, service.hatZugang(lehrerAngemeldet, wettbewerb));
 			assertEquals(false, service.hatZugang(lehrerNichtAngemeldet, wettbewerb));
-			assertEquals(false, service.hatZugang(lehrerSonderzugangsberechtigung, wettbewerb));
+			assertEquals(false, service.hatZugang(lehrerSonderzugangsberechtigungNichtAngemeldet, wettbewerb));
 			assertEquals(false, service.hatZugang(lehrerZugangsberechtigungEntzogen, wettbewerb));
 
 		}
@@ -160,7 +173,7 @@ public class ZugangUnterlagenServiceTest {
 			// Act + Assert
 			assertEquals(false, service.hatZugang(lehrerAngemeldet, wettbewerb));
 			assertEquals(false, service.hatZugang(lehrerNichtAngemeldet, wettbewerb));
-			assertEquals(false, service.hatZugang(lehrerSonderzugangsberechtigung, wettbewerb));
+			assertEquals(false, service.hatZugang(lehrerSonderzugangsberechtigungNichtAngemeldet, wettbewerb));
 			assertEquals(false, service.hatZugang(lehrerZugangsberechtigungEntzogen, wettbewerb));
 
 		}
@@ -179,13 +192,24 @@ public class ZugangUnterlagenServiceTest {
 		}
 
 		@Test
-		void should_HatZugangReturnTrue_when_WettbewerbAnmeldung() {
+		void should_HatZugangReturnFalse_when_WettbewerbAnmeldungAberKeineTeilnahme() {
 
 			// Arrange
 			wettbewerb.withStatus(WettbewerbStatus.ANMELDUNG);
 
 			// Act + Assert
-			assertEquals(true, service.hatZugang(lehrerSonderzugangsberechtigung, wettbewerb));
+			assertEquals(false, service.hatZugang(lehrerSonderzugangsberechtigungNichtAngemeldet, wettbewerb));
+
+		}
+
+		@Test
+		void should_HatZugangReturnTrue_when_WettbewerbAnmeldungUndTeilnahme() {
+
+			// Arrange
+			wettbewerb.withStatus(WettbewerbStatus.ANMELDUNG);
+
+			// Act + Assert
+			assertEquals(true, service.hatZugang(lehrerSonderzugangsberechtigungAngemeldet, wettbewerb));
 
 		}
 
@@ -198,6 +222,7 @@ public class ZugangUnterlagenServiceTest {
 			// Act + Assert
 			assertEquals(false, service.hatZugang(lehrerNichtAngemeldet, wettbewerb));
 			assertEquals(false, service.hatZugang(lehrerZugangsberechtigungEntzogen, wettbewerb));
+			assertEquals(true, service.hatZugang(lehrerAngemeldet, wettbewerb));
 
 		}
 
@@ -209,7 +234,8 @@ public class ZugangUnterlagenServiceTest {
 
 			// Act + Assert
 			assertEquals(true, service.hatZugang(lehrerAngemeldet, wettbewerb));
-			assertEquals(true, service.hatZugang(lehrerSonderzugangsberechtigung, wettbewerb));
+			assertEquals(false, service.hatZugang(lehrerSonderzugangsberechtigungNichtAngemeldet, wettbewerb));
+			assertEquals(true, service.hatZugang(lehrerSonderzugangsberechtigungAngemeldet, wettbewerb));
 
 		}
 
@@ -233,7 +259,8 @@ public class ZugangUnterlagenServiceTest {
 
 			// Act + Assert
 			assertEquals(true, service.hatZugang(lehrerAngemeldet, wettbewerb));
-			assertEquals(true, service.hatZugang(lehrerSonderzugangsberechtigung, wettbewerb));
+			assertEquals(false, service.hatZugang(lehrerSonderzugangsberechtigungNichtAngemeldet, wettbewerb));
+			assertEquals(true, service.hatZugang(lehrerSonderzugangsberechtigungAngemeldet, wettbewerb));
 
 		}
 

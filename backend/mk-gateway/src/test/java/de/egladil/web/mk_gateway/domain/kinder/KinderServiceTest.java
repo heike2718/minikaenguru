@@ -213,6 +213,7 @@ public class KinderServiceTest extends AbstractDomainServiceTest {
 		}
 	}
 
+	@Test
 	void should_koennteDubletteSein_work_whenGleicheUuid() {
 
 		// Arrange

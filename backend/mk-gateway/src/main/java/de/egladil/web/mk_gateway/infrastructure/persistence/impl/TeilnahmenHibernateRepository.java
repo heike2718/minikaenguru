@@ -47,37 +47,6 @@ public class TeilnahmenHibernateRepository implements TeilnahmenRepository {
 	}
 
 	@Override
-	public Optional<Teilnahme> ofTeilnahmenummerArtWettbewerb(final String teilnahmenummer, final Teilnahmeart art, final WettbewerbID wettbewerbId) {
-
-		if (art == null) {
-
-			throw new IllegalArgumentException("art darf nicht null sein.");
-		}
-
-		if (wettbewerbId == null) {
-
-			throw new IllegalArgumentException("wettbewerbId darf nicht null sein.");
-		}
-
-		List<PersistenteTeilnahme> teilnahmen = this.findAllByNummer(teilnahmenummer);
-
-		Optional<PersistenteTeilnahme> optTeilnahme = teilnahmen.stream()
-			.filter(t -> t.getTeilnahmeart() == art && t.getWettbewerbUUID().equals(wettbewerbId.jahr().toString()))
-			.findFirst();
-
-		if (optTeilnahme.isEmpty()) {
-
-			return Optional.empty();
-		}
-
-		PersistenteTeilnahme persistente = optTeilnahme.get();
-
-		Teilnahme teilnahme = mapToTeilnahme(persistente);
-
-		return Optional.of(teilnahme);
-	}
-
-	@Override
 	public Optional<Teilnahme> ofTeilnahmeIdentifier(final TeilnahmeIdentifier teilnahmeIdentifier) {
 
 		if (teilnahmeIdentifier == null) {
