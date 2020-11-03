@@ -16,6 +16,7 @@ import de.egladil.web.mk_gateway.domain.semantik.DomainService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
@@ -120,8 +121,9 @@ public class ZugangUnterlagenService {
 
 		veranstalter.teilnahmeIdentifier().forEach(ident -> {
 
-			Optional<Teilnahme> optTeilnahme = teilnahmenRepository.ofTeilnahmenummerArtWettbewerb(ident.identifier(),
-				veranstalter.teilnahmeart(), wettbewerb.id());
+			Optional<Teilnahme> optTeilnahme = teilnahmenRepository
+				.ofTeilnahmeIdentifier(new TeilnahmeIdentifier().withTeilnahmeart(veranstalter.teilnahmeart())
+					.withWettbewerbID(wettbewerb.id()).withTeilnahmenummer(ident.identifier()));
 
 			if (optTeilnahme.isPresent()) {
 

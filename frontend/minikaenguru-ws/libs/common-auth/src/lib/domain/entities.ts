@@ -14,7 +14,7 @@ export interface AuthResult {
 
 export interface User {
 	readonly idReference: string;
-	readonly rolle: string;
+	readonly rolle: Rolle;
 	readonly fullName: string;
 }
 

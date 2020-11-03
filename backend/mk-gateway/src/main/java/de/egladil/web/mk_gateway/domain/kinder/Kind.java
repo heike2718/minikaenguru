@@ -39,6 +39,8 @@ public class Kind {
 
 	private Identifier klasseID;
 
+	private String landkuerzel;
+
 	public Kind() {
 
 	}
@@ -55,6 +57,7 @@ public class Kind {
 		this.zusatz = kindEditorModel.zusatz() == null ? null : kindEditorModel.zusatz().trim();
 		this.sprache = kindEditorModel.sprache().sprache();
 		this.klassenstufe = kindEditorModel.klassenstufe().klassenstufe();
+		this.landkuerzel = kindEditorModel.land();
 		return this;
 	}
 
@@ -148,6 +151,17 @@ public class Kind {
 	public Kind withKlasseID(final Identifier klasseID) {
 
 		this.klasseID = klasseID;
+		return this;
+	}
+
+	public String landkuerzel() {
+
+		return landkuerzel;
+	}
+
+	public Kind withLandkuerzel(final String landkuerzel) {
+
+		this.landkuerzel = landkuerzel;
 		return this;
 	}
 

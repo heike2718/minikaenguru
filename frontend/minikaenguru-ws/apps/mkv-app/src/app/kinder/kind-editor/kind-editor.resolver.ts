@@ -3,17 +3,17 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/r
 import { Store, select } from '@ngrx/store';
 import { AppState } from '../../reducers';
 import { Observable } from 'rxjs';
-import { kindEditorModel, kinderMap } from '../+state/privatauswertung.selectors';
+import { kindEditorModel, kinderMap } from '../+state/kinder.selectors';
 import { first, tap } from 'rxjs/operators';
-import { KinderMap } from '../privatauswertung.model';
+import { KinderMap } from '../kinder.model';
 import { Kind } from '@minikaenguru-ws/common-components';
-import { PrivatauswertungFacade } from '../privatauswertung.facade';
+import { KinderFacade } from '../kinder.facade';
 
 
 @Injectable()
 export class KindEditorResolver implements Resolve<any> {
 
-	constructor(private store: Store<AppState>, private privatauswertungFacade: PrivatauswertungFacade) { }
+	constructor(private store: Store<AppState>, private kinderFacade: KinderFacade) { }
 
 	resolve(route: ActivatedRouteSnapshot,
 		_state: RouterStateSnapshot): Observable<any> {
@@ -26,7 +26,7 @@ export class KindEditorResolver implements Resolve<any> {
 				return this.store.pipe(
 					select(kindEditorModel),
 					tap(
-						_m => this.privatauswertungFacade.createNewKind()
+						_m => this.kinderFacade.createNewKind()
 					),
 					first()
 				);
@@ -37,7 +37,7 @@ export class KindEditorResolver implements Resolve<any> {
 					tap(
 						map => {
 							const kind: Kind = new KinderMap(map).get(uuid);
-							this.privatauswertungFacade.editKind(kind);
+							this.kinderFacade.editKind(kind);
 						}
 					),
 					first()

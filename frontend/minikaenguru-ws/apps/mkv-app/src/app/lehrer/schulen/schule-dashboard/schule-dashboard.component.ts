@@ -131,8 +131,9 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 	}
 
 	gotoAuswertung(): void {
-		this.textFeatureFlagAnzeigen = true;
-		this.textFeatureFlag = 'Auswertungen sind im Moment noch nicht möglich, kommt aber Anfang 2021.';
+		this.textFeatureFlagAnzeigen = false;
+		// FIXME: hier muss zu den Klassen navigiert werden!
+		this.router.navigateByUrl('/kinder/' + this.schule.kuerzel);
 	}
 
 	backToSchulen(): void {

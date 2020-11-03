@@ -1,5 +1,5 @@
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Session, isLoggedIn, STORAGE_KEY_USER, User } from '@minikaenguru-ws/common-auth';
+import { Session, isLoggedIn, STORAGE_KEY_USER, User, Rolle } from '@minikaenguru-ws/common-auth';
 import { Injectable } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { tap } from 'rxjs/operators';

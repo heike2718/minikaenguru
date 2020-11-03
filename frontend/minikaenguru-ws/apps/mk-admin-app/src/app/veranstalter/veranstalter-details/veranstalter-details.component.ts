@@ -4,6 +4,7 @@ import { Veranstalter } from '../veranstalter.model';
 import { Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { SchulteilnahmenFacade } from '../../schulteilnahmen/schulteilnahmen.facade';
+import { Rolle } from '@minikaenguru-ws/common-auth';
 
 @Component({
 	selector: 'mka-veranstalter-details',
@@ -18,7 +19,7 @@ export class VeranstalterDetailsComponent implements OnInit, OnDestroy {
 
 	teilnahmenummernAsString: string;
 
-	private rolle: string;
+	private rolle: Rolle;
 
 	constructor(private router: Router, private veranstalterFacade: VeranstalterFacade, private schulteilnahmenFacade: SchulteilnahmenFacade) { }
 

@@ -26,26 +26,25 @@ import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.auswertungen.LoesungszettelService;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
-import de.egladil.web.mk_gateway.domain.kinder.api.PrivatkindRequestData;
+import de.egladil.web.mk_gateway.domain.kinder.api.KindRequestData;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Privatteilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
-import de.egladil.web.mk_gateway.domain.veranstalter.PrivatveranstalterService;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 
 /**
- * PrivatkinderServiceTest
+ * KinderServiceTest
  */
-public class PrivatkinderServiceTest extends AbstractDomainServiceTest {
+public class KinderServiceTest extends AbstractDomainServiceTest {
 
-	private PrivatkinderService service;
+	private KinderService service;
 
 	private KinderRepository kinderRepository;
 
-	private PrivatveranstalterService privatveranstalterService;
+	private KlassenRepository klassenRepository;
 
 	private WettbewerbService wettbewerbService;
 
@@ -105,22 +104,22 @@ public class PrivatkinderServiceTest extends AbstractDomainServiceTest {
 
 		Mockito.when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(aktuellerWettbewerb));
 
+		klassenRepository = Mockito.mock(KlassenRepository.class);
+
 		kinderRepository = Mockito.mock(KinderRepository.class);
-		privatveranstalterService = PrivatveranstalterService.createForTest(getVeranstalterRepository(),
-			getZugangUnterlagenService(), getWettbewerbService(), getTeilnahmenRepository(), getPrivatteilnameKuerzelService());
 
 		authService = Mockito.mock(AuthorizationService.class);
 		loesungszettelService = Mockito.mock(LoesungszettelService.class);
 
-		service = PrivatkinderService.createForTest(authService, kinderRepository, getTeilnahmenRepository(),
-			privatveranstalterService, wettbewerbService, loesungszettelService);
+		service = KinderService.createForTest(authService, kinderRepository, getTeilnahmenRepository(),
+			getVeranstalterRepository(), wettbewerbService, loesungszettelService, klassenRepository);
 	}
 
 	@Test
 	void should_pruefeDublettePrivat_call_TeilnahmenRepository() {
 
 		// Arrange
-		PrivatkindRequestData data = createTestData();
+		KindRequestData data = createTestData();
 
 		Teilnahme teilnahme = new Privatteilnahme(new WettbewerbID(WETTBEWERBSJAHR_AKTUELL),
 			new Identifier(TEILNAHMENUMMER_PRIVAT));
@@ -129,7 +128,7 @@ public class PrivatkinderServiceTest extends AbstractDomainServiceTest {
 			.thenReturn(new ArrayList<>());
 
 		// Act
-		boolean result = service.pruefeDublettePrivat(data, UUID_PRIVAT);
+		boolean result = service.pruefeDublette(data, UUID_PRIVAT);
 
 		// Assert
 		assertFalse(result);
@@ -140,21 +139,21 @@ public class PrivatkinderServiceTest extends AbstractDomainServiceTest {
 	void should_pruefeDublettePrivatThrowNotFound_when_VeranstalterNichtAngemeldet() {
 
 		// Arrange
-		PrivatkindRequestData data = createTestData();
+		KindRequestData data = createTestData();
 
 		Mockito.when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(new Wettbewerb(new WettbewerbID(2018))));
 
 		// Act
 		try {
 
-			service.pruefeDublettePrivat(data, UUID_PRIVAT);
+			service.pruefeDublette(data, UUID_PRIVAT);
 			fail("keine NotFoundException");
 		} catch (NotFoundException e) {
 
 			System.err.println(e.getMessage());
 
 			assertEquals(
-				"PrivatkinderService.pruefeDublettePrivat(...): Privatveranstalter mit UUID=UUID_PRIVAT ist nicht zum aktuellen Wettbewerb (2018) angemeldet",
+				"KinderService.pruefeDublette(...): Veranstalter mit UUID=UUID_PRIVAT ist nicht zum aktuellen Wettbewerb (2018) angemeldet",
 				e.getMessage());
 		}
 	}
@@ -163,7 +162,7 @@ public class PrivatkinderServiceTest extends AbstractDomainServiceTest {
 	void should_privatkindAnlegen_triggerEvent() {
 
 		// Arrange
-		PrivatkindRequestData data = createTestData();
+		KindRequestData data = createTestData();
 		Kind gespeichertesKind = new Kind(new Identifier("UUID-UUID"))
 			.withKlassenstufe(Klassenstufe.EINS)
 			.withNachname("Paschulke")
@@ -176,11 +175,11 @@ public class PrivatkinderServiceTest extends AbstractDomainServiceTest {
 		Mockito.when(kinderRepository.findKinderWithTeilnahme(teilnahme))
 			.thenReturn(new ArrayList<>());
 
-		PrivatkinderService theService = PrivatkinderService.createForTest(authService, new TestKinderRepository(gespeichertesKind),
-			getTeilnahmenRepository(), privatveranstalterService, wettbewerbService, loesungszettelService);
+		KinderService theService = KinderService.createForTest(authService, new TestKinderRepository(gespeichertesKind),
+			getTeilnahmenRepository(), getVeranstalterRepository(), wettbewerbService, loesungszettelService, klassenRepository);
 
 		// Act
-		theService.privatkindAnlegen(data, UUID_PRIVAT);
+		theService.kindAnlegen(data, UUID_PRIVAT);
 
 		// Assert
 		assertNotNull(theService.getKindCreated());
@@ -191,17 +190,17 @@ public class PrivatkinderServiceTest extends AbstractDomainServiceTest {
 	void should_privatkindAnlegenThrowNotFound_when_VeranstalterNichtAngemeldet() {
 
 		// Arrange
-		PrivatkindRequestData data = createTestData();
+		KindRequestData data = createTestData();
 
 		Mockito.when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(new Wettbewerb(new WettbewerbID(2018))));
 
-		PrivatkinderService theService = PrivatkinderService.createForTest(authService, kinderRepository,
-			getTeilnahmenRepository(), privatveranstalterService, wettbewerbService, loesungszettelService);
+		KinderService theService = KinderService.createForTest(authService, kinderRepository,
+			getTeilnahmenRepository(), getVeranstalterRepository(), wettbewerbService, loesungszettelService, klassenRepository);
 
 		// Act
 		try {
 
-			theService.privatkindAnlegen(data, UUID_PRIVAT);
+			theService.kindAnlegen(data, UUID_PRIVAT);
 			fail("keine NotFoundException");
 		} catch (NotFoundException e) {
 
@@ -209,7 +208,7 @@ public class PrivatkinderServiceTest extends AbstractDomainServiceTest {
 
 			assertNull(theService.getKindCreated());
 			assertEquals(
-				"PrivatkinderService.privatkindAnlegen(...): Privatveranstalter mit UUID=UUID_PRIVAT ist nicht zum aktuellen Wettbewerb (2018) angemeldet",
+				"KinderService.kindAnlegen(...): Veranstalter mit UUID=UUID_PRIVAT ist nicht zum aktuellen Wettbewerb (2018) angemeldet",
 				e.getMessage());
 		}
 	}
@@ -233,13 +232,13 @@ public class PrivatkinderServiceTest extends AbstractDomainServiceTest {
 
 	}
 
-	private PrivatkindRequestData createTestData() {
+	private KindRequestData createTestData() {
 
 		KindEditorModel kind = new KindEditorModel(Klassenstufe.EINS, Sprache.de)
 			.withNachname("Paschulke")
 			.withVorname("Heinz");
 
-		return new PrivatkindRequestData().withKind(kind);
+		return new KindRequestData().withKind(kind);
 	}
 
 }

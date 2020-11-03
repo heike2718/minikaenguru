@@ -4,6 +4,7 @@ import { MessageService } from '@minikaenguru-ws/common-messages';
 import { environment } from '../../environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LogPublishersService } from './log-publishers.service';
+import { Router } from '@angular/router';
 
 @Injectable(
 	{
@@ -14,6 +15,7 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 
 	private logger: LogService;
 	private messageService: MessageService;
+	private router: Router;
 
 	constructor(private injector: Injector) {
 
@@ -28,6 +30,8 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 		this.logger.info('logging initialized: loglevel=' + environment.loglevel);
 
 		this.messageService = this.injector.get(MessageService);
+
+		this.router = this.injector.get(Router);
 
 
 	}
@@ -59,7 +63,8 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 					this.messageService.error('Sie haben keine Berechtigung, diese Resource aufzurufen.');
 					break;
 				case 908:
-					this.messageService.error('Ihre Session ist abgelaufen. Bitte loggen Sie sich erneut ein.');
+					this.messageService.warn('Ihre Session ist abgelaufen. Bitte loggen Sie sich erneut ein.');
+					this.router.navigateByUrl('/timeout');
 					break;
 				default: {
 					if (msg) {
