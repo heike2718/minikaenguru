@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.kinder;
+package de.egladil.web.mk_gateway.domain.kinder.events;
 
 import java.time.LocalDateTime;
 

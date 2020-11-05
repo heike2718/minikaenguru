@@ -2,22 +2,21 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.kinder;
+package de.egladil.web.mk_gateway.domain.kinder.events;
 
 import de.egladil.web.mk_gateway.domain.event.EventType;
 
 /**
- * KindDeleted
+ * KindCreated
  */
-public class KindDeleted extends AbstractKindEvent {
+public class KindCreated extends AbstractKindEvent {
 
-	public KindDeleted() {
+	public KindCreated() {
 
 		super();
-
 	}
 
-	public KindDeleted(final String triggeringUser) {
+	public KindCreated(final String triggeringUser) {
 
 		super(triggeringUser);
 
@@ -26,7 +25,7 @@ public class KindDeleted extends AbstractKindEvent {
 	@Override
 	public String typeName() {
 
-		return EventType.KIND_DELETED.getLabel();
+		return EventType.KIND_CREATED.getLabel();
 	}
 
 }

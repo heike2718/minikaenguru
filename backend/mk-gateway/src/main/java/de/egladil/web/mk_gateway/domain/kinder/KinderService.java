@@ -26,6 +26,11 @@ import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindAPIModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindRequestData;
+import de.egladil.web.mk_gateway.domain.kinder.events.KindChanged;
+import de.egladil.web.mk_gateway.domain.kinder.events.KindCreated;
+import de.egladil.web.mk_gateway.domain.kinder.events.KindDeleted;
+import de.egladil.web.mk_gateway.domain.klassen.Klasse;
+import de.egladil.web.mk_gateway.domain.klassen.KlassenRepository;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
@@ -304,6 +309,8 @@ public class KinderService {
 		Optional<Teilnahme> optTeilnahme = teilnahmenRepository.ofTeilnahmeIdentifier(teilnahmeIdentifier);
 
 		if (optTeilnahme.isEmpty()) {
+
+			LOG.warn("Veranstalter mit uuid={} ist nicht zum aktuellen Wettebwerb angemeldet.", veranstalterUuid);
 
 			throw new NotFoundException();
 		}

@@ -118,6 +118,24 @@ public class KinderHibernateRepository implements KinderRepository {
 		return true;
 	}
 
+	@Override
+	public int removeKinder(final List<Kind> kinder) {
+
+		int count = 0;
+
+		for (Kind kind : kinder) {
+
+			boolean removed = this.removeKind(kind);
+
+			if (removed) {
+
+				count++;
+			}
+		}
+
+		return count;
+	}
+
 	Kind mapFromDB(final PersistentesKind persistentesKind, final TeilnahmeIdentifier teilnahmeIdentifier) {
 
 		Kind result = new Kind(new Identifier(persistentesKind.getUuid()))

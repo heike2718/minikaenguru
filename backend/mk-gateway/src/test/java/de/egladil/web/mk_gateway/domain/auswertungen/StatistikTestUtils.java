@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
+import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.entities.InMemoryLoesungszettelList;
 
 /**
  * StatistikTestUtils
@@ -27,7 +28,7 @@ public class StatistikTestUtils {
 
 		try (InputStream in = StatistikTestUtils.class.getResourceAsStream("/loesungszettelCollection.json")) {
 
-			LoesungszettelList liste = objectMapper.readValue(in, LoesungszettelList.class);
+			InMemoryLoesungszettelList liste = objectMapper.readValue(in, InMemoryLoesungszettelList.class);
 
 			return liste.getLoesungszettel();
 

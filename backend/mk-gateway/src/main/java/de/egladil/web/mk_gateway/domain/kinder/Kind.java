@@ -8,6 +8,9 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
 import de.egladil.web.mk_gateway.domain.semantik.AggregateRoot;
@@ -21,24 +24,34 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 @AggregateRoot
 public class Kind {
 
+	@JsonProperty
 	private Identifier identifier;
 
+	@JsonProperty
 	private TeilnahmeIdentifier teilnahmeIdentifier;
 
+	@JsonProperty
 	private String vorname;
 
+	@JsonProperty
 	private String nachname;
 
+	@JsonProperty
 	private String zusatz;
 
+	@JsonProperty
 	private Klassenstufe klassenstufe;
 
+	@JsonProperty
 	private Sprache sprache;
 
+	@JsonProperty
 	private Identifier loesungszettelID;
 
+	@JsonProperty
 	private Identifier klasseID;
 
+	@JsonProperty
 	private String landkuerzel;
 
 	public Kind() {
@@ -165,16 +178,19 @@ public class Kind {
 		return this;
 	}
 
+	@JsonIgnore
 	public String getLowerVornameNullSafe() {
 
 		return vorname == null ? null : vorname.trim().toLowerCase();
 	}
 
+	@JsonIgnore
 	public String getLowerNachnameNullSafe() {
 
 		return nachname == null ? null : nachname.trim().toLowerCase();
 	}
 
+	@JsonIgnore
 	public String getLowerZusatzNullSafe() {
 
 		return zusatz == null ? null : zusatz.trim().toLowerCase();

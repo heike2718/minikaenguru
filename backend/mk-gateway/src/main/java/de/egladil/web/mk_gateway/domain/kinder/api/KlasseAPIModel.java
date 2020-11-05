@@ -9,7 +9,7 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
+import de.egladil.web.mk_gateway.domain.klassen.Klasse;
 
 /**
  * KlasseAPIModel
@@ -26,5 +26,49 @@ public class KlasseAPIModel implements Serializable {
 	private String name;
 
 	@JsonProperty
-	private TeilnahmeIdentifier teilnahmeIdentifier;
+	private String schulkuerzel;
+
+	public static KlasseAPIModel createFromKlasse(final Klasse klasse) {
+
+		KlasseAPIModel result = new KlasseAPIModel(klasse.identifier().identifier());
+		result.name = klasse.name();
+		result.schulkuerzel = klasse.schuleID().identifier();
+		return result;
+	}
+
+	public KlasseAPIModel() {
+
+	}
+
+	public KlasseAPIModel(final String uuid) {
+
+		this.uuid = uuid;
+	}
+
+	public String name() {
+
+		return name;
+	}
+
+	public KlasseAPIModel withName(final String name) {
+
+		this.name = name;
+		return this;
+	}
+
+	public String getUuid() {
+
+		return uuid;
+	}
+
+	public String schulkuerzel() {
+
+		return schulkuerzel;
+	}
+
+	public KlasseAPIModel withSchulkuerzel(final String schulkuerzel) {
+
+		this.schulkuerzel = schulkuerzel;
+		return this;
+	}
 }

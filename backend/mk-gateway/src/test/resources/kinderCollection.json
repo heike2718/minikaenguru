@@ -1,0 +1,103 @@
+{"kinder": [
+  {
+    "identifier": {
+      "identifier": "SCHULKUERZEL_1_KIND_1"
+    },
+    "teilnahmeIdentifier": {
+      "jahr": 2020,
+      "teilnahmenummer": "SCHULKUERZEL_1_KLASSE_2A",
+      "teilnahmeart": "SCHULE"
+    },
+    "vorname": "Rudi",
+    "nachname": "Rutsche",
+    "zusatz": null,
+    "klassenstufe": "ZWEI",
+    "sprache": "de",
+    "loesungszettelID": {
+      "identifier": "4054ed58-9074-43cb-bc76-c9eeeccc0e60"
+    },
+    "klasseID": {
+      "identifier": "SCHULKUERZEL_1_KLASSE_2A"
+    },
+    "landkuerzel": "DE-HH",
+    "lowerVornameNullSafe": "rudi",
+    "lowerNachnameNullSafe": "rutsche",
+    "lowerZusatzNullSafe": null
+  },
+  {
+    "identifier": {
+      "identifier": "SCHULKUERZEL_1_KIND_2"
+    },
+    "teilnahmeIdentifier": {
+      "jahr": 2020,
+      "teilnahmenummer": "SCHULKUERZEL_1_KLASSE_2A",
+      "teilnahmeart": "SCHULE"
+    },
+    "vorname": "Marie",
+    "nachname": "Mayer",
+    "zusatz": null,
+    "klassenstufe": "ZWEI",
+    "sprache": "de",
+    "loesungszettelID": {
+      "identifier": "2e2bb45f-d333-468b-ac93-5715851d5843"
+    },
+    "klasseID": {
+      "identifier": "SCHULKUERZEL_1_KLASSE_2A"
+    },
+    "landkuerzel": "DE-HH",
+    "lowerVornameNullSafe": "marie",
+    "lowerNachnameNullSafe": "mayer",
+    "lowerZusatzNullSafe": null
+  },
+  {
+    "identifier": {
+      "identifier": "SCHULKUERZEL_1_KIND_3"
+    },
+    "teilnahmeIdentifier": {
+      "jahr": 2020,
+      "teilnahmenummer": "SCHULKUERZEL_1_KLASSE_2B",
+      "teilnahmeart": "SCHULE"
+    },
+    "vorname": "Marie",
+    "nachname": "Mayer",
+    "zusatz": null,
+    "klassenstufe": "ZWEI",
+    "sprache": "de",
+    "loesungszettelID": {
+      "identifier": "472fba58-939a-4166-afd6-09cc7b619e2d"
+    },
+    "klasseID": {
+      "identifier": "SCHULKUERZEL_1_KLASSE_2B"
+    },
+    "landkuerzel": "DE-HH",
+    "lowerVornameNullSafe": "marie",
+    "lowerNachnameNullSafe": "mayer",
+    "lowerZusatzNullSafe": null
+  },
+  {
+    "identifier": {
+      "identifier": "SCHULKUERZEL_1_KIND_4"
+    },
+    "teilnahmeIdentifier": {
+      "jahr": 2020,
+      "teilnahmenummer": "SCHULKUERZEL_1_KLASSE_2B",
+      "teilnahmeart": "SCHULE"
+    },
+    "vorname": "Sophie",
+    "nachname": "Walter",
+    "zusatz": null,
+    "klassenstufe": "ZWEI",
+    "sprache": "de",
+    "loesungszettelID": {
+      "identifier": "a969178b-a848-4ee4-83be-2c083e576c44"
+    },
+    "klasseID": {
+      "identifier": "SCHULKUERZEL_1_KLASSE_2B"
+    },
+    "landkuerzel": "DE-HH",
+    "lowerVornameNullSafe": "sophie",
+    "lowerNachnameNullSafe": "walter",
+    "lowerZusatzNullSafe": null
+  }
+]}
+

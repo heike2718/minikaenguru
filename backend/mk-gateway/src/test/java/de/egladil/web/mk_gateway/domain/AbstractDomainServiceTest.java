@@ -23,7 +23,11 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbRepository;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
+import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryKinderRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryKlassenRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryLoesungszettelRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryTeilnahmenRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryUserRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryVeranstalterRepository;
 
 /**
@@ -65,9 +69,13 @@ public abstract class AbstractDomainServiceTest {
 
 	protected static final Integer WETTBEWERBSJAHR_AKTUELL = 2020;
 
+	private InMemoryUserRepository userRepository;
+
 	private InMemoryVeranstalterRepository veranstalterRepository;
 
 	private InMemoryTeilnahmenRepository teilnahmenRepository;
+
+	private InMemoryKlassenRepository klassenRepository;
 
 	private Wettbewerb aktuellerWettbewerb;
 
@@ -78,6 +86,10 @@ public abstract class AbstractDomainServiceTest {
 	private PrivatteilnahmeKuerzelService privatteilnameKuerzelService;
 
 	private WettbewerbRepository wettbewerbRepository;
+
+	private InMemoryLoesungszettelRepository loesungszettelRepository;
+
+	private InMemoryKinderRepository kinderRepository;
 
 	private int countWettbewerbInsert = 0;
 
@@ -97,9 +109,17 @@ public abstract class AbstractDomainServiceTest {
 
 		Mockito.when(wettbewerbRepository.loadWettbewerbe()).thenReturn(Arrays.asList(new Wettbewerb[] { aktuellerWettbewerb }));
 
+		userRepository = new InMemoryUserRepository();
+
 		veranstalterRepository = new InMemoryVeranstalterRepository();
 
 		teilnahmenRepository = new InMemoryTeilnahmenRepository();
+
+		klassenRepository = new InMemoryKlassenRepository();
+
+		loesungszettelRepository = new InMemoryLoesungszettelRepository();
+
+		kinderRepository = new InMemoryKinderRepository();
 
 		wettbewerbService = WettbewerbService.createForTest(wettbewerbRepository);
 
@@ -279,6 +299,26 @@ public abstract class AbstractDomainServiceTest {
 	protected int getCountChangeWettbewerbStatus() {
 
 		return countChangeWettbewerbStatus;
+	}
+
+	protected InMemoryKlassenRepository getKlassenRepository() {
+
+		return klassenRepository;
+	}
+
+	protected InMemoryLoesungszettelRepository getLoesungszettelRepository() {
+
+		return loesungszettelRepository;
+	}
+
+	protected InMemoryKinderRepository getKinderRepository() {
+
+		return kinderRepository;
+	}
+
+	protected InMemoryUserRepository getUserRepository() {
+
+		return userRepository;
 	}
 
 }

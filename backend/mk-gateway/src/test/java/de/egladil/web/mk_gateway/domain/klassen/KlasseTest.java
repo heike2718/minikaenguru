@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.kinder;
+package de.egladil.web.mk_gateway.domain.klassen;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -12,6 +12,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.kinder.Kind;
 
 /**
  * KlasseTest
@@ -56,7 +57,7 @@ public class KlasseTest {
 		// Assert
 		assertTrue(result);
 		assertEquals(1, klasse.kinder().size());
-		assertEquals(klasse.getIdentifier(), kind.klasseID());
+		assertEquals(klasse.identifier(), kind.klasseID());
 	}
 
 	@Test

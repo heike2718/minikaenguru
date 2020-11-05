@@ -61,4 +61,10 @@ public interface KinderRepository {
 	 */
 	boolean removeKind(Kind kind);
 
+	/**
+	 * @param  klasseID
+	 * @return
+	 */
+	int removeKinder(List<Kind> kinder);
+
 }
