@@ -17,9 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
-import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
-import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.entities.InMemoryKinderList;
 
 /**
@@ -49,16 +47,14 @@ public class InMemoryKinderRepository implements KinderRepository {
 	}
 
 	@Override
-	public List<Kind> findKinderWithTeilnahme(final Teilnahme teilnahme) {
-
-		TeilnahmeIdentifier teilnahmeIdentifier = TeilnahmeIdentifier.createFromTeilnahme(teilnahme);
+	public List<Kind> withTeilnahme(final TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdentifier) {
 
 		return alleKinder.values().stream().filter(k -> k.teilnahmeIdentifier().equals(teilnahmeIdentifier))
 			.collect(Collectors.toList());
 	}
 
 	@Override
-	public Optional<Kind> findKindWithIdentifier(final Identifier identifier, final WettbewerbID wettbewerbID) {
+	public Optional<Kind> withIdentifier(final Identifier identifier) {
 
 		Kind kind = alleKinder.get(identifier);
 

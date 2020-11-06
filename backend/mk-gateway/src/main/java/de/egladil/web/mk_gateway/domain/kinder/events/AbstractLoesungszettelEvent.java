@@ -2,15 +2,11 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.auswertungen;
+package de.egladil.web.mk_gateway.domain.kinder.events;
 
-import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import de.egladil.web.commons_net.time.CommonTimeUtils;
-import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
+import de.egladil.web.mk_gateway.domain.event.AbstractDomainEvent;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRohdaten;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
@@ -18,10 +14,7 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 /**
  * AbstractLoesungszettelEvent
  */
-public abstract class AbstractLoesungszettelEvent implements MkGatewayDomainEvent {
-
-	@JsonIgnore
-	private final LocalDateTime occuredOn;
+public abstract class AbstractLoesungszettelEvent extends AbstractDomainEvent {
 
 	@JsonProperty
 	private String uuid;
@@ -49,13 +42,13 @@ public abstract class AbstractLoesungszettelEvent implements MkGatewayDomainEven
 
 	AbstractLoesungszettelEvent() {
 
-		this.occuredOn = CommonTimeUtils.now();
+		super();
 
 	}
 
 	public AbstractLoesungszettelEvent(final String triggeringUser) {
 
-		this();
+		super();
 		this.triggeringUser = triggeringUser;
 	}
 
@@ -99,12 +92,6 @@ public abstract class AbstractLoesungszettelEvent implements MkGatewayDomainEven
 
 		this.spracheNeu = spracheNeu;
 		return this;
-	}
-
-	@Override
-	public LocalDateTime occuredOn() {
-
-		return null;
 	}
 
 }

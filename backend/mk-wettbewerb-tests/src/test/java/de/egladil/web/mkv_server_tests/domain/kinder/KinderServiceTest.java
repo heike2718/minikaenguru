@@ -18,9 +18,7 @@ import javax.persistence.PersistenceException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.auswertungen.LoesungszettelService;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
 import de.egladil.web.mk_gateway.domain.kinder.KinderService;
@@ -29,16 +27,7 @@ import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindRequestData;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
-import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
-import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KinderHibernateRepository;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KlassenHibernateRepository;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.TeilnahmenHibernateRepository;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UserHibernateRepository;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.VeranstalterHibernateRepository;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.WettbewerbHibernateRepository;
 import de.egladil.web.mkv_server_tests.AbstractIT;
 
 /**
@@ -57,25 +46,8 @@ public class KinderServiceTest extends AbstractIT {
 	protected void setUp() {
 
 		super.setUp();
-
-		WettbewerbService wettbewerbService = WettbewerbService
-			.createForTest(WettbewerbHibernateRepository.createForIntegrationTest(entityManager));
-
 		kinderRepository = KinderHibernateRepository.createForIntegrationTest(entityManager);
-
-		AuthorizationService authService = AuthorizationService.createForTest(
-			VeranstalterHibernateRepository.createForIntegrationTest(entityManager),
-			UserHibernateRepository.createForIntegrationTest(entityManager));
-		TeilnahmenRepository teilnahmenRepository = TeilnahmenHibernateRepository.createForIntegrationTest(entityManager);
-
-		VeranstalterRepository veranstalterRepository = VeranstalterHibernateRepository.createForIntegrationTest(entityManager);
-
-		LoesungszettelService loesungszettelService = LoesungszettelService
-			.createForTest(authService, LoesungszettelHibernateRepository.createForIntegrationTest(entityManager));
-
-		kinderService = KinderService.createForTest(authService, kinderRepository, teilnahmenRepository,
-			veranstalterRepository, wettbewerbService, loesungszettelService,
-			KlassenHibernateRepository.createForIntegrationTest(entityManager));
+		kinderService = KinderService.createForIntegrationTest(entityManager);
 
 	}
 
@@ -113,8 +85,7 @@ public class KinderServiceTest extends AbstractIT {
 
 				neueUuid = result.uuid();
 
-				Optional<Kind> optKind = kinderRepository.findKindWithIdentifier(new Identifier(neueUuid),
-					kinderService.getWettbewerbID());
+				Optional<Kind> optKind = kinderRepository.withIdentifier(new Identifier(neueUuid));
 
 				assertTrue(optKind.isPresent());
 
@@ -172,8 +143,7 @@ public class KinderServiceTest extends AbstractIT {
 
 				neueUuid = result.uuid();
 
-				Optional<Kind> optKind = kinderRepository.findKindWithIdentifier(new Identifier(neueUuid),
-					kinderService.getWettbewerbID());
+				Optional<Kind> optKind = kinderRepository.withIdentifier(new Identifier(neueUuid));
 
 				assertTrue(optKind.isPresent());
 
@@ -206,8 +176,7 @@ public class KinderServiceTest extends AbstractIT {
 
 				trx.commit();
 
-				Optional<Kind> optKind = kinderRepository.findKindWithIdentifier(new Identifier(neueUuid),
-					kinderService.getWettbewerbID());
+				Optional<Kind> optKind = kinderRepository.withIdentifier(new Identifier(neueUuid));
 
 				// Assert
 				assertTrue(optKind.isEmpty());

@@ -12,13 +12,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
-import de.egladil.web.mk_gateway.domain.klassen.Klasse;
+import de.egladil.web.mk_gateway.domain.kinder.Klasse;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
-import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistentesKind;
+import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistentesKindKindMapper;
 
 /**
  * TestdatenGenerator
@@ -65,6 +65,8 @@ public class TestdatenGenerator {
 		Teilnahmeart teilnahmeart = Teilnahmeart.SCHULE;
 		WettbewerbID wettbewerbID = new WettbewerbID(2020);
 
+		PersistentesKindKindMapper dbToDomainObjectMapper = new PersistentesKindKindMapper();
+
 		{
 
 			PersistentesKind kind = new PersistentesKind();
@@ -79,9 +81,7 @@ public class TestdatenGenerator {
 			kind.setTeilnahmeart(teilnahmeart);
 			kind.setTeilnahmenummer(schulkuerzel);
 
-			kinder.add(mapFromDB(kind,
-				new TeilnahmeIdentifier().withTeilnahmeart(teilnahmeart).withTeilnahmenummer("SCHULKUERZEL_1_KLASSE_2A")
-					.withWettbewerbID(wettbewerbID)));
+			kinder.add(dbToDomainObjectMapper.apply(kind));
 		}
 
 		{
@@ -98,9 +98,7 @@ public class TestdatenGenerator {
 			kind.setTeilnahmeart(teilnahmeart);
 			kind.setTeilnahmenummer(schulkuerzel);
 
-			kinder.add(mapFromDB(kind,
-				new TeilnahmeIdentifier().withTeilnahmeart(teilnahmeart).withTeilnahmenummer("SCHULKUERZEL_1_KLASSE_2A")
-					.withWettbewerbID(wettbewerbID)));
+			kinder.add(dbToDomainObjectMapper.apply(kind));
 		}
 
 		{
@@ -117,9 +115,7 @@ public class TestdatenGenerator {
 			kind.setTeilnahmeart(teilnahmeart);
 			kind.setTeilnahmenummer(schulkuerzel);
 
-			kinder.add(mapFromDB(kind,
-				new TeilnahmeIdentifier().withTeilnahmeart(teilnahmeart).withTeilnahmenummer("SCHULKUERZEL_1_KLASSE_2B")
-					.withWettbewerbID(wettbewerbID)));
+			kinder.add(dbToDomainObjectMapper.apply(kind));
 		}
 
 		{
@@ -136,9 +132,7 @@ public class TestdatenGenerator {
 			kind.setTeilnahmeart(teilnahmeart);
 			kind.setTeilnahmenummer(schulkuerzel);
 
-			kinder.add(mapFromDB(kind,
-				new TeilnahmeIdentifier().withTeilnahmeart(teilnahmeart).withTeilnahmenummer("SCHULKUERZEL_1_KLASSE_2B")
-					.withWettbewerbID(wettbewerbID)));
+			kinder.add(dbToDomainObjectMapper.apply(kind));
 		}
 
 		{
@@ -153,9 +147,7 @@ public class TestdatenGenerator {
 			kind.setTeilnahmeart(Teilnahmeart.PRIVAT);
 			kind.setTeilnahmenummer("TEILNAHMENUMMER_PRIVAT");
 
-			kinder.add(mapFromDB(kind,
-				new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.PRIVAT).withTeilnahmenummer("TEILNAHMENUMMER_PRIVAT")
-					.withWettbewerbID(wettbewerbID)));
+			kinder.add(dbToDomainObjectMapper.apply(kind));
 		}
 
 		ObjectMapper om = new ObjectMapper();
@@ -167,30 +159,6 @@ public class TestdatenGenerator {
 
 		System.out.println(kinderSerialized);
 
-	}
-
-	Kind mapFromDB(final PersistentesKind persistentesKind, final TeilnahmeIdentifier teilnahmeIdentifier) {
-
-		Kind result = new Kind(new Identifier(persistentesKind.getUuid()))
-			.withKlassenstufe(persistentesKind.getKlassenstufe())
-			.withLandkuerzel(persistentesKind.getLandkuerzel())
-			.withNachname(persistentesKind.getNachname())
-			.withSprache(persistentesKind.getSprache())
-			.withTeilnahmeIdentifier(teilnahmeIdentifier)
-			.withVorname(persistentesKind.getVorname())
-			.withZusatz(persistentesKind.getZusatz());
-
-		if (persistentesKind.getLoesungszettelUUID() != null) {
-
-			result = result.withLoesungszettelID(new Identifier(persistentesKind.getLoesungszettelUUID()));
-		}
-
-		if (persistentesKind.getKlasseUUID() != null) {
-
-			result = result.withKlasseID(new Identifier(persistentesKind.getKlasseUUID()));
-		}
-
-		return result;
 	}
 
 }

@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.klassen.api;
+package de.egladil.web.mk_gateway.domain.kinder.api;
 
 import java.io.Serializable;
 

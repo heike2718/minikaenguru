@@ -9,7 +9,7 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import de.egladil.web.mk_gateway.domain.klassen.Klasse;
+import de.egladil.web.mk_gateway.domain.kinder.Klasse;
 
 /**
  * KlasseAPIModel

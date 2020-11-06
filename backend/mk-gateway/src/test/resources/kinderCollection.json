@@ -4,8 +4,7 @@
       "identifier": "SCHULKUERZEL_1_KIND_1"
     },
     "teilnahmeIdentifier": {
-      "jahr": 2020,
-      "teilnahmenummer": "SCHULKUERZEL_1_KLASSE_2A",
+      "teilnahmenummer": "SCHULKUERZEL_1",
       "teilnahmeart": "SCHULE"
     },
     "vorname": "Rudi",
@@ -19,18 +18,14 @@
     "klasseID": {
       "identifier": "SCHULKUERZEL_1_KLASSE_2A"
     },
-    "landkuerzel": "DE-HH",
-    "lowerVornameNullSafe": "rudi",
-    "lowerNachnameNullSafe": "rutsche",
-    "lowerZusatzNullSafe": null
+    "landkuerzel": null
   },
   {
     "identifier": {
       "identifier": "SCHULKUERZEL_1_KIND_2"
     },
     "teilnahmeIdentifier": {
-      "jahr": 2020,
-      "teilnahmenummer": "SCHULKUERZEL_1_KLASSE_2A",
+      "teilnahmenummer": "SCHULKUERZEL_1",
       "teilnahmeart": "SCHULE"
     },
     "vorname": "Marie",
@@ -44,18 +39,14 @@
     "klasseID": {
       "identifier": "SCHULKUERZEL_1_KLASSE_2A"
     },
-    "landkuerzel": "DE-HH",
-    "lowerVornameNullSafe": "marie",
-    "lowerNachnameNullSafe": "mayer",
-    "lowerZusatzNullSafe": null
+    "landkuerzel": null
   },
   {
     "identifier": {
       "identifier": "SCHULKUERZEL_1_KIND_3"
     },
     "teilnahmeIdentifier": {
-      "jahr": 2020,
-      "teilnahmenummer": "SCHULKUERZEL_1_KLASSE_2B",
+      "teilnahmenummer": "SCHULKUERZEL_1",
       "teilnahmeart": "SCHULE"
     },
     "vorname": "Marie",
@@ -69,18 +60,14 @@
     "klasseID": {
       "identifier": "SCHULKUERZEL_1_KLASSE_2B"
     },
-    "landkuerzel": "DE-HH",
-    "lowerVornameNullSafe": "marie",
-    "lowerNachnameNullSafe": "mayer",
-    "lowerZusatzNullSafe": null
+    "landkuerzel": null
   },
   {
     "identifier": {
       "identifier": "SCHULKUERZEL_1_KIND_4"
     },
     "teilnahmeIdentifier": {
-      "jahr": 2020,
-      "teilnahmenummer": "SCHULKUERZEL_1_KLASSE_2B",
+      "teilnahmenummer": "SCHULKUERZEL_1",
       "teilnahmeart": "SCHULE"
     },
     "vorname": "Sophie",
@@ -94,10 +81,26 @@
     "klasseID": {
       "identifier": "SCHULKUERZEL_1_KLASSE_2B"
     },
-    "landkuerzel": "DE-HH",
-    "lowerVornameNullSafe": "sophie",
-    "lowerNachnameNullSafe": "walter",
-    "lowerZusatzNullSafe": null
+    "landkuerzel": null
+  },
+  {
+    "identifier": {
+      "identifier": "TEILNAHMENUMMER_PRIVAT_KIND_1"
+    },
+    "teilnahmeIdentifier": {
+      "teilnahmenummer": "TEILNAHMENUMMER_PRIVAT",
+      "teilnahmeart": "PRIVAT"
+    },
+    "vorname": "Rainer",
+    "nachname": "Traubenzucker",
+    "zusatz": null,
+    "klassenstufe": "ZWEI",
+    "sprache": "de",
+    "loesungszettelID": {
+      "identifier": "bffa4611-69e0-48d5-b483-2c829d3e534d"
+    },
+    "klasseID": null,
+    "landkuerzel": null
   }
 ]}
 

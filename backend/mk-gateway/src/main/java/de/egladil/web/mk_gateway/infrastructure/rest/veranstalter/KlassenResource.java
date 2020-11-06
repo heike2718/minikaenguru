@@ -31,9 +31,9 @@ import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.DuplikatWarnungModel;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.Duplikatkontext;
+import de.egladil.web.mk_gateway.domain.kinder.KlassenService;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseAPIModel;
-import de.egladil.web.mk_gateway.domain.klassen.KlassenService;
-import de.egladil.web.mk_gateway.domain.klassen.api.KlasseRequestData;
+import de.egladil.web.mk_gateway.domain.kinder.api.KlasseRequestData;
 
 /**
  * KlassenResource

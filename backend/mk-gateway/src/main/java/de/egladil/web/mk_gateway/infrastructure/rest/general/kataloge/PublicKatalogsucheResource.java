@@ -83,5 +83,4 @@ public class PublicKatalogsucheResource {
 
 		return this.katalogResourceAdapter.sendeSchulkatalogAntrag(antrag);
 	}
-
 }

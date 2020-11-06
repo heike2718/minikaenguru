@@ -16,7 +16,7 @@ import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
 import de.egladil.web.mk_gateway.domain.semantik.AggregateRoot;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
-import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
 
 /**
  * Kind
@@ -28,7 +28,7 @@ public class Kind {
 	private Identifier identifier;
 
 	@JsonProperty
-	private TeilnahmeIdentifier teilnahmeIdentifier;
+	private TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdentifier;
 
 	@JsonProperty
 	private String vorname;
@@ -79,12 +79,12 @@ public class Kind {
 		return identifier;
 	}
 
-	public TeilnahmeIdentifier teilnahmeIdentifier() {
+	public TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdentifier() {
 
 		return teilnahmeIdentifier;
 	}
 
-	public Kind withTeilnahmeIdentifier(final TeilnahmeIdentifier teilnahmeIdentifier) {
+	public Kind withTeilnahmeIdentifier(final TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdentifier) {
 
 		this.teilnahmeIdentifier = teilnahmeIdentifier;
 		return this;

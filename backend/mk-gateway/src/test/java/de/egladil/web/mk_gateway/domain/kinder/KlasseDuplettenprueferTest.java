@@ -2,13 +2,15 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.klassen;
+package de.egladil.web.mk_gateway.domain.kinder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.kinder.Klasse;
+import de.egladil.web.mk_gateway.domain.kinder.KlasseDuplettenpruefer;
 
 /**
  * KlasseDuplettenprueferTest

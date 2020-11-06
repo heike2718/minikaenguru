@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.klassen;
+package de.egladil.web.mk_gateway.domain.kinder;
 
 import java.util.function.BiFunction;
 

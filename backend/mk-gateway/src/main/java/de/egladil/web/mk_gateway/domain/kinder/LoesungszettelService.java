@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.auswertungen;
+package de.egladil.web.mk_gateway.domain.kinder;
 
 import java.util.Optional;
 
@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelChanged;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRohdaten;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
@@ -75,7 +76,7 @@ public class LoesungszettelService {
 	 * @param  veranstalterUuid
 	 * @return                  boolean
 	 */
-	public boolean loesungszettelLoeschenWithoutAuthorizationCheck(final Identifier identifier, final String veranstalterUuid) {
+	boolean loesungszettelLoeschenWithoutAuthorizationCheck(final Identifier identifier, final String veranstalterUuid) {
 
 		return this.loesungszettelRepository.removeLoesungszettel(identifier, veranstalterUuid);
 	}

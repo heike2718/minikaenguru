@@ -4,22 +4,15 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.event;
 
-import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.mk_gateway.domain.semantik.DomainEvent;
 
 /**
  * DataInconsistencyRegistered
  */
 @DomainEvent
-public class DataInconsistencyRegistered implements MkGatewayDomainEvent {
-
-	@JsonIgnore
-	private final LocalDateTime occuredOn;
+public class DataInconsistencyRegistered extends AbstractDomainEvent {
 
 	@JsonProperty
 	private String message;
@@ -27,7 +20,6 @@ public class DataInconsistencyRegistered implements MkGatewayDomainEvent {
 	DataInconsistencyRegistered() {
 
 		super();
-		this.occuredOn = CommonTimeUtils.now();
 
 	}
 
@@ -36,12 +28,6 @@ public class DataInconsistencyRegistered implements MkGatewayDomainEvent {
 		this();
 		this.message = message;
 
-	}
-
-	@Override
-	public LocalDateTime occuredOn() {
-
-		return occuredOn;
 	}
 
 	@Override

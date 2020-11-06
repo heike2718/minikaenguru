@@ -17,8 +17,7 @@ import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
-import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KinderHibernateRepository;
 import de.egladil.web.mkv_server_tests.AbstractIT;
 
@@ -41,8 +40,8 @@ public class KinderHibernateRepositoryTest extends AbstractIT {
 	void should_addKind_work() {
 
 		// Arrange
-		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.PRIVAT)
-			.withTeilnahmenummer("5SBB0D8PUR").withWettbewerbID(new WettbewerbID(2020));
+		TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdentifier = new TeilnahmeIdentifierAktuellerWettbewerb("5SBB0D8PUR",
+			Teilnahmeart.PRIVAT);
 
 		Kind kind = new Kind().withKlassenstufe(Klassenstufe.ZWEI).withNachname("Meier").withSprache(Sprache.de)
 			.withVorname("Emma").withTeilnahmeIdentifier(teilnahmeIdentifier);
@@ -64,7 +63,6 @@ public class KinderHibernateRepositoryTest extends AbstractIT {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
-
 	}
 
 }

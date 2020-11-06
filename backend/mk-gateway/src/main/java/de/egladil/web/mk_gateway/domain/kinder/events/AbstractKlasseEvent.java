@@ -2,25 +2,16 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.klassen.events;
+package de.egladil.web.mk_gateway.domain.kinder.events;
 
-import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import de.egladil.web.commons_net.time.CommonTimeUtils;
-import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
+import de.egladil.web.mk_gateway.domain.event.AbstractDomainEvent;
 
 /**
  * AbstractKlasseEvent
  */
-public abstract class AbstractKlasseEvent implements MkGatewayDomainEvent {
-
-	@JsonIgnore
-	private final LocalDateTime occuredOn;
+public abstract class AbstractKlasseEvent extends AbstractDomainEvent {
 
 	@JsonProperty
 	private String klasseID;
@@ -39,19 +30,13 @@ public abstract class AbstractKlasseEvent implements MkGatewayDomainEvent {
 	 */
 	AbstractKlasseEvent() {
 
-		this.occuredOn = CommonTimeUtils.now();
+		super();
 	}
 
 	public AbstractKlasseEvent(final String triggeringUser) {
 
-		this();
+		super();
 		this.triggeringUser = triggeringUser;
-	}
-
-	@Override
-	public LocalDateTime occuredOn() {
-
-		return this.occuredOn;
 	}
 
 	public String klasseID() {
@@ -91,18 +76,4 @@ public abstract class AbstractKlasseEvent implements MkGatewayDomainEvent {
 		this.name = name;
 		return this;
 	}
-
-	public String serializeQuietly() {
-
-		try {
-
-			String body = new ObjectMapper().writeValueAsString(this);
-			return body;
-		} catch (JsonProcessingException e) {
-
-			e.printStackTrace();
-			return e.getMessage();
-		}
-	}
-
 }

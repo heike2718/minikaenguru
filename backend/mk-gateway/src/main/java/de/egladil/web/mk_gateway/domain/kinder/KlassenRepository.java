@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.klassen;
+package de.egladil.web.mk_gateway.domain.kinder;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,5 +36,23 @@ public interface KlassenRepository {
 	 * @return        Klasse die neue
 	 */
 	Klasse addKlasse(Klasse klasse);
+
+	/**
+	 * Ändert eine vorhandene Klasse.
+	 *
+	 * @param  klasse
+	 * @return        Klasse
+	 */
+	Klasse changeKlasse(Klasse klasse);
+
+	/**
+	 * Vorhandene Klasse wird gelöscht. Dies ist Teil eines UnitOfWork, in dem alle Kinder der Klasse und deren Lösungszettel
+	 * ebenfalls gelöscht werden müssen. De Transaktionsklammer beginnt also weiter außen.
+	 *
+	 * @param  klasse
+	 *                Klasse
+	 * @return        boolean true, falls gelöscht, false sonst.
+	 */
+	boolean removeKlasse(Klasse klasse);
 
 }

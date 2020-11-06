@@ -11,11 +11,13 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.ws.rs.NotFoundException;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.klassen.Klasse;
-import de.egladil.web.mk_gateway.domain.klassen.KlassenRepository;
+import de.egladil.web.mk_gateway.domain.kinder.Klasse;
+import de.egladil.web.mk_gateway.domain.kinder.KlassenRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.entities.InMemoryKlassenList;
 
 /**
@@ -23,7 +25,7 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.entities.I
  */
 public class InMemoryKlassenRepository implements KlassenRepository {
 
-	final List<Klasse> klassen = new ArrayList<>();
+	private final List<Klasse> klassen = new ArrayList<>();
 
 	public InMemoryKlassenRepository() {
 
@@ -67,6 +69,36 @@ public class InMemoryKlassenRepository implements KlassenRepository {
 		this.klassen.add(neue);
 
 		return neue;
+	}
+
+	@Override
+	public Klasse changeKlasse(final Klasse klasse) {
+
+		Optional<Klasse> opt = klassen.stream().filter(kl -> kl.identifier().equals(klasse.identifier())).findFirst();
+
+		if (opt.isEmpty()) {
+
+			throw new NotFoundException("Klasse mit UUID=" + klasse.identifier() + " gibt es nicht");
+		}
+
+		Klasse geaenderte = opt.get().withName(klasse.name());
+
+		return geaenderte;
+	}
+
+	@Override
+	public boolean removeKlasse(final Klasse klasse) {
+
+		Optional<Klasse> opt = klassen.stream().filter(kl -> kl.identifier().equals(klasse.identifier())).findFirst();
+
+		if (opt.isEmpty()) {
+
+			return false;
+		}
+
+		klassen.remove(opt.get());
+
+		return true;
 	}
 
 }

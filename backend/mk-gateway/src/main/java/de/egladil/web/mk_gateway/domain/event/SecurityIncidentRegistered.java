@@ -4,29 +4,22 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.event;
 
-import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.mk_gateway.domain.semantik.DomainEvent;
 
 /**
  * SecurityIncidentRegistered
  */
 @DomainEvent
-public class SecurityIncidentRegistered implements MkGatewayDomainEvent {
-
-	@JsonIgnore
-	private final LocalDateTime occuredOn;
+public class SecurityIncidentRegistered extends AbstractDomainEvent {
 
 	@JsonProperty
 	private String message;
 
 	SecurityIncidentRegistered() {
 
-		this.occuredOn = CommonTimeUtils.now();
+		super();
 
 	}
 
@@ -35,12 +28,6 @@ public class SecurityIncidentRegistered implements MkGatewayDomainEvent {
 		this();
 		this.message = message;
 
-	}
-
-	@Override
-	public LocalDateTime occuredOn() {
-
-		return this.occuredOn;
 	}
 
 	@Override

@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.klassen;
+package de.egladil.web.mk_gateway.domain.kinder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,8 +13,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.kinder.Kind;
-import de.egladil.web.mk_gateway.domain.kinder.KindDublettenpruefer;
 import de.egladil.web.mk_gateway.domain.semantik.AggregateRoot;
 
 /**

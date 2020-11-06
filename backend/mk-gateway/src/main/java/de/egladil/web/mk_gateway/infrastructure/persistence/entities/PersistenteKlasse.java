@@ -18,7 +18,7 @@ import javax.persistence.Table;
 @NamedQueries({
 	@NamedQuery(
 		name = "PersistenteKlasse.FIND_KLASSEN_WITH_SCHULE",
-		query = "select k of PersistenteKlasse k where k.schulkuerzel = :schulkuerzel")
+		query = "select k from PersistenteKlasse k where k.schulkuerzel = :schulkuerzel order by k.uuid")
 })
 public class PersistenteKlasse extends ConcurrencySafeEntity {
 

@@ -15,8 +15,8 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.klassen.Klasse;
-import de.egladil.web.mk_gateway.domain.klassen.KlassenRepository;
+import de.egladil.web.mk_gateway.domain.kinder.Klasse;
+import de.egladil.web.mk_gateway.domain.kinder.KlassenRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenteKlasse;
 
 /**
@@ -38,7 +38,7 @@ public class KlassenHibernateRepository implements KlassenRepository {
 	@Override
 	public Optional<Klasse> ofIdentifier(final Identifier klasseID) {
 
-		PersistenteKlasse persistenteKlasse = em.find(PersistenteKlasse.class, klasseID.identifier());
+		PersistenteKlasse persistenteKlasse = findPersistenteKlasse(klasseID);
 
 		if (persistenteKlasse == null) {
 
@@ -82,6 +82,38 @@ public class KlassenHibernateRepository implements KlassenRepository {
 
 		return new Klasse(new Identifier(persistenteKlasse.getUuid())).withName(persistenteKlasse.getName())
 			.withSchuleID(new Identifier(persistenteKlasse.getSchulkuerzel()));
+	}
+
+	@Override
+	@Transactional
+	public Klasse changeKlasse(final Klasse klasse) {
+
+		PersistenteKlasse persistenteKlasse = findPersistenteKlasse(klasse.identifier());
+		persistenteKlasse.setName(klasse.name());
+
+		em.merge(persistenteKlasse);
+
+		return mapFromDB(persistenteKlasse);
+	}
+
+	@Override
+	public boolean removeKlasse(final Klasse klasse) {
+
+		PersistenteKlasse persistenteKlasse = findPersistenteKlasse(klasse.identifier());
+
+		if (persistenteKlasse == null) {
+
+			return false;
+		}
+
+		em.remove(persistenteKlasse);
+		return true;
+	}
+
+	private PersistenteKlasse findPersistenteKlasse(final Identifier klasseID) {
+
+		PersistenteKlasse persistenteKlasse = em.find(PersistenteKlasse.class, klasseID.identifier());
+		return persistenteKlasse;
 	}
 
 }

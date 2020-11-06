@@ -27,6 +27,9 @@ public class LoggableEventDelegate {
 		if (dataInconsistencyEvent != null) {
 
 			dataInconsistencyEvent.fire(dataInconsistencyRegistered);
+		} else {
+
+			System.out.println(dataInconsistencyRegistered.serializeQuietly());
 		}
 
 		return dataInconsistencyRegistered;
@@ -49,6 +52,9 @@ public class LoggableEventDelegate {
 		if (securityIncidentEvent != null) {
 
 			securityIncidentEvent.fire(securityIncidentRegistered);
+		} else {
+
+			System.out.println(securityIncidentRegistered.serializeQuietly());
 		}
 
 		return securityIncidentRegistered;

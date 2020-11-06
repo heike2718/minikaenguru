@@ -7,10 +7,12 @@ package de.egladil.web.mk_gateway.domain.kinder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
 
@@ -19,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.auswertungen.LoesungszettelService;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
@@ -29,16 +30,22 @@ import de.egladil.web.mk_gateway.domain.kinder.api.KindRequestData;
 import de.egladil.web.mk_gateway.domain.kinder.events.KindChanged;
 import de.egladil.web.mk_gateway.domain.kinder.events.KindCreated;
 import de.egladil.web.mk_gateway.domain.kinder.events.KindDeleted;
-import de.egladil.web.mk_gateway.domain.klassen.Klasse;
-import de.egladil.web.mk_gateway.domain.klassen.KlassenRepository;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KinderHibernateRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KlassenHibernateRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.TeilnahmenHibernateRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UserHibernateRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.VeranstalterHibernateRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.WettbewerbHibernateRepository;
 
 /**
  * KinderService
@@ -104,6 +111,35 @@ public class KinderService {
 		return result;
 	}
 
+	public static KinderService createForIntegrationTest(final EntityManager em) {
+
+		VeranstalterRepository veranstalterRepository = VeranstalterHibernateRepository.createForIntegrationTest(em);
+
+		AuthorizationService authService = AuthorizationService.createForTest(
+			veranstalterRepository, UserHibernateRepository.createForIntegrationTest(em));
+
+		KinderRepository kinderRepository = KinderHibernateRepository.createForIntegrationTest(em);
+		TeilnahmenRepository teilnahmenRepository = TeilnahmenHibernateRepository.createForIntegrationTest(em);
+		WettbewerbService wettbewerbService = WettbewerbService
+			.createForTest(WettbewerbHibernateRepository.createForIntegrationTest(em));
+
+		LoesungszettelService loesungszettelService = LoesungszettelService.createForTest(authService,
+			LoesungszettelHibernateRepository.createForIntegrationTest(em));
+
+		KlassenRepository klassenRepository = KlassenHibernateRepository.createForIntegrationTest(em);
+
+		KinderService result = new KinderService();
+		result.authService = authService;
+		result.kinderRepository = kinderRepository;
+		result.klassenRepository = klassenRepository;
+		result.loesungszettelService = loesungszettelService;
+		result.teilnahmenRepository = teilnahmenRepository;
+		result.veranstalterRepository = veranstalterRepository;
+		result.wettbewerbService = wettbewerbService;
+		return result;
+
+	}
+
 	/**
 	 * Prüft, ob das gegebene Kind evtl. eine Dublette wäre.
 	 *
@@ -120,7 +156,7 @@ public class KinderService {
 		authService.checkPermissionForTeilnahmenummer(new Identifier(veranstalterUuid), teilnahme.teilnahmenummer(),
 			"[kindAnlegen - teilnahmenummer=" + teilnahme.teilnahmenummer().identifier() + "]");
 
-		List<Kind> kinder = kinderRepository.findKinderWithTeilnahme(teilnahme);
+		List<Kind> kinder = kinderRepository.withTeilnahme(TeilnahmeIdentifierAktuellerWettbewerb.createFromTeilnahme(teilnahme));
 
 		if (kinder.isEmpty()) {
 
@@ -161,13 +197,15 @@ public class KinderService {
 		authService.checkPermissionForTeilnahmenummer(new Identifier(veranstalterUuid), teilnahme.teilnahmenummer(),
 			"[kindAnlegen - teilnahmenummer=" + teilnahme.teilnahmenummer().identifier() + "]");
 
-		Kind kind = new Kind().withDaten(daten.kind()).withTeilnahmeIdentifier(teilnahme.teilnahmeIdentifier());
+		Kind kind = new Kind().withDaten(daten.kind())
+			.withTeilnahmeIdentifier(TeilnahmeIdentifierAktuellerWettbewerb.createFromTeilnahme(teilnahme));
 
 		Kind gespeichertesKind = kinderRepository.addKind(kind);
 
 		KindAPIModel result = KindAPIModel.createFromKind(gespeichertesKind);
 
-		kindCreated = (KindCreated) new KindCreated(veranstalterUuid).withKindID(result.uuid())
+		kindCreated = (KindCreated) new KindCreated(veranstalterUuid)
+			.withKindID(result.uuid())
 			.withKlassenstufe(gespeichertesKind.klassenstufe())
 			.withSprache(gespeichertesKind.sprache())
 			.withTeilnahmenummer(teilnahme.teilnahmenummer().identifier());
@@ -177,7 +215,7 @@ public class KinderService {
 			this.kindCreatedEvent.fire(kindCreated);
 		} else {
 
-			System.out.println("kindCreated: " + kindCreated.serializeQuietly());
+			System.out.println(kindCreated.typeName() + ": " + kindCreated.serializeQuietly());
 		}
 
 		return result;
@@ -186,7 +224,7 @@ public class KinderService {
 	@Transactional
 	public KindAPIModel kindAendern(final KindRequestData daten, final String veranstalterUuid) {
 
-		Optional<Kind> optKind = kinderRepository.findKindWithIdentifier(new Identifier(daten.uuid()), getWettbewerbID());
+		Optional<Kind> optKind = kinderRepository.withIdentifier(new Identifier(daten.uuid()));
 
 		if (optKind.isEmpty()) {
 
@@ -238,7 +276,7 @@ public class KinderService {
 				kindChangedEvent.fire(kindChanged);
 			} else {
 
-				System.out.println("kindChanged: " + kindChanged.serializeQuietly());
+				System.out.println(kindChanged.typeName() + ": " + kindChanged.serializeQuietly());
 			}
 		}
 
@@ -257,7 +295,7 @@ public class KinderService {
 	@Transactional
 	public KindAPIModel kindLoeschen(final String uuid, final String veranstalterUuid) {
 
-		Optional<Kind> optKind = kinderRepository.findKindWithIdentifier(new Identifier(uuid), getWettbewerbID());
+		Optional<Kind> optKind = kinderRepository.withIdentifier(new Identifier(uuid));
 
 		if (optKind.isEmpty()) {
 
@@ -269,6 +307,20 @@ public class KinderService {
 
 		authService.checkPermissionForTeilnahmenummer(new Identifier(veranstalterUuid),
 			new Identifier(kind.teilnahmeIdentifier().teilnahmenummer()), "[kindLoeschen - kindUUID=" + uuid + "]");
+
+		kindLoeschenWithoutAuthorizationCheck(kind, veranstalterUuid);
+
+		return KindAPIModel.createFromKind(kind);
+	}
+
+	/**
+	 * Löscht das gegebene Kind ohne erneute Autorisierung.
+	 *
+	 * @param  kind
+	 * @param  veranstalterUuid
+	 * @return
+	 */
+	boolean kindLoeschenWithoutAuthorizationCheck(final Kind kind, final String veranstalterUuid) {
 
 		if (kind.loesungszettelID() != null) {
 
@@ -290,11 +342,12 @@ public class KinderService {
 				this.kindDeletedEvent.fire(kindDeleted);
 			} else {
 
-				System.out.println("kindDeleted: " + kindDeleted.serializeQuietly());
+				System.out.println(kindDeleted.typeName() + ": " + kindDeleted.serializeQuietly());
 			}
 		}
 
-		return KindAPIModel.createFromKind(kind);
+		return removed;
+
 	}
 
 	public List<KindAPIModel> kinderZuTeilnahmeLaden(final String teilnahmenummer, final String veranstalterUuid) {
@@ -317,12 +370,21 @@ public class KinderService {
 
 		Teilnahme aktuelleTeilnahme = optTeilnahme.get();
 
-		List<Kind> kinder = this.kinderRepository.findKinderWithTeilnahme(aktuelleTeilnahme);
+		List<Kind> kinder = this.kinderRepository
+			.withTeilnahme(TeilnahmeIdentifierAktuellerWettbewerb.createFromTeilnahme(aktuelleTeilnahme));
 		final List<KindAPIModel> result = new ArrayList<>();
 
 		kinder.forEach(kind -> result.add(KindAPIModel.createFromKind(kind)));
 
 		return result;
+	}
+
+	List<Kind> findKinderMitKlasseWithoutAuthorization(final Identifier klasseID, final TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdentifier) {
+
+		List<Kind> kinder = kinderRepository.withTeilnahme(teilnahmeIdentifier).stream().filter(k -> klasseID.equals(k.klasseID()))
+			.collect(Collectors.toList());
+
+		return kinder;
 	}
 
 	private String getTeilnahmenummerFromKlasse(final String klasseUuid) {
