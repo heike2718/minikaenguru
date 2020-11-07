@@ -9,7 +9,9 @@ export { DownloadFacade } from './lib/download/download.facade';
 export { DownloadButtonModel, DownloadCardModel } from './lib/download/download.model';
 
 export {
+	Teilnahmeart,
 	TeilnahmeIdentifier,
+	TeilnahmeIdentifierAktuellerWettbewerb,
 	Teilnahme,
 	Klassenstufenart,
 	Sprachtyp,
@@ -17,16 +19,21 @@ export {
 	Klassenstufe,
 	Sprache,
 	Kind,
-	Klasse,
 	KindEditorModel,
 	Duplikatwarnung,
-	PrivatkindRequestData,
+	KindRequestData,
 	KEINE_UUID,
 	ALL_KLASSENSTUFEN,
 	ALL_SPRACHEN,
+	Klasse,
+	KlasseEditorModel,
+	KlasseRequestData,
+	initialKindEditorModel,
+	initialKlasseEditorModel,
 	getKlassenstufeByLabel,
 	getSpracheByLabel,
-	compareKinder
+	compareKinder,
+	compareKlassen
 } from './lib/common-components.model';
 
 export { AnonymisierteTeilnahmeComponent } from './lib/anonymisierte-teilnahme/anonymisierte-teilnahme.component';

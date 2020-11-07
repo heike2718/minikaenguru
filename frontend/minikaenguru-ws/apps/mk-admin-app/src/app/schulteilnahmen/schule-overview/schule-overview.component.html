@@ -39,29 +39,19 @@
 				</div>
 			</div>
 
-			<ng-container *ngIf="schule.aktuelleTeilnahme">
+			<ng-container *ngIf="schule.angemeldetDurch">
 				<div class="card mt-2">
 					<div class="card-body">
 						<div class="card-title">Aktuelle Teilnahme</div>
 						<div class="card-text">
 							<div class="row">
 								<div class="col-sm-12 col-md-3">Name auf Urkunde:</div>
-								<div class="col-sm-12 col-md-9">{{schule.aktuelleTeilnahme.nameUrkunde}}</div>
+								<div class="col-sm-12 col-md-9">{{schule.nameUrkunde}}</div>
 							</div>
 
 							<div class="row">
 								<div class="col-sm-12 col-md-3">Angemeldet durch:</div>
-								<div class="col-sm-12 col-md-9">{{schule.aktuelleTeilnahme.angemeldetDurch}}</div>
-							</div>
-
-							<div class="row">
-								<div class="col-sm-12 col-md-3">Anzahl Klassen:</div>
-								<div class="col-sm-12 col-md-9">{{schule.aktuelleTeilnahme.anzahlKlassen}}</div>
-							</div>
-
-							<div class="row">
-								<div class="col-sm-12 col-md-3">Anzahl Kinder:</div>
-								<div class="col-sm-12 col-md-9">{{schule.aktuelleTeilnahme.anzahlKinder}}</div>
+								<div class="col-sm-12 col-md-9">{{schule.angemeldetDurch}}</div>
 							</div>
 						</div>
 					</div>
@@ -69,6 +59,8 @@
 			</ng-container>
 
 			<ng-container *ngIf="schule.schulteilnahmen && schule.schulteilnahmen.length > 0" class="mt-2">
+
+				<div class="m-12 mt-2 alert-info"><strong class="ml-2">anonymisierte Teilnahmen:</strong></div>
 
 				<div *ngFor="let teilnahme of schule.schulteilnahmen">
 					<mk-anonymisierte-teilnahme [teilnahme]="teilnahme" [statistikUrlPrefix]="statistikUrlPrefix"></mk-anonymisierte-teilnahme>

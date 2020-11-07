@@ -4,7 +4,15 @@ import { AppState } from '../reducers';
 import * as KinderSelectors from './+state/kinder.selectors';
 import * as KinderActions from './+state/kinder.actions';
 import { Observable, of, Subscription, from } from 'rxjs';
-import { Kind, KindEditorModel, Duplikatwarnung, PrivatkindRequestData, getKlassenstufeByLabel, getSpracheByLabel, TeilnahmeIdentifier } from '@minikaenguru-ws/common-components';
+import { Kind
+	, KindEditorModel
+	, Duplikatwarnung
+	, KindRequestData
+	, getKlassenstufeByLabel
+	, getSpracheByLabel
+	, TeilnahmeIdentifier
+	, TeilnahmeIdentifierAktuellerWettbewerb
+	, Teilnahmeart } from '@minikaenguru-ws/common-components';
 import { AuthService, User, STORAGE_KEY_USER, Rolle } from '@minikaenguru-ws/common-auth';
 import { KinderService } from './kinder.service';
 import { take, map } from 'rxjs/operators';
@@ -13,8 +21,6 @@ import { KindWithID } from './kinder.model';
 import { ThrowStmt } from '@angular/compiler';
 import { Message, MessageService } from '@minikaenguru-ws/common-messages';
 import { environment } from '../../environments/environment';
-import { Wettbewerb } from '../wettbewerb/wettbewerb.model';
-import { Teilnahmeart } from 'libs/common-components/src/lib/common-components.model';
 
 
 
@@ -23,7 +29,7 @@ import { Teilnahmeart } from 'libs/common-components/src/lib/common-components.m
 })
 export class KinderFacade {
 
-	public teilnahmeIdentifier$: Observable<TeilnahmeIdentifier> = this.store.select(KinderSelectors.teilnahmeIdentifier);
+	public teilnahmeIdentifier$: Observable<TeilnahmeIdentifierAktuellerWettbewerb> = this.store.select(KinderSelectors.teilnahmeIdentifier);
 	public kindEditorModel$: Observable<KindEditorModel> = this.store.select(KinderSelectors.kindEditorModel);
 	public kinder$: Observable<Kind[]> = this.store.select(KinderSelectors.kinder);
 	public kinderGeladen$: Observable<boolean> = this.store.select(KinderSelectors.kinderGeladen);
@@ -32,8 +38,6 @@ export class KinderFacade {
 	public saveOutcome$: Observable<Message> = this.store.select(KinderSelectors.saveOutcome);
 
 	private loggingOut: boolean;
-
-	private wettbewerb: Wettbewerb;
 
 	constructor(private store: Store<AppState>,
 		private authService: AuthService,
@@ -44,8 +48,6 @@ export class KinderFacade {
 		this.authService.onLoggingOut$.subscribe(
 			loggingOut => this.loggingOut = loggingOut
 		);
-
-		this.wettbewerb = JSON.parse(localStorage.getItem(environment.storageKeyPrefix + 'wettbewerb'));
 	}
 
 	public createNewKind(): void {
@@ -75,8 +77,7 @@ export class KinderFacade {
 		const user = JSON.parse(localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_USER));
 		const teilnahmeart: Teilnahmeart = user.rolle === 'PRIVAT' ? 'PRIVAT' : 'SCHULE';
 
-		const teilnahmeIdentifier: TeilnahmeIdentifier = {
-			jahr: this.wettbewerb.jahr,
+		const teilnahmeIdentifier: TeilnahmeIdentifierAktuellerWettbewerb = {
 			teilnahmeart: teilnahmeart,
 			teilnahmenummer: teilnahmenummer
 		}
@@ -97,7 +98,7 @@ export class KinderFacade {
 
 		this.store.dispatch(KinderActions.startLoading());
 
-		const data = this.mapFromEditorModel(uuid, editorModel) as PrivatkindRequestData;
+		const data = this.mapFromEditorModel(uuid, editorModel) as KindRequestData;
 
 		this.kinderService.checkDuplikat(data).subscribe(
 			warnung => this.store.dispatch(KinderActions.duplikatGeprueft({ duplikatwarnung: warnung })),
@@ -112,7 +113,7 @@ export class KinderFacade {
 
 		this.store.dispatch(KinderActions.startLoading());
 
-		const data = this.mapFromEditorModel(uuid, editorModel) as PrivatkindRequestData;
+		const data = this.mapFromEditorModel(uuid, editorModel) as KindRequestData;
 
 		this.kinderService.insertKind(data).subscribe(
 			responsePayload => this.store.dispatch(KinderActions.kindSaved({ kind: responsePayload.data, outcome: responsePayload.message })),
@@ -127,7 +128,7 @@ export class KinderFacade {
 
 		this.store.dispatch(KinderActions.startLoading());
 
-		const data = this.mapFromEditorModel(uuid, editorModel) as PrivatkindRequestData;
+		const data = this.mapFromEditorModel(uuid, editorModel) as KindRequestData;
 
 		this.kinderService.updateKind(data).subscribe(
 			responsePayload => this.store.dispatch(KinderActions.kindSaved({ kind: responsePayload.data, outcome: responsePayload.message })),
@@ -164,9 +165,9 @@ export class KinderFacade {
 
 	// ////////////////////////////////////// private members //////////////////
 
-	private mapFromEditorModel(uuid: string, editorModel: KindEditorModel): PrivatkindRequestData {
+	private mapFromEditorModel(uuid: string, editorModel: KindEditorModel): KindRequestData {
 
-		const data: PrivatkindRequestData = {
+		const data: KindRequestData = {
 			uuid: uuid,
 			kind: editorModel
 		};

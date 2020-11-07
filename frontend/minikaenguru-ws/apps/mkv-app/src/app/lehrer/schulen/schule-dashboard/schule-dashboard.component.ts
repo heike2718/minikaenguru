@@ -132,8 +132,7 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 
 	gotoAuswertung(): void {
 		this.textFeatureFlagAnzeigen = false;
-		// FIXME: hier muss zu den Klassen navigiert werden!
-		this.router.navigateByUrl('/kinder/' + this.schule.kuerzel);
+		this.router.navigateByUrl('/klassen/' + this.schule.kuerzel);
 	}
 
 	backToSchulen(): void {

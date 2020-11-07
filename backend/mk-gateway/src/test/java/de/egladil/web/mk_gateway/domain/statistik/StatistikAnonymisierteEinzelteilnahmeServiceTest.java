@@ -79,7 +79,7 @@ public class StatistikAnonymisierteEinzelteilnahmeServiceTest {
 		Identifier userIdentifier = new Identifier(userUuid);
 		Identifier teilnahmeID = new Identifier(teilnahmenummer);
 
-		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE.toString())
+		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE)
 			.withTeilnahmenummer(teilnahmenummer).withWettbewerbID(new WettbewerbID(2018));
 
 		Mockito
@@ -106,7 +106,7 @@ public class StatistikAnonymisierteEinzelteilnahmeServiceTest {
 		String schulkuerzel = "12345";
 		String veranstalterUUID = "aaaaa";
 
-		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE.toString())
+		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE)
 			.withTeilnahmenummer(schulkuerzel).withWettbewerbID(new WettbewerbID(2018));
 
 		Mockito
@@ -153,7 +153,7 @@ public class StatistikAnonymisierteEinzelteilnahmeServiceTest {
 		String schulkuerzel = "12345";
 		String veranstalterUUID = "aaaaa";
 
-		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.PRIVAT.toString())
+		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.PRIVAT)
 			.withTeilnahmenummer(schulkuerzel).withWettbewerbID(new WettbewerbID(2018));
 
 		Mockito

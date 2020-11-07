@@ -1,0 +1,24 @@
+<div class="mkv-container mt-1">
+	<div class="col-12">
+
+		<h2>Klassen <span *ngIf="(anzahlKlassen$ | async) as anzahl" class="badge badge-secondary">{{anzahl}}></span>
+		</h2>
+		<p *ngIf="devMode">(kinder-list.component)</p>
+
+		<ng-container *ngIf="(klassen$ | async) as klassen">
+			<ng-container *ngIf="(selectedSchule$ | async) as schule">
+				<div class="col-12 mt-1 mb-1 " *ngFor="let klasse of klassen">
+					<mkv-klasse-details [schule]="schule" [klasse]="klasse"></mkv-klasse-details>
+				</div>
+			</ng-container>
+			</ng-container>
+
+			<div class="btn-group d-flex" role="group">
+				<button class="btn btn-primary w-100 ml-1" (click)="addKlasse()"><i class="fa fa-plus"
+						aria-hidden="true"></i>neue Klasse</button>
+
+				<button class="btn btn-primary w-100 ml-1" (click)="gotoDashboard()"><i class="fa fa-arrow-left"
+						aria-hidden="true"></i>Übersicht</button>
+			</div>
+	</div>
+</div>

@@ -25,7 +25,7 @@ public class DataInconsistencyRegistered extends AbstractDomainEvent {
 
 	public DataInconsistencyRegistered(final String message) {
 
-		this();
+		super();
 		this.message = message;
 
 	}

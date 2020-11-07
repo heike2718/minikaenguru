@@ -16,7 +16,6 @@ import de.egladil.web.mk_gateway.domain.adv.VertragAuftragsdatenverarbeitung;
 import de.egladil.web.mk_gateway.domain.adv.VertragAuftragsverarbeitungRepository;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
-import de.egladil.web.mk_gateway.domain.teilnahmen.api.SchulteilnahmeAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.Person;
 import de.egladil.web.mk_gateway.domain.veranstalter.SchulkollegienRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.Schulkollegium;
@@ -98,6 +97,9 @@ public class SchuleDetailsService {
 			if (aktuelle.teilnahmeart() == Teilnahmeart.SCHULE) {
 
 				Schulteilnahme schulteilnahme = (Schulteilnahme) aktuelle;
+
+				result.withNameUrkunde(schulteilnahme.nameSchule());
+
 				Identifier veranstalterID = schulteilnahme.angemeldetDurchVeranstalterId();
 
 				if (veranstalterID != null) {
@@ -110,8 +112,6 @@ public class SchuleDetailsService {
 					}
 				}
 			}
-
-			result.withTeilnahme(SchulteilnahmeAPIModel.create((Schulteilnahme) aktuelle));
 		}
 
 		result.withAnzahlTeilnahmen(teilnahmen.size());

@@ -160,7 +160,7 @@ public class SchuleDetailsServiceTest extends AbstractDomainServiceTest {
 		assertEquals(1, details.anzahlTeilnahmen());
 		assertEquals("Olle Keule", details.kollegen());
 		assertEquals("SCHULKUERZEL_1", details.kuerzel());
-		assertNotNull(details.aktuelleTeilnahme());
+		assertNotNull(details.angemeldetDurch());
 
 	}
 
@@ -175,7 +175,7 @@ public class SchuleDetailsServiceTest extends AbstractDomainServiceTest {
 		assertEquals(0, details.anzahlTeilnahmen());
 		assertEquals("Hans Wurst", details.kollegen());
 		assertEquals("SCHULKUERZEL_2", details.kuerzel());
-		assertNull(details.aktuelleTeilnahme());
+		assertNull(details.angemeldetDurch());
 
 	}
 
@@ -190,7 +190,7 @@ public class SchuleDetailsServiceTest extends AbstractDomainServiceTest {
 		assertEquals(0, details.anzahlTeilnahmen());
 		assertNull(details.kollegen());
 		assertEquals("SCHULKUERZEL_3", details.kuerzel());
-		assertNull(details.aktuelleTeilnahme());
+		assertNull(details.angemeldetDurch());
 	}
 
 }

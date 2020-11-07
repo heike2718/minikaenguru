@@ -1,4 +1,4 @@
-import { TeilnahmeIdentifier, Teilnahme } from '@minikaenguru-ws/common-components';
+import { TeilnahmeIdentifier, Teilnahme, TeilnahmeIdentifierAktuellerWettbewerb } from '@minikaenguru-ws/common-components';
 
 export interface SchulkatalogData {
 	readonly kuerzel: string;
@@ -15,20 +15,12 @@ export interface SchuleMinikaenguruData {
 	readonly hatAdv: boolean;
 };
 
-
-export interface AktuelleSchulteilnahme {
-	readonly identifier: TeilnahmeIdentifier;
-	readonly nameUrkunde: string;
-	readonly anzahlKlassen: number;
-	readonly anzahlKinder: number;
-	readonly angemeldetDurch: string;
-};
-
 export interface SchuleAdminOverview {
 	readonly kuerzel: string,
 	readonly katalogData: SchulkatalogData;
 	readonly minikaenguruData: SchuleMinikaenguruData;
-	readonly aktuelleTeilnahme?: AktuelleSchulteilnahme;
+	readonly angemeldetDurch?: string;
+	readonly nameUrkunde?: string;
 	readonly schulteilnahmen: Teilnahme[];
 };
 

@@ -4,25 +4,18 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.teilnahmen;
 
-import java.time.LocalDateTime;
-
 import org.apache.commons.lang3.StringUtils;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import de.egladil.web.commons_net.time.CommonTimeUtils;
+import de.egladil.web.mk_gateway.domain.event.AbstractDomainEvent;
 import de.egladil.web.mk_gateway.domain.semantik.DomainEvent;
-import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
 
 /**
  * AbstractTeilnahmeEvent
  */
 @DomainEvent
-public abstract class AbstractTeilnahmeEvent implements MkGatewayDomainEvent {
-
-	@JsonIgnore
-	private final LocalDateTime occouredOn;
+public abstract class AbstractTeilnahmeEvent extends AbstractDomainEvent {
 
 	@JsonProperty
 	private Integer wettbewerbsjahr;
@@ -35,12 +28,12 @@ public abstract class AbstractTeilnahmeEvent implements MkGatewayDomainEvent {
 
 	AbstractTeilnahmeEvent() {
 
-		this.occouredOn = CommonTimeUtils.now();
+		super();
 	}
 
 	public AbstractTeilnahmeEvent(final Integer wettbewerbsjahr, final String teilnahmenummer, final String triggeringUser) {
 
-		this();
+		super();
 
 		if (wettbewerbsjahr == null) {
 
@@ -60,12 +53,6 @@ public abstract class AbstractTeilnahmeEvent implements MkGatewayDomainEvent {
 		this.wettbewerbsjahr = wettbewerbsjahr;
 		this.teilnahmenummer = teilnahmenummer;
 		this.triggeringUser = triggeringUser;
-	}
-
-	@Override
-	public LocalDateTime occuredOn() {
-
-		return occouredOn;
 	}
 
 	public Integer wettbewerbsjahr() {

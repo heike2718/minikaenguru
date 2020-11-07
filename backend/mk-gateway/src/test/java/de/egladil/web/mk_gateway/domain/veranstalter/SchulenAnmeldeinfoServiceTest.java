@@ -29,11 +29,8 @@ import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
 import de.egladil.web.mk_gateway.domain.teilnahmen.SchuleDetailsService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.SchulenOverviewService;
-import de.egladil.web.mk_gateway.domain.teilnahmen.Schulteilnahme;
-import de.egladil.web.mk_gateway.domain.teilnahmen.api.SchulteilnahmeAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleDetails;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 
 /**
  * SchulenAnmeldeinfoServiceTest
@@ -403,11 +400,9 @@ public class SchulenAnmeldeinfoServiceTest {
 
 		// Arrange
 		List<Person> kollegen = Arrays.asList(new Person[] { new Person("ajhdqh", "Herta Meier") });
-		Schulteilnahme schulteilnahme = new Schulteilnahme(new WettbewerbID(2020), new Identifier("12345"), "12345-Schule",
-			new Identifier(LEHRER_UUID));
 
 		SchuleDetails schuleDetails = new SchuleDetails("12345").withAngemeldetDurch(new Person("ghagdqg", "John Doe"))
-			.withAnzahlTeilnahmen(1).withKollegen(kollegen).withTeilnahme(SchulteilnahmeAPIModel.create(schulteilnahme));
+			.withAnzahlTeilnahmen(1).withKollegen(kollegen);
 
 		Map<String, Object> schuleKatalogeMap = new HashMap<>();
 
@@ -471,11 +466,9 @@ public class SchulenAnmeldeinfoServiceTest {
 
 		// Arrange
 		List<Person> kollegen = Arrays.asList(new Person[] { new Person("ajhdqh", "Herta Meier") });
-		Schulteilnahme schulteilnahme = new Schulteilnahme(new WettbewerbID(2020), new Identifier("12345"), "12345-Schule",
-			new Identifier(LEHRER_UUID));
 
 		SchuleDetails schuleDetails = new SchuleDetails("12345").withAngemeldetDurch(new Person("ghagdqg", "John Doe"))
-			.withAnzahlTeilnahmen(1).withKollegen(kollegen).withTeilnahme(SchulteilnahmeAPIModel.create(schulteilnahme));
+			.withAnzahlTeilnahmen(1).withKollegen(kollegen).withNameUrkunde("Schule 12345");
 
 		Mockito.when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID)))
 			.thenReturn(Arrays.asList(new SchuleAPIModel[] { SchuleAPIModel.withKuerzel("12345").withAngemeldet(true) }));
@@ -508,10 +501,7 @@ public class SchulenAnmeldeinfoServiceTest {
 		assertEquals("John Doe", details.angemeldetDurch());
 		assertEquals("Herta Meier", details.kollegen());
 		assertEquals("12345", details.kuerzel());
-
-		SchulteilnahmeAPIModel teilnahme = details.aktuelleTeilnahme();
-
-		assertEquals("12345-Schule", teilnahme.nameUrkunde());
+		assertEquals("Schule 12345", details.nameUrkunde());
 
 	}
 

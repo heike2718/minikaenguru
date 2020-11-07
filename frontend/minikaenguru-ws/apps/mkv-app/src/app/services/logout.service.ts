@@ -7,6 +7,7 @@ import { Injectable } from '@angular/core';
 import { VertragAdvFacade } from '../vertrag-adv/vertrag-adv.facade';
 import { KinderFacade } from '../kinder/kinder.facade';
 import { Router } from '@angular/router';
+import { KlassenFacade } from '../klassen/klassen.facade';
 
 
 @Injectable({
@@ -21,7 +22,8 @@ export class LogoutService {
 		, private wettbewerbFacade: WettbewerbFacade
 		, private teinahmenFacade: TeilnahmenFacade
 		, private vertragAdvFacade: VertragAdvFacade
-		, private kinderFacade: KinderFacade) { }
+		, private kinderFacade: KinderFacade
+		, private klassenFacade: KlassenFacade) { }
 
 
 	logout(): void {
@@ -32,6 +34,7 @@ export class LogoutService {
 		this.teinahmenFacade.resetState();
 		this.vertragAdvFacade.resetState();
 		this.kinderFacade.resetState();
+		this.klassenFacade.resetState();
 
 		this.router.navigateByUrl('/landing');
 	}

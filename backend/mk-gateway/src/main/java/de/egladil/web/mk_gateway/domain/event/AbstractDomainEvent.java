@@ -28,7 +28,7 @@ public abstract class AbstractDomainEvent implements MkGatewayDomainEvent {
 	@Override
 	public LocalDateTime occuredOn() {
 
-		return null;
+		return occuredOn;
 	}
 
 	public String serializeQuietly() {

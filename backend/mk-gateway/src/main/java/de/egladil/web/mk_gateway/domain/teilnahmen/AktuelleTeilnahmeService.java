@@ -25,6 +25,7 @@ import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.SchulanmeldungRequestPayload;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.SchulteilnahmeAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
@@ -46,7 +47,7 @@ public class AktuelleTeilnahmeService {
 	Event<PrivatteilnahmeCreated> privatteilnahmeCreated;
 
 	@Inject
-	Event<SchulteilnahmeCreated> schulteilahmeCreated;
+	Event<SchulteilnahmeCreated> schulteilahmeCreatedEvent;
 
 	@Inject
 	Event<SecurityIncidentRegistered> securityIncidentEvent;
@@ -56,7 +57,7 @@ public class AktuelleTeilnahmeService {
 
 	private PrivatteilnahmeCreated privatteilnahmeCreatedEvent;
 
-	private SchulteilnahmeCreated schulteilnahmeCreatedEvent;
+	private SchulteilnahmeCreated schulteilnahmeCreated;
 
 	private SecurityIncidentRegistered securityIncidentRegistered;
 
@@ -230,7 +231,7 @@ public class AktuelleTeilnahmeService {
 	 * @return              SchulteilnahmeAPIModel
 	 */
 	@Transactional
-	public Schulteilnahme schuleAnmelden(final SchulanmeldungRequestPayload payload, final String uuid) {
+	public SchulteilnahmeAPIModel schuleAnmelden(final SchulanmeldungRequestPayload payload, final String uuid) {
 
 		if (payload == null) {
 
@@ -317,24 +318,32 @@ public class AktuelleTeilnahmeService {
 
 		Optional<Teilnahme> optVorhandene = this.findVorhandeneTeilnahme(schulkuerzel, Teilnahmeart.SCHULE, aktuellerWettbewerb);
 
+		Schulteilnahme schulteilnahme = null;
+
 		if (optVorhandene.isPresent()) {
 
-			return (Schulteilnahme) optVorhandene.get();
+			schulteilnahme = (Schulteilnahme) optVorhandene.get();
+		} else {
+
+			schulteilnahme = new Schulteilnahme(aktuellerWettbewerb.id(), new Identifier(schulkuerzel), schulname,
+				new Identifier(uuid));
+
+			teilnahmenRepository.addTeilnahme(schulteilnahme);
+
+			this.schulteilnahmeCreated = SchulteilnahmeCreated.create(schulteilnahme);
+
+			if (schulteilahmeCreatedEvent != null) {
+
+				this.schulteilahmeCreatedEvent.fire(schulteilnahmeCreated);
+			} else {
+
+				System.out.println(schulteilnahmeCreated.serializeQuietly());
+			}
 		}
 
-		Schulteilnahme neue = new Schulteilnahme(aktuellerWettbewerb.id(), new Identifier(schulkuerzel), schulname,
-			new Identifier(uuid));
+		SchulteilnahmeAPIModel result = SchulteilnahmeAPIModel.create(schulteilnahme).withAngemeldetDurch(veranstalter.fullName());
 
-		teilnahmenRepository.addTeilnahme(neue);
-
-		this.schulteilnahmeCreatedEvent = SchulteilnahmeCreated.create(neue);
-
-		if (schulteilahmeCreated != null) {
-
-			this.schulteilahmeCreated.fire(schulteilnahmeCreatedEvent);
-		}
-
-		return neue;
+		return result;
 
 	}
 
@@ -350,9 +359,9 @@ public class AktuelleTeilnahmeService {
 		return privatteilnahmeCreatedEvent;
 	}
 
-	SchulteilnahmeCreated schulteilnahmeCreatedEvent() {
+	SchulteilnahmeCreated schulteilnahmeCreated() {
 
-		return schulteilnahmeCreatedEvent;
+		return schulteilnahmeCreated;
 	}
 
 	SecurityIncidentRegistered getSecurityIncidentRegistered() {

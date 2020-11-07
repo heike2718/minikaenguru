@@ -26,13 +26,13 @@ public class TeilnahmeIdentifier {
 	private String teilnahmenummer;
 
 	@JsonProperty
-	private String teilnahmeart;
+	private Teilnahmeart teilnahmeart;
 
 	public static TeilnahmeIdentifier createFromTeilnahme(final Teilnahme teilnahme) {
 
 		TeilnahmeIdentifier result = new TeilnahmeIdentifier();
 		result.jahr = teilnahme.wettbewerbID().jahr();
-		result.teilnahmeart = teilnahme.teilnahmeart().toString();
+		result.teilnahmeart = teilnahme.teilnahmeart();
 		result.teilnahmenummer = teilnahme.teilnahmenummer().identifier();
 		return result;
 	}
@@ -49,7 +49,7 @@ public class TeilnahmeIdentifier {
 
 	public Teilnahmeart teilnahmeart() {
 
-		return Teilnahmeart.valueOf(teilnahmeart);
+		return this.teilnahmeart;
 	}
 
 	public String wettbewerbID() {
@@ -77,23 +77,13 @@ public class TeilnahmeIdentifier {
 		return this;
 	}
 
-	public TeilnahmeIdentifier withTeilnahmeart(final String teilnahmeart) {
-
-		if (this.teilnahmeart != null) {
-
-			throw new IllegalStateException("TeilnahmeIdentifier ist immutable: teilnahmeart darf nicht geändert werden.");
-		}
-		this.teilnahmeart = teilnahmeart;
-		return this;
-	}
-
 	public TeilnahmeIdentifier withTeilnahmeart(final Teilnahmeart teilnahmeart) {
 
 		if (this.teilnahmeart != null) {
 
 			throw new IllegalStateException("TeilnahmeIdentifier ist immutable: teilnahmeart darf nicht geändert werden.");
 		}
-		this.teilnahmeart = teilnahmeart.toString();
+		this.teilnahmeart = teilnahmeart;
 		return this;
 	}
 

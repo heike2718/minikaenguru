@@ -127,8 +127,9 @@ public class SchuleAPIModel {
 		result.name = schuleAusKatalog.name;
 		result.ort = schuleAusKatalog.ort;
 		result.land = schuleAusKatalog.land;
+		result.kuerzelLand = schuleAusKatalog.kuerzelLand;
 
-		result.aktuellAngemeldet = schuleAusWettbewerbAPI.aktuelleTeilnahme() != null;
+		result.aktuellAngemeldet = schuleAusWettbewerbAPI.angemeldetDurch() != null;
 		result.details = schuleAusWettbewerbAPI;
 		return result;
 	}
