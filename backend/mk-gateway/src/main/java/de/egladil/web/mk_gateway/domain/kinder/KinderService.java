@@ -16,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -197,8 +198,12 @@ public class KinderService {
 		authService.checkPermissionForTeilnahmenummer(new Identifier(veranstalterUuid), teilnahme.teilnahmenummer(),
 			"[kindAnlegen - teilnahmenummer=" + teilnahme.teilnahmenummer().identifier() + "]");
 
+		Identifier klasseID = StringUtils.isBlank(daten.klasseUuid()) ? null : new Identifier(daten.klasseUuid());
+
 		Kind kind = new Kind().withDaten(daten.kind())
-			.withTeilnahmeIdentifier(TeilnahmeIdentifierAktuellerWettbewerb.createFromTeilnahme(teilnahme));
+			.withTeilnahmeIdentifier(TeilnahmeIdentifierAktuellerWettbewerb.createFromTeilnahme(teilnahme))
+			.withLandkuerzel(daten.kuerzelLand())
+			.withKlasseID(klasseID);
 
 		Kind gespeichertesKind = kinderRepository.addKind(kind);
 

@@ -116,6 +116,7 @@ public class KinderHibernateRepository implements KinderRepository {
 
 		em.remove(persistentesKind);
 		return true;
+
 	}
 
 	@Override

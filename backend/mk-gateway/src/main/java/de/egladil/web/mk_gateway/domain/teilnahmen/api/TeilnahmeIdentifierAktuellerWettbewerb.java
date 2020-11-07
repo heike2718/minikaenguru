@@ -24,6 +24,14 @@ public class TeilnahmeIdentifierAktuellerWettbewerb {
 	@JsonProperty
 	private Teilnahmeart teilnahmeart;
 
+	public static TeilnahmeIdentifierAktuellerWettbewerb createForPrivatteilnahme(String teilnahmenummer) {
+		return new TeilnahmeIdentifierAktuellerWettbewerb(teilnahmenummer, Teilnahmeart.PRIVAT);
+	}
+
+	public static TeilnahmeIdentifierAktuellerWettbewerb createForSchulteilnahme(String teilnahmenummer) {
+		return new TeilnahmeIdentifierAktuellerWettbewerb(teilnahmenummer, Teilnahmeart.SCHULE);
+	}
+
 	public static TeilnahmeIdentifierAktuellerWettbewerb createFromTeilnahme(final Teilnahme teilnahme) {
 
 		TeilnahmeIdentifierAktuellerWettbewerb result = new TeilnahmeIdentifierAktuellerWettbewerb();

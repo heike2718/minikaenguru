@@ -108,6 +108,7 @@ public class KlassenHibernateRepository implements KlassenRepository {
 
 		em.remove(persistenteKlasse);
 		return true;
+
 	}
 
 	private PersistenteKlasse findPersistenteKlasse(final Identifier klasseID) {

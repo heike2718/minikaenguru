@@ -43,9 +43,6 @@ public class KindEditorModel {
 	@NotNull
 	private SpracheAPIModel sprache;
 
-	@JsonProperty
-	private String land;
-
 	KindEditorModel() {
 
 		super();
@@ -98,19 +95,6 @@ public class KindEditorModel {
 	public KindEditorModel withZusatz(final String zusatz) {
 
 		this.zusatz = zusatz;
-		return this;
-	}
-
-
-
-	public String land() {
-
-		return land;
-	}
-
-	public KindEditorModel withLand(String land) {
-
-		this.land = land;
 		return this;
 	}
 

@@ -70,7 +70,6 @@ public class Kind {
 		this.zusatz = kindEditorModel.zusatz() == null ? null : kindEditorModel.zusatz().trim();
 		this.sprache = kindEditorModel.sprache().sprache();
 		this.klassenstufe = kindEditorModel.klassenstufe().klassenstufe();
-		this.landkuerzel = kindEditorModel.land();
 		return this;
 	}
 

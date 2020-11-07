@@ -33,7 +33,8 @@ public class PersistentesKindKindMapper implements Function<PersistentesKind, Ki
 			.withSprache(persistentesKind.getSprache())
 			.withTeilnahmeIdentifier(teilnahmeIdentifier)
 			.withVorname(persistentesKind.getVorname())
-			.withZusatz(persistentesKind.getZusatz());
+			.withZusatz(persistentesKind.getZusatz())
+			.withLandkuerzel(persistentesKind.getLandkuerzel());
 	}
 
 }
