@@ -1,7 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Klasse } from '@minikaenguru-ws/common-components';
-import { Schule } from '../../lehrer/schulen/schulen.model';
-import { LogService } from '@minikaenguru-ws/common-logging';
 
 @Component({
 	selector: 'mkv-klasse-details',
@@ -11,18 +9,10 @@ import { LogService } from '@minikaenguru-ws/common-logging';
 export class KlasseDetailsComponent implements OnInit {
 
 	@Input()
-	schule: Schule;
-
-	@Input()
 	klasse: Klasse;
 
+	constructor() { }
 
-
-	constructor(private logger: LogService) { }
-
-	ngOnInit(): void {
-
-		this.logger.debug('schule=' + JSON.stringify(this.schule));
-	}
+	ngOnInit(): void { }
 
 }

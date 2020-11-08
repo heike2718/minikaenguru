@@ -28,7 +28,8 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 	constructor(private router: Router,
 		private route: ActivatedRoute,
 		private klassenFacade: KlassenFacade,
-		private lehrerFacade: LehrerFacade) { }
+		private lehrerFacade: LehrerFacade
+		) { }
 
 	ngOnInit(): void {
 
@@ -78,7 +79,7 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 
 
 	addKlasse(): void {
-		console.log('jetzt zum klasse-editor wechseln');
+		this.klassenFacade.startCreateKlasse();
 	}
 
 	gotoDashboard(): void {

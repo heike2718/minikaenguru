@@ -8,6 +8,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -179,7 +180,10 @@ public class KlassenService {
 			return new ArrayList<>();
 		}
 
-		return klassen.stream().map(kl -> KlasseAPIModel.createFromKlasse(kl)).collect(Collectors.toList());
+		final Map<Identifier, Long> anzahlenKinder = this.kinderService.countKinder(klassen);
+
+		return klassen.stream().map(kl -> KlasseAPIModel.createFromKlasse(kl).withAnzahlKinder(anzahlenKinder.get(kl.identifier())))
+			.collect(Collectors.toList());
 	}
 
 	/**

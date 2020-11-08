@@ -23,7 +23,7 @@ export const allKlassenLoaded = createAction(
 );
 
 export const createNewKlasse = createAction(
-	'[KlassenFacade] createNewKlasse'
+	'[KlassenFacade] startCreateKlasse'
 );
 
 export const startEditingKlasse = createAction(

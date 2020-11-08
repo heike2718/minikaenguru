@@ -5,20 +5,26 @@ import { KlasseDetailsComponent } from './klasse-details/klasse-details.componen
 import { KlassenRoutingModule } from './klassen-routing.module';
 import { StoreModule } from '@ngrx/store';
 import * as fromKlassen from './+state/klassen.reducer';
-import { AppRoutingModule } from '../app-routing.module';
+import { KlasseEditorComponent } from './klasse-editor/klasse-editor.component';
+import { KlasseEditorResolver } from './klasse-editor/klasse-editor.resolver';
+import { FormsModule } from '@angular/forms';
 
 
 
 @NgModule({
 	declarations: [
 		KlassenListComponent,
-		KlasseDetailsComponent
+		KlasseDetailsComponent,
+		KlasseEditorComponent
 	],
 	imports: [
 		CommonModule,
+		FormsModule,
 		KlassenRoutingModule,
-		AppRoutingModule,
 		StoreModule.forFeature(fromKlassen.klassenFeatureKey, fromKlassen.reducer)
+	],
+	providers: [
+		KlasseEditorResolver
 	]
 })
 export class KlassenModule { }

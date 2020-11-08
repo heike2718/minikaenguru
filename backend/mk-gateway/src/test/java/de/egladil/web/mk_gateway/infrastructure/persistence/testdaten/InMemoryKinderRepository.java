@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
+import de.egladil.web.mk_gateway.domain.kinder.Klasse;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.entities.InMemoryKinderList;
 
@@ -119,6 +120,13 @@ public class InMemoryKinderRepository implements KinderRepository {
 		}
 
 		return count;
+	}
+
+	@Override
+	public long countKinderInKlasse(final Klasse klasse) {
+
+		return alleKinder.values().stream().filter(k -> klasse.identifier().equals(k.klasseID())).count();
+
 	}
 
 }

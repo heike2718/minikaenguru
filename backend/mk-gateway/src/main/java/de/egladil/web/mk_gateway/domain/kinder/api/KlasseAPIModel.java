@@ -28,6 +28,9 @@ public class KlasseAPIModel implements Serializable {
 	@JsonProperty
 	private String schulkuerzel;
 
+	@JsonProperty
+	private long anzahlKinder;
+
 	public static KlasseAPIModel createFromKlasse(final Klasse klasse) {
 
 		KlasseAPIModel result = new KlasseAPIModel(klasse.identifier().identifier());
@@ -56,7 +59,7 @@ public class KlasseAPIModel implements Serializable {
 		return this;
 	}
 
-	public String getUuid() {
+	public String uuid() {
 
 		return uuid;
 	}
@@ -69,6 +72,17 @@ public class KlasseAPIModel implements Serializable {
 	public KlasseAPIModel withSchulkuerzel(final String schulkuerzel) {
 
 		this.schulkuerzel = schulkuerzel;
+		return this;
+	}
+
+	public long anzahlKinder() {
+
+		return anzahlKinder;
+	}
+
+	public KlasseAPIModel withAnzahlKinder(final long anzahlKinder) {
+
+		this.anzahlKinder = anzahlKinder;
 		return this;
 	}
 }

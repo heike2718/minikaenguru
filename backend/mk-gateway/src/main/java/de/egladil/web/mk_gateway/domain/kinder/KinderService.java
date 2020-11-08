@@ -5,7 +5,9 @@
 package de.egladil.web.mk_gateway.domain.kinder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -458,6 +460,27 @@ public class KinderService {
 		}
 
 		return optTeilnahme.get();
+	}
+
+	/**
+	 * Gibt für die gegebenen Klassen die Anzahl der Kinder zurück.
+	 *
+	 * @param  klassen
+	 * @return         Map mit klasse.identifier als key
+	 */
+	Map<Identifier, Long> countKinder(final List<Klasse> klassen) {
+
+		Map<Identifier, Long> result = new HashMap<>();
+
+		for (Klasse klasse : klassen) {
+
+			long anzahlKinder = this.kinderRepository.countKinderInKlasse(klasse);
+			result.put(klasse.identifier(), Long.valueOf(anzahlKinder));
+
+		}
+
+		return result;
+
 	}
 
 	KindCreated getKindCreated() {

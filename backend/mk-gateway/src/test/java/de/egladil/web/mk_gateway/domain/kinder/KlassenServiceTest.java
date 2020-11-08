@@ -224,7 +224,7 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 
 		// Assert
 		assertEquals("2c", klasse.name());
-		assertNotNull(klasse.getUuid());
+		assertNotNull(klasse.uuid());
 
 		assertNotNull(klassenService.getKlasseCreated());
 	}
@@ -299,11 +299,11 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 		KlasseAPIModel klasse = klassenService.klasseUmbenennen(data, UUID_LEHRER_1);
 
 		// Assert
-		assertEquals("SCHULKUERZEL_1_KLASSE_2A", klasse.getUuid());
+		assertEquals("SCHULKUERZEL_1_KLASSE_2A", klasse.uuid());
 		assertEquals(expectedName, klasse.name());
 		assertEquals(SCHULKUERZEL_1, klasse.schulkuerzel());
 
-		Optional<Klasse> opt = getKlassenRepository().ofIdentifier(new Identifier(klasse.getUuid()));
+		Optional<Klasse> opt = getKlassenRepository().ofIdentifier(new Identifier(klasse.uuid()));
 
 		assertFalse(opt.isEmpty());
 
@@ -377,7 +377,7 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 		// Act
 		KlasseAPIModel result = klassenService.klasseLoeschen(klasseUUID, UUID_LEHRER_1);
 
-		assertEquals(klasseUUID, result.getUuid());
+		assertEquals(klasseUUID, result.uuid());
 
 		List<Kind> kinderHinterher = getKinderRepository()
 			.withTeilnahme(new TeilnahmeIdentifierAktuellerWettbewerb(SCHULKUERZEL_1, Teilnahmeart.SCHULE));

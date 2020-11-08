@@ -64,4 +64,12 @@ public interface KinderRepository {
 	 */
 	int removeKinder(List<Kind> kinder);
 
+	/**
+	 * Gib die Anzahl von Kindern in der gegebenen Klasse zurück.
+	 *
+	 * @param  klasse
+	 * @return
+	 */
+	long countKinderInKlasse(Klasse klasse);
+
 }

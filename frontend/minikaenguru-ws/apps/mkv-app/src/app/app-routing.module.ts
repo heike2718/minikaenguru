@@ -58,7 +58,6 @@ const routes: Routes = [
 	},
 	{
 		path: 'adv',
-		pathMatch: 'full',
 		loadChildren: () => import('./vertrag-adv/vertrag-adv.module').then(m => m.VertragAdvModule)
 	},
 	{

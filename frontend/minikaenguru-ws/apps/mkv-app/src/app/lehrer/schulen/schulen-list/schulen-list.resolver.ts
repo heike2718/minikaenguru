@@ -6,7 +6,6 @@ import { schulenLoaded } from '../../+state/lehrer.selectors';
 import { tap, first, finalize, filter } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { LehrerFacade } from '../../lehrer.facade';
-import { isLoggedIn } from '@minikaenguru-ws/common-auth';
 
 @Injectable()
 export class SchulenListResolver implements Resolve<any> {

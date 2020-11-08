@@ -71,6 +71,9 @@ public class KlassenUndKinderServiceCombinedTest extends AbstractIT {
 		String lehrerUuid = "412b67dc-132f-465a-a3c3-468269e866cb";
 		String name = "2a";
 
+		int anzahlKInderVorher = kinderRepository
+			.withTeilnahme(TeilnahmeIdentifierAktuellerWettbewerb.createForSchulteilnahme(schulkuerzel)).size();
+
 		KlasseEditorModel klasseEditorModel = new KlasseEditorModel().withName(name);
 		KlasseRequestData data = new KlasseRequestData()
 			.withKlasse(klasseEditorModel)
@@ -97,7 +100,7 @@ public class KlassenUndKinderServiceCombinedTest extends AbstractIT {
 				// Assert
 				assertTrue(duplikat);
 
-				klasseUuid = result.getUuid();
+				klasseUuid = result.uuid();
 				data = data.withUuid(klasseUuid);
 
 				// Assert
@@ -172,6 +175,20 @@ public class KlassenUndKinderServiceCombinedTest extends AbstractIT {
 
 		{
 
+			List<KlasseAPIModel> apiKlassen = this.klassenService.klassenZuSchuleLaden(schulkuerzel, lehrerUuid);
+			assertTrue(apiKlassen.size() >= 1);
+
+			for (KlasseAPIModel apiKlasse : apiKlassen) {
+
+				if (klasseID.identifier().equals(apiKlasse.uuid())) {
+
+					assertEquals(1, apiKlasse.anzahlKinder());
+				}
+			}
+		}
+
+		{
+
 			EntityTransaction trx = entityManager.getTransaction();
 
 			try {
@@ -199,7 +216,7 @@ public class KlassenUndKinderServiceCombinedTest extends AbstractIT {
 			.withTeilnahme(TeilnahmeIdentifierAktuellerWettbewerb.createForSchulteilnahme(schulkuerzel));
 
 		assertTrue(optKlasse.isEmpty());
-		assertEquals(0, kinder.size());
+		assertEquals(anzahlKInderVorher, kinder.size());
 
 	}
 

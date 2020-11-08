@@ -10,6 +10,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityTransaction;
@@ -40,6 +41,25 @@ public class KlassenServiceTest extends AbstractIT {
 
 		super.setUp();
 		klassenService = KlassenService.createForIntegrationTest(entityManager);
+	}
+
+	@Test
+	void should_klassenZuSchuleLaden_work() {
+
+		// Arrange
+		String schulkuerzel = "G1HDI46O";
+		String lehrerUuid = "412b67dc-132f-465a-a3c3-468269e866cb";
+
+		// Act
+		List<KlasseAPIModel> klassen = klassenService.klassenZuSchuleLaden(schulkuerzel, lehrerUuid);
+
+		// Assert
+		assertEquals(1, klassen.size());
+		KlasseAPIModel klasse = klassen.get(0);
+		assertEquals("Testklasse", klasse.name());
+		assertEquals(schulkuerzel, klasse.schulkuerzel());
+		assertEquals("6d57b4f6-61ed-450a-ae17-7ccb3d9d776a", klasse.uuid());
+		assertEquals(1, klasse.anzahlKinder());
 	}
 
 	@Test
@@ -76,7 +96,7 @@ public class KlassenServiceTest extends AbstractIT {
 				// Assert
 				assertTrue(duplikat);
 
-				klasseUuid = result.getUuid();
+				klasseUuid = result.uuid();
 				data = data.withUuid(klasseUuid);
 
 				// Assert

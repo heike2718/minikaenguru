@@ -8,3 +8,5 @@ export const klassenState = createFeatureSelector<fromKlassen.KlassenState>(from
 export const klassenGeladen = createSelector(klassenState, s => s.klassenLoaded);
 export const klassen = createSelector(klassenState, s => new KlassenMap(s.klassenMap).toArray());
 export const anzahlKlassen = createSelector(klassenState, s => s.klassenMap.length);
+export const klasseEditorModel = createSelector(klassenState, s => s.editorModel);
+export const klassenMap = createSelector(klassenState, s => s.klassenMap);

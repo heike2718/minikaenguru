@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.persistence.impl;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +18,7 @@ import javax.transaction.Transactional;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
+import de.egladil.web.mk_gateway.domain.kinder.Klasse;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistentesKind;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistentesKindKindMapper;
@@ -135,6 +137,23 @@ public class KinderHibernateRepository implements KinderRepository {
 		}
 
 		return count;
+	}
+
+	@Override
+	public long countKinderInKlasse(final Klasse klasse) {
+
+		String stmt = "select count(*) from KINDER k where k.KLASSE_UUID = :klasseUuid";
+
+		@SuppressWarnings("unchecked")
+		List<BigInteger> trefferliste = em.createNativeQuery(stmt)
+			.setParameter("klasseUuid", klasse.identifier().identifier()).getResultList();
+
+		if (trefferliste.isEmpty()) {
+
+			return 0;
+		}
+
+		return trefferliste.get(0).longValue();
 	}
 
 	void copyAttributesFromKindWithoutUuid(final Kind source, final PersistentesKind target) {

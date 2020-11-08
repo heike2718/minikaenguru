@@ -11,9 +11,9 @@
 
 			<div class="row mt-4 ml-2">
 				<div class="col-12">
-					<h2>{{schule.name}} <span *ngIf="schule.aktuellAngemeldet"
+					<h3>{{schule.name}} <span *ngIf="schule.aktuellAngemeldet"
 							class="ml-1 badge badge-success">angemeldet
-							für {{wettbewerb.jahr}}</span></h2>
+							für {{wettbewerb.jahr}}</span></h3>
 					<p>{{schule.ort}} - {{schule.land}}</p>
 
 					<p *ngIf="schule.details.kollegen && schule.details.kollegen.length > 0">Kollegen:
