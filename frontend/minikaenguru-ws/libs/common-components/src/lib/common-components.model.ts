@@ -76,6 +76,7 @@ export interface Klasse {
 	readonly uuid: string;
 	readonly name: string;
 	readonly schulkuerzel: string;
+	readonly anzahlKinder?: number;
 };
 
 export interface KlasseEditorModel {

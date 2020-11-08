@@ -23,6 +23,16 @@ const klassenReducer = createReducer(initialKlassenState,
 		return initialKlassenState;
 	}),
 
+	on(KlassenActions.allKlassenLoaded, (state, action) => {
+
+		const alle = action.klassen;
+		const newMap = [];
+		alle.forEach(k => newMap.push({ uuid: k.uuid, klasse: k }));
+
+
+		return { ...state, klassenLoaded: true, klassenMap: newMap, loading: false };
+	})
+
 );
 
 

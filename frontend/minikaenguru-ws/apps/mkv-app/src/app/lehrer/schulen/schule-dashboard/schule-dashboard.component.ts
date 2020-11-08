@@ -10,6 +10,7 @@ import { LogService } from '@minikaenguru-ws/common-logging';
 import { TeilnahmenFacade } from '../../../teilnahmen/teilnahmen.facade';
 import { VertragAdvFacade } from '../../../vertrag-adv/vertrag-adv.facade';
 import { DownloadCardModel } from '@minikaenguru-ws/common-components';
+import { KlassenFacade } from '../../../klassen/klassen.facade';
 
 @Component({
 	selector: 'mkv-schule-dashboard',
@@ -49,6 +50,7 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 		private wettbewerbFacade: WettbewerbFacade,
 		private teilnahmenFacade: TeilnahmenFacade,
 		private vertragAdvFacade: VertragAdvFacade,
+		private klassenFacade: KlassenFacade,
 		private logger: LogService) {
 	}
 
@@ -136,6 +138,7 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 	}
 
 	backToSchulen(): void {
+		this.klassenFacade.resetState();
 		this.lehrerFacade.resetSelection();
 		this.router.navigateByUrl('/lehrer/schulen');
 	}

@@ -5,7 +5,7 @@ import { KlasseDetailsComponent } from './klasse-details/klasse-details.componen
 import { KlassenRoutingModule } from './klassen-routing.module';
 import { StoreModule } from '@ngrx/store';
 import * as fromKlassen from './+state/klassen.reducer';
-import { KlassenListResover } from './klassen-list/klassen-list.resolver';
+import { AppRoutingModule } from '../app-routing.module';
 
 
 
@@ -17,10 +17,8 @@ import { KlassenListResover } from './klassen-list/klassen-list.resolver';
 	imports: [
 		CommonModule,
 		KlassenRoutingModule,
+		AppRoutingModule,
 		StoreModule.forFeature(fromKlassen.klassenFeatureKey, fromKlassen.reducer)
-	],
-	providers: [
-		KlassenListResover
 	]
 })
 export class KlassenModule { }

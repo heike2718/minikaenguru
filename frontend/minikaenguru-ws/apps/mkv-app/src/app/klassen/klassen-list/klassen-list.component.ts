@@ -5,7 +5,7 @@ import { Observable, Subscription } from 'rxjs';
 import { Klasse } from '@minikaenguru-ws/common-components';
 import { Schule } from '../../lehrer/schulen/schulen.model';
 import { environment } from '../../../environments/environment';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
 	selector: 'mkv-klassen-list',
@@ -18,27 +18,61 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 
 	klassen$: Observable<Klasse[]> = this.klassenFacade.klassen$;
 	anzahlKlassen$: Observable<number> = this.klassenFacade.anzahlKlassen$;
-	selectedSchule$: Observable<Schule> = this.lehrerFacade.selectedSchule$;
 
-	private schule: Schule;
+	schule: Schule;
 
+	private routeSubscription: Subscription;
 	private schuleSubscription: Subscription;
+	private klassenSubscription: Subscription;
 
 	constructor(private router: Router,
+		private route: ActivatedRoute,
 		private klassenFacade: KlassenFacade,
 		private lehrerFacade: LehrerFacade) { }
 
 	ngOnInit(): void {
 
-		this.schuleSubscription = this.selectedSchule$.subscribe(
-			s => this.schule = s
+		this.routeSubscription = this.route.paramMap.subscribe(
+
+			paramMap => {
+				const param = paramMap.get('schulkuerzel');
+				if (param) {
+					this.klassenFacade.loadKlassen(param);
+				}
+			}
+
+		)
+
+		this.schuleSubscription = this.lehrerFacade.selectedSchule$.subscribe(
+			s => {
+				if (s) {
+					this.schule = s;
+				} else {
+					this.router.navigateByUrl('/lehrer/schulen');
+				}
+			}
 		);
+
+		this.klassenSubscription = this.klassen$.subscribe(
+			klassen => {
+				for (let ind = 0; ind < klassen.length; ind++) {
+					console.log(JSON.stringify(klassen[ind]));
+				}
+			}
+		)
+
 
 	}
 
 	ngOnDestroy(): void {
+		if (this.routeSubscription) {
+			this.routeSubscription.unsubscribe();
+		}
 		if (this.schuleSubscription) {
 			this.schuleSubscription.unsubscribe();
+		}
+		if (this.klassenSubscription) {
+			this.klassenSubscription.unsubscribe();
 		}
 	}
 

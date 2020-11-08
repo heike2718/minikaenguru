@@ -20,7 +20,7 @@ export class KlassenFacade {
 	public klassen$: Observable<Klasse[]> = this.store.select(KlassenSelectors.klassen);
 	public anzahlKlassen$: Observable<number> = this.store.select(KlassenSelectors.anzahlKlassen);
 
-	private loggingOut: boolean;
+	private loggingOut = false;
 
 	constructor(private store: Store<AppState>,
 		private authService: AuthService,
@@ -28,10 +28,34 @@ export class KlassenFacade {
 		private errorHandler: GlobalErrorHandlerService
 	) {
 
+		this.authService.onLoggingOut$.subscribe(
+			loggingOut => this.loggingOut = loggingOut
+		);
 	}
 
 	public loadKlassen(teilnahmenummer: string) {
 
+		if (this.loggingOut) {
+			return;
+		}
+
+		this.store.dispatch(KlassenActions.startLoading());
+
+		const klassen: Klasse[] = [];
+		klassen.push({
+			name: '2a',
+			schulkuerzel: teilnahmenummer,
+			uuid: 'uuid-1',
+			anzahlKinder: 0
+		});
+		klassen.push({
+			name: '1b',
+			schulkuerzel: teilnahmenummer,
+			uuid: 'uuid-2',
+			anzahlKinder: 0
+		});
+
+		this.store.dispatch(KlassenActions.allKlassenLoaded({ klassen: klassen }));
 	}
 
 
