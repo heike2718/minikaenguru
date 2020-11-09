@@ -74,7 +74,19 @@ export class KlassenMap {
 		return result;
 	}
 
+	public containsName(param: {uuid: string, name: string}): boolean {
 
+		if (!param.name || !param.uuid) {
+			return false;
+		}
 
+		for (const item of this.items) {
 
+			if (item.uuid !== param.uuid && item.klasse.name.toLocaleLowerCase() === param.name.trim().toLocaleLowerCase()) {
+				return true;
+			}
+
+		}
+		return false;
+	}
 };

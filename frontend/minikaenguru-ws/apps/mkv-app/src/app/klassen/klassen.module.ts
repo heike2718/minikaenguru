@@ -6,8 +6,8 @@ import { KlassenRoutingModule } from './klassen-routing.module';
 import { StoreModule } from '@ngrx/store';
 import * as fromKlassen from './+state/klassen.reducer';
 import { KlasseEditorComponent } from './klasse-editor/klasse-editor.component';
-import { KlasseEditorResolver } from './klasse-editor/klasse-editor.resolver';
 import { FormsModule } from '@angular/forms';
+import { KlasseNameValidatorDirective } from './klasse-editor/klasse-name-validator.directive';
 
 
 
@@ -15,16 +15,14 @@ import { FormsModule } from '@angular/forms';
 	declarations: [
 		KlassenListComponent,
 		KlasseDetailsComponent,
-		KlasseEditorComponent
+		KlasseEditorComponent,
+		KlasseNameValidatorDirective
 	],
 	imports: [
 		CommonModule,
 		FormsModule,
 		KlassenRoutingModule,
 		StoreModule.forFeature(fromKlassen.klassenFeatureKey, fromKlassen.reducer)
-	],
-	providers: [
-		KlasseEditorResolver
 	]
 })
 export class KlassenModule { }

@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 import { Klasse, KlasseEditorModel } from '@minikaenguru-ws/common-components';
 import { KlassenService } from './klassen.service';
 import { Router } from '@angular/router';
+import { KlasseWithID } from './klassen.model';
 
 
 
@@ -21,6 +22,7 @@ export class KlassenFacade {
 	public klassen$: Observable<Klasse[]> = this.store.select(KlassenSelectors.klassen);
 	public anzahlKlassen$: Observable<number> = this.store.select(KlassenSelectors.anzahlKlassen);
 	public editorModel$: Observable<KlasseEditorModel> = this.store.select(KlassenSelectors.klasseEditorModel);
+	public klassenMap$: Observable<KlasseWithID[]> = this.store.select(KlassenSelectors.klassenMap);
 
 	private loggingOut = false;
 

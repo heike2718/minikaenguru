@@ -42,7 +42,7 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 				}
 			}
 
-		)
+		);
 
 		this.schuleSubscription = this.lehrerFacade.selectedSchule$.subscribe(
 			s => {

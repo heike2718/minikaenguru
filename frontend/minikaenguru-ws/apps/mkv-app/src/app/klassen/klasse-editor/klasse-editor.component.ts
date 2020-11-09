@@ -18,6 +18,8 @@ export class KlasseEditorComponent implements OnInit, OnDestroy {
 
 	submitted = false;
 
+	warntextDuplikat = '';
+
 	private saveInProgress = false;
 
 	private modelSubscription: Subscription;
@@ -45,19 +47,20 @@ export class KlasseEditorComponent implements OnInit, OnDestroy {
 		if (this.modelSubscription) {
 			this.modelSubscription.unsubscribe();
 		}
+
 	}
 
 	submitDisabled(): boolean {
-
-		if (this.name === undefined) {
-			return true;
-		}
 
 		if (this.saveInProgress) {
 			return true;
 		}
 
-		return this.name.trim().length === 0;
+		if (this.name || this.name.length === 0) {
+			return true;
+		}
+
+		return false;
 	}
 
 
