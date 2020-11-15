@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { STORAGE_KEY_USER, User, Rolle } from '@minikaenguru-ws/common-auth';
 import { LehrerFacade } from '../../lehrer/lehrer.facade';
-import { TeilnahmeIdentifier } from '@minikaenguru-ws/common-components';
+import { TeilnahmeIdentifierAktuellerWettbewerb } from '@minikaenguru-ws/common-components';
 
 
 @Component({
@@ -24,7 +24,7 @@ export class KinderListComponent implements OnInit, OnDestroy {
 
 	veranstalter$ = this.privatveranstalterFacade.veranstalter$;
 
-	private teilnahmeIdentifier: TeilnahmeIdentifier;
+	private teilnahmeIdentifier: TeilnahmeIdentifierAktuellerWettbewerb;
 
 	private veranstalterSubscription: Subscription;
 

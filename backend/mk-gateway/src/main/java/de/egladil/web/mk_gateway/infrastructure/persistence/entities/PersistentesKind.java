@@ -24,7 +24,7 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 @NamedQueries({
 	@NamedQuery(
 		name = "PersistentesKind.FIND_BY_TEILNAHME",
-		query = "select k from PersistentesKind k where k.teilnahmenummer = :teilnahmenummer order by k.uuid")
+		query = "select k from PersistentesKind k where k.teilnahmenummer = :teilnahmenummer and k.teilnahmeart = :teilnahmeart order by k.uuid")
 })
 public class PersistentesKind extends ConcurrencySafeEntity {
 

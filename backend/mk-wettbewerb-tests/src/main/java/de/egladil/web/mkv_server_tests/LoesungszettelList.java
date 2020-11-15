@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 
 /**
- * LoesungszettelList
+ * InMemoryLoesungszettelList
  */
 public class LoesungszettelList {
 

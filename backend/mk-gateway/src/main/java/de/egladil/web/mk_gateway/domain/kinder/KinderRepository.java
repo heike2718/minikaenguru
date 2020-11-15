@@ -8,8 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
 
 /**
  * KinderRepository
@@ -17,15 +16,13 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 public interface KinderRepository {
 
 	/**
-	 * Gibt alle Kinder mit der gleichen Teilnahmenummer zurück.
+	 * Gibt alle Kinder mit dem gegebenen teilnahmeIdentifier zurück.
 	 *
-	 * @param  teilnahmenummer
-	 *                         String
-	 * @param  wettbewerbID
-	 *                         WettbewerbID
-	 * @return                 List
+	 * @param  teilnahmeIdentifier
+	 *                             TeilnahmeIdentifierAktuellerWettbewerb
+	 * @return                     List
 	 */
-	List<Kind> findKinderWithTeilnahme(Teilnahme teilnahme);
+	List<Kind> withTeilnahme(TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdentifier);
 
 	/**
 	 * Sucht das Kind anhand seiner UUID.
@@ -33,7 +30,7 @@ public interface KinderRepository {
 	 * @param  identifier
 	 * @return            Optional
 	 */
-	Optional<Kind> findKindWithIdentifier(Identifier identifier, WettbewerbID wettbewerbID);
+	Optional<Kind> withIdentifier(Identifier identifier);
 
 	/**
 	 * Fügt ein neues Kind hinzu
@@ -60,5 +57,19 @@ public interface KinderRepository {
 	 * @return      boolean
 	 */
 	boolean removeKind(Kind kind);
+
+	/**
+	 * @param  klasseID
+	 * @return
+	 */
+	int removeKinder(List<Kind> kinder);
+
+	/**
+	 * Gib die Anzahl von Kindern in der gegebenen Klasse zurück.
+	 *
+	 * @param  klasse
+	 * @return
+	 */
+	long countKinderInKlasse(Klasse klasse);
 
 }

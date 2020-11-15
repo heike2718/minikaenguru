@@ -10,6 +10,9 @@ https://mathe-jung-alt.de/mk-gateway/open-data/statistik/2020/mediane
 
 mk-gateway
 
+http://localhost:9510/mk-gateway
+
+
 http://192.168.10.176:9510/mk-gateway/heartbeats?heartbeatId=heartbeat
 
 http://192.168.10.176:9510/mk-gateway/schulkatalog/ort?search="hal"

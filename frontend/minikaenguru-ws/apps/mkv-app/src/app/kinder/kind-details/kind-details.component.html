@@ -11,13 +11,13 @@
 			</div>
 		</div>
 		<div class="btn-group d-flex" role="group">
-			<button class="btn btn-outline-secondary w-100 ml-1" (click)="editKind()"><i class="fa fa-pencil"
+			<button class="btn btn-outline-dark w-100 ml-1" (click)="editKind()"><i class="fa fa-pencil"
 					aria-hidden="true"></i>ändern</button>
 
-			<button *ngIf="veranstalter.hatZugangZuUnterlangen" class="btn btn-outline-secondary w-100 ml-1"
+			<button *ngIf="veranstalter.hatZugangZuUnterlangen" class="btn btn-outline-dark w-100 ml-1"
 				(click)="editLoesungszettel()"><i class="fa fa-bars" aria-hidden="true"></i>Lösungszettel</button>
 
-			<button class="btn btn-outline-secondary w-100 ml-1" (click)="deleteKind()"><i class="fa fa-trash"
+			<button class="btn btn-outline-dark w-100 ml-1" (click)="deleteKind()"><i class="fa fa-trash"
 					aria-hidden="true"></i>löschen</button>
 		</div>
 	</div>
@@ -41,7 +41,7 @@
 				gemacht werden.</span></p>
 	</div>
 	<div class="modal-footer">
-		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('nein')">nein</button>
-		<button type="button" class="btn btn-danger" (click)="modal.close('ja')">ja</button>
+		<button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('nein')">besser nicht löschen</button>
+		<button type="button" class="btn btn-danger" (click)="modal.close('ja')">löschen</button>
 	</div>
 </ng-template>

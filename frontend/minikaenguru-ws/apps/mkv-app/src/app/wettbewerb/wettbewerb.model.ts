@@ -1,4 +1,4 @@
-import { TeilnahmeIdentifier, Kind, Klasse } from '@minikaenguru-ws/common-components';
+import { Kind, Klasse, TeilnahmeIdentifierAktuellerWettbewerb } from '@minikaenguru-ws/common-components';
 
 export type WettbewerbStatus = 'ERFASST' | 'ANMELDUNG' | 'DOWNLOAD_PRIVAT' | 'DOWNLOAD_LEHRER' | 'BEENDET';
 
@@ -26,22 +26,16 @@ export interface Privatveranstalter {
 }
 
 export interface AbstractTeilnahme {
-	readonly identifier: TeilnahmeIdentifier;
-	readonly anzahlKinder: number;
+	readonly identifier: TeilnahmeIdentifierAktuellerWettbewerb;
 }
 
 // tslint:disable-next-line:no-empty-interface
 export interface Privatteilnahme extends AbstractTeilnahme {
-	// readonly kinderGeladen: boolean;
-	// readonly kinder: Kind[];
 }
 
 export interface Schulteilnahme extends AbstractTeilnahme {
 	readonly nameUrkunde: string;
-	readonly anzahlKlassen: number;
-	// readonly klassenGeladen: boolean;
 	readonly angemeldetDurch: string;
-	// readonly klassen: Klasse[];
 };
 
 export interface AnonymisierteTeilnahme extends AbstractTeilnahme {

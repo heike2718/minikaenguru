@@ -1,0 +1,106 @@
+{"kinder": [
+  {
+    "identifier": {
+      "identifier": "SCHULKUERZEL_1_KIND_1"
+    },
+    "teilnahmeIdentifier": {
+      "teilnahmenummer": "SCHULKUERZEL_1",
+      "teilnahmeart": "SCHULE"
+    },
+    "vorname": "Rudi",
+    "nachname": "Rutsche",
+    "zusatz": null,
+    "klassenstufe": "ZWEI",
+    "sprache": "de",
+    "loesungszettelID": {
+      "identifier": "4054ed58-9074-43cb-bc76-c9eeeccc0e60"
+    },
+    "klasseID": {
+      "identifier": "SCHULKUERZEL_1_KLASSE_2A"
+    },
+    "landkuerzel": null
+  },
+  {
+    "identifier": {
+      "identifier": "SCHULKUERZEL_1_KIND_2"
+    },
+    "teilnahmeIdentifier": {
+      "teilnahmenummer": "SCHULKUERZEL_1",
+      "teilnahmeart": "SCHULE"
+    },
+    "vorname": "Marie",
+    "nachname": "Mayer",
+    "zusatz": null,
+    "klassenstufe": "ZWEI",
+    "sprache": "de",
+    "loesungszettelID": {
+      "identifier": "2e2bb45f-d333-468b-ac93-5715851d5843"
+    },
+    "klasseID": {
+      "identifier": "SCHULKUERZEL_1_KLASSE_2A"
+    },
+    "landkuerzel": null
+  },
+  {
+    "identifier": {
+      "identifier": "SCHULKUERZEL_1_KIND_3"
+    },
+    "teilnahmeIdentifier": {
+      "teilnahmenummer": "SCHULKUERZEL_1",
+      "teilnahmeart": "SCHULE"
+    },
+    "vorname": "Marie",
+    "nachname": "Mayer",
+    "zusatz": null,
+    "klassenstufe": "ZWEI",
+    "sprache": "de",
+    "loesungszettelID": {
+      "identifier": "472fba58-939a-4166-afd6-09cc7b619e2d"
+    },
+    "klasseID": {
+      "identifier": "SCHULKUERZEL_1_KLASSE_2B"
+    },
+    "landkuerzel": null
+  },
+  {
+    "identifier": {
+      "identifier": "SCHULKUERZEL_1_KIND_4"
+    },
+    "teilnahmeIdentifier": {
+      "teilnahmenummer": "SCHULKUERZEL_1",
+      "teilnahmeart": "SCHULE"
+    },
+    "vorname": "Sophie",
+    "nachname": "Walter",
+    "zusatz": null,
+    "klassenstufe": "ZWEI",
+    "sprache": "de",
+    "loesungszettelID": {
+      "identifier": "a969178b-a848-4ee4-83be-2c083e576c44"
+    },
+    "klasseID": {
+      "identifier": "SCHULKUERZEL_1_KLASSE_2B"
+    },
+    "landkuerzel": null
+  },
+  {
+    "identifier": {
+      "identifier": "TEILNAHMENUMMER_PRIVAT_KIND_1"
+    },
+    "teilnahmeIdentifier": {
+      "teilnahmenummer": "TEILNAHMENUMMER_PRIVAT",
+      "teilnahmeart": "PRIVAT"
+    },
+    "vorname": "Rainer",
+    "nachname": "Traubenzucker",
+    "zusatz": null,
+    "klassenstufe": "ZWEI",
+    "sprache": "de",
+    "loesungszettelID": {
+      "identifier": "bffa4611-69e0-48d5-b483-2c829d3e534d"
+    },
+    "klasseID": null,
+    "landkuerzel": null
+  }
+]}
+

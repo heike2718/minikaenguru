@@ -9,6 +9,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.semantik.AggregateRoot;
 
@@ -18,20 +21,28 @@ import de.egladil.web.mk_gateway.domain.semantik.AggregateRoot;
 @AggregateRoot
 public class Klasse {
 
-	private final Identifier identifier;
+	@JsonProperty
+	private Identifier identifier;
 
+	@JsonProperty
 	private String name;
 
+	@JsonProperty
 	private Identifier schuleID;
 
+	@JsonIgnore
 	private List<Kind> kinder = new ArrayList<>();
+
+	Klasse() {
+
+	}
 
 	public Klasse(final Identifier identifier) {
 
 		this.identifier = identifier;
 	}
 
-	public String getName() {
+	public String name() {
 
 		return name;
 	}
@@ -53,7 +64,7 @@ public class Klasse {
 		return this;
 	}
 
-	public Identifier getIdentifier() {
+	public Identifier identifier() {
 
 		return identifier;
 	}
@@ -86,9 +97,16 @@ public class Klasse {
 		return Collections.unmodifiableList(kinder);
 	}
 
+	/**
+	 * Prüft, ob es in dieser Klasse bereits ein Kind mit den gegebenen Attributen gibt.
+	 *
+	 * @param  kind
+	 *              Kind
+	 * @return      boolean beim ersten Treffer.
+	 */
 	public boolean kindKoennteDuplikatSein(final Kind kind) {
 
-		KindDublettenpruefer dublettenpruefer = new KindDublettenpruefer();
+		final KindDublettenpruefer dublettenpruefer = new KindDublettenpruefer();
 
 		for (Kind k : kinder) {
 
@@ -125,5 +143,11 @@ public class Klasse {
 		}
 		Klasse other = (Klasse) obj;
 		return Objects.equals(identifier, other.identifier);
+	}
+
+	@Override
+	public String toString() {
+
+		return "Klasse [identifier=" + identifier + ", name=" + name + ", schuleID=" + schuleID + "]";
 	}
 }

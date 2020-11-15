@@ -53,8 +53,11 @@ const routes: Routes = [
 		loadChildren: () => import('./kinder/kinder.module').then(m => m.KinderModule)
 	},
 	{
+		path: 'klassen',
+		loadChildren: () => import('./klassen/klassen.module').then(m => m.KlassenModule)
+	},
+	{
 		path: 'adv',
-		pathMatch: 'full',
 		loadChildren: () => import('./vertrag-adv/vertrag-adv.module').then(m => m.VertragAdvModule)
 	},
 	{

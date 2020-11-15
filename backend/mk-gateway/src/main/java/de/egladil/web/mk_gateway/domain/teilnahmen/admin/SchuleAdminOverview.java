@@ -25,7 +25,10 @@ public class SchuleAdminOverview {
 	private SchuleMinikaenguruData minikaenguruData;
 
 	@JsonProperty
-	private AktuelleSchulteilnahmeData aktuelleTeilnahme;
+	private String nameUrkunde;
+
+	@JsonProperty
+	private String angemeldetDurch;
 
 	@JsonProperty
 	private List<AnonymisierteTeilnahmeAPIModel> schulteilnahmen;
@@ -53,17 +56,6 @@ public class SchuleAdminOverview {
 		return this;
 	}
 
-	public AktuelleSchulteilnahmeData getAktuelleTeilnahme() {
-
-		return aktuelleTeilnahme;
-	}
-
-	public SchuleAdminOverview withAktuelleTeilnahme(final AktuelleSchulteilnahmeData aktuelleTeilnahme) {
-
-		this.aktuelleTeilnahme = aktuelleTeilnahme;
-		return this;
-	}
-
 	public List<AnonymisierteTeilnahmeAPIModel> getSchulteilnahmen() {
 
 		return schulteilnahmen;
@@ -75,4 +67,25 @@ public class SchuleAdminOverview {
 		return this;
 	}
 
+	public String getNameUrkunde() {
+
+		return nameUrkunde;
+	}
+
+	public SchuleAdminOverview withNameUrkunde(final String nameUrkunde) {
+
+		this.nameUrkunde = nameUrkunde;
+		return this;
+	}
+
+	public String getAngemeldetDurch() {
+
+		return angemeldetDurch;
+	}
+
+	public SchuleAdminOverview withAngemeldetDurch(final String angemeldetDurch) {
+
+		this.angemeldetDurch = angemeldetDurch;
+		return this;
+	}
 }

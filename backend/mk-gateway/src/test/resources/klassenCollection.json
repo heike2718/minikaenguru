@@ -1,0 +1,20 @@
+{"klassen": [
+  {
+    "identifier": {
+      "identifier": "SCHULKUERZEL_1_KLASSE_2A"
+    },
+    "name": "2a",
+    "schuleID": {
+      "identifier": "SCHULKUERZEL_1"
+    }
+  },
+  {
+    "identifier": {
+      "identifier": "SCHULKUERZEL_1_KLASSE_2B"
+    },
+    "name": "2b",
+    "schuleID": {
+      "identifier": "SCHULKUERZEL_1"
+    }
+  }
+]}

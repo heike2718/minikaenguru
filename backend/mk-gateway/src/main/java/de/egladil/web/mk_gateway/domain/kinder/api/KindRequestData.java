@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.annotations.UuidString;
 
 /**
@@ -33,6 +34,10 @@ public class KindRequestData implements Serializable {
 	@JsonProperty
 	@UuidString
 	private String klasseUuid;
+
+	@JsonProperty
+	@Kuerzel
+	private String kuerzelLand;
 
 	@JsonProperty
 	@NotNull
@@ -68,6 +73,17 @@ public class KindRequestData implements Serializable {
 	public KindRequestData withKlasseUuid(final String klasseUuid) {
 
 		this.klasseUuid = klasseUuid;
+		return this;
+	}
+
+	public String kuerzelLand() {
+
+		return kuerzelLand;
+	}
+
+	public KindRequestData withKuerzelLand(final String kuerzelLand) {
+
+		this.kuerzelLand = kuerzelLand;
 		return this;
 	}
 

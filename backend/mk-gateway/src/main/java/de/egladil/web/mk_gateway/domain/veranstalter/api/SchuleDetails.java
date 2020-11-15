@@ -13,7 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.mk_gateway.domain.semantik.ValueObject;
-import de.egladil.web.mk_gateway.domain.teilnahmen.api.SchulteilnahmeAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.Person;
 
 /**
@@ -32,7 +31,7 @@ public class SchuleDetails {
 	private String angemeldetDurch;
 
 	@JsonProperty
-	private SchulteilnahmeAPIModel aktuelleTeilnahme;
+	private String nameUrkunde;
 
 	@JsonProperty
 	private int anzahlTeilnahmen;
@@ -63,12 +62,6 @@ public class SchuleDetails {
 		return this;
 	}
 
-	public SchuleDetails withTeilnahme(final SchulteilnahmeAPIModel teilnahme) {
-
-		this.aktuelleTeilnahme = teilnahme;
-		return this;
-	}
-
 	public SchuleDetails withAnzahlTeilnahmen(final int anzahl) {
 
 		this.anzahlTeilnahmen = anzahl;
@@ -90,11 +83,6 @@ public class SchuleDetails {
 		return angemeldetDurch;
 	}
 
-	public SchulteilnahmeAPIModel aktuelleTeilnahme() {
-
-		return aktuelleTeilnahme;
-	}
-
 	public int anzahlTeilnahmen() {
 
 		return anzahlTeilnahmen;
@@ -108,6 +96,17 @@ public class SchuleDetails {
 	public SchuleDetails withHatAdv(final boolean hatAdv) {
 
 		this.hatAdv = hatAdv;
+		return this;
+	}
+
+	public String nameUrkunde() {
+
+		return nameUrkunde;
+	}
+
+	public SchuleDetails withNameUrkunde(final String nameUrkunde) {
+
+		this.nameUrkunde = nameUrkunde;
 		return this;
 	}
 

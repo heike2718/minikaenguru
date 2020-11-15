@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.persistence.impl;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,9 +18,8 @@ import javax.transaction.Transactional;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
-import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
-import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.domain.kinder.Klasse;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistentesKind;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistentesKindKindMapper;
 
@@ -28,6 +28,8 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.entities.Persistente
  */
 @RequestScoped
 public class KinderHibernateRepository implements KinderRepository {
+
+	private final PersistentesKindKindMapper dbToDomainObjectMapper = new PersistentesKindKindMapper();
 
 	@Inject
 	EntityManager em;
@@ -40,23 +42,23 @@ public class KinderHibernateRepository implements KinderRepository {
 	}
 
 	@Override
-	public List<Kind> findKinderWithTeilnahme(final Teilnahme teilnahme) {
-
-		final PersistentesKindKindMapper mapper = new PersistentesKindKindMapper(teilnahme.wettbewerbID());
+	public List<Kind> withTeilnahme(final TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdentifier) {
 
 		List<PersistentesKind> trefferliste = em.createNamedQuery(PersistentesKind.FIND_BY_TEILNAHME, PersistentesKind.class)
-			.setParameter("teilnahmenummer", teilnahme.teilnahmenummer().identifier()).getResultList();
+			.setParameter("teilnahmenummer", teilnahmeIdentifier.teilnahmenummer())
+			.setParameter("teilnahmeart", teilnahmeIdentifier.teilnahmeart())
+			.getResultList();
 
 		if (trefferliste.isEmpty()) {
 
 			return new ArrayList<>();
 		}
 
-		return trefferliste.stream().map(pk -> mapper.apply(pk)).collect(Collectors.toList());
+		return trefferliste.stream().map(pk -> dbToDomainObjectMapper.apply(pk)).collect(Collectors.toList());
 	}
 
 	@Override
-	public Optional<Kind> findKindWithIdentifier(final Identifier identifier, final WettbewerbID wettbewerbID) {
+	public Optional<Kind> withIdentifier(final Identifier identifier) {
 
 		PersistentesKind persistentesKind = em.find(PersistentesKind.class, identifier.identifier());
 
@@ -65,7 +67,7 @@ public class KinderHibernateRepository implements KinderRepository {
 			return Optional.empty();
 		}
 
-		Kind kind = new PersistentesKindKindMapper(wettbewerbID).apply(persistentesKind);
+		Kind kind = new PersistentesKindKindMapper().apply(persistentesKind);
 
 		return Optional.of(kind);
 	}
@@ -83,7 +85,7 @@ public class KinderHibernateRepository implements KinderRepository {
 
 		em.persist(persistentesKind);
 
-		Kind result = this.mapFromDB(persistentesKind, kind.teilnahmeIdentifier());
+		Kind result = dbToDomainObjectMapper.apply(persistentesKind);
 		return result;
 	}
 
@@ -116,30 +118,42 @@ public class KinderHibernateRepository implements KinderRepository {
 
 		em.remove(persistentesKind);
 		return true;
+
 	}
 
-	Kind mapFromDB(final PersistentesKind persistentesKind, final TeilnahmeIdentifier teilnahmeIdentifier) {
+	@Override
+	public int removeKinder(final List<Kind> kinder) {
 
-		Kind result = new Kind(new Identifier(persistentesKind.getUuid()))
-			.withKlassenstufe(persistentesKind.getKlassenstufe())
-			.withLandkuerzel(persistentesKind.getLandkuerzel())
-			.withNachname(persistentesKind.getNachname())
-			.withSprache(persistentesKind.getSprache())
-			.withTeilnahmeIdentifier(teilnahmeIdentifier)
-			.withVorname(persistentesKind.getVorname())
-			.withZusatz(persistentesKind.getZusatz());
+		int count = 0;
 
-		if (persistentesKind.getLoesungszettelUUID() != null) {
+		for (Kind kind : kinder) {
 
-			result = result.withLoesungszettelID(new Identifier(persistentesKind.getLoesungszettelUUID()));
+			boolean removed = this.removeKind(kind);
+
+			if (removed) {
+
+				count++;
+			}
 		}
 
-		if (persistentesKind.getKlasseUUID() != null) {
+		return count;
+	}
 
-			result = result.withKlasseID(new Identifier(persistentesKind.getKlasseUUID()));
+	@Override
+	public long countKinderInKlasse(final Klasse klasse) {
+
+		String stmt = "select count(*) from KINDER k where k.KLASSE_UUID = :klasseUuid";
+
+		@SuppressWarnings("unchecked")
+		List<BigInteger> trefferliste = em.createNativeQuery(stmt)
+			.setParameter("klasseUuid", klasse.identifier().identifier()).getResultList();
+
+		if (trefferliste.isEmpty()) {
+
+			return 0;
 		}
 
-		return result;
+		return trefferliste.get(0).longValue();
 	}
 
 	void copyAttributesFromKindWithoutUuid(final Kind source, final PersistentesKind target) {

@@ -44,7 +44,7 @@ public class LoesungszettelHibernateRepositoryTest extends AbstractIT {
 	void should_getAnzahlLoesungszettel_when_exist() {
 
 		// Arrange
-		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.PRIVAT.toString())
+		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.PRIVAT)
 			.withTeilnahmenummer("AUFNUR0WEG").withWettbewerbID(new WettbewerbID(2017));
 
 		// Act
