@@ -103,7 +103,7 @@ export class KlassenFacade {
 		);
 	}
 
-	public updateKlasse (uuid: string, schulkuerzel: string, editorModel: KlasseEditorModel): void {
+	public updateKlasse(uuid: string, schulkuerzel: string, editorModel: KlasseEditorModel): void {
 
 		this.store.dispatch(KlassenActions.startLoading());
 
@@ -116,6 +116,22 @@ export class KlassenFacade {
 		this.klassenService.updateKlasse(data).subscribe(
 			rp => {
 				this.store.dispatch(KlassenActions.klasseSaved({ klasse: rp.data }));
+				this.messageService.showMessage(rp.message);
+			},
+			(error => {
+				this.store.dispatch(KlassenActions.finishedLoadig());
+				this.errorHandler.handleError(error);
+			})
+		);
+	}
+
+	public deleteKlasse(klasse: Klasse): void {
+
+		this.store.dispatch(KlassenActions.startLoading());
+
+		this.klassenService.deleteKlasse(klasse.uuid).subscribe(
+			rp => {
+				this.store.dispatch(KlassenActions.klasseDeleted({ klasse: rp.data }));
 				this.messageService.showMessage(rp.message);
 			},
 			(error => {

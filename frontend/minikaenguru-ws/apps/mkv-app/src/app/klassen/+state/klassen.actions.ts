@@ -47,7 +47,7 @@ export const editCancelled = createAction(
 
 export const klasseDeleted = createAction(
 	'[KlassenFacade] deleteKlasse',
-	props<{klasse: Klasse, outcome: Message}>()
+	props<{klasse: Klasse}>()
 );
 
 export const resetModule = createAction(

@@ -59,6 +59,12 @@ const klassenReducer = createReducer(initialKlassenState,
 
 		const neueMap = new KlassenMap(state.klassenMap).merge(action.klasse);
 		return { ...state, klassenMap: neueMap, loading: false };
+	}),
+
+	on(KlassenActions.klasseDeleted, (state, action) => {
+
+		const neueMap = new KlassenMap(state.klassenMap).remove(action.klasse.uuid);
+		return { ...state, klassenMap: neueMap, loading: false };
 	})
 
 );

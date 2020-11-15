@@ -6,6 +6,7 @@ package de.egladil.web.mk_gateway.domain.kinder;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -324,7 +325,9 @@ public class KlassenService {
 			System.out.println(klasseChanged.serializeQuietly());
 		}
 
-		return KlasseAPIModel.createFromKlasse(geaenderte);
+		final Map<Identifier, Long> anzahlenKinder = this.kinderService.countKinder(Arrays.asList(new Klasse[] { geaenderte }));
+
+		return KlasseAPIModel.createFromKlasse(geaenderte).withAnzahlKinder(anzahlenKinder.get(geaenderte.identifier()));
 	}
 
 	/**

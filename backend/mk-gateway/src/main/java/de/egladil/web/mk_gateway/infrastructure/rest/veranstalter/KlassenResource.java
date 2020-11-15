@@ -24,9 +24,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.egladil.web.commons_validation.annotations.UuidString;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
@@ -44,8 +41,6 @@ import de.egladil.web.mk_gateway.domain.kinder.api.KlasseRequestData;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class KlassenResource {
-
-	private static final Logger LOG = LoggerFactory.getLogger(KlassenResource.class);
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
@@ -122,6 +117,13 @@ public class KlassenResource {
 
 		String lehrerUuid = securityContext.getUserPrincipal().getName();
 
-		return null;
+		KlasseAPIModel geloeschteKlasse = this.klassenService.klasseLoeschen(uuid, lehrerUuid);
+
+		String msg = MessageFormat.format(applicationMessages.getString("deleteKlasse.success"),
+			new Object[] { geloeschteKlasse.name() });
+
+		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.info(msg), geloeschteKlasse);
+
+		return Response.ok(responsePayload).build();
 	}
 }

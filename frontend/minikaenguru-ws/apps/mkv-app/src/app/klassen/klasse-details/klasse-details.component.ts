@@ -57,7 +57,7 @@ export class KlasseDetailsComponent implements OnInit {
 	}
 
 	private forceDeleteKlasse(): void {
-		this.logger.debug('jetzt Klasse löschen');
+		this.klassenFacade.deleteKlasse(this.klasse);
 	}
 
 }

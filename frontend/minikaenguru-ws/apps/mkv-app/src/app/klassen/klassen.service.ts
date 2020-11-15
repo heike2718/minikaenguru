@@ -44,4 +44,14 @@ export class KlassenService {
 
 	}
 
+	public deleteKlasse(uuid: string): Observable<ResponsePayload> {
+
+		const url = environment.apiUrl + '/klassen/' + uuid;
+
+		return this.http.delete(url).pipe(
+			map(body => body as ResponsePayload)
+		);
+
+	}
+
 }
