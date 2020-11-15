@@ -32,6 +32,7 @@ import { VertragAdvModule } from './vertrag-adv/vertrag-adv.module';
 import { KinderModule } from './kinder/kinder.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SessionTimeoutComponent } from './session-timeout/session-timeout.component';
+import { KlassenModule } from './klassen/klassen.module';
 
 
 
@@ -73,6 +74,7 @@ import { SessionTimeoutComponent } from './session-timeout/session-timeout.compo
 		LehrerModule,
 		PrivatveranstalterModule,
 		KinderModule,
+		KlassenModule,
 		TeilnahmenModule,
 		VertragAdvModule,
 		StoreModule.forRoot(reducers, {

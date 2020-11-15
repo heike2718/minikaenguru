@@ -1,13 +1,13 @@
 import { createReducer, Action, on } from '@ngrx/store';
 import * as KinderActions from './kinder.actions';
 import { KindWithID, KinderMap } from '../kinder.model';
-import { initialKindEditorModel, KindEditorModel, Duplikatwarnung, Teilnahmeart, TeilnahmeIdentifier } from 'libs/common-components/src/lib/common-components.model';
+import { initialKindEditorModel, KindEditorModel, Duplikatwarnung, Teilnahmeart, TeilnahmeIdentifierAktuellerWettbewerb } from '@minikaenguru-ws/common-components';
 import { Message } from '@minikaenguru-ws/common-messages';
 
 export const kinderFeatureKey = 'mkv-app-kinder';
 
 export interface KinderState {
-	teilnahmeIdentifier: TeilnahmeIdentifier;
+	teilnahmeIdentifier: TeilnahmeIdentifierAktuellerWettbewerb;
 	kinderMap: KindWithID[];
 	selectedKindUUID: string;
 	kinderLoaded: boolean;
@@ -25,7 +25,7 @@ const initialKinderState: KinderState = {
 	loading: false,
 	saveOutcome: undefined,
 	duplikatwarnung: undefined,
-	editorModel: undefined
+	editorModel: initialKindEditorModel
 };
 
 const kinderReducer = createReducer(initialKinderState,

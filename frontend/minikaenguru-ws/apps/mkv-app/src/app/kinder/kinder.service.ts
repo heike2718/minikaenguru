@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
 import { ResponsePayload, MessageService, Message } from '@minikaenguru-ws/common-messages';
-import { Kind, Duplikatwarnung, PrivatkindRequestData } from '@minikaenguru-ws/common-components';
+import { Kind, Duplikatwarnung, KindRequestData } from '@minikaenguru-ws/common-components';
 
 
 @Injectable({
@@ -26,7 +26,7 @@ export class KinderService {
 		);
 	}
 
-	public checkDuplikat(data: PrivatkindRequestData): Observable<Duplikatwarnung> {
+	public checkDuplikat(data: KindRequestData): Observable<Duplikatwarnung> {
 
 		const url = environment.apiUrl + '/kinder/duplikate';
 
@@ -36,7 +36,7 @@ export class KinderService {
 		);
 	}
 
-	public insertKind(data: PrivatkindRequestData): Observable<ResponsePayload> {
+	public insertKind(data: KindRequestData): Observable<ResponsePayload> {
 
 		const url = environment.apiUrl + '/kinder';
 
@@ -46,7 +46,7 @@ export class KinderService {
 
 	}
 
-	public updateKind(data: PrivatkindRequestData): Observable<ResponsePayload> {
+	public updateKind(data: KindRequestData): Observable<ResponsePayload> {
 
 		const url = environment.apiUrl + '/kinder';
 

@@ -1,11 +1,11 @@
 import { createAction, props } from '@ngrx/store';
 import { Kind, Duplikatwarnung } from '@minikaenguru-ws/common-components';
 import { Message } from '@minikaenguru-ws/common-messages';
-import { Teilnahmeart, TeilnahmeIdentifier } from 'libs/common-components/src/lib/common-components.model';
+import { Teilnahmeart, TeilnahmeIdentifierAktuellerWettbewerb } from '@minikaenguru-ws/common-components';
 
 export const teilnahmenummerInitialized = createAction(
 	'[KinderFacade] on loadKinder',
-	props<{teilnahmeIdentifier: TeilnahmeIdentifier}>()
+	props<{teilnahmeIdentifier: TeilnahmeIdentifierAktuellerWettbewerb}>()
 );
 
 export const startLoading = createAction(

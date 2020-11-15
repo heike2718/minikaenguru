@@ -303,6 +303,61 @@ public class PermittedRolesInMemoryRepositoryTest {
 			assertTrue(rollen.contains(Rolle.LEHRER));
 			assertTrue(rollen.contains(Rolle.PRIVAT));
 		}
+
+		@Test
+		void should_permittedRollen_klassenDelete_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/klassen/FRTGZ76G3", HttpMethod.DELETE);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.LEHRER));
+		}
+
+		@Test
+		void should_permittedRollen_klassenGet_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/klassen/GGUIIFGTU", HttpMethod.GET);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.LEHRER));
+		}
+
+		@Test
+		void should_permittedRollen_klassenPost_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/klassen", HttpMethod.POST);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.LEHRER));
+		}
+
+		@Test
+		void should_permittedRollen_klassenDuplikatePost_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/klassen/duplikate", HttpMethod.POST);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.LEHRER));
+		}
+
+		@Test
+		void should_permittedRollen_klassenPut_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/klassen", HttpMethod.PUT);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.LEHRER));
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,0 +1,34 @@
+<div class="mkv-container mt-1">
+
+
+	<h3><span *ngIf="schule$ | async as schule">{{schule.name}}</span> Klasse anlegen oder ändern</h3>
+
+	<div class="col-12 form-group">
+
+		<div class="row mt-4">
+			<div class="col-12">
+				<label for="nameInput">Name*</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12">
+				<input type="text" class="form-control" id="nameInput" required [(ngModel)]="name" #nameInput="ngModel"
+					name="nameInput" mkvKlasseNameValidator>
+			</div>
+			<div class="col-12 alert-danger" *ngIf="!nameInput.valid && (nameInput.dirty ||nameInput.touched)">
+				<div *ngIf="nameInput.errors.klasseExists">
+					{{nameInput.errors.rule}}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="btn-group d-flex" role="group">
+		<button class="btn btn-primary w-100 ml-1" [disabled]="submitDisabled()" (click)="onSubmit()"><i
+				class="fa fa-floppy-o" aria-hidden="true"></i>
+			speichern</button>
+
+		<button class="btn btn-primary w-100 ml-1" (click)="onCancel()"><i class="fa fa-arrow-left"
+				aria-hidden="true"></i>abbrechen</button>
+	</div>
+</div>

@@ -8,32 +8,22 @@ import java.util.function.Function;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
-import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
 
 /**
  * PersistentesKindKindMapper
  */
 public class PersistentesKindKindMapper implements Function<PersistentesKind, Kind> {
 
-	private final WettbewerbID wettbewerbID;
-
-	public PersistentesKindKindMapper(final WettbewerbID wettbewerbID) {
-
-		this.wettbewerbID = wettbewerbID;
-	}
-
 	@Override
 	public Kind apply(final PersistentesKind persistentesKind) {
-
-		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier()
-			.withTeilnahmeart(persistentesKind.getTeilnahmeart())
-			.withTeilnahmenummer(persistentesKind.getTeilnahmenummer())
-			.withWettbewerbID(wettbewerbID);
 
 		Identifier klasse = persistentesKind.getKlasseUUID() == null ? null : new Identifier(persistentesKind.getKlasseUUID());
 		Identifier loesungszettel = persistentesKind.getLoesungszettelUUID() == null ? null
 			: new Identifier(persistentesKind.getLoesungszettelUUID());
+
+		TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdentifier = new TeilnahmeIdentifierAktuellerWettbewerb(
+			persistentesKind.getTeilnahmenummer(), persistentesKind.getTeilnahmeart());
 
 		return new Kind(new Identifier(persistentesKind.getUuid()))
 			.withKlasseID(klasse)
@@ -43,7 +33,8 @@ public class PersistentesKindKindMapper implements Function<PersistentesKind, Ki
 			.withSprache(persistentesKind.getSprache())
 			.withTeilnahmeIdentifier(teilnahmeIdentifier)
 			.withVorname(persistentesKind.getVorname())
-			.withZusatz(persistentesKind.getZusatz());
+			.withZusatz(persistentesKind.getZusatz())
+			.withLandkuerzel(persistentesKind.getLandkuerzel());
 	}
 
 }

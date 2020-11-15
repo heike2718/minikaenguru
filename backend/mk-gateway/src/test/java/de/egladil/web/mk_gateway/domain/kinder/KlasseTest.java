@@ -12,6 +12,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.kinder.Kind;
+import de.egladil.web.mk_gateway.domain.kinder.Klasse;
 
 /**
  * KlasseTest
@@ -56,7 +58,7 @@ public class KlasseTest {
 		// Assert
 		assertTrue(result);
 		assertEquals(1, klasse.kinder().size());
-		assertEquals(klasse.getIdentifier(), kind.klasseID());
+		assertEquals(klasse.identifier(), kind.klasseID());
 	}
 
 	@Test

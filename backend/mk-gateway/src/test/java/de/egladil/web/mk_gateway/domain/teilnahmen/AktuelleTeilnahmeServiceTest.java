@@ -25,6 +25,7 @@ import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.SchulanmeldungRequestPayload;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.SchulteilnahmeAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 
@@ -163,7 +164,7 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			} catch (BadRequestException e) {
 
 				assertEquals("payload darf nicht null sein.", e.getMessage());
-				assertNull(service.schulteilnahmeCreatedEvent());
+				assertNull(service.schulteilnahmeCreated());
 				assertNull(service.privatteilnahmeCreatedEvent());
 				assertNull(service.getSecurityIncidentRegistered());
 				assertNull(service.getDataInconsistencyRegistered());
@@ -186,7 +187,7 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			} catch (BadRequestException e) {
 
 				assertEquals("uuid darf nicht blank sein.", e.getMessage());
-				assertNull(service.schulteilnahmeCreatedEvent());
+				assertNull(service.schulteilnahmeCreated());
 				assertNull(service.privatteilnahmeCreatedEvent());
 				assertNull(service.getSecurityIncidentRegistered());
 				assertNull(service.getDataInconsistencyRegistered());
@@ -208,7 +209,7 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			} catch (BadRequestException e) {
 
 				assertEquals("uuid darf nicht blank sein.", e.getMessage());
-				assertNull(service.schulteilnahmeCreatedEvent());
+				assertNull(service.schulteilnahmeCreated());
 				assertNull(service.privatteilnahmeCreatedEvent());
 				assertNull(service.getSecurityIncidentRegistered());
 				assertNull(service.getDataInconsistencyRegistered());
@@ -230,7 +231,7 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			} catch (BadRequestException e) {
 
 				assertEquals("schulkuerzel darf nicht blank sein.", e.getMessage());
-				assertNull(service.schulteilnahmeCreatedEvent());
+				assertNull(service.schulteilnahmeCreated());
 				assertNull(service.privatteilnahmeCreatedEvent());
 				assertNull(service.getSecurityIncidentRegistered());
 				assertNull(service.getDataInconsistencyRegistered());
@@ -252,7 +253,7 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			} catch (BadRequestException e) {
 
 				assertEquals("schulkuerzel darf nicht blank sein.", e.getMessage());
-				assertNull(service.schulteilnahmeCreatedEvent());
+				assertNull(service.schulteilnahmeCreated());
 				assertNull(service.privatteilnahmeCreatedEvent());
 				assertNull(service.getSecurityIncidentRegistered());
 				assertNull(service.getDataInconsistencyRegistered());
@@ -274,7 +275,7 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			} catch (BadRequestException e) {
 
 				assertEquals("schulname darf nicht blank sein.", e.getMessage());
-				assertNull(service.schulteilnahmeCreatedEvent());
+				assertNull(service.schulteilnahmeCreated());
 				assertNull(service.privatteilnahmeCreatedEvent());
 				assertNull(service.getSecurityIncidentRegistered());
 				assertNull(service.getDataInconsistencyRegistered());
@@ -296,7 +297,7 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			} catch (BadRequestException e) {
 
 				assertEquals("schulname darf nicht blank sein.", e.getMessage());
-				assertNull(service.schulteilnahmeCreatedEvent());
+				assertNull(service.schulteilnahmeCreated());
 				assertNull(service.privatteilnahmeCreatedEvent());
 				assertNull(service.getSecurityIncidentRegistered());
 				assertNull(service.getDataInconsistencyRegistered());
@@ -326,7 +327,7 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			} catch (IllegalStateException e) {
 
 				assertEquals("keine Anmeldung möglich", e.getMessage());
-				assertNull(service.schulteilnahmeCreatedEvent());
+				assertNull(service.schulteilnahmeCreated());
 				assertNull(service.privatteilnahmeCreatedEvent());
 				assertNull(service.getSecurityIncidentRegistered());
 				assertNull(service.getDataInconsistencyRegistered());
@@ -351,7 +352,7 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			} catch (AccessDeniedException e) {
 
 				assertEquals("keinen Veranstalter mit UUID=basghoqh gefunden", e.getMessage());
-				assertNull(service.schulteilnahmeCreatedEvent());
+				assertNull(service.schulteilnahmeCreated());
 				assertNotNull(service.getSecurityIncidentRegistered());
 				assertNull(service.privatteilnahmeCreatedEvent());
 				assertNull(service.getDataInconsistencyRegistered());
@@ -377,7 +378,7 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			} catch (AccessDeniedException e) {
 
 				assertEquals("Dem Veranstalter wurde der Zugang zu den Unterlagen entzogen.", e.getMessage());
-				assertNull(service.schulteilnahmeCreatedEvent());
+				assertNull(service.schulteilnahmeCreated());
 				assertNotNull(service.getSecurityIncidentRegistered());
 				assertNull(service.privatteilnahmeCreatedEvent());
 				assertNull(service.getDataInconsistencyRegistered());
@@ -401,7 +402,7 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			} catch (AccessDeniedException e) {
 
 				assertEquals("Dies ist ein Privatveranstalter. Nur Lehrer dürfen diese Funktion aufrufen.", e.getMessage());
-				assertNull(service.schulteilnahmeCreatedEvent());
+				assertNull(service.schulteilnahmeCreated());
 				assertNotNull(service.getSecurityIncidentRegistered());
 				assertNull(service.privatteilnahmeCreatedEvent());
 				assertNull(service.getDataInconsistencyRegistered());
@@ -425,7 +426,7 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			} catch (AccessDeniedException e) {
 
 				assertEquals("Der Lehrer gehört nicht zur anzumeldenden Schule.", e.getMessage());
-				assertNull(service.schulteilnahmeCreatedEvent());
+				assertNull(service.schulteilnahmeCreated());
 				assertNotNull(service.getSecurityIncidentRegistered());
 				assertNull(service.privatteilnahmeCreatedEvent());
 				assertNull(service.getDataInconsistencyRegistered());
@@ -441,11 +442,12 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			SchulanmeldungRequestPayload payload = SchulanmeldungRequestPayload.create(schulkuerzel, "Antonschule");
 
 			// Act
-			Schulteilnahme actual = service.schuleAnmelden(payload, uuid);
+			SchulteilnahmeAPIModel actual = service.schuleAnmelden(payload, uuid);
 
 			// Assert
-			assertEquals("Christaschule", actual.nameSchule());
-			assertNull(service.schulteilnahmeCreatedEvent());
+			assertEquals("Christaschule", actual.nameUrkunde());
+			assertEquals("", actual.angemeldetDurch());
+			assertNull(service.schulteilnahmeCreated());
 			assertNull(service.getSecurityIncidentRegistered());
 			assertNull(service.privatteilnahmeCreatedEvent());
 			assertNull(service.getDataInconsistencyRegistered());
@@ -460,16 +462,13 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			SchulanmeldungRequestPayload payload = SchulanmeldungRequestPayload.create(schulkuerzel, "Antonschule");
 
 			// Act
-			Schulteilnahme actual = service.schuleAnmelden(payload, uuid);
+			SchulteilnahmeAPIModel actual = service.schuleAnmelden(payload, uuid);
 
 			// Assert
-			assertEquals("Antonschule", actual.nameSchule());
-			assertEquals(Teilnahmeart.SCHULE, actual.teilnahmeart());
-			assertEquals(UUID_LEHRER_1, actual.angemeldetDurchVeranstalterId().identifier());
-			assertEquals(SCHULKUERZEL_2, actual.teilnahmenummer().identifier());
-			assertEquals(Integer.valueOf(2020), actual.wettbewerbID().jahr());
+			assertEquals("Antonschule", actual.nameUrkunde());
+			assertEquals("", actual.angemeldetDurch());
 
-			SchulteilnahmeCreated event = service.schulteilnahmeCreatedEvent();
+			SchulteilnahmeCreated event = service.schulteilnahmeCreated();
 
 			assertNotNull(event);
 			assertEquals("Antonschule", event.schulname());

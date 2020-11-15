@@ -14,7 +14,8 @@ import {
 	getKlassenstufeByLabel,
 	Duplikatwarnung,
 	getSpracheByLabel,
-	TeilnahmeIdentifier
+	TeilnahmeIdentifier,
+	TeilnahmeIdentifierAktuellerWettbewerb
 } from '@minikaenguru-ws/common-components';
 import { Subscription } from 'rxjs';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
@@ -59,7 +60,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	private uuid: string;
 
-	private teilnahmeIdentifier: TeilnahmeIdentifier;
+	private teilnahmeIdentifier: TeilnahmeIdentifierAktuellerWettbewerb;
 
 	private initialGuiModel: KindEditorModel;
 

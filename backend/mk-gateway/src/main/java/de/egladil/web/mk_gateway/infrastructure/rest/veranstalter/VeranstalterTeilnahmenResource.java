@@ -24,7 +24,6 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.AktuelleTeilnahmeService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Privatteilnahme;
-import de.egladil.web.mk_gateway.domain.teilnahmen.Schulteilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.PrivatteilnahmeAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.SchulanmeldungRequestPayload;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.SchulteilnahmeAPIModel;
@@ -47,7 +46,7 @@ public class VeranstalterTeilnahmenResource {
 	AktuelleTeilnahmeService aktuelleTeilnahmeService;
 
 	@Inject
-	AuthorizationService veranstalterAuthService;
+	AuthorizationService authService;
 
 	@POST
 	@Path("/privat")
@@ -73,14 +72,12 @@ public class VeranstalterTeilnahmenResource {
 
 		final String principalName = securityContext.getUserPrincipal().getName();
 
-		Schulteilnahme schulteilnahme = aktuelleTeilnahmeService.schuleAnmelden(payload, principalName);
+		SchulteilnahmeAPIModel data = aktuelleTeilnahmeService.schuleAnmelden(payload, principalName);
 
 		String message = MessageFormat.format(applicationMessages.getString("teilnahmenResource.anmelden.schule.success"),
-			new Object[] { schulteilnahme.nameSchule() });
+			new Object[] { data.nameUrkunde() });
 
-		SchulteilnahmeAPIModel data = SchulteilnahmeAPIModel.create(schulteilnahme).withKlassenGeladen(true);
-
-		// hier könnte noch über Messging ein Ereignis propagiert werden, um en update eines Anmeldungszählers zu triggern
+		// hier könnte noch über Messging ein Ereignis propagiert werden, um den update eines Anmeldungszählers zu triggern
 
 		return Response
 			.ok(new ResponsePayload(

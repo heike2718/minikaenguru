@@ -62,10 +62,10 @@ public class AdminSchulenService {
 		if (optSchuleAPIModel.isPresent()) {
 
 			data = optSchuleAPIModel.get().withDetails(schuleDetails)
-				.withAngemeldet(schuleDetails.aktuelleTeilnahme() != null);
+				.withAngemeldet(schuleDetails.angemeldetDurch() != null);
 		} else {
 
-			data = SchuleAPIModel.withKuerzel(schuleDetails.kuerzel()).withAngemeldet(schuleDetails.aktuelleTeilnahme() != null)
+			data = SchuleAPIModel.withKuerzel(schuleDetails.kuerzel()).withAngemeldet(schuleDetails.angemeldetDurch() != null)
 				.withDetails(schuleDetails);
 		}
 
@@ -80,10 +80,9 @@ public class AdminSchulenService {
 
 		if (schuleMinikaenguruData.aktuellAngemeldet()) {
 
-			result = result.withAktuelleTeilnahme(
-				AktuelleSchulteilnahmeData.createFromSchulteilnahmeAPIModel(schuleDetails.aktuelleTeilnahme())
-					.withAngemeldetDurch(schuleDetails.angemeldetDurch()));
+			result.withAngemeldetDurch(schuleDetails.angemeldetDurch()).withNameUrkunde(schuleDetails.nameUrkunde());
 		}
+
 		return Optional.of(result);
 	}
 

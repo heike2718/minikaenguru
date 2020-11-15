@@ -9,6 +9,11 @@ export interface TeilnahmeIdentifier {
 	readonly teilnahmeart: Teilnahmeart;
 };
 
+export interface TeilnahmeIdentifierAktuellerWettbewerb {
+	readonly teilnahmenummer: string;
+	readonly teilnahmeart: Teilnahmeart;
+};
+
 export interface Teilnahme {
 	readonly identifier: TeilnahmeIdentifier;
 	readonly anzahlKinder: number;
@@ -42,12 +47,6 @@ export interface Sprache {
 	readonly label: string;
 };
 
-export interface Klasse {
-	readonly uuid: string;
-	readonly name: string;
-	readonly teilnahmeIdentifier: TeilnahmeIdentifier;
-};
-
 export interface Kind {
 	readonly uuid: string;
 	readonly vorname: string;
@@ -64,12 +63,30 @@ export interface KindEditorModel {
 	zusatz: string;
 	klassenstufe: Klassenstufe,
 	sprache: Sprache;
-	land?: string;
 };
 
-export interface PrivatkindRequestData {
+export interface KindRequestData {
 	uuid: string,
+	klasseUuid?: string,
+	kuerzelLand?: string,
 	kind: KindEditorModel
+};
+
+export interface Klasse {
+	readonly uuid: string;
+	readonly name: string;
+	readonly schulkuerzel: string;
+	readonly anzahlKinder?: number;
+};
+
+export interface KlasseEditorModel {
+	name: string;
+};
+
+export interface KlasseRequestData {
+	uuid: string;
+	schulkuerzel: string;
+	klasse: KlasseEditorModel;
 };
 
 
@@ -79,7 +96,10 @@ export const initialKindEditorModel: KindEditorModel = {
 	zusatz: '',
 	klassenstufe: null,
 	sprache: { sprache: 'de', label: 'deutsch' },
-	land: undefined
+};
+
+export const initialKlasseEditorModel: KlasseEditorModel = {
+	name: ''
 };
 
 export function getKlassenstufeByLabel(label: string): Klassenstufe {
@@ -153,5 +173,11 @@ export function compareKinder(kind1: Kind, kind2: Kind): number {
 	}
 
 	return compareKlassenstufen(kind1.klassenstufe, kind2.klassenstufe);
-}
+};
+
+export function compareKlassen(klasse1: Klasse, klasse2: Klasse): number {
+
+	return klasse1.name.localeCompare(klasse2.name);
+
+};
 

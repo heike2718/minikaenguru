@@ -5,6 +5,7 @@ import { WettbewerbFacade } from '../../wettbewerb/wettbewerb.facade';
 import { ThrowStmt } from '@angular/compiler';
 import { LogoutService } from '../../services/logout.service';
 import { environment } from '../../../environments/environment';
+import { KlassenFacade } from '../../klassen/klassen.facade';
 
 @Component({
 	selector: 'mkv-lehrer-dashboard',
@@ -20,11 +21,13 @@ export class LehrerDashboardComponent implements OnInit {
 	textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
 
 	constructor(private lehrerFacade: LehrerFacade,
+		private klassenFacade: KlassenFacade,
 		private wettbewerbFacade: WettbewerbFacade,
 		private logoutService: LogoutService,
 		private router: Router) { }
 
 	ngOnInit(): void {
+		this.klassenFacade.resetState();
 	}
 
 	gotoSchulen() {

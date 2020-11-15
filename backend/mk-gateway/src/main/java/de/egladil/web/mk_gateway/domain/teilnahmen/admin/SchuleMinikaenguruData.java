@@ -28,7 +28,7 @@ public class SchuleMinikaenguruData {
 	public static SchuleMinikaenguruData createFromSchuleDetails(final SchuleDetails details) {
 
 		SchuleMinikaenguruData result = new SchuleMinikaenguruData();
-		result.aktuellAngemeldet = details.aktuelleTeilnahme() != null;
+		result.aktuellAngemeldet = details.angemeldetDurch() != null;
 		result.anzahlTeilnahmen = details.anzahlTeilnahmen();
 		result.hatAdv = details.hatAdv();
 		result.kollegen = details.kollegen();

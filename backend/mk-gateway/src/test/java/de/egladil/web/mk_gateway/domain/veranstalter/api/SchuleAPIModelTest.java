@@ -17,8 +17,6 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.veranstalter.Person;
-import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
-import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleDetails;
 
 /**
  * SchuleAPIModelTest
@@ -106,7 +104,7 @@ public class SchuleAPIModelTest {
 			.asList(new Person[] { new Person("11111", "Alter Verwalter"), new Person("22222", "Strick Liesel") });
 
 		SchuleDetails details = new SchuleDetails("12345").withAngemeldetDurch(new Person("44444", "Herta Grummlig"))
-			.withAnzahlTeilnahmen(4).withHatAdv(true).withKollegen(kollegen);
+			.withAnzahlTeilnahmen(4).withHatAdv(true).withKollegen(kollegen).withNameUrkunde("David-Hilbert-Schule");
 
 		// Act
 		SchuleAPIModel model = SchuleAPIModel.withAttributes(schuleWettbewerbMap).withAngemeldet(true).withDetails(details);
@@ -124,9 +122,10 @@ public class SchuleAPIModelTest {
 		assertEquals("Herta Grummlig", modelDetails.angemeldetDurch());
 		assertEquals(4, modelDetails.anzahlTeilnahmen());
 		assertTrue(modelDetails.hatAdv());
-		assertNull(modelDetails.aktuelleTeilnahme());
+		assertEquals("Herta Grummlig", modelDetails.angemeldetDurch());
 		assertEquals("12345", modelDetails.kuerzel());
 		assertEquals("Alter Verwalter, Strick Liesel", modelDetails.kollegen());
+		assertEquals("David-Hilbert-Schule", modelDetails.nameUrkunde());
 	}
 
 	@Test

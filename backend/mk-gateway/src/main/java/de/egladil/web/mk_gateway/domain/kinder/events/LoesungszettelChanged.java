@@ -2,27 +2,28 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.auswertungen;
+package de.egladil.web.mk_gateway.domain.kinder.events;
 
 import de.egladil.web.mk_gateway.domain.event.EventType;
 
 /**
- * LoesungszettelDeleted
+ * LoesungszettelChanged
  */
-public class LoesungszettelDeleted extends AbstractLoesungszettelEvent {
+public class LoesungszettelChanged extends AbstractLoesungszettelEvent {
 
 	/**
 	 *
 	 */
-	public LoesungszettelDeleted() {
+	public LoesungszettelChanged() {
 
 		super();
+
 	}
 
 	/**
 	 * @param triggeringUser
 	 */
-	public LoesungszettelDeleted(final String triggeringUser) {
+	public LoesungszettelChanged(final String triggeringUser) {
 
 		super(triggeringUser);
 
@@ -31,7 +32,7 @@ public class LoesungszettelDeleted extends AbstractLoesungszettelEvent {
 	@Override
 	public String typeName() {
 
-		return EventType.LOESUNGSZETTEL_DELETED.getLabel();
+		return EventType.LOESUNGSZETTEL_CHANGED.getLabel();
 	}
 
 }

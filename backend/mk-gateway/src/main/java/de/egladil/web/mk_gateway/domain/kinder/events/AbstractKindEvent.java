@@ -2,27 +2,18 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.kinder;
+package de.egladil.web.mk_gateway.domain.kinder.events;
 
-import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import de.egladil.web.commons_net.time.CommonTimeUtils;
-import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
+import de.egladil.web.mk_gateway.domain.event.AbstractDomainEvent;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 
 /**
  * AbstractKindEvent
  */
-public abstract class AbstractKindEvent implements MkGatewayDomainEvent {
-
-	@JsonIgnore
-	private final LocalDateTime occuredOn;
+public abstract class AbstractKindEvent extends AbstractDomainEvent {
 
 	@JsonProperty
 	private String kindID;
@@ -44,19 +35,13 @@ public abstract class AbstractKindEvent implements MkGatewayDomainEvent {
 
 	AbstractKindEvent() {
 
-		this.occuredOn = CommonTimeUtils.now();
+		super();
 	}
 
 	public AbstractKindEvent(final String triggeringUser) {
 
-		this();
+		super();
 		this.triggeringUser = triggeringUser;
-	}
-
-	@Override
-	public LocalDateTime occuredOn() {
-
-		return this.occuredOn;
 	}
 
 	public AbstractKindEvent withKindID(final String kindID) {
@@ -87,18 +72,5 @@ public abstract class AbstractKindEvent implements MkGatewayDomainEvent {
 
 		this.klasseID = klasseID;
 		return this;
-	}
-
-	public String serializeQuietly() {
-
-		try {
-
-			String body = new ObjectMapper().writeValueAsString(this);
-			return body;
-		} catch (JsonProcessingException e) {
-
-			e.printStackTrace();
-			return e.getMessage();
-		}
 	}
 }

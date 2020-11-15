@@ -68,7 +68,7 @@ public class Loesungszettel {
 		return kindID;
 	}
 
-	public Loesungszettel withNummer(final String kindID) {
+	public Loesungszettel withKindID(final String kindID) {
 
 		this.kindID = kindID;
 		return this;

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { Router } from '@angular/router';
 import { LehrerFacade } from '../../lehrer.facade';
+import { KlassenFacade } from '../../../klassen/klassen.facade';
 
 @Component({
 	selector: 'mkv-schulen-list',
@@ -17,10 +18,13 @@ export class SchulenListComponent implements OnInit {
 	textFeatureFlagAnzeigen = false;
 	textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber Anfang 2021.';
 
-	constructor(private lehrerFacade: LehrerFacade, private router: Router) {
+	constructor(private lehrerFacade: LehrerFacade
+		, private klassenFacade: KlassenFacade
+		, private router: Router) {
 	}
 
 	ngOnInit(): void {
+		this.klassenFacade.resetState();
 	}
 
 	addSchule(): void {

@@ -8,12 +8,15 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
 import de.egladil.web.mk_gateway.domain.semantik.AggregateRoot;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
-import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
 
 /**
  * Kind
@@ -21,24 +24,34 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 @AggregateRoot
 public class Kind {
 
+	@JsonProperty
 	private Identifier identifier;
 
-	private TeilnahmeIdentifier teilnahmeIdentifier;
+	@JsonProperty
+	private TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdentifier;
 
+	@JsonProperty
 	private String vorname;
 
+	@JsonProperty
 	private String nachname;
 
+	@JsonProperty
 	private String zusatz;
 
+	@JsonProperty
 	private Klassenstufe klassenstufe;
 
+	@JsonProperty
 	private Sprache sprache;
 
+	@JsonProperty
 	private Identifier loesungszettelID;
 
+	@JsonProperty
 	private Identifier klasseID;
 
+	@JsonProperty
 	private String landkuerzel;
 
 	public Kind() {
@@ -57,7 +70,6 @@ public class Kind {
 		this.zusatz = kindEditorModel.zusatz() == null ? null : kindEditorModel.zusatz().trim();
 		this.sprache = kindEditorModel.sprache().sprache();
 		this.klassenstufe = kindEditorModel.klassenstufe().klassenstufe();
-		this.landkuerzel = kindEditorModel.land();
 		return this;
 	}
 
@@ -66,12 +78,12 @@ public class Kind {
 		return identifier;
 	}
 
-	public TeilnahmeIdentifier teilnahmeIdentifier() {
+	public TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdentifier() {
 
 		return teilnahmeIdentifier;
 	}
 
-	public Kind withTeilnahmeIdentifier(final TeilnahmeIdentifier teilnahmeIdentifier) {
+	public Kind withTeilnahmeIdentifier(final TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdentifier) {
 
 		this.teilnahmeIdentifier = teilnahmeIdentifier;
 		return this;
@@ -165,16 +177,19 @@ public class Kind {
 		return this;
 	}
 
+	@JsonIgnore
 	public String getLowerVornameNullSafe() {
 
 		return vorname == null ? null : vorname.trim().toLowerCase();
 	}
 
+	@JsonIgnore
 	public String getLowerNachnameNullSafe() {
 
 		return nachname == null ? null : nachname.trim().toLowerCase();
 	}
 
+	@JsonIgnore
 	public String getLowerZusatzNullSafe() {
 
 		return zusatz == null ? null : zusatz.trim().toLowerCase();
