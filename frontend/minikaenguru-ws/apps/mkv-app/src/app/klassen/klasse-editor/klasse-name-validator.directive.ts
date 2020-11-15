@@ -61,7 +61,7 @@ export class KlasseNameValidatorDirective implements OnInit, OnDestroy, Validato
 
 		const name: string = c.value;
 
-		if (name === undefined || name.length === 0) {
+		if (!name || name.length === 0) {
 			return null;
 		}
 

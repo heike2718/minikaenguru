@@ -3,7 +3,8 @@ import { KlassenFacade } from '../klassen.facade';
 import { Subscription, Observable } from 'rxjs';
 import { LehrerFacade } from '../../lehrer/lehrer.facade';
 import { Schule } from '../../lehrer/schulen/schulen.model';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { MessageService } from '@minikaenguru-ws/common-messages';
 
 @Component({
 	selector: 'mkv-klasse-editor',
@@ -20,15 +21,39 @@ export class KlasseEditorComponent implements OnInit, OnDestroy {
 
 	warntextDuplikat = '';
 
+	private uuid: string;
+
+	private schulkuerzel: string;
+
 	private saveInProgress = false;
 
 	private modelSubscription: Subscription;
 
+	private routeParamsSubcription: Subscription;
+
+	private schuleSubscription: Subscription;
+
 	constructor(private router: Router,
+		private route: ActivatedRoute,
+		private messageService: MessageService,
 		private klassenFacade: KlassenFacade,
 		private lehrerFacade: LehrerFacade) { }
 
 	ngOnInit(): void {
+
+		this.routeParamsSubcription = this.route.params.subscribe(
+			p => {
+				this.uuid = p['id'];
+			}
+		);
+
+		this.schuleSubscription = this.schule$.subscribe(
+			s => {
+				if (s) {
+					this.schulkuerzel = s.kuerzel;
+				}
+			}
+		);
 
 		this.modelSubscription = this.klassenFacade.editorModel$.subscribe(
 			em => {
@@ -44,6 +69,14 @@ export class KlasseEditorComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 
+		if (this.routeParamsSubcription) {
+			this.routeParamsSubcription.unsubscribe();
+		}
+
+		if (this.schuleSubscription) {
+			this.schuleSubscription.unsubscribe();
+		}
+
 		if (this.modelSubscription) {
 			this.modelSubscription.unsubscribe();
 		}
@@ -56,7 +89,11 @@ export class KlasseEditorComponent implements OnInit, OnDestroy {
 			return true;
 		}
 
-		if (this.name || this.name.length === 0) {
+		if (!this.name || this.name.length === 0) {
+			return true;
+		}
+
+		if (!this.schulkuerzel || !this.uuid) {
 			return true;
 		}
 
@@ -66,9 +103,21 @@ export class KlasseEditorComponent implements OnInit, OnDestroy {
 
 	onSubmit(): void {
 		this.submitted = true;
+		if (this.uuid === 'neu') {
+			this.klassenFacade.insertKlasse(this.uuid, this.schulkuerzel, { name: this.name });
+		} else {
+			this.klassenFacade.updateKlasse(this.uuid, this.schulkuerzel, {name: this.name});
+		}
 	}
 
 	onCancel(): void {
+		this.messageService.clear();
+		this.klassenFacade.cancelEditKlasse();
 
+		if (this.schulkuerzel) {
+			this.router.navigateByUrl('/klassen/' + this.schulkuerzel);
+		} else {
+			this.router.navigateByUrl('/lehrer/schulen');
+		}
 	}
 }

@@ -33,7 +33,7 @@ export const startEditingKlasse = createAction(
 
 export const klasseSaved = createAction(
 	'[KlassenFacade] insert or update klasse',
-	props<{klasse: Klasse, message: Message}>()
+	props<{klasse: Klasse}>()
 );
 
 export const duplikatGeprueft = createAction(

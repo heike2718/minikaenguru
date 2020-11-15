@@ -1,7 +1,8 @@
 import { createReducer, Action, on } from '@ngrx/store';
 import * as KlassenActions from './klassen.actions';
-import { KlasseWithID } from '../klassen.model';
+import { KlasseWithID, KlassenMap } from '../klassen.model';
 import { KlasseEditorModel, initialKlasseEditorModel } from '@minikaenguru-ws/common-components';
+import { Message } from '@minikaenguru-ws/common-messages';
 
 
 export const klassenFeatureKey = 'mkv-app-klassen';
@@ -52,6 +53,12 @@ const klassenReducer = createReducer(initialKlassenState,
 
 		return { ...state, editorModel: klasseEditorModel };
 
+	}),
+
+	on(KlassenActions.klasseSaved, (state, action) => {
+
+		const neueMap = new KlassenMap(state.klassenMap).merge(action.klasse);
+		return { ...state, klassenMap: neueMap, loading: false };
 	})
 
 );

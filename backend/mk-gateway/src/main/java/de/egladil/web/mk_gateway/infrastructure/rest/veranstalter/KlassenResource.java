@@ -15,6 +15,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -90,15 +91,29 @@ public class KlassenResource {
 
 		String lehrerUuid = securityContext.getUserPrincipal().getName();
 
-		return null;
+		KlasseAPIModel klasse = this.klassenService.klasseAnlegen(data, lehrerUuid);
+
+		String msg = MessageFormat.format(applicationMessages.getString("saveKlasse.success"),
+			new Object[] { klasse.name() });
+
+		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.info(msg), klasse);
+
+		return Response.ok(responsePayload).build();
 	}
 
-	@POST
+	@PUT
 	public Response klasseAendern(final KlasseRequestData data) {
 
 		String lehrerUuid = securityContext.getUserPrincipal().getName();
 
-		return null;
+		KlasseAPIModel klasse = this.klassenService.klasseUmbenennen(data, lehrerUuid);
+
+		String msg = MessageFormat.format(applicationMessages.getString("saveKlasse.success"),
+			new Object[] { klasse.name() });
+
+		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.info(msg), klasse);
+
+		return Response.ok(responsePayload).build();
 	}
 
 	@DELETE

@@ -6,10 +6,11 @@ import { GlobalErrorHandlerService } from '../infrastructure/global-error-handle
 import * as KlassenActions from './+state/klassen.actions';
 import * as KlassenSelectors from './+state/klassen.selectors';
 import { Observable } from 'rxjs';
-import { Klasse, KlasseEditorModel } from '@minikaenguru-ws/common-components';
+import { Klasse, KlasseEditorModel, KlasseRequestData } from '@minikaenguru-ws/common-components';
 import { KlassenService } from './klassen.service';
 import { Router } from '@angular/router';
 import { KlasseWithID } from './klassen.model';
+import { MessageService } from '@minikaenguru-ws/common-messages';
 
 
 
@@ -31,6 +32,7 @@ export class KlassenFacade {
 	constructor(private store: Store<AppState>,
 		private router: Router,
 		private authService: AuthService,
+		private messageService: MessageService,
 		private klassenService: KlassenService,
 		private errorHandler: GlobalErrorHandlerService
 	) {
@@ -72,7 +74,55 @@ export class KlassenFacade {
 	}
 
 	public editKlasse(klasse: Klasse): void {
-		this.store.dispatch(KlassenActions.startEditingKlasse({klasse: klasse}));
+		this.store.dispatch(KlassenActions.startEditingKlasse({ klasse: klasse }));
+	}
+
+	public cancelEditKlasse(): void {
+		this.store.dispatch(KlassenActions.editCancelled());
+	}
+
+	public insertKlasse(uuid: string, schulkuerzel: string, editorModel: KlasseEditorModel): void {
+
+		this.store.dispatch(KlassenActions.startLoading());
+
+		const data: KlasseRequestData = {
+			uuid: uuid,
+			klasse: editorModel,
+			schulkuerzel: schulkuerzel
+		};
+
+		this.klassenService.insertKlasse(data).subscribe(
+			rp => {
+				this.store.dispatch(KlassenActions.klasseSaved({ klasse: rp.data }));
+				this.messageService.showMessage(rp.message);
+			},
+			(error => {
+				this.store.dispatch(KlassenActions.finishedLoadig());
+				this.errorHandler.handleError(error);
+			})
+		);
+	}
+
+	public updateKlasse (uuid: string, schulkuerzel: string, editorModel: KlasseEditorModel): void {
+
+		this.store.dispatch(KlassenActions.startLoading());
+
+		const data: KlasseRequestData = {
+			uuid: uuid,
+			klasse: editorModel,
+			schulkuerzel: schulkuerzel
+		};
+
+		this.klassenService.updateKlasse(data).subscribe(
+			rp => {
+				this.store.dispatch(KlassenActions.klasseSaved({ klasse: rp.data }));
+				this.messageService.showMessage(rp.message);
+			},
+			(error => {
+				this.store.dispatch(KlassenActions.finishedLoadig());
+				this.errorHandler.handleError(error);
+			})
+		);
 	}
 
 

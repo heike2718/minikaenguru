@@ -8,6 +8,7 @@ import * as fromKlassen from './+state/klassen.reducer';
 import { KlasseEditorComponent } from './klasse-editor/klasse-editor.component';
 import { FormsModule } from '@angular/forms';
 import { KlasseNameValidatorDirective } from './klasse-editor/klasse-name-validator.directive';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 
@@ -21,6 +22,7 @@ import { KlasseNameValidatorDirective } from './klasse-editor/klasse-name-valida
 	imports: [
 		CommonModule,
 		FormsModule,
+		NgbModule,
 		KlassenRoutingModule,
 		StoreModule.forFeature(fromKlassen.klassenFeatureKey, fromKlassen.reducer)
 	]
