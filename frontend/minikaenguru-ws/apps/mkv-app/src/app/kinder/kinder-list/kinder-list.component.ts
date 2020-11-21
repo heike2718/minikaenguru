@@ -7,6 +7,9 @@ import { Router } from '@angular/router';
 import { STORAGE_KEY_USER, User, Rolle } from '@minikaenguru-ws/common-auth';
 import { LehrerFacade } from '../../lehrer/lehrer.facade';
 import { TeilnahmeIdentifierAktuellerWettbewerb } from '@minikaenguru-ws/common-components';
+import { KlassenFacade } from '../../klassen/klassen.facade';
+import { ThrowStmt } from '@angular/compiler';
+import { WettbewerbFacade } from '../../wettbewerb/wettbewerb.facade';
 
 
 @Component({
@@ -19,10 +22,12 @@ export class KinderListComponent implements OnInit, OnDestroy {
 
 	devMode = !environment.production;
 
+	selectedKlasse$ = this.klassenFacade.selectedKlasse$;
+
 	kinder$ = this.kinderFacade.kinder$;
 	anzahlKinder$ = this.kinderFacade.anzahlKinder$;
 
-	veranstalter$ = this.privatveranstalterFacade.veranstalter$;
+	veranstalter$ = this.wettbewerbFacade.veranstalter$;
 
 	private teilnahmeIdentifier: TeilnahmeIdentifierAktuellerWettbewerb;
 
@@ -30,9 +35,12 @@ export class KinderListComponent implements OnInit, OnDestroy {
 
 	private teilnahmeIdentifierSubscription: Subscription;
 
+	private kinderSubscription: Subscription;
+
 	constructor(private kinderFacade: KinderFacade,
+		private klassenFacade: KlassenFacade,
 		private privatveranstalterFacade: PrivatveranstalterFacade,
-		private lehrerFacade: LehrerFacade,
+		private wettbewerbFacade: WettbewerbFacade,
 		private router: Router) { }
 
 	ngOnInit(): void {
@@ -52,6 +60,12 @@ export class KinderListComponent implements OnInit, OnDestroy {
 		this.teilnahmeIdentifierSubscription = this.kinderFacade.teilnahmeIdentifier$.subscribe(
 			ti => this.teilnahmeIdentifier = ti
 		);
+
+		this.kinderSubscription = this.kinder$.subscribe(
+			kinder => {
+				kinder.forEach(k => console.log(JSON.stringify(k)))
+			}
+		);
 	}
 
 	ngOnDestroy(): void {
@@ -60,6 +74,9 @@ export class KinderListComponent implements OnInit, OnDestroy {
 		}
 		if (this.teilnahmeIdentifierSubscription) {
 			this.teilnahmeIdentifierSubscription.unsubscribe();
+		}
+		if (this.kinderSubscription) {
+			this.kinderSubscription.unsubscribe();
 		}
 	}
 

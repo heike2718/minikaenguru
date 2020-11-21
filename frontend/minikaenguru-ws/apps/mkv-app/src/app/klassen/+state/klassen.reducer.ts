@@ -1,7 +1,7 @@
 import { createReducer, Action, on } from '@ngrx/store';
 import * as KlassenActions from './klassen.actions';
 import { KlasseWithID, KlassenMap } from '../klassen.model';
-import { KlasseEditorModel, initialKlasseEditorModel } from '@minikaenguru-ws/common-components';
+import { KlasseEditorModel, initialKlasseEditorModel, Klasse } from '@minikaenguru-ws/common-components';
 import { Message } from '@minikaenguru-ws/common-messages';
 
 
@@ -12,13 +12,15 @@ export interface KlassenState {
 	klassenLoaded: boolean;
 	loading: boolean;
 	editorModel: KlasseEditorModel;
+	selectedKlasse: Klasse;
 };
 
 const initialKlassenState: KlassenState = {
 	klassenMap: [],
 	klassenLoaded: false,
 	loading: false,
-	editorModel: undefined
+	editorModel: undefined,
+	selectedKlasse: undefined
 };
 
 const klassenReducer = createReducer(initialKlassenState,
@@ -51,7 +53,14 @@ const klassenReducer = createReducer(initialKlassenState,
 			name: klasse.name
 		};
 
-		return { ...state, editorModel: klasseEditorModel };
+		return { ...state, editorModel: klasseEditorModel, selectedKlasse: klasse };
+
+	}),
+
+	on(KlassenActions.startAssigningKinder, (state, action) => {
+
+		const klasse = action.klasse;
+		return { ...state, editorModel: undefined, selectedKlasse: klasse };
 
 	}),
 

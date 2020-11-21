@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { TeilnahmeIdentifierAktuellerWettbewerb, Klasse, Duplikatwarnung } from '@minikaenguru-ws/common-components';
+import { TeilnahmeIdentifierAktuellerWettbewerb, Klasse, Duplikatwarnung, Kind } from '@minikaenguru-ws/common-components';
 import { Message } from '@minikaenguru-ws/common-messages';
 
 
@@ -28,6 +28,11 @@ export const createNewKlasse = createAction(
 
 export const startEditingKlasse = createAction(
 	'[KlassenFacade] editKlasse',
+	props<{klasse: Klasse}>()
+);
+
+export const startAssigningKinder = createAction(
+	'[KlassenFacade] insertUpdateKinder',
 	props<{klasse: Klasse}>()
 );
 

@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Wettbewerb } from '../wettbewerb.model';
+import { Wettbewerb, AbstractVeranstalter } from '../wettbewerb.model';
 
 
 
@@ -11,4 +11,11 @@ export const aktuellerWettbewerbGeladen = createAction(
 export const reset = createAction(
 	'[TeilnahmenFacade] resetState'
 );
+
+export const veranstalterLoaded = createAction(
+	'[LehrerFacade/PrivatveranstalterFacade] load veranstalter',
+	props<{veranstalter: AbstractVeranstalter}>()
+);
+
+
 

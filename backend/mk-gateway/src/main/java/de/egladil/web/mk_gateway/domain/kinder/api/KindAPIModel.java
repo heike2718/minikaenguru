@@ -58,6 +58,10 @@ public class KindAPIModel implements Serializable {
 	@UuidString
 	private String loesungszettelId;
 
+	@JsonProperty
+	@UuidString
+	private String klasseId;
+
 	public static KindAPIModel create(final Klassenstufe klassenstufe, final Sprache sprache) {
 
 		KindAPIModel result = new KindAPIModel();
@@ -79,6 +83,11 @@ public class KindAPIModel implements Serializable {
 
 			result = result.withLoesungszettelId(kind.loesungszettelID().identifier());
 
+		}
+
+		if (kind.klasseID() != null) {
+
+			result = result.withKlasseId(kind.klasseID().identifier());
 		}
 
 		return result;
@@ -146,6 +155,17 @@ public class KindAPIModel implements Serializable {
 	public KindAPIModel withLoesungszettelId(final String loesungszettelId) {
 
 		this.loesungszettelId = loesungszettelId;
+		return this;
+	}
+
+	public String klasseId() {
+
+		return klasseId;
+	}
+
+	public KindAPIModel withKlasseId(final String klasseId) {
+
+		this.klasseId = klasseId;
 		return this;
 	}
 

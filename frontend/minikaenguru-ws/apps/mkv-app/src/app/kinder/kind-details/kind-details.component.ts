@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewChild, TemplateRef } from '@angular/core';
 import { Kind } from '@minikaenguru-ws/common-components';
-import { Privatveranstalter } from '../../wettbewerb/wettbewerb.model';
+import { Privatveranstalter, AbstractVeranstalter } from '../../wettbewerb/wettbewerb.model';
 import { Router } from '@angular/router';
 import { PrivatveranstalterFacade } from '../../privatveranstalter/privatveranstalter.facade';
 import { KinderFacade } from '../kinder.facade';
@@ -21,7 +21,7 @@ export class KindDetailsComponent implements OnInit {
 	kind: Kind
 
 	@Input()
-	veranstalter: Privatveranstalter;
+	veranstalter: AbstractVeranstalter;
 
 	titel: string;
 

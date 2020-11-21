@@ -1,7 +1,8 @@
 <div class="mkv-container mt-1">
 	<div class="col-12">
-		<h2>Kinder <span *ngIf="anzahlKinder$ | async as anzahl" class="badge badge-secondary">{{anzahl}}</span></h2>
+		<h2><span *ngIf="(selectedKlasse$ | async) as klasse">{{klasse.name}}: </span>Kinder <span *ngIf="anzahlKinder$ | async as anzahl" class="badge badge-secondary">{{anzahl}}</span></h2>
 		<p *ngIf="devMode">(kinder-list.component)</p>
+
 
 		<ng-container *ngIf="(kinder$ | async) as kinder">
 			<ng-container *ngIf="(veranstalter$ | async) as veranstalter">
@@ -20,4 +21,3 @@
 		</div>
 	</div>
 </div>
-

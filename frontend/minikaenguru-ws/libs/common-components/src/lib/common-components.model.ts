@@ -54,7 +54,8 @@ export interface Kind {
 	readonly zusatz?: string;
 	readonly klassenstufe: Klassenstufe;
 	readonly sprache: Sprache;
-	readonly loesungszettelId?: String;
+	readonly loesungszettelId?: string;
+	readonly klasseId?: string;
 };
 
 export interface KindEditorModel {

@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
 import * as PrivatveranstalterActions from './+state/privatveranstalter.actions';
-import { loading, privatveranstalterState, privatveranstalter, aktuelleTeilnahmeGeladen } from './+state/privatveranstalter.selectors';
+import { loading, privatveranstalter, aktuelleTeilnahmeGeladen } from './+state/privatveranstalter.selectors';
 import { VeranstalterService } from '../services/veranstalter.service';
 import { TeilnahmenService } from '../services/teilnahmen.service';
 import { MessageService, Message } from '@minikaenguru-ws/common-messages';
@@ -11,7 +11,7 @@ import { Privatteilnahme } from '../wettbewerb/wettbewerb.model';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { AuthService } from '@minikaenguru-ws/common-auth';
-import { TeilnahmenListComponent } from '../teilnahmen/teilnahmen-list/teilnahmen-list.component';
+import * as WettbewerbActions from '../wettbewerb/+state/wettbewerb.actions';
 
 
 @Injectable({ providedIn: 'root' })
@@ -55,6 +55,7 @@ export class PrivatveranstalterFacade {
 		).subscribe(
 			veranstalter => {
 				this.appStore.dispatch(PrivatveranstalterActions.privatveranstalterGeladen({ veranstalter: veranstalter }));
+				this.appStore.dispatch(WettbewerbActions.veranstalterLoaded({veranstalter: veranstalter}));
 			},
 			(error => {
 				this.appStore.dispatch(PrivatveranstalterActions.finishedWithError());

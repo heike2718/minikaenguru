@@ -11,14 +11,16 @@ export interface Wettbewerb {
 	readonly datumFreischaltungPrivat: string;
 };
 
-export interface Lehrer {
+export interface AbstractVeranstalter {
 	readonly hatZugangZuUnterlangen: boolean;
 	readonly newsletterAbonniert: boolean;
+};
+
+// tslint:disable-next-line:no-empty-interface
+export interface Lehrer extends AbstractVeranstalter {
 }
 
-export interface Privatveranstalter {
-	readonly hatZugangZuUnterlangen: boolean;
-	readonly newsletterAbonniert: boolean;
+export interface Privatveranstalter extends AbstractVeranstalter {
 	readonly anzahlTeilnahmen: number;
 	readonly aktuellAngemeldet: boolean;
 	readonly aktuelleTeilnahme?: Privatteilnahme;

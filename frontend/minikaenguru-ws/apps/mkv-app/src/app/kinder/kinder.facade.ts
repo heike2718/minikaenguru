@@ -3,8 +3,10 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
 import * as KinderSelectors from './+state/kinder.selectors';
 import * as KinderActions from './+state/kinder.actions';
-import { Observable, of, Subscription, from } from 'rxjs';
-import { Kind
+import * as KlassenSelectors from '../klassen/+state/klassen.selectors';
+import { Observable } from 'rxjs';
+import {
+	Kind
 	, KindEditorModel
 	, Duplikatwarnung
 	, KindRequestData
@@ -12,12 +14,14 @@ import { Kind
 	, getSpracheByLabel
 	, TeilnahmeIdentifier
 	, TeilnahmeIdentifierAktuellerWettbewerb
-	, Teilnahmeart } from '@minikaenguru-ws/common-components';
+	, Teilnahmeart,
+	Klasse
+} from '@minikaenguru-ws/common-components';
 import { AuthService, User, STORAGE_KEY_USER, Rolle } from '@minikaenguru-ws/common-auth';
 import { KinderService } from './kinder.service';
-import { take, map } from 'rxjs/operators';
+import { map, withLatestFrom, switchMap } from 'rxjs/operators';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
-import { KindWithID } from './kinder.model';
+import { KinderMap } from './kinder.model';
 import { ThrowStmt } from '@angular/compiler';
 import { Message, MessageService } from '@minikaenguru-ws/common-messages';
 import { environment } from '../../environments/environment';
@@ -31,7 +35,7 @@ export class KinderFacade {
 
 	public teilnahmeIdentifier$: Observable<TeilnahmeIdentifierAktuellerWettbewerb> = this.store.select(KinderSelectors.teilnahmeIdentifier);
 	public kindEditorModel$: Observable<KindEditorModel> = this.store.select(KinderSelectors.kindEditorModel);
-	public kinder$: Observable<Kind[]> = this.store.select(KinderSelectors.kinder);
+	public kinder$: Observable<Kind[]>;
 	public kinderGeladen$: Observable<boolean> = this.store.select(KinderSelectors.kinderGeladen);
 	public anzahlKinder$: Observable<number> = this.store.select(KinderSelectors.anzahlKinder);
 	public duplikatwarnung$: Observable<Duplikatwarnung> = this.store.select(KinderSelectors.duplikatwarnung);
@@ -48,6 +52,8 @@ export class KinderFacade {
 		this.authService.onLoggingOut$.subscribe(
 			loggingOut => this.loggingOut = loggingOut
 		);
+
+		this.kinder$ = this.getKinder();
 	}
 
 	public createNewKind(): void {
@@ -164,6 +170,19 @@ export class KinderFacade {
 
 
 	// ////////////////////////////////////// private members //////////////////
+
+	private getKinder(): Observable<Kind[]> {
+
+		const a$ = this.store.select(KlassenSelectors.selectedKlasse);
+		const b$ = this.store.select(KinderSelectors.kinderMap);
+
+		return b$.pipe(
+			withLatestFrom(a$)
+		).pipe(
+			map((x => new KinderMap(x[0]).filterWithKlasse(x[1])))
+		);
+
+	}
 
 	private mapFromEditorModel(uuid: string, editorModel: KindEditorModel): KindRequestData {
 
