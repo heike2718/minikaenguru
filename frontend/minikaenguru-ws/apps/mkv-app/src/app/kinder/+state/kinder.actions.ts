@@ -22,7 +22,8 @@ export const allKinderLoaded = createAction(
 );
 
 export const createNewKind = createAction(
-	'[KinderFacade] createNewKind'
+	'[KinderFacade] createNewKind',
+	props<{klasseUuid: string}>()
 );
 
 

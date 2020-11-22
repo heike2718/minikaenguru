@@ -19,6 +19,8 @@ import {
 } from '@minikaenguru-ws/common-components';
 import { Subscription } from 'rxjs';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { LehrerFacade } from '../../lehrer/lehrer.facade';
+import { Schule } from '../../lehrer/schulen/schulen.model';
 
 @Component({
 	selector: 'mkv-kind-editor',
@@ -56,6 +58,8 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	showWarndialog = true;
 
+	private selectedSchule: Schule;
+
 	private showSaveMessage = false;
 
 	private uuid: string;
@@ -72,13 +76,20 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	private routeParamsSubcription: Subscription;
 
+	private queryParamsSubscription: Subscription;
+
 	private saveOutcomeSubscription: Subscription;
 
 	private teilnahmeIdentifierSubscription: Subscription;
 
+	private klasseUuid: string;
+
+	private schuleSubscription: Subscription;
+
 	constructor(private fb: FormBuilder,
 		private modalService: NgbModal,
 		private kinderFacade: KinderFacade,
+		private lehrerFacade: LehrerFacade,
 		private router: Router,
 		private route: ActivatedRoute,
 		private messageService: MessageService,
@@ -105,9 +116,11 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 
 		this.routeParamsSubcription = this.route.params.subscribe(
-			p => {
-				this.uuid = p['id'];
-			}
+			p => this.uuid = p['id']
+		);
+
+		this.queryParamsSubscription = this.route.queryParams.subscribe(
+			p => this.klasseUuid = p['klasseUuid']
 		);
 
 		this.editorModelSubscription = this.kinderFacade.kindEditorModel$.subscribe(
@@ -125,6 +138,9 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 
 					this.editorInitialized = true;
+					if (!this.klasseUuid) {
+						this.klasseUuid = ke.klasseUuid;
+					}
 				}
 			}
 		);
@@ -158,6 +174,19 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 		this.teilnahmeIdentifierSubscription = this.kinderFacade.teilnahmeIdentifier$.subscribe(
 			ti => this.teilnahmeIdentifier = ti
 		);
+
+		if (this.lehrerFacade) {
+
+			this.schuleSubscription = this.lehrerFacade.selectedSchule$.subscribe(
+
+				sch => {
+					if (sch) {
+						this.selectedSchule = sch;
+					}
+				}
+
+			);
+		}
 	}
 
 	ngOnDestroy(): void {
@@ -172,11 +201,21 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 		if (this.routeParamsSubcription) {
 			this.routeParamsSubcription.unsubscribe();
 		}
+
+		if (this.queryParamsSubscription) {
+			this.queryParamsSubscription.unsubscribe();
+		}
+
 		if (this.saveOutcomeSubscription) {
 			this.saveOutcomeSubscription.unsubscribe();
 		}
+
 		if (this.teilnahmeIdentifierSubscription) {
 			this.teilnahmeIdentifierSubscription.unsubscribe();
+		}
+
+		if (this.schuleSubscription) {
+			this.schuleSubscription.unsubscribe();
 		}
 	}
 
@@ -190,7 +229,8 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 			nachname: formValue.nachname === '' ? null : formValue.nachname.trim(),
 			zusatz: formValue.zusatz === '' ? null : formValue.zusatz.trim(),
 			sprache: getSpracheByLabel(formValue.sprache),
-			klassenstufe: getKlassenstufeByLabel(formValue.klassenstufe)
+			klassenstufe: getKlassenstufeByLabel(formValue.klassenstufe),
+			klasseUuid: this.klasseUuid
 		};
 
 		this.kinderFacade.pruefeDuplikat(this.uuid, this.kindDaten);
@@ -229,9 +269,9 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 	saveKind(): void {
 		this.showSaveMessage = true;
 		if (this.uuid === 'neu') {
-			this.kinderFacade.insertKind(this.uuid, this.kindDaten);
+			this.kinderFacade.insertKind(this.uuid, this.kindDaten, this.selectedSchule);
 		} else {
-			this.kinderFacade.updateKind(this.uuid, this.kindDaten);
+			this.kinderFacade.updateKind(this.uuid, this.kindDaten, this.selectedSchule);
 		}
 	}
 }

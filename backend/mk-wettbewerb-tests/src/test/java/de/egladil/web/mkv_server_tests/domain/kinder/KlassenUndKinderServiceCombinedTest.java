@@ -120,9 +120,10 @@ public class KlassenUndKinderServiceCombinedTest extends AbstractIT {
 
 		KindEditorModel initialesKindEditorModel = new KindEditorModel(Klassenstufe.ZWEI, Sprache.de)
 			.withNachname(initialerNachname)
-			.withVorname("Fiona").withZusatz("blond");
+			.withVorname("Fiona").withZusatz("blond")
+			.withKlasseUuid(klasseUuid);
 
-		KindRequestData kindRequestData = new KindRequestData().withKind(initialesKindEditorModel).withKlasseUuid(klasseUuid)
+		KindRequestData kindRequestData = new KindRequestData().withKind(initialesKindEditorModel)
 			.withUuid("neu").withKuerzelLand("DE-ST");
 
 		String kindUuid = null;

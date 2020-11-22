@@ -166,6 +166,14 @@ public class KinderService {
 			return false;
 		}
 
+		if (daten.klasseUuid() != null) {
+
+			final Identifier klasseID = new Identifier(daten.klasseUuid());
+
+			kinder = kinder.stream().filter(k -> klasseID.equals(k.klasseID())).collect(Collectors.toList());
+
+		}
+
 		Kind kind = new Kind().withDaten(daten.kind());
 
 		return this.koennteDubletteSein(kind, kinder);

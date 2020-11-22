@@ -67,8 +67,9 @@ const kinderReducer = createReducer(initialKinderState,
 		return { ...state, editorModel: kindEditorModel, saveOutcome: undefined };
 	}),
 
-	on(KinderActions.createNewKind, (state, _action) => {
-		return { ...state, editorModel: initialKindEditorModel }
+	on(KinderActions.createNewKind, (state, action) => {
+
+		return { ...state, editorModel: {...initialKindEditorModel, klasseId: action.klasseUuid} };
 	}),
 
 	on(KinderActions.finishedWithError, (state, _action) => {

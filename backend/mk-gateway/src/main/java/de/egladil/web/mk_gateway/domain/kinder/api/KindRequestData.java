@@ -32,10 +32,6 @@ public class KindRequestData implements Serializable {
 	private String uuid;
 
 	@JsonProperty
-	@UuidString
-	private String klasseUuid;
-
-	@JsonProperty
 	@Kuerzel
 	private String kuerzelLand;
 
@@ -65,17 +61,6 @@ public class KindRequestData implements Serializable {
 		return this;
 	}
 
-	public String klasseUuid() {
-
-		return klasseUuid;
-	}
-
-	public KindRequestData withKlasseUuid(final String klasseUuid) {
-
-		this.klasseUuid = klasseUuid;
-		return this;
-	}
-
 	public String kuerzelLand() {
 
 		return kuerzelLand;
@@ -85,6 +70,14 @@ public class KindRequestData implements Serializable {
 
 		this.kuerzelLand = kuerzelLand;
 		return this;
+	}
+
+	/**
+	 * @return
+	 */
+	public String klasseUuid() {
+
+		return this.kind.klasseUuid();
 	}
 
 	@Override
@@ -113,5 +106,4 @@ public class KindRequestData implements Serializable {
 		KindRequestData other = (KindRequestData) obj;
 		return Objects.equals(kind, other.kind) && Objects.equals(uuid, other.uuid);
 	}
-
 }

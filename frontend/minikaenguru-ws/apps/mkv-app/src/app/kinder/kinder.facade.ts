@@ -25,6 +25,8 @@ import { KinderMap } from './kinder.model';
 import { ThrowStmt } from '@angular/compiler';
 import { Message, MessageService } from '@minikaenguru-ws/common-messages';
 import { environment } from '../../environments/environment';
+import { Schule } from '../lehrer/schulen/schulen.model';
+import { schulkatalogFeatureKey } from 'libs/common-schulkatalog/src/lib/+state/schulkatalog.reducer';
 
 
 
@@ -56,10 +58,9 @@ export class KinderFacade {
 		this.kinder$ = this.getKinder();
 	}
 
-	public createNewKind(): void {
+	public createNewKind(klasseUuid: string): void {
 
-		this.store.dispatch(KinderActions.createNewKind());
-		//TODO navigate to the Editor
+		this.store.dispatch(KinderActions.createNewKind({ klasseUuid: klasseUuid }));
 
 	}
 
@@ -104,7 +105,7 @@ export class KinderFacade {
 
 		this.store.dispatch(KinderActions.startLoading());
 
-		const data = this.mapFromEditorModel(uuid, editorModel) as KindRequestData;
+		const data = this.mapFromEditorModel(uuid, editorModel, undefined) as KindRequestData;
 
 		this.kinderService.checkDuplikat(data).subscribe(
 			warnung => this.store.dispatch(KinderActions.duplikatGeprueft({ duplikatwarnung: warnung })),
@@ -115,11 +116,11 @@ export class KinderFacade {
 		);
 	}
 
-	public insertKind(uuid: string, editorModel: KindEditorModel): void {
+	public insertKind(uuid: string, editorModel: KindEditorModel, schule: Schule): void {
 
 		this.store.dispatch(KinderActions.startLoading());
 
-		const data = this.mapFromEditorModel(uuid, editorModel) as KindRequestData;
+		const data = this.mapFromEditorModel(uuid, editorModel, schule) as KindRequestData;
 
 		this.kinderService.insertKind(data).subscribe(
 			responsePayload => this.store.dispatch(KinderActions.kindSaved({ kind: responsePayload.data, outcome: responsePayload.message })),
@@ -130,11 +131,11 @@ export class KinderFacade {
 		);
 	}
 
-	public updateKind(uuid: string, editorModel: KindEditorModel): void {
+	public updateKind(uuid: string, editorModel: KindEditorModel, schule: Schule): void {
 
 		this.store.dispatch(KinderActions.startLoading());
 
-		const data = this.mapFromEditorModel(uuid, editorModel) as KindRequestData;
+		const data = this.mapFromEditorModel(uuid, editorModel, schule) as KindRequestData;
 
 		this.kinderService.updateKind(data).subscribe(
 			responsePayload => this.store.dispatch(KinderActions.kindSaved({ kind: responsePayload.data, outcome: responsePayload.message })),
@@ -184,12 +185,16 @@ export class KinderFacade {
 
 	}
 
-	private mapFromEditorModel(uuid: string, editorModel: KindEditorModel): KindRequestData {
+	private mapFromEditorModel(uuid: string, editorModel: KindEditorModel, schule: Schule): KindRequestData {
 
-		const data: KindRequestData = {
+		let data: KindRequestData = {
 			uuid: uuid,
 			kind: editorModel
 		};
+
+		if (schule) {
+			data = { ...data, kuerzelLand: schule.kuerzelLand };
+		}
 
 		return data
 	}

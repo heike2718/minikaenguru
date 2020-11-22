@@ -5,6 +5,7 @@ export interface Schule {
 	readonly name: string;
 	readonly ort: string;
 	readonly land: string;
+	readonly kuerzelLand: string,
 	readonly aktuellAngemeldet: boolean;
 	readonly details?: SchuleDetails;
 };

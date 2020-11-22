@@ -37,6 +37,10 @@ export class KinderListComponent implements OnInit, OnDestroy {
 
 	private kinderSubscription: Subscription;
 
+	private klasseSubscription: Subscription;
+
+	private klasseUuid: string;
+
 	constructor(private kinderFacade: KinderFacade,
 		private klassenFacade: KlassenFacade,
 		private privatveranstalterFacade: PrivatveranstalterFacade,
@@ -66,6 +70,14 @@ export class KinderListComponent implements OnInit, OnDestroy {
 				kinder.forEach(k => console.log(JSON.stringify(k)))
 			}
 		);
+
+		this.klasseSubscription = this.selectedKlasse$.subscribe(
+			kl => {
+				if (kl) {
+					this.klasseUuid = kl.uuid;
+				}
+			}
+		);
 	}
 
 	ngOnDestroy(): void {
@@ -78,12 +90,22 @@ export class KinderListComponent implements OnInit, OnDestroy {
 		if (this.kinderSubscription) {
 			this.kinderSubscription.unsubscribe();
 		}
+		if (this.klasseSubscription) {
+			this.klasseSubscription.unsubscribe();
+		}
 	}
 
 
 	addKind(): void {
-		this.kinderFacade.createNewKind();
-		this.router.navigateByUrl('/kinder/kind-editor/neu');
+		this.kinderFacade.createNewKind(this.klasseUuid);
+
+		const url = '/kinder/kind-editor/neu';
+
+		if (this.klasseUuid) {
+			this.router.navigate([url], { queryParams: { klasseUuid: this.klasseUuid } });
+		} else {
+			this.router.navigateByUrl(url);
+		}
 	}
 
 	gotoDashboard(): void {

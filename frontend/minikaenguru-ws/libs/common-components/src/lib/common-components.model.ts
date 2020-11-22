@@ -55,7 +55,7 @@ export interface Kind {
 	readonly klassenstufe: Klassenstufe;
 	readonly sprache: Sprache;
 	readonly loesungszettelId?: string;
-	readonly klasseId?: string;
+	readonly klasseUuid?: string;
 };
 
 export interface KindEditorModel {
@@ -64,6 +64,7 @@ export interface KindEditorModel {
 	zusatz: string;
 	klassenstufe: Klassenstufe,
 	sprache: Sprache;
+	klasseUuid?: string;
 };
 
 export interface KindRequestData {

@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
 import { ResponsePayload, MessageService, Message } from '@minikaenguru-ws/common-messages';
 import { Kind, Duplikatwarnung, KindRequestData } from '@minikaenguru-ws/common-components';
+import { LogService } from '@minikaenguru-ws/common-logging';
 
 
 @Injectable({
@@ -13,7 +14,8 @@ import { Kind, Duplikatwarnung, KindRequestData } from '@minikaenguru-ws/common-
 export class KinderService {
 
 
-	constructor(private http: HttpClient) { }
+	constructor(private http: HttpClient,
+		private logger: LogService) { }
 
 
 	public loadKinder(teilnahmenummer: string): Observable<Kind[]> {
@@ -29,6 +31,9 @@ export class KinderService {
 	public checkDuplikat(data: KindRequestData): Observable<Duplikatwarnung> {
 
 		const url = environment.apiUrl + '/kinder/duplikate';
+
+		this.logger.debug(JSON.stringify(data));
+
 
 		return this.http.post(url, data, { observe: 'body' }).pipe(
 			map(body => body as ResponsePayload),
