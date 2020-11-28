@@ -21,6 +21,8 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 
 	schule: Schule;
 
+	tooltipBtnSchuluebersicht: string;
+
 	private routeSubscription: Subscription;
 	private schuleSubscription: Subscription;
 	private klassenSubscription: Subscription;
@@ -32,6 +34,8 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 		) { }
 
 	ngOnInit(): void {
+
+		this.tooltipBtnSchuluebersicht = 'Übersicht';
 
 		this.routeSubscription = this.route.paramMap.subscribe(
 
@@ -48,6 +52,7 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 			s => {
 				if (s) {
 					this.schule = s;
+					this.tooltipBtnSchuluebersicht = 'Übersicht ' + this.schule.name;
 				} else {
 					this.router.navigateByUrl('/lehrer/schulen');
 				}
@@ -80,6 +85,10 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 
 	addKlasse(): void {
 		this.klassenFacade.startCreateKlasse();
+	}
+
+	gotoMeineSchulen(): void {
+		this.router.navigateByUrl('/lehrer/schulen');
 	}
 
 	gotoDashboard(): void {

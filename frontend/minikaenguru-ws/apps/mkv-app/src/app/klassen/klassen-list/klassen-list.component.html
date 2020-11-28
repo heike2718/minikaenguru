@@ -1,7 +1,8 @@
 <div class="mkv-container mt-1">
 	<div class="col-12">
 
-		<h3><span *ngIf="schule">{{schule.name}}</span> Klassen <span *ngIf="(anzahlKlassen$ | async) as anzahl" class="badge badge-secondary">{{anzahl}}</span>
+		<h3><span *ngIf="schule">{{schule.name}}</span> Klassen <span *ngIf="(anzahlKlassen$ | async) as anzahl"
+				class="badge badge-secondary">{{anzahl}}</span>
 		</h3>
 		<p *ngIf="devMode">(kinder-list.component)</p>
 
@@ -17,8 +18,12 @@
 			<button class="btn btn-primary w-100 ml-1" (click)="addKlasse()"><i class="fa fa-plus"
 					aria-hidden="true"></i>neue Klasse</button>
 
-			<button class="btn btn-primary w-100 ml-1" (click)="gotoDashboard()"><i class="fa fa-arrow-left"
+			<button *ngIf="schule" class="btn btn-primary w-100 ml-1" (click)="gotoDashboard()"
+				title="{{tooltipBtnSchuluebersicht}}"><i class="fa fa-arrow-left"
 					aria-hidden="true"></i>Schulübersicht</button>
+
+			<button class="btn btn-primary w-100 ml-1" (click)="gotoMeineSchulen()"><i class="fa fa-building-o"
+					aria-hidden="true"></i>meine Schulen</button>
 		</div>
 	</div>
 </div>
