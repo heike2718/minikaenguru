@@ -55,7 +55,7 @@ export interface Kind {
 	readonly klassenstufe: Klassenstufe;
 	readonly sprache: Sprache;
 	readonly loesungszettelId?: string;
-	readonly klasseUuid?: string;
+	readonly klasseId?: string;
 };
 
 export interface KindEditorModel {
@@ -78,7 +78,7 @@ export interface Klasse {
 	readonly uuid: string;
 	readonly name: string;
 	readonly schulkuerzel: string;
-	readonly anzahlKinder?: number;
+	anzahlKinder?: number;
 };
 
 export interface KlasseEditorModel {
@@ -97,7 +97,7 @@ export const initialKindEditorModel: KindEditorModel = {
 	nachname: '',
 	zusatz: '',
 	klassenstufe: null,
-	sprache: { sprache: 'de', label: 'deutsch' },
+	sprache: null,
 };
 
 export const initialKlasseEditorModel: KlasseEditorModel = {

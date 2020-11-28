@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
 import { Kind } from '@minikaenguru-ws/common-components';
 import { Privatveranstalter, AbstractVeranstalter } from '../../wettbewerb/wettbewerb.model';
 import { Router } from '@angular/router';
@@ -6,13 +6,15 @@ import { PrivatveranstalterFacade } from '../../privatveranstalter/privatveranst
 import { KinderFacade } from '../kinder.facade';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LogService } from '@minikaenguru-ws/common-logging';
+import { Subscription } from 'rxjs';
+import { KlassenFacade } from '../../klassen/klassen.facade';
 
 @Component({
 	selector: 'mkv-kind-details',
 	templateUrl: './kind-details.component.html',
 	styleUrls: ['./kind-details.component.css']
 })
-export class KindDetailsComponent implements OnInit {
+export class KindDetailsComponent implements OnInit, OnDestroy {
 
 	@ViewChild('loeschenWarndialog')
 	loeschenWarndialog: TemplateRef<HTMLElement>;
@@ -23,17 +25,38 @@ export class KindDetailsComponent implements OnInit {
 	@Input()
 	veranstalter: AbstractVeranstalter;
 
+	selectedKlasse$ = this.klassenFacade.selectedKlasse$;
+
+	private klasseSubscription: Subscription;
+
+	private klasseUuid: string;
+
 	titel: string;
 
 	constructor(private router: Router,
 		private modalService: NgbModal,
 		private kinderFacade: KinderFacade,
+		private klassenFacade: KlassenFacade,
 		private logger: LogService
 	) { }
 
 	ngOnInit(): void {
 
 		this.titel = this.createTitel();
+
+		this.klasseSubscription = this.selectedKlasse$.subscribe(
+			kl => {
+				if (kl) {
+					this.klasseUuid = kl.uuid;
+				}
+			}
+		);
+	}
+
+	ngOnDestroy(): void {
+		if (this.klasseSubscription) {
+			this.klasseSubscription.unsubscribe();
+		}
 	}
 
 
@@ -55,7 +78,12 @@ export class KindDetailsComponent implements OnInit {
 	editKind(): void {
 		this.kinderFacade.editKind(this.kind);
 		const url = '/kinder/kind-editor/' + this.kind.uuid;
-		this.router.navigateByUrl(url);
+
+		if (this.klasseUuid) {
+			this.router.navigate([url], { queryParams: { klasseUuid: this.klasseUuid } });
+		} else {
+			this.router.navigateByUrl(url);
+		}
 	}
 
 	deleteKind(): void {
@@ -63,7 +91,7 @@ export class KindDetailsComponent implements OnInit {
 		this.modalService.open(this.loeschenWarndialog, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
 
 			if (result === 'ja') {
-				this.kinderFacade.deleteKind(this.kind.uuid);
+				this.kinderFacade.deleteKind(this.kind.uuid, this.klasseUuid);
 			}
 
 		}, (reason) => {

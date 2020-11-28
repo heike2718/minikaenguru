@@ -98,7 +98,7 @@
 				speichern</button>
 
 			<button class="btn btn-primary w-100 ml-1" (click)="onCancel()"><i class="fa fa-arrow-left"
-					aria-hidden="true"></i>abbrechen</button>
+					aria-hidden="true"></i>zurück</button>
 		</div>
 	</div>
 </div>
@@ -111,16 +111,11 @@
 		</button>
 	</div>
 	<div class="modal-body">
-	<p>{{duplikatwarnung.warnungstext}}</p>
-	<p> Möchten Sie das Kind trotzdem speichern?</p>
+		<p>{{duplikatwarnung.warnungstext}}</p>
+		<p> Möchten Sie das Kind trotzdem speichern?</p>
 	</div>
 	<div class="modal-footer">
 		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('nein')">nein</button>
 		<button type="button" class="btn btn-outline-secondary" (click)="modal.close('ja')">ja</button>
 	</div>
 </ng-template>
-
-
-
-
-

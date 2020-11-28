@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { KinderFacade } from '../kinder.facade';
 import { PrivatveranstalterFacade } from '../../privatveranstalter/privatveranstalter.facade';
@@ -10,6 +10,7 @@ import { TeilnahmeIdentifierAktuellerWettbewerb } from '@minikaenguru-ws/common-
 import { KlassenFacade } from '../../klassen/klassen.facade';
 import { ThrowStmt } from '@angular/compiler';
 import { WettbewerbFacade } from '../../wettbewerb/wettbewerb.facade';
+import { MessageService } from '@minikaenguru-ws/common-messages';
 
 
 @Component({
@@ -35,8 +36,6 @@ export class KinderListComponent implements OnInit, OnDestroy {
 
 	private teilnahmeIdentifierSubscription: Subscription;
 
-	private kinderSubscription: Subscription;
-
 	private klasseSubscription: Subscription;
 
 	private klasseUuid: string;
@@ -44,18 +43,31 @@ export class KinderListComponent implements OnInit, OnDestroy {
 	constructor(private kinderFacade: KinderFacade,
 		private klassenFacade: KlassenFacade,
 		private privatveranstalterFacade: PrivatveranstalterFacade,
+		private lehrerFacade: LehrerFacade,
 		private wettbewerbFacade: WettbewerbFacade,
+		private messageService: MessageService,
 		private router: Router) { }
 
 	ngOnInit(): void {
 
 		this.veranstalterSubscription = this.veranstalter$.subscribe(
 			v => {
-				if (v === undefined) {
-					if (this.teilnahmeIdentifier) {
-						if (this.teilnahmeIdentifier.teilnahmeart === 'PRIVAT') {
+
+				const user: User = this.readUser();
+
+				if (user && v === undefined) {
+					switch (user.rolle) {
+						case 'LEHRER':
+							this.lehrerFacade.loadLehrer();
+							if (this.klasseUuid === undefined) {
+								this.gotoDashboard();
+							}
+							break;
+						case 'PRIVAT':
 							this.privatveranstalterFacade.loadInitialTeilnahmeinfos();
-						}
+							break;
+						default: break;
+
 					}
 				}
 			}
@@ -63,12 +75,6 @@ export class KinderListComponent implements OnInit, OnDestroy {
 
 		this.teilnahmeIdentifierSubscription = this.kinderFacade.teilnahmeIdentifier$.subscribe(
 			ti => this.teilnahmeIdentifier = ti
-		);
-
-		this.kinderSubscription = this.kinder$.subscribe(
-			kinder => {
-				kinder.forEach(k => console.log(JSON.stringify(k)))
-			}
 		);
 
 		this.klasseSubscription = this.selectedKlasse$.subscribe(
@@ -86,9 +92,6 @@ export class KinderListComponent implements OnInit, OnDestroy {
 		}
 		if (this.teilnahmeIdentifierSubscription) {
 			this.teilnahmeIdentifierSubscription.unsubscribe();
-		}
-		if (this.kinderSubscription) {
-			this.kinderSubscription.unsubscribe();
 		}
 		if (this.klasseSubscription) {
 			this.klasseSubscription.unsubscribe();
@@ -110,22 +113,32 @@ export class KinderListComponent implements OnInit, OnDestroy {
 
 	gotoDashboard(): void {
 
-		const obj = localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_USER);
+		this.messageService.clear();
 
-		if (obj) {
-			const user: User = JSON.parse(obj);
+		const user = this.readUser();
 
+		if (user) {
 			if (user.rolle === 'PRIVAT') {
 				this.router.navigateByUrl('/privat/dashboard');
 			}
 			if (user.rolle === 'LEHRER') {
-				if (this.teilnahmeIdentifier.teilnahmenummer) {
-					this.router.navigateByUrl('/lehrer/schule-dashboard/' + this.teilnahmeIdentifier.teilnahmenummer)
-				} else {
+
+				if (!this.teilnahmeIdentifier) {
 					this.router.navigateByUrl('/lehrer/dashboard');
+				} else {
+					this.router.navigateByUrl('/klassen/' + this.teilnahmeIdentifier.teilnahmenummer);
 				}
 			}
+		} else {
+			this.router.navigateByUrl('/dashboard');
 		}
 	}
 
+	private readUser(): User {
+		const obj = localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_USER);
+		if (obj) {
+			return JSON.parse(obj);
+		}
+		return undefined;
+	}
 }

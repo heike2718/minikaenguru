@@ -1,6 +1,11 @@
 import { TeilnahmeIdentifier, Klassenstufe, Sprache, Kind, compareKinder } from '@minikaenguru-ws/common-components';
 import { Klasse } from '@minikaenguru-ws/common-components';
 
+export interface KindEditorVorbelegung {
+	klassenstufe: Klassenstufe;
+	sprache: Sprache
+};
+
 export interface KindWithID {
 	readonly uuid: string;
 	readonly kind: Kind;
@@ -43,6 +48,7 @@ export class KinderMap {
 	public filterWithKlasse(klasse: Klasse): Kind[] {
 
 		if (!klasse) {
+			console.log('filterWithKlasse(): klasse undefined - anzahl Kinder=' + this.items.length);
 			return this.toArray();
 		}
 

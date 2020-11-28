@@ -21,6 +21,7 @@ import { Subscription } from 'rxjs';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { LehrerFacade } from '../../lehrer/lehrer.facade';
 import { Schule } from '../../lehrer/schulen/schulen.model';
+import { User, Rolle } from '@minikaenguru-ws/common-auth';
 
 @Component({
 	selector: 'mkv-kind-editor',
@@ -56,7 +57,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	editorInitialized = false;
 
-	showWarndialog = true;
+	showWarndialog = false;
 
 	private selectedSchule: Schule;
 
@@ -98,19 +99,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 		this.klassenstufen = ALL_KLASSENSTUFEN.map(kl => kl.label);
 		this.sprachen = ALL_SPRACHEN.map(sp => sp.label);
 
-		this.vornameFormControl = new FormControl({ value: '' }, { validators: [Validators.required, Validators.maxLength(55)] });
-		this.nachnameFormControl = new FormControl({ value: '' }, { validators: [Validators.maxLength(55)] });
-		this.zusatzFormControl = new FormControl({ value: '' }, { validators: [Validators.maxLength(55)] });
-		this.klassenstufeFormControl = new FormControl({ value: '' }, { validators: [Validators.required] });
-		this.spracheFormControl = new FormControl({ value: '' }, Validators.required);
-
-		this.kindForm = this.fb.group({
-			vorname: this.vornameFormControl,
-			nachname: this.nachnameFormControl,
-			zusatz: this.zusatzFormControl,
-			klassenstufe: this.klassenstufeFormControl,
-			sprache: this.spracheFormControl
-		});
+		this.initForm();
 	}
 
 	ngOnInit(): void {
@@ -148,15 +137,19 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 		this.duplikatwarnungSubscription = this.kinderFacade.duplikatwarnung$.subscribe(
 			warnung => {
 
-				if (warnung && warnung.kontext === 'KIND') {
-					if (warnung.warnungstext === '') {
+				if (warnung) {
+					if (warnung.kontext === 'KIND') {
 
-						this.saveKind();
-					} else {
-						this.showWarndialog = true;
-						this.duplikatwarnung = warnung;
+						const text = warnung.warnungstext;
 
-						this.open(this.dialogContent);
+						if (text.length === 0) {
+							this.saveKind();
+						} else {
+							this.showWarndialog = true;
+							this.duplikatwarnung = warnung;
+
+							this.open(this.dialogContent);
+						}
 					}
 				}
 			}
@@ -219,6 +212,31 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	onCancel(): void {
+		this.messageService.clear();
+		this.kinderFacade.cancelEditKind();
+
+		if (this.teilnahmeIdentifier && this.teilnahmeIdentifier.teilnahmenummer) {
+			this.router.navigateByUrl('/kinder/' + this.teilnahmeIdentifier.teilnahmenummer);
+		} else {
+
+			const item = localStorage.getItem(environment.storageKeyPrefix + 'user');
+			if (item) {
+				const user: User = JSON.parse(item);
+
+				switch (user.rolle) {
+					case 'LEHRER':
+						this.router.navigateByUrl('/lehrer/dashboard');
+						break;
+					case 'PRIVAT':
+						this.router.navigateByUrl('/privat/dashboard');
+						break;
+					default: this.router.navigateByUrl('/landing');
+				}
+			}
+		}
+	}
+
 	onSubmit(): void {
 
 		this.saveInProgress = true;
@@ -229,13 +247,33 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 			nachname: formValue.nachname === '' ? null : formValue.nachname.trim(),
 			zusatz: formValue.zusatz === '' ? null : formValue.zusatz.trim(),
 			sprache: getSpracheByLabel(formValue.sprache),
-			klassenstufe: getKlassenstufeByLabel(formValue.klassenstufe),
-			klasseUuid: this.klasseUuid
+			klassenstufe: getKlassenstufeByLabel(formValue.klassenstufe)
 		};
+
+		if (this.klasseUuid) {
+			this.kindDaten = { ...this.kindDaten, klasseUuid: this.klasseUuid };
+		}
 
 		this.kinderFacade.pruefeDuplikat(this.uuid, this.kindDaten);
 	}
 
+
+	private initForm(): void {
+
+		this.vornameFormControl = new FormControl({ value: '' }, { validators: [Validators.required, Validators.maxLength(55)] });
+		this.nachnameFormControl = new FormControl({ value: '' }, { validators: [Validators.maxLength(55)] });
+		this.zusatzFormControl = new FormControl({ value: '' }, { validators: [Validators.maxLength(55)] });
+		this.klassenstufeFormControl = new FormControl({ value: '' }, { validators: [Validators.required] });
+		this.spracheFormControl = new FormControl({ value: '' }, Validators.required);
+
+		this.kindForm = this.fb.group({
+			vorname: this.vornameFormControl,
+			nachname: this.nachnameFormControl,
+			zusatz: this.zusatzFormControl,
+			klassenstufe: this.klassenstufeFormControl,
+			sprache: this.spracheFormControl
+		});
+	}
 
 
 	private open(content: TemplateRef<HTMLElement>) {
@@ -252,21 +290,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	onCancel(): void {
-		this.messageService.clear();
-		this.kinderFacade.cancelEditKind();
-
-		if (this.teilnahmeIdentifier.teilnahmenummer) {
-			this.router.navigateByUrl('/kinder/' + this.teilnahmeIdentifier.teilnahmenummer);
-		} else {
-			this.router.navigateByUrl('/privat/dashboard');
-
-		}
-
-
-	}
-
-	saveKind(): void {
+	private saveKind(): void {
 		this.showSaveMessage = true;
 		if (this.uuid === 'neu') {
 			this.kinderFacade.insertKind(this.uuid, this.kindDaten, this.selectedSchule);
@@ -274,4 +298,8 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 			this.kinderFacade.updateKind(this.uuid, this.kindDaten, this.selectedSchule);
 		}
 	}
+
+
+
+
 }

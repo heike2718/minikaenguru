@@ -36,6 +36,14 @@ export const startAssigningKinder = createAction(
 	props<{klasse: Klasse}>()
 );
 
+export const kindAdded = createAction(
+	'[KinderFacade] insertKind to klasse'
+);
+
+export const kindDeleted = createAction(
+	'[KinderFacade] deleteKind from klasse'
+);
+
 export const klasseSaved = createAction(
 	'[KlassenFacade] insert or update klasse',
 	props<{klasse: Klasse}>()

@@ -4,6 +4,7 @@ import { AppState } from '../reducers';
 import * as KinderSelectors from './+state/kinder.selectors';
 import * as KinderActions from './+state/kinder.actions';
 import * as KlassenSelectors from '../klassen/+state/klassen.selectors';
+import * as KlassenActions from '../klassen/+state/klassen.actions';
 import { Observable } from 'rxjs';
 import {
 	Kind
@@ -19,9 +20,9 @@ import {
 } from '@minikaenguru-ws/common-components';
 import { AuthService, User, STORAGE_KEY_USER, Rolle } from '@minikaenguru-ws/common-auth';
 import { KinderService } from './kinder.service';
-import { map, withLatestFrom, switchMap } from 'rxjs/operators';
+import { map, withLatestFrom, switchMap, tap } from 'rxjs/operators';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
-import { KinderMap } from './kinder.model';
+import { KinderMap, KindEditorVorbelegung } from './kinder.model';
 import { ThrowStmt } from '@angular/compiler';
 import { Message, MessageService } from '@minikaenguru-ws/common-messages';
 import { environment } from '../../environments/environment';
@@ -39,7 +40,7 @@ export class KinderFacade {
 	public kindEditorModel$: Observable<KindEditorModel> = this.store.select(KinderSelectors.kindEditorModel);
 	public kinder$: Observable<Kind[]>;
 	public kinderGeladen$: Observable<boolean> = this.store.select(KinderSelectors.kinderGeladen);
-	public anzahlKinder$: Observable<number> = this.store.select(KinderSelectors.anzahlKinder);
+	public anzahlKinder$: Observable<number>;
 	public duplikatwarnung$: Observable<Duplikatwarnung> = this.store.select(KinderSelectors.duplikatwarnung);
 	public saveOutcome$: Observable<Message> = this.store.select(KinderSelectors.saveOutcome);
 
@@ -56,6 +57,8 @@ export class KinderFacade {
 		);
 
 		this.kinder$ = this.getKinder();
+		this.anzahlKinder$ = this.getAnzahlKinder();
+
 	}
 
 	public createNewKind(klasseUuid: string): void {
@@ -93,7 +96,11 @@ export class KinderFacade {
 		this.store.dispatch(KinderActions.startLoading());
 
 		this.kinderService.loadKinder(teilnahmenummer).subscribe(
-			kinder => this.store.dispatch(KinderActions.allKinderLoaded({ kinder: kinder })),
+			kinder => {
+				this.store.dispatch(KinderActions.allKinderLoaded({ kinder: kinder }));
+				this.kinder$ = this.getKinder();
+				this.anzahlKinder$ = this.getAnzahlKinder();
+			},
 			(error => {
 				this.store.dispatch(KinderActions.finishedWithError());
 				this.errorHandler.handleError(error);
@@ -123,7 +130,12 @@ export class KinderFacade {
 		const data = this.mapFromEditorModel(uuid, editorModel, schule) as KindRequestData;
 
 		this.kinderService.insertKind(data).subscribe(
-			responsePayload => this.store.dispatch(KinderActions.kindSaved({ kind: responsePayload.data, outcome: responsePayload.message })),
+			responsePayload => {
+				this.store.dispatch(KinderActions.kindSaved({ kind: responsePayload.data, outcome: responsePayload.message }));
+				if (schule) {
+					this.store.dispatch(KlassenActions.kindAdded());
+				}
+			},
 			(error) => {
 				this.store.dispatch(KinderActions.finishedWithError());
 				this.errorHandler.handleError(error);
@@ -138,7 +150,9 @@ export class KinderFacade {
 		const data = this.mapFromEditorModel(uuid, editorModel, schule) as KindRequestData;
 
 		this.kinderService.updateKind(data).subscribe(
-			responsePayload => this.store.dispatch(KinderActions.kindSaved({ kind: responsePayload.data, outcome: responsePayload.message })),
+			responsePayload => {
+				this.store.dispatch(KinderActions.kindSaved({ kind: responsePayload.data, outcome: responsePayload.message }));
+			},
 			(error) => {
 				this.store.dispatch(KinderActions.finishedWithError());
 				this.errorHandler.handleError(error);
@@ -147,7 +161,7 @@ export class KinderFacade {
 
 	}
 
-	public deleteKind(uuid: string): void {
+	public deleteKind(uuid: string, klasseUuid: string): void {
 
 		this.store.dispatch(KinderActions.startLoading());
 
@@ -155,6 +169,9 @@ export class KinderFacade {
 			responsePayload => {
 
 				this.store.dispatch(KinderActions.kindDeleted({ kind: responsePayload.data, outcome: responsePayload.message }));
+				if (klasseUuid) {
+					this.store.dispatch(KlassenActions.kindDeleted());
+				}
 				this.messageService.showMessage(responsePayload.message);
 			},
 			(error) => {
@@ -172,6 +189,14 @@ export class KinderFacade {
 
 	// ////////////////////////////////////// private members //////////////////
 
+	private getAnzahlKinder(): Observable<number> {
+
+		return this.getKinder().pipe(
+			map(kinder => kinder.length)
+		);
+
+	}
+
 	private getKinder(): Observable<Kind[]> {
 
 		const a$ = this.store.select(KlassenSelectors.selectedKlasse);
@@ -180,7 +205,7 @@ export class KinderFacade {
 		return b$.pipe(
 			withLatestFrom(a$)
 		).pipe(
-			map((x => new KinderMap(x[0]).filterWithKlasse(x[1])))
+			map(x => new KinderMap(x[0]).filterWithKlasse(x[1]))
 		);
 
 	}

@@ -64,6 +64,26 @@ const klassenReducer = createReducer(initialKlassenState,
 
 	}),
 
+	on(KlassenActions.kindAdded, (state, _action) => {
+
+		const anzahlKinder = state.selectedKlasse.anzahlKinder + 1;
+		const selectedKlasse = {...state.selectedKlasse, anzahlKinder};
+		const merged: KlasseWithID[] = new KlassenMap(state.klassenMap).merge(selectedKlasse);
+
+		return {...state, selectedKlasse: selectedKlasse, klassenMap: merged};
+
+	}),
+
+	on(KlassenActions.kindDeleted, (state, _action) => {
+
+		const anzahlKinder = state.selectedKlasse.anzahlKinder - 1;
+		const selectedKlasse = {...state.selectedKlasse, anzahlKinder};
+		const merged: KlasseWithID[] = new KlassenMap(state.klassenMap).merge(selectedKlasse);
+
+		return {...state, selectedKlasse: selectedKlasse, klassenMap: merged};
+
+	}),
+
 	on(KlassenActions.klasseSaved, (state, action) => {
 
 		const neueMap = new KlassenMap(state.klassenMap).merge(action.klasse);
