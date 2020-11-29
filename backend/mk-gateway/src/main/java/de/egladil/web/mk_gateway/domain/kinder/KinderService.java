@@ -4,11 +4,14 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.kinder;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -59,6 +62,8 @@ public class KinderService {
 	private static final Logger LOG = LoggerFactory.getLogger(KinderService.class);
 
 	private final KindDublettenpruefer dublettenpruefer = new KindDublettenpruefer();
+
+	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
 	@Inject
 	AuthorizationService authService;
@@ -166,6 +171,14 @@ public class KinderService {
 			return false;
 		}
 
+		if (daten.klasseUuid() != null) {
+
+			final Identifier klasseID = new Identifier(daten.klasseUuid());
+
+			kinder = kinder.stream().filter(k -> klasseID.equals(k.klasseID())).collect(Collectors.toList());
+
+		}
+
 		Kind kind = new Kind().withDaten(daten.kind());
 
 		return this.koennteDubletteSein(kind, kinder);
@@ -182,6 +195,57 @@ public class KinderService {
 		}
 
 		return false;
+	}
+
+	public String getWarnungstext(final KindEditorModel kind) {
+
+		if (StringUtils.isBlank(kind.klasseUuid())) {
+
+			return getWarnungPrivat(kind);
+		}
+
+		return getWarnungSchulkind(kind);
+
+	}
+
+	String getWarnungSchulkind(final KindEditorModel kind) {
+
+		String klassenstufeSuffix = kind.klassenstufe().klassenstufe().getLabelSuffix();
+
+		if (StringUtils.isNotBlank(kind.nachname()) && StringUtils.isNotBlank(kind.zusatz())) {
+
+			return MessageFormat.format(applicationMessages.getString("checkKindDuplikat.klasse.vornameNachnameZusatz"),
+				new Object[] { kind.vorname(), kind.nachname(), kind.zusatz(), klassenstufeSuffix });
+
+		}
+
+		if (StringUtils.isNotBlank(kind.nachname())) {
+
+			return MessageFormat.format(applicationMessages.getString("checkKindDuplikat.klasse.vornameNachname"),
+				new Object[] { kind.vorname(), kind.nachname(), klassenstufeSuffix });
+		}
+
+		return MessageFormat.format(applicationMessages.getString("checkKindDuplikat.klasse.nurVorname"),
+			new Object[] { kind.vorname(), klassenstufeSuffix });
+	}
+
+	String getWarnungPrivat(final KindEditorModel kind) {
+
+		if (StringUtils.isNotBlank(kind.nachname()) && StringUtils.isNotBlank(kind.zusatz())) {
+
+			return MessageFormat.format(applicationMessages.getString("checkKindDuplikat.privat.vornameNachnameZusatz"),
+				new Object[] { kind.klassenstufe().label(), kind.vorname(), kind.nachname(), kind.zusatz() });
+
+		}
+
+		if (StringUtils.isNotBlank(kind.nachname())) {
+
+			return MessageFormat.format(applicationMessages.getString("checkKindDuplikat.privat.vornameNachname"),
+				new Object[] { kind.klassenstufe().label(), kind.vorname(), kind.nachname() });
+		}
+
+		return MessageFormat.format(applicationMessages.getString("checkKindDuplikat.privat.nurVorname"),
+			new Object[] { kind.klassenstufe().label(), kind.vorname() });
 	}
 
 	/**

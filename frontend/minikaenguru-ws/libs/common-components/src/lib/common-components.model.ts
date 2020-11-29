@@ -54,7 +54,8 @@ export interface Kind {
 	readonly zusatz?: string;
 	readonly klassenstufe: Klassenstufe;
 	readonly sprache: Sprache;
-	readonly loesungszettelId?: String;
+	readonly loesungszettelId?: string;
+	readonly klasseId?: string;
 };
 
 export interface KindEditorModel {
@@ -63,6 +64,7 @@ export interface KindEditorModel {
 	zusatz: string;
 	klassenstufe: Klassenstufe,
 	sprache: Sprache;
+	klasseUuid?: string;
 };
 
 export interface KindRequestData {
@@ -76,7 +78,7 @@ export interface Klasse {
 	readonly uuid: string;
 	readonly name: string;
 	readonly schulkuerzel: string;
-	readonly anzahlKinder?: number;
+	anzahlKinder?: number;
 };
 
 export interface KlasseEditorModel {
@@ -95,7 +97,7 @@ export const initialKindEditorModel: KindEditorModel = {
 	nachname: '',
 	zusatz: '',
 	klassenstufe: null,
-	sprache: { sprache: 'de', label: 'deutsch' },
+	sprache: null,
 };
 
 export const initialKlasseEditorModel: KlasseEditorModel = {
@@ -180,4 +182,18 @@ export function compareKlassen(klasse1: Klasse, klasse2: Klasse): number {
 	return klasse1.name.localeCompare(klasse2.name);
 
 };
+
+export function kindToString(kind: Kind): string {
+
+	let result = kind.vorname;
+
+	if (kind.nachname) {
+		result = result + ' ' + kind.nachname;
+	}
+	if (kind.zusatz) {
+		result = result + ' (' + kind.zusatz + ')'
+	}
+
+	return result;
+}
 

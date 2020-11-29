@@ -6,6 +6,7 @@ import { LehrerFacade } from '../lehrer/lehrer.facade';
 import { PrivatveranstalterFacade } from '../privatveranstalter/privatveranstalter.facade';
 import { WettbewerbFacade } from '../wettbewerb/wettbewerb.facade';
 import { LogoutService } from '../services/logout.service';
+import { MessageService } from '@minikaenguru-ws/common-messages';
 
 @Component({
 	selector: 'mkv-navbar',

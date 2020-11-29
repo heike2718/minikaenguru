@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_validation.annotations.StringLatin;
+import de.egladil.web.commons_validation.annotations.UuidString;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.KlassenstufeAPIModel;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.SpracheAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
@@ -42,6 +43,10 @@ public class KindEditorModel {
 	@JsonProperty
 	@NotNull
 	private SpracheAPIModel sprache;
+
+	@JsonProperty
+	@UuidString
+	private String klasseUuid;
 
 	KindEditorModel() {
 
@@ -95,6 +100,17 @@ public class KindEditorModel {
 	public KindEditorModel withZusatz(final String zusatz) {
 
 		this.zusatz = zusatz;
+		return this;
+	}
+
+	public String klasseUuid() {
+
+		return klasseUuid;
+	}
+
+	public KindEditorModel withKlasseUuid(final String klasseUuid) {
+
+		this.klasseUuid = klasseUuid;
 		return this;
 	}
 

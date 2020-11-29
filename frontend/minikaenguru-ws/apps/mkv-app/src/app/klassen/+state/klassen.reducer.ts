@@ -1,7 +1,7 @@
 import { createReducer, Action, on } from '@ngrx/store';
 import * as KlassenActions from './klassen.actions';
 import { KlasseWithID, KlassenMap } from '../klassen.model';
-import { KlasseEditorModel, initialKlasseEditorModel } from '@minikaenguru-ws/common-components';
+import { KlasseEditorModel, initialKlasseEditorModel, Klasse } from '@minikaenguru-ws/common-components';
 import { Message } from '@minikaenguru-ws/common-messages';
 
 
@@ -12,13 +12,15 @@ export interface KlassenState {
 	klassenLoaded: boolean;
 	loading: boolean;
 	editorModel: KlasseEditorModel;
+	selectedKlasse: Klasse;
 };
 
 const initialKlassenState: KlassenState = {
 	klassenMap: [],
 	klassenLoaded: false,
 	loading: false,
-	editorModel: undefined
+	editorModel: undefined,
+	selectedKlasse: undefined
 };
 
 const klassenReducer = createReducer(initialKlassenState,
@@ -51,7 +53,34 @@ const klassenReducer = createReducer(initialKlassenState,
 			name: klasse.name
 		};
 
-		return { ...state, editorModel: klasseEditorModel };
+		return { ...state, editorModel: klasseEditorModel, selectedKlasse: klasse };
+
+	}),
+
+	on(KlassenActions.startAssigningKinder, (state, action) => {
+
+		const klasse = action.klasse;
+		return { ...state, editorModel: undefined, selectedKlasse: klasse };
+
+	}),
+
+	on(KlassenActions.kindAdded, (state, _action) => {
+
+		const anzahlKinder = state.selectedKlasse.anzahlKinder + 1;
+		const selectedKlasse = { ...state.selectedKlasse, anzahlKinder };
+		const merged: KlasseWithID[] = new KlassenMap(state.klassenMap).merge(selectedKlasse);
+
+		return { ...state, selectedKlasse: selectedKlasse, klassenMap: merged };
+
+	}),
+
+	on(KlassenActions.kindDeleted, (state, _action) => {
+
+		const anzahlKinder = state.selectedKlasse.anzahlKinder - 1;
+		const selectedKlasse = { ...state.selectedKlasse, anzahlKinder };
+		const merged: KlasseWithID[] = new KlassenMap(state.klassenMap).merge(selectedKlasse);
+
+		return { ...state, selectedKlasse: selectedKlasse, klassenMap: merged };
 
 	}),
 
@@ -65,6 +94,25 @@ const klassenReducer = createReducer(initialKlassenState,
 
 		const neueMap = new KlassenMap(state.klassenMap).remove(action.klasse.uuid);
 		return { ...state, klassenMap: neueMap, loading: false };
+	}),
+
+	on(KlassenActions.kindMoved, (state, action) => {
+
+		const alteKlassenmap = new KlassenMap([...state.klassenMap]);
+
+		const sourceKlasse = alteKlassenmap.get(action.sourceKlasseUuid);
+		const anzahlKinderSourceKlasse = sourceKlasse.anzahlKinder - 1;
+		const sourceKlasseToMerge = { ...sourceKlasse, anzahlKinder: anzahlKinderSourceKlasse };
+
+		const ersterMerge = alteKlassenmap.merge(sourceKlasseToMerge);
+
+		const targetKlasse = new KlassenMap([...ersterMerge]).get(action.targetKlasseUuid);
+		const anzahlKinderTargetKlasse = targetKlasse.anzahlKinder + 1;
+		const targetKlasseToMerge = { ...targetKlasse, anzahlKinder: anzahlKinderTargetKlasse };
+
+
+		const neueMap = new KlassenMap(ersterMerge).merge(targetKlasseToMerge);
+		return { ...state, klassenMap: neueMap };
 	})
 
 );

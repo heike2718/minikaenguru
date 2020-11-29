@@ -44,9 +44,11 @@ public class SchulkatalogService {
 	 */
 	public Optional<SchuleAPIModel> findSchuleQuietly(final String schulkuerzel) {
 
+		Response katalogeResponse = null;
+
 		try {
 
-			Response katalogeResponse = katalogeResourceAdapter.findSchulen(schulkuerzel);
+			katalogeResponse = katalogeResourceAdapter.findSchulen(schulkuerzel);
 
 			List<SchuleAPIModel> trefferliste = new SchuleKatalogResponseMapper().getSchulenFromKatalogeAPI(katalogeResponse);
 
@@ -56,6 +58,12 @@ public class SchulkatalogService {
 
 			LOG.warn("Können Schule nicht ermitteln: {}", e.getMessage());
 			return Optional.empty();
+		} finally {
+
+			if (katalogeResponse != null) {
+
+				katalogeResponse.close();
+			}
 		}
 	}
 

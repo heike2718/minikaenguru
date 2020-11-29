@@ -12,6 +12,7 @@ import { Schulteilnahme } from '../wettbewerb/wettbewerb.model';
 import { Message, MessageService } from '@minikaenguru-ws/common-messages';
 import { User, AuthService } from '@minikaenguru-ws/common-auth';
 import { take } from 'rxjs/operators';
+import * as WettbewerbActions from '../wettbewerb/+state/wettbewerb.actions';
 
 
 @Injectable({ providedIn: 'root' })
@@ -53,6 +54,7 @@ export class LehrerFacade {
 		).subscribe(
 			data => {
 				this.appStore.dispatch(LehrerActions.datenLehrerGeladen({ lehrer: data }));
+				this.appStore.dispatch(WettbewerbActions.veranstalterLoaded({veranstalter: data}));
 			},
 			(error => {
 				this.errorHandler.handleError(error);

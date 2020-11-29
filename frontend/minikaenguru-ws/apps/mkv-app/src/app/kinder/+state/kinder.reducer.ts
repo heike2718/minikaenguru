@@ -1,7 +1,7 @@
 import { createReducer, Action, on } from '@ngrx/store';
 import * as KinderActions from './kinder.actions';
-import { KindWithID, KinderMap } from '../kinder.model';
-import { initialKindEditorModel, KindEditorModel, Duplikatwarnung, Teilnahmeart, TeilnahmeIdentifierAktuellerWettbewerb } from '@minikaenguru-ws/common-components';
+import { KindWithID, KinderMap, KindEditorVorbelegung, KlassenwechselDaten } from '../kinder.model';
+import { initialKindEditorModel, KindEditorModel, Duplikatwarnung, Teilnahmeart, TeilnahmeIdentifierAktuellerWettbewerb, Klassenstufe, Kind } from '@minikaenguru-ws/common-components';
 import { Message } from '@minikaenguru-ws/common-messages';
 
 export const kinderFeatureKey = 'mkv-app-kinder';
@@ -15,6 +15,8 @@ export interface KinderState {
 	saveOutcome: Message;
 	duplikatwarnung: Duplikatwarnung;
 	editorModel: KindEditorModel;
+	editorVorbelegung: KindEditorVorbelegung;
+
 };
 
 const initialKinderState: KinderState = {
@@ -25,7 +27,8 @@ const initialKinderState: KinderState = {
 	loading: false,
 	saveOutcome: undefined,
 	duplikatwarnung: undefined,
-	editorModel: initialKindEditorModel
+	editorModel: initialKindEditorModel,
+	editorVorbelegung: { klassenstufe: null, sprache: {sprache: 'de', label: 'deutsch'} }
 };
 
 const kinderReducer = createReducer(initialKinderState,
@@ -60,27 +63,43 @@ const kinderReducer = createReducer(initialKinderState,
 			zusatz: kind.zusatz ? kind.zusatz : '',
 			klassenstufe: kind.klassenstufe,
 			sprache: kind.sprache
-
 		};
 
 
 		return { ...state, editorModel: kindEditorModel, saveOutcome: undefined };
 	}),
 
-	on(KinderActions.createNewKind, (state, _action) => {
-		return { ...state, editorModel: initialKindEditorModel }
+	on(KinderActions.createNewKind, (state, action) => {
+
+		return {
+			...state,
+			editorModel: { ...initialKindEditorModel, klasseId: action.klasseUuid, klassenstufe: state.editorVorbelegung.klassenstufe, sprache: state.editorVorbelegung.sprache },
+			duplikatwarnung: undefined
+		};
 	}),
 
 	on(KinderActions.finishedWithError, (state, _action) => {
 
-		return { ...state, loading: false, kinderLoaded: false };
+		return { ...state, loading: false, kinderLoaded: false, duplikatwarnung: undefined };
 
 	}),
 
 	on(KinderActions.kindSaved, (state, action) => {
 		const outcome = action.outcome;
 		const neueMap = new KinderMap(state.kinderMap).merge(action.kind);
-		return { ...state, kinderMap: neueMap, saveOutcome: outcome, loading: false };
+
+		const editorVorbelegung: KindEditorVorbelegung = {
+			klassenstufe: action.kind.klassenstufe,
+			sprache: action.kind.sprache
+		};
+
+		return { ...state,
+			kinderMap: neueMap,
+			saveOutcome: outcome,
+			loading: false,
+			duplikatwarnung: undefined,
+			editorVorbelegung: editorVorbelegung
+		 };
 	}),
 
 	on(KinderActions.duplikatGeprueft, (state, action) => {
@@ -90,13 +109,13 @@ const kinderReducer = createReducer(initialKinderState,
 	}),
 
 	on(KinderActions.editCancelled, (state, _action) => {
-		return { ...state, editorModel: undefined, saveOutcome: undefined, loading: false };
+		return { ...state, editorModel: undefined, saveOutcome: undefined, loading: false, duplikatwarnung: undefined};
 	}),
 
 	on(KinderActions.kindDeleted, (state, action) => {
 		const outcome = action.outcome;
 		const neueMap = new KinderMap(state.kinderMap).remove(action.kind.uuid)
-		return { ...state, kinderMap: neueMap, saveOutcome: outcome, loading: false };
+		return { ...state, kinderMap: neueMap, saveOutcome: outcome, loading: false, duplikatwarnung: undefined };
 	}),
 
 	on(KinderActions.resetModule, (_state, _action) => {

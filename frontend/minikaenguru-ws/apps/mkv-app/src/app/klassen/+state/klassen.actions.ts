@@ -1,6 +1,7 @@
 import { createAction, props } from '@ngrx/store';
-import { TeilnahmeIdentifierAktuellerWettbewerb, Klasse, Duplikatwarnung } from '@minikaenguru-ws/common-components';
+import { TeilnahmeIdentifierAktuellerWettbewerb, Klasse, Duplikatwarnung, Kind } from '@minikaenguru-ws/common-components';
 import { Message } from '@minikaenguru-ws/common-messages';
+import { createAttribute } from '@angular/compiler/src/core';
 
 
 
@@ -31,6 +32,19 @@ export const startEditingKlasse = createAction(
 	props<{klasse: Klasse}>()
 );
 
+export const startAssigningKinder = createAction(
+	'[KlassenFacade] insertUpdateKinder',
+	props<{klasse: Klasse}>()
+);
+
+export const kindAdded = createAction(
+	'[KinderFacade] insertKind to klasse'
+);
+
+export const kindDeleted = createAction(
+	'[KinderFacade] deleteKind from klasse'
+);
+
 export const klasseSaved = createAction(
 	'[KlassenFacade] insert or update klasse',
 	props<{klasse: Klasse}>()
@@ -49,6 +63,11 @@ export const klasseDeleted = createAction(
 	'[KlassenFacade] deleteKlasse',
 	props<{klasse: Klasse}>()
 );
+
+export const kindMoved = createAction(
+	'[KinderFacade] moveKind',
+	props<{sourceKlasseUuid: string, targetKlasseUuid: string}>()
+)
 
 export const resetModule = createAction(
 	'[KlassenFacade] reset'

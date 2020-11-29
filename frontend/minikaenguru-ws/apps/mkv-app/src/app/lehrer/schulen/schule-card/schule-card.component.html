@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-12">
-		<div class="card clickable" (click)="selectSchule()">
+		<div class="card">
 			<div class="card-body">
 				<div class="card-title">{{schule.name}}
 					<span *ngIf="devMode">({{schule.kuerzel}})</span>
@@ -15,6 +15,17 @@
 				<div class="card-subtitle mb-2 text-muted">{{schule.ort}}</div>
 				<div class="card-subtitle mb-2 text-muted">
 					{{schule.land}}</div>
+
+				<div class="btn-group d-flex" role="group">
+					<button *ngIf="schule.aktuellAngemeldet" class="btn btn-outline-dark w-100 ml-1" (click)="gotoAuswertung()" title="Kinder erfassen und Urkunden generieren"><i
+							class="fa fa-pencil-square-o" aria-hidden="true"></i>
+					Auswertung <span *ngIf="wettbewerb$ | async as wettbewerb"> {{wettbewerb.jahr}}</span></button>
+
+					<button class="btn btn-outline-dark w-100 ml-1" (click)="selectSchule()"><i class="fa fa-users"
+							aria-hidden="true"></i>
+						Schulübersicht</button>
+				</div>
+
 			</div>
 		</div>
 	</div>

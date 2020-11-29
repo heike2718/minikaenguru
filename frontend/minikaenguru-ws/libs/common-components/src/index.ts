@@ -33,7 +33,8 @@ export {
 	getKlassenstufeByLabel,
 	getSpracheByLabel,
 	compareKinder,
-	compareKlassen
+	compareKlassen,
+	kindToString
 } from './lib/common-components.model';
 
 export { AnonymisierteTeilnahmeComponent } from './lib/anonymisierte-teilnahme/anonymisierte-teilnahme.component';

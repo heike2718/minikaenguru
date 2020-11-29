@@ -21,9 +21,10 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 
 	schule: Schule;
 
+	tooltipBtnSchuluebersicht: string;
+
 	private routeSubscription: Subscription;
 	private schuleSubscription: Subscription;
-	private klassenSubscription: Subscription;
 
 	constructor(private router: Router,
 		private route: ActivatedRoute,
@@ -32,6 +33,8 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 		) { }
 
 	ngOnInit(): void {
+
+		this.tooltipBtnSchuluebersicht = 'Übersicht';
 
 		this.routeSubscription = this.route.paramMap.subscribe(
 
@@ -48,20 +51,12 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 			s => {
 				if (s) {
 					this.schule = s;
+					this.tooltipBtnSchuluebersicht = 'Übersicht ' + this.schule.name;
 				} else {
 					this.router.navigateByUrl('/lehrer/schulen');
 				}
 			}
 		);
-
-		this.klassenSubscription = this.klassen$.subscribe(
-			klassen => {
-				for (let ind = 0; ind < klassen.length; ind++) {
-					console.log(JSON.stringify(klassen[ind]));
-				}
-			}
-		)
-
 
 	}
 
@@ -72,14 +67,15 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 		if (this.schuleSubscription) {
 			this.schuleSubscription.unsubscribe();
 		}
-		if (this.klassenSubscription) {
-			this.klassenSubscription.unsubscribe();
-		}
 	}
 
 
 	addKlasse(): void {
 		this.klassenFacade.startCreateKlasse();
+	}
+
+	gotoMeineSchulen(): void {
+		this.router.navigateByUrl('/lehrer/schulen');
 	}
 
 	gotoDashboard(): void {
