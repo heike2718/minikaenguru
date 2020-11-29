@@ -231,7 +231,7 @@ export class KlasseWechselnComponent implements OnInit, OnDestroy {
 		this.saveInProgress = true;
 		this.selectDisabled = true;
 		const kindDaten = this.createRequestData();
-		this.kinderFacade.updateKind(this.kind.uuid, kindDaten, this.selectedSchule);
+		this.kinderFacade.moveKind(this.kind, kindDaten, this.selectedSchule);
 	}
 
 	private createRequestData(): KindEditorModel {

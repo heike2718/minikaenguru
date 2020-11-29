@@ -163,6 +163,25 @@ export class KinderFacade {
 
 	}
 
+	public moveKind(kind: Kind, editorModel: KindEditorModel, schule: Schule): void {
+
+		this.store.dispatch(KinderActions.startLoading());
+
+		const data = this.mapFromEditorModel(kind.uuid, editorModel, schule) as KindRequestData;
+
+		this.kinderService.updateKind(data).subscribe(
+			responsePayload => {
+				this.store.dispatch(KinderActions.kindSaved({ kind: responsePayload.data, outcome: responsePayload.message }));
+				this.store.dispatch(KlassenActions.kindMoved({sourceKlasseUuid: kind.klasseId, targetKlasseUuid: editorModel.klasseUuid}));
+			},
+			(error) => {
+				this.store.dispatch(KinderActions.finishedWithError());
+				this.errorHandler.handleError(error);
+			}
+		);
+
+	}
+
 	public deleteKind(uuid: string, klasseUuid: string): void {
 
 		this.store.dispatch(KinderActions.startLoading());

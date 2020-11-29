@@ -67,20 +67,20 @@ const klassenReducer = createReducer(initialKlassenState,
 	on(KlassenActions.kindAdded, (state, _action) => {
 
 		const anzahlKinder = state.selectedKlasse.anzahlKinder + 1;
-		const selectedKlasse = {...state.selectedKlasse, anzahlKinder};
+		const selectedKlasse = { ...state.selectedKlasse, anzahlKinder };
 		const merged: KlasseWithID[] = new KlassenMap(state.klassenMap).merge(selectedKlasse);
 
-		return {...state, selectedKlasse: selectedKlasse, klassenMap: merged};
+		return { ...state, selectedKlasse: selectedKlasse, klassenMap: merged };
 
 	}),
 
 	on(KlassenActions.kindDeleted, (state, _action) => {
 
 		const anzahlKinder = state.selectedKlasse.anzahlKinder - 1;
-		const selectedKlasse = {...state.selectedKlasse, anzahlKinder};
+		const selectedKlasse = { ...state.selectedKlasse, anzahlKinder };
 		const merged: KlasseWithID[] = new KlassenMap(state.klassenMap).merge(selectedKlasse);
 
-		return {...state, selectedKlasse: selectedKlasse, klassenMap: merged};
+		return { ...state, selectedKlasse: selectedKlasse, klassenMap: merged };
 
 	}),
 
@@ -94,6 +94,25 @@ const klassenReducer = createReducer(initialKlassenState,
 
 		const neueMap = new KlassenMap(state.klassenMap).remove(action.klasse.uuid);
 		return { ...state, klassenMap: neueMap, loading: false };
+	}),
+
+	on(KlassenActions.kindMoved, (state, action) => {
+
+		const alteKlassenmap = new KlassenMap([...state.klassenMap]);
+
+		const sourceKlasse = alteKlassenmap.get(action.sourceKlasseUuid);
+		const anzahlKinderSourceKlasse = sourceKlasse.anzahlKinder - 1;
+		const sourceKlasseToMerge = { ...sourceKlasse, anzahlKinder: anzahlKinderSourceKlasse };
+
+		const ersterMerge = alteKlassenmap.merge(sourceKlasseToMerge);
+
+		const targetKlasse = new KlassenMap([...ersterMerge]).get(action.targetKlasseUuid);
+		const anzahlKinderTargetKlasse = targetKlasse.anzahlKinder + 1;
+		const targetKlasseToMerge = { ...targetKlasse, anzahlKinder: anzahlKinderTargetKlasse };
+
+
+		const neueMap = new KlassenMap(ersterMerge).merge(targetKlasseToMerge);
+		return { ...state, klassenMap: neueMap };
 	})
 
 );
