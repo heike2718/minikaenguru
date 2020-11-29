@@ -1,5 +1,10 @@
 import { Klasse, compareKlassen } from '@minikaenguru-ws/common-components';
 
+export interface KinderKlasseLocalStorageModel {
+	readonly schulkuerzel: string;
+	readonly klasseUuid: string
+};
+
 
 export interface KlasseWithID {
 	readonly uuid: string;

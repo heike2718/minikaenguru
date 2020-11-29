@@ -36,6 +36,7 @@ import { KlassenModule } from './klassen/klassen.module';
 
 
 
+
 @NgModule({
 	declarations: [
 		AppComponent,

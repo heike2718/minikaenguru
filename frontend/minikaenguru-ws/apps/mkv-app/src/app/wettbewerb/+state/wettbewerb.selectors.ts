@@ -4,5 +4,6 @@ import * as fromWettbewerb from './wettbewerb.reducer';
 export const wettbewerbState = createFeatureSelector<fromWettbewerb.WettbewerbState>(fromWettbewerb.wettbewerbFeatureKey);
 
 export const aktuellerWettbewerb = createSelector(wettbewerbState, s => s.aktuellerWettbewerb);
+export const veranstalter = createSelector(wettbewerbState, s => s.veranstalter);
 
 

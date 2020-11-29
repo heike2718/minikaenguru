@@ -10,3 +10,4 @@ export const klassen = createSelector(klassenState, s => new KlassenMap(s.klasse
 export const anzahlKlassen = createSelector(klassenState, s => s.klassenMap.length);
 export const klasseEditorModel = createSelector(klassenState, s => s.editorModel);
 export const klassenMap = createSelector(klassenState, s => s.klassenMap);
+export const selectedKlasse = createSelector(klassenState, s => s.selectedKlasse);

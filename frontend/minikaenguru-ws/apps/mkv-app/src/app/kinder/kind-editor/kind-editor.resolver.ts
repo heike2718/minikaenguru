@@ -21,12 +21,14 @@ export class KindEditorResolver implements Resolve<any> {
 
 			const uuid = route.params.id;
 
+			const klasseUuid = route.queryParams['klasseUuid'];
+
 			if (uuid === 'neu') {
 
 				return this.store.pipe(
 					select(kindEditorModel),
 					tap(
-						_m => this.kinderFacade.createNewKind()
+						_m => this.kinderFacade.createNewKind(klasseUuid)
 					),
 					first()
 				);

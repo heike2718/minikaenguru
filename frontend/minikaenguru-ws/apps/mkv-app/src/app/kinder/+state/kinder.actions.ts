@@ -1,7 +1,8 @@
 import { createAction, props } from '@ngrx/store';
-import { Kind, Duplikatwarnung } from '@minikaenguru-ws/common-components';
+import { Kind, Duplikatwarnung, Klasse } from '@minikaenguru-ws/common-components';
 import { Message } from '@minikaenguru-ws/common-messages';
 import { Teilnahmeart, TeilnahmeIdentifierAktuellerWettbewerb } from '@minikaenguru-ws/common-components';
+import { KindEditorVorbelegung, KlassenwechselDaten } from '../kinder.model';
 
 export const teilnahmenummerInitialized = createAction(
 	'[KinderFacade] on loadKinder',
@@ -22,7 +23,8 @@ export const allKinderLoaded = createAction(
 );
 
 export const createNewKind = createAction(
-	'[KinderFacade] createNewKind'
+	'[KinderFacade] createNewKind',
+	props<{klasseUuid: string}>()
 );
 
 

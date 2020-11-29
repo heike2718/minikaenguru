@@ -35,6 +35,7 @@ export class KlasseDetailsComponent implements OnInit {
 	}
 
 	gotoKinder(): void {
+		this.klassenFacade.insertUpdateKinder(this.klasse);
 	}
 
 	deleteKlasse(): void {

@@ -43,9 +43,11 @@ public class TokenExchangeService {
 
 		OAuthClientCredentials clientCredentials = OAuthClientCredentials.create(clientId, clientSecret, nonce);
 
+		Response response = null;
+
 		try {
 
-			Response response = tokenExchangeRestClient.exchangeOneTimeTokenWithJwt(oneTimeToken, clientCredentials);
+			response = tokenExchangeRestClient.exchangeOneTimeTokenWithJwt(oneTimeToken, clientCredentials);
 
 			ResponsePayload responsePayload = response.readEntity(ResponsePayload.class);
 
@@ -68,6 +70,12 @@ public class TokenExchangeService {
 			LOG.error("endpoint authprovider ist nicht erreichbar");
 
 			throw new InaccessableEndpointException("Der Endpoint authprovider ist nicht erreichbar. ");
+		} finally {
+
+			if (response != null) {
+
+				response.close();
+			}
 		}
 	}
 

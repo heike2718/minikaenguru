@@ -11,6 +11,10 @@ import { KlassenService } from './klassen.service';
 import { Router } from '@angular/router';
 import { KlasseWithID } from './klassen.model';
 import { MessageService } from '@minikaenguru-ws/common-messages';
+import * as KinderActions from '../kinder/+state/kinder.actions';
+import * as KinderSelectors from '../kinder/+state/kinder.selectors';
+import * as LehrerActions from '../lehrer/+state/lehrer.actions';
+import { KinderService } from '../kinder/kinder.service';
 
 
 
@@ -24,14 +28,18 @@ export class KlassenFacade {
 	public anzahlKlassen$: Observable<number> = this.store.select(KlassenSelectors.anzahlKlassen);
 	public editorModel$: Observable<KlasseEditorModel> = this.store.select(KlassenSelectors.klasseEditorModel);
 	public klassenMap$: Observable<KlasseWithID[]> = this.store.select(KlassenSelectors.klassenMap);
+	public selectedKlasse$: Observable<Klasse> = this.store.select(KlassenSelectors.selectedKlasse);
 
 	private loggingOut = false;
 
 	private klassenGeladen = false;
 
+	private kinderGeladen = false;
+
 	constructor(private store: Store<AppState>,
 		private router: Router,
 		private authService: AuthService,
+		private kinderService: KinderService,
 		private messageService: MessageService,
 		private klassenService: KlassenService,
 		private errorHandler: GlobalErrorHandlerService
@@ -43,6 +51,10 @@ export class KlassenFacade {
 
 		this.klassenGeladen$.subscribe(
 			geladen => this.klassenGeladen = geladen
+		);
+
+		this.store.select(KinderSelectors.kinderGeladen).subscribe(
+			geladen => this.kinderGeladen = geladen
 		);
 	}
 
@@ -75,6 +87,22 @@ export class KlassenFacade {
 
 	public editKlasse(klasse: Klasse): void {
 		this.store.dispatch(KlassenActions.startEditingKlasse({ klasse: klasse }));
+	}
+
+	public insertUpdateKinder(klasse: Klasse): void {
+
+		if (!this.kinderGeladen) {
+			this.kinderService.loadKinder(klasse.schulkuerzel).subscribe(
+				kinder => this.store.dispatch(KinderActions.allKinderLoaded({ kinder: kinder })),
+				(error => {
+					this.store.dispatch(KinderActions.finishedWithError());
+					this.errorHandler.handleError(error);
+				})
+			);
+		}
+
+		this.store.dispatch(KlassenActions.startAssigningKinder({ klasse: klasse }));
+		this.router.navigateByUrl('/kinder/' + klasse.schulkuerzel);
 	}
 
 	public cancelEditKlasse(): void {
@@ -144,6 +172,7 @@ export class KlassenFacade {
 
 	public resetState(): void {
 		this.store.dispatch(KlassenActions.resetModule());
+		this.store.dispatch(LehrerActions.deselectSchule());
 	}
 
 

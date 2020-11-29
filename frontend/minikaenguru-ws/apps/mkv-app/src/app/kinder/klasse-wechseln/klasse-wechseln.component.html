@@ -1,0 +1,73 @@
+<div class="mkv-container mt-1">
+
+	<h3 *ngIf="showGenericTitle">Klassenwechsel nicht möglich: kein Kind ausgewählt</h3>
+
+	<p *ngIf="devMode">
+		(klasse-wechseln.component.ts)
+	</p>
+
+	<div *ngIf="(klassenwechselDaten$ | async)">
+
+		<h3>{{componentTitle}}</h3>
+
+		<div class="col-12">
+
+			<form class="mb-4" [formGroup]="klassenForm">
+
+				<div class="row mt-4">
+					<div class="col-12">
+						<label for="klassenstufeSelect">Klasse*</label>
+					</div>
+				</div>
+				<div *ngIf="!selectDisabled" class="row">
+					<div class="col-12">
+						<select id="klasseSelect" class="custom-select" formControlName="klasse">
+							<option [ngValue]="null" disabled>Bitte neue Klasse wählen</option>
+							<option *ngFor="let name of klassenNamen" [ngValue]="name">
+								{{ name }}
+							</option>
+						</select>
+					</div>
+				</div>
+
+			</form>
+
+			<p *ngIf="devMode">
+				Form Value: {{ klassenForm.value | json }}
+			</p>
+
+
+			<p *ngIf="devMode">
+				Form Status: {{ klassenForm.status }}
+			</p>
+		</div>
+	</div>
+
+	<div class="btn-group d-flex" role="group">
+		<button *ngIf="klassenwechselDaten$ | async" class="btn btn-primary w-100 ml-1"
+			[disabled]="!klassenForm.valid || saveInProgress || selectDisabled" (click)="onSubmit()"><i class="fa fa-floppy-o"
+				aria-hidden="true"></i>
+			speichern</button>
+
+		<button class="btn btn-primary w-100 ml-1" (click)="onCancel()"><i class="fa fa-arrow-left"
+				aria-hidden="true"></i><span *ngIf="sourceKlasse">zurück</span><span *ngIf="!sourceKlasse">Übersicht</span></button>
+	</div>
+
+</div>
+
+<ng-template #dialogContent let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">Mehrfacherfassung?</h4>
+		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<p>{{duplikatwarnung.warnungstext}}</p>
+		<p> Möchten Sie das Kind trotzdem verschieben?</p>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('nein')">nein</button>
+		<button type="button" class="btn btn-outline-secondary" (click)="modal.close('ja')">ja</button>
+	</div>
+</ng-template>

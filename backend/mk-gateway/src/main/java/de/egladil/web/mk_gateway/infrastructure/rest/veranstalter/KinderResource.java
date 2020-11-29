@@ -81,24 +81,7 @@ public class KinderResource {
 		if (moeglichesDuplikat) {
 
 			KindEditorModel kind = data.kind();
-
-			if (StringUtils.isNotBlank(kind.nachname()) && StringUtils.isNotBlank(kind.zusatz())) {
-
-				msg = MessageFormat.format(applicationMessages.getString("checkKindDuplikat.privat.vornameNachnameZusatz"),
-					new Object[] { kind.klassenstufe().label(), kind.vorname(), kind.nachname(), kind.zusatz() });
-
-			} else {
-
-				if (StringUtils.isNotBlank(data.kind().nachname())) {
-
-					msg = MessageFormat.format(applicationMessages.getString("checkKindDuplikat.privat.vornameNachname"),
-						new Object[] { kind.klassenstufe().label(), kind.vorname(), kind.nachname() });
-				} else {
-
-					msg = MessageFormat.format(applicationMessages.getString("checkKindDuplikat.privat.nurVorname"),
-						new Object[] { kind.klassenstufe().label(), kind.vorname() });
-				}
-			}
+			msg = this.kinderService.getWarnungstext(kind);
 
 		}
 

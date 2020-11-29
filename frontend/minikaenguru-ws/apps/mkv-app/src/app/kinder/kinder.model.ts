@@ -1,4 +1,16 @@
 import { TeilnahmeIdentifier, Klassenstufe, Sprache, Kind, compareKinder } from '@minikaenguru-ws/common-components';
+import { Klasse } from '@minikaenguru-ws/common-components';
+
+
+export interface KlassenwechselDaten {
+	readonly kind: Kind,
+	readonly zielklassen: Klasse[]
+};
+
+export interface KindEditorVorbelegung {
+	klassenstufe: Klassenstufe;
+	sprache: Sprache
+};
 
 export interface KindWithID {
 	readonly uuid: string;
@@ -37,6 +49,19 @@ export class KinderMap {
 		const array = [...this.kinder.values()];
 		array.sort((kind1, kind2) => compareKinder(kind1, kind2));
 		return array;
+	}
+
+	public filterWithKlasse(klasse: Klasse): Kind[] {
+
+		if (!klasse) {
+			console.log('filterWithKlasse(): klasse undefined - anzahl Kinder=' + this.items.length);
+			return this.toArray();
+		}
+
+		const array = [...this.kinder.values()];
+		const filtered = array.filter((kind: Kind) => kind.klasseId === klasse.uuid);
+		filtered.sort((kind1, kind2) => compareKinder(kind1, kind2));
+		return filtered;
 	}
 
 	public merge(kind: Kind): KindWithID[] {

@@ -70,6 +70,11 @@ public class Kind {
 		this.zusatz = kindEditorModel.zusatz() == null ? null : kindEditorModel.zusatz().trim();
 		this.sprache = kindEditorModel.sprache().sprache();
 		this.klassenstufe = kindEditorModel.klassenstufe().klassenstufe();
+
+		if (StringUtils.isNotBlank(kindEditorModel.klasseUuid())) {
+
+			this.klasseID = new Identifier(kindEditorModel.klasseUuid());
+		}
 		return this;
 	}
 

@@ -42,7 +42,7 @@ export const selectSchule = createAction(
 );
 
 export const deselectSchule = createAction(
-	'[LehrerFacade] resetSelection'
+	'[LehrerFacade/KlassenFacade] resetSelection/resetState'
 );
 
 export const schuleAngemeldet = createAction(

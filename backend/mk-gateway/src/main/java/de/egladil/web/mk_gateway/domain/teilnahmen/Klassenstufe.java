@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public enum Klassenstufe {
 
-	IKID("Inklusion") {
+	IKID("Inklusion", "Inklusion") {
 
 		@Override
 		public List<String> defaultAufgabennummern() {
@@ -24,7 +24,7 @@ public enum Klassenstufe {
 		}
 
 	},
-	EINS("Klasse 1") {
+	EINS("Klasse 1", "1") {
 		@Override
 		public List<String> defaultAufgabennummern() {
 
@@ -33,7 +33,7 @@ public enum Klassenstufe {
 		}
 
 	},
-	ZWEI("Klasse 2") {
+	ZWEI("Klasse 2", "2") {
 		@Override
 		public List<String> defaultAufgabennummern() {
 
@@ -46,17 +46,25 @@ public enum Klassenstufe {
 
 	private final String label;
 
+	private final String labelSuffix;
+
 	/**
 	 * @param label
 	 */
-	private Klassenstufe(final String label) {
+	private Klassenstufe(final String label, final String labelSuffix) {
 
 		this.label = label;
+		this.labelSuffix = labelSuffix;
 	}
 
 	public String getLabel() {
 
 		return label;
+	}
+
+	public String getLabelSuffix() {
+
+		return labelSuffix;
 	}
 
 	public static Klassenstufe[] valuesSorted() {

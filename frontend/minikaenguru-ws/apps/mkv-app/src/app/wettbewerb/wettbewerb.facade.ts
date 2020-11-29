@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
 import * as WettbewerbActions from './+state/wettbewerb.actions';
-import { aktuellerWettbewerb } from './+state/wettbewerb.selectors';
+import { aktuellerWettbewerb, veranstalter } from './+state/wettbewerb.selectors';
 import { tap, first, take } from 'rxjs/operators';
 import { Wettbewerb } from './wettbewerb.model';
 
@@ -14,6 +14,8 @@ const WETTBEWERB_STORAGE_KEY = 'mkv_wettbewerb';
 export class WettbewerbFacade {
 
 	public aktuellerWettbewerb$ = this.appStore.select(aktuellerWettbewerb);
+
+	public veranstalter$ = this.appStore.select(veranstalter);
 
 	constructor(private appStore: Store<AppState>,
 		private teilnahmenService: TeilnahmenService,
