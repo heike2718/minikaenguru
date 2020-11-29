@@ -106,9 +106,18 @@ export class KlasseEditorComponent implements OnInit, OnDestroy {
 		if (this.uuid === 'neu') {
 			this.klassenFacade.insertKlasse(this.uuid, this.schulkuerzel, { name: this.name });
 		} else {
-			this.klassenFacade.updateKlasse(this.uuid, this.schulkuerzel, {name: this.name});
+			this.klassenFacade.updateKlasse(this.uuid, this.schulkuerzel, { name: this.name });
 		}
 	}
+
+
+	addKlasse(): void {
+		this.saveInProgress = false;
+		this.messageService.clear();
+		this.name = '';
+		this.klassenFacade.startCreateKlasse();
+	}
+
 
 	onCancel(): void {
 		this.messageService.clear();

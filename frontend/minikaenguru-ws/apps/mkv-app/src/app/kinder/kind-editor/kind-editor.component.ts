@@ -123,7 +123,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 					this.kindForm.get('nachname').setValue(this.initialGuiModel.nachname, { onlySelf: true });
 					this.kindForm.get('zusatz').setValue(this.initialGuiModel.zusatz, { onlySelf: true });
 					this.kindForm.get('klassenstufe').setValue(this.initialGuiModel.klassenstufe ? this.initialGuiModel.klassenstufe.label : null, { onlySelf: true });
-					this.kindForm.get('sprache').setValue(this.initialGuiModel.sprache.label, { onlySelf: true });
+					this.kindForm.get('sprache').setValue(this.initialGuiModel.sprache ? this.initialGuiModel.sprache.label : null, { onlySelf: true });
 
 
 					this.editorInitialized = true;
@@ -160,6 +160,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 				if (this.showSaveMessage) {
 					this.messageService.showMessage(message);
 					this.showSaveMessage = false;
+					this.saveInProgress = false;
 				}
 			}
 		);
@@ -300,6 +301,24 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 	}
 
 
+	addKind(): void {
+
+		this.messageService.clear();
+
+		this.saveInProgress = false;
+		this.showWarndialog = false;
+		this.editorInitialized = false;
+
+		this.kinderFacade.createNewKind(this.klasseUuid);
+
+		const url = '/kinder/kind-editor/neu';
+
+		if (this.klasseUuid) {
+			this.router.navigate([url], { queryParams: { klasseUuid: this.klasseUuid } });
+		} else {
+			this.router.navigateByUrl(url);
+		}
+	}
 
 
 }

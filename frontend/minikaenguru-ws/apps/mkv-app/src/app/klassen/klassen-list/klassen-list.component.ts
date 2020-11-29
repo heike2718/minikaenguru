@@ -25,7 +25,6 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 
 	private routeSubscription: Subscription;
 	private schuleSubscription: Subscription;
-	private klassenSubscription: Subscription;
 
 	constructor(private router: Router,
 		private route: ActivatedRoute,
@@ -59,15 +58,6 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 			}
 		);
 
-		this.klassenSubscription = this.klassen$.subscribe(
-			klassen => {
-				for (let ind = 0; ind < klassen.length; ind++) {
-					console.log(JSON.stringify(klassen[ind]));
-				}
-			}
-		)
-
-
 	}
 
 	ngOnDestroy(): void {
@@ -76,9 +66,6 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 		}
 		if (this.schuleSubscription) {
 			this.schuleSubscription.unsubscribe();
-		}
-		if (this.klassenSubscription) {
-			this.klassenSubscription.unsubscribe();
 		}
 	}
 

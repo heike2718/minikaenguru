@@ -8,6 +8,7 @@ import { VertragAdvFacade } from '../vertrag-adv/vertrag-adv.facade';
 import { KinderFacade } from '../kinder/kinder.facade';
 import { Router } from '@angular/router';
 import { KlassenFacade } from '../klassen/klassen.facade';
+import { MessageService } from '@minikaenguru-ws/common-messages';
 
 
 @Injectable({
@@ -23,7 +24,9 @@ export class LogoutService {
 		, private teinahmenFacade: TeilnahmenFacade
 		, private vertragAdvFacade: VertragAdvFacade
 		, private kinderFacade: KinderFacade
-		, private klassenFacade: KlassenFacade) { }
+		, private klassenFacade: KlassenFacade
+		, private messageService: MessageService
+		) { }
 
 
 	logout(): void {
@@ -35,6 +38,8 @@ export class LogoutService {
 		this.vertragAdvFacade.resetState();
 		this.kinderFacade.resetState();
 		this.klassenFacade.resetState();
+
+		this.messageService.clear();
 
 		this.router.navigateByUrl('/landing');
 	}

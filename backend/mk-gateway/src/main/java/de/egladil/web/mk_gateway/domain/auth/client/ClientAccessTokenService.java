@@ -54,9 +54,11 @@ public class ClientAccessTokenService implements IClientAccessTokenService {
 		String nonce = UUID.randomUUID().toString();
 		OAuthClientCredentials credentials = OAuthClientCredentials.create(clientId, clientSecret, nonce);
 
+		Response authResponse = null;
+
 		try {
 
-			Response authResponse = initAccessTokenRestClient.authenticateClient(credentials);
+			authResponse = initAccessTokenRestClient.authenticateClient(credentials);
 
 			ResponsePayload responsePayload = authResponse.readEntity(ResponsePayload.class);
 
@@ -76,6 +78,12 @@ public class ClientAccessTokenService implements IClientAccessTokenService {
 
 			// wurde schon geloggt
 			return null;
+		} finally {
+
+			if (authResponse != null) {
+
+				authResponse.close();
+			}
 		}
 	}
 

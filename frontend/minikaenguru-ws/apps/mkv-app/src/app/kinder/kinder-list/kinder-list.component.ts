@@ -30,6 +30,8 @@ export class KinderListComponent implements OnInit, OnDestroy {
 
 	veranstalter$ = this.wettbewerbFacade.veranstalter$;
 
+	labelBtnCancel = 'Übersicht';
+
 	private teilnahmeIdentifier: TeilnahmeIdentifierAktuellerWettbewerb;
 
 	private veranstalterSubscription: Subscription;
@@ -74,7 +76,15 @@ export class KinderListComponent implements OnInit, OnDestroy {
 		);
 
 		this.teilnahmeIdentifierSubscription = this.kinderFacade.teilnahmeIdentifier$.subscribe(
-			ti => this.teilnahmeIdentifier = ti
+			ti => {
+				this.teilnahmeIdentifier = ti;
+
+				if (ti && ti.teilnahmeart === 'SCHULE') {
+					this.labelBtnCancel = 'Klassen';
+				} else {
+					this.labelBtnCancel = 'Übersicht';
+				}
+			}
 		);
 
 		this.klasseSubscription = this.selectedKlasse$.subscribe(

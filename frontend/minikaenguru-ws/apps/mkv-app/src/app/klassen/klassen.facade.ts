@@ -13,6 +13,7 @@ import { KlasseWithID } from './klassen.model';
 import { MessageService } from '@minikaenguru-ws/common-messages';
 import * as KinderActions from '../kinder/+state/kinder.actions';
 import * as KinderSelectors from '../kinder/+state/kinder.selectors';
+import * as LehrerActions from '../lehrer/+state/lehrer.actions';
 import { KinderService } from '../kinder/kinder.service';
 
 
@@ -171,6 +172,7 @@ export class KlassenFacade {
 
 	public resetState(): void {
 		this.store.dispatch(KlassenActions.resetModule());
+		this.store.dispatch(LehrerActions.deselectSchule());
 	}
 
 
