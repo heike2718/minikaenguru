@@ -1,6 +1,12 @@
 import { TeilnahmeIdentifier, Klassenstufe, Sprache, Kind, compareKinder } from '@minikaenguru-ws/common-components';
 import { Klasse } from '@minikaenguru-ws/common-components';
 
+
+export interface KlassenwechselDaten {
+	readonly kind: Kind,
+	readonly zielklassen: Klasse[]
+};
+
 export interface KindEditorVorbelegung {
 	klassenstufe: Klassenstufe;
 	sprache: Sprache

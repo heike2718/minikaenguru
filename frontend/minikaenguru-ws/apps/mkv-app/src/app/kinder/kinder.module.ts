@@ -10,6 +10,7 @@ import { KindEditorComponent } from './kind-editor/kind-editor.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
 import { KindEditorResolver } from './kind-editor/kind-editor.resolver';
+import { KlasseWechselnComponent } from './klasse-wechseln/klasse-wechseln.component';
 
 
 
@@ -17,7 +18,8 @@ import { KindEditorResolver } from './kind-editor/kind-editor.resolver';
 	declarations: [
 		KindDetailsComponent,
 		KinderListComponent,
-		KindEditorComponent
+		KindEditorComponent,
+		KlasseWechselnComponent
 	],
 	imports: [
 		CommonModule,

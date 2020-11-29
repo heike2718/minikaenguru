@@ -57,8 +57,6 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	editorInitialized = false;
 
-	showWarndialog = false;
-
 	private selectedSchule: Schule;
 
 	private showSaveMessage = false;
@@ -145,10 +143,8 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 						if (text.length === 0) {
 							this.saveKind();
 						} else {
-							this.showWarndialog = true;
 							this.duplikatwarnung = warnung;
-
-							this.open(this.dialogContent);
+							this.openWarndialog(this.dialogContent);
 						}
 					}
 				}
@@ -277,7 +273,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 	}
 
 
-	private open(content: TemplateRef<HTMLElement>) {
+	private openWarndialog(content: TemplateRef<HTMLElement>) {
 
 		this.saveInProgress = false;
 		this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
@@ -306,7 +302,6 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 		this.messageService.clear();
 
 		this.saveInProgress = false;
-		this.showWarndialog = false;
 		this.editorInitialized = false;
 
 		this.kinderFacade.createNewKind(this.klasseUuid);

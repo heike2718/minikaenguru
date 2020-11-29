@@ -20,14 +20,15 @@ import {
 } from '@minikaenguru-ws/common-components';
 import { AuthService, User, STORAGE_KEY_USER, Rolle } from '@minikaenguru-ws/common-auth';
 import { KinderService } from './kinder.service';
-import { map, withLatestFrom, switchMap, tap } from 'rxjs/operators';
+import { map, withLatestFrom, switchMap, tap, filter } from 'rxjs/operators';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
-import { KinderMap, KindEditorVorbelegung } from './kinder.model';
+import { KinderMap, KindEditorVorbelegung, KlassenwechselDaten } from './kinder.model';
 import { ThrowStmt } from '@angular/compiler';
 import { Message, MessageService } from '@minikaenguru-ws/common-messages';
 import { environment } from '../../environments/environment';
 import { Schule } from '../lehrer/schulen/schulen.model';
 import { schulkatalogFeatureKey } from 'libs/common-schulkatalog/src/lib/+state/schulkatalog.reducer';
+import { Router } from '@angular/router';
 
 
 
@@ -43,6 +44,7 @@ export class KinderFacade {
 	public anzahlKinder$: Observable<number>;
 	public duplikatwarnung$: Observable<Duplikatwarnung> = this.store.select(KinderSelectors.duplikatwarnung);
 	public saveOutcome$: Observable<Message> = this.store.select(KinderSelectors.saveOutcome);
+	public klassenwechselDaten$: Observable<KlassenwechselDaten>;
 
 	private loggingOut: boolean;
 
@@ -50,7 +52,8 @@ export class KinderFacade {
 		private authService: AuthService,
 		private kinderService: KinderService,
 		private messageService: MessageService,
-		private errorHandler: GlobalErrorHandlerService) {
+		private errorHandler: GlobalErrorHandlerService,
+		private router: Router) {
 
 		this.authService.onLoggingOut$.subscribe(
 			loggingOut => this.loggingOut = loggingOut
@@ -58,7 +61,6 @@ export class KinderFacade {
 
 		this.kinder$ = this.getKinder();
 		this.anzahlKinder$ = this.getAnzahlKinder();
-
 	}
 
 	public createNewKind(klasseUuid: string): void {
@@ -182,6 +184,11 @@ export class KinderFacade {
 
 	}
 
+	public startKlassenwechsel(kind: Kind): void {
+		this.klassenwechselDaten$ = this.getKlassenwechselDaten(kind);
+		this.router.navigateByUrl('/kind/klassenwechsel');
+	}
+
 	public resetState(): void {
 		this.store.dispatch(KinderActions.resetModule());
 	}
@@ -208,6 +215,16 @@ export class KinderFacade {
 			map(x => new KinderMap(x[0]).filterWithKlasse(x[1]))
 		);
 
+	}
+
+	private getKlassenwechselDaten(kind: Kind): Observable<KlassenwechselDaten> {
+
+		const kl$ = this.store.select(KlassenSelectors.klassen);
+
+		return kl$.pipe(
+			map(alle => alle.filter(kl => kl.uuid !== kind.klasseId)),
+			map(filteredKlassen => <KlassenwechselDaten> {kind: kind,zielklassen: filteredKlassen})
+		);
 	}
 
 	private mapFromEditorModel(uuid: string, editorModel: KindEditorModel, schule: Schule): KindRequestData {

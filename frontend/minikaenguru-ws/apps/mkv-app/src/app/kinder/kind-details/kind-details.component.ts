@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
-import { Kind } from '@minikaenguru-ws/common-components';
+import { Kind, kindToString } from '@minikaenguru-ws/common-components';
 import { Privatveranstalter, AbstractVeranstalter } from '../../wettbewerb/wettbewerb.model';
 import { Router } from '@angular/router';
 import { PrivatveranstalterFacade } from '../../privatveranstalter/privatveranstalter.facade';
@@ -25,11 +25,15 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 	@Input()
 	veranstalter: AbstractVeranstalter;
 
+	showKlasseWechselnButton = false;
+
 	selectedKlasse$ = this.klassenFacade.selectedKlasse$;
 
 	private klasseSubscription: Subscription;
 
 	private klasseUuid: string;
+
+	private klassenSubscription: Subscription;
 
 	titel: string;
 
@@ -42,12 +46,23 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 
-		this.titel = this.createTitel();
+		this.titel = kindToString(this.kind);
 
 		this.klasseSubscription = this.selectedKlasse$.subscribe(
 			kl => {
 				if (kl) {
 					this.klasseUuid = kl.uuid;
+				}
+			}
+		);
+
+		this.klassenSubscription = this.klassenFacade.klassen$.subscribe(
+
+			klassen => {
+				if (klassen && klassen.length > 1) {
+					this.showKlasseWechselnButton = true;
+				} else {
+					this.showKlasseWechselnButton = false;
 				}
 			}
 		);
@@ -57,23 +72,10 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 		if (this.klasseSubscription) {
 			this.klasseSubscription.unsubscribe();
 		}
-	}
-
-
-	private createTitel(): string {
-
-		let result = this.kind.vorname;
-
-		if (this.kind.nachname) {
-			result = result + ' ' + this.kind.nachname;
+		if (this.klassenSubscription) {
+			this.klassenSubscription.unsubscribe();
 		}
-		if (this.kind.zusatz) {
-			result = result + ' (' + this.kind.zusatz + ')'
-		}
-
-		return result;
 	}
-
 
 	editKind(): void {
 		this.kinderFacade.editKind(this.kind);
@@ -84,6 +86,10 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 		} else {
 			this.router.navigateByUrl(url);
 		}
+	}
+
+	klasseWechseln() {
+		this.kinderFacade.startKlassenwechsel(this.kind);
 	}
 
 	deleteKind(): void {

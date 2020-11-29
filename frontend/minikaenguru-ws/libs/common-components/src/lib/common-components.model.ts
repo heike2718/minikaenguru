@@ -183,3 +183,17 @@ export function compareKlassen(klasse1: Klasse, klasse2: Klasse): number {
 
 };
 
+export function kindToString(kind: Kind): string {
+
+	let result = kind.vorname;
+
+	if (kind.nachname) {
+		result = result + ' ' + kind.nachname;
+	}
+	if (kind.zusatz) {
+		result = result + ' (' + kind.zusatz + ')'
+	}
+
+	return result;
+}
+
