@@ -9,16 +9,17 @@ export const selectedSchule = createSelector(lehrerState, s => s.selectedSchule)
 
 export const schuleDetails = createSelector(selectedSchule, s => s !== undefined ? s.details : undefined);
 
-export const showSchulkatalog = createSelector(lehrerState, s => s.showSchulkatalog);
-
 export const schulenLoaded = createSelector(lehrerState, s => s.schulenLoaded);
 
 export const loading = createSelector(lehrerState, s => s.loading);
 
 export const lehrer = createSelector(lehrerState, s => s.lehrer);
 
-export const showTextSchuleBereitsZugeordnet = createSelector(lehrerState, s => s.showTextSchuleBereitsZugeordnet);
+export const addSchuleState = createSelector(lehrerState, s => s.addSchuleState);
 
-export const btnAddMeToSchuleDisabled = createSelector(lehrerState, s => s.btnAddMeToSchuleDisabled);
+export const showSchulkatalog = createSelector(addSchuleState, s => s.showSchulkatalog);
 
+export const showTextSchuleBereitsZugeordnet = createSelector(addSchuleState, s => s.showTextSchuleBereitsZugeordnet);
+
+export const btnAddMeToSchuleDisabled = createSelector(addSchuleState, s => s.btnAddMeToSchuleDisabled);
 

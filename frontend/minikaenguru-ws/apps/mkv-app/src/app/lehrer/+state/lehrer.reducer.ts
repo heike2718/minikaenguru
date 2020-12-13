@@ -4,14 +4,24 @@ import * as LehrerActions from './lehrer.actions';
 import { Schulteilnahme, Lehrer } from '../../wettbewerb/wettbewerb.model';
 export const lehrerFeatureKey = 'mkv-app-lehrer';
 
+export interface AddSchuleState {
+	readonly showSchulkatalog: boolean;
+	readonly showTextSchuleBereitsZugeordnet: boolean;
+	readonly btnAddMeToSchuleDisabled: boolean;
+}
+
+const initialAddSchuleState: AddSchuleState = {
+	showSchulkatalog: false,
+	showTextSchuleBereitsZugeordnet: false,
+	btnAddMeToSchuleDisabled: true,
+}
+
 export interface LehrerState {
 	readonly lehrer: Lehrer;
 	readonly schulen: SchuleWithID[];
 	readonly selectedSchule: Schule;
-	readonly showSchulkatalog: boolean;
-	readonly showTextSchuleBereitsZugeordnet: boolean;
-	readonly btnAddMeToSchuleDisabled: boolean;
 	readonly schulenLoaded: boolean;
+	readonly addSchuleState: AddSchuleState;
 	readonly loading: boolean;
 
 };
@@ -19,11 +29,9 @@ export interface LehrerState {
 const initalLehrerState: LehrerState = {
 	lehrer: undefined,
 	schulen: [],
-	showSchulkatalog: false,
 	selectedSchule: undefined,
-	showTextSchuleBereitsZugeordnet: false,
-	btnAddMeToSchuleDisabled: true,
 	schulenLoaded: false,
+	addSchuleState: initialAddSchuleState,
 	loading: false
 };
 
@@ -88,7 +96,7 @@ const lehrerReducer = createReducer(initalLehrerState,
 		const schule = findSchuleMitId(state.schulen, action.kuerzel);
 
 		if (schule != null) {
-			return { ...state, selectedSchule: schule, showSchulkatalog: false };
+			return { ...state, selectedSchule: schule, addSchuleState: initialAddSchuleState };
 		}
 
 		return state;
@@ -111,30 +119,48 @@ const lehrerReducer = createReducer(initalLehrerState,
 	}),
 
 	on(LehrerActions.deselectSchule, (state, _action) => {
-		return { ...state, selectedSchule: undefined, showSchulkatalog: false }
+		return { ...state, selectedSchule: undefined, addSchuleState: initialAddSchuleState }
 	}),
 
 	on(LehrerActions.schulkatalogEinblenden, (state, _action) => {
-		return { ...state,
-			btnAddMeToSchuleDisabled: true,
-			showTextSchuleBereitsZugeordnet: false,
+
+		const neuerAddSchuleState: AddSchuleState = {
 			showSchulkatalog: true,
+			showTextSchuleBereitsZugeordnet: false,
+			btnAddMeToSchuleDisabled: true
+		}
+
+		return {
+			...state,
+			addSchuleState: neuerAddSchuleState,
 			loading: false,
 			schulenLoaded: true,
-			selectedSchule: undefined };
+			selectedSchule: undefined
+		};
 	}),
 
 	on(LehrerActions.neueSchuleSelected, (state, action) => {
 
 		const selectedItem = action.selectedKatalogItem;
 
+
 		if (!selectedItem) {
-			return { ...state, btnAddMeToSchuleDisabled: true, showTextSchuleBereitsZugeordnet: false, showSchulkatalog: false };
+			return {
+				...state, addSchuleState: {
+					showSchulkatalog: false,
+					showTextSchuleBereitsZugeordnet: false,
+					btnAddMeToSchuleDisabled: true
+				}
+			};
 		}
 
 		const schuleBereitsZugeordnet = new SchulenMap(state.schulen).has(selectedItem.kuerzel);
 
-		return { ...state, btnAddMeToSchuleDisabled: schuleBereitsZugeordnet, showTextSchuleBereitsZugeordnet: schuleBereitsZugeordnet };
+		const neuerAddSchuleState: AddSchuleState = { ...state.addSchuleState,
+			btnAddMeToSchuleDisabled: schuleBereitsZugeordnet,
+			showTextSchuleBereitsZugeordnet: schuleBereitsZugeordnet }
+
+		return { ...state, addSchuleState: neuerAddSchuleState };
 	}),
 
 	on(LehrerActions.schuleAdded, (state, action) => {
@@ -143,25 +169,25 @@ const lehrerReducer = createReducer(initalLehrerState,
 
 		const neueMap = new SchulenMap(state.schulen).merge(schule);
 
-		return { ...state,
-			btnAddMeToSchuleDisabled: true,
-			showTextSchuleBereitsZugeordnet: false,
+		return {
+			...state,
 			schulen: neueMap,
-			showSchulkatalog: false,
+			addSchuleState: initialAddSchuleState,
 			loading: false,
 			schulenLoaded: true,
-			selectedSchule: undefined };
+			selectedSchule: undefined
+		};
 	}),
 
 	on(LehrerActions.closeSchulsuche, (state, _action) => {
 
-		return { ...state,
-			btnAddMeToSchuleDisabled: true,
-			showTextSchuleBereitsZugeordnet: false,
-			showSchulkatalog: false,
+		return {
+			...state,
+			addSchuleState: initialAddSchuleState,
 			loading: false,
 			schulenLoaded: true,
-			selectedSchule: undefined };
+			selectedSchule: undefined
+		};
 	}),
 
 	on(LehrerActions.resetLehrer, (_state, _action) => {
