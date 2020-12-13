@@ -41,7 +41,7 @@ public class StatistikWettbewerbServiceTest {
 	@BeforeEach
 	void setUp() throws Exception {
 
-		wettbewerbLoesungszettel = StatistikTestUtils.loadTheLoesungszettel();
+		wettbewerbLoesungszettel = StatistikTestUtils.loadTheLoesungszettel(2018);
 		loesungszettelRepository = Mockito.mock(LoesungszettelRepository.class);
 		statistikService = StatistikWettbewerbService.createForTest(loesungszettelRepository);
 	}

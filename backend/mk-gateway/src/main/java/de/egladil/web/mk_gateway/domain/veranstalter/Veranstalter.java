@@ -162,6 +162,12 @@ public abstract class Veranstalter {
 		return Objects.equals(person, other.person);
 	}
 
+	@Override
+	public String toString() {
+
+		return "Veranstalter [person=" + person + "]";
+	}
+
 	public boolean isNewsletterEmpfaenger() {
 
 		return newsletterEmpfaenger;

@@ -9,6 +9,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.mk_gateway.domain.semantik.ValueObject;
 
 /**
@@ -30,6 +31,7 @@ public class SchuleAPIModel {
 	private static final String KEY_ANGEMELDET = "aktuellAngemeldet";
 
 	@JsonProperty
+	@Kuerzel
 	private String kuerzel;
 
 	@JsonProperty

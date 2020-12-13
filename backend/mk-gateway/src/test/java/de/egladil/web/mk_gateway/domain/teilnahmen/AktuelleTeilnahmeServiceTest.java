@@ -446,7 +446,7 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 
 			// Assert
 			assertEquals("Christaschule", actual.nameUrkunde());
-			assertEquals("", actual.angemeldetDurch());
+			assertEquals("Hans Wurst", actual.angemeldetDurch());
 			assertNull(service.schulteilnahmeCreated());
 			assertNull(service.getSecurityIncidentRegistered());
 			assertNull(service.privatteilnahmeCreatedEvent());
@@ -466,7 +466,7 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 
 			// Assert
 			assertEquals("Antonschule", actual.nameUrkunde());
-			assertEquals("", actual.angemeldetDurch());
+			assertEquals("Hans Wurst", actual.angemeldetDurch());
 
 			SchulteilnahmeCreated event = service.schulteilnahmeCreated();
 

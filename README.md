@@ -8,9 +8,11 @@ Folgende Funktionen stehen zur Verfügung:
 
 ### open data
 
-* Mediane vergangener Wettbewerbe abfragen
-* Gesamtpunktverteilungen als PDF erstellen
-* Gesamtpunktverteilungen nach Klassenstufe als xml erstellen
+* [Mediane vergangener Wettbewerbe abfragen](https://mathe-jung-alt.de/mk-gateway/open-data/statistik/2020/mediane): jahr variabel
+
+* [Gesamtpunktverteilungen als PDF erstellen](https://mathe-jung-alt.de/mk-gateway/open-data/statistik/2020/pdf): jahr variabel  - Ladezeit ist etwas länger
+ 
+* [Gesamtpunktverteilungen nach Klassenstufe als xml erstellen](https://mathe-jung-alt.de/mk-gateway/open-data/statistik/2020/EINS/xml): jahr und Klassenstufe variabel,  Klassenstufen IKID (Inklusion), EINS (Klasse 1), ZWEI (Klasse 2)
 
 ### mkv-app
 

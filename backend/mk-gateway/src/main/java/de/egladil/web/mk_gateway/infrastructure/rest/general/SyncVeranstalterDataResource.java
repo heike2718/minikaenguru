@@ -100,7 +100,7 @@ public class SyncVeranstalterDataResource {
 
 	@DELETE
 	@Path("/veranstalter")
-	public Response anonymisiereVeranstalter(final LoescheVeranstalterCommand data) {
+	public Response loescheVeranstalter(final LoescheVeranstalterCommand data) {
 
 		try {
 

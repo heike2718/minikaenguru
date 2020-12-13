@@ -8,11 +8,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.veranstalter.Person;
-import de.egladil.web.mk_gateway.domain.veranstalter.Schulkollegium;
 
 /**
  * SchulkollegiumTest
@@ -119,6 +122,53 @@ public class SchulkollegiumTest {
 		assertFalse(result2.equals(result3));
 		assertFalse(result1.equals(new Object()));
 
+	}
+
+	@Test
+	void should_serializeAsJson_work() throws Exception {
+
+		// Arrange
+
+		List<Schulkollegium> kollegien = new ArrayList<>();
+
+		{
+
+			Identifier schulkuerzel = new Identifier("SCHULKUERZEL_1");
+			Person[] personen = new Person[4];
+			personen[0] = new Person("UUID_LEHRER_1", "Hans Wurst");
+			personen[1] = new Person("UUID_LEHRER_2", "Olle Keule");
+			personen[2] = new Person("UUID_LEHRER_3", "Mimi Mimimi");
+			personen[3] = new Person("UUID_LEHRER_GESPERRT", "Gesperrter Lehrer");
+			Schulkollegium result = new Schulkollegium(schulkuerzel, personen);
+
+			kollegien.add(result);
+		}
+
+		{
+
+			Identifier schulkuerzel = new Identifier("SCHULKUERZEL_2");
+			Person[] personen = new Person[1];
+			personen[0] = new Person("UUID_LEHRER_1", "Hans Wurst");
+			Schulkollegium result = new Schulkollegium(schulkuerzel, personen);
+
+			kollegien.add(result);
+		}
+
+		{
+
+			Identifier schulkuerzel = new Identifier("SCHULKUERZEL_3");
+			Person[] personen = new Person[1];
+			personen[0] = new Person("UUID_LEHRER_ANDERE_SCHULE", "Lehrer andere Schule");
+			Schulkollegium result = new Schulkollegium(schulkuerzel, personen);
+
+			kollegien.add(result);
+		}
+
+		// Act
+		String json = new ObjectMapper().writeValueAsString(kollegien);
+
+		// Assert
+		System.out.println(json);
 	}
 
 }

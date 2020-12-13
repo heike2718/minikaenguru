@@ -46,7 +46,7 @@ public class OpenDataResource {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_XML })
-	@Path("/statistik/{jahr}/IKID/xml")
+	@Path("statistik/{jahr}/IKID/xml")
 	public Response getGesamtstatistikIKidsFuerJahr(@PathParam(value = "jahr") final String jahr) {
 
 		Response checkResponse = this.checkJahr(jahr, "/open-data/statistik/{jahr}/IKID/xml");
@@ -64,7 +64,7 @@ public class OpenDataResource {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_XML })
-	@Path("/statistik/{jahr}/EINS/xml")
+	@Path("statistik/{jahr}/EINS/xml")
 	public Response getGesamtstatistikIKlasse1FuerJahr(@PathParam(value = "jahr") final String jahr) {
 
 		Response checkResponse = this.checkJahr(jahr, "/open-data/statistik/{jahr}/EINS/xml");
@@ -82,7 +82,7 @@ public class OpenDataResource {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_XML })
-	@Path("/statistik/{jahr}/ZWEI/xml")
+	@Path("statistik/{jahr}/ZWEI/xml")
 	public Response getGesamtstatistikIKlasse2FuerJahr(@PathParam(value = "jahr") final String jahr) {
 
 		Response checkResponse = this.checkJahr(jahr, "/open-data/statistik/{jahr}/ZWEI/xml");
@@ -100,7 +100,7 @@ public class OpenDataResource {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM })
-	@Path("/statistik/{jahr}/pdf")
+	@Path("statistik/{jahr}/pdf")
 	public Response downloadGesamtstatistikFuerJahr(@PathParam(value = "jahr") final String jahr) {
 
 		Response checkJahrResponse = this.checkJahr(jahr, "/open-data/statistik/{jahr}/pdf");
@@ -119,7 +119,7 @@ public class OpenDataResource {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
-	@Path("/statistik/{jahr}/mediane")
+	@Path("statistik/{jahr}/mediane")
 	public Response getMediane(@PathParam(
 		value = "jahr") final String jahr) {
 

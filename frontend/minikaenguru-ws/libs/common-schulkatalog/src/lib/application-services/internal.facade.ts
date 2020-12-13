@@ -36,8 +36,8 @@ export class InternalFacade {
 	public searchKatalogItems(typ: Katalogtyp, searchTerm: string) {
 
 		this.katalogService.searchKatalogItems(typ, searchTerm).subscribe(
-			katalogItems => {
-				this.store.dispatch(searchFinished({ katalogItems: katalogItems, immediatelyLoadOnNumberChilds: this.config.immediatelyLoadOnNumberChilds }));
+			katItems => {
+				this.store.dispatch(searchFinished({ katalogItems: katItems, immediatelyLoadOnNumberChilds: this.config.immediatelyLoadOnNumberChilds }));
 			},
 			(error => {
 				this.errorHandler.handleError(error, '[InternalFacade] searchKatalogItems')
@@ -48,8 +48,8 @@ export class InternalFacade {
 	public searchKindelemente(katalogItem: KatalogItem, searchTerm: string) {
 
 		this.katalogService.searchKindelemente(katalogItem, searchTerm).subscribe(
-			katalogItems => {
-				this.store.dispatch(searchFinished({ katalogItems: katalogItems, immediatelyLoadOnNumberChilds: this.config.immediatelyLoadOnNumberChilds }));
+			katItems => {
+				this.store.dispatch(searchFinished({ katalogItems: katItems, immediatelyLoadOnNumberChilds: this.config.immediatelyLoadOnNumberChilds }));
 			},
 			(error => {
 				this.errorHandler.handleError(error, '[InternalFacade] searchKatalogItems')

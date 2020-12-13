@@ -2,7 +2,7 @@
 	<div class="col-12">
 		<h2>Meine Schulen</h2>
 		<p *ngIf="devMode">(schulen-list.component)</p>
-		<ng-container *ngIf="(schulen$ | async) as schulen">
+		<ng-container *ngIf="(lehrerFacade.schulen$ | async) as schulen">
 			<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let schule of schulen">
 				<mkv-schule-card [schule]="schule.schule"></mkv-schule-card>
 			</div>
@@ -11,10 +11,12 @@
 
 	<div class="btn-group d-flex" role="group">
 
-		<button class="btn btn-primary w-100 ml-1" (click)="addSchule()"><i class="fa fa-plus" aria-hidden="true"></i>weitere
+		<button class="btn btn-primary w-100 ml-1" (click)="addSchule()"><i class="fa fa-plus"
+				aria-hidden="true"></i>weitere
 			Schule</button>
 
-		<button class="btn btn-primary w-100 ml-1" (click)="gotoDashboard()"><i class="fa fa-arrow-left" aria-hidden="true"></i>zur
+		<button class="btn btn-primary w-100 ml-1" (click)="gotoDashboard()"><i class="fa fa-home"
+				aria-hidden="true"></i>zur
 			Übersicht</button>
 	</div>
 

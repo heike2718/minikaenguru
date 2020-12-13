@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { Router } from '@angular/router';
 import { LehrerFacade } from '../../lehrer.facade';
@@ -13,22 +13,22 @@ export class SchulenListComponent implements OnInit {
 
 	devMode = !environment.production;
 
-	schulen$ = this.lehrerFacade.schulen$;
-
 	textFeatureFlagAnzeigen = false;
 	textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber Anfang 2021.';
 
-	constructor(private lehrerFacade: LehrerFacade
+	constructor(public lehrerFacade: LehrerFacade
 		, private klassenFacade: KlassenFacade
 		, private router: Router) {
 	}
 
 	ngOnInit(): void {
+
 		this.klassenFacade.resetState();
 	}
 
 	addSchule(): void {
-		this.textFeatureFlagAnzeigen = true;
+		this.lehrerFacade.neueSchulsuche();
+		this.router.navigateByUrl('/lehrer/schulen/add-schule')
 	}
 
 	gotoDashboard(): void {

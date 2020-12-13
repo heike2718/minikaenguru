@@ -26,6 +26,7 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryKinderRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryKlassenRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryLoesungszettelRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemorySchulkollegienRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryTeilnahmenRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryUserRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryVeranstalterRepository;
@@ -91,6 +92,8 @@ public abstract class AbstractDomainServiceTest {
 
 	private InMemoryKinderRepository kinderRepository;
 
+	private InMemorySchulkollegienRepository schulkollegienRepository;
+
 	private int countWettbewerbInsert = 0;
 
 	private int countWettbewerbUpdate = 0;
@@ -120,6 +123,8 @@ public abstract class AbstractDomainServiceTest {
 		loesungszettelRepository = new InMemoryLoesungszettelRepository();
 
 		kinderRepository = new InMemoryKinderRepository();
+
+		schulkollegienRepository = new InMemorySchulkollegienRepository();
 
 		wettbewerbService = WettbewerbService.createForTest(wettbewerbRepository);
 
@@ -319,6 +324,11 @@ public abstract class AbstractDomainServiceTest {
 	protected InMemoryUserRepository getUserRepository() {
 
 		return userRepository;
+	}
+
+	protected InMemorySchulkollegienRepository getSchulkollegienRepository() {
+
+		return schulkollegienRepository;
 	}
 
 }
