@@ -118,8 +118,27 @@ const lehrerReducer = createReducer(initalLehrerState,
 		return state;
 	}),
 
-	on(LehrerActions.deselectSchule, (state, _action) => {
-		return { ...state, selectedSchule: undefined, addSchuleState: initialAddSchuleState }
+	on(LehrerActions.schuleAdded, (state, action) => {
+
+		const schule = action.schule;
+
+		const neueMap = new SchulenMap(state.schulen).merge(schule);
+
+		return {
+			...state,
+			schulen: neueMap,
+			addSchuleState: initialAddSchuleState,
+			loading: false,
+			schulenLoaded: true,
+			selectedSchule: undefined
+		};
+	}),
+
+	on(LehrerActions.schuleRemoved, (state, action) => {
+
+		const neueMap = new SchulenMap(state.schulen).remove(action.kuerzel);
+
+		return { ...state, selectedSchule: undefined, addSchuleState: initialAddSchuleState, schulen: neueMap };
 	}),
 
 	on(LehrerActions.schulkatalogEinblenden, (state, _action) => {

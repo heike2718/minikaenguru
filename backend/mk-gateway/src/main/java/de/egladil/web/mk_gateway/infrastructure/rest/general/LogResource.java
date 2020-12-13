@@ -23,7 +23,7 @@ import de.egladil.web.commons_validation.payload.LogEntry;
  * LogResource
  */
 @RequestScoped
-@Path("/log")
+@Path("log")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class LogResource {

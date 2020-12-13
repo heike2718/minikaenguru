@@ -37,7 +37,7 @@ import de.egladil.web.mk_gateway.domain.kinder.api.KlasseRequestData;
  * KlassenResource
  */
 @RequestScoped
-@Path("/klassen")
+@Path("klassen")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class KlassenResource {

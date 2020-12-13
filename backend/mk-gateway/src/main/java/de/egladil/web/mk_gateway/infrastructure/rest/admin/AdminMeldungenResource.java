@@ -22,7 +22,7 @@ import de.egladil.web.mk_gateway.domain.meldungen.MeldungenService;
 /**
  * AdminMeldungenResource
  */
-@Path("/admin/meldungen")
+@Path("admin/meldungen")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class AdminMeldungenResource {
@@ -30,7 +30,7 @@ public class AdminMeldungenResource {
 	@Inject
 	MeldungenService meldungenService;
 
-	@Path("/aktuelle-meldung")
+	@Path("aktuelle-meldung")
 	@GET
 	public Response getMeldung() {
 
@@ -40,7 +40,7 @@ public class AdminMeldungenResource {
 		return Response.ok(responsePayload).build();
 	}
 
-	@Path("/aktuelle-meldung")
+	@Path("aktuelle-meldung")
 	@POST
 	public Response postMeldung(final Meldung meldung) {
 
@@ -50,7 +50,7 @@ public class AdminMeldungenResource {
 
 	}
 
-	@Path("/aktuelle-meldung")
+	@Path("aktuelle-meldung")
 	@DELETE
 	public Response deleteMeldung() {
 

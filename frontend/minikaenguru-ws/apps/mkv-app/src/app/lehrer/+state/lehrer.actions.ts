@@ -60,6 +60,12 @@ export const neueSchuleSelected = createAction(
 	props<{selectedKatalogItem: KatalogItem}>()
 );
 
+export const schuleRemoved = createAction(
+	'[LehrerFacade] schuleEntfernen',
+	props<{ kuerzel: string }>()
+)
+
+
 export const schuleAdded = createAction(
 	'[LehrerFacade] schuleHinzufuegen',
 	props<{ schule: Schule }>()

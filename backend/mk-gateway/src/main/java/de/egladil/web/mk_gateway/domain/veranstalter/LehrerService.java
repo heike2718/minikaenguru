@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.veranstalter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -202,16 +203,17 @@ public class LehrerService {
 		Lehrer lehrer = (Lehrer) veranstalter;
 		String alteSchulkuerzel = lehrer.joinedSchulen();
 
-		lehrer.addSchule(schuleID);
-		String neueSchulkuerzel = lehrer.joinedSchulen();
-
-		List<String> zugeordneteSchulkuerzel = Arrays.asList(StringUtils.split(alteSchulkuerzel, ","));
+		List<String> zugeordneteSchulkuerzel = alteSchulkuerzel == null ? new ArrayList<>()
+			: Arrays.asList(StringUtils.split(alteSchulkuerzel, ","));
 
 		if (zugeordneteSchulkuerzel.contains(schuleID.identifier())) {
 
 			LOG.debug("Schule {} war dem Lehrer {} bereits zugeordnet", schuleID.identifier(), lehrer);
 			return ResponsePayload.messageOnly(MessagePayload.warn(applicationMessages.getString("lehrer.schulen.add.warn")));
 		}
+
+		lehrer.addSchule(schuleID);
+		String neueSchulkuerzel = lehrer.joinedSchulen();
 
 		veranstalterRepository.changeVeranstalter(lehrer);
 
@@ -227,6 +229,72 @@ public class LehrerService {
 		}
 
 		return ResponsePayload.messageOnly(MessagePayload.info(applicationMessages.getString("lehrer.schulen.add.success")));
+
+	}
+
+	/**
+	 * Entfernt die gegebene Schule vom Lehrer und den Lehrer aus dem Schulkollegium.
+	 *
+	 * @param lehrerID
+	 *                 Identifier
+	 * @param schuleID
+	 *                 Identifier
+	 */
+	public ResponsePayload removeSchule(final Identifier lehrerID, final Identifier schuleID) {
+
+		Optional<Veranstalter> optLehrer = veranstalterRepository.ofId(lehrerID);
+
+		if (optLehrer.isEmpty()) {
+
+			String msg = "Unbekannter Lehrer mit UUID=" + lehrerID + " versucht, sich von der Schule mit KUERZEL=" + schuleID
+				+ " abzumelden.";
+			LOG.warn(msg);
+
+			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, securityEventRegistered);
+			throw new NotFoundException();
+		}
+
+		Veranstalter veranstalter = optLehrer.get();
+
+		if (veranstalter.rolle() != Rolle.LEHRER) {
+
+			String msg = "Privatveranstalter mit UUID=" + lehrerID + " versucht, sich von der Schule mit KUERZEL=" + schuleID
+				+ " abzumelden.";
+			LOG.warn(msg);
+
+			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, securityEventRegistered);
+			throw new NotFoundException();
+		}
+
+		Lehrer lehrer = (Lehrer) veranstalter;
+		String alteSchulkuerzel = lehrer.joinedSchulen();
+
+		List<String> zugeordneteSchulkuerzel = Arrays.asList(StringUtils.split(alteSchulkuerzel, ","));
+
+		if (!zugeordneteSchulkuerzel.contains(schuleID.identifier())) {
+
+			LOG.debug("Schule {} war dem Lehrer {} gar nicht zugeordnet", schuleID.identifier(), lehrer);
+			return ResponsePayload
+				.messageOnly(MessagePayload.warn(applicationMessages.getString("lehrer.schulen.remove.nicht_registriert.warn")));
+		}
+
+		lehrer.removeSchule(schuleID);
+		String neueSchulkuerzel = lehrer.joinedSchulen();
+
+		veranstalterRepository.changeVeranstalter(lehrer);
+
+		lehrerChangedEventPayload = new LehrerChanged(lehrer.person(), alteSchulkuerzel, neueSchulkuerzel,
+			lehrer.isNewsletterEmpfaenger());
+
+		if (lehrerChanged != null) {
+
+			lehrerChanged.fire(lehrerChangedEventPayload);
+		} else {
+
+			System.out.println(lehrerChangedEventPayload.serializeQuietly());
+		}
+
+		return ResponsePayload.messageOnly(MessagePayload.info(applicationMessages.getString("lehrer.schulen.remove.success")));
 
 	}
 

@@ -27,7 +27,7 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.api.AnonymisierteTeilnahmeAPI
  * TeilnahmenResource
  */
 @RequestScoped
-@Path("/teilnahmen")
+@Path("teilnahmen")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class TeilnahmenResource {
@@ -39,7 +39,7 @@ public class TeilnahmenResource {
 	AnonymisierteTeilnahmenService anonTeilnahmenService;
 
 	@GET
-	@Path("/{teilnahmenummer}")
+	@Path("{teilnahmenummer}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAnonymisierteTeilnahmen(@PathParam(value = "teilnahmenummer") final String teilnahmenummer) {
 

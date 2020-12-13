@@ -32,7 +32,7 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.api.SchulteilnahmeAPIModel;
  * VeranstalterTeilnahmenResource
  */
 @RequestScoped
-@Path("/veranstalter/teilnahmen")
+@Path("veranstalter/teilnahmen")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class VeranstalterTeilnahmenResource {
@@ -49,7 +49,7 @@ public class VeranstalterTeilnahmenResource {
 	AuthorizationService authService;
 
 	@POST
-	@Path("/privat")
+	@Path("privat")
 	public Response meldePrivatmenschZumAktuellenWettbewerbAn() {
 
 		final String principalName = securityContext.getUserPrincipal().getName();
@@ -66,7 +66,7 @@ public class VeranstalterTeilnahmenResource {
 	}
 
 	@POST
-	@Path("/schule")
+	@Path("schule")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response meldeSchuleZumAktuellenWettbewerbAn(final SchulanmeldungRequestPayload payload) {
 

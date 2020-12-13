@@ -40,7 +40,7 @@ import de.egladil.web.mk_gateway.domain.veranstalter.api.PrivatveranstalterAPIMo
  * VeranstalterResource ist die Resource zu den Minikänguru-Veranstaltern.
  */
 @RequestScoped
-@Path("/veranstalter")
+@Path("veranstalter")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class VeranstalterResource {
@@ -86,7 +86,7 @@ public class VeranstalterResource {
 	}
 
 	@PUT
-	@Path("/newsletter")
+	@Path("newsletter")
 	public Response changeStatusNewsletter() {
 
 		Veranstalter veranstalter = this.changeNewsletterAboService
@@ -102,7 +102,7 @@ public class VeranstalterResource {
 	}
 
 	@GET
-	@Path("/privat")
+	@Path("privat")
 	public Response getPrivatveranstalter() {
 
 		Principal principal = securityContext.getUserPrincipal();

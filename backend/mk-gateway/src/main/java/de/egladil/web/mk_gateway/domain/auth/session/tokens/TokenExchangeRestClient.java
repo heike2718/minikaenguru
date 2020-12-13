@@ -27,7 +27,7 @@ import de.egladil.web.commons_validation.payload.OAuthClientCredentials;
 public interface TokenExchangeRestClient {
 
 	@PUT
-	@Path("/exchange/{oneTimeToken}")
+	@Path("exchange/{oneTimeToken}")
 	public Response exchangeOneTimeTokenWithJwt(@PathParam(
 		value = "oneTimeToken") @UuidString final String oneTimeToken, final OAuthClientCredentials clientCredentials);
 

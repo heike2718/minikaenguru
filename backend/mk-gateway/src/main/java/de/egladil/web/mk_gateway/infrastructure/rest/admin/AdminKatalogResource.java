@@ -35,7 +35,7 @@ import de.egladil.web.mk_gateway.domain.kataloge.api.SchulePayload;
  * AdminKatalogResource
  */
 @RequestScoped
-@Path("/admin/kataloge")
+@Path("admin/kataloge")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class AdminKatalogResource {
@@ -52,28 +52,28 @@ public class AdminKatalogResource {
 	MkKatalogeResourceAdapter katalogResourceAdapter;
 
 	@GET
-	@Path("/laender")
+	@Path("laender")
 	public Response loadLaender() {
 
 		return katalogResourceAdapter.loadLaender(securityContext.getUserPrincipal().getName(), katalogAdminSecret);
 	}
 
 	@GET
-	@Path("/laender/{kuerzel}/orte")
+	@Path("laender/{kuerzel}/orte")
 	public Response loadOrteInLand(@PathParam(value = "kuerzel") @Kuerzel final String kuerzel) {
 
 		return katalogResourceAdapter.loadOrteInLand(kuerzel);
 	}
 
 	@GET
-	@Path("/orte/{kuerzel}/schulen")
+	@Path("orte/{kuerzel}/schulen")
 	public Response loadSchulenInOrt(@PathParam(value = "kuerzel") @Kuerzel final String kuerzel) {
 
 		return katalogResourceAdapter.loadSchulenInOrt(kuerzel);
 	}
 
 	@PUT
-	@Path("/laender")
+	@Path("laender")
 	public Response renameLand(final LandPayload requestPayload) {
 
 		String uuid = securityContext.getUserPrincipal().getName();
@@ -81,7 +81,7 @@ public class AdminKatalogResource {
 	}
 
 	@PUT
-	@Path("/orte")
+	@Path("orte")
 	public Response renameOrt(final OrtPayload requestPayload) {
 
 		String uuid = securityContext.getUserPrincipal().getName();
@@ -91,7 +91,7 @@ public class AdminKatalogResource {
 	}
 
 	@PUT
-	@Path("/schulen")
+	@Path("schulen")
 	public Response renameSchule(final SchulePayload requestPayload) {
 
 		String uuid = securityContext.getUserPrincipal().getName();
@@ -99,7 +99,7 @@ public class AdminKatalogResource {
 	}
 
 	@POST
-	@Path("/schulen")
+	@Path("schulen")
 	public Response createSchule(final SchulePayload requestPayload) {
 
 		String uuid = securityContext.getUserPrincipal().getName();
@@ -108,7 +108,7 @@ public class AdminKatalogResource {
 	}
 
 	@GET
-	@Path("/suche/global/{typ}")
+	@Path("suche/global/{typ}")
 	public Response sucheItems(@PathParam(
 		value = "typ") final String typ, @NotBlank @StringLatin @QueryParam("search") final String searchTerm) {
 
@@ -116,7 +116,7 @@ public class AdminKatalogResource {
 	}
 
 	@GET
-	@Path("/kuerzel")
+	@Path("kuerzel")
 	public Response generateKuerzel() {
 
 		return katalogResourceAdapter.generateKuerzel(katalogAdminSecret);

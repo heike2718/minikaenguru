@@ -28,7 +28,7 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.admin.PrivatteilnahmeAdminOve
  * AdminPrivatteilnahmenResource
  */
 @RequestScoped
-@Path("/admin/privatteilnahmen")
+@Path("admin/privatteilnahmen")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class AdminPrivatteilnahmenResource {

@@ -6,8 +6,6 @@ package de.egladil.web.mk_gateway.domain.veranstalter;
 
 import java.time.LocalDateTime;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -27,11 +25,6 @@ public class LehrerChanged extends AbstractDomainEvent {
 
 	@JsonProperty
 	private String alteSchulkuerzel;
-
-	public String neueSchulkuerzel() {
-
-		return neueSchulkuerzel;
-	}
 
 	@JsonProperty
 	private String neueSchulkuerzel;
@@ -61,11 +54,6 @@ public class LehrerChanged extends AbstractDomainEvent {
 			throw new IllegalArgumentException("person darf nicht null sein.");
 		}
 
-		if (StringUtils.isBlank(neueSchulkuerzel)) {
-
-			throw new IllegalArgumentException("neueSchulkuerzel darf nicht blank sein.");
-		}
-
 		this.person = person;
 		this.alteSchulkuerzel = alteSchulkuerzel;
 		this.neueSchulkuerzel = neueSchulkuerzel;
@@ -88,6 +76,11 @@ public class LehrerChanged extends AbstractDomainEvent {
 	public String alteSchulkuerzel() {
 
 		return alteSchulkuerzel;
+	}
+
+	public String neueSchulkuerzel() {
+
+		return neueSchulkuerzel;
 	}
 
 	public boolean newsletterAbonnieren() {

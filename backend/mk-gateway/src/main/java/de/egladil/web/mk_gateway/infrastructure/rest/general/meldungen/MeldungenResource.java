@@ -20,7 +20,7 @@ import de.egladil.web.mk_gateway.domain.meldungen.MeldungenService;
 /**
  * MeldungenResource
  */
-@Path("/meldungen")
+@Path("meldungen")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class MeldungenResource {
@@ -28,7 +28,7 @@ public class MeldungenResource {
 	@Inject
 	MeldungenService meldungenService;
 
-	@Path("/aktuelle-meldung")
+	@Path("aktuelle-meldung")
 	@GET
 	public Response getMeldung() {
 
