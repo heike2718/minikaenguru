@@ -31,7 +31,7 @@ public class UebersichtAufgabenErgebnisseRechnerTest {
 	@BeforeEach
 	void setUp() throws Exception {
 
-		wettbewerbLoesungszettel = StatistikTestUtils.loadTheLoesungszettel();
+		wettbewerbLoesungszettel = StatistikTestUtils.loadTheLoesungszettel(2018);
 		rechner = new UebersichtAufgabenErgebnisseRechner();
 
 	}

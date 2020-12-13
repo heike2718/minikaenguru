@@ -66,7 +66,7 @@ public class StatistikAnonymisierteEinzelteilnahmeServiceTest {
 		statistikService = StatistikAnonymisierteEinzelteilnahmeService.createForTest(authService, loesungszettelRepository,
 			SchulkatalogService.createForTest(katalogeResourceAdapter), statistikWettbewerbService);
 
-		wettbewerbLoesungszettel = StatistikTestUtils.loadTheLoesungszettel();
+		wettbewerbLoesungszettel = StatistikTestUtils.loadTheLoesungszettel(2018);
 
 	}
 
@@ -195,7 +195,7 @@ public class StatistikAnonymisierteEinzelteilnahmeServiceTest {
 	void should_sortByKlassenstufe_work() throws Exception {
 
 		// Arrange
-		List<Loesungszettel> alleLoesungszettel = StatistikTestUtils.loadTheLoesungszettel();
+		List<Loesungszettel> alleLoesungszettel = StatistikTestUtils.loadTheLoesungszettel(2018);
 		assertEquals(12, alleLoesungszettel.size());
 
 		// Act

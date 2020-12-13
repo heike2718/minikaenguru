@@ -11,6 +11,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -113,4 +114,23 @@ public class VeranstalterLehrerResource {
 		Response response = Response.ok(new ResponsePayload(MessagePayload.ok(), schule)).build();
 		return response;
 	}
+
+	@POST
+	@Path("/schulen/{schulkuerzel}")
+	public Response addSchule(@PathParam(value = "schulkuerzel") final String schulkuerzel) {
+
+		Principal principal = securityContext.getUserPrincipal();
+
+		final Identifier lehrerID = new Identifier(principal.getName());
+		final Identifier schuleID = new Identifier(schulkuerzel);
+
+		ResponsePayload responsePayload = lehrerService.addSchule(lehrerID, schuleID);
+
+		SchuleAPIModel schule = this.schulenAnmeldeinfoService.getSchuleWithWettbewerbsdetails(schulkuerzel, principal.getName());
+
+		responsePayload.setData(schule);
+
+		return Response.ok(responsePayload).build();
+	}
+
 }

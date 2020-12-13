@@ -1,0 +1,47 @@
+[
+  {
+    "schulkuerzel": {
+      "identifier": "SCHULKUERZEL_1"
+    },
+    "alleLehrer": [
+      {
+        "uuid": "UUID_LEHRER_1",
+        "fullName": "Hans Wurst"
+      },
+      {
+        "uuid": "UUID_LEHRER_2",
+        "fullName": "Olle Keule"
+      },
+      {
+        "uuid": "UUID_LEHRER_3",
+        "fullName": "Mimi Mimimi"
+      },
+      {
+        "uuid": "UUID_LEHRER_GESPERRT",
+        "fullName": "Gesperrter Lehrer"
+      }
+    ]
+  },
+  {
+    "schulkuerzel": {
+      "identifier": "SCHULKUERZEL_2"
+    },
+    "alleLehrer": [
+      {
+        "uuid": "UUID_LEHRER_1",
+        "fullName": "Hans Wurst"
+      }
+    ]
+  },
+  {
+    "schulkuerzel": {
+      "identifier": "SCHULKUERZEL_3"
+    },
+    "alleLehrer": [
+      {
+        "uuid": "UUID_LEHRER_ANDERE_SCHULE",
+        "fullName": "Lehrer andere Schule"
+      }
+    ]
+  }
+]

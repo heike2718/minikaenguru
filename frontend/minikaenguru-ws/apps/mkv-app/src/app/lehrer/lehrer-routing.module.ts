@@ -7,6 +7,7 @@ import { LehrerDashboardResolver } from './lehrer-dashboard/lehrer-dashboard.res
 import { SchuleDashboardComponent } from './schulen/schule-dashboard/schule-dashboard.component';
 import { SchuleDashboardResolver } from './schulen/schule-dashboard/schule-dashboard.resolver';
 import { SchulenListResolver } from './schulen/schulen-list/schulen-list.resolver';
+import { AddSchuleComponent } from './schulen/add-schule/add-schule.component';
 
 
 const lehrerRoutes: Routes = [
@@ -23,6 +24,10 @@ const lehrerRoutes: Routes = [
 				canActivate: [LehrerGuardService],
 				component: SchulenListComponent,
 				resolve: {schulen: SchulenListResolver }
+			}, {
+				path: 'schulen/add-schule',
+				canActivate: [LehrerGuardService],
+				component: AddSchuleComponent
 			}, {
 				path: 'schule-dashboard/:kuerzel',
 				canActivate: [LehrerGuardService],

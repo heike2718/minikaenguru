@@ -25,4 +25,14 @@ public class LehrerAPIModel {
 		return result;
 	}
 
+	public boolean hatZugangZuUnterlangen() {
+
+		return hatZugangZuUnterlangen;
+	}
+
+	public boolean newsletterAbonniert() {
+
+		return newsletterAbonniert;
+	}
+
 }

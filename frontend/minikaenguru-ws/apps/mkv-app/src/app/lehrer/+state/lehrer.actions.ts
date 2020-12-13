@@ -1,6 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import { Schule } from './../schulen/schulen.model';
 import { Schulteilnahme, Lehrer } from '../../wettbewerb/wettbewerb.model';
+import { KatalogItem } from '@minikaenguru-ws/common-schulkatalog';
 
 
 export const datenLehrerGeladen = createAction(
@@ -48,6 +49,29 @@ export const deselectSchule = createAction(
 export const schuleAngemeldet = createAction(
 	'[LehrerFacade] schuleAnmelden',
 	props<{ teilnahme: Schulteilnahme, angemeldetDurch: string}>()
+);
+
+export const schulkatalogEinblenden = createAction(
+	'[LehrerFacade] schulkatalogEinblenden'
+);
+
+export const neueSchuleSelected = createAction(
+	'[LehrerFacade] neueSchuleSelected',
+	props<{selectedKatalogItem: KatalogItem}>()
+);
+
+export const schuleAdded = createAction(
+	'[LehrerFacade] schuleHinzufuegen',
+	props<{ schule: Schule }>()
+);
+
+export const setShowTextSchuleBereitsZugeordnet = createAction(
+	'[LehrerFacade] setShowTextSchuleBereitsZugeordnet',
+	props<{value: boolean}>()
+);
+
+export const closeSchulsuche = createAction(
+	'[LehrerFacade] closeSchulsuche'
 );
 
 export const aboNewsletterChanged = createAction(

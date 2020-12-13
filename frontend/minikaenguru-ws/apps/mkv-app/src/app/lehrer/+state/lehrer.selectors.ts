@@ -15,4 +15,11 @@ export const loading = createSelector(lehrerState, s => s.loading);
 
 export const lehrer = createSelector(lehrerState, s => s.lehrer);
 
+export const addSchuleState = createSelector(lehrerState, s => s.addSchuleState);
+
+export const showSchulkatalog = createSelector(addSchuleState, s => s.showSchulkatalog);
+
+export const showTextSchuleBereitsZugeordnet = createSelector(addSchuleState, s => s.showTextSchuleBereitsZugeordnet);
+
+export const btnAddMeToSchuleDisabled = createSelector(addSchuleState, s => s.btnAddMeToSchuleDisabled);
 

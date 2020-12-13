@@ -166,6 +166,6 @@ public class Loesungszettel {
 	public String toString() {
 
 		return "Loesungszettel [identifier=" + identifier + ", klassenstufe=" + klassenstufe + ", teilnahmeIdentifier="
-			+ teilnahmeIdentifier + "]";
+			+ teilnahmeIdentifier + ", punkte=" + this.punkte + "]";
 	}
 }
