@@ -15,7 +15,7 @@ import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**
  * CreateOrUpdateLehrerCommand hat die gleiche Signatur wie der body eines entsprechenden mk-gateway-DomainEvents und entsteht durch
- * Deserialisierung eines REST-Payloads..
+ * Deserialisierung eines REST-Payloads.
  */
 @DomainCommand
 public class CreateOrUpdateLehrerCommand {
@@ -51,7 +51,6 @@ public class CreateOrUpdateLehrerCommand {
 		result.schulkuerzel = event.schulkuerzel();
 		result.uuid = event.uuid();
 		return result;
-
 	}
 
 	public static CreateOrUpdateLehrerCommand createForTest(final String uuid, final String fullName, final String alteSchulkuerze) {

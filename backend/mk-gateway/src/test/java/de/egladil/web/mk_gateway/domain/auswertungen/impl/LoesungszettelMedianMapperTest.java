@@ -28,7 +28,7 @@ public class LoesungszettelMedianMapperTest {
 	@BeforeEach
 	void setUp() throws Exception {
 
-		alleLoesungszettel = StatistikTestUtils.loadTheLoesungszettel();
+		alleLoesungszettel = StatistikTestUtils.loadTheLoesungszettel(2018);
 	}
 
 	@Test

@@ -35,6 +35,17 @@ public class Lehrer extends Veranstalter {
 
 	}
 
+	/**
+	 * Fügt die gegebene Schule hinzu.
+	 *
+	 * @param  schuleID
+	 * @return
+	 */
+	public boolean addSchule(final Identifier schuleID) {
+
+		return this.schulen.add(schuleID);
+	}
+
 	@Override
 	public Rolle rolle() {
 

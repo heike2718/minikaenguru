@@ -1,0 +1,29 @@
+<div class="mkv-container mt-1">
+	<div class="col-12">
+		<h2>Neue Schule</h2>
+		<p *ngIf="devMode">(add-schule.component)</p>
+	</div>
+
+	<div *ngIf="lehrerFacade.showSchulkatalog$ | async " class="mkv-container mkv-container-elevated">
+		<mk-katalog></mk-katalog>
+	</div>
+
+	<p *ngIf="neueSchule">{{neueSchule.pfad}}</p>
+	<p *ngIf="lehrerFacade.showTextSchuleBereitsZugeordnet$ | async" class="alert-danger">
+		{{textSchuleBereitsZugeordnet}}</p>
+
+	<div class="btn-group d-flex" role="group">
+
+		<button *ngIf="neueSchule" class="btn btn-primary w-100 ml-1" [disabled]="lehrerFacade.btnAddMeToSchuleDisabled$ | async"
+			(click)="schuleHinzufuegen()"><i class="fa fa-plus" aria-hidden="true"></i>hinzufuegen
+		</button>
+		<button *ngIf="neueSchule" class="btn btn-primary w-100 ml-1" (click)="resetSuche()">neue Suche
+		</button>
+		<button class="btn btn-primary w-100 ml-1" (click)="gotoSchulenliste()"><i class="fa fa-building-o"
+				aria-hidden="true"></i>meine Schulen</button>
+
+		<button class="btn btn-primary w-100 ml-1" (click)="gotoDashboard()"><i class="fa fa-home"
+				aria-hidden="true"></i>zur
+			Übersicht</button>
+	</div>
+</div>

@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 
@@ -31,6 +32,21 @@ public class StatistikTestUtils {
 			InMemoryLoesungszettelList liste = objectMapper.readValue(in, InMemoryLoesungszettelList.class);
 
 			return liste.getLoesungszettel();
+
+		}
+
+	}
+
+	public static List<Loesungszettel> loadTheLoesungszettel(final int jahr) throws Exception {
+
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		try (InputStream in = StatistikTestUtils.class.getResourceAsStream("/loesungszettelCollection.json")) {
+
+			InMemoryLoesungszettelList liste = objectMapper.readValue(in, InMemoryLoesungszettelList.class);
+
+			return liste.getLoesungszettel().stream().filter(lo -> lo.teilnahmeIdentifier().jahr() == jahr)
+				.collect(Collectors.toList());
 
 		}
 

@@ -141,6 +141,9 @@ public class InMemoryVeranstalterRepository implements VeranstalterRepository {
 	@Override
 	public void changeVeranstalter(final Veranstalter veranstalter) throws IllegalStateException {
 
+		alleVeranstalter.remove(veranstalter);
+		alleVeranstalter.add(veranstalter);
+
 		switch (veranstalter.rolle()) {
 
 		case PRIVAT:

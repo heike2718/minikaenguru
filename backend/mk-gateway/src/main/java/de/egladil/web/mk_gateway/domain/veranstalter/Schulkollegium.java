@@ -24,10 +24,17 @@ import de.egladil.web.mk_gateway.domain.semantik.AggregateRoot;
 public class Schulkollegium {
 
 	@JsonProperty
-	private final Identifier schulkuerzel;
+	private Identifier schulkuerzel;
 
 	@JsonProperty
-	private final Person[] alleLehrer;
+	private Person[] alleLehrer;
+
+	/**
+	 * Nur für Tests verwenden!!!!
+	 */
+	public Schulkollegium() {
+
+	}
 
 	/**
 	 * @param schulkuerzel

@@ -12,15 +12,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
+import de.egladil.web.mk_gateway.domain.event.AbstractDomainEvent;
 import de.egladil.web.mk_gateway.domain.event.EventType;
-import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
 import de.egladil.web.mk_gateway.domain.semantik.DomainEvent;
 
 /**
  * LehrerChanged
  */
 @DomainEvent
-public class LehrerChanged implements MkGatewayDomainEvent {
+public class LehrerChanged extends AbstractDomainEvent {
 
 	@JsonProperty
 	private Person person;
