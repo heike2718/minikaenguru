@@ -23,6 +23,7 @@ export class SchulenListComponent implements OnInit {
 
 	ngOnInit(): void {
 
+		this.lehrerFacade.closeSchulsuche();
 		this.klassenFacade.resetState();
 	}
 

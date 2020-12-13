@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LehrerFacade } from '../lehrer.facade';
 import { WettbewerbFacade } from '../../wettbewerb/wettbewerb.facade';
-import { ThrowStmt } from '@angular/compiler';
 import { LogoutService } from '../../services/logout.service';
 import { environment } from '../../../environments/environment';
 import { KlassenFacade } from '../../klassen/klassen.facade';
