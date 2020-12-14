@@ -62,4 +62,16 @@ public class LoescheVeranstalterCommand {
 		return syncToken;
 	}
 
+	public LoescheVeranstalterCommand withSyncToken(final String syncToken) {
+
+		this.syncToken = syncToken;
+		return this;
+	}
+
+	public LoescheVeranstalterCommand withUuid(final String uuid) {
+
+		this.uuid = uuid;
+		return this;
+	}
+
 }

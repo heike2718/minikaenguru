@@ -76,7 +76,8 @@ public class SchulkollegiumTest {
 		assertEquals("JZHUF64T", result.schulkuerzel().identifier());
 		assertEquals(2, result.alleLehrerUnmodifiable().size());
 
-		assertEquals("[{\"uuid\":\"gsdgqu\",\"fullName\":\"Herr Bert\"},{\"uuid\":\"bakvsk\",\"fullName\":\"Frau Mann\"}]",
+		assertEquals(
+			"[{\"uuid\":\"gsdgqu\",\"fullName\":\"Herr Bert\",\"email\":null},{\"uuid\":\"bakvsk\",\"fullName\":\"Frau Mann\",\"email\":null}]",
 			result.personenAlsJSON());
 	}
 

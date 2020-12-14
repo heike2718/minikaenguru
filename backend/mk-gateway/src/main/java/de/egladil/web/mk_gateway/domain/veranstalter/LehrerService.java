@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
@@ -44,10 +43,6 @@ public class LehrerService {
 	private static final Logger LOG = LoggerFactory.getLogger(LehrerService.class);
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
-
-	private SecurityIncidentRegistered securityIncidentRegistered;
-
-	private DataInconsistencyRegistered dataInconsistencyRegistered;
 
 	@Inject
 	WettbewerbService wettbewerbService;
@@ -146,8 +141,13 @@ public class LehrerService {
 		String alteSchulkuerzel = StringUtils.join(vorhandener.schulen(), ",");
 		String neueSchulkuerzel = data.schulkuerzel();
 
-		List<Identifier> schulen = Arrays.stream(neueSchulkuerzel.split(",")).map(s -> new Identifier(s))
-			.collect(Collectors.toList());
+		List<Identifier> schulen = new ArrayList<>();
+
+		if (neueSchulkuerzel != null) {
+
+			schulen = Arrays.stream(neueSchulkuerzel.split(",")).map(s -> new Identifier(s))
+				.collect(Collectors.toList());
+		}
 
 		Lehrer geaenderterLehrer = new Lehrer(new Person(veranstalter.uuid(), data.fullName()), data.newsletterEmpfaenger(),
 			schulen);
@@ -273,7 +273,12 @@ public class LehrerService {
 
 		if (!zugeordneteSchulkuerzel.contains(schuleID.identifier())) {
 
-			LOG.debug("Schule {} war dem Lehrer {} gar nicht zugeordnet", schuleID.identifier(), lehrer);
+			String msg = "removeSchule(): Schule " + schuleID + " war dem Lehrer " + lehrerID
+				+ " nicht zugeordnet.";
+			LOG.warn(msg);
+
+			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, securityEventRegistered);
+
 			return ResponsePayload
 				.messageOnly(MessagePayload.warn(applicationMessages.getString("lehrer.schulen.remove.nicht_registriert.warn")));
 		}
@@ -326,8 +331,7 @@ public class LehrerService {
 
 			String msg = "Falsche Rolle: erwarten Lehrer, war aber " + veranstalter.toString();
 			LOG.warn(msg);
-			this.securityIncidentEventPayload = new SecurityIncidentRegistered(msg);
-			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityEventRegistered);
+			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, securityEventRegistered);
 			throw new NotFoundException("Kennen keinen Lehrer mit dieser ID");
 		}
 
@@ -345,16 +349,6 @@ public class LehrerService {
 			.create(hatZugang, lehrer.isNewsletterEmpfaenger());
 
 		return result;
-	}
-
-	SecurityIncidentRegistered getSecurityIncidentRegistered() {
-
-		return securityIncidentRegistered;
-	}
-
-	DataInconsistencyRegistered getDataInconsistencyRegistered() {
-
-		return dataInconsistencyRegistered;
 	}
 
 	LehrerChanged lehrerChangedEventPayload() {

@@ -105,7 +105,7 @@ public class LehrerServiceTest extends AbstractDomainServiceTest {
 		assertNotNull(event);
 
 		assertEquals(lehrer.person(), event.person());
-		assertEquals("", event.alteSchulkuerzel());
+		assertEquals(null, event.alteSchulkuerzel());
 		assertEquals(schulkuerzel, event.neueSchulkuerzel());
 
 		assertEquals("LehrerChanged", event.typeName());
@@ -354,6 +354,284 @@ public class LehrerServiceTest extends AbstractDomainServiceTest {
 
 		assertEquals("LehrerChanged", event.typeName());
 		System.out.println("command: " + new ObjectMapper().writeValueAsString(command));
+	}
+
+	@Test
+	void should_changeLehrerAndCreateEvent_when_LehrerHinterherOhneSchulen() throws Exception {
+
+		// Arrange
+		final String uuid = UUID_LEHRER_2;
+		final String fullName = "Olle Keule";
+
+		final Identifier identifier = new Identifier(uuid);
+
+		Optional<Veranstalter> optVeranstalter = getVeranstalterRepository().ofId(identifier);
+		assertTrue(optVeranstalter.isPresent());
+
+		CreateOrUpdateLehrerCommand command = CreateOrUpdateLehrerCommand.createForTest(uuid, fullName,
+			null);
+
+		Schulkollegium aktuellesSchulkollegium = getSchulkollegienRepository()
+			.ofSchulkuerzel(new Identifier(SCHULKUERZEL_1)).get();
+
+		Optional<Person> optKeule = aktuellesSchulkollegium.alleLehrerUnmodifiable().stream()
+			.filter(p -> fullName.equals(p.fullName())).findFirst();
+
+		assertTrue(optKeule.isPresent());
+
+		// Act
+		boolean changed = service.changeLehrer(command);
+
+		// Assert
+		assertTrue(changed);
+
+		int anzahlNachher = getVeranstalterRepository().getCountLehrerAdded();
+		assertEquals(0, anzahlNachher);
+		int anzahlChanged = getVeranstalterRepository().getCountLehrerChanged();
+		assertEquals(1, anzahlChanged);
+
+		optVeranstalter = getVeranstalterRepository().ofId(identifier);
+		assertTrue(optVeranstalter.isPresent());
+
+		Veranstalter veranstalter = optVeranstalter.get();
+
+		assertEquals(Rolle.LEHRER, veranstalter.rolle());
+		assertEquals(uuid, veranstalter.uuid());
+		assertEquals(fullName, veranstalter.fullName());
+
+		Lehrer lehrer = (Lehrer) veranstalter;
+		assertNull(lehrer.persistierbareTeilnahmenummern());
+
+		LehrerChanged event = service.lehrerChangedEventPayload();
+		assertNotNull(event);
+
+		assertEquals(lehrer.person(), event.person());
+		assertEquals(SCHULKUERZEL_1, event.alteSchulkuerzel());
+		assertEquals(null, event.neueSchulkuerzel());
+
+		assertEquals("LehrerChanged", event.typeName());
+		System.out.println("command: " + new ObjectMapper().writeValueAsString(command));
+	}
+
+	@Test
+	void should_changeLehrerReturnFalse_when_UuidUnbekannt() {
+
+		// Arrange
+		final String uuid = "UIUIUIUIUI";
+		final String fullName = "Kannichnich";
+		final String schulkuerzel = SCHULKUERZEL_1;
+
+		final Identifier identifier = new Identifier(uuid);
+
+		Optional<Veranstalter> optVeranstalter = getVeranstalterRepository().ofId(identifier);
+		assertFalse(optVeranstalter.isPresent());
+
+		CreateOrUpdateLehrerCommand command = CreateOrUpdateLehrerCommand.createForTest(uuid, fullName,
+			schulkuerzel);
+
+		// Act
+		boolean changed = service.changeLehrer(command);
+
+		// Assert
+
+		SecurityIncidentRegistered secIncident = service.securityIncidentEventPayload();
+
+		assertNotNull(secIncident);
+		assertEquals(
+			"Versuch, einen nicht existierenden Lehrer zu ändern: CreateOrUpdateLehrerCommand [uuid=UIUIUIUIUI, fullName=Kannichnich, schulkuerzel=SCHULKUERZEL_1, newsletterEmpfaenger=false]",
+			secIncident.message());
+
+		assertFalse(changed);
+
+		int anzahlNachher = getVeranstalterRepository().getCountLehrerAdded();
+		assertEquals(0, anzahlNachher);
+		int anzahlChanged = getVeranstalterRepository().getCountLehrerChanged();
+		assertEquals(0, anzahlChanged);
+	}
+
+	@Test
+	void should_changeLehrerReturnFalse_when_UuidPrivatperson() {
+
+		// Arrange
+		final String uuid = UUID_PRIVAT;
+		final String fullName = "Kannichnich";
+		final String schulkuerzel = SCHULKUERZEL_1;
+
+		final Identifier identifier = new Identifier(uuid);
+
+		Optional<Veranstalter> optVeranstalter = getVeranstalterRepository().ofId(identifier);
+		assertTrue(optVeranstalter.isPresent());
+
+		CreateOrUpdateLehrerCommand command = CreateOrUpdateLehrerCommand.createForTest(uuid, fullName,
+			schulkuerzel);
+
+		// Act
+		boolean changed = service.changeLehrer(command);
+
+		// Assert
+
+		SecurityIncidentRegistered secIncident = service.securityIncidentEventPayload();
+
+		assertNotNull(secIncident);
+		assertEquals(
+			"Versuch, einen Veranstalter zu ändern, der kein Lehrer ist: CreateOrUpdateLehrerCommand [uuid=UUID_PRIVAT, fullName=Kannichnich, schulkuerzel=SCHULKUERZEL_1, newsletterEmpfaenger=false] - UUID_PRIVAT - Herta Grütze (PRIVAT)",
+			secIncident.message());
+
+		assertFalse(changed);
+
+		int anzahlNachher = getVeranstalterRepository().getCountLehrerAdded();
+		assertEquals(0, anzahlNachher);
+		int anzahlChanged = getVeranstalterRepository().getCountLehrerChanged();
+		assertEquals(0, anzahlChanged);
+
+	}
+
+	@Test
+	void should_removeSchule_work() throws Exception {
+
+		// Arrange
+		Identifier lehrerID = new Identifier(UUID_LEHRER_3);
+		Identifier schuleID = new Identifier(SCHULKUERZEL_1);
+
+		// Act
+		ResponsePayload responsePayload = service.removeSchule(lehrerID, schuleID);
+
+		// Assert
+		assertTrue(responsePayload.isOk());
+
+		LehrerChanged lehrerChangedEventPayload = service.lehrerChangedEventPayload();
+		assertNotNull(lehrerChangedEventPayload);
+
+		String changedSerialized = new ObjectMapper().writeValueAsString(lehrerChangedEventPayload);
+
+		assertEquals(
+			"{\"person\":{\"uuid\":\"UUID_LEHRER_3\",\"fullName\":\"Mimi Mimimi\",\"email\":\"minimi@web.de\"},\"alteSchulkuerzel\":\"SCHULKUERZEL_1\",\"neueSchulkuerzel\":null,\"newsletterAbonnieren\":true}",
+			changedSerialized);
+
+		int anzahlNachher = getVeranstalterRepository().getCountLehrerAdded();
+		assertEquals(0, anzahlNachher);
+		int anzahlChanged = getVeranstalterRepository().getCountLehrerChanged();
+		assertEquals(1, anzahlChanged);
+
+		Optional<Veranstalter> optVer = getVeranstalterRepository().ofId(lehrerID);
+		Lehrer lehrer = (Lehrer) optVer.get();
+
+		assertNull(lehrer.joinedSchulen());
+		assertNull(lehrer.persistierbareTeilnahmenummern());
+		assertTrue(lehrer.teilnahmeIdentifier().isEmpty());
+	}
+
+	@Test
+	void should_removeSchuleThrowNotFoundException_when_UuidUnbekannt() {
+
+		// Arrange
+		final String uuid = "MIMIMI";
+		final String schulkuerzel = SCHULKUERZEL_1;
+
+		final Identifier identifier = new Identifier(uuid);
+
+		Optional<Veranstalter> optVeranstalter = getVeranstalterRepository().ofId(identifier);
+		assertFalse(optVeranstalter.isPresent());
+
+		// Act
+		try {
+
+			service.removeSchule(new Identifier(uuid), new Identifier(schulkuerzel));
+			fail("keine NotFoundException");
+
+		} catch (NotFoundException e) {
+
+			// Assert
+
+			SecurityIncidentRegistered secIncident = service.securityIncidentEventPayload();
+
+			assertNotNull(secIncident);
+			assertEquals(
+				"Unbekannter Lehrer mit UUID=MIMIMI versucht, sich von der Schule mit KUERZEL=SCHULKUERZEL_1 abzumelden.",
+				secIncident.message());
+
+			int anzahlNachher = getVeranstalterRepository().getCountLehrerAdded();
+			assertEquals(0, anzahlNachher);
+			int anzahlChanged = getVeranstalterRepository().getCountLehrerChanged();
+			assertEquals(0, anzahlChanged);
+		}
+
+	}
+
+	@Test
+	void should_removeSchuleThrowNotFoundException_when_UuidPrivatperson() {
+
+		// Arrange
+		final String uuid = UUID_PRIVAT;
+		final String schulkuerzel = SCHULKUERZEL_1;
+
+		final Identifier identifier = new Identifier(uuid);
+
+		Optional<Veranstalter> optVeranstalter = getVeranstalterRepository().ofId(identifier);
+		assertTrue(optVeranstalter.isPresent());
+
+		// Act
+		try {
+
+			service.removeSchule(new Identifier(uuid), new Identifier(schulkuerzel));
+			fail("keine NotFoundException");
+
+		} catch (NotFoundException e) {
+
+			// Assert
+
+			SecurityIncidentRegistered secIncident = service.securityIncidentEventPayload();
+
+			assertNotNull(secIncident);
+			assertEquals(
+				"Privatveranstalter mit UUID=UUID_PRIVAT versucht, sich von der Schule mit KUERZEL=SCHULKUERZEL_1 abzumelden.",
+				secIncident.message());
+
+			int anzahlNachher = getVeranstalterRepository().getCountLehrerAdded();
+			assertEquals(0, anzahlNachher);
+			int anzahlChanged = getVeranstalterRepository().getCountLehrerChanged();
+			assertEquals(0, anzahlChanged);
+		}
+
+	}
+
+	@Test
+	void should_removeSchuleChangeNothing_when_schuleNichtZugeordnet() throws Exception {
+
+		// Arrange
+		Identifier lehrerID = new Identifier(UUID_LEHRER_3);
+		Identifier schuleID = new Identifier(SCHULKUERZEL_2);
+
+		// Act
+		ResponsePayload responsePayload = service.removeSchule(lehrerID, schuleID);
+
+		// Assert
+		assertFalse(responsePayload.isOk());
+
+		assertEquals("WARN", responsePayload.getMessage().getLevel());
+		assertEquals("An dieser Schule waren Sie nicht als Lehrerin/Lehrer registriert.",
+			responsePayload.getMessage().getMessage());
+
+		LehrerChanged lehrerChangedEventPayload = service.lehrerChangedEventPayload();
+		assertNull(lehrerChangedEventPayload);
+
+		SecurityIncidentRegistered secIncident = service.securityIncidentEventPayload();
+		assertNotNull(secIncident);
+
+		assertEquals("{\"message\":\"removeSchule(): Schule SCHULKUERZEL_2 war dem Lehrer UUID_LEHRER_3 nicht zugeordnet.\"}",
+			new ObjectMapper().writeValueAsString(secIncident));
+
+		int anzahlNachher = getVeranstalterRepository().getCountLehrerAdded();
+		assertEquals(0, anzahlNachher);
+		int anzahlChanged = getVeranstalterRepository().getCountLehrerChanged();
+		assertEquals(0, anzahlChanged);
+
+		Optional<Veranstalter> optVer = getVeranstalterRepository().ofId(lehrerID);
+		Lehrer lehrer = (Lehrer) optVer.get();
+
+		assertEquals("SCHULKUERZEL_1", lehrer.joinedSchulen());
+		assertEquals("SCHULKUERZEL_1", lehrer.persistierbareTeilnahmenummern());
+		assertEquals(1, lehrer.teilnahmeIdentifier().size());
 	}
 
 }

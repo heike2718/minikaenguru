@@ -72,7 +72,7 @@ public class AktuelleTeilnahmeService {
 	@Inject
 	TeilnahmenRepository teilnahmenRepository;
 
-	static AktuelleTeilnahmeService createForTest(final TeilnahmenRepository teilnahmenRepository, final WettbewerbService wettbewerbService, final VeranstalterRepository veranstalterRepository) {
+	public static AktuelleTeilnahmeService createForTest(final TeilnahmenRepository teilnahmenRepository, final WettbewerbService wettbewerbService, final VeranstalterRepository veranstalterRepository) {
 
 		AktuelleTeilnahmeService result = new AktuelleTeilnahmeService();
 		result.teilnahmenRepository = teilnahmenRepository;

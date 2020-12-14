@@ -62,7 +62,7 @@ public class SchulkollegienHibernateRepositoryTest {
 			System.out.println(e.getMessage());
 
 			assertEquals(
-				"Konnte personen nicht deserialisieren: Unrecognized field \"hallo\" (class de.egladil.web.mk_gateway.domain.veranstalter.Person), not marked as ignorable (2 known properties: \"fullName\", \"uuid\"])\n"
+				"Konnte personen nicht deserialisieren: Unrecognized field \"hallo\" (class de.egladil.web.mk_gateway.domain.veranstalter.Person), not marked as ignorable (3 known properties: \"fullName\", \"uuid\", \"email\"])\n"
 					+
 					" at [Source: (String)\"[{\"uuid\":\"gsdgqu\",\"hallo\":\"Herr Bert\"},{\"uuid\":\"bakvsk\",\"fullName\":\"Frau Mann\"}]\"; line: 1, column: 28] (through reference chain: java.lang.Object[][0]->de.egladil.web.mk_gateway.domain.veranstalter.Person[\"hallo\"])",
 				e.getMessage());

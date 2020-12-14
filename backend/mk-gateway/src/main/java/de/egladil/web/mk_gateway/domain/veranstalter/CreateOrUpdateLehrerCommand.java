@@ -53,12 +53,12 @@ public class CreateOrUpdateLehrerCommand {
 		return result;
 	}
 
-	public static CreateOrUpdateLehrerCommand createForTest(final String uuid, final String fullName, final String alteSchulkuerze) {
+	public static CreateOrUpdateLehrerCommand createForTest(final String uuid, final String fullName, final String neueSchulkuerzel) {
 
 		CreateOrUpdateLehrerCommand result = new CreateOrUpdateLehrerCommand();
 		result.rolle = Rolle.LEHRER.name();
 		result.fullName = fullName;
-		result.schulkuerzel = alteSchulkuerze;
+		result.schulkuerzel = neueSchulkuerzel;
 		result.occouredOn = LocalDateTime.now();
 		result.uuid = uuid;
 

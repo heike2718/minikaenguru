@@ -3,7 +3,8 @@
     "rolle": "PRIVAT",
     "person": {
       "uuid": "UUID_PRIVAT",
-      "fullName": "Herta Grütze"
+      "fullName": "Herta Grütze",
+      "email": "herta-gruetze@web.de"
     },
     "zugangUnterlagen": "DEFAULT",
     "newsletterEmpfaenger": "true",
@@ -17,7 +18,8 @@
     "rolle": "PRIVAT",
     "person": {
       "uuid": "UUID_PRIVAT_GESPERRT",
-      "fullName": "Böser Helikoptervater"
+      "fullName": "Böser Helikoptervater",
+      "email": "heli@web.de"
     },
     "zugangUnterlagen": "ENTZOGEN",
     "newsletterEmpfaenger": "false",
@@ -31,7 +33,8 @@
     "rolle": "PRIVAT",
     "person": {
       "uuid": "UUID_PRIVAT_NICHT_ANGEMELDET",
-      "fullName": "Bob Pudding"
+      "fullName": "Bob Pudding",
+      "email": "bob-pudding@web.de"
     },
     "zugangUnterlagen": "DEFAULT",
     "newsletterEmpfaenger": "true",
@@ -45,7 +48,8 @@
     "rolle": "PRIVAT",
     "person": {
       "uuid": "UUID_PRIVAT_MEHRERE_TEILNAHMEKURZEL",
-      "fullName": "Karl Düsentrieb"
+      "fullName": "Karl Düsentrieb",
+      "email": "duesi@web.de"
     },
     "zugangUnterlagen": "DEFAULT",
     "newsletterEmpfaenger": "false",
@@ -62,7 +66,8 @@
     "rolle": "PRIVAT",
     "person": {
       "uuid": "UUID_PRIVAT_KEIN_TEILNAHMEKURZEL",
-      "fullName": "Gustav Adular"
+      "fullName": "Gustav Adular",
+      "email": "gutav-adular@web.de"
     },
     "zugangUnterlagen": "DEFAULT",
     "newsletterEmpfaenger": "false",
@@ -72,7 +77,8 @@
     "rolle": "LEHRER",
     "person": {
       "uuid": "UUID_LEHRER_1",
-      "fullName": "Hans Wurst"
+      "fullName": "Hans Wurst",
+      "email": "hans-wurst@web.de"
     },
     "zugangUnterlagen": "DEFAULT",
     "newsletterEmpfaenger": "true",
@@ -89,7 +95,8 @@
     "rolle": "LEHRER",
     "person": {
       "uuid": "UUID_LEHRER_2",
-      "fullName": "Olle Keule"
+      "fullName": "Olle Keule",
+      "email": "keule@web.de"
     },
     "zugangUnterlagen": "DEFAULT",
     "newsletterEmpfaenger": "true",
@@ -103,7 +110,8 @@
     "rolle": "LEHRER",
     "person": {
       "uuid": "UUID_LEHRER_3",
-      "fullName": "Mimi Mimimi"
+      "fullName": "Mimi Mimimi",
+      "email": "minimi@web.de"
     },
     "zugangUnterlagen": "DEFAULT",
     "newsletterEmpfaenger": "false",
@@ -117,7 +125,8 @@
     "rolle": "LEHRER",
     "person": {
       "uuid": "UUID_LEHRER_GESPERRT",
-      "fullName": "Gesperrter Lehrer"
+      "fullName": "Gesperrter Lehrer",
+      "email": "trollo@web.de"
     },
     "zugangUnterlagen": "ENTZOGEN",
     "newsletterEmpfaenger": "true",
@@ -131,7 +140,8 @@
     "rolle": "LEHRER",
     "person": {
       "uuid": "UUID_LEHRER_ANDERE_SCHULE",
-      "fullName": "Lehrer andere Schule"
+      "fullName": "Lehrer andere Schule",
+      "email": "bolle@web.de"
     },
     "zugangUnterlagen": "DEFAULT",
     "newsletterEmpfaenger": "false",
@@ -140,6 +150,17 @@
         "identifier": "SCHULKUERZEL_3"
       }
     ]
+  },
+  {
+    "rolle": "LEHRER",
+    "person": {
+      "uuid": "UUID_LEHRER_OHNE_SCHULE",
+      "fullName": "Lehrer ohne Schule",
+      "email": "ohne@web.de"
+    },
+    "zugangUnterlagen": "DEFAULT",
+    "newsletterEmpfaenger": "false",
+    "teilnahmenummern": []
   }
 ]
 }

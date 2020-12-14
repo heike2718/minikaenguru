@@ -28,10 +28,6 @@ public class ChangeUserCommand {
 	@JsonProperty
 	private String email;
 
-	ChangeUserCommand() {
-
-	}
-
 	public String syncToken() {
 
 		return syncToken;
@@ -58,6 +54,36 @@ public class ChangeUserCommand {
 		return "ChangeUserCommand [uuid=" + StringUtils.abbreviate(uuid, 11) + ", vorname=" + vorname + ", nachname=" + nachname
 			+ ", email="
 			+ StringUtils.abbreviate(email, 8) + "]";
+	}
+
+	public ChangeUserCommand withSyncToken(final String syncToken) {
+
+		this.syncToken = syncToken;
+		return this;
+	}
+
+	public ChangeUserCommand withUuid(final String uuid) {
+
+		this.uuid = uuid;
+		return this;
+	}
+
+	public ChangeUserCommand withVorname(final String vorname) {
+
+		this.vorname = vorname;
+		return this;
+	}
+
+	public ChangeUserCommand withNachname(final String nachname) {
+
+		this.nachname = nachname;
+		return this;
+	}
+
+	public ChangeUserCommand withEmail(final String email) {
+
+		this.email = email;
+		return this;
 	}
 
 }
