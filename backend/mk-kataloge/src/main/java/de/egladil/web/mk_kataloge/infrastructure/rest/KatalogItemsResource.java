@@ -46,7 +46,7 @@ import de.egladil.web.mk_kataloge.domain.event.SecurityIncidentRegistered;
  * KatalogItemsResource
  */
 @ApplicationScoped
-@Path("/kataloge")
+@Path("kataloge")
 @Produces(MediaType.APPLICATION_JSON)
 public class KatalogItemsResource {
 
@@ -77,7 +77,7 @@ public class KatalogItemsResource {
 	RenameLandService renameLandService;
 
 	@GET
-	@Path("/laender")
+	@Path("laender")
 	public Response loadLaender(@HeaderParam(
 		value = KatalogAPIApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
 			value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret) {
@@ -114,7 +114,7 @@ public class KatalogItemsResource {
 	 * @return                Response mit LandPayload
 	 */
 	@PUT
-	@Path("/laender")
+	@Path("laender")
 	public Response renameLand(@HeaderParam(
 		value = KatalogAPIApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
 			value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret, final LandPayload requestPayload) {
@@ -156,7 +156,7 @@ public class KatalogItemsResource {
 	 * @return                Response mit OrtPayload
 	 */
 	@PUT
-	@Path("/orte")
+	@Path("orte")
 	public Response renameOrt(@HeaderParam(
 		value = KatalogAPIApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
 			value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret, final OrtPayload requestPayload) {
@@ -198,7 +198,7 @@ public class KatalogItemsResource {
 	 * @return                Response mit SchulePayload
 	 */
 	@PUT
-	@Path("/schulen")
+	@Path("schulen")
 	public Response renameSchule(@HeaderParam(
 		value = KatalogAPIApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
 			value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret, final SchulePayload requestPayload) {
@@ -240,7 +240,7 @@ public class KatalogItemsResource {
 	 * @return                Response mit SchulePayload
 	 */
 	@POST
-	@Path("/schulen")
+	@Path("schulen")
 	public Response createSchule(@HeaderParam(
 		value = KatalogAPIApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
 			value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret, final SchulePayload requestPayload) {
@@ -268,7 +268,7 @@ public class KatalogItemsResource {
 	}
 
 	@GET
-	@Path("/laender/{kuerzel}/orte")
+	@Path("laender/{kuerzel}/orte")
 	public Response loadOrteInLand(@PathParam(value = "kuerzel") @Kuerzel final String kuerzel) {
 
 		int anzahlTreffer = katalogFacade.countOrteInLand(kuerzel);
@@ -290,7 +290,7 @@ public class KatalogItemsResource {
 	}
 
 	@GET
-	@Path("/orte/{kuerzel}/schulen")
+	@Path("orte/{kuerzel}/schulen")
 	public Response loadSchulenInOrt(@PathParam(value = "kuerzel") @Kuerzel final String kuerzel) {
 
 		int anzahlTreffer = katalogFacade.countSchulenInOrt(kuerzel);
@@ -312,7 +312,7 @@ public class KatalogItemsResource {
 	}
 
 	@GET
-	@Path("/schulen/{kommaseparierteKuerzel}")
+	@Path("schulen/{kommaseparierteKuerzel}")
 	public Response findSchulenMitKuerzeln(@PathParam(
 		value = "kommaseparierteKuerzel") @Kuerzel final String kommaseparierteKuerzel) {
 

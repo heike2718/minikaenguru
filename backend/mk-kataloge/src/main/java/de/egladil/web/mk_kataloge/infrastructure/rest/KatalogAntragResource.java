@@ -25,7 +25,7 @@ import de.egladil.web.mk_kataloge.domain.katalogantrag.KatalogAntragService;
  * KatalogAntragResource
  */
 @ApplicationScoped
-@Path("/katalogantrag")
+@Path("katalogantrag")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class KatalogAntragResource {

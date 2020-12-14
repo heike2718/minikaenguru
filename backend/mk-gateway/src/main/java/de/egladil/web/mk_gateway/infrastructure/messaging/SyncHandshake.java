@@ -25,6 +25,14 @@ public class SyncHandshake {
 
 	}
 
+	public static SyncHandshake create(final String clientId, final String nonce) {
+
+		SyncHandshake result = new SyncHandshake();
+		result.sendingClientId = clientId;
+		result.nonce = nonce;
+		return result;
+	}
+
 	public String sendingClientId() {
 
 		return sendingClientId;

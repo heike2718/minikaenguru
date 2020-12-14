@@ -34,26 +34,26 @@ import de.egladil.web.mk_gateway.domain.kataloge.api.SchulkatalogAntrag;
  * MkKatalogeRestClient
  */
 @RegisterRestClient
-@Path("/mk-kataloge")
+@Path("mk-kataloge")
 @Produces(MediaType.APPLICATION_JSON)
 public interface MkKatalogeRestClient {
 
 	@GET
-	@Path("/heartbeats")
+	@Path("heartbeats")
 	public Response getHeartbeat(@NotBlank @StringLatin @QueryParam("heartbeatId") final String searchTerm);
 
 	@GET
-	@Path("/katalogsuche/global/{typ}")
+	@Path("katalogsuche/global/{typ}")
 	public Response findItems(@PathParam(
 		value = "typ") final String typ, @NotBlank @StringLatin @QueryParam("search") final String searchTerm);
 
 	@GET
-	@Path("/katalogsuche/laender/{land}/orte")
+	@Path("katalogsuche/laender/{land}/orte")
 	public Response findOrteInLand(@LandKuerzel @PathParam(
 		value = "land") final String landKuerzel, @NotBlank @StringLatin @QueryParam("search") final String searchTerm);
 
 	@GET
-	@Path("/katalogsuche/orte/{ort}/schulen")
+	@Path("katalogsuche/orte/{ort}/schulen")
 	public Response findSchulenInOrt(@Kuerzel @PathParam(
 		value = "ort") final String ortKuerzel, @NotBlank @StringLatin @QueryParam("search") final String searchTerm);
 
@@ -65,78 +65,78 @@ public interface MkKatalogeRestClient {
 	 * @return                        Response Liste von KatalogItems als data.
 	 */
 	@GET
-	@Path("/kataloge/schulen/{kommaseparierteKuerzel}")
+	@Path("kataloge/schulen/{kommaseparierteKuerzel}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	Response findSchulenMitKuerzeln(@PathParam(
 		value = "kommaseparierteKuerzel") @Kuerzel final String kommaseparierteKuerzel);
 
 	@GET
-	@Path("/kataloge/laender")
+	@Path("kataloge/laender")
 	@Consumes(MediaType.APPLICATION_JSON)
 	Response loadLaender(@HeaderParam(
 		value = MkGatewayApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
 			value = MkGatewayApp.SECRET_HEADER_NAME) final String secret);
 
 	@GET
-	@Path("/kataloge/laender/{kuerzel}/orte")
+	@Path("kataloge/laender/{kuerzel}/orte")
 	@Consumes(MediaType.APPLICATION_JSON)
 	Response loadOrteInLand(@PathParam(
 		value = "kuerzel") final String kuerzel);
 
 	@GET
-	@Path("/kataloge/orte/{kuerzel}/schulen")
+	@Path("kataloge/orte/{kuerzel}/schulen")
 	@Consumes(MediaType.APPLICATION_JSON)
 	Response loadSchulenInOrt(@PathParam(
 		value = "kuerzel") final String kuerzel);
 
 	@PUT
-	@Path("/kataloge/laender")
+	@Path("kataloge/laender")
 	@Consumes(MediaType.APPLICATION_JSON)
 	Response renameLand(@HeaderParam(
 		value = MkGatewayApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
 			value = MkGatewayApp.SECRET_HEADER_NAME) final String secret, final LandPayload requestPayload);
 
 	@PUT
-	@Path("/kataloge/orte")
+	@Path("kataloge/orte")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response renameOrt(@HeaderParam(
 		value = MkGatewayApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
 			value = MkGatewayApp.SECRET_HEADER_NAME) final String secret, final OrtPayload requestPayload);
 
 	@PUT
-	@Path("/kataloge/schulen")
+	@Path("kataloge/schulen")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response renameSchule(@HeaderParam(
 		value = MkGatewayApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
 			value = MkGatewayApp.SECRET_HEADER_NAME) final String secret, SchulePayload requestPayload);
 
 	@POST
-	@Path("/kataloge/schulen")
+	@Path("kataloge/schulen")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createSchule(@HeaderParam(
 		value = MkGatewayApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
 			value = MkGatewayApp.SECRET_HEADER_NAME) final String secret, SchulePayload requestPayload);
 
 	@GET
-	@Path("/katalogsuche/global/{typ}")
+	@Path("katalogsuche/global/{typ}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	Response searchItems(@PathParam(
 		value = "typ") final String typ, @NotBlank @StringLatin @QueryParam("search") final String searchTerm);
 
 	@GET
-	@Path("/kuerzel")
+	@Path("kuerzel")
 	@Consumes(MediaType.APPLICATION_JSON)
 	Response generateKuerzel(@HeaderParam(
 		value = MkGatewayApp.UUID_HEADER_NAME) final String secret);
 
 	@POST
-	@Path("/upload/schulen/csv")
+	@Path("upload/schulen/csv")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	Response uploadSchulkatalog(@HeaderParam(
 		value = MkGatewayApp.SECRET_HEADER_NAME) final String secret, @MultipartForm final FileResource input);
 
 	@POST
-	@Path("/katalogantrag")
+	@Path("katalogantrag")
 	@Consumes(MediaType.APPLICATION_JSON)
 	Response sendeSchulkatalogAntrag(final SchulkatalogAntrag antrag);
 

@@ -30,6 +30,8 @@ public class InMemoryVeranstalterRepository implements VeranstalterRepository {
 
 	private int countLehrerAdded = 0;
 
+	private int countVeranstalterRemoved = 0;
+
 	private int countPrivatpersonChanged = 0;
 
 	private int countLehrerChanged = 0;
@@ -159,6 +161,29 @@ public class InMemoryVeranstalterRepository implements VeranstalterRepository {
 		}
 	}
 
+	@Override
+	public void removeVeranstalter(final Veranstalter veranstalter) {
+
+		boolean removed = alleVeranstalter.remove(veranstalter);
+
+		if (removed) {
+
+			countVeranstalterRemoved++;
+		}
+
+	}
+
+	@Override
+	public List<Veranstalter> findVeranstalter(final VeranstalterSuchanfrage suchanfrage) {
+
+		return null;
+	}
+
+	public int getCountVeranstalterRemoved() {
+
+		return countVeranstalterRemoved;
+	}
+
 	public int getCountPrivatpersonAdded() {
 
 		return countPrivatpersonAdded;
@@ -177,19 +202,6 @@ public class InMemoryVeranstalterRepository implements VeranstalterRepository {
 	public int getCountLehrerChanged() {
 
 		return countLehrerChanged;
-	}
-
-	@Override
-	public void removeVeranstalter(final Veranstalter veranstalter) {
-
-		alleVeranstalter.remove(veranstalter);
-
-	}
-
-	@Override
-	public List<Veranstalter> findVeranstalter(final VeranstalterSuchanfrage suchanfrage) {
-
-		return null;
 	}
 
 }

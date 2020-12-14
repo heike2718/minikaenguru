@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.veranstalter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -68,6 +69,11 @@ public class SchulenAnmeldeinfoService {
 
 		List<SchuleAPIModel> schulenOfLehrer = this.schulenOverviewService
 			.ermittleAnmeldedatenFuerSchulen(new Identifier(lehrerUUID));
+
+		if (schulenOfLehrer == null || schulenOfLehrer.isEmpty()) {
+
+			return new ArrayList<>();
+		}
 
 		List<String> kuerzel = schulenOfLehrer.stream().map(s -> s.kuerzel()).collect(Collectors.toList());
 

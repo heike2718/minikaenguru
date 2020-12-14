@@ -26,7 +26,7 @@ export function landValidator(control: AbstractControl): {
 } {
 	const value: string = extractTheValueAsString(control).toLowerCase();
 
-	if (value.includes('deutsch') || value.includes('bundesrepublik') || value === 'brd') {
+	if (value.includes('deutsch') || value.includes('bundesrepublik') || value.toUpperCase() === 'BRD' || value.toUpperCase() === 'DE') {
 		return { 'invalidLandDeutschland': true };
 	}
 	return null;

@@ -31,7 +31,7 @@ import de.egladil.web.mk_gateway.domain.veranstalter.api.VertragAdvAPIModel;
  * AdvResource
  */
 @RequestScoped
-@Path("/adv")
+@Path("adv")
 @Consumes(MediaType.APPLICATION_JSON)
 public class AdvResource {
 

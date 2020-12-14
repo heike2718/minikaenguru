@@ -20,7 +20,7 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
  * VersionResource
  */
 @RequestScoped
-@Path("/version")
+@Path("version")
 @Produces(MediaType.APPLICATION_JSON)
 public class VersionResource {
 

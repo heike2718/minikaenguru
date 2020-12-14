@@ -48,7 +48,7 @@ public class UploadSchulenCsvResource {
 	ImportSchulenService importService;
 
 	@POST
-	@Path("/csv")
+	@Path("csv")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response uploadFile(@HeaderParam(

@@ -46,6 +46,11 @@ public class Lehrer extends Veranstalter {
 		return this.schulen.add(schuleID);
 	}
 
+	public boolean removeSchule(final Identifier schuleID) {
+
+		return this.schulen.remove(schuleID);
+	}
+
 	@Override
 	public Rolle rolle() {
 
@@ -87,6 +92,11 @@ public class Lehrer extends Veranstalter {
 	}
 
 	public String joinedSchulen() {
+
+		if (schulen == null || schulen.isEmpty()) {
+
+			return null;
+		}
 
 		String schulkuerzel = StringUtils.join(schulen.stream().map(i -> i.identifier()).collect(Collectors.toList()),
 			",");

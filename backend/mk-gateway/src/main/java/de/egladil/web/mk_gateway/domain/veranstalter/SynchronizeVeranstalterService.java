@@ -56,7 +56,19 @@ public class SynchronizeVeranstalterService {
 	@Inject
 	SchulkollegienService schulkollegienService;
 
+	private SecurityIncidentRegistered securityIncidentPayload;
+
 	private Map<String, SyncHandshake> syncSessions = new ConcurrentHashMap<String, SyncHandshake>();
+
+	public static SynchronizeVeranstalterService createForTest(final VeranstalterRepository veranstalterRepository, final UserRepository userRepository, final SchulkollegienService schulkollegienService) {
+
+		SynchronizeVeranstalterService result = new SynchronizeVeranstalterService();
+		result.veranstalterRepository = veranstalterRepository;
+		result.userRepository = userRepository;
+		result.schulkollegienService = schulkollegienService;
+		result.syncTokenValidityPeriod = 1;
+		return result;
+	}
 
 	public HandshakeAck createHandshakeAck(final SyncHandshake handshake) {
 
@@ -133,7 +145,7 @@ public class SynchronizeVeranstalterService {
 		userRepository.removeUser(command.uuid());
 	}
 
-	private void verifySession(final String syncSessionId) {
+	void verifySession(final String syncSessionId) {
 
 		SyncHandshake handshake = this.syncSessions.get(syncSessionId);
 
@@ -141,7 +153,7 @@ public class SynchronizeVeranstalterService {
 
 			String msg = "Aufruf sync mit falscher sessionId '" + syncSessionId + "'";
 			LOG.warn("{}", msg);
-			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+			this.securityIncidentPayload = new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
 			throw new MessagingAuthException(msg);
 		}
 
@@ -150,5 +162,10 @@ public class SynchronizeVeranstalterService {
 			throw new SessionExpiredException("SyncSession ist nicht mehr gültig");
 		}
 
+	}
+
+	SecurityIncidentRegistered securityIncidentPayload() {
+
+		return securityIncidentPayload;
 	}
 }

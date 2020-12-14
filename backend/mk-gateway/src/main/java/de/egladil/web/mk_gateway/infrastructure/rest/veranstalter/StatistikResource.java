@@ -24,7 +24,7 @@ import de.egladil.web.mk_gateway.infrastructure.rest.general.statistik.Personali
  * StatistikResource
  */
 @RequestScoped
-@Path("/statistik")
+@Path("statistik")
 @Consumes(MediaType.APPLICATION_JSON)
 public class StatistikResource {
 

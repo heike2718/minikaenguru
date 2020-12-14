@@ -34,7 +34,7 @@ import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
  * VersionResource
  */
 @RequestScoped
-@Path("/version")
+@Path("version")
 @Produces(MediaType.APPLICATION_JSON)
 public class VersionResource {
 
@@ -45,8 +45,6 @@ public class VersionResource {
 	public Response getVersion() {
 
 		byte[] pdf = this.generatePdf();
-
-		System.out.println("PDF hat laenge " + pdf.length);
 
 		return Response.ok(ResponsePayload.messageOnly(MessagePayload.info(version))).build();
 

@@ -21,7 +21,7 @@ import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 
 /**
- * SchulenOverviewServiceTest
+ * SchulenAnmeldeinfoServiceWithInMemoryDatabaseTest
  */
 public class SchulenOverviewServiceTest extends AbstractDomainServiceTest {
 

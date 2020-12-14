@@ -72,6 +72,11 @@ public class SchulenOverviewService {
 
 		final List<Identifier> schulIDs = optVeranstalter.get().teilnahmeIdentifier();
 
+		if (schulIDs == null || schulIDs.isEmpty()) {
+
+			return items;
+		}
+
 		for (Identifier schulID : schulIDs) {
 
 			Optional<Teilnahme> optTeilnahme = aktuelleTeilnahmeService.aktuelleTeilnahme(schulID.identifier());
