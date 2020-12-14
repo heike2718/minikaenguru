@@ -22,6 +22,12 @@ import de.egladil.web.mk_gateway.domain.veranstalter.Schulkollegium;
  */
 public class InMemorySchulkollegienRepository implements SchulkollegienRepository {
 
+	private int countKollegiumAdded = 0;
+
+	private int countKollegiumChanged = 0;
+
+	private int countKollegiumDeleted = 0;
+
 	private Map<Identifier, Schulkollegium> schulkollegien = new HashMap<>();
 
 	public InMemorySchulkollegienRepository() {
@@ -57,6 +63,7 @@ public class InMemorySchulkollegienRepository implements SchulkollegienRepositor
 		if (!this.schulkollegien.containsKey(schulkollegium.schulkuerzel())) {
 
 			this.schulkollegien.put(schulkollegium.schulkuerzel(), schulkollegium);
+			countKollegiumAdded++;
 		}
 
 	}
@@ -71,6 +78,7 @@ public class InMemorySchulkollegienRepository implements SchulkollegienRepositor
 			throw new MkGatewayRuntimeException("Testsetting: das Schulkollegium " + schulkollegium + " ist nicht geladen");
 		}
 
+		countKollegiumChanged++;
 		schulkollegien.put(schulkollegium.schulkuerzel(), schulkollegium);
 
 	}
@@ -79,7 +87,23 @@ public class InMemorySchulkollegienRepository implements SchulkollegienRepositor
 	public void deleteKollegium(final Schulkollegium kollegium) {
 
 		this.schulkollegien.remove(kollegium.schulkuerzel());
+		countKollegiumDeleted++;
 
+	}
+
+	public int getCountKollegiumChanged() {
+
+		return countKollegiumChanged;
+	}
+
+	public int getCountKollegiumAdded() {
+
+		return countKollegiumAdded;
+	}
+
+	public int getCountKollegiumDeleted() {
+
+		return countKollegiumDeleted;
 	}
 
 }

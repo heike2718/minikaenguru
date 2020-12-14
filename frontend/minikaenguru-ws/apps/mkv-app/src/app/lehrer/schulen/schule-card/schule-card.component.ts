@@ -33,4 +33,8 @@ export class SchuleCardComponent implements OnInit {
 		this.router.navigateByUrl('/klassen/' + this.schule.kuerzel);
 	}
 
+	vonSchuleAbmelden(): void {
+		this.lehrerFacade.removeSchule(this.schule);
+	}
+
 }

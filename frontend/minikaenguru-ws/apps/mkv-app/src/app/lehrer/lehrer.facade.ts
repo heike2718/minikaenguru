@@ -157,9 +157,26 @@ export class LehrerFacade {
 		this.appStore.dispatch(LehrerActions.selectSchule({ schule: schule }));
 	}
 
+	public removeSchule(schule: Schule): void {
+
+		this.appStore.dispatch(LehrerActions.startLoading());
+
+		this.veranstalterService.removeSchule(schule.kuerzel).subscribe(
+			message => {
+				this.appStore.dispatch(LehrerActions.schuleRemoved({ kuerzel: schule.kuerzel }));
+				this.messageService.showMessage(message);
+			},
+			(error => {
+				this.appStore.dispatch(LehrerActions.finishedWithError());
+				this.errorHandler.handleError(error);
+			})
+		);
+
+	}
+
 	public neueSchuleSelected(item: KatalogItem): void {
 
-		this.appStore.dispatch(LehrerActions.neueSchuleSelected({selectedKatalogItem: item}));
+		this.appStore.dispatch(LehrerActions.neueSchuleSelected({ selectedKatalogItem: item }));
 	}
 
 	public neueSchulsuche(): void {
@@ -180,7 +197,7 @@ export class LehrerFacade {
 			take(1)
 		).subscribe(
 			responsePayload => {
-				this.appStore.dispatch(LehrerActions.schuleAdded({schule: responsePayload.data}));
+				this.appStore.dispatch(LehrerActions.schuleAdded({ schule: responsePayload.data }));
 				this.messageService.showMessage(responsePayload.message);
 				this.router.navigateByUrl('/lehrer/schulen');
 			},

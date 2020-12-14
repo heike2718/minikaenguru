@@ -25,7 +25,7 @@ import de.egladil.web.mk_gateway.domain.veranstalter.api.VeranstalterUserAPIMode
  * AdminVeranstalterResource
  */
 @RequestScoped
-@Path("/admin/veranstalter")
+@Path("admin/veranstalter")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class AdminVeranstalterResource {

@@ -28,11 +28,6 @@ public class LehrerChanged extends AbstractDomainEvent {
 	@JsonProperty
 	private String alteSchulkuerzel;
 
-	public String neueSchulkuerzel() {
-
-		return neueSchulkuerzel;
-	}
-
 	@JsonProperty
 	private String neueSchulkuerzel;
 
@@ -61,14 +56,9 @@ public class LehrerChanged extends AbstractDomainEvent {
 			throw new IllegalArgumentException("person darf nicht null sein.");
 		}
 
-		if (StringUtils.isBlank(neueSchulkuerzel)) {
-
-			throw new IllegalArgumentException("neueSchulkuerzel darf nicht blank sein.");
-		}
-
 		this.person = person;
-		this.alteSchulkuerzel = alteSchulkuerzel;
-		this.neueSchulkuerzel = neueSchulkuerzel;
+		this.alteSchulkuerzel = StringUtils.isBlank(alteSchulkuerzel) ? null : alteSchulkuerzel;
+		this.neueSchulkuerzel = StringUtils.isBlank(neueSchulkuerzel) ? null : neueSchulkuerzel;
 		this.newsletterAbonnieren = newsletter;
 	}
 
@@ -88,6 +78,11 @@ public class LehrerChanged extends AbstractDomainEvent {
 	public String alteSchulkuerzel() {
 
 		return alteSchulkuerzel;
+	}
+
+	public String neueSchulkuerzel() {
+
+		return neueSchulkuerzel;
 	}
 
 	public boolean newsletterAbonnieren() {

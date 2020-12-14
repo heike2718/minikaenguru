@@ -26,7 +26,7 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbAPIModel;
  * PublicWettbewerbResource
  */
 @RequestScoped
-@Path("/wettbewerb")
+@Path("wettbewerb")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class PublicWettbewerbResource {
@@ -46,7 +46,7 @@ public class PublicWettbewerbResource {
 	}
 
 	@GET
-	@Path("/aktueller")
+	@Path("aktueller")
 	public Response getAktuellenWettbewerb() {
 
 		Optional<Wettbewerb> optWettbewerb = this.wettewerbService.aktuellerWettbewerb();

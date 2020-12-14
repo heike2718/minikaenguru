@@ -35,7 +35,7 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
  * OpenDataResource
  */
 @RequestScoped
-@Path("/open-data")
+@Path("open-data")
 @Consumes(MediaType.APPLICATION_JSON)
 public class OpenDataResource {
 

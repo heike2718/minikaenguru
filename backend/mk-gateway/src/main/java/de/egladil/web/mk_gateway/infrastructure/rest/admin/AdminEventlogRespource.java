@@ -24,7 +24,7 @@ import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 @RequestScoped
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces({ MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_JSON })
-@Path("/admin/events")
+@Path("admin/events")
 public class AdminEventlogRespource {
 
 	@Inject
@@ -36,7 +36,7 @@ public class AdminEventlogRespource {
 	 * @return            Response
 	 */
 	@GET
-	@Path("/{ab}")
+	@Path("{ab}")
 	public Response getEventLogFromDate(@PathParam(value = "ab") final String dateString) {
 
 		DownloadData downloadData = eventService.exportEventsStartingFromDate(dateString);

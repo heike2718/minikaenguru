@@ -28,7 +28,7 @@ import de.egladil.web.mk_gateway.domain.auth.urls.AuthLoginSignupUrlService;
  * VeranstalterSessionResource ist der Endpoint für mkv-app, um sich ein- und auszuloggen.
  */
 @RequestScoped
-@Path("/veranstalter/session")
+@Path("veranstalter/session")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class VeranstalterSessionResource {
@@ -43,7 +43,7 @@ public class VeranstalterSessionResource {
 	LoginLogoutService loginLogoutService;
 
 	@GET
-	@Path("/authurls/login")
+	@Path("authurls/login")
 	public Response getLoginUrl() {
 
 		return authUrlService.getLoginUrl();
@@ -51,7 +51,7 @@ public class VeranstalterSessionResource {
 	}
 
 	@GET
-	@Path("/authurls/signup/lehrer/{schulkuerzel}/{newsletterAbonnieren}")
+	@Path("authurls/signup/lehrer/{schulkuerzel}/{newsletterAbonnieren}")
 	public Response getSignupLehrerUrl(@PathParam(value = "schulkuerzel") final String schulkuerzel, @PathParam(
 		value = "newsletterAbonnieren") final String newsletterAbonnieren) {
 
@@ -59,7 +59,7 @@ public class VeranstalterSessionResource {
 	}
 
 	@GET
-	@Path("/authurls/signup/privat/{newsletterAbonnieren}")
+	@Path("authurls/signup/privat/{newsletterAbonnieren}")
 	public Response getSignupPrivatmenschUrl(@PathParam(
 		value = "newsletterAbonnieren") final String newsletterAbonnieren) {
 
@@ -67,21 +67,21 @@ public class VeranstalterSessionResource {
 	}
 
 	@POST
-	@Path("/login")
+	@Path("login")
 	public Response login(final AuthResult authResult) {
 
 		return loginLogoutService.login(authResult, AuthMode.VERANSTALTER);
 	}
 
 	@DELETE
-	@Path("/logout")
+	@Path("logout")
 	public Response logout(@CookieParam(value = SESSION_COOKIE_NAME) final String sessionId) {
 
 		return loginLogoutService.logout(sessionId);
 	}
 
 	@DELETE
-	@Path("/dev/logout/{sessionId}")
+	@Path("dev/logout/{sessionId}")
 	public Response logoutDev(@PathParam(value = "sessionId") final String sessionId) {
 
 		return loginLogoutService.logoutDev(sessionId);

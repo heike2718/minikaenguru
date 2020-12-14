@@ -49,8 +49,9 @@ public class SchulkollegienService {
 			: Arrays.stream(event.alteSchulkuerzel().split(",")).map(k -> new Identifier(k))
 				.collect(Collectors.toList());
 
-		List<Identifier> neueSchulen = Arrays.stream(event.neueSchulkuerzel().split(",")).map(k -> new Identifier(k))
-			.collect(Collectors.toList());
+		List<Identifier> neueSchulen = StringUtils.isBlank(event.neueSchulkuerzel()) ? new ArrayList<>()
+			: Arrays.stream(event.neueSchulkuerzel().split(",")).map(k -> new Identifier(k))
+				.collect(Collectors.toList());
 
 		final Person derLehrer = event.person();
 

@@ -24,6 +24,7 @@ public class Person {
 	@JsonProperty
 	private String fullName;
 
+	@JsonProperty
 	private String email;
 
 	/**
@@ -94,7 +95,7 @@ public class Person {
 	@Override
 	public String toString() {
 
-		return "Person [uuid=" + uuid + ", fullName=" + fullName + "]";
+		return "Person [uuid=" + uuid + ", fullName=" + fullName + ", email=" + email + "]";
 	}
 
 	public String email() {

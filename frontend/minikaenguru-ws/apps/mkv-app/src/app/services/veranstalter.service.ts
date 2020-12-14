@@ -54,4 +54,13 @@ export class VeranstalterService {
 			map(body => body as ResponsePayload)
 		);
 	}
+
+	public removeSchule(kuerzel: string): Observable<Message> {
+		const url = environment.apiUrl + '/veranstalter/lehrer/schulen/' + kuerzel;
+
+		return this.http.delete(url).pipe(
+			map(body => body as ResponsePayload),
+			map(payload => payload.message)
+		);
+	}
 }

@@ -59,7 +59,7 @@ public class SyncVeranstalterDataResource {
 	SynchronizeVeranstalterService syncService;
 
 	@POST
-	@Path("/ack")
+	@Path("ack")
 	public Response getSyncToken(final SyncHandshake data) {
 
 		if (!clientId.equals(data.sendingClientId())) {
@@ -77,7 +77,7 @@ public class SyncVeranstalterDataResource {
 	}
 
 	@POST
-	@Path("/veranstalter")
+	@Path("veranstalter")
 	public Response synchronizeVeranstalter(final ChangeUserCommand data) {
 
 		try {
@@ -99,7 +99,7 @@ public class SyncVeranstalterDataResource {
 	}
 
 	@DELETE
-	@Path("/veranstalter")
+	@Path("veranstalter")
 	public Response loescheVeranstalter(final LoescheVeranstalterCommand data) {
 
 		try {

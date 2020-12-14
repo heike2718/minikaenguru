@@ -10,8 +10,6 @@ import static org.junit.Assert.fail;
 
 import org.junit.jupiter.api.Test;
 
-import de.egladil.web.mk_gateway.domain.veranstalter.Person;
-
 /**
  * PersonTest
  */
@@ -85,12 +83,12 @@ public class PersonTest {
 		String expectedFullName = "Ghfwhiow Tsvdj";
 
 		// Act
-		Person person = new Person(expectedUuid, expectedFullName);
+		Person person = new Person(expectedUuid, expectedFullName).withEmail("holla@web.de");
 
 		// Assert
 		assertEquals(expectedUuid, person.uuid());
 		assertEquals(expectedFullName, person.fullName());
-		assertEquals("Person [uuid=ajkgdasdi, fullName=Ghfwhiow Tsvdj]", person.toString());
+		assertEquals("Person [uuid=ajkgdasdi, fullName=Ghfwhiow Tsvdj, email=holla@web.de]", person.toString());
 	}
 
 	@Test

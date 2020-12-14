@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.veranstalter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -24,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
@@ -43,10 +43,6 @@ public class LehrerService {
 	private static final Logger LOG = LoggerFactory.getLogger(LehrerService.class);
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
-
-	private SecurityIncidentRegistered securityIncidentRegistered;
-
-	private DataInconsistencyRegistered dataInconsistencyRegistered;
 
 	@Inject
 	WettbewerbService wettbewerbService;
@@ -145,8 +141,13 @@ public class LehrerService {
 		String alteSchulkuerzel = StringUtils.join(vorhandener.schulen(), ",");
 		String neueSchulkuerzel = data.schulkuerzel();
 
-		List<Identifier> schulen = Arrays.stream(neueSchulkuerzel.split(",")).map(s -> new Identifier(s))
-			.collect(Collectors.toList());
+		List<Identifier> schulen = new ArrayList<>();
+
+		if (neueSchulkuerzel != null) {
+
+			schulen = Arrays.stream(neueSchulkuerzel.split(",")).map(s -> new Identifier(s))
+				.collect(Collectors.toList());
+		}
 
 		Lehrer geaenderterLehrer = new Lehrer(new Person(veranstalter.uuid(), data.fullName()), data.newsletterEmpfaenger(),
 			schulen);
@@ -202,16 +203,17 @@ public class LehrerService {
 		Lehrer lehrer = (Lehrer) veranstalter;
 		String alteSchulkuerzel = lehrer.joinedSchulen();
 
-		lehrer.addSchule(schuleID);
-		String neueSchulkuerzel = lehrer.joinedSchulen();
-
-		List<String> zugeordneteSchulkuerzel = Arrays.asList(StringUtils.split(alteSchulkuerzel, ","));
+		List<String> zugeordneteSchulkuerzel = alteSchulkuerzel == null ? new ArrayList<>()
+			: Arrays.asList(StringUtils.split(alteSchulkuerzel, ","));
 
 		if (zugeordneteSchulkuerzel.contains(schuleID.identifier())) {
 
 			LOG.debug("Schule {} war dem Lehrer {} bereits zugeordnet", schuleID.identifier(), lehrer);
 			return ResponsePayload.messageOnly(MessagePayload.warn(applicationMessages.getString("lehrer.schulen.add.warn")));
 		}
+
+		lehrer.addSchule(schuleID);
+		String neueSchulkuerzel = lehrer.joinedSchulen();
 
 		veranstalterRepository.changeVeranstalter(lehrer);
 
@@ -227,6 +229,77 @@ public class LehrerService {
 		}
 
 		return ResponsePayload.messageOnly(MessagePayload.info(applicationMessages.getString("lehrer.schulen.add.success")));
+
+	}
+
+	/**
+	 * Entfernt die gegebene Schule vom Lehrer und den Lehrer aus dem Schulkollegium.
+	 *
+	 * @param lehrerID
+	 *                 Identifier
+	 * @param schuleID
+	 *                 Identifier
+	 */
+	public ResponsePayload removeSchule(final Identifier lehrerID, final Identifier schuleID) {
+
+		Optional<Veranstalter> optLehrer = veranstalterRepository.ofId(lehrerID);
+
+		if (optLehrer.isEmpty()) {
+
+			String msg = "Unbekannter Lehrer mit UUID=" + lehrerID + " versucht, sich von der Schule mit KUERZEL=" + schuleID
+				+ " abzumelden.";
+			LOG.warn(msg);
+
+			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, securityEventRegistered);
+			throw new NotFoundException();
+		}
+
+		Veranstalter veranstalter = optLehrer.get();
+
+		if (veranstalter.rolle() != Rolle.LEHRER) {
+
+			String msg = "Privatveranstalter mit UUID=" + lehrerID + " versucht, sich von der Schule mit KUERZEL=" + schuleID
+				+ " abzumelden.";
+			LOG.warn(msg);
+
+			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, securityEventRegistered);
+			throw new NotFoundException();
+		}
+
+		Lehrer lehrer = (Lehrer) veranstalter;
+		String alteSchulkuerzel = lehrer.joinedSchulen();
+
+		List<String> zugeordneteSchulkuerzel = Arrays.asList(StringUtils.split(alteSchulkuerzel, ","));
+
+		if (!zugeordneteSchulkuerzel.contains(schuleID.identifier())) {
+
+			String msg = "removeSchule(): Schule " + schuleID + " war dem Lehrer " + lehrerID
+				+ " nicht zugeordnet.";
+			LOG.warn(msg);
+
+			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, securityEventRegistered);
+
+			return ResponsePayload
+				.messageOnly(MessagePayload.warn(applicationMessages.getString("lehrer.schulen.remove.nicht_registriert.warn")));
+		}
+
+		lehrer.removeSchule(schuleID);
+		String neueSchulkuerzel = lehrer.joinedSchulen();
+
+		veranstalterRepository.changeVeranstalter(lehrer);
+
+		lehrerChangedEventPayload = new LehrerChanged(lehrer.person(), alteSchulkuerzel, neueSchulkuerzel,
+			lehrer.isNewsletterEmpfaenger());
+
+		if (lehrerChanged != null) {
+
+			lehrerChanged.fire(lehrerChangedEventPayload);
+		} else {
+
+			System.out.println(lehrerChangedEventPayload.serializeQuietly());
+		}
+
+		return ResponsePayload.messageOnly(MessagePayload.info(applicationMessages.getString("lehrer.schulen.remove.success")));
 
 	}
 
@@ -258,8 +331,7 @@ public class LehrerService {
 
 			String msg = "Falsche Rolle: erwarten Lehrer, war aber " + veranstalter.toString();
 			LOG.warn(msg);
-			this.securityIncidentEventPayload = new SecurityIncidentRegistered(msg);
-			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityEventRegistered);
+			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, securityEventRegistered);
 			throw new NotFoundException("Kennen keinen Lehrer mit dieser ID");
 		}
 
@@ -277,16 +349,6 @@ public class LehrerService {
 			.create(hatZugang, lehrer.isNewsletterEmpfaenger());
 
 		return result;
-	}
-
-	SecurityIncidentRegistered getSecurityIncidentRegistered() {
-
-		return securityIncidentRegistered;
-	}
-
-	DataInconsistencyRegistered getDataInconsistencyRegistered() {
-
-		return dataInconsistencyRegistered;
 	}
 
 	LehrerChanged lehrerChangedEventPayload() {

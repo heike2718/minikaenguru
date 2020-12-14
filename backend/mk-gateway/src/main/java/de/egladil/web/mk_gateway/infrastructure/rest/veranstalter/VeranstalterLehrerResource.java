@@ -6,10 +6,13 @@ package de.egladil.web.mk_gateway.infrastructure.rest.veranstalter;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -23,6 +26,7 @@ import javax.ws.rs.core.SecurityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
@@ -37,12 +41,14 @@ import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
  * VeranstalterLehrerResource
  */
 @RequestScoped
-@Path("/veranstalter/lehrer")
+@Path("veranstalter/lehrer")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class VeranstalterLehrerResource {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VeranstalterLehrerResource.class);
+
+	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
 	@Context
 	SecurityContext securityContext;
@@ -78,7 +84,7 @@ public class VeranstalterLehrerResource {
 	}
 
 	@GET
-	@Path("/schulen")
+	@Path("schulen")
 	public Response findSchulen() {
 
 		Principal principal = securityContext.getUserPrincipal();
@@ -99,7 +105,7 @@ public class VeranstalterLehrerResource {
 	}
 
 	@GET
-	@Path("/schulen/{schulkuerzel}/details")
+	@Path("schulen/{schulkuerzel}/details")
 	public Response getSchuleDetails(@PathParam(value = "schulkuerzel") final String schulkuerzel) {
 
 		Principal principal = securityContext.getUserPrincipal();
@@ -116,8 +122,8 @@ public class VeranstalterLehrerResource {
 	}
 
 	@POST
-	@Path("/schulen/{schulkuerzel}")
-	public Response addSchule(@PathParam(value = "schulkuerzel") final String schulkuerzel) {
+	@Path("schulen/{schulkuerzel}")
+	public Response addSchule(@PathParam(value = "schulkuerzel") @Kuerzel final String schulkuerzel) {
 
 		Principal principal = securityContext.getUserPrincipal();
 
@@ -129,6 +135,34 @@ public class VeranstalterLehrerResource {
 		SchuleAPIModel schule = this.schulenAnmeldeinfoService.getSchuleWithWettbewerbsdetails(schulkuerzel, principal.getName());
 
 		responsePayload.setData(schule);
+
+		return Response.ok(responsePayload).build();
+	}
+
+	@DELETE
+	@Path("schulen/{schulkuerzel}")
+	public Response removeSchule(@PathParam(value = "schulkuerzel") @Kuerzel final String schulkuerzel) {
+
+		Principal principal = securityContext.getUserPrincipal();
+
+		final Identifier lehrerID = new Identifier(principal.getName());
+		final Identifier schuleID = new Identifier(schulkuerzel);
+
+		veranstalterAuthService.checkPermissionForTeilnahmenummer(lehrerID, schuleID, "[removeSchule - " + schulkuerzel + "]");
+
+		SchuleAPIModel schule = this.schulenAnmeldeinfoService.getSchuleWithWettbewerbsdetails(schulkuerzel, principal.getName());
+
+		if (schule.aktuellAngemeldet()) {
+
+			ResponsePayload responsePayload = ResponsePayload
+				.messageOnly(MessagePayload
+					.warn(applicationMessages.getString("lehrer.schulen.remove.schule_zum_wettbewerb_angemeldet.warn")));
+
+			// Conflict
+			return Response.status(409).entity(responsePayload).build();
+		}
+
+		ResponsePayload responsePayload = this.lehrerService.removeSchule(lehrerID, schuleID);
 
 		return Response.ok(responsePayload).build();
 	}

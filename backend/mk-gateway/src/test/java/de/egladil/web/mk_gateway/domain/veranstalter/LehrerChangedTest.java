@@ -6,14 +6,12 @@ package de.egladil.web.mk_gateway.domain.veranstalter;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import de.egladil.web.mk_gateway.domain.veranstalter.LehrerChanged;
-import de.egladil.web.mk_gateway.domain.veranstalter.Person;
 
 /**
  * LehrerChangedTest
@@ -35,33 +33,21 @@ public class LehrerChangedTest {
 	}
 
 	@Test
-	void should_ConstructorThrowException_when_SchulkuerzelNull() {
+	void should_ConstructorAcceptBlankSchulkuerzel_when_SchulkuerzelNull() {
 
-		try {
-
-			Person person = new Person("gqudqgi", "Hans Wurst");
-			new LehrerChanged(person, "", null, false);
-
-			fail("keine IllegalArgumentException");
-		} catch (IllegalArgumentException e) {
-
-			assertEquals("neueSchulkuerzel darf nicht blank sein.", e.getMessage());
-		}
+		Person person = new Person("gqudqgi", "Hans Wurst");
+		LehrerChanged eventPayload = new LehrerChanged(person, "", null, false);
+		assertNull(eventPayload.alteSchulkuerzel());
+		assertNull(eventPayload.neueSchulkuerzel());
 	}
 
 	@Test
-	void should_ConstructorThrowException_when_SchulkuerzelBlank() {
+	void should_ConstructorAcceptBlankSchulkuerzel_when_SchulkuerzelBlank() {
 
-		try {
-
-			Person person = new Person("gqudqgi", "Hans Wurst");
-			new LehrerChanged(person, "", "   ", false);
-
-			fail("keine IllegalArgumentException");
-		} catch (IllegalArgumentException e) {
-
-			assertEquals("neueSchulkuerzel darf nicht blank sein.", e.getMessage());
-		}
+		Person person = new Person("gqudqgi", "Hans Wurst");
+		LehrerChanged eventPayload = new LehrerChanged(person, "", "   ", false);
+		assertNull(eventPayload.alteSchulkuerzel());
+		assertNull(eventPayload.neueSchulkuerzel());
 	}
 
 	@Test
@@ -78,7 +64,7 @@ public class LehrerChangedTest {
 
 		// Assert
 		assertEquals(
-			"{\"person\":{\"uuid\":\"gqudqgi\",\"fullName\":\"Hans Wurst\"},\"alteSchulkuerzel\":\"\",\"neueSchulkuerzel\":\"jasqqh\",\"newsletterAbonnieren\":false}",
+			"{\"person\":{\"uuid\":\"gqudqgi\",\"fullName\":\"Hans Wurst\",\"email\":null},\"alteSchulkuerzel\":null,\"neueSchulkuerzel\":\"jasqqh\",\"newsletterAbonnieren\":false}",
 			body);
 		assertEquals("LehrerChanged", eventObject.typeName());
 		assertNotNull(eventObject.occuredOn());

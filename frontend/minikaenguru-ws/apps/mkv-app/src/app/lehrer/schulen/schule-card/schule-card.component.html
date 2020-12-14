@@ -17,13 +17,18 @@
 					{{schule.land}}</div>
 
 				<div class="btn-group d-flex" role="group">
-					<button *ngIf="schule.aktuellAngemeldet" class="btn btn-outline-dark w-100 ml-1" (click)="gotoAuswertung()" title="Kinder erfassen und Urkunden generieren"><i
+					<button *ngIf="schule.aktuellAngemeldet" class="btn btn-outline-dark w-100 ml-1"
+						(click)="gotoAuswertung()" title="Kinder erfassen und Urkunden generieren"><i
 							class="fa fa-pencil-square-o" aria-hidden="true"></i>
-					Auswertung <span *ngIf="wettbewerb$ | async as wettbewerb"> {{wettbewerb.jahr}}</span></button>
+						Auswertung <span *ngIf="wettbewerb$ | async as wettbewerb"> {{wettbewerb.jahr}}</span></button>
 
 					<button class="btn btn-outline-dark w-100 ml-1" (click)="selectSchule()"><i class="fa fa-users"
 							aria-hidden="true"></i>
 						Schulübersicht</button>
+
+					<button *ngIf="!schule.aktuellAngemeldet" class="btn btn-outline-dark w-100 ml-1" (click)="vonSchuleAbmelden()"><i class="fa fa-trash"
+							aria-hidden="true"></i>
+						löschen</button>
 				</div>
 
 			</div>

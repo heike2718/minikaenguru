@@ -28,7 +28,7 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.admin.SchuleAdminOverview;
  * AdminSchulenResource
  */
 @RequestScoped
-@Path("/admin/schulen")
+@Path("admin/schulen")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class AdminSchulenResource {

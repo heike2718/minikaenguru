@@ -106,7 +106,7 @@ public class SchulkollegienServiceTest {
 		assertEquals(uuidLehrer, derLehrer.uuid());
 		assertEquals(fullName, derLehrer.fullName());
 
-		assertEquals("[{\"uuid\":\"sjqhhih\",\"fullName\":\"Hans Wurst\"}]", neues.personenAlsJSON());
+		assertEquals("[{\"uuid\":\"sjqhhih\",\"fullName\":\"Hans Wurst\",\"email\":null}]", neues.personenAlsJSON());
 
 	}
 
@@ -149,7 +149,7 @@ public class SchulkollegienServiceTest {
 		}
 
 		assertEquals(
-			"[{\"uuid\":\"kslawhdqh\",\"fullName\":\"Professor Proton\"},{\"uuid\":\"sjqhhih\",\"fullName\":\"Hans Wurst\"}]",
+			"[{\"uuid\":\"kslawhdqh\",\"fullName\":\"Professor Proton\",\"email\":null},{\"uuid\":\"sjqhhih\",\"fullName\":\"Hans Wurst\",\"email\":null}]",
 			neues.personenAlsJSON());
 
 	}
@@ -196,7 +196,7 @@ public class SchulkollegienServiceTest {
 			}
 
 			assertEquals(
-				"[{\"uuid\":\"kslawhdqh\",\"fullName\":\"Professor Proton\"},{\"uuid\":\"sjqhhih\",\"fullName\":\"Hans Wurst\"}]",
+				"[{\"uuid\":\"kslawhdqh\",\"fullName\":\"Professor Proton\",\"email\":null},{\"uuid\":\"sjqhhih\",\"fullName\":\"Hans Wurst\",\"email\":null}]",
 				neues.personenAlsJSON());
 		}
 
@@ -225,7 +225,7 @@ public class SchulkollegienServiceTest {
 			}
 
 			assertEquals(
-				"[{\"uuid\":\"kslawhdqh\",\"fullName\":\"Professor Proton\"},{\"uuid\":\"sjqhhih\",\"fullName\":\"Hans Wurst\"}]",
+				"[{\"uuid\":\"kslawhdqh\",\"fullName\":\"Professor Proton\",\"email\":null},{\"uuid\":\"sjqhhih\",\"fullName\":\"Hans Wurst\",\"email\":null}]",
 				neues.personenAlsJSON());
 		}
 

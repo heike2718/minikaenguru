@@ -34,7 +34,7 @@ import de.egladil.web.mk_kataloge.domain.event.SecurityIncidentRegistered;
  * KuerzelResource
  */
 @ApplicationScoped
-@Path("/kuerzel")
+@Path("kuerzel")
 @Produces(MediaType.APPLICATION_JSON)
 public class KuerzelResource {
 

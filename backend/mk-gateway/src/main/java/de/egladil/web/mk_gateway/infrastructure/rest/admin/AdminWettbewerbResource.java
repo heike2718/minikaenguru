@@ -35,7 +35,7 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbListAPIModel;
  * AdminWettbewerbResource .../mk-gateway/admin/...
  */
 @RequestScoped
-@Path("/admin/wettbewerbe")
+@Path("admin/wettbewerbe")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class AdminWettbewerbResource extends AbstractAdminResource {
@@ -53,7 +53,7 @@ public class AdminWettbewerbResource extends AbstractAdminResource {
 	}
 
 	@GET
-	@Path("/wettbewerb/{jahr}")
+	@Path("wettbewerb/{jahr}")
 	public Response wettbewerbMitJahr(@PathParam(value = "jahr") final Integer jahr) {
 
 		Optional<WettbewerbDetailsAPIModel> optDaten = this.wettbewerbService.wettbewerbMitJahr(jahr);
@@ -68,7 +68,7 @@ public class AdminWettbewerbResource extends AbstractAdminResource {
 	}
 
 	@POST
-	@Path("/wettbewerb")
+	@Path("wettbewerb")
 	public Response wettbewerbAnlegen(final EditWettbewerbModel data) {
 
 		Optional<WettbewerbDetailsAPIModel> optVorhanden = this.wettbewerbService.wettbewerbMitJahr(data.getJahr());
@@ -90,7 +90,7 @@ public class AdminWettbewerbResource extends AbstractAdminResource {
 	}
 
 	@PUT
-	@Path("/wettbewerb")
+	@Path("wettbewerb")
 	public Response wettbewerbAendern(final EditWettbewerbModel data) {
 
 		this.wettbewerbService.wettbewerbAendern(data);
@@ -102,7 +102,7 @@ public class AdminWettbewerbResource extends AbstractAdminResource {
 	}
 
 	@PUT
-	@Path("/wettbewerb/status")
+	@Path("wettbewerb/status")
 	public Response starteNaechstePhase(final WettbewerbID wettbewerbId) {
 
 		WettbewerbStatus neuerStatus = wettbewerbService.starteNaechstePhase(wettbewerbId.jahr());

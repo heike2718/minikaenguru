@@ -28,7 +28,7 @@ import de.egladil.web.mk_gateway.domain.auth.urls.AuthLoginUrlService;
  * AdminSessionResource ist der Endpoint für mk-admin-app, um sich einzuloggen.
  */
 @RequestScoped
-@Path("/admin/session")
+@Path("admin/session")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class AdminSessionResource {
@@ -43,7 +43,7 @@ public class AdminSessionResource {
 	LoginLogoutService loginLogoutService;
 
 	@GET
-	@Path("/authurls/login")
+	@Path("authurls/login")
 	public Response getAdminLoginUrl() {
 
 		return authLoginUrlService.getLoginUrl();
@@ -51,21 +51,21 @@ public class AdminSessionResource {
 	}
 
 	@POST
-	@Path("/login")
+	@Path("login")
 	public Response login(final AuthResult authResult) {
 
 		return loginLogoutService.login(authResult, AuthMode.ADMIN);
 	}
 
 	@DELETE
-	@Path("/logout")
+	@Path("logout")
 	public Response logout(@CookieParam(value = SESSION_COOKIE_NAME) final String sessionId) {
 
 		return this.loginLogoutService.logout(sessionId);
 	}
 
 	@DELETE
-	@Path("/dev/logout/{sessionId}")
+	@Path("dev/logout/{sessionId}")
 	public Response logoutDev(@PathParam(value = "sessionId") final String sessionId) {
 
 		return this.loginLogoutService.logoutDev(sessionId);
