@@ -6,7 +6,7 @@ Heike Winkelvoß
 :icons:
 :numbered:
 :website: https://mathe-jung-alt.de/
-:imagesdir: /home/heike/git/minikaenguru/documentation
+:imagesdir: https://github.com/heike2718/minikaenguru/tree/master/documentation/images
 :toc-title: Inhaltsverzeichnis
 
 .Über dieses Dokument
