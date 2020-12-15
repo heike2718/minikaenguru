@@ -12,7 +12,7 @@ import { environment } from '../../../environments/environment';
 export class VeranstalterListComponent implements OnInit {
 
 
-	devMode = !environment.production;
+	devMode = environment.envName === 'DEV';
 
 	veranstalters$: Observable<Veranstalter[]> = this.veranstalterFacade.veranstalters$;
 	loading$: Observable<boolean> = this.veranstalterFacade.loading$;

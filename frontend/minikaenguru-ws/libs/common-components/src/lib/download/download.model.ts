@@ -21,5 +21,6 @@ export interface DownloadButtonModel {
 	readonly mimetype: string;
 	readonly buttonLabel: string;
 	readonly tooltip: string;
+	readonly class: string;
 };
 

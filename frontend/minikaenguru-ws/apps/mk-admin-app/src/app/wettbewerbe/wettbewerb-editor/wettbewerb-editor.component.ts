@@ -16,7 +16,7 @@ import { MessageService } from '@minikaenguru-ws/common-messages';
 })
 export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 
-	devMode = !environment.production;
+	devMode = environment.envName === 'DEV';
 
 	wettbewerbForm: FormGroup;
 

@@ -33,7 +33,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 	@ViewChild('dialogContent')
 	dialogContent: TemplateRef<HTMLElement>;
 
-	devMode = !environment.production;
+	devMode = environment.envName === 'DEV';
 
 	kindForm: FormGroup;
 

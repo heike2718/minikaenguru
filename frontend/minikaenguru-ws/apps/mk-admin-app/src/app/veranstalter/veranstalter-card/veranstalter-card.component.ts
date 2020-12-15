@@ -10,7 +10,7 @@ import { VeranstalterFacade } from '../veranstalter.facade';
 })
 export class VeranstalterCardComponent implements OnInit {
 
-	devMode = !environment.production;
+	devMode = environment.envName === 'DEV';
 
 	@Input()
 	veranstalter: Veranstalter;

@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
 })
 export class AddSchuleComponent implements OnInit, OnDestroy {
 
-	devMode = !environment.production;
+	devMode = environment.envName === 'DEV';
 	neueSchule: KatalogItem;
 
 	textSchuleBereitsZugeordnet = 'Sie sind bereits in dieser Schule eingetragen.';

@@ -10,7 +10,7 @@ import { WettbewerbFacade } from '../../services/wettbewerb.facade';
 })
 export class WettbewerbCardComponent implements OnInit {
 
-	devMode = !environment.production;
+	devMode = environment.envName === 'DEV';
 
 	@Input()
 	wettbewerb: Wettbewerb;

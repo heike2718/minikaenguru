@@ -12,7 +12,7 @@ import { Wettbewerb } from '../wettbewerbe.model';
 })
 export class WettbewerbDashboardComponent implements OnInit, OnDestroy {
 
-	devMode = !environment.production;
+	devMode = environment.envName === 'DEV';
 
 	wettbewerb$ = this.wettbewerbFacade.wettbewerb$;
 

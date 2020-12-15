@@ -12,7 +12,7 @@ import { Wettbewerb } from '../wettbewerbe.model';
 })
 export class WettbewerbeListComponent implements OnInit {
 
-	devMode = !environment.production;
+	devMode = environment.envName === 'DEV';
 	wettbewerbe$: Observable<Wettbewerb[]> = this.wettbewerbFacade.wettbewerbe$;
 
 

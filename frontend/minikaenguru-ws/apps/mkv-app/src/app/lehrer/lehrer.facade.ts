@@ -21,6 +21,7 @@ import { Router } from '@angular/router';
 export class LehrerFacade {
 
 
+	public hatZugangZuUnterlagen$ = this.appStore.select(LehrerSelectors.hatZugangZuUnterlagen);
 	public schulen$ = this.appStore.select(LehrerSelectors.alleSchulen);
 	public selectedSchule$ = this.appStore.select(LehrerSelectors.selectedSchule);
 	public schuleDetails$ = this.appStore.select(LehrerSelectors.schuleDetails);

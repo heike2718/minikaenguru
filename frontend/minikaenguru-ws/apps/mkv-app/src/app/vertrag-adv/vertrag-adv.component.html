@@ -4,13 +4,13 @@
 	<h3>zwischen {{vertrag.schulname}} und Heike Winkelvoß</h3>
 
 	<p>Bitte füllen Sie das Formular korrekt aus. Die Angaben werden in den Vertrag übernommen.</p>
-	<p>Sollte der Schulname nicht stimmen, nehmen Sie bitte per Mail Kontakt zu mir auf.</p>
+	<p class="alert-warning">Sollte der Schulname nicht stimmen, nehmen Sie bitte per Mail Kontakt zu mir auf.</p>
 	<p>Ihr Name erscheint <b>nicht</b> im Vertrag.</p>
 
 	<div *ngIf="selectedSchule$ | async as schule">
 
 		<div *ngIf="!schule.details.hatAdv" class="col-12">
-			<mk-download-button [model]="vertragstextBtnModel">
+			<mk-download-button class="w-100 ml-1" [model]="vertragstextBtnModel">
 			</mk-download-button>
 
 			<form class="mb-4" [formGroup]="vertragAdvForm">
@@ -90,7 +90,7 @@
 		</div>
 
 		<div *ngIf="schule.details.hatAdv" class="col-12">
-			<mk-download-button [model]="vertragBtnModel">
+			<mk-download-button class="w-100 ml-1" [model]="vertragBtnModel">
 			</mk-download-button>
 		</div>
 

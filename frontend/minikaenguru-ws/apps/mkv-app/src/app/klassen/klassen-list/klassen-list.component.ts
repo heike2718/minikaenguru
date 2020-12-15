@@ -14,7 +14,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class KlassenListComponent implements OnInit, OnDestroy {
 
-	devMode = !environment.production;
+	devMode = environment.envName === 'DEV';
 
 	klassen$: Observable<Klasse[]> = this.klassenFacade.klassen$;
 	anzahlKlassen$: Observable<number> = this.klassenFacade.anzahlKlassen$;

@@ -21,7 +21,7 @@ import { MessageService } from '@minikaenguru-ws/common-messages';
 export class KinderListComponent implements OnInit, OnDestroy {
 
 
-	devMode = !environment.production;
+	devMode = environment.envName === 'DEV';
 
 	selectedKlasse$ = this.klassenFacade.selectedKlasse$;
 

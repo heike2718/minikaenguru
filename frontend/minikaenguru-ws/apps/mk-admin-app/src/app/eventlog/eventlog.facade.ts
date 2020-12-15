@@ -37,7 +37,8 @@ export class EventlogFacade {
 			buttonLabel: 'ab ' + dateString,
 			dateiname: dateString + '-mkv-gateway-events.log',
 			mimetype: 'application/octet-stream',
-			tooltip: 'eventlog ab ' + dateString + ' herunterladen'
+			tooltip: 'eventlog ab ' + dateString + ' herunterladen',
+			class: 'btn btn-outline-dark w-100 ml-1'
 		};
 
 		return result;

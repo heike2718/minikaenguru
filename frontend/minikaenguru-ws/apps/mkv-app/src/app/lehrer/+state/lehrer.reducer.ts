@@ -1,5 +1,5 @@
 import { createReducer, Action, on } from '@ngrx/store';
-import { SchuleWithID, Schule, mergeSchulenMap, findSchuleMitId, SchuleDetails, SchulenMap } from './../schulen/schulen.model';
+import { SchuleWithID, Schule, mergeSchulenMap, findSchuleMitId, SchuleDetails, SchulenMap, compareSchulen } from './../schulen/schulen.model';
 import * as LehrerActions from './lehrer.actions';
 import { Schulteilnahme, Lehrer } from '../../wettbewerb/wettbewerb.model';
 export const lehrerFeatureKey = 'mkv-app-lehrer';
@@ -58,10 +58,10 @@ const lehrerReducer = createReducer(initalLehrerState,
 
 	on(LehrerActions.schulenLoaded, (state, action) => {
 
-		const schulen: Schule[] = action.schulen;
-		const newMap: SchuleWithID[] = [];
-		schulen.forEach(s => newMap.push({ kuerzel: s.kuerzel, schule: s }));
+		const schulen: Schule[] = [...action.schulen];
+		schulen.sort((s1, s2) => compareSchulen(s1, s2));		const newMap: SchuleWithID[] = [];
 
+		schulen.forEach(s => newMap.push({ kuerzel: s.kuerzel, schule: s }));
 		return { ...state, schulen: newMap, selectedSchule: undefined, schulenLoaded: true, loading: false }
 	}),
 
@@ -163,7 +163,7 @@ const lehrerReducer = createReducer(initalLehrerState,
 		const selectedItem = action.selectedKatalogItem;
 
 
-		if (!selectedItem) {
+		if (selectedItem) {
 			return {
 				...state, addSchuleState: {
 					showSchulkatalog: false,
