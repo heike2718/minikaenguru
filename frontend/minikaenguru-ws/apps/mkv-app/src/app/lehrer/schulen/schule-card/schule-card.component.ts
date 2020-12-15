@@ -12,7 +12,7 @@ import { WettbewerbFacade } from '../../../wettbewerb/wettbewerb.facade';
 })
 export class SchuleCardComponent implements OnInit {
 
-	devMode = !environment.production;
+	devMode = environment.envName === 'DEV';
 
 	@Input()
 	schule: Schule;

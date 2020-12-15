@@ -16,7 +16,7 @@ export class AppComponent {
 
 
 	envName = environment.envName;
-	showEnv = !environment.production;
+	showEnv = environment.envName === 'DEV';
 	api = environment.apiUrl;
 	version = environment.version;
 

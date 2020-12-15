@@ -20,7 +20,7 @@ import { LehrerFacade } from '../../lehrer/lehrer.facade';
 })
 export class KlasseWechselnComponent implements OnInit, OnDestroy {
 
-	devMode = !environment.production;
+	devMode = environment.envName === 'DEV';
 
 	@ViewChild('dialogContent')
 	dialogContent: TemplateRef<HTMLElement>;

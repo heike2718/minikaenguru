@@ -195,5 +195,5 @@ export function kindToString(kind: Kind): string {
 	}
 
 	return result;
-}
+};
 

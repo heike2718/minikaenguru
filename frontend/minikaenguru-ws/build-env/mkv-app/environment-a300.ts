@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  envName: 'DEV',
+  envName: 'QS-a300',
   production: false,
   assetsUrl: 'http://a300/mkv-app/assets',
   apiUrl: 'http://a300/mk-gateway',

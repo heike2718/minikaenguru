@@ -120,6 +120,7 @@ export class SchulenMap {
 	public toArray(): Schule[] {
 
 		const array = [...this.schulen.values()];
+		array.sort((schule1, schule2) => compareSchulen(schule1, schule2));
 		return array;
 	}
 
@@ -131,6 +132,7 @@ export class SchulenMap {
 
 		const array = [...this.schulen.values()];
 		const filtered = array.filter((s: Schule) => s.kuerzel === schule.kuerzel);
+		filtered.sort((schule1, schule2) => compareSchulen(schule1, schule2));
 		return filtered;
 	}
 
@@ -148,6 +150,8 @@ export class SchulenMap {
 				result.push({ kuerzel: schule.kuerzel, schule: schule });
 			}
 		}
+
+		result.sort((s1, s2) => this.compareSchulenWithID(s1, s2));
 		return result;
 	}
 
@@ -161,9 +165,21 @@ export class SchulenMap {
 			}
 		}
 
+		result.sort((s1, s2) => this.compareSchulenWithID(s1, s2));
 		return result;
+	}
+
+	private compareSchulenWithID(schule1: SchuleWithID, schule2: SchuleWithID): number {
+
+		return schule1.schule.name.localeCompare(schule2.schule.name);
+
 	}
 };
 
+export function compareSchulen(schule1: Schule, schule2: Schule): number {
+
+	return schule1.name.localeCompare(schule2.name);
+
+};
 
 

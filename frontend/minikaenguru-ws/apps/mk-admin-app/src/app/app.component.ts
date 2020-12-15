@@ -13,7 +13,7 @@ import { RouterOutlet } from '@angular/router';
 export class AppComponent {
 
 	envName = environment.envName;
-	showEnv = !environment.production;
+	showEnv = this.envName === 'DEV';
 	api = environment.apiUrl;
 	version = environment.version;
 

@@ -11,7 +11,7 @@ import { KlassenFacade } from '../../../klassen/klassen.facade';
 })
 export class SchulenListComponent implements OnInit {
 
-	devMode = !environment.production;
+	devMode = environment.envName === 'DEV';
 
 	textFeatureFlagAnzeigen = false;
 	textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber Anfang 2021.';

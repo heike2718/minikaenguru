@@ -14,7 +14,7 @@ import { LogoutService } from '../../services/logout.service';
 })
 export class PrivatDashboardComponent implements OnInit, OnDestroy {
 
-	devMode = !environment.production;
+	devMode = environment.envName === 'DEV';
 
 	aktuellerWettbewerb$ = this.wettbewerbFacade.aktuellerWettbewerb$;
 

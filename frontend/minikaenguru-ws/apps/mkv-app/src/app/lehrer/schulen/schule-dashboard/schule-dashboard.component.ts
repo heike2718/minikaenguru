@@ -19,16 +19,18 @@ import { KlassenFacade } from '../../../klassen/klassen.facade';
 })
 export class SchuleDashboardComponent implements OnInit, OnDestroy {
 
-	devMode = !environment.production;
+	devMode = environment.envName === 'DEV';
 
 	details$ = this.lehrerFacade.schuleDetails$;
+
+	hatZugangZuUnterlagen$ = this.lehrerFacade.hatZugangZuUnterlagen$;
 
 	aktuellerWettbewerb$ = this.wettbewerbFacade.aktuellerWettbewerb$;
 
 	loading$ = this.lehrerFacade.loading$;
 
 	textFeatureFlagAnzeigen = false;
-	textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
+	textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber bis März.';
 
 	vertragAdvModel: DownloadCardModel;
 
@@ -137,6 +139,11 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 		this.router.navigateByUrl('/klassen/' + this.schule.kuerzel);
 	}
 
+	gotoKlassenlisteHochladen(): void {
+		// TODO
+		this.textFeatureFlagAnzeigen = true;
+	}
+
 	backToSchulen(): void {
 		this.klassenFacade.resetState();
 		this.lehrerFacade.resetSelection();
@@ -144,7 +151,7 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 	}
 
 	toggleTextFeatureFlagAnzeigen(): void {
-		this.textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
+		this.textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber bis März.';
 		this.textFeatureFlagAnzeigen = !this.textFeatureFlagAnzeigen;
 	}
 

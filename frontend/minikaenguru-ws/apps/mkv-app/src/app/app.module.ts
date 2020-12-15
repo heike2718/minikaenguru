@@ -51,7 +51,7 @@ import { KlassenModule } from './klassen/klassen.module';
 		NgbModule,
 		CommonSchulkatalogModule.forRoot({
 			baseUrl: environment.apiUrl,
-			devmode: !environment.production,
+			devmode: environment.envName === 'DEV',
 			admin: false,
 			immediatelyLoadOnNumberChilds: 25,
 			cancelKatalogantragRedirectPath: '/landing'

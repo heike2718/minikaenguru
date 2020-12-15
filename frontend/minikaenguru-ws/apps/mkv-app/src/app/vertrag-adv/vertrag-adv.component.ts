@@ -27,8 +27,9 @@ export class VertragAdvComponent implements OnInit, OnDestroy {
 		url: environment.apiUrl + '/adv/vertragstext',
 		dateiname: 'vertrag-auftragsdatenverarbeitung',
 		mimetype: 'pdf',
-		buttonLabel: 'Vertragstext',
-		tooltip: 'allgemeinen Vertragstext herunterladen (PDF)'
+		buttonLabel: 'Vertragstext herunterladen',
+		tooltip: 'allgemeinen Vertragstext herunterladen (PDF)',
+		class: 'btn btn-outline-dark w-100 ml-1'
 	};
 
 	vertragBtnModel: DownloadButtonModel;
@@ -86,7 +87,8 @@ export class VertragAdvComponent implements OnInit, OnDestroy {
 						dateiname: 'Vertrag-Auftragsdatenverarbeitung-Minikaenguru',
 						mimetype: 'pdf',
 						buttonLabel: 'Vertrag herunterladen',
-						tooltip: 'Vertrag Auftragsdatenverarbeitung herunterladen (PDF)'
+						tooltip: 'Vertrag Auftragsdatenverarbeitung herunterladen (PDF)',
+						class: 'btn btn-outline-dark w-100 ml-1'
 					};
 
 					this.formChangeSubscription = this.vertragAdvForm.statusChanges.subscribe(

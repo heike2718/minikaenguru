@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 })
 export class TeilnahmenListComponent implements OnInit, OnDestroy {
 
-	devMode = !environment.production;
+	devMode = environment.envName === 'DEV';
 
 	teilnahmen$ = this.teilnahmenFacade.anonymisierteTeilnahmen$;
 

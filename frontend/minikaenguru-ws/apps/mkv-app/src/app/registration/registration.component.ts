@@ -27,7 +27,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 		, public registrationFacade: RegistrationFacade
 		, public schulkatalogFacade: SchulkatalogFacade) {
 
-		this.devMode = !environment.production;
+		this.devMode = environment.envName === 'DEV';
 
 		this.textNewsletter = `In diesem Fall werden Sie über den Wettbewerb betreffende Änderungen per E-Mail informiert. Ihre Daten werden ausschließlich zu diesem Zweck genutzt. Eine Weitergabe an Dritte erfolgt nicht.
 		  Sie können die Einwilligung jederzeit per E-Mail an minikaenguru@egladil.de oder nach dem Einloggen widerrufen.`
