@@ -6,6 +6,7 @@ import { LandingComponent } from './landing/landing.component';
 import { WettbewerbInfoComponent } from './wettbewerb/wettbewerb-info.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SessionTimeoutComponent } from './session-timeout/session-timeout.component';
+import { environment } from '../environments/environment';
 
 
 
@@ -74,8 +75,7 @@ const routes: Routes = [
 @NgModule({
 	imports: [RouterModule.forRoot(
 		routes,
-		//   { enableTracing: !environment.production, useHash: true })
-		{ enableTracing: false, useHash: true })
+		{ enableTracing: !environment.production, useHash: true, relativeLinkResolution: 'legacy' })
 	],
 	exports: [RouterModule]
 })

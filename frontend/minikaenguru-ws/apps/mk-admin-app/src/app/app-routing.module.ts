@@ -26,13 +26,10 @@ const routes: Routes = [
 	{ path: '**', component: NotFoundComponent },
 ];
 
-const routesConfig = { enableTracing: false, useHash: true };
-// const routesConfig = { enableTracing: !environment.production, useHash: true };
-
 @NgModule({
 	imports: [RouterModule.forRoot(
 		routes,
-		routesConfig)
+		{ enableTracing: !environment.production, useHash: true, relativeLinkResolution: 'legacy' })
 	],
 	exports: [RouterModule]
 })
