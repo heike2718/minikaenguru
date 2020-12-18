@@ -38,6 +38,7 @@ import { LayouttestsModule } from './layouttests/layouttests.module';
 import { SchulteilnahmenModule } from './schulteilnahmen/schulteilnahmen.module';
 import { EventlogModule } from './eventlog/eventlog.module';
 import { SessionTimeoutComponent } from './session-timeout/session-timeout.component';
+import { NewsletterModule } from './newsletter/newsletter.module';
 
 registerLocaleData(localeDe);
 
@@ -93,6 +94,7 @@ registerLocaleData(localeDe);
 		VeranstalterModule,
 		SchulteilnahmenModule,
 		EventlogModule,
+		NewsletterModule,
 		LayouttestsModule,
 		AppRoutingModule, // <-- immer am Ende, damit die wildcard-route als letzte deklariert bleibt
 	],

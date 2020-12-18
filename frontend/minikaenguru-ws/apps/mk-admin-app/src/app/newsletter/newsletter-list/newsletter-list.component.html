@@ -1,1 +1,16 @@
-<p>newsletter-list works!</p>
+<div class="mkv-container mt-1">
+
+	<h2>Newsletter</h2>
+	<p *ngIf="devMode">(newsletter-list.component)</p>
+
+
+	<div class="btn-group d-flex" role="group">
+		<button class="btn btn-primary w-100 ml-1" (click)="addNewsletter()"><i class="fa fa-plus"
+				aria-hidden="true"></i>neuer
+			Newsletter</button>
+
+		<button class="btn btn-primary w-100 ml-1" (click)="gotoDashboard()"><i class="fa fa-arrow-left"
+				aria-hidden="true"></i>Dashboard</button>
+	</div>
+
+</div>

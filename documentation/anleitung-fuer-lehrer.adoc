@@ -98,7 +98,7 @@ Klassen- und Kinderdaten pflegen
 Derzeit noch in Arbeit ist eine Funktion, mit der Sie die Daten Ihrer Klassen und Kinder mit einer Excel-Tabelle hochladen können.
 Sie kennen eine ähnliche Funktion vielleicht bereits vom Känguru-Wettbewerb.
 
-Klassen und Kinderdaten können aber auch ohne das Hochladen einer Datei erfaast werden und jederzeit gelöscht und geändert werden.
+Klassen und Kinderdaten können aber auch ohne das Hochladen einer Datei erfasst werden und jederzeit gelöscht und geändert werden.
 
 Klassen anlegen und ändern
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -245,7 +245,7 @@ image::./images/kind-verschieben-nach-auswahl-klasse.png[width=60%]
 Beim Klick auf "speichern" wird automatisch überprüft, ob es ein Kind mit gleichem Namen und gleicher Klassenstufe
 in der neuen Klasse bereits gibt. In diesem Fall öffnet sich wieder der Warndialog "Merfacherfassung" und Sie können das
 Verschieben abbrechen. Falls es kein gleiches Kind in der neuen Klasse gibt, wird das Kind verschoben und sie finden
-es anschließend in Liste der Kinder der neuen Klasse.
+es anschließend in der Liste der Kinder der neuen Klasse.
 
 Klassen und Kinder mit einer Exceltabelle hochladen
 ----------------------------------------------------

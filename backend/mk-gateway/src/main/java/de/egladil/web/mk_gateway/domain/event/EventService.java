@@ -50,7 +50,7 @@ public class EventService {
 
 		List<StoredEvent> events = eventRepository.findEventsAfter(datum.atStartOfDay());
 
-		final StringBuffer sb = new StringBuffer();
+		final StringBuilder sb = new StringBuilder();
 		events.forEach(event -> append(sb, event));
 
 		String filename = datum.format(DateTimeFormatter.ofPattern(FILENAME_DATE_FORMAT)) + "-mk-gateway-events.log";
@@ -84,7 +84,7 @@ public class EventService {
 
 	}
 
-	private void append(final StringBuffer sb, final StoredEvent event) {
+	private void append(final StringBuilder sb, final StoredEvent event) {
 
 		sb.append(StringUtils.rightPad(event.getId().toString(), 7));
 		sb.append(event.getOccuredOn().format(DateTimeFormatter.ofPattern(LOG_DATE_TIME_FORMAT)));
