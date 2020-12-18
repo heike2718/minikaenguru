@@ -10,9 +10,11 @@
 		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenteKlasse</class>
 		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistentesKind</class>
 		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterLoesungszettel</class>
+		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterNewsletter</class>
 		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistentesSchulkollegium</class>
 		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenteTeilnahme</class>
 		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterVeranstalter</class>
+		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenteVersandinfo</class>
 		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterWettbewerb</class>
 		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.StoredEvent</class>
 		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.User</class>

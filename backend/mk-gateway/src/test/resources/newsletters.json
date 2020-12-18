@@ -1,0 +1,41 @@
+[
+  {
+    "identifier": {
+      "identifier": "NEWSLETTER_TEST_UND_ALLE_UUID"
+    },
+    "betreff": "Wichtige Information an alle",
+    "text": "Bla bla bla blablablabla bla bla",
+    "idsVersandinformationen": [
+      {
+        "identifier": "VERSANDINFO_ALLE_UUID"
+      },
+      {
+        "identifier": "VERSANDINFO_TEST_UUID"
+      }
+    ]
+  },
+  {
+    "identifier": {
+      "identifier": "NEWSLETTER_LEHRER_UUID"
+    },
+    "betreff": "Nur für Lehrer",
+    "text": "Blubb blubb blubb blubbblubbblubbblubb blubb blubb",
+    "idsVersandinformationen": [
+      {
+        "identifier": "VERSANDINFO_LEHRER_UUID"
+      }
+    ]
+  },
+  {
+    "identifier": {
+      "identifier": "NEWSLETTER_PRIVATVERANSTALTER_UUID"
+    },
+    "betreff": "Nur für Privatveranstalter",
+    "text": "Würg würg würg würgwürgwürgwürg würg würg",
+    "idsVersandinformationen": [
+      {
+        "identifier": "VERSANDINFO_PRIVATVERANSTALTER_UUID"
+      }
+    ]
+  }
+]

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import de.egladil.web.mk_gateway.domain.auth.signup.LehrerCreated;
+import de.egladil.web.mk_gateway.domain.auth.events.LehrerCreated;
 import de.egladil.web.mk_gateway.domain.semantik.DomainCommand;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 

@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
@@ -21,6 +22,9 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.mail.AdminEmailsConfiguration;
+import de.egladil.web.mk_gateway.domain.mail.Empfaengertyp;
+import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.veranstalter.Lehrer;
 import de.egladil.web.mk_gateway.domain.veranstalter.Person;
 import de.egladil.web.mk_gateway.domain.veranstalter.Privatveranstalter;
@@ -38,6 +42,9 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 
 	private static final Logger LOG = LoggerFactory.getLogger(VeranstalterHibernateRepository.class);
 
+	@Inject
+	AdminEmailsConfiguration mailconfiguration;
+
 	private final PersistenterVeranstalterVeranstalterMapper mapper = new PersistenterVeranstalterVeranstalterMapper();
 
 	@Inject
@@ -51,6 +58,7 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 
 		VeranstalterHibernateRepository result = new VeranstalterHibernateRepository();
 		result.em = entityManager;
+		result.mailconfiguration = AdminEmailsConfiguration.createForTest("hdwinkel@egladil.de,info@egladil.de", 5);
 		return result;
 	}
 
@@ -243,6 +251,49 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 		List<PersistenterVeranstalter> trefferliste = query.setParameter("suchstring", value).getResultList();
 
 		return trefferliste.stream().map(pv -> mapper.apply(pv)).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<String> findEmailsNewsletterAbonnenten(final Empfaengertyp empfaengertyp) {
+
+		if (empfaengertyp == Empfaengertyp.TEST) {
+
+			return Arrays.asList(this.mailconfiguration.getTestempfaenger().split(","));
+		}
+
+		String stmt = null;
+
+		switch (empfaengertyp) {
+
+		case ALLE:
+			stmt = "select v.EMAIL from VERANSTALTER v where v.NEWSLETTER = :newsletter and v.EMAIL IS NOT NULL";
+			break;
+
+		default:
+			stmt = "select v.EMAIL from VERANSTALTER v where v.NEWSLETTER = :newsletter and v.ROLLE = :rolle and v.EMAIL IS NOT NULL";
+			break;
+		}
+
+		Query query = em.createNativeQuery(stmt).setParameter("newsletter", 1);
+
+		switch (empfaengertyp) {
+
+		case LEHRER:
+			query.setParameter("rolle", Rolle.LEHRER.toString());
+			break;
+
+		case PRIVATVERANSTALTER:
+			query.setParameter("rolle", Rolle.PRIVAT.toString());
+			break;
+
+		default:
+			break;
+		}
+
+		@SuppressWarnings("unchecked")
+		List<Object> trefferliste = query.getResultList();
+
+		return trefferliste.stream().map(o -> o.toString()).collect(Collectors.toList());
 	}
 
 }

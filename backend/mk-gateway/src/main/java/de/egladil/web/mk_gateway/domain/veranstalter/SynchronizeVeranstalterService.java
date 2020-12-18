@@ -29,6 +29,7 @@ import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.user.UserRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.ChangeUserCommand;
+import de.egladil.web.mk_gateway.domain.veranstalter.events.LehrerChanged;
 import de.egladil.web.mk_gateway.infrastructure.messaging.HandshakeAck;
 import de.egladil.web.mk_gateway.infrastructure.messaging.LoescheVeranstalterCommand;
 import de.egladil.web.mk_gateway.infrastructure.messaging.SyncHandshake;
