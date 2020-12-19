@@ -1,1 +1,35 @@
-<p>newsletter-card works!</p>
+<div class="mkv-container mt-1">
+	<p *ngIf="devMode">newsletter-card.component</p>
+	<div class="card mt-2">
+		<div class="card-body">
+			<div class="card-title">{{newsletter.betreff}}</div>
+			<div class="card-text">
+				<div class="row">
+					<div class="card-subtitle text-muted">{{newsletter.text}}</div>
+				</div>
+			</div>
+			<div class="btn-group d-flex" role="group">
+				<button class="btn btn-outline-dark w-100 ml-1" (click)="editNewsletter()"><i class="fa fa-pencil"
+						aria-hidden="true"></i>ändern</button>
+				<button class="btn btn-outline-dark w-100 ml-1" (click)="toggleSendMail()"><i class="fa fa-mail-forward"
+						aria-hidden="true"></i>Mails senden</button>
+				<button class="btn btn-outline-dark w-100 ml-1" (click)="deleteNewsletter()"><i class="fa fa-trash" aria-hidden="true"></i>löschen</button>
+			</div>
+		</div>
+	</div>
+
+	<div *ngIf="sendMailpartVisible">
+
+		<div class="form-group">
+				<label for="power">Empfängertyp</label>
+				<select class="form-control" id="selectEmpfaengertyp" (change)="onChangeEmpfaengertyp($event)" required>
+					<option *ngFor="let typ of newsletterFacade.empfaengertypen" [value]="typ">{{typ}}
+					</option>
+				</select>
+				<button class="btn btn-outline-dark w-100 ml-1" [disabled]="!empfaengertyp || empfaengertyp.length === 0" (click)="mailSenden()"><i
+						class="fa fa-mail-forward" aria-hidden="true"></i>Mails senden</button>
+				<button class="btn btn-outline-dark w-100 ml-1" (click)="toggleSendMail()"><i class="fa fa-hand-stop-o"
+						aria-hidden="true"></i>doch nicht</button>
+			</div>
+	</div>
+</div>

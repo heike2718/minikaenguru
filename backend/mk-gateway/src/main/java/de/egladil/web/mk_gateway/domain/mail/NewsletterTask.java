@@ -4,11 +4,16 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.mail;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.enterprise.event.Event;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -170,14 +175,32 @@ public class NewsletterTask implements Runnable {
 	 */
 	private void sendeMail(final Newsletter newsletter, final List<String> gruppe) {
 
+		String text = getCompleteText(newsletter);
+
 		DefaultEmailDaten maildaten = new DefaultEmailDaten();
 		maildaten.setBetreff(newsletter.betreff());
-		maildaten.setText(newsletter.text());
+		maildaten.setText(text);
 		maildaten.setEmpfaenger(StringUtils.join(gruppe, ","));
 
 		waitQuietly();
 
 		this.mailService.sendMail(maildaten);
+	}
+
+	private String getCompleteText(final Newsletter newsletter) {
+
+		try (InputStream in = getClass().getResourceAsStream("/mails/mailsuffix.txt"); StringWriter sw = new StringWriter()) {
+
+			IOUtils.copy(in, sw, Charset.defaultCharset());
+
+			return newsletter.text() + sw.toString();
+
+		} catch (IOException e) {
+
+			LOG.warn("Standardmailende konnte nicht geladen werden: " + e.getMessage(), e);
+			return newsletter.text();
+		}
+
 	}
 
 	/**

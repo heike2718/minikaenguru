@@ -15,6 +15,13 @@ export interface NewsletterWithID {
 	readonly newsletter: Newsletter;
 };
 
+export const initialNewsletterEditorModel: Newsletter = {
+	uuid: 'neu',
+	betreff: 'Minikänguru: ',
+	text: '',
+	versandinfoIDs: []
+};
+
 export interface Versandinfo {
 	readonly uuid: string;
 	readonly newsletterID: string;
@@ -33,8 +40,10 @@ export interface VersandinfoWithID {
 
 export interface NewsletterVersandauftrag {
 	readonly newsletterID: string;
-	readonly empfaengertyp: Empfaengertyp;
+	readonly emfaengertyp: Empfaengertyp;
 };
+
+
 
 
 export class NewsletterMap {
@@ -83,6 +92,19 @@ export class NewsletterMap {
 				result.push(item);
 			} else {
 				result.push({uuid: newsletter.uuid, newsletter: newsletter});
+			}
+		}
+
+		return result;
+	}
+
+	public remove(newsletter: Newsletter): NewsletterWithID[] {
+
+		const result: NewsletterWithID[] = [];
+
+		for(const item of this.items) {
+			if (item.uuid !== newsletter.uuid) {
+				result.push(item);
 			}
 		}
 

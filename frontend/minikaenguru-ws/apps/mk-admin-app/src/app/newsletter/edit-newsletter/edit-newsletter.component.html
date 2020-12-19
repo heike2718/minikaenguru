@@ -1,1 +1,49 @@
-<p>edit-newsletter works!</p>
+<div class="mkv-container mt-1">
+	<h3>Newlsetter anlegen oder ändern</h3>
+	<p *ngIf="devMode">edit-newsletter.component.ts</p>
+
+	<div *ngIf="editorInitialized">
+
+		<div class="col-12">
+
+			<form class="mb-4" [formGroup]="newsletterForm">
+
+				<div class="row mt-4">
+					<div class="col-12">
+						<label for="betreffInput">Betreff*</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						<input [class.error]="betreffControl.touched && !betreffControl.valid"
+							class="form-control" type="text" id="betreffInput" placeholder="Betreff"
+							formControlName="betreff" autocomplete="true">
+					</div>
+				</div>
+
+				<div class="row mt-4">
+					<div class="col-12">
+						<label for="textInput">Mailtext*</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						<textarea [class.error]="textControl.touched && !textControl.valid"
+							class="form-control" rows="10" type="text" id="textInput" placeholder="Mailtext"
+							formControlName="text" autocomplete="true"></textarea>
+					</div>
+				</div>
+
+			</form>
+		</div>
+
+		<div class="btn-group d-flex" role="group">
+			<button class="btn btn-primary w-100 ml-1" [disabled]="!newsletterForm.valid || saveInProgress"
+				(click)="onSubmit()"><i class="fa fa-floppy-o" aria-hidden="true"></i>
+				speichern</button>
+
+			<button class="btn btn-primary w-100 ml-1" (click)="onCancel()"><i class="fa fa-arrow-left"
+					aria-hidden="true"></i>zurück</button>
+		</div>
+	</div>
+</div>

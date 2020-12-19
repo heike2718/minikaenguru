@@ -7,6 +7,7 @@ import { resetKataloge } from '../katalogpflege/+state/katalogpflege.actions';
 import { resetVeranstalters } from '../veranstalter/+state/veranstalter.actions';
 import { resetAktuelleMeldung } from '../aktuelle-meldung/+state/aktuelle-meldung.actions';
 import { resetSchulteilnahmen } from '../schulteilnahmen/+state/schulteilnahmen.actions';
+import { resetNewsletters } from '../newsletter/+state/newsletter.actions';
 import { dateCleared } from '../eventlog/+state/eventlog.actions';
 
 
@@ -27,5 +28,6 @@ export class LogoutService {
 		this.appStore.dispatch(resetAktuelleMeldung());
 		this.appStore.dispatch(resetSchulteilnahmen());
 		this.appStore.dispatch(dateCleared());
+		this.appStore.dispatch(resetNewsletters())
 	}
 }

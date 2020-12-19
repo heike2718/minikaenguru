@@ -162,4 +162,11 @@ public class NewsletterService {
 
 		return VersandinfoAPIModel.createFromVersandinfo(versandinformation);
 	}
+
+	@Transactional
+	public void newsletterLoeschen(final Identifier identifier) {
+
+		this.newsletterRepositiory.removeNewsletter(identifier);
+
+	}
 }

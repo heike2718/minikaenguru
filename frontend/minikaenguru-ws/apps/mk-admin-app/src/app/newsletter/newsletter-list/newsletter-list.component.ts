@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
+import { NewsletterFacade } from '../newsletter.facade';
 
 @Component({
 	selector: 'mka-newsletter-list',
@@ -11,17 +12,20 @@ export class NewsletterListComponent implements OnInit {
 
 	devMode = environment.envName === 'DEV'
 
-	constructor(private router: Router) { }
+	constructor(private router: Router,
+		public newsletterFacade: NewsletterFacade) { }
 
 	ngOnInit(): void {
 
 		console.log('entered NewsletterListComponent');
 	}
 
+	loadNewsletters(): void {
+		this.newsletterFacade.loadNewsletters();
+	}
 
 	addNewsletter(): void {
-
-		console.log('jetzt neues NewsletterEditorModel erzeugen und zum Editor navigieren.');
+		this.newsletterFacade.createNewNewsletter();
 	}
 
 	gotoDashboard(): void {
