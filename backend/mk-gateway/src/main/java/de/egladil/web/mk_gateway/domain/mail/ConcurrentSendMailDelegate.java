@@ -45,7 +45,7 @@ public class ConcurrentSendMailDelegate {
 			// Wenn man ein Future verwendet, wartet der Endpoint bis das Teil fertig ist. Daher Runnable!
 			executorservice.execute(newsletterTask);
 
-			LOG.info("Mailversand abgeschlossen");
+			LOG.info("Mailversand an executorService delegiert. Kann jetzt eine Weile dauern...");
 
 		} catch (Exception e) {
 

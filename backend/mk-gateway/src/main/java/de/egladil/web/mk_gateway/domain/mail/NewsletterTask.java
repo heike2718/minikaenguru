@@ -185,6 +185,8 @@ public class NewsletterTask implements Runnable {
 		waitQuietly();
 
 		this.mailService.sendMail(maildaten);
+
+		LOG.info("Mail an {} Empfaenger versendet", gruppe.size());
 	}
 
 	private String getCompleteText(final Newsletter newsletter) {

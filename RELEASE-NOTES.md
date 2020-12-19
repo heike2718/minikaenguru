@@ -1,5 +1,12 @@
 # authprovider Release Notes
 
+__Release 1.2.0__:
+
+* [Milestone 3.0.0](https://github.com/heike2718/minikaenguru/milestone/3)
+* bump quarkus to 1.10.5.Final
+* sec patch commons 1.4.11
+* bump angular to 11
+
 __Release 1.1.0__:
 
 * [ADMIN: Veranstalter und Teilnahmen anzeigen](https://github.com/heike2718/minikaenguru/issues/35)
