@@ -7,11 +7,11 @@ import { Message } from '@minikaenguru-ws/common-messages';
 export const wettbewerbeFeatureKey = 'mk-admin-app-wettbewerbe';
 
 export interface WettbewerbeState {
-	wettbewerbeMap: WettbewerbWithID[],
-	selectedJahr: number,
-	wettbewerbeLoaded: boolean;
-	saveOutcome: Message;
-	wettbewerbEditorModel: WettbewerbEditorModel;
+	readonly wettbewerbeMap: WettbewerbWithID[],
+	readonly selectedJahr: number,
+	readonly wettbewerbeLoaded: boolean;
+	readonly saveOutcome: Message;
+	readonly wettbewerbEditorModel: WettbewerbEditorModel;
 };
 
 const initialWettbewerbeState = {

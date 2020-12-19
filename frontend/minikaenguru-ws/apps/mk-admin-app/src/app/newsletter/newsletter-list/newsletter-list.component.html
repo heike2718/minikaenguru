@@ -1,0 +1,31 @@
+<div class="mkv-container mt-1">
+
+	<h3>Newsletter  <span *ngIf="(newsletterFacade.newsletters$ | async) as newsletters"
+				class="badge badge-secondary">{{newsletters.length}}</span></h3>
+	<p *ngIf="devMode">(newsletter-list.component)</p>
+
+	<ng-container *ngIf="(newsletterFacade.newsletters$ | async ) as newsletters else loading">
+		<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let newsletter of newsletters">
+			<mka-newsletter-card [newsletter]="newsletter"></mka-newsletter-card>
+		</div>
+	</ng-container>
+
+
+	<div class="btn-group d-flex" role="group">
+
+		<button class="btn btn-primary w-100 ml-1" [disabled]="newsletterFacade.newslettersLoaded$ | async" (click)="loadNewsletters()"><i class="fa fa-download"
+				aria-hidden="true"></i>laden</button>
+
+		<button class="btn btn-primary w-100 ml-1" (click)="addNewsletter()"><i class="fa fa-plus"
+				aria-hidden="true"></i>neuer
+			Newsletter</button>
+
+		<button class="btn btn-primary w-100 ml-1" (click)="gotoDashboard()"><i class="fa fa-arrow-left"
+				aria-hidden="true"></i>Dashboard</button>
+	</div>
+
+</div>
+
+<ng-template #loading>
+	Lade Newsletter... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
+</ng-template>

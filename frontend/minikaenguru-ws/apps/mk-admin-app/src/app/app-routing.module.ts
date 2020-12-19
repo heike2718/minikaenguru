@@ -21,18 +21,16 @@ const routes: Routes = [
 	{ path: 'veranstalter', loadChildren: () => import('./veranstalter/veranstalter.module').then(m => m.VeranstalterModule) },
 	{ path: 'schulteilnahme', loadChildren: () => import('./schulteilnahmen/schulteilnahmen.module').then(m => m.SchulteilnahmenModule) },
 	{ path: 'eventlog', loadChildren: () => import('./eventlog/eventlog.module').then(m => m.EventlogModule) },
+	{ path: 'newsletters', loadChildren: () => import('./newsletter/newsletter.module').then(m => m.NewsletterModule) },
 	{ path: 'irgendwas', pathMatch: 'full', component: IrgendwasListComponent },
 	{ path: '', pathMatch: 'full', component: LandingComponent },
 	{ path: '**', component: NotFoundComponent },
 ];
 
-const routesConfig = { enableTracing: false, useHash: true };
-// const routesConfig = { enableTracing: !environment.production, useHash: true };
-
 @NgModule({
 	imports: [RouterModule.forRoot(
 		routes,
-		routesConfig)
+		{ enableTracing: !environment.production, useHash: true, relativeLinkResolution: 'legacy' })
 	],
 	exports: [RouterModule]
 })

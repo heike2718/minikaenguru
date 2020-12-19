@@ -8,8 +8,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
-import de.egladil.web.mk_gateway.domain.auth.signup.LehrerCreated;
-import de.egladil.web.mk_gateway.domain.auth.signup.PrivatveranstalterCreated;
+import de.egladil.web.mk_gateway.domain.auth.events.LehrerCreated;
+import de.egladil.web.mk_gateway.domain.auth.events.PrivatveranstalterCreated;
 import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
 import de.egladil.web.mk_gateway.domain.semantik.InfrastructureService;
 import de.egladil.web.mk_gateway.domain.veranstalter.CreateOrUpdateLehrerCommand;

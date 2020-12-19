@@ -5,13 +5,11 @@
 
 	</div>
 
-	<div *ngIf="(user$ | async) as user" class="row ml-1 mt-1 mr-1">
+	<div *ngIf="(user$ | async) as user" class="row ml-1 mt-2 mr-1">
 		<div class="col-3">
 			<div class="card clickable" (click)="gotoWettbewerbe()">
 				<div class="card-body">
 					<div class="card-title"><i class="fa fa-files-o fa-1x" aria-hidden="true"></i> Wettbewerbe</div>
-					<div class="mb-2 text-muted">verwalten</div>
-					<div class="mb-2 text-muted">Statistiken</div>
 				</div>
 			</div>
 		</div>
@@ -39,12 +37,20 @@
 			</div>
 		</div>
 	</div>
-	<div *ngIf="(user$ | async) as user" class="row ml-1 mt-1 mr-1">
+	<div *ngIf="(user$ | async) as user" class="row ml-1 mt-2 mr-1">
 
 		<div class="col-3">
 			<div class="card clickable" (click)="gotoEventlog()">
 				<div class="card-body">
 					<div class="card-title"><i class="fa fa-history fa-1x" aria-hidden="true"></i> Eventlog</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-3">
+			<div class="card clickable" (click)="gotoNewsletters()">
+				<div class="card-body">
+					<div class="card-title"><i class="fa fa-mail-forward fa-1x" aria-hidden="true"></i> Newsletters</div>
 				</div>
 			</div>
 		</div>

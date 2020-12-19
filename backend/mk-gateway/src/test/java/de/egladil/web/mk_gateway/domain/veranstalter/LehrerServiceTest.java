@@ -27,6 +27,7 @@ import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.LehrerAPIModel;
+import de.egladil.web.mk_gateway.domain.veranstalter.events.LehrerChanged;
 
 /**
  * LehrerServiceTest

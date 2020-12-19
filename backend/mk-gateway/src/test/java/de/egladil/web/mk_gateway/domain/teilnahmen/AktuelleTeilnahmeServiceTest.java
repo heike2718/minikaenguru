@@ -26,6 +26,8 @@ import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.SchulanmeldungRequestPayload;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.SchulteilnahmeAPIModel;
+import de.egladil.web.mk_gateway.domain.teilnahmen.events.PrivatteilnahmeCreated;
+import de.egladil.web.mk_gateway.domain.teilnahmen.events.SchulteilnahmeCreated;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 

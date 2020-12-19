@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.mail.Empfaengertyp;
 import de.egladil.web.mk_gateway.domain.semantik.Repository;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.VeranstalterSuchanfrage;
 
@@ -54,5 +55,13 @@ public interface VeranstalterRepository {
 	 * @return               List
 	 */
 	List<Veranstalter> findVeranstalter(VeranstalterSuchanfrage suchanfrage);
+
+	/**
+	 * Gibt die Mailadressen der Newsletterempfaenger des gegebenen Empfaengertyps zurück.
+	 *
+	 * @param  empfaengertyp
+	 * @return
+	 */
+	List<String> findEmailsNewsletterAbonnenten(Empfaengertyp empfaengertyp);
 
 }

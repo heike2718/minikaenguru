@@ -28,7 +28,10 @@ public enum EventType {
 	SECURITY_INCIDENT_REGISTERED("SecurityIncidentRegistered"),
 	SYNCHRONIZE_VERANSTALTER_FAILED("SynchronizeVeranstalterFailed"),
 	USER_LOGGED_IN("UserLoggedIn"),
-	USER_LOGGED_OUT("UserLoggedOut");
+	USER_LOGGED_OUT("UserLoggedOut"),
+	NEWSLETTERVERSAND_FAILED("NewsletterversandFailed"),
+	NEWSLETTERVERSAND_FINISHED("NewsletterversandFinished"),
+	NEWSLETTERVERSAND_PROGRESS("NewsletterversandProgress");
 
 	private final String label;
 

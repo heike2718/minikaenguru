@@ -14,6 +14,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import de.egladil.web.mk_gateway.domain.auth.events.LehrerCreated;
+import de.egladil.web.mk_gateway.domain.auth.events.PrivatveranstalterCreated;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.user.UserRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
