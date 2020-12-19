@@ -5,12 +5,14 @@
 package de.egladil.web.mkv_server_tests.dao;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import de.egladil.web.mk_gateway.domain.mail.Empfaengertyp;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.admin.VeranstalterSuchkriterium;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.VeranstalterSuchanfrage;
@@ -42,7 +44,7 @@ public class VeranstalterHibernateRepositoryTest extends AbstractIT {
 		List<Veranstalter> result = veranstalterRepository.findVeranstalter(suchanfrage);
 
 		// Assert
-		assertEquals(5, result.size());
+		assertEquals(4, result.size());
 	}
 
 	@Test
@@ -82,6 +84,51 @@ public class VeranstalterHibernateRepositoryTest extends AbstractIT {
 
 		// Assert
 		assertEquals(3, result.size());
+	}
+
+	@Test
+	void should_findEmailsNewsletterAbonnentenWork_when_Alle() {
+
+		// Act
+		List<String> mailadressen = veranstalterRepository.findEmailsNewsletterAbonnenten(Empfaengertyp.ALLE);
+
+		// Assert
+		assertEquals(119, mailadressen.size());
+
+	}
+
+	@Test
+	void should_findEmailsNewsletterAbonnentenWork_when_Lehrer() {
+
+		// Act
+		List<String> mailadressen = veranstalterRepository.findEmailsNewsletterAbonnenten(Empfaengertyp.LEHRER);
+
+		// Assert
+		assertEquals(76, mailadressen.size());
+
+	}
+
+	@Test
+	void should_findEmailsNewsletterAbonnentenWork_when_Privatveranstalter() {
+
+		// Act
+		List<String> mailadressen = veranstalterRepository.findEmailsNewsletterAbonnenten(Empfaengertyp.PRIVATVERANSTALTER);
+
+		// Assert
+		assertEquals(43, mailadressen.size());
+
+	}
+
+	@Test
+	void should_findEmailsNewsletterAbonnentenWork_when_Test() {
+
+		// Act
+		List<String> mailadressen = veranstalterRepository.findEmailsNewsletterAbonnenten(Empfaengertyp.TEST);
+
+		// Assert
+		assertEquals(2, mailadressen.size());
+		assertTrue(mailadressen.contains("hdwinkel@egladil.de"));
+		assertTrue(mailadressen.contains("info@egladil.de"));
 	}
 
 }

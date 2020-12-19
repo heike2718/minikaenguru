@@ -36,8 +36,12 @@
 					<span class="fa fa-map-marker fa-1x" aria-hidden="true"></span> Schulkatalog </a></li>
 
 			<li *ngIf="isLoggedIn$ | async" routerLinkActive="active"><a routerLink="/eventlog"
-					(click)="collapseNav()" class="nav-link" title="Schulkatalog">
+					(click)="collapseNav()" class="nav-link" title="Eventlog">
 					<span class="fa fa-history fa-1x" aria-hidden="true"></span> Eventlog </a></li>
+
+			<li *ngIf="isLoggedIn$ | async" routerLinkActive="active"><a routerLink="/newsletters"
+					(click)="collapseNav()" class="nav-link" title="Newsletters">
+					<span class="fa fa-mail-forward fa-1x" aria-hidden="true"></span> Newsletters </a></li>
 
 			<li *ngIf="isLoggedOut$ | async" routerLinkActive="active">
 				<a class="nav-link" (click)="login()"><span class="fa fa-sign-in fa-1x" aria-hidden="true"></span>

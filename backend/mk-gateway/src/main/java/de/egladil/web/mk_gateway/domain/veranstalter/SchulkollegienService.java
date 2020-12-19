@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.IdentifierComparator;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
+import de.egladil.web.mk_gateway.domain.veranstalter.events.LehrerChanged;
 
 /**
  * SchulkollegienService

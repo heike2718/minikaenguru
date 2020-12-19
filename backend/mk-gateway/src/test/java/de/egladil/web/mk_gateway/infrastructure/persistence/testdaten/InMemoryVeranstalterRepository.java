@@ -8,10 +8,14 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.mail.Empfaengertyp;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.veranstalter.Lehrer;
 import de.egladil.web.mk_gateway.domain.veranstalter.Privatveranstalter;
@@ -171,6 +175,45 @@ public class InMemoryVeranstalterRepository implements VeranstalterRepository {
 			countVeranstalterRemoved++;
 		}
 
+	}
+
+	@Override
+	public List<String> findEmailsNewsletterAbonnenten(final Empfaengertyp empfaengertyp) {
+
+		List<String> result = new ArrayList<>();
+
+		switch (empfaengertyp) {
+
+		case ALLE:
+
+			result = this.alleVeranstalter.stream().filter(v -> v.isNewsletterEmpfaenger() && StringUtils.isNotBlank(v.email()))
+				.map(v -> v.email()).collect(Collectors.toList());
+			break;
+
+		case LEHRER:
+
+			result = this.alleVeranstalter.stream()
+				.filter(v -> v.rolle() == Rolle.LEHRER && v.isNewsletterEmpfaenger() && StringUtils.isNotBlank(v.email()))
+				.map(v -> v.email()).collect(Collectors.toList());
+			break;
+
+		case PRIVATVERANSTALTER:
+
+			result = this.alleVeranstalter.stream()
+				.filter(v -> v.rolle() == Rolle.PRIVAT && v.isNewsletterEmpfaenger() && StringUtils.isNotBlank(v.email()))
+				.map(v -> v.email()).collect(Collectors.toList());
+			break;
+
+		case TEST:
+			break;
+
+		default:
+			return new ArrayList<>();
+		}
+
+		result.add("hdwinkel@egladil.de");
+
+		return result;
 	}
 
 	@Override

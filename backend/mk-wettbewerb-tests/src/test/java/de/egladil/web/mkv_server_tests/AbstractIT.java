@@ -5,6 +5,7 @@
 package de.egladil.web.mkv_server_tests;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
 /**
@@ -18,6 +19,14 @@ public abstract class AbstractIT {
 
 		entityManager = Persistence.createEntityManagerFactory("mkWettbewerbPU").createEntityManager();
 
+	}
+
+	protected void rollback(final EntityTransaction trx) {
+
+		if (trx != null && trx.isActive()) {
+
+			trx.rollback();
+		}
 	}
 
 }

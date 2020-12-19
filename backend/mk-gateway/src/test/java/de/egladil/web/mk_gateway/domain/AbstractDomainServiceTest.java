@@ -26,15 +26,31 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryKinderRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryKlassenRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryLoesungszettelRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryNewsletterRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemorySchulkollegienRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryTeilnahmenRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryUserRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryVeranstalterRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryVersandinfosRepository;
 
 /**
  * AbstractDomainServiceTest
  */
 public abstract class AbstractDomainServiceTest {
+
+	public static final String VERSANDINFO_TEST_UUID = "VERSANDINFO_TEST_UUID";
+
+	public static final String VERSANDINFO_ALLE_UUID = "VERSANDINFO_ALLE_UUID";
+
+	public static final String VERSANDINFO_LEHRER_UUID = "VERSANDINFO_LEHRER_UUID";
+
+	public static final String VERSANDINFO_PRIVATVERANSTALTER_UUID = "VERSANDINFO_PRIVATVERANSTALTER_UUID";
+
+	public static final String NEWSLETTER_TEST_UND_ALLE_UUID = "NEWSLETTER_TEST_UND_ALLE_UUID";
+
+	public static final String NEWSLETTER_LEHRER_UUID = "NEWSLETTER_LEHRER_UUID";
+
+	public static final String NEWSLETTER_PRIVATVERANSTALTER_UUID = "NEWSLETTER_PRIVATVERANSTALTER_UUID";
 
 	protected static final String UUID_LEHRER_1 = "UUID_LEHRER_1";
 
@@ -95,6 +111,10 @@ public abstract class AbstractDomainServiceTest {
 	private InMemoryKinderRepository kinderRepository;
 
 	private InMemorySchulkollegienRepository schulkollegienRepository;
+
+	private InMemoryNewsletterRepository newsletterRepository;
+
+	private InMemoryVersandinfosRepository versandinfosRepository;
 
 	private int countWettbewerbInsert = 0;
 
@@ -236,6 +256,9 @@ public abstract class AbstractDomainServiceTest {
 			}
 		};
 
+		newsletterRepository = new InMemoryNewsletterRepository();
+		versandinfosRepository = new InMemoryVersandinfosRepository();
+
 	}
 
 	protected InMemoryVeranstalterRepository getVeranstalterRepository() {
@@ -331,6 +354,16 @@ public abstract class AbstractDomainServiceTest {
 	protected InMemorySchulkollegienRepository getSchulkollegienRepository() {
 
 		return schulkollegienRepository;
+	}
+
+	protected InMemoryNewsletterRepository getNewsletterRepository() {
+
+		return newsletterRepository;
+	}
+
+	protected InMemoryVersandinfosRepository getVersandinfosRepository() {
+
+		return versandinfosRepository;
 	}
 
 }

@@ -105,23 +105,10 @@ public class AufgabeErgebnisItem implements Comparable<AufgabeErgebnisItem> {
 	@Override
 	public String toString() {
 
-		final StringBuffer sb = new StringBuffer();
-		sb.append("AufgabeErgebnisItem [nummer=");
-		sb.append(nummer);
-		sb.append(", richtig=");
-		sb.append(anzahlRichtigGeloest);
-		sb.append(", anteilRichtig=");
-		sb.append(anteilRichtigText);
-		sb.append(", falsch=");
-		sb.append(anzahlFalschGeloest);
-		sb.append(", anteilFalsch=");
-		sb.append(anteilFalschText);
-		sb.append(", nichtGeloest=");
-		sb.append(anzahlNichtGeloest);
-		sb.append(", anteilNichtGeloest=");
-		sb.append(anteilNichtGeloestText);
-		sb.append("]");
-		return sb.toString();
+		return "AufgabeErgebnisItem [nummer=" + nummer + ", richtig=" + anzahlRichtigGeloest
+			+ ", anteilRichtig=" + anteilRichtigGeloest + ", falsch=" + anzahlFalschGeloest
+			+ ", anteilFalsch=" + anteilFalschGeloest + ", nichtGeloest=" + anzahlNichtGeloest
+			+ ", anteilNichtGeloest=" + anteilNichtGeloestText + "]";
 	}
 
 	public int index() {

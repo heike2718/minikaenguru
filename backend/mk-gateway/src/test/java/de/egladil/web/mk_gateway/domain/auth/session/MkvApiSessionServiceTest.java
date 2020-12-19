@@ -23,11 +23,11 @@ import org.mockito.Mockito;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.egladil.web.commons_net.exception.SessionExpiredException;
+import de.egladil.web.mk_gateway.domain.auth.events.UserLoggedIn;
+import de.egladil.web.mk_gateway.domain.auth.events.UserLoggedOut;
 import de.egladil.web.mk_gateway.domain.auth.session.LoggedInUser;
 import de.egladil.web.mk_gateway.domain.auth.session.MkSessionService;
 import de.egladil.web.mk_gateway.domain.auth.session.Session;
-import de.egladil.web.mk_gateway.domain.auth.session.UserLoggedIn;
-import de.egladil.web.mk_gateway.domain.auth.session.UserLoggedOut;
 import de.egladil.web.mk_gateway.domain.error.AuthException;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.user.UserRepository;

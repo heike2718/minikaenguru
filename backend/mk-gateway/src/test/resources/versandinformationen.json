@@ -1,0 +1,55 @@
+[
+  {
+    "identifier": {
+      "identifier": "VERSANDINFO_ALLE_UUID"
+    },
+    "newsletterID": {
+      "identifier": "NEWSLETTER_TEST_UND_ALLE_UUID"
+    },
+    "empfaengertyp": "ALLE",
+    "anzahlAktuellVersendet": 42,
+    "anzahlEmpaenger": 42,
+    "versandBegonnenAm": "15.12.2020 10:54:01",
+    "versandBeendetAm": "15.12.2020 11:03:22"
+  },
+  {
+    "identifier": {
+      "identifier": "VERSANDINFO_TEST_UUID"
+    },
+    "newsletterID": {
+      "identifier": "NEWSLETTER_TEST_UND_ALLE_UUID"
+    },
+    "empfaengertyp": "TEST",
+    "anzahlAktuellVersendet": 0,
+    "anzahlEmpaenger": 0,
+    "versandBegonnenAm": null,
+    "versandBeendetAm": null
+  },
+  {
+    "identifier": {
+      "identifier": "VERSANDINFO_LEHRER_UUID"
+    },
+    "newsletterID": {
+      "identifier": "NEWSLETTER_LEHRER_UUID"
+    },
+    "empfaengertyp": "LEHRER",
+    "anzahlAktuellVersendet": 13,
+    "anzahlEmpaenger": 42,
+    "versandBegonnenAm": "16.12.2020 10:54:01",
+    "versandBeendetAm": null,
+    "fehlermeldung": "Mailversand gescheitert (wird abgebrochen): could not establish SMTP connection"
+  },
+  {
+    "identifier": {
+      "identifier": "VERSANDINFO_PRIVATVERANSTALTER_UUID"
+    },
+    "newsletterID": {
+      "identifier": "NEWSLETTER_PRIVATVERANSTALTER_UUID"
+    },
+    "empfaengertyp": "PRIVATVERANSTALTER",
+    "anzahlAktuellVersendet": 0,
+    "anzahlEmpaenger": 0,
+    "versandBegonnenAm": null,
+    "versandBeendetAm": null
+  }
+]

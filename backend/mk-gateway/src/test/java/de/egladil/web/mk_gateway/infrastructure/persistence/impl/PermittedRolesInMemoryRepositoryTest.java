@@ -628,6 +628,146 @@ public class PermittedRolesInMemoryRepositoryTest {
 			assertTrue(rollen.contains(Rolle.ADMIN));
 
 		}
+
+		@Test
+		void should_permittedRollen_newsletter_beOk() {
+
+			String path = "/admin/newsletters";
+
+			{
+
+				// Act
+				List<Rolle> rollen = repository.permittedRollen(path, HttpMethod.GET);
+
+				// Assert
+				assertEquals(1, rollen.size());
+				assertTrue(rollen.contains(Rolle.ADMIN));
+			}
+
+			{
+
+				// Act
+				List<Rolle> rollen = repository.permittedRollen(path, HttpMethod.POST);
+
+				// Assert
+				assertEquals(1, rollen.size());
+				assertTrue(rollen.contains(Rolle.ADMIN));
+			}
+
+			{
+
+				// Act
+				List<Rolle> rollen = repository.permittedRollen(path, HttpMethod.PUT);
+
+				// Assert
+				assertEquals(1, rollen.size());
+				assertTrue(rollen.contains(Rolle.ADMIN));
+			}
+
+			{
+
+				// Act
+				List<Rolle> rollen = repository.permittedRollen(path + "/4353-37", HttpMethod.DELETE);
+
+				// Assert
+				assertEquals(1, rollen.size());
+				assertTrue(rollen.contains(Rolle.ADMIN));
+			}
+
+			{
+
+				// Act
+				List<Rolle> rollen = repository.permittedRollen(path + "/mustertext/abddef-012345",
+					HttpMethod.POST);
+
+				// Assert
+				assertEquals(1, rollen.size());
+				assertTrue(rollen.contains(Rolle.ADMIN));
+			}
+
+		}
+
+		@Test
+		void should_permittedRollen_mustertexte_beOk() {
+
+			final String path = "/admin/mail/mustertexte";
+
+			{
+
+				// Act
+				List<Rolle> rollen = repository.permittedRollen(path, HttpMethod.GET);
+
+				// Assert
+				assertEquals(1, rollen.size());
+				assertTrue(rollen.contains(Rolle.ADMIN));
+			}
+
+			{
+
+				// Act
+				List<Rolle> rollen = repository.permittedRollen(path, HttpMethod.POST);
+
+				// Assert
+				assertEquals(1, rollen.size());
+				assertTrue(rollen.contains(Rolle.ADMIN));
+			}
+
+			{
+
+				// Act
+				List<Rolle> rollen = repository.permittedRollen(path, HttpMethod.PUT);
+
+				// Assert
+				assertEquals(1, rollen.size());
+				assertTrue(rollen.contains(Rolle.ADMIN));
+			}
+
+			{
+
+				// Act
+				List<Rolle> rollen = repository.permittedRollen(path + "/4353-37", HttpMethod.DELETE);
+
+				// Assert
+				assertEquals(1, rollen.size());
+				assertTrue(rollen.contains(Rolle.ADMIN));
+			}
+
+			{
+
+				// Act
+				List<Rolle> rollen = repository.permittedRollen(path + "/newsletter/abddef-012345",
+					HttpMethod.POST);
+
+				// Assert
+				assertEquals(1, rollen.size());
+				assertTrue(rollen.contains(Rolle.ADMIN));
+			}
+
+		}
+
+		@Test
+		void should_permittedRollen_postVersand_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/admin/newsletterversand", HttpMethod.POST);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.ADMIN));
+
+		}
+
+		@Test
+		void should_permittedRollen_getSingleVersandinfo_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/admin/newsletters/versandinfo/d34f5-10a5d", HttpMethod.GET);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.ADMIN));
+
+		}
 	}
 
 	@Nested
