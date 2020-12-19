@@ -14,7 +14,6 @@ import java.util.concurrent.TimeUnit;
 import javax.enterprise.event.Event;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -180,7 +179,7 @@ public class NewsletterTask implements Runnable {
 		DefaultEmailDaten maildaten = new DefaultEmailDaten();
 		maildaten.setBetreff(newsletter.betreff());
 		maildaten.setText(text);
-		maildaten.setEmpfaenger(StringUtils.join(gruppe, ","));
+		maildaten.addHiddenEmpfaenger(gruppe);
 
 		waitQuietly();
 
