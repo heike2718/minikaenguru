@@ -9,6 +9,8 @@ import java.util.Objects;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_validation.annotations.StringLatin;
@@ -141,6 +143,12 @@ public class KindEditorModel {
 		return Objects.equals(klassenstufe, other.klassenstufe) && Objects.equals(nachname, other.nachname)
 			&& Objects.equals(sprache, other.sprache) && Objects.equals(vorname, other.vorname)
 			&& Objects.equals(zusatz, other.zusatz);
+	}
+
+	public String logData() {
+
+		return "KindEditorModel [vorname=" + StringUtils.abbreviate(vorname, 5) + ", zusatz=" + zusatz + ", klassenstufe="
+			+ klassenstufe + ", sprache=" + sprache + ", klasseUuid=" + klasseUuid + "]";
 	}
 
 }
