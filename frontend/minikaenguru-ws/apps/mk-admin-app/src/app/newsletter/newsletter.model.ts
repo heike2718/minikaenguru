@@ -87,6 +87,10 @@ export class NewsletterMap {
 
 		const result: NewsletterWithID[] = [];
 
+		if (!this.has(newsletter.uuid)) {
+			result.push({uuid: newsletter.uuid, newsletter: newsletter});
+		}
+
 		for(const item of this.items) {
 			if (item.uuid !== newsletter.uuid) {
 				result.push(item);

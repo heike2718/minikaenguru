@@ -5,13 +5,13 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mk-gateway</artifactId>
-	<version>1.2.0-SNAPSHOT</version>
+	<version>1.2.0</version>
 	<packaging>jar</packaging>
 
 
 	<properties>
 		<quarkus.version>1.10.5.Final</quarkus.version>
-		<commons.version>1.4.11-SNAPSHOT</commons.version>
+		<commons.version>1.4.11</commons.version>
 		<maven.compiler.source>1.11</maven.compiler.source>
 		<maven.compiler.target>1.11</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

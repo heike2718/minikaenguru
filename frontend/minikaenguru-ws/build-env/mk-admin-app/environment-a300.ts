@@ -4,12 +4,12 @@
 //
 
 export const environment = {
-        envName: 'DEV',
+        envName: 'QS-a300',
         production: false,
         assetsUrl: 'http://mk-admin-app/assets',
         apiUrl: 'http://a300/mk-gateway/admin',
         storageKeyPrefix: 'mka_',
-        version: '1.2.0-SNAPSHOT',
+        version: '1.2.0',
         consoleLogActive: true,
         serverLogActive: false,
         loglevel: 1

@@ -5,7 +5,7 @@
 package de.egladil.web.mk_gateway.domain.mail;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -166,11 +166,11 @@ public class NewsletterServiceTest extends AbstractDomainServiceTest {
 		// Assert
 		assertEquals(VERSANDINFO_LEHRER_UUID, model.uuid());
 		assertEquals(NEWSLETTER_LEHRER_UUID, model.newsletterID());
-		assertNotNull(model.versandBeendetAm());
-		assertNotNull(model.versandBegonnenAm());
+		assertNull(model.versandBeendetAm());
+		assertNull(model.versandBegonnenAm());
 
-		assertEquals(6, model.anzahlAktuellVersendet());
-		assertEquals(6, model.anzahlEmpaenger());
+		assertEquals(0, model.anzahlAktuellVersendet());
+		assertEquals(0, model.anzahlEmpaenger());
 		assertFalse(model.versandMitFehler());
 	}
 }
