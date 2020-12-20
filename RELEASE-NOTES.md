@@ -1,5 +1,10 @@
 # authprovider Release Notes
 
+__Release 1.2.1__:
+
+[Fehler beim Ändern eines neu erfassten Kindes](https://github.com/heike2718/minikaenguru/issues/213)
+
+
 __Release 1.2.0__:
 
 * [Milestone 3.0.0](https://github.com/heike2718/minikaenguru/milestone/3)

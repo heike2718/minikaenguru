@@ -61,8 +61,6 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	private showSaveMessage = false;
 
-	private uuid: string;
-
 	private teilnahmeIdentifier: TeilnahmeIdentifierAktuellerWettbewerb;
 
 	private initialGuiModel: KindEditorModel;
@@ -73,8 +71,6 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	private kindDaten: KindEditorModel;
 
-	private routeParamsSubcription: Subscription;
-
 	private queryParamsSubscription: Subscription;
 
 	private saveOutcomeSubscription: Subscription;
@@ -83,7 +79,11 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	private klasseUuid: string;
 
+	private selectedKindUUID: string;
+
 	private schuleSubscription: Subscription;
+
+	private selectedKindUUIDSubscription: Subscription;
 
 	constructor(private fb: FormBuilder,
 		private modalService: NgbModal,
@@ -102,12 +102,14 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 
-		this.routeParamsSubcription = this.route.params.subscribe(
-			p => this.uuid = p['id']
-		);
-
 		this.queryParamsSubscription = this.route.queryParams.subscribe(
 			p => this.klasseUuid = p['klasseUuid']
+		);
+
+		this.selectedKindUUIDSubscription = this.kinderFacade.selectedKindUUID$.subscribe(
+			uuid => {
+				this.selectedKindUUID = uuid;
+			}
 		);
 
 		this.editorModelSubscription = this.kinderFacade.kindEditorModel$.subscribe(
@@ -180,16 +182,17 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
+
+		if (this.selectedKindUUIDSubscription) {
+			this.selectedKindUUIDSubscription.unsubscribe();
+		}
+
 		if (this.editorModelSubscription) {
 			this.editorModelSubscription.unsubscribe();
 		}
 
 		if (this.duplikatwarnungSubscription) {
 			this.duplikatwarnungSubscription.unsubscribe();
-		}
-
-		if (this.routeParamsSubcription) {
-			this.routeParamsSubcription.unsubscribe();
 		}
 
 		if (this.queryParamsSubscription) {
@@ -251,7 +254,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 			this.kindDaten = { ...this.kindDaten, klasseUuid: this.klasseUuid };
 		}
 
-		this.kinderFacade.pruefeDuplikat(this.uuid, this.kindDaten);
+		this.kinderFacade.pruefeDuplikat(this.selectedKindUUID, this.kindDaten);
 	}
 
 
@@ -289,10 +292,10 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	private saveKind(): void {
 		this.showSaveMessage = true;
-		if (this.uuid === 'neu') {
-			this.kinderFacade.insertKind(this.uuid, this.kindDaten, this.selectedSchule);
+		if (this.selectedKindUUID === 'neu') {
+			this.kinderFacade.insertKind(this.selectedKindUUID, this.kindDaten, this.selectedSchule);
 		} else {
-			this.kinderFacade.updateKind(this.uuid, this.kindDaten, this.selectedSchule);
+			this.kinderFacade.updateKind(this.selectedKindUUID, this.kindDaten, this.selectedSchule);
 		}
 	}
 
