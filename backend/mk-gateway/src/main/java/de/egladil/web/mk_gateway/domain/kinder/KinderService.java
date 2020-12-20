@@ -271,6 +271,13 @@ public class KinderService {
 			.withLandkuerzel(daten.kuerzelLand())
 			.withKlasseID(klasseID);
 
+		if (klasseID != null && kind.landkuerzel() == null) {
+
+			String msg = "Schulkind wird ohne landkuerzel angelegt: " + daten.logData();
+
+			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
+		}
+
 		Kind gespeichertesKind = kinderRepository.addKind(kind);
 
 		KindAPIModel result = KindAPIModel.createFromKind(gespeichertesKind);
@@ -327,6 +334,7 @@ public class KinderService {
 		}
 
 		Kind geaendertesKind = new Kind(new Identifier(daten.uuid())).withDaten(daten.kind())
+			.withLandkuerzel(kind.landkuerzel())
 			.withTeilnahmeIdentifier(kind.teilnahmeIdentifier())
 			.withLoesungszettelID(kind.loesungszettelID());
 

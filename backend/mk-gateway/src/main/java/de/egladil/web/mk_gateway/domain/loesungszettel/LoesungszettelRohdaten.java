@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.loesungszettel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.mk_gateway.domain.semantik.ValueObject;
@@ -14,16 +15,19 @@ import de.egladil.web.mk_gateway.domain.semantik.ValueObject;
 @ValueObject
 public class LoesungszettelRohdaten {
 
-	@JsonProperty
+	@JsonIgnore
 	private boolean typo;
 
+	/**
+	 * Nutzereingabe ist ein String der Länge 6, 12 oder 15 aus den Zeichen ABCDEN (bei Onlineauswertung) bzw. rfn beim Upload.
+	 */
 	@JsonProperty
 	private String nutzereingabe;
 
-	@JsonProperty
+	@JsonIgnore
 	private String antwortcode;
 
-	@JsonProperty
+	@JsonIgnore
 	private String wertungscode;
 
 	public LoesungszettelRohdaten() {
