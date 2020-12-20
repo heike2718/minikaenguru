@@ -19,5 +19,6 @@ export const kinderGeladen = createSelector(kinderState, s => s.kinderLoaded);
 export const anzahlKinder = createSelector(kinderState, s => s.kinderMap.length);
 export const duplikatwarnung = createSelector(kinderState, s => s.duplikatwarnung);
 export const saveOutcome = createSelector(kinderState, s => s.saveOutcome);
+export const selectedKindUUID = createSelector(kinderState, s=> s.selectedKindUUID);
 
 

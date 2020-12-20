@@ -66,13 +66,14 @@ const kinderReducer = createReducer(initialKinderState,
 		};
 
 
-		return { ...state, editorModel: kindEditorModel, saveOutcome: undefined };
+		return { ...state, selectedKindUUID: kind.uuid, editorModel: kindEditorModel, saveOutcome: undefined };
 	}),
 
 	on(KinderActions.createNewKind, (state, action) => {
 
 		return {
 			...state,
+			selectedKindUUID: 'neu',
 			editorModel: { ...initialKindEditorModel, klasseId: action.klasseUuid, klassenstufe: state.editorVorbelegung.klassenstufe, sprache: state.editorVorbelegung.sprache },
 			duplikatwarnung: undefined
 		};
@@ -98,7 +99,8 @@ const kinderReducer = createReducer(initialKinderState,
 			saveOutcome: outcome,
 			loading: false,
 			duplikatwarnung: undefined,
-			editorVorbelegung: editorVorbelegung
+			editorVorbelegung: editorVorbelegung,
+			selectedKindUUID: action.kind.uuid
 		 };
 	}),
 
@@ -109,7 +111,7 @@ const kinderReducer = createReducer(initialKinderState,
 	}),
 
 	on(KinderActions.editCancelled, (state, _action) => {
-		return { ...state, editorModel: undefined, saveOutcome: undefined, loading: false, duplikatwarnung: undefined};
+		return { ...state, selectedKindUUID: undefined, editorModel: undefined, saveOutcome: undefined, loading: false, duplikatwarnung: undefined};
 	}),
 
 	on(KinderActions.kindDeleted, (state, action) => {

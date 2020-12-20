@@ -45,6 +45,7 @@ export class KinderFacade {
 	public duplikatwarnung$: Observable<Duplikatwarnung> = this.store.select(KinderSelectors.duplikatwarnung);
 	public saveOutcome$: Observable<Message> = this.store.select(KinderSelectors.saveOutcome);
 	public klassenwechselDaten$: Observable<KlassenwechselDaten>;
+	public selectedKindUUID$: Observable<string> = this.store.select(KinderSelectors.selectedKindUUID);
 
 	private loggingOut: boolean;
 

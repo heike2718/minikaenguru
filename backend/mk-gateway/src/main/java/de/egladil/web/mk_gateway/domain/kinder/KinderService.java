@@ -271,6 +271,14 @@ public class KinderService {
 			.withLandkuerzel(daten.kuerzelLand())
 			.withKlasseID(klasseID);
 
+		if (klasseID != null && kind.landkuerzel() == null) {
+
+			String msg = "Schulkind wird ohne landkuerzel angelegt: " + daten.logData();
+			LOG.warn(msg);
+
+			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
+		}
+
 		Kind gespeichertesKind = kinderRepository.addKind(kind);
 
 		KindAPIModel result = KindAPIModel.createFromKind(gespeichertesKind);
@@ -279,7 +287,8 @@ public class KinderService {
 			.withKindID(result.uuid())
 			.withKlassenstufe(gespeichertesKind.klassenstufe())
 			.withSprache(gespeichertesKind.sprache())
-			.withTeilnahmenummer(teilnahme.teilnahmenummer().identifier());
+			.withTeilnahmenummer(teilnahme.teilnahmenummer().identifier())
+			.withKlasseID(gespeichertesKind.klasseID() == null ? null : gespeichertesKind.klasseID().identifier());
 
 		if (this.kindCreatedEvent != null) {
 
@@ -326,9 +335,20 @@ public class KinderService {
 			}
 		}
 
+		// das KindEditorModel hat die Attribute vorname, nachname, zusatz, klassenstufe, sprache, klasseUiid
 		Kind geaendertesKind = new Kind(new Identifier(daten.uuid())).withDaten(daten.kind())
+			.withLandkuerzel(kind.landkuerzel())
 			.withTeilnahmeIdentifier(kind.teilnahmeIdentifier())
 			.withLoesungszettelID(kind.loesungszettelID());
+
+		if (geaendertesKind.klasseID() != null && geaendertesKind.landkuerzel() == null) {
+
+			String msg = "Schulkind verliert beim Ändern sein landkuerzel: " + daten.logData() + ", altes landkuerzel="
+				+ kind.landkuerzel();
+			LOG.warn(msg);
+
+			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
+		}
 
 		boolean changed = this.kinderRepository.changeKind(geaendertesKind);
 
@@ -336,11 +356,14 @@ public class KinderService {
 
 		if (changed) {
 
+			String klasseID = geaendertesKind.klasseID() == null ? null : geaendertesKind.klasseID().identifier();
+
 			kindChanged = (KindChanged) new KindChanged(veranstalterUuid)
 				.withKlassenstufe(geaendertesKind.klassenstufe())
 				.withSprache(geaendertesKind.sprache())
 				.withTeilnahmenummer(geaendertesKind.teilnahmeIdentifier().teilnahmenummer())
-				.withKindID(geaendertesKind.identifier().identifier());
+				.withKindID(geaendertesKind.identifier().identifier())
+				.withKlasseID(klasseID);
 
 			if (kindChangedEvent != null) {
 
@@ -406,7 +429,8 @@ public class KinderService {
 				.withKindID(kind.identifier().identifier())
 				.withKlassenstufe(kind.klassenstufe())
 				.withSprache(kind.sprache())
-				.withTeilnahmenummer(kind.teilnahmeIdentifier().teilnahmenummer());
+				.withTeilnahmenummer(kind.teilnahmeIdentifier().teilnahmenummer())
+				.withKlasseID(kind.klasseID() == null ? null : kind.klasseID().identifier());
 
 			if (this.kindDeletedEvent != null) {
 
