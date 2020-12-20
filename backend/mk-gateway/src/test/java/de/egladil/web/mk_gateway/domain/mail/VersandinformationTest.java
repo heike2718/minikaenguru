@@ -41,12 +41,12 @@ public class VersandinformationTest {
 		// Act
 		String serialisierung = new ObjectMapper().writeValueAsString(apiModel);
 
-		// System.out.println(serialisierung);
+		System.out.println(serialisierung);
 
-		// {"uuid":"VERSANDINFO_ALLE_UUID","newsletterID":"NEWSLETTER_UUID_1","empfaengertyp":"ALLE","anzahlAktuellVersendet":13,"anzahlEmpaenger":42,"versandBegonnenAm":"16.12.2020
-		// 10:54:01","versandBeendetAm":"16.12.2020 11:03:22"}
+		// {"uuid":"VERSANDINFO_ALLE_UUID","newsletterID":"NEWSLETTER_TEST_UND_ALLE_UUID","empfaengertyp":"ALLE","anzahlAktuellVersendet":13,"anzahlEmpaenger":42,"versandBegonnenAm":"16.12.2020
+		// 10:54:01","versandBeendetAm":"16.12.2020 11:03:22","versandMitFehler":false}
 		assertEquals(
-			"{\"uuid\":\"VERSANDINFO_ALLE_UUID\",\"newsletterID\":\"NEWSLETTER_UUID_1\",\"empfaengertyp\":\"ALLE\",\"anzahlAktuellVersendet\":13,\"anzahlEmpaenger\":42,\"versandBegonnenAm\":\"16.12.2020 10:54:01\",\"versandBeendetAm\":\"16.12.2020 11:03:22\"}",
+			"{\"uuid\":\"VERSANDINFO_ALLE_UUID\",\"newsletterID\":\"NEWSLETTER_TEST_UND_ALLE_UUID\",\"empfaengertyp\":\"ALLE\",\"anzahlAktuellVersendet\":13,\"anzahlEmpaenger\":42,\"versandBegonnenAm\":\"16.12.2020 10:54:01\",\"versandBeendetAm\":\"16.12.2020 11:03:22\",\"versandMitFehler\":false}",
 			serialisierung);
 	}
 

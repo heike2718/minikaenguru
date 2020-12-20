@@ -39,10 +39,10 @@ public class NewsletterTest {
 
 		System.out.println(serialisierung);
 
-		// {"uuid":"VERSANDINFO_ALLE_UUID","newsletterID":"NEWSLETTER_UUID_1","empfaengertyp":"ALLE","anzahlAktuellVersendet":13,"anzahlEmpaenger":42,"versandBegonnenAm":"16.12.2020
-		// 10:54:01","versandBeendetAm":"16.12.2020 11:03:22"}
+		// {"uuid":"NEWSLETTER_TEST_UND_ALLE_UUID","betreff":"Wichtige Information","text":"Bla bla bla blablablabla bla
+		// bla","versandinfoIDs":[]}
 		assertEquals(
-			"{\"uuid\":\"VERSANDINFO_ALLE_UUID\",\"newsletterID\":\"NEWSLETTER_UUID_1\",\"empfaengertyp\":\"ALLE\",\"anzahlAktuellVersendet\":13,\"anzahlEmpaenger\":42,\"versandBegonnenAm\":\"16.12.2020 10:54:01\",\"versandBeendetAm\":\"16.12.2020 11:03:22\"}",
+			"{\"uuid\":\"NEWSLETTER_TEST_UND_ALLE_UUID\",\"betreff\":\"Wichtige Information\",\"text\":\"Bla bla bla blablablabla bla bla\",\"versandinfoIDs\":[]}",
 			serialisierung);
 	}
 

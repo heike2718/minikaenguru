@@ -27,10 +27,10 @@ public class NewsletterversandFailedTest {
 		// Act
 		String serialization = eventPayload.serializeQuietly();
 
-		// System.out.println(serialization);
+		System.out.println(serialization);
 
 		assertEquals(
-			"NewsletterversandFailed: {\"message\":\"Fehler beim Mailversand\",\"invalidEmails\":[\"hdwinkel@egladil.de\",\"info@egladil.de\"],\"validSentEmails\":null,\"validUnsentEmails\":null}",
+			"NewsletterversandFailed: {\"uuid\":null,\"message\":\"Fehler beim Mailversand\",\"invalidEmails\":[\"hdwinkel@egladil.de\",\"info@egladil.de\"],\"validSentEmails\":null,\"validUnsentEmails\":null}",
 			serialization);
 	}
 

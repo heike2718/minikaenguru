@@ -106,8 +106,8 @@ public class AufgabeErgebnisItem implements Comparable<AufgabeErgebnisItem> {
 	public String toString() {
 
 		return "AufgabeErgebnisItem [nummer=" + nummer + ", richtig=" + anzahlRichtigGeloest
-			+ ", anteilRichtig=" + anteilRichtigGeloest + ", falsch=" + anzahlFalschGeloest
-			+ ", anteilFalsch=" + anteilFalschGeloest + ", nichtGeloest=" + anzahlNichtGeloest
+			+ ", anteilRichtig=" + anteilRichtigText + ", falsch=" + anzahlFalschGeloest
+			+ ", anteilFalsch=" + anteilFalschText + ", nichtGeloest=" + anzahlNichtGeloest
 			+ ", anteilNichtGeloest=" + anteilNichtGeloestText + "]";
 	}
 
