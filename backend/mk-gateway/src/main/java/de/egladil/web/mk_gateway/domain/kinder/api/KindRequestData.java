@@ -106,4 +106,9 @@ public class KindRequestData implements Serializable {
 		KindRequestData other = (KindRequestData) obj;
 		return Objects.equals(kind, other.kind) && Objects.equals(uuid, other.uuid);
 	}
+
+	public String logData() {
+
+		return this.kind.logData();
+	}
 }

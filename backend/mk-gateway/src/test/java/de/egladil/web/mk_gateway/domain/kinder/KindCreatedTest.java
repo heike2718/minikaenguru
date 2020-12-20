@@ -35,7 +35,9 @@ public class KindCreatedTest {
 
 		// Act
 		KindCreated eventPayload = (KindCreated) new KindCreated(triggeringUser)
-			.withKindID(kindID).withKlasseID(klasseID).withKlassenstufe(klassenstufe)
+			.withKindID(kindID)
+			.withKlasseID(klasseID)
+			.withKlassenstufe(klassenstufe)
 			.withSprache(sprache)
 			.withTeilnahmenummer(teilnahmenummer);
 
