@@ -23,7 +23,6 @@ import { KinderService } from './kinder.service';
 import { map, withLatestFrom, switchMap, tap, filter } from 'rxjs/operators';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
 import { KinderMap, KindEditorVorbelegung, KlassenwechselDaten } from './kinder.model';
-import { ThrowStmt } from '@angular/compiler';
 import { Message, MessageService } from '@minikaenguru-ws/common-messages';
 import { environment } from '../../environments/environment';
 import { Schule } from '../lehrer/schulen/schulen.model';
@@ -45,7 +44,7 @@ export class KinderFacade {
 	public duplikatwarnung$: Observable<Duplikatwarnung> = this.store.select(KinderSelectors.duplikatwarnung);
 	public saveOutcome$: Observable<Message> = this.store.select(KinderSelectors.saveOutcome);
 	public klassenwechselDaten$: Observable<KlassenwechselDaten>;
-	public selectedKindUUID$: Observable<string> = this.store.select(KinderSelectors.selectedKindUUID);
+	public selectedKind$: Observable<Kind> = this.store.select(KinderSelectors.selectedKind);
 
 	private loggingOut: boolean;
 
@@ -68,6 +67,10 @@ export class KinderFacade {
 
 		this.store.dispatch(KinderActions.createNewKind({ klasseUuid: klasseUuid }));
 
+	}
+
+	public selectKind(kind: Kind): void {
+		this.store.dispatch(KinderActions.selectKind({kind: kind}));
 	}
 
 

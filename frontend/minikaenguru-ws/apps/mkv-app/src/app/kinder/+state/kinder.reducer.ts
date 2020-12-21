@@ -7,22 +7,22 @@ import { Message } from '@minikaenguru-ws/common-messages';
 export const kinderFeatureKey = 'mkv-app-kinder';
 
 export interface KinderState {
-	teilnahmeIdentifier: TeilnahmeIdentifierAktuellerWettbewerb;
-	kinderMap: KindWithID[];
-	selectedKindUUID: string;
-	kinderLoaded: boolean;
-	loading: boolean;
-	saveOutcome: Message;
-	duplikatwarnung: Duplikatwarnung;
-	editorModel: KindEditorModel;
-	editorVorbelegung: KindEditorVorbelegung;
+	readonly teilnahmeIdentifier: TeilnahmeIdentifierAktuellerWettbewerb;
+	readonly kinderMap: KindWithID[];
+	readonly selectedKind: Kind,
+	readonly kinderLoaded: boolean;
+	readonly loading: boolean;
+	readonly saveOutcome: Message;
+	readonly duplikatwarnung: Duplikatwarnung;
+	readonly editorModel: KindEditorModel;
+	readonly editorVorbelegung: KindEditorVorbelegung;
 
 };
 
 const initialKinderState: KinderState = {
 	teilnahmeIdentifier: undefined,
 	kinderMap: [],
-	selectedKindUUID: undefined,
+	selectedKind: undefined,
 	kinderLoaded: false,
 	loading: false,
 	saveOutcome: undefined,
@@ -54,6 +54,10 @@ const kinderReducer = createReducer(initialKinderState,
 
 	}),
 
+	on(KinderActions.selectKind, (state, action) => {
+		return {...state, selectedKind: action.kind};
+	}),
+
 	on(KinderActions.startEditingKind, (state, action) => {
 
 		const kind = action.kind;
@@ -66,14 +70,25 @@ const kinderReducer = createReducer(initialKinderState,
 		};
 
 
-		return { ...state, selectedKindUUID: kind.uuid, editorModel: kindEditorModel, saveOutcome: undefined };
+		return { ...state, selectedKind: kind, editorModel: kindEditorModel, saveOutcome: undefined };
 	}),
 
 	on(KinderActions.createNewKind, (state, action) => {
 
+		const kind: Kind = {
+			uuid: 'neu',
+			klasseId: action.klasseUuid,
+			klassenstufe: state.editorVorbelegung.klassenstufe,
+			sprache: state.editorVorbelegung.sprache,
+			vorname: '',
+			loesungszettelId: undefined,
+			nachname: undefined,
+			zusatz: undefined
+		};
+
 		return {
 			...state,
-			selectedKindUUID: 'neu',
+			selectedKind: kind,
 			editorModel: { ...initialKindEditorModel, klasseId: action.klasseUuid, klassenstufe: state.editorVorbelegung.klassenstufe, sprache: state.editorVorbelegung.sprache },
 			duplikatwarnung: undefined
 		};
@@ -100,7 +115,7 @@ const kinderReducer = createReducer(initialKinderState,
 			loading: false,
 			duplikatwarnung: undefined,
 			editorVorbelegung: editorVorbelegung,
-			selectedKindUUID: action.kind.uuid
+			selectedKind: action.kind
 		 };
 	}),
 
@@ -111,7 +126,7 @@ const kinderReducer = createReducer(initialKinderState,
 	}),
 
 	on(KinderActions.editCancelled, (state, _action) => {
-		return { ...state, selectedKindUUID: undefined, editorModel: undefined, saveOutcome: undefined, loading: false, duplikatwarnung: undefined};
+		return { ...state, selectedKind: undefined, editorModel: undefined, saveOutcome: undefined, loading: false, duplikatwarnung: undefined};
 	}),
 
 	on(KinderActions.kindDeleted, (state, action) => {

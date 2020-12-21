@@ -335,7 +335,7 @@ public class KinderService {
 			}
 		}
 
-		// das KindEditorModel hat die Attribute vorname, nachname, zusatz, klassenstufe, sprache, klasseUiid
+		// das KindEditorModel hat die Attribute vorname, nachname, zusatz, klassenstufe, sprache, klasseUuid
 		Kind geaendertesKind = new Kind(new Identifier(daten.uuid())).withDaten(daten.kind())
 			.withLandkuerzel(kind.landkuerzel())
 			.withTeilnahmeIdentifier(kind.teilnahmeIdentifier())

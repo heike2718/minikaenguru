@@ -1,0 +1,6 @@
+<div class="mkv-container mt-1">
+	<h3>{{titel}}</h3>
+	<p *ngIf="devMode">loesungszettel-editor.component.ts</p>
+
+	<div *ngIf="loesungszettelFacade.selectedLoesungszettel$ | async as loesungszettel">{{loesungszettel.uuid}}</div>
+</div>

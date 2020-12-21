@@ -27,6 +27,10 @@ export const createNewKind = createAction(
 	props<{klasseUuid: string}>()
 );
 
+export const selectKind = createAction(
+	'[KinderFacade] selectKind',
+	props<{ kind: Kind }>()
+);
 
 export const startEditingKind = createAction(
 	'[KinderFacade] editKind',
@@ -54,7 +58,7 @@ export const kindDeleted = createAction(
 );
 
 export const resetModule = createAction(
-	'[KinderFacade] reset'
+	'[KinderFacade] resetState'
 );
 
 
