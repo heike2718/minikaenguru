@@ -23,7 +23,6 @@ export class LoesungszettelFacade {
 
 	private loesungszettelMap: LoesungszettelMap;
 
-
 	constructor(private store: Store<AppState>,
 		private loesungszettelService: LoesungszettelService,
 		private messageService: MessageService,
@@ -82,8 +81,10 @@ export class LoesungszettelFacade {
 		this.store.dispatch(LoesungszettelActions.resetModule());
 	}
 
+	public loesungszettelChanged(zeile: Loesungszettelzeile): void {
 
-	// ////////////////////////////////////////////////////////////////////////////////////////////
+		this.store.dispatch(LoesungszettelActions.loesungszettelChanged({zeile: zeile}));
+	}
 
 
 

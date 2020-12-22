@@ -2,5 +2,13 @@
 	<h3>{{titel}}</h3>
 	<p *ngIf="devMode">loesungszettel-editor.component.ts</p>
 
-	<div *ngIf="loesungszettelFacade.selectedLoesungszettel$ | async as loesungszettel">{{loesungszettel.uuid}}</div>
+	<div *ngIf="devMode && loesungszettelFacade.selectedLoesungszettel$ | async as loesungszettel">{{loesungszettel.uuid}}</div>
+
+	<div *ngIf="loesungszettelFacade.selectedLoesungszettel$ | async as loesungszettel">
+
+		<div *ngFor="let zeile of loesungszettel.zeilen">
+			<mkv-loesungszettelrow [zeile]="zeile"></mkv-loesungszettelrow>
+		</div>
+
+	</div>
 </div>

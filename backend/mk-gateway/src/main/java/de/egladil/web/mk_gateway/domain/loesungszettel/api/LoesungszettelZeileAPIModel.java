@@ -17,7 +17,10 @@ public class LoesungszettelZeileAPIModel {
 	private int index;
 
 	@JsonProperty
-	private int anzahlColumns;
+	private int anzahlSpalten;
+
+	@JsonProperty // A-1,..., C-5
+	private String name;
 
 	@JsonProperty
 	private ZulaessigeLoesungszetteleingabe eingabe;

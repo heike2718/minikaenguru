@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Loesungszettel } from '../loesungszettel.model';
+import { Loesungszettel, Loesungszettelzeile } from '../loesungszettel.model';
 
 
 export const createNewLoesungsettel = createAction(
@@ -24,6 +24,11 @@ export const loesungszettelSelected = createAction(
 	'[LoesungszettelFacade] selectLoesungszettel',
 	props<{loesungszettel: Loesungszettel}>()
 );
+
+export const loesungszettelChanged = createAction(
+	'[LoesungszettelFacade] loesungszettelChanged',
+	props<{zeile: Loesungszettelzeile}>()
+)
 
 export const resetModule = createAction(
 	'[LoesungszettelFacade] resetState'

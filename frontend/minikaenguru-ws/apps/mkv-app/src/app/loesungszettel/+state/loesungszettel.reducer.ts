@@ -1,5 +1,5 @@
-import { createReducer, Action, on } from '@ngrx/store';
-import { Loesungszettel, LoesungszettelWithID, LoesungszettelMap } from '../loesungszettel.model';
+import { createReducer, Action, on, State } from '@ngrx/store';
+import { Loesungszettel, LoesungszettelWithID, LoesungszettelMap, Loesungszettelzeile } from '../loesungszettel.model';
 import * as LoesungszettelActions from './loesungszettel.actions';
 
 
@@ -44,6 +44,29 @@ const loesungszettelReducer = createReducer(initialLoesungszettelState,
 	on(LoesungszettelActions.loesungszettelSelected, (state, action) => {
 
 		return { ...state, loading: false, selectedLoesungszettel: action.loesungszettel };
+	}),
+
+	on(LoesungszettelActions.loesungszettelChanged, (state, action) => {
+
+		const zettel: Loesungszettel = state.selectedLoesungszettel;
+
+		const zeile: Loesungszettelzeile = action.zeile;
+
+		const neueZeilen: Loesungszettelzeile[] = [];
+
+		for(let i = 0; i < zettel.zeilen.length; i++) {
+			const z: Loesungszettelzeile = zettel.zeilen[i];
+			if (z.index !== zeile.index) {
+				neueZeilen.push(z);
+			} else {
+				neueZeilen.push(zeile);
+			}
+		}
+
+		const neuerLoesungszettel = {...zettel, zeilen: neueZeilen};
+
+		return { ...state, selectedLoesungszettel: neuerLoesungszettel };
+
 	}),
 
 	on(LoesungszettelActions.resetModule, (_state, _action) => {
