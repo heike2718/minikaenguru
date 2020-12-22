@@ -35,6 +35,38 @@
   color: black
 }
 
+.square-text {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 200;
+  font-size: 2rem;
+}
+
 .square-box:hover {
-	background: #aaaaaf;
+  background: #aaaaaf;
+}
+
+@media screen and (max-width: 668px) {
+
+  .square-box {
+    width: 100%;
+  }
+
+  .square-text {
+    font-size: 1rem;
+  }
+}
+
+
+@media screen and (max-width: 768px) {
+
+  .square-text {
+    font-weight: 400;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+
+  .square-box {
+    width: 100%;
+  }
 }

@@ -1,11 +1,14 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
 import { LoesungszettelFacade } from '../loesungszettel.facade';
 import { KinderFacade } from '../../kinder/kinder.facade';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { Subscription } from 'rxjs';
-import { Kind, kindToString } from '@minikaenguru-ws/common-components';
-import { Loesungszettel } from '../loesungszettel.model';
+import { Kind, kindToString, TeilnahmeIdentifierAktuellerWettbewerb } from '@minikaenguru-ws/common-components';
+import { Loesungszettel, loesungszettelIsLeer } from '../loesungszettel.model';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { MessageService } from '@minikaenguru-ws/common-messages';
+import { User } from '@minikaenguru-ws/common-auth';
 
 @Component({
 	selector: 'mkv-loesungszettel-editor',
@@ -14,20 +17,36 @@ import { Loesungszettel } from '../loesungszettel.model';
 })
 export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 
+	@ViewChild('dialogContent')
+	dialogContent: TemplateRef<HTMLElement>;
+
 	devMode = environment.envName === 'DEV'
 
 	titel: string;
 
+	nameKind: string;
+
 	loesungszetteleingaben: string;
+
+	saveInProgress = false;
 
 	private selectedKindSubscription: Subscription;
 
 	private loesungszettelSubscription: Subscription;
 
+	private teilnahmeIdentifierSubscription: Subscription;
+
+	private loesungszettel: Loesungszettel;
+
 	private kind: Kind;
+
+	private teilnahmeIdentifier: TeilnahmeIdentifierAktuellerWettbewerb;
+
 
 	constructor(public loesungszettelFacade: LoesungszettelFacade,
 		private kinderFacade: KinderFacade,
+		private modalService: NgbModal,
+		private messageService: MessageService,
 		private router: Router) { }
 
 	ngOnInit(): void {
@@ -37,7 +56,8 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 				this.kind = kind;
 
 				if (kind) {
-					this.titel = kindToString(this.kind) + ': Antworten erfassen oder ändern';
+					this.nameKind = kindToString(this.kind);
+					this.titel = this.nameKind + ': Antworten erfassen oder ändern';
 				} else {
 					this.titel = 'kein Kind ausgewählt';
 				}
@@ -46,9 +66,16 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 
 		this.loesungszettelSubscription = this.loesungszettelFacade.selectedLoesungszettel$.subscribe(
 
-			zettel => this.loesungszetteleingaben = this.initEingaben(zettel)
+			zettel => {
+				this.loesungszetteleingaben = this.initEingaben(zettel);
+				this.loesungszettel = zettel;
+			}
 
 		);
+		this.teilnahmeIdentifierSubscription = this.kinderFacade.teilnahmeIdentifier$.subscribe(
+			ti => this.teilnahmeIdentifier = ti
+		);
+
 	}
 
 	ngOnDestroy(): void {
@@ -60,7 +87,66 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 		if (this.loesungszettelSubscription) {
 			this.loesungszettelSubscription.unsubscribe();
 		}
+
+		if (this.teilnahmeIdentifierSubscription) {
+			this.teilnahmeIdentifierSubscription.unsubscribe();
+		}
 	}
+
+	onSubmit(): void {
+
+		this.saveInProgress = true;
+
+		if (loesungszettelIsLeer(this.loesungszettel)) {
+			this.openWarndialog(this.dialogContent);
+		}
+	}
+
+	onCancel(): void {
+
+		this.messageService.clear();
+		this.loesungszettelFacade.cancelEditLoesungszettel();
+
+		if (this.teilnahmeIdentifier && this.teilnahmeIdentifier.teilnahmenummer) {
+			this.router.navigateByUrl('/kinder/' + this.teilnahmeIdentifier.teilnahmenummer);
+		} else {
+
+			const item = localStorage.getItem(environment.storageKeyPrefix + 'user');
+			if (item) {
+				const user: User = JSON.parse(item);
+
+				switch (user.rolle) {
+					case 'LEHRER':
+						this.router.navigateByUrl('/lehrer/dashboard');
+						break;
+					case 'PRIVAT':
+						this.router.navigateByUrl('/privat/dashboard');
+						break;
+					default: this.router.navigateByUrl('/landing');
+				}
+			}
+		}
+	}
+
+	private forceSave(): void {
+
+		this.saveInProgress = false;
+
+	}
+
+	private openWarndialog(content: TemplateRef<HTMLElement>) {
+
+		this.saveInProgress = false;
+		this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+
+			if (result === 'ja') {
+				this.forceSave();
+			}
+
+		});
+	}
+
+
 
 	private initEingaben(loesungszettel: Loesungszettel): string {
 
@@ -79,5 +165,7 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 
 		return eingaben;
 	}
+
+
 
 }

@@ -58,4 +58,20 @@ export class LoesungszettelrowComponent implements OnInit {
 		}
 
 	}
+
+	calculateBackgroundColor(): string {
+
+		if (this.zeile.name.startsWith('A')) {
+			return '#def7d4';
+		}
+		if (this.zeile.name.startsWith('B')) {
+			return '#ffe0b3';
+		}
+		if (this.zeile.name.startsWith('C')) {
+			return '#ffcce6';// return '#ffcccc';
+		}
+
+		return 'white';
+
+	}
 }

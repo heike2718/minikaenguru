@@ -1,4 +1,4 @@
-<div class="mkv-container mt-1">
+<div class="mkv-container mt-1 loesungszettel">
 	<h3>{{titel}}</h3>
 	<p *ngIf="devMode">loesungszettel-editor.component.ts</p>
 	<p *ngIf="devMode">{{loesungszetteleingaben}}</p>
@@ -6,7 +6,7 @@
 	<div *ngIf="devMode && loesungszettelFacade.selectedLoesungszettel$ | async as loesungszettel">
 		{{loesungszettel.uuid}}</div>
 
-	<div *ngIf="loesungszettelFacade.selectedLoesungszettel$ | async as loesungszettel">
+	<div *ngIf="loesungszettelFacade.selectedLoesungszettel$ | async as loesungszettel" class="tabelle">
 
 		<div *ngFor="let zeile of loesungszettel.zeilen">
 			<mkv-loesungszettelrow [zeile]="zeile"></mkv-loesungszettelrow>
@@ -14,5 +14,31 @@
 
 	</div>
 
-	<p *ngIf="devMode">{{loesungszetteleingaben}}</p>
+	<p>Lösungscode: {{loesungszetteleingaben}}</p>
+
+	<div class="btn-group d-flex" role="group">
+		<button class="btn btn-primary w-100 ml-1" [disabled]="saveInProgress"
+			(click)="onSubmit()"><i class="fa fa-floppy-o" aria-hidden="true"></i>
+			speichern</button>
+
+		<button class="btn btn-primary w-100 ml-1" (click)="onCancel()"><i class="fa fa-arrow-left"
+				aria-hidden="true"></i>zurück</button>
+	</div>
+
 </div>
+
+<ng-template #dialogContent let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">Leerer Lösungszettel?</h4>
+		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<p>Ist es richtig, dass {{nameKind}} einen leeren Lösungszettel abgegeben hat?</p>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('nein')">nein</button>
+		<button type="button" class="btn btn-outline-secondary" (click)="modal.close('ja')">ja</button>
+	</div>
+</ng-template>

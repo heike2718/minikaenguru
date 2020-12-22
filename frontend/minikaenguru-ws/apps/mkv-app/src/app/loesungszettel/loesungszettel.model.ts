@@ -183,6 +183,32 @@ export function createLoseungszettelzeilen(klassenstufenart: Klassenstufenart): 
 	}
 
 	return result;
+};
+
+export function loesungszettelzeileNichtLeer(zeile: Loesungszettelzeile): boolean {
+
+	if (!zeile) {
+		return false;
+	}
+
+	return zeile.eingabe !== 'N';
+
+}
+
+export function loesungszettelIsLeer(loesungszettel: Loesungszettel): boolean {
+
+	if (!loesungszettel) {
+		return true;
+	}
+
+	for (let i = 0; i < loesungszettel.zeilen.length; i++) {
+
+		if (loesungszettelzeileNichtLeer(loesungszettel.zeilen[i])) {
+			return false;
+		}
+	}
+
+	return true;
 }
 
 

@@ -77,6 +77,10 @@ export class LoesungszettelFacade {
 		this.store.dispatch(LoesungszettelActions.loesungszettelSelected({ loesungszettel: loesungszettel }));
 	}
 
+	public cancelEditLoesungszettel(): void {
+
+	}
+
 	public resetState(): void {
 		this.store.dispatch(LoesungszettelActions.resetModule());
 	}
