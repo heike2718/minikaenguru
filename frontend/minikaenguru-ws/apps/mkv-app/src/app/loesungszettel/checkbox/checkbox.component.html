@@ -1,5 +1,5 @@
-<div class="square-box">
+<div class="square-box" (click)="onClickEvent($event)">
 	<div class="square-content">
-		<div><span><i class="fa fa-times fa-2x" aria-hidden="true"></i></span></div>
+		<div><span><i *ngIf="checked" class="fa fa-times fa-2x" aria-hidden="true"></i></span></div>
 	</div>
 </div>

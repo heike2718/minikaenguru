@@ -3,7 +3,8 @@
   width: 50%;
   overflow: hidden;
   background: white;
-  border: 1px solid black;
+  border: 2px solid black;
+  border-radius: 4px;
 }
 
 .square-box:before {

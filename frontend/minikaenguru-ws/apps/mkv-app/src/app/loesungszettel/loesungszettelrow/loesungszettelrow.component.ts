@@ -27,9 +27,11 @@ export class LoesungszettelrowComponent implements OnInit {
 
 	onCheckboxClicked($event: any): void {
 
-		const value = $event.value as CheckboxData;
+		const value = $event as CheckboxData;
 
 		if (this.zeile.index === value.rowIndex) {
+
+
 
 			if (value.checked) {
 
@@ -44,14 +46,16 @@ export class LoesungszettelrowComponent implements OnInit {
 					default: eingabe = 'N'; break;
 				}
 
-				const loesungszettelzeile = { ...this.zeile, eingabe: eingabe };
+				const loesungszettelzeile:Loesungszettelzeile = { ...this.zeile, eingabe: eingabe };
+				this.loesungszettelFacade.loesungszettelChanged(loesungszettelzeile);
 
+			} else {
+				const loesungszettelzeile: Loesungszettelzeile = { ...this.zeile, eingabe: 'N' };
 				this.loesungszettelFacade.loesungszettelChanged(loesungszettelzeile);
 			}
-		}
-	}
 
-	calculateBackgroundColor(): string {
-		return '#ffffff';
+
+		}
+
 	}
 }

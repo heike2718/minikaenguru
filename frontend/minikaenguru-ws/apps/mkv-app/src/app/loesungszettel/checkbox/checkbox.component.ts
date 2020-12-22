@@ -91,7 +91,11 @@ export class CheckboxComponent implements OnInit, OnDestroy {
 	onClickEvent(_$event): void {
 
 		this.checked = !this.checked;
-		this.checkboxClicked.emit({rowIndex: this.rowIndex, columnIndex: this.columnIndex, checked: this.checked});
+
+		const checkboxData: CheckboxData = {
+			rowIndex: this.rowIndex, columnIndex: this.columnIndex, checked: this.checked
+		};
+		this.checkboxClicked.emit(checkboxData);
 	}
 
 }

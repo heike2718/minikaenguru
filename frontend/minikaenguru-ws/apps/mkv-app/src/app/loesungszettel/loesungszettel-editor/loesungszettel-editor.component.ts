@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { Subscription } from 'rxjs';
 import { Kind, kindToString } from '@minikaenguru-ws/common-components';
+import { Loesungszettel } from '../loesungszettel.model';
 
 @Component({
 	selector: 'mkv-loesungszettel-editor',
@@ -17,7 +18,11 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 
 	titel: string;
 
+	loesungszetteleingaben: string;
+
 	private selectedKindSubscription: Subscription;
+
+	private loesungszettelSubscription: Subscription;
 
 	private kind: Kind;
 
@@ -37,7 +42,13 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 					this.titel = 'kein Kind ausgewählt';
 				}
 			}
-		)
+		);
+
+		this.loesungszettelSubscription = this.loesungszettelFacade.selectedLoesungszettel$.subscribe(
+
+			zettel => this.loesungszetteleingaben = this.initEingaben(zettel)
+
+		);
 	}
 
 	ngOnDestroy(): void {
@@ -45,6 +56,28 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 		if (this.selectedKindSubscription) {
 			this.selectedKindSubscription.unsubscribe();
 		}
+
+		if (this.loesungszettelSubscription) {
+			this.loesungszettelSubscription.unsubscribe();
+		}
+	}
+
+	private initEingaben(loesungszettel: Loesungszettel): string {
+
+		let eingaben = '';
+
+		if (loesungszettel) {
+
+
+			for (let i = 0; i < loesungszettel.zeilen.length; i++) {
+				eingaben += loesungszettel.zeilen[i].eingabe;
+			}
+
+
+		}
+
+
+		return eingaben;
 	}
 
 }
