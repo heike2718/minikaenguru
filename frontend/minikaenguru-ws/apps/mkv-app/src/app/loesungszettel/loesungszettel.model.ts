@@ -1,4 +1,4 @@
-import { Klassenstufe, Sprache, Klassenstufenart } from '@minikaenguru-ws/common-components';
+import { Klassenstufe, Sprache, Klassenstufenart, LoesungszettelPunkte } from '@minikaenguru-ws/common-components';
 
 export type ZulaessigeEingabe = 'A' | 'B' | 'C' | 'D' | 'E' | 'N';
 
@@ -21,7 +21,6 @@ export interface Loesungszettelzeile {
 	readonly eingabe: ZulaessigeEingabe;
 };
 
-
 /** mapped LoesungszettelAPIModel */
 export interface Loesungszettel {
 	readonly uuid: string;
@@ -34,6 +33,11 @@ export interface LoesungszettelWithID {
 	readonly uuid: string;
 	readonly loesungszettel: Loesungszettel;
 };
+
+export interface LoesungszettelResponseModel  {
+	readonly loesungszettel: Loesungszettel;
+	readonly punkte: LoesungszettelPunkte;
+}
 
 // verpackt häufig erforderliche Operationen auf einem LoesungszettelWithID[] etwas handhabbarer.
 export class LoesungszettelMap {

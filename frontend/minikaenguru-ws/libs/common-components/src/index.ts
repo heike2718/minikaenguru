@@ -20,6 +20,7 @@ export {
 	Sprache,
 	Kind,
 	KindEditorModel,
+	LoesungszettelPunkte,
 	Duplikatwarnung,
 	KindRequestData,
 	KEINE_UUID,

@@ -16,9 +16,11 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.LoesungszettelpunkteAPIModel;
 import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelChanged;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRohdaten;
+import de.egladil.web.mk_gateway.domain.statistik.functions.PunkteStringMapper;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
@@ -134,6 +136,33 @@ public class LoesungszettelService {
 
 			loesungszettelChangedEvent.fire(loesungszettelChanged);
 		}
+	}
+
+	public Optional<LoesungszettelpunkteAPIModel> findPunkteWithID(final Identifier loesungszettelID) {
+
+		if (loesungszettelID == null) {
+
+			return Optional.empty();
+		}
+
+		Optional<PersistenterLoesungszettel> optLoesungszettel = this.loesungszettelRepository.findByIdentifier(loesungszettelID);
+
+		if (optLoesungszettel.isEmpty()) {
+
+			return Optional.empty();
+		}
+
+		PersistenterLoesungszettel persistenterLoesungszettel = optLoesungszettel.get();
+
+		String punkte = new PunkteStringMapper().apply(persistenterLoesungszettel.getPunkte());
+
+		LoesungszettelpunkteAPIModel result = new LoesungszettelpunkteAPIModel()
+			.withLaengeKaengurusprung(persistenterLoesungszettel.getKaengurusprung())
+			.withLoesungszettelId(persistenterLoesungszettel.getUuid())
+			.withPunkte(punkte);
+
+		return Optional.of(result);
+
 	}
 
 }

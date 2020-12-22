@@ -47,6 +47,12 @@ export interface Sprache {
 	readonly label: string;
 };
 
+export interface LoesungszettelPunkte {
+	readonly loesungszettelId: string;
+	readonly punkte: string;
+	readonly laengeKaengurusprung: number
+};
+
 export interface Kind {
 	readonly uuid: string;
 	readonly vorname: string;
@@ -54,7 +60,7 @@ export interface Kind {
 	readonly zusatz?: string;
 	readonly klassenstufe: Klassenstufe;
 	readonly sprache: Sprache;
-	readonly loesungszettelId?: string;
+	readonly loesungszettelPunkte?: LoesungszettelPunkte;
 	readonly klasseId?: string;
 };
 

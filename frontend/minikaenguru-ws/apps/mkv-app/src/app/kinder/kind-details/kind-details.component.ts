@@ -111,7 +111,7 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 
 		this.kinderFacade.selectKind(this.kind);
 
-		if (this.kind.loesungszettelId) {
+		if (this.kind.loesungszettelPunkte) {
 			this.loesungszettelFacade.loadLoesungszettel(this.kind);
 		} else {
 			this.loesungszettelFacade.createNewLoesungszettel(this.kind);

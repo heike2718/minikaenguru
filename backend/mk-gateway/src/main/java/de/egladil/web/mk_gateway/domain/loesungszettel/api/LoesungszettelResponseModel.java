@@ -4,27 +4,18 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.loesungszettel.api;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
+import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.LoesungszettelpunkteAPIModel;
 
 /**
- * LoesungszettelAPIModel
+ * LoesungszettelResponseModel
  */
-public class LoesungszettelAPIModel {
+public class LoesungszettelResponseModel {
 
 	@JsonProperty
-	private String uuid;
+	private LoesungszettelAPIModel loesungszettel;
 
 	@JsonProperty
-	private String kindID;
-
-	@JsonProperty
-	private Klassenstufe klassenstufe;
-
-	@JsonProperty
-	private List<LoesungszettelZeileAPIModel> zeilen;
-
+	private LoesungszettelpunkteAPIModel punkte;
 }

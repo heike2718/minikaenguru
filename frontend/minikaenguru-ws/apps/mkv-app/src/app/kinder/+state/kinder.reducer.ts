@@ -81,7 +81,7 @@ const kinderReducer = createReducer(initialKinderState,
 			klassenstufe: state.editorVorbelegung.klassenstufe,
 			sprache: state.editorVorbelegung.sprache,
 			vorname: '',
-			loesungszettelId: undefined,
+			loesungszettelPunkte: undefined,
 			nachname: undefined,
 			zusatz: undefined
 		};
@@ -118,6 +118,22 @@ const kinderReducer = createReducer(initialKinderState,
 			selectedKind: action.kind
 		 };
 	}),
+
+	on(KinderActions.kindLoesungszettelChanged, (state, action) => {
+
+		const neuesKind = {...action.kind, loesungszettelPunkte: action.punkte};
+		const neueMap = new KinderMap(state.kinderMap).merge(neuesKind);
+
+		const selectedKind = state.selectedKind && state.selectedKind.uuid === neuesKind.uuid ? neuesKind : state.selectedKind;
+
+		return { ...state,
+			kinderMap: neueMap,
+			loading: false,
+			duplikatwarnung: undefined,
+			selectedKind: selectedKind
+		 };
+	}),
+
 
 	on(KinderActions.duplikatGeprueft, (state, action) => {
 

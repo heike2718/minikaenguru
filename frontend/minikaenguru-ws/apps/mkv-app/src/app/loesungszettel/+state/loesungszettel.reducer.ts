@@ -69,6 +69,18 @@ const loesungszettelReducer = createReducer(initialLoesungszettelState,
 
 	}),
 
+	on(LoesungszettelActions.loesungszettelSaved, (state, action) => {
+
+		const neueMap = new LoesungszettelMap(state.loesungszettelMap).merge(action.loesungszettel);
+		return {...state, loading: false, selectedLoesungszettel: action.loesungszettel, loesungszettelMap: neueMap};
+
+	}),
+
+	on(LoesungszettelActions.editLoesungszettelCancelled, (state, _action) => {
+
+		return {...state, loading: false, selectedLoesungszettel: undefined};
+	}),
+
 	on(LoesungszettelActions.resetModule, (_state, _action) => {
 		return initialLoesungszettelState;
 	})

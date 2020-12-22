@@ -99,6 +99,8 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 
 		if (loesungszettelIsLeer(this.loesungszettel)) {
 			this.openWarndialog(this.dialogContent);
+		} else {
+			this.forceSave();
 		}
 	}
 
@@ -131,6 +133,7 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 	private forceSave(): void {
 
 		this.saveInProgress = false;
+		this.loesungszettelFacade.saveLoesungszettel(this.kind, this.loesungszettel);
 
 	}
 

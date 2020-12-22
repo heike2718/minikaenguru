@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
-import { Loesungszettel, Loesungszettelzeile, createLoseungszettelzeilen, LoesungszettelMap } from './loesungszettel.model';
+import { Loesungszettel, Loesungszettelzeile, createLoseungszettelzeilen, LoesungszettelMap, LoesungszettelResponseModel } from './loesungszettel.model';
 import { Klassenstufe, Kind } from '@minikaenguru-ws/common-components';
 import * as LoesungszettelActions from './+state/loesungszettel.actions';
 import * as LoesungszettelSelectors from './+state/loesungszettel.selectors';
@@ -10,6 +10,7 @@ import { LoesungszettelService } from './loesungszettel.service';
 import { Subscription, Observable } from 'rxjs';
 import { MessageService } from '@minikaenguru-ws/common-messages';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
+import * as KinderActions from '../kinder/+state/kinder.actions';
 
 @Injectable({
 	providedIn: 'root'
@@ -52,25 +53,51 @@ export class LoesungszettelFacade {
 
 	public loadLoesungszettel(kind: Kind): void {
 
-		if (kind.loesungszettelId) {
-			if (!this.loesungszettelMap.has(kind.loesungszettelId)) {
+		if (kind.loesungszettelPunkte) {
+			if (!this.loesungszettelMap.has(kind.loesungszettelPunkte.loesungszettelId)) {
 
 				this.store.dispatch(LoesungszettelActions.startLoading());
 
 				this.loesungszettelService.loadLoesungszettelWithID(kind).subscribe(
 
-					zettel => {
-						this.store.dispatch(LoesungszettelActions.loesungszettelLoaded({ loesungszettel: zettel }));
-						this.selectLoesungszettel(zettel);
+					zettelResponse => {
+						this.store.dispatch(LoesungszettelActions.loesungszettelLoaded({ loesungszettel: zettelResponse.loesungszettel }));
+						this.selectLoesungszettel(zettelResponse.loesungszettel);
 					},
 					(error => {
 						this.store.dispatch(LoesungszettelActions.finishedWithError());
 						this.errorHandler.handleError(error);
 					})
 
-				)
+				);
 			}
 		}
+	}
+
+	public saveLoesungszettel(kind: Kind, loesungszettel: Loesungszettel): void {
+
+		this.store.dispatch(LoesungszettelActions.startLoading());
+
+		this.loesungszettelService.saveLoesungszettel(loesungszettel).subscribe(
+
+			responsePayload => {
+
+				const loesungszettelResponse: LoesungszettelResponseModel = responsePayload.data;
+				this.store.dispatch(KinderActions.kindLoesungszettelChanged({kind: kind, punkte: loesungszettelResponse.punkte}));
+
+
+				this.store.dispatch(LoesungszettelActions.loesungszettelSaved({ loesungszettel: loesungszettelResponse.loesungszettel }));
+				this.selectLoesungszettel(loesungszettelResponse.loesungszettel);
+
+				this.messageService.showMessage(responsePayload.message);
+			},
+			(error => {
+				this.store.dispatch(LoesungszettelActions.finishedWithError());
+				this.errorHandler.handleError(error);
+			})
+
+		);
+
 	}
 
 	public selectLoesungszettel(loesungszettel: Loesungszettel): void {
@@ -78,7 +105,7 @@ export class LoesungszettelFacade {
 	}
 
 	public cancelEditLoesungszettel(): void {
-
+		this.store.dispatch(LoesungszettelActions.editLoesungszettelCancelled());
 	}
 
 	public resetState(): void {
@@ -87,9 +114,7 @@ export class LoesungszettelFacade {
 
 	public loesungszettelChanged(zeile: Loesungszettelzeile): void {
 
-		this.store.dispatch(LoesungszettelActions.loesungszettelChanged({zeile: zeile}));
+		this.store.dispatch(LoesungszettelActions.loesungszettelChanged({ zeile: zeile }));
 	}
-
-
-
 }
+

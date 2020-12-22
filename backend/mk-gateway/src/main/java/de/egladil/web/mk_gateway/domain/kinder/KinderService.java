@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.LoesungszettelpunkteAPIModel;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
@@ -281,7 +282,7 @@ public class KinderService {
 
 		Kind gespeichertesKind = kinderRepository.addKind(kind);
 
-		KindAPIModel result = KindAPIModel.createFromKind(gespeichertesKind);
+		KindAPIModel result = KindAPIModel.createFromKind(gespeichertesKind, Optional.empty());
 
 		kindCreated = (KindCreated) new KindCreated(veranstalterUuid)
 			.withKindID(result.uuid())
@@ -352,7 +353,10 @@ public class KinderService {
 
 		boolean changed = this.kinderRepository.changeKind(geaendertesKind);
 
-		KindAPIModel result = KindAPIModel.createFromKind(geaendertesKind);
+		Optional<LoesungszettelpunkteAPIModel> optPunkte = this.loesungszettelService
+			.findPunkteWithID(geaendertesKind.loesungszettelID());
+
+		KindAPIModel result = KindAPIModel.createFromKind(geaendertesKind, optPunkte);
 
 		if (changed) {
 
@@ -404,7 +408,7 @@ public class KinderService {
 
 		kindLoeschenWithoutAuthorizationCheck(kind, veranstalterUuid);
 
-		return KindAPIModel.createFromKind(kind);
+		return KindAPIModel.createFromKind(kind, Optional.empty());
 	}
 
 	/**
@@ -469,7 +473,13 @@ public class KinderService {
 			.withTeilnahme(TeilnahmeIdentifierAktuellerWettbewerb.createFromTeilnahme(aktuelleTeilnahme));
 		final List<KindAPIModel> result = new ArrayList<>();
 
-		kinder.forEach(kind -> result.add(KindAPIModel.createFromKind(kind)));
+		kinder.forEach(kind -> {
+
+			Optional<LoesungszettelpunkteAPIModel> optPunkte = loesungszettelService.findPunkteWithID(kind.loesungszettelID());
+
+			result.add(KindAPIModel.createFromKind(kind, optPunkte));
+
+		});
 
 		return result;
 	}
