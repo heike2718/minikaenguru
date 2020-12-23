@@ -156,4 +156,9 @@ public class Loesungszettel {
 		return "Loesungszettel [identifier=" + identifier + ", klassenstufe=" + klassenstufe + ", teilnahmeIdentifier="
 			+ teilnahmeIdentifier + ", punkte=" + this.punkte + "]";
 	}
+
+	public Identifier getTheTeilnahmenummer() {
+
+		return new Identifier(this.teilnahmeIdentifier.teilnahmenummer());
+	}
 }

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
 import { Loesungszettel, Loesungszettelzeile, createLoseungszettelzeilen, LoesungszettelMap, LoesungszettelResponseModel } from './loesungszettel.model';
-import { Klassenstufe, Kind } from '@minikaenguru-ws/common-components';
+import { Klassenstufe, Kind, LoesungszettelPunkte } from '@minikaenguru-ws/common-components';
 import * as LoesungszettelActions from './+state/loesungszettel.actions';
 import * as LoesungszettelSelectors from './+state/loesungszettel.selectors';
 import { LoesungszettelService } from './loesungszettel.service';
@@ -47,22 +47,22 @@ export class LoesungszettelFacade {
 			zeilen: zeilen
 		};
 
-		this.store.dispatch(LoesungszettelActions.createNewLoesungsettel({ loesungszettel: loesungszettel }));
+		this.store.dispatch(LoesungszettelActions.newLoesungszettelCreated({ loesungszettel: loesungszettel }));
 		this.selectLoesungszettel(loesungszettel);
 	}
 
 	public loadLoesungszettel(kind: Kind): void {
 
-		if (kind.loesungszettelPunkte) {
-			if (!this.loesungszettelMap.has(kind.loesungszettelPunkte.loesungszettelId)) {
+		if (kind.punkte) {
+			if (!this.loesungszettelMap.has(kind.punkte.loesungszettelId)) {
 
 				this.store.dispatch(LoesungszettelActions.startLoading());
 
 				this.loesungszettelService.loadLoesungszettelWithID(kind).subscribe(
 
-					zettelResponse => {
-						this.store.dispatch(LoesungszettelActions.loesungszettelLoaded({ loesungszettel: zettelResponse.loesungszettel }));
-						this.selectLoesungszettel(zettelResponse.loesungszettel);
+					zettel => {
+						this.store.dispatch(LoesungszettelActions.loesungszettelLoaded({ loesungszettel: zettel }));
+						this.selectLoesungszettel(zettel);
 					},
 					(error => {
 						this.store.dispatch(LoesungszettelActions.finishedWithError());

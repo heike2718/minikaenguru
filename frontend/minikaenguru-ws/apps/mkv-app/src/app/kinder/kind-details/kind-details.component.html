@@ -1,13 +1,13 @@
 <div class="card mt-2">
 	<div class="card-body">
-	<div class="card-title">{{titel}} <span *ngIf="kind.loesungszettelPunkte" class="badge badge-success">Punkte: {{kind.loesungszettelPunkte.punkte}}</span></div>
+	<div class="card-title">{{titel}} <span *ngIf="kind.punkte" class="badge badge-success">Punkte: {{kind.punkte.punkte}}</span></div>
 		<div class="card-text">
 			<div class="row">
 				<div class="card-subtitle text-muted col-sm-12 col-md-9">{{kind.klassenstufe.label}}</div>
 				<div class="card-subtitle text-muted col-sm-12 col-md-9">Sprache: {{kind.sprache.label}}</div>
 
-				<div *ngIf="kind.loesungszettelPunkte" class="card-subtitle text-muted col-sm-12 col-md-9">Länge Kängurusprung:
-					{{kind.loesungszettelPunkte.laengeKaengurusprung}}</div>
+				<div *ngIf="kind.punkte" class="card-subtitle text-muted col-sm-12 col-md-9">Länge Kängurusprung:
+					{{kind.punkte.laengeKaengurusprung}}</div>
 			</div>
 		</div>
 		<div class="btn-group d-flex" role="group">

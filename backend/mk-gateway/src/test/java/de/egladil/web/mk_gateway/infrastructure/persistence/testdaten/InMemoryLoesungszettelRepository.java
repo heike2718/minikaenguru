@@ -77,7 +77,7 @@ public class InMemoryLoesungszettelRepository implements LoesungszettelRepositor
 	}
 
 	@Override
-	public Optional<PersistenterLoesungszettel> findByIdentifier(final Identifier identifier) {
+	public Optional<PersistenterLoesungszettel> findPersistentenLoesungszettel(final Identifier identifier) {
 
 		Loesungszettel loesungszettel = alleLoesungszettel.get(identifier);
 
@@ -90,7 +90,20 @@ public class InMemoryLoesungszettelRepository implements LoesungszettelRepositor
 	}
 
 	@Override
-	public Identifier addLosungszettel(final Loesungszettel loesungszettel) {
+	public Optional<Loesungszettel> ofID(final Identifier identifier) {
+
+		Loesungszettel loesungszettel = alleLoesungszettel.get(identifier);
+
+		if (loesungszettel == null) {
+
+			return Optional.empty();
+		}
+
+		return Optional.of(loesungszettel);
+	}
+
+	@Override
+	public Identifier addLoesungszettel(final Loesungszettel loesungszettel) {
 
 		Identifier identifier = new Identifier(UUID.randomUUID().toString());
 

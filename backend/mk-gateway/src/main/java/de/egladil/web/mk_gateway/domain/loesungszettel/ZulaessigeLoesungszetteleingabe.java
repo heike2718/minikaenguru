@@ -16,4 +16,29 @@ public enum ZulaessigeLoesungszetteleingabe {
 	E,
 	N;
 
+	public static ZulaessigeLoesungszetteleingabe valueOfChar(final char c) {
+
+		switch (c) {
+
+		case 'A':
+			return A;
+
+		case 'B':
+			return B;
+
+		case 'C':
+			return C;
+
+		case 'D':
+			return D;
+
+		case 'E':
+			return E;
+
+		default:
+			return N;
+		}
+
+	}
+
 }

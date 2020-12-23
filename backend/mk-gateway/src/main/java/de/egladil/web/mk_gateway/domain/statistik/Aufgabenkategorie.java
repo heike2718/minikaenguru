@@ -14,9 +14,51 @@ import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
  */
 public enum Aufgabenkategorie {
 
-	LEICHT("A"),
-	MITTEL("B"),
-	SCHWER("C");
+	LEICHT("A") {
+
+		@Override
+		public int getPenalty() {
+
+			return 75;
+		}
+
+		@Override
+		public int getPunkte() {
+
+			return 300;
+		}
+
+	},
+	MITTEL("B") {
+
+		@Override
+		public int getPenalty() {
+
+			return 100;
+		}
+
+		@Override
+		public int getPunkte() {
+
+			return 400;
+		}
+
+	},
+	SCHWER("C") {
+
+		@Override
+		public int getPenalty() {
+
+			return 125;
+		}
+
+		@Override
+		public int getPunkte() {
+
+			return 500;
+		}
+
+	};
 
 	private final String nummerPrefix;
 
@@ -24,6 +66,10 @@ public enum Aufgabenkategorie {
 
 		this.nummerPrefix = nummerPrefix;
 	}
+
+	public abstract int getPenalty();
+
+	public abstract int getPunkte();
 
 	public static Aufgabenkategorie valueOfNummer(final String nummer) {
 

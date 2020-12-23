@@ -37,6 +37,7 @@ import de.egladil.web.mk_gateway.domain.kinder.api.KindRequestData;
 import de.egladil.web.mk_gateway.domain.kinder.events.KindChanged;
 import de.egladil.web.mk_gateway.domain.kinder.events.KindCreated;
 import de.egladil.web.mk_gateway.domain.kinder.events.KindDeleted;
+import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
@@ -132,7 +133,8 @@ public class KinderService {
 		WettbewerbService wettbewerbService = WettbewerbService
 			.createForTest(WettbewerbHibernateRepository.createForIntegrationTest(em));
 
-		LoesungszettelService loesungszettelService = LoesungszettelService.createForTest(authService,
+		LoesungszettelService loesungszettelService = LoesungszettelService.createForTest(authService, wettbewerbService,
+			kinderRepository,
 			LoesungszettelHibernateRepository.createForIntegrationTest(em));
 
 		KlassenRepository klassenRepository = KlassenHibernateRepository.createForIntegrationTest(em);
@@ -305,7 +307,7 @@ public class KinderService {
 	@Transactional
 	public KindAPIModel kindAendern(final KindRequestData daten, final String veranstalterUuid) {
 
-		Optional<Kind> optKind = kinderRepository.withIdentifier(new Identifier(daten.uuid()));
+		Optional<Kind> optKind = kinderRepository.ofId(new Identifier(daten.uuid()));
 
 		if (optKind.isEmpty()) {
 
@@ -393,7 +395,7 @@ public class KinderService {
 	@Transactional
 	public KindAPIModel kindLoeschen(final String uuid, final String veranstalterUuid) {
 
-		Optional<Kind> optKind = kinderRepository.withIdentifier(new Identifier(uuid));
+		Optional<Kind> optKind = kinderRepository.ofId(new Identifier(uuid));
 
 		if (optKind.isEmpty()) {
 

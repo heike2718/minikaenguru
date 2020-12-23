@@ -81,7 +81,7 @@ const kinderReducer = createReducer(initialKinderState,
 			klassenstufe: state.editorVorbelegung.klassenstufe,
 			sprache: state.editorVorbelegung.sprache,
 			vorname: '',
-			loesungszettelPunkte: undefined,
+			punkte: undefined,
 			nachname: undefined,
 			zusatz: undefined
 		};

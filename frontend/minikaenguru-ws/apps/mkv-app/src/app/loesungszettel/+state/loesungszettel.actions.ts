@@ -1,8 +1,9 @@
 import { createAction, props } from '@ngrx/store';
 import { Loesungszettel, Loesungszettelzeile, LoesungszettelResponseModel } from '../loesungszettel.model';
+import { LoesungszettelPunkte } from '@minikaenguru-ws/common-components';
 
 
-export const createNewLoesungsettel = createAction(
+export const newLoesungszettelCreated = createAction(
 	'[LoesungszettelFacade] createNewLoesungszettel',
 	props<{loesungszettel: Loesungszettel}>()
 );

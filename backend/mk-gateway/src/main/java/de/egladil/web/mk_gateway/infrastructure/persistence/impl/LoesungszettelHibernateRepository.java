@@ -99,11 +99,26 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 	}
 
 	@Override
-	public Optional<PersistenterLoesungszettel> findByIdentifier(final Identifier identifier) {
+	public Optional<PersistenterLoesungszettel> findPersistentenLoesungszettel(final Identifier identifier) {
 
 		PersistenterLoesungszettel result = em.find(PersistenterLoesungszettel.class, identifier.identifier());
 
 		return result == null ? Optional.empty() : Optional.of(result);
+	}
+
+	@Override
+	public Optional<Loesungszettel> ofID(final Identifier identifier) {
+
+		Optional<PersistenterLoesungszettel> optPersistenter = this.findPersistentenLoesungszettel(identifier);
+
+		if (optPersistenter.isEmpty()) {
+
+			return Optional.empty();
+		}
+
+		Loesungszettel result = this.mapFromDB(optPersistenter.get());
+
+		return Optional.of(result);
 	}
 
 	Loesungszettel mapFromDB(final PersistenterLoesungszettel persistenter) {
@@ -163,7 +178,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 	}
 
 	@Override
-	public Identifier addLosungszettel(final Loesungszettel loesungszettel) {
+	public Identifier addLoesungszettel(final Loesungszettel loesungszettel) {
 
 		if (loesungszettel.identifier() != null) {
 
@@ -204,7 +219,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 	@Override
 	public boolean removeLoesungszettel(final Identifier identifier, final String veranstalterUuid) {
 
-		Optional<PersistenterLoesungszettel> optExisting = this.findByIdentifier(identifier);
+		Optional<PersistenterLoesungszettel> optExisting = this.findPersistentenLoesungszettel(identifier);
 
 		if (optExisting.isEmpty()) {
 

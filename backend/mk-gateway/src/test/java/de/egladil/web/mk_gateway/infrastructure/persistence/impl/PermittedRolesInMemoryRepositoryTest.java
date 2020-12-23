@@ -358,6 +358,55 @@ public class PermittedRolesInMemoryRepositoryTest {
 			assertEquals(1, rollen.size());
 			assertTrue(rollen.contains(Rolle.LEHRER));
 		}
+
+		@Test
+		void should_permittedRollen_loesungszettel_beOk() {
+
+			{
+
+				// Act
+				List<Rolle> rollen = repository.permittedRollen("/veranstalter/loesungszettel/abcdef-012345", HttpMethod.GET);
+
+				// Assert
+				assertEquals(2, rollen.size());
+				assertTrue(rollen.contains(Rolle.LEHRER));
+				assertTrue(rollen.contains(Rolle.PRIVAT));
+			}
+
+			{
+
+				// Act
+				List<Rolle> rollen = repository.permittedRollen("/veranstalter/loesungszettel/abcdef-012345", HttpMethod.DELETE);
+
+				// Assert
+				assertEquals(2, rollen.size());
+				assertTrue(rollen.contains(Rolle.LEHRER));
+				assertTrue(rollen.contains(Rolle.PRIVAT));
+			}
+
+			{
+
+				// Act
+				List<Rolle> rollen = repository.permittedRollen("/veranstalter/loesungszettel", HttpMethod.POST);
+
+				// Assert
+				assertEquals(2, rollen.size());
+				assertTrue(rollen.contains(Rolle.LEHRER));
+				assertTrue(rollen.contains(Rolle.PRIVAT));
+			}
+
+			{
+
+				// Act
+				List<Rolle> rollen = repository.permittedRollen("/veranstalter/loesungszettel", HttpMethod.PUT);
+
+				// Assert
+				assertEquals(2, rollen.size());
+				assertTrue(rollen.contains(Rolle.LEHRER));
+				assertTrue(rollen.contains(Rolle.PRIVAT));
+			}
+
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

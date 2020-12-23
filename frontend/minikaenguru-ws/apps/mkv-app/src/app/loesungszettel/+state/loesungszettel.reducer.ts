@@ -23,6 +23,11 @@ const initialLoesungszettelState: LoesungszettelState = {
 
 const loesungszettelReducer = createReducer(initialLoesungszettelState,
 
+	on(LoesungszettelActions.newLoesungszettelCreated, (state, action) => {
+
+		return { ...state, selectedLoesungszettel: action.loesungszettel }
+	}),
+
 	on(LoesungszettelActions.startLoading, (state, _action) => {
 
 		return { ...state, loading: true };
@@ -54,7 +59,7 @@ const loesungszettelReducer = createReducer(initialLoesungszettelState,
 
 		const neueZeilen: Loesungszettelzeile[] = [];
 
-		for(let i = 0; i < zettel.zeilen.length; i++) {
+		for (let i = 0; i < zettel.zeilen.length; i++) {
 			const z: Loesungszettelzeile = zettel.zeilen[i];
 			if (z.index !== zeile.index) {
 				neueZeilen.push(z);
@@ -63,7 +68,7 @@ const loesungszettelReducer = createReducer(initialLoesungszettelState,
 			}
 		}
 
-		const neuerLoesungszettel = {...zettel, zeilen: neueZeilen};
+		const neuerLoesungszettel = { ...zettel, zeilen: neueZeilen };
 
 		return { ...state, selectedLoesungszettel: neuerLoesungszettel };
 
@@ -72,13 +77,13 @@ const loesungszettelReducer = createReducer(initialLoesungszettelState,
 	on(LoesungszettelActions.loesungszettelSaved, (state, action) => {
 
 		const neueMap = new LoesungszettelMap(state.loesungszettelMap).merge(action.loesungszettel);
-		return {...state, loading: false, selectedLoesungszettel: action.loesungszettel, loesungszettelMap: neueMap};
+		return { ...state, loading: false, selectedLoesungszettel: action.loesungszettel, loesungszettelMap: neueMap };
 
 	}),
 
 	on(LoesungszettelActions.editLoesungszettelCancelled, (state, _action) => {
 
-		return {...state, loading: false, selectedLoesungszettel: undefined};
+		return { ...state, loading: false, selectedLoesungszettel: undefined };
 	}),
 
 	on(LoesungszettelActions.resetModule, (_state, _action) => {
