@@ -10,6 +10,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 
@@ -22,6 +23,8 @@ import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.Loesungszettelpunk
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
 import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelChanged;
+import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelCreated;
+import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelDeleted;
 import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelAPIModel;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.statistik.functions.PunkteStringMapper;
@@ -41,7 +44,13 @@ public class LoesungszettelService {
 	private static final Logger LOG = LoggerFactory.getLogger(LoesungszettelService.class);
 
 	@Inject
+	Event<LoesungszettelCreated> loesungszettelCreatedEvent;
+
+	@Inject
 	Event<LoesungszettelChanged> loesungszettelChangedEvent;
+
+	@Inject
+	Event<LoesungszettelDeleted> loesungszettelDeletedEvent;
 
 	@Inject
 	LoesungszettelRepository loesungszettelRepository;
@@ -57,7 +66,11 @@ public class LoesungszettelService {
 
 	private Wettbewerb aktuellerWettbewerb;
 
+	private LoesungszettelCreated loesungszettelCreated;
+
 	private LoesungszettelChanged loesungszettelChanged;
+
+	private LoesungszettelDeleted loesungszettelDeleted;
 
 	public static LoesungszettelService createForTest(final AuthorizationService authService, final WettbewerbService wettbewerbService, final KinderRepository kinderRepository, final LoesungszettelRepository loesungszettelRepository) {
 
@@ -66,6 +79,41 @@ public class LoesungszettelService {
 		result.wettbewerbService = wettbewerbService;
 		result.kinderRepository = kinderRepository;
 		result.loesungszettelRepository = loesungszettelRepository;
+		return result;
+	}
+
+	/**
+	 * Sucht den Loesingszettel mit der gegeben ID und gibt ihn als APIModel zurück, sofern der Veranstalter berechtigt ist.
+	 *
+	 * @param  loesungszettelID
+	 * @param  veranstalterID
+	 * @return                  LoesungszettelAPIModel
+	 */
+	public LoesungszettelAPIModel findLoesungszettelWithID(final Identifier loesungszettelID, final Identifier veranstalterID) {
+
+		Optional<Loesungszettel> opt = loesungszettelRepository
+			.ofID(loesungszettelID);
+
+		if (opt.isEmpty()) {
+
+			LOG.warn("Kein Loesungszettel mit UUID {} bekannt", loesungszettelID);
+
+			throw new NotFoundException();
+		}
+
+		authService.checkPermissionForTeilnahmenummer(veranstalterID,
+			opt.get().getTheTeilnahmenummer(),
+			"[findLoesungszettelWithID - " + loesungszettelID.toString() + "]");
+
+		Loesungszettel loesungszettel = opt.get();
+
+		if (loesungszettel.auswertungsquelle() != Auswertungsquelle.ONLINE) {
+
+			throw new BadRequestException("Diese Methode darf nur bei Onlineauswertungen aufgerufen werden");
+		}
+
+		LoesungszettelAPIModel result = new LoesungszettelToAPIModelMapper().apply(loesungszettel);
+
 		return result;
 	}
 
@@ -83,7 +131,32 @@ public class LoesungszettelService {
 			opt.get().getTheTeilnahmenummer(),
 			"[loesungszettelLoeschenWithAuthorizationCheck - " + identifier.toString() + "]");
 
-		return this.loesungszettelLoeschenWithoutAuthorizationCheck(identifier, veranstalterID.identifier());
+		boolean deleted = this.loesungszettelLoeschenWithoutAuthorizationCheck(identifier, veranstalterID.identifier());
+
+		if (deleted) {
+
+			Loesungszettel geloeschter = opt.get();
+
+			if (deleted) {
+
+				loesungszettelDeleted = (LoesungszettelDeleted) new LoesungszettelDeleted(veranstalterID.identifier())
+					.withKindID(geloeschter.kindID().identifier())
+					.withRohdatenAlt(geloeschter.rohdaten())
+					.withSpracheAlt(geloeschter.sprache())
+					.withTeilnahmeIdentifier(geloeschter.teilnahmeIdentifier());
+
+				if (loesungszettelDeletedEvent != null) {
+
+					loesungszettelDeletedEvent.fire(loesungszettelDeleted);
+				} else {
+
+					System.out.println(loesungszettelDeleted.serializeQuietly());
+				}
+
+			}
+
+		}
+		return deleted;
 
 	}
 
@@ -94,9 +167,11 @@ public class LoesungszettelService {
 	 * @param  veranstalterUuid
 	 * @return                  boolean
 	 */
+	@Transactional(TxType.REQUIRED)
 	public boolean loesungszettelLoeschenWithoutAuthorizationCheck(final Identifier identifier, final String veranstalterUuid) {
 
-		return this.loesungszettelRepository.removeLoesungszettel(identifier, veranstalterUuid);
+		boolean deleted = this.loesungszettelRepository.removeLoesungszettel(identifier, veranstalterUuid);
+		return deleted;
 	}
 
 	/**
@@ -135,7 +210,7 @@ public class LoesungszettelService {
 			.withTeilnahmenummer(persistenterLoesungszettel.getTeilnahmenummer())
 			.withWettbewerbID(new WettbewerbID(persistenterLoesungszettel.getWettbewerbUuid()));
 
-		persistenterLoesungszettel.withSprache(sprache);
+		persistenterLoesungszettel.setSprache(sprache);
 
 		this.loesungszettelRepository.updateLoesungszettelInTransaction(persistenterLoesungszettel);
 
@@ -223,6 +298,21 @@ public class LoesungszettelService {
 
 		kinderRepository.changeKind(kind);
 
+		loesungszettelCreated = (LoesungszettelCreated) new LoesungszettelCreated(veranstalterID.identifier())
+			.withKindID(kind.identifier().identifier())
+			.withRohdatenNeu(loesungszettel.rohdaten())
+			.withSpracheNeu(loesungszettel.sprache())
+			.withTeilnahmeIdentifier(loesungszettel.teilnahmeIdentifier())
+			.withUuid(loesungszettelID.identifier());
+
+		if (loesungszettelCreatedEvent != null) {
+
+			loesungszettelCreatedEvent.fire(loesungszettelCreated);
+		} else {
+
+			System.out.println(loesungszettelCreated.serializeQuietly());
+		}
+
 		String punkte = new PunkteStringMapper().apply(loesungszettel.punkte());
 
 		return new LoesungszettelpunkteAPIModel().withLaengeKaengurusprung(loesungszettel.laengeKaengurusprung()).withPunkte(punkte)
@@ -230,40 +320,13 @@ public class LoesungszettelService {
 	}
 
 	/**
-	 * Sucht den Loesingszettel mit der gegeben ID und gibt ihn als APIModel zurück, sofern der Veranstalter berechtigt ist.
+	 * Ändert die Daten eines vorhandenen Lösungszettels.
 	 *
-	 * @param  loesungszettelID
+	 * @param  loesungszetteldaten
 	 * @param  veranstalterID
-	 * @return                  LoesungszettelAPIModel
+	 * @return                     LoesungszettelpunkteAPIModel
 	 */
-	public LoesungszettelAPIModel findLoesungszettelWithID(final Identifier loesungszettelID, final Identifier veranstalterID) {
-
-		Optional<Loesungszettel> opt = loesungszettelRepository
-			.ofID(loesungszettelID);
-
-		if (opt.isEmpty()) {
-
-			LOG.warn("Kein Loesungszettel mit UUID {} bekannt", loesungszettelID);
-
-			throw new NotFoundException();
-		}
-
-		authService.checkPermissionForTeilnahmenummer(veranstalterID,
-			opt.get().getTheTeilnahmenummer(),
-			"[findLoesungszettelWithID - " + loesungszettelID.toString() + "]");
-
-		Loesungszettel loesungszettel = opt.get();
-
-		if (loesungszettel.auswertungsquelle() != Auswertungsquelle.ONLINE) {
-
-			throw new BadRequestException("Diese Methode darf nur bei Onlineauswertungen aufgerufen werden");
-		}
-
-		LoesungszettelAPIModel result = new LoesungszettelToAPIModelMapper().apply(loesungszettel);
-
-		return result;
-	}
-
+	@Transactional
 	public LoesungszettelpunkteAPIModel loesungszettelAendern(final LoesungszettelAPIModel loesungszetteldaten, final Identifier veranstalterID) {
 
 		Identifier loesungszettelID = new Identifier(loesungszetteldaten.uuid());
@@ -281,7 +344,47 @@ public class LoesungszettelService {
 		authService.checkPermissionForTeilnahmenummer(veranstalterID,
 			opt.get().getTheTeilnahmenummer(),
 			"[loesungszettelAendern - " + loesungszettelID.toString() + "]");
-		return null;
+
+		Loesungszettel persistenter = opt.get();
+
+		Optional<Kind> optKind = kinderRepository.ofId(persistenter.kindID());
+
+		if (optKind.isEmpty()) {
+
+			LOG.warn("Kein Kind mit UUID {} bekannt", persistenter.kindID());
+
+			throw new NotFoundException();
+		}
+
+		Kind kind = optKind.get();
+
+		Loesungszettel loesungszettel = new LoesungszettelCreator().createLoesungszettel(loesungszetteldaten, getWettbewerb(),
+			kind);
+
+		loesungszettel = loesungszettel.withIdentifier(loesungszettelID);
+		loesungszettelRepository.updateLoesungszettel(loesungszettel);
+
+		loesungszettelChanged = (LoesungszettelChanged) new LoesungszettelChanged(veranstalterID.identifier())
+			.withKindID(kind.identifier().identifier())
+			.withRohdatenAlt(persistenter.rohdaten())
+			.withRohdatenNeu(loesungszettel.rohdaten())
+			.withSpracheAlt(persistenter.sprache())
+			.withSpracheNeu(loesungszettel.sprache())
+			.withTeilnahmeIdentifier(loesungszettel.teilnahmeIdentifier())
+			.withUuid(loesungszettelID.identifier());
+
+		if (loesungszettelChangedEvent != null) {
+
+			loesungszettelChangedEvent.fire(loesungszettelChanged);
+		} else {
+
+			System.out.println(loesungszettelChanged.serializeQuietly());
+		}
+
+		String punkte = new PunkteStringMapper().apply(loesungszettel.punkte());
+
+		return new LoesungszettelpunkteAPIModel().withLaengeKaengurusprung(loesungszettel.laengeKaengurusprung()).withPunkte(punkte)
+			.withLoesungszettelId(loesungszettelID.identifier());
 	}
 
 	private Wettbewerb getWettbewerb() {

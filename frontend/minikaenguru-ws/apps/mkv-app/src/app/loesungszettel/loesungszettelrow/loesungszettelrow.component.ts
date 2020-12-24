@@ -65,10 +65,10 @@ export class LoesungszettelrowComponent implements OnInit {
 			return '#def7d4';
 		}
 		if (this.zeile.name.startsWith('B')) {
-			return '#ffe0b3';
+			return '#ffffb3';
 		}
 		if (this.zeile.name.startsWith('C')) {
-			return '#ffcce6';// return '#ffcccc';
+			return '#ffe0b3';
 		}
 
 		return 'white';

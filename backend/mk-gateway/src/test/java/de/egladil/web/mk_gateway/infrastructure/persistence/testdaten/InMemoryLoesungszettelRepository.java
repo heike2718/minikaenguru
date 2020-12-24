@@ -194,21 +194,21 @@ public class InMemoryLoesungszettelRepository implements LoesungszettelRepositor
 	private PersistenterLoesungszettel mapFromLoesungszettel(final Loesungszettel loesungszettel) {
 
 		LoesungszettelRohdaten rohdaten = loesungszettel.rohdaten();
-		PersistenterLoesungszettel result = new PersistenterLoesungszettel()
-			.withAntwortcode(rohdaten.antwortcode())
-			.withAuswertungsquelle(loesungszettel.auswertungsquelle())
-			.withKaengurusprung(loesungszettel.laengeKaengurusprung())
-			.withKindID(loesungszettel.kindID().identifier())
-			.withKlassenstufe(loesungszettel.klassenstufe())
-			.withLandkuerzel(loesungszettel.landkuerzel())
-			.withNutzereingabe(rohdaten.nutzereingabe())
-			.withPunkte(loesungszettel.punkte())
-			.withSprache(loesungszettel.sprache())
-			.withTeilnahmeart(loesungszettel.teilnahmeIdentifier().teilnahmeart())
-			.withTeilnahmenummer(loesungszettel.teilnahmeIdentifier().teilnahmenummer())
-			.withTypo(rohdaten.hatTypo())
-			.withWertungscode(rohdaten.wertungscode())
-			.withWettbewerbUuid(loesungszettel.teilnahmeIdentifier().wettbewerbID());
+		PersistenterLoesungszettel result = new PersistenterLoesungszettel();
+		result.setAntwortcode(rohdaten.antwortcode());
+		result.setAuswertungsquelle(loesungszettel.auswertungsquelle());
+		result.setKaengurusprung(loesungszettel.laengeKaengurusprung());
+		result.setKindID(loesungszettel.kindID().identifier());
+		result.setKlassenstufe(loesungszettel.klassenstufe());
+		result.setLandkuerzel(loesungszettel.landkuerzel());
+		result.setNutzereingabe(rohdaten.nutzereingabe());
+		result.setPunkte(loesungszettel.punkte());
+		result.setSprache(loesungszettel.sprache());
+		result.setTeilnahmeart(loesungszettel.teilnahmeIdentifier().teilnahmeart());
+		result.setTeilnahmenummer(loesungszettel.teilnahmeIdentifier().teilnahmenummer());
+		result.setTypo(rohdaten.hatTypo());
+		result.setWertungscode(rohdaten.wertungscode());
+		result.setWettbewerbUuid(loesungszettel.teilnahmeIdentifier().wettbewerbID());
 
 		if (loesungszettel.identifier() != null) {
 

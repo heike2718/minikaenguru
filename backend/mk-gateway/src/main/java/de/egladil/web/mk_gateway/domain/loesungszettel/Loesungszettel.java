@@ -56,6 +56,16 @@ public class Loesungszettel {
 		return kindID;
 	}
 
+	public Loesungszettel withIdentifier(final Identifier identifier) {
+
+		if (this.identifier != null) {
+
+			throw new IllegalStateException("Der identifier darf nicht geändert werden!");
+		}
+		this.identifier = identifier;
+		return this;
+	}
+
 	public Loesungszettel withKindID(final Identifier kindID) {
 
 		this.kindID = kindID;

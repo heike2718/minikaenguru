@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable, of, throwError } from 'rxjs';
-import { Loesungszettel, Loesungszettelzeile, createLoseungszettelzeilen, LoesungszettelResponseModel } from './loesungszettel.model';
+import { Loesungszettel, Loesungszettelzeile, createLoseungszettelzeilen } from './loesungszettel.model';
 import { Kind, Klassenstufe, LoesungszettelPunkte } from '@minikaenguru-ws/common-components';
 import { ResponsePayload } from '@minikaenguru-ws/common-messages';
 import { env } from 'process';

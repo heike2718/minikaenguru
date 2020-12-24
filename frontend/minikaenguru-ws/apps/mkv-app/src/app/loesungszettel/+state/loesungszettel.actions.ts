@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Loesungszettel, Loesungszettelzeile, LoesungszettelResponseModel } from '../loesungszettel.model';
+import { Loesungszettel, Loesungszettelzeile } from '../loesungszettel.model';
 import { LoesungszettelPunkte } from '@minikaenguru-ws/common-components';
 
 
@@ -31,15 +31,14 @@ export const loesungszettelChanged = createAction(
 	props<{zeile: Loesungszettelzeile}>()
 );
 
+export const loesungszettelSaved = createAction(
+	'[LoesungszettelFacade] saveLoesungszettel',
+	props<{loesungszettelAlt:Loesungszettel, loesungszettelUuidNeu: string}>()
+);
+
 export const editLoesungszettelCancelled = createAction(
 	'[LoesungszettelFacade] cancelEditLoesungszettel'
 );
-
-export const loesungszettelSaved = createAction(
-	'[LoesungszettelFacade] saveLoesungszettel',
-	props<{loesungszettel: Loesungszettel}>()
-)
-
 
 export const resetModule = createAction(
 	'[LoesungszettelFacade] resetState'

@@ -33,7 +33,7 @@ public class AntwortcodeWertungscodeMapper implements BiFunction<String, String,
 				sb.append("n");
 			} else {
 
-				char l = losungscode.charAt(0);
+				char l = losungscode.charAt(i);
 
 				if (a == l) {
 

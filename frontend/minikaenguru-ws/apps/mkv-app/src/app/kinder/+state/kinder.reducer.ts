@@ -58,6 +58,10 @@ const kinderReducer = createReducer(initialKinderState,
 		return {...state, selectedKind: action.kind};
 	}),
 
+	on(KinderActions.unselectKind, (state, _action) => {
+		return {...state, selectedKind: undefined};
+	}),
+
 	on(KinderActions.startEditingKind, (state, action) => {
 
 		const kind = action.kind;
@@ -121,7 +125,7 @@ const kinderReducer = createReducer(initialKinderState,
 
 	on(KinderActions.kindLoesungszettelChanged, (state, action) => {
 
-		const neuesKind = {...action.kind, loesungszettelPunkte: action.punkte};
+		const neuesKind = {...action.kind, punkte: action.punkte};
 		const neueMap = new KinderMap(state.kinderMap).merge(neuesKind);
 
 		const selectedKind = state.selectedKind && state.selectedKind.uuid === neuesKind.uuid ? neuesKind : state.selectedKind;

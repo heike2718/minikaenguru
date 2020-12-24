@@ -150,31 +150,24 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 		return result;
 	}
 
-	PersistenterLoesungszettel mapFromDomainObject(final Loesungszettel loesungszettel) {
+	void copyAllAttributesBitIdentifier(final PersistenterLoesungszettel target, final Loesungszettel loesungszettel) {
 
 		LoesungszettelRohdaten rohdaten = loesungszettel.rohdaten();
-		PersistenterLoesungszettel result = new PersistenterLoesungszettel()
-			.withAntwortcode(rohdaten.antwortcode())
-			.withAuswertungsquelle(loesungszettel.auswertungsquelle())
-			.withKaengurusprung(loesungszettel.laengeKaengurusprung())
-			.withKindID(loesungszettel.kindID().identifier())
-			.withKlassenstufe(loesungszettel.klassenstufe())
-			.withLandkuerzel(loesungszettel.landkuerzel())
-			.withNutzereingabe(rohdaten.nutzereingabe())
-			.withPunkte(loesungszettel.punkte())
-			.withSprache(loesungszettel.sprache())
-			.withTeilnahmeart(loesungszettel.teilnahmeIdentifier().teilnahmeart())
-			.withTeilnahmenummer(loesungszettel.teilnahmeIdentifier().teilnahmenummer())
-			.withTypo(rohdaten.hatTypo())
-			.withWertungscode(rohdaten.wertungscode())
-			.withWettbewerbUuid(loesungszettel.teilnahmeIdentifier().wettbewerbID());
 
-		if (loesungszettel.identifier() != null) {
-
-			result.setUuid(loesungszettel.identifier().identifier());
-		}
-		return result;
-
+		target.setAntwortcode(rohdaten.antwortcode());
+		target.setAuswertungsquelle(loesungszettel.auswertungsquelle());
+		target.setKaengurusprung(loesungszettel.laengeKaengurusprung());
+		target.setKindID(loesungszettel.kindID().identifier());
+		target.setKlassenstufe(loesungszettel.klassenstufe());
+		target.setLandkuerzel(loesungszettel.landkuerzel());
+		target.setNutzereingabe(rohdaten.nutzereingabe());
+		target.setPunkte(loesungszettel.punkte());
+		target.setSprache(loesungszettel.sprache());
+		target.setTeilnahmeart(loesungszettel.teilnahmeIdentifier().teilnahmeart());
+		target.setTeilnahmenummer(loesungszettel.teilnahmeIdentifier().teilnahmenummer());
+		target.setTypo(rohdaten.hatTypo());
+		target.setWertungscode(rohdaten.wertungscode());
+		target.setWettbewerbUuid(loesungszettel.teilnahmeIdentifier().wettbewerbID());
 	}
 
 	@Override
@@ -186,7 +179,8 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 				+ " und kann hinzugefügt werden!");
 		}
 
-		PersistenterLoesungszettel zuPeristierenderLoesungszettel = this.mapFromDomainObject(loesungszettel);
+		PersistenterLoesungszettel zuPeristierenderLoesungszettel = new PersistenterLoesungszettel();
+		this.copyAllAttributesBitIdentifier(zuPeristierenderLoesungszettel, loesungszettel);
 
 		em.persist(zuPeristierenderLoesungszettel);
 
@@ -201,11 +195,17 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 			throw new IllegalStateException("loesungszettel hat keine UUID und kann geändert werden!");
 		}
 
-		PersistenterLoesungszettel neuerLoesungszettel = this.mapFromDomainObject(loesungszettel);
-		this.removeLoesungszettel(loesungszettel.identifier(), null);
-		neuerLoesungszettel.setImportierteUuid(loesungszettel.identifier().identifier());
+		Optional<PersistenterLoesungszettel> optPersistenter = this.findPersistentenLoesungszettel(loesungszettel.identifier());
 
-		em.persist(neuerLoesungszettel);
+		if (optPersistenter.isEmpty()) {
+
+			return false;
+		}
+
+		PersistenterLoesungszettel persistenter = optPersistenter.get();
+		this.copyAllAttributesBitIdentifier(persistenter, loesungszettel);
+
+		em.merge(persistenter);
 
 		return true;
 	}

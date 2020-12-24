@@ -22,6 +22,10 @@ export const allKinderLoaded = createAction(
 	props<{kinder: Kind[]}>()
 );
 
+export const unselectKind = createAction(
+	'[LoesungszettelFacade] cancelEditLoesungszettel'
+);
+
 export const createNewKind = createAction(
 	'[KinderFacade] createNewKind',
 	props<{klasseUuid: string}>()
@@ -58,7 +62,7 @@ export const kindDeleted = createAction(
 );
 
 export const kindLoesungszettelChanged = createAction(
-	'[LoesungszettelFacade]: saveLoesungszettel',
+	'[LoesungszettelFacade]: change the punkte in saveLoesungszettel',
 	props<{kind: Kind, punkte: LoesungszettelPunkte}>()
 );
 

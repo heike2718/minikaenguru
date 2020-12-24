@@ -363,13 +363,16 @@ public class KinderService {
 		if (changed) {
 
 			String klasseID = geaendertesKind.klasseID() == null ? null : geaendertesKind.klasseID().identifier();
+			String loesungszettelID = geaendertesKind.loesungszettelID() == null ? null
+				: geaendertesKind.loesungszettelID().identifier();
 
 			kindChanged = (KindChanged) new KindChanged(veranstalterUuid)
 				.withKlassenstufe(geaendertesKind.klassenstufe())
 				.withSprache(geaendertesKind.sprache())
 				.withTeilnahmenummer(geaendertesKind.teilnahmeIdentifier().teilnahmenummer())
 				.withKindID(geaendertesKind.identifier().identifier())
-				.withKlasseID(klasseID);
+				.withKlasseID(klasseID)
+				.withLoesungszettelID(loesungszettelID);
 
 			if (kindChangedEvent != null) {
 
@@ -436,7 +439,8 @@ public class KinderService {
 				.withKlassenstufe(kind.klassenstufe())
 				.withSprache(kind.sprache())
 				.withTeilnahmenummer(kind.teilnahmeIdentifier().teilnahmenummer())
-				.withKlasseID(kind.klasseID() == null ? null : kind.klasseID().identifier());
+				.withKlasseID(kind.klasseID() == null ? null : kind.klasseID().identifier())
+				.withLoesungszettelID(kind.loesungszettelID() == null ? null : kind.loesungszettelID().identifier());
 
 			if (this.kindDeletedEvent != null) {
 

@@ -34,11 +34,6 @@ export interface LoesungszettelWithID {
 	readonly loesungszettel: Loesungszettel;
 };
 
-export interface LoesungszettelResponseModel  {
-	readonly loesungszettel: Loesungszettel;
-	readonly punkte: LoesungszettelPunkte;
-}
-
 // verpackt häufig erforderliche Operationen auf einem LoesungszettelWithID[] etwas handhabbarer.
 export class LoesungszettelMap {
 

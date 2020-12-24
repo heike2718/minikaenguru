@@ -76,9 +76,20 @@ const loesungszettelReducer = createReducer(initialLoesungszettelState,
 
 	on(LoesungszettelActions.loesungszettelSaved, (state, action) => {
 
-		const neueMap = new LoesungszettelMap(state.loesungszettelMap).merge(action.loesungszettel);
-		return { ...state, loading: false, selectedLoesungszettel: action.loesungszettel, loesungszettelMap: neueMap };
 
+		if (action.loesungszettelAlt.uuid === 'neu') {
+
+			const neuerLoesungszettel = { ...state.selectedLoesungszettel, uuid: action.loesungszettelUuidNeu };
+
+			let neueMap = new LoesungszettelMap(state.loesungszettelMap).remove(action.loesungszettelAlt.uuid);
+			neueMap = new LoesungszettelMap(neueMap).merge(neuerLoesungszettel);
+
+			return { ...state, loading: false, loesungszettelMap: neueMap, selectedLoesungszettel: neuerLoesungszettel };
+
+		} else {
+
+			return { ...state, loading: false };
+		}
 	}),
 
 	on(LoesungszettelActions.editLoesungszettelCancelled, (state, _action) => {

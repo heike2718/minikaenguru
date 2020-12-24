@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
-import { Loesungszettel, Loesungszettelzeile, createLoseungszettelzeilen, LoesungszettelMap, LoesungszettelResponseModel } from './loesungszettel.model';
+import { Loesungszettel, Loesungszettelzeile, createLoseungszettelzeilen, LoesungszettelMap } from './loesungszettel.model';
 import { Klassenstufe, Kind, LoesungszettelPunkte } from '@minikaenguru-ws/common-components';
 import * as LoesungszettelActions from './+state/loesungszettel.actions';
 import * as LoesungszettelSelectors from './+state/loesungszettel.selectors';
@@ -70,6 +70,10 @@ export class LoesungszettelFacade {
 					})
 
 				);
+			} else {
+				const zettel: Loesungszettel = this.loesungszettelMap.get(kind.punkte.loesungszettelId);
+				this.store.dispatch(LoesungszettelActions.loesungszettelLoaded({ loesungszettel: zettel }));
+				this.selectLoesungszettel(zettel);
 			}
 		}
 	}
@@ -82,13 +86,9 @@ export class LoesungszettelFacade {
 
 			responsePayload => {
 
-				const loesungszettelResponse: LoesungszettelResponseModel = responsePayload.data;
-				this.store.dispatch(KinderActions.kindLoesungszettelChanged({kind: kind, punkte: loesungszettelResponse.punkte}));
-
-
-				this.store.dispatch(LoesungszettelActions.loesungszettelSaved({ loesungszettel: loesungszettelResponse.loesungszettel }));
-				this.selectLoesungszettel(loesungszettelResponse.loesungszettel);
-
+				const loesungszettelResponse: LoesungszettelPunkte = responsePayload.data;
+				this.store.dispatch(LoesungszettelActions.loesungszettelSaved({ loesungszettelAlt: loesungszettel, loesungszettelUuidNeu: loesungszettelResponse.loesungszettelId }));
+				this.store.dispatch(KinderActions.kindLoesungszettelChanged({ kind: kind, punkte: loesungszettelResponse }));
 				this.messageService.showMessage(responsePayload.message);
 			},
 			(error => {
@@ -106,6 +106,7 @@ export class LoesungszettelFacade {
 
 	public cancelEditLoesungszettel(): void {
 		this.store.dispatch(LoesungszettelActions.editLoesungszettelCancelled());
+		this.store.dispatch(KinderActions.unselectKind());
 	}
 
 	public resetState(): void {
