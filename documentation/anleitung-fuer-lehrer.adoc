@@ -169,9 +169,10 @@ Pflichtfelder sind:
 
 *Welche Daten werden auf die Urkunde gedruckt?*
 
-Haben Sie für ein Kind den Vornamen *und* den Nachnamen eingetragen, wird der volle Name auf die Urkunde gedruckt.
+Der Name der Klasse, zu der ein Kind gehört, erscheint auf der Urkunde. Abhängig von den übrigen Daten, die sie für die Kinder erfassen, erscheinen:
 
-Haben Sie für ein Kind nur den Vorname eingetragen, wird nur dieser auf die Urkunde gedruckt.
+* der vollständige Name, wenn Sie für ein Kind den Vornamen *und* den Nachnamen eingetragen haben
+* nur der Vorname, wenn die für ein Kind nur den Vornamen eingetragen haben.
 
 Der Zusatztext erscheint *nicht auf der Urkunde*.
 

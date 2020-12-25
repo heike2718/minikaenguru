@@ -91,10 +91,10 @@ footer {
 
 /* ===== small devices ==== */
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
 
   body {
-    width: 100%;
+    width: 100vw;
   }
 
   h4,
@@ -122,7 +122,13 @@ footer {
     border: 1px solid gray;
     border-radius: 4px;
   }
+}
+
+@media screen and (max-width: 1024px) {
+
+	body, p {
+	font-size: 1.1rem;
 
 
-
+  }
 }

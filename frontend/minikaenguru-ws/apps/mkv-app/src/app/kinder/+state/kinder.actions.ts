@@ -1,12 +1,12 @@
 import { createAction, props } from '@ngrx/store';
-import { Kind, Duplikatwarnung, Klasse } from '@minikaenguru-ws/common-components';
+import { Kind, Duplikatwarnung, Klasse, LoesungszettelPunkte } from '@minikaenguru-ws/common-components';
 import { Message } from '@minikaenguru-ws/common-messages';
 import { Teilnahmeart, TeilnahmeIdentifierAktuellerWettbewerb } from '@minikaenguru-ws/common-components';
 import { KindEditorVorbelegung, KlassenwechselDaten } from '../kinder.model';
 
 export const teilnahmenummerInitialized = createAction(
 	'[KinderFacade] on loadKinder',
-	props<{teilnahmeIdentifier: TeilnahmeIdentifierAktuellerWettbewerb}>()
+	props<{ teilnahmeIdentifier: TeilnahmeIdentifierAktuellerWettbewerb }>()
 );
 
 export const startLoading = createAction(
@@ -19,14 +19,22 @@ export const finishedWithError = createAction(
 
 export const allKinderLoaded = createAction(
 	'[KinderFacade] on loadKinder finished with success',
-	props<{kinder: Kind[]}>()
+	props<{ kinder: Kind[] }>()
+);
+
+export const unselectKind = createAction(
+	'[LoesungszettelFacade] cancelEditLoesungszettel'
 );
 
 export const createNewKind = createAction(
 	'[KinderFacade] createNewKind',
-	props<{klasseUuid: string}>()
+	props<{ klasseUuid: string }>()
 );
 
+export const selectKind = createAction(
+	'[KinderFacade] selectKind',
+	props<{ kind: Kind }>()
+);
 
 export const startEditingKind = createAction(
 	'[KinderFacade] editKind',
@@ -53,8 +61,18 @@ export const kindDeleted = createAction(
 	props<{ kind: Kind, outcome: Message }>()
 );
 
+export const kindLoesungszettelChanged = createAction(
+	'[LoesungszettelFacade]: change the punkte in saveLoesungszettel',
+	props<{ kind: Kind, punkte: LoesungszettelPunkte }>()
+);
+
+export const kindLoesungszettelDeleted = createAction(
+	'[LoesungszettelFacade]: delete the punkte in deleteLoesungszettel',
+	props<{ kindID: string }>()
+);
+
 export const resetModule = createAction(
-	'[KinderFacade] reset'
+	'[KinderFacade] resetState'
 );
 
 

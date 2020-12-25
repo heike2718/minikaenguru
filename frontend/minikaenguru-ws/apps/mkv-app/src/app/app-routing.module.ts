@@ -50,6 +50,10 @@ const routes: Routes = [
 		loadChildren: () => import('./teilnahmen/teilnahmen.module').then(m => m.TeilnahmenModule)
 	},
 	{
+		path: 'loesungszettel',
+		loadChildren: () => import('./loesungszettel/loesungszettel.module').then(m => m.LoesungszettelModule)
+	},
+	{
 		path: 'kinder',
 		loadChildren: () => import('./kinder/kinder.module').then(m => m.KinderModule)
 	},
@@ -75,7 +79,7 @@ const routes: Routes = [
 @NgModule({
 	imports: [RouterModule.forRoot(
 		routes,
-		{ enableTracing: !environment.production, useHash: true, relativeLinkResolution: 'legacy' })
+		{ enableTracing: false, useHash: true, relativeLinkResolution: 'legacy' })
 	],
 	exports: [RouterModule]
 })

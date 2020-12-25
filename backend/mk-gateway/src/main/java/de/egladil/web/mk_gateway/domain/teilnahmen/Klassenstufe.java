@@ -23,6 +23,24 @@ public enum Klassenstufe {
 			return Arrays.asList(new String[] { "A-1", "A-2", "B-1", "B-2", "C-1", "C-2" });
 		}
 
+		@Override
+		public int getStartguthaben() {
+
+			return 600;
+		}
+
+		@Override
+		public int getAnzahlAufgabenInKategorien() {
+
+			return 2;
+		}
+
+		@Override
+		public int getAnzahlSpalten() {
+
+			return 3;
+		}
+
 	},
 	EINS("Klasse 1", "1") {
 		@Override
@@ -30,6 +48,18 @@ public enum Klassenstufe {
 
 			return Arrays
 				.asList(new String[] { "A-1", "A-2", "A-3", "A-4", "B-1", "B-2", "B-3", "B-4", "C-1", "C-2", "C-3", "C-4" });
+		}
+
+		@Override
+		public int getStartguthaben() {
+
+			return 1200;
+		}
+
+		@Override
+		public int getAnzahlAufgabenInKategorien() {
+
+			return 4;
 		}
 
 	},
@@ -40,6 +70,18 @@ public enum Klassenstufe {
 			return Arrays.asList(
 				new String[] { "A-1", "A-2", "A-3", "A-4", "A-5", "B-1", "B-2", "B-3", "B-4", "B-5", "C-1", "C-2", "C-3", "C-4",
 					"C-5" });
+		}
+
+		@Override
+		public int getStartguthaben() {
+
+			return 1500;
+		}
+
+		@Override
+		public int getAnzahlAufgabenInKategorien() {
+
+			return 5;
 		}
 
 	};
@@ -65,6 +107,15 @@ public enum Klassenstufe {
 	public String getLabelSuffix() {
 
 		return labelSuffix;
+	}
+
+	public abstract int getStartguthaben();
+
+	public abstract int getAnzahlAufgabenInKategorien();
+
+	public int getAnzahlSpalten() {
+
+		return 5;
 	}
 
 	public static Klassenstufe[] valuesSorted() {

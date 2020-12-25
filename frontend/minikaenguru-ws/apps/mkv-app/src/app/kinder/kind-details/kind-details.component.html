@@ -1,13 +1,13 @@
 <div class="card mt-2">
 	<div class="card-body">
-		<div class="card-title">{{titel}}</div>
+	<div class="card-title">{{titel}} <span *ngIf="kind.punkte" class="badge badge-success">Punkte: {{kind.punkte.punkte}}</span></div>
 		<div class="card-text">
 			<div class="row">
 				<div class="card-subtitle text-muted col-sm-12 col-md-9">{{kind.klassenstufe.label}}</div>
 				<div class="card-subtitle text-muted col-sm-12 col-md-9">Sprache: {{kind.sprache.label}}</div>
-				<div *ngIf="veranstalter.hatZugangZuUnterlangen else loesungenBlockiert"
-					class="card-subtitle text-muted col-sm-12 col-md-9">
-					Können Lösungszettel erfassen</div>
+
+				<div *ngIf="kind.punkte" class="card-subtitle text-muted col-sm-12 col-md-9">Länge Kängurusprung:
+					{{kind.punkte.laengeKaengurusprung}}</div>
 			</div>
 		</div>
 		<div class="btn-group d-flex" role="group">

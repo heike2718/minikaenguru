@@ -4,8 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.loesungszettel;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.semantik.AggregateRoot;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
@@ -19,34 +17,24 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 @AggregateRoot
 public class Loesungszettel {
 
-	@JsonProperty
 	private Identifier identifier;
 
-	@JsonProperty
-	private String kindID;
+	private Identifier kindID;
 
-	@JsonProperty
 	private Klassenstufe klassenstufe;
 
-	@JsonProperty
 	private Sprache sprache;
 
-	@JsonProperty
 	private TeilnahmeIdentifier teilnahmeIdentifier;
 
-	@JsonProperty
 	private String landkuerzel;
 
-	@JsonProperty
 	private int laengeKaengurusprung;
 
-	@JsonProperty
 	private int punkte;
 
-	@JsonProperty
 	private Auswertungsquelle auswertungsquelle;
 
-	@JsonProperty
 	private LoesungszettelRohdaten rohdaten;
 
 	public Loesungszettel() {
@@ -63,12 +51,22 @@ public class Loesungszettel {
 		return identifier;
 	}
 
-	public String kindID() {
+	public Identifier kindID() {
 
 		return kindID;
 	}
 
-	public Loesungszettel withKindID(final String kindID) {
+	public Loesungszettel withIdentifier(final Identifier identifier) {
+
+		if (this.identifier != null) {
+
+			throw new IllegalStateException("Der identifier darf nicht geändert werden!");
+		}
+		this.identifier = identifier;
+		return this;
+	}
+
+	public Loesungszettel withKindID(final Identifier kindID) {
 
 		this.kindID = kindID;
 		return this;
@@ -167,5 +165,10 @@ public class Loesungszettel {
 
 		return "Loesungszettel [identifier=" + identifier + ", klassenstufe=" + klassenstufe + ", teilnahmeIdentifier="
 			+ teilnahmeIdentifier + ", punkte=" + this.punkte + "]";
+	}
+
+	public Identifier getTheTeilnahmenummer() {
+
+		return new Identifier(this.teilnahmeIdentifier.teilnahmenummer());
 	}
 }

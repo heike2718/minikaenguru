@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 
 /**
  * Wettbewerb
@@ -189,6 +190,25 @@ public class Wettbewerb {
 	public boolean isBeendet() {
 
 		return this.status == WettbewerbStatus.BEENDET;
+	}
+
+	public String loesungsbuchstabenOf(final Klassenstufe klassenstufe) {
+
+		switch (klassenstufe) {
+
+		case IKID:
+			return loesungsbuchstabenIkids;
+
+		case EINS:
+			return loesungsbuchstabenKlasse1;
+
+		case ZWEI:
+			return loesungsbuchstabenKlasse2;
+
+		default:
+			throw new IllegalArgumentException("existiert keine Implementierung für klassenstufe " + klassenstufe);
+		}
+
 	}
 
 }

@@ -32,6 +32,7 @@ import de.egladil.web.mk_gateway.domain.kinder.api.KlasseRequestData;
 import de.egladil.web.mk_gateway.domain.kinder.events.KlasseChanged;
 import de.egladil.web.mk_gateway.domain.kinder.events.KlasseCreated;
 import de.egladil.web.mk_gateway.domain.kinder.events.KlasseDeleted;
+import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
@@ -126,7 +127,8 @@ public class KlassenService {
 		WettbewerbService wettbewerbService = WettbewerbService
 			.createForTest(WettbewerbHibernateRepository.createForIntegrationTest(em));
 
-		LoesungszettelService loesungszettelService = LoesungszettelService.createForTest(authService,
+		LoesungszettelService loesungszettelService = LoesungszettelService.createForTest(authService, wettbewerbService,
+			kinderRepository,
 			LoesungszettelHibernateRepository.createForIntegrationTest(em));
 
 		KlassenRepository klassenRepository = KlassenHibernateRepository.createForIntegrationTest(em);

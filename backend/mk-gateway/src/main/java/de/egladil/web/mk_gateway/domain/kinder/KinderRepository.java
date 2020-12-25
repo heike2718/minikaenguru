@@ -30,7 +30,7 @@ public interface KinderRepository {
 	 * @param  identifier
 	 * @return            Optional
 	 */
-	Optional<Kind> withIdentifier(Identifier identifier);
+	Optional<Kind> ofId(Identifier identifier);
 
 	/**
 	 * Fügt ein neues Kind hinzu
@@ -71,5 +71,4 @@ public interface KinderRepository {
 	 * @return
 	 */
 	long countKinderInKlasse(Klasse klasse);
-
 }

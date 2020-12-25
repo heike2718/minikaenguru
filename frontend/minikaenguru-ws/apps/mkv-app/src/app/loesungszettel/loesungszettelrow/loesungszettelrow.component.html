@@ -1,0 +1,9 @@
+<div class="row mt-5 mb-5" [style.background-color]="calculateBackgroundColor()">
+	<div class="col-2 loesungszettel-text">
+		{{zeile.name}}:
+	</div>
+	<div class="col-2" *ngFor="let columnIndex of columnIdexes">
+		<mkv-checkbox [rowIndex]="zeile.index" [columnIndex]="columnIndex"
+			(checkboxClicked)="onCheckboxClicked($event)"></mkv-checkbox>
+	</div>
+</div>

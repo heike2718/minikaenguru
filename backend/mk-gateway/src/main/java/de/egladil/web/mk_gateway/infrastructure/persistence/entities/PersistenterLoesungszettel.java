@@ -106,21 +106,9 @@ public class PersistenterLoesungszettel extends ConcurrencySafeEntity {
 		return kindID;
 	}
 
-	public PersistenterLoesungszettel withKindID(final String kindID) {
-
-		this.kindID = kindID;
-		return this;
-	}
-
 	public Klassenstufe getKlassenstufe() {
 
 		return klassenstufe;
-	}
-
-	public PersistenterLoesungszettel withKlassenstufe(final Klassenstufe klassenstufe) {
-
-		this.klassenstufe = klassenstufe;
-		return this;
 	}
 
 	public String getTeilnahmenummer() {
@@ -128,21 +116,9 @@ public class PersistenterLoesungszettel extends ConcurrencySafeEntity {
 		return teilnahmenummer;
 	}
 
-	public PersistenterLoesungszettel withTeilnahmenummer(final String teilnahmenummer) {
-
-		this.teilnahmenummer = teilnahmenummer;
-		return this;
-	}
-
 	public Auswertungsquelle getAuswertungsquelle() {
 
 		return auswertungsquelle;
-	}
-
-	public PersistenterLoesungszettel withAuswertungsquelle(final Auswertungsquelle auswertungsquelle) {
-
-		this.auswertungsquelle = auswertungsquelle;
-		return this;
 	}
 
 	public Teilnahmeart getTeilnahmeart() {
@@ -150,21 +126,9 @@ public class PersistenterLoesungszettel extends ConcurrencySafeEntity {
 		return teilnahmeart;
 	}
 
-	public PersistenterLoesungszettel withTeilnahmeart(final Teilnahmeart teilnahmeart) {
-
-		this.teilnahmeart = teilnahmeart;
-		return this;
-	}
-
 	public String getWettbewerbUuid() {
 
 		return wettbewerbUuid;
-	}
-
-	public PersistenterLoesungszettel withWettbewerbUuid(final String wettbewerbUuid) {
-
-		this.wettbewerbUuid = wettbewerbUuid;
-		return this;
 	}
 
 	public String getLandkuerzel() {
@@ -172,21 +136,9 @@ public class PersistenterLoesungszettel extends ConcurrencySafeEntity {
 		return landkuerzel;
 	}
 
-	public PersistenterLoesungszettel withLandkuerzel(final String landkuerzel) {
-
-		this.landkuerzel = landkuerzel;
-		return this;
-	}
-
 	public int getKaengurusprung() {
 
 		return kaengurusprung;
-	}
-
-	public PersistenterLoesungszettel withKaengurusprung(final int kaengurusprung) {
-
-		this.kaengurusprung = kaengurusprung;
-		return this;
 	}
 
 	public boolean isTypo() {
@@ -194,21 +146,9 @@ public class PersistenterLoesungszettel extends ConcurrencySafeEntity {
 		return typo;
 	}
 
-	public PersistenterLoesungszettel withTypo(final boolean typo) {
-
-		this.typo = typo;
-		return this;
-	}
-
 	public String getNutzereingabe() {
 
 		return nutzereingabe;
-	}
-
-	public PersistenterLoesungszettel withNutzereingabe(final String originalwerbung) {
-
-		this.nutzereingabe = originalwerbung;
-		return this;
 	}
 
 	public int getPunkte() {
@@ -216,21 +156,9 @@ public class PersistenterLoesungszettel extends ConcurrencySafeEntity {
 		return punkte;
 	}
 
-	public PersistenterLoesungszettel withPunkte(final int punkte) {
-
-		this.punkte = punkte;
-		return this;
-	}
-
 	public String getAntwortcode() {
 
 		return antwortcode;
-	}
-
-	public PersistenterLoesungszettel withAntwortcode(final String antwortcode) {
-
-		this.antwortcode = antwortcode;
-		return this;
 	}
 
 	public String getWertungscode() {
@@ -238,21 +166,9 @@ public class PersistenterLoesungszettel extends ConcurrencySafeEntity {
 		return wertungscode;
 	}
 
-	public PersistenterLoesungszettel withWertungscode(final String wertungscode) {
-
-		this.wertungscode = wertungscode;
-		return this;
-	}
-
 	public Sprache getSprache() {
 
 		return sprache;
-	}
-
-	public PersistenterLoesungszettel withSprache(final Sprache sprache) {
-
-		this.sprache = sprache;
-		return this;
 	}
 
 	@Override
@@ -261,6 +177,76 @@ public class PersistenterLoesungszettel extends ConcurrencySafeEntity {
 		return "PersistenterLoesungszettel [uuid=" + getUuid() + ", wettbewerbUuid=" + wettbewerbUuid + ", teilnahmeart="
 			+ teilnahmeart
 			+ ", teilnahmenummer=" + teilnahmenummer + ", kindID=" + kindID + "]";
+	}
+
+	public void setKindID(final String kindID) {
+
+		this.kindID = kindID;
+	}
+
+	public void setKlassenstufe(final Klassenstufe klassenstufe) {
+
+		this.klassenstufe = klassenstufe;
+	}
+
+	public void setTeilnahmenummer(final String teilnahmenummer) {
+
+		this.teilnahmenummer = teilnahmenummer;
+	}
+
+	public void setAuswertungsquelle(final Auswertungsquelle auswertungsquelle) {
+
+		this.auswertungsquelle = auswertungsquelle;
+	}
+
+	public void setTeilnahmeart(final Teilnahmeart teilnahmeart) {
+
+		this.teilnahmeart = teilnahmeart;
+	}
+
+	public void setWettbewerbUuid(final String wettbewerbUuid) {
+
+		this.wettbewerbUuid = wettbewerbUuid;
+	}
+
+	public void setLandkuerzel(final String landkuerzel) {
+
+		this.landkuerzel = landkuerzel;
+	}
+
+	public void setKaengurusprung(final int kaengurusprung) {
+
+		this.kaengurusprung = kaengurusprung;
+	}
+
+	public void setTypo(final boolean typo) {
+
+		this.typo = typo;
+	}
+
+	public void setNutzereingabe(final String nutzereingabe) {
+
+		this.nutzereingabe = nutzereingabe;
+	}
+
+	public void setPunkte(final int punkte) {
+
+		this.punkte = punkte;
+	}
+
+	public void setAntwortcode(final String antwortcode) {
+
+		this.antwortcode = antwortcode;
+	}
+
+	public void setWertungscode(final String wertungscode) {
+
+		this.wertungscode = wertungscode;
+	}
+
+	public void setSprache(final Sprache sprache) {
+
+		this.sprache = sprache;
 	}
 
 }

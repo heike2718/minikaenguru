@@ -77,7 +77,7 @@ public class InMemoryLoesungszettelRepository implements LoesungszettelRepositor
 	}
 
 	@Override
-	public Optional<PersistenterLoesungszettel> findByIdentifier(final Identifier identifier) {
+	public Optional<PersistenterLoesungszettel> findPersistentenLoesungszettel(final Identifier identifier) {
 
 		Loesungszettel loesungszettel = alleLoesungszettel.get(identifier);
 
@@ -90,7 +90,20 @@ public class InMemoryLoesungszettelRepository implements LoesungszettelRepositor
 	}
 
 	@Override
-	public Identifier addLosungszettel(final Loesungszettel loesungszettel) {
+	public Optional<Loesungszettel> ofID(final Identifier identifier) {
+
+		Loesungszettel loesungszettel = alleLoesungszettel.get(identifier);
+
+		if (loesungszettel == null) {
+
+			return Optional.empty();
+		}
+
+		return Optional.of(loesungszettel);
+	}
+
+	@Override
+	public Identifier addLoesungszettel(final Loesungszettel loesungszettel) {
 
 		Identifier identifier = new Identifier(UUID.randomUUID().toString());
 
@@ -169,7 +182,7 @@ public class InMemoryLoesungszettelRepository implements LoesungszettelRepositor
 			.withKlassenstufe(persistenter.getKlassenstufe())
 			.withLaengeKaengurusprung(persistenter.getKaengurusprung())
 			.withLandkuerzel(persistenter.getLandkuerzel())
-			.withKindID(persistenter.getKindID())
+			.withKindID(new Identifier(persistenter.getKindID()))
 			.withPunkte(persistenter.getPunkte())
 			.withRohdaten(rohdaten)
 			.withSprache(persistenter.getSprache())
@@ -181,21 +194,21 @@ public class InMemoryLoesungszettelRepository implements LoesungszettelRepositor
 	private PersistenterLoesungszettel mapFromLoesungszettel(final Loesungszettel loesungszettel) {
 
 		LoesungszettelRohdaten rohdaten = loesungszettel.rohdaten();
-		PersistenterLoesungszettel result = new PersistenterLoesungszettel()
-			.withAntwortcode(rohdaten.antwortcode())
-			.withAuswertungsquelle(loesungszettel.auswertungsquelle())
-			.withKaengurusprung(loesungszettel.laengeKaengurusprung())
-			.withKindID(loesungszettel.kindID())
-			.withKlassenstufe(loesungszettel.klassenstufe())
-			.withLandkuerzel("") // TODO
-			.withNutzereingabe(rohdaten.nutzereingabe())
-			.withPunkte(loesungszettel.punkte())
-			.withSprache(loesungszettel.sprache())
-			.withTeilnahmeart(loesungszettel.teilnahmeIdentifier().teilnahmeart())
-			.withTeilnahmenummer(loesungszettel.teilnahmeIdentifier().teilnahmenummer())
-			.withTypo(rohdaten.hatTypo())
-			.withWertungscode(rohdaten.wertungscode())
-			.withWettbewerbUuid(loesungszettel.teilnahmeIdentifier().wettbewerbID());
+		PersistenterLoesungszettel result = new PersistenterLoesungszettel();
+		result.setAntwortcode(rohdaten.antwortcode());
+		result.setAuswertungsquelle(loesungszettel.auswertungsquelle());
+		result.setKaengurusprung(loesungszettel.laengeKaengurusprung());
+		result.setKindID(loesungszettel.kindID().identifier());
+		result.setKlassenstufe(loesungszettel.klassenstufe());
+		result.setLandkuerzel(loesungszettel.landkuerzel());
+		result.setNutzereingabe(rohdaten.nutzereingabe());
+		result.setPunkte(loesungszettel.punkte());
+		result.setSprache(loesungszettel.sprache());
+		result.setTeilnahmeart(loesungszettel.teilnahmeIdentifier().teilnahmeart());
+		result.setTeilnahmenummer(loesungszettel.teilnahmeIdentifier().teilnahmenummer());
+		result.setTypo(rohdaten.hatTypo());
+		result.setWertungscode(rohdaten.wertungscode());
+		result.setWettbewerbUuid(loesungszettel.teilnahmeIdentifier().wettbewerbID());
 
 		if (loesungszettel.identifier() != null) {
 
