@@ -4,18 +4,17 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.loesungszettel;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.mk_gateway.domain.semantik.ValueObject;
 
 /**
- * LoesungszettelRohdaten
+ * LoesungszettelRohdaten.Ist JSON-annotiert für die Datenbanklosen Tests.
  */
 @ValueObject
 public class LoesungszettelRohdaten {
 
-	@JsonIgnore
+	@JsonProperty
 	private boolean typo;
 
 	/**
@@ -24,10 +23,10 @@ public class LoesungszettelRohdaten {
 	@JsonProperty
 	private String nutzereingabe;
 
-	@JsonIgnore
+	@JsonProperty
 	private String antwortcode;
 
-	@JsonIgnore
+	@JsonProperty
 	private String wertungscode;
 
 	public LoesungszettelRohdaten() {
