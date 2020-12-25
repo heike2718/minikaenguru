@@ -4,6 +4,8 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.loesungszettel;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.semantik.AggregateRoot;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
@@ -12,29 +14,39 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 
 /**
- * Loesungszettel
+ * Loesungszettel. Ist JSON-annotiert für die Datenbanklosen Tests.
  */
 @AggregateRoot
 public class Loesungszettel {
 
+	@JsonProperty
 	private Identifier identifier;
 
+	@JsonProperty
 	private Identifier kindID;
 
+	@JsonProperty
 	private Klassenstufe klassenstufe;
 
+	@JsonProperty
 	private Sprache sprache;
 
+	@JsonProperty
 	private TeilnahmeIdentifier teilnahmeIdentifier;
 
+	@JsonProperty
 	private String landkuerzel;
 
+	@JsonProperty
 	private int laengeKaengurusprung;
 
+	@JsonProperty
 	private int punkte;
 
+	@JsonProperty
 	private Auswertungsquelle auswertungsquelle;
 
+	@JsonProperty
 	private LoesungszettelRohdaten rohdaten;
 
 	public Loesungszettel() {
