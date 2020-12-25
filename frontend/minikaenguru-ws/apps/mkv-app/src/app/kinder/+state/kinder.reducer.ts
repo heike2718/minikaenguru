@@ -28,7 +28,7 @@ const initialKinderState: KinderState = {
 	saveOutcome: undefined,
 	duplikatwarnung: undefined,
 	editorModel: initialKindEditorModel,
-	editorVorbelegung: { klassenstufe: null, sprache: {sprache: 'de', label: 'deutsch'} }
+	editorVorbelegung: { klassenstufe: null, sprache: { sprache: 'de', label: 'deutsch' } }
 };
 
 const kinderReducer = createReducer(initialKinderState,
@@ -55,11 +55,11 @@ const kinderReducer = createReducer(initialKinderState,
 	}),
 
 	on(KinderActions.selectKind, (state, action) => {
-		return {...state, selectedKind: action.kind};
+		return { ...state, selectedKind: action.kind };
 	}),
 
 	on(KinderActions.unselectKind, (state, _action) => {
-		return {...state, selectedKind: undefined};
+		return { ...state, selectedKind: undefined };
 	}),
 
 	on(KinderActions.startEditingKind, (state, action) => {
@@ -113,29 +113,51 @@ const kinderReducer = createReducer(initialKinderState,
 			sprache: action.kind.sprache
 		};
 
-		return { ...state,
+		return {
+			...state,
 			kinderMap: neueMap,
 			saveOutcome: outcome,
 			loading: false,
 			duplikatwarnung: undefined,
 			editorVorbelegung: editorVorbelegung,
 			selectedKind: action.kind
-		 };
+		};
 	}),
 
 	on(KinderActions.kindLoesungszettelChanged, (state, action) => {
 
-		const neuesKind = {...action.kind, punkte: action.punkte};
+		const neuesKind = { ...action.kind, punkte: action.punkte };
 		const neueMap = new KinderMap(state.kinderMap).merge(neuesKind);
 
-		const selectedKind = state.selectedKind && state.selectedKind.uuid === neuesKind.uuid ? neuesKind : state.selectedKind;
-
-		return { ...state,
+		return {
+			...state,
 			kinderMap: neueMap,
 			loading: false,
 			duplikatwarnung: undefined,
-			selectedKind: selectedKind
-		 };
+			selectedKind: neuesKind
+		};
+	}),
+
+	on(KinderActions.kindLoesungszettelDeleted, (state, action) => {
+
+		const theKind = new KinderMap(state.kinderMap).get(action.kindID);
+
+		if (theKind !== null) {
+			const neuesKind = { ...theKind, punkte: undefined };
+
+
+			const neueMap = new KinderMap(state.kinderMap).merge(neuesKind);
+
+			return {
+				...state,
+				kinderMap: neueMap,
+				loading: false,
+				duplikatwarnung: undefined,
+				selectedKind: neuesKind
+			};
+		}
+
+		return {...state};
 	}),
 
 
@@ -146,7 +168,7 @@ const kinderReducer = createReducer(initialKinderState,
 	}),
 
 	on(KinderActions.editCancelled, (state, _action) => {
-		return { ...state, selectedKind: undefined, editorModel: undefined, saveOutcome: undefined, loading: false, duplikatwarnung: undefined};
+		return { ...state, selectedKind: undefined, editorModel: undefined, saveOutcome: undefined, loading: false, duplikatwarnung: undefined };
 	}),
 
 	on(KinderActions.kindDeleted, (state, action) => {

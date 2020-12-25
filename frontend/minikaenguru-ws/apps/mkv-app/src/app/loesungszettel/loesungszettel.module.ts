@@ -7,6 +7,7 @@ import { LoesungszettelEditorComponent } from './loesungszettel-editor/loesungsz
 import { LoesungszettelRoutingModule } from './loesungszettel-routing.module';
 import { CheckboxComponent } from './checkbox/checkbox.component';
 import { LoesungszettelrowComponent } from './loesungszettelrow/loesungszettelrow.component';
+import { CommonMessagesModule } from '@minikaenguru-ws/common-messages';
 
 
 
@@ -19,6 +20,7 @@ import { LoesungszettelrowComponent } from './loesungszettelrow/loesungszettelro
 	imports: [
 		CommonModule,
 		NgbModule,
+		CommonMessagesModule,
 		LoesungszettelRoutingModule,
 		StoreModule.forFeature(fromLoesungszettel.loesungszettelFeatureKey, fromLoesungszettel.reducer)
 	]

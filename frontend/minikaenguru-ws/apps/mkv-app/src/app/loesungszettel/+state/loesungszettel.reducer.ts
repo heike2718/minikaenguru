@@ -92,6 +92,15 @@ const loesungszettelReducer = createReducer(initialLoesungszettelState,
 		}
 	}),
 
+	on(LoesungszettelActions.loesungszettelDeleted, (state, action) => {
+
+		const neueMap = new LoesungszettelMap(state.loesungszettelMap).remove(action.loesungszettel.uuid);
+
+		return { ...state, l: false, loesungszettelMap: neueMap, selectedLoesungszettel: undefined };
+
+
+	}),
+
 	on(LoesungszettelActions.editLoesungszettelCancelled, (state, _action) => {
 
 		return { ...state, loading: false, selectedLoesungszettel: undefined };

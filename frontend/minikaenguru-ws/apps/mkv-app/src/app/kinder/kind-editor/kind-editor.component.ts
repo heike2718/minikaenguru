@@ -108,7 +108,11 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 		this.selectedKindSubscription = this.kinderFacade.selectedKind$.subscribe(
 			kind => {
-				this.selectedKindUUID = kind.uuid;
+				if (kind) {
+					this.selectedKindUUID = kind.uuid;
+				} else {
+					this.selectedKindUUID = undefined;
+				}
 			}
 		);
 
@@ -317,6 +321,4 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 			this.router.navigateByUrl(url);
 		}
 	}
-
-
 }

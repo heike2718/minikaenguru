@@ -100,6 +100,32 @@ export class LoesungszettelFacade {
 
 	}
 
+	public deleteLoesungszettel(loesungszettel: Loesungszettel): void {
+
+		if (!loesungszettel || !loesungszettel.uuid || loesungszettel.uuid === 'neu') {
+			this.store.dispatch(KinderActions.unselectKind());
+		}
+
+		this.store.dispatch(LoesungszettelActions.startLoading());
+
+		this.loesungszettelService.deleteLoesungszettel(loesungszettel.uuid).subscribe(
+
+			responsePayload => {
+
+				this.store.dispatch(LoesungszettelActions.loesungszettelDeleted({ loesungszettel: loesungszettel }));
+				this.store.dispatch(KinderActions.kindLoesungszettelDeleted({ kindID: loesungszettel.kindID }));
+				this.store.dispatch(KinderActions.unselectKind());
+				this.messageService.showMessage(responsePayload.message);
+			},
+			(error => {
+				this.store.dispatch(LoesungszettelActions.finishedWithError());
+				this.errorHandler.handleError(error);
+			})
+
+		);
+
+	}
+
 	public selectLoesungszettel(loesungszettel: Loesungszettel): void {
 		this.store.dispatch(LoesungszettelActions.loesungszettelSelected({ loesungszettel: loesungszettel }));
 	}

@@ -41,9 +41,17 @@ export class LoesungszettelService {
 		return this.uppdateLoesungszettel(url, loesungszettel);
 	}
 
+	public deleteLoesungszettel(loesungszettelID: string): Observable<ResponsePayload> {
+		const url = environment.apiUrl + '/veranstalter/loesungszettel/' + loesungszettelID;
+
+		return this.http.delete(url).pipe(
+			map(body => body as ResponsePayload)
+		);
+	}
+
 	// /////////////////////////////
 
-	private insertLoesungszettel(url: string, loesungszettel: Loesungszettel): Observable<ResponsePayload>{
+	private insertLoesungszettel(url: string, loesungszettel: Loesungszettel): Observable<ResponsePayload> {
 
 		return this.http.post(url, loesungszettel).pipe(
 			map(body => body as ResponsePayload)
@@ -51,7 +59,7 @@ export class LoesungszettelService {
 
 	}
 
-	private uppdateLoesungszettel(url: string, loesungszettel: Loesungszettel): Observable<ResponsePayload>{
+	private uppdateLoesungszettel(url: string, loesungszettel: Loesungszettel): Observable<ResponsePayload> {
 
 		return this.http.put(url, loesungszettel).pipe(
 			map(body => body as ResponsePayload)

@@ -116,6 +116,10 @@ export class KinderFacade {
 
 	public pruefeDuplikat(uuid: string, editorModel: KindEditorModel): void {
 
+		if (!uuid) {
+			return;
+		}
+
 		this.store.dispatch(KinderActions.startLoading());
 
 		const data = this.mapFromEditorModel(uuid, editorModel, undefined) as KindRequestData;

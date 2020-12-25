@@ -6,7 +6,7 @@ import { KindEditorVorbelegung, KlassenwechselDaten } from '../kinder.model';
 
 export const teilnahmenummerInitialized = createAction(
 	'[KinderFacade] on loadKinder',
-	props<{teilnahmeIdentifier: TeilnahmeIdentifierAktuellerWettbewerb}>()
+	props<{ teilnahmeIdentifier: TeilnahmeIdentifierAktuellerWettbewerb }>()
 );
 
 export const startLoading = createAction(
@@ -19,7 +19,7 @@ export const finishedWithError = createAction(
 
 export const allKinderLoaded = createAction(
 	'[KinderFacade] on loadKinder finished with success',
-	props<{kinder: Kind[]}>()
+	props<{ kinder: Kind[] }>()
 );
 
 export const unselectKind = createAction(
@@ -28,7 +28,7 @@ export const unselectKind = createAction(
 
 export const createNewKind = createAction(
 	'[KinderFacade] createNewKind',
-	props<{klasseUuid: string}>()
+	props<{ klasseUuid: string }>()
 );
 
 export const selectKind = createAction(
@@ -63,7 +63,12 @@ export const kindDeleted = createAction(
 
 export const kindLoesungszettelChanged = createAction(
 	'[LoesungszettelFacade]: change the punkte in saveLoesungszettel',
-	props<{kind: Kind, punkte: LoesungszettelPunkte}>()
+	props<{ kind: Kind, punkte: LoesungszettelPunkte }>()
+);
+
+export const kindLoesungszettelDeleted = createAction(
+	'[LoesungszettelFacade]: delete the punkte in deleteLoesungszettel',
+	props<{ kindID: string }>()
 );
 
 export const resetModule = createAction(

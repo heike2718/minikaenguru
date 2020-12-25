@@ -3,8 +3,8 @@
 	<p *ngIf="devMode">loesungszettel-editor.component.ts</p>
 	<p *ngIf="devMode">{{loesungszetteleingaben}}</p>
 
-	<div *ngIf="devMode && loesungszettelFacade.selectedLoesungszettel$ | async as loesungszettel">
-		{{loesungszettel.uuid}}</div>
+	<div *ngIf="devMode && uuid">
+		{{uuid}}</div>
 
 	<div *ngIf="loesungszettelFacade.selectedLoesungszettel$ | async as loesungszettel" class="tabelle">
 
@@ -16,10 +16,16 @@
 
 	<p>Lösungscode: {{loesungszetteleingaben}}</p>
 
+	<div *ngIf="showSaveMessage">
+		<cmn-msg></cmn-msg>
+	</div>
+
 	<div class="btn-group d-flex" role="group">
-		<button class="btn btn-primary w-100 ml-1" [disabled]="saveInProgress"
-			(click)="onSubmit()"><i class="fa fa-floppy-o" aria-hidden="true"></i>
+		<button class="btn btn-primary w-100 ml-1" [disabled]="saveInProgress" (click)="onSubmit()"><i
+				class="fa fa-floppy-o" aria-hidden="true"></i>
 			speichern</button>
+
+
 
 		<button class="btn btn-primary w-100 ml-1" (click)="onCancel()"><i class="fa fa-arrow-left"
 				aria-hidden="true"></i>zurück</button>

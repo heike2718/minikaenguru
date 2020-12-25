@@ -45,7 +45,14 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 			this.handleHttpError(httpError);
 		} else {
 			console.log('ErrorEvent: ' + error);
-			this.logger.error('mk-admin-app: Unerwarteter Fehler: ' + error.message);
+			if (error.stack) {
+				console.log(error.stack);
+			}
+			let msg = 'mk-admin-app: Unerwarteter Fehler: ' + error.message;
+			if (error.stack) {
+				msg += ' - ' + error.stack;
+			}
+			this.logger.error(msg);
 			if (environment.envName === 'DEV') {
 				this.showServerResponseMessage('ERROR', 'Unerwarteter GUI-Error: ' + error.message);
 			}

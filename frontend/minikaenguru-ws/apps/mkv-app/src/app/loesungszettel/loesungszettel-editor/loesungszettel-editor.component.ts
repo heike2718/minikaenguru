@@ -30,6 +30,10 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 
 	saveInProgress = false;
 
+	showSaveMessage = false;
+
+	uuid: string;
+
 	private selectedKindSubscription: Subscription;
 
 	private loesungszettelSubscription: Subscription;
@@ -69,6 +73,12 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 			zettel => {
 				this.loesungszetteleingaben = this.initEingaben(zettel);
 				this.loesungszettel = zettel;
+
+				if (zettel) {
+					this.uuid = zettel.uuid;
+				} else {
+					this.uuid= undefined;
+				}
 			}
 
 		);
@@ -108,6 +118,24 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 
 		this.messageService.clear();
 		this.loesungszettelFacade.cancelEditLoesungszettel();
+		this.navigateBack();
+	}
+
+	onDelete(): void {
+
+		this.loesungszettelFacade.deleteLoesungszettel(this.loesungszettel);
+		this.navigateBack();
+	}
+
+	private forceSave(): void {
+
+		this.saveInProgress = false;
+		this.loesungszettelFacade.saveLoesungszettel(this.kind, this.loesungszettel);
+		this.showSaveMessage = true;
+
+	}
+
+	private navigateBack(): void {
 
 		if (this.teilnahmeIdentifier && this.teilnahmeIdentifier.teilnahmenummer) {
 			this.router.navigateByUrl('/kinder/' + this.teilnahmeIdentifier.teilnahmenummer);
@@ -130,13 +158,6 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	private forceSave(): void {
-
-		this.saveInProgress = false;
-		this.loesungszettelFacade.saveLoesungszettel(this.kind, this.loesungszettel);
-
-	}
-
 	private openWarndialog(content: TemplateRef<HTMLElement>) {
 
 		this.saveInProgress = false;
@@ -148,8 +169,6 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 
 		});
 	}
-
-
 
 	private initEingaben(loesungszettel: Loesungszettel): string {
 
@@ -168,7 +187,4 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 
 		return eingaben;
 	}
-
-
-
 }

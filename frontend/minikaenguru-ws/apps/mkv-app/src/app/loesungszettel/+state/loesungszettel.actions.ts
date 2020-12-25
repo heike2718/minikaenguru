@@ -40,6 +40,11 @@ export const editLoesungszettelCancelled = createAction(
 	'[LoesungszettelFacade] cancelEditLoesungszettel'
 );
 
+export const loesungszettelDeleted = createAction(
+	'[LoesungszettelFacade] deleteLoesungszettel',
+	props<{loesungszettel: Loesungszettel}>()
+);
+
 export const resetModule = createAction(
 	'[LoesungszettelFacade] resetState'
 );
