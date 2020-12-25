@@ -99,11 +99,26 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 	}
 
 	@Override
-	public Optional<PersistenterLoesungszettel> findByIdentifier(final Identifier identifier) {
+	public Optional<PersistenterLoesungszettel> findPersistentenLoesungszettel(final Identifier identifier) {
 
 		PersistenterLoesungszettel result = em.find(PersistenterLoesungszettel.class, identifier.identifier());
 
 		return result == null ? Optional.empty() : Optional.of(result);
+	}
+
+	@Override
+	public Optional<Loesungszettel> ofID(final Identifier identifier) {
+
+		Optional<PersistenterLoesungszettel> optPersistenter = this.findPersistentenLoesungszettel(identifier);
+
+		if (optPersistenter.isEmpty()) {
+
+			return Optional.empty();
+		}
+
+		Loesungszettel result = this.mapFromDB(optPersistenter.get());
+
+		return Optional.of(result);
 	}
 
 	Loesungszettel mapFromDB(final PersistenterLoesungszettel persistenter) {
@@ -126,7 +141,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 			.withKlassenstufe(persistenter.getKlassenstufe())
 			.withLaengeKaengurusprung(persistenter.getKaengurusprung())
 			.withLandkuerzel(persistenter.getLandkuerzel())
-			.withKindID(persistenter.getKindID())
+			.withKindID(new Identifier(persistenter.getKindID()))
 			.withPunkte(persistenter.getPunkte())
 			.withRohdaten(rohdaten)
 			.withSprache(persistenter.getSprache())
@@ -135,35 +150,28 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 		return result;
 	}
 
-	PersistenterLoesungszettel mapFromDomainObject(final Loesungszettel loesungszettel) {
+	void copyAllAttributesBitIdentifier(final PersistenterLoesungszettel target, final Loesungszettel loesungszettel) {
 
 		LoesungszettelRohdaten rohdaten = loesungszettel.rohdaten();
-		PersistenterLoesungszettel result = new PersistenterLoesungszettel()
-			.withAntwortcode(rohdaten.antwortcode())
-			.withAuswertungsquelle(loesungszettel.auswertungsquelle())
-			.withKaengurusprung(loesungszettel.laengeKaengurusprung())
-			.withKindID(loesungszettel.kindID())
-			.withKlassenstufe(loesungszettel.klassenstufe())
-			.withLandkuerzel("") // TODO
-			.withNutzereingabe(rohdaten.nutzereingabe())
-			.withPunkte(loesungszettel.punkte())
-			.withSprache(loesungszettel.sprache())
-			.withTeilnahmeart(loesungszettel.teilnahmeIdentifier().teilnahmeart())
-			.withTeilnahmenummer(loesungszettel.teilnahmeIdentifier().teilnahmenummer())
-			.withTypo(rohdaten.hatTypo())
-			.withWertungscode(rohdaten.wertungscode())
-			.withWettbewerbUuid(loesungszettel.teilnahmeIdentifier().wettbewerbID());
 
-		if (loesungszettel.identifier() != null) {
-
-			result.setUuid(loesungszettel.identifier().identifier());
-		}
-		return result;
-
+		target.setAntwortcode(rohdaten.antwortcode());
+		target.setAuswertungsquelle(loesungszettel.auswertungsquelle());
+		target.setKaengurusprung(loesungszettel.laengeKaengurusprung());
+		target.setKindID(loesungszettel.kindID().identifier());
+		target.setKlassenstufe(loesungszettel.klassenstufe());
+		target.setLandkuerzel(loesungszettel.landkuerzel());
+		target.setNutzereingabe(rohdaten.nutzereingabe());
+		target.setPunkte(loesungszettel.punkte());
+		target.setSprache(loesungszettel.sprache());
+		target.setTeilnahmeart(loesungszettel.teilnahmeIdentifier().teilnahmeart());
+		target.setTeilnahmenummer(loesungszettel.teilnahmeIdentifier().teilnahmenummer());
+		target.setTypo(rohdaten.hatTypo());
+		target.setWertungscode(rohdaten.wertungscode());
+		target.setWettbewerbUuid(loesungszettel.teilnahmeIdentifier().wettbewerbID());
 	}
 
 	@Override
-	public Identifier addLosungszettel(final Loesungszettel loesungszettel) {
+	public Identifier addLoesungszettel(final Loesungszettel loesungszettel) {
 
 		if (loesungszettel.identifier() != null) {
 
@@ -171,7 +179,8 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 				+ " und kann hinzugefügt werden!");
 		}
 
-		PersistenterLoesungszettel zuPeristierenderLoesungszettel = this.mapFromDomainObject(loesungszettel);
+		PersistenterLoesungszettel zuPeristierenderLoesungszettel = new PersistenterLoesungszettel();
+		this.copyAllAttributesBitIdentifier(zuPeristierenderLoesungszettel, loesungszettel);
 
 		em.persist(zuPeristierenderLoesungszettel);
 
@@ -186,11 +195,17 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 			throw new IllegalStateException("loesungszettel hat keine UUID und kann geändert werden!");
 		}
 
-		PersistenterLoesungszettel neuerLoesungszettel = this.mapFromDomainObject(loesungszettel);
-		this.removeLoesungszettel(loesungszettel.identifier(), null);
-		neuerLoesungszettel.setImportierteUuid(loesungszettel.identifier().identifier());
+		Optional<PersistenterLoesungszettel> optPersistenter = this.findPersistentenLoesungszettel(loesungszettel.identifier());
 
-		em.persist(neuerLoesungszettel);
+		if (optPersistenter.isEmpty()) {
+
+			return false;
+		}
+
+		PersistenterLoesungszettel persistenter = optPersistenter.get();
+		this.copyAllAttributesBitIdentifier(persistenter, loesungszettel);
+
+		em.merge(persistenter);
 
 		return true;
 	}
@@ -204,7 +219,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 	@Override
 	public boolean removeLoesungszettel(final Identifier identifier, final String veranstalterUuid) {
 
-		Optional<PersistenterLoesungszettel> optExisting = this.findByIdentifier(identifier);
+		Optional<PersistenterLoesungszettel> optExisting = this.findPersistentenLoesungszettel(identifier);
 
 		if (optExisting.isEmpty()) {
 

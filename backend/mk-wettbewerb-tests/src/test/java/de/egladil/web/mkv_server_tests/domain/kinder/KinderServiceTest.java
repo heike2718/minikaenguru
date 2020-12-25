@@ -85,7 +85,7 @@ public class KinderServiceTest extends AbstractIT {
 
 				neueUuid = result.uuid();
 
-				Optional<Kind> optKind = kinderRepository.withIdentifier(new Identifier(neueUuid));
+				Optional<Kind> optKind = kinderRepository.ofId(new Identifier(neueUuid));
 
 				assertTrue(optKind.isPresent());
 
@@ -143,7 +143,7 @@ public class KinderServiceTest extends AbstractIT {
 
 				neueUuid = result.uuid();
 
-				Optional<Kind> optKind = kinderRepository.withIdentifier(new Identifier(neueUuid));
+				Optional<Kind> optKind = kinderRepository.ofId(new Identifier(neueUuid));
 
 				assertTrue(optKind.isPresent());
 
@@ -176,7 +176,7 @@ public class KinderServiceTest extends AbstractIT {
 
 				trx.commit();
 
-				Optional<Kind> optKind = kinderRepository.withIdentifier(new Identifier(neueUuid));
+				Optional<Kind> optKind = kinderRepository.ofId(new Identifier(neueUuid));
 
 				// Assert
 				assertTrue(optKind.isEmpty());

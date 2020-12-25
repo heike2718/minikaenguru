@@ -1,0 +1,43 @@
+.loesungszettel {
+
+  max-width: 75%;
+}
+
+.tabelle {
+  max-width: 75%;
+}
+
+@media screen and (max-width: 668px) {
+  .loesungszettel {
+
+    width: 90%;
+  }
+
+  .tabelle {
+    max-width: 90%;
+  }
+}
+
+
+@media screen and (max-width: 768px) {
+  .loesungszettel {
+
+    width: 100vw;
+  }
+
+  .tabelle {
+    max-width: 100vw;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+
+	.loesungszettel {
+
+    width: 100vw;
+  }
+
+  .tabelle {
+    max-width: 100vw;
+  }
+}

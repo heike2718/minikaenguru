@@ -1,0 +1,25 @@
+.loesungszettel-text {
+	font-size: 1.5em;
+	font-weight: 200;
+}
+
+.loesungszettelrow {
+	background-color: bisque;
+}
+
+@media screen and (max-width: 768px) {
+  .loesungszettel-text {
+
+	font-size: 1em;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+
+	.loesungszettel-text {
+
+	font-size: 2em;
+  }
+}
+
+

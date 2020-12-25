@@ -33,6 +33,7 @@ import { KinderModule } from './kinder/kinder.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SessionTimeoutComponent } from './session-timeout/session-timeout.component';
 import { KlassenModule } from './klassen/klassen.module';
+import { LoesungszettelModule } from './loesungszettel/loesungszettel.module';
 
 
 
@@ -78,6 +79,7 @@ import { KlassenModule } from './klassen/klassen.module';
 		KlassenModule,
 		TeilnahmenModule,
 		VertragAdvModule,
+		LoesungszettelModule,
 		StoreModule.forRoot(reducers, {
 			metaReducers,
 			runtimeChecks: {

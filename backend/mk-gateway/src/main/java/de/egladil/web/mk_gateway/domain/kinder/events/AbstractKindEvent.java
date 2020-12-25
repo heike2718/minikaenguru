@@ -33,6 +33,9 @@ public abstract class AbstractKindEvent extends AbstractDomainEvent {
 	@JsonProperty
 	private String klasseID;
 
+	@JsonProperty
+	private String loesungszettelID;
+
 	AbstractKindEvent() {
 
 		super();
@@ -71,6 +74,12 @@ public abstract class AbstractKindEvent extends AbstractDomainEvent {
 	public AbstractKindEvent withKlasseID(final String klasseID) {
 
 		this.klasseID = klasseID;
+		return this;
+	}
+
+	public AbstractKindEvent withLoesungszettelID(final String loesungszettelID) {
+
+		this.loesungszettelID = loesungszettelID;
 		return this;
 	}
 }

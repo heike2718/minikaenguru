@@ -6,10 +6,13 @@ package de.egladil.web.mk_gateway.domain.kinder.api;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.KlassenstufeAPIModel;
+import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.LoesungszettelpunkteAPIModel;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.SpracheAPIModel;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
@@ -35,15 +38,18 @@ public class KindAPIModelTest {
 		KlassenstufeAPIModel expectedKlassenstufe = KlassenstufeAPIModel.create(klassenstufe);
 		SpracheAPIModel expectedSprache = SpracheAPIModel.create(sprache);
 
+		LoesungszettelpunkteAPIModel punkte = new LoesungszettelpunkteAPIModel().withPunkte("48,5").withLaengeKaengurusprung(4)
+			.withLoesungszettelId("GGGOHOHHP6");
+
 		// Act
-		KindAPIModel apiModel = KindAPIModel.create(klassenstufe, sprache).withLoesungszettelId("GGGOHOHHP6")
+		KindAPIModel apiModel = KindAPIModel.create(klassenstufe, sprache).withPunkte(punkte)
 			.withNachname("Klabauter").withVorname("Klaus").withZusatz("zusatz").withUuid("JLHDRSRZDU");
 
 		// Assert
 		assertEquals(expectedKlassenstufe, apiModel.klassenstufe());
 		assertEquals(expectedSprache, apiModel.sprache());
 		assertEquals(expectedUuid, apiModel.uuid());
-		assertEquals(expectedLoesungszettelId, apiModel.loesungszettelId());
+		assertEquals(expectedLoesungszettelId, apiModel.punkte().loesungszettelId());
 		assertEquals(expectedNachname, apiModel.nachname());
 		assertEquals(expectedVorname, apiModel.vorname());
 		assertEquals(expectedZusatz, apiModel.zusatz());
@@ -74,13 +80,13 @@ public class KindAPIModelTest {
 			.withZusatz("zusatz");
 
 		// Act
-		KindAPIModel apiModel = KindAPIModel.createFromKind(kind);
+		KindAPIModel apiModel = KindAPIModel.createFromKind(kind, Optional.empty());
 
 		// Assert
 		assertEquals(expectedKlassenstufe, apiModel.klassenstufe());
 		assertEquals(expectedSprache, apiModel.sprache());
 		assertEquals(expectedUuid, apiModel.uuid());
-		assertEquals(expectedLoesungszettelId, apiModel.loesungszettelId());
+		assertEquals(expectedLoesungszettelId, apiModel.punkte().loesungszettelId());
 		assertEquals(expectedNachname, apiModel.nachname());
 		assertEquals(expectedVorname, apiModel.vorname());
 		assertEquals(expectedZusatz, apiModel.zusatz());

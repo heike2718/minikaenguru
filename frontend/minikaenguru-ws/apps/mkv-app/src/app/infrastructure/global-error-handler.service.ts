@@ -45,6 +45,14 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 			this.handleHttpError(httpError, 'mkv-app');
 		} else {
 			console.log('ErrorEvent: ' + error);
+			if (error.stack) {
+				console.log(error.stack);
+			}
+			let msg = 'mkv-app: Unerwarteter Fehler: ' + error.message;
+			if (error.stack) {
+				msg += ' - ' + error.stack;
+			}
+			this.logger.error(msg);
 			this.logger.error('mkv-app: Unerwarteter Fehler: ' + error.message);
 			this.showServerResponseMessage('ERROR', 'Unerwarteter GUI-Error: ' + error.message);
 		}

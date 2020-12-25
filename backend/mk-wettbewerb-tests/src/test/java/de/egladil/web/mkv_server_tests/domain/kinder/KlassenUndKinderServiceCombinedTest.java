@@ -160,7 +160,7 @@ public class KlassenUndKinderServiceCombinedTest extends AbstractIT {
 		{
 
 			Optional<Kind> optKind = kinderRepository
-				.withIdentifier(new Identifier(kindUuid));
+				.ofId(new Identifier(kindUuid));
 
 			assertTrue(optKind.isPresent());
 

@@ -59,9 +59,17 @@ public interface LoesungszettelRepository {
 	 * Sucht den Lösungszettel anhand des Identifiers.
 	 *
 	 * @param  identifier
-	 * @return            PersistenterLoesungszettel
+	 * @return            Optional
 	 */
-	Optional<PersistenterLoesungszettel> findByIdentifier(Identifier identifier);
+	Optional<PersistenterLoesungszettel> findPersistentenLoesungszettel(Identifier identifier);
+
+	/**
+	 * Sucht den Lösungszettel anhand des Identifiers.
+	 *
+	 * @param  identifier
+	 * @return            Optional
+	 */
+	Optional<Loesungszettel> ofID(Identifier identifier);
 
 	/**
 	 * Fügt einen neuen Löungszettel hinzu.
@@ -70,7 +78,7 @@ public interface LoesungszettelRepository {
 	 *                        Lösungszettel
 	 * @return                Identifier
 	 */
-	Identifier addLosungszettel(Loesungszettel loesungszettel);
+	Identifier addLoesungszettel(Loesungszettel loesungszettel);
 
 	/**
 	 * Ändert einen vorhandenen Lösungszettel in der DB.

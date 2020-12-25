@@ -8,6 +8,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LogService } from '@minikaenguru-ws/common-logging';
 import { Subscription } from 'rxjs';
 import { KlassenFacade } from '../../klassen/klassen.facade';
+import { LoesungszettelFacade } from '../../loesungszettel/loesungszettel.facade';
 
 @Component({
 	selector: 'mkv-kind-details',
@@ -41,6 +42,7 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 		private modalService: NgbModal,
 		private kinderFacade: KinderFacade,
 		private klassenFacade: KlassenFacade,
+		private loesungszettelFacade: LoesungszettelFacade,
 		private logger: LogService
 	) { }
 
@@ -107,6 +109,15 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 
 	editLoesungszettel(): void {
 
+		this.kinderFacade.selectKind(this.kind);
+
+		if (this.kind.punkte) {
+			this.loesungszettelFacade.loadLoesungszettel(this.kind);
+		} else {
+			this.loesungszettelFacade.createNewLoesungszettel(this.kind);
+		}
+
+		this.router.navigateByUrl('/loesungszettel');
 	}
 
 }

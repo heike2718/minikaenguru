@@ -55,7 +55,7 @@ public class InMemoryKinderRepository implements KinderRepository {
 	}
 
 	@Override
-	public Optional<Kind> withIdentifier(final Identifier identifier) {
+	public Optional<Kind> ofId(final Identifier identifier) {
 
 		Kind kind = alleKinder.get(identifier);
 

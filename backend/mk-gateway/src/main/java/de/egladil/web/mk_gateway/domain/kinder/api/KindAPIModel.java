@@ -6,6 +6,7 @@ package de.egladil.web.mk_gateway.domain.kinder.api;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import de.egladil.web.commons_validation.annotations.StringLatin;
 import de.egladil.web.commons_validation.annotations.UuidString;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.KlassenstufeAPIModel;
+import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.LoesungszettelpunkteAPIModel;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.SpracheAPIModel;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
@@ -55,8 +57,7 @@ public class KindAPIModel implements Serializable {
 	private SpracheAPIModel sprache;
 
 	@JsonProperty
-	@UuidString
-	private String loesungszettelId;
+	private LoesungszettelpunkteAPIModel punkte;
 
 	@JsonProperty
 	@UuidString
@@ -71,19 +72,14 @@ public class KindAPIModel implements Serializable {
 		return result;
 	}
 
-	public static KindAPIModel createFromKind(final Kind kind) {
+	public static KindAPIModel createFromKind(final Kind kind, final Optional<LoesungszettelpunkteAPIModel> optPunkte) {
 
 		KindAPIModel result = KindAPIModel.create(kind.klassenstufe(), kind.sprache())
 			.withNachname(kind.nachname())
 			.withUuid(kind.identifier().identifier())
 			.withVorname(kind.vorname())
-			.withZusatz(kind.zusatz());
-
-		if (kind.loesungszettelID() != null) {
-
-			result = result.withLoesungszettelId(kind.loesungszettelID().identifier());
-
-		}
+			.withZusatz(kind.zusatz())
+			.withPunkte(optPunkte.isEmpty() ? null : optPunkte.get());
 
 		if (kind.klasseID() != null) {
 
@@ -147,14 +143,14 @@ public class KindAPIModel implements Serializable {
 		return sprache;
 	}
 
-	public String loesungszettelId() {
+	public LoesungszettelpunkteAPIModel punkte() {
 
-		return loesungszettelId;
+		return this.punkte;
 	}
 
-	public KindAPIModel withLoesungszettelId(final String loesungszettelId) {
+	public KindAPIModel withPunkte(final LoesungszettelpunkteAPIModel punkte) {
 
-		this.loesungszettelId = loesungszettelId;
+		this.punkte = punkte;
 		return this;
 	}
 

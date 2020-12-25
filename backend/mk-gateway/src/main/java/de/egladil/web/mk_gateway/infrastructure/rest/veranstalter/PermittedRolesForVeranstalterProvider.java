@@ -29,6 +29,16 @@ public final class PermittedRolesForVeranstalterProvider {
 
 		{
 
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.PRIVAT, Rolle.LEHRER });
+			result.put(new PathWithMethod("/veranstalter/loesungszettel/*", HttpMethod.GET), rollen);
+			result.put(new PathWithMethod("/veranstalter/loesungszettel", HttpMethod.POST), rollen);
+			result.put(new PathWithMethod("/veranstalter/loesungszettel", HttpMethod.PUT), rollen);
+			result.put(new PathWithMethod("/veranstalter/loesungszettel/*", HttpMethod.DELETE), rollen);
+
+		}
+
+		{
+
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.PRIVAT });
 			result.put(new PathWithMethod("/veranstalter/teilnahmen/privat", HttpMethod.GET), rollen);
 			result.put(new PathWithMethod("/veranstalter/teilnahmen/privat", HttpMethod.POST), rollen);

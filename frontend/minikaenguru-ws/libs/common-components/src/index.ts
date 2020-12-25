@@ -18,6 +18,7 @@ export {
 	Duplikatkontext,
 	Klassenstufe,
 	Sprache,
+	LoesungszettelPunkte,
 	Kind,
 	KindEditorModel,
 	Duplikatwarnung,

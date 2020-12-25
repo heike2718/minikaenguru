@@ -19,7 +19,6 @@ export class KlassenMap {
 
 	constructor(readonly items: KlasseWithID[]) {
 
-
 		if (items !== undefined) {
 			for (const i of items) {
 				this.klassen.set(i.uuid, i.klasse);

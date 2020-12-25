@@ -58,7 +58,7 @@ public class KinderHibernateRepository implements KinderRepository {
 	}
 
 	@Override
-	public Optional<Kind> withIdentifier(final Identifier identifier) {
+	public Optional<Kind> ofId(final Identifier identifier) {
 
 		PersistentesKind persistentesKind = em.find(PersistentesKind.class, identifier.identifier());
 

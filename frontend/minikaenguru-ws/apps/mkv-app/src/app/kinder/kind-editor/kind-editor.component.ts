@@ -83,7 +83,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	private schuleSubscription: Subscription;
 
-	private selectedKindUUIDSubscription: Subscription;
+	private selectedKindSubscription: Subscription;
 
 	constructor(private fb: FormBuilder,
 		private modalService: NgbModal,
@@ -106,9 +106,13 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 			p => this.klasseUuid = p['klasseUuid']
 		);
 
-		this.selectedKindUUIDSubscription = this.kinderFacade.selectedKindUUID$.subscribe(
-			uuid => {
-				this.selectedKindUUID = uuid;
+		this.selectedKindSubscription = this.kinderFacade.selectedKind$.subscribe(
+			kind => {
+				if (kind) {
+					this.selectedKindUUID = kind.uuid;
+				} else {
+					this.selectedKindUUID = undefined;
+				}
 			}
 		);
 
@@ -183,8 +187,8 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 
-		if (this.selectedKindUUIDSubscription) {
-			this.selectedKindUUIDSubscription.unsubscribe();
+		if (this.selectedKindSubscription) {
+			this.selectedKindSubscription.unsubscribe();
 		}
 
 		if (this.editorModelSubscription) {
@@ -317,6 +321,4 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 			this.router.navigateByUrl(url);
 		}
 	}
-
-
 }
