@@ -8,6 +8,7 @@ import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.Klasse;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Schulteilnahme;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.urkunden.Urkundenmotiv;
 import de.egladil.web.mk_gateway.domain.urkunden.daten.AbstractDatenUrkunde;
 import de.egladil.web.mk_gateway.domain.urkunden.daten.KaengurusprungurkundeSchuleDaten;
@@ -30,8 +31,10 @@ public class CreateDatenKaengurusprungSchuleStrategie implements CreateDatenUrku
 	@Override
 	public AbstractDatenUrkunde createDatenUrkunde(final Kind kind, final Loesungszettel loesungszettel, final String datum, final Urkundenmotiv urkundenmotiv) {
 
+		String theDatum = kind.sprache() == Sprache.en ? datum.replaceAll("\\.", "/") : datum;
+
 		return new KaengurusprungurkundeSchuleDaten(loesungszettel.laengeKaengurusprung(), schulteilnahme, klasse)
-			.withDatum(datum)
+			.withDatum(theDatum)
 			.withUrkundenmotiv(urkundenmotiv)
 			.withFullName(kind.nameUrkunde())
 			.withWettbewerbsjahr(loesungszettel.teilnahmeIdentifier().wettbewerbID());

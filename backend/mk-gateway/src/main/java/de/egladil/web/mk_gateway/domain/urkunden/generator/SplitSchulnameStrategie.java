@@ -23,7 +23,7 @@ public class SplitSchulnameStrategie extends AbstractSplitTextStrategie {
 	@Override
 	protected int getMaxLengthAbbreviatedText() {
 
-		return 45;
+		return 42;
 	}
 
 	@Override

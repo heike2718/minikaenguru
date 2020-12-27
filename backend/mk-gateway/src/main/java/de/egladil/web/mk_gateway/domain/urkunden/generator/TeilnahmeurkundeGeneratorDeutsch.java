@@ -45,7 +45,7 @@ public class TeilnahmeurkundeGeneratorDeutsch implements UrkundeGenerator {
 			final PdfContentByte content = stamper.getOverContent(1);
 
 			// header
-			String text = "Beim Wettbewerb";
+			String text = "Beim Mathewettbewerb";
 			int verschiebungVonTop = headerRenderer.printSectionAndShiftVerticalPosition(content, text);
 
 			// hauptabschnitt

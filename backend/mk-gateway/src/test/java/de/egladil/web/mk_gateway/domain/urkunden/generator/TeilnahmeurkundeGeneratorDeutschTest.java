@@ -4,15 +4,18 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.urkunden.generator;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.auswertungen.StatistikTestUtils;
 import de.egladil.web.mk_gateway.domain.kinder.Klasse;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Schulteilnahme;
 import de.egladil.web.mk_gateway.domain.urkunden.Farbschema;
 import de.egladil.web.mk_gateway.domain.urkunden.Urkundenmotiv;
+import de.egladil.web.mk_gateway.domain.urkunden.daten.TeilnahmeurkundePrivatDaten;
 import de.egladil.web.mk_gateway.domain.urkunden.daten.TeilnahmeurkundeSchuleDaten;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 
@@ -21,105 +24,180 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
  */
 public class TeilnahmeurkundeGeneratorDeutschTest {
 
-	@Test
-	void eineUrkundeMitSchuleEinzeilig() throws Exception {
+	@Nested
+	class TeilnahmeurkundeSchulenTests {
 
-		// Arrange
-		Urkundenmotiv urkundenmotiv = Urkundenmotiv.createFromFarbschema(Farbschema.BLUE);
+		@Test
+		void eineUrkundeMitSchuleEinzeilig() throws Exception {
 
-		Schulteilnahme schulteilnahme = new Schulteilnahme(new WettbewerbID(2020), new Identifier("GHZTZZIT"),
-			"Grundschule \"Johann Wolfgang von Goethe\"", new Identifier("jkasdkjq"));
-		Klasse klasse = new Klasse(new Identifier("sdhuqwo")).withName("Eichelhäher");
+			// Arrange
+			Urkundenmotiv urkundenmotiv = Urkundenmotiv.createFromFarbschema(Farbschema.BLUE);
 
-		TeilnahmeurkundeSchuleDaten datenUrkunde = new TeilnahmeurkundeSchuleDaten("38,75", schulteilnahme, klasse)
-			.withDatum("26.12.2020")
-			.withFullName("Anna Bolika")
-			.withUrkundenmotiv(urkundenmotiv)
-			.withWettbewerbsjahr("2020");
+			Schulteilnahme schulteilnahme = new Schulteilnahme(new WettbewerbID(2020), new Identifier("GHZTZZIT"),
+				"Grundschule \"Johann Wolfgang von Goethe\"", new Identifier("jkasdkjq"));
+			Klasse klasse = new Klasse(new Identifier("sdhuqwo")).withName("Klasse 2b");
 
-		// Act
-		byte[] daten = new TeilnahmeurkundeGeneratorDeutsch().generiereUrkunde(datenUrkunde);
+			TeilnahmeurkundeSchuleDaten datenUrkunde = new TeilnahmeurkundeSchuleDaten("42,75", schulteilnahme, klasse)
+				.withDatum("26.12.2020")
+				.withFullName("Anna Logika")
+				.withUrkundenmotiv(urkundenmotiv)
+				.withWettbewerbsjahr("2020");
 
-		// jetzt in Datei schreiben
-		DownloadData downloadData = new DownloadData("name.pdf", daten);
+			// Act
+			byte[] daten = new TeilnahmeurkundeGeneratorDeutsch().generiereUrkunde(datenUrkunde);
 
-		StatistikTestUtils.print(downloadData, true);
+			// jetzt in Datei schreiben
+			DownloadData downloadData = new DownloadData("name.pdf", daten);
+
+			StatistikTestUtils.print(downloadData, true);
+		}
+
+		@Test
+		void eineUrkundeMitKindernameUndSchulnameZweizeilig() throws Exception {
+
+			// Arrange
+			Urkundenmotiv urkundenmotiv = Urkundenmotiv.createFromFarbschema(Farbschema.BLUE);
+
+			Schulteilnahme schulteilnahme = new Schulteilnahme(new WettbewerbID(2020), new Identifier("GHZTZZIT"),
+				"Grundschule an der Georgstraße Städtische Gemeinschaftsschule der Primarstufe", new Identifier("jkasdkjq"));
+			Klasse klasse = new Klasse(new Identifier("sdhuqwo")).withName("Klasse 2b");
+
+			TeilnahmeurkundeSchuleDaten datenUrkunde = new TeilnahmeurkundeSchuleDaten("38,75", schulteilnahme, klasse)
+				.withDatum("26.12.2020")
+				.withFullName("Karl mit einem Nachnamen der gerade noch so passt indem umgebrochen wird")
+				.withUrkundenmotiv(urkundenmotiv)
+				.withWettbewerbsjahr("2020");
+
+			// Act
+			byte[] daten = new TeilnahmeurkundeGeneratorDeutsch().generiereUrkunde(datenUrkunde);
+
+			// jetzt in Datei schreiben
+			DownloadData downloadData = new DownloadData("name.pdf", daten);
+
+			StatistikTestUtils.print(downloadData, true);
+		}
+
+		@Test
+		void eineUrkundeMitLangemKindernamenUndSchuleZweizeilig() throws Exception {
+
+			// Arrange
+			Urkundenmotiv urkundenmotiv = Urkundenmotiv.createFromFarbschema(Farbschema.BLUE);
+
+			Schulteilnahme schulteilnahme = new Schulteilnahme(new WettbewerbID(2020), new Identifier("GHZTZZIT"),
+				"Grundschule an der Georgstraße Städtische Gemeinschaftsschule der Primarstufe", new Identifier("jkasdkjq"));
+			Klasse klasse = new Klasse(new Identifier("sdhuqwo")).withName("Eichelhäher");
+
+			TeilnahmeurkundeSchuleDaten datenUrkunde = new TeilnahmeurkundeSchuleDaten("13,75", schulteilnahme, klasse)
+				.withDatum("26.12.2020")
+				.withFullName("Karl Theodor zu Guttenberg Kuckucksheim")
+				.withUrkundenmotiv(urkundenmotiv)
+				.withWettbewerbsjahr("2020");
+
+			// Act
+			byte[] daten = new TeilnahmeurkundeGeneratorDeutsch().generiereUrkunde(datenUrkunde);
+
+			// jetzt in Datei schreiben
+			DownloadData downloadData = new DownloadData("name.pdf", daten);
+
+			StatistikTestUtils.print(downloadData, true);
+		}
+
+		@Test
+		void eineUrkundeMitZuLangemKindernamenUndZuLangemSchulnamen() throws Exception {
+
+			// Arrange
+			Urkundenmotiv urkundenmotiv = Urkundenmotiv.createFromFarbschema(Farbschema.BLUE);
+
+			Schulteilnahme schulteilnahme = new Schulteilnahme(new WettbewerbID(2020), new Identifier("GHZTZZIT"),
+				"Grundschule an der Wilhemstraße Gemeinschaftsschule der Primarstufe für mathematisch minderbegante Kinder",
+				new Identifier("jkasdkjq"));
+			Klasse klasse = new Klasse(new Identifier("sdhuqwo")).withName("Klasse 2b");
+
+			TeilnahmeurkundeSchuleDaten datenUrkunde = new TeilnahmeurkundeSchuleDaten("13,75", schulteilnahme, klasse)
+				.withDatum("26.12.2020")
+				.withFullName(
+					"Maximilian Konstantin Pfennigfuchser Trostel beim besten Willen nicht nicht auf die Urkunde passen wird")
+				.withUrkundenmotiv(urkundenmotiv)
+				.withWettbewerbsjahr("2020");
+
+			// Act
+			byte[] daten = new TeilnahmeurkundeGeneratorDeutsch().generiereUrkunde(datenUrkunde);
+
+			// jetzt in Datei schreiben
+			DownloadData downloadData = new DownloadData("name.pdf", daten);
+
+			StatistikTestUtils.print(downloadData, true);
+		}
+
 	}
 
-	@Test
-	void eineUrkundeMitSchuleZweizeilig() throws Exception {
+	@Nested
+	class TeilnahmeurkundePrivatTests {
 
-		// Arrange
-		Urkundenmotiv urkundenmotiv = Urkundenmotiv.createFromFarbschema(Farbschema.BLUE);
+		@Test
+		void eineUrkundeMitLangemKindernamenZweizeilig() throws Exception {
 
-		Schulteilnahme schulteilnahme = new Schulteilnahme(new WettbewerbID(2020), new Identifier("GHZTZZIT"),
-			"Grundschule an der Georgstraße Städtische Gemeinschaftsschule der Primarstufe", new Identifier("jkasdkjq"));
-		Klasse klasse = new Klasse(new Identifier("sdhuqwo")).withName("Eichelhäher");
+			// Arrange
+			Urkundenmotiv urkundenmotiv = Urkundenmotiv.createFromFarbschema(Farbschema.ORANGE);
 
-		TeilnahmeurkundeSchuleDaten datenUrkunde = new TeilnahmeurkundeSchuleDaten("38,75", schulteilnahme, klasse)
-			.withDatum("26.12.2020")
-			.withFullName("Anna Bolika")
-			.withUrkundenmotiv(urkundenmotiv)
-			.withWettbewerbsjahr("2020");
+			TeilnahmeurkundePrivatDaten datenUrkunde = new TeilnahmeurkundePrivatDaten("13,75", Klassenstufe.ZWEI)
+				.withDatum("26.12.2020")
+				.withFullName("Karl mit einem Nachnamen der gerade noch so passt wenn umgebrochen wird")
+				.withUrkundenmotiv(urkundenmotiv)
+				.withWettbewerbsjahr("2020");
 
-		// Act
-		byte[] daten = new TeilnahmeurkundeGeneratorDeutsch().generiereUrkunde(datenUrkunde);
+			// Act
+			byte[] daten = new TeilnahmeurkundeGeneratorDeutsch().generiereUrkunde(datenUrkunde);
 
-		// jetzt in Datei schreiben
-		DownloadData downloadData = new DownloadData("name.pdf", daten);
+			// jetzt in Datei schreiben
+			DownloadData downloadData = new DownloadData("name.pdf", daten);
 
-		StatistikTestUtils.print(downloadData, true);
-	}
+			StatistikTestUtils.print(downloadData, true);
+		}
 
-	@Test
-	void eineUrkundeMitLangemKindernamenUndSchuleZweizeilig() throws Exception {
+		@Test
+		void eineUrkundeMitLangemKindernamenEinzeilig() throws Exception {
 
-		// Arrange
-		Urkundenmotiv urkundenmotiv = Urkundenmotiv.createFromFarbschema(Farbschema.BLUE);
+			// Arrange
+			Urkundenmotiv urkundenmotiv = Urkundenmotiv.createFromFarbschema(Farbschema.ORANGE);
 
-		Schulteilnahme schulteilnahme = new Schulteilnahme(new WettbewerbID(2020), new Identifier("GHZTZZIT"),
-			"Grundschule an der Georgstraße Städtische Gemeinschaftsschule der Primarstufe", new Identifier("jkasdkjq"));
-		Klasse klasse = new Klasse(new Identifier("sdhuqwo")).withName("Eichelhäher");
+			TeilnahmeurkundePrivatDaten datenUrkunde = new TeilnahmeurkundePrivatDaten("13,75", Klassenstufe.ZWEI)
+				.withDatum("26.12.2020")
+				.withFullName("Karl Theodor zu Guttenberg Kuckucksheim")
+				.withUrkundenmotiv(urkundenmotiv)
+				.withWettbewerbsjahr("2020");
 
-		TeilnahmeurkundeSchuleDaten datenUrkunde = new TeilnahmeurkundeSchuleDaten("13,75", schulteilnahme, klasse)
-			.withDatum("26.12.2020")
-			.withFullName("Karl Theodor zu Guttenberg Kuckucksheim")
-			.withUrkundenmotiv(urkundenmotiv)
-			.withWettbewerbsjahr("2020");
+			// Act
+			byte[] daten = new TeilnahmeurkundeGeneratorDeutsch().generiereUrkunde(datenUrkunde);
 
-		// Act
-		byte[] daten = new TeilnahmeurkundeGeneratorDeutsch().generiereUrkunde(datenUrkunde);
+			// jetzt in Datei schreiben
+			DownloadData downloadData = new DownloadData("name.pdf", daten);
 
-		// jetzt in Datei schreiben
-		DownloadData downloadData = new DownloadData("name.pdf", daten);
+			StatistikTestUtils.print(downloadData, true);
+		}
 
-		StatistikTestUtils.print(downloadData, true);
-	}
+		@Test
+		void eineUrkundeMitZuLangemKindernamen() throws Exception {
 
-	@Test
-	void eineUrkundeMitZuLangemKindernamenUndZuLangemSchulnamen() throws Exception {
+			// Arrange
+			Urkundenmotiv urkundenmotiv = Urkundenmotiv.createFromFarbschema(Farbschema.ORANGE);
 
-		// Arrange
-		Urkundenmotiv urkundenmotiv = Urkundenmotiv.createFromFarbschema(Farbschema.BLUE);
+			TeilnahmeurkundePrivatDaten datenUrkunde = new TeilnahmeurkundePrivatDaten("13,75", Klassenstufe.ZWEI)
+				.withDatum("26.12.2020")
+				.withFullName(
+					"Maximilian Konstantin Pfennigfuchser Trostel beim besten Willen nicht nicht auf die Urkunde passen wird")
+				.withUrkundenmotiv(urkundenmotiv)
+				.withWettbewerbsjahr("2020");
 
-		Schulteilnahme schulteilnahme = new Schulteilnahme(new WettbewerbID(2020), new Identifier("GHZTZZIT"),
-			"Grundschule an der Georgstraße Städtische Gemeinschaftsschule der Primarstufe für mathematisch minderbegante Kinder",
-			new Identifier("jkasdkjq"));
-		Klasse klasse = new Klasse(new Identifier("sdhuqwo")).withName("Eichelhäher");
+			// Act
+			byte[] daten = new TeilnahmeurkundeGeneratorDeutsch().generiereUrkunde(datenUrkunde);
 
-		TeilnahmeurkundeSchuleDaten datenUrkunde = new TeilnahmeurkundeSchuleDaten("13,75", schulteilnahme, klasse)
-			.withDatum("26.12.2020")
-			.withFullName("Maximilian Konstantin Pfennigfuchser Trostel beim besten Willen nicht nicht auf die Urkunde passen wird")
-			.withUrkundenmotiv(urkundenmotiv)
-			.withWettbewerbsjahr("2020");
+			// jetzt in Datei schreiben
+			DownloadData downloadData = new DownloadData("name.pdf", daten);
 
-		// Act
-		byte[] daten = new TeilnahmeurkundeGeneratorDeutsch().generiereUrkunde(datenUrkunde);
+			StatistikTestUtils.print(downloadData, true);
+		}
 
-		// jetzt in Datei schreiben
-		DownloadData downloadData = new DownloadData("name.pdf", daten);
-
-		StatistikTestUtils.print(downloadData, false);
 	}
 
 }
