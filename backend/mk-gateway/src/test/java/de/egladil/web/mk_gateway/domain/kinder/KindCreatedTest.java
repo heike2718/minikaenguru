@@ -47,9 +47,9 @@ public class KindCreatedTest {
 
 		String serialized = new ObjectMapper().writeValueAsString(eventPayload);
 
-		// {"kindID":"abcde-1234567890","teilnahmenummer":"ZGFR54DE","klassenstufe":"ZWEI","sprache":"en","triggeringUser":"uuid-uuid","klasseID":"hdgt-653-djez"}
+		// {"kindID":"abcde-1234567890","teilnahmenummer":"ZGFR54DE","klassenstufe":"ZWEI","sprache":"en","triggeringUser":"uuid-uuid","klasseID":"hdgt-653-djez","loesungszettelID":null}
 		assertEquals(
-			"{\"kindID\":\"abcde-1234567890\",\"teilnahmenummer\":\"ZGFR54DE\",\"klassenstufe\":\"ZWEI\",\"sprache\":\"en\",\"triggeringUser\":\"uuid-uuid\",\"klasseID\":\"hdgt-653-djez\"}",
+			"{\"kindID\":\"abcde-1234567890\",\"teilnahmenummer\":\"ZGFR54DE\",\"klassenstufe\":\"ZWEI\",\"sprache\":\"en\",\"triggeringUser\":\"uuid-uuid\",\"klasseID\":\"hdgt-653-djez\",\"loesungszettelID\":null}",
 			serialized);
 	}
 
