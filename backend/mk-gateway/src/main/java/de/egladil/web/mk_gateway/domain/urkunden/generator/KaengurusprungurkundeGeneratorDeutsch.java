@@ -4,18 +4,15 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.urkunden.generator;
 
-import de.egladil.web.mk_gateway.domain.urkunden.daten.AbstractDatenUrkunde;
-
 /**
  * KaengurusprungurkundeGeneratorDeutsch
  */
-public class KaengurusprungurkundeGeneratorDeutsch implements UrkundeGenerator {
+public class KaengurusprungurkundeGeneratorDeutsch extends AbstractUrkundegeneratorDeutsch {
 
 	@Override
-	public byte[] generiereUrkunde(final AbstractDatenUrkunde datenUrkunde) {
+	protected UrkundeHauptabschnittRenderer getHauptabschnittRenderer() {
 
-		return null;
-
+		return new KaengurusprungurkundeHauptabschnittRendererDeutsch();
 	}
 
 }

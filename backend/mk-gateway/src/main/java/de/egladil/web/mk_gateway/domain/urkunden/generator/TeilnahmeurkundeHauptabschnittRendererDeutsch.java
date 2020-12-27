@@ -15,12 +15,13 @@ import de.egladil.web.mk_gateway.domain.urkunden.daten.AbstractDatenUrkunde;
 /**
  * TeilnahmeurkundeHauptabschnittRendererDeutsch
  */
-public class TeilnahmeurkundeHauptabschnittRendererDeutsch {
+public class TeilnahmeurkundeHauptabschnittRendererDeutsch implements UrkundeHauptabschnittRenderer {
 
 	private static final String MF_PATTERN_PUNKTE = "{0} Punkte";
 
 	private final FontCalulator fontCalculator = new FontCalulator();
 
+	@Override
 	public int printAbschnittAndShiftVerticalPosition(final PdfContentByte content, final AbstractDatenUrkunde datenUrkunde, final int differenceFromTopPositionPoints) {
 
 		int deltaY = differenceFromTopPositionPoints;

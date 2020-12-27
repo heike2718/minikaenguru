@@ -13,11 +13,11 @@ import com.itextpdf.text.pdf.PdfContentByte;
 import de.egladil.web.mk_gateway.domain.urkunden.daten.AbstractDatenUrkunde;
 
 /**
- * TeilnahmeurkundeHauptabschnittRendererEnglisch
+ * KaengurusprungurkundeHauptabschnittRendererEnglisch
  */
-public class TeilnahmeurkundeHauptabschnittRendererEnglisch implements UrkundeHauptabschnittRenderer {
+public class KaengurusprungurkundeHauptabschnittRendererEnglisch implements UrkundeHauptabschnittRenderer {
 
-	private static final String MF_PATTERN_PUNKTE = "{0} points";
+	private static final String MF_PATTERN_PUNKTE = "with {0} correct answers in a row";
 
 	private final FontCalulator fontCalculator = new FontCalulator();
 
@@ -73,12 +73,6 @@ public class TeilnahmeurkundeHauptabschnittRendererEnglisch implements UrkundeHa
 
 		deltaY += UrkundePDFUtils.POINTS_BETWEEN_PARAGRAPHS;
 
-		text = "has succesfully participated with a score of";
-
-		UrkundeLinePrinter.printTextCenter(content, text, UrkundePDFUtils.getFontBlack(UrkundePDFUtils.SIZE_TEXT_NORMAL),
-			deltaY);
-		deltaY += UrkundePDFUtils.POINTS_BETWEEN_ROWS;
-
 		fontSize = UrkundePDFUtils.SIZE_TEXT_NORMAL;
 		text = MessageFormat.format(MF_PATTERN_PUNKTE, new Object[] { datenUrkunde.punktvalue() });
 
@@ -86,7 +80,10 @@ public class TeilnahmeurkundeHauptabschnittRendererEnglisch implements UrkundeHa
 		UrkundeLinePrinter.printTextCenter(content, text, UrkundePDFUtils.getFontBlack(fontSize), deltaY);
 
 		deltaY += UrkundePDFUtils.POINTS_BETWEEN_ROWS;
+		text = "made the farthest kangaroo jump.";
+		UrkundeLinePrinter.printTextCenter(content, text, UrkundePDFUtils.getFontBlack(UrkundePDFUtils.SIZE_TEXT_NORMAL),
+			deltaY);
+
 		return deltaY;
 	}
-
 }
