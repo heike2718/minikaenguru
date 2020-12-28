@@ -18,21 +18,21 @@ public enum Farbschema {
 		}
 
 	},
-	ORANGE("orange", "/urkunden/overlay_orange.png", "/urkunden/overlay_orange.pdf") {
-
-		@Override
-		public Ueberschriftfarbe getUeberschriftfarbe() {
-
-			return Ueberschriftfarbe.ORANGE;
-		}
-
-	},
 	GREEN("grün", "/urkunden/overlay_green.png", "/urkunden/overlay_green.pdf") {
 
 		@Override
 		public Ueberschriftfarbe getUeberschriftfarbe() {
 
 			return Ueberschriftfarbe.GREEN;
+		}
+
+	},
+	ORANGE("orange", "/urkunden/overlay_orange.png", "/urkunden/overlay_orange.pdf") {
+
+		@Override
+		public Ueberschriftfarbe getUeberschriftfarbe() {
+
+			return Ueberschriftfarbe.ORANGE;
 		}
 
 	};

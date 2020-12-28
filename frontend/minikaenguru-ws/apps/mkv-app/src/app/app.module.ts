@@ -34,6 +34,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SessionTimeoutComponent } from './session-timeout/session-timeout.component';
 import { KlassenModule } from './klassen/klassen.module';
 import { LoesungszettelModule } from './loesungszettel/loesungszettel.module';
+import { UrkundenModule } from './urkunden/urkunden.module';
 
 
 
@@ -80,6 +81,7 @@ import { LoesungszettelModule } from './loesungszettel/loesungszettel.module';
 		TeilnahmenModule,
 		VertragAdvModule,
 		LoesungszettelModule,
+		UrkundenModule,
 		StoreModule.forRoot(reducers, {
 			metaReducers,
 			runtimeChecks: {

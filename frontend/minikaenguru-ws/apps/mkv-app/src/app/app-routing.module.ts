@@ -54,6 +54,10 @@ const routes: Routes = [
 		loadChildren: () => import('./loesungszettel/loesungszettel.module').then(m => m.LoesungszettelModule)
 	},
 	{
+		path: 'urkunden',
+		loadChildren: () => import('./urkunden/urkunden.module').then(m => m.UrkundenModule)
+	},
+	{
 		path: 'kinder',
 		loadChildren: () => import('./kinder/kinder.module').then(m => m.KinderModule)
 	},

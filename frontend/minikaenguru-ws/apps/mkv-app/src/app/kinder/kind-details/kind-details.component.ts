@@ -9,6 +9,7 @@ import { LogService } from '@minikaenguru-ws/common-logging';
 import { Subscription } from 'rxjs';
 import { KlassenFacade } from '../../klassen/klassen.facade';
 import { LoesungszettelFacade } from '../../loesungszettel/loesungszettel.facade';
+import { UrkundenFacade } from '../../urkunden/urkunden.facade';
 
 @Component({
 	selector: 'mkv-kind-details',
@@ -43,6 +44,7 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 		private kinderFacade: KinderFacade,
 		private klassenFacade: KlassenFacade,
 		private loesungszettelFacade: LoesungszettelFacade,
+		private urkundenFacade: UrkundenFacade,
 		private logger: LogService
 	) { }
 
@@ -118,6 +120,11 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 		}
 
 		this.router.navigateByUrl('/loesungszettel');
+	}
+
+	urkundeErstellen(): void {
+		this.loesungszettelFacade.cancelEditLoesungszettel();
+		this.urkundenFacade.createUrkundenauftrag(this.kind);
 	}
 
 }
