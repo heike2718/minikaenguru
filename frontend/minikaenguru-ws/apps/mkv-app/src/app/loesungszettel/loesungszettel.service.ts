@@ -5,7 +5,6 @@ import { Observable, of, throwError } from 'rxjs';
 import { Loesungszettel, Loesungszettelzeile, createLoseungszettelzeilen } from './loesungszettel.model';
 import { Kind, Klassenstufe, LoesungszettelPunkte } from '@minikaenguru-ws/common-components';
 import { ResponsePayload } from '@minikaenguru-ws/common-messages';
-import { env } from 'process';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -18,7 +17,7 @@ export class LoesungszettelService {
 	public loadLoesungszettelWithID(kind: Kind): Observable<Loesungszettel> {
 
 		if (!kind.punkte) {
-			return throwError("invalid ID");
+			return throwError("invalid ID: kind hat keinen Lösungszettel");
 		}
 
 		const url = environment.apiUrl + '/veranstalter/loesungszettel/' + kind.punkte.loesungszettelId;

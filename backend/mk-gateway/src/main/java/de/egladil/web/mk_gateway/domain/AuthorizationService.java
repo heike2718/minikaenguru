@@ -53,19 +53,19 @@ public class AuthorizationService {
 
 	/**
 	 * @param  userIdentifier
-	 * @param  teilnahmeID
+	 * @param  identifierTeilnahmenummer
 	 * @param  kontext
 	 *                               String
 	 * @return                       boolean - nicht void wegen Mockito.
 	 * @throws AccessDeniedException
 	 */
-	public boolean checkPermissionForTeilnahmenummer(final Identifier userIdentifier, final Identifier teilnahmeID, final String kontext) throws AccessDeniedException {
+	public boolean checkPermissionForTeilnahmenummer(final Identifier userIdentifier, final Identifier identifierTeilnahmenummer, final String kontext) throws AccessDeniedException {
 
 		Optional<User> optUser = userRepository.ofId(userIdentifier.identifier());
 
 		if (optUser.isEmpty()) {
 
-			String msg = kontext + ": unzulaessiger Zugriff mit Teilnahmenummer " + teilnahmeID + " durch " + userIdentifier
+			String msg = kontext + ": unzulaessiger Zugriff mit Teilnahmenummer " + identifierTeilnahmenummer + " durch " + userIdentifier
 				+ ": User existiert nicht";
 
 			LOG.warn(msg);
@@ -86,7 +86,7 @@ public class AuthorizationService {
 
 		if (optVeranstalter.isEmpty()) {
 
-			String msg = kontext + ": unzulaessiger Zugriff mit Teilnahmenummer " + teilnahmeID + " durch " + userIdentifier
+			String msg = kontext + ": unzulaessiger Zugriff mit Teilnahmenummer " + identifierTeilnahmenummer + " durch " + userIdentifier
 				+ ": Veranstalter existiert nicht";
 
 			LOG.warn(msg);
@@ -96,11 +96,11 @@ public class AuthorizationService {
 		}
 
 		Optional<Identifier> optTeilnahmeIdentifier = optVeranstalter.get().teilnahmeIdentifier().stream()
-			.filter(tID -> tID.equals(teilnahmeID)).findFirst();
+			.filter(tID -> tID.equals(identifierTeilnahmenummer)).findFirst();
 
 		if (optTeilnahmeIdentifier.isEmpty()) {
 
-			String msg = kontext + ": unzulaessiger Zugriff mit Teilnahmenummer " + teilnahmeID + " durch " + optVeranstalter.get()
+			String msg = kontext + ": unzulaessiger Zugriff mit Teilnahmenummer " + identifierTeilnahmenummer + " durch " + optVeranstalter.get()
 				+ ": Veranstalter hat keine Berechtigung.";
 
 			LOG.warn(msg);

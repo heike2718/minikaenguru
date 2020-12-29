@@ -233,4 +233,39 @@ public class Kind {
 		return "Kind [vorname=" + vorname + ", nachname=" + nachname + ", zusatz=" + zusatz + ", klassenstufe=" + klassenstufe
 			+ ", sprache=" + sprache + ", identifier=" + identifier + "]";
 	}
+
+	/**
+	 * Gibt den vollen Namen für die Urkunde zurück.
+	 *
+	 * @return Sring
+	 */
+	public String nameUrkunde() {
+
+		if (StringUtils.isNotBlank(nachname)) {
+
+			return vorname + " " + nachname;
+		}
+
+		return vorname;
+	}
+
+	/**
+	 * Gibt den vollen Namen für die Schulstatistik zurück.
+	 *
+	 * @return Sring
+	 */
+	public String nameStatistik() {
+
+		if (StringUtils.isNotBlank(zusatz) && StringUtils.isNotBlank(nachname)) {
+
+			return vorname + " " + nachname + " (" + zusatz + ")";
+		}
+
+		if (StringUtils.isNotBlank(nachname)) {
+
+			return vorname + " " + nachname;
+		}
+
+		return vorname;
+	}
 }

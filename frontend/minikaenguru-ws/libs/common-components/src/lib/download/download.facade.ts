@@ -43,7 +43,7 @@ export class DownloadFacade {
 		);
 	}
 
-	private saveAs(httpResponse: HttpResponse<any>, defaultFilename: string): void {
+	public saveAs(httpResponse: HttpResponse<any>, defaultFilename: string): void {
 
 		const contentDispositionHeader = httpResponse.headers.get('Content-Disposition');
 		const filename = this.getFilenameFromContentDispositionHeader(contentDispositionHeader, defaultFilename);

@@ -407,6 +407,18 @@ public class PermittedRolesInMemoryRepositoryTest {
 			}
 
 		}
+
+		@Test
+		void should_permittedRollen_urkunden_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/veranstalter/urkunden/urkunde", HttpMethod.POST);
+
+			// Assert
+			assertEquals(2, rollen.size());
+			assertTrue(rollen.contains(Rolle.LEHRER));
+			assertTrue(rollen.contains(Rolle.PRIVAT));
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
