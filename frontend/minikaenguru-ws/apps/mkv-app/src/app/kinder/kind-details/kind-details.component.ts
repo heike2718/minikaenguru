@@ -10,6 +10,8 @@ import { Subscription } from 'rxjs';
 import { KlassenFacade } from '../../klassen/klassen.facade';
 import { LoesungszettelFacade } from '../../loesungszettel/loesungszettel.facade';
 import { UrkundenFacade } from '../../urkunden/urkunden.facade';
+import { User, STORAGE_KEY_USER } from '@minikaenguru-ws/common-auth';
+import { environment } from '../../../environments/environment';
 
 @Component({
 	selector: 'mkv-kind-details',
@@ -31,6 +33,12 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 
 	selectedKlasse$ = this.klassenFacade.selectedKlasse$;
 
+	btnUrkundeLabel = 'Urkunde';
+
+	btnUrkundeTooltip = 'Urkunde erstellen';
+
+	showHinweisUrkunde = false;
+
 	private klasseSubscription: Subscription;
 
 	private klasseUuid: string;
@@ -51,6 +59,14 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 
 		this.titel = kindToString(this.kind);
+
+		const user: User = this.readUser();
+
+		if (user && user.rolle === 'LEHRER') {
+			this.btnUrkundeLabel = 'Urkunde korrigieren';
+			this.btnUrkundeTooltip = 'Urkunde dieses Kindes korrigieren';
+			this.showHinweisUrkunde = this.kind.punkte && this.kind.punkte.loesungszettelId !== 'neu';
+		}
 
 		this.klasseSubscription = this.selectedKlasse$.subscribe(
 			kl => {
@@ -123,8 +139,17 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 	}
 
 	urkundeErstellen(): void {
-		this.loesungszettelFacade.cancelEditLoesungszettel();
+		this.kinderFacade.selectKind(this.kind);
 		this.urkundenFacade.createUrkundenauftrag(this.kind);
+	}
+
+
+	private readUser(): User {
+		const obj = localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_USER);
+		if (obj) {
+			return JSON.parse(obj);
+		}
+		return undefined;
 	}
 
 }

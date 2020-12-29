@@ -31,6 +31,11 @@ export const urkundenReducer = createReducer(initialUrkundenState,
 		return {...state, loading: false};
 	}),
 
+	on(UrkundenActions.downloadFinished, (state, _action) => {
+
+		return {...state, loading: false};
+	}),
+
 	on(UrkundenActions.resetModule, (_state, _action) => {
 		return initialUrkundenState;
 	})

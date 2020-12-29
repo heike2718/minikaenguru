@@ -55,7 +55,6 @@ export class EventlogComponent implements OnInit, OnDestroy {
 
 	onDateSelect($event: NgbDate): void {
 		this.eventlogFacade.submitDate($event);
-
 	}
 
 }

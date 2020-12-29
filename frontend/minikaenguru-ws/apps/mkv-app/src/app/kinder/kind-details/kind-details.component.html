@@ -9,7 +9,11 @@
 
 				<div *ngIf="kind.punkte" class="card-subtitle text-muted col-sm-12 col-md-9">Länge Kängurusprung:
 					{{kind.punkte.laengeKaengurusprung}}</div>
+
+				<div *ngIf="showHinweisUrkunde" class="mt-1 card-subtitle text-primary">Bitte Urkunden nicht für jedes Kind einzeln erstellen, sondern für die ganze Schule</div>
 			</div>
+
+
 		</div>
 		<div class="btn-group d-flex" role="group">
 			<button class="btn btn-outline-dark w-100 ml-1" (click)="editKind()"><i class="fa fa-pencil"
@@ -23,7 +27,8 @@
 				(click)="editLoesungszettel()"><i class="fa fa-bars" aria-hidden="true"></i>Lösungszettel</button>
 
 			<button *ngIf="kind.punkte && kind.punkte.loesungszettelId !=='neu'" class="btn btn-outline-dark w-100 ml-1"
-				(click)="urkundeErstellen()"><i class="fa fa-graduation-cap" aria-hidden="true"></i>Urkunde</button>
+				(click)="urkundeErstellen()" title="{{btnUrkundeTooltip}}"><i class="fa fa-graduation-cap"
+					aria-hidden="true"></i>{{btnUrkundeLabel}}</button>
 
 			<button class="btn btn-outline-danger w-100 ml-1" (click)="deleteKind()"><i class="fa fa-trash"
 					aria-hidden="true"></i>löschen</button>

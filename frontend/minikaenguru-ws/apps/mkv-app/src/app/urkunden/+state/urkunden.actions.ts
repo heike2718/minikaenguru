@@ -10,11 +10,15 @@ export const startLoading = createAction(
 	'[UrkundenFacade] diverse before backend call'
 );
 
+export const downloadFinished = createAction(
+	'[UrkundenFacade] downloadUrkunde'
+);
+
 export const finishedWithError = createAction(
 	'[UrkundenFacade] diverse on error'
 );
 
-export const einzelurkundeGeneriert = createAction(
+export const urkundenauftragVersendet = createAction(
 	'[UrkundenFacade] generiereEinzelurkunde'
 );
 

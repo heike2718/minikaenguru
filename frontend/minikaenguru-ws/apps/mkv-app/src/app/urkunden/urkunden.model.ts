@@ -2,48 +2,44 @@ export type Urkundenart = 'KAENGURUSPRUNG' | 'TEILNAHME';
 
 export type Farbschema = 'BLUE' | 'GREEN' | 'ORANGE';
 
-export interface UIUrkundenart {
-	readonly art: Urkundenart;
-	readonly label: string;
-};
-
-export interface UIFarbschema {
-	readonly farbe: Farbschema;
-	readonly label: string;
-};
-
-export const Farbschemata: UIFarbschema[] = [
-	{
-		farbe: 'BLUE',
-		label: 'blau'
-	},
-	{
-		farbe: 'GREEN',
-		label: 'grün'
-	},
-	{
-		farbe: 'ORANGE',
-		label: 'orange'
-	}
-];
-
-export const Urkundenarten: UIUrkundenart[] = [
-	{
-		art: 'KAENGURUSPRUNG',
-		label: 'Kängurusprung'
-	},
-	{
-		art: 'TEILNAHME',
-		label: 'Teilnahme'
-	}
-];
-
 export interface UrkundenauftragEinzelkind {
 	readonly urkundenart?: Urkundenart;
 	readonly kindUuid: string;
 	readonly dateString?: string;
 	readonly farbschema?: Farbschema;
 };
+
+
+export function getLabelFarbe(farbschema: Farbschema): string {
+
+
+	if (!farbschema) {
+		return '';
+	}
+
+	switch (farbschema) {
+		case 'BLUE': return 'blaue';
+		case 'GREEN': return 'grüne';
+		case 'ORANGE': return 'orange';
+		default: return '';
+	}
+
+
+}
+
+export function getLabelUrkundenart(urkundenart: Urkundenart): string {
+
+
+	if (!urkundenart) {
+		return 'Urkunde';
+	}
+
+	switch (urkundenart) {
+		case 'TEILNAHME': return 'Teilnahmeurkunde';
+		case 'KAENGURUSPRUNG': return 'Urkunde Kängurusprung';
+		default: return 'Orkunde';
+	}
+}
 
 
 
