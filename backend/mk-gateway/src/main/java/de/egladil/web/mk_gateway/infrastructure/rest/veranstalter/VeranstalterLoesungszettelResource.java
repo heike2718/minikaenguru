@@ -35,9 +35,6 @@ import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelAPIMode
 /**
  * VeranstalterLoesungszettelResource
  */
-/**
- * VeranstalterTeilnahmenResource
- */
 @RequestScoped
 @Path("veranstalter/loesungszettel")
 @Consumes(MediaType.APPLICATION_JSON)

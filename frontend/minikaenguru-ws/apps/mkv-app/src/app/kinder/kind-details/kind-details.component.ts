@@ -9,6 +9,9 @@ import { LogService } from '@minikaenguru-ws/common-logging';
 import { Subscription } from 'rxjs';
 import { KlassenFacade } from '../../klassen/klassen.facade';
 import { LoesungszettelFacade } from '../../loesungszettel/loesungszettel.facade';
+import { UrkundenFacade } from '../../urkunden/urkunden.facade';
+import { User, STORAGE_KEY_USER } from '@minikaenguru-ws/common-auth';
+import { environment } from '../../../environments/environment';
 
 @Component({
 	selector: 'mkv-kind-details',
@@ -30,6 +33,12 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 
 	selectedKlasse$ = this.klassenFacade.selectedKlasse$;
 
+	btnUrkundeLabel = 'Urkunde';
+
+	btnUrkundeTooltip = 'Urkunde erstellen';
+
+	showHinweisUrkunde = false;
+
 	private klasseSubscription: Subscription;
 
 	private klasseUuid: string;
@@ -43,12 +52,21 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 		private kinderFacade: KinderFacade,
 		private klassenFacade: KlassenFacade,
 		private loesungszettelFacade: LoesungszettelFacade,
+		private urkundenFacade: UrkundenFacade,
 		private logger: LogService
 	) { }
 
 	ngOnInit(): void {
 
 		this.titel = kindToString(this.kind);
+
+		const user: User = this.readUser();
+
+		if (user && user.rolle === 'LEHRER') {
+			this.btnUrkundeLabel = 'Urkunde korrigieren';
+			this.btnUrkundeTooltip = 'Urkunde dieses Kindes korrigieren';
+			this.showHinweisUrkunde = this.kind.punkte && this.kind.punkte.loesungszettelId !== 'neu';
+		}
 
 		this.klasseSubscription = this.selectedKlasse$.subscribe(
 			kl => {
@@ -118,6 +136,20 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 		}
 
 		this.router.navigateByUrl('/loesungszettel');
+	}
+
+	urkundeErstellen(): void {
+		this.kinderFacade.selectKind(this.kind);
+		this.router.navigateByUrl('/urkunden');
+	}
+
+
+	private readUser(): User {
+		const obj = localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_USER);
+		if (obj) {
+			return JSON.parse(obj);
+		}
+		return undefined;
 	}
 
 }

@@ -20,7 +20,7 @@ import { EventlogRoutingModule } from './eventlog-routing.module';
 		BrowserModule,
 		FormsModule,
 		NgbModule,
-		CommonComponentsModule,
+		CommonComponentsModule, // für den downloadbutton
 		StoreModule.forFeature(fromEventlogReducer.eventlogFeatureKey, fromEventlogReducer.eventlogReducer),
 		EventlogRoutingModule
 	]

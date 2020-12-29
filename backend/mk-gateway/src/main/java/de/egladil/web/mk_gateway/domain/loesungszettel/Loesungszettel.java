@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.semantik.AggregateRoot;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
+import de.egladil.web.mk_gateway.domain.statistik.functions.PunkteStringMapper;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
@@ -170,6 +171,16 @@ public class Loesungszettel {
 
 		this.rohdaten = rohdaten;
 		return this;
+	}
+
+	/**
+	 * Gibt die Punkte als String mit 2 Dezimalstellen und einem Komma zurück, so wie es in der UIs / PDFs angezeigt wird.
+	 *
+	 * @return
+	 */
+	public String punkteAsString() {
+
+		return new PunkteStringMapper().apply(this.punkte);
 	}
 
 	@Override

@@ -5,6 +5,7 @@
 package de.egladil.web.mk_gateway.domain.kinder.api;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.Optional;
 
@@ -67,6 +68,10 @@ public class KindAPIModelTest {
 		String expectedLoesungszettelId = "LOES-ID";
 		String expectedUuid = "TFGRTH7";
 
+		LoesungszettelpunkteAPIModel punkte = new LoesungszettelpunkteAPIModel().withLoesungszettelId("LOES-ID")
+			.withLaengeKaengurusprung(3).withPunkte("28,5");
+		Optional<LoesungszettelpunkteAPIModel> optPunkte = Optional.of(punkte);
+
 		KlassenstufeAPIModel expectedKlassenstufe = KlassenstufeAPIModel.create(klassenstufe);
 		SpracheAPIModel expectedSprache = SpracheAPIModel.create(sprache);
 
@@ -80,13 +85,17 @@ public class KindAPIModelTest {
 			.withZusatz("zusatz");
 
 		// Act
-		KindAPIModel apiModel = KindAPIModel.createFromKind(kind, Optional.empty());
+		KindAPIModel apiModel = KindAPIModel.createFromKind(kind, optPunkte);
 
 		// Assert
+		assertNotNull(apiModel.punkte());
+
 		assertEquals(expectedKlassenstufe, apiModel.klassenstufe());
 		assertEquals(expectedSprache, apiModel.sprache());
 		assertEquals(expectedUuid, apiModel.uuid());
 		assertEquals(expectedLoesungszettelId, apiModel.punkte().loesungszettelId());
+		assertEquals(3, apiModel.punkte().laengeKaengurusprung());
+		assertEquals("28,5", apiModel.punkte().punkte());
 		assertEquals(expectedNachname, apiModel.nachname());
 		assertEquals(expectedVorname, apiModel.vorname());
 		assertEquals(expectedZusatz, apiModel.zusatz());

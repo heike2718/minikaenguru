@@ -27,7 +27,6 @@ import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelCreated;
 import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelDeleted;
 import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelAPIModel;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
-import de.egladil.web.mk_gateway.domain.statistik.functions.PunkteStringMapper;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
@@ -101,11 +100,11 @@ public class LoesungszettelService {
 			throw new NotFoundException();
 		}
 
-		authService.checkPermissionForTeilnahmenummer(veranstalterID,
-			opt.get().getTheTeilnahmenummer(),
-			"[findLoesungszettelWithID - " + loesungszettelID.toString() + "]");
-
 		Loesungszettel loesungszettel = opt.get();
+
+		authService.checkPermissionForTeilnahmenummer(veranstalterID,
+			loesungszettel.getTheTeilnahmenummer(),
+			"[findLoesungszettelWithID - " + loesungszettelID.toString() + "]");
 
 		if (loesungszettel.auswertungsquelle() != Auswertungsquelle.ONLINE) {
 
@@ -245,12 +244,10 @@ public class LoesungszettelService {
 
 		Loesungszettel loesungszettel = optLoesungszettel.get();
 
-		String punkte = new PunkteStringMapper().apply(loesungszettel.punkte());
-
 		LoesungszettelpunkteAPIModel result = new LoesungszettelpunkteAPIModel()
 			.withLaengeKaengurusprung(loesungszettel.laengeKaengurusprung())
 			.withLoesungszettelId(loesungszettel.identifier().identifier())
-			.withPunkte(punkte);
+			.withPunkte(loesungszettel.punkteAsString());
 
 		return Optional.of(result);
 
@@ -313,9 +310,8 @@ public class LoesungszettelService {
 			System.out.println(loesungszettelCreated.serializeQuietly());
 		}
 
-		String punkte = new PunkteStringMapper().apply(loesungszettel.punkte());
-
-		return new LoesungszettelpunkteAPIModel().withLaengeKaengurusprung(loesungszettel.laengeKaengurusprung()).withPunkte(punkte)
+		return new LoesungszettelpunkteAPIModel().withLaengeKaengurusprung(loesungszettel.laengeKaengurusprung())
+			.withPunkte(loesungszettel.punkteAsString())
 			.withLoesungszettelId(loesungszettelID.identifier());
 	}
 
@@ -381,9 +377,8 @@ public class LoesungszettelService {
 			System.out.println(loesungszettelChanged.serializeQuietly());
 		}
 
-		String punkte = new PunkteStringMapper().apply(loesungszettel.punkte());
-
-		return new LoesungszettelpunkteAPIModel().withLaengeKaengurusprung(loesungszettel.laengeKaengurusprung()).withPunkte(punkte)
+		return new LoesungszettelpunkteAPIModel().withLaengeKaengurusprung(loesungszettel.laengeKaengurusprung())
+			.withPunkte(loesungszettel.punkteAsString())
 			.withLoesungszettelId(loesungszettelID.identifier());
 	}
 

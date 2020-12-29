@@ -25,9 +25,4 @@ import { CommonMessagesModule } from '@minikaenguru-ws/common-messages';
 		StoreModule.forFeature(fromLoesungszettel.loesungszettelFeatureKey, fromLoesungszettel.reducer)
 	]
 })
-export class LoesungszettelModule {
-
-	constructor() {
-		console.log('LoesungszettelModule created')
-	}
-}
+export class LoesungszettelModule { }

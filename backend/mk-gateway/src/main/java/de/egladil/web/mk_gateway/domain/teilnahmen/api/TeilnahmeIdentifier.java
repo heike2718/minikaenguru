@@ -37,6 +37,20 @@ public class TeilnahmeIdentifier {
 		return result;
 	}
 
+	/**
+	 * Erzeugt ein Objekt ohne Jahr!
+	 *
+	 * @param  identAktuell
+	 * @return
+	 */
+	public static TeilnahmeIdentifier createFromTeilnahmeIdentifierAktuellesJahr(final TeilnahmeIdentifierAktuellerWettbewerb identAktuell) {
+
+		TeilnahmeIdentifier result = new TeilnahmeIdentifier();
+		result.teilnahmeart = identAktuell.teilnahmeart();
+		result.teilnahmenummer = identAktuell.teilnahmenummer();
+		return result;
+	}
+
 	public int jahr() {
 
 		return jahr;

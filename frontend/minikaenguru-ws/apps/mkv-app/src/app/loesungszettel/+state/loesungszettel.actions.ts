@@ -9,7 +9,7 @@ export const newLoesungszettelCreated = createAction(
 );
 
 export const startLoading = createAction(
-	'[LoesungszettelFacade] diverse bevore backend call'
+	'[LoesungszettelFacade] diverse before backend call'
 );
 
 export const finishedWithError = createAction(
