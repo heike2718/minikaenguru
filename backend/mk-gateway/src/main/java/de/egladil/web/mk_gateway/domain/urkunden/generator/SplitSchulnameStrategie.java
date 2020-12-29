@@ -27,7 +27,7 @@ public class SplitSchulnameStrategie extends AbstractSplitTextStrategie {
 	}
 
 	@Override
-	protected int getMaxFontSizeAbbreviatedText() {
+	public int getMaxFontSizeAbbreviatedText() {
 
 		return UrkundePDFUtils.SIZE_TEXT_NORMAL;
 	}

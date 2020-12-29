@@ -33,13 +33,17 @@ public class TeilnahmeurkundeGeneratorEnglischTest {
 			"Swiss International School Basel", new Identifier("jkasdkjq"));
 		Klasse klasse = new Klasse(new Identifier("sdhuqwo")).withName("2b");
 
+		FontSizeAndLines fontSizeAndLinesSchulname = new SplitSchulnameStrategie()
+			.getFontSizeAndLines(schulteilnahme.nameSchule());
+
 		String theDatum = "26.12.2020".replaceAll("\\.", "/");
 
-		TeilnahmeurkundeSchuleDaten datenUrkunde = new TeilnahmeurkundeSchuleDaten("42,75", schulteilnahme, klasse)
+		TeilnahmeurkundeSchuleDaten datenUrkunde = new TeilnahmeurkundeSchuleDaten("42,75", klasse)
 			.withDatum(theDatum)
 			.withFullName("Anna Logika")
 			.withUrkundenmotiv(urkundenmotiv)
-			.withWettbewerbsjahr("2020");
+			.withWettbewerbsjahr("2020")
+			.withFontsizeAndLinesSchulname(fontSizeAndLinesSchulname);
 
 		// Act
 		byte[] daten = new TeilnahmeurkundeGeneratorEnglisch().generiereUrkunde(datenUrkunde);

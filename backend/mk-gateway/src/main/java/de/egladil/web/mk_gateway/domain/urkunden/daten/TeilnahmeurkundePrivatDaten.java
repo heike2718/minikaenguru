@@ -6,6 +6,8 @@ package de.egladil.web.mk_gateway.domain.urkunden.daten;
 
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.urkunden.Urkundenmotiv;
+import de.egladil.web.mk_gateway.domain.urkunden.generator.FontSizeAndLines;
+import de.egladil.web.mk_gateway.domain.urkunden.generator.SplitSchulnameStrategie;
 
 /**
  * TeilnahmeurkundePrivatDaten
@@ -17,7 +19,7 @@ public class TeilnahmeurkundePrivatDaten extends AbstractDatenUrkunde {
 	public TeilnahmeurkundePrivatDaten(final String value, final Klassenstufe klassenstufe) {
 
 		this.value = value;
-		this.setNameSchule("");
+		this.setFontSizeAndLinesSchulname(new FontSizeAndLines(new SplitSchulnameStrategie().getMaxFontSizeAbbreviatedText()));
 		this.setNameKlasse(klassenstufe.getLabel());
 	}
 

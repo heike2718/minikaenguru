@@ -31,11 +31,14 @@ public class KaengurusprungurkundeGeneratorDeutschTest {
 			"Grundschule \"Johann Wolfgang von Goethe\"", new Identifier("jkasdkjq"));
 		Klasse klasse = new Klasse(new Identifier("sdhuqwo")).withName("Klasse 2b");
 
-		TeilnahmeurkundeSchuleDaten datenUrkunde = new TeilnahmeurkundeSchuleDaten("7", schulteilnahme, klasse)
+		FontSizeAndLines fontSizeAndLinesSchulname = new SplitSchulnameStrategie().getFontSizeAndLines(schulteilnahme.nameSchule());
+
+		TeilnahmeurkundeSchuleDaten datenUrkunde = new TeilnahmeurkundeSchuleDaten("7", klasse)
 			.withDatum("26.12.2020")
 			.withFullName("Anna Logika")
 			.withUrkundenmotiv(urkundenmotiv)
-			.withWettbewerbsjahr("2020");
+			.withWettbewerbsjahr("2020")
+			.withFontsizeAndLinesSchulname(fontSizeAndLinesSchulname);
 
 		// Act
 		byte[] daten = new KaengurusprungurkundeGeneratorDeutsch().generiereUrkunde(datenUrkunde);

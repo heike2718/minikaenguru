@@ -59,16 +59,23 @@ public class TeilnahmeurkundeHauptabschnittRendererEnglisch implements UrkundeHa
 		deltaY = fontCalculator.berechneDeltaY(text, deltaY, UrkundePDFUtils.SIZE_TEXT_NORMAL);
 		UrkundeLinePrinter.printTextCenter(content, text, font, deltaY);
 
-		fontSizeAndLines = new SplitSchulnameStrategie().getFontSizeAndLines(datenUrkunde.nameSchule());
+		fontSizeAndLines = datenUrkunde.fontSizeAndLinesSchulname();
 		fontSize = fontSizeAndLines.fontSize();
-		font = UrkundePDFUtils.getFontBlack(fontSize);
 
-		lines = fontSizeAndLines.lines().get();
+		if (fontSizeAndLines.lines().isPresent()) {
 
-		for (String line : lines) {
+			font = UrkundePDFUtils.getFontBlack(fontSize);
 
-			deltaY = fontCalculator.berechneDeltaY(line, deltaY, fontSize);
-			UrkundeLinePrinter.printTextCenter(content, line, font, deltaY);
+			lines = fontSizeAndLines.lines().get();
+
+			for (String line : lines) {
+
+				deltaY = fontCalculator.berechneDeltaY(line, deltaY, fontSize);
+				UrkundeLinePrinter.printTextCenter(content, line, font, deltaY);
+			}
+		} else {
+
+			deltaY = fontCalculator.berechneDeltaY("", deltaY, fontSize);
 		}
 
 		deltaY += UrkundePDFUtils.POINTS_BETWEEN_PARAGRAPHS;

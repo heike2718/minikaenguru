@@ -7,7 +7,6 @@ package de.egladil.web.mk_gateway.domain.urkunden.generator;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.Klasse;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
-import de.egladil.web.mk_gateway.domain.teilnahmen.Schulteilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.urkunden.Urkundenmotiv;
 import de.egladil.web.mk_gateway.domain.urkunden.daten.AbstractDatenUrkunde;
@@ -18,13 +17,13 @@ import de.egladil.web.mk_gateway.domain.urkunden.daten.KaengurusprungurkundeSchu
  */
 public class CreateDatenKaengurusprungSchuleStrategie implements CreateDatenUrkundeStrategy {
 
-	private final Schulteilnahme schulteilnahme;
+	private final FontSizeAndLines fontSizeAndLinesSchulname;
 
 	private final Klasse klasse;
 
-	public CreateDatenKaengurusprungSchuleStrategie(final Schulteilnahme schulteilnahme, final Klasse klasse) {
+	public CreateDatenKaengurusprungSchuleStrategie(final FontSizeAndLines fontSizeAndLinesSchulname, final Klasse klasse) {
 
-		this.schulteilnahme = schulteilnahme;
+		this.fontSizeAndLinesSchulname = fontSizeAndLinesSchulname;
 		this.klasse = klasse;
 	}
 
@@ -33,10 +32,11 @@ public class CreateDatenKaengurusprungSchuleStrategie implements CreateDatenUrku
 
 		String theDatum = kind.sprache() == Sprache.en ? datum.replaceAll("\\.", "/") : datum;
 
-		return new KaengurusprungurkundeSchuleDaten(loesungszettel.laengeKaengurusprung(), schulteilnahme, klasse)
+		return new KaengurusprungurkundeSchuleDaten(loesungszettel.laengeKaengurusprung(), klasse)
 			.withDatum(theDatum)
 			.withUrkundenmotiv(urkundenmotiv)
 			.withFullName(kind.nameUrkunde())
+			.withFontsizeAndLinesSchulname(fontSizeAndLinesSchulname)
 			.withWettbewerbsjahr(loesungszettel.teilnahmeIdentifier().wettbewerbID());
 	}
 

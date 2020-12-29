@@ -68,13 +68,6 @@ public abstract class AbstractSplitTextStrategie implements SplitTextStrategy {
 	 */
 	protected abstract int getMaxLengthAbbreviatedText();
 
-	/**
-	 * Maximale fonzSize des abgekürzten Textes.
-	 *
-	 * @return
-	 */
-	protected abstract int getMaxFontSizeAbbreviatedText();
-
 	private FontSizeAndLines splitWithFontSize(final int fontSize, final String text) {
 
 		List<String> zeilen = getLines(text, fontSize);

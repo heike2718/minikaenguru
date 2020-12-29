@@ -5,6 +5,7 @@
 package de.egladil.web.mk_gateway.domain.urkunden.daten;
 
 import de.egladil.web.mk_gateway.domain.urkunden.Urkundenmotiv;
+import de.egladil.web.mk_gateway.domain.urkunden.generator.FontSizeAndLines;
 
 /**
  * AbstractDatenUrkunde
@@ -15,13 +16,13 @@ public abstract class AbstractDatenUrkunde {
 
 	private String nameKlasse;
 
-	private String nameSchule;
-
 	private String datum;
 
 	private String wettbewerbsjahr;
 
 	private Urkundenmotiv urkundenmotiv;
+
+	private FontSizeAndLines fontSizeAndLinesSchulname;
 
 	public String fullName() {
 
@@ -41,16 +42,6 @@ public abstract class AbstractDatenUrkunde {
 	protected void setNameKlasse(final String nameKlasse) {
 
 		this.nameKlasse = nameKlasse;
-	}
-
-	public String nameSchule() {
-
-		return nameSchule;
-	}
-
-	protected void setNameSchule(final String nameSchule) {
-
-		this.nameSchule = nameSchule;
 	}
 
 	public String datum() {
@@ -83,5 +74,15 @@ public abstract class AbstractDatenUrkunde {
 	protected void setWettbewerbsjahr(final String wettbewerbsjahr) {
 
 		this.wettbewerbsjahr = wettbewerbsjahr;
+	}
+
+	public FontSizeAndLines fontSizeAndLinesSchulname() {
+
+		return fontSizeAndLinesSchulname;
+	}
+
+	protected void setFontSizeAndLinesSchulname(final FontSizeAndLines fontsizeAndLinesSchulname) {
+
+		this.fontSizeAndLinesSchulname = fontsizeAndLinesSchulname;
 	}
 }

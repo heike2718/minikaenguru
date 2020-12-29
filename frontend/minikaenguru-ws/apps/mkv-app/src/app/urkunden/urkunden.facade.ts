@@ -10,13 +10,11 @@ import * as UrkundenActions from './+state/urkunden.actions';
 import * as UrkundenSelecors from './+state/urkunden.selectors';
 import { UrkundenauftragEinzelkind, getLabelFarbe, getLabelUrkundenart, Farbschema, Urkundenart, UrkundeDateModel } from './urkunden.model';
 import { Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { NgbDate, NgbDateStruct, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { KinderFacade } from '../kinder/kinder.facade';
 import { User } from '@minikaenguru-ws/common-auth';
-import { Wettbewerb } from '../wettbewerb/wettbewerb.model';
-import { WettbewerbFacade } from '../wettbewerb/wettbewerb.facade';
 import { Schule } from '../lehrer/schulen/schulen.model';
 import { LehrerFacade } from '../lehrer/lehrer.facade';
 
@@ -145,7 +143,7 @@ export class UrkundenFacade {
 		}
 
 		return 'Bitte verwenden Sie diese Funktion nur, um Urkunden für einzelne Kinder zu korrigieren.'
-			+ ' Die Urkunden für Ihre Schule erstellen Sie bitte zusammen mit einer Auswertungsseite in der Ansicht "Klassen" (Klick auf "Klassenliste") für die ganze Schule.';
+			+ ' Alle Urkunden für Ihre Schule können Sie zusammen mit einer Auswertungsseite in einem einzigen Schritt in der Ansicht "Klassen" (Klick auf "Klassenliste") erstellen.';
 	}
 
 

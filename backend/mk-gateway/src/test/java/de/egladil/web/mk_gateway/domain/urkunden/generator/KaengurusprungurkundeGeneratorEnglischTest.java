@@ -33,11 +33,14 @@ public class KaengurusprungurkundeGeneratorEnglischTest {
 
 		String theDatum = "26.12.2020".replaceAll("\\.", "/");
 
-		TeilnahmeurkundeSchuleDaten datenUrkunde = new TeilnahmeurkundeSchuleDaten("7", schulteilnahme, klasse)
+		FontSizeAndLines fontSizeAndLinesSchulname = new SplitSchulnameStrategie().getFontSizeAndLines(schulteilnahme.nameSchule());
+
+		TeilnahmeurkundeSchuleDaten datenUrkunde = new TeilnahmeurkundeSchuleDaten("7", klasse)
 			.withDatum(theDatum)
 			.withFullName("Anna Logika")
 			.withUrkundenmotiv(urkundenmotiv)
-			.withWettbewerbsjahr("2020");
+			.withWettbewerbsjahr("2020")
+			.withFontsizeAndLinesSchulname(fontSizeAndLinesSchulname);
 
 		// Act
 		byte[] daten = new KaengurusprungurkundeGeneratorEnglisch().generiereUrkunde(datenUrkunde);

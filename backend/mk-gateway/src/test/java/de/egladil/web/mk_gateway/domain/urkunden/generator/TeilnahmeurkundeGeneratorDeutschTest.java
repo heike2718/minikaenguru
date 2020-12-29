@@ -37,11 +37,15 @@ public class TeilnahmeurkundeGeneratorDeutschTest {
 				"Grundschule \"Johann Wolfgang von Goethe\"", new Identifier("jkasdkjq"));
 			Klasse klasse = new Klasse(new Identifier("sdhuqwo")).withName("Klasse 2b");
 
-			TeilnahmeurkundeSchuleDaten datenUrkunde = new TeilnahmeurkundeSchuleDaten("42,75", schulteilnahme, klasse)
+			FontSizeAndLines fontSizeAndLinesSchulname = new SplitSchulnameStrategie()
+				.getFontSizeAndLines(schulteilnahme.nameSchule());
+
+			TeilnahmeurkundeSchuleDaten datenUrkunde = new TeilnahmeurkundeSchuleDaten("42,75", klasse)
 				.withDatum("26.12.2020")
 				.withFullName("Anna Logika")
 				.withUrkundenmotiv(urkundenmotiv)
-				.withWettbewerbsjahr("2020");
+				.withWettbewerbsjahr("2020")
+				.withFontsizeAndLinesSchulname(fontSizeAndLinesSchulname);
 
 			// Act
 			byte[] daten = new TeilnahmeurkundeGeneratorDeutsch().generiereUrkunde(datenUrkunde);
@@ -62,11 +66,15 @@ public class TeilnahmeurkundeGeneratorDeutschTest {
 				"Grundschule an der Georgstraße Städtische Gemeinschaftsschule der Primarstufe", new Identifier("jkasdkjq"));
 			Klasse klasse = new Klasse(new Identifier("sdhuqwo")).withName("Klasse 2b");
 
-			TeilnahmeurkundeSchuleDaten datenUrkunde = new TeilnahmeurkundeSchuleDaten("38,75", schulteilnahme, klasse)
+			FontSizeAndLines fontSizeAndLinesSchulname = new SplitSchulnameStrategie()
+				.getFontSizeAndLines(schulteilnahme.nameSchule());
+
+			TeilnahmeurkundeSchuleDaten datenUrkunde = new TeilnahmeurkundeSchuleDaten("38,75", klasse)
 				.withDatum("26.12.2020")
 				.withFullName("Karl mit einem Nachnamen der gerade noch so passt indem umgebrochen wird")
 				.withUrkundenmotiv(urkundenmotiv)
-				.withWettbewerbsjahr("2020");
+				.withWettbewerbsjahr("2020")
+				.withFontsizeAndLinesSchulname(fontSizeAndLinesSchulname);
 
 			// Act
 			byte[] daten = new TeilnahmeurkundeGeneratorDeutsch().generiereUrkunde(datenUrkunde);
@@ -87,11 +95,15 @@ public class TeilnahmeurkundeGeneratorDeutschTest {
 				"Grundschule an der Georgstraße Städtische Gemeinschaftsschule der Primarstufe", new Identifier("jkasdkjq"));
 			Klasse klasse = new Klasse(new Identifier("sdhuqwo")).withName("Eichelhäher");
 
-			TeilnahmeurkundeSchuleDaten datenUrkunde = new TeilnahmeurkundeSchuleDaten("13,75", schulteilnahme, klasse)
+			FontSizeAndLines fontSizeAndLinesSchulname = new SplitSchulnameStrategie()
+				.getFontSizeAndLines(schulteilnahme.nameSchule());
+
+			TeilnahmeurkundeSchuleDaten datenUrkunde = new TeilnahmeurkundeSchuleDaten("13,75", klasse)
 				.withDatum("26.12.2020")
 				.withFullName("Karl Theodor zu Guttenberg Kuckucksheim")
 				.withUrkundenmotiv(urkundenmotiv)
-				.withWettbewerbsjahr("2020");
+				.withWettbewerbsjahr("2020")
+				.withFontsizeAndLinesSchulname(fontSizeAndLinesSchulname);
 
 			// Act
 			byte[] daten = new TeilnahmeurkundeGeneratorDeutsch().generiereUrkunde(datenUrkunde);
@@ -113,12 +125,16 @@ public class TeilnahmeurkundeGeneratorDeutschTest {
 				new Identifier("jkasdkjq"));
 			Klasse klasse = new Klasse(new Identifier("sdhuqwo")).withName("Klasse 2b");
 
-			TeilnahmeurkundeSchuleDaten datenUrkunde = new TeilnahmeurkundeSchuleDaten("13,75", schulteilnahme, klasse)
+			FontSizeAndLines fontSizeAndLinesSchulname = new SplitSchulnameStrategie()
+				.getFontSizeAndLines(schulteilnahme.nameSchule());
+
+			TeilnahmeurkundeSchuleDaten datenUrkunde = new TeilnahmeurkundeSchuleDaten("13,75", klasse)
 				.withDatum("26.12.2020")
 				.withFullName(
 					"Maximilian Konstantin Pfennigfuchser Trostel beim besten Willen nicht nicht auf die Urkunde passen wird")
 				.withUrkundenmotiv(urkundenmotiv)
-				.withWettbewerbsjahr("2020");
+				.withWettbewerbsjahr("2020")
+				.withFontsizeAndLinesSchulname(fontSizeAndLinesSchulname);
 
 			// Act
 			byte[] daten = new TeilnahmeurkundeGeneratorDeutsch().generiereUrkunde(datenUrkunde);

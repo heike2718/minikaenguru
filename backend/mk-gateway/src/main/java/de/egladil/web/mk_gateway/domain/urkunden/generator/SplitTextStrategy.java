@@ -20,4 +20,11 @@ public interface SplitTextStrategy {
 	 */
 	FontSizeAndLines getFontSizeAndLines(final String text);
 
+	/**
+	 * Maximale fonzSize des abgekürzten Textes.
+	 *
+	 * @return
+	 */
+	int getMaxFontSizeAbbreviatedText();
+
 }

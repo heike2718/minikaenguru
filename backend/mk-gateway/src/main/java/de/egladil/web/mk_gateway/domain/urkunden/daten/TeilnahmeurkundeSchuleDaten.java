@@ -5,8 +5,8 @@
 package de.egladil.web.mk_gateway.domain.urkunden.daten;
 
 import de.egladil.web.mk_gateway.domain.kinder.Klasse;
-import de.egladil.web.mk_gateway.domain.teilnahmen.Schulteilnahme;
 import de.egladil.web.mk_gateway.domain.urkunden.Urkundenmotiv;
+import de.egladil.web.mk_gateway.domain.urkunden.generator.FontSizeAndLines;
 
 /**
  * TeilnahmeurkundeSchuleDaten
@@ -15,10 +15,9 @@ public class TeilnahmeurkundeSchuleDaten extends AbstractDatenUrkunde {
 
 	private final String value;
 
-	public TeilnahmeurkundeSchuleDaten(final String value, final Schulteilnahme schulteilnahme, final Klasse klasse) {
+	public TeilnahmeurkundeSchuleDaten(final String value, final Klasse klasse) {
 
 		this.value = value;
-		this.setNameSchule(schulteilnahme.nameSchule());
 		this.setNameKlasse(klasse.name());
 	}
 
@@ -49,6 +48,12 @@ public class TeilnahmeurkundeSchuleDaten extends AbstractDatenUrkunde {
 	public TeilnahmeurkundeSchuleDaten withWettbewerbsjahr(final String wettbewerbsjahr) {
 
 		this.setWettbewerbsjahr(wettbewerbsjahr);
+		return this;
+	}
+
+	public TeilnahmeurkundeSchuleDaten withFontsizeAndLinesSchulname(final FontSizeAndLines fontSizeAndLinesSchulname) {
+
+		this.setFontSizeAndLinesSchulname(fontSizeAndLinesSchulname);
 		return this;
 	}
 

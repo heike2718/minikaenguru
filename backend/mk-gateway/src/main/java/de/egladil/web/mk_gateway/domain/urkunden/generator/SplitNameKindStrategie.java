@@ -29,7 +29,7 @@ public class SplitNameKindStrategie extends AbstractSplitTextStrategie {
 	}
 
 	@Override
-	protected int getMaxFontSizeAbbreviatedText() {
+	public int getMaxFontSizeAbbreviatedText() {
 
 		return UrkundePDFUtils.SIZE_NAME_LARGE;
 	}
