@@ -140,7 +140,7 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 
 	urkundeErstellen(): void {
 		this.kinderFacade.selectKind(this.kind);
-		this.urkundenFacade.createUrkundenauftrag(this.kind);
+		this.router.navigateByUrl('/urkunden');
 	}
 
 

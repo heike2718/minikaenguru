@@ -1,3 +1,5 @@
+import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
+
 export type Urkundenart = 'KAENGURUSPRUNG' | 'TEILNAHME';
 
 export type Farbschema = 'BLUE' | 'GREEN' | 'ORANGE';
@@ -7,6 +9,12 @@ export interface UrkundenauftragEinzelkind {
 	readonly kindUuid: string;
 	readonly dateString?: string;
 	readonly farbschema?: Farbschema;
+};
+
+export interface UrkundeDateModel {
+	readonly minDate: NgbDate,
+	readonly maxDate: NgbDate,
+	readonly selectedDate: string
 };
 
 

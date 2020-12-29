@@ -2,6 +2,8 @@
 
 	<h3>Urkunde <span *ngIf="kind">für {{nameKind}} </span>erstellen</h3>
 
+	<div *ngIf="showWarntext" class="mt-1 ml-3 card-subtitle text-primary">{{warntext}}</div>
+
 	<form #urkundenauftragForm="ngForm" (ngSubmit)="onFormSubmit(urkundenauftragForm)">
 
 		<div class="form-group mt-4">
@@ -39,13 +41,14 @@
 
 	<div class="form-group mt-4">
 		<div class="row ml-3 mb-2"><strong>Datum für die Urkunde*:</strong></div>
-		<ngb-datepicker class="ml-1" #dp [(ngModel)]="dateModel" (dateSelect)="onDateSelect($event)" [minDate]="minDate"
-			[maxDate]="maxDate" (navigate)="dateModel = $event.next">
+		<ngb-datepicker class="ml-1" #dp [(ngModel)]="dateModel" (dateSelect)="onDateSelect($event)"
+			[minDate]="urkundeDateModel.minDate" [maxDate]="urkundeDateModel.maxDate"
+			(navigate)="dateModel = $event.next">
 		</ngb-datepicker>
 	</div>
 
 
-<p class="mt-4 mb-1" *ngIf="kind && urkundenauftragForm.valid">{{zusammenfassung()}}</p>
+	<p class="mt-4 mb-1" *ngIf="kind && urkundenauftragForm.valid">{{zusammenfassung()}}</p>
 
 	<div class="col-12 mb-2 mt-2" *ngIf="urkundenFacade.loading$ | async">
 		die Urkunde wird erstellt... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
@@ -57,7 +60,9 @@
 			(click)="onFormSubmit(urkundenauftragForm)"><i class="fa fa-graduation-cap" aria-hidden="true"></i>
 			Urkunde erstellen</button>
 
-		<button class="btn btn-primary w-100 ml-1" (click)="onCancel()"><i class="fa fa-arrow-left"
-				aria-hidden="true"></i>abbrechen</button>
+		<button *ngIf="showWarntext" class="btn btn-primary w-100 ml-1" (click)="onGotoKlassenliste()">Klassen</button>
+
+		<button class="btn btn-primary w-100 ml-1" (click)="onCancel()"><i class="fa fa-users"
+				aria-hidden="true"></i>zurück zur Kinderliste</button>
 	</div>
 </div>

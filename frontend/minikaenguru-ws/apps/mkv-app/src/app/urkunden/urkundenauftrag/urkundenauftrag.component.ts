@@ -1,14 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NgbCalendar, NgbDateStruct, NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct, NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { UrkundenFacade } from '../urkunden.facade';
 import { Subscription } from 'rxjs';
-import { Kind, kindToString, TeilnahmeIdentifierAktuellerWettbewerb } from '@minikaenguru-ws/common-components';
+import { Kind, kindToString } from '@minikaenguru-ws/common-components';
 import { KinderFacade } from '../../kinder/kinder.facade';
-import { Urkundenart, Farbschema, UrkundenauftragEinzelkind, getLabelFarbe, getLabelUrkundenart } from '../urkunden.model';
+import { Urkundenart, Farbschema, UrkundenauftragEinzelkind, getLabelFarbe, getLabelUrkundenart, UrkundeDateModel } from '../urkunden.model';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
-import { environment } from '../../../environments/environment';
-import { User } from '@minikaenguru-ws/common-auth';
 
 @Component({
 	selector: 'mkv-urkundenauftrag',
@@ -17,39 +14,34 @@ import { User } from '@minikaenguru-ws/common-auth';
 })
 export class UrkundenauftragComponent implements OnInit, OnDestroy {
 
+	warntext = '';
+
+	showWarntext = false;
 
 	kind: Kind;
 
 	nameKind: string;
 	dateModel: NgbDateStruct;
 
-	minDate: NgbDate = new NgbDate(2020, 12, 26);
-	maxDate: NgbDate;
+	urkundeDateModel: UrkundeDateModel;
 
 	urkundenart: Urkundenart;
 	farbe: Farbschema;
 
-	dateString = '';
-
-	private teilnahmeIdentifier: TeilnahmeIdentifierAktuellerWettbewerb;
-
 	private selectedKindSubscription: Subscription;
 
-	private teilnahmeIdentifierSubscription: Subscription;
-
-	constructor(private calendar: NgbCalendar,
-		public urkundenFacade: UrkundenFacade,
-		private kinderFacade: KinderFacade,
-		private router: Router) { }
+	constructor(public urkundenFacade: UrkundenFacade,
+		private kinderFacade: KinderFacade) { }
 
 	ngOnInit(): void {
 
-		this.maxDate = this.calendar.getToday();
-		this.dateModel = this.maxDate;
-		this.dateString = this.calcDateString(this.maxDate);
+		this.warntext = this.urkundenFacade.warntext;
+		this.showWarntext = this.warntext.length > 0;
+		this.urkundeDateModel = this.urkundenFacade.getUrkundeDateModel();
+
+		this.dateModel = this.urkundeDateModel.maxDate;
 
 		this.urkundenart = 'TEILNAHME';
-		this.farbe = 'GREEN';
 
 		this.selectedKindSubscription = this.kinderFacade.selectedKind$.subscribe(
 
@@ -60,10 +52,6 @@ export class UrkundenauftragComponent implements OnInit, OnDestroy {
 				}
 			}
 		);
-
-		this.teilnahmeIdentifierSubscription = this.kinderFacade.teilnahmeIdentifier$.subscribe(
-			ti => this.teilnahmeIdentifier = ti
-		);
 	}
 
 	ngOnDestroy(): void {
@@ -71,17 +59,13 @@ export class UrkundenauftragComponent implements OnInit, OnDestroy {
 		if (this.selectedKindSubscription) {
 			this.selectedKindSubscription.unsubscribe();
 		}
-
-		if (this.teilnahmeIdentifierSubscription) {
-			this.teilnahmeIdentifierSubscription.unsubscribe();
-		}
-
 	}
 
 
 	onDateSelect($event: NgbDate): void {
 
-		this.dateString = this.calcDateString($event);
+		const dateString = this.urkundenFacade.calculateDateString($event);
+		this.urkundeDateModel = {...this.urkundeDateModel, selectedDate: dateString};
 	}
 
 	onFormSubmit(form: NgForm): void {
@@ -90,7 +74,7 @@ export class UrkundenauftragComponent implements OnInit, OnDestroy {
 
 		const auftrag: UrkundenauftragEinzelkind = {
 			kindUuid: this.kind.uuid,
-			dateString: this.dateString,
+			dateString: this.urkundeDateModel.selectedDate,
 			farbschema: value['farbe'],
 			urkundenart: value['urkundenart']
 		};
@@ -98,63 +82,18 @@ export class UrkundenauftragComponent implements OnInit, OnDestroy {
 		this.urkundenFacade.downloadUrkunde(auftrag);
 	}
 
+	onGotoKlassenliste(): void {
+		this.urkundenFacade.gotoKlassenliste();
+	}
+
 
 	onCancel(): void {
 
-		this.urkundenFacade.resetState();
-		this.navigateBack();
-
+		this.urkundenFacade.cancelEinzelurkunde();
 	}
 
 	zusammenfassung(): string {
 
-		const labelFarbe = getLabelFarbe(this.farbe);
-		const labelUrkundenart = getLabelUrkundenart(this.urkundenart);
-		const name =  this.nameKind ? ' für ' + this.nameKind : '';
-
-		return 'Mit Klick auf den Button "Urkunde erstellen" erstellen Sie eine ' + labelFarbe + ' ' + labelUrkundenart + ' '+ name + ' (Datum ' + this.dateString + ').';
+		return this.urkundenFacade.zusammenfassung(this.farbe, this.urkundenart, this.nameKind, this.urkundeDateModel);
 	}
-
-
-	private navigateBack(): void {
-
-		if (this.teilnahmeIdentifier && this.teilnahmeIdentifier.teilnahmenummer) {
-			this.router.navigateByUrl('/kinder/' + this.teilnahmeIdentifier.teilnahmenummer);
-		} else {
-
-			const item = localStorage.getItem(environment.storageKeyPrefix + 'user');
-			if (item) {
-				const user: User = JSON.parse(item);
-
-				switch (user.rolle) {
-					case 'LEHRER':
-						this.router.navigateByUrl('/lehrer/dashboard');
-						break;
-					case 'PRIVAT':
-						this.router.navigateByUrl('/privat/dashboard');
-						break;
-					default: this.router.navigateByUrl('/landing');
-				}
-			}
-		}
-	}
-
-	private calcDateString(dateStruct: NgbDate): string {
-		const month = this.lpad(dateStruct.month);
-		const day = this.lpad(dateStruct.day);
-
-		return day + '.' + month + '.' + dateStruct.year;
-	}
-
-
-	private lpad(zahl: number): string {
-
-		let result = zahl + '';
-		if (result.length === 1) {
-			result = '0' + result;
-		}
-
-		return result;
-	}
-
 }
