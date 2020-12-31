@@ -65,8 +65,7 @@ public class SchuluebersichtPDFGenerator {
 		byte[] deckblatt = this.generiereDeckblatt(wettbewerbID, optSchule, verteilungenNachKlassenstufe, gesamtmediane);
 		seiten.add(deckblatt);
 
-		List<byte[]> statistiken = new StatistikPDFGenerator()
-			.generiereStatistikUebersichtVeranstalter(verteilungenNachKlassenstufe);
+		List<byte[]> statistiken = generiereStatistikseiten(verteilungenNachKlassenstufe);
 		seiten.addAll(statistiken);
 
 		final byte[] result = new PdfMerger().concatPdf(seiten);
@@ -75,7 +74,17 @@ public class SchuluebersichtPDFGenerator {
 			new Object[] { wettbewerbID.toString() });
 
 		return new DownloadData(dateiname, result);
+	}
 
+	/**
+	 * @param verteilungenNachKlassenstufe
+	 * @return
+	 */
+	public List<byte[]> generiereStatistikseiten(final Map<Klassenstufe, GesamtpunktverteilungKlassenstufe> verteilungenNachKlassenstufe) {
+
+		List<byte[]> statistiken = new StatistikPDFGenerator()
+			.generiereStatistikUebersichtVeranstalter(verteilungenNachKlassenstufe);
+		return statistiken;
 	}
 
 	byte[] generiereDeckblatt(final WettbewerbID wettbewerbID, final Optional<SchuleAPIModel> optSchule, final Map<Klassenstufe, GesamtpunktverteilungKlassenstufe> verteilungenNachKlassenstufe, final Map<Klassenstufe, String> gesamtmediane) {

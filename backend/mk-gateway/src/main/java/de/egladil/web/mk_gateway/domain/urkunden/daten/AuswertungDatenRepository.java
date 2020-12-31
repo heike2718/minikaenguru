@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import de.egladil.web.mk_gateway.domain.statistik.GesamtpunktverteilungKlassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.urkunden.functions.DatenKaengurusprungKaengurugewinnerMapper;
 
@@ -25,13 +26,17 @@ public class AuswertungDatenRepository {
 
 	private final Map<Klassenstufe, List<KinddatenUebersicht>> uebersichtsdaten;
 
-	public AuswertungDatenRepository(final List<AbstractDatenUrkunde> datenTeilnahmeurkunden, final List<AbstractDatenUrkunde> datenKaengurusprungurkunden, final Map<Klassenstufe, List<KinddatenUebersicht>> uebersichtsdaten) {
+	private final Map<Klassenstufe, GesamtpunktverteilungKlassenstufe> gesamtpunktverteilungen;
+
+	public AuswertungDatenRepository(final List<AbstractDatenUrkunde> datenTeilnahmeurkunden, final List<AbstractDatenUrkunde> datenKaengurusprungurkunden, final Map<Klassenstufe, List<KinddatenUebersicht>> uebersichtsdaten, final Map<Klassenstufe, GesamtpunktverteilungKlassenstufe> gesamtpunktverteilungen) {
 
 		this.datenTeilnahmeurkunden = datenTeilnahmeurkunden;
 		Collections.sort(this.datenTeilnahmeurkunden, new KinddatenUrkundenComparator());
 
 		this.datenKaengurusprungurkunden = datenKaengurusprungurkunden;
 		this.uebersichtsdaten = uebersichtsdaten;
+
+		this.gesamtpunktverteilungen = gesamtpunktverteilungen;
 	}
 
 	/**
@@ -88,5 +93,10 @@ public class AuswertungDatenRepository {
 
 		return datenKaengurusprungurkunden.stream().filter(d -> kindUUID.equals(d.uuid())).findFirst();
 
+	}
+
+	public Map<Klassenstufe, GesamtpunktverteilungKlassenstufe> getGesamtpunktverteilungen() {
+
+		return gesamtpunktverteilungen;
 	}
 }
