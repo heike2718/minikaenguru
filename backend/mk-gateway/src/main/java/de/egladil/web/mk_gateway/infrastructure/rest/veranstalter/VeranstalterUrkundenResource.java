@@ -19,7 +19,9 @@ import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.urkunden.EinzelkindUrkundenservice;
+import de.egladil.web.mk_gateway.domain.urkunden.SchuleUrkundenservice;
 import de.egladil.web.mk_gateway.domain.urkunden.api.UrkundenauftragEinzelkind;
+import de.egladil.web.mk_gateway.domain.urkunden.api.UrkundenauftragSchule;
 
 /**
  * VeranstalterUrkundenResource
@@ -35,14 +37,15 @@ public class VeranstalterUrkundenResource {
 	@Inject
 	EinzelkindUrkundenservice einzelkindUrkundenservice;
 
+	@Inject
+	SchuleUrkundenservice schulurkundenservice;
+
 	/**
 	 * Generiert eine einzelne Teilnehmerurkunde für das gegebene Kind, sofern es einen Lösungszettel hat.
 	 *
-	 * @param  kindUuid
-	 *                        String UUID eines Kindes.
-	 * @param  farbschemaname
-	 *                        String Name eines bekannten Farbschemas.
-	 * @return                Response mit einem DownloadData-Payload
+	 * @param  urkundenauftrag
+	 *                         UrkundenauftragEinzelkind
+	 * @return                 Response mit einem DownloadData-Payload
 	 */
 	@POST
 	@Path("urkunde")
@@ -56,4 +59,22 @@ public class VeranstalterUrkundenResource {
 		return MkGatewayFileUtils.createDownloadResponse(file);
 	}
 
+	/**
+	 * Generiert Schulauswertung mit Urkunden und allem.
+	 *
+	 * @param  urkundenauftrag
+	 *                         UrkundenauftragSchule
+	 * @return                 Response mit einem DownloadData-Payload
+	 */
+	@POST
+	@Path("schule")
+	@Produces({ MediaType.APPLICATION_OCTET_STREAM })
+	public Response generiereSchulauswertung(final UrkundenauftragSchule urkundenauftrag) {
+
+		Identifier veranstalterID = new Identifier(securityContext.getUserPrincipal().getName());
+
+		DownloadData file = schulurkundenservice.generiereSchulauswertung(urkundenauftrag, veranstalterID);
+
+		return MkGatewayFileUtils.createDownloadResponse(file);
+	}
 }

@@ -74,7 +74,7 @@ public class SchuleUrkundenserviceTest extends AbstractIT {
 		// jetzt in Datei schreiben
 		DownloadData downloadData = new DownloadData("name.pdf", daten);
 
-		this.print(downloadData, false);
+		this.print(downloadData, true);
 
 	}
 
@@ -84,8 +84,8 @@ public class SchuleUrkundenserviceTest extends AbstractIT {
 		// Arrange
 		UrkundenauftragSchule urkundenauftrag = new UrkundenauftragSchule()
 			.withDateString("30.12.2020")
-			.withFarbschema(Farbschema.GREEN)
-			.withSchulkuerzel("G1HDI46O");
+			.withFarbschema(Farbschema.ORANGE)
+			.withSchulkuerzel("KI7PLSUB");
 
 		Identifier veranstalterID = new Identifier("412b67dc-132f-465a-a3c3-468269e866cb");
 

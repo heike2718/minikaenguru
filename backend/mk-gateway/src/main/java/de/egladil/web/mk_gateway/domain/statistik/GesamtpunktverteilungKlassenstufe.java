@@ -5,6 +5,7 @@
 package de.egladil.web.mk_gateway.domain.statistik;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -117,6 +118,7 @@ public class GesamtpunktverteilungKlassenstufe {
 
 	public List<AufgabeErgebnisItem> aufgabeErgebnisItems() {
 
+		Collections.sort(aufgabeErgebnisItems);
 		return aufgabeErgebnisItems;
 	}
 

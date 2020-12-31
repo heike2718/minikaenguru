@@ -8,7 +8,7 @@ import { UrkundenService } from './urkunden.service';
 import { Kind, DownloadFacade, TeilnahmeIdentifierAktuellerWettbewerb } from '@minikaenguru-ws/common-components';
 import * as UrkundenActions from './+state/urkunden.actions';
 import * as UrkundenSelecors from './+state/urkunden.selectors';
-import { UrkundenauftragEinzelkind, getLabelFarbe, getLabelUrkundenart, Farbschema, Urkundenart, UrkundeDateModel } from './urkunden.model';
+import { UrkundenauftragEinzelkind, getLabelFarbe, getLabelUrkundenart, Farbschema, Urkundenart, UrkundeDateModel, UrkundenauftragSchule } from './urkunden.model';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -89,7 +89,26 @@ export class UrkundenFacade {
 		);
 	}
 
-	zusammenfassung(farbe: Farbschema, urkundenart: Urkundenart, nameKind: string, urkundeDateModel: UrkundeDateModel): string {
+	public downloadAuswertung(auftrag: UrkundenauftragSchule): void {
+		this.store.dispatch(UrkundenActions.startLoading());
+
+		const defaultFilename = 'schulauswertung_e0f2467a.pdf';
+
+		this.urkundenService.generateSchulauswertung(auftrag).pipe(
+			take(1)
+		).subscribe(
+			blob => {
+				this.downloadFacade.saveAs(blob, defaultFilename);
+				this.store.dispatch(UrkundenActions.downloadFinished());
+			},
+			(error => {
+				this.store.dispatch(UrkundenActions.downloadFinished());
+				this.errorHandler.handleError(error);
+			})
+		);
+	}
+
+	zusammenfassungEinzelurkunde(farbe: Farbschema, urkundenart: Urkundenart, nameKind: string, urkundeDateModel: UrkundeDateModel): string {
 
 		const labelFarbe = getLabelFarbe(farbe);
 		const labelUrkundenart = getLabelUrkundenart(urkundenart);
@@ -97,6 +116,12 @@ export class UrkundenFacade {
 
 
 		return 'Mit Klick auf den Button "Urkunde erstellen" erstellen Sie eine ' + labelFarbe + ' ' + labelUrkundenart + ' ' + name + ' (Datum ' + urkundeDateModel.selectedDate + ').';
+	}
+
+	zusammenfassungAuswertungsauftrag(farbe: Farbschema, urkundeDateModel: UrkundeDateModel): string {
+
+		const labelFarbe = getLabelFarbe(farbe);
+		return 'Mit Klick auf den Button "Auswertung erstellen" erstellen Sie die Auswertung: ' + labelFarbe + ' Urkunden mit Datum ' + urkundeDateModel.selectedDate;
 	}
 
 
@@ -115,6 +140,11 @@ export class UrkundenFacade {
 	public cancelEinzelurkunde() {
 		this.resetState();
 		this.navigateBack();
+	}
+
+	public cancelSchulauswertung() {
+		this.resetState();
+		this.gotoKlassenliste();
 	}
 
 	public gotoKlassenliste(): void {

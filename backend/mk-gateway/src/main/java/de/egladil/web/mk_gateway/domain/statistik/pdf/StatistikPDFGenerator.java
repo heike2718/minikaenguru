@@ -49,6 +49,30 @@ public class StatistikPDFGenerator {
 	private final ProzentrangEinzeluebersichtPDFGenerator prozentrangEinzeluebersichtPDFGenerator = new ProzentrangEinzeluebersichtPDFGenerator();
 
 	/**
+	 * Generiert die Aufgabenübersichten je Klassenstufen.
+	 *
+	 * @param  verteilungenNachKlassenstufe
+	 * @return
+	 */
+	public List<byte[]> generiereAufgabenUebersichtVeranstalter(final Map<Klassenstufe, GesamtpunktverteilungKlassenstufe> verteilungenNachKlassenstufe) {
+
+		List<byte[]> result = new ArrayList<>();
+
+		for (Klassenstufe klassenstufe : Klassenstufe.valuesSorted()) {
+
+			GesamtpunktverteilungKlassenstufe verteilung = verteilungenNachKlassenstufe.get(klassenstufe);
+
+			if (verteilung != null) {
+
+				result.add(aufgabenuebersichtGenerator.generiereAufgabenuebersichtKlassenstufe(verteilung, false));
+			}
+
+		}
+
+		return result;
+	}
+
+	/**
 	 * Generiert die Tabellen je Klassenstufe.
 	 *
 	 * @param  verteilungenNachKlassenstufe

@@ -156,7 +156,8 @@ public class SchuleUrkundenservice {
 		seiten.add(new AuswertungSchuluebersichtGenerator().generiereSchuluebersicht(schulteilnahme, datenRepository));
 
 		SchuluebersichtPDFGenerator statistikGenerator = new SchuluebersichtPDFGenerator();
-		List<byte[]> statistikseiten = statistikGenerator.generiereStatistikseiten(datenRepository.getGesamtpunktverteilungen());
+		List<byte[]> statistikseiten = statistikGenerator.generiereStatistikseiten(datenRepository.getGesamtpunktverteilungen(),
+			true);
 
 		seiten.addAll(statistikseiten);
 
@@ -252,9 +253,14 @@ public class SchuleUrkundenservice {
 
 			List<Loesungszettel> loesungszettelKlassenstufe = alleLoesungszettel.stream()
 				.filter(l -> klassenstufe == l.klassenstufe()).collect(Collectors.toList());
-			GesamtpunktverteilungKlassenstufe verteilung = statistikService.generiereGesamtpunktverteilung(wettbewerbID,
-				klassenstufe, loesungszettelKlassenstufe);
-			statistikMap.put(klassenstufe, verteilung);
+
+			if (loesungszettelKlassenstufe.size() > 0) {
+
+				GesamtpunktverteilungKlassenstufe verteilung = statistikService.generiereGesamtpunktverteilung(wettbewerbID,
+					klassenstufe, loesungszettelKlassenstufe);
+
+				statistikMap.put(klassenstufe, verteilung);
+			}
 		}
 
 		return this.createTheDatenrepository(datenTeilnahmeurkunden, datenKaengurusprungurkunden, alleDatenUebersicht,

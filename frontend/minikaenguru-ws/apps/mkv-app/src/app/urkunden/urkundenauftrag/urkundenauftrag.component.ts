@@ -31,7 +31,7 @@ export class UrkundenauftragComponent implements OnInit, OnDestroy {
 	private selectedKindSubscription: Subscription;
 
 	constructor(public urkundenFacade: UrkundenFacade,
-		private kinderFacade: KinderFacade) { }
+		private kinderFacade: KinderFacade) {}
 
 	ngOnInit(): void {
 
@@ -94,6 +94,6 @@ export class UrkundenauftragComponent implements OnInit, OnDestroy {
 
 	zusammenfassung(): string {
 
-		return this.urkundenFacade.zusammenfassung(this.farbe, this.urkundenart, this.nameKind, this.urkundeDateModel);
+		return this.urkundenFacade.zusammenfassungEinzelurkunde(this.farbe, this.urkundenart, this.nameKind, this.urkundeDateModel);
 	}
 }
