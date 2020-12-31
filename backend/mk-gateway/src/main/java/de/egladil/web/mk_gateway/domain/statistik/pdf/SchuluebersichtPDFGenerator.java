@@ -65,8 +65,7 @@ public class SchuluebersichtPDFGenerator {
 		byte[] deckblatt = this.generiereDeckblatt(wettbewerbID, optSchule, verteilungenNachKlassenstufe, gesamtmediane);
 		seiten.add(deckblatt);
 
-		List<byte[]> statistiken = new StatistikPDFGenerator()
-			.generiereStatistikUebersichtVeranstalter(verteilungenNachKlassenstufe);
+		List<byte[]> statistiken = generiereStatistikseiten(verteilungenNachKlassenstufe, false);
 		seiten.addAll(statistiken);
 
 		final byte[] result = new PdfMerger().concatPdf(seiten);
@@ -75,7 +74,22 @@ public class SchuluebersichtPDFGenerator {
 			new Object[] { wettbewerbID.toString() });
 
 		return new DownloadData(dateiname, result);
+	}
 
+	/**
+	 * @param  verteilungenNachKlassenstufe
+	 * @return
+	 */
+	public List<byte[]> generiereStatistikseiten(final Map<Klassenstufe, GesamtpunktverteilungKlassenstufe> verteilungenNachKlassenstufe, final boolean nurAufgabenuebersicht) {
+
+		if (nurAufgabenuebersicht) {
+
+			return new StatistikPDFGenerator().generiereAufgabenUebersichtVeranstalter(verteilungenNachKlassenstufe);
+		}
+
+		List<byte[]> statistiken = new StatistikPDFGenerator()
+			.generiereStatistikUebersichtVeranstalter(verteilungenNachKlassenstufe);
+		return statistiken;
 	}
 
 	byte[] generiereDeckblatt(final WettbewerbID wettbewerbID, final Optional<SchuleAPIModel> optSchule, final Map<Klassenstufe, GesamtpunktverteilungKlassenstufe> verteilungenNachKlassenstufe, final Map<Klassenstufe, String> gesamtmediane) {
@@ -147,6 +161,13 @@ public class SchuluebersichtPDFGenerator {
 			String msg = "konnte keinen PdfWriter erzeugen: " + e.getMessage();
 			LOG.error(msg, e);
 			throw new MkGatewayRuntimeException(msg, e);
+		} finally {
+
+			if (doc != null && doc.isOpen()) {
+
+				doc.close();
+			}
+
 		}
 	}
 

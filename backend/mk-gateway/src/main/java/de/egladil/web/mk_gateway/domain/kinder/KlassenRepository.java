@@ -46,7 +46,7 @@ public interface KlassenRepository {
 	Klasse changeKlasse(Klasse klasse);
 
 	/**
-	 * Vorhandene Klasse wird gelöscht. Dies ist Teil eines UnitOfWork, in dem alle Kinder der Klasse und deren Lösungszettel
+	 * Vorhandene Klasse wird gelöscht. Dies ist Teil eines UnitOfWork, in dem alle KinderDatenTeilnahmeurkundenMapper der Klasse und deren Lösungszettel
 	 * ebenfalls gelöscht werden müssen. De Transaktionsklammer beginnt also weiter außen.
 	 *
 	 * @param  klasse

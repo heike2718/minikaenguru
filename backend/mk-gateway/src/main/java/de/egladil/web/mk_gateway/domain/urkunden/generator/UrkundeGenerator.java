@@ -7,6 +7,10 @@ package de.egladil.web.mk_gateway.domain.urkunden.generator;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.urkunden.Urkundenart;
 import de.egladil.web.mk_gateway.domain.urkunden.daten.AbstractDatenUrkunde;
+import de.egladil.web.mk_gateway.domain.urkunden.generator.urkunden.KaengurusprungurkundeGeneratorDeutsch;
+import de.egladil.web.mk_gateway.domain.urkunden.generator.urkunden.KaengurusprungurkundeGeneratorEnglisch;
+import de.egladil.web.mk_gateway.domain.urkunden.generator.urkunden.TeilnahmeurkundeGeneratorDeutsch;
+import de.egladil.web.mk_gateway.domain.urkunden.generator.urkunden.TeilnahmeurkundeGeneratorEnglisch;
 
 /**
  * UrkundeGenerator

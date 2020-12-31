@@ -9,6 +9,7 @@ import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,8 @@ import de.egladil.web.mk_gateway.domain.user.UserRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UserHibernateRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.VeranstalterHibernateRepository;
 
 /**
  * AuthorizationService
@@ -51,12 +54,20 @@ public class AuthorizationService {
 		return service;
 	}
 
+	public static AuthorizationService createForIntegrationTests(final EntityManager entityManager) {
+
+		AuthorizationService result = new AuthorizationService();
+		result.veranstalterRepository = VeranstalterHibernateRepository.createForIntegrationTest(entityManager);
+		result.userRepository = UserHibernateRepository.createForIntegrationTest(entityManager);
+		return result;
+	}
+
 	/**
 	 * @param  userIdentifier
 	 * @param  identifierTeilnahmenummer
 	 * @param  kontext
-	 *                               String
-	 * @return                       boolean - nicht void wegen Mockito.
+	 *                                   String
+	 * @return                           boolean - nicht void wegen Mockito.
 	 * @throws AccessDeniedException
 	 */
 	public boolean checkPermissionForTeilnahmenummer(final Identifier userIdentifier, final Identifier identifierTeilnahmenummer, final String kontext) throws AccessDeniedException {
@@ -65,7 +76,8 @@ public class AuthorizationService {
 
 		if (optUser.isEmpty()) {
 
-			String msg = kontext + ": unzulaessiger Zugriff mit Teilnahmenummer " + identifierTeilnahmenummer + " durch " + userIdentifier
+			String msg = kontext + ": unzulaessiger Zugriff mit Teilnahmenummer " + identifierTeilnahmenummer + " durch "
+				+ userIdentifier
 				+ ": User existiert nicht";
 
 			LOG.warn(msg);
@@ -86,7 +98,8 @@ public class AuthorizationService {
 
 		if (optVeranstalter.isEmpty()) {
 
-			String msg = kontext + ": unzulaessiger Zugriff mit Teilnahmenummer " + identifierTeilnahmenummer + " durch " + userIdentifier
+			String msg = kontext + ": unzulaessiger Zugriff mit Teilnahmenummer " + identifierTeilnahmenummer + " durch "
+				+ userIdentifier
 				+ ": Veranstalter existiert nicht";
 
 			LOG.warn(msg);
@@ -100,7 +113,8 @@ public class AuthorizationService {
 
 		if (optTeilnahmeIdentifier.isEmpty()) {
 
-			String msg = kontext + ": unzulaessiger Zugriff mit Teilnahmenummer " + identifierTeilnahmenummer + " durch " + optVeranstalter.get()
+			String msg = kontext + ": unzulaessiger Zugriff mit Teilnahmenummer " + identifierTeilnahmenummer + " durch "
+				+ optVeranstalter.get()
 				+ ": Veranstalter hat keine Berechtigung.";
 
 			LOG.warn(msg);

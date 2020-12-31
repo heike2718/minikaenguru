@@ -78,6 +78,10 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 		this.router.navigateByUrl('/lehrer/schulen');
 	}
 
+	gotoSchulauswertung(): void {
+		this.router.navigateByUrl('/schulauswertung');
+	}
+
 	gotoDashboard(): void {
 
 		let url = '/lehrer/dashboard';

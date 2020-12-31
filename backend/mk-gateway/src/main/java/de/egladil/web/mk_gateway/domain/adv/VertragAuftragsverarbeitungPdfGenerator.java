@@ -150,6 +150,13 @@ public class VertragAuftragsverarbeitungPdfGenerator {
 		} catch (final DocumentException e) {
 
 			throw new MkGatewayRuntimeException("konnte keinen PdfWriter erzeugen: " + e.getMessage(), e);
+		} finally {
+
+			if (doc != null && doc.isOpen()) {
+
+				doc.close();
+			}
+
 		}
 	}
 
