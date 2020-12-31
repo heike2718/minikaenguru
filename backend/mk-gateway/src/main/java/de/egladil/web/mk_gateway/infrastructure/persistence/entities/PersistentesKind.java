@@ -24,13 +24,18 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 @NamedQueries({
 	@NamedQuery(
 		name = "PersistentesKind.FIND_BY_TEILNAHME",
-		query = "select k from PersistentesKind k where k.teilnahmenummer = :teilnahmenummer and k.teilnahmeart = :teilnahmeart order by k.uuid")
+		query = "select k from PersistentesKind k where k.teilnahmenummer = :teilnahmenummer and k.teilnahmeart = :teilnahmeart order by k.uuid"),
+	@NamedQuery(
+		name = "PersistentesKind.FIND_BY_TEILNAHME_WITH_NON_NULL_LOESUNGSZETTEL",
+		query = "select k from PersistentesKind k where k.teilnahmenummer = :teilnahmenummer and k.teilnahmeart = :teilnahmeart and k.loesungszettelUUID IS NOT NULL order by k.uuid")
 })
 public class PersistentesKind extends ConcurrencySafeEntity {
 
 	private static final long serialVersionUID = -2115088245418466350L;
 
 	public static final String FIND_BY_TEILNAHME = "PersistentesKind.FIND_BY_TEILNAHME";
+
+	public static final String FIND_BY_TEILNAHME_WITH_NON_NULL_LOESUNGSZETTEL = "PersistentesKind.FIND_BY_TEILNAHME_WITH_NON_NULL_LOESUNGSZETTEL";
 
 	@Column(name = "KLASSENSTUFE")
 	@Enumerated(EnumType.STRING)

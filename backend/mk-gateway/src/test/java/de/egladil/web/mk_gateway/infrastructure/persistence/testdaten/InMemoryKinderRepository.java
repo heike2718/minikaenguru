@@ -129,4 +129,12 @@ public class InMemoryKinderRepository implements KinderRepository {
 
 	}
 
+	@Override
+	public List<Kind> withTeilnahmeHavingLoesungszettel(final TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdentifier) {
+
+		return alleKinder.values().stream()
+			.filter(k -> k.teilnahmeIdentifier().equals(teilnahmeIdentifier) && k.loesungszettelID() != null)
+			.collect(Collectors.toList());
+	}
+
 }

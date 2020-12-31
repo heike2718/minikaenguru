@@ -50,6 +50,18 @@
 			<version>${minikaenguru-version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>5.4.26.Final</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>5.4.26.Final</version>
+		</dependency>
+
 		<!-- Test START -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>

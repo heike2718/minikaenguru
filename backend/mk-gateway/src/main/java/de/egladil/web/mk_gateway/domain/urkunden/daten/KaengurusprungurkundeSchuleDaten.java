@@ -5,8 +5,9 @@
 package de.egladil.web.mk_gateway.domain.urkunden.daten;
 
 import de.egladil.web.mk_gateway.domain.kinder.Klasse;
+import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.urkunden.Urkundenmotiv;
-import de.egladil.web.mk_gateway.domain.urkunden.generator.FontSizeAndLines;
+import de.egladil.web.mk_gateway.domain.urkunden.generator.urkunden.FontSizeAndLines;
 
 /**
  * KaengurusprungurkundeSchuleDaten
@@ -15,10 +16,16 @@ public class KaengurusprungurkundeSchuleDaten extends AbstractDatenUrkunde {
 
 	private final String value;
 
-	public KaengurusprungurkundeSchuleDaten(final int value, final Klasse klasse) {
+	public KaengurusprungurkundeSchuleDaten(final Loesungszettel loesungszettel, final Klasse klasse) {
 
-		this.value = "" + value;
+		this.value = "" + loesungszettel.laengeKaengurusprung();
 		this.setNameKlasse(klasse.name());
+		this.setKlasseUUID(klasse.identifier().identifier());
+		this.setKlassenstufe(loesungszettel.klassenstufe());
+		this.setSprache(loesungszettel.sprache());
+		this.setUuid(loesungszettel.kindID().identifier());
+		this.setWettbewerbsjahr(loesungszettel.teilnahmeIdentifier().wettbewerbID());
+
 	}
 
 	@Override
@@ -42,12 +49,6 @@ public class KaengurusprungurkundeSchuleDaten extends AbstractDatenUrkunde {
 	public KaengurusprungurkundeSchuleDaten withUrkundenmotiv(final Urkundenmotiv urkundenmotiv) {
 
 		this.setUrkundenmotiv(urkundenmotiv);
-		return this;
-	}
-
-	public KaengurusprungurkundeSchuleDaten withWettbewerbsjahr(final String wettbewerbsjahr) {
-
-		this.setWettbewerbsjahr(wettbewerbsjahr);
 		return this;
 	}
 

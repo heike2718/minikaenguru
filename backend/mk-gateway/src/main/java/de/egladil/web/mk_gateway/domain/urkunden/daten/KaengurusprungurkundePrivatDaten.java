@@ -4,10 +4,10 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.urkunden.daten;
 
-import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
+import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.urkunden.Urkundenmotiv;
-import de.egladil.web.mk_gateway.domain.urkunden.generator.FontSizeAndLines;
-import de.egladil.web.mk_gateway.domain.urkunden.generator.SplitSchulnameStrategie;
+import de.egladil.web.mk_gateway.domain.urkunden.generator.urkunden.FontSizeAndLines;
+import de.egladil.web.mk_gateway.domain.urkunden.generator.urkunden.SplitSchulnameStrategie;
 
 /**
  * KaengurusprungurkundePrivatDaten
@@ -16,11 +16,15 @@ public class KaengurusprungurkundePrivatDaten extends AbstractDatenUrkunde {
 
 	private final String value;
 
-	public KaengurusprungurkundePrivatDaten(final int value, final Klassenstufe klassenstufe) {
+	public KaengurusprungurkundePrivatDaten(final Loesungszettel loesungszettel) {
 
-		this.value = "" + value;
+		this.value = "" + loesungszettel.laengeKaengurusprung();
 		this.setFontSizeAndLinesSchulname(new FontSizeAndLines(new SplitSchulnameStrategie().getMaxFontSizeAbbreviatedText()));
-		this.setNameKlasse(klassenstufe.getLabel());
+		this.setKlassenstufe(loesungszettel.klassenstufe());
+		this.setNameKlasse(loesungszettel.klassenstufe().getLabel());
+		this.setUuid(loesungszettel.kindID().identifier());
+		this.setSprache(loesungszettel.sprache());
+		this.setWettbewerbsjahr(loesungszettel.teilnahmeIdentifier().wettbewerbID());
 	}
 
 	@Override
@@ -44,12 +48,6 @@ public class KaengurusprungurkundePrivatDaten extends AbstractDatenUrkunde {
 	public KaengurusprungurkundePrivatDaten withUrkundenmotiv(final Urkundenmotiv urkundenmotiv) {
 
 		this.setUrkundenmotiv(urkundenmotiv);
-		return this;
-	}
-
-	public KaengurusprungurkundePrivatDaten withWettbewerbsjahr(final String wettbewerbsjahr) {
-
-		this.setWettbewerbsjahr(wettbewerbsjahr);
 		return this;
 	}
 }
