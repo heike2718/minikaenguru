@@ -173,6 +173,23 @@ public class KinderHibernateRepository implements KinderRepository {
 		return trefferliste.get(0).longValue();
 	}
 
+	@Override
+	public long countLoesungszettelInKlasse(final Klasse klasse) {
+
+		String stmt = "select count(*) from KINDER k where k.KLASSE_UUID = :klasseUuid AND k.LOESUNGSZETTEL_UUID IS NOT NULL";
+
+		@SuppressWarnings("unchecked")
+		List<BigInteger> trefferliste = em.createNativeQuery(stmt)
+			.setParameter("klasseUuid", klasse.identifier().identifier()).getResultList();
+
+		if (trefferliste.isEmpty()) {
+
+			return 0;
+		}
+
+		return trefferliste.get(0).longValue();
+	}
+
 	void copyAttributesFromKindWithoutUuid(final Kind source, final PersistentesKind target) {
 
 		target.setKlassenstufe(source.klassenstufe());

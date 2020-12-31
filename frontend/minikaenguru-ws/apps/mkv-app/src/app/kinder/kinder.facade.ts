@@ -180,7 +180,7 @@ export class KinderFacade {
 		this.kinderService.updateKind(data).subscribe(
 			responsePayload => {
 				this.store.dispatch(KinderActions.kindSaved({ kind: responsePayload.data, outcome: responsePayload.message }));
-				this.store.dispatch(KlassenActions.kindMoved({sourceKlasseUuid: kind.klasseId, targetKlasseUuid: editorModel.klasseUuid}));
+				this.store.dispatch(KlassenActions.kindMoved({kind: kind, sourceKlasseUuid: kind.klasseId, targetKlasseUuid: editorModel.klasseUuid}));
 			},
 			(error) => {
 				this.store.dispatch(KinderActions.finishedWithError());
@@ -190,16 +190,16 @@ export class KinderFacade {
 
 	}
 
-	public deleteKind(uuid: string, klasseUuid: string): void {
+	public deleteKind(kind: Kind, klasseUuid: string): void {
 
 		this.store.dispatch(KinderActions.startLoading());
 
-		this.kinderService.deleteKind(uuid).subscribe(
+		this.kinderService.deleteKind(kind.uuid).subscribe(
 			responsePayload => {
 
 				this.store.dispatch(KinderActions.kindDeleted({ kind: responsePayload.data, outcome: responsePayload.message }));
 				if (klasseUuid) {
-					this.store.dispatch(KlassenActions.kindDeleted());
+					this.store.dispatch(KlassenActions.kindDeleted({kind: kind}));
 				}
 				this.messageService.showMessage(responsePayload.message);
 			},

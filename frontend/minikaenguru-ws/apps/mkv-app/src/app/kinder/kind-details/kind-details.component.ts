@@ -117,7 +117,7 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 		this.modalService.open(this.loeschenWarndialog, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
 
 			if (result === 'ja') {
-				this.kinderFacade.deleteKind(this.kind.uuid, this.klasseUuid);
+				this.kinderFacade.deleteKind(this.kind, this.klasseUuid);
 			}
 
 		}, (reason) => {

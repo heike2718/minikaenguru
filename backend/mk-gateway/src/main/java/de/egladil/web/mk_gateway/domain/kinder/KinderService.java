@@ -587,6 +587,27 @@ public class KinderService {
 
 	}
 
+	/**
+	 * Gibt für die gegebenen Klassen die Anzahl der KinderDatenTeilnahmeurkundenMapper zurück.
+	 *
+	 * @param  klassen
+	 * @return         Map mit klasse.identifier als key
+	 */
+	Map<Identifier, Long> countLoesungszettel(final List<Klasse> klassen) {
+
+		Map<Identifier, Long> result = new HashMap<>();
+
+		for (Klasse klasse : klassen) {
+
+			long anzahlKinder = this.kinderRepository.countKinderInKlasse(klasse);
+			result.put(klasse.identifier(), Long.valueOf(anzahlKinder));
+
+		}
+
+		return result;
+
+	}
+
 	KindCreated getKindCreated() {
 
 		return kindCreated;

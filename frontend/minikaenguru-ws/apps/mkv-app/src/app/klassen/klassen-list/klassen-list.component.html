@@ -1,12 +1,12 @@
 <div class="mkv-container mt-1">
 	<div class="col-12">
 
-		<h3><span *ngIf="schule">{{schule.name}}</span> Klassen <span *ngIf="(anzahlKlassen$ | async) as anzahl"
+		<h3><span *ngIf="schule">{{schule.name}}</span> Klassen <span *ngIf="(klassenFacade.anzahlKlassen$ | async) as anzahl"
 				class="badge badge-secondary">{{anzahl}}</span>
 		</h3>
 		<p *ngIf="devMode">(kinder-list.component)</p>
 
-		<ng-container *ngIf="(klassen$ | async) as klassen else loading">
+		<ng-container *ngIf="(klassenFacade.klassen$ | async) as klassen else loading">
 
 			<div class="col-12 mt-1 mb-1 " *ngFor="let klasse of klassen">
 				<mkv-klasse-details [klasse]="klasse"></mkv-klasse-details>
@@ -18,7 +18,7 @@
 			<button class="btn btn-primary w-100 ml-1" (click)="addKlasse()"><i class="fa fa-plus"
 					aria-hidden="true"></i>neue Klasse</button>
 
-			<button class="btn btn-primary w-100 ml-1" (click)="gotoSchulauswertung()"><i class="fa fa-graduation-cap"
+			<button *ngIf="(klassenFacade.anzahlLoesungszettel$ | async) > 0" class="btn btn-success w-100 ml-1" (click)="gotoSchulauswertung()"><i class="fa fa-graduation-cap"
 					aria-hidden="true"></i>Urkunden generieren</button>
 
 			<button *ngIf="schule" class="btn btn-primary w-100 ml-1" (click)="gotoDashboard()"

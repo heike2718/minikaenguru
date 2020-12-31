@@ -184,8 +184,11 @@ public class KlassenService {
 		}
 
 		final Map<Identifier, Long> anzahlenKinder = this.kinderService.countKinder(klassen);
+		final Map<Identifier, Long> anzahlenLoesungszettel = this.kinderService.countLoesungszettel(klassen);
 
-		return klassen.stream().map(kl -> KlasseAPIModel.createFromKlasse(kl).withAnzahlKinder(anzahlenKinder.get(kl.identifier())))
+		return klassen.stream()
+			.map(kl -> KlasseAPIModel.createFromKlasse(kl).withAnzahlKinder(anzahlenKinder.get(kl.identifier()))
+				.withAnzahlLoesungszettel(anzahlenLoesungszettel.get(kl.identifier())))
 			.collect(Collectors.toList());
 	}
 

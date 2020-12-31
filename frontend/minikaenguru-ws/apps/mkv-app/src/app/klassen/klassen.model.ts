@@ -93,4 +93,17 @@ export class KlassenMap {
 		}
 		return false;
 	}
+
+	public countLoesungszettel(): number {
+
+		let count = 0;
+
+		for (const item of this.items) {
+
+			count+= item.klasse.anzahlLoesungszettel;
+		}
+
+		return count;
+
+	}
 };
