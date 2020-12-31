@@ -74,10 +74,14 @@ const klassenReducer = createReducer(initialKlassenState,
 
 	}),
 
-	on(KlassenActions.kindDeleted, (state, _action) => {
+	on(KlassenActions.kindDeleted, (state, action) => {
 
 		const anzahlKinder = state.selectedKlasse.anzahlKinder - 1;
-		const selectedKlasse = { ...state.selectedKlasse, anzahlKinder };
+		let anzahlLoesungszettel = state.selectedKlasse.anzahlLoesungszettel;
+		if (action.kind && action.kind.punkte) {
+			anzahlLoesungszettel--;
+		}
+		const selectedKlasse = { ...state.selectedKlasse, anzahlKinder: anzahlKinder, anzahlLoesungszettel: anzahlLoesungszettel };
 		const merged: KlasseWithID[] = new KlassenMap(state.klassenMap).merge(selectedKlasse);
 
 		return { ...state, selectedKlasse: selectedKlasse, klassenMap: merged };
@@ -102,13 +106,26 @@ const klassenReducer = createReducer(initialKlassenState,
 
 		const sourceKlasse = alteKlassenmap.get(action.sourceKlasseUuid);
 		const anzahlKinderSourceKlasse = sourceKlasse.anzahlKinder - 1;
-		const sourceKlasseToMerge = { ...sourceKlasse, anzahlKinder: anzahlKinderSourceKlasse };
+
+		let anzahlLoesungszettelSourceKlasse = sourceKlasse.anzahlLoesungszettel;
+
+		if (action.kind && action.kind.punkte) {
+			anzahlLoesungszettelSourceKlasse--;
+		}
+
+		const sourceKlasseToMerge = { ...sourceKlasse, anzahlKinder: anzahlKinderSourceKlasse, anzahlLoesungszettel: anzahlLoesungszettelSourceKlasse };
 
 		const ersterMerge = alteKlassenmap.merge(sourceKlasseToMerge);
 
 		const targetKlasse = new KlassenMap([...ersterMerge]).get(action.targetKlasseUuid);
+		let anzahlLoesungszettelTargetKlasse = targetKlasse.anzahlLoesungszettel;
+
+		if (action.kind && action.kind.punkte) {
+			anzahlLoesungszettelTargetKlasse++;
+		}
+
 		const anzahlKinderTargetKlasse = targetKlasse.anzahlKinder + 1;
-		const targetKlasseToMerge = { ...targetKlasse, anzahlKinder: anzahlKinderTargetKlasse };
+		const targetKlasseToMerge = { ...targetKlasse, anzahlKinder: anzahlKinderTargetKlasse, anzahlLoesungszettel: anzahlLoesungszettelTargetKlasse };
 
 
 		const neueMap = new KlassenMap(ersterMerge).merge(targetKlasseToMerge);

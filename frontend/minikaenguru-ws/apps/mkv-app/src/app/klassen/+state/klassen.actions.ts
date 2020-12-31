@@ -42,7 +42,8 @@ export const kindAdded = createAction(
 );
 
 export const kindDeleted = createAction(
-	'[KinderFacade] deleteKind from klasse'
+	'[KinderFacade] deleteKind from klasse',
+	props<{kind: Kind}>()
 );
 
 export const klasseSaved = createAction(
@@ -66,7 +67,7 @@ export const klasseDeleted = createAction(
 
 export const kindMoved = createAction(
 	'[KinderFacade] moveKind',
-	props<{sourceKlasseUuid: string, targetKlasseUuid: string}>()
+	props<{kind: Kind, sourceKlasseUuid: string, targetKlasseUuid: string}>()
 )
 
 export const resetModule = createAction(

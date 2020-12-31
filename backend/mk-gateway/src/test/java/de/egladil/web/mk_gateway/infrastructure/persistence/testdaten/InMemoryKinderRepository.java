@@ -130,6 +130,13 @@ public class InMemoryKinderRepository implements KinderRepository {
 	}
 
 	@Override
+	public long countLoesungszettelInKlasse(final Klasse klasse) {
+
+		return alleKinder.values().stream().filter(k -> k.loesungszettelID() != null && klasse.identifier().equals(k.klasseID()))
+			.count();
+	}
+
+	@Override
 	public List<Kind> withTeilnahmeHavingLoesungszettel(final TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdentifier) {
 
 		return alleKinder.values().stream()

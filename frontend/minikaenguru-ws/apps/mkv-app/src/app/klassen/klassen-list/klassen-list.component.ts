@@ -16,8 +16,8 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 
 	devMode = environment.envName === 'DEV';
 
-	klassen$: Observable<Klasse[]> = this.klassenFacade.klassen$;
-	anzahlKlassen$: Observable<number> = this.klassenFacade.anzahlKlassen$;
+	// klassen$: Observable<Klasse[]> = this.klassenFacade.klassen$;
+	// anzahlKlassen$: Observable<number> = this.klassenFacade.anzahlKlassen$;
 
 	schule: Schule;
 
@@ -28,7 +28,7 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 
 	constructor(private router: Router,
 		private route: ActivatedRoute,
-		private klassenFacade: KlassenFacade,
+		public klassenFacade: KlassenFacade,
 		private lehrerFacade: LehrerFacade
 		) { }
 

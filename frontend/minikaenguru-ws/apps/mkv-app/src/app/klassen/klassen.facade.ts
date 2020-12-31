@@ -29,6 +29,7 @@ export class KlassenFacade {
 	public editorModel$: Observable<KlasseEditorModel> = this.store.select(KlassenSelectors.klasseEditorModel);
 	public klassenMap$: Observable<KlasseWithID[]> = this.store.select(KlassenSelectors.klassenMap);
 	public selectedKlasse$: Observable<Klasse> = this.store.select(KlassenSelectors.selectedKlasse);
+	public anzahlLoesungszettel$: Observable<number> = this.store.select(KlassenSelectors.anzahlLoesungszettel);
 
 	private loggingOut = false;
 

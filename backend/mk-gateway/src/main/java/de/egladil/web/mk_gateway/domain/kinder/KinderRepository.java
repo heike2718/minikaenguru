@@ -79,4 +79,12 @@ public interface KinderRepository {
 	 * @return
 	 */
 	long countKinderInKlasse(Klasse klasse);
+
+	/**
+	 * Gib die Anzahl von Kindern MIT einem Lösungszettel in der gegebenen Klasse zurück.
+	 *
+	 * @param  klasse
+	 * @return
+	 */
+	long countLoesungszettelInKlasse(Klasse klasse);
 }

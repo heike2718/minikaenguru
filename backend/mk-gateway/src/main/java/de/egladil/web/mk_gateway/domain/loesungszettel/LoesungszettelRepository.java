@@ -100,5 +100,4 @@ public interface LoesungszettelRepository {
 	 * @return            boolean
 	 */
 	boolean removeLoesungszettel(Identifier identifier, String veranstalterUuid);
-
 }
