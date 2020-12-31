@@ -60,4 +60,10 @@ public class Schulteilnahme extends Teilnahme {
 
 		return angemeldetDurchVeranstalterId;
 	}
+
+	public String getTransformedNameForDownloads() {
+
+		return this.nameSchule.replaceAll(" ", "-");
+
+	}
 }

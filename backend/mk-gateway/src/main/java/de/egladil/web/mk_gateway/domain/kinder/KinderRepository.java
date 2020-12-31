@@ -16,13 +16,21 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuel
 public interface KinderRepository {
 
 	/**
-	 * Gibt alle Kinder mit dem gegebenen teilnahmeIdentifier zurück.
+	 * Gibt alle KinderDatenTeilnahmeurkundenMapper mit dem gegebenen teilnahmeIdentifier zurück.
 	 *
 	 * @param  teilnahmeIdentifier
 	 *                             TeilnahmeIdentifierAktuellerWettbewerb
 	 * @return                     List
 	 */
 	List<Kind> withTeilnahme(TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdentifier);
+
+	/**
+	 * Gibt alle KinderDatenTeilnahmeurkundenMapper mit dem gegebenen teilnahmeidentifier zurück, die einen Lösungszettel haben.
+	 *
+	 * @param  teilnahmeIdentifier
+	 * @return                     List
+	 */
+	List<Kind> withTeilnahmeHavingLoesungszettel(TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdentifier);
 
 	/**
 	 * Sucht das Kind anhand seiner UUID.

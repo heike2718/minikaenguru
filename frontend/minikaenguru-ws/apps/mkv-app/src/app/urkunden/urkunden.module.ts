@@ -8,12 +8,14 @@ import { StoreModule } from '@ngrx/store';
 import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
 import { UrkundenauftragComponent } from './urkundenauftrag/urkundenauftrag.component';
 import { UrkundenRoutingModule } from './urkunden-routing.module';
+import { AuswertungsaufragComponent } from './auswertungsaufrag/auswertungsaufrag.component';
 
 
 
 @NgModule({
 	declarations: [
-		UrkundenauftragComponent
+		UrkundenauftragComponent,
+		AuswertungsaufragComponent
 	],
 	imports: [
 		CommonModule,

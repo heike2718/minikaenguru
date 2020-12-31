@@ -88,6 +88,13 @@ public class RohpunkteuebersichtPDFGenerator {
 			String msg = "konnte keinen PdfWriter erzeugen: " + e.getMessage();
 			LOG.error(msg, e);
 			throw new MkGatewayRuntimeException(msg, e);
+		} finally {
+
+			if (doc != null && doc.isOpen()) {
+
+				doc.close();
+			}
+
 		}
 
 	}
@@ -96,7 +103,7 @@ public class RohpunkteuebersichtPDFGenerator {
 
 		final Font font = fontProvider.getFont(FontTyp.BOLD, 11);
 
-		final String[] headings = new String[] { "Punkte", "Anzahl Kinder" };
+		final String[] headings = new String[] { "Punkte", "Anzahl KinderDatenTeilnahmeurkundenMapper" };
 
 		for (final String text : headings) {
 
@@ -115,7 +122,7 @@ public class RohpunkteuebersichtPDFGenerator {
 	private void addRowGesamt(final PdfPTable table, final GesamtpunktverteilungKlassenstufe verteilung) {
 
 		final Font font = fontProvider.getFont(FontTyp.BOLD, 11);
-		table.addCell(cellRendererRight.createCell(font, "Anzahl Kinder", 1));
+		table.addCell(cellRendererRight.createCell(font, "Anzahl KinderDatenTeilnahmeurkundenMapper", 1));
 		table.addCell(cellRendererRight.createCell(font, String.valueOf(verteilung.anzahlTeilnehmer()), 1));
 
 	}

@@ -35,12 +35,14 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
 import de.egladil.web.mk_gateway.domain.urkunden.api.UrkundenauftragEinzelkind;
 import de.egladil.web.mk_gateway.domain.urkunden.daten.AbstractDatenUrkunde;
-import de.egladil.web.mk_gateway.domain.urkunden.generator.CreateDatenKaengurusprungPrivatStrategie;
-import de.egladil.web.mk_gateway.domain.urkunden.generator.CreateDatenKaengurusprungSchuleStrategie;
-import de.egladil.web.mk_gateway.domain.urkunden.generator.CreateDatenTeilnahmePrivatStrategie;
-import de.egladil.web.mk_gateway.domain.urkunden.generator.CreateDatenTeilnahmeSchuleStrategie;
-import de.egladil.web.mk_gateway.domain.urkunden.generator.CreateDatenUrkundeStrategy;
 import de.egladil.web.mk_gateway.domain.urkunden.generator.UrkundeGenerator;
+import de.egladil.web.mk_gateway.domain.urkunden.generator.urkunden.CreateDatenKaengurusprungPrivatStrategie;
+import de.egladil.web.mk_gateway.domain.urkunden.generator.urkunden.CreateDatenKaengurusprungSchuleStrategie;
+import de.egladil.web.mk_gateway.domain.urkunden.generator.urkunden.CreateDatenTeilnahmePrivatStrategie;
+import de.egladil.web.mk_gateway.domain.urkunden.generator.urkunden.CreateDatenTeilnahmeSchuleStrategie;
+import de.egladil.web.mk_gateway.domain.urkunden.generator.urkunden.CreateDatenUrkundeStrategy;
+import de.egladil.web.mk_gateway.domain.urkunden.generator.urkunden.FontSizeAndLines;
+import de.egladil.web.mk_gateway.domain.urkunden.generator.urkunden.SplitSchulnameStrategie;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 
@@ -150,7 +152,7 @@ public class EinzelkindUrkundenservice {
 
 		String uuid = UUID.randomUUID().toString().substring(0, 8);
 
-		return urkundenart.praefixDateiname() + "_" + uuid;
+		return urkundenart.praefixDateiname() + "_" + uuid + ".pdf";
 
 	}
 
@@ -210,14 +212,17 @@ public class EinzelkindUrkundenservice {
 
 		Klasse klasse = optKlasse.get();
 
+		FontSizeAndLines fontSizeAndLinesSchulname = new SplitSchulnameStrategie()
+			.getFontSizeAndLines(schulteilnahme.nameSchule());
+
 		switch (urkundenart) {
 
 		case KAENGURUSPRUNG:
 
-			return new CreateDatenKaengurusprungSchuleStrategie(schulteilnahme, klasse);
+			return new CreateDatenKaengurusprungSchuleStrategie(fontSizeAndLinesSchulname, klasse);
 
 		case TEILNAHME:
-			return new CreateDatenTeilnahmeSchuleStrategie(schulteilnahme, klasse);
+			return new CreateDatenTeilnahmeSchuleStrategie(fontSizeAndLinesSchulname, klasse);
 
 		default:
 			throw new IllegalArgumentException("Schulteilnahme: unzulaessige Urkundenart " + urkundenart);

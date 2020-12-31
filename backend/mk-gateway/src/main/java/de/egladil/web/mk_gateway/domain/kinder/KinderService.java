@@ -567,7 +567,7 @@ public class KinderService {
 	}
 
 	/**
-	 * Gibt für die gegebenen Klassen die Anzahl der Kinder zurück.
+	 * Gibt für die gegebenen Klassen die Anzahl der KinderDatenTeilnahmeurkundenMapper zurück.
 	 *
 	 * @param  klassen
 	 * @return         Map mit klasse.identifier als key

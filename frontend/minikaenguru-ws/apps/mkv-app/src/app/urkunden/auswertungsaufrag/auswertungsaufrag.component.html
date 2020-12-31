@@ -1,0 +1,50 @@
+<div class="mkv-container mt-1">
+
+	<h3>Auswertung und Urkunden <span *ngIf="lehrerFacade.selectedSchule$ | async">für {{nameSchule}} </span>erstellen</h3>
+
+	<form #urkundenauftragForm="ngForm" (ngSubmit)="onFormSubmit(urkundenauftragForm)">
+
+		<div class="form-group mt-4">
+
+			<div class="row ml-3"><strong>Farbe Urkunden*:</strong></div>
+			<div class="form-check form-check-inline">
+				<input class="form-check-input ml-3" type="radio" [(ngModel)]="farbe" name="farbe" value="BLUE"
+					required>
+				<label class="form-check-label ml-1" for="farbe">blau</label>
+
+				<input class="form-check-input ml-3" type="radio" [(ngModel)]="farbe" name="farbe" value="GREEN"
+					required>
+				<label class="form-check-label ml-1" for="farbe">grün</label>
+
+				<input class="form-check-input ml-3" type="radio" [(ngModel)]="farbe" name="farbe" value="ORANGE"
+					required>
+				<label class="form-check-label ml-1" for="farbe">orange</label>
+			</div>
+		</div>
+	</form>
+
+	<div class="form-group mt-4">
+		<div class="row ml-3 mb-2"><strong>Datum Urkunden*:</strong></div>
+		<ngb-datepicker class="ml-1" #dp [(ngModel)]="dateModel" (dateSelect)="onDateSelect($event)"
+			[minDate]="urkundeDateModel.minDate" [maxDate]="urkundeDateModel.maxDate"
+			(navigate)="dateModel = $event.next">
+		</ngb-datepicker>
+	</div>
+
+
+	<p class="mt-4 mb-1" *ngIf="urkundenauftragForm.valid">{{zusammenfassung()}}</p>
+
+	<div class="col-12 mb-2 mt-2" *ngIf="urkundenFacade.loading$ | async">
+		die Auswertung wird erstellt... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
+	</div>
+
+	<div class="btn-group d-flex" role="group">
+		<button class="btn btn-primary w-100 ml-1"
+			[disabled]="!schule || !urkundenauftragForm.valid || (urkundenFacade.loading$ | async)"
+			(click)="onFormSubmit(urkundenauftragForm)"><i class="fa fa-graduation-cap" aria-hidden="true"></i>
+			Auswertung erstellen</button>
+
+		<button class="btn btn-primary w-100 ml-1" (click)="onCancel()"><i class="fa fa-arrow-left"
+				aria-hidden="true"></i>zurück zur Klassenliste</button>
+	</div>
+</div>

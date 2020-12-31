@@ -133,6 +133,13 @@ public class PrivatteilnahmenuebersichtPDFGenerator {
 			String msg = "konnte keinen PdfWriter erzeugen: " + e.getMessage();
 			LOG.error(msg, e);
 			throw new MkGatewayRuntimeException(msg, e);
+		} finally {
+
+			if (doc != null && doc.isOpen()) {
+
+				doc.close();
+			}
+
 		}
 	}
 

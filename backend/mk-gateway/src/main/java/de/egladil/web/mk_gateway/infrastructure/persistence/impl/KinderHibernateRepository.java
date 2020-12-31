@@ -58,6 +58,23 @@ public class KinderHibernateRepository implements KinderRepository {
 	}
 
 	@Override
+	public List<Kind> withTeilnahmeHavingLoesungszettel(final TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdentifier) {
+
+		List<PersistentesKind> trefferliste = em
+			.createNamedQuery(PersistentesKind.FIND_BY_TEILNAHME_WITH_NON_NULL_LOESUNGSZETTEL, PersistentesKind.class)
+			.setParameter("teilnahmenummer", teilnahmeIdentifier.teilnahmenummer())
+			.setParameter("teilnahmeart", teilnahmeIdentifier.teilnahmeart())
+			.getResultList();
+
+		if (trefferliste.isEmpty()) {
+
+			return new ArrayList<>();
+		}
+
+		return trefferliste.stream().map(pk -> dbToDomainObjectMapper.apply(pk)).collect(Collectors.toList());
+	}
+
+	@Override
 	public Optional<Kind> ofId(final Identifier identifier) {
 
 		PersistentesKind persistentesKind = em.find(PersistentesKind.class, identifier.identifier());
