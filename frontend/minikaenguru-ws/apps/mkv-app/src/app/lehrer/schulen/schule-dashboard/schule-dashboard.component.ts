@@ -134,7 +134,7 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 		this.teilnahmenFacade.selectTeilnahmenummer(this.schule.kuerzel, this.schule.name);
 	}
 
-	gotoAuswertung(): void {
+	gotoKlassenliste(): void {
 		this.textFeatureFlagAnzeigen = false;
 		this.router.navigateByUrl('/klassen/' + this.schule.kuerzel);
 	}
