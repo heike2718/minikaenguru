@@ -1,5 +1,15 @@
 # authprovider Release Notes
 
+__Release 1.3.0__:
+
+* [Privatveranstalter Lösungszettel erfassen](https://github.com/heike2718/minikaenguru/issues/163)
+* [Lehrer Lösungszettel erfassen](https://github.com/heike2718/minikaenguru/issues/166)
+* [Auswertung Teilnahmeurkunde generieren](https://github.com/heike2718/minikaenguru/issues/167)
+* [Auswertung Urkunde Kängurusprung generieren](https://github.com/heike2718/minikaenguru/issues/211)
+* [Auswertung Urkunden für Schule generieren](https://github.com/heike2718/minikaenguru/issues/210)
+* [Auswertung Schulstatistik genrieren](https://github.com/heike2718/minikaenguru/issues/209)
+* [Klassendetails: Zähler mit Anzahl Lösungszettel](https://github.com/heike2718/minikaenguru/issues/219)
+
 __Release 1.2.1__:
 
 [Fehler beim Ändern eines neu erfassten Kindes](https://github.com/heike2718/minikaenguru/issues/213)

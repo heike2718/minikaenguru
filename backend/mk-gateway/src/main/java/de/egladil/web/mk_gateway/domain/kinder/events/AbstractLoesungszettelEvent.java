@@ -94,4 +94,9 @@ public abstract class AbstractLoesungszettelEvent extends AbstractDomainEvent {
 		return this;
 	}
 
+	public String kindID() {
+
+		return kindID;
+	}
+
 }

@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -37,6 +38,7 @@ import de.egladil.web.mk_gateway.domain.kinder.api.KindRequestData;
 import de.egladil.web.mk_gateway.domain.kinder.events.KindChanged;
 import de.egladil.web.mk_gateway.domain.kinder.events.KindCreated;
 import de.egladil.web.mk_gateway.domain.kinder.events.KindDeleted;
+import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelDeleted;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
@@ -599,13 +601,30 @@ public class KinderService {
 
 		for (Klasse klasse : klassen) {
 
-			long anzahlKinder = this.kinderRepository.countKinderInKlasse(klasse);
+			long anzahlKinder = this.kinderRepository.countLoesungszettelInKlasse(klasse);
 			result.put(klasse.identifier(), Long.valueOf(anzahlKinder));
 
 		}
 
 		return result;
 
+	}
+
+	@Transactional
+	public void handleLoesungszettelDeleted(@Observes final LoesungszettelDeleted loesungszettelDeletedEvent) {
+
+		if (loesungszettelDeletedEvent.kindID() != null) {
+
+			Optional<Kind> optKind = kinderRepository.ofId(new Identifier(loesungszettelDeletedEvent.kindID()));
+
+			if (optKind.isPresent()) {
+
+				Kind kind = optKind.get();
+				kind.deleteLoesungszettel();
+
+				this.kinderRepository.changeKind(kind);
+			}
+		}
 	}
 
 	KindCreated getKindCreated() {

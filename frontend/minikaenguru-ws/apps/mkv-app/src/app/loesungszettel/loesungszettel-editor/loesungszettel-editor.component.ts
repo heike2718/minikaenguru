@@ -123,7 +123,7 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 
 	onDelete(): void {
 
-		this.loesungszettelFacade.deleteLoesungszettel(this.loesungszettel);
+		this.loesungszettelFacade.deleteLoesungszettel(this.kind, this.loesungszettel);
 		this.navigateBack();
 	}
 

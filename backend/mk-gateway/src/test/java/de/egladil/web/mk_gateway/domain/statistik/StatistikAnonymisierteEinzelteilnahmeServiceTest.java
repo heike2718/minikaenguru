@@ -141,7 +141,7 @@ public class StatistikAnonymisierteEinzelteilnahmeServiceTest {
 
 		// Assert
 		assertEquals("minikaenguru_2018_schulstatistik.pdf", downloadData.filename());
-		assertEquals(219026, downloadData.data().length);
+		assertEquals(219034, downloadData.data().length);
 
 		StatistikTestUtils.print(downloadData, true);
 	}
@@ -169,7 +169,7 @@ public class StatistikAnonymisierteEinzelteilnahmeServiceTest {
 
 		// Assert
 		assertEquals("minikaenguru_2018_statistik.pdf", downloadData.filename());
-		assertEquals(218617, downloadData.data().length);
+		assertEquals(218625, downloadData.data().length);
 
 		StatistikTestUtils.print(downloadData, true);
 	}
