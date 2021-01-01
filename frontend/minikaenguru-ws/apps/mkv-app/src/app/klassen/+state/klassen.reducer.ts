@@ -1,7 +1,7 @@
 import { createReducer, Action, on } from '@ngrx/store';
 import * as KlassenActions from './klassen.actions';
 import { KlasseWithID, KlassenMap } from '../klassen.model';
-import { KlasseEditorModel, initialKlasseEditorModel, Klasse } from '@minikaenguru-ws/common-components';
+import { KlasseEditorModel, initialKlasseEditorModel, Klasse, Kind } from '@minikaenguru-ws/common-components';
 import { Message } from '@minikaenguru-ws/common-messages';
 
 
@@ -79,13 +79,55 @@ const klassenReducer = createReducer(initialKlassenState,
 		const anzahlKinder = state.selectedKlasse.anzahlKinder - 1;
 		let anzahlLoesungszettel = state.selectedKlasse.anzahlLoesungszettel;
 		if (action.kind && action.kind.punkte) {
-			anzahlLoesungszettel--;
+			anzahlLoesungszettel = anzahlLoesungszettel - 1;
 		}
 		const selectedKlasse = { ...state.selectedKlasse, anzahlKinder: anzahlKinder, anzahlLoesungszettel: anzahlLoesungszettel };
 		const merged: KlasseWithID[] = new KlassenMap(state.klassenMap).merge(selectedKlasse);
 
 		return { ...state, selectedKlasse: selectedKlasse, klassenMap: merged };
 
+	}),
+
+	on(KlassenActions.loesungszettelAdded, (state, action) => {
+
+		const kind: Kind = action.kind;
+		const klasseID = kind.klasseId;
+		if (klasseID) {
+
+			if (state.selectedKlasse && state.selectedKlasse.uuid === klasseID) {
+				const anzahlLoesungszettel = state.selectedKlasse.anzahlLoesungszettel + 1;
+				const neueGewaehlteKlasse = {...state.selectedKlasse, anzahlLoesungszettel: anzahlLoesungszettel};
+
+				const neueMap = new KlassenMap(state.klassenMap).merge(neueGewaehlteKlasse);
+
+				return {...state, selectedKlasse: neueGewaehlteKlasse, klassenMap: neueMap};
+			}
+
+		} else {
+
+			return { ...state };
+		}
+	}),
+
+	on(KlassenActions.loesungszettelDeleted, (state, action) => {
+
+		const kind: Kind = action.kind;
+		const klasseID = kind.klasseId;
+		if (klasseID) {
+
+			if (state.selectedKlasse && state.selectedKlasse.uuid === klasseID) {
+				const anzahlLoesungszettel = state.selectedKlasse.anzahlLoesungszettel - 1;
+				const neueGewaehlteKlasse = {...state.selectedKlasse, anzahlLoesungszettel: anzahlLoesungszettel};
+
+				const neueMap = new KlassenMap(state.klassenMap).merge(neueGewaehlteKlasse);
+
+				return {...state, selectedKlasse: neueGewaehlteKlasse, klassenMap: neueMap};
+			}
+
+		} else {
+
+			return { ...state };
+		}
 	}),
 
 	on(KlassenActions.klasseSaved, (state, action) => {
@@ -110,7 +152,7 @@ const klassenReducer = createReducer(initialKlassenState,
 		let anzahlLoesungszettelSourceKlasse = sourceKlasse.anzahlLoesungszettel;
 
 		if (action.kind && action.kind.punkte) {
-			anzahlLoesungszettelSourceKlasse--;
+			anzahlLoesungszettelSourceKlasse = anzahlLoesungszettelSourceKlasse - 1;
 		}
 
 		const sourceKlasseToMerge = { ...sourceKlasse, anzahlKinder: anzahlKinderSourceKlasse, anzahlLoesungszettel: anzahlLoesungszettelSourceKlasse };
@@ -121,7 +163,7 @@ const klassenReducer = createReducer(initialKlassenState,
 		let anzahlLoesungszettelTargetKlasse = targetKlasse.anzahlLoesungszettel;
 
 		if (action.kind && action.kind.punkte) {
-			anzahlLoesungszettelTargetKlasse++;
+			anzahlLoesungszettelTargetKlasse = anzahlLoesungszettelTargetKlasse + 1;
 		}
 
 		const anzahlKinderTargetKlasse = targetKlasse.anzahlKinder + 1;

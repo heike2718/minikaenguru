@@ -268,4 +268,9 @@ public class Kind {
 
 		return vorname;
 	}
+
+	public void deleteLoesungszettel() {
+
+		this.loesungszettelID = null;
+	}
 }
