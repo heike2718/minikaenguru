@@ -220,7 +220,7 @@ public class StatistikWettbewerbServiceTest {
 
 			// Assert
 			assertEquals("minikaenguru_2018_gesamptunktverteilung.pdf", downloadData.filename());
-			assertEquals(227440, downloadData.data().length);
+			assertEquals(227438, downloadData.data().length);
 
 			StatistikTestUtils.print(downloadData, true);
 
@@ -264,7 +264,7 @@ public class StatistikWettbewerbServiceTest {
 
 			// Assert
 			assertEquals("minikaenguru_2018_gesamptunktverteilung.pdf", downloadData.filename());
-			assertEquals(163669, downloadData.data().length);
+			assertEquals(163667, downloadData.data().length);
 
 			StatistikTestUtils.print(downloadData, true);
 

@@ -197,11 +197,17 @@ public class KinderHibernateRepository implements KinderRepository {
 		if (source.klasseID() != null) {
 
 			target.setKlasseUUID(source.klasseID().identifier());
+		} else {
+
+			target.setKlasseUUID(null);
 		}
 
 		if (source.loesungszettelID() != null) {
 
 			target.setLoesungszettelUUID(source.loesungszettelID().identifier());
+		} else {
+
+			target.setLoesungszettelUUID(null);
 		}
 
 		target.setNachname(source.nachname());

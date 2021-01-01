@@ -68,7 +68,17 @@ export const klasseDeleted = createAction(
 export const kindMoved = createAction(
 	'[KinderFacade] moveKind',
 	props<{kind: Kind, sourceKlasseUuid: string, targetKlasseUuid: string}>()
-)
+);
+
+export const loesungszettelAdded = createAction(
+	'[LoesungszettelFacade] saveLoesungszettel second',
+	props<{kind: Kind}>()
+);
+
+export const loesungszettelDeleted = createAction(
+	'[LoesungszettelFacade] deleteLoesungszettel second',
+	props<{kind: Kind}>()
+);
 
 export const resetModule = createAction(
 	'[KlassenFacade] reset'

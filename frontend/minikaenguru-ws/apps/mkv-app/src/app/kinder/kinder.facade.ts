@@ -66,6 +66,7 @@ export class KinderFacade {
 	public createNewKind(klasseUuid: string): void {
 
 		this.store.dispatch(KinderActions.createNewKind({ klasseUuid: klasseUuid }));
+		this.kinder$ = this.getKinder();
 
 	}
 
@@ -181,6 +182,7 @@ export class KinderFacade {
 			responsePayload => {
 				this.store.dispatch(KinderActions.kindSaved({ kind: responsePayload.data, outcome: responsePayload.message }));
 				this.store.dispatch(KlassenActions.kindMoved({kind: kind, sourceKlasseUuid: kind.klasseId, targetKlasseUuid: editorModel.klasseUuid}));
+				this.kinder$ = this.getKinder();
 			},
 			(error) => {
 				this.store.dispatch(KinderActions.finishedWithError());
@@ -201,6 +203,7 @@ export class KinderFacade {
 				if (klasseUuid) {
 					this.store.dispatch(KlassenActions.kindDeleted({kind: kind}));
 				}
+				this.kinder$ = this.getKinder();
 				this.messageService.showMessage(responsePayload.message);
 			},
 			(error) => {

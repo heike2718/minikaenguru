@@ -11,6 +11,7 @@ import { Subscription, Observable } from 'rxjs';
 import { MessageService } from '@minikaenguru-ws/common-messages';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
 import * as KinderActions from '../kinder/+state/kinder.actions';
+import * as KlassenActons from '../klassen/+state/klassen.actions';
 
 @Injectable({
 	providedIn: 'root'
@@ -89,6 +90,11 @@ export class LoesungszettelFacade {
 				const loesungszettelResponse: LoesungszettelPunkte = responsePayload.data;
 				this.store.dispatch(LoesungszettelActions.loesungszettelSaved({ loesungszettelAlt: loesungszettel, loesungszettelUuidNeu: loesungszettelResponse.loesungszettelId }));
 				this.store.dispatch(KinderActions.kindLoesungszettelChanged({ kind: kind, punkte: loesungszettelResponse }));
+
+				if (kind.klasseId && loesungszettel.uuid === 'neu') {
+					this.store.dispatch(KlassenActons.loesungszettelAdded({ kind: kind }));
+				}
+
 				this.messageService.showMessage(responsePayload.message);
 			},
 			(error => {
@@ -100,7 +106,7 @@ export class LoesungszettelFacade {
 
 	}
 
-	public deleteLoesungszettel(loesungszettel: Loesungszettel): void {
+	public deleteLoesungszettel(kind: Kind, loesungszettel: Loesungszettel): void {
 
 		if (!loesungszettel || !loesungszettel.uuid || loesungszettel.uuid === 'neu') {
 			this.store.dispatch(KinderActions.unselectKind());
@@ -115,6 +121,10 @@ export class LoesungszettelFacade {
 				this.store.dispatch(LoesungszettelActions.loesungszettelDeleted({ loesungszettel: loesungszettel }));
 				this.store.dispatch(KinderActions.kindLoesungszettelDeleted({ kindID: loesungszettel.kindID }));
 				this.store.dispatch(KinderActions.unselectKind());
+
+				if (kind.klasseId) {
+					this.store.dispatch(KlassenActons.loesungszettelDeleted({ kind: kind }));
+				}
 				this.messageService.showMessage(responsePayload.message);
 			},
 			(error => {
