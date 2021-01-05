@@ -1,5 +1,9 @@
 # authprovider Release Notes
 
+__Release 1.3.1__:
+
+[Bugfix Hinzufügen neuer Schule](https://github.com/heike2718/minikaenguru/issues/225)
+
 __Release 1.3.0__:
 
 * [Privatveranstalter Lösungszettel erfassen](https://github.com/heike2718/minikaenguru/issues/163)
