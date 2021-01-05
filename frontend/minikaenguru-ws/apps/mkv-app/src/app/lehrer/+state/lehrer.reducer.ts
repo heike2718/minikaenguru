@@ -59,7 +59,7 @@ const lehrerReducer = createReducer(initalLehrerState,
 	on(LehrerActions.schulenLoaded, (state, action) => {
 
 		const schulen: Schule[] = [...action.schulen];
-		schulen.sort((s1, s2) => compareSchulen(s1, s2));		const newMap: SchuleWithID[] = [];
+		schulen.sort((s1, s2) => compareSchulen(s1, s2)); const newMap: SchuleWithID[] = [];
 
 		schulen.forEach(s => newMap.push({ kuerzel: s.kuerzel, schule: s }));
 		return { ...state, schulen: newMap, selectedSchule: undefined, schulenLoaded: true, loading: false }
@@ -164,22 +164,34 @@ const lehrerReducer = createReducer(initalLehrerState,
 
 
 		if (selectedItem) {
-			return {
-				...state, addSchuleState: {
+
+
+			const schuleBereitsZugeordnet = new SchulenMap(state.schulen).has(selectedItem.kuerzel);
+
+			if (schuleBereitsZugeordnet) {
+				const neuerAddSchuleState: AddSchuleState = {
+					...state.addSchuleState,
 					showSchulkatalog: false,
-					showTextSchuleBereitsZugeordnet: false,
-					btnAddMeToSchuleDisabled: true
+					btnAddMeToSchuleDisabled: true,
+					showTextSchuleBereitsZugeordnet: schuleBereitsZugeordnet
 				}
-			};
+
+				return { ...state, addSchuleState: neuerAddSchuleState };
+			} else {
+				const neuerAddSchuleState: AddSchuleState = {
+					...state.addSchuleState,
+					showSchulkatalog: false,
+					btnAddMeToSchuleDisabled: false,
+					showTextSchuleBereitsZugeordnet: false
+				}
+
+				return { ...state, addSchuleState: neuerAddSchuleState };
+			}
+
 		}
 
-		const schuleBereitsZugeordnet = new SchulenMap(state.schulen).has(selectedItem.kuerzel);
+		return { ...state };
 
-		const neuerAddSchuleState: AddSchuleState = { ...state.addSchuleState,
-			btnAddMeToSchuleDisabled: schuleBereitsZugeordnet,
-			showTextSchuleBereitsZugeordnet: schuleBereitsZugeordnet }
-
-		return { ...state, addSchuleState: neuerAddSchuleState };
 	}),
 
 	on(LehrerActions.schuleAdded, (state, action) => {
