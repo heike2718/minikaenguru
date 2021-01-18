@@ -17,6 +17,13 @@
 					{{schule.land}}</div>
 
 				<div class="btn-group d-flex" role="group">
+					<ng-container *ngIf="wettbewerb$ | async as wettbewerb">
+						<button
+							*ngIf="(wettbewerb.status !== 'ERFASST' && wettbewerb.status !== 'BEENDET' && !schule.aktuellAngemeldet)"
+							class="btn btn-outline-success w-100 ml-1" (click)="schuleAnmelden()"><i class="fa fa-users"
+								aria-hidden="true"></i>
+							anmelden für {{wettbewerb.jahr}}</button>
+					</ng-container>
 					<button class="btn btn-outline-dark w-100 ml-1" (click)="selectSchule()"><i class="fa fa-users"
 							aria-hidden="true"></i>
 						Schulübersicht</button>
@@ -26,8 +33,9 @@
 							class="fa fa-pencil-square-o" aria-hidden="true"></i>
 						Auswertung <span *ngIf="wettbewerb$ | async as wettbewerb"> {{wettbewerb.jahr}}</span></button>
 
-					<button *ngIf="!schule.aktuellAngemeldet" class="btn btn-outline-dark w-100 ml-1" (click)="vonSchuleAbmelden()" title="als Lehrerin/Lehrer von dieser Schule abmelden"><i class="fa fa-trash"
-							aria-hidden="true"></i>
+					<button *ngIf="!schule.aktuellAngemeldet" class="btn btn-outline-dark w-100 ml-1"
+						(click)="vonSchuleAbmelden()" title="als Lehrerin/Lehrer von dieser Schule abmelden"><i
+							class="fa fa-trash" aria-hidden="true"></i>
 						entfernen</button>
 				</div>
 
