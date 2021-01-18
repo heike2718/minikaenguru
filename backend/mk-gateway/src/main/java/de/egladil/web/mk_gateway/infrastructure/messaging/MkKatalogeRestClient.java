@@ -58,17 +58,29 @@ public interface MkKatalogeRestClient {
 		value = "ort") final String ortKuerzel, @NotBlank @StringLatin @QueryParam("search") final String searchTerm);
 
 	/**
-	 * Response.entity.data hat die Signatur von List<KatalogItem>
+	 * Response.entity.data hat die Signatur von List von SchuleAPIModel-Objekten
 	 *
 	 * @param  kommaseparierteKuerzel
 	 *                                String
-	 * @return                        Response Liste von KatalogItems als data.
+	 * @return                        Response Liste von SchuleAPIModel als data.
 	 */
 	@GET
-	@Path("kataloge/schulen/{kommaseparierteKuerzel}")
+	@Path("schulinfos/{kommaseparierteKuerzel}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	Response findSchulenMitKuerzeln(@PathParam(
 		value = "kommaseparierteKuerzel") @Kuerzel final String kommaseparierteKuerzel);
+
+	/**
+	 * Response.entity ist eine List von SchuleAPIModel
+	 *
+	 * @param  schulkuerzel
+	 *                      StringsAPIModel
+	 * @return
+	 */
+	@POST
+	@Path("schulinfos")
+	@Consumes(MediaType.TEXT_PLAIN)
+	Response loadSchulenMitKuerzeln(final String schulkuerzel);
 
 	@GET
 	@Path("kataloge/laender")

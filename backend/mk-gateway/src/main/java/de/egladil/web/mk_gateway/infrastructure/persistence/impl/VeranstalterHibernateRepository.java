@@ -87,7 +87,7 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 
 		}
 		Veranstalter veranstalter = null;
-		Person person = new Person(treffer.getUuid(), treffer.getFullName());
+		Person person = new Person(treffer.getUuid(), treffer.getFullName()).withEmail(treffer.getEmail());
 
 		switch (treffer.getRolle()) {
 

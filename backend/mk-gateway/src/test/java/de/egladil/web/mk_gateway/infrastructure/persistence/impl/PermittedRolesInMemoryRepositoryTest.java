@@ -692,6 +692,18 @@ public class PermittedRolesInMemoryRepositoryTest {
 		}
 
 		@Test
+		void should_permittedRollen_getStatistikAnmeldungen_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/admin/statistik/anmeldungen", HttpMethod.GET);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.ADMIN));
+
+		}
+
+		@Test
 		void should_permittedRollen_getEventsFromDate_beOk() {
 
 			// Act

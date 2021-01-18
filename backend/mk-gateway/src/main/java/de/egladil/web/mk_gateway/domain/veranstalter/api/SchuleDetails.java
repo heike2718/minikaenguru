@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.mk_gateway.domain.semantik.ValueObject;
-import de.egladil.web.mk_gateway.domain.veranstalter.Person;
+import de.egladil.web.mk_gateway.domain.veranstalter.Kollege;
 
 /**
  * SchuleDetails
@@ -48,7 +48,7 @@ public class SchuleDetails {
 		this.kuerzel = kuerzel;
 	}
 
-	public SchuleDetails withKollegen(final List<Person> kollegen) {
+	public SchuleDetails withKollegen(final List<Kollege> kollegen) {
 
 		this.kollegen = StringUtils.join(kollegen.stream().map(p -> p.fullName()).collect(Collectors.toList()),
 			", ");
@@ -56,7 +56,7 @@ public class SchuleDetails {
 		return this;
 	}
 
-	public SchuleDetails withAngemeldetDurch(final Person person) {
+	public SchuleDetails withAngemeldetDurch(final Kollege person) {
 
 		this.angemeldetDurch = person.fullName();
 		return this;

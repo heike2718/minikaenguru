@@ -27,7 +27,7 @@ public class Schulkollegium {
 	private Identifier schulkuerzel;
 
 	@JsonProperty
-	private Person[] alleLehrer;
+	private Kollege[] alleLehrer;
 
 	/**
 	 * Nur für Tests verwenden!!!!
@@ -39,23 +39,23 @@ public class Schulkollegium {
 	/**
 	 * @param schulkuerzel
 	 *                     Identifier
-	 * @param personen
-	 *                     Person[]
+	 * @param kollegen
+	 *                     Kollege[]
 	 */
-	public Schulkollegium(final Identifier schulkuerzel, final Person[] personen) {
+	public Schulkollegium(final Identifier schulkuerzel, final Kollege[] kollegen) {
 
 		if (schulkuerzel == null) {
 
 			throw new IllegalArgumentException("schulkuerzel darf nicht null sein.");
 		}
 
-		if (personen == null) {
+		if (kollegen == null) {
 
 			throw new IllegalArgumentException("personen darf nicht null sein.");
 		}
 
 		this.schulkuerzel = schulkuerzel;
-		this.alleLehrer = personen;
+		this.alleLehrer = kollegen;
 	}
 
 	public Identifier schulkuerzel() {
@@ -63,7 +63,7 @@ public class Schulkollegium {
 		return this.schulkuerzel;
 	}
 
-	public List<Person> alleLehrerUnmodifiable() {
+	public List<Kollege> alleLehrerUnmodifiable() {
 
 		return Collections.unmodifiableList(Arrays.asList(this.alleLehrer));
 	}

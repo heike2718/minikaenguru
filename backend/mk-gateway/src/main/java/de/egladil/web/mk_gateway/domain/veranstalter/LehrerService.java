@@ -218,7 +218,8 @@ public class LehrerService {
 
 		veranstalterRepository.changeVeranstalter(lehrer);
 
-		lehrerChangedEventPayload = new LehrerChanged(lehrer.person(), alteSchulkuerzel, neueSchulkuerzel,
+		Person person = lehrer.person();
+		lehrerChangedEventPayload = new LehrerChanged(person, alteSchulkuerzel, neueSchulkuerzel,
 			lehrer.isNewsletterEmpfaenger());
 
 		if (lehrerChanged != null) {
@@ -289,7 +290,8 @@ public class LehrerService {
 
 		veranstalterRepository.changeVeranstalter(lehrer);
 
-		lehrerChangedEventPayload = new LehrerChanged(lehrer.person(), alteSchulkuerzel, neueSchulkuerzel,
+		Person person = lehrer.person();
+		lehrerChangedEventPayload = new LehrerChanged(person, alteSchulkuerzel, neueSchulkuerzel,
 			lehrer.isNewsletterEmpfaenger());
 
 		if (lehrerChanged != null) {

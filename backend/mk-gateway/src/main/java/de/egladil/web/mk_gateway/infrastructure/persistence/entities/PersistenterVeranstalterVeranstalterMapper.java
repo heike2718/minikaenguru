@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.persistence.entities;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
@@ -24,9 +25,16 @@ public class PersistenterVeranstalterVeranstalterMapper implements Function<Pers
 	@Override
 	public Veranstalter apply(final PersistenterVeranstalter persistenterVeranstalter) {
 
-		Person person = new Person(persistenterVeranstalter.getUuid(), persistenterVeranstalter.getFullName()).withEmail(persistenterVeranstalter.getEmail());
-		List<Identifier> teilnahmenummern = Arrays.stream(persistenterVeranstalter.getTeilnahmenummern().split(",")).map(n -> new Identifier(n))
-			.collect(Collectors.toList());
+		Person person = new Person(persistenterVeranstalter.getUuid(), persistenterVeranstalter.getFullName())
+			.withEmail(persistenterVeranstalter.getEmail());
+
+		List<Identifier> teilnahmenummern = new ArrayList<>();
+
+		if (persistenterVeranstalter.getTeilnahmenummern() != null) {
+
+			teilnahmenummern = Arrays.stream(persistenterVeranstalter.getTeilnahmenummern().split(",")).map(n -> new Identifier(n))
+				.collect(Collectors.toList());
+		}
 
 		switch (persistenterVeranstalter.getRolle()) {
 

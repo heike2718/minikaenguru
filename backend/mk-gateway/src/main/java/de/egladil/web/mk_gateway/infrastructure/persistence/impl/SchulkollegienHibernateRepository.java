@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.veranstalter.Person;
+import de.egladil.web.mk_gateway.domain.veranstalter.Kollege;
 import de.egladil.web.mk_gateway.domain.veranstalter.SchulkollegienRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.Schulkollegium;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistentesSchulkollegium;
@@ -31,6 +31,13 @@ public class SchulkollegienHibernateRepository implements SchulkollegienReposito
 	@Inject
 	EntityManager em;
 
+	public static SchulkollegienHibernateRepository createForIntegrationTest(final EntityManager em) {
+
+		SchulkollegienHibernateRepository result = new SchulkollegienHibernateRepository();
+		result.em = em;
+		return result;
+	}
+
 	@Override
 	public Optional<Schulkollegium> ofSchulkuerzel(final Identifier identifier) {
 
@@ -42,8 +49,8 @@ public class SchulkollegienHibernateRepository implements SchulkollegienReposito
 		}
 
 		String kollegiumSerialized = persistentes.getKollegium();
-		Person[] personen = this.deserializeKollegen(kollegiumSerialized);
-		Schulkollegium result = new Schulkollegium(identifier, personen);
+		Kollege[] kollegen = this.deserializeKollegen(kollegiumSerialized);
+		Schulkollegium result = new Schulkollegium(identifier, kollegen);
 
 		return Optional.of(result);
 	}
@@ -71,11 +78,11 @@ public class SchulkollegienHibernateRepository implements SchulkollegienReposito
 
 	}
 
-	Person[] deserializeKollegen(final String serializedKollegen) {
+	Kollege[] deserializeKollegen(final String serializedKollegen) {
 
 		try {
 
-			return new ObjectMapper().readValue(serializedKollegen, Person[].class);
+			return new ObjectMapper().readValue(serializedKollegen, Kollege[].class);
 		} catch (JsonProcessingException e) {
 
 			throw new MkGatewayRuntimeException("Konnte personen nicht deserialisieren: " + e.getMessage(), e);

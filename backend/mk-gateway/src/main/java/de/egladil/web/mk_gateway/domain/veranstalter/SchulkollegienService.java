@@ -54,11 +54,11 @@ public class SchulkollegienService {
 			: Arrays.stream(event.neueSchulkuerzel().split(",")).map(k -> new Identifier(k))
 				.collect(Collectors.toList());
 
-		final Person derLehrer = event.person();
+		final Kollege derKollege = Kollege.fromPerson(event.person());
 
-		this.handleDeregisteredSchulen(derLehrer, alteSchulen, neueSchulen);
-		this.handleRegisteredSchulen(derLehrer, alteSchulen, neueSchulen);
-		this.handleUnchangedSchulen(derLehrer, alteSchulen, neueSchulen);
+		this.handleDeregisteredSchulen(derKollege, alteSchulen, neueSchulen);
+		this.handleRegisteredSchulen(derKollege, alteSchulen, neueSchulen);
+		this.handleUnchangedSchulen(derKollege, alteSchulen, neueSchulen);
 
 	}
 
@@ -69,16 +69,17 @@ public class SchulkollegienService {
 	public void entferneSpurenDesLehrers(final Lehrer lehrer) {
 
 		final Person person = new Person(lehrer.person().uuid(), "ANONYM");
+		final Kollege kollege = Kollege.fromPerson(person);
 
 		List<Identifier> alteSchulen = StringUtils.isBlank(lehrer.persistierbareTeilnahmenummern()) ? new ArrayList<>()
 			: Arrays.stream(lehrer.persistierbareTeilnahmenummern().split(",")).map(k -> new Identifier(k))
 				.collect(Collectors.toList());
 
-		this.handleDeregisteredSchulen(person, alteSchulen, new ArrayList<>());
+		this.handleDeregisteredSchulen(kollege, alteSchulen, new ArrayList<>());
 
 	}
 
-	private void handleDeregisteredSchulen(final Person derLehrer, final List<Identifier> alteSchulen, final List<Identifier> neueSchulen) {
+	private void handleDeregisteredSchulen(final Kollege derLehrer, final List<Identifier> alteSchulen, final List<Identifier> neueSchulen) {
 
 		List<Identifier> deregisteredFromSchulen = this.getDeregisterList(alteSchulen, neueSchulen);
 
@@ -89,7 +90,7 @@ public class SchulkollegienService {
 			if (opt.isPresent()) {
 
 				Schulkollegium kollegium = opt.get();
-				List<Person> verbleibendeLehrer = getVerbleibendeLehrer(derLehrer, kollegium);
+				List<Kollege> verbleibendeLehrer = getVerbleibendeLehrer(derLehrer, kollegium);
 
 				if (verbleibendeLehrer.isEmpty()) {
 
@@ -97,13 +98,13 @@ public class SchulkollegienService {
 
 				} else {
 
-					this.repository.replaceKollegen(new Schulkollegium(schulkuerzel, verbleibendeLehrer.toArray(new Person[0])));
+					this.repository.replaceKollegen(new Schulkollegium(schulkuerzel, verbleibendeLehrer.toArray(new Kollege[0])));
 				}
 			}
 		}
 	}
 
-	private void handleRegisteredSchulen(final Person derLehrer, final List<Identifier> alteSchulen, final List<Identifier> neueSchulen) {
+	private void handleRegisteredSchulen(final Kollege derKollege, final List<Identifier> alteSchulen, final List<Identifier> neueSchulen) {
 
 		List<Identifier> registeredAtSchulen = this.getRegisterList(alteSchulen, neueSchulen);
 
@@ -111,24 +112,24 @@ public class SchulkollegienService {
 
 			Optional<Schulkollegium> opt = repository.ofSchulkuerzel(schulkuerzel);
 
-			List<Person> alleLehrer = new ArrayList<>();
+			List<Kollege> alleLehrer = new ArrayList<>();
 
 			if (opt.isPresent()) {
 
 				Schulkollegium schulkollegium = opt.get();
 				alleLehrer.addAll(schulkollegium.alleLehrerUnmodifiable());
-				alleLehrer.add(derLehrer);
-				this.repository.replaceKollegen(new Schulkollegium(schulkuerzel, alleLehrer.toArray(new Person[0])));
+				alleLehrer.add(derKollege);
+				this.repository.replaceKollegen(new Schulkollegium(schulkuerzel, alleLehrer.toArray(new Kollege[0])));
 			} else {
 
-				alleLehrer.add(derLehrer);
-				Schulkollegium neuesSchulkollegium = new Schulkollegium(schulkuerzel, alleLehrer.toArray(new Person[0]));
+				alleLehrer.add(derKollege);
+				Schulkollegium neuesSchulkollegium = new Schulkollegium(schulkuerzel, alleLehrer.toArray(new Kollege[0]));
 				this.repository.addKollegium(neuesSchulkollegium);
 			}
 		}
 	}
 
-	private void handleUnchangedSchulen(final Person derLehrer, final List<Identifier> alteSchulen, final List<Identifier> neueSchulen) {
+	private void handleUnchangedSchulen(final Kollege derKollege, final List<Identifier> alteSchulen, final List<Identifier> neueSchulen) {
 
 		List<Identifier> unchangedSchulen = this.getUnchangedList(alteSchulen, neueSchulen);
 
@@ -140,13 +141,13 @@ public class SchulkollegienService {
 
 				Schulkollegium kollegium = opt.get();
 
-				List<Person> verbleibendeLehrer = kollegium.alleLehrerUnmodifiable().stream().filter(p -> !p.equals(derLehrer))
+				List<Kollege> verbleibendeLehrer = kollegium.alleLehrerUnmodifiable().stream().filter(p -> !p.equals(derKollege))
 					.collect(Collectors.toList());
 
 				// bei Änderung des Namens!!!
-				verbleibendeLehrer.add(derLehrer);
+				verbleibendeLehrer.add(derKollege);
 
-				this.repository.replaceKollegen(new Schulkollegium(schulkuerzel, verbleibendeLehrer.toArray(new Person[0])));
+				this.repository.replaceKollegen(new Schulkollegium(schulkuerzel, verbleibendeLehrer.toArray(new Kollege[0])));
 			} else {
 
 				LOG.debug("Schulkollegium mit Schule {} nicht vorhanden", schulkuerzel);
@@ -155,9 +156,9 @@ public class SchulkollegienService {
 		}
 	}
 
-	List<Person> getVerbleibendeLehrer(final Person dieserLehrer, final Schulkollegium kollegium) {
+	List<Kollege> getVerbleibendeLehrer(final Kollege dieserLehrer, final Schulkollegium kollegium) {
 
-		List<Person> verbleibendeLehrer = kollegium.alleLehrerUnmodifiable().stream().filter(p -> !p.equals(dieserLehrer))
+		List<Kollege> verbleibendeLehrer = kollegium.alleLehrerUnmodifiable().stream().filter(p -> !p.equals(dieserLehrer))
 			.collect(Collectors.toList());
 		return verbleibendeLehrer;
 	}

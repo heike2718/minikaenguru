@@ -8,6 +8,8 @@ Folgende Funktionen stehen zur Verfügung:
 
 ### open data
 
+* [Status Anmeldungen und Beteiligungen aktueller Wettbewerb](https://mathe-jung-alt.de/mk-gateway/open-data/statistik/anmeldungen)
+
 * [Mediane vergangener Wettbewerbe abfragen](https://mathe-jung-alt.de/mk-gateway/open-data/statistik/2020/mediane): jahr variabel
 
 * [Gesamtpunktverteilungen als PDF erstellen](https://mathe-jung-alt.de/mk-gateway/open-data/statistik/2020/pdf): jahr variabel  - Ladezeit ist etwas länger

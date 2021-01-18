@@ -5,6 +5,7 @@
 package de.egladil.web.mkv_server_tests.dao;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.TeilnahmenHibernateRepository;
 import de.egladil.web.mkv_server_tests.AbstractIT;
 
@@ -39,5 +41,19 @@ public class TeilnahmenHibernateRepositoryTest extends AbstractIT {
 
 		// Assert
 		assertTrue(teilnahmen.size() >= 5);
+	}
+
+	@Test
+	void testLoadAllForWettbewerb() {
+
+		// Arrange
+		WettbewerbID wettbewerbID = new WettbewerbID(2020);
+
+		// Act
+		List<Teilnahme> teilnahmen = teilnahmenRepository.loadAllForWettbewerb(wettbewerbID);
+
+		// Assert
+		assertEquals(15, teilnahmen.size());
+
 	}
 }

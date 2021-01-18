@@ -8,12 +8,14 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.domain.AbstractMkResourceAdapter;
 import de.egladil.web.mk_gateway.domain.apimodel.FileResource;
+import de.egladil.web.mk_gateway.domain.apimodel.StringsAPIModel;
 import de.egladil.web.mk_gateway.domain.kataloge.api.LandPayload;
 import de.egladil.web.mk_gateway.domain.kataloge.api.OrtPayload;
 import de.egladil.web.mk_gateway.domain.kataloge.api.SchulePayload;
@@ -242,6 +244,21 @@ public class MkKatalogeResourceAdapter extends AbstractMkResourceAdapter {
 
 			Response response = restClient.getHeartbeat(heartbeatSecret);
 			return response;
+		} catch (Exception e) {
+
+			return handleException(e, LOG, "[getHeartbeat]");
+		}
+
+	}
+
+	public Response loadSchulen(final StringsAPIModel schulkuerzel) {
+
+		try {
+
+			String kommaseparierteKuerzel = StringUtils.join(schulkuerzel.getStrings(), ",");
+			Response response = restClient.loadSchulenMitKuerzeln(kommaseparierteKuerzel);
+			return response;
+
 		} catch (Exception e) {
 
 			return handleException(e, LOG, "[getHeartbeat]");

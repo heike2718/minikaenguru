@@ -1,5 +1,13 @@
 # authprovider Release Notes
 
+__Release 1.3.2__:
+
+* [Veranstalter ändern löscht Mailadresse](https://github.com/heike2718/minikaenguru/issues/226)
+* [Mailadresse im Schulkollegium](https://github.com/heike2718/minikaenguru/issues/228)
+* [NPE wenn Veranstalter keine Teilnahmenummern hat](https://github.com/heike2718/minikaenguru/issues/224)
+* [Anmeldungsübersicht über den aktuellen wettbewerb, sofern er aktiv ist](https://github.com/heike2718/minikaenguru/issues/173)
+
+
 __Release 1.3.1__:
 
 [Bugfix Hinzufügen neuer Schule](https://github.com/heike2718/minikaenguru/issues/225)

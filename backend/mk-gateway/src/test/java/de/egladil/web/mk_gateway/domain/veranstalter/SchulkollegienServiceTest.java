@@ -45,8 +45,8 @@ public class SchulkollegienServiceTest {
 
 		schulkollegienMap = new HashMap<>();
 
-		Person[] personen = new Person[1];
-		personen[0] = new Person(UUID_LEHRER, "Professor Proton");
+		Kollege[] personen = new Kollege[1];
+		personen[0] = new Kollege(UUID_LEHRER, "Professor Proton");
 		Schulkollegium kollegium = new Schulkollegium(new Identifier(SCHULKUERZEL_1), personen);
 
 		schulkollegienMap.put(SCHULKUERZEL_1, kollegium);
@@ -101,13 +101,13 @@ public class SchulkollegienServiceTest {
 
 		Schulkollegium neues = opt.get();
 		assertEquals(identifier, neues.schulkuerzel());
-		List<Person> alleLehrer = neues.alleLehrerUnmodifiable();
+		List<Kollege> alleLehrer = neues.alleLehrerUnmodifiable();
 		assertEquals(1, alleLehrer.size());
-		Person derLehrer = alleLehrer.get(0);
+		Kollege derLehrer = alleLehrer.get(0);
 		assertEquals(uuidLehrer, derLehrer.uuid());
 		assertEquals(fullName, derLehrer.fullName());
 
-		assertEquals("[{\"uuid\":\"sjqhhih\",\"fullName\":\"Hans Wurst\",\"email\":null}]", neues.personenAlsJSON());
+		assertEquals("[{\"uuid\":\"sjqhhih\",\"fullName\":\"Hans Wurst\"}]", neues.personenAlsJSON());
 
 	}
 
@@ -132,25 +132,25 @@ public class SchulkollegienServiceTest {
 
 		Schulkollegium neues = opt.get();
 		assertEquals(identifier, neues.schulkuerzel());
-		List<Person> alleLehrer = neues.alleLehrerUnmodifiable();
+		List<Kollege> alleLehrer = neues.alleLehrerUnmodifiable();
 		assertEquals(2, alleLehrer.size());
 
 		{
 
-			Person derLehrer = alleLehrer.stream().filter(p -> uuidLehrer.equals(p.uuid())).findFirst().get();
+			Kollege derLehrer = alleLehrer.stream().filter(p -> uuidLehrer.equals(p.uuid())).findFirst().get();
 			assertEquals(uuidLehrer, derLehrer.uuid());
 			assertEquals(fullName, derLehrer.fullName());
 		}
 
 		{
 
-			Person derLehrer = alleLehrer.stream().filter(p -> UUID_LEHRER.equals(p.uuid())).findFirst().get();
+			Kollege derLehrer = alleLehrer.stream().filter(p -> UUID_LEHRER.equals(p.uuid())).findFirst().get();
 			assertEquals(UUID_LEHRER, derLehrer.uuid());
 			assertEquals("Professor Proton", derLehrer.fullName());
 		}
 
 		assertEquals(
-			"[{\"uuid\":\"kslawhdqh\",\"fullName\":\"Professor Proton\",\"email\":null},{\"uuid\":\"sjqhhih\",\"fullName\":\"Hans Wurst\",\"email\":null}]",
+			"[{\"uuid\":\"kslawhdqh\",\"fullName\":\"Professor Proton\"},{\"uuid\":\"sjqhhih\",\"fullName\":\"Hans Wurst\"}]",
 			neues.personenAlsJSON());
 
 	}
@@ -179,25 +179,25 @@ public class SchulkollegienServiceTest {
 
 			Schulkollegium neues = opt.get();
 			assertEquals(identifier1, neues.schulkuerzel());
-			List<Person> alleLehrer = neues.alleLehrerUnmodifiable();
+			List<Kollege> alleLehrer = neues.alleLehrerUnmodifiable();
 			assertEquals(2, alleLehrer.size());
 
 			{
 
-				Person derLehrer = alleLehrer.stream().filter(p -> uuidLehrer.equals(p.uuid())).findFirst().get();
+				Kollege derLehrer = alleLehrer.stream().filter(p -> uuidLehrer.equals(p.uuid())).findFirst().get();
 				assertEquals(uuidLehrer, derLehrer.uuid());
 				assertEquals(fullName, derLehrer.fullName());
 			}
 
 			{
 
-				Person derLehrer = alleLehrer.stream().filter(p -> UUID_LEHRER.equals(p.uuid())).findFirst().get();
+				Kollege derLehrer = alleLehrer.stream().filter(p -> UUID_LEHRER.equals(p.uuid())).findFirst().get();
 				assertEquals(UUID_LEHRER, derLehrer.uuid());
 				assertEquals("Professor Proton", derLehrer.fullName());
 			}
 
 			assertEquals(
-				"[{\"uuid\":\"kslawhdqh\",\"fullName\":\"Professor Proton\",\"email\":null},{\"uuid\":\"sjqhhih\",\"fullName\":\"Hans Wurst\",\"email\":null}]",
+				"[{\"uuid\":\"kslawhdqh\",\"fullName\":\"Professor Proton\"},{\"uuid\":\"sjqhhih\",\"fullName\":\"Hans Wurst\"}]",
 				neues.personenAlsJSON());
 		}
 
@@ -208,25 +208,25 @@ public class SchulkollegienServiceTest {
 
 			Schulkollegium neues = opt.get();
 			assertEquals(identifier2, neues.schulkuerzel());
-			List<Person> alleLehrer = neues.alleLehrerUnmodifiable();
+			List<Kollege> alleLehrer = neues.alleLehrerUnmodifiable();
 			assertEquals(2, alleLehrer.size());
 
 			{
 
-				Person derLehrer = alleLehrer.stream().filter(p -> uuidLehrer.equals(p.uuid())).findFirst().get();
+				Kollege derLehrer = alleLehrer.stream().filter(p -> uuidLehrer.equals(p.uuid())).findFirst().get();
 				assertEquals(uuidLehrer, derLehrer.uuid());
 				assertEquals(fullName, derLehrer.fullName());
 			}
 
 			{
 
-				Person derLehrer = alleLehrer.stream().filter(p -> UUID_LEHRER.equals(p.uuid())).findFirst().get();
+				Kollege derLehrer = alleLehrer.stream().filter(p -> UUID_LEHRER.equals(p.uuid())).findFirst().get();
 				assertEquals(UUID_LEHRER, derLehrer.uuid());
 				assertEquals("Professor Proton", derLehrer.fullName());
 			}
 
 			assertEquals(
-				"[{\"uuid\":\"kslawhdqh\",\"fullName\":\"Professor Proton\",\"email\":null},{\"uuid\":\"sjqhhih\",\"fullName\":\"Hans Wurst\",\"email\":null}]",
+				"[{\"uuid\":\"kslawhdqh\",\"fullName\":\"Professor Proton\"},{\"uuid\":\"sjqhhih\",\"fullName\":\"Hans Wurst\"}]",
 				neues.personenAlsJSON());
 		}
 

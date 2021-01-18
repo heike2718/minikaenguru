@@ -131,7 +131,7 @@ public class LehrerServiceTest extends AbstractDomainServiceTest {
 
 		Lehrer lehrer = (Lehrer) optLehrer.get();
 		Schulkollegium schulkollegium = optKoll.get();
-		assertFalse(schulkollegium.alleLehrerUnmodifiable().contains(lehrer.person()));
+		assertFalse(schulkollegium.alleLehrerUnmodifiable().contains(Kollege.fromPerson(lehrer.person())));
 
 		// Act
 		ResponsePayload responsePayload = service.addSchule(lehrerID, schuleID);
@@ -213,8 +213,9 @@ public class LehrerServiceTest extends AbstractDomainServiceTest {
 		assertTrue(optLehrer.isPresent());
 
 		Lehrer lehrer = (Lehrer) optLehrer.get();
+		Kollege kollege = Kollege.fromPerson(lehrer.person());
 		Schulkollegium schulkollegium = optKoll.get();
-		assertTrue(schulkollegium.alleLehrerUnmodifiable().contains(lehrer.person()));
+		assertTrue(schulkollegium.alleLehrerUnmodifiable().contains(kollege));
 
 		// Act
 		ResponsePayload responsePayload = service.addSchule(lehrerID, schuleID);
@@ -375,7 +376,7 @@ public class LehrerServiceTest extends AbstractDomainServiceTest {
 		Schulkollegium aktuellesSchulkollegium = getSchulkollegienRepository()
 			.ofSchulkuerzel(new Identifier(SCHULKUERZEL_1)).get();
 
-		Optional<Person> optKeule = aktuellesSchulkollegium.alleLehrerUnmodifiable().stream()
+		Optional<Kollege> optKeule = aktuellesSchulkollegium.alleLehrerUnmodifiable().stream()
 			.filter(p -> fullName.equals(p.fullName())).findFirst();
 
 		assertTrue(optKeule.isPresent());

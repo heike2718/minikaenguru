@@ -5,6 +5,8 @@
 package de.egladil.web.mkv_server_tests.dao;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -13,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.mail.Empfaengertyp;
+import de.egladil.web.mk_gateway.domain.veranstalter.Person;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.admin.VeranstalterSuchkriterium;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.VeranstalterSuchanfrage;
@@ -44,7 +47,7 @@ public class VeranstalterHibernateRepositoryTest extends AbstractIT {
 		List<Veranstalter> result = veranstalterRepository.findVeranstalter(suchanfrage);
 
 		// Assert
-		assertEquals(4, result.size());
+		assertEquals(5, result.size());
 	}
 
 	@Test
@@ -71,6 +74,25 @@ public class VeranstalterHibernateRepositoryTest extends AbstractIT {
 
 		// Assert
 		assertEquals(1, result.size());
+		Person person = result.get(0).person();
+		assertNotNull(person.email());
+
+	}
+
+	@Test
+	void should_findByUuid_beResilient_whenTeilnahmenummerNull() {
+
+		// Arrange
+		VeranstalterSuchanfrage suchanfrage = new VeranstalterSuchanfrage(VeranstalterSuchkriterium.UUID, "c84e5769");
+
+		// Act
+		List<Veranstalter> result = veranstalterRepository.findVeranstalter(suchanfrage);
+
+		// Assert
+		assertEquals(1, result.size());
+		Veranstalter veranstalter = result.get(0);
+		assertEquals(0, veranstalter.teilnahmeIdentifier().size());
+		assertNull(veranstalter.persistierbareTeilnahmenummern());
 	}
 
 	@Test
@@ -93,7 +115,7 @@ public class VeranstalterHibernateRepositoryTest extends AbstractIT {
 		List<String> mailadressen = veranstalterRepository.findEmailsNewsletterAbonnenten(Empfaengertyp.ALLE);
 
 		// Assert
-		assertEquals(119, mailadressen.size());
+		assertEquals(120, mailadressen.size());
 
 	}
 
@@ -104,7 +126,7 @@ public class VeranstalterHibernateRepositoryTest extends AbstractIT {
 		List<String> mailadressen = veranstalterRepository.findEmailsNewsletterAbonnenten(Empfaengertyp.LEHRER);
 
 		// Assert
-		assertEquals(76, mailadressen.size());
+		assertEquals(77, mailadressen.size());
 
 	}
 
