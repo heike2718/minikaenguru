@@ -211,4 +211,10 @@ public class SchuleAPIModel {
 
 		return "SchuleAPIModel [kuerzel=" + kuerzel + "]";
 	}
+
+	public SchuleAPIModel withLand(final String land) {
+
+		this.land = land;
+		return this;
+	}
 }

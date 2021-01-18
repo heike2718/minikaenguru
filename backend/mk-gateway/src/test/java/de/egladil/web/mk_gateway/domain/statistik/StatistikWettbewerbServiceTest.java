@@ -5,8 +5,10 @@
 package de.egladil.web.mk_gateway.domain.statistik;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,17 +22,20 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.auswertungen.StatistikTestUtils;
+import de.egladil.web.mk_gateway.domain.kataloge.SchulkatalogService;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
+import de.egladil.web.mk_gateway.domain.statistik.api.AnmeldungenAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 
 /**
  * StatistikWettbewerbServiceTest
  */
-public class StatistikWettbewerbServiceTest {
+public class StatistikWettbewerbServiceTest extends AbstractDomainServiceTest {
 
 	private LoesungszettelRepository loesungszettelRepository;
 
@@ -38,12 +43,27 @@ public class StatistikWettbewerbServiceTest {
 
 	private List<Loesungszettel> wettbewerbLoesungszettel;
 
-	@BeforeEach
-	void setUp() throws Exception {
+	private SchulkatalogService schulkatalogService;
 
-		wettbewerbLoesungszettel = StatistikTestUtils.loadTheLoesungszettel(2018);
-		loesungszettelRepository = Mockito.mock(LoesungszettelRepository.class);
-		statistikService = StatistikWettbewerbService.createForTest(loesungszettelRepository);
+	@BeforeEach
+	@Override
+	protected void setUp() {
+
+		super.setUp();
+
+		try {
+
+			wettbewerbLoesungszettel = StatistikTestUtils.loadTheLoesungszettel(2018);
+			loesungszettelRepository = Mockito.mock(LoesungszettelRepository.class);
+			schulkatalogService = Mockito.mock(SchulkatalogService.class);
+
+			statistikService = StatistikWettbewerbService.createForTest(loesungszettelRepository, getWettbewerbService(),
+				schulkatalogService, getTeilnahmenRepository());
+		} catch (Exception e) {
+
+			fail("test setup klappt nicht");
+		}
+
 	}
 
 	@Nested
@@ -307,6 +327,22 @@ public class StatistikWettbewerbServiceTest {
 			assertEquals(33305, downloadData.data().length);
 
 			StatistikTestUtils.print(downloadData, true);
+
+		}
+
+	}
+
+	@Nested
+	class AnmeldungenTests {
+
+		@Test
+		void should_anmeldungenReturnJson_when_ok() {
+
+			// Act
+			AnmeldungenAPIModel result = statistikService.berechneAnmeldungsstatistikAktuellerWettbewerb();
+
+			// Assert
+			assertNotNull(result);
 
 		}
 

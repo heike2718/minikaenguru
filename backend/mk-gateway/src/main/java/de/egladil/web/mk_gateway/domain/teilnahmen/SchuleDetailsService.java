@@ -16,7 +16,7 @@ import de.egladil.web.mk_gateway.domain.adv.VertragAuftragsdatenverarbeitung;
 import de.egladil.web.mk_gateway.domain.adv.VertragAuftragsverarbeitungRepository;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
-import de.egladil.web.mk_gateway.domain.veranstalter.Person;
+import de.egladil.web.mk_gateway.domain.veranstalter.Kollege;
 import de.egladil.web.mk_gateway.domain.veranstalter.SchulkollegienRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.Schulkollegium;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
@@ -79,7 +79,7 @@ public class SchuleDetailsService {
 
 			Schulkollegium kollegium = optKollegium.get();
 
-			List<Person> andere = kollegium.alleLehrerUnmodifiable().stream()
+			List<Kollege> andere = kollegium.alleLehrerUnmodifiable().stream()
 				.filter(p -> lehrerIdentifier == null || !p.uuid().equals(lehrerIdentifier.identifier()))
 				.collect(Collectors.toList());
 
@@ -108,7 +108,7 @@ public class SchuleDetailsService {
 
 					if (optAnmelder.isPresent()) {
 
-						result.withAngemeldetDurch(optAnmelder.get().person());
+						result.withAngemeldetDurch(Kollege.fromPerson(optAnmelder.get().person()));
 					}
 				}
 			}

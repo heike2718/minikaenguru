@@ -27,6 +27,7 @@ import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.statistik.GesamtpunktverteilungKlassenstufe;
 import de.egladil.web.mk_gateway.domain.statistik.StatistikWettbewerbService;
+import de.egladil.web.mk_gateway.domain.statistik.api.AnmeldungenAPIModel;
 import de.egladil.web.mk_gateway.domain.statistik.api.MedianeAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
@@ -147,6 +148,16 @@ public class OpenDataResource {
 		MedianeAPIModel responseData = new MedianeAPIModel(mediane);
 
 		return Response.ok(new ResponsePayload(MessagePayload.ok(), responseData)).build();
+	}
+
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("statistik/anmeldungen")
+	public Response getAnmeldungenUndBeteiligungenAktuellerWettbewerb() {
+
+		AnmeldungenAPIModel anmeldungen = statistikWettbewerbService.berechneAnmeldungsstatistikAktuellerWettbewerb();
+
+		return Response.ok(new ResponsePayload(MessagePayload.ok(), anmeldungen)).build();
 	}
 
 	private Response checkJahr(final String jahr, final String path) {
