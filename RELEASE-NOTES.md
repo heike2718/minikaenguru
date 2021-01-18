@@ -1,5 +1,11 @@
 # authprovider Release Notes
 
+__Release 1.3.3_:
+
+* Summe Schulanmeldung in Anmeldungsübersicht-API
+* vereinfachte Anmeldung einer Schule zum Wettbewerb über die Schule-Card
+
+
 __Release 1.3.2__:
 
 * [Veranstalter ändern löscht Mailadresse](https://github.com/heike2718/minikaenguru/issues/226)
