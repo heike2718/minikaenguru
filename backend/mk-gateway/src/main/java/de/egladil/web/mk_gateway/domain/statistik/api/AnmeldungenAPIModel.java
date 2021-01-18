@@ -15,32 +15,28 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class AnmeldungenAPIModel {
 
 	@JsonProperty
-	private List<AnmeldungsitemAPIModel> schulen = new ArrayList<>();
-
-	@JsonProperty
 	private AnmeldungsitemAPIModel privatanmeldungen;
 
-	public static AnmeldungenAPIModel createEmptyObject() {
+	@JsonProperty
+	private AnmeldungsitemAPIModel schulanmeldungen;
 
-		return new AnmeldungenAPIModel()
-			.withPrivatanmeldungen(AnmeldungsitemAPIModel.createEmptyPrivatanmeldungenAPIModel())
-			.withSchulen(new ArrayList<>());
-	}
+	@JsonProperty
+	private List<AnmeldungsitemAPIModel> laender = new ArrayList<>();
 
 	@Override
 	public String toString() {
 
-		return "AnmeldungenAPIModel [schulen=" + schulen + ", privatanmeldungen=" + privatanmeldungen + "]";
+		return "AnmeldungenAPIModel [laender=" + laender + ", privatanmeldungen=" + privatanmeldungen + "]";
 	}
 
-	public List<AnmeldungsitemAPIModel> getSchulen() {
+	public List<AnmeldungsitemAPIModel> getLaender() {
 
-		return schulen;
+		return laender;
 	}
 
-	public AnmeldungenAPIModel withSchulen(final List<AnmeldungsitemAPIModel> schulen) {
+	public AnmeldungenAPIModel withLaendern(final List<AnmeldungsitemAPIModel> schulen) {
 
-		this.schulen = schulen;
+		this.laender = schulen;
 		return this;
 	}
 
@@ -55,4 +51,14 @@ public class AnmeldungenAPIModel {
 		return this;
 	}
 
+	public AnmeldungsitemAPIModel getSchulanmeldungen() {
+
+		return schulanmeldungen;
+	}
+
+	public AnmeldungenAPIModel withSchulanmeldungen(final AnmeldungsitemAPIModel schulanmeldungen) {
+
+		this.schulanmeldungen = schulanmeldungen;
+		return this;
+	}
 }
