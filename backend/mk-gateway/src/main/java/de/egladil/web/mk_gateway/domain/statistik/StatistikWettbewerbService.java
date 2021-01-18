@@ -97,7 +97,7 @@ public class StatistikWettbewerbService {
 
 		if (optAktuellerWettbewerb.isEmpty()) {
 
-			return AnmeldungenAPIModel.createEmptyObject();
+			return this.createEmptyResponsePayload();
 
 		}
 
@@ -110,7 +110,7 @@ public class StatistikWettbewerbService {
 
 		case ERFASST:
 		case BEENDET:
-			return AnmeldungenAPIModel.createEmptyObject();
+			return this.createEmptyResponsePayload();
 
 		case ANMELDUNG:
 			teilnahmen = teilnahmeRepository.loadAllForWettbewerb(aktueller.id());
@@ -136,9 +136,20 @@ public class StatistikWettbewerbService {
 		long anzahlPrivatloesungszettel = loesungszettel.stream()
 			.filter(z -> Teilnahmeart.PRIVAT == z.teilnahmeIdentifier().teilnahmeart()).count();
 
-		AnmeldungsitemAPIModel privatanmeldungen = AnmeldungsitemAPIModel.createEmptyPrivatanmeldungenAPIModel()
+		long anzahlSchulanmeldungen = teilnahmen.stream().filter(t -> Teilnahmeart.SCHULE == t.teilnahmeart()).count();
+
+		long anzahlSchulloesungszettel = loesungszettel.stream()
+			.filter(z -> Teilnahmeart.SCHULE == z.teilnahmeIdentifier().teilnahmeart()).count();
+
+		AnmeldungsitemAPIModel privatanmeldungen = new AnmeldungsitemAPIModel()
+			.withName("Privatanmeldungen")
 			.withAnzahlAnmeldungen(Long.valueOf(anzahlPrivatteilnahmen).intValue())
 			.withAnzahlLoesungszettel(Long.valueOf(anzahlPrivatloesungszettel).intValue());
+
+		AnmeldungsitemAPIModel summeSchulanmeldungen = new AnmeldungsitemAPIModel()
+			.withName("Schulanmeldungen")
+			.withAnzahlAnmeldungen(Long.valueOf(anzahlSchulanmeldungen).intValue())
+			.withAnzahlLoesungszettel(Long.valueOf(anzahlSchulloesungszettel).intValue());
 
 		// Schulen und Privatteilnahmen aggregieren
 		if (!schulkuerzel.isEmpty()) {
@@ -153,7 +164,7 @@ public class StatistikWettbewerbService {
 		Map<String, List<Loesungszettel>> loesnungszettelNachBundeslaendern = new LoesungszettelLandAggregator()
 			.apply(loesungszettel, schulen);
 
-		List<AnmeldungsitemAPIModel> schulanmeldungen = new ArrayList<>();
+		List<AnmeldungsitemAPIModel> laenderanmeldungen = new ArrayList<>();
 
 		for (String bundesland : schulenNachBundeslaendern.keySet()) {
 
@@ -166,18 +177,27 @@ public class StatistikWettbewerbService {
 				int anzahlAnmeldungen = sch.size();
 				int anzahlLoesungszettel = lz == null ? 0 : lz.size();
 
-				schulanmeldungen.add(new AnmeldungsitemAPIModel().withName(bundesland).withAnzahlAnmeldungen(anzahlAnmeldungen)
+				laenderanmeldungen.add(new AnmeldungsitemAPIModel().withName(bundesland).withAnzahlAnmeldungen(anzahlAnmeldungen)
 					.withAnzahlLoesungszettel(anzahlLoesungszettel));
 			}
 		}
 
-		Collections.sort(schulanmeldungen, new AnmeldungsitemAPIModelComparator());
+		Collections.sort(laenderanmeldungen, new AnmeldungsitemAPIModelComparator());
 
 		AnmeldungenAPIModel result = new AnmeldungenAPIModel()
+			.withSchulanmeldungen(summeSchulanmeldungen)
 			.withPrivatanmeldungen(privatanmeldungen)
-			.withSchulen(schulanmeldungen);
+			.withLaendern(laenderanmeldungen);
 
 		return result;
+	}
+
+	AnmeldungenAPIModel createEmptyResponsePayload() {
+
+		return new AnmeldungenAPIModel()
+			.withPrivatanmeldungen(new AnmeldungsitemAPIModel().withName("Privatanmeldungen"))
+			.withSchulanmeldungen(new AnmeldungsitemAPIModel().withName("Schulanmeldungen"));
+
 	}
 
 	/**
