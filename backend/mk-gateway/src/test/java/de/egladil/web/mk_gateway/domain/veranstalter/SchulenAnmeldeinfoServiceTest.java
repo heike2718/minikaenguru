@@ -399,9 +399,9 @@ public class SchulenAnmeldeinfoServiceTest {
 	void should_getSchuleWithWettbewerbsdetails_work() {
 
 		// Arrange
-		List<Person> kollegen = Arrays.asList(new Person[] { new Person("ajhdqh", "Herta Meier") });
+		List<Kollege> kollegen = Arrays.asList(new Kollege[] { new Kollege("ajhdqh", "Herta Meier") });
 
-		SchuleDetails schuleDetails = new SchuleDetails("12345").withAngemeldetDurch(new Person("ghagdqg", "John Doe"))
+		SchuleDetails schuleDetails = new SchuleDetails("12345").withAngemeldetDurch(new Kollege("ghagdqg", "John Doe"))
 			.withAnzahlTeilnahmen(1).withKollegen(kollegen);
 
 		Map<String, Object> schuleKatalogeMap = new HashMap<>();
@@ -465,9 +465,9 @@ public class SchulenAnmeldeinfoServiceTest {
 	void should_getSchuleWithWettbewerbsdetailsReturnIncompleteObject_when_KatalogeintragFehlt() {
 
 		// Arrange
-		List<Person> kollegen = Arrays.asList(new Person[] { new Person("ajhdqh", "Herta Meier") });
+		List<Kollege> kollegen = Arrays.asList(new Kollege[] { new Kollege("ajhdqh", "Herta Meier") });
 
-		SchuleDetails schuleDetails = new SchuleDetails("12345").withAngemeldetDurch(new Person("ghagdqg", "John Doe"))
+		SchuleDetails schuleDetails = new SchuleDetails("12345").withAngemeldetDurch(new Kollege("ghagdqg", "John Doe"))
 			.withAnzahlTeilnahmen(1).withKollegen(kollegen).withNameUrkunde("Schule 12345");
 
 		Mockito.when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID)))

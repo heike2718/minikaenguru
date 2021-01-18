@@ -293,5 +293,13 @@ public final class PermittedRolesForAdminProvider {
 
 		}
 
+		{
+
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			result.put((new PathWithMethod("/admin/statistik/anmeldungen", HttpMethod.GET)),
+				rollen);
+
+		}
+
 	}
 }

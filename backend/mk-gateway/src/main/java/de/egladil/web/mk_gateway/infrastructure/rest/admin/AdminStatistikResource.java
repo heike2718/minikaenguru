@@ -25,8 +25,8 @@ import de.egladil.web.mk_gateway.infrastructure.rest.general.statistik.Personali
  */
 @RequestScoped
 @Consumes(MediaType.APPLICATION_JSON)
-@Produces({ MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_JSON })
 @Path("admin/statistik")
+@Produces({ MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_JSON })
 public class AdminStatistikResource {
 
 	@Context
@@ -56,6 +56,13 @@ public class AdminStatistikResource {
 			securityContext.getUserPrincipal().getName());
 
 		return MkGatewayFileUtils.createDownloadResponse(data);
+	}
+
+	@GET
+	@Path("anmeldungen")
+	public Response getAnmeldungsUndTeilnahmestatistik() {
+
+		return null;
 	}
 
 }

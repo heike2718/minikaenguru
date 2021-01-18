@@ -19,7 +19,7 @@ import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.adv.VertragAuftragsdatenverarbeitung;
 import de.egladil.web.mk_gateway.domain.adv.VertragAuftragsverarbeitungRepository;
 import de.egladil.web.mk_gateway.domain.adv.Vertragstext;
-import de.egladil.web.mk_gateway.domain.veranstalter.Person;
+import de.egladil.web.mk_gateway.domain.veranstalter.Kollege;
 import de.egladil.web.mk_gateway.domain.veranstalter.SchulkollegienRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.Schulkollegium;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleDetails;
@@ -121,15 +121,15 @@ public class SchuleDetailsServiceTest extends AbstractDomainServiceTest {
 
 				if (identifier.equals(new Identifier(SCHULKUERZEL_1))) {
 
-					Person[] personen = new Person[] { new Person(UUID_LEHRER_1, "Hans Wurst"),
-						new Person(UUID_LEHRER_2, "Olle Keule") };
+					Kollege[] personen = new Kollege[] { new Kollege(UUID_LEHRER_1, "Hans Wurst"),
+						new Kollege(UUID_LEHRER_2, "Olle Keule") };
 					Schulkollegium schulkollegium = new Schulkollegium(identifier, personen);
 					return Optional.of(schulkollegium);
 				}
 
 				if (identifier.equals(new Identifier(SCHULKUERZEL_2))) {
 
-					Person[] personen = new Person[] { new Person(UUID_LEHRER_1, "Hans Wurst") };
+					Kollege[] personen = new Kollege[] { new Kollege(UUID_LEHRER_1, "Hans Wurst") };
 					Schulkollegium schulkollegium = new Schulkollegium(identifier, personen);
 					return Optional.of(schulkollegium);
 				}

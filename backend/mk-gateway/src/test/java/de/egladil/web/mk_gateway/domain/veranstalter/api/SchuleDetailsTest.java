@@ -12,8 +12,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import de.egladil.web.mk_gateway.domain.veranstalter.Person;
-import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleDetails;
+import de.egladil.web.mk_gateway.domain.veranstalter.Kollege;
 
 /**
  * SchuleDetailsTest
@@ -24,16 +23,16 @@ public class SchuleDetailsTest {
 	void should_EqualsHashCode_be_BasedOnKuerzel() {
 
 		// Arrange
-		List<Person> kollegen = Arrays
-			.asList(new Person[] { new Person("11111", "Alter Verwalter"), new Person("22222", "Strick Liesel") });
+		List<Kollege> kollegen = Arrays
+			.asList(new Kollege[] { new Kollege("11111", "Alter Verwalter"), new Kollege("22222", "Strick Liesel") });
 
-		SchuleDetails details1 = new SchuleDetails("12345").withAngemeldetDurch(new Person("44444", "Herta Grummlig"))
+		SchuleDetails details1 = new SchuleDetails("12345").withAngemeldetDurch(new Kollege("44444", "Herta Grummlig"))
 			.withAnzahlTeilnahmen(4).withHatAdv(true).withKollegen(kollegen);
 
-		SchuleDetails details2 = new SchuleDetails("12345").withAngemeldetDurch(new Person("33333", "Helle Barde"))
+		SchuleDetails details2 = new SchuleDetails("12345").withAngemeldetDurch(new Kollege("33333", "Helle Barde"))
 			.withAnzahlTeilnahmen(3).withHatAdv(true);
 
-		SchuleDetails details3 = new SchuleDetails("54321").withAngemeldetDurch(new Person("44444", "Herta Grummlig"))
+		SchuleDetails details3 = new SchuleDetails("54321").withAngemeldetDurch(new Kollege("44444", "Herta Grummlig"))
 			.withAnzahlTeilnahmen(4).withHatAdv(true).withKollegen(kollegen);
 
 		// Act

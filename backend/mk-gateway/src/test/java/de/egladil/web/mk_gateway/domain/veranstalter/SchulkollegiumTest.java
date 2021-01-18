@@ -27,8 +27,8 @@ public class SchulkollegiumTest {
 
 		// Arrange
 		Identifier schulkuerzel = null;
-		Person[] personen = new Person[1];
-		personen[0] = new Person("gsdgqu", "Herr Bert");
+		Kollege[] personen = new Kollege[1];
+		personen[0] = new Kollege("gsdgqu", "Herr Bert");
 
 		// Act
 		try {
@@ -43,7 +43,7 @@ public class SchulkollegiumTest {
 	}
 
 	@Test
-	void should_ConstructorThrowException_when_PersonenNull() {
+	void should_ConstructorThrowException_when_KollegenNull() {
 
 		// Arrange
 		Identifier schulkuerzel = new Identifier("JZHUF64T");
@@ -65,9 +65,9 @@ public class SchulkollegiumTest {
 
 		// Arrange
 		Identifier schulkuerzel = new Identifier("JZHUF64T");
-		Person[] personen = new Person[2];
-		personen[0] = new Person("gsdgqu", "Herr Bert");
-		personen[1] = new Person("bakvsk", "Frau Mann");
+		Kollege[] personen = new Kollege[2];
+		personen[0] = new Kollege("gsdgqu", "Herr Bert");
+		personen[1] = new Kollege("bakvsk", "Frau Mann");
 
 		// Act
 		Schulkollegium result = new Schulkollegium(schulkuerzel, personen);
@@ -77,7 +77,7 @@ public class SchulkollegiumTest {
 		assertEquals(2, result.alleLehrerUnmodifiable().size());
 
 		assertEquals(
-			"[{\"uuid\":\"gsdgqu\",\"fullName\":\"Herr Bert\",\"email\":null},{\"uuid\":\"bakvsk\",\"fullName\":\"Frau Mann\",\"email\":null}]",
+			"[{\"uuid\":\"gsdgqu\",\"fullName\":\"Herr Bert\"},{\"uuid\":\"bakvsk\",\"fullName\":\"Frau Mann\"}]",
 			result.personenAlsJSON());
 	}
 
@@ -92,25 +92,25 @@ public class SchulkollegiumTest {
 		{
 
 			Identifier schulkuerzel = new Identifier("JZHUF64T");
-			Person[] personen = new Person[2];
-			personen[0] = new Person("gsdgqu", "Herr Bert");
-			personen[1] = new Person("bakvsk", "Frau Mann");
+			Kollege[] personen = new Kollege[2];
+			personen[0] = new Kollege("gsdgqu", "Herr Bert");
+			personen[1] = new Kollege("bakvsk", "Frau Mann");
 			result1 = new Schulkollegium(schulkuerzel, personen);
 		}
 
 		{
 
 			Identifier schulkuerzel = new Identifier("JZHUF64T");
-			Person[] personen = new Person[1];
-			personen[0] = new Person("hisdhpfhw", "Klaus Nikolaus");
+			Kollege[] personen = new Kollege[1];
+			personen[0] = new Kollege("hisdhpfhw", "Klaus Nikolaus");
 			result2 = new Schulkollegium(schulkuerzel, personen);
 		}
 
 		{
 
 			Identifier schulkuerzel = new Identifier("OU874FR3");
-			Person[] personen = new Person[1];
-			personen[0] = new Person("hisdhpfhw", "Klaus Nikolaus");
+			Kollege[] personen = new Kollege[1];
+			personen[0] = new Kollege("hisdhpfhw", "Klaus Nikolaus");
 			result3 = new Schulkollegium(schulkuerzel, personen);
 		}
 
@@ -135,11 +135,11 @@ public class SchulkollegiumTest {
 		{
 
 			Identifier schulkuerzel = new Identifier("SCHULKUERZEL_1");
-			Person[] personen = new Person[4];
-			personen[0] = new Person("UUID_LEHRER_1", "Hans Wurst");
-			personen[1] = new Person("UUID_LEHRER_2", "Olle Keule");
-			personen[2] = new Person("UUID_LEHRER_3", "Mimi Mimimi");
-			personen[3] = new Person("UUID_LEHRER_GESPERRT", "Gesperrter Lehrer");
+			Kollege[] personen = new Kollege[4];
+			personen[0] = new Kollege("UUID_LEHRER_1", "Hans Wurst");
+			personen[1] = new Kollege("UUID_LEHRER_2", "Olle Keule");
+			personen[2] = new Kollege("UUID_LEHRER_3", "Mimi Mimimi");
+			personen[3] = new Kollege("UUID_LEHRER_GESPERRT", "Gesperrter Lehrer");
 			Schulkollegium result = new Schulkollegium(schulkuerzel, personen);
 
 			kollegien.add(result);
@@ -148,8 +148,8 @@ public class SchulkollegiumTest {
 		{
 
 			Identifier schulkuerzel = new Identifier("SCHULKUERZEL_2");
-			Person[] personen = new Person[1];
-			personen[0] = new Person("UUID_LEHRER_1", "Hans Wurst");
+			Kollege[] personen = new Kollege[1];
+			personen[0] = new Kollege("UUID_LEHRER_1", "Hans Wurst");
 			Schulkollegium result = new Schulkollegium(schulkuerzel, personen);
 
 			kollegien.add(result);
@@ -158,8 +158,8 @@ public class SchulkollegiumTest {
 		{
 
 			Identifier schulkuerzel = new Identifier("SCHULKUERZEL_3");
-			Person[] personen = new Person[1];
-			personen[0] = new Person("UUID_LEHRER_ANDERE_SCHULE", "Lehrer andere Schule");
+			Kollege[] personen = new Kollege[1];
+			personen[0] = new Kollege("UUID_LEHRER_ANDERE_SCHULE", "Lehrer andere Schule");
 			Schulkollegium result = new Schulkollegium(schulkuerzel, personen);
 
 			kollegien.add(result);

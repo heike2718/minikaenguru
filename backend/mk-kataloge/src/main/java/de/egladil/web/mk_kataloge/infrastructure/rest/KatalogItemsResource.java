@@ -37,7 +37,6 @@ import de.egladil.web.mk_kataloge.domain.admin.RenameOrtService;
 import de.egladil.web.mk_kataloge.domain.admin.RenameSchuleService;
 import de.egladil.web.mk_kataloge.domain.apimodel.LandPayload;
 import de.egladil.web.mk_kataloge.domain.apimodel.OrtPayload;
-import de.egladil.web.mk_kataloge.domain.apimodel.SchuleAPIModel;
 import de.egladil.web.mk_kataloge.domain.apimodel.SchulePayload;
 import de.egladil.web.mk_kataloge.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_kataloge.domain.event.SecurityIncidentRegistered;
@@ -311,15 +310,4 @@ public class KatalogItemsResource {
 		return Response.ok(responsePayload).build();
 	}
 
-	@GET
-	@Path("schulen/{kommaseparierteKuerzel}")
-	public Response findSchulenMitKuerzeln(@PathParam(
-		value = "kommaseparierteKuerzel") @Kuerzel final String kommaseparierteKuerzel) {
-
-		List<SchuleAPIModel> trefferliste = katalogFacade.findSchulen(kommaseparierteKuerzel);
-
-		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.info("OK"), trefferliste);
-
-		return Response.ok(responsePayload).build();
-	}
 }

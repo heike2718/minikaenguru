@@ -16,7 +16,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import de.egladil.web.mk_gateway.domain.veranstalter.Person;
+import de.egladil.web.mk_gateway.domain.veranstalter.Kollege;
 
 /**
  * SchuleAPIModelTest
@@ -100,10 +100,10 @@ public class SchuleAPIModelTest {
 		schuleWettbewerbMap.put("kuerzelLand", "DE-NI");
 		schuleWettbewerbMap.put("aktuellAngemeldet", Boolean.FALSE);
 
-		List<Person> kollegen = Arrays
-			.asList(new Person[] { new Person("11111", "Alter Verwalter"), new Person("22222", "Strick Liesel") });
+		List<Kollege> kollegen = Arrays
+			.asList(new Kollege[] { new Kollege("11111", "Alter Verwalter"), new Kollege("22222", "Strick Liesel") });
 
-		SchuleDetails details = new SchuleDetails("12345").withAngemeldetDurch(new Person("44444", "Herta Grummlig"))
+		SchuleDetails details = new SchuleDetails("12345").withAngemeldetDurch(new Kollege("44444", "Herta Grummlig"))
 			.withAnzahlTeilnahmen(4).withHatAdv(true).withKollegen(kollegen).withNameUrkunde("David-Hilbert-Schule");
 
 		// Act

@@ -7,7 +7,7 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mk-kataloge</artifactId>
-	<version>1.3.0</version>
+	<version>1.3.2</version>
 
 	<properties>
 		<quarkus.version>1.10.5.Final</quarkus.version>

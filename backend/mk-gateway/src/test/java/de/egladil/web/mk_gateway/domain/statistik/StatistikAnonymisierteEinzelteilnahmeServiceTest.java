@@ -23,6 +23,7 @@ import org.mockito.Mockito;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.Identifier;
@@ -40,7 +41,7 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 /**
  * StatistikAnonymisierteEinzelteilnahmeServiceTest
  */
-public class StatistikAnonymisierteEinzelteilnahmeServiceTest {
+public class StatistikAnonymisierteEinzelteilnahmeServiceTest extends AbstractDomainServiceTest {
 
 	private AuthorizationService authService;
 
@@ -54,19 +55,30 @@ public class StatistikAnonymisierteEinzelteilnahmeServiceTest {
 
 	private List<Loesungszettel> wettbewerbLoesungszettel;
 
+	private SchulkatalogService schulkatalogService;
+
 	@BeforeEach
-	void setUp() throws Exception {
+	public void setUp() {
 
 		authService = Mockito.mock(AuthorizationService.class);
 		loesungszettelRepository = Mockito.mock(LoesungszettelRepository.class);
 		katalogeResourceAdapter = Mockito.mock(MkKatalogeResourceAdapter.class);
 
-		statistikWettbewerbService = StatistikWettbewerbService.createForTest(loesungszettelRepository);
+		statistikWettbewerbService = StatistikWettbewerbService.createForTest(loesungszettelRepository, getWettbewerbService(),
+			schulkatalogService, getTeilnahmenRepository());
 
+		schulkatalogService = Mockito.mock(SchulkatalogService.class);
 		statistikService = StatistikAnonymisierteEinzelteilnahmeService.createForTest(authService, loesungszettelRepository,
 			SchulkatalogService.createForTest(katalogeResourceAdapter), statistikWettbewerbService);
 
-		wettbewerbLoesungszettel = StatistikTestUtils.loadTheLoesungszettel(2018);
+		try {
+
+			wettbewerbLoesungszettel = StatistikTestUtils.loadTheLoesungszettel(2018);
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			fail("Exception beim test setup");
+		}
 
 	}
 

@@ -136,9 +136,10 @@ public class InMemoryTeilnahmenRepository implements TeilnahmenRepository {
 	}
 
 	@Override
-	public List<Teilnahme> loadAllPrivatteilnahmen() {
+	public List<Teilnahme> loadAllForWettbewerb(final WettbewerbID wettbewerbID) {
 
-		return null;
+		return teilnahmen.stream().filter(t -> wettbewerbID.toString().equals(t.teilnahmeIdentifier().wettbewerbID()))
+			.collect(Collectors.toList());
 	}
 
 }

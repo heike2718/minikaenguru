@@ -197,12 +197,11 @@ public class TeilnahmenHibernateRepository implements TeilnahmenRepository {
 	}
 
 	@Override
-	public List<Teilnahme> loadAllPrivatteilnahmen() {
+	public List<Teilnahme> loadAllForWettbewerb(final WettbewerbID wettbewerbID) {
 
-		String stmt = "select t from PersistenteTeilnahme t where t.teilnahmeart = :teilnahmeart";
-
-		List<PersistenteTeilnahme> persistente = em.createQuery(stmt, PersistenteTeilnahme.class)
-			.setParameter("teilnahmeart", Teilnahmeart.PRIVAT).getResultList();
+		List<PersistenteTeilnahme> persistente = em
+			.createNamedQuery(PersistenteTeilnahme.FIND_BY_WETTBEWERB_ID, PersistenteTeilnahme.class)
+			.setParameter("wettbewerbUUID", wettbewerbID.toString()).getResultList();
 
 		return persistente.stream().map(t -> mapToTeilnahme(t)).collect(Collectors.toList());
 	}

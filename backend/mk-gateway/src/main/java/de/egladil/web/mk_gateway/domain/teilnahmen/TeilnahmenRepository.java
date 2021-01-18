@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import de.egladil.web.mk_gateway.domain.semantik.Repository;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 
 /**
  * TeilnahmenRepository
@@ -64,8 +65,10 @@ public interface TeilnahmenRepository {
 	void changeTeilnahme(Schulteilnahme teilnahme, String uuidAenderer) throws IllegalStateException;
 
 	/**
-	 * @return
+	 * Läd alle Teilnahmen eines gegebenen Wettbewerbsjahrs.
+	 *
+	 * @return List
 	 */
-	List<Teilnahme> loadAllPrivatteilnahmen();
+	List<Teilnahme> loadAllForWettbewerb(WettbewerbID wettbewerbID);
 
 }

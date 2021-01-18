@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.kataloge;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +15,7 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.egladil.web.mk_gateway.domain.apimodel.StringsAPIModel;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.veranstalter.SchuleKatalogResponseMapper;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
@@ -37,7 +39,7 @@ public class SchulkatalogService {
 	}
 
 	/**
-	 * Fragt beim mk-kataloge-Microservice nach Daten der Schule mit gegebenem schulkuerzel an. Exceptions weren nur geloggt.
+	 * Fragt beim mk-kataloge-Microservice nach Daten der Schule mit gegebenem schulkuerzel. Exceptions weren nur geloggt.
 	 *
 	 * @param  schulkuerzel
 	 * @return              Optional
@@ -58,6 +60,39 @@ public class SchulkatalogService {
 
 			LOG.warn("Können Schule nicht ermitteln: {}", e.getMessage());
 			return Optional.empty();
+		} finally {
+
+			if (katalogeResponse != null) {
+
+				katalogeResponse.close();
+			}
+		}
+	}
+
+	/**
+	 * Fragt beim mk-kataloge-Microservice nach Daten der Schulen mit den gegebenen kuerzeln. Exceptions weren nur geloggt.
+	 *
+	 * @param  schulkuerzel
+	 * @return
+	 */
+	public List<SchuleAPIModel> loadSchulenQuietly(final StringsAPIModel schulkuerzel) {
+
+		Response katalogeResponse = null;
+
+		try {
+
+			katalogeResponse = katalogeResourceAdapter.loadSchulen(schulkuerzel);
+
+			katalogeResponse.bufferEntity();
+
+			List<SchuleAPIModel> trefferliste = new SchuleKatalogResponseMapper().getSchulenFromKatalogeAPI(katalogeResponse);
+
+			return trefferliste;
+
+		} catch (MkGatewayRuntimeException e) {
+
+			LOG.warn("Können Schule nicht ermitteln: {}", e.getMessage());
+			return new ArrayList<>();
 		} finally {
 
 			if (katalogeResponse != null) {
