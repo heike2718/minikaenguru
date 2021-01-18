@@ -22,11 +22,6 @@ public class AnmeldungsitemAPIModel {
 	@JsonProperty
 	private int anzahlLoesungszettel;
 
-	public static AnmeldungsitemAPIModel createEmptyPrivatanmeldungenAPIModel() {
-
-		return new AnmeldungsitemAPIModel().withName("Privatanmeldungen");
-	}
-
 	@Override
 	public int hashCode() {
 
