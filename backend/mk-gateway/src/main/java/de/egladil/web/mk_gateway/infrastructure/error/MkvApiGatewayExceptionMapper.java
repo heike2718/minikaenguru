@@ -41,6 +41,7 @@ import de.egladil.web.mk_gateway.domain.error.InaccessableEndpointException;
 import de.egladil.web.mk_gateway.domain.error.MessagingAuthException;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.error.StatistikKeineDatenException;
+import de.egladil.web.mk_gateway.domain.error.UnterlagenNichtVerfuegbarException;
 import de.egladil.web.mk_gateway.infrastructure.rest.XmlSerializer;
 
 /**
@@ -127,6 +128,14 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 
 			ResponsePayload payload = ResponsePayload
 				.messageOnly(MessagePayload.error(applicationMessages.getString("statistik.keineDaten")));
+
+			return Response.status(404).entity(serializeAsJson(payload)).build();
+		}
+
+		if (exception instanceof UnterlagenNichtVerfuegbarException) {
+
+			ResponsePayload payload = ResponsePayload
+				.messageOnly(MessagePayload.error(applicationMessages.getString("unterlagen.nichtVerfuegbar")));
 
 			return Response.status(404).entity(serializeAsJson(payload)).build();
 		}
