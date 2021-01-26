@@ -146,7 +146,7 @@ public class SynchronizeVeranstalterService {
 		userRepository.removeUser(command.uuid());
 	}
 
-	void verifySession(final String syncSessionId) {
+	public void verifySession(final String syncSessionId) {
 
 		SyncHandshake handshake = this.syncSessions.get(syncSessionId);
 
@@ -168,5 +168,13 @@ public class SynchronizeVeranstalterService {
 	SecurityIncidentRegistered securityIncidentPayload() {
 
 		return securityIncidentPayload;
+	}
+
+	/**
+	 * @param syncToken
+	 */
+	public void removeSyncToken(final String syncToken) {
+
+		this.syncSessions.remove(syncToken);
 	}
 }

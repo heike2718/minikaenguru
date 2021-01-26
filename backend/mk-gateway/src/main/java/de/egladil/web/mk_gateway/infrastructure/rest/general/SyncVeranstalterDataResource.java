@@ -10,6 +10,7 @@ import javax.persistence.PersistenceException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -21,12 +22,14 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.auth.signup.SignUpService;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.veranstalter.SynchronizeVeranstalterService;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.ChangeUserCommand;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.CreateUserCommand;
 import de.egladil.web.mk_gateway.domain.veranstalter.events.DeleteVeranstalterFailed;
 import de.egladil.web.mk_gateway.domain.veranstalter.events.SynchronizeVeranstalterFailed;
 import de.egladil.web.mk_gateway.infrastructure.messaging.HandshakeAck;
@@ -58,6 +61,9 @@ public class SyncVeranstalterDataResource {
 	@Inject
 	SynchronizeVeranstalterService syncService;
 
+	@Inject
+	SignUpService signUpService;
+
 	@POST
 	@Path("ack")
 	public Response getSyncToken(final SyncHandshake data) {
@@ -77,6 +83,36 @@ public class SyncVeranstalterDataResource {
 	}
 
 	@POST
+	@Path("veranstalter")
+	public Response createVeranstalter(final CreateUserCommand createUserCommand) {
+
+		System.out.println("nonce=" + createUserCommand.getNonce());
+
+		if (!clientId.equals(createUserCommand.getClientId())) {
+
+			LOG.debug("nicht die erwartete ClientId => uninteressant");
+			return Response.ok(ResponsePayload.messageOnly(MessagePayload.ok())).build();
+		}
+
+		try {
+
+			this.signUpService.createUser(createUserCommand);
+
+			return Response.ok(ResponsePayload.messageOnly(MessagePayload.ok())).build();
+		} catch (PersistenceException e) {
+
+			LOG.error("Veranstalter mit UUID {} wurde nicht angelegt: {}", createUserCommand.getUuid(), e.getMessage(), e);
+
+			if (synchronizeFailedEvent != null) {
+
+				synchronizeFailedEvent.fire(SynchronizeVeranstalterFailed.fromMessagingCommand(createUserCommand));
+
+			}
+			throw new MkGatewayRuntimeException("Veranstalter synchronisieren schlug fehl!");
+		}
+	}
+
+	@PUT
 	@Path("veranstalter")
 	public Response synchronizeVeranstalter(final ChangeUserCommand data) {
 

@@ -27,6 +27,7 @@ public enum EventType {
 	SCHULTEILNAHME_CHANGED("SchulteilnahmeChanged"),
 	SECURITY_INCIDENT_REGISTERED("SecurityIncidentRegistered"),
 	SYNCHRONIZE_VERANSTALTER_FAILED("SynchronizeVeranstalterFailed"),
+	USER_CREATED("UserCreated"),
 	USER_LOGGED_IN("UserLoggedIn"),
 	USER_LOGGED_OUT("UserLoggedOut"),
 	NEWSLETTERVERSAND_FAILED("NewsletterversandFailed"),

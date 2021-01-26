@@ -9,8 +9,8 @@
 
 
 	<properties>
-		<minikaenguru-version>1.3.3</minikaenguru-version>
-		<commons.version>1.4.11</commons.version>
+		<minikaenguru-version>1.3.4</minikaenguru-version>
+		<commons.version>1.4.12</commons.version>
 		<junit.jupiter.version>5.5.0</junit.jupiter.version>
 		<junit.platform.version>1.5.0</junit.platform.version>
 		<surefire-plugin.version>2.22.0</surefire-plugin.version>
