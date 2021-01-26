@@ -42,6 +42,7 @@ public class SynchronizeVeranstalterServiceTest extends AbstractDomainServiceTes
 	protected void setUp() {
 
 		super.setUp();
+
 		service = SynchronizeVeranstalterService.createForTest(getVeranstalterRepository(), getUserRepository(),
 			SchulkollegienService.createForTest(getSchulkollegienRepository()));
 	}

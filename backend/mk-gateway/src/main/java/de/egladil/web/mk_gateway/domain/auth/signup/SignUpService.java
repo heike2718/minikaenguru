@@ -11,6 +11,9 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.mk_gateway.domain.auth.events.LehrerCreated;
 import de.egladil.web.mk_gateway.domain.auth.events.PrivatveranstalterCreated;
@@ -18,6 +21,8 @@ import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.user.UserRepository;
+import de.egladil.web.mk_gateway.domain.veranstalter.SynchronizeVeranstalterService;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.CreateUserCommand;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
 
 /**
@@ -26,8 +31,13 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
 @RequestScoped
 public class SignUpService {
 
+	private static final Logger LOG = LoggerFactory.getLogger(SignUpService.class);
+
 	@Inject
 	UserRepository userRepository;
+
+	@Inject
+	SynchronizeVeranstalterService syncVeranstalterService;
 
 	@Inject
 	Event<MkGatewayDomainEvent> createdEvent;
@@ -39,6 +49,19 @@ public class SignUpService {
 		SignUpService result = new SignUpService();
 		result.userRepository = userRepository;
 		return result;
+	}
+
+	public User createUser(final CreateUserCommand command) {
+
+		String syncToken = command.getSyncToken();
+		this.syncVeranstalterService.verifySession(syncToken);
+		this.syncVeranstalterService.removeSyncToken(syncToken);
+
+		SignUpResourceOwner signUpResourceOwner = new SignUpResourceOwner(command.getUuid(), command.getFullName(),
+			command.getEmail(), command.getNonce());
+
+		return this.createUser(signUpResourceOwner, false);
+
 	}
 
 	@Transactional
@@ -54,6 +77,7 @@ public class SignUpService {
 
 		if (optUser.isPresent()) {
 
+			LOG.info("User mit UUID={} bereits vorhanden", uuid);
 			return optUser.get();
 		}
 

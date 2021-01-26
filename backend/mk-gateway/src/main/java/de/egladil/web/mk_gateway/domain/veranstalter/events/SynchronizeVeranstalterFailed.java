@@ -13,6 +13,7 @@ import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.mk_gateway.domain.event.EventType;
 import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.ChangeUserCommand;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.CreateUserCommand;
 
 /**
  * SynchronizeVeranstalterFailed
@@ -42,6 +43,15 @@ public class SynchronizeVeranstalterFailed implements MkGatewayDomainEvent {
 		result.uuid = cmd.uuid();
 		result.email = cmd.email();
 		result.fullName = cmd.fullName();
+		return result;
+	}
+
+	public static SynchronizeVeranstalterFailed fromMessagingCommand(final CreateUserCommand cmd) {
+
+		SynchronizeVeranstalterFailed result = new SynchronizeVeranstalterFailed();
+		result.uuid = cmd.getUuid();
+		result.email = cmd.getEmail();
+		result.fullName = cmd.getFullName();
 		return result;
 	}
 

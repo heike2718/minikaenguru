@@ -114,6 +114,8 @@ public class AuthResultToResourceOwnerMapper implements Function<AuthResult, Sig
 					"Fehler in der Konfiguration der MinikänguruApp beim AuthProvider: Vor- und Nachname sind erforderlich");
 			}
 
+			System.out.println(authResult.getNonce());
+
 			return new SignUpResourceOwner(uuid, fullName, email, authResult.getNonce());
 
 		} catch (TokenExpiredException e) {
