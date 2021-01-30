@@ -37,8 +37,8 @@ export class UrkundenauftragComponent implements OnInit, OnDestroy {
 
 		this.warntext = this.urkundenFacade.warntext;
 		this.showWarntext = this.warntext.length > 0;
-		this.urkundeDateModel = this.urkundenFacade.getUrkundeDateModel();
 
+		this.urkundeDateModel = this.urkundenFacade.getUrkundeDateModel();
 		this.dateModel = this.urkundeDateModel.maxDate;
 
 		this.urkundenart = 'TEILNAHME';
