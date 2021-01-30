@@ -33,13 +33,13 @@ import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelService;
 import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelAPIModel;
 
 /**
- * VeranstalterLoesungszettelResource
+ * LoesungszettelResource
  */
 @RequestScoped
-@Path("veranstalter/loesungszettel")
+@Path("loesungszettel")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class VeranstalterLoesungszettelResource {
+public class LoesungszettelResource {
 
 	@Context
 	SecurityContext securityContext;

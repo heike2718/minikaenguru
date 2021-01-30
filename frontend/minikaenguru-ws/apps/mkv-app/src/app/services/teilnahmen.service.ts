@@ -55,7 +55,7 @@ export class TeilnahmenService {
 
 	public ladeAnonymisierteTeilnahmen(teilnahmenummer: string): Observable<AnonymisierteTeilnahme[]> {
 
-		const url = environment.apiUrl + '/teilnahmen/' + teilnahmenummer;
+		const url = environment.apiUrl + '/teilnahmen/veranstalter/' + teilnahmenummer;
 
 		return this.http.get(url, {observe: 'body'}).pipe(
 			map(body => body as ResponsePayload),

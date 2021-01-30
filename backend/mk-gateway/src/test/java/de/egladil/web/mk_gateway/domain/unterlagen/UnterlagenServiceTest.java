@@ -61,7 +61,7 @@ public class UnterlagenServiceTest extends AbstractDomainServiceTest {
 				assertNotNull(secEventPayload);
 
 				assertEquals("SecurityIncidentRegistered", secEventPayload.typeName());
-				assertEquals("Unbekannter Lehrer mit UUID=UUID_LEHRER_4 versucht, Wettbewerbsunterlagen herunterzuladen.",
+				assertEquals("Unbekannter Veranstalter mit UUID=UUID_LEHRER_4 versucht, Wettbewerbsunterlagen herunterzuladen.",
 					secEventPayload.message());
 			}
 		}
@@ -84,7 +84,7 @@ public class UnterlagenServiceTest extends AbstractDomainServiceTest {
 
 				assertEquals("SecurityIncidentRegistered", secEventPayload.typeName());
 				assertEquals(
-					"Veranstalter mit UUID=UUID_PRIVAT und Rolle PRIVAT versucht, Wettbewerbsunterlagen für Schulen herunterzuladen.",
+					"Veranstalter mit UUID=UUID_PRIVAT und Rolle PRIVAT versucht, Wettbewerbsunterlagen über die falsche URL herunterzuladen.",
 					secEventPayload.message());
 			}
 		}
@@ -107,7 +107,7 @@ public class UnterlagenServiceTest extends AbstractDomainServiceTest {
 
 				assertEquals("SecurityIncidentRegistered", secEventPayload.typeName());
 				assertEquals(
-					"Lehrer UUID=UUID_LEHRER_GESPERRT, Zugang Unterlagen=ENTZOGEN, Wettbewerbsstatus=ANMELDUNG versucht, Wettbewerbsunterlagen für Schulen herunterzuladen.",
+					"Veranstalter UUID=UUID_LEHRER_GESPERRT, Zugang Unterlagen=ENTZOGEN, Wettbewerbsstatus=ANMELDUNG versucht, Wettbewerbsunterlagen herunterzuladen.",
 					secEventPayload.message());
 			}
 		}
@@ -153,6 +153,123 @@ public class UnterlagenServiceTest extends AbstractDomainServiceTest {
 			// Assert
 			assertNotNull(result);
 			assertEquals("2020-minikangaroo-english-schools.zip", result.filename());
+			assertTrue(result.data().length > 10);
+		}
+	}
+
+	@Nested
+	class PrivatveranstalterTests {
+
+		@Test
+		void should_getUnterlagenFuerPrivatanmeldungThrowNotFoundExceptionAndAddSecurityEvent_when_VeranstalterNichtVorhanden() {
+
+			// Arrange
+			String uuid = "HEINZ";
+			Identifier veranstalterID = new Identifier(uuid);
+
+			// Act
+			try {
+
+				service.getUnterlagenFuerPrivatanmeldung(veranstalterID, Sprache.de);
+				fail("keine NotFoundException");
+			} catch (NotFoundException e) {
+
+				SecurityIncidentRegistered secEventPayload = service.securityIncidentEventPayload();
+				assertNotNull(secEventPayload);
+
+				assertEquals("SecurityIncidentRegistered", secEventPayload.typeName());
+				assertEquals("Unbekannter Veranstalter mit UUID=HEINZ versucht, Wettbewerbsunterlagen herunterzuladen.",
+					secEventPayload.message());
+			}
+		}
+
+		@Test
+		void should_getUnterlagenFuerPrivatanmeldungThrowNotFoundExceptionAndAddSecurityEvent_when_uuidLehrer() {
+
+			// Arrange
+			Identifier veranstalterID = new Identifier(UUID_LEHRER_1);
+
+			// Act
+			try {
+
+				service.getUnterlagenFuerPrivatanmeldung(veranstalterID, Sprache.de);
+				fail("keine NotFoundException");
+			} catch (NotFoundException e) {
+
+				SecurityIncidentRegistered secEventPayload = service.securityIncidentEventPayload();
+				assertNotNull(secEventPayload);
+
+				assertEquals("SecurityIncidentRegistered", secEventPayload.typeName());
+				assertEquals(
+					"Veranstalter mit UUID=UUID_LEHRER_1 und Rolle LEHRER versucht, Wettbewerbsunterlagen über die falsche URL herunterzuladen.",
+					secEventPayload.message());
+			}
+		}
+
+		@Test
+		void should_getUnterlagenFuerPrivatanmeldungThrowUnterlagenNichtVerfuegbarException_when_zugangUnterlagenEntzogen() {
+
+			// Arrange
+			Identifier veranstalterID = new Identifier(UUID_PRIVAT_GESPERRT);
+
+			// Act
+			try {
+
+				service.getUnterlagenFuerPrivatanmeldung(veranstalterID, Sprache.de);
+				fail("keine UnterlagenNichtVerfuegbarException");
+			} catch (UnterlagenNichtVerfuegbarException e) {
+
+				SecurityIncidentRegistered secEventPayload = service.securityIncidentEventPayload();
+				assertNotNull(secEventPayload);
+
+				assertEquals("SecurityIncidentRegistered", secEventPayload.typeName());
+				assertEquals(
+					"Veranstalter UUID=UUID_PRIVAT_GESPERRT, Zugang Unterlagen=ENTZOGEN, Wettbewerbsstatus=ANMELDUNG versucht, Wettbewerbsunterlagen herunterzuladen.",
+					secEventPayload.message());
+			}
+		}
+
+		@Test
+		void should_getUnterlagenFuerPrivatanmeldung_returnDeutschZip_when_spracheDeutsch() {
+
+			// Arrange
+			Identifier lehrerID = new Identifier(UUID_PRIVAT);
+
+			ZugangUnterlagenService zugangsservice = Mockito.mock(ZugangUnterlagenService.class);
+			Mockito.when(zugangsservice.hatZugang(UUID_PRIVAT)).thenReturn(Boolean.TRUE);
+
+			UnterlagenService theService = UnterlagenService.createForTest(getWettbewerbService(), getVeranstalterRepository(),
+				zugangsservice);
+			theService.setPathExternalFiles("/home/heike/mkv");
+
+			// Act
+			DownloadData result = theService.getUnterlagenFuerPrivatanmeldung(lehrerID, Sprache.de);
+
+			// Assert
+			assertNotNull(result);
+			assertEquals("2020-minikaenguru-deutsch-privat.zip", result.filename());
+			assertTrue(result.data().length > 10);
+		}
+
+		@Test
+		void should_getUnterlagenFuerPrivatanmeldung_returnDeutschZip_when_spracheEnglisch() {
+
+			// Arrange
+			Identifier lehrerID = new Identifier(UUID_PRIVAT);
+
+			ZugangUnterlagenService zugangsservice = Mockito.mock(ZugangUnterlagenService.class);
+			Mockito.when(zugangsservice.hatZugang(UUID_PRIVAT)).thenReturn(Boolean.TRUE);
+
+			UnterlagenService theService = UnterlagenService.createForTest(getWettbewerbService(), getVeranstalterRepository(),
+				zugangsservice);
+			theService.setPathExternalFiles("/home/heike/mkv");
+
+			// Act
+			DownloadData result = theService.getUnterlagenFuerPrivatanmeldung(lehrerID, Sprache.en);
+
+			// Assert
+			assertNotNull(result);
+			assertEquals("2020-minikangaru-english-private.zip", result.filename());
 			assertTrue(result.data().length > 10);
 		}
 	}

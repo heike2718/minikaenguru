@@ -14,7 +14,7 @@ export class UrkundenService {
 
 	public generateUrkunde(auftrag: UrkundenauftragEinzelkind): Observable<HttpResponse<any>> {
 
-		const url = environment.apiUrl + '/veranstalter/urkunden/urkunde';
+		const url = environment.apiUrl + '/urkunden/urkunde';
 
 		return this.http.post(url, auftrag, { observe: 'response', responseType: 'blob' });
 	}
@@ -22,7 +22,7 @@ export class UrkundenService {
 
 	public generateSchulauswertung(auftrag: UrkundenauftragSchule): Observable<HttpResponse<any>> {
 
-		const url = environment.apiUrl + '/veranstalter/urkunden/schule';
+		const url = environment.apiUrl + '/urkunden/schule';
 
 		return this.http.post(url, auftrag, { observe: 'response', responseType: 'blob' });
 	}

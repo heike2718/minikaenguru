@@ -20,7 +20,7 @@ export class LoesungszettelService {
 			return throwError("invalid ID: kind hat keinen Lösungszettel");
 		}
 
-		const url = environment.apiUrl + '/veranstalter/loesungszettel/' + kind.punkte.loesungszettelId;
+		const url = environment.apiUrl + '/loesungszettel/' + kind.punkte.loesungszettelId;
 
 		return this.http.get(url).pipe(
 			map(body => body as ResponsePayload),
@@ -31,7 +31,7 @@ export class LoesungszettelService {
 
 	public saveLoesungszettel(loesungszettel: Loesungszettel): Observable<ResponsePayload> {
 
-		const url = environment.apiUrl + '/veranstalter/loesungszettel';
+		const url = environment.apiUrl + '/loesungszettel';
 
 		if (loesungszettel.uuid === 'neu') {
 			return this.insertLoesungszettel(url, loesungszettel);
@@ -41,7 +41,7 @@ export class LoesungszettelService {
 	}
 
 	public deleteLoesungszettel(loesungszettelID: string): Observable<ResponsePayload> {
-		const url = environment.apiUrl + '/veranstalter/loesungszettel/' + loesungszettelID;
+		const url = environment.apiUrl + '/loesungszettel/' + loesungszettelID;
 
 		return this.http.delete(url).pipe(
 			map(body => body as ResponsePayload)

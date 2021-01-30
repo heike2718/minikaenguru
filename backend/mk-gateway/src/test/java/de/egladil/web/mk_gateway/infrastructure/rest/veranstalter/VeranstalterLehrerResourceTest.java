@@ -33,7 +33,7 @@ public class VeranstalterLehrerResourceTest {
 
 	private LehrerService lehrerService;
 
-	private VeranstalterLehrerResource resource;
+	private LehrerResource resource;
 
 	@BeforeEach
 	void setUp() {
@@ -46,7 +46,7 @@ public class VeranstalterLehrerResourceTest {
 		LoggedInUser loggedInUser = LoggedInUser.create(LEHRER_UUID, Rolle.LEHRER, "Alter Verwalter", "dgqwudugö");
 		Mockito.when(securityContext.getUserPrincipal()).thenReturn(loggedInUser);
 
-		resource = VeranstalterLehrerResource.createForPermissionTest(authService, lehrerService, securityContext);
+		resource = LehrerResource.createForPermissionTest(authService, lehrerService, securityContext);
 
 	}
 

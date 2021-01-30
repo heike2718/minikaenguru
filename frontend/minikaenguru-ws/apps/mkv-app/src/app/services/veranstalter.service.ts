@@ -17,7 +17,7 @@ export class VeranstalterService {
 
 	getLehrer(): Observable<Lehrer> {
 
-		const url = environment.apiUrl + '/veranstalter/lehrer';
+		const url = environment.apiUrl + '/lehrer';
 
 		return this.http.get(url).pipe(
 			map(body => body as ResponsePayload),
@@ -48,7 +48,7 @@ export class VeranstalterService {
 
 	public addSchule(kuerzel: string): Observable<ResponsePayload> {
 
-		const url = environment.apiUrl + '/veranstalter/lehrer/schulen/' + kuerzel;
+		const url = environment.apiUrl + '/lehrer/schulen/' + kuerzel;
 
 		return this.http.post(url, {}).pipe(
 			map(body => body as ResponsePayload)
@@ -56,7 +56,7 @@ export class VeranstalterService {
 	}
 
 	public removeSchule(kuerzel: string): Observable<Message> {
-		const url = environment.apiUrl + '/veranstalter/lehrer/schulen/' + kuerzel;
+		const url = environment.apiUrl + '/lehrer/schulen/' + kuerzel;
 
 		return this.http.delete(url).pipe(
 			map(body => body as ResponsePayload),
