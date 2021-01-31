@@ -16,8 +16,8 @@
 			<h3 *ngIf="wettbewerb.status === 'ERFASST'">Beginn Anmeldezeitraum für {{wettbewerb.jahr}}:
 				{{wettbewerb.wettbewerbsbeginn}}</h3>
 
-			<div class="row mt-2 ml-2 mr-2">
-
+			<!-- card-deck 1 -->
+			<div class="card-deck">
 				<div *ngIf="veranstalter.aktuellAngemeldet" class="col-md-4 col-sm-12 mt-2">
 					<ng-container *ngIf="wettbewerb.status !== 'BEENDET' && wettbewerb.status !== 'BEENDET'">
 						<div class="card clickable" (click)="gotoAuswertung()">
@@ -28,6 +28,7 @@
 						</div>
 					</ng-container>
 				</div>
+
 				<div *ngIf="!veranstalter.aktuellAngemeldet" class="col-md-4 col-sm-12 mt-2">
 					<div *ngIf="wettbewerb.status !== 'ERFASST' && wettbewerb.status !== 'BEENDET'">
 						<div class="card clickable" (click)="anmelden()">
@@ -55,6 +56,11 @@
 						</div>
 					</div>
 				</div>
+
+			</div>
+
+			<!-- card-deck 2 -->
+			<div class="card-deck">
 				<div *ngIf="veranstalter.anzahlTeilnahmen > 0" class="col-md-4 col-sm-12 mt-2">
 					<div class="card clickable" (click)="gotoTeilnahmen()">
 						<div class="card-body">
@@ -65,47 +71,38 @@
 						</div>
 					</div>
 				</div>
-			</div>
-
-			<div class="row mt-2 ml-2 mr-2 ">
-				<div class="col-md-4 col-sm-12 mt-1">
-					<div class="card clickable" (click)="changeAboNewsletter()">
-						<div class="card-body">
-							<div *ngIf="veranstalter.newsletterAbonniert">
-								<div class="card-title">Newsletter <span
-										class="ml-1 badge badge-success">abonniert</span></div>
-								<div class="mb-2 text-muted">Newsletter
-									abbestellen</div>
+				<div class="card clickable" (click)="changeAboNewsletter()">
+					<div class="card-body">
+						<div *ngIf="veranstalter.newsletterAbonniert">
+							<div class="card-title">Newsletter <span class="ml-1 badge badge-success">abonniert</span>
 							</div>
-							<div *ngIf="!veranstalter.newsletterAbonniert">
-								<div class="card-title">Newsletter <span class="ml-1 badge badge-secondary">nicht
-										abonniert</span></div>
-								<div class="mb-2 text-muted">Newsletter
-									abonnieren</div>
-							</div>
+							<div class="mb-2 text-muted">Newsletter
+								abbestellen</div>
 						</div>
+						<div *ngIf="!veranstalter.newsletterAbonniert">
+							<div class="card-title">Newsletter <span class="ml-1 badge badge-secondary">nicht
+									abonniert</span></div>
+							<div class="mb-2 text-muted">Newsletter
+								abonnieren</div>
+						</div>
+					</div>
+				</div>
+				<div class="card clickable" (click)="gotoProfil()">
+					<div class="card-body">
+						<div class="card-title">Mein Profil</div>
+						<div class="mb-2 text-muted">Name, Mailadresse, Passwort ändern</div>
+						<div class="mb-2 text-danger">Achtung: hierfür werden Sie ausgeloggt.</div>
+					</div>
+				</div>
+				<div class="card clickable" (click)="gotoInfos()">
+					<div class="card-body">
+						<div class="card-title">Infos</div>
+						<div class="mb-2 text-muted">Informationen über den Wettbewerb</div>
+						<div *ngIf="!veranstalter.hatZugangZuUnterlagen" class="mb-2 text-muted">
+							Warum kann ich die Aufgaben nicht herunterladen?</div>
 					</div>
 				</div>
 
-				<div class="col-md-4 col-sm-12 mt-2">
-					<div class="card clickable" (click)="gotoProfil()">
-						<div class="card-body">
-							<div class="card-title">Mein Profil</div>
-							<div class="mb-2 text-muted">Name, Mailadresse, Passwort ändern</div>
-							<div class="mb-2 text-danger">Achtung: hierfür werden Sie ausgeloggt.</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-4 col-sm-12 mt-2">
-					<div class="card clickable" (click)="gotoInfos()">
-						<div class="card-body">
-							<div class="card-title">Infos</div>
-							<div class="mb-2 text-muted">Informationen über den Wettbewerb</div>
-							<div *ngIf="!veranstalter.hatZugangZuUnterlagen" class="mb-2 text-muted">
-								Warum kann ich die Aufgaben nicht herunterladen?</div>
-						</div>
-					</div>
-				</div>
 			</div>
 		</div>
 	</div>
