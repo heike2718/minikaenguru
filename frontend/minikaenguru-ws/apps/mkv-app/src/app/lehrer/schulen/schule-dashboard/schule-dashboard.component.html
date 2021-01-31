@@ -108,10 +108,16 @@
 			</button>
 		</div>
 	</div>
-	<div class="col-md-3 mt-4">
-		<button class="btn btn-primary" (click)="backToSchulen()"><i class="fa fa-arrow-left"
+
+	<div class="btn-group d-flex mt-3" role="group">
+		<button class="btn btn-primary w-100 ml-1" (click)="backToSchulen()"><i class="fa fa-arrow-left"
 				aria-hidden="true"></i>zurück zu
 			Schulen</button>
+
+		<button class="btn btn-primary w-100 ml-1" (click)="gotoDashboard()"><i class="fa fa-home"
+				aria-hidden="true"></i>zur
+			Übersicht</button>
 	</div>
+
 	<p *ngIf="devMode">(schule-dashboard.component)</p>
 </div>

@@ -18,59 +18,55 @@
 
 			<!-- card-deck 1 -->
 			<div class="card-deck">
-				<div *ngIf="veranstalter.aktuellAngemeldet" class="col-md-4 col-sm-12 mt-2">
-					<ng-container *ngIf="wettbewerb.status !== 'BEENDET' && wettbewerb.status !== 'BEENDET'">
-						<div class="card clickable" (click)="gotoAuswertung()">
-							<div class="card-body">
-								<div class="card-title">Auswertung {{wettbewerb.jahr}}</div>
-								<div class="mb-2 text-muted">Kind(er) erfassen und Urkunde(n) generieren</div>
-							</div>
-						</div>
-					</ng-container>
-				</div>
+				<div *ngIf="hatZugangZuUnterlagen" class="card">
+					<div class="card-body">
+						<div class="card-title">Unterlagen {{wettbewerb.jahr}}</div>
 
-				<div *ngIf="!veranstalter.aktuellAngemeldet" class="col-md-4 col-sm-12 mt-2">
-					<div *ngIf="wettbewerb.status !== 'ERFASST' && wettbewerb.status !== 'BEENDET'">
-						<div class="card clickable" (click)="anmelden()">
-							<div class="card-body">
-								<div class="card-title">Anmelden</div>
-								<div class="mb-2 text-muted"> für {{wettbewerb.jahr}}</div>
-							</div>
+						<div class="btn-group d-flex" role="group">
+							<mk-unterlagen [downloadUrl]="unterlagenDeutschUrl" [userIdRef]="userIdRef"
+								[sprache]="'deutsch'">
+							</mk-unterlagen>
+							<mk-unterlagen [downloadUrl]="unterlagenEnglischUrl" [userIdRef]="userIdRef"
+								[sprache]="'englisch'">
+							</mk-unterlagen>
 						</div>
 					</div>
 				</div>
-				<div *ngIf="hatZugangZuUnterlagen" class="col-md-6 col-sm-12 mt-1">
 
-					<div class="card">
+				<div *ngIf="veranstalter.aktuellAngemeldet">
+					<div *ngIf="wettbewerb.status !== 'BEENDET' && wettbewerb.status !== 'BEENDET'"
+						class="card clickable" (click)="gotoAuswertung()">
 						<div class="card-body">
-							<div class="card-title">Unterlagen {{wettbewerb.jahr}}</div>
-
-							<div class="btn-group d-flex" role="group">
-								<mk-unterlagen [downloadUrl]="unterlagenDeutschUrl" [userIdRef]="userIdRef"
-									[sprache]="'deutsch'">
-								</mk-unterlagen>
-								<mk-unterlagen [downloadUrl]="unterlagenEnglischUrl" [userIdRef]="userIdRef"
-									[sprache]="'englisch'">
-								</mk-unterlagen>
-							</div>
+							<div class="card-title">Auswertung {{wettbewerb.jahr}}</div>
+							<div class="mb-2 text-muted">Kind(er) erfassen und Urkunde(n) generieren</div>
 						</div>
 					</div>
 				</div>
+
+				<div *ngIf="!veranstalter.aktuellAngemeldet">
+					<div *ngIf="wettbewerb.status !== 'ERFASST' && wettbewerb.status !== 'BEENDET'"
+						class="card clickable" (click)="anmelden()">
+						<div class="card-body">
+							<div class="card-title">Anmelden</div>
+							<div class="mb-2 text-muted"> für {{wettbewerb.jahr}}</div>
+						</div>
+					</div>
+				</div>
+
 
 			</div>
 
 			<!-- card-deck 2 -->
 			<div class="card-deck mt-3">
-				<div *ngIf="veranstalter.anzahlTeilnahmen > 0" class="col-md-4 col-sm-12 mt-2">
-					<div class="card clickable" (click)="gotoTeilnahmen()">
-						<div class="card-body">
-							<div class="card-title">alle Teilnahmen <span
-									class="ml-1 badge badge-primary">{{veranstalter.anzahlTeilnahmen}}</span>
-							</div>
-							<div class="mb-2 text-muted">Statistiken</div>
+				<div *ngIf="veranstalter.anzahlTeilnahmen > 0" class="card clickable" (click)="gotoTeilnahmen()">
+					<div class="card-body">
+						<div class="card-title">alle Teilnahmen <span
+								class="ml-1 badge badge-primary">{{veranstalter.anzahlTeilnahmen}}</span>
 						</div>
+						<div class="mb-2 text-muted">Statistiken</div>
 					</div>
 				</div>
+
 				<div class="card clickable" (click)="changeAboNewsletter()">
 					<div class="card-body">
 						<div *ngIf="veranstalter.newsletterAbonniert">
@@ -87,13 +83,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="card clickable" (click)="gotoProfil()">
-					<div class="card-body">
-						<div class="card-title">Mein Profil</div>
-						<div class="mb-2 text-muted">Name, Mailadresse, Passwort ändern</div>
-						<div class="mb-2 text-danger">Achtung: hierfür werden Sie ausgeloggt.</div>
-					</div>
-				</div>
+
 				<div class="card clickable" (click)="gotoInfos()">
 					<div class="card-body">
 						<div class="card-title">Infos</div>
@@ -102,6 +92,15 @@
 							Warum kann ich die Aufgaben nicht herunterladen?</div>
 					</div>
 				</div>
+
+				<div class="card clickable" (click)="gotoProfil()">
+					<div class="card-body">
+						<div class="card-title">Mein Profil</div>
+						<div class="mb-2 text-muted">Name, Mailadresse, Passwort ändern</div>
+						<div class="mb-2 text-danger">Achtung: hierfür werden Sie ausgeloggt.</div>
+					</div>
+				</div>
+
 
 			</div>
 		</div>
