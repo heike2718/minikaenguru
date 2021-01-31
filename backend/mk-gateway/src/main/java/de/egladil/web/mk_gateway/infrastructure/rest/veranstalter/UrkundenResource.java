@@ -24,12 +24,12 @@ import de.egladil.web.mk_gateway.domain.urkunden.api.UrkundenauftragEinzelkind;
 import de.egladil.web.mk_gateway.domain.urkunden.api.UrkundenauftragSchule;
 
 /**
- * VeranstalterUrkundenResource
+ * UrkundenResource
  */
 @RequestScoped
-@Path("veranstalter/urkunden")
+@Path("urkunden")
 @Consumes(MediaType.APPLICATION_JSON)
-public class VeranstalterUrkundenResource {
+public class UrkundenResource {
 
 	@Context
 	SecurityContext securityContext;

@@ -63,8 +63,6 @@ public class LoesungszettelService {
 	@Inject
 	WettbewerbService wettbewerbService;
 
-	private Wettbewerb aktuellerWettbewerb;
-
 	private LoesungszettelCreated loesungszettelCreated;
 
 	private LoesungszettelChanged loesungszettelChanged;
@@ -384,11 +382,6 @@ public class LoesungszettelService {
 
 	private Wettbewerb getWettbewerb() {
 
-		if (aktuellerWettbewerb == null) {
-
-			this.aktuellerWettbewerb = this.wettbewerbService.aktuellerWettbewerb().get();
-		}
-
-		return aktuellerWettbewerb;
+		return this.wettbewerbService.aktuellerWettbewerb().get();
 	}
 }

@@ -30,48 +30,48 @@ public final class PermittedRolesForVeranstalterProvider {
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.PRIVAT, Rolle.LEHRER });
-			result.put(new PathWithMethod("/veranstalter/loesungszettel/*", HttpMethod.GET), rollen);
-			result.put(new PathWithMethod("/veranstalter/loesungszettel", HttpMethod.POST), rollen);
-			result.put(new PathWithMethod("/veranstalter/loesungszettel", HttpMethod.PUT), rollen);
-			result.put(new PathWithMethod("/veranstalter/loesungszettel/*", HttpMethod.DELETE), rollen);
+			result.put(new PathWithMethod("/loesungszettel/*", HttpMethod.GET), rollen);
+			result.put(new PathWithMethod("/loesungszettel", HttpMethod.POST), rollen);
+			result.put(new PathWithMethod("/loesungszettel", HttpMethod.PUT), rollen);
+			result.put(new PathWithMethod("/loesungszettel/*", HttpMethod.DELETE), rollen);
 
 		}
 
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.PRIVAT });
-			result.put(new PathWithMethod("/veranstalter/teilnahmen/privat", HttpMethod.GET), rollen);
-			result.put(new PathWithMethod("/veranstalter/teilnahmen/privat", HttpMethod.POST), rollen);
+			result.put(new PathWithMethod("/teilnahmen/privat", HttpMethod.GET), rollen);
+			result.put(new PathWithMethod("/teilnahmen/privat", HttpMethod.POST), rollen);
 
 		}
 
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
-			result.put(new PathWithMethod("/veranstalter/teilnahmen/schulen/*", HttpMethod.GET), rollen);
-			result.put(new PathWithMethod("/veranstalter/teilnahmen/schule", HttpMethod.POST), rollen);
+			result.put(new PathWithMethod("/teilnahmen/schulen/*", HttpMethod.GET), rollen);
+			result.put(new PathWithMethod("/teilnahmen/schule", HttpMethod.POST), rollen);
 
 		}
 
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
-			result.put(new PathWithMethod("/veranstalter/lehrer/schulen", HttpMethod.GET), rollen);
+			result.put(new PathWithMethod("/lehrer/schulen", HttpMethod.GET), rollen);
 
 		}
 
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
-			result.put(new PathWithMethod("/veranstalter/lehrer/schulen/*", HttpMethod.POST), rollen);
-			result.put(new PathWithMethod("/veranstalter/lehrer/schulen/*", HttpMethod.DELETE), rollen);
+			result.put(new PathWithMethod("/lehrer/schulen/*", HttpMethod.POST), rollen);
+			result.put(new PathWithMethod("/lehrer/schulen/*", HttpMethod.DELETE), rollen);
 
 		}
 
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
-			result.put(new PathWithMethod("/veranstalter/lehrer/schulen/*/details", HttpMethod.GET), rollen);
+			result.put(new PathWithMethod("/lehrer/schulen/*/details", HttpMethod.GET), rollen);
 
 		}
 
@@ -92,15 +92,15 @@ public final class PermittedRolesForVeranstalterProvider {
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
-			result.put(new PathWithMethod("/veranstalter/lehrer", HttpMethod.GET), rollen);
+			result.put(new PathWithMethod("/lehrer", HttpMethod.GET), rollen);
 
 		}
 
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
-			result.put(new PathWithMethod("/veranstalter/lehrer", HttpMethod.GET), rollen);
-			result.put(new PathWithMethod("/veranstalter/lehrer", HttpMethod.PUT), rollen);
+			result.put(new PathWithMethod("/lehrer", HttpMethod.GET), rollen);
+			result.put(new PathWithMethod("/lehrer", HttpMethod.PUT), rollen);
 
 		}
 
@@ -123,7 +123,7 @@ public final class PermittedRolesForVeranstalterProvider {
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER, Rolle.PRIVAT });
-			result.put((new PathWithMethod("/teilnahmen/*", HttpMethod.GET)),
+			result.put((new PathWithMethod("/teilnahmen/veranstalter/*", HttpMethod.GET)),
 				rollen);
 
 		}
@@ -171,13 +171,29 @@ public final class PermittedRolesForVeranstalterProvider {
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER, Rolle.PRIVAT });
-			result.put(new PathWithMethod("/veranstalter/urkunden/urkunde", HttpMethod.POST), rollen);
+			result.put(new PathWithMethod("/urkunden/urkunde", HttpMethod.POST), rollen);
 		}
 
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
-			result.put(new PathWithMethod("/veranstalter/urkunden/schule", HttpMethod.POST), rollen);
+			result.put(new PathWithMethod("/urkunden/schule", HttpMethod.POST), rollen);
+		}
+
+		{
+
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
+			result.put((new PathWithMethod("/unterlagen/schulen/*", HttpMethod.GET)),
+				rollen);
+
+		}
+
+		{
+
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.PRIVAT });
+			result.put((new PathWithMethod("/unterlagen/privat/*", HttpMethod.GET)),
+				rollen);
+
 		}
 
 		return result;

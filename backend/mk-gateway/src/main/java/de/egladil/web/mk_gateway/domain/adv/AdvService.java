@@ -40,7 +40,7 @@ public class AdvService {
 	private static final String PATH_SUBDIR_ADV_TEXTE = "/adv/";
 
 	@ConfigProperty(name = "path.external.files")
-	String pathAdvTexteDir;
+	String pathExternalFiles;
 
 	@Inject
 	Event<DataInconsistencyRegistered> dataInconsistencyEvent;
@@ -105,7 +105,7 @@ public class AdvService {
 
 		Vertragstext vertragstext = this.getAktuellenVertragstext();
 
-		String path = pathAdvTexteDir + PATH_SUBDIR_ADV_TEXTE + vertragstext.dateiname();
+		String path = pathExternalFiles + PATH_SUBDIR_ADV_TEXTE + vertragstext.dateiname();
 
 		final byte[] pdfAllgemein = MkGatewayFileUtils.readBytesFromFile(path);
 

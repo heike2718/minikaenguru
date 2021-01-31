@@ -78,8 +78,6 @@ public class EinzelkindUrkundenservice {
 	@Inject
 	Event<DataInconsistencyRegistered> dataInconsistencyEvent;
 
-	private Wettbewerb aktuellerWettbewerb;
-
 	/**
 	 * Generiert eine einzelne Teilnehmerurkunde für das gegebene Privatkind.
 	 *
@@ -231,11 +229,6 @@ public class EinzelkindUrkundenservice {
 
 	private Wettbewerb getWettbewerb() {
 
-		if (aktuellerWettbewerb == null) {
-
-			this.aktuellerWettbewerb = this.wettbewerbService.aktuellerWettbewerb().get();
-		}
-
-		return aktuellerWettbewerb;
+		return this.wettbewerbService.aktuellerWettbewerb().get();
 	}
 }

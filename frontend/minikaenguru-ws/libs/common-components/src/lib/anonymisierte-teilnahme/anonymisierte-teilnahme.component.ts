@@ -11,8 +11,6 @@ import { DownloadFacade } from '../download/download.facade';
 })
 export class AnonymisierteTeilnahmeComponent implements OnInit {
 
-	downloadId$ = this.downloadFacade.downloadId$;
-
 	@Input()
 	teilnahme: Teilnahme;
 
@@ -26,7 +24,7 @@ export class AnonymisierteTeilnahmeComponent implements OnInit {
 	downloadId: string;
 
 
-	constructor(private downloadFacade: DownloadFacade) { }
+	constructor(public downloadFacade: DownloadFacade) { }
 
 	ngOnInit(): void {
 

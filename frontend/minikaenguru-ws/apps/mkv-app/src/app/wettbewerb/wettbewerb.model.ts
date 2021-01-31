@@ -12,7 +12,7 @@ export interface Wettbewerb {
 };
 
 export interface AbstractVeranstalter {
-	readonly hatZugangZuUnterlangen: boolean;
+	readonly hatZugangZuUnterlagen: boolean;
 	readonly newsletterAbonniert: boolean;
 };
 

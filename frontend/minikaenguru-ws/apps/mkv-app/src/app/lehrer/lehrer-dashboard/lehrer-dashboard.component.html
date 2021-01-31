@@ -8,78 +8,63 @@
 		<h3>Beginn Anmeldezeitraum für {{wettbewerb.jahr}}:
 			{{wettbewerb.wettbewerbsbeginn}}</h3>
 
-
-		<div class="row m-2">
-
-			<div class="col-md-6 col-sm-12 mt-1">
-				<div class="card clickable" (click)="gotoSchulen()">
-					<div class="card-body">
-						<div class="card-title">Meine Schulen</div>
-						<div class="mb-2 text-muted">Schulen verwalten</div>
-						<div class="mb-2 text-muted">Wettbewerb auswerten</div>
-					</div>
+		<!-- card-deck 1 -->
+		<div class="card-deck">
+			<div class="card clickable" (click)="gotoSchulen()">
+				<div class="card-body">
+					<div class="card-title">Meine Schulen</div>
+					<div class="mb-2 text-muted">Schulen verwalten</div>
+					<div class="mb-2 text-muted">Wettbewerb auswerten</div>
 				</div>
 			</div>
-			<ng-container *ngIf="lehrer$ | async as lehrer">
-				<div *ngIf="lehrer.hatZugangZuUnterlangen" class="col-md-6 col-sm-12 mt-1">
-					<div class="card clickable" (click)="gotoDownloadUnterlagen()">
-						<div class="card-body">
-							<div class="card-title">Unterlagen {{wettbewerb.jahr}}</div>
-							<div class="mb-2 text-muted">Wettbewerbsunterlagen herunterladen</div>
-						</div>
-					</div>
-				</div>
-			</ng-container>
+			<div *ngIf="hatZugangZuUnterlagen" class="col-md-6 col-sm-12 mt-1">
+
+				<mkv-unterlagen-card></mkv-unterlagen-card>
+
+			</div>
 		</div>
 
-		<div class="row m-2">
+		<!-- card-deck 2 -->
+		<div class="card-deck mt-3">
 
-			<ng-container *ngIf="lehrer$ | async as lehrer">
-				<div class="col-md-4 col-sm-12 mt-1">
-					<div class="card clickable" (click)="changeAboNewsletter()">
-						<div class="card-body">
-							<div *ngIf="lehrer.newsletterAbonniert">
-								<div class="card-title">Newsletter <span
-										class="ml-1 badge badge-success">abonniert</span>
-								</div>
-								<div class="mb-2 text-muted">Newsletter
-									abbestellen</div>
-							</div>
-							<div *ngIf="!lehrer.newsletterAbonniert">
-								<div class="card-title">Newsletter <span class="ml-1 badge badge-secondary">nicht
-										abonniert</span></div>
-								<div class="mb-2 text-muted">Newsletter
-									abonnieren</div>
-							</div>
+			<div *ngIf="lehrer$ | async as lehrer" class="card clickable" (click)="changeAboNewsletter()">
+				<div class="card-body">
+					<div *ngIf="lehrer.newsletterAbonniert">
+						<div class="card-title">Newsletter <span class="ml-1 badge badge-success">abonniert</span>
 						</div>
+						<div class="mb-2 text-muted">Newsletter
+							abbestellen</div>
 					</div>
-				</div>
-			</ng-container>
-
-			<div class="col-md-4 col-sm-12 mt-1">
-				<div class="card clickable" (click)="gotoProfil()">
-					<div class="card-body">
-						<div class="card-title">Mein Profil</div>
-						<div class="mb-2 text-muted">Name, Mailadresse, Passwort ändern</div>
-						<div class="mb-2 text-danger">Achtung: hierfür werden Sie ausgeloggt.</div>
+					<div *ngIf="!lehrer.newsletterAbonniert">
+						<div class="card-title">Newsletter <span class="ml-1 badge badge-secondary">nicht
+								abonniert</span></div>
+						<div class="mb-2 text-muted">Newsletter
+							abonnieren</div>
 					</div>
 				</div>
 			</div>
-
-			<ng-container *ngIf="lehrer$ | async as lehrer">
-				<div class="col-md-4 col-sm-12 mt-1">
-					<div class="card clickable" (click)="gotoInfos()">
-						<div class="card-body">
-							<div class="card-title">Infos</div>
-							<div class="mb-2 text-muted">Informationen über den Wettbewerb</div>
-							<div *ngIf="!lehrer.hatZugangZuUnterlangen" class="mb-2 text-muted">Warum sehe ich die
-								Unterlagen
-								nicht?</div>
-						</div>
-					</div>
+			<div class="card clickable" (click)="gotoProfil()">
+				<div class="card-body">
+					<div class="card-title">Mein Profil</div>
+					<div class="mb-2 text-muted">Name, Mailadresse, Passwort ändern</div>
+					<div class="mb-2 text-danger">Achtung: hierfür werden Sie ausgeloggt.</div>
 				</div>
-			</ng-container>
+			</div>
 
+			<div *ngIf="lehrer$ | async as lehrer" class="card clickable" (click)="gotoInfos()">
+				<div class="card-body">
+					<div class="card-title">Infos</div>
+					<div class="mb-2 text-muted">Informationen über den Wettbewerb</div>
+					<div *ngIf="!lehrer.hatZugangZuUnterlagen" class="mb-2 text-muted">Warum sehe ich die
+						Unterlagen
+						nicht?</div>
+				</div>
+			</div>
+
+		</div>
+
+
+		<div class="row m-2">
 			<div *ngIf="textFeatureFlagAnzeigen" class="row ml-3 mr-3 mt-3 hinweis">
 				<div class="col-11">
 					<div class="mkv-boardered">{{textFeatureFlag}}</div>

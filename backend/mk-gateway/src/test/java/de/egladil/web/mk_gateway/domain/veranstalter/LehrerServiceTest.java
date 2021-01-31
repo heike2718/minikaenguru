@@ -304,7 +304,7 @@ public class LehrerServiceTest extends AbstractDomainServiceTest {
 		LehrerAPIModel lehrerAPIModel = service.findLehrer(UUID_LEHRER_GESPERRT);
 
 		// Assert
-		assertFalse(lehrerAPIModel.hatZugangZuUnterlangen());
+		assertFalse(lehrerAPIModel.hatZugangZuUnterlagen());
 		assertTrue(lehrerAPIModel.newsletterAbonniert());
 	}
 

@@ -5,14 +5,17 @@
 package de.egladil.web.mk_gateway.infrastructure.rest.veranstalter;
 
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -22,20 +25,22 @@ import javax.ws.rs.core.SecurityContext;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
+import de.egladil.web.mk_gateway.domain.statistik.AnonymisierteTeilnahmenService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.AktuelleTeilnahmeService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Privatteilnahme;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.AnonymisierteTeilnahmeAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.PrivatteilnahmeAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.SchulanmeldungRequestPayload;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.SchulteilnahmeAPIModel;
 
 /**
- * VeranstalterTeilnahmenResource
+ * AnonymisierteTeilnahmenResource
  */
 @RequestScoped
-@Path("veranstalter/teilnahmen")
+@Path("teilnahmen")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class VeranstalterTeilnahmenResource {
+public class TeilnahmenResource {
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
@@ -47,6 +52,21 @@ public class VeranstalterTeilnahmenResource {
 
 	@Inject
 	AuthorizationService authService;
+
+	@Inject
+	AnonymisierteTeilnahmenService anonTeilnahmenService;
+
+	@GET
+	@Path("veranstalter/{teilnahmenummer}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAnonymisierteTeilnahmen(@PathParam(value = "teilnahmenummer") final String teilnahmenummer) {
+
+		List<AnonymisierteTeilnahmeAPIModel> teilnahmen = anonTeilnahmenService.loadAnonymisierteTeilnahmen(teilnahmenummer,
+			securityContext.getUserPrincipal().getName());
+
+		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), teilnahmen);
+		return Response.ok(responsePayload).build();
+	}
 
 	@POST
 	@Path("privat")

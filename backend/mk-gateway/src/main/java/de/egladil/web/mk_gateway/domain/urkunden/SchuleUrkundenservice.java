@@ -100,8 +100,6 @@ public class SchuleUrkundenservice {
 	@Inject
 	Event<DataInconsistencyRegistered> dataInconsistencyEvent;
 
-	private Wettbewerb aktuellerWettbewerb;
-
 	public static SchuleUrkundenservice createForIntegrationTests(final EntityManager entityManager) {
 
 		SchuleUrkundenservice result = new SchuleUrkundenservice();
@@ -286,12 +284,7 @@ public class SchuleUrkundenservice {
 
 	private Wettbewerb getWettbewerb() {
 
-		if (aktuellerWettbewerb == null) {
-
-			this.aktuellerWettbewerb = this.wettbewerbService.aktuellerWettbewerb().get();
-		}
-
-		return aktuellerWettbewerb;
+		return this.wettbewerbService.aktuellerWettbewerb().get();
 	}
 
 }

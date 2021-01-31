@@ -38,15 +38,15 @@ import de.egladil.web.mk_gateway.domain.veranstalter.api.LehrerAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 
 /**
- * VeranstalterLehrerResource
+ * LehrerResource
  */
 @RequestScoped
-@Path("veranstalter/lehrer")
+@Path("lehrer")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class VeranstalterLehrerResource {
+public class LehrerResource {
 
-	private static final Logger LOG = LoggerFactory.getLogger(VeranstalterLehrerResource.class);
+	private static final Logger LOG = LoggerFactory.getLogger(LehrerResource.class);
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
@@ -62,9 +62,9 @@ public class VeranstalterLehrerResource {
 	@Inject
 	LehrerService lehrerService;
 
-	static VeranstalterLehrerResource createForPermissionTest(final AuthorizationService veranstalterAuthService, final LehrerService lehrerService, final SecurityContext securityContext) {
+	static LehrerResource createForPermissionTest(final AuthorizationService veranstalterAuthService, final LehrerService lehrerService, final SecurityContext securityContext) {
 
-		VeranstalterLehrerResource result = new VeranstalterLehrerResource();
+		LehrerResource result = new LehrerResource();
 		result.veranstalterAuthService = veranstalterAuthService;
 		result.lehrerService = lehrerService;
 		result.securityContext = securityContext;

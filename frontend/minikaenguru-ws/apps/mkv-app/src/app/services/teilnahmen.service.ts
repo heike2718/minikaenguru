@@ -32,7 +32,7 @@ export class TeilnahmenService {
 
 	public privatveranstalterAnmelden(): Observable<ResponsePayload> {
 
-		const url = environment.apiUrl + '/veranstalter/teilnahmen/privat';
+		const url = environment.apiUrl + '/teilnahmen/privat';
 
 		return this.http.post(url, null).pipe(
 			map(body => body as ResponsePayload)
@@ -41,7 +41,7 @@ export class TeilnahmenService {
 
 	public schuleAnmelden(schule: Schule): Observable<ResponsePayload> {
 
-		const url = environment.apiUrl + '/veranstalter/teilnahmen/schule';
+		const url = environment.apiUrl + '/teilnahmen/schule';
 
 		const payload: SchulanmeldungRequestPayload = {
 			schulkuerzel: schule.kuerzel,
@@ -55,7 +55,7 @@ export class TeilnahmenService {
 
 	public ladeAnonymisierteTeilnahmen(teilnahmenummer: string): Observable<AnonymisierteTeilnahme[]> {
 
-		const url = environment.apiUrl + '/teilnahmen/' + teilnahmenummer;
+		const url = environment.apiUrl + '/teilnahmen/veranstalter/' + teilnahmenummer;
 
 		return this.http.get(url, {observe: 'body'}).pipe(
 			map(body => body as ResponsePayload),

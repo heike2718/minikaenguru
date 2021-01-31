@@ -5,14 +5,10 @@
 package de.egladil.web.mk_gateway.domain.error;
 
 /**
- * StatistikKeineDatenException
+ * UnterlagenNichtVerfuegbarException
  */
-public class StatistikKeineDatenException extends RuntimeException {
+public class UnterlagenNichtVerfuegbarException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
-
-	public StatistikKeineDatenException() {
-
-	}
 
 }
