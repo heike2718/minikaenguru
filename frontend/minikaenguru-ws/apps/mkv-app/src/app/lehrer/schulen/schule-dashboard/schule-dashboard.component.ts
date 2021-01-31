@@ -150,6 +150,10 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 		this.router.navigateByUrl('/lehrer/schulen');
 	}
 
+	gotoDashboard(): void {
+		this.router.navigateByUrl('/lehrer/dashboard');
+	}
+
 	toggleTextFeatureFlagAnzeigen(): void {
 		this.textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber bis März.';
 		this.textFeatureFlagAnzeigen = !this.textFeatureFlagAnzeigen;

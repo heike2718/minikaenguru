@@ -29,70 +29,68 @@
 				</div>
 			</div>
 
-			<div class="row mt-2 ml-2 mr-2">
+			<div class="card-deck">
 
-				<div *ngIf="schule.aktuellAngemeldet" class="col-md-4 col-sm-12 mt-2">
-					<div class="card clickable" (click)="gotoKlassenliste()">
-						<div class="card-body">
-							<div class="card-title">Auswertung {{wettbewerb.jahr}}</div>
-							<div class="mb-2 text-muted">Kinder erfassen und Urkunden generieren</div>
-						</div>
+				<mkv-unterlagen-card></mkv-unterlagen-card>
+
+				<div *ngIf="schule.aktuellAngemeldet" class="card clickable" (click)="gotoKlassenliste()">
+					<div class="card-body">
+						<div class="card-title">Auswertung {{wettbewerb.jahr}}</div>
+						<div class="mb-2 text-muted">Kinder erfassen und Urkunden generieren</div>
 					</div>
 				</div>
 
-				<div *ngIf="schule.aktuellAngemeldet" class="col-md-4 col-sm-12 mt-2">
-					<div class="card clickable" (click)="gotoKlassenlisteHochladen()">
-						<div class="card-body">
-							<div class="card-title">Klassenlisten hochladen</div>
-							<div class="mb-2 text-muted">Klassen und Kinderdaten als Excel hochladen</div>
-						</div>
+				<div *ngIf="schule.aktuellAngemeldet" class="card clickable" (click)="gotoKlassenlisteHochladen()">
+					<div class="card-body">
+						<div class="card-title">Klassenlisten hochladen</div>
+						<div class="mb-2 text-muted">Klassen und Kinderdaten als Excel hochladen</div>
 					</div>
 				</div>
 
+				<!--
 				<div *ngIf="schule.aktuellAngemeldet && hatZugangZuUnterlagen$ | async" class="col-md-4 col-sm-12 mt-2">
 					<div class="card clickable">
 						<div class="card-body">
 							<div class="card-title">Auswertungstabelle hochladen</div>
-							<div class="mb-2  text-danger">Achtung: nur wenn Sie die Urkunden selbst erstellen möchten</div>
+							<div class="mb-2  text-danger">Achtung: nur wenn Sie die Urkunden selbst erstellen möchten
+							</div>
 							<div class="mb-2 text-muted">
 								Excel-Auswertungstabelle hochladen</div>
 						</div>
 					</div>
 				</div>
+				-->
 
 				<div *ngIf="(wettbewerb.status !== 'ERFASST' && wettbewerb.status !== 'BEENDET' && !schule.aktuellAngemeldet)"
-					class="col-md-6 col-sm-12 mt-2">
-					<div class="card clickable" (click)="anmelden()">
-						<div class="card-body">
-							<div class="card-title">Anmelden</div>
-							<div class="mb-2 text-muted"> für {{wettbewerb.jahr}}</div>
-						</div>
+					class="card clickable" (click)="anmelden()">
+					<div class="card-body">
+						<div class="card-title">Anmelden</div>
+						<div class="mb-2 text-muted"> für {{wettbewerb.jahr}}</div>
 					</div>
 				</div>
+
+
 			</div>
 
-			<div class="row ml-2 mr-2 mt-2">
-				<div *ngIf="schule.details.anzahlTeilnahmen > 0" class="col-md-6 col-sm-12 mt-2">
-					<div class="card clickable" (click)="gotoTeilnahmen()">
-						<div class="card-body">
-							<div class="card-title">alle Teilnahmen <span
-									class="ml-1 badge badge-primary">{{schule.details.anzahlTeilnahmen}}</span>
-							</div>
-							<div class="mb-2 text-muted">Schulstatistiken</div>
+			<div class="card-deck mt-3">
+
+				<div *ngIf="schule.details.anzahlTeilnahmen > 0" class="card clickable" (click)="gotoTeilnahmen()">
+					<div class="card-body">
+						<div class="card-title">alle Teilnahmen <span
+								class="ml-1 badge badge-primary">{{schule.details.anzahlTeilnahmen}}</span>
 						</div>
+						<div class="mb-2 text-muted">Schulstatistiken</div>
 					</div>
 				</div>
 
-				<div *ngIf="schule.details.hatAdv" class="col-md-6 col-sm-12 mt-2">
+				<div *ngIf="schule.details.hatAdv">
 					<mk-download-card [model]="vertragAdvModel"></mk-download-card>
 				</div>
 
-				<div *ngIf="!schule.details.hatAdv" class="col-md-6 col-sm-12 mt-2">
-					<div class="card clickable" (click)="gotoVertragAdv()">
-						<div class="card-body">
-							<div class="card-title">DSGVO</div>
-							<div class="mb-2 text-muted">Vertrag zur Auftragsdatenverarbeitung abschließen</div>
-						</div>
+				<div *ngIf="!schule.details.hatAdv" class="card clickable" (click)="gotoVertragAdv()">
+					<div class="card-body">
+						<div class="card-title">DSGVO</div>
+						<div class="mb-2 text-muted">Vertrag zur Auftragsdatenverarbeitung abschließen</div>
 					</div>
 				</div>
 			</div>
