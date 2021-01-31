@@ -20,16 +20,23 @@
 					</div>
 				</div>
 			</div>
-			<ng-container *ngIf="lehrer$ | async as lehrer">
-				<div *ngIf="lehrer.hatZugangZuUnterlangen" class="col-md-6 col-sm-12 mt-1">
-					<div class="card clickable" (click)="gotoDownloadUnterlagen()">
-						<div class="card-body">
-							<div class="card-title">Unterlagen {{wettbewerb.jahr}}</div>
-							<div class="mb-2 text-muted">Wettbewerbsunterlagen herunterladen</div>
+			<div *ngIf="hatZugangZuUnterlagen" class="col-md-6 col-sm-12 mt-1">
+
+				<div class="card">
+					<div class="card-body">
+						<div class="card-title">Unterlagen {{wettbewerb.jahr}}</div>
+
+						<div class="btn-group d-flex" role="group">
+							<mk-unterlagen [downloadUrl]="unterlagenDeutschUrl" [userIdRef]="userIdRef"
+								[sprache]="'deutsch'">
+							</mk-unterlagen>
+							<mk-unterlagen [downloadUrl]="unterlagenEnglischUrl" [userIdRef]="userIdRef"
+								[sprache]="'englisch'">
+							</mk-unterlagen>
 						</div>
 					</div>
 				</div>
-			</ng-container>
+			</div>
 		</div>
 
 		<div class="row m-2">
@@ -72,7 +79,7 @@
 						<div class="card-body">
 							<div class="card-title">Infos</div>
 							<div class="mb-2 text-muted">Informationen über den Wettbewerb</div>
-							<div *ngIf="!lehrer.hatZugangZuUnterlangen" class="mb-2 text-muted">Warum sehe ich die
+							<div *ngIf="!lehrer.hatZugangZuUnterlagen" class="mb-2 text-muted">Warum sehe ich die
 								Unterlagen
 								nicht?</div>
 						</div>

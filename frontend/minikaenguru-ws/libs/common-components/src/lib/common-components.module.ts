@@ -11,6 +11,7 @@ import { DownloadCardComponent } from './download/download-card/download-card.co
 import * as fromDownload from './download/+state/download.reducer';
 import { StoreModule } from '@ngrx/store';
 import { AnonymisierteTeilnahmeComponent } from './anonymisierte-teilnahme/anonymisierte-teilnahme.component';
+import { UnterlagenComponent } from './unterlagen/unterlagen.component';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { AnonymisierteTeilnahmeComponent } from './anonymisierte-teilnahme/anony
 		DownloadCardComponent,
 		FormErrorComponent,
 		UploadComponent,
-		AnonymisierteTeilnahmeComponent
+		AnonymisierteTeilnahmeComponent,
+		UnterlagenComponent
 	],
 	exports: [
 		DialogComponent,
@@ -33,7 +35,8 @@ import { AnonymisierteTeilnahmeComponent } from './anonymisierte-teilnahme/anony
 		DownloadCardComponent,
 		FormErrorComponent,
 		UploadComponent,
-		AnonymisierteTeilnahmeComponent
+		AnonymisierteTeilnahmeComponent,
+		UnterlagenComponent
 	]
 })
 export class CommonComponentsModule {

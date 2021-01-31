@@ -3,7 +3,7 @@ import * as fromLehrer from './lehrer.reducer';
 
 export const lehrerState = createFeatureSelector<fromLehrer.LehrerState>(fromLehrer.lehrerFeatureKey);
 
-export const hatZugangZuUnterlagen = createSelector(lehrerState, s => s.lehrer && s.lehrer.hatZugangZuUnterlangen);
+export const hatZugangZuUnterlagen = createSelector(lehrerState, s => s.lehrer && s.lehrer.hatZugangZuUnterlagen);
 
 export const alleSchulen = createSelector(lehrerState, s => s.schulen);
 

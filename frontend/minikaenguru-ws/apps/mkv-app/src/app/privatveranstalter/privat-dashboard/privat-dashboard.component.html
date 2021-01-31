@@ -38,11 +38,20 @@
 						</div>
 					</div>
 				</div>
-				<div *ngIf="veranstalter.hatZugangZuUnterlangen" class="col-md-4 col-sm-12 mt-2">
-					<div class="card clickable" (click)="gotoDownloadUnterlagen()">
+				<div *ngIf="hatZugangZuUnterlagen" class="col-md-6 col-sm-12 mt-1">
+
+					<div class="card">
 						<div class="card-body">
 							<div class="card-title">Unterlagen {{wettbewerb.jahr}}</div>
-							<div class="mb-2 text-muted">Aufgaben herunterladen</div>
+
+							<div class="btn-group d-flex" role="group">
+								<mk-unterlagen [downloadUrl]="unterlagenDeutschUrl" [userIdRef]="userIdRef"
+									[sprache]="'deutsch'">
+								</mk-unterlagen>
+								<mk-unterlagen [downloadUrl]="unterlagenEnglischUrl" [userIdRef]="userIdRef"
+									[sprache]="'englisch'">
+								</mk-unterlagen>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -92,7 +101,7 @@
 						<div class="card-body">
 							<div class="card-title">Infos</div>
 							<div class="mb-2 text-muted">Informationen über den Wettbewerb</div>
-							<div *ngIf="!veranstalter.hatZugangZuUnterlangen" class="mb-2 text-muted">
+							<div *ngIf="!veranstalter.hatZugangZuUnterlagen" class="mb-2 text-muted">
 								Warum kann ich die Aufgaben nicht herunterladen?</div>
 						</div>
 					</div>
