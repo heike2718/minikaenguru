@@ -160,7 +160,7 @@ public class PrivatpersonServiceTest extends AbstractDomainServiceTest {
 		PrivatveranstalterAPIModel veranstalter = service.findPrivatperson(uuid);
 
 		// Assert
-		assertFalse(veranstalter.hatZugangZuUnterlangen());
+		assertFalse(veranstalter.hatZugangZuUnterlagen());
 		assertTrue(veranstalter.aktuellAngemeldet());
 		assertEquals(1, veranstalter.anzahlTeilnahmen());
 		assertNotNull(veranstalter.aktuelleTeilnahme());

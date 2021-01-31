@@ -11,7 +11,7 @@
 					</mk-download-button>
 				</div>
 			</div>
-			<ng-container *ngIf="downloadId$ | async as id">
+			<ng-container *ngIf="downloadFacade.downloadId$ | async as id">
 				<div *ngIf="id === downloadId" class="row">
 					<div class="col-12 center">Erstelle Statistik... <i class="fa fa-spinner fa-2x fa-spin"
 							aria-hidden="true"></i></div>

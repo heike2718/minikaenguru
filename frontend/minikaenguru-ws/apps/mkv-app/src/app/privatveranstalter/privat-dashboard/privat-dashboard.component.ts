@@ -6,6 +6,7 @@ import { environment } from '../../../environments/environment';
 import { TeilnahmenFacade } from '../../teilnahmen/teilnahmen.facade';
 import { Subscription } from 'rxjs';
 import { LogoutService } from '../../services/logout.service';
+import { STORAGE_KEY_USER, User } from '@minikaenguru-ws/common-auth';
 
 @Component({
 	selector: 'mkv-privat-dashboard',
@@ -27,6 +28,13 @@ export class PrivatDashboardComponent implements OnInit, OnDestroy {
 	textFeatureFlagAnzeigen = false;
 	textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
 
+	userIdRef: string;
+
+	unterlagenDeutschUrl  = environment.apiUrl + '/unterlagen/privat/de';
+	unterlagenEnglischUrl  = environment.apiUrl + '/unterlagen/privat/en';
+
+	hatZugangZuUnterlagen = false;
+
 	private veranstalterSubscription: Subscription;
 
 	private teilnahmenummerSubscription: Subscription;
@@ -44,12 +52,16 @@ export class PrivatDashboardComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 
+		const user: User = JSON.parse(localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_USER));
+		this.userIdRef = user.idReference;
+
 		this.teilnahmenSelected = false;
 
 		this.veranstalterSubscription = this.privatveranstalter$.subscribe(
 			veranstalter => {
 				if (veranstalter) {
 					this.teilnahmenummer = veranstalter.teilnahmenummer;
+					this.hatZugangZuUnterlagen = veranstalter.hatZugangZuUnterlagen;
 				}
 			}
 		);
@@ -65,6 +77,8 @@ export class PrivatDashboardComponent implements OnInit, OnDestroy {
 
 		);
 
+
+
 	}
 
 	ngOnDestroy(): void {
@@ -75,7 +89,6 @@ export class PrivatDashboardComponent implements OnInit, OnDestroy {
 		if (this.teilnahmenummerSubscription) {
 			this.teilnahmenummerSubscription.unsubscribe();
 		}
-
 	}
 
 	gotoTeilnahmen(): void {

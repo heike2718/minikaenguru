@@ -13,6 +13,7 @@ import { SchuleDashboardResolver } from './schulen/schule-dashboard/schule-dashb
 import { CommonComponentsModule  } from '@minikaenguru-ws/common-components';
 import { CommonSchulkatalogModule } from '@minikaenguru-ws/common-schulkatalog';
 import { AddSchuleComponent } from './schulen/add-schule/add-schule.component';
+import { UnterlagenCardComponent } from './unterlagen-card/unterlagen-card.component';
 
 
 
@@ -29,7 +30,8 @@ import { AddSchuleComponent } from './schulen/add-schule/add-schule.component';
 		SchulenListComponent,
 		SchuleDashboardComponent,
 		SchuleCardComponent,
-		AddSchuleComponent
+		AddSchuleComponent,
+		UnterlagenCardComponent
 	],
 	exports: [
 		LehrerDashboardComponent

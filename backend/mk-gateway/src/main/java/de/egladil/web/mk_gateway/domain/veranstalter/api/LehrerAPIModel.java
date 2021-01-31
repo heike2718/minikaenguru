@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class LehrerAPIModel {
 
 	@JsonProperty
-	private boolean hatZugangZuUnterlangen;
+	private boolean hatZugangZuUnterlagen;
 
 	@JsonProperty
 	private boolean newsletterAbonniert;
@@ -20,14 +20,14 @@ public class LehrerAPIModel {
 	public static LehrerAPIModel create(final boolean zugangZuUnterlagen, final boolean newsletterAbonniert) {
 
 		LehrerAPIModel result = new LehrerAPIModel();
-		result.hatZugangZuUnterlangen = zugangZuUnterlagen;
+		result.hatZugangZuUnterlagen = zugangZuUnterlagen;
 		result.newsletterAbonniert = newsletterAbonniert;
 		return result;
 	}
 
-	public boolean hatZugangZuUnterlangen() {
+	public boolean hatZugangZuUnterlagen() {
 
-		return hatZugangZuUnterlangen;
+		return hatZugangZuUnterlagen;
 	}
 
 	public boolean newsletterAbonniert() {

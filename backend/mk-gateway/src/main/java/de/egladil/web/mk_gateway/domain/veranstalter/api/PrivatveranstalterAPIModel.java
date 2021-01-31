@@ -17,7 +17,7 @@ public class PrivatveranstalterAPIModel {
 	private String teilnahmenummer;
 
 	@JsonProperty
-	private boolean hatZugangZuUnterlangen;
+	private boolean hatZugangZuUnterlagen;
 
 	@JsonProperty
 	private boolean newsletterAbonniert;
@@ -34,7 +34,7 @@ public class PrivatveranstalterAPIModel {
 	public static PrivatveranstalterAPIModel create(final boolean zugangZuUnterlagen, final boolean newsletterAbonniert) {
 
 		PrivatveranstalterAPIModel result = new PrivatveranstalterAPIModel();
-		result.hatZugangZuUnterlangen = zugangZuUnterlagen;
+		result.hatZugangZuUnterlagen = zugangZuUnterlagen;
 		result.newsletterAbonniert = newsletterAbonniert;
 		return result;
 	}
@@ -56,9 +56,9 @@ public class PrivatveranstalterAPIModel {
 		return this;
 	}
 
-	public boolean hatZugangZuUnterlangen() {
+	public boolean hatZugangZuUnterlagen() {
 
-		return hatZugangZuUnterlangen;
+		return hatZugangZuUnterlagen;
 	}
 
 	public int anzahlTeilnahmen() {
