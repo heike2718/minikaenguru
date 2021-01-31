@@ -57,12 +57,12 @@ export class UrkundenFacade {
 	public getUrkundeDateModel(): UrkundeDateModel {
 
 		const heute = this.calendar.getToday();
-		const maxDate = new NgbDate(heute.year, 8, 1);
+		const minDate = new NgbDate(heute.year, 1, 1);
 		const selectedDate = this.calculateDateString(heute);
 
 		return {
-			minDate: heute,
-			maxDate: maxDate,
+			minDate: minDate,
+			maxDate: heute,
 			selectedDate: selectedDate
 		};
 	}
