@@ -31,7 +31,11 @@
 
 			<div class="card-deck">
 
-				<mkv-unterlagen-card></mkv-unterlagen-card>
+				<div *ngIf="hatZugangZuUnterlagen$ | async">
+
+					<mkv-unterlagen-card></mkv-unterlagen-card>
+
+				</div>
 
 				<div *ngIf="schule.aktuellAngemeldet" class="card clickable" (click)="gotoKlassenliste()">
 					<div class="card-body">

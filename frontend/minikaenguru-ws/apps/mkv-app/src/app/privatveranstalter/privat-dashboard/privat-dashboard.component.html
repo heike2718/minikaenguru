@@ -20,7 +20,7 @@
 			<div class="card-deck">
 				<div *ngIf="hatZugangZuUnterlagen" class="card">
 					<div class="card-body">
-						<div class="card-title">Unterlagen {{wettbewerb.jahr}}</div>
+						<div class="card-title">Wettbewerbsaufgaben {{wettbewerb.jahr}}</div>
 
 						<div class="btn-group d-flex" role="group">
 							<mk-unterlagen [downloadUrl]="unterlagenDeutschUrl" [userIdRef]="userIdRef"
@@ -97,7 +97,7 @@
 					<div class="card-body">
 						<div class="card-title">Mein Profil</div>
 						<div class="mb-2 text-muted">Name, Mailadresse, Passwort ändern</div>
-						<div class="mb-2 text-danger">Achtung: hierfür werden Sie ausgeloggt.</div>
+						<div class="mb-2 text-danger">Achtung: hierfür werden Sie ausgeloggt und auf eine andere Webseite umgeleitet.</div>
 					</div>
 				</div>
 
