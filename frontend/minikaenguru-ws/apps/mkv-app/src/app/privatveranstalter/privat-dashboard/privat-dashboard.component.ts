@@ -101,10 +101,6 @@ export class PrivatDashboardComponent implements OnInit, OnDestroy {
 		this.router.navigateByUrl('/kinder/' + this.teilnahmenummer);
 	}
 
-	gotoDownloadUnterlagen() {
-		console.log('hier gehts zu den Unterlagen: Achtung - vorher Status abfragen, ob angemeldet und freigeschaltet!');
-	}
-
 	gotoProfil() {
 		this.logoutService.logout();
 		window.location.href = environment.profileUrl;
