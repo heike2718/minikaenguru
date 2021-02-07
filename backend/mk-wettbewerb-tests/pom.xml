@@ -9,7 +9,7 @@
 
 
 	<properties>
-		<minikaenguru-version>1.4.0</minikaenguru-version>
+		<minikaenguru-version>1.4.0.1</minikaenguru-version>
 		<commons.version>1.4.12</commons.version>
 		<junit.jupiter.version>5.5.0</junit.jupiter.version>
 		<junit.platform.version>1.5.0</junit.platform.version>

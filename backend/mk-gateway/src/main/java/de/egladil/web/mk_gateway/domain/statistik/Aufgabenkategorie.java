@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 
 /**
  * Aufgabenkategorie
@@ -17,9 +18,9 @@ public enum Aufgabenkategorie {
 	LEICHT("A") {
 
 		@Override
-		public int getPenalty() {
+		public int getPenalty(final Klassenstufe klassenstufe) {
 
-			return 75;
+			return klassenstufe == Klassenstufe.IKID ? 150 : 75; // 3 Antwortmöglichkeiten als Hälfte der Punkte Abzug
 		}
 
 		@Override
@@ -32,9 +33,9 @@ public enum Aufgabenkategorie {
 	MITTEL("B") {
 
 		@Override
-		public int getPenalty() {
+		public int getPenalty(final Klassenstufe klassenstufe) {
 
-			return 100;
+			return klassenstufe == Klassenstufe.IKID ? 200 : 100; // 3 Antwortmöglichkeiten als Hälfte der Punkte Abzug
 		}
 
 		@Override
@@ -47,9 +48,9 @@ public enum Aufgabenkategorie {
 	SCHWER("C") {
 
 		@Override
-		public int getPenalty() {
+		public int getPenalty(final Klassenstufe klassenstufe) {
 
-			return 125;
+			return klassenstufe == Klassenstufe.IKID ? 250 : 125; // 3 Antwortmöglichkeiten als Hälfte der Punkte Abzug
 		}
 
 		@Override
@@ -67,7 +68,7 @@ public enum Aufgabenkategorie {
 		this.nummerPrefix = nummerPrefix;
 	}
 
-	public abstract int getPenalty();
+	public abstract int getPenalty(Klassenstufe klassenstufe);
 
 	public abstract int getPunkte();
 
