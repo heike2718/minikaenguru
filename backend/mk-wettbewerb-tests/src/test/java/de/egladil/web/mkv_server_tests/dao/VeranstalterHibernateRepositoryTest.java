@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import de.egladil.web.mk_gateway.domain.mail.Empfaengertyp;
 import de.egladil.web.mk_gateway.domain.veranstalter.Person;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
+import de.egladil.web.mk_gateway.domain.veranstalter.ZugangUnterlagen;
 import de.egladil.web.mk_gateway.domain.veranstalter.admin.VeranstalterSuchkriterium;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.VeranstalterSuchanfrage;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.VeranstalterHibernateRepository;
@@ -76,6 +77,24 @@ public class VeranstalterHibernateRepositoryTest extends AbstractIT {
 		assertEquals(1, result.size());
 		Person person = result.get(0).person();
 		assertNotNull(person.email());
+
+	}
+
+	@Test
+	void should_findByUuid_work_and_readTheZugangUnterlagenStatus() {
+
+		// Arrange
+		VeranstalterSuchanfrage suchanfrage = new VeranstalterSuchanfrage(VeranstalterSuchkriterium.UUID, "feae6094");
+
+		// Act
+		List<Veranstalter> result = veranstalterRepository.findVeranstalter(suchanfrage);
+
+		// Assert
+		assertEquals(1, result.size());
+		Veranstalter veranstalter = result.get(0);
+		Person person = veranstalter.person();
+		assertNotNull(person.email());
+		assertEquals(ZugangUnterlagen.ENTZOGEN, veranstalter.zugangUnterlagen());
 
 	}
 
