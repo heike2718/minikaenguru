@@ -1,9 +1,10 @@
 <div *ngIf="wettbewerbFacade.aktuellerWettbewerb$ | async as wettbewerb">
+
 	<div class="card">
 		<div class="card-body">
-			<div class="card-title">Wettbewerbsaufgaben {{wettbewerb.jahr}}
+			<div class="card-title mb-4">Unterlagen {{wettbewerb.jahr}}
 
-				<div class="btn-group d-flex" role="group">
+				<div class="row" role="group">
 					<mk-unterlagen [downloadUrl]="unterlagenDeutschUrl" [userIdRef]="userIdRef" [sprache]="'deutsch'">
 					</mk-unterlagen>
 					<mk-unterlagen [downloadUrl]="unterlagenEnglischUrl" [userIdRef]="userIdRef" [sprache]="'englisch'">

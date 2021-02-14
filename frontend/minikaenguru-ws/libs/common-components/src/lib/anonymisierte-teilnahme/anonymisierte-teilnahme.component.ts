@@ -39,7 +39,7 @@ export class AnonymisierteTeilnahmeComponent implements OnInit {
 				mimetype: 'pdf',
 				buttonLabel: 'Statistik',
 				tooltip: 'Statistik generieren und herunterladen (PDF)',
-				class: 'btn btn-primary w-100 ml-1'
+				class: 'btn btn-outline-dark w-100 ml-1'
 			};
 
 			this.showDownloadButton = true;

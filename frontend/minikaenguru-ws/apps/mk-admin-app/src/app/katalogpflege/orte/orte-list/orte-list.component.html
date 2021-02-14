@@ -1,5 +1,6 @@
 <div class="mkv-container mt-1">
 	<div class="col-12">
+		<p *ngIf="devMode">orte-list.component</p>
 		<h2>Orte <span *ngIf="selectedKatalogItem$ | async as land">in {{land.name}}</span></h2>
 		<ng-container *ngIf="orte$ | async as orte">
 			<p>Anzahl Orte: {{orte.length}}</p>

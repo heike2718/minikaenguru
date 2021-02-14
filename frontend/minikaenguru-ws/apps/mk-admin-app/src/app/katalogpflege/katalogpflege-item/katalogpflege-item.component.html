@@ -1,4 +1,5 @@
 <div class="card">
+	<p *ngIf="devMode">katalogpflege-item.component</p>
 	<div class="card-body">
 		<div class="card-title col-12">{{katalogItem.name}} ({{katalogItem.kuerzel}})
 			<span *ngIf="katalogItem.typ !=='SCHULE'" class="ml-1 badge badge-dark">{{anzahlText}}
@@ -14,9 +15,7 @@
 
 			<button class="btn btn-outline-dark w-100 ml-1" (click)="editItem()">ändern</button>
 
-			<div *ngIf="katalogItem.typ !== 'SCHULE'">
-				<button class="btn btn-outline-dark w-100 ml-1" (click)="openOrSearchChilds()">{{sucheBtnText}}</button>
-			</div>
+			<button *ngIf="katalogItem.typ !== 'SCHULE'" class="btn btn-outline-dark w-100 ml-1" (click)="openOrSearchChilds()">{{sucheBtnText}}</button>
 		</div>
 	</div>
 </div>

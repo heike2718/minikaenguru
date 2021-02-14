@@ -5,6 +5,7 @@ import { SchulePayload } from '../../katalogpflege.model';
 import { Subscription } from 'rxjs';
 import { SchuleEditorModel } from '../../+state/katalogpflege.reducer';
 import { emailValidator } from '@minikaenguru-ws/common-components';
+import { environment } from '../../../../environments/environment';
 
 @Component({
 	selector: 'mka-edit-schule',
@@ -12,6 +13,8 @@ import { emailValidator } from '@minikaenguru-ws/common-components';
 	styleUrls: ['./edit-schule.component.css']
 })
 export class EditSchuleComponent implements OnInit, OnDestroy {
+
+	devMode = environment.envName === 'DEV';
 
 	editSchuleInput$ = this.katalogFacade.editSchuleInput$;
 

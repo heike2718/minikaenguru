@@ -1,8 +1,6 @@
-<div class="col-12">
-	<div *ngIf="showDownloadButton" class="col-sm-12 col-md-3">
-		<mk-download-button [model]="unterlagenBtnModel">
-		</mk-download-button>
-	</div>
+<div *ngIf="showDownloadButton" class="col-sm-12 col-md-6">
+	<mk-download-button [model]="unterlagenBtnModel">
+	</mk-download-button>
 </div>
 <ng-container *ngIf="downloadFacade.downloadId$ | async as id">
 	<div *ngIf="id === userIdRef" class="row">
