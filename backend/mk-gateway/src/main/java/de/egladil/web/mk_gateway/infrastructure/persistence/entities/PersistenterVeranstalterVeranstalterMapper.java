@@ -39,10 +39,12 @@ public class PersistenterVeranstalterVeranstalterMapper implements Function<Pers
 		switch (persistenterVeranstalter.getRolle()) {
 
 		case PRIVAT:
-			return new Privatveranstalter(person, persistenterVeranstalter.isNewsletterEmpfaenger(), teilnahmenummern);
+			return new Privatveranstalter(person, persistenterVeranstalter.isNewsletterEmpfaenger(), teilnahmenummern)
+				.withZugangUnterlagen(persistenterVeranstalter.getZugangsberechtigungUnterlagen());
 
 		case LEHRER:
-			return new Lehrer(person, persistenterVeranstalter.isNewsletterEmpfaenger(), teilnahmenummern);
+			return new Lehrer(person, persistenterVeranstalter.isNewsletterEmpfaenger(), teilnahmenummern)
+				.withZugangUnterlagen(persistenterVeranstalter.getZugangsberechtigungUnterlagen());
 
 		default:
 			throw new MkGatewayRuntimeException("unerwartete Rolle " + persistenterVeranstalter.getRolle());

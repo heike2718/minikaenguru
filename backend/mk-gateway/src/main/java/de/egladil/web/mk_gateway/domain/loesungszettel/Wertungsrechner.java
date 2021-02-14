@@ -43,7 +43,7 @@ public class Wertungsrechner {
 					break;
 
 				case 'f':
-					punkte -= kategorie.getPenalty();
+					punkte -= kategorie.getPenalty(klassenstufe);
 
 				default:
 					break;

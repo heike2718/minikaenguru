@@ -26,7 +26,7 @@ public enum Klassenstufe {
 		@Override
 		public int getStartguthaben() {
 
-			return 600;
+			return 1200;
 		}
 
 		@Override

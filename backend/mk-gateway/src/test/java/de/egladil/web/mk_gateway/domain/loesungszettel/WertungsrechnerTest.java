@@ -76,12 +76,12 @@ public class WertungsrechnerTest {
 		}
 
 		@Test
-		void should_getWertungReturn3000_when_allesRichtig() {
+		void should_getWertungReturn3600_when_allesRichtig() {
 
 			// Arrange
 			String wertungscode = "rrrrrr";
 			Wertungsrechner wertungsrechner = new Wertungsrechner();
-			Wettbewerbswertung expectedWewrtung = new Wettbewerbswertung(3000, 6);
+			Wettbewerbswertung expectedWewrtung = new Wettbewerbswertung(3600, 6);
 
 			// Act
 			Wettbewerbswertung actual = wertungsrechner.getWertung(wertungscode, klassenstufe);
@@ -97,7 +97,7 @@ public class WertungsrechnerTest {
 			// Arrange
 			String wertungscode = "nnnnnn";
 			Wertungsrechner wertungsrechner = new Wertungsrechner();
-			Wettbewerbswertung expectedWewrtung = new Wettbewerbswertung(600, 0);
+			Wettbewerbswertung expectedWewrtung = new Wettbewerbswertung(1200, 0);
 
 			// Act
 			Wettbewerbswertung actual = wertungsrechner.getWertung(wertungscode, klassenstufe);
@@ -108,12 +108,12 @@ public class WertungsrechnerTest {
 		}
 
 		@Test
-		void should_getWertungReturn1200_when_leichteRichtigGeloest() {
+		void should_getWertungReturn1800_when_leichteRichtigGeloest() {
 
 			// Arrange
 			String wertungscode = "rrnnnn";
 			Wertungsrechner wertungsrechner = new Wertungsrechner();
-			Wettbewerbswertung expectedWewrtung = new Wettbewerbswertung(1200, 2);
+			Wettbewerbswertung expectedWewrtung = new Wettbewerbswertung(1800, 2);
 
 			// Act
 			Wettbewerbswertung actual = wertungsrechner.getWertung(wertungscode, klassenstufe);
@@ -129,7 +129,7 @@ public class WertungsrechnerTest {
 			// Arrange
 			String wertungscode = "rrrnnn";
 			Wertungsrechner wertungsrechner = new Wertungsrechner();
-			Wettbewerbswertung expectedWewrtung = new Wettbewerbswertung(1600, 3);
+			Wettbewerbswertung expectedWewrtung = new Wettbewerbswertung(2200, 3);
 
 			// Act
 			Wettbewerbswertung actual = wertungsrechner.getWertung(wertungscode, klassenstufe);
@@ -145,7 +145,7 @@ public class WertungsrechnerTest {
 			// Arrange
 			String wertungscode = "rrfnrf";
 			Wertungsrechner wertungsrechner = new Wertungsrechner();
-			Wettbewerbswertung expectedWewrtung = new Wettbewerbswertung(1475, 2);
+			Wettbewerbswertung expectedWewrtung = new Wettbewerbswertung(1850, 2);
 
 			// Act
 			Wettbewerbswertung actual = wertungsrechner.getWertung(wertungscode, klassenstufe);

@@ -172,4 +172,10 @@ public abstract class Veranstalter {
 
 		return newsletterEmpfaenger;
 	}
+
+	public Veranstalter withZugangUnterlagen(final ZugangUnterlagen zugangUnterlagen) {
+
+		this.zugangUnterlagen = zugangUnterlagen;
+		return this;
+	}
 }
