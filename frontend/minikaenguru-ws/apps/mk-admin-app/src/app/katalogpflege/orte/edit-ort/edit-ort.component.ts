@@ -3,6 +3,7 @@ import { KatalogpflegeFacade } from '../../katalogpflege.facade';
 import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { OrtPayload } from '../../katalogpflege.model';
+import { environment } from '../../../../environments/environment';
 
 @Component({
 	selector: 'mka-edit-ort',
@@ -10,6 +11,8 @@ import { OrtPayload } from '../../katalogpflege.model';
 	styleUrls: ['./edit-ort.component.css']
 })
 export class EditOrtComponent implements OnInit, OnDestroy {
+
+	devMode = environment.envName === 'DEV';
 
 	editOrtInput$ = this.katalogFacade.editOrtInput$;
 

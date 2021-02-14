@@ -6,7 +6,7 @@
 html,
 body {
   height: 100%;
-  width: 90%;
+  /*width: 90%;*/
 }
 
 body {
@@ -31,7 +31,7 @@ button>i {
 
 .hinweis {
   background-color: #ffffcc;
-  font-size: 1.1rem;
+  /*font-size: 1.1rem;*/
 }
 
 .mkv-bordered {
@@ -57,25 +57,16 @@ button>i {
 }
 
 .card-title {
-  font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
-  font-size: 1.2rem;
-}
-
-.card-text {
-	margin-left: 10px;
 }
 
 .clickable {
   cursor: pointer;
   overflow: hidden;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
-  -webkit-transition: .25s box-shadow;
-  transition: .25s box-shadow;
 }
 
 .clickabe-stacked {
-  width: 50%;
+  width: 100%;
 }
 
 .clickable div:hover {
@@ -84,51 +75,20 @@ button>i {
 
 footer {
   position: relative;
-  margin-top: 250px;
+  margin-top: 350px;
   background-color: #e5e6e6;
   padding: 5px 10px 5px 10px;
 }
 
-/* ===== small devices ==== */
 
-@media screen and (max-width: 768px) {
+/* Extra small devices (phones, 600px and down)
+@media only screen and (max-width: 600px) {
 
-  body {
-    width: 100vw;
+  .btn-group {
+    display: block;
+    float: none;
   }
 
-  h4,
-  body {
-    font-size: 1rem;
-  }
-
-  .header-3 {
-    font-size: 1.1rem;
-  }
-
-  h2 {
-    font-size: 1.2rem;
-  }
-
-  h3 {
-    font-size: 1.1rem;
-  }
-
-  .clickabe-stacked {
-    width: 95%;
-  }
-
-  .conditionally-bordered {
-    border: 1px solid gray;
-    border-radius: 4px;
-  }
 }
+*/
 
-@media screen and (max-width: 1024px) {
-
-	body, p {
-	font-size: 1.1rem;
-
-
-  }
-}

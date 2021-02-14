@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { KlassenFacade } from '../klassen.facade';
 import { LehrerFacade } from '../../lehrer/lehrer.facade';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Klasse } from '@minikaenguru-ws/common-components';
 import { Schule } from '../../lehrer/schulen/schulen.model';
 import { environment } from '../../../environments/environment';

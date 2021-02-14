@@ -4,22 +4,15 @@
 }
 
 .loesungszettelrow {
+	width: 100%;
 	background-color: bisque;
 }
 
-@media screen and (max-width: 768px) {
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+
   .loesungszettel-text {
 
 	font-size: 1em;
   }
 }
-
-@media screen and (max-width: 1024px) {
-
-	.loesungszettel-text {
-
-	font-size: 2em;
-  }
-}
-
-

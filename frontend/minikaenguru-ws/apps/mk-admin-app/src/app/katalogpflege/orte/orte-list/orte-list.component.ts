@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { KatalogpflegeFacade } from '../../katalogpflege.facade';
 import { Router } from '@angular/router';
+import { environment } from '../../../../environments/environment';
 
 @Component({
 	selector: 'mka-orte-list',
@@ -8,6 +9,8 @@ import { Router } from '@angular/router';
 	styleUrls: ['./orte-list.component.css']
 })
 export class OrteListComponent implements OnInit {
+
+	devMode = environment.envName === 'DEV';
 
 	orte$ = this.katalogFacade.orte$;
 	selectedKatalogItem$ = this.katalogFacade.selectedKatalogItem$;

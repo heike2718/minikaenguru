@@ -1,5 +1,6 @@
 <div class="mkv-container">
 	<div class="col-12">
+		<p *ngIf="devMode">schulen-list.component</p>
 		<h2>Schulen <span *ngIf="selectedKatalogItem$ | async as ort">in {{ort.name}}</span></h2>
 		<div *ngIf="schulen$ | async as schulen">
 			<p>Anzahl Schulen: {{schulen.length}}</p>
@@ -28,11 +29,9 @@
 		</div>
 	</div>
 	<div class="btn-group d-flex" role="group">
-		<div *ngIf="selectedKatalogItem$ | async">
-			<button class="btn btn-primary w-100 ml-1" (click)="addSchule()"><i class="fa fa-plus" aria-hidden="true"
-					title="neue Schule im gleichen Ort"></i>neue
-				Schule</button>
-		</div>
+		<button *ngIf="selectedKatalogItem$ | async" class="btn btn-primary w-100 ml-1" (click)="addSchule()"><i
+				class="fa fa-plus" aria-hidden="true" title="neue Schule im gleichen Ort"></i>neue
+			Schule</button>
 
 		<button class="btn btn-primary w-100 ml-1" (click)="gotoKataloge()"><i class="fa fa-arrow-left"
 				aria-hidden="true"></i>Kataloge</button>

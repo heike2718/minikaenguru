@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { KatalogpflegeItem } from '../katalogpflege.model';
 import { KatalogpflegeFacade } from '../katalogpflege.facade';
+import { environment } from '../../../environments/environment';
 
 @Component({
 	selector: 'mka-katalogpflege-item',
@@ -9,6 +10,8 @@ import { KatalogpflegeFacade } from '../katalogpflege.facade';
 })
 export class KatalogpflegeItemComponent implements OnInit {
 
+
+	devMode = environment.envName === 'DEV';
 
 	@Input()
 	katalogItem: KatalogpflegeItem;
