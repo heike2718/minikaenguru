@@ -60,7 +60,7 @@
 	
 	</div>
 
-    <div class="d-md-none d-lg-none d-xl-none">
+        <div class="d-md-none d-lg-none d-xl-none">
         <div class="row">
 	        <div class="col-3 my-auto"><span class="checkbox-text">A-1</span></div>
 	</div>

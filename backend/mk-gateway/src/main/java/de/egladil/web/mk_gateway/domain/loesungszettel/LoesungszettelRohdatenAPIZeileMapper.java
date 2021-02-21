@@ -168,7 +168,7 @@ public class LoesungszettelRohdatenAPIZeileMapper implements Function<Loesungsze
 			switch (klassenstufe) {
 
 			case EINS:
-				return "C-2";
+				return "C-3";
 
 			default:
 				return "C-1";
@@ -180,7 +180,7 @@ public class LoesungszettelRohdatenAPIZeileMapper implements Function<Loesungsze
 			switch (klassenstufe) {
 
 			case EINS:
-				return "C-3";
+				return "C-4";
 
 			default:
 				return "C-2";
@@ -189,14 +189,7 @@ public class LoesungszettelRohdatenAPIZeileMapper implements Function<Loesungsze
 
 		case 12: {
 
-			switch (klassenstufe) {
-
-			case EINS:
-				return "C-4";
-
-			default:
-				return "C-3";
-			}
+			return "C-3";
 		}
 
 		case 13: {

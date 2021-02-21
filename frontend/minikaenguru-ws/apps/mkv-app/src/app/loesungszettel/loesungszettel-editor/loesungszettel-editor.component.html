@@ -1,4 +1,4 @@
-<div class="mkv-container mt-1 loesungszettel">
+<div class="container p-3 my-3">
 	<h3>{{titel}}</h3>
 	<p *ngIf="devMode">loesungszettel-editor.component.ts</p>
 	<p *ngIf="devMode">{{loesungszetteleingaben}}</p>
@@ -6,47 +6,53 @@
 	<div *ngIf="devMode && uuid">
 		{{uuid}}</div>
 
-	<div *ngIf="loesungszettelFacade.selectedLoesungszettel$ | async as loesungszettel" class="tabelle">
+	<ng-container *ngIf="loesungszettelFacade.selectedLoesungszettel$ | async as loesungszettel" class="tabelle">
 
-		<div *ngFor="let zeile of loesungszettel.zeilen">
-			<mkv-loesungszettelrow [zeile]="zeile"></mkv-loesungszettelrow>
+		<div class="d-none d-md-block">
+			<ng-container *ngFor="let zeile of loesungszettel.zeilen">
+				<mkv-loesungszettelrow [zeile]="zeile"></mkv-loesungszettelrow>
+			</ng-container>
 		</div>
 
-	</div>
+		<div class="d-md-none d-lg-none d-xl-none">
+			<ng-container *ngFor="let zeile of loesungszettel.zeilen">
+				<mkv-loesungszettelrow [zeile]="zeile"></mkv-loesungszettelrow>
+			</ng-container>
+		</div>
 
-	<p>Lösungscode: {{loesungszetteleingaben}}</p>
+		<p>Lösungscode: {{loesungszetteleingaben}}</p>
 
-	<div *ngIf="showSaveMessage">
-		<cmn-msg></cmn-msg>
-	</div>
+		<div *ngIf="showSaveMessage">
+			<cmn-msg></cmn-msg>
+		</div>
 
-	<div class="btn-group d-flex" role="group">
-		<button class="btn btn-primary w-100 ml-1" [disabled]="saveInProgress" (click)="onSubmit()"><i
-				class="fa fa-floppy-o" aria-hidden="true"></i>
-			speichern</button>
+		<div class="btn-group d-flex" role="group">
+			<button class="btn btn-primary w-100 ml-1" [disabled]="saveInProgress" (click)="onSubmit()"><i
+					class="fa fa-floppy-o" aria-hidden="true"></i>
+				speichern</button>
 
-		<button class="btn btn-outline-danger w-100 ml-1" [disabled]="!uuid || uuid === 'neu'"
-			title="Lösungszettel löschen" (click)="onDelete()"><i class="fa fa-trash" aria-hidden="true"></i>
-			löschen</button>
+			<button class="btn btn-outline-danger w-100 ml-1" [disabled]="!uuid || uuid === 'neu'"
+				title="Lösungszettel löschen" (click)="onDelete()"><i class="fa fa-trash" aria-hidden="true"></i>
+				löschen</button>
 
-		<button class="btn btn-primary w-100 ml-1" (click)="onCancel()"><i class="fa fa-arrow-left"
-				aria-hidden="true"></i>zurück</button>
-	</div>
+			<button class="btn btn-primary w-100 ml-1" (click)="onCancel()"><i class="fa fa-arrow-left"
+					aria-hidden="true"></i>zurück</button>
+		</div>
 
-</div>
+	</ng-container>
 
-<ng-template #dialogContent let-modal>
-	<div class="modal-header">
-		<h4 class="modal-title" id="modal-basic-title">Leerer Lösungszettel?</h4>
-		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-			<span aria-hidden="true">&times;</span>
-		</button>
-	</div>
-	<div class="modal-body">
-		<p>Ist es richtig, dass {{nameKind}} einen leeren Lösungszettel abgegeben hat?</p>
-	</div>
-	<div class="modal-footer">
-		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('nein')">nein</button>
-		<button type="button" class="btn btn-outline-secondary" (click)="modal.close('ja')">ja</button>
-	</div>
-</ng-template>
+	<ng-template #dialogContent let-modal>
+		<div class="modal-header">
+			<h4 class="modal-title" id="modal-basic-title">Leerer Lösungszettel?</h4>
+			<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<p>Ist es richtig, dass {{nameKind}} einen leeren Lösungszettel abgegeben hat?</p>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('nein')">nein</button>
+			<button type="button" class="btn btn-outline-secondary" (click)="modal.close('ja')">ja</button>
+		</div>
+	</ng-template>

@@ -24,6 +24,8 @@ public class KatalogAntragMailtextGenerator {
 
 	private static final String PATH_MAILTEMPLATE_SCHULE_ANSCHRIFT = "/mailtemplates/katalogeintragSchule.txt";
 
+	private static final String PATH_EMAIL_SUFFIX = "/mailtemplates/mailsuffix.txt";
+
 	private static final Logger LOG = LoggerFactory.getLogger(KatalogAntragMailtextGenerator.class);
 
 	/**
@@ -35,17 +37,23 @@ public class KatalogAntragMailtextGenerator {
 	 */
 	public String getSchuleKatalogantragText(final SchulkatalogAntrag antrag) {
 
-		try (InputStream in = getClass().getResourceAsStream(PATH_MAILTEMPLATE_SCHULE_ANSCHRIFT);
-			StringWriter sw = new StringWriter()) {
+		try (InputStream inMailtext = getClass().getResourceAsStream(PATH_MAILTEMPLATE_SCHULE_ANSCHRIFT);
+			InputStream inMailSuffix = getClass().getResourceAsStream(PATH_EMAIL_SUFFIX);
+			StringWriter swMailtext = new StringWriter();
+			StringWriter swSuffix = new StringWriter()) {
 
-			IOUtils.copy(in, sw, Charset.forName("UTF-8"));
+			IOUtils.copy(inMailtext, swMailtext, Charset.forName("UTF-8"));
 
-			String text = sw.toString();
+			String text = swMailtext.toString();
 			text = text.replace("#0#", antrag.schulname());
 			text = text.replace("#1#", StringUtils.isBlank(antrag.plz()) ? "-" : antrag.plz());
 			text = text.replace("#2#", antrag.ort());
 			text = text.replace("#3#", StringUtils.isBlank(antrag.strasseUndHausnummer()) ? "-" : antrag.strasseUndHausnummer());
 			text = text.replace("#4#", antrag.land());
+
+			IOUtils.copy(inMailSuffix, swSuffix, Charset.defaultCharset());
+
+			text += swSuffix.toString();
 
 			return text;
 
