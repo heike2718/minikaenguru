@@ -17,8 +17,11 @@ import { User } from '@minikaenguru-ws/common-auth';
 })
 export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 
-	@ViewChild('dialogContent')
-	dialogContent: TemplateRef<HTMLElement>;
+	@ViewChild('dialogContentLeererLoesungszettel')
+	dialogContentLeererLoesungszettel: TemplateRef<HTMLElement>;
+
+	@ViewChild('dialogContentLoeschen')
+	dialogContentLoeschen: TemplateRef<HTMLElement>;
 
 	devMode = environment.envName === 'DEV'
 
@@ -77,7 +80,7 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 				if (zettel) {
 					this.uuid = zettel.uuid;
 				} else {
-					this.uuid= undefined;
+					this.uuid = undefined;
 				}
 			}
 
@@ -108,7 +111,7 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 		this.saveInProgress = true;
 
 		if (loesungszettelIsLeer(this.loesungszettel)) {
-			this.openWarndialog(this.dialogContent);
+			this.openWarndialogLeererLoesungszettel();
 		} else {
 			this.forceSave();
 		}
@@ -122,7 +125,10 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 	}
 
 	onDelete(): void {
+		this.openWarndialogLoesungszettelLoeschen();
+	}
 
+	private forceDelete(): void {
 		this.loesungszettelFacade.deleteLoesungszettel(this.kind, this.loesungszettel);
 		this.navigateBack();
 	}
@@ -158,13 +164,24 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	private openWarndialog(content: TemplateRef<HTMLElement>) {
+	private openWarndialogLeererLoesungszettel() {
 
 		this.saveInProgress = false;
-		this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+		this.modalService.open(this.dialogContentLeererLoesungszettel, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
 
 			if (result === 'ja') {
 				this.forceSave();
+			}
+
+		});
+	}
+
+	private openWarndialogLoesungszettelLoeschen() {
+
+		this.modalService.open(this.dialogContentLoeschen, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+
+			if (result === 'ja') {
+				this.forceDelete();
 			}
 
 		});

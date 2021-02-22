@@ -5,7 +5,7 @@ import { AppState } from '../reducers';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
 import * as WettbewerbActions from './+state/wettbewerb.actions';
 import { aktuellerWettbewerb, veranstalter } from './+state/wettbewerb.selectors';
-import { tap, first, take } from 'rxjs/operators';
+import { tap, take } from 'rxjs/operators';
 import { Wettbewerb } from './wettbewerb.model';
 
 const WETTBEWERB_STORAGE_KEY = 'mkv_wettbewerb';

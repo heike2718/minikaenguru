@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LogPublishersService } from './log-publishers.service';
 import { Router } from '@angular/router';
+import { STORAGE_KEY_USER } from '@minikaenguru-ws/common-auth';
 
 @Injectable(
 	{
@@ -49,6 +50,13 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 				console.log(error.stack);
 			}
 			let msg = 'mk-admin-app: Unerwarteter Fehler: ' + error.message;
+
+			const user = localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_USER);
+
+			if (user) {
+				msg += ' user=' + user;
+			}
+
 			if (error.stack) {
 				msg += ' - ' + error.stack;
 			}
