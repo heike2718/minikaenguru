@@ -80,15 +80,39 @@ footer {
   padding: 5px 10px 5px 10px;
 }
 
+.loesungszettelrow {
+  max-width: 70%;
+}
 
-/* Extra small devices (phones, 600px and down)
+.checkbox-text {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.cell {
+  background: white;
+  border: 2px solid black;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+
+.cell:hover {
+  border: 2px solid red;
+  border-radius: 4px;
+}
+
+/* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
 
-  .btn-group {
-    display: block;
-    float: none;
+  .checkbox-text {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+
+  .cell {
+    background: white;
+    border: 1px solid black;
   }
 
 }
-*/
-

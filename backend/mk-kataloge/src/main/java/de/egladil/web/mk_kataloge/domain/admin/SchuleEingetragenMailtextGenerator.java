@@ -23,6 +23,8 @@ public class SchuleEingetragenMailtextGenerator {
 
 	private static final String PATH_MAILTEMPLATE = "/mailtemplates/schuleEingetragen.txt";
 
+	private static final String PATH_EMAIL_SUFFIX = "/mailtemplates/mailsuffix.txt";
+
 	private static final Logger LOG = LoggerFactory.getLogger(SchuleEingetragenMailtextGenerator.class);
 
 	/**
@@ -34,15 +36,21 @@ public class SchuleEingetragenMailtextGenerator {
 	 */
 	public String getSchuleEingetragenText(final SchulePayload schulePayload) {
 
-		try (InputStream in = getClass().getResourceAsStream(PATH_MAILTEMPLATE);
-			StringWriter sw = new StringWriter()) {
+		try (InputStream inMailtext = getClass().getResourceAsStream(PATH_MAILTEMPLATE);
+			InputStream inMailSuffix = getClass().getResourceAsStream(PATH_EMAIL_SUFFIX);
+			StringWriter swMailtext = new StringWriter();
+			StringWriter swSuffix = new StringWriter()) {
 
-			IOUtils.copy(in, sw, Charset.forName("UTF-8"));
+			IOUtils.copy(inMailtext, swMailtext, Charset.defaultCharset());
 
-			String text = sw.toString();
+			String text = swMailtext.toString();
 			text = text.replace("#0#", schulePayload.name());
 			text = text.replace("#1#", schulePayload.nameOrt());
 			text = text.replace("#2#", schulePayload.nameLand());
+
+			IOUtils.copy(inMailSuffix, swSuffix, Charset.defaultCharset());
+
+			text += swSuffix.toString();
 
 			return text;
 

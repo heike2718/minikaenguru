@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Minik&auml;nguru</title>
+<link rel="stylesheet" href="./bootstrap/bootstrap.min.css">
+<link rel="stylesheet" href="./bootstrap/bootstrap-grid.min.css">
+<link rel="stylesheet" href="./font-awesome/font-awesome.min.css">
+<link rel="stylesheet" href="./test.css">
+</head>
+<body>
+<div class="container-fluid">
+<div class="container border p-3 my-3">
+	<h1>Lösungszetteltest</h1>
+	
+	<div class="d-none d-md-block">
+        <div class="row">
+	        <div class="col-3 my-auto"><span class="checkbox-text">A-1</span></div>
+	</div>
+	<div class="row border p-3 bg-success loesungszettelrow">
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+	</div>
+       <div class="row">
+	        <div class="col-3 my-auto"><span class="checkbox-text">A-2</span></div>
+	</div>
+	<div class="row border p-3 bg-success loesungszettelrow">
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+	</div>
+        <div class="row">
+	        <div class="col-3 my-auto"><span class="checkbox-text">B-1</span></div>
+	</div>
+        <div class="row border p-3 bg-warning loesungszettelrow">
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+	</div>
+
+        <div class="row">
+	        <div class="col-3 my-auto"><span class="checkbox-text">C-1</span></div>
+	</div>
+
+         <div class="row border p-3 bg-danger loesungszettelrow">
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+	</div>
+	
+	</div>
+
+        <div class="d-md-none d-lg-none d-xl-none">
+        <div class="row">
+	        <div class="col-3 my-auto"><span class="checkbox-text">A-1</span></div>
+	</div>
+	<div class="row border p-3 bg-success">
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+	</div>
+        <div class="row">
+	        <div class="col-3 my-auto"><span class="checkbox-text">A-2</span></div>
+	</div>
+	<div class="row border p-3 bg-success">
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+	</div>
+        <div class="row">
+	        <div class="col-3 my-auto"><span class="checkbox-text">B-1</span></div>
+	</div>
+        <div class="row border p-3 bg-warning">
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+	</div>
+
+        <div class="row">
+	        <div class="col-3 my-auto"><span class="checkbox-text">C-1</span></div>
+	</div>
+
+         <div class="row border p-3 bg-danger">
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+		<div class="col-2 ml2 mr-2 my-auto by1 p-3  text-center cell"><span class="checkbox-text">X</span></div>
+	</div>
+	
+	</div>
+</div>
+</body>
+</html>

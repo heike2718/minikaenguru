@@ -1,5 +1,4 @@
-<div class="square-box" (click)="onClickEvent($event)">
-	<div class="square-content">
-		<div class="square-text"><span *ngIf="checked">X</span></div>
-	</div>
+<div (click)="onClickEvent($event)">
+	<span *ngIf="checked" class="selected">X</span>
+	<span *ngIf="!checked" class="deselected">X</span>
 </div>

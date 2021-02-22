@@ -108,7 +108,6 @@ export class KinderListComponent implements OnInit, OnDestroy {
 		}
 	}
 
-
 	addKind(): void {
 		this.kinderFacade.createNewKind(this.klasseUuid);
 

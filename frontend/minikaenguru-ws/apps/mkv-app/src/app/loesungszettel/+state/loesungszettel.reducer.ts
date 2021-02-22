@@ -53,6 +53,7 @@ const loesungszettelReducer = createReducer(initialLoesungszettelState,
 
 	on(LoesungszettelActions.loesungszettelChanged, (state, action) => {
 
+
 		const zettel: Loesungszettel = state.selectedLoesungszettel;
 
 		const zeile: Loesungszettelzeile = action.zeile;
@@ -70,7 +71,10 @@ const loesungszettelReducer = createReducer(initialLoesungszettelState,
 
 		const neuerLoesungszettel = { ...zettel, zeilen: neueZeilen };
 
-		return { ...state, selectedLoesungszettel: neuerLoesungszettel };
+		let neueMap = new LoesungszettelMap(state.loesungszettelMap).remove(neuerLoesungszettel.uuid);
+		neueMap = new LoesungszettelMap(neueMap).merge(neuerLoesungszettel);
+
+		return { ...state, loading: false, loesungszettelMap: neueMap,  selectedLoesungszettel: neuerLoesungszettel };
 
 	}),
 
