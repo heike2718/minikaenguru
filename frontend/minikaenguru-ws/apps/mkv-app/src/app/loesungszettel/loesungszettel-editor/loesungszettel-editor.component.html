@@ -41,7 +41,7 @@
 
 	</ng-container>
 
-	<ng-template #dialogContent let-modal>
+	<ng-template #dialogContentLeererLoesungszettel let-modal>
 		<div class="modal-header">
 			<h4 class="modal-title" id="modal-basic-title">Leerer Lösungszettel?</h4>
 			<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
@@ -50,6 +50,22 @@
 		</div>
 		<div class="modal-body">
 			<p>Ist es richtig, dass {{nameKind}} einen leeren Lösungszettel abgegeben hat?</p>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('nein')">nein</button>
+			<button type="button" class="btn btn-outline-secondary" (click)="modal.close('ja')">ja</button>
+		</div>
+	</ng-template>
+
+	<ng-template #dialogContentLoeschen let-modal>
+		<div class="modal-header">
+			<h4 class="modal-title" id="modal-basic-title">Lösungszettel löschen?</h4>
+			<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<p>Möchten Sie den Lösungszetttel von {{nameKind}} wirklich löschen?</p>
 		</div>
 		<div class="modal-footer">
 			<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('nein')">nein</button>

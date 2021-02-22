@@ -263,17 +263,50 @@ Lösungszettel der Kinder erfassen
 
 Der Einstieg zum Erfassen der Lösungszettel erfolgt über Schulübersicht -> Auswertung -> "Kinder bearbeiten" -> "Lösungszettel"
 
-image::./images/kinderliste-optionen-loesungszettel.png[width=60%]
+image::./images/klassenliste-teilweise-vollstaendig.png[width=60%]
+
+Kinder, für die Sie bereits einen Lösungszettel erfasst haben, erkennen Sie in der Übersichtt an der grünen Markierung neben dem Namen, die die Punkte anzeigt, der Zeile
+mit der Angabe der Länge des Kängurusprungs, sowie der Schaltfläche "Urkunde korrigieren".
 
 Nach Klick auf die Schaltfläche "Lösungszettel" gelangen Sie in das Formular zum Erfassen des Lösungszettels für dieses Kind.
 Das Bild zeigt das Formular für ein Inklusionskind, da hier das gesamte Formular in ein Bildschirmfoto passt:
 
 image::./images/loesungszettel-inklusion.png[width=45%]
 
-Sie sehen den Namen des Kindes und eine Tabelle mit den Aufgabennummern
+Sie sehen den Namen des Kindes und eine Tabelle mit den Aufgabennummern. Die Aufgaben in den Kategorien A (leicht), B (mittelschwer) und C (schwer) sind
+jeweils mit einer anderen Farbe hinterlegt, um es zu erleichtern, den Überblick zu behalten.
+Jede Zeile enthält Ankreuzkästchen, die den Ankreuztabellen auf den Aufgabenzetteln entsprechen.
+
+Sie können also die Antworten der Kinder auf deren Arbeitsblättern einfach in diese Tabelle übertragen, indem Sie in jeder Zeile das Kästchen anklicken,
+das das Kind angekreutz hat. Bei nicht gelösten Aufgaben bleibt die entsprechende Zeile leer. Ein versehentlich gesetztes Kreuz in einer Zeile können Sie
+durch erneutes Anklicken wieder löschen.
+
+Nachdem der Lösungszettel übertragen wurde, kann er gespeichert werden. Die Anwendung berechnet dann sofort die erreichte
+Punktzahl und die Länge des Kängurusprungs.
+
+Hat das Kind einen leeren Lösungszettel abgegeben, so erhält es trotzdem Punkte und eine Urkunde. Daher
+ist es möglich, einen leeren Lösungszettel zu speichern.In diesem Fall erscheint ein Warndialog:
+
+image::./images/dialog-leerer-loesungszettel.png[width=70%]
+
+Bestätigen Sie die Frage mit "ja", wird der leere Lösungszettel gespeichert.
 
 
+Sie können einen Lösungszettel auch jederzeit löschen. Die Löschung erfolgt erst, nachdem Sie einen Warndiaog bestätigt haben.
+Die Schaltfläche "löschen" ist nur aktiviert, wenn für das Kind bereits einmal ein Lösungszettel gespeichert wurde.
 
+Nach dem Löschen gelangen Sie automatisch zurück in die Klassenliste.
 
+Sie können aus dem Formular "Lösungszettel" zurück in die Klassenliste gelangen, indem Sie sie Schaltfläche "zurück" anklicken.
+
+*Urkunde korrigieren*
+
+In der Kinderliste einer Klasse gibt es für jedes Kind die Möglichkeit, eine Urkunde zu erstellen (Schaltfläche "Urkunde korrigieren").
+Das Erstellen einer Urkunde erfordert mehrere Klicks und daher gibt es diese Möglichkeit für ein einzelnes Kind nur, um eine Urkunde zu
+korrigieren, beispielsweise wenn Sie die Auswertung für die Schule mit allen Urkunden bereits erstellt hatten und feststellen, dass Sie sich
+beim Namen des Kindes verschrieben haben. Dann können Sie den Namen des Kindes korrigieren und eine einzelne Urkunde für dieses Kind noch einmal ausdrucken.
+
+Bitte verwenden Sie diese Schaltfläche nicht, um für jedes Kind einzeln eine Urkunde zu erstellen. Das würde viel zu lange dauern und Sie bekämen dann auch keine
+Gesamtübersicht mit den Platzierungen der Kinder.
 
 
