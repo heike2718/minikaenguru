@@ -14,6 +14,7 @@ __Release 1.4.0_:
 * [Fehler im Datepicker](https://github.com/heike2718/minikaenguru/issues/236)
 * [Feature "Download Unterlagen"](https://github.com/heike2718/minikaenguru/issues/194)
 
+
 __Release 1.3.3_:
 
 * Summe Schulanmeldung in Anmeldungsübersicht-API
