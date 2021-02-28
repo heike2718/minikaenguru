@@ -1,10 +1,19 @@
 # authprovider Release Notes
 
+__Release 1.4.1_:
+
+* bump quarkus to 1.11.4-Final
+* bump commons to 1.4.13
+* [Zugang Unterlagen erteilt wird in mkv-app ignoriert](https://github.com/heike2718/minikaenguru/issues/245)
+* [Fehler beim Anmeldestatus nach Anmelden Schule über Schule-Card](https://github.com/heike2718/minikaenguru/issues/232)
+
+
 __Release 1.4.0_:
 
 * [upgrade dependencies](https://github.com/heike2718/minikaenguru/issues/233)
 * [Fehler im Datepicker](https://github.com/heike2718/minikaenguru/issues/236)
 * [Feature "Download Unterlagen"](https://github.com/heike2718/minikaenguru/issues/194)
+
 
 __Release 1.3.3_:
 
