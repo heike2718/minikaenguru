@@ -17,7 +17,9 @@ import de.egladil.web.mk_gateway.domain.urkunden.daten.AbstractDatenUrkunde;
  */
 public class KaengurusprungurkundeHauptabschnittRendererDeutsch implements UrkundeHauptabschnittRenderer {
 
-	private static final String MF_PATTERN_PUNKTE = "mit {0} richtigen Antworten in Folge";
+	private static final String MF_PATTERN_ANTWORTEN = "mit {0} richtigen Antworten in Folge";
+
+	private static final String MF_PATTERN_ANTWORT = "mit {0} richtigen Antwort in Folge";
 
 	private final FontCalulator fontCalculator = new FontCalulator();
 
@@ -81,7 +83,7 @@ public class KaengurusprungurkundeHauptabschnittRendererDeutsch implements Urkun
 		deltaY += UrkundePDFUtils.POINTS_BETWEEN_PARAGRAPHS;
 
 		fontSize = UrkundePDFUtils.SIZE_TEXT_NORMAL;
-		text = MessageFormat.format(MF_PATTERN_PUNKTE, new Object[] { datenUrkunde.punktvalue() });
+		text = getTextAntwortenInFolge(datenUrkunde.punktvalue());
 
 		deltaY = fontCalculator.berechneDeltaY(text, deltaY, fontSize);
 		UrkundeLinePrinter.printTextCenter(content, text, UrkundePDFUtils.getFontBlack(fontSize), deltaY);
@@ -92,6 +94,12 @@ public class KaengurusprungurkundeHauptabschnittRendererDeutsch implements Urkun
 			deltaY);
 
 		return deltaY;
+	}
+
+	String getTextAntwortenInFolge(final String anzahl) {
+
+		return "1".equals(anzahl) ? MessageFormat.format(MF_PATTERN_ANTWORT, new Object[] { anzahl })
+			: MessageFormat.format(MF_PATTERN_ANTWORTEN, new Object[] { anzahl });
 	}
 
 }
