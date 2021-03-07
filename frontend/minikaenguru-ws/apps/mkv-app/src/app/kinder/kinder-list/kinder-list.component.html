@@ -7,7 +7,7 @@
 		<ng-container *ngIf="(veranstalter$ | async) as veranstalter else kinderBlockiert">
 			<ng-container  *ngIf="(kinder$ | async) as kinder">
 				<div class="col-md-12 mt-1 mb-1" *ngFor="let kind of kinder">
-					<mkv-kind-details [kind]="kind" [veranstalter]="veranstalter"></mkv-kind-details>
+					<mkv-kind-details [kind]="kind"></mkv-kind-details>
 				</div>
 			</ng-container>
 		</ng-container>

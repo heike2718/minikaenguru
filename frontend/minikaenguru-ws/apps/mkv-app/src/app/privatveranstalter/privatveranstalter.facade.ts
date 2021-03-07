@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
 import * as PrivatveranstalterActions from './+state/privatveranstalter.actions';
-import { loading, privatveranstalter, aktuelleTeilnahmeGeladen } from './+state/privatveranstalter.selectors';
+import * as VeranstalterSelectors from './+state/privatveranstalter.selectors';
 import { VeranstalterService } from '../services/veranstalter.service';
 import { TeilnahmenService } from '../services/teilnahmen.service';
 import { MessageService, Message } from '@minikaenguru-ws/common-messages';
@@ -17,9 +17,10 @@ import * as WettbewerbActions from '../wettbewerb/+state/wettbewerb.actions';
 @Injectable({ providedIn: 'root' })
 export class PrivatveranstalterFacade {
 
-	public loading$ = this.appStore.select(loading);
-	public veranstalter$ = this.appStore.select(privatveranstalter);
-	public aktuelleTeilnahmeGeladen$ = this.appStore.select(aktuelleTeilnahmeGeladen);
+	public loading$ = this.appStore.select(VeranstalterSelectors.loading);
+	public veranstalter$ = this.appStore.select(VeranstalterSelectors.privatveranstalter);
+	public aktuelleTeilnahmeGeladen$ = this.appStore.select(VeranstalterSelectors.aktuelleTeilnahmeGeladen);
+	public hatZugangZuUnterlagen$ = this.appStore.select(VeranstalterSelectors.zugangUnterlagen);
 
 	private loggingOut: boolean;
 
@@ -76,6 +77,8 @@ export class PrivatveranstalterFacade {
 
 				this.messageService.info(message.message);
 				this.appStore.dispatch(PrivatveranstalterActions.privatveranstalterAngemeldet({ teilnahme: teilnahme }));
+
+				this.reloadZugangsstatusUnterlagen();
 			},
 			(error => {
 				this.appStore.dispatch(PrivatveranstalterActions.finishedWithError());
@@ -100,6 +103,17 @@ export class PrivatveranstalterFacade {
 				this.errorHandler.handleError(error);
 			})
 		);
+	}
+
+	// ///////////////////////////////////////
+
+	private reloadZugangsstatusUnterlagen(): void {
+
+		this.veranstalterService.loadPrivatveranstalter().subscribe(
+			veranstalter => {
+				this.appStore.dispatch(PrivatveranstalterActions.privatveranstalterGeladen({ veranstalter: veranstalter }));
+			}
+		)
 	}
 
 }

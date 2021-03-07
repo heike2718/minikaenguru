@@ -6,7 +6,7 @@
 html,
 body {
   height: 100%;
-  /*width: 90%;*/
+  width: 90%;
 }
 
 body {
@@ -104,6 +104,10 @@ footer {
 
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
+
+  body {
+    width: 100%;
+  }
 
   .checkbox-text {
     font-size: 1rem;
