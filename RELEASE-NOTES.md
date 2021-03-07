@@ -2,6 +2,14 @@
 
 __Release 1.4.1_:
 
+* [Admin: Zugangsstatus Unterlagen wird nicht korrekt angezeigt](https://github.com/heike2718/minikaenguru/issues/258)
+* [Kind-Details: kein Lösungszettelbutton, wenn sich zugangsstatus Unterlagen geändert hat](https://github.com/heike2718/minikaenguru/issues/264)
+* [Nachladen Zugangsstatus Unterlagen](https://github.com/heike2718/minikaenguru/issues/255)
+* [Grammatikfehler Urkunde Kängurusprung](https://github.com/heike2718/minikaenguru/issues/256)
+* [NPE beim Anmelden einer Schule über den Anmelden-Button auf der Karte](https://github.com/heike2718/minikaenguru/issues/261)
+
+__Release 1.4.1_:
+
 * bump quarkus to 1.11.4-Final
 * bump commons to 1.4.13
 * [Zugang Unterlagen erteilt wird in mkv-app ignoriert](https://github.com/heike2718/minikaenguru/issues/245)

@@ -128,6 +128,9 @@ export class LehrerFacade {
 				this.messageService.info(message.message);
 
 				this.appStore.dispatch(LehrerActions.schuleAngemeldet({ teilnahme: teilnahme, angemeldetDurch: user.fullName }));
+
+				this.reloadZugangsstatusUnterlagen();
+
 			},
 			(error => {
 				this.appStore.dispatch(LehrerActions.finishedWithError());
@@ -220,6 +223,17 @@ export class LehrerFacade {
 	public resetState(): void {
 
 		this.appStore.dispatch(LehrerActions.resetLehrer());
+	}
+
+	// ///////////////////////////////////////
+
+	private reloadZugangsstatusUnterlagen(): void {
+
+		this.veranstalterService.getLehrer().subscribe(
+			lehrer => {
+				this.appStore.dispatch(LehrerActions.datenLehrerGeladen({ lehrer: lehrer }))
+			}
+		)
 	}
 
 }
