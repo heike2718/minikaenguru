@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
 import { Kind, kindToString } from '@minikaenguru-ws/common-components';
-import { Privatveranstalter, AbstractVeranstalter } from '../../wettbewerb/wettbewerb.model';
 import { Router } from '@angular/router';
 import { PrivatveranstalterFacade } from '../../privatveranstalter/privatveranstalter.facade';
 import { KinderFacade } from '../kinder.facade';
@@ -12,6 +11,7 @@ import { LoesungszettelFacade } from '../../loesungszettel/loesungszettel.facade
 import { UrkundenFacade } from '../../urkunden/urkunden.facade';
 import { User, STORAGE_KEY_USER } from '@minikaenguru-ws/common-auth';
 import { environment } from '../../../environments/environment';
+import { LehrerFacade } from '../../lehrer/lehrer.facade';
 
 @Component({
 	selector: 'mkv-kind-details',
@@ -26,9 +26,6 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 	@Input()
 	kind: Kind
 
-	@Input()
-	veranstalter: AbstractVeranstalter;
-
 	showKlasseWechselnButton = false;
 
 	selectedKlasse$ = this.klassenFacade.selectedKlasse$;
@@ -39,11 +36,15 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 
 	showHinweisUrkunde = false;
 
+	zugangUnterlagen = false;
+
 	private klasseSubscription: Subscription;
 
 	private klasseUuid: string;
 
 	private klassenSubscription: Subscription;
+
+	private zugangUnterlagenSubscription: Subscription;
 
 	titel: string;
 
@@ -51,8 +52,9 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 		private modalService: NgbModal,
 		private kinderFacade: KinderFacade,
 		private klassenFacade: KlassenFacade,
+		private lehrerFacade: LehrerFacade,
+		private privatveranstalterFacade: PrivatveranstalterFacade,
 		private loesungszettelFacade: LoesungszettelFacade,
-		private urkundenFacade: UrkundenFacade,
 		private logger: LogService
 	) { }
 
@@ -66,6 +68,13 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 			this.btnUrkundeLabel = 'Urkunde korrigieren';
 			this.btnUrkundeTooltip = 'Urkunde dieses Kindes korrigieren';
 			this.showHinweisUrkunde = this.kind.punkte && this.kind.punkte.loesungszettelId !== 'neu';
+			this.zugangUnterlagenSubscription = this.lehrerFacade.hatZugangZuUnterlagen$.subscribe(
+				z => this.zugangUnterlagen = z
+			);
+		} else {
+			this.zugangUnterlagenSubscription = this.privatveranstalterFacade.hatZugangZuUnterlagen$.subscribe(
+				z => this.zugangUnterlagen = z
+			);
 		}
 
 		this.klasseSubscription = this.selectedKlasse$.subscribe(
@@ -86,6 +95,8 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 				}
 			}
 		);
+
+
 	}
 
 	ngOnDestroy(): void {
@@ -94,6 +105,9 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 		}
 		if (this.klassenSubscription) {
 			this.klassenSubscription.unsubscribe();
+		}
+		if (this.zugangUnterlagenSubscription) {
+			this.zugangUnterlagenSubscription.unsubscribe();
 		}
 	}
 
