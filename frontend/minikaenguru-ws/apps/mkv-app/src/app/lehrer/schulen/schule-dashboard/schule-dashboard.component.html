@@ -44,6 +44,13 @@
 					</div>
 				</div>
 
+				<div *ngIf="schule.details.kollegen && schule.details.kollegen.length > 0" class="card clickable" (click)="vonSchuleAbmelden()">
+					<div class="card-body">
+						<div class="card-title">Entfernen</div>
+						<div class="mb-2 text-muted">von dieser Schule abmelden</div>
+					</div>
+				</div>
+
 				<!--
 				<div *ngIf="schule.aktuellAngemeldet" class="card clickable" (click)="gotoKlassenlisteHochladen()">
 					<div class="card-body">
