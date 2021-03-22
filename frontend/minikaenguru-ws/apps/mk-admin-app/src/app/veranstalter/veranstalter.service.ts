@@ -59,4 +59,14 @@ export class VeranstalterService {
 
 	}
 
+	public newsletterDeaktivieren(veranstalter: Veranstalter): Observable<ResponsePayload> {
+
+		const url = environment.apiUrl + '/veranstalter/' + veranstalter.uuid + '/newsletter';
+
+		return this.http.post(url, null).pipe(
+			map(body => body as ResponsePayload)
+		);
+
+	}
+
 }

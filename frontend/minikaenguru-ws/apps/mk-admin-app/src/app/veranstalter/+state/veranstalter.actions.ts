@@ -43,5 +43,10 @@ export const zugangsstatusUnterlagenGeaendert = createAction(
 	props<{veranstalter: Veranstalter, neuerStatus: ZugangUnterlagen}>()
 );
 
+export const newsletterDeaktiviert = createAction(
+	'[VeranstalterFacade] newsletterDeaktivieren',
+	props<{veranstalter: Veranstalter}>()
+)
+
 
 

@@ -185,6 +185,13 @@ public final class PermittedRolesForAdminProvider {
 			result.put(new PathWithMethod("/admin/veranstalter/*/zugangsstatus", HttpMethod.POST), rollen);
 
 		}
+
+		{
+
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			result.put(new PathWithMethod("/admin/veranstalter/*/newsletter", HttpMethod.POST), rollen);
+
+		}
 	}
 
 	/**

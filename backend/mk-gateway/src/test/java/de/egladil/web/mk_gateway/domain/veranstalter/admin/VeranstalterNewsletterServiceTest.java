@@ -5,6 +5,7 @@
 package de.egladil.web.mk_gateway.domain.veranstalter.admin;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -32,16 +33,16 @@ import de.egladil.web.mk_gateway.domain.veranstalter.ZugangUnterlagen;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.VeranstalterSuchanfrage;
 
 /**
- * VeranstalterZugangsstatusServiceTest
+ * VeranstalterNewsletterServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-public class VeranstalterZugangsstatusServiceTest {
+public class VeranstalterNewsletterServiceTest {
 
 	@Mock
 	private VeranstalterRepository veranstalterRepository;
 
 	@InjectMocks
-	private VeranstalterZugangsstatusService service;
+	private VeranstalterNewsletterService service;
 
 	@Test
 	void should_aendereVeranstalterReturnErrorResponsePayload_when_keinTrefferMitUuidFragment() {
@@ -54,7 +55,7 @@ public class VeranstalterZugangsstatusServiceTest {
 		when(veranstalterRepository.findVeranstalter(suchanfrage)).thenReturn(new ArrayList<>());
 
 		// Act
-		ResponsePayload result = service.aendereVeranstalter(uuidPrefix, ZugangUnterlagen.ERTEILT);
+		ResponsePayload result = service.aendereVeranstalter(uuidPrefix, null);
 
 		// Assert
 		MessagePayload messagePayload = result.getMessage();
@@ -80,17 +81,43 @@ public class VeranstalterZugangsstatusServiceTest {
 		when(veranstalterRepository.findVeranstalter(suchanfrage)).thenReturn(veranstalter);
 
 		// Act
-		ResponsePayload result = service.aendereVeranstalter(uuidPrefix, ZugangUnterlagen.ERTEILT);
+		ResponsePayload result = service.aendereVeranstalter(uuidPrefix, null);
 
 		// Assert
 		MessagePayload messagePayload = result.getMessage();
 		assertEquals("ERROR", messagePayload.getLevel());
 		assertEquals("2 Veranstalter mit UUID like '80c8052f%' gefunden.", messagePayload.getMessage());
+	}
+
+	@Test
+	void should_aendereVeranstalterReturnInfoNotChangedResponsePayload_when_trefferUndNewsletterBereitsDeaktiviert() {
+
+		// Arrange
+		String uuidPrefix = "80c8052f";
+		ZugangUnterlagen zugangUnterlagen = ZugangUnterlagen.ERTEILT;
+		VeranstalterSuchanfrage suchanfrage = new VeranstalterSuchanfrage().withSuchkriterium(VeranstalterSuchkriterium.UUID)
+			.withSuchstring(uuidPrefix);
+
+		List<Veranstalter> veranstalter = new ArrayList<>();
+		veranstalter.add(new Lehrer(new Person(uuidPrefix + "-guigsdiqg", "Harald Schulze"), false,
+			Arrays.asList(new Identifier[] { new Identifier("hqdhoq") })));
+
+		when(veranstalterRepository.findVeranstalter(suchanfrage)).thenReturn(veranstalter);
+
+		// Act
+		ResponsePayload result = service.aendereVeranstalter(uuidPrefix, zugangUnterlagen);
+
+		// Assert
+		MessagePayload messagePayload = result.getMessage();
+		assertEquals("INFO", messagePayload.getLevel());
+		assertEquals("Veranstalter hatte den Newsletterempfang bereits deaktiviert.", messagePayload.getMessage());
+		assertNull(result.getData());
+		verify(veranstalterRepository, times(0)).changeVeranstalter(any());
 
 	}
 
 	@Test
-	void should_aendereVeranstalterReturnInfoNotChangedResponsePayload_when_trefferUndZugangsstatusBereitsGesetzt() {
+	void should_aendereVeranstalterCallsPersist_when_trefferUndNewsletterAktiviert() {
 
 		// Arrange
 		String uuidPrefix = "80c8052f";
@@ -100,7 +127,7 @@ public class VeranstalterZugangsstatusServiceTest {
 
 		List<Veranstalter> veranstalter = new ArrayList<>();
 		veranstalter.add(new Lehrer(new Person(uuidPrefix + "-guigsdiqg", "Harald Schulze"), true,
-			Arrays.asList(new Identifier[] { new Identifier("hqdhoq") })).withZugangUnterlagen(zugangUnterlagen));
+			Arrays.asList(new Identifier[] { new Identifier("hqdhoq") })));
 
 		when(veranstalterRepository.findVeranstalter(suchanfrage)).thenReturn(veranstalter);
 
@@ -110,100 +137,9 @@ public class VeranstalterZugangsstatusServiceTest {
 		// Assert
 		MessagePayload messagePayload = result.getMessage();
 		assertEquals("INFO", messagePayload.getLevel());
-		assertEquals("Veranstalter hatte bereits den gewünschten Zugangsstatus Unterlagen.", messagePayload.getMessage());
-		assertEquals(zugangUnterlagen, result.getData());
-		verify(veranstalterRepository, times(0)).changeVeranstalter(any());
+		assertEquals("Newsletterempfang erfolgreich deaktiviert", messagePayload.getMessage());
+		assertNull(result.getData());
+		verify(veranstalterRepository, times(1)).changeVeranstalter(any());
 
 	}
-
-	@Test
-	void should_aendereVeranstalterCallPersistAndReturnInfoWithNeuerZugangsstatusResponsePayload_when_trefferUndZugangsstatusNeuErteilt() {
-
-		// Arrange
-		String uuidPrefix = "80c8052f";
-		ZugangUnterlagen zugangUnterlagen = ZugangUnterlagen.ERTEILT;
-		VeranstalterSuchanfrage suchanfrage = new VeranstalterSuchanfrage().withSuchkriterium(VeranstalterSuchkriterium.UUID)
-			.withSuchstring(uuidPrefix);
-
-		List<Veranstalter> veranstalter = new ArrayList<>();
-		Veranstalter theVeranstalter = new Lehrer(new Person(uuidPrefix + "-guigsdiqg", "Harald Schulze"), true,
-			Arrays.asList(new Identifier[] { new Identifier("hqdhoq") })).withZugangUnterlagen(ZugangUnterlagen.ENTZOGEN);
-		veranstalter.add(theVeranstalter);
-
-		when(veranstalterRepository.findVeranstalter(suchanfrage)).thenReturn(veranstalter);
-		when(veranstalterRepository.changeVeranstalter(theVeranstalter)).thenReturn(Boolean.TRUE);
-
-		// Act
-		ResponsePayload result = service.aendereVeranstalter(uuidPrefix, zugangUnterlagen);
-
-		// Assert
-		MessagePayload messagePayload = result.getMessage();
-		assertEquals("INFO", messagePayload.getLevel());
-		assertEquals("Zugangsstatus Unterlagen erfolgreich geändert.", messagePayload.getMessage());
-		assertEquals(zugangUnterlagen, result.getData());
-
-		verify(veranstalterRepository, times(1)).changeVeranstalter(theVeranstalter);
-
-	}
-
-	@Test
-	void should_aendereVeranstalterCallPersistAndReturnInfoWithNeuerZugangsstatusResponsePayload_when_trefferUndZugangsstatusNeuDefault() {
-
-		// Arrange
-		String uuidPrefix = "80c8052f";
-		ZugangUnterlagen zugangUnterlagen = ZugangUnterlagen.DEFAULT;
-		VeranstalterSuchanfrage suchanfrage = new VeranstalterSuchanfrage().withSuchkriterium(VeranstalterSuchkriterium.UUID)
-			.withSuchstring(uuidPrefix);
-
-		List<Veranstalter> veranstalter = new ArrayList<>();
-		Veranstalter theVeranstalter = new Lehrer(new Person(uuidPrefix + "-guigsdiqg", "Harald Schulze"), true,
-			Arrays.asList(new Identifier[] { new Identifier("hqdhoq") })).withZugangUnterlagen(ZugangUnterlagen.ENTZOGEN);
-		veranstalter.add(theVeranstalter);
-
-		when(veranstalterRepository.findVeranstalter(suchanfrage)).thenReturn(veranstalter);
-		when(veranstalterRepository.changeVeranstalter(theVeranstalter)).thenReturn(Boolean.TRUE);
-
-		// Act
-		ResponsePayload result = service.aendereVeranstalter(uuidPrefix, zugangUnterlagen);
-
-		// Assert
-		MessagePayload messagePayload = result.getMessage();
-		assertEquals("INFO", messagePayload.getLevel());
-		assertEquals("Zugangsstatus Unterlagen erfolgreich geändert.", messagePayload.getMessage());
-		assertEquals(zugangUnterlagen, result.getData());
-
-		verify(veranstalterRepository, times(1)).changeVeranstalter(theVeranstalter);
-
-	}
-
-	@Test
-	void should_aendereVeranstalterCallPersistAndReturnInfoWithNeuerZugangsstatusResponsePayload_when_trefferUndZugangsstatusNeuEntzogen() {
-
-		// Arrange
-		String uuidPrefix = "80c8052f";
-		ZugangUnterlagen zugangUnterlagen = ZugangUnterlagen.ENTZOGEN;
-		VeranstalterSuchanfrage suchanfrage = new VeranstalterSuchanfrage().withSuchkriterium(VeranstalterSuchkriterium.UUID)
-			.withSuchstring(uuidPrefix);
-
-		List<Veranstalter> veranstalter = new ArrayList<>();
-		Veranstalter theVeranstalter = new Lehrer(new Person(uuidPrefix + "-guigsdiqg", "Harald Schulze"), true,
-			Arrays.asList(new Identifier[] { new Identifier("hqdhoq") })).withZugangUnterlagen(ZugangUnterlagen.DEFAULT);
-		veranstalter.add(theVeranstalter);
-
-		when(veranstalterRepository.findVeranstalter(suchanfrage)).thenReturn(veranstalter);
-		when(veranstalterRepository.changeVeranstalter(theVeranstalter)).thenReturn(Boolean.TRUE);
-
-		// Act
-		ResponsePayload result = service.aendereVeranstalter(uuidPrefix, zugangUnterlagen);
-
-		// Assert
-		MessagePayload messagePayload = result.getMessage();
-		assertEquals("INFO", messagePayload.getLevel());
-		assertEquals("Zugangsstatus Unterlagen erfolgreich geändert.", messagePayload.getMessage());
-		assertEquals(zugangUnterlagen, result.getData());
-
-		verify(veranstalterRepository, times(1)).changeVeranstalter(theVeranstalter);
-
-	}
-
 }

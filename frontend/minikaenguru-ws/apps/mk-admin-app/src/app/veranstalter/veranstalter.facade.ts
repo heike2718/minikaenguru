@@ -116,4 +116,18 @@ export class VeranstalterFacade {
 			})
 		);
 	}
+
+	public newsletterDeaktivieren(veranstalter: Veranstalter): void {
+
+		this.veranstalterService.newsletterDeaktivieren(veranstalter).subscribe(
+			(responsePayload: ResponsePayload) => {
+				this.messageService.showMessage(responsePayload.message);
+				this.store.dispatch(VeranstalterActions.newsletterDeaktiviert({ veranstalter: veranstalter }));
+			},
+			(error => {
+				this.store.dispatch(VeranstalterActions.sucheFinishedWithError());
+				this.errorService.handleError(error);
+			})
+		);
+	}
 }

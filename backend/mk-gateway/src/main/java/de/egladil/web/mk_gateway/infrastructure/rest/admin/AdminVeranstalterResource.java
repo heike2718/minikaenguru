@@ -18,6 +18,7 @@ import javax.ws.rs.core.Response;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.veranstalter.admin.VeranstalterNewsletterService;
 import de.egladil.web.mk_gateway.domain.veranstalter.admin.VeranstalterSucheService;
 import de.egladil.web.mk_gateway.domain.veranstalter.admin.VeranstalterZugangsstatusService;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.VeranstalterSuchanfrage;
@@ -39,6 +40,9 @@ public class AdminVeranstalterResource {
 	@Inject
 	VeranstalterZugangsstatusService veranstalterZugangsstatusService;
 
+	@Inject
+	VeranstalterNewsletterService veranstalterNewsletterService;
+
 	@POST
 	@Path("suche")
 	public Response findVeranstalter(final VeranstalterSuchanfrage suchanfrage) {
@@ -54,8 +58,18 @@ public class AdminVeranstalterResource {
 	public Response changeZugangsstatus(@PathParam(
 		value = "uuidPrefix") final String uuidPrefix, final ZugangsstatusPayload zugangsstatus) {
 
-		ResponsePayload responsePayload = this.veranstalterZugangsstatusService.zugangsstatusAendern(uuidPrefix,
+		ResponsePayload responsePayload = this.veranstalterZugangsstatusService.aendereVeranstalter(uuidPrefix,
 			zugangsstatus.getZugangsstatus());
+
+		return Response.ok(responsePayload).build();
+	}
+
+	@POST
+	@Path("{uuidPrefix}/newsletter")
+	public Response deactivateNewsletter(@PathParam(
+		value = "uuidPrefix") final String uuidPrefix) {
+
+		ResponsePayload responsePayload = this.veranstalterNewsletterService.aendereVeranstalter(uuidPrefix, null);
 
 		return Response.ok(responsePayload).build();
 	}
