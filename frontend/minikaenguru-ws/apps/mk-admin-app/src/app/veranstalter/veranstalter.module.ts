@@ -12,6 +12,7 @@ import { VeranstalterDetailsComponent } from './veranstalter-details/veranstalte
 import { VeranstalterNavComponent } from './veranstalter-nav/veranstalter-nav.component';
 import { PrivatteilnahmeOverviewComponent } from './privatteilnahme-overview/privatteilnahme-overview.component';
 import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
+import { ZugangUnterlagenComponent } from './zugang-unterlagen/zugang-unterlagen.component';
 
 
 
@@ -23,7 +24,8 @@ import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
 		VeranstalterComponent,
 		VeranstalterDetailsComponent,
 		VeranstalterNavComponent,
-		PrivatteilnahmeOverviewComponent
+		PrivatteilnahmeOverviewComponent,
+		ZugangUnterlagenComponent
 	],
 	imports: [
 		CommonModule,

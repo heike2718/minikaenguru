@@ -480,6 +480,18 @@ public class PermittedRolesInMemoryRepositoryTest {
 		}
 
 		@Test
+		void should_permittedRollen_changeZugangsstatus_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/admin/veranstalter/80c8052f/zugangsstatus", HttpMethod.POST);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.ADMIN));
+
+		}
+
+		@Test
 		void should_permittedRollen_getWettbewerbe_beOk() {
 
 			// Act

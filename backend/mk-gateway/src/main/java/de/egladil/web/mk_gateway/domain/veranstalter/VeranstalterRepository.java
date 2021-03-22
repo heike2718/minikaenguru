@@ -37,11 +37,13 @@ public interface VeranstalterRepository {
 	/**
 	 * Ändert einen vorhandenen Veranstalter.
 	 *
-	 * @param veranstalter
-	 *                     Veranstalter darf nicht null sein. Es muss bereits einen gespeicherten Veranstalter mit der gleichen uuid
-	 *                     geben.
+	 * @param  veranstalter
+	 *                      Veranstalter darf nicht null sein. Es muss bereits einen gespeicherten Veranstalter mit der gleichen
+	 *                      uuid
+	 *                      geben.
+	 * @return              boolean - damit man Mocken kann
 	 */
-	void changeVeranstalter(Veranstalter veranstalter) throws IllegalStateException;
+	boolean changeVeranstalter(Veranstalter veranstalter) throws IllegalStateException;
 
 	/**
 	 * Löscht den gegebenen Veranstalter ersatzlos. Das ist unkritisch, da Daten nicht mit dem Veranstalter verknüft sind.

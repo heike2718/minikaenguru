@@ -74,6 +74,31 @@ const veranstalterReducer = createReducer(initialVeranstalterState,
 			, selectedVeranstalter: newSelectedVeranstalter
 		};
 
+	}),
+
+	on(VeranstalterActions.zugangsstatusUnterlagenGeaendert, (state, action) => {
+
+		const theSelectedVeranstalter: Veranstalter = state.selectedVeranstalter;
+
+		if (theSelectedVeranstalter && theSelectedVeranstalter.uuid === action.veranstalter.uuid) {
+
+			if (theSelectedVeranstalter.zugangsstatusUnterlagen !== action.neuerStatus) {
+
+				const changedVeranstalter: Veranstalter = { ...theSelectedVeranstalter, zugangsstatusUnterlagen: action.neuerStatus };
+
+
+				const veranstalterMapAktuell = new VeranstalterMap(state.veranstalterMap);
+				const veranstalterArray: Veranstalter[] = [];
+				veranstalterArray.push(changedVeranstalter);
+				const neueVeranstalterMap = veranstalterMapAktuell.merge(veranstalterArray);
+
+				return { ...state, veranstalterMap: neueVeranstalterMap, selectedVeranstalter: changedVeranstalter, loading: false };
+			}
+
+		}
+
+		return { ...state, loading: false };
+
 	})
 );
 

@@ -5,12 +5,13 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
 import { LogService } from '@minikaenguru-ws/common-logging';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
-import { Veranstalter, VeranstalterSuchanfrage } from './veranstalter.model';
+import { Veranstalter, VeranstalterSuchanfrage, ZugangUnterlagen } from './veranstalter.model';
 import * as VeranstalterActions from './+state/veranstalter.actions';
 import * as VeranstalterSelectors from './+state/veranstalter.selectors';
 import { take } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { PrivatteilnahmeAdminOverview } from './teilnahmen.model';
+import { ResponsePayload, MessageService } from '@minikaenguru-ws/common-messages';
 
 
 @Injectable({
@@ -29,6 +30,7 @@ export class VeranstalterFacade {
 		private store: Store<AppState>,
 		private router: Router,
 		private logger: LogService,
+		private messageService: MessageService,
 		private errorService: GlobalErrorHandlerService,
 	) {
 
@@ -98,5 +100,20 @@ export class VeranstalterFacade {
 				)
 			}
 		}
+	}
+
+	public zugangsstatusUnterlagenAendern(veranstalter: Veranstalter, zugangsstatusUnterlagen: ZugangUnterlagen): void {
+
+		this.veranstalterService.zugangsstatusUnterlagenAendern(veranstalter, zugangsstatusUnterlagen).subscribe(
+			(responsePayload: ResponsePayload) => {
+				const geaenderterStatus: ZugangUnterlagen = responsePayload.data;
+				this.messageService.showMessage(responsePayload.message);
+				this.store.dispatch(VeranstalterActions.zugangsstatusUnterlagenGeaendert({ veranstalter: veranstalter, neuerStatus: geaenderterStatus }));
+			},
+			(error => {
+				this.store.dispatch(VeranstalterActions.sucheFinishedWithError());
+				this.errorService.handleError(error);
+			})
+		);
 	}
 }

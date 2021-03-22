@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
 import { ResponsePayload } from '@minikaenguru-ws/common-messages';
-import { Veranstalter, VeranstalterSuchanfrage } from './veranstalter.model';
+import { Veranstalter, VeranstalterSuchanfrage, ZugangUnterlagen } from './veranstalter.model';
 import { PrivatteilnahmeAdminOverview } from './teilnahmen.model';
 
 @Injectable({
@@ -47,6 +47,16 @@ export class VeranstalterService {
 			map(body => body as ResponsePayload),
 			map(payload => payload.data)
 		);
+	}
+
+	public zugangsstatusUnterlagenAendern(veranstalter: Veranstalter, neuerStatus: ZugangUnterlagen): Observable<ResponsePayload> {
+
+		const url = environment.apiUrl + '/veranstalter/' + veranstalter.uuid + '/zugangsstatus';
+
+		return this.http.post(url, { 'zugangsstatus': neuerStatus }).pipe(
+			map(body => body as ResponsePayload)
+		);
+
 	}
 
 }

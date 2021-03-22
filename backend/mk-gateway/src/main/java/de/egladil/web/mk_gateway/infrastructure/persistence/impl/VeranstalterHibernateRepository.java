@@ -178,7 +178,7 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 
 	@Override
 	@Transactional
-	public void changeVeranstalter(final Veranstalter veranstalter) throws IllegalStateException {
+	public boolean changeVeranstalter(final Veranstalter veranstalter) throws IllegalStateException {
 
 		PersistenterVeranstalter vorhandener = this.findByUuid(veranstalter.uuid());
 
@@ -190,6 +190,8 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 		this.mergeFromVeranstalter(vorhandener, veranstalter);
 
 		em.persist(vorhandener);
+
+		return true;
 	}
 
 	void mergeFromVeranstalter(final PersistenterVeranstalter vorhandener, final Veranstalter veranstalter) {

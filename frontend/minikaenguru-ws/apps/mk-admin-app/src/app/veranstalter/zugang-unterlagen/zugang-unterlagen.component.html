@@ -1,0 +1,9 @@
+<div class="row">
+	<div class="col-sm-12 col-md-3">Zugang Unterlagen ändern:</div>
+</div>
+<div class="btn-group d-flex" role="group">
+	<ng-container *ngFor="let btn of buttons.buttons">
+		<button type="submit" class="btn btn-outline-dark w-100 ml-1" (click)="onButtonClicked(btn)"
+			title="{{btn.tooltip}}">{{btn.label}}</button>
+	</ng-container>
+</div>
