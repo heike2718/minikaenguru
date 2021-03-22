@@ -11,15 +11,19 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.veranstalter.admin.VeranstalterNewsletterService;
 import de.egladil.web.mk_gateway.domain.veranstalter.admin.VeranstalterSucheService;
+import de.egladil.web.mk_gateway.domain.veranstalter.admin.VeranstalterZugangsstatusService;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.VeranstalterSuchanfrage;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.VeranstalterUserAPIModel;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.ZugangsstatusPayload;
 
 /**
  * AdminVeranstalterResource
@@ -33,6 +37,12 @@ public class AdminVeranstalterResource {
 	@Inject
 	VeranstalterSucheService veranstalterSucheService;
 
+	@Inject
+	VeranstalterZugangsstatusService veranstalterZugangsstatusService;
+
+	@Inject
+	VeranstalterNewsletterService veranstalterNewsletterService;
+
 	@POST
 	@Path("suche")
 	public Response findVeranstalter(final VeranstalterSuchanfrage suchanfrage) {
@@ -40,6 +50,27 @@ public class AdminVeranstalterResource {
 		List<VeranstalterUserAPIModel> treffer = veranstalterSucheService.findVeranstalter(suchanfrage);
 
 		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), treffer);
+		return Response.ok(responsePayload).build();
+	}
+
+	@POST
+	@Path("{uuidPrefix}/zugangsstatus")
+	public Response changeZugangsstatus(@PathParam(
+		value = "uuidPrefix") final String uuidPrefix, final ZugangsstatusPayload zugangsstatus) {
+
+		ResponsePayload responsePayload = this.veranstalterZugangsstatusService.aendereVeranstalter(uuidPrefix,
+			zugangsstatus.getZugangsstatus());
+
+		return Response.ok(responsePayload).build();
+	}
+
+	@POST
+	@Path("{uuidPrefix}/newsletter")
+	public Response deactivateNewsletter(@PathParam(
+		value = "uuidPrefix") final String uuidPrefix) {
+
+		ResponsePayload responsePayload = this.veranstalterNewsletterService.aendereVeranstalter(uuidPrefix, null);
+
 		return Response.ok(responsePayload).build();
 	}
 

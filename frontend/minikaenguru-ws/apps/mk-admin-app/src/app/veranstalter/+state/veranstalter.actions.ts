@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Veranstalter } from '../veranstalter.model';
+import { Veranstalter, ZugangUnterlagen } from '../veranstalter.model';
 import { PrivatteilnahmeAdminOverview } from '../teilnahmen.model';
 
 export const startSuche = createAction(
@@ -37,6 +37,16 @@ export const privatteilnahmeOverviewLoaded = createAction(
 	'[VeranstalterFacade] findOrLoadPrivatteilnahmeAdminOverview',
 	props<{privatteilnahmeOverview: PrivatteilnahmeAdminOverview}>()
 );
+
+export const zugangsstatusUnterlagenGeaendert = createAction(
+	'[VeranstalterFacade] zugangsstatusUnterlagenAendern',
+	props<{veranstalter: Veranstalter, neuerStatus: ZugangUnterlagen}>()
+);
+
+export const newsletterDeaktiviert = createAction(
+	'[VeranstalterFacade] newsletterDeaktivieren',
+	props<{veranstalter: Veranstalter}>()
+)
 
 
 

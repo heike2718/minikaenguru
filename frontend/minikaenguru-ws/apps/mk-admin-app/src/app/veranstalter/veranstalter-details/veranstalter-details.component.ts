@@ -19,7 +19,7 @@ export class VeranstalterDetailsComponent implements OnInit, OnDestroy {
 
 	teilnahmenummernAsString: string;
 
-	private rolle: Rolle;
+	private veranstalter: Veranstalter;
 
 	constructor(private router: Router, private veranstalterFacade: VeranstalterFacade, private schulteilnahmenFacade: SchulteilnahmenFacade) { }
 
@@ -33,7 +33,7 @@ export class VeranstalterDetailsComponent implements OnInit, OnDestroy {
 					this.router.navigateByUrl('/veranstalter');
 				} else {
 					this.teilnahmenummernAsString = this.getTeilnahmenummernAsString(veranstalter);
-					this.rolle = veranstalter.rolle;
+					this.veranstalter = veranstalter;
 				}
 			}
 		);
@@ -63,11 +63,17 @@ export class VeranstalterDetailsComponent implements OnInit, OnDestroy {
 
 	gotoTeilnahmen(teilnahmenummer: string): void {
 
-		if (this.rolle && this.rolle === 'LEHRER') {
+		if (this.veranstalter && this.veranstalter.rolle && this.veranstalter.rolle === 'LEHRER') {
 			this.schulteilnahmenFacade.findOrLoadSchuleAdminOverview(teilnahmenummer);
 		} else {
 			this.veranstalterFacade.findOrLoadPrivatteilnahmeAdminOverview(teilnahmenummer);
 		}
+	}
+
+	newsletterDeaktivieren(): void {
+
+		this.veranstalterFacade.newsletterDeaktivieren(this.veranstalter);
+
 	}
 }
 

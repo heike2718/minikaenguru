@@ -159,5 +159,8 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 		this.textFeatureFlagAnzeigen = !this.textFeatureFlagAnzeigen;
 	}
 
-
+	vonSchuleAbmelden(): void {
+		this.lehrerFacade.removeSchule(this.schule);
+		this.gotoDashboard();
+	}
 }

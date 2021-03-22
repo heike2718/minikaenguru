@@ -32,6 +32,7 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.veranstalter.CheckCanRemoveSchuleService;
 import de.egladil.web.mk_gateway.domain.veranstalter.LehrerService;
 import de.egladil.web.mk_gateway.domain.veranstalter.SchulenAnmeldeinfoService;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.LehrerAPIModel;
@@ -58,6 +59,9 @@ public class LehrerResource {
 
 	@Inject
 	AuthorizationService veranstalterAuthService;
+
+	@Inject
+	CheckCanRemoveSchuleService checkRemoveSchuleService;
 
 	@Inject
 	LehrerService lehrerService;
@@ -148,11 +152,9 @@ public class LehrerResource {
 		final Identifier lehrerID = new Identifier(principal.getName());
 		final Identifier schuleID = new Identifier(schulkuerzel);
 
-		veranstalterAuthService.checkPermissionForTeilnahmenummer(lehrerID, schuleID, "[removeSchule - " + schulkuerzel + "]");
+		boolean kannAbmelden = this.checkRemoveSchuleService.kannLehrerVonSchuleAbmelden(lehrerID, schuleID);
 
-		SchuleAPIModel schule = this.schulenAnmeldeinfoService.getSchuleWithWettbewerbsdetails(schulkuerzel, principal.getName());
-
-		if (schule.aktuellAngemeldet()) {
+		if (!kannAbmelden) {
 
 			ResponsePayload responsePayload = ResponsePayload
 				.messageOnly(MessagePayload
@@ -166,5 +168,4 @@ public class LehrerResource {
 
 		return Response.ok(responsePayload).build();
 	}
-
 }

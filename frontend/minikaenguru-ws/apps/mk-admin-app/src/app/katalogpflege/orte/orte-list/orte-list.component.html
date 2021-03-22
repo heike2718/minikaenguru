@@ -29,11 +29,9 @@
 		</ng-container>
 	</div>
 	<div class="btn-group d-flex" role="group">
-		<div *ngIf="selectedKatalogItem$ | async">
-			<button class="btn btn-primary w-100" (click)="addOrtUndSchule()"><i class="fa fa-plus" aria-hidden="true"
+		<button *ngIf="selectedKatalogItem$ | async" class="btn btn-primary w-100 ml-1" (click)="addOrtUndSchule()"><i class="fa fa-plus" aria-hidden="true"
 					title="neuer Ort und neue Schule im gleichen Land"></i>neue
 				Schule</button>
-		</div>
 		<button class="btn btn-primary w-100 ml-1" (click)="gotoKataloge()"><i class="fa fa-arrow-left"
 				aria-hidden="true"></i>Kataloge</button>
 

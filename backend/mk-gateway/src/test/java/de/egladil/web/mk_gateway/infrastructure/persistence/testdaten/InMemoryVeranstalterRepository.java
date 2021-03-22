@@ -145,7 +145,7 @@ public class InMemoryVeranstalterRepository implements VeranstalterRepository {
 	}
 
 	@Override
-	public void changeVeranstalter(final Veranstalter veranstalter) throws IllegalStateException {
+	public boolean changeVeranstalter(final Veranstalter veranstalter) throws IllegalStateException {
 
 		alleVeranstalter.remove(veranstalter);
 		alleVeranstalter.add(veranstalter);
@@ -163,6 +163,8 @@ public class InMemoryVeranstalterRepository implements VeranstalterRepository {
 		default:
 			break;
 		}
+
+		return true;
 	}
 
 	@Override
