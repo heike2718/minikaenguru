@@ -487,6 +487,33 @@ Die Datei wird automatisch meist in das Verzeichnis "Downloads" gespeichert, von
 Nochmals der Hinweis: verwenden Sie diese Funktion nicht, um nacheinander die Urkunden für jedes Kind Ihrer Schule zu erstellen, da das sehr zeitaufwendig
 wäre und Sie außerdem so keine Rangliste erhalten.
 
+Fehlersituationen
+-----------------
 
+Hängenbleiben zwischen Login- Formular und Startseite
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Es kommt vor, dass man das Loginformular mit Mailadresse und Password abgesendet hat, dann aber nicht in der Minikänguru-Anwendung landet, sondern wieder die Startseite
+sieht, und sich erneut einloggen müsste.
+
+*Was hilft in diesem Fall?*
+
+Dieses Verhalten wurde bisher ausschließlich von Nutzern berichtet, die den Brwoser Safari verwenden. Dieser Browser wird von
+mir nicht unterstützt, da der Aufwand zu hoch wäre. Bitte verwenden Sie einen der anderen Browser, z.B. Firefox, Chrome oder Edge.
+
+Berechtigungsfehlermeldung, obwohl man eingeloggt zu sein scheint
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Sporadisch kommt es vor, dass man eine Fehlermeldung "Sie haben keine Berechtigung, bitte loggen Sie sich ein" angezeigt bekommt, obwohl das Menü anzeigt,
+man sei eingeloggt:
+
+image::./images/browser-denkt-noch-angemeldet.png[width=80%]
+
+Wie dies zustande kommt, ist noch nicht vollständig klar. Es könnte sein, dass man sich nicht ausgeloggt hatte und nach längerer Zeit ( > 1h) die Anwendung öffnet.
+Der Brwoser cached die Anmeldeinformation, aber die Session ist bereits abgelaufen.
+
+*Was hilft in diesem Fall?*
+
+Bitte klicken Sie auf "Ausloggen" und laden die Seite neu (Klick auf rot umrandeten Neuladepfeil links neben der Adressleiste oder F5 - besser Strg und F5 gleichzeitig).
 
 

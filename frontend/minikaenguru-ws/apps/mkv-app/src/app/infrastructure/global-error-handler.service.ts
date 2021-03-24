@@ -1,11 +1,11 @@
 import { ErrorHandler, Injector, Injectable } from '@angular/core';
 import { LogService } from '@minikaenguru-ws/common-logging';
-import { MessageService } from '@minikaenguru-ws/common-messages';
+import { MessageService, Message } from '@minikaenguru-ws/common-messages';
 import { environment } from '../../environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LogPublishersService } from './log-publishers.service';
 import { Router } from '@angular/router';
-import { STORAGE_KEY_USER } from '@minikaenguru-ws/common-auth';
+import { STORAGE_KEY_USER, STORAGE_KEY_INVALID_SESSION } from '@minikaenguru-ws/common-auth';
 
 @Injectable(
 	{
@@ -71,15 +71,15 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 			this.messageService.error('Der Server ist nicht erreichbar.');
 		} else {
 			const msg = this.extractMessageObject(httpError);
+
 			switch (httpError.status) {
-				case 401:
-					this.messageService.error('Sie haben keine Berechtigung. Bitte loggen Sie sich ein.');
-					break;
 				case 403:
-					this.messageService.error('Sie haben keine Berechtigung, diese Resource aufzurufen.');
+					localStorage.setItem(STORAGE_KEY_INVALID_SESSION, JSON.stringify({ level: 'ERROR', message: 'Sie haben keine Berechtigung, diese Resource aufzurufen.' }));
+					this.router.navigateByUrl('/timeout');
 					break;
+				case 401:
 				case 908:
-					this.messageService.warn('Ihre Session ist abgelaufen. Bitte loggen Sie sich erneut ein.');
+					localStorage.setItem(STORAGE_KEY_INVALID_SESSION, JSON.stringify({ level: 'WARN', message: 'Ihre Session ist abgelaufen. Bitte loggen Sie sich erneut ein.' }));
 					this.router.navigateByUrl('/timeout');
 					break;
 				default: {

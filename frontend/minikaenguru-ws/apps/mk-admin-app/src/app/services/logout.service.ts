@@ -1,4 +1,4 @@
-import { AuthService } from '@minikaenguru-ws/common-auth';
+import { AuthService, STORAGE_KEY_INVALID_SESSION } from '@minikaenguru-ws/common-auth';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
@@ -29,5 +29,7 @@ export class LogoutService {
 		this.appStore.dispatch(resetSchulteilnahmen());
 		this.appStore.dispatch(dateCleared());
 		this.appStore.dispatch(resetNewsletters())
+
+		localStorage.removeItem(STORAGE_KEY_INVALID_SESSION);
 	}
 }
