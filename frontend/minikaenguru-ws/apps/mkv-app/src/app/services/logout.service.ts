@@ -1,4 +1,4 @@
-import { AuthService } from '@minikaenguru-ws/common-auth';
+import { AuthService, STORAGE_KEY_INVALID_SESSION } from '@minikaenguru-ws/common-auth';
 import { LehrerFacade } from '../lehrer/lehrer.facade';
 import { PrivatveranstalterFacade } from '../privatveranstalter/privatveranstalter.facade';
 import { WettbewerbFacade } from '../wettbewerb/wettbewerb.facade';
@@ -26,7 +26,7 @@ export class LogoutService {
 		, private kinderFacade: KinderFacade
 		, private klassenFacade: KlassenFacade
 		, private messageService: MessageService
-		) { }
+	) { }
 
 
 	logout(): void {
@@ -40,6 +40,8 @@ export class LogoutService {
 		this.klassenFacade.resetState();
 
 		this.messageService.clear();
+
+		localStorage.removeItem(STORAGE_KEY_INVALID_SESSION);
 
 		this.router.navigateByUrl('/landing');
 	}

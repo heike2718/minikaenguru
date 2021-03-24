@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LogPublishersService } from './log-publishers.service';
 import { Router } from '@angular/router';
-import { STORAGE_KEY_USER } from '@minikaenguru-ws/common-auth';
+import { STORAGE_KEY_USER, STORAGE_KEY_INVALID_SESSION } from '@minikaenguru-ws/common-auth';
 
 @Injectable(
 	{
@@ -74,11 +74,12 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 			const msg = this.extractMessageObject(httpError);
 			switch (httpError.status) {
 				case 401:
-				case 403:
-					this.messageService.error('Sie haben keine Berechtigung. Bitte loggen Sie sich ein.');
-					break;
 				case 908:
-					this.messageService.warn('Tja, warste zu lange lazy. Session ist abgelaufen. Log dich einfach wieder ein.');
+					localStorage.setItem(STORAGE_KEY_INVALID_SESSION, JSON.stringify({ level: 'WARN', message: 'Tja, warste zu lange lazy. Session ist abgelaufen. Log dich halt wieder ein.' }));
+					this.router.navigateByUrl('/timeout');
+					break;
+				case 403:
+					localStorage.setItem(STORAGE_KEY_INVALID_SESSION, JSON.stringify({ level: 'ERROR', message: 'Sie haben keine Berechtigung, diese Resource aufzurufen.' }));
 					this.router.navigateByUrl('/timeout');
 					break;
 				default: {

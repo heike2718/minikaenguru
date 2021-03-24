@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LogoutService } from '../services/logout.service';
+import { MessageService, Message } from '@minikaenguru-ws/common-messages';
+import { STORAGE_KEY_INVALID_SESSION } from '@minikaenguru-ws/common-auth';
 
 @Component({
   selector: 'mka-session-timeout',
@@ -9,10 +11,22 @@ import { LogoutService } from '../services/logout.service';
 })
 export class SessionTimeoutComponent implements OnInit {
 
-	constructor(private router: Router, private logoutService: LogoutService) { }
+	constructor(private router: Router, private logoutService: LogoutService, private messageService: MessageService) { }
 
 	ngOnInit() {
+
+
+		const sessionMessage = localStorage.getItem(STORAGE_KEY_INVALID_SESSION);
+
 		this.logoutService.logout();
+
+		if (sessionMessage) {
+
+			const message = JSON.parse(sessionMessage) as Message;
+			this.messageService.showMessage(message);
+
+			localStorage.removeItem(STORAGE_KEY_INVALID_SESSION);
+		}
 	}
 
 	gotoLandingPage() {

@@ -1,5 +1,3 @@
-import { STORAGE_KEY_USER } from './lib/domain/entities';
-
 export * from './lib/common-auth.module';
 
 export { AuthService } from './lib/auth.service';
@@ -10,6 +8,6 @@ export { MkAuthConfig, MkAuthConfigService } from './lib/configuration/mk-auth-c
 
 export { AuthState } from './lib/+state/auth.reducer';
 
-export { Session, User, STORAGE_KEY_USER, Rolle } from './lib/domain/entities';
+export { Session, User, STORAGE_KEY_USER, STORAGE_KEY_INVALID_SESSION, Rolle } from './lib/domain/entities';
 
 export * from './lib/+state/auth.selectors';
