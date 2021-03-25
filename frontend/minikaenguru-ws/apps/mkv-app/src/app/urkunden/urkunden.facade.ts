@@ -14,7 +14,7 @@ import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { NgbDate, NgbDateStruct, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { KinderFacade } from '../kinder/kinder.facade';
-import { User } from '@minikaenguru-ws/common-auth';
+import { User, STORAGE_KEY_USER } from '@minikaenguru-ws/common-auth';
 import { Schule } from '../lehrer/schulen/schulen.model';
 import { LehrerFacade } from '../lehrer/lehrer.facade';
 
@@ -56,13 +56,16 @@ export class UrkundenFacade {
 
 	public getUrkundeDateModel(): UrkundeDateModel {
 
+
 		const heute = this.calendar.getToday();
+
 		const minDate = new NgbDate(heute.year, 1, 1);
+		const maxDate = new NgbDate(heute.year, 12, 31);
 		const selectedDate = this.calculateDateString(heute);
 
 		return {
 			minDate: minDate,
-			maxDate: heute,
+			maxDate: maxDate,
 			selectedDate: selectedDate
 		};
 	}
@@ -200,7 +203,7 @@ export class UrkundenFacade {
 	}
 
 	private getUser(): User {
-		const item = localStorage.getItem(environment.storageKeyPrefix + 'user');
+		const item = localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_USER);
 
 		if (item) {
 			return JSON.parse(item);
