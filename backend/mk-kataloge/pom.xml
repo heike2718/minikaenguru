@@ -125,6 +125,11 @@
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.jboss.slf4j</groupId>
+			<artifactId>slf4j-jboss-logmanager</artifactId>
+		</dependency>
+
 		<!-- Test START -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -156,7 +161,7 @@
 	</dependencies>
 
 	<build>
-				<plugins>
+		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.0</version>
