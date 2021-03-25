@@ -1,6 +1,6 @@
 # authprovider Release Notes
 
-__Release 1.4.3_:
+__Release 1.4.3__:
 
 * [Browserlogout bei 401 und 403](https://github.com/heike2718/minikaenguru/issues/275)
 * [Button-Layout ADMIN Katalogpflege](https://github.com/heike2718/minikaenguru/issues/223)
@@ -9,7 +9,7 @@ __Release 1.4.3_:
 * [Admin: Unterlagen für einzelne Veranstalter freischalten, sperren oder zurücksetzen](https://github.com/heike2718/minikaenguru/issues/243)
 * [bump quarkus to 1.13](https://github.com/heike2718/minikaenguru/issues/254)
 
-__Release 1.4.2_:
+__Release 1.4.2__:
 
 * [Admin: Zugangsstatus Unterlagen wird nicht korrekt angezeigt](https://github.com/heike2718/minikaenguru/issues/258)
 * [Kind-Details: kein Lösungszettelbutton, wenn sich zugangsstatus Unterlagen geändert hat](https://github.com/heike2718/minikaenguru/issues/264)
@@ -17,7 +17,7 @@ __Release 1.4.2_:
 * [Grammatikfehler Urkunde Kängurusprung](https://github.com/heike2718/minikaenguru/issues/256)
 * [NPE beim Anmelden einer Schule über den Anmelden-Button auf der Karte](https://github.com/heike2718/minikaenguru/issues/261)
 
-__Release 1.4.1_:
+__Release 1.4.1__:
 
 * bump quarkus to 1.11.4-Final
 * bump commons to 1.4.13
@@ -25,14 +25,14 @@ __Release 1.4.1_:
 * [Fehler beim Anmeldestatus nach Anmelden Schule über Schule-Card](https://github.com/heike2718/minikaenguru/issues/232)
 
 
-__Release 1.4.0_:
+__Release 1.4.0__:
 
 * [upgrade dependencies](https://github.com/heike2718/minikaenguru/issues/233)
 * [Fehler im Datepicker](https://github.com/heike2718/minikaenguru/issues/236)
 * [Feature "Download Unterlagen"](https://github.com/heike2718/minikaenguru/issues/194)
 
 
-__Release 1.3.3_:
+__Release 1.3.3__:
 
 * Summe Schulanmeldung in Anmeldungsübersicht-API
 * vereinfachte Anmeldung einer Schule zum Wettbewerb über die Schule-Card
@@ -46,7 +46,7 @@ __Release 1.3.2__:
 * [Anmeldungsübersicht über den aktuellen wettbewerb, sofern er aktiv ist](https://github.com/heike2718/minikaenguru/issues/173)
 
 
-__Release 1.3.1__:
+_Release 1.3.1__:
 
 [Bugfix Hinzufügen neuer Schule](https://github.com/heike2718/minikaenguru/issues/225)
 

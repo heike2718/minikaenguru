@@ -2,7 +2,7 @@
 
 Monorepo für alles, was mit Minikänguru zu tun hat.
 
-## Milesotone 1 ist fertig
+## Milesotone 4 ist fertig
 
 Folgende Funktionen stehen zur Verfügung:
 
@@ -25,11 +25,19 @@ Folgende Funktionen stehen zur Verfügung:
 * zu einem laufenden Wettbewerb anmelden
 * Statistiken vergangener Teilnahmen generieren
 * für Lehrer: Vertrag zur Auftragsdatenverabreitung abschließen
+* Klassen / Kinder mit Lösungszetteln erfassen
+* Auswertung generieren
+* Unterlagen herunterladen
+* Lehrer: weitere Schulen hinzugügen bzw. sich von Schulen austragen
 
 ### mkadmin-app
 
 * Wettbewerbe pflegen
 * Schulkatalog Pflegen
+* Eventlog-Protokoll herunterladen
+* Veranstalter: suchen, Newsletter deaktivieren, Zugang zu Unterlagen ändern
+* aktuelle Meldung schalten / entfernen
+* Newsletter eintragen und versenden
 
 ## Releasenotes
 
