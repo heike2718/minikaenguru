@@ -1,6 +1,15 @@
 # authprovider Release Notes
 
-__Release 1.4.1_:
+__Release 1.4.3_:
+
+* [Browserlogout bei 401 und 403](https://github.com/heike2718/minikaenguru/issues/275)
+* [Button-Layout ADMIN Katalogpflege](https://github.com/heike2718/minikaenguru/issues/223)
+* [Entfernen einer Schule auch bei aktueller Anmeldung, wenn es mehr als einen Lehrer gibt](https://github.com/heike2718/minikaenguru/issues/270)
+* [Admin: Newsletter für einen Veranstalter deaktivieren](https://github.com/heike2718/minikaenguru/issues/271)
+* [Admin: Unterlagen für einzelne Veranstalter freischalten, sperren oder zurücksetzen](https://github.com/heike2718/minikaenguru/issues/243)
+* [bump quarkus to 1.13](https://github.com/heike2718/minikaenguru/issues/254)
+
+__Release 1.4.2_:
 
 * [Admin: Zugangsstatus Unterlagen wird nicht korrekt angezeigt](https://github.com/heike2718/minikaenguru/issues/258)
 * [Kind-Details: kein Lösungszettelbutton, wenn sich zugangsstatus Unterlagen geändert hat](https://github.com/heike2718/minikaenguru/issues/264)
