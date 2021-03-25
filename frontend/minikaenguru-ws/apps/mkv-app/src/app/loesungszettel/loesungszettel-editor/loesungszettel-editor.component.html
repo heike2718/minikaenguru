@@ -8,17 +8,21 @@
 
 	<ng-container *ngIf="loesungszettelFacade.selectedLoesungszettel$ | async as loesungszettel" class="tabelle">
 
-		<div class="d-none d-md-block">
-			<ng-container *ngFor="let zeile of loesungszettel.zeilen">
-				<mkv-loesungszettelrow [zeile]="zeile"></mkv-loesungszettelrow>
-			</ng-container>
-		</div>
+		<ng-container *ngIf="loesungszettel !== undefined else loesungszettelUndefined">
 
-		<div class="d-md-none d-lg-none d-xl-none">
-			<ng-container *ngFor="let zeile of loesungszettel.zeilen">
-				<mkv-loesungszettelrow [zeile]="zeile"></mkv-loesungszettelrow>
-			</ng-container>
-		</div>
+			<div class="d-none d-md-block">
+				<ng-container *ngFor="let zeile of loesungszettel.zeilen">
+					<mkv-loesungszettelrow [zeile]="zeile"></mkv-loesungszettelrow>
+				</ng-container>
+			</div>
+
+			<div class="d-md-none d-lg-none d-xl-none">
+				<ng-container *ngFor="let zeile of loesungszettel.zeilen">
+					<mkv-loesungszettelrow [zeile]="zeile"></mkv-loesungszettelrow>
+				</ng-container>
+			</div>
+
+		</ng-container>
 
 		<p>Lösungscode: {{loesungszetteleingaben}}</p>
 
@@ -72,3 +76,10 @@
 			<button type="button" class="btn btn-outline-secondary" (click)="modal.close('ja')">ja</button>
 		</div>
 	</ng-template>
+</div>
+
+<ng-template #loesungszettelUndefined>
+	<p>Fehler beim Laden des Lösungszettels. Bitte Klicken Sie "zurück".</p>
+</ng-template>
+
+

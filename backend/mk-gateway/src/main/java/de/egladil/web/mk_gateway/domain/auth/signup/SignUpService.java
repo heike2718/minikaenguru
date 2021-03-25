@@ -77,7 +77,7 @@ public class SignUpService {
 
 		if (optUser.isPresent()) {
 
-			LOG.info("User mit UUID={} bereits vorhanden", uuid);
+			LOG.debug("User mit UUID={} bereits vorhanden", uuid);
 			return optUser.get();
 		}
 
