@@ -37,7 +37,7 @@ export class LoesungszettelService {
 			return this.insertLoesungszettel(url, loesungszettel);
 		}
 
-		return this.uppdateLoesungszettel(url, loesungszettel);
+		return this.updateLoesungszettel(url, loesungszettel);
 	}
 
 	public deleteLoesungszettel(loesungszettelID: string): Observable<ResponsePayload> {
@@ -58,7 +58,7 @@ export class LoesungszettelService {
 
 	}
 
-	private uppdateLoesungszettel(url: string, loesungszettel: Loesungszettel): Observable<ResponsePayload> {
+	private updateLoesungszettel(url: string, loesungszettel: Loesungszettel): Observable<ResponsePayload> {
 
 		return this.http.put(url, loesungszettel).pipe(
 			map(body => body as ResponsePayload)

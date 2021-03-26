@@ -69,12 +69,7 @@ public class LoesungszettelResource {
 
 		Identifier veranstalterID = new Identifier(securityContext.getUserPrincipal().getName());
 
-		LoesungszettelpunkteAPIModel result = loesungszettelService.loesungszettelAnlegen(loesungszetteldaten, veranstalterID);
-
-		String msg = MessageFormat.format(applicationMessages.getString("loesungszettel.addOrChange.success"),
-			new Object[] { result.punkte(), Integer.valueOf(result.laengeKaengurusprung()) });
-
-		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.info(msg), result);
+		ResponsePayload responsePayload = loesungszettelService.loesungszettelAnlegen(loesungszetteldaten, veranstalterID);
 
 		return Response.ok(responsePayload).build();
 	}

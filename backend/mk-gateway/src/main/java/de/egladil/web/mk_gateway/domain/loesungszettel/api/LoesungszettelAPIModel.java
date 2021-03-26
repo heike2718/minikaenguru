@@ -30,6 +30,12 @@ public class LoesungszettelAPIModel {
 	@JsonProperty
 	private List<LoesungszettelZeileAPIModel> zeilen;
 
+	@Override
+	public String toString() {
+
+		return "LoesungszettelAPIModel [uuid=" + uuid + ", kindID=" + kindID + ", klassenstufe=" + klassenstufe + "]";
+	}
+
 	public String uuid() {
 
 		return uuid;

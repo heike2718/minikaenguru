@@ -4,7 +4,10 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.loesungszettel;
 
+import java.text.MessageFormat;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
@@ -17,6 +20,8 @@ import javax.ws.rs.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.LoesungszettelpunkteAPIModel;
@@ -41,6 +46,8 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.entities.Persistente
 public class LoesungszettelService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(LoesungszettelService.class);
+
+	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
 	@Inject
 	Event<LoesungszettelCreated> loesungszettelCreatedEvent;
@@ -261,7 +268,7 @@ public class LoesungszettelService {
 	 * @return
 	 */
 	@Transactional
-	public LoesungszettelpunkteAPIModel loesungszettelAnlegen(final LoesungszettelAPIModel loesungszetteldaten, final Identifier veranstalterID) {
+	public ResponsePayload loesungszettelAnlegen(final LoesungszettelAPIModel loesungszetteldaten, final Identifier veranstalterID) {
 
 		Identifier kindID = new Identifier(loesungszetteldaten.kindID());
 
@@ -285,32 +292,55 @@ public class LoesungszettelService {
 			new Identifier(teilnahmeIdentifier.teilnahmenummer()),
 			"[loesungszettelAnlegen - kindID=" + kindID + "]");
 
-		Loesungszettel loesungszettel = new LoesungszettelCreator().createLoesungszettel(loesungszetteldaten, getWettbewerb(),
-			kind);
+		Loesungszettel loesungszettel = null;
+		boolean concurrent = false;
 
-		Identifier loesungszettelID = loesungszettelRepository.addLoesungszettel(loesungszettel);
-		kind.withLoesungszettelID(loesungszettelID);
+		Identifier loesungszettelID = kind.loesungszettelID();
 
-		kinderRepository.changeKind(kind);
+		if (loesungszettelID != null) {
 
-		loesungszettelCreated = (LoesungszettelCreated) new LoesungszettelCreated(veranstalterID.identifier())
-			.withKindID(kind.identifier().identifier())
-			.withRohdatenNeu(loesungszettel.rohdaten())
-			.withSpracheNeu(loesungszettel.sprache())
-			.withTeilnahmeIdentifier(loesungszettel.teilnahmeIdentifier())
-			.withUuid(loesungszettelID.identifier());
-
-		if (loesungszettelCreatedEvent != null) {
-
-			loesungszettelCreatedEvent.fire(loesungszettelCreated);
+			loesungszettel = loesungszettelRepository.ofID(kind.loesungszettelID()).get();
+			concurrent = true;
 		} else {
 
-			System.out.println(loesungszettelCreated.serializeQuietly());
+			loesungszettel = new LoesungszettelCreator().createLoesungszettel(loesungszetteldaten, getWettbewerb(),
+				kind);
+
+			loesungszettelID = loesungszettelRepository.addLoesungszettel(loesungszettel);
+			kind.withLoesungszettelID(loesungszettelID);
+
+			kinderRepository.changeKind(kind);
+
+			loesungszettelCreated = (LoesungszettelCreated) new LoesungszettelCreated(veranstalterID.identifier())
+				.withKindID(kind.identifier().identifier())
+				.withRohdatenNeu(loesungszettel.rohdaten())
+				.withSpracheNeu(loesungszettel.sprache())
+				.withTeilnahmeIdentifier(loesungszettel.teilnahmeIdentifier())
+				.withUuid(loesungszettelID.identifier());
+
+			if (loesungszettelCreatedEvent != null) {
+
+				loesungszettelCreatedEvent.fire(loesungszettelCreated);
+			} else {
+
+				System.out.println(loesungszettelCreated.serializeQuietly());
+			}
+
 		}
 
-		return new LoesungszettelpunkteAPIModel().withLaengeKaengurusprung(loesungszettel.laengeKaengurusprung())
+		LoesungszettelpunkteAPIModel result = new LoesungszettelpunkteAPIModel()
+			.withLaengeKaengurusprung(loesungszettel.laengeKaengurusprung())
 			.withPunkte(loesungszettel.punkteAsString())
 			.withLoesungszettelId(loesungszettelID.identifier());
+
+		String messageFormatKey = concurrent ? "loesungszettel.addOrChange.concurrent" : "loesungszettel.addOrChange.success";
+
+		String msg = MessageFormat.format(applicationMessages.getString(messageFormatKey),
+			new Object[] { result.punkte(), Integer.valueOf(result.laengeKaengurusprung()) });
+
+		MessagePayload messagePayload = concurrent ? MessagePayload.warn(msg) : MessagePayload.info(msg);
+		ResponsePayload responsePayload = new ResponsePayload(messagePayload, result);
+		return responsePayload;
 	}
 
 	/**
