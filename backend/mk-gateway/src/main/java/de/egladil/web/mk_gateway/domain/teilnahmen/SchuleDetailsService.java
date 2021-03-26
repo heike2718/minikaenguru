@@ -6,10 +6,11 @@ package de.egladil.web.mk_gateway.domain.teilnahmen;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.adv.VertragAuftragsdatenverarbeitung;
@@ -29,6 +30,9 @@ import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleDetails;
 @ApplicationScoped
 @DomainService
 public class SchuleDetailsService {
+
+	@ConfigProperty(name = "uuid.testlehrer")
+	String uuidTestlehrer;
 
 	@Inject
 	AktuelleTeilnahmeService aktuelleTeilnahmeService;
@@ -79,9 +83,7 @@ public class SchuleDetailsService {
 
 			Schulkollegium kollegium = optKollegium.get();
 
-			List<Kollege> andere = kollegium.alleLehrerUnmodifiable().stream()
-				.filter(p -> lehrerIdentifier == null || !p.uuid().equals(lehrerIdentifier.identifier()))
-				.collect(Collectors.toList());
+			List<Kollege> andere = new KollegiumFilter(lehrerIdentifier, uuidTestlehrer).apply(kollegium);
 
 			result.withKollegen(andere);
 		}
@@ -121,6 +123,12 @@ public class SchuleDetailsService {
 		result.withHatAdv(optVertrag.isPresent());
 
 		return result;
+	}
+
+	public SchuleDetailsService withUuidTestlehrer(final String uuidTestlehrer) {
+
+		this.uuidTestlehrer = uuidTestlehrer;
+		return this;
 	}
 
 }
