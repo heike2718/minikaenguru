@@ -133,7 +133,7 @@ public enum Klassenstufe {
 	 * @throws IllegalArgumentException,
 	 *                                   wenn es zur Kombination aus Klassennummer und Jahr keine Auswertung gibt.
 	 */
-	private List<String> getAufgabennummern(final Integer jahr) {
+	public List<String> getAufgabennummern(final Integer jahr) {
 
 		if (this == Klassenstufe.IKID) {
 

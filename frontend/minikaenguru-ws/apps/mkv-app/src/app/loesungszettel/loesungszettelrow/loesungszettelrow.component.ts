@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { LoesungszettelFacade } from '../loesungszettel.facade';
-import { CheckboxData, Loesungszettelzeile, ZulaessigeEingabe } from '../loesungszettel.model';
+import { CheckboxData } from '../loesungszettel.model';
+import { Loesungszettelzeile, ZulaessigeEingabe } from '@minikaenguru-ws/common-components';
 
 @Component({
 	selector: 'mkv-loesungszettelrow',

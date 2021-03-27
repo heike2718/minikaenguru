@@ -5,6 +5,8 @@
 package de.egladil.web.mk_gateway.domain.loesungszettel;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -31,6 +33,7 @@ import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelChanged;
 import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelCreated;
 import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelDeleted;
 import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelAPIModel;
+import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelZeileAPIModel;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
@@ -283,10 +286,12 @@ public class LoesungszettelService {
 
 		Kind kind = optKind.get();
 
+		Wettbewerb wettbewerb = getWettbewerb();
+
 		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier()
 			.withTeilnahmeart(kind.teilnahmeIdentifier().teilnahmeart())
 			.withTeilnahmenummer(kind.teilnahmeIdentifier().teilnahmenummer())
-			.withWettbewerbID(getWettbewerb().id());
+			.withWettbewerbID(wettbewerb.id());
 
 		authService.checkPermissionForTeilnahmenummer(veranstalterID,
 			new Identifier(teilnahmeIdentifier.teilnahmenummer()),
@@ -303,7 +308,7 @@ public class LoesungszettelService {
 			concurrent = true;
 		} else {
 
-			loesungszettel = new LoesungszettelCreator().createLoesungszettel(loesungszetteldaten, getWettbewerb(),
+			loesungszettel = new LoesungszettelCreator().createLoesungszettel(loesungszetteldaten, wettbewerb,
 				kind);
 
 			loesungszettelID = loesungszettelRepository.addLoesungszettel(loesungszettel);
@@ -328,10 +333,7 @@ public class LoesungszettelService {
 
 		}
 
-		LoesungszettelpunkteAPIModel result = new LoesungszettelpunkteAPIModel()
-			.withLaengeKaengurusprung(loesungszettel.laengeKaengurusprung())
-			.withPunkte(loesungszettel.punkteAsString())
-			.withLoesungszettelId(loesungszettelID.identifier());
+		LoesungszettelpunkteAPIModel result = this.mapLoesungszettel(loesungszettelID, loesungszettel, wettbewerb);
 
 		String messageFormatKey = concurrent ? "loesungszettel.addOrChange.concurrent" : "loesungszettel.addOrChange.success";
 
@@ -382,7 +384,8 @@ public class LoesungszettelService {
 
 		Kind kind = optKind.get();
 
-		Loesungszettel loesungszettel = new LoesungszettelCreator().createLoesungszettel(loesungszetteldaten, getWettbewerb(),
+		Wettbewerb wettbewerb = getWettbewerb();
+		Loesungszettel loesungszettel = new LoesungszettelCreator().createLoesungszettel(loesungszetteldaten, wettbewerb,
 			kind);
 
 		loesungszettel = loesungszettel.withIdentifier(loesungszettelID);
@@ -405,9 +408,34 @@ public class LoesungszettelService {
 			System.out.println(loesungszettelChanged.serializeQuietly());
 		}
 
-		return new LoesungszettelpunkteAPIModel().withLaengeKaengurusprung(loesungszettel.laengeKaengurusprung())
+		LoesungszettelpunkteAPIModel result = this.mapLoesungszettel(loesungszettelID, loesungszettel, wettbewerb);
+
+		return result;
+	}
+
+	LoesungszettelpunkteAPIModel mapLoesungszettel(final Identifier loesungszettelID, final Loesungszettel loesungszettel, final Wettbewerb wettbewerb) {
+
+		List<LoesungszettelZeileAPIModel> zeilen = new ArrayList<>();
+		char[] eingabebuchstaben = loesungszettel.rohdaten().nutzereingabe().toCharArray();
+		int anzahlSpalten = loesungszettel.klassenstufe().getAnzahlSpalten();
+
+		List<String> aufgabennummern = loesungszettel.klassenstufe().getAufgabennummern(wettbewerb.id().jahr());
+
+		for (int i = 0; i < eingabebuchstaben.length; i++) {
+
+			LoesungszettelZeileAPIModel zeile = new LoesungszettelZeileAPIModel().withAnzahlSpalten(anzahlSpalten)
+				.withEingabe(ZulaessigeLoesungszetteleingabe.valueOfChar(eingabebuchstaben[i])).withIndex(i)
+				.withName(aufgabennummern.get(i));
+			zeilen.add(zeile);
+		}
+
+		LoesungszettelpunkteAPIModel result = new LoesungszettelpunkteAPIModel()
+			.withLaengeKaengurusprung(loesungszettel.laengeKaengurusprung())
 			.withPunkte(loesungszettel.punkteAsString())
-			.withLoesungszettelId(loesungszettelID.identifier());
+			.withLoesungszettelId(loesungszettelID.identifier())
+			.withZeilen(zeilen);
+
+		return result;
 	}
 
 	private Wettbewerb getWettbewerb() {

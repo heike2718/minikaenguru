@@ -70,8 +70,10 @@ public class LoesungszettelServiceTest {
 		LoesungszettelAPIModel loesungszettelDaten = new LoesungszettelAPIModel().withKindID(kindID)
 			.withKlassenstufe(Klassenstufe.EINS).withUuid("neu");
 
+		LoesungszettelRohdaten rohdaten = new LoesungszettelRohdaten().withNutzereingabe("EBCACCBDBNBN");
+
 		Loesungszettel vorhandener = new Loesungszettel(loesungszettelID).withKindID(new Identifier(kindID)).withPunkte(5000)
-			.withLaengeKaengurusprung(5);
+			.withLaengeKaengurusprung(5).withRohdaten(rohdaten).withKlassenstufe(Klassenstufe.EINS);
 		when(kinderRepository.ofId(new Identifier(kindID))).thenReturn(Optional.of(kind));
 		when(loesungszettelRepository.ofID(loesungszettelID)).thenReturn(Optional.of(vorhandener));
 		when(authService.checkPermissionForTeilnahmenummer(any(), any(), any())).thenReturn(Boolean.TRUE);
@@ -84,7 +86,7 @@ public class LoesungszettelServiceTest {
 		MessagePayload messagePayload = responsePayload.getMessage();
 		assertEquals("WARN", messagePayload.getLevel());
 		assertEquals(
-			"Ein Lösungszettel für dieses Kind wurde bereits durch eine andere Person gespeichert: Punkte 50,00, Länge Kängurusprung 5.",
+			"Ein Lösungszettel für dieses Kind wurde bereits durch eine andere Person gespeichert. Bitte prüfen Sie die neuen Daten. Punkte 50,00, Länge Kängurusprung 5.",
 			messagePayload.getMessage());
 
 		assertNotNull(responsePayload.getData());

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { Observable, of, throwError } from 'rxjs';
-import { Loesungszettel, Loesungszettelzeile, createLoseungszettelzeilen } from './loesungszettel.model';
-import { Kind, Klassenstufe, LoesungszettelPunkte } from '@minikaenguru-ws/common-components';
+import { Observable, throwError } from 'rxjs';
+import { Loesungszettel} from './loesungszettel.model';
+import { Kind, Klassenstufe, LoesungszettelResponse, Loesungszettelzeile } from '@minikaenguru-ws/common-components';
 import { ResponsePayload } from '@minikaenguru-ws/common-messages';
 import { map } from 'rxjs/operators';
 
