@@ -1,5 +1,12 @@
 # authprovider Release Notes
 
+__Release 1.4.4__:
+
+* [Testlehreraccount für mkv-app](https://github.com/heike2718/minikaenguru/issues/273)
+* [Status nach Wechseln der Schule](https://github.com/heike2718/minikaenguru/issues/282)
+* [Lösungszettel sporadisch kommt eine ContraintViloationException](https://github.com/heike2718/minikaenguru/issues/284)
+* [Lösungszettel ändern liest nicht die neuesten Daten](https://github.com/heike2718/minikaenguru/issues/285)
+
 __Release 1.4.3__:
 
 * [Browserlogout bei 401 und 403](https://github.com/heike2718/minikaenguru/issues/275)
