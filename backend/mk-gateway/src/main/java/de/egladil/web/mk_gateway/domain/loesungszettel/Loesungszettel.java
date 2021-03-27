@@ -4,6 +4,8 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.loesungszettel;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
@@ -57,6 +59,41 @@ public class Loesungszettel {
 	public Loesungszettel(final Identifier identifier) {
 
 		this.identifier = identifier;
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(identifier);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+
+		if (this == obj) {
+
+			return true;
+		}
+
+		if (obj == null) {
+
+			return false;
+		}
+
+		if (getClass() != obj.getClass()) {
+
+			return false;
+		}
+		Loesungszettel other = (Loesungszettel) obj;
+		return Objects.equals(identifier, other.identifier);
+	}
+
+	@Override
+	public String toString() {
+
+		return "Loesungszettel [identifier=" + identifier + ", kindID=" + kindID + ", klassenstufe=" + klassenstufe + ", sprache="
+			+ sprache + ", teilnahmeIdentifier=" + teilnahmeIdentifier + ", punkte=" + punkte + ", laengeKaengurusprung="
+			+ laengeKaengurusprung + "]";
 	}
 
 	public Identifier identifier() {
@@ -181,13 +218,6 @@ public class Loesungszettel {
 	public String punkteAsString() {
 
 		return new PunkteStringMapper().apply(this.punkte);
-	}
-
-	@Override
-	public String toString() {
-
-		return "Loesungszettel [identifier=" + identifier + ", klassenstufe=" + klassenstufe + ", teilnahmeIdentifier="
-			+ teilnahmeIdentifier + ", punkte=" + this.punkte + "]";
 	}
 
 	public Identifier getTheTeilnahmenummer() {

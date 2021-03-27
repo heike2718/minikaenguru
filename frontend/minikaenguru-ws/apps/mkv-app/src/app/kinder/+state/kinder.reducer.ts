@@ -126,7 +126,7 @@ const kinderReducer = createReducer(initialKinderState,
 
 	on(KinderActions.kindLoesungszettelChanged, (state, action) => {
 
-		const neuesKind = { ...action.kind, punkte: action.punkte };
+		const neuesKind = { ...action.kind, punkte: action.loesungszettelResponse };
 		const neueMap = new KinderMap(state.kinderMap).merge(neuesKind);
 
 		return {

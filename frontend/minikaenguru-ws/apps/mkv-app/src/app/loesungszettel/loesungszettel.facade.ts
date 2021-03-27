@@ -2,8 +2,8 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
-import { Loesungszettel, Loesungszettelzeile, createLoseungszettelzeilen, LoesungszettelMap } from './loesungszettel.model';
-import { Klassenstufe, Kind, LoesungszettelPunkte } from '@minikaenguru-ws/common-components';
+import { Loesungszettel, createLoseungszettelzeilen, LoesungszettelMap } from './loesungszettel.model';
+import { Klassenstufe, Kind, LoesungszettelResponse, Loesungszettelzeile } from '@minikaenguru-ws/common-components';
 import * as LoesungszettelActions from './+state/loesungszettel.actions';
 import * as LoesungszettelSelectors from './+state/loesungszettel.selectors';
 import { LoesungszettelService } from './loesungszettel.service';
@@ -87,9 +87,9 @@ export class LoesungszettelFacade {
 
 			responsePayload => {
 
-				const loesungszettelResponse: LoesungszettelPunkte = responsePayload.data;
-				this.store.dispatch(LoesungszettelActions.loesungszettelSaved({ loesungszettelAlt: loesungszettel, loesungszettelUuidNeu: loesungszettelResponse.loesungszettelId }));
-				this.store.dispatch(KinderActions.kindLoesungszettelChanged({ kind: kind, punkte: loesungszettelResponse }));
+				const loesungszettelResponse: LoesungszettelResponse = responsePayload.data;
+				this.store.dispatch(LoesungszettelActions.loesungszettelSaved({ loesungszettelAlt: loesungszettel, loesungszettelNeu: loesungszettelResponse }));
+				this.store.dispatch(KinderActions.kindLoesungszettelChanged({ kind: kind, loesungszettelResponse: loesungszettelResponse }));
 
 				if (kind.klasseId && loesungszettel.uuid === 'neu') {
 					this.store.dispatch(KlassenActons.loesungszettelAdded({ kind: kind }));

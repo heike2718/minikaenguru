@@ -4,11 +4,13 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.apimodel.auswertungen;
 
+import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_validation.annotations.UuidString;
+import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelZeileAPIModel;
 
 /**
  * LoesungszettelpunkteAPIModel
@@ -24,6 +26,43 @@ public class LoesungszettelpunkteAPIModel {
 
 	@JsonProperty
 	private int laengeKaengurusprung;
+
+	@JsonProperty
+	private List<LoesungszettelZeileAPIModel> zeilen;
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(loesungszettelId);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+
+		if (this == obj) {
+
+			return true;
+		}
+
+		if (obj == null) {
+
+			return false;
+		}
+
+		if (getClass() != obj.getClass()) {
+
+			return false;
+		}
+		LoesungszettelpunkteAPIModel other = (LoesungszettelpunkteAPIModel) obj;
+		return Objects.equals(loesungszettelId, other.loesungszettelId);
+	}
+
+	@Override
+	public String toString() {
+
+		return "LoesungszettelpunkteAPIModel [loesungszettelId=" + loesungszettelId + ", punkte=" + punkte
+			+ ", laengeKaengurusprung=" + laengeKaengurusprung + "]";
+	}
 
 	public String loesungszettelId() {
 
@@ -58,38 +97,15 @@ public class LoesungszettelpunkteAPIModel {
 		return this;
 	}
 
-	@Override
-	public int hashCode() {
+	public List<LoesungszettelZeileAPIModel> zeilen() {
 
-		return Objects.hash(loesungszettelId);
+		return zeilen;
 	}
 
-	@Override
-	public boolean equals(final Object obj) {
+	public LoesungszettelpunkteAPIModel withZeilen(final List<LoesungszettelZeileAPIModel> zeilen) {
 
-		if (this == obj) {
-
-			return true;
-		}
-
-		if (obj == null) {
-
-			return false;
-		}
-
-		if (getClass() != obj.getClass()) {
-
-			return false;
-		}
-		LoesungszettelpunkteAPIModel other = (LoesungszettelpunkteAPIModel) obj;
-		return Objects.equals(loesungszettelId, other.loesungszettelId);
-	}
-
-	@Override
-	public String toString() {
-
-		return "LoesungszettelpunkteAPIModel [loesungszettelId=" + loesungszettelId + ", punkte=" + punkte
-			+ ", laengeKaengurusprung=" + laengeKaengurusprung + "]";
+		this.zeilen = zeilen;
+		return this;
 	}
 
 }

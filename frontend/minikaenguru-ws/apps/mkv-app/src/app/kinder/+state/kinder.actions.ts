@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Kind, Duplikatwarnung, Klasse, LoesungszettelPunkte } from '@minikaenguru-ws/common-components';
+import { Kind, Duplikatwarnung, Klasse, LoesungszettelResponse } from '@minikaenguru-ws/common-components';
 import { Message } from '@minikaenguru-ws/common-messages';
 import { Teilnahmeart, TeilnahmeIdentifierAktuellerWettbewerb } from '@minikaenguru-ws/common-components';
 import { KindEditorVorbelegung, KlassenwechselDaten } from '../kinder.model';
@@ -63,7 +63,7 @@ export const kindDeleted = createAction(
 
 export const kindLoesungszettelChanged = createAction(
 	'[LoesungszettelFacade]: change the punkte in saveLoesungszettel',
-	props<{ kind: Kind, punkte: LoesungszettelPunkte }>()
+	props<{ kind: Kind, loesungszettelResponse: LoesungszettelResponse }>()
 );
 
 export const kindLoesungszettelDeleted = createAction(

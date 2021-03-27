@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { LoesungszettelFacade } from '../loesungszettel.facade';
 import { Subscription } from 'rxjs';
-import { Loesungszettelzeile, CheckboxData } from '../loesungszettel.model';
+import { CheckboxData } from '../loesungszettel.model';
+import { Loesungszettelzeile } from '@minikaenguru-ws/common-components';
 
 @Component({
 	selector: 'mkv-checkbox',

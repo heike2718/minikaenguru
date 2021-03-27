@@ -1,6 +1,7 @@
 import { createReducer, Action, on, State } from '@ngrx/store';
-import { Loesungszettel, LoesungszettelWithID, LoesungszettelMap, Loesungszettelzeile } from '../loesungszettel.model';
+import { Loesungszettel, LoesungszettelWithID, LoesungszettelMap } from '../loesungszettel.model';
 import * as LoesungszettelActions from './loesungszettel.actions';
+import { Loesungszettelzeile } from '@minikaenguru-ws/common-components';
 
 
 export const loesungszettelFeatureKey = 'mkv-app-loesungszettel';
@@ -80,20 +81,13 @@ const loesungszettelReducer = createReducer(initialLoesungszettelState,
 
 	on(LoesungszettelActions.loesungszettelSaved, (state, action) => {
 
+		const neuerLoesungszettel: Loesungszettel = { ...state.selectedLoesungszettel, uuid: action.loesungszettelNeu.loesungszettelId, zeilen: action.loesungszettelNeu.zeilen };
 
-		if (action.loesungszettelAlt.uuid === 'neu') {
+		let neueMap = new LoesungszettelMap(state.loesungszettelMap).remove(action.loesungszettelAlt.uuid);
 
-			const neuerLoesungszettel = { ...state.selectedLoesungszettel, uuid: action.loesungszettelUuidNeu };
-
-			let neueMap = new LoesungszettelMap(state.loesungszettelMap).remove(action.loesungszettelAlt.uuid);
 			neueMap = new LoesungszettelMap(neueMap).merge(neuerLoesungszettel);
 
-			return { ...state, loading: false, loesungszettelMap: neueMap, selectedLoesungszettel: neuerLoesungszettel };
-
-		} else {
-
-			return { ...state, loading: false };
-		}
+		return { ...state, loading: false, loesungszettelMap: neueMap, selectedLoesungszettel: neuerLoesungszettel };
 	}),
 
 	on(LoesungszettelActions.loesungszettelDeleted, (state, action) => {

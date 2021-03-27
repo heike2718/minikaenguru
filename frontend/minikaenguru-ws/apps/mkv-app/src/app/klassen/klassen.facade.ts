@@ -15,6 +15,7 @@ import * as KinderActions from '../kinder/+state/kinder.actions';
 import * as KinderSelectors from '../kinder/+state/kinder.selectors';
 import * as LehrerActions from '../lehrer/+state/lehrer.actions';
 import { KinderService } from '../kinder/kinder.service';
+import { KinderFacade } from '../kinder/kinder.facade';
 
 
 
@@ -38,6 +39,7 @@ export class KlassenFacade {
 	private kinderGeladen = false;
 
 	constructor(private store: Store<AppState>,
+		private kinderFacade: KinderFacade,
 		private router: Router,
 		private authService: AuthService,
 		private kinderService: KinderService,
@@ -172,6 +174,7 @@ export class KlassenFacade {
 
 
 	public resetState(): void {
+		this.kinderFacade.resetState();
 		this.store.dispatch(KlassenActions.resetModule());
 		this.store.dispatch(LehrerActions.deselectSchule());
 	}

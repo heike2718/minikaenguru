@@ -1,6 +1,4 @@
-import { Klassenstufe, Sprache, Klassenstufenart, LoesungszettelPunkte } from '@minikaenguru-ws/common-components';
-
-export type ZulaessigeEingabe = 'A' | 'B' | 'C' | 'D' | 'E' | 'N';
+import { Klassenstufe, Sprache, Klassenstufenart, LoesungszettelResponse, ZulaessigeEingabe, Loesungszettelzeile } from '@minikaenguru-ws/common-components';
 
 export interface Koordinaten {
 	readonly row: number;
@@ -13,13 +11,6 @@ export interface CheckboxData {
 	readonly checked: boolean;
 };
 
-/** mapped LoesungszettelZeileAPIModel */
-export interface Loesungszettelzeile {
-	readonly index: number;
-	readonly anzahlSpalten: number;
-	readonly name: string;
-	readonly eingabe: ZulaessigeEingabe;
-};
 
 /** mapped LoesungszettelAPIModel */
 export interface Loesungszettel {

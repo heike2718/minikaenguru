@@ -2,6 +2,8 @@ export type Teilnahmeart = 'PRIVAT' | 'SCHULE';
 export type Klassenstufenart = 'IKID' | 'EINS' | 'ZWEI';
 export type Sprachtyp = 'de' | 'en';
 export type Duplikatkontext = 'KIND' | 'KLASSE';
+export type ZulaessigeEingabe = 'A' | 'B' | 'C' | 'D' | 'E' | 'N';
+
 
 export interface TeilnahmeIdentifier {
 	readonly jahr: number;
@@ -47,10 +49,20 @@ export interface Sprache {
 	readonly label: string;
 };
 
-export interface LoesungszettelPunkte {
+/** mapped LoesungszettelZeileAPIModel */
+export interface Loesungszettelzeile {
+	readonly index: number;
+	readonly anzahlSpalten: number;
+	readonly name: string;
+	readonly eingabe: ZulaessigeEingabe;
+};
+
+/** mapped LoesungszettelResponseAPIModel */
+export interface LoesungszettelResponse {
 	readonly loesungszettelId: string;
 	readonly punkte: string;
-	readonly laengeKaengurusprung: number
+	readonly laengeKaengurusprung: number;
+	readonly zeilen: Loesungszettelzeile[];
 };
 
 export interface Kind {
@@ -60,7 +72,7 @@ export interface Kind {
 	readonly zusatz?: string;
 	readonly klassenstufe: Klassenstufe;
 	readonly sprache: Sprache;
-	readonly punkte?: LoesungszettelPunkte;
+	readonly punkte?: LoesungszettelResponse;
 	readonly klasseId?: string;
 };
 

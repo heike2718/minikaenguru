@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { Observable, of, throwError } from 'rxjs';
-import { Loesungszettel, Loesungszettelzeile, createLoseungszettelzeilen } from './loesungszettel.model';
-import { Kind, Klassenstufe, LoesungszettelPunkte } from '@minikaenguru-ws/common-components';
+import { Observable, throwError } from 'rxjs';
+import { Loesungszettel} from './loesungszettel.model';
+import { Kind, Klassenstufe, LoesungszettelResponse, Loesungszettelzeile } from '@minikaenguru-ws/common-components';
 import { ResponsePayload } from '@minikaenguru-ws/common-messages';
 import { map } from 'rxjs/operators';
 
@@ -37,7 +37,7 @@ export class LoesungszettelService {
 			return this.insertLoesungszettel(url, loesungszettel);
 		}
 
-		return this.uppdateLoesungszettel(url, loesungszettel);
+		return this.updateLoesungszettel(url, loesungszettel);
 	}
 
 	public deleteLoesungszettel(loesungszettelID: string): Observable<ResponsePayload> {
@@ -58,7 +58,7 @@ export class LoesungszettelService {
 
 	}
 
-	private uppdateLoesungszettel(url: string, loesungszettel: Loesungszettel): Observable<ResponsePayload> {
+	private updateLoesungszettel(url: string, loesungszettel: Loesungszettel): Observable<ResponsePayload> {
 
 		return this.http.put(url, loesungszettel).pipe(
 			map(body => body as ResponsePayload)
