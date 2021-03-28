@@ -29,7 +29,7 @@ public class TeilnahmenHibernateRepositoryTest extends AbstractIT {
 	protected void setUp() {
 
 		super.setUp();
-		teilnahmenRepository = TeilnahmenHibernateRepository.createForIntegrationTest(entityManager);
+		teilnahmenRepository = TeilnahmenHibernateRepository.createForIntegrationTest(entityManagerWettbewerbDB);
 
 	}
 
@@ -53,7 +53,7 @@ public class TeilnahmenHibernateRepositoryTest extends AbstractIT {
 		List<Teilnahme> teilnahmen = teilnahmenRepository.loadAllForWettbewerb(wettbewerbID);
 
 		// Assert
-		assertEquals(15, teilnahmen.size());
+		assertEquals(30, teilnahmen.size());
 
 	}
 }

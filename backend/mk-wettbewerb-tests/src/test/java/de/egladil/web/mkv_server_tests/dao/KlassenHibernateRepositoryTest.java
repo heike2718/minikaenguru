@@ -28,7 +28,7 @@ public class KlassenHibernateRepositoryTest extends AbstractIT {
 	protected void setUp() {
 
 		super.setUp();
-		repository = KlassenHibernateRepository.createForIntegrationTest(entityManager);
+		repository = KlassenHibernateRepository.createForIntegrationTest(entityManagerWettbewerbDB);
 	}
 
 	@Test

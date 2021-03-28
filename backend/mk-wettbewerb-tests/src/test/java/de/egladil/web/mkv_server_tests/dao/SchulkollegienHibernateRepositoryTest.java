@@ -32,7 +32,7 @@ public class SchulkollegienHibernateRepositoryTest extends AbstractIT {
 	protected void setUp() {
 
 		super.setUp();
-		schulkollegienRepository = SchulkollegienHibernateRepository.createForIntegrationTest(entityManager);
+		schulkollegienRepository = SchulkollegienHibernateRepository.createForIntegrationTest(entityManagerWettbewerbDB);
 	}
 
 	@Test
@@ -50,7 +50,7 @@ public class SchulkollegienHibernateRepositoryTest extends AbstractIT {
 		Schulkollegium kollegium = opt.get();
 
 		List<Kollege> alle = kollegium.alleLehrerUnmodifiable();
-		assertEquals(3, alle.size());
+		assertEquals(2, alle.size());
 
 	}
 

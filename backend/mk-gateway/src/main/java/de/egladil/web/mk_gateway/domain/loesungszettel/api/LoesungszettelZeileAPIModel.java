@@ -31,6 +31,13 @@ public class LoesungszettelZeileAPIModel implements Comparable<LoesungszettelZei
 		return this.index - o.index;
 	}
 
+	@Override
+	public String toString() {
+
+		return "LoesungszettelZeileAPIModel [index=" + index + ", anzahlSpalten=" + anzahlSpalten + ", name=" + name + ", eingabe="
+			+ eingabe + "]";
+	}
+
 	public int index() {
 
 		return index;

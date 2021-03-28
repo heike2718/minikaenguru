@@ -34,7 +34,7 @@ public class EventServiceTest extends AbstractIT {
 	protected void setUp() {
 
 		super.setUp();
-		repo = EventRepositoryHibernate.createForIntegrationTest(entityManager);
+		repo = EventRepositoryHibernate.createForIntegrationTest(entityManagerWettbewerbDB);
 		eventService = EventService.createForTests(repo);
 	}
 

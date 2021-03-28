@@ -37,7 +37,7 @@ public class LoesungszettelHibernateRepositoryTest extends AbstractIT {
 	protected void setUp() {
 
 		super.setUp();
-		this.loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(entityManager);
+		this.loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(entityManagerWettbewerbDB);
 	}
 
 	@Test

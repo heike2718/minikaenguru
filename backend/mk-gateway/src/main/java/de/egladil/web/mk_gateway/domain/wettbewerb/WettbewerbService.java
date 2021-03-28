@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.WebApplicationException;
@@ -29,6 +30,7 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.api.EditWettbewerbModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.TeilnahmenuebersichtAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbDetailsAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbListAPIModel;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.WettbewerbHibernateRepository;
 
 /**
  * WettbewerbService
@@ -43,6 +45,14 @@ public class WettbewerbService {
 	@Inject
 	WettbewerbRepository wettbewerbRepository;
 
+	public static WettbewerbService createForIntegrationTest(final EntityManager entityManager) {
+
+		WettbewerbService result = new WettbewerbService();
+		result.wettbewerbRepository = WettbewerbHibernateRepository.createForIntegrationTest(entityManager);
+		return result;
+	}
+
+	@Deprecated
 	public static WettbewerbService createForTest(final WettbewerbRepository repository) {
 
 		WettbewerbService result = new WettbewerbService();

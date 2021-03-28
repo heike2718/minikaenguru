@@ -24,8 +24,6 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 import de.egladil.web.commons_crypto.CryptoService;
 import de.egladil.web.commons_crypto.JWTService;
-import de.egladil.web.commons_crypto.impl.CryptoServiceImpl;
-import de.egladil.web.commons_crypto.impl.JWTServiceImpl;
 import de.egladil.web.commons_net.exception.SessionExpiredException;
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.commons_net.utils.CommonHttpUtils;
@@ -74,26 +72,6 @@ public class MkSessionService {
 	private UserLoggedOut logoutEventObject;
 
 	private ConcurrentHashMap<String, Session> sessions = new ConcurrentHashMap<>();
-
-	static MkSessionService createForTestWithUserRepository(final UserRepository userRepository) {
-
-		MkSessionService result = new MkSessionService();
-		result.jwtService = new JWTServiceImpl();
-		result.userRepository = userRepository;
-		result.cryptoService = new CryptoServiceImpl();
-		return result;
-	}
-
-	static MkSessionService createForTestWithSession(final Session session) {
-
-		MkSessionService result = new MkSessionService();
-		result.jwtService = new JWTServiceImpl();
-		result.cryptoService = new CryptoServiceImpl();
-
-		result.sessions.put(session.sessionId(), session);
-		return result;
-
-	}
 
 	/**
 	 * @param  sessionId
@@ -165,6 +143,9 @@ public class MkSessionService {
 			if (loginEvent != null) {
 
 				loginEvent.fire(loginEventObject);
+			} else {
+
+				System.out.println(loginEventObject.serializeQuietly());
 			}
 
 			return session;
@@ -200,6 +181,9 @@ public class MkSessionService {
 			if (logoutEvent != null) {
 
 				logoutEvent.fire(logoutEventObject);
+			} else {
+
+				System.out.println(logoutEventObject.serializeQuietly());
 			}
 		} else {
 
@@ -221,5 +205,10 @@ public class MkSessionService {
 	UserLoggedOut getLogoutEventObject() {
 
 		return logoutEventObject;
+	}
+
+	void initSessionForTest(final Session session) {
+
+		sessions.put(session.sessionId(), session);
 	}
 }

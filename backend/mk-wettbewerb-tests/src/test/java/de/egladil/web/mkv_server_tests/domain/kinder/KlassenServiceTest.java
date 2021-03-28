@@ -40,7 +40,7 @@ public class KlassenServiceTest extends AbstractIT {
 	protected void setUp() {
 
 		super.setUp();
-		klassenService = KlassenService.createForIntegrationTest(entityManager);
+		klassenService = KlassenService.createForIntegrationTest(entityManagerWettbewerbDB);
 	}
 
 	@Test
@@ -68,7 +68,7 @@ public class KlassenServiceTest extends AbstractIT {
 		// Arrange
 		String schulkuerzel = "G1HDI46O";
 		String lehrerUuid = "412b67dc-132f-465a-a3c3-468269e866cb";
-		String name = "2a";
+		String name = "Füchse";
 
 		KlasseEditorModel klasseEditorModel = new KlasseEditorModel().withName(name);
 		KlasseRequestData data = new KlasseRequestData()
@@ -79,7 +79,7 @@ public class KlassenServiceTest extends AbstractIT {
 
 		{
 
-			EntityTransaction trx = entityManager.getTransaction();
+			EntityTransaction trx = entityManagerWettbewerbDB.getTransaction();
 
 			try {
 
@@ -123,11 +123,11 @@ public class KlassenServiceTest extends AbstractIT {
 
 		{
 
-			EntityTransaction trx = entityManager.getTransaction();
+			EntityTransaction trx = entityManagerWettbewerbDB.getTransaction();
 
 			try {
 
-				klasseEditorModel = klasseEditorModel.withName("2a - Füchse");
+				klasseEditorModel = klasseEditorModel.withName("Seeadler");
 
 				trx.begin();
 
@@ -136,7 +136,7 @@ public class KlassenServiceTest extends AbstractIT {
 				trx.commit();
 
 				// Assert
-				assertEquals("2a - Füchse", result.name());
+				assertEquals("Seeadler", result.name());
 
 			} catch (PersistenceException e) {
 
@@ -148,7 +148,7 @@ public class KlassenServiceTest extends AbstractIT {
 
 		{
 
-			EntityTransaction trx = entityManager.getTransaction();
+			EntityTransaction trx = entityManagerWettbewerbDB.getTransaction();
 
 			try {
 
@@ -159,7 +159,7 @@ public class KlassenServiceTest extends AbstractIT {
 				trx.commit();
 
 				// Assert
-				assertEquals("2a - Füchse", result.name());
+				assertEquals("Seeadler", result.name());
 
 			} catch (PersistenceException e) {
 
@@ -169,7 +169,7 @@ public class KlassenServiceTest extends AbstractIT {
 			}
 		}
 
-		Optional<Klasse> optKlasse = KlassenHibernateRepository.createForIntegrationTest(entityManager)
+		Optional<Klasse> optKlasse = KlassenHibernateRepository.createForIntegrationTest(entityManagerWettbewerbDB)
 			.ofIdentifier(new Identifier(klasseUuid));
 
 		assertTrue(optKlasse.isEmpty());

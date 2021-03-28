@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.Optional;
 
@@ -25,9 +25,12 @@ import de.egladil.web.mk_gateway.domain.kinder.KinderService;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindAPIModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindRequestData;
+import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
+import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KinderHibernateRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
 import de.egladil.web.mkv_server_tests.AbstractIT;
 
 /**
@@ -35,9 +38,9 @@ import de.egladil.web.mkv_server_tests.AbstractIT;
  */
 public class KinderServiceTest extends AbstractIT {
 
-	private static final String VERANSTALTER_UUID = "5d89c2e1-5d35-4e1b-b5a5-c56defd8ba43";
-
 	private KinderRepository kinderRepository;
+
+	private LoesungszettelRepository loesungszettelRepository;
 
 	private KinderService kinderService;
 
@@ -46,148 +49,284 @@ public class KinderServiceTest extends AbstractIT {
 	protected void setUp() {
 
 		super.setUp();
-		kinderRepository = KinderHibernateRepository.createForIntegrationTest(entityManager);
-		kinderService = KinderService.createForIntegrationTest(entityManager);
+		kinderRepository = KinderHibernateRepository.createForIntegrationTest(entityManagerWettbewerbDB);
+		loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(entityManagerWettbewerbDB);
+		kinderService = KinderService.createForIntegrationTest(entityManagerWettbewerbDB);
 
 	}
 
 	@Test
-	void testKindAnlegenUndDublettePruefenUndAendernUndLoeschen() {
+	void testKindAnlegenUndDublettePruefenUndAendern() {
 
+		// Arrange
+		String veranstalterUuid = "5d89c2e1-5d35-4e1b-b5a5-c56defd8ba43";
 		String neueUuid = "";
 
-		String initialerNachname = "Walter " + System.currentTimeMillis();
+		String initialerNachname = "Meier-Walter";
 
 		KindEditorModel initialesKindEditorModel = new KindEditorModel(Klassenstufe.ZWEI, Sprache.de)
 			.withNachname(initialerNachname)
 			.withVorname("Fiona").withZusatz("blond");
 
-		{
+		KindRequestData requestData = new KindRequestData().withKind(initialesKindEditorModel)
+			.withUuid(KindRequestData.KEINE_UUID);
 
-			// Arrange
+		// Act 1
+		System.out.println("Act 1: Kind anlegen...");
+		KindAPIModel result = this.kindAnlegen(requestData, veranstalterUuid);
 
-			KindRequestData requestData = new KindRequestData().withKind(initialesKindEditorModel)
-				.withUuid(KindRequestData.KEINE_UUID);
+		// Assert 1
+		assertNotNull(result.uuid());
 
-			EntityTransaction trx = entityManager.getTransaction();
+		neueUuid = result.uuid();
 
-			try {
+		Optional<Kind> optKind = kinderRepository.ofId(new Identifier(neueUuid));
 
-				trx.begin();
+		assertTrue(optKind.isPresent());
 
-				// Act
-				KindAPIModel result = kinderService.kindAnlegen(requestData, VERANSTALTER_UUID);
+		Kind kind = optKind.get();
+		assertEquals(new Identifier(neueUuid), kind.identifier());
+		assertNull(kind.klasseID());
+		assertNull(kind.loesungszettelID());
+		assertEquals(initialerNachname, kind.nachname());
+		assertEquals("Fiona", kind.vorname());
+		assertEquals("blond", kind.zusatz());
 
-				trx.commit();
+		// Act 2
+		System.out.println("Act 2: Dublette prüfen...");
+		requestData = new KindRequestData().withKind(initialesKindEditorModel)
+			.withUuid(KindRequestData.KEINE_UUID);
 
-				// Assert
-				assertNotNull(result.uuid());
+		// Act + Assert
+		assertTrue(kinderService.pruefeDublette(requestData, veranstalterUuid));
 
-				neueUuid = result.uuid();
+		// Act 2
+		System.out.println("Act 3: Kind ändern...");
+		String nachname = "Müller-Walter";
 
-				Optional<Kind> optKind = kinderRepository.ofId(new Identifier(neueUuid));
+		KindEditorModel kindEditorModel = new KindEditorModel(Klassenstufe.ZWEI, Sprache.de).withNachname(nachname)
+			.withVorname("Fiona").withZusatz("brünett");
 
-				assertTrue(optKind.isPresent());
+		requestData = new KindRequestData().withKind(kindEditorModel)
+			.withUuid(neueUuid);
 
-				Kind kind = optKind.get();
-				assertEquals(new Identifier(neueUuid), kind.identifier());
-				assertNull(kind.klasseID());
-				assertNull(kind.loesungszettelID());
-				assertEquals(initialerNachname, kind.nachname());
-				assertEquals("Fiona", kind.vorname());
-				assertEquals("blond", kind.zusatz());
+		result = this.kindAendern(requestData, veranstalterUuid);
+		assertNotNull(result.uuid());
 
-			} catch (PersistenceException e) {
+		neueUuid = result.uuid();
 
-				trx.rollback();
-				e.printStackTrace();
-				fail(e.getMessage());
-			}
+		optKind = kinderRepository.ofId(new Identifier(neueUuid));
+
+		assertTrue(optKind.isPresent());
+
+		kind = optKind.get();
+		assertEquals(new Identifier(neueUuid), kind.identifier());
+		assertNull(kind.klasseID());
+		assertNull(kind.loesungszettelID());
+		assertEquals(nachname, kind.nachname());
+		assertEquals("Fiona", kind.vorname());
+		assertEquals("brünett", kind.zusatz());
+	}
+
+	@Test
+	void should_pruefeDubletteFindDubletteReturnTrue_when_kindInKlasseAlleAttributeGefuellt() {
+
+		// Arrange
+		String veranstalterUuid = "c048e4d6-3d40-412a-8d8c-95fb3e0eb614";
+		String klasseUuid = "6d57b4f6-61ed-450a-ae17-7ccb3d9d776a";
+
+		KindEditorModel kindEditorModel = new KindEditorModel(Klassenstufe.ZWEI, Sprache.de)
+			.withNachname("Mirkowitz")
+			.withVorname("Fiona").withZusatz("blond").withKlasseUuid(klasseUuid);
+
+		KindRequestData requestData = new KindRequestData().withKind(kindEditorModel)
+			.withUuid(KindRequestData.KEINE_UUID);
+
+		// Act + Assert
+		assertTrue(kinderService.pruefeDublette(requestData, veranstalterUuid));
+
+	}
+
+	@Test
+	void should_pruefeDubletteFindDubletteReturnTrue_when_kindInKlasseOhneZusatz() {
+
+		// Arrange
+		String veranstalterUuid = "c048e4d6-3d40-412a-8d8c-95fb3e0eb614";
+		String klasseUuid = "6d57b4f6-61ed-450a-ae17-7ccb3d9d776a";
+
+		KindEditorModel kindEditorModel = new KindEditorModel(Klassenstufe.ZWEI, Sprache.de)
+			.withNachname("Mirkowitz")
+			.withVorname("Fiona").withKlasseUuid(klasseUuid);
+
+		KindRequestData requestData = new KindRequestData().withKind(kindEditorModel)
+			.withUuid(KindRequestData.KEINE_UUID);
+
+		// Act + Assert
+		assertFalse(kinderService.pruefeDublette(requestData, veranstalterUuid));
+
+	}
+
+	@Test
+	void should_pruefeDubletteFindDubletteReturnFalse_when_kindInKlasseAlleAttributeGefuellt_and_andereKlasse() {
+
+		// Arrange
+		String veranstalterUuid = "c048e4d6-3d40-412a-8d8c-95fb3e0eb614";
+		String klasseUuid = "fe2ed680-d1b8-41f8-9ef1-3c5b2fdbad87";
+
+		KindEditorModel kindEditorModel = new KindEditorModel(Klassenstufe.ZWEI, Sprache.de)
+			.withNachname("Mirkowitz")
+			.withVorname("Fiona").withZusatz("blond").withKlasseUuid(klasseUuid);
+
+		KindRequestData requestData = new KindRequestData().withKind(kindEditorModel)
+			.withUuid(KindRequestData.KEINE_UUID);
+
+		// Act + Assert
+		assertFalse(kinderService.pruefeDublette(requestData, veranstalterUuid));
+
+	}
+
+	@Test
+	void should_pruefeDubletteFindDubletteReturnFalse_when_kindInKlasseAlleAttributeGefuellt_andereKlasenstufe() {
+
+		// Arrange
+		String veranstalterUuid = "c048e4d6-3d40-412a-8d8c-95fb3e0eb614";
+		String klasseUuid = "6d57b4f6-61ed-450a-ae17-7ccb3d9d776a";
+
+		KindEditorModel kindEditorModel = new KindEditorModel(Klassenstufe.EINS, Sprache.de)
+			.withNachname("Mirkowitz")
+			.withVorname("Fiona").withZusatz("blond").withKlasseUuid(klasseUuid);
+
+		KindRequestData requestData = new KindRequestData().withKind(kindEditorModel)
+			.withUuid(KindRequestData.KEINE_UUID);
+
+		// Act + Assert
+		assertFalse(kinderService.pruefeDublette(requestData, veranstalterUuid));
+
+	}
+
+	@Test
+	void shhould_pruefeDubletteFindDubletteReturnTrue_when_kindInKlasseAlleAttributeGefuellt_andereSprache() {
+
+		// Arrange
+		String veranstalterUuid = "c048e4d6-3d40-412a-8d8c-95fb3e0eb614";
+		String klasseUuid = "6d57b4f6-61ed-450a-ae17-7ccb3d9d776a";
+
+		KindEditorModel kindEditorModel = new KindEditorModel(Klassenstufe.ZWEI, Sprache.en)
+			.withNachname("Mirkowitz")
+			.withVorname("Fiona").withZusatz("blond").withKlasseUuid(klasseUuid);
+
+		KindRequestData requestData = new KindRequestData().withKind(kindEditorModel)
+			.withUuid(KindRequestData.KEINE_UUID);
+
+		// Act + Assert
+		assertTrue(kinderService.pruefeDublette(requestData, veranstalterUuid));
+
+	}
+
+	@Test
+	void should_kindLoeschenLoeschtLoesungszettel_when_KindMitLoesungszettel() {
+
+		// Arrange
+		String kindUuid = "00bf7996-4224-49a3-908d-d18258fec747";
+		String loesungszettelUuid = "a1527ce3-a835-4d2c-b4a9-7a59f1f637e6";
+		String veranstalterUuid = "2f09da36-07c6-4033-a2f1-5e110c804026";
+
+		// Test data
+		Optional<Kind> optKind = kinderRepository.ofId(new Identifier(kindUuid));
+		assertTrue(optKind.isPresent());
+
+		Kind kind = optKind.get();
+		assertEquals(new Identifier(loesungszettelUuid), kind.loesungszettelID());
+		assertEquals("Ernst", kind.vorname());
+		assertEquals("Lustig", kind.nachname());
+
+		Optional<Loesungszettel> optLoesungszettel = loesungszettelRepository.ofID(new Identifier(loesungszettelUuid));
+		assertTrue(optLoesungszettel.isPresent());
+
+		// Act
+		KindAPIModel result = this.kindLoeschen(kindUuid, veranstalterUuid);
+
+		// Assert
+		assertNotNull(result);
+		assertEquals(kindUuid, result.uuid());
+		assertNull(result.punkte());
+
+		optKind = kinderRepository.ofId(new Identifier(kindUuid));
+		assertTrue(optKind.isEmpty());
+		optLoesungszettel = loesungszettelRepository.ofID(new Identifier(loesungszettelUuid));
+		assertTrue(optLoesungszettel.isEmpty());
+
+	}
+
+	private KindAPIModel kindAnlegen(final KindRequestData requestData, final String veranstalterUuid) {
+
+		EntityTransaction trx = entityManagerWettbewerbDB.getTransaction();
+
+		try {
+
+			trx.begin();
+
+			// Act
+			KindAPIModel result = kinderService.kindAnlegen(requestData, veranstalterUuid);
+
+			trx.commit();
+
+			return result;
+
+		} catch (PersistenceException e) {
+
+			trx.rollback();
+			e.printStackTrace();
+
+			throw new RuntimeException("Kind konnte nicht gespeichert werden");
 		}
+	}
 
-		{
+	private KindAPIModel kindAendern(final KindRequestData requestData, final String veranstalterUuid) {
 
-			// Arrange
-			KindRequestData requestData = new KindRequestData().withKind(initialesKindEditorModel)
-				.withUuid(KindRequestData.KEINE_UUID);
+		EntityTransaction trx = entityManagerWettbewerbDB.getTransaction();
 
-			// Act + Assert
-			assertTrue(kinderService.pruefeDublette(requestData, VERANSTALTER_UUID));
+		try {
 
+			trx.begin();
+
+			// Act
+			KindAPIModel result = kinderService.kindAendern(requestData, veranstalterUuid);
+
+			trx.commit();
+
+			return result;
+
+		} catch (PersistenceException e) {
+
+			trx.rollback();
+			e.printStackTrace();
+
+			throw new RuntimeException("Kind konnte nicht gespeichert werden");
 		}
+	}
 
-		{
+	private KindAPIModel kindLoeschen(final String kindUuid, final String veranstalterUuid) {
 
-			// Arrange
-			String nachname = System.currentTimeMillis() + " Walter";
+		EntityTransaction trx = entityManagerWettbewerbDB.getTransaction();
 
-			KindEditorModel kindEditorModel = new KindEditorModel(Klassenstufe.ZWEI, Sprache.de).withNachname(nachname)
-				.withVorname("Fiona").withZusatz("brünett");
+		try {
 
-			KindRequestData requestData = new KindRequestData().withKind(kindEditorModel)
-				.withUuid(neueUuid);
+			trx.begin();
 
-			EntityTransaction trx = entityManager.getTransaction();
+			// Act
+			KindAPIModel result = kinderService.kindLoeschen(kindUuid, veranstalterUuid);
 
-			try {
+			trx.commit();
 
-				trx.begin();
+			return result;
 
-				// Act
-				KindAPIModel result = kinderService.kindAendern(requestData, VERANSTALTER_UUID);
+		} catch (PersistenceException e) {
 
-				trx.commit();
+			trx.rollback();
+			e.printStackTrace();
 
-				// Assert
-				assertNotNull(result.uuid());
-
-				neueUuid = result.uuid();
-
-				Optional<Kind> optKind = kinderRepository.ofId(new Identifier(neueUuid));
-
-				assertTrue(optKind.isPresent());
-
-				Kind kind = optKind.get();
-				assertEquals(new Identifier(neueUuid), kind.identifier());
-				assertNull(kind.klasseID());
-				assertNull(kind.loesungszettelID());
-				assertEquals(nachname, kind.nachname());
-				assertEquals("Fiona", kind.vorname());
-				assertEquals("brünett", kind.zusatz());
-
-			} catch (PersistenceException e) {
-
-				trx.rollback();
-				e.printStackTrace();
-				fail(e.getMessage());
-			}
-		}
-
-		{
-
-			EntityTransaction trx = entityManager.getTransaction();
-
-			try {
-
-				trx.begin();
-
-				// Act
-				kinderService.kindLoeschen(neueUuid, VERANSTALTER_UUID);
-
-				trx.commit();
-
-				Optional<Kind> optKind = kinderRepository.ofId(new Identifier(neueUuid));
-
-				// Assert
-				assertTrue(optKind.isEmpty());
-
-			} catch (PersistenceException e) {
-
-				trx.rollback();
-				e.printStackTrace();
-				fail(e.getMessage());
-			}
-
+			throw new RuntimeException("Kind konnte nicht gespeichert werden");
 		}
 
 	}

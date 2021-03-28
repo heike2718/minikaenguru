@@ -33,7 +33,7 @@ public class KinderHibernateRepositoryTest extends AbstractIT {
 	protected void setUp() {
 
 		super.setUp();
-		repository = KinderHibernateRepository.createForIntegrationTest(entityManager);
+		repository = KinderHibernateRepository.createForIntegrationTest(entityManagerWettbewerbDB);
 	}
 
 	@Test
@@ -46,7 +46,7 @@ public class KinderHibernateRepositoryTest extends AbstractIT {
 		Kind kind = new Kind().withKlassenstufe(Klassenstufe.ZWEI).withNachname("Meier").withSprache(Sprache.de)
 			.withVorname("Emma").withTeilnahmeIdentifier(teilnahmeIdentifier);
 
-		EntityTransaction trx = entityManager.getTransaction();
+		EntityTransaction trx = entityManagerWettbewerbDB.getTransaction();
 
 		try {
 

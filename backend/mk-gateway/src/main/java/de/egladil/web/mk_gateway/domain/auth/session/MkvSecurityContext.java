@@ -46,7 +46,7 @@ public class MkvSecurityContext implements SecurityContext {
 	public boolean isUserInRole(final String role) {
 
 		LoggedInUser user = session.user();
-		String rolle = user.rolle() != null ? user.rolle().toString() : "";
+		String rolle = user.rolle().toString();
 
 		boolean result = rolle.equalsIgnoreCase(role);
 

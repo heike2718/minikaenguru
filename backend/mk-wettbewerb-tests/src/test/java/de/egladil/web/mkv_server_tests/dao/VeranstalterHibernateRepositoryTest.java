@@ -34,7 +34,7 @@ public class VeranstalterHibernateRepositoryTest extends AbstractIT {
 	protected void setUp() {
 
 		super.setUp();
-		veranstalterRepository = VeranstalterHibernateRepository.createForIntegrationTest(entityManager);
+		veranstalterRepository = VeranstalterHibernateRepository.createForIntegrationTest(entityManagerWettbewerbDB);
 
 	}
 
@@ -48,7 +48,7 @@ public class VeranstalterHibernateRepositoryTest extends AbstractIT {
 		List<Veranstalter> result = veranstalterRepository.findVeranstalter(suchanfrage);
 
 		// Assert
-		assertEquals(5, result.size());
+		assertEquals(6, result.size());
 	}
 
 	@Test
@@ -134,7 +134,7 @@ public class VeranstalterHibernateRepositoryTest extends AbstractIT {
 		List<String> mailadressen = veranstalterRepository.findEmailsNewsletterAbonnenten(Empfaengertyp.ALLE);
 
 		// Assert
-		assertEquals(120, mailadressen.size());
+		assertEquals(126, mailadressen.size());
 
 	}
 
@@ -145,7 +145,7 @@ public class VeranstalterHibernateRepositoryTest extends AbstractIT {
 		List<String> mailadressen = veranstalterRepository.findEmailsNewsletterAbonnenten(Empfaengertyp.LEHRER);
 
 		// Assert
-		assertEquals(77, mailadressen.size());
+		assertEquals(81, mailadressen.size());
 
 	}
 
@@ -156,7 +156,7 @@ public class VeranstalterHibernateRepositoryTest extends AbstractIT {
 		List<String> mailadressen = veranstalterRepository.findEmailsNewsletterAbonnenten(Empfaengertyp.PRIVATVERANSTALTER);
 
 		// Assert
-		assertEquals(43, mailadressen.size());
+		assertEquals(45, mailadressen.size());
 
 	}
 

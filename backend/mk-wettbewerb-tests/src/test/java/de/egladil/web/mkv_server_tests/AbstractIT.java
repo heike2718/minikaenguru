@@ -20,11 +20,14 @@ import de.egladil.web.mk_gateway.domain.DownloadData;
  */
 public abstract class AbstractIT {
 
-	protected EntityManager entityManager;
+	protected EntityManager entityManagerWettbewerbDB;
+
+	protected EntityManager entityManagerKatalogeDB;
 
 	protected void setUp() {
 
-		entityManager = Persistence.createEntityManagerFactory("mkWettbewerbPU").createEntityManager();
+		entityManagerWettbewerbDB = Persistence.createEntityManagerFactory("mkWettbewerbPU").createEntityManager();
+		entityManagerKatalogeDB = Persistence.createEntityManagerFactory("mkKatalogePU").createEntityManager();
 
 	}
 

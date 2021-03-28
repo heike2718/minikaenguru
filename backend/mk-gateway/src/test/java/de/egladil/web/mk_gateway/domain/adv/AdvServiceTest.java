@@ -7,13 +7,18 @@ package de.egladil.web.mk_gateway.domain.adv;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
@@ -24,9 +29,19 @@ import de.egladil.web.mk_gateway.domain.veranstalter.api.VertragAdvAPIModel;
 /**
  * AdvServiceTest
  */
+@ExtendWith(MockitoExtension.class)
 public class AdvServiceTest {
 
 	private static final String LEHRER_UUID = "guowdgqog";
+
+	@Mock
+	private AuthorizationService authService;
+
+	@Mock
+	private VertragAuftragsverarbeitungRepository vertragRepository;
+
+	@InjectMocks
+	private AdvService advService;
 
 	@Test
 	void should_initVertrag_initAllAttributes() {
@@ -95,14 +110,9 @@ public class AdvServiceTest {
 		Identifier lehrerId = new Identifier(LEHRER_UUID);
 		Identifier teilnahmeId = new Identifier(schulkuerzel);
 
-		AuthorizationService authService = Mockito.mock(AuthorizationService.class);
-
-		Mockito
-			.when(authService.checkPermissionForTeilnahmenummer(lehrerId, teilnahmeId,
-				"[getVertragAuftragsdatenverarbeitung - " + schulkuerzel + "]"))
-			.thenThrow(new AccessDeniedException());
-
-		AdvService advService = AdvService.createForTest(authService);
+		when(authService.checkPermissionForTeilnahmenummer(lehrerId, teilnahmeId,
+			"[getVertragAuftragsdatenverarbeitung - " + schulkuerzel + "]"))
+				.thenThrow(new AccessDeniedException());
 
 		// Act
 		try {
@@ -139,14 +149,10 @@ public class AdvServiceTest {
 		Identifier lehrerId = new Identifier(LEHRER_UUID);
 		Identifier teilnahmeId = new Identifier(schulkuerzel);
 
-		AuthorizationService authService = Mockito.mock(AuthorizationService.class);
-
 		Mockito
 			.when(authService.checkPermissionForTeilnahmenummer(lehrerId, teilnahmeId,
 				"[createVertragAuftragsdatenverarbeitung - " + schulkuerzel + "]"))
 			.thenThrow(new AccessDeniedException());
-
-		AdvService advService = AdvService.createForTest(authService);
 
 		// Act
 		try {

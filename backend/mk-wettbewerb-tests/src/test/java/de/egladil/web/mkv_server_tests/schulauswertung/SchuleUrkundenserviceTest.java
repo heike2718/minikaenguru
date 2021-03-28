@@ -42,8 +42,8 @@ public class SchuleUrkundenserviceTest extends AbstractIT {
 	protected void setUp() {
 
 		super.setUp();
-		urkundenservice = SchuleUrkundenservice.createForIntegrationTests(entityManager);
-		loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(entityManager);
+		urkundenservice = SchuleUrkundenservice.createForIntegrationTests(entityManagerWettbewerbDB);
+		loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(entityManagerWettbewerbDB);
 
 	}
 
@@ -61,7 +61,7 @@ public class SchuleUrkundenserviceTest extends AbstractIT {
 
 		List<Loesungszettel> alleLoesungszettel = loesungszettelRepository.loadAll(teilnahmeIdentifier);
 
-		Optional<Teilnahme> optTeilnahme = TeilnahmenHibernateRepository.createForIntegrationTest(entityManager)
+		Optional<Teilnahme> optTeilnahme = TeilnahmenHibernateRepository.createForIntegrationTest(entityManagerWettbewerbDB)
 			.ofTeilnahmeIdentifier(teilnahmeIdentifier);
 
 		Schulteilnahme schulteilnahme = (Schulteilnahme) optTeilnahme.get();

@@ -7,8 +7,11 @@ package de.egladil.web.mk_gateway.domain.fileutils;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import javax.ws.rs.core.Response;
+
 import org.junit.jupiter.api.Test;
 
+import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 
 /**
@@ -44,5 +47,26 @@ public class MkGatewayFileUtilsTest {
 
 			assertEquals("Konnte Datei mit Pfad /home/heike/mkv/adv/adv-vereinbarung-10.0.pdf nicht laden", e.getMessage());
 		}
+	}
+
+	@Test
+	void should_createDownloadResponseSetAllHeaders() {
+
+		// Arrange
+		DownloadData downloadData = new DownloadData("xxx.pdf", "Hallo".getBytes());
+
+		// Act
+		Response response = MkGatewayFileUtils.createDownloadResponse(downloadData);
+
+		// Assert
+		String contentTypHeader = response.getHeaderString("Content-Type");
+		assertEquals("application/octet-stream", contentTypHeader);
+
+		assertEquals("attachement; filename=xxx.pdf", response.getHeaderString("Content-Disposition"));
+
+		byte[] entity = (byte[]) response.getEntity();
+
+		assertEquals("Hallo", new String(entity));
+
 	}
 }

@@ -32,7 +32,7 @@ public class UebersichtGesamtpunktverteilungItemsRechnerTest extends AbstractIT 
 	protected void setUp() {
 
 		super.setUp();
-		loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(entityManager);
+		loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(entityManagerWettbewerbDB);
 	}
 
 	@Test

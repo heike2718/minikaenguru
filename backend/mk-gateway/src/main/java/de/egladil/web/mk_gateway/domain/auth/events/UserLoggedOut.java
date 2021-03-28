@@ -10,14 +10,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
+import de.egladil.web.mk_gateway.domain.event.AbstractDomainEvent;
 import de.egladil.web.mk_gateway.domain.event.EventType;
-import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**
  * UserLoggedOut
  */
-public class UserLoggedOut implements MkGatewayDomainEvent {
+public class UserLoggedOut extends AbstractDomainEvent {
 
 	@JsonIgnore
 	private final LocalDateTime occuredOn;

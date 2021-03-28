@@ -14,6 +14,7 @@ import java.util.ResourceBundle;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 import javax.ws.rs.BadRequestException;
@@ -41,6 +42,8 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterLoesungszettel;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KinderHibernateRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
 
 /**
  * LoesungszettelService
@@ -79,6 +82,18 @@ public class LoesungszettelService {
 
 	private LoesungszettelDeleted loesungszettelDeleted;
 
+	public static LoesungszettelService createForIntegrationTest(final EntityManager entityManager) {
+
+		LoesungszettelService result = new LoesungszettelService();
+		result.loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(entityManager);
+		result.kinderRepository = KinderHibernateRepository.createForIntegrationTest(entityManager);
+		result.authService = AuthorizationService.createForIntegrationTests(entityManager);
+		result.wettbewerbService = WettbewerbService.createForIntegrationTest(entityManager);
+		return result;
+
+	}
+
+	@Deprecated
 	public static LoesungszettelService createForTest(final AuthorizationService authService, final WettbewerbService wettbewerbService, final KinderRepository kinderRepository, final LoesungszettelRepository loesungszettelRepository) {
 
 		LoesungszettelService result = new LoesungszettelService();

@@ -33,7 +33,7 @@ public class NewsletterHibernateRepositoryTest extends AbstractIT {
 	protected void setUp() {
 
 		super.setUp();
-		repo = NewsletterHibernateRepository.createForIntegrationTest(entityManager);
+		repo = NewsletterHibernateRepository.createForIntegrationTest(entityManagerWettbewerbDB);
 	}
 
 	@Test
@@ -45,7 +45,7 @@ public class NewsletterHibernateRepositoryTest extends AbstractIT {
 		Newsletter newsletter = new Newsletter().withBetreff("Test")
 			.withText("Bla blabla blablablabla bla bla\nblubb blubberdiblubb.");
 
-		EntityTransaction trx = entityManager.getTransaction();
+		EntityTransaction trx = entityManagerWettbewerbDB.getTransaction();
 
 		try {
 
@@ -86,7 +86,7 @@ public class NewsletterHibernateRepositoryTest extends AbstractIT {
 		newsletter.withBetreff("Testbetreff");
 		newsletter.withText("Nönö nö! " + newsletter.text());
 
-		trx = entityManager.getTransaction();
+		trx = entityManagerWettbewerbDB.getTransaction();
 
 		try {
 
@@ -106,7 +106,7 @@ public class NewsletterHibernateRepositoryTest extends AbstractIT {
 			fail(e.getMessage());
 		}
 
-		trx = entityManager.getTransaction();
+		trx = entityManagerWettbewerbDB.getTransaction();
 
 		try {
 

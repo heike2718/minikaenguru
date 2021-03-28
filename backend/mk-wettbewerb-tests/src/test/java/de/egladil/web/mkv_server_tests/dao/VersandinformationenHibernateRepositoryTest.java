@@ -41,8 +41,8 @@ public class VersandinformationenHibernateRepositoryTest extends AbstractIT {
 
 		super.setUp();
 
-		newsletterRepo = NewsletterHibernateRepository.createForIntegrationTest(entityManager);
-		versandinfoRepo = VersandinformationenHibernateRepository.createForTest(entityManager);
+		newsletterRepo = NewsletterHibernateRepository.createForIntegrationTest(entityManagerWettbewerbDB);
+		versandinfoRepo = VersandinformationenHibernateRepository.createForTest(entityManagerWettbewerbDB);
 
 		createANewsletter();
 	}
@@ -52,7 +52,7 @@ public class VersandinformationenHibernateRepositoryTest extends AbstractIT {
 	 */
 	private void createANewsletter() {
 
-		EntityTransaction trx = entityManager.getTransaction();
+		EntityTransaction trx = entityManagerWettbewerbDB.getTransaction();
 
 		try {
 
@@ -86,7 +86,7 @@ public class VersandinformationenHibernateRepositoryTest extends AbstractIT {
 			.withEmpfaengertyp(Empfaengertyp.LEHRER)
 			.withNewsletterID(newsletterID);
 
-		EntityTransaction trx = entityManager.getTransaction();
+		EntityTransaction trx = entityManagerWettbewerbDB.getTransaction();
 
 		try {
 
@@ -109,7 +109,7 @@ public class VersandinformationenHibernateRepositoryTest extends AbstractIT {
 			.withEmpfaengertyp(Empfaengertyp.TEST)
 			.withNewsletterID(newsletterID);
 
-		trx = entityManager.getTransaction();
+		trx = entityManagerWettbewerbDB.getTransaction();
 
 		try {
 
@@ -131,7 +131,7 @@ public class VersandinformationenHibernateRepositoryTest extends AbstractIT {
 
 		versandinfo.withIdentifier(generatedID).withAnzahlEmpaenger(119).withVersandBegonnenAm("18.12.2020 06:48:02");
 
-		trx = entityManager.getTransaction();
+		trx = entityManagerWettbewerbDB.getTransaction();
 
 		try {
 
@@ -159,7 +159,7 @@ public class VersandinformationenHibernateRepositoryTest extends AbstractIT {
 
 		assertEquals("18.12.2020 06:48:02", erste.versandBegonnenAm());
 
-		trx = entityManager.getTransaction();
+		trx = entityManagerWettbewerbDB.getTransaction();
 
 		try {
 
