@@ -155,11 +155,11 @@ public class InMemoryLoesungszettelRepository implements LoesungszettelRepositor
 	}
 
 	@Override
-	public boolean removeLoesungszettel(final Identifier identifier, final String veranstalterUuid) {
+	public Optional<PersistenterLoesungszettel> removeLoesungszettel(final Identifier identifier, final String veranstalterUuid) {
 
 		Loesungszettel geloeschter = alleLoesungszettel.remove(identifier);
 
-		return geloeschter != null;
+		return geloeschter != null ? Optional.of(new PersistenterLoesungszettel()) : Optional.empty();
 	}
 
 	private Loesungszettel mapFromDB(final PersistenterLoesungszettel persistenter) {

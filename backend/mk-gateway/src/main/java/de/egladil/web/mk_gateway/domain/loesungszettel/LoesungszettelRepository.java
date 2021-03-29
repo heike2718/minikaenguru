@@ -97,7 +97,7 @@ public interface LoesungszettelRepository {
 
 	/**
 	 * @param  identifier
-	 * @return            boolean
+	 * @return            Optional den gelöschten Lösungszettel oder empty.
 	 */
-	boolean removeLoesungszettel(Identifier identifier, String veranstalterUuid);
+	Optional<PersistenterLoesungszettel> removeLoesungszettel(Identifier identifier, String veranstalterUuid);
 }

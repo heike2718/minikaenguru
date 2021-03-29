@@ -21,8 +21,6 @@ export class LoesungszettelFacade {
 	public selectedLoesungszettel$: Observable<Loesungszettel> = this.store.select(LoesungszettelSelectors.selectedLoesungszettel);
 
 
-	private loesungszettelMapSubscription: Subscription;
-
 	private loesungszettelMap: LoesungszettelMap;
 
 	constructor(private store: Store<AppState>,
@@ -30,7 +28,7 @@ export class LoesungszettelFacade {
 		private messageService: MessageService,
 		private errorHandler: GlobalErrorHandlerService,) {
 
-		this.loesungszettelMapSubscription = this.store.select(LoesungszettelSelectors.loesungszettelMap).subscribe(
+		this.store.select(LoesungszettelSelectors.loesungszettelMap).subscribe(
 
 			map => this.loesungszettelMap = map
 		);
@@ -87,13 +85,21 @@ export class LoesungszettelFacade {
 
 			responsePayload => {
 
-				const loesungszettelResponse: LoesungszettelResponse = responsePayload.data;
-				this.store.dispatch(LoesungszettelActions.loesungszettelSaved({ loesungszettelAlt: loesungszettel, loesungszettelNeu: loesungszettelResponse }));
-				this.store.dispatch(KinderActions.kindLoesungszettelChanged({ kind: kind, loesungszettelResponse: loesungszettelResponse }));
+				const data = responsePayload.data;
 
-				if (kind.klasseId && loesungszettel.uuid === 'neu') {
-					this.store.dispatch(KlassenActons.loesungszettelAdded({ kind: kind }));
+				if (data) {
+
+					const loesungszettelResponse: LoesungszettelResponse = responsePayload.data;
+					this.store.dispatch(LoesungszettelActions.loesungszettelSaved({ loesungszettelAlt: loesungszettel, loesungszettelNeu: loesungszettelResponse }));
+					this.store.dispatch(KinderActions.kindLoesungszettelChanged({ kind: kind, loesungszettelResponse: loesungszettelResponse }));
+
+					if (kind.klasseId && loesungszettel.uuid === 'neu') {
+						this.store.dispatch(KlassenActons.loesungszettelAdded({ kind: kind }));
+					}
+				} else {
+					this.handleLoesungszettelDeleted(loesungszettel,kind);
 				}
+
 
 				this.messageService.showMessage(responsePayload.message);
 			},
@@ -118,13 +124,7 @@ export class LoesungszettelFacade {
 
 			responsePayload => {
 
-				this.store.dispatch(LoesungszettelActions.loesungszettelDeleted({ loesungszettel: loesungszettel }));
-				this.store.dispatch(KinderActions.kindLoesungszettelDeleted({ kindID: loesungszettel.kindID }));
-				this.store.dispatch(KinderActions.unselectKind());
-
-				if (kind.klasseId) {
-					this.store.dispatch(KlassenActons.loesungszettelDeleted({ kind: kind }));
-				}
+				this.handleLoesungszettelDeleted(loesungszettel, kind);
 				this.messageService.showMessage(responsePayload.message);
 			},
 			(error => {
@@ -152,6 +152,18 @@ export class LoesungszettelFacade {
 	public loesungszettelChanged(zeile: Loesungszettelzeile): void {
 
 		this.store.dispatch(LoesungszettelActions.loesungszettelChanged({ zeile: zeile }));
+	}
+
+	// //////
+
+	private handleLoesungszettelDeleted(loesungszettel: Loesungszettel, kind: Kind) {
+		this.store.dispatch(LoesungszettelActions.loesungszettelDeleted({ loesungszettel: loesungszettel }));
+		this.store.dispatch(KinderActions.kindLoesungszettelDeleted({ kindID: loesungszettel.kindID }));
+		this.store.dispatch(KinderActions.unselectKind());
+
+		if (kind.klasseId) {
+			this.store.dispatch(KlassenActons.loesungszettelDeleted({ kind: kind }));
+		}
 	}
 }
 

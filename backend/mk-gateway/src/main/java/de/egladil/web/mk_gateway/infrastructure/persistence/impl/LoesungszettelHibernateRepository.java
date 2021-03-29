@@ -10,19 +10,17 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelDeleted;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRohdaten;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
-import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.infrastructure.persistence.entities.LoesungszettelNonIdentifiingAttributesMapper;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterLoesungszettel;
 
 /**
@@ -33,11 +31,6 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 
 	@Inject
 	EntityManager em;
-
-	@Inject
-	Event<LoesungszettelDeleted> loesungszettelDeletedEvent;
-
-	private LoesungszettelDeleted loesungszettelDeleted;
 
 	public static LoesungszettelHibernateRepository createForIntegrationTest(final EntityManager em) {
 
@@ -150,24 +143,9 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 		return result;
 	}
 
-	void copyAllAttributesBitIdentifier(final PersistenterLoesungszettel target, final Loesungszettel loesungszettel) {
+	void copyAllAttributesButIdentifier(final PersistenterLoesungszettel target, final Loesungszettel loesungszettel) {
 
-		LoesungszettelRohdaten rohdaten = loesungszettel.rohdaten();
-
-		target.setAntwortcode(rohdaten.antwortcode());
-		target.setAuswertungsquelle(loesungszettel.auswertungsquelle());
-		target.setKaengurusprung(loesungszettel.laengeKaengurusprung());
-		target.setKindID(loesungszettel.kindID().identifier());
-		target.setKlassenstufe(loesungszettel.klassenstufe());
-		target.setLandkuerzel(loesungszettel.landkuerzel());
-		target.setNutzereingabe(rohdaten.nutzereingabe());
-		target.setPunkte(loesungszettel.punkte());
-		target.setSprache(loesungszettel.sprache());
-		target.setTeilnahmeart(loesungszettel.teilnahmeIdentifier().teilnahmeart());
-		target.setTeilnahmenummer(loesungszettel.teilnahmeIdentifier().teilnahmenummer());
-		target.setTypo(rohdaten.hatTypo());
-		target.setWertungscode(rohdaten.wertungscode());
-		target.setWettbewerbUuid(loesungszettel.teilnahmeIdentifier().wettbewerbID());
+		new LoesungszettelNonIdentifiingAttributesMapper().copyAllAttributesButIdentifier(target, loesungszettel);
 	}
 
 	@Override
@@ -180,7 +158,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 		}
 
 		PersistenterLoesungszettel zuPeristierenderLoesungszettel = new PersistenterLoesungszettel();
-		this.copyAllAttributesBitIdentifier(zuPeristierenderLoesungszettel, loesungszettel);
+		this.copyAllAttributesButIdentifier(zuPeristierenderLoesungszettel, loesungszettel);
 
 		em.persist(zuPeristierenderLoesungszettel);
 
@@ -203,7 +181,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 		}
 
 		PersistenterLoesungszettel persistenter = optPersistenter.get();
-		this.copyAllAttributesBitIdentifier(persistenter, loesungszettel);
+		this.copyAllAttributesButIdentifier(persistenter, loesungszettel);
 
 		em.merge(persistenter);
 
@@ -217,50 +195,16 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 	}
 
 	@Override
-	public boolean removeLoesungszettel(final Identifier identifier, final String veranstalterUuid) {
+	public Optional<PersistenterLoesungszettel> removeLoesungszettel(final Identifier identifier, final String veranstalterUuid) {
 
 		Optional<PersistenterLoesungszettel> optExisting = this.findPersistentenLoesungszettel(identifier);
 
-		if (optExisting.isEmpty()) {
+		if (optExisting.isPresent()) {
 
-			return false;
+			em.remove(optExisting.get());
 		}
 
-		PersistenterLoesungszettel persistenterLoesungszettel = optExisting.get();
-
-		em.remove(persistenterLoesungszettel);
-
-		if (veranstalterUuid != null) {
-
-			Sprache sprache = persistenterLoesungszettel.getSprache();
-
-			LoesungszettelRohdaten rohdaten = new LoesungszettelRohdaten()
-				.withAntwortcode(persistenterLoesungszettel.getAntwortcode())
-				.withNutzereingabe(persistenterLoesungszettel.getNutzereingabe())
-				.withTypo(persistenterLoesungszettel.isTypo())
-				.withWertungscode(persistenterLoesungszettel.getWertungscode());
-
-			TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier()
-				.withTeilnahmeart(persistenterLoesungszettel.getTeilnahmeart())
-				.withTeilnahmenummer(persistenterLoesungszettel.getTeilnahmenummer())
-				.withWettbewerbID(new WettbewerbID(persistenterLoesungszettel.getWettbewerbUuid()));
-
-			loesungszettelDeleted = (LoesungszettelDeleted) new LoesungszettelDeleted(veranstalterUuid)
-				.withKindID(persistenterLoesungszettel.getKindID())
-				.withRohdatenAlt(rohdaten)
-				.withRohdatenNeu(null)
-				.withSpracheAlt(sprache)
-				.withSpracheNeu(null)
-				.withTeilnahmeIdentifier(teilnahmeIdentifier)
-				.withUuid(persistenterLoesungszettel.getUuid());
-
-			if (loesungszettelDeletedEvent != null) {
-
-				loesungszettelDeletedEvent.fire(loesungszettelDeleted);
-			}
-		}
-
-		return true;
+		return optExisting;
 	}
 
 }

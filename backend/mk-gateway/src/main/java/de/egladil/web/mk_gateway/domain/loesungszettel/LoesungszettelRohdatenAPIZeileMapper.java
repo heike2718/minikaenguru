@@ -119,6 +119,9 @@ public class LoesungszettelRohdatenAPIZeileMapper implements Function<Loesungsze
 
 			switch (klassenstufe) {
 
+			case IKID:
+				return null;
+
 			case EINS:
 				return "B-3";
 
@@ -130,6 +133,9 @@ public class LoesungszettelRohdatenAPIZeileMapper implements Function<Loesungsze
 		case 7: {
 
 			switch (klassenstufe) {
+
+			case IKID:
+				return null;
 
 			case EINS:
 				return "B-4";
@@ -143,6 +149,9 @@ public class LoesungszettelRohdatenAPIZeileMapper implements Function<Loesungsze
 
 			switch (klassenstufe) {
 
+			case IKID:
+				return null;
+
 			case EINS:
 				return "C-1";
 
@@ -154,6 +163,9 @@ public class LoesungszettelRohdatenAPIZeileMapper implements Function<Loesungsze
 		case 9: {
 
 			switch (klassenstufe) {
+
+			case IKID:
+				return null;
 
 			case EINS:
 				return "C-2";
@@ -167,6 +179,9 @@ public class LoesungszettelRohdatenAPIZeileMapper implements Function<Loesungsze
 
 			switch (klassenstufe) {
 
+			case IKID:
+				return null;
+
 			case EINS:
 				return "C-3";
 
@@ -179,6 +194,9 @@ public class LoesungszettelRohdatenAPIZeileMapper implements Function<Loesungsze
 
 			switch (klassenstufe) {
 
+			case IKID:
+				return null;
+
 			case EINS:
 				return "C-4";
 
@@ -189,16 +207,44 @@ public class LoesungszettelRohdatenAPIZeileMapper implements Function<Loesungsze
 
 		case 12: {
 
+			switch (klassenstufe) {
+
+			case IKID:
+			case EINS:
+				return null;
+
+			default:
+				break;
+			}
+
 			return "C-3";
 		}
 
 		case 13: {
 
+			switch (klassenstufe) {
+
+			case IKID:
+			case EINS:
+				return null;
+
+			default:
+				break;
+			}
 			return "C-4";
 		}
 
 		case 14: {
 
+			switch (klassenstufe) {
+
+			case IKID:
+			case EINS:
+				return null;
+
+			default:
+				break;
+			}
 			return "C-5";
 		}
 
