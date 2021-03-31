@@ -20,7 +20,6 @@ import javax.transaction.Transactional.TxType;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,12 +28,8 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.LoesungszettelpunkteAPIModel;
-import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
-import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
-import de.egladil.web.mk_gateway.domain.kinder.events.KindChanged;
 import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelChanged;
 import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelCreated;
 import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelDeleted;
@@ -70,12 +65,6 @@ public class LoesungszettelService {
 	Event<LoesungszettelDeleted> loesungszettelDeletedEvent;
 
 	@Inject
-	Event<KindChanged> kindChangedEvent;
-
-	@Inject
-	Event<DataInconsistencyRegistered> dataInconsistencyEvent;
-
-	@Inject
 	LoesungszettelRepository loesungszettelRepository;
 
 	@Inject
@@ -92,8 +81,6 @@ public class LoesungszettelService {
 	private LoesungszettelChanged loesungszettelChanged;
 
 	private LoesungszettelDeleted loesungszettelDeleted;
-
-	private KindChanged kindChanged;
 
 	public static LoesungszettelService createForIntegrationTest(final EntityManager entityManager) {
 
@@ -153,63 +140,32 @@ public class LoesungszettelService {
 	}
 
 	@Transactional
-	public void loesungszettelLoeschenWithAuthorizationCheck(final Identifier identifier, final Identifier veranstalterID) {
+	public boolean loesungszettelLoeschenWithAuthorizationCheck(final Identifier identifier, final Identifier veranstalterID) {
 
 		Optional<Loesungszettel> opt = loesungszettelRepository.ofID(identifier);
 
 		if (opt.isEmpty()) {
 
-			return;
+			return false;
 		}
 
 		authService.checkPermissionForTeilnahmenummer(veranstalterID,
 			opt.get().getTheTeilnahmenummer(),
 			"[loesungszettelLoeschenWithAuthorizationCheck - " + identifier.toString() + "]");
 
-		this.loesungszettelLoeschenWithoutAuthorizationCheck(identifier,
-			veranstalterID.identifier());
-	}
+		boolean deleted = this.loesungszettelLoeschenWithoutAuthorizationCheck(identifier, veranstalterID.identifier());
 
-	/**
-	 * Löscht den gegebenen Lösungszettel. AuthorizationCheck muss hierfür bereits stattgefunden haben.
-	 *
-	 * @param  identifier
-	 * @param  veranstalterUuid
-	 * @return                  LoesungszettelDeleted - kann null sein
-	 */
-	@Transactional(TxType.REQUIRED)
-	public Optional<PersistenterLoesungszettel> loesungszettelLoeschenWithoutAuthorizationCheck(final Identifier identifier, final String veranstalterUuid) {
+		if (deleted) {
 
-		Optional<PersistenterLoesungszettel> optPersistenter = this.loesungszettelRepository.removeLoesungszettel(identifier,
-			veranstalterUuid);
+			Loesungszettel geloeschter = opt.get();
 
-		if (optPersistenter.isPresent()) {
+			if (deleted) {
 
-			PersistenterLoesungszettel persistenterLoesungszettel = optPersistenter.get();
-
-			Sprache sprache = persistenterLoesungszettel.getSprache();
-
-			LoesungszettelRohdaten rohdaten = new LoesungszettelRohdaten()
-				.withAntwortcode(persistenterLoesungszettel.getAntwortcode())
-				.withNutzereingabe(persistenterLoesungszettel.getNutzereingabe())
-				.withTypo(persistenterLoesungszettel.isTypo())
-				.withWertungscode(persistenterLoesungszettel.getWertungscode());
-
-			TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier()
-				.withTeilnahmeart(persistenterLoesungszettel.getTeilnahmeart())
-				.withTeilnahmenummer(persistenterLoesungszettel.getTeilnahmenummer())
-				.withWettbewerbID(new WettbewerbID(persistenterLoesungszettel.getWettbewerbUuid()));
-
-			this.loesungszettelDeleted = (LoesungszettelDeleted) new LoesungszettelDeleted(veranstalterUuid)
-				.withKindID(persistenterLoesungszettel.getKindID())
-				.withRohdatenAlt(rohdaten)
-				.withRohdatenNeu(null)
-				.withSpracheAlt(sprache)
-				.withSpracheNeu(null)
-				.withTeilnahmeIdentifier(teilnahmeIdentifier)
-				.withUuid(persistenterLoesungszettel.getUuid());
-
-			if (this.loesungszettelDeleted != null) {
+				loesungszettelDeleted = (LoesungszettelDeleted) new LoesungszettelDeleted(veranstalterID.identifier())
+					.withKindID(geloeschter.kindID().identifier())
+					.withRohdatenAlt(geloeschter.rohdaten())
+					.withSpracheAlt(geloeschter.sprache())
+					.withTeilnahmeIdentifier(geloeschter.teilnahmeIdentifier());
 
 				if (loesungszettelDeletedEvent != null) {
 
@@ -218,11 +174,26 @@ public class LoesungszettelService {
 
 					System.out.println(loesungszettelDeleted.serializeQuietly());
 				}
+
 			}
 
 		}
+		return deleted;
 
-		return optPersistenter;
+	}
+
+	/**
+	 * Löscht den gegebenen Lösungszettel. AuthorizationCheck muss hierfür bereits stattgefunden haben.
+	 *
+	 * @param  identifier
+	 * @param  veranstalterUuid
+	 * @return                  boolean
+	 */
+	@Transactional(TxType.REQUIRED)
+	public boolean loesungszettelLoeschenWithoutAuthorizationCheck(final Identifier identifier, final String veranstalterUuid) {
+
+		boolean deleted = this.loesungszettelRepository.removeLoesungszettel(identifier, veranstalterUuid);
+		return deleted;
 	}
 
 	/**
@@ -348,43 +319,8 @@ public class LoesungszettelService {
 
 		if (loesungszettelID != null) {
 
-			Optional<Loesungszettel> optLoesungszettel = loesungszettelRepository.ofID(kind.loesungszettelID());
-
-			if (optLoesungszettel.isPresent()) {
-
-				loesungszettel = optLoesungszettel.get();
-				concurrent = true;
-			} else {
-
-				LOG.error(
-					"Dateninkonsistenz: kind.uuid={}, kind.loesungszettelID={}: kein Lösungszettel mit dieser UUID vorhanden. Kind wird aktualisiert",
-					kind.identifier(), kind.loesungszettelID());
-
-				kind.withLoesungszettelID(null);
-				kinderRepository.changeKind(kind);
-
-				kindChanged = (KindChanged) new KindChanged(veranstalterID.identifier())
-					.withKlassenstufe(kind.klassenstufe())
-					.withSprache(kind.sprache())
-					.withTeilnahmenummer(kind.teilnahmeIdentifier().teilnahmenummer())
-					.withKindID(kind.identifier().identifier())
-					.withKlasseID(kind.klasseID().identifier())
-					.withLoesungszettelID(null);
-
-				if (kindChangedEvent != null) {
-
-					kindChangedEvent.fire(kindChanged);
-				} else {
-
-					System.out.println(kindChanged.typeName() + ": " + kindChanged.serializeQuietly());
-				}
-
-				String msg = MessageFormat.format(applicationMessages.getString("loesungszettel.add.datenInkonsistent"),
-					new Object[0]);
-
-				ResponsePayload responsePayload = new ResponsePayload(MessagePayload.warn(msg), null);
-				return responsePayload;
-			}
+			loesungszettel = loesungszettelRepository.ofID(kind.loesungszettelID()).get();
+			concurrent = true;
 		} else {
 
 			loesungszettel = new LoesungszettelCreator().createLoesungszettel(loesungszetteldaten, wettbewerb,
@@ -408,22 +344,6 @@ public class LoesungszettelService {
 			} else {
 
 				System.out.println(loesungszettelCreated.serializeQuietly());
-			}
-
-			kindChanged = (KindChanged) new KindChanged(veranstalterID.identifier())
-				.withKlassenstufe(kind.klassenstufe())
-				.withSprache(kind.sprache())
-				.withTeilnahmenummer(kind.teilnahmeIdentifier().teilnahmenummer())
-				.withKindID(kind.identifier().identifier())
-				.withKlasseID(kind.klasseID().identifier())
-				.withLoesungszettelID(loesungszettelID.identifier());
-
-			if (kindChangedEvent != null) {
-
-				kindChangedEvent.fire(kindChanged);
-			} else {
-
-				System.out.println(kindChanged.typeName() + ": " + kindChanged.serializeQuietly());
 			}
 
 		}
@@ -462,11 +382,11 @@ public class LoesungszettelService {
 			throw new NotFoundException();
 		}
 
-		Loesungszettel persistenter = opt.get();
-
 		authService.checkPermissionForTeilnahmenummer(veranstalterID,
-			persistenter.getTheTeilnahmenummer(),
+			opt.get().getTheTeilnahmenummer(),
 			"[loesungszettelAendern - " + loesungszettelID.toString() + "]");
+
+		Loesungszettel persistenter = opt.get();
 
 		Optional<Kind> optKind = kinderRepository.ofId(persistenter.kindID());
 
@@ -478,18 +398,6 @@ public class LoesungszettelService {
 		}
 
 		Kind kind = optKind.get();
-
-		if (!loesungszettelID.equals(kind.loesungszettelID())) {
-
-			String msg = "Für Kind mit UUID=" + kind.identifier() + " passen kind.loesungszettelID=" + kind.loesungszettelID()
-				+ " und loesungszettel.uuid=" + loesungszettelID + " nicht zueinander. Triggering user="
-				+ StringUtils.abbreviate(veranstalterID.identifier(), 11);
-			LOG.error("Fehler bei Aenderung Loesungszettel: " + msg);
-
-			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
-
-			throw new MkGatewayRuntimeException(msg);
-		}
 
 		Wettbewerb wettbewerb = getWettbewerb();
 		Loesungszettel loesungszettel = new LoesungszettelCreator().createLoesungszettel(loesungszetteldaten, wettbewerb,
@@ -548,25 +456,5 @@ public class LoesungszettelService {
 	private Wettbewerb getWettbewerb() {
 
 		return this.wettbewerbService.aktuellerWettbewerb().get();
-	}
-
-	KindChanged getKindChanged() {
-
-		return kindChanged;
-	}
-
-	LoesungszettelCreated getLoesungszettelCreated() {
-
-		return loesungszettelCreated;
-	}
-
-	LoesungszettelChanged getLoesungszettelChanged() {
-
-		return loesungszettelChanged;
-	}
-
-	LoesungszettelDeleted getLoesungszettelDeleted() {
-
-		return loesungszettelDeleted;
 	}
 }
