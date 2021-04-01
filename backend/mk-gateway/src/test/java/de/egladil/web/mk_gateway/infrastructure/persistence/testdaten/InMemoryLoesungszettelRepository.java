@@ -159,7 +159,7 @@ public class InMemoryLoesungszettelRepository implements LoesungszettelRepositor
 
 		Loesungszettel geloeschter = alleLoesungszettel.remove(identifier);
 
-		return geloeschter != null ? Optional.of(new PersistenterLoesungszettel()) : Optional.empty();
+		return geloeschter != null ? Optional.of(mapFromLoesungszettel(geloeschter)) : Optional.empty();
 	}
 
 	private Loesungszettel mapFromDB(final PersistenterLoesungszettel persistenter) {

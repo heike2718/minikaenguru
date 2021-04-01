@@ -1,0 +1,83 @@
+Ändern: fbf0283b-6038-42e1-bfc0-d0bfc3e30214   2017 gabi-goldfisch@egladil.de   ZSH712H9
+Löschen: 02608833-162b-42fb-b88d-415c08fb5f4c  2017
+
+
+Ab hier haben die Veranstalter die email 'leda%': VC91WP8L
+
+Veranstalter: eee4dcf4-decf-4d7f-89cd-ea2516122320
+
+Kinder löschen
+======================
+
+Kind mit Lösungszettel Kind (Steffen): 0f0c14c3-18ce-4f5f-96a6-27a95ac2bb49 mit loesungszettel 2fa57109-3406-4f02-a5d8-c76e5ef4417a
+
+String kindUuid = "00bf7996-4224-49a3-908d-d18258fec747";
+		String loesungszettelUuid = "a1527ce3-a835-4d2c-b4a9-7a59f1f637e6";
+		String veranstalterUuid = "2f09da36-07c6-4033-a2f1-5e110c804026";
+
+
+Klasse Löschen
+========================
+1) Klasse ohne Kinder löschen: zu Schule G1HDI46O wird eine Klasse angelegt, umbenannt und gelöscht
+2) Klasse mit Kindern und Lösungszettel löschen: Klasse 2a: 222f3bc1-7437-4935-a1fd-2c821a603baf:
+    Kind (Oaskar) d1a1d319-2947-4cc2-926e-747aa8262124 hat Lösungszettel mit ID 139a26a9-475c-4e37-acd0-d8f593819d20
+    Kind (Paulina) 978d57d5-b78e-49ac-8e5e-a61ce068cfbd hat keinen Lösungszettel
+
+
+Lösungszetteltests
+~~~~~~~~~~~~~~~~~~~~~~
+Anlegen:
+
+4) Kind ohne LZ: (Karla): 907136fe-240d-4a4b-a525-5c643cb5f0f3  => anlegen
+5) Referenzen verwirrt: Kind (Johann) a2d11023-582e-4e53-97a7-b54a8bb5f711 hat loesungszettelID, die anderem Kind gehört: d0e6644c-8202-49cf-b434-d69225b0556c
+6) Konkurrierend: (#291) lösungszettel gelöscht, aber kind hat Referenz: (missi) 09151448-02fa-4072-b95c-d8ded1baea6d, kind-loesungszettel=0bf5e030-94c9-4d33-b39c-b5d52cbd74d2
+7) Kind mit lzId, aber loesungszettel existiert nicht: Kind (Elena): 834985a0-9afb-4572-89bd-853512022804, loesungszettel: f1b2508c-f3b3-454d-8814-3bb3b8a2ebf6
+
+
+
+Ändern:
+
+Kind existiert nicht:
+=========================
+1) lösungszettel existiert, referenziert aber nicht existentes Kind: loesungszettel.kindID=yeaa4bf6-ee85-4047-8c8d-b82aa3fd849d, loesungszettelID = ee3b8ad0-9538-4803-bc41-217281c67e1d
+    Erwartung: lösungszettel wird gelöscht
+2) lösungszettel existiert nicht: 57fc5f1c-f9f0-4a55-b93b-59155bccba7m
+
+3) lösungszettel existiert und ist aus früherem Wettbewerb (2027): fbf0283b-6038-42e1-bfc0-d0bfc3e30214  => 422
+
+
+
+
+Kind existiert
+======================================
+Lösungszettel exisiert nicht
+--------------------------------
+
+1) Kind hat Lösungszettelreferenz, die ins nichts zeigt, aber es gibt einen Lösungszettel, der auf dieses Kind zeigt: KIND (Astrid)=3ed7eb57-a838-4398-977b-b0ff347a8dbb, kind-loesungszettel = 64f5f7a2-157d-45d1-956b-6be0319934a4, loesungszettel=54538c66-9401-4407-a0f8-bc328d48962b  => erwarten ändern und update kind
+
+2) Kind hat Lösungszettelreferenz, die auf den Lösungszettel eines anderen kindes zeigt: kind (Inge)=a910ba37-f7c1-4cee-9f6e-b374e0773a54, kind-loesungszettel = 6a8f2c46-1a90-4af4-afa4-d3bc5a3c22f1, lösungszettel-kind=05162d47-3539-43af-8e24-ff3378719e36
+
+
+3) Kind hat Lösungszettelreferenz, aber lösungszettel existiert nicht: kind (Benjamin) = b85c8e52-ba6d-4069-9557-970ab46cd2ec, zu ändernder lösungszettel= 4d4ce7d3-2027-47d4-93d8-4f38af456cbf
+
+4) Lösungszettel zu Kind anlegen: kind (Xaver)=544c092b-5549-4d77-9edc-be69d8d9531e hat keinen Lösungszettel wird aber mit ändern aufgerufen => erwarten anlegen und update auf kind.lzId
+
+Löungszettel existiert
+---------------------------
+1) Normaler Fall: kind (Yvonne) 86582bfc-168e-49af-a5f2-71bf36b23603, loesungszettel = 23ab789a-b569-4843-82d5-c1c2da727f37
+
+2) jemand hat loesungszettelreferenz aus kind gelöscht: Kind (Frank) = 41825d54-de55-4424-b6e3-4dec8b01b7e9, loesungszettel = 5ffefc14-755c-4eab-98d6-4f1489e2e936
+
+
+3) Lösungszettel-Ändern request mit uuuid eines Lösungszettels für ganz anderes Kind: b09fccf9-2616-4366-82e0-fa49adb94a88', kind für request (Dieter) 3efb0472-4f0d-4eb5-9847-121c64b88253 => lösungszettel darf nicht geändert werden
+
+4) Ändernrequest loesungszettel = 729c1077-b6c4-426b-823f-7c9c2c153ef1 ist von (Zacharias), request für kind (Claudia) c91af100-5ca5-4be0-8fbf-b3fa5f44c770
+
+5) kind.lzId null, loesungszettel.kindId null => Kind (Ute) 40058a65-e14b-4dbf-a757-801e38113933, loesungszettel = 71c9f5a9-33d0-4e6f-b524-b4d38229fea3
+
+Sprache ändern
+==========================
+
+Kind zum Sprache ändern: Kind (Viktor): cc74ed3c-28cd-4cc5-8744-c4c3eb7e5c19, lösungszettel = 6c180cbf-d78e-4173-992e-a6d095485299 von de auf en
+
+

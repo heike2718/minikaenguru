@@ -28,7 +28,7 @@
 			<property name="hibernate.dialect"
 				value="org.hibernate.dialect.MariaDBDialect" />
 			<property name="javax.persistence.jdbc.url"
-				value="jdbc:mysql://localhost:3306/mk_wettbewerb" />
+				value="jdbc:mysql://localhost:4306/mk_wettbewerb" />
 			<property name="javax.persistence.jdbc.user"
 				value="mk_wettbewerb" />
 			<property name="javax.persistence.jdbc.password"
@@ -54,7 +54,7 @@
 			<property name="hibernate.dialect"
 				value="org.hibernate.dialect.MariaDBDialect" />
 			<property name="javax.persistence.jdbc.url"
-				value="jdbc:mysql://localhost:3306/mk_kataloge" />
+				value="jdbc:mysql://localhost:5306/mk_kataloge" />
 			<property name="javax.persistence.jdbc.user"
 				value="mk_kataloge" />
 			<property name="javax.persistence.jdbc.password"

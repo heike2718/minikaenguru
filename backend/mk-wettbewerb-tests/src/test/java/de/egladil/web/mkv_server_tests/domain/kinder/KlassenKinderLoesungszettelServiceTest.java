@@ -121,7 +121,7 @@ public class KlassenKinderLoesungszettelServiceTest extends AbstractIT {
 
 		// Act 3
 		System.out.println("Lösungszettel anlegen...");
-		LoesungszettelAPIModel loesungszettelDaten = TestUtils.createLoesungszettelNeuKlasseEinsKreuzeABC(kindUuid);
+		LoesungszettelAPIModel loesungszettelDaten = TestUtils.createLoesungszettelRequestDatenKlasseEinsKreuzeABC("neu", kindUuid);
 
 		ResponsePayload loesungszettelResponse = this.loesungszettelAnlegen(loesungszettelDaten, veranstalterUuid);
 

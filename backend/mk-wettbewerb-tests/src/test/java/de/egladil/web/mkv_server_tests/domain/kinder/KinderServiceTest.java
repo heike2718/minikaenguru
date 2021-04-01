@@ -8,6 +8,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.Optional;
@@ -256,6 +257,18 @@ public class KinderServiceTest extends AbstractIT {
 		optLoesungszettel = loesungszettelRepository.ofID(new Identifier(loesungszettelUuid));
 		assertTrue(optLoesungszettel.isEmpty());
 
+	}
+
+	@Test
+	void should_handleLoesungszettelDeletedUpdateKindLoesungszettelUuid() {
+
+		fail("not yet implemented");
+	}
+
+	@Test
+	void should_changeSpracheKindBePropagatedToLoesungszettel() {
+
+		fail("not yet implemented");
 	}
 
 	private KindAPIModel kindAnlegen(final KindRequestData requestData, final String veranstalterUuid) {

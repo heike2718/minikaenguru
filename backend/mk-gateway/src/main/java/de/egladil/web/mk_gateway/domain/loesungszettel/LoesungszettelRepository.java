@@ -67,6 +67,7 @@ public interface LoesungszettelRepository {
 	 * Sucht den Lösungszettel anhand des Identifiers.
 	 *
 	 * @param  identifier
+	 *                    Identifier oder null
 	 * @return            Optional
 	 */
 	Optional<Loesungszettel> ofID(Identifier identifier);

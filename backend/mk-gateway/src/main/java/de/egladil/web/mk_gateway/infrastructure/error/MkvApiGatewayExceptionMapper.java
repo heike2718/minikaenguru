@@ -73,7 +73,9 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 		if (exception instanceof InvalidInputException) {
 
 			InvalidInputException e = (InvalidInputException) exception;
-			return Response.status(Status.BAD_REQUEST).entity(serializeAsJson(e.getResponsePayload())).build();
+
+			int statusUnprocessableEntity = 422;
+			return Response.status(statusUnprocessableEntity).entity(serializeAsJson(e.getResponsePayload())).build();
 		}
 
 		if (exception instanceof AuthException) {

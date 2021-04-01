@@ -94,6 +94,11 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 	@Override
 	public Optional<PersistenterLoesungszettel> findPersistentenLoesungszettel(final Identifier identifier) {
 
+		if (identifier == null) {
+
+			return Optional.empty();
+		}
+
 		PersistenterLoesungszettel result = em.find(PersistenterLoesungszettel.class, identifier.identifier());
 
 		return result == null ? Optional.empty() : Optional.of(result);
