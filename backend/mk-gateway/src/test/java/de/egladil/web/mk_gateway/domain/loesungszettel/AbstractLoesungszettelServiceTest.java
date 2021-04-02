@@ -34,6 +34,8 @@ public abstract class AbstractLoesungszettelServiceTest {
 
 	protected static final Identifier REQUEST_LOESUNGSZETTEL_ID = new Identifier("request-loesungszettel-uuid");
 
+	protected static final Identifier PERSISTENT_LOESUNGSZETTEL_ID = new Identifier("persistent-loesungszettel-uuid");
+
 	protected Wettbewerb aktuellerWettbewerb = new Wettbewerb(new WettbewerbID(2021))
 		.withLoesungsbuchstabenKlasse1("CEBE-DDEC-BCAE");
 

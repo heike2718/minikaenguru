@@ -32,6 +32,9 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 	@NamedQuery(
 		name = "PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID_KLASSENSTUFE",
 		query = "select l from PersistenterLoesungszettel l where l.wettbewerbUuid = :wettbewerbUuid and l.klassenstufe = :klassenstufe order by l.uuid"),
+	@NamedQuery(
+		name = "PersistenterLoesungszettel.FIND_LOESUNGSZETTEL_WITH_KIND",
+		query = "select l from PersistenterLoesungszettel l where l.kindID = :kindID order by l.uuid"),
 
 })
 public class PersistenterLoesungszettel extends ConcurrencySafeEntity {
@@ -43,6 +46,8 @@ public class PersistenterLoesungszettel extends ConcurrencySafeEntity {
 	public static final String LOAD_ALL_WITH_WETTBEWERBID = "PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID";
 
 	public static final String LOAD_ALL_WITH_WETTBEWERBID_KLASSENSTUFE = "PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID_KLASSENSTUFE";
+
+	public static final String FIND_LOESUNGSZETTEL_WITH_KIND = "PersistenterLoesungszettel.FIND_LOESUNGSZETTEL_WITH_KIND";
 
 	@Column(name = "KIND_ID")
 	private String kindID;

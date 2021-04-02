@@ -73,6 +73,15 @@ public interface LoesungszettelRepository {
 	Optional<Loesungszettel> ofID(Identifier identifier);
 
 	/**
+	 * Sucht den Lösungszettel zu einem gegebenen Kind, sofern er existiert.
+	 *
+	 * @param  kindID
+	 *                Identifier darf nicht null sein
+	 * @return        Optional
+	 */
+	Optional<Loesungszettel> findLoesungszettelWithKindID(Identifier kindID);
+
+	/**
 	 * Fügt einen neuen Löungszettel hinzu.
 	 *
 	 * @param  loesungszettel

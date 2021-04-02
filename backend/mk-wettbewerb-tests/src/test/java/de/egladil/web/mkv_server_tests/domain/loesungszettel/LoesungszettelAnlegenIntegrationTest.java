@@ -49,8 +49,7 @@ public class LoesungszettelAnlegenIntegrationTest extends AbstractLoesungszettel
 		String veranstalterUuid = "412b67dc-132f-465a-a3c3-468269e866cb";
 
 		LoesungszettelAPIModel requestDaten = TestUtils
-			.createLoesungszettelRequestDatenKlasseZWEIKreuzeABC(LOESUNGSZETTEL_REQUEST_UUID, kindUuid)
-			.withUuid(LOESUNGSZETTEL_REQUEST_UUID);
+			.createLoesungszettelRequestDatenKlasseZWEIKreuzeABC(LOESUNGSZETTEL_REQUEST_UUID, kindUuid);
 
 		// Act
 		try {
@@ -71,8 +70,7 @@ public class LoesungszettelAnlegenIntegrationTest extends AbstractLoesungszettel
 		String kindUuid = "ghi768-240d-4a4b-a525-5c643cb5f0f3";
 
 		LoesungszettelAPIModel requestDaten = TestUtils
-			.createLoesungszettelRequestDatenKlasseZWEIKreuzeABC(LOESUNGSZETTEL_REQUEST_UUID, kindUuid)
-			.withUuid(LOESUNGSZETTEL_REQUEST_UUID);
+			.createLoesungszettelRequestDatenKlasseZWEIKreuzeABC(LOESUNGSZETTEL_REQUEST_UUID, kindUuid);
 
 		// Act
 		try {
@@ -98,8 +96,7 @@ public class LoesungszettelAnlegenIntegrationTest extends AbstractLoesungszettel
 		assertNull("DB muss zurückgesetzt werden", karla.loesungszettelID());
 
 		LoesungszettelAPIModel requestDaten = TestUtils
-			.createLoesungszettelRequestDatenKlasseZWEIKreuzeABC(LOESUNGSZETTEL_REQUEST_UUID, kindUuid)
-			.withUuid(LOESUNGSZETTEL_REQUEST_UUID);
+			.createLoesungszettelRequestDatenKlasseZWEIKreuzeABC(LOESUNGSZETTEL_REQUEST_UUID, kindUuid);
 
 		// Act
 		ResponsePayload responsePayload = this.loesungszettelAnlegen(requestDaten, VERANSTALTER_UUID);
@@ -170,8 +167,7 @@ public class LoesungszettelAnlegenIntegrationTest extends AbstractLoesungszettel
 		assertFalse(kindUuid.equals(optLoesungszettel.get().kindID().identifier()));
 
 		LoesungszettelAPIModel requestDaten = TestUtils
-			.createLoesungszettelRequestDatenKlasseZWEIKreuzeABC(LOESUNGSZETTEL_REQUEST_UUID, kindUuid)
-			.withUuid(LOESUNGSZETTEL_REQUEST_UUID);
+			.createLoesungszettelRequestDatenKlasseZWEIKreuzeABC(LOESUNGSZETTEL_REQUEST_UUID, kindUuid);
 
 		// Act
 		try {
@@ -271,8 +267,7 @@ public class LoesungszettelAnlegenIntegrationTest extends AbstractLoesungszettel
 		assertEquals("DB muss zurückgesetzt werden", loesungszettelUuid, wilma.loesungszettelID().identifier());
 
 		LoesungszettelAPIModel requestDaten = TestUtils
-			.createLoesungszettelRequestDatenKlasseEinsKreuzeABC(LOESUNGSZETTEL_REQUEST_UUID, kindUuid)
-			.withUuid(loesungszettelUuid);
+			.createLoesungszettelRequestDatenKlasseEinsKreuzeABC(LOESUNGSZETTEL_REQUEST_UUID, kindUuid);
 
 		// Act
 		ResponsePayload responsePayload = this.loesungszettelAnlegen(requestDaten, VERANSTALTER_UUID);

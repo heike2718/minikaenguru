@@ -103,6 +103,17 @@ public class InMemoryLoesungszettelRepository implements LoesungszettelRepositor
 	}
 
 	@Override
+	public Optional<Loesungszettel> findLoesungszettelWithKindID(final Identifier kindID) {
+
+		if (kindID == null) {
+
+			throw new IllegalArgumentException("kindID darf nicht null sein.");
+		}
+
+		return alleLoesungszettel.values().stream().filter(l -> kindID.equals(l.kindID())).findFirst();
+	}
+
+	@Override
 	public Identifier addLoesungszettel(final Loesungszettel loesungszettel) {
 
 		Identifier identifier = new Identifier(UUID.randomUUID().toString());

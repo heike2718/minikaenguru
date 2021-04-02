@@ -53,14 +53,12 @@ Kind existiert
 Lösungszettel exisiert nicht
 --------------------------------
 
-1) Kind hat Lösungszettelreferenz, die ins nichts zeigt, aber es gibt einen Lösungszettel, der auf dieses Kind zeigt: KIND (Astrid)=3ed7eb57-a838-4398-977b-b0ff347a8dbb, kind-loesungszettel = 64f5f7a2-157d-45d1-956b-6be0319934a4, loesungszettel=54538c66-9401-4407-a0f8-bc328d48962b  => erwarten ändern und update kind
+1) Kind hat Lösungszettelreferenz, aber lösungszettel existiert nicht: kind (Benjamin) = b85c8e52-ba6d-4069-9557-970ab46cd2ec, zu ändernder lösungszettel= 4d4ce7d3-2027-47d4-93d8-4f38af456cbf
 
-2) Kind hat Lösungszettelreferenz, die auf den Lösungszettel eines anderen kindes zeigt: kind (Inge)=a910ba37-f7c1-4cee-9f6e-b374e0773a54, kind-loesungszettel = 6a8f2c46-1a90-4af4-afa4-d3bc5a3c22f1, lösungszettel-kind=05162d47-3539-43af-8e24-ff3378719e36
+2) Lösungszettel zu Kind anlegen: kind (Xaver)=544c092b-5549-4d77-9edc-be69d8d9531e hat keinen Lösungszettel wird aber mit ändern aufgerufen => erwarten anlegen und update auf kind.lzId
 
+3) Kind hat Lösungszettelreferenz, die ins nichts zeigt, aber es gibt einen Lösungszettel, der auf dieses Kind zeigt: KIND (Astrid)=3ed7eb57-a838-4398-977b-b0ff347a8dbb, kind-loesungszettel = 64f5f7a2-157d-45d1-956b-6be0319934a4, loesungszettel=54538c66-9401-4407-a0f8-bc328d48962b  => erwarten ändern und update kind
 
-3) Kind hat Lösungszettelreferenz, aber lösungszettel existiert nicht: kind (Benjamin) = b85c8e52-ba6d-4069-9557-970ab46cd2ec, zu ändernder lösungszettel= 4d4ce7d3-2027-47d4-93d8-4f38af456cbf
-
-4) Lösungszettel zu Kind anlegen: kind (Xaver)=544c092b-5549-4d77-9edc-be69d8d9531e hat keinen Lösungszettel wird aber mit ändern aufgerufen => erwarten anlegen und update auf kind.lzId
 
 Löungszettel existiert
 ---------------------------
@@ -74,6 +72,9 @@ Löungszettel existiert
 4) Ändernrequest loesungszettel = 729c1077-b6c4-426b-823f-7c9c2c153ef1 ist von (Zacharias), request für kind (Claudia) c91af100-5ca5-4be0-8fbf-b3fa5f44c770
 
 5) kind.lzId null, loesungszettel.kindId null => Kind (Ute) 40058a65-e14b-4dbf-a757-801e38113933, loesungszettel = 71c9f5a9-33d0-4e6f-b524-b4d38229fea3
+
+6) Kind hat Lösungszettelreferenz, die auf den Lösungszettel eines anderen kindes zeigt: kind (Inge)=a910ba37-f7c1-4cee-9f6e-b374e0773a54, kind-loesungszettel = 6a8f2c46-1a90-4af4-afa4-d3bc5a3c22f1, lösungszettel-kind=05162d47-3539-43af-8e24-ff3378719e36
+
 
 Sprache ändern
 ==========================

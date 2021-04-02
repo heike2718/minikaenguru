@@ -13,6 +13,9 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
@@ -28,6 +31,8 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.entities.Persistente
  */
 @RequestScoped
 public class LoesungszettelHibernateRepository implements LoesungszettelRepository {
+
+	private static final Logger LOG = LoggerFactory.getLogger(LoesungszettelHibernateRepository.class);
 
 	@Inject
 	EntityManager em;
@@ -115,6 +120,34 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 		}
 
 		Loesungszettel result = this.mapFromDB(optPersistenter.get());
+
+		return Optional.of(result);
+	}
+
+	@Override
+	public Optional<Loesungszettel> findLoesungszettelWithKindID(final Identifier kindID) {
+
+		if (kindID == null) {
+
+			throw new IllegalArgumentException("kindID darf nicht null sein.");
+		}
+
+		List<PersistenterLoesungszettel> trefferliste = em
+			.createNamedQuery(PersistenterLoesungszettel.FIND_LOESUNGSZETTEL_WITH_KIND, PersistenterLoesungszettel.class)
+			.setParameter("kindID", kindID.identifier())
+			.getResultList();
+
+		if (trefferliste.isEmpty()) {
+
+			return Optional.empty();
+		}
+
+		if (trefferliste.size() > 1) {
+
+			LOG.warn("{} LOESUNGSZETTEL mit KIND_ID={} gefunden. Nehmen den ersten", trefferliste.size(), kindID);
+		}
+
+		Loesungszettel result = this.mapFromDB(trefferliste.get(0));
 
 		return Optional.of(result);
 	}

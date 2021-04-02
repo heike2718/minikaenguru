@@ -419,7 +419,7 @@ public class LoesungszettelService {
 					+ loesungszettel.identifier()
 					+ ", requestDaten.kindID=" + kindID + ", loesungszettel.kindID=" + loesungszettel.kindID();
 
-				doFireInconsistentDataAndExitMathodWithInvalidInputException(msg);
+				doFireInconsistentDataAndExitMethodWithInvalidInputException(msg);
 
 				// das ist nur pro Forma
 				return null;
@@ -483,7 +483,7 @@ public class LoesungszettelService {
 	 * @param msg
 	 *            String
 	 */
-	private void doFireInconsistentDataAndExitMathodWithInvalidInputException(final String msg) {
+	private void doFireInconsistentDataAndExitMethodWithInvalidInputException(final String msg) {
 
 		new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
 
@@ -582,7 +582,6 @@ public class LoesungszettelService {
 		}
 
 		Kind kind = optKind.get();
-
 		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier()
 			.withTeilnahmeart(kind.teilnahmeIdentifier().teilnahmeart())
 			.withTeilnahmenummer(kind.teilnahmeIdentifier().teilnahmenummer())
@@ -596,7 +595,7 @@ public class LoesungszettelService {
 
 		if (optLoesungszettel.isEmpty()) {
 
-			LOG.warn("== upd 2 == Kein Loesungszettel mit UUID=" + loesungszettelID
+			LOG.warn("== upd 3 == Kein Loesungszettel mit UUID=" + loesungszettelID
 				+ " (requestDaten.uuid) vorhanden (konkurrierend geloescht?)");
 
 			Optional<Loesungszettel> optReferencedLoesungszettel = loesungszettelRepository.ofID(kind.loesungszettelID());
@@ -605,14 +604,49 @@ public class LoesungszettelService {
 
 				if (kind.loesungszettelID() != null) {
 
-					LOG.warn("== upd 2.1 == kind referenziert nicht mehr vorhandenen Loesungszettel="
+					LOG.warn("== upd 3.1 == kind referenziert nicht mehr vorhandenen Loesungszettel="
 						+ kind.loesungszettelID().identifier() + " (loesungszettel unvollstaendig geloescht?)");
 
 					// TODO Telegram-Message!
 
+					Optional<Loesungszettel> optLoesungszettelMitKind = loesungszettelRepository
+						.findLoesungszettelWithKindID(kindID);
+
+					if (optLoesungszettelMitKind.isPresent()) {
+
+						LOG.warn("== upd 3.2 == loesungszettelMitKind wird geaendert Kind="
+							+ kindID + ", geaenderter Loesungszettel=" + kindLoesungszettelID);
+
+						ResponsePayload result = doChangeLoesungszettel(optLoesungszettelMitKind.get().identifier(),
+							loesungszetteldaten, wettbewerb,
+							optLoesungszettelMitKind.get(), kind, veranstalterID.identifier());
+
+						// TODO Telegram-Message!
+
+						return result;
+
+					} else {
+
+						LOG.warn("== upd 3.2 == anderen loesun Kind="
+							+ kindID + " (loesungszettel konkurrierend geloescht?)");
+
+						Loesungszettel neuerLoesungszettel = this.doCreateAndSaveNewLoesungszettel(loesungszetteldaten, wettbewerb,
+							kind,
+							veranstalterID.identifier());
+
+						LoesungszettelpunkteAPIModel result = this.mapLoesungszettel(neuerLoesungszettel.identifier(),
+							neuerLoesungszettel,
+							wettbewerb);
+						String msg = MessageFormat.format(applicationMessages.getString("loesungszettel.addOrChange.success"),
+							new Object[] { result.punkte(), Integer.valueOf(result.laengeKaengurusprung()) });
+
+						ResponsePayload responsePayload = new ResponsePayload(MessagePayload.info(msg), result);
+						return responsePayload;
+					}
+
 				}
 
-				LOG.warn("== upd 2.2 == update wird zu insert Kind="
+				LOG.warn("== upd 3.4 == update wird zu insert Kind="
 					+ kindID + " (loesungszettel konkurrierend geloescht?)");
 
 				Loesungszettel neuerLoesungszettel = this.doCreateAndSaveNewLoesungszettel(loesungszetteldaten, wettbewerb, kind,
@@ -628,12 +662,14 @@ public class LoesungszettelService {
 
 			} else {
 
+				// optReferencedLoesungszettel.isPresent()
+
 				Loesungszettel referencedLoesungszettel = optReferencedLoesungszettel.get();
 
 				if (!kindID.equals(referencedLoesungszettel.kindID())) {
 
 					LOG.warn(
-						"== upd 2.3 == vom Kind {} referenzierter Loesungszettel zeigt auf anderes Kind {} - Abbruch inkonsistente Daten!!!",
+						"== upd 3.5 == vom Kind {} referenzierter Loesungszettel zeigt auf anderes Kind {} - Abbruch inkonsistente Daten!!!",
 						kindID, referencedLoesungszettel.kindID());
 
 					// TODO: Telegram Message
@@ -645,13 +681,15 @@ public class LoesungszettelService {
 						+ ", referencedLoesungszettel.kindID="
 						+ referencedLoesungszettel.kindID();
 
-					doFireInconsistentDataAndExitMathodWithInvalidInputException(msg);
+					doFireInconsistentDataAndExitMethodWithInvalidInputException(msg);
 
 					return null;
 
 				} else {
 
-					LOG.warn("== upd 2.4 == Unerwartete Konstellation: zu aendernder loesungszettel mit UUID=" + loesungszettelID
+					// !kindID.equals(referencedLoesungszettel.kindID())
+
+					LOG.warn("== upd 3.6 == Unerwartete Konstellation: zu aendernder loesungszettel mit UUID=" + loesungszettelID
 						+ " existiert nicht, aber Kind hat einen Loesungszettel mit anderer UUID: kind.UUID=" + kindID
 						+ ", kind.loesungszettelUUID=" + referencedLoesungszettel.identifier()
 						+ ". referenzierter Loesungszettel wird geaendert.");
@@ -672,16 +710,17 @@ public class LoesungszettelService {
 
 			Loesungszettel persistenter = optLoesungszettel.get();
 
-			if (!loesungszettelID.equals(kind.loesungszettelID())) {
+			// if (!loesungszettelID.equals(kind.loesungszettelID())) {
+			if (!kindID.equals(persistenter.kindID())) {
 
 				LOG.warn(
-					"== upd 3 == Kind {} referenziert keinen oder einen anderen Loesungszettel {} - requestDaten.loesungszettel={}",
+					"== upd 4 == Kind {} referenziert keinen oder einen anderen Loesungszettel {} - requestDaten.loesungszettel={}",
 					kind.identifier(), kind.loesungszettelID(), loesungszettelID);
 
 				if (kind.loesungszettelID() != null) {
 
 					LOG.warn(
-						"== upd 3.1 == Abbruch inkonsistente Daten!!!");
+						"== upd 4.1 == Abbruch inkonsistente Daten!!!");
 
 					// TODO: Telegram Message
 
@@ -693,7 +732,7 @@ public class LoesungszettelService {
 						+ ", requestDaten.loesungszettel="
 						+ loesungszettelID;
 
-					doFireInconsistentDataAndExitMathodWithInvalidInputException(msg);
+					doFireInconsistentDataAndExitMethodWithInvalidInputException(msg);
 
 					return null;
 				} else {
@@ -703,7 +742,7 @@ public class LoesungszettelService {
 					if (!kindID.equals(gespeicherteLoesungszettelKindReferenz)) {
 
 						LOG.warn(
-							"== upd 3.2 == persistenter Loesungszettel {} zeigt auf anderes Kind {}, requestData.KindID={} - Abbruch inkonsistente Daten!!!",
+							"== upd 4.2 == persistenter Loesungszettel {} zeigt auf anderes Kind {}, requestData.KindID={} - Abbruch inkonsistente Daten!!!",
 							loesungszettelID,
 							gespeicherteLoesungszettelKindReferenz == null ? "null" : gespeicherteLoesungszettelKindReferenz,
 							kindID);
@@ -721,14 +760,18 @@ public class LoesungszettelService {
 							+ ", requestDaten.kindID="
 							+ kindID;
 
-						doFireInconsistentDataAndExitMathodWithInvalidInputException(msg);
+						doFireInconsistentDataAndExitMethodWithInvalidInputException(msg);
+						return null;
+					} else {
+
+						LOG.debug(
+							"== upd 4.3 == loesungszettel wird geaendert und kind.loesungszettelID wird gesetzt");
+
+						// !kindID.equals(gespeicherteLoesungszettelKindReferenz
+
+						return this.doChangeLoesungszettel(loesungszettelID, loesungszetteldaten, wettbewerb, persistenter, kind,
+							veranstalterID.identifier());
 					}
-
-					LOG.debug(
-						"== upd 3.3 == loesungszettel wird geaendert und kind.loesungszettelID wird gesetzt");
-
-					return this.doChangeLoesungszettel(loesungszettelID, loesungszetteldaten, wettbewerb, persistenter, kind,
-						veranstalterID.identifier());
 				}
 			}
 

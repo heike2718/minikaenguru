@@ -71,7 +71,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 	}
 
 	@Test
-	@DisplayName("kind mit kindID existiert, hat lzID, LZ mit lzID existiert und hat gleiche kindID => concurrent insert")
+	@DisplayName("5) kind mit kindID existiert, hat lzID, LZ mit lzID existiert und hat gleiche kindID => concurrent insert")
 	void should_loesungszettelAnlegenReturnTheConcurrentlySavedEntity_when_concurrentInsert() {
 
 		// Arrange
@@ -114,7 +114,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 	}
 
 	@Test
-	@DisplayName("kind mit kindID existiert nicht => 404")
+	@DisplayName("2) kind mit kindID existiert nicht => 404")
 	void should_loesungszettelAnlegenThrowNotFoundException_when_noKindPresent() {
 
 		// Arrange
@@ -145,7 +145,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 	}
 
 	@Test
-	@DisplayName("Veranstalter nicht berechtigt => 401")
+	@DisplayName("1) Veranstalter nicht berechtigt => 401")
 	void should_loesungszettelAnlegenThrowAccessDeniedException_when_notPermitted() {
 
 		// Arrange
@@ -182,7 +182,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 	}
 
 	@Test
-	@DisplayName("kind mit kindID existiert, hat lzID, LZ mit lzID existiert nicht => anlegen")
+	@DisplayName("6) kind mit kindID existiert, hat lzID, LZ mit lzID existiert nicht => anlegen")
 	void should_loesungszettelAnlegenInsertTheLoesungszettel_when_kindLoesungszettelIdNotNullButLoesungszettelAbsent() {
 
 		// Arrange
@@ -237,7 +237,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 	}
 
 	@Test
-	@DisplayName("kind mit kindID existiert, hat lzID, LZ mit lzID existiert und hat andere kindID => Abbruch mit 422")
+	@DisplayName("4) Referenzen verwirrt kind mit kindID existiert, hat lzID, LZ mit lzID existiert und hat andere kindID => Abbruch mit 422")
 	void should_loesungszettelAnlegenInvalidInputException_when_datenInkonsistent() {
 
 		// Arrange
@@ -331,7 +331,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 	}
 
 	@Test
-	@DisplayName("kind mit kindID existiert, hat keine lzID => anlegen")
+	@DisplayName("3) kind mit kindID existiert, hat keine lzID => anlegen")
 	void should_loesungszettelAnlegenWork() {
 
 		// Arrange

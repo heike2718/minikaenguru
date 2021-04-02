@@ -167,7 +167,7 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 	class KindExistiertNichtTests {
 
 		@Test
-		@DisplayName("loesungszettel existiert: loesungszettel.jahr == aktuelles Jahr, loesungszettel.kindID != null =>  => deleteLösungszettel und 404")
+		@DisplayName("3) loesungszettel existiert: loesungszettel.jahr == aktuelles Jahr, loesungszettel.kindID != null =>  => deleteLösungszettel und 404")
 		void should_loesungszettelAendernTriggerDeleteEventAndThrowNotFoundException_when_kindAbsentAndLoesungszettelPresent() {
 
 			// Arrange
@@ -208,7 +208,7 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 		}
 
 		@Test
-		@DisplayName("loesungszettel existiert: loesungszettel.jahr == vorjahr Jahr, loesungszettel.kindID != null => Abbruch und 422")
+		@DisplayName("2) loesungszettel existiert: loesungszettel.jahr == vorjahr Jahr, loesungszettel.kindID != null => Abbruch und 422")
 		void should_loesungszettelAendernTriggerThrowInvalidInputException_when_kindAbsentAndLoesungszettelAusVorjahr() {
 
 			// Arrange
@@ -257,7 +257,7 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 		}
 
 		@Test
-		@DisplayName("loesungszettel existiert nicht => 404")
+		@DisplayName("1) kind und loesungszettel existieren nicht => 404")
 		void should_loesungszettelAendernThrowNotFoundException_when_noKindPresent() {
 
 			// Arrange
@@ -294,7 +294,7 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 	class KindExistiertLoesungszettelExistiertNichtTests {
 
 		@Test
-		@DisplayName("kind.lzID null => anlegen")
+		@DisplayName("2) kind.lzID null, anderer loesungszettel existiert nicht => anlegen")
 		void should_loesungszettelAendernSwitchToAnlegen_when_kindPresentLoesungszettelAbsent_andKindOhneLoesungszettelreferenz() {
 
 			// Arrange
@@ -347,63 +347,8 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 		}
 
 		@Test
-		@DisplayName("kind.lzID != null, anderer loesungszettel mit kind.lzId existiert, lz.kindID != kindID => Abbruch mit 422 inkonsistente Daten")
-		void should_loesungszettelAendernThrowInvalidInputException_when_kindPresentLoesungszettelAbsent_andKindMitReferenzAufAnderenLZ() {
-
-			// Arrange
-			Identifier kindLoesungszettelID = new Identifier("kind-loesungszettel-uuid");
-			Identifier loesungszettelKindID = new Identifier("loesungszettel-kind-uuid");
-
-			Loesungszettel loesungszettel = new Loesungszettel()
-				.withIdentifier(kindLoesungszettelID)
-				.withKindID(loesungszettelKindID)
-				.withTeilnahmeIdentifier(teilnahmeIdentifier);
-
-			Kind kind = kindOhneIDs.withIdentifier(REQUEST_KIND_ID).withLoesungszettelID(kindLoesungszettelID);
-
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(aktuellerWettbewerb));
-			when(kinderRepository.ofId(REQUEST_KIND_ID)).thenReturn(Optional.of(kind));
-			when(loesungszettelRepository.ofID(REQUEST_LOESUNGSZETTEL_ID)).thenReturn(Optional.empty());
-			when(loesungszettelRepository.ofID(kindLoesungszettelID)).thenReturn(Optional.of(loesungszettel));
-
-			// Act
-			try {
-
-				service.loesungszettelAendern(requestDaten, VERANSTALTER_ID);
-				fail("keine InvalidInputException");
-			} catch (InvalidInputException e) {
-
-				ResponsePayload responsePayload = e.getResponsePayload();
-
-				MessagePayload messagePayload = responsePayload.getMessage();
-				assertEquals("ERROR", messagePayload.getLevel());
-				assertEquals(
-					"Der Lösungszettel konnte leider nicht gespeichert werden: es gibt inkonsistente Daten in der Datenbank. Bitte wenden Sie sich per Mail an info@egladil.de.",
-					messagePayload.getMessage());
-
-				assertNull(responsePayload.getData());
-
-				assertNull(e.getMessage());
-
-				verify(wettbewerbService, times(1)).aktuellerWettbewerb();
-				verify(loesungszettelRepository, times(2)).ofID(any());
-				verify(kinderRepository, times(1)).ofId(any());
-				verify(authService, times(1)).checkPermissionForTeilnahmenummer(any(), any(), any());
-
-				verify(loesungszettelRepository, times(0)).addLoesungszettel(any());
-				verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
-				verify(loesungszettelRepository, times(0)).removeLoesungszettel(any(), any());
-				verify(kinderRepository, times(0)).changeKind(any());
-
-				assertNull(service.getLoesungszettelCreated());
-				assertNull(service.getLoesungszettelChanged());
-				assertNull(service.getLoesungszettelDeleted());
-			}
-		}
-
-		@Test
-		@DisplayName("kind.lzID != null, anderer loesungszettel mit kind.lzId existiert, lz.kindID == kindID => ändern")
-		void should_loesungszettelAendernAendertReferenziertenLoesungszettel_when_kindPresentLoesungszettelAbsent() {
+		@DisplayName("3) kindLz != null, referencedLZ null, requestedLz == kindLz, exists lz with kindId = kind => existing loesungszettel ändern und kind.lzID ändern")
+		void should_loesungszettelAendernAendertReferenziertenLoesungszettel_when_referencedLoesungszettelAbsentReuestLoesungszettelAbsentLoesungszettelMitKindIDExists() {
 
 			// Arrange
 			Identifier kindLoesungszettelID = new Identifier("kind-loesungszettel-uuid");
@@ -418,7 +363,9 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(aktuellerWettbewerb));
 			when(kinderRepository.ofId(REQUEST_KIND_ID)).thenReturn(Optional.of(kind));
 			when(loesungszettelRepository.ofID(REQUEST_LOESUNGSZETTEL_ID)).thenReturn(Optional.empty());
-			when(loesungszettelRepository.ofID(kindLoesungszettelID)).thenReturn(Optional.of(andererLoesungszettel));
+			when(loesungszettelRepository.ofID(kindLoesungszettelID)).thenReturn(Optional.empty());
+			when(loesungszettelRepository.findLoesungszettelWithKindID(kind.identifier()))
+				.thenReturn(Optional.of(andererLoesungszettel));
 			when(loesungszettelRepository.updateLoesungszettel(any())).thenReturn(Boolean.TRUE);
 
 			// Act
@@ -447,6 +394,7 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 
 			verify(wettbewerbService, times(1)).aktuellerWettbewerb();
 			verify(loesungszettelRepository, times(2)).ofID(any());
+			verify(loesungszettelRepository, times(1)).findLoesungszettelWithKindID(kind.identifier());
 			verify(kinderRepository, times(1)).ofId(any());
 			verify(authService, times(1)).checkPermissionForTeilnahmenummer(any(), any(), any());
 
@@ -461,7 +409,7 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 		}
 
 		@Test
-		@DisplayName("(IT erforderlich) kind.lzID != null, anderer loesungszettel mit kind.lzId existiert nicht => anlegen")
+		@DisplayName("1) kind.lzID != null, anderer loesungszettel mit kind.lzId existiert nicht => anlegen")
 		void should_loesungszettelAendernSwitchToAnlegen_when_kindPresentLoesungszettelAbsent_andLoesungszettelMitkindLzIDAbsent() {
 
 			// Arrange
@@ -730,23 +678,24 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 		}
 
 		@Test
-		@DisplayName("kind.lzID != null, kind.lzID != requestData.loesungszettelID => 422 inkonsistente Daten")
-		void should_loesungszettelAendernThrowInvalidInputException_when_kindLoesungszettelAndLoesungszettelDiffer() {
+		@DisplayName("kind.lzID != null, anderer loesungszettel mit kind.lzId existiert, lz.kindID != kindID => Abbruch mit 422 inkonsistente Daten")
+		void should_loesungszettelAendernThrowInvalidInputException_when_kindPresentLoesungszettelAbsent_andKindMitReferenzAufAnderenLZ() {
 
 			// Arrange
 			Identifier kindLoesungszettelID = new Identifier("kind-loesungszettel-uuid");
+			Identifier loesungszettelKindID = new Identifier("loesungszettel-kind-uuid");
 
 			Loesungszettel loesungszettel = new Loesungszettel()
-				.withIdentifier(REQUEST_LOESUNGSZETTEL_ID)
-				.withKindID(REQUEST_KIND_ID)
+				.withIdentifier(kindLoesungszettelID)
+				.withKindID(loesungszettelKindID)
 				.withTeilnahmeIdentifier(teilnahmeIdentifier);
 
 			Kind kind = kindOhneIDs.withIdentifier(REQUEST_KIND_ID).withLoesungszettelID(kindLoesungszettelID);
 
 			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(aktuellerWettbewerb));
-			when(loesungszettelRepository.ofID(REQUEST_LOESUNGSZETTEL_ID)).thenReturn(Optional.of(loesungszettel));
-			when(authService.checkPermissionForTeilnahmenummer(any(), any(), any())).thenReturn(Boolean.TRUE);
 			when(kinderRepository.ofId(REQUEST_KIND_ID)).thenReturn(Optional.of(kind));
+			when(loesungszettelRepository.ofID(REQUEST_LOESUNGSZETTEL_ID)).thenReturn(Optional.empty());
+			when(loesungszettelRepository.ofID(kindLoesungszettelID)).thenReturn(Optional.of(loesungszettel));
 
 			// Act
 			try {
@@ -756,6 +705,7 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 			} catch (InvalidInputException e) {
 
 				ResponsePayload responsePayload = e.getResponsePayload();
+
 				MessagePayload messagePayload = responsePayload.getMessage();
 				assertEquals("ERROR", messagePayload.getLevel());
 				assertEquals(
@@ -764,8 +714,10 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 
 				assertNull(responsePayload.getData());
 
+				assertNull(e.getMessage());
+
 				verify(wettbewerbService, times(1)).aktuellerWettbewerb();
-				verify(loesungszettelRepository, times(1)).ofID(any());
+				verify(loesungszettelRepository, times(2)).ofID(any());
 				verify(kinderRepository, times(1)).ofId(any());
 				verify(authService, times(1)).checkPermissionForTeilnahmenummer(any(), any(), any());
 
@@ -778,7 +730,6 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 				assertNull(service.getLoesungszettelChanged());
 				assertNull(service.getLoesungszettelDeleted());
 			}
-
 		}
 
 		@Test
