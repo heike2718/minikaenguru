@@ -3,6 +3,7 @@ export type Klassenstufenart = 'IKID' | 'EINS' | 'ZWEI';
 export type Sprachtyp = 'de' | 'en';
 export type Duplikatkontext = 'KIND' | 'KLASSE';
 export type ZulaessigeEingabe = 'A' | 'B' | 'C' | 'D' | 'E' | 'N';
+export type ConcurrentModificationType = 'DETETED' | 'INSERTED' | 'UPDATED';
 
 
 export interface TeilnahmeIdentifier {
@@ -57,9 +58,11 @@ export interface Loesungszettelzeile {
 	readonly eingabe: ZulaessigeEingabe;
 };
 
-/** mapped LoesungszettelResponseAPIModel */
+/** mapped LoesungszettelpunkteAPIModel */
 export interface LoesungszettelResponse {
 	readonly loesungszettelId: string;
+	readonly version: number;
+	readonly concurrentModificationType?: string;
 	readonly punkte: string;
 	readonly laengeKaengurusprung: number;
 	readonly zeilen: Loesungszettelzeile[];

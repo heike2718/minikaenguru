@@ -15,6 +15,7 @@ export interface CheckboxData {
 /** mapped LoesungszettelAPIModel */
 export interface Loesungszettel {
 	readonly uuid: string;
+	readonly version: number;
 	readonly kindID: string;
 	readonly klassenstufe: Klassenstufenart;
 	readonly zeilen: Loesungszettelzeile[];

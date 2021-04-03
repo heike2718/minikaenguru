@@ -6,6 +6,7 @@ package de.egladil.web.mk_gateway.domain.loesungszettel;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
@@ -51,6 +52,9 @@ public class Loesungszettel {
 
 	@JsonProperty
 	private LoesungszettelRohdaten rohdaten;
+
+	@JsonIgnore
+	private int version;
 
 	public Loesungszettel() {
 
@@ -223,5 +227,16 @@ public class Loesungszettel {
 	public Identifier getTheTeilnahmenummer() {
 
 		return new Identifier(this.teilnahmeIdentifier.teilnahmenummer());
+	}
+
+	public int version() {
+
+		return version;
+	}
+
+	public Loesungszettel withVersion(final int version) {
+
+		this.version = version;
+		return this;
 	}
 }

@@ -17,6 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.error.ConcurrentModificationType;
+import de.egladil.web.mk_gateway.domain.error.EntityConcurrentlyModifiedException;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRohdaten;
@@ -127,6 +129,20 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 	@Override
 	public Optional<Loesungszettel> findLoesungszettelWithKindID(final Identifier kindID) {
 
+		PersistenterLoesungszettel persistenter = this.findEntityWithKindID(kindID);
+
+		if (persistenter == null) {
+
+			return Optional.empty();
+		}
+
+		Loesungszettel result = this.mapFromDB(persistenter);
+
+		return Optional.of(result);
+	}
+
+	private PersistenterLoesungszettel findEntityWithKindID(final Identifier kindID) {
+
 		if (kindID == null) {
 
 			throw new IllegalArgumentException("kindID darf nicht null sein.");
@@ -139,7 +155,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 
 		if (trefferliste.isEmpty()) {
 
-			return Optional.empty();
+			return null;
 		}
 
 		if (trefferliste.size() > 1) {
@@ -147,9 +163,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 			LOG.warn("{} LOESUNGSZETTEL mit KIND_ID={} gefunden. Nehmen den ersten", trefferliste.size(), kindID);
 		}
 
-		Loesungszettel result = this.mapFromDB(trefferliste.get(0));
-
-		return Optional.of(result);
+		return trefferliste.get(0);
 	}
 
 	Loesungszettel mapFromDB(final PersistenterLoesungszettel persistenter) {
@@ -176,7 +190,8 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 			.withPunkte(persistenter.getPunkte())
 			.withRohdaten(rohdaten)
 			.withSprache(persistenter.getSprache())
-			.withTeilnahmeIdentifier(teilnahmeIdentifier);
+			.withTeilnahmeIdentifier(teilnahmeIdentifier)
+			.withVersion(persistenter.getVersion());
 
 		return result;
 	}
@@ -187,12 +202,14 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 	}
 
 	@Override
-	public Identifier addLoesungszettel(final Loesungszettel loesungszettel) {
+	public Loesungszettel addLoesungszettel(final Loesungszettel loesungszettel) throws EntityConcurrentlyModifiedException {
 
-		if (loesungszettel.identifier() != null) {
+		PersistenterLoesungszettel concurrentlyInserted = this.findEntityWithKindID(loesungszettel.kindID());
 
-			throw new IllegalStateException("loesungszettel hat bereits die UUID " + loesungszettel.identifier().identifier()
-				+ " und kann hinzugefügt werden!");
+		if (concurrentlyInserted != null) {
+
+			Loesungszettel result = this.mapFromDB(concurrentlyInserted);
+			throw new EntityConcurrentlyModifiedException(ConcurrentModificationType.INSERTED, result);
 		}
 
 		PersistenterLoesungszettel zuPeristierenderLoesungszettel = new PersistenterLoesungszettel();
@@ -200,11 +217,13 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 
 		em.persist(zuPeristierenderLoesungszettel);
 
-		return new Identifier(zuPeristierenderLoesungszettel.getUuid());
+		Loesungszettel result = this.mapFromDB(zuPeristierenderLoesungszettel);
+
+		return result;
 	}
 
 	@Override
-	public boolean updateLoesungszettel(final Loesungszettel loesungszettel) {
+	public Loesungszettel updateLoesungszettel(final Loesungszettel loesungszettel) {
 
 		if (loesungszettel.identifier() == null) {
 
@@ -215,15 +234,27 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 
 		if (optPersistenter.isEmpty()) {
 
-			return false;
+			throw new EntityConcurrentlyModifiedException(ConcurrentModificationType.DETETED, null);
 		}
 
 		PersistenterLoesungszettel persistenter = optPersistenter.get();
+
+		if (persistenter.getVersion() > loesungszettel.version()) {
+
+			Loesungszettel result = this.mapFromDB(persistenter);
+
+			throw new EntityConcurrentlyModifiedException(ConcurrentModificationType.UPDATED, result);
+		}
+
 		this.copyAllAttributesButIdentifier(persistenter, loesungszettel);
 
-		em.merge(persistenter);
+		PersistenterLoesungszettel merged = em.merge(persistenter);
 
-		return true;
+		int neueVersion = merged.getVersion() + 1;
+
+		Loesungszettel result = this.mapFromDB(merged).withVersion(neueVersion);
+
+		return result;
 	}
 
 	@Override
@@ -233,7 +264,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 	}
 
 	@Override
-	public Optional<PersistenterLoesungszettel> removeLoesungszettel(final Identifier identifier, final String veranstalterUuid) {
+	public Optional<PersistenterLoesungszettel> removeLoesungszettel(final Identifier identifier) {
 
 		Optional<PersistenterLoesungszettel> optExisting = this.findPersistentenLoesungszettel(identifier);
 

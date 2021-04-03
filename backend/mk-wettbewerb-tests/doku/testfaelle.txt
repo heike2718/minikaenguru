@@ -29,7 +29,6 @@ Lösungszetteltests
 Anlegen:
 
 4) Kind ohne LZ: (Karla): 907136fe-240d-4a4b-a525-5c643cb5f0f3  => anlegen
-5) Referenzen verwirrt: Kind (Johann) a2d11023-582e-4e53-97a7-b54a8bb5f711 hat loesungszettelID, die anderem Kind gehört: d0e6644c-8202-49cf-b434-d69225b0556c
 6) Konkurrierend: (#291) lösungszettel gelöscht, aber kind hat Referenz: (missi) 09151448-02fa-4072-b95c-d8ded1baea6d, kind-loesungszettel=0bf5e030-94c9-4d33-b39c-b5d52cbd74d2
 7) Kind mit lzId, aber loesungszettel existiert nicht: Kind (Elena): 834985a0-9afb-4572-89bd-853512022804, loesungszettel: f1b2508c-f3b3-454d-8814-3bb3b8a2ebf6
 

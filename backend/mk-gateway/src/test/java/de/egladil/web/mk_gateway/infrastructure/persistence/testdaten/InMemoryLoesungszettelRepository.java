@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.auswertungen.StatistikTestUtils;
+import de.egladil.web.mk_gateway.domain.error.ConcurrentModificationType;
+import de.egladil.web.mk_gateway.domain.error.EntityConcurrentlyModifiedException;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRohdaten;
@@ -114,7 +116,7 @@ public class InMemoryLoesungszettelRepository implements LoesungszettelRepositor
 	}
 
 	@Override
-	public Identifier addLoesungszettel(final Loesungszettel loesungszettel) {
+	public Loesungszettel addLoesungszettel(final Loesungszettel loesungszettel) {
 
 		Identifier identifier = new Identifier(UUID.randomUUID().toString());
 
@@ -130,22 +132,22 @@ public class InMemoryLoesungszettelRepository implements LoesungszettelRepositor
 			.withTeilnahmeIdentifier(loesungszettel.teilnahmeIdentifier());
 
 		this.alleLoesungszettel.put(identifier, neuer);
-		return identifier;
+		return neuer;
 	}
 
 	@Override
-	public boolean updateLoesungszettel(final Loesungszettel loesungszettel) {
+	public Loesungszettel updateLoesungszettel(final Loesungszettel loesungszettel) {
 
 		Loesungszettel vorhandener = alleLoesungszettel.get(loesungszettel.identifier());
 
 		if (vorhandener == null) {
 
-			return false;
+			throw new EntityConcurrentlyModifiedException(ConcurrentModificationType.DETETED, null);
 		}
 
 		alleLoesungszettel.put(loesungszettel.identifier(), loesungszettel);
 
-		return true;
+		return loesungszettel;
 	}
 
 	@Override
@@ -166,7 +168,7 @@ public class InMemoryLoesungszettelRepository implements LoesungszettelRepositor
 	}
 
 	@Override
-	public Optional<PersistenterLoesungszettel> removeLoesungszettel(final Identifier identifier, final String veranstalterUuid) {
+	public Optional<PersistenterLoesungszettel> removeLoesungszettel(final Identifier identifier) {
 
 		Loesungszettel geloeschter = alleLoesungszettel.remove(identifier);
 

@@ -17,12 +17,12 @@ import javax.ws.rs.NotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import de.egladil.web.commons_validation.exception.InvalidInputException;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.LoesungszettelpunkteAPIModel;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
+import de.egladil.web.mk_gateway.domain.error.ConcurrentModificationType;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRohdaten;
@@ -108,6 +108,7 @@ public class LoesungszettelAnlegenIntegrationTest extends AbstractLoesungszettel
 			messagePayload.getMessage());
 
 		LoesungszettelpunkteAPIModel responseData = (LoesungszettelpunkteAPIModel) responsePayload.getData();
+		assertNull(responseData.getConcurrentModificationType());
 
 		for (int i = 0; i < responseData.zeilen().size(); i++) {
 
@@ -148,45 +149,6 @@ public class LoesungszettelAnlegenIntegrationTest extends AbstractLoesungszettel
 	}
 
 	@Test
-	@DisplayName("4) Referenzen verwirrt: kind mit kindID existiert, hat lzID, LZ mit lzID existiert und hat andere kindID => Abbruch mit 422")
-	void should_loesungszettelAnlegenInvalidInputException_when_datenInkonsistent() {
-
-		// Arrange
-		String kindUuid = "a2d11023-582e-4e53-97a7-b54a8bb5f711";
-		String loesungszettelUuid = "d0e6644c-8202-49cf-b434-d69225b0556c";
-
-		Optional<Kind> optKind = kinderRepository.ofId(new Identifier(kindUuid));
-		assertTrue(optKind.isPresent());
-
-		Kind johann = optKind.get();
-		assertEquals("DB muss zurückgesetzt werden", loesungszettelUuid, johann.loesungszettelID().identifier());
-
-		Optional<Loesungszettel> optLoesungszettel = loesungszettelRepository.ofID(new Identifier(loesungszettelUuid));
-		assertTrue("DB muss zurückgesetzt werden", optLoesungszettel.isPresent());
-
-		assertFalse(kindUuid.equals(optLoesungszettel.get().kindID().identifier()));
-
-		LoesungszettelAPIModel requestDaten = TestUtils
-			.createLoesungszettelRequestDatenKlasseZWEIKreuzeABC(LOESUNGSZETTEL_REQUEST_UUID, kindUuid);
-
-		// Act
-		try {
-
-			this.loesungszettelAnlegen(requestDaten, VERANSTALTER_UUID);
-			fail("keine InvalidInputException");
-		} catch (InvalidInputException e) {
-
-			ResponsePayload responsePayload = e.getResponsePayload();
-			MessagePayload messagePayload = responsePayload.getMessage();
-			assertEquals("ERROR", messagePayload.getLevel());
-			assertEquals(
-				"Der Lösungszettel konnte leider nicht gespeichert werden: es gibt inkonsistente Daten in der Datenbank. Bitte wenden Sie sich per Mail an info@egladil.de.",
-				messagePayload.getMessage());
-
-		}
-	}
-
-	@Test
 	@DisplayName("5) kind mit kindID existiert, hat lzID, LZ mit lzID existiert und hat gleiche kindID => concurrent insert")
 	void should_AnlegenBeRejectedAndReturnPersistentData_when_Konkurrurierend() throws Exception {
 
@@ -220,6 +182,8 @@ public class LoesungszettelAnlegenIntegrationTest extends AbstractLoesungszettel
 
 		LoesungszettelpunkteAPIModel responseData = (LoesungszettelpunkteAPIModel) result.getData();
 		assertEquals(loesungszettelUuid, responseData.loesungszettelId());
+		assertEquals(0, responseData.getVersion());
+		assertEquals(ConcurrentModificationType.INSERTED, responseData.getConcurrentModificationType());
 
 		for (int i = 0; i < responseData.zeilen().size(); i++) {
 
@@ -279,6 +243,7 @@ public class LoesungszettelAnlegenIntegrationTest extends AbstractLoesungszettel
 			messagePayload.getMessage());
 
 		LoesungszettelpunkteAPIModel responseData = (LoesungszettelpunkteAPIModel) responsePayload.getData();
+		assertNull(responseData.getConcurrentModificationType());
 
 		for (int i = 0; i < responseData.zeilen().size(); i++) {
 

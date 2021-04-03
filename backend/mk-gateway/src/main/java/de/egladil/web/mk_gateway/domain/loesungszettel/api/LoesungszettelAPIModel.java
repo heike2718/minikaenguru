@@ -22,6 +22,9 @@ public class LoesungszettelAPIModel {
 	private String uuid;
 
 	@JsonProperty
+	private int version = -1;
+
+	@JsonProperty
 	private String kindID;
 
 	@JsonProperty
@@ -88,6 +91,17 @@ public class LoesungszettelAPIModel {
 		this.zeilen.forEach(z -> sb.append(z.eingabe().toString()));
 		return sb.toString();
 
+	}
+
+	public int version() {
+
+		return version;
+	}
+
+	public LoesungszettelAPIModel withVersion(final int version) {
+
+		this.version = version;
+		return this;
 	}
 
 }

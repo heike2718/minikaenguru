@@ -33,6 +33,8 @@ import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.LoesungszettelpunkteAPIModel;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
+import de.egladil.web.mk_gateway.domain.error.ConcurrentModificationType;
+import de.egladil.web.mk_gateway.domain.error.EntityConcurrentlyModifiedException;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
 import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelAPIModel;
@@ -45,6 +47,11 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
  */
 @ExtendWith(MockitoExtension.class)
 public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest {
+
+	/**
+	 *
+	 */
+	private static final String NEU = "neu";
 
 	@Mock
 	private KinderRepository kinderRepository;
@@ -66,7 +73,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 
 		super.init();
 
-		this.requestDaten = new LoesungszettelAPIModel().withKindID(REQUEST_KIND_ID.identifier()).withUuid("neu")
+		this.requestDaten = new LoesungszettelAPIModel().withKindID(REQUEST_KIND_ID.identifier()).withUuid(NEU)
 			.withKlassenstufe(Klassenstufe.EINS).withZeilen(zeilen);
 	}
 
@@ -78,12 +85,17 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 		Kind kind = kindOhneIDs.withIdentifier(REQUEST_KIND_ID).withLoesungszettelID(REQUEST_LOESUNGSZETTEL_ID);
 
 		Loesungszettel vorhandener = vorhandenerLoesungszettelOhneIDs.withIdentifier(REQUEST_LOESUNGSZETTEL_ID)
-			.withKindID(REQUEST_KIND_ID);
+			.withKindID(REQUEST_KIND_ID).withVersion(0).withRohdaten(createRohdatenKlasseEINS()).withPunkte(5000)
+			.withLaengeKaengurusprung(5);
 
 		when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(aktuellerWettbewerb));
 		when(kinderRepository.ofId(REQUEST_KIND_ID)).thenReturn(Optional.of(kind));
-		when(loesungszettelRepository.ofID(REQUEST_LOESUNGSZETTEL_ID)).thenReturn(Optional.of(vorhandener));
+		when(loesungszettelRepository.addLoesungszettel(any()))
+			.thenThrow(new EntityConcurrentlyModifiedException(ConcurrentModificationType.INSERTED, vorhandener));
+
 		when(authService.checkPermissionForTeilnahmenummer(any(), any(), any())).thenReturn(Boolean.TRUE);
+
+		requestDaten = requestDaten.withUuid(NEU);
 
 		// Act
 		ResponsePayload responsePayload = service.loesungszettelAnlegen(requestDaten, VERANSTALTER_ID);
@@ -97,14 +109,18 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 
 		assertNotNull(responsePayload.getData());
 
+		LoesungszettelpunkteAPIModel responseData = (LoesungszettelpunkteAPIModel) responsePayload.getData();
+		assertEquals(REQUEST_LOESUNGSZETTEL_ID.identifier(), responseData.loesungszettelId());
+		assertEquals(ConcurrentModificationType.INSERTED, responseData.getConcurrentModificationType());
+
 		verify(wettbewerbService, times(1)).aktuellerWettbewerb();
-		verify(loesungszettelRepository, times(1)).ofID(any());
+		verify(loesungszettelRepository, times(0)).ofID(any());
 		verify(kinderRepository, times(1)).ofId(any());
 		verify(authService, times(1)).checkPermissionForTeilnahmenummer(any(), any(), any());
 
-		verify(loesungszettelRepository, times(0)).addLoesungszettel(any());
+		verify(loesungszettelRepository, times(1)).addLoesungszettel(any());
 		verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
-		verify(loesungszettelRepository, times(0)).removeLoesungszettel(any(), any());
+		verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
 		verify(kinderRepository, times(0)).changeKind(any());
 
 		assertNull(service.getLoesungszettelCreated());
@@ -120,6 +136,8 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 		// Arrange
 		when(kinderRepository.ofId(REQUEST_KIND_ID)).thenReturn(Optional.empty());
 
+		requestDaten = requestDaten.withUuid(NEU);
+
 		// Act
 		try {
 
@@ -134,7 +152,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 
 			verify(loesungszettelRepository, times(0)).addLoesungszettel(any());
 			verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
-			verify(loesungszettelRepository, times(0)).removeLoesungszettel(any(), any());
+			verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
 			verify(kinderRepository, times(0)).changeKind(any());
 
 			assertNull(service.getLoesungszettelCreated());
@@ -150,6 +168,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 
 		// Arrange
 		Kind kind = kindOhneIDs.withIdentifier(REQUEST_KIND_ID);
+		requestDaten = requestDaten.withUuid(NEU);
 
 		when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(aktuellerWettbewerb));
 		when(kinderRepository.ofId(REQUEST_KIND_ID)).thenReturn(Optional.of(kind));
@@ -171,7 +190,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 
 			verify(loesungszettelRepository, times(0)).addLoesungszettel(any());
 			verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
-			verify(loesungszettelRepository, times(0)).removeLoesungszettel(any(), any());
+			verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
 			verify(kinderRepository, times(0)).changeKind(any());
 
 			assertNull(service.getLoesungszettelCreated());
@@ -188,14 +207,19 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 		// Arrange
 
 		String neueLoesungszettelUuid = "ashdihqo";
+		requestDaten = requestDaten.withUuid(NEU).withVersion(0);
 
 		Kind kind = kindOhneIDs.withIdentifier(REQUEST_KIND_ID).withLoesungszettelID(REQUEST_LOESUNGSZETTEL_ID);
 
+		Loesungszettel neuerLoesungszettel = new Loesungszettel().withIdentifier(new Identifier(neueLoesungszettelUuid))
+			.withVersion(0)
+			.withKindID(kind.identifier()).withRohdaten(createRohdatenKlasseEINS()).withKlassenstufe(Klassenstufe.EINS)
+			.withPunkte(625).withLaengeKaengurusprung(1);
+
 		when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(aktuellerWettbewerb));
 		when(kinderRepository.ofId(REQUEST_KIND_ID)).thenReturn(Optional.of(kind));
-		when(loesungszettelRepository.ofID(REQUEST_LOESUNGSZETTEL_ID)).thenReturn(Optional.empty());
 		when(authService.checkPermissionForTeilnahmenummer(any(), any(), any())).thenReturn(Boolean.TRUE);
-		when(loesungszettelRepository.addLoesungszettel(any())).thenReturn(new Identifier(neueLoesungszettelUuid));
+		when(loesungszettelRepository.addLoesungszettel(any())).thenReturn(neuerLoesungszettel);
 
 		// Act
 		ResponsePayload result = service.loesungszettelAnlegen(requestDaten, VERANSTALTER_ID);
@@ -208,10 +232,11 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 		assertEquals("INFO", messagePayload.getLevel());
 		assertNotNull(result.getData());
 
-		LoesungszettelpunkteAPIModel entity = (LoesungszettelpunkteAPIModel) result.getData();
+		LoesungszettelpunkteAPIModel responseData = (LoesungszettelpunkteAPIModel) result.getData();
+		assertNull(responseData.getConcurrentModificationType());
 
-		assertEquals(neueLoesungszettelUuid, entity.loesungszettelId());
-		List<LoesungszettelZeileAPIModel> actualZeilen = entity.zeilen();
+		assertEquals(neueLoesungszettelUuid, responseData.loesungszettelId());
+		List<LoesungszettelZeileAPIModel> actualZeilen = responseData.zeilen();
 
 		assertEquals(zeilen.size(), actualZeilen.size());
 
@@ -221,13 +246,13 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 		}
 
 		verify(wettbewerbService, times(1)).aktuellerWettbewerb();
-		verify(loesungszettelRepository, times(1)).ofID(any());
+		verify(loesungszettelRepository, times(0)).ofID(any());
 		verify(kinderRepository, times(1)).ofId(any());
 		verify(authService, times(1)).checkPermissionForTeilnahmenummer(any(), any(), any());
 
 		verify(loesungszettelRepository, times(1)).addLoesungszettel(any());
 		verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
-		verify(loesungszettelRepository, times(0)).removeLoesungszettel(any(), any());
+		verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
 		verify(kinderRepository, times(1)).changeKind(any());
 
 		assertNotNull(service.getLoesungszettelCreated());
@@ -237,62 +262,11 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 	}
 
 	@Test
-	@DisplayName("4) Referenzen verwirrt kind mit kindID existiert, hat lzID, LZ mit lzID existiert und hat andere kindID => Abbruch mit 422")
-	void should_loesungszettelAnlegenInvalidInputException_when_datenInkonsistent() {
-
-		// Arrange
-		String uuidAnderesKind = "kljgdq";
-
-		Kind kind = kindOhneIDs.withIdentifier(REQUEST_KIND_ID).withLoesungszettelID(REQUEST_LOESUNGSZETTEL_ID);
-
-		LoesungszettelRohdaten rohdaten = new LoesungszettelRohdaten().withNutzereingabe("EBCACCBDBNBN");
-
-		Loesungszettel vorhandener = new Loesungszettel(REQUEST_LOESUNGSZETTEL_ID).withKindID(new Identifier(uuidAnderesKind))
-			.withPunkte(5000)
-			.withLaengeKaengurusprung(5).withRohdaten(rohdaten).withKlassenstufe(Klassenstufe.EINS);
-
-		when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(aktuellerWettbewerb));
-		when(kinderRepository.ofId(REQUEST_KIND_ID)).thenReturn(Optional.of(kind));
-		when(loesungszettelRepository.ofID(REQUEST_LOESUNGSZETTEL_ID)).thenReturn(Optional.of(vorhandener));
-		when(authService.checkPermissionForTeilnahmenummer(any(), any(), any())).thenReturn(Boolean.TRUE);
-
-		// Act
-		try {
-
-			service.loesungszettelAnlegen(requestDaten, VERANSTALTER_ID);
-			fail("keine InvalidInputException");
-		} catch (InvalidInputException e) {
-
-			ResponsePayload responsePayload = e.getResponsePayload();
-			MessagePayload messagePayload = responsePayload.getMessage();
-			assertEquals("ERROR", messagePayload.getLevel());
-			assertEquals(
-				"Der Lösungszettel konnte leider nicht gespeichert werden: es gibt inkonsistente Daten in der Datenbank. Bitte wenden Sie sich per Mail an info@egladil.de.",
-				messagePayload.getMessage());
-
-			verify(wettbewerbService, times(1)).aktuellerWettbewerb();
-			verify(loesungszettelRepository, times(1)).ofID(any());
-			verify(kinderRepository, times(1)).ofId(any());
-			verify(authService, times(1)).checkPermissionForTeilnahmenummer(any(), any(), any());
-
-			verify(loesungszettelRepository, times(0)).addLoesungszettel(any());
-			verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
-			verify(loesungszettelRepository, times(0)).removeLoesungszettel(any(), any());
-			verify(kinderRepository, times(0)).changeKind(any());
-
-			assertNull(service.getLoesungszettelCreated());
-			assertNull(service.getLoesungszettelChanged());
-			assertNull(service.getLoesungszettelDeleted());
-		}
-
-	}
-
-	@Test
 	@DisplayName("requestDaten.kindID null => Abbruch mit 422")
 	void should_loesungszettelAnlegenThrowInvalidInputException_when_kindIDNull() {
 
 		// Arrange
-		LoesungszettelAPIModel datenOhneKindId = new LoesungszettelAPIModel().withUuid("neu");
+		LoesungszettelAPIModel datenOhneKindId = new LoesungszettelAPIModel().withUuid(NEU);
 
 		// Act
 		try {
@@ -320,7 +294,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 
 			verify(loesungszettelRepository, times(0)).addLoesungszettel(any());
 			verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
-			verify(loesungszettelRepository, times(0)).removeLoesungszettel(any(), any());
+			verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
 			verify(kinderRepository, times(0)).changeKind(any());
 
 			assertNull(service.getLoesungszettelCreated());
@@ -336,15 +310,20 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 
 		// Arrange
 		Identifier neueLoesungszettelID = new Identifier("ahhqhiohqi");
+		requestDaten = requestDaten.withUuid(NEU);
 
 		Kind kind = kindOhneIDs.withIdentifier(REQUEST_KIND_ID);
+
+		Loesungszettel neuerLoesungszettel = new Loesungszettel().withIdentifier(neueLoesungszettelID).withVersion(0)
+			.withKindID(kind.identifier()).withRohdaten(createRohdatenKlasseEINS()).withKlassenstufe(Klassenstufe.EINS)
+			.withPunkte(625).withLaengeKaengurusprung(1);
 
 		when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(aktuellerWettbewerb));
 		when(kinderRepository.ofId(REQUEST_KIND_ID)).thenReturn(Optional.of(kind));
 		when(authService.checkPermissionForTeilnahmenummer(any(), any(), any())).thenReturn(Boolean.TRUE);
 
 		when(kinderRepository.changeKind(kind)).thenReturn(Boolean.TRUE);
-		when(loesungszettelRepository.addLoesungszettel(any())).thenReturn(neueLoesungszettelID);
+		when(loesungszettelRepository.addLoesungszettel(any())).thenReturn(neuerLoesungszettel);
 
 		// Act
 		ResponsePayload responsePayload = service.loesungszettelAnlegen(requestDaten, VERANSTALTER_ID);
@@ -359,6 +338,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 		assertNotNull(responsePayload.getData());
 
 		LoesungszettelpunkteAPIModel result = (LoesungszettelpunkteAPIModel) responsePayload.getData();
+		assertNull(result.getConcurrentModificationType());
 
 		assertEquals(neueLoesungszettelID.identifier(), result.loesungszettelId());
 		List<LoesungszettelZeileAPIModel> actualZeilen = result.zeilen();
@@ -377,7 +357,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 
 		verify(loesungszettelRepository, times(1)).addLoesungszettel(any());
 		verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
-		verify(loesungszettelRepository, times(0)).removeLoesungszettel(any(), any());
+		verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
 		verify(kinderRepository, times(1)).changeKind(any());
 
 		assertNotNull(service.getLoesungszettelCreated());

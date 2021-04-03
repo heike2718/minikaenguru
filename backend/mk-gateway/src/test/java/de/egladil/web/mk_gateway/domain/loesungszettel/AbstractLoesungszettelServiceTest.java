@@ -125,4 +125,11 @@ public abstract class AbstractLoesungszettelServiceTest {
 		return zeilen;
 	}
 
+	protected LoesungszettelRohdaten createRohdatenKlasseEINS() {
+
+		return new LoesungszettelRohdaten().withAntwortcode("AAAABBBBCCCC").withNutzereingabe("AAAABBBBCCCC")
+			.withWertungscode("fffffffffrff");
+
+	}
+
 }

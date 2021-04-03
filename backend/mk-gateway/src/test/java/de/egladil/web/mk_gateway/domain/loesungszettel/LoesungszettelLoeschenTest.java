@@ -32,6 +32,7 @@ import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
@@ -84,7 +85,7 @@ public class LoesungszettelLoeschenTest extends AbstractLoesungszettelServiceTes
 
 		verify(loesungszettelRepository, times(0)).addLoesungszettel(any());
 		verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
-		verify(loesungszettelRepository, times(0)).removeLoesungszettel(any(), any());
+		verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
 		verify(kinderRepository, times(0)).changeKind(any());
 
 		assertNull(service.getLoesungszettelCreated());
@@ -93,7 +94,7 @@ public class LoesungszettelLoeschenTest extends AbstractLoesungszettelServiceTes
 	}
 
 	@Test
-	@DisplayName("nicht autoriisert => 401")
+	@DisplayName("nicht autorisiert => 401")
 	void should_loesungszettelLoeschenWithAuthorizationCheckThrowAccessDenied_when_notAuthorized() {
 
 		// Arrange
@@ -124,7 +125,7 @@ public class LoesungszettelLoeschenTest extends AbstractLoesungszettelServiceTes
 
 			verify(loesungszettelRepository, times(0)).addLoesungszettel(any());
 			verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
-			verify(loesungszettelRepository, times(0)).removeLoesungszettel(any(), any());
+			verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
 			verify(kinderRepository, times(0)).changeKind(any());
 
 			assertNull(service.getLoesungszettelCreated());
@@ -176,9 +177,8 @@ public class LoesungszettelLoeschenTest extends AbstractLoesungszettelServiceTes
 
 			verify(loesungszettelRepository, times(0)).addLoesungszettel(any());
 			verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
-			verify(loesungszettelRepository, times(0)).removeLoesungszettel(REQUEST_LOESUNGSZETTEL_ID,
-				VERANSTALTER_ID.identifier());
-			verify(loesungszettelRepository, times(0)).removeLoesungszettel(any(), any());
+			verify(loesungszettelRepository, times(0)).removeLoesungszettel(REQUEST_LOESUNGSZETTEL_ID);
+			verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
 			verify(kinderRepository, times(0)).changeKind(any());
 
 			assertNull(service.getLoesungszettelCreated());
@@ -189,7 +189,7 @@ public class LoesungszettelLoeschenTest extends AbstractLoesungszettelServiceTes
 	}
 
 	@Test
-	@DisplayName("loesungszettel existiert => ereignis wird propagiert, loesungszettel wird gelöscht")
+	@DisplayName("loesungszettel existiert, kind mit loesungszettelID existiert nicht => loesungszettel wird gelöscht, ereignis wird propagiert")
 	void should_loesungszettelLoeschenWithAuthorizationCheckPropagateEvent_when_LoesungszettelVorhanden() {
 
 		// Arrange
@@ -204,48 +204,9 @@ public class LoesungszettelLoeschenTest extends AbstractLoesungszettelServiceTes
 		when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(aktuellerWettbewerb));
 		when(loesungszettelRepository.ofID(REQUEST_LOESUNGSZETTEL_ID)).thenReturn(Optional.of(loesungszettel));
 		when(authService.checkPermissionForTeilnahmenummer(any(), any(), any())).thenReturn(Boolean.TRUE);
-		when(loesungszettelRepository.removeLoesungszettel(REQUEST_LOESUNGSZETTEL_ID, VERANSTALTER_ID.identifier()))
+		when(loesungszettelRepository.removeLoesungszettel(REQUEST_LOESUNGSZETTEL_ID))
 			.thenReturn(Optional.of(persistenterLoesungszettel));
-
-		// Act
-		service.loesungszettelLoeschenWithAuthorizationCheck(REQUEST_LOESUNGSZETTEL_ID, VERANSTALTER_ID);
-
-		// Assert
-		verify(wettbewerbService, times(1)).aktuellerWettbewerb();
-		verify(loesungszettelRepository, times(1)).ofID(any());
-		verify(kinderRepository, times(0)).ofId(any());
-		verify(authService, times(1)).checkPermissionForTeilnahmenummer(any(), any(), any());
-
-		verify(loesungszettelRepository, times(0)).addLoesungszettel(any());
-		verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
-		verify(loesungszettelRepository, times(1)).removeLoesungszettel(REQUEST_LOESUNGSZETTEL_ID,
-			VERANSTALTER_ID.identifier());
-		verify(kinderRepository, times(0)).changeKind(any());
-
-		assertNull(service.getLoesungszettelCreated());
-		assertNull(service.getLoesungszettelChanged());
-		assertNotNull(service.getLoesungszettelDeleted());
-	}
-
-	@Test
-	@DisplayName("loesungszettel existiert, kind mit loesungszettelID existiert => loeschen wird aufgerufen, ereignis wird propagiert")
-	void should_loesungszettelLoeschenWithAuthorizationCheckPropagateEvent_when_LoesungszettelVorhandenAberLoeschenEmptyUndKindMitLoesungszettelVorhanden() {
-
-		// Arrange
-		Loesungszettel loesungszettel = new Loesungszettel()
-			.withIdentifier(REQUEST_LOESUNGSZETTEL_ID)
-			.withKindID(REQUEST_KIND_ID)
-			.withTeilnahmeIdentifier(teilnahmeIdentifier);
-
-		Kind kind = kindOhneIDs.withLoesungszettelID(REQUEST_LOESUNGSZETTEL_ID).withIdentifier(REQUEST_KIND_ID);
-
-		when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(aktuellerWettbewerb));
-		when(loesungszettelRepository.ofID(REQUEST_LOESUNGSZETTEL_ID)).thenReturn(Optional.of(loesungszettel));
-		when(authService.checkPermissionForTeilnahmenummer(any(), any(), any())).thenReturn(Boolean.TRUE);
-		when(kinderRepository.findKindWithLoesungszettelId(REQUEST_LOESUNGSZETTEL_ID)).thenReturn(Optional.of(kind));
-
-		when(loesungszettelRepository.removeLoesungszettel(REQUEST_LOESUNGSZETTEL_ID, VERANSTALTER_ID.identifier()))
-			.thenReturn(Optional.empty());
+		when(kinderRepository.findKindWithLoesungszettelId(REQUEST_LOESUNGSZETTEL_ID)).thenReturn(Optional.empty());
 
 		// Act
 		service.loesungszettelLoeschenWithAuthorizationCheck(REQUEST_LOESUNGSZETTEL_ID, VERANSTALTER_ID);
@@ -259,9 +220,58 @@ public class LoesungszettelLoeschenTest extends AbstractLoesungszettelServiceTes
 
 		verify(loesungszettelRepository, times(0)).addLoesungszettel(any());
 		verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
-		verify(loesungszettelRepository, times(1)).removeLoesungszettel(REQUEST_LOESUNGSZETTEL_ID,
-			VERANSTALTER_ID.identifier());
+		verify(loesungszettelRepository, times(1)).removeLoesungszettel(REQUEST_LOESUNGSZETTEL_ID);
 		verify(kinderRepository, times(0)).changeKind(any());
+
+		assertNull(service.getLoesungszettelCreated());
+		assertNull(service.getLoesungszettelChanged());
+		assertNotNull(service.getLoesungszettelDeleted());
+	}
+
+	@Test
+	@DisplayName("loesungszettel existiert, kind mit loesungszettelID existiert => kind wird aktualisiert, loesungszettel wird gelöscht, ereignis wird propagiert")
+	void should_loesungszettelLoeschenWithAuthorizationCheckPropagateEvent() {
+
+		// Arrange
+		Loesungszettel loesungszettel = new Loesungszettel()
+			.withIdentifier(REQUEST_LOESUNGSZETTEL_ID)
+			.withKindID(REQUEST_KIND_ID)
+			.withTeilnahmeIdentifier(teilnahmeIdentifier);
+
+		Kind kind = kindOhneIDs.withLoesungszettelID(REQUEST_LOESUNGSZETTEL_ID).withIdentifier(REQUEST_KIND_ID);
+
+		PersistenterLoesungszettel persistenter = new PersistenterLoesungszettel();
+		persistenter.setUuid(REQUEST_LOESUNGSZETTEL_ID.identifier());
+		persistenter.setKindID(kind.identifier().identifier());
+		persistenter.setNutzereingabe("NNNNNNNNNNNN");
+		persistenter.setAntwortcode("NNNNNNNNNNNN");
+		persistenter.setWertungscode("nnnnnnnnnnnn");
+		persistenter.setSprache(Sprache.de);
+		persistenter.setWettbewerbUuid("2020");
+		persistenter.setTeilnahmenummer(kind.teilnahmeIdentifier().teilnahmenummer());
+		persistenter.setTeilnahmeart(Teilnahmeart.SCHULE);
+
+		when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(aktuellerWettbewerb));
+		when(loesungszettelRepository.ofID(REQUEST_LOESUNGSZETTEL_ID)).thenReturn(Optional.of(loesungszettel));
+		when(authService.checkPermissionForTeilnahmenummer(any(), any(), any())).thenReturn(Boolean.TRUE);
+		when(kinderRepository.findKindWithLoesungszettelId(REQUEST_LOESUNGSZETTEL_ID)).thenReturn(Optional.of(kind));
+		when(loesungszettelRepository.removeLoesungszettel(REQUEST_LOESUNGSZETTEL_ID))
+			.thenReturn(Optional.of(persistenter));
+
+		// Act
+		service.loesungszettelLoeschenWithAuthorizationCheck(REQUEST_LOESUNGSZETTEL_ID, VERANSTALTER_ID);
+
+		// Assert
+		verify(wettbewerbService, times(1)).aktuellerWettbewerb();
+		verify(loesungszettelRepository, times(1)).ofID(any());
+		verify(kinderRepository, times(0)).ofId(any());
+		verify(kinderRepository, times(1)).findKindWithLoesungszettelId(REQUEST_LOESUNGSZETTEL_ID);
+		verify(authService, times(1)).checkPermissionForTeilnahmenummer(any(), any(), any());
+
+		verify(loesungszettelRepository, times(0)).addLoesungszettel(any());
+		verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
+		verify(loesungszettelRepository, times(1)).removeLoesungszettel(REQUEST_LOESUNGSZETTEL_ID);
+		verify(kinderRepository, times(1)).changeKind(any());
 
 		assertNull(service.getLoesungszettelCreated());
 		assertNull(service.getLoesungszettelChanged());
@@ -283,7 +293,7 @@ public class LoesungszettelLoeschenTest extends AbstractLoesungszettelServiceTes
 		when(authService.checkPermissionForTeilnahmenummer(any(), any(), any())).thenReturn(Boolean.TRUE);
 		when(kinderRepository.findKindWithLoesungszettelId(REQUEST_LOESUNGSZETTEL_ID)).thenReturn(Optional.empty());
 
-		when(loesungszettelRepository.removeLoesungszettel(REQUEST_LOESUNGSZETTEL_ID, VERANSTALTER_ID.identifier()))
+		when(loesungszettelRepository.removeLoesungszettel(REQUEST_LOESUNGSZETTEL_ID))
 			.thenReturn(Optional.empty());
 
 		// Act
@@ -298,8 +308,7 @@ public class LoesungszettelLoeschenTest extends AbstractLoesungszettelServiceTes
 
 		verify(loesungszettelRepository, times(0)).addLoesungszettel(any());
 		verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
-		verify(loesungszettelRepository, times(1)).removeLoesungszettel(REQUEST_LOESUNGSZETTEL_ID,
-			VERANSTALTER_ID.identifier());
+		verify(loesungszettelRepository, times(1)).removeLoesungszettel(REQUEST_LOESUNGSZETTEL_ID);
 		verify(kinderRepository, times(0)).changeKind(any());
 
 		assertNull(service.getLoesungszettelCreated());

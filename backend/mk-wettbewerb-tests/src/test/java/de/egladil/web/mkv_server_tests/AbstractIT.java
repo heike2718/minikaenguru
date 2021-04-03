@@ -31,6 +31,14 @@ public abstract class AbstractIT {
 
 	}
 
+	protected void commit(final EntityTransaction trx) {
+
+		if (trx != null && trx.isActive()) {
+
+			trx.commit();
+		}
+	}
+
 	protected void rollback(final EntityTransaction trx) {
 
 		if (trx != null && trx.isActive()) {
