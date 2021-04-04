@@ -547,6 +547,79 @@ public class LoesungszettelAendernIntegrationTest extends AbstractLoesungszettel
 			assertEquals("AAAABBBBCCCC", geaenderterLoesungszettel.rohdaten().nutzereingabe());
 		}
 
+		@Test
+		@DisplayName("normaler Fall")
+		void should_aendernReturCorrectVersion() {
+
+			// Arrange
+			String loesungszettelUuid = "21b1765f-8305-4907-8ed9-390cd48b2f1c";
+			String kindUuid = "51fef8ee-0b6c-4923-9ab9-14dbf0f522a9";
+
+			Optional<Kind> optKind = kinderRepository.ofId(new Identifier(kindUuid));
+			assertTrue("DB muss zurückgesetzt werden", optKind.isPresent());
+
+			Kind heinBloed = optKind.get();
+			assertEquals("DB muss zurückgesetzt werden", loesungszettelUuid, heinBloed.loesungszettelID().identifier());
+			;
+
+			Optional<Loesungszettel> optLoesungszettel = loesungszettelRepository.ofID(new Identifier(loesungszettelUuid));
+			assertTrue("DB muss zurückgesetzt werden", optLoesungszettel.isPresent());
+
+			Loesungszettel loesungszettel = optLoesungszettel.get();
+			assertEquals("DB muss zurückgesetzt werden", new Identifier(kindUuid), loesungszettel.kindID());
+			assertEquals("DB muss zurückgesetzt werden", 0, loesungszettel.version());
+
+			LoesungszettelAPIModel requestDaten = TestUtils
+				.createLoesungszettelRequestDatenKlasseEinsKreuzeABC(loesungszettelUuid, kindUuid).withVersion(0);
+
+			// Act
+			ResponsePayload responsePayload = loesungszettelAendern(requestDaten, VERANSTALTER_KI7PLSUB_ID.identifier());
+
+			// Assert
+			MessagePayload messagePayload = responsePayload.getMessage();
+			assertEquals("INFO", messagePayload.getLevel());
+			assertEquals(
+				"Der Lösungszettel wurde erfolgreich gespeichert: Punkte 6,25, Länge Kängurusprung 1.",
+				messagePayload.getMessage());
+
+			LoesungszettelpunkteAPIModel responseData = (LoesungszettelpunkteAPIModel) responsePayload.getData();
+
+			// Assert
+			for (int i = 0; i < responseData.zeilen().size(); i++) {
+
+				LoesungszettelZeileAPIModel responseZeile = responseData.zeilen().get(i);
+
+				if (responseZeile.name().startsWith("A")) {
+
+					assertEquals("Fehler bei Zeile " + responseZeile.name(), ZulaessigeLoesungszetteleingabe.A,
+						responseZeile.eingabe());
+				}
+
+				if (responseZeile.name().startsWith("B")) {
+
+					assertEquals("Fehler bei Zeile " + responseZeile.name(), ZulaessigeLoesungszetteleingabe.B,
+						responseZeile.eingabe());
+				}
+
+				if (responseZeile.name().startsWith("C")) {
+
+					assertEquals("Fehler bei Zeile " + responseZeile.name(), ZulaessigeLoesungszetteleingabe.C,
+						responseZeile.eingabe());
+				}
+
+			}
+
+			assertEquals(1, responseData.getVersion());
+			assertNull(responseData.getConcurrentModificationType());
+
+			Kind geaendertesKind = kinderRepository.ofId(new Identifier(kindUuid)).get();
+			assertEquals(loesungszettelUuid, geaendertesKind.loesungszettelID().identifier());
+
+			Loesungszettel geaenderterLoesungszettel = loesungszettelRepository.ofID(new Identifier(loesungszettelUuid)).get();
+			assertEquals(1, geaenderterLoesungszettel.version());
+			assertEquals("AAAABBBBCCCC", geaenderterLoesungszettel.rohdaten().nutzereingabe());
+		}
+
 	}
 
 }

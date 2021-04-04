@@ -43,7 +43,8 @@ export class LoesungszettelFacade {
 			uuid: 'neu',
 			kindID: kind.uuid,
 			klassenstufe: kind.klassenstufe.klassenstufe,
-			zeilen: zeilen
+			zeilen: zeilen,
+			version: -1
 		};
 
 		this.store.dispatch(LoesungszettelActions.newLoesungszettelCreated({ loesungszettel: loesungszettel }));

@@ -36,6 +36,8 @@ public class LoesungszettelCreator {
 
 		Wettbewerbswertung wertung = new Wertungsrechner().getWertung(wertungscode, kind.klassenstufe());
 
+		int version = LoesungszettelAPIModel.KEINE_UUID.equals(loesungszetteldaten.uuid()) ? 0 : loesungszetteldaten.version();
+
 		Loesungszettel loesungszettel = new Loesungszettel()
 			.withAuswertungsquelle(Auswertungsquelle.ONLINE)
 			.withKindID(kind.identifier())
@@ -45,7 +47,8 @@ public class LoesungszettelCreator {
 			.withTeilnahmeIdentifier(teilnahmeIdentifier)
 			.withRohdaten(rohdaten)
 			.withPunkte(wertung.punkte())
-			.withLaengeKaengurusprung(wertung.kaengurusprung());
+			.withLaengeKaengurusprung(wertung.kaengurusprung())
+			.withVersion(version);
 
 		return loesungszettel;
 	}
