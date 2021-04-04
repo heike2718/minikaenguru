@@ -185,7 +185,7 @@ public class KlassenServiceTest extends AbstractIT {
 		assertEquals("2a", klasse.name());
 		List<Kind> kinder = kinderRepository.withTeilnahme(teilnahmeIdentifier);
 
-		assertEquals(19, kinder.size());
+		assertEquals("DB muss zurückgesetzt werden", 20, kinder.size());
 
 		assertTrue("DB muss zurückgesetzt werden", this.klassenRepository.ofIdentifier(klasseID).isPresent());
 		assertTrue("DB muss zurückgesetzt werden", this.kinderRepository.ofId(new Identifier(uuidOskar)).isPresent());
@@ -200,7 +200,7 @@ public class KlassenServiceTest extends AbstractIT {
 		assertEquals(klasseUuid, result.uuid());
 		assertEquals("2a", result.name());
 
-		assertEquals(17, kinderRepository.withTeilnahme(teilnahmeIdentifier).size());
+		assertEquals(18, kinderRepository.withTeilnahme(teilnahmeIdentifier).size());
 
 		assertTrue(this.klassenRepository.ofIdentifier(klasseID).isEmpty());
 		assertTrue(this.kinderRepository.ofId(new Identifier(uuidOskar)).isEmpty());

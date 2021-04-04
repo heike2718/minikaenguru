@@ -8,7 +8,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.Optional;
@@ -260,15 +259,59 @@ public class KinderServiceTest extends AbstractIT {
 	}
 
 	@Test
-	void should_handleLoesungszettelDeletedUpdateKindLoesungszettelUuid() {
-
-		fail("not yet implemented");
-	}
-
-	@Test
 	void should_changeSpracheKindBePropagatedToLoesungszettel() {
 
-		fail("not yet implemented");
+		// Arrange
+		String veranstalterUuid = "eee4dcf4-decf-4d7f-89cd-ea2516122320";
+
+		Identifier kindID = new Identifier("cc74ed3c-28cd-4cc5-8744-c4c3eb7e5c19");
+		String loesungszettelUuid = "6c180cbf-d78e-4173-992e-a6d095485299";
+		Identifier loesungszettelID = new Identifier(loesungszettelUuid);
+
+		Optional<Kind> optKind = kinderRepository.ofId(kindID);
+
+		assertTrue("DB muss zurückgesetzt werden", optKind.isPresent());
+
+		Kind kind = optKind.get();
+
+		assertEquals("DB muss zurückgesetzt werden", loesungszettelID, kind.loesungszettelID());
+		assertEquals("DB muss zurückgesetzt werden", Sprache.de, kind.sprache());
+
+		Optional<Loesungszettel> optLoesungszettel = loesungszettelRepository.ofID(loesungszettelID);
+		assertTrue("DB muss zurückgesetzt werden", optLoesungszettel.isPresent());
+
+		Loesungszettel loesungszettel = optLoesungszettel.get();
+
+		int expectedVersion = loesungszettel.version() + 1;
+
+		assertEquals("DB muss zurückgesetzt werden", Sprache.de, loesungszettel.sprache());
+
+		KindEditorModel kindEditorModel = new KindEditorModel(kind.klassenstufe(), Sprache.en).withVorname(kind.vorname())
+			.withNachname(kind.nachname()).withZusatz(kind.zusatz()).withKlasseUuid(kind.klasseID().identifier());
+		KindRequestData daten = new KindRequestData().withKind(kindEditorModel).withKuerzelLand(kind.landkuerzel())
+			.withUuid(kind.identifier().identifier());
+
+		// Act
+		KindAPIModel result = this.kindAendern(daten, veranstalterUuid);
+
+		// Act
+		assertEquals(Sprache.en, result.sprache().sprache());
+		assertEquals(kind.vorname(), result.vorname());
+		assertEquals(kind.nachname(), result.nachname());
+		assertEquals(kind.zusatz(), result.zusatz());
+		assertEquals(kind.klassenstufe(), result.klassenstufe().klassenstufe());
+		assertEquals(kind.klasseID().identifier(), result.klasseId());
+
+		Kind geaendertesKind = kinderRepository.ofId(kindID).get();
+		assertEquals(Sprache.en, geaendertesKind.sprache());
+		assertEquals(kind.klasseID(), geaendertesKind.klasseID());
+		assertEquals(loesungszettelID, geaendertesKind.loesungszettelID());
+
+		Loesungszettel geanderterLoesungszettel = loesungszettelRepository.ofID(loesungszettelID).get();
+		assertEquals(expectedVersion, geanderterLoesungszettel.version());
+		assertEquals(Sprache.en, geanderterLoesungszettel.sprache());
+		assertEquals(kindID, geanderterLoesungszettel.kindID());
+
 	}
 
 	private KindAPIModel kindAnlegen(final KindRequestData requestData, final String veranstalterUuid) {

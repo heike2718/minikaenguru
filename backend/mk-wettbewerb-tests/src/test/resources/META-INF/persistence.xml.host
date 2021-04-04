@@ -28,11 +28,11 @@
 			<property name="hibernate.dialect"
 				value="org.hibernate.dialect.MariaDBDialect" />
 			<property name="javax.persistence.jdbc.url"
-				value="jdbc:mysql://192.168.10.176:4306/mk_wettbewerb" />
+				value="jdbc:mysql://localhost:3306/mk_wettbewerb" />
 			<property name="javax.persistence.jdbc.user"
 				value="mk_wettbewerb" />
 			<property name="javax.persistence.jdbc.password"
-				value="integrationtests" />
+				value="hwinkel" />
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.format_sql" value="true" />
 			<property name="hibernate.use_sql_comments" value="true" />

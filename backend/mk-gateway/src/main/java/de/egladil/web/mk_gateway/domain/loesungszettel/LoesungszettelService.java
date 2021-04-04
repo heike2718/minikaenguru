@@ -447,7 +447,7 @@ public class LoesungszettelService {
 			kind);
 
 		Loesungszettel saved = loesungszettelRepository.addLoesungszettel(loesungszettel);
-		kind.withLoesungszettelID(saved.kindID());
+		kind.withLoesungszettelID(saved.identifier());
 
 		kinderRepository.changeKind(kind);
 

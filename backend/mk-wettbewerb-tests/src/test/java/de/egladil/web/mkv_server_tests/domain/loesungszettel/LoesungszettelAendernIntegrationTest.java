@@ -12,8 +12,6 @@ import static org.junit.Assert.fail;
 
 import java.util.Optional;
 
-import javax.ws.rs.NotFoundException;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -23,6 +21,7 @@ import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.LoesungszettelpunkteAPIModel;
+import de.egladil.web.mk_gateway.domain.error.ConcurrentModificationType;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.ZulaessigeLoesungszetteleingabe;
@@ -39,11 +38,13 @@ public class LoesungszettelAendernIntegrationTest extends AbstractLoesungszettel
 
 	private static final Identifier VERANSTALTER_ZSH712H9_ID = new Identifier("4e060c0f-ccaa-40b6-965f-3267f84df234");
 
+	private static final Identifier VERANSTALTER_KI7PLSUB_ID = new Identifier("412b67dc-132f-465a-a3c3-468269e866cb");
+
 	@Nested
 	class KindExistiertNichtTests {
 
 		@Test
-		@DisplayName("1) kind und loesungszettel existieren nicht => 404")
+		@DisplayName("1) kind und loesungszettel existieren nicht => 422: konkurrierend gelöscht")
 		void should_loesungszettelAendernThrowNotFoundException_when_noKindPresent() {
 
 			// Arrange
@@ -61,14 +62,12 @@ public class LoesungszettelAendernIntegrationTest extends AbstractLoesungszettel
 				.createLoesungszettelRequestDatenKlasseZWEIKreuzeABC(loesungszettelUuid, kindUuid);
 
 			// Act
-			try {
+			LoesungszettelpunkteAPIModel result = (LoesungszettelpunkteAPIModel) loesungszettelAendern(requestDaten,
+				veranstalterID.identifier()).getData();
 
-				loesungszettelAendern(requestDaten, veranstalterID.identifier());
-				fail("keine NotFoundException");
-			} catch (NotFoundException e) {
-
-				// nüscht
-			}
+			// Assert
+			assertEquals(ConcurrentModificationType.DETETED, result.getConcurrentModificationType());
+			assertEquals(loesungszettelUuid, result.loesungszettelId());
 
 		}
 
@@ -121,10 +120,39 @@ public class LoesungszettelAendernIntegrationTest extends AbstractLoesungszettel
 		}
 
 		@Test
-		@DisplayName("3) loesungszettel existiert: loesungszettel.jahr == aktuelles Jahr, loesungszettel.kindID != null =>  => deleteLösungszettel und 404")
+		@DisplayName("3) loesungszettel existiert: loesungszettel.jahr == aktuelles Jahr, loesungszettel.kindID != null => concurrent modification")
 		void should_loesungszettelAendernTriggerDeleteEventAndThrowNotFoundException_when_kindAbsentAndLoesungszettelPresent() {
 
-			fail("not yet implemented");
+			Identifier veranstalterID = VERANSTALTER_VC91WP8L_ID;
+			String loesungszettelUuid = "ee3b8ad0-9538-4803-bc41-217281c67e1d";
+			String kindUuid = "7eaa4bf6-ee85-4047-8c8d-b82aa3fd849y";
+
+			Optional<Kind> optKind = kinderRepository.ofId(new Identifier(kindUuid));
+			assertTrue(optKind.isEmpty());
+
+			Optional<Loesungszettel> optLoesungszettel = loesungszettelRepository.ofID(new Identifier(loesungszettelUuid));
+			assertTrue("DB muss zurückgesetzt werden", optLoesungszettel.isPresent());
+
+			Loesungszettel loesungszettel = optLoesungszettel.get();
+			assertEquals("DB muss zurückgesetzt werden", new Identifier(kindUuid), loesungszettel.kindID());
+
+			LoesungszettelAPIModel requestDaten = TestUtils
+				.createLoesungszettelRequestDatenKlasseZWEIKreuzeABC(loesungszettelUuid, kindUuid)
+				.withUuid(loesungszettelUuid);
+
+			// Act
+			ResponsePayload responsePayload = loesungszettelAendern(requestDaten, veranstalterID.identifier());
+			LoesungszettelpunkteAPIModel result = (LoesungszettelpunkteAPIModel) responsePayload.getData();
+
+			// Assert
+			MessagePayload messagePayload = responsePayload.getMessage();
+			assertEquals("WARN", messagePayload.getLevel());
+			assertEquals("Das Kind wurde in der Zwischenzeit gelöscht. Bitte klären Sie dies im Kollegium.",
+				messagePayload.getMessage());
+
+			assertEquals(ConcurrentModificationType.DETETED, result.getConcurrentModificationType());
+			assertEquals(loesungszettelUuid, result.loesungszettelId());
+			assertTrue(loesungszettelRepository.ofID(veranstalterID).isEmpty());
 		}
 
 	}
@@ -154,7 +182,8 @@ public class LoesungszettelAendernIntegrationTest extends AbstractLoesungszettel
 				.withUuid(loesungszettelUuid);
 
 			// Act
-			LoesungszettelpunkteAPIModel responseData = loesungszettelAendern(requestDaten, VERANSTALTER_VC91WP8L_ID.identifier());
+			LoesungszettelpunkteAPIModel responseData = (LoesungszettelpunkteAPIModel) loesungszettelAendern(requestDaten,
+				VERANSTALTER_VC91WP8L_ID.identifier()).getData();
 
 			// Assert
 			for (int i = 0; i < responseData.zeilen().size(); i++) {
@@ -220,7 +249,8 @@ public class LoesungszettelAendernIntegrationTest extends AbstractLoesungszettel
 				.withUuid(loesungszettelUuid);
 
 			// Act
-			LoesungszettelpunkteAPIModel responseData = loesungszettelAendern(requestDaten, VERANSTALTER_VC91WP8L_ID.identifier());
+			LoesungszettelpunkteAPIModel responseData = (LoesungszettelpunkteAPIModel) loesungszettelAendern(requestDaten,
+				VERANSTALTER_VC91WP8L_ID.identifier()).getData();
 
 			// Assert
 			for (int i = 0; i < responseData.zeilen().size(); i++) {
@@ -292,7 +322,8 @@ public class LoesungszettelAendernIntegrationTest extends AbstractLoesungszettel
 				.withUuid(requestLoesungszettelUuid);
 
 			// Act
-			LoesungszettelpunkteAPIModel responseData = loesungszettelAendern(requestDaten, VERANSTALTER_VC91WP8L_ID.identifier());
+			LoesungszettelpunkteAPIModel responseData = (LoesungszettelpunkteAPIModel) loesungszettelAendern(requestDaten,
+				VERANSTALTER_VC91WP8L_ID.identifier()).getData();
 
 			// Assert
 			for (int i = 0; i < responseData.zeilen().size(); i++) {
@@ -320,12 +351,17 @@ public class LoesungszettelAendernIntegrationTest extends AbstractLoesungszettel
 			}
 
 			String responseLoesungszettelUuid = responseData.loesungszettelId();
-			assertEquals(loesungszettelExistingLoesungszettelUuid, responseLoesungszettelUuid);
+			assertFalse(loesungszettelExistingLoesungszettelUuid.equals(responseLoesungszettelUuid));
 
 			Optional<Loesungszettel> optLoesungszettel = loesungszettelRepository
 				.ofID(new Identifier(loesungszettelExistingLoesungszettelUuid));
-			assertFalse(optLoesungszettel.isEmpty());
-			Loesungszettel loesungszettel = optLoesungszettel.get();
+			assertTrue(optLoesungszettel.isEmpty());
+
+			Optional<Loesungszettel> optNeuer = loesungszettelRepository.ofID(new Identifier(responseLoesungszettelUuid));
+
+			assertTrue(optNeuer.isPresent());
+
+			Loesungszettel loesungszettel = optNeuer.get();
 			assertEquals("AAAABBBBCCCC", loesungszettel.rohdaten().nutzereingabe());
 			assertEquals(625, loesungszettel.punkte());
 
@@ -333,7 +369,7 @@ public class LoesungszettelAendernIntegrationTest extends AbstractLoesungszettel
 			assertTrue(optKind.isPresent());
 
 			astrid = optKind.get();
-			assertEquals(loesungszettelExistingLoesungszettelUuid, astrid.loesungszettelID().identifier());
+			assertEquals(loesungszettel.identifier(), astrid.loesungszettelID());
 		}
 	}
 
@@ -399,6 +435,116 @@ public class LoesungszettelAendernIntegrationTest extends AbstractLoesungszettel
 				inge = optKind.get();
 				assertEquals(loesungszettelUuid, inge.loesungszettelID().identifier());
 			}
+		}
+
+		@Test
+		@DisplayName("8) konkurrierendes update wird verhindert ")
+		void should_loesungszettelAendernReturnConcurrentModification_when_actVerisionGreaterThanReadVersion() {
+
+			String loesungszettelUuid = "3567d656-f788-4fec-bb71-be6c793ee961";
+			String kindUuid = "08cf931e-961e-461a-94a2-6e44965440a5";
+			String expectedNutzereingabe = "BADNACACBENNNNC";
+
+			Optional<Kind> optKind = kinderRepository.ofId(new Identifier(kindUuid));
+			assertTrue(optKind.isPresent());
+
+			Optional<Loesungszettel> optExistierenderLoesungszettel = loesungszettelRepository
+				.ofID(new Identifier(loesungszettelUuid));
+
+			assertTrue("DB muss zurückgesetzt werden", optExistierenderLoesungszettel.isPresent());
+			assertEquals(expectedNutzereingabe, optExistierenderLoesungszettel.get().rohdaten().nutzereingabe());
+
+			LoesungszettelAPIModel requestDaten = TestUtils
+				.createLoesungszettelRequestDatenKlasseZWEIKreuzeABC(loesungszettelUuid, kindUuid).withVersion(4);
+
+			// Act
+			ResponsePayload responsePayload = loesungszettelAendern(requestDaten, VERANSTALTER_KI7PLSUB_ID.identifier());
+			LoesungszettelpunkteAPIModel result = (LoesungszettelpunkteAPIModel) responsePayload.getData();
+
+			// Assert
+			MessagePayload messagePayload = responsePayload.getMessage();
+			assertEquals("WARN", messagePayload.getLevel());
+			assertEquals(
+				"Ein Lösungszettel für dieses Kind wurde bereits durch eine andere Person gespeichert. Bitte prüfen Sie die neuen Daten. Punkte 48,25, Länge Kängurusprung 6.",
+				messagePayload.getMessage());
+
+			assertEquals(5, result.getVersion());
+			assertEquals(ConcurrentModificationType.UPDATED, result.getConcurrentModificationType());
+
+			Loesungszettel alter = loesungszettelRepository.ofID(new Identifier(loesungszettelUuid)).get();
+			assertEquals(5, alter.version());
+			assertEquals(expectedNutzereingabe, alter.rohdaten().nutzereingabe());
+		}
+
+		@Test
+		@DisplayName("jemand hat loesungszettelreferenz aus kind gelöscht")
+		void should_aendernKorrigiertReferenzGeloescht() {
+
+			// Arrange
+			String loesungszettelUuid = "5ffefc14-755c-4eab-98d6-4f1489e2e936";
+			String kindUuid = "41825d54-de55-4424-b6e3-4dec8b01b7e9";
+
+			Optional<Kind> optKind = kinderRepository.ofId(new Identifier(kindUuid));
+			assertTrue("DB muss zurückgesetzt werden", optKind.isPresent());
+
+			Kind frank = optKind.get();
+			assertNull("DB muss zurückgesetzt werden", frank.loesungszettelID());
+
+			Optional<Loesungszettel> optLoesungszettel = loesungszettelRepository.ofID(new Identifier(loesungszettelUuid));
+			assertTrue("DB muss zurückgesetzt werden", optLoesungszettel.isPresent());
+
+			Loesungszettel loesungszettel = optLoesungszettel.get();
+			assertEquals("DB muss zurückgesetzt werden", new Identifier(kindUuid), loesungszettel.kindID());
+
+			LoesungszettelAPIModel requestDaten = TestUtils
+				.createLoesungszettelRequestDatenKlasseEinsKreuzeABC(loesungszettelUuid, kindUuid).withVersion(0);
+
+			// Act
+			ResponsePayload responsePayload = loesungszettelAendern(requestDaten, VERANSTALTER_VC91WP8L_ID.identifier());
+
+			// Assert
+			MessagePayload messagePayload = responsePayload.getMessage();
+			assertEquals("INFO", messagePayload.getLevel());
+			assertEquals(
+				"Der Lösungszettel wurde erfolgreich gespeichert: Punkte 6,25, Länge Kängurusprung 1.",
+				messagePayload.getMessage());
+
+			LoesungszettelpunkteAPIModel responseData = (LoesungszettelpunkteAPIModel) responsePayload.getData();
+
+			// Assert
+			for (int i = 0; i < responseData.zeilen().size(); i++) {
+
+				LoesungszettelZeileAPIModel responseZeile = responseData.zeilen().get(i);
+
+				if (responseZeile.name().startsWith("A")) {
+
+					assertEquals("Fehler bei Zeile " + responseZeile.name(), ZulaessigeLoesungszetteleingabe.A,
+						responseZeile.eingabe());
+				}
+
+				if (responseZeile.name().startsWith("B")) {
+
+					assertEquals("Fehler bei Zeile " + responseZeile.name(), ZulaessigeLoesungszetteleingabe.B,
+						responseZeile.eingabe());
+				}
+
+				if (responseZeile.name().startsWith("C")) {
+
+					assertEquals("Fehler bei Zeile " + responseZeile.name(), ZulaessigeLoesungszetteleingabe.C,
+						responseZeile.eingabe());
+				}
+
+			}
+
+			assertEquals(1, responseData.getVersion());
+			assertNull(responseData.getConcurrentModificationType());
+
+			Kind geaendertesKind = kinderRepository.ofId(new Identifier(kindUuid)).get();
+			assertEquals(loesungszettelUuid, geaendertesKind.loesungszettelID().identifier());
+
+			Loesungszettel geaenderterLoesungszettel = loesungszettelRepository.ofID(new Identifier(loesungszettelUuid)).get();
+			assertEquals(1, geaenderterLoesungszettel.version());
+			assertEquals("AAAABBBBCCCC", geaenderterLoesungszettel.rohdaten().nutzereingabe());
 		}
 
 	}

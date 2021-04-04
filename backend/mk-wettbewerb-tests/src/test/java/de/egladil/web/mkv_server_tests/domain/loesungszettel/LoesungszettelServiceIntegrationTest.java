@@ -7,7 +7,6 @@ package de.egladil.web.mkv_server_tests.domain.loesungszettel;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import org.junit.jupiter.api.Test;
 
@@ -57,7 +56,7 @@ public class LoesungszettelServiceIntegrationTest extends AbstractLoesungszettel
 		LoesungszettelAPIModel zweiteRequestDaten = TestUtils
 			.createLoesungszettelRequestDatenKlasseEinsKreuzeDEN(loesungszettelUuid, kindUuid);
 
-		responseData = this.loesungszettelAendern(zweiteRequestDaten, veranstalterUuid);
+		responseData = (LoesungszettelpunkteAPIModel) this.loesungszettelAendern(zweiteRequestDaten, veranstalterUuid).getData();
 		assertEquals(loesungszettelUuid, responseData.loesungszettelId());
 
 		for (int i = 0; i < responseData.zeilen().size(); i++) {
@@ -87,12 +86,6 @@ public class LoesungszettelServiceIntegrationTest extends AbstractLoesungszettel
 		assertEquals("10,00", responseData.punkte());
 		assertEquals(1, responseData.laengeKaengurusprung());
 
-	}
-
-	@Test
-	void schould_loesugszettelAendernReturnWarnung_when_LoesungszettelNotPresentButKindLoesungszettelReferenceNotNull() {
-
-		fail("not yet implemented");
 	}
 
 }

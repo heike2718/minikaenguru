@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.LoesungszettelpunkteAPIModel;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelService;
@@ -68,7 +67,7 @@ public abstract class AbstractLoesungszettelTest extends AbstractIT {
 
 	}
 
-	protected LoesungszettelpunkteAPIModel loesungszettelAendern(final LoesungszettelAPIModel loesungszetteldaten, final String veranstalterUuid) {
+	protected ResponsePayload loesungszettelAendern(final LoesungszettelAPIModel loesungszetteldaten, final String veranstalterUuid) {
 
 		EntityTransaction trx = entityManagerWettbewerbDB.getTransaction();
 
@@ -81,8 +80,7 @@ public abstract class AbstractLoesungszettelTest extends AbstractIT {
 
 			trx.commit();
 
-			LoesungszettelpunkteAPIModel result = (LoesungszettelpunkteAPIModel) responsePayload.getData();
-			return result;
+			return responsePayload;
 
 		} catch (PersistenceException e) {
 
