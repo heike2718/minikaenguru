@@ -486,7 +486,7 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 			}
 
 			verify(wettbewerbService, times(1)).aktuellerWettbewerb();
-			verify(loesungszettelRepository, times(1)).ofID(any());
+			verify(loesungszettelRepository, times(2)).ofID(any());
 			verify(loesungszettelRepository, times(1)).removeLoesungszettel(kindLoesungszettelID);
 			verify(kinderRepository, times(1)).ofId(any());
 			verify(authService, times(1)).checkPermissionForTeilnahmenummer(any(), any(), any());
@@ -555,7 +555,7 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 				assertNull(responsePayload.getData());
 
 				verify(wettbewerbService, times(1)).aktuellerWettbewerb();
-				verify(loesungszettelRepository, times(1)).ofID(any());
+				verify(loesungszettelRepository, times(2)).ofID(any());
 				verify(kinderRepository, times(1)).ofId(any());
 				verify(authService, times(1)).checkPermissionForTeilnahmenummer(any(), any(), any());
 
@@ -619,7 +619,7 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 			}
 
 			verify(wettbewerbService, times(1)).aktuellerWettbewerb();
-			verify(loesungszettelRepository, times(1)).ofID(any());
+			verify(loesungszettelRepository, times(2)).ofID(any());
 			verify(kinderRepository, times(1)).ofId(any());
 			verify(authService, times(1)).checkPermissionForTeilnahmenummer(any(), any(), any());
 
@@ -631,6 +631,64 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 			assertNotNull(service.getLoesungszettelCreated());
 			assertNull(service.getLoesungszettelChanged());
 			assertNull(service.getLoesungszettelDeleted());
+
+		}
+
+		@Test
+		@DisplayName("6) kindLz != null, loesungszettel mit kind.lzID existiert => 422 inkonsistente Daten")
+		void should_loesungszettelAendernThrowInvalidInpitException_when_VonKindReferenzierterLoesungszettelExistiert() {
+
+			// Arrange
+			Identifier kindLoesungszettelID = new Identifier("kind-loesungszettel-uuid");
+			Identifier neueLoesungszettelID = new Identifier("neueLoesungszettelID");
+
+			Loesungszettel neuerLoesungszettel = new Loesungszettel().withIdentifier(neueLoesungszettelID).withVersion(0)
+				.withKindID(REQUEST_KIND_ID).withKlassenstufe(Klassenstufe.EINS).withRohdaten(createRohdatenKlasseEINS())
+				.withPunkte(625).withLaengeKaengurusprung(1);
+
+			Loesungszettel vonKindReferenzierterLoesungszettel = new Loesungszettel().withIdentifier(REQUEST_KIND_ID).withVersion(0)
+				.withKindID(REQUEST_KIND_ID).withKlassenstufe(Klassenstufe.EINS).withRohdaten(createRohdatenKlasseEINS())
+				.withPunkte(625).withLaengeKaengurusprung(1).withTeilnahmeIdentifier(teilnahmeIdentifier);
+
+			Kind kind = kindOhneIDs.withIdentifier(REQUEST_KIND_ID).withLoesungszettelID(kindLoesungszettelID);
+
+			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(aktuellerWettbewerb));
+			when(kinderRepository.ofId(REQUEST_KIND_ID)).thenReturn(Optional.of(kind));
+			when(loesungszettelRepository.ofID(REQUEST_LOESUNGSZETTEL_ID)).thenReturn(Optional.empty());
+			when(loesungszettelRepository.ofID(kind.loesungszettelID()))
+				.thenReturn(Optional.of(vonKindReferenzierterLoesungszettel));
+			when(authService.checkPermissionForTeilnahmenummer(any(), any(), any())).thenReturn(Boolean.TRUE);
+
+			// Act
+			try {
+
+				service.loesungszettelAendern(requestDaten, VERANSTALTER_ID);
+			} catch (InvalidInputException e) {
+
+				ResponsePayload responsePayload = e.getResponsePayload();
+
+				MessagePayload messagePayload = responsePayload.getMessage();
+				assertEquals("ERROR", messagePayload.getLevel());
+				assertEquals(
+					"Der Lösungszettel konnte leider nicht gespeichert werden: es gibt inkonsistente Daten in der Datenbank. Bitte wenden Sie sich per Mail an info@egladil.de.",
+					messagePayload.getMessage());
+
+				assertNull(responsePayload.getData());
+
+				verify(wettbewerbService, times(1)).aktuellerWettbewerb();
+				verify(loesungszettelRepository, times(2)).ofID(any());
+				verify(kinderRepository, times(1)).ofId(any());
+				verify(authService, times(1)).checkPermissionForTeilnahmenummer(any(), any(), any());
+
+				verify(loesungszettelRepository, times(0)).addLoesungszettel(any());
+				verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
+				verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
+				verify(kinderRepository, times(0)).changeKind(any());
+
+				assertNull(service.getLoesungszettelCreated());
+				assertNull(service.getLoesungszettelChanged());
+				assertNull(service.getLoesungszettelDeleted());
+			}
 
 		}
 	}

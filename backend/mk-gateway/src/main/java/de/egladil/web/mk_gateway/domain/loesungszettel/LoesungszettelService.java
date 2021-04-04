@@ -296,6 +296,22 @@ public class LoesungszettelService {
 			new Identifier(persistenterLoesungszettel.getTeilnahmenummer()),
 			"[spracheLoesungszettelAendern - " + identifier.toString() + "]");
 
+		Wettbewerb wettbewerb = getWettbewerb();
+
+		if (!persistenterLoesungszettel.getWettbewerbUuid().equals(wettbewerb.id().jahr().toString())) {
+
+			String msg = "Veranstalter " + StringUtils.abbreviate(veranstalterUuid, 11)
+				+ " versucht, Sprache eines Loesungszettels von "
+				+ persistenterLoesungszettel.getWettbewerbUuid() + " zu aendern: UUID=" + identifier;
+			LOG.warn(msg);
+
+			new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
+
+			String errorMessage = MessageFormat.format(applicationMessages.getString("loesungszettel.change.gesperrt"),
+				new Object[] { persistenterLoesungszettel.getWettbewerbUuid() });
+			throw new BadRequestException(errorMessage);
+		}
+
 		Sprache spracheAlt = persistenterLoesungszettel.getSprache();
 		LoesungszettelRohdaten rohdaten = new LoesungszettelRohdaten()
 			.withAntwortcode(persistenterLoesungszettel.getAntwortcode())
@@ -346,7 +362,8 @@ public class LoesungszettelService {
 		LoesungszettelpunkteAPIModel result = new LoesungszettelpunkteAPIModel()
 			.withLaengeKaengurusprung(loesungszettel.laengeKaengurusprung())
 			.withLoesungszettelId(loesungszettel.identifier().identifier())
-			.withPunkte(loesungszettel.punkteAsString());
+			.withPunkte(loesungszettel.punkteAsString())
+			.withVersion(loesungszettel.version());
 
 		return Optional.of(result);
 
@@ -648,119 +665,106 @@ public class LoesungszettelService {
 		final Identifier kindID = kind.identifier();
 		final Identifier kindLoesungszettelID = kind.loesungszettelID();
 
+		LOG.warn("== upd 1 == Kein Loesungszettel mit UUID=" + loesungszettelID + " vorhanden (konkurrierend geloescht?)");
+
 		Optional<Loesungszettel> optLoesungszettelMitKind = loesungszettelRepository
 			.findLoesungszettelWithKindID(kindID);
 
-		if (optLoesungszettelMitKind.isPresent()) {
-
-			Loesungszettel zuLoeschenderLoesungszettel = optLoesungszettelMitKind.get();
-			Identifier zuLoesschenderLoesungszettelID = zuLoeschenderLoesungszettel.identifier();
-
-			LOG.warn("== upd 1 == kind referenziert nicht mehr vorhandenen Loesungszettel="
-				+ loesungszettelID + ", es gibt aber einen Loesungszettel mit kindID=" + kindID
-				+ " (loesungszettel unvollstaendig geloescht?)");
-
-			// TODO Telegram-Message!
-
-			TeilnahmeIdentifier teilnahmeIdentifierZuLoeschenderLoesungszettel = zuLoeschenderLoesungszettel
-				.teilnahmeIdentifier();
-
-			if (!teilnahmeIdentifierZuLoeschenderLoesungszettel.wettbewerbID().equals(wettbewerb.id().toString())) {
-
-				String msg = "Veranstalter " + StringUtils.abbreviate(veranstalterID.identifier(), 11)
-					+ ": versucht Lösungszettel aus Jahr " + teilnahmeIdentifierZuLoeschenderLoesungszettel.jahr()
-					+ " zu ändern. UUID="
-					+ zuLoesschenderLoesungszettelID;
-				new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
-
-				String message = MessageFormat.format(
-					applicationMessages.getString("loesungszettel.addOrChange.invalidArguments"),
-					"es gibt inkonsistente Daten in der Datenbank");
-				ResponsePayload responsePayload = ResponsePayload.messageOnly(
-					MessagePayload.warn(message));
-
-				throw new InvalidInputException(responsePayload);
-
-			}
-			this.loesungszettelLoeschenWithoutAuthorizationCheck(zuLoesschenderLoesungszettelID, veranstalterID.identifier());
-
-			Loesungszettel neuerLoesungszettel = this.doCreateAndSaveNewLoesungszettel(loesungszetteldaten, wettbewerb,
-				kind,
-				veranstalterID.identifier());
-
-			LoesungszettelpunkteAPIModel result = this.mapLoesungszettel(neuerLoesungszettel.identifier(),
-				neuerLoesungszettel,
-				wettbewerb);
-			String msg = MessageFormat.format(applicationMessages.getString("loesungszettel.addOrChange.success"),
-				new Object[] { result.punkte(), Integer.valueOf(result.laengeKaengurusprung()) });
-
-			ResponsePayload responsePayload = new ResponsePayload(MessagePayload.info(msg), result);
-			return responsePayload;
-		}
-
-		LOG.warn("== upd 3 == Kein Loesungszettel mit UUID=" + loesungszettelID
-			+ " (requestDaten.uuid) vorhanden (konkurrierend geloescht?)");
-
 		Optional<Loesungszettel> optVonKindReferencedLoesungszettel = loesungszettelRepository.ofID(kind.loesungszettelID());
 
-		if (optVonKindReferencedLoesungszettel.isEmpty()) {
+		if (optVonKindReferencedLoesungszettel.isPresent()) {
 
-			if (kind.loesungszettelID() != null) {
+			LOG.warn(
+				"== upd 1.4 == toter Zweig?");
 
-				LOG.warn("== upd 3.1 == kind referenziert nicht mehr vorhandenen Loesungszettel="
-					+ kind.loesungszettelID().identifier() + " (loesungszettel unvollstaendig geloescht?)");
+			// TODO: Telegram Message
 
-				// TODO Telegram-Message!
+			String msg = "Veranstalter " + StringUtils.abbreviate(veranstalterID.identifier(), 11)
+				+ " - Kind "
+				+ kind.identifier()
+				+ " referenziert keinen oder einen anderen als den zu ändernden Lösungszettel: kind.loesungszettelID="
+				+ kindLoesungszettelID
+				+ ", requestDaten.loesungszettel="
+				+ loesungszettelID;
 
-				LOG.warn("== upd 3.2 == anderen loesun Kind="
-					+ kindID + " (loesungszettel konkurrierend geloescht?)");
+			doFireInconsistentDataAndExitMethodWithInvalidInputException(msg);
 
-				Loesungszettel neuerLoesungszettel = this.doCreateAndSaveNewLoesungszettel(loesungszetteldaten, wettbewerb,
-					kind,
-					veranstalterID.identifier());
+			return null;
+		}
 
-				LoesungszettelpunkteAPIModel result = this.mapLoesungszettel(neuerLoesungszettel.identifier(),
-					neuerLoesungszettel,
-					wettbewerb);
-				String msg = MessageFormat.format(applicationMessages.getString("loesungszettel.addOrChange.success"),
-					new Object[] { result.punkte(), Integer.valueOf(result.laengeKaengurusprung()) });
+		if (optLoesungszettelMitKind.isPresent()) {
 
-				ResponsePayload responsePayload = new ResponsePayload(MessagePayload.info(msg), result);
-				return responsePayload;
-			}
+			return this.bereinigeLoesungszettelDerKindReferenziert(loesungszetteldaten, optLoesungszettelMitKind.get(), kind,
+				wettbewerb, veranstalterID);
+		}
 
-			LOG.warn("== upd 3.4 == update wird zu insert Kind="
-				+ kindID + " (loesungszettel konkurrierend geloescht?)");
+		LOG.warn("== upd 1.3 == von Kind referenzierter Loesungszettel mit UUID=" + kind.loesungszettelID()
+			+ " existiert nicht => update wird zu insert.");
 
-			Loesungszettel neuerLoesungszettel = this.doCreateAndSaveNewLoesungszettel(loesungszetteldaten, wettbewerb, kind,
-				veranstalterID.identifier());
+		Loesungszettel neuerLoesungszettel = this.doCreateAndSaveNewLoesungszettel(loesungszetteldaten, wettbewerb,
+			kind,
+			veranstalterID.identifier());
 
-			LoesungszettelpunkteAPIModel result = this.mapLoesungszettel(neuerLoesungszettel.identifier(), neuerLoesungszettel,
-				wettbewerb);
-			String msg = MessageFormat.format(applicationMessages.getString("loesungszettel.addOrChange.success"),
-				new Object[] { result.punkte(), Integer.valueOf(result.laengeKaengurusprung()) });
+		LoesungszettelpunkteAPIModel result = this.mapLoesungszettel(neuerLoesungszettel.identifier(),
+			neuerLoesungszettel,
+			wettbewerb);
+		String msg = MessageFormat.format(applicationMessages.getString("loesungszettel.addOrChange.success"),
+			new Object[] { result.punkte(), Integer.valueOf(result.laengeKaengurusprung()) });
 
-			ResponsePayload responsePayload = new ResponsePayload(MessagePayload.info(msg), result);
-			return responsePayload;
+		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.info(msg), result);
+		return responsePayload;
+
+	}
+
+	private ResponsePayload bereinigeLoesungszettelDerKindReferenziert(final LoesungszettelAPIModel loesungszetteldaten, final Loesungszettel zuLoeschenderLoesungszettel, final Kind kind, final Wettbewerb wettbewerb, final Identifier veranstalterID) {
+
+		Identifier kindID = kind.identifier();
+		Identifier zuLoesschenderLoesungszettelID = zuLoeschenderLoesungszettel.identifier();
+
+		// TODO Telegram-Message!
+
+		TeilnahmeIdentifier teilnahmeIdentifierZuLoeschenderLoesungszettel = zuLoeschenderLoesungszettel
+			.teilnahmeIdentifier();
+
+		if (!teilnahmeIdentifierZuLoeschenderLoesungszettel.wettbewerbID().equals(wettbewerb.id().toString())) {
+
+			LOG.warn("== upd 1.1 == es gibt einen Loesungszettel mit kindID=" + kindID + " wettbeweerbID="
+				+ teilnahmeIdentifierZuLoeschenderLoesungszettel.jahr() +
+				": kann nicht geloescht werden");
+
+			String msg = "Veranstalter " + StringUtils.abbreviate(veranstalterID.identifier(), 11)
+				+ ": versucht Lösungszettel aus Jahr " + teilnahmeIdentifierZuLoeschenderLoesungszettel.jahr()
+				+ " zu ändern. UUID="
+				+ zuLoesschenderLoesungszettelID;
+			new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
+
+			String message = MessageFormat.format(
+				applicationMessages.getString("loesungszettel.addOrChange.invalidArguments"),
+				"es gibt inkonsistente Daten in der Datenbank");
+			ResponsePayload responsePayload = ResponsePayload.messageOnly(
+				MessagePayload.warn(message));
+
+			throw new InvalidInputException(responsePayload);
 
 		}
 
-		LOG.warn(
-			"== upd 4.1 == Abbruch inkonsistente Daten!!!");
+		LOG.warn("== upd 1.2 == es gibt einen aktuellen Loesungszettel mit kindID=" + kindID +
+			": wird geloescht, neuer wird angelegt");
 
-		// TODO: Telegram Message
+		this.loesungszettelLoeschenWithoutAuthorizationCheck(zuLoesschenderLoesungszettelID, veranstalterID.identifier());
 
-		String msg = "Veranstalter " + StringUtils.abbreviate(veranstalterID.identifier(), 11)
-			+ " - Kind "
-			+ kind.identifier()
-			+ " referenziert keinen oder einen anderen als den zu ändernden Lösungszettel: kind.loesungszettelID="
-			+ kindLoesungszettelID
-			+ ", requestDaten.loesungszettel="
-			+ loesungszettelID;
+		Loesungszettel neuerLoesungszettel = this.doCreateAndSaveNewLoesungszettel(loesungszetteldaten, wettbewerb,
+			kind,
+			veranstalterID.identifier());
 
-		doFireInconsistentDataAndExitMethodWithInvalidInputException(msg);
+		LoesungszettelpunkteAPIModel result = this.mapLoesungszettel(neuerLoesungszettel.identifier(),
+			neuerLoesungszettel,
+			wettbewerb);
+		String msg = MessageFormat.format(applicationMessages.getString("loesungszettel.addOrChange.success"),
+			new Object[] { result.punkte(), Integer.valueOf(result.laengeKaengurusprung()) });
 
-		return null;
+		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.info(msg), result);
+		return responsePayload;
 
 	}
 
@@ -845,39 +849,5 @@ public class LoesungszettelService {
 	LoesungszettelDeleted getLoesungszettelDeleted() {
 
 		return loesungszettelDeleted;
-	}
-
-	/**
-	 * Prüft, ob die Daten inkonsistent sind. Falls ja, wird InvalidInputException 422 mit ResponsePayload ohne data geworfen.
-	 *
-	 * @param requestDaten
-	 * @param veranstalterUuid
-	 *                         String für das DataInconsustencyDetected-Event
-	 */
-	public void checkAendernInkonsistenteDaten(final LoesungszettelAPIModel requestDaten, final String veranstalterUuid) {
-
-		// es wird davon ausgegangen, dass requestDaten sowohl kindID als auch loesungszettelID haben
-
-		Identifier requestKindID = new Identifier(requestDaten.kindID());
-		Identifier requestLoesungszettelID = new Identifier(requestDaten.uuid());
-
-		// kindLz != null, referencedLZ null, requestedLz == kindLz, exists lz with kindId = kind
-		Optional<Kind> optRequestedKind = kinderRepository.ofId(requestKindID);
-		Optional<Loesungszettel> optRequestLoesungszettel = loesungszettelRepository.ofID(requestLoesungszettelID);
-
-		if (optRequestedKind.isEmpty() && optRequestLoesungszettel.isEmpty()) {
-
-			String msg = "Veranstalter " + StringUtils.abbreviate(veranstalterUuid, 11)
-				+ " - Lösungszettel ändern: weder Lösungszettelnoch Kind existierten (konkurrierend gelöscht?)"
-				+ requestDaten.toString();
-
-			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
-
-			String message = MessageFormat.format(applicationMessages.getString("loesungszettel.addOrChange.invalidArguments"),
-				"es gibt inkonsistente Daten in der Datenbank");
-			ResponsePayload responsePayload = ResponsePayload.messageOnly(MessagePayload.error(message));
-
-			throw new InvalidInputException(responsePayload);
-		}
 	}
 }
