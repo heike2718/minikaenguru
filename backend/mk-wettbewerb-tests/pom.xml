@@ -5,15 +5,12 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mk-wettbewerb-tests</artifactId>
-	<version>${minikaenguru-version}</version>
+	<version>1.4.5</version>
 
 
 	<properties>
 		<minikaenguru-version>1.4.5</minikaenguru-version>
 		<commons.version>1.4.13</commons.version>
-		<junit.jupiter.version>5.5.0</junit.jupiter.version>
-		<junit.platform.version>1.5.0</junit.platform.version>
-		<surefire-plugin.version>2.22.0</surefire-plugin.version>
 		<dependency-check.version>6.0.1</dependency-check.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<log4j.version>2.13.3</log4j.version>
@@ -45,15 +42,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>de.egladil.web</groupId>
-			<artifactId>mk-kataloge</artifactId>
-			<version>${minikaenguru-version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-core</artifactId>
-			<version>5.4.26.Final</version>
+			<groupId>jakarta.platform</groupId>
+			<artifactId>jakarta.jakartaee-api</artifactId>
+			<version>8.0.0</version>
 		</dependency>
 
 		<dependency>
@@ -66,21 +57,21 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.6.2</version>
+			<version>5.7.1</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
-			<version>5.6.2</version>
+			<version>5.7.1</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.junit.platform</groupId>
 			<artifactId>junit-platform-runner</artifactId>
-			<version>1.6.2</version>
+			<version>1.7.1</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -113,28 +104,57 @@
 				</configuration>
 			</plugin>
 
-
-			<plugin>
+						<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${surefire-plugin.version}</version>
-				<configuration>
-					<systemPropertyVariables>
-						<java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-						<maven.home>${maven.home}</maven.home>
-					</systemPropertyVariables>
-				</configuration>
+				<version>2.22.0</version>
 			</plugin>
 
-
 			<plugin>
-				<groupId>org.owasp</groupId>
-				<artifactId>dependency-check-maven</artifactId>
-				<version>${dependency-check.version}</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.22.0</version>
 				<executions>
 					<execution>
-						<phase>package</phase>
 						<goals>
-							<goal>check</goal>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.34.1</version>
+				<extensions>true</extensions>
+				<executions>
+					<execution>
+						<id>prepare-it-database</id>
+						<goals>
+							<goal>start</goal>
+						</goals>
+						<configuration>
+							<images>
+								<image>
+									<name>heik2718/it-mk_wettbewerb-db:v27</name>
+									<alias>it-mk_wettbewerb-db</alias>
+									<run>
+										<ports>
+											<port>4306:3306</port>
+										</ports>
+										<wait>
+											<time>5000</time>
+										</wait>
+									</run>
+								</image>
+							</images>
+						</configuration>
+					</execution>
+					<execution>
+						<id>remove-it-database</id>
+						<goals>
+							<goal>stop</goal>
 						</goals>
 					</execution>
 				</executions>

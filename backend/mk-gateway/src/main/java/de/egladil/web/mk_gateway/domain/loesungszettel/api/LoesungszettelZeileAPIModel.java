@@ -4,6 +4,8 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.loesungszettel.api;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.mk_gateway.domain.loesungszettel.ZulaessigeLoesungszetteleingabe;
@@ -29,6 +31,41 @@ public class LoesungszettelZeileAPIModel implements Comparable<LoesungszettelZei
 	public int compareTo(final LoesungszettelZeileAPIModel o) {
 
 		return this.index - o.index;
+	}
+
+	@Override
+	public String toString() {
+
+		return "LoesungszettelZeileAPIModel [index=" + index + ", anzahlSpalten=" + anzahlSpalten + ", name=" + name + ", eingabe="
+			+ eingabe + "]";
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(anzahlSpalten, eingabe, index, name);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+
+		if (this == obj) {
+
+			return true;
+		}
+
+		if (obj == null) {
+
+			return false;
+		}
+
+		if (getClass() != obj.getClass()) {
+
+			return false;
+		}
+		LoesungszettelZeileAPIModel other = (LoesungszettelZeileAPIModel) obj;
+		return anzahlSpalten == other.anzahlSpalten && eingabe == other.eingabe && index == other.index
+			&& Objects.equals(name, other.name);
 	}
 
 	public int index() {

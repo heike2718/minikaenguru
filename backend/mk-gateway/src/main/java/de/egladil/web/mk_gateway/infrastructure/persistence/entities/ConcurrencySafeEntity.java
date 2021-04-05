@@ -99,4 +99,9 @@ public abstract class ConcurrencySafeEntity implements Serializable {
 		return Objects.equals(uuid, other.uuid);
 	}
 
+	public int getVersion() {
+
+		return version;
+	}
+
 }

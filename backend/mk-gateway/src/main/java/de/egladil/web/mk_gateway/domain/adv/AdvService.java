@@ -60,13 +60,6 @@ public class AdvService {
 	@Inject
 	VertragAuftragsverarbeitungPdfGenerator pdfGenerator;
 
-	public static AdvService createForTest(final AuthorizationService authService) {
-
-		AdvService result = new AdvService();
-		result.authorizationService = authService;
-		return result;
-	}
-
 	/**
 	 * Falls die Schule einen Vertrag abgeschlossen hat und der gegebene Lehrer dieser Schule angehört, wird das PDF generiert und
 	 * zurückgegeben.

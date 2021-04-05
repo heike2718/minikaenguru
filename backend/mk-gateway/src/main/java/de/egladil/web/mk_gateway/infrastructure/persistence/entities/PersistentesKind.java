@@ -23,6 +23,9 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 @Table(name = "KINDER")
 @NamedQueries({
 	@NamedQuery(
+		name = "PersistentesKind.FIND_WITH_LOESUNGSZETTEL",
+		query = "select k from PersistentesKind k where k.loesungszettelUUID = :loesungszettelUUID"),
+	@NamedQuery(
 		name = "PersistentesKind.FIND_BY_TEILNAHME",
 		query = "select k from PersistentesKind k where k.teilnahmenummer = :teilnahmenummer and k.teilnahmeart = :teilnahmeart order by k.uuid"),
 	@NamedQuery(
@@ -32,6 +35,8 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 public class PersistentesKind extends ConcurrencySafeEntity {
 
 	private static final long serialVersionUID = -2115088245418466350L;
+
+	public static final String FIND_WITH_LOESUNGSZETTEL = "PersistentesKind.FIND_WITH_LOESUNGSZETTEL";
 
 	public static final String FIND_BY_TEILNAHME = "PersistentesKind.FIND_BY_TEILNAHME";
 

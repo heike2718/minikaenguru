@@ -27,7 +27,8 @@ public class LoesungszettelToAPIModelMapper implements Function<Loesungszettel, 
 			.withKindID(loesungszettel.kindID().identifier())
 			.withKlassenstufe(loesungszettel.klassenstufe())
 			.withUuid(loesungszettel.identifier().identifier())
-			.withZeilen(zeilen);
+			.withZeilen(zeilen)
+			.withVersion(loesungszettel.version());
 
 		return result;
 	}

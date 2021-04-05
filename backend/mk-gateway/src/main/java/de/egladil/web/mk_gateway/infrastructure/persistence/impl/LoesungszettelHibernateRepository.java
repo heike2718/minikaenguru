@@ -10,19 +10,22 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelDeleted;
+import de.egladil.web.mk_gateway.domain.error.ConcurrentModificationType;
+import de.egladil.web.mk_gateway.domain.error.EntityConcurrentlyModifiedException;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRohdaten;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
-import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.infrastructure.persistence.entities.LoesungszettelNonIdentifiingAttributesMapper;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterLoesungszettel;
 
 /**
@@ -31,13 +34,10 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.entities.Persistente
 @RequestScoped
 public class LoesungszettelHibernateRepository implements LoesungszettelRepository {
 
+	private static final Logger LOG = LoggerFactory.getLogger(LoesungszettelHibernateRepository.class);
+
 	@Inject
 	EntityManager em;
-
-	@Inject
-	Event<LoesungszettelDeleted> loesungszettelDeletedEvent;
-
-	private LoesungszettelDeleted loesungszettelDeleted;
 
 	public static LoesungszettelHibernateRepository createForIntegrationTest(final EntityManager em) {
 
@@ -101,6 +101,11 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 	@Override
 	public Optional<PersistenterLoesungszettel> findPersistentenLoesungszettel(final Identifier identifier) {
 
+		if (identifier == null) {
+
+			return Optional.empty();
+		}
+
 		PersistenterLoesungszettel result = em.find(PersistenterLoesungszettel.class, identifier.identifier());
 
 		return result == null ? Optional.empty() : Optional.of(result);
@@ -119,6 +124,46 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 		Loesungszettel result = this.mapFromDB(optPersistenter.get());
 
 		return Optional.of(result);
+	}
+
+	@Override
+	public Optional<Loesungszettel> findLoesungszettelWithKindID(final Identifier kindID) {
+
+		PersistenterLoesungszettel persistenter = this.findEntityWithKindID(kindID);
+
+		if (persistenter == null) {
+
+			return Optional.empty();
+		}
+
+		Loesungszettel result = this.mapFromDB(persistenter);
+
+		return Optional.of(result);
+	}
+
+	private PersistenterLoesungszettel findEntityWithKindID(final Identifier kindID) {
+
+		if (kindID == null) {
+
+			throw new IllegalArgumentException("kindID darf nicht null sein.");
+		}
+
+		List<PersistenterLoesungszettel> trefferliste = em
+			.createNamedQuery(PersistenterLoesungszettel.FIND_LOESUNGSZETTEL_WITH_KIND, PersistenterLoesungszettel.class)
+			.setParameter("kindID", kindID.identifier())
+			.getResultList();
+
+		if (trefferliste.isEmpty()) {
+
+			return null;
+		}
+
+		if (trefferliste.size() > 1) {
+
+			LOG.warn("{} LOESUNGSZETTEL mit KIND_ID={} gefunden. Nehmen den ersten", trefferliste.size(), kindID);
+		}
+
+		return trefferliste.get(0);
 	}
 
 	Loesungszettel mapFromDB(final PersistenterLoesungszettel persistenter) {
@@ -145,50 +190,40 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 			.withPunkte(persistenter.getPunkte())
 			.withRohdaten(rohdaten)
 			.withSprache(persistenter.getSprache())
-			.withTeilnahmeIdentifier(teilnahmeIdentifier);
+			.withTeilnahmeIdentifier(teilnahmeIdentifier)
+			.withVersion(persistenter.getVersion());
 
 		return result;
 	}
 
-	void copyAllAttributesBitIdentifier(final PersistenterLoesungszettel target, final Loesungszettel loesungszettel) {
+	void copyAllAttributesButIdentifier(final PersistenterLoesungszettel target, final Loesungszettel loesungszettel) {
 
-		LoesungszettelRohdaten rohdaten = loesungszettel.rohdaten();
-
-		target.setAntwortcode(rohdaten.antwortcode());
-		target.setAuswertungsquelle(loesungszettel.auswertungsquelle());
-		target.setKaengurusprung(loesungszettel.laengeKaengurusprung());
-		target.setKindID(loesungszettel.kindID().identifier());
-		target.setKlassenstufe(loesungszettel.klassenstufe());
-		target.setLandkuerzel(loesungszettel.landkuerzel());
-		target.setNutzereingabe(rohdaten.nutzereingabe());
-		target.setPunkte(loesungszettel.punkte());
-		target.setSprache(loesungszettel.sprache());
-		target.setTeilnahmeart(loesungszettel.teilnahmeIdentifier().teilnahmeart());
-		target.setTeilnahmenummer(loesungszettel.teilnahmeIdentifier().teilnahmenummer());
-		target.setTypo(rohdaten.hatTypo());
-		target.setWertungscode(rohdaten.wertungscode());
-		target.setWettbewerbUuid(loesungszettel.teilnahmeIdentifier().wettbewerbID());
+		new LoesungszettelNonIdentifiingAttributesMapper().copyAllAttributesButIdentifier(target, loesungszettel);
 	}
 
 	@Override
-	public Identifier addLoesungszettel(final Loesungszettel loesungszettel) {
+	public Loesungszettel addLoesungszettel(final Loesungszettel loesungszettel) throws EntityConcurrentlyModifiedException {
 
-		if (loesungszettel.identifier() != null) {
+		PersistenterLoesungszettel concurrentlyInserted = this.findEntityWithKindID(loesungszettel.kindID());
 
-			throw new IllegalStateException("loesungszettel hat bereits die UUID " + loesungszettel.identifier().identifier()
-				+ " und kann hinzugefügt werden!");
+		if (concurrentlyInserted != null) {
+
+			Loesungszettel result = this.mapFromDB(concurrentlyInserted);
+			throw new EntityConcurrentlyModifiedException(ConcurrentModificationType.INSERTED, result);
 		}
 
 		PersistenterLoesungszettel zuPeristierenderLoesungszettel = new PersistenterLoesungszettel();
-		this.copyAllAttributesBitIdentifier(zuPeristierenderLoesungszettel, loesungszettel);
+		this.copyAllAttributesButIdentifier(zuPeristierenderLoesungszettel, loesungszettel);
 
 		em.persist(zuPeristierenderLoesungszettel);
 
-		return new Identifier(zuPeristierenderLoesungszettel.getUuid());
+		Loesungszettel result = this.mapFromDB(zuPeristierenderLoesungszettel);
+
+		return result;
 	}
 
 	@Override
-	public boolean updateLoesungszettel(final Loesungszettel loesungszettel) {
+	public Loesungszettel updateLoesungszettel(final Loesungszettel loesungszettel) {
 
 		if (loesungszettel.identifier() == null) {
 
@@ -199,15 +234,27 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 
 		if (optPersistenter.isEmpty()) {
 
-			return false;
+			throw new EntityConcurrentlyModifiedException(ConcurrentModificationType.DETETED, null);
 		}
 
 		PersistenterLoesungszettel persistenter = optPersistenter.get();
-		this.copyAllAttributesBitIdentifier(persistenter, loesungszettel);
 
-		em.merge(persistenter);
+		if (persistenter.getVersion() > loesungszettel.version()) {
 
-		return true;
+			Loesungszettel result = this.mapFromDB(persistenter);
+
+			throw new EntityConcurrentlyModifiedException(ConcurrentModificationType.UPDATED, result);
+		}
+
+		this.copyAllAttributesButIdentifier(persistenter, loesungszettel);
+
+		PersistenterLoesungszettel merged = em.merge(persistenter);
+
+		int neueVersion = merged.getVersion() + 1;
+
+		Loesungszettel result = this.mapFromDB(merged).withVersion(neueVersion);
+
+		return result;
 	}
 
 	@Override
@@ -217,50 +264,16 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 	}
 
 	@Override
-	public boolean removeLoesungszettel(final Identifier identifier, final String veranstalterUuid) {
+	public Optional<PersistenterLoesungszettel> removeLoesungszettel(final Identifier identifier) {
 
 		Optional<PersistenterLoesungszettel> optExisting = this.findPersistentenLoesungszettel(identifier);
 
-		if (optExisting.isEmpty()) {
+		if (optExisting.isPresent()) {
 
-			return false;
+			em.remove(optExisting.get());
 		}
 
-		PersistenterLoesungszettel persistenterLoesungszettel = optExisting.get();
-
-		em.remove(persistenterLoesungszettel);
-
-		if (veranstalterUuid != null) {
-
-			Sprache sprache = persistenterLoesungszettel.getSprache();
-
-			LoesungszettelRohdaten rohdaten = new LoesungszettelRohdaten()
-				.withAntwortcode(persistenterLoesungszettel.getAntwortcode())
-				.withNutzereingabe(persistenterLoesungszettel.getNutzereingabe())
-				.withTypo(persistenterLoesungszettel.isTypo())
-				.withWertungscode(persistenterLoesungszettel.getWertungscode());
-
-			TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier()
-				.withTeilnahmeart(persistenterLoesungszettel.getTeilnahmeart())
-				.withTeilnahmenummer(persistenterLoesungszettel.getTeilnahmenummer())
-				.withWettbewerbID(new WettbewerbID(persistenterLoesungszettel.getWettbewerbUuid()));
-
-			loesungszettelDeleted = (LoesungszettelDeleted) new LoesungszettelDeleted(veranstalterUuid)
-				.withKindID(persistenterLoesungszettel.getKindID())
-				.withRohdatenAlt(rohdaten)
-				.withRohdatenNeu(null)
-				.withSpracheAlt(sprache)
-				.withSpracheNeu(null)
-				.withTeilnahmeIdentifier(teilnahmeIdentifier)
-				.withUuid(persistenterLoesungszettel.getUuid());
-
-			if (loesungszettelDeletedEvent != null) {
-
-				loesungszettelDeletedEvent.fire(loesungszettelDeleted);
-			}
-		}
-
-		return true;
+		return optExisting;
 	}
 
 }

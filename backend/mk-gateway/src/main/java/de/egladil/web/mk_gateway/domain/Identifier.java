@@ -73,7 +73,7 @@ public class Identifier {
 	@Override
 	public String toString() {
 
-		return this.identifier;
+		return this.identifier == null ? "null" : this.identifier;
 	}
 
 }

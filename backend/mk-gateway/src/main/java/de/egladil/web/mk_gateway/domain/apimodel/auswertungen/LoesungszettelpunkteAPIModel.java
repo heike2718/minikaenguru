@@ -10,6 +10,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_validation.annotations.UuidString;
+import de.egladil.web.mk_gateway.domain.error.ConcurrentModificationType;
 import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelZeileAPIModel;
 
 /**
@@ -20,6 +21,12 @@ public class LoesungszettelpunkteAPIModel {
 	@JsonProperty
 	@UuidString
 	private String loesungszettelId;
+
+	@JsonProperty
+	private ConcurrentModificationType concurrentModificationType;
+
+	@JsonProperty
+	private int version;
 
 	@JsonProperty
 	private String punkte;
@@ -105,6 +112,28 @@ public class LoesungszettelpunkteAPIModel {
 	public LoesungszettelpunkteAPIModel withZeilen(final List<LoesungszettelZeileAPIModel> zeilen) {
 
 		this.zeilen = zeilen;
+		return this;
+	}
+
+	public ConcurrentModificationType getConcurrentModificationType() {
+
+		return concurrentModificationType;
+	}
+
+	public LoesungszettelpunkteAPIModel withConcurrentModificationType(final ConcurrentModificationType concurrentModificationType) {
+
+		this.concurrentModificationType = concurrentModificationType;
+		return this;
+	}
+
+	public int getVersion() {
+
+		return version;
+	}
+
+	public LoesungszettelpunkteAPIModel withVersion(final int version) {
+
+		this.version = version;
 		return this;
 	}
 

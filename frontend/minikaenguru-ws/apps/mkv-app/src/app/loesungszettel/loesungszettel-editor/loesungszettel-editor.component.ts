@@ -74,6 +74,13 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 		this.loesungszettelSubscription = this.loesungszettelFacade.selectedLoesungszettel$.subscribe(
 
 			zettel => {
+
+				if (zettel && !zettel.zeilen) {
+					// Lösungszettel wurde vermutlich konkurrierend geöscht!
+					this.messageService.warn('Der Lösungszettel wurde möglicherweise inzwischen gelöscht. Bitte klären Sie das im Kollegium.');
+					this.onCancel();
+				}
+
 				this.loesungszetteleingaben = this.initEingaben(zettel);
 				this.loesungszettel = zettel;
 
@@ -191,6 +198,10 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 
 		let eingaben = '';
 
+		if (!loesungszettel || !loesungszettel.zeilen) {
+			return '';
+		}
+
 		if (loesungszettel) {
 
 
@@ -200,7 +211,6 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 
 
 		}
-
 
 		return eingaben;
 	}

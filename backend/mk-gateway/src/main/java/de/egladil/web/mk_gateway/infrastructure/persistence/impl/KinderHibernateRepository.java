@@ -15,6 +15,9 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
@@ -28,6 +31,8 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.entities.Persistente
  */
 @RequestScoped
 public class KinderHibernateRepository implements KinderRepository {
+
+	private static final Logger LOG = LoggerFactory.getLogger(KinderHibernateRepository.class);
 
 	private final PersistentesKindKindMapper dbToDomainObjectMapper = new PersistentesKindKindMapper();
 
@@ -85,6 +90,32 @@ public class KinderHibernateRepository implements KinderRepository {
 		}
 
 		Kind kind = new PersistentesKindKindMapper().apply(persistentesKind);
+
+		return Optional.of(kind);
+	}
+
+	@Override
+	public Optional<Kind> findKindWithLoesungszettelId(final Identifier loesungszettelID) {
+
+		if (loesungszettelID == null) {
+
+			return Optional.empty();
+		}
+
+		List<PersistentesKind> trefferliste = em.createNamedQuery(PersistentesKind.FIND_WITH_LOESUNGSZETTEL, PersistentesKind.class)
+			.setParameter("loesungszettelUUID", loesungszettelID.identifier()).getResultList();
+
+		if (trefferliste.isEmpty()) {
+
+			return Optional.empty();
+		}
+
+		if (trefferliste.size() > 1) {
+
+			LOG.warn("{} kinder mit LOESUNGSZETTEL_UUID={} vorhanden. Geben erstes zurück", trefferliste.size(), loesungszettelID);
+		}
+
+		Kind kind = new PersistentesKindKindMapper().apply(trefferliste.get(0));
 
 		return Optional.of(kind);
 	}

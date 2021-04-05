@@ -13,9 +13,6 @@ import java.security.Principal;
 
 import org.junit.jupiter.api.Test;
 
-import de.egladil.web.mk_gateway.domain.auth.session.LoggedInUser;
-import de.egladil.web.mk_gateway.domain.auth.session.MkvSecurityContext;
-import de.egladil.web.mk_gateway.domain.auth.session.Session;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**

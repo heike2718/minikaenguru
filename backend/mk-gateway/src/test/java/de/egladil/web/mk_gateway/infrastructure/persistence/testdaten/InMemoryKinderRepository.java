@@ -63,6 +63,12 @@ public class InMemoryKinderRepository implements KinderRepository {
 	}
 
 	@Override
+	public Optional<Kind> findKindWithLoesungszettelId(final Identifier loesungszettelID) {
+
+		return alleKinder.values().stream().filter(k -> loesungszettelID.equals(k.loesungszettelID())).findFirst();
+	}
+
+	@Override
 	public Kind addKind(final Kind kind) {
 
 		Identifier identifier = new Identifier(UUID.randomUUID().toString());

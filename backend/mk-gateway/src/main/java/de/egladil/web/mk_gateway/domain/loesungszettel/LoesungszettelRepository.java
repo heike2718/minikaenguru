@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.error.EntityConcurrentlyModifiedException;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
@@ -67,26 +68,36 @@ public interface LoesungszettelRepository {
 	 * Sucht den Lösungszettel anhand des Identifiers.
 	 *
 	 * @param  identifier
+	 *                    Identifier oder null
 	 * @return            Optional
 	 */
 	Optional<Loesungszettel> ofID(Identifier identifier);
+
+	/**
+	 * Sucht den Lösungszettel zu einem gegebenen Kind, sofern er existiert.
+	 *
+	 * @param  kindID
+	 *                Identifier darf nicht null sein
+	 * @return        Optional
+	 */
+	Optional<Loesungszettel> findLoesungszettelWithKindID(Identifier kindID);
 
 	/**
 	 * Fügt einen neuen Löungszettel hinzu.
 	 *
 	 * @param  loesungszettel
 	 *                        Lösungszettel
-	 * @return                Identifier
+	 * @return                Loesungszettel
 	 */
-	Identifier addLoesungszettel(Loesungszettel loesungszettel);
+	Loesungszettel addLoesungszettel(Loesungszettel loesungszettel) throws EntityConcurrentlyModifiedException;
 
 	/**
 	 * Ändert einen vorhandenen Lösungszettel in der DB.
 	 *
 	 * @param  loesungszettel
-	 * @return                boolean
+	 * @return                Loesungszettel - wenn empty, dann konkurrierend gelöscht.
 	 */
-	boolean updateLoesungszettel(Loesungszettel loesungszettel);
+	Loesungszettel updateLoesungszettel(Loesungszettel loesungszettel) throws EntityConcurrentlyModifiedException;
 
 	/**
 	 * @param  persistenterLoesungszettel
@@ -97,7 +108,7 @@ public interface LoesungszettelRepository {
 
 	/**
 	 * @param  identifier
-	 * @return            boolean
+	 * @return            Optional den gelöschten Lösungszettel oder empty.
 	 */
-	boolean removeLoesungszettel(Identifier identifier, String veranstalterUuid);
+	Optional<PersistenterLoesungszettel> removeLoesungszettel(Identifier identifier);
 }
