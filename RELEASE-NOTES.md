@@ -1,5 +1,12 @@
 # authprovider Release Notes
 
+__Release 1.4.5__:
+
+* [Transaktionsmanagement Kösungszettel Löschen gefixed](https://github.com/heike2718/minikaenguru/issues/291)
+* [Umschreiben ansible-playbooks wegen quarkus-1.13](https://github.com/heike2718/minikaenguru/issues/287)
+* [Basis für Testautomation erstellen](https://github.com/heike2718/minikaenguru/issues/286)
+* docker-maven-basierte Integrationstests
+
 __Release 1.4.4__:
 
 * [Testlehreraccount für mkv-app](https://github.com/heike2718/minikaenguru/issues/273)
