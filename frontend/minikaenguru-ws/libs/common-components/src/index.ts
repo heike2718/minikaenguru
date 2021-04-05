@@ -19,6 +19,7 @@ export {
 	Klassenstufe,
 	Sprache,
 	ZulaessigeEingabe,
+	ConcurrentModificationType,
 	LoesungszettelResponse,
 	Loesungszettelzeile,
 	Kind,

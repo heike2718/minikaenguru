@@ -4,7 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.veranstalter;
 
-import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -28,7 +27,6 @@ import de.egladil.web.commons_validation.annotations.UuidString;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.LoesungszettelpunkteAPIModel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelService;
 import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelAPIModel;
 
@@ -79,12 +77,7 @@ public class LoesungszettelResource {
 
 		Identifier veranstalterID = new Identifier(securityContext.getUserPrincipal().getName());
 
-		LoesungszettelpunkteAPIModel result = loesungszettelService.loesungszettelAendern(loesungszetteldaten, veranstalterID);
-
-		String msg = MessageFormat.format(applicationMessages.getString("loesungszettel.addOrChange.success"),
-			new Object[] { result.punkte(), Integer.valueOf(result.laengeKaengurusprung()) });
-
-		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.info(msg), result);
+		ResponsePayload responsePayload = loesungszettelService.loesungszettelAendern(loesungszetteldaten, veranstalterID);
 
 		return Response.ok(responsePayload).build();
 	}

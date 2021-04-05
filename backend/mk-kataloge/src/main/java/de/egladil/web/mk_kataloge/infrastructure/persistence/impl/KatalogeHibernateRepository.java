@@ -38,11 +38,11 @@ public class KatalogeHibernateRepository implements KatalogeRepository {
 	@Inject
 	EntityManager em;
 
-	/**
-	 *
-	 */
-	public KatalogeHibernateRepository() {
+	public static KatalogeHibernateRepository createForIntegrationTests(final EntityManager entityManager) {
 
+		KatalogeHibernateRepository result = new KatalogeHibernateRepository();
+		result.em = entityManager;
+		return result;
 	}
 
 	@Override

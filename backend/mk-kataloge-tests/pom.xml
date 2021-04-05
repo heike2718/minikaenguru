@@ -1,0 +1,151 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>de.egladil.web</groupId>
+	<artifactId>mk-kataloge-tests</artifactId>
+	<version>1.4.5</version>
+
+
+	<properties>
+		<minikaenguru-version>1.4.5</minikaenguru-version>
+		<commons.version>1.4.13</commons.version>
+		<slf4j.version>1.7.25</slf4j.version>
+		<log4j.version>2.13.3</log4j.version>
+		<maven.compiler.source>1.11</maven.compiler.source>
+		<maven.compiler.target>1.11</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
+
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>de.egladil.web</groupId>
+				<artifactId>commons-bom</artifactId>
+				<version>${commons.version}</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>de.egladil.web</groupId>
+			<artifactId>mk-kataloge</artifactId>
+			<version>${minikaenguru-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>jakarta.platform</groupId>
+			<artifactId>jakarta.jakartaee-api</artifactId>
+			<version>8.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>5.4.26.Final</version>
+		</dependency>
+
+		<!-- Test START -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.7.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.7.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-runner</artifactId>
+			<version>1.7.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Test ENDE -->
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.0</version>
+				<configuration>
+					<release>11</release>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.0</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.22.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.34.1</version>
+				<extensions>true</extensions>
+				<executions>
+					<execution>
+						<id>prepare-it-database</id>
+						<goals>
+							<goal>start</goal>
+						</goals>
+						<configuration>
+							<images>
+								<image>
+									<name>heik2718/it-mk_kataloge-db:v6</name>
+									<alias>it-mk_kataloge-db</alias>
+									<run>
+										<ports>
+											<port>5306:3306</port>
+										</ports>
+										<wait>
+											<time>5000</time>
+										</wait>
+									</run>
+								</image>
+							</images>
+						</configuration>
+					</execution>
+					<execution>
+						<id>remove-it-database</id>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

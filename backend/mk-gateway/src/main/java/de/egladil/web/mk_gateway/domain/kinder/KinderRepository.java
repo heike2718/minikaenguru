@@ -87,4 +87,10 @@ public interface KinderRepository {
 	 * @return
 	 */
 	long countLoesungszettelInKlasse(Klasse klasse);
+
+	/**
+	 * @param  identifier
+	 * @return
+	 */
+	Optional<Kind> findKindWithLoesungszettelId(Identifier loesungszettelID);
 }

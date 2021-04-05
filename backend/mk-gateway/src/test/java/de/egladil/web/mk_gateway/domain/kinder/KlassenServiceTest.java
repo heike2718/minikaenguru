@@ -6,10 +6,12 @@ package de.egladil.web.mk_gateway.domain.kinder;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -379,6 +381,21 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 			.withTeilnahme(new TeilnahmeIdentifierAktuellerWettbewerb(SCHULKUERZEL_1, Teilnahmeart.SCHULE)).stream()
 			.filter(k -> klasseID.equals(k.klasseID())).collect(Collectors.toList());
 
+		final List<Loesungszettel> alleLoesungszettel = getLoesungszettelRepository().loadAll(teilnahmeIdentifier);
+
+		final List<Loesungszettel> zuLoeschendeLoesungszettel = new ArrayList<>();
+
+		for (Kind kind : kinderMitKlasse) {
+
+			Optional<Loesungszettel> optLZ = alleLoesungszettel.stream()
+				.filter(lz -> kind.loesungszettelID().equals(lz.identifier())).findAny();
+
+			if (optLZ.isPresent()) {
+
+				zuLoeschendeLoesungszettel.add(optLZ.get());
+			}
+		}
+
 		// Act
 		KlasseAPIModel result = klassenService.klasseLoeschen(klasseUUID, UUID_LEHRER_1);
 
@@ -387,13 +404,9 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 		List<Kind> kinderHinterher = getKinderRepository()
 			.withTeilnahme(new TeilnahmeIdentifierAktuellerWettbewerb(SCHULKUERZEL_1, Teilnahmeart.SCHULE));
 
-		List<Loesungszettel> loesungszettelHinterher = getLoesungszettelRepository().loadAll(teilnahmeIdentifier);
-
 		for (Kind kind : kinderMitKlasse) {
 
-			Optional<Loesungszettel> optLZ = loesungszettelHinterher.stream()
-				.filter(lz -> kind.loesungszettelID().equals(lz.identifier())).findAny();
-			assertTrue("Fehler bei Kind " + kind + ": Lösungszettel nicht gelöscht", optLZ.isEmpty());
+			assertNull("Fehler bei Kind " + kind + ": Lösungszettelreferenz nicht gelöscht", kind.loesungszettelID());
 
 			Optional<Kind> optKind = kinderHinterher.stream().filter(k -> k.equals(kind)).findAny();
 			assertTrue("Fehler bei Kind " + kind + ": Kind nicht gelöscht", optKind.isEmpty());

@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
-import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -38,7 +37,6 @@ import de.egladil.web.mk_gateway.domain.kinder.api.KindRequestData;
 import de.egladil.web.mk_gateway.domain.kinder.events.KindChanged;
 import de.egladil.web.mk_gateway.domain.kinder.events.KindCreated;
 import de.egladil.web.mk_gateway.domain.kinder.events.KindDeleted;
-import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelDeleted;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
@@ -610,22 +608,27 @@ public class KinderService {
 
 	}
 
-	@Transactional
-	public void handleLoesungszettelDeleted(@Observes final LoesungszettelDeleted loesungszettelDeletedEvent) {
+	// #291: Erkenntnis - Dies war ein Experiment zum DDD, aber es hat sich gezeigt, dass die Wahrscheinlichkeit von inkonsistenten
+	// Daten nicht 0 ist
+	// und inkonsistente Daten durch kapseln in eine Transaktion hier besser vermieden werden sollteb, weil das Erreichen
+	// konsistenter Daten anderenfalls zu vollkommen unnötig komplexem Code mit kaum zu beherrschender Testbasis führt.
 
-		if (loesungszettelDeletedEvent.kindID() != null) {
-
-			Optional<Kind> optKind = kinderRepository.ofId(new Identifier(loesungszettelDeletedEvent.kindID()));
-
-			if (optKind.isPresent()) {
-
-				Kind kind = optKind.get();
-				kind.deleteLoesungszettel();
-
-				this.kinderRepository.changeKind(kind);
-			}
-		}
-	}
+	// @Transactional
+	// public void handleLoesungszettelDeleted(@Observes final LoesungszettelDeleted loesungszettelDeletedEvent) {
+	//
+	// if (loesungszettelDeletedEvent.kindID() != null) {
+	//
+	// Optional<Kind> optKind = kinderRepository.ofId(new Identifier(loesungszettelDeletedEvent.kindID()));
+	//
+	// if (optKind.isPresent()) {
+	//
+	// Kind kind = optKind.get();
+	// kind.deleteLoesungszettel();
+	//
+	// this.kinderRepository.changeKind(kind);
+	// }
+	// }
+	// }
 
 	KindCreated getKindCreated() {
 

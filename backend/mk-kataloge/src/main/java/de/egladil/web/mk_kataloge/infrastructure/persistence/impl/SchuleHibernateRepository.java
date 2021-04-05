@@ -33,6 +33,14 @@ public class SchuleHibernateRepository implements SchuleRepository {
 	@Inject
 	KatalogeRepository katalogRepository;
 
+	public static SchuleHibernateRepository createForIntegrationTests(final EntityManager entityManager) {
+
+		SchuleHibernateRepository result = new SchuleHibernateRepository();
+		result.em = entityManager;
+		result.katalogRepository = KatalogeHibernateRepository.createForIntegrationTests(entityManager);
+		return result;
+	}
+
 	@Transactional
 	@Override
 	public boolean addSchule(final Schule schule) {

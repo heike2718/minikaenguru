@@ -83,6 +83,12 @@ public class Kind {
 		return identifier;
 	}
 
+	public Kind withIdentifier(final Identifier identifier) {
+
+		this.identifier = identifier;
+		return this;
+	}
+
 	public TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdentifier() {
 
 		return teilnahmeIdentifier;
@@ -273,4 +279,5 @@ public class Kind {
 
 		this.loesungszettelID = null;
 	}
+
 }
