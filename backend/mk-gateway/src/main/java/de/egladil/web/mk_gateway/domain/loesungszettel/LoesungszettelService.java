@@ -58,8 +58,6 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelH
 @ApplicationScoped
 public class LoesungszettelService {
 
-	private static final String LOESUNGSZETTEL_NEU_UUID = "neu";
-
 	private static final Logger LOG = LoggerFactory.getLogger(LoesungszettelService.class);
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);

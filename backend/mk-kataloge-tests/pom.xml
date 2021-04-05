@@ -4,17 +4,15 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>de.egladil.web</groupId>
-	<artifactId>mk-wettbewerb-tests</artifactId>
+	<artifactId>mk-kataloge-tests</artifactId>
 	<version>1.4.5</version>
 
 
 	<properties>
 		<minikaenguru-version>1.4.5</minikaenguru-version>
 		<commons.version>1.4.13</commons.version>
-		<dependency-check.version>6.0.1</dependency-check.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<log4j.version>2.13.3</log4j.version>
-		<mockito.version>3.1.0</mockito.version>
 		<maven.compiler.source>1.11</maven.compiler.source>
 		<maven.compiler.target>1.11</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -37,7 +35,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>de.egladil.web</groupId>
-			<artifactId>mk-gateway</artifactId>
+			<artifactId>mk-kataloge</artifactId>
 			<version>${minikaenguru-version}</version>
 		</dependency>
 
@@ -75,19 +73,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-			<version>${log4j.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<version>3.4.6</version>
-			<scope>test</scope>
-
-		</dependency>
 		<!-- Test ENDE -->
 
 	</dependencies>
@@ -104,7 +89,7 @@
 				</configuration>
 			</plugin>
 
-						<plugin>
+			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.22.0</version>
 			</plugin>
@@ -123,6 +108,7 @@
 				</executions>
 			</plugin>
 
+
 			<plugin>
 				<groupId>io.fabric8</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
@@ -137,11 +123,11 @@
 						<configuration>
 							<images>
 								<image>
-									<name>heik2718/it-mk_wettbewerb-db:v27</name>
-									<alias>it-mk_wettbewerb-db</alias>
+									<name>heik2718/it-mk_kataloge-db:v6</name>
+									<alias>it-mk_kataloge-db</alias>
 									<run>
 										<ports>
-											<port>4306:3306</port>
+											<port>5306:3306</port>
 										</ports>
 										<wait>
 											<time>5000</time>

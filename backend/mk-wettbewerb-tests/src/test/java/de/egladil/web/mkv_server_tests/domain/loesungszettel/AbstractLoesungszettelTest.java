@@ -18,12 +18,12 @@ import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelService;
 import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelAPIModel;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KinderHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
-import de.egladil.web.mkv_server_tests.AbstractIT;
+import de.egladil.web.mkv_server_tests.AbstractIntegrationTest;
 
 /**
  * AbstractLoesungszettelTest
  */
-public abstract class AbstractLoesungszettelTest extends AbstractIT {
+public abstract class AbstractLoesungszettelTest extends AbstractIntegrationTest {
 
 	protected KinderRepository kinderRepository;
 
@@ -36,15 +36,15 @@ public abstract class AbstractLoesungszettelTest extends AbstractIT {
 
 		super.setUp();
 
-		kinderRepository = KinderHibernateRepository.createForIntegrationTest(entityManagerWettbewerbDB);
-		loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(entityManagerWettbewerbDB);
+		kinderRepository = KinderHibernateRepository.createForIntegrationTest(entityManager);
+		loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(entityManager);
 
-		loesungszettelService = LoesungszettelService.createForIntegrationTest(entityManagerWettbewerbDB);
+		loesungszettelService = LoesungszettelService.createForIntegrationTest(entityManager);
 	}
 
 	protected ResponsePayload loesungszettelAnlegen(final LoesungszettelAPIModel loesungszetteldaten, final String veranstalterUuid) throws NotFoundException {
 
-		EntityTransaction trx = entityManagerWettbewerbDB.getTransaction();
+		EntityTransaction trx = entityManager.getTransaction();
 
 		try {
 
@@ -69,7 +69,7 @@ public abstract class AbstractLoesungszettelTest extends AbstractIT {
 
 	protected ResponsePayload loesungszettelAendern(final LoesungszettelAPIModel loesungszetteldaten, final String veranstalterUuid) {
 
-		EntityTransaction trx = entityManagerWettbewerbDB.getTransaction();
+		EntityTransaction trx = entityManager.getTransaction();
 
 		try {
 
