@@ -130,6 +130,7 @@
 											<port>5306:3306</port>
 										</ports>
 										<wait>
+											<log>mysqld: ready for connections</log>
 											<time>5000</time>
 										</wait>
 									</run>

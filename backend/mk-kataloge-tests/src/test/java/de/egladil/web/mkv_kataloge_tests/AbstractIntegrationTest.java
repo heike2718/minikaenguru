@@ -6,7 +6,6 @@ package de.egladil.web.mkv_kataloge_tests;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
 
 /**
  * AbstractIntegrationTest
@@ -17,7 +16,7 @@ public abstract class AbstractIntegrationTest {
 
 	protected void init() {
 
-		entityManager = Persistence.createEntityManagerFactory("mkKatalogePU").createEntityManager();
+		entityManager = EntityManagerFactoryProvider.getInstance().getEmf().createEntityManager();
 
 	}
 
