@@ -5,11 +5,11 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mk-kataloge-tests</artifactId>
-	<version>1.4.5</version>
+	<version>1.4.6</version>
 
 
 	<properties>
-		<minikaenguru-version>1.4.5</minikaenguru-version>
+		<minikaenguru-version>1.4.6</minikaenguru-version>
 		<commons.version>1.4.13</commons.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<log4j.version>2.13.3</log4j.version>
@@ -130,6 +130,7 @@
 											<port>5306:3306</port>
 										</ports>
 										<wait>
+											<log>mysqld: ready for connections</log>
 											<time>5000</time>
 										</wait>
 									</run>

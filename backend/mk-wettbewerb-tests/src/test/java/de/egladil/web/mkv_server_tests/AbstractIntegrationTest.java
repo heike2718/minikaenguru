@@ -9,7 +9,6 @@ import java.io.FileOutputStream;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
 
 import org.apache.commons.io.IOUtils;
 
@@ -24,7 +23,7 @@ public abstract class AbstractIntegrationTest {
 
 	protected void setUp() {
 
-		entityManager = Persistence.createEntityManagerFactory("mkWettbewerbPU").createEntityManager();
+		entityManager = EntityManagerFactoryProvider.getInstance().getEmf().createEntityManager();
 
 	}
 
