@@ -40,6 +40,11 @@ export const mailversandScheduled = createAction(
 	props<{versandinfo: Versandinfo}>()
 );
 
+export const versandinfoAktualisiert = createAction(
+	'[NewsletterFacade]: pollVersandinfo',
+	props<{versandinfo: Versandinfo}>()
+);
+
 export const newsletterRemoved = createAction(
 	'[NewsletterFacade]: deleteNewsletter',
 	props<{newsletter: Newsletter}>()

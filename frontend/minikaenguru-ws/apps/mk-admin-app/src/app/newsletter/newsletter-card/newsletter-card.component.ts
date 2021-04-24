@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Newsletter, Empfaengertyp, NewsletterVersandauftrag } from '../newsletter.model';
+import { Newsletter, Empfaengertyp, NewsletterVersandauftrag, Versandinfo } from '../newsletter.model';
 import { environment } from '../../../environments/environment';
 import { NewsletterFacade } from '../newsletter.facade';
 

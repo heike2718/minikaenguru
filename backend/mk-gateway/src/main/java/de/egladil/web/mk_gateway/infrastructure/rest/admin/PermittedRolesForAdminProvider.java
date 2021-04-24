@@ -234,15 +234,14 @@ public final class PermittedRolesForAdminProvider {
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			result.put(new PathWithMethod("/admin/newsletters/versandinfo/*", HttpMethod.GET), rollen);
+			result.put(new PathWithMethod("/admin/newsletterversand", HttpMethod.POST), rollen);
 
 		}
 
 		{
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			result.put(new PathWithMethod("/admin/newsletterversand", HttpMethod.POST), rollen);
-
+			result.put(new PathWithMethod("/admin/newsletterversand/*", HttpMethod.GET), rollen);
 		}
 
 		{

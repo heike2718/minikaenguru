@@ -12,7 +12,11 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.mail.api.VersandinfoAPIModel;
 import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandFinished;
 import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandProgress;
 
@@ -21,6 +25,8 @@ import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandProgress;
  */
 @ApplicationScoped
 public class VersandinfoService {
+
+	private static final Logger LOG = LoggerFactory.getLogger(VersandinfoService.class);
 
 	@Inject
 	VersandinformationenRepository versandinfoRepo;
@@ -40,6 +46,37 @@ public class VersandinfoService {
 		}
 
 		return versandinfoRepo.findForNewsletter(newsletterID);
+	}
+
+	/**
+	 * Gibt die Versandinfo mit der UUID zurück.
+	 * 
+	 * @param  versandinfoUuid
+	 *                         String
+	 * @return                 Optional
+	 */
+	public Optional<VersandinfoAPIModel> getStatusNewsletterVersand(final String versandinfoUuid) {
+
+		int anzahlVersendet = Long.valueOf(System.currentTimeMillis() / 1000).intValue();
+
+		Versandinformation info = new Versandinformation().withAnzahlAktuellVersendet(anzahlVersendet).withAnzahlEmpaenger(200)
+			.withEmpfaengertyp(Empfaengertyp.LEHRER).withIdentifier(new Identifier(versandinfoUuid))
+			.withNewsletterID(new Identifier("daef356")).withVersandBegonnenAm("24.04.2021 17:45");
+
+		// Optional<Versandinformation> optVersandinfo = this.versandinfoRepo.ofId(new Identifier(versandinfoUuid));
+
+		LOG.info("pollen Versandinfo {}", versandinfoUuid);
+
+		Optional<Versandinformation> optVersandinfo = Optional.of(info);
+
+		if (optVersandinfo.isEmpty()) {
+
+			return Optional.empty();
+		}
+
+		VersandinfoAPIModel apiModel = VersandinfoAPIModel.createFromVersandinfo(optVersandinfo.get());
+
+		return Optional.of(apiModel);
 	}
 
 	@Transactional

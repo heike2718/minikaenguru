@@ -4,6 +4,11 @@
 				class="badge badge-secondary">{{newsletters.length}}</span></h3>
 	<p *ngIf="devMode">(newsletter-list.component)</p>
 
+
+	<div *ngIf="newsletterFacade.versandinfo$ | async as versandinfo">
+		<p>Gesamt: {{versandinfo.anzahlEmpaenger}}  - versendet: {{versandinfo.anzahlAktuellVersendet}}</p>
+	</div>
+
 	<ng-container *ngIf="(newsletterFacade.newsletters$ | async ) as newsletters else loading">
 		<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let newsletter of newsletters">
 			<mka-newsletter-card [newsletter]="newsletter"></mka-newsletter-card>
