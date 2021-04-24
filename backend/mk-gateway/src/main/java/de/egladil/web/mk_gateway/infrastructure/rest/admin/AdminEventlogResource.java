@@ -23,9 +23,9 @@ import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
  */
 @RequestScoped
 @Consumes(MediaType.APPLICATION_JSON)
-@Produces({ MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_JSON })
+@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON }) // text/plain, damit man kein encoding-Problem bekommt
 @Path("admin/events")
-public class AdminEventlogRespource {
+public class AdminEventlogResource {
 
 	@Inject
 	EventService eventService;
