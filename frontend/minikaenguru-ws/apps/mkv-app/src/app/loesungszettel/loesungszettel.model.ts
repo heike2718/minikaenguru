@@ -56,6 +56,21 @@ export class LoesungszettelMap {
 		return this.alleLoesungszettel.get(uuid);
 	}
 
+	public findWithKindUuid(kindUuid: string): Loesungszettel {
+
+		for (const i of this.items) {
+
+			if (i.loesungszettel.kindID === kindUuid) {
+				return i.loesungszettel;
+			}
+
+		}
+
+
+		return null;
+
+	}
+
 	public toArray(): Loesungszettel[] {
 
 		const array = [...this.alleLoesungszettel.values()];

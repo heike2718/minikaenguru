@@ -5,6 +5,7 @@ import * as KinderSelectors from './+state/kinder.selectors';
 import * as KinderActions from './+state/kinder.actions';
 import * as KlassenSelectors from '../klassen/+state/klassen.selectors';
 import * as KlassenActions from '../klassen/+state/klassen.actions';
+import * as LoesungszettelActions from '../loesungszettel/+state/loesungszettel.actions';
 import { Observable } from 'rxjs';
 import {
 	Kind
@@ -203,6 +204,7 @@ export class KinderFacade {
 				if (klasseUuid) {
 					this.store.dispatch(KlassenActions.kindDeleted({kind: kind}));
 				}
+			    this.store.dispatch(LoesungszettelActions.kindDeleted({kindUuid: kind.uuid}));
 				this.kinder$ = this.getKinder();
 				this.messageService.showMessage(responsePayload.message);
 			},
