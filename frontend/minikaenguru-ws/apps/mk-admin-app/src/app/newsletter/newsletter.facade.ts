@@ -153,7 +153,7 @@ export class NewsletterFacade {
 
 	public startPollVersandinfo(versandinfo: Versandinfo): void {
 
-		const optVersandinfo: Observable<Versandinfo> = timer(1, 2000).pipe(
+		const optVersandinfo: Observable<Versandinfo> = timer(1, 10000).pipe(
 			switchMap(() => this.newsletterService.getStatusNewsletterversand(versandinfo)),
 			retry(),
 			share(),
@@ -162,9 +162,14 @@ export class NewsletterFacade {
 
 		optVersandinfo.subscribe(
 			info => {
-				this.store.dispatch(NewsletterActions.versandinfoAktualisiert({versandinfo: info}));
+				this.store.dispatch(NewsletterActions.versandinfoAktualisiert({ versandinfo: info }));
+
 				if (!info) {
-					this.stopPollVersandinfo();
+					this.propagateVersandBeendet(undefined);
+				} else {
+					if (info.versandBeendetAm) {
+						this.propagateVersandBeendet(info.versandBeendetAm);
+					}
 				}
 			},
 			(error => {
@@ -172,6 +177,19 @@ export class NewsletterFacade {
 				this.errorHandler.handleError(error);
 			})
 		);
+	}
+
+	private propagateVersandBeendet(am: string): void {
+
+		this.stopPollVersandinfo();
+
+		if (am) {
+			this.messageService.info('Mailversand beendet ' + am);
+		} else {
+			this.messageService.info('Mailversand beendet');
+		}
+
+		this.store.dispatch(NewsletterActions.versandBeendet());
 	}
 
 	public stopPollVersandinfo(): void {

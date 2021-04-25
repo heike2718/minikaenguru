@@ -41,8 +41,12 @@ export const mailversandScheduled = createAction(
 );
 
 export const versandinfoAktualisiert = createAction(
-	'[NewsletterFacade]: pollVersandinfo',
+	'[NewsletterFacade]: pollVersandinfo - running',
 	props<{versandinfo: Versandinfo}>()
+);
+
+export const versandBeendet = createAction(
+	'[NewsletterFacade]: pollVersandinfo - done'
 );
 
 export const newsletterRemoved = createAction(

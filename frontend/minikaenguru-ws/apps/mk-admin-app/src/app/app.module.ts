@@ -39,6 +39,7 @@ import { SchulteilnahmenModule } from './schulteilnahmen/schulteilnahmen.module'
 import { EventlogModule } from './eventlog/eventlog.module';
 import { SessionTimeoutComponent } from './session-timeout/session-timeout.component';
 import { NewsletterModule } from './newsletter/newsletter.module';
+import { VersandinfoProgressComponent } from './versandinfo-progress/versandinfo-progress.component';
 
 registerLocaleData(localeDe);
 
@@ -51,7 +52,8 @@ registerLocaleData(localeDe);
 		NavbarComponent,
 		DashboardComponent,
 		NotAuthorizedComponent,
-		SessionTimeoutComponent],
+		SessionTimeoutComponent,
+		VersandinfoProgressComponent],
 	imports: [
 		BrowserModule,
 		ReactiveFormsModule,

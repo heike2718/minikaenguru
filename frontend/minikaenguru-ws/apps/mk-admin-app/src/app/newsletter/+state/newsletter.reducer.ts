@@ -63,6 +63,11 @@ const newsletterReducer = createReducer(initialNewsletterState,
 		return {...state, loading: false, versandinfo: action.versandinfo};
 	}),
 
+	on(NewsletterActions.versandBeendet, (state, _action) => {
+
+		return {...state, loading: false, versandinfo: undefined};
+	}),
+
 	on(NewsletterActions.editNewsletterTriggered, (state, action) => {
 
 		return {...state, newsletterEditorModel: {...action.newsletter}, selectedNewsletter: {...action.newsletter}};

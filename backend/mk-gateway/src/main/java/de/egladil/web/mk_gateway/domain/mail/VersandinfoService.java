@@ -57,17 +57,9 @@ public class VersandinfoService {
 	 */
 	public Optional<VersandinfoAPIModel> getStatusNewsletterVersand(final String versandinfoUuid) {
 
-		int anzahlVersendet = Long.valueOf(System.currentTimeMillis() / 1000).intValue();
-
-		Versandinformation info = new Versandinformation().withAnzahlAktuellVersendet(anzahlVersendet).withAnzahlEmpaenger(200)
-			.withEmpfaengertyp(Empfaengertyp.LEHRER).withIdentifier(new Identifier(versandinfoUuid))
-			.withNewsletterID(new Identifier("daef356")).withVersandBegonnenAm("24.04.2021 17:45");
-
-		// Optional<Versandinformation> optVersandinfo = this.versandinfoRepo.ofId(new Identifier(versandinfoUuid));
+		Optional<Versandinformation> optVersandinfo = this.versandinfoRepo.ofId(new Identifier(versandinfoUuid));
 
 		LOG.info("pollen Versandinfo {}", versandinfoUuid);
-
-		Optional<Versandinformation> optVersandinfo = Optional.of(info);
 
 		if (optVersandinfo.isEmpty()) {
 
