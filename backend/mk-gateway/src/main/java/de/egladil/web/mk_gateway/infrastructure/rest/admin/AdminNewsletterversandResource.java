@@ -17,6 +17,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.egladil.web.commons_validation.annotations.UuidString;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
@@ -33,6 +36,8 @@ import de.egladil.web.mk_gateway.domain.mail.api.VersandinfoAPIModel;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class AdminNewsletterversandResource {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(AdminNewsletterversandResource.class);
 
 	@Inject
 	NewsletterService newsletterService;
@@ -62,9 +67,12 @@ public class AdminNewsletterversandResource {
 	@POST
 	public Response scheduleNewsletterversand(final NewsletterVersandauftrag auftrag) {
 
-		VersandinfoAPIModel data = newsletterService.scheduleAndStartMailversand(auftrag);
+		ResponsePayload responsePayload = newsletterService.scheduleAndStartMailversand(auftrag);
 
-		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), data);
+		if (!responsePayload.isOk()) {
+
+			LOGGER.info(responsePayload.getMessage().toString());
+		}
 
 		return Response.ok(responsePayload).build();
 	}

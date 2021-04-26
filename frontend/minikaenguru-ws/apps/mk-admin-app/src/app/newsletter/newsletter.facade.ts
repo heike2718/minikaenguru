@@ -133,10 +133,19 @@ export class NewsletterFacade {
 
 		this.newsletterService.scheduleMailversand(auftrag).subscribe(
 
-			versandinfo => {
+			responsePayload => {
+
+				let versandinfo: Versandinfo;
+
+				if (responsePayload.data) {
+					versandinfo = responsePayload.data;
+				}
+
 				this.store.dispatch(NewsletterActions.mailversandScheduled({ versandinfo: versandinfo }));
-				this.messageService.info('Mailversand angeleiert');
-				this.startPollVersandinfo(versandinfo);
+				this.messageService.showMessage(responsePayload.message);
+				if (responsePayload.message.level === 'INFO') {
+					this.startPollVersandinfo(versandinfo);
+				}
 			},
 			(error => {
 				this.store.dispatch(NewsletterActions.backendCallFinishedWithError());

@@ -6,9 +6,11 @@ package de.egladil.web.mk_gateway.domain.mail;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 
@@ -31,6 +33,13 @@ public class ScheduleNewsletterDelegate {
 		return result;
 	}
 
+	public static ScheduleNewsletterDelegate createForIntegrationTest(final EntityManager etityManager) {
+
+		ScheduleNewsletterDelegate result = new ScheduleNewsletterDelegate();
+		result.versandinfoService = VersandinfoService.createForIntegrationTest(etityManager);
+		return result;
+	}
+
 	@Transactional(value = TxType.REQUIRES_NEW)
 	public Versandinformation scheduleMailversand(final NewsletterVersandauftrag auftrag) {
 
@@ -38,7 +47,11 @@ public class ScheduleNewsletterDelegate {
 		List<Versandinformation> vorhandene = versandinfoService
 			.getVersandinformationenZuNewsletter(newsletterID);
 
-		Optional<Versandinformation> optDiejenige = vorhandene.stream().filter(v -> auftrag.emfaengertyp() == v.empfaengertyp())
+		List<Versandinformation> nichtZumTestGesendete = vorhandene.stream().filter(v -> Empfaengertyp.TEST != v.empfaengertyp())
+			.collect(Collectors.toList());
+
+		Optional<Versandinformation> optDiejenige = nichtZumTestGesendete.stream()
+			.filter(v -> auftrag.emfaengertyp() == v.empfaengertyp())
 			.findFirst();
 
 		if (optDiejenige.isPresent()) {
@@ -47,9 +60,40 @@ public class ScheduleNewsletterDelegate {
 
 		}
 
+		if (Empfaengertyp.ALLE == auftrag.emfaengertyp() && !nichtZumTestGesendete.isEmpty()) {
+
+			return nichtZumTestGesendete.get(0);
+		}
+
+		if (auftrag.emfaengertyp() == Empfaengertyp.LEHRER || auftrag.emfaengertyp() == Empfaengertyp.PRIVATVERANSTALTER) {
+
+			Optional<Versandinformation> optAnAlleGesendete = nichtZumTestGesendete.stream()
+				.filter(v -> Empfaengertyp.ALLE == v.empfaengertyp())
+				.findFirst();
+
+			if (optAnAlleGesendete.isPresent()) {
+
+				return optAnAlleGesendete.get();
+
+			}
+
+		}
+
 		Versandinformation versandinformation = new Versandinformation()
 			.withEmpfaengertyp(auftrag.emfaengertyp())
 			.withNewsletterID(newsletterID);
+
+		if (auftrag.emfaengertyp() == Empfaengertyp.TEST) {
+
+			Optional<Versandinformation> optTest = vorhandene.stream()
+				.filter(v -> auftrag.emfaengertyp() == v.empfaengertyp())
+				.findFirst();
+
+			if (optTest.isPresent()) {
+
+				versandinformation = optTest.get();
+			}
+		}
 
 		return versandinfoService.versandinformationSpeichern(versandinformation);
 	}

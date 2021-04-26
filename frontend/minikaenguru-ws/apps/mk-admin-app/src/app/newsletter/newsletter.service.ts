@@ -60,13 +60,12 @@ export class NewsletterService {
 
 	}
 
-	public scheduleMailversand(auftrag: NewsletterVersandauftrag): Observable<Versandinfo> {
+	public scheduleMailversand(auftrag: NewsletterVersandauftrag): Observable<ResponsePayload> {
 
 		const url = environment.apiUrl + '/newsletterversand';
 
 		return this.http.post(url, auftrag).pipe(
-			map(body => body as ResponsePayload),
-			map(payload => payload.data)
+			map(body => body as ResponsePayload)
 		);
 
 	}

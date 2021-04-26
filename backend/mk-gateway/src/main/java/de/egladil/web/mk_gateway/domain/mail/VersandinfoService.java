@@ -10,6 +10,7 @@ import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.mail.api.VersandinfoAPIModel;
 import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandFinished;
 import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandProgress;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.VersandinformationenHibernateRepository;
 
 /**
  * VersandinfoService
@@ -35,6 +37,13 @@ public class VersandinfoService {
 
 		VersandinfoService result = new VersandinfoService();
 		result.versandinfoRepo = repo;
+		return result;
+	}
+
+	public static VersandinfoService createForIntegrationTest(final EntityManager entityManager) {
+
+		VersandinfoService result = new VersandinfoService();
+		result.versandinfoRepo = VersandinformationenHibernateRepository.createForTest(entityManager);
 		return result;
 	}
 
