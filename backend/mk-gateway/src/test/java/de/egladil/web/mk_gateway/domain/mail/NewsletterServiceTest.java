@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.mail.api.NewsletterAPIModel;
@@ -159,11 +160,10 @@ public class NewsletterServiceTest extends AbstractDomainServiceTest {
 		newsletterService.withMockedScheduleNewsletterDelegate(scheduleDelegate);
 
 		// Act
-		VersandinfoAPIModel model = newsletterService.scheduleAndStartMailversand(auftrag);
-
-		// waitQuietly(15);
+		ResponsePayload responsePayload = newsletterService.scheduleAndStartMailversand(auftrag);
 
 		// Assert
+		VersandinfoAPIModel model = (VersandinfoAPIModel) responsePayload.getData();
 		assertEquals(VERSANDINFO_LEHRER_UUID, model.uuid());
 		assertEquals(NEWSLETTER_LEHRER_UUID, model.newsletterID());
 		assertNull(model.versandBeendetAm());

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { LogService } from '@minikaenguru-ws/common-logging';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ResponsePayload, Message } from '@minikaenguru-ws/common-messages';
 import { Newsletter, NewsletterVersandauftrag, Versandinfo } from './newsletter.model';
@@ -60,13 +60,30 @@ export class NewsletterService {
 
 	}
 
-	public scheduleMailversand(auftrag: NewsletterVersandauftrag): Observable<Versandinfo> {
+	public scheduleMailversand(auftrag: NewsletterVersandauftrag): Observable<ResponsePayload> {
 
 		const url = environment.apiUrl + '/newsletterversand';
 
 		return this.http.post(url, auftrag).pipe(
+			map(body => body as ResponsePayload)
+		);
+
+	}
+
+	public getStatusNewsletterversand(versandinfo: Versandinfo): Observable<Versandinfo> {
+
+		const url = environment.apiUrl + '/newsletterversand/' + versandinfo.uuid;
+
+		return this.http.get(url).pipe(
 			map(body => body as ResponsePayload),
-			map(payload => payload.data)
+			map(payload => {
+
+				if (payload.message.level === 'INFO') {
+					return payload.data
+				}
+
+				return of(undefined);
+			})
 		);
 
 	}

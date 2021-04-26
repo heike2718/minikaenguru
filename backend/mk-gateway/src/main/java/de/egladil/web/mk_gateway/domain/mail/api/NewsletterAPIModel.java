@@ -75,4 +75,16 @@ public class NewsletterAPIModel {
 
 		return versandinfoIDs;
 	}
+
+	public NewsletterAPIModel withBetreff(final String betreff) {
+
+		this.betreff = betreff;
+		return this;
+	}
+
+	public NewsletterAPIModel withText(final String text) {
+
+		this.text = text;
+		return this;
+	}
 }

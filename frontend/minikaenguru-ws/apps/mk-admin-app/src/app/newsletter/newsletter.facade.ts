@@ -3,12 +3,13 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
 import * as NewsletterActions from './+state/newsletter.actions';
 import * as NewsletterSelectors from './+state/newsletter.selectors';
-import { Observable } from 'rxjs';
-import { Newsletter, Empfaengertyp, NewsletterVersandauftrag } from './newsletter.model';
+import { Observable, timer, Subject } from 'rxjs';
+import { Newsletter, Empfaengertyp, NewsletterVersandauftrag, Versandinfo, VersandinfoMap } from './newsletter.model';
 import { NewsletterService } from './newsletter.service';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
 import { Router } from '@angular/router';
 import { MessageService } from '@minikaenguru-ws/common-messages';
+import { switchMap, retry, share, takeUntil } from 'rxjs/operators';
 
 
 
@@ -23,8 +24,11 @@ export class NewsletterFacade {
 	public newsletters$: Observable<Newsletter[]> = this.store.select(NewsletterSelectors.newsletters);
 	public newslettersLoaded$: Observable<boolean> = this.store.select(NewsletterSelectors.newslettersLoaded);
 	public selectedNewsletter$: Observable<Newsletter> = this.store.select(NewsletterSelectors.selectedNewsletter);
+	public versandinfo$: Observable<Versandinfo> = this.store.select(NewsletterSelectors.versandinfo);
 
 	public empfaengertypen: string[] = ['', 'TEST', 'ALLE', 'LEHRER', 'PRIVATVERANSTALTER'];
+
+	private stopPolling = new Subject();
 
 	constructor(private store: Store<AppState>,
 		private newsletterService: NewsletterService,
@@ -32,7 +36,6 @@ export class NewsletterFacade {
 		private messageService: MessageService,
 		private router: Router
 	) { }
-
 
 	public createNewNewsletter(): void {
 
@@ -130,9 +133,19 @@ export class NewsletterFacade {
 
 		this.newsletterService.scheduleMailversand(auftrag).subscribe(
 
-			versandinfo => {
+			responsePayload => {
+
+				let versandinfo: Versandinfo;
+
+				if (responsePayload.data) {
+					versandinfo = responsePayload.data;
+				}
+
 				this.store.dispatch(NewsletterActions.mailversandScheduled({ versandinfo: versandinfo }));
-				this.messageService.info('Mailversand angeleiert');
+				this.messageService.showMessage(responsePayload.message);
+				if (responsePayload.message.level === 'INFO') {
+					this.startPollVersandinfo(versandinfo);
+				}
 			},
 			(error => {
 				this.store.dispatch(NewsletterActions.backendCallFinishedWithError());
@@ -146,4 +159,50 @@ export class NewsletterFacade {
 		this.store.dispatch(NewsletterActions.resetNewsletters());
 	}
 
+
+	public startPollVersandinfo(versandinfo: Versandinfo): void {
+
+		const optVersandinfo: Observable<Versandinfo> = timer(1, 10000).pipe(
+			switchMap(() => this.newsletterService.getStatusNewsletterversand(versandinfo)),
+			retry(),
+			share(),
+			takeUntil(this.stopPolling)
+		);
+
+		optVersandinfo.subscribe(
+			info => {
+				this.store.dispatch(NewsletterActions.versandinfoAktualisiert({ versandinfo: info }));
+
+				if (!info) {
+					this.propagateVersandBeendet(undefined);
+				} else {
+					if (info.versandBeendetAm) {
+						this.propagateVersandBeendet(info.versandBeendetAm);
+					}
+				}
+			},
+			(error => {
+				this.stopPollVersandinfo();
+				this.errorHandler.handleError(error);
+			})
+		);
+	}
+
+	private propagateVersandBeendet(am: string): void {
+
+		this.stopPollVersandinfo();
+
+		if (am) {
+			this.messageService.info('Mailversand beendet ' + am);
+		} else {
+			this.messageService.info('Mailversand beendet');
+		}
+
+		this.store.dispatch(NewsletterActions.versandBeendet());
+	}
+
+	public stopPollVersandinfo(): void {
+
+		this.stopPolling.next();
+	}
 };

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
 import { NewsletterFacade } from '../newsletter.facade';
@@ -8,17 +8,12 @@ import { NewsletterFacade } from '../newsletter.facade';
 	templateUrl: './newsletter-list.component.html',
 	styleUrls: ['./newsletter-list.component.css']
 })
-export class NewsletterListComponent implements OnInit {
+export class NewsletterListComponent {
 
 	devMode = environment.envName === 'DEV'
 
 	constructor(private router: Router,
 		public newsletterFacade: NewsletterFacade) { }
-
-	ngOnInit(): void {
-
-		console.log('entered NewsletterListComponent');
-	}
 
 	loadNewsletters(): void {
 		this.newsletterFacade.loadNewsletters();

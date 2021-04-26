@@ -39,8 +39,6 @@ public class NewsletterTask implements Runnable {
 
 	private final List<List<String>> mailempfaengerGruppen;
 
-	private final AdminEmailsConfiguration mailConfiguration;
-
 	private final AdminMailService mailService;
 
 	private final Event<NewsletterversandProgress> versandProgress;
@@ -51,7 +49,6 @@ public class NewsletterTask implements Runnable {
 
 	public NewsletterTask(final NewsletterService newsletterService, final Newsletter newsletter, final Versandinformation versandinformation, final List<List<String>> mailempfaengerGruppen) {
 
-		this.mailConfiguration = newsletterService.mailConfiguration;
 		this.mailService = newsletterService.mailService;
 		this.versandFailedEvent = newsletterService.versandFailedEvent;
 		this.versandFinished = newsletterService.versandFinished;
@@ -208,6 +205,8 @@ public class NewsletterTask implements Runnable {
 	 *
 	 */
 	private void waitQuietly() {
+
+		AdminEmailsConfiguration mailConfiguration = mailService.getMailConfig();
 
 		try {
 
