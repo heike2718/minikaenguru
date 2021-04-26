@@ -45,6 +45,11 @@ export const loesungszettelDeleted = createAction(
 	props<{loesungszettel: Loesungszettel}>()
 );
 
+export const kindDeleted = createAction(
+	'[KinderFacade] deleteKindSuccess',
+	props<{kindUuid: string}>()
+);
+
 export const resetModule = createAction(
 	'[LoesungszettelFacade] resetState'
 );

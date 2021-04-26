@@ -896,10 +896,10 @@ public class PermittedRolesInMemoryRepositoryTest {
 		}
 
 		@Test
-		void should_permittedRollen_getSingleVersandinfo_beOk() {
+		void should_permittedRollen_getVersandInfo_beOk() {
 
 			// Act
-			List<Rolle> rollen = repository.permittedRollen("/admin/newsletters/versandinfo/d34f5-10a5d", HttpMethod.GET);
+			List<Rolle> rollen = repository.permittedRollen("/admin/newsletterversand/d34f5-10a5d", HttpMethod.GET);
 
 			// Assert
 			assertEquals(1, rollen.size());

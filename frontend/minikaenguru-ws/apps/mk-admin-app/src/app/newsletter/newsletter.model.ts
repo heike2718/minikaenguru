@@ -29,7 +29,7 @@ export interface Versandinfo {
 	readonly anzahlAktuellVersendet: number;
 	readonly anzahlEmpaenger: number;
 	readonly versandBegonnenAm: string;
-	readonly versandBeendetAm: string;
+	readonly versandBeendetAm?: string;
 	readonly versandMitFehler: boolean;
 };
 

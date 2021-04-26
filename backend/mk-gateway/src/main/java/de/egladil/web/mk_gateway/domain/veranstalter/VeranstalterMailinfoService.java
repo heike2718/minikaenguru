@@ -9,9 +9,11 @@ import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import de.egladil.web.mk_gateway.domain.mail.AdminEmailsConfiguration;
 import de.egladil.web.mk_gateway.domain.mail.Empfaengertyp;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.VeranstalterHibernateRepository;
 
 /**
  * VeranstalterMailinfoService
@@ -32,6 +34,14 @@ public class VeranstalterMailinfoService {
 		result.mailConfiguration = mailConfiguration;
 		return result;
 
+	}
+
+	public static VeranstalterMailinfoService createForIntegrationTest(final EntityManager entityManager) {
+
+		VeranstalterMailinfoService result = new VeranstalterMailinfoService();
+		result.veranstalterRepository = VeranstalterHibernateRepository.createForIntegrationTest(entityManager);
+		result.mailConfiguration = AdminEmailsConfiguration.createForTest("hdwinkel@egladil.de", 150);
+		return result;
 	}
 
 	/**
@@ -67,6 +77,11 @@ public class VeranstalterMailinfoService {
 		}
 
 		return groups;
+	}
+
+	public AdminEmailsConfiguration getMailConfiguration() {
+
+		return mailConfiguration;
 	}
 
 }

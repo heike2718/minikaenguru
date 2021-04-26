@@ -11,3 +11,4 @@ export const selectedNewsletter = createSelector(newsletterState, s => s.selecte
 export const newslettersLoaded = createSelector(newsletterState, s => s.newslettersLoaded);
 export const loading = createSelector(newsletterState, s => s.loading);
 export const newsletterEditorModel = createSelector(newsletterState, s => s.newsletterEditorModel);
+export const versandinfo = createSelector(newsletterState, s => s.versandinfo);

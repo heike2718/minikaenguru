@@ -41,6 +41,13 @@ public class AdminMailService {
 		return result;
 	}
 
+	public static AdminMailService createForTest(final AdminEmailsConfiguration mailConfig) {
+
+		AdminMailService result = new AdminMailService();
+		result.mailConfig = mailConfig;
+		return result;
+	}
+
 	public static AdminMailService createForTestWithMailException() {
 
 		AdminMailService result = new AdminMailService();
@@ -92,6 +99,11 @@ public class AdminMailService {
 	public boolean isMailSent() {
 
 		return mailSent;
+	}
+
+	AdminEmailsConfiguration getMailConfig() {
+
+		return mailConfig;
 	}
 
 }

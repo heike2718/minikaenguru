@@ -10,17 +10,25 @@ import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.mail.api.VersandinfoAPIModel;
 import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandFinished;
 import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandProgress;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.VersandinformationenHibernateRepository;
 
 /**
  * VersandinfoService
  */
 @ApplicationScoped
 public class VersandinfoService {
+
+	private static final Logger LOG = LoggerFactory.getLogger(VersandinfoService.class);
 
 	@Inject
 	VersandinformationenRepository versandinfoRepo;
@@ -32,6 +40,13 @@ public class VersandinfoService {
 		return result;
 	}
 
+	public static VersandinfoService createForIntegrationTest(final EntityManager entityManager) {
+
+		VersandinfoService result = new VersandinfoService();
+		result.versandinfoRepo = VersandinformationenHibernateRepository.createForTest(entityManager);
+		return result;
+	}
+
 	public List<Versandinformation> getVersandinformationenZuNewsletter(final Identifier newsletterID) {
 
 		if (newsletterID == null) {
@@ -40,6 +55,29 @@ public class VersandinfoService {
 		}
 
 		return versandinfoRepo.findForNewsletter(newsletterID);
+	}
+
+	/**
+	 * Gibt die Versandinfo mit der UUID zurück.
+	 * 
+	 * @param  versandinfoUuid
+	 *                         String
+	 * @return                 Optional
+	 */
+	public Optional<VersandinfoAPIModel> getStatusNewsletterVersand(final String versandinfoUuid) {
+
+		Optional<Versandinformation> optVersandinfo = this.versandinfoRepo.ofId(new Identifier(versandinfoUuid));
+
+		LOG.info("pollen Versandinfo {}", versandinfoUuid);
+
+		if (optVersandinfo.isEmpty()) {
+
+			return Optional.empty();
+		}
+
+		VersandinfoAPIModel apiModel = VersandinfoAPIModel.createFromVersandinfo(optVersandinfo.get());
+
+		return Optional.of(apiModel);
 	}
 
 	@Transactional

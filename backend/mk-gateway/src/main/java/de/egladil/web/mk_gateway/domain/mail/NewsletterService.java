@@ -11,8 +11,11 @@ import java.util.Optional;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
+import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.mail.api.NewsletterAPIModel;
@@ -22,6 +25,7 @@ import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandFailed;
 import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandFinished;
 import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandProgress;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterMailinfoService;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.NewsletterHibernateRepository;
 
 /**
  * NewsletterService
@@ -45,9 +49,6 @@ public class NewsletterService {
 	AdminMailService mailService;
 
 	@Inject
-	AdminEmailsConfiguration mailConfiguration;
-
-	@Inject
 	Event<NewsletterversandFailed> versandFailedEvent;
 
 	@Inject
@@ -63,10 +64,20 @@ public class NewsletterService {
 		result.versandinfoService = versandinfoService;
 		result.scheduleNewsletterDelegate = ScheduleNewsletterDelegate.createForTest(versandinfoService);
 		result.veranstalterMailinfoService = veranstalterMailinfoService;
-		result.mailConfiguration = AdminEmailsConfiguration.createForTest("hdwinkel@egladil.de", 3);
 		result.mailService = mailService;
 		return result;
 
+	}
+
+	public static NewsletterService createForIntegrationTest(final EntityManager entityManager) {
+
+		NewsletterService result = new NewsletterService();
+		result.newsletterRepositiory = NewsletterHibernateRepository.createForIntegrationTest(entityManager);
+		result.versandinfoService = VersandinfoService.createForIntegrationTest(entityManager);
+		result.scheduleNewsletterDelegate = ScheduleNewsletterDelegate.createForIntegrationTest(entityManager);
+		result.veranstalterMailinfoService = VeranstalterMailinfoService.createForIntegrationTest(entityManager);
+		result.mailService = AdminMailService.createForTest(result.veranstalterMailinfoService.getMailConfiguration());
+		return result;
 	}
 
 	NewsletterService withMockedScheduleNewsletterDelegate(final ScheduleNewsletterDelegate scheduleNewsletterDelegate) {
@@ -131,13 +142,22 @@ public class NewsletterService {
 		return NewsletterAPIModel.createFromNewsletter(persistierter);
 	}
 
-	public VersandinfoAPIModel scheduleAndStartMailversand(final NewsletterVersandauftrag auftrag) {
+	/**
+	 * Startet den Mailversand asynchron.
+	 * 
+	 * @param  auftrag
+	 * @return         ResponsePayload
+	 */
+	public ResponsePayload scheduleAndStartMailversand(final NewsletterVersandauftrag auftrag) {
 
 		Versandinformation versandinformation = this.scheduleNewsletterDelegate.scheduleMailversand(auftrag);
 
 		if (versandinformation.bereitsVersendet()) {
 
-			return VersandinfoAPIModel.createFromVersandinfo(versandinformation);
+			return new ResponsePayload(
+				MessagePayload.warn("Newsletter wurde bereits am " + versandinformation.versandBeendetAm()
+					+ " an " + versandinformation.empfaengertyp() + " versendet"),
+				VersandinfoAPIModel.createFromVersandinfo(versandinformation));
 		}
 
 		Optional<Newsletter> optNewsletter = this.newsletterRepositiory.ofId(new Identifier(auftrag.newsletterID()));
@@ -160,7 +180,9 @@ public class NewsletterService {
 
 		sendMailDelegate.mailsVersenden(task);
 
-		return VersandinfoAPIModel.createFromVersandinfo(versandinformation);
+		return new ResponsePayload(MessagePayload.info(
+			"Versand an " + versandinformation.empfaengertyp() + " begonnen "),
+			VersandinfoAPIModel.createFromVersandinfo(versandinformation));
 	}
 
 	@Transactional
