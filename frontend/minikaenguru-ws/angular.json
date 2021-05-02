@@ -527,6 +527,153 @@
           }
         }
       }
+    },
+    "mk-open-data-app": {
+      "projectType": "application",
+      "root": "apps/mk-open-data-app",
+      "sourceRoot": "apps/mk-open-data-app/src",
+      "prefix": "mkod",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/mk-open-data-app",
+            "index": "apps/mk-open-data-app/src/index.html",
+            "main": "apps/mk-open-data-app/src/main.ts",
+            "polyfills": "apps/mk-open-data-app/src/polyfills.ts",
+            "tsConfig": "apps/mk-open-data-app/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "apps/mk-open-data-app/src/favicon.ico",
+              "apps/mk-open-data-app/src/assets"
+            ],
+            "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/bootstrap/dist/css/bootstrap-grid.min.css",
+              "node_modules/font-awesome/css/font-awesome.min.css",
+			  "apps/mk-open-data-app/src/styles.css"
+			],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/mk-open-data-app/src/environments/environment.ts",
+                  "with": "apps/mk-open-data-app/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            },
+            "a300": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/mk-open-data-app/src/environments/environment.ts",
+                  "with": "build-env/mk-open-data-app/environment-a300.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "mk-open-data-app:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "mk-open-data-app:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "mk-open-data-app:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/mk-open-data-app/src/**/*.ts",
+              "apps/mk-open-data-app/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/mk-open-data-app"],
+          "options": {
+            "jestConfig": "apps/mk-open-data-app/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "mk-open-data-app-e2e": {
+      "root": "apps/mk-open-data-app-e2e",
+      "sourceRoot": "apps/mk-open-data-app-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/mk-open-data-app-e2e/cypress.json",
+            "tsConfig": "apps/mk-open-data-app-e2e/tsconfig.e2e.json",
+            "devServerTarget": "mk-open-data-app:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "mk-open-data-app:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/mk-open-data-app-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
     }
   },
   "cli": {
