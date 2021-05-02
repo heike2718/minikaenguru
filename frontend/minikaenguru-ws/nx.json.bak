@@ -1,0 +1,63 @@
+{
+  "npmScope": "minikaenguru-ws",
+  "implicitDependencies": {
+    "angular.json": "*",
+    "package.json": {
+      "dependencies": "*",
+      "devDependencies": "*"
+    },
+    "tsconfig.json": "*",
+    "tslint.json": "*",
+    "nx.json": "*"
+  },
+  "projects": {
+    "mkv-app": {
+      "tags": ["domain:mkv-app", "type:app"]
+    },
+    "mkv-app-e2e": {
+      "tags": [],
+      "implicitDependencies": ["mkv-app"]
+    },
+    "mk-admin-app": {
+      "tags": ["domain:mk-admin-app", "type:app"]
+    },
+    "mk-admin-app-e2e": {
+      "tags": [],
+      "implicitDependencies": ["mk-admin-app"]
+    },
+    "mk-open-data-app": {
+      "tags": ["domain:mk-open-data-app", "type:app"]
+    },
+    "common-schulkatalog": {
+      "tags": []
+    },
+    "shared-util-messages": {
+      "tags": []
+    },
+    "shared-util-logging": {
+      "tags": []
+    },
+    "common-messages": {
+      "tags": []
+    },
+    "common-logging": {
+      "tags": []
+    },
+    "test-lib": {
+      "tags": []
+    },
+    "common-auth": {
+      "tags": []
+    },
+    "common-components": {
+      "tags": []
+    },
+    "mk-admin-app": {
+      "tags": []
+    },
+    "mk-admin-app-e2e": {
+      "tags": [],
+      "implicitDependencies": ["mk-admin-app"]
+    }
+  }
+}
