@@ -41,6 +41,18 @@ public enum Klassenstufe {
 			return 3;
 		}
 
+		@Override
+		public int getMaximalpunktzahlMal100() {
+
+			return 3600;
+		}
+
+		@Override
+		public int getMinimalesWettbewerbsjahrMitStatistik() {
+
+			return 2019;
+		}
+
 	},
 	EINS("Klasse 1", "1") {
 		@Override
@@ -60,6 +72,18 @@ public enum Klassenstufe {
 		public int getAnzahlAufgabenInKategorien() {
 
 			return 4;
+		}
+
+		@Override
+		public int getMaximalpunktzahlMal100() {
+
+			return 6000;
+		}
+
+		@Override
+		public int getMinimalesWettbewerbsjahrMitStatistik() {
+
+			return 2014;
 		}
 
 	},
@@ -82,6 +106,18 @@ public enum Klassenstufe {
 		public int getAnzahlAufgabenInKategorien() {
 
 			return 5;
+		}
+
+		@Override
+		public int getMaximalpunktzahlMal100() {
+
+			return 7500;
+		}
+
+		@Override
+		public int getMinimalesWettbewerbsjahrMitStatistik() {
+
+			return 2010;
 		}
 
 	};
@@ -112,6 +148,10 @@ public enum Klassenstufe {
 	public abstract int getStartguthaben();
 
 	public abstract int getAnzahlAufgabenInKategorien();
+
+	public abstract int getMaximalpunktzahlMal100();
+
+	public abstract int getMinimalesWettbewerbsjahrMitStatistik();
 
 	public int getAnzahlSpalten() {
 
@@ -189,6 +229,35 @@ public enum Klassenstufe {
 			return null;
 		}
 		return aufgabennummern.size() + ",00";
+	}
+
+	public static Klassenstufe valueOfNumericString(final String value) {
+
+		int intVal = 0;
+
+		try {
+
+			intVal = Integer.valueOf(value);
+		} catch (NumberFormatException e) {
+
+			return null;
+		}
+
+		switch (intVal) {
+
+		case 0:
+			return Klassenstufe.IKID;
+
+		case 1:
+			return Klassenstufe.EINS;
+
+		case 2:
+			return Klassenstufe.ZWEI;
+
+		default:
+			return null;
+		}
+
 	}
 
 }
