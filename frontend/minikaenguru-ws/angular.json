@@ -528,30 +528,30 @@
         }
       }
     },
-    "mk-open-data-app": {
+    "mkod-app": {
       "projectType": "application",
-      "root": "apps/mk-open-data-app",
-      "sourceRoot": "apps/mk-open-data-app/src",
+      "root": "apps/mkod-app",
+      "sourceRoot": "apps/mkod-app/src",
       "prefix": "mkod",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/apps/mk-open-data-app",
-            "index": "apps/mk-open-data-app/src/index.html",
-            "main": "apps/mk-open-data-app/src/main.ts",
-            "polyfills": "apps/mk-open-data-app/src/polyfills.ts",
-            "tsConfig": "apps/mk-open-data-app/tsconfig.app.json",
+            "outputPath": "dist/apps/mkod-app",
+            "index": "apps/mkod-app/src/index.html",
+            "main": "apps/mkod-app/src/main.ts",
+            "polyfills": "apps/mkod-app/src/polyfills.ts",
+            "tsConfig": "apps/mkod-app/tsconfig.app.json",
             "aot": true,
             "assets": [
-              "apps/mk-open-data-app/src/favicon.ico",
-              "apps/mk-open-data-app/src/assets"
+              "apps/mkod-app/src/favicon.ico",
+              "apps/mkod-app/src/assets"
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/bootstrap/dist/css/bootstrap-grid.min.css",
               "node_modules/font-awesome/css/font-awesome.min.css",
-			  "apps/mk-open-data-app/src/styles.css"
+			  "apps/mkod-app/src/styles.css"
 			],
             "scripts": []
           },
@@ -559,8 +559,8 @@
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "apps/mk-open-data-app/src/environments/environment.ts",
-                  "with": "apps/mk-open-data-app/src/environments/environment.prod.ts"
+                  "replace": "apps/mkod-app/src/environments/environment.ts",
+                  "with": "apps/mkod-app/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -586,8 +586,8 @@
             "a300": {
               "fileReplacements": [
                 {
-                  "replace": "apps/mk-open-data-app/src/environments/environment.ts",
-                  "with": "build-env/mk-open-data-app/environment-a300.ts"
+                  "replace": "apps/mkod-app/src/environments/environment.ts",
+                  "with": "build-env/mkod-app/environment-a300.ts"
                 }
               ],
               "optimization": true,
@@ -616,61 +616,61 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "mk-open-data-app:build"
+            "browserTarget": "mkod-app:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "mk-open-data-app:build:production"
+              "browserTarget": "mkod-app:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "mk-open-data-app:build"
+            "browserTarget": "mkod-app:build"
           }
         },
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": [
-              "apps/mk-open-data-app/src/**/*.ts",
-              "apps/mk-open-data-app/src/**/*.html"
+              "apps/mkod-app/src/**/*.ts",
+              "apps/mkod-app/src/**/*.html"
             ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/mk-open-data-app"],
+          "outputs": ["coverage/apps/mkod-app"],
           "options": {
-            "jestConfig": "apps/mk-open-data-app/jest.config.js",
+            "jestConfig": "apps/mkod-app/jest.config.js",
             "passWithNoTests": true
           }
         }
       }
     },
-    "mk-open-data-app-e2e": {
-      "root": "apps/mk-open-data-app-e2e",
-      "sourceRoot": "apps/mk-open-data-app-e2e/src",
+    "mkod-app-e2e": {
+      "root": "apps/mkod-app-e2e",
+      "sourceRoot": "apps/mkod-app-e2e/src",
       "projectType": "application",
       "architect": {
         "e2e": {
           "builder": "@nrwl/cypress:cypress",
           "options": {
-            "cypressConfig": "apps/mk-open-data-app-e2e/cypress.json",
-            "tsConfig": "apps/mk-open-data-app-e2e/tsconfig.e2e.json",
-            "devServerTarget": "mk-open-data-app:serve"
+            "cypressConfig": "apps/mkod-app-e2e/cypress.json",
+            "tsConfig": "apps/mkod-app-e2e/tsconfig.e2e.json",
+            "devServerTarget": "mkod-app:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "mk-open-data-app:serve:production"
+              "devServerTarget": "mkod-app:serve:production"
             }
           }
         },
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/mk-open-data-app-e2e/**/*.{js,ts}"]
+            "lintFilePatterns": ["apps/mkod-app-e2e/**/*.{js,ts}"]
           }
         }
       }
