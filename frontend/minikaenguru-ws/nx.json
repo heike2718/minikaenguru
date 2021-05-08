@@ -25,6 +25,13 @@
       "tags": [],
       "implicitDependencies": ["mk-admin-app"]
     },
+    "mkod-app": {
+      "tags": ["domain:mkod-app", "type:app"]
+    },
+    "mkod-app-e2e": {
+      "tags": [],
+      "implicitDependencies": ["mkod-app"]
+    },
     "common-schulkatalog": {
       "tags": []
     },
@@ -48,18 +55,6 @@
     },
     "common-components": {
       "tags": []
-    },
-    "mk-admin-app": {
-      "tags": []
-    },
-    "mk-admin-app-e2e": {
-      "tags": [],
-      "implicitDependencies": ["mk-admin-app"]
-	},
-    "mk-open-data-app": { "tags": [] },
-    "mk-open-data-app-e2e": {
-      "tags": [],
-      "implicitDependencies": ["mk-open-data-app"]
     }
   }
 }
