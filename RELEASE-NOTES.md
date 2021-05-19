@@ -1,5 +1,13 @@
 # authprovider Release Notes
 
+__Release 1.4.6__:
+
+* [create an open-data-app](https://github.com/heike2718/minikaenguru/issues/302)
+* [Open-Data-Schnittstelle zum Berechnen des Prozentrangs für eine gegebene Punktzahl im Jahr x mit Klassenstufe y](https://github.com/heike2718/minikaenguru/issues/172)
+* [Newsletters: Fortschrittsanzeige durch pollen auf Versandinformation](https://github.com/heike2718/minikaenguru/issues/205)
+* [Encoding-Problem beim Herunterladen des Eventlogs](https://github.com/heike2718/minikaenguru/issues/299)
+* [Nach dem Löschen eines Kindes wird die Kinderliste nicht aktualisiert](https://github.com/heike2718/minikaenguru/issues/288)
+
 __Release 1.4.5__:
 
 * [Transaktionsmanagement Kösungszettel Löschen gefixed](https://github.com/heike2718/minikaenguru/issues/291)
