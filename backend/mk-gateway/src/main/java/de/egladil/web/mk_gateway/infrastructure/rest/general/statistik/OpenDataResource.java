@@ -17,8 +17,13 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.exception.InvalidInputException;
 import de.egladil.web.commons_validation.payload.MessagePayload;
@@ -26,9 +31,12 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.statistik.GesamtpunktverteilungKlassenstufe;
+import de.egladil.web.mk_gateway.domain.statistik.ProzentrangEinzelpunktzahlService;
 import de.egladil.web.mk_gateway.domain.statistik.StatistikWettbewerbService;
 import de.egladil.web.mk_gateway.domain.statistik.api.AnmeldungenAPIModel;
 import de.egladil.web.mk_gateway.domain.statistik.api.MedianeAPIModel;
+import de.egladil.web.mk_gateway.domain.statistik.api.ProzentrangAPIModel;
+import de.egladil.web.mk_gateway.domain.statistik.functions.StringPunkteMapper;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 
@@ -40,10 +48,15 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 @Consumes(MediaType.APPLICATION_JSON)
 public class OpenDataResource {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(OpenDataResource.class);
+
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
 	@Inject
 	StatistikWettbewerbService statistikWettbewerbService;
+
+	@Inject
+	ProzentrangEinzelpunktzahlService prozentrangService;
 
 	@GET
 	@Produces({ MediaType.APPLICATION_XML })
@@ -160,6 +173,67 @@ public class OpenDataResource {
 		return Response.ok(new ResponsePayload(MessagePayload.ok(), anmeldungen)).build();
 	}
 
+	@GET
+	@Path("statistik/prozentrang")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getProzentrang(@QueryParam(value = "jahr") final String jahr, @QueryParam(
+		value = "klasse") final String klasse, @QueryParam(
+			value = "punkte") final String punkte) {
+
+		String fehlertext = "Die Anfrage ist ungültig: jahr muss eine Zahl ab 2010 sein, Klasse muss eins von IKID (0), EINS (1) oder ZWEI (2) sein, Punkte werden in der Form 56,5 erwartet. Beispiel  /open-data/statistik/prozentrang?jahr=2019&klasse=ZWEI&punkte=56,5";
+
+		String eingabeparameter = "getProzentrang()- Fehlerhafte Eingabe: jahr=" + jahr + ", klasse=" + klasse + ", punkte="
+			+ punkte;
+
+		Integer wettbewerbsjahr = null;
+
+		try {
+
+			wettbewerbsjahr = Integer.valueOf(jahr);
+		} catch (NumberFormatException e) {
+
+			throw this.createInvalidInputException(fehlertext, eingabeparameter);
+		}
+
+		Integer punkteMal100 = new StringPunkteMapper().apply(punkte);
+
+		if (punkteMal100 == null) {
+
+			throw this.createInvalidInputException(fehlertext, eingabeparameter);
+		}
+
+		if (StringUtils.isAllBlank(klasse)) {
+
+			throw this.createInvalidInputException(fehlertext, eingabeparameter);
+		}
+
+		Klassenstufe klassenstufe = Klassenstufe.valueOfNumericString(klasse);
+
+		if (klassenstufe == null) {
+
+			try {
+
+				klassenstufe = Klassenstufe.valueOf(klasse.toUpperCase());
+			} catch (IllegalArgumentException e1) {
+
+				throw this.createInvalidInputException(fehlertext, eingabeparameter);
+			}
+		}
+
+		ProzentrangAPIModel responseData = this.prozentrangService.berechneProzentrang(wettbewerbsjahr, klassenstufe,
+			punkteMal100.intValue());
+
+		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), responseData);
+		return Response.ok(responsePayload).build();
+	}
+
+	private InvalidInputException createInvalidInputException(final String fehlertext, final String eingabeparameter) {
+
+		LOGGER.error(eingabeparameter);
+		return new InvalidInputException(
+			ResponsePayload.messageOnly(MessagePayload.error(fehlertext)));
+	}
+
 	private Response checkJahr(final String jahr, final String path) {
 
 		try {
@@ -200,7 +274,6 @@ public class OpenDataResource {
 		}
 
 		return Response.ok(optVerteilung.get()).build();
-
 	}
 
 }

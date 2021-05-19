@@ -56,7 +56,7 @@ public class SchulinfosResource {
 	@Consumes(MediaType.TEXT_PLAIN)
 	public Response loadSchulen(@Kuerzel final String kommaseparierteKuerzel) {
 
-		LOG.info(StringUtils.abbreviate(kommaseparierteKuerzel, 30));
+		LOG.debug(StringUtils.abbreviate(kommaseparierteKuerzel, 30));
 
 		List<SchuleAPIModel> trefferliste = katalogFacade.findSchulen(kommaseparierteKuerzel);
 

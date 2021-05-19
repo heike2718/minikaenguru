@@ -527,6 +527,153 @@
           }
         }
       }
+    },
+    "mkod-app": {
+      "projectType": "application",
+      "root": "apps/mkod-app",
+      "sourceRoot": "apps/mkod-app/src",
+      "prefix": "mkod",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/mkod-app",
+            "index": "apps/mkod-app/src/index.html",
+            "main": "apps/mkod-app/src/main.ts",
+            "polyfills": "apps/mkod-app/src/polyfills.ts",
+            "tsConfig": "apps/mkod-app/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "apps/mkod-app/src/favicon.ico",
+              "apps/mkod-app/src/assets"
+            ],
+            "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/bootstrap/dist/css/bootstrap-grid.min.css",
+              "node_modules/font-awesome/css/font-awesome.min.css",
+			  "apps/mkod-app/src/styles.css"
+			],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/mkod-app/src/environments/environment.ts",
+                  "with": "apps/mkod-app/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            },
+            "a300": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/mkod-app/src/environments/environment.ts",
+                  "with": "build-env/mkod-app/environment-a300.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "mkod-app:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "mkod-app:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "mkod-app:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/mkod-app/src/**/*.ts",
+              "apps/mkod-app/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/mkod-app"],
+          "options": {
+            "jestConfig": "apps/mkod-app/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "mkod-app-e2e": {
+      "root": "apps/mkod-app-e2e",
+      "sourceRoot": "apps/mkod-app-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/mkod-app-e2e/cypress.json",
+            "tsConfig": "apps/mkod-app-e2e/tsconfig.e2e.json",
+            "devServerTarget": "mkod-app:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "mkod-app:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/mkod-app-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
     }
   },
   "cli": {

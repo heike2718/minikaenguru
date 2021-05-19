@@ -14,6 +14,7 @@ import javax.ws.rs.HttpMethod;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**
@@ -909,7 +910,7 @@ public class PermittedRolesInMemoryRepositoryTest {
 	}
 
 	@Nested
-	class CommonAPITest {
+	class OpenDataTests {
 
 		@Test
 		void should_permittedRollen_notContain_readVersion() {
@@ -927,6 +928,40 @@ public class PermittedRolesInMemoryRepositoryTest {
 		void should_permittedRollen_notContain_readAktuellenWettbewerb() {
 
 			assertTrue(repository.permittedRollen("/wettbewerb/aktueller", HttpMethod.GET).isEmpty());
+		}
+
+		@Test
+		void should_permittedRollen_notContain_readStatistiAnmeldungen() {
+
+			assertTrue(repository.permittedRollen("/open-data/statistik/anmeldungen", HttpMethod.GET).isEmpty());
+		}
+
+		@Test
+		void should_permittedRollen_notContain_readAuswertungXml() {
+
+			for (Klassenstufe klassenstufe : Klassenstufe.values()) {
+
+				assertTrue("Fehler bei Klassenstufe " + klassenstufe, repository
+					.permittedRollen("/open-data/statistik/2019/" + klassenstufe.toString() + "/xml", HttpMethod.GET).isEmpty());
+			}
+		}
+
+		@Test
+		void should_permittedRollen_notContain_readStatistikMediane() {
+
+			assertTrue(repository.permittedRollen("/open-data/statistik/2017/mediane", HttpMethod.GET).isEmpty());
+		}
+
+		@Test
+		void should_permittedRollen_notContain_readStatistikPdf() {
+
+			assertTrue(repository.permittedRollen("/open-data/statistik/2017/pdf", HttpMethod.GET).isEmpty());
+		}
+
+		@Test
+		void should_permittedRollen_notContain_readProzentrang() {
+
+			assertTrue(repository.permittedRollen("/open-data/statistik/prozentrang/2020/EINS/5000", HttpMethod.GET).isEmpty());
 		}
 	}
 }

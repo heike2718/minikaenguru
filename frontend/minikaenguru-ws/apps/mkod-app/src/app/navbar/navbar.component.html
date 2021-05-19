@@ -1,0 +1,25 @@
+<nav class="navbar navbar-expand-md navbar-dark navbar-static-top bg-dark header-nav">
+	<button class="navbar-toggler d-lg-none" id="navbarToggler" type="button" (click)="collapsed = !collapsed"
+		[attr.aria-expanded]="!collapsed" aria-controls="navbarsExampleDefault" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+
+	<div id="navbarSupportedContent" class="collapse navbar-collapse" [class.collapse]="collapsed"
+		(window:resize)="collapsed = true">
+		<ul class="navbar-nav mr-auto">
+
+			<li routerLinkActive="active"><a routerLink="/" (click)="collapseNav()" class="nav-link" title="Startseite">
+					<span class="fa fa-home fa-1x" aria-hidden="true"></span> Minikänguru - Statistik </a></li>
+
+		</ul>
+
+		<ul class="nav navbar-nav navbar-right">
+			<li class="nav-link">Willkommen, Gast!</li>
+
+			<li routerLinkActive="active"><a routerLink="/anmeldungen" (click)="collapseNav()"
+					class="nav-link" title="Anmeldungen zum laufenden Wettbewerb">
+					<span class="fa fa-handshake-o fa-1x" aria-hidden="true"></span> Anmeldungen </a></li>
+		</ul>
+
+	</div>
+</nav>
