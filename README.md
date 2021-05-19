@@ -1,8 +1,14 @@
-# minikaenguru
+i# minikaenguru
 
 Monorepo für alles, was mit Minikänguru zu tun hat.
 
-## Milesotone 4 ist fertig
+## Release 1.4.6 ist fertig
+
+### Neue Anwendung mit aufbereiteten Statistikdaten
+
+[MkOpenDataApp](https://mathe-jung-alt.de/mkod-app)
+
+Momentan nur die  Anmeldungszahlen des aktuellen Wettbewerbs.
 
 Folgende Funktionen stehen zur Verfügung:
 
