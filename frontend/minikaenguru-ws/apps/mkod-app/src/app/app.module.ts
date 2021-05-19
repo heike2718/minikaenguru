@@ -27,6 +27,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { LandingComponent } from './landing/landing.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { GlobalErrorHandlerService } from './infrastructure/global-error-handler.service';
+import { AnmeldungenModule } from './anmeldungen/anmeldungen.module';
 
 registerLocaleData(localeDe);
 
@@ -68,6 +69,7 @@ registerLocaleData(localeDe);
 				strictActionWithinNgZone: true
 			}
 		}),
+		AnmeldungenModule,
 		EffectsModule.forRoot([]),
 		StoreRouterConnectingModule.forRoot({
 			stateKey: 'router',

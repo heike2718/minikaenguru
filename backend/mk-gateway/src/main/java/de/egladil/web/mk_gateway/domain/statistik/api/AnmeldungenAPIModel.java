@@ -9,10 +9,18 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
+
 /**
  * AnmeldungenAPIModel
  */
 public class AnmeldungenAPIModel {
+
+	@JsonProperty
+	private String wettbewerbsjahr;
+
+	@JsonProperty
+	private WettbewerbStatus statusWettbewerb;
 
 	@JsonProperty
 	private AnmeldungsitemAPIModel privatanmeldungen;
@@ -27,6 +35,28 @@ public class AnmeldungenAPIModel {
 	public String toString() {
 
 		return "AnmeldungenAPIModel [laender=" + laender + ", privatanmeldungen=" + privatanmeldungen + "]";
+	}
+
+	public String getWettbewerbsjahr() {
+
+		return wettbewerbsjahr;
+	}
+
+	public AnmeldungenAPIModel withWettbewerbsjahr(final String wettbewerbsjahr) {
+
+		this.wettbewerbsjahr = wettbewerbsjahr;
+		return this;
+	}
+
+	public WettbewerbStatus getStatusWettbewerb() {
+
+		return statusWettbewerb;
+	}
+
+	public AnmeldungenAPIModel withStatusWettbewerb(final WettbewerbStatus statusWettbewerb) {
+
+		this.statusWettbewerb = statusWettbewerb;
+		return this;
 	}
 
 	public List<AnmeldungsitemAPIModel> getLaender() {

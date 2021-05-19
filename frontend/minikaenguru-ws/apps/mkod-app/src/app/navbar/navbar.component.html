@@ -14,7 +14,11 @@
 		</ul>
 
 		<ul class="nav navbar-nav navbar-right">
-			<li class="nav-link">Gast sei gegrüßt</li>
+			<li class="nav-link">Gast sei gegrüßt!</li>
+
+			<li routerLinkActive="active"><a routerLink="/anmeldungen" (click)="collapseNav()"
+					class="nav-link" title="Anmeldungen">
+					<span class="fa fa-handshake-o fa-1x" aria-hidden="true"></span> Anmeldungen </a></li>
 		</ul>
 
 	</div>
