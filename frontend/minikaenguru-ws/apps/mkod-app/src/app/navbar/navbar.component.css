@@ -1,0 +1,8 @@
+.navbar-boardered {
+	border: solid 1px gray;
+	background-color: lightblue;
+}
+
+.nav-link {
+	cursor: pointer;
+}
