@@ -16,6 +16,7 @@ export class AppComponent {
 
 	constructor() {
 		// const hash = window.location.hash;
+
 	}
 
 	getAnimationData(outlet: RouterOutlet) {

@@ -185,6 +185,8 @@ public class StatistikWettbewerbService {
 		Collections.sort(laenderanmeldungen, new AnmeldungsitemAPIModelComparator());
 
 		AnmeldungenAPIModel result = new AnmeldungenAPIModel()
+			.withWettbewerbsjahr(aktueller.id().toString())
+			.withStatusWettbewerb(aktueller.status())
 			.withSchulanmeldungen(summeSchulanmeldungen)
 			.withPrivatanmeldungen(privatanmeldungen)
 			.withLaendern(laenderanmeldungen);
