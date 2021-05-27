@@ -10,6 +10,7 @@ import static org.junit.Assert.fail;
 
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.nio.charset.Charset;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,7 +46,7 @@ public class DecodedJWTReaderTest {
 			StringWriter sw = new StringWriter()) {
 
 			// Arrange
-			IOUtils.copy(in, sw, "UTF-8");
+			IOUtils.copy(in, sw, Charset.forName("UTF-8"));
 			jwtWithName = sw.toString();
 		}
 
@@ -53,7 +54,7 @@ public class DecodedJWTReaderTest {
 			StringWriter sw = new StringWriter()) {
 
 			// Arrange
-			IOUtils.copy(in, sw, "UTF-8");
+			IOUtils.copy(in, sw, Charset.forName("UTF-8"));
 			jwtWithoutName = sw.toString();
 		}
 	}
