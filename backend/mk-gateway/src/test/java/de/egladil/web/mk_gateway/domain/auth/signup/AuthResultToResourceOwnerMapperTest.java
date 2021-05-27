@@ -159,7 +159,7 @@ public class AuthResultToResourceOwnerMapperTest {
 		try (InputStream in = getClass().getResourceAsStream("/expired-jwt.txt");
 			StringWriter sw = new StringWriter()) {
 
-			IOUtils.copy(in, sw, "UTF-8");
+			IOUtils.copy(in, sw, Charset.forName("UTF-8"));
 			expiredJwt = sw.toString();
 		}
 

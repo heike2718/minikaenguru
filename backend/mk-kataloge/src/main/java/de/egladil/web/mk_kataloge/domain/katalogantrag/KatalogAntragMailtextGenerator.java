@@ -51,7 +51,7 @@ public class KatalogAntragMailtextGenerator {
 			text = text.replace("#3#", StringUtils.isBlank(antrag.strasseUndHausnummer()) ? "-" : antrag.strasseUndHausnummer());
 			text = text.replace("#4#", antrag.land());
 
-			IOUtils.copy(inMailSuffix, swSuffix, Charset.defaultCharset());
+			IOUtils.copy(inMailSuffix, swSuffix, Charset.forName("UTF-8"));
 
 			text += swSuffix.toString();
 

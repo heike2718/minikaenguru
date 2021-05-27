@@ -189,7 +189,7 @@ public class NewsletterTask implements Runnable {
 
 		try (InputStream in = getClass().getResourceAsStream("/mails/mailsuffix.txt"); StringWriter sw = new StringWriter()) {
 
-			IOUtils.copy(in, sw, Charset.defaultCharset());
+			IOUtils.copy(in, sw, Charset.forName("UTF-8"));
 
 			return newsletter.text() + sw.toString();
 
