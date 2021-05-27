@@ -9,12 +9,12 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.nio.charset.Charset;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_kataloge.domain.apimodel.SchulkatalogAntrag;
-import de.egladil.web.mk_kataloge.domain.katalogantrag.KatalogAntragMailtextGenerator;
 
 /**
  * KatalogAntragMailtextGeneratorTest
@@ -57,7 +57,7 @@ public class KatalogAntragMailtextGeneratorTest {
 
 		try (InputStream in = getClass().getResourceAsStream(path); StringWriter sw = new StringWriter()) {
 
-			IOUtils.copy(in, sw, "UTF-8");
+			IOUtils.copy(in, sw, Charset.forName("UTF-8"));
 			return sw.toString();
 		} catch (Exception e) {
 

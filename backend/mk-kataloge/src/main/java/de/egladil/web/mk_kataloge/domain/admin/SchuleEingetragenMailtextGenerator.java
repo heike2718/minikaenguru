@@ -41,14 +41,14 @@ public class SchuleEingetragenMailtextGenerator {
 			StringWriter swMailtext = new StringWriter();
 			StringWriter swSuffix = new StringWriter()) {
 
-			IOUtils.copy(inMailtext, swMailtext, Charset.defaultCharset());
+			IOUtils.copy(inMailtext, swMailtext, Charset.forName("UTF-8"));
 
 			String text = swMailtext.toString();
 			text = text.replace("#0#", schulePayload.name());
 			text = text.replace("#1#", schulePayload.nameOrt());
 			text = text.replace("#2#", schulePayload.nameLand());
 
-			IOUtils.copy(inMailSuffix, swSuffix, Charset.defaultCharset());
+			IOUtils.copy(inMailSuffix, swSuffix, Charset.forName("UTF-8"));
 
 			text += swSuffix.toString();
 
