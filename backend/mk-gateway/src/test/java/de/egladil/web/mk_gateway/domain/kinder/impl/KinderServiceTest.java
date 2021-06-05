@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.kinder;
+package de.egladil.web.mk_gateway.domain.kinder.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -21,8 +21,10 @@ import org.junit.jupiter.api.Test;
 import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindRequestData;
+import de.egladil.web.mk_gateway.domain.kinder.impl.KinderServiceImpl;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
@@ -32,7 +34,7 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
  */
 public class KinderServiceTest extends AbstractDomainServiceTest {
 
-	private KinderService service;
+	private KinderServiceImpl service;
 
 	@Override
 	@BeforeEach
@@ -45,7 +47,7 @@ public class KinderServiceTest extends AbstractDomainServiceTest {
 			getKinderRepository(),
 			getLoesungszettelRepository());
 
-		service = KinderService.createForTest(authService, getKinderRepository(), getTeilnahmenRepository(),
+		service = KinderServiceImpl.createForTest(authService, getKinderRepository(), getTeilnahmenRepository(),
 			getVeranstalterRepository(), getWettbewerbService(), loesungszettelService, getKlassenRepository());
 	}
 
@@ -78,7 +80,7 @@ public class KinderServiceTest extends AbstractDomainServiceTest {
 			System.err.println(e.getMessage());
 
 			assertEquals(
-				"KinderService.pruefeDublette(...): Veranstalter mit UUID=UUID_PRIVAT_NICHT_ANGEMELDET ist nicht zum aktuellen Wettbewerb (2020) angemeldet",
+				"KinderServiceImpl.pruefeDublette(...): Veranstalter mit UUID=UUID_PRIVAT_NICHT_ANGEMELDET ist nicht zum aktuellen Wettbewerb (2020) angemeldet",
 				e.getMessage());
 		}
 	}
@@ -114,7 +116,7 @@ public class KinderServiceTest extends AbstractDomainServiceTest {
 
 			assertNull(service.getKindCreated());
 			assertEquals(
-				"KinderService.kindAnlegen(...): Veranstalter mit UUID=UUID_PRIVAT_NICHT_ANGEMELDET ist nicht zum aktuellen Wettbewerb (2020) angemeldet",
+				"KinderServiceImpl.kindAnlegen(...): Veranstalter mit UUID=UUID_PRIVAT_NICHT_ANGEMELDET ist nicht zum aktuellen Wettbewerb (2020) angemeldet",
 				e.getMessage());
 		}
 	}

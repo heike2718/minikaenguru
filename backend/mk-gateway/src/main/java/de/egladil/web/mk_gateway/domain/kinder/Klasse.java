@@ -33,7 +33,7 @@ public class Klasse {
 	@JsonIgnore
 	private List<Kind> kinder = new ArrayList<>();
 
-	Klasse() {
+	public Klasse() {
 
 	}
 

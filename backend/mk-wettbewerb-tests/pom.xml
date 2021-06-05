@@ -137,7 +137,7 @@
 						<configuration>
 							<images>
 								<image>
-									<name>heik2718/it-mk_wettbewerb-db:v27</name>
+									<name>heik2718/it-mk_wettbewerb-db:v25</name>
 									<alias>it-mk_wettbewerb-db</alias>
 									<run>
 										<ports>

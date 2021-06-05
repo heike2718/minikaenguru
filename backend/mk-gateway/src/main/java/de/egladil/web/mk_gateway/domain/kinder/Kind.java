@@ -54,6 +54,12 @@ public class Kind {
 	@JsonProperty
 	private String landkuerzel;
 
+	@JsonProperty
+	private boolean klassenstufePruefen;
+
+	@JsonProperty
+	private boolean dublettePruefen;
+
 	public Kind() {
 
 	}
@@ -278,6 +284,26 @@ public class Kind {
 	public void deleteLoesungszettel() {
 
 		this.loesungszettelID = null;
+	}
+
+	public boolean isKlassenstufePruefen() {
+
+		return klassenstufePruefen;
+	}
+
+	public void setKlassenstufePruefen(final boolean klassenstufePruefen) {
+
+		this.klassenstufePruefen = klassenstufePruefen;
+	}
+
+	public boolean isDublettePruefen() {
+
+		return dublettePruefen;
+	}
+
+	public void setDublettePruefen(final boolean dublettePruefen) {
+
+		this.dublettePruefen = dublettePruefen;
 	}
 
 }

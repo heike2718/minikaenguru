@@ -248,6 +248,8 @@ public class KinderHibernateRepository implements KinderRepository {
 		target.setVorname(source.vorname());
 		target.setZusatz(source.zusatz());
 		target.setLandkuerzel(source.landkuerzel());
+		target.setDublettePruefen(source.isDublettePruefen());
+		target.setKlassenstufePruefen(source.isKlassenstufePruefen());
 	}
 
 }

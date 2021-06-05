@@ -35,6 +35,7 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.MkGatewayApp;
 import de.egladil.web.mk_gateway.domain.auth.session.LoggedInUser;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
+import de.egladil.web.mk_gateway.domain.error.ActionNotAuthorizedException;
 import de.egladil.web.mk_gateway.domain.error.AuthException;
 import de.egladil.web.mk_gateway.domain.error.ClientAuthException;
 import de.egladil.web.mk_gateway.domain.error.InaccessableEndpointException;
@@ -85,6 +86,16 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 
 			return Response.status(401)
 				.cookie(CommonHttpUtils.createSessionInvalidatedCookie(MkGatewayApp.CLIENT_COOKIE_PREFIX))
+				.entity(serializeAsJson(payload))
+				.build();
+		}
+
+		if (exception instanceof ActionNotAuthorizedException) {
+
+			ResponsePayload payload = ResponsePayload
+				.messageOnly(MessagePayload.error(exception.getMessage()));
+
+			return Response.status(200)
 				.entity(serializeAsJson(payload))
 				.build();
 		}

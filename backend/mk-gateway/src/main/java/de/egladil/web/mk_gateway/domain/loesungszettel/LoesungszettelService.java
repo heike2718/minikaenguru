@@ -30,6 +30,7 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.LoesungszettelpunkteAPIModel;
+import de.egladil.web.mk_gateway.domain.error.ActionNotAuthorizedException;
 import de.egladil.web.mk_gateway.domain.error.ConcurrentModificationType;
 import de.egladil.web.mk_gateway.domain.error.EntityConcurrentlyModifiedException;
 import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
@@ -236,7 +237,7 @@ public class LoesungszettelService {
 
 		}
 
-		// #291: sehr sehr selten kommt es vor, dass das deletedEvent nicht beim KinderService ankommnt (bisher einmal). Daher
+		// #291: sehr sehr selten kommt es vor, dass das deletedEvent nicht beim KinderServiceImpl ankommnt (bisher einmal). Daher
 		// konsistente Daten durch Transaktion
 		if (optKind.isPresent()) {
 
@@ -256,7 +257,7 @@ public class LoesungszettelService {
 	}
 
 	/**
-	 * Sendet das loesungszettelDeleted-Objekt. Einer der EventHandler ist KinderService, der dafür sorgt, dass die
+	 * Sendet das loesungszettelDeleted-Objekt. Einer der EventHandler ist KinderServiceImpl, der dafür sorgt, dass die
 	 * Loesungszettel-Referenz genullt wird.
 	 */
 	private void propagateLoesungszettelDeleted() {
@@ -411,6 +412,18 @@ public class LoesungszettelService {
 		authService.checkPermissionForTeilnahmenummer(veranstalterID,
 			new Identifier(teilnahmeIdentifier.teilnahmenummer()),
 			"[loesungszettelAnlegen - kindID=" + kindID + "]");
+
+		List<Loesungszettel> vorhandeneLoesungszettel = loesungszettelRepository.loadAll(teilnahmeIdentifier);
+
+		Optional<Loesungszettel> optUploaded = vorhandeneLoesungszettel.stream()
+			.filter(l -> l.auswertungsquelle() == Auswertungsquelle.UPLOAD).findFirst();
+
+		if (optUploaded.isPresent()) {
+
+			LOG.warn("Zuu Teilnahme {} gibt es bereits hochgeladene Auswertungen. Veranstalter={}", teilnahmeIdentifier,
+				veranstalterID);
+			throw new ActionNotAuthorizedException(applicationMessages.getString("loesungszettel.add.nurUpload"));
+		}
 
 		Loesungszettel loesungszettel = null;
 		ConcurrentModificationType concurrentModificationType = null;

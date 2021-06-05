@@ -21,10 +21,10 @@ import org.junit.jupiter.api.Test;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
-import de.egladil.web.mk_gateway.domain.kinder.KinderService;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindAPIModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindRequestData;
+import de.egladil.web.mk_gateway.domain.kinder.impl.KinderServiceImpl;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
@@ -42,7 +42,7 @@ public class KinderServiceIT extends AbstractIntegrationTest {
 
 	private LoesungszettelRepository loesungszettelRepository;
 
-	private KinderService kinderService;
+	private KinderServiceImpl kinderService;
 
 	@Override
 	@BeforeEach
@@ -51,7 +51,7 @@ public class KinderServiceIT extends AbstractIntegrationTest {
 		super.setUp();
 		kinderRepository = KinderHibernateRepository.createForIntegrationTest(entityManager);
 		loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(entityManager);
-		kinderService = KinderService.createForIntegrationTest(entityManager);
+		kinderService = KinderServiceImpl.createForIntegrationTest(entityManager);
 
 	}
 
