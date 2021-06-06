@@ -5,9 +5,33 @@
 package de.egladil.web.mk_gateway.infrastructure.rest.veranstalter;
 
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.validation.constraints.NotBlank;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+
+import de.egladil.web.commons_validation.annotations.Kuerzel;
+import de.egladil.web.commons_validation.annotations.LandKuerzel;
+import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.klassenlisten.impl.KlassenlisteCSVImportService;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
+import de.egladil.web.mk_gateway.domain.uploads.MultipartUtils;
+import de.egladil.web.mk_gateway.domain.uploads.UploadData;
+import de.egladil.web.mk_gateway.domain.uploads.UploadManager;
+import de.egladil.web.mk_gateway.domain.uploads.UploadRequestPayload;
+import de.egladil.web.mk_gateway.domain.uploads.UploadType;
+import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
+import de.egladil.web.mk_gateway.infrastructure.upload.ScanResult;
 
 /**
  * UploadKlassenlistenResource
@@ -16,5 +40,41 @@ import javax.ws.rs.core.MediaType;
 @Path("klassenlisten")
 @Produces(MediaType.APPLICATION_JSON)
 public class UploadKlassenlistenResource {
+
+	@Context
+	SecurityContext securityContext;
+
+	@Inject
+	UploadManager uploadManager;
+
+	@Inject
+	KlassenlisteCSVImportService klassenlisteImportService;
+
+	@POST
+	@Path("{kuerzelLand}/{schulkuerzel}")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	Response uploadKlassenliste(@PathParam(value = "kuerzelLand") @LandKuerzel final String kuerzelLand, @PathParam(
+		value = "schulkuerzel") @Kuerzel final String schulkuerzel, @QueryParam(
+			value = "nachnameZusatz") final boolean nachnameAlsZusatz, @QueryParam(
+				value = "sprache") @NotBlank final String sprache, final MultipartFormDataInput input) {
+
+		String veranstalterUuid = securityContext.getUserPrincipal().getName();
+		UploadType uploadType = UploadType.KLASSENLISTE;
+
+		Sprache theSprache = Sprache.valueOf(sprache);
+
+		uploadManager.authorizeUpload(veranstalterUuid, schulkuerzel, uploadType);
+
+		UploadData uploadData = MultipartUtils.getUploadData(input);
+
+		UploadRequestPayload uploadPayload = new UploadRequestPayload().withSchuleID(new Identifier(schulkuerzel))
+			.withVeranstalterID(new Identifier(veranstalterUuid)).withUploadType(uploadType).withUploadData(uploadData);
+
+		ScanResult scanResult = uploadManager.scanUpload(uploadPayload);
+
+		PersistenterUpload uploadMetadata = uploadManager.transformAndPersistUpload(uploadPayload, scanResult);
+
+		return Response.ok().build();
+	}
 
 }

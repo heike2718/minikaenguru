@@ -24,18 +24,19 @@ import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.kinder.Klasse;
 import de.egladil.web.mk_gateway.domain.kinder.KlassenService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
+import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 
 /**
- * KlassenlisteImportServiceTest
+ * KlassenlisteCSVImportServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-public class KlassenlisteImportServiceTest {
+public class KlassenlisteCSVImportServiceTest {
 
 	@Mock
 	private KlassenService klassenService;;
 
 	@InjectMocks
-	private KlassenlisteImportService service;
+	private KlassenlisteCSVImportService service;
 
 	@Test
 	void should() throws IOException {
@@ -46,7 +47,11 @@ public class KlassenlisteImportServiceTest {
 		boolean nachnamenAlsZusatz = false;
 		Sprache sprache = Sprache.de;
 		String kuerzelLand = "DE-HE";
-		String path = "/home/heike/upload/klassenlisten-testdaten/korrekt/klassenliste.csv";
+
+		service.setPathUploadDir("/home/heike/upload/klassenlisten-testdaten/korrekt");
+
+		PersistenterUpload persistenterUpload = new PersistenterUpload();
+		persistenterUpload.setUuid("klassenliste");
 
 		List<Klasse> klassen = new ArrayList<>();
 		klassen.add(new Klasse(new Identifier("uuid-2a")).withName("2a").withSchuleID(new Identifier(schulkuerzel)));
@@ -56,7 +61,7 @@ public class KlassenlisteImportServiceTest {
 
 		// Act
 		ResponsePayload responsePayload = service.importiereKinder(veranstalterID, schulkuerzel, nachnamenAlsZusatz, sprache,
-			kuerzelLand, path);
+			kuerzelLand, persistenterUpload);
 		assertNotNull(responsePayload.getData());
 		// List<KindAPIModel> kinder = (List<KindAPIModel>) responsePayload.getData();
 

@@ -65,6 +65,11 @@
 
 		<dependency>
 			<groupId>de.egladil.web</groupId>
+			<artifactId>commons-openofficetools</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>de.egladil.web</groupId>
 			<artifactId>commons-security</artifactId>
 		</dependency>
 

@@ -25,6 +25,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,16 +52,20 @@ import de.egladil.web.mk_gateway.domain.klassenlisten.StringKlassenimportZeileMa
 import de.egladil.web.mk_gateway.domain.klassenlisten.utils.KinderDublettenPruefer;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
+import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 
 /**
- * KlassenlisteImportService
+ * KlassenlisteCSVImportService importiert die Kinder aus einer CSV-Datei.
  */
 @ApplicationScoped
-public class KlassenlisteImportService {
+public class KlassenlisteCSVImportService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(KlassenlisteImportService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(KlassenlisteCSVImportService.class);
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
+
+	@ConfigProperty(name = "upload.folder.path")
+	String pathUploadDir;
 
 	@Inject
 	KlassenService klassenService;
@@ -74,9 +79,9 @@ public class KlassenlisteImportService {
 	@Inject
 	Event<KindCreated> kindCreatedEvent;
 
-	public static KlassenlisteImportService createForIntegrationTests(final EntityManager em) {
+	public static KlassenlisteCSVImportService createForIntegrationTests(final EntityManager em) {
 
-		KlassenlisteImportService result = new KlassenlisteImportService();
+		KlassenlisteCSVImportService result = new KlassenlisteCSVImportService();
 		result.klassenService = KlassenServiceImpl.createForIntegrationTest(em);
 		result.kinderService = KinderServiceImpl.createForIntegrationTest(em);
 		return result;
@@ -91,9 +96,11 @@ public class KlassenlisteImportService {
 	 * @param  path
 	 * @return
 	 */
-	public ResponsePayload importiereKinder(final Identifier veranstalterID, final String schulkuerzel, final boolean nachnamenAlsZusatz, final Sprache sprache, final String kuerzelLand, final String path) {
+	public ResponsePayload importiereKinder(final Identifier veranstalterID, final String schulkuerzel, final boolean nachnamenAlsZusatz, final Sprache sprache, final String kuerzelLand, final PersistenterUpload uploadMetadata) {
 
-		List<String> lines = getContents(veranstalterID.identifier(), path);
+		String path = pathUploadDir + File.separator + uploadMetadata.getUuid() + ".csv";
+
+		List<String> lines = getContents(path);
 
 		KlassenlisteUeberschrift ueberschrift = new KlassenlisteUeberschrift(lines.get(0));
 
@@ -279,7 +286,7 @@ public class KlassenlisteImportService {
 		return result;
 	}
 
-	List<String> getContents(final String owner, final String path) {
+	List<String> getContents(final String path) {
 
 		File file = new File(path);
 
@@ -298,11 +305,16 @@ public class KlassenlisteImportService {
 
 		} catch (IOException e) {
 
-			LOGGER.error("Konnte Klassenliste nicht importieren: veranstalter={}, path={}: {}", owner, path,
+			LOGGER.error("Konnte Klassenliste nicht importieren: path={}: {}", path,
 				e.getMessage(), e);
 			throw new MkGatewayRuntimeException("Beim Import einer Klassenliste ist ein Fehler aufgetreten", e);
 
 		}
+	}
+
+	void setPathUploadDir(final String pathUploadDir) {
+
+		this.pathUploadDir = pathUploadDir;
 	}
 
 }
