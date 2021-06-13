@@ -19,6 +19,8 @@ public class UploadRequestPayload {
 
 	private UploadData uploadData;
 
+	private Object context;
+
 	public Identifier getVeranstalterID() {
 
 		return veranstalterID;
@@ -60,6 +62,17 @@ public class UploadRequestPayload {
 	public UploadRequestPayload withUploadData(final UploadData uploadData) {
 
 		this.uploadData = uploadData;
+		return this;
+	}
+
+	public Object getContext() {
+
+		return context;
+	}
+
+	public UploadRequestPayload withContext(final Object context) {
+
+		this.context = context;
 		return this;
 	}
 

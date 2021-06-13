@@ -22,16 +22,16 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.annotations.LandKuerzel;
+import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.klassenlisten.impl.KlassenlisteCSVImportService;
+import de.egladil.web.mk_gateway.domain.klassenlisten.KlassenlisteImportService;
+import de.egladil.web.mk_gateway.domain.klassenlisten.UploadKlassenlisteContext;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.uploads.MultipartUtils;
 import de.egladil.web.mk_gateway.domain.uploads.UploadData;
 import de.egladil.web.mk_gateway.domain.uploads.UploadManager;
 import de.egladil.web.mk_gateway.domain.uploads.UploadRequestPayload;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
-import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
-import de.egladil.web.mk_gateway.infrastructure.upload.ScanResult;
 
 /**
  * UploadKlassenlistenResource
@@ -48,7 +48,7 @@ public class UploadKlassenlistenResource {
 	UploadManager uploadManager;
 
 	@Inject
-	KlassenlisteCSVImportService klassenlisteImportService;
+	KlassenlisteImportService klassenlisteImportService;
 
 	@POST
 	@Path("{kuerzelLand}/{schulkuerzel}")
@@ -67,14 +67,16 @@ public class UploadKlassenlistenResource {
 
 		UploadData uploadData = MultipartUtils.getUploadData(input);
 
+		UploadKlassenlisteContext contextObject = new UploadKlassenlisteContext().withKuerzelLand(kuerzelLand)
+			.withNachnameAlsZusatz(nachnameAlsZusatz).withSprache(theSprache);
+
 		UploadRequestPayload uploadPayload = new UploadRequestPayload().withSchuleID(new Identifier(schulkuerzel))
-			.withVeranstalterID(new Identifier(veranstalterUuid)).withUploadType(uploadType).withUploadData(uploadData);
+			.withVeranstalterID(new Identifier(veranstalterUuid)).withUploadType(uploadType).withUploadData(uploadData)
+			.withContext(contextObject);
 
-		ScanResult scanResult = uploadManager.scanUpload(uploadPayload);
+		ResponsePayload responsePayload = uploadManager.processUpload(uploadPayload);
 
-		PersistenterUpload uploadMetadata = uploadManager.transformAndPersistUpload(uploadPayload, scanResult);
-
-		return Response.ok().build();
+		return Response.ok(responsePayload).build();
 	}
 
 }

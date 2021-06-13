@@ -43,6 +43,7 @@ import de.egladil.web.mk_gateway.domain.error.MessagingAuthException;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.error.StatistikKeineDatenException;
 import de.egladil.web.mk_gateway.domain.error.UnterlagenNichtVerfuegbarException;
+import de.egladil.web.mk_gateway.domain.error.UploadFormatException;
 import de.egladil.web.mk_gateway.infrastructure.rest.XmlSerializer;
 
 /**
@@ -159,6 +160,14 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 				.messageOnly(MessagePayload.error(applicationMessages.getString("general.notFound")));
 
 			return Response.status(404).entity(serializeAsJson(payload)).build();
+		}
+
+		if (exception instanceof UploadFormatException) {
+
+			ResponsePayload payload = ResponsePayload
+				.messageOnly(MessagePayload.error(exception.getMessage()));
+
+			return Response.status(Status.BAD_REQUEST).entity(payload).build();
 		}
 
 		if (exception instanceof BadRequestException) {

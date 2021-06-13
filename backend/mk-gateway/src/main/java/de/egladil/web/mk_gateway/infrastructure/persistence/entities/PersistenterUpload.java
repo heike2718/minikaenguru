@@ -10,6 +10,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
@@ -20,9 +22,16 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadType;
  */
 @Entity
 @Table(name = "UPLOADS")
+@NamedQueries({
+	@NamedQuery(
+		name = "PersistenterUpload.FIND_BY_IDENTIFIER",
+		query = "select u from PersistenterUpload where u.teilnahmenummer = :teilnahmenummer and u.checksumme = :checksumme")
+})
 public class PersistenterUpload extends ConcurrencySafeEntity {
 
 	private static final long serialVersionUID = 1L;
+
+	public static final String FIND_BY_IDENTIFIER = "PersistenterUpload.FIND_BY_IDENTIFIER";
 
 	@Column(name = "VERANSTALTER_UUID")
 	private String veranstalterUuid;
@@ -44,7 +53,7 @@ public class PersistenterUpload extends ConcurrencySafeEntity {
 	private String charset;
 
 	@Column(name = "CHECKSUMME")
-	private String checksumme;
+	private Long checksumme;
 
 	@Column(name = "STATUS")
 	@Enumerated(EnumType.STRING)
@@ -113,16 +122,6 @@ public class PersistenterUpload extends ConcurrencySafeEntity {
 		this.charset = charset;
 	}
 
-	public String getChecksumme() {
-
-		return checksumme;
-	}
-
-	public void setChecksumme(final String checksumme) {
-
-		this.checksumme = checksumme;
-	}
-
 	public UploadStatus getStatus() {
 
 		return status;
@@ -141,6 +140,16 @@ public class PersistenterUpload extends ConcurrencySafeEntity {
 	public void setUploadDate(final Date uploadDate) {
 
 		this.uploadDate = uploadDate;
+	}
+
+	public Long getChecksumme() {
+
+		return checksumme;
+	}
+
+	public void setChecksumme(final Long checksumme) {
+
+		this.checksumme = checksumme;
 	}
 
 }

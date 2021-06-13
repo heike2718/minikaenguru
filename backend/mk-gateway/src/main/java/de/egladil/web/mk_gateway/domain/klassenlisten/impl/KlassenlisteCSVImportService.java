@@ -47,18 +47,19 @@ import de.egladil.web.mk_gateway.domain.kinder.events.KlasseCreated;
 import de.egladil.web.mk_gateway.domain.kinder.impl.KinderServiceImpl;
 import de.egladil.web.mk_gateway.domain.kinder.impl.KlassenServiceImpl;
 import de.egladil.web.mk_gateway.domain.klassenlisten.KlassenimportZeile;
+import de.egladil.web.mk_gateway.domain.klassenlisten.KlassenlisteImportService;
 import de.egladil.web.mk_gateway.domain.klassenlisten.KlassenlisteUeberschrift;
 import de.egladil.web.mk_gateway.domain.klassenlisten.StringKlassenimportZeileMapper;
+import de.egladil.web.mk_gateway.domain.klassenlisten.UploadKlassenlisteContext;
 import de.egladil.web.mk_gateway.domain.klassenlisten.utils.KinderDublettenPruefer;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
-import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 
 /**
  * KlassenlisteCSVImportService importiert die Kinder aus einer CSV-Datei.
  */
 @ApplicationScoped
-public class KlassenlisteCSVImportService {
+public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(KlassenlisteCSVImportService.class);
 
@@ -79,7 +80,7 @@ public class KlassenlisteCSVImportService {
 	@Inject
 	Event<KindCreated> kindCreatedEvent;
 
-	public static KlassenlisteCSVImportService createForIntegrationTests(final EntityManager em) {
+	public static KlassenlisteImportService createForIntegrationTests(final EntityManager em) {
 
 		KlassenlisteCSVImportService result = new KlassenlisteCSVImportService();
 		result.klassenService = KlassenServiceImpl.createForIntegrationTest(em);
@@ -87,16 +88,8 @@ public class KlassenlisteCSVImportService {
 		return result;
 	}
 
-	/**
-	 * Importiert die Kinder aus einer CSV-Datei. Diese wurde zuvor aus einem Excel- oder OpenOffice-Upload vom UploadMicroservice
-	 * in das konfigurierte Upload-Verzeichnis geschrieben.
-	 *
-	 * @param  veranstalterID
-	 * @param  schulkuerzel
-	 * @param  path
-	 * @return
-	 */
-	public ResponsePayload importiereKinder(final Identifier veranstalterID, final String schulkuerzel, final boolean nachnamenAlsZusatz, final Sprache sprache, final String kuerzelLand, final PersistenterUpload uploadMetadata) {
+	@Override
+	public ResponsePayload importiereKinder(final UploadKlassenlisteContext uploadKlassenlisteContext, final PersistenterUpload uploadMetadata) {
 
 		String path = pathUploadDir + File.separator + uploadMetadata.getUuid() + ".csv";
 
@@ -108,11 +101,13 @@ public class KlassenlisteCSVImportService {
 
 		List<KlassenimportZeile> klassenimportZeilen = lines.stream().map(z -> zeilenMapper.apply(z)).collect(Collectors.toList());
 
+		Identifier veranstalterID = new Identifier(uploadMetadata.getVeranstalterUuid());
+		String schulkuerzel = uploadMetadata.getTeilnahmenummer();
+
 		try {
 
-			KlassenImportErgebnis importErgebnis = this.openTransactionAndImport(veranstalterID, schulkuerzel, nachnamenAlsZusatz,
-				sprache,
-				kuerzelLand, klassenimportZeilen);
+			KlassenImportErgebnis importErgebnis = this.openTransactionAndImport(veranstalterID, schulkuerzel,
+				uploadKlassenlisteContext, klassenimportZeilen);
 
 			long anzahlDubletten = importErgebnis.getKinder().stream().filter(k -> k.isDublettePruefen()).count();
 			long anzahlMitUnklarerKlassenstufe = importErgebnis.getKinder().stream().filter(k -> k.isKlassenstufePruefen()).count();
@@ -189,12 +184,12 @@ public class KlassenlisteCSVImportService {
 	}
 
 	@Transactional
-	KlassenImportErgebnis openTransactionAndImport(final Identifier veranstalterID, final String schulkuerzel, final boolean nachnamenAlsZusatz, final Sprache sprache, final String kuerzelLand, final List<KlassenimportZeile> klassenimportZeilen) {
+	KlassenImportErgebnis openTransactionAndImport(final Identifier veranstalterID, final String schulkuerzel, final UploadKlassenlisteContext uploadKlassenlisteContext, final List<KlassenimportZeile> klassenimportZeilen) {
 
 		Map<String, Klasse> klassenMap = this.importiereKlassen(veranstalterID, schulkuerzel, klassenimportZeilen);
 
 		List<Kind> importierteKinder = this.createAndImportKinder(veranstalterID, schulkuerzel, klassenimportZeilen, klassenMap,
-			nachnamenAlsZusatz, sprache, kuerzelLand);
+			uploadKlassenlisteContext);
 
 		List<Klasse> importierteKlassen = klassenMap.values().stream().collect(Collectors.toList());
 		return new KlassenImportErgebnis(importierteKlassen, importierteKinder);
@@ -227,7 +222,7 @@ public class KlassenlisteCSVImportService {
 		return result;
 	}
 
-	List<Kind> createAndImportKinder(final Identifier veranstalterID, final String schulkuerzel, final List<KlassenimportZeile> klassenimportZeilen, final Map<String, Klasse> klassenMap, final boolean nachnamenAlsZusatz, final Sprache sprache, final String kuerzelLand) {
+	List<Kind> createAndImportKinder(final Identifier veranstalterID, final String schulkuerzel, final List<KlassenimportZeile> klassenimportZeilen, final Map<String, Klasse> klassenMap, final UploadKlassenlisteContext uploadKlassenlisteContext) {
 
 		List<Kind> result = new ArrayList<>();
 
@@ -253,10 +248,10 @@ public class KlassenlisteCSVImportService {
 
 				klassenstufe = optKlassenstufe.get();
 			}
-			KindEditorModel kindEditorModel = new KindEditorModel(klassenstufe, sprache)
+			KindEditorModel kindEditorModel = new KindEditorModel(klassenstufe, uploadKlassenlisteContext.getSprache())
 				.withKlasseUuid(klasse.identifier().identifier()).withVorname(zeile.getVorname());
 
-			if (nachnamenAlsZusatz) {
+			if (uploadKlassenlisteContext.isNachnameAlsZusatz()) {
 
 				kindEditorModel = kindEditorModel.withZusatz(zeile.getNachname());
 			} else {
@@ -264,7 +259,8 @@ public class KlassenlisteCSVImportService {
 				kindEditorModel = kindEditorModel.withZusatz(zeile.getNachname());
 			}
 
-			KindRequestData kindRequestData = new KindRequestData().withKind(kindEditorModel).withKuerzelLand(kuerzelLand)
+			KindRequestData kindRequestData = new KindRequestData().withKind(kindEditorModel)
+				.withKuerzelLand(uploadKlassenlisteContext.getKuerzelLand())
 				.withUuid(KindRequestData.KEINE_UUID);
 
 			KindImportDaten kindImportDaten = new KindImportDaten(kindRequestData);

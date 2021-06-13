@@ -23,6 +23,7 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.kinder.Klasse;
 import de.egladil.web.mk_gateway.domain.kinder.KlassenService;
+import de.egladil.web.mk_gateway.domain.klassenlisten.UploadKlassenlisteContext;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 
@@ -42,16 +43,21 @@ public class KlassenlisteCSVImportServiceTest {
 	void should() throws IOException {
 
 		// Arrange
-		Identifier veranstalterID = new Identifier("hallo");
+		String veranstalterUuid = "hallo";
 		String schulkuerzel = "ZUTFG654F";
 		boolean nachnamenAlsZusatz = false;
 		Sprache sprache = Sprache.de;
 		String kuerzelLand = "DE-HE";
 
+		UploadKlassenlisteContext uploadKlassenlisteContext = new UploadKlassenlisteContext().withKuerzelLand(kuerzelLand)
+			.withNachnameAlsZusatz(nachnamenAlsZusatz).withSprache(sprache);
+
 		service.setPathUploadDir("/home/heike/upload/klassenlisten-testdaten/korrekt");
 
 		PersistenterUpload persistenterUpload = new PersistenterUpload();
 		persistenterUpload.setUuid("klassenliste");
+		persistenterUpload.setVeranstalterUuid(veranstalterUuid);
+		persistenterUpload.setTeilnahmenummer(schulkuerzel);
 
 		List<Klasse> klassen = new ArrayList<>();
 		klassen.add(new Klasse(new Identifier("uuid-2a")).withName("2a").withSchuleID(new Identifier(schulkuerzel)));
@@ -60,8 +66,7 @@ public class KlassenlisteCSVImportServiceTest {
 		when(klassenService.importiereKlassen(any(), any(), anyList())).thenReturn(klassen);
 
 		// Act
-		ResponsePayload responsePayload = service.importiereKinder(veranstalterID, schulkuerzel, nachnamenAlsZusatz, sprache,
-			kuerzelLand, persistenterUpload);
+		ResponsePayload responsePayload = service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
 		assertNotNull(responsePayload.getData());
 		// List<KindAPIModel> kinder = (List<KindAPIModel>) responsePayload.getData();
 
