@@ -100,33 +100,42 @@ public class StatistikPDFGenerator {
 
 	public byte[] generiereGesamtpunktverteilungWettbewerb(final WettbewerbID wettbewerbID, final Map<Klassenstufe, GesamtpunktverteilungKlassenstufe> verteilungenNachKlassenstufe) {
 
-		List<byte[]> result = new ArrayList<>();
+		List<byte[]> seiten = new ArrayList<>();
 
-		if (verteilungenNachKlassenstufe.isEmpty()) {
+		try {
 
-			result.add(generiereDeckblattKeineDaten(wettbewerbID));
+			if (verteilungenNachKlassenstufe.isEmpty()) {
 
-		} else {
+				seiten.add(generiereDeckblattKeineDaten(wettbewerbID));
 
-			result.add(generiereDeckblatt(wettbewerbID));
-		}
+			} else {
 
-		for (Klassenstufe klassenstufe : Klassenstufe.valuesSorted()) {
+				seiten.add(generiereDeckblatt(wettbewerbID));
+			}
 
-			GesamtpunktverteilungKlassenstufe verteilung = verteilungenNachKlassenstufe.get(klassenstufe);
+			for (Klassenstufe klassenstufe : Klassenstufe.valuesSorted()) {
 
-			if (verteilung != null) {
+				GesamtpunktverteilungKlassenstufe verteilung = verteilungenNachKlassenstufe.get(klassenstufe);
 
-				result.add(aufgabenuebersichtGenerator.generiereAufgabenuebersichtKlassenstufe(verteilung, true));
+				if (verteilung != null) {
 
-				result.add(prozentrangEinzeluebersichtPDFGenerator.generiereProzentrangUebersicht(verteilung));
+					seiten.add(aufgabenuebersichtGenerator.generiereAufgabenuebersichtKlassenstufe(verteilung, true));
+
+					seiten.add(prozentrangEinzeluebersichtPDFGenerator.generiereProzentrangUebersicht(verteilung));
+
+				}
 
 			}
 
-		}
+			PdfMerger pdfMerger = new PdfMerger();
+			byte[] bytes = pdfMerger.concatPdf(seiten);
+			return bytes;
+		} finally {
 
-		PdfMerger pdfMerger = new PdfMerger();
-		return pdfMerger.concatPdf(result);
+			// Memory-Leak
+			seiten.clear();
+			seiten = null;
+		}
 	}
 
 	byte[] generiereDeckblattKeineDaten(final WettbewerbID wettbewerbID) {
