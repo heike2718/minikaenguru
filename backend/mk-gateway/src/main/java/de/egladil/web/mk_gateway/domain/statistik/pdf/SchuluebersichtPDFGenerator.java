@@ -62,18 +62,26 @@ public class SchuluebersichtPDFGenerator {
 
 		List<byte[]> seiten = new ArrayList<>();
 
-		byte[] deckblatt = this.generiereDeckblatt(wettbewerbID, optSchule, verteilungenNachKlassenstufe, gesamtmediane);
-		seiten.add(deckblatt);
+		try {
 
-		List<byte[]> statistiken = generiereStatistikseiten(verteilungenNachKlassenstufe, false);
-		seiten.addAll(statistiken);
+			byte[] deckblatt = this.generiereDeckblatt(wettbewerbID, optSchule, verteilungenNachKlassenstufe, gesamtmediane);
+			seiten.add(deckblatt);
 
-		final byte[] result = new PdfMerger().concatPdf(seiten);
+			List<byte[]> statistiken = generiereStatistikseiten(verteilungenNachKlassenstufe, false);
+			seiten.addAll(statistiken);
 
-		String dateiname = MessageFormat.format(applicationMessages.getString("statistik.pdf.dateiname.schule"),
-			new Object[] { wettbewerbID.toString() });
+			final byte[] result = new PdfMerger().concatPdf(seiten);
 
-		return new DownloadData(dateiname, result);
+			String dateiname = MessageFormat.format(applicationMessages.getString("statistik.pdf.dateiname.schule"),
+				new Object[] { wettbewerbID.toString() });
+
+			return new DownloadData(dateiname, result);
+		} finally {
+
+			// Memory-Leak
+			seiten.clear();
+			seiten = null;
+		}
 	}
 
 	/**

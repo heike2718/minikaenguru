@@ -40,10 +40,13 @@ public class PdfMerger {
 		}
 		final Document document = new Document();
 
+		PdfReader first = null;
+		PdfReader second = null;
+
 		try {
 
-			PdfReader first = new PdfReader(pdfs.get(0));
-			PdfReader second = new PdfReader(pdfs.get(1));
+			first = new PdfReader(pdfs.get(0));
+			second = new PdfReader(pdfs.get(1));
 
 			byte[] firstChunk = concat(first, second, document);
 
@@ -53,10 +56,15 @@ public class PdfMerger {
 				second = new PdfReader(pdfs.get(i));
 				firstChunk = concat(first, second, document);
 			}
+
 			return firstChunk;
 		} catch (final IOException | DocumentException e) {
 
 			throw new MkGatewayRuntimeException("Unerwartete Exception beim pipen von PDFs: " + e.getMessage(), e);
+		} finally {
+
+			close(first);
+			close(second);
 		}
 	}
 
@@ -73,6 +81,14 @@ public class PdfMerger {
 			second.close();
 			final byte[] data = out.toByteArray();
 			return data;
+		}
+	}
+
+	private void close(final PdfReader reader) {
+
+		if (reader != null) {
+
+			reader.close();
 		}
 	}
 }

@@ -9,7 +9,7 @@
 
 
 	<properties>
-		<minikaenguru-version>1.4.6.1</minikaenguru-version>
+		<minikaenguru-version>1.4.6.2</minikaenguru-version>
 		<commons.version>1.5.1</commons.version>
 		<dependency-check.version>6.0.1</dependency-check.version>
 		<slf4j.version>1.7.25</slf4j.version>
