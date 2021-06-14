@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -69,7 +69,7 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.impl.WettbewerbHiber
  * SchuleUrkundenservice erstellt alle Urkunden einer gegebenen Schule sowie eine Übersichtsseite mit den Kindernamen und
  * Platzierungen.
  */
-@ApplicationScoped
+@RequestScoped
 public class SchuleUrkundenservice {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SchuleUrkundenservice.class);
@@ -151,22 +151,30 @@ public class SchuleUrkundenservice {
 
 		List<byte[]> seiten = new ArrayList<>();
 
-		seiten.add(new AuswertungSchuluebersichtGenerator().generiereSchuluebersicht(schulteilnahme, datenRepository));
+		try {
 
-		SchuluebersichtPDFGenerator statistikGenerator = new SchuluebersichtPDFGenerator();
-		List<byte[]> statistikseiten = statistikGenerator.generiereStatistikseiten(datenRepository.getGesamtpunktverteilungen(),
-			true);
+			seiten.add(new AuswertungSchuluebersichtGenerator().generiereSchuluebersicht(schulteilnahme, datenRepository));
 
-		seiten.addAll(statistikseiten);
+			SchuluebersichtPDFGenerator statistikGenerator = new SchuluebersichtPDFGenerator();
+			List<byte[]> statistikseiten = statistikGenerator.generiereStatistikseiten(datenRepository.getGesamtpunktverteilungen(),
+				true);
 
-		SchulurkundenGenerator urkundenGenerator = new SchulurkundenGenerator();
-		seiten.addAll(urkundenGenerator.generiereUrkunden(datenRepository));
+			seiten.addAll(statistikseiten);
 
-		byte[] daten = new PdfMerger().concatPdf(seiten);
+			SchulurkundenGenerator urkundenGenerator = new SchulurkundenGenerator();
+			seiten.addAll(urkundenGenerator.generiereUrkunden(datenRepository));
 
-		String dateiname = this.getDateiname(schulteilnahme);
+			byte[] daten = new PdfMerger().concatPdf(seiten);
 
-		return new DownloadData(dateiname, daten);
+			String dateiname = this.getDateiname(schulteilnahme);
+
+			return new DownloadData(dateiname, daten);
+		} finally {
+
+			// Memory-Leak
+			seiten.clear();
+			seiten = null;
+		}
 	}
 
 	/**

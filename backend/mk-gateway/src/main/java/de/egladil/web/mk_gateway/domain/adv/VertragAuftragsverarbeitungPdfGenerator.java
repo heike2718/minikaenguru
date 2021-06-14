@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -30,7 +30,7 @@ import de.egladil.web.mk_gateway.domain.pdfutils.UebersichtFontProvider;
 /**
  * VertragAuftragsverarbeitungPdfGenerator
  */
-@ApplicationScoped
+@RequestScoped
 public class VertragAuftragsverarbeitungPdfGenerator {
 
 	private static final String PATH_SUBDIR_ADV_TEXTE = "/adv/";
@@ -57,15 +57,25 @@ public class VertragAuftragsverarbeitungPdfGenerator {
 
 		String path = pathAdvTexteDir + PATH_SUBDIR_ADV_TEXTE + vertrag.vertragstext().dateiname();
 
-		final byte[] pdfAllgemein = MkGatewayFileUtils.readBytesFromFile(path);
-		final byte[] deckblatt = generiereDeckblatt(vertrag, vertrag.vertragstext().versionsnummer());
-		final List<byte[]> seiten = new ArrayList<>();
-		seiten.add(deckblatt);
-		seiten.add(pdfAllgemein);
+		List<byte[]> seiten = new ArrayList<>();
 
-		final byte[] pdfs = new PdfMerger().concatPdf(seiten);
+		try {
 
-		return pdfs;
+			final byte[] pdfAllgemein = MkGatewayFileUtils.readBytesFromFile(path);
+			final byte[] deckblatt = generiereDeckblatt(vertrag, vertrag.vertragstext().versionsnummer());
+
+			seiten.add(deckblatt);
+			seiten.add(pdfAllgemein);
+
+			final byte[] pdfs = new PdfMerger().concatPdf(seiten);
+
+			return pdfs;
+		} finally {
+
+			// Memory-Leak
+			seiten.clear();
+			seiten = null;
+		}
 	}
 
 	private byte[] generiereDeckblatt(final VertragAuftragsdatenverarbeitung vertrag, final String textVersionsnummer) {

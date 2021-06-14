@@ -56,19 +56,27 @@ public class PrivatteilnahmenuebersichtPDFGenerator {
 
 		List<byte[]> seiten = new ArrayList<>();
 
-		byte[] deckblatt = this.generiereDeckblatt(wettbewerbID, verteilungenNachKlassenstufe, gesamtmediane);
-		seiten.add(deckblatt);
+		try {
 
-		List<byte[]> statistiken = new StatistikPDFGenerator()
-			.generiereStatistikUebersichtVeranstalter(verteilungenNachKlassenstufe);
-		seiten.addAll(statistiken);
+			byte[] deckblatt = this.generiereDeckblatt(wettbewerbID, verteilungenNachKlassenstufe, gesamtmediane);
+			seiten.add(deckblatt);
 
-		final byte[] result = new PdfMerger().concatPdf(seiten);
+			List<byte[]> statistiken = new StatistikPDFGenerator()
+				.generiereStatistikUebersichtVeranstalter(verteilungenNachKlassenstufe);
+			seiten.addAll(statistiken);
 
-		String dateiname = MessageFormat.format(applicationMessages.getString("statistik.pdf.dateiname.privat"),
-			new Object[] { wettbewerbID.toString() });
+			final byte[] result = new PdfMerger().concatPdf(seiten);
 
-		return new DownloadData(dateiname, result);
+			String dateiname = MessageFormat.format(applicationMessages.getString("statistik.pdf.dateiname.privat"),
+				new Object[] { wettbewerbID.toString() });
+
+			return new DownloadData(dateiname, result);
+		} finally {
+
+			// Memory-Leak
+			seiten.clear();
+			seiten = null;
+		}
 
 	}
 
