@@ -10,7 +10,6 @@ import java.util.Optional;
 
 import javax.annotation.Priority;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -31,8 +30,8 @@ import de.egladil.web.mk_gateway.domain.auth.session.MkvSecurityContext;
 import de.egladil.web.mk_gateway.domain.auth.session.Session;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.error.AuthException;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
-import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.permissions.PermittedRolesRepository;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.infrastructure.config.ConfigService;
@@ -61,7 +60,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 	PermittedRolesRepository permittedRolesRepository;
 
 	@Inject
-	Event<SecurityIncidentRegistered> securityEvent;
+	DomainEventHandler domainEventHandler;
 
 	@Override
 	public void filter(final ContainerRequestContext requestContext) throws IOException {
@@ -93,7 +92,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 			String msg = "restricted path " + path + " ohne sessionId aufgerufen";
 			LOG.warn(msg);
 
-			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+			new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 
 			throw new AuthException();
 		}
@@ -106,7 +105,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
 			LOG.warn(msg);
 
-			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+			new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 			throw new AuthException();
 		}
 
@@ -118,7 +117,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
 			LOG.warn(msg);
 
-			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+			new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 			throw new AuthException();
 		}
 
@@ -129,7 +128,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 			String msg = "[" + method + " " + path + "] durch user " + user + " aufgerufen. Das ist nicht erlaubt";
 			LOG.warn(msg);
 
-			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+			new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 			throw new AccessDeniedException("keine Berechtigung, diese API aufzurufen");
 		}
 

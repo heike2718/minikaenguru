@@ -13,9 +13,9 @@ import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
 import de.egladil.web.mk_gateway.domain.klassenlisten.impl.KindImportDaten;
 
 /**
- * KinderDublettenPruefer
+ * ImportDublettenPruefer
  */
-public class KinderDublettenPruefer {
+public class ImportDublettenPruefer {
 
 	/**
 	 * Prüft die Importdaten klassenweise auf Dubletten. Gefundene Dubletten werden markiert, damit sie mit dem dublettePruefen-Flag

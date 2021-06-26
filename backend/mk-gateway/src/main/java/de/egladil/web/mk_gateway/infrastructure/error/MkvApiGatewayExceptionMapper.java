@@ -135,7 +135,7 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 			ResponsePayload payload = ResponsePayload
 				.messageOnly(MessagePayload.error(exception.getMessage() + applicationMessages.getString("sendMail")));
 
-			return Response.status(909).entity(serializeAsJson(payload)).build();
+			return Response.status(503).entity(serializeAsJson(payload)).build();
 		}
 
 		if (exception instanceof StatistikKeineDatenException) {

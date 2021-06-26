@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.BadRequestException;
@@ -22,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
@@ -50,6 +50,9 @@ public class PrivatveranstalterService {
 	private DataInconsistencyRegistered dataInconsistencyRegistered;
 
 	@Inject
+	DomainEventHandler domainEventHandler;
+
+	@Inject
 	VeranstalterRepository repository;
 
 	@Inject
@@ -63,12 +66,6 @@ public class PrivatveranstalterService {
 
 	@Inject
 	PrivatteilnahmeKuerzelService teilnahmenKuerzelService;
-
-	@Inject
-	Event<SecurityIncidentRegistered> securityIncidentEvent;
-
-	@Inject
-	Event<DataInconsistencyRegistered> dataInconsistencyEvent;
 
 	public static PrivatveranstalterService createForTest(final VeranstalterRepository veranstalterRepository, final ZugangUnterlagenService zugangUnterlagenService, final WettbewerbService wettbewerbSerivice, final TeilnahmenRepository teilnahmenRepository, final PrivatteilnahmeKuerzelService teilnahmeKuerzelService) {
 
@@ -111,7 +108,7 @@ public class PrivatveranstalterService {
 				LOG.warn(msg);
 
 				this.dataInconsistencyRegistered = new LoggableEventDelegate().fireDataInconsistencyEvent(msg,
-					dataInconsistencyEvent);
+					domainEventHandler);
 
 				throw new MkGatewayRuntimeException("Kann aktuelle Teilnahme nicht ermitteln");
 			}
@@ -158,7 +155,7 @@ public class PrivatveranstalterService {
 			String msg = "Versuch, nicht vorhandenen Veranstalter mit UUID=" + uuid + " zu finden";
 			LOG.warn(msg);
 
-			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
+			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 			throw new NotFoundException("Kennen keinen Veranstalter mit dieser ID");
 		}
 
@@ -168,7 +165,7 @@ public class PrivatveranstalterService {
 
 			String msg = "Falsche Rolle: erwarten Privatveranstalter, war aber " + veranstalter.toString();
 			LOG.warn(msg);
-			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
+			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 			throw new NotFoundException("Kennen keinen Privatveranstalter mit dieser ID");
 		}
 

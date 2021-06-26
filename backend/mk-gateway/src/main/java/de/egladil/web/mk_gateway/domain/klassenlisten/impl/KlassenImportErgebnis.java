@@ -14,14 +14,16 @@ import de.egladil.web.mk_gateway.domain.kinder.Klasse;
  */
 public class KlassenImportErgebnis {
 
-	private final List<Klasse> klassen;
+	private List<Klasse> klassen;
 
 	private final List<Kind> kinder;
 
-	public KlassenImportErgebnis(final List<Klasse> klassen, final List<Kind> kinder) {
+	private final List<KindImportDaten> kindImportDaten;
+
+	public KlassenImportErgebnis(final List<KindImportDaten> kindImportDaten, final List<Kind> kinder) {
 
 		super();
-		this.klassen = klassen;
+		this.kindImportDaten = kindImportDaten;
 		this.kinder = kinder;
 	}
 
@@ -30,9 +32,19 @@ public class KlassenImportErgebnis {
 		return klassen;
 	}
 
+	public List<KindImportDaten> getKindImportDaten() {
+
+		return kindImportDaten;
+	}
+
 	public List<Kind> getKinder() {
 
 		return kinder;
+	}
+
+	public void setKlassen(final List<Klasse> klassen) {
+
+		this.klassen = klassen;
 	}
 
 }

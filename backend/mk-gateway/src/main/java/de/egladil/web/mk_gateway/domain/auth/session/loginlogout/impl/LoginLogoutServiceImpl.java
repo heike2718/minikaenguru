@@ -5,7 +5,6 @@
 package de.egladil.web.mk_gateway.domain.auth.session.loginlogout.impl;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.core.NewCookie;
@@ -27,8 +26,8 @@ import de.egladil.web.mk_gateway.domain.auth.session.Session;
 import de.egladil.web.mk_gateway.domain.auth.session.SessionUtils;
 import de.egladil.web.mk_gateway.domain.auth.session.loginlogout.LoginLogoutService;
 import de.egladil.web.mk_gateway.domain.auth.session.tokens.TokenExchangeService;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
-import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 
 /**
  * LoginLogoutServiceImpl
@@ -63,7 +62,7 @@ public class LoginLogoutServiceImpl implements LoginLogoutService {
 	TokenExchangeService tokenExchangeService;
 
 	@Inject
-	Event<SecurityIncidentRegistered> securityEvent;
+	DomainEventHandler domainEventHandler;
 
 	@Override
 	public Response login(final AuthResult authResult, final AuthMode authMode) {
@@ -72,7 +71,7 @@ public class LoginLogoutServiceImpl implements LoginLogoutService {
 
 			String msg = "login wurde ohne payload aufgerufen";
 
-			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+			new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 
 			throw new BadRequestException("erwarte payload");
 		}
@@ -129,7 +128,7 @@ public class LoginLogoutServiceImpl implements LoginLogoutService {
 
 			LOG.warn(msg);
 
-			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+			new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 
 			return Response.status(401)
 				.entity(ResponsePayload.messageOnly(MessagePayload.error("böse böse. Dieser Request wurde geloggt!")))

@@ -75,7 +75,7 @@ public class InMemoryKinderRepository implements KinderRepository {
 
 		Kind neues = new Kind(identifier)
 			.withKlasseID(kind.klasseID())
-			.withKlassenstufe(kind.klassenstufe())
+			.withKlassenstufe(kind.getKlassenstufe())
 			.withLandkuerzel(kind.landkuerzel())
 			.withLoesungszettelID(kind.loesungszettelID())
 			.withNachname(kind.nachname())

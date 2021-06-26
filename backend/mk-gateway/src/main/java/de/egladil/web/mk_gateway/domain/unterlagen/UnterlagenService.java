@@ -8,7 +8,6 @@ import java.text.MessageFormat;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
 
@@ -19,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.UnterlagenNichtVerfuegbarException;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
@@ -52,7 +52,7 @@ public class UnterlagenService {
 	String pathExternalFiles;
 
 	@Inject
-	Event<SecurityIncidentRegistered> securityEventRegistered;
+	DomainEventHandler domainEventHandler;
 
 	@Inject
 	private WettbewerbService wettbewerbService;
@@ -149,7 +149,7 @@ public class UnterlagenService {
 				+ " versucht, Wettbewerbsunterlagen herunterzuladen.";
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, securityEventRegistered);
+			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 			throw new UnterlagenNichtVerfuegbarException();
 		}
 	}
@@ -166,7 +166,7 @@ public class UnterlagenService {
 				+ " versucht, Wettbewerbsunterlagen über die falsche URL herunterzuladen.";
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, securityEventRegistered);
+			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 			throw new NotFoundException();
 		}
 	}
@@ -184,7 +184,7 @@ public class UnterlagenService {
 			String msg = "Unbekannter Veranstalter mit UUID=" + lehrerID + " versucht, Wettbewerbsunterlagen herunterzuladen.";
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, securityEventRegistered);
+			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 			throw new NotFoundException();
 
 		}

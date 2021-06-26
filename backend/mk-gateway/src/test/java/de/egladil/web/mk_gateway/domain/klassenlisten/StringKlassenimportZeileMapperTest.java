@@ -5,8 +5,14 @@
 package de.egladil.web.mk_gateway.domain.klassenlisten;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.Optional;
+
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,91 +32,126 @@ public class StringKlassenimportZeileMapperTest {
 	}
 
 	@Test
+	void should_constructorThrowUploadFormatException_when_ueberschriftNichtWieGefordert() {
+
+		KlassenlisteUeberschrift ueberschrift = new KlassenlisteUeberschrift("blau,grün,Vorname,Klassenstufe");
+
+		try {
+
+			new StringKlassenimportZeileMapper(ueberschrift);
+			fail("keine UploadFormatException");
+
+		} catch (UploadFormatException e) {
+
+			assertEquals(
+				"Die hochgeladene Datei kann nicht verarbeitet werden. Die erste Zeile enthält nicht die Felder \"Nachname\", \"Vorname\", \"Klasse\", \"Klassenstufe\".",
+				e.getMessage());
+		}
+
+	}
+
+	@Test
 	void should_applyReturnExcepctedKlassenlisteZeile_when_allesOk() {
 
 		// Arrange
 		String kommaseparierteZeile = "2a , Grüter ,Johanna , 2";
+
+		Pair<Integer, String> zeileMitIndex = Pair.of(Integer.valueOf(42), kommaseparierteZeile);
+
 		StringKlassenimportZeileMapper mapper = new StringKlassenimportZeileMapper(klassenlisteUeberschrift);
 
 		// Act
-		KlassenimportZeile result = mapper.apply(kommaseparierteZeile);
+		Optional<KlassenimportZeile> optResult = mapper.apply(zeileMitIndex);
 
 		// Assert
+		KlassenimportZeile result = optResult.get();
 		assertEquals("Johanna", result.getVorname());
 		assertEquals("Grüter", result.getNachname());
 		assertEquals("2a", result.getKlasse());
 		assertEquals("2", result.getKlassenstufe());
+		assertEquals(42, result.getIndex());
+		assertNull(result.getFehlermeldung());
+		assertTrue(result.ok());
 
 	}
 
 	@Test
-	void should_applyThrowUploadFormatException_when_zeileZuKurz() {
+	void should_applyReturnZeileMitFehlermeldung_when_zeileZuKurz() {
 
 		// Arrange
 		String kommaseparierteZeile = "2a , Grüter ,2";
+		Pair<Integer, String> zeileMitIndex = Pair.of(Integer.valueOf(42), kommaseparierteZeile);
+
 		StringKlassenimportZeileMapper mapper = new StringKlassenimportZeileMapper(klassenlisteUeberschrift);
 
-		// Act + Assert
-		try {
+		// Act
+		Optional<KlassenimportZeile> optResult = mapper.apply(zeileMitIndex);
 
-			mapper.apply(kommaseparierteZeile);
-			fail("keine UploadFormatException");
+		// Assert
+		assertTrue(optResult.isPresent());
 
-		} catch (UploadFormatException e) {
+		KlassenimportZeile result = optResult.get();
+		assertEquals(42, result.getIndex());
+		assertEquals(
+			"Fehler in Zeile 42: \"2a , Grüter ,2\" hat nicht genau 4 Einträge und wird nicht importiert. Anzahl Einträge = 3",
+			result.getFehlermeldung());
+		assertFalse(result.ok());
+		assertNull(result.getKlasse());
+		assertNull(result.getKlassenstufe());
+		assertNull(result.getNachname());
+		assertNull(result.getVorname());
 
-			assertEquals("Die Klassenliste kann nicht importiert werden: erwarte genau 4 Einträge in jeder Zeile.", e.getMessage());
-		}
 	}
 
 	@Test
-	void should_applyThrowUploadFormatException_when_zeileZuLang() {
+	void should_applyReturnOptionalWithFehlermeldung_when_zeileZuLang() {
 
 		// Arrange
 		String kommaseparierteZeile = "2a , Grüter , Marie, Luise ,2";
+		Pair<Integer, String> zeileMitIndex = Pair.of(Integer.valueOf(42), kommaseparierteZeile);
 		StringKlassenimportZeileMapper mapper = new StringKlassenimportZeileMapper(klassenlisteUeberschrift);
 
-		// Act + Assert
-		try {
+		// Act
+		Optional<KlassenimportZeile> optResult = mapper.apply(zeileMitIndex);
 
-			mapper.apply(kommaseparierteZeile);
-			fail("keine UploadFormatException");
+		// Assert
+		assertTrue(optResult.isPresent());
 
-		} catch (UploadFormatException e) {
-
-			assertEquals("Die Klassenliste kann nicht importiert werden: erwarte genau 4 Einträge in jeder Zeile.", e.getMessage());
-		}
+		KlassenimportZeile result = optResult.get();
+		assertEquals(42, result.getIndex());
+		assertEquals(
+			"Fehler in Zeile 42: \"2a , Grüter , Marie, Luise ,2\" hat nicht genau 4 Einträge und wird nicht importiert. Anzahl Einträge = 5",
+			result.getFehlermeldung());
+		assertFalse(result.ok());
+		assertNull(result.getKlasse());
+		assertNull(result.getKlassenstufe());
+		assertNull(result.getNachname());
+		assertNull(result.getVorname());
 	}
 
 	@Test
-	void should_applyThrowUploadFormatException_when_zeileBlank() {
+	void should_applyReturnEmptyOptional_when_zeileBlank() {
 
 		// Arrange
 		String kommaseparierteZeile = " ";
+		Pair<Integer, String> zeileMitIndex = Pair.of(Integer.valueOf(42), kommaseparierteZeile);
 		StringKlassenimportZeileMapper mapper = new StringKlassenimportZeileMapper(klassenlisteUeberschrift);
 
-		// Act + Assert
-		try {
-
-			mapper.apply(kommaseparierteZeile);
-			fail("keine UploadFormatException");
-
-		} catch (UploadFormatException e) {
-
-			assertEquals("Die Klassenliste kann nicht importiert werden: erwarte genau 4 Einträge in jeder Zeile.", e.getMessage());
-		}
+		// Act
+		Optional<KlassenimportZeile> optResult = mapper.apply(zeileMitIndex);
+		assertTrue(optResult.isEmpty());
 	}
 
 	@Test
-	void should_applyThrowNPE_when_zeileBlank() {
+	void should_applyThrowNPE_when_zeileMitIndexNull() {
 
 		// Arrange
-		String kommaseparierteZeile = null;
 		StringKlassenimportZeileMapper mapper = new StringKlassenimportZeileMapper(klassenlisteUeberschrift);
 
 		// Act + Assert
 		try {
 
-			mapper.apply(kommaseparierteZeile);
+			mapper.apply(null);
 			fail("keine NullPointerException");
 
 		} catch (NullPointerException e) {

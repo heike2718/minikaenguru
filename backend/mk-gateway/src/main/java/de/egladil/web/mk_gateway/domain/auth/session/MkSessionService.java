@@ -11,7 +11,6 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
@@ -32,6 +31,7 @@ import de.egladil.web.mk_gateway.domain.auth.events.UserLoggedIn;
 import de.egladil.web.mk_gateway.domain.auth.events.UserLoggedOut;
 import de.egladil.web.mk_gateway.domain.error.AuthException;
 import de.egladil.web.mk_gateway.domain.error.LogmessagePrefixes;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.user.UserRepository;
@@ -57,13 +57,7 @@ public class MkSessionService {
 	CryptoService cryptoService;
 
 	@Inject
-	Event<SecurityIncidentRegistered> securityEvent;
-
-	@Inject
-	Event<UserLoggedIn> loginEvent;
-
-	@Inject
-	Event<UserLoggedOut> logoutEvent;
+	DomainEventHandler domainEventHandler;
 
 	private SecurityIncidentRegistered securityIncident;
 
@@ -120,7 +114,7 @@ public class MkSessionService {
 
 				String msg = "USER mit UUID " + uuid + " existiert nicht";
 
-				this.securityIncident = new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+				this.securityIncident = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 				throw new AuthException(msg);
 			}
 
@@ -140,9 +134,9 @@ public class MkSessionService {
 
 			this.loginEventObject = new UserLoggedIn(uuid, user.getRolle());
 
-			if (loginEvent != null) {
+			if (domainEventHandler != null) {
 
-				loginEvent.fire(loginEventObject);
+				domainEventHandler.handleEvent(loginEventObject);
 			} else {
 
 				System.out.println(loginEventObject.serializeQuietly());
@@ -157,7 +151,7 @@ public class MkSessionService {
 
 			String msg = LogmessagePrefixes.BOT + "JWT " + StringUtils.abbreviate(jwt, 20) + " invalid: " + e.getMessage();
 
-			this.securityIncident = new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+			this.securityIncident = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 
 			LOG.warn(msg);
 			throw new AuthException("JWT invalid");
@@ -178,9 +172,9 @@ public class MkSessionService {
 
 			logoutEventObject = new UserLoggedOut(session.user().uuid(), session.user().rolle());
 
-			if (logoutEvent != null) {
+			if (domainEventHandler != null) {
 
-				logoutEvent.fire(logoutEventObject);
+				domainEventHandler.handleEvent(logoutEventObject);
 			} else {
 
 				System.out.println(logoutEventObject.serializeQuietly());

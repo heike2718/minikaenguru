@@ -9,26 +9,36 @@ import java.util.function.BiFunction;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 /**
- * KindDublettenpruefer
+ * Dublettenpruefer
  */
-@Deprecated
-public class KindDublettenpruefer implements BiFunction<Kind, Kind, Boolean> {
+public class Dublettenpruefer implements BiFunction<KindAdaptable, KindAdaptable, Boolean> {
 
 	@Override
-	public Boolean apply(final Kind kind1, final Kind kind2) {
+	public Boolean apply(final KindAdaptable kind1, final KindAdaptable kind2) {
 
-		if (kind1.equals(kind2)) {
+		if (kind1 == null || kind2 == null) {
 
 			return Boolean.FALSE;
 		}
 
 		boolean b = new EqualsBuilder().append(kind1.klasseID(), kind2.klasseID())
-			.append(kind1.klassenstufe(), kind2.klassenstufe())
+			.append(kind1.getKlassenstufe(), kind2.getKlassenstufe())
 			.append(kind1.getLowerVornameNullSafe(), kind2.getLowerVornameNullSafe())
 			.append(kind1.getLowerNachnameNullSafe(), kind2.getLowerNachnameNullSafe())
 			.append(kind1.getLowerZusatzNullSafe(), kind2.getLowerZusatzNullSafe()).isEquals();
 
-		return Boolean.valueOf(b);
+		if (!b) {
+
+			return Boolean.FALSE;
+		}
+
+		// interessant ist es, wenn dort neue Kinder drin sind - also Daten aus einem Import
+		if (kind1.isNeu() && kind2.isNeu()) {
+
+			return Boolean.TRUE;
+		}
+
+		return !kind1.identifier().equals(kind2.identifier());
 	}
 
 }

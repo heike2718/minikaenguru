@@ -8,7 +8,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,13 +17,14 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +43,6 @@ import de.egladil.web.mk_gateway.domain.kinder.api.KlasseAPIModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseEditorModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseRequestData;
 import de.egladil.web.mk_gateway.domain.kinder.events.KindCreated;
-import de.egladil.web.mk_gateway.domain.kinder.events.KlasseCreated;
 import de.egladil.web.mk_gateway.domain.kinder.impl.KinderServiceImpl;
 import de.egladil.web.mk_gateway.domain.kinder.impl.KlassenServiceImpl;
 import de.egladil.web.mk_gateway.domain.klassenlisten.KlassenimportZeile;
@@ -51,14 +50,15 @@ import de.egladil.web.mk_gateway.domain.klassenlisten.KlassenlisteImportService;
 import de.egladil.web.mk_gateway.domain.klassenlisten.KlassenlisteUeberschrift;
 import de.egladil.web.mk_gateway.domain.klassenlisten.StringKlassenimportZeileMapper;
 import de.egladil.web.mk_gateway.domain.klassenlisten.UploadKlassenlisteContext;
-import de.egladil.web.mk_gateway.domain.klassenlisten.utils.KinderDublettenPruefer;
+import de.egladil.web.mk_gateway.domain.klassenlisten.api.KlassenlisteImportReport;
+import de.egladil.web.mk_gateway.domain.klassenlisten.utils.ImportDublettenPruefer;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 
 /**
  * KlassenlisteCSVImportService importiert die Kinder aus einer CSV-Datei.
  */
-@ApplicationScoped
+@RequestScoped
 public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(KlassenlisteCSVImportService.class);
@@ -74,11 +74,7 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 	@Inject
 	KinderService kinderService;
 
-	@Inject
-	Event<KlasseCreated> klasseCreatedEvent;
-
-	@Inject
-	Event<KindCreated> kindCreatedEvent;
+	private List<KindCreated> kindCreatedEventPayloads;
 
 	public static KlassenlisteImportService createForIntegrationTests(final EntityManager em) {
 
@@ -93,58 +89,58 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 
 		String path = pathUploadDir + File.separator + uploadMetadata.getUuid() + ".csv";
 
-		List<String> lines = getContents(path);
+		List<String> lines = readFileContent(path);
 
 		KlassenlisteUeberschrift ueberschrift = new KlassenlisteUeberschrift(lines.get(0));
 
 		StringKlassenimportZeileMapper zeilenMapper = new StringKlassenimportZeileMapper(ueberschrift);
 
-		List<KlassenimportZeile> klassenimportZeilen = lines.stream().map(z -> zeilenMapper.apply(z)).collect(Collectors.toList());
+		List<Pair<Integer, String>> zeilenMitIndex = new ArrayList<>();
+
+		for (int i = 0; i < lines.size(); i++) {
+
+			String line = lines.get(i);
+			zeilenMitIndex.add(Pair.of(Integer.valueOf(i), line));
+		}
+
+		List<KlassenimportZeile> klassenimportZeilen = zeilenMitIndex.stream().map(p -> zeilenMapper.apply(p))
+			.filter(opt -> opt.isPresent()).map(opt -> opt.get()).collect(Collectors.toList());
+
+		long anzahlMitFehlern = klassenimportZeilen.stream().filter(z -> !z.ok()).count();
 
 		Identifier veranstalterID = new Identifier(uploadMetadata.getVeranstalterUuid());
 		String schulkuerzel = uploadMetadata.getTeilnahmenummer();
 
 		try {
 
-			KlassenImportErgebnis importErgebnis = this.openTransactionAndImport(veranstalterID, schulkuerzel,
-				uploadKlassenlisteContext, klassenimportZeilen);
+			List<Kind> vorhandeneKinder = kinderService.findWithSchulteilname(schulkuerzel);
 
-			long anzahlDubletten = importErgebnis.getKinder().stream().filter(k -> k.isDublettePruefen()).count();
-			long anzahlMitUnklarerKlassenstufe = importErgebnis.getKinder().stream().filter(k -> k.isKlassenstufePruefen()).count();
+			KlassenImportErgebnis importErgebnis = this.doTheImport(veranstalterID, schulkuerzel,
+				uploadKlassenlisteContext, klassenimportZeilen, vorhandeneKinder);
 
-			String msg = getImportMessage(anzahlDubletten, anzahlMitUnklarerKlassenstufe);
+			long anzahlDubletten = importErgebnis.getKindImportDaten().stream().filter(k -> k.isDublettePruefen()).count();
+			long anzahlMitUnklarerKlassenstufe = importErgebnis.getKindImportDaten().stream().filter(k -> k.isKlassenstufePruefen())
+				.count();
+
+			String msg = getImportMessage(anzahlMitFehlern, anzahlMitUnklarerKlassenstufe, anzahlDubletten);
 
 			List<Klasse> klassen = importErgebnis.getKlassen();
 
-			if (klasseCreatedEvent != null) {
-
-				for (Klasse klasse : klassen) {
-
-					KlasseCreated klasseCreated = (KlasseCreated) new KlasseCreated(veranstalterID.identifier())
-						.withKlasseID(klasse.identifier().identifier()).withSchulkuerzel(schulkuerzel).withName(klasse.name());
-					klasseCreatedEvent.fire(klasseCreated);
-				}
-			}
-
-			if (kindCreatedEvent != null) {
-
-				for (Kind kind : importErgebnis.getKinder()) {
-
-					KindCreated kindCreated = (KindCreated) new KindCreated(veranstalterID.identifier())
-						.withKindID(kind.identifier().identifier())
-						.withKlassenstufe(kind.klassenstufe())
-						.withSprache(kind.sprache())
-						.withTeilnahmenummer(schulkuerzel)
-						.withKlasseID(kind.klasseID().identifier());
-
-					kindCreatedEvent.fire(kindCreated);
-				}
-			}
-
-			List<KlasseAPIModel> payloadData = klassen.stream().map(kl -> KlasseAPIModel.createFromKlasse(kl))
+			List<KlasseAPIModel> klasseAPIModels = klassen.stream().map(kl -> KlasseAPIModel.createFromKlasse(kl))
 				.collect(Collectors.toList());
 
-			if (anzahlDubletten + anzahlMitUnklarerKlassenstufe > 0) {
+			KlassenlisteImportReport payloadData = new KlassenlisteImportReport()
+				.withKlassen(klasseAPIModels).withAnzahlDubletten(anzahlDubletten)
+				.withAnzahlKlassenstufeUnklar(anzahlMitUnklarerKlassenstufe).withAnzahlNichtImportiert(anzahlMitFehlern)
+				.withAnzahlKlassen(klasseAPIModels.size()).withAnzahlKinderImportiert(importErgebnis.getKinder().size());
+
+			if (anzahlMitFehlern > 0) {
+
+				// TODO: fehlerhafte Zeilen als CSV auf die Festplatte schreiben mit der UUID als Dateiname.
+				payloadData.setUuidImportReport(uploadMetadata.getUuid());
+			}
+
+			if (anzahlMitFehlern + anzahlDubletten + anzahlMitUnklarerKlassenstufe > 0) {
 
 				return new ResponsePayload(MessagePayload.warn(msg), payloadData);
 			}
@@ -159,57 +155,65 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 		}
 	}
 
-	String getImportMessage(final long anzahlDubletten, final long anzahlMitUnklarerKlassenstufe) {
+	String getImportMessage(final long anzahlMitFehlern, final long anzahlMitUnklarerKlassenstufe, final long anzahlDubletten) {
+
+		if (anzahlMitFehlern > 0) {
+
+			return applicationMessages.getString("klassenimport.nichtVollstaendig");
+		}
 
 		if (anzahlDubletten > 0 && anzahlMitUnklarerKlassenstufe > 0) {
 
-			return MessageFormat.format(applicationMessages.getString(""),
-				new Object[] { "klassenimport.allesPruefen" + anzahlDubletten, "" + anzahlMitUnklarerKlassenstufe });
+			return applicationMessages.getString("klassenimport.vollstaendigMitWarnung");
 		}
 
 		if (anzahlDubletten > 0) {
 
-			return MessageFormat.format(applicationMessages.getString(""),
-				new Object[] { "klassenimport.dublettenPruefen" + anzahlDubletten, "" + anzahlMitUnklarerKlassenstufe });
+			return applicationMessages.getString("klassenimport.vollstaendigMitWarnungNurDublette");
 
 		}
 
 		if (anzahlMitUnklarerKlassenstufe > 0) {
 
-			return MessageFormat.format(applicationMessages.getString(""),
-				new Object[] { "klassenimport.klassenstufenPruefen" + anzahlDubletten, "" + anzahlMitUnklarerKlassenstufe });
+			return applicationMessages.getString("klassenimport.vollstaendigMitWarnungNurKlassenstufe");
 		}
 
 		return applicationMessages.getString("klassenimport.success");
 	}
 
 	@Transactional
-	KlassenImportErgebnis openTransactionAndImport(final Identifier veranstalterID, final String schulkuerzel, final UploadKlassenlisteContext uploadKlassenlisteContext, final List<KlassenimportZeile> klassenimportZeilen) {
+	KlassenImportErgebnis doTheImport(final Identifier veranstalterID, final String schulkuerzel, final UploadKlassenlisteContext uploadKlassenlisteContext, final List<KlassenimportZeile> klassenimportZeilen, final List<Kind> vorhandeneKinder) {
 
-		Map<String, Klasse> klassenMap = this.importiereKlassen(veranstalterID, schulkuerzel, klassenimportZeilen);
+		Map<String, Klasse> klassenMap = this.createAndImportKlassen(veranstalterID, schulkuerzel, klassenimportZeilen);
 
-		List<Kind> importierteKinder = this.createAndImportKinder(veranstalterID, schulkuerzel, klassenimportZeilen, klassenMap,
-			uploadKlassenlisteContext);
+		KlassenImportErgebnis importErgebnis = this.createAndImportKinder(veranstalterID, schulkuerzel, klassenimportZeilen,
+			klassenMap, uploadKlassenlisteContext, vorhandeneKinder);
 
 		List<Klasse> importierteKlassen = klassenMap.values().stream().collect(Collectors.toList());
-		return new KlassenImportErgebnis(importierteKlassen, importierteKinder);
+		importErgebnis.setKlassen(importierteKlassen);
+		return importErgebnis;
 	}
 
-	Map<String, Klasse> importiereKlassen(final Identifier veranstalterID, final String schulkuerzel, final List<KlassenimportZeile> importZeilen) {
+	Map<String, Klasse> createAndImportKlassen(final Identifier veranstalterID, final String schulkuerzel, final List<KlassenimportZeile> importZeilen) {
 
 		Map<String, KlasseRequestData> klassenMap = new HashMap<>();
 
-		for (KlassenimportZeile zeile : importZeilen) {
+		for (int i = 1; i < importZeilen.size(); i++) {
 
-			String nameKlasse = zeile.getKlasse();
-			KlasseRequestData klasseRequestData = klassenMap.get(nameKlasse);
+			KlassenimportZeile zeile = importZeilen.get(i);
 
-			if (klasseRequestData == null) {
+			if (zeile.ok()) {
 
-				KlasseEditorModel klasseEditorModel = new KlasseEditorModel().withName(nameKlasse);
-				klasseRequestData = new KlasseRequestData().withKlasse(klasseEditorModel).withSchulkuerzel(schulkuerzel)
-					.withUuid(KlasseRequestData.KEINE_UUID);
-				klassenMap.put(nameKlasse, klasseRequestData);
+				String nameKlasse = zeile.getKlasse();
+				KlasseRequestData klasseRequestData = klassenMap.get(nameKlasse);
+
+				if (klasseRequestData == null) {
+
+					KlasseEditorModel klasseEditorModel = new KlasseEditorModel().withName(nameKlasse);
+					klasseRequestData = new KlasseRequestData().withKlasse(klasseEditorModel).withSchulkuerzel(schulkuerzel)
+						.withUuid(KlasseRequestData.KEINE_UUID);
+					klassenMap.put(nameKlasse, klasseRequestData);
+				}
 			}
 		}
 
@@ -222,15 +226,18 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 		return result;
 	}
 
-	List<Kind> createAndImportKinder(final Identifier veranstalterID, final String schulkuerzel, final List<KlassenimportZeile> klassenimportZeilen, final Map<String, Klasse> klassenMap, final UploadKlassenlisteContext uploadKlassenlisteContext) {
-
-		List<Kind> result = new ArrayList<>();
+	KlassenImportErgebnis createAndImportKinder(final Identifier veranstalterID, final String schulkuerzel, final List<KlassenimportZeile> klassenimportZeilen, final Map<String, Klasse> klassenMap, final UploadKlassenlisteContext uploadKlassenlisteContext, final List<Kind> vorhandeneKinder) {
 
 		List<KindImportDaten> importDaten = new ArrayList<>();
 
 		for (int i = 1; i < klassenimportZeilen.size(); i++) {
 
 			KlassenimportZeile zeile = klassenimportZeilen.get(i);
+
+			if (!zeile.ok()) {
+
+				continue;
+			}
 
 			String nameKlasse = zeile.getKlasse();
 			Klasse klasse = klassenMap.get(nameKlasse);
@@ -269,7 +276,7 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 			importDaten.add(kindImportDaten);
 		}
 
-		int anzahlDublettenInImportdatei = new KinderDublettenPruefer().pruefeUndMarkiereDublettenImportDaten(importDaten);
+		int anzahlDublettenInImportdatei = new ImportDublettenPruefer().pruefeUndMarkiereDublettenImportDaten(importDaten);
 
 		if (anzahlDublettenInImportdatei > 0) {
 
@@ -277,12 +284,12 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 				anzahlDublettenInImportdatei);
 		}
 
-		result = this.kinderService.importiereKinder(veranstalterID, schulkuerzel, importDaten);
+		List<Kind> kinder = this.kinderService.importiereKinder(veranstalterID, schulkuerzel, importDaten, vorhandeneKinder);
 
-		return result;
+		return new KlassenImportErgebnis(importDaten, kinder);
 	}
 
-	List<String> getContents(final String path) {
+	List<String> readFileContent(final String path) {
 
 		File file = new File(path);
 
@@ -294,7 +301,10 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 
 			while ((line = br.readLine()) != null) {
 
-				lines.add(index++, line);
+				if (StringUtils.isNotBlank(line)) {
+
+					lines.add(index++, line);
+				}
 			}
 
 			return lines;
@@ -303,7 +313,7 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 
 			LOGGER.error("Konnte Klassenliste nicht importieren: path={}: {}", path,
 				e.getMessage(), e);
-			throw new MkGatewayRuntimeException("Beim Import einer Klassenliste ist ein Fehler aufgetreten", e);
+			throw new MkGatewayRuntimeException("IOException beim Import einer Klassenliste", e);
 
 		}
 	}
@@ -311,6 +321,11 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 	void setPathUploadDir(final String pathUploadDir) {
 
 		this.pathUploadDir = pathUploadDir;
+	}
+
+	List<KindCreated> getKindCreatedEventPayloads() {
+
+		return kindCreatedEventPayloads;
 	}
 
 }

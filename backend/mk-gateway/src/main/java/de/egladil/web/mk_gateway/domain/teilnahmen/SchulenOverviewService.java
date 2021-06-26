@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
@@ -39,7 +39,7 @@ public class SchulenOverviewService {
 	AktuelleTeilnahmeService aktuelleTeilnahmeService;
 
 	@Inject
-	Event<SecurityIncidentRegistered> securityIncidentEvent;
+	DomainEventHandler domainEventHandler;
 
 	private SecurityIncidentRegistered securityIncidentRegistered;
 
@@ -65,7 +65,7 @@ public class SchulenOverviewService {
 
 			LOG.warn(msg);
 
-			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
+			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 
 			return items;
 		}

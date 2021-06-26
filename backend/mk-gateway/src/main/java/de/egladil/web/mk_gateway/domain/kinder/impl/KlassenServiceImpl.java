@@ -15,7 +15,6 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -27,8 +26,8 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
-import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
 import de.egladil.web.mk_gateway.domain.kinder.Klasse;
 import de.egladil.web.mk_gateway.domain.kinder.KlasseDuplettenpruefer;
 import de.egladil.web.mk_gateway.domain.kinder.KlassenRepository;
@@ -48,13 +47,9 @@ import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KinderHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KlassenHibernateRepository;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.TeilnahmenHibernateRepository;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UserHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.VeranstalterHibernateRepository;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.WettbewerbHibernateRepository;
 
 /**
  * KlassenServiceImpl
@@ -89,20 +84,14 @@ public class KlassenServiceImpl implements KlassenService {
 	@Inject
 	WettbewerbService wettbewerbService;
 
-	private KlasseCreated klasseCreated;
-
 	@Inject
-	Event<KlasseCreated> klasseCreatedEvent;
+	DomainEventHandler domainEventHandler;
+
+	private KlasseCreated klasseCreated;
 
 	private KlasseChanged klasseChanged;
 
-	@Inject
-	Event<KlasseChanged> klasseChangedEvent;
-
 	private KlasseDeleted klasseDeleted;
-
-	@Inject
-	Event<KlasseDeleted> klasseDeletedEvent;
 
 	private WettbewerbID wettbewerbID;
 
@@ -122,33 +111,14 @@ public class KlassenServiceImpl implements KlassenService {
 	public static KlassenServiceImpl createForIntegrationTest(final EntityManager em) {
 
 		KlassenServiceImpl result = new KlassenServiceImpl();
-
-		VeranstalterRepository veranstalterRepository = VeranstalterHibernateRepository.createForIntegrationTest(em);
-
-		AuthorizationService authService = AuthorizationService.createForTest(
-			veranstalterRepository, UserHibernateRepository.createForIntegrationTest(em));
-
-		KinderRepository kinderRepository = KinderHibernateRepository.createForIntegrationTest(em);
-		TeilnahmenRepository teilnahmenRepository = TeilnahmenHibernateRepository.createForIntegrationTest(em);
-		WettbewerbService wettbewerbService = WettbewerbService
-			.createForTest(WettbewerbHibernateRepository.createForIntegrationTest(em));
-
-		LoesungszettelService loesungszettelService = LoesungszettelService.createForTest(authService, wettbewerbService,
-			kinderRepository,
-			LoesungszettelHibernateRepository.createForIntegrationTest(em));
-
-		KlassenRepository klassenRepository = KlassenHibernateRepository.createForIntegrationTest(em);
-
-		KinderServiceImpl kinderService = KinderServiceImpl.createForTest(authService, kinderRepository, teilnahmenRepository,
-			veranstalterRepository, wettbewerbService, loesungszettelService, klassenRepository);
-
-		result.authService = authService;
-		result.kinderService = kinderService;
-		result.klassenRepository = klassenRepository;
-		result.loesungszettelService = loesungszettelService;
-		result.teilnahmenRepository = teilnahmenRepository;
-		result.veranstalterRepository = veranstalterRepository;
-		result.wettbewerbService = wettbewerbService;
+		result.authService = AuthorizationService.createForIntegrationTest(em);
+		result.kinderService = KinderServiceImpl.createForIntegrationTest(em);
+		result.klassenRepository = KlassenHibernateRepository.createForIntegrationTest(em);
+		result.loesungszettelService = LoesungszettelService.createForIntegrationTest(em);
+		result.teilnahmenRepository = TeilnahmenHibernateRepository.createForIntegrationTest(em);
+		result.veranstalterRepository = VeranstalterHibernateRepository.createForIntegrationTest(em);
+		result.wettbewerbService = WettbewerbService.createForIntegrationTest(em);
+		result.domainEventHandler = DomainEventHandler.createForIntegrationTest(em);
 
 		return result;
 
@@ -280,9 +250,9 @@ public class KlassenServiceImpl implements KlassenService {
 			.withName(neueKlasse.name())
 			.withSchulkuerzel(schulkuerzel);
 
-		if (klasseCreatedEvent != null) {
+		if (domainEventHandler != null) {
 
-			klasseCreatedEvent.fire(klasseCreated);
+			domainEventHandler.handleEvent(klasseCreated);
 		} else {
 
 			System.out.println(klasseCreated.serializeQuietly());
@@ -337,9 +307,9 @@ public class KlassenServiceImpl implements KlassenService {
 			.withKlasseID(klasseID.identifier())
 			.withSchulkuerzel(schulkuerzel);
 
-		if (klasseChangedEvent != null) {
+		if (domainEventHandler != null) {
 
-			klasseChangedEvent.fire(klasseChanged);
+			domainEventHandler.handleEvent(klasseChanged);
 		} else {
 
 			System.out.println(klasseChanged.serializeQuietly());
@@ -395,9 +365,9 @@ public class KlassenServiceImpl implements KlassenService {
 			.withName(klasse.name())
 			.withSchulkuerzel(schulkuerzel);
 
-		if (klasseDeletedEvent != null) {
+		if (domainEventHandler != null) {
 
-			klasseDeletedEvent.fire(klasseDeleted);
+			domainEventHandler.handleEvent(klasseDeleted);
 		} else {
 
 			System.out.println(klasseDeleted.serializeQuietly());

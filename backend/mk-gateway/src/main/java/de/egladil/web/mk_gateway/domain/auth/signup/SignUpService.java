@@ -7,7 +7,6 @@ package de.egladil.web.mk_gateway.domain.auth.signup;
 import java.util.Optional;
 
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
@@ -18,6 +17,7 @@ import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.mk_gateway.domain.auth.events.LehrerCreated;
 import de.egladil.web.mk_gateway.domain.auth.events.PrivatveranstalterCreated;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.user.UserRepository;
@@ -40,7 +40,7 @@ public class SignUpService {
 	SynchronizeVeranstalterService syncVeranstalterService;
 
 	@Inject
-	Event<MkGatewayDomainEvent> createdEvent;
+	DomainEventHandler domainEventHandler;
 
 	private MkGatewayDomainEvent event;
 
@@ -111,9 +111,9 @@ public class SignUpService {
 			userRepository.addUser(user);
 		}
 
-		if (createdEvent != null) {
+		if (domainEventHandler != null) {
 
-			createdEvent.fire(event);
+			domainEventHandler.handleEvent(event);
 		}
 
 		return user;

@@ -12,7 +12,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -33,9 +32,8 @@ import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.Loesungszettelpunk
 import de.egladil.web.mk_gateway.domain.error.ActionNotAuthorizedException;
 import de.egladil.web.mk_gateway.domain.error.ConcurrentModificationType;
 import de.egladil.web.mk_gateway.domain.error.EntityConcurrentlyModifiedException;
-import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
-import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
 import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelChanged;
@@ -64,19 +62,7 @@ public class LoesungszettelService {
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
 	@Inject
-	Event<LoesungszettelCreated> loesungszettelCreatedEvent;
-
-	@Inject
-	Event<LoesungszettelChanged> loesungszettelChangedEvent;
-
-	@Inject
-	Event<LoesungszettelDeleted> loesungszettelDeletedEvent;
-
-	@Inject
-	Event<DataInconsistencyRegistered> dataInconsistencyEvent;
-
-	@Inject
-	Event<SecurityIncidentRegistered> securityIncidentEvent;
+	DomainEventHandler domainEventHandler;
 
 	@Inject
 	LoesungszettelRepository loesungszettelRepository;
@@ -101,8 +87,9 @@ public class LoesungszettelService {
 		LoesungszettelService result = new LoesungszettelService();
 		result.loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(entityManager);
 		result.kinderRepository = KinderHibernateRepository.createForIntegrationTest(entityManager);
-		result.authService = AuthorizationService.createForIntegrationTests(entityManager);
+		result.authService = AuthorizationService.createForIntegrationTest(entityManager);
 		result.wettbewerbService = WettbewerbService.createForIntegrationTest(entityManager);
+		result.domainEventHandler = DomainEventHandler.createForIntegrationTest(entityManager);
 		return result;
 
 	}
@@ -177,7 +164,7 @@ public class LoesungszettelService {
 
 			String msg = "Veranstalter " + StringUtils.abbreviate(veranstalterID.identifier(), 11)
 				+ ": versucht Lösungszettel aus Jahr " + lzJahr + " zu löschen. UUID=" + identifier.identifier();
-			new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
+			new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 
 			String message = MessageFormat.format(applicationMessages.getString("loesungszettel.delete.gesperrt"),
 				new Object[] { lzWettbewerbID });
@@ -262,9 +249,9 @@ public class LoesungszettelService {
 	 */
 	private void propagateLoesungszettelDeleted() {
 
-		if (loesungszettelDeletedEvent != null) {
+		if (domainEventHandler != null) {
 
-			loesungszettelDeletedEvent.fire(loesungszettelDeleted);
+			domainEventHandler.handleEvent(loesungszettelDeleted);
 		} else {
 
 			System.out.println(loesungszettelDeleted.serializeQuietly());
@@ -304,7 +291,7 @@ public class LoesungszettelService {
 				+ persistenterLoesungszettel.getWettbewerbUuid() + " zu aendern: UUID=" + identifier;
 			LOG.warn(msg);
 
-			new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
+			new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 
 			String errorMessage = MessageFormat.format(applicationMessages.getString("loesungszettel.change.gesperrt"),
 				new Object[] { persistenterLoesungszettel.getWettbewerbUuid() });
@@ -336,9 +323,9 @@ public class LoesungszettelService {
 			.withTeilnahmeIdentifier(teilnahmeIdentifier)
 			.withUuid(persistenterLoesungszettel.getUuid());
 
-		if (loesungszettelChangedEvent != null) {
+		if (domainEventHandler != null) {
 
-			loesungszettelChangedEvent.fire(loesungszettelChanged);
+			domainEventHandler.handleEvent(loesungszettelChanged);
 		}
 	}
 
@@ -469,9 +456,9 @@ public class LoesungszettelService {
 			.withTeilnahmeIdentifier(loesungszettel.teilnahmeIdentifier())
 			.withUuid(saved.kindID().identifier());
 
-		if (loesungszettelCreatedEvent != null) {
+		if (domainEventHandler != null) {
 
-			loesungszettelCreatedEvent.fire(loesungszettelCreated);
+			domainEventHandler.handleEvent(loesungszettelCreated);
 		} else {
 
 			System.out.println(loesungszettelCreated.serializeQuietly());
@@ -486,7 +473,7 @@ public class LoesungszettelService {
 	 */
 	private void doFireInconsistentDataAndExitMethodWithInvalidInputException(final String msg) {
 
-		new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
+		new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
 
 		String message = MessageFormat.format(applicationMessages.getString("loesungszettel.addOrChange.invalidArguments"),
 			"es gibt inkonsistente Daten in der Datenbank");
@@ -654,7 +641,7 @@ public class LoesungszettelService {
 
 			String msg = "Veranstalter " + StringUtils.abbreviate(veranstalterID.identifier(), 11)
 				+ ": versucht Lösungszettel aus Jahr " + lzJahr + " zu ändern. UUID=" + lz.identifier();
-			new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
+			new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 
 			String message = MessageFormat.format(applicationMessages.getString("loesungszettel.change.gesperrt"),
 				new Object[] { lz.teilnahmeIdentifier().wettbewerbID() });
@@ -747,7 +734,7 @@ public class LoesungszettelService {
 				+ ": versucht Lösungszettel aus Jahr " + teilnahmeIdentifierZuLoeschenderLoesungszettel.jahr()
 				+ " zu ändern. UUID="
 				+ zuLoesschenderLoesungszettelID;
-			new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
+			new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 
 			String message = MessageFormat.format(
 				applicationMessages.getString("loesungszettel.addOrChange.invalidArguments"),
@@ -799,9 +786,9 @@ public class LoesungszettelService {
 			.withTeilnahmeIdentifier(loesungszettel.teilnahmeIdentifier())
 			.withUuid(loesungszettelID.identifier());
 
-		if (loesungszettelChangedEvent != null) {
+		if (domainEventHandler != null) {
 
-			loesungszettelChangedEvent.fire(loesungszettelChanged);
+			domainEventHandler.handleEvent(loesungszettelChanged);
 		} else {
 
 			System.out.println(loesungszettelChanged.serializeQuietly());

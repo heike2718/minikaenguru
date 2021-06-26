@@ -14,6 +14,8 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
  */
 public class KlassenimportZeile {
 
+	private int index;
+
 	private String vorname;
 
 	private String nachname;
@@ -21,6 +23,8 @@ public class KlassenimportZeile {
 	private String klasse;
 
 	private String klassenstufe;
+
+	private String fehlermeldung;
 
 	@Override
 	public String toString() {
@@ -112,6 +116,33 @@ public class KlassenimportZeile {
 
 		this.klassenstufe = klassenstufe;
 		return this;
+	}
+
+	public int getIndex() {
+
+		return index;
+	}
+
+	public KlassenimportZeile withIndex(final int index) {
+
+		this.index = index;
+		return this;
+	}
+
+	public String getFehlermeldung() {
+
+		return fehlermeldung;
+	}
+
+	public KlassenimportZeile withFehlermeldung(final String fehlermeldung) {
+
+		this.fehlermeldung = fehlermeldung;
+		return this;
+	}
+
+	public boolean ok() {
+
+		return this.fehlermeldung == null;
 	}
 
 }

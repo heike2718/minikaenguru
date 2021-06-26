@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
@@ -20,9 +19,8 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.ActionNotAuthorizedException;
-import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
-import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
@@ -53,6 +51,9 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
 	@Inject
+	DomainEventHandler domainEventHandler;
+
+	@Inject
 	AuthorizationService authService;
 
 	@Inject
@@ -67,20 +68,15 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 	@Inject
 	LoesungszettelRepository loesungszettelRepository;
 
-	@Inject
-	Event<DataInconsistencyRegistered> dataInconsistencyEvent;
-
-	@Inject
-	Event<SecurityIncidentRegistered> securityEvent;
-
 	public static UploadAuthorizationServiceImpl createForIntegrationTests(final EntityManager em) {
 
 		UploadAuthorizationServiceImpl result = new UploadAuthorizationServiceImpl();
 		result.wettbewerbService = WettbewerbService.createForIntegrationTest(em);
-		result.authService = AuthorizationService.createForIntegrationTests(em);
+		result.authService = AuthorizationService.createForIntegrationTest(em);
 		result.veranstalterRepository = VeranstalterHibernateRepository.createForIntegrationTest(em);
 		result.teilnahmenRepository = TeilnahmenHibernateRepository.createForIntegrationTest(em);
 		result.loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(em);
+		result.domainEventHandler = DomainEventHandler.createForIntegrationTest(em);
 		return result;
 	}
 
@@ -198,7 +194,7 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 		if (optVeranstalter.isEmpty()) {
 
 			String msg = "Veranstalter mit UUID=" + veranstalterID.identifier() + " nicht gefunden";
-			new LoggableEventDelegate().fireSecurityEvent(eventMessagePrefix + msg, securityEvent);
+			new LoggableEventDelegate().fireSecurityEvent(eventMessagePrefix + msg, domainEventHandler);
 			LOGGER.warn(msg);
 
 			throw new ActionNotAuthorizedException(applicationMessages.getString("general.actionNotAuthorized"));
@@ -209,7 +205,7 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 		if (veranstalter.rolle() == Rolle.PRIVAT) {
 
 			String msg = "Privatveranstalter " + veranstalterID + " versucht, Datei hochzuladen";
-			new LoggableEventDelegate().fireSecurityEvent(eventMessagePrefix + msg, securityEvent);
+			new LoggableEventDelegate().fireSecurityEvent(eventMessagePrefix + msg, domainEventHandler);
 			LOGGER.warn(msg);
 
 			throw new ActionNotAuthorizedException(applicationMessages.getString("general.actionNotAuthorized"));
@@ -218,7 +214,7 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 		if (veranstalter.zugangUnterlagen() == ZugangUnterlagen.ENTZOGEN) {
 
 			String msg = "Lehrer " + veranstalterID + " mit entzogenem Zugang zu Unterlagen versucht, Datei hochzuladen";
-			new LoggableEventDelegate().fireSecurityEvent(eventMessagePrefix + msg, securityEvent);
+			new LoggableEventDelegate().fireSecurityEvent(eventMessagePrefix + msg, domainEventHandler);
 			LOGGER.warn(msg);
 
 			throw new ActionNotAuthorizedException(applicationMessages.getString("general.actionNotAuthorized"));
@@ -236,7 +232,7 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 				+ schulkuerzel + " ist nicht zum aktuellen Wettbewerb (" + aktuellerWettbewerb.id()
 				+ ") angemeldet. veranstalterUUID=" + veranstalterID.toString();
 
-			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
+			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
 			LOGGER.warn(msg);
 
 			switch (uploadType) {

@@ -286,7 +286,7 @@ public class KinderServiceIT extends AbstractIntegrationTest {
 
 		assertEquals("DB muss zurückgesetzt werden", Sprache.de, loesungszettel.sprache());
 
-		KindEditorModel kindEditorModel = new KindEditorModel(kind.klassenstufe(), Sprache.en).withVorname(kind.vorname())
+		KindEditorModel kindEditorModel = new KindEditorModel(kind.getKlassenstufe(), Sprache.en).withVorname(kind.vorname())
 			.withNachname(kind.nachname()).withZusatz(kind.zusatz()).withKlasseUuid(kind.klasseID().identifier());
 		KindRequestData daten = new KindRequestData().withKind(kindEditorModel).withKuerzelLand(kind.landkuerzel())
 			.withUuid(kind.identifier().identifier());
@@ -299,7 +299,7 @@ public class KinderServiceIT extends AbstractIntegrationTest {
 		assertEquals(kind.vorname(), result.vorname());
 		assertEquals(kind.nachname(), result.nachname());
 		assertEquals(kind.zusatz(), result.zusatz());
-		assertEquals(kind.klassenstufe(), result.klassenstufe().klassenstufe());
+		assertEquals(kind.getKlassenstufe(), result.klassenstufe().klassenstufe());
 		assertEquals(kind.klasseID().identifier(), result.klasseId());
 
 		Kind geaendertesKind = kinderRepository.ofId(kindID).get();

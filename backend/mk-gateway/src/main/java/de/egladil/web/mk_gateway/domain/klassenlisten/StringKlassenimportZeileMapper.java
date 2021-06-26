@@ -4,20 +4,27 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.klassenlisten;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.error.UploadFormatException;
 
 /**
  * StringKlassenimportZeileMapper
  */
-public class StringKlassenimportZeileMapper implements Function<String, KlassenimportZeile> {
+public class StringKlassenimportZeileMapper implements Function<Pair<Integer, String>, Optional<KlassenimportZeile>> {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(StringKlassenimportZeileMapper.class);
+
+	private static final String FEHLERMESSAGE_PATTERN = "Fehler in Zeile {0}: \"{1}\" hat nicht genau 4 Einträge und wird nicht importiert. Anzahl Einträge = {2}";
 
 	private Map<KlassenlisteFeldart, Integer> feldartenIndizes = new HashMap<>();
 
@@ -29,9 +36,14 @@ public class StringKlassenimportZeileMapper implements Function<String, Klasseni
 
 			if (optIndex.isEmpty()) {
 
-				throw new MkGatewayRuntimeException(
-					"klassenlisteUeberschrift wurde nicht korrekt ermittelt: kein Mapping für KlassenlisteFeldart " + feldart
-						+ " moeglich");
+				String message = "klassenlisteUeberschrift wurde nicht korrekt ermittelt: kein Mapping für KlassenlisteFeldart "
+					+ feldart
+					+ " moeglich";
+
+				LOGGER.warn(message);
+
+				throw new UploadFormatException(
+					"Die hochgeladene Datei kann nicht verarbeitet werden. Die erste Zeile enthält nicht die Felder \"Nachname\", \"Vorname\", \"Klasse\", \"Klassenstufe\".");
 			}
 
 			feldartenIndizes.put(feldart, optIndex.get());
@@ -39,28 +51,43 @@ public class StringKlassenimportZeileMapper implements Function<String, Klasseni
 	}
 
 	@Override
-	public KlassenimportZeile apply(final String kommaseparierteZeile) {
+	public Optional<KlassenimportZeile> apply(final Pair<Integer, String> kommaseparierteZeileMitIndex) {
 
-		if (kommaseparierteZeile == null) {
+		if (kommaseparierteZeileMitIndex == null) {
 
 			throw new NullPointerException("kommaseparierteZeile");
 		}
 
-		String[] tokens = StringUtils.split(kommaseparierteZeile, ',');
+		if (StringUtils.isBlank(kommaseparierteZeileMitIndex.getRight())) {
+
+			LOGGER.debug("Zeile {} ist leer. Wird übersprungen", kommaseparierteZeileMitIndex.getLeft());
+			return Optional.empty();
+		}
+
+		String[] tokens = StringUtils.split(kommaseparierteZeileMitIndex.getRight(), ',');
+
+		String fehlermeldung = null;
 
 		if (tokens.length != 4) {
 
-			String msg = "Die Klassenliste kann nicht importiert werden: erwarte genau 4 Einträge in jeder Zeile.";
-			throw new UploadFormatException(msg);
+			fehlermeldung = MessageFormat.format(FEHLERMESSAGE_PATTERN,
+				new Object[] { kommaseparierteZeileMitIndex.getLeft().toString(), kommaseparierteZeileMitIndex.getRight(),
+					"" + tokens.length });
+
+			KlassenimportZeile result = new KlassenimportZeile().withFehlermeldung(fehlermeldung)
+				.withIndex(kommaseparierteZeileMitIndex.getLeft().intValue());
+
+			return Optional.of(result);
 		}
 
 		KlassenimportZeile result = new KlassenimportZeile()
 			.withKlasse(tokens[feldartenIndizes.get(KlassenlisteFeldart.KLASSE).intValue()].trim())
 			.withKlassenstufe(tokens[feldartenIndizes.get(KlassenlisteFeldart.KLASSENSTUFE).intValue()].trim())
 			.withVorname(tokens[feldartenIndizes.get(KlassenlisteFeldart.VORNAME).intValue()].trim())
-			.withNachname(tokens[feldartenIndizes.get(KlassenlisteFeldart.NACHNAME).intValue()].trim());
+			.withNachname(tokens[feldartenIndizes.get(KlassenlisteFeldart.NACHNAME).intValue()].trim())
+			.withIndex(kommaseparierteZeileMitIndex.getLeft());
 
-		return result;
+		return Optional.of(result);
 	}
 
 }

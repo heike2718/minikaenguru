@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
 
@@ -22,7 +21,7 @@ import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.kataloge.SchulkatalogService;
@@ -43,7 +42,7 @@ public class AdvService {
 	String pathExternalFiles;
 
 	@Inject
-	Event<DataInconsistencyRegistered> dataInconsistencyEvent;
+	DomainEventHandler domainEventHandler;
 
 	@Inject
 	SchulkatalogService schulkatalogService;
@@ -168,7 +167,7 @@ public class AdvService {
 			String msg = "Es gibt keinen Vertragstext";
 
 			LOG.error(msg);
-			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
+			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
 
 			throw new MkGatewayRuntimeException(msg);
 		}

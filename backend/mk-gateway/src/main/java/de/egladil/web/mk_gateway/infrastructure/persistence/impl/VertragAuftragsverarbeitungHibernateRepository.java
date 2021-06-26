@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -22,7 +21,6 @@ import de.egladil.web.mk_gateway.domain.adv.VertragAuftragsdatenverarbeitung;
 import de.egladil.web.mk_gateway.domain.adv.VertragAuftragsverarbeitungRepository;
 import de.egladil.web.mk_gateway.domain.adv.Vertragstext;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterVertragAdv;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterVertragAdvText;
 
@@ -36,9 +34,6 @@ public class VertragAuftragsverarbeitungHibernateRepository implements VertragAu
 
 	@Inject
 	EntityManager em;
-
-	@Inject
-	Event<DataInconsistencyRegistered> dataInconsistencyEvent;
 
 	@Override
 	public Optional<VertragAuftragsdatenverarbeitung> ofUuid(final String uuid) {
@@ -57,12 +52,6 @@ public class VertragAuftragsverarbeitungHibernateRepository implements VertragAu
 			String msg = "mehr als ein PersistenterVertragAdv mit UUID='" + uuid + "' in der DB";
 
 			LOG.error(msg);
-
-			if (dataInconsistencyEvent != null) {
-
-				DataInconsistencyRegistered entity = new DataInconsistencyRegistered(msg);
-				dataInconsistencyEvent.fire(entity);
-			}
 			throw new MkGatewayRuntimeException(msg);
 		}
 
@@ -89,12 +78,6 @@ public class VertragAuftragsverarbeitungHibernateRepository implements VertragAu
 			String msg = "mehr als ein PersistenterVertragAdv mit SCHULKUERZEL='" + schuleIdentity.toString() + "' in der DB";
 
 			LOG.error(msg);
-
-			if (dataInconsistencyEvent != null) {
-
-				DataInconsistencyRegistered entity = new DataInconsistencyRegistered(msg);
-				dataInconsistencyEvent.fire(entity);
-			}
 			throw new MkGatewayRuntimeException(msg);
 		}
 

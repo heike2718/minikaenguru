@@ -73,6 +73,21 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 			const msg = this.extractMessageObject(httpError);
 
 			switch (httpError.status) {
+				case 400:
+				case 422:
+					if (msg) {
+						this.showServerResponseMessage(msg.level, msg.message);
+					} else {
+						this.messageService.error('Ihre Anfrage konnte nicht verarbeitet werden, da sie fehlerhafte Daten enthielt. Bitte schreiben Sie eine Mail an minikaenguru@egladil.de');
+					}
+					break;
+				case 404:
+					if (msg) {
+						this.showServerResponseMessage(msg.level, msg.message);
+					} else {
+						this.messageService.error('Das gesuchte Objekt existiert nicht oder nicht mehr.');
+					}
+					break;
 				case 403:
 					localStorage.setItem(STORAGE_KEY_INVALID_SESSION, JSON.stringify({ level: 'ERROR', message: 'Sie haben keine Berechtigung, diese Resource aufzurufen.' }));
 					this.router.navigateByUrl('/timeout');
@@ -81,6 +96,9 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 				case 908:
 					localStorage.setItem(STORAGE_KEY_INVALID_SESSION, JSON.stringify({ level: 'WARN', message: 'Ihre Session ist abgelaufen. Bitte loggen Sie sich erneut ein.' }));
 					this.router.navigateByUrl('/timeout');
+					break;
+				case 503:
+					this.messageService.error('Der Service steht momentan nicht zur Verfügung. Bitte schreiben Sie eine Mail an minikaenguru@egladil.de');
 					break;
 				default: {
 					if (msg) {

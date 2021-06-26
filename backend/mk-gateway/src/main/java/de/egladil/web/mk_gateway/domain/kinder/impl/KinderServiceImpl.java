@@ -15,7 +15,6 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -29,9 +28,11 @@ import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.LoesungszettelpunkteAPIModel;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
+import de.egladil.web.mk_gateway.domain.kinder.Dublettenpruefer;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
+import de.egladil.web.mk_gateway.domain.kinder.KindAdapter;
 import de.egladil.web.mk_gateway.domain.kinder.KindDublettenpruefer;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
 import de.egladil.web.mk_gateway.domain.kinder.KinderService;
@@ -56,11 +57,8 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KinderHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KlassenHibernateRepository;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.TeilnahmenHibernateRepository;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UserHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.VeranstalterHibernateRepository;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.WettbewerbHibernateRepository;
 
 /**
  * KinderServiceImpl
@@ -70,7 +68,9 @@ public class KinderServiceImpl implements KinderService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(KinderServiceImpl.class);
 
-	private final KindDublettenpruefer dublettenpruefer = new KindDublettenpruefer();
+	private final KindDublettenpruefer _dublettenpruefer = new KindDublettenpruefer();
+
+	private final Dublettenpruefer dublettenpruefer = new Dublettenpruefer();
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
@@ -96,16 +96,7 @@ public class KinderServiceImpl implements KinderService {
 	LoesungszettelService loesungszettelService;
 
 	@Inject
-	Event<KindCreated> kindCreatedEvent;
-
-	@Inject
-	Event<KindChanged> kindChangedEvent;
-
-	@Inject
-	Event<KindDeleted> kindDeletedEvent;
-
-	@Inject
-	Event<DataInconsistencyRegistered> dataInconsistencyEvent;
+	DomainEventHandler domainEventHandler;
 
 	private WettbewerbID wettbewerbID;
 
@@ -130,30 +121,15 @@ public class KinderServiceImpl implements KinderService {
 
 	public static KinderServiceImpl createForIntegrationTest(final EntityManager em) {
 
-		VeranstalterRepository veranstalterRepository = VeranstalterHibernateRepository.createForIntegrationTest(em);
-
-		AuthorizationService authService = AuthorizationService.createForTest(
-			veranstalterRepository, UserHibernateRepository.createForIntegrationTest(em));
-
-		KinderRepository kinderRepository = KinderHibernateRepository.createForIntegrationTest(em);
-		TeilnahmenRepository teilnahmenRepository = TeilnahmenHibernateRepository.createForIntegrationTest(em);
-		WettbewerbService wettbewerbService = WettbewerbService
-			.createForTest(WettbewerbHibernateRepository.createForIntegrationTest(em));
-
-		LoesungszettelService loesungszettelService = LoesungszettelService.createForTest(authService, wettbewerbService,
-			kinderRepository,
-			LoesungszettelHibernateRepository.createForIntegrationTest(em));
-
-		KlassenRepository klassenRepository = KlassenHibernateRepository.createForIntegrationTest(em);
-
 		KinderServiceImpl result = new KinderServiceImpl();
-		result.authService = authService;
-		result.kinderRepository = kinderRepository;
-		result.klassenRepository = klassenRepository;
-		result.loesungszettelService = loesungszettelService;
-		result.teilnahmenRepository = teilnahmenRepository;
-		result.veranstalterRepository = veranstalterRepository;
-		result.wettbewerbService = wettbewerbService;
+		result.authService = AuthorizationService.createForIntegrationTest(em);
+		result.kinderRepository = KinderHibernateRepository.createForIntegrationTest(em);
+		result.klassenRepository = KlassenHibernateRepository.createForIntegrationTest(em);
+		result.loesungszettelService = LoesungszettelService.createForIntegrationTest(em);
+		result.teilnahmenRepository = TeilnahmenHibernateRepository.createForIntegrationTest(em);
+		result.veranstalterRepository = VeranstalterHibernateRepository.createForIntegrationTest(em);
+		result.wettbewerbService = WettbewerbService.createForIntegrationTest(em);
+		result.domainEventHandler = DomainEventHandler.createForIntegrationTest(em);
 		return result;
 
 	}
@@ -175,7 +151,7 @@ public class KinderServiceImpl implements KinderService {
 		authService.checkPermissionForTeilnahmenummer(new Identifier(veranstalterUuid), teilnahme.teilnahmenummer(),
 			"[kindAnlegen - teilnahmenummer=" + teilnahme.teilnahmenummer().identifier() + "]");
 
-		List<Kind> kinder = kinderRepository.withTeilnahme(TeilnahmeIdentifierAktuellerWettbewerb.createFromTeilnahme(teilnahme));
+		List<Kind> kinder = findWithTeilnahme(TeilnahmeIdentifierAktuellerWettbewerb.createFromTeilnahme(teilnahme));
 
 		if (kinder.isEmpty()) {
 
@@ -195,11 +171,28 @@ public class KinderServiceImpl implements KinderService {
 		return this.koennteDubletteSein(kind, kinder);
 	}
 
+	@Override
+	public List<Kind> findWithSchulteilname(final String schulkuerzel) {
+
+		TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdentifier = TeilnahmeIdentifierAktuellerWettbewerb
+			.createForSchulteilnahme(schulkuerzel);
+
+		return this.findWithTeilnahme(teilnahmeIdentifier);
+
+	}
+
+	List<Kind> findWithTeilnahme(final TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdentifier) {
+
+		return kinderRepository.withTeilnahme(teilnahmeIdentifier);
+	}
+
 	boolean koennteDubletteSein(final Kind kind, final List<Kind> kinder) {
+
+		KindAdapter kindAdapter = new KindAdapter();
 
 		for (Kind k : kinder) {
 
-			if (Boolean.TRUE == dublettenpruefer.apply(k, kind)) {
+			if (Boolean.TRUE == dublettenpruefer.apply(kindAdapter.adaptKind(k), kindAdapter.adaptKind(kind))) {
 
 				return true;
 			}
@@ -270,6 +263,7 @@ public class KinderServiceImpl implements KinderService {
 	 * @return                  KindAPIModel
 	 */
 	@Override
+	@Transactional
 	public KindAPIModel kindAnlegen(final KindRequestData daten, final String veranstalterUuid) {
 
 		Teilnahme teilnahme = getAktuelleTeilnahme(daten, veranstalterUuid, "kindAnlegen");
@@ -289,7 +283,7 @@ public class KinderServiceImpl implements KinderService {
 			String msg = "Schulkind wird ohne landkuerzel angelegt: " + daten.logData();
 			LOG.warn(msg);
 
-			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
+			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
 		}
 
 		Kind gespeichertesKind = kinderRepository.addKind(kind);
@@ -303,9 +297,9 @@ public class KinderServiceImpl implements KinderService {
 			.withTeilnahmenummer(teilnahme.teilnahmenummer().identifier())
 			.withKlasseID(gespeichertesKind.klasseID() == null ? null : gespeichertesKind.klasseID().identifier());
 
-		if (this.kindCreatedEvent != null) {
+		if (this.domainEventHandler != null) {
 
-			this.kindCreatedEvent.fire(kindCreated);
+			this.domainEventHandler.handleEvent(kindCreated);
 		} else {
 
 			System.out.println(kindCreated.typeName() + ": " + kindCreated.serializeQuietly());
@@ -315,7 +309,7 @@ public class KinderServiceImpl implements KinderService {
 	}
 
 	@Override
-	public List<Kind> importiereKinder(final Identifier veranstalterID, final String schulkuerzel, final List<KindImportDaten> importDaten) {
+	public List<Kind> importiereKinder(final Identifier veranstalterID, final String schulkuerzel, final List<KindImportDaten> importDaten, final List<Kind> vorhandeneKinder) {
 
 		List<Kind> result = new ArrayList<>();
 
@@ -332,6 +326,22 @@ public class KinderServiceImpl implements KinderService {
 			Kind gespeichertesKind = kinderRepository.addKind(kind);
 			result.add(gespeichertesKind);
 
+			kindCreated = (KindCreated) new KindCreated().withKindID(gespeichertesKind.identifier().identifier())
+				.withKlasseID(gespeichertesKind.klasseID().identifier())
+				.withKlassenstufe(gespeichertesKind.klassenstufe())
+				.withSprache(gespeichertesKind.sprache())
+				.withTeilnahmenummer(schulkuerzel);
+
+			domainEventHandler.handleEvent(kindCreated);
+
+		}
+
+		for (Kind kind : vorhandeneKinder) {
+
+			if (kind.isDublettePruefen()) {
+
+				kinderRepository.changeKind(kind);
+			}
 		}
 		return result;
 	}
@@ -383,7 +393,7 @@ public class KinderServiceImpl implements KinderService {
 				+ kind.landkuerzel();
 			LOG.warn(msg);
 
-			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
+			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
 		}
 
 		boolean changed = this.kinderRepository.changeKind(geaendertesKind);
@@ -407,9 +417,9 @@ public class KinderServiceImpl implements KinderService {
 				.withKlasseID(klasseID)
 				.withLoesungszettelID(loesungszettelID);
 
-			if (kindChangedEvent != null) {
+			if (domainEventHandler != null) {
 
-				kindChangedEvent.fire(kindChanged);
+				domainEventHandler.handleEvent(kindChanged);
 			} else {
 
 				System.out.println(kindChanged.typeName() + ": " + kindChanged.serializeQuietly());
@@ -476,9 +486,9 @@ public class KinderServiceImpl implements KinderService {
 				.withKlasseID(kind.klasseID() == null ? null : kind.klasseID().identifier())
 				.withLoesungszettelID(kind.loesungszettelID() == null ? null : kind.loesungszettelID().identifier());
 
-			if (this.kindDeletedEvent != null) {
+			if (this.domainEventHandler != null) {
 
-				this.kindDeletedEvent.fire(kindDeleted);
+				this.domainEventHandler.handleEvent(kindDeleted);
 			} else {
 
 				System.out.println(kindDeleted.typeName() + ": " + kindDeleted.serializeQuietly());
@@ -593,7 +603,7 @@ public class KinderServiceImpl implements KinderService {
 			String msg = this.getClass().getSimpleName() + "." + callingMethod + "(...): " + "Veranstalter mit UUID="
 				+ veranstalterUuid + " ist nicht zum aktuellen Wettbewerb (" + wettbewerbID + ") angemeldet";
 
-			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
+			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
 			throw new NotFoundException(
 				msg);
 		}

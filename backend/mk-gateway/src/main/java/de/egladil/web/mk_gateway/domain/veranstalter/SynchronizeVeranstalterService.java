@@ -12,7 +12,6 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
@@ -24,6 +23,7 @@ import de.egladil.web.commons_net.exception.SessionExpiredException;
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MessagingAuthException;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
@@ -46,7 +46,7 @@ public class SynchronizeVeranstalterService {
 	int syncTokenValidityPeriod;
 
 	@Inject
-	Event<SecurityIncidentRegistered> securityEvent;
+	DomainEventHandler domainEventHandler;
 
 	@Inject
 	VeranstalterRepository veranstalterRepository;
@@ -154,7 +154,7 @@ public class SynchronizeVeranstalterService {
 
 			String msg = "Aufruf sync mit falscher sessionId '" + syncSessionId + "'";
 			LOG.warn("{}", msg);
-			this.securityIncidentPayload = new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+			this.securityIncidentPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 			throw new MessagingAuthException(msg);
 		}
 
