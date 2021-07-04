@@ -55,7 +55,7 @@ public class UploadKlassenlistenResource {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	Response uploadKlassenliste(@PathParam(value = "kuerzelLand") @LandKuerzel final String kuerzelLand, @PathParam(
 		value = "schulkuerzel") @Kuerzel final String schulkuerzel, @QueryParam(
-			value = "nachnameZusatz") final boolean nachnameAlsZusatz, @QueryParam(
+			value = "nachnameAlsZusatz") final boolean nachnameAlsZusatz, @QueryParam(
 				value = "sprache") @NotBlank final String sprache, final MultipartFormDataInput input) {
 
 		String veranstalterUuid = securityContext.getUserPrincipal().getName();

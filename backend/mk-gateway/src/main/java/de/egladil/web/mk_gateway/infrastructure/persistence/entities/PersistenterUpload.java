@@ -25,7 +25,7 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 @NamedQueries({
 	@NamedQuery(
 		name = "PersistenterUpload.FIND_BY_IDENTIFIER",
-		query = "select u from PersistenterUpload where u.teilnahmenummer = :teilnahmenummer and u.checksumme = :checksumme")
+		query = "select u from PersistenterUpload u where u.teilnahmenummer = :teilnahmenummer and u.checksumme = :checksumme")
 })
 public class PersistenterUpload extends ConcurrencySafeEntity {
 

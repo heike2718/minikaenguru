@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.egladil.web.mk_gateway.domain.kinder.Dublettenpruefer;
+import de.egladil.web.mk_gateway.domain.kinder.KindAdaptable;
+import de.egladil.web.mk_gateway.domain.kinder.KindAdapter;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
 import de.egladil.web.mk_gateway.domain.klassenlisten.impl.KindImportDaten;
 
@@ -16,6 +19,10 @@ import de.egladil.web.mk_gateway.domain.klassenlisten.impl.KindImportDaten;
  * ImportDublettenPruefer
  */
 public class ImportDublettenPruefer {
+
+	private final KindAdapter kindAdapter = new KindAdapter();
+
+	private final Dublettenpruefer dublettenpruefer = new Dublettenpruefer();
 
 	/**
 	 * Prüft die Importdaten klassenweise auf Dubletten. Gefundene Dubletten werden markiert, damit sie mit dem dublettePruefen-Flag
@@ -69,9 +76,13 @@ public class ImportDublettenPruefer {
 
 	boolean dubletteGefunden(final List<KindImportDaten> gepruefteKinder, final KindImportDaten neuesKind) {
 
+		KindAdaptable neuesKindAdapted = kindAdapter.adaptKindImportDaten(neuesKind);
+
 		for (KindImportDaten geprueftesKind : gepruefteKinder) {
 
-			if (geprueftesKind.equals(neuesKind)) {
+			KindAdaptable geprueftesKindAdapted = kindAdapter.adaptKindImportDaten(geprueftesKind);
+
+			if (dublettenpruefer.apply(geprueftesKindAdapted, neuesKindAdapted)) {
 
 				return true;
 			}

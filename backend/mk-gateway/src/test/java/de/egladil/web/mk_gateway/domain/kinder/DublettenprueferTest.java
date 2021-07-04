@@ -4,13 +4,18 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.kinder;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
+import de.egladil.web.mk_gateway.domain.kinder.api.KindRequestData;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 
 /**
  * DublettenprueferTest
@@ -19,19 +24,107 @@ public class DublettenprueferTest {
 
 	private Dublettenpruefer dublettenpruefer = new Dublettenpruefer();
 
+	private KindAdapter kindAdapter = new KindAdapter();
+
 	@Nested
 	class KinderTests {
 
 		@Test
-		void should_KindNotBeDoubleOfItself() {
+		void should_NeuesKindNotBeDoubleOfItself() {
 
 			// Arrange
-			Kind kind1 = new Kind(new Identifier("eins")).withVorname("HarAld").withNachname("HEimeLig").withZusatz("Bank rechts");
+			Kind kind1 = new Kind().withVorname("HarAld").withNachname("HEimeLig").withZusatz("Bank rechts");
+			KindAdaptable adaptedKind = kindAdapter.adaptKind(kind1);
+			assertTrue(adaptedKind.isNeu());
+
 			// Act
-			Boolean result = dublettenpruefer.apply(kind1, kind1);
+			Boolean result = dublettenpruefer.apply(adaptedKind, adaptedKind);
 
 			// Assert
 			assertEquals(Boolean.FALSE, result);
+		}
+
+		@Test
+		void should_NeuesKindBeDoubleOfAnotherNeuesKind() {
+
+			// Arrange
+			Kind kind1 = new Kind().withVorname("HarAld").withNachname("HEimeLig").withZusatz("Bank rechts");
+			KindAdaptable adaptedKind1 = kindAdapter.adaptKind(kind1);
+
+			Kind kind2 = new Kind().withVorname("HarAld").withNachname("HEimeLig").withZusatz("Bank rechts");
+			KindAdaptable adaptedKind2 = kindAdapter.adaptKind(kind2);
+
+			// Act
+			Boolean result = dublettenpruefer.apply(adaptedKind1, adaptedKind2);
+
+			// Assert
+			assertEquals(Boolean.TRUE, result);
+		}
+
+		@Test
+		void should_VorhandenesKindNotBeDoubleOfItself() {
+
+			// Arrange
+			Kind kind1 = new Kind(new Identifier("hdihHHAIOHo")).withVorname("HarAld").withNachname("HEimeLig")
+				.withZusatz("Bank rechts");
+			KindAdaptable adaptedKind = kindAdapter.adaptKind(kind1);
+			assertFalse(adaptedKind.isNeu());
+
+			// Act
+			Boolean result = dublettenpruefer.apply(adaptedKind, adaptedKind);
+
+			// Assert
+			assertEquals(Boolean.FALSE, result);
+		}
+
+		@Test
+		void should_VorhandenesKindNotBeDoubleOfOtherVorhandenesKind() {
+
+			// Arrange
+			Kind kind1 = new Kind(new Identifier("hdihHHAIOHo")).withVorname("HarAld").withNachname("HEimeLig")
+				.withZusatz("Bank rechts");
+			KindAdaptable adaptedKind1 = kindAdapter.adaptKind(kind1);
+
+			Kind kind2 = new Kind(new Identifier("HDIHHHAIOHO")).withVorname("HarAld").withNachname("HEimeLig")
+				.withZusatz("Bank rechts");
+			KindAdaptable adaptedKind2 = kindAdapter.adaptKind(kind2);
+
+			// Act
+			Boolean result = dublettenpruefer.apply(adaptedKind1, adaptedKind2);
+
+			// Assert
+			assertEquals(Boolean.TRUE, result);
+		}
+
+		@Test
+		void should_KindBeDoubleWhenAttributesEqualAndKind2IsNeu() {
+
+			// Arrange
+			Kind kind1 = new Kind(new Identifier("ajsdgqg")).withVorname("HarAld").withNachname("HEimeLig")
+				.withZusatz("Bank rechts");
+			Kind kind2 = new Kind().withVorname("HarAld").withNachname("HEimeLig").withZusatz("Bank rechts");
+
+			// Act
+			Boolean result = dublettenpruefer.apply(kindAdapter.adaptKind(kind1), kindAdapter.adaptKind(kind2));
+
+			// Assert
+			assertEquals(Boolean.TRUE, result);
+		}
+
+		@Test
+		void should_KindBeDoubleWhenAttributesEqualAndKind1IsNeu() {
+
+			// Arrange
+			Kind kind1 = new Kind().withVorname("HarAld").withNachname("HEimeLig")
+				.withZusatz("Bank rechts");
+			Kind kind2 = new Kind(new Identifier("ajsdgqg")).withVorname("HarAld").withNachname("HEimeLig")
+				.withZusatz("Bank rechts");
+
+			// Act
+			Boolean result = dublettenpruefer.apply(kindAdapter.adaptKind(kind1), kindAdapter.adaptKind(kind2));
+
+			// Assert
+			assertEquals(Boolean.TRUE, result);
 		}
 
 		@Test
@@ -46,7 +139,7 @@ public class DublettenprueferTest {
 				.withKlassenstufe(Klassenstufe.EINS).withKlasseID(klasseID);
 
 			// Act
-			Boolean result = dublettenpruefer.apply(kind1, kind2);
+			Boolean result = dublettenpruefer.apply(kindAdapter.adaptKind(kind1), kindAdapter.adaptKind(kind2));
 
 			// Assert
 			assertEquals(Boolean.FALSE, result);
@@ -64,7 +157,7 @@ public class DublettenprueferTest {
 				.withKlassenstufe(Klassenstufe.ZWEI).withKlasseID(klasseID);
 
 			// Act
-			Boolean result = dublettenpruefer.apply(kind1, kind2);
+			Boolean result = dublettenpruefer.apply(kindAdapter.adaptKind(kind1), kindAdapter.adaptKind(kind2));
 
 			// Assert
 			assertEquals(Boolean.TRUE, result);
@@ -80,7 +173,7 @@ public class DublettenprueferTest {
 				.withKlassenstufe(Klassenstufe.EINS);
 
 			// Act
-			Boolean result = dublettenpruefer.apply(kind1, kind2);
+			Boolean result = dublettenpruefer.apply(kindAdapter.adaptKind(kind1), kindAdapter.adaptKind(kind2));
 
 			// Assert
 			assertEquals(Boolean.TRUE, result);
@@ -96,7 +189,7 @@ public class DublettenprueferTest {
 				.withKlassenstufe(Klassenstufe.EINS);
 
 			// Act
-			Boolean result = dublettenpruefer.apply(kind1, kind2);
+			Boolean result = dublettenpruefer.apply(kindAdapter.adaptKind(kind1), kindAdapter.adaptKind(kind2));
 
 			// Assert
 			assertEquals(Boolean.FALSE, result);
@@ -110,7 +203,7 @@ public class DublettenprueferTest {
 			Kind kind2 = new Kind(new Identifier("zwei")).withVorname("Harald").withKlassenstufe(Klassenstufe.EINS);
 
 			// Act
-			Boolean result = dublettenpruefer.apply(kind1, kind2);
+			Boolean result = dublettenpruefer.apply(kindAdapter.adaptKind(kind1), kindAdapter.adaptKind(kind2));
 
 			// Assert
 			assertEquals(Boolean.TRUE, result);
@@ -126,7 +219,7 @@ public class DublettenprueferTest {
 				.withKlassenstufe(Klassenstufe.EINS);
 
 			// Act
-			Boolean result = dublettenpruefer.apply(kind1, kind2);
+			Boolean result = dublettenpruefer.apply(kindAdapter.adaptKind(kind1), kindAdapter.adaptKind(kind2));
 
 			// Assert
 			assertEquals(Boolean.FALSE, result);
@@ -142,7 +235,7 @@ public class DublettenprueferTest {
 				.withKlassenstufe(Klassenstufe.EINS);
 
 			// Act
-			Boolean result = dublettenpruefer.apply(kind1, kind2);
+			Boolean result = dublettenpruefer.apply(kindAdapter.adaptKind(kind1), kindAdapter.adaptKind(kind2));
 
 			// Assert
 			assertEquals(Boolean.FALSE, result);
@@ -158,7 +251,7 @@ public class DublettenprueferTest {
 			Kind kind2 = new Kind(new Identifier("zwei")).withNachname("Heimelig").withKlassenstufe(Klassenstufe.EINS);
 
 			// Act
-			Boolean result = dublettenpruefer.apply(kind1, kind2);
+			Boolean result = dublettenpruefer.apply(kindAdapter.adaptKind(kind1), kindAdapter.adaptKind(kind2));
 
 			// Assert
 			assertEquals(Boolean.TRUE, result);
@@ -174,7 +267,7 @@ public class DublettenprueferTest {
 				.withKlassenstufe(Klassenstufe.EINS);
 
 			// Act
-			Boolean result = dublettenpruefer.apply(kind1, kind2);
+			Boolean result = dublettenpruefer.apply(kindAdapter.adaptKind(kind1), kindAdapter.adaptKind(kind2));
 
 			// Assert
 			assertEquals(Boolean.FALSE, result);
@@ -190,7 +283,7 @@ public class DublettenprueferTest {
 				.withKlassenstufe(Klassenstufe.EINS);
 
 			// Act
-			Boolean result = dublettenpruefer.apply(kind1, kind2);
+			Boolean result = dublettenpruefer.apply(kindAdapter.adaptKind(kind1), kindAdapter.adaptKind(kind2));
 
 			// Assert
 			assertEquals(Boolean.FALSE, result);
@@ -206,7 +299,7 @@ public class DublettenprueferTest {
 			Kind kind2 = new Kind(new Identifier("zwei")).withZusatz("Heimelig").withKlassenstufe(Klassenstufe.EINS);
 
 			// Act
-			Boolean result = dublettenpruefer.apply(kind1, kind2);
+			Boolean result = dublettenpruefer.apply(kindAdapter.adaptKind(kind1), kindAdapter.adaptKind(kind2));
 
 			// Assert
 			assertEquals(Boolean.TRUE, result);
@@ -222,7 +315,7 @@ public class DublettenprueferTest {
 				.withKlassenstufe(Klassenstufe.EINS);
 
 			// Act
-			Boolean result = dublettenpruefer.apply(kind1, kind2);
+			Boolean result = dublettenpruefer.apply(kindAdapter.adaptKind(kind1), kindAdapter.adaptKind(kind2));
 
 			// Assert
 			assertEquals(Boolean.FALSE, result);
@@ -238,10 +331,95 @@ public class DublettenprueferTest {
 				.withKlassenstufe(Klassenstufe.EINS);
 
 			// Act
-			Boolean result = dublettenpruefer.apply(kind1, kind2);
+			Boolean result = dublettenpruefer.apply(kindAdapter.adaptKind(kind1), kindAdapter.adaptKind(kind2));
 
 			// Assert
 			assertEquals(Boolean.FALSE, result);
 		}
+	}
+
+	@Nested
+	class MixedTests {
+
+		@Test
+		void should_KindBeDoubleWhenAttributesEqualAndKind1IsPersistentKindAndKind2IsRequestedKindNeu() {
+
+			// Arrange
+			Kind kind1 = new Kind(new Identifier("eine-uuid")).withVorname("HarAld").withNachname("HEimeLig")
+				.withZusatz("Bank rechts").withKlasseID(new Identifier("klasse-uuid")).withKlassenstufe(Klassenstufe.EINS)
+				.withSprache(Sprache.en);
+
+			KindEditorModel kindEditorModel = new KindEditorModel(Klassenstufe.EINS, Sprache.en).withNachname("Heimelig")
+				.withVorname("Harald").withZusatz("Bank rechts").withKlasseUuid("klasse-uuid");
+
+			KindRequestData kind2 = new KindRequestData().withKind(kindEditorModel).withUuid(KindRequestData.KEINE_UUID);
+
+			// Act
+			Boolean result = dublettenpruefer.apply(kindAdapter.adaptKind(kind1), kindAdapter.adaptKindRequestData(kind2));
+
+			// Assert
+			assertEquals(Boolean.TRUE, result);
+		}
+
+		@Test
+		void should_KindBeDoubleWhenAttributesEqualAndKind2IsPersistentKindAndKind1IsRequestedKindNeu() {
+
+			// Arrange
+			KindEditorModel kindEditorModel = new KindEditorModel(Klassenstufe.EINS, Sprache.en).withNachname("Heimelig")
+				.withVorname("Harald").withZusatz("Bank rechts").withKlasseUuid("klasse-uuid");
+
+			KindRequestData kind1 = new KindRequestData().withKind(kindEditorModel).withUuid(KindRequestData.KEINE_UUID);
+
+			Kind kind2 = new Kind(new Identifier("eine-uuid")).withVorname("HarAld").withNachname("HEimeLig")
+				.withZusatz("Bank rechts").withKlasseID(new Identifier("klasse-uuid")).withKlassenstufe(Klassenstufe.EINS)
+				.withSprache(Sprache.en);
+
+			// Act
+			Boolean result = dublettenpruefer.apply(kindAdapter.adaptKindRequestData(kind1), kindAdapter.adaptKind(kind2));
+
+			// Assert
+			assertEquals(Boolean.TRUE, result);
+		}
+
+		@Test
+		void should_KindBeDoubleWhenAttributesEqualAndKind1IsPersistentKindAndKind2IsRequestedKindAlt() {
+
+			// Arrange
+			Kind kind1 = new Kind(new Identifier("eine-uuid")).withVorname("HarAld").withNachname("HEimeLig")
+				.withZusatz("Bank rechts").withKlasseID(new Identifier("klasse-uuid")).withKlassenstufe(Klassenstufe.EINS)
+				.withSprache(Sprache.en);
+
+			KindEditorModel kindEditorModel = new KindEditorModel(Klassenstufe.EINS, Sprache.en).withNachname("Heimelig")
+				.withVorname("Harald").withZusatz("Bank rechts").withKlasseUuid("klasse-uuid");
+
+			KindRequestData kind2 = new KindRequestData().withKind(kindEditorModel).withUuid("eine-uuid");
+
+			// Act
+			Boolean result = dublettenpruefer.apply(kindAdapter.adaptKind(kind1), kindAdapter.adaptKindRequestData(kind2));
+
+			// Assert
+			assertEquals(Boolean.FALSE, result);
+		}
+
+		@Test
+		void should_KindBeDoubleWhenAttributesEqualAndKind2IsPersistentKindAndKind1IsRequestedKindAlt() {
+
+			// Arrange
+			KindEditorModel kindEditorModel = new KindEditorModel(Klassenstufe.EINS, Sprache.en).withNachname("Heimelig")
+				.withVorname("Harald").withZusatz("Bank rechts").withKlasseUuid("klasse-uuid");
+
+			KindRequestData kind1 = new KindRequestData().withKind(kindEditorModel).withUuid("eine-uuid");
+
+			Kind kind2 = new Kind(new Identifier("eine-uuid")).withVorname("HarAld").withNachname("HEimeLig")
+				.withZusatz("Bank rechts").withKlasseID(new Identifier("klasse-uuid")).withKlassenstufe(Klassenstufe.EINS)
+				.withSprache(Sprache.en);
+
+			// Act
+			Boolean result = dublettenpruefer.apply(kindAdapter.adaptKindRequestData(kind1), kindAdapter.adaptKind(kind2));
+
+			// Assert
+			assertEquals(Boolean.FALSE, result);
+		}
+
 	}
 }

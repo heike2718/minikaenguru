@@ -81,6 +81,7 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 		KlassenlisteCSVImportService result = new KlassenlisteCSVImportService();
 		result.klassenService = KlassenServiceImpl.createForIntegrationTest(em);
 		result.kinderService = KinderServiceImpl.createForIntegrationTest(em);
+		result.pathUploadDir = "/home/heike/mkv/upload";
 		return result;
 	}
 

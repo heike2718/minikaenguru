@@ -6,6 +6,7 @@ package de.egladil.web.mk_gateway.domain.uploads;
 
 import java.util.Base64;
 
+import de.egladil.web.filescanner_service.scan.Upload;
 import de.egladil.web.mk_gateway.domain.semantik.ValueObject;
 
 /**
@@ -30,7 +31,7 @@ public class UploadData {
 		return filename;
 	}
 
-	byte[] getData() {
+	public byte[] getData() {
 
 		return data;
 	}
@@ -38,6 +39,12 @@ public class UploadData {
 	public byte[] getDataBASE64() {
 
 		return Base64.getEncoder().encode(data);
+
+	}
+
+	public Upload toUpload() {
+
+		return new Upload().withData(data).withName(filename);
 
 	}
 

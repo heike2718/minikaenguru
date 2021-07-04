@@ -19,4 +19,10 @@ public interface UploadRepository {
 	 */
 	Optional<PersistenterUpload> findUploadByIdentifier(UploadIdentifier uploadIdentifier);
 
+	/**
+	 * @param  upload
+	 * @return
+	 */
+	PersistenterUpload addUploadMetaData(PersistenterUpload upload);
+
 }

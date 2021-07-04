@@ -32,6 +32,7 @@ import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.kinder.Dublettenpruefer;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
+import de.egladil.web.mk_gateway.domain.kinder.KindAdaptable;
 import de.egladil.web.mk_gateway.domain.kinder.KindAdapter;
 import de.egladil.web.mk_gateway.domain.kinder.KindDublettenpruefer;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
@@ -146,12 +147,15 @@ public class KinderServiceImpl implements KinderService {
 	@Override
 	public boolean pruefeDublette(final KindRequestData daten, final String veranstalterUuid) {
 
+		final KindAdapter kindAdapter = new KindAdapter();
+
 		Teilnahme teilnahme = getAktuelleTeilnahme(daten, veranstalterUuid, "pruefeDublette");
 
 		authService.checkPermissionForTeilnahmenummer(new Identifier(veranstalterUuid), teilnahme.teilnahmenummer(),
 			"[kindAnlegen - teilnahmenummer=" + teilnahme.teilnahmenummer().identifier() + "]");
 
 		List<Kind> kinder = findWithTeilnahme(TeilnahmeIdentifierAktuellerWettbewerb.createFromTeilnahme(teilnahme));
+		List<KindAdaptable> adaptedKinder = null;
 
 		if (kinder.isEmpty()) {
 
@@ -162,13 +166,12 @@ public class KinderServiceImpl implements KinderService {
 
 			final Identifier klasseID = new Identifier(daten.klasseUuid());
 
-			kinder = kinder.stream().filter(k -> klasseID.equals(k.klasseID())).collect(Collectors.toList());
+			adaptedKinder = kinder.stream().filter(k -> klasseID.equals(k.klasseID())).map(k -> kindAdapter.adaptKind(k))
+				.collect(Collectors.toList());
 
 		}
 
-		Kind kind = new Kind().withDaten(daten.kind());
-
-		return this.koennteDubletteSein(kind, kinder);
+		return this.koennteDubletteSein(kindAdapter.adaptKindRequestData(daten), adaptedKinder);
 	}
 
 	@Override
@@ -186,13 +189,11 @@ public class KinderServiceImpl implements KinderService {
 		return kinderRepository.withTeilnahme(teilnahmeIdentifier);
 	}
 
-	boolean koennteDubletteSein(final Kind kind, final List<Kind> kinder) {
+	private boolean koennteDubletteSein(final KindAdaptable kind, final List<KindAdaptable> kinder) {
 
-		KindAdapter kindAdapter = new KindAdapter();
+		for (KindAdaptable k : kinder) {
 
-		for (Kind k : kinder) {
-
-			if (Boolean.TRUE == dublettenpruefer.apply(kindAdapter.adaptKind(k), kindAdapter.adaptKind(kind))) {
+			if (Boolean.TRUE == dublettenpruefer.apply(k, kind)) {
 
 				return true;
 			}

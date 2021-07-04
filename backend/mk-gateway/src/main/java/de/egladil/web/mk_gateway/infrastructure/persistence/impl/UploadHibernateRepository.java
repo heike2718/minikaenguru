@@ -65,4 +65,11 @@ public class UploadHibernateRepository implements UploadRepository {
 		return trefferliste.isEmpty() ? Optional.empty() : Optional.of(trefferliste.get(0));
 	}
 
+	@Override
+	public PersistenterUpload addUploadMetaData(final PersistenterUpload upload) {
+
+		entityManager.persist(upload);
+		return upload;
+	}
+
 }

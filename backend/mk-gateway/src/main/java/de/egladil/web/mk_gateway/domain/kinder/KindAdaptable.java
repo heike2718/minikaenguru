@@ -41,6 +41,11 @@ public interface KindAdaptable {
 
 	boolean isNeu();
 
-	String getType();
+	/**
+	 * Das Objekt, das adaptiert wurde.
+	 *
+	 * @return
+	 */
+	Object getAdaptedObject();
 
 }

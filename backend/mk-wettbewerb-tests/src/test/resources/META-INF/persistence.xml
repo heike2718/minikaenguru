@@ -19,6 +19,7 @@
 		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistentesKind</class>
 		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistentesSchulkollegium</class>
 		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenteTeilnahme</class>
+		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload</class>
 		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenteVersandinfo</class>
 		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.StoredEvent</class>
 		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.User</class>
@@ -28,7 +29,7 @@
 			<property name="hibernate.dialect"
 				value="org.hibernate.dialect.MariaDBDialect" />
 			<property name="javax.persistence.jdbc.url"
-				value="jdbc:mysql://192.168.10.176:4306/mk_wettbewerb" />
+				value="jdbc:mysql://172.17.0.2:3306/mk_wettbewerb" />
 			<property name="javax.persistence.jdbc.user"
 				value="mk_wettbewerb" />
 			<property name="javax.persistence.jdbc.password"

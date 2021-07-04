@@ -16,11 +16,6 @@ public class Dublettenpruefer implements BiFunction<KindAdaptable, KindAdaptable
 	@Override
 	public Boolean apply(final KindAdaptable kind1, final KindAdaptable kind2) {
 
-		if (kind1 == null || kind2 == null) {
-
-			return Boolean.FALSE;
-		}
-
 		boolean b = new EqualsBuilder().append(kind1.klasseID(), kind2.klasseID())
 			.append(kind1.getKlassenstufe(), kind2.getKlassenstufe())
 			.append(kind1.getLowerVornameNullSafe(), kind2.getLowerVornameNullSafe())
@@ -32,10 +27,14 @@ public class Dublettenpruefer implements BiFunction<KindAdaptable, KindAdaptable
 			return Boolean.FALSE;
 		}
 
-		// interessant ist es, wenn dort neue Kinder drin sind - also Daten aus einem Import
 		if (kind1.isNeu() && kind2.isNeu()) {
 
-			return Boolean.TRUE;
+			return kind1.getAdaptedObject() != kind2.getAdaptedObject();
+		}
+
+		if (kind1.isNeu() && !kind2.isNeu() || !kind1.isNeu() && kind2.isNeu()) {
+
+			return true;
 		}
 
 		return !kind1.identifier().equals(kind2.identifier());

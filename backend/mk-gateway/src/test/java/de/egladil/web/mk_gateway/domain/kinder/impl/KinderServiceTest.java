@@ -10,9 +10,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
-import java.util.Arrays;
-import java.util.List;
-
 import javax.ws.rs.NotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -20,11 +17,8 @@ import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
-import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindRequestData;
-import de.egladil.web.mk_gateway.domain.kinder.impl.KinderServiceImpl;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
@@ -119,26 +113,6 @@ public class KinderServiceTest extends AbstractDomainServiceTest {
 				"KinderServiceImpl.kindAnlegen(...): Veranstalter mit UUID=UUID_PRIVAT_NICHT_ANGEMELDET ist nicht zum aktuellen Wettbewerb (2020) angemeldet",
 				e.getMessage());
 		}
-	}
-
-	@Test
-	void should_koennteDubletteSein_work_whenGleicheUuid() {
-
-		// Arrange
-		Kind kind = new Kind(new Identifier("UUID-UUID"))
-			.withKlassenstufe(Klassenstufe.EINS)
-			.withNachname("Paschulke")
-			.withVorname("Heinz")
-			.withSprache(Sprache.de);
-
-		List<Kind> kinder = Arrays.asList(new Kind[] { kind });
-
-		// Act
-		boolean koennte = service.koennteDubletteSein(kind, kinder);
-
-		// Assert
-		assertFalse(koennte);
-
 	}
 
 	private KindRequestData createTestData() {

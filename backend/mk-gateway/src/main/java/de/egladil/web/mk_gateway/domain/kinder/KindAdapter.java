@@ -4,6 +4,8 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.kinder;
 
+import org.jboss.weld.exceptions.IllegalArgumentException;
+
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindRequestData;
 import de.egladil.web.mk_gateway.domain.klassenlisten.impl.KindImportDaten;
@@ -23,6 +25,11 @@ public class KindAdapter {
 	 */
 	public KindAdaptable adaptKind(final Kind kind) {
 
+		if (kind == null) {
+
+			throw new IllegalArgumentException("null must not be adapted");
+		}
+
 		return new KindAdaptable() {
 
 			@Override
@@ -34,7 +41,7 @@ public class KindAdapter {
 			@Override
 			public boolean isNeu() {
 
-				return kind.identifier() != null;
+				return kind.identifier() == null;
 			}
 
 			@Override
@@ -68,9 +75,9 @@ public class KindAdapter {
 			}
 
 			@Override
-			public String getType() {
+			public Object getAdaptedObject() {
 
-				return Kind.class.getName();
+				return kind;
 			}
 		};
 
@@ -85,7 +92,12 @@ public class KindAdapter {
 	 */
 	public KindAdaptable adaptKindImportDaten(final KindImportDaten kindImportDaten) {
 
-		final KindAdaptable adaptedKind = this.adaptKindImportDaten(kindImportDaten.getKindRequestData());
+		if (kindImportDaten == null) {
+
+			throw new IllegalArgumentException("null must not be adapted");
+		}
+
+		final KindAdaptable adaptedKind = this.adaptKindRequestData(kindImportDaten.getKindRequestData());
 
 		return new KindAdaptable() {
 
@@ -105,12 +117,6 @@ public class KindAdapter {
 			public Identifier identifier() {
 
 				return adaptedKind.identifier();
-			}
-
-			@Override
-			public String getType() {
-
-				return KindImportDaten.class.getName();
 			}
 
 			@Override
@@ -136,6 +142,12 @@ public class KindAdapter {
 
 				return adaptedKind.getKlassenstufe();
 			}
+
+			@Override
+			public Object getAdaptedObject() {
+
+				return kindImportDaten;
+			}
 		};
 	}
 
@@ -146,7 +158,12 @@ public class KindAdapter {
 	 *              Kind
 	 * @return      KindAdaptable
 	 */
-	public KindAdaptable adaptKindImportDaten(final KindRequestData kind) {
+	public KindAdaptable adaptKindRequestData(final KindRequestData kind) {
+
+		if (kind == null) {
+
+			throw new IllegalArgumentException("null must not be adapted");
+		}
 
 		return new KindAdaptable() {
 
@@ -193,9 +210,9 @@ public class KindAdapter {
 			}
 
 			@Override
-			public String getType() {
+			public Object getAdaptedObject() {
 
-				return KindRequestData.class.getName();
+				return kind;
 			}
 		};
 	}

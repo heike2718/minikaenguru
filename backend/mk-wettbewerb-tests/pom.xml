@@ -10,7 +10,8 @@
 
 	<properties>
 		<minikaenguru-version>1.5.0</minikaenguru-version>
-		<commons.version>1.5.1</commons.version>
+		<commons.version>1.6.0</commons.version>
+		<filescanner.version>1.0.0</filescanner.version>
 		<dependency-check.version>6.0.1</dependency-check.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<log4j.version>2.13.3</log4j.version>
@@ -39,6 +40,18 @@
 			<groupId>de.egladil.web</groupId>
 			<artifactId>mk-gateway</artifactId>
 			<version>${minikaenguru-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>de.egladil.web</groupId>
+			<artifactId>filescanner-service</artifactId>
+			<version>${filescanner.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.tika</groupId>
+			<artifactId>tika-parsers</artifactId>
+			<version>1.26</version>
 		</dependency>
 
 		<dependency>
@@ -104,7 +117,7 @@
 				</configuration>
 			</plugin>
 
-						<plugin>
+			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.22.0</version>
 			</plugin>
