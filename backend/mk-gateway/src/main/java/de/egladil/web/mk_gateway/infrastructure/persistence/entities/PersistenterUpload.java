@@ -24,12 +24,17 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 @Table(name = "UPLOADS")
 @NamedQueries({
 	@NamedQuery(
+		name = "PersistenterUpload.FIND_BY_TEILNAHMENUMMER",
+		query = "select u from PersistenterUpload u where u.teilnahmenummer = :teilnahmenummer"),
+	@NamedQuery(
 		name = "PersistenterUpload.FIND_BY_IDENTIFIER",
 		query = "select u from PersistenterUpload u where u.teilnahmenummer = :teilnahmenummer and u.checksumme = :checksumme")
 })
 public class PersistenterUpload extends ConcurrencySafeEntity {
 
 	private static final long serialVersionUID = 1L;
+
+	public static final String FIND_BY_TEILNAHMENUMMER = "PersistenterUpload.FIND_BY_TEILNAHMENUMMER";
 
 	public static final String FIND_BY_IDENTIFIER = "PersistenterUpload.FIND_BY_IDENTIFIER";
 

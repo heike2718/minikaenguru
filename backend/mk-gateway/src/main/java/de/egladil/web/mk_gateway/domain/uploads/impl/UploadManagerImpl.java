@@ -50,6 +50,7 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadRepository;
 import de.egladil.web.mk_gateway.domain.uploads.UploadRequestPayload;
 import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
+import de.egladil.web.mk_gateway.domain.uploads.convert.UploadToCSVConverter;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UploadHibernateRepository;
 
@@ -169,12 +170,10 @@ public class UploadManagerImpl implements UploadManager {
 			break;
 
 		case OSD:
-			// TODO Hier eigenen Umwandler bemühen
 			break;
 
 		case EXCEL_ALT:
 		case EXCEL_NEU:
-			// TODO Hier pandas bemühen
 			break;
 
 		default:
@@ -227,7 +226,13 @@ public class UploadManagerImpl implements UploadManager {
 
 		PersistenterUpload persistenterUpload = transformAndPersistUploadMetadata(uploadPayload, scanResult, checksumme);
 
-		writeUploadFile(uploadPayload.getUploadData(), persistenterUpload.getUuid());
+		DateiTyp dateiTyp = DateiTyp.valueOfTikaName(scanResult.getMediaType());
+
+		String pathFile = writeUploadFile(uploadPayload.getUploadData(), dateiTyp, persistenterUpload.getUuid());
+
+		UploadToCSVConverter uploadConverter = UploadToCSVConverter.createForDateityp(dateiTyp);
+
+		File csvFile = uploadConverter.convertToCSVAndPersistInFilesystem(pathFile, persistenterUpload.getUuid());
 
 		ResponsePayload responsePayload = null;
 
@@ -242,17 +247,31 @@ public class UploadManagerImpl implements UploadManager {
 		default:
 			break;
 		}
+		UploadStatus uploadStatus = responsePayload.isOk() ? UploadStatus.IMPORTIERT : UploadStatus.FEHLER;
+
+		persistenterUpload.setStatus(uploadStatus);
+
+		try {
+
+			uploadRepository.updateUpload(persistenterUpload);
+		} catch (Exception e) {
+
+			LOGGER.error("Upload mit UUID=" + persistenterUpload.getUuid() + ": UploadStatus konnte nicht aktualisiert werden: "
+				+ e.getMessage(), e);
+		}
 
 		return responsePayload;
 	}
 
 	/**
-	 * @param uploadData
+	 * @param csvData
+	 *                byte[]
 	 * @param uuid
+	 *                String die UUID der Upload-Metadaten aus der DB.
 	 */
-	private void writeUploadFile(final UploadData uploadData, final String uuid) {
+	private String writeUploadFile(final UploadData uploadData, final DateiTyp dateiTyp, final String uuid) {
 
-		String path = pathUploadDir + File.separator + uuid + ".csv";
+		String path = pathUploadDir + File.separator + uuid + dateiTyp.getSuffixWithPoint();
 
 		File file = new File(path);
 
@@ -260,6 +279,8 @@ public class UploadManagerImpl implements UploadManager {
 
 			IOUtils.copy(in, fos);
 			fos.flush();
+
+			return path;
 		} catch (IOException e) {
 
 			LOGGER.error("Fehler beim Speichern im Filesystem: " + e.getMessage(), e);

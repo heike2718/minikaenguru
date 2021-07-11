@@ -38,10 +38,14 @@ public class ImportDublettenPruefer {
 
 		for (KindImportDaten daten : importDaten) {
 
-			KindEditorModel kind = daten.getKindRequestData().kind();
+			if (daten.getKindRequestData() != null) {
 
-			List<KindImportDaten> kinderInKlasse = klassenKinderMap.getOrDefault(kind.klasseUuid(), new ArrayList<>());
-			kinderInKlasse.add(daten);
+				KindEditorModel kind = daten.getKindRequestData().kind();
+
+				List<KindImportDaten> kinderInKlasse = klassenKinderMap.getOrDefault(kind.klasseUuid(), new ArrayList<>());
+				kinderInKlasse.add(daten);
+				klassenKinderMap.put(kind.klasseUuid(), kinderInKlasse);
+			}
 		}
 
 		int anzahlDubletten = 0;
@@ -67,8 +71,9 @@ public class ImportDublettenPruefer {
 
 				daten.setDublettePruefen(true);
 				anzahlDubletten++;
-				gepruefte.add(daten);
+
 			}
+			gepruefte.add(daten);
 		}
 
 		return anzahlDubletten;
@@ -84,6 +89,7 @@ public class ImportDublettenPruefer {
 
 			if (dublettenpruefer.apply(geprueftesKindAdapted, neuesKindAdapted)) {
 
+				geprueftesKind.setDublettePruefen(true);
 				return true;
 			}
 		}

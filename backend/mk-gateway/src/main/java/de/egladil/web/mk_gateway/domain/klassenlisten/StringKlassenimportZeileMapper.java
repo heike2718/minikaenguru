@@ -24,7 +24,7 @@ public class StringKlassenimportZeileMapper implements Function<Pair<Integer, St
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(StringKlassenimportZeileMapper.class);
 
-	private static final String FEHLERMESSAGE_PATTERN = "Fehler in Zeile {0}: \"{1}\" hat nicht genau 4 Einträge und wird nicht importiert. Anzahl Einträge = {2}";
+	private static final String FEHLERMESSAGE_PATTERN = "Fehler! Zeile \"{0}\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.";
 
 	private Map<KlassenlisteFeldart, Integer> feldartenIndizes = new HashMap<>();
 
@@ -71,8 +71,7 @@ public class StringKlassenimportZeileMapper implements Function<Pair<Integer, St
 		if (tokens.length != 4) {
 
 			fehlermeldung = MessageFormat.format(FEHLERMESSAGE_PATTERN,
-				new Object[] { kommaseparierteZeileMitIndex.getLeft().toString(), kommaseparierteZeileMitIndex.getRight(),
-					"" + tokens.length });
+				new Object[] { kommaseparierteZeileMitIndex.getRight() });
 
 			KlassenimportZeile result = new KlassenimportZeile().withFehlermeldung(fehlermeldung)
 				.withIndex(kommaseparierteZeileMitIndex.getLeft().intValue());

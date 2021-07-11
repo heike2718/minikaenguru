@@ -9,16 +9,19 @@ package de.egladil.web.mk_gateway.domain.uploads.impl;
  */
 public enum DateiTyp {
 
-	EXCEL_ALT("application/vnd.ms-excel"),
-	EXCEL_NEU("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
-	OSD("application/vnd.oasis.opendocument.spreadsheet"),
-	TEXT("text/plain");
+	EXCEL_ALT("application/vnd.ms-excel", ".xls"),
+	EXCEL_NEU("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx"),
+	OSD("application/vnd.oasis.opendocument.spreadsheet", ".osd"),
+	TEXT("text/plain", ".csv");
 
 	private final String tikaName;
 
-	private DateiTyp(final String tikaName) {
+	private final String suffixWithPoint;
+
+	private DateiTyp(final String tikaName, final String suffixWithPoint) {
 
 		this.tikaName = tikaName;
+		this.suffixWithPoint = suffixWithPoint;
 	}
 
 	public String getTikaName() {
@@ -38,6 +41,11 @@ public enum DateiTyp {
 
 		return null;
 
+	}
+
+	public String getSuffixWithPoint() {
+
+		return suffixWithPoint;
 	}
 
 }

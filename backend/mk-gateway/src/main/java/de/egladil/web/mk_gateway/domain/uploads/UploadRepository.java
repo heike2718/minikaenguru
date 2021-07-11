@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.uploads;
 
+import java.util.List;
 import java.util.Optional;
 
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
@@ -14,6 +15,12 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.entities.Persistente
 public interface UploadRepository {
 
 	/**
+	 * @param  teilnahmenummer
+	 * @return                 List
+	 */
+	List<PersistenterUpload> findUploadsWithTeilnahmenummer(String teilnahmenummer);
+
+	/**
 	 * @param  uploadIdentifier
 	 * @return
 	 */
@@ -21,8 +28,14 @@ public interface UploadRepository {
 
 	/**
 	 * @param  upload
-	 * @return
+	 * @return        PersistenterUpload
 	 */
 	PersistenterUpload addUploadMetaData(PersistenterUpload upload);
+
+	/**
+	 * @param  persistenterUpload
+	 * @return                    PersistenterUpload
+	 */
+	PersistenterUpload updateUpload(PersistenterUpload persistenterUpload);
 
 }

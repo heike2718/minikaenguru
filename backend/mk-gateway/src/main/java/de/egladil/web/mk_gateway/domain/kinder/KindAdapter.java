@@ -170,7 +170,7 @@ public class KindAdapter {
 			@Override
 			public Identifier klasseID() {
 
-				return new Identifier(kind.klasseUuid());
+				return kind.klasseUuid() == null ? null : new Identifier(kind.klasseUuid());
 			}
 
 			@Override

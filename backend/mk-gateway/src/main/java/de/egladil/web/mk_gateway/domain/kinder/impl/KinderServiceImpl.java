@@ -155,7 +155,7 @@ public class KinderServiceImpl implements KinderService {
 			"[kindAnlegen - teilnahmenummer=" + teilnahme.teilnahmenummer().identifier() + "]");
 
 		List<Kind> kinder = findWithTeilnahme(TeilnahmeIdentifierAktuellerWettbewerb.createFromTeilnahme(teilnahme));
-		List<KindAdaptable> adaptedKinder = null;
+		List<KindAdaptable> adaptedKinder = new ArrayList<>();
 
 		if (kinder.isEmpty()) {
 
@@ -169,6 +169,10 @@ public class KinderServiceImpl implements KinderService {
 			adaptedKinder = kinder.stream().filter(k -> klasseID.equals(k.klasseID())).map(k -> kindAdapter.adaptKind(k))
 				.collect(Collectors.toList());
 
+		} else {
+
+			adaptedKinder = kinder.stream().map(k -> kindAdapter.adaptKind(k))
+				.collect(Collectors.toList());
 		}
 
 		return this.koennteDubletteSein(kindAdapter.adaptKindRequestData(daten), adaptedKinder);
@@ -316,25 +320,27 @@ public class KinderServiceImpl implements KinderService {
 
 		for (KindImportDaten item : importDaten) {
 
-			KindRequestData kindRequestData = item.getKindRequestData();
-			Kind kind = new Kind().withDaten(kindRequestData.kind())
-				.withTeilnahmeIdentifier(TeilnahmeIdentifierAktuellerWettbewerb.createForSchulteilnahme(schulkuerzel))
-				.withLandkuerzel(kindRequestData.kuerzelLand())
-				.withKlasseID(new Identifier(kindRequestData.klasseUuid()));
-			kind.setDublettePruefen(item.isDublettePruefen());
-			kind.setKlassenstufePruefen(item.isKlassenstufePruefen());
+			if (item.getKindRequestData() != null) {
 
-			Kind gespeichertesKind = kinderRepository.addKind(kind);
-			result.add(gespeichertesKind);
+				KindRequestData kindRequestData = item.getKindRequestData();
+				Kind kind = new Kind().withDaten(kindRequestData.kind())
+					.withTeilnahmeIdentifier(TeilnahmeIdentifierAktuellerWettbewerb.createForSchulteilnahme(schulkuerzel))
+					.withLandkuerzel(kindRequestData.kuerzelLand())
+					.withKlasseID(new Identifier(kindRequestData.klasseUuid()));
+				kind.setDublettePruefen(item.isDublettePruefen());
+				kind.setKlassenstufePruefen(item.isKlassenstufePruefen());
 
-			kindCreated = (KindCreated) new KindCreated().withKindID(gespeichertesKind.identifier().identifier())
-				.withKlasseID(gespeichertesKind.klasseID().identifier())
-				.withKlassenstufe(gespeichertesKind.klassenstufe())
-				.withSprache(gespeichertesKind.sprache())
-				.withTeilnahmenummer(schulkuerzel);
+				Kind gespeichertesKind = kinderRepository.addKind(kind);
+				result.add(gespeichertesKind);
 
-			domainEventHandler.handleEvent(kindCreated);
+				kindCreated = (KindCreated) new KindCreated().withKindID(gespeichertesKind.identifier().identifier())
+					.withKlasseID(gespeichertesKind.klasseID().identifier())
+					.withKlassenstufe(gespeichertesKind.klassenstufe())
+					.withSprache(gespeichertesKind.sprache())
+					.withTeilnahmenummer(schulkuerzel);
 
+				domainEventHandler.handleEvent(kindCreated);
+			}
 		}
 
 		for (Kind kind : vorhandeneKinder) {

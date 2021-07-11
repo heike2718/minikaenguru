@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.klassenlisten.api;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -34,7 +35,10 @@ public class KlassenlisteImportReport {
 	private String uuidImportReport;
 
 	@JsonProperty
-	private List<KlasseAPIModel> klassen;
+	private List<String> nichtImportierteZeilen = new ArrayList<>();
+
+	@JsonProperty
+	private List<KlasseAPIModel> klassen = new ArrayList<>();
 
 	public String getUuidImportReport() {
 
@@ -110,6 +114,16 @@ public class KlassenlisteImportReport {
 
 		this.anzahlKlassen = anzahlKlassen;
 		return this;
+	}
+
+	public List<String> getNichtImportierteZeilen() {
+
+		return nichtImportierteZeilen;
+	}
+
+	public void setNichtImportierteZeilen(final List<String> nichtImportierteZeilen) {
+
+		this.nichtImportierteZeilen = nichtImportierteZeilen;
 	}
 
 }

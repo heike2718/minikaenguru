@@ -5,9 +5,12 @@
 package de.egladil.web.mk_gateway.domain.klassenlisten.impl;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +26,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -107,7 +111,10 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 		List<KlassenimportZeile> klassenimportZeilen = zeilenMitIndex.stream().map(p -> zeilenMapper.apply(p))
 			.filter(opt -> opt.isPresent()).map(opt -> opt.get()).collect(Collectors.toList());
 
-		long anzahlMitFehlern = klassenimportZeilen.stream().filter(z -> !z.ok()).count();
+		List<String> nichtImportierteZeilen = klassenimportZeilen.stream()
+			.filter(z -> z.getFehlermeldung() != null).map(z -> z.getFehlermeldung()).collect(Collectors.toList());
+
+		long anzahlMitFehlern = nichtImportierteZeilen.size();
 
 		Identifier veranstalterID = new Identifier(uploadMetadata.getVeranstalterUuid());
 		String schulkuerzel = uploadMetadata.getTeilnahmenummer();
@@ -125,19 +132,18 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 
 			String msg = getImportMessage(anzahlMitFehlern, anzahlMitUnklarerKlassenstufe, anzahlDubletten);
 
-			List<Klasse> klassen = importErgebnis.getKlassen();
-
-			List<KlasseAPIModel> klasseAPIModels = klassen.stream().map(kl -> KlasseAPIModel.createFromKlasse(kl))
-				.collect(Collectors.toList());
+			List<KlasseAPIModel> klasseAPIModels = klassenService.klassenZuSchuleLaden(schulkuerzel, veranstalterID.identifier());
 
 			KlassenlisteImportReport payloadData = new KlassenlisteImportReport()
 				.withKlassen(klasseAPIModels).withAnzahlDubletten(anzahlDubletten)
 				.withAnzahlKlassenstufeUnklar(anzahlMitUnklarerKlassenstufe).withAnzahlNichtImportiert(anzahlMitFehlern)
 				.withAnzahlKlassen(klasseAPIModels.size()).withAnzahlKinderImportiert(importErgebnis.getKinder().size());
 
+			payloadData.setNichtImportierteZeilen(nichtImportierteZeilen);
+
 			if (anzahlMitFehlern > 0) {
 
-				// TODO: fehlerhafte Zeilen als CSV auf die Festplatte schreiben mit der UUID als Dateiname.
+				this.writeFehlermeldungen(nichtImportierteZeilen, uploadMetadata.getUuid());
 				payloadData.setUuidImportReport(uploadMetadata.getUuid());
 			}
 
@@ -237,6 +243,7 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 
 			if (!zeile.ok()) {
 
+				importDaten.add(KindImportDaten.createWithFehlermeldung(zeile.getFehlermeldung()));
 				continue;
 			}
 
@@ -264,7 +271,7 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 				kindEditorModel = kindEditorModel.withZusatz(zeile.getNachname());
 			} else {
 
-				kindEditorModel = kindEditorModel.withZusatz(zeile.getNachname());
+				kindEditorModel = kindEditorModel.withNachname(zeile.getNachname());
 			}
 
 			KindRequestData kindRequestData = new KindRequestData().withKind(kindEditorModel)
@@ -327,6 +334,30 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 	List<KindCreated> getKindCreatedEventPayloads() {
 
 		return kindCreatedEventPayloads;
+	}
+
+	/**
+	 * @param uploadData
+	 * @param uuid
+	 */
+	private void writeFehlermeldungen(final List<String> fehlermeldungen, final String uuid) {
+
+		String path = pathUploadDir + File.separator + uuid + "-fehlerreport.csv";
+
+		File file = new File(path);
+
+		String content = StringUtils.join(fehlermeldungen, "\n");
+		content += "\n";
+
+		try (FileOutputStream fos = new FileOutputStream(file); InputStream in = new ByteArrayInputStream(content.getBytes())) {
+
+			IOUtils.copy(in, fos);
+			fos.flush();
+		} catch (IOException e) {
+
+			LOGGER.error("Fehler beim Speichern im Filesystem: " + e.getMessage(), e);
+			throw new MkGatewayRuntimeException("Konnte upload nicht ins Filesystem speichern: " + e.getMessage(), e);
+		}
 	}
 
 }

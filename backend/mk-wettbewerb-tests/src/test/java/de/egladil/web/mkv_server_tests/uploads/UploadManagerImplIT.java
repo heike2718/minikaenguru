@@ -7,6 +7,7 @@ package de.egladil.web.mkv_server_tests.uploads;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -29,10 +30,14 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
 import de.egladil.web.mk_gateway.domain.uploads.UploadData;
 import de.egladil.web.mk_gateway.domain.uploads.UploadManager;
+import de.egladil.web.mk_gateway.domain.uploads.UploadRepository;
 import de.egladil.web.mk_gateway.domain.uploads.UploadRequestPayload;
+import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.domain.uploads.impl.UploadManagerImpl;
+import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KinderHibernateRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UploadHibernateRepository;
 import de.egladil.web.mkv_server_tests.AbstractIntegrationTest;
 
 /**
@@ -40,9 +45,13 @@ import de.egladil.web.mkv_server_tests.AbstractIntegrationTest;
  */
 public class UploadManagerImplIT extends AbstractIntegrationTest {
 
+	private static final String PATH_UPLOAD_DIR = "/home/heike/mkv/upload";
+
 	private UploadManager uploadManager;
 
 	private KinderRepository kinderRepository;
+
+	private UploadRepository uploadRepository;
 
 	@Override
 	@BeforeEach
@@ -51,6 +60,7 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 		super.setUp();
 		uploadManager = UploadManagerImpl.createForIntegrationTests(entityManager);
 		kinderRepository = KinderHibernateRepository.createForIntegrationTest(entityManager);
+		uploadRepository = UploadHibernateRepository.createForIntegrationTests(entityManager);
 
 	}
 
@@ -82,15 +92,15 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 		MessagePayload messagePayload = result.getMessage();
 		assertEquals("WARN", messagePayload.getLevel());
 		assertEquals(
-			"Bei einigen Kindern war die Klassenstufe nicht korrekt und wurde automatisch auf 2 gesetzt. Es gab möglicherweise Doppeleinträge. Alle betroffenen Kinder wurden markiert.",
+			"Einige Kinder konnten nicht importiert werden. Einen Fehlerreport können Sie mit dem Link herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert.",
 			messagePayload.getMessage());
 
 		KlassenlisteImportReport importReport = (KlassenlisteImportReport) result.getData();
-		assertEquals(Long.valueOf(1L), Long.valueOf(importReport.getAnzahlDubletten()));
+		assertEquals(Long.valueOf(2L), Long.valueOf(importReport.getAnzahlDubletten()));
 		assertEquals(10, importReport.getAnzahlKinderImportiert());
 		assertEquals(3, importReport.getAnzahlKlassen());
 		assertEquals(Long.valueOf(2L), importReport.getAnzahlKlassenstufeUnklar());
-		assertEquals(0, importReport.getAnzahlNichtImportiert());
+		assertEquals(1, importReport.getAnzahlNichtImportiert());
 		List<KlasseAPIModel> klassen = importReport.getKlassen();
 
 		assertEquals(3, klassen.size());
@@ -130,6 +140,26 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 
 		List<Kind> kinder = kinderRepository.withTeilnahme(teilnahmeIdentifier);
 		assertEquals(10, kinder.size());
+
+		List<String> fehlermeldungen = importReport.getNichtImportierteZeilen();
+		assertEquals(1, fehlermeldungen.size());
+		assertEquals(
+			"Fehler! Zeile \"2a,Heinz,2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+			fehlermeldungen.get(0));
+
+		List<PersistenterUpload> uploads = uploadRepository.findUploadsWithTeilnahmenummer(schulkuerzel);
+
+		assertEquals(1, uploads.size());
+
+		PersistenterUpload persistenterUpload = uploads.get(0);
+		assertEquals(UploadStatus.FEHLER, persistenterUpload.getStatus());
+
+		String path = PATH_UPLOAD_DIR + File.separator + persistenterUpload.getUuid() + "-fehlerreport.csv";
+
+		File fehlerfile = new File(path);
+		assertTrue(fehlerfile.exists());
+		assertTrue(fehlerfile.isFile());
+		assertTrue(fehlerfile.canRead());
 	}
 
 	/**

@@ -382,7 +382,7 @@ public class DublettenprueferTest {
 		}
 
 		@Test
-		void should_KindBeDoubleWhenAttributesEqualAndKind1IsPersistentKindAndKind2IsRequestedKindAlt() {
+		void should_NotKindBeDoubleWhenAttributesEqualAndKind1IsPersistentKindAndKind2IsRequestedKindAlt() {
 
 			// Arrange
 			Kind kind1 = new Kind(new Identifier("eine-uuid")).withVorname("HarAld").withNachname("HEimeLig")
@@ -402,7 +402,7 @@ public class DublettenprueferTest {
 		}
 
 		@Test
-		void should_KindBeDoubleWhenAttributesEqualAndKind2IsPersistentKindAndKind1IsRequestedKindAlt() {
+		void should_NotKindBeDoubleWhenAttributesEqualAndKind2IsPersistentKindAndKind1IsRequestedKindAlt() {
 
 			// Arrange
 			KindEditorModel kindEditorModel = new KindEditorModel(Klassenstufe.EINS, Sprache.en).withNachname("Heimelig")
@@ -412,6 +412,66 @@ public class DublettenprueferTest {
 
 			Kind kind2 = new Kind(new Identifier("eine-uuid")).withVorname("HarAld").withNachname("HEimeLig")
 				.withZusatz("Bank rechts").withKlasseID(new Identifier("klasse-uuid")).withKlassenstufe(Klassenstufe.EINS)
+				.withSprache(Sprache.en);
+
+			// Act
+			Boolean result = dublettenpruefer.apply(kindAdapter.adaptKindRequestData(kind1), kindAdapter.adaptKind(kind2));
+
+			// Assert
+			assertEquals(Boolean.FALSE, result);
+		}
+
+		@Test
+		void should_NotKindBeDoubleWhenAttributesEqualAndKind2IsPersistentKindAndKind1IsRequestedKindAltAndKlasseUUIDNull() {
+
+			// Arrange
+			KindEditorModel kindEditorModel = new KindEditorModel(Klassenstufe.EINS, Sprache.en).withNachname("Heimelig")
+				.withVorname("Harald").withZusatz("Bank rechts");
+
+			KindRequestData kind1 = new KindRequestData().withKind(kindEditorModel).withUuid("eine-uuid");
+
+			Kind kind2 = new Kind(new Identifier("eine-uuid")).withVorname("HarAld").withNachname("HEimeLig")
+				.withZusatz("Bank rechts").withKlassenstufe(Klassenstufe.EINS)
+				.withSprache(Sprache.en);
+
+			// Act
+			Boolean result = dublettenpruefer.apply(kindAdapter.adaptKindRequestData(kind1), kindAdapter.adaptKind(kind2));
+
+			// Assert
+			assertEquals(Boolean.FALSE, result);
+		}
+
+		@Test
+		void should_NotKindBeDoubleWhenKind1KlasseUUIDNullKind2KlasseUUIDNotNull() {
+
+			// Arrange
+			KindEditorModel kindEditorModel = new KindEditorModel(Klassenstufe.EINS, Sprache.en).withNachname("Heimelig")
+				.withVorname("Harald").withZusatz("Bank rechts");
+
+			KindRequestData kind1 = new KindRequestData().withKind(kindEditorModel).withUuid("eine-uuid");
+
+			Kind kind2 = new Kind(new Identifier("andere-uuid")).withVorname("HarAld").withNachname("HEimeLig")
+				.withZusatz("Bank rechts").withKlassenstufe(Klassenstufe.EINS)
+				.withSprache(Sprache.en).withKlasseID(new Identifier("uuid-klasse"));
+
+			// Act
+			Boolean result = dublettenpruefer.apply(kindAdapter.adaptKindRequestData(kind1), kindAdapter.adaptKind(kind2));
+
+			// Assert
+			assertEquals(Boolean.FALSE, result);
+		}
+
+		@Test
+		void should_NotKindBeDoubleWhenKind1KlasseUUIDNotNullKind2KlasseUUIDNull() {
+
+			// Arrange
+			KindEditorModel kindEditorModel = new KindEditorModel(Klassenstufe.EINS, Sprache.en).withNachname("Heimelig")
+				.withVorname("Harald").withZusatz("Bank rechts").withKlasseUuid("uuid-klasse");
+
+			KindRequestData kind1 = new KindRequestData().withKind(kindEditorModel).withUuid("eine-uuid");
+
+			Kind kind2 = new Kind(new Identifier("andere-uuid")).withVorname("HarAld").withNachname("HEimeLig")
+				.withZusatz("Bank rechts").withKlassenstufe(Klassenstufe.EINS)
 				.withSprache(Sprache.en);
 
 			// Act

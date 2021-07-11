@@ -16,6 +16,7 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -34,6 +35,7 @@ import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderService;
 import de.egladil.web.mk_gateway.domain.kinder.Klasse;
 import de.egladil.web.mk_gateway.domain.kinder.KlassenService;
+import de.egladil.web.mk_gateway.domain.kinder.api.KlasseAPIModel;
 import de.egladil.web.mk_gateway.domain.klassenlisten.UploadKlassenlisteContext;
 import de.egladil.web.mk_gateway.domain.klassenlisten.api.KlassenlisteImportReport;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
@@ -157,6 +159,9 @@ public class KlassenlisteCSVImportServiceTest {
 			klassen.add(new Klasse(new Identifier("uuid-2a")).withName("2a").withSchuleID(new Identifier(SCHULKUERZEL)));
 			klassen.add(new Klasse(new Identifier("uuid-2b")).withName("2b").withSchuleID(new Identifier(SCHULKUERZEL)));
 
+			List<KlasseAPIModel> klassenAPIModels = klassen.stream().map(k -> KlasseAPIModel.createFromKlasse(k))
+				.collect(Collectors.toList());
+
 			List<Kind> kinder = new ArrayList<>();
 			kinder.add(
 				new Kind(new Identifier("shdiqhio")).withKlasseID(new Identifier("uuid-2a")).withKlassenstufe(Klassenstufe.ZWEI)
@@ -165,6 +170,7 @@ public class KlassenlisteCSVImportServiceTest {
 			when(klassenService.importiereKlassen(any(), any(), anyList())).thenReturn(klassen);
 			when(kinderService.importiereKinder(any(), any(), any(), any())).thenReturn(kinder);
 			when(kinderService.findWithSchulteilname(any())).thenReturn(vorhandeneKinder);
+			when(klassenService.klassenZuSchuleLaden(SCHULKUERZEL, VERANSTALTER_UUID)).thenReturn(klassenAPIModels);
 
 			// Act
 			ResponsePayload responsePayload = service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
@@ -182,6 +188,8 @@ public class KlassenlisteCSVImportServiceTest {
 			assertEquals(0L, report.getAnzahlKlassenstufeUnklar());
 			assertEquals(0, report.getAnzahlNichtImportiert());
 			assertNull(report.getUuidImportReport());
+			List<String> fehlermeldungen = report.getNichtImportierteZeilen();
+			assertEquals(0, fehlermeldungen.size());
 		}
 
 		@Test
@@ -195,6 +203,9 @@ public class KlassenlisteCSVImportServiceTest {
 			klassen.add(new Klasse(new Identifier("uuid-2a")).withName("2a").withSchuleID(new Identifier(SCHULKUERZEL)));
 			klassen.add(new Klasse(new Identifier("uuid-2b")).withName("2b").withSchuleID(new Identifier(SCHULKUERZEL)));
 
+			List<KlasseAPIModel> klassenAPIModels = klassen.stream().map(k -> KlasseAPIModel.createFromKlasse(k))
+				.collect(Collectors.toList());
+
 			List<Kind> kinder = new ArrayList<>();
 			kinder.add(
 				new Kind(new Identifier("shdiqhio")).withKlasseID(new Identifier("uuid-2a")).withKlassenstufe(Klassenstufe.ZWEI)
@@ -203,6 +214,7 @@ public class KlassenlisteCSVImportServiceTest {
 			when(klassenService.importiereKlassen(any(), any(), anyList())).thenReturn(klassen);
 			when(kinderService.importiereKinder(any(), any(), any(), any())).thenReturn(kinder);
 			when(kinderService.findWithSchulteilname(any())).thenReturn(vorhandeneKinder);
+			when(klassenService.klassenZuSchuleLaden(SCHULKUERZEL, VERANSTALTER_UUID)).thenReturn(klassenAPIModels);
 
 			// Act
 			ResponsePayload responsePayload = service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
@@ -220,8 +232,17 @@ public class KlassenlisteCSVImportServiceTest {
 			assertEquals(1, report.getAnzahlKinderImportiert());
 			assertEquals(2L, report.getAnzahlDubletten());
 			assertEquals(1L, report.getAnzahlKlassenstufeUnklar());
-			assertEquals(0, report.getAnzahlNichtImportiert());
+			assertEquals(2, report.getAnzahlNichtImportiert());
 			assertEquals("mit-ueberschrift-alle-anderen-faelle", report.getUuidImportReport());
+			List<String> fehlermeldungen = report.getNichtImportierteZeilen();
+			assertEquals(2, fehlermeldungen.size());
+
+			assertEquals(
+				"Fehler! Zeile \"Amiera, Maria,Kaled,2a,2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+				fehlermeldungen.get(0));
+			assertEquals(
+				"Fehler! Zeile \"Benedikt,2a,0\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+				fehlermeldungen.get(1));
 		}
 
 	}
