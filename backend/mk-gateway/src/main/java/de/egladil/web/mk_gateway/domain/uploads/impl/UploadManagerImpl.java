@@ -164,23 +164,6 @@ public class UploadManagerImpl implements UploadManager {
 			throw new UploadFormatException(applicationMessages.getString("upload.unbekannterMediaType"));
 		}
 
-		switch (dateiTyp) {
-
-		case TEXT:
-			break;
-
-		case OSD:
-			break;
-
-		case EXCEL_ALT:
-		case EXCEL_NEU:
-			break;
-
-		default:
-			LOGGER.error("Unerwarteter DateiTyp {} - brechen ab.", dateiTyp);
-			throw new UploadFormatException(applicationMessages.getString("upload.unbekannterMediaType"));
-		}
-
 		return scanResult;
 	}
 
@@ -233,6 +216,8 @@ public class UploadManagerImpl implements UploadManager {
 		UploadToCSVConverter uploadConverter = UploadToCSVConverter.createForDateityp(dateiTyp);
 
 		File csvFile = uploadConverter.convertToCSVAndPersistInFilesystem(pathFile, persistenterUpload.getUuid());
+
+		LOGGER.info("upload " + persistenterUpload.getUuid() + " konvertiert: " + csvFile.getAbsolutePath());
 
 		ResponsePayload responsePayload = null;
 

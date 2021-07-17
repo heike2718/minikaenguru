@@ -4,20 +4,15 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.uploads.convert;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_openofficetools.OpenOfficeContentReader;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.uploads.impl.DateiTyp;
 
 /**
@@ -30,19 +25,23 @@ public class OpenOfficeToCSVConverter implements UploadToCSVConverter {
 	@Override
 	public File convertToCSVAndPersistInFilesystem(final String pathUpload, final String uuid) {
 
-		File uploadFile = checkUpload(pathUpload);
+		File uploadFile = checkUpload(pathUpload, uuid);
 
 		try {
 
 			List<String> lines = new OpenOfficeContentReader().readContentAsLines(uploadFile);
-			File result = this.writeUploadFile(pathUpload, lines, uuid);
+
+			String pathUploadDir = uploadFile.getParent();
+
+			File result = this.writeUploadFile(pathUploadDir, lines, uuid);
 
 			return result;
 
 		} catch (Exception e) {
 
 			LOGGER.error(e.getMessage(), e);
-			throw new MkGatewayRuntimeException("Konnte upload " + uuid + " nicht verarbeiten");
+			throw new MkGatewayRuntimeException(
+				"Die Datei " + pathUpload + " zum upload " + uuid + " konnte nicht verarbeitet werden: " + e.getMessage(), e);
 
 		}
 	}
@@ -51,21 +50,7 @@ public class OpenOfficeToCSVConverter implements UploadToCSVConverter {
 
 		String path = pathUploadDir + File.separator + uuid + DateiTyp.TEXT.getSuffixWithPoint();
 
-		File file = new File(path);
-
-		String content = StringUtils.join(lines, "\n") + "\n";
-
-		try (FileOutputStream fos = new FileOutputStream(file); InputStream in = new ByteArrayInputStream(content.getBytes())) {
-
-			IOUtils.copy(in, fos);
-			fos.flush();
-
-			return file;
-		} catch (IOException e) {
-
-			LOGGER.error("Fehler beim Speichern im Filesystem: " + e.getMessage(), e);
-			throw new MkGatewayRuntimeException("Konnte upload nicht ins Filesystem speichern: " + e.getMessage(), e);
-		}
+		return MkGatewayFileUtils.writeLines(lines, path);
 	}
 
 }

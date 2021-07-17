@@ -14,7 +14,7 @@ public class CSVToCSVConverter implements UploadToCSVConverter {
 	@Override
 	public File convertToCSVAndPersistInFilesystem(final String pathUpload, final String uuid) {
 
-		File file = checkUpload(pathUpload);
+		File file = checkUpload(pathUpload, uuid);
 		return file;
 	}
 

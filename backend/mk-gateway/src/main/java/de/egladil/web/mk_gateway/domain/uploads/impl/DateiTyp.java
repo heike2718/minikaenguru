@@ -11,7 +11,7 @@ public enum DateiTyp {
 
 	EXCEL_ALT("application/vnd.ms-excel", ".xls"),
 	EXCEL_NEU("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx"),
-	OSD("application/vnd.oasis.opendocument.spreadsheet", ".osd"),
+	ODS("application/vnd.oasis.opendocument.spreadsheet", ".ods"),
 	TEXT("text/plain", ".csv");
 
 	private final String tikaName;

@@ -38,7 +38,7 @@ public interface UploadToCSVConverter {
 		case TEXT:
 			return new CSVToCSVConverter();
 
-		case OSD:
+		case ODS:
 			return new OpenOfficeToCSVConverter();
 
 		case EXCEL_ALT:
@@ -50,14 +50,15 @@ public interface UploadToCSVConverter {
 		}
 	}
 
-	default File checkUpload(final String pathUpload) {
+	default File checkUpload(final String pathUpload, final String uuid) {
 
 		File file = new File(pathUpload);
 
 		if (!file.exists() || !file.isFile() || !file.canRead()) {
 
 			throw new MkGatewayRuntimeException(
-				pathUpload + " existiert nicht oder ist keine Datei oder hat Zugriffsbeschraenkungen");
+				"Die Datei " + pathUpload + " zum upload " + uuid
+					+ " existiert nicht oder ist keine Datei oder hat Zugriffsbeschraenkungen");
 		}
 
 		return file;

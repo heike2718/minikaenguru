@@ -37,6 +37,7 @@ import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderService;
 import de.egladil.web.mk_gateway.domain.kinder.Klasse;
@@ -94,7 +95,7 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 
 		String path = pathUploadDir + File.separator + uploadMetadata.getUuid() + ".csv";
 
-		List<String> lines = readFileContent(path);
+		List<String> lines = MkGatewayFileUtils.readLines(path);
 
 		KlassenlisteUeberschrift ueberschrift = new KlassenlisteUeberschrift(lines.get(0));
 

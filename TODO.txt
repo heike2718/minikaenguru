@@ -3,7 +3,9 @@
 
 + Dubletten werden noch nicht korrekt erkannt Testdaten siehe mk-wettbewerb-tests
 + obwohl nachnameAlsZustz = false gesetzt war, wurden die Nachnamen in die Zusatzspalte geeschrieben
-* Umwandlung Excel in CSV noch nicht eingebaut
-* Umwandlung ODT in CSV noch nicht eingebaut  (beides in UploadManagerImpl.scanUpload)
++ Umwandlung Excel in CSV noch nicht eingebaut
++ Umwandlung ODT in CSV noch nicht eingebaut
 * Integrationstest fuer KlassenlisteCSVImportService
-
+* Uploadcomponent in mkv-app
+* uploadcomponent in mk-admin-app
+* oder uploadcomponent in the lib
