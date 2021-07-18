@@ -6,6 +6,7 @@
 + Umwandlung Excel in CSV noch nicht eingebaut
 + Umwandlung ODT in CSV noch nicht eingebaut
 * Integrationstest fuer KlassenlisteCSVImportService
-* Uploadcomponent in mkv-app
-* uploadcomponent in mk-admin-app
-* oder uploadcomponent in the lib
++ uploadcomponent in the lib
+* mkv-app: upload klassenliste
+* mk-admin-app: upload auswertung fuer schule
+
