@@ -10,12 +10,14 @@
 
 
 	<properties>
-		<quarkus.version>1.13.3.Final</quarkus.version>
 		<commons.version>1.6.0</commons.version>
 		<filescanner.version>1.0.0</filescanner.version>
 		<poi.version>5.0.0</poi.version>
-		<maven.compiler.source>1.11</maven.compiler.source>
-		<maven.compiler.target>1.11</maven.compiler.target>
+		<quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
+		<quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
+		<quarkus.platform.version>2.0.2.Final</quarkus.platform.version>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<surefire-plugin.version>2.22.0</surefire-plugin.version>
@@ -26,9 +28,9 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>io.quarkus</groupId>
-				<artifactId>quarkus-bom</artifactId>
-				<version>${quarkus.version}</version>
+				<groupId>${quarkus.platform.group-id}</groupId>
+				<artifactId>${quarkus.platform.artifact-id}</artifactId>
+				<version>${quarkus.platform.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -119,6 +121,14 @@
 			<version>2.2.12.Final</version>
 		</dependency>
 
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+
 		<!-- Quarkus START -->
 		<dependency>
 			<groupId>io.quarkus</groupId>
@@ -205,13 +215,18 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>io.quarkus</groupId>
+				<groupId>${quarkus.platform.group-id}</groupId>
 				<artifactId>quarkus-maven-plugin</artifactId>
-				<version>${quarkus.version}</version>
+				<version>${quarkus.platform.version}</version>
+				<extensions>true</extensions>
 				<executions>
 					<execution>
 						<goals>
 							<goal>build</goal>
+							<!--
+							<goal>generate-code</goal>
+							<goal>generate-code-tests</goal>
+							 -->
 						</goals>
 					</execution>
 				</executions>
