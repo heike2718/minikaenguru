@@ -13,6 +13,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,12 +34,14 @@ import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.LoesungszettelpunkteAPIModel;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
+import de.egladil.web.mk_gateway.domain.error.ActionNotAuthorizedException;
 import de.egladil.web.mk_gateway.domain.error.ConcurrentModificationType;
 import de.egladil.web.mk_gateway.domain.error.EntityConcurrentlyModifiedException;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
 import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelAPIModel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelZeileAPIModel;
+import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 
@@ -149,6 +152,48 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 			verify(loesungszettelRepository, times(0)).ofID(any());
 			verify(kinderRepository, times(1)).ofId(any());
 			verify(authService, times(0)).checkPermissionForTeilnahmenummer(any(), any(), any());
+
+			verify(loesungszettelRepository, times(0)).addLoesungszettel(any());
+			verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
+			verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
+			verify(kinderRepository, times(0)).changeKind(any());
+
+			assertNull(service.getLoesungszettelCreated());
+			assertNull(service.getLoesungszettelChanged());
+			assertNull(service.getLoesungszettelDeleted());
+		}
+
+	}
+
+	@Test
+	@DisplayName("0) Es gibt bereits hochgeladene Auswertung")
+	void should_loesungszettelAnlegenThrowActionNotAuthorized_when_AuswertungHochgeladen() {
+
+		// Arrange
+		Kind kind = kindOhneIDs.withIdentifier(REQUEST_KIND_ID);
+		requestDaten = requestDaten.withUuid(NEU);
+
+		Loesungszettel loesungszettel = new Loesungszettel().withAuswertungsquelle(Auswertungsquelle.UPLOAD);
+
+		when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(aktuellerWettbewerb));
+		when(kinderRepository.ofId(REQUEST_KIND_ID)).thenReturn(Optional.of(kind));
+		when(authService.checkPermissionForTeilnahmenummer(any(), any(), any())).thenReturn(Boolean.TRUE);
+		when(loesungszettelRepository.loadAll(any())).thenReturn(Collections.singletonList(loesungszettel));
+
+		// Act
+		try {
+
+			service.loesungszettelAnlegen(requestDaten, VERANSTALTER_ID);
+			fail("keine ActionNotAuthorizedException");
+		} catch (ActionNotAuthorizedException e) {
+
+			assertEquals("Der Lösungszettel konnte leider nicht gespeichert werden, da bereits Auswertungen hochgeladen wurden.",
+				e.getMessage());
+
+			verify(wettbewerbService, times(1)).aktuellerWettbewerb();
+			verify(loesungszettelRepository, times(0)).ofID(any());
+			verify(kinderRepository, times(1)).ofId(any());
+			verify(authService, times(1)).checkPermissionForTeilnahmenummer(any(), any(), any());
 
 			verify(loesungszettelRepository, times(0)).addLoesungszettel(any());
 			verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());

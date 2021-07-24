@@ -53,7 +53,7 @@ public class TeilnahmenHibernateRepositoryIT extends AbstractIntegrationTest {
 		List<Teilnahme> teilnahmen = teilnahmenRepository.loadAllForWettbewerb(wettbewerbID);
 
 		// Assert
-		assertEquals(32, teilnahmen.size());
+		assertEquals(33, teilnahmen.size());
 
 	}
 }

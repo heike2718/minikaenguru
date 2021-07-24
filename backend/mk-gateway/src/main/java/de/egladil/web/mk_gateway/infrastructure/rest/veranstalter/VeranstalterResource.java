@@ -9,7 +9,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -67,9 +66,6 @@ public class VeranstalterResource {
 
 	@Inject
 	AuthResultToResourceOwnerMapper authResultMapper;
-
-	@Inject
-	Event<SecurityIncidentRegistered> securityIncidentEvent;
 
 	private SecurityIncidentRegistered securityIncidentRegistered;
 

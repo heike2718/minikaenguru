@@ -20,7 +20,7 @@ public class ConfigService {
 	@ConfigProperty(name = "target.origin")
 	String targetOrigin;
 
-	@ConfigProperty(name = "stage")
+	@ConfigProperty(name = "env")
 	String stage;
 
 	@ConfigProperty(name = "allowedOrigin", defaultValue = "https://mathe-jung-alt.de")

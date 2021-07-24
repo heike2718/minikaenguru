@@ -32,7 +32,9 @@ public enum EventType {
 	USER_LOGGED_OUT("UserLoggedOut"),
 	NEWSLETTERVERSAND_FAILED("NewsletterversandFailed"),
 	NEWSLETTERVERSAND_FINISHED("NewsletterversandFinished"),
-	NEWSLETTERVERSAND_PROGRESS("NewsletterversandProgress");
+	NEWSLETTERVERSAND_PROGRESS("NewsletterversandProgress"),
+	UPLOAD_THREAD_DETECTED("UploadThreadDetected"),
+	VIRUS_DETECTD("VirusDetected");
 
 	private final String label;
 

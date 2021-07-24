@@ -1,0 +1,12 @@
+04.07.2021
+------------------
+
++ Dubletten werden noch nicht korrekt erkannt Testdaten siehe mk-wettbewerb-tests
++ obwohl nachnameAlsZustz = false gesetzt war, wurden die Nachnamen in die Zusatzspalte geeschrieben
++ Umwandlung Excel in CSV noch nicht eingebaut
++ Umwandlung ODT in CSV noch nicht eingebaut
+* Integrationstest fuer KlassenlisteCSVImportService
++ uploadcomponent in the lib
+* mkv-app: upload klassenliste
+* mk-admin-app: upload auswertung fuer schule
+

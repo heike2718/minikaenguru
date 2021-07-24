@@ -4,7 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.kinder.api;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
@@ -18,7 +17,7 @@ import de.egladil.web.commons_validation.annotations.UuidString;
 /**
  * KindRequestData
  */
-public class KindRequestData implements Serializable {
+public class KindRequestData {
 
 	@JsonIgnore
 	private static final long serialVersionUID = 1L;
@@ -38,6 +37,12 @@ public class KindRequestData implements Serializable {
 	@JsonProperty
 	@NotNull
 	private KindEditorModel kind;
+
+	@Override
+	public String toString() {
+
+		return "uuid=" + uuid + ", kuerzelLand=" + kuerzelLand + ", kind=" + kind;
+	}
 
 	public KindEditorModel kind() {
 

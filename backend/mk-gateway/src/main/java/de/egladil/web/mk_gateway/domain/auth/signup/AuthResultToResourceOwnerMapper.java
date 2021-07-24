@@ -7,7 +7,6 @@ package de.egladil.web.mk_gateway.domain.auth.signup;
 import java.util.function.Function;
 
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +27,7 @@ import de.egladil.web.mk_gateway.domain.auth.session.tokens.TokenExchangeService
 import de.egladil.web.mk_gateway.domain.error.AuthException;
 import de.egladil.web.mk_gateway.domain.error.LogmessagePrefixes;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 
@@ -52,7 +52,7 @@ public class AuthResultToResourceOwnerMapper implements Function<AuthResult, Sig
 	JWTService jwtService;
 
 	@Inject
-	Event<SecurityIncidentRegistered> securityEvent;
+	DomainEventHandler domainEventHandler;
 
 	private SecurityIncidentRegistered securityIncident;
 
@@ -126,7 +126,7 @@ public class AuthResultToResourceOwnerMapper implements Function<AuthResult, Sig
 
 			String msg = LogmessagePrefixes.BOT + "JWT " + StringUtils.abbreviate(jwt, 20) + " invalid: " + e.getMessage();
 
-			this.securityIncident = new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+			this.securityIncident = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 
 			LOG.warn(msg);
 			throw new AuthException("invalid JWT");

@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.kinder;
+package de.egladil.web.mk_gateway.domain.kinder.impl;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -25,9 +25,13 @@ import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
+import de.egladil.web.mk_gateway.domain.kinder.Kind;
+import de.egladil.web.mk_gateway.domain.kinder.Klasse;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseAPIModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseEditorModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseRequestData;
+import de.egladil.web.mk_gateway.domain.kinder.impl.KinderServiceImpl;
+import de.egladil.web.mk_gateway.domain.kinder.impl.KlassenServiceImpl;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
@@ -40,7 +44,7 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
  */
 public class KlassenServiceTest extends AbstractDomainServiceTest {
 
-	private KlassenService klassenService;
+	private KlassenServiceImpl klassenService;
 
 	@Override
 	@BeforeEach
@@ -50,8 +54,8 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 
 		AuthorizationService authService = AuthorizationService.createForTest(getVeranstalterRepository(), getUserRepository());
 
-		klassenService = KlassenService.createForTest(authService,
-			KinderService.createForTest(authService, getKinderRepository(), getTeilnahmenRepository(), getVeranstalterRepository(),
+		klassenService = KlassenServiceImpl.createForTest(authService,
+			KinderServiceImpl.createForTest(authService, getKinderRepository(), getTeilnahmenRepository(), getVeranstalterRepository(),
 				getWettbewerbService(),
 				LoesungszettelService.createForTest(authService, getWettbewerbService(), getKinderRepository(),
 					getLoesungszettelRepository()),
@@ -214,7 +218,7 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 		} catch (NotFoundException e) {
 
 			assertEquals(
-				"KlassenService.klasseAnlegen(...): Schule mit UUID=SCHULKUERZEL_2 ist nicht zum aktuellen Wettbewerb (2020) angemeldet",
+				"KlassenServiceImpl.klasseAnlegen(...): Schule mit UUID=SCHULKUERZEL_2 ist nicht zum aktuellen Wettbewerb (2020) angemeldet",
 				e.getMessage());
 		}
 	}
@@ -270,7 +274,7 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 		} catch (NotFoundException e) {
 
 			assertEquals(
-				"KlassenService.klasseUmbenennen(...): Schule mit UUID=SCHULKUERZEL_2 ist nicht zum aktuellen Wettbewerb (2020) angemeldet",
+				"KlassenServiceImpl.klasseUmbenennen(...): Schule mit UUID=SCHULKUERZEL_2 ist nicht zum aktuellen Wettbewerb (2020) angemeldet",
 				e.getMessage());
 		}
 	}

@@ -15,7 +15,6 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.ws.rs.NotFoundException;
@@ -26,7 +25,7 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
@@ -63,7 +62,6 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KinderHibernate
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KlassenHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.TeilnahmenHibernateRepository;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.WettbewerbHibernateRepository;
 
 /**
  * SchuleUrkundenservice erstellt alle Urkunden einer gegebenen Schule sowie eine Übersichtsseite mit den Kindernamen und
@@ -75,6 +73,9 @@ public class SchuleUrkundenservice {
 	private static final Logger LOG = LoggerFactory.getLogger(SchuleUrkundenservice.class);
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
+
+	@Inject
+	DomainEventHandler domainEventHandler;
 
 	@Inject
 	LoesungszettelRepository loesungezettelRepository;
@@ -97,20 +98,17 @@ public class SchuleUrkundenservice {
 	@Inject
 	WettbewerbService wettbewerbService;
 
-	@Inject
-	Event<DataInconsistencyRegistered> dataInconsistencyEvent;
-
 	public static SchuleUrkundenservice createForIntegrationTests(final EntityManager entityManager) {
 
 		SchuleUrkundenservice result = new SchuleUrkundenservice();
 		result.loesungezettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(entityManager);
 		result.kinderRepository = KinderHibernateRepository.createForIntegrationTest(entityManager);
-		result.authService = AuthorizationService.createForIntegrationTests(entityManager);
+		result.authService = AuthorizationService.createForIntegrationTest(entityManager);
 		result.teilnahmenRepository = TeilnahmenHibernateRepository.createForIntegrationTest(entityManager);
 		result.klassenRepository = KlassenHibernateRepository.createForIntegrationTest(entityManager);
 		result.urkundenmotivRepository = new UrkundenmotivRepository();
-		result.wettbewerbService = WettbewerbService
-			.createForTest(WettbewerbHibernateRepository.createForIntegrationTest(entityManager));
+		result.wettbewerbService = WettbewerbService.createForIntegrationTest(entityManager);
+		result.domainEventHandler = DomainEventHandler.createForIntegrationTest(entityManager);
 		return result;
 	}
 
@@ -245,7 +243,7 @@ public class SchuleUrkundenservice {
 				String msg = "generiereSchulauswertung: Loesungszettel zu Kind wurde nicht gefunden: kindUUID="
 					+ kind.identifier().identifier() + " - Kind wird weggelassen";
 				LOG.warn(msg);
-				new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
+				new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
 			}
 
 		}

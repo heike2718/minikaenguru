@@ -75,6 +75,12 @@ public class PersistentesKind extends ConcurrencySafeEntity {
 	@Column(name = "LANDKUERZEL")
 	private String landkuerzel;
 
+	@Column(name = "KLASSENSTUFE_PRUEFEN")
+	private boolean klassenstufePruefen;
+
+	@Column(name = "DUBLETTE_PRUEFEN")
+	private boolean dublettePruefen;
+
 	public Klassenstufe getKlassenstufe() {
 
 		return klassenstufe;
@@ -173,6 +179,26 @@ public class PersistentesKind extends ConcurrencySafeEntity {
 	public void setLandkuerzel(final String landkuerzel) {
 
 		this.landkuerzel = landkuerzel;
+	}
+
+	public boolean isKlassenstufePruefen() {
+
+		return klassenstufePruefen;
+	}
+
+	public void setKlassenstufePruefen(final boolean klassenstufePruefen) {
+
+		this.klassenstufePruefen = klassenstufePruefen;
+	}
+
+	public boolean isDublettePruefen() {
+
+		return dublettePruefen;
+	}
+
+	public void setDublettePruefen(final boolean dublettePruefen) {
+
+		this.dublettePruefen = dublettePruefen;
 	}
 
 }

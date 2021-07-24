@@ -62,6 +62,13 @@ public class KindEditorModel {
 		this.sprache = SpracheAPIModel.create(sprache);
 	}
 
+	@Override
+	public String toString() {
+
+		return "[vorname=" + vorname + ", nachname=" + nachname + ", zusatz=" + zusatz + ", klassenstufe="
+			+ klassenstufe + ", sprache=" + sprache + ", klasseUuid=" + klasseUuid;
+	}
+
 	public String vorname() {
 
 		return vorname;

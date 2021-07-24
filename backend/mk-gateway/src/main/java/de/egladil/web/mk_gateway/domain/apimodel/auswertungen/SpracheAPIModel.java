@@ -31,6 +31,12 @@ public class SpracheAPIModel {
 		return result;
 	}
 
+	@Override
+	public String toString() {
+
+		return sprache.toString();
+	}
+
 	public Sprache sprache() {
 
 		return sprache;

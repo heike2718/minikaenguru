@@ -35,6 +35,7 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.MkGatewayApp;
 import de.egladil.web.mk_gateway.domain.auth.session.LoggedInUser;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
+import de.egladil.web.mk_gateway.domain.error.ActionNotAuthorizedException;
 import de.egladil.web.mk_gateway.domain.error.AuthException;
 import de.egladil.web.mk_gateway.domain.error.ClientAuthException;
 import de.egladil.web.mk_gateway.domain.error.InaccessableEndpointException;
@@ -42,6 +43,7 @@ import de.egladil.web.mk_gateway.domain.error.MessagingAuthException;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.error.StatistikKeineDatenException;
 import de.egladil.web.mk_gateway.domain.error.UnterlagenNichtVerfuegbarException;
+import de.egladil.web.mk_gateway.domain.error.UploadFormatException;
 import de.egladil.web.mk_gateway.infrastructure.rest.XmlSerializer;
 
 /**
@@ -89,6 +91,16 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 				.build();
 		}
 
+		if (exception instanceof ActionNotAuthorizedException) {
+
+			ResponsePayload payload = ResponsePayload
+				.messageOnly(MessagePayload.error(exception.getMessage()));
+
+			return Response.status(200)
+				.entity(serializeAsJson(payload))
+				.build();
+		}
+
 		if (exception instanceof MessagingAuthException) {
 
 			ResponsePayload payload = ResponsePayload
@@ -123,7 +135,7 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 			ResponsePayload payload = ResponsePayload
 				.messageOnly(MessagePayload.error(exception.getMessage() + applicationMessages.getString("sendMail")));
 
-			return Response.status(909).entity(serializeAsJson(payload)).build();
+			return Response.status(503).entity(serializeAsJson(payload)).build();
 		}
 
 		if (exception instanceof StatistikKeineDatenException) {
@@ -148,6 +160,14 @@ public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> 
 				.messageOnly(MessagePayload.error(applicationMessages.getString("general.notFound")));
 
 			return Response.status(404).entity(serializeAsJson(payload)).build();
+		}
+
+		if (exception instanceof UploadFormatException) {
+
+			ResponsePayload payload = ResponsePayload
+				.messageOnly(MessagePayload.error(exception.getMessage()));
+
+			return Response.status(Status.BAD_REQUEST).entity(payload).build();
 		}
 
 		if (exception instanceof BadRequestException) {

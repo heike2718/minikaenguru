@@ -4,8 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.event;
 
-import javax.enterprise.event.Event;
-
 /**
  * LoggableEventDelegate
  */
@@ -20,13 +18,13 @@ public class LoggableEventDelegate {
 	 *                                CDI-Event
 	 * @return                        DataInconsistencyRegistered
 	 */
-	public DataInconsistencyRegistered fireDataInconsistencyEvent(final String msg, final Event<DataInconsistencyRegistered> dataInconsistencyEvent) {
+	public DataInconsistencyRegistered fireDataInconsistencyEvent(final String msg, final DomainEventHandler domainEventHandler) {
 
 		DataInconsistencyRegistered dataInconsistencyRegistered = new DataInconsistencyRegistered(msg);
 
-		if (dataInconsistencyEvent != null) {
+		if (domainEventHandler != null) {
 
-			dataInconsistencyEvent.fire(dataInconsistencyRegistered);
+			domainEventHandler.handleEvent(dataInconsistencyRegistered);
 		} else {
 
 			System.out.println(dataInconsistencyRegistered.serializeQuietly());
@@ -45,13 +43,13 @@ public class LoggableEventDelegate {
 	 *                               CDI-Event
 	 * @return                       SecurityIncidentRegistered
 	 */
-	public SecurityIncidentRegistered fireSecurityEvent(final String msg, final Event<SecurityIncidentRegistered> securityIncidentEvent) {
+	public SecurityIncidentRegistered fireSecurityEvent(final String msg, final DomainEventHandler domainEventHandler) {
 
 		SecurityIncidentRegistered securityIncidentRegistered = new SecurityIncidentRegistered(msg);
 
-		if (securityIncidentEvent != null) {
+		if (domainEventHandler != null) {
 
-			securityIncidentEvent.fire(securityIncidentRegistered);
+			domainEventHandler.handleEvent(securityIncidentRegistered);
 		} else {
 
 			System.out.println(securityIncidentRegistered.serializeQuietly());

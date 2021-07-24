@@ -17,6 +17,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.nio.charset.Charset;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -70,7 +71,7 @@ public class MkSessionServiceTest {
 			StringWriter sw = new StringWriter()) {
 
 			String uuid = "4d8ed03a-575a-442e-89f4-0e54e51dd0d8";
-			IOUtils.copy(in, sw, "UTF-8");
+			IOUtils.copy(in, sw, Charset.forName("UTF-8"));
 			String jwt = sw.toString();
 
 			User user = new User();
@@ -243,7 +244,7 @@ public class MkSessionServiceTest {
 			StringWriter sw = new StringWriter()) {
 
 			String uuid = "4d8ed03a-575a-442e-89f4-0e54e51dd0d8";
-			IOUtils.copy(in, sw, "UTF-8");
+			IOUtils.copy(in, sw, Charset.forName("UTF-8"));
 			String jwt = sw.toString();
 
 			User user = new User();

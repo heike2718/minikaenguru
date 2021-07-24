@@ -27,6 +27,19 @@ public abstract class AbstractIntegrationTest {
 
 	}
 
+	protected EntityTransaction startTransaction() {
+
+		EntityTransaction transaction = entityManager.getTransaction();
+
+		if (!transaction.isActive()) {
+
+			transaction.begin();
+		}
+
+		return transaction;
+
+	}
+
 	protected void commit(final EntityTransaction trx) {
 
 		if (trx != null && trx.isActive()) {

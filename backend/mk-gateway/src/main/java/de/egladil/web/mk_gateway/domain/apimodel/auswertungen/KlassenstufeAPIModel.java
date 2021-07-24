@@ -34,6 +34,12 @@ public class KlassenstufeAPIModel {
 
 	}
 
+	@Override
+	public String toString() {
+
+		return klassenstufe.toString();
+	}
+
 	public Klassenstufe klassenstufe() {
 
 		return klassenstufe;
