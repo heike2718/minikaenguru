@@ -14,8 +14,8 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
-import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelService;
-import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelAPIModel;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.OnlineLoesungszettelService;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelAPIModel;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KinderHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
 import de.egladil.web.mkv_server_tests.AbstractIntegrationTest;
@@ -29,7 +29,7 @@ public abstract class AbstractLoesungszettelTest extends AbstractIntegrationTest
 
 	protected LoesungszettelRepository loesungszettelRepository;
 
-	protected LoesungszettelService loesungszettelService;
+	protected OnlineLoesungszettelService loesungszettelService;
 
 	@BeforeEach
 	protected void init() {
@@ -39,7 +39,7 @@ public abstract class AbstractLoesungszettelTest extends AbstractIntegrationTest
 		kinderRepository = KinderHibernateRepository.createForIntegrationTest(entityManager);
 		loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(entityManager);
 
-		loesungszettelService = LoesungszettelService.createForIntegrationTest(entityManager);
+		loesungszettelService = OnlineLoesungszettelService.createForIntegrationTest(entityManager);
 	}
 
 	protected ResponsePayload loesungszettelAnlegen(final LoesungszettelAPIModel loesungszetteldaten, final String veranstalterUuid) throws NotFoundException {

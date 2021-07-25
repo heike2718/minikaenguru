@@ -102,7 +102,7 @@ public class EinzelkindUrkundenservice {
 
 		TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdntifier = kind.teilnahmeIdentifier();
 
-		authService.checkPermissionForTeilnahmenummer(veranstalterID,
+		authService.checkPermissionForTeilnahmenummerAndReturnRolle(veranstalterID,
 			new Identifier(teilnahmeIdntifier.teilnahmenummer()),
 			"[generiereUrkunde - " + kindID.toString() + "]");
 

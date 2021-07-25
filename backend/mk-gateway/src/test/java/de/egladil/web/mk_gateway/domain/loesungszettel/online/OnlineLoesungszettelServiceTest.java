@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.loesungszettel;
+package de.egladil.web.mk_gateway.domain.loesungszettel.online;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -33,19 +33,22 @@ import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.LoesungszettelpunkteAPIModel;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
-import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelAPIModel;
-import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelZeileAPIModel;
+import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
+import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelAPIModel;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelZeileAPIModel;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
+import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterLoesungszettel;
 
 /**
- * LoesungszettelServiceTest
+ * OnlineLoesungszettelServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-public class LoesungszettelServiceTest extends AbstractLoesungszettelServiceTest {
+public class OnlineLoesungszettelServiceTest extends AbstractLoesungszettelServiceTest {
 
 	@Mock
 	private KinderRepository kinderRepository;
@@ -60,7 +63,7 @@ public class LoesungszettelServiceTest extends AbstractLoesungszettelServiceTest
 	private WettbewerbService wettbewerbService;
 
 	@InjectMocks
-	private LoesungszettelService service;
+	private OnlineLoesungszettelService service;
 
 	@BeforeEach
 	void setUp() {
@@ -145,7 +148,7 @@ public class LoesungszettelServiceTest extends AbstractLoesungszettelServiceTest
 			} catch (NotFoundException e) {
 
 				verify(loesungszettelRepository, times(1)).ofID(REQUEST_LOESUNGSZETTEL_ID);
-				verify(authService, times(0)).checkPermissionForTeilnahmenummer(any(), any(), any());
+				verify(authService, times(0)).checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any());
 			}
 
 		}
@@ -166,7 +169,7 @@ public class LoesungszettelServiceTest extends AbstractLoesungszettelServiceTest
 				.withAuswertungsquelle(Auswertungsquelle.ONLINE);
 
 			when(loesungszettelRepository.ofID(REQUEST_LOESUNGSZETTEL_ID)).thenReturn(Optional.of(loesungszettel));
-			when(authService.checkPermissionForTeilnahmenummer(any(), any(), any())).thenReturn(Boolean.TRUE);
+			when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any())).thenReturn(Rolle.LEHRER);
 
 			// Act
 			LoesungszettelAPIModel result = service.findLoesungszettelWithID(REQUEST_LOESUNGSZETTEL_ID, VERANSTALTER_ID);
@@ -187,7 +190,7 @@ public class LoesungszettelServiceTest extends AbstractLoesungszettelServiceTest
 			}
 
 			verify(loesungszettelRepository, times(1)).ofID(REQUEST_LOESUNGSZETTEL_ID);
-			verify(authService, times(1)).checkPermissionForTeilnahmenummer(any(), any(), any());
+			verify(authService, times(1)).checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any());
 		}
 
 		@Test
@@ -205,7 +208,7 @@ public class LoesungszettelServiceTest extends AbstractLoesungszettelServiceTest
 				.withVersion(3);
 
 			when(loesungszettelRepository.ofID(REQUEST_LOESUNGSZETTEL_ID)).thenReturn(Optional.of(loesungszettel));
-			when(authService.checkPermissionForTeilnahmenummer(any(), any(), any())).thenReturn(Boolean.TRUE);
+			when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any())).thenReturn(Rolle.LEHRER);
 
 			// Act
 			try {
@@ -217,7 +220,7 @@ public class LoesungszettelServiceTest extends AbstractLoesungszettelServiceTest
 				assertEquals("Diese Methode darf nur bei Onlineauswertungen aufgerufen werden", e.getMessage());
 
 				verify(loesungszettelRepository, times(1)).ofID(REQUEST_LOESUNGSZETTEL_ID);
-				verify(authService, times(1)).checkPermissionForTeilnahmenummer(any(), any(), any());
+				verify(authService, times(1)).checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any());
 			}
 		}
 
@@ -237,7 +240,7 @@ public class LoesungszettelServiceTest extends AbstractLoesungszettelServiceTest
 				.withAuswertungsquelle(Auswertungsquelle.UPLOAD);
 
 			when(loesungszettelRepository.ofID(REQUEST_LOESUNGSZETTEL_ID)).thenReturn(Optional.of(loesungszettel));
-			when(authService.checkPermissionForTeilnahmenummer(any(), any(), any())).thenReturn(Boolean.TRUE);
+			when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any())).thenReturn(Rolle.LEHRER);
 
 			// Act
 			try {
@@ -249,7 +252,7 @@ public class LoesungszettelServiceTest extends AbstractLoesungszettelServiceTest
 				assertEquals("Diese Methode darf nur bei Onlineauswertungen aufgerufen werden", e.getMessage());
 
 				verify(loesungszettelRepository, times(1)).ofID(REQUEST_LOESUNGSZETTEL_ID);
-				verify(authService, times(1)).checkPermissionForTeilnahmenummer(any(), any(), any());
+				verify(authService, times(1)).checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any());
 			}
 		}
 
@@ -269,7 +272,7 @@ public class LoesungszettelServiceTest extends AbstractLoesungszettelServiceTest
 				.withAuswertungsquelle(Auswertungsquelle.UPLOAD);
 
 			when(loesungszettelRepository.ofID(REQUEST_LOESUNGSZETTEL_ID)).thenReturn(Optional.of(loesungszettel));
-			when(authService.checkPermissionForTeilnahmenummer(any(), any(), any())).thenThrow(new AccessDeniedException());
+			when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any())).thenThrow(new AccessDeniedException());
 
 			// Act
 			try {
@@ -279,7 +282,7 @@ public class LoesungszettelServiceTest extends AbstractLoesungszettelServiceTest
 			} catch (AccessDeniedException e) {
 
 				verify(loesungszettelRepository, times(1)).ofID(REQUEST_LOESUNGSZETTEL_ID);
-				verify(authService, times(1)).checkPermissionForTeilnahmenummer(any(), any(), any());
+				verify(authService, times(1)).checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any());
 				verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
 			}
 		}
@@ -300,7 +303,7 @@ public class LoesungszettelServiceTest extends AbstractLoesungszettelServiceTest
 			// Assert
 			verify(loesungszettelRepository, times(1)).findPersistentenLoesungszettel(REQUEST_LOESUNGSZETTEL_ID);
 			verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
-			verify(authService, times(0)).checkPermissionForTeilnahmenummer(any(), any(), any());
+			verify(authService, times(0)).checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any());
 			verify(wettbewerbService, times(0)).aktuellerWettbewerb();
 		}
 
@@ -323,14 +326,14 @@ public class LoesungszettelServiceTest extends AbstractLoesungszettelServiceTest
 			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(aktuellerWettbewerb));
 			when(loesungszettelRepository.findPersistentenLoesungszettel(REQUEST_LOESUNGSZETTEL_ID))
 				.thenReturn(Optional.of(persistenter));
-			when(authService.checkPermissionForTeilnahmenummer(any(), any(), any())).thenReturn(Boolean.TRUE);
+			when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any())).thenReturn(Rolle.LEHRER);
 
 			// Act
 			service.spracheLoesungszettelAendern(REQUEST_LOESUNGSZETTEL_ID, Sprache.en, VERANSTALTER_ID.identifier());
 
 			verify(wettbewerbService, times(1)).aktuellerWettbewerb();
 			verify(loesungszettelRepository, times(1)).findPersistentenLoesungszettel(REQUEST_LOESUNGSZETTEL_ID);
-			verify(authService, times(1)).checkPermissionForTeilnahmenummer(any(), any(), any());
+			verify(authService, times(1)).checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any());
 
 			verify(loesungszettelRepository, times(1)).updateLoesungszettelInTransaction(any());
 
@@ -359,7 +362,7 @@ public class LoesungszettelServiceTest extends AbstractLoesungszettelServiceTest
 			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(aktuellerWettbewerb));
 			when(loesungszettelRepository.findPersistentenLoesungszettel(REQUEST_LOESUNGSZETTEL_ID))
 				.thenReturn(Optional.of(persistenter));
-			when(authService.checkPermissionForTeilnahmenummer(any(), any(), any())).thenReturn(Boolean.TRUE);
+			when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any())).thenReturn(Rolle.LEHRER);
 
 			try {
 
@@ -370,7 +373,7 @@ public class LoesungszettelServiceTest extends AbstractLoesungszettelServiceTest
 
 				verify(wettbewerbService, times(1)).aktuellerWettbewerb();
 				verify(loesungszettelRepository, times(1)).findPersistentenLoesungszettel(REQUEST_LOESUNGSZETTEL_ID);
-				verify(authService, times(1)).checkPermissionForTeilnahmenummer(any(), any(), any());
+				verify(authService, times(1)).checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any());
 			}
 
 		}
@@ -392,7 +395,7 @@ public class LoesungszettelServiceTest extends AbstractLoesungszettelServiceTest
 
 			when(loesungszettelRepository.findPersistentenLoesungszettel(REQUEST_LOESUNGSZETTEL_ID))
 				.thenReturn(Optional.of(persistenter));
-			when(authService.checkPermissionForTeilnahmenummer(any(), any(), any())).thenThrow(new AccessDeniedException());
+			when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any())).thenThrow(new AccessDeniedException());
 
 			// Act
 			try {
@@ -403,7 +406,7 @@ public class LoesungszettelServiceTest extends AbstractLoesungszettelServiceTest
 
 				verify(loesungszettelRepository, times(1)).findPersistentenLoesungszettel(REQUEST_LOESUNGSZETTEL_ID);
 				verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
-				verify(authService, times(1)).checkPermissionForTeilnahmenummer(any(), any(), any());
+				verify(authService, times(1)).checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any());
 
 			}
 

@@ -46,7 +46,7 @@ import de.egladil.web.mk_gateway.domain.kinder.events.KindChanged;
 import de.egladil.web.mk_gateway.domain.kinder.events.KindCreated;
 import de.egladil.web.mk_gateway.domain.kinder.events.KindDeleted;
 import de.egladil.web.mk_gateway.domain.klassenlisten.impl.KindImportDaten;
-import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelService;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.OnlineLoesungszettelService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
@@ -94,7 +94,7 @@ public class KinderServiceImpl implements KinderService {
 	WettbewerbService wettbewerbService;
 
 	@Inject
-	LoesungszettelService loesungszettelService;
+	OnlineLoesungszettelService loesungszettelService;
 
 	@Inject
 	DomainEventHandler domainEventHandler;
@@ -107,7 +107,7 @@ public class KinderServiceImpl implements KinderService {
 
 	private KindDeleted kindDeleted;
 
-	public static KinderServiceImpl createForTest(final AuthorizationService authService, final KinderRepository kinderRepository, final TeilnahmenRepository teilnahmenRepository, final VeranstalterRepository veranstalterRepository, final WettbewerbService wettbewerbService, final LoesungszettelService loesungszettelService, final KlassenRepository klassenRepository) {
+	public static KinderServiceImpl createForTest(final AuthorizationService authService, final KinderRepository kinderRepository, final TeilnahmenRepository teilnahmenRepository, final VeranstalterRepository veranstalterRepository, final WettbewerbService wettbewerbService, final OnlineLoesungszettelService loesungszettelService, final KlassenRepository klassenRepository) {
 
 		KinderServiceImpl result = new KinderServiceImpl();
 		result.authService = authService;
@@ -126,7 +126,7 @@ public class KinderServiceImpl implements KinderService {
 		result.authService = AuthorizationService.createForIntegrationTest(em);
 		result.kinderRepository = KinderHibernateRepository.createForIntegrationTest(em);
 		result.klassenRepository = KlassenHibernateRepository.createForIntegrationTest(em);
-		result.loesungszettelService = LoesungszettelService.createForIntegrationTest(em);
+		result.loesungszettelService = OnlineLoesungszettelService.createForIntegrationTest(em);
 		result.teilnahmenRepository = TeilnahmenHibernateRepository.createForIntegrationTest(em);
 		result.veranstalterRepository = VeranstalterHibernateRepository.createForIntegrationTest(em);
 		result.wettbewerbService = WettbewerbService.createForIntegrationTest(em);
@@ -151,7 +151,7 @@ public class KinderServiceImpl implements KinderService {
 
 		Teilnahme teilnahme = getAktuelleTeilnahme(daten, veranstalterUuid, "pruefeDublette");
 
-		authService.checkPermissionForTeilnahmenummer(new Identifier(veranstalterUuid), teilnahme.teilnahmenummer(),
+		authService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(veranstalterUuid), teilnahme.teilnahmenummer(),
 			"[kindAnlegen - teilnahmenummer=" + teilnahme.teilnahmenummer().identifier() + "]");
 
 		List<Kind> kinder = findWithTeilnahme(TeilnahmeIdentifierAktuellerWettbewerb.createFromTeilnahme(teilnahme));
@@ -273,7 +273,7 @@ public class KinderServiceImpl implements KinderService {
 
 		Teilnahme teilnahme = getAktuelleTeilnahme(daten, veranstalterUuid, "kindAnlegen");
 
-		authService.checkPermissionForTeilnahmenummer(new Identifier(veranstalterUuid), teilnahme.teilnahmenummer(),
+		authService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(veranstalterUuid), teilnahme.teilnahmenummer(),
 			"[kindAnlegen - teilnahmenummer=" + teilnahme.teilnahmenummer().identifier() + "]");
 
 		Identifier klasseID = StringUtils.isBlank(daten.klasseUuid()) ? null : new Identifier(daten.klasseUuid());
@@ -367,7 +367,7 @@ public class KinderServiceImpl implements KinderService {
 
 		Kind kind = optKind.get();
 
-		authService.checkPermissionForTeilnahmenummer(new Identifier(veranstalterUuid),
+		authService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(veranstalterUuid),
 			new Identifier(kind.teilnahmeIdentifier().teilnahmenummer()), "[kindAendern - kindUUID=" + daten.uuid() + "]");
 
 		KindEditorModel kindDaten = daten.kind();
@@ -459,7 +459,7 @@ public class KinderServiceImpl implements KinderService {
 
 		Kind kind = optKind.get();
 
-		authService.checkPermissionForTeilnahmenummer(new Identifier(veranstalterUuid),
+		authService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(veranstalterUuid),
 			new Identifier(kind.teilnahmeIdentifier().teilnahmenummer()), "[kindLoeschen - kindUUID=" + uuid + "]");
 
 		kindLoeschenWithoutAuthorizationCheck(kind, veranstalterUuid);
@@ -509,7 +509,7 @@ public class KinderServiceImpl implements KinderService {
 	@Override
 	public List<KindAPIModel> kinderZuTeilnahmeLaden(final String teilnahmenummer, final String veranstalterUuid) {
 
-		this.authService.checkPermissionForTeilnahmenummer(new Identifier(veranstalterUuid), new Identifier(teilnahmenummer),
+		this.authService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(veranstalterUuid), new Identifier(teilnahmenummer),
 			"[kinderZuTeilnahmeLaden - " + teilnahmenummer + "]");
 
 		Veranstalter veranstalter = veranstalterRepository.ofId(new Identifier(veranstalterUuid)).get();

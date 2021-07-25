@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.loesungszettel;
+package de.egladil.web.mk_gateway.domain.loesungszettel.online;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -39,10 +39,13 @@ import de.egladil.web.mk_gateway.domain.error.ConcurrentModificationType;
 import de.egladil.web.mk_gateway.domain.error.EntityConcurrentlyModifiedException;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
-import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelAPIModel;
-import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelZeileAPIModel;
+import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
+import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelAPIModel;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelZeileAPIModel;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
+import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 
 /**
@@ -69,7 +72,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 	private WettbewerbService wettbewerbService;
 
 	@InjectMocks
-	private LoesungszettelService service;
+	private OnlineLoesungszettelService service;
 
 	@BeforeEach
 	void setUp() {
@@ -96,7 +99,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 		when(loesungszettelRepository.addLoesungszettel(any()))
 			.thenThrow(new EntityConcurrentlyModifiedException(ConcurrentModificationType.INSERTED, vorhandener));
 
-		when(authService.checkPermissionForTeilnahmenummer(any(), any(), any())).thenReturn(Boolean.TRUE);
+		when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any())).thenReturn(Rolle.LEHRER);
 
 		requestDaten = requestDaten.withUuid(NEU);
 
@@ -119,7 +122,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 		verify(wettbewerbService, times(1)).aktuellerWettbewerb();
 		verify(loesungszettelRepository, times(0)).ofID(any());
 		verify(kinderRepository, times(1)).ofId(any());
-		verify(authService, times(1)).checkPermissionForTeilnahmenummer(any(), any(), any());
+		verify(authService, times(1)).checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any());
 
 		verify(loesungszettelRepository, times(1)).addLoesungszettel(any());
 		verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
@@ -151,7 +154,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 			verify(wettbewerbService, times(0)).aktuellerWettbewerb();
 			verify(loesungszettelRepository, times(0)).ofID(any());
 			verify(kinderRepository, times(1)).ofId(any());
-			verify(authService, times(0)).checkPermissionForTeilnahmenummer(any(), any(), any());
+			verify(authService, times(0)).checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any());
 
 			verify(loesungszettelRepository, times(0)).addLoesungszettel(any());
 			verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
@@ -177,7 +180,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 
 		when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(aktuellerWettbewerb));
 		when(kinderRepository.ofId(REQUEST_KIND_ID)).thenReturn(Optional.of(kind));
-		when(authService.checkPermissionForTeilnahmenummer(any(), any(), any())).thenReturn(Boolean.TRUE);
+		when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any())).thenReturn(Rolle.LEHRER);
 		when(loesungszettelRepository.loadAll(any())).thenReturn(Collections.singletonList(loesungszettel));
 
 		// Act
@@ -193,7 +196,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 			verify(wettbewerbService, times(1)).aktuellerWettbewerb();
 			verify(loesungszettelRepository, times(0)).ofID(any());
 			verify(kinderRepository, times(1)).ofId(any());
-			verify(authService, times(1)).checkPermissionForTeilnahmenummer(any(), any(), any());
+			verify(authService, times(1)).checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any());
 
 			verify(loesungszettelRepository, times(0)).addLoesungszettel(any());
 			verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
@@ -217,7 +220,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 
 		when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(aktuellerWettbewerb));
 		when(kinderRepository.ofId(REQUEST_KIND_ID)).thenReturn(Optional.of(kind));
-		when(authService.checkPermissionForTeilnahmenummer(any(), any(), any())).thenThrow(new AccessDeniedException("nö"));
+		when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any())).thenThrow(new AccessDeniedException("nö"));
 
 		// Act
 		try {
@@ -231,7 +234,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 			verify(wettbewerbService, times(1)).aktuellerWettbewerb();
 			verify(loesungszettelRepository, times(0)).ofID(any());
 			verify(kinderRepository, times(1)).ofId(any());
-			verify(authService, times(1)).checkPermissionForTeilnahmenummer(any(), any(), any());
+			verify(authService, times(1)).checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any());
 
 			verify(loesungszettelRepository, times(0)).addLoesungszettel(any());
 			verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
@@ -263,7 +266,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 
 		when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(aktuellerWettbewerb));
 		when(kinderRepository.ofId(REQUEST_KIND_ID)).thenReturn(Optional.of(kind));
-		when(authService.checkPermissionForTeilnahmenummer(any(), any(), any())).thenReturn(Boolean.TRUE);
+		when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any())).thenReturn(Rolle.LEHRER);
 		when(loesungszettelRepository.addLoesungszettel(any())).thenReturn(neuerLoesungszettel);
 
 		// Act
@@ -293,7 +296,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 		verify(wettbewerbService, times(1)).aktuellerWettbewerb();
 		verify(loesungszettelRepository, times(0)).ofID(any());
 		verify(kinderRepository, times(1)).ofId(any());
-		verify(authService, times(1)).checkPermissionForTeilnahmenummer(any(), any(), any());
+		verify(authService, times(1)).checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any());
 
 		verify(loesungszettelRepository, times(1)).addLoesungszettel(any());
 		verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
@@ -335,7 +338,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 			verify(wettbewerbService, times(0)).aktuellerWettbewerb();
 			verify(loesungszettelRepository, times(0)).ofID(any());
 			verify(kinderRepository, times(0)).ofId(any());
-			verify(authService, times(0)).checkPermissionForTeilnahmenummer(any(), any(), any());
+			verify(authService, times(0)).checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any());
 
 			verify(loesungszettelRepository, times(0)).addLoesungszettel(any());
 			verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
@@ -365,7 +368,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 
 		when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(aktuellerWettbewerb));
 		when(kinderRepository.ofId(REQUEST_KIND_ID)).thenReturn(Optional.of(kind));
-		when(authService.checkPermissionForTeilnahmenummer(any(), any(), any())).thenReturn(Boolean.TRUE);
+		when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any())).thenReturn(Rolle.LEHRER);
 
 		when(kinderRepository.changeKind(kind)).thenReturn(Boolean.TRUE);
 		when(loesungszettelRepository.addLoesungszettel(any())).thenReturn(neuerLoesungszettel);
@@ -398,7 +401,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 		verify(wettbewerbService, times(1)).aktuellerWettbewerb();
 		verify(loesungszettelRepository, times(0)).ofID(any());
 		verify(kinderRepository, times(1)).ofId(any());
-		verify(authService, times(1)).checkPermissionForTeilnahmenummer(any(), any(), any());
+		verify(authService, times(1)).checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any());
 
 		verify(loesungszettelRepository, times(1)).addLoesungszettel(any());
 		verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());

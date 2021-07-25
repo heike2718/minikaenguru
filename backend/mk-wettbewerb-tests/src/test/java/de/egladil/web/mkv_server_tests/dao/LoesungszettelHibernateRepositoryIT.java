@@ -66,7 +66,7 @@ public class LoesungszettelHibernateRepositoryIT extends AbstractIntegrationTest
 	}
 
 	@Test
-	void should_loadAll_when_exist() throws Exception {
+	void should_loadAllWithTeilnahmeId_when_exist() throws Exception {
 
 		// Arrange
 		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE)
@@ -101,6 +101,51 @@ public class LoesungszettelHibernateRepositoryIT extends AbstractIntegrationTest
 			TeilnahmeIdentifier theTeilnahmeIdentifier = loesungszettel.teilnahmeIdentifier();
 			assertNotNull(theTeilnahmeIdentifier);
 			assertEquals(teilnahmeIdentifier, theTeilnahmeIdentifier);
+		}
+
+		LoesungszettelList liste = new LoesungszettelList();
+		liste.setLoesungszettel(trefferliste);
+
+		objectMapper.writeValue(System.out, liste);
+	}
+
+	@Test
+	void should_loadAllWithTeilnahmenummer_when_exist() throws Exception {
+
+		// Arrange
+		String teilnahmenummer = "M94P3IH9";
+		WettbewerbID wettbewerbID = new WettbewerbID(2018);
+
+		// Act
+		List<Loesungszettel> trefferliste = loesungszettelRepository.loadAll(teilnahmenummer, wettbewerbID);
+
+		// Assert
+		assertEquals(9, trefferliste.size());
+
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		for (Loesungszettel loesungszettel : trefferliste) {
+
+			assertNotNull(loesungszettel.auswertungsquelle());
+			assertNotNull(loesungszettel.identifier());
+			assertNotNull(loesungszettel.klassenstufe());
+			assertNotNull(loesungszettel.sprache());
+
+			LoesungszettelRohdaten rohdaten = loesungszettel.rohdaten();
+			assertNotNull(rohdaten);
+
+			if (rohdaten.antwortcode() == null) {
+
+				assertEquals(Auswertungsquelle.UPLOAD, loesungszettel.auswertungsquelle());
+			}
+
+			assertNotNull(rohdaten.nutzereingabe());
+			assertNotNull(rohdaten.wertungscode());
+
+			TeilnahmeIdentifier theTeilnahmeIdentifier = loesungszettel.teilnahmeIdentifier();
+			assertNotNull(theTeilnahmeIdentifier);
+			assertEquals(teilnahmenummer, theTeilnahmeIdentifier.teilnahmenummer());
+			assertEquals(wettbewerbID.jahr().intValue(), theTeilnahmeIdentifier.jahr());
 		}
 
 		LoesungszettelList liste = new LoesungszettelList();

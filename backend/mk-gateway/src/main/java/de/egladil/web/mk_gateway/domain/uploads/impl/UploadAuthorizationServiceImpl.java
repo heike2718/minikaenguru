@@ -13,10 +13,10 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.ActionNotAuthorizedException;
 import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
@@ -26,7 +26,6 @@ import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
-import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.uploads.UploadAuthorizationService;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
@@ -54,9 +53,6 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 	DomainEventHandler domainEventHandler;
 
 	@Inject
-	AuthorizationService authService;
-
-	@Inject
 	VeranstalterRepository veranstalterRepository;
 
 	@Inject
@@ -72,7 +68,6 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 
 		UploadAuthorizationServiceImpl result = new UploadAuthorizationServiceImpl();
 		result.wettbewerbService = WettbewerbService.createForIntegrationTest(em);
-		result.authService = AuthorizationService.createForIntegrationTest(em);
 		result.veranstalterRepository = VeranstalterHibernateRepository.createForIntegrationTest(em);
 		result.teilnahmenRepository = TeilnahmenHibernateRepository.createForIntegrationTest(em);
 		result.loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(em);
@@ -81,7 +76,19 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 	}
 
 	@Override
-	public boolean authorizeUpload(final Identifier veranstalterID, final String schulkuerzel, final UploadType uploadType) {
+	public boolean authorizeUpload(final Identifier benutzerID, final String schulkuerzel, final UploadType uploadType, final Rolle rolle) {
+
+		if (Rolle.PRIVAT == rolle) {
+
+			String eventMessagePrefix = this.getClass().getSimpleName() + ".authorizeUpload(...) - uploadType=" + uploadType + ": ";
+
+			String msg = "Privatveranstalter " + benutzerID + " versucht, Datei hochzuladen";
+			new LoggableEventDelegate().fireSecurityEvent(eventMessagePrefix + msg,
+				domainEventHandler);
+			LOGGER.warn(msg);
+
+			throw new ActionNotAuthorizedException(applicationMessages.getString("general.actionNotAuthorized"));
+		}
 
 		Optional<Wettbewerb> optWettbewerb = this.wettbewerbService.aktuellerWettbewerb();
 
@@ -103,7 +110,7 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 				break;
 			}
 
-			LOGGER.warn("Uploadversuch durch Veranstalter {}, kein Wettbewerb, UploadTyp={}", veranstalterID, uploadType);
+			LOGGER.warn("Uploadversuch durch Veranstalter {}, kein Wettbewerb, UploadTyp={}", benutzerID, uploadType);
 			throw new ActionNotAuthorizedException(msg);
 		}
 
@@ -127,7 +134,7 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 				break;
 			}
 
-			LOGGER.warn("Uploadversuch durch Veranstalter {}, Wettbewerbsstatus={}, UploadTyp={}", veranstalterID,
+			LOGGER.warn("Uploadversuch durch Veranstalter {}, Wettbewerbsstatus={}, UploadTyp={}", benutzerID,
 				aktuellerWettbewerb.status(), uploadType);
 			throw new ActionNotAuthorizedException(msg);
 		}
@@ -143,31 +150,44 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 				break;
 
 			case AUSWERTUNG:
-				msg = applicationMessages.getString("auswertungimport.forbidden.wettbewerbBeendet");
+				if (!rolle.isAdmin()) {
+
+					msg = applicationMessages.getString("auswertungimport.forbidden.wettbewerbBeendet");
+				}
 				break;
 
 			default:
 				break;
 			}
 
-			LOGGER.warn("Uploadversuch durch Veranstalter {}, Wettbewerbsstatus={}, UploadTyp={}", veranstalterID,
+			LOGGER.warn("Uploadversuch durch Veranstalter {}, Wettbewerbsstatus={}, UploadTyp={}", benutzerID,
 				aktuellerWettbewerb.status(), uploadType);
-			throw new ActionNotAuthorizedException(msg);
+
+			if (msg != null) {
+
+				throw new ActionNotAuthorizedException(msg);
+			}
 		}
 
-		Veranstalter veranstalter = this.isAuthorizedForTeilnahme(veranstalterID, schulkuerzel, aktuellerWettbewerb, uploadType);
+		Pair<Veranstalter, Teilnahme> veranstalterUndTeilnahme = this.isAuthorizedForTeilnahme(rolle, benutzerID, schulkuerzel,
+			aktuellerWettbewerb, uploadType);
 
-		if (UploadType.AUSWERTUNG == uploadType && WettbewerbStatus.ANMELDUNG == aktuellerWettbewerb.status()
-			&& ZugangUnterlagen.ERTEILT != veranstalter.zugangUnterlagen()) {
+		if (!rolle.isAdmin()) {
 
-			throw new ActionNotAuthorizedException(
-				applicationMessages.getString("auswertungimport.forbidden.downloadNichtErlaubt"));
+			Veranstalter veranstalter = veranstalterUndTeilnahme.getLeft();
+
+			if (UploadType.AUSWERTUNG == uploadType && WettbewerbStatus.ANMELDUNG == aktuellerWettbewerb.status()
+				&& ZugangUnterlagen.ERTEILT != veranstalter.zugangUnterlagen()) {
+
+				throw new ActionNotAuthorizedException(
+					applicationMessages.getString("auswertungimport.forbidden.downloadNichtErlaubt"));
+			}
 		}
+
+		List<Loesungszettel> loesungszettelAktuellerWettbewerb = loesungszettelRepository.loadAll(schulkuerzel,
+			aktuellerWettbewerb.id());
 
 		if (UploadType.AUSWERTUNG == uploadType) {
-
-			List<Loesungszettel> loesungszettelAktuellerWettbewerb = loesungszettelRepository
-				.loadAllForWettbewerb(aktuellerWettbewerb.id());
 
 			Optional<Loesungszettel> optOnline = loesungszettelAktuellerWettbewerb.stream()
 				.filter(l -> Auswertungsquelle.ONLINE == l.auswertungsquelle()).findFirst();
@@ -175,56 +195,68 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 			if (optOnline.isPresent()) {
 
 				LOGGER.warn(
-					"Lehrer {} versucht, Auswertungen fuer Schule {} hochzuladen, aber es gibt bereits Onlineloesungszettel",
-					veranstalterID, schulkuerzel);
+					"{} - {} - {} versucht, Auswertungen fuer Schule {} hochzuladen, aber es gibt bereits Onlineloesungszettel",
+					rolle, benutzerID, schulkuerzel);
 				throw new ActionNotAuthorizedException(
 					applicationMessages.getString("auswertungimport.forbidden.nurOnline"));
 			}
 
 		}
 
+		if (UploadType.KLASSENLISTE == uploadType) {
+
+			Optional<Loesungszettel> optUpload = loesungszettelAktuellerWettbewerb.stream()
+				.filter(l -> Auswertungsquelle.UPLOAD == l.auswertungsquelle()).findFirst();
+
+			if (optUpload.isPresent()) {
+
+				LOGGER.warn(
+					"{} - {} - {} versucht, Klassenliste fuer Schule {} hochzuladen, aber es gibt bereits Onlineloesungszettel",
+					rolle, benutzerID, schulkuerzel);
+				throw new ActionNotAuthorizedException(
+					applicationMessages.getString("klassenimport.forbidden.hochgeladeneAuswertung"));
+			}
+		}
+
 		return true;
 	}
 
-	private Veranstalter isAuthorizedForTeilnahme(final Identifier veranstalterID, final String schulkuerzel, final Wettbewerb aktuellerWettbewerb, final UploadType uploadType) {
+	private Pair<Veranstalter, Teilnahme> isAuthorizedForTeilnahme(final Rolle rolle, final Identifier veranstalterID, final String schulkuerzel, final Wettbewerb aktuellerWettbewerb, final UploadType uploadType) {
 
 		String eventMessagePrefix = this.getClass().getSimpleName() + ".authorizeUpload(...) - uploadType=" + uploadType + ": ";
-		Optional<Veranstalter> optVeranstalter = veranstalterRepository.ofId(veranstalterID);
 
-		if (optVeranstalter.isEmpty()) {
+		Veranstalter veranstalter = null;
 
-			String msg = "Veranstalter mit UUID=" + veranstalterID.identifier() + " nicht gefunden";
-			new LoggableEventDelegate().fireSecurityEvent(eventMessagePrefix + msg, domainEventHandler);
-			LOGGER.warn(msg);
+		if (!rolle.isAdmin()) {
 
-			throw new ActionNotAuthorizedException(applicationMessages.getString("general.actionNotAuthorized"));
+			Optional<Veranstalter> optVeranstalter = veranstalterRepository.ofId(veranstalterID);
+
+			if (optVeranstalter.isEmpty()) {
+
+				String msg = "Veranstalter mit UUID=" + veranstalterID.identifier() + " nicht gefunden";
+				new LoggableEventDelegate().fireSecurityEvent(eventMessagePrefix + msg, domainEventHandler);
+				LOGGER.warn(msg);
+
+				throw new ActionNotAuthorizedException(applicationMessages.getString("general.actionNotAuthorized"));
+			}
+
+			veranstalter = optVeranstalter.get();
+
+			if (veranstalter.zugangUnterlagen() == ZugangUnterlagen.ENTZOGEN) {
+
+				String msg = "Lehrer " + veranstalterID + " mit entzogenem Zugang zu Unterlagen versucht, Datei hochzuladen";
+				new LoggableEventDelegate().fireSecurityEvent(eventMessagePrefix + msg, domainEventHandler);
+				LOGGER.warn(msg);
+
+				throw new ActionNotAuthorizedException(applicationMessages.getString("general.actionNotAuthorized"));
+
+			}
 		}
 
-		Veranstalter veranstalter = optVeranstalter.get();
+		List<Teilnahme> teilnahmen = this.teilnahmenRepository.ofTeilnahmenummer(schulkuerzel);
 
-		if (veranstalter.rolle() == Rolle.PRIVAT) {
-
-			String msg = "Privatveranstalter " + veranstalterID + " versucht, Datei hochzuladen";
-			new LoggableEventDelegate().fireSecurityEvent(eventMessagePrefix + msg, domainEventHandler);
-			LOGGER.warn(msg);
-
-			throw new ActionNotAuthorizedException(applicationMessages.getString("general.actionNotAuthorized"));
-		}
-
-		if (veranstalter.zugangUnterlagen() == ZugangUnterlagen.ENTZOGEN) {
-
-			String msg = "Lehrer " + veranstalterID + " mit entzogenem Zugang zu Unterlagen versucht, Datei hochzuladen";
-			new LoggableEventDelegate().fireSecurityEvent(eventMessagePrefix + msg, domainEventHandler);
-			LOGGER.warn(msg);
-
-			throw new ActionNotAuthorizedException(applicationMessages.getString("general.actionNotAuthorized"));
-
-		}
-
-		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(veranstalter.teilnahmeart())
-			.withTeilnahmenummer(schulkuerzel).withWettbewerbID(aktuellerWettbewerb.id());
-
-		Optional<Teilnahme> optTeilnahme = this.teilnahmenRepository.ofTeilnahmeIdentifier(teilnahmeIdentifier);
+		Optional<Teilnahme> optTeilnahme = teilnahmen.stream().filter(t -> t.wettbewerbID().equals(aktuellerWettbewerb.id()))
+			.findFirst();
 
 		if (optTeilnahme.isEmpty()) {
 
@@ -252,6 +284,6 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 			throw new ActionNotAuthorizedException(msg);
 		}
 
-		return veranstalter;
+		return Pair.of(veranstalter, optTeilnahme.get());
 	}
 }

@@ -33,7 +33,7 @@ import de.egladil.web.mk_gateway.domain.kinder.api.KlasseRequestData;
 import de.egladil.web.mk_gateway.domain.kinder.impl.KinderServiceImpl;
 import de.egladil.web.mk_gateway.domain.kinder.impl.KlassenServiceImpl;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
-import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelService;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.OnlineLoesungszettelService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
@@ -57,13 +57,13 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 		klassenService = KlassenServiceImpl.createForTest(authService,
 			KinderServiceImpl.createForTest(authService, getKinderRepository(), getTeilnahmenRepository(), getVeranstalterRepository(),
 				getWettbewerbService(),
-				LoesungszettelService.createForTest(authService, getWettbewerbService(), getKinderRepository(),
+				OnlineLoesungszettelService.createForTest(authService, getWettbewerbService(), getKinderRepository(),
 					getLoesungszettelRepository()),
 				getKlassenRepository()),
 			getTeilnahmenRepository(),
 			getVeranstalterRepository(),
 			getWettbewerbService(),
-			LoesungszettelService.createForTest(authService, getWettbewerbService(), getKinderRepository(),
+			OnlineLoesungszettelService.createForTest(authService, getWettbewerbService(), getKinderRepository(),
 				getLoesungszettelRepository()),
 			getKlassenRepository());
 	}

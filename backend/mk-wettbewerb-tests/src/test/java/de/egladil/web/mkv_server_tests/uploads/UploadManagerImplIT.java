@@ -68,7 +68,7 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 	void should_upload_work() {
 
 		// Arrange
-		String lehrerUuid = "2f09da36-07c6-4033-a2f1-5e110c804026";
+		String benutzerUuid = "2f09da36-07c6-4033-a2f1-5e110c804026";
 		String schulkuerzel = "2EX6DENW";
 		TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdentifier = TeilnahmeIdentifierAktuellerWettbewerb
 			.createForSchulteilnahme(schulkuerzel);
@@ -80,8 +80,8 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 			.withNachnameAlsZusatz(false).withSprache(Sprache.de);
 
 		UploadRequestPayload uploadRequestPayload = new UploadRequestPayload().withContext(contextObject).withUploadData(uploadData)
-			.withSchuleID(new Identifier(schulkuerzel)).withUploadType(UploadType.KLASSENLISTE)
-			.withVeranstalterID(new Identifier(lehrerUuid));
+			.withTeilnahmenummer(schulkuerzel).withUploadType(UploadType.KLASSENLISTE)
+			.withBenutzerID(new Identifier(benutzerUuid));
 
 		// Act
 		EntityTransaction transaction = startTransaction();

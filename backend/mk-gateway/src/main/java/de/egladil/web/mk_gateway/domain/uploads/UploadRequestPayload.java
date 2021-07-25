@@ -11,9 +11,9 @@ import de.egladil.web.mk_gateway.domain.Identifier;
  */
 public class UploadRequestPayload {
 
-	private Identifier veranstalterID;
+	private Identifier benutzerID;
 
-	private Identifier schuleID;
+	private String teilnahmenummer;
 
 	private UploadType uploadType;
 
@@ -21,25 +21,25 @@ public class UploadRequestPayload {
 
 	private Object context;
 
-	public Identifier getVeranstalterID() {
+	public Identifier getBenutzerID() {
 
-		return veranstalterID;
+		return benutzerID;
 	}
 
-	public UploadRequestPayload withVeranstalterID(final Identifier veranstalterID) {
+	public UploadRequestPayload withBenutzerID(final Identifier veranstalterID) {
 
-		this.veranstalterID = veranstalterID;
+		this.benutzerID = veranstalterID;
 		return this;
 	}
 
-	public Identifier getSchuleID() {
+	public String getTeilnahmenummer() {
 
-		return schuleID;
+		return teilnahmenummer;
 	}
 
-	public UploadRequestPayload withSchuleID(final Identifier schuleID) {
+	public UploadRequestPayload withTeilnahmenummer(final String schuleID) {
 
-		this.schuleID = schuleID;
+		this.teilnahmenummer = schuleID;
 		return this;
 	}
 

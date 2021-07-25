@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.loesungszettel;
+package de.egladil.web.mk_gateway.domain.loesungszettel.online;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -11,7 +11,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
-import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelAPIModel;
+import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
+import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRohdaten;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.LoesungszettelCreator;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelAPIModel;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;

@@ -18,13 +18,13 @@ import de.egladil.web.mk_gateway.domain.uploads.impl.UploadManagerImpl;
 public interface UploadManager {
 
 	/**
-	 * @param  veranstalterUuid
+	 * @param  benutzerUuid
 	 * @param  teilnahmenummer
 	 * @param  uploadType
 	 * @return                  boolean true, anderenfalls eine der genannten Exceptions, die vom globalen ExceptionHandler
 	 *                          verwurstet werden.
 	 */
-	boolean authorizeUpload(String veranstalterUuid, String teilnahmenummer, UploadType uploadType) throws AccessDeniedException, ActionNotAuthorizedException;
+	boolean authorizeUpload(String benutzerUuid, String teilnahmenummer, UploadType uploadType) throws AccessDeniedException, ActionNotAuthorizedException;
 
 	/**
 	 * Verarbeitet den Upload.

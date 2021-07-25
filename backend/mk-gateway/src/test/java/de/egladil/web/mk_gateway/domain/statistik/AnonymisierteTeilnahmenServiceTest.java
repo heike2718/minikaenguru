@@ -50,7 +50,7 @@ public class AnonymisierteTeilnahmenServiceTest {
 		Identifier teilnahmeID = new Identifier(teilnahmenummer);
 
 		Mockito
-			.when(authService.checkPermissionForTeilnahmenummer(userIdentifier, teilnahmeID,
+			.when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(userIdentifier, teilnahmeID,
 				"[loadAnonymisierteTeilnahmen - " + teilnahmenummer + "]"))
 			.thenThrow(new AccessDeniedException());
 

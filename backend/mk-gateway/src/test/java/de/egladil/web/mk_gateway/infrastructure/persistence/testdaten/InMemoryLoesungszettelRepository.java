@@ -73,6 +73,15 @@ public class InMemoryLoesungszettelRepository implements LoesungszettelRepositor
 	}
 
 	@Override
+	public List<Loesungszettel> loadAll(final String teilnahmenummer, final WettbewerbID wettbewerbID) {
+
+		return this.alleLoesungszettel.values().stream()
+			.filter(l -> l.teilnahmeIdentifier().teilnahmenummer().equals(teilnahmenummer)
+				&& l.teilnahmeIdentifier().jahr() == wettbewerbID.jahr().intValue())
+			.collect(Collectors.toList());
+	}
+
+	@Override
 	public int anzahlLoesungszettel(final TeilnahmeIdentifier teilnahmeIdentifier) {
 
 		return alleLoesungszettel.size();

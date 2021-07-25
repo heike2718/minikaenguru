@@ -26,6 +26,7 @@ import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.teilnahmen.SchuleDetailsService;
+import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleDetails;
 
 /**
@@ -50,7 +51,7 @@ public class CheckCanRemoveSchuleServiceTest {
 		Identifier schuleID = new Identifier("SCHULE");
 		Identifier lehrerID = new Identifier("uuid-lehrer");
 
-		when(veranstalterAuthService.checkPermissionForTeilnahmenummer(any(), any(),
+		when(veranstalterAuthService.checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(),
 			any()))
 				.thenThrow(new AccessDeniedException("nö"));
 
@@ -62,7 +63,7 @@ public class CheckCanRemoveSchuleServiceTest {
 			fail("keine AccessDeniedException");
 		} catch (AccessDeniedException e) {
 
-			verify(veranstalterAuthService, times(1)).checkPermissionForTeilnahmenummer(any(), any(),
+			verify(veranstalterAuthService, times(1)).checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(),
 				any());
 			assertEquals("nö", e.getMessage());
 		}
@@ -75,9 +76,9 @@ public class CheckCanRemoveSchuleServiceTest {
 		Identifier schuleID = new Identifier("SCHULE");
 		Identifier lehrerID = new Identifier("uuid-lehrer");
 
-		when(veranstalterAuthService.checkPermissionForTeilnahmenummer(any(), any(),
+		when(veranstalterAuthService.checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(),
 			any()))
-				.thenReturn(Boolean.TRUE);
+				.thenReturn(Rolle.LEHRER);
 
 		SchuleDetails details = new SchuleDetails(schuleID.identifier());
 
@@ -97,9 +98,9 @@ public class CheckCanRemoveSchuleServiceTest {
 		Identifier schuleID = new Identifier("SCHULE");
 		Identifier lehrerID = new Identifier("uuid-lehrer");
 
-		when(veranstalterAuthService.checkPermissionForTeilnahmenummer(any(), any(),
+		when(veranstalterAuthService.checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(),
 			any()))
-				.thenReturn(Boolean.TRUE);
+				.thenReturn(Rolle.LEHRER);
 
 		Kollege kollege = new Kollege(lehrerID.identifier(), "ich");
 		List<Kollege> kollegen = new ArrayList<>();
@@ -123,9 +124,9 @@ public class CheckCanRemoveSchuleServiceTest {
 		Identifier schuleID = new Identifier("SCHULE");
 		Identifier lehrerID = new Identifier("uuid-lehrer");
 
-		when(veranstalterAuthService.checkPermissionForTeilnahmenummer(any(), any(),
+		when(veranstalterAuthService.checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(),
 			any()))
-				.thenReturn(Boolean.TRUE);
+				.thenReturn(Rolle.LEHRER);
 
 		Kollege kollege = new Kollege(lehrerID.identifier(), "ich");
 		List<Kollege> kollegen = new ArrayList<>();

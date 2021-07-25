@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.loesungszettel.api;
+package de.egladil.web.mk_gateway.domain.loesungszettel.online.api;
 
 import java.util.Collections;
 import java.util.List;

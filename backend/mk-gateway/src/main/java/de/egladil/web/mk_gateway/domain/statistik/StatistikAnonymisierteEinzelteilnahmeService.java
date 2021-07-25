@@ -65,7 +65,7 @@ public class StatistikAnonymisierteEinzelteilnahmeService {
 	 */
 	public DownloadData erstelleStatistikPDFEinzelteilnahme(final TeilnahmeIdentifier teilnahmeIdentifier, final String userUuid) {
 
-		authorizationService.checkPermissionForTeilnahmenummer(new Identifier(userUuid),
+		authorizationService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(userUuid),
 			new Identifier(teilnahmeIdentifier.teilnahmenummer()),
 			"[erstelleStatistikPDFEinzelteilnahme - " + teilnahmeIdentifier.teilnahmenummer() + "]");
 

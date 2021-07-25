@@ -2,13 +2,13 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.loesungszettel.api;
+package de.egladil.web.mk_gateway.domain.loesungszettel.online.api;
 
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import de.egladil.web.mk_gateway.domain.loesungszettel.ZulaessigeLoesungszetteleingabe;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.OnlineLoesungszetteleingabe;
 
 /**
  * LoesungszettelZeileAPIModel
@@ -25,7 +25,7 @@ public class LoesungszettelZeileAPIModel implements Comparable<LoesungszettelZei
 	private String name;
 
 	@JsonProperty
-	private ZulaessigeLoesungszetteleingabe eingabe;
+	private OnlineLoesungszetteleingabe eingabe;
 
 	@Override
 	public int compareTo(final LoesungszettelZeileAPIModel o) {
@@ -101,12 +101,12 @@ public class LoesungszettelZeileAPIModel implements Comparable<LoesungszettelZei
 		return this;
 	}
 
-	public ZulaessigeLoesungszetteleingabe eingabe() {
+	public OnlineLoesungszetteleingabe eingabe() {
 
 		return eingabe;
 	}
 
-	public LoesungszettelZeileAPIModel withEingabe(final ZulaessigeLoesungszetteleingabe eingabe) {
+	public LoesungszettelZeileAPIModel withEingabe(final OnlineLoesungszetteleingabe eingabe) {
 
 		this.eingabe = eingabe;
 		return this;

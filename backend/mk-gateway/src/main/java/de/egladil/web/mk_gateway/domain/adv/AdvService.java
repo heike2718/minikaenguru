@@ -70,7 +70,7 @@ public class AdvService {
 	public DownloadData getVertragAuftragsdatenverarbeitung(final String schulkuerzel, final String lehrerUuid) {
 
 		Identifier schuleIdentifier = new Identifier(schulkuerzel);
-		authorizationService.checkPermissionForTeilnahmenummer(new Identifier(lehrerUuid),
+		authorizationService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(lehrerUuid),
 			schuleIdentifier, "[getVertragAuftragsdatenverarbeitung - " + schulkuerzel + "]");
 
 		Optional<VertragAuftragsdatenverarbeitung> optVertrag = vertragRepository.findVertragForSchule(schuleIdentifier);
@@ -115,7 +115,7 @@ public class AdvService {
 
 		Identifier schuleIdentifier = new Identifier(daten.schulkuerzel());
 
-		authorizationService.checkPermissionForTeilnahmenummer(new Identifier(lehrerUuid),
+		authorizationService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(lehrerUuid),
 			schuleIdentifier, "[createVertragAuftragsdatenverarbeitung - " + daten.schulkuerzel() + "]");
 
 		Optional<VertragAuftragsdatenverarbeitung> optVertrag = vertragRepository.findVertragForSchule(schuleIdentifier);

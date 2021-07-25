@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.loesungszettel;
+package de.egladil.web.mk_gateway.domain.loesungszettel.online;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -39,8 +39,11 @@ import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
 import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelChanged;
 import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelCreated;
 import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelDeleted;
-import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelAPIModel;
-import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelZeileAPIModel;
+import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
+import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
+import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRohdaten;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelAPIModel;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelZeileAPIModel;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
@@ -52,12 +55,12 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KinderHibernate
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
 
 /**
- * LoesungszettelService
+ * OnlineLoesungszettelService
  */
 @ApplicationScoped
-public class LoesungszettelService {
+public class OnlineLoesungszettelService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(LoesungszettelService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(OnlineLoesungszettelService.class);
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
@@ -82,9 +85,9 @@ public class LoesungszettelService {
 
 	private LoesungszettelDeleted loesungszettelDeleted;
 
-	public static LoesungszettelService createForIntegrationTest(final EntityManager entityManager) {
+	public static OnlineLoesungszettelService createForIntegrationTest(final EntityManager entityManager) {
 
-		LoesungszettelService result = new LoesungszettelService();
+		OnlineLoesungszettelService result = new OnlineLoesungszettelService();
 		result.loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(entityManager);
 		result.kinderRepository = KinderHibernateRepository.createForIntegrationTest(entityManager);
 		result.authService = AuthorizationService.createForIntegrationTest(entityManager);
@@ -95,9 +98,9 @@ public class LoesungszettelService {
 	}
 
 	@Deprecated
-	public static LoesungszettelService createForTest(final AuthorizationService authService, final WettbewerbService wettbewerbService, final KinderRepository kinderRepository, final LoesungszettelRepository loesungszettelRepository) {
+	public static OnlineLoesungszettelService createForTest(final AuthorizationService authService, final WettbewerbService wettbewerbService, final KinderRepository kinderRepository, final LoesungszettelRepository loesungszettelRepository) {
 
-		LoesungszettelService result = new LoesungszettelService();
+		OnlineLoesungszettelService result = new OnlineLoesungszettelService();
 		result.authService = authService;
 		result.wettbewerbService = wettbewerbService;
 		result.kinderRepository = kinderRepository;
@@ -126,7 +129,7 @@ public class LoesungszettelService {
 
 		Loesungszettel loesungszettel = opt.get();
 
-		authService.checkPermissionForTeilnahmenummer(veranstalterID,
+		authService.checkPermissionForTeilnahmenummerAndReturnRolle(veranstalterID,
 			loesungszettel.getTheTeilnahmenummer(),
 			"[findLoesungszettelWithID - " + loesungszettelID.toString() + "]");
 
@@ -150,7 +153,7 @@ public class LoesungszettelService {
 			return false;
 		}
 
-		authService.checkPermissionForTeilnahmenummer(veranstalterID,
+		authService.checkPermissionForTeilnahmenummerAndReturnRolle(veranstalterID,
 			opt.get().getTheTeilnahmenummer(),
 			"[loesungszettelLoeschenWithAuthorizationCheck - " + identifier.toString() + "]");
 
@@ -278,7 +281,7 @@ public class LoesungszettelService {
 
 		PersistenterLoesungszettel persistenterLoesungszettel = optionalPersistenter.get();
 
-		authService.checkPermissionForTeilnahmenummer(new Identifier(veranstalterUuid),
+		authService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(veranstalterUuid),
 			new Identifier(persistenterLoesungszettel.getTeilnahmenummer()),
 			"[spracheLoesungszettelAendern - " + identifier.toString() + "]");
 
@@ -396,7 +399,7 @@ public class LoesungszettelService {
 
 		TeilnahmeIdentifier teilnahmeIdentifier = getTeilnahmeIdentifierFromKind(kind, wettbewerb);
 
-		authService.checkPermissionForTeilnahmenummer(veranstalterID,
+		authService.checkPermissionForTeilnahmenummerAndReturnRolle(veranstalterID,
 			new Identifier(teilnahmeIdentifier.teilnahmenummer()),
 			"[loesungszettelAnlegen - kindID=" + kindID + "]");
 
@@ -534,7 +537,7 @@ public class LoesungszettelService {
 		Kind kind = optKind.get();
 		TeilnahmeIdentifier teilnahmeIdentifier = getTeilnahmeIdentifierFromKind(kind, wettbewerb);
 
-		authService.checkPermissionForTeilnahmenummer(veranstalterID,
+		authService.checkPermissionForTeilnahmenummerAndReturnRolle(veranstalterID,
 			new Identifier(teilnahmeIdentifier.teilnahmenummer()),
 			"[loesungszettelAnlegen - kindID=" + kindID + "]");
 
@@ -814,7 +817,7 @@ public class LoesungszettelService {
 		for (int i = 0; i < eingabebuchstaben.length; i++) {
 
 			LoesungszettelZeileAPIModel zeile = new LoesungszettelZeileAPIModel().withAnzahlSpalten(anzahlSpalten)
-				.withEingabe(ZulaessigeLoesungszetteleingabe.valueOfChar(eingabebuchstaben[i])).withIndex(i)
+				.withEingabe(OnlineLoesungszetteleingabe.valueOfChar(eingabebuchstaben[i])).withIndex(i)
 				.withName(aufgabennummern.get(i));
 			zeilen.add(zeile);
 		}

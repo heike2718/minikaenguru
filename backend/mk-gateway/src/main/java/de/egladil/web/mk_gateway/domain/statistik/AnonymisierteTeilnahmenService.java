@@ -45,7 +45,7 @@ public class AnonymisierteTeilnahmenService {
 
 	public List<AnonymisierteTeilnahmeAPIModel> loadAnonymisierteTeilnahmen(final String teilnahmenummer, final String userUuid) {
 
-		this.authorizationService.checkPermissionForTeilnahmenummer(new Identifier(userUuid),
+		this.authorizationService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(userUuid),
 			new Identifier(teilnahmenummer), "[loadAnonymisierteTeilnahmen - " + teilnahmenummer + "]");
 
 		List<Teilnahme> alleTeilnahmen = teilnahmenRepository.ofTeilnahmenummer(teilnahmenummer);

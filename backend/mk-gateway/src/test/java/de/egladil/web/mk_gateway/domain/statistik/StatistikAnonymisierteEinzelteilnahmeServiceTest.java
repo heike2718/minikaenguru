@@ -36,6 +36,7 @@ import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
+import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 
 /**
@@ -95,7 +96,7 @@ public class StatistikAnonymisierteEinzelteilnahmeServiceTest extends AbstractDo
 			.withTeilnahmenummer(teilnahmenummer).withWettbewerbID(new WettbewerbID(2018));
 
 		Mockito
-			.when(authService.checkPermissionForTeilnahmenummer(userIdentifier, teilnahmeID,
+			.when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(userIdentifier, teilnahmeID,
 				"[erstelleStatistikPDFEinzelteilnahme - " + teilnahmenummer + "]"))
 			.thenThrow(new AccessDeniedException());
 
@@ -122,9 +123,9 @@ public class StatistikAnonymisierteEinzelteilnahmeServiceTest extends AbstractDo
 			.withTeilnahmenummer(schulkuerzel).withWettbewerbID(new WettbewerbID(2018));
 
 		Mockito
-			.when(authService.checkPermissionForTeilnahmenummer(new Identifier(veranstalterUUID), new Identifier(schulkuerzel),
+			.when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(veranstalterUUID), new Identifier(schulkuerzel),
 				"[erstelleStatistikPDFEinzelteilnahme - " + schulkuerzel + "]"))
-			.thenReturn(Boolean.TRUE);
+			.thenReturn(Rolle.LEHRER);
 
 		List<Map<String, Object>> data = new ArrayList<>();
 
@@ -169,9 +170,9 @@ public class StatistikAnonymisierteEinzelteilnahmeServiceTest extends AbstractDo
 			.withTeilnahmenummer(schulkuerzel).withWettbewerbID(new WettbewerbID(2018));
 
 		Mockito
-			.when(authService.checkPermissionForTeilnahmenummer(new Identifier(veranstalterUUID), new Identifier(schulkuerzel),
+			.when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(veranstalterUUID), new Identifier(schulkuerzel),
 				"[erstelleStatistikPDFEinzelteilnahme - " + schulkuerzel + "]"))
-			.thenReturn(Boolean.TRUE);
+			.thenReturn(Rolle.PRIVAT);
 
 		Mockito.when(loesungszettelRepository.loadAll(teilnahmeIdentifier)).thenReturn(wettbewerbLoesungszettel);
 

@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_validation.annotations.UuidString;
 import de.egladil.web.mk_gateway.domain.error.ConcurrentModificationType;
-import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelZeileAPIModel;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelZeileAPIModel;
 
 /**
  * LoesungszettelpunkteAPIModel

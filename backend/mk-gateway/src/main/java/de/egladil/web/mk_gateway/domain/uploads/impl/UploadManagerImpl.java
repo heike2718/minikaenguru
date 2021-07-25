@@ -51,6 +51,7 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadRequestPayload;
 import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.domain.uploads.convert.UploadToCSVConverter;
+import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UploadHibernateRepository;
 
@@ -105,21 +106,21 @@ public class UploadManagerImpl implements UploadManager {
 	}
 
 	@Override
-	public boolean authorizeUpload(final String veranstalterUuid, final String teilnahmenummer, final UploadType uploadType) {
+	public boolean authorizeUpload(final String benutzerUuid, final String teilnahmenummer, final UploadType uploadType) {
 
-		Identifier veranstalterID = new Identifier(veranstalterUuid);
+		Identifier benutzerID = new Identifier(benutzerUuid);
 		Identifier teilnameID = new Identifier(teilnahmenummer);
 
-		authService.checkPermissionForTeilnahmenummer(veranstalterID, teilnameID, "upload Klassenliste");
+		Rolle rolle = authService.checkPermissionForTeilnahmenummerAndReturnRolle(benutzerID, teilnameID, uploadType.toString());
 
-		uploadAuthService.authorizeUpload(veranstalterID, teilnahmenummer, uploadType);
+		uploadAuthService.authorizeUpload(benutzerID, teilnahmenummer, uploadType, rolle);
 
 		return true;
 	}
 
 	ScanResult scanUpload(final UploadRequestPayload uploadPayload) {
 
-		String fileOwnerId = uploadPayload.getVeranstalterID().identifier();
+		String fileOwnerId = uploadPayload.getBenutzerID().identifier();
 		ScanRequestPayload scanRequestPayload = new ScanRequestPayload().withClientId(clientId)
 			.withFileOwner(fileOwnerId).withUpload(uploadPayload.getUploadData().toUpload());
 
@@ -176,9 +177,9 @@ public class UploadManagerImpl implements UploadManager {
 		upload.setDateiname(uploadPayload.getUploadData().getFilename());
 		upload.setMediatype(scanResult.getMediaType());
 		upload.setStatus(UploadStatus.HOCHGELADEN);
-		upload.setTeilnahmenummer(uploadPayload.getSchuleID().identifier());
+		upload.setTeilnahmenummer(uploadPayload.getTeilnahmenummer());
 		upload.setUploadTyp(uploadPayload.getUploadType());
-		upload.setVeranstalterUuid(uploadPayload.getVeranstalterID().identifier());
+		upload.setBenutzerUuid(uploadPayload.getBenutzerID().identifier());
 
 		PersistenterUpload persistenterUpload = uploadRepository.addUploadMetaData(upload);
 
@@ -198,7 +199,7 @@ public class UploadManagerImpl implements UploadManager {
 		ScanResult scanResult = this.scanUpload(uploadPayload);
 
 		Long checksumme = this.getCRC32Checksum(uploadPayload.getUploadData().getDataBASE64());
-		UploadIdentifier uploadIdentifier = new UploadIdentifier(uploadPayload.getSchuleID().identifier(), checksumme);
+		UploadIdentifier uploadIdentifier = new UploadIdentifier(uploadPayload.getTeilnahmenummer(), checksumme);
 
 		Optional<PersistenterUpload> optUpload = this.uploadRepository.findUploadByIdentifier(uploadIdentifier);
 

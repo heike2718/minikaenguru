@@ -19,7 +19,7 @@ import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindRequestData;
-import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelService;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.OnlineLoesungszettelService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 
@@ -37,7 +37,7 @@ public class KinderServiceTest extends AbstractDomainServiceTest {
 		super.setUp();
 
 		AuthorizationService authService = AuthorizationService.createForTest(getVeranstalterRepository(), getUserRepository());
-		LoesungszettelService loesungszettelService = LoesungszettelService.createForTest(authService, getWettbewerbService(),
+		OnlineLoesungszettelService loesungszettelService = OnlineLoesungszettelService.createForTest(authService, getWettbewerbService(),
 			getKinderRepository(),
 			getLoesungszettelRepository());
 

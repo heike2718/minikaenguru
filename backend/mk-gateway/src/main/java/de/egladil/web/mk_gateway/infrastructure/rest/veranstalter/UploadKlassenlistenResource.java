@@ -70,8 +70,8 @@ public class UploadKlassenlistenResource {
 		UploadKlassenlisteContext contextObject = new UploadKlassenlisteContext().withKuerzelLand(kuerzelLand)
 			.withNachnameAlsZusatz(nachnameAlsZusatz).withSprache(theSprache);
 
-		UploadRequestPayload uploadPayload = new UploadRequestPayload().withSchuleID(new Identifier(schulkuerzel))
-			.withVeranstalterID(new Identifier(veranstalterUuid)).withUploadType(uploadType).withUploadData(uploadData)
+		UploadRequestPayload uploadPayload = new UploadRequestPayload().withTeilnahmenummer(schulkuerzel)
+			.withBenutzerID(new Identifier(veranstalterUuid)).withUploadType(uploadType).withUploadData(uploadData)
 			.withContext(contextObject);
 
 		ResponsePayload responsePayload = uploadManager.processUpload(uploadPayload);

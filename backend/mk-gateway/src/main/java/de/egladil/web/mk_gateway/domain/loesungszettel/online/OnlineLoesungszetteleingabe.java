@@ -2,12 +2,12 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.loesungszettel;
+package de.egladil.web.mk_gateway.domain.loesungszettel.online;
 
 /**
- * ZulaessigeLoesungszetteleingabe
+ * OnlineLoesungszetteleingabe
  */
-public enum ZulaessigeLoesungszetteleingabe {
+public enum OnlineLoesungszetteleingabe {
 
 	A,
 	B,
@@ -16,7 +16,7 @@ public enum ZulaessigeLoesungszetteleingabe {
 	E,
 	N;
 
-	public static ZulaessigeLoesungszetteleingabe valueOfChar(final char c) {
+	public static OnlineLoesungszetteleingabe valueOfChar(final char c) {
 
 		switch (c) {
 

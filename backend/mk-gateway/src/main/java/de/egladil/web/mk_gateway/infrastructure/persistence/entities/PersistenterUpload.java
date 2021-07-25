@@ -38,8 +38,8 @@ public class PersistenterUpload extends ConcurrencySafeEntity {
 
 	public static final String FIND_BY_IDENTIFIER = "PersistenterUpload.FIND_BY_IDENTIFIER";
 
-	@Column(name = "VERANSTALTER_UUID")
-	private String veranstalterUuid;
+	@Column(name = "BENUTZER_UUID")
+	private String benutzerUuid;
 
 	@Column(name = "TEILNAHMENUMMER")
 	private String teilnahmenummer;
@@ -67,14 +67,14 @@ public class PersistenterUpload extends ConcurrencySafeEntity {
 	@Column(name = "DATE_UPLOAD")
 	private Date uploadDate;
 
-	public String getVeranstalterUuid() {
+	public String getBenutzerUuid() {
 
-		return veranstalterUuid;
+		return benutzerUuid;
 	}
 
-	public void setVeranstalterUuid(final String veranstalterUuid) {
+	public void setBenutzerUuid(final String veranstalterUuid) {
 
-		this.veranstalterUuid = veranstalterUuid;
+		this.benutzerUuid = veranstalterUuid;
 	}
 
 	public String getTeilnahmenummer() {

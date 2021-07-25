@@ -2,13 +2,14 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.loesungszettel;
+package de.egladil.web.mk_gateway.domain.loesungszettel.online;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelZeileAPIModel;
+import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRohdaten;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelZeileAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 
 /**
@@ -36,7 +37,7 @@ public class LoesungszettelRohdatenAPIZeileMapper implements Function<Loesungsze
 
 			LoesungszettelZeileAPIModel zeile = new LoesungszettelZeileAPIModel()
 				.withAnzahlSpalten(klassenstufe.getAnzahlSpalten())
-				.withEingabe(ZulaessigeLoesungszetteleingabe.valueOfChar(code))
+				.withEingabe(OnlineLoesungszetteleingabe.valueOfChar(code))
 				.withIndex(i)
 				.withName(getNameZeile(i));
 

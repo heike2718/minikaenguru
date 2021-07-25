@@ -10,6 +10,9 @@ import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 
+import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
+import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelPunkteComparator;
+
 /**
  * LoesungszettelPunkteComparatorTest
  */

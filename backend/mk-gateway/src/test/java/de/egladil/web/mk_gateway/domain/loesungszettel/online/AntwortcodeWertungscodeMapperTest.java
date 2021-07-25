@@ -2,11 +2,13 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.loesungszettel;
+package de.egladil.web.mk_gateway.domain.loesungszettel.online;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.jupiter.api.Test;
+
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.AntwortcodeWertungscodeMapper;
 
 /**
  * AntwortcodeWertungscodeMapperTest

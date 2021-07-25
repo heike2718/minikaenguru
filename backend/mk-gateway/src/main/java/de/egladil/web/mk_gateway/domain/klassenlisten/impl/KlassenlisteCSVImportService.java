@@ -117,7 +117,7 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 
 		long anzahlMitFehlern = nichtImportierteZeilen.size();
 
-		Identifier veranstalterID = new Identifier(uploadMetadata.getVeranstalterUuid());
+		Identifier veranstalterID = new Identifier(uploadMetadata.getBenutzerUuid());
 		String schulkuerzel = uploadMetadata.getTeilnahmenummer();
 
 		try {

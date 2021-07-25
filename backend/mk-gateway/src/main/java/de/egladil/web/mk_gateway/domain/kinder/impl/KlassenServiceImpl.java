@@ -37,7 +37,7 @@ import de.egladil.web.mk_gateway.domain.kinder.api.KlasseRequestData;
 import de.egladil.web.mk_gateway.domain.kinder.events.KlasseChanged;
 import de.egladil.web.mk_gateway.domain.kinder.events.KlasseCreated;
 import de.egladil.web.mk_gateway.domain.kinder.events.KlasseDeleted;
-import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelService;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.OnlineLoesungszettelService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
@@ -79,7 +79,7 @@ public class KlassenServiceImpl implements KlassenService {
 	KinderServiceImpl kinderService;
 
 	@Inject
-	LoesungszettelService loesungszettelService;
+	OnlineLoesungszettelService loesungszettelService;
 
 	@Inject
 	WettbewerbService wettbewerbService;
@@ -95,7 +95,7 @@ public class KlassenServiceImpl implements KlassenService {
 
 	private WettbewerbID wettbewerbID;
 
-	public static KlassenServiceImpl createForTest(final AuthorizationService authService, final KinderServiceImpl kinderRepository, final TeilnahmenRepository teilnahmenRepository, final VeranstalterRepository veranstalterRepository, final WettbewerbService wettbewerbService, final LoesungszettelService loesungszettelService, final KlassenRepository klassenRepository) {
+	public static KlassenServiceImpl createForTest(final AuthorizationService authService, final KinderServiceImpl kinderRepository, final TeilnahmenRepository teilnahmenRepository, final VeranstalterRepository veranstalterRepository, final WettbewerbService wettbewerbService, final OnlineLoesungszettelService loesungszettelService, final KlassenRepository klassenRepository) {
 
 		KlassenServiceImpl result = new KlassenServiceImpl();
 		result.authService = authService;
@@ -114,7 +114,7 @@ public class KlassenServiceImpl implements KlassenService {
 		result.authService = AuthorizationService.createForIntegrationTest(em);
 		result.kinderService = KinderServiceImpl.createForIntegrationTest(em);
 		result.klassenRepository = KlassenHibernateRepository.createForIntegrationTest(em);
-		result.loesungszettelService = LoesungszettelService.createForIntegrationTest(em);
+		result.loesungszettelService = OnlineLoesungszettelService.createForIntegrationTest(em);
 		result.teilnahmenRepository = TeilnahmenHibernateRepository.createForIntegrationTest(em);
 		result.veranstalterRepository = VeranstalterHibernateRepository.createForIntegrationTest(em);
 		result.wettbewerbService = WettbewerbService.createForIntegrationTest(em);
@@ -136,7 +136,7 @@ public class KlassenServiceImpl implements KlassenService {
 	@Override
 	public List<KlasseAPIModel> klassenZuSchuleLaden(final String schulkuerzel, final String lehrerUuid) {
 
-		this.authService.checkPermissionForTeilnahmenummer(new Identifier(lehrerUuid), new Identifier(schulkuerzel),
+		this.authService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(lehrerUuid), new Identifier(schulkuerzel),
 			"[klassenZuSchuleLaden - schulkuerzel=" + schulkuerzel + "]");
 
 		Veranstalter veranstalter = veranstalterRepository.ofId(new Identifier(lehrerUuid)).get();
@@ -402,7 +402,7 @@ public class KlassenServiceImpl implements KlassenService {
 
 	void authorizeAction(final String schulkuerzel, final String lehrerUuid, final String callingMethodForLog) {
 
-		this.authService.checkPermissionForTeilnahmenummer(new Identifier(lehrerUuid), new Identifier(schulkuerzel),
+		this.authService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(lehrerUuid), new Identifier(schulkuerzel),
 			"[" + callingMethodForLog + " - schulkuerzel=" + schulkuerzel + "]");
 
 		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE)

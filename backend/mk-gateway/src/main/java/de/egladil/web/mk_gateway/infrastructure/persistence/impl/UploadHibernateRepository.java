@@ -70,7 +70,7 @@ public class UploadHibernateRepository implements UploadRepository {
 		if (trefferliste.size() > 1) {
 
 			String veranstalterUuids = StringUtils
-				.join(trefferliste.stream().map(pu -> pu.getVeranstalterUuid()).collect(Collectors.toList()), ",");
+				.join(trefferliste.stream().map(pu -> pu.getBenutzerUuid()).collect(Collectors.toList()), ",");
 
 			LOGGER.error("Mehr als ein Upload mit UploadIdentifier={} gefunden: hochgeladen durch {}", uploadIdentifier,
 				veranstalterUuids);

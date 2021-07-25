@@ -67,10 +67,10 @@ public class AuthorizationService {
 	 * @param  identifierTeilnahmenummer
 	 * @param  kontext
 	 *                                   String
-	 * @return                           boolean - nicht void wegen Mockito.
+	 * @return                           Rolle des users
 	 * @throws AccessDeniedException
 	 */
-	public boolean checkPermissionForTeilnahmenummer(final Identifier userIdentifier, final Identifier identifierTeilnahmenummer, final String kontext) throws AccessDeniedException {
+	public Rolle checkPermissionForTeilnahmenummerAndReturnRolle(final Identifier userIdentifier, final Identifier identifierTeilnahmenummer, final String kontext) throws AccessDeniedException {
 
 		Optional<User> optUser = userRepository.ofId(userIdentifier.identifier());
 
@@ -88,9 +88,9 @@ public class AuthorizationService {
 
 		User user = optUser.get();
 
-		if (Rolle.ADMIN.equals(user.getRolle())) {
+		if (user.getRolle().isAdmin()) {
 
-			return true;
+			return user.getRolle();
 
 		}
 
@@ -123,7 +123,7 @@ public class AuthorizationService {
 			throw new AccessDeniedException();
 		}
 
-		return true;
+		return user.getRolle();
 	}
 
 	SecurityIncidentRegistered getSecurityIncidentRegistered() {

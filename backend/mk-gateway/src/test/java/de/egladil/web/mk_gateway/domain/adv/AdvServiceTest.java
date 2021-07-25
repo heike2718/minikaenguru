@@ -110,7 +110,7 @@ public class AdvServiceTest {
 		Identifier lehrerId = new Identifier(LEHRER_UUID);
 		Identifier teilnahmeId = new Identifier(schulkuerzel);
 
-		when(authService.checkPermissionForTeilnahmenummer(lehrerId, teilnahmeId,
+		when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(lehrerId, teilnahmeId,
 			"[getVertragAuftragsdatenverarbeitung - " + schulkuerzel + "]"))
 				.thenThrow(new AccessDeniedException());
 
@@ -150,7 +150,7 @@ public class AdvServiceTest {
 		Identifier teilnahmeId = new Identifier(schulkuerzel);
 
 		Mockito
-			.when(authService.checkPermissionForTeilnahmenummer(lehrerId, teilnahmeId,
+			.when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(lehrerId, teilnahmeId,
 				"[createVertragAuftragsdatenverarbeitung - " + schulkuerzel + "]"))
 			.thenThrow(new AccessDeniedException());
 

@@ -116,7 +116,7 @@ public class SchuleUrkundenservice {
 
 		String schulkuerzel = urkundenauftrag.schulkuerzel();
 
-		this.authService.checkPermissionForTeilnahmenummer(veranstalterID, new Identifier(schulkuerzel),
+		this.authService.checkPermissionForTeilnahmenummerAndReturnRolle(veranstalterID, new Identifier(schulkuerzel),
 			"[generiereSchulauswertung - schulkuerzel=" + schulkuerzel + "]");
 
 		TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdentifierAktuellerWettbewerb = TeilnahmeIdentifierAktuellerWettbewerb

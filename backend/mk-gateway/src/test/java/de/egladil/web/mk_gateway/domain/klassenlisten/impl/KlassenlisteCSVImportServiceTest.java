@@ -81,7 +81,7 @@ public class KlassenlisteCSVImportServiceTest {
 
 		persistenterUpload = new PersistenterUpload();
 		persistenterUpload.setUuid("klassenliste");
-		persistenterUpload.setVeranstalterUuid(VERANSTALTER_UUID);
+		persistenterUpload.setBenutzerUuid(VERANSTALTER_UUID);
 		persistenterUpload.setTeilnahmenummer(SCHULKUERZEL);
 	}
 

@@ -2,15 +2,18 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.loesungszettel;
+package de.egladil.web.mk_gateway.domain.loesungszettel.online;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
-import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelAPIModel;
-import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelZeileAPIModel;
+import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
+import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRohdaten;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.OnlineLoesungszetteleingabe;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelAPIModel;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelZeileAPIModel;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
@@ -97,31 +100,31 @@ public abstract class AbstractLoesungszettelServiceTest {
 		List<LoesungszettelZeileAPIModel> zeilen = new ArrayList<>();
 
 		zeilen.add(new LoesungszettelZeileAPIModel().withAnzahlSpalten(5)
-			.withEingabe(ZulaessigeLoesungszetteleingabe.A).withIndex(0).withName("A-1"));
+			.withEingabe(OnlineLoesungszetteleingabe.A).withIndex(0).withName("A-1"));
 		zeilen.add(new LoesungszettelZeileAPIModel().withAnzahlSpalten(5)
-			.withEingabe(ZulaessigeLoesungszetteleingabe.A).withIndex(1).withName("A-2"));
+			.withEingabe(OnlineLoesungszetteleingabe.A).withIndex(1).withName("A-2"));
 		zeilen.add(new LoesungszettelZeileAPIModel().withAnzahlSpalten(5)
-			.withEingabe(ZulaessigeLoesungszetteleingabe.A).withIndex(2).withName("A-3"));
+			.withEingabe(OnlineLoesungszetteleingabe.A).withIndex(2).withName("A-3"));
 		zeilen.add(new LoesungszettelZeileAPIModel().withAnzahlSpalten(5)
-			.withEingabe(ZulaessigeLoesungszetteleingabe.A).withIndex(3).withName("A-4"));
+			.withEingabe(OnlineLoesungszetteleingabe.A).withIndex(3).withName("A-4"));
 
 		zeilen.add(new LoesungszettelZeileAPIModel().withAnzahlSpalten(5)
-			.withEingabe(ZulaessigeLoesungszetteleingabe.B).withIndex(4).withName("B-1"));
+			.withEingabe(OnlineLoesungszetteleingabe.B).withIndex(4).withName("B-1"));
 		zeilen.add(new LoesungszettelZeileAPIModel().withAnzahlSpalten(5)
-			.withEingabe(ZulaessigeLoesungszetteleingabe.B).withIndex(5).withName("B-2"));
+			.withEingabe(OnlineLoesungszetteleingabe.B).withIndex(5).withName("B-2"));
 		zeilen.add(new LoesungszettelZeileAPIModel().withAnzahlSpalten(5)
-			.withEingabe(ZulaessigeLoesungszetteleingabe.B).withIndex(6).withName("B-3"));
+			.withEingabe(OnlineLoesungszetteleingabe.B).withIndex(6).withName("B-3"));
 		zeilen.add(new LoesungszettelZeileAPIModel().withAnzahlSpalten(5)
-			.withEingabe(ZulaessigeLoesungszetteleingabe.B).withIndex(7).withName("B-4"));
+			.withEingabe(OnlineLoesungszetteleingabe.B).withIndex(7).withName("B-4"));
 
 		zeilen.add(new LoesungszettelZeileAPIModel().withAnzahlSpalten(5)
-			.withEingabe(ZulaessigeLoesungszetteleingabe.C).withIndex(8).withName("C-1"));
+			.withEingabe(OnlineLoesungszetteleingabe.C).withIndex(8).withName("C-1"));
 		zeilen.add(new LoesungszettelZeileAPIModel().withAnzahlSpalten(5)
-			.withEingabe(ZulaessigeLoesungszetteleingabe.C).withIndex(9).withName("C-2"));
+			.withEingabe(OnlineLoesungszetteleingabe.C).withIndex(9).withName("C-2"));
 		zeilen.add(new LoesungszettelZeileAPIModel().withAnzahlSpalten(5)
-			.withEingabe(ZulaessigeLoesungszetteleingabe.C).withIndex(10).withName("C-3"));
+			.withEingabe(OnlineLoesungszetteleingabe.C).withIndex(10).withName("C-3"));
 		zeilen.add(new LoesungszettelZeileAPIModel().withAnzahlSpalten(5)
-			.withEingabe(ZulaessigeLoesungszetteleingabe.C).withIndex(11).withName("C-4"));
+			.withEingabe(OnlineLoesungszetteleingabe.C).withIndex(11).withName("C-4"));
 		return zeilen;
 	}
 

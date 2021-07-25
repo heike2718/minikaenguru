@@ -27,8 +27,8 @@ import de.egladil.web.commons_validation.annotations.UuidString;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelService;
-import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelAPIModel;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.OnlineLoesungszettelService;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelAPIModel;
 
 /**
  * LoesungszettelResource
@@ -43,7 +43,7 @@ public class LoesungszettelResource {
 	SecurityContext securityContext;
 
 	@Inject
-	LoesungszettelService loesungszettelService;
+	OnlineLoesungszettelService loesungszettelService;
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 

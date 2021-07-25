@@ -9,7 +9,20 @@ package de.egladil.web.mk_gateway.domain.user;
  */
 public enum Rolle {
 
-	ADMIN,
+	ADMIN {
+
+		@Override
+		public boolean isAdmin() {
+
+			return true;
+		}
+
+	},
 	LEHRER,
 	PRIVAT;
+
+	public boolean isAdmin() {
+
+		return false;
+	}
 }
