@@ -32,6 +32,7 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadData;
 import de.egladil.web.mk_gateway.domain.uploads.UploadManager;
 import de.egladil.web.mk_gateway.domain.uploads.UploadRequestPayload;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
+import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**
  * UploadKlassenlistenResource
@@ -63,7 +64,7 @@ public class UploadKlassenlistenResource {
 
 		Sprache theSprache = Sprache.valueOf(sprache);
 
-		uploadManager.authorizeUpload(veranstalterUuid, schulkuerzel, uploadType);
+		Rolle rolle = uploadManager.authorizeUpload(veranstalterUuid, schulkuerzel, uploadType);
 
 		UploadData uploadData = MultipartUtils.getUploadData(input);
 
@@ -74,7 +75,7 @@ public class UploadKlassenlistenResource {
 			.withBenutzerID(new Identifier(veranstalterUuid)).withUploadType(uploadType).withUploadData(uploadData)
 			.withContext(contextObject);
 
-		ResponsePayload responsePayload = uploadManager.processUpload(uploadPayload);
+		ResponsePayload responsePayload = uploadManager.processUpload(uploadPayload, rolle);
 
 		return Response.ok(responsePayload).build();
 	}

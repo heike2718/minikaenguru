@@ -720,7 +720,7 @@ public class UploadAuthorizationServiceImplTest {
 
 				// Assert
 				assertEquals(
-					"Schulauswertungen können nicht mehr hochgeladen werden, da der Wettbewerb beendet ist.",
+					"Schulauswertungen können nicht mehr hochgeladen werden, da der Wettbewerb beendet ist. Bitte senden Sie Ihre Auswertungen per Mail an minikaenguru@egladil.de.",
 					e.getMessage());
 
 				verify(domainEventHandler, never()).handleEvent(any());

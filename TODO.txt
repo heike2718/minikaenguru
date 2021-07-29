@@ -5,8 +5,9 @@
 + obwohl nachnameAlsZustz = false gesetzt war, wurden die Nachnamen in die Zusatzspalte geeschrieben
 + Umwandlung Excel in CSV noch nicht eingebaut
 + Umwandlung ODT in CSV noch nicht eingebaut
-* Integrationstest fuer KlassenlisteCSVImportService
+- Integrationstest fuer KlassenlisteCSVImportService
 + uploadcomponent in the lib
-* mkv-app: upload klassenliste
-* mk-admin-app: upload auswertung fuer schule
+- mkv-app: upload klassenliste
+- Lösungszettel aus Importliste generieren und speichern
+- mk-admin-app: upload auswertung fuer schule
 

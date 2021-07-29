@@ -53,4 +53,10 @@ public class AuswertungimportZeile {
 		this.rohdaten = rohdaten;
 		return this;
 	}
+
+	public String getFehlerreportItem() {
+
+		return "Fehler Zeile " + this.index + "! [" + this.fehlermeldung + "] (Rohdaten=" + this.rohdaten + ")";
+
+	}
 }

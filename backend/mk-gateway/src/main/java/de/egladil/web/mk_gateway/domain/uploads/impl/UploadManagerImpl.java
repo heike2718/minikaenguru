@@ -42,6 +42,8 @@ import de.egladil.web.mk_gateway.domain.event.VirusDetected;
 import de.egladil.web.mk_gateway.domain.klassenlisten.KlassenlisteImportService;
 import de.egladil.web.mk_gateway.domain.klassenlisten.UploadKlassenlisteContext;
 import de.egladil.web.mk_gateway.domain.klassenlisten.impl.KlassenlisteCSVImportService;
+import de.egladil.web.mk_gateway.domain.loesungszettel.upload.AuswertungImportService;
+import de.egladil.web.mk_gateway.domain.loesungszettel.upload.UploadAuswertungContext;
 import de.egladil.web.mk_gateway.domain.uploads.UploadAuthorizationService;
 import de.egladil.web.mk_gateway.domain.uploads.UploadData;
 import de.egladil.web.mk_gateway.domain.uploads.UploadIdentifier;
@@ -84,6 +86,9 @@ public class UploadManagerImpl implements UploadManager {
 	KlassenlisteImportService klassenlisteImportService;
 
 	@Inject
+	AuswertungImportService auswertungImportService;
+
+	@Inject
 	UploadRepository uploadRepository;
 
 	@Inject
@@ -106,7 +111,7 @@ public class UploadManagerImpl implements UploadManager {
 	}
 
 	@Override
-	public boolean authorizeUpload(final String benutzerUuid, final String teilnahmenummer, final UploadType uploadType) {
+	public Rolle authorizeUpload(final String benutzerUuid, final String teilnahmenummer, final UploadType uploadType) {
 
 		Identifier benutzerID = new Identifier(benutzerUuid);
 		Identifier teilnameID = new Identifier(teilnahmenummer);
@@ -115,7 +120,7 @@ public class UploadManagerImpl implements UploadManager {
 
 		uploadAuthService.authorizeUpload(benutzerID, teilnahmenummer, uploadType, rolle);
 
-		return true;
+		return rolle;
 	}
 
 	ScanResult scanUpload(final UploadRequestPayload uploadPayload) {
@@ -194,7 +199,7 @@ public class UploadManagerImpl implements UploadManager {
 	}
 
 	@Override
-	public ResponsePayload processUpload(final UploadRequestPayload uploadPayload) throws UploadFormatException {
+	public ResponsePayload processUpload(final UploadRequestPayload uploadPayload, final Rolle rolle) throws UploadFormatException {
 
 		ScanResult scanResult = this.scanUpload(uploadPayload);
 
@@ -227,23 +232,18 @@ public class UploadManagerImpl implements UploadManager {
 		case KLASSENLISTE:
 
 			UploadKlassenlisteContext uploadKlassenlisteContext = (UploadKlassenlisteContext) uploadPayload.getContext();
-			responsePayload = klassenlisteImportService.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
+			responsePayload = klassenlisteImportService
+				.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
+			break;
+
+		case AUSWERTUNG:
+			UploadAuswertungContext uploadAuswertungContext = (UploadAuswertungContext) uploadPayload.getContext();
+			uploadAuswertungContext.setRolle(rolle);
+			responsePayload = auswertungImportService.importiereAuswertung(uploadAuswertungContext, persistenterUpload);
 			break;
 
 		default:
 			break;
-		}
-		UploadStatus uploadStatus = responsePayload.isOk() ? UploadStatus.IMPORTIERT : UploadStatus.FEHLER;
-
-		persistenterUpload.setStatus(uploadStatus);
-
-		try {
-
-			uploadRepository.updateUpload(persistenterUpload);
-		} catch (Exception e) {
-
-			LOGGER.error("Upload mit UUID=" + persistenterUpload.getUuid() + ": UploadStatus konnte nicht aktualisiert werden: "
-				+ e.getMessage(), e);
 		}
 
 		return responsePayload;

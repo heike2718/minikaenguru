@@ -35,6 +35,7 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadRequestPayload;
 import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.domain.uploads.impl.UploadManagerImpl;
+import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KinderHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UploadHibernateRepository;
@@ -65,7 +66,7 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 	}
 
 	@Test
-	void should_upload_work() {
+	void should_uploadKlassenliste_work() {
 
 		// Arrange
 		String benutzerUuid = "2f09da36-07c6-4033-a2f1-5e110c804026";
@@ -85,7 +86,7 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 
 		// Act
 		EntityTransaction transaction = startTransaction();
-		ResponsePayload result = uploadManager.processUpload(uploadRequestPayload);
+		ResponsePayload result = uploadManager.processUpload(uploadRequestPayload, Rolle.LEHRER);
 		commit(transaction);
 
 		// Assert

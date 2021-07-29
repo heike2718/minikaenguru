@@ -4,13 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.klassenlisten.impl;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,8 +20,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
@@ -36,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderService;
@@ -58,7 +49,10 @@ import de.egladil.web.mk_gateway.domain.klassenlisten.UploadKlassenlisteContext;
 import de.egladil.web.mk_gateway.domain.klassenlisten.api.KlassenlisteImportReport;
 import de.egladil.web.mk_gateway.domain.klassenlisten.utils.ImportDublettenPruefer;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
+import de.egladil.web.mk_gateway.domain.uploads.UploadRepository;
+import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UploadHibernateRepository;
 
 /**
  * KlassenlisteCSVImportService importiert die Kinder aus einer CSV-Datei.
@@ -79,6 +73,9 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 	@Inject
 	KinderService kinderService;
 
+	@Inject
+	UploadRepository uploadRepository;
+
 	private List<KindCreated> kindCreatedEventPayloads;
 
 	public static KlassenlisteImportService createForIntegrationTests(final EntityManager em) {
@@ -86,6 +83,7 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 		KlassenlisteCSVImportService result = new KlassenlisteCSVImportService();
 		result.klassenService = KlassenServiceImpl.createForIntegrationTest(em);
 		result.kinderService = KinderServiceImpl.createForIntegrationTest(em);
+		result.uploadRepository = UploadHibernateRepository.createForIntegrationTests(em);
 		result.pathUploadDir = "/home/heike/mkv/upload";
 		return result;
 	}
@@ -96,6 +94,16 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 		String path = pathUploadDir + File.separator + uploadMetadata.getUuid() + ".csv";
 
 		List<String> lines = MkGatewayFileUtils.readLines(path);
+
+		if (lines.isEmpty()) {
+
+			ResponsePayload responsePayload = ResponsePayload
+				.messageOnly(MessagePayload.error(applicationMessages.getString("leer")));
+
+			updateUploadstatusQuietly(uploadMetadata, UploadStatus.LEER);
+
+			return responsePayload;
+		}
 
 		KlassenlisteUeberschrift ueberschrift = new KlassenlisteUeberschrift(lines.get(0));
 
@@ -144,23 +152,53 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 
 			if (anzahlMitFehlern > 0) {
 
-				this.writeFehlermeldungen(nichtImportierteZeilen, uploadMetadata.getUuid());
+				String pathFehlerreport = pathUploadDir + File.separator + uploadMetadata.getUuid() + "-fehlerreport.csv";
+				MkGatewayFileUtils.writeLines(nichtImportierteZeilen, pathFehlerreport);
 				payloadData.setUuidImportReport(uploadMetadata.getUuid());
 			}
 
+			ResponsePayload responsePayload = null;
+
 			if (anzahlMitFehlern + anzahlDubletten + anzahlMitUnklarerKlassenstufe > 0) {
 
-				return new ResponsePayload(MessagePayload.warn(msg), payloadData);
+				responsePayload = new ResponsePayload(MessagePayload.warn(msg), payloadData);
+			} else {
+
+				responsePayload = new ResponsePayload(MessagePayload.info(msg), payloadData);
 			}
 
-			return new ResponsePayload(MessagePayload.info(msg), payloadData);
+			updateUploadstatusQuietly(uploadMetadata, UploadStatus.IMPORTIERT);
+
+			return responsePayload;
 		} catch (PersistenceException e) {
 
 			String msg = applicationMessages.getString("klassenimport.error");
 			LOGGER.error("{}: {}", msg, e.getMessage(), e);
 
+			updateUploadstatusQuietly(uploadMetadata, UploadStatus.FEHLER);
+
 			return ResponsePayload.messageOnly(MessagePayload.error(msg));
 		}
+	}
+
+	/**
+	 * @param uploadMetadata
+	 * @param leer
+	 */
+	private void updateUploadstatusQuietly(final PersistenterUpload uploadMetadata, final UploadStatus leer) {
+
+		try {
+
+			doUpdateTheUploadStatus(uploadMetadata, leer);
+		} catch (PersistenceException e) {
+
+			String msg = applicationMessages.getString("klassenimport.error");
+			LOGGER.error("{}: {}", msg, e.getMessage(), e);
+
+			// TODO: hier eine Telegram-Message senden?
+
+		}
+
 	}
 
 	String getImportMessage(final long anzahlMitFehlern, final long anzahlMitUnklarerKlassenstufe, final long anzahlDubletten) {
@@ -200,6 +238,14 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 		List<Klasse> importierteKlassen = klassenMap.values().stream().collect(Collectors.toList());
 		importErgebnis.setKlassen(importierteKlassen);
 		return importErgebnis;
+	}
+
+	@Transactional
+	PersistenterUpload doUpdateTheUploadStatus(final PersistenterUpload persistenterUpload, final UploadStatus uploadStatus) {
+
+		persistenterUpload.setStatus(uploadStatus);
+		return this.uploadRepository.updateUpload(persistenterUpload);
+
 	}
 
 	Map<String, Klasse> createAndImportKlassen(final Identifier veranstalterID, final String schulkuerzel, final List<KlassenimportZeile> importZeilen) {
@@ -298,67 +344,8 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 		return new KlassenImportErgebnis(importDaten, kinder);
 	}
 
-	List<String> readFileContent(final String path) {
-
-		File file = new File(path);
-
-		try (FileReader fr = new FileReader(file); BufferedReader br = new BufferedReader(fr)) {
-
-			List<String> lines = new ArrayList<>();
-			String line = null;
-			int index = 0;
-
-			while ((line = br.readLine()) != null) {
-
-				if (StringUtils.isNotBlank(line)) {
-
-					lines.add(index++, line);
-				}
-			}
-
-			return lines;
-
-		} catch (IOException e) {
-
-			LOGGER.error("Konnte Klassenliste nicht importieren: path={}: {}", path,
-				e.getMessage(), e);
-			throw new MkGatewayRuntimeException("IOException beim Import einer Klassenliste", e);
-
-		}
-	}
-
-	void setPathUploadDir(final String pathUploadDir) {
-
-		this.pathUploadDir = pathUploadDir;
-	}
-
 	List<KindCreated> getKindCreatedEventPayloads() {
 
 		return kindCreatedEventPayloads;
 	}
-
-	/**
-	 * @param uploadData
-	 * @param uuid
-	 */
-	private void writeFehlermeldungen(final List<String> fehlermeldungen, final String uuid) {
-
-		String path = pathUploadDir + File.separator + uuid + "-fehlerreport.csv";
-
-		File file = new File(path);
-
-		String content = StringUtils.join(fehlermeldungen, "\n");
-		content += "\n";
-
-		try (FileOutputStream fos = new FileOutputStream(file); InputStream in = new ByteArrayInputStream(content.getBytes())) {
-
-			IOUtils.copy(in, fos);
-			fos.flush();
-		} catch (IOException e) {
-
-			LOGGER.error("Fehler beim Speichern im Filesystem: " + e.getMessage(), e);
-			throw new MkGatewayRuntimeException("Konnte upload nicht ins Filesystem speichern: " + e.getMessage(), e);
-		}
-	}
-
 }

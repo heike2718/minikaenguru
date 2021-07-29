@@ -11,6 +11,8 @@ import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
@@ -29,7 +31,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.error.UploadFormatException;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderService;
@@ -40,6 +41,7 @@ import de.egladil.web.mk_gateway.domain.klassenlisten.UploadKlassenlisteContext;
 import de.egladil.web.mk_gateway.domain.klassenlisten.api.KlassenlisteImportReport;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
+import de.egladil.web.mk_gateway.domain.uploads.UploadRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 
 /**
@@ -50,7 +52,7 @@ public class KlassenlisteCSVImportServiceTest {
 
 	private static final String SCHULKUERZEL = "ZUTFG654F";
 
-	private static final String VERANSTALTER_UUID = "9515636f-9909-45b2-9132-85e2e0af3cb4";
+	private static final String BENUTZER_UUID = "9515636f-9909-45b2-9132-85e2e0af3cb4";
 
 	private UploadKlassenlisteContext uploadKlassenlisteContext;
 
@@ -63,6 +65,9 @@ public class KlassenlisteCSVImportServiceTest {
 
 	@Mock
 	private KinderService kinderService;
+
+	@Mock
+	private UploadRepository uploadRepository;
 
 	@InjectMocks
 	private KlassenlisteCSVImportService service;
@@ -81,48 +86,8 @@ public class KlassenlisteCSVImportServiceTest {
 
 		persistenterUpload = new PersistenterUpload();
 		persistenterUpload.setUuid("klassenliste");
-		persistenterUpload.setBenutzerUuid(VERANSTALTER_UUID);
+		persistenterUpload.setBenutzerUuid(BENUTZER_UUID);
 		persistenterUpload.setTeilnahmenummer(SCHULKUERZEL);
-	}
-
-	@Nested
-	class ReadContentTests {
-
-		@Test
-		void should_readFileContentThrowMkGatewayException_when_FileDoesNotExist() {
-
-			// Arrange
-			String path = "/home/heike/git/minikaenguru/missing-file.csv";
-
-			// Act + Assert
-			try {
-
-				service.readFileContent(path);
-				fail("keine MkGatewayRuntimeException");
-			} catch (MkGatewayRuntimeException e) {
-
-				assertEquals("IOException beim Import einer Klassenliste", e.getMessage());
-			}
-
-		}
-
-		@Test
-		void should_readFileContent_IgnoreEmptyLines() {
-
-			// Arrange
-			String path = "/home/heike/upload/klassenlisten-testdaten/korrekt/klassenliste-mit-leerzeilen.csv";
-
-			// Act
-			List<String> lines = service.readFileContent(path);
-
-			// Assert
-			assertEquals(5, lines.size());
-			assertEquals("Vorname,Nachname,Klasse,Klassenstufe", lines.get(0));
-			assertEquals("Amiera,Kaled,2a,2", lines.get(1));
-			assertEquals("Benedikt,Fichtenholz ,2a,0", lines.get(2));
-			assertEquals("Özcan,Bakir,2b,2", lines.get(3));
-			assertEquals("Thomas, Grütze,2b,2", lines.get(4));
-		}
 	}
 
 	@Nested
@@ -132,7 +97,7 @@ public class KlassenlisteCSVImportServiceTest {
 		void should_importiereKlassenThrowUploadFormatException_when_keineUeberschrift() {
 
 			// Arrange
-			service.setPathUploadDir("/home/heike/upload/klassenlisten-testdaten/fehlerhaft");
+			service.pathUploadDir = "/home/heike/upload/klassenlisten-testdaten/fehlerhaft";
 			persistenterUpload.setUuid("ohne-ueberschrift");
 
 			// Act + Assert
@@ -145,6 +110,12 @@ public class KlassenlisteCSVImportServiceTest {
 				assertEquals(
 					"Die hochgeladene Datei kann nicht verarbeitet werden. Die erste Zeile enthält nicht die Felder \"Nachname\", \"Vorname\", \"Klasse\", \"Klassenstufe\".",
 					e.getMessage());
+
+				verify(klassenService, never()).importiereKlassen(any(), any(), anyList());
+				verify(kinderService, never()).importiereKinder(any(), any(), any(), any());
+				verify(kinderService, never()).findWithSchulteilname(any());
+				verify(klassenService, never()).klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID);
+				verify(uploadRepository, never()).updateUpload(persistenterUpload);
 			}
 
 		}
@@ -153,7 +124,7 @@ public class KlassenlisteCSVImportServiceTest {
 		void should_importiereKlassenWork() throws IOException {
 
 			// Arrange
-			service.setPathUploadDir("/home/heike/upload/klassenlisten-testdaten/korrekt");
+			service.pathUploadDir = "/home/heike/upload/klassenlisten-testdaten/korrekt";
 
 			List<Klasse> klassen = new ArrayList<>();
 			klassen.add(new Klasse(new Identifier("uuid-2a")).withName("2a").withSchuleID(new Identifier(SCHULKUERZEL)));
@@ -170,7 +141,8 @@ public class KlassenlisteCSVImportServiceTest {
 			when(klassenService.importiereKlassen(any(), any(), anyList())).thenReturn(klassen);
 			when(kinderService.importiereKinder(any(), any(), any(), any())).thenReturn(kinder);
 			when(kinderService.findWithSchulteilname(any())).thenReturn(vorhandeneKinder);
-			when(klassenService.klassenZuSchuleLaden(SCHULKUERZEL, VERANSTALTER_UUID)).thenReturn(klassenAPIModels);
+			when(klassenService.klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID)).thenReturn(klassenAPIModels);
+			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
 
 			// Act
 			ResponsePayload responsePayload = service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
@@ -190,13 +162,19 @@ public class KlassenlisteCSVImportServiceTest {
 			assertNull(report.getUuidImportReport());
 			List<String> fehlermeldungen = report.getNichtImportierteZeilen();
 			assertEquals(0, fehlermeldungen.size());
+
+			verify(klassenService).importiereKlassen(any(), any(), anyList());
+			verify(kinderService).importiereKinder(any(), any(), any(), any());
+			verify(kinderService).findWithSchulteilname(any());
+			verify(klassenService).klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID);
+			verify(uploadRepository).updateUpload(persistenterUpload);
 		}
 
 		@Test
 		void should_importiereKlassenWork_withFehlern() throws IOException {
 
 			// Arrange
-			service.setPathUploadDir("/home/heike/upload/klassenlisten-testdaten/fehlerhaft");
+			service.pathUploadDir = "/home/heike/upload/klassenlisten-testdaten/fehlerhaft";
 			persistenterUpload.setUuid("mit-ueberschrift-alle-anderen-faelle");
 
 			List<Klasse> klassen = new ArrayList<>();
@@ -214,7 +192,8 @@ public class KlassenlisteCSVImportServiceTest {
 			when(klassenService.importiereKlassen(any(), any(), anyList())).thenReturn(klassen);
 			when(kinderService.importiereKinder(any(), any(), any(), any())).thenReturn(kinder);
 			when(kinderService.findWithSchulteilname(any())).thenReturn(vorhandeneKinder);
-			when(klassenService.klassenZuSchuleLaden(SCHULKUERZEL, VERANSTALTER_UUID)).thenReturn(klassenAPIModels);
+			when(klassenService.klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID)).thenReturn(klassenAPIModels);
+			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
 
 			// Act
 			ResponsePayload responsePayload = service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
@@ -243,6 +222,12 @@ public class KlassenlisteCSVImportServiceTest {
 			assertEquals(
 				"Fehler! Zeile \"Benedikt,2a,0\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
 				fehlermeldungen.get(1));
+
+			verify(klassenService).importiereKlassen(any(), any(), anyList());
+			verify(kinderService).importiereKinder(any(), any(), any(), any());
+			verify(kinderService).findWithSchulteilname(any());
+			verify(klassenService).klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID);
+			verify(uploadRepository).updateUpload(persistenterUpload);
 		}
 
 	}

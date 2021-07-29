@@ -20,7 +20,7 @@ public class Wertungsrechner {
 		if (wertungscode.length() != klassenstufe.getAnzahlAufgabenInKategorien() * 3) {
 
 			throw new IllegalArgumentException(
-				"laenge wertugscode " + wertungscode + " (" + wertungscode.length() + ") und klassenstufe " + klassenstufe
+				"laenge wertungscode " + wertungscode + " (" + wertungscode.length() + ") und klassenstufe " + klassenstufe
 					+ " sind inkompatibel");
 		}
 
