@@ -8,6 +8,6 @@
 - Integrationstest fuer KlassenlisteCSVImportService
 + uploadcomponent in the lib
 - mkv-app: upload klassenliste
-- Lösungszettel aus Importliste generieren und speichern
++ Import Auswertung als Lehrer ohne Wettbewerbsjahr
 - mk-admin-app: upload auswertung fuer schule
 

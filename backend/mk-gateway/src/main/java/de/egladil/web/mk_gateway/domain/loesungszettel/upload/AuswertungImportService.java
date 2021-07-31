@@ -7,6 +7,7 @@ package de.egladil.web.mk_gateway.domain.loesungszettel.upload;
 import java.io.File;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -42,6 +43,7 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbRepository;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbeDescendingComparator;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UploadHibernateRepository;
@@ -102,9 +104,19 @@ public class AuswertungImportService {
 		List<Wettbewerb> wettbewerbe = wettbewerbRepository.loadWettbewerbe();
 		// Collections.sort(wettbewerbe, new WettbewerbeDescendingComparator());
 
+		Optional<Wettbewerb> optWettbewerb = null;
+
 		final Integer wettbewerbsjahr = uploadContext.getWettbewerbsjahr();
 
-		Optional<Wettbewerb> optWettbewerb = wettbewerbe.stream().filter(w -> w.id().jahr().equals(wettbewerbsjahr)).findFirst();
+		if (wettbewerbsjahr != null) {
+
+			optWettbewerb = wettbewerbe.stream().filter(w -> w.id().jahr().equals(wettbewerbsjahr)).findFirst();
+
+		} else {
+
+			Collections.sort(wettbewerbe, new WettbewerbeDescendingComparator());
+			optWettbewerb = Optional.of(wettbewerbe.get(0));
+		}
 
 		if (optWettbewerb.isEmpty()) {
 
@@ -132,7 +144,7 @@ public class AuswertungImportService {
 			this.doUpdateTheUploadStatus(persistenterUpload, UploadStatus.FEHLER);
 
 			String msg = MessageFormat.format(applicationMessages.getString("auswertungimport.forbidden.wettbewerbBeendet"),
-				wettbewerbsjahr.toString());
+				wettbewerb.id().toString());
 
 			return ResponsePayload
 				.messageOnly(

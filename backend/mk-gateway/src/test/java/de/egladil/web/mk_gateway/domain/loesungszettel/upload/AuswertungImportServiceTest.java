@@ -342,6 +342,28 @@ public class AuswertungImportServiceTest {
 			verify(uploadRepository).updateUpload(persistenterUpload);
 		}
 
+		@Test
+		void should_importiereAuswertungenReturnErrorPayload_when_wettbewrbsjahrNullAndAktuellerWettbewerbBeendet() {
+
+			// Arrange
+			uploadContextOhneJahr.setRolle(Rolle.LEHRER);
+			when(wettbewerbRepository.loadWettbewerbe()).thenReturn(Collections.singletonList(wettbewerbe.get(0)));
+			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
+
+			// Act
+			ResponsePayload responsePayload = service.importiereAuswertung(uploadContextOhneJahr, persistenterUpload);
+
+			// Assert
+			MessagePayload messagePayload = responsePayload.getMessage();
+			assertEquals("ERROR", messagePayload.getLevel());
+			assertEquals(
+				"Schulauswertungen können nicht mehr hochgeladen werden, da der Wettbewerb beendet ist. Bitte senden Sie Ihre Auswertungen per Mail an minikaenguru@egladil.de.",
+				messagePayload.getMessage());
+
+			verify(wettbewerbRepository).loadWettbewerbe();
+			verify(uploadRepository).updateUpload(persistenterUpload);
+		}
+
 		// @Test
 		void should_importiereAuswertungWork_when_wettbewebRunning() {
 
@@ -365,6 +387,63 @@ public class AuswertungImportServiceTest {
 			verify(wettbewerbRepository).loadWettbewerbe();
 			verify(uploadRepository).updateUpload(persistenterUpload);
 
+		}
+
+		@Test
+		void should_importiereAuswertungenWork_when_WettbewerbsjahrNullAndAktuellerWettbewerbRunningUndStatusHOCHGELADEN() {
+
+			// Arrange
+			service.pathUploadDir = "/home/heike/upload/auswertungen-testdaten/korrekt";
+			uploadContextOhneJahr.setRolle(Rolle.LEHRER);
+
+			when(wettbewerbRepository.loadWettbewerbe()).thenReturn(wettbewerbe);
+			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
+			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
+
+			List<Pair<Integer, Integer>> jahreUndAnzahl = new ArrayList<>();
+			jahreUndAnzahl.add(Pair.of(JAHR_WETTBEWERB_BEENDET, 13));
+			jahreUndAnzahl.add(Pair.of(JAHR_WETTBEWERB_RUNNING, 12));
+
+			List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = createAnonymisierteTeilnahmen(jahreUndAnzahl);
+			when(anonymisierteTeilnahmenService.loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID))
+				.thenReturn(anonymisierteTeilnahmen);
+
+			when(loesungszettelRepository.addLoesungszettel(any())).thenReturn(new Loesungszettel());
+
+			// Act
+			ResponsePayload responsePayload = service.importiereAuswertung(uploadContextOhneJahr, persistenterUpload);
+
+			// Assert
+			MessagePayload messagePayload = responsePayload.getMessage();
+			assertEquals("INFO", messagePayload.getLevel());
+			assertEquals(
+				"Die Auswertung wurde erfolgreich importiert. Vielen Dank!",
+				messagePayload.getMessage());
+
+			verify(wettbewerbRepository).loadWettbewerbe();
+			verify(uploadRepository).updateUpload(persistenterUpload);
+			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
+			verify(loesungszettelRepository, times(24)).addLoesungszettel(any());
+
+			AuswertungImportReport report = (AuswertungImportReport) responsePayload.getData();
+			List<AnonymisierteTeilnahmeAPIModel> teilnahmen = report.getTeilnahmen();
+			assertEquals(2, teilnahmen.size());
+
+			{
+
+				AnonymisierteTeilnahmeAPIModel teilnahme = teilnahmen.get(0);
+				assertEquals(JAHR_WETTBEWERB_BEENDET.intValue(), teilnahme.identifier().jahr());
+				assertEquals(13, teilnahme.anzahlKinder());
+			}
+
+			{
+
+				AnonymisierteTeilnahmeAPIModel teilnahme = teilnahmen.get(1);
+				assertEquals(JAHR_WETTBEWERB_RUNNING.intValue(), teilnahme.identifier().jahr());
+				assertEquals(12, teilnahme.anzahlKinder());
+			}
+
+			assertTrue(report.getFehlerhafteZeilen().isEmpty());
 		}
 	}
 
@@ -411,6 +490,52 @@ public class AuswertungImportServiceTest {
 
 			// Act
 			ResponsePayload responsePayload = service.importiereAuswertung(uploadContxtWettbewerbBeendet, persistenterUpload);
+
+			// Assert
+			MessagePayload messagePayload = responsePayload.getMessage();
+			assertEquals("INFO", messagePayload.getLevel());
+			assertEquals(
+				"Die Auswertung wurde erfolgreich importiert. Vielen Dank!",
+				messagePayload.getMessage());
+
+			verify(wettbewerbRepository).loadWettbewerbe();
+			verify(uploadRepository).updateUpload(persistenterUpload);
+			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
+			verify(loesungszettelRepository, times(24)).addLoesungszettel(any());
+
+			AuswertungImportReport report = (AuswertungImportReport) responsePayload.getData();
+			List<AnonymisierteTeilnahmeAPIModel> teilnahmen = report.getTeilnahmen();
+			assertEquals(1, teilnahmen.size());
+
+			AnonymisierteTeilnahmeAPIModel teilnahme = teilnahmen.get(0);
+			assertEquals(JAHR_WETTBEWERB_BEENDET.intValue(), teilnahme.identifier().jahr());
+			assertEquals(13, teilnahme.anzahlKinder());
+
+			assertTrue(report.getFehlerhafteZeilen().isEmpty());
+		}
+
+		@Test
+		void should_importiereAuswertungenWork_when_WettbewerbsjahrNullWettbewerbBeendetUndStatusHOCHGELADEN() {
+
+			// Arrange
+			service.pathUploadDir = "/home/heike/upload/auswertungen-testdaten/korrekt";
+
+			uploadContextOhneJahr.setRolle(Rolle.ADMIN);
+
+			when(wettbewerbRepository.loadWettbewerbe()).thenReturn(Collections.singletonList(wettbewerbe.get(0)));
+			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
+			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
+
+			Pair<Integer, Integer> jahrUndAnzahl = Pair.of(JAHR_WETTBEWERB_BEENDET, 13);
+			List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = createAnonymisierteTeilnahmen(
+				Collections.singletonList(jahrUndAnzahl));
+			when(anonymisierteTeilnahmenService.loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID))
+				.thenReturn(anonymisierteTeilnahmen);
+
+			when(loesungszettelRepository.addLoesungszettel(any())).thenReturn(new Loesungszettel());
+
+			// Act
+			ResponsePayload responsePayload = service.importiereAuswertung(uploadContextOhneJahr, persistenterUpload);
 
 			// Assert
 			MessagePayload messagePayload = responsePayload.getMessage();
