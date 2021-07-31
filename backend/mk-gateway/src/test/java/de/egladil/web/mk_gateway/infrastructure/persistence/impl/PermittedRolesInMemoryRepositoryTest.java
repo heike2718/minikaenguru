@@ -461,6 +461,20 @@ public class PermittedRolesInMemoryRepositoryTest {
 				assertTrue(rollen.contains(Rolle.PRIVAT));
 			}
 		}
+
+		@Test
+		void should_permittedRollen_uploadsKlassenlisten_beOk() {
+
+			{
+
+				// Act
+				List<Rolle> rollen = repository.permittedRollen("/uploads/klassenliste/DE-HE/en", HttpMethod.POST);
+
+				// Assert
+				assertEquals(1, rollen.size());
+				assertTrue(rollen.contains(Rolle.LEHRER));
+			}
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -677,6 +691,18 @@ public class PermittedRolesInMemoryRepositoryTest {
 
 			// Act
 			List<Rolle> rollen = repository.permittedRollen("/admin/upload/schulen/csv", HttpMethod.POST);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.ADMIN));
+
+		}
+
+		@Test
+		void should_permittedRollen_uploadAuswertung_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/admin/uploads/auswertung/2020/DE-ST/HZTFGRE5", HttpMethod.POST);
 
 			// Assert
 			assertEquals(1, rollen.size());

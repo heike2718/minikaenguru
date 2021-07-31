@@ -34,9 +34,16 @@ public final class PermittedRolesForAdminProvider {
 		addPathsAndMethodsForPrivatteilnahmen(result);
 		addPathsAndMethodsForStatistik(result);
 		addPathsAndMethodsForMails(result);
+		addPathsAndMethodsForUpload(result);
 
 		return result;
 
+	}
+
+	private static void addPathsAndMethodsForUpload(final Map<PathWithMethod, List<Rolle>> result) {
+
+		List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+		result.put(new PathWithMethod("/admin/uploads/auswertung/*/*/*", HttpMethod.POST), rollen);
 	}
 
 	/**
@@ -279,7 +286,6 @@ public final class PermittedRolesForAdminProvider {
 			result.put(new PathWithMethod(path, HttpMethod.POST), rollen);
 
 		}
-
 	}
 
 	/**

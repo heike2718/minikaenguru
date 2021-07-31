@@ -35,12 +35,12 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**
- * UploadKlassenlistenResource
+ * UploadResource
  */
 @RequestScoped
-@Path("klassenlisten")
+@Path("uploads")
 @Produces(MediaType.APPLICATION_JSON)
-public class UploadKlassenlistenResource {
+public class UploadResource {
 
 	@Context
 	SecurityContext securityContext;
@@ -52,7 +52,7 @@ public class UploadKlassenlistenResource {
 	KlassenlisteImportService klassenlisteImportService;
 
 	@POST
-	@Path("{kuerzelLand}/{schulkuerzel}")
+	@Path("klassenlisten/{kuerzelLand}/{schulkuerzel}")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	Response uploadKlassenliste(@PathParam(value = "kuerzelLand") @LandKuerzel final String kuerzelLand, @PathParam(
 		value = "schulkuerzel") @Kuerzel final String schulkuerzel, @QueryParam(
