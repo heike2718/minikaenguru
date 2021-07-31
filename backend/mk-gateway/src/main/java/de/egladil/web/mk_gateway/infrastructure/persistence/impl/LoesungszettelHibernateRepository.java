@@ -157,7 +157,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 
 		if (kindID == null) {
 
-			throw new IllegalArgumentException("kindID darf nicht null sein.");
+			return null;
 		}
 
 		List<PersistenterLoesungszettel> trefferliste = em

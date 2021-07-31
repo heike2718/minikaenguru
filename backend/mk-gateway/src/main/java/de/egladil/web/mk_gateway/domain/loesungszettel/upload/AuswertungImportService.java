@@ -80,6 +80,7 @@ public class AuswertungImportService {
 		result.wettbewerbRepository = WettbewerbHibernateRepository.createForIntegrationTest(em);
 		result.uploadRepository = UploadHibernateRepository.createForIntegrationTests(em);
 		result.loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(em);
+		result.anonymisierteTeilnahmenService = AnonymisierteTeilnahmenService.createForIntegrationTest(em);
 		result.pathUploadDir = "/home/heike/mkv/upload";
 		return result;
 	}
@@ -90,19 +91,13 @@ public class AuswertungImportService {
 	 */
 	public ResponsePayload importiereAuswertung(final UploadAuswertungContext uploadContext, final PersistenterUpload persistenterUpload) {
 
-		AuswertungImportReport report = new AuswertungImportReport();
+		if (persistenterUpload.getStatus() != UploadStatus.HOCHGELADEN) {
 
-		if (persistenterUpload.getStatus() == UploadStatus.IMPORTIERT) {
-
-			List<AnonymisierteTeilnahmeAPIModel> teilnahmen = getTeilnahmen(persistenterUpload);
-
-			report.setTeilnahmen(teilnahmen);
-			MessagePayload messagePayload = MessagePayload.info(applicationMessages.getString("auswertungimport.success"));
-			return new ResponsePayload(messagePayload, report);
+			return handleBereitsVerarbeitet(uploadContext, persistenterUpload);
 		}
 
+		AuswertungImportReport report = new AuswertungImportReport();
 		List<Wettbewerb> wettbewerbe = wettbewerbRepository.loadWettbewerbe();
-		// Collections.sort(wettbewerbe, new WettbewerbeDescendingComparator());
 
 		Optional<Wettbewerb> optWettbewerb = null;
 
@@ -125,7 +120,7 @@ public class AuswertungImportService {
 				uploadContext.getWettbewerbsjahr(),
 				persistenterUpload.getBenutzerUuid(), persistenterUpload.getTeilnahmenummer());
 
-			this.doUpdateTheUploadStatus(persistenterUpload, UploadStatus.FEHLER);
+			this.doUpdateTheUploadStatus(persistenterUpload, UploadStatus.ABGEWIESEN);
 
 			return ResponsePayload
 				.messageOnly(MessagePayload.error(wettbewerbsjahr + " gab es keinen Wettbewerb"));
@@ -141,7 +136,7 @@ public class AuswertungImportService {
 				rolle, uploadContext.getWettbewerbsjahr(),
 				persistenterUpload.getBenutzerUuid(), persistenterUpload.getTeilnahmenummer());
 
-			this.doUpdateTheUploadStatus(persistenterUpload, UploadStatus.FEHLER);
+			this.doUpdateTheUploadStatus(persistenterUpload, UploadStatus.ABGEWIESEN);
 
 			String msg = MessageFormat.format(applicationMessages.getString("auswertungimport.forbidden.wettbewerbBeendet"),
 				wettbewerb.id().toString());
@@ -154,13 +149,37 @@ public class AuswertungImportService {
 
 		String path = pathUploadDir + File.separator + persistenterUpload.getUuid() + ".csv";
 
-		List<String> lines = MkGatewayFileUtils.readLines(path);
-
-		List<AuswertungimportZeile> zeilen = new AuswertungCSVToAuswertungimportZeilenMapper().apply(lines);
+		List<AuswertungimportZeile> zeilen = new AuswertungCSVToAuswertungimportZeilenMapper()
+			.apply(MkGatewayFileUtils.readLines(path));
 
 		AuswertungimportZeileSensor sensor = new AuswertungimportZeileSensor();
+		AuswertungimportZeile ueberschrift = zeilen.isEmpty() ? null : zeilen.get(0);
 
-		AuswertungimportZeile ueberschrift = zeilen.get(0);
+		if (ueberschrift == null) {
+
+			MessagePayload messagePayload = null;
+
+			if (rolle == Rolle.ADMIN) {
+
+				messagePayload = MessagePayload
+					.warn(MessageFormat.format(applicationMessages.getString("auswertungimport.ohneUeberschrift.admin"),
+						persistenterUpload.getDateiname(),
+						persistenterUpload.getUuid(),
+						persistenterUpload.getTeilnahmenummer()));
+
+			} else {
+
+				messagePayload = MessagePayload.info(applicationMessages.getString("auswertungimport.ohneUeberschrift.lehrer"));
+
+			}
+
+			List<AnonymisierteTeilnahmeAPIModel> teilnahmen = getTeilnahmen(persistenterUpload);
+			report.setTeilnahmen(teilnahmen);
+
+			this.updateUploadstatusQuietly(persistenterUpload, UploadStatus.DATENFEHLER);
+
+			return new ResponsePayload(messagePayload, report);
+		}
 
 		if (zeilen.size() == 1) {
 
@@ -171,6 +190,7 @@ public class AuswertungImportService {
 				messagePayload = MessagePayload
 					.warn(MessageFormat.format(applicationMessages.getString("auswertungimport.leer.admin"),
 						persistenterUpload.getDateiname(),
+						persistenterUpload.getUuid(),
 						persistenterUpload.getTeilnahmenummer()));
 			} else {
 
@@ -246,19 +266,19 @@ public class AuswertungImportService {
 			if (Rolle.ADMIN == rolle) {
 
 				report.setFehlerhafteZeilen(fehlermeldungen);
-				String msg = MessageFormat.format(applicationMessages.getString("auswertungimport.datenfehler"),
-					persistenterUpload.getDateiname());
+				String msg = MessageFormat.format(applicationMessages.getString("auswertungimport.datenfehler.admin"),
+					persistenterUpload.getDateiname(), persistenterUpload.getUuid(), persistenterUpload.getTeilnahmenummer());
 				messagePayload = MessagePayload.error(msg);
 
 			} else {
 
-				messagePayload = MessagePayload.info(applicationMessages.getString("auswertungimport.success"));
+				messagePayload = MessagePayload.info(applicationMessages.getString("auswertungimport.datenfehler.lehrer"));
 			}
 
 			ResponsePayload responsePayload = new ResponsePayload(messagePayload,
 				report);
 
-			this.updateUploadstatusQuietly(persistenterUpload, UploadStatus.FEHLER);
+			this.updateUploadstatusQuietly(persistenterUpload, UploadStatus.DATENFEHLER);
 
 			return responsePayload;
 		}
@@ -281,10 +301,98 @@ public class AuswertungImportService {
 			String msg = applicationMessages.getString("klassenimport.error");
 			LOGGER.error("{}: {}", msg, e.getMessage(), e);
 
-			updateUploadstatusQuietly(persistenterUpload, UploadStatus.FEHLER);
+			updateUploadstatusQuietly(persistenterUpload, UploadStatus.EXCEPTION);
 
 			return ResponsePayload.messageOnly(MessagePayload.error(msg));
 		}
+	}
+
+	/**
+	 * @param  uploadContext
+	 * @param  persistenterUpload
+	 * @param  report
+	 * @return
+	 */
+	ResponsePayload handleBereitsVerarbeitet(final UploadAuswertungContext uploadContext, final PersistenterUpload persistenterUpload) {
+
+		AuswertungImportReport report = new AuswertungImportReport();
+
+		List<AnonymisierteTeilnahmeAPIModel> teilnahmen = getTeilnahmen(persistenterUpload);
+
+		report.setTeilnahmen(teilnahmen);
+
+		MessagePayload messagePayload = null;
+
+		switch (persistenterUpload.getStatus()) {
+
+		case IMPORTIERT:
+			messagePayload = MessagePayload.info(applicationMessages.getString("auswertungimport.success"));
+			break;
+
+		case ABGEWIESEN:
+			if (uploadContext.getRolle() == Rolle.ADMIN) {
+
+				messagePayload = MessagePayload
+					.warn(
+						MessageFormat.format(applicationMessages.getString("auswertungsimport.bereitsImportiert.abgewiesen.admin"),
+							persistenterUpload.getUuid(), persistenterUpload.getTeilnahmenummer()));
+			} else {
+
+				messagePayload = MessagePayload
+					.warn(applicationMessages.getString("auswertungsimport.bereitsImportiert.abgewiesen.lehrer"));
+			}
+			break;
+
+		case DATENFEHLER:
+			if (uploadContext.getRolle() == Rolle.ADMIN) {
+
+				messagePayload = MessagePayload
+					.warn(
+						MessageFormat.format(applicationMessages.getString("auswertungsimport.bereitsImportiert.datenfehler.admin"),
+							persistenterUpload.getUuid(), persistenterUpload.getTeilnahmenummer()));
+			} else {
+
+				messagePayload = MessagePayload
+					.info(applicationMessages.getString("auswertungsimport.bereitsImportiert.datenfehler.lehrer"));
+			}
+			break;
+
+		case LEER:
+
+			if (uploadContext.getRolle() == Rolle.ADMIN) {
+
+				messagePayload = MessagePayload
+					.warn(
+						MessageFormat.format(applicationMessages.getString("auswertungsimport.bereitsImportiert.datenfehler.admin"),
+							persistenterUpload.getUuid(), persistenterUpload.getTeilnahmenummer()));
+			} else {
+
+				messagePayload = MessagePayload
+					.warn(MessageFormat.format(applicationMessages.getString("auswertungimport.leer.lehrer"),
+						persistenterUpload.getDateiname()));
+			}
+			break;
+
+		case EXCEPTION:
+			if (uploadContext.getRolle() == Rolle.ADMIN) {
+
+				messagePayload = MessagePayload
+					.warn(
+						MessageFormat.format(applicationMessages.getString("auswertungsimport.bereitsImportiert.exception.admin"),
+							persistenterUpload.getUuid(), persistenterUpload.getTeilnahmenummer()));
+			} else {
+
+				messagePayload = MessagePayload
+					.warn(applicationMessages.getString("auswertungsimport.bereitsImportiert.exception.lehrer"));
+			}
+
+			break;
+
+		default:
+			break;
+		}
+
+		return new ResponsePayload(messagePayload, report);
 	}
 
 	private List<AnonymisierteTeilnahmeAPIModel> getTeilnahmen(final PersistenterUpload persistenterUpload) {

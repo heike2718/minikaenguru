@@ -9,9 +9,10 @@ package de.egladil.web.mk_gateway.domain.uploads;
  */
 public enum UploadStatus {
 
+	ABGEWIESEN,
 	HOCHGELADEN,
 	IMPORTIERT,
+	DATENFEHLER,
 	LEER,
-	FEHLER;
-
+	EXCEPTION;
 }

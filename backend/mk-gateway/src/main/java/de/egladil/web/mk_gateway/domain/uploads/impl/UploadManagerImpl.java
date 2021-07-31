@@ -106,6 +106,7 @@ public class UploadManagerImpl implements UploadManager {
 		result.uploadRepository = UploadHibernateRepository.createForIntegrationTests(em);
 		result.domainEventHandler = DomainEventHandler.createForIntegrationTest(em);
 		result.scanService = ScanService.createForIntegrationTest();
+		result.auswertungImportService = AuswertungImportService.createForIntegrationTest(em);
 		return result;
 
 	}

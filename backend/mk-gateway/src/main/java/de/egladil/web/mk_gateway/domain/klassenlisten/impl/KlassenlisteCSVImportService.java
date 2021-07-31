@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderService;
@@ -105,6 +106,11 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 			return responsePayload;
 		}
 
+		if (lines.isEmpty()) {
+
+			throw new MkGatewayRuntimeException("Dieser Teil wurde noch nicht implementiert.");
+		}
+
 		KlassenlisteUeberschrift ueberschrift = new KlassenlisteUeberschrift(lines.get(0));
 
 		StringKlassenimportZeileMapper zeilenMapper = new StringKlassenimportZeileMapper(ueberschrift);
@@ -162,12 +168,12 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 			if (anzahlMitFehlern + anzahlDubletten + anzahlMitUnklarerKlassenstufe > 0) {
 
 				responsePayload = new ResponsePayload(MessagePayload.warn(msg), payloadData);
+				updateUploadstatusQuietly(uploadMetadata, UploadStatus.DATENFEHLER);
 			} else {
 
 				responsePayload = new ResponsePayload(MessagePayload.info(msg), payloadData);
+				updateUploadstatusQuietly(uploadMetadata, UploadStatus.IMPORTIERT);
 			}
-
-			updateUploadstatusQuietly(uploadMetadata, UploadStatus.IMPORTIERT);
 
 			return responsePayload;
 		} catch (PersistenceException e) {
@@ -175,7 +181,7 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 			String msg = applicationMessages.getString("klassenimport.error");
 			LOGGER.error("{}: {}", msg, e.getMessage(), e);
 
-			updateUploadstatusQuietly(uploadMetadata, UploadStatus.FEHLER);
+			updateUploadstatusQuietly(uploadMetadata, UploadStatus.EXCEPTION);
 
 			return ResponsePayload.messageOnly(MessagePayload.error(msg));
 		}

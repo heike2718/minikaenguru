@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
@@ -18,6 +19,8 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.AnonymisierteTeilnahmeAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.TeilnahmenHibernateRepository;
 
 /**
  * AnonymisierteTeilnahmenService
@@ -33,6 +36,15 @@ public class AnonymisierteTeilnahmenService {
 
 	@Inject
 	AuthorizationService authorizationService;
+
+	public static AnonymisierteTeilnahmenService createForIntegrationTest(final EntityManager em) {
+
+		AnonymisierteTeilnahmenService result = new AnonymisierteTeilnahmenService();
+		result.teilnahmenRepository = TeilnahmenHibernateRepository.createForIntegrationTest(em);
+		result.loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(em);
+		result.authorizationService = AuthorizationService.createForIntegrationTest(em);
+		return result;
+	}
 
 	public static AnonymisierteTeilnahmenService createForTest(final AuthorizationService authorizationService, final TeilnahmenRepository teilnahmenRepository, final LoesungszettelRepository loesungszettelRepository) {
 

@@ -122,6 +122,8 @@ public class AuswertungImportServiceTest {
 		void should_importiereAuswertungenReturnErrorPayload_when_wettbewerbMitJahrNichtVorhanden() {
 
 			// Arrange
+			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
+
 			when(wettbewerbRepository.loadWettbewerbe()).thenReturn(wettbewerbe);
 			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
 
@@ -169,54 +171,6 @@ public class AuswertungImportServiceTest {
 			verify(uploadRepository, never()).updateUpload(persistenterUpload);
 			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
 
-		}
-
-		@Test
-		void should_importiereAuswertungenReturnExistingTeilnahmen_when_StatusLEER() {
-
-			// Arrange
-			service.pathUploadDir = "/home/heike/upload/auswertungen-testdaten/fehlerhaft";
-
-			Pair<Integer, Integer> jahrUndAnzahl = Pair.of(JAHR_WETTBEWERB_BEENDET, Integer.valueOf(12));
-			List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = createAnonymisierteTeilnahmen(
-				Collections.singletonList(jahrUndAnzahl));
-
-			persistenterUpload.setStatus(UploadStatus.LEER);
-			persistenterUpload.setDateiname("Auswertung Blümchenschule.xslx");
-			persistenterUpload.setUuid("mit-ueberschrift-leer");
-
-			uploadContextWettbewerbRunning.setRolle(Rolle.LEHRER);
-
-			when(anonymisierteTeilnahmenService.loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID))
-				.thenReturn(anonymisierteTeilnahmen);
-
-			when(wettbewerbRepository.loadWettbewerbe()).thenReturn(wettbewerbe);
-			when(anonymisierteTeilnahmenService.loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID))
-				.thenReturn(anonymisierteTeilnahmen);
-
-			// Act
-			ResponsePayload responsePayload = service.importiereAuswertung(uploadContextWettbewerbRunning, persistenterUpload);
-
-			// Assert
-			AuswertungImportReport report = (AuswertungImportReport) responsePayload.getData();
-			List<AnonymisierteTeilnahmeAPIModel> teilnahmen = report.getTeilnahmen();
-			assertEquals(1, teilnahmen.size());
-			AnonymisierteTeilnahmeAPIModel teilnahme = teilnahmen.get(0);
-			assertEquals(12, teilnahme.anzahlKinder());
-			assertEquals(JAHR_WETTBEWERB_BEENDET.intValue(), teilnahme.identifier().jahr());
-
-			assertTrue(report.getFehlerhafteZeilen().isEmpty());
-
-			MessagePayload messagePayload = responsePayload.getMessage();
-			assertEquals("WARN", messagePayload.getLevel());
-			assertEquals(
-				"Die Datei \"Auswertung Blümchenschule.xslx\" war leider leer.",
-				messagePayload.getMessage());
-
-			verify(wettbewerbRepository).loadWettbewerbe();
-			verify(uploadRepository).updateUpload(persistenterUpload);
-			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
-			verify(loesungszettelRepository, never()).addLoesungszettel(any());
 		}
 
 		@Test
@@ -297,7 +251,7 @@ public class AuswertungImportServiceTest {
 			MessagePayload messagePayload = responsePayload.getMessage();
 			assertEquals("INFO", messagePayload.getLevel());
 			assertEquals(
-				"Die Auswertung wurde erfolgreich importiert. Vielen Dank!",
+				"Die Auswertung wurde erfolgreich hochgeladen. Sie muss noch nachbearbeitet werden. Die Statistik steht Ihnen in einigen Tagen zur Verfügung.",
 				messagePayload.getMessage());
 
 			AuswertungImportReport report = (AuswertungImportReport) responsePayload.getData();
@@ -315,16 +269,111 @@ public class AuswertungImportServiceTest {
 			assertTrue(file.exists());
 
 		}
+
+		@Test
+		void should_importiereAuswertungenNotPersistAnyLoesungszettel_when_ohneUeberschrift() {
+
+			// Arrange
+			service.pathUploadDir = "/home/heike/upload/auswertungen-testdaten/fehlerhaft";
+
+			List<Pair<Integer, Integer>> jahreUndAnzahlen = new ArrayList<>();
+			jahreUndAnzahlen.add(Pair.of(JAHR_WETTBEWERB_BEENDET, Integer.valueOf(12)));
+
+			List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = createAnonymisierteTeilnahmen(jahreUndAnzahlen);
+
+			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
+			persistenterUpload.setUuid("ohne-ueberschrift");
+			persistenterUpload.setDateiname("Auswertung Blümchenschule.xslx");
+
+			uploadContextWettbewerbRunning.setRolle(Rolle.LEHRER);
+
+			when(wettbewerbRepository.loadWettbewerbe()).thenReturn(wettbewerbe);
+			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
+			when(anonymisierteTeilnahmenService.loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID))
+				.thenReturn(anonymisierteTeilnahmen);
+
+			// Act
+			ResponsePayload responsePayload = service.importiereAuswertung(uploadContextWettbewerbRunning, persistenterUpload);
+
+			// Assert
+			MessagePayload messagePayload = responsePayload.getMessage();
+			assertEquals("INFO", messagePayload.getLevel());
+			assertEquals(
+				"Die Auswertung wurde erfolgreich hochgeladen. Sie muss noch nachbearbeitet werden. Die Statistik steht Ihnen in einigen Tagen zur Verfügung.",
+				messagePayload.getMessage());
+
+			AuswertungImportReport report = (AuswertungImportReport) responsePayload.getData();
+			List<AnonymisierteTeilnahmeAPIModel> teilnahmen = report.getTeilnahmen();
+			assertEquals(1, teilnahmen.size());
+
+			List<String> fehlermeldungen = report.getFehlerhafteZeilen();
+			assertEquals(0, fehlermeldungen.size());
+
+			verify(wettbewerbRepository).loadWettbewerbe();
+			verify(uploadRepository).updateUpload(persistenterUpload);
+			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
+			verify(loesungszettelRepository, never()).addLoesungszettel(any());
+		}
 	}
 
 	@Nested
 	class LehrerImportTests {
 
 		@Test
+		void should_importiereAuswertungenReturnExistingTeilnahmen_when_StatusLEER() {
+
+			// Arrange
+			service.pathUploadDir = "/home/heike/upload/auswertungen-testdaten/fehlerhaft";
+
+			Pair<Integer, Integer> jahrUndAnzahl = Pair.of(JAHR_WETTBEWERB_BEENDET, Integer.valueOf(12));
+			List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = createAnonymisierteTeilnahmen(
+				Collections.singletonList(jahrUndAnzahl));
+
+			persistenterUpload.setStatus(UploadStatus.LEER);
+			persistenterUpload.setDateiname("Auswertung Blümchenschule.xslx");
+			persistenterUpload.setUuid("mit-ueberschrift-leer");
+
+			uploadContextWettbewerbRunning.setRolle(Rolle.LEHRER);
+
+			when(anonymisierteTeilnahmenService.loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID))
+				.thenReturn(anonymisierteTeilnahmen);
+
+			when(anonymisierteTeilnahmenService.loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID))
+				.thenReturn(anonymisierteTeilnahmen);
+
+			// Act
+			ResponsePayload responsePayload = service.importiereAuswertung(uploadContextWettbewerbRunning, persistenterUpload);
+
+			// Assert
+			AuswertungImportReport report = (AuswertungImportReport) responsePayload.getData();
+			List<AnonymisierteTeilnahmeAPIModel> teilnahmen = report.getTeilnahmen();
+			assertEquals(1, teilnahmen.size());
+			AnonymisierteTeilnahmeAPIModel teilnahme = teilnahmen.get(0);
+			assertEquals(12, teilnahme.anzahlKinder());
+			assertEquals(JAHR_WETTBEWERB_BEENDET.intValue(), teilnahme.identifier().jahr());
+
+			assertTrue(report.getFehlerhafteZeilen().isEmpty());
+
+			MessagePayload messagePayload = responsePayload.getMessage();
+			assertEquals("WARN", messagePayload.getLevel());
+			assertEquals(
+				"Die Datei \"Auswertung Blümchenschule.xslx\" war leider leer.",
+				messagePayload.getMessage());
+
+			verify(wettbewerbRepository, never()).loadWettbewerbe();
+			verify(uploadRepository, never()).updateUpload(persistenterUpload);
+			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
+			verify(loesungszettelRepository, never()).addLoesungszettel(any());
+
+		}
+
+		@Test
 		void should_importiereAuswertungenReturnErrorPayload_when_wettbewerbBeendet() {
 
 			// Arrange
 			uploadContxtWettbewerbBeendet.setRolle(Rolle.LEHRER);
+			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
+
 			when(wettbewerbRepository.loadWettbewerbe()).thenReturn(wettbewerbe);
 			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
 
@@ -335,7 +384,7 @@ public class AuswertungImportServiceTest {
 			MessagePayload messagePayload = responsePayload.getMessage();
 			assertEquals("ERROR", messagePayload.getLevel());
 			assertEquals(
-				"Schulauswertungen können nicht mehr hochgeladen werden, da der Wettbewerb beendet ist. Bitte senden Sie Ihre Auswertungen per Mail an minikaenguru@egladil.de.",
+				"Auswertungen können nicht mehr hochgeladen werden, da der Wettbewerb beendet ist. Bitte senden Sie Ihre Auswertungen per Mail an minikaenguru@egladil.de.",
 				messagePayload.getMessage());
 
 			verify(wettbewerbRepository).loadWettbewerbe();
@@ -347,6 +396,8 @@ public class AuswertungImportServiceTest {
 
 			// Arrange
 			uploadContextOhneJahr.setRolle(Rolle.LEHRER);
+			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
+
 			when(wettbewerbRepository.loadWettbewerbe()).thenReturn(Collections.singletonList(wettbewerbe.get(0)));
 			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
 
@@ -357,7 +408,7 @@ public class AuswertungImportServiceTest {
 			MessagePayload messagePayload = responsePayload.getMessage();
 			assertEquals("ERROR", messagePayload.getLevel());
 			assertEquals(
-				"Schulauswertungen können nicht mehr hochgeladen werden, da der Wettbewerb beendet ist. Bitte senden Sie Ihre Auswertungen per Mail an minikaenguru@egladil.de.",
+				"Auswertungen können nicht mehr hochgeladen werden, da der Wettbewerb beendet ist. Bitte senden Sie Ihre Auswertungen per Mail an minikaenguru@egladil.de.",
 				messagePayload.getMessage());
 
 			verify(wettbewerbRepository).loadWettbewerbe();
@@ -455,6 +506,7 @@ public class AuswertungImportServiceTest {
 
 			// Arrange
 			uploadContextFalscheJahr.setRolle(Rolle.ADMIN);
+			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
 			when(wettbewerbRepository.loadWettbewerbe()).thenReturn(wettbewerbe);
 			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
 
@@ -615,7 +667,6 @@ public class AuswertungImportServiceTest {
 			when(anonymisierteTeilnahmenService.loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID))
 				.thenReturn(anonymisierteTeilnahmen);
 
-			when(wettbewerbRepository.loadWettbewerbe()).thenReturn(wettbewerbe);
 			when(anonymisierteTeilnahmenService.loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID))
 				.thenReturn(anonymisierteTeilnahmen);
 
@@ -635,14 +686,12 @@ public class AuswertungImportServiceTest {
 			MessagePayload messagePayload = responsePayload.getMessage();
 			assertEquals("WARN", messagePayload.getLevel());
 			assertEquals(
-				"Die Datei \"Auswertung Blümchenschule.xslx\" war leider leer. Sie gehört zur Teilnahmenummer " + SCHULKUERZEL,
+				"Auswertung leer oder fehlerhaft. Upload-ID=mit-ueberschrift-leer, Teilnahmenummer=ZUTFG654F",
 				messagePayload.getMessage());
-
-			verify(wettbewerbRepository).loadWettbewerbe();
-			verify(uploadRepository).updateUpload(persistenterUpload);
+			verify(wettbewerbRepository, never()).loadWettbewerbe();
+			verify(uploadRepository, never()).updateUpload(persistenterUpload);
 			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
 			verify(loesungszettelRepository, never()).addLoesungszettel(any());
-
 		}
 
 		@Test
@@ -679,7 +728,7 @@ public class AuswertungImportServiceTest {
 			MessagePayload messagePayload = responsePayload.getMessage();
 			assertEquals("ERROR", messagePayload.getLevel());
 			assertEquals(
-				"Die Auswertung konnte nicht importiert werden, da sie fehlerhafte Zeilen enthält. Die Datei \"Auswertung Blümchenschule.xslx\" muss korrigiert werden.",
+				"Die Datei \"Auswertung Blümchenschule.xslx\" enthält fehlerhafte Zeilen. Upload-ID=mit-ueberschrift-fehlerhaft, Teilnahmenummer=ZUTFG654F",
 				messagePayload.getMessage());
 
 			AuswertungImportReport report = (AuswertungImportReport) responsePayload.getData();
@@ -699,6 +748,51 @@ public class AuswertungImportServiceTest {
 
 			assertTrue(file.exists());
 
+		}
+
+		@Test
+		void should_importiereAuswertungenNotPersistAnyLoesungszettel_when_ohneUeberschrift() {
+
+			// Arrange
+			service.pathUploadDir = "/home/heike/upload/auswertungen-testdaten/fehlerhaft";
+
+			List<Pair<Integer, Integer>> jahreUndAnzahlen = new ArrayList<>();
+			jahreUndAnzahlen.add(Pair.of(JAHR_WETTBEWERB_BEENDET, Integer.valueOf(12)));
+
+			List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = createAnonymisierteTeilnahmen(jahreUndAnzahlen);
+
+			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
+			persistenterUpload.setUuid("ohne-ueberschrift");
+			persistenterUpload.setDateiname("Auswertung Blümchenschule.xslx");
+
+			uploadContextWettbewerbRunning.setRolle(Rolle.ADMIN);
+
+			when(wettbewerbRepository.loadWettbewerbe()).thenReturn(wettbewerbe);
+			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
+			when(anonymisierteTeilnahmenService.loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID))
+				.thenReturn(anonymisierteTeilnahmen);
+
+			// Act
+			ResponsePayload responsePayload = service.importiereAuswertung(uploadContextWettbewerbRunning, persistenterUpload);
+
+			// Assert
+			MessagePayload messagePayload = responsePayload.getMessage();
+			assertEquals("WARN", messagePayload.getLevel());
+			assertEquals(
+				"Bei der Datei \"Auswertung Blümchenschule.xslx\" fehlt die Überscrift. Upload-ID=ohne-ueberschrift, Teilnahmenummer=ZUTFG654F",
+				messagePayload.getMessage());
+
+			AuswertungImportReport report = (AuswertungImportReport) responsePayload.getData();
+			List<AnonymisierteTeilnahmeAPIModel> teilnahmen = report.getTeilnahmen();
+			assertEquals(1, teilnahmen.size());
+
+			List<String> fehlermeldungen = report.getFehlerhafteZeilen();
+			assertEquals(0, fehlermeldungen.size());
+
+			verify(wettbewerbRepository).loadWettbewerbe();
+			verify(uploadRepository).updateUpload(persistenterUpload);
+			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
+			verify(loesungszettelRepository, never()).addLoesungszettel(any());
 		}
 	}
 
