@@ -8,6 +8,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.validation.constraints.NotBlank;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -18,6 +19,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 import de.egladil.web.commons_validation.annotations.Kuerzel;
@@ -33,14 +35,14 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadManager;
 import de.egladil.web.mk_gateway.domain.uploads.UploadRequestPayload;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
+import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 
 /**
  * AdminUploadResource
  */
 @RequestScoped
 @Path("admin/uploads")
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 public class AdminUploadResource {
 
 	@Context
@@ -52,31 +54,46 @@ public class AdminUploadResource {
 	@Inject
 	AuswertungImportService klassenlisteImportService;
 
+	@GET
+	@Path("auswertung/{jahr}/{kuerzelLand}/{schulkuerzel}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
+	private Response sayExists(@PathParam(value = "jahr") final String jahr, @PathParam(
+		value = "kuerzelLand") @LandKuerzel final String kuerzelLand, @PathParam(
+			value = "schulkuerzel") @Kuerzel final String schulkuerzel, @QueryParam(
+				value = "sprache") @NotBlank final String sprache) {
+
+		return Response.ok("Mission accomblished: jahr=" + jahr + ", land=" + kuerzelLand + ", teilnahmenummer=" + schulkuerzel
+			+ ", sprache=" + sprache).build();
+	}
+
 	@POST
 	@Path("auswertung/{jahr}/{kuerzelLand}/{schulkuerzel}")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	Response uploadKlassenliste(@PathParam(value = "jahr") final Integer jahr, @PathParam(
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response uploadKlassenliste(@PathParam(value = "jahr") final Integer jahr, @PathParam(
 		value = "kuerzelLand") @LandKuerzel final String kuerzelLand, @PathParam(
 			value = "schulkuerzel") @Kuerzel final String schulkuerzel, @QueryParam(
 				value = "sprache") @NotBlank final String sprache, final MultipartFormDataInput input) {
 
 		String benutzerUuid = securityContext.getUserPrincipal().getName();
-		UploadType uploadType = UploadType.KLASSENLISTE;
+		UploadType uploadType = UploadType.AUSWERTUNG;
 
 		Sprache theSprache = Sprache.valueOf(sprache);
 
-		Rolle rolle = uploadManager.authorizeUpload(benutzerUuid, schulkuerzel, uploadType);
-
-		UploadData uploadData = MultipartUtils.getUploadData(input);
+		Pair<Rolle, Wettbewerb> rolleUndWettbewerb = uploadManager.authorizeUpload(benutzerUuid, schulkuerzel, uploadType,
+			new WettbewerbID(jahr));
 
 		UploadAuswertungContext contextObject = new UploadAuswertungContext().withKuerzelLand(kuerzelLand)
-			.withWettbewerbsjahr(jahr).withSprache(theSprache);
+			.withWettbewerb(rolleUndWettbewerb.getRight()).withSprache(theSprache).withRolle(rolleUndWettbewerb.getLeft());
+
+		UploadData uploadData = MultipartUtils.getUploadData(input);
 
 		UploadRequestPayload uploadPayload = new UploadRequestPayload().withTeilnahmenummer(schulkuerzel)
 			.withBenutzerID(new Identifier(benutzerUuid)).withUploadType(uploadType).withUploadData(uploadData)
 			.withContext(contextObject);
 
-		ResponsePayload responsePayload = uploadManager.processUpload(uploadPayload, rolle);
+		ResponsePayload responsePayload = uploadManager.processUpload(uploadPayload);
 
 		return Response.ok(responsePayload).build();
 	}

@@ -117,7 +117,7 @@ public class LoesungszettelHibernateRepositoryIT extends AbstractIntegrationTest
 		WettbewerbID wettbewerbID = new WettbewerbID(2018);
 
 		// Act
-		List<Loesungszettel> trefferliste = loesungszettelRepository.loadAll(teilnahmenummer, wettbewerbID);
+		List<Loesungszettel> trefferliste = loesungszettelRepository.loadAllWithTeilnahmenummerForWettbewerb(teilnahmenummer, wettbewerbID);
 
 		// Assert
 		assertEquals(9, trefferliste.size());

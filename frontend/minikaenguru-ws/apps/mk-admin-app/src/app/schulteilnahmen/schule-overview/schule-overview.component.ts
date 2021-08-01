@@ -14,9 +14,11 @@ export class SchuleOverviewComponent implements OnInit, OnDestroy {
 
 	schuleOverview$ = this.schulteilnahmenFacade.schuleOverview$;
 
-	statistikUrlPrefix  = environment.apiUrl + '/statistik/';
+	statistikUrlPrefix = environment.apiUrl + '/statistik/';
 
 	private schuleSubscription: Subscription;
+
+	private preserveSelectedSchule = false;
 
 
 	constructor(private router: Router, private schulteilnahmenFacade: SchulteilnahmenFacade, private veranstalterFacade: VeranstalterFacade) { }
@@ -37,7 +39,9 @@ export class SchuleOverviewComponent implements OnInit, OnDestroy {
 		if (this.schuleSubscription) {
 			this.schuleSubscription.unsubscribe();
 		}
-		this.schulteilnahmenFacade.clearSchuleSelection();
+		if (!this.preserveSelectedSchule) {
+			this.schulteilnahmenFacade.clearSchuleSelection();
+		}
 	}
 
 	gotoSelectedVeranstalter(): void {
@@ -47,5 +51,10 @@ export class SchuleOverviewComponent implements OnInit, OnDestroy {
 	gotoVeranstalterList(): void {
 		this.veranstalterFacade.clearVeranstalterSelection();
 		this.router.navigateByUrl('/veranstalter');
+	}
+
+	gotoUploadAuswertung(): void {
+		this.preserveSelectedSchule = true;
+		this.router.navigateByUrl('upload-auswertung');
 	}
 }

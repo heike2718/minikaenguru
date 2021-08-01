@@ -47,7 +47,6 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadRequestPayload;
 import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.domain.uploads.impl.UploadManagerImpl;
-import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KinderHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
@@ -102,7 +101,7 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 
 		// Act
 		EntityTransaction transaction = startTransaction();
-		ResponsePayload result = uploadManager.processUpload(uploadRequestPayload, Rolle.LEHRER);
+		ResponsePayload result = uploadManager.processUpload(uploadRequestPayload);
 		commit(transaction);
 
 		// Assert
@@ -197,7 +196,7 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 
 		// Act
 		EntityTransaction transaction = startTransaction();
-		ResponsePayload result = uploadManager.processUpload(uploadRequestPayload, Rolle.ADMIN);
+		ResponsePayload result = uploadManager.processUpload(uploadRequestPayload);
 		commit(transaction);
 
 		// Assert
@@ -253,7 +252,7 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 
 		// Act
 		EntityTransaction transaction = startTransaction();
-		ResponsePayload result = uploadManager.processUpload(uploadRequestPayload, Rolle.ADMIN);
+		ResponsePayload result = uploadManager.processUpload(uploadRequestPayload);
 		commit(transaction);
 
 		// Assert

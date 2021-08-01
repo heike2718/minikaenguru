@@ -41,7 +41,6 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbRepository;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 
@@ -61,8 +60,6 @@ public class AuswertungImportServiceTest {
 
 	private static final Integer JAHR_WETTBEWERB_RUNNING = Integer.valueOf(2021);
 
-	private static final Integer JAHR_WETTBEWERB_NICHT_EXISTENT = Integer.valueOf(2006);
-
 	private static final Sprache SPRACHE = Sprache.de;
 
 	private PersistenterUpload persistenterUpload;
@@ -76,9 +73,6 @@ public class AuswertungImportServiceTest {
 	private UploadAuswertungContext uploadContextOhneJahr;
 
 	private List<Wettbewerb> wettbewerbe = new ArrayList<>();
-
-	@Mock
-	private WettbewerbRepository wettbewerbRepository;
 
 	@Mock
 	private UploadRepository uploadRepository;
@@ -95,24 +89,20 @@ public class AuswertungImportServiceTest {
 	@BeforeEach
 	void setUp() {
 
+		wettbewerbe.add(new Wettbewerb(new WettbewerbID(JAHR_WETTBEWERB_BEENDET)).withStatus(WettbewerbStatus.BEENDET));
+		wettbewerbe.add(new Wettbewerb(new WettbewerbID(JAHR_WETTBEWERB_RUNNING)).withStatus(WettbewerbStatus.DOWNLOAD_PRIVAT));
+
 		uploadContxtWettbewerbBeendet = new UploadAuswertungContext().withKuerzelLand(KUERZEL_LAND).withSprache(SPRACHE)
-			.withWettbewerbsjahr(JAHR_WETTBEWERB_BEENDET);
+			.withWettbewerb(wettbewerbe.get(0));
 
 		uploadContextWettbewerbRunning = new UploadAuswertungContext().withKuerzelLand(KUERZEL_LAND).withSprache(SPRACHE)
-			.withWettbewerbsjahr(JAHR_WETTBEWERB_RUNNING);
-
-		uploadContextFalscheJahr = new UploadAuswertungContext().withKuerzelLand(KUERZEL_LAND).withSprache(SPRACHE)
-			.withWettbewerbsjahr(JAHR_WETTBEWERB_NICHT_EXISTENT);
-
-		uploadContextOhneJahr = new UploadAuswertungContext().withKuerzelLand(KUERZEL_LAND).withSprache(SPRACHE);
+			.withWettbewerb(wettbewerbe.get(1));
 
 		persistenterUpload = new PersistenterUpload();
 		persistenterUpload.setUuid("auswertung");
 		persistenterUpload.setBenutzerUuid(BENUTZER_UUID);
 		persistenterUpload.setTeilnahmenummer(SCHULKUERZEL);
 
-		wettbewerbe.add(new Wettbewerb(new WettbewerbID(JAHR_WETTBEWERB_BEENDET)).withStatus(WettbewerbStatus.BEENDET));
-		wettbewerbe.add(new Wettbewerb(new WettbewerbID(JAHR_WETTBEWERB_RUNNING)).withStatus(WettbewerbStatus.DOWNLOAD_PRIVAT));
 	}
 
 	@Nested
@@ -124,7 +114,6 @@ public class AuswertungImportServiceTest {
 			// Arrange
 			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
 
-			when(wettbewerbRepository.loadWettbewerbe()).thenReturn(wettbewerbe);
 			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
 
 			// Act
@@ -135,7 +124,6 @@ public class AuswertungImportServiceTest {
 			assertEquals("ERROR", messagePayload.getLevel());
 			assertEquals("2006 gab es keinen Wettbewerb", messagePayload.getMessage());
 
-			verify(wettbewerbRepository).loadWettbewerbe();
 			verify(uploadRepository).updateUpload(persistenterUpload);
 		}
 
@@ -167,7 +155,6 @@ public class AuswertungImportServiceTest {
 				"Die Auswertung wurde erfolgreich importiert. Vielen Dank!",
 				messagePayload.getMessage());
 
-			verify(wettbewerbRepository, never()).loadWettbewerbe();
 			verify(uploadRepository, never()).updateUpload(persistenterUpload);
 			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
 
@@ -188,7 +175,6 @@ public class AuswertungImportServiceTest {
 			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
 			persistenterUpload.setDateiname("Auswertung Blümchenschule.xslx");
 
-			when(wettbewerbRepository.loadWettbewerbe()).thenReturn(wettbewerbe);
 			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
 			when(anonymisierteTeilnahmenService.loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID))
 				.thenReturn(anonymisierteTeilnahmen);
@@ -210,7 +196,6 @@ public class AuswertungImportServiceTest {
 
 			assertTrue(report.getFehlerhafteZeilen().isEmpty());
 
-			verify(wettbewerbRepository).loadWettbewerbe();
 			verify(uploadRepository).updateUpload(persistenterUpload);
 			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
 			verify(loesungszettelRepository, times(24)).addLoesungszettel(any());
@@ -239,7 +224,6 @@ public class AuswertungImportServiceTest {
 
 			uploadContextWettbewerbRunning.setRolle(Rolle.LEHRER);
 
-			when(wettbewerbRepository.loadWettbewerbe()).thenReturn(wettbewerbe);
 			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
 			when(anonymisierteTeilnahmenService.loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID))
 				.thenReturn(anonymisierteTeilnahmen);
@@ -261,7 +245,6 @@ public class AuswertungImportServiceTest {
 			List<String> fehlermeldungen = report.getFehlerhafteZeilen();
 			assertEquals(0, fehlermeldungen.size());
 
-			verify(wettbewerbRepository).loadWettbewerbe();
 			verify(uploadRepository).updateUpload(persistenterUpload);
 			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
 			verify(loesungszettelRepository, never()).addLoesungszettel(any());
@@ -287,7 +270,6 @@ public class AuswertungImportServiceTest {
 
 			uploadContextWettbewerbRunning.setRolle(Rolle.LEHRER);
 
-			when(wettbewerbRepository.loadWettbewerbe()).thenReturn(wettbewerbe);
 			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
 			when(anonymisierteTeilnahmenService.loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID))
 				.thenReturn(anonymisierteTeilnahmen);
@@ -309,7 +291,6 @@ public class AuswertungImportServiceTest {
 			List<String> fehlermeldungen = report.getFehlerhafteZeilen();
 			assertEquals(0, fehlermeldungen.size());
 
-			verify(wettbewerbRepository).loadWettbewerbe();
 			verify(uploadRepository).updateUpload(persistenterUpload);
 			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
 			verify(loesungszettelRepository, never()).addLoesungszettel(any());
@@ -360,7 +341,6 @@ public class AuswertungImportServiceTest {
 				"Die Datei \"Auswertung Blümchenschule.xslx\" war leider leer.",
 				messagePayload.getMessage());
 
-			verify(wettbewerbRepository, never()).loadWettbewerbe();
 			verify(uploadRepository, never()).updateUpload(persistenterUpload);
 			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
 			verify(loesungszettelRepository, never()).addLoesungszettel(any());
@@ -374,7 +354,6 @@ public class AuswertungImportServiceTest {
 			uploadContxtWettbewerbBeendet.setRolle(Rolle.LEHRER);
 			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
 
-			when(wettbewerbRepository.loadWettbewerbe()).thenReturn(wettbewerbe);
 			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
 
 			// Act
@@ -387,7 +366,6 @@ public class AuswertungImportServiceTest {
 				"Auswertungen können nicht mehr hochgeladen werden, da der Wettbewerb beendet ist. Bitte senden Sie Ihre Auswertungen per Mail an minikaenguru@egladil.de.",
 				messagePayload.getMessage());
 
-			verify(wettbewerbRepository).loadWettbewerbe();
 			verify(uploadRepository).updateUpload(persistenterUpload);
 		}
 
@@ -398,7 +376,6 @@ public class AuswertungImportServiceTest {
 			uploadContextOhneJahr.setRolle(Rolle.LEHRER);
 			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
 
-			when(wettbewerbRepository.loadWettbewerbe()).thenReturn(Collections.singletonList(wettbewerbe.get(0)));
 			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
 
 			// Act
@@ -411,7 +388,6 @@ public class AuswertungImportServiceTest {
 				"Auswertungen können nicht mehr hochgeladen werden, da der Wettbewerb beendet ist. Bitte senden Sie Ihre Auswertungen per Mail an minikaenguru@egladil.de.",
 				messagePayload.getMessage());
 
-			verify(wettbewerbRepository).loadWettbewerbe();
 			verify(uploadRepository).updateUpload(persistenterUpload);
 		}
 
@@ -422,7 +398,6 @@ public class AuswertungImportServiceTest {
 			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
 
 			uploadContextWettbewerbRunning.setRolle(Rolle.LEHRER);
-			when(wettbewerbRepository.loadWettbewerbe()).thenReturn(wettbewerbe);
 			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
 
 			// Act
@@ -435,7 +410,6 @@ public class AuswertungImportServiceTest {
 				"Die Auswertung wurde erfolgreich importiert.",
 				messagePayload.getMessage());
 
-			verify(wettbewerbRepository).loadWettbewerbe();
 			verify(uploadRepository).updateUpload(persistenterUpload);
 
 		}
@@ -447,7 +421,6 @@ public class AuswertungImportServiceTest {
 			service.pathUploadDir = "/home/heike/upload/auswertungen-testdaten/korrekt";
 			uploadContextOhneJahr.setRolle(Rolle.LEHRER);
 
-			when(wettbewerbRepository.loadWettbewerbe()).thenReturn(wettbewerbe);
 			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
 			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
 
@@ -471,7 +444,6 @@ public class AuswertungImportServiceTest {
 				"Die Auswertung wurde erfolgreich importiert. Vielen Dank!",
 				messagePayload.getMessage());
 
-			verify(wettbewerbRepository).loadWettbewerbe();
 			verify(uploadRepository).updateUpload(persistenterUpload);
 			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
 			verify(loesungszettelRepository, times(24)).addLoesungszettel(any());
@@ -507,7 +479,6 @@ public class AuswertungImportServiceTest {
 			// Arrange
 			uploadContextFalscheJahr.setRolle(Rolle.ADMIN);
 			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
-			when(wettbewerbRepository.loadWettbewerbe()).thenReturn(wettbewerbe);
 			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
 
 			// Act
@@ -518,7 +489,6 @@ public class AuswertungImportServiceTest {
 			assertEquals("ERROR", messagePayload.getLevel());
 			assertEquals("2006 gab es keinen Wettbewerb", messagePayload.getMessage());
 
-			verify(wettbewerbRepository).loadWettbewerbe();
 			verify(uploadRepository).updateUpload(persistenterUpload);
 		}
 
@@ -528,7 +498,6 @@ public class AuswertungImportServiceTest {
 			// Arrange
 			service.pathUploadDir = "/home/heike/upload/auswertungen-testdaten/korrekt";
 			uploadContxtWettbewerbBeendet.setRolle(Rolle.ADMIN);
-			when(wettbewerbRepository.loadWettbewerbe()).thenReturn(wettbewerbe);
 			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
 			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
 
@@ -550,7 +519,6 @@ public class AuswertungImportServiceTest {
 				"Die Auswertung wurde erfolgreich importiert. Vielen Dank!",
 				messagePayload.getMessage());
 
-			verify(wettbewerbRepository).loadWettbewerbe();
 			verify(uploadRepository).updateUpload(persistenterUpload);
 			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
 			verify(loesungszettelRepository, times(24)).addLoesungszettel(any());
@@ -574,7 +542,6 @@ public class AuswertungImportServiceTest {
 
 			uploadContextOhneJahr.setRolle(Rolle.ADMIN);
 
-			when(wettbewerbRepository.loadWettbewerbe()).thenReturn(Collections.singletonList(wettbewerbe.get(0)));
 			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
 			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
 
@@ -596,7 +563,6 @@ public class AuswertungImportServiceTest {
 				"Die Auswertung wurde erfolgreich importiert. Vielen Dank!",
 				messagePayload.getMessage());
 
-			verify(wettbewerbRepository).loadWettbewerbe();
 			verify(uploadRepository).updateUpload(persistenterUpload);
 			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
 			verify(loesungszettelRepository, times(24)).addLoesungszettel(any());
@@ -642,7 +608,6 @@ public class AuswertungImportServiceTest {
 				"Die Auswertung wurde erfolgreich importiert. Vielen Dank!",
 				messagePayload.getMessage());
 
-			verify(wettbewerbRepository, never()).loadWettbewerbe();
 			verify(uploadRepository, never()).updateUpload(persistenterUpload);
 			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
 
@@ -688,7 +653,6 @@ public class AuswertungImportServiceTest {
 			assertEquals(
 				"Auswertung leer oder fehlerhaft. Upload-ID=mit-ueberschrift-leer, Teilnahmenummer=ZUTFG654F",
 				messagePayload.getMessage());
-			verify(wettbewerbRepository, never()).loadWettbewerbe();
 			verify(uploadRepository, never()).updateUpload(persistenterUpload);
 			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
 			verify(loesungszettelRepository, never()).addLoesungszettel(any());
@@ -716,7 +680,6 @@ public class AuswertungImportServiceTest {
 			persistenterUpload.setUuid("mit-ueberschrift-fehlerhaft");
 			persistenterUpload.setDateiname("Auswertung Blümchenschule.xslx");
 
-			when(wettbewerbRepository.loadWettbewerbe()).thenReturn(wettbewerbe);
 			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
 			when(anonymisierteTeilnahmenService.loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID))
 				.thenReturn(anonymisierteTeilnahmen);
@@ -741,7 +704,6 @@ public class AuswertungImportServiceTest {
 				"Fehler Zeile 4! [laenge wertungscode rrfrfrrrfff (11) und klassenstufe ZWEI sind inkompatibel] (Rohdaten=Maylin,r,3,r,3.0,f,-0.75,r,3.0,f,-0.75,r,4.0,r,4.0,r,4.0,f,-1.0,f,-1.0,f,-1.25,32.5)",
 				fehlermeldungen.get(0));
 
-			verify(wettbewerbRepository).loadWettbewerbe();
 			verify(uploadRepository).updateUpload(persistenterUpload);
 			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
 			verify(loesungszettelRepository, never()).addLoesungszettel(any());
@@ -767,7 +729,6 @@ public class AuswertungImportServiceTest {
 
 			uploadContextWettbewerbRunning.setRolle(Rolle.ADMIN);
 
-			when(wettbewerbRepository.loadWettbewerbe()).thenReturn(wettbewerbe);
 			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
 			when(anonymisierteTeilnahmenService.loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID))
 				.thenReturn(anonymisierteTeilnahmen);
@@ -789,7 +750,6 @@ public class AuswertungImportServiceTest {
 			List<String> fehlermeldungen = report.getFehlerhafteZeilen();
 			assertEquals(0, fehlermeldungen.size());
 
-			verify(wettbewerbRepository).loadWettbewerbe();
 			verify(uploadRepository).updateUpload(persistenterUpload);
 			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
 			verify(loesungszettelRepository, never()).addLoesungszettel(any());

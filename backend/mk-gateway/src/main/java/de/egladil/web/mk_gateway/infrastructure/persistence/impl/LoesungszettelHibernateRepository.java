@@ -99,12 +99,12 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 	}
 
 	@Override
-	public List<Loesungszettel> loadAll(final String teilnahmenummer, final WettbewerbID wettbewerbID) {
+	public List<Loesungszettel> loadAllWithTeilnahmenummerForWettbewerb(final String teilnahmenummer, final WettbewerbID wettbewerbID) {
 
 		List<PersistenterLoesungszettel> trefferliste = em
 			.createNamedQuery(PersistenterLoesungszettel.LOAD_ALL_WITH_TEILNAHMENUMMER_AND_JAHR, PersistenterLoesungszettel.class)
 			.setParameter("teilnahmenummer", teilnahmenummer)
-			.setParameter("wettbewerbUuid", wettbewerbID)
+			.setParameter("wettbewerbUuid", wettbewerbID.jahr().toString())
 			.getResultList();
 
 		return trefferliste.stream().map(pl -> mapFromDB(pl)).collect(Collectors.toList());

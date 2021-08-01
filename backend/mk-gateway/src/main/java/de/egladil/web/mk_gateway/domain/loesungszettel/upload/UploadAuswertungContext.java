@@ -6,6 +6,7 @@ package de.egladil.web.mk_gateway.domain.loesungszettel.upload;
 
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
+import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 
 /**
  * UploadAuswertungContext
@@ -14,11 +15,11 @@ public class UploadAuswertungContext {
 
 	private String kuerzelLand;
 
-	private Integer wettbewerbsjahr;
-
 	private Sprache sprache;
 
 	private Rolle rolle;
+
+	private Wettbewerb wettbewerb;
 
 	public String getKuerzelLand() {
 
@@ -31,14 +32,14 @@ public class UploadAuswertungContext {
 		return this;
 	}
 
-	public Integer getWettbewerbsjahr() {
+	public Wettbewerb getWettbewerb() {
 
-		return wettbewerbsjahr;
+		return wettbewerb;
 	}
 
-	public UploadAuswertungContext withWettbewerbsjahr(final Integer wettbewerbsjahr) {
+	public UploadAuswertungContext withWettbewerb(final Wettbewerb wettbewerb) {
 
-		this.wettbewerbsjahr = wettbewerbsjahr;
+		this.wettbewerb = wettbewerb;
 		return this;
 	}
 
@@ -61,6 +62,12 @@ public class UploadAuswertungContext {
 	public void setRolle(final Rolle rolle) {
 
 		this.rolle = rolle;
+	}
+
+	public UploadAuswertungContext withRolle(final Rolle rolle) {
+
+		this.rolle = rolle;
+		return this;
 	}
 
 }

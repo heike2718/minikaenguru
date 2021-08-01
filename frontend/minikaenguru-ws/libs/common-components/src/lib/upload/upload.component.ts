@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { UploadService } from './upload.service';
 import { forkJoin, Observable } from 'rxjs';
+import { UploadComponentModel } from '../common-components.model';
 
 @Component({
 	selector: 'mk-upload',
@@ -9,13 +10,12 @@ import { forkJoin, Observable } from 'rxjs';
 })
 export class UploadComponent implements OnInit {
 
+	// https://www.bezkoder.com/angular-11-node-js-file-upload/
+
 	@ViewChild('file', { static: false }) file;
 
 	@Input()
-	uploadUrl: string;
-
-	@Input()
-	mainTitle: string;
+	uploadModel: UploadComponentModel;
 
 	public files: Set<File> = new Set();
 
@@ -53,7 +53,7 @@ export class UploadComponent implements OnInit {
 
 		this.uploading = true;
 
-		this.progress = this.uploadService.upload(this.files, this.uploadUrl);
+		this.progress = this.uploadService.upload(this.files, this.uploadModel.subUrl);
 
 		console.log(this.progress);
 		// tslint:disable-next-line: forin

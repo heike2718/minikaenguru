@@ -5,11 +5,13 @@ import * as fromSchulteilnahmen from './+state/schulteilnahmen.reducer';
 import { SchuleOverviewComponent } from './schule-overview/schule-overview.component';
 import { SchulteilnahmenRoutingModule } from './schulteilnahmen-routing.module';
 import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
+import { UploadAuswertungComponent } from './upload-auswertung/upload-auswertung.component';
 
 
 @NgModule({
 	declarations: [
-		SchuleOverviewComponent
+		SchuleOverviewComponent,
+		UploadAuswertungComponent
 	],
   imports: [
 	CommonModule,

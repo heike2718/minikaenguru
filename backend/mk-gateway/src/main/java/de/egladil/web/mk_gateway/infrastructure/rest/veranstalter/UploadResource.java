@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 import de.egladil.web.commons_validation.annotations.Kuerzel;
@@ -33,6 +34,7 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadManager;
 import de.egladil.web.mk_gateway.domain.uploads.UploadRequestPayload;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
+import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 
 /**
  * UploadResource
@@ -64,18 +66,20 @@ public class UploadResource {
 
 		Sprache theSprache = Sprache.valueOf(sprache);
 
-		Rolle rolle = uploadManager.authorizeUpload(veranstalterUuid, schulkuerzel, uploadType);
+		Pair<Rolle, Wettbewerb> rolleUndWettbewerb = uploadManager.authorizeUpload(veranstalterUuid, schulkuerzel, uploadType,
+			null);
 
 		UploadData uploadData = MultipartUtils.getUploadData(input);
 
 		UploadKlassenlisteContext contextObject = new UploadKlassenlisteContext().withKuerzelLand(kuerzelLand)
-			.withNachnameAlsZusatz(nachnameAlsZusatz).withSprache(theSprache);
+			.withNachnameAlsZusatz(nachnameAlsZusatz).withSprache(theSprache).withRolle(rolleUndWettbewerb.getLeft())
+			.withWettbewerb(rolleUndWettbewerb.getRight());
 
 		UploadRequestPayload uploadPayload = new UploadRequestPayload().withTeilnahmenummer(schulkuerzel)
 			.withBenutzerID(new Identifier(veranstalterUuid)).withUploadType(uploadType).withUploadData(uploadData)
 			.withContext(contextObject);
 
-		ResponsePayload responsePayload = uploadManager.processUpload(uploadPayload, rolle);
+		ResponsePayload responsePayload = uploadManager.processUpload(uploadPayload);
 
 		return Response.ok(responsePayload).build();
 	}

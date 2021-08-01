@@ -113,6 +113,10 @@ export interface KlasseRequestData {
 	klasse: KlasseEditorModel;
 };
 
+export interface UploadComponentModel {
+	readonly subUrl: string;
+	readonly titel: string;
+};
 
 export const initialKindEditorModel: KindEditorModel = {
 	vorname: '',

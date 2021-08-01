@@ -56,7 +56,7 @@ public interface LoesungszettelRepository {
 	 *                         WettbewerbID
 	 * @return
 	 */
-	List<Loesungszettel> loadAll(String teilnahmenummer, WettbewerbID wettbewerbID);
+	List<Loesungszettel> loadAllWithTeilnahmenummerForWettbewerb(String teilnahmenummer, WettbewerbID wettbewerbID);
 
 	/**
 	 * Ermittelt die Anzahl der Lösungszettel mit dem gegebenen TeilnahmeIdentifier.

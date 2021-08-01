@@ -21,6 +21,7 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +55,8 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.domain.uploads.convert.UploadToCSVConverter;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
+import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UploadHibernateRepository;
 
@@ -112,16 +115,17 @@ public class UploadManagerImpl implements UploadManager {
 	}
 
 	@Override
-	public Rolle authorizeUpload(final String benutzerUuid, final String teilnahmenummer, final UploadType uploadType) {
+	public Pair<Rolle, Wettbewerb> authorizeUpload(final String benutzerUuid, final String teilnahmenummer, final UploadType uploadType, final WettbewerbID wettbewerbID) {
 
 		Identifier benutzerID = new Identifier(benutzerUuid);
 		Identifier teilnameID = new Identifier(teilnahmenummer);
 
 		Rolle rolle = authService.checkPermissionForTeilnahmenummerAndReturnRolle(benutzerID, teilnameID, uploadType.toString());
 
-		uploadAuthService.authorizeUpload(benutzerID, teilnahmenummer, uploadType, rolle);
+		Wettbewerb wettbewerb = uploadAuthService.authorizeUploadAndReturnWettbewerb(benutzerID, teilnahmenummer, uploadType, rolle,
+			wettbewerbID);
 
-		return rolle;
+		return Pair.of(rolle, wettbewerb);
 	}
 
 	ScanResult scanUpload(final UploadRequestPayload uploadPayload) {
@@ -200,7 +204,7 @@ public class UploadManagerImpl implements UploadManager {
 	}
 
 	@Override
-	public ResponsePayload processUpload(final UploadRequestPayload uploadPayload, final Rolle rolle) throws UploadFormatException {
+	public ResponsePayload processUpload(final UploadRequestPayload uploadPayload) throws UploadFormatException {
 
 		ScanResult scanResult = this.scanUpload(uploadPayload);
 
@@ -239,7 +243,6 @@ public class UploadManagerImpl implements UploadManager {
 
 		case AUSWERTUNG:
 			UploadAuswertungContext uploadAuswertungContext = (UploadAuswertungContext) uploadPayload.getContext();
-			uploadAuswertungContext.setRolle(rolle);
 			responsePayload = auswertungImportService.importiereAuswertung(uploadAuswertungContext, persistenterUpload);
 			break;
 

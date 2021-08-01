@@ -1,0 +1,39 @@
+<div class="mkv-container mt-1">
+	<div *ngIf="(schuleOverview$ | async) as schule">
+		<ng-container *ngIf="schule !== undefined else loading">
+			<h3>Auswertung hochladen</h3>
+			<div class="row">
+				<div class="col-sm-12 col-md-3">Schule:</div>
+				<div class="col-sm-12 col-md-9">{{schule.katalogData.name }} ({{schule.kuerzel}})</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12 col-md-3">Ort:</div>
+				<div class="col-sm-12 col-md-9">{{schule.katalogData.ort}}</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12 col-md-3">Land:</div>
+				<div class="col-sm-12 col-md-9">{{schule.katalogData.land}}
+					({{schule.katalogData.kuerzelLand}})</div>
+			</div>
+
+			<p>Hier kommt das Formular hin</p>
+
+			<p>{{uploadModel.subUrl}}</p>
+
+			<mk-upload [uploadModel]="uploadModel"></mk-upload>
+		</ng-container>
+	</div>
+	<div class="btn-group d-flex mt-2" role="group">
+		<button class="btn btn-primary w-100 ml-1" (click)="gotoSchuleOverview()" title="zur Schule"><i
+				class="fa fa-arrow-left" aria-hidden="true"></i>Schule</button>
+
+		<button class="btn btn-primary w-100 ml-1" (click)="gotoSelectedVeranstalter()"><i class="fa fa-arrow-left"
+				aria-hidden="true"></i>Veranstalter</button>
+
+	</div>
+</div>
+
+<ng-template #loading>
+	<h3>Schule</h3>
+	Lade Schule... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
+</ng-template>

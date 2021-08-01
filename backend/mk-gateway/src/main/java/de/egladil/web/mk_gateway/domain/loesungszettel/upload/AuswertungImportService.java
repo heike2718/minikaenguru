@@ -7,10 +7,8 @@ package de.egladil.web.mk_gateway.domain.loesungszettel.upload;
 import java.io.File;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -42,12 +40,9 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadRepository;
 import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbRepository;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbeDescendingComparator;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UploadHibernateRepository;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.WettbewerbHibernateRepository;
 
 /**
  * AuswertungImportService
@@ -63,9 +58,6 @@ public class AuswertungImportService {
 	String pathUploadDir;
 
 	@Inject
-	private WettbewerbRepository wettbewerbRepository;
-
-	@Inject
 	private UploadRepository uploadRepository;
 
 	@Inject
@@ -77,7 +69,6 @@ public class AuswertungImportService {
 	public static AuswertungImportService createForIntegrationTest(final EntityManager em) {
 
 		AuswertungImportService result = new AuswertungImportService();
-		result.wettbewerbRepository = WettbewerbHibernateRepository.createForIntegrationTest(em);
 		result.uploadRepository = UploadHibernateRepository.createForIntegrationTests(em);
 		result.loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(em);
 		result.anonymisierteTeilnahmenService = AnonymisierteTeilnahmenService.createForIntegrationTest(em);
@@ -97,43 +88,15 @@ public class AuswertungImportService {
 		}
 
 		AuswertungImportReport report = new AuswertungImportReport();
-		List<Wettbewerb> wettbewerbe = wettbewerbRepository.loadWettbewerbe();
 
-		Optional<Wettbewerb> optWettbewerb = null;
-
-		final Integer wettbewerbsjahr = uploadContext.getWettbewerbsjahr();
-
-		if (wettbewerbsjahr != null) {
-
-			optWettbewerb = wettbewerbe.stream().filter(w -> w.id().jahr().equals(wettbewerbsjahr)).findFirst();
-
-		} else {
-
-			Collections.sort(wettbewerbe, new WettbewerbeDescendingComparator());
-			optWettbewerb = Optional.of(wettbewerbe.get(0));
-		}
-
-		if (optWettbewerb.isEmpty()) {
-
-			LOGGER.error(
-				"Upload Auswertung zu einem nicht vorhandenen Wettbewerb abgewiesen: wettbewerbsjahr={}, benutzerUUID={}, teilnahmenummer={}",
-				uploadContext.getWettbewerbsjahr(),
-				persistenterUpload.getBenutzerUuid(), persistenterUpload.getTeilnahmenummer());
-
-			this.doUpdateTheUploadStatus(persistenterUpload, UploadStatus.ABGEWIESEN);
-
-			return ResponsePayload
-				.messageOnly(MessagePayload.error(wettbewerbsjahr + " gab es keinen Wettbewerb"));
-		}
-
-		Wettbewerb wettbewerb = optWettbewerb.get();
+		Wettbewerb wettbewerb = uploadContext.getWettbewerb();
 		Rolle rolle = uploadContext.getRolle();
 
 		if (wettbewerb.isBeendet() && Rolle.ADMIN != rolle) {
 
 			LOGGER.error(
 				"Upload Auswertung zu einem beendeten Wettbewerb durch {} abgewiesen: wettbewerbsjahr {}: benutzerUUID={}, teilnahmenummer={}",
-				rolle, uploadContext.getWettbewerbsjahr(),
+				rolle, uploadContext.getWettbewerb(),
 				persistenterUpload.getBenutzerUuid(), persistenterUpload.getTeilnahmenummer());
 
 			this.doUpdateTheUploadStatus(persistenterUpload, UploadStatus.ABGEWIESEN);
