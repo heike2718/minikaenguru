@@ -15,19 +15,19 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 public class AdminEmailsConfiguration {
 
 	@ConfigProperty(name = "emails.testempfaenger", defaultValue = "hdwinkel@egladil.de,info@egladil.de")
-	private String testempfaenger;
+	String testempfaenger;
 
 	@ConfigProperty(name = "emails.groupsiz", defaultValue = "35")
-	private String groupsize;
+	String groupsize;
 
 	@ConfigProperty(name = "emails.wartezeitMinSec", defaultValue = "45")
-	private String wartezeitMinSec;
+	String wartezeitMinSec;
 
 	@ConfigProperty(name = "emails.wartezeitMaxSec", defaultValue = "90")
-	private String wartezeitMaxSec;
+	String wartezeitMaxSec;
 
 	@ConfigProperty(name = "emails.mockup", defaultValue = "false")
-	private String mockup = "false";
+	String mockup = "false";
 
 	public static AdminEmailsConfiguration createForTest(final String testempfaenger, final int groupsize) {
 

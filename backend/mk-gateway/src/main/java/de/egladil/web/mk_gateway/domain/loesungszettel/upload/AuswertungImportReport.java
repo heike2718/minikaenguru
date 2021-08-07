@@ -17,20 +17,10 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.api.AnonymisierteTeilnahmeAPI
 public class AuswertungImportReport {
 
 	@JsonProperty
-	private List<AnonymisierteTeilnahmeAPIModel> teilnahmen = new ArrayList<>();
+	AnonymisierteTeilnahmeAPIModel teilnahme;
 
 	@JsonProperty
 	private List<String> fehlerhafteZeilen = new ArrayList<>();
-
-	public List<AnonymisierteTeilnahmeAPIModel> getTeilnahmen() {
-
-		return teilnahmen;
-	}
-
-	public void setTeilnahmen(final List<AnonymisierteTeilnahmeAPIModel> teilnahmen) {
-
-		this.teilnahmen = teilnahmen;
-	}
 
 	public List<String> getFehlerhafteZeilen() {
 
@@ -40,6 +30,16 @@ public class AuswertungImportReport {
 	public void setFehlerhafteZeilen(final List<String> fehlerhafteZeilen) {
 
 		this.fehlerhafteZeilen = fehlerhafteZeilen;
+	}
+
+	public AnonymisierteTeilnahmeAPIModel getTeilnahme() {
+
+		return teilnahme;
+	}
+
+	public void setTeilnahme(final AnonymisierteTeilnahmeAPIModel teilnahme) {
+
+		this.teilnahme = teilnahme;
 	}
 
 }

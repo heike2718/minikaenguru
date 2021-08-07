@@ -9,6 +9,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -40,6 +41,7 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadRepository;
 import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UploadHibernateRepository;
@@ -58,7 +60,7 @@ public class AuswertungImportService {
 	String pathUploadDir;
 
 	@Inject
-	private UploadRepository uploadRepository;
+	UploadRepository uploadRepository;
 
 	@Inject
 	LoesungszettelRepository loesungszettelRepository;
@@ -136,8 +138,12 @@ public class AuswertungImportService {
 
 			}
 
-			List<AnonymisierteTeilnahmeAPIModel> teilnahmen = getTeilnahmen(persistenterUpload);
-			report.setTeilnahmen(teilnahmen);
+			Optional<AnonymisierteTeilnahmeAPIModel> optTeilnahme = getTeilnahme(persistenterUpload, wettbewerb.id());
+
+			if (optTeilnahme.isPresent()) {
+
+				report.setTeilnahme(optTeilnahme.get());
+			}
 
 			this.updateUploadstatusQuietly(persistenterUpload, UploadStatus.DATENFEHLER);
 
@@ -162,8 +168,12 @@ public class AuswertungImportService {
 						persistenterUpload.getDateiname()));
 			}
 
-			List<AnonymisierteTeilnahmeAPIModel> teilnahmen = getTeilnahmen(persistenterUpload);
-			report.setTeilnahmen(teilnahmen);
+			Optional<AnonymisierteTeilnahmeAPIModel> optTeilnahme = getTeilnahme(persistenterUpload, wettbewerb.id());
+
+			if (optTeilnahme.isPresent()) {
+
+				report.setTeilnahme(optTeilnahme.get());
+			}
 
 			this.updateUploadstatusQuietly(persistenterUpload, UploadStatus.LEER);
 
@@ -221,8 +231,12 @@ public class AuswertungImportService {
 				.collect(Collectors.toList());
 			MkGatewayFileUtils.writeLines(fehlermeldungen, pathFehlerreport);
 
-			List<AnonymisierteTeilnahmeAPIModel> teilnahmen = getTeilnahmen(persistenterUpload);
-			report.setTeilnahmen(teilnahmen);
+			Optional<AnonymisierteTeilnahmeAPIModel> optTeilnahme = getTeilnahme(persistenterUpload, wettbewerb.id());
+
+			if (optTeilnahme.isPresent()) {
+
+				report.setTeilnahme(optTeilnahme.get());
+			}
 
 			MessagePayload messagePayload = null;
 
@@ -251,8 +265,12 @@ public class AuswertungImportService {
 			loesungszettelSpeichern(neueLoesungszettel);
 			this.doUpdateTheUploadStatus(persistenterUpload, UploadStatus.IMPORTIERT);
 
-			List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = getTeilnahmen(persistenterUpload);
-			report.setTeilnahmen(anonymisierteTeilnahmen);
+			Optional<AnonymisierteTeilnahmeAPIModel> optTeilnahme = getTeilnahme(persistenterUpload, wettbewerb.id());
+
+			if (optTeilnahme.isPresent()) {
+
+				report.setTeilnahme(optTeilnahme.get());
+			}
 
 			ResponsePayload responsePayload = new ResponsePayload(
 				MessagePayload.info(applicationMessages.getString("auswertungimport.success")), report);
@@ -279,10 +297,6 @@ public class AuswertungImportService {
 	ResponsePayload handleBereitsVerarbeitet(final UploadAuswertungContext uploadContext, final PersistenterUpload persistenterUpload) {
 
 		AuswertungImportReport report = new AuswertungImportReport();
-
-		List<AnonymisierteTeilnahmeAPIModel> teilnahmen = getTeilnahmen(persistenterUpload);
-
-		report.setTeilnahmen(teilnahmen);
 
 		MessagePayload messagePayload = null;
 
@@ -358,10 +372,15 @@ public class AuswertungImportService {
 		return new ResponsePayload(messagePayload, report);
 	}
 
-	private List<AnonymisierteTeilnahmeAPIModel> getTeilnahmen(final PersistenterUpload persistenterUpload) {
+	private Optional<AnonymisierteTeilnahmeAPIModel> getTeilnahme(final PersistenterUpload persistenterUpload, final WettbewerbID wettbewerbID) {
 
-		return anonymisierteTeilnahmenService.loadAnonymisierteTeilnahmen(persistenterUpload.getTeilnahmenummer(),
+		List<AnonymisierteTeilnahmeAPIModel> teilnahmen = anonymisierteTeilnahmenService.loadAnonymisierteTeilnahmen(
+			persistenterUpload.getTeilnahmenummer(),
 			persistenterUpload.getBenutzerUuid());
+
+		Optional<AnonymisierteTeilnahmeAPIModel> optTeilnahme = teilnahmen.stream()
+			.filter(t -> wettbewerbID.jahr().equals(Integer.valueOf(t.identifier().jahr()))).findFirst();
+		return optTeilnahme;
 	}
 
 	/**

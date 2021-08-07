@@ -17,6 +17,12 @@ public class AnonymisierteTeilnahmeAPIModel {
 	@JsonProperty
 	private int anzahlKinder;
 
+	@JsonProperty
+	private int anzahlLoesungszettelOnline;
+
+	@JsonProperty
+	private int anzahlLoesungszettelUpload;
+
 	AnonymisierteTeilnahmeAPIModel() {
 
 	}
@@ -41,6 +47,28 @@ public class AnonymisierteTeilnahmeAPIModel {
 	public AnonymisierteTeilnahmeAPIModel withAnzahlKinder(final int anzahlKinder) {
 
 		this.anzahlKinder = anzahlKinder;
+		return this;
+	}
+
+	public int getAnzahlLoesungszettelOnline() {
+
+		return anzahlLoesungszettelOnline;
+	}
+
+	public AnonymisierteTeilnahmeAPIModel withAnzahlLoesungszettelOnline(final int anzahlLoesungszettelOnline) {
+
+		this.anzahlLoesungszettelOnline = anzahlLoesungszettelOnline;
+		return this;
+	}
+
+	public int getAnzahlLoesungszettelUpload() {
+
+		return anzahlLoesungszettelUpload;
+	}
+
+	public AnonymisierteTeilnahmeAPIModel withAnzahlLoesungszettelUpload(final int anzahlLoesungszettelUpload) {
+
+		this.anzahlLoesungszettelUpload = anzahlLoesungszettelUpload;
 		return this;
 	}
 }

@@ -5,7 +5,6 @@ export type Duplikatkontext = 'KIND' | 'KLASSE';
 export type ZulaessigeEingabe = 'A' | 'B' | 'C' | 'D' | 'E' | 'N';
 export type ConcurrentModificationType = 'DETETED' | 'INSERTED' | 'UPDATED';
 
-
 export interface TeilnahmeIdentifier {
 	readonly jahr: number;
 	readonly teilnahmenummer: string;
@@ -20,6 +19,8 @@ export interface TeilnahmeIdentifierAktuellerWettbewerb {
 export interface Teilnahme {
 	readonly identifier: TeilnahmeIdentifier;
 	readonly anzahlKinder: number;
+	readonly anzahlLoesungszettelOnline: number;
+	readonly anzahlLoesungszettelUpload: number;
 };
 
 export interface Klassenstufe {

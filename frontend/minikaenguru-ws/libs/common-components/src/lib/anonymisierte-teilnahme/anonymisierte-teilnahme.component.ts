@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { Teilnahme } from '../common-components.model';
 import { DownloadButtonModel } from '../download/download.model';
 import { DownloadFacade } from '../download/download.facade';
@@ -16,6 +16,12 @@ export class AnonymisierteTeilnahmeComponent implements OnInit {
 
 	@Input()
 	statistikUrlPrefix: string;
+
+	@Input()
+	showUploadButton: boolean;
+
+	@Output()
+	uploadButtonClicked: EventEmitter<Teilnahme> = new EventEmitter<Teilnahme>();
 
 	statistikBtnModel: DownloadButtonModel;
 
@@ -46,4 +52,7 @@ export class AnonymisierteTeilnahmeComponent implements OnInit {
 		}
 	}
 
+	onUploadClicked(): void {
+		this.uploadButtonClicked.emit(this.teilnahme);
+	}
 }

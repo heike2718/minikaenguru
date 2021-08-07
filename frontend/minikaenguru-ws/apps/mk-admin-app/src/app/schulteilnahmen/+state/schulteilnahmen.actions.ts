@@ -1,5 +1,7 @@
 import { createAction, props } from '@ngrx/store';
-import { SchuleAdminOverview } from '../schulteilnahmen.model';
+import { SchuleAdminOverview, AuswertungImportReport } from '../schulteilnahmen.model';
+import { Teilnahme } from '@minikaenguru-ws/common-components';
+import { Message } from '@minikaenguru-ws/common-messages';
 
 
 
@@ -16,6 +18,19 @@ export const schuleOverviewLoaded = createAction(
 	props<{schuleAdminOverview: SchuleAdminOverview}>()
 );
 
+export const anonymisierteTeilnahmeSelected = createAction(
+	'[SchulteilnahmenFacade] selectTeilnahme',
+	props<{teilnahme: Teilnahme}>()
+);
+
+export const auswertungImportert = createAction(
+	'[SchulteilnahmenFacade] auswertungImportiert',
+	props<{report: AuswertungImportReport}>()
+);
+
+export const dateiAusgewaehlt = createAction(
+	'[SchulteilnahmeFacade] dateiAusgewaehlt'
+);
 
 export const resetSchulteilnahmen = createAction(
 	'[NavbarComponent] - schulteilnahmen login/logout'

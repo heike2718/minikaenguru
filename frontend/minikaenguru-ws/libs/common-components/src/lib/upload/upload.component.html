@@ -4,22 +4,22 @@
 	<div class="row">
 
 		<div class="col-12">
-			<input type="file" #file style="display: none" (change)="onFilesAdded()" multiple />
+			<input type="file" #file style="display: none" (change)="onFileAdded()" />
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-12">
-			<button [disabled]="uploading" class="btn btn-primary" (click)="addFiles()">
+			<button [disabled]="uploading" class="btn btn-outline-dark" (click)="addFiles()">
 				Datei auswählen
 			</button>
 		</div>
 
-		<div class="col-12" *ngFor="let file of files">
-			<h4>{{file.name}}</h4>
+		<div class="col-12" *ngIf="selectedFile">
+			<h4>{{selectedFile.name}}</h4>
 		</div>
 		<div class="col-12">
-			<div *ngIf="!uploading && files.size > 0">
-				<button [disabled]="!uploading && !canSubmit" (click)="submitUpload()">hochladen</button>
+			<div *ngIf="selectedFile">
+				<button class="btn btn-outline-primary" [disabled]="!uploading && !canSubmit" (click)="submitUpload()">hochladen</button>
 			</div>
 		</div>
 	</div>

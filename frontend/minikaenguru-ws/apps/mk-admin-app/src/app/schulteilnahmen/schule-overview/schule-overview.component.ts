@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { SchulteilnahmenFacade } from '../schulteilnahmen.facade';
 import { VeranstalterFacade } from '../../veranstalter/veranstalter.facade';
+import { Teilnahme } from '@minikaenguru-ws/common-components';
 
 @Component({
 	selector: 'mka-schule-overview',
@@ -15,6 +16,8 @@ export class SchuleOverviewComponent implements OnInit, OnDestroy {
 	schuleOverview$ = this.schulteilnahmenFacade.schuleOverview$;
 
 	statistikUrlPrefix = environment.apiUrl + '/statistik/';
+
+	message: string;
 
 	private schuleSubscription: Subscription;
 
@@ -42,6 +45,12 @@ export class SchuleOverviewComponent implements OnInit, OnDestroy {
 		if (!this.preserveSelectedSchule) {
 			this.schulteilnahmenFacade.clearSchuleSelection();
 		}
+	}
+
+	onUploadButtonClicked(event: Teilnahme | undefined): void {
+		this.preserveSelectedSchule = true;
+		this.schulteilnahmenFacade.selectTeilnahme(event);
+		this.router.navigateByUrl('/upload-auswertung');
 	}
 
 	gotoSelectedVeranstalter(): void {

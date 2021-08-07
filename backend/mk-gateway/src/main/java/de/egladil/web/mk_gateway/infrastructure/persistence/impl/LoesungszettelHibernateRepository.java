@@ -5,6 +5,7 @@
 package de.egladil.web.mk_gateway.infrastructure.persistence.impl;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -13,6 +14,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +24,7 @@ import de.egladil.web.mk_gateway.domain.error.EntityConcurrentlyModifiedExceptio
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRohdaten;
+import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
@@ -60,6 +63,49 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 		int anzahl = trefferliste.get(0).intValue();
 
 		return anzahl;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Pair<Auswertungsquelle, Integer>> getAuswertungsquellenMitAnzahl(final TeilnahmeIdentifier teilnahmeIdentifier) {
+
+		String stmt = "select QUELLE, count(*) from LOESUNGSZETTEL where TEILNAHMENUMMER = :teilnahmenummer and WETTBEWERB_UUID = :wettbewerbUuid and TEILNAHMEART = :teilnahmeart group by QUELLE";
+
+		List<Object[]> trefferliste = em.createNativeQuery(stmt)
+			.setParameter("teilnahmenummer", teilnahmeIdentifier.teilnahmenummer())
+			.setParameter("wettbewerbUuid", teilnahmeIdentifier.wettbewerbID())
+			.setParameter("teilnahmeart", teilnahmeIdentifier.teilnahmeart().toString()).getResultList();
+
+		List<Pair<Auswertungsquelle, Integer>> result = mapQuellenWithAnzahl(trefferliste);
+		return result;
+	}
+
+	@Override
+	public List<Pair<Auswertungsquelle, Integer>> getAuswertungsquelleMitAnzahl(final WettbewerbID wettbewerbID) {
+
+		String stmt = "select QUELLE, count(*) from LOESUNGSZETTEL where WETTBEWERB_UUID = :wettbewerbUuid group by QUELLE";
+
+		@SuppressWarnings("unchecked")
+		List<Object[]> trefferliste = em.createNativeQuery(stmt)
+			.setParameter("wettbewerbUuid", wettbewerbID.jahr().toString()).getResultList();
+
+		List<Pair<Auswertungsquelle, Integer>> result = mapQuellenWithAnzahl(trefferliste);
+		return result;
+	}
+
+	private List<Pair<Auswertungsquelle, Integer>> mapQuellenWithAnzahl(final List<Object[]> trefferliste) {
+
+		List<Pair<Auswertungsquelle, Integer>> result = new ArrayList<>();
+
+		for (Object[] obj : trefferliste) {
+
+			Auswertungsquelle auswertungsquelle = Auswertungsquelle.valueOf((String) obj[0]);
+			BigInteger bi = (BigInteger) obj[1];
+
+			result.add(Pair.of(auswertungsquelle, bi.intValue()));
+		}
+
+		return result;
 	}
 
 	@Override

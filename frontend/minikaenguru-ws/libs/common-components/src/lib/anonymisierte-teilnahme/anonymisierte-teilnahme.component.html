@@ -3,10 +3,17 @@
 		<div class="card-title">Teilnahme {{teilnahme.identifier.jahr}}</div>
 		<div class="card-text">
 			<div class="row">
-				<div class="card-subtitle text-muted col-sm-12 col-md-9">Anzahl Kinder: {{teilnahme.anzahlKinder}}
+				<div class="card-subtitle text-muted col-sm-12 col-md-12">Anzahl Kinder: {{teilnahme.anzahlKinder}}
+				</div>
+			</div>
+			<div class="btn-group d-flex mt-2" role="group">
+
+				<div *ngIf="showUploadButton" class="col-sm-12 col-md-6 w-100 ml-1">
+					<button class="btn btn-outline-dark" title="Auswertung hochladen" (click)="onUploadClicked()"><i
+							class="fa fa-upload" aria-hidden="true"></i>Auswertung hochladen</button>
 				</div>
 
-				<div *ngIf="showDownloadButton" class="col-sm-12 col-md-3">
+				<div *ngIf="showDownloadButton" class="col-sm-12 col-md-6 w-100 ml-1">
 					<mk-download-button [model]="statistikBtnModel">
 					</mk-download-button>
 				</div>

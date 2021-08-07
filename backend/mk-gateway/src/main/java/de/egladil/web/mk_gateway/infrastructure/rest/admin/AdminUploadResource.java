@@ -71,7 +71,7 @@ public class AdminUploadResource {
 	@Path("auswertung/{jahr}/{kuerzelLand}/{schulkuerzel}")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response uploadKlassenliste(@PathParam(value = "jahr") final Integer jahr, @PathParam(
+	public Response uploadAuswertung(@PathParam(value = "jahr") final Integer jahr, @PathParam(
 		value = "kuerzelLand") @LandKuerzel final String kuerzelLand, @PathParam(
 			value = "schulkuerzel") @Kuerzel final String schulkuerzel, @QueryParam(
 				value = "sprache") @NotBlank final String sprache, final MultipartFormDataInput input) {

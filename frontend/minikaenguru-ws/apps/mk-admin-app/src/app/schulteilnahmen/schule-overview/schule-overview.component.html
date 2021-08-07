@@ -17,10 +17,6 @@
 							<div class="col-sm-12 col-md-9">{{schule.katalogData.land}}
 								({{schule.katalogData.kuerzelLand}})</div>
 						</div>
-						<div class="row">
-							<button class="btn btn-outline-dark w-50 ml-1" (click)="gotoUploadAuswertung()"><i class="fa fa-upload"
-				aria-hidden="true"></i>Auswertung hochladen</button>
-						</div>
 					</div>
 				</div>
 			</div>
@@ -67,7 +63,7 @@
 				<div class="m-12 mt-2 alert-info"><strong class="ml-2">anonymisierte Teilnahmen:</strong></div>
 
 				<div *ngFor="let teilnahme of schule.schulteilnahmen">
-					<mk-anonymisierte-teilnahme [teilnahme]="teilnahme" [statistikUrlPrefix]="statistikUrlPrefix"></mk-anonymisierte-teilnahme>
+					<mk-anonymisierte-teilnahme [teilnahme]="teilnahme" [statistikUrlPrefix]="statistikUrlPrefix" [showUploadButton]="teilnahme.anzahlLoesungszettelOnline===0" (uploadButtonClicked)="onUploadButtonClicked($event)"></mk-anonymisierte-teilnahme>
 				</div>
 			</ng-container>
 		</ng-container>

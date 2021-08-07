@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.loesungszettel.upload;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -68,10 +69,6 @@ public class AuswertungImportServiceTest {
 
 	private UploadAuswertungContext uploadContextWettbewerbRunning;
 
-	private UploadAuswertungContext uploadContextFalscheJahr;
-
-	private UploadAuswertungContext uploadContextOhneJahr;
-
 	private List<Wettbewerb> wettbewerbe = new ArrayList<>();
 
 	@Mock
@@ -109,25 +106,6 @@ public class AuswertungImportServiceTest {
 	class ImportTests {
 
 		@Test
-		void should_importiereAuswertungenReturnErrorPayload_when_wettbewerbMitJahrNichtVorhanden() {
-
-			// Arrange
-			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
-
-			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
-
-			// Act
-			ResponsePayload responsePayload = service.importiereAuswertung(uploadContextFalscheJahr, persistenterUpload);
-
-			// Assert
-			MessagePayload messagePayload = responsePayload.getMessage();
-			assertEquals("ERROR", messagePayload.getLevel());
-			assertEquals("2006 gab es keinen Wettbewerb", messagePayload.getMessage());
-
-			verify(uploadRepository).updateUpload(persistenterUpload);
-		}
-
-		@Test
 		void should_importiereAuswertungenReturnExistingTeilnahmen_when_StatusIMPORTIERT() {
 
 			// Arrange
@@ -144,9 +122,8 @@ public class AuswertungImportServiceTest {
 
 			// Assert
 			AuswertungImportReport report = (AuswertungImportReport) responsePayload.getData();
-			List<AnonymisierteTeilnahmeAPIModel> teilnahmen = report.getTeilnahmen();
-			assertEquals(1, teilnahmen.size());
-			AnonymisierteTeilnahmeAPIModel teilnahme = teilnahmen.get(0);
+			AnonymisierteTeilnahmeAPIModel teilnahme = report.getTeilnahme();
+			assertNotNull(teilnahme);
 			assertEquals(13, teilnahme.anzahlKinder());
 
 			MessagePayload messagePayload = responsePayload.getMessage();
@@ -185,8 +162,8 @@ public class AuswertungImportServiceTest {
 
 			// Assert
 			AuswertungImportReport report = (AuswertungImportReport) responsePayload.getData();
-			List<AnonymisierteTeilnahmeAPIModel> teilnahmen = report.getTeilnahmen();
-			assertEquals(2, teilnahmen.size());
+			AnonymisierteTeilnahmeAPIModel teilnahme = report.getTeilnahme();
+			assertNotNull(teilnahme);
 
 			MessagePayload messagePayload = responsePayload.getMessage();
 			assertEquals("INFO", messagePayload.getLevel());
@@ -239,8 +216,8 @@ public class AuswertungImportServiceTest {
 				messagePayload.getMessage());
 
 			AuswertungImportReport report = (AuswertungImportReport) responsePayload.getData();
-			List<AnonymisierteTeilnahmeAPIModel> teilnahmen = report.getTeilnahmen();
-			assertEquals(1, teilnahmen.size());
+			AnonymisierteTeilnahmeAPIModel teilnahme = report.getTeilnahme();
+			assertNotNull(teilnahme);
 
 			List<String> fehlermeldungen = report.getFehlerhafteZeilen();
 			assertEquals(0, fehlermeldungen.size());
@@ -285,8 +262,8 @@ public class AuswertungImportServiceTest {
 				messagePayload.getMessage());
 
 			AuswertungImportReport report = (AuswertungImportReport) responsePayload.getData();
-			List<AnonymisierteTeilnahmeAPIModel> teilnahmen = report.getTeilnahmen();
-			assertEquals(1, teilnahmen.size());
+			AnonymisierteTeilnahmeAPIModel teilnahme = report.getTeilnahme();
+			assertNotNull(teilnahme);
 
 			List<String> fehlermeldungen = report.getFehlerhafteZeilen();
 			assertEquals(0, fehlermeldungen.size());
@@ -327,9 +304,8 @@ public class AuswertungImportServiceTest {
 
 			// Assert
 			AuswertungImportReport report = (AuswertungImportReport) responsePayload.getData();
-			List<AnonymisierteTeilnahmeAPIModel> teilnahmen = report.getTeilnahmen();
-			assertEquals(1, teilnahmen.size());
-			AnonymisierteTeilnahmeAPIModel teilnahme = teilnahmen.get(0);
+			AnonymisierteTeilnahmeAPIModel teilnahme = report.getTeilnahme();
+			assertNotNull(teilnahme);
 			assertEquals(12, teilnahme.anzahlKinder());
 			assertEquals(JAHR_WETTBEWERB_BEENDET.intValue(), teilnahme.identifier().jahr());
 
@@ -369,28 +345,6 @@ public class AuswertungImportServiceTest {
 			verify(uploadRepository).updateUpload(persistenterUpload);
 		}
 
-		@Test
-		void should_importiereAuswertungenReturnErrorPayload_when_wettbewrbsjahrNullAndAktuellerWettbewerbBeendet() {
-
-			// Arrange
-			uploadContextOhneJahr.setRolle(Rolle.LEHRER);
-			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
-
-			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
-
-			// Act
-			ResponsePayload responsePayload = service.importiereAuswertung(uploadContextOhneJahr, persistenterUpload);
-
-			// Assert
-			MessagePayload messagePayload = responsePayload.getMessage();
-			assertEquals("ERROR", messagePayload.getLevel());
-			assertEquals(
-				"Auswertungen können nicht mehr hochgeladen werden, da der Wettbewerb beendet ist. Bitte senden Sie Ihre Auswertungen per Mail an minikaenguru@egladil.de.",
-				messagePayload.getMessage());
-
-			verify(uploadRepository).updateUpload(persistenterUpload);
-		}
-
 		// @Test
 		void should_importiereAuswertungWork_when_wettbewebRunning() {
 
@@ -413,84 +367,10 @@ public class AuswertungImportServiceTest {
 			verify(uploadRepository).updateUpload(persistenterUpload);
 
 		}
-
-		@Test
-		void should_importiereAuswertungenWork_when_WettbewerbsjahrNullAndAktuellerWettbewerbRunningUndStatusHOCHGELADEN() {
-
-			// Arrange
-			service.pathUploadDir = "/home/heike/upload/auswertungen-testdaten/korrekt";
-			uploadContextOhneJahr.setRolle(Rolle.LEHRER);
-
-			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
-			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
-
-			List<Pair<Integer, Integer>> jahreUndAnzahl = new ArrayList<>();
-			jahreUndAnzahl.add(Pair.of(JAHR_WETTBEWERB_BEENDET, 13));
-			jahreUndAnzahl.add(Pair.of(JAHR_WETTBEWERB_RUNNING, 12));
-
-			List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = createAnonymisierteTeilnahmen(jahreUndAnzahl);
-			when(anonymisierteTeilnahmenService.loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID))
-				.thenReturn(anonymisierteTeilnahmen);
-
-			when(loesungszettelRepository.addLoesungszettel(any())).thenReturn(new Loesungszettel());
-
-			// Act
-			ResponsePayload responsePayload = service.importiereAuswertung(uploadContextOhneJahr, persistenterUpload);
-
-			// Assert
-			MessagePayload messagePayload = responsePayload.getMessage();
-			assertEquals("INFO", messagePayload.getLevel());
-			assertEquals(
-				"Die Auswertung wurde erfolgreich importiert. Vielen Dank!",
-				messagePayload.getMessage());
-
-			verify(uploadRepository).updateUpload(persistenterUpload);
-			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
-			verify(loesungszettelRepository, times(24)).addLoesungszettel(any());
-
-			AuswertungImportReport report = (AuswertungImportReport) responsePayload.getData();
-			List<AnonymisierteTeilnahmeAPIModel> teilnahmen = report.getTeilnahmen();
-			assertEquals(2, teilnahmen.size());
-
-			{
-
-				AnonymisierteTeilnahmeAPIModel teilnahme = teilnahmen.get(0);
-				assertEquals(JAHR_WETTBEWERB_BEENDET.intValue(), teilnahme.identifier().jahr());
-				assertEquals(13, teilnahme.anzahlKinder());
-			}
-
-			{
-
-				AnonymisierteTeilnahmeAPIModel teilnahme = teilnahmen.get(1);
-				assertEquals(JAHR_WETTBEWERB_RUNNING.intValue(), teilnahme.identifier().jahr());
-				assertEquals(12, teilnahme.anzahlKinder());
-			}
-
-			assertTrue(report.getFehlerhafteZeilen().isEmpty());
-		}
 	}
 
 	@Nested
 	class AdminImportTests {
-
-		@Test
-		void should_importiereAuswertungenReturnErrorPayload_when_wettbewerbMitJahrNichtVorhanden() {
-
-			// Arrange
-			uploadContextFalscheJahr.setRolle(Rolle.ADMIN);
-			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
-			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
-
-			// Act
-			ResponsePayload responsePayload = service.importiereAuswertung(uploadContextFalscheJahr, persistenterUpload);
-
-			// Assert
-			MessagePayload messagePayload = responsePayload.getMessage();
-			assertEquals("ERROR", messagePayload.getLevel());
-			assertEquals("2006 gab es keinen Wettbewerb", messagePayload.getMessage());
-
-			verify(uploadRepository).updateUpload(persistenterUpload);
-		}
 
 		@Test
 		void should_importiereAuswertungenWork_when_wettbewerbBeendetUndStatusHOCHGELADEN() {
@@ -524,54 +404,8 @@ public class AuswertungImportServiceTest {
 			verify(loesungszettelRepository, times(24)).addLoesungszettel(any());
 
 			AuswertungImportReport report = (AuswertungImportReport) responsePayload.getData();
-			List<AnonymisierteTeilnahmeAPIModel> teilnahmen = report.getTeilnahmen();
-			assertEquals(1, teilnahmen.size());
-
-			AnonymisierteTeilnahmeAPIModel teilnahme = teilnahmen.get(0);
-			assertEquals(JAHR_WETTBEWERB_BEENDET.intValue(), teilnahme.identifier().jahr());
-			assertEquals(13, teilnahme.anzahlKinder());
-
-			assertTrue(report.getFehlerhafteZeilen().isEmpty());
-		}
-
-		@Test
-		void should_importiereAuswertungenWork_when_WettbewerbsjahrNullWettbewerbBeendetUndStatusHOCHGELADEN() {
-
-			// Arrange
-			service.pathUploadDir = "/home/heike/upload/auswertungen-testdaten/korrekt";
-
-			uploadContextOhneJahr.setRolle(Rolle.ADMIN);
-
-			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
-			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
-
-			Pair<Integer, Integer> jahrUndAnzahl = Pair.of(JAHR_WETTBEWERB_BEENDET, 13);
-			List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = createAnonymisierteTeilnahmen(
-				Collections.singletonList(jahrUndAnzahl));
-			when(anonymisierteTeilnahmenService.loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID))
-				.thenReturn(anonymisierteTeilnahmen);
-
-			when(loesungszettelRepository.addLoesungszettel(any())).thenReturn(new Loesungszettel());
-
-			// Act
-			ResponsePayload responsePayload = service.importiereAuswertung(uploadContextOhneJahr, persistenterUpload);
-
-			// Assert
-			MessagePayload messagePayload = responsePayload.getMessage();
-			assertEquals("INFO", messagePayload.getLevel());
-			assertEquals(
-				"Die Auswertung wurde erfolgreich importiert. Vielen Dank!",
-				messagePayload.getMessage());
-
-			verify(uploadRepository).updateUpload(persistenterUpload);
-			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
-			verify(loesungszettelRepository, times(24)).addLoesungszettel(any());
-
-			AuswertungImportReport report = (AuswertungImportReport) responsePayload.getData();
-			List<AnonymisierteTeilnahmeAPIModel> teilnahmen = report.getTeilnahmen();
-			assertEquals(1, teilnahmen.size());
-
-			AnonymisierteTeilnahmeAPIModel teilnahme = teilnahmen.get(0);
+			AnonymisierteTeilnahmeAPIModel teilnahme = report.getTeilnahme();
+			assertNotNull(teilnahme);
 			assertEquals(JAHR_WETTBEWERB_BEENDET.intValue(), teilnahme.identifier().jahr());
 			assertEquals(13, teilnahme.anzahlKinder());
 
@@ -597,9 +431,8 @@ public class AuswertungImportServiceTest {
 
 			// Assert
 			AuswertungImportReport report = (AuswertungImportReport) responsePayload.getData();
-			List<AnonymisierteTeilnahmeAPIModel> teilnahmen = report.getTeilnahmen();
-			assertEquals(1, teilnahmen.size());
-			AnonymisierteTeilnahmeAPIModel teilnahme = teilnahmen.get(0);
+			AnonymisierteTeilnahmeAPIModel teilnahme = report.getTeilnahme();
+			assertNotNull(teilnahme);
 			assertEquals(13, teilnahme.anzahlKinder());
 
 			MessagePayload messagePayload = responsePayload.getMessage();
@@ -640,9 +473,8 @@ public class AuswertungImportServiceTest {
 
 			// Assert
 			AuswertungImportReport report = (AuswertungImportReport) responsePayload.getData();
-			List<AnonymisierteTeilnahmeAPIModel> teilnahmen = report.getTeilnahmen();
-			assertEquals(1, teilnahmen.size());
-			AnonymisierteTeilnahmeAPIModel teilnahme = teilnahmen.get(0);
+			AnonymisierteTeilnahmeAPIModel teilnahme = report.getTeilnahme();
+			assertNotNull(teilnahme);
 			assertEquals(12, teilnahme.anzahlKinder());
 			assertEquals(JAHR_WETTBEWERB_BEENDET.intValue(), teilnahme.identifier().jahr());
 
@@ -695,8 +527,8 @@ public class AuswertungImportServiceTest {
 				messagePayload.getMessage());
 
 			AuswertungImportReport report = (AuswertungImportReport) responsePayload.getData();
-			List<AnonymisierteTeilnahmeAPIModel> teilnahmen = report.getTeilnahmen();
-			assertEquals(1, teilnahmen.size());
+			AnonymisierteTeilnahmeAPIModel teilnahme = report.getTeilnahme();
+			assertNotNull(teilnahme);
 
 			List<String> fehlermeldungen = report.getFehlerhafteZeilen();
 			assertEquals(1, fehlermeldungen.size());
@@ -744,8 +576,8 @@ public class AuswertungImportServiceTest {
 				messagePayload.getMessage());
 
 			AuswertungImportReport report = (AuswertungImportReport) responsePayload.getData();
-			List<AnonymisierteTeilnahmeAPIModel> teilnahmen = report.getTeilnahmen();
-			assertEquals(1, teilnahmen.size());
+			AnonymisierteTeilnahmeAPIModel teilnahme = report.getTeilnahme();
+			assertNotNull(teilnahme);
 
 			List<String> fehlermeldungen = report.getFehlerhafteZeilen();
 			assertEquals(0, fehlermeldungen.size());

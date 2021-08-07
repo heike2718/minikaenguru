@@ -6,12 +6,15 @@ package de.egladil.web.mk_gateway.infrastructure.persistence.testdaten;
 
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.auswertungen.StatistikTestUtils;
@@ -20,6 +23,7 @@ import de.egladil.web.mk_gateway.domain.error.EntityConcurrentlyModifiedExceptio
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRohdaten;
+import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
@@ -85,6 +89,48 @@ public class InMemoryLoesungszettelRepository implements LoesungszettelRepositor
 	public int anzahlLoesungszettel(final TeilnahmeIdentifier teilnahmeIdentifier) {
 
 		return alleLoesungszettel.size();
+	}
+
+	@Override
+	public List<Pair<Auswertungsquelle, Integer>> getAuswertungsquelleMitAnzahl(final WettbewerbID wettbewerbID) {
+
+		List<Pair<Auswertungsquelle, Integer>> result = new ArrayList<>();
+
+		List<Loesungszettel> online = alleLoesungszettel.values().stream()
+			.filter(z -> wettbewerbID.jahr().equals(Integer.valueOf(z.teilnahmeIdentifier().jahr()))
+				&& Auswertungsquelle.ONLINE == z.auswertungsquelle())
+			.collect(Collectors.toList());
+
+		List<Loesungszettel> upload = alleLoesungszettel.values().stream()
+			.filter(z -> wettbewerbID.jahr().equals(Integer.valueOf(z.teilnahmeIdentifier().jahr()))
+				&& Auswertungsquelle.UPLOAD == z.auswertungsquelle())
+			.collect(Collectors.toList());
+
+		result.add(Pair.of(Auswertungsquelle.ONLINE, online.size()));
+		result.add(Pair.of(Auswertungsquelle.UPLOAD, upload.size()));
+
+		return result;
+	}
+
+	@Override
+	public List<Pair<Auswertungsquelle, Integer>> getAuswertungsquellenMitAnzahl(final TeilnahmeIdentifier teilnahmeIdentifier) {
+
+		List<Pair<Auswertungsquelle, Integer>> result = new ArrayList<>();
+
+		List<Loesungszettel> online = alleLoesungszettel.values().stream()
+			.filter(z -> teilnahmeIdentifier.equals(z.teilnahmeIdentifier())
+				&& Auswertungsquelle.ONLINE == z.auswertungsquelle())
+			.collect(Collectors.toList());
+
+		List<Loesungszettel> upload = alleLoesungszettel.values().stream()
+			.filter(z -> teilnahmeIdentifier.equals(z.teilnahmeIdentifier())
+				&& Auswertungsquelle.UPLOAD == z.auswertungsquelle())
+			.collect(Collectors.toList());
+
+		result.add(Pair.of(Auswertungsquelle.ONLINE, online.size()));
+		result.add(Pair.of(Auswertungsquelle.UPLOAD, upload.size()));
+
+		return result;
 	}
 
 	@Override
