@@ -14,8 +14,6 @@ import java.util.Map;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import de.egladil.web.mk_gateway.domain.loesungszettel.Wertungsrechner;
-import de.egladil.web.mk_gateway.domain.loesungszettel.Wettbewerbswertung;
 import de.egladil.web.mk_gateway.domain.statistik.Aufgabenkategorie;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 
@@ -56,7 +54,7 @@ public class WertungsrechnerTest {
 				fail("keine IllegalArgumentException");
 			} catch (IllegalArgumentException e) {
 
-				assertEquals("laenge wertugscode rrffn (5) und klassenstufe IKID sind inkompatibel", e.getMessage());
+				assertEquals("laenge wertungscode rrffn (5) und klassenstufe IKID sind inkompatibel", e.getMessage());
 			}
 
 		}

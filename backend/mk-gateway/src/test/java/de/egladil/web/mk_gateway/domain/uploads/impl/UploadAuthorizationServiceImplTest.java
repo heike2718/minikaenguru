@@ -5,7 +5,6 @@
 package de.egladil.web.mk_gateway.domain.uploads.impl;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -80,7 +79,8 @@ public class UploadAuthorizationServiceImplTest {
 		void should_authorizeUploadReturnTrue_when_WettbewerbBegonnenAndSchuleAngemeldet() {
 
 			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2021));
+			WettbewerbID wettbewerbID = new WettbewerbID(2021);
+			Wettbewerb wettbewerb = new Wettbewerb(wettbewerbID);
 			wettbewerb.naechsterStatus();
 			assertEquals(WettbewerbStatus.ANMELDUNG, wettbewerb.status());
 			String veranstalterUuid = UUID.randomUUID().toString();
@@ -93,17 +93,18 @@ public class UploadAuthorizationServiceImplTest {
 
 			Teilnahme teilnahme = new Schulteilnahme(wettbewerb.id(), schuleID, "Blümchenschule", veranstalterID);
 
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
+			when(wettbewerbService.findWettbewerbMitID(wettbewerbID)).thenReturn(Optional.of(wettbewerb));
 			when(veranstalterRepository.ofId(veranstalterID)).thenReturn(Optional.of(veranstalter));
 			when(teilnahmenRepository.ofTeilnahmenummer(schulkuerzel)).thenReturn(Collections.singletonList(teilnahme));
 
 			// Act
-			boolean result = service.authorizeUpload(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER);
+			Wettbewerb theWettbewerb = service.authorizeUploadAndReturnWettbewerb(veranstalterID, schulkuerzel, uploadType,
+				Rolle.LEHRER, wettbewerb.id());
 
 			// Assert
-			assertTrue(result);
+			assertEquals(wettbewerb, theWettbewerb);
 			verify(domainEventHandler, never()).handleEvent(any());
-			verify(wettbewerbService).aktuellerWettbewerb();
+			verify(wettbewerbService).findWettbewerbMitID(wettbewerbID);
 			verify(veranstalterRepository).ofId(veranstalterID);
 			verify(teilnahmenRepository).ofTeilnahmenummer(schulkuerzel);
 		}
@@ -115,13 +116,14 @@ public class UploadAuthorizationServiceImplTest {
 			String veranstalterUuid = UUID.randomUUID().toString();
 			Identifier veranstalterID = new Identifier(veranstalterUuid);
 			String schulkuerzel = "JGJGJLGL";
+			WettbewerbID wettbewerbID = new WettbewerbID(2011);
 
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.empty());
+			when(wettbewerbService.findWettbewerbMitID(wettbewerbID)).thenReturn(Optional.empty());
 
 			// Act
 			try {
 
-				service.authorizeUpload(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER);
+				service.authorizeUploadAndReturnWettbewerb(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER, wettbewerbID);
 				fail("keine ActionNotAuthorizedException");
 			} catch (ActionNotAuthorizedException e) {
 
@@ -131,7 +133,7 @@ public class UploadAuthorizationServiceImplTest {
 					e.getMessage());
 
 				verify(domainEventHandler, never()).handleEvent(any());
-				verify(wettbewerbService).aktuellerWettbewerb();
+				verify(wettbewerbService).findWettbewerbMitID(wettbewerbID);
 				verify(veranstalterRepository, never()).ofId(veranstalterID);
 				verify(teilnahmenRepository, never()).ofTeilnahmenummer(schulkuerzel);
 			}
@@ -141,18 +143,19 @@ public class UploadAuthorizationServiceImplTest {
 		void should_authorizeUploadThrowActionNotAuthorizedException_when_aktuellerWettbewerbErfasst() {
 
 			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2021));
+			WettbewerbID wettbewerbID = new WettbewerbID(2021);
+			Wettbewerb wettbewerb = new Wettbewerb(wettbewerbID);
 			assertEquals(WettbewerbStatus.ERFASST, wettbewerb.status());
 			String veranstalterUuid = UUID.randomUUID().toString();
 			Identifier veranstalterID = new Identifier(veranstalterUuid);
 			String schulkuerzel = "JGJGJLGL";
 
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
+			when(wettbewerbService.findWettbewerbMitID(wettbewerbID)).thenReturn(Optional.of(wettbewerb));
 
 			// Act
 			try {
 
-				service.authorizeUpload(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER);
+				service.authorizeUploadAndReturnWettbewerb(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER, wettbewerbID);
 				fail("keine ActionNotAuthorizedException");
 			} catch (ActionNotAuthorizedException e) {
 
@@ -162,10 +165,10 @@ public class UploadAuthorizationServiceImplTest {
 					e.getMessage());
 
 				verify(domainEventHandler, never()).handleEvent(any());
-				verify(wettbewerbService).aktuellerWettbewerb();
+				verify(wettbewerbService).findWettbewerbMitID(wettbewerbID);
 				verify(veranstalterRepository, never()).ofId(veranstalterID);
 				verify(teilnahmenRepository, never()).ofTeilnahmenummer(schulkuerzel);
-				verify(loesungszettelRepository, never()).loadAll(schulkuerzel, wettbewerb.id());
+				verify(loesungszettelRepository, never()).loadAllWithTeilnahmenummerForWettbewerb(schulkuerzel, wettbewerb.id());
 			}
 		}
 
@@ -173,7 +176,8 @@ public class UploadAuthorizationServiceImplTest {
 		void should_authorizeUploadThrowActionNotAuthorizedException_when_aktuellerWettbewerbBeendet() {
 
 			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2021));
+			WettbewerbID wettbewerbID = new WettbewerbID(2021);
+			Wettbewerb wettbewerb = new Wettbewerb(wettbewerbID);
 
 			for (int i = 0; i < 4; i++) {
 
@@ -184,12 +188,12 @@ public class UploadAuthorizationServiceImplTest {
 			Identifier veranstalterID = new Identifier(veranstalterUuid);
 			String schulkuerzel = "JGJGJLGL";
 
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
+			when(wettbewerbService.findWettbewerbMitID(wettbewerbID)).thenReturn(Optional.of(wettbewerb));
 
 			// Act
 			try {
 
-				service.authorizeUpload(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER);
+				service.authorizeUploadAndReturnWettbewerb(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER, wettbewerbID);
 				fail("keine ActionNotAuthorizedException");
 			} catch (ActionNotAuthorizedException e) {
 
@@ -199,10 +203,10 @@ public class UploadAuthorizationServiceImplTest {
 					e.getMessage());
 
 				verify(domainEventHandler, never()).handleEvent(any());
-				verify(wettbewerbService).aktuellerWettbewerb();
+				verify(wettbewerbService).findWettbewerbMitID(wettbewerbID);
 				verify(veranstalterRepository, never()).ofId(veranstalterID);
 				verify(teilnahmenRepository, never()).ofTeilnahmenummer(schulkuerzel);
-				verify(loesungszettelRepository, never()).loadAll(schulkuerzel, wettbewerb.id());
+				verify(loesungszettelRepository, never()).loadAllWithTeilnahmenummerForWettbewerb(schulkuerzel, wettbewerb.id());
 			}
 
 		}
@@ -211,7 +215,8 @@ public class UploadAuthorizationServiceImplTest {
 		void should_authorizeUploadThrowActionNotAuthorizedException_when_veranstalterUnbekannt() {
 
 			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2021));
+			WettbewerbID wettbewerbID = new WettbewerbID(2021);
+			Wettbewerb wettbewerb = new Wettbewerb(wettbewerbID);
 			wettbewerb.naechsterStatus();
 			assertEquals(WettbewerbStatus.ANMELDUNG, wettbewerb.status());
 			String veranstalterUuid = UUID.randomUUID().toString();
@@ -219,13 +224,13 @@ public class UploadAuthorizationServiceImplTest {
 			String schulkuerzel = "JGJGJLGL";
 
 			doNothing().when(domainEventHandler).handleEvent(any());
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
+			when(wettbewerbService.findWettbewerbMitID(wettbewerbID)).thenReturn(Optional.of(wettbewerb));
 			when(veranstalterRepository.ofId(veranstalterID)).thenReturn(Optional.empty());
 
 			// Act
 			try {
 
-				service.authorizeUpload(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER);
+				service.authorizeUploadAndReturnWettbewerb(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER, wettbewerbID);
 				fail("keine ActionNotAuthorizedException");
 			} catch (ActionNotAuthorizedException e) {
 
@@ -235,10 +240,10 @@ public class UploadAuthorizationServiceImplTest {
 					e.getMessage());
 
 				verify(domainEventHandler).handleEvent(any());
-				verify(wettbewerbService).aktuellerWettbewerb();
+				verify(wettbewerbService).findWettbewerbMitID(wettbewerbID);
 				verify(veranstalterRepository).ofId(veranstalterID);
 				verify(teilnahmenRepository, never()).ofTeilnahmenummer(schulkuerzel);
-				verify(loesungszettelRepository, never()).loadAll(schulkuerzel, wettbewerb.id());
+				verify(loesungszettelRepository, never()).loadAllWithTeilnahmenummerForWettbewerb(schulkuerzel, wettbewerb.id());
 			}
 		}
 
@@ -246,7 +251,8 @@ public class UploadAuthorizationServiceImplTest {
 		void should_authorizeUploadThrowActionNotAuthorizedException_when_keinLehrer() {
 
 			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2021));
+			WettbewerbID wettbewerbID = new WettbewerbID(2021);
+			Wettbewerb wettbewerb = new Wettbewerb(wettbewerbID);
 			wettbewerb.naechsterStatus();
 			assertEquals(WettbewerbStatus.ANMELDUNG, wettbewerb.status());
 			String veranstalterUuid = UUID.randomUUID().toString();
@@ -258,7 +264,7 @@ public class UploadAuthorizationServiceImplTest {
 			// Act
 			try {
 
-				service.authorizeUpload(veranstalterID, schulkuerzel, uploadType, Rolle.PRIVAT);
+				service.authorizeUploadAndReturnWettbewerb(veranstalterID, schulkuerzel, uploadType, Rolle.PRIVAT, wettbewerbID);
 				fail("keine ActionNotAuthorizedException");
 			} catch (ActionNotAuthorizedException e) {
 
@@ -268,10 +274,10 @@ public class UploadAuthorizationServiceImplTest {
 					e.getMessage());
 
 				verify(domainEventHandler).handleEvent(any());
-				verify(wettbewerbService, never()).aktuellerWettbewerb();
+				verify(wettbewerbService, never()).findWettbewerbMitID(wettbewerbID);
 				verify(veranstalterRepository, never()).ofId(veranstalterID);
 				verify(teilnahmenRepository, never()).ofTeilnahmenummer(schulkuerzel);
-				verify(loesungszettelRepository, never()).loadAll(schulkuerzel, wettbewerb.id());
+				verify(loesungszettelRepository, never()).loadAllWithTeilnahmenummerForWettbewerb(schulkuerzel, wettbewerb.id());
 			}
 		}
 
@@ -279,7 +285,8 @@ public class UploadAuthorizationServiceImplTest {
 		void should_authorizeUploadThrowActionNotAuthorizedException_when_SchuleNichtAngemeldet() {
 
 			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2021));
+			WettbewerbID wettbewerbID = new WettbewerbID(2021);
+			Wettbewerb wettbewerb = new Wettbewerb(wettbewerbID);
 			wettbewerb.naechsterStatus();
 			assertEquals(WettbewerbStatus.ANMELDUNG, wettbewerb.status());
 			String veranstalterUuid = UUID.randomUUID().toString();
@@ -291,14 +298,14 @@ public class UploadAuthorizationServiceImplTest {
 			Veranstalter veranstalter = new Lehrer(new Person("suquwdq", "Flora Fauna"), false, schulen);
 
 			doNothing().when(domainEventHandler).handleEvent(any());
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
+			when(wettbewerbService.findWettbewerbMitID(wettbewerbID)).thenReturn(Optional.of(wettbewerb));
 			when(veranstalterRepository.ofId(veranstalterID)).thenReturn(Optional.of(veranstalter));
 			when(teilnahmenRepository.ofTeilnahmenummer(schulkuerzel)).thenReturn(new ArrayList<>());
 
 			// Act
 			try {
 
-				service.authorizeUpload(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER);
+				service.authorizeUploadAndReturnWettbewerb(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER, wettbewerbID);
 				fail("keine ActionNotAuthorizedException");
 			} catch (ActionNotAuthorizedException e) {
 
@@ -308,10 +315,10 @@ public class UploadAuthorizationServiceImplTest {
 					e.getMessage());
 
 				verify(domainEventHandler).handleEvent(any());
-				verify(wettbewerbService).aktuellerWettbewerb();
+				verify(wettbewerbService).findWettbewerbMitID(wettbewerbID);
 				verify(veranstalterRepository).ofId(veranstalterID);
 				verify(teilnahmenRepository).ofTeilnahmenummer(schulkuerzel);
-				verify(loesungszettelRepository, never()).loadAll(schulkuerzel, wettbewerb.id());
+				verify(loesungszettelRepository, never()).loadAllWithTeilnahmenummerForWettbewerb(schulkuerzel, wettbewerb.id());
 			}
 		}
 
@@ -319,7 +326,8 @@ public class UploadAuthorizationServiceImplTest {
 		void should_authorizeUploadReturnFalse_when_WettbewerbBegonnenAndSchuleAngemeldetUndLoesungszettelMitQuelleUpload() {
 
 			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2021));
+			WettbewerbID wettbewerbID = new WettbewerbID(2021);
+			Wettbewerb wettbewerb = new Wettbewerb(wettbewerbID);
 			wettbewerb.naechsterStatus();
 			wettbewerb.naechsterStatus();
 			assertEquals(WettbewerbStatus.DOWNLOAD_LEHRER, wettbewerb.status());
@@ -336,15 +344,15 @@ public class UploadAuthorizationServiceImplTest {
 			Loesungszettel onlineZettel = new Loesungszettel().withTeilnahmeIdentifier(teilnahmeIdentifier)
 				.withAuswertungsquelle(Auswertungsquelle.UPLOAD);
 
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
+			when(wettbewerbService.findWettbewerbMitID(wettbewerbID)).thenReturn(Optional.of(wettbewerb));
 			when(veranstalterRepository.ofId(veranstalterID)).thenReturn(Optional.of(veranstalter));
 			when(teilnahmenRepository.ofTeilnahmenummer(schulkuerzel)).thenReturn(Collections.singletonList(teilnahme));
-			when(loesungszettelRepository.loadAll(schulkuerzel, wettbewerb.id()))
+			when(loesungszettelRepository.loadAllWithTeilnahmenummerForWettbewerb(schulkuerzel, wettbewerb.id()))
 				.thenReturn(Collections.singletonList(onlineZettel));
 
 			try {
 
-				service.authorizeUpload(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER);
+				service.authorizeUploadAndReturnWettbewerb(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER, wettbewerbID);
 				fail("keine ActionNotAuthorizedException");
 			} catch (ActionNotAuthorizedException e) {
 
@@ -353,10 +361,10 @@ public class UploadAuthorizationServiceImplTest {
 					e.getMessage());
 
 				verify(domainEventHandler, never()).handleEvent(any());
-				verify(wettbewerbService).aktuellerWettbewerb();
+				verify(wettbewerbService).findWettbewerbMitID(wettbewerbID);
 				verify(veranstalterRepository).ofId(veranstalterID);
 				verify(teilnahmenRepository).ofTeilnahmenummer(schulkuerzel);
-				verify(loesungszettelRepository).loadAll(schulkuerzel, wettbewerb.id());
+				verify(loesungszettelRepository).loadAllWithTeilnahmenummerForWettbewerb(schulkuerzel, wettbewerb.id());
 
 			}
 		}
@@ -371,7 +379,8 @@ public class UploadAuthorizationServiceImplTest {
 		void should_authorizeUploadThrowActionNotAuthorizedException_when_keinLehrer() {
 
 			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2021));
+			WettbewerbID wettbewerbID = new WettbewerbID(2021);
+			Wettbewerb wettbewerb = new Wettbewerb(wettbewerbID);
 			wettbewerb.naechsterStatus();
 			assertEquals(WettbewerbStatus.ANMELDUNG, wettbewerb.status());
 			String veranstalterUuid = UUID.randomUUID().toString();
@@ -383,7 +392,7 @@ public class UploadAuthorizationServiceImplTest {
 			// Act
 			try {
 
-				service.authorizeUpload(veranstalterID, schulkuerzel, uploadType, Rolle.PRIVAT);
+				service.authorizeUploadAndReturnWettbewerb(veranstalterID, schulkuerzel, uploadType, Rolle.PRIVAT, wettbewerbID);
 				fail("keine ActionNotAuthorizedException");
 			} catch (ActionNotAuthorizedException e) {
 
@@ -393,10 +402,10 @@ public class UploadAuthorizationServiceImplTest {
 					e.getMessage());
 
 				verify(domainEventHandler).handleEvent(any());
-				verify(wettbewerbService, never()).aktuellerWettbewerb();
+				verify(wettbewerbService, never()).findWettbewerbMitID(wettbewerbID);
 				verify(veranstalterRepository, never()).ofId(veranstalterID);
 				verify(teilnahmenRepository, never()).ofTeilnahmenummer(schulkuerzel);
-				verify(loesungszettelRepository, never()).loadAll(schulkuerzel, wettbewerb.id());
+				verify(loesungszettelRepository, never()).loadAllWithTeilnahmenummerForWettbewerb(schulkuerzel, wettbewerb.id());
 			}
 		}
 
@@ -404,7 +413,8 @@ public class UploadAuthorizationServiceImplTest {
 		void should_authorizeUploadReturnTrue_when_WettbewerbBegonnenAndSchuleAngemeldetUndKeineLoesungszettelMitQuelleOnline() {
 
 			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2021));
+			WettbewerbID wettbewerbID = new WettbewerbID(2021);
+			Wettbewerb wettbewerb = new Wettbewerb(wettbewerbID);
 			wettbewerb.naechsterStatus();
 			wettbewerb.naechsterStatus();
 			assertEquals(WettbewerbStatus.DOWNLOAD_LEHRER, wettbewerb.status());
@@ -418,28 +428,32 @@ public class UploadAuthorizationServiceImplTest {
 
 			Teilnahme teilnahme = new Schulteilnahme(wettbewerb.id(), schuleID, "Blümchenschule", veranstalterID);
 
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
+			when(wettbewerbService.findWettbewerbMitID(wettbewerbID)).thenReturn(Optional.of(wettbewerb));
 			when(veranstalterRepository.ofId(veranstalterID)).thenReturn(Optional.of(veranstalter));
 			when(teilnahmenRepository.ofTeilnahmenummer(schulkuerzel)).thenReturn(Collections.singletonList(teilnahme));
-			when(loesungszettelRepository.loadAll(schulkuerzel, wettbewerb.id())).thenReturn(new ArrayList<>());
+			when(loesungszettelRepository.loadAllWithTeilnahmenummerForWettbewerb(schulkuerzel, wettbewerb.id()))
+				.thenReturn(new ArrayList<>());
 
 			// Act
-			boolean result = service.authorizeUpload(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER);
+			Wettbewerb result = service.authorizeUploadAndReturnWettbewerb(veranstalterID, schulkuerzel, uploadType,
+				Rolle.LEHRER,
+				wettbewerbID);
 
 			// Assert
-			assertTrue(result);
+			assertEquals(wettbewerb, result);
 			verify(domainEventHandler, never()).handleEvent(any());
-			verify(wettbewerbService).aktuellerWettbewerb();
+			verify(wettbewerbService).findWettbewerbMitID(wettbewerbID);
 			verify(veranstalterRepository).ofId(veranstalterID);
 			verify(teilnahmenRepository).ofTeilnahmenummer(schulkuerzel);
-			verify(loesungszettelRepository).loadAll(schulkuerzel, wettbewerb.id());
+			verify(loesungszettelRepository).loadAllWithTeilnahmenummerForWettbewerb(schulkuerzel, wettbewerb.id());
 		}
 
 		@Test
 		void should_authorizeUploadReturnTrue_when_AdminAndWettbewerbBegonnenAndSchuleAngemeldetUndKeineLoesungszettelMitQuelleOnline() {
 
 			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2021));
+			WettbewerbID wettbewerbID = new WettbewerbID(2021);
+			Wettbewerb wettbewerb = new Wettbewerb(wettbewerbID);
 			wettbewerb.naechsterStatus();
 			wettbewerb.naechsterStatus();
 			assertEquals(WettbewerbStatus.DOWNLOAD_LEHRER, wettbewerb.status());
@@ -451,27 +465,30 @@ public class UploadAuthorizationServiceImplTest {
 
 			Teilnahme teilnahme = new Schulteilnahme(wettbewerb.id(), schuleID, "Blümchenschule", veranstalterID);
 
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
+			when(wettbewerbService.findWettbewerbMitID(wettbewerbID)).thenReturn(Optional.of(wettbewerb));
 			when(teilnahmenRepository.ofTeilnahmenummer(schulkuerzel)).thenReturn(Collections.singletonList(teilnahme));
-			when(loesungszettelRepository.loadAll(schulkuerzel, wettbewerb.id())).thenReturn(new ArrayList<>());
+			when(loesungszettelRepository.loadAllWithTeilnahmenummerForWettbewerb(schulkuerzel, wettbewerb.id()))
+				.thenReturn(new ArrayList<>());
 
 			// Act
-			boolean result = service.authorizeUpload(veranstalterID, schulkuerzel, uploadType, Rolle.ADMIN);
+			Wettbewerb result = service.authorizeUploadAndReturnWettbewerb(veranstalterID, schulkuerzel, uploadType, Rolle.ADMIN,
+				wettbewerbID);
 
 			// Assert
-			assertTrue(result);
+			assertEquals(wettbewerb, result);
 			verify(domainEventHandler, never()).handleEvent(any());
-			verify(wettbewerbService).aktuellerWettbewerb();
+			verify(wettbewerbService).findWettbewerbMitID(wettbewerbID);
 			verify(veranstalterRepository, never()).ofId(veranstalterID);
 			verify(teilnahmenRepository).ofTeilnahmenummer(schulkuerzel);
-			verify(loesungszettelRepository).loadAll(schulkuerzel, wettbewerb.id());
+			verify(loesungszettelRepository).loadAllWithTeilnahmenummerForWettbewerb(schulkuerzel, wettbewerb.id());
 		}
 
 		@Test
 		void should_authorizeUploadReturnFalse_when_WettbewerbBegonnenAndSchuleAngemeldetUndLoesungszettelMitQuelleOnline() {
 
 			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2021));
+			WettbewerbID wettbewerbID = new WettbewerbID(2021);
+			Wettbewerb wettbewerb = new Wettbewerb(wettbewerbID);
 			wettbewerb.naechsterStatus();
 			wettbewerb.naechsterStatus();
 			assertEquals(WettbewerbStatus.DOWNLOAD_LEHRER, wettbewerb.status());
@@ -488,27 +505,27 @@ public class UploadAuthorizationServiceImplTest {
 			Loesungszettel onlineZettel = new Loesungszettel().withTeilnahmeIdentifier(teilnahmeIdentifier)
 				.withAuswertungsquelle(Auswertungsquelle.ONLINE);
 
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
+			when(wettbewerbService.findWettbewerbMitID(wettbewerbID)).thenReturn(Optional.of(wettbewerb));
 			when(veranstalterRepository.ofId(veranstalterID)).thenReturn(Optional.of(veranstalter));
 			when(teilnahmenRepository.ofTeilnahmenummer(schulkuerzel)).thenReturn(Collections.singletonList(teilnahme));
-			when(loesungszettelRepository.loadAll(schulkuerzel, wettbewerb.id()))
+			when(loesungszettelRepository.loadAllWithTeilnahmenummerForWettbewerb(schulkuerzel, wettbewerb.id()))
 				.thenReturn(Collections.singletonList(onlineZettel));
 
 			try {
 
-				service.authorizeUpload(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER);
+				service.authorizeUploadAndReturnWettbewerb(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER, wettbewerbID);
 				fail("keine ActionNotAuthorizedException");
 			} catch (ActionNotAuthorizedException e) {
 
 				assertEquals(
-					"Sie können keine Schulauswertungen für diese Schule hochladen, da bereits Lösungszettel online erfasst wurden.",
+					"Sie können keine Auswertungen für diese Schule hochladen, da bereits Lösungszettel online erfasst wurden.",
 					e.getMessage());
 
 				verify(domainEventHandler, never()).handleEvent(any());
-				verify(wettbewerbService).aktuellerWettbewerb();
+				verify(wettbewerbService).findWettbewerbMitID(wettbewerbID);
 				verify(veranstalterRepository).ofId(veranstalterID);
 				verify(teilnahmenRepository).ofTeilnahmenummer(schulkuerzel);
-				verify(loesungszettelRepository).loadAll(schulkuerzel, wettbewerb.id());
+				verify(loesungszettelRepository).loadAllWithTeilnahmenummerForWettbewerb(schulkuerzel, wettbewerb.id());
 
 			}
 		}
@@ -517,7 +534,8 @@ public class UploadAuthorizationServiceImplTest {
 		void should_authorizeUploadReturnTrue_when_aktuellerWettbewerbsstatusAnmeldungLehrerZugangErteiltKeineOnlineloesungszettel() {
 
 			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2021));
+			WettbewerbID wettbewerbID = new WettbewerbID(2021);
+			Wettbewerb wettbewerb = new Wettbewerb(wettbewerbID);
 			wettbewerb.naechsterStatus();
 			assertEquals(WettbewerbStatus.ANMELDUNG, wettbewerb.status());
 			String veranstalterUuid = UUID.randomUUID().toString();
@@ -531,19 +549,21 @@ public class UploadAuthorizationServiceImplTest {
 
 			Teilnahme teilnahme = new Schulteilnahme(wettbewerb.id(), schuleID, "Blümchenschule", veranstalterID);
 
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
+			when(wettbewerbService.findWettbewerbMitID(wettbewerbID)).thenReturn(Optional.of(wettbewerb));
 			when(veranstalterRepository.ofId(veranstalterID)).thenReturn(Optional.of(veranstalter));
 			when(teilnahmenRepository.ofTeilnahmenummer(schulkuerzel)).thenReturn(Collections.singletonList(teilnahme));
-			when(loesungszettelRepository.loadAll(schulkuerzel, wettbewerb.id())).thenReturn(new ArrayList<>());
+			when(loesungszettelRepository.loadAllWithTeilnahmenummerForWettbewerb(schulkuerzel, wettbewerb.id()))
+				.thenReturn(new ArrayList<>());
 
 			// Act + Assert
-			assertTrue(service.authorizeUpload(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER));
+			assertEquals(wettbewerb,
+				service.authorizeUploadAndReturnWettbewerb(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER, wettbewerbID));
 
 			verify(domainEventHandler, never()).handleEvent(any());
-			verify(wettbewerbService).aktuellerWettbewerb();
+			verify(wettbewerbService).findWettbewerbMitID(wettbewerbID);
 			verify(veranstalterRepository).ofId(veranstalterID);
 			verify(teilnahmenRepository).ofTeilnahmenummer(schulkuerzel);
-			verify(loesungszettelRepository).loadAll(schulkuerzel, wettbewerb.id());
+			verify(loesungszettelRepository).loadAllWithTeilnahmenummerForWettbewerb(schulkuerzel, wettbewerb.id());
 
 		}
 
@@ -551,7 +571,8 @@ public class UploadAuthorizationServiceImplTest {
 		void should_authorizeUploadReturnFalse_when_AdminWettbewerbBegonnenAndSchuleAngemeldetUndLoesungszettelMitQuelleOnline() {
 
 			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2021));
+			WettbewerbID wettbewerbID = new WettbewerbID(2021);
+			Wettbewerb wettbewerb = new Wettbewerb(wettbewerbID);
 			wettbewerb.naechsterStatus();
 			wettbewerb.naechsterStatus();
 			assertEquals(WettbewerbStatus.DOWNLOAD_LEHRER, wettbewerb.status());
@@ -566,26 +587,26 @@ public class UploadAuthorizationServiceImplTest {
 			Loesungszettel onlineZettel = new Loesungszettel().withTeilnahmeIdentifier(teilnahmeIdentifier)
 				.withAuswertungsquelle(Auswertungsquelle.ONLINE);
 
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
+			when(wettbewerbService.findWettbewerbMitID(wettbewerbID)).thenReturn(Optional.of(wettbewerb));
 			when(teilnahmenRepository.ofTeilnahmenummer(schulkuerzel)).thenReturn(Collections.singletonList(teilnahme));
-			when(loesungszettelRepository.loadAll(schulkuerzel, wettbewerb.id()))
+			when(loesungszettelRepository.loadAllWithTeilnahmenummerForWettbewerb(schulkuerzel, wettbewerb.id()))
 				.thenReturn(Collections.singletonList(onlineZettel));
 
 			try {
 
-				service.authorizeUpload(veranstalterID, schulkuerzel, uploadType, Rolle.ADMIN);
+				service.authorizeUploadAndReturnWettbewerb(veranstalterID, schulkuerzel, uploadType, Rolle.ADMIN, wettbewerbID);
 				fail("keine ActionNotAuthorizedException");
 			} catch (ActionNotAuthorizedException e) {
 
 				assertEquals(
-					"Sie können keine Schulauswertungen für diese Schule hochladen, da bereits Lösungszettel online erfasst wurden.",
+					"Sie können keine Auswertungen für diese Schule hochladen, da bereits Lösungszettel online erfasst wurden.",
 					e.getMessage());
 
 				verify(domainEventHandler, never()).handleEvent(any());
-				verify(wettbewerbService).aktuellerWettbewerb();
+				verify(wettbewerbService).findWettbewerbMitID(wettbewerbID);
 				verify(veranstalterRepository, never()).ofId(veranstalterID);
 				verify(teilnahmenRepository).ofTeilnahmenummer(schulkuerzel);
-				verify(loesungszettelRepository).loadAll(schulkuerzel, wettbewerb.id());
+				verify(loesungszettelRepository).loadAllWithTeilnahmenummerForWettbewerb(schulkuerzel, wettbewerb.id());
 
 			}
 		}
@@ -594,29 +615,30 @@ public class UploadAuthorizationServiceImplTest {
 		void should_authorizeUploadThrowActionNotAuthorizedException_when_keinAktuellerWettbewerb() {
 
 			// Arrange
+			WettbewerbID wettbewerbID = new WettbewerbID(2018);
 			String veranstalterUuid = UUID.randomUUID().toString();
 			Identifier veranstalterID = new Identifier(veranstalterUuid);
 			String schulkuerzel = "JGJGJLGL";
 
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.empty());
+			when(wettbewerbService.findWettbewerbMitID(wettbewerbID)).thenReturn(Optional.empty());
 
 			// Act
 			try {
 
-				service.authorizeUpload(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER);
+				service.authorizeUploadAndReturnWettbewerb(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER, wettbewerbID);
 				fail("keine ActionNotAuthorizedException");
 			} catch (ActionNotAuthorizedException e) {
 
 				// Assert
 				assertEquals(
-					"Schulauswertungen können noch nicht hochgeladen werden, da der Anmeldezeitraum noch nicht begonnen hat.",
+					"Auswertungen können noch nicht hochgeladen werden, da der Anmeldezeitraum noch nicht begonnen hat.",
 					e.getMessage());
 
 				verify(domainEventHandler, never()).handleEvent(any());
-				verify(wettbewerbService).aktuellerWettbewerb();
+				verify(wettbewerbService).findWettbewerbMitID(wettbewerbID);
 				verify(veranstalterRepository, never()).ofId(veranstalterID);
 				verify(teilnahmenRepository, never()).ofTeilnahmenummer(schulkuerzel);
-				verify(loesungszettelRepository, never()).loadAll(any(), any());
+				verify(loesungszettelRepository, never()).loadAllWithTeilnahmenummerForWettbewerb(any(), any());
 			}
 		}
 
@@ -624,31 +646,32 @@ public class UploadAuthorizationServiceImplTest {
 		void should_authorizeUploadThrowActionNotAuthorizedException_when_aktuellerWettbewerbErfasst() {
 
 			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2021));
+			WettbewerbID wettbewerbID = new WettbewerbID(2021);
+			Wettbewerb wettbewerb = new Wettbewerb(wettbewerbID);
 			assertEquals(WettbewerbStatus.ERFASST, wettbewerb.status());
 			String veranstalterUuid = UUID.randomUUID().toString();
 			Identifier veranstalterID = new Identifier(veranstalterUuid);
 			String schulkuerzel = "JGJGJLGL";
 
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
+			when(wettbewerbService.findWettbewerbMitID(wettbewerbID)).thenReturn(Optional.of(wettbewerb));
 
 			// Act
 			try {
 
-				service.authorizeUpload(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER);
+				service.authorizeUploadAndReturnWettbewerb(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER, wettbewerbID);
 				fail("keine ActionNotAuthorizedException");
 			} catch (ActionNotAuthorizedException e) {
 
 				// Assert
 				assertEquals(
-					"Schulauswertungen können noch nicht hochgeladen werden, da der Anmeldezeitraum noch nicht begonnen hat.",
+					"Auswertungen können noch nicht hochgeladen werden, da der Anmeldezeitraum noch nicht begonnen hat.",
 					e.getMessage());
 
 				verify(domainEventHandler, never()).handleEvent(any());
-				verify(wettbewerbService).aktuellerWettbewerb();
+				verify(wettbewerbService).findWettbewerbMitID(wettbewerbID);
 				verify(veranstalterRepository, never()).ofId(veranstalterID);
 				verify(teilnahmenRepository, never()).ofTeilnahmenummer(schulkuerzel);
-				verify(loesungszettelRepository, never()).loadAll(schulkuerzel, wettbewerb.id());
+				verify(loesungszettelRepository, never()).loadAllWithTeilnahmenummerForWettbewerb(schulkuerzel, wettbewerb.id());
 
 			}
 		}
@@ -657,7 +680,8 @@ public class UploadAuthorizationServiceImplTest {
 		void should_authorizeUploadThrowActionNotAuthorizedException_when_aktuellerWettbewerbsstatusAnmeldungAndZugangsstatusDefault() {
 
 			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2021));
+			WettbewerbID wettbewerbID = new WettbewerbID(2021);
+			Wettbewerb wettbewerb = new Wettbewerb(wettbewerbID);
 			wettbewerb.naechsterStatus();
 			assertEquals(WettbewerbStatus.ANMELDUNG, wettbewerb.status());
 			String veranstalterUuid = UUID.randomUUID().toString();
@@ -670,26 +694,26 @@ public class UploadAuthorizationServiceImplTest {
 
 			Teilnahme teilnahme = new Schulteilnahme(wettbewerb.id(), schuleID, "Blümchenschule", veranstalterID);
 
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
+			when(wettbewerbService.findWettbewerbMitID(wettbewerbID)).thenReturn(Optional.of(wettbewerb));
 			when(veranstalterRepository.ofId(veranstalterID)).thenReturn(Optional.of(veranstalter));
 			when(teilnahmenRepository.ofTeilnahmenummer(schulkuerzel)).thenReturn(Collections.singletonList(teilnahme));
 
 			// Act
 			try {
 
-				service.authorizeUpload(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER);
+				service.authorizeUploadAndReturnWettbewerb(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER, wettbewerbID);
 				fail("keine ActionNotAuthorizedException");
 			} catch (ActionNotAuthorizedException e) {
 
 				// Assert
 				assertEquals(
-					"Sie können keine Schulauswertungen für diese Schule hochladen, da die Aufgaben noch nicht zur Verfügung gestellt wurden.",
+					"Sie können keine Auswertungen für diese Schule hochladen, da die Aufgaben noch nicht zur Verfügung gestellt wurden.",
 					e.getMessage());
 
-				verify(wettbewerbService).aktuellerWettbewerb();
+				verify(wettbewerbService).findWettbewerbMitID(wettbewerbID);
 				verify(veranstalterRepository).ofId(veranstalterID);
 				verify(teilnahmenRepository).ofTeilnahmenummer(schulkuerzel);
-				verify(loesungszettelRepository, never()).loadAll(schulkuerzel, wettbewerb.id());
+				verify(loesungszettelRepository, never()).loadAllWithTeilnahmenummerForWettbewerb(schulkuerzel, wettbewerb.id());
 
 			}
 		}
@@ -698,7 +722,8 @@ public class UploadAuthorizationServiceImplTest {
 		void should_authorizeUploadThrowActionNotAuthorizedException_when_aktuellerWettbewerbBeendet() {
 
 			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2021));
+			WettbewerbID wettbewerbID = new WettbewerbID(2021);
+			Wettbewerb wettbewerb = new Wettbewerb(wettbewerbID);
 
 			for (int i = 0; i < 4; i++) {
 
@@ -709,25 +734,25 @@ public class UploadAuthorizationServiceImplTest {
 			Identifier veranstalterID = new Identifier(veranstalterUuid);
 			String schulkuerzel = "JGJGJLGL";
 
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
+			when(wettbewerbService.findWettbewerbMitID(wettbewerbID)).thenReturn(Optional.of(wettbewerb));
 
 			// Act
 			try {
 
-				service.authorizeUpload(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER);
+				service.authorizeUploadAndReturnWettbewerb(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER, wettbewerbID);
 				fail("keine ActionNotAuthorizedException");
 			} catch (ActionNotAuthorizedException e) {
 
 				// Assert
 				assertEquals(
-					"Schulauswertungen können nicht mehr hochgeladen werden, da der Wettbewerb beendet ist.",
+					"Auswertungen können nicht mehr hochgeladen werden, da der Wettbewerb beendet ist. Bitte senden Sie Ihre Auswertungen per Mail an minikaenguru@egladil.de.",
 					e.getMessage());
 
 				verify(domainEventHandler, never()).handleEvent(any());
-				verify(wettbewerbService).aktuellerWettbewerb();
+				verify(wettbewerbService).findWettbewerbMitID(wettbewerbID);
 				verify(veranstalterRepository, never()).ofId(veranstalterID);
 				verify(teilnahmenRepository, never()).ofTeilnahmenummer(schulkuerzel);
-				verify(loesungszettelRepository, never()).loadAll(schulkuerzel, wettbewerb.id());
+				verify(loesungszettelRepository, never()).loadAllWithTeilnahmenummerForWettbewerb(schulkuerzel, wettbewerb.id());
 
 			}
 		}
@@ -736,7 +761,8 @@ public class UploadAuthorizationServiceImplTest {
 		void should_authorizeUploadThrowActionNotAuthorizedException_when_veranstalterUnbekannt() {
 
 			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2021));
+			WettbewerbID wettbewerbID = new WettbewerbID(2021);
+			Wettbewerb wettbewerb = new Wettbewerb(wettbewerbID);
 			wettbewerb.naechsterStatus();
 			wettbewerb.naechsterStatus();
 			assertEquals(WettbewerbStatus.DOWNLOAD_LEHRER, wettbewerb.status());
@@ -745,13 +771,13 @@ public class UploadAuthorizationServiceImplTest {
 			String schulkuerzel = "JGJGJLGL";
 
 			doNothing().when(domainEventHandler).handleEvent(any());
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
+			when(wettbewerbService.findWettbewerbMitID(wettbewerbID)).thenReturn(Optional.of(wettbewerb));
 			when(veranstalterRepository.ofId(veranstalterID)).thenReturn(Optional.empty());
 
 			// Act
 			try {
 
-				service.authorizeUpload(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER);
+				service.authorizeUploadAndReturnWettbewerb(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER, wettbewerbID);
 				fail("keine ActionNotAuthorizedException");
 			} catch (ActionNotAuthorizedException e) {
 
@@ -761,10 +787,10 @@ public class UploadAuthorizationServiceImplTest {
 					e.getMessage());
 
 				verify(domainEventHandler).handleEvent(any());
-				verify(wettbewerbService).aktuellerWettbewerb();
+				verify(wettbewerbService).findWettbewerbMitID(wettbewerbID);
 				verify(veranstalterRepository).ofId(veranstalterID);
 				verify(teilnahmenRepository, never()).ofTeilnahmenummer(schulkuerzel);
-				verify(loesungszettelRepository, never()).loadAll(schulkuerzel, wettbewerb.id());
+				verify(loesungszettelRepository, never()).loadAllWithTeilnahmenummerForWettbewerb(schulkuerzel, wettbewerb.id());
 
 			}
 		}
@@ -773,7 +799,8 @@ public class UploadAuthorizationServiceImplTest {
 		void should_authorizeUploadThrowActionNotAuthorizedException_when_SchuleNichtAngemeldet() {
 
 			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2021));
+			WettbewerbID wettbewerbID = new WettbewerbID(2021);
+			Wettbewerb wettbewerb = new Wettbewerb(wettbewerbID);
 			wettbewerb.naechsterStatus();
 			wettbewerb.naechsterStatus();
 			assertEquals(WettbewerbStatus.DOWNLOAD_LEHRER, wettbewerb.status());
@@ -786,27 +813,27 @@ public class UploadAuthorizationServiceImplTest {
 			Veranstalter veranstalter = new Lehrer(new Person("suquwdq", "Flora Fauna"), false, schulen);
 
 			doNothing().when(domainEventHandler).handleEvent(any());
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
+			when(wettbewerbService.findWettbewerbMitID(wettbewerbID)).thenReturn(Optional.of(wettbewerb));
 			when(veranstalterRepository.ofId(veranstalterID)).thenReturn(Optional.of(veranstalter));
 			when(teilnahmenRepository.ofTeilnahmenummer(schulkuerzel)).thenReturn(new ArrayList<>());
 
 			// Act
 			try {
 
-				service.authorizeUpload(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER);
+				service.authorizeUploadAndReturnWettbewerb(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER, wettbewerbID);
 				fail("keine ActionNotAuthorizedException");
 			} catch (ActionNotAuthorizedException e) {
 
 				// Assert
 				assertEquals(
-					"Sie können keine Schulauswertungen für diese Schule hochladen, da sie noch nicht zum aktuellen Wettbewerb angemeldet ist.",
+					"Sie können keine Auswertungen für diese Schule hochladen, da sie noch nicht zum aktuellen Wettbewerb angemeldet ist.",
 					e.getMessage());
 
 				verify(domainEventHandler).handleEvent(any());
-				verify(wettbewerbService).aktuellerWettbewerb();
+				verify(wettbewerbService).findWettbewerbMitID(wettbewerbID);
 				verify(veranstalterRepository).ofId(veranstalterID);
 				verify(teilnahmenRepository).ofTeilnahmenummer(schulkuerzel);
-				verify(loesungszettelRepository, never()).loadAll(schulkuerzel, wettbewerb.id());
+				verify(loesungszettelRepository, never()).loadAllWithTeilnahmenummerForWettbewerb(schulkuerzel, wettbewerb.id());
 			}
 		}
 
@@ -814,7 +841,8 @@ public class UploadAuthorizationServiceImplTest {
 		void should_authorizeUploadThrowActionNotAuthorizedException_when_LehrerZugangUnterlagenEntzogen() {
 
 			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2021));
+			WettbewerbID wettbewerbID = new WettbewerbID(2021);
+			Wettbewerb wettbewerb = new Wettbewerb(wettbewerbID);
 			wettbewerb.naechsterStatus();
 			wettbewerb.naechsterStatus();
 			assertEquals(WettbewerbStatus.DOWNLOAD_LEHRER, wettbewerb.status());
@@ -828,13 +856,13 @@ public class UploadAuthorizationServiceImplTest {
 			veranstalter.verwehreZugangUnterlagen();
 
 			doNothing().when(domainEventHandler).handleEvent(any());
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
+			when(wettbewerbService.findWettbewerbMitID(wettbewerbID)).thenReturn(Optional.of(wettbewerb));
 			when(veranstalterRepository.ofId(veranstalterID)).thenReturn(Optional.of(veranstalter));
 
 			// Act
 			try {
 
-				service.authorizeUpload(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER);
+				service.authorizeUploadAndReturnWettbewerb(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER, wettbewerbID);
 				fail("keine ActionNotAuthorizedException");
 			} catch (ActionNotAuthorizedException e) {
 
@@ -844,10 +872,10 @@ public class UploadAuthorizationServiceImplTest {
 					e.getMessage());
 
 				verify(domainEventHandler).handleEvent(any());
-				verify(wettbewerbService).aktuellerWettbewerb();
+				verify(wettbewerbService).findWettbewerbMitID(wettbewerbID);
 				verify(veranstalterRepository).ofId(veranstalterID);
 				verify(teilnahmenRepository, never()).ofTeilnahmenummer(schulkuerzel);
-				verify(loesungszettelRepository, never()).loadAll(schulkuerzel, wettbewerb.id());
+				verify(loesungszettelRepository, never()).loadAllWithTeilnahmenummerForWettbewerb(schulkuerzel, wettbewerb.id());
 			}
 		}
 
@@ -855,7 +883,8 @@ public class UploadAuthorizationServiceImplTest {
 		void should_authorizeUploadThrowActionNotAuthorizedException_when_OnlineauswertungenGefunden() {
 
 			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2021));
+			WettbewerbID wettbewerbID = new WettbewerbID(2021);
+			Wettbewerb wettbewerb = new Wettbewerb(wettbewerbID);
 			wettbewerb.naechsterStatus();
 			wettbewerb.naechsterStatus();
 			assertEquals(WettbewerbStatus.DOWNLOAD_LEHRER, wettbewerb.status());
@@ -871,29 +900,29 @@ public class UploadAuthorizationServiceImplTest {
 
 			Loesungszettel loesungszettel = new Loesungszettel().withAuswertungsquelle(Auswertungsquelle.ONLINE);
 
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
+			when(wettbewerbService.findWettbewerbMitID(wettbewerbID)).thenReturn(Optional.of(wettbewerb));
 			when(veranstalterRepository.ofId(veranstalterID)).thenReturn(Optional.of(veranstalter));
 			when(teilnahmenRepository.ofTeilnahmenummer(schulkuerzel)).thenReturn(Collections.singletonList(teilnahme));
-			when(loesungszettelRepository.loadAll(schulkuerzel, wettbewerb.id()))
+			when(loesungszettelRepository.loadAllWithTeilnahmenummerForWettbewerb(schulkuerzel, wettbewerb.id()))
 				.thenReturn(Collections.singletonList(loesungszettel));
 
 			// Act
 			try {
 
-				service.authorizeUpload(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER);
+				service.authorizeUploadAndReturnWettbewerb(veranstalterID, schulkuerzel, uploadType, Rolle.LEHRER, wettbewerbID);
 				fail("keine ActionNotAuthorizedException");
 			} catch (ActionNotAuthorizedException e) {
 
 				// Assert
 				assertEquals(
-					"Sie können keine Schulauswertungen für diese Schule hochladen, da bereits Lösungszettel online erfasst wurden.",
+					"Sie können keine Auswertungen für diese Schule hochladen, da bereits Lösungszettel online erfasst wurden.",
 					e.getMessage());
 
 				verify(domainEventHandler, never()).handleEvent(any());
-				verify(wettbewerbService).aktuellerWettbewerb();
+				verify(wettbewerbService).findWettbewerbMitID(wettbewerbID);
 				verify(veranstalterRepository).ofId(veranstalterID);
 				verify(teilnahmenRepository).ofTeilnahmenummer(schulkuerzel);
-				verify(loesungszettelRepository).loadAll(schulkuerzel, wettbewerb.id());
+				verify(loesungszettelRepository).loadAllWithTeilnahmenummerForWettbewerb(schulkuerzel, wettbewerb.id());
 			}
 		}
 	}

@@ -55,7 +55,7 @@ public class UnterlagenService {
 	DomainEventHandler domainEventHandler;
 
 	@Inject
-	private WettbewerbService wettbewerbService;
+	WettbewerbService wettbewerbService;
 
 	@Inject
 	VeranstalterRepository veranstalterRepository;

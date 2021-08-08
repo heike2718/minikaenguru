@@ -147,7 +147,7 @@ public class AuthorizationServiceTest {
 		Mockito.when(veranstalterRepository.ofId(veranstalterId)).thenReturn(Optional.of(veranstalter));
 
 		// Act
-		assertEquals(Rolle.ADMIN, service.checkPermissionForTeilnahmenummerAndReturnRolle(veranstalterId, teilnahmeId, "kontext"));
+		assertEquals(Rolle.PRIVAT, service.checkPermissionForTeilnahmenummerAndReturnRolle(veranstalterId, teilnahmeId, "kontext"));
 		assertNull(service.getSecurityIncidentRegistered());
 	}
 

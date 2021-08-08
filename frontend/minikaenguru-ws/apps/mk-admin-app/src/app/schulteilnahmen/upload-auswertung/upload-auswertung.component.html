@@ -1,0 +1,66 @@
+<div class="mkv-container mt-1">
+	<div *ngIf="(schuleUploadModel$ | async) as schule">
+		<ng-container *ngIf="schule !== undefined else loading">
+			<h3>Auswertung hochladen</h3>
+			<div class="row">
+				<div class="col-sm-12 col-md-3">Schule:</div>
+				<div class="col-sm-12 col-md-9">{{schule.katalogData.name }} ({{schule.kuerzel}})</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12 col-md-3">Ort:</div>
+				<div class="col-sm-12 col-md-9">{{schule.katalogData.ort}}</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12 col-md-3">Land:</div>
+				<div class="col-sm-12 col-md-9">{{schule.katalogData.land}}
+					({{schule.katalogData.kuerzelLand}})</div>
+			</div>
+
+			<ng-container *ngIf="selectedTeilnahme$ | async as teilnahme">
+				<div class="row">
+					<div class="col-sm-12 col-md-3">Kinder:</div>
+					<div class="col-sm-12 col-md-9">{{teilnahme.anzahlKinder}}</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12 col-md-3">Lösungszettel:</div>
+					<div class="col-sm-12 col-md-9">{{teilnahme.anzahlLoesungszettelUpload}}</div>
+				</div>
+			</ng-container>
+
+			<div class="mkv-bordered w-100 m-1 p-1">
+
+				<div class="row">
+					<div class="col-sm-12 col-md-3">Sprache englisch:</div>
+					<div class="col-sm-12 col-md-9"><input type="checkbox" id="chkEnglisch"
+							[(ngModel)]="spracheEnglisch" (change)="onCheckboxChanged()" /></div>
+				</div>
+
+				<div class="row">
+					<div class="col-12" *ngIf="subUrl.length > 0">
+						<mk-upload [uploadModel]="uploadModel" (dateiAusgewaehlt)="onDateiAusgewaehlt($event)"
+							(responsePayload)="onResponse($event)"></mk-upload>
+					</div>
+				</div>
+
+				<div *ngIf="fehlermeldungen$| async as fehlermeldungen">
+					<p *ngIf="fehlermeldungen.length > 0">Es gab Fehler:</p>
+					<div *ngFor="let fehler of fehlermeldungen; let indexOfelement=index;" class="col-12">
+						{{indexOfelement+1}}: {{fehler}}</div>
+				</div>
+			</div>
+		</ng-container>
+	</div>
+	<div class="btn-group d-flex mt-2" role="group">
+		<button class="btn btn-primary w-100 ml-1" (click)="gotoSchuleOverview()" title="zur Schule"><i
+				class="fa fa-arrow-left" aria-hidden="true"></i>Schule</button>
+
+		<button class="btn btn-primary w-100 ml-1" (click)="gotoSelectedVeranstalter()"><i class="fa fa-arrow-left"
+				aria-hidden="true"></i>Veranstalter</button>
+
+	</div>
+</div>
+
+<ng-template #loading>
+	<h3>Schule</h3>
+	Lade Schule... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
+</ng-template>

@@ -31,6 +31,12 @@ public class SchuleAdminOverview {
 	private String angemeldetDurch;
 
 	@JsonProperty
+	private int anzahlLoesungszettel;
+
+	@JsonProperty
+	private int anzahlKinder;
+
+	@JsonProperty
 	private List<AnonymisierteTeilnahmeAPIModel> schulteilnahmen;
 
 	public SchuleKatalogData getKatalogData() {
@@ -86,6 +92,28 @@ public class SchuleAdminOverview {
 	public SchuleAdminOverview withAngemeldetDurch(final String angemeldetDurch) {
 
 		this.angemeldetDurch = angemeldetDurch;
+		return this;
+	}
+
+	public int getAnzahlLoesungszettel() {
+
+		return anzahlLoesungszettel;
+	}
+
+	public SchuleAdminOverview withAnzahlLoesungszettel(final int anzahlLoesungszettel) {
+
+		this.anzahlLoesungszettel = anzahlLoesungszettel;
+		return this;
+	}
+
+	public int getAnzahlKinder() {
+
+		return anzahlKinder;
+	}
+
+	public SchuleAdminOverview withAnzahlKinder(final int anzahlKinder) {
+
+		this.anzahlKinder = anzahlKinder;
 		return this;
 	}
 }

@@ -48,4 +48,9 @@ public class UploadData {
 
 	}
 
+	public int size() {
+
+		return this.data.length;
+	}
+
 }

@@ -5,6 +5,8 @@
 package de.egladil.web.mk_gateway.domain.klassenlisten;
 
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
+import de.egladil.web.mk_gateway.domain.user.Rolle;
+import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 
 /**
  * UploadKlassenlisteContext
@@ -16,6 +18,10 @@ public class UploadKlassenlisteContext {
 	private boolean nachnameAlsZusatz;
 
 	private String kuerzelLand;
+
+	private Rolle rolle;
+
+	private Wettbewerb wettbewerb;
 
 	public Sprache getSprache() {
 
@@ -47,6 +53,28 @@ public class UploadKlassenlisteContext {
 	public UploadKlassenlisteContext withKuerzelLand(final String kuerzelLand) {
 
 		this.kuerzelLand = kuerzelLand;
+		return this;
+	}
+
+	public Rolle getRolle() {
+
+		return rolle;
+	}
+
+	public UploadKlassenlisteContext withRolle(final Rolle rolle) {
+
+		this.rolle = rolle;
+		return this;
+	}
+
+	public Wettbewerb getWettbewerb() {
+
+		return wettbewerb;
+	}
+
+	public UploadKlassenlisteContext withWettbewerb(final Wettbewerb wettbewerb) {
+
+		this.wettbewerb = wettbewerb;
 		return this;
 	}
 

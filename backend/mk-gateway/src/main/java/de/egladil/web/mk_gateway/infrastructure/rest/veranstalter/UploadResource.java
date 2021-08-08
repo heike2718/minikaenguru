@@ -2,13 +2,12 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.infrastructure.rest.admin;
+package de.egladil.web.mk_gateway.infrastructure.rest.veranstalter;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.validation.constraints.NotBlank;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -26,8 +25,8 @@ import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.annotations.LandKuerzel;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.loesungszettel.upload.AuswertungImportService;
-import de.egladil.web.mk_gateway.domain.loesungszettel.upload.UploadAuswertungContext;
+import de.egladil.web.mk_gateway.domain.klassenlisten.KlassenlisteImportService;
+import de.egladil.web.mk_gateway.domain.klassenlisten.UploadKlassenlisteContext;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.uploads.MultipartUtils;
 import de.egladil.web.mk_gateway.domain.uploads.UploadData;
@@ -36,14 +35,14 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadRequestPayload;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 
 /**
- * AdminUploadResource
+ * UploadResource
  */
 @RequestScoped
-@Path("admin/uploads")
-public class AdminUploadResource {
+@Path("uploads")
+@Produces(MediaType.APPLICATION_JSON)
+public class UploadResource {
 
 	@Context
 	SecurityContext securityContext;
@@ -52,49 +51,37 @@ public class AdminUploadResource {
 	UploadManager uploadManager;
 
 	@Inject
-	AuswertungImportService klassenlisteImportService;
-
-	@GET
-	@Path("auswertung/{jahr}/{kuerzelLand}/{schulkuerzel}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.TEXT_PLAIN)
-	private Response sayExists(@PathParam(value = "jahr") final String jahr, @PathParam(
-		value = "kuerzelLand") @LandKuerzel final String kuerzelLand, @PathParam(
-			value = "schulkuerzel") @Kuerzel final String schulkuerzel, @QueryParam(
-				value = "sprache") @NotBlank final String sprache) {
-
-		return Response.ok("Mission accomblished: jahr=" + jahr + ", land=" + kuerzelLand + ", teilnahmenummer=" + schulkuerzel
-			+ ", sprache=" + sprache).build();
-	}
+	KlassenlisteImportService klassenlisteImportService;
 
 	@POST
-	@Path("auswertung/{jahr}/{kuerzelLand}/{schulkuerzel}")
+	@Path("klassenlisten/{kuerzelLand}/{schulkuerzel}")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response uploadAuswertung(@PathParam(value = "jahr") final Integer jahr, @PathParam(
-		value = "kuerzelLand") @LandKuerzel final String kuerzelLand, @PathParam(
-			value = "schulkuerzel") @Kuerzel final String schulkuerzel, @QueryParam(
+	Response uploadKlassenliste(@PathParam(value = "kuerzelLand") @LandKuerzel final String kuerzelLand, @PathParam(
+		value = "schulkuerzel") @Kuerzel final String schulkuerzel, @QueryParam(
+			value = "nachnameAlsZusatz") final boolean nachnameAlsZusatz, @QueryParam(
 				value = "sprache") @NotBlank final String sprache, final MultipartFormDataInput input) {
 
-		String benutzerUuid = securityContext.getUserPrincipal().getName();
-		UploadType uploadType = UploadType.AUSWERTUNG;
+		String veranstalterUuid = securityContext.getUserPrincipal().getName();
+		UploadType uploadType = UploadType.KLASSENLISTE;
 
 		Sprache theSprache = Sprache.valueOf(sprache);
 
-		Pair<Rolle, Wettbewerb> rolleUndWettbewerb = uploadManager.authorizeUpload(benutzerUuid, schulkuerzel, uploadType,
-			new WettbewerbID(jahr));
-
-		UploadAuswertungContext contextObject = new UploadAuswertungContext().withKuerzelLand(kuerzelLand)
-			.withWettbewerb(rolleUndWettbewerb.getRight()).withSprache(theSprache).withRolle(rolleUndWettbewerb.getLeft());
+		Pair<Rolle, Wettbewerb> rolleUndWettbewerb = uploadManager.authorizeUpload(veranstalterUuid, schulkuerzel, uploadType,
+			null);
 
 		UploadData uploadData = MultipartUtils.getUploadData(input);
 
+		UploadKlassenlisteContext contextObject = new UploadKlassenlisteContext().withKuerzelLand(kuerzelLand)
+			.withNachnameAlsZusatz(nachnameAlsZusatz).withSprache(theSprache).withRolle(rolleUndWettbewerb.getLeft())
+			.withWettbewerb(rolleUndWettbewerb.getRight());
+
 		UploadRequestPayload uploadPayload = new UploadRequestPayload().withTeilnahmenummer(schulkuerzel)
-			.withBenutzerID(new Identifier(benutzerUuid)).withUploadType(uploadType).withUploadData(uploadData)
+			.withBenutzerID(new Identifier(veranstalterUuid)).withUploadType(uploadType).withUploadData(uploadData)
 			.withContext(contextObject);
 
 		ResponsePayload responsePayload = uploadManager.processUpload(uploadPayload);
 
 		return Response.ok(responsePayload).build();
 	}
+
 }

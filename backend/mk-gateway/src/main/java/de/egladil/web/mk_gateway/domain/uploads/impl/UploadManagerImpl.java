@@ -21,6 +21,7 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,9 +40,12 @@ import de.egladil.web.mk_gateway.domain.error.UploadFormatException;
 import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.UploadThreadDetected;
 import de.egladil.web.mk_gateway.domain.event.VirusDetected;
+import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.klassenlisten.KlassenlisteImportService;
 import de.egladil.web.mk_gateway.domain.klassenlisten.UploadKlassenlisteContext;
 import de.egladil.web.mk_gateway.domain.klassenlisten.impl.KlassenlisteCSVImportService;
+import de.egladil.web.mk_gateway.domain.loesungszettel.upload.AuswertungImportService;
+import de.egladil.web.mk_gateway.domain.loesungszettel.upload.UploadAuswertungContext;
 import de.egladil.web.mk_gateway.domain.uploads.UploadAuthorizationService;
 import de.egladil.web.mk_gateway.domain.uploads.UploadData;
 import de.egladil.web.mk_gateway.domain.uploads.UploadIdentifier;
@@ -52,6 +56,8 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.domain.uploads.convert.UploadToCSVConverter;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
+import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UploadHibernateRepository;
 
@@ -71,6 +77,9 @@ public class UploadManagerImpl implements UploadManager {
 	@ConfigProperty(name = "upload.folder.path")
 	String pathUploadDir;
 
+	@ConfigProperty(name = "upload.max.bytes")
+	String maxFilesizeBytes;
+
 	@Inject
 	AuthorizationService authService;
 
@@ -82,6 +91,9 @@ public class UploadManagerImpl implements UploadManager {
 
 	@Inject
 	KlassenlisteImportService klassenlisteImportService;
+
+	@Inject
+	AuswertungImportService auswertungImportService;
 
 	@Inject
 	UploadRepository uploadRepository;
@@ -101,32 +113,51 @@ public class UploadManagerImpl implements UploadManager {
 		result.uploadRepository = UploadHibernateRepository.createForIntegrationTests(em);
 		result.domainEventHandler = DomainEventHandler.createForIntegrationTest(em);
 		result.scanService = ScanService.createForIntegrationTest();
+		result.auswertungImportService = AuswertungImportService.createForIntegrationTest(em);
 		return result;
 
 	}
 
 	@Override
-	public boolean authorizeUpload(final String benutzerUuid, final String teilnahmenummer, final UploadType uploadType) {
+	public Pair<Rolle, Wettbewerb> authorizeUpload(final String benutzerUuid, final String teilnahmenummer, final UploadType uploadType, final WettbewerbID wettbewerbID) {
 
 		Identifier benutzerID = new Identifier(benutzerUuid);
 		Identifier teilnameID = new Identifier(teilnahmenummer);
 
 		Rolle rolle = authService.checkPermissionForTeilnahmenummerAndReturnRolle(benutzerID, teilnameID, uploadType.toString());
 
-		uploadAuthService.authorizeUpload(benutzerID, teilnahmenummer, uploadType, rolle);
+		Wettbewerb wettbewerb = uploadAuthService.authorizeUploadAndReturnWettbewerb(benutzerID, teilnahmenummer, uploadType, rolle,
+			wettbewerbID);
 
-		return true;
+		return Pair.of(rolle, wettbewerb);
 	}
 
 	ScanResult scanUpload(final UploadRequestPayload uploadPayload) {
 
+		String filename = uploadPayload.getUploadData().getFilename();
 		String fileOwnerId = uploadPayload.getBenutzerID().identifier();
+		int maxBytes = Integer.valueOf(maxFilesizeBytes);
+
+		int size = uploadPayload.getUploadData().size();
+
+		if (size > maxBytes) {
+
+			String errorMessage = applicationMessages.getString("upload.maxSizeExceeded");
+
+			UploadThreadDetected threadDetected = new UploadThreadDetected().withClientId(clientId)
+				.withFileName(filename)
+				.withOwnerId(fileOwnerId)
+				.withFilescannerMessage(errorMessage + ": size=" + size + " bytes");
+
+			domainEventHandler.handleEvent(threadDetected);
+
+			throw new UploadFormatException(errorMessage);
+		}
+
 		ScanRequestPayload scanRequestPayload = new ScanRequestPayload().withClientId(clientId)
 			.withFileOwner(fileOwnerId).withUpload(uploadPayload.getUploadData().toUpload());
 
 		ScanResult scanResult = scanService.scanFile(scanRequestPayload);
-
-		String filename = uploadPayload.getUploadData().getFilename();
 
 		VirusDetection virusDetection = scanResult.getVirusDetection();
 
@@ -227,26 +258,39 @@ public class UploadManagerImpl implements UploadManager {
 		case KLASSENLISTE:
 
 			UploadKlassenlisteContext uploadKlassenlisteContext = (UploadKlassenlisteContext) uploadPayload.getContext();
-			responsePayload = klassenlisteImportService.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
+			responsePayload = klassenlisteImportService
+				.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
+			break;
+
+		case AUSWERTUNG:
+			UploadAuswertungContext uploadAuswertungContext = (UploadAuswertungContext) uploadPayload.getContext();
+			responsePayload = auswertungImportService.importiereAuswertung(uploadAuswertungContext, persistenterUpload);
 			break;
 
 		default:
 			break;
 		}
-		UploadStatus uploadStatus = responsePayload.isOk() ? UploadStatus.IMPORTIERT : UploadStatus.FEHLER;
 
-		persistenterUpload.setStatus(uploadStatus);
+		if (responsePayload.isOk()) {
 
-		try {
+			removeFilesQuietly(persistenterUpload.getUuid(), dateiTyp);
 
-			uploadRepository.updateUpload(persistenterUpload);
-		} catch (Exception e) {
-
-			LOGGER.error("Upload mit UUID=" + persistenterUpload.getUuid() + ": UploadStatus konnte nicht aktualisiert werden: "
-				+ e.getMessage(), e);
 		}
 
 		return responsePayload;
+	}
+
+	/**
+	 * @param persistenterUpload
+	 */
+	private void removeFilesQuietly(final String uuidUpload, final DateiTyp dateiTyp) {
+
+		File uploadedFile = new File(this.getPathUploadedFile(dateiTyp, uuidUpload));
+
+		MkGatewayFileUtils.deleteFileWithErrorLogQuietly(uploadedFile, LOGGER);
+		File convertedFile = new File(this.getPathConvertedFile(uuidUpload));
+
+		MkGatewayFileUtils.deleteFileWithErrorLogQuietly(convertedFile, LOGGER);
 	}
 
 	/**
@@ -257,7 +301,7 @@ public class UploadManagerImpl implements UploadManager {
 	 */
 	private String writeUploadFile(final UploadData uploadData, final DateiTyp dateiTyp, final String uuid) {
 
-		String path = pathUploadDir + File.separator + uuid + dateiTyp.getSuffixWithPoint();
+		String path = getPathUploadedFile(dateiTyp, uuid);
 
 		File file = new File(path);
 
@@ -272,5 +316,25 @@ public class UploadManagerImpl implements UploadManager {
 			LOGGER.error("Fehler beim Speichern im Filesystem: " + e.getMessage(), e);
 			throw new MkGatewayRuntimeException("Konnte upload nicht ins Filesystem speichern: " + e.getMessage(), e);
 		}
+	}
+
+	/**
+	 * @param  dateiTyp
+	 * @param  uuid
+	 * @return
+	 */
+	private String getPathUploadedFile(final DateiTyp dateiTyp, final String uuid) {
+
+		return pathUploadDir + File.separator + uuid + dateiTyp.getSuffixWithPoint();
+	}
+
+	/**
+	 * @param  dateiTyp
+	 * @param  uuid
+	 * @return
+	 */
+	private String getPathConvertedFile(final String uuid) {
+
+		return pathUploadDir + File.separator + uuid + ".csv";
 	}
 }

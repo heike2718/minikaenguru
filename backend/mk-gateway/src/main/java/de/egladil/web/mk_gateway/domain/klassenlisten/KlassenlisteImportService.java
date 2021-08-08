@@ -20,7 +20,7 @@ public interface KlassenlisteImportService {
 	 * @param  uploadMetadata
 	 *                                   PersistenterUpload - weitere Daten, die zum Anlegen der Kinder und auch zum Finden der
 	 *                                   CSV-Datei erforderlich sind.
-	 * @return
+	 * @return                           ResponsePayload
 	 */
 	ResponsePayload importiereKinder(final UploadKlassenlisteContext uploadKlassenlisteContext, final PersistenterUpload uploadMetadata);
 

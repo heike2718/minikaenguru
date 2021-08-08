@@ -33,6 +33,7 @@ import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.ZugangUnterlagen;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
@@ -76,7 +77,7 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 	}
 
 	@Override
-	public boolean authorizeUpload(final Identifier benutzerID, final String schulkuerzel, final UploadType uploadType, final Rolle rolle) {
+	public Wettbewerb authorizeUploadAndReturnWettbewerb(final Identifier benutzerID, final String schulkuerzel, final UploadType uploadType, final Rolle rolle, final WettbewerbID wettbewerbID) {
 
 		if (Rolle.PRIVAT == rolle) {
 
@@ -90,7 +91,7 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 			throw new ActionNotAuthorizedException(applicationMessages.getString("general.actionNotAuthorized"));
 		}
 
-		Optional<Wettbewerb> optWettbewerb = this.wettbewerbService.aktuellerWettbewerb();
+		Optional<Wettbewerb> optWettbewerb = wettbewerbService.findWettbewerbMitID(wettbewerbID);
 
 		if (optWettbewerb.isEmpty()) {
 
@@ -114,69 +115,72 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 			throw new ActionNotAuthorizedException(msg);
 		}
 
-		Wettbewerb aktuellerWettbewerb = optWettbewerb.get();
+		Wettbewerb wettbewerb = optWettbewerb.get();
 
-		if (WettbewerbStatus.ERFASST == aktuellerWettbewerb.status()) {
+		if (!rolle.isAdmin()) {
 
-			String msg = null;
+			if (WettbewerbStatus.ERFASST == wettbewerb.status()) {
 
-			switch (uploadType) {
+				String msg = null;
 
-			case KLASSENLISTE:
-				msg = applicationMessages.getString("klassenimport.forbidden.nochKeineAnmeldungen");
-				break;
+				switch (uploadType) {
 
-			case AUSWERTUNG:
-				msg = applicationMessages.getString("auswertungimport.forbidden.nochKeineAnmeldungen");
-				break;
+				case KLASSENLISTE:
+					msg = applicationMessages.getString("klassenimport.forbidden.nochKeineAnmeldungen");
+					break;
 
-			default:
-				break;
-			}
+				case AUSWERTUNG:
+					msg = applicationMessages.getString("auswertungimport.forbidden.nochKeineAnmeldungen");
+					break;
 
-			LOGGER.warn("Uploadversuch durch Veranstalter {}, Wettbewerbsstatus={}, UploadTyp={}", benutzerID,
-				aktuellerWettbewerb.status(), uploadType);
-			throw new ActionNotAuthorizedException(msg);
-		}
-
-		if (WettbewerbStatus.BEENDET == aktuellerWettbewerb.status()) {
-
-			String msg = null;
-
-			switch (uploadType) {
-
-			case KLASSENLISTE:
-				msg = applicationMessages.getString("klassenimport.forbidden.wettbewerbBeendet");
-				break;
-
-			case AUSWERTUNG:
-				if (!rolle.isAdmin()) {
-
-					msg = applicationMessages.getString("auswertungimport.forbidden.wettbewerbBeendet");
+				default:
+					break;
 				}
-				break;
 
-			default:
-				break;
+				LOGGER.warn("Uploadversuch durch Veranstalter {}, Wettbewerbsstatus={}, UploadTyp={}", benutzerID,
+					wettbewerb.status(), uploadType);
+				throw new ActionNotAuthorizedException(msg);
 			}
 
-			LOGGER.warn("Uploadversuch durch Veranstalter {}, Wettbewerbsstatus={}, UploadTyp={}", benutzerID,
-				aktuellerWettbewerb.status(), uploadType);
+			if (WettbewerbStatus.BEENDET == wettbewerb.status()) {
 
-			if (msg != null) {
+				String msg = null;
 
-				throw new ActionNotAuthorizedException(msg);
+				switch (uploadType) {
+
+				case KLASSENLISTE:
+					msg = applicationMessages.getString("klassenimport.forbidden.wettbewerbBeendet");
+					break;
+
+				case AUSWERTUNG:
+					if (!rolle.isAdmin()) {
+
+						msg = applicationMessages.getString("auswertungimport.forbidden.wettbewerbBeendet");
+					}
+					break;
+
+				default:
+					break;
+				}
+
+				LOGGER.warn("Uploadversuch durch Veranstalter {}, Wettbewerbsstatus={}, UploadTyp={}", benutzerID,
+					wettbewerb.status(), uploadType);
+
+				if (msg != null) {
+
+					throw new ActionNotAuthorizedException(msg);
+				}
 			}
 		}
 
 		Pair<Veranstalter, Teilnahme> veranstalterUndTeilnahme = this.isAuthorizedForTeilnahme(rolle, benutzerID, schulkuerzel,
-			aktuellerWettbewerb, uploadType);
+			wettbewerb, uploadType);
 
 		if (!rolle.isAdmin()) {
 
 			Veranstalter veranstalter = veranstalterUndTeilnahme.getLeft();
 
-			if (UploadType.AUSWERTUNG == uploadType && WettbewerbStatus.ANMELDUNG == aktuellerWettbewerb.status()
+			if (UploadType.AUSWERTUNG == uploadType && WettbewerbStatus.ANMELDUNG == wettbewerb.status()
 				&& ZugangUnterlagen.ERTEILT != veranstalter.zugangUnterlagen()) {
 
 				throw new ActionNotAuthorizedException(
@@ -184,8 +188,9 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 			}
 		}
 
-		List<Loesungszettel> loesungszettelAktuellerWettbewerb = loesungszettelRepository.loadAll(schulkuerzel,
-			aktuellerWettbewerb.id());
+		List<Loesungszettel> loesungszettelAktuellerWettbewerb = loesungszettelRepository.loadAllWithTeilnahmenummerForWettbewerb(
+			schulkuerzel,
+			wettbewerb.id());
 
 		if (UploadType.AUSWERTUNG == uploadType) {
 
@@ -218,7 +223,7 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 			}
 		}
 
-		return true;
+		return wettbewerb;
 	}
 
 	private Pair<Veranstalter, Teilnahme> isAuthorizedForTeilnahme(final Rolle rolle, final Identifier veranstalterID, final String schulkuerzel, final Wettbewerb aktuellerWettbewerb, final UploadType uploadType) {

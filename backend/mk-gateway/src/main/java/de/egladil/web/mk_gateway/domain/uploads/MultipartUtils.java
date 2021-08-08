@@ -41,7 +41,7 @@ public class MultipartUtils {
 		if (inputParts.size() != 1) {
 
 			LOGGER.error("Anzahl hochgeladene Datein=" + inputParts.size());
-			throw new MkGatewayRuntimeException("Unerwartete Anzahl hichgeladener Dateien: kann nur genau eine Datei verarbeiten.");
+			throw new MkGatewayRuntimeException("Unerwartete Anzahl hochgeladener Dateien: kann nur genau eine Datei verarbeiten.");
 		}
 
 		InputPart inputPart = inputParts.get(0);
