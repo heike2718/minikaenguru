@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
 
@@ -19,7 +18,7 @@ import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
@@ -55,6 +54,9 @@ public class EinzelkindUrkundenservice {
 	private static final Logger LOG = LoggerFactory.getLogger(EinzelkindUrkundenservice.class);
 
 	@Inject
+	DomainEventHandler domainEventHandler;
+
+	@Inject
 	LoesungszettelRepository loesungezettelRepository;
 
 	@Inject
@@ -74,9 +76,6 @@ public class EinzelkindUrkundenservice {
 
 	@Inject
 	WettbewerbService wettbewerbService;
-
-	@Inject
-	Event<DataInconsistencyRegistered> dataInconsistencyEvent;
 
 	/**
 	 * Generiert eine einzelne Teilnehmerurkunde für das gegebene Privatkind.
@@ -103,7 +102,7 @@ public class EinzelkindUrkundenservice {
 
 		TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdntifier = kind.teilnahmeIdentifier();
 
-		authService.checkPermissionForTeilnahmenummer(veranstalterID,
+		authService.checkPermissionForTeilnahmenummerAndReturnRolle(veranstalterID,
 			new Identifier(teilnahmeIdntifier.teilnahmenummer()),
 			"[generiereUrkunde - " + kindID.toString() + "]");
 
@@ -121,7 +120,7 @@ public class EinzelkindUrkundenservice {
 			String msg = "Loesungszettel mit UUID " + kind.loesungszettelID() + " existiert nicht, ist aber mit Kind "
 				+ kind.identifier() + " verknuepft";
 			LOG.warn(msg);
-			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
+			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
 
 			throw new NotFoundException();
 		}
@@ -178,7 +177,7 @@ public class EinzelkindUrkundenservice {
 			String msg = "Kind aus Schulteilnahme " + kind.identifier() + ", " + kind.teilnahmeIdentifier()
 				+ " ist keiner Klasse zugeordnet.";
 			LOG.error(msg);
-			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
+			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
 			throw new NotFoundException();
 		}
 
@@ -192,7 +191,7 @@ public class EinzelkindUrkundenservice {
 			String msg = "Das sollte hier nicht mehr passieren: konnte keine Teilnahme mit Identifier " + teilnahmeIdentifier
 				+ " finden";
 			LOG.error(msg);
-			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
+			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
 			throw new MkGatewayRuntimeException(msg);
 		}
 
@@ -204,7 +203,7 @@ public class EinzelkindUrkundenservice {
 
 			String msg = "Klasse mit UUID " + kind.klasseID() + " nicht gefunden";
 			LOG.error(msg);
-			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
+			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
 			throw new MkGatewayRuntimeException(msg);
 		}
 

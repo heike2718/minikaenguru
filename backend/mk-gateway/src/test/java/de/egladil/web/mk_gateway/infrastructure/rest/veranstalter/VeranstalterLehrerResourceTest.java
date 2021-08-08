@@ -60,7 +60,7 @@ public class VeranstalterLehrerResourceTest {
 		Identifier teilnahmeId = new Identifier(schulkuerzel);
 
 		Mockito
-			.when(authService.checkPermissionForTeilnahmenummer(lehrerId, teilnahmeId, "[getSchuleDetails - " + schulkuerzel + "]"))
+			.when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(lehrerId, teilnahmeId, "[getSchuleDetails - " + schulkuerzel + "]"))
 			.thenThrow(new AccessDeniedException());
 
 		// Act

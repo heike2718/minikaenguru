@@ -11,7 +11,7 @@ export class VeranstalterSucheComponent implements OnInit {
 
 	suchkriterien: VeranstalterSuchkriterium[] = ['EMAIL', 'NAME', 'TEILNAHMENUMMER', 'UUID'];
 
-	model: VeranstalterSuchanfrage = {suchkriterium: undefined, suchstring: undefined};
+	model: VeranstalterSuchanfrage = {suchkriterium: 'EMAIL', suchstring: undefined};
 
 	constructor(private veranstalterFacade: VeranstalterFacade) { }
 

@@ -4,7 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.general;
 
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.Consumes;
@@ -25,8 +24,8 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.auth.signup.SignUpService;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
-import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.veranstalter.SynchronizeVeranstalterService;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.ChangeUserCommand;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.CreateUserCommand;
@@ -50,13 +49,7 @@ public class SyncVeranstalterDataResource {
 	String clientId;
 
 	@Inject
-	Event<SecurityIncidentRegistered> securityEvent;
-
-	@Inject
-	Event<DeleteVeranstalterFailed> deleteFailedEvent;
-
-	@Inject
-	Event<SynchronizeVeranstalterFailed> synchronizeFailedEvent;
+	DomainEventHandler domainEventHandler;
 
 	@Inject
 	SynchronizeVeranstalterService syncService;
@@ -72,7 +65,7 @@ public class SyncVeranstalterDataResource {
 
 			String msg = "Aufruf POST /sync/ack mit falscher ClientID '" + data.sendingClientId() + "'";
 			LOG.warn("{}: {}", msg, data);
-			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+			new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 			throw new AccessDeniedException(msg);
 		}
 
@@ -103,9 +96,9 @@ public class SyncVeranstalterDataResource {
 
 			LOG.error("Veranstalter mit UUID {} wurde nicht angelegt: {}", createUserCommand.getUuid(), e.getMessage(), e);
 
-			if (synchronizeFailedEvent != null) {
+			if (domainEventHandler != null) {
 
-				synchronizeFailedEvent.fire(SynchronizeVeranstalterFailed.fromMessagingCommand(createUserCommand));
+				domainEventHandler.handleEvent(SynchronizeVeranstalterFailed.fromMessagingCommand(createUserCommand));
 
 			}
 			throw new MkGatewayRuntimeException("Veranstalter synchronisieren schlug fehl!");
@@ -125,9 +118,9 @@ public class SyncVeranstalterDataResource {
 
 			LOG.error("Veranstalter mit UUID {} wurde nicht geändert: {}", data.uuid(), e.getMessage(), e);
 
-			if (synchronizeFailedEvent != null) {
+			if (domainEventHandler != null) {
 
-				synchronizeFailedEvent.fire(SynchronizeVeranstalterFailed.fromMessagingCommand(data));
+				domainEventHandler.handleEvent(SynchronizeVeranstalterFailed.fromMessagingCommand(data));
 
 			}
 			throw new MkGatewayRuntimeException("Veranstalter synchronisieren schlug fehl!");
@@ -147,9 +140,9 @@ public class SyncVeranstalterDataResource {
 
 			LOG.error("Veranstalter mit UUID {} wurde nicht gelöscht: {}", data.uuid(), e.getMessage(), e);
 
-			if (deleteFailedEvent != null) {
+			if (domainEventHandler != null) {
 
-				deleteFailedEvent.fire(new DeleteVeranstalterFailed(data.uuid()));
+				domainEventHandler.handleEvent(new DeleteVeranstalterFailed(data.uuid()));
 
 			}
 			throw new MkGatewayRuntimeException("Veranstalter löschen schlug fehl!");

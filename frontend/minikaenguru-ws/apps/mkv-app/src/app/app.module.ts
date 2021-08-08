@@ -59,7 +59,9 @@ import { UrkundenModule } from './urkunden/urkunden.module';
 			cancelKatalogantragRedirectPath: '/landing'
 		}),
 		CommonMessagesModule,
-		CommonComponentsModule,
+		CommonComponentsModule.forRoot({
+			baseUrl: environment.apiUrl
+		}),
 		CommonLoggingModule.forRoot({
 			consoleLogActive: environment.consoleLogActive,
 			serverLogActive: environment.serverLogActive,

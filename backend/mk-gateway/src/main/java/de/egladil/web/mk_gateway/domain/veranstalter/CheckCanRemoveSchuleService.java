@@ -37,7 +37,7 @@ public class CheckCanRemoveSchuleService {
 	 */
 	public boolean kannLehrerVonSchuleAbmelden(final Identifier lehrerID, final Identifier schuleID) {
 
-		veranstalterAuthService.checkPermissionForTeilnahmenummer(lehrerID, schuleID,
+		veranstalterAuthService.checkPermissionForTeilnahmenummerAndReturnRolle(lehrerID, schuleID,
 			"[removeSchule - " + schuleID.identifier() + "]");
 
 		SchuleDetails details = schuleDetailsService.ermittleSchuldetails(schuleID, lehrerID);

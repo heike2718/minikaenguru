@@ -93,6 +93,23 @@ public class WettbewerbService {
 		return Optional.of(wettbewerbe.get(0));
 	}
 
+	/**
+	 * Ermittelt den Wettbewerb mit der gegebenen ID. Es kann auch sein, dass es keinen gibt.
+	 *
+	 * @return Optional
+	 */
+	public Optional<Wettbewerb> findWettbewerbMitID(final WettbewerbID wettbewerbId) {
+
+		List<Wettbewerb> wettbewerbe = wettbewerbRepository.loadWettbewerbe();
+
+		if (wettbewerbe.isEmpty()) {
+
+			return Optional.empty();
+		}
+
+		return wettbewerbe.stream().filter(w -> w.id().equals(wettbewerbId)).findFirst();
+	}
+
 	public Optional<WettbewerbDetailsAPIModel> wettbewerbMitJahr(final Integer jahr) {
 
 		if (jahr == null) {

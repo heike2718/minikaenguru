@@ -27,13 +27,13 @@ public class VersionResource {
 	@ConfigProperty(name = "quarkus.application.version")
 	String version;
 
-	@ConfigProperty(name = "stage")
-	String stage;
+	@ConfigProperty(name = "env")
+	String env;
 
 	@GET
 	public Response getVersion() {
 
-		return Response.ok(ResponsePayload.messageOnly(MessagePayload.info(version + " - " + stage))).build();
+		return Response.ok(ResponsePayload.messageOnly(MessagePayload.info(version + " - " + env))).build();
 
 	}
 

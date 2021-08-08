@@ -26,9 +26,9 @@ import de.egladil.web.mk_gateway.domain.error.ConcurrentModificationType;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRohdaten;
-import de.egladil.web.mk_gateway.domain.loesungszettel.ZulaessigeLoesungszetteleingabe;
-import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelAPIModel;
-import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelZeileAPIModel;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.OnlineLoesungszetteleingabe;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelAPIModel;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelZeileAPIModel;
 import de.egladil.web.mkv_server_tests.TestUtils;
 
 /**
@@ -116,19 +116,19 @@ public class LoesungszettelAnlegenIntegrationIT extends AbstractLoesungszettelTe
 
 			if (responseZeile.name().startsWith("A")) {
 
-				assertEquals("Fehler bei Zeile " + responseZeile.name(), ZulaessigeLoesungszetteleingabe.A,
+				assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.A,
 					responseZeile.eingabe());
 			}
 
 			if (responseZeile.name().startsWith("B")) {
 
-				assertEquals("Fehler bei Zeile " + responseZeile.name(), ZulaessigeLoesungszetteleingabe.B,
+				assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.B,
 					responseZeile.eingabe());
 			}
 
 			if (responseZeile.name().startsWith("C")) {
 
-				assertEquals("Fehler bei Zeile " + responseZeile.name(), ZulaessigeLoesungszetteleingabe.C,
+				assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.C,
 					responseZeile.eingabe());
 			}
 
@@ -191,19 +191,19 @@ public class LoesungszettelAnlegenIntegrationIT extends AbstractLoesungszettelTe
 
 			if (responseZeile.name().startsWith("A")) {
 
-				assertEquals("Fehler bei Zeile " + responseZeile.name(), ZulaessigeLoesungszetteleingabe.A,
+				assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.A,
 					responseZeile.eingabe());
 			}
 
 			if (responseZeile.name().startsWith("B")) {
 
-				assertEquals("Fehler bei Zeile " + responseZeile.name(), ZulaessigeLoesungszetteleingabe.B,
+				assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.B,
 					responseZeile.eingabe());
 			}
 
 			if (responseZeile.name().startsWith("C")) {
 
-				assertEquals("Fehler bei Zeile " + responseZeile.name(), ZulaessigeLoesungszetteleingabe.C,
+				assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.C,
 					responseZeile.eingabe());
 			}
 
@@ -251,19 +251,19 @@ public class LoesungszettelAnlegenIntegrationIT extends AbstractLoesungszettelTe
 
 			if (responseZeile.name().startsWith("A")) {
 
-				assertEquals("Fehler bei Zeile " + responseZeile.name(), ZulaessigeLoesungszetteleingabe.A,
+				assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.A,
 					responseZeile.eingabe());
 			}
 
 			if (responseZeile.name().startsWith("B")) {
 
-				assertEquals("Fehler bei Zeile " + responseZeile.name(), ZulaessigeLoesungszetteleingabe.B,
+				assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.B,
 					responseZeile.eingabe());
 			}
 
 			if (responseZeile.name().startsWith("C")) {
 
-				assertEquals("Fehler bei Zeile " + responseZeile.name(), ZulaessigeLoesungszetteleingabe.C,
+				assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.C,
 					responseZeile.eingabe());
 			}
 

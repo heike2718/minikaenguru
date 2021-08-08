@@ -6,8 +6,8 @@ package de.egladil.web.mk_gateway.domain;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -63,7 +63,7 @@ public class AuthorizationServiceTest {
 		// Act + Assert
 		try {
 
-			service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId, "kontext");
+			service.checkPermissionForTeilnahmenummerAndReturnRolle(veranstalterId, teilnahmeId, "kontext");
 			fail("keine AccessDeniedException");
 		} catch (AccessDeniedException e) {
 
@@ -89,7 +89,7 @@ public class AuthorizationServiceTest {
 		// Act + Assert
 		try {
 
-			service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId, "kontext");
+			service.checkPermissionForTeilnahmenummerAndReturnRolle(veranstalterId, teilnahmeId, "kontext");
 			fail("keine AccessDeniedException");
 		} catch (AccessDeniedException e) {
 
@@ -119,7 +119,7 @@ public class AuthorizationServiceTest {
 		// Act + Assert
 		try {
 
-			service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId, "kontext");
+			service.checkPermissionForTeilnahmenummerAndReturnRolle(veranstalterId, teilnahmeId, "kontext");
 			fail("keine AccessDeniedException");
 		} catch (AccessDeniedException e) {
 
@@ -147,7 +147,7 @@ public class AuthorizationServiceTest {
 		Mockito.when(veranstalterRepository.ofId(veranstalterId)).thenReturn(Optional.of(veranstalter));
 
 		// Act
-		assertTrue(service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId, "kontext"));
+		assertEquals(Rolle.PRIVAT, service.checkPermissionForTeilnahmenummerAndReturnRolle(veranstalterId, teilnahmeId, "kontext"));
 		assertNull(service.getSecurityIncidentRegistered());
 	}
 
@@ -164,7 +164,7 @@ public class AuthorizationServiceTest {
 		Mockito.when(userRepository.ofId(USER_UUID)).thenReturn(Optional.of(user));
 		Mockito.when(veranstalterRepository.ofId(veranstalterId)).thenReturn(Optional.empty());
 
-		assertTrue(service.checkPermissionForTeilnahmenummer(veranstalterId, teilnahmeId, "kontext"));
+		assertEquals(Rolle.ADMIN, service.checkPermissionForTeilnahmenummerAndReturnRolle(veranstalterId, teilnahmeId, "kontext"));
 		assertNull(service.getSecurityIncidentRegistered());
 	}
 

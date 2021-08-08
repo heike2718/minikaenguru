@@ -11,6 +11,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 /**
  * KindDublettenpruefer
  */
+@Deprecated
 public class KindDublettenpruefer implements BiFunction<Kind, Kind, Boolean> {
 
 	@Override

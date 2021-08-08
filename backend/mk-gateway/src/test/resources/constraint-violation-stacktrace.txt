@@ -1,0 +1,196 @@
+2021-06-10 16:02:58.922 WARN  [or.hi.en.jd.sp.SqlExceptionHelper] (executor-thread-8495) SQL Error: 1062, SQLState: 23000
+2021-06-10 16:02:59.099 ERROR [or.hi.en.jd.sp.SqlExceptionHelper] (executor-thread-8495) (conn=623) Duplicate entry 'SCHULE-2021-JZVR7H8X-EINS-e827acb0-b9ac-4a58-abb4-e0adc19cc256' for key 'uk_loesungszettel_1'
+2021-06-10 16:02:59.589 ERROR [de.eg.we.mk.in.er.MkvApiGatewayExceptionMapper] (executor-thread-8495) idRef=5df12836596c492b_174843f6 - uuid=174843f6...: org.hibernate.exception.ConstraintViolationException: could not execute statement: javax.persistence.PersistenceException: org.hibernate.exception.ConstraintViolationException: could not execute statement
+	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:154)
+	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:181)
+	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:188)
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:726)
+	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:706)
+	at io.quarkus.hibernate.orm.runtime.session.TransactionScopedSession.persist(TransactionScopedSession.java:139)
+	at io.quarkus.hibernate.orm.runtime.session.ForwardingSession.persist(ForwardingSession.java:53)
+	at de.egladil.web.mk_gateway.infrastructure.persistence.impl.EventRepositoryHibernate.appendEvent(EventRepositoryHibernate.java:38)
+	at de.egladil.web.mk_gateway.infrastructure.persistence.impl.EventRepositoryHibernate_Subclass.appendEvent$$superaccessor1(EventRepositoryHibernate_Subclass.zig:211)
+	at de.egladil.web.mk_gateway.infrastructure.persistence.impl.EventRepositoryHibernate_Subclass$$function$$1.apply(EventRepositoryHibernate_Subclass$$function$$1.zig:33)
+	at io.quarkus.arc.impl.AroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:54)
+	at io.quarkus.narayana.jta.runtime.interceptor.TransactionalInterceptorBase.invokeInCallerTx(TransactionalInterceptorBase.java:252)
+	at io.quarkus.narayana.jta.runtime.interceptor.TransactionalInterceptorRequired.doIntercept(TransactionalInterceptorRequired.java:34)
+	at io.quarkus.narayana.jta.runtime.interceptor.TransactionalInterceptorBase.intercept(TransactionalInterceptorBase.java:53)
+	at io.quarkus.narayana.jta.runtime.interceptor.TransactionalInterceptorRequired.intercept(TransactionalInterceptorRequired.java:26)
+	at io.quarkus.narayana.jta.runtime.interceptor.TransactionalInterceptorRequired_Bean.intercept(TransactionalInterceptorRequired_Bean.zig:340)
+	at io.quarkus.arc.impl.InterceptorInvocation.invoke(InterceptorInvocation.java:41)
+	at io.quarkus.arc.impl.AroundInvokeInvocationContext.perform(AroundInvokeInvocationContext.java:41)
+	at io.quarkus.arc.impl.InvocationContexts.performAroundInvoke(InvocationContexts.java:32)
+	at de.egladil.web.mk_gateway.infrastructure.persistence.impl.EventRepositoryHibernate_Subclass.appendEvent(EventRepositoryHibernate_Subclass.zig:168)
+	at de.egladil.web.mk_gateway.infrastructure.persistence.impl.EventRepositoryHibernate_ClientProxy.appendEvent(EventRepositoryHibernate_ClientProxy.zig:103)
+	at de.egladil.web.mk_gateway.domain.event.DomainEventHandler.handleDomainEvent(DomainEventHandler.java:41)
+	at de.egladil.web.mk_gateway.domain.event.DomainEventHandler_Observer_handleDomainEvent_9279a1d2bde9ecdcc90945e7f7e2c9466dab3b74.notify(DomainEventHandler_Observer_handleDomainEvent_9279a1d2bde9ecdcc90945e7f7e2c9466dab3b74.zig:147)
+	at io.quarkus.arc.impl.EventImpl$Notifier.notifyObservers(EventImpl.java:283)
+	at io.quarkus.arc.impl.EventImpl$Notifier.notify(EventImpl.java:264)
+	at io.quarkus.arc.impl.EventImpl.fire(EventImpl.java:70)
+	at de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelService.doCreateAndSaveNewLoesungszettel(LoesungszettelService.java:461)
+	at de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelService.loesungszettelAnlegen(LoesungszettelService.java:420)
+	at de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelService_Subclass.loesungszettelAnlegen$$superaccessor4(LoesungszettelService_Subclass.zig:705)
+	at de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelService_Subclass$$function$$4.apply(LoesungszettelService_Subclass$$function$$4.zig:41)
+	at io.quarkus.arc.impl.AroundInvokeInvocationContext.proceed(AroundInvokeInvocationContext.java:54)
+	at io.quarkus.narayana.jta.runtime.interceptor.TransactionalInterceptorBase.invokeInOurTx(TransactionalInterceptorBase.java:127)
+	at io.quarkus.narayana.jta.runtime.interceptor.TransactionalInterceptorBase.invokeInOurTx(TransactionalInterceptorBase.java:100)
+	at io.quarkus.narayana.jta.runtime.interceptor.TransactionalInterceptorRequired.doIntercept(TransactionalInterceptorRequired.java:32)
+	at io.quarkus.narayana.jta.runtime.interceptor.TransactionalInterceptorBase.intercept(TransactionalInterceptorBase.java:53)
+	at io.quarkus.narayana.jta.runtime.interceptor.TransactionalInterceptorRequired.intercept(TransactionalInterceptorRequired.java:26)
+	at io.quarkus.narayana.jta.runtime.interceptor.TransactionalInterceptorRequired_Bean.intercept(TransactionalInterceptorRequired_Bean.zig:340)
+	at io.quarkus.arc.impl.InterceptorInvocation.invoke(InterceptorInvocation.java:41)
+	at io.quarkus.arc.impl.AroundInvokeInvocationContext.perform(AroundInvokeInvocationContext.java:41)
+	at io.quarkus.arc.impl.InvocationContexts.performAroundInvoke(InvocationContexts.java:32)
+	at de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelService_Subclass.loesungszettelAnlegen(LoesungszettelService_Subclass.zig:660)
+	at de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelService_ClientProxy.loesungszettelAnlegen(LoesungszettelService_ClientProxy.zig:488)
+	at de.egladil.web.mk_gateway.infrastructure.rest.veranstalter.LoesungszettelResource.addLoesungszettel(LoesungszettelResource.java:70)
+	at de.egladil.web.mk_gateway.infrastructure.rest.veranstalter.LoesungszettelResource_ClientProxy.addLoesungszettel(LoesungszettelResource_ClientProxy.zig:225)
+	at jdk.internal.reflect.GeneratedMethodAccessor51.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.jboss.resteasy.core.MethodInjectorImpl.invoke(MethodInjectorImpl.java:170)
+	at org.jboss.resteasy.core.MethodInjectorImpl.invoke(MethodInjectorImpl.java:130)
+	at org.jboss.resteasy.core.ResourceMethodInvoker.internalInvokeOnTarget(ResourceMethodInvoker.java:643)
+	at org.jboss.resteasy.core.ResourceMethodInvoker.invokeOnTargetAfterFilter(ResourceMethodInvoker.java:507)
+	at org.jboss.resteasy.core.ResourceMethodInvoker.lambda$invokeOnTarget$2(ResourceMethodInvoker.java:457)
+	at org.jboss.resteasy.core.interception.jaxrs.PreMatchContainerRequestContext.filter(PreMatchContainerRequestContext.java:364)
+	at org.jboss.resteasy.core.ResourceMethodInvoker.invokeOnTarget(ResourceMethodInvoker.java:459)
+	at org.jboss.resteasy.core.ResourceMethodInvoker.invoke(ResourceMethodInvoker.java:419)
+	at org.jboss.resteasy.core.ResourceMethodInvoker.invoke(ResourceMethodInvoker.java:393)
+	at org.jboss.resteasy.core.ResourceMethodInvoker.invoke(ResourceMethodInvoker.java:68)
+	at org.jboss.resteasy.core.SynchronousDispatcher.invoke(SynchronousDispatcher.java:492)
+	at org.jboss.resteasy.core.SynchronousDispatcher.lambda$invoke$4(SynchronousDispatcher.java:261)
+	at org.jboss.resteasy.core.SynchronousDispatcher.lambda$preprocess$0(SynchronousDispatcher.java:161)
+	at org.jboss.resteasy.core.interception.jaxrs.PreMatchContainerRequestContext.filter(PreMatchContainerRequestContext.java:364)
+	at org.jboss.resteasy.core.SynchronousDispatcher.preprocess(SynchronousDispatcher.java:164)
+	at org.jboss.resteasy.core.SynchronousDispatcher.invoke(SynchronousDispatcher.java:247)
+	at io.quarkus.resteasy.runtime.standalone.RequestDispatcher.service(RequestDispatcher.java:73)
+	at io.quarkus.resteasy.runtime.standalone.VertxRequestHandler.dispatch(VertxRequestHandler.java:138)
+	at io.quarkus.resteasy.runtime.standalone.VertxRequestHandler.access$000(VertxRequestHandler.java:41)
+	at io.quarkus.resteasy.runtime.standalone.VertxRequestHandler$1.run(VertxRequestHandler.java:93)
+	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2415)
+	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1452)
+	at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:29)
+	at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:29)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+	at org.jboss.threads.JBossThread.run(JBossThread.java:501)
+Caused by: org.hibernate.exception.ConstraintViolationException: could not execute statement
+	at org.hibernate.exception.internal.SQLExceptionTypeDelegate.convert(SQLExceptionTypeDelegate.java:59)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:42)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:113)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:99)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:200)
+	at org.hibernate.persister.entity.AbstractEntityPersister.insert(AbstractEntityPersister.java:3297)
+	at org.hibernate.persister.entity.AbstractEntityPersister.insert(AbstractEntityPersister.java:3824)
+	at org.hibernate.action.internal.EntityInsertAction.execute(EntityInsertAction.java:107)
+	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:604)
+	at org.hibernate.engine.spi.ActionQueue.executeInserts(ActionQueue.java:461)
+	at org.hibernate.engine.spi.ActionQueue.addInsertAction(ActionQueue.java:258)
+	at org.hibernate.engine.spi.ActionQueue.addAction(ActionQueue.java:317)
+	at org.hibernate.event.internal.AbstractSaveEventListener.addInsertAction(AbstractSaveEventListener.java:330)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:287)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:193)
+	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:123)
+	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:185)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:128)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:55)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:93)
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:720)
+	... 69 more
+Caused by: java.sql.SQLIntegrityConstraintViolationException: (conn=623) Duplicate entry 'SCHULE-2021-JZVR7H8X-EINS-e827acb0-b9ac-4a58-abb4-e0adc19cc256' for key 'uk_loesungszettel_1'
+	at org.mariadb.jdbc.internal.util.exceptions.ExceptionFactory.createException(ExceptionFactory.java:70)
+	at org.mariadb.jdbc.internal.util.exceptions.ExceptionFactory.create(ExceptionFactory.java:153)
+	at org.mariadb.jdbc.MariaDbStatement.executeExceptionEpilogue(MariaDbStatement.java:274)
+	at org.mariadb.jdbc.ClientSidePreparedStatement.executeInternal(ClientSidePreparedStatement.java:229)
+	at org.mariadb.jdbc.ClientSidePreparedStatement.execute(ClientSidePreparedStatement.java:149)
+	at org.mariadb.jdbc.ClientSidePreparedStatement.executeUpdate(ClientSidePreparedStatement.java:181)
+	at io.agroal.pool.wrapper.PreparedStatementWrapper.executeUpdate(PreparedStatementWrapper.java:88)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:197)
+	... 85 more
+Caused by: org.mariadb.jdbc.internal.util.exceptions.MariaDbSqlException: Duplicate entry 'SCHULE-2021-JZVR7H8X-EINS-e827acb0-b9ac-4a58-abb4-e0adc19cc256' for key 'uk_loesungszettel_1'
+	at org.mariadb.jdbc.internal.util.exceptions.MariaDbSqlException.of(MariaDbSqlException.java:34)
+	at org.mariadb.jdbc.internal.protocol.AbstractQueryProtocol.exceptionWithQuery(AbstractQueryProtocol.java:192)
+	at org.mariadb.jdbc.internal.protocol.AbstractQueryProtocol.exceptionWithQuery(AbstractQueryProtocol.java:175)
+	at org.mariadb.jdbc.internal.protocol.AbstractQueryProtocol.executeQuery(AbstractQueryProtocol.java:319)
+	at org.mariadb.jdbc.ClientSidePreparedStatement.executeInternal(ClientSidePreparedStatement.java:220)
+	... 89 more
+Caused by: java.sql.SQLException: Duplicate entry 'SCHULE-2021-JZVR7H8X-EINS-e827acb0-b9ac-4a58-abb4-e0adc19cc256' for key 'uk_loesungszettel_1'
+	at org.mariadb.jdbc.internal.protocol.AbstractQueryProtocol.readErrorPacket(AbstractQueryProtocol.java:1681)
+	at org.mariadb.jdbc.internal.protocol.AbstractQueryProtocol.readPacket(AbstractQueryProtocol.java:1543)
+	at org.mariadb.jdbc.internal.protocol.AbstractQueryProtocol.getResult(AbstractQueryProtocol.java:1506)
+	at org.mariadb.jdbc.internal.protocol.AbstractQueryProtocol.executeQuery(AbstractQueryProtocol.java:316)
+	... 90 more
+
+nonce=LEHRER-K1FT560Y-true
+2021-06-10 17:23:47.252 INFO  [de.eg.we.mk.in.pe.im.VeranstalterHibernateRepository] (executor-thread-8566) Veranstalter 6baddf51-4bcf-43d9-936c-9e451ec10aa2 - Hannah Wei? (LEHRER) erfolgreich angelegt.
+LEHRER-K1FT560Y-true
+Terminating due to java.lang.OutOfMemoryError: Java heap space
+exec java -Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager -XX:+ExitOnOutOfMemoryError -cp . -jar /deployments/quarkus-run.jar java -jar app.jar
+__  ____  __  _____   ___  __ ____  ______ 
+ --/ __ \/ / / / _ | / _ \/ //_/ / / / __/ 
+ -/ /_/ / /_/ / __ |/ , _/ ,< / /_/ /\ \   
+--\___\_\____/_/ |_/_/|_/_/|_|\____/___/   
+2021-06-10 18:53:00.696 WARN  [de.eg.we.mk.in.fi.AuthorizationFilter] (executor-thread-1) restricted path /klassen/1DVAOAWP ohne gueltige Session aufgerufen
+2021-06-10 18:53:01.382 INFO  [de.eg.we.mk.do.au.se.MkSessionService] (executor-thread-2) session was null
+Terminating due to java.lang.OutOfMemoryError: Java heap space
+exec java -Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager -XX:+ExitOnOutOfMemoryError -cp . -jar /deployments/quarkus-run.jar java -jar app.jar
+Terminating due to java.lang.OutOfMemoryError: Java heap space
+exec java -Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager -XX:+ExitOnOutOfMemoryError -cp . -jar /deployments/quarkus-run.jar java -jar app.jar
+__  ____  __  _____   ___  __ ____  ______ 
+ --/ __ \/ / / / _ | / _ \/ //_/ / / / __/ 
+ -/ /_/ / /_/ / __ |/ , _/ ,< / /_/ /\ \   
+--\___\_\____/_/ |_/_/|_/_/|_|\____/___/   
+2021-06-10 19:45:56.040 INFO  [de.eg.we.mk.do.au.se.MkSessionService] (executor-thread-21) session was null
+Terminating due to java.lang.OutOfMemoryError: Java heap space
+exec java -Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager -XX:+ExitOnOutOfMemoryError -cp . -jar /deployments/quarkus-run.jar java -jar app.jar
+Terminating due to java.lang.OutOfMemoryError: Java heap space
+exec java -Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager -XX:+ExitOnOutOfMemoryError -cp . -jar /deployments/quarkus-run.jar java -jar app.jar
+__  ____  __  _____   ___  __ ____  ______ 
+ --/ __ \/ / / / _ | / _ \/ //_/ / / / __/ 
+ -/ /_/ / /_/ / __ |/ , _/ ,< / /_/ /\ \   
+--\___\_\____/_/ |_/_/|_/_/|_|\____/___/   
+2021-06-11 07:45:52.396 INFO  [de.eg.we.mk.do.au.se.MkSessionService] (executor-thread-3) session was null
+nonce=PRIVAT-true
+2021-06-11 19:40:11.319 INFO  [de.eg.we.mk.in.pe.im.VeranstalterHibernateRepository] (executor-thread-332) Veranstalter 0b64c8d5-f62a-4627-87ce-cf9359d1c2cc - olfa Ghorbel-Dhouib (PRIVAT) erfolgreich angelegt.
+PRIVAT-true
+2021-06-11 19:41:11.846 INFO  [de.eg.we.mk.in.pe.im.TeilnahmenHibernateRepository] (executor-thread-333) Teilnahme Privatteilnahme [wettbewerbID=2021, teilnahmekuerzel=7KFNPW495M] erfolreich angelegt
+Terminating due to java.lang.OutOfMemoryError: Java heap space
+exec java -Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager -XX:+ExitOnOutOfMemoryError -cp . -jar /deployments/quarkus-run.jar java -jar app.jar
+__  ____  __  _____   ___  __ ____  ______ 
+ --/ __ \/ / / / _ | / _ \/ //_/ / / / __/ 
+ -/ /_/ / /_/ / __ |/ , _/ ,< / /_/ /\ \   
+--\___\_\____/_/ |_/_/|_/_/|_|\____/___/   
+2021-06-12 10:19:31.859 WARN  [de.eg.we.mk.in.fi.AuthorizationFilter] (executor-thread-7) restricted path /klassen/1DVAOAWP ohne gueltige Session aufgerufen
+2021-06-12 10:19:31.860 WARN  [de.eg.we.mk.in.fi.AuthorizationFilter] (executor-thread-8) restricted path /teilnahmen/veranstalter/1DVAOAWP ohne gueltige Session aufgerufen
+2021-06-12 10:19:32.076 INFO  [de.eg.we.mk.do.au.se.MkSessionService] (executor-thread-9) session was null
+2021-06-12 10:19:32.124 INFO  [de.eg.we.mk.do.au.se.MkSessionService] (executor-thread-9) session was null
+Terminating due to java.lang.OutOfMemoryError: Java heap space
+exec java -Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager -XX:+ExitOnOutOfMemoryError -cp . -jar /deployments/quarkus-run.jar java -jar app.jar
+Terminating due to java.lang.OutOfMemoryError: Java heap space
+exec java -Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager -XX:+ExitOnOutOfMemoryError -cp . -jar /deployments/quarkus-run.jar java -jar app.jar
+__  ____  __  _____   ___  __ ____  ______ 
+ --/ __ \/ / / / _ | / _ \/ //_/ / / / __/ 
+ -/ /_/ / /_/ / __ |/ , _/ ,< / /_/ /\ \   
+--\___\_\____/_/ |_/_/|_/_/|_|\____/___/   
+2021-06-12 13:20:43.519 WARN  [de.eg.we.co.ut.CommonHttpUtils] (executor-thread-94) org.jboss.resteasy.specimpl.ResteasyUriInfo@4db05d77: Request ohne mk_SESSIONID-Cookie
+2021-06-12 13:20:43.526 WARN  [de.eg.we.mk.in.fi.AuthorizationFilter] (executor-thread-94) restricted path /loesungszettel ohne sessionId aufgerufen
+2021-06-12 13:20:43.612 INFO  [de.eg.we.mk.do.au.se.lo.im.LoginLogoutServiceImpl] (executor-thread-94) sessionId was null
+2021-06-12 15:21:46.300 WARN  [de.eg.we.co.ut.CommonHttpUtils] (executor-thread-159) org.jboss.resteasy.specimpl.ResteasyUriInfo@3899ae89: Request ohne mk_SESSIONID-Cookie
+2021-06-12 15:21:46.302 WARN  [de.eg.we.mk.in.fi.AuthorizationFilter] (executor-thread-159) restricted path /kinder/duplikate ohne sessionId aufgerufen
+2021-06-12 15:21:46.378 INFO  [de.eg.we.mk.do.au.se.lo.im.LoginLogoutServiceImpl] (executor-thread-160) sessionId was null
+2021-06-12 15:52:46.135 ERROR [de.eg.we.mk.in.re.ge.LogResource] (executor-thread-188) BrowserLog: 2021-06-12 15:52:45,940 -  mkv-app: Unerwarteter Fehler: Uncaught (in promise): Cross click user={"idReference":"329d525ad4454692_174843f6","rolle":"LEHRER","fullName":"Nicola R?nneburg"} - Z@https://mathe-jung-alt.de/mkv-app/polyfills.8fbeb090ef4c0fcffd58.js:1:12878
+Z@https://mathe-jung-alt.de/mkv-app/polyfills.8fbeb090ef4c0fcffd58.js:1:12409
+P/<@https://mathe-jung-alt.de/mkv-app/polyfills.8fbeb090ef4c0fcffd58.js:1:13687
+invokeTask@https://mathe-jung-alt.de/mkv-app/polyfills.8fbeb090ef4c0fcffd58.js:1:7917
+onInvokeTask@https://mathe-jung-alt.de/mkv-app/main.993cfc9ec65f3929152b.js:1:719372
+invokeTask@https://mathe-jung-alt.de/mkv-app/polyfills.8fbeb090ef4c0fcffd58.js:1:7838
+runTask@https://mathe-jung-alt.de/mkv-app/polyfills.8fbeb090ef4c0fcffd58.js:1:3326
+m@https://mathe-jung-alt.de/mkv-app/polyfills.8fbeb090ef4c0fcffd58.js:1:9911
+invokeTask@https://mathe-jung-alt.de/mkv-app/polyfills.8fbeb090ef4c0fcffd58.js:1:8996
+k@https://mathe-jung-alt.de/mkv-app/polyfills.8fbeb090ef4c0fcffd58.js:1:21220
+_@https://mathe-jung-alt.de/mkv-app/polyfills.8fbeb090ef4c0fcffd58.js:1:21466
+ - Client-ID=Ek55GuGJ...
+2021-06-12 16:01:42.329 INFO  [de.eg.we.mk.in.pe.im.TeilnahmenHibernateRepository] (executor-thread-195) Teilnahme Privatteilnahme [wettbewerbID=2021, teilnahmekuerzel=1KG8P5B1MD] erfolreich angelegt
+exec java -Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager -XX:+ExitOnOutOfMemoryError -cp . -jar /deployments/quarkus-run.jar java -jar app.jar
+
+

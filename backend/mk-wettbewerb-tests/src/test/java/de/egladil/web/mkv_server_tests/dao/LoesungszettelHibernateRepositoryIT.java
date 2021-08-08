@@ -15,6 +15,7 @@ import java.util.Optional;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -66,7 +67,7 @@ public class LoesungszettelHibernateRepositoryIT extends AbstractIntegrationTest
 	}
 
 	@Test
-	void should_loadAll_when_exist() throws Exception {
+	void should_loadAllWithTeilnahmeId_when_exist() throws Exception {
 
 		// Arrange
 		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE)
@@ -101,6 +102,52 @@ public class LoesungszettelHibernateRepositoryIT extends AbstractIntegrationTest
 			TeilnahmeIdentifier theTeilnahmeIdentifier = loesungszettel.teilnahmeIdentifier();
 			assertNotNull(theTeilnahmeIdentifier);
 			assertEquals(teilnahmeIdentifier, theTeilnahmeIdentifier);
+		}
+
+		LoesungszettelList liste = new LoesungszettelList();
+		liste.setLoesungszettel(trefferliste);
+
+		objectMapper.writeValue(System.out, liste);
+	}
+
+	@Test
+	void should_loadAllWithTeilnahmenummer_when_exist() throws Exception {
+
+		// Arrange
+		String teilnahmenummer = "M94P3IH9";
+		WettbewerbID wettbewerbID = new WettbewerbID(2018);
+
+		// Act
+		List<Loesungszettel> trefferliste = loesungszettelRepository.loadAllWithTeilnahmenummerForWettbewerb(teilnahmenummer,
+			wettbewerbID);
+
+		// Assert
+		assertEquals(9, trefferliste.size());
+
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		for (Loesungszettel loesungszettel : trefferliste) {
+
+			assertNotNull(loesungszettel.auswertungsquelle());
+			assertNotNull(loesungszettel.identifier());
+			assertNotNull(loesungszettel.klassenstufe());
+			assertNotNull(loesungszettel.sprache());
+
+			LoesungszettelRohdaten rohdaten = loesungszettel.rohdaten();
+			assertNotNull(rohdaten);
+
+			if (rohdaten.antwortcode() == null) {
+
+				assertEquals(Auswertungsquelle.UPLOAD, loesungszettel.auswertungsquelle());
+			}
+
+			assertNotNull(rohdaten.nutzereingabe());
+			assertNotNull(rohdaten.wertungscode());
+
+			TeilnahmeIdentifier theTeilnahmeIdentifier = loesungszettel.teilnahmeIdentifier();
+			assertNotNull(theTeilnahmeIdentifier);
+			assertEquals(teilnahmenummer, theTeilnahmeIdentifier.teilnahmenummer());
+			assertEquals(wettbewerbID.jahr().intValue(), theTeilnahmeIdentifier.jahr());
 		}
 
 		LoesungszettelList liste = new LoesungszettelList();
@@ -263,6 +310,59 @@ public class LoesungszettelHibernateRepositoryIT extends AbstractIntegrationTest
 
 		// Assert
 		assertTrue(optResult.isEmpty());
+	}
+
+	@Test
+	void should_getAuswertungsquellenWithAnzahlForWettbewerbWork_when_NoLoesungszettel() {
+
+		// Arrange
+		WettbewerbID wettbewerbID = new WettbewerbID(2021);
+
+		// Act
+		List<Pair<Auswertungsquelle, Integer>> result = loesungszettelRepository.getAuswertungsquelleMitAnzahl(wettbewerbID);
+
+		// Assert
+		assertEquals(0, result.size());
+	}
+
+	@Test
+	void should_getAuswertungsquellenWithAnzahlForWettbewerbWork_when_OnlyUpload() {
+
+		// Arrange
+		WettbewerbID wettbewerbID = new WettbewerbID(2010);
+
+		// Act
+		List<Pair<Auswertungsquelle, Integer>> result = loesungszettelRepository.getAuswertungsquelleMitAnzahl(wettbewerbID);
+
+		// Assert
+		assertEquals(1, result.size());
+
+		Pair<Auswertungsquelle, Integer> treffer = result.get(0);
+		assertEquals(Auswertungsquelle.UPLOAD, treffer.getLeft());
+		assertEquals(142, treffer.getRight().intValue());
+	}
+
+	@Test
+	void should_getAuswertungsquellenWithAnzahlForWettbewerbWork_when_Both() {
+
+		// Arrange
+		WettbewerbID wettbewerbID = new WettbewerbID(2019);
+
+		// Act
+		List<Pair<Auswertungsquelle, Integer>> result = loesungszettelRepository.getAuswertungsquelleMitAnzahl(wettbewerbID);
+
+		// Assert
+		assertEquals(2, result.size());
+
+		Optional<Pair<Auswertungsquelle, Integer>> optOnline = result.stream().filter(p -> Auswertungsquelle.ONLINE == p.getLeft())
+			.findFirst();
+		assertTrue(optOnline.isPresent());
+		assertEquals(7, optOnline.get().getRight().intValue());
+
+		Optional<Pair<Auswertungsquelle, Integer>> optUpload = result.stream().filter(p -> Auswertungsquelle.UPLOAD == p.getLeft())
+			.findFirst();
+		assertTrue(optUpload.isPresent());
+		assertEquals(48, optUpload.get().getRight().intValue());
 	}
 
 	private Loesungszettel addLoesungszettel(final Loesungszettel loesungszettel) {

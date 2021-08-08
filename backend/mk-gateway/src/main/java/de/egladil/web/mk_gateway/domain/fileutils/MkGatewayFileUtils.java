@@ -4,17 +4,24 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.fileutils;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +39,7 @@ public final class MkGatewayFileUtils {
 
 	private static final String CONTENT_DISPOSITION_MF = "attachement; filename={0}";
 
-	private static final Logger LOG = LoggerFactory.getLogger(MkGatewayFileUtils.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MkGatewayFileUtils.class);
 
 	/**
 	 *
@@ -54,7 +61,7 @@ public final class MkGatewayFileUtils {
 
 		} catch (IOException e) {
 
-			LOG.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 			throw new MkGatewayRuntimeException("Konnte Datei mit Pfad " + path + " nicht laden");
 		}
 	}
@@ -63,7 +70,7 @@ public final class MkGatewayFileUtils {
 	 * Bastelt einen APPLICATION_OCTET_STREAM aus den DownloadData.
 	 *
 	 * @param  downloadData
-	 * @return               Response
+	 * @return              Response
 	 */
 	public static Response createDownloadResponse(final DownloadData downloadData) {
 
@@ -74,4 +81,81 @@ public final class MkGatewayFileUtils {
 			.header(CONTENT_DISPOSITION_HEADER_NAME, contentDisposition).build();
 	}
 
+	/**
+	 * Liest die Datei zeilenweise ein.
+	 *
+	 * @param  path
+	 *              Pfad zu einer Textdatei.
+	 * @return      List
+	 */
+	public static List<String> readLines(final String path) {
+
+		File file = new File(path);
+
+		try (FileReader fr = new FileReader(file); BufferedReader br = new BufferedReader(fr)) {
+
+			List<String> lines = new ArrayList<>();
+			String line = null;
+			int index = 0;
+
+			while ((line = br.readLine()) != null) {
+
+				if (StringUtils.isNotBlank(line)) {
+
+					lines.add(index++, line);
+				}
+			}
+
+			return lines;
+
+		} catch (IOException e) {
+
+			String msg = "Fehler beim Laden der Textdatei " + path + ": " + e.getMessage();
+			LOGGER.error(msg, e);
+
+			throw new MkGatewayRuntimeException(msg, e);
+
+		}
+	}
+
+	public static File writeLines(final List<String> lines, final String path) {
+
+		File file = new File(path);
+
+		String content = StringUtils.join(lines, "\n") + "\n";
+
+		try (FileOutputStream fos = new FileOutputStream(file); InputStream in = new ByteArrayInputStream(content.getBytes())) {
+
+			IOUtils.copy(in, fos);
+			fos.flush();
+
+			return file;
+		} catch (IOException e) {
+
+			LOGGER.error("Fehler beim Speichern im Filesystem: " + e.getMessage(), e);
+			throw new MkGatewayRuntimeException("Konnte lines nicht Filesystem speichern: " + e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * Löscht die gegebene Datei und Loggt Exceptons als Warnung.
+	 *
+	 * @param file
+	 * @param logger
+	 */
+	public static void deleteFileWithErrorLogQuietly(final File file, final Logger logger) {
+
+		if (file.exists() && file.isFile()) {
+
+			try {
+
+				file.delete();
+			} catch (Exception e) {
+
+				logger.warn("{} konnte nicht geloescht werden: {}", file.getAbsolutePath(),
+					e.getMessage(), e);
+
+			}
+		}
+	}
 }

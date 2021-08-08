@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
 
@@ -31,7 +31,7 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 /**
  * StatistikAnonymisierteEinzelteilnahmeService
  */
-@ApplicationScoped
+@RequestScoped
 public class StatistikAnonymisierteEinzelteilnahmeService {
 
 	@Inject
@@ -65,7 +65,7 @@ public class StatistikAnonymisierteEinzelteilnahmeService {
 	 */
 	public DownloadData erstelleStatistikPDFEinzelteilnahme(final TeilnahmeIdentifier teilnahmeIdentifier, final String userUuid) {
 
-		authorizationService.checkPermissionForTeilnahmenummer(new Identifier(userUuid),
+		authorizationService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(userUuid),
 			new Identifier(teilnahmeIdentifier.teilnahmenummer()),
 			"[erstelleStatistikPDFEinzelteilnahme - " + teilnahmeIdentifier.teilnahmenummer() + "]");
 

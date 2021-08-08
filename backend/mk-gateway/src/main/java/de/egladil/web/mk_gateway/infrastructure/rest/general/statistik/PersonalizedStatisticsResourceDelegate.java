@@ -4,7 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.general.statistik;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.BadRequestException;
@@ -18,7 +18,7 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 /**
  * PersonalizedStatisticsResourceDelegate
  */
-@ApplicationScoped
+@RequestScoped
 public class PersonalizedStatisticsResourceDelegate {
 
 	@Inject

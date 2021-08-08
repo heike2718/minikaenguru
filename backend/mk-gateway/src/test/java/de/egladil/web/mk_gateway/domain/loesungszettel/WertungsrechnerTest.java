@@ -54,7 +54,7 @@ public class WertungsrechnerTest {
 				fail("keine IllegalArgumentException");
 			} catch (IllegalArgumentException e) {
 
-				assertEquals("laenge wertugscode rrffn (5) und klassenstufe IKID sind inkompatibel", e.getMessage());
+				assertEquals("laenge wertungscode rrffn (5) und klassenstufe IKID sind inkompatibel", e.getMessage());
 			}
 
 		}

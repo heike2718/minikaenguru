@@ -29,7 +29,17 @@ export interface SchuleAdminOverviewWithID {
 	readonly schuleOverview: SchuleAdminOverview;
 };
 
+export interface SchuleUploadModel {
+	readonly kuerzel: string;
+	readonly katalogData: SchulkatalogData;
+	readonly jahr: number;
+	readonly anzahlKinder: number;
+};
 
+export interface AuswertungImportReport {
+	readonly teilnahme?: Teilnahme;
+	readonly fehlerhafteZeilen: string[];
+};
 
 export class SchulenOverviewMap {
 
@@ -75,4 +85,18 @@ export class SchulenOverviewMap {
 
 };
 
+export function replaceTeilnahme(teilnahme: Teilnahme, teilnahmen: Teilnahme[]): Teilnahme[] {
+
+	const result: Teilnahme[] = [];
+
+	teilnahmen.forEach(t => {
+		if (t.identifier.jahr !== teilnahme.identifier.jahr) {
+			result.push(t);
+		} else {
+			result.push(teilnahme);
+		}
+	});
+
+	return result;
+}
 

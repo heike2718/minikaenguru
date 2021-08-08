@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
-import { ResponsePayload, MessageService, Message } from '@minikaenguru-ws/common-messages';
+import { ResponsePayload, MessageService, Message, ErrorMappingService } from '@minikaenguru-ws/common-messages';
 import { Wettbewerb, WettbewerbEditorModel } from '../wettbewerbe/wettbewerbe.model';
 import { LogService } from '@minikaenguru-ws/common-logging';
 import { Store } from '@ngrx/store';
@@ -32,6 +32,7 @@ export class WettbewerbFacade {
 		private store: Store<AppState>,
 		private router: Router,
 		private logger: LogService,
+		private errorMapper: ErrorMappingService,
 		private errorService: GlobalErrorHandlerService,
 		private messageService: MessageService) {
 
@@ -113,7 +114,7 @@ export class WettbewerbFacade {
 			(error) => {
 				const message: Message = {
 					level: 'ERROR',
-					message: this.errorService.extractMessageObject(error).message
+					message: this.errorMapper.extractMessageObject(error).message
 				};
 				this.store.dispatch(WettbewerbActions.saveFailed({ outcome: message }));
 			}
@@ -134,7 +135,7 @@ export class WettbewerbFacade {
 			(error) => {
 				const message: Message = {
 					level: 'ERROR',
-					message: this.errorService.extractMessageObject(error).message
+					message: this.errorMapper.extractMessageObject(error).message
 				};
 				this.store.dispatch(WettbewerbActions.saveFailed({ outcome: message }));
 			}
@@ -157,7 +158,7 @@ export class WettbewerbFacade {
 			(error) => {
 				const message: Message = {
 					level: 'ERROR',
-					message: this.errorService.extractMessageObject(error).message
+					message: this.errorMapper.extractMessageObject(error).message
 				};
 				this.store.dispatch(WettbewerbActions.saveFailed({ outcome: message }));
 			}

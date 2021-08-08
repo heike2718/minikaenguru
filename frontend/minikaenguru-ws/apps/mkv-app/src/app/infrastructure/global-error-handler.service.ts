@@ -1,6 +1,6 @@
 import { ErrorHandler, Injector, Injectable } from '@angular/core';
 import { LogService } from '@minikaenguru-ws/common-logging';
-import { MessageService, Message } from '@minikaenguru-ws/common-messages';
+import { MessageService, Message, ErrorMappingService } from '@minikaenguru-ws/common-messages';
 import { environment } from '../../environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LogPublishersService } from './log-publishers.service';
@@ -14,6 +14,7 @@ import { STORAGE_KEY_USER, STORAGE_KEY_INVALID_SESSION } from '@minikaenguru-ws/
 )
 export class GlobalErrorHandlerService implements ErrorHandler {
 
+	private errorMapper: ErrorMappingService;
 	private logger: LogService;
 	private messageService: MessageService;
 	private router: Router;
@@ -22,6 +23,8 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 
 		// ErrorHandler wird vor allen anderen Injectables instanziiert,
 		// so dass man benötigte Services nicht im Konstruktor injekten kann !!!
+
+		this.errorMapper = this.injector.get(ErrorMappingService);
 
 		const logPublishersService = this.injector.get(LogPublishersService);
 		this.logger = this.injector.get(LogService);
@@ -62,7 +65,7 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 				msg += ' - ' + error.stack;
 			}
 			this.logger.error(msg);
-			this.showServerResponseMessage('ERROR', 'Unerwarteter GUI-Error: ' + error.message);
+			this.messageService.showMessage({ level: 'ERROR', message: 'Unerwarteter GUI-Error: ' + error.message });
 		}
 	}
 
@@ -70,8 +73,6 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 		if (httpError.status === 0) {
 			this.messageService.error('Der Server ist nicht erreichbar.');
 		} else {
-			const msg = this.extractMessageObject(httpError);
-
 			switch (httpError.status) {
 				case 403:
 					localStorage.setItem(STORAGE_KEY_INVALID_SESSION, JSON.stringify({ level: 'ERROR', message: 'Sie haben keine Berechtigung, diese Resource aufzurufen.' }));
@@ -82,41 +83,14 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 					localStorage.setItem(STORAGE_KEY_INVALID_SESSION, JSON.stringify({ level: 'WARN', message: 'Ihre Session ist abgelaufen. Bitte loggen Sie sich erneut ein.' }));
 					this.router.navigateByUrl('/timeout');
 					break;
+				case 503:
+					this.messageService.error('Der Service steht momentan nicht zur Verfügung. Bitte schreiben Sie eine Mail an minikaenguru@egladil.de');
+					break;
 				default: {
-					if (msg) {
-						this.showServerResponseMessage(msg.level, msg.message);
-					} else {
-						this.messageService.error('Es ist ein unerwarteter Fehler aufgetreten. Bitte schreiben Sie eine Mail an minikaenguru@egladil.de');
-					}
+					const message: Message = this.errorMapper.extractMessageObject(httpError);
+					this.messageService.showMessage(message);
 				}
 			}
-		}
-	}
-
-	public extractMessageObject(error: HttpErrorResponse): { level: string, message: string } {
-
-		if (error.error && error.error.message) {
-			return { level: 'ERROR', message: error.error.message['message'] };
-		}
-
-		if (error.error && error.message) {
-			return { level: 'ERROR', message: error['message'] };
-		}
-
-		return { level: 'ERROR', message: 'Es ist ein unerwarteter Fehler aufgetreten. Bitte schreiben Sie eine Mail an minikaenguru@egladil.de' };
-	}
-
-	private showServerResponseMessage(level: string, message: string) {
-
-		switch (level) {
-			case 'WARN':
-				this.messageService.error(message);
-				break;
-			case 'ERROR':
-				this.messageService.error(message);
-				break;
-			default:
-				this.messageService.error('Unbekanntes message.level ' + level + ' vom Server bekommen.');
 		}
 	}
 }

@@ -5,7 +5,6 @@
 package de.egladil.web.mk_gateway.domain.auth.session.loginlogout.impl;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.core.NewCookie;
@@ -27,8 +26,8 @@ import de.egladil.web.mk_gateway.domain.auth.session.Session;
 import de.egladil.web.mk_gateway.domain.auth.session.SessionUtils;
 import de.egladil.web.mk_gateway.domain.auth.session.loginlogout.LoginLogoutService;
 import de.egladil.web.mk_gateway.domain.auth.session.tokens.TokenExchangeService;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
-import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 
 /**
  * LoginLogoutServiceImpl
@@ -41,8 +40,8 @@ public class LoginLogoutServiceImpl implements LoginLogoutService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(LoginLogoutServiceImpl.class);
 
-	@ConfigProperty(name = "stage")
-	String stage;
+	@ConfigProperty(name = "env")
+	String env;
 
 	@ConfigProperty(name = "mk-admin-app.client-id")
 	String adminClientId;
@@ -63,7 +62,7 @@ public class LoginLogoutServiceImpl implements LoginLogoutService {
 	TokenExchangeService tokenExchangeService;
 
 	@Inject
-	Event<SecurityIncidentRegistered> securityEvent;
+	DomainEventHandler domainEventHandler;
 
 	@Override
 	public Response login(final AuthResult authResult, final AuthMode authMode) {
@@ -72,7 +71,7 @@ public class LoginLogoutServiceImpl implements LoginLogoutService {
 
 			String msg = "login wurde ohne payload aufgerufen";
 
-			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+			new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 
 			throw new BadRequestException("erwarte payload");
 		}
@@ -87,7 +86,7 @@ public class LoginLogoutServiceImpl implements LoginLogoutService {
 
 		NewCookie sessionCookie = SessionUtils.createSessionCookie(SESSION_COOKIE_NAME, session.sessionId());
 
-		if (!MkGatewayApp.STAGE_DEV.equals(stage)) {
+		if (!MkGatewayApp.STAGE_DEV.equals(env)) {
 
 			// TODO: schauen, ob dies aufgerufen wird.
 			session.clearSessionId();
@@ -123,13 +122,13 @@ public class LoginLogoutServiceImpl implements LoginLogoutService {
 			LOG.info("sessionId was null");
 		}
 
-		if (!MkGatewayApp.STAGE_DEV.equals(stage)) {
+		if (!MkGatewayApp.STAGE_DEV.equals(env)) {
 
-			String msg = "logoutDev wurde auf der Umgebung " + stage + " aufgerufen. sessionId=" + sessionId;
+			String msg = "logoutDev wurde auf der Umgebung " + env + " aufgerufen. sessionId=" + sessionId;
 
 			LOG.warn(msg);
 
-			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+			new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 
 			return Response.status(401)
 				.entity(ResponsePayload.messageOnly(MessagePayload.error("böse böse. Dieser Request wurde geloggt!")))

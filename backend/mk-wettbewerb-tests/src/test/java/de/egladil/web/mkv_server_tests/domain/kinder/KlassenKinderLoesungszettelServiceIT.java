@@ -20,20 +20,20 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.LoesungszettelpunkteAPIModel;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
-import de.egladil.web.mk_gateway.domain.kinder.KinderService;
 import de.egladil.web.mk_gateway.domain.kinder.Klasse;
 import de.egladil.web.mk_gateway.domain.kinder.KlassenRepository;
-import de.egladil.web.mk_gateway.domain.kinder.KlassenService;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindAPIModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindRequestData;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseAPIModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseEditorModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseRequestData;
+import de.egladil.web.mk_gateway.domain.kinder.impl.KinderServiceImpl;
+import de.egladil.web.mk_gateway.domain.kinder.impl.KlassenServiceImpl;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
-import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelService;
-import de.egladil.web.mk_gateway.domain.loesungszettel.api.LoesungszettelAPIModel;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.OnlineLoesungszettelService;
+import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KinderHibernateRepository;
@@ -53,11 +53,11 @@ public class KlassenKinderLoesungszettelServiceIT extends AbstractIntegrationTes
 
 	private LoesungszettelRepository loesungszettelRepository;
 
-	private KlassenService klassenService;
+	private KlassenServiceImpl klassenService;
 
-	private KinderService kinderService;
+	private KinderServiceImpl kinderService;
 
-	private LoesungszettelService loesungszettelService;
+	private OnlineLoesungszettelService loesungszettelService;
 
 	@Override
 	@BeforeEach
@@ -68,9 +68,9 @@ public class KlassenKinderLoesungszettelServiceIT extends AbstractIntegrationTes
 		kinderRepository = KinderHibernateRepository.createForIntegrationTest(entityManager);
 		loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(entityManager);
 
-		klassenService = KlassenService.createForIntegrationTest(entityManager);
-		kinderService = KinderService.createForIntegrationTest(entityManager);
-		loesungszettelService = LoesungszettelService.createForIntegrationTest(entityManager);
+		klassenService = KlassenServiceImpl.createForIntegrationTest(entityManager);
+		kinderService = KinderServiceImpl.createForIntegrationTest(entityManager);
+		loesungszettelService = OnlineLoesungszettelService.createForIntegrationTest(entityManager);
 	}
 
 	@Test

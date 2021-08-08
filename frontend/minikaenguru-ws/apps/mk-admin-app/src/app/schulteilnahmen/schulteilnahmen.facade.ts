@@ -8,8 +8,10 @@ import { Observable } from 'rxjs';
 import { SchulteilnahmenService } from './schulteilnahmen.service';
 import * as SchulteilnamenActions from './+state/schulteilnahmen.actions';
 import * as SchulteilnahmenSelectors from './+state/schulteilnahmen.selectors';
-import { SchuleAdminOverview, SchuleAdminOverviewWithID, SchulenOverviewMap } from './schulteilnahmen.model';
+import { SchuleAdminOverview, SchuleAdminOverviewWithID, SchulenOverviewMap, SchuleUploadModel, AuswertungImportReport } from './schulteilnahmen.model';
 import { take } from 'rxjs/operators';
+import { Teilnahme } from '@minikaenguru-ws/common-components';
+import { ResponsePayload, MessageService, Message } from '@minikaenguru-ws/common-messages';
 
 @Injectable({
 	providedIn: 'root'
@@ -18,9 +20,16 @@ export class SchulteilnahmenFacade {
 
 	public schuleOverview$: Observable<SchuleAdminOverview> = this.store.select(SchulteilnahmenSelectors.selectedSchule);
 
+	public schuleUploadModel$: Observable<SchuleUploadModel> = this.store.select(SchulteilnahmenSelectors.schuleUploadModel);
+
+	public selectedTeilnahme$: Observable<Teilnahme> = this.store.select(SchulteilnahmenSelectors.selectedTeilnahme);
+
+	public fehlermeldungen$: Observable<string[]> = this.store.select(SchulteilnahmenSelectors.fehlermeldungen);
+
 	private schulenMap: SchuleAdminOverviewWithID[];
 
 	constructor(private schulteilnahmenService: SchulteilnahmenService,
+		private messageService: MessageService,
 		private store: Store<AppState>,
 		private router: Router,
 		private errorService: GlobalErrorHandlerService) {
@@ -36,6 +45,30 @@ export class SchulteilnahmenFacade {
 
 		this.store.dispatch(SchulteilnamenActions.resetSchulteilnahmen());
 
+	}
+
+	public selectTeilnahme(teilnahme: Teilnahme): void {
+
+		this.store.dispatch(SchulteilnamenActions.anonymisierteTeilnahmeSelected({ teilnahme: teilnahme }));
+	}
+
+	public dateiAusgewaelt(): void {
+
+		this.messageService.clear();
+
+		this.store.dispatch(SchulteilnamenActions.dateiAusgewaehlt());
+
+	}
+
+	public auswertungImportiert(responsePayload: ResponsePayload): void {
+
+		if (responsePayload.data) {
+
+			const report: AuswertungImportReport = responsePayload.data;
+			this.store.dispatch(SchulteilnamenActions.auswertungImportert({ report: report }));
+		}
+
+		this.messageService.showMessage(responsePayload.message);
 	}
 
 	public findOrLoadSchuleAdminOverview(schulkuerzel: string) {

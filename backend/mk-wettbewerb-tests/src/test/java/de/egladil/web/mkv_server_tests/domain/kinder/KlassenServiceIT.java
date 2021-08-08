@@ -23,10 +23,10 @@ import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
 import de.egladil.web.mk_gateway.domain.kinder.Klasse;
 import de.egladil.web.mk_gateway.domain.kinder.KlassenRepository;
-import de.egladil.web.mk_gateway.domain.kinder.KlassenService;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseAPIModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseEditorModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseRequestData;
+import de.egladil.web.mk_gateway.domain.kinder.impl.KlassenServiceImpl;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KinderHibernateRepository;
@@ -45,7 +45,7 @@ public class KlassenServiceIT extends AbstractIntegrationTest {
 
 	private LoesungszettelRepository loesungszettelRepository;
 
-	private KlassenService klassenService;
+	private KlassenServiceImpl klassenService;
 
 	@Override
 	@BeforeEach
@@ -55,7 +55,7 @@ public class KlassenServiceIT extends AbstractIntegrationTest {
 		kinderRepository = KinderHibernateRepository.createForIntegrationTest(entityManager);
 		klassenRepository = KlassenHibernateRepository.createForIntegrationTest(entityManager);
 		loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(entityManager);
-		klassenService = KlassenService.createForIntegrationTest(entityManager);
+		klassenService = KlassenServiceImpl.createForIntegrationTest(entityManager);
 	}
 
 	@Test

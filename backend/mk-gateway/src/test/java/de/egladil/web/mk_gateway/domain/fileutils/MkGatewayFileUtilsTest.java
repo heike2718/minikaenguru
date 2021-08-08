@@ -4,8 +4,10 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.fileutils;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.List;
 
 import javax.ws.rs.core.Response;
 
@@ -68,5 +70,43 @@ public class MkGatewayFileUtilsTest {
 
 		assertEquals("Hallo", new String(entity));
 
+	}
+
+	@Test
+	void should_readLinesThrowMkGatewayException_when_FileDoesNotExist() {
+
+		// Arrange
+		String path = "/home/heike/git/minikaenguru/missing-file.csv";
+
+		// Act + Assert
+		try {
+
+			MkGatewayFileUtils.readLines(path);
+			fail("keine MkGatewayRuntimeException");
+		} catch (MkGatewayRuntimeException e) {
+
+			assertEquals(
+				"Fehler beim Laden der Textdatei /home/heike/git/minikaenguru/missing-file.csv: /home/heike/git/minikaenguru/missing-file.csv (Datei oder Verzeichnis nicht gefunden)",
+				e.getMessage());
+		}
+
+	}
+
+	@Test
+	void should_readFileContent_IgnoreEmptyLines() {
+
+		// Arrange
+		String path = "/home/heike/upload/klassenlisten-testdaten/korrekt/klassenliste-mit-leerzeilen.csv";
+
+		// Act
+		List<String> lines = MkGatewayFileUtils.readLines(path);
+
+		// Assert
+		assertEquals(5, lines.size());
+		assertEquals("Vorname,Nachname,Klasse,Klassenstufe", lines.get(0));
+		assertEquals("Amiera,Kaled,2a,2", lines.get(1));
+		assertEquals("Benedikt,Fichtenholz ,2a,0", lines.get(2));
+		assertEquals("Özcan,Bakir,2b,2", lines.get(3));
+		assertEquals("Thomas, Grütze,2b,2", lines.get(4));
 	}
 }

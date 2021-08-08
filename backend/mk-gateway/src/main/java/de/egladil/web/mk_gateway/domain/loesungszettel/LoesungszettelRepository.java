@@ -7,8 +7,11 @@ package de.egladil.web.mk_gateway.domain.loesungszettel;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.EntityConcurrentlyModifiedException;
+import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
@@ -26,6 +29,15 @@ public interface LoesungszettelRepository {
 	 * @return
 	 */
 	List<Loesungszettel> loadAllForWettbewerb(WettbewerbID wettbewerbID);
+
+	/**
+	 * Läd die Aufschlüsselung der Lösungszettel nach Auswertungsquelle für das gegebene Wettbewerbsjahr.
+	 *
+	 * @param  wettbewerbID
+	 *                      WettbewerbID
+	 * @return              List
+	 */
+	List<Pair<Auswertungsquelle, Integer>> getAuswertungsquelleMitAnzahl(WettbewerbID wettbewerbID);
 
 	/**
 	 * Läd alle Lösungszettel zum gegebenen Wettbewerb mit der Klassenstufe.
@@ -48,6 +60,17 @@ public interface LoesungszettelRepository {
 	List<Loesungszettel> loadAll(TeilnahmeIdentifier teilnahmeIdentifier);
 
 	/**
+	 * Läd alle Lösungszettel zum gegebenen Wettbewerb mit der gegebenen Teilnahmenummer.
+	 *
+	 * @param  teilnahmenummer
+	 *                         String
+	 * @param  wettbewerbID
+	 *                         WettbewerbID
+	 * @return
+	 */
+	List<Loesungszettel> loadAllWithTeilnahmenummerForWettbewerb(String teilnahmenummer, WettbewerbID wettbewerbID);
+
+	/**
 	 * Ermittelt die Anzahl der Lösungszettel mit dem gegebenen TeilnahmeIdentifier.
 	 *
 	 * @param  teilnahmeIdentifier
@@ -55,6 +78,15 @@ public interface LoesungszettelRepository {
 	 * @return                     int
 	 */
 	int anzahlLoesungszettel(TeilnahmeIdentifier teilnahmeIdentifier);
+
+	/**
+	 * Ermitelt für alle Auswertunsquellen die Anzahl der Lösungszettel.
+	 *
+	 * @param  teilnahmeIdentifier
+	 *                             TeilnahmeIdentifier
+	 * @return                     List
+	 */
+	List<Pair<Auswertungsquelle, Integer>> getAuswertungsquellenMitAnzahl(TeilnahmeIdentifier teilnahmeIdentifier);
 
 	/**
 	 * Sucht den Lösungszettel anhand des Identifiers.

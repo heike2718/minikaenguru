@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.BadRequestException;
@@ -21,6 +20,7 @@ import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
@@ -45,18 +45,6 @@ public class AktuelleTeilnahmeService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AktuelleTeilnahmeService.class);
 
-	@Inject
-	Event<PrivatteilnahmeCreated> privatteilnahmeCreated;
-
-	@Inject
-	Event<SchulteilnahmeCreated> schulteilahmeCreatedEvent;
-
-	@Inject
-	Event<SecurityIncidentRegistered> securityIncidentEvent;
-
-	@Inject
-	Event<DataInconsistencyRegistered> dataInconsistencyEvent;
-
 	private PrivatteilnahmeCreated privatteilnahmeCreatedEvent;
 
 	private SchulteilnahmeCreated schulteilnahmeCreated;
@@ -64,6 +52,9 @@ public class AktuelleTeilnahmeService {
 	private SecurityIncidentRegistered securityIncidentRegistered;
 
 	private DataInconsistencyRegistered dataInconsistencyRegistered;
+
+	@Inject
+	DomainEventHandler domainEventHandler;
 
 	@Inject
 	VeranstalterRepository veranstalterRepository;
@@ -159,7 +150,7 @@ public class AktuelleTeilnahmeService {
 
 			LOG.warn(msg);
 
-			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
+			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 			throw new AccessDeniedException("keinen Veranstalter mit UUID=" + uuid + " gefunden");
 		}
 
@@ -171,7 +162,7 @@ public class AktuelleTeilnahmeService {
 
 			LOG.warn(msg);
 
-			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
+			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 			throw new AccessDeniedException("Der Veranstalter ist ein Lehrer. Nur Privatprsonen dürfen diese Funktion aufrufen.");
 		}
 
@@ -182,7 +173,7 @@ public class AktuelleTeilnahmeService {
 
 			LOG.warn(msg);
 
-			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
+			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 			throw new AccessDeniedException("Dem Veranstalter wurde der Zugang zu den Unterlagen entzogen.");
 		}
 
@@ -196,7 +187,7 @@ public class AktuelleTeilnahmeService {
 			LOG.warn(msg);
 
 			this.dataInconsistencyRegistered = new LoggableEventDelegate().fireDataInconsistencyEvent(msg,
-				dataInconsistencyEvent);
+				domainEventHandler);
 
 			throw new MkGatewayRuntimeException("Kann aktuelle Teilnahme nicht ermitteln");
 		}
@@ -217,9 +208,9 @@ public class AktuelleTeilnahmeService {
 
 		privatteilnahmeCreatedEvent = PrivatteilnahmeCreated.create(neue, uuid);
 
-		if (privatteilnahmeCreated != null) {
+		if (domainEventHandler != null) {
 
-			privatteilnahmeCreated.fire(privatteilnahmeCreatedEvent);
+			domainEventHandler.handleEvent(privatteilnahmeCreatedEvent);
 		}
 
 		return neue;
@@ -272,7 +263,7 @@ public class AktuelleTeilnahmeService {
 
 			LOG.warn(msg);
 
-			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
+			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 
 			throw new AccessDeniedException("keinen Veranstalter mit UUID=" + uuid + " gefunden");
 		}
@@ -285,7 +276,7 @@ public class AktuelleTeilnahmeService {
 
 			LOG.warn(msg);
 
-			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
+			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 			throw new AccessDeniedException("Dies ist ein Privatveranstalter. Nur Lehrer dürfen diese Funktion aufrufen.");
 		}
 
@@ -296,7 +287,7 @@ public class AktuelleTeilnahmeService {
 
 			LOG.warn(msg);
 
-			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
+			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 
 			throw new AccessDeniedException("Dem Veranstalter wurde der Zugang zu den Unterlagen entzogen.");
 		}
@@ -312,7 +303,7 @@ public class AktuelleTeilnahmeService {
 
 			LOG.warn(msg);
 
-			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, securityIncidentEvent);
+			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 
 			throw new AccessDeniedException("Der Lehrer gehört nicht zur anzumeldenden Schule.");
 
@@ -334,9 +325,9 @@ public class AktuelleTeilnahmeService {
 
 			this.schulteilnahmeCreated = SchulteilnahmeCreated.create(schulteilnahme);
 
-			if (schulteilahmeCreatedEvent != null) {
+			if (domainEventHandler != null) {
 
-				this.schulteilahmeCreatedEvent.fire(schulteilnahmeCreated);
+				domainEventHandler.handleEvent(schulteilnahmeCreated);
 			} else {
 
 				System.out.println(schulteilnahmeCreated.serializeQuietly());

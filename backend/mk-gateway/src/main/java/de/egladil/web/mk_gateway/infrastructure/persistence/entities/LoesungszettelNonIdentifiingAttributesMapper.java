@@ -19,7 +19,12 @@ public class LoesungszettelNonIdentifiingAttributesMapper {
 		target.setAntwortcode(rohdaten.antwortcode());
 		target.setAuswertungsquelle(loesungszettel.auswertungsquelle());
 		target.setKaengurusprung(loesungszettel.laengeKaengurusprung());
-		target.setKindID(loesungszettel.kindID().identifier());
+
+		if (loesungszettel.kindID() != null) {
+
+			target.setKindID(loesungszettel.kindID().identifier());
+		}
+
 		target.setKlassenstufe(loesungszettel.klassenstufe());
 		target.setLandkuerzel(loesungszettel.landkuerzel());
 		target.setNutzereingabe(rohdaten.nutzereingabe());

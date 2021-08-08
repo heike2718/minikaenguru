@@ -11,7 +11,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 
@@ -24,6 +23,7 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
@@ -42,6 +42,9 @@ public class SchulenAnmeldeinfoService {
 	private static final Logger LOG = LoggerFactory.getLogger(SchulenAnmeldeinfoService.class);
 
 	@Inject
+	DomainEventHandler domainEventHandler;
+
+	@Inject
 	SchulenOverviewService schulenOverviewService;
 
 	@Inject
@@ -49,9 +52,6 @@ public class SchulenAnmeldeinfoService {
 
 	@Inject
 	MkKatalogeResourceAdapter katalogeAdapter;
-
-	@Inject
-	Event<DataInconsistencyRegistered> dataInconsistencyEvent;
 
 	private DataInconsistencyRegistered dataInconsistencyRegistered;
 
@@ -163,7 +163,7 @@ public class SchulenAnmeldeinfoService {
 
 			LOG.warn(msg);
 
-			this.dataInconsistencyRegistered = new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
+			this.dataInconsistencyRegistered = new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
 		}
 
 		if (schulenOfLehrer.size() > schulenAusKatalg.size()) {

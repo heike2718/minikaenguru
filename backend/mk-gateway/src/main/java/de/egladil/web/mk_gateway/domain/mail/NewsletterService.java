@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -18,12 +17,10 @@ import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.mail.api.NewsletterAPIModel;
 import de.egladil.web.mk_gateway.domain.mail.api.NewsletterVersandauftrag;
 import de.egladil.web.mk_gateway.domain.mail.api.VersandinfoAPIModel;
-import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandFailed;
-import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandFinished;
-import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandProgress;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterMailinfoService;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.NewsletterHibernateRepository;
 
@@ -49,13 +46,7 @@ public class NewsletterService {
 	AdminMailService mailService;
 
 	@Inject
-	Event<NewsletterversandFailed> versandFailedEvent;
-
-	@Inject
-	Event<NewsletterversandFinished> versandFinished;
-
-	@Inject
-	Event<NewsletterversandProgress> versandProgress;
+	DomainEventHandler domainEventHandler;
 
 	public static NewsletterService createForTest(final NewsletterRepository newsletterRepository, final VersandinfoService versandinfoService, final VeranstalterMailinfoService veranstalterMailinfoService, final AdminMailService mailService) {
 
@@ -144,7 +135,7 @@ public class NewsletterService {
 
 	/**
 	 * Startet den Mailversand asynchron.
-	 * 
+	 *
 	 * @param  auftrag
 	 * @return         ResponsePayload
 	 */
@@ -175,8 +166,7 @@ public class NewsletterService {
 		NewsletterTask task = new NewsletterTask(this, newsletter, versandinformation, mailempfaengerGruppen);
 
 		// Das läuft dann hoffentlich wirklich in einem eigenen Thread.
-		ConcurrentSendMailDelegate sendMailDelegate = new ConcurrentSendMailDelegate(versandinformation, versandFinished,
-			versandFailedEvent);
+		ConcurrentSendMailDelegate sendMailDelegate = new ConcurrentSendMailDelegate(versandinformation, domainEventHandler);
 
 		sendMailDelegate.mailsVersenden(task);
 

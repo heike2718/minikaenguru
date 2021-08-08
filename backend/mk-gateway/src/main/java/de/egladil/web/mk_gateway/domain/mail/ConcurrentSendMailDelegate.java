@@ -7,12 +7,11 @@ package de.egladil.web.mk_gateway.domain.mail;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javax.enterprise.event.Event;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandFailed;
 import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandFinished;
 
@@ -25,15 +24,12 @@ public class ConcurrentSendMailDelegate {
 
 	private final Versandinformation versandinformation;
 
-	private final Event<NewsletterversandFinished> versandFinished;
+	private final DomainEventHandler domainEventHandler;
 
-	private final Event<NewsletterversandFailed> versandFailedEvent;
-
-	public ConcurrentSendMailDelegate(final Versandinformation versandinformation, final Event<NewsletterversandFinished> versandFinished, final Event<NewsletterversandFailed> versandFailedEvent) {
+	public ConcurrentSendMailDelegate(final Versandinformation versandinformation, final DomainEventHandler domainEventHandler) {
 
 		this.versandinformation = versandinformation;
-		this.versandFinished = versandFinished;
-		this.versandFailedEvent = versandFailedEvent;
+		this.domainEventHandler = domainEventHandler;
 	}
 
 	public void mailsVersenden(final NewsletterTask newsletterTask) {
@@ -63,9 +59,9 @@ public class ConcurrentSendMailDelegate {
 				NewsletterversandFailed versandFailedEventPayload = new NewsletterversandFailed()
 					.withMessage(msg);
 
-				if (versandFailedEvent != null) {
+				if (domainEventHandler != null) {
 
-					versandFailedEvent.fire(versandFailedEventPayload);
+					domainEventHandler.handleEvent(versandFailedEventPayload);
 				} else {
 
 					System.out.println(versandFailedEventPayload.serializeQuietly());
@@ -82,9 +78,9 @@ public class ConcurrentSendMailDelegate {
 					.withMessage(message)
 					.withVersandBeendetAm(versandBeendetAm);
 
-				if (versandFinished != null) {
+				if (domainEventHandler != null) {
 
-					versandFinished.fire(finishedEventPayload);
+					domainEventHandler.handleEvent(finishedEventPayload);
 				} else {
 
 					System.out.println(finishedEventPayload.serializeQuietly());

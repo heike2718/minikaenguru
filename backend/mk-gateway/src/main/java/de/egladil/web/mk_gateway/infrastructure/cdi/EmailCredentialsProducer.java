@@ -36,16 +36,16 @@ public class EmailCredentialsProducer {
 	@ConfigProperty(name = "common.email.credentials.path", defaultValue = "null")
 	String credentialsPath;
 
-	@ConfigProperty(name = "common.email.host")
+	@ConfigProperty(name = "email.host")
 	String host;
 
-	@ConfigProperty(name = "common.email.port")
+	@ConfigProperty(name = "email.port")
 	int port;
 
-	@ConfigProperty(name = "common.email.user")
+	@ConfigProperty(name = "email.user")
 	String user;
 
-	@ConfigProperty(name = "common.email.password")
+	@ConfigProperty(name = "email.password")
 	String password;
 
 	public static EmailCredentialsProducer createForTest(final String credentialsPath) {
@@ -100,7 +100,7 @@ public class EmailCredentialsProducer {
 
 		} catch (NumberFormatException e) {
 
-			LOG.error("Konfigurationsfehler in File {}: common.email.port ist keine Zahl", credentialsPath);
+			LOG.error("Konfigurationsfehler in File {}: email.port ist keine Zahl", credentialsPath);
 		}
 	}
 

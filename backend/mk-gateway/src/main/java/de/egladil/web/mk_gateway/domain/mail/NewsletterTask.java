@@ -11,8 +11,6 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import javax.enterprise.event.Event;
-
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +19,7 @@ import de.egladil.web.commons_mailer.DefaultEmailDaten;
 import de.egladil.web.commons_mailer.exception.InvalidMailAddressException;
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandFailed;
 import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandFinished;
 import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandProgress;
@@ -41,18 +40,12 @@ public class NewsletterTask implements Runnable {
 
 	private final AdminMailService mailService;
 
-	private final Event<NewsletterversandProgress> versandProgress;
-
-	private final Event<NewsletterversandFailed> versandFailedEvent;
-
-	private final Event<NewsletterversandFinished> versandFinished;
+	private final DomainEventHandler domainEventHandler;
 
 	public NewsletterTask(final NewsletterService newsletterService, final Newsletter newsletter, final Versandinformation versandinformation, final List<List<String>> mailempfaengerGruppen) {
 
 		this.mailService = newsletterService.mailService;
-		this.versandFailedEvent = newsletterService.versandFailedEvent;
-		this.versandFinished = newsletterService.versandFinished;
-		this.versandProgress = newsletterService.versandProgress;
+		this.domainEventHandler = newsletterService.domainEventHandler;
 		this.newsletter = newsletter;
 		this.versandinformation = versandinformation;
 		this.mailempfaengerGruppen = mailempfaengerGruppen;
@@ -118,9 +111,9 @@ public class NewsletterTask implements Runnable {
 					.withValidSentAddresses(e.getAllValidSentAddresses())
 					.withValidUnsentAddresses(e.getAllValidUnsentAddresses());
 
-				if (this.versandFailedEvent != null) {
+				if (this.domainEventHandler != null) {
 
-					this.versandFailedEvent.fire(versandFailedEventPayload);
+					this.domainEventHandler.handleEvent(versandFailedEventPayload);
 				} else {
 
 					System.out.println(versandFailedEventPayload.serializeQuietly());
@@ -137,9 +130,9 @@ public class NewsletterTask implements Runnable {
 			.withUuid(versandinfoUuid)
 			.withVersandBeendetAm(versandBeendetAm);
 
-		if (versandFinished != null) {
+		if (domainEventHandler != null) {
 
-			versandFinished.fire(finishedEventPayload);
+			domainEventHandler.handleEvent(finishedEventPayload);
 		} else {
 
 			System.out.println(finishedEventPayload.serializeQuietly());
@@ -155,9 +148,9 @@ public class NewsletterTask implements Runnable {
 	 */
 	private void aktualisiereVersandinformation(final NewsletterversandProgress progressPayload) {
 
-		if (this.versandProgress != null) {
+		if (this.domainEventHandler != null) {
 
-			this.versandProgress.fire(progressPayload);
+			this.domainEventHandler.handleEvent(progressPayload);
 		} else {
 
 			System.out.println(progressPayload.serializeQuietly());

@@ -13,7 +13,6 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
@@ -25,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
@@ -58,10 +58,7 @@ public class LehrerService {
 	ZugangUnterlagenService zugangUnterlagenService;
 
 	@Inject
-	Event<SecurityIncidentRegistered> securityEventRegistered;
-
-	@Inject
-	Event<LehrerChanged> lehrerChanged;
+	DomainEventHandler domainEventHandler;
 
 	private LehrerChanged lehrerChangedEventPayload;
 
@@ -101,9 +98,9 @@ public class LehrerService {
 
 		lehrerChangedEventPayload = new LehrerChanged(person, "", neueSchulkuerzel, data.newsletterEmpfaenger());
 
-		if (lehrerChanged != null) {
+		if (domainEventHandler != null) {
 
-			lehrerChanged.fire(lehrerChangedEventPayload);
+			domainEventHandler.handleEvent(lehrerChangedEventPayload);
 		} else {
 
 			System.out.println(lehrerChangedEventPayload.serializeQuietly());
@@ -113,6 +110,7 @@ public class LehrerService {
 
 	}
 
+	@Transactional
 	public boolean changeLehrer(final CreateOrUpdateLehrerCommand data) {
 
 		Optional<Veranstalter> optLehrer = veranstalterRepository.ofId(new Identifier(data.uuid()));
@@ -122,7 +120,7 @@ public class LehrerService {
 			String msg = "Versuch, einen nicht existierenden Lehrer zu ändern: " + data.toString();
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, securityEventRegistered);
+			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 			return false;
 		}
 
@@ -133,7 +131,7 @@ public class LehrerService {
 			String msg = "Versuch, einen Veranstalter zu ändern, der kein Lehrer ist: " + data.toString() + " - " + veranstalter;
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, securityEventRegistered);
+			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 			return false;
 		}
 
@@ -158,9 +156,9 @@ public class LehrerService {
 		lehrerChangedEventPayload = new LehrerChanged(geaenderterLehrer.person(), alteSchulkuerzel, neueSchulkuerzel,
 			data.newsletterEmpfaenger());
 
-		if (lehrerChanged != null) {
+		if (domainEventHandler != null) {
 
-			lehrerChanged.fire(lehrerChangedEventPayload);
+			domainEventHandler.handleEvent(lehrerChangedEventPayload);
 		} else {
 
 			System.out.println(lehrerChangedEventPayload.serializeQuietly());
@@ -186,7 +184,7 @@ public class LehrerService {
 			String msg = "Unbekannter Lehrer mit UUID=" + lehrerID + " versucht, Schule mit KUERZEL=" + schuleID + " hinzuzufügen.";
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, securityEventRegistered);
+			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 			throw new NotFoundException();
 		}
 
@@ -197,7 +195,7 @@ public class LehrerService {
 			String msg = "Privatveranstalter mit UUID=" + lehrerID + " versucht, Schule mit KUERZEL=" + schuleID + " hinzuzufügen.";
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, securityEventRegistered);
+			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 			throw new NotFoundException();
 		}
 
@@ -222,9 +220,9 @@ public class LehrerService {
 		lehrerChangedEventPayload = new LehrerChanged(person, alteSchulkuerzel, neueSchulkuerzel,
 			lehrer.isNewsletterEmpfaenger());
 
-		if (lehrerChanged != null) {
+		if (domainEventHandler != null) {
 
-			lehrerChanged.fire(lehrerChangedEventPayload);
+			domainEventHandler.handleEvent(lehrerChangedEventPayload);
 		} else {
 
 			System.out.println(lehrerChangedEventPayload.serializeQuietly());
@@ -242,6 +240,7 @@ public class LehrerService {
 	 * @param schuleID
 	 *                 Identifier
 	 */
+	@Transactional
 	public ResponsePayload removeSchule(final Identifier lehrerID, final Identifier schuleID) {
 
 		Optional<Veranstalter> optLehrer = veranstalterRepository.ofId(lehrerID);
@@ -252,7 +251,7 @@ public class LehrerService {
 				+ " abzumelden.";
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, securityEventRegistered);
+			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 			throw new NotFoundException();
 		}
 
@@ -264,7 +263,7 @@ public class LehrerService {
 				+ " abzumelden.";
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, securityEventRegistered);
+			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 			throw new NotFoundException();
 		}
 
@@ -279,7 +278,7 @@ public class LehrerService {
 				+ " nicht zugeordnet.";
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, securityEventRegistered);
+			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 
 			return ResponsePayload
 				.messageOnly(MessagePayload.warn(applicationMessages.getString("lehrer.schulen.remove.nicht_registriert.warn")));
@@ -294,9 +293,9 @@ public class LehrerService {
 		lehrerChangedEventPayload = new LehrerChanged(person, alteSchulkuerzel, neueSchulkuerzel,
 			lehrer.isNewsletterEmpfaenger());
 
-		if (lehrerChanged != null) {
+		if (domainEventHandler != null) {
 
-			lehrerChanged.fire(lehrerChangedEventPayload);
+			domainEventHandler.handleEvent(lehrerChangedEventPayload);
 		} else {
 
 			System.out.println(lehrerChangedEventPayload.serializeQuietly());
@@ -324,7 +323,7 @@ public class LehrerService {
 			String msg = "Versuch, nicht vorhandenen Veranstalter mit UUID=" + uuid + " zu finden";
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, securityEventRegistered);
+			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 			throw new NotFoundException("Kennen keinen Veranstalter mit dieser ID");
 		}
 
@@ -334,7 +333,7 @@ public class LehrerService {
 
 			String msg = "Falsche Rolle: erwarten Lehrer, war aber " + veranstalter.toString();
 			LOG.warn(msg);
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, securityEventRegistered);
+			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 			throw new NotFoundException("Kennen keinen Lehrer mit dieser ID");
 		}
 
