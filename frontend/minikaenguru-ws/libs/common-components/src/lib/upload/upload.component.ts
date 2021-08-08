@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, Input, EventEmitter, Output } from '@angular/core';
 import { UploadService } from './upload.service';
 import { UploadComponentModel } from '../common-components.model';
-import { ResponsePayload } from '@minikaenguru-ws/common-messages';
+import { ResponsePayload, Message, MessageLevel, ErrorMappingService } from '@minikaenguru-ws/common-messages';
 
 @Component({
 	selector: 'mk-upload',
@@ -31,7 +31,7 @@ export class UploadComponent implements OnInit {
 	uploadSuccessful = false;
 	canSubmit = false;
 
-	constructor(private uploadService: UploadService) { }
+	constructor(private uploadService: UploadService, private errorMapper: ErrorMappingService) { }
 
 	ngOnInit(): void {
 	}
@@ -60,14 +60,20 @@ export class UploadComponent implements OnInit {
 		this.uploading = true;
 
 		this.uploadService.uploadSingleFile(this.selectedFile, this.uploadModel.subUrl).subscribe(
-			rp => {
+			(rp: ResponsePayload) => {
 
 				this.uploading = false;
 				this.selectedFile = undefined;
 				this.canSubmit = false;
 				this.responsePayload.emit(rp);
 
-			}
+			},
+			(error => {
+				this.uploading = false;
+				this.canSubmit = true;
+				const msg: Message = this.errorMapper.extractMessageObject(error);
+				this.responsePayload.emit({message: msg});
+			})
 		);
 	}
 }

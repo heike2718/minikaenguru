@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mkv_server_tests.uploads;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -207,11 +208,12 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 		AuswertungImportReport report = (AuswertungImportReport) result.getData();
 		assertTrue(report.getFehlerhafteZeilen().isEmpty());
 
-		List<AnonymisierteTeilnahmeAPIModel> teilnahmen = report.getTeilnahmen();
-		assertEquals(1, teilnahmen.size());
+		AnonymisierteTeilnahmeAPIModel teilnahme = report.getTeilnahme();
+		assertNotNull(teilnahme);
 
-		AnonymisierteTeilnahmeAPIModel teilnahme = teilnahmen.get(0);
 		assertEquals(24, teilnahme.anzahlKinder());
+		assertEquals(24, teilnahme.getAnzahlLoesungszettelUpload());
+		assertEquals(0, teilnahme.getAnzahlLoesungszettelOnline());
 		TeilnahmeIdentifier teilnahmeIdentifier = teilnahme.identifier();
 		assertEquals(2020, teilnahmeIdentifier.jahr());
 		assertEquals(schulkuerzel, teilnahmeIdentifier.teilnahmenummer());
@@ -263,11 +265,12 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 		AuswertungImportReport report = (AuswertungImportReport) result.getData();
 		assertTrue(report.getFehlerhafteZeilen().isEmpty());
 
-		List<AnonymisierteTeilnahmeAPIModel> teilnahmen = report.getTeilnahmen();
-		assertEquals(1, teilnahmen.size());
+		AnonymisierteTeilnahmeAPIModel teilnahme = report.getTeilnahme();
+		assertNotNull(teilnahme);
 
-		AnonymisierteTeilnahmeAPIModel teilnahme = teilnahmen.get(0);
 		assertEquals(15, teilnahme.anzahlKinder());
+		assertEquals(15, teilnahme.getAnzahlLoesungszettelUpload());
+		assertEquals(0, teilnahme.getAnzahlLoesungszettelOnline());
 		TeilnahmeIdentifier teilnahmeIdentifier = teilnahme.identifier();
 		assertEquals(2020, teilnahmeIdentifier.jahr());
 		assertEquals(schulkuerzel, teilnahmeIdentifier.teilnahmenummer());
