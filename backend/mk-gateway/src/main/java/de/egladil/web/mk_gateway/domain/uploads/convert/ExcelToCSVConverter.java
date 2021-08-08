@@ -6,6 +6,7 @@ package de.egladil.web.mk_gateway.domain.uploads.convert;
 
 import java.io.File;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +26,8 @@ public class ExcelToCSVConverter implements UploadToCSVConverter {
 	@Override
 	public File convertToCSVAndPersistInFilesystem(final String pathUpload, final String uuid) {
 
+		File pyFile = null;
+
 		try {
 
 			File upload = checkUpload(pathUpload, uuid);
@@ -33,7 +36,7 @@ public class ExcelToCSVConverter implements UploadToCSVConverter {
 			String nameExcelFile = upload.getName();
 			String pathOutputFile = pathWorkDir + File.separator + uuid + DateiTyp.TEXT.getSuffixWithPoint();
 
-			File pyFile = new ConvertscriptGenerator().generatePyFile(pathWorkDir, nameExcelFile, pathOutputFile);
+			pyFile = new ConvertscriptGenerator().generatePyFile(pathWorkDir, nameExcelFile, pathOutputFile);
 
 			new ConvertscriptRunner().executePyScript(pyFile, 3000);
 
@@ -45,6 +48,9 @@ public class ExcelToCSVConverter implements UploadToCSVConverter {
 			LOGGER.error("Fehler beim Konvertieren der Datei {}: {}", pathUpload, e.getMessage(), e);
 			throw new MkGatewayRuntimeException(
 				"Die Datei " + pathUpload + " zum upload " + uuid + " konnte nicht konvertiert werden.", e);
+		} finally {
+
+			FileUtils.deleteQuietly(pyFile);
 		}
 	}
 

@@ -27,6 +27,8 @@ export class UploadComponent implements OnInit {
 
 	public selectedFile: File;
 
+	public maxFileSizeInfo: string;
+
 	uploading = false;
 	uploadSuccessful = false;
 	canSubmit = false;
@@ -34,6 +36,11 @@ export class UploadComponent implements OnInit {
 	constructor(private uploadService: UploadService, private errorMapper: ErrorMappingService) { }
 
 	ngOnInit(): void {
+
+		const maxFileSizeInKB = this.uploadModel.maxSizeBytes / 1024;
+		const maxFileSizeInMB = maxFileSizeInKB / 1024;
+
+		this.maxFileSizeInfo = 'Maximale erlaubte Größe: ' + maxFileSizeInKB + ' kB bzw. ' + maxFileSizeInMB + ' MB';
 	}
 
 	onFileAdded() {
@@ -41,6 +48,13 @@ export class UploadComponent implements OnInit {
 		const files: { [key: string]: File } = this.file.nativeElement.files;
 		for (const key in files) {
 			if (!isNaN(parseInt(key, 0))) {
+
+				if (files[key].size > this.uploadModel.maxSizeBytes) {
+					this.canSubmit = false;
+					const msg: Message = { level: 'ERROR', message: this.uploadModel.errorMessageSize };
+					this.responsePayload.emit({ message: msg });
+				}
+
 				this.selectedFile = files[key];
 			}
 		}
@@ -72,7 +86,7 @@ export class UploadComponent implements OnInit {
 				this.uploading = false;
 				this.canSubmit = true;
 				const msg: Message = this.errorMapper.extractMessageObject(error);
-				this.responsePayload.emit({message: msg});
+				this.responsePayload.emit({ message: msg });
 			})
 		);
 	}

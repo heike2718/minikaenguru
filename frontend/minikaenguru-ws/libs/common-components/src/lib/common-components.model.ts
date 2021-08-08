@@ -117,6 +117,10 @@ export interface KlasseRequestData {
 export interface UploadComponentModel {
 	readonly subUrl: string;
 	readonly titel: string;
+	readonly maxSizeBytes: number;
+	readonly errorMessageSize: string;
+	readonly accept: string;
+	readonly acceptMessage: string;
 };
 
 export const initialKindEditorModel: KindEditorModel = {

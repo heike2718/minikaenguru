@@ -41,7 +41,16 @@ export class UploadAuswertungComponent implements OnInit, OnDestroy {
 				if (m) {
 
 					this.subUrl = '/uploads/auswertung/' + m.jahr + '/' + m.katalogData.kuerzelLand + '/' + m.kuerzel;
-					this.uploadModel = {subUrl: this.subUrl + '?sprache=de', titel: ''};
+					this.uploadModel = {
+						subUrl: this.subUrl + '?sprache=de'
+						, titel: ''
+						// , accept: '.*'
+						, accept: '.txt, .csv, .ods, .xls, .xlsx'
+						, maxSizeBytes: 2097152
+						// , maxSizeBytes: 61440
+						, errorMessageSize: 'Die Datei ist zu groß. Die maximale erlaubte Größe ist 2 MB'
+						, acceptMessage: 'Erlaubte Dateitypen: csv, Excel, OpenOffice, LibreOffice'
+					};
 				}
 			}
 		)
@@ -51,9 +60,9 @@ export class UploadAuswertungComponent implements OnInit, OnDestroy {
 	onCheckboxChanged(_event$): void {
 
 		if (this.spracheEnglisch) {
-			this.uploadModel = {...this.uploadModel, subUrl: this.subUrl + '?sprache=en'}
+			this.uploadModel = { ...this.uploadModel, subUrl: this.subUrl + '?sprache=en' }
 		} else {
-			this.uploadModel = {...this.uploadModel, subUrl: this.subUrl + '?sprache=de'}
+			this.uploadModel = { ...this.uploadModel, subUrl: this.subUrl + '?sprache=de' }
 		}
 
 	}

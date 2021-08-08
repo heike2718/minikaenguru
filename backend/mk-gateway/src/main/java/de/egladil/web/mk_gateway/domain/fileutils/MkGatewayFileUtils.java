@@ -137,4 +137,25 @@ public final class MkGatewayFileUtils {
 		}
 	}
 
+	/**
+	 * Löscht die gegebene Datei und Loggt Exceptons als Warnung.
+	 *
+	 * @param file
+	 * @param logger
+	 */
+	public static void deleteFileWithErrorLogQuietly(final File file, final Logger logger) {
+
+		if (file.exists() && file.isFile()) {
+
+			try {
+
+				file.delete();
+			} catch (Exception e) {
+
+				logger.warn("{} konnte nicht geloescht werden: {}", file.getAbsolutePath(),
+					e.getMessage(), e);
+
+			}
+		}
+	}
 }
