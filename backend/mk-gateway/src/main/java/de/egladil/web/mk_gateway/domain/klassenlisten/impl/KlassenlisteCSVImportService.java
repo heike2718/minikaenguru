@@ -61,12 +61,14 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UploadHibernate
 @RequestScoped
 public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 
+	private static final String NAME_UPLOAD_DIR = "upload";
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(KlassenlisteCSVImportService.class);
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
-	@ConfigProperty(name = "upload.folder.path")
-	String pathUploadDir;
+	@ConfigProperty(name = "path.external.files")
+	String pathExternalFiles;
 
 	@Inject
 	KlassenService klassenService;
@@ -85,14 +87,14 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 		result.klassenService = KlassenServiceImpl.createForIntegrationTest(em);
 		result.kinderService = KinderServiceImpl.createForIntegrationTest(em);
 		result.uploadRepository = UploadHibernateRepository.createForIntegrationTests(em);
-		result.pathUploadDir = "/home/heike/mkv/upload";
+		result.pathExternalFiles = "/home/heike/mkv";
 		return result;
 	}
 
 	@Override
 	public ResponsePayload importiereKinder(final UploadKlassenlisteContext uploadKlassenlisteContext, final PersistenterUpload uploadMetadata) {
 
-		String path = pathUploadDir + File.separator + uploadMetadata.getUuid() + ".csv";
+		String path = getUploadDir() + File.separator + uploadMetadata.getUuid() + ".csv";
 
 		List<String> lines = MkGatewayFileUtils.readLines(path);
 
@@ -158,7 +160,7 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 
 			if (anzahlMitFehlern > 0) {
 
-				String pathFehlerreport = pathUploadDir + File.separator + uploadMetadata.getUuid() + "-fehlerreport.csv";
+				String pathFehlerreport = getUploadDir() + File.separator + uploadMetadata.getUuid() + "-fehlerreport.csv";
 				MkGatewayFileUtils.writeLines(nichtImportierteZeilen, pathFehlerreport);
 				payloadData.setUuidImportReport(uploadMetadata.getUuid());
 			}
@@ -353,5 +355,10 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 	List<KindCreated> getKindCreatedEventPayloads() {
 
 		return kindCreatedEventPayloads;
+	}
+
+	String getUploadDir() {
+
+		return pathExternalFiles + File.separator + NAME_UPLOAD_DIR;
 	}
 }

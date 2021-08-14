@@ -26,18 +26,21 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 @Produces(MediaType.APPLICATION_JSON)
 public class VersionResource {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(VersionResource.class);
+
 	@ConfigProperty(name = "quarkus.application.version")
 	String version;
 
 	@ConfigProperty(name = "env")
 	String env;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(VersionResource.class);
+	@ConfigProperty(name = "stage")
+	String stage;
 
 	@GET
 	public Response getVersion() {
 
-		LOGGER.info("running version {} on env {}", version, env);
+		LOGGER.info("running version {} on stage {} and env {}", version, stage, env);
 		return Response.ok(ResponsePayload.messageOnly(MessagePayload.info(version + " - " + env))).build();
 
 	}

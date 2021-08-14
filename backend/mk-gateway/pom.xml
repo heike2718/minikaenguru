@@ -15,7 +15,7 @@
 		<poi.version>5.0.0</poi.version>
 		<quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
 		<quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-		<quarkus.platform.version>2.0.2.Final</quarkus.platform.version>
+		<quarkus.platform.version>2.1.2.Final</quarkus.platform.version>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -125,7 +125,6 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>4.0.1</version>
-			<scope>provided</scope>
 		</dependency>
 
 

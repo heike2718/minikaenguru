@@ -97,7 +97,7 @@ public class KlassenlisteCSVImportServiceTest {
 		void should_importiereKlassenThrowUploadFormatException_when_keineUeberschrift() {
 
 			// Arrange
-			service.pathUploadDir = "/home/heike/upload/klassenlisten-testdaten/fehlerhaft";
+			service.pathExternalFiles = "/home/heike/upload/klassenlisten-testdaten/fehlerhaft";
 			persistenterUpload.setUuid("ohne-ueberschrift");
 
 			// Act + Assert
@@ -124,7 +124,7 @@ public class KlassenlisteCSVImportServiceTest {
 		void should_importiereKlassenWork() throws IOException {
 
 			// Arrange
-			service.pathUploadDir = "/home/heike/upload/klassenlisten-testdaten/korrekt";
+			service.pathExternalFiles = "/home/heike/upload/klassenlisten-testdaten/korrekt";
 
 			List<Klasse> klassen = new ArrayList<>();
 			klassen.add(new Klasse(new Identifier("uuid-2a")).withName("2a").withSchuleID(new Identifier(SCHULKUERZEL)));
@@ -174,7 +174,7 @@ public class KlassenlisteCSVImportServiceTest {
 		void should_importiereKlassenWork_withFehlern() throws IOException {
 
 			// Arrange
-			service.pathUploadDir = "/home/heike/upload/klassenlisten-testdaten/fehlerhaft";
+			service.pathExternalFiles = "/home/heike/upload/klassenlisten-testdaten/fehlerhaft";
 			persistenterUpload.setUuid("mit-ueberschrift-alle-anderen-faelle");
 
 			List<Klasse> klassen = new ArrayList<>();

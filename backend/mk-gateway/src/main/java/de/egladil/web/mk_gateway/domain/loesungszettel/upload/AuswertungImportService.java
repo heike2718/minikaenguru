@@ -52,12 +52,14 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UploadHibernate
 @ApplicationScoped
 public class AuswertungImportService {
 
+	private static final String NAME_UPLOAD_DIR = "upload";
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(AuswertungImportService.class);
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
-	@ConfigProperty(name = "upload.folder.path")
-	String pathUploadDir;
+	@ConfigProperty(name = "path.external.files")
+	String pathExternalFiles;
 
 	@Inject
 	UploadRepository uploadRepository;
@@ -74,7 +76,7 @@ public class AuswertungImportService {
 		result.uploadRepository = UploadHibernateRepository.createForIntegrationTests(em);
 		result.loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(em);
 		result.anonymisierteTeilnahmenService = AnonymisierteTeilnahmenService.createForIntegrationTest(em);
-		result.pathUploadDir = "/home/heike/mkv/upload";
+		result.pathExternalFiles = "/home/heike/mkv";
 		return result;
 	}
 
@@ -84,14 +86,15 @@ public class AuswertungImportService {
 	 */
 	public ResponsePayload importiereAuswertung(final UploadAuswertungContext uploadContext, final PersistenterUpload persistenterUpload) {
 
+		Wettbewerb wettbewerb = uploadContext.getWettbewerb();
+
 		if (persistenterUpload.getStatus() != UploadStatus.HOCHGELADEN) {
 
-			return handleBereitsVerarbeitet(uploadContext, persistenterUpload);
+			return handleBereitsVerarbeitet(uploadContext, persistenterUpload, wettbewerb.id());
 		}
 
 		AuswertungImportReport report = new AuswertungImportReport();
 
-		Wettbewerb wettbewerb = uploadContext.getWettbewerb();
 		Rolle rolle = uploadContext.getRolle();
 
 		if (wettbewerb.isBeendet() && Rolle.ADMIN != rolle) {
@@ -112,7 +115,7 @@ public class AuswertungImportService {
 
 		}
 
-		String path = pathUploadDir + File.separator + persistenterUpload.getUuid() + ".csv";
+		String path = getPathUploadDir() + File.separator + persistenterUpload.getUuid() + ".csv";
 
 		List<AuswertungimportZeile> zeilen = new AuswertungCSVToAuswertungimportZeilenMapper()
 			.apply(MkGatewayFileUtils.readLines(path));
@@ -225,7 +228,7 @@ public class AuswertungImportService {
 
 		if (!fehlerhafteZeilen.isEmpty()) {
 
-			String pathFehlerreport = pathUploadDir + File.separator + persistenterUpload.getUuid() + "-fehlerreport.csv";
+			String pathFehlerreport = getPathUploadDir() + File.separator + persistenterUpload.getUuid() + "-fehlerreport.csv";
 
 			List<String> fehlermeldungen = fehlerhafteZeilen.stream().map(AuswertungimportZeile::getFehlerreportItem)
 				.collect(Collectors.toList());
@@ -294,7 +297,7 @@ public class AuswertungImportService {
 	 * @param  report
 	 * @return
 	 */
-	ResponsePayload handleBereitsVerarbeitet(final UploadAuswertungContext uploadContext, final PersistenterUpload persistenterUpload) {
+	ResponsePayload handleBereitsVerarbeitet(final UploadAuswertungContext uploadContext, final PersistenterUpload persistenterUpload, final WettbewerbID wettbewerbID) {
 
 		AuswertungImportReport report = new AuswertungImportReport();
 
@@ -369,6 +372,13 @@ public class AuswertungImportService {
 			break;
 		}
 
+		Optional<AnonymisierteTeilnahmeAPIModel> optTeilnahme = getTeilnahme(persistenterUpload, wettbewerbID);
+
+		if (optTeilnahme.isPresent()) {
+
+			report.setTeilnahme(optTeilnahme.get());
+		}
+
 		return new ResponsePayload(messagePayload, report);
 	}
 
@@ -419,6 +429,11 @@ public class AuswertungImportService {
 		persistenterUpload.setStatus(uploadStatus);
 		uploadRepository.updateUpload(persistenterUpload);
 
+	}
+
+	private String getPathUploadDir() {
+
+		return pathExternalFiles + File.separator + NAME_UPLOAD_DIR;
 	}
 
 }
