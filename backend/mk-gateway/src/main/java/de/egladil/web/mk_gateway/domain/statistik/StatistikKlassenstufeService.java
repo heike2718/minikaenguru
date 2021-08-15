@@ -32,6 +32,9 @@ public class StatistikKlassenstufeService {
 		GesamtpunktverteilungKlassenstufeDaten daten = new VerteilungRechner().berechne(wettbewerbID, klassenstufe,
 			loesungszettelKlassenstufe);
 
+		String titel = MessageFormat.format(applicationMessages.getString("statistik.gesamtpunktverteilung.headline"),
+			new Object[] { wettbewerbID.jahr().toString(), klassenstufe.getLabel() });
+
 		GesamtpunktverteilungTexte texte = new GesamtpunktverteilungTexte()
 			.withBasis(
 				MessageFormat.format(applicationMessages.getString("statistik.gesamtpunktverteilung.grundlage.description"),
@@ -39,9 +42,7 @@ public class StatistikKlassenstufeService {
 			.withBewertung(
 				MessageFormat.format(applicationMessages.getString("statistik.gesamtpunktverteilung.bewertung.description"),
 					new Object[] { klassenstufe.getStartguthaben(wettbewerbID.jahr()) }))
-			.withTitel(MessageFormat.format(applicationMessages.getString("statistik.gesamtpunktverteilung.headline"),
-				new Object[] { wettbewerbID.jahr().toString(), klassenstufe.getLabel() }))
-			.withTitel(applicationMessages.getString("statistik.gesamtpunktverteilung.sectioneinzel"));
+			.withTitel(titel);
 
 		return new GesamtpunktverteilungKlassenstufe(texte, daten);
 	}

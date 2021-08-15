@@ -1,0 +1,152 @@
+
+\documentclass[12pt,a4paper,twoside,german]{article}
+\input{../include/vorspann}
+\input{../include/commands}
+\pagestyle{empty}
+\begin{document}
+\renewcommand\arraystretch{1.3}
+Heike Winkelvoß, www.mathe-jung-alt.de/minikaenguru\par\vspace{1cm}
+
+	
+\begin{minipage}{2cm}
+\input{../branding/aglogo_level_4_20mm}
+\end{minipage}
+\begin{minipage}[c]{10cm}
+\begin{center}
+\LARGE Lösungen je Aufgabe
+\end{center}
+\end{minipage}
+\begin{minipage}{3.5cm}
+\bild{3.0cm}{../resources/001/00140.eps}
+\end{minipage}
+\\
+\rule{16cm}{0.5pt}\\
+\rule[5ex]{16cm}{0.5pt}
+	Die Punktverteilung wurde auf der Grundlage der zurückgesendeten Ergebnisse von 20 Kindern ermittelt.
+		\par
+	Die Kinder erhielten ein Startguthaben von 15,00 Punkten. Für falsch gelöste Aufgaben wurden abgezogen: 0,75 Punkte bei 3-Punkte-Aufgaben, 1 Punkt bei 4-Punkte-Aufgaben, 1,25 Punkte bei 5-Punkte-Aufgaben.
+\begin{center}
+\begin{longtable}{*{3}{|r}|}
+\hline
+{\bf Punkte}  &  {\bf Anzahl}  &  {\bf Prozentrang}\\\hline\hline
+	75,00-75,00 & 2 & 100,0
+\\ \hline
+	70,00-72,00 & 0 & 90,0
+\\ \hline
+	65,00-69,00 & 1 & 90,0
+\\ \hline
+	60,00-64,75 & 1 & 85,0
+\\ \hline
+	55,00-59,75 & 3 & 80,0
+\\ \hline
+	50,00-54,75 & 1 & 65,0
+\\ \hline
+	45,00-49,75 & 3 & 60,0
+\\ \hline
+	40,00-44,75 & 0 & 45,0
+\\ \hline
+	35,00-39,75 & 0 & 45,0
+\\ \hline
+	30,00-34,75 & 0 & 45,0
+\\ \hline
+	25,00-29,75 & 1 & 45,0
+\\ \hline
+	20,00-24,75 & 4 & 40,0
+\\ \hline
+	15,00-19,75 & 2 & 20,0
+\\ \hline
+	10,00-14,75 & 2 & 10,0
+\\ \hline
+	5,00-9,75 & 0 & 0,0
+\\ \hline
+	0-4,75 & 0 & 0,0
+\\ \hline
+	 &  {\bf 20} & 
+	\\ \hline
+	
+\end{longtable}
+\end{center}
+	
+Der Median (Prozentrang 50) liegt bei {\bf 47,25 Punkten} .\newpage {\large \bf Prozentränge}\par
+    
+\begin{center}
+\begin{longtable}{*{3}{|r}|}
+\hline
+{\bf Punkte}  &  {\bf Anzahl}  &  {\bf Prozentrang}\\\hline\hline
+	75,00 & 2 & 100,0
+\\ \hline
+	66,25 & 1 & 90,0
+\\ \hline
+	60,00 & 1 & 85,0
+\\ \hline
+	58,75 & 2 & 80,0
+\\ \hline
+	55,00 & 1 & 70,0
+\\ \hline
+	51,25 & 1 & 65,0
+\\ \hline
+	48,25 & 2 & 60,0
+\\ \hline
+	46,25 & 1 & 50,0
+\\ \hline
+	25,00 & 1 & 45,0
+\\ \hline
+	23,00 & 3 & 40,0
+\\ \hline
+	20,00 & 1 & 25,0
+\\ \hline
+	18,25 & 1 & 20,0
+\\ \hline
+	15,75 & 1 & 15,0
+\\ \hline
+	13,75 & 1 & 10,0
+\\ \hline
+	10,00 & 1 & 5,0
+\\ \hline
+	
+\end{longtable}
+\end{center}
+	 \newpage {\large \bf
+        Lösungen je Aufgabe }
+		
+\begin{center}
+\begin{tabular}{|c||r|r||r|r||r|r|}
+\hline
+{\bf Aufgabe}  &  {\bf richtig}  &  {\bf \% richtig}  &  {\bf falsch}  &  {\bf \% falsch}  &   {\bf nicht gelöst}  &   {\bf \% nicht gelöst} \\\hline\hline
+	A-1 & 8 & 40,0 & 6 & 30,0 & 6 & 30,0
+\\ \hline
+	A-2 & 17 & 85,0 & 1 & 5,0 & 2 & 10,0
+\\ \hline
+	A-3 & 13 & 65,0 & 4 & 20,0 & 3 & 15,0
+\\ \hline
+	A-4 & 11 & 55,0 & 5 & 25,0 & 4 & 20,0
+\\ \hline
+	A-5 & 14 & 70,0 & 3 & 15,0 & 3 & 15,0
+\\ \hline
+	B-1 & 9 & 45,0 & 9 & 45,0 & 2 & 10,0
+\\ \hline
+	B-2 & 11 & 55,0 & 7 & 35,0 & 2 & 10,0
+\\ \hline
+	B-3 & 12 & 60,0 & 5 & 25,0 & 3 & 15,0
+\\ \hline
+	B-4 & 10 & 50,0 & 7 & 35,0 & 3 & 15,0
+\\ \hline
+	B-5 & 11 & 55,0 & 3 & 15,0 & 6 & 30,0
+\\ \hline
+	C-1 & 7 & 35,0 & 4 & 20,0 & 9 & 45,0
+\\ \hline
+	C-2 & 7 & 35,0 & 5 & 25,0 & 8 & 40,0
+\\ \hline
+	C-3 & 8 & 40,0 & 4 & 20,0 & 8 & 40,0
+\\ \hline
+	C-4 & 6 & 30,0 & 5 & 25,0 & 9 & 45,0
+\\ \hline
+	C-5 & 9 & 45,0 & 3 & 15,0 & 8 & 40,0
+\\ \hline
+	
+\end{tabular}
+\end{center}
+	
+
+\end{document}
+	
