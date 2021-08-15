@@ -164,7 +164,7 @@ public class StatistikWettbewerbServiceTest extends AbstractDomainServiceTest {
 			assertEquals(
 				"Die Kinder erhielten ein Startguthaben von 12,00 Punkten. Für falsch gelöste Aufgaben wurden abgezogen: 0,75 Punkte bei 3-Punkte-Aufgaben, 1 Punkt bei 4-Punkte-Aufgaben, 1,25 Punkte bei 5-Punkte-Aufgaben.",
 				verteilung.bewertung());
-			assertEquals("Lösungen je Aufgabe", verteilung.titel());
+			assertEquals("Ergebnisse 2018 - Klasse 1", verteilung.titel());
 			assertEquals("Lösungen je Aufgabe", verteilung.sectionEinzelergebnisse());
 			assertEquals(13, verteilung.gesamtpunktverteilungItems().size());
 			assertEquals(12, verteilung.aufgabeErgebnisItems().size());
