@@ -96,7 +96,7 @@ public class MkGatewayFileUtilsTest {
 	void should_readFileContent_IgnoreEmptyLines() {
 
 		// Arrange
-		String path = "/home/heike/upload/klassenlisten-testdaten/korrekt/klassenliste-mit-leerzeilen.csv";
+		String path = "/home/heike/upload/klassenlisten-testdaten/korrekt/upload/klassenliste-mit-leerzeilen.csv";
 
 		// Act
 		List<String> lines = MkGatewayFileUtils.readLines(path);

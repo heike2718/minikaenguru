@@ -40,8 +40,8 @@ public class LoginLogoutServiceImpl implements LoginLogoutService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(LoginLogoutServiceImpl.class);
 
-	@ConfigProperty(name = "env")
-	String env;
+	@ConfigProperty(name = "stage")
+	String stage;
 
 	@ConfigProperty(name = "mk-admin-app.client-id")
 	String adminClientId;
@@ -86,7 +86,7 @@ public class LoginLogoutServiceImpl implements LoginLogoutService {
 
 		NewCookie sessionCookie = SessionUtils.createSessionCookie(SESSION_COOKIE_NAME, session.sessionId());
 
-		if (!MkGatewayApp.STAGE_DEV.equals(env)) {
+		if (!MkGatewayApp.STAGE_DEV.equals(stage)) {
 
 			// TODO: schauen, ob dies aufgerufen wird.
 			session.clearSessionId();
@@ -122,9 +122,9 @@ public class LoginLogoutServiceImpl implements LoginLogoutService {
 			LOG.info("sessionId was null");
 		}
 
-		if (!MkGatewayApp.STAGE_DEV.equals(env)) {
+		if (!MkGatewayApp.STAGE_DEV.equals(stage)) {
 
-			String msg = "logoutDev wurde auf der Umgebung " + env + " aufgerufen. sessionId=" + sessionId;
+			String msg = "logoutDev wurde auf der Umgebung " + stage + " aufgerufen. sessionId=" + sessionId;
 
 			LOG.warn(msg);
 
