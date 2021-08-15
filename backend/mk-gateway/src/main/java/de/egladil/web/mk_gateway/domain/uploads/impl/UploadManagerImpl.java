@@ -67,6 +67,8 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UploadHibernate
 @ApplicationScoped
 public class UploadManagerImpl implements UploadManager {
 
+	private static final String NAME_UPLOAD_DIR = "upload";
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(UploadManagerImpl.class);
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
@@ -74,8 +76,8 @@ public class UploadManagerImpl implements UploadManager {
 	@ConfigProperty(name = "mkv-app.client-id")
 	String clientId;
 
-	@ConfigProperty(name = "upload.folder.path")
-	String pathUploadDir;
+	@ConfigProperty(name = "path.external.files")
+	String pathExternalFiles;
 
 	@ConfigProperty(name = "upload.max.bytes")
 	String maxFilesizeBytes;
@@ -106,7 +108,7 @@ public class UploadManagerImpl implements UploadManager {
 		UploadManagerImpl result = new UploadManagerImpl();
 		result.scanService = ScanService.createForIntegrationTest();
 		result.clientId = "integration-test-client";
-		result.pathUploadDir = "/home/heike/mkv/upload";
+		result.pathExternalFiles = "/home/heike/mkv";
 		result.authService = AuthorizationService.createForIntegrationTest(em);
 		result.uploadAuthService = UploadAuthorizationServiceImpl.createForIntegrationTests(em);
 		result.klassenlisteImportService = KlassenlisteCSVImportService.createForIntegrationTests(em);
@@ -325,7 +327,7 @@ public class UploadManagerImpl implements UploadManager {
 	 */
 	private String getPathUploadedFile(final DateiTyp dateiTyp, final String uuid) {
 
-		return pathUploadDir + File.separator + uuid + dateiTyp.getSuffixWithPoint();
+		return getPathUploadDir() + File.separator + uuid + dateiTyp.getSuffixWithPoint();
 	}
 
 	/**
@@ -335,6 +337,11 @@ public class UploadManagerImpl implements UploadManager {
 	 */
 	private String getPathConvertedFile(final String uuid) {
 
-		return pathUploadDir + File.separator + uuid + ".csv";
+		return getPathUploadDir() + File.separator + uuid + ".csv";
+	}
+
+	private String getPathUploadDir() {
+
+		return pathExternalFiles + File.separator + NAME_UPLOAD_DIR;
 	}
 }

@@ -12,6 +12,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
@@ -24,17 +26,22 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 @Produces(MediaType.APPLICATION_JSON)
 public class VersionResource {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(VersionResource.class);
+
 	@ConfigProperty(name = "quarkus.application.version")
 	String version;
 
 	@ConfigProperty(name = "env")
 	String env;
 
+	@ConfigProperty(name = "stage")
+	String stage;
+
 	@GET
 	public Response getVersion() {
 
+		LOGGER.info("running version {} on stage {} and env {}", version, stage, env);
 		return Response.ok(ResponsePayload.messageOnly(MessagePayload.info(version + " - " + env))).build();
 
 	}
-
 }

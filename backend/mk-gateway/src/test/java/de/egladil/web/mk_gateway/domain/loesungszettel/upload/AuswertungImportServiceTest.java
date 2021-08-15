@@ -141,7 +141,7 @@ public class AuswertungImportServiceTest {
 		void should_importiereAuswertungen_work() {
 
 			// Arrange
-			service.pathUploadDir = "/home/heike/upload/auswertungen-testdaten/korrekt";
+			service.pathExternalFiles = "/home/heike/upload/auswertungen-testdaten/korrekt";
 
 			List<Pair<Integer, Integer>> jahreUndAnzahlen = new ArrayList<>();
 			jahreUndAnzahlen.add(Pair.of(JAHR_WETTBEWERB_BEENDET, Integer.valueOf(12)));
@@ -184,14 +184,14 @@ public class AuswertungImportServiceTest {
 
 			// Arrange
 			File file = new File(
-				"/home/heike/upload/auswertungen-testdaten/fehlerhaft/mit-ueberschrift-fehlerhaft-fehlerreport.csv");
+				"/home/heike/upload/auswertungen-testdaten/fehlerhaft/upload/mit-ueberschrift-fehlerhaft-fehlerreport.csv");
 
 			FileUtils.deleteQuietly(file);
 
-			service.pathUploadDir = "/home/heike/upload/auswertungen-testdaten/fehlerhaft";
+			service.pathExternalFiles = "/home/heike/upload/auswertungen-testdaten/fehlerhaft";
 
 			List<Pair<Integer, Integer>> jahreUndAnzahlen = new ArrayList<>();
-			jahreUndAnzahlen.add(Pair.of(JAHR_WETTBEWERB_BEENDET, Integer.valueOf(12)));
+			jahreUndAnzahlen.add(Pair.of(JAHR_WETTBEWERB_RUNNING, Integer.valueOf(12)));
 
 			List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = createAnonymisierteTeilnahmen(jahreUndAnzahlen);
 
@@ -234,10 +234,10 @@ public class AuswertungImportServiceTest {
 		void should_importiereAuswertungenNotPersistAnyLoesungszettel_when_ohneUeberschrift() {
 
 			// Arrange
-			service.pathUploadDir = "/home/heike/upload/auswertungen-testdaten/fehlerhaft";
+			service.pathExternalFiles = "/home/heike/upload/auswertungen-testdaten/fehlerhaft";
 
 			List<Pair<Integer, Integer>> jahreUndAnzahlen = new ArrayList<>();
-			jahreUndAnzahlen.add(Pair.of(JAHR_WETTBEWERB_BEENDET, Integer.valueOf(12)));
+			jahreUndAnzahlen.add(Pair.of(JAHR_WETTBEWERB_RUNNING, Integer.valueOf(12)));
 
 			List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = createAnonymisierteTeilnahmen(jahreUndAnzahlen);
 
@@ -281,9 +281,9 @@ public class AuswertungImportServiceTest {
 		void should_importiereAuswertungenReturnExistingTeilnahmen_when_StatusLEER() {
 
 			// Arrange
-			service.pathUploadDir = "/home/heike/upload/auswertungen-testdaten/fehlerhaft";
+			service.pathExternalFiles = "/home/heike/upload/auswertungen-testdaten/fehlerhaft";
 
-			Pair<Integer, Integer> jahrUndAnzahl = Pair.of(JAHR_WETTBEWERB_BEENDET, Integer.valueOf(12));
+			Pair<Integer, Integer> jahrUndAnzahl = Pair.of(JAHR_WETTBEWERB_RUNNING, Integer.valueOf(12));
 			List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = createAnonymisierteTeilnahmen(
 				Collections.singletonList(jahrUndAnzahl));
 
@@ -307,7 +307,7 @@ public class AuswertungImportServiceTest {
 			AnonymisierteTeilnahmeAPIModel teilnahme = report.getTeilnahme();
 			assertNotNull(teilnahme);
 			assertEquals(12, teilnahme.anzahlKinder());
-			assertEquals(JAHR_WETTBEWERB_BEENDET.intValue(), teilnahme.identifier().jahr());
+			assertEquals(JAHR_WETTBEWERB_RUNNING.intValue(), teilnahme.identifier().jahr());
 
 			assertTrue(report.getFehlerhafteZeilen().isEmpty());
 
@@ -376,7 +376,7 @@ public class AuswertungImportServiceTest {
 		void should_importiereAuswertungenWork_when_wettbewerbBeendetUndStatusHOCHGELADEN() {
 
 			// Arrange
-			service.pathUploadDir = "/home/heike/upload/auswertungen-testdaten/korrekt";
+			service.pathExternalFiles = "/home/heike/upload/auswertungen-testdaten/korrekt";
 			uploadContxtWettbewerbBeendet.setRolle(Rolle.ADMIN);
 			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
 			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
@@ -450,9 +450,9 @@ public class AuswertungImportServiceTest {
 		void should_importiereAuswertungenReturnExistingTeilnahmen_when_StatusLEER() {
 
 			// Arrange
-			service.pathUploadDir = "/home/heike/upload/auswertungen-testdaten/fehlerhaft";
+			service.pathExternalFiles = "/home/heike/upload/auswertungen-testdaten/fehlerhaft";
 
-			Pair<Integer, Integer> jahrUndAnzahl = Pair.of(JAHR_WETTBEWERB_BEENDET, Integer.valueOf(12));
+			Pair<Integer, Integer> jahrUndAnzahl = Pair.of(JAHR_WETTBEWERB_RUNNING, Integer.valueOf(12));
 			List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = createAnonymisierteTeilnahmen(
 				Collections.singletonList(jahrUndAnzahl));
 
@@ -476,7 +476,7 @@ public class AuswertungImportServiceTest {
 			AnonymisierteTeilnahmeAPIModel teilnahme = report.getTeilnahme();
 			assertNotNull(teilnahme);
 			assertEquals(12, teilnahme.anzahlKinder());
-			assertEquals(JAHR_WETTBEWERB_BEENDET.intValue(), teilnahme.identifier().jahr());
+			assertEquals(JAHR_WETTBEWERB_RUNNING.intValue(), teilnahme.identifier().jahr());
 
 			assertTrue(report.getFehlerhafteZeilen().isEmpty());
 
@@ -495,16 +495,16 @@ public class AuswertungImportServiceTest {
 
 			// Arrange
 			File file = new File(
-				"/home/heike/upload/auswertungen-testdaten/fehlerhaft/mit-ueberschrift-fehlerhaft-fehlerreport.csv");
+				"/home/heike/upload/auswertungen-testdaten/fehlerhaft/upload/mit-ueberschrift-fehlerhaft-fehlerreport.csv");
 
 			FileUtils.deleteQuietly(file);
 
-			service.pathUploadDir = "/home/heike/upload/auswertungen-testdaten/fehlerhaft";
+			service.pathExternalFiles = "/home/heike/upload/auswertungen-testdaten/fehlerhaft";
 
 			uploadContextWettbewerbRunning.setRolle(Rolle.ADMIN);
 
 			List<Pair<Integer, Integer>> jahreUndAnzahlen = new ArrayList<>();
-			jahreUndAnzahlen.add(Pair.of(JAHR_WETTBEWERB_BEENDET, Integer.valueOf(12)));
+			jahreUndAnzahlen.add(Pair.of(JAHR_WETTBEWERB_RUNNING, Integer.valueOf(12)));
 
 			List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = createAnonymisierteTeilnahmen(jahreUndAnzahlen);
 
@@ -548,10 +548,10 @@ public class AuswertungImportServiceTest {
 		void should_importiereAuswertungenNotPersistAnyLoesungszettel_when_ohneUeberschrift() {
 
 			// Arrange
-			service.pathUploadDir = "/home/heike/upload/auswertungen-testdaten/fehlerhaft";
+			service.pathExternalFiles = "/home/heike/upload/auswertungen-testdaten/fehlerhaft";
 
 			List<Pair<Integer, Integer>> jahreUndAnzahlen = new ArrayList<>();
-			jahreUndAnzahlen.add(Pair.of(JAHR_WETTBEWERB_BEENDET, Integer.valueOf(12)));
+			jahreUndAnzahlen.add(Pair.of(JAHR_WETTBEWERB_RUNNING, Integer.valueOf(12)));
 
 			List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = createAnonymisierteTeilnahmen(jahreUndAnzahlen);
 
