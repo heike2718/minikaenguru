@@ -5,12 +5,14 @@
 package de.egladil.web.mk_gateway.domain.statistik.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.statistik.AufgabeErgebnisItem;
 import de.egladil.web.mk_gateway.domain.statistik.AufgabeErgebnisRechner;
+import de.egladil.web.mk_gateway.domain.statistik.comparators.AufgabeErgebnisItemComparator;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 
@@ -42,6 +44,8 @@ public class UebersichtAufgabenErgebnisseRechner {
 			result.add(
 				aufgabeErgebnsRechner.berechneAufgabeErgebnisItem(aufgabennummer, index.intValue(), loesungszettelKlassenstufe));
 		}
+
+		Collections.sort(result, new AufgabeErgebnisItemComparator());
 
 		return result;
 	}

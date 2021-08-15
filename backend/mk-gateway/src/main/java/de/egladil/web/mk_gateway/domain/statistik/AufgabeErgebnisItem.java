@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,6 +19,9 @@ import de.egladil.web.mk_gateway.domain.statistik.functions.DoubleStringMapper;
  * den prozentualen Anteilen.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(
+	propOrder = { "nummer", "anzahlRichtigGeloest", "anteilRichtigText", "anzahlFalschGeloest", "anteilFalschText",
+		"anzahlNichtGeloest", "anteilNichtGeloestText" })
 public class AufgabeErgebnisItem implements Comparable<AufgabeErgebnisItem> {
 
 	@XmlElement(name = "nummer")
