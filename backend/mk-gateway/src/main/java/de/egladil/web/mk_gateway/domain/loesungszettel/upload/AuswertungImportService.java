@@ -185,8 +185,10 @@ public class AuswertungImportService {
 		}
 
 		Klassenstufe klassenstufe = sensor.detectKlassenstufe(ueberschrift.getRohdaten());
+		boolean auswertungMitNamen = sensor.hasNamenSpalte(ueberschrift);
 
-		final ExtractWertungscodeRohdatenMapper extractWertungscodeMapper = new ExtractWertungscodeRohdatenMapper();
+		final ExtractWertungscodeRohdatenMapper extractWertungscodeMapper = new ExtractWertungscodeRohdatenMapper(
+			auswertungMitNamen);
 		final Wertungsrechner wertungsrechner = new Wertungsrechner();
 
 		List<Loesungszettel> neueLoesungszettel = new ArrayList<>();
@@ -203,7 +205,7 @@ public class AuswertungImportService {
 			try {
 
 				String rohdaten = extractWertungscodeMapper.apply(zeile.getRohdaten());
-				rohdaten = rohdaten.replaceAll(",,", "");
+				rohdaten = rohdaten.replaceAll(";", "");
 
 				Wettbewerbswertung wertung = wertungsrechner.getWertung(rohdaten, klassenstufe);
 
@@ -434,6 +436,11 @@ public class AuswertungImportService {
 	private String getPathUploadDir() {
 
 		return pathExternalFiles + File.separator + NAME_UPLOAD_DIR;
+	}
+
+	void setPathExternalFiles(final String pathExternalFiles) {
+
+		this.pathExternalFiles = pathExternalFiles;
 	}
 
 }

@@ -11,6 +11,9 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.egladil.web.mk_gateway.domain.mail.AdminEmailsConfiguration;
 import de.egladil.web.mk_gateway.domain.mail.Empfaengertyp;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.VeranstalterHibernateRepository;
@@ -20,6 +23,8 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.impl.VeranstalterHib
  */
 @ApplicationScoped
 public class VeranstalterMailinfoService {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(VeranstalterMailinfoService.class);
 
 	@Inject
 	AdminEmailsConfiguration mailConfiguration;
@@ -51,6 +56,13 @@ public class VeranstalterMailinfoService {
 	public List<List<String>> getMailempfaengerGroups(final Empfaengertyp empfaengertyp) {
 
 		List<String> alleMailempfaenger = veranstalterRepository.findEmailsNewsletterAbonnenten(empfaengertyp);
+
+		LOGGER.info("Mailversand an Empfaengertyp={}, Anzahl Empfaenger={}", empfaengertyp.toString(), alleMailempfaenger.size());
+
+		if (alleMailempfaenger.isEmpty()) {
+
+			LOGGER.warn("keine Mailempfaenger fuer Empfaengertyp={} vorhanden", empfaengertyp);
+		}
 
 		List<List<String>> groups = new ArrayList<>();
 

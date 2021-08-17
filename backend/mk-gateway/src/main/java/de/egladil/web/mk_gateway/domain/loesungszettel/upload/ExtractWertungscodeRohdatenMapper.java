@@ -15,6 +15,13 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class ExtractWertungscodeRohdatenMapper implements Function<String, String> {
 
+	private final boolean withNamen;
+
+	public ExtractWertungscodeRohdatenMapper(final boolean withNamen) {
+
+		this.withNamen = withNamen;
+	}
+
 	@Override
 	public String apply(final String rohdaten) {
 
@@ -23,13 +30,15 @@ public class ExtractWertungscodeRohdatenMapper implements Function<String, Strin
 			throw new IllegalArgumentException("rohdaten null");
 		}
 
-		String[] tokens = StringUtils.splitPreserveAllTokens(rohdaten, ',');
+		String[] tokens = StringUtils.splitPreserveAllTokens(rohdaten, ';');
 
 		List<String> nans = new ArrayList<>();
 
-		for (String token : tokens) {
+		int startIndex = withNamen ? 1 : 0;
 
-			String trToken = token.trim();
+		for (int index = startIndex; index < tokens.length; index++) {
+
+			String trToken = tokens[index].trim();
 
 			try {
 
@@ -43,7 +52,7 @@ public class ExtractWertungscodeRohdatenMapper implements Function<String, Strin
 			}
 		}
 
-		return StringUtils.join(nans, ",,");
+		return StringUtils.join(nans, ";");
 	}
 
 }

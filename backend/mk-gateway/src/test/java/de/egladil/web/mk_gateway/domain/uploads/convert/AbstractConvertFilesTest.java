@@ -33,7 +33,7 @@ public abstract class AbstractConvertFilesTest {
 			File[] allFiles = new File(PATH_DIR_SOURCEFILES_AUSWERTUNG).listFiles();
 
 			List<File> intermediateFiles = Arrays.stream(allFiles).filter(
-				f -> !f.getName().startsWith("auswertung"))
+				f -> !f.getName().startsWith("auswertung") && !f.getName().startsWith("2021_"))
 				.collect(Collectors.toList());
 
 			intermediateFiles.forEach(f -> FileUtils.deleteQuietly(f));

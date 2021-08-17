@@ -35,7 +35,7 @@ public class OpenOfficeToCSVConverterTest extends AbstractConvertFilesTest {
 	@AfterEach
 	public void tearDown() {
 
-		clearFiles();
+		// clearFiles();
 	}
 
 	@Override

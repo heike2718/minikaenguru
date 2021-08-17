@@ -26,13 +26,6 @@ public class AuswertungimportZeile {
 		return this;
 	}
 
-	public String getWertungscode() {
-
-		String result = new ExtractWertungscodeRohdatenMapper().apply(rohdaten);
-		result = result.replaceAll(",", "");
-		return result;
-	}
-
 	public String getFehlermeldung() {
 
 		return fehlermeldung;
@@ -58,5 +51,11 @@ public class AuswertungimportZeile {
 
 		return "Fehler Zeile " + this.index + "! [" + this.fehlermeldung + "] (Rohdaten=" + this.rohdaten + ")";
 
+	}
+
+	@Override
+	public String toString() {
+
+		return "[index=" + index + ", rohdaten=" + rohdaten + "]";
 	}
 }

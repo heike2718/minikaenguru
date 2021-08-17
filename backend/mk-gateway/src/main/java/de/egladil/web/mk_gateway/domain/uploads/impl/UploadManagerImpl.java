@@ -116,6 +116,7 @@ public class UploadManagerImpl implements UploadManager {
 		result.domainEventHandler = DomainEventHandler.createForIntegrationTest(em);
 		result.scanService = ScanService.createForIntegrationTest();
 		result.auswertungImportService = AuswertungImportService.createForIntegrationTest(em);
+		result.maxFilesizeBytes = "2097152";
 		return result;
 
 	}

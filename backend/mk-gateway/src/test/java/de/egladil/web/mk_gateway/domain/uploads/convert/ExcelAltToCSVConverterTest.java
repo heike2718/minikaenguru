@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import de.egladil.web.commons_exceltools.FileType;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.uploads.impl.DateiTyp;
 
@@ -30,13 +31,13 @@ public class ExcelAltToCSVConverterTest extends AbstractConvertFilesTest {
 	@BeforeEach
 	public void setUp() {
 
-		converter = new ExcelToCSVConverter();
+		converter = new ExcelToCSVConverter(FileType.EXCEL_ALT);
 	}
 
 	@AfterEach
 	public void tearDown() {
 
-		clearFiles();
+		// clearFiles();
 	}
 
 	@Override
@@ -47,6 +48,7 @@ public class ExcelAltToCSVConverterTest extends AbstractConvertFilesTest {
 
 	@Nested
 	class KlassenlisteTests {
+
 		@Test
 		void should_convertToCSVAndPersistInFilesystemWork_when_excelFile() {
 
@@ -63,7 +65,7 @@ public class ExcelAltToCSVConverterTest extends AbstractConvertFilesTest {
 			assertTrue(result.isFile());
 			assertTrue(result.canRead());
 
-			// printResult(result);
+			printResult(result);
 
 		}
 
