@@ -1,6 +1,6 @@
 in die farbigen Zellen eingeben:
 In der letzten Spalte stehen anschließend die Punkte für das jeweilige Kind
 Gleich nach dem Ausfüllen und Speichern über die Minikänguru-Anwendung hochladen: https://mathe-jung-alt.de/mkv
-Name,A-1,A-2,A-3,A-4,B-1,B-2,B-3,B-4,C-1,C-2,C-3,C-4,Punkte
-Albert Einstein,r,,r,,r,,r,,r,,r,,r,,r,,r,,r,,r,,r,,
-Max Planck,r,,r,,n,,r,,r,,r,,f,,r,,r,,n,,f,,f,,
+Name;A-1;A-2;A-3;A-4;B-1;B-2;B-3;B-4;C-1;C-2;C-3;C-4;Punkte
+Albert Einstein;r;r;r;r;r;r;r;r;r;r;r;r;
+Max Planck;r;r;n;r;r;r;f;r;r;n;f;f;

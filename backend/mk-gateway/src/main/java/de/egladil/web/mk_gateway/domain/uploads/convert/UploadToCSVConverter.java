@@ -6,6 +6,7 @@ package de.egladil.web.mk_gateway.domain.uploads.convert;
 
 import java.io.File;
 
+import de.egladil.web.commons_exceltools.FileType;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.error.UploadFormatException;
 import de.egladil.web.mk_gateway.domain.uploads.impl.DateiTyp;
@@ -43,7 +44,7 @@ public interface UploadToCSVConverter {
 
 		case EXCEL_ALT:
 		case EXCEL_NEU:
-			return new ExcelToCSVConverter();
+			return new ExcelToCSVConverter(FileType.valueOf(dateiTyp.toString()));
 
 		default:
 			throw new UploadFormatException("Dateityp " + dateiTyp + " kann nicht verarbeitet werden");

@@ -48,10 +48,12 @@ public class OpenOfficeToCSVConverterTest extends AbstractConvertFilesTest {
 	void should_convertToCSVAndPersistInFilesystemWork_when_klassenliste() {
 
 		// Arrange
-		String path = PATH_DIR_SOURCEFILES_KLASSENLISTE + NAME_TARGET + DateiTyp.TEXT.getSuffixWithPoint();
+		String path = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/" + NAME_TARGET
+			+ DateiTyp.TEXT.getSuffixWithPoint();
 		clearResult(path);
 
-		String pathSourceFile = PATH_DIR_SOURCEFILES_KLASSENLISTE + getNameSourcefileKlassenliste();
+		String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/"
+			+ getNameSourcefileKlassenliste();
 
 		// Act
 		File result = converter.convertToCSVAndPersistInFilesystem(pathSourceFile, NAME_TARGET);
@@ -68,10 +70,12 @@ public class OpenOfficeToCSVConverterTest extends AbstractConvertFilesTest {
 	void should_convertToCSVAndPersistInFilesystemWork_when_auswertung() {
 
 		// Arrange
-		String path = PATH_DIR_SOURCEFILES_AUSWERTUNG + NAME_TARGET + DateiTyp.TEXT.getSuffixWithPoint();
+		String path = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload/" + NAME_TARGET
+			+ DateiTyp.TEXT.getSuffixWithPoint();
 		clearResult(path);
 
-		String pathSourceFile = PATH_DIR_SOURCEFILES_AUSWERTUNG + getNameSourcefileAuswertung();
+		String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload/"
+			+ getNameSourcefileAuswertung();
 
 		// Act
 		File result = converter.convertToCSVAndPersistInFilesystem(pathSourceFile, NAME_TARGET);
@@ -88,7 +92,7 @@ public class OpenOfficeToCSVConverterTest extends AbstractConvertFilesTest {
 	void should_convertToCSVAndPersistInFilesystemThrowMkGatewayRuntimeException_when_textFile() {
 
 		// Arrange
-		String pathSourceFile = PATH_DIR_SOURCEFILES_KLASSENLISTE + "klassenliste.csv";
+		String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.csv";
 
 		try {
 
@@ -97,7 +101,7 @@ public class OpenOfficeToCSVConverterTest extends AbstractConvertFilesTest {
 		} catch (MkGatewayRuntimeException e) {
 
 			assertEquals(
-				"Die Datei /home/heike/mkv/upload/original-files/klassenlisten/klassenliste.csv zum upload 40f991fe-4ab1-4207-b118-26670b7fd181 konnte nicht verarbeitet werden: Exception Erzeugen eines ZipFiles (vermutlich kein Zip-Archiv): zip END header not found",
+				"Die Datei /home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.csv zum upload 40f991fe-4ab1-4207-b118-26670b7fd181 konnte nicht verarbeitet werden: Exception Erzeugen eines ZipFiles (vermutlich kein Zip-Archiv): zip END header not found",
 				e.getMessage());
 		}
 
@@ -107,7 +111,7 @@ public class OpenOfficeToCSVConverterTest extends AbstractConvertFilesTest {
 	void should_convertToCSVAndPersistInFilesystemThrowMkGatewayRuntimeException_when_altesExcelFile() {
 
 		// Arrange
-		String pathSourceFile = PATH_DIR_SOURCEFILES_KLASSENLISTE + "klassenliste.xls";
+		String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.xls";
 
 		try {
 
@@ -116,7 +120,7 @@ public class OpenOfficeToCSVConverterTest extends AbstractConvertFilesTest {
 		} catch (MkGatewayRuntimeException e) {
 
 			assertEquals(
-				"Die Datei /home/heike/mkv/upload/original-files/klassenlisten/klassenliste.xls zum upload 40f991fe-4ab1-4207-b118-26670b7fd181 konnte nicht verarbeitet werden: Exception Erzeugen eines ZipFiles (vermutlich kein Zip-Archiv): zip END header not found",
+				"Die Datei /home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.xls zum upload 40f991fe-4ab1-4207-b118-26670b7fd181 konnte nicht verarbeitet werden: Exception Erzeugen eines ZipFiles (vermutlich kein Zip-Archiv): zip END header not found",
 				e.getMessage());
 		}
 
@@ -126,7 +130,7 @@ public class OpenOfficeToCSVConverterTest extends AbstractConvertFilesTest {
 	void should_convertToCSVAndPersistInFilesystemThrowMkGatewayRuntimeException_when_neuesExcelFile() {
 
 		// Arrange
-		String pathSourceFile = PATH_DIR_SOURCEFILES_KLASSENLISTE + "klassenliste.xlsx";
+		String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.xlsx";
 
 		try {
 
@@ -135,7 +139,7 @@ public class OpenOfficeToCSVConverterTest extends AbstractConvertFilesTest {
 		} catch (MkGatewayRuntimeException e) {
 
 			assertEquals(
-				"Die Datei /home/heike/mkv/upload/original-files/klassenlisten/klassenliste.xlsx zum upload 40f991fe-4ab1-4207-b118-26670b7fd181 konnte nicht verarbeitet werden: Das Zip-Archiv enthält keinen ZipEntry mit Namen 'content.xml' in oberster Ebene.",
+				"Die Datei /home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.xlsx zum upload 40f991fe-4ab1-4207-b118-26670b7fd181 konnte nicht verarbeitet werden: Das Zip-Archiv enthält keinen ZipEntry mit Namen 'content.xml' in oberster Ebene.",
 				e.getMessage());
 		}
 
@@ -145,7 +149,7 @@ public class OpenOfficeToCSVConverterTest extends AbstractConvertFilesTest {
 	void should_convertToCSVAndPersistInFilesystemThrowMkGatewayRuntimeException_when_fileDoesNotExist() {
 
 		// Arrange
-		String pathSourceFile = PATH_DIR_SOURCEFILES_KLASSENLISTE + "bla.csv";
+		String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/bla.csv";
 
 		try {
 
@@ -154,7 +158,7 @@ public class OpenOfficeToCSVConverterTest extends AbstractConvertFilesTest {
 		} catch (MkGatewayRuntimeException e) {
 
 			assertEquals(
-				"Die Datei /home/heike/mkv/upload/original-files/klassenlisten/bla.csv zum upload 40f991fe-4ab1-4207-b118-26670b7fd181 existiert nicht oder ist keine Datei oder hat Zugriffsbeschraenkungen",
+				"Die Datei /home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/bla.csv zum upload 40f991fe-4ab1-4207-b118-26670b7fd181 existiert nicht oder ist keine Datei oder hat Zugriffsbeschraenkungen",
 				e.getMessage());
 		}
 
