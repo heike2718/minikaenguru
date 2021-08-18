@@ -37,7 +37,7 @@ public class ExcelAltToCSVConverterTest extends AbstractConvertFilesTest {
 	@AfterEach
 	public void tearDown() {
 
-		// clearFiles();
+		clearFiles();
 	}
 
 	@Override
@@ -53,10 +53,12 @@ public class ExcelAltToCSVConverterTest extends AbstractConvertFilesTest {
 		void should_convertToCSVAndPersistInFilesystemWork_when_excelFile() {
 
 			// Arrange
-			String path = PATH_DIR_SOURCEFILES_KLASSENLISTE + NAME_TARGET + DateiTyp.TEXT.getSuffixWithPoint();
+			String path = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/" + NAME_TARGET
+				+ DateiTyp.TEXT.getSuffixWithPoint();
 			clearResult(path);
 
-			String pathSourceFile = PATH_DIR_SOURCEFILES_KLASSENLISTE + getNameSourcefileKlassenliste();
+			String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/"
+				+ getNameSourcefileKlassenliste();
 
 			// Act
 			File result = converter.convertToCSVAndPersistInFilesystem(pathSourceFile, NAME_TARGET);
@@ -73,7 +75,7 @@ public class ExcelAltToCSVConverterTest extends AbstractConvertFilesTest {
 		void should_convertToCSVAndPersistInFilesystemThrowMkGatewayRuntimeException_when_textFile() {
 
 			// Arrange
-			String pathSourceFile = PATH_DIR_SOURCEFILES_KLASSENLISTE + "klassenliste.csv";
+			String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.csv";
 
 			try {
 
@@ -82,7 +84,7 @@ public class ExcelAltToCSVConverterTest extends AbstractConvertFilesTest {
 			} catch (MkGatewayRuntimeException e) {
 
 				assertEquals(
-					"Die Datei /home/heike/mkv/upload/original-files/klassenlisten/klassenliste.csv zum upload ff573035-70ff-40e8-bcad-09d781788324 konnte nicht konvertiert werden.",
+					"Die Datei /home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.csv zum upload ff573035-70ff-40e8-bcad-09d781788324 konnte nicht konvertiert werden.",
 					e.getMessage());
 			}
 
@@ -92,7 +94,7 @@ public class ExcelAltToCSVConverterTest extends AbstractConvertFilesTest {
 		void should_convertToCSVAndPersistInFilesystemThrowMkGatewayRuntimeException_when_odsFile() {
 
 			// Arrange
-			String pathSourceFile = PATH_DIR_SOURCEFILES_KLASSENLISTE + "klassenliste.ods";
+			String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.ods";
 
 			try {
 
@@ -101,7 +103,7 @@ public class ExcelAltToCSVConverterTest extends AbstractConvertFilesTest {
 			} catch (MkGatewayRuntimeException e) {
 
 				assertEquals(
-					"Die Datei /home/heike/mkv/upload/original-files/klassenlisten/klassenliste.ods zum upload ff573035-70ff-40e8-bcad-09d781788324 konnte nicht konvertiert werden.",
+					"Die Datei /home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.ods zum upload ff573035-70ff-40e8-bcad-09d781788324 konnte nicht konvertiert werden.",
 					e.getMessage());
 			}
 
@@ -114,10 +116,12 @@ public class ExcelAltToCSVConverterTest extends AbstractConvertFilesTest {
 		void should_convertToCSVAndPersistInFilesystemWork_when_excelFile() {
 
 			// Arrange
-			String path = PATH_DIR_SOURCEFILES_AUSWERTUNG + NAME_TARGET + DateiTyp.TEXT.getSuffixWithPoint();
+			String path = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload/" + NAME_TARGET
+				+ DateiTyp.TEXT.getSuffixWithPoint();
 			clearResult(path);
 
-			String pathSourceFile = PATH_DIR_SOURCEFILES_AUSWERTUNG + getNameSourcefileAuswertung();
+			String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload/"
+				+ getNameSourcefileAuswertung();
 
 			// Act
 			File result = converter.convertToCSVAndPersistInFilesystem(pathSourceFile, NAME_TARGET);
@@ -134,7 +138,7 @@ public class ExcelAltToCSVConverterTest extends AbstractConvertFilesTest {
 		void should_convertToCSVAndPersistInFilesystemThrowMkGatewayRuntimeException_when_textFile() {
 
 			// Arrange
-			String pathSourceFile = PATH_DIR_SOURCEFILES_AUSWERTUNG + "auswertung.csv";
+			String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload/auswertung.csv";
 
 			try {
 
@@ -143,7 +147,7 @@ public class ExcelAltToCSVConverterTest extends AbstractConvertFilesTest {
 			} catch (MkGatewayRuntimeException e) {
 
 				assertEquals(
-					"Die Datei /home/heike/mkv/upload/original-files/auswertungen/auswertung.csv zum upload ff573035-70ff-40e8-bcad-09d781788324 konnte nicht konvertiert werden.",
+					"Die Datei /home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload/auswertung.csv zum upload ff573035-70ff-40e8-bcad-09d781788324 konnte nicht konvertiert werden.",
 					e.getMessage());
 			}
 
@@ -153,7 +157,7 @@ public class ExcelAltToCSVConverterTest extends AbstractConvertFilesTest {
 		void should_convertToCSVAndPersistInFilesystemThrowMkGatewayRuntimeException_when_odsFile() {
 
 			// Arrange
-			String pathSourceFile = PATH_DIR_SOURCEFILES_AUSWERTUNG + "auswertung.ods";
+			String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload/auswertung.ods";
 
 			try {
 
@@ -162,7 +166,7 @@ public class ExcelAltToCSVConverterTest extends AbstractConvertFilesTest {
 			} catch (MkGatewayRuntimeException e) {
 
 				assertEquals(
-					"Die Datei /home/heike/mkv/upload/original-files/auswertungen/auswertung.ods zum upload ff573035-70ff-40e8-bcad-09d781788324 konnte nicht konvertiert werden.",
+					"Die Datei /home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload/auswertung.ods zum upload ff573035-70ff-40e8-bcad-09d781788324 konnte nicht konvertiert werden.",
 					e.getMessage());
 			}
 

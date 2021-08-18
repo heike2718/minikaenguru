@@ -76,7 +76,7 @@ public class AuswertungImportService {
 		result.uploadRepository = UploadHibernateRepository.createForIntegrationTests(em);
 		result.loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(em);
 		result.anonymisierteTeilnahmenService = AnonymisierteTeilnahmenService.createForIntegrationTest(em);
-		result.pathExternalFiles = "/home/heike/mkv";
+		result.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/integrationtests";
 		return result;
 	}
 
@@ -206,6 +206,11 @@ public class AuswertungImportService {
 
 				String rohdaten = extractWertungscodeMapper.apply(zeile.getRohdaten());
 				rohdaten = rohdaten.replaceAll(";", "");
+
+				if (rohdaten.isEmpty()) {
+
+					continue;
+				}
 
 				Wettbewerbswertung wertung = wertungsrechner.getWertung(rohdaten, klassenstufe);
 

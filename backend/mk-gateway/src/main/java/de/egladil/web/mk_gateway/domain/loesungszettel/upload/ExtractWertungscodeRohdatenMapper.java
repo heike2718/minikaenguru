@@ -10,6 +10,8 @@ import java.util.function.Function;
 
 import org.apache.commons.lang3.StringUtils;
 
+import de.egladil.web.mk_gateway.domain.statistik.Wertung;
+
 /**
  * ExtractWertungscodeRohdatenMapper
  */

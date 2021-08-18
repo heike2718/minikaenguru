@@ -88,11 +88,11 @@ public class AuswertungimportZeileSensorTest {
 		}
 
 		@Test
-		void should_isLeereZeileReturnFalse_when_rohdatenDoesNotContainZeileIndikator() {
+		void should_isLeereZeileReturnFalse_when_LeereZeileIndikatorAndVolleZellen() {
 
 			// Act + Assert
-			assertFalse(sensor.isLeereZeile(UUID.randomUUID().toString()));
-
+			assertFalse(sensor.isLeereZeile(
+				"Henrik;r;3;r;3.0;r;3.0;f;-0.75;f;-0.75;r;4.0;r;4.0;r;4.0;n;0.0;f;-1.0;n;0.0;n;0.0;n;0.0;n;0.0;n;0.0;33.5"));
 		}
 
 	}

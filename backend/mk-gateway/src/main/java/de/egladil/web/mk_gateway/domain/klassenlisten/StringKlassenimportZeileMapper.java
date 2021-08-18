@@ -51,30 +51,30 @@ public class StringKlassenimportZeileMapper implements Function<Pair<Integer, St
 	}
 
 	@Override
-	public Optional<KlassenimportZeile> apply(final Pair<Integer, String> kommaseparierteZeileMitIndex) {
+	public Optional<KlassenimportZeile> apply(final Pair<Integer, String> semikolonseparierteZeileMitIndex) {
 
-		if (kommaseparierteZeileMitIndex == null) {
+		if (semikolonseparierteZeileMitIndex == null) {
 
-			throw new NullPointerException("kommaseparierteZeile");
+			throw new NullPointerException("semikolonseparierteZeileMitIndex");
 		}
 
-		if (StringUtils.isBlank(kommaseparierteZeileMitIndex.getRight())) {
+		if (StringUtils.isBlank(semikolonseparierteZeileMitIndex.getRight())) {
 
-			LOGGER.debug("Zeile {} ist leer. Wird übersprungen", kommaseparierteZeileMitIndex.getLeft());
+			LOGGER.debug("Zeile {} ist leer. Wird übersprungen", semikolonseparierteZeileMitIndex.getLeft());
 			return Optional.empty();
 		}
 
-		String[] tokens = StringUtils.split(kommaseparierteZeileMitIndex.getRight(), ',');
+		String[] tokens = StringUtils.split(semikolonseparierteZeileMitIndex.getRight(), ';');
 
 		String fehlermeldung = null;
 
 		if (tokens.length != 4) {
 
 			fehlermeldung = MessageFormat.format(FEHLERMESSAGE_PATTERN,
-				new Object[] { kommaseparierteZeileMitIndex.getRight() });
+				new Object[] { semikolonseparierteZeileMitIndex.getRight() });
 
 			KlassenimportZeile result = new KlassenimportZeile().withFehlermeldung(fehlermeldung)
-				.withIndex(kommaseparierteZeileMitIndex.getLeft().intValue());
+				.withIndex(semikolonseparierteZeileMitIndex.getLeft().intValue());
 
 			return Optional.of(result);
 		}
@@ -84,7 +84,7 @@ public class StringKlassenimportZeileMapper implements Function<Pair<Integer, St
 			.withKlassenstufe(tokens[feldartenIndizes.get(KlassenlisteFeldart.KLASSENSTUFE).intValue()].trim())
 			.withVorname(tokens[feldartenIndizes.get(KlassenlisteFeldart.VORNAME).intValue()].trim())
 			.withNachname(tokens[feldartenIndizes.get(KlassenlisteFeldart.NACHNAME).intValue()].trim())
-			.withIndex(kommaseparierteZeileMitIndex.getLeft());
+			.withIndex(semikolonseparierteZeileMitIndex.getLeft());
 
 		return Optional.of(result);
 	}

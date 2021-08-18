@@ -123,7 +123,7 @@ public class UnterlagenServiceTest extends AbstractDomainServiceTest {
 
 			UnterlagenService theService = UnterlagenService.createForTest(getWettbewerbService(), getVeranstalterRepository(),
 				zugangsservice);
-			theService.setPathExternalFiles("/home/heike/mkv");
+			theService.setPathExternalFiles("/home/heike/git/testdaten/minikaenguru");
 
 			// Act
 			DownloadData result = theService.getUnterlagenFuerSchule(lehrerID, Sprache.de);
@@ -145,7 +145,7 @@ public class UnterlagenServiceTest extends AbstractDomainServiceTest {
 
 			UnterlagenService theService = UnterlagenService.createForTest(getWettbewerbService(), getVeranstalterRepository(),
 				zugangsservice);
-			theService.setPathExternalFiles("/home/heike/mkv");
+			theService.setPathExternalFiles("/home/heike/git/testdaten/minikaenguru");
 
 			// Act
 			DownloadData result = theService.getUnterlagenFuerSchule(lehrerID, Sprache.en);
@@ -240,7 +240,7 @@ public class UnterlagenServiceTest extends AbstractDomainServiceTest {
 
 			UnterlagenService theService = UnterlagenService.createForTest(getWettbewerbService(), getVeranstalterRepository(),
 				zugangsservice);
-			theService.setPathExternalFiles("/home/heike/mkv");
+			theService.setPathExternalFiles("/home/heike/git/testdaten/minikaenguru");
 
 			// Act
 			DownloadData result = theService.getUnterlagenFuerPrivatanmeldung(lehrerID, Sprache.de);
@@ -262,7 +262,7 @@ public class UnterlagenServiceTest extends AbstractDomainServiceTest {
 
 			UnterlagenService theService = UnterlagenService.createForTest(getWettbewerbService(), getVeranstalterRepository(),
 				zugangsservice);
-			theService.setPathExternalFiles("/home/heike/mkv");
+			theService.setPathExternalFiles("/home/heike/git/testdaten/minikaenguru");
 
 			// Act
 			DownloadData result = theService.getUnterlagenFuerPrivatanmeldung(lehrerID, Sprache.en);

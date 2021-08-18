@@ -47,16 +47,17 @@ public class ExcelNeuToCSVConverterTest extends AbstractConvertFilesTest {
 	}
 
 	@Nested
-	class AuswwertungTests {
+	class AuswertungTests {
 
 		@Test
-		void should_convertToCSVAndPersistInFilesystemWork_when_klassenlisteExcelFile() {
+		void should_convertToCSVAndPersistInFilesystemWork_when_auswertungAusProduktion() {
 
 			// Arrange
-			String path = PATH_DIR_SOURCEFILES_KLASSENLISTE + NAME_TARGET + DateiTyp.TEXT.getSuffixWithPoint();
+			String path = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload" + NAME_TARGET
+				+ DateiTyp.TEXT.getSuffixWithPoint();
 			clearResult(path);
 
-			String pathSourceFile = PATH_DIR_SOURCEFILES_KLASSENLISTE + getNameSourcefileKlassenliste();
+			String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload/2021_auswertung_minikaenguru_klasse_1.xlsx";
 
 			// Act
 			File result = converter.convertToCSVAndPersistInFilesystem(pathSourceFile, NAME_TARGET);
@@ -65,7 +66,7 @@ public class ExcelNeuToCSVConverterTest extends AbstractConvertFilesTest {
 			assertTrue(result.isFile());
 			assertTrue(result.canRead());
 
-			// printResult(result);
+			printResult(result);
 
 		}
 
@@ -73,10 +74,12 @@ public class ExcelNeuToCSVConverterTest extends AbstractConvertFilesTest {
 		void should_convertToCSVAndPersistInFilesystemWork_when_auswertungExcelFile() {
 
 			// Arrange
-			String path = PATH_DIR_SOURCEFILES_AUSWERTUNG + NAME_TARGET + DateiTyp.TEXT.getSuffixWithPoint();
+			String path = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload/" + NAME_TARGET
+				+ DateiTyp.TEXT.getSuffixWithPoint();
 			clearResult(path);
 
-			String pathSourceFile = PATH_DIR_SOURCEFILES_AUSWERTUNG + getNameSourcefileAuswertung();
+			String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload/"
+				+ getNameSourcefileAuswertung();
 
 			// Act
 			File result = converter.convertToCSVAndPersistInFilesystem(pathSourceFile, NAME_TARGET);
@@ -98,7 +101,7 @@ public class ExcelNeuToCSVConverterTest extends AbstractConvertFilesTest {
 		void should_convertToCSVAndPersistInFilesystemThrowMkGatewayRuntimeException_when_fileDoesNotExist() {
 
 			// Arrange
-			String pathSourceFile = PATH_DIR_SOURCEFILES_KLASSENLISTE + "bla.csv";
+			String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/bla.csv";
 
 			try {
 
@@ -107,9 +110,31 @@ public class ExcelNeuToCSVConverterTest extends AbstractConvertFilesTest {
 			} catch (MkGatewayRuntimeException e) {
 
 				assertEquals(
-					"Die Datei /home/heike/mkv/upload/original-files/klassenlisten/bla.csv zum upload 642cd963-2c8a-49f9-be95-f31a1b7e251a existiert nicht oder ist keine Datei oder hat Zugriffsbeschraenkungen",
+					"Die Datei /home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/bla.csv zum upload 642cd963-2c8a-49f9-be95-f31a1b7e251a existiert nicht oder ist keine Datei oder hat Zugriffsbeschraenkungen",
 					e.getMessage());
 			}
+
+		}
+
+		@Test
+		void should_convertToCSVAndPersistInFilesystemWork_when_klassenlisteExcelFile() {
+
+			// Arrange
+			String path = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/" + NAME_TARGET
+				+ DateiTyp.TEXT.getSuffixWithPoint();
+			clearResult(path);
+
+			String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/"
+				+ getNameSourcefileKlassenliste();
+
+			// Act
+			File result = converter.convertToCSVAndPersistInFilesystem(pathSourceFile, NAME_TARGET);
+
+			// Assert
+			assertTrue(result.isFile());
+			assertTrue(result.canRead());
+
+			// printResult(result);
 
 		}
 	}

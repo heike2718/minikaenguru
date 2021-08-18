@@ -38,7 +38,7 @@ public class CSVToCSVConverterTest extends AbstractConvertFilesTest {
 	void should_convertToCSVAndPersistInFilesystemThrowMkGatewayRuntimeException_when_fileDoesNotExist() {
 
 		// Arrange
-		String pathSourceFile = PATH_DIR_SOURCEFILES_KLASSENLISTE + "bla.csv";
+		String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/" + "bla.csv";
 
 		try {
 
@@ -47,7 +47,7 @@ public class CSVToCSVConverterTest extends AbstractConvertFilesTest {
 		} catch (MkGatewayRuntimeException e) {
 
 			assertEquals(
-				"Die Datei /home/heike/mkv/upload/original-files/klassenlisten/bla.csv zum upload cf6469ad-347d-4530-9416-a70f15f02a93 existiert nicht oder ist keine Datei oder hat Zugriffsbeschraenkungen",
+				"Die Datei /home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/bla.csv zum upload cf6469ad-347d-4530-9416-a70f15f02a93 existiert nicht oder ist keine Datei oder hat Zugriffsbeschraenkungen",
 				e.getMessage());
 		}
 

@@ -15,6 +15,8 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
+
 /**
  * AuswertungCSVToAuswertungimportZeilenMapperTest
  */
@@ -118,6 +120,22 @@ public class AuswertungCSVToAuswertungimportZeilenMapperTest {
 
 			// Assert
 			assertTrue(zeilen.isEmpty());
+
+		}
+
+		@Test
+		void should_mappingWork_when_convertedFile() {
+
+			// Arrange
+			String path = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload/auswertung.csv";
+
+			List<String> zeilen = MkGatewayFileUtils.readLines(path);
+
+			// Act
+			List<AuswertungimportZeile> result = mapper.apply(zeilen);
+
+			// Assert
+			assertEquals(25, result.size());
 
 		}
 	}

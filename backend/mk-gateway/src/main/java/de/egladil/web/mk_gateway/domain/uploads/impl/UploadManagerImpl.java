@@ -108,7 +108,7 @@ public class UploadManagerImpl implements UploadManager {
 		UploadManagerImpl result = new UploadManagerImpl();
 		result.scanService = ScanService.createForIntegrationTest();
 		result.clientId = "integration-test-client";
-		result.pathExternalFiles = "/home/heike/mkv";
+		result.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/integrationtests";
 		result.authService = AuthorizationService.createForIntegrationTest(em);
 		result.uploadAuthService = UploadAuthorizationServiceImpl.createForIntegrationTests(em);
 		result.klassenlisteImportService = KlassenlisteCSVImportService.createForIntegrationTests(em);

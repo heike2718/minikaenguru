@@ -63,8 +63,6 @@ import de.egladil.web.mkv_server_tests.AbstractIntegrationTest;
  */
 public class UploadManagerImplIT extends AbstractIntegrationTest {
 
-	private static final String PATH_UPLOAD_DIR = "/home/heike/mkv/upload";
-
 	private UploadManager uploadManager;
 
 	private KinderRepository kinderRepository;
@@ -176,7 +174,7 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 		List<String> fehlermeldungen = importReport.getNichtImportierteZeilen();
 		assertEquals(1, fehlermeldungen.size());
 		assertEquals(
-			"Fehler! Zeile \"2a,Heinz,2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+			"Fehler! Zeile \"2a;Heinz;2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
 			fehlermeldungen.get(0));
 
 		List<PersistenterUpload> uploads = uploadRepository.findUploadsWithTeilnahmenummer(schulkuerzel);
@@ -186,7 +184,8 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 		PersistenterUpload persistenterUpload = uploads.get(0);
 		assertEquals(UploadStatus.DATENFEHLER, persistenterUpload.getStatus());
 
-		String path = PATH_UPLOAD_DIR + File.separator + persistenterUpload.getUuid() + "-fehlerreport.csv";
+		String path = "/home/heike/git/testdaten/minikaenguru/integrationtests/upload/" + persistenterUpload.getUuid()
+			+ "-fehlerreport.csv";
 
 		File fehlerfile = new File(path);
 		assertTrue(fehlerfile.exists());
@@ -253,7 +252,7 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 	}
 
 	@Test
-	void should_uploadAuswertungByAdmin_work_whenExcel() {
+	void should_uploadAuswertungByAdmin_returnWarn_whenNamenspalteAberKeineNamen() {
 
 		// Arrange
 		String benutzerUuid = "it-db-inside-docker";
@@ -277,7 +276,9 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 		// Assert
 		MessagePayload messagePayload = result.getMessage();
 		assertEquals("INFO", messagePayload.getLevel());
-		assertEquals("Die Auswertung wurde erfolgreich importiert. Vielen Dank!", messagePayload.getMessage());
+		assertEquals(
+			"Die Auswertung wurde erfolgreich hochgeladen. Sie muss noch nachbearbeitet werden. Die Statistik steht Ihnen in einigen Tagen zur Verfügung.",
+			messagePayload.getMessage());
 
 		AuswertungImportReport report = (AuswertungImportReport) result.getData();
 		assertTrue(report.getFehlerhafteZeilen().isEmpty());
@@ -285,29 +286,13 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 		AnonymisierteTeilnahmeAPIModel teilnahme = report.getTeilnahme();
 		assertNotNull(teilnahme);
 
-		assertEquals(15, teilnahme.anzahlKinder());
-		assertEquals(15, teilnahme.getAnzahlLoesungszettelUpload());
+		assertEquals(0, teilnahme.anzahlKinder());
+		assertEquals(0, teilnahme.getAnzahlLoesungszettelUpload());
 		assertEquals(0, teilnahme.getAnzahlLoesungszettelOnline());
 		TeilnahmeIdentifier teilnahmeIdentifier = teilnahme.identifier();
 		assertEquals(2020, teilnahmeIdentifier.jahr());
 		assertEquals(schulkuerzel, teilnahmeIdentifier.teilnahmenummer());
 		assertEquals(Teilnahmeart.SCHULE, teilnahmeIdentifier.teilnahmeart());
-
-		List<Loesungszettel> alleLoesungszettel = loesungszettelRepository.loadAll(teilnahmeIdentifier);
-
-		for (Loesungszettel loesungszettel : alleLoesungszettel) {
-
-			assertEquals(Auswertungsquelle.UPLOAD, loesungszettel.auswertungsquelle());
-			assertEquals("DE-ST", loesungszettel.landkuerzel());
-			assertEquals(Klassenstufe.ZWEI, loesungszettel.klassenstufe());
-			assertEquals(Sprache.de, loesungszettel.sprache());
-			LoesungszettelRohdaten rohdaten = loesungszettel.rohdaten();
-			assertFalse(rohdaten.hatTypo());
-			assertEquals(rohdaten.nutzereingabe(), rohdaten.wertungscode());
-			assertNull(rohdaten.antwortcode());
-
-		}
-
 	}
 
 	@Test
