@@ -20,7 +20,6 @@
 # IDE - VSCode
 .vscode/*
 workspace.code-workspace
-workspace.code-workspace.bak
 
 # misc
 /.sass-cache
