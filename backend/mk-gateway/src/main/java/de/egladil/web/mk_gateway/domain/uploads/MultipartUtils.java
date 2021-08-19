@@ -7,8 +7,6 @@ package de.egladil.web.mk_gateway.domain.uploads;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
-import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
@@ -30,50 +28,13 @@ public class MultipartUtils {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MultipartUtils.class);
 
 	/**
-	 * Fummelt die UploadData aus dem input heraus. Es wird davon ausgegangen, dass genau eine Datei hochgeladen wurde. Es handelt
-	 * sich um eine Datei mit Textdaten, also Excel, OpenOffice, CSV. Als Charset wird UTF-8 angenommen.
+	 * Fummelt die UploadData aus dem input heraus. Es wird davon ausgegangen, dass genau eine Datei hochgeladen wurde.
 	 *
 	 * @param  input
 	 * @return
 	 * @throws IOException
 	 */
-	public static UploadData getUploadDataFromTextSource(final MultipartFormDataInput input) {
-
-		Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
-		List<InputPart> inputParts = uploadForm.get("uploadedFile");
-
-		if (inputParts.size() != 1) {
-
-			LOGGER.error("Anzahl hochgeladene Datein=" + inputParts.size());
-			throw new MkGatewayRuntimeException("Unerwartete Anzahl hochgeladener Dateien: kann nur genau eine Datei verarbeiten.");
-		}
-
-		InputPart inputPart = inputParts.get(0);
-
-		MultivaluedMap<String, String> header = inputPart.getHeaders();
-		String fileName = getFileName(header);
-
-		try (InputStream inputStream = inputPart.getBody(InputStream.class, null); StringWriter sw = new StringWriter()) {
-
-			IOUtils.copy(inputStream, sw, Charset.forName("UTF-8"));
-			return new UploadData(fileName, sw.toString().getBytes());
-		} catch (IOException e) {
-
-			LOGGER.error("Exception beim Umwandeln des uploads: " + e.getMessage(), e);
-			throw new MkGatewayRuntimeException("IOException beim Verarbeiten des MultipartFormDataInput");
-		}
-
-	}
-
-	/**
-	 * Fummelt die UploadData aus dem input heraus. Es wird davon ausgegangen, dass genau eine Datei hochgeladen wurde. Es handelt
-	 * sich um eine Datei mit Binärdaten, also PDF, Image etc.
-	 *
-	 * @param  input
-	 * @return
-	 * @throws IOException
-	 */
-	public static UploadData getUploadDataFromBinarySource(final MultipartFormDataInput input) {
+	public static UploadData getUploadData(final MultipartFormDataInput input) {
 
 		Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
 		List<InputPart> inputParts = uploadForm.get("uploadedFile");
@@ -103,8 +64,11 @@ public class MultipartUtils {
 
 			LOGGER.error("Exception beim Umwandeln des uploads: " + e.getMessage(), e);
 			throw new MkGatewayRuntimeException("IOException beim Verarbeiten des MultipartFormDataInput");
-		}
+		} finally {
 
+			// Call this method to delete any temporary files created from unmarshalling this multipart message
+			input.close();
+		}
 	}
 
 	private static String getFileName(final MultivaluedMap<String, String> header) {

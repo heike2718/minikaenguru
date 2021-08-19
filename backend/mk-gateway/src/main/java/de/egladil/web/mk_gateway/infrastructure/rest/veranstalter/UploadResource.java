@@ -69,7 +69,7 @@ public class UploadResource {
 		Pair<Rolle, Wettbewerb> rolleUndWettbewerb = uploadManager.authorizeUpload(veranstalterUuid, schulkuerzel, uploadType,
 			null);
 
-		UploadData uploadData = MultipartUtils.getUploadDataFromBinarySource(input);
+		UploadData uploadData = MultipartUtils.getUploadData(input);
 
 		UploadKlassenlisteContext contextObject = new UploadKlassenlisteContext().withKuerzelLand(kuerzelLand)
 			.withNachnameAlsZusatz(nachnameAlsZusatz).withSprache(theSprache).withRolle(rolleUndWettbewerb.getLeft())

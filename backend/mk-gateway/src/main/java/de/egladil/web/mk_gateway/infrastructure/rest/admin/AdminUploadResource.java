@@ -87,7 +87,7 @@ public class AdminUploadResource {
 		UploadAuswertungContext contextObject = new UploadAuswertungContext().withKuerzelLand(kuerzelLand)
 			.withWettbewerb(rolleUndWettbewerb.getRight()).withSprache(theSprache).withRolle(rolleUndWettbewerb.getLeft());
 
-		UploadData uploadData = MultipartUtils.getUploadDataFromBinarySource(input);
+		UploadData uploadData = MultipartUtils.getUploadData(input);
 
 		UploadRequestPayload uploadPayload = new UploadRequestPayload().withTeilnahmenummer(schulkuerzel)
 			.withBenutzerID(new Identifier(benutzerUuid)).withUploadType(uploadType).withUploadData(uploadData)

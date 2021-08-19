@@ -54,9 +54,6 @@ public class PersistenterUpload extends ConcurrencySafeEntity {
 	@Column(name = "MEDIATYPE")
 	private String mediatype;
 
-	@Column(name = "CHARSET")
-	private String charset;
-
 	@Column(name = "CHECKSUMME")
 	private Long checksumme;
 
@@ -115,16 +112,6 @@ public class PersistenterUpload extends ConcurrencySafeEntity {
 	public void setMediatype(final String mimetype) {
 
 		this.mediatype = mimetype;
-	}
-
-	public String getCharset() {
-
-		return charset;
-	}
-
-	public void setCharset(final String charset) {
-
-		this.charset = charset;
 	}
 
 	public UploadStatus getStatus() {

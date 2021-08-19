@@ -206,7 +206,6 @@ public class UploadManagerImpl implements UploadManager {
 	PersistenterUpload transformAndPersistUploadMetadata(final UploadRequestPayload uploadPayload, final ScanResult scanResult, final Long checksumme) {
 
 		PersistenterUpload upload = new PersistenterUpload();
-		upload.setCharset(scanResult.getCharset());
 		upload.setChecksumme(checksumme);
 		upload.setDateiname(uploadPayload.getUploadData().getFilename());
 		upload.setMediatype(scanResult.getMediaType());
