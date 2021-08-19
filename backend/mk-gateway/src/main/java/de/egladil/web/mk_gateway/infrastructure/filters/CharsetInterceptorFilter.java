@@ -8,7 +8,6 @@ import java.io.IOException;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.ext.Provider;
 
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.slf4j.Logger;
@@ -17,7 +16,7 @@ import org.slf4j.LoggerFactory;
 /**
  * CharsetInterceptorFilter
  */
-@Provider
+// @Provider
 public class CharsetInterceptorFilter implements ContainerRequestFilter {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CharsetInterceptorFilter.class);

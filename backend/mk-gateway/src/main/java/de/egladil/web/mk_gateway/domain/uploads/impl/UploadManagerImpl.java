@@ -275,7 +275,7 @@ public class UploadManagerImpl implements UploadManager {
 
 		if (responsePayload.isOk()) {
 
-			// removeFilesQuietly(persistenterUpload.getUuid(), dateiTyp);
+			removeFilesQuietly(persistenterUpload.getUuid(), dateiTyp);
 
 		}
 
