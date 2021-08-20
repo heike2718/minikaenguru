@@ -11,6 +11,8 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.enterprise.event.Event;
+
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +21,6 @@ import de.egladil.web.commons_mailer.DefaultEmailDaten;
 import de.egladil.web.commons_mailer.exception.InvalidMailAddressException;
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandFailed;
 import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandFinished;
 import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandProgress;
@@ -40,12 +41,18 @@ public class NewsletterTask implements Runnable {
 
 	private final AdminMailService mailService;
 
-	private final DomainEventHandler domainEventHandler;
+	private final Event<NewsletterversandProgress> versandProgress;
+
+	private final Event<NewsletterversandFailed> versandFailedEvent;
+
+	private final Event<NewsletterversandFinished> versandFinished;
 
 	public NewsletterTask(final NewsletterService newsletterService, final Newsletter newsletter, final Versandinformation versandinformation, final List<List<String>> mailempfaengerGruppen) {
 
 		this.mailService = newsletterService.mailService;
-		this.domainEventHandler = newsletterService.domainEventHandler;
+		this.versandFailedEvent = newsletterService.versandFailedEvent;
+		this.versandFinished = newsletterService.versandFinished;
+		this.versandProgress = newsletterService.versandProgress;
 		this.newsletter = newsletter;
 		this.versandinformation = versandinformation;
 		this.mailempfaengerGruppen = mailempfaengerGruppen;
@@ -69,7 +76,7 @@ public class NewsletterTask implements Runnable {
 	public Versandinformation call() throws Exception {
 
 		int count = 0;
-		int anzahlEmpfaenger = countMailempfaenger(mailempfaengerGruppen);
+		int anzahlEmpfaenger = new Mailempfaengerzaehler().apply(mailempfaengerGruppen);
 		String versandinfoUuid = this.versandinformation.identifier().identifier();
 
 		String versandBegonnenAm = CommonTimeUtils.format(CommonTimeUtils.now());
@@ -79,6 +86,7 @@ public class NewsletterTask implements Runnable {
 			.withAnzahlEmpfaenger(anzahlEmpfaenger)
 			.withAktuellVersendet(count)
 			.withVersandBegonnenAm(versandBegonnenAm);
+
 		aktualisiereVersandinformation(progressPayload);
 
 		versandinformation.withAnzahlEmpaenger(anzahlEmpfaenger);
@@ -111,9 +119,9 @@ public class NewsletterTask implements Runnable {
 					.withValidSentAddresses(e.getAllValidSentAddresses())
 					.withValidUnsentAddresses(e.getAllValidUnsentAddresses());
 
-				if (this.domainEventHandler != null) {
+				if (this.versandFailedEvent != null) {
 
-					this.domainEventHandler.handleEvent(versandFailedEventPayload);
+					this.versandFailedEvent.fire(versandFailedEventPayload);
 				} else {
 
 					System.out.println(versandFailedEventPayload.serializeQuietly());
@@ -130,9 +138,9 @@ public class NewsletterTask implements Runnable {
 			.withUuid(versandinfoUuid)
 			.withVersandBeendetAm(versandBeendetAm);
 
-		if (domainEventHandler != null) {
+		if (versandFinished != null) {
 
-			domainEventHandler.handleEvent(finishedEventPayload);
+			versandFinished.fire(finishedEventPayload);
 		} else {
 
 			System.out.println(finishedEventPayload.serializeQuietly());
@@ -148,9 +156,9 @@ public class NewsletterTask implements Runnable {
 	 */
 	private void aktualisiereVersandinformation(final NewsletterversandProgress progressPayload) {
 
-		if (this.domainEventHandler != null) {
+		if (this.versandProgress != null) {
 
-			this.domainEventHandler.handleEvent(progressPayload);
+			this.versandProgress.fire(progressPayload);
 		} else {
 
 			System.out.println(progressPayload.serializeQuietly());
@@ -216,15 +224,56 @@ public class NewsletterTask implements Runnable {
 		}
 	}
 
-	private int countMailempfaenger(final List<List<String>> mailempfaengerGruppen) {
+	@Override
+	public int hashCode() {
 
-		int count = 0;
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((newsletter == null) ? 0 : newsletter.hashCode());
+		result = prime * result + ((versandinformation == null) ? 0 : versandinformation.hashCode());
+		return result;
+	}
 
-		for (List<String> gruppe : mailempfaengerGruppen) {
+	@Override
+	public boolean equals(final Object obj) {
 
-			count += gruppe.size();
+		if (this == obj) {
+
+			return true;
 		}
 
-		return count;
+		if (obj == null) {
+
+			return false;
+		}
+
+		if (getClass() != obj.getClass()) {
+
+			return false;
+		}
+		NewsletterTask other = (NewsletterTask) obj;
+
+		if (newsletter == null) {
+
+			if (other.newsletter != null) {
+
+				return false;
+			}
+		} else if (!newsletter.equals(other.newsletter)) {
+
+			return false;
+		}
+
+		if (versandinformation == null) {
+
+			if (other.versandinformation != null) {
+
+				return false;
+			}
+		} else if (!versandinformation.equals(other.versandinformation)) {
+
+			return false;
+		}
+		return true;
 	}
 }
