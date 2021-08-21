@@ -72,4 +72,10 @@ public class NewsletterVersandauftrag {
 		return emfaengertyp == other.emfaengertyp && Objects.equals(newsletterID, other.newsletterID);
 	}
 
+	@Override
+	public String toString() {
+
+		return "NewsletterVersandauftrag [newsletterID=" + newsletterID + ", emfaengertyp=" + emfaengertyp + "]";
+	}
+
 }

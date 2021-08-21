@@ -108,7 +108,7 @@ public class UploadManagerImpl implements UploadManager {
 		UploadManagerImpl result = new UploadManagerImpl();
 		result.scanService = ScanService.createForIntegrationTest();
 		result.clientId = "integration-test-client";
-		result.pathExternalFiles = "/home/heike/mkv";
+		result.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/integrationtests";
 		result.authService = AuthorizationService.createForIntegrationTest(em);
 		result.uploadAuthService = UploadAuthorizationServiceImpl.createForIntegrationTests(em);
 		result.klassenlisteImportService = KlassenlisteCSVImportService.createForIntegrationTests(em);
@@ -116,6 +116,7 @@ public class UploadManagerImpl implements UploadManager {
 		result.domainEventHandler = DomainEventHandler.createForIntegrationTest(em);
 		result.scanService = ScanService.createForIntegrationTest();
 		result.auswertungImportService = AuswertungImportService.createForIntegrationTest(em);
+		result.maxFilesizeBytes = "2097152";
 		return result;
 
 	}
@@ -205,7 +206,6 @@ public class UploadManagerImpl implements UploadManager {
 	PersistenterUpload transformAndPersistUploadMetadata(final UploadRequestPayload uploadPayload, final ScanResult scanResult, final Long checksumme) {
 
 		PersistenterUpload upload = new PersistenterUpload();
-		upload.setCharset(scanResult.getCharset());
 		upload.setChecksumme(checksumme);
 		upload.setDateiname(uploadPayload.getUploadData().getFilename());
 		upload.setMediatype(scanResult.getMediaType());

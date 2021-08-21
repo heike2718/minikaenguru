@@ -37,7 +37,7 @@ public class AdminEventlogResource {
 	 */
 	@GET
 	@Path("{ab}")
-	public Response getEventLogFromDate(@PathParam(value = "ab") final String dateString) {
+	public Response getEventLogBeginningWithDate(@PathParam(value = "ab") final String dateString) {
 
 		DownloadData downloadData = eventService.exportEventsStartingFromDate(dateString);
 		return MkGatewayFileUtils.createDownloadResponse(downloadData);

@@ -258,7 +258,9 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 
 		if (empfaengertyp == Empfaengertyp.TEST) {
 
-			return Arrays.asList(this.mailconfiguration.getTestempfaenger().split(","));
+			String testempfaenger = this.mailconfiguration.getTestempfaenger();
+			LOG.info("Senden Mails an {}", testempfaenger);
+			return Arrays.asList(testempfaenger.split(","));
 		}
 
 		String stmt = null;

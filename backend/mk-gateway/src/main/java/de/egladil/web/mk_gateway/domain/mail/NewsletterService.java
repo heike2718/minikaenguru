@@ -9,18 +9,24 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.context.RequestScoped;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.mail.api.NewsletterAPIModel;
 import de.egladil.web.mk_gateway.domain.mail.api.NewsletterVersandauftrag;
 import de.egladil.web.mk_gateway.domain.mail.api.VersandinfoAPIModel;
+import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandFailed;
+import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandFinished;
+import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandProgress;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterMailinfoService;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.NewsletterHibernateRepository;
 
@@ -29,6 +35,8 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.impl.NewsletterHiber
  */
 @RequestScoped
 public class NewsletterService {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(NewsletterService.class);
 
 	@Inject
 	NewsletterRepository newsletterRepositiory;
@@ -46,7 +54,16 @@ public class NewsletterService {
 	AdminMailService mailService;
 
 	@Inject
-	DomainEventHandler domainEventHandler;
+	ConcurrentSendMailDelegate sendMailDelegate;
+
+	@Inject
+	Event<NewsletterversandFailed> versandFailedEvent;
+
+	@Inject
+	Event<NewsletterversandFinished> versandFinished;
+
+	@Inject
+	Event<NewsletterversandProgress> versandProgress;
 
 	public static NewsletterService createForTest(final NewsletterRepository newsletterRepository, final VersandinfoService versandinfoService, final VeranstalterMailinfoService veranstalterMailinfoService, final AdminMailService mailService) {
 
@@ -68,6 +85,7 @@ public class NewsletterService {
 		result.scheduleNewsletterDelegate = ScheduleNewsletterDelegate.createForIntegrationTest(entityManager);
 		result.veranstalterMailinfoService = VeranstalterMailinfoService.createForIntegrationTest(entityManager);
 		result.mailService = AdminMailService.createForTest(result.veranstalterMailinfoService.getMailConfiguration());
+		result.sendMailDelegate = new ConcurrentSendMailDelegate();
 		return result;
 	}
 
@@ -141,9 +159,52 @@ public class NewsletterService {
 	 */
 	public ResponsePayload scheduleAndStartMailversand(final NewsletterVersandauftrag auftrag) {
 
-		Versandinformation versandinformation = this.scheduleNewsletterDelegate.scheduleMailversand(auftrag);
+		Optional<Newsletter> optNewsletter = this.newsletterRepositiory.ofId(new Identifier(auftrag.newsletterID()));
 
-		if (versandinformation.bereitsVersendet()) {
+		if (optNewsletter.isEmpty()) {
+
+			String fehlermeldung = "kein Newsletter mit UUID=" + auftrag.newsletterID() + " vorhanden";
+
+			Versandinformation finished = this.createFinishedVersandinfo(auftrag).withFehlermeldung(fehlermeldung);
+
+			return new ResponsePayload(MessagePayload.error(
+				fehlermeldung),
+				VersandinfoAPIModel.createFromVersandinfo(finished));
+		}
+
+		List<List<String>> mailempfaengerGruppen = this.veranstalterMailinfoService
+			.getMailempfaengerGroups(auftrag.emfaengertyp());
+
+		if (mailempfaengerGruppen.isEmpty()) {
+
+			Versandinformation finished = this.createFinishedVersandinfo(auftrag);
+
+			return new ResponsePayload(MessagePayload.warn(
+				"Keine Empfängeradressen für " + auftrag.emfaengertyp() + " gefunden."),
+				VersandinfoAPIModel.createFromVersandinfo(finished));
+		}
+
+		Versandinformation versandinformation = null;
+
+		try {
+
+			versandinformation = this.scheduleNewsletterDelegate.scheduleMailversand(auftrag);
+		} catch (Exception e) {
+
+			String message = "Beim Anlegen des Versandauftrags ist ein Fehler aufgetreten: " + e.getMessage();
+
+			LOGGER.error("Exception beim Anlegen des Versandauftrags {}: {}", auftrag, e.getMessage(), e);
+
+			int anzahlEmpfaenger = new Mailempfaengerzaehler().apply(mailempfaengerGruppen);
+
+			versandinformation = this.createFinishedVersandinfo(auftrag).withAnzahlEmpaenger(anzahlEmpfaenger)
+				.withFehlermeldung(message);
+			return new ResponsePayload(MessagePayload.error(
+				message),
+				VersandinfoAPIModel.createFromVersandinfo(versandinformation));
+		}
+
+		if (versandinformation.bereitsVersendet() && Empfaengertyp.TEST != versandinformation.empfaengertyp()) {
 
 			return new ResponsePayload(
 				MessagePayload.warn("Newsletter wurde bereits am " + versandinformation.versandBeendetAm()
@@ -151,24 +212,10 @@ public class NewsletterService {
 				VersandinfoAPIModel.createFromVersandinfo(versandinformation));
 		}
 
-		Optional<Newsletter> optNewsletter = this.newsletterRepositiory.ofId(new Identifier(auftrag.newsletterID()));
-
-		if (optNewsletter.isEmpty()) {
-
-			throw new MkGatewayRuntimeException("kein Newsletter mit UUID=" + auftrag.newsletterID() + " vorhanden");
-		}
-
 		Newsletter newsletter = optNewsletter.get();
-
-		List<List<String>> mailempfaengerGruppen = this.veranstalterMailinfoService
-			.getMailempfaengerGroups(versandinformation.empfaengertyp());
-
 		NewsletterTask task = new NewsletterTask(this, newsletter, versandinformation, mailempfaengerGruppen);
 
-		// Das läuft dann hoffentlich wirklich in einem eigenen Thread.
-		ConcurrentSendMailDelegate sendMailDelegate = new ConcurrentSendMailDelegate(versandinformation, domainEventHandler);
-
-		sendMailDelegate.mailsVersenden(task);
+		sendMailDelegate.mailsVersenden(task, versandinformation);
 
 		return new ResponsePayload(MessagePayload.info(
 			"Versand an " + versandinformation.empfaengertyp() + " begonnen "),
@@ -179,6 +226,26 @@ public class NewsletterService {
 	public void newsletterLoeschen(final Identifier identifier) {
 
 		this.newsletterRepositiory.removeNewsletter(identifier);
+
+	}
+
+	/**
+	 * Erzeugt eine transiente beendete Versandiformation bei leerer Empfängerliste.
+	 *
+	 * @param  versandinformation
+	 *                            Versandinformation
+	 * @return                    Versandinformation
+	 */
+	Versandinformation createFinishedVersandinfo(final NewsletterVersandauftrag auftrag) {
+
+		String jetzt = CommonTimeUtils.format(CommonTimeUtils.now());
+
+		Versandinformation result = new Versandinformation().withIdentifier(new Identifier("neu"))
+			.withNewsletterID(new Identifier(auftrag.newsletterID())).withAnzahlEmpaenger(0).withAnzahlAktuellVersendet(0)
+			.withVersandBegonnenAm(jetzt)
+			.withVersandBeendetAm(jetzt);
+
+		return result;
 
 	}
 }

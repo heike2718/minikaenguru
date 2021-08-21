@@ -5,13 +5,13 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mk-gateway</artifactId>
-	<version>1.5.0</version>
+	<version>1.5.1</version>
 	<packaging>jar</packaging>
 
 
 	<properties>
-		<commons.version>1.6.0</commons.version>
-		<filescanner.version>1.0.0</filescanner.version>
+		<commons.version>1.7.0</commons.version>
+		<filescanner.version>2.0.0</filescanner.version>
 		<poi.version>5.0.0</poi.version>
 		<quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
 		<quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
@@ -164,6 +164,11 @@
 		<dependency>
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-jdbc-mariadb</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-tika</artifactId>
 		</dependency>
 
 		<!-- Quarkus END -->

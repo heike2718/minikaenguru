@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,6 +49,9 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadRequestPayload;
 import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.domain.uploads.impl.UploadManagerImpl;
+import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KinderHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
@@ -59,8 +63,6 @@ import de.egladil.web.mkv_server_tests.AbstractIntegrationTest;
  */
 public class UploadManagerImplIT extends AbstractIntegrationTest {
 
-	private static final String PATH_UPLOAD_DIR = "/home/heike/mkv/upload";
-
 	private UploadManager uploadManager;
 
 	private KinderRepository kinderRepository;
@@ -68,6 +70,8 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 	private UploadRepository uploadRepository;
 
 	private LoesungszettelRepository loesungszettelRepository;
+
+	private Wettbewerb wettbewerb;
 
 	@Override
 	@BeforeEach
@@ -78,6 +82,15 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 		kinderRepository = KinderHibernateRepository.createForIntegrationTest(entityManager);
 		uploadRepository = UploadHibernateRepository.createForIntegrationTests(entityManager);
 		loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(entityManager);
+
+		wettbewerb = new Wettbewerb(new WettbewerbID(2020));
+		WettbewerbStatus status = wettbewerb.status();
+
+		while (WettbewerbStatus.DOWNLOAD_PRIVAT != status) {
+
+			wettbewerb.naechsterStatus();
+			status = wettbewerb.status();
+		}
 
 	}
 
@@ -161,7 +174,7 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 		List<String> fehlermeldungen = importReport.getNichtImportierteZeilen();
 		assertEquals(1, fehlermeldungen.size());
 		assertEquals(
-			"Fehler! Zeile \"2a,Heinz,2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+			"Fehler! Zeile \"2a;Heinz;2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
 			fehlermeldungen.get(0));
 
 		List<PersistenterUpload> uploads = uploadRepository.findUploadsWithTeilnahmenummer(schulkuerzel);
@@ -171,7 +184,8 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 		PersistenterUpload persistenterUpload = uploads.get(0);
 		assertEquals(UploadStatus.DATENFEHLER, persistenterUpload.getStatus());
 
-		String path = PATH_UPLOAD_DIR + File.separator + persistenterUpload.getUuid() + "-fehlerreport.csv";
+		String path = "/home/heike/git/testdaten/minikaenguru/integrationtests/upload/" + persistenterUpload.getUuid()
+			+ "-fehlerreport.csv";
 
 		File fehlerfile = new File(path);
 		assertTrue(fehlerfile.exists());
@@ -189,7 +203,8 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 		byte[] data = loadData("/auswertungen/auswertung-UUBW0AZW.csv");
 		UploadData uploadData = new UploadData("Auswertung-Grundschule Börgitz \"Hans Beimler\".xslx", data);
 
-		UploadAuswertungContext contextObject = new UploadAuswertungContext().withKuerzelLand("DE-ST").withSprache(Sprache.en);
+		UploadAuswertungContext contextObject = new UploadAuswertungContext().withWettbewerb(wettbewerb).withKuerzelLand("DE-ST")
+			.withSprache(Sprache.en);
 
 		UploadRequestPayload uploadRequestPayload = new UploadRequestPayload().withContext(contextObject).withUploadData(uploadData)
 			.withTeilnahmenummer(schulkuerzel).withUploadType(UploadType.AUSWERTUNG)
@@ -237,7 +252,7 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 	}
 
 	@Test
-	void should_uploadAuswertungByAdmin_work_whenExcel() {
+	void should_uploadAuswertungByAdmin_returnWarn_whenNamenspalteAberKeineNamen() {
 
 		// Arrange
 		String benutzerUuid = "it-db-inside-docker";
@@ -246,7 +261,52 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 		byte[] data = loadData("/auswertungen/auswertung-M5ZD2NL2.xlsx");
 		UploadData uploadData = new UploadData("Auswertung-Rosental.xslx", data);
 
-		UploadAuswertungContext contextObject = new UploadAuswertungContext().withKuerzelLand("DE-ST").withSprache(Sprache.de);
+		UploadAuswertungContext contextObject = new UploadAuswertungContext().withWettbewerb(wettbewerb).withKuerzelLand("DE-ST")
+			.withSprache(Sprache.de);
+
+		UploadRequestPayload uploadRequestPayload = new UploadRequestPayload().withContext(contextObject).withUploadData(uploadData)
+			.withTeilnahmenummer(schulkuerzel).withUploadType(UploadType.AUSWERTUNG)
+			.withBenutzerID(new Identifier(benutzerUuid));
+
+		// Act
+		EntityTransaction transaction = startTransaction();
+		ResponsePayload result = uploadManager.processUpload(uploadRequestPayload);
+		commit(transaction);
+
+		// Assert
+		MessagePayload messagePayload = result.getMessage();
+		assertEquals("INFO", messagePayload.getLevel());
+		assertEquals(
+			"Die Auswertung wurde erfolgreich hochgeladen. Sie muss noch nachbearbeitet werden. Die Statistik steht Ihnen in einigen Tagen zur Verfügung.",
+			messagePayload.getMessage());
+
+		AuswertungImportReport report = (AuswertungImportReport) result.getData();
+		assertTrue(report.getFehlerhafteZeilen().isEmpty());
+
+		AnonymisierteTeilnahmeAPIModel teilnahme = report.getTeilnahme();
+		assertNotNull(teilnahme);
+
+		assertEquals(0, teilnahme.anzahlKinder());
+		assertEquals(0, teilnahme.getAnzahlLoesungszettelUpload());
+		assertEquals(0, teilnahme.getAnzahlLoesungszettelOnline());
+		TeilnahmeIdentifier teilnahmeIdentifier = teilnahme.identifier();
+		assertEquals(2020, teilnahmeIdentifier.jahr());
+		assertEquals(schulkuerzel, teilnahmeIdentifier.teilnahmenummer());
+		assertEquals(Teilnahmeart.SCHULE, teilnahmeIdentifier.teilnahmeart());
+	}
+
+	@Test
+	void should_uploadAuswertungByAdmin_work_whenDateiMitEchtdatenKlasse1() {
+
+		// Arrange
+		String benutzerUuid = "it-db-inside-docker";
+		String schulkuerzel = "U9OI773A";
+
+		byte[] data = loadData("/auswertungen/2021_auswertung_minikaenguru_klasse_1.xlsx");
+		UploadData uploadData = new UploadData("Auswertung-Evangelische Grundschule Diakonie-Klasse 1.xslx", data);
+
+		UploadAuswertungContext contextObject = new UploadAuswertungContext().withWettbewerb(wettbewerb).withKuerzelLand("DE-ST")
+			.withSprache(Sprache.de);
 
 		UploadRequestPayload uploadRequestPayload = new UploadRequestPayload().withContext(contextObject).withUploadData(uploadData)
 			.withTeilnahmenummer(schulkuerzel).withUploadType(UploadType.AUSWERTUNG)
@@ -268,8 +328,8 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 		AnonymisierteTeilnahmeAPIModel teilnahme = report.getTeilnahme();
 		assertNotNull(teilnahme);
 
-		assertEquals(15, teilnahme.anzahlKinder());
-		assertEquals(15, teilnahme.getAnzahlLoesungszettelUpload());
+		assertEquals(40, teilnahme.anzahlKinder());
+		assertEquals(40, teilnahme.getAnzahlLoesungszettelUpload());
 		assertEquals(0, teilnahme.getAnzahlLoesungszettelOnline());
 		TeilnahmeIdentifier teilnahmeIdentifier = teilnahme.identifier();
 		assertEquals(2020, teilnahmeIdentifier.jahr());
@@ -282,7 +342,7 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 
 			assertEquals(Auswertungsquelle.UPLOAD, loesungszettel.auswertungsquelle());
 			assertEquals("DE-ST", loesungszettel.landkuerzel());
-			assertEquals(Klassenstufe.ZWEI, loesungszettel.klassenstufe());
+			assertEquals(Klassenstufe.EINS, loesungszettel.klassenstufe());
 			assertEquals(Sprache.de, loesungszettel.sprache());
 			LoesungszettelRohdaten rohdaten = loesungszettel.rohdaten();
 			assertFalse(rohdaten.hatTypo());
@@ -299,7 +359,7 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 	 */
 	private byte[] loadData(final String classpathData) {
 
-		try (InputStream in = getClass().getResourceAsStream(classpathData)) {
+		try (InputStream in = getClass().getResourceAsStream(classpathData); StringWriter sw = new StringWriter()) {
 
 			return in.readAllBytes();
 		} catch (IOException e) {

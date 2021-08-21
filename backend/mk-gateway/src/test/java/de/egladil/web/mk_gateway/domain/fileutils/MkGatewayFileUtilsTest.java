@@ -25,7 +25,7 @@ public class MkGatewayFileUtilsTest {
 	void should_readBytesFromFileSucced() {
 
 		// Arrange
-		String path = "/home/heike/mkv/adv/adv-vereinbarung-1.1.pdf";
+		String path = "/home/heike/git/testdaten/minikaenguru/adv/adv-vereinbarung-1.1.pdf";
 
 		// Act
 		byte[] daten = MkGatewayFileUtils.readBytesFromFile(path);
@@ -38,7 +38,7 @@ public class MkGatewayFileUtilsTest {
 	void should_readBytesFromFileThrowException_when_DateiNichtDa() {
 
 		// Arrange
-		String path = "/home/heike/mkv/adv/adv-vereinbarung-10.0.pdf";
+		String path = "/home/heike/git/testdaten/minikaenguru/adv/adv-vereinbarung-10.0.pdf";
 
 		// Act + Assert
 		try {
@@ -47,7 +47,8 @@ public class MkGatewayFileUtilsTest {
 			fail("keine MkGatewayRuntimeException");
 		} catch (MkGatewayRuntimeException e) {
 
-			assertEquals("Konnte Datei mit Pfad /home/heike/mkv/adv/adv-vereinbarung-10.0.pdf nicht laden", e.getMessage());
+			assertEquals("Konnte Datei mit Pfad /home/heike/git/testdaten/minikaenguru/adv/adv-vereinbarung-10.0.pdf nicht laden",
+				e.getMessage());
 		}
 	}
 
@@ -96,7 +97,7 @@ public class MkGatewayFileUtilsTest {
 	void should_readFileContent_IgnoreEmptyLines() {
 
 		// Arrange
-		String path = "/home/heike/upload/klassenlisten-testdaten/korrekt/upload/klassenliste-mit-leerzeilen.csv";
+		String path = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste-mit-leerzeilen.csv";
 
 		// Act
 		List<String> lines = MkGatewayFileUtils.readLines(path);

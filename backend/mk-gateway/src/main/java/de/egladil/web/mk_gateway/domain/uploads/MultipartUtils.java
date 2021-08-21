@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.uploads;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -49,20 +50,25 @@ public class MultipartUtils {
 		MultivaluedMap<String, String> header = inputPart.getHeaders();
 		String fileName = getFileName(header);
 
-		try {
+		try (InputStream inputStream = inputPart.getBody(InputStream.class, null);
+			ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
 
-			// convert the uploaded file to inputstream
-			InputStream inputStream = inputPart.getBody(InputStream.class, null);
+			IOUtils.copy(inputStream, bos);
 
-			byte[] bytes = IOUtils.toByteArray(inputStream);
+			final byte[] result = bos.toByteArray();
+			bos.flush();
 
-			return new UploadData(fileName, bytes);
+			return new UploadData(fileName, result);
+
 		} catch (IOException e) {
 
 			LOGGER.error("Exception beim Umwandeln des uploads: " + e.getMessage(), e);
 			throw new MkGatewayRuntimeException("IOException beim Verarbeiten des MultipartFormDataInput");
-		}
+		} finally {
 
+			// Call this method to delete any temporary files created from unmarshalling this multipart message
+			input.close();
+		}
 	}
 
 	private static String getFileName(final MultivaluedMap<String, String> header) {

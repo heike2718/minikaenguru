@@ -22,18 +22,18 @@ public class KlassenlisteUeberschrift {
 	private final String[] eingaben;
 
 	/**
-	 * @param  zeileKommasepariert
+	 * @param  zeileSemikolonsepariert
 	 *                               String
 	 * @throws UploadFormatException
 	 *                               wenn zeileKommasepariert null oder es nicht genau 4 Token sind.
 	 */
-	public KlassenlisteUeberschrift(final String zeileKommasepariert) throws UploadFormatException {
+	public KlassenlisteUeberschrift(final String zeileSemikolonsepariert) throws UploadFormatException {
 
-		eingaben = StringUtils.split(zeileKommasepariert, ',');
+		eingaben = StringUtils.split(zeileSemikolonsepariert, ';');
 
 		if (eingaben == null || eingaben.length != 4) {
 
-			LOGGER.error("ungueltige erste Zeile: -{}-", zeileKommasepariert);
+			LOGGER.error("ungueltige erste Zeile: -{}-", zeileSemikolonsepariert);
 			throw new UploadFormatException(KlassenlisteFeldart.getMessageExpectedContents());
 		}
 

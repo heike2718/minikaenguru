@@ -7,6 +7,9 @@ package de.egladil.web.mk_gateway.domain.mail;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.egladil.web.commons_mailer.CommonEmailService;
 import de.egladil.web.commons_mailer.DefaultEmailDaten;
 import de.egladil.web.commons_mailer.EmailServiceCredentials;
@@ -18,6 +21,8 @@ import de.egladil.web.commons_mailer.exception.InvalidMailAddressException;
  */
 @ApplicationScoped
 public class AdminMailService {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(AdminMailService.class);
 
 	@Inject
 	AdminEmailsConfiguration mailConfig;
@@ -89,7 +94,7 @@ public class AdminMailService {
 					new SendFailedExceptionAdapter());
 			}
 
-			System.out.println("Mail mit Betreff " + maildaten.getBetreff() + " wurde an "
+			LOGGER.debug("Mail mit Betreff " + maildaten.getBetreff() + " wurde an "
 				+ maildaten.alleEmpfaengerFuersLog() + " gesendet (TO=" + maildaten.getEmpfaenger() + "):\n" + maildaten.getText());
 		}
 
