@@ -38,10 +38,11 @@
 			<li *ngIf="isLoggedIn$ | async" routerLinkActive="active">
 				<a class="nav-link" (click)="gotProfilApp()" title="Hierfür werden Sie ausgelogged!"><span class="fa fa-gear fa-1x" aria-hidden="true"></span>
 					Benutzerdaten <span class="sr-only">(current)</span></a></li>
+			<div *ngIf="activateRegistration">
 			<li *ngIf="isLoggedOut$ | async" routerLinkActive="active"><a routerLink="/registrierung" class="nav-link"
 					title="Konto anlegen">
 					<span class="fa fa-user-o fa-1x" aria-hidden="true"></span> Konto anlegen </a></li>
-
+			</div>
 			<li *ngIf="isLoggedOut$ | async" routerLinkActive="active">
 				<a class="nav-link" (click)="login()"><span class="fa fa-sign-in fa-1x" aria-hidden="true"></span>
 					Einloggen <span class="sr-only">(current)</span></a></li>

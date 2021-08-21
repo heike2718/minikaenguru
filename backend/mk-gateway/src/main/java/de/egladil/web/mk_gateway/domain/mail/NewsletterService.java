@@ -85,6 +85,7 @@ public class NewsletterService {
 		result.scheduleNewsletterDelegate = ScheduleNewsletterDelegate.createForIntegrationTest(entityManager);
 		result.veranstalterMailinfoService = VeranstalterMailinfoService.createForIntegrationTest(entityManager);
 		result.mailService = AdminMailService.createForTest(result.veranstalterMailinfoService.getMailConfiguration());
+		result.sendMailDelegate = new ConcurrentSendMailDelegate();
 		return result;
 	}
 
