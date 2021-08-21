@@ -1,4 +1,14 @@
-# authprovider Release Notes
+# minikaenguru Release Notes
+
+__Release 1.5.1__:
+
+* Wechsel zu quarkus-2.1.2-Final
+* [Upload Auswertungsdateien as ADMIN](https://github.com/heike2718/minikaenguru/issues/307)
+* [Upload: charset problem: CHARSET US-ASCII auf dem Serer](https://github.com/heike2718/minikaenguru/issues/316)
+* [Hochladen von Auswertungen mit einer gefüllten Namen-Spalte funktioniert nicht](https://github.com/heike2718/minikaenguru/issues/317)
+* [Die Dateien CDRX5HXW-Schule-xxxx (erste) warfen einen python-Fehler beim Konvertieren](https://github.com/heike2718/minikaenguru/issues/318)
+* [Statistik: Ergebnisse je Aufgabe: Spalten und Zeilen falsch sortiert](https://github.com/heike2718/minikaenguru/issues/319)
+* [Mails an Testaccount lassen sich nicht mehr versenden](https://github.com/heike2718/minikaenguru/issues/320)
 
 __Release 1.4.6__:
 
@@ -10,7 +20,7 @@ __Release 1.4.6__:
 
 __Release 1.4.5__:
 
-* [Transaktionsmanagement Kösungszettel Löschen gefixed](https://github.com/heike2718/minikaenguru/issues/291)
+* [Transaktionsmanagement Lösungszettel Löschen gefixed](https://github.com/heike2718/minikaenguru/issues/291)
 * [Umschreiben ansible-playbooks wegen quarkus-1.13](https://github.com/heike2718/minikaenguru/issues/287)
 * [Basis für Testautomation erstellen](https://github.com/heike2718/minikaenguru/issues/286)
 * docker-maven-basierte Integrationstests
@@ -67,8 +77,7 @@ __Release 1.3.2__:
 * [NPE wenn Veranstalter keine Teilnahmenummern hat](https://github.com/heike2718/minikaenguru/issues/224)
 * [Anmeldungsübersicht über den aktuellen wettbewerb, sofern er aktiv ist](https://github.com/heike2718/minikaenguru/issues/173)
 
-
-_Release 1.3.1__:
+__Release 1.3.1__:
 
 [Bugfix Hinzufügen neuer Schule](https://github.com/heike2718/minikaenguru/issues/225)
 
@@ -116,8 +125,6 @@ __Release 0.2.9__:
 * [Umleitung zur Profil-App aktivieren](https://github.com/heike2718/minikaenguru/issues/146)
 * [Newsletter: abonnieren / deabonnieren](https://github.com/heike2718/minikaenguru/issues/155)
 
-
-
 __Release 0.2.9__:
 
 [Status Schulanmeldung geht beim Laden der Details verloren](https://github.com/heike2718/minikaenguru/issues/148)
@@ -127,7 +134,6 @@ __Release 0.2.8__:
 * Anzeigen aktuelle Meldungen in mkv-app
 * Editieren aktueller Meldung in mk-admin-app
 * Hinweistexte für unfertige Funktionen
-
 
 __Release 0.2.7__:
 
