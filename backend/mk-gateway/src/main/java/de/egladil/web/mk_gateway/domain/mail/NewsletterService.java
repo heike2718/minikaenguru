@@ -164,7 +164,7 @@ public class NewsletterService {
 
 			String fehlermeldung = "kein Newsletter mit UUID=" + auftrag.newsletterID() + " vorhanden";
 
-			Versandinformation finished = this.finishVersandWhenGroupsEmpty(auftrag).withFehlermeldung(fehlermeldung);
+			Versandinformation finished = this.createFinishedVersandinfo(auftrag).withFehlermeldung(fehlermeldung);
 
 			return new ResponsePayload(MessagePayload.error(
 				fehlermeldung),
@@ -176,7 +176,7 @@ public class NewsletterService {
 
 		if (mailempfaengerGruppen.isEmpty()) {
 
-			Versandinformation finished = this.finishVersandWhenGroupsEmpty(auftrag);
+			Versandinformation finished = this.createFinishedVersandinfo(auftrag);
 
 			return new ResponsePayload(MessagePayload.warn(
 				"Keine Empfängeradressen für " + auftrag.emfaengertyp() + " gefunden."),
@@ -196,7 +196,7 @@ public class NewsletterService {
 
 			int anzahlEmpfaenger = new Mailempfaengerzaehler().apply(mailempfaengerGruppen);
 
-			versandinformation = this.finishVersandWhenGroupsEmpty(auftrag).withAnzahlEmpaenger(anzahlEmpfaenger)
+			versandinformation = this.createFinishedVersandinfo(auftrag).withAnzahlEmpaenger(anzahlEmpfaenger)
 				.withFehlermeldung(message);
 			return new ResponsePayload(MessagePayload.error(
 				message),
@@ -235,7 +235,7 @@ public class NewsletterService {
 	 *                            Versandinformation
 	 * @return                    Versandinformation
 	 */
-	Versandinformation finishVersandWhenGroupsEmpty(final NewsletterVersandauftrag auftrag) {
+	Versandinformation createFinishedVersandinfo(final NewsletterVersandauftrag auftrag) {
 
 		String jetzt = CommonTimeUtils.format(CommonTimeUtils.now());
 

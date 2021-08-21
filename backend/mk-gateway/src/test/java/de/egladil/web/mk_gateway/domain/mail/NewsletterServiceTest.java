@@ -416,7 +416,7 @@ public class NewsletterServiceTest {
 			NewsletterVersandauftrag auftrag = NewsletterVersandauftrag.create(newsletterID, empfaengertyp);
 
 			// Act
-			Versandinformation result = newsletterService.finishVersandWhenGroupsEmpty(auftrag);
+			Versandinformation result = newsletterService.createFinishedVersandinfo(auftrag);
 
 			// Assert
 			assertNotNull(result.versandBegonnenAm());

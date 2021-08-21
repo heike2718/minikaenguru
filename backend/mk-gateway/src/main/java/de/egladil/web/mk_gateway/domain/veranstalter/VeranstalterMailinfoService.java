@@ -77,7 +77,9 @@ public class VeranstalterMailinfoService {
 			return Collections.emptyList();
 		}
 
-		List<String> trimmedMailempfaenger = alleMailempfaenger.stream().map(e -> e.trim()).collect(Collectors.toList());
+		List<String> trimmedMailempfaenger = alleMailempfaenger.stream().map(e -> e.trim()).collect(Collectors.toList()).stream()
+			.filter(m -> StringUtils.isNotBlank(m)).collect(Collectors.toList());
+		;
 
 		List<List<String>> groups = group(trimmedMailempfaenger);
 
@@ -98,7 +100,10 @@ public class VeranstalterMailinfoService {
 
 		for (String email : alleMailempfaenger) {
 
-			gruppe.add(email);
+			if (!StringUtils.isBlank(email) && !gruppe.contains(email)) {
+
+				gruppe.add(email);
+			}
 
 			if (gruppe.size() == groupsize) {
 
