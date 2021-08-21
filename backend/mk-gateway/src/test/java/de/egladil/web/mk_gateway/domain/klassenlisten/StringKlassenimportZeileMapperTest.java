@@ -28,13 +28,13 @@ public class StringKlassenimportZeileMapperTest {
 	@BeforeEach
 	void setUp() {
 
-		klassenlisteUeberschrift = new KlassenlisteUeberschrift("Klasse,Nachname,Vorname,Klassenstufe");
+		klassenlisteUeberschrift = new KlassenlisteUeberschrift("Klasse;Nachname;Vorname;Klassenstufe");
 	}
 
 	@Test
 	void should_constructorThrowUploadFormatException_when_ueberschriftNichtWieGefordert() {
 
-		KlassenlisteUeberschrift ueberschrift = new KlassenlisteUeberschrift("blau,grün,Vorname,Klassenstufe");
+		KlassenlisteUeberschrift ueberschrift = new KlassenlisteUeberschrift("blau;grün;Vorname;Klassenstufe");
 
 		try {
 
@@ -54,7 +54,7 @@ public class StringKlassenimportZeileMapperTest {
 	void should_applyReturnExcepctedKlassenlisteZeile_when_allesOk() {
 
 		// Arrange
-		String kommaseparierteZeile = "2a , Grüter ,Johanna , 2";
+		String kommaseparierteZeile = "2a ; Grüter ;Johanna ; 2";
 
 		Pair<Integer, String> zeileMitIndex = Pair.of(Integer.valueOf(42), kommaseparierteZeile);
 
@@ -79,7 +79,7 @@ public class StringKlassenimportZeileMapperTest {
 	void should_applyReturnZeileMitFehlermeldung_when_zeileZuKurz() {
 
 		// Arrange
-		String kommaseparierteZeile = "2a , Grüter ,2";
+		String kommaseparierteZeile = "2a ; Grüter ;2";
 		Pair<Integer, String> zeileMitIndex = Pair.of(Integer.valueOf(42), kommaseparierteZeile);
 
 		StringKlassenimportZeileMapper mapper = new StringKlassenimportZeileMapper(klassenlisteUeberschrift);
@@ -93,7 +93,7 @@ public class StringKlassenimportZeileMapperTest {
 		KlassenimportZeile result = optResult.get();
 		assertEquals(42, result.getIndex());
 		assertEquals(
-			"Fehler! Zeile \"2a , Grüter ,2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+			"Fehler! Zeile \"2a ; Grüter ;2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
 			result.getFehlermeldung());
 		assertFalse(result.ok());
 		assertNull(result.getKlasse());
@@ -107,7 +107,7 @@ public class StringKlassenimportZeileMapperTest {
 	void should_applyReturnOptionalWithFehlermeldung_when_zeileZuLang() {
 
 		// Arrange
-		String kommaseparierteZeile = "2a , Grüter , Marie, Luise ,2";
+		String kommaseparierteZeile = "2a ; Grüter ; Marie; Luise ;2";
 		Pair<Integer, String> zeileMitIndex = Pair.of(Integer.valueOf(42), kommaseparierteZeile);
 		StringKlassenimportZeileMapper mapper = new StringKlassenimportZeileMapper(klassenlisteUeberschrift);
 
@@ -120,7 +120,7 @@ public class StringKlassenimportZeileMapperTest {
 		KlassenimportZeile result = optResult.get();
 		assertEquals(42, result.getIndex());
 		assertEquals(
-			"Fehler! Zeile \"2a , Grüter , Marie, Luise ,2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+			"Fehler! Zeile \"2a ; Grüter ; Marie; Luise ;2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
 			result.getFehlermeldung());
 		assertFalse(result.ok());
 		assertNull(result.getKlasse());
@@ -156,7 +156,7 @@ public class StringKlassenimportZeileMapperTest {
 
 		} catch (NullPointerException e) {
 
-			assertEquals("kommaseparierteZeile", e.getMessage());
+			assertEquals("semikolonseparierteZeileMitIndex", e.getMessage());
 		}
 	}
 }

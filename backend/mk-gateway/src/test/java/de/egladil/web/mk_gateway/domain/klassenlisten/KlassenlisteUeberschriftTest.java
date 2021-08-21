@@ -124,7 +124,7 @@ public class KlassenlisteUeberschriftTest {
 		void should_getIndexReturnExpectedValues_when_inputValid() {
 
 			// Arrange
-			String zeileKommasepariert = "klassenStufe,Klasse,VorName,nachName";
+			String zeileKommasepariert = "klassenStufe;Klasse;VorName;nachName";
 			KlassenlisteUeberschrift ueberschrift = new KlassenlisteUeberschrift(zeileKommasepariert);
 
 			// Act + Assert
@@ -139,7 +139,7 @@ public class KlassenlisteUeberschriftTest {
 		void should_getIndexReturnEmpty_when_feldartNotFound() {
 
 			// Arrange
-			String zeileKommasepariert = "klassenStufe,Horst,VorName,nachName";
+			String zeileKommasepariert = "klassenStufe;Horst;VorName;nachName";
 			KlassenlisteUeberschrift ueberschrift = new KlassenlisteUeberschrift(zeileKommasepariert);
 
 			// Act + Assert
@@ -154,7 +154,7 @@ public class KlassenlisteUeberschriftTest {
 		void should_getIndexReturnEmpty_when_tokenBlank() {
 
 			// Arrange
-			String zeileKommasepariert = "klassenStufe,\" \",VorName,nachName";
+			String zeileKommasepariert = "klassenStufe;\" \";VorName;nachName";
 			KlassenlisteUeberschrift ueberschrift = new KlassenlisteUeberschrift(zeileKommasepariert);
 
 			// Act + Assert

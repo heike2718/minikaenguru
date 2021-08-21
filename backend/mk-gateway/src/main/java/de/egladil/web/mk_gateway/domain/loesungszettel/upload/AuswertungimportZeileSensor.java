@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.error.UploadFormatException;
+import de.egladil.web.mk_gateway.domain.statistik.Wertung;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 
 /**
@@ -18,8 +19,6 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 public class AuswertungimportZeileSensor {
 
 	private static final String UEBESCHRIFT_INDIKATOR = "punkte";
-
-	private static final String LEERE_ZEILE_INDIKATOR = ",,0.0,,";
 
 	/**
 	 * @param  string
@@ -36,7 +35,21 @@ public class AuswertungimportZeileSensor {
 	 */
 	public boolean isLeereZeile(final String string) {
 
-		return StringUtils.isBlank(string) ? true : string.contains(LEERE_ZEILE_INDIKATOR);
+		if (StringUtils.isBlank(string)) {
+
+			return true;
+		}
+
+		String lower = string.toLowerCase();
+
+		for (Wertung wertung : Wertung.values()) {
+
+			if (lower.contains(wertung.toString())) {
+
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -56,7 +69,7 @@ public class AuswertungimportZeileSensor {
 				"'" + ueberschrift + "' ist keine Ueberschrift. Klassenstufe laesst sich nicht ermitteln");
 		}
 
-		String[] tokens = StringUtils.split(ueberschrift.toUpperCase(), ",");
+		String[] tokens = StringUtils.split(ueberschrift.toUpperCase(), ";");
 
 		int anzahlA = Long.valueOf(Arrays.stream(tokens).filter(t -> t.contains("A-")).count()).intValue();
 
@@ -75,5 +88,26 @@ public class AuswertungimportZeileSensor {
 			break;
 		}
 		throw new UploadFormatException("unerwartete Anzahl A- in '" + ueberschrift + "'. Klassenstufe lässt sich nicht ermitteln");
+	}
+
+	/**
+	 * Ermittelt, ob die Auswertungsdatei Namen enthält.
+	 *
+	 * @param ueberschrift
+	 *                     AuswertungimportZeile
+	 */
+	public boolean hasNamenSpalte(final AuswertungimportZeile ueberschrift) {
+
+		if (ueberschrift == null) {
+
+			throw new IllegalArgumentException("ueberschrift null");
+		}
+
+		if (!isUeberschrift(ueberschrift.getRohdaten())) {
+
+			throw new MkGatewayRuntimeException(ueberschrift + " ist keine Ueberschrift");
+		}
+
+		return ueberschrift.getRohdaten().toUpperCase().indexOf("A-1") > 0;
 	}
 }

@@ -5,6 +5,7 @@
 package de.egladil.web.mk_gateway.domain.event;
 
 import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.control.ActivateRequestContext;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -38,6 +39,7 @@ public class DomainEventHandler {
 		return result;
 	}
 
+	@ActivateRequestContext
 	public void handleEvent(@Observes final MkGatewayDomainEvent event) {
 
 		try {

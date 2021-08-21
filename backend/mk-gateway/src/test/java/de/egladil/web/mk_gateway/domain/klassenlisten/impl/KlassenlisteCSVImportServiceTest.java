@@ -42,6 +42,9 @@ import de.egladil.web.mk_gateway.domain.klassenlisten.api.KlassenlisteImportRepo
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.uploads.UploadRepository;
+import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 
 /**
@@ -59,6 +62,8 @@ public class KlassenlisteCSVImportServiceTest {
 	private PersistenterUpload persistenterUpload;
 
 	private List<Kind> vorhandeneKinder;
+
+	private Wettbewerb wettbewerb;
 
 	@Mock
 	private KlassenService klassenService;
@@ -81,8 +86,17 @@ public class KlassenlisteCSVImportServiceTest {
 
 		vorhandeneKinder = new ArrayList<>();
 
+		wettbewerb = new Wettbewerb(new WettbewerbID(2020));
+		WettbewerbStatus status = wettbewerb.status();
+
+		while (status != WettbewerbStatus.ANMELDUNG) {
+
+			wettbewerb.naechsterStatus();
+			status = wettbewerb.status();
+		}
+
 		uploadKlassenlisteContext = new UploadKlassenlisteContext().withKuerzelLand(kuerzelLand)
-			.withNachnameAlsZusatz(nachnamenAlsZusatz).withSprache(sprache);
+			.withNachnameAlsZusatz(nachnamenAlsZusatz).withSprache(sprache).withWettbewerb(wettbewerb);
 
 		persistenterUpload = new PersistenterUpload();
 		persistenterUpload.setUuid("klassenliste");
@@ -97,7 +111,7 @@ public class KlassenlisteCSVImportServiceTest {
 		void should_importiereKlassenThrowUploadFormatException_when_keineUeberschrift() {
 
 			// Arrange
-			service.pathExternalFiles = "/home/heike/upload/klassenlisten-testdaten/fehlerhaft";
+			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/fehlerhaft";
 			persistenterUpload.setUuid("ohne-ueberschrift");
 
 			// Act + Assert
@@ -124,9 +138,11 @@ public class KlassenlisteCSVImportServiceTest {
 		void should_importiereKlassenWork() throws IOException {
 
 			// Arrange
-			service.pathExternalFiles = "/home/heike/upload/klassenlisten-testdaten/korrekt";
+			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt";
 
 			List<Klasse> klassen = new ArrayList<>();
+			klassen.add(new Klasse(new Identifier("uuid-1a")).withName("1a").withSchuleID(new Identifier(SCHULKUERZEL)));
+			klassen.add(new Klasse(new Identifier("uuid-1b")).withName("1b").withSchuleID(new Identifier(SCHULKUERZEL)));
 			klassen.add(new Klasse(new Identifier("uuid-2a")).withName("2a").withSchuleID(new Identifier(SCHULKUERZEL)));
 			klassen.add(new Klasse(new Identifier("uuid-2b")).withName("2b").withSchuleID(new Identifier(SCHULKUERZEL)));
 
@@ -135,8 +151,29 @@ public class KlassenlisteCSVImportServiceTest {
 
 			List<Kind> kinder = new ArrayList<>();
 			kinder.add(
-				new Kind(new Identifier("shdiqhio")).withKlasseID(new Identifier("uuid-2a")).withKlassenstufe(Klassenstufe.ZWEI)
-					.withLandkuerzel("DE-HE").withNachname("Fichtenholz").withSprache(Sprache.de).withVorname("Genadi"));
+				new Kind(new Identifier("1")).withKlasseID(new Identifier("uuid-1a")).withKlassenstufe(Klassenstufe.EINS)
+					.withLandkuerzel("DE-HE").withNachname("Granach").withSprache(Sprache.de).withVorname("Lukas"));
+			kinder.add(
+				new Kind(new Identifier("2")).withKlasseID(new Identifier("uuid-1a")).withKlassenstufe(Klassenstufe.EINS)
+					.withLandkuerzel("DE-HE").withNachname("Weiß").withSprache(Sprache.de).withVorname("Natalie"));
+			kinder.add(
+				new Kind(new Identifier("3")).withKlasseID(new Identifier("uuid-1b")).withKlassenstufe(Klassenstufe.EINS)
+					.withLandkuerzel("DE-HE").withNachname("Wanowski").withSprache(Sprache.de).withVorname("Szymon"));
+			kinder.add(
+				new Kind(new Identifier("4")).withKlasseID(new Identifier("uuid-1b")).withKlassenstufe(Klassenstufe.EINS)
+					.withLandkuerzel("DE-HE").withNachname("Schöner").withSprache(Sprache.de).withVorname("Patrick"));
+			kinder.add(
+				new Kind(new Identifier("5")).withKlasseID(new Identifier("uuid-2a")).withKlassenstufe(Klassenstufe.ZWEI)
+					.withLandkuerzel("DE-HE").withNachname("Hofstedter").withSprache(Sprache.de).withVorname("Lennart"));
+			kinder.add(
+				new Kind(new Identifier("6")).withKlasseID(new Identifier("uuid-2a")).withKlassenstufe(Klassenstufe.ZWEI)
+					.withLandkuerzel("DE-HE").withNachname("Gfauna").withSprache(Sprache.de).withVorname("Flora"));
+			kinder.add(
+				new Kind(new Identifier("7")).withKlasseID(new Identifier("uuid-2b")).withKlassenstufe(Klassenstufe.ZWEI)
+					.withLandkuerzel("DE-HE").withNachname("Gröblin").withSprache(Sprache.de).withVorname("Pauline"));
+			kinder.add(
+				new Kind(new Identifier("8")).withKlasseID(new Identifier("uuid-2b")).withKlassenstufe(Klassenstufe.ZWEI)
+					.withLandkuerzel("DE-HE").withNachname("Hinremöller").withSprache(Sprache.de).withVorname("Lucie"));
 
 			when(klassenService.importiereKlassen(any(), any(), anyList())).thenReturn(klassen);
 			when(kinderService.importiereKinder(any(), any(), any(), any())).thenReturn(kinder);
@@ -154,8 +191,8 @@ public class KlassenlisteCSVImportServiceTest {
 			assertNotNull(responsePayload.getData());
 
 			KlassenlisteImportReport report = (KlassenlisteImportReport) responsePayload.getData();
-			assertEquals(2, report.getKlassen().size());
-			assertEquals(1, report.getAnzahlKinderImportiert());
+			assertEquals(4, report.getKlassen().size());
+			assertEquals(8, report.getAnzahlKinderImportiert());
 			assertEquals(0L, report.getAnzahlDubletten());
 			assertEquals(0L, report.getAnzahlKlassenstufeUnklar());
 			assertEquals(0, report.getAnzahlNichtImportiert());
@@ -174,7 +211,7 @@ public class KlassenlisteCSVImportServiceTest {
 		void should_importiereKlassenWork_withFehlern() throws IOException {
 
 			// Arrange
-			service.pathExternalFiles = "/home/heike/upload/klassenlisten-testdaten/fehlerhaft";
+			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/fehlerhaft";
 			persistenterUpload.setUuid("mit-ueberschrift-alle-anderen-faelle");
 
 			List<Klasse> klassen = new ArrayList<>();
@@ -217,10 +254,10 @@ public class KlassenlisteCSVImportServiceTest {
 			assertEquals(2, fehlermeldungen.size());
 
 			assertEquals(
-				"Fehler! Zeile \"Amiera, Maria,Kaled,2a,2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+				"Fehler! Zeile \"Amiera; Maria;Kaled;2a;2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
 				fehlermeldungen.get(0));
 			assertEquals(
-				"Fehler! Zeile \"Benedikt,2a,0\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+				"Fehler! Zeile \"Benedikt;2a;0\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
 				fehlermeldungen.get(1));
 
 			verify(klassenService).importiereKlassen(any(), any(), anyList());

@@ -141,7 +141,7 @@ public class AuswertungImportServiceTest {
 		void should_importiereAuswertungen_work() {
 
 			// Arrange
-			service.pathExternalFiles = "/home/heike/upload/auswertungen-testdaten/korrekt";
+			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt";
 
 			List<Pair<Integer, Integer>> jahreUndAnzahlen = new ArrayList<>();
 			jahreUndAnzahlen.add(Pair.of(JAHR_WETTBEWERB_BEENDET, Integer.valueOf(12)));
@@ -184,11 +184,11 @@ public class AuswertungImportServiceTest {
 
 			// Arrange
 			File file = new File(
-				"/home/heike/upload/auswertungen-testdaten/fehlerhaft/upload/mit-ueberschrift-fehlerhaft-fehlerreport.csv");
+				"/home/heike/git/testdaten/minikaenguru/auswertungen/fehlerhaft/upload/mit-ueberschrift-fehlerhaft-fehlerreport.csv");
 
 			FileUtils.deleteQuietly(file);
 
-			service.pathExternalFiles = "/home/heike/upload/auswertungen-testdaten/fehlerhaft";
+			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/auswertungen/fehlerhaft";
 
 			List<Pair<Integer, Integer>> jahreUndAnzahlen = new ArrayList<>();
 			jahreUndAnzahlen.add(Pair.of(JAHR_WETTBEWERB_RUNNING, Integer.valueOf(12)));
@@ -234,7 +234,7 @@ public class AuswertungImportServiceTest {
 		void should_importiereAuswertungenNotPersistAnyLoesungszettel_when_ohneUeberschrift() {
 
 			// Arrange
-			service.pathExternalFiles = "/home/heike/upload/auswertungen-testdaten/fehlerhaft";
+			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/auswertungen/fehlerhaft";
 
 			List<Pair<Integer, Integer>> jahreUndAnzahlen = new ArrayList<>();
 			jahreUndAnzahlen.add(Pair.of(JAHR_WETTBEWERB_RUNNING, Integer.valueOf(12)));
@@ -281,7 +281,7 @@ public class AuswertungImportServiceTest {
 		void should_importiereAuswertungenReturnExistingTeilnahmen_when_StatusLEER() {
 
 			// Arrange
-			service.pathExternalFiles = "/home/heike/upload/auswertungen-testdaten/fehlerhaft";
+			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/auswertungen/fehlerhaft";
 
 			Pair<Integer, Integer> jahrUndAnzahl = Pair.of(JAHR_WETTBEWERB_RUNNING, Integer.valueOf(12));
 			List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = createAnonymisierteTeilnahmen(
@@ -376,7 +376,7 @@ public class AuswertungImportServiceTest {
 		void should_importiereAuswertungenWork_when_wettbewerbBeendetUndStatusHOCHGELADEN() {
 
 			// Arrange
-			service.pathExternalFiles = "/home/heike/upload/auswertungen-testdaten/korrekt";
+			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt";
 			uploadContxtWettbewerbBeendet.setRolle(Rolle.ADMIN);
 			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
 			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
@@ -450,7 +450,7 @@ public class AuswertungImportServiceTest {
 		void should_importiereAuswertungenReturnExistingTeilnahmen_when_StatusLEER() {
 
 			// Arrange
-			service.pathExternalFiles = "/home/heike/upload/auswertungen-testdaten/fehlerhaft";
+			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/auswertungen/fehlerhaft";
 
 			Pair<Integer, Integer> jahrUndAnzahl = Pair.of(JAHR_WETTBEWERB_RUNNING, Integer.valueOf(12));
 			List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = createAnonymisierteTeilnahmen(
@@ -495,11 +495,11 @@ public class AuswertungImportServiceTest {
 
 			// Arrange
 			File file = new File(
-				"/home/heike/upload/auswertungen-testdaten/fehlerhaft/upload/mit-ueberschrift-fehlerhaft-fehlerreport.csv");
+				"/home/heike/git/testdaten/minikaenguru/auswertungen/fehlerhaft/upload/mit-ueberschrift-fehlerhaft-fehlerreport.csv");
 
 			FileUtils.deleteQuietly(file);
 
-			service.pathExternalFiles = "/home/heike/upload/auswertungen-testdaten/fehlerhaft";
+			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/auswertungen/fehlerhaft";
 
 			uploadContextWettbewerbRunning.setRolle(Rolle.ADMIN);
 
@@ -531,10 +531,14 @@ public class AuswertungImportServiceTest {
 			assertNotNull(teilnahme);
 
 			List<String> fehlermeldungen = report.getFehlerhafteZeilen();
-			assertEquals(1, fehlermeldungen.size());
+			assertEquals(2, fehlermeldungen.size());
 			assertEquals(
-				"Fehler Zeile 4! [laenge wertungscode rrfrfrrrfff (11) und klassenstufe ZWEI sind inkompatibel] (Rohdaten=Maylin,r,3,r,3.0,f,-0.75,r,3.0,f,-0.75,r,4.0,r,4.0,r,4.0,f,-1.0,f,-1.0,f,-1.25,32.5)",
+				"Fehler Zeile 4! [laenge wertungscode rrfrfrrrfff (11) und klassenstufe ZWEI sind inkompatibel] (Rohdaten=Maylin;r;3;r;3.0;f;-0.75;r;3.0;f;-0.75;r;4.0;r;4.0;r;4.0;f;-1.0;f;-1.0;f;-1.25;32.5)",
 				fehlermeldungen.get(0));
+
+			assertEquals(
+				"Fehler Zeile 9! [laenge wertungscode frfffrfrnfnrfn (14) und klassenstufe ZWEI sind inkompatibel] (Rohdaten=r;3;f;-0.75;r;3.0;f;-0.75;f;-0.75;f;-1.0;r;4.0;f;-1.0;r;4.0;n;0.0;f;-1.25;n;0.0;r;5.0;f;-1.25;n;0.0;27.25)",
+				fehlermeldungen.get(1));
 
 			verify(uploadRepository).updateUpload(persistenterUpload);
 			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
@@ -548,7 +552,7 @@ public class AuswertungImportServiceTest {
 		void should_importiereAuswertungenNotPersistAnyLoesungszettel_when_ohneUeberschrift() {
 
 			// Arrange
-			service.pathExternalFiles = "/home/heike/upload/auswertungen-testdaten/fehlerhaft";
+			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/auswertungen/fehlerhaft";
 
 			List<Pair<Integer, Integer>> jahreUndAnzahlen = new ArrayList<>();
 			jahreUndAnzahlen.add(Pair.of(JAHR_WETTBEWERB_RUNNING, Integer.valueOf(12)));
@@ -585,6 +589,43 @@ public class AuswertungImportServiceTest {
 			verify(uploadRepository).updateUpload(persistenterUpload);
 			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
 			verify(loesungszettelRepository, never()).addLoesungszettel(any());
+		}
+
+		@Test
+		void should_importiereAuswertungenWork_when_DateiMitNamenspalte() {
+
+			// Arrange
+			service.setPathExternalFiles("/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt");
+			uploadContextWettbewerbRunning.setRolle(Rolle.ADMIN);
+			persistenterUpload.setUuid("2021_auswertung_minikaenguru_klasse_1");
+			persistenterUpload.setDateiname("2021_auswertung_minikaenguru_klasse_1.xlsx");
+
+			Pair<Integer, Integer> jahrUndAnzahl = Pair.of(JAHR_WETTBEWERB_RUNNING, 13);
+			List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = createAnonymisierteTeilnahmen(
+				Collections.singletonList(jahrUndAnzahl));
+
+			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
+			when(anonymisierteTeilnahmenService.loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID))
+				.thenReturn(anonymisierteTeilnahmen);
+
+			// Act
+			ResponsePayload responsePayload = service.importiereAuswertung(uploadContextWettbewerbRunning, persistenterUpload);
+
+			// Assert
+			AuswertungImportReport report = (AuswertungImportReport) responsePayload.getData();
+			AnonymisierteTeilnahmeAPIModel teilnahme = report.getTeilnahme();
+			assertNotNull(teilnahme);
+			assertEquals(13, teilnahme.anzahlKinder());
+
+			MessagePayload messagePayload = responsePayload.getMessage();
+			assertEquals("INFO", messagePayload.getLevel());
+			assertEquals(
+				"Die Auswertung wurde erfolgreich importiert. Vielen Dank!",
+				messagePayload.getMessage());
+
+			verify(uploadRepository).updateUpload(persistenterUpload);
+			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
+
 		}
 	}
 

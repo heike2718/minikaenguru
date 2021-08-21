@@ -5,3 +5,5 @@ target/
 /dependency-reduced-pom.xml
 log/
 ObjectStore/
+/quarkus-app-with-apache-poi.7z
+/quarkus-app-ohne-apache-poi.7z

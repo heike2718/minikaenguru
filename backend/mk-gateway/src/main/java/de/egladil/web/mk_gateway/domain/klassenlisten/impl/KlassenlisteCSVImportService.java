@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderService;
@@ -87,7 +86,7 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 		result.klassenService = KlassenServiceImpl.createForIntegrationTest(em);
 		result.kinderService = KinderServiceImpl.createForIntegrationTest(em);
 		result.uploadRepository = UploadHibernateRepository.createForIntegrationTests(em);
-		result.pathExternalFiles = "/home/heike/mkv";
+		result.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/integrationtests";
 		return result;
 	}
 
@@ -106,11 +105,6 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 			updateUploadstatusQuietly(uploadMetadata, UploadStatus.LEER);
 
 			return responsePayload;
-		}
-
-		if (lines.isEmpty()) {
-
-			throw new MkGatewayRuntimeException("Dieser Teil wurde noch nicht implementiert.");
 		}
 
 		KlassenlisteUeberschrift ueberschrift = new KlassenlisteUeberschrift(lines.get(0));

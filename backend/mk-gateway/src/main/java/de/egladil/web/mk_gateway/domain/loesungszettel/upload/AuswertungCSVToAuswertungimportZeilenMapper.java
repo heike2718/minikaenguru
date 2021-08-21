@@ -27,7 +27,9 @@ public class AuswertungCSVToAuswertungimportZeilenMapper implements Function<Lis
 			return result;
 		}
 
-		result.add(new AuswertungimportZeile().withIndex(0).withRohdaten(lines.get(indexUeberschrift)));
+		AuswertungimportZeile ueberschrift = new AuswertungimportZeile().withIndex(0).withRohdaten(lines.get(indexUeberschrift));
+
+		result.add(ueberschrift);
 
 		for (int i = indexUeberschrift + 1; i < lines.size(); i++) {
 
@@ -42,7 +44,7 @@ public class AuswertungCSVToAuswertungimportZeilenMapper implements Function<Lis
 		return result;
 	}
 
-	private int findIndexUeberschrift(final List<String> lines) {
+	int findIndexUeberschrift(final List<String> lines) {
 
 		for (int index = 0; index < lines.size(); index++) {
 
