@@ -14,10 +14,10 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 @ApplicationScoped
 public class AdminEmailsConfiguration {
 
-	@ConfigProperty(name = "emails.testempfaenger", defaultValue = "hdwinkel@egladil.de,info@egladil.de")
+	@ConfigProperty(name = "emails.testempfaenger")
 	String testempfaenger;
 
-	@ConfigProperty(name = "emails.groupsiz", defaultValue = "35")
+	@ConfigProperty(name = "emails.groupsize", defaultValue = "35")
 	String groupsize;
 
 	@ConfigProperty(name = "emails.wartezeitMinSec", defaultValue = "45")

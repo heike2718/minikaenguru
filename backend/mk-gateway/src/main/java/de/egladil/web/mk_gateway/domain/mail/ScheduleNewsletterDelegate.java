@@ -12,7 +12,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.mail.api.NewsletterVersandauftrag;
@@ -40,7 +39,7 @@ public class ScheduleNewsletterDelegate {
 		return result;
 	}
 
-	@Transactional(value = TxType.REQUIRES_NEW)
+	@Transactional
 	public Versandinformation scheduleMailversand(final NewsletterVersandauftrag auftrag) {
 
 		Identifier newsletterID = new Identifier(auftrag.newsletterID());

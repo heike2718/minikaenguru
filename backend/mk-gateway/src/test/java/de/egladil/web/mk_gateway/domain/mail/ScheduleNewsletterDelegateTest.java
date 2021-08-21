@@ -191,10 +191,10 @@ public class ScheduleNewsletterDelegateTest {
 
 			Versandinformation neue = new Versandinformation()
 				.withEmpfaengertyp(Empfaengertyp.TEST)
-				.withNewsletterID(NEWSLETTER_ID);
+				.withNewsletterID(NEWSLETTER_ID).withNewsletterID(NEWSLETTER_ID).withIdentifier(VERSANDINFO_ID);
 
 			Mockito.when(versandinfoService.getVersandinformationenZuNewsletter(NEWSLETTER_ID)).thenReturn(vorhandene);
-			Mockito.when(versandinfoService.versandinformationSpeichern(any())).thenReturn(neue);
+			Mockito.when(versandinfoService.versandinformationSpeichern(info)).thenReturn(neue);
 
 			// Act
 			Versandinformation versandinformation = delegate.scheduleMailversand(auftrag);
