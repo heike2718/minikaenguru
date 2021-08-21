@@ -5,6 +5,7 @@
 package de.egladil.web.mk_gateway.domain.veranstalter.admin;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.transaction.Transactional;
 
 import org.jboss.weld.exceptions.IllegalArgumentException;
 
@@ -20,6 +21,7 @@ import de.egladil.web.mk_gateway.domain.veranstalter.ZugangUnterlagen;
 public class VeranstalterZugangsstatusService extends AbstractVeranstalterAendernService {
 
 	@Override
+	@Transactional
 	protected ResponsePayload specialAendereVeranstalter(final Veranstalter zuAendernderVeranstalter, final Object data) {
 
 		ZugangUnterlagen neuerZugangsstatus = (ZugangUnterlagen) data;
