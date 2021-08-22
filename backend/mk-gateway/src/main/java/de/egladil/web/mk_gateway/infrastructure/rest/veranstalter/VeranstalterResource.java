@@ -12,7 +12,6 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -23,9 +22,7 @@ import javax.ws.rs.core.SecurityContext;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_gateway.domain.auth.AuthResult;
 import de.egladil.web.mk_gateway.domain.auth.signup.AuthResultToResourceOwnerMapper;
-import de.egladil.web.mk_gateway.domain.auth.signup.SignUpResourceOwner;
 import de.egladil.web.mk_gateway.domain.auth.signup.SignUpService;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.veranstalter.ChangeNewsletterAboService;
@@ -68,18 +65,6 @@ public class VeranstalterResource {
 	AuthResultToResourceOwnerMapper authResultMapper;
 
 	private SecurityIncidentRegistered securityIncidentRegistered;
-
-	@POST
-	@Path("")
-	public Response createUser(final AuthResult authResult) {
-
-		SignUpResourceOwner signUpResourceOwner = authResultMapper.apply(authResult);
-
-		signUpService.createUser(signUpResourceOwner, false);
-
-		return Response.ok(ResponsePayload.messageOnly(MessagePayload.info(applicationMessages.getString("createUser.success"))))
-			.build();
-	}
 
 	@PUT
 	@Path("newsletter")
