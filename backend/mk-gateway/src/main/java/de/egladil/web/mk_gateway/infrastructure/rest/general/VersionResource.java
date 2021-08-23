@@ -40,8 +40,10 @@ public class VersionResource {
 	@GET
 	public Response getVersion() {
 
-		LOGGER.info("running version {} on stage {} and env {}", version, stage, env);
-		return Response.ok(ResponsePayload.messageOnly(MessagePayload.info(version + " - " + env))).build();
+		String message = "running version " + version + " on stage " + stage + " and env " + env;
+
+		LOGGER.info(message);
+		return Response.ok(ResponsePayload.messageOnly(MessagePayload.info(message))).build();
 
 	}
 }
