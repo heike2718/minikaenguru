@@ -23,6 +23,7 @@ import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.user.UserRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.SynchronizeVeranstalterService;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.CreateUserCommand;
+import de.egladil.web.mk_gateway.infrastructure.messaging.PropagateUserService;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
 
 /**
@@ -42,16 +43,18 @@ public class SignUpService {
 	@Inject
 	DomainEventHandler domainEventHandler;
 
+	@Inject
+	PropagateUserService propagateUserService;
+
 	private MkGatewayDomainEvent event;
 
-	public static SignUpService createForTest(final UserRepository userRepository) {
-
-		SignUpService result = new SignUpService();
-		result.userRepository = userRepository;
-		return result;
-	}
-
-	public User createUser(final CreateUserCommand command) {
+	/**
+	 * Legt einen neuen Minikänguru-Veranstalter an.
+	 *
+	 * @param  command
+	 * @return         User
+	 */
+	public User verifySyncTokenAndCreateUser(final CreateUserCommand command) {
 
 		String syncToken = command.getSyncToken();
 		this.syncVeranstalterService.verifySession(syncToken);
@@ -60,12 +63,12 @@ public class SignUpService {
 		SignUpResourceOwner signUpResourceOwner = new SignUpResourceOwner(command.getUuid(), command.getFullName(),
 			command.getEmail(), command.getNonce());
 
-		return this.createUser(signUpResourceOwner, false);
+		return this.createUserAndVeranstalter(signUpResourceOwner);
 
 	}
 
 	@Transactional
-	public User createUser(final SignUpResourceOwner signUpResourceOwner, final boolean anonym) {
+	User createUserAndVeranstalter(final SignUpResourceOwner signUpResourceOwner) {
 
 		if (signUpResourceOwner == null) {
 
@@ -106,15 +109,11 @@ public class SignUpService {
 		user.setImportierteUuid(uuid);
 		user.setRolle(rolle);
 
-		if (!anonym) {
+		userRepository.addUser(user);
+		// #322: seit ich das wegen der Transaktionslogik nicht mehr mit dem async-Event-Mechanismus behandle,
+		propagateUserService.handleDomainEvent(event);
 
-			userRepository.addUser(user);
-		}
-
-		if (domainEventHandler != null) {
-
-			domainEventHandler.handleEvent(event);
-		}
+		domainEventHandler.handleEvent(event);
 
 		return user;
 	}

@@ -36,14 +36,20 @@ import de.egladil.web.mk_gateway.infrastructure.messaging.LoescheVeranstalterCom
 import de.egladil.web.mk_gateway.infrastructure.messaging.SyncHandshake;
 
 /**
- * SyncVeranstalterDataResource
+ * SyncVeranstalterDataResource ist eine REST-API, bei Änderungen aus der Benutzerverwaltung aufgerufen wird, um diese an Clients
+ * des IdentityProviders zu übermitteln. Solche Änderungen sind
+ * <ul>
+ * <li>neues Benutzerkonto</li>
+ * <li>Änderungen der Benutzerattribute email und fullName</li>
+ * <li>Löschung eines Benutzerkontos</li>
+ * </ul>
  */
 @Path(value = "/sync")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class SyncVeranstalterDataResource {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SyncVeranstalterDataResource.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SyncVeranstalterDataResource.class);
 
 	@ConfigProperty(name = "mkv-app.client-id")
 	String clientId;
@@ -64,7 +70,7 @@ public class SyncVeranstalterDataResource {
 		if (!clientId.equals(data.sendingClientId())) {
 
 			String msg = "Aufruf POST /sync/ack mit falscher ClientID '" + data.sendingClientId() + "'";
-			LOG.warn("{}: {}", msg, data);
+			LOGGER.warn("{}: {}", msg, data);
 			new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
 			throw new AccessDeniedException(msg);
 		}
@@ -79,22 +85,22 @@ public class SyncVeranstalterDataResource {
 	@Path("veranstalter")
 	public Response createVeranstalter(final CreateUserCommand createUserCommand) {
 
-		System.out.println("nonce=" + createUserCommand.getNonce());
-
 		if (!clientId.equals(createUserCommand.getClientId())) {
 
-			LOG.debug("nicht die erwartete ClientId => uninteressant");
+			LOGGER.info("nicht die erwartete ClientId => uninteressant");
 			return Response.ok(ResponsePayload.messageOnly(MessagePayload.ok())).build();
 		}
 
+		LOGGER.info("nonce=" + createUserCommand.getNonce());
+
 		try {
 
-			this.signUpService.createUser(createUserCommand);
+			this.signUpService.verifySyncTokenAndCreateUser(createUserCommand);
 
 			return Response.ok(ResponsePayload.messageOnly(MessagePayload.ok())).build();
 		} catch (PersistenceException e) {
 
-			LOG.error("Veranstalter mit UUID {} wurde nicht angelegt: {}", createUserCommand.getUuid(), e.getMessage(), e);
+			LOGGER.error("Veranstalter mit UUID {} wurde nicht angelegt: {}", createUserCommand.getUuid(), e.getMessage(), e);
 
 			if (domainEventHandler != null) {
 
@@ -116,7 +122,7 @@ public class SyncVeranstalterDataResource {
 			return Response.ok(ResponsePayload.messageOnly(MessagePayload.ok())).build();
 		} catch (PersistenceException e) {
 
-			LOG.error("Veranstalter mit UUID {} wurde nicht geändert: {}", data.uuid(), e.getMessage(), e);
+			LOGGER.error("Veranstalter mit UUID {} wurde nicht geändert: {}", data.uuid(), e.getMessage(), e);
 
 			if (domainEventHandler != null) {
 
@@ -138,7 +144,7 @@ public class SyncVeranstalterDataResource {
 			return Response.ok(ResponsePayload.messageOnly(MessagePayload.ok())).build();
 		} catch (PersistenceException e) {
 
-			LOG.error("Veranstalter mit UUID {} wurde nicht gelöscht: {}", data.uuid(), e.getMessage(), e);
+			LOGGER.error("Veranstalter mit UUID {} wurde nicht gelöscht: {}", data.uuid(), e.getMessage(), e);
 
 			if (domainEventHandler != null) {
 
