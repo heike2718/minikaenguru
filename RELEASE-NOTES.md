@@ -1,5 +1,11 @@
 # minikaenguru Release Notes
 
+__Release 1.5.2__:
+
+* [Weiterleitung Benutzeränderungen an Minikänguru-App funktioniert nicht mehr](https://github.com/heike2718/minikaenguru/issues/322)
+* [Registrierung auf Prod wieder aktivieren](https://github.com/heike2718/minikaenguru/issues/326)
+* [Registrierung auf Prod wieder aktivieren](https://github.com/heike2718/minikaenguru/issues/326)
+
 __Release 1.5.1__:
 
 * Wechsel zu quarkus-2.1.2-Final
