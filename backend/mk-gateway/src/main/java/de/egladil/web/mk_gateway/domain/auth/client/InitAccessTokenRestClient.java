@@ -25,6 +25,6 @@ import de.egladil.web.commons_validation.payload.OAuthClientCredentials;
 public interface InitAccessTokenRestClient {
 
 	@POST
-	@Path("client/accesstoken")
+	@Path("client/accesstoken/responsepayload")
 	Response authenticateClient(OAuthClientCredentials clientSecrets);
 }

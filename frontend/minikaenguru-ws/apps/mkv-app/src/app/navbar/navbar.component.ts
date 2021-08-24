@@ -18,7 +18,7 @@ export class NavbarComponent implements OnInit {
 	collapsed = true;
 	logo: string;
 
-	activateRegistration = !environment.production;
+	activateRegistration = true;
 	// activateRegistration = false;
 
 	isLoggedIn$ = this.authService.isLoggedIn$;

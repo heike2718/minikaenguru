@@ -4,10 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.veranstalter;
 
-import java.text.MessageFormat;
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -27,11 +24,8 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.statistik.AnonymisierteTeilnahmenService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.AktuelleTeilnahmeService;
-import de.egladil.web.mk_gateway.domain.teilnahmen.Privatteilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.AnonymisierteTeilnahmeAPIModel;
-import de.egladil.web.mk_gateway.domain.teilnahmen.api.PrivatteilnahmeAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.SchulanmeldungRequestPayload;
-import de.egladil.web.mk_gateway.domain.teilnahmen.api.SchulteilnahmeAPIModel;
 
 /**
  * AnonymisierteTeilnahmenResource
@@ -41,8 +35,6 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.api.SchulteilnahmeAPIModel;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class TeilnahmenResource {
-
-	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
 	@Context
 	SecurityContext securityContext;
@@ -74,14 +66,10 @@ public class TeilnahmenResource {
 
 		final String principalName = securityContext.getUserPrincipal().getName();
 
-		Privatteilnahme teilnahme = this.aktuelleTeilnahmeService.privatpersonAnmelden(principalName);
-
-		// hier könnte noch über Messging ein Ereignis propagiert werden, um en update eines Anmeldungszählers zu triggern
+		ResponsePayload responsePayload = this.aktuelleTeilnahmeService.privatpersonAnmelden(principalName);
 
 		return Response
-			.ok(new ResponsePayload(
-				MessagePayload.info(applicationMessages.getString("teilnahmenResource.anmelden.privat.success")),
-				PrivatteilnahmeAPIModel.createFromPrivatteilnahme(teilnahme)))
+			.ok(responsePayload)
 			.build();
 	}
 
@@ -92,17 +80,10 @@ public class TeilnahmenResource {
 
 		final String principalName = securityContext.getUserPrincipal().getName();
 
-		SchulteilnahmeAPIModel data = aktuelleTeilnahmeService.schuleAnmelden(payload, principalName);
-
-		String message = MessageFormat.format(applicationMessages.getString("teilnahmenResource.anmelden.schule.success"),
-			new Object[] { data.nameUrkunde() });
-
-		// hier könnte noch über Messging ein Ereignis propagiert werden, um den update eines Anmeldungszählers zu triggern
+		ResponsePayload responsePayload = aktuelleTeilnahmeService.schuleAnmelden(payload, principalName);
 
 		return Response
-			.ok(new ResponsePayload(
-				MessagePayload.info(message),
-				data))
+			.ok(responsePayload)
 			.build();
 	}
 

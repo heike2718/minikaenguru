@@ -47,7 +47,6 @@ public class ClientAccessTokenService implements IClientAccessTokenService {
 	 * @return String das accessToken oder null!
 	 */
 	@Override
-	@Deprecated
 	public String orderAccessToken(final String clientId, final String clientSecret) {
 
 		String nonce = UUID.randomUUID().toString();

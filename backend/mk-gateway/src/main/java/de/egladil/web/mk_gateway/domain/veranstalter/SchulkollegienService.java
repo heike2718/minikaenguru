@@ -44,7 +44,7 @@ public class SchulkollegienService {
 	}
 
 	@Transactional
-	void handleLehrerChanged(@Observes final LehrerChanged event) {
+	public void handleLehrerChanged(@Observes final LehrerChanged event) {
 
 		List<Identifier> alteSchulen = StringUtils.isBlank(event.alteSchulkuerzel()) ? new ArrayList<>()
 			: Arrays.stream(event.alteSchulkuerzel().split(",")).map(k -> new Identifier(k))

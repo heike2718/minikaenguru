@@ -248,7 +248,8 @@ public class WettbewerbService {
 	 *
 	 * @return                       Wettbewerb
 	 * @throws IllegalStateException
-	 *                               wenn es keinen gibt oder der den falschen Status hat.
+	 *                               wenn es keinen gibt oder der den falschen Status hat. Die Fehlermeldung kann in den Response
+	 *                               eingebaut werden.
 	 */
 	public Wettbewerb aktuellerWettbewerbImAnmeldemodus() throws IllegalStateException {
 
