@@ -98,6 +98,8 @@ public class LehrerService {
 
 		lehrerChangedEventPayload = new LehrerChanged(person, "", neueSchulkuerzel, data.newsletterEmpfaenger());
 
+		schulkollegienService.handleLehrerChanged(lehrerChangedEventPayload);
+
 		if (domainEventHandler != null) {
 
 			domainEventHandler.handleEvent(lehrerChangedEventPayload);
@@ -175,6 +177,7 @@ public class LehrerService {
 	 * @param schuleID
 	 *                 Identifier
 	 */
+	@Transactional
 	public ResponsePayload addSchule(final Identifier lehrerID, final Identifier schuleID) {
 
 		Optional<Veranstalter> optLehrer = veranstalterRepository.ofId(lehrerID);
@@ -219,6 +222,8 @@ public class LehrerService {
 		Person person = lehrer.person();
 		lehrerChangedEventPayload = new LehrerChanged(person, alteSchulkuerzel, neueSchulkuerzel,
 			lehrer.isNewsletterEmpfaenger());
+
+		schulkollegienService.handleLehrerChanged(lehrerChangedEventPayload);
 
 		if (domainEventHandler != null) {
 
@@ -292,6 +297,8 @@ public class LehrerService {
 		Person person = lehrer.person();
 		lehrerChangedEventPayload = new LehrerChanged(person, alteSchulkuerzel, neueSchulkuerzel,
 			lehrer.isNewsletterEmpfaenger());
+
+		schulkollegienService.handleLehrerChanged(lehrerChangedEventPayload);
 
 		if (domainEventHandler != null) {
 

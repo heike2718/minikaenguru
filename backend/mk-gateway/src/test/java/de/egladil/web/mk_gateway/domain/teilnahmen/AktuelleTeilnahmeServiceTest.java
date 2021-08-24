@@ -21,14 +21,16 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.PrivatteilnahmeAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.SchulanmeldungRequestPayload;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.SchulteilnahmeAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.events.PrivatteilnahmeCreated;
 import de.egladil.web.mk_gateway.domain.teilnahmen.events.SchulteilnahmeCreated;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 
 /**
@@ -310,9 +312,11 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 		void should_SchuleAnmelden_call_WettbewerbImAnmeldemodus() {
 
 			// Arrange
+			String expectedMessage = "keine Anmeldung möglich hähähä";
+
 			WettbewerbService mockService = Mockito.mock(WettbewerbService.class);
 			Mockito.when(mockService.aktuellerWettbewerbImAnmeldemodus())
-				.thenThrow(new IllegalStateException("keine Anmeldung möglich"));
+				.thenThrow(new IllegalStateException(expectedMessage));
 
 			String uuid = "TZUTUFFZUF";
 			String schulkuerzel = "UTGFR56FR";
@@ -321,19 +325,18 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			service = AktuelleTeilnahmeService.createForTest(getTeilnahmenRepository(), mockService, getVeranstalterRepository());
 
 			// Act
-			try {
+			ResponsePayload responsePayload = service.schuleAnmelden(payload, uuid);
 
-				service.schuleAnmelden(payload, uuid);
-				fail("keine IllegalStateException");
+			// Assert
 
-			} catch (IllegalStateException e) {
+			MessagePayload messagePayload = responsePayload.getMessage();
 
-				assertEquals("keine Anmeldung möglich", e.getMessage());
-				assertNull(service.schulteilnahmeCreated());
-				assertNull(service.privatteilnahmeCreatedEvent());
-				assertNull(service.getSecurityIncidentRegistered());
-				assertNull(service.getDataInconsistencyRegistered());
-			}
+			assertEquals(expectedMessage, messagePayload.getMessage());
+			assertEquals("WARN", messagePayload.getLevel());
+			assertNull(service.schulteilnahmeCreated());
+			assertNull(service.privatteilnahmeCreatedEvent());
+			assertNull(service.getSecurityIncidentRegistered());
+			assertNull(service.getDataInconsistencyRegistered());
 
 		}
 
@@ -444,7 +447,7 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			SchulanmeldungRequestPayload payload = SchulanmeldungRequestPayload.create(schulkuerzel, "Antonschule");
 
 			// Act
-			SchulteilnahmeAPIModel actual = service.schuleAnmelden(payload, uuid);
+			SchulteilnahmeAPIModel actual = (SchulteilnahmeAPIModel) service.schuleAnmelden(payload, uuid).getData();
 
 			// Assert
 			assertEquals("Christaschule", actual.nameUrkunde());
@@ -464,7 +467,7 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			SchulanmeldungRequestPayload payload = SchulanmeldungRequestPayload.create(schulkuerzel, "Antonschule");
 
 			// Act
-			SchulteilnahmeAPIModel actual = service.schuleAnmelden(payload, uuid);
+			SchulteilnahmeAPIModel actual = (SchulteilnahmeAPIModel) service.schuleAnmelden(payload, uuid).getData();
 
 			// Assert
 			assertEquals("Antonschule", actual.nameUrkunde());
@@ -593,25 +596,24 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 		void should_PrivatpersonAnmelden_call_WettbewerbImAnmeldemodus() {
 
 			// Arrange
+			String expectedMessage = "keine Anmeldung möglich hähähä";
+
 			WettbewerbService mockService = Mockito.mock(WettbewerbService.class);
 			Mockito.when(mockService.aktuellerWettbewerbImAnmeldemodus())
-				.thenThrow(new IllegalStateException("keine Anmeldung möglich"));
+				.thenThrow(new IllegalStateException(expectedMessage));
 
 			service = AktuelleTeilnahmeService.createForTest(getTeilnahmenRepository(), mockService, getVeranstalterRepository());
 
 			// Act
-			try {
+			ResponsePayload responsePayload = service.privatpersonAnmelden(UUID_PRIVAT_NICHT_ANGEMELDET);
 
-				service.privatpersonAnmelden(UUID_PRIVAT_NICHT_ANGEMELDET);
-				fail("keine IllegalStateException");
-
-			} catch (IllegalStateException e) {
-
-				assertEquals("keine Anmeldung möglich", e.getMessage());
-				assertNull(service.privatteilnahmeCreatedEvent());
-				assertNull(service.getSecurityIncidentRegistered());
-				assertNull(service.getDataInconsistencyRegistered());
-			}
+			// Assert
+			MessagePayload messagePayload = responsePayload.getMessage();
+			assertEquals(expectedMessage, messagePayload.getMessage());
+			assertEquals("WARN", messagePayload.getLevel());
+			assertNull(service.privatteilnahmeCreatedEvent());
+			assertNull(service.getSecurityIncidentRegistered());
+			assertNull(service.getDataInconsistencyRegistered());
 
 		}
 
@@ -619,13 +621,14 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 		void should_PrivatpersonAnmeldenCreateNew_when_NichtVorhanden() {
 
 			// Act
-			Teilnahme teilnahme = service.privatpersonAnmelden(UUID_PRIVAT_NICHT_ANGEMELDET);
+			PrivatteilnahmeAPIModel teilnahme = (PrivatteilnahmeAPIModel) service.privatpersonAnmelden(UUID_PRIVAT_NICHT_ANGEMELDET)
+				.getData();
 
 			// Assert
 			assertEquals(1, getTeilnahmenRepository().getTeilnahmeAdded());
-			assertEquals(Teilnahmeart.PRIVAT, teilnahme.teilnahmeart());
-			assertEquals(new Identifier(TEILNAHMENUMMER_PRIVAT_NICHT_ANGEMELDET), teilnahme.teilnahmenummer());
-			assertEquals(new WettbewerbID(WETTBEWERBSJAHR_AKTUELL), teilnahme.wettbewerbID());
+			assertEquals(Teilnahmeart.PRIVAT, teilnahme.identifier().teilnahmeart());
+			assertEquals(TEILNAHMENUMMER_PRIVAT_NICHT_ANGEMELDET, teilnahme.identifier().teilnahmenummer());
+			assertEquals(WETTBEWERBSJAHR_AKTUELL.intValue(), teilnahme.identifier().jahr());
 
 			PrivatteilnahmeCreated event = service.privatteilnahmeCreatedEvent();
 
@@ -643,13 +646,13 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 		void should_PrivatpersonAnmeldenDoNothing_when_vorhanden() {
 
 			// Act
-			Teilnahme teilnahme = service.privatpersonAnmelden(UUID_PRIVAT);
+			PrivatteilnahmeAPIModel teilnahme = (PrivatteilnahmeAPIModel) service.privatpersonAnmelden(UUID_PRIVAT).getData();
 
 			// Assert
 			assertEquals(0, getTeilnahmenRepository().getTeilnahmeAdded());
-			assertEquals(Teilnahmeart.PRIVAT, teilnahme.teilnahmeart());
-			assertEquals(new Identifier(TEILNAHMENUMMER_PRIVAT), teilnahme.teilnahmenummer());
-			assertEquals(new WettbewerbID(WETTBEWERBSJAHR_AKTUELL), teilnahme.wettbewerbID());
+			assertEquals(Teilnahmeart.PRIVAT, teilnahme.identifier().teilnahmeart());
+			assertEquals(TEILNAHMENUMMER_PRIVAT, teilnahme.identifier().teilnahmenummer());
+			assertEquals(WETTBEWERBSJAHR_AKTUELL.toString(), teilnahme.identifier().wettbewerbID());
 
 			assertNull(service.privatteilnahmeCreatedEvent());
 			assertNull(service.getSecurityIncidentRegistered());

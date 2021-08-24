@@ -35,19 +35,10 @@ export class AppComponent {
 			if (authResult.state) {
 				if (authResult.state === 'login') {
 					this.authService.createSession(authResult);
-
 				}
 				if (authResult.state === 'signup') {
-					this.registrationService.createVeranstalter(authResult).pipe(
-						map(body => body as ResponsePayload)
-					).subscribe(
-						payload => {
-							this.messageService.info(payload.message.message);
-						},
-						(_error => {
-							// TODO this.handleError(error, '[AuthService] createUser')
-							this.messageService.error('Beim Anlegen eines Benutzerkontos ist etwas schiefgegangen')
-						}));
+					window.location.hash = '';
+					this.messageService.info('Ihr Benutzerkonto wurde angelegt und muss noch aktiviert werden. Bitte schauen Sie in Ihrem Postfach nach.')					
 				}
 			} else {
 				window.location.hash = '';
