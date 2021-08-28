@@ -35,6 +35,8 @@
 							[(ngModel)]="spracheEnglisch" (change)="onCheckboxChanged()" /></div>
 				</div>
 
+				<small *ngIf="subUrl.length > 0">{{uploadModel.subUrl}}</small>
+
 				<div class="row">
 					<div class="col-12" *ngIf="subUrl.length > 0">
 						<mk-upload [uploadModel]="uploadModel" (dateiAusgewaehlt)="onDateiAusgewaehlt($event)"

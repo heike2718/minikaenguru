@@ -16,9 +16,6 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 
 	devMode = environment.envName === 'DEV';
 
-	// klassen$: Observable<Klasse[]> = this.klassenFacade.klassen$;
-	// anzahlKlassen$: Observable<number> = this.klassenFacade.anzahlKlassen$;
-
 	schule: Schule;
 
 	tooltipBtnSchuluebersicht: string;
@@ -76,6 +73,10 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 
 	gotoMeineSchulen(): void {
 		this.router.navigateByUrl('/lehrer/schulen');
+	}
+
+	gotoUploadKklassenlisten(): void {
+		this.router.navigateByUrl('/klassen/uploads/' + this.schule.kuerzel)
 	}
 
 	gotoSchulauswertung(): void {

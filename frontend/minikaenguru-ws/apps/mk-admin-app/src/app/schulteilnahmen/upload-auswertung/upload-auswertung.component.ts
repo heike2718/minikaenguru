@@ -1,10 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SchulteilnahmenFacade } from '../schulteilnahmen.facade';
 import { Router } from '@angular/router';
-import { environment } from '../../../environments/environment';
 import { Subscription, combineLatest } from 'rxjs';
 import { UploadComponentModel } from '@minikaenguru-ws/common-components';
-import { SchuleUploadModel } from '../schulteilnahmen.model';
 import { ResponsePayload } from '@minikaenguru-ws/common-messages';
 
 
@@ -26,8 +24,6 @@ export class UploadAuswertungComponent implements OnInit, OnDestroy {
 	spracheEnglisch: boolean;
 
 	subUrl = '';
-
-
 
 	private schuleUploadModelSubscription: Subscription;
 
@@ -57,6 +53,13 @@ export class UploadAuswertungComponent implements OnInit, OnDestroy {
 
 	}
 
+	ngOnDestroy(): void {
+
+		if (this.schuleUploadModelSubscription) {
+			this.schuleUploadModelSubscription.unsubscribe();
+		}
+	}
+
 	onCheckboxChanged(_event$): void {
 
 		if (this.spracheEnglisch) {
@@ -76,13 +79,6 @@ export class UploadAuswertungComponent implements OnInit, OnDestroy {
 
 		if (rp) {
 			this.schulteilnahmenFacade.auswertungImportiert(rp);
-		}
-	}
-
-	ngOnDestroy(): void {
-
-		if (this.schuleUploadModelSubscription) {
-			this.schuleUploadModelSubscription.unsubscribe();
 		}
 	}
 

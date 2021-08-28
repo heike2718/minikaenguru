@@ -58,13 +58,15 @@ public class UploadResource {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	Response uploadKlassenliste(@PathParam(value = "kuerzelLand") @LandKuerzel final String kuerzelLand, @PathParam(
 		value = "schulkuerzel") @Kuerzel final String schulkuerzel, @QueryParam(
-			value = "nachnameAlsZusatz") final boolean nachnameAlsZusatz, @QueryParam(
+			value = "nachnameAlsZusatz") final String nachnameAlsZusatzString, @QueryParam(
 				value = "sprache") @NotBlank final String sprache, final MultipartFormDataInput input) {
 
 		String veranstalterUuid = securityContext.getUserPrincipal().getName();
 		UploadType uploadType = UploadType.KLASSENLISTE;
 
 		Sprache theSprache = Sprache.valueOf(sprache);
+
+		boolean nachnameAlsZusatz = Boolean.valueOf(nachnameAlsZusatzString);
 
 		Pair<Rolle, Wettbewerb> rolleUndWettbewerb = uploadManager.authorizeUpload(veranstalterUuid, schulkuerzel, uploadType,
 			null);
