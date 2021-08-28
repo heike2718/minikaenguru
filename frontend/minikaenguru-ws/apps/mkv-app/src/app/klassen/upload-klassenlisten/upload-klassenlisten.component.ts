@@ -7,6 +7,8 @@ import { Schule } from '../../lehrer/schulen/schulen.model';
 import { KlassenFacade } from '../klassen.facade';
 import { ResponsePayload } from '@minikaenguru-ws/common-messages';
 import { UploadComponentModel } from '@minikaenguru-ws/common-components';
+import { WettbewerbFacade } from '../../wettbewerb/wettbewerb.facade';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'mkv-upload-klassenlisten',
@@ -31,43 +33,47 @@ export class UploadKlassenlistenComponent implements OnInit, OnDestroy {
 
   textNachname = 'Die Nachnamen werden in das Feld Nachname importiert und erscheinen auf der Urkunde.';
 
-  private schuleSubscription: Subscription;
+  private schuleUndWettbewerbSubscription: Subscription;
 
 
   constructor(private router: Router,
+     private wettbewerbFacade: WettbewerbFacade,
      public klassenFacade: KlassenFacade,
      private lehrerFacade: LehrerFacade) { }
 
   ngOnInit(): void {
- 
-    this.schuleSubscription = this.lehrerFacade.selectedSchule$.subscribe(
-			s => {
-				if (s) {
-					this.schule = s;
 
-          this.subUrl = '/uploads/klassenlisten/' + '/' + s.kuerzelLand + '/' + s.kuerzel;
-					this.uploadModel = {
-						subUrl: this.subUrl + '?nachnameAlsZusatz=false&sprache=de'
-						, titel: ''
-						// , accept: '.*'
-						, accept: '.csv, .ods, .xls, .xlsx'
-						, maxSizeBytes: 2097152
-						// , maxSizeBytes: 61440
-						, errorMessageSize: 'Die Datei ist zu groß. Die maximale erlaubte Größe ist 2 MB'
-						, acceptMessage: 'Erlaubte Dateitypen: csv, Excel, OpenOffice, LibreOffice'
-					};
+    this.schuleUndWettbewerbSubscription = combineLatest([this.wettbewerbFacade.aktuellerWettbewerb$, this.lehrerFacade.selectedSchule$]).subscribe(
+      result => {
 
-				} else {
-					this.router.navigateByUrl('/lehrer/schulen');
-				}
-			}
-		);
+        const w = result[0];
+        const s: Schule = result[1];
+
+        if (w && s) {
+          const jahr = w.jahr;
+          this.schule = s;
+          this.subUrl = '/uploads/klassenlisten/' + jahr + '/' + s.kuerzelLand + '/' + s.kuerzel;
+          this.uploadModel = {
+            subUrl: this.subUrl + '?nachnameAlsZusatz=false&sprache=de'
+            , titel: ''
+            // , accept: '.*'
+            , accept: '.csv, .ods, .xls, .xlsx'
+            , maxSizeBytes: 2097152
+            // , maxSizeBytes: 61440
+            , errorMessageSize: 'Die Datei ist zu groß. Die maximale erlaubte Größe ist 2 MB'
+            , acceptMessage: 'Erlaubte Dateitypen: csv, Excel, OpenOffice, LibreOffice'
+          };
+        } else {
+          this.router.navigateByUrl('/lehrer/schulen');
+        }        
+      }
+    );
   }
 
   ngOnDestroy(): void {
 
-    if (this.schuleSubscription) {
-      this.schuleSubscription.unsubscribe();
+    if (this.schuleUndWettbewerbSubscription) {
+      this.schuleUndWettbewerbSubscription.unsubscribe();
     }
   }
 
@@ -88,13 +94,13 @@ export class UploadKlassenlistenComponent implements OnInit, OnDestroy {
 
   onDateiAusgewaehlt(event$): void {
 
-		//this.schulteilnahmenFacade.dateiAusgewaelt();
+		this.klassenFacade.dateiAusgewaelt();
 	}
 
 	onResponse(rp: ResponsePayload | any): void {
 
 		if (rp) {
-			// this.schulteilnahmenFacade.auswertungImportiert(rp);
+			this.klassenFacade.klassenlisteImportiert(rp);
 		}
 	}
 

@@ -35,13 +35,14 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadRequestPayload;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 
 /**
  * UploadResource
  */
 @RequestScoped
 @Path("uploads")
-@Produces(MediaType.APPLICATION_JSON)
 public class UploadResource {
 
 	@Context
@@ -53,13 +54,18 @@ public class UploadResource {
 	@Inject
 	KlassenlisteImportService klassenlisteImportService;
 
+	@Inject
+	WettbewerbService wettbewerbService;
+
 	@POST
-	@Path("klassenlisten/{kuerzelLand}/{schulkuerzel}")
+	@Path("klassenlisten/{jahr}/{kuerzelLand}/{schulkuerzel}")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	Response uploadKlassenliste(@PathParam(value = "kuerzelLand") @LandKuerzel final String kuerzelLand, @PathParam(
-		value = "schulkuerzel") @Kuerzel final String schulkuerzel, @QueryParam(
-			value = "nachnameAlsZusatz") final String nachnameAlsZusatzString, @QueryParam(
-				value = "sprache") @NotBlank final String sprache, final MultipartFormDataInput input) {
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response uploadKlassenliste(@PathParam(value = "jahr") final Integer jahr, @PathParam(
+		value = "kuerzelLand") @LandKuerzel final String kuerzelLand, @PathParam(
+			value = "schulkuerzel") @Kuerzel final String schulkuerzel, @QueryParam(
+				value = "nachnameAlsZusatz") final String nachnameAlsZusatzString, @QueryParam(
+					value = "sprache") @NotBlank final String sprache, final MultipartFormDataInput input) {
 
 		String veranstalterUuid = securityContext.getUserPrincipal().getName();
 		UploadType uploadType = UploadType.KLASSENLISTE;
@@ -69,7 +75,7 @@ public class UploadResource {
 		boolean nachnameAlsZusatz = Boolean.valueOf(nachnameAlsZusatzString);
 
 		Pair<Rolle, Wettbewerb> rolleUndWettbewerb = uploadManager.authorizeUpload(veranstalterUuid, schulkuerzel, uploadType,
-			null);
+			new WettbewerbID(jahr));
 
 		UploadData uploadData = MultipartUtils.getUploadData(input);
 

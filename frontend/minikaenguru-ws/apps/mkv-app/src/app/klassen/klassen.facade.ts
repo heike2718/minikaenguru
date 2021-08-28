@@ -9,8 +9,8 @@ import { Observable } from 'rxjs';
 import { Klasse, KlasseEditorModel, KlasseRequestData } from '@minikaenguru-ws/common-components';
 import { KlassenService } from './klassen.service';
 import { Router } from '@angular/router';
-import { KlasseWithID } from './klassen.model';
-import { MessageService } from '@minikaenguru-ws/common-messages';
+import { KlassenlisteImportReport, KlasseWithID } from './klassen.model';
+import { MessageService, ResponsePayload } from '@minikaenguru-ws/common-messages';
 import * as KinderActions from '../kinder/+state/kinder.actions';
 import * as KinderSelectors from '../kinder/+state/kinder.selectors';
 import * as LehrerActions from '../lehrer/+state/lehrer.actions';
@@ -172,6 +172,25 @@ export class KlassenFacade {
 		);
 	}
 
+	public dateiAusgewaelt(): void {
+
+		this.messageService.clear();
+
+		this.store.dispatch(KlassenActions.dateiAusgewaehlt());
+
+	}
+
+	public klassenlisteImportiert(responsePayload: ResponsePayload): void {
+
+		if (responsePayload.data) {
+
+			const report: KlassenlisteImportReport = responsePayload.data;
+			this.store.dispatch(KlassenActions.klassenlisteImportiert({ report: report }));
+		}
+
+		this.messageService.showMessage(responsePayload.message);
+
+	};
 
 	public resetState(): void {
 		this.kinderFacade.resetState();

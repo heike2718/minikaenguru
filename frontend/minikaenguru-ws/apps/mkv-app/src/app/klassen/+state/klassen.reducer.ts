@@ -13,6 +13,7 @@ export interface KlassenState {
 	loading: boolean;
 	editorModel: KlasseEditorModel;
 	selectedKlasse: Klasse;
+	fehlermeldungenUploadReport: string[];
 };
 
 const initialKlassenState: KlassenState = {
@@ -20,7 +21,8 @@ const initialKlassenState: KlassenState = {
 	klassenLoaded: false,
 	loading: false,
 	editorModel: undefined,
-	selectedKlasse: undefined
+	selectedKlasse: undefined,
+	fehlermeldungenUploadReport: []
 };
 
 const klassenReducer = createReducer(initialKlassenState,
@@ -172,6 +174,14 @@ const klassenReducer = createReducer(initialKlassenState,
 
 		const neueMap = new KlassenMap(ersterMerge).merge(targetKlasseToMerge);
 		return { ...state, klassenMap: neueMap };
+	}), 
+
+	on(KlassenActions.dateiAusgewaehlt, (state, _action) => {
+		return {...state, fehlermeldungenUploadReport: []};
+	}),
+
+	on(KlassenActions.klassenlisteImportiert, (state, action) => {
+		return state;
 	})
 
 );

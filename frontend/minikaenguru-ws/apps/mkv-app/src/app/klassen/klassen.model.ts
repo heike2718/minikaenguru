@@ -11,6 +11,16 @@ export interface KlasseWithID {
 	readonly klasse: Klasse
 };
 
+export interface KlassenlisteImportReport {
+	readonly anzahlKlassen: number;
+	readonly anzahlKinderImportiert: number;
+	readonly anzahlNichtImportiert: number;
+	readonly anzahlKlassenstufeUnklar: number;
+	readonly anzahlDubletten: number;
+	readonly nichtImportierteZeilen: string[];
+	readonly klassen: Klasse[];
+};
+
 
 // verpackt häufig erforderliche Operationen auf einem KlasseWithID[] etwas handhabbarer.
 export class KlassenMap {

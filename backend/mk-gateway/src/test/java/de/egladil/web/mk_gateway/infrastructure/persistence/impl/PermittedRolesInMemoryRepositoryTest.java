@@ -468,7 +468,7 @@ public class PermittedRolesInMemoryRepositoryTest {
 			{
 
 				// Act
-				List<Rolle> rollen = repository.permittedRollen("/uploads/klassenliste/DE-HE/en", HttpMethod.POST);
+				List<Rolle> rollen = repository.permittedRollen("/uploads/klassenliste/2021/DE-HE/5RTG67F", HttpMethod.POST);
 
 				// Assert
 				assertEquals(1, rollen.size());
