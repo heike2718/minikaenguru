@@ -5,7 +5,6 @@ import { EffectsModule } from '@ngrx/effects';
 
 import { registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
-import localeExtraDe from '@angular/common/locales/extra/de';
 
 
 import { AppComponent } from './app.component';
@@ -14,8 +13,7 @@ import { StoreModule } from '@ngrx/store';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { reducers, metaReducers } from './reducers';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { RouterStateSerializer, StoreRouterConnectingModule, RouterState, routerReducer } from "@ngrx/router-store";
+import { StoreRouterConnectingModule, RouterState } from "@ngrx/router-store";
 import { environment } from '../environments/environment';
 
 import { CommonMessagesModule } from '@minikaenguru-ws/common-messages';
@@ -48,7 +46,7 @@ registerLocaleData(localeDe);
 		CommonMessagesModule,
 		CommonComponentsModule.forRoot({
 			baseUrl: environment.apiUrl
-		}) ,
+		}),
 		CommonLoggingModule.forRoot({
 			consoleLogActive: environment.consoleLogActive,
 			serverLogActive: environment.serverLogActive,
@@ -77,7 +75,6 @@ registerLocaleData(localeDe);
 			routerState: RouterState.Minimal
 		}),
 		StoreDevModules,
-		// StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
 		AppRoutingModule, // <-- immer am Ende, damit die wildcard-route als letzte deklariert bleibt
 	],
 	providers: [
@@ -88,7 +85,4 @@ registerLocaleData(localeDe);
 	],
 	bootstrap: [AppComponent]
 })
-export class AppModule {
-
-
- }
+export class AppModule { }

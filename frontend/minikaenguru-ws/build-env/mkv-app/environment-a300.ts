@@ -9,7 +9,7 @@ export const environment = {
   apiUrl: 'http://a300/mk-gateway',
   profileUrl: 'http://a300/profil-app',
   storageKeyPrefix: 'mkv_',
-  version: '1.4.7',
+  version: '1.5.2',
   consoleLogActive: true,
   serverLogActive: false,
   loglevel: 1

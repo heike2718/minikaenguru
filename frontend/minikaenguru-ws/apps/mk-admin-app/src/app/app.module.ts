@@ -5,15 +5,13 @@ import { EffectsModule } from '@ngrx/effects';
 
 import { registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
-import localeExtraDe from '@angular/common/locales/extra/de';
 
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { RouterStateSerializer, StoreRouterConnectingModule, RouterState, routerReducer } from "@ngrx/router-store";
+import { StoreRouterConnectingModule, RouterState } from "@ngrx/router-store";
 import { environment } from '../environments/environment';
 
 import { CommonMessagesModule } from '@minikaenguru-ws/common-messages';
@@ -24,7 +22,7 @@ import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { LandingComponent } from './landing/landing.component';
 import { NavbarComponent } from './navbar/navbar.component';
-import { CustomRouterStateSerializer } from './shared/utils';
+// import { CustomRouterStateSerializer } from './shared/utils';
 import { GlobalErrorHandlerService } from './infrastructure/global-error-handler.service';
 import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
 import { WettbewerbeModule } from './wettbewerbe/wettbewerbe.module';
@@ -40,6 +38,7 @@ import { EventlogModule } from './eventlog/eventlog.module';
 import { SessionTimeoutComponent } from './session-timeout/session-timeout.component';
 import { NewsletterModule } from './newsletter/newsletter.module';
 import { VersandinfoProgressComponent } from './versandinfo-progress/versandinfo-progress.component';
+import { StoreDevModules } from './store-config/store-devtools';
 
 registerLocaleData(localeDe);
 
@@ -89,7 +88,7 @@ registerLocaleData(localeDe);
 			stateKey: 'router',
 			routerState: RouterState.Minimal
 		}),
-		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+		StoreDevModules,
 		AktuelleMeldungModule,
 		WettbewerbeModule,
 		KatalogpflegeModule,
@@ -103,7 +102,7 @@ registerLocaleData(localeDe);
 	providers: [
 		GlobalErrorHandlerService,
 		{ provide: ErrorHandler, useClass: GlobalErrorHandlerService },
-		{ provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },
+		// { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },
 		{ provide: LOCALE_ID, useValue: "de-DE" },
 	],
 	bootstrap: [AppComponent]

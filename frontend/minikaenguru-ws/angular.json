@@ -35,6 +35,10 @@
                 {
                   "replace": "apps/mkv-app/src/environments/environment.ts",
                   "with": "apps/mkv-app/src/environments/environment.prod.ts"
+                },
+                {
+                  "replace": "apps/mkv-app/src/app/store-config/store-devtools.ts",
+                  "with": "apps/mkv-app/src/app/store-config/store-devtools.prod.ts"
                 }
               ],
               "optimization": true,
@@ -62,6 +66,10 @@
                 {
                   "replace": "apps/mkv-app/src/environments/environment.ts",
                   "with": "build-env/mkv-app/environment-a300.ts"
+                },
+                {
+                  "replace": "apps/mkv-app/src/app/store-config/store-devtools.ts",
+                  "with": "build-env/store-devtools.a300.ts"
                 }
               ],
               "optimization": true,
@@ -408,6 +416,10 @@
                 {
                   "replace": "apps/mk-admin-app/src/environments/environment.ts",
                   "with": "apps/mk-admin-app/src/environments/environment.prod.ts"
+                },
+                {
+                  "replace": "apps/mk-admin-app/src/app/store-config/store-devtools.ts",
+                  "with": "apps/mk-admin-app/src/app/store-config/store-devtools.prod.ts"
                 }
               ],
               "optimization": true,
@@ -435,6 +447,10 @@
                 {
                   "replace": "apps/mk-admin-app/src/environments/environment.ts",
                   "with": "build-env/mk-admin-app/environment-a300.ts"
+                },
+                {
+                  "replace": "apps/mk-admin-app/src/app/store-config/store-devtools.ts",
+                  "with": "build-env/store-devtools.a300.ts"
                 }
               ],
               "optimization": true,
@@ -591,7 +607,7 @@
                 },
                 {
                   "replace": "apps/mkod-app/src/app/store-config/store-devtools.ts",
-                  "with": "build-env/mkod-app/store-devtools.a300.ts"
+                  "with": "build-env/store-devtools.a300.ts"
                 }
               ],
               "optimization": true,
