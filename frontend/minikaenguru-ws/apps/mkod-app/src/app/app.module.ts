@@ -28,6 +28,7 @@ import { LandingComponent } from './landing/landing.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { GlobalErrorHandlerService } from './infrastructure/global-error-handler.service';
 import { AnmeldungenModule } from './anmeldungen/anmeldungen.module';
+import { StoreDevModules } from './store-config/store-devtools';
 
 registerLocaleData(localeDe);
 
@@ -75,7 +76,8 @@ registerLocaleData(localeDe);
 			stateKey: 'router',
 			routerState: RouterState.Minimal
 		}),
-		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+		StoreDevModules,
+		// StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
 		AppRoutingModule, // <-- immer am Ende, damit die wildcard-route als letzte deklariert bleibt
 	],
 	providers: [

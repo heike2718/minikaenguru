@@ -22,6 +22,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.auswertungen.StatistikTestUtils;
@@ -29,8 +31,10 @@ import de.egladil.web.mk_gateway.domain.kataloge.SchulkatalogService;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.statistik.api.AnmeldungenAPIModel;
+import de.egladil.web.mk_gateway.domain.statistik.api.AnmeldungsitemAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
 
 /**
  * StatistikWettbewerbServiceTest
@@ -344,6 +348,79 @@ public class StatistikWettbewerbServiceTest extends AbstractDomainServiceTest {
 			// Assert
 			assertNotNull(result);
 
+			assertEquals("2020", result.getWettbewerbsjahr());
+
+		}
+
+	}
+
+	@Nested
+	class TeilnahmenTests {
+
+		@Test
+		void should_teilnahmenReturnJson_when_ok() {
+
+			// Arrange
+			String expectedJahr = Integer.valueOf(2020).toString();
+
+			// Act
+			ResponsePayload result = statistikService.berechneTeilnahmestatistikWettbewerbsjahr(WETTBEWERBSJAHR_AKTUELL);
+
+			// Assert
+			assertNotNull(result);
+			assertTrue(result.isOk());
+			assertNotNull(result.getData());
+
+			AnmeldungenAPIModel data = (AnmeldungenAPIModel) result.getData();
+
+			assertEquals(expectedJahr, data.getWettbewerbsjahr());
+			List<AnmeldungsitemAPIModel> laender = data.getLaender();
+			assertEquals(0, laender.size());
+			assertEquals(WettbewerbStatus.ANMELDUNG, data.getStatusWettbewerb());
+
+		}
+
+		@Test
+		void should_teilnahmenReturnEmptyREsult_when_wettbewerbErfasst() {
+
+			// Arrange
+			String expectedJahr = Integer.valueOf(2017).toString();
+
+			// Act
+			ResponsePayload result = statistikService.berechneTeilnahmestatistikWettbewerbsjahr(WETTBEWERBSJAHR_ERFASST);
+
+			// Assert
+			assertNotNull(result);
+
+			MessagePayload messagePayload = result.getMessage();
+
+			assertEquals("WARN", messagePayload.getLevel());
+			assertEquals("Der Wettbewerb ist noch nicht zur Anmeldung freigegeben.", messagePayload.getMessage());
+			assertNotNull(result.getData());
+
+			AnmeldungenAPIModel data = (AnmeldungenAPIModel) result.getData();
+
+			assertEquals(expectedJahr, data.getWettbewerbsjahr());
+			List<AnmeldungsitemAPIModel> laender = data.getLaender();
+			assertEquals(0, laender.size());
+			assertEquals(WettbewerbStatus.ERFASST, data.getStatusWettbewerb());
+
+		}
+
+		@Test
+		void should_teilnahmenReturnResponseOnlyResult_when_wettbewerbNichtVorhanden() {
+
+			// Act
+			ResponsePayload result = statistikService.berechneTeilnahmestatistikWettbewerbsjahr(2032);
+
+			// Assert
+			assertNotNull(result);
+
+			MessagePayload messagePayload = result.getMessage();
+
+			assertEquals("ERROR", messagePayload.getLevel());
+			assertEquals("keine Daten vorhanden", messagePayload.getMessage());
+			assertNull(result.getData());
 		}
 
 	}

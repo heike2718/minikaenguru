@@ -14,7 +14,10 @@ import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
+import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.apimodel.StringsAPIModel;
 import de.egladil.web.mk_gateway.domain.kataloge.SchulkatalogService;
@@ -34,6 +37,8 @@ import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.TeilnahmenHibernateRepository;
 
 /**
  * StatistikWettbewerbService
@@ -51,7 +56,7 @@ public class StatistikWettbewerbService {
 	SchulkatalogService schulkatalogService;
 
 	@Inject
-	TeilnahmenRepository teilnahmeRepository;
+	TeilnahmenRepository teilnahmenRepository;
 
 	public static StatistikWettbewerbService createForTest(final LoesungszettelRepository loesungszettelRepository, final WettbewerbService wettbewerbService, final SchulkatalogService schulkatalogService, final TeilnahmenRepository teilnahmeRepository) {
 
@@ -59,7 +64,16 @@ public class StatistikWettbewerbService {
 		result.loesungszettelRepository = loesungszettelRepository;
 		result.wettbewerbService = wettbewerbService;
 		result.schulkatalogService = schulkatalogService;
-		result.teilnahmeRepository = teilnahmeRepository;
+		result.teilnahmenRepository = teilnahmeRepository;
+		return result;
+	}
+
+	public static StatistikWettbewerbService createForIntegrationTest(final EntityManager entityManager) {
+
+		StatistikWettbewerbService result = new StatistikWettbewerbService();
+		result.loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(entityManager);
+		result.wettbewerbService = WettbewerbService.createForIntegrationTest(entityManager);
+		result.teilnahmenRepository = TeilnahmenHibernateRepository.createForIntegrationTest(entityManager);
 		return result;
 	}
 
@@ -113,18 +127,119 @@ public class StatistikWettbewerbService {
 			return this.createEmptyResponsePayload();
 
 		case ANMELDUNG:
-			teilnahmen = teilnahmeRepository.loadAllForWettbewerb(aktueller.id());
+			teilnahmen = teilnahmenRepository.loadAllForWettbewerb(aktueller.id());
 			break;
 
 		case DOWNLOAD_LEHRER:
 		case DOWNLOAD_PRIVAT:
-			teilnahmen = teilnahmeRepository.loadAllForWettbewerb(aktueller.id());
+			teilnahmen = teilnahmenRepository.loadAllForWettbewerb(aktueller.id());
 			loesungszettel = loesungszettelRepository.loadAllForWettbewerb(aktueller.id());
 			break;
 
 		default:
 			break;
 		}
+
+		AnmeldungenAPIModel result = computeTeilnahmestatistik(aktueller, teilnahmen, loesungszettel);
+
+		return result;
+	}
+
+	/**
+	 * @param  wettbewerbsjahr
+	 * @return                 AnmeldungenAPIModel
+	 */
+	public ResponsePayload berechneTeilnahmestatistikWettbewerbsjahr(final Integer wettbewerbsjahr) {
+
+		WettbewerbID wettbewerbId = new WettbewerbID(wettbewerbsjahr);
+		Optional<Wettbewerb> optWettbewerb = wettbewerbService.findWettbewerbMitID(wettbewerbId);
+
+		if (optWettbewerb.isEmpty()) {
+
+			return ResponsePayload.messageOnly(MessagePayload.error("keine Daten vorhanden"));
+
+		}
+
+		Wettbewerb wettbewerb = optWettbewerb.get();
+
+		List<Teilnahme> teilnahmen = new ArrayList<>();
+		List<Loesungszettel> loesungszettel = new ArrayList<>();
+
+		switch (wettbewerb.status()) {
+
+		case ERFASST:
+
+			AnmeldungenAPIModel data = createEmptyResponsePayload().withStatusWettbewerb(wettbewerb.status())
+				.withWettbewerbsjahr(wettbewerb.id().toString());
+
+			return new ResponsePayload(MessagePayload.warn("Der Wettbewerb ist noch nicht zur Anmeldung freigegeben."), data);
+
+		default:
+			teilnahmen = teilnahmenRepository.loadAllForWettbewerb(wettbewerbId);
+			loesungszettel = loesungszettelRepository.loadAllForWettbewerb(wettbewerbId);
+			break;
+		}
+
+		AnmeldungenAPIModel result = computeTeilnahmestatistik(wettbewerb, teilnahmen, loesungszettel);
+
+		return new ResponsePayload(MessagePayload.ok(), result);
+	}
+
+	AnmeldungenAPIModel createEmptyResponsePayload() {
+
+		return new AnmeldungenAPIModel()
+			.withPrivatanmeldungen(new AnmeldungsitemAPIModel().withName("Privatanmeldungen"))
+			.withSchulanmeldungen(new AnmeldungsitemAPIModel().withName("Schulanmeldungen"));
+
+	}
+
+	/**
+	 * Erstellt die Statistik für alle vorhandenen Lösungszettel
+	 *
+	 * @param  wettbewerbID
+	 * @param  klassenstufe
+	 * @return              Optional
+	 */
+	public Optional<GesamtpunktverteilungKlassenstufe> erstelleStatistikWettbewerbKlassenstufe(final WettbewerbID wettbewerbID, final Klassenstufe klassenstufe) {
+
+		List<Loesungszettel> zettelKlassenstufe = loesungszettelRepository.loadAllForWettbewerbAndKlassenstufe(wettbewerbID,
+			klassenstufe);
+
+		if (zettelKlassenstufe.isEmpty()) {
+
+			return Optional.empty();
+		}
+
+		GesamtpunktverteilungKlassenstufe verteilung = new StatistikKlassenstufeService()
+			.generiereGesamtpunktverteilung(wettbewerbID, klassenstufe, zettelKlassenstufe);
+
+		return Optional.of(verteilung);
+
+	}
+
+	public DownloadData erstelleStatistikPDFWettbewerb(final WettbewerbID wettbewerbID) {
+
+		Map<Klassenstufe, GesamtpunktverteilungKlassenstufe> gesamtpunktverteilungenNachKlassenstufe = new HashMap<>();
+
+		for (Klassenstufe klassenstufe : Klassenstufe.valuesSorted()) {
+
+			Optional<GesamtpunktverteilungKlassenstufe> opt = erstelleStatistikWettbewerbKlassenstufe(
+				wettbewerbID,
+				klassenstufe);
+
+			if (opt.isPresent()) {
+
+				gesamtpunktverteilungenNachKlassenstufe.put(klassenstufe, opt.get());
+			}
+		}
+
+		byte[] pdf = new StatistikPDFGenerator().generiereGesamtpunktverteilungWettbewerb(wettbewerbID,
+			gesamtpunktverteilungenNachKlassenstufe);
+
+		return new DownloadData("minikaenguru_" + wettbewerbID.toString() + "_gesamptunktverteilung.pdf", pdf);
+	}
+
+	AnmeldungenAPIModel computeTeilnahmestatistik(final Wettbewerb wettbewerb, final List<Teilnahme> teilnahmen, final List<Loesungszettel> loesungszettel) {
 
 		List<String> schulkuerzel = teilnahmen.stream().filter(t -> Teilnahmeart.SCHULE == t.teilnahmeart())
 			.map(t -> t.teilnahmenummer().identifier()).collect(Collectors.toList());
@@ -185,67 +300,12 @@ public class StatistikWettbewerbService {
 		Collections.sort(laenderanmeldungen, new AnmeldungsitemAPIModelComparator());
 
 		AnmeldungenAPIModel result = new AnmeldungenAPIModel()
-			.withWettbewerbsjahr(aktueller.id().toString())
-			.withStatusWettbewerb(aktueller.status())
+			.withWettbewerbsjahr(wettbewerb.id().toString())
+			.withStatusWettbewerb(wettbewerb.status())
 			.withSchulanmeldungen(summeSchulanmeldungen)
 			.withPrivatanmeldungen(privatanmeldungen)
 			.withLaendern(laenderanmeldungen);
-
 		return result;
-	}
-
-	AnmeldungenAPIModel createEmptyResponsePayload() {
-
-		return new AnmeldungenAPIModel()
-			.withPrivatanmeldungen(new AnmeldungsitemAPIModel().withName("Privatanmeldungen"))
-			.withSchulanmeldungen(new AnmeldungsitemAPIModel().withName("Schulanmeldungen"));
-
-	}
-
-	/**
-	 * Erstellt die Statistik für alle vorhandenen Lösungszettel
-	 *
-	 * @param  wettbewerbID
-	 * @param  klassenstufe
-	 * @return              Optional
-	 */
-	public Optional<GesamtpunktverteilungKlassenstufe> erstelleStatistikWettbewerbKlassenstufe(final WettbewerbID wettbewerbID, final Klassenstufe klassenstufe) {
-
-		List<Loesungszettel> zettelKlassenstufe = loesungszettelRepository.loadAllForWettbewerbAndKlassenstufe(wettbewerbID,
-			klassenstufe);
-
-		if (zettelKlassenstufe.isEmpty()) {
-
-			return Optional.empty();
-		}
-
-		GesamtpunktverteilungKlassenstufe verteilung = new StatistikKlassenstufeService()
-			.generiereGesamtpunktverteilung(wettbewerbID, klassenstufe, zettelKlassenstufe);
-
-		return Optional.of(verteilung);
-
-	}
-
-	public DownloadData erstelleStatistikPDFWettbewerb(final WettbewerbID wettbewerbID) {
-
-		Map<Klassenstufe, GesamtpunktverteilungKlassenstufe> gesamtpunktverteilungenNachKlassenstufe = new HashMap<>();
-
-		for (Klassenstufe klassenstufe : Klassenstufe.valuesSorted()) {
-
-			Optional<GesamtpunktverteilungKlassenstufe> opt = erstelleStatistikWettbewerbKlassenstufe(
-				wettbewerbID,
-				klassenstufe);
-
-			if (opt.isPresent()) {
-
-				gesamtpunktverteilungenNachKlassenstufe.put(klassenstufe, opt.get());
-			}
-		}
-
-		byte[] pdf = new StatistikPDFGenerator().generiereGesamtpunktverteilungWettbewerb(wettbewerbID,
-			gesamtpunktverteilungenNachKlassenstufe);
-
-		return new DownloadData("minikaenguru_" + wettbewerbID.toString() + "_gesamptunktverteilung.pdf", pdf);
 	}
 
 }

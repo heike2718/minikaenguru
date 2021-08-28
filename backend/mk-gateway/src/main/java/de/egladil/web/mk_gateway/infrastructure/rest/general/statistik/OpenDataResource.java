@@ -174,6 +174,16 @@ public class OpenDataResource {
 	}
 
 	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("statistik/teilnahmen")
+	public Response getAnmeldungenUndBeteiligungenNachWettbewerbsjahr(@QueryParam(value = "jahr") final Integer jahr) {
+
+		ResponsePayload responsePayload = statistikWettbewerbService.berechneTeilnahmestatistikWettbewerbsjahr(jahr);
+
+		return Response.ok(responsePayload).build();
+	}
+
+	@GET
 	@Path("statistik/prozentrang")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getProzentrang(@QueryParam(value = "jahr") final String jahr, @QueryParam(
