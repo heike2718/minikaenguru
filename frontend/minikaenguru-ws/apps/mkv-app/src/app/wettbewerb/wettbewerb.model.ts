@@ -1,6 +1,4 @@
-import { Kind, Klasse, TeilnahmeIdentifierAktuellerWettbewerb } from '@minikaenguru-ws/common-components';
-
-export type WettbewerbStatus = 'ERFASST' | 'ANMELDUNG' | 'DOWNLOAD_PRIVAT' | 'DOWNLOAD_LEHRER' | 'BEENDET';
+import { TeilnahmeIdentifierAktuellerWettbewerb, WettbewerbStatus } from '@minikaenguru-ws/common-components';
 
 export interface Wettbewerb {
 	readonly jahr: number;

@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
 import { AnmeldungenService } from './anmeldungen.service';
 import { AppState } from '../reducers';
+import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { anmeldungenState, anmeldungenLoading } from './+state/anmeldungen.selectors';
+import { anmeldungenState } from './+state/anmeldungen.selectors';
 import * as AnmeldungenActions from './+state/anmeldungen.actions';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
 
@@ -12,8 +12,6 @@ import { GlobalErrorHandlerService } from '../infrastructure/global-error-handle
 export class AnmeldungenFacade {
 
 	public anmeldungenState$ = this.store.select(anmeldungenState);
-
-	public loading$ = this.store.select(anmeldungenLoading);
 
 	private alreadyLoaded = false;
 

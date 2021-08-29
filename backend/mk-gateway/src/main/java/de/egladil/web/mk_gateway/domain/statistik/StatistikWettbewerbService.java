@@ -149,7 +149,7 @@ public class StatistikWettbewerbService {
 	 * @param  wettbewerbsjahr
 	 * @return                 AnmeldungenAPIModel
 	 */
-	public ResponsePayload berechneTeilnahmestatistikWettbewerbsjahr(final Integer wettbewerbsjahr) {
+	public ResponsePayload getBeteiligungen(final Integer wettbewerbsjahr) {
 
 		WettbewerbID wettbewerbId = new WettbewerbID(wettbewerbsjahr);
 		Optional<Wettbewerb> optWettbewerb = wettbewerbService.findWettbewerbMitID(wettbewerbId);

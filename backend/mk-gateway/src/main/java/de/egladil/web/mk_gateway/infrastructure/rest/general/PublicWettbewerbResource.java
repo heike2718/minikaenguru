@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.general;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.context.RequestScoped;
@@ -21,12 +22,13 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbAPIModel;
+import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbListAPIModel;
 
 /**
  * PublicWettbewerbResource
  */
 @RequestScoped
-@Path("wettbewerb")
+@Path("wettbewerbe")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class PublicWettbewerbResource {
@@ -64,4 +66,13 @@ public class PublicWettbewerbResource {
 
 	}
 
+	@GET
+	public Response loadWettbewerbe() {
+
+		List<WettbewerbListAPIModel> wettbewerbe = this.wettewerbService.alleWettbewerbeHolen();
+
+		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), wettbewerbe);
+
+		return Response.ok(responsePayload).build();
+	}
 }

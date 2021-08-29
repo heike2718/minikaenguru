@@ -364,7 +364,7 @@ public class StatistikWettbewerbServiceTest extends AbstractDomainServiceTest {
 			String expectedJahr = Integer.valueOf(2020).toString();
 
 			// Act
-			ResponsePayload result = statistikService.berechneTeilnahmestatistikWettbewerbsjahr(WETTBEWERBSJAHR_AKTUELL);
+			ResponsePayload result = statistikService.getBeteiligungen(WETTBEWERBSJAHR_AKTUELL);
 
 			// Assert
 			assertNotNull(result);
@@ -387,7 +387,7 @@ public class StatistikWettbewerbServiceTest extends AbstractDomainServiceTest {
 			String expectedJahr = Integer.valueOf(2017).toString();
 
 			// Act
-			ResponsePayload result = statistikService.berechneTeilnahmestatistikWettbewerbsjahr(WETTBEWERBSJAHR_ERFASST);
+			ResponsePayload result = statistikService.getBeteiligungen(WETTBEWERBSJAHR_ERFASST);
 
 			// Assert
 			assertNotNull(result);
@@ -411,7 +411,7 @@ public class StatistikWettbewerbServiceTest extends AbstractDomainServiceTest {
 		void should_teilnahmenReturnResponseOnlyResult_when_wettbewerbNichtVorhanden() {
 
 			// Act
-			ResponsePayload result = statistikService.berechneTeilnahmestatistikWettbewerbsjahr(2032);
+			ResponsePayload result = statistikService.getBeteiligungen(2032);
 
 			// Assert
 			assertNotNull(result);

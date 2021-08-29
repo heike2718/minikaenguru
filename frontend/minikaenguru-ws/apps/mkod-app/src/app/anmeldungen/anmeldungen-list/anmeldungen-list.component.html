@@ -1,7 +1,7 @@
 <div class="mkv-container mt-5">
 	<div *ngIf="anmeldungenFacade.anmeldungenState$ | async as anmeldungen">
 		<ng-container *ngIf="!anmeldungen.loading else loading">
-			<h3>Anmeldungen zum Wettbewerb {{anmeldungen.wettbewerbsjahr? anmeldungen.wettbewerbsjahr : ''}}</h3>
+			<h3>Anmeldungen zum Wettbewerb {{anmeldungen.wettbewerbsjahr? anmeldungen.wettbewerbsjahr : ': der Anmeldezeitraum hat noch nicht begonnen'}}</h3>
 			<div *ngIf="anmeldungen.statusWettbewerb === 'ERFASST'">
 				<p>Der Anmeldungszeitraum hat noch nicht begonnen. Es liegen noch keine Daten vor</p>
 			</div>

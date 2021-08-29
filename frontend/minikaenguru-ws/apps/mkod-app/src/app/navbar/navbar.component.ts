@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../environments/environment';
+import { WettbewerbeFacade } from '../wettbewerbe/wettbewerbe.facade';
 
 @Component({
 	selector: 'mkod-navbar',
@@ -14,7 +15,7 @@ export class NavbarComponent implements OnInit {
 
 	@ViewChild(NgbCollapse, { static: true }) navbarToggler: NgbCollapse;
 
-	constructor() { }
+	constructor(private wettbewerbeFacade: WettbewerbeFacade) { }
 
 	collapseNav() {
 		if (this.navbarToggler) {
@@ -24,5 +25,6 @@ export class NavbarComponent implements OnInit {
 
 	ngOnInit() {
 		this.logo = environment.assetsUrl + '/mja-logo.png';
+		this.wettbewerbeFacade.loadWettbewerbe();
 	}
 }

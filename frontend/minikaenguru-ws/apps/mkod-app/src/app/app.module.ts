@@ -27,6 +27,8 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { GlobalErrorHandlerService } from './infrastructure/global-error-handler.service';
 import { AnmeldungenModule } from './anmeldungen/anmeldungen.module';
 import { StoreDevModules } from './store-config/store-devtools';
+import { TeilnahmenModule } from './teilnahmen/teilnahmen.module';
+import { WettbewerbeModule } from './wettbewerbe/wettbewerbe.module';
 
 registerLocaleData(localeDe);
 
@@ -36,7 +38,7 @@ registerLocaleData(localeDe);
 		AppComponent,
 		NotFoundComponent,
 		LandingComponent,
-		NavbarComponent
+		NavbarComponent,
 	],
 	imports: [
 		BrowserModule,
@@ -69,6 +71,8 @@ registerLocaleData(localeDe);
 			}			
 		}),
 		AnmeldungenModule,
+		TeilnahmenModule,
+		WettbewerbeModule,
 		EffectsModule.forRoot([]),
 		StoreRouterConnectingModule.forRoot({
 			stateKey: 'router',
