@@ -11,7 +11,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
-import { StoreRouterConnectingModule, RouterState } from "@ngrx/router-store";
+import { StoreRouterConnectingModule, RouterState, RouterStateSerializer } from "@ngrx/router-store";
 import { environment } from '../environments/environment';
 
 import { CommonMessagesModule } from '@minikaenguru-ws/common-messages';
@@ -22,7 +22,7 @@ import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { LandingComponent } from './landing/landing.component';
 import { NavbarComponent } from './navbar/navbar.component';
-// import { CustomRouterStateSerializer } from './shared/utils';
+import { CustomRouterStateSerializer } from './shared/utils';
 import { GlobalErrorHandlerService } from './infrastructure/global-error-handler.service';
 import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
 import { WettbewerbeModule } from './wettbewerbe/wettbewerbe.module';
@@ -102,7 +102,7 @@ registerLocaleData(localeDe);
 	providers: [
 		GlobalErrorHandlerService,
 		{ provide: ErrorHandler, useClass: GlobalErrorHandlerService },
-		// { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },
+		{ provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },
 		{ provide: LOCALE_ID, useValue: "de-DE" },
 	],
 	bootstrap: [AppComponent]

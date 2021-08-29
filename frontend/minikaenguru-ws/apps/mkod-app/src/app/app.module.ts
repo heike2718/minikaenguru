@@ -6,15 +6,15 @@ import { EffectsModule } from '@ngrx/effects';
 import { registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
 
-
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { StoreModule } from '@ngrx/store';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { reducers, metaReducers } from './reducers';
-import { StoreRouterConnectingModule, RouterState } from "@ngrx/router-store";
+import { StoreRouterConnectingModule, RouterState, RouterStateSerializer } from "@ngrx/router-store";
 import { environment } from '../environments/environment';
+import { CustomRouterStateSerializer } from './shared/utils';
 
 import { CommonMessagesModule } from '@minikaenguru-ws/common-messages';
 import { CommonAuthModule } from '@minikaenguru-ws/common-auth';
@@ -66,7 +66,7 @@ registerLocaleData(localeDe);
 				strictActionSerializability: true,
 				strictStateSerializability: true,
 				strictActionWithinNgZone: true
-			}
+			}			
 		}),
 		AnmeldungenModule,
 		EffectsModule.forRoot([]),
@@ -80,7 +80,7 @@ registerLocaleData(localeDe);
 	providers: [
 		GlobalErrorHandlerService,
 		{ provide: ErrorHandler, useClass: GlobalErrorHandlerService },
-		// { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },
+		{ provide: RouterStateSerializer, useClass: CustomRouterStateSerializer},
 		{ provide: LOCALE_ID, useValue: "de-DE" },
 	],
 	bootstrap: [AppComponent]
