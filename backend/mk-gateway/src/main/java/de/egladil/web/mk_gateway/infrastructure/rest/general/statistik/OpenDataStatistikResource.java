@@ -4,6 +4,9 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.general.statistik;
 
+import static de.egladil.web.mk_gateway.infrastructure.rest.HttpStatus.HTTP_OK;
+import static de.egladil.web.mk_gateway.infrastructure.rest.HttpStatus.HTTP_SERVER_ERROR;
+
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Map;
@@ -22,6 +25,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +55,7 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 @RequestScoped
 @Path("open-data/statistik")
 @Consumes(MediaType.APPLICATION_JSON)
+@Tag(name = "statistik")
 public class OpenDataStatistikResource {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OpenDataStatistikResource.class);
@@ -173,6 +183,31 @@ public class OpenDataStatistikResource {
 		return Response.ok(new ResponsePayload(MessagePayload.ok(), anmeldungen)).build();
 	}
 
+	@APIResponses({
+		@APIResponse(
+			description = "Liste der Anmeldungen und Beteiligungen nach Ländern zu einem Wettbewerbsjahr",
+			responseCode = HTTP_OK,
+			content = {
+				@Content(
+					mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(
+						implementation = AnmeldungenAPIModel.class,
+						type = SchemaType.OBJECT,
+						description = "Liste der Anmeldungen und Teilnahmen nach Ländern"))
+			}),
+		@APIResponse(
+			description = "Fehler beim Laden der Teilnahmestatistik",
+			name = "Error",
+			responseCode = HTTP_SERVER_ERROR,
+			content = {
+				@Content(
+					mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(
+						implementation = ResponsePayload.class,
+						type = SchemaType.OBJECT))
+			})
+
+	})
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("teilnahmen")

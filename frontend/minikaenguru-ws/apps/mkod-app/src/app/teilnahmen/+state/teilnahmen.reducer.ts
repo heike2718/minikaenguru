@@ -25,10 +25,15 @@ const teilnahmenReducer = createReducer(initalTeilnahmenState,
 		return { ...state, loading: true }
 	}),
 
+    on(TeilnahmenActions.teilnahmenSelected, (state, action) => {
+
+        return {...state, loading: false, selectedAnmeldungen: action.anmeldungen};
+    }),
+
     on(TeilnahmenActions.teilnahmenLoaded, (state, action) => {
 
-        const neueMap = new AnmeldungenMap(state.anmeldungenMap).merge(action.anmeldungen);
-		return { ...state, loading: false, anmeldungenMap: neueMap, selectedAnmeldungen: undefined, selectedItem: undefined};
+        const neueMap = new AnmeldungenMap([...state.anmeldungenMap]).merge(action.anmeldungen);
+		return { ...state, loading: false, anmeldungenMap: neueMap, selectedAnmeldungen: action.anmeldungen, selectedItem: undefined};
     }),
 
     on(TeilnahmenActions.finishedWithError, (state, action) => {

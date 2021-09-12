@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Anmeldungsitem } from '../../shared/beteiligungen.model';
 
 @Component({
   selector: 'mkod-teilnahmen-card',
@@ -7,9 +8,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TeilnahmenCardComponent implements OnInit {
 
+
+  @Input()
+	anmeldungsitem: Anmeldungsitem;
+
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  isOverview(): boolean {
+
+    return this.anmeldungsitem.name === 'Privatanmeldungen' || this.anmeldungsitem.name === 'Schulanmeldungen';
   }
 
 }

@@ -19,7 +19,6 @@ export class TeilnahmenJahrResolver implements Resolve<any> {
     resolve(route: ActivatedRouteSnapshot,
 		_state: RouterStateSnapshot): Observable<any> {
 
-            const id = route.params.id;
             let jahr: number;
 
             try {
@@ -30,9 +29,9 @@ export class TeilnahmenJahrResolver implements Resolve<any> {
 
             return this.store.pipe(
 				select(selectedWettbewerb),
-				tap(w => {
+				tap(_w => {
 					if (jahr !== null) {
-						this.store.dispatch(loadTeilnhahmen({jahr: jahr}))
+						this.teilnahmenFacade.loadTeilnahmen(jahr);
 					}
 				}),
 				filter(wettbewerb => wettbewerb && wettbewerb.jahr === jahr),

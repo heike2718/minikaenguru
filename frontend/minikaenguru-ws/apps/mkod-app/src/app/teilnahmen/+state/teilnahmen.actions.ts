@@ -14,7 +14,12 @@ export const loadTeilnhahmen = createAction(
 );
 
 export const teilnahmenLoaded = createAction(
-	'[TeilnahmenEffects] after Teilnahmen loaded',
+	'[TeilnahmenFacade] loadTeilnahmen success',
+	props<{anmeldungen: Anmeldungen}>()
+);
+
+export const teilnahmenSelected = createAction(
+	'[TeilnahmenFacade] loadTeilnahmen - done',
 	props<{anmeldungen: Anmeldungen}>()
 );
 

@@ -7,6 +7,6 @@
 + Umwandlung ODT in CSV noch nicht eingebaut
 + uploadcomponent in the lib
 + Import Auswertung als Lehrer ohne Wettbewerbsjahr
-- mk-admin-app: upload auswertung fuer schule
-- errorhandling in upload componente (zum Test vulnerable verwenden)
++ mk-admin-app: upload auswertung fuer schule
++ errorhandling in upload componente (zum Test vulnerable verwenden)
 - upgrade to angular 12

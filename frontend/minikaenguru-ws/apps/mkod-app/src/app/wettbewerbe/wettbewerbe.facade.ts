@@ -6,6 +6,8 @@ import * as WettbewerbeActions from './+state/wettbewerbe.actions';
 import * as WettbewerbeSelectors from './+state/wettbewerbe.selectors';
 import { WettbewerbeService } from './wettbewerbe.service';
 import { Wettbewerb } from './wettbewerb.model';
+import { Observable } from 'rxjs';
+import { Anmeldungen } from '../shared/beteiligungen.model';
 
 @Injectable({
 	providedIn: 'root'

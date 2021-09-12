@@ -7,3 +7,4 @@ export const teilnahmenState = createFeatureSelector<fromTeilnahmen.TeilnahmenSt
 
 export const anmeldungenMap = createSelector(teilnahmenState, s => s.anmeldungenMap);
 export const anmeldungen = createSelector(anmeldungenMap, m => new AnmeldungenMap(m).toArray());
+export const selectedAnmeldung = createSelector(teilnahmenState, s => s.selectedAnmeldungen);

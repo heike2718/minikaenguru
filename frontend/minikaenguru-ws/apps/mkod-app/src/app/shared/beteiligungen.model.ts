@@ -1,3 +1,5 @@
+import { anmeldungenState } from "../anmeldungen/+state/anmeldungen.selectors";
+
 export type WettbewerbStatus = 'ERFASST' | 'ANMELDUNG' | 'DOWNLOAD_PRIVAT' | 'DOWNLOAD_LEHRER' | 'BEENDET';
 
 export interface Anmeldungsitem {
@@ -61,13 +63,20 @@ export class AnmeldungenMap {
 	public merge(anmeldungen: Anmeldungen): AnmeldungenWithID[] {
 
 		const result: AnmeldungenWithID[] = [];
+		if (!this.has(anmeldungen.wettbewerbsjahr)) {
+			result.push({wettbewerbsjahr: anmeldungen.wettbewerbsjahr, anmeldunegn: anmeldungen});
+		}
+
 		for (const item of this.items) {
+
 			if (item.wettbewerbsjahr !== anmeldungen.wettbewerbsjahr) {
 				result.push(item);
 			} else {
-				result.push({ wettbewerbsjahr: anmeldungen.wettbewerbsjahr, anmeldunegn: anmeldungen });
+				result.push({wettbewerbsjahr: anmeldungen.wettbewerbsjahr, anmeldunegn: anmeldungen});
 			}
+
 		}
+
 		return result;
 	}
 }

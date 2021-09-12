@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MessageService } from '@minikaenguru-ws/common-messages';
 import { TeilnahmenFacade } from '../../teilnahmen/teilnahmen.facade';
 import { Wettbewerb } from '../wettbewerb.model';
 import { WettbewerbeFacade } from '../wettbewerbe.facade';
@@ -20,7 +21,8 @@ export class WettbewerbeCardComponent implements OnInit {
 
   constructor(private router: Router,
     private wettbewerbeFacace: WettbewerbeFacade,
-    private teilnahmenFacade: TeilnahmenFacade) { }
+    private teilnahmenFacade: TeilnahmenFacade,
+    private messageService: MessageService) { }
 
   ngOnInit(): void {
 
@@ -46,7 +48,9 @@ export class WettbewerbeCardComponent implements OnInit {
   }
 
   gotoAufgaben(): void {
+    this.messageService.info('An dieser Funktion wird noch gearbeitet');
     this.wettbewerbeFacace.selectWettbewerb(this.wettbewerb);
+    window.scroll(0,0);
   }
 
 }
