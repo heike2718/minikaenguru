@@ -5,15 +5,13 @@ import { EffectsModule } from '@ngrx/effects';
 
 import { registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
-import localeExtraDe from '@angular/common/locales/extra/de';
 
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { RouterStateSerializer, StoreRouterConnectingModule, RouterState, routerReducer } from "@ngrx/router-store";
+import { StoreRouterConnectingModule, RouterState, RouterStateSerializer } from "@ngrx/router-store";
 import { environment } from '../environments/environment';
 
 import { CommonMessagesModule } from '@minikaenguru-ws/common-messages';
@@ -40,6 +38,7 @@ import { EventlogModule } from './eventlog/eventlog.module';
 import { SessionTimeoutComponent } from './session-timeout/session-timeout.component';
 import { NewsletterModule } from './newsletter/newsletter.module';
 import { VersandinfoProgressComponent } from './versandinfo-progress/versandinfo-progress.component';
+import { StoreDevModules } from './store-config/store-devtools';
 
 registerLocaleData(localeDe);
 
@@ -89,7 +88,7 @@ registerLocaleData(localeDe);
 			stateKey: 'router',
 			routerState: RouterState.Minimal
 		}),
-		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+		StoreDevModules,
 		AktuelleMeldungModule,
 		WettbewerbeModule,
 		KatalogpflegeModule,

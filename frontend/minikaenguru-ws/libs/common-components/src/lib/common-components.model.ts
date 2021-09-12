@@ -4,6 +4,7 @@ export type Sprachtyp = 'de' | 'en';
 export type Duplikatkontext = 'KIND' | 'KLASSE';
 export type ZulaessigeEingabe = 'A' | 'B' | 'C' | 'D' | 'E' | 'N';
 export type ConcurrentModificationType = 'DETETED' | 'INSERTED' | 'UPDATED';
+export type WettbewerbStatus = 'ERFASST' | 'ANMELDUNG' | 'DOWNLOAD_PRIVAT' | 'DOWNLOAD_LEHRER' | 'BEENDET';
 
 export interface TeilnahmeIdentifier {
 	readonly jahr: number;

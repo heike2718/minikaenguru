@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Anmeldungen } from '../anmeldungen.model';
+import { Anmeldungen } from '../../shared/beteiligungen.model';
 
 
 
@@ -9,7 +9,7 @@ export const loadAnmeldungen = createAction(
 );
 
 export const anmeldungenLoaded = createAction(
-	'[AnmeldungenFacade] loadAll',
+	'[AnmeldungenFacade] loadAll finished',
 	props<{anmeldungen: Anmeldungen}>()
 );
 

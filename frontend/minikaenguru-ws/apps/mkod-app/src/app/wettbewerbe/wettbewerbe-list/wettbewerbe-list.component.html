@@ -1,0 +1,15 @@
+<div class="mkv-container mt-5">
+    <h3>Wetttbewerbe</h3>
+    <div *ngIf="wettbewerbeFacade.wettbewerbe$ | async as wettbewerbe">
+
+        <div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let wettbewerb of wettbewerbe">
+            <mkod-wettbewerbe-card [wettbewerb]="wettbewerb"></mkod-wettbewerbe-card>
+        </div>
+
+    </div>
+</div>
+
+
+<ng-template #loading>	
+	Bitte warten... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
+</ng-template>

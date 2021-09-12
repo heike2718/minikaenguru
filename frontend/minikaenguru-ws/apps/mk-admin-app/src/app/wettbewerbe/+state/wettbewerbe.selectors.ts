@@ -4,7 +4,7 @@ import { WettbewerbeMap } from '../wettbewerbe.model';
 
 export const wettbewerbeState = createFeatureSelector<fromWettbewerbe.WettbewerbeState>(fromWettbewerbe.wettbewerbeFeatureKey);
 
-export const wettbewerbeMap = createSelector(wettbewerbeState, s => s.wettbewerbeMap);
+const wettbewerbeMap = createSelector(wettbewerbeState, s => s.wettbewerbeMap);
 export const wettbewerbe = createSelector(wettbewerbeState, s => new WettbewerbeMap(s.wettbewerbeMap).toArray());
 export const selectedWettbewerbsjahr= createSelector(wettbewerbeState, s => s.selectedJahr);
 export const wettbewerbeLoaded = createSelector(wettbewerbeState, s => s.wettbewerbeLoaded);

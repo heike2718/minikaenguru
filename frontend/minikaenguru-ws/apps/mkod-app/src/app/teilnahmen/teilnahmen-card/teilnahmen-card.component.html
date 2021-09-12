@@ -1,0 +1,11 @@
+<div class="row">
+	<div class="col-12">
+		<div class="card-body mkv-bordered" [style.background-color]="anmeldungsitem.anzahlLoesungszettel > 0 ? '#d5e7cb' : '#faedca'">
+			<div class="card-title">{{anmeldungsitem.name}}
+			</div>
+			<div *ngIf="isOverview()" class="card-subtitle text-muted">Anzahl: {{anmeldungsitem.anzahlAnmeldungen}}</div>
+            <div *ngIf="!isOverview()" class="card-subtitle text-muted">Anzahl Schulen: {{anmeldungsitem.anzahlAnmeldungen}}</div>
+			<div class="card-subtitle text-muted">Anzahl Kinder: {{anmeldungsitem.anzahlLoesungszettel}}</div>
+		</div>
+	</div>
+</div>

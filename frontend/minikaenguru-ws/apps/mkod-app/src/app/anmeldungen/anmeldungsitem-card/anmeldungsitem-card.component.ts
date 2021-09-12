@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Anmeldungsitem } from '../anmeldungen.model';
+import { Anmeldungsitem } from '../../shared/beteiligungen.model';
 
 @Component({
 	selector: 'mkod-anmeldungsitem-card',

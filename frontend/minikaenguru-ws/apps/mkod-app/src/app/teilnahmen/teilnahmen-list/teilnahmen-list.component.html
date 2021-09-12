@@ -1,0 +1,27 @@
+<div class="mkv-container mt-5">
+	<div *ngIf="teilnahmenFacade.selectedAnmeldung$| async as anmeldungen">
+		<ng-container *ngIf="!anmeldungen.loading else loading">
+			<h3>Teilnhamen am Wettbewerb {{anmeldungen.wettbewerbsjahr}}</h3>
+			<div>
+				<p>Für grün hinterlegte Karten liegen Lösungszettel vor.</p>
+				<h4>insgesamt</h4>
+				<div class="col-md-12 mt-1 mb-1 mb-2">
+					<mkod-teilnahmen-card [anmeldungsitem]="anmeldungen.privatanmeldungen"></mkod-teilnahmen-card>
+				</div>
+				<div class="col-md-12 mt-1 mb-1 mb-2">
+                    <mkod-teilnahmen-card [anmeldungsitem]="anmeldungen.schulanmeldungen"></mkod-teilnahmen-card>
+				</div>
+
+				<h4>nach Ländern</h4>
+				<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let land of anmeldungen.laender">
+                    <mkod-teilnahmen-card [anmeldungsitem]="land"></mkod-teilnahmen-card>
+				</div>
+			</div>
+		</ng-container>
+	</div>
+</div>
+<ng-template #loading>
+	<h3>Anmeldungen</h3>
+	Bitte warten... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
+</ng-template>
+
