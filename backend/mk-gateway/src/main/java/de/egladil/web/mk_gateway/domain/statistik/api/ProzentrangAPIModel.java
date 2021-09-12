@@ -13,7 +13,11 @@ public class ProzentrangAPIModel {
 
 	private String klassenstufe;
 
+	private String punkteText;
+
 	private int anzahlLoesungszettel;
+
+	private int anzahlKinderBesser;
 
 	private String prozentrang;
 
@@ -71,6 +75,28 @@ public class ProzentrangAPIModel {
 	public ProzentrangAPIModel withText(final String text) {
 
 		this.text = text;
+		return this;
+	}
+
+	public int getAnzahlKinderBesser() {
+
+		return anzahlKinderBesser;
+	}
+
+	public ProzentrangAPIModel withAnzahlKinderBesser(final int anzahlKinderBesser) {
+
+		this.anzahlKinderBesser = anzahlKinderBesser;
+		return this;
+	}
+
+	public String getPunkteText() {
+
+		return punkteText;
+	}
+
+	public ProzentrangAPIModel withPunkteText(final String punkteText) {
+
+		this.punkteText = punkteText;
 		return this;
 	}
 

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -92,14 +93,21 @@ public class ProzentrangEinzelpunktzahlService {
 
 		int anzahlLoesungszettel = loesungszettelKlassenstufe.size();
 
-		ProzentrangAPIModel result = new ProzentrangAPIModel().withKlassenstufe(klassenstufe.getLabel())
-			.withWettbewerbsjahr(wettbewerbsjahr.toString())
-			.withAnzahlLoesungszettel(anzahlLoesungszettel);
-
 		List<RohpunktItem> rohpunktItems = this.rohpunktItemsRechner.berechneRohpunktItems(loesungszettelKlassenstufe);
-		Collections.sort(rohpunktItems, new RohpunktItemDescendingComparator());
+
+		Integer anzahlKinderBesser = rohpunktItems.stream().filter(ri -> ri.getPunkte() > punkte)
+			.map(ri -> ri.getAnzahl()).collect(Collectors.summingInt(Integer::intValue));
 
 		new VerteilungRechner().addProzentraengeToRohpunktItems(rohpunktItems, anzahlLoesungszettel);
+
+		String punkteText = new PunkteStringMapper().apply(punkte);
+		String punkteMax = new PunkteStringMapper().apply(klassenstufe.getMaximalpunktzahlMal100());
+
+		ProzentrangAPIModel result = new ProzentrangAPIModel().withKlassenstufe(klassenstufe.getLabel())
+			.withWettbewerbsjahr(wettbewerbsjahr.toString())
+			.withAnzahlLoesungszettel(anzahlLoesungszettel)
+			.withAnzahlKinderBesser(anzahlKinderBesser)
+			.withPunkteText(punkteText + " von " + punkteMax);
 
 		Optional<RohpunktItem> optMitGleicherPunktzahl = rohpunktItems.stream().filter(ri -> ri.getPunkte() == punkte).findFirst();
 
@@ -107,7 +115,7 @@ public class ProzentrangEinzelpunktzahlService {
 
 			RohpunktItem treffer = optMitGleicherPunktzahl.get();
 			String text = MessageFormat.format(applicationMessages.getString("statistik.prozentrang.exakterTreffer.text"),
-				new Object[] { "" + anzahlLoesungszettel, treffer.getProzentrangText() });
+				new Object[] { String.valueOf(wettbewerbsjahr), treffer.getProzentrangText() });
 
 			if (anzahlLoesungszettel > 1) {
 
@@ -117,12 +125,12 @@ public class ProzentrangEinzelpunktzahlService {
 
 						text = MessageFormat.format(
 							applicationMessages.getString("statistik.prozentrang.exakterTreffer.maximalSingular.text"),
-							new Object[] { "" + anzahlLoesungszettel });
+							new Object[] { String.valueOf(String.valueOf(wettbewerbsjahr)) });
 					} else {
 
 						text = MessageFormat.format(
-							applicationMessages.getString("statistik.prozentrang.exakterTreffer.maximalSingular.text"),
-							new Object[] { "" + anzahlLoesungszettel, "" + treffer.getAnzahl() });
+							applicationMessages.getString("statistik.prozentrang.exakterTreffer.maximalPlural.text"),
+							new Object[] { String.valueOf(wettbewerbsjahr), "" + treffer.getAnzahl() });
 					}
 
 					return result.withProzentrang("100").withText(text);
@@ -133,7 +141,6 @@ public class ProzentrangEinzelpunktzahlService {
 
 		}
 
-		String punkteText = new PunkteStringMapper().apply(punkte);
 		Collections.sort(rohpunktItems, new RohpunktItemAscendingComparator());
 
 		Optional<RohpunktItem> optErstesMitMehrPunkten = rohpunktItems.stream().filter(ri -> ri.getPunkte() > punkte).findFirst();
@@ -141,7 +148,7 @@ public class ProzentrangEinzelpunktzahlService {
 		if (optErstesMitMehrPunkten.isEmpty()) {
 
 			String text = MessageFormat.format(applicationMessages.getString("statistik.prozentrang.besserAlsAlle.text"),
-				new Object[] { "" + anzahlLoesungszettel });
+				new Object[] { String.valueOf(wettbewerbsjahr) });
 
 			return result.withProzentrang("100").withText(text);
 
