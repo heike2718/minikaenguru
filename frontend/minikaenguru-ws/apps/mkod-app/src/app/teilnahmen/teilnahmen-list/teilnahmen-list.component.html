@@ -1,9 +1,14 @@
 <div class="mkv-container mt-5">
 	<div *ngIf="teilnahmenFacade.selectedAnmeldung$| async as anmeldungen">
 		<ng-container *ngIf="!anmeldungen.loading else loading">
-			<h3>Teilnhamen am Wettbewerb {{anmeldungen.wettbewerbsjahr}}</h3>
+			<h3>Teilnahmen am Wettbewerb {{anmeldungen.wettbewerbsjahr}}</h3>
 			<div>
-				<p>Für grün hinterlegte Karten liegen Lösungszettel vor.</p>
+				<div class="mkv-bordered">
+					<div class="mt-1 ml-1 mb-2" *ngFor="let median of anmeldungen.mediane">
+						<mkod-median [median]=median></mkod-median>
+					</div>
+				</div>
+
 				<h4>insgesamt</h4>
 				<div class="col-md-12 mt-1 mb-1 mb-2">
 					<mkod-teilnahmen-card [anmeldungsitem]="anmeldungen.privatanmeldungen"></mkod-teilnahmen-card>

@@ -66,6 +66,13 @@
 			<version>5.4.26.Final</version>
 		</dependency>
 
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.11.0</version>
+		</dependency>
+
+
 		<!-- Test START -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>

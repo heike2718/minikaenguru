@@ -5,6 +5,7 @@
 package de.egladil.web.mk_gateway.domain.statistik;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.DownloadData;
@@ -26,6 +29,8 @@ import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.statistik.api.AnmeldungenAPIModel;
 import de.egladil.web.mk_gateway.domain.statistik.api.AnmeldungsitemAPIModel;
 import de.egladil.web.mk_gateway.domain.statistik.api.AnmeldungsitemAPIModelComparator;
+import de.egladil.web.mk_gateway.domain.statistik.api.MedianAPIModel;
+import de.egladil.web.mk_gateway.domain.statistik.api.MedianeAPIModel;
 import de.egladil.web.mk_gateway.domain.statistik.functions.LoesungszettelLandAggregator;
 import de.egladil.web.mk_gateway.domain.statistik.functions.SchulanmeldungenLandAggregator;
 import de.egladil.web.mk_gateway.domain.statistik.pdf.StatistikPDFGenerator;
@@ -58,6 +63,8 @@ public class StatistikWettbewerbService {
 	@Inject
 	TeilnahmenRepository teilnahmenRepository;
 
+	private String schulenJson;
+
 	public static StatistikWettbewerbService createForTest(final LoesungszettelRepository loesungszettelRepository, final WettbewerbService wettbewerbService, final SchulkatalogService schulkatalogService, final TeilnahmenRepository teilnahmeRepository) {
 
 		StatistikWettbewerbService result = new StatistikWettbewerbService();
@@ -68,12 +75,13 @@ public class StatistikWettbewerbService {
 		return result;
 	}
 
-	public static StatistikWettbewerbService createForIntegrationTest(final EntityManager entityManager) {
+	public static StatistikWettbewerbService createForIntegrationTest(final EntityManager entityManagerWettbewerbe, final String schulenJson) throws Exception {
 
 		StatistikWettbewerbService result = new StatistikWettbewerbService();
-		result.loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(entityManager);
-		result.wettbewerbService = WettbewerbService.createForIntegrationTest(entityManager);
-		result.teilnahmenRepository = TeilnahmenHibernateRepository.createForIntegrationTest(entityManager);
+		result.loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(entityManagerWettbewerbe);
+		result.wettbewerbService = WettbewerbService.createForIntegrationTest(entityManagerWettbewerbe);
+		result.teilnahmenRepository = TeilnahmenHibernateRepository.createForIntegrationTest(entityManagerWettbewerbe);
+		result.schulenJson = schulenJson;
 		return result;
 	}
 
@@ -81,13 +89,22 @@ public class StatistikWettbewerbService {
 	 * @param  wettbewerbID
 	 * @return              Map
 	 */
-	public Map<Klassenstufe, String> berechneGesamtmedianeWettbewerb(final WettbewerbID wettbewerbID) {
-
-		final MedianRechner medianRechner = new MedianRechner();
-
-		Map<Klassenstufe, String> result = new HashMap<>();
+	public MedianeAPIModel berechneGesamtmedianeWettbewerb(final WettbewerbID wettbewerbID) {
 
 		List<Loesungszettel> loesungszettel = loesungszettelRepository.loadAllForWettbewerb(wettbewerbID);
+		return this.berechneMediane(loesungszettel);
+	}
+
+	/**
+	 * Berechnet für die gegebenen Loesungszettel die Mediane je Klassenstufe.
+	 *
+	 * @param  loesungszettel
+	 * @return                MedianeAPIModel
+	 */
+	MedianeAPIModel berechneMediane(final List<Loesungszettel> loesungszettel) {
+
+		final MedianRechner medianRechner = new MedianRechner();
+		final MedianeAPIModel result = new MedianeAPIModel();
 
 		for (Klassenstufe klassenstufe : Klassenstufe.valuesSorted()) {
 
@@ -97,8 +114,8 @@ public class StatistikWettbewerbService {
 			if (!loesungszettelKlassenstufe.isEmpty()) {
 
 				String median = medianRechner.berechneMedian(loesungszettelKlassenstufe);
-				result.put(klassenstufe, median);
-
+				MedianAPIModel medianModel = new MedianAPIModel(klassenstufe, median, loesungszettelKlassenstufe.size());
+				result.addMedian(medianModel);
 			}
 		}
 
@@ -140,7 +157,7 @@ public class StatistikWettbewerbService {
 			break;
 		}
 
-		AnmeldungenAPIModel result = computeTeilnahmestatistik(aktueller, teilnahmen, loesungszettel);
+		AnmeldungenAPIModel result = computeTeilnahmestatistik(aktueller, teilnahmen, loesungszettel, false);
 
 		return result;
 	}
@@ -180,7 +197,9 @@ public class StatistikWettbewerbService {
 			break;
 		}
 
-		AnmeldungenAPIModel result = computeTeilnahmestatistik(wettbewerb, teilnahmen, loesungszettel);
+		boolean withMediane = wettbewerb.isBeendet();
+
+		AnmeldungenAPIModel result = computeTeilnahmestatistik(wettbewerb, teilnahmen, loesungszettel, withMediane);
 
 		return new ResponsePayload(MessagePayload.ok(), result);
 	}
@@ -239,44 +258,43 @@ public class StatistikWettbewerbService {
 		return new DownloadData("minikaenguru_" + wettbewerbID.toString() + "_gesamptunktverteilung.pdf", pdf);
 	}
 
-	AnmeldungenAPIModel computeTeilnahmestatistik(final Wettbewerb wettbewerb, final List<Teilnahme> teilnahmen, final List<Loesungszettel> loesungszettel) {
+	AnmeldungenAPIModel computeTeilnahmestatistik(final Wettbewerb wettbewerb, final List<Teilnahme> teilnahmen, final List<Loesungszettel> loesungszettel, final boolean withMediane) {
 
-		List<String> schulkuerzel = teilnahmen.stream().filter(t -> Teilnahmeart.SCHULE == t.teilnahmeart())
-			.map(t -> t.teilnahmenummer().identifier()).collect(Collectors.toList());
-
-		// Aus Teilnahmen die schulkuerzel extrahieren und schulen holen
-		List<SchuleAPIModel> schulen = null;
+		List<SchuleAPIModel> schulen = schulenJson != null ? getSchulenFromJson() : getSchulenFromSchulkatalog(teilnahmen);
 
 		long anzahlPrivatteilnahmen = teilnahmen.stream().filter(t -> Teilnahmeart.PRIVAT == t.teilnahmeart()).count();
-		long anzahlPrivatloesungszettel = loesungszettel.stream()
-			.filter(z -> Teilnahmeart.PRIVAT == z.teilnahmeIdentifier().teilnahmeart()).count();
-
-		long anzahlSchulanmeldungen = teilnahmen.stream().filter(t -> Teilnahmeart.SCHULE == t.teilnahmeart()).count();
-
-		long anzahlSchulloesungszettel = loesungszettel.stream()
-			.filter(z -> Teilnahmeart.SCHULE == z.teilnahmeIdentifier().teilnahmeart()).count();
+		List<Loesungszettel> loesungszettelPrivat = loesungszettel.stream()
+			.filter(z -> Teilnahmeart.PRIVAT == z.teilnahmeIdentifier().teilnahmeart()).collect(Collectors.toList());
 
 		AnmeldungsitemAPIModel privatanmeldungen = new AnmeldungsitemAPIModel()
 			.withName("Privatanmeldungen")
 			.withAnzahlAnmeldungen(Long.valueOf(anzahlPrivatteilnahmen).intValue())
-			.withAnzahlLoesungszettel(Long.valueOf(anzahlPrivatloesungszettel).intValue());
+			.withAnzahlLoesungszettel(loesungszettelPrivat.size());
+
+		if (withMediane) {
+
+			MedianeAPIModel medianePrivat = berechneMediane(loesungszettelPrivat);
+			privatanmeldungen.setMediane(medianePrivat.getMedianeSortedByKlassenstufe());
+		}
+
+		long anzahlSchulanmeldungen = teilnahmen.stream().filter(t -> Teilnahmeart.SCHULE == t.teilnahmeart()).count();
+		List<Loesungszettel> loesungszettelSchulen = loesungszettel.stream()
+			.filter(z -> Teilnahmeart.SCHULE == z.teilnahmeIdentifier().teilnahmeart()).collect(Collectors.toList());
 
 		AnmeldungsitemAPIModel summeSchulanmeldungen = new AnmeldungsitemAPIModel()
 			.withName("Schulanmeldungen")
 			.withAnzahlAnmeldungen(Long.valueOf(anzahlSchulanmeldungen).intValue())
-			.withAnzahlLoesungszettel(Long.valueOf(anzahlSchulloesungszettel).intValue());
+			.withAnzahlLoesungszettel(loesungszettelSchulen.size());
 
-		// Schulen und Privatteilnahmen aggregieren
-		if (!schulkuerzel.isEmpty()) {
+		if (withMediane) {
 
-			StringsAPIModel strings = new StringsAPIModel().withStrings(schulkuerzel);
-
-			schulen = schulkatalogService.loadSchulenQuietly(strings);
+			MedianeAPIModel medianeSchulen = berechneMediane(loesungszettelSchulen);
+			summeSchulanmeldungen.setMediane(medianeSchulen.getMedianeSortedByKlassenstufe());
 		}
 
 		Map<String, List<SchuleAPIModel>> schulenNachBundeslaendern = new SchulanmeldungenLandAggregator().apply(schulen);
 
-		Map<String, List<Loesungszettel>> loesnungszettelNachBundeslaendern = new LoesungszettelLandAggregator()
+		Map<String, List<Loesungszettel>> loesungszettelNachBundeslaendern = new LoesungszettelLandAggregator()
 			.apply(loesungszettel, schulen);
 
 		List<AnmeldungsitemAPIModel> laenderanmeldungen = new ArrayList<>();
@@ -287,13 +305,22 @@ public class StatistikWettbewerbService {
 
 			if (schulen != null) {
 
-				List<Loesungszettel> lz = loesnungszettelNachBundeslaendern.get(bundesland);
+				List<Loesungszettel> lz = loesungszettelNachBundeslaendern.get(bundesland);
 
 				int anzahlAnmeldungen = sch.size();
 				int anzahlLoesungszettel = lz == null ? 0 : lz.size();
 
-				laenderanmeldungen.add(new AnmeldungsitemAPIModel().withName(bundesland).withAnzahlAnmeldungen(anzahlAnmeldungen)
-					.withAnzahlLoesungszettel(anzahlLoesungszettel));
+				AnmeldungsitemAPIModel statistikLand = new AnmeldungsitemAPIModel().withName(bundesland)
+					.withAnzahlAnmeldungen(anzahlAnmeldungen)
+					.withAnzahlLoesungszettel(anzahlLoesungszettel);
+
+				if (withMediane && anzahlAnmeldungen > 1 && anzahlLoesungszettel > 0) {
+
+					MedianeAPIModel medianeLand = berechneMediane(lz);
+					statistikLand.setMediane(medianeLand.getMedianeSortedByKlassenstufe());
+				}
+
+				laenderanmeldungen.add(statistikLand);
 			}
 		}
 
@@ -305,7 +332,49 @@ public class StatistikWettbewerbService {
 			.withSchulanmeldungen(summeSchulanmeldungen)
 			.withPrivatanmeldungen(privatanmeldungen)
 			.withLaendern(laenderanmeldungen);
+
+		if (withMediane) {
+
+			MedianeAPIModel medianeGesamt = berechneMediane(loesungszettel);
+			result.setMediane(medianeGesamt.getMedianeSortedByKlassenstufe());
+
+		}
 		return result;
 	}
 
+	/**
+	 * @return
+	 */
+	private List<SchuleAPIModel> getSchulenFromSchulkatalog(final List<Teilnahme> teilnahmen) {
+
+		List<String> schulkuerzel = teilnahmen.stream().filter(t -> Teilnahmeart.SCHULE == t.teilnahmeart())
+			.map(t -> t.teilnahmenummer().identifier()).collect(Collectors.toList());
+
+		if (!schulkuerzel.isEmpty()) {
+
+			StringsAPIModel strings = new StringsAPIModel().withStrings(schulkuerzel);
+			List<SchuleAPIModel> schulen = schulkatalogService.loadSchulenQuietly(strings);
+
+			return schulen;
+		}
+
+		return new ArrayList<>();
+	}
+
+	/**
+	 * @return
+	 */
+	private List<SchuleAPIModel> getSchulenFromJson() {
+
+		try {
+
+			SchuleAPIModel[] schulen = new ObjectMapper().readValue(schulenJson, SchuleAPIModel[].class);
+			return Arrays.asList(schulen);
+
+		} catch (Exception e) {
+
+			throw new RuntimeException("Test kann nicht stattfinden wegen " + e.getMessage(), e);
+
+		}
+	}
 }

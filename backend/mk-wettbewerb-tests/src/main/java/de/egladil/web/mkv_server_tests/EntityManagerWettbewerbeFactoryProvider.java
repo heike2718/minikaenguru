@@ -8,18 +8,18 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 /**
- * EntityManagerFactoryProvider
+ * EntityManagerWettbewerbeFactoryProvider
  */
-public class EntityManagerFactoryProvider {
+public class EntityManagerWettbewerbeFactoryProvider {
 
 	private EntityManagerFactory emf;
 
-	private static EntityManagerFactoryProvider instance;
+	private static EntityManagerWettbewerbeFactoryProvider instance;
 
 	/**
 	 *
 	 */
-	private EntityManagerFactoryProvider() {
+	private EntityManagerWettbewerbeFactoryProvider() {
 
 		emf = Persistence.createEntityManagerFactory("mkWettbewerbPU");
 
@@ -37,11 +37,11 @@ public class EntityManagerFactoryProvider {
 	/**
 	 * @return the instance
 	 */
-	public static EntityManagerFactoryProvider getInstance() {
+	public static EntityManagerWettbewerbeFactoryProvider getInstance() {
 
 		if (instance == null) {
 
-			instance = new EntityManagerFactoryProvider();
+			instance = new EntityManagerWettbewerbeFactoryProvider();
 		}
 
 		return instance;

@@ -23,7 +23,7 @@ public abstract class AbstractIntegrationTest {
 
 	protected void setUp() {
 
-		entityManager = EntityManagerFactoryProvider.getInstance().getEmf().createEntityManager();
+		entityManager = EntityManagerWettbewerbeFactoryProvider.getInstance().getEmf().createEntityManager();
 
 	}
 

@@ -14,8 +14,7 @@ export class TeilnahmenCardComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
   isOverview(): boolean {
 

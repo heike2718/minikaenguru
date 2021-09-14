@@ -4,6 +4,8 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.statistik.api;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,6 +23,9 @@ public class AnmeldungsitemAPIModel {
 
 	@JsonProperty
 	private int anzahlLoesungszettel;
+
+	@JsonProperty
+	private List<MedianAPIModel> mediane = new ArrayList<>();
 
 	@Override
 	public int hashCode() {
@@ -87,6 +92,16 @@ public class AnmeldungsitemAPIModel {
 
 		this.anzahlLoesungszettel = anzahlLoesungszettel;
 		return this;
+	}
+
+	public List<MedianAPIModel> getMediane() {
+
+		return mediane;
+	}
+
+	public void setMediane(final List<MedianAPIModel> mediane) {
+
+		this.mediane = mediane;
 	}
 
 }
