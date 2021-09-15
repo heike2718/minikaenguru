@@ -1,36 +1,60 @@
 <div class="mkv-container mt-5">
-	<div *ngIf="anmeldungenFacade.anmeldungenState$ | async as anmeldungen">
-		<ng-container *ngIf="!anmeldungen.loading else loading">
-			<h3>Anmeldungen zum Wettbewerb {{anmeldungen.wettbewerbsjahr? anmeldungen.wettbewerbsjahr : ': der Anmeldezeitraum hat noch nicht begonnen'}}</h3>
-			<div *ngIf="anmeldungen.statusWettbewerb === 'ERFASST'">
-				<p>Der Anmeldungszeitraum hat noch nicht begonnen. Es liegen noch keine Daten vor</p>
-			</div>
-			<div *ngIf="anmeldungen.statusWettbewerb === 'BEENDET'">
-				<p>Der Wettbewerb ist beendet. Die Daten finden Sie unter Gesamtauswertung
-					{{anmeldungen.wettbewerbsjahr}}</p>
-			</div>
-			<div
-				*ngIf="anmeldungen.statusWettbewerb === 'ANMELDUNG' || anmeldungen.statusWettbewerb === 'DOWNLOAD_LEHRER' || anmeldungen.statusWettbewerb === 'DOWNLOAD_PRIVAT'">
-				<p>Für grün hinterlegte Karten liegen bereits Lösungszettel vor.</p>
-				<h4>insgesamt</h4>
-				<div class="col-md-12 mt-1 mb-1 mb-2">
-					<mkod-anmeldungsitem-card [anmeldungsitem]="anmeldungen.privatanmeldungen">
-					</mkod-anmeldungsitem-card>
+	<div class="col-12">
+		<div *ngIf="anmeldungenFacade.anmeldungenState$ | async as anmeldungen">
+			<ng-container *ngIf="!anmeldungen.loading else loading">
+				<h3>Anmeldungen zum Wettbewerb {{anmeldungen.wettbewerbsjahr? anmeldungen.wettbewerbsjahr : ': der Anmeldezeitraum hat noch nicht begonnen'}}</h3>
+				<div *ngIf="anmeldungen.statusWettbewerb === 'ERFASST'">
+					<p>Der Anmeldungszeitraum hat noch nicht begonnen. Es liegen noch keine Daten vor</p>
 				</div>
-				<div class="col-md-12 mt-1 mb-1 mb-2">
-					<mkod-anmeldungsitem-card [anmeldungsitem]="anmeldungen.schulanmeldungen">
-					</mkod-anmeldungsitem-card>
+				<div *ngIf="anmeldungen.statusWettbewerb === 'BEENDET'">
+					<p>Der Wettbewerb ist beendet. Die Daten finden Sie unter Gesamtauswertung
+						{{anmeldungen.wettbewerbsjahr}}</p>
 				</div>
+				<div
+					*ngIf="anmeldungen.statusWettbewerb === 'ANMELDUNG' || anmeldungen.statusWettbewerb === 'DOWNLOAD_LEHRER' || anmeldungen.statusWettbewerb === 'DOWNLOAD_PRIVAT'">
+					<p>Für grün hinterlegte Karten liegen bereits Lösungszettel vor.</p>
+					<h4>insgesamt</h4>
+					<div class="col-md-12 mt-1 mb-1 mb-2">
+						<mkod-anmeldungsitem-card [anmeldungsitem]="anmeldungen.privatanmeldungen">
+						</mkod-anmeldungsitem-card>
+					</div>
+					<div class="col-md-12 mt-1 mb-1 mb-2">
+						<mkod-anmeldungsitem-card [anmeldungsitem]="anmeldungen.schulanmeldungen">
+						</mkod-anmeldungsitem-card>
+					</div>
 
-				<h4>nach Ländern</h4>
-				<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let land of anmeldungen.laender">
-					<mkod-anmeldungsitem-card [anmeldungsitem]="land">
-					</mkod-anmeldungsitem-card>
+					<h4>nach Ländern</h4>
+					<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let land of anmeldungen.laender">
+						<mkod-anmeldungsitem-card [anmeldungsitem]="land">
+						</mkod-anmeldungsitem-card>
+					</div>
 				</div>
+			</ng-container>
+		</div>
+
+		<div class="d-none d-md-block">
+			<div class="btn-group d-flex" role="group">
+				<button class="btn btn-outline-dark w-100 ml-1" (click)="gotoLanding()"
+					title="zur Startseite"><i class="fa fa-home"
+						aria-hidden="true"></i>Startseite</button>
+				<button class="btn btn-outline-dark w-100 ml-1" (click)="gotoWettbewerbe()"
+					title="zur Wettbewerbsübersicht"><i class="fa fa-list"
+						aria-hidden="true"></i>Wettbewerbe</button>
 			</div>
-		</ng-container>
+		</div>
+		<div class="d-md-none d-lg-none d-xl-none">
+			<div class="btn-group d-inline" role="group">
+				<button class="btn btn-outline-dark w-100 ml-1" (click)="gotoLanding()"
+					title="zur Startseite"><i class="fa fa-home"
+						aria-hidden="true"></i>Startseite</button>
+				<button class="btn btn-outline-dark w-100 ml-1" (click)="gotoWettbewerbe()"
+					title="zur Wettbewerbsübersicht"><i class="fa fa-list"
+						aria-hidden="true"></i>Wettbewerbe</button>
+			</div>
+		</div>
 	</div>
 </div>
+
 <ng-template #loading>
 	<h3>Anmeldungen</h3>
 	Bitte warten... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>

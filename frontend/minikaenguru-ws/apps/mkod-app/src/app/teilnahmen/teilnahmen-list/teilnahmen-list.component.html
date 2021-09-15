@@ -1,30 +1,53 @@
 <div class="mkv-container mt-5">
-	<div *ngIf="teilnahmenFacade.selectedAnmeldung$| async as anmeldungen">
-		<ng-container *ngIf="!anmeldungen.loading else loading">
-			<h3>Teilnahmen am Wettbewerb {{anmeldungen.wettbewerbsjahr}}</h3>
-			<div>
-				<div class="mkv-bordered">
-					<div class="mt-1 ml-1 mb-2" *ngFor="let median of anmeldungen.mediane">
-						<mkod-median [median]=median></mkod-median>
+	<div class="col-12">
+		<div *ngIf="teilnahmenFacade.selectedAnmeldung$| async as anmeldungen">
+			<ng-container *ngIf="!anmeldungen.loading else loading">
+				<h3>Teilnahmen am Wettbewerb {{anmeldungen.wettbewerbsjahr}}</h3>
+				<div>
+					<div class="mkv-bordered">
+						<div class="mt-1 ml-1 mb-2" *ngFor="let median of anmeldungen.mediane">
+							<mkod-median [median]=median></mkod-median>
+						</div>
+					</div>
+
+					<h4>insgesamt</h4>
+					<div class="col-md-12 mt-1 mb-1 mb-2">
+						<mkod-teilnahmen-card [anmeldungsitem]="anmeldungen.privatanmeldungen"></mkod-teilnahmen-card>
+					</div>
+					<div class="col-md-12 mt-1 mb-1 mb-2">
+                    	<mkod-teilnahmen-card [anmeldungsitem]="anmeldungen.schulanmeldungen"></mkod-teilnahmen-card>
+					</div>
+
+					<h4>nach Ländern</h4>
+					<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let land of anmeldungen.laender">
+                    	<mkod-teilnahmen-card [anmeldungsitem]="land"></mkod-teilnahmen-card>
 					</div>
 				</div>
+			</ng-container>
+		</div>
 
-				<h4>insgesamt</h4>
-				<div class="col-md-12 mt-1 mb-1 mb-2">
-					<mkod-teilnahmen-card [anmeldungsitem]="anmeldungen.privatanmeldungen"></mkod-teilnahmen-card>
-				</div>
-				<div class="col-md-12 mt-1 mb-1 mb-2">
-                    <mkod-teilnahmen-card [anmeldungsitem]="anmeldungen.schulanmeldungen"></mkod-teilnahmen-card>
-				</div>
-
-				<h4>nach Ländern</h4>
-				<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let land of anmeldungen.laender">
-                    <mkod-teilnahmen-card [anmeldungsitem]="land"></mkod-teilnahmen-card>
-				</div>
+		<div class="d-none d-md-block">
+			<div class="btn-group d-flex" role="group">
+				<button class="btn btn-outline-dark w-100 ml-1" (click)="gotoWettbewerbe()"
+					title="zur Wettbewerbsübersicht"><i class="fa fa-list"
+						aria-hidden="true"></i>Wettbewerbe</button>
+				<button class="btn btn-outline-dark w-100 ml-1" (click)="gotoAnmeldungen()"
+					title="zum aktuellen Wettbewerb"><i class="fa fa-handshake-o"
+						aria-hidden="true"></i>Anemldungen</button>
 			</div>
-		</ng-container>
+		</div>
+		<div class="d-md-none d-lg-none d-xl-none">
+			<div class="btn-group d-inline" role="group">
+				<button class="btn btn-outline-dark w-100 ml-1" (click)="gotoWettbewerbe()"
+					title="zur Wettbewerbsübersicht"><i class="fa fa-list"
+						aria-hidden="true"></i>Wettbewerbe</button>
+				<button class="btn btn-outline-dark w-100 ml-1" (click)="gotoAnmeldungen()"
+					title="zum aktuellen Wettbewerb"><i class="fa fa-handshake-o"
+						aria-hidden="true"></i>Anemldungen</button>
+		</div>
 	</div>
 </div>
+
 <ng-template #loading>
 	<h3>Anmeldungen</h3>
 	Bitte warten... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>

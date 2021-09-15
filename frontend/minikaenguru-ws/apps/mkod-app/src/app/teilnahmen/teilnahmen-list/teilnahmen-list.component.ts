@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { LogService } from '@minikaenguru-ws/common-logging';
 import { Subscription } from 'rxjs';
 import { TeilnahmenFacade } from '../teilnahmen.facade';
@@ -13,7 +14,8 @@ export class TeilnahmenListComponent implements OnInit, OnDestroy {
   private selectedAnmeldunngenSubscription: Subscription;
 
   constructor(public teilnahmenFacade: TeilnahmenFacade,
-    private logger: LogService) { }
+    private logger: LogService,
+    private router: Router) { }
 
   ngOnInit(): void {
 
@@ -32,5 +34,13 @@ export class TeilnahmenListComponent implements OnInit, OnDestroy {
     if (this.selectedAnmeldunngenSubscription) {
       this.selectedAnmeldunngenSubscription.unsubscribe();
     }
+  }
+
+  gotoWettbewerbe(): void {
+    this.router.navigateByUrl('/wettbewerbe');
+  }
+
+  gotoAnmeldungen(): void {
+    this.router.navigateByUrl('/anmeldungen');
   }
 }
