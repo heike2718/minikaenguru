@@ -314,7 +314,7 @@ public class StatistikWettbewerbService {
 					.withAnzahlAnmeldungen(anzahlAnmeldungen)
 					.withAnzahlLoesungszettel(anzahlLoesungszettel);
 
-				if (withMediane && anzahlAnmeldungen > 1 && anzahlLoesungszettel > 0) {
+				if (withMediane && anzahlLoesungszettel > 0) {
 
 					MedianeAPIModel medianeLand = berechneMediane(lz);
 					statistikLand.setMediane(medianeLand.getMedianeSortedByKlassenstufe());

@@ -152,7 +152,9 @@ public class StatistikWettbewerbServiceIT extends AbstractIntegrationTest {
 			assertTrue(opt.isPresent());
 
 			AnmeldungsitemAPIModel anmeldungsitemAPIModel = opt.get();
-			assertTrue(anmeldungsitemAPIModel.getMediane().isEmpty());
+			List<MedianAPIModel> mediane = anmeldungsitemAPIModel.getMediane();
+			assertEquals(1, mediane.size());
+
 		}
 
 		{
@@ -162,7 +164,10 @@ public class StatistikWettbewerbServiceIT extends AbstractIntegrationTest {
 			assertTrue(opt.isPresent());
 
 			AnmeldungsitemAPIModel anmeldungsitemAPIModel = opt.get();
-			assertTrue(anmeldungsitemAPIModel.getMediane().isEmpty());
+			List<MedianAPIModel> mediane = anmeldungsitemAPIModel.getMediane();
+			assertEquals(1, mediane.size());
+
+			// mediane.forEach(m -> System.out.println(m.toString()));
 		}
 
 		{
