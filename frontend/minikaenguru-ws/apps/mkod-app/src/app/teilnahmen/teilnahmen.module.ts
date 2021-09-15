@@ -6,13 +6,15 @@ import { StoreModule } from '@ngrx/store';
 import { TeilnahmenListComponent } from './teilnahmen-list/teilnahmen-list.component';
 import { TeilnahmenCardComponent } from './teilnahmen-card/teilnahmen-card.component';
 import { TeilnahmenJahrResolver } from './teilnahmen-jahr.resolver';
+import { MedianComponent } from './median/median.component';
 
 
 
 @NgModule({
 	declarations: [
 		TeilnahmenListComponent,
-		TeilnahmenCardComponent
+		TeilnahmenCardComponent,
+  MedianComponent
 	],
 	imports: [
 		CommonModule,

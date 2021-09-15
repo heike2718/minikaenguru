@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import org.slf4j.Logger;
@@ -31,6 +32,8 @@ import de.egladil.web.mk_gateway.domain.pdfutils.FontProviderWrapper;
 import de.egladil.web.mk_gateway.domain.pdfutils.FontTyp;
 import de.egladil.web.mk_gateway.domain.pdfutils.PdfMerger;
 import de.egladil.web.mk_gateway.domain.statistik.GesamtpunktverteilungKlassenstufe;
+import de.egladil.web.mk_gateway.domain.statistik.api.MedianAPIModel;
+import de.egladil.web.mk_gateway.domain.statistik.api.MedianeAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 
@@ -52,7 +55,7 @@ public class PrivatteilnahmenuebersichtPDFGenerator {
 	 *                                      Map die Auswertungsdaten und Texte nach Klassenstufe.
 	 * @return
 	 */
-	public DownloadData generierePdf(final WettbewerbID wettbewerbID, final Map<Klassenstufe, GesamtpunktverteilungKlassenstufe> verteilungenNachKlassenstufe, final Map<Klassenstufe, String> gesamtmediane) {
+	public DownloadData generierePdf(final WettbewerbID wettbewerbID, final Map<Klassenstufe, GesamtpunktverteilungKlassenstufe> verteilungenNachKlassenstufe, final MedianeAPIModel gesamtmediane) {
 
 		List<byte[]> seiten = new ArrayList<>();
 
@@ -80,7 +83,7 @@ public class PrivatteilnahmenuebersichtPDFGenerator {
 
 	}
 
-	byte[] generiereDeckblatt(final WettbewerbID wettbewerbID, final Map<Klassenstufe, GesamtpunktverteilungKlassenstufe> verteilungenNachKlassenstufe, final Map<Klassenstufe, String> gesamtmediane) {
+	byte[] generiereDeckblatt(final WettbewerbID wettbewerbID, final Map<Klassenstufe, GesamtpunktverteilungKlassenstufe> verteilungenNachKlassenstufe, final MedianeAPIModel gesamtmediane) {
 
 		final FontProviderWrapper fontProvider = new FontProviderWrapper();
 		final Document doc = new Document(PageSize.A4);
@@ -104,7 +107,9 @@ public class PrivatteilnahmenuebersichtPDFGenerator {
 
 				if (verteilung != null) {
 
-					String gesamtmedian = gesamtmediane.getOrDefault(verteilung.klassenstufe(), "");
+					Optional<MedianAPIModel> optMedian = gesamtmediane.findMedian(klassenstufe);
+
+					String gesamtmedian = optMedian.isPresent() ? optMedian.get().getMedian() : "";
 
 					String text = MessageFormat.format(applicationMessages.getString("statistik.pdf.median.privat.text"),
 						new Object[] { klassenstufe.getLabel(), verteilung.getMedian() });

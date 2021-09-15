@@ -196,7 +196,7 @@ public class ProzentrangEinzelpunktzahlServiceTest {
 			} catch (InvalidInputException e) {
 
 				ResponsePayload responsePayload = e.getResponsePayload();
-				assertEquals("Für Klassenstufe IKID muss die Eingabe zwischen 0 und 3600 liegen.",
+				assertEquals("Für Klassenstufe IKID muss die Eingabe zwischen 0 und 36 liegen.",
 					responsePayload.getMessage().getMessage());
 				assertEquals("ERROR", responsePayload.getMessage().getLevel());
 			}
@@ -220,7 +220,7 @@ public class ProzentrangEinzelpunktzahlServiceTest {
 			} catch (InvalidInputException e) {
 
 				ResponsePayload responsePayload = e.getResponsePayload();
-				assertEquals("Für Klassenstufe EINS muss die Eingabe zwischen 0 und 6000 liegen.",
+				assertEquals("Für Klassenstufe EINS muss die Eingabe zwischen 0 und 60 liegen.",
 					responsePayload.getMessage().getMessage());
 				assertEquals("ERROR", responsePayload.getMessage().getLevel());
 			}
@@ -244,7 +244,7 @@ public class ProzentrangEinzelpunktzahlServiceTest {
 			} catch (InvalidInputException e) {
 
 				ResponsePayload responsePayload = e.getResponsePayload();
-				assertEquals("Für Klassenstufe ZWEI muss die Eingabe zwischen 0 und 7500 liegen.",
+				assertEquals("Für Klassenstufe ZWEI muss die Eingabe zwischen 0 und 75 liegen.",
 					responsePayload.getMessage().getMessage());
 				assertEquals("ERROR", responsePayload.getMessage().getLevel());
 			}
@@ -359,7 +359,7 @@ public class ProzentrangEinzelpunktzahlServiceTest {
 
 			// Assert
 			assertEquals(
-				"Von insgesamt 9 Kindern haben 77,78 Prozent ein gleiches oder schlechteres Ergebnis erzielt.",
+				"2019 haben 77,78 Prozent aller Kinder das gleiche oder ein schlechteres Ergebnis erzielt.",
 				result.getText());
 			assertEquals(9, result.getAnzahlLoesungszettel());
 			assertEquals("Klasse 2", result.getKlassenstufe());
@@ -389,7 +389,7 @@ public class ProzentrangEinzelpunktzahlServiceTest {
 
 			// Assert
 			assertEquals(
-				"Das ist das beste Ergebnis. Von insgesamt 9 Kindern hat 1 Kind das gleiche Ergebnis erzielt.",
+				"Das ist die höchste erreichbare Punktzahl. 2019 haben 2 Kinder das gleiche Ergebnis erzielt.",
 				result.getText());
 			assertEquals(9, result.getAnzahlLoesungszettel());
 			assertEquals("Klasse 2", result.getKlassenstufe());
@@ -419,7 +419,7 @@ public class ProzentrangEinzelpunktzahlServiceTest {
 
 			// Assert
 			assertEquals(
-				"Von insgesamt 9 Kindern haben 22,22 Prozent ein gleiches oder schlechteres Ergebnis erzielt.",
+				"2019 haben 22,22 Prozent aller Kinder das gleiche oder ein schlechteres Ergebnis erzielt.",
 				result.getText());
 			assertEquals(9, result.getAnzahlLoesungszettel());
 			assertEquals("Klasse 2", result.getKlassenstufe());
@@ -449,7 +449,7 @@ public class ProzentrangEinzelpunktzahlServiceTest {
 
 			// Assert
 			assertEquals(
-				"Von insgesamt 9 Kindern haben 55,56 Prozent ein schlechteres Ergebnis erzielt.",
+				"2019 haben 55,56 Prozent aller Kinder ein schlechteres Ergebnis erzielt.",
 				result.getText());
 			assertEquals(9, result.getAnzahlLoesungszettel());
 			assertEquals("Klasse 2", result.getKlassenstufe());
@@ -479,7 +479,7 @@ public class ProzentrangEinzelpunktzahlServiceTest {
 
 			// Assert
 			assertEquals(
-				"Das ist das beste Ergebnis. Von insgesamt 9 Kindern hat kein Kind eine so hohe Punktzahl erzielt.",
+				"Das ist die höchste erreichbare Punktzahl. 2019 hat kein Kind eine so hohe Punktzahl erzielt.",
 				result.getText());
 			assertEquals(9, result.getAnzahlLoesungszettel());
 			assertEquals("Klasse 2", result.getKlassenstufe());
@@ -509,7 +509,7 @@ public class ProzentrangEinzelpunktzahlServiceTest {
 
 			// Assert
 			assertEquals(
-				"Von insgesamt 9 Kindern haben alle ein besseres Ergebnis als 8,75 Punkte erzielt.",
+				"2019 haben alle Kinder ein besseres Ergebnis erzielt.",
 				result.getText());
 			assertEquals(9, result.getAnzahlLoesungszettel());
 			assertEquals("Klasse 2", result.getKlassenstufe());

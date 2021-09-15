@@ -26,6 +26,9 @@ public class AnmeldungenAPIModel {
 	private WettbewerbStatus statusWettbewerb;
 
 	@JsonProperty
+	private List<MedianAPIModel> mediane = new ArrayList<>();
+
+	@JsonProperty
 	private AnmeldungsitemAPIModel privatanmeldungen;
 
 	@JsonProperty
@@ -93,5 +96,15 @@ public class AnmeldungenAPIModel {
 
 		this.schulanmeldungen = schulanmeldungen;
 		return this;
+	}
+
+	public List<MedianAPIModel> getMediane() {
+
+		return mediane;
+	}
+
+	public void setMediane(final List<MedianAPIModel> mediane) {
+
+		this.mediane = mediane;
 	}
 }

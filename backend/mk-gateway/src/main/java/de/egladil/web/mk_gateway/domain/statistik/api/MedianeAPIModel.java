@@ -6,8 +6,9 @@ package de.egladil.web.mk_gateway.domain.statistik.api;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
@@ -20,21 +21,38 @@ public class MedianeAPIModel {
 	@JsonProperty
 	private List<MedianAPIModel> mediane = new ArrayList<>();
 
-	MedianeAPIModel() {
+	public void addMedian(final MedianAPIModel median) {
 
+		this.mediane.add(median);
 	}
 
-	public MedianeAPIModel(final Map<Klassenstufe, String> medianMap) {
+	public int size() {
+
+		return mediane.size();
+	}
+
+	public Optional<MedianAPIModel> findMedian(final Klassenstufe klassenstufe) {
+
+		return mediane.stream().filter(m -> klassenstufe == m.getKlassenstufe()).findFirst();
+	}
+
+	@JsonIgnore
+	public List<MedianAPIModel> getMedianeSortedByKlassenstufe() {
+
+		List<MedianAPIModel> result = new ArrayList<>();
 
 		for (Klassenstufe klassenstufe : Klassenstufe.valuesSorted()) {
 
-			String median = medianMap.get(klassenstufe);
+			Optional<MedianAPIModel> opt = findMedian(klassenstufe);
 
-			if (median != null) {
+			if (opt.isPresent()) {
 
-				this.mediane.add(new MedianAPIModel(klassenstufe, median));
+				result.add(opt.get());
 			}
 		}
+
+		return result;
+
 	}
 
 }

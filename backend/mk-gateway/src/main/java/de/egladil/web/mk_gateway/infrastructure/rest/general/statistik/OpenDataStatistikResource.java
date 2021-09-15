@@ -9,7 +9,6 @@ import static de.egladil.web.mk_gateway.infrastructure.rest.HttpStatus.HTTP_SERV
 
 import java.text.MessageFormat;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -156,7 +155,7 @@ public class OpenDataStatistikResource {
 
 		WettbewerbID wettbewerbID = new WettbewerbID(jahr);
 
-		Map<Klassenstufe, String> mediane = statistikWettbewerbService.berechneGesamtmedianeWettbewerb(wettbewerbID);
+		MedianeAPIModel mediane = statistikWettbewerbService.berechneGesamtmedianeWettbewerb(wettbewerbID);
 
 		if (mediane.size() == 0) {
 
@@ -168,9 +167,7 @@ public class OpenDataStatistikResource {
 				.build();
 		}
 
-		MedianeAPIModel responseData = new MedianeAPIModel(mediane);
-
-		return Response.ok(new ResponsePayload(MessagePayload.ok(), responseData)).build();
+		return Response.ok(new ResponsePayload(MessagePayload.ok(), mediane)).build();
 	}
 
 	@GET

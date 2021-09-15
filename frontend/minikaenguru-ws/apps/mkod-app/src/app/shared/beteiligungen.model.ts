@@ -1,11 +1,21 @@
+import { Klassenstufenart } from "@minikaenguru-ws/common-components";
 import { anmeldungenState } from "../anmeldungen/+state/anmeldungen.selectors";
 
 export type WettbewerbStatus = 'ERFASST' | 'ANMELDUNG' | 'DOWNLOAD_PRIVAT' | 'DOWNLOAD_LEHRER' | 'BEENDET';
+
+export interface Median {
+
+	readonly klassenstufe: Klassenstufenart;
+	readonly median: string;
+	readonly anzahlLoesungszettel:number;
+
+};
 
 export interface Anmeldungsitem {
 	readonly name: string;
 	readonly anzahlAnmeldungen: number;
 	readonly anzahlLoesungszettel: number;
+	readonly mediane: Median[];
 };
 
 export interface Anmeldungen {
@@ -14,6 +24,7 @@ export interface Anmeldungen {
 	readonly privatanmeldungen: Anmeldungsitem;
 	readonly schulanmeldungen: Anmeldungsitem;
 	readonly laender: Anmeldungsitem[];
+	readonly mediane: Median[];
 };
 
 export interface AnmeldungLandWithID {
