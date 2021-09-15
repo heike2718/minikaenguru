@@ -9,7 +9,7 @@ export const environment = {
         assetsUrl: 'http://mk-admin-app/assets',
         apiUrl: 'http://a300/mk-gateway/admin',
         storageKeyPrefix: 'mka_',
-        version: '1.5.2',
+        version: '1.5.3',
         consoleLogActive: true,
         serverLogActive: false,
         loglevel: 1

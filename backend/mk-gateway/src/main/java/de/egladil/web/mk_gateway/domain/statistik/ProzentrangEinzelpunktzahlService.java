@@ -161,7 +161,7 @@ public class ProzentrangEinzelpunktzahlService {
 		if (optErstesMitWenigerPunkten.isEmpty()) {
 
 			String text = MessageFormat.format(applicationMessages.getString("statistik.prozentrang.schlechterAlsAlle.text"),
-				new Object[] { "" + anzahlLoesungszettel, punkteText });
+				new Object[] { String.valueOf(wettbewerbsjahr), punkteText });
 
 			return result.withProzentrang("0").withText(text);
 		}
@@ -169,7 +169,7 @@ public class ProzentrangEinzelpunktzahlService {
 		RohpunktItem infimum = optErstesMitWenigerPunkten.get();
 
 		String text = MessageFormat.format(applicationMessages.getString("statistik.prozentrang.innerhalbIntervall.text"),
-			new Object[] { "" + anzahlLoesungszettel, infimum.getProzentrangText() });
+			new Object[] { String.valueOf(wettbewerbsjahr), infimum.getProzentrangText() });
 
 		return result.withProzentrang(infimum.getProzentrangText()).withText(text);
 	}
@@ -203,12 +203,13 @@ public class ProzentrangEinzelpunktzahlService {
 			throw new StatistikKeineDatenException();
 		}
 
-		int maximalpunktzahlMal100 = klassenstufe.getMaximalpunktzahlMal100();
+		int maximalpunktzahlMalHundert = klassenstufe.getMaximalpunktzahlMal100();
+		int maximalpunktzahl = maximalpunktzahlMalHundert / 100;
 
-		if (punkte > maximalpunktzahlMal100) {
+		if (punkte > maximalpunktzahlMalHundert) {
 
 			String text = MessageFormat.format(applicationMessages.getString("statistik.prozentrang.punkteZuHoch"),
-				new Object[] { klassenstufe, "" + maximalpunktzahlMal100 });
+				new Object[] { klassenstufe, "" + maximalpunktzahl });
 
 			throw new InvalidInputException(
 				ResponsePayload.messageOnly(MessagePayload.error(text)));

@@ -1,6 +1,7 @@
 import { createAction, props } from '@ngrx/store';
-import { Wettbewerb, WettbewerbStatus } from '../wettbewerbe.model';
+import { Wettbewerb } from '../wettbewerbe.model';
 import { Message } from '@minikaenguru-ws/common-messages';
+import { WettbewerbStatus } from '@minikaenguru-ws/common-components';
 
 export const loadWettbewerbe = createAction(
 	'[WettbewerbeListResolver]'
