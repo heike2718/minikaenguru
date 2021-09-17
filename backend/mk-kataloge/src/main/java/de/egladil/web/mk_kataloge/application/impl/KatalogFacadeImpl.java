@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -30,6 +31,7 @@ import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Ort;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.OrtToKatalogItemMapper;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.SchuleToKatalogItemMapper;
+import de.egladil.web.mk_kataloge.infrastructure.persistence.impl.KatalogeHibernateRepository;
 
 /**
  * KatalogFacadeImpl
@@ -44,6 +46,13 @@ public class KatalogFacadeImpl implements KatalogFacade {
 
 	@Inject
 	Event<DataInconsistencyRegistered> dataInconcistencyEvent;
+
+	public static KatalogFacadeImpl createForIntegrationTest(final EntityManager entityManager) {
+
+		KatalogFacadeImpl result = new KatalogFacadeImpl();
+		result.katalogRepository = KatalogeHibernateRepository.createForIntegrationTests(entityManager);
+		return result;
+	}
 
 	@Override
 	public List<KatalogItem> loadLaender() {

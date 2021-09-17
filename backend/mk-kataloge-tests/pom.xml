@@ -5,11 +5,11 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mk-kataloge-tests</artifactId>
-	<version>1.5.2</version>
+	<version>1.5.3</version>
 
 
 	<properties>
-		<minikaenguru-version>1.5.2</minikaenguru-version>
+		<minikaenguru-version>1.5.3</minikaenguru-version>
 		<commons.version>1.7.0</commons.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<log4j.version>2.13.3</log4j.version>
@@ -52,6 +52,13 @@
 		</dependency>
 
 		<!-- Test START -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j.version}</version>
+			<scope>test</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>

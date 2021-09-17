@@ -60,7 +60,7 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 		{
 
 			WettbewerbListAPIModel w = wettbewerbe.get(0);
-			assertEquals(2020, w.jahr());
+			assertEquals(Integer.valueOf(2020), w.jahr());
 			assertEquals(WettbewerbStatus.ANMELDUNG, w.status());
 			assertFalse(w.completelyLoaded());
 		}
@@ -68,7 +68,7 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 		{
 
 			WettbewerbListAPIModel w = wettbewerbe.get(1);
-			assertEquals(2015, w.jahr());
+			assertEquals(Integer.valueOf(2015), w.jahr());
 			assertEquals(WettbewerbStatus.DOWNLOAD_PRIVAT, w.status());
 			assertFalse(w.completelyLoaded());
 		}
@@ -76,7 +76,7 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 		{
 
 			WettbewerbListAPIModel w = wettbewerbe.get(2);
-			assertEquals(2010, w.jahr());
+			assertEquals(Integer.valueOf(2010), w.jahr());
 			assertEquals(WettbewerbStatus.BEENDET, w.status());
 			assertFalse(w.completelyLoaded());
 		}
@@ -84,7 +84,7 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 		{
 
 			WettbewerbListAPIModel w = wettbewerbe.get(3);
-			assertEquals(2005, w.jahr());
+			assertEquals(Integer.valueOf(2005), w.jahr());
 			assertEquals(WettbewerbStatus.BEENDET, w.status());
 			assertFalse(w.completelyLoaded());
 		}

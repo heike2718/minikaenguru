@@ -12,7 +12,6 @@ import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -22,6 +21,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.auswertungen.StatistikTestUtils;
@@ -29,8 +30,11 @@ import de.egladil.web.mk_gateway.domain.kataloge.SchulkatalogService;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.statistik.api.AnmeldungenAPIModel;
+import de.egladil.web.mk_gateway.domain.statistik.api.AnmeldungsitemAPIModel;
+import de.egladil.web.mk_gateway.domain.statistik.api.MedianeAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
 
 /**
  * StatistikWettbewerbServiceTest
@@ -78,10 +82,10 @@ public class StatistikWettbewerbServiceTest extends AbstractDomainServiceTest {
 			Mockito.when(loesungszettelRepository.loadAllForWettbewerb(wettbewerbID)).thenReturn(new ArrayList<>());
 
 			// Act
-			Map<Klassenstufe, String> mediane = statistikService.berechneGesamtmedianeWettbewerb(wettbewerbID);
+			MedianeAPIModel mediane = statistikService.berechneGesamtmedianeWettbewerb(wettbewerbID);
 
 			// Assert
-			assertTrue(mediane.isEmpty());
+			assertEquals(0, mediane.size());
 
 		}
 
@@ -95,14 +99,18 @@ public class StatistikWettbewerbServiceTest extends AbstractDomainServiceTest {
 				.thenReturn(wettbewerbLoesungszettel);
 
 			// Act
-			Map<Klassenstufe, String> mediane = statistikService.berechneGesamtmedianeWettbewerb(wettbewerbID);
+			MedianeAPIModel mediane = statistikService.berechneGesamtmedianeWettbewerb(wettbewerbID);
 
 			// Assert
 			assertEquals(3, mediane.size());
 
-			assertEquals("24,0", mediane.get(Klassenstufe.IKID));
-			assertEquals("14,75", mediane.get(Klassenstufe.EINS));
-			assertEquals("32,625", mediane.get(Klassenstufe.ZWEI));
+			assertEquals("24,0", mediane.findMedian(Klassenstufe.IKID).get().getMedian());
+			assertEquals("14,75", mediane.findMedian(Klassenstufe.EINS).get().getMedian());
+			assertEquals("32,625", mediane.findMedian(Klassenstufe.ZWEI).get().getMedian());
+
+			assertEquals(3, mediane.findMedian(Klassenstufe.IKID).get().getAnzahlLoesungszettel());
+			assertEquals(5, mediane.findMedian(Klassenstufe.EINS).get().getAnzahlLoesungszettel());
+			assertEquals(4, mediane.findMedian(Klassenstufe.ZWEI).get().getAnzahlLoesungszettel());
 
 		}
 
@@ -119,14 +127,14 @@ public class StatistikWettbewerbServiceTest extends AbstractDomainServiceTest {
 				.thenReturn(alleLoesungszettel);
 
 			// Act
-			Map<Klassenstufe, String> mediane = statistikService.berechneGesamtmedianeWettbewerb(wettbewerbID);
+			MedianeAPIModel mediane = statistikService.berechneGesamtmedianeWettbewerb(wettbewerbID);
 
 			// Assert
 			assertEquals(2, mediane.size());
 
-			assertNull(mediane.get(Klassenstufe.IKID));
-			assertEquals("14,75", mediane.get(Klassenstufe.EINS));
-			assertEquals("32,625", mediane.get(Klassenstufe.ZWEI));
+			assertTrue(mediane.findMedian(Klassenstufe.IKID).isEmpty());
+			assertEquals("14,75", mediane.findMedian(Klassenstufe.EINS).get().getMedian());
+			assertEquals("32,625", mediane.findMedian(Klassenstufe.ZWEI).get().getMedian());
 
 		}
 
@@ -344,6 +352,78 @@ public class StatistikWettbewerbServiceTest extends AbstractDomainServiceTest {
 			// Assert
 			assertNotNull(result);
 
+			assertEquals("2020", result.getWettbewerbsjahr());
+
+		}
+
+	}
+
+	@Nested
+	class BeteiligungenTests {
+
+		@Test
+		void should_getBeteiligungenReturnJson_when_ok() {
+
+			// Arrange
+			String expectedJahr = Integer.valueOf(2020).toString();
+
+			// Act
+			ResponsePayload result = statistikService.getBeteiligungen(WETTBEWERBSJAHR_AKTUELL);
+
+			// Assert
+			assertNotNull(result);
+			assertTrue(result.isOk());
+			assertNotNull(result.getData());
+
+			AnmeldungenAPIModel data = (AnmeldungenAPIModel) result.getData();
+
+			assertEquals(expectedJahr, data.getWettbewerbsjahr());
+			List<AnmeldungsitemAPIModel> laender = data.getLaender();
+			assertEquals(0, laender.size());
+			assertEquals(WettbewerbStatus.ANMELDUNG, data.getStatusWettbewerb());
+		}
+
+		@Test
+		void should_getBeteiligungenReturnEmptyREsult_when_wettbewerbErfasst() {
+
+			// Arrange
+			String expectedJahr = Integer.valueOf(2017).toString();
+
+			// Act
+			ResponsePayload result = statistikService.getBeteiligungen(WETTBEWERBSJAHR_ERFASST);
+
+			// Assert
+			assertNotNull(result);
+
+			MessagePayload messagePayload = result.getMessage();
+
+			assertEquals("WARN", messagePayload.getLevel());
+			assertEquals("Der Wettbewerb ist noch nicht zur Anmeldung freigegeben.", messagePayload.getMessage());
+			assertNotNull(result.getData());
+
+			AnmeldungenAPIModel data = (AnmeldungenAPIModel) result.getData();
+
+			assertEquals(expectedJahr, data.getWettbewerbsjahr());
+			List<AnmeldungsitemAPIModel> laender = data.getLaender();
+			assertEquals(0, laender.size());
+			assertEquals(WettbewerbStatus.ERFASST, data.getStatusWettbewerb());
+
+		}
+
+		@Test
+		void should_getBeteiligungenReturnResponseOnlyResult_when_wettbewerbNichtVorhanden() {
+
+			// Act
+			ResponsePayload result = statistikService.getBeteiligungen(2032);
+
+			// Assert
+			assertNotNull(result);
+
+			MessagePayload messagePayload = result.getMessage();
+
+			assertEquals("ERROR", messagePayload.getLevel());
+			assertEquals("keine Daten vorhanden", messagePayload.getMessage());
+			assertNull(result.getData());
 		}
 
 	}

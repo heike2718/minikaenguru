@@ -19,7 +19,7 @@ export class TeilnahmenService {
 	public getAktuellenWettbewerb(): Observable<Wettbewerb> {
 
 
-		const url = environment.apiUrl + '/wettbewerb/aktueller';
+		const url = environment.apiUrl + '/wettbewerbe/aktueller';
 
 		this.logger.debug('[TeilnahmenService] getAktuellenWettbewerb - url = ' + url);
 

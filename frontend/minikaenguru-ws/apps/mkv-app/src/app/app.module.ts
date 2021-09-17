@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, ErrorHandler } from '@angular/core';
+import { NgModule, ErrorHandler, LOCALE_ID } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -13,8 +13,7 @@ import { CommonComponentsModule  } from '@minikaenguru-ws/common-components';
 
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './reducers';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { RouterStateSerializer, StoreRouterConnectingModule, RouterState, routerReducer} from "@ngrx/router-store";
+import { RouterStateSerializer, StoreRouterConnectingModule, RouterState} from "@ngrx/router-store";
 import { environment } from '../environments/environment';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { LandingComponent } from './landing/landing.component';
@@ -35,6 +34,7 @@ import { SessionTimeoutComponent } from './session-timeout/session-timeout.compo
 import { KlassenModule } from './klassen/klassen.module';
 import { LoesungszettelModule } from './loesungszettel/loesungszettel.module';
 import { UrkundenModule } from './urkunden/urkunden.module';
+import { StoreDevModules } from './store-config/store-devtools.prod';
 
 
 
@@ -99,13 +99,14 @@ import { UrkundenModule } from './urkunden/urkunden.module';
 			stateKey:'router',
 			routerState: RouterState.Minimal
 		}),
-		StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+		StoreDevModules,		
 		AppRoutingModule, // <-- immer am Ende, damit die wildcard-route als letzte deklariert bleibt
 	],
 	providers: [
 		GlobalErrorHandlerService,
 		{ provide: ErrorHandler, useClass: GlobalErrorHandlerService },
-		{ provide: RouterStateSerializer, useClass: CustomRouterStateSerializer }
+		{ provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },
+		{ provide: LOCALE_ID, useValue: "de-DE" },
 
 	],
 	bootstrap: [AppComponent]

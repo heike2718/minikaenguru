@@ -1,8 +1,9 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import * as WettbewerbeActions from './wettbewerbe.actions';
-import { WettbewerbWithID, WettbewerbEditorModel, initialWettbewerbEditorModel, Wettbewerb, WettbewerbeMap, WettbewerbStatus } from '../wettbewerbe.model';
+import { WettbewerbWithID, WettbewerbEditorModel, initialWettbewerbEditorModel, Wettbewerb, WettbewerbeMap } from '../wettbewerbe.model';
 
 import { Message } from '@minikaenguru-ws/common-messages';
+import { WettbewerbStatus } from '@minikaenguru-ws/common-components';
 
 export const wettbewerbeFeatureKey = 'mk-admin-app-wettbewerbe';
 

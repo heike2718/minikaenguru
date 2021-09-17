@@ -32,6 +32,8 @@ import de.egladil.web.mk_gateway.domain.pdfutils.FontProviderWrapper;
 import de.egladil.web.mk_gateway.domain.pdfutils.FontTyp;
 import de.egladil.web.mk_gateway.domain.pdfutils.PdfMerger;
 import de.egladil.web.mk_gateway.domain.statistik.GesamtpunktverteilungKlassenstufe;
+import de.egladil.web.mk_gateway.domain.statistik.api.MedianAPIModel;
+import de.egladil.web.mk_gateway.domain.statistik.api.MedianeAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
@@ -58,7 +60,7 @@ public class SchuluebersichtPDFGenerator {
 	 * @param  gesamtmediane
 	 * @return
 	 */
-	public DownloadData generierePdf(final WettbewerbID wettbewerbID, final Optional<SchuleAPIModel> optSchule, final Map<Klassenstufe, GesamtpunktverteilungKlassenstufe> verteilungenNachKlassenstufe, final Map<Klassenstufe, String> gesamtmediane) {
+	public DownloadData generierePdf(final WettbewerbID wettbewerbID, final Optional<SchuleAPIModel> optSchule, final Map<Klassenstufe, GesamtpunktverteilungKlassenstufe> verteilungenNachKlassenstufe, final MedianeAPIModel gesamtmediane) {
 
 		List<byte[]> seiten = new ArrayList<>();
 
@@ -100,7 +102,7 @@ public class SchuluebersichtPDFGenerator {
 		return statistiken;
 	}
 
-	byte[] generiereDeckblatt(final WettbewerbID wettbewerbID, final Optional<SchuleAPIModel> optSchule, final Map<Klassenstufe, GesamtpunktverteilungKlassenstufe> verteilungenNachKlassenstufe, final Map<Klassenstufe, String> gesamtmediane) {
+	byte[] generiereDeckblatt(final WettbewerbID wettbewerbID, final Optional<SchuleAPIModel> optSchule, final Map<Klassenstufe, GesamtpunktverteilungKlassenstufe> verteilungenNachKlassenstufe, final MedianeAPIModel gesamtmediane) {
 
 		final FontProviderWrapper fontProvider = new FontProviderWrapper();
 		final Document doc = new Document(PageSize.A4);
@@ -132,7 +134,9 @@ public class SchuluebersichtPDFGenerator {
 
 				if (verteilung != null) {
 
-					String gesamtmedian = gesamtmediane.getOrDefault(verteilung.klassenstufe(), "");
+					Optional<MedianAPIModel> optMedian = gesamtmediane.findMedian(klassenstufe);
+
+					String gesamtmedian = optMedian.isPresent() ? optMedian.get().getMedian() : "";
 
 					String text = MessageFormat.format(applicationMessages.getString("statistik.pdf.median.schule.text"),
 						new Object[] { klassenstufe.getLabel(), verteilung.getMedian() });

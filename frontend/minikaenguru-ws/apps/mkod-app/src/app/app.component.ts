@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { environment } from '../environments/environment';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 
 @Component({
 	selector: 'mkod-root',
@@ -14,9 +14,35 @@ export class AppComponent {
 	api = environment.apiUrl;
 	version = environment.version;
 
-	constructor() {
-		// const hash = window.location.hash;
+	constructor(private router: Router) {
+		
+		const hash = window.location.hash;
 
+		if (hash ) {
+
+			const hashLower = hash.toLowerCase();
+
+			if (hashLower.indexOf('anmeldungen') >= 0) {
+				window.location.hash = '';
+				router.navigateByUrl('/anmeldungen');
+			}
+
+			if (hashLower.indexOf('teilnahmen') >= 0) {
+
+				let jahr: number;
+
+				const keyVal = hashLower.split('=');
+
+				switch (keyVal[0]) {
+						case 'jahr': jahr = JSON.parse(keyVal[1]); break;
+				}
+
+				if (jahr) {
+					window.location.hash = '';
+					router.navigateByUrl('/teilnahmen/' + jahr);
+				}			
+			}
+		}
 	}
 
 	getAnimationData(outlet: RouterOutlet) {

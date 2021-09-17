@@ -18,14 +18,14 @@
 			<property name="hibernate.dialect"
 				value="org.hibernate.dialect.MariaDBDialect" />
 			<property name="javax.persistence.jdbc.url"
-				value="jdbc:mysql://192.168.10.176:5306/mk_kataloge" />
+				value="jdbc:mysql://172.17.0.3:3306/mk_kataloge" />
 			<property name="javax.persistence.jdbc.user"
 				value="mk_kataloge" />
 			<property name="javax.persistence.jdbc.password"
 				value="integrationtests" />
 			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.format_sql" value="true" />
-			<property name="hibernate.use_sql_comments" value="true" />
+			<property name="hibernate.format_sql" value="false" />
+			<property name="hibernate.use_sql_comments" value="false" />
 			<property name="hibernate.generate_statistics" value="true" />
 		</properties>
 	</persistence-unit>

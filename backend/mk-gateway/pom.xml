@@ -5,7 +5,7 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mk-gateway</artifactId>
-	<version>1.5.2.1</version>
+	<version>1.5.3</version>
 	<packaging>jar</packaging>
 
 
@@ -170,7 +170,10 @@
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-tika</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-smallrye-openapi</artifactId>
+		</dependency>
 		<!-- Quarkus END -->
 
 		<!-- Test START -->
@@ -227,10 +230,7 @@
 					<execution>
 						<goals>
 							<goal>build</goal>
-							<!--
-							<goal>generate-code</goal>
-							<goal>generate-code-tests</goal>
-							 -->
+							<!-- <goal>generate-code</goal> <goal>generate-code-tests</goal> -->
 						</goals>
 					</execution>
 				</executions>

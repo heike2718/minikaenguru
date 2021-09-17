@@ -90,6 +90,8 @@ public abstract class AbstractDomainServiceTest {
 
 	protected static final Integer WETTBEWERBSJAHR_AKTUELL = 2020;
 
+	protected static final Integer WETTBEWERBSJAHR_ERFASST = 2017;
+
 	private InMemoryUserRepository userRepository;
 
 	private InMemoryVeranstalterRepository veranstalterRepository;
@@ -99,6 +101,8 @@ public abstract class AbstractDomainServiceTest {
 	private InMemoryKlassenRepository klassenRepository;
 
 	private Wettbewerb aktuellerWettbewerb;
+
+	private Wettbewerb erfassterWettbewerb;
 
 	private ZugangUnterlagenService zugangUnterlagenService;
 
@@ -132,9 +136,16 @@ public abstract class AbstractDomainServiceTest {
 			.withDatumFreischaltungPrivat(LocalDate.of(WETTBEWERBSJAHR_AKTUELL, Month.JUNE, 1))
 			.withWettbewerbsende(LocalDate.of(WETTBEWERBSJAHR_AKTUELL, Month.AUGUST, 1));
 
+		erfassterWettbewerb = new Wettbewerb(new WettbewerbID(WETTBEWERBSJAHR_ERFASST)).withStatus(WettbewerbStatus.ERFASST)
+			.withWettbewerbsbeginn(LocalDate.of(WETTBEWERBSJAHR_AKTUELL, Month.JANUARY, 1))
+			.withDatumFreischaltungLehrer(LocalDate.of(WETTBEWERBSJAHR_AKTUELL, Month.MARCH, 1))
+			.withDatumFreischaltungPrivat(LocalDate.of(WETTBEWERBSJAHR_AKTUELL, Month.JUNE, 1))
+			.withWettbewerbsende(LocalDate.of(WETTBEWERBSJAHR_AKTUELL, Month.AUGUST, 1));
+
 		wettbewerbRepository = Mockito.mock(WettbewerbRepository.class);
 
-		Mockito.when(wettbewerbRepository.loadWettbewerbe()).thenReturn(Arrays.asList(new Wettbewerb[] { aktuellerWettbewerb }));
+		Mockito.when(wettbewerbRepository.loadWettbewerbe())
+			.thenReturn(Arrays.asList(new Wettbewerb[] { aktuellerWettbewerb, erfassterWettbewerb }));
 
 		userRepository = new InMemoryUserRepository();
 

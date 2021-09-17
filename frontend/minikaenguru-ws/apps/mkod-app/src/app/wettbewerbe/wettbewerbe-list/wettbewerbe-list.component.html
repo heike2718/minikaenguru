@@ -1,0 +1,37 @@
+<div class="mkv-container mt-5">
+	<div class="col-12">
+        <h3>Wetttbewerbe</h3>
+        <div *ngIf="wettbewerbeFacade.wettbewerbe$ | async as wettbewerbe">
+
+            <div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let wettbewerb of wettbewerbe">
+                <mkod-wettbewerbe-card [wettbewerb]="wettbewerb"></mkod-wettbewerbe-card>
+            </div>
+
+        </div>
+
+		<div class="d-none d-md-block">
+			<div class="btn-group d-flex" role="group">
+				<button class="btn btn-secondary w-100 ml-1" (click)="gotoAnmeldungen()"
+					title="zum aktuellen Wettbewerb"><i class="fa fa-handshake-o"
+						aria-hidden="true"></i>Anmeldungen</button>
+                <button class="btn btn-secondary w-100 ml-1" (click)="gotoLanding()"
+                    title="zur Startseite"><i class="fa fa-home"
+                        aria-hidden="true"></i>Startseite</button>
+            </div>
+		</div>
+		<div class="d-md-none d-lg-none d-xl-none">
+			<div class="btn-group d-inline" role="group">
+				<button class="btn btn-secondary w-100 ml-1" (click)="gotoAnmeldungen()"
+					title="zum aktuellen Wettbewerb"><i class="fa fa-handshake-o"
+						aria-hidden="true"></i>Anmeldungen</button>
+                <button class="btn btn-secondary w-100 ml-1" (click)="gotoLanding()"
+                    title="zur Startseite"><i class="fa fa-home"
+                        aria-hidden="true"></i>Startseite</button>
+		</div>
+    </div>    
+</div>
+
+
+<ng-template #loading>	
+	Bitte warten... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
+</ng-template>

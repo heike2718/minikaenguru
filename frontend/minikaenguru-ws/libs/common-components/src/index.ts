@@ -39,7 +39,8 @@ export {
 	compareKinder,
 	compareKlassen,
 	kindToString,
-	UploadComponentModel
+	UploadComponentModel,
+	WettbewerbStatus
 } from './lib/common-components.model';
 
 export { AnonymisierteTeilnahmeComponent } from './lib/anonymisierte-teilnahme/anonymisierte-teilnahme.component';

@@ -4,9 +4,11 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.general.statistik;
 
+import static de.egladil.web.mk_gateway.infrastructure.rest.HttpStatus.HTTP_OK;
+import static de.egladil.web.mk_gateway.infrastructure.rest.HttpStatus.HTTP_SERVER_ERROR;
+
 import java.text.MessageFormat;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -22,6 +24,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,14 +49,15 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 
 /**
- * OpenDataResource
+ * OpenDataStatistikResource
  */
 @RequestScoped
-@Path("open-data")
+@Path("open-data/statistik")
 @Consumes(MediaType.APPLICATION_JSON)
-public class OpenDataResource {
+@Tag(name = "statistik")
+public class OpenDataStatistikResource {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(OpenDataResource.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(OpenDataStatistikResource.class);
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
@@ -60,7 +69,7 @@ public class OpenDataResource {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_XML })
-	@Path("statistik/{jahr}/IKID/xml")
+	@Path("{jahr}/IKID/xml")
 	public Response getGesamtstatistikIKidsFuerJahr(@PathParam(value = "jahr") final String jahr) {
 
 		Response checkResponse = this.checkJahr(jahr, "/open-data/statistik/{jahr}/IKID/xml");
@@ -78,7 +87,7 @@ public class OpenDataResource {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_XML })
-	@Path("statistik/{jahr}/EINS/xml")
+	@Path("{jahr}/EINS/xml")
 	public Response getGesamtstatistikIKlasse1FuerJahr(@PathParam(value = "jahr") final String jahr) {
 
 		Response checkResponse = this.checkJahr(jahr, "/open-data/statistik/{jahr}/EINS/xml");
@@ -96,7 +105,7 @@ public class OpenDataResource {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_XML })
-	@Path("statistik/{jahr}/ZWEI/xml")
+	@Path("{jahr}/ZWEI/xml")
 	public Response getGesamtstatistikIKlasse2FuerJahr(@PathParam(value = "jahr") final String jahr) {
 
 		Response checkResponse = this.checkJahr(jahr, "/open-data/statistik/{jahr}/ZWEI/xml");
@@ -114,7 +123,7 @@ public class OpenDataResource {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM })
-	@Path("statistik/{jahr}/pdf")
+	@Path("{jahr}/pdf")
 	public Response downloadGesamtstatistikFuerJahr(@PathParam(value = "jahr") final String jahr) {
 
 		Response checkJahrResponse = this.checkJahr(jahr, "/open-data/statistik/{jahr}/pdf");
@@ -133,7 +142,7 @@ public class OpenDataResource {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
-	@Path("statistik/{jahr}/mediane")
+	@Path("{jahr}/mediane")
 	public Response getMediane(@PathParam(
 		value = "jahr") final String jahr) {
 
@@ -146,7 +155,7 @@ public class OpenDataResource {
 
 		WettbewerbID wettbewerbID = new WettbewerbID(jahr);
 
-		Map<Klassenstufe, String> mediane = statistikWettbewerbService.berechneGesamtmedianeWettbewerb(wettbewerbID);
+		MedianeAPIModel mediane = statistikWettbewerbService.berechneGesamtmedianeWettbewerb(wettbewerbID);
 
 		if (mediane.size() == 0) {
 
@@ -158,14 +167,12 @@ public class OpenDataResource {
 				.build();
 		}
 
-		MedianeAPIModel responseData = new MedianeAPIModel(mediane);
-
-		return Response.ok(new ResponsePayload(MessagePayload.ok(), responseData)).build();
+		return Response.ok(new ResponsePayload(MessagePayload.ok(), mediane)).build();
 	}
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
-	@Path("statistik/anmeldungen")
+	@Path("anmeldungen")
 	public Response getAnmeldungenUndBeteiligungenAktuellerWettbewerb() {
 
 		AnmeldungenAPIModel anmeldungen = statistikWettbewerbService.berechneAnmeldungsstatistikAktuellerWettbewerb();
@@ -173,8 +180,50 @@ public class OpenDataResource {
 		return Response.ok(new ResponsePayload(MessagePayload.ok(), anmeldungen)).build();
 	}
 
+	@APIResponses({
+		@APIResponse(
+			description = "Liste der Anmeldungen und Beteiligungen nach Ländern zu einem Wettbewerbsjahr",
+			responseCode = HTTP_OK,
+			content = {
+				@Content(
+					mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(
+						implementation = AnmeldungenAPIModel.class,
+						type = SchemaType.OBJECT,
+						description = "Liste der Anmeldungen und Teilnahmen nach Ländern"))
+			}),
+		@APIResponse(
+			description = "Fehler beim Laden der Teilnahmestatistik",
+			name = "Error",
+			responseCode = HTTP_SERVER_ERROR,
+			content = {
+				@Content(
+					mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(
+						implementation = ResponsePayload.class,
+						type = SchemaType.OBJECT))
+			})
+
+	})
 	@GET
-	@Path("statistik/prozentrang")
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("teilnahmen")
+	public Response getAnmeldungenUndBeteiligungenNachWettbewerbsjahr(@QueryParam(value = "jahr") final Integer jahr) {
+
+		Response checkResponse = this.checkJahr(jahr.toString(), "/open-data/statistik/teilnahmen/{jahr}");
+
+		if (checkResponse.getStatus() != 200) {
+
+			return checkResponse;
+		}
+
+		ResponsePayload responsePayload = statistikWettbewerbService.getBeteiligungen(jahr);
+
+		return Response.ok(responsePayload).build();
+	}
+
+	@GET
+	@Path("prozentrang")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getProzentrang(@QueryParam(value = "jahr") final String jahr, @QueryParam(
 		value = "klasse") final String klasse, @QueryParam(

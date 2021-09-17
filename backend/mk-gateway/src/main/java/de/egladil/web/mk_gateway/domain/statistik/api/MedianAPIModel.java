@@ -14,19 +14,45 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 public class MedianAPIModel {
 
 	@JsonProperty
-	private String klassenstufe;
+	private Klassenstufe klassenstufe;
 
 	@JsonProperty
 	private String median;
+
+	@JsonProperty
+	private int anzahlLoesungszettel;
 
 	MedianAPIModel() {
 
 	}
 
-	public MedianAPIModel(final Klassenstufe klassenstufe, final String median) {
+	public MedianAPIModel(final Klassenstufe klassenstufe, final String median, final int anzahlLoesungszettel) {
 
-		this.klassenstufe = klassenstufe.getLabel();
+		this.klassenstufe = klassenstufe;
 		this.median = median;
+		this.anzahlLoesungszettel = anzahlLoesungszettel;
+	}
+
+	@Override
+	public String toString() {
+
+		return "MedianAPIModel [klassenstufe=" + klassenstufe + ", anzahlLoesungszettel=" + anzahlLoesungszettel + ", median="
+			+ median + "]";
+	}
+
+	public Klassenstufe getKlassenstufe() {
+
+		return klassenstufe;
+	}
+
+	public String getMedian() {
+
+		return median;
+	}
+
+	public int getAnzahlLoesungszettel() {
+
+		return anzahlLoesungszettel;
 	}
 
 }

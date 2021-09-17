@@ -11,10 +11,14 @@ export class LandingComponent implements OnInit {
 	constructor(private router: Router) { }
 
 	ngOnInit(): void {
-	}
+	}	
 
-	gotoAnmeldungen() {
-		this.router.navigateByUrl('anmeldungen');
+	gotoWettbewerbe(): void {
+		this.router.navigateByUrl('/wettbewerbe');
+	}
+	
+	gotoAnmeldungen(): void {
+		this.router.navigateByUrl('/anmeldungen');
 	}
 
 }

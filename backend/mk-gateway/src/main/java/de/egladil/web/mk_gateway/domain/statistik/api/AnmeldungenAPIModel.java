@@ -7,6 +7,8 @@ package de.egladil.web.mk_gateway.domain.statistik.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
@@ -14,6 +16,7 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
 /**
  * AnmeldungenAPIModel
  */
+@Schema(name = "teilnahmen")
 public class AnmeldungenAPIModel {
 
 	@JsonProperty
@@ -21,6 +24,9 @@ public class AnmeldungenAPIModel {
 
 	@JsonProperty
 	private WettbewerbStatus statusWettbewerb;
+
+	@JsonProperty
+	private List<MedianAPIModel> mediane = new ArrayList<>();
 
 	@JsonProperty
 	private AnmeldungsitemAPIModel privatanmeldungen;
@@ -90,5 +96,15 @@ public class AnmeldungenAPIModel {
 
 		this.schulanmeldungen = schulanmeldungen;
 		return this;
+	}
+
+	public List<MedianAPIModel> getMediane() {
+
+		return mediane;
+	}
+
+	public void setMediane(final List<MedianAPIModel> mediane) {
+
+		this.mediane = mediane;
 	}
 }

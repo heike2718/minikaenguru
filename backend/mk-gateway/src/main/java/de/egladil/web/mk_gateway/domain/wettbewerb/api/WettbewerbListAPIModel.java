@@ -15,7 +15,7 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
 public class WettbewerbListAPIModel {
 
 	@JsonProperty
-	private int jahr;
+	private Integer jahr;
 
 	@JsonProperty
 	private WettbewerbStatus status;
@@ -26,12 +26,12 @@ public class WettbewerbListAPIModel {
 	public static WettbewerbListAPIModel fromWettbewerb(final Wettbewerb wettbewerb) {
 
 		WettbewerbListAPIModel result = new WettbewerbListAPIModel();
-		result.jahr = wettbewerb.id().jahr().intValue();
+		result.jahr = wettbewerb.id().jahr();
 		result.status = wettbewerb.status();
 		return result;
 	}
 
-	public int jahr() {
+	public Integer jahr() {
 
 		return jahr;
 	}

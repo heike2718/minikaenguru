@@ -21,6 +21,7 @@ import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.kataloge.SchulkatalogService;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
+import de.egladil.web.mk_gateway.domain.statistik.api.MedianeAPIModel;
 import de.egladil.web.mk_gateway.domain.statistik.pdf.PrivatteilnahmenuebersichtPDFGenerator;
 import de.egladil.web.mk_gateway.domain.statistik.pdf.SchuluebersichtPDFGenerator;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
@@ -86,7 +87,7 @@ public class StatistikAnonymisierteEinzelteilnahmeService {
 			}
 		}
 
-		Map<Klassenstufe, String> gesamtmediane = statistikWettbewerbService.berechneGesamtmedianeWettbewerb(wettbewerbID);
+		MedianeAPIModel gesamtmediane = statistikWettbewerbService.berechneGesamtmedianeWettbewerb(wettbewerbID);
 
 		switch (teilnahmeIdentifier.teilnahmeart()) {
 
