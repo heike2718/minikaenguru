@@ -37,7 +37,7 @@ export class LogWebApi extends LogPublisher {
 
 		if (!this.url) {
 			console.log('[LogWebApi]: muss mal die LogWebApi-Config prüfen');
-			return;
+			return of(false);
 		}
 
 		this.http.post(this.url, entry).pipe(
