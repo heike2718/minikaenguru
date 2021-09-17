@@ -1,5 +1,10 @@
 # minikaenguru Release Notes
 
+__Release 1.5.3__:
+
+* [Auflistung Beteiligungen nach Ländern](https://github.com/heike2718/minikaenguru/issues/332)
+* [Prozentrang wird in einigen Fällen falsch berechnet](https://github.com/heike2718/minikaenguru/issues/333)
+
 __Release 1.5.2__:
 
 * [Weiterleitung Benutzeränderungen an Minikänguru-App funktioniert nicht mehr](https://github.com/heike2718/minikaenguru/issues/322)
