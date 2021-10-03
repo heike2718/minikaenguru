@@ -8,8 +8,9 @@ export const environment = {
         production: false,
         assetsUrl: '/home/heike/git/minikaenguru/frontend/minikaenguru-ws/apps/mk-admin-app/src/assets',
         apiUrl: 'http://localhost:9510/mk-gateway/admin',
+        profileUrl: 'http://localhost:80/profil-app',
         storageKeyPrefix: 'mka_',
-        version: '1.6.0',
+        version: '1.6.1',
         consoleLogActive: true,
         serverLogActive: false,
         loglevel: 1

@@ -71,7 +71,8 @@ import { StoreDevModules } from './store-config/store-devtools';
 			baseUrl: environment.apiUrl + '/veranstalter',
 			production: environment.production,
 			storagePrefix: environment.storageKeyPrefix,
-			loginSuccessUrl: '/dashboard'
+			loginSuccessUrl: '/dashboard',
+			profileUrl: environment.profileUrl
 		}),
 		AktuelleMeldungModule,
 		WettbewerbModule,

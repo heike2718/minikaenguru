@@ -30,7 +30,7 @@ export class LogoutService {
 
 
 	logout(): void {
-		this.authService.logout();
+		this.authService.logOut(false);
 		this.lehrerFacade.resetState();
 		this.privatveranstalterFacade.resetState();
 		this.wettbewerbFacade.resetState();
@@ -44,5 +44,20 @@ export class LogoutService {
 		localStorage.removeItem(STORAGE_KEY_INVALID_SESSION);
 
 		this.router.navigateByUrl('/landing');
+	}
+
+	logoutForUserSettings(): void {
+		this.authService.logOut(true);
+		this.lehrerFacade.resetState();
+		this.privatveranstalterFacade.resetState();
+		this.wettbewerbFacade.resetState();
+		this.teinahmenFacade.resetState();
+		this.vertragAdvFacade.resetState();
+		this.kinderFacade.resetState();
+		this.klassenFacade.resetState();
+
+		this.messageService.clear();
+
+		localStorage.removeItem(STORAGE_KEY_INVALID_SESSION);
 	}
 }

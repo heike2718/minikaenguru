@@ -71,7 +71,8 @@ registerLocaleData(localeDe);
 			baseUrl: environment.apiUrl,
 			production: environment.production,
 			storagePrefix: environment.storageKeyPrefix,
-			loginSuccessUrl: '/dashboard'
+			loginSuccessUrl: '/dashboard',
+			profileUrl: environment.profileUrl
 		}),
 		StoreModule.forRoot(reducers, {
 			metaReducers,
