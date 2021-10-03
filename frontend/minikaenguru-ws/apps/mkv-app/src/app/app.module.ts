@@ -34,7 +34,7 @@ import { SessionTimeoutComponent } from './session-timeout/session-timeout.compo
 import { KlassenModule } from './klassen/klassen.module';
 import { LoesungszettelModule } from './loesungszettel/loesungszettel.module';
 import { UrkundenModule } from './urkunden/urkunden.module';
-import { StoreDevModules } from './store-config/store-devtools.prod';
+import { StoreDevModules } from './store-config/store-devtools';
 
 
 
@@ -71,7 +71,8 @@ import { StoreDevModules } from './store-config/store-devtools.prod';
 			baseUrl: environment.apiUrl + '/veranstalter',
 			production: environment.production,
 			storagePrefix: environment.storageKeyPrefix,
-			loginSuccessUrl: '/dashboard'
+			loginSuccessUrl: '/dashboard',
+			profileUrl: environment.profileUrl
 		}),
 		AktuelleMeldungModule,
 		WettbewerbModule,
