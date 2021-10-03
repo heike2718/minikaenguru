@@ -33,12 +33,12 @@
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "apps/mkv-app/src/environments/environment.ts",
-                  "with": "apps/mkv-app/src/environments/environment.prod.ts"
-                },
-                {
                   "replace": "apps/mkv-app/src/app/store-config/store-devtools.ts",
                   "with": "apps/mkv-app/src/app/store-config/store-devtools.prod.ts"
+                },
+                {
+                  "replace": "apps/mkv-app/src/environments/environment.ts",
+                  "with": "apps/mkv-app/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -414,12 +414,12 @@
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "apps/mk-admin-app/src/environments/environment.ts",
-                  "with": "apps/mk-admin-app/src/environments/environment.prod.ts"
-                },
-                {
                   "replace": "apps/mk-admin-app/src/app/store-config/store-devtools.ts",
                   "with": "apps/mk-admin-app/src/app/store-config/store-devtools.prod.ts"
+                },
+                {
+                  "replace": "apps/mk-admin-app/src/environments/environment.ts",
+                  "with": "apps/mk-admin-app/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -571,12 +571,12 @@
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "apps/mkod-app/src/environments/environment.ts",
-                  "with": "apps/mkod-app/src/environments/environment.prod.ts"
-                },
-                {
                   "replace": "apps/mkod-app/src/app/store-config/store-devtools.ts",
                   "with": "apps/mkod-app/src/app/store-config/store-devtools.prod.ts"
+                },
+                {
+                  "replace": "apps/mkod-app/src/environments/environment.ts",
+                  "with": "apps/mkod-app/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
