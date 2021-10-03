@@ -1,5 +1,9 @@
 # minikaenguru Release Notes
 
+__Release 1.6.1__:
+
+* [Patch Session wird beim Wechsel zu Benutzereinstellungen nicht invalidatet](https://github.com/heike2718/minikaenguru/issues/335)
+
 __Release 1.5.3__:
 
 * [Auflistung Beteiligungen nach Ländern](https://github.com/heike2718/minikaenguru/issues/332)
