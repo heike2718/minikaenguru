@@ -8,7 +8,7 @@ export const login = createAction(
 );
 
 export const logout = createAction(
-	'[Navbar/AuthService] logout'
+	'[Navbar/AuthService] logout'	
 );
 
 export const refreshSession = createAction(

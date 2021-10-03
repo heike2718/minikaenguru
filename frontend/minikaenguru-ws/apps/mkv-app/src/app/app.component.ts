@@ -2,8 +2,7 @@ import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { environment } from '../environments/environment';
 import { AuthService, AuthResult } from '@minikaenguru-ws/common-auth';
 import { RegistrationService } from './registration/registration.service';
-import { map } from 'rxjs/operators';
-import { ResponsePayload, MessageService } from '@minikaenguru-ws/common-messages';
+import { MessageService } from '@minikaenguru-ws/common-messages';
 import { RouterOutlet } from '@angular/router';
 
 @Component({

@@ -101,7 +101,7 @@ export class AuthService {
 			}));
 	}
 
-	public logout() {
+	logOut(redirectToProfileApp: boolean): void {
 
 		this.store.dispatch(startLoggingOut());
 
@@ -116,9 +116,13 @@ export class AuthService {
 			map(body => body as ResponsePayload)
 		).subscribe(
 			_payload => {
-				// der auth.effect löscht die Daten anschließend aus dem localStorage
+				// der auth.effect löscht die Daten anschließend aus dem localStorage (oder auch nicht :/)
 				this.store.dispatch(logout());
-				this.router.navigateByUrl('/');
+				if (redirectToProfileApp) {
+					window.location.href = this.config.profileUrl;
+				} else {
+					this.router.navigateByUrl('/');
+				}
 			},
 			(error => {
 				this.handleError(error, '[AuthService] logout')

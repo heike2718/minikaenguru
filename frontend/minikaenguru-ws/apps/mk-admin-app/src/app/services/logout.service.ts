@@ -23,7 +23,7 @@ export class LogoutService {
 
 	logout(): void {
 		this.newsletterFacade.stopPollVersandinfo();
-		this.authService.logout();
+		this.authService.logOut(false);
 		this.appStore.dispatch(resetWettbewerbe());
 		this.appStore.dispatch(resetKataloge());
 		this.appStore.dispatch(resetVeranstalters());

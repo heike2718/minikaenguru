@@ -53,7 +53,6 @@ export class NavbarComponent implements OnInit {
 	}
 
 	gotProfilApp(): void {
-		this.logout();
-		window.location.href = environment.profileUrl;
+		this.logoutService.logoutForUserSettings();
 	}
 }
