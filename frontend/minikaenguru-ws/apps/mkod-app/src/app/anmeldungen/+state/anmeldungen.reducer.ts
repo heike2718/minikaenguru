@@ -6,12 +6,12 @@ import * as AnmeldungenActions from './anmeldungen.actions';
 export const anmeldungenFeatureKey = 'mkod-app-anmeldungen';
 
 export interface AnmeldungenState {
-	wettbewerbsjahr: string,
-	statusWettbewerb: WettbewerbStatus,
-	privatanmeldungen: Anmeldungsitem,
-	schulanmeldungen: Anmeldungsitem,
+	wettbewerbsjahr?: string,
+	statusWettbewerb?: WettbewerbStatus,
+	privatanmeldungen?: Anmeldungsitem,
+	schulanmeldungen?: Anmeldungsitem,
 	laender: Anmeldungsitem[],
-	selectedItem: Anmeldungsitem,
+	selectedItem?: Anmeldungsitem,
 	anmeldungenLoaded: boolean,
 	loading: boolean
 };

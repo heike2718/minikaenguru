@@ -29,7 +29,7 @@ export class AppComponent {
 
 			if (hashLower.indexOf('teilnahmen') >= 0) {
 
-				let jahr: number;
+				let jahr: number | undefined;
 
 				const keyVal = hashLower.split('=');
 

@@ -6,8 +6,8 @@ export const teilnahmenFeatureKey = 'mkod-app-teilnahmen';
 
 export interface TeilnahmenState {
     readonly anmeldungenMap: AnmeldungenWithID[],
-    readonly selectedAnmeldungen: Anmeldungen;
-	readonly selectedItem: Anmeldungsitem,
+    readonly selectedAnmeldungen?: Anmeldungen;
+	readonly selectedItem?: Anmeldungsitem,
     readonly loading: boolean;
 }
 

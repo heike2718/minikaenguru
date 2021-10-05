@@ -5,13 +5,15 @@ import { Store } from '@ngrx/store';
 import { anmeldungenState } from './+state/anmeldungen.selectors';
 import * as AnmeldungenActions from './+state/anmeldungen.actions';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
+import { Observable } from 'rxjs';
+import { AnmeldungenState } from './+state/anmeldungen.reducer';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class AnmeldungenFacade {
 
-	public anmeldungenState$ = this.store.select(anmeldungenState);
+	public anmeldungenState$ : Observable<AnmeldungenState> = this.store.select(anmeldungenState);
 
 	private alreadyLoaded = false;
 

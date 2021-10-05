@@ -6,7 +6,7 @@ export const wettbewerbeFeatureKey = 'mkod-app-wettbewerbe';
 
 export interface WettbewerbeState {
     readonly wettbewerbeMap: WettbewerbWithID[],
-    readonly selectedWettbewerb: Wettbewerb,
+    readonly selectedWettbewerb?: Wettbewerb,
 	readonly wettbewerbeLoaded: boolean;
     readonly loading: boolean;
 }
@@ -28,10 +28,9 @@ const wettbewerbeReducer = createReducer(initialWettbewerbeState,
     on (WettbewerbeActions.wettbewerbeLoaded, (state, action) => {
 
         const alle = action.wettbewerbe;
-		const newMap = [];
+		const newMap: WettbewerbWithID[] = [];
 		alle.forEach(w => newMap.push({ jahr: w.jahr, wettbewerb: w }));
 
-        // TODO wettbewerbeMap füllen
         return { ...state, loading: false, wettbewerbeLoaded: true, wettbewerbeMap: newMap, selectedWettbewerb: undefined};
     }),
 
