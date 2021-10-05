@@ -28,10 +28,10 @@ export interface WettbewerbWithID {
 export interface WettbewerbEditorModel {
 	jahr: number,
 	status: WettbewerbStatus,
-	wettbewerbsbeginn: string
-	wettbewerbsende: string;
-	datumFreischaltungLehrer: string;
-	datumFreischaltungPrivat: string;
+	wettbewerbsbeginn?: string
+	wettbewerbsende?: string;
+	datumFreischaltungLehrer?: string;
+	datumFreischaltungPrivat?: string;
 	loesungsbuchstabenIkids: string;
 	loesungsbuchstabenKlasse1: string;
 	loesungsbuchstabenKlasse2: string;
@@ -70,10 +70,14 @@ export class WettbewerbeMap {
 		return this.wettbewerbe.has(jahr);
 	}
 
-	public get(jahr: number): Wettbewerb {
+	public get(jahr: number | undefined): Wettbewerb | undefined{
+
+		if (!jahr) {
+			return undefined;
+		}
 
 		if (!this.has(jahr)) {
-			return null;
+			return undefined;
 		}
 
 		return this.wettbewerbe.get(jahr);

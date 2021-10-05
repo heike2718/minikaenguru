@@ -17,13 +17,13 @@ export class SchuleCardComponent implements OnInit, OnDestroy {
 	devMode = environment.envName === 'DEV';
 
 	@Input()
-	schule: Schule;
+	schule!: Schule;
 
 	wettbewerb$ = this.wettbewerbFacade.aktuellerWettbewerb$;
 
-	private user: User;
+	private user!: User | null;
 
-	private userSubscription: Subscription;
+	private userSubscription: Subscription = new Subscription();
 
 	constructor(private router: Router,
 		private lehrerFacade: LehrerFacade,
@@ -38,13 +38,14 @@ export class SchuleCardComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-
-		if (this.userSubscription) {
-			this.userSubscription.unsubscribe();
-		}
+		this.userSubscription.unsubscribe();
 	}
 
 	schuleAnmelden(): void {
+
+		if (this.user === null) {
+			return;
+		}
 		this.lehrerFacade.selectSchule(this.schule);
 		this.lehrerFacade.schuleAnmelden(this.schule, this.user);
 		this.router.navigateByUrl('/lehrer/schule-dashboard/' + this.schule.kuerzel);

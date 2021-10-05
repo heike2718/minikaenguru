@@ -18,15 +18,15 @@ import { ResponsePayload, MessageService, Message } from '@minikaenguru-ws/commo
 })
 export class SchulteilnahmenFacade {
 
-	public schuleOverview$: Observable<SchuleAdminOverview> = this.store.select(SchulteilnahmenSelectors.selectedSchule);
+	public schuleOverview$: Observable<SchuleAdminOverview | undefined> = this.store.select(SchulteilnahmenSelectors.selectedSchule);
 
-	public schuleUploadModel$: Observable<SchuleUploadModel> = this.store.select(SchulteilnahmenSelectors.schuleUploadModel);
+	public schuleUploadModel$: Observable<SchuleUploadModel | undefined> = this.store.select(SchulteilnahmenSelectors.schuleUploadModel);
 
-	public selectedTeilnahme$: Observable<Teilnahme> = this.store.select(SchulteilnahmenSelectors.selectedTeilnahme);
+	public selectedTeilnahme$: Observable<Teilnahme | undefined> = this.store.select(SchulteilnahmenSelectors.selectedTeilnahme);
 
 	public fehlermeldungen$: Observable<string[]> = this.store.select(SchulteilnahmenSelectors.fehlermeldungen);
 
-	private schulenMap: SchuleAdminOverviewWithID[];
+	private schulenMap: SchuleAdminOverviewWithID[] = [];
 
 	constructor(private schulteilnahmenService: SchulteilnahmenService,
 		private messageService: MessageService,
@@ -65,7 +65,7 @@ export class SchulteilnahmenFacade {
 		if (responsePayload.data) {
 
 			const report: AuswertungImportReport = responsePayload.data;
-			this.store.dispatch(SchulteilnamenActions.auswertungImportert({ report: report }));
+			this.store.dispatch(SchulteilnamenActions.auswertungImportiert({ report: report }));
 		}
 
 		this.messageService.showMessage(responsePayload.message);

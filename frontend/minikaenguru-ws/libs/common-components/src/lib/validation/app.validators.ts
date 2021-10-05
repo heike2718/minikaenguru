@@ -1,10 +1,9 @@
 import { AbstractControl, FormGroup, FormControl } from '@angular/forms';
-import { Klassenstufe, getKlassenstufeByLabel } from '../common-components.model';
 
 
 export function emailValidator(control: AbstractControl): {
 	[key: string]: any
-} {
+} | null {
 
 	const theValue: string = extractTheValueAsString(control);
 
@@ -23,7 +22,7 @@ export function emailValidator(control: AbstractControl): {
 
 export function landValidator(control: AbstractControl): {
 	[key: string]: any
-} {
+} | null {
 	const value: string = extractTheValueAsString(control).toLowerCase();
 
 	if (value.includes('deutsch') || value.includes('bundesrepublik') || value.toUpperCase() === 'BRD' || value.toUpperCase() === 'DE') {
@@ -38,7 +37,7 @@ export function validateAllFormFields(formGroup: FormGroup): void {
 		if (control instanceof FormControl) {
 			control.markAsTouched({ onlySelf: true });
 		} else if (control instanceof FormGroup) {
-			this.validateAllFormFields(control);
+			validateAllFormFields(control);
 		}
 	});
 };

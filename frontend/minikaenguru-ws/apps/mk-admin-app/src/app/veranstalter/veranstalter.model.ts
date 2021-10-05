@@ -6,7 +6,7 @@ export type ZugangUnterlagen = 'DEFAULT' | 'ERTEILT' | 'ENTZOGEN';
 
 export interface VeranstalterSuchanfrage {
 	suchkriterium: VeranstalterSuchkriterium;
-	suchstring: string;
+	suchstring?: string;
 };
 
 export interface Veranstalter {
@@ -49,10 +49,10 @@ export class VeranstalterMap {
 
 	}
 
-	public get(uuid: string): Veranstalter {
+	public get(uuid: string): Veranstalter | undefined {
 
 		if (uuid === undefined) {
-			return null;
+			return undefined;
 		}
 		return this.veranstalter.get(uuid);
 

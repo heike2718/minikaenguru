@@ -6,7 +6,7 @@ export const veranstalterFeatureKey = 'mk-admin-app-veranstalter';
 
 export interface VeranstalterState {
 	veranstalterMap: VeranstalterWithID[],
-	selectedVeranstalter: Veranstalter,
+	selectedVeranstalter?: Veranstalter,
 	sucheFinished: boolean,
 	loading: boolean
 };
@@ -63,38 +63,46 @@ const veranstalterReducer = createReducer(initialVeranstalterState,
 
 	on(VeranstalterActions.privatteilnahmeOverviewLoaded, (state, action) => {
 
-		const veranstalterMapAktuell = new VeranstalterMap(state.veranstalterMap);
-		const newSelectedVeranstalter = { ...state.selectedVeranstalter, schuleAdminOverview: undefined, privatOverview: action.privatteilnahmeOverview };
-		const veranstalterArray: Veranstalter[] = [];
-		veranstalterArray.push(newSelectedVeranstalter);
-		const neueVeranstalterMap = veranstalterMapAktuell.merge(veranstalterArray);
+		if (state.selectedVeranstalter) {
 
-		return {
-			...state, loading: false, sucheFinished: true, veranstalterMap: neueVeranstalterMap
-			, selectedVeranstalter: newSelectedVeranstalter
-		};
+			const veranstalterMapAktuell = new VeranstalterMap(state.veranstalterMap);
+			const newSelectedVeranstalter = { ...state.selectedVeranstalter, schuleAdminOverview: undefined, privatOverview: action.privatteilnahmeOverview };
+			const veranstalterArray: Veranstalter[] = [];
+			veranstalterArray.push(newSelectedVeranstalter);
+			const neueVeranstalterMap = veranstalterMapAktuell.merge(veranstalterArray);
+
+			return {
+				...state, loading: false, sucheFinished: true, veranstalterMap: neueVeranstalterMap
+				, selectedVeranstalter: newSelectedVeranstalter
+			};
+		}
+
+		return {...state, loading: false, sucheFinished: true};
 
 	}),
 
 	on(VeranstalterActions.zugangsstatusUnterlagenGeaendert, (state, action) => {
 
-		const theSelectedVeranstalter: Veranstalter = state.selectedVeranstalter;
+		if (state.selectedVeranstalter) {
 
-		if (theSelectedVeranstalter && theSelectedVeranstalter.uuid === action.veranstalter.uuid) {
+			const theSelectedVeranstalter: Veranstalter = state.selectedVeranstalter;
 
-			if (theSelectedVeranstalter.zugangsstatusUnterlagen !== action.neuerStatus) {
+			if (theSelectedVeranstalter.uuid === action.veranstalter.uuid) {
 
-				const changedVeranstalter: Veranstalter = { ...theSelectedVeranstalter, zugangsstatusUnterlagen: action.neuerStatus };
+				if (theSelectedVeranstalter.zugangsstatusUnterlagen !== action.neuerStatus) {
+
+					const changedVeranstalter: Veranstalter = { ...theSelectedVeranstalter, zugangsstatusUnterlagen: action.neuerStatus };
 
 
-				const veranstalterMapAktuell = new VeranstalterMap(state.veranstalterMap);
-				const veranstalterArray: Veranstalter[] = [];
-				veranstalterArray.push(changedVeranstalter);
-				const neueVeranstalterMap = veranstalterMapAktuell.merge(veranstalterArray);
+					const veranstalterMapAktuell = new VeranstalterMap(state.veranstalterMap);
+					const veranstalterArray: Veranstalter[] = [];
+					veranstalterArray.push(changedVeranstalter);
+					const neueVeranstalterMap = veranstalterMapAktuell.merge(veranstalterArray);
 
-				return { ...state, veranstalterMap: neueVeranstalterMap, selectedVeranstalter: changedVeranstalter, loading: false };
+					return { ...state, veranstalterMap: neueVeranstalterMap, selectedVeranstalter: changedVeranstalter, loading: false };
+				}
+
 			}
-
 		}
 
 		return { ...state, loading: false };
@@ -103,23 +111,26 @@ const veranstalterReducer = createReducer(initialVeranstalterState,
 
 	on(VeranstalterActions.newsletterDeaktiviert, (state, action) => {
 
-		const theSelectedVeranstalter: Veranstalter = state.selectedVeranstalter;
+		if (state.selectedVeranstalter) {
 
-		if (theSelectedVeranstalter && theSelectedVeranstalter.uuid === action.veranstalter.uuid) {
+			const theSelectedVeranstalter: Veranstalter = state.selectedVeranstalter;
 
-			if (theSelectedVeranstalter.newsletterAbonniert) {
+			if (theSelectedVeranstalter.uuid === action.veranstalter.uuid) {
 
-				const changedVeranstalter: Veranstalter = { ...theSelectedVeranstalter, newsletterAbonniert: false };
+				if (theSelectedVeranstalter.newsletterAbonniert) {
+
+					const changedVeranstalter: Veranstalter = { ...theSelectedVeranstalter, newsletterAbonniert: false };
 
 
-				const veranstalterMapAktuell = new VeranstalterMap(state.veranstalterMap);
-				const veranstalterArray: Veranstalter[] = [];
-				veranstalterArray.push(changedVeranstalter);
-				const neueVeranstalterMap = veranstalterMapAktuell.merge(veranstalterArray);
+					const veranstalterMapAktuell = new VeranstalterMap(state.veranstalterMap);
+					const veranstalterArray: Veranstalter[] = [];
+					veranstalterArray.push(changedVeranstalter);
+					const neueVeranstalterMap = veranstalterMapAktuell.merge(veranstalterArray);
 
-				return { ...state, veranstalterMap: neueVeranstalterMap, selectedVeranstalter: changedVeranstalter, loading: false };
+					return { ...state, veranstalterMap: neueVeranstalterMap, selectedVeranstalter: changedVeranstalter, loading: false };
+				}
+
 			}
-
 		}
 
 		return { ...state, loading: false };

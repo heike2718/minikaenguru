@@ -17,9 +17,9 @@ export class SchuleOverviewComponent implements OnInit, OnDestroy {
 
 	statistikUrlPrefix = environment.apiUrl + '/statistik/';
 
-	message: string;
+	message: string = '';
 
-	private schuleSubscription: Subscription;
+	private schuleSubscription: Subscription = new Subscription();
 
 	private preserveSelectedSchule = false;
 
@@ -38,16 +38,13 @@ export class SchuleOverviewComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-
-		if (this.schuleSubscription) {
-			this.schuleSubscription.unsubscribe();
-		}
+		this.schuleSubscription.unsubscribe();
 		if (!this.preserveSelectedSchule) {
 			this.schulteilnahmenFacade.clearSchuleSelection();
 		}
 	}
 
-	onUploadButtonClicked(event: Teilnahme | undefined): void {
+	onUploadButtonClicked(event: Teilnahme | any): void {
 		this.preserveSelectedSchule = true;
 		this.schulteilnahmenFacade.selectTeilnahme(event);
 		this.router.navigateByUrl('/upload-auswertung');

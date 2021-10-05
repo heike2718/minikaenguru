@@ -14,11 +14,11 @@ export class KatalogpflegeItemComponent implements OnInit {
 	devMode = environment.envName === 'DEV';
 
 	@Input()
-	katalogItem: KatalogpflegeItem;
+	katalogItem!: KatalogpflegeItem;
 
-	anzahlText: string;
+	anzahlText: string = '';
 
-	sucheBtnText: string
+	sucheBtnText: string = '';
 
 	constructor(private katalogFacade: KatalogpflegeFacade) { }
 
@@ -32,11 +32,15 @@ export class KatalogpflegeItemComponent implements OnInit {
 	}
 
 	editItem() {
-		this.katalogFacade.switchToRenameKatalogItemEditor(this.katalogItem);
+		if (this.katalogItem) {
+			this.katalogFacade.switchToRenameKatalogItemEditor(this.katalogItem);
+		}
 	}
 
 	openOrSearchChilds() {
-		this.katalogFacade.gotoChildItems(this.katalogItem);
+		if (this.katalogItem) {
+			this.katalogFacade.gotoChildItems(this.katalogItem);
+		}
 	}
 
 }

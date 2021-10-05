@@ -1,14 +1,12 @@
 import { ZugangUnterlagen } from '../veranstalter.model';
 
 export interface ZugangsstatusButtonModel {
-
 	readonly label: string;
 	readonly tooltip: string;
 	readonly neuerStatus: ZugangUnterlagen;
 };
 
 export interface ZugangsstatusButtons {
-
 	readonly buttons: ZugangsstatusButtonModel[];
 };
 

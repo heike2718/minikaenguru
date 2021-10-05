@@ -5,7 +5,6 @@ import { AktuelleMeldungService } from './aktuelle-meldung.service';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
 import { aktuelleMeldung, aktuelleMeldungGeladen, habenAktuelleMeldung } from './+state/aktuelle-meldung.selectors';
 import * as AktuelleMeldungActions from './+state/aktuelle-meldung.actions';
-import { ResponsePayload, MessageService, Message } from '@minikaenguru-ws/common-messages';
 import { first } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })

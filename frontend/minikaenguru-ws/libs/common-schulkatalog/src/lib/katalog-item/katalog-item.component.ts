@@ -11,11 +11,12 @@ import { SchulkatalogConfigService } from '../configuration/schulkatalog-config'
 export class KatalogItemComponent implements OnInit {
 
 	@Input()
-	katalogItem: KatalogItem;
+	katalogItem!: KatalogItem;
 
-	anzahlText: string;
+	anzahlText!: string;
 
-	constructor(@Inject(SchulkatalogConfigService) public readonly config, private internalFacade: InternalFacade) { }
+	constructor(@Inject(SchulkatalogConfigService) public readonly config
+		, private internalFacade: InternalFacade) { }
 
 	ngOnInit() {
 

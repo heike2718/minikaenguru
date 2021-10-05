@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { DownloadButtonModel } from '../download/download.model';
+import { DownloadButtonModel, initialDownloadButtonModel } from '../download/download.model';
 import { DownloadFacade } from '../download/download.facade';
 
 @Component({
@@ -10,17 +10,17 @@ import { DownloadFacade } from '../download/download.facade';
 export class UnterlagenComponent implements OnInit {
 
 	@Input()
-	downloadUrl: string;
+	downloadUrl!: string;
 
 	@Input()
-	userIdRef: string;
+	userIdRef!: string;
 
 	@Input()
-	sprache: string;
+	sprache!: string;
 
 	showDownloadButton = false;
 
-	unterlagenBtnModel: DownloadButtonModel;
+	unterlagenBtnModel: DownloadButtonModel = initialDownloadButtonModel;
 
 	constructor(public downloadFacade: DownloadFacade) { }
 

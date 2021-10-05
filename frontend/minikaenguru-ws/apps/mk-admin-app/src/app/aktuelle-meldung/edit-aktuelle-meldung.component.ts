@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AktuelleMeldungFacade } from './aktuelle-meldung.facade';
 import { Subscription } from 'rxjs';
-import { AktuelleMeldung } from './aktuelle-meldung.model';
+import { AktuelleMeldung, initialAktuelleMeldung } from './aktuelle-meldung.model';
 import { MessageService } from '@minikaenguru-ws/common-messages';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { LogService } from '@minikaenguru-ws/common-logging';
@@ -14,12 +14,12 @@ import { LogService } from '@minikaenguru-ws/common-logging';
 export class EditAktuelleMeldungComponent implements OnInit, OnDestroy {
 
 
-	private aktuelleMeldungSubscription: Subscription;
+	private aktuelleMeldungSubscription: Subscription = new Subscription();
 
-	private initialMeldung: AktuelleMeldung;
+	private initialMeldung: AktuelleMeldung = initialAktuelleMeldung;
 
 	aktuelleMeldungGeladen$ = this.aktuelleMeldungFacade.aktuelleMeldungGeladen$;
-	aktuelleMeldung: AktuelleMeldung;
+	aktuelleMeldung: AktuelleMeldung = initialAktuelleMeldung;
 
 	constructor(private fb: FormBuilder,
 		private aktuelleMeldungFacade: AktuelleMeldungFacade,
@@ -36,6 +36,10 @@ export class EditAktuelleMeldungComponent implements OnInit, OnDestroy {
 				this.aktuelleMeldung = { ...m };
 			}
 		);
+	}
+
+	ngOnDestroy(): void {
+		this.aktuelleMeldungSubscription.unsubscribe();
 	}
 
 	submitDisabled(): boolean {
@@ -66,13 +70,6 @@ export class EditAktuelleMeldungComponent implements OnInit, OnDestroy {
 		}
 
 		return false;
-	}
-
-	ngOnDestroy(): void {
-
-		if (this.aktuelleMeldungSubscription) {
-			this.aktuelleMeldungSubscription.unsubscribe();
-		}
 	}
 
 	onSubmit(): void {

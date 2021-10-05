@@ -12,11 +12,9 @@ export class MessagesComponent implements OnInit, OnDestroy {
 
   @Input() escape = true;
 
-  msg: Message;
+  msg?: Message;
 
-	private subscription: Subscription;
-
-
+	private subscription: Subscription = new Subscription();
 
   constructor(private messageService: MessageService) { }
 
@@ -29,9 +27,7 @@ export class MessagesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    this.subscription.unsubscribe();
   }
 
   close() {
@@ -42,19 +38,14 @@ export class MessagesComponent implements OnInit, OnDestroy {
 		const result = [];
 		result.push('alert');
 
-		switch (this.msg.level) {
-			case 'INFO':
-				result.push('alert-info');
-				break;
-			case 'WARN':
-				result.push('alert-warning');
-				break;
-			case 'ERROR':
-				result.push('alert-danger');
-				break;
-		}
+    if (this.msg) {
+
+		  switch (this.msg.level) {
+			  case 'INFO': result.push('alert-info'); break;
+			  case 'WARN': result.push('alert-warning'); break;
+			  case 'ERROR': result.push('alert-danger'); break;
+		  }
+    }
 		return result;
 	}
-
-
 }

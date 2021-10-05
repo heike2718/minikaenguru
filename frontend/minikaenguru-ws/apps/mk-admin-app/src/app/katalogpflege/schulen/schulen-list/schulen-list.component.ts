@@ -14,12 +14,11 @@ export class SchulenListComponent implements OnInit {
 	schulen$ = this.katalogFacade.schulen$;
 	selectedKatalogItem$ = this.katalogFacade.selectedKatalogItem$;
 
-	inputValue: string;
+	inputValue: string = '';
 
 	constructor(private katalogFacade: KatalogpflegeFacade) { }
 
 	ngOnInit(): void {
-		this.inputValue = '';
 	}
 
 	addSchule() {

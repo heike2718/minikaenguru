@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 import { KlassenFacade } from '../../klassen/klassen.facade';
 import { Schule } from '../../lehrer/schulen/schulen.model';
 import { LehrerFacade } from '../../lehrer/lehrer.facade';
+import { modalOptions } from '../../shared/utils';
 
 @Component({
 	selector: 'mkv-klasse-wechseln',
@@ -215,7 +216,7 @@ export class KlasseWechselnComponent implements OnInit, OnDestroy {
 	private openWarndialog(content: TemplateRef<HTMLElement>) {
 
 		this.saveInProgress = false;
-		this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+		this.modalService.open(content, modalOptions).result.then((result) => {
 
 			if (result === 'ja') {
 				this.saveKind();

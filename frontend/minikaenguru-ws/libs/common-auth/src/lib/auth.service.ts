@@ -186,7 +186,7 @@ export class AuthService {
 	}
 
 
-	private extractMessageObject(error: HttpErrorResponse): { level: string, message: string } {
+	private extractMessageObject(error: HttpErrorResponse): { level: string, message: string } | null {
 
 		if (error.error && error.error.message) {
 			return { level: 'ERROR', message: error.error.message['message'] };
@@ -245,10 +245,12 @@ export class AuthService {
 		const user = localStorage.getItem(this.config.storagePrefix + STORAGE_KEY_USER);
 		if (expiration) {
 
+			const userObject = user ? JSON.parse(user): null;
+
 			const session: Session = {
 				expiresAt: JSON.parse(expiration),
 				sessionId: localStorage.getItem(this.config.storagePrefix + STORAGE_KEY_DEV_SESSION_ID),
-				user: JSON.parse(user)
+				user: userObject
 			};
 
 			this.store.dispatch(refreshSession({ session: session }));

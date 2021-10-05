@@ -12,6 +12,7 @@ import { UrkundenFacade } from '../../urkunden/urkunden.facade';
 import { User, STORAGE_KEY_USER } from '@minikaenguru-ws/common-auth';
 import { environment } from '../../../environments/environment';
 import { LehrerFacade } from '../../lehrer/lehrer.facade';
+import { modalOptions } from '../../shared/utils';
 
 @Component({
 	selector: 'mkv-kind-details',
@@ -21,10 +22,10 @@ import { LehrerFacade } from '../../lehrer/lehrer.facade';
 export class KindDetailsComponent implements OnInit, OnDestroy {
 
 	@ViewChild('loeschenWarndialog')
-	loeschenWarndialog: TemplateRef<HTMLElement>;
+	loeschenWarndialog!: TemplateRef<HTMLElement>;
 
 	@Input()
-	kind: Kind
+	kind!: Kind
 
 	showKlasseWechselnButton = false;
 
@@ -34,19 +35,19 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 
 	btnUrkundeTooltip = 'Urkunde erstellen';
 
-	showHinweisUrkunde = false;
+	showHinweisUrkunde: boolean = false;
 
 	zugangUnterlagen = false;
 
-	private klasseSubscription: Subscription;
+	private klasseSubscription: Subscription = new Subscription();
 
-	private klasseUuid: string;
+	private klasseUuid: string = '';
 
-	private klassenSubscription: Subscription;
+	private klassenSubscription: Subscription = new Subscription();
 
-	private zugangUnterlagenSubscription: Subscription;
+	private zugangUnterlagenSubscription: Subscription = new Subscription();
 
-	titel: string;
+	titel: string = '';
 
 	constructor(private router: Router,
 		private modalService: NgbModal,
@@ -67,7 +68,9 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 		if (user && user.rolle === 'LEHRER') {
 			this.btnUrkundeLabel = 'Urkunde korrigieren';
 			this.btnUrkundeTooltip = 'Urkunde dieses Kindes korrigieren';
-			this.showHinweisUrkunde = this.kind.punkte && this.kind.punkte.loesungszettelId !== 'neu';
+			if (this.kind.punkte && this.kind.punkte.loesungszettelId) {
+				this.showHinweisUrkunde = this.kind.punkte.loesungszettelId !== 'neu'
+			}
 			this.zugangUnterlagenSubscription = this.lehrerFacade.hatZugangZuUnterlagen$.subscribe(
 				z => this.zugangUnterlagen = z
 			);
@@ -100,15 +103,9 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		if (this.klasseSubscription) {
-			this.klasseSubscription.unsubscribe();
-		}
-		if (this.klassenSubscription) {
-			this.klassenSubscription.unsubscribe();
-		}
-		if (this.zugangUnterlagenSubscription) {
-			this.zugangUnterlagenSubscription.unsubscribe();
-		}
+		this.klasseSubscription.unsubscribe();
+		this.klassenSubscription.unsubscribe();
+		this.zugangUnterlagenSubscription.unsubscribe();
 	}
 
 	editKind(): void {
@@ -128,7 +125,7 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 
 	deleteKind(): void {
 
-		this.modalService.open(this.loeschenWarndialog, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+		this.modalService.open(this.loeschenWarndialog, modalOptions).result.then((result) => {
 
 			if (result === 'ja') {
 				this.kinderFacade.deleteKind(this.kind, this.klasseUuid);

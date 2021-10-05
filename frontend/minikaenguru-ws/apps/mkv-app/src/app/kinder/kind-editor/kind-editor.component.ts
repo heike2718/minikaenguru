@@ -22,6 +22,7 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { LehrerFacade } from '../../lehrer/lehrer.facade';
 import { Schule } from '../../lehrer/schulen/schulen.model';
 import { User, Rolle } from '@minikaenguru-ws/common-auth';
+import { modalOptions } from '../../shared/utils';
 
 @Component({
 	selector: 'mkv-kind-editor',
@@ -31,21 +32,21 @@ import { User, Rolle } from '@minikaenguru-ws/common-auth';
 export class KindEditorComponent implements OnInit, OnDestroy {
 
 	@ViewChild('dialogContent')
-	dialogContent: TemplateRef<HTMLElement>;
+	dialogContent!: TemplateRef<HTMLElement>;
 
 	devMode = environment.envName === 'DEV';
 
-	kindForm: FormGroup;
+	kindForm!: FormGroup;
 
-	vornameFormControl: FormControl;
+	vornameFormControl!: FormControl;
 
-	nachnameFormControl: FormControl;
+	nachnameFormControl!: FormControl;
 
-	zusatzFormControl: FormControl;
+	zusatzFormControl!: FormControl;
 
-	klassenstufeFormControl: FormControl;
+	klassenstufeFormControl!: FormControl;
 
-	spracheFormControl: FormControl;
+	spracheFormControl!: FormControl;
 
 	klassenstufen: string[];
 
@@ -283,7 +284,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 	private openWarndialog(content: TemplateRef<HTMLElement>) {
 
 		this.saveInProgress = false;
-		this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+		this.modalService.open(content, modalOptions).result.then((result) => {
 
 			if (result === 'ja') {
 				this.saveKind();

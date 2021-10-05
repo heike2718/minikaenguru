@@ -13,9 +13,9 @@ import { WettbewerbeFacade } from '../wettbewerbe.facade';
 export class WettbewerbeCardComponent implements OnInit {
 
   @Input()
-  wettbewerb: Wettbewerb;
+  wettbewerb!: Wettbewerb;
 
-  wettbewerbUndefined: boolean;
+  wettbewerbUndefined: boolean = false;
 
   showBtnAnmeldungen = false;
 

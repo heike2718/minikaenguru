@@ -24,3 +24,22 @@ export interface DownloadButtonModel {
 	readonly class: string;
 };
 
+export const initialDownloadCardModel: DownloadCardModel = {
+	cardTitle: '',
+	dateiname: '',
+	id: '',
+	mimetype: '',
+	subtext: '',
+	url: ''
+};
+
+export const initialDownloadButtonModel: DownloadButtonModel = {
+	buttonLabel: '',
+	class: '',
+	dateiname: '',
+	id: '',
+	mimetype: '',
+	tooltip: '',
+	url: ''
+};
+

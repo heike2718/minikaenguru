@@ -85,8 +85,8 @@ export interface KindEditorModel {
 	vorname: string;
 	nachname: string;
 	zusatz: string;
-	klassenstufe: Klassenstufe,
-	sprache: Sprache;
+	klassenstufe?: Klassenstufe,
+	sprache?: Sprache,
 	klasseUuid?: string;
 };
 
@@ -124,19 +124,28 @@ export interface UploadComponentModel {
 	readonly acceptMessage: string;
 };
 
+export const initialUploadComponentModel: UploadComponentModel = {
+	subUrl: '',
+	titel: '',
+	maxSizeBytes: 0,
+	errorMessageSize: '',
+	accept: '',
+	acceptMessage: ''	
+};
+
 export const initialKindEditorModel: KindEditorModel = {
 	vorname: '',
 	nachname: '',
 	zusatz: '',
-	klassenstufe: null,
-	sprache: null,
+	klassenstufe: undefined,
+	sprache: undefined,
 };
 
 export const initialKlasseEditorModel: KlasseEditorModel = {
 	name: ''
 };
 
-export function getKlassenstufeByLabel(label: string): Klassenstufe {
+export function getKlassenstufeByLabel(label: string): Klassenstufe | undefined{
 
 	for (let index = 0; index < ALL_KLASSENSTUFEN.length; index++) {
 		const result = ALL_KLASSENSTUFEN[index];
@@ -149,7 +158,7 @@ export function getKlassenstufeByLabel(label: string): Klassenstufe {
 	return undefined;
 }
 
-export function getSpracheByLabel(label: string): Sprache {
+export function getSpracheByLabel(label: string): Sprache | undefined {
 
 	for (let index = 0; index < ALL_SPRACHEN.length; index++) {
 		const result = ALL_SPRACHEN[index];
@@ -171,7 +180,7 @@ function compareKlassenstufen(klassenstufe1: Klassenstufe, klassenstufe2: Klasse
 
 }
 
-function compareStrings(str1: string, str2: string): number {
+function compareStrings(str1?: string, str2?: string): number {
 
 	const result = str1 && str2 ? str1.localeCompare(str2) : 0;
 	if (result !== 0) {

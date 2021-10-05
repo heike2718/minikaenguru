@@ -1,6 +1,6 @@
 <div class="mkv-container mt-1">
-	<div *ngIf="(veranstalter$ | async) as veranstalter">
-		<ng-container *ngIf="veranstalter !== undefined else loading">
+	<div *ngIf="(veranstalter$ | async) as veranstalter else loading">
+		<ng-container *ngIf="veranstalter && veranstalter.privatOverview">
 
 			<h3>{{veranstalter.fullName}} - {{veranstalter.teilnahmenummern[0]}}</h3>
 

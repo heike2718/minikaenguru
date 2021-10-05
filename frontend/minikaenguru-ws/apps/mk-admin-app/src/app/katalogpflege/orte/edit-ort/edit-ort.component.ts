@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { KatalogpflegeFacade } from '../../katalogpflege.facade';
 import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { OrtPayload } from '../../katalogpflege.model';
+import { initialOrtPayload, OrtPayload } from '../../katalogpflege.model';
 import { environment } from '../../../../environments/environment';
 
 @Component({
@@ -16,23 +16,23 @@ export class EditOrtComponent implements OnInit, OnDestroy {
 
 	editOrtInput$ = this.katalogFacade.editOrtInput$;
 
-	editOrtForm: FormGroup;
+	editOrtForm!: FormGroup;
 
-	name: AbstractControl;
+	name!: AbstractControl;
 
-	kuerzel: AbstractControl;
+	kuerzel!: AbstractControl;
 
-	nameLand: AbstractControl;
+	nameLand!: AbstractControl;
 
-	kuerzelLand: AbstractControl;
+	kuerzelLand!: AbstractControl;
 
-	submitDisabled: boolean;
+	submitDisabled: boolean = false;
 
-	submited: boolean;
+	submited: boolean = false;
 
-	private editOrtInputSubscription: Subscription;
+	private editOrtInputSubscription: Subscription = new Subscription();
 
-	private ortPayload: OrtPayload;
+	private ortPayload: OrtPayload = initialOrtPayload;
 
 	constructor(private fb: FormBuilder, private katalogFacade: KatalogpflegeFacade) { }
 
@@ -44,16 +44,19 @@ export class EditOrtComponent implements OnInit, OnDestroy {
 
 		this.editOrtInputSubscription = this.editOrtInput$.subscribe(
 			input => {
-				this.ortPayload = input;
+				if (input) {
+					this.ortPayload = input;					
+				} else {
+					this.ortPayload = initialOrtPayload;
+				}
+
 				this.setFormValues();
 			}
 		);
 	}
 
 	ngOnDestroy(): void {
-		if (this.editOrtInputSubscription) {
-			this.editOrtInputSubscription.unsubscribe();
-		}
+		this.editOrtInputSubscription.unsubscribe();
 	}
 
 	private initForm() {
@@ -75,12 +78,13 @@ export class EditOrtComponent implements OnInit, OnDestroy {
 	private setFormValues() {
 
 
-		if (this.ortPayload === undefined) {
+		if (this.ortPayload.kuerzel.length > 0) {
 			return;
 		}
 
-		this.editOrtForm.setValue(this.ortPayload);
-
+		if (this.editOrtForm) {
+			this.editOrtForm.setValue(this.ortPayload);
+		}
 	}
 
 	submitForm(): void {
@@ -89,10 +93,10 @@ export class EditOrtComponent implements OnInit, OnDestroy {
 		this.submited = true;
 
 		const ortPayload: OrtPayload = {
-			name: this.name.value.trim(),
-			kuerzel: this.kuerzel.value,
-			nameLand: this.nameLand.value,
-			kuerzelLand: this.kuerzelLand.value
+			name: this.name ? this.name.value.trim() : '',
+			kuerzel: this.kuerzel ? this.kuerzel.value : '',
+			nameLand: this.nameLand ? this.nameLand.value : '',
+			kuerzelLand: this.kuerzelLand ? this.kuerzelLand.value : ''
 		};
 
 		this.katalogFacade.sendRenameOrt(ortPayload);

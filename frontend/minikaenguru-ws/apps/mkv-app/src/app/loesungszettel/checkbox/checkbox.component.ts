@@ -12,17 +12,17 @@ import { Loesungszettelzeile } from '@minikaenguru-ws/common-components';
 export class CheckboxComponent implements OnInit, OnDestroy {
 
 	@Input()
-	rowIndex: number;
+	rowIndex!: number;
 
 	@Input()
-	columnIndex: number;
+	columnIndex!: number;
 
 	@Output()
 	checkboxClicked: EventEmitter<CheckboxData> = new EventEmitter<CheckboxData>();
 
-	checked: boolean;
+	checked: boolean = false;
 
-	private selectedLoesungszettelSubscription: Subscription;
+	private selectedLoesungszettelSubscription: Subscription = new Subscription();
 
 	constructor(private loesungszettelFacace: LoesungszettelFacade) { }
 
@@ -89,7 +89,7 @@ export class CheckboxComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	onClickEvent(_$event): void {
+	onClickEvent(_$event: any): void {
 
 		this.checked = !this.checked;
 

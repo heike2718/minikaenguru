@@ -15,12 +15,11 @@ export class OrteListComponent implements OnInit {
 	orte$ = this.katalogFacade.orte$;
 	selectedKatalogItem$ = this.katalogFacade.selectedKatalogItem$;
 
-	inputValue: string;
+	inputValue: string = '';
 
 	constructor(private katalogFacade: KatalogpflegeFacade, private router: Router) { }
 
 	ngOnInit(): void {
-		this.inputValue = '';
 	}
 
 	addOrtUndSchule() {

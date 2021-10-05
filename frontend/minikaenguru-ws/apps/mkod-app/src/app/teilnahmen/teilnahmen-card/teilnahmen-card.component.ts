@@ -10,7 +10,7 @@ export class TeilnahmenCardComponent implements OnInit {
 
 
   @Input()
-	anmeldungsitem: Anmeldungsitem;
+	anmeldungsitem!: Anmeldungsitem;
 
   constructor() { }
 

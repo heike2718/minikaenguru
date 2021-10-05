@@ -3,7 +3,7 @@ import { environment } from '../../../environments/environment';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { NewsletterFacade } from '../newsletter.facade';
 import { Subscription } from 'rxjs';
-import { Newsletter } from '../newsletter.model';
+import { initialNewsletter, Newsletter } from '../newsletter.model';
 import { MessageService } from '@minikaenguru-ws/common-messages';
 import { Router } from '@angular/router';
 
@@ -16,21 +16,19 @@ export class EditNewsletterComponent implements OnInit, OnDestroy {
 
 	devMode = environment.envName === 'DEV';
 
-	newsletterForm: FormGroup;
+	newsletterForm!: FormGroup;
 
-	betreffControl: FormControl;
+	betreffControl!: FormControl;
 
-	textControl: FormControl;
+	textControl!: FormControl;
 
 	editorInitialized = false;
 
 	saveInProgress = false;
 
-	private initialGuiModel: Newsletter;
+	private uuid: string = '';
 
-	private uuid: string;
-
-	private editorModelSubscription: Subscription;
+	private editorModelSubscription: Subscription = new Subscription();
 
 	constructor(private fb: FormBuilder,
 		private router: Router,
@@ -47,10 +45,14 @@ export class EditNewsletterComponent implements OnInit, OnDestroy {
 			model => {
 				if (model) {
 
-					this.initialGuiModel = {...model};
-
-					this.newsletterForm.get('betreff').setValue(model.betreff, { onlySelf: true });
-					this.newsletterForm.get('text').setValue(model.text, { onlySelf: true });
+					const betreff = this.newsletterForm.get('betreff');
+					if (betreff) {
+						betreff.setValue(model.betreff, { onlySelf: true });
+					}
+					const text = this.newsletterForm.get('text');
+					if (text) {
+						text.setValue(model.text, { onlySelf: true });
+					}
 
 					this.saveInProgress = false;
 					this.editorInitialized = true;

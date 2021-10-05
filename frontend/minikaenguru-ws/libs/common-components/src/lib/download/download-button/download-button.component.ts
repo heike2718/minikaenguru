@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { DownloadFacade } from '../download.facade';
-import { DownloadButtonModel } from '../download.model';
+import { DownloadButtonModel, initialDownloadButtonModel } from '../download.model';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -10,12 +10,12 @@ import { Subscription } from 'rxjs';
 })
 export class DownloadButtonComponent implements OnInit, OnDestroy {
 
-	downloadButtonDisabled: boolean
+	downloadButtonDisabled = true;
 
 	@Input()
-	model: DownloadButtonModel;
+	model: DownloadButtonModel = initialDownloadButtonModel;
 
-	private downloadProgressSubscription: Subscription;
+	private downloadProgressSubscription: Subscription = new Subscription();
 
 	constructor(private downloadFacade: DownloadFacade) { }
 
@@ -28,9 +28,7 @@ export class DownloadButtonComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		if (this.downloadProgressSubscription) {
-			this.downloadProgressSubscription.unsubscribe();
-		}
+		this.downloadProgressSubscription.unsubscribe();
 	}
 
 	startDownload(): void {

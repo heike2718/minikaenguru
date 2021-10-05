@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
 import { VeranstalterFacade } from '../veranstalter.facade';
 import { Veranstalter } from '../veranstalter.model';
 import { Observable, Subscription } from 'rxjs';
@@ -13,13 +13,15 @@ import { Rolle } from '@minikaenguru-ws/common-auth';
 })
 export class VeranstalterDetailsComponent implements OnInit, OnDestroy {
 
-	selectedVeranstalter$: Observable<Veranstalter> = this.veranstalterFacade.selectedVeranstalter$;
+	selectedVeranstalter$: Observable<Veranstalter | undefined> = this.veranstalterFacade.selectedVeranstalter$;
 
-	private veranstalterSubscription: Subscription;
+	teilnahmenummernAsString: string = '';
 
-	teilnahmenummernAsString: string;
+	@ViewChild('dialogNewsletterDeaktivieren')
+	dialogNewsletterDeaktivieren!: TemplateRef<HTMLElement>;
 
-	private veranstalter: Veranstalter;
+	private veranstalter!: Veranstalter;
+	private veranstalterSubscription: Subscription = new Subscription();
 
 	constructor(private router: Router, private veranstalterFacade: VeranstalterFacade, private schulteilnahmenFacade: SchulteilnahmenFacade) { }
 
@@ -41,11 +43,7 @@ export class VeranstalterDetailsComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-
-		if (this.veranstalterSubscription) {
-			this.veranstalterSubscription.unsubscribe();
-		}
-
+		this.veranstalterSubscription.unsubscribe();
 	}
 
 	private getTeilnahmenummernAsString(veranstalter: Veranstalter): string {

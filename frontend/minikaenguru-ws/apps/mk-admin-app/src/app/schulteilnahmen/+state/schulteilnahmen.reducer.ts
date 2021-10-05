@@ -7,8 +7,8 @@ export const schulteilnahmenFeatureKey = 'mk-admin-app-schulteilnahmen';
 
 export interface SchulteilnahmenState {
 	schulenMap: SchuleAdminOverviewWithID[],
-	selectedSchule: SchuleAdminOverview,
-	selectedTeilnahme: Teilnahme,
+	selectedSchule?: SchuleAdminOverview,
+	selectedTeilnahme?: Teilnahme,
 	fehlermeldungenUploadReport: string[];
 	loading: boolean
 };
@@ -31,11 +31,12 @@ const schulteilnahmenReducer = createReducer(initialSchulteilnahmenState,
 
 	on(SchulteilnahmenActions.schuleOverviewLoaded, (state, action) => {
 
-		const neueSchulenMap = new SchulenOverviewMap(state.schulenMap).add(action.schuleAdminOverview);
+		if (action.schuleAdminOverview) {
+			const neueSchulenMap = new SchulenOverviewMap(state.schulenMap).add(action.schuleAdminOverview);
+			return {...state, loading: false, schulenMap: neueSchulenMap, selectedSchule: action.schuleAdminOverview};
+		}
 
-		return {
-			...state, loading: false, schulenMap: neueSchulenMap, selectedSchule: action.schuleAdminOverview
-		};
+		return {...state};
 
 	}),
 
@@ -46,20 +47,15 @@ const schulteilnahmenReducer = createReducer(initialSchulteilnahmenState,
 		};
 	}),
 
-	on(SchulteilnahmenActions.auswertungImportert, (state, action) => {
+	on(SchulteilnahmenActions.auswertungImportiert, (state, action) => {
 
-		if (action.report) {
-
-			const teilnahme = action.report.teilnahme;
-			const neueTeilnahmen: Teilnahme[] = replaceTeilnahme(action.report.teilnahme, state.selectedSchule.schulteilnahmen);
-			const neueSchule = { ...state.selectedSchule, schulteilnahmen: neueTeilnahmen };
-
-			return {
-				...state, selectedTeilnahme: teilnahme, selectedSchule: neueSchule, fehlermeldungenUploadReport: action.report.fehlerhafteZeilen
-			};
-		} else {
-			return {...state, fehlermeldungenUploadReport: []};
-		}
+		if (state.selectedSchule) {
+			const neueTeilnahmen = replaceTeilnahme(action.report.teilnahme, state.selectedSchule.schulteilnahmen);
+			const neueSchule: SchuleAdminOverview = { ...state.selectedSchule, schulteilnahmen: neueTeilnahmen };
+			return {...state, selectedTeilnahme: action.report.teilnahme, selectedSchule: neueSchule, fehlermeldungenUploadReport: action.report.fehlerhafteZeilen};
+		}	
+		
+		return {...state};
 	}),
 
 	on (SchulteilnahmenActions.dateiAusgewaehlt, (state, _action) => {

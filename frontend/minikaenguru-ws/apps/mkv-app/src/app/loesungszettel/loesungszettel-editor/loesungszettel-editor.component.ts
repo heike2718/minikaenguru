@@ -9,6 +9,7 @@ import { Loesungszettel, loesungszettelIsLeer } from '../loesungszettel.model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MessageService } from '@minikaenguru-ws/common-messages';
 import { User } from '@minikaenguru-ws/common-auth';
+import { modalOptions } from '../../shared/utils';
 
 @Component({
 	selector: 'mkv-loesungszettel-editor',
@@ -174,7 +175,7 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 	private openWarndialogLeererLoesungszettel() {
 
 		this.saveInProgress = false;
-		this.modalService.open(this.dialogContentLeererLoesungszettel, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+		this.modalService.open(this.dialogContentLeererLoesungszettel, modalOptions).result.then((result) => {
 
 			if (result === 'ja') {
 				this.forceSave();
@@ -185,7 +186,7 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 
 	private openWarndialogLoesungszettelLoeschen() {
 
-		this.modalService.open(this.dialogContentLoeschen, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+		this.modalService.open(this.dialogContentLoeschen, modalOptions).result.then((result) => {
 
 			if (result === 'ja') {
 				this.forceDelete();

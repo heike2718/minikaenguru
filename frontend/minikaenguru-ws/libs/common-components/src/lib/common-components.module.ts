@@ -1,6 +1,5 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DialogComponent } from './dialog/dialog.component';
 import { FormErrorComponent } from './form-error/form-error.component';
 import { UploadComponent } from './upload/upload.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -21,7 +20,6 @@ import { UnterlagenComponent } from './unterlagen/unterlagen.component';
 		StoreModule.forFeature(fromDownload.downloadFeatureKey, fromDownload.reducer),
 	],
 	declarations: [
-		DialogComponent,
 		DownloadButtonComponent,
 		DownloadCardComponent,
 		FormErrorComponent,
@@ -30,7 +28,6 @@ import { UnterlagenComponent } from './unterlagen/unterlagen.component';
 		UnterlagenComponent
 	],
 	exports: [
-		DialogComponent,
 		DownloadButtonComponent,
 		DownloadCardComponent,
 		FormErrorComponent,
