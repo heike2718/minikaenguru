@@ -9,7 +9,7 @@
 			</div>
 			<div class="col-xs-12 col-sm-12 col-md-11">
 				<input id="sucheInput" type="text" name="sucheInput" placeholder="{{viewModel.guiModel.texte.inputLabel}}"
-					(keyup)="onKeyup($event)" [ngModel]="searchFormInputValue" />
+					(keyup)="onKeyup($event, 'KATALOGE')" [ngModel]="searchFormInputValue" />
 			</div>
 		</div>
 	</ng-container>

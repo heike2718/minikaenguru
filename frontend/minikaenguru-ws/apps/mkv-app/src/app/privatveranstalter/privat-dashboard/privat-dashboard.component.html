@@ -18,7 +18,7 @@
 
 			<!-- card-deck 1 -->
 			<div class="card-deck">
-				<div *ngIf="hatZugangZuUnterlagen" class="card hinweis">
+				<div *ngIf="userIdRef && hatZugangZuUnterlagen" class="card hinweis">
 					<div class="card-body">
 						<div class="card-title">Wettbewerbsaufgaben {{wettbewerb.jahr}}</div>
 
@@ -34,7 +34,7 @@
 				</div>
 
 				<div *ngIf="veranstalter.aktuellAngemeldet">
-					<div *ngIf="wettbewerb.status !== 'BEENDET' && wettbewerb.status !== 'BEENDET'"
+					<div *ngIf="wettbewerb.status !== 'BEENDET'"
 						class="card clickable" (click)="gotoAuswertung()">
 						<div class="card-body">
 							<div class="card-title">Auswertung {{wettbewerb.jahr}}</div>

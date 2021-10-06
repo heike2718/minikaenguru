@@ -9,7 +9,7 @@ import { SchulkatalogConfigService } from '../configuration/schulkatalog-config'
 })
 export class SchulkatalogComponent implements OnInit {
 
-	constructor(@Inject(SchulkatalogConfigService) public readonly config) { }
+	constructor(@Inject(SchulkatalogConfigService) public readonly config: any) { }
 
 	ngOnInit() {}
 }

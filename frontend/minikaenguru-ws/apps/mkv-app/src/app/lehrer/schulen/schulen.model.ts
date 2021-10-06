@@ -50,14 +50,14 @@ export function indexOfSchuleMitId(schulenWithID: SchuleWithID[], kuerzel: strin
 	return -1;
 }
 
-export function findSchuleMitId(schulenWithID: SchuleWithID[], kuerzel: string): Schule {
+export function findSchuleMitId(schulenWithID: SchuleWithID[], kuerzel: string): Schule | undefined {
 
 	if (!schulenWithID) {
-		return null;
+		return undefined;
 	}
 
 	if (!kuerzel) {
-		return null;
+		return undefined;
 	}
 
 	const index = indexOfSchuleMitId(schulenWithID, kuerzel);
@@ -66,7 +66,7 @@ export function findSchuleMitId(schulenWithID: SchuleWithID[], kuerzel: string):
 		return schulenWithID[index].schule;
 	}
 
-	return null;
+	return undefined;
 }
 
 export function mergeSchulenMap(schulenMap: SchuleWithID[], schule: Schule): SchuleWithID[] {
@@ -108,10 +108,10 @@ export class SchulenMap {
 		return this.schulen.has(kuerzel);
 	}
 
-	public get(kuerzel: string): Schule {
+	public get(kuerzel: string): Schule | undefined{
 
 		if (!this.has(kuerzel)) {
-			return null;
+			return undefined;
 		}
 
 		return this.schulen.get(kuerzel);

@@ -16,7 +16,7 @@
 					name="nameInput" mkvKlasseNameValidator>
 			</div>
 			<div class="col-12 alert-danger" *ngIf="!nameInput.valid && (nameInput.dirty ||nameInput.touched)">
-				<div *ngIf="nameInput.errors.klasseExists">
+				<div *ngIf="nameInput.errors !== null && nameInput.errors.klasseExists">
 					{{nameInput.errors.rule}}
 				</div>
 			</div>

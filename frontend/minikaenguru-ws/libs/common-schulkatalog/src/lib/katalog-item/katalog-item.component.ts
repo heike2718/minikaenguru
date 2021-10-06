@@ -15,7 +15,7 @@ export class KatalogItemComponent implements OnInit {
 
 	anzahlText!: string;
 
-	constructor(@Inject(SchulkatalogConfigService) public readonly config
+	constructor(@Inject(SchulkatalogConfigService) public readonly config: any
 		, private internalFacade: InternalFacade) { }
 
 	ngOnInit() {

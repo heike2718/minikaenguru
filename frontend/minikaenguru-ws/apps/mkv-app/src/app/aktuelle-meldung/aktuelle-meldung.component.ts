@@ -10,10 +10,10 @@ import { AktuelleMeldung } from './aktuelle-meldung.model';
 })
 export class AktuelleMeldungComponent implements OnInit, OnDestroy {
 
-	private aktuelleMeldungSubscription: Subscription;
+	private aktuelleMeldungSubscription: Subscription = new Subscription();
 
 	aktuelleMeldungGeladen$ = this.aktuelleMeldungFacade.aktuelleMeldungGeladen$;
-	aktuelleMeldung: AktuelleMeldung;
+	aktuelleMeldung?: AktuelleMeldung;
 
 	constructor(private aktuelleMeldungFacade: AktuelleMeldungFacade) { }
 
@@ -25,9 +25,7 @@ export class AktuelleMeldungComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		if (this.aktuelleMeldungSubscription) {
-			this.aktuelleMeldungSubscription.unsubscribe();
-		}
+		this.aktuelleMeldungSubscription.unsubscribe();
 	}
 
 }

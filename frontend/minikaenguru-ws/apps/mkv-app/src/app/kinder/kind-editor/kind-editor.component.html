@@ -114,7 +114,7 @@
 		</button>
 	</div>
 	<div class="modal-body">
-		<p>{{duplikatwarnung.warnungstext}}</p>
+		<p *ngIf="duplikatwarnung">{{duplikatwarnung.warnungstext}}</p>
 		<p> Möchten Sie das Kind trotzdem speichern?</p>
 	</div>
 	<div class="modal-footer">

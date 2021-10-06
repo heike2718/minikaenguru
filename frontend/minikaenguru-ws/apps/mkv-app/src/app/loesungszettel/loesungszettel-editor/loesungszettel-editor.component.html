@@ -6,7 +6,7 @@
 	<div *ngIf="devMode && uuid">
 		{{uuid}}</div>
 
-	<ng-container *ngIf="loesungszettelFacade.selectedLoesungszettel$ | async as loesungszettel" class="tabelle">
+	<ng-container *ngIf="loesungszettel" class="tabelle">
 
 		<div class="d-none d-md-block">
 			<ng-container *ngFor="let zeile of loesungszettel.zeilen">
@@ -27,7 +27,7 @@
 		</div>
 
 		<div class="btn-group d-flex" role="group">
-			<button class="btn btn-primary w-100 ml-1" [disabled]="saveInProgress" (click)="onSubmit()"><i
+			<button class="btn btn-primary w-100 ml-1" [disabled]="saveInProgress || !kind" (click)="onSubmit()"><i
 					class="fa fa-floppy-o" aria-hidden="true"></i>
 				speichern</button>
 

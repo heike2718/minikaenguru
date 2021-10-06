@@ -81,7 +81,8 @@ export class KatalogService {
 
 			return this.http
 				.get(url).pipe(
-					map(body => body['data'] as KatalogItem[])
+					map(body => body as ResponsePayload),
+					map(rp => rp.data as KatalogItem[])
 				);
 		}
 
@@ -98,7 +99,8 @@ export class KatalogService {
 
 		return this.http
 			.get(finalUrl).pipe(
-				map(body => body['data'] as KatalogItem[])
+				map(body => body as ResponsePayload),
+				map(rp => rp.data as KatalogItem[])
 			);
 	}
 
@@ -107,7 +109,8 @@ export class KatalogService {
 		const url = this.config.baseUrl + '/schulkatalog/katalogantrag';
 
 		return this.http.post(url, antrag).pipe(
-			map(body => body['message'] as Message)
+			map(body => body as ResponsePayload),
+			map(rp => rp.message)
 		);
 	}
 }

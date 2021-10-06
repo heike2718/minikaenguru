@@ -4,7 +4,7 @@ import * as AktuelleMeldungActions from './aktuelle-meldung.actions';
 export const aktuelleMeldungFeatureKey = 'mkv-app-aktuelle-meldung';
 
 export interface AktuelleMeldungState {
-	readonly aktuelleMeldung: AktuelleMeldung;
+	readonly aktuelleMeldung?: AktuelleMeldung;
 	readonly aktuelleMeldungLoaded: boolean;
 	readonly aktuelleMeldungNotEmpty: boolean;
 };

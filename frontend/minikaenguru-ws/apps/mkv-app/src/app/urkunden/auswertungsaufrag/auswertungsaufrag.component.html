@@ -26,13 +26,12 @@
 	<div class="form-group mt-4">
 		<div class="row ml-3 mb-2"><strong>Datum Urkunden*:</strong></div>
 		<ngb-datepicker class="ml-1" #dp [(ngModel)]="dateModel" (dateSelect)="onDateSelect($event)"
-			[minDate]="urkundeDateModel.minDate" [maxDate]="urkundeDateModel.maxDate"
-			(navigate)="dateModel = $event.next">
+			[minDate]="urkundeDateModel.minDate" [maxDate]="urkundeDateModel.maxDate">
 		</ngb-datepicker>
 	</div>
 
 
-	<p class="mt-4 mb-1" *ngIf="urkundenauftragForm.valid">{{zusammenfassung()}}</p>
+	<p class="mt-4 mb-1" *ngIf="farbe && urkundenauftragForm.valid">{{zusammenfassung()}}</p>
 
 	<div class="col-12 mb-2 mt-2" *ngIf="urkundenFacade.loading$ | async">
 		die Auswertung wird erstellt... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>

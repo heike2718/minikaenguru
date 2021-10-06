@@ -13,25 +13,25 @@ import { MessageService } from '@minikaenguru-ws/common-messages';
 })
 export class KlasseEditorComponent implements OnInit, OnDestroy {
 
-	schule$: Observable<Schule> = this.lehrerFacade.selectedSchule$;
+	schule$: Observable<Schule | undefined> = this.lehrerFacade.selectedSchule$;
 
-	name: string;
+	name: string = '';
 
 	submitted = false;
 
 	warntextDuplikat = '';
 
-	private uuid: string;
+	private uuid: string = '';
 
-	private schulkuerzel: string;
+	private schulkuerzel: string = '';
 
 	private saveInProgress = false;
 
-	private modelSubscription: Subscription;
+	private modelSubscription: Subscription = new Subscription();
 
-	private routeParamsSubcription: Subscription;
+	private routeParamsSubcription: Subscription = new Subscription();
 
-	private schuleSubscription: Subscription;
+	private schuleSubscription: Subscription = new Subscription();
 
 	constructor(private router: Router,
 		private route: ActivatedRoute,
@@ -69,18 +69,9 @@ export class KlasseEditorComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 
-		if (this.routeParamsSubcription) {
-			this.routeParamsSubcription.unsubscribe();
-		}
-
-		if (this.schuleSubscription) {
-			this.schuleSubscription.unsubscribe();
-		}
-
-		if (this.modelSubscription) {
-			this.modelSubscription.unsubscribe();
-		}
-
+		this.routeParamsSubcription.unsubscribe();
+		this.schuleSubscription.unsubscribe();
+		this.modelSubscription.unsubscribe();
 	}
 
 	submitDisabled(): boolean {

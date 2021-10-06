@@ -32,19 +32,19 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 	textFeatureFlagAnzeigen = false;
 	textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber bis März.';
 
-	vertragAdvModel: DownloadCardModel;
+	vertragAdvModel!: DownloadCardModel;
 
-	private user: User;
+	private user?: User;
 
-	schule: Schule;
+	schule?: Schule;
 
-	private userSubscription: Subscription;
+	private userSubscription: Subscription = new Subscription();
 
-	private schuleSubscription: Subscription;
+	private schuleSubscription: Subscription = new Subscription();
 
-	private teilnahmenummerSubscription: Subscription;
+	private teilnahmenummerSubscription: Subscription = new Subscription();
 
-	private teilnahmenSelected: boolean;
+	private teilnahmenSelected: boolean = false;
 
 	constructor(private router: Router,
 		private lehrerFacade: LehrerFacade,
@@ -61,7 +61,11 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 		this.teilnahmenSelected = false;
 
 		this.userSubscription = this.authService.user$.subscribe(
-			u => this.user = u
+			u => {
+				if (u) {
+					this.user = u;
+				}
+			}
 		);
 
 		this.schuleSubscription = this.lehrerFacade.selectedSchule$.subscribe(
@@ -106,35 +110,54 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		if (this.userSubscription) {
-			this.userSubscription.unsubscribe();
-		}
-
-		if (this.schuleSubscription) {
-			this.schuleSubscription.unsubscribe();
-		}
-
-		if (this.teilnahmenummerSubscription) {
-			this.teilnahmenummerSubscription.unsubscribe();
-		}
+		this.userSubscription.unsubscribe();
+		this.schuleSubscription.unsubscribe();
+		this.teilnahmenummerSubscription.unsubscribe();
 	}
 
 	gotoVertragAdv(): void {
-		this.vertragAdvFacade.setSelectedSchule(this.schule);
-		this.router.navigateByUrl('/adv');
+		if (this.schule) {
+			this.vertragAdvFacade.setSelectedSchule(this.schule);
+			this.router.navigateByUrl('/adv');
+		} else {
+			this.logger.debug('selectedSchule was undefined');
+		}
 	}
 
 	anmelden(): void {
+
+		if (!this.schule) {
+			this.logger.debug('selectedSchule was undefined');
+			return;
+		}
+
+		if (!this.user) {
+			this.logger.debug('user was undefined');
+			return;
+		}
+
 		this.lehrerFacade.schuleAnmelden(this.schule, this.user);
 		this.router.navigateByUrl('/lehrer/schule-dashboard/' + this.schule.kuerzel);
 	}
 
 	gotoTeilnahmen(): void {
+
+		if (!this.schule) {
+			this.logger.debug('selectedSchule was undefined');
+			return;
+		}
+
 		this.teilnahmenSelected = true;
 		this.teilnahmenFacade.selectTeilnahmenummer(this.schule.kuerzel, this.schule.name);
 	}
 
 	gotoKlassenliste(): void {
+
+		if (!this.schule) {
+			this.logger.debug('selectedSchule was undefined');
+			return;
+		}
+
 		this.textFeatureFlagAnzeigen = false;
 		this.router.navigateByUrl('/klassen/' + this.schule.kuerzel);
 	}
@@ -160,6 +183,12 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 	}
 
 	vonSchuleAbmelden(): void {
+
+		if (!this.schule) {
+			this.logger.debug('selectedSchule was undefined');
+			return;
+		}
+
 		this.lehrerFacade.removeSchule(this.schule);
 		this.gotoDashboard();
 	}

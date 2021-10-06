@@ -16,15 +16,15 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 
 	devMode = environment.envName === 'DEV';
 
-	// klassen$: Observable<Klasse[]> = this.klassenFacade.klassen$;
-	// anzahlKlassen$: Observable<number> = this.klassenFacade.anzahlKlassen$;
+	schule?: Schule;
 
-	schule: Schule;
+	tooltipBtnSchuluebersicht: string = '';
 
-	tooltipBtnSchuluebersicht: string;
+	anzahlLoesungszettel: number = 0;
 
-	private routeSubscription: Subscription;
-	private schuleSubscription: Subscription;
+	private routeSubscription: Subscription = new Subscription();
+	private schuleSubscription: Subscription = new Subscription();
+	private anzahlLoesungszettelSubsciption = new Subscription();
 
 	constructor(private router: Router,
 		private route: ActivatedRoute,
@@ -58,15 +58,16 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 			}
 		);
 
+		this.anzahlLoesungszettelSubsciption = this.klassenFacade.anzahlLoesungszettel$.subscribe(
+			anzahl => this.anzahlLoesungszettel = anzahl
+		);
+
 	}
 
 	ngOnDestroy(): void {
-		if (this.routeSubscription) {
-			this.routeSubscription.unsubscribe();
-		}
-		if (this.schuleSubscription) {
-			this.schuleSubscription.unsubscribe();
-		}
+		this.routeSubscription.unsubscribe();
+		this.schuleSubscription.unsubscribe();
+		this.anzahlLoesungszettelSubsciption.unsubscribe();
 	}
 
 

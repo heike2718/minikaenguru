@@ -78,7 +78,7 @@ export class EditOrtComponent implements OnInit, OnDestroy {
 	private setFormValues() {
 
 
-		if (this.ortPayload.kuerzel.length > 0) {
+		if (this.ortPayload.kuerzel.length === 0) {
 			return;
 		}
 

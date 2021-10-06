@@ -1,16 +1,13 @@
 <div class="mkv-container mt-1">
-	<div class="col--12">
+	<div *ngIf="registrationFacade.registrationReady$ | async">
 		<h2>Benutzerkonto anlegen <span *ngIf="devMode">(registration.component)</span> </h2>
 
 		<div class="row">
-			<div class="col-1">
-				<input type="checkbox" class="form-control" id="newsletterAbonieren"
+			<div class="col-10">
+				<input type="checkbox" id="newsletterAbonieren" autofocus
 					title="bitte wählen, wenn Sie Mailbenachrichtigungen wünschen" [(ngModel)]="newsletterAbonnieren"
-					name="newsletter" (change)="onNewsletterChanged($event.target.checked)">
-			</div>
-			<div class="col-9">
-				<label for="newsletterAbonieren" class="checkboxlabel form-control">Ja, ich möchte Informationen per Mail erhalten.</label>
-			</div>
+					name="newsletter" (onClick)="onNewsletterChanged($event)"> Ja, ich möchte Informationen per Mail erhalten.
+			</div>			
 			<div *ngIf="!showInfoNewsletter" class="col-2">
 				<button type="button" class="btn btn-primary" data-placement="bottom" title="mehr Informationen" (click)="toggleInfoNewsletter()">
 					<i class="fa fa-info" aria-hidden="true"></i> Info
@@ -48,7 +45,7 @@
 		<p *ngIf="selectedKatalogItem">{{selectedKatalogItem.pfad}}</p>
 		<div class="row">
 			<div class="btn-group d-flex" role="group">
-				<button type="button" [disabled]="!(registrationFacade.submitState$ | async)" class="btn btn-primary w-100 ml-1"
+				<button type="button" [disabled]="!selectedKatalogItem || !(registrationFacade.submitState$ | async)" class="btn btn-primary w-100 ml-1"
 					(click)="lehrerkontoAnlegen()">Konto anlegen</button>
 			</div>
 			<div *ngIf="(registrationFacade.registrationMode$ | async) && (registrationFacade.registrationMode$ | async) === 'LEHRER'" class="btn-group d-flex">

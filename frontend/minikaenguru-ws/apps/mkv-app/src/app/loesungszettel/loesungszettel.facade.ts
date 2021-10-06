@@ -18,10 +18,10 @@ import * as KlassenActons from '../klassen/+state/klassen.actions';
 })
 export class LoesungszettelFacade {
 
-	public selectedLoesungszettel$: Observable<Loesungszettel> = this.store.select(LoesungszettelSelectors.selectedLoesungszettel);
+	public selectedLoesungszettel$: Observable<Loesungszettel | undefined> = this.store.select(LoesungszettelSelectors.selectedLoesungszettel);
 
 
-	private loesungszettelMap: LoesungszettelMap;
+	private loesungszettelMap!: LoesungszettelMap;
 
 	constructor(private store: Store<AppState>,
 		private loesungszettelService: LoesungszettelService,
@@ -71,9 +71,11 @@ export class LoesungszettelFacade {
 
 				);
 			} else {
-				const zettel: Loesungszettel = this.loesungszettelMap.get(kind.punkte.loesungszettelId);
-				this.store.dispatch(LoesungszettelActions.loesungszettelLoaded({ loesungszettel: zettel }));
-				this.selectLoesungszettel(zettel);
+				const zettel: Loesungszettel | undefined = this.loesungszettelMap.get(kind.punkte.loesungszettelId);
+				if (zettel) {
+					this.store.dispatch(LoesungszettelActions.loesungszettelLoaded({ loesungszettel: zettel }));
+					this.selectLoesungszettel(zettel);
+				}				
 			}
 		}
 	}

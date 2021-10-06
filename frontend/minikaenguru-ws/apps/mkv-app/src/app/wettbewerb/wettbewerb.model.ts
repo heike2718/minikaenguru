@@ -1,4 +1,4 @@
-import { TeilnahmeIdentifierAktuellerWettbewerb, WettbewerbStatus } from '@minikaenguru-ws/common-components';
+import { Teilnahme, TeilnahmeIdentifierAktuellerWettbewerb, WettbewerbStatus } from '@minikaenguru-ws/common-components';
 
 export interface Wettbewerb {
 	readonly jahr: number;
@@ -25,20 +25,17 @@ export interface Privatveranstalter extends AbstractVeranstalter {
 	readonly teilnahmenummer: string;
 }
 
-export interface AbstractTeilnahme {
-	readonly identifier: TeilnahmeIdentifierAktuellerWettbewerb;
-}
-
 // tslint:disable-next-line:no-empty-interface
-export interface Privatteilnahme extends AbstractTeilnahme {
+export interface Privatteilnahme extends Teilnahme {	
 }
 
-export interface Schulteilnahme extends AbstractTeilnahme {
+export interface Schulteilnahme extends Teilnahme {
 	readonly nameUrkunde: string;
 	readonly angemeldetDurch: string;
 };
 
-export interface AnonymisierteTeilnahme extends AbstractTeilnahme {
+
+export interface AnonymisierteTeilnahme extends Teilnahme {
 	// hier kommt dann sowas wie Lösungszettelgruppen für jede Klassenstufe
 	readonly nameSchule?: string;
 };

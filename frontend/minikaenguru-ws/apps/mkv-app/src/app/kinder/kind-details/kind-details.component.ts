@@ -8,7 +8,6 @@ import { LogService } from '@minikaenguru-ws/common-logging';
 import { Subscription } from 'rxjs';
 import { KlassenFacade } from '../../klassen/klassen.facade';
 import { LoesungszettelFacade } from '../../loesungszettel/loesungszettel.facade';
-import { UrkundenFacade } from '../../urkunden/urkunden.facade';
 import { User, STORAGE_KEY_USER } from '@minikaenguru-ws/common-auth';
 import { environment } from '../../../environments/environment';
 import { LehrerFacade } from '../../lehrer/lehrer.facade';
@@ -63,7 +62,7 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 
 		this.titel = kindToString(this.kind);
 
-		const user: User = this.readUser();
+		const user: User | undefined = this.readUser();
 
 		if (user && user.rolle === 'LEHRER') {
 			this.btnUrkundeLabel = 'Urkunde korrigieren';
@@ -72,11 +71,19 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 				this.showHinweisUrkunde = this.kind.punkte.loesungszettelId !== 'neu'
 			}
 			this.zugangUnterlagenSubscription = this.lehrerFacade.hatZugangZuUnterlagen$.subscribe(
-				z => this.zugangUnterlagen = z
+				z => {
+					if (z !== undefined) {
+						this.zugangUnterlagen = z;
+					}
+				}
 			);
 		} else {
 			this.zugangUnterlagenSubscription = this.privatveranstalterFacade.hatZugangZuUnterlagen$.subscribe(
-				z => this.zugangUnterlagen = z
+				z => {
+					if (z !== undefined) {
+						this.zugangUnterlagen = z;
+					}
+				}
 			);
 		}
 
@@ -155,7 +162,7 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 	}
 
 
-	private readUser(): User {
+	private readUser(): User | undefined {
 		const obj = localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_USER);
 		if (obj) {
 			return JSON.parse(obj);

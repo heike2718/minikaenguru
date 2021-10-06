@@ -40,7 +40,7 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 
 	loesungsbuchstabenKlasse2FormControl!: FormControl;
 
-	private wettbewerbEditorModelSubscription!: Subscription;
+	private wettbewerbEditorModelSubscription: Subscription = new Subscription();
 
 	private saveOutcomeSubscription: Subscription = new Subscription();
 

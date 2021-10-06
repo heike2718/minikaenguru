@@ -33,7 +33,7 @@ const initialGuiModel: GuiModel = {
 	showInputControl: false,
 	showLoadingIndicator: false,
 	showAuswahlDescription: false,
-	katalogantragSuccess: undefined
+	katalogantragSuccess: false
 };
 
 export interface SchulkatalogState {
@@ -41,11 +41,11 @@ export interface SchulkatalogState {
 	readonly guiModel: GuiModel,
 	readonly loadedKatalogItems: KatalogItem[],
 	readonly searchTerm: string,
-	readonly selectedKatalogItem: KatalogItem
+	readonly selectedKatalogItem?: KatalogItem
 };
 
 const initialState: SchulkatalogState = {
-	currentKatalogtyp: undefined, // 1
+	currentKatalogtyp: 'ORT', // 1
 	guiModel: initialGuiModel,
 	loadedKatalogItems: [],
 	searchTerm: '',
@@ -79,6 +79,10 @@ const schulkatalogReducer = createReducer(
 	}),
 
 	on(SchulkatalogActions.searchFinished, (state, action) => {
+
+		if (!state.currentKatalogtyp) {
+			return {...state};
+		}
 
 		const loadedKatalogItems = action.katalogItems;
 		const typ = loadedKatalogItems.length > 0 ? loadedKatalogItems[0].typ : state.currentKatalogtyp;
@@ -131,6 +135,10 @@ const schulkatalogReducer = createReducer(
 
 	on(SchulkatalogActions.childItemsLoaded, (state, action) => {
 
+		if (!state.selectedKatalogItem || !state.currentKatalogtyp) {
+			return {...state};
+		}
+
 		const loadedKatalogItems = action.katalogItems;
 		const selectedKatalogItem = state.selectedKatalogItem;
 		const katalogtyp = (selectedKatalogItem === undefined) ? state.currentKatalogtyp : selectedKatalogItem.typ;
@@ -155,6 +163,10 @@ const schulkatalogReducer = createReducer(
 	}),
 
 	on(SchulkatalogActions.searchError, (state, _action) => {
+
+		if (!state.currentKatalogtyp) {
+			return {...state};
+		}
 
 		const katalogtyp = state.currentKatalogtyp;
 
@@ -181,6 +193,11 @@ const schulkatalogReducer = createReducer(
 	on(SchulkatalogActions.katalogItemSelected, (state, action) => {
 
 		const selectedKatalogItem = action.katalogItem;
+
+		if (!selectedKatalogItem || !state.currentKatalogtyp) {
+			return {...state};
+		}
+
 		let katalogtyp = (selectedKatalogItem === undefined) ? state.currentKatalogtyp : selectedKatalogItem.typ;
 
 		let texte = getKatalogSucheTexte(state.guiModel.texte, katalogtyp, []);

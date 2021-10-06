@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment';
 import { SchulkatalogFacade, KatalogItem } from '@minikaenguru-ws/common-schulkatalog';
 import { Subscription } from 'rxjs';
 import { RegistrationFacade } from './registration.facade';
+import { LogService } from '@minikaenguru-ws/common-logging';
 
 @Component({
 	selector: 'mkv-registration',
@@ -14,18 +15,19 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
 	devMode: boolean;
 
-	selectedKatalogItem: KatalogItem;
-	newsletterAbonnieren: boolean;
+	selectedKatalogItem?: KatalogItem;
+	newsletterAbonnieren!: boolean;
 	textNewsletter: string;
-	showInfoNewsletter: boolean;
+	showInfoNewsletter: boolean = false;
 
-	private selectedKatalogItemSubscription: Subscription;
+	private selectedKatalogItemSubscription: Subscription = new Subscription();
 
-	private newsletterAboStateSubscription: Subscription;
+	private newsletterAboStateSubscription: Subscription = new Subscription();
 
 	constructor(private router: Router
 		, public registrationFacade: RegistrationFacade
-		, public schulkatalogFacade: SchulkatalogFacade) {
+		, public schulkatalogFacade: SchulkatalogFacade
+		, private logger: LogService) {
 
 		this.devMode = environment.envName === 'DEV';
 
@@ -62,19 +64,15 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy() {
 
-		if (this.newsletterAboStateSubscription) {
-			this.newsletterAboStateSubscription.unsubscribe();
-		}
-
-		if (this.selectedKatalogItemSubscription) {
-			this.selectedKatalogItemSubscription.unsubscribe();
-		}
+	    this.newsletterAboStateSubscription.unsubscribe();
+		this.selectedKatalogItemSubscription.unsubscribe();
 
 		this.initState();
 
 	}
 
-	onNewsletterChanged(isChecked: boolean) {
+	onNewsletterChanged($event: any) {
+		const isChecked: boolean = $event.target.isChecked;
 		this.registrationFacade.setNewsletterAboState(isChecked);
 	}
 
@@ -97,6 +95,12 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 	}
 
 	lehrerkontoAnlegen() {
+
+		if (!this.selectedKatalogItem) {
+			this.logger.debug('selectedKatalogItem is undefined');
+			return;
+		}
+
 		this.registrationFacade.lehrerkontoAnlegen(this.selectedKatalogItem.kuerzel, this.newsletterAbonnieren);
 	}
 

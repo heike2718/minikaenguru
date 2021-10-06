@@ -15,7 +15,7 @@ export class KinderListResolver implements Resolve<any> {
 	resolve(route: ActivatedRouteSnapshot,
 		_state: RouterStateSnapshot): Observable<any> {
 
-		const teilnahmenummer = route.paramMap.get('teilnahmenummer');
+		const teilnahmenummer: string | null = route.paramMap.get('teilnahmenummer');
 
 		return this.kinderFacade.kinderGeladen$.pipe(
 
@@ -24,7 +24,7 @@ export class KinderListResolver implements Resolve<any> {
 				geladen => {
 
 					if (!geladen) {
-						if (!this.loading) {
+						if (teilnahmenummer && !this.loading) {
 							this.loading = true;
 
 							this.kinderFacade.loadKinder(teilnahmenummer);

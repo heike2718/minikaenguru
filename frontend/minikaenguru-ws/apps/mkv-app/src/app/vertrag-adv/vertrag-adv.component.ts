@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { DownloadButtonModel } from '@minikaenguru-ws/common-components';
 import { LehrerFacade } from '../lehrer/lehrer.facade';
+import { LogService } from '@minikaenguru-ws/common-logging';
 
 @Component({
 	selector: 'mkv-vertrag-adv',
@@ -32,9 +33,9 @@ export class VertragAdvComponent implements OnInit, OnDestroy {
 		class: 'btn btn-outline-dark w-100 ml-1'
 	};
 
-	vertragBtnModel: DownloadButtonModel;
+	vertragBtnModel?: DownloadButtonModel;
 
-	private initialEditorModel: VertragAdvEditorModel;
+	initialEditorModel?: VertragAdvEditorModel;
 
 	schulnameFormControl: FormControl;
 
@@ -46,14 +47,15 @@ export class VertragAdvComponent implements OnInit, OnDestroy {
 
 	hausnummerFormControl: FormControl;
 
-	formChangeSubscription: Subscription;
+	formChangeSubscription: Subscription = new Subscription();
 
-	advEditorModelSubscription: Subscription;
+	advEditorModelSubscription: Subscription = new Subscription();
 
 	constructor(private fb: FormBuilder,
 		private router: Router,
 		private vertragAdvFacade: VertragAdvFacade,
-		private lehrerFacade: LehrerFacade) {
+		private lehrerFacade: LehrerFacade,
+		private logger: LogService) {
 
 		this.schulnameFormControl = new FormControl({ value: '', disabled: true }),
 			this.plzFormControl = new FormControl({ value: '' }, Validators.required);
@@ -102,23 +104,28 @@ export class VertragAdvComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		if (this.advEditorModelSubscription) {
-			this.advEditorModelSubscription.unsubscribe();
-		}
-		if (this.formChangeSubscription) {
-			this.formChangeSubscription.unsubscribe();
-		}
-
-
+		this.advEditorModelSubscription.unsubscribe();
+		this.formChangeSubscription.unsubscribe();
 	}
 
 	submit(): void {
+
+		if (!this.initialEditorModel) {
+			this.logger.debug('initialEditorModel is undefined');
+			return;
+		}
+
 		const formValue: VertragAdvEditorModel = this.vertragAdvForm.value;
 		const vertrag = { ...formValue, schulkuerzel: this.initialEditorModel.schulkuerzel, schulname: this.initialEditorModel.schulname, ort: this.initialEditorModel.ort };
 		this.vertragAdvFacade.submitVertrag(vertrag);
 	}
 
 	gotoSchule(): void {
+
+		if (!this.initialEditorModel) {
+			this.logger.debug('initialEditorModel is undefined');
+			return;
+		}
 		this.router.navigateByUrl('/lehrer/schule-dashboard/' + this.initialEditorModel.schulkuerzel);
 	}
 }

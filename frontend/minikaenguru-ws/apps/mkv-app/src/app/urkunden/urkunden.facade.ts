@@ -28,9 +28,9 @@ export class UrkundenFacade {
 
 	public warntext: string;
 
-	private teilnahmeIdentifier: TeilnahmeIdentifierAktuellerWettbewerb;
+	private teilnahmeIdentifier?: TeilnahmeIdentifierAktuellerWettbewerb;
 
-	private selectedSchule: Schule;
+	private selectedSchule?: Schule;
 
 	constructor(private store: Store<AppState>,
 		private urkundenService: UrkundenService,
@@ -202,7 +202,7 @@ export class UrkundenFacade {
 		}
 	}
 
-	private getUser(): User {
+	private getUser(): User | undefined{
 		const item = localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_USER);
 
 		if (item) {

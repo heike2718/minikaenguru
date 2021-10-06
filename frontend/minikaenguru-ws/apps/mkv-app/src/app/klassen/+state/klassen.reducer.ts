@@ -2,7 +2,6 @@ import { createReducer, Action, on } from '@ngrx/store';
 import * as KlassenActions from './klassen.actions';
 import { KlasseWithID, KlassenMap } from '../klassen.model';
 import { KlasseEditorModel, initialKlasseEditorModel, Klasse, Kind } from '@minikaenguru-ws/common-components';
-import { Message } from '@minikaenguru-ws/common-messages';
 
 
 export const klassenFeatureKey = 'mkv-app-klassen';
@@ -11,8 +10,8 @@ export interface KlassenState {
 	klassenMap: KlasseWithID[];
 	klassenLoaded: boolean;
 	loading: boolean;
-	editorModel: KlasseEditorModel;
-	selectedKlasse: Klasse;
+	editorModel?: KlasseEditorModel;
+	selectedKlasse?: Klasse;
 };
 
 const initialKlassenState: KlassenState = {
@@ -32,7 +31,7 @@ const klassenReducer = createReducer(initialKlassenState,
 	on(KlassenActions.allKlassenLoaded, (state, action) => {
 
 		const alle = action.klassen;
-		const newMap = [];
+		const newMap: KlasseWithID[] = [];
 		alle.forEach(k => newMap.push({ uuid: k.uuid, klasse: k }));
 
 
@@ -66,6 +65,10 @@ const klassenReducer = createReducer(initialKlassenState,
 
 	on(KlassenActions.kindAdded, (state, _action) => {
 
+		if (!state.selectedKlasse) {
+			return {...state};
+		}
+
 		const anzahlKinder = state.selectedKlasse.anzahlKinder + 1;
 		const selectedKlasse = { ...state.selectedKlasse, anzahlKinder };
 		const merged: KlasseWithID[] = new KlassenMap(state.klassenMap).merge(selectedKlasse);
@@ -75,6 +78,10 @@ const klassenReducer = createReducer(initialKlassenState,
 	}),
 
 	on(KlassenActions.kindDeleted, (state, action) => {
+
+		if (!state.selectedKlasse) {
+			return {...state};
+		}
 
 		const anzahlKinder = state.selectedKlasse.anzahlKinder - 1;
 		let anzahlLoesungszettel = state.selectedKlasse.anzahlLoesungszettel;
@@ -91,42 +98,44 @@ const klassenReducer = createReducer(initialKlassenState,
 	on(KlassenActions.loesungszettelAdded, (state, action) => {
 
 		const kind: Kind = action.kind;
-		const klasseID = kind.klasseId;
-		if (klasseID) {
 
-			if (state.selectedKlasse && state.selectedKlasse.uuid === klasseID) {
-				const anzahlLoesungszettel = state.selectedKlasse.anzahlLoesungszettel + 1;
-				const neueGewaehlteKlasse = {...state.selectedKlasse, anzahlLoesungszettel: anzahlLoesungszettel};
-
-				const neueMap = new KlassenMap(state.klassenMap).merge(neueGewaehlteKlasse);
-
-				return {...state, selectedKlasse: neueGewaehlteKlasse, klassenMap: neueMap};
-			}
-
-		} else {
-
-			return { ...state };
+		if (!state.selectedKlasse || !kind.klasseId) {
+			return {...state};
 		}
+
+		
+		const klasseID = kind.klasseId;
+		if (state.selectedKlasse.uuid === klasseID) {
+			const anzahlLoesungszettel = state.selectedKlasse.anzahlLoesungszettel + 1;
+			const neueGewaehlteKlasse = {...state.selectedKlasse, anzahlLoesungszettel: anzahlLoesungszettel};
+
+			const neueMap = new KlassenMap(state.klassenMap).merge(neueGewaehlteKlasse);
+
+			return {...state, selectedKlasse: neueGewaehlteKlasse, klassenMap: neueMap};
+		} else {
+			return {...state};
+		}
+
 	}),
 
 	on(KlassenActions.loesungszettelDeleted, (state, action) => {
 
 		const kind: Kind = action.kind;
 		const klasseID = kind.klasseId;
-		if (klasseID) {
 
-			if (state.selectedKlasse && state.selectedKlasse.uuid === klasseID) {
-				const anzahlLoesungszettel = state.selectedKlasse.anzahlLoesungszettel - 1;
-				const neueGewaehlteKlasse = {...state.selectedKlasse, anzahlLoesungszettel: anzahlLoesungszettel};
+		if (!state.selectedKlasse || !klasseID ) {
+			return {...state};
+		}
 
-				const neueMap = new KlassenMap(state.klassenMap).merge(neueGewaehlteKlasse);
+		if (state.selectedKlasse && state.selectedKlasse.uuid === klasseID) {
+			const anzahlLoesungszettel = state.selectedKlasse.anzahlLoesungszettel - 1;
+			const neueGewaehlteKlasse = {...state.selectedKlasse, anzahlLoesungszettel: anzahlLoesungszettel};
 
-				return {...state, selectedKlasse: neueGewaehlteKlasse, klassenMap: neueMap};
-			}
+			const neueMap = new KlassenMap(state.klassenMap).merge(neueGewaehlteKlasse);
 
+			return {...state, selectedKlasse: neueGewaehlteKlasse, klassenMap: neueMap};
 		} else {
-
-			return { ...state };
+			return {...state};
 		}
 	}),
 
@@ -145,33 +154,40 @@ const klassenReducer = createReducer(initialKlassenState,
 	on(KlassenActions.kindMoved, (state, action) => {
 
 		const alteKlassenmap = new KlassenMap([...state.klassenMap]);
-
 		const sourceKlasse = alteKlassenmap.get(action.sourceKlasseUuid);
-		const anzahlKinderSourceKlasse = sourceKlasse.anzahlKinder - 1;
+		
 
-		let anzahlLoesungszettelSourceKlasse = sourceKlasse.anzahlLoesungszettel;
+		if (sourceKlasse) {
+			const anzahlKinderSourceKlasse = sourceKlasse.anzahlKinder - 1;
+			let anzahlLoesungszettelSourceKlasse = sourceKlasse.anzahlLoesungszettel;
+			
+			if (action.kind && action.kind.punkte) {
+				anzahlLoesungszettelSourceKlasse = anzahlLoesungszettelSourceKlasse - 1;
+			}
 
-		if (action.kind && action.kind.punkte) {
-			anzahlLoesungszettelSourceKlasse = anzahlLoesungszettelSourceKlasse - 1;
+			const sourceKlasseToMerge = { ...sourceKlasse, anzahlKinder: anzahlKinderSourceKlasse, anzahlLoesungszettel: anzahlLoesungszettelSourceKlasse };
+			const ersterMerge = alteKlassenmap.merge(sourceKlasseToMerge);
+			const targetKlasse = new KlassenMap([...ersterMerge]).get(action.targetKlasseUuid);
+
+			if (targetKlasse) {
+
+				let anzahlLoesungszettelTargetKlasse = targetKlasse.anzahlLoesungszettel;
+
+				if (action.kind && action.kind.punkte) {
+					anzahlLoesungszettelTargetKlasse = anzahlLoesungszettelTargetKlasse + 1;
+				}
+
+				const anzahlKinderTargetKlasse = targetKlasse.anzahlKinder + 1;
+				const targetKlasseToMerge = { ...targetKlasse, anzahlKinder: anzahlKinderTargetKlasse, anzahlLoesungszettel: anzahlLoesungszettelTargetKlasse };
+
+
+				const neueMap = new KlassenMap(ersterMerge).merge(targetKlasseToMerge);
+				return { ...state, klassenMap: neueMap };
+
+			}		
 		}
 
-		const sourceKlasseToMerge = { ...sourceKlasse, anzahlKinder: anzahlKinderSourceKlasse, anzahlLoesungszettel: anzahlLoesungszettelSourceKlasse };
-
-		const ersterMerge = alteKlassenmap.merge(sourceKlasseToMerge);
-
-		const targetKlasse = new KlassenMap([...ersterMerge]).get(action.targetKlasseUuid);
-		let anzahlLoesungszettelTargetKlasse = targetKlasse.anzahlLoesungszettel;
-
-		if (action.kind && action.kind.punkte) {
-			anzahlLoesungszettelTargetKlasse = anzahlLoesungszettelTargetKlasse + 1;
-		}
-
-		const anzahlKinderTargetKlasse = targetKlasse.anzahlKinder + 1;
-		const targetKlasseToMerge = { ...targetKlasse, anzahlKinder: anzahlKinderTargetKlasse, anzahlLoesungszettel: anzahlLoesungszettelTargetKlasse };
-
-
-		const neueMap = new KlassenMap(ersterMerge).merge(targetKlasseToMerge);
-		return { ...state, klassenMap: neueMap };
+		return {...state};		
 	})
 
 );

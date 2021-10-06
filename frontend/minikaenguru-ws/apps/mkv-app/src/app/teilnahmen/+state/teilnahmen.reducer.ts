@@ -11,7 +11,7 @@ export interface TeilnahmenummerAndName {
 }
 
 export interface TeilnahmenState {
-	readonly teilnahmenummerAndName: TeilnahmenummerAndName;
+	readonly teilnahmenummerAndName?: TeilnahmenummerAndName;
 	readonly anonymisierteTeilnahmenGeladen: boolean;
 	readonly anonymisierteTeilnahmen: AnonymisierteTeilnahme[];
 	readonly loading: boolean;

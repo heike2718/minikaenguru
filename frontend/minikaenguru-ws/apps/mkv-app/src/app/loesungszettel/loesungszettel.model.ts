@@ -47,16 +47,16 @@ export class LoesungszettelMap {
 		return this.alleLoesungszettel.has(uuid);
 	}
 
-	public get(uuid: string): Loesungszettel {
+	public get(uuid: string): Loesungszettel | undefined {
 
 		if (!this.has(uuid)) {
-			return null;
+			return undefined;
 		}
 
 		return this.alleLoesungszettel.get(uuid);
 	}
 
-	public findWithKindUuid(kindUuid: string): Loesungszettel {
+	public findWithKindUuid(kindUuid: string): Loesungszettel | undefined {
 
 		for (const i of this.items) {
 
@@ -65,9 +65,7 @@ export class LoesungszettelMap {
 			}
 
 		}
-
-
-		return null;
+		return undefined;
 
 	}
 

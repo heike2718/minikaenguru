@@ -8,7 +8,6 @@ import { STORAGE_KEY_USER, User, Rolle } from '@minikaenguru-ws/common-auth';
 import { LehrerFacade } from '../../lehrer/lehrer.facade';
 import { TeilnahmeIdentifierAktuellerWettbewerb } from '@minikaenguru-ws/common-components';
 import { KlassenFacade } from '../../klassen/klassen.facade';
-import { ThrowStmt } from '@angular/compiler';
 import { WettbewerbFacade } from '../../wettbewerb/wettbewerb.facade';
 import { MessageService } from '@minikaenguru-ws/common-messages';
 
@@ -32,15 +31,15 @@ export class KinderListComponent implements OnInit, OnDestroy {
 
 	labelBtnCancel = 'Übersicht';
 
-	private teilnahmeIdentifier: TeilnahmeIdentifierAktuellerWettbewerb;
+	private teilnahmeIdentifier?: TeilnahmeIdentifierAktuellerWettbewerb;
 
-	private veranstalterSubscription: Subscription;
+	private veranstalterSubscription: Subscription = new Subscription();
 
-	private teilnahmeIdentifierSubscription: Subscription;
+	private teilnahmeIdentifierSubscription: Subscription = new Subscription();
 
-	private klasseSubscription: Subscription;
+	private klasseSubscription: Subscription = new Subscription();
 
-	private klasseUuid: string;
+	private klasseUuid?: string;
 
 	constructor(private kinderFacade: KinderFacade,
 		private klassenFacade: KlassenFacade,
@@ -55,7 +54,7 @@ export class KinderListComponent implements OnInit, OnDestroy {
 		this.veranstalterSubscription = this.veranstalter$.subscribe(
 			v => {
 
-				const user: User = this.readUser();
+				const user: User | undefined = this.readUser();
 
 				if (user && v === undefined) {
 					switch (user.rolle) {
@@ -97,15 +96,9 @@ export class KinderListComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		if (this.veranstalterSubscription) {
-			this.veranstalterSubscription.unsubscribe();
-		}
-		if (this.teilnahmeIdentifierSubscription) {
-			this.teilnahmeIdentifierSubscription.unsubscribe();
-		}
-		if (this.klasseSubscription) {
-			this.klasseSubscription.unsubscribe();
-		}
+		this.veranstalterSubscription.unsubscribe();
+		this.teilnahmeIdentifierSubscription.unsubscribe();
+		this.klasseSubscription.unsubscribe();
 	}
 
 	addKind(): void {
@@ -143,7 +136,7 @@ export class KinderListComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	private readUser(): User {
+	private readUser(): User | undefined {
 		const obj = localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_USER);
 		if (obj) {
 			return JSON.parse(obj);

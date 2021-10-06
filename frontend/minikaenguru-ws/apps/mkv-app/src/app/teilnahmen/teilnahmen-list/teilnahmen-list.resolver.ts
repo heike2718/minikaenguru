@@ -10,7 +10,7 @@ import { AuthService } from '@minikaenguru-ws/common-auth';
 export class TeilnahmenListResolver implements Resolve<any> {
 
 	private loading = false;
-	private userSubscription: Subscription;
+	private userSubscription: Subscription = new Subscription();
 
 
 	constructor(private teilnahmenFacade: TeilnahmenFacade, private authService: AuthService) { }

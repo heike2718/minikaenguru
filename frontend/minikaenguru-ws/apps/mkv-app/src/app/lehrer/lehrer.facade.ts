@@ -35,7 +35,7 @@ export class LehrerFacade {
 
 
 
-	private loggingOut: boolean;
+	private loggingOut: boolean = false;
 
 	constructor(private appStore: Store<AppState>,
 		private veranstalterService: VeranstalterService,

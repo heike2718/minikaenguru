@@ -38,8 +38,10 @@ export class KindEditorResolver implements Resolve<any> {
 					select(kinderMap),
 					tap(
 						map => {
-							const kind: Kind = new KinderMap(map).get(uuid);
-							this.kinderFacade.editKind(kind);
+							const kind: Kind | undefined = new KinderMap(map).get(uuid);
+							if (kind) {
+								this.kinderFacade.editKind(kind);
+							}
 						}
 					),
 					first()
