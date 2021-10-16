@@ -32,10 +32,10 @@ export class KlassenMap {
 		return this.klassen.has(uuid);
 	}
 
-	public get(uuid: string): Klasse {
+	public get(uuid: string): Klasse | undefined {
 
 		if (!this.has(uuid)) {
-			return null;
+			return undefined;
 		}
 
 		return this.klassen.get(uuid);
@@ -78,7 +78,7 @@ export class KlassenMap {
 		return result;
 	}
 
-	public containsName(param: {uuid: string, name: string}): boolean {
+	public containsName(param: {uuid?: string, name?: string}): boolean {
 
 		if (!param.name || !param.uuid) {
 			return false;

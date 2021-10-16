@@ -9,9 +9,9 @@ import { Median } from '../../shared/beteiligungen.model';
 export class MedianComponent implements OnInit {
 
   @Input()
-  median: Median;
+  median!: Median;
 
-  klassenstufe: string;
+  klassenstufe: string = '';
 
   constructor() { }
 

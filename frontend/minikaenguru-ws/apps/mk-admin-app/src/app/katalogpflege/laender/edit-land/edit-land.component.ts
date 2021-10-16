@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, AbstractControl, Validators } from '@angular/forms';
 import { KatalogpflegeFacade } from '../../katalogpflege.facade';
 import { Subscription } from 'rxjs';
-import { LandPayload } from '../../katalogpflege.model';
+import { initialLandPayload, LandPayload } from '../../katalogpflege.model';
 
 @Component({
 	selector: 'mka-edit-land',
@@ -13,19 +13,19 @@ export class EditLandComponent implements OnInit, OnDestroy {
 
 	edtitLandInput$ = this.katalogFacade.editLandInput$;
 
-	editLandForm: FormGroup;
+	editLandForm!: FormGroup;
 
-	name: AbstractControl;
+	name!: AbstractControl;
 
-	kuerzel: AbstractControl;
+	kuerzel!: AbstractControl;
 
-	submitDisabled: boolean;
+	submitDisabled: boolean = false;
 
-	submited: boolean;
+	submited: boolean = false;
 
-	private editLandInputSubscription: Subscription;
+	private editLandInputSubscription: Subscription = new Subscription();
 
-	private landPayload: LandPayload;
+	private landPayload: LandPayload = initialLandPayload;
 
 	constructor(private fb: FormBuilder, private katalogFacade: KatalogpflegeFacade) { }
 
@@ -37,16 +37,18 @@ export class EditLandComponent implements OnInit, OnDestroy {
 
 		this.editLandInputSubscription = this.edtitLandInput$.subscribe(
 			input => {
-				this.landPayload = input;
+				if (input) {
+					this.landPayload = input;					
+				} else {
+					this.landPayload = initialLandPayload;					
+				}
 				this.setFormValues();
 			}
 		);
 	}
 
 	ngOnDestroy(): void {
-		if (this.editLandInputSubscription) {
-			this.editLandInputSubscription.unsubscribe();
-		}
+		this.editLandInputSubscription.unsubscribe();
 	}
 
 	private initForm() {
@@ -63,12 +65,13 @@ export class EditLandComponent implements OnInit, OnDestroy {
 
 	private setFormValues() {
 
-
-		if (this.landPayload === undefined) {
+		if (this.landPayload.kuerzel.length === 0) {
 			return;
 		}
 
-		this.editLandForm.setValue(this.landPayload);
+		if (this.editLandForm) {
+			this.editLandForm.setValue(this.landPayload);
+		}
 
 	}
 
@@ -78,11 +81,13 @@ export class EditLandComponent implements OnInit, OnDestroy {
 		this.submited = true;
 
 		const landPayload: LandPayload = {
-			name: this.name.value.trim(),
-			kuerzel: this.kuerzel.value
+			name: this.name? this.name.value.trim() : '',
+			kuerzel: this.kuerzel ? this.kuerzel.value : ''
 		};
 
-		this.katalogFacade.sendRenameLand(landPayload);
+		if (this.landPayload.kuerzel.length > 0) {
+			this.katalogFacade.sendRenameLand(landPayload);
+		}
 	}
 
 	cancel(): void {

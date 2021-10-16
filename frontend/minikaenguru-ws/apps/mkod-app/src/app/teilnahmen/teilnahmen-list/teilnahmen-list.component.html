@@ -1,7 +1,7 @@
 <div class="mkv-container mt-5">
 	<div class="col-12">
-		<div *ngIf="teilnahmenFacade.selectedAnmeldung$| async as anmeldungen">
-			<ng-container *ngIf="!anmeldungen.loading else loading">
+		<div *ngIf="teilnahmenFacade.selectedAnmeldung$| async as anmeldungen else loading">
+			<ng-container>
 				<h3>Teilnahmen am Wettbewerb {{anmeldungen.wettbewerbsjahr}}</h3>
 				<div>
 					<div class="mkv-bordered">

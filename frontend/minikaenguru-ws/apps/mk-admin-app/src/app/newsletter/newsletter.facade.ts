@@ -19,12 +19,12 @@ import { switchMap, retry, share, takeUntil } from 'rxjs/operators';
 export class NewsletterFacade {
 
 
-	public newsletterEditorModel$: Observable<Newsletter> = this.store.select(NewsletterSelectors.newsletterEditorModel);
+	public newsletterEditorModel$: Observable<Newsletter | undefined> = this.store.select(NewsletterSelectors.newsletterEditorModel);
 	public loading$: Observable<boolean> = this.store.select(NewsletterSelectors.loading);
 	public newsletters$: Observable<Newsletter[]> = this.store.select(NewsletterSelectors.newsletters);
 	public newslettersLoaded$: Observable<boolean> = this.store.select(NewsletterSelectors.newslettersLoaded);
-	public selectedNewsletter$: Observable<Newsletter> = this.store.select(NewsletterSelectors.selectedNewsletter);
-	public versandinfo$: Observable<Versandinfo> = this.store.select(NewsletterSelectors.versandinfo);
+	public selectedNewsletter$: Observable<Newsletter | undefined> = this.store.select(NewsletterSelectors.selectedNewsletter);
+	public versandinfo$: Observable<Versandinfo | undefined> = this.store.select(NewsletterSelectors.versandinfo);
 
 	public empfaengertypen: string[] = ['', 'TEST', 'ALLE', 'LEHRER', 'PRIVATVERANSTALTER'];
 
@@ -133,19 +133,17 @@ export class NewsletterFacade {
 
 		this.newsletterService.scheduleMailversand(auftrag).subscribe(
 
-			responsePayload => {
-
-				let versandinfo: Versandinfo;
+			responsePayload => {			
 
 				if (responsePayload.data) {
-					versandinfo = responsePayload.data;
-				}
-
-				this.store.dispatch(NewsletterActions.mailversandScheduled({ versandinfo: versandinfo }));
-				this.messageService.showMessage(responsePayload.message);
-				if (responsePayload.message.level === 'INFO') {
-					this.startPollVersandinfo(versandinfo);
-				}
+					const versandinfo = responsePayload.data;
+					this.store.dispatch(NewsletterActions.mailversandScheduled({ versandinfo: versandinfo }));
+					this.messageService.showMessage(responsePayload.message);
+				
+					if (responsePayload.message.level === 'INFO') {
+						this.startPollVersandinfo(versandinfo);
+					}
+				}				
 			},
 			(error => {
 				this.store.dispatch(NewsletterActions.backendCallFinishedWithError());
@@ -188,7 +186,7 @@ export class NewsletterFacade {
 		);
 	}
 
-	private propagateVersandBeendet(am: string): void {
+	private propagateVersandBeendet(am: string | undefined): void {
 
 		this.stopPollVersandinfo();
 

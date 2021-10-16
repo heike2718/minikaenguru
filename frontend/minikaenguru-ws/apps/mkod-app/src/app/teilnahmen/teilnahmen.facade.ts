@@ -15,7 +15,7 @@ export class TeilnahmenFacade {
 
 	private anmeldungenMap: AnmeldungenWithID[] = [];
 	
-	public selectedAnmeldung$: Observable<Anmeldungen> = this.store.select(TeilnahmenSelectors.selectedAnmeldung);
+	public selectedAnmeldung$: Observable<Anmeldungen | undefined> = this.store.select(TeilnahmenSelectors.selectedAnmeldung);
 
     constructor(private store: Store<AppState>,
         private teilnahmenService: TeilnahmenService,
@@ -30,9 +30,11 @@ export class TeilnahmenFacade {
 		
 		const map = new AnmeldungenMap(this.anmeldungenMap);
 
-        if (map.has('' + jahr)) {
+		const anmeldungen : Anmeldungen | undefined = map.get('' + jahr);
 
-			this.store.dispatch(TeilnahmenActions.teilnahmenSelected({anmeldungen: map.get('' + jahr)}));
+        if (anmeldungen) {
+
+			this.store.dispatch(TeilnahmenActions.teilnahmenSelected({anmeldungen: anmeldungen}));
 			return;
 		}
 

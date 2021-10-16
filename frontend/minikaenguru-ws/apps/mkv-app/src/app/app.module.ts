@@ -1,5 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler, LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localeDe from '@angular/common/locales/de';
 
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -36,8 +38,7 @@ import { LoesungszettelModule } from './loesungszettel/loesungszettel.module';
 import { UrkundenModule } from './urkunden/urkunden.module';
 import { StoreDevModules } from './store-config/store-devtools';
 
-
-
+registerLocaleData(localeDe);
 
 @NgModule({
 	declarations: [

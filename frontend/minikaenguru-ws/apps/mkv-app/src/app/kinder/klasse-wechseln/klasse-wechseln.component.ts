@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
-import { Kind, Klasse, kindToString, Duplikatwarnung, KindEditorModel } from '@minikaenguru-ws/common-components';
+import { Kind, Klasse, kindToString, Duplikatwarnung, KindEditorModel, modalOptions } from '@minikaenguru-ws/common-components';
 import { KinderFacade } from '../kinder.facade';
 import { Subscription, Observable, of } from 'rxjs';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
@@ -23,13 +23,13 @@ export class KlasseWechselnComponent implements OnInit, OnDestroy {
 	devMode = environment.envName === 'DEV';
 
 	@ViewChild('dialogContent')
-	dialogContent: TemplateRef<HTMLElement>;
+	dialogContent!: TemplateRef<HTMLElement>;
 
 	showGenericTitle = true;
 
-	klassenwechselDaten$: Observable<KlassenwechselDaten>;
+	klassenwechselDaten$?: Observable<KlassenwechselDaten>;
 
-	kind: Kind;
+	kind?: Kind;
 
 	componentTitle = '';
 
@@ -37,33 +37,33 @@ export class KlasseWechselnComponent implements OnInit, OnDestroy {
 
 	selectDisabled = false;
 
-	klassenNamen: string[];
+	klassenNamen: string[] = [];
 
-	klassenForm: FormGroup;
+	klassenForm!: FormGroup;
 
-	klassenFormControl: FormControl;
+	klassenFormControl!: FormControl;
 
-	duplikatwarnung: Duplikatwarnung;
+	duplikatwarnung!: Duplikatwarnung;
 
-	nameZielklasse: string;
+	nameZielklasse: string = '';
 
-	sourceKlasse: Klasse;
+	sourceKlasse?: Klasse;
 
-	private klassen: Klasse[];
+	private klassen: Klasse[] = [];
 
-	private selectedSchule: Schule;
+	private selectedSchule?: Schule;
 
 	private showSaveMessage = false;
 
-	private klassenwechselDatenSubscription: Subscription;
+	private klassenwechselDatenSubscription: Subscription = new Subscription();
 
-	private saveOutcomeSubscription: Subscription;
+	private saveOutcomeSubscription: Subscription = new Subscription();
 
-	private duplikatwarnungSubscription: Subscription;
+	private duplikatwarnungSubscription: Subscription = new Subscription();
 
-	private selectedKlasseSubscription: Subscription;
+	private selectedKlasseSubscription: Subscription = new Subscription();
 
-	private schuleSubscription: Subscription;
+	private schuleSubscription: Subscription = new Subscription();
 
 	constructor(private fb: FormBuilder,
 		private modalService: NgbModal,
@@ -92,7 +92,11 @@ export class KlasseWechselnComponent implements OnInit, OnDestroy {
 						this.klassen = daten.zielklassen;
 						this.klassenNamen = this.klassen.map(k => k.name);
 						this.componentTitle = kindToString(this.kind) + ' in andere Klasse verschieben';
-						this.klassenForm.get('klasse').setValue(null, { onlySelf: true });
+
+						const control = this.klassenForm.get('klasse');
+						if (control) {
+							control.setValue(null, { onlySelf: true });
+						}
 						this.showGenericTitle = false;
 					} else {
 						this.kind = undefined;
@@ -144,11 +148,15 @@ export class KlasseWechselnComponent implements OnInit, OnDestroy {
 
 		this.saveOutcomeSubscription = this.kinderFacade.saveOutcome$.subscribe(
 			message => {
-				if (this.showSaveMessage) {
+				if (message && this.showSaveMessage) {
 					this.messageService.showMessage(message);
 					this.showSaveMessage = false;
 					this.saveInProgress = false;
-					this.klassenForm.get('klasse').setValue(null, { onlySelf: true });
+
+					const control = this.klassenForm.get('klasse');
+					if (control) {
+						control.setValue(null, { onlySelf: true });
+					}
 				}
 			}
 		);
@@ -156,21 +164,11 @@ export class KlasseWechselnComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 
-		if (this.klassenwechselDatenSubscription) {
-			this.klassenwechselDatenSubscription.unsubscribe();
-		}
-		if (this.duplikatwarnungSubscription) {
-			this.duplikatwarnungSubscription.unsubscribe();
-		}
-		if (this.selectedKlasseSubscription) {
-			this.selectedKlasseSubscription.unsubscribe();
-		}
-		if (this.schuleSubscription) {
-			this.schuleSubscription.unsubscribe();
-		}
-		if (this.saveOutcomeSubscription) {
-			this.saveOutcomeSubscription.unsubscribe();
-		}
+		this.klassenwechselDatenSubscription.unsubscribe();
+		this.duplikatwarnungSubscription.unsubscribe();
+		this.selectedKlasseSubscription.unsubscribe();
+		this.schuleSubscription.unsubscribe();
+		this.saveOutcomeSubscription.unsubscribe();
 	}
 
 	editorInitialized(): boolean {
@@ -187,8 +185,16 @@ export class KlasseWechselnComponent implements OnInit, OnDestroy {
 
 	onSubmit(): void {
 
-		this.saveInProgress = true;
+		if (!this.kind) {
+			return;
+		}
 		const kindDaten = this.createRequestData();
+
+		if (!kindDaten) {
+			return;
+		}
+
+		this.saveInProgress = true;		
 		this.kinderFacade.pruefeDuplikat(this.kind.uuid, kindDaten);
 	}
 
@@ -215,7 +221,7 @@ export class KlasseWechselnComponent implements OnInit, OnDestroy {
 	private openWarndialog(content: TemplateRef<HTMLElement>) {
 
 		this.saveInProgress = false;
-		this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+		this.modalService.open(content, modalOptions).result.then((result) => {
 
 			if (result === 'ja') {
 				this.saveKind();
@@ -227,14 +233,32 @@ export class KlasseWechselnComponent implements OnInit, OnDestroy {
 	}
 
 	private saveKind(): void {
+
+		if (!this.kind) {
+			return;
+		}
+
+		if (!this.selectedSchule) {
+			return;
+		}
+
+		const kindDaten: KindEditorModel | undefined = this.createRequestData();
+
+		if (!kindDaten) {
+			return;
+		}
+
 		this.showSaveMessage = true;
 		this.saveInProgress = true;
 		this.selectDisabled = true;
-		const kindDaten = this.createRequestData();
 		this.kinderFacade.moveKind(this.kind, kindDaten, this.selectedSchule);
 	}
 
-	private createRequestData(): KindEditorModel {
+	private createRequestData(): KindEditorModel | undefined {
+
+		if (!this.kind) {
+			return undefined;
+		}
 
 		const nameNeueKlasse = this.klassenForm.value.klasse;
 		const neueKlassen = this.klassen.filter(kl => kl.name === nameNeueKlasse);
@@ -242,8 +266,8 @@ export class KlasseWechselnComponent implements OnInit, OnDestroy {
 
 		return {
 			vorname: this.kind.vorname,
-			nachname: this.kind.nachname,
-			zusatz: this.kind.zusatz,
+			nachname: this.kind.nachname ? this.kind.nachname : '',
+			zusatz: this.kind.zusatz ? this.kind.zusatz : '',
 			klassenstufe: this.kind.klassenstufe,
 			sprache: this.kind.sprache,
 			klasseUuid: neueKlasse.uuid

@@ -1,9 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { SchuleAdminOverview, AuswertungImportReport } from '../schulteilnahmen.model';
 import { Teilnahme } from '@minikaenguru-ws/common-components';
-import { Message } from '@minikaenguru-ws/common-messages';
-
-
 
 export const startLoadSchule = createAction(
 	'[SchulteilnahmenFacade] findOrLoad beforeLoad'
@@ -15,7 +12,7 @@ export const loadSchuleFinishedWithError = createAction(
 
 export const schuleOverviewLoaded = createAction(
 	'[SchulteilnahmenFacade] findOrLoadSchuleAdminOverview',
-	props<{schuleAdminOverview: SchuleAdminOverview}>()
+	props<{schuleAdminOverview?: SchuleAdminOverview}>()
 );
 
 export const anonymisierteTeilnahmeSelected = createAction(
@@ -23,7 +20,7 @@ export const anonymisierteTeilnahmeSelected = createAction(
 	props<{teilnahme: Teilnahme}>()
 );
 
-export const auswertungImportert = createAction(
+export const auswertungImportiert = createAction(
 	'[SchulteilnahmenFacade] auswertungImportiert',
 	props<{report: AuswertungImportReport}>()
 );

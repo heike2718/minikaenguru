@@ -8,7 +8,7 @@ export const initSchulkatalog = createAction(
 
 export const startSearch = createAction(
 	'[KatalogItemsSucheComponent] startSearch',
-	props<{ selectedKatalogtyp: Katalogtyp, selectedItem: KatalogItem, searchTerm: string }>()
+	props<{ selectedKatalogtyp: Katalogtyp, selectedItem?: KatalogItem, searchTerm: string }>()
 );
 
 export const searchFinished = createAction(

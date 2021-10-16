@@ -13,7 +13,7 @@ import { VeranstalterNavComponent } from './veranstalter-nav/veranstalter-nav.co
 import { PrivatteilnahmeOverviewComponent } from './privatteilnahme-overview/privatteilnahme-overview.component';
 import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
 import { ZugangUnterlagenComponent } from './zugang-unterlagen/zugang-unterlagen.component';
-
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -30,6 +30,7 @@ import { ZugangUnterlagenComponent } from './zugang-unterlagen/zugang-unterlagen
 	imports: [
 		CommonModule,
 		FormsModule,
+		NgbModule,
 		CommonComponentsModule,
 		VeranstalterRoutingModule,
 		StoreModule.forFeature(fromVeranstalter.veranstalterFeatureKey, fromVeranstalter.reducer),

@@ -1,4 +1,4 @@
-import { ErrorHandler, Injector, Injectable, Inject } from '@angular/core';
+import { ErrorHandler, Injector, Injectable } from '@angular/core';
 import { LogService } from '@minikaenguru-ws/common-logging';
 import { MessageService, ErrorMappingService, Message } from '@minikaenguru-ws/common-messages';
 import { environment } from '../../environments/environment';
@@ -36,8 +36,6 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 		this.messageService = this.injector.get(MessageService);
 
 		this.router = this.injector.get(Router);
-
-
 	}
 
 
@@ -73,7 +71,7 @@ export class GlobalErrorHandlerService implements ErrorHandler {
 
 	public handleHttpError(httpError: HttpErrorResponse) {
 		if (httpError.status === 0) {
-			this.messageService.error('Der Server ist nicht erreichbar.');
+			// this.messageService.error('Der Server ist nicht erreichbar.');
 		} else {
 			switch (httpError.status) {
 				case 401:

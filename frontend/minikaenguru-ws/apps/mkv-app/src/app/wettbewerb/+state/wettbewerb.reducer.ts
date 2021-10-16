@@ -5,8 +5,8 @@ import { Wettbewerb, AbstractVeranstalter } from '../wettbewerb.model';
 export const wettbewerbFeatureKey = 'mkv-app-wettbewerb';
 
 export interface WettbewerbState {
-	readonly aktuellerWettbewerb: Wettbewerb;
-	readonly veranstalter: AbstractVeranstalter;
+	readonly aktuellerWettbewerb?: Wettbewerb;
+	readonly veranstalter?: AbstractVeranstalter;
 };
 
 const initialWettbewerbState: WettbewerbState = {

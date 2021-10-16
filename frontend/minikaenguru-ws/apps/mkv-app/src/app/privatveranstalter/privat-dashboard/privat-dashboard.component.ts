@@ -7,6 +7,7 @@ import { TeilnahmenFacade } from '../../teilnahmen/teilnahmen.facade';
 import { Subscription } from 'rxjs';
 import { LogoutService } from '../../services/logout.service';
 import { STORAGE_KEY_USER, User } from '@minikaenguru-ws/common-auth';
+import { LogService } from '@minikaenguru-ws/common-logging';
 
 @Component({
 	selector: 'mkv-privat-dashboard',
@@ -28,33 +29,36 @@ export class PrivatDashboardComponent implements OnInit, OnDestroy {
 	textFeatureFlagAnzeigen = false;
 	textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
 
-	userIdRef: string;
+	userIdRef?: string;
 
 	unterlagenDeutschUrl  = environment.apiUrl + '/unterlagen/privat/de';
 	unterlagenEnglischUrl  = environment.apiUrl + '/unterlagen/privat/en';
 
 	hatZugangZuUnterlagen = false;
 
-	private veranstalterSubscription: Subscription;
+	private veranstalterSubscription: Subscription = new Subscription();
 
-	private teilnahmenummerSubscription: Subscription;
+	private teilnahmenummerSubscription: Subscription = new Subscription();
 
-	private teilnahmenummer: string;
+	private teilnahmenummer?: string;
 
-	private teilnahmenSelected: boolean;
+	private teilnahmenSelected: boolean = false;
 
 	constructor(private veranstalterFacade: PrivatveranstalterFacade,
 		private teilnahmenFacade: TeilnahmenFacade,
 		private wettbewerbFacade: WettbewerbFacade,
 		private logoutService: LogoutService,
+		private logger: LogService,
 		private router: Router
 	) { }
 
 	ngOnInit(): void {
 
-		const user: User = JSON.parse(localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_USER));
-		this.userIdRef = user.idReference;
-
+		const obj : string | null = localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_USER);
+		if (obj) {
+			const user: User = JSON.parse(obj);
+			this.userIdRef = user.idReference;
+		}
 		this.teilnahmenSelected = false;
 
 		this.veranstalterSubscription = this.privatveranstalter$.subscribe(
@@ -76,22 +80,20 @@ export class PrivatDashboardComponent implements OnInit, OnDestroy {
 			}
 
 		);
-
-
-
 	}
 
 	ngOnDestroy(): void {
-		if (this.veranstalterSubscription) {
-			this.veranstalterSubscription.unsubscribe();
-		}
-
-		if (this.teilnahmenummerSubscription) {
-			this.teilnahmenummerSubscription.unsubscribe();
-		}
+		this.veranstalterSubscription.unsubscribe();
+		this.teilnahmenummerSubscription.unsubscribe();
 	}
 
 	gotoTeilnahmen(): void {
+
+		if (!this.teilnahmenummer) {
+			this.logger.debug('teilnahmenummer was undefined');
+			return;
+		}
+
 		this.teilnahmenSelected = true;
 		this.teilnahmenFacade.selectTeilnahmenummer(this.teilnahmenummer, '');
 	}

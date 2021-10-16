@@ -22,9 +22,9 @@ export class TeilnahmenListComponent implements OnInit, OnDestroy {
 
 	teilnahmenummer: string;
 
-	name: string;
+	name: string = '';
 
-	private teilnahmeIdSubscription: Subscription;
+	private teilnahmeIdSubscription: Subscription = new Subscription();
 
 	constructor(private teilnahmenFacade: TeilnahmenFacade, private authService: AuthService, private router: Router) {
 
@@ -44,9 +44,7 @@ export class TeilnahmenListComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		if (this.teilnahmeIdSubscription) {
-			this.teilnahmeIdSubscription.unsubscribe();
-		}
+		this.teilnahmeIdSubscription.unsubscribe();
 	}
 
 	backToSchule(): void {

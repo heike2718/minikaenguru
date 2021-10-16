@@ -1,4 +1,4 @@
-import { TeilnahmeIdentifier, Teilnahme, TeilnahmeIdentifierAktuellerWettbewerb } from '@minikaenguru-ws/common-components';
+import { Teilnahme } from '@minikaenguru-ws/common-components';
 
 export interface SchulkatalogData {
 	readonly kuerzel: string;
@@ -62,7 +62,7 @@ export class SchulenOverviewMap {
 		return this.schulen.has(kuerzel);
 	}
 
-	public get(kuerzel: string): SchuleAdminOverview {
+	public get(kuerzel: string): SchuleAdminOverview | undefined {
 
 		if (kuerzel === undefined) {
 			return undefined;
@@ -85,7 +85,11 @@ export class SchulenOverviewMap {
 
 };
 
-export function replaceTeilnahme(teilnahme: Teilnahme, teilnahmen: Teilnahme[]): Teilnahme[] {
+export function replaceTeilnahme(teilnahme?: Teilnahme, teilnahmen?: Teilnahme[]): Teilnahme[] {
+
+	if (!teilnahme || !teilnahmen) {
+		return [];
+	}
 
 	const result: Teilnahme[] = [];
 

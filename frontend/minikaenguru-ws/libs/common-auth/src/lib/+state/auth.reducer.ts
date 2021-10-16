@@ -12,9 +12,9 @@ export interface AuthState {
 
 export const initialAuthState: AuthState = {
 	session: {
-		sessionId: undefined,
+		sessionId: null,
 		expiresAt: 0,
-		user: undefined
+		user: null
 	},
 	loggingOut: false
 };

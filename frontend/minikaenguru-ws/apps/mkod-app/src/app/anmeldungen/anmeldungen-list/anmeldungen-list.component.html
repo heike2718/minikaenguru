@@ -1,7 +1,7 @@
 <div class="mkv-container mt-5">
 	<div class="col-12">
-		<div *ngIf="anmeldungenFacade.anmeldungenState$ | async as anmeldungen">
-			<ng-container *ngIf="!anmeldungen.loading else loading">
+		<div *ngIf="anmeldungenFacade.anmeldungenState$ | async as anmeldungen else loading">
+			<ng-container>
 				<h3>Anmeldungen zum Wettbewerb {{anmeldungen.wettbewerbsjahr? anmeldungen.wettbewerbsjahr : ': der Anmeldezeitraum hat noch nicht begonnen'}}</h3>
 				<div *ngIf="anmeldungen.statusWettbewerb === 'ERFASST'">
 					<p>Der Anmeldungszeitraum hat noch nicht begonnen. Es liegen noch keine Daten vor</p>
@@ -14,11 +14,11 @@
 					*ngIf="anmeldungen.statusWettbewerb === 'ANMELDUNG' || anmeldungen.statusWettbewerb === 'DOWNLOAD_LEHRER' || anmeldungen.statusWettbewerb === 'DOWNLOAD_PRIVAT'">
 					<p>Für grün hinterlegte Karten liegen bereits Lösungszettel vor.</p>
 					<h4>insgesamt</h4>
-					<div class="col-md-12 mt-1 mb-1 mb-2">
+					<div *ngIf="anmeldungen.privatanmeldungen" class="col-md-12 mt-1 mb-1 mb-2">
 						<mkod-anmeldungsitem-card [anmeldungsitem]="anmeldungen.privatanmeldungen">
 						</mkod-anmeldungsitem-card>
 					</div>
-					<div class="col-md-12 mt-1 mb-1 mb-2">
+					<div *ngIf="anmeldungen.schulanmeldungen" class="col-md-12 mt-1 mb-1 mb-2">
 						<mkod-anmeldungsitem-card [anmeldungsitem]="anmeldungen.schulanmeldungen">
 						</mkod-anmeldungsitem-card>
 					</div>

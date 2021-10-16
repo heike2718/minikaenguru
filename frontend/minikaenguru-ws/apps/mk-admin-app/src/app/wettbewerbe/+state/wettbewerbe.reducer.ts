@@ -9,10 +9,10 @@ export const wettbewerbeFeatureKey = 'mk-admin-app-wettbewerbe';
 
 export interface WettbewerbeState {
 	readonly wettbewerbeMap: WettbewerbWithID[],
-	readonly selectedJahr: number,
+	readonly selectedJahr?: number,
 	readonly wettbewerbeLoaded: boolean;
-	readonly saveOutcome: Message;
-	readonly wettbewerbEditorModel: WettbewerbEditorModel;
+	readonly saveOutcome?: Message;
+	readonly wettbewerbEditorModel?: WettbewerbEditorModel;
 };
 
 const initialWettbewerbeState = {
@@ -28,7 +28,7 @@ const wettbewerbeReducer = createReducer(initialWettbewerbeState,
 	on(WettbewerbeActions.allWettbewerbeLoaded, (state, action) => {
 
 		const alle = action.wettbewerbe;
-		const newMap = [];
+		const newMap: WettbewerbWithID[] = [];
 		alle.forEach(w => newMap.push({ jahr: w.jahr, wettbewerb: w }));
 		return { ...state, wettbewerbeMap: newMap, selectedJahr: undefined, wettbewerbeLoaded: true, saveOutcome: undefined }
 	}),
@@ -40,9 +40,13 @@ const wettbewerbeReducer = createReducer(initialWettbewerbeState,
 
 	on(WettbewerbeActions.selectedWettbewerbLoaded, (state, action) => {
 
-		const neueMap = new WettbewerbeMap(state.wettbewerbeMap).merge(action.wettbewerb);
-		const loaded = state.wettbewerbeMap.length > 0;
-		return { ...state, wettbewerbeMap: neueMap, selectedJahr: action.wettbewerb.jahr, wettbewerbeLoaded: loaded, saveOutcome: undefined }
+		if (action.wettbewerb) {
+			const neueMap = new WettbewerbeMap(state.wettbewerbeMap).merge(action.wettbewerb);
+			const loaded = state.wettbewerbeMap.length > 0;
+			return { ...state, wettbewerbeMap: neueMap, selectedJahr: action.wettbewerb.jahr, wettbewerbeLoaded: loaded, saveOutcome: undefined };
+		}
+
+		return {...state};
 	}),
 
 	on(WettbewerbeActions.resetWettbewerbe, (_state, _action) => {
@@ -57,20 +61,26 @@ const wettbewerbeReducer = createReducer(initialWettbewerbeState,
 
 	on(WettbewerbeActions.startEditingWettbewerb, (state, action) => {
 
-		const wettbewerb: Wettbewerb = action.wettbewerb;
-		const wettbewerbEditorModel: WettbewerbEditorModel = {
-			jahr: wettbewerb.jahr,
-			status: wettbewerb.status,
-			wettbewerbsbeginn: wettbewerb.wettbewerbsbeginn,
-			wettbewerbsende: wettbewerb.wettbewerbsende,
-			datumFreischaltungLehrer: wettbewerb.datumFreischaltungLehrer,
-			datumFreischaltungPrivat: wettbewerb.datumFreischaltungPrivat,
-			loesungsbuchstabenIkids: wettbewerb.loesungsbuchstabenIkids,
-			loesungsbuchstabenKlasse1: wettbewerb.loesungsbuchstabenKlasse1,
-			loesungsbuchstabenKlasse2: wettbewerb.loesungsbuchstabenKlasse2
-		};
+		if (action.wettbewerb) {
+		
+			const wettbewerb: Wettbewerb = action.wettbewerb;
+			
+			const wettbewerbEditorModel: WettbewerbEditorModel = {
+				jahr: wettbewerb.jahr,
+				status: wettbewerb.status,
+				wettbewerbsbeginn: wettbewerb.wettbewerbsbeginn,
+				wettbewerbsende: wettbewerb.wettbewerbsende,
+				datumFreischaltungLehrer: wettbewerb.datumFreischaltungLehrer,
+				datumFreischaltungPrivat: wettbewerb.datumFreischaltungPrivat,
+				loesungsbuchstabenIkids: wettbewerb.loesungsbuchstabenIkids,
+				loesungsbuchstabenKlasse1: wettbewerb.loesungsbuchstabenKlasse1,
+				loesungsbuchstabenKlasse2: wettbewerb.loesungsbuchstabenKlasse2
+			};
 
-		return { ...state, wettbewerbEditorModel: wettbewerbEditorModel, saveOutcome: undefined };
+			return { ...state, wettbewerbEditorModel: wettbewerbEditorModel, saveOutcome: undefined };
+		}
+
+		return {...state};
 	}),
 
 	on(WettbewerbeActions.editWettbewerbFinished, (state, _action) => {

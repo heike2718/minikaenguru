@@ -13,8 +13,8 @@ export class VeranstalterCardComponent implements OnInit {
 	devMode = environment.envName === 'DEV';
 
 	@Input()
-	veranstalter: Veranstalter;
-	veranstalterUndefined: boolean;
+	veranstalter!: Veranstalter;
+	veranstalterUndefined: boolean = false;
 
 
 	constructor(private verastalterFacade: VeranstalterFacade) { }

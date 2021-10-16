@@ -18,7 +18,7 @@
 				<button class="btn btn-primary w-100 ml-1" (click)="addKlasse()"><i class="fa fa-plus"
 						aria-hidden="true"></i>neue Klasse</button>
 
-				<button *ngIf="(klassenFacade.anzahlLoesungszettel$ | async) > 0" class="btn btn-success w-100 ml-1"
+				<button *ngIf="anzahlLoesungszettel > 0" class="btn btn-success w-100 ml-1"
 					(click)="gotoSchulauswertung()"><i class="fa fa-graduation-cap" aria-hidden="true"></i>Urkunden
 					generieren</button>
 
@@ -35,7 +35,7 @@
 				<button class="btn btn-primary w-100 ml-1" (click)="addKlasse()"><i class="fa fa-plus"
 						aria-hidden="true"></i>neue Klasse</button>
 
-				<button *ngIf="(klassenFacade.anzahlLoesungszettel$ | async) > 0" class="btn btn-success w-100 ml-1"
+				<button *ngIf="anzahlLoesungszettel > 0" class="btn btn-success w-100 ml-1"
 					(click)="gotoSchulauswertung()"><i class="fa fa-graduation-cap" aria-hidden="true"></i>Urkunden
 					generieren</button>
 

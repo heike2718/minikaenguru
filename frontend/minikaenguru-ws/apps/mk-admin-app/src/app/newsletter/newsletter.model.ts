@@ -1,5 +1,3 @@
-import { ThrowStmt } from '@angular/compiler';
-
 export type Empfaengertyp = 'ALLE' | 'LEHRER' | 'PRIVATVERANSTALTER' | 'TEST';
 
 
@@ -8,6 +6,13 @@ export interface Newsletter {
 	readonly betreff: string;
 	readonly text: string;
 	readonly versandinfoIDs: string[];
+};
+
+export const initialNewsletter: Newsletter = {
+	uuid: '',
+	betreff: '',
+	text: '',
+	versandinfoIDs: []
 };
 
 export interface NewsletterWithID {
@@ -68,10 +73,10 @@ export class NewsletterMap {
 		return this.newsletters.has(uuid);
 	}
 
-	public get(uuid: string): Newsletter {
+	public get(uuid: string): Newsletter | undefined {
 
 		if (!this.has(uuid)) {
-			return null;
+			return undefined;
 		}
 
 		return this.newsletters.get(uuid);
@@ -139,10 +144,10 @@ export class VersandinfoMap {
 		return this.versandinfos.has(uuid);
 	}
 
-	public get(uuid: string): Versandinfo {
+	public get(uuid: string): Versandinfo | undefined {
 
 		if (!this.has(uuid)) {
-			return null;
+			return undefined;
 		}
 
 		return this.versandinfos.get(uuid);

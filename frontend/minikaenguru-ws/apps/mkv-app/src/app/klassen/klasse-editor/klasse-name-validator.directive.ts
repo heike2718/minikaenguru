@@ -13,13 +13,13 @@ import { KlassenMap } from '../klassen.model';
 })
 export class KlasseNameValidatorDirective implements OnInit, OnDestroy, Validator {
 
-	private klassenMapSubscription: Subscription;
+	private klassenMapSubscription: Subscription = new Subscription();
 
-	private routeSubscription: Subscription;
+	private routeSubscription: Subscription = new Subscription();
 
-	private uuid: string;
+	private uuid?: string;
 
-	private klassenMap: KlassenMap;
+	private klassenMap!: KlassenMap;
 
 	constructor(private route: ActivatedRoute,
 		private klassenFacade: KlassenFacade) { }
@@ -47,13 +47,8 @@ export class KlasseNameValidatorDirective implements OnInit, OnDestroy, Validato
 
 	ngOnDestroy(): void {
 
-		if (this.routeSubscription) {
-			this.routeSubscription.unsubscribe();
-		}
-
-		if (this.klassenMapSubscription) {
-			this.klassenMapSubscription.unsubscribe();
-		}
+		this.routeSubscription.unsubscribe();
+		this.klassenMapSubscription.unsubscribe();
 
 	}
 

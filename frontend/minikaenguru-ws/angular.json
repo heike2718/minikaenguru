@@ -554,6 +554,7 @@
     },
     "mkod-app": {
       "projectType": "application",
+      "schematics": {},
       "root": "apps/mkod-app",
       "sourceRoot": "apps/mkod-app/src",
       "prefix": "mkod",

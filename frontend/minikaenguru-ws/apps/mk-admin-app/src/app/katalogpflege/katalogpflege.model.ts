@@ -12,7 +12,6 @@ export interface KatalogpflegeItem {
 	readonly kinderGeladen?: boolean;
 };
 
-
 export interface KatalogpflegeItemWithID {
 	readonly kuerzel: string;
 	readonly katalogItem: KatalogpflegeItem;
@@ -29,11 +28,23 @@ export interface LandPayload {
 	readonly kuerzel: string;
 };
 
+export const initialLandPayload: LandPayload = {
+	name: '',
+	kuerzel: ''
+};
+
 export interface OrtPayload {
 	readonly name: string;
 	readonly kuerzel: string;
 	readonly kuerzelLand: string;
 	readonly nameLand: string;
+};
+
+export const initialOrtPayload: OrtPayload = {
+	name: '',
+	kuerzel: '',
+	kuerzelLand: '',
+	nameLand: ''
 };
 
 export interface SchulePayload {
@@ -45,6 +56,15 @@ export interface SchulePayload {
 	readonly nameLand: string;
 	readonly emailAuftraggeber?: string;
 };
+
+export const initialSchulePayload: SchulePayload = {
+	name: '',
+	kuerzel: '',
+	kuerzelOrt: '',
+	nameOrt: '',
+	kuerzelLand: '',
+	nameLand: ''
+}
 
 export interface KuerzelAPIModel {
 	readonly kuerzelSchule: string;
@@ -123,9 +143,9 @@ export function mergeKatalogItems(katalogItems: KatalogpflegeItem[], kataloge: K
 	const orteMap: KatalogPflegeItemsMap = new KatalogPflegeItemsMap(kataloge.orte);
 	const schulenMap: KatalogPflegeItemsMap = new KatalogPflegeItemsMap(kataloge.schulen);
 
-	let laender: KatalogpflegeItemWithID[];
-	let orte: KatalogpflegeItemWithID[];
-	let schulen: KatalogpflegeItemWithID[];
+	let laender: KatalogpflegeItemWithID[] = [];
+	let orte: KatalogpflegeItemWithID[] = [];
+	let schulen: KatalogpflegeItemWithID[] = [];
 
 	katalogItems.forEach(item => {
 		const typ = item.typ;

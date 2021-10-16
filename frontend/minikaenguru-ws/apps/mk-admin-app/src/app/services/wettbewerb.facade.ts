@@ -21,11 +21,11 @@ import { AuthService } from '@minikaenguru-ws/common-auth';
 export class WettbewerbFacade {
 
 	public wettbewerbe$: Observable<Wettbewerb[]> = this.store.select(wettbewerbe);
-	public wettbewerb$: Observable<Wettbewerb> = this.store.select(selectedWettbewerb);
-	public wettbewerbEditorModel$: Observable<WettbewerbEditorModel> = this.store.select(wettbewerbEditorModel);
-	public saveOutcome$: Observable<Message> = this.store.select(saveOutcome);
+	public wettbewerb$: Observable<Wettbewerb | undefined> = this.store.select(selectedWettbewerb);
+	public wettbewerbEditorModel$: Observable<WettbewerbEditorModel | undefined> = this.store.select(wettbewerbEditorModel);
+	public saveOutcome$: Observable<Message | undefined> = this.store.select(saveOutcome);
 
-	private loggingOut: boolean;
+	private loggingOut: boolean = false;
 
 	constructor(private http: HttpClient,
 		private authService: AuthService,
@@ -73,7 +73,7 @@ export class WettbewerbFacade {
 		);
 	}
 
-	public loadWettbewerbDetails(jahr: number): Observable<Wettbewerb> {
+	public loadWettbewerbDetails(jahr: number): Observable<Wettbewerb | undefined> {
 
 		if (this.loggingOut) {
 			return of(undefined);

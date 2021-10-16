@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild, TemplateRef, OnInit, OnDestroy } from '@angular/core';
-import { Klasse } from '@minikaenguru-ws/common-components';
+import { Klasse, modalOptions } from '@minikaenguru-ws/common-components';
 import { Router } from '@angular/router';
 import { KlassenFacade } from '../klassen.facade';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -14,15 +14,15 @@ import { Subscription } from 'rxjs';
 export class KlasseDetailsComponent implements OnInit, OnDestroy {
 
 	@ViewChild('loeschenWarndialog')
-	loeschenWarndialog: TemplateRef<HTMLElement>;
+	loeschenWarndialog!: TemplateRef<HTMLElement>;
 
 	@Input()
-	klasse: Klasse;
+	klasse!: Klasse;
 
-	anzahlKinder: number;
-	anzahlLoesungszettel: number;
+	anzahlKinder: number = 0;
+	anzahlLoesungszettel: number = 0;
 
-	private selectedKlasseSubscription: Subscription;
+	private selectedKlasseSubscription: Subscription = new Subscription();
 
 	constructor(private router: Router,
 		private modalService: NgbModal,
@@ -32,14 +32,14 @@ export class KlasseDetailsComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 
-		this.anzahlKinder = this.klasse.anzahlKinder;
-		this.anzahlLoesungszettel = this.klasse.anzahlLoesungszettel;
+		this.anzahlKinder = this.klasse.anzahlKinder? this.klasse.anzahlKinder : 0;
+		this.anzahlLoesungszettel = this.klasse.anzahlLoesungszettel? this.klasse.anzahlLoesungszettel : 0;
 
 		this.selectedKlasseSubscription = this.klassenFacade.selectedKlasse$.subscribe(
 			klasse => {
 				if (klasse && klasse.uuid === this.klasse.uuid) {
-					this.anzahlKinder = klasse.anzahlKinder;
-					this.anzahlLoesungszettel = klasse.anzahlLoesungszettel;
+					this.anzahlKinder = klasse.anzahlKinder ? klasse.anzahlKinder : 0;
+					this.anzahlLoesungszettel = klasse.anzahlLoesungszettel ? klasse.anzahlLoesungszettel : 0;
 				}
 			}
 		);
@@ -68,7 +68,7 @@ export class KlasseDetailsComponent implements OnInit, OnDestroy {
 
 		if (this.klasse.anzahlKinder && this.klasse.anzahlKinder > 0) {
 
-			this.modalService.open(this.loeschenWarndialog, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+			this.modalService.open(this.loeschenWarndialog, modalOptions).result.then((result) => {
 
 				if (result === 'ja') {
 					this.forceDeleteKlasse();

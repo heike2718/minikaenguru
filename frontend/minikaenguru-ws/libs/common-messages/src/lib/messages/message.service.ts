@@ -7,9 +7,9 @@ import { Message } from '../domain/entities';
 })
 export class MessageService {
 
-	private messageSubject = new BehaviorSubject<Message>(undefined);
+	private messageSubject = new BehaviorSubject<Message | undefined>(undefined);
 
-	message$: Observable<Message> = this.messageSubject.asObservable();
+	message$: Observable<Message | undefined> = this.messageSubject.asObservable();
 
 	constructor() { }
 

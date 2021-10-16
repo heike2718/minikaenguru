@@ -11,9 +11,9 @@ import { Loesungszettelzeile, ZulaessigeEingabe } from '@minikaenguru-ws/common-
 export class LoesungszettelrowComponent implements OnInit {
 
 	@Input()
-	zeile: Loesungszettelzeile;
+	zeile!: Loesungszettelzeile;
 
-	columnIdexes: number[];
+	columnIdexes: number[] = [];
 
 	constructor(private loesungszettelFacade: LoesungszettelFacade) { }
 

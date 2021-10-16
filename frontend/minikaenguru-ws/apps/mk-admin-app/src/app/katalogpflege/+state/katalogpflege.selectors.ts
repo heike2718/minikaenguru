@@ -19,10 +19,10 @@ export const editLandInput = createSelector(katalogflegeState, s => s.landEditor
 
 
 
-function combineSchulePayloadWithModus(e: fromKatalogpflege.SchuleEditorModel, it: KatalogpflegeItem, lo: boolean): { 'schuleEditorModel': fromKatalogpflege.SchuleEditorModel, 'selectedItem': KatalogpflegeItem, 'loading': boolean } {
+function combineSchulePayloadWithModus(e: fromKatalogpflege.SchuleEditorModel, it?: KatalogpflegeItem, lo?: boolean): { 'schuleEditorModel': fromKatalogpflege.SchuleEditorModel, 'selectedItem'?: KatalogpflegeItem, 'loading': boolean } {
 	return {
 		schuleEditorModel: e,
 		selectedItem: it,
-		loading: lo
+		loading: lo ? lo : false
 	};
 }

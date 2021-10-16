@@ -12,23 +12,19 @@ import {
 	, KindEditorModel
 	, Duplikatwarnung
 	, KindRequestData
-	, getKlassenstufeByLabel
-	, getSpracheByLabel
-	, TeilnahmeIdentifier
 	, TeilnahmeIdentifierAktuellerWettbewerb
-	, Teilnahmeart,
-	Klasse
+	, Teilnahmeart
 } from '@minikaenguru-ws/common-components';
-import { AuthService, User, STORAGE_KEY_USER, Rolle } from '@minikaenguru-ws/common-auth';
+import { AuthService, STORAGE_KEY_USER } from '@minikaenguru-ws/common-auth';
 import { KinderService } from './kinder.service';
-import { map, withLatestFrom, switchMap, tap, filter } from 'rxjs/operators';
+import { map, withLatestFrom, filter } from 'rxjs/operators';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
-import { KinderMap, KindEditorVorbelegung, KlassenwechselDaten } from './kinder.model';
+import { KinderMap, KlassenwechselDaten } from './kinder.model';
 import { Message, MessageService } from '@minikaenguru-ws/common-messages';
 import { environment } from '../../environments/environment';
 import { Schule } from '../lehrer/schulen/schulen.model';
-import { schulkatalogFeatureKey } from 'libs/common-schulkatalog/src/lib/+state/schulkatalog.reducer';
 import { Router } from '@angular/router';
+import { LogService } from '@minikaenguru-ws/common-logging';
 
 
 
@@ -37,22 +33,25 @@ import { Router } from '@angular/router';
 })
 export class KinderFacade {
 
-	public teilnahmeIdentifier$: Observable<TeilnahmeIdentifierAktuellerWettbewerb> = this.store.select(KinderSelectors.teilnahmeIdentifier);
+	public teilnahmeIdentifier$: Observable<TeilnahmeIdentifierAktuellerWettbewerb | undefined> = this.store.select(KinderSelectors.teilnahmeIdentifier);
 	public kindEditorModel$: Observable<KindEditorModel> = this.store.select(KinderSelectors.kindEditorModel);
 	public kinder$: Observable<Kind[]>;
 	public kinderGeladen$: Observable<boolean> = this.store.select(KinderSelectors.kinderGeladen);
 	public anzahlKinder$: Observable<number>;
-	public duplikatwarnung$: Observable<Duplikatwarnung> = this.store.select(KinderSelectors.duplikatwarnung);
-	public saveOutcome$: Observable<Message> = this.store.select(KinderSelectors.saveOutcome);
-	public klassenwechselDaten$: Observable<KlassenwechselDaten>;
-	public selectedKind$: Observable<Kind> = this.store.select(KinderSelectors.selectedKind);
+	public duplikatwarnung$: Observable<Duplikatwarnung | undefined> = this.store.select(KinderSelectors.duplikatwarnung);
+	public saveOutcome$: Observable<Message | undefined> = this.store.select(KinderSelectors.saveOutcome);
 
-	private loggingOut: boolean;
+	// wird in startKlassenwechsel() initialisiert und ist daher nicht undefined!
+	public klassenwechselDaten$!: Observable<KlassenwechselDaten>;
+	public selectedKind$: Observable<Kind | undefined> = this.store.select(KinderSelectors.selectedKind);
+
+	private loggingOut: boolean = false;
 
 	constructor(private store: Store<AppState>,
 		private authService: AuthService,
 		private kinderService: KinderService,
 		private messageService: MessageService,
+		private logger: LogService,
 		private errorHandler: GlobalErrorHandlerService,
 		private router: Router) {
 
@@ -64,7 +63,7 @@ export class KinderFacade {
 		this.anzahlKinder$ = this.getAnzahlKinder();
 	}
 
-	public createNewKind(klasseUuid: string): void {
+	public createNewKind(klasseUuid?: string): void {
 
 		this.store.dispatch(KinderActions.createNewKind({ klasseUuid: klasseUuid }));
 		this.kinder$ = this.getKinder();
@@ -92,7 +91,14 @@ export class KinderFacade {
 			return;
 		}
 
-		const user = JSON.parse(localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_USER));
+		const userObj = localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_USER);
+		
+		if (!userObj) {
+			this.logger.error('there is no user in localTorage');
+			return;
+		}
+
+		const user = JSON.parse(userObj);
 		const teilnahmeart: Teilnahmeart = user.rolle === 'PRIVAT' ? 'PRIVAT' : 'SCHULE';
 
 		const teilnahmeIdentifier: TeilnahmeIdentifierAktuellerWettbewerb = {
@@ -135,7 +141,7 @@ export class KinderFacade {
 		);
 	}
 
-	public insertKind(uuid: string, editorModel: KindEditorModel, schule: Schule): void {
+	public insertKind(uuid: string, editorModel: KindEditorModel, schule?: Schule): void {
 
 		this.store.dispatch(KinderActions.startLoading());
 
@@ -155,7 +161,7 @@ export class KinderFacade {
 		);
 	}
 
-	public updateKind(uuid: string, editorModel: KindEditorModel, schule: Schule): void {
+	public updateKind(uuid: string, editorModel: KindEditorModel, schule?: Schule): void {
 
 		this.store.dispatch(KinderActions.startLoading());
 
@@ -175,6 +181,14 @@ export class KinderFacade {
 
 	public moveKind(kind: Kind, editorModel: KindEditorModel, schule: Schule): void {
 
+		if (!kind.klasseId || !editorModel.klasseUuid) {
+			this.logger.error('Klassenwechsel nicht möglich - brechen ab: kind.klasseId=' + kind.klasseId + ", editorModel=" + editorModel.klasseUuid);
+			return;
+		}
+
+		const kindKlasseUUID: string = kind.klasseId;
+		const ediorModelKlasseUUID: string = editorModel.klasseUuid;
+
 		this.store.dispatch(KinderActions.startLoading());
 
 		const data = this.mapFromEditorModel(kind.uuid, editorModel, schule) as KindRequestData;
@@ -182,7 +196,7 @@ export class KinderFacade {
 		this.kinderService.updateKind(data).subscribe(
 			responsePayload => {
 				this.store.dispatch(KinderActions.kindSaved({ kind: responsePayload.data, outcome: responsePayload.message }));
-				this.store.dispatch(KlassenActions.kindMoved({kind: kind, sourceKlasseUuid: kind.klasseId, targetKlasseUuid: editorModel.klasseUuid}));
+				this.store.dispatch(KlassenActions.kindMoved({kind: kind, sourceKlasseUuid: kindKlasseUUID, targetKlasseUuid: ediorModelKlasseUUID}));
 				this.kinder$ = this.getKinder();
 			},
 			(error) => {
@@ -259,7 +273,7 @@ export class KinderFacade {
 		);
 	}
 
-	private mapFromEditorModel(uuid: string, editorModel: KindEditorModel, schule: Schule): KindRequestData {
+	private mapFromEditorModel(uuid: string, editorModel: KindEditorModel, schule?: Schule): KindRequestData {
 
 		let data: KindRequestData = {
 			uuid: uuid,

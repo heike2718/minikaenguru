@@ -22,7 +22,7 @@ export class PrivatveranstalterFacade {
 	public aktuelleTeilnahmeGeladen$ = this.appStore.select(VeranstalterSelectors.aktuelleTeilnahmeGeladen);
 	public hatZugangZuUnterlagen$ = this.appStore.select(VeranstalterSelectors.zugangUnterlagen);
 
-	private loggingOut: boolean;
+	private loggingOut: boolean = false;
 
 	constructor(private appStore: Store<AppState>,
 		private authService: AuthService,

@@ -17,9 +17,9 @@ const initialAddSchuleState: AddSchuleState = {
 }
 
 export interface LehrerState {
-	readonly lehrer: Lehrer;
+	readonly lehrer?: Lehrer;
 	readonly schulen: SchuleWithID[];
-	readonly selectedSchule: Schule;
+	readonly selectedSchule?: Schule;
 	readonly schulenLoaded: boolean;
 	readonly addSchuleState: AddSchuleState;
 	readonly loading: boolean;
@@ -43,9 +43,13 @@ const lehrerReducer = createReducer(initalLehrerState,
 
 	on(LehrerActions.aboNewsletterChanged, (state, _action) => {
 
-		const abonniert = !state.lehrer.newsletterAbonniert;
-		const lehrer = { ...state.lehrer, newsletterAbonniert: abonniert };
-		return { ...state, loading: false, lehrer: lehrer };
+		if (state.lehrer) {
+			const abonniert = !state.lehrer.newsletterAbonniert;
+			const lehrer = { ...state.lehrer, newsletterAbonniert: abonniert };
+			return { ...state, loading: false, lehrer: lehrer };
+		}
+
+		return {...state, loading: false};		
 	}),
 
 	on(LehrerActions.startLoading, (state, _action) => {
@@ -81,14 +85,22 @@ const lehrerReducer = createReducer(initalLehrerState,
 		const schulteilnahme: Schulteilnahme = action.teilnahme;
 
 		const alteSchule = state.selectedSchule;
-		const alteDetails = alteSchule.details;
 
-		const anzahlTeilnahmen = !alteDetails ? 1 : alteDetails.anzahlTeilnahmen + 1;
-		const neueDetails: SchuleDetails = { ...alteDetails, angemeldetDurch: action.angemeldetDurch, anzahlTeilnahmen: anzahlTeilnahmen };
-		const neueSchule: Schule = { ...alteSchule, aktuellAngemeldet: true, details: neueDetails };
-		const neueMap = mergeSchulenMap(state.schulen, neueSchule);
-		const neuerState = { ...state, schulen: neueMap, selectedSchule: neueSchule };
-		return neuerState;
+		if (alteSchule) {
+			const alteDetails = alteSchule.details;
+
+			if (alteDetails) {
+				const anzahlTeilnahmen = alteDetails.anzahlTeilnahmen + 1;
+				const neueDetails: SchuleDetails = { ...alteDetails, angemeldetDurch: action.angemeldetDurch, anzahlTeilnahmen: anzahlTeilnahmen };
+				const neueSchule: Schule = { ...alteSchule, aktuellAngemeldet: true, details: neueDetails };
+				const neueMap = mergeSchulenMap(state.schulen, neueSchule);
+				const neuerState = { ...state, schulen: neueMap, selectedSchule: neueSchule };
+				return neuerState;
+			}			
+		}
+
+		return {...state};
+		
 	}),
 
 	on(LehrerActions.restoreDetailsFromCache, (state, action) => {
@@ -105,17 +117,22 @@ const lehrerReducer = createReducer(initalLehrerState,
 	on(LehrerActions.vertragAdvCreated, (state, action) => {
 
 		const schule = findSchuleMitId(state.schulen, action.schulkuerzel);
+		const selectedSchule = state.selectedSchule;
 
-		if (schule != null) {
+		if (schule && selectedSchule && schule.details) {
 
 			const changedSchuleDetails = { ...schule.details, hatAdv: true };
-			const changedSchule = { ...state.selectedSchule, details: changedSchuleDetails };
-			const neueSchuleMap = mergeSchulenMap(state.schulen, changedSchule);
+			const changedSchule = { ...selectedSchule, details: changedSchuleDetails };
 
-			return { ...state, schulen: neueSchuleMap, selectedSchule: changedSchule };
+			if (changedSchule) {
+				const neueSchuleMap = mergeSchulenMap(state.schulen, changedSchule);
+
+				return { ...state, schulen: neueSchuleMap, selectedSchule: changedSchule };
+			}
+			
 		}
 
-		return state;
+		return {...state};
 	}),
 
 	on(LehrerActions.schuleAdded, (state, action) => {

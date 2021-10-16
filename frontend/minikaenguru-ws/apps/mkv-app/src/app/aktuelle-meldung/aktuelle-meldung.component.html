@@ -1,6 +1,6 @@
 <div *ngIf="aktuelleMeldungGeladen$ | async" class="mkv-container mkv-bordered hinweis">
 
-	<div class="col-md-12 mb-2 ml-0 pl-1">
+	<div *ngIf="aktuelleMeldung" class="col-md-12 mb-2 ml-0 pl-1">
 		{{aktuelleMeldung.text}}
 	</div>
 

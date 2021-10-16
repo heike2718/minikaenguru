@@ -56,7 +56,7 @@ export class DownloadFacade {
 		URL.revokeObjectURL(objectUrl);
 	}
 
-	private getFilenameFromContentDispositionHeader(contentDispositionHeader: string, defaultFilename: string) {
+	private getFilenameFromContentDispositionHeader(contentDispositionHeader: string | null, defaultFilename: string) {
 
 		if (!contentDispositionHeader) {
 			return defaultFilename;

@@ -4,6 +4,7 @@ import { environment } from '../../../environments/environment';
 import { WettbewerbFacade } from '../../services/wettbewerb.facade';
 import { Subscription } from 'rxjs';
 import { Wettbewerb } from '../wettbewerbe.model';
+import { LogService } from '@minikaenguru-ws/common-logging';
 
 @Component({
 	selector: 'mka-wettbewerb-dashboard',
@@ -16,11 +17,11 @@ export class WettbewerbDashboardComponent implements OnInit, OnDestroy {
 
 	wettbewerb$ = this.wettbewerbFacade.wettbewerb$;
 
-	private wettbewerb: Wettbewerb;
+	private wettbewerb?: Wettbewerb;
 
-	private selectedWettbewerbSubscription: Subscription;
+	private selectedWettbewerbSubscription: Subscription = new Subscription();
 
-	constructor(private wettbewerbFacade: WettbewerbFacade, private router: Router) { }
+	constructor(private wettbewerbFacade: WettbewerbFacade, private router: Router, private logger: LogService) { }
 
 	ngOnInit(): void {
 
@@ -30,19 +31,24 @@ export class WettbewerbDashboardComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-
-		if (this.selectedWettbewerbSubscription) {
-			this.selectedWettbewerbSubscription.unsubscribe();
-		}
-
+		this.selectedWettbewerbSubscription.unsubscribe();
 	}
 
 	editWettbewerb() {
-		this.wettbewerbFacade.editWettbewerb(this.wettbewerb);
+		if (this.wettbewerb) {
+			this.wettbewerbFacade.editWettbewerb(this.wettbewerb);
+		} else {
+			this.logger.debug('wettwerb was undefined');
+		}		
 	}
 
 	moveToNextStatus() {
-		this.wettbewerbFacade.moveWettbewerbOn(this.wettbewerb);
+		if (this.wettbewerb) {
+			this.wettbewerbFacade.moveWettbewerbOn(this.wettbewerb);
+		} else {
+			this.logger.debug('wettwerb was undefined');
+		}	
+		
 	}
 
 	backToWettbewerbe() {

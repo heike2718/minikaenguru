@@ -11,9 +11,9 @@ import { WettbewerbeFacade } from '../wettbewerbe/wettbewerbe.facade';
 export class NavbarComponent implements OnInit {
 
 	collapsed = true;
-	logo: string;
+	logo: string = '';
 
-	@ViewChild(NgbCollapse, { static: true }) navbarToggler: NgbCollapse;
+	@ViewChild(NgbCollapse, { static: true }) navbarToggler!: NgbCollapse;
 
 	constructor(private wettbewerbeFacade: WettbewerbeFacade) { }
 

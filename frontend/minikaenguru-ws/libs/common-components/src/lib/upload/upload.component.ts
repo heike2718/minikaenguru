@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild, Input, EventEmitter, Output } from '@angular/core';
 import { UploadService } from './upload.service';
 import { UploadComponentModel } from '../common-components.model';
-import { ResponsePayload, Message, MessageLevel, ErrorMappingService } from '@minikaenguru-ws/common-messages';
+import { ResponsePayload, Message, ErrorMappingService } from '@minikaenguru-ws/common-messages';
+import { LogService } from '@minikaenguru-ws/common-logging';
 
 @Component({
 	selector: 'mk-upload',
@@ -10,12 +11,10 @@ import { ResponsePayload, Message, MessageLevel, ErrorMappingService } from '@mi
 })
 export class UploadComponent implements OnInit {
 
-	// https://www.bezkoder.com/angular-11-node-js-file-upload/
-
-	@ViewChild('file', { static: false }) file;
+	// adapted from https://www.bezkoder.com/angular-12-file-upload
 
 	@Input()
-	uploadModel: UploadComponentModel;
+	uploadModel!: UploadComponentModel;
 
 	@Output()
 	responsePayload: EventEmitter<ResponsePayload> = new EventEmitter<ResponsePayload>();
@@ -23,17 +22,18 @@ export class UploadComponent implements OnInit {
 	@Output()
 	dateiAusgewaehlt: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-	// public files: Set<File> = new Set();
-
-	public selectedFile: File;
-
-	public maxFileSizeInfo: string;
+	maxFileSizeInfo!: string;
 
 	uploading = false;
 	uploadSuccessful = false;
 	canSubmit = false;
 
-	constructor(private uploadService: UploadService, private errorMapper: ErrorMappingService) { }
+	selectedFiles?: FileList;
+  	currentFile?: File;
+  	progress = 0;
+  	message = '';
+
+	constructor(private uploadService: UploadService, private errorMapper: ErrorMappingService, private logger: LogService) { }
 
 	ngOnInit(): void {
 
@@ -43,26 +43,15 @@ export class UploadComponent implements OnInit {
 		this.maxFileSizeInfo = 'Maximale erlaubte Größe: ' + maxFileSizeInKB + ' kB bzw. ' + maxFileSizeInMB + ' MB';
 	}
 
-	onFileAdded() {
-		this.dateiAusgewaehlt.emit(true);
-		const files: { [key: string]: File } = this.file.nativeElement.files;
-		for (const key in files) {
-			if (!isNaN(parseInt(key, 0))) {
+	onFileAdded($event: any) {
+		this.selectedFiles = $event.target.files;
 
-				if (files[key].size > this.uploadModel.maxSizeBytes) {
-					this.canSubmit = false;
-					const msg: Message = { level: 'ERROR', message: this.uploadModel.errorMessageSize };
-					this.responsePayload.emit({ message: msg });
-				}
-
-				this.selectedFile = files[key];
-			}
+		if (this.selectedFiles && this.selectedFiles.length === 1) {
+			this.currentFile = this.selectedFiles[0];
+			this.canSubmit = true;
+			this.uploading = false;
+			this.dateiAusgewaehlt.emit(true);			
 		}
-	}
-
-	addFiles() {
-		this.file.nativeElement.click();
-		this.canSubmit = true;
 	}
 
 	submitUpload(): void {
@@ -71,13 +60,18 @@ export class UploadComponent implements OnInit {
 			return;
 		}
 
-		this.uploading = true;
+		if (!this.currentFile) {
+			this.logger.debug('currentFile was undefined');
+			return;
+		}
 
-		this.uploadService.uploadSingleFile(this.selectedFile, this.uploadModel.subUrl).subscribe(
+		this.uploading = true;	
+
+		this.uploadService.uploadSingleFile(this.currentFile, this.uploadModel.subUrl).subscribe(
 			(rp: ResponsePayload) => {
 
 				this.uploading = false;
-				this.selectedFile = undefined;
+				this.currentFile = undefined;
 				this.canSubmit = false;
 				this.responsePayload.emit(rp);
 
@@ -88,6 +82,6 @@ export class UploadComponent implements OnInit {
 				const msg: Message = this.errorMapper.extractMessageObject(error);
 				this.responsePayload.emit({ message: msg });
 			})
-		);
+		);		
 	}
 }

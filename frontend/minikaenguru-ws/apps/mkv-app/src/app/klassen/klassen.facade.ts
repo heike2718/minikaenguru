@@ -27,9 +27,9 @@ export class KlassenFacade {
 	public klassenGeladen$: Observable<boolean> = this.store.select(KlassenSelectors.klassenGeladen);
 	public klassen$: Observable<Klasse[]> = this.store.select(KlassenSelectors.klassen);
 	public anzahlKlassen$: Observable<number> = this.store.select(KlassenSelectors.anzahlKlassen);
-	public editorModel$: Observable<KlasseEditorModel> = this.store.select(KlassenSelectors.klasseEditorModel);
+	public editorModel$: Observable<KlasseEditorModel | undefined> = this.store.select(KlassenSelectors.klasseEditorModel);
 	public klassenMap$: Observable<KlasseWithID[]> = this.store.select(KlassenSelectors.klassenMap);
-	public selectedKlasse$: Observable<Klasse> = this.store.select(KlassenSelectors.selectedKlasse);
+	public selectedKlasse$: Observable<Klasse | undefined> = this.store.select(KlassenSelectors.selectedKlasse);
 	public anzahlLoesungszettel$: Observable<number> = this.store.select(KlassenSelectors.anzahlLoesungszettel);
 
 	private loggingOut = false;

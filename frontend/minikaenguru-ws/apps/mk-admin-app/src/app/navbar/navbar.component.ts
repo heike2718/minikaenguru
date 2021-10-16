@@ -20,13 +20,13 @@ import { LogoutService } from '../services/logout.service';
 export class NavbarComponent implements OnInit {
 
 	collapsed = true;
-	logo: string;
+	logo: string = '';
 
 	isLoggedIn$ = this.authStore.select(isLoggedIn);
 	isLoggedOut$ = this.authStore.select(isLoggedOut);
 	user$ = this.sessionStore.select(user);
 
-	@ViewChild(NgbCollapse, { static: true }) navbarToggler: NgbCollapse;
+	@ViewChild(NgbCollapse, { static: true }) navbarToggler?: NgbCollapse;
 
 	constructor(private authService: AuthService
 		, private authStore: Store<AuthState>

@@ -35,10 +35,10 @@ export class KinderMap {
 		return this.kinder.has(uuid);
 	}
 
-	public get(uuid: string): Kind {
+	public get(uuid: string): Kind | undefined{
 
 		if (!this.has(uuid)) {
-			return null;
+			return undefined;
 		}
 
 		return this.kinder.get(uuid);
@@ -51,7 +51,7 @@ export class KinderMap {
 		return array;
 	}
 
-	public filterWithKlasse(klasse: Klasse): Kind[] {
+	public filterWithKlasse(klasse?: Klasse): Kind[] {
 
 		if (!klasse) {
 			console.log('filterWithKlasse(): klasse undefined - anzahl Kinder=' + this.items.length);

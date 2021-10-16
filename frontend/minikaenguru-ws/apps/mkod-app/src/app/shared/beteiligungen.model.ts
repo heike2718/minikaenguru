@@ -1,5 +1,4 @@
 import { Klassenstufenart } from "@minikaenguru-ws/common-components";
-import { anmeldungenState } from "../anmeldungen/+state/anmeldungen.selectors";
 
 export type WettbewerbStatus = 'ERFASST' | 'ANMELDUNG' | 'DOWNLOAD_PRIVAT' | 'DOWNLOAD_LEHRER' | 'BEENDET';
 
@@ -57,10 +56,10 @@ export class AnmeldungenMap {
 		return this.anmeldungen.has(jahr);
 	}
 
-	public get(jahr: string): Anmeldungen {
+	public get(jahr: string): Anmeldungen | undefined {
 
 		if (!this.has(jahr)) {
-			return null;
+			return undefined;
 		}
 
 		return this.anmeldungen.get(jahr);

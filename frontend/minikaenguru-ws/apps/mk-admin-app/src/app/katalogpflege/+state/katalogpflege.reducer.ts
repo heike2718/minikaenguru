@@ -1,28 +1,36 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { KatalogpflegeItem, Katalogpflegetyp, mergeKatalogItems, Kataloge, childrenAsArray, SchulePayload, KatalogpflegeItemWithID, OrtPayload, LandPayload, KatalogPflegeItemsMap } from '../katalogpflege.model';
+import { KatalogpflegeItem, Katalogpflegetyp, mergeKatalogItems, Kataloge, childrenAsArray, SchulePayload, KatalogpflegeItemWithID, OrtPayload, LandPayload, KatalogPflegeItemsMap, initialSchulePayload } from '../katalogpflege.model';
 import * as KatalogpflegeActions from './katalogpflege.actions';
 
 export const katalogpflegeFeatureKey = 'mk-admin-app-kataloge';
 
 export interface SchuleEditorModel {
-	readonly schulePayload: SchulePayload;
+	readonly schulePayload?: SchulePayload;
 	readonly modusCreate: boolean;
 	readonly kuerzelLandDisabled: boolean;
 	readonly nameLandDisabled: boolean;
 	readonly nameOrtDisabled: boolean;
 };
 
+export const initialSchuleEditorModel: SchuleEditorModel = {
+	schulePayload: initialSchulePayload,
+	modusCreate: true,
+	kuerzelLandDisabled: false,
+	nameLandDisabled: false,
+	nameOrtDisabled: false
+};
+
 export interface KatalogpflegeState {
 	readonly kataloge: Kataloge;
 	readonly filteredOrte: KatalogpflegeItem[],
 	readonly filteredSchulen: KatalogpflegeItem[],
-	readonly selectedKatalogItem: KatalogpflegeItem;
-	readonly selectedKatalogTyp: Katalogpflegetyp;
+	readonly selectedKatalogItem?: KatalogpflegeItem;
+	readonly selectedKatalogTyp?: Katalogpflegetyp;
 	readonly showLoadingIndicator: boolean;
 	readonly sucheBeendet: boolean;
 	readonly schuleEditorModel: SchuleEditorModel;
-	readonly ortEditorPayload: OrtPayload;
-	readonly landEditorPayload: LandPayload;
+	readonly ortEditorPayload?: OrtPayload;
+	readonly landEditorPayload?: LandPayload;
 };
 
 const initialSchuleEditorModelState: SchuleEditorModel = {
@@ -68,8 +76,8 @@ const katalogpflegeReducer = createReducer(initialState,
 		const alle: KatalogpflegeItem[] = action.katalogItems;
 		const kataloge: Kataloge = mergeKatalogItems(alle, state.kataloge);
 
-		let filteredOrte = [];
-		let filteredSchulen = [];
+		let filteredOrte: KatalogpflegeItem[] = [];
+		let filteredSchulen: KatalogpflegeItem[] = [];
 
 		switch (action.typ) {
 			case 'ORT': filteredOrte = alle; break;
@@ -146,8 +154,8 @@ const katalogpflegeReducer = createReducer(initialState,
 
 		const selectedItem = action.katalogItem;
 
-		let filteredOrte = [];
-		let filteredSchulen = [];
+		let filteredOrte: KatalogpflegeItem[] = [];
+		let filteredSchulen: KatalogpflegeItem[] = [];
 
 		switch (selectedItem.typ) {
 			case 'LAND': filteredOrte = childrenAsArray(selectedItem, state.kataloge); break;

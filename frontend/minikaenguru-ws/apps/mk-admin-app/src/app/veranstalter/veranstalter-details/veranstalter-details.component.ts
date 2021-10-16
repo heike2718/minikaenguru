@@ -1,10 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
 import { VeranstalterFacade } from '../veranstalter.facade';
 import { Veranstalter } from '../veranstalter.model';
 import { Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { SchulteilnahmenFacade } from '../../schulteilnahmen/schulteilnahmen.facade';
-import { Rolle } from '@minikaenguru-ws/common-auth';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { modalOptions } from '@minikaenguru-ws/common-components';
+import { LogService } from '@minikaenguru-ws/common-logging';
 
 @Component({
 	selector: 'mka-veranstalter-details',
@@ -13,15 +15,22 @@ import { Rolle } from '@minikaenguru-ws/common-auth';
 })
 export class VeranstalterDetailsComponent implements OnInit, OnDestroy {
 
-	selectedVeranstalter$: Observable<Veranstalter> = this.veranstalterFacade.selectedVeranstalter$;
+	selectedVeranstalter$: Observable<Veranstalter | undefined> = this.veranstalterFacade.selectedVeranstalter$;
 
-	private veranstalterSubscription: Subscription;
+	teilnahmenummernAsString: string = '';
+	veranstalterFullName: string = 'Der Veranstalter';
 
-	teilnahmenummernAsString: string;
+	@ViewChild('dialogNewsletterDeaktivieren')
+	dialogNewsletterDeaktivieren!: TemplateRef<HTMLElement>;
 
-	private veranstalter: Veranstalter;
+	private veranstalter!: Veranstalter;
+	private veranstalterSubscription: Subscription = new Subscription();
 
-	constructor(private router: Router, private veranstalterFacade: VeranstalterFacade, private schulteilnahmenFacade: SchulteilnahmenFacade) { }
+	constructor(private router: Router
+		, private veranstalterFacade: VeranstalterFacade
+		, private schulteilnahmenFacade: SchulteilnahmenFacade
+		, private modalService: NgbModal
+		, private logger: LogService) { }
 
 	ngOnInit(): void {
 
@@ -34,6 +43,7 @@ export class VeranstalterDetailsComponent implements OnInit, OnDestroy {
 				} else {
 					this.teilnahmenummernAsString = this.getTeilnahmenummernAsString(veranstalter);
 					this.veranstalter = veranstalter;
+					this.veranstalterFullName = veranstalter.fullName;
 				}
 			}
 		);
@@ -41,11 +51,7 @@ export class VeranstalterDetailsComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-
-		if (this.veranstalterSubscription) {
-			this.veranstalterSubscription.unsubscribe();
-		}
-
+		this.veranstalterSubscription.unsubscribe();
 	}
 
 	private getTeilnahmenummernAsString(veranstalter: Veranstalter): string {
@@ -72,8 +78,21 @@ export class VeranstalterDetailsComponent implements OnInit, OnDestroy {
 
 	newsletterDeaktivieren(): void {
 
-		this.veranstalterFacade.newsletterDeaktivieren(this.veranstalter);
+		this.modalService.open(this.dialogNewsletterDeaktivieren, modalOptions).result.then((result) => {
 
+			if (result === 'OK') {
+				this.forceNewsletterDeaktivieren();
+			}
+
+		}, (reason) => {
+			this.logger.debug('closed with reason=' + reason);
+		});
+
+	}
+
+	private forceNewsletterDeaktivieren(): void {
+
+		this.veranstalterFacade.newsletterDeaktivieren(this.veranstalter);
 	}
 }
 

@@ -11,12 +11,12 @@ import { ZugangsstatusButtons, ZugangsstatusButtonModel, createZugangUnterlagenB
 })
 export class ZugangUnterlagenComponent implements OnInit, OnDestroy {
 
-	selectedVeranstalter$: Observable<Veranstalter> = this.veranstalterFacade.selectedVeranstalter$;
+	selectedVeranstalter$: Observable<Veranstalter | undefined> = this.veranstalterFacade.selectedVeranstalter$;
 
-	buttons: ZugangsstatusButtons;
+	buttons: ZugangsstatusButtons | undefined;
 
-	private veranstalter: Veranstalter;
-	private selectedVeranstalterSubscription: Subscription;
+	private veranstalter: Veranstalter | undefined;
+	private selectedVeranstalterSubscription: Subscription = new Subscription();
 
 
 
@@ -40,15 +40,12 @@ export class ZugangUnterlagenComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-
-		if (this.selectedVeranstalterSubscription) {
-			this.selectedVeranstalterSubscription.unsubscribe();
-		}
+		this.selectedVeranstalterSubscription.unsubscribe();
 	}
 
 	onButtonClicked(btn: ZugangsstatusButtonModel): void {
-
-		this.veranstalterFacade.zugangsstatusUnterlagenAendern(this.veranstalter, btn.neuerStatus);
+		if (this.veranstalter) {
+			this.veranstalterFacade.zugangsstatusUnterlagenAendern(this.veranstalter, btn.neuerStatus);
+		}
 	}
-
 }

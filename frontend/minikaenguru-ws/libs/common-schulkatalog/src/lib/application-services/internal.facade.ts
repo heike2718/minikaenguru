@@ -9,14 +9,15 @@ import { SchulkatalogConfig, SchulkatalogConfigService } from '../configuration/
 import { ErrorHandlerService } from '../infrastructure/error-handler.service';
 import { MessageService } from '@minikaenguru-ws/common-messages';
 import * as SchulkatalogActions from '../+state/schulkatalog.actions';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class InternalFacade {
 
-	public katalogItems$ = this.store.select(katalogItems);
-	public schulkatalogState$ = this.store.select(schulkatalogState);
-	public selectedKatalogItem$ = this.store.select(selectedKatalogItem);
-	public katalogAntragSuccess$ = this.store.select(katalogAntragSuccess);
+	public katalogItems$: Observable<KatalogItem[]>= this.store.select(katalogItems);
+	public schulkatalogState$: Observable<SchulkatalogState> = this.store.select(schulkatalogState);
+	public selectedKatalogItem$: Observable<KatalogItem | undefined> = this.store.select(selectedKatalogItem);
+	public katalogAntragSuccess$: Observable<boolean> = this.store.select(katalogAntragSuccess);
 
 	constructor(@Inject(SchulkatalogConfigService) private config: SchulkatalogConfig,
 		private store: Store<SchulkatalogState>,
@@ -25,7 +26,8 @@ export class InternalFacade {
 		private errorHandler: ErrorHandlerService) { }
 
 
-	public startSearch(katalogtyp: Katalogtyp, katalogItem: KatalogItem, searchTerm: string) {
+	public startSearch(searchTerm: string, katalogtyp: Katalogtyp, katalogItem?: KatalogItem) {
+		
 		this.store.dispatch(startSearch({
 			selectedKatalogtyp: katalogtyp,
 			selectedItem: katalogItem,

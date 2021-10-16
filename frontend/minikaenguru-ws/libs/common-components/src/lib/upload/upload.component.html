@@ -1,17 +1,11 @@
 <div class="container container-fluid">
 	<h2 *ngIf="uploadModel.titel && uploadModel.titel.length>0">{{uploadModel.titel}}</h2>
 
-	<div class="row">
-
+	<div *ngIf="!currentFile" class="row mt-3">
 		<div class="col-12">
-			<input type="file" #file accept="{{uploadModel.accept}}" style="display: none" (change)="onFileAdded()" />
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-12">
-			<button [disabled]="uploading" class="btn btn-outline-dark" (click)="addFiles()">
-				Datei auswählen
-			</button>
+			<label class="btn btn-outline-dark"> Datei auswählen 
+				<input type="file" #file accept="{{uploadModel.accept}}" style="display: none" (change)="onFileAdded($event)" />
+			</label>
 		</div>
 		<div class="col-12">
 			{{uploadModel.acceptMessage}}
@@ -19,15 +13,15 @@
 		<div class="col-12">
 			{{maxFileSizeInfo}}
 		</div>
+	</div>
 
-		<div class="col-12" *ngIf="selectedFile">
-			<h4>{{selectedFile.name}}</h4>
+	<div *ngIf="currentFile" class="row mt-3">
+		<div class="col-12" *ngIf="currentFile">
+			<p>{{currentFile.name}}</p>
 		</div>
 		<div class="col-12">
-			<div *ngIf="selectedFile">
-				<button class="btn btn-outline-primary" [disabled]="!uploading && !canSubmit"
+			<button class="btn btn-outline-primary" [disabled]="!uploading && !canSubmit"
 					(click)="submitUpload()">hochladen</button>
-			</div>
 		</div>
 	</div>
 </div>

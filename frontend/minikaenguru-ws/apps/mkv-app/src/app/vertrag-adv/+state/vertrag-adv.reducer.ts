@@ -8,8 +8,8 @@ import { Schule } from '../../lehrer/schulen/schulen.model';
 export const vertragAdvFeatureKey = 'mkv-app-vertrag-adv';
 
 export interface VertragAdvEditorState {
-	selectedSchule: Schule,
-	editorModel: VertragAdvEditorModel;
+	selectedSchule?: Schule,
+	editorModel?: VertragAdvEditorModel;
 	submitDisabled: boolean;
 	saveInProgress: boolean;
 };
