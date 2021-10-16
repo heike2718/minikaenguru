@@ -39,6 +39,7 @@ import { SessionTimeoutComponent } from './session-timeout/session-timeout.compo
 import { NewsletterModule } from './newsletter/newsletter.module';
 import { VersandinfoProgressComponent } from './versandinfo-progress/versandinfo-progress.component';
 import { StoreDevModules } from './store-config/store-devtools';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 registerLocaleData(localeDe);
 
@@ -58,6 +59,7 @@ registerLocaleData(localeDe);
 		ReactiveFormsModule,
 		HttpClientModule,
 		BrowserAnimationsModule,
+		NgbModule,
 		CommonMessagesModule,
 		CommonComponentsModule.forRoot({
 			baseUrl: environment.apiUrl

@@ -16,14 +16,14 @@ import {
 	getSpracheByLabel,
 	TeilnahmeIdentifier,
 	TeilnahmeIdentifierAktuellerWettbewerb,
-	initialKindEditorModel
+	initialKindEditorModel,
+	modalOptions
 } from '@minikaenguru-ws/common-components';
 import { Subscription } from 'rxjs';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { LehrerFacade } from '../../lehrer/lehrer.facade';
 import { Schule } from '../../lehrer/schulen/schulen.model';
 import { User, Rolle } from '@minikaenguru-ws/common-auth';
-import { modalOptions } from '../../shared/utils';
 
 @Component({
 	selector: 'mkv-kind-editor',

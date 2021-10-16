@@ -1,3 +1,5 @@
+import { NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
+
 export type Teilnahmeart = 'PRIVAT' | 'SCHULE';
 export type Klassenstufenart = 'IKID' | 'EINS' | 'ZWEI';
 export type Sprachtyp = 'de' | 'en';
@@ -5,6 +7,12 @@ export type Duplikatkontext = 'KIND' | 'KLASSE';
 export type ZulaessigeEingabe = 'A' | 'B' | 'C' | 'D' | 'E' | 'N';
 export type ConcurrentModificationType = 'DETETED' | 'INSERTED' | 'UPDATED';
 export type WettbewerbStatus = 'ERFASST' | 'ANMELDUNG' | 'DOWNLOAD_PRIVAT' | 'DOWNLOAD_LEHRER' | 'BEENDET';
+
+export const modalOptions: NgbModalOptions = {
+    backdrop:'static',
+    centered:true,
+    ariaLabelledBy: 'modal-basic-title'
+};
 
 export interface TeilnahmeIdentifier {
 	readonly jahr: number;

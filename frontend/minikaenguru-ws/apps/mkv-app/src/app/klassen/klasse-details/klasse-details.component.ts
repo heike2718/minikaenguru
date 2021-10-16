@@ -1,11 +1,10 @@
 import { Component, Input, ViewChild, TemplateRef, OnInit, OnDestroy } from '@angular/core';
-import { Klasse } from '@minikaenguru-ws/common-components';
+import { Klasse, modalOptions } from '@minikaenguru-ws/common-components';
 import { Router } from '@angular/router';
 import { KlassenFacade } from '../klassen.facade';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LogService } from '@minikaenguru-ws/common-logging';
 import { Subscription } from 'rxjs';
-import { modalOptions } from '../../shared/utils';
 
 @Component({
 	selector: 'mkv-klasse-details',

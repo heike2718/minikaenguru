@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
-import { Kind, Klasse, kindToString, Duplikatwarnung, KindEditorModel } from '@minikaenguru-ws/common-components';
+import { Kind, Klasse, kindToString, Duplikatwarnung, KindEditorModel, modalOptions } from '@minikaenguru-ws/common-components';
 import { KinderFacade } from '../kinder.facade';
 import { Subscription, Observable, of } from 'rxjs';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
@@ -12,7 +12,6 @@ import { Router } from '@angular/router';
 import { KlassenFacade } from '../../klassen/klassen.facade';
 import { Schule } from '../../lehrer/schulen/schulen.model';
 import { LehrerFacade } from '../../lehrer/lehrer.facade';
-import { modalOptions } from '../../shared/utils';
 
 @Component({
 	selector: 'mkv-klasse-wechseln',

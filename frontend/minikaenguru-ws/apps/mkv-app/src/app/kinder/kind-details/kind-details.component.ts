@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
-import { Kind, kindToString } from '@minikaenguru-ws/common-components';
+import { Kind, kindToString, modalOptions } from '@minikaenguru-ws/common-components';
 import { Router } from '@angular/router';
 import { PrivatveranstalterFacade } from '../../privatveranstalter/privatveranstalter.facade';
 import { KinderFacade } from '../kinder.facade';
@@ -11,7 +11,6 @@ import { LoesungszettelFacade } from '../../loesungszettel/loesungszettel.facade
 import { User, STORAGE_KEY_USER } from '@minikaenguru-ws/common-auth';
 import { environment } from '../../../environments/environment';
 import { LehrerFacade } from '../../lehrer/lehrer.facade';
-import { modalOptions } from '../../shared/utils';
 
 @Component({
 	selector: 'mkv-kind-details',

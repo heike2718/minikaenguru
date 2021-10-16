@@ -4,7 +4,9 @@ import { Veranstalter } from '../veranstalter.model';
 import { Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { SchulteilnahmenFacade } from '../../schulteilnahmen/schulteilnahmen.facade';
-import { Rolle } from '@minikaenguru-ws/common-auth';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { modalOptions } from '@minikaenguru-ws/common-components';
+import { LogService } from '@minikaenguru-ws/common-logging';
 
 @Component({
 	selector: 'mka-veranstalter-details',
@@ -16,6 +18,7 @@ export class VeranstalterDetailsComponent implements OnInit, OnDestroy {
 	selectedVeranstalter$: Observable<Veranstalter | undefined> = this.veranstalterFacade.selectedVeranstalter$;
 
 	teilnahmenummernAsString: string = '';
+	veranstalterFullName: string = 'Der Veranstalter';
 
 	@ViewChild('dialogNewsletterDeaktivieren')
 	dialogNewsletterDeaktivieren!: TemplateRef<HTMLElement>;
@@ -23,7 +26,11 @@ export class VeranstalterDetailsComponent implements OnInit, OnDestroy {
 	private veranstalter!: Veranstalter;
 	private veranstalterSubscription: Subscription = new Subscription();
 
-	constructor(private router: Router, private veranstalterFacade: VeranstalterFacade, private schulteilnahmenFacade: SchulteilnahmenFacade) { }
+	constructor(private router: Router
+		, private veranstalterFacade: VeranstalterFacade
+		, private schulteilnahmenFacade: SchulteilnahmenFacade
+		, private modalService: NgbModal
+		, private logger: LogService) { }
 
 	ngOnInit(): void {
 
@@ -36,6 +43,7 @@ export class VeranstalterDetailsComponent implements OnInit, OnDestroy {
 				} else {
 					this.teilnahmenummernAsString = this.getTeilnahmenummernAsString(veranstalter);
 					this.veranstalter = veranstalter;
+					this.veranstalterFullName = veranstalter.fullName;
 				}
 			}
 		);
@@ -70,8 +78,21 @@ export class VeranstalterDetailsComponent implements OnInit, OnDestroy {
 
 	newsletterDeaktivieren(): void {
 
-		this.veranstalterFacade.newsletterDeaktivieren(this.veranstalter);
+		this.modalService.open(this.dialogNewsletterDeaktivieren, modalOptions).result.then((result) => {
 
+			if (result === 'OK') {
+				this.forceNewsletterDeaktivieren();
+			}
+
+		}, (reason) => {
+			this.logger.debug('closed with reason=' + reason);
+		});
+
+	}
+
+	private forceNewsletterDeaktivieren(): void {
+
+		this.veranstalterFacade.newsletterDeaktivieren(this.veranstalter);
 	}
 }
 

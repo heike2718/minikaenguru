@@ -4,14 +4,12 @@ import { KinderFacade } from '../../kinder/kinder.facade';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { Subscription } from 'rxjs';
-import { Kind, kindToString, TeilnahmeIdentifierAktuellerWettbewerb } from '@minikaenguru-ws/common-components';
+import { Kind, kindToString, modalOptions, TeilnahmeIdentifierAktuellerWettbewerb } from '@minikaenguru-ws/common-components';
 import { Loesungszettel, loesungszettelIsLeer } from '../loesungszettel.model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MessageService } from '@minikaenguru-ws/common-messages';
 import { User } from '@minikaenguru-ws/common-auth';
-import { modalOptions } from '../../shared/utils';
 import { LogService } from '@minikaenguru-ws/common-logging';
-import { TeilnahmenListResolver } from '../../teilnahmen/teilnahmen-list/teilnahmen-list.resolver';
 
 @Component({
 	selector: 'mkv-loesungszettel-editor',

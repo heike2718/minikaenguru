@@ -51,6 +51,25 @@
 	<mka-veranstalter-nav></mka-veranstalter-nav>
 </div>
 
+<ng-template #dialogNewsletterDeaktivieren let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">Newsletter deaktivieren</h4>
+		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<p><strong>Bist du sicher, dass du das tun willst?</strong></p>
+		<p>{{veranstalterFullName}} wird anschließend keine Mail mehr erhalten. <span class="text-danger">Das kann nicht so einfach rückgängig
+				gemacht werden.</span></p>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('CANCEL')">besser nicht</button>
+		<button type="button" class="btn btn-outline-danger" (click)="modal.close('OK')">ja schon</button>
+	</div>
+</ng-template>
+
+
 <ng-template #loading>
 	<h3>Veranstalter</h3>
 	Lade Details... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>

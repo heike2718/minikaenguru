@@ -11,12 +11,14 @@ import * as fromDownload from './download/+state/download.reducer';
 import { StoreModule } from '@ngrx/store';
 import { AnonymisierteTeilnahmeComponent } from './anonymisierte-teilnahme/anonymisierte-teilnahme.component';
 import { UnterlagenComponent } from './unterlagen/unterlagen.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
 	imports: [
 		CommonModule,
 		HttpClientModule,
+		NgbModule,
 		StoreModule.forFeature(fromDownload.downloadFeatureKey, fromDownload.reducer),
 	],
 	declarations: [
