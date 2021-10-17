@@ -12,6 +12,7 @@ import { StoreModule } from '@ngrx/store';
 import { AnonymisierteTeilnahmeComponent } from './anonymisierte-teilnahme/anonymisierte-teilnahme.component';
 import { UnterlagenComponent } from './unterlagen/unterlagen.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SwitchComponent } from './switch/switch.component';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 		FormErrorComponent,
 		UploadComponent,
 		AnonymisierteTeilnahmeComponent,
-		UnterlagenComponent
+		UnterlagenComponent, 
+		SwitchComponent
 	],
 	exports: [
 		DownloadButtonComponent,
@@ -35,7 +37,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 		FormErrorComponent,
 		UploadComponent,
 		AnonymisierteTeilnahmeComponent,
-		UnterlagenComponent
+		UnterlagenComponent,
+		SwitchComponent
 	]
 })
 export class CommonComponentsModule {

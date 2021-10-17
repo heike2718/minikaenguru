@@ -1,10 +1,13 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { SchulkatalogFacade, KatalogItem } from '@minikaenguru-ws/common-schulkatalog';
 import { Subscription } from 'rxjs';
 import { RegistrationFacade } from './registration.facade';
 import { LogService } from '@minikaenguru-ws/common-logging';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { modalOptions } from '@minikaenguru-ws/common-components';
+import { AbstractControl } from '@angular/forms';
 
 @Component({
 	selector: 'mkv-registration',
@@ -13,12 +16,14 @@ import { LogService } from '@minikaenguru-ws/common-logging';
 })
 export class RegistrationComponent implements OnInit, OnDestroy {
 
-	devMode: boolean;
+	@ViewChild('dialogNewsletterInfo')
+	dialogNewsletterInfo!: TemplateRef<HTMLElement>;
+
+	devMode = environment.envName === 'DEV';
 
 	selectedKatalogItem?: KatalogItem;
 	newsletterAbonnieren!: boolean;
 	textNewsletter: string;
-	showInfoNewsletter: boolean = false;
 
 	private selectedKatalogItemSubscription: Subscription = new Subscription();
 
@@ -27,12 +32,11 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 	constructor(private router: Router
 		, public registrationFacade: RegistrationFacade
 		, public schulkatalogFacade: SchulkatalogFacade
-		, private logger: LogService) {
+		, private logger: LogService
+		, private modalService: NgbModal) {
 
-		this.devMode = environment.envName === 'DEV';
-
-		this.textNewsletter = `In diesem Fall werden Sie über den Wettbewerb betreffende Änderungen per E-Mail informiert. Ihre Daten werden ausschließlich zu diesem Zweck genutzt. Eine Weitergabe an Dritte erfolgt nicht.
-		  Sie können die Einwilligung jederzeit per E-Mail an minikaenguru@egladil.de oder nach dem Einloggen widerrufen.`
+		this.textNewsletter = `In diesem Fall werden Sie über den Wettbewerb betreffende Dinge per E-Mail informiert. Ihre Daten werden ausschließlich zu diesem Zweck genutzt. Eine Weitergabe an Dritte erfolgt nicht.
+		  Sie können die Einwilligung jederzeit per E-Mail an minikaenguru@egladil.de oder ganz einfach nach dem Einloggen widerrufen.`
 
 	}
 
@@ -108,8 +112,16 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 		this.router.navigateByUrl('/');
 	}
 
-	toggleInfoNewsletter() {
-		this.showInfoNewsletter = !this.showInfoNewsletter;
+	showInfoNewsletter() {
+		this.modalService.open(this.dialogNewsletterInfo, modalOptions).result.then((_result) => {
+			
+			// do nothing
+	  });
+	}
+
+	onCheckboxNewsletterClicked(event: boolean) {
+		this.newsletterAbonnieren = event;
+		this.registrationFacade.setNewsletterAboState(this.newsletterAbonnieren);
 	}
 
 	private initState() {

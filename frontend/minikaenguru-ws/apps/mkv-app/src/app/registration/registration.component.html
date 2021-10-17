@@ -2,26 +2,17 @@
 	<div *ngIf="registrationFacade.registrationReady$ | async">
 		<h2>Benutzerkonto anlegen <span *ngIf="devMode">(registration.component)</span> </h2>
 
-		<div class="row">
-			<div class="col-10">
-				<input type="checkbox" id="newsletterAbonieren" autofocus
-					title="bitte wählen, wenn Sie Mailbenachrichtigungen wünschen" [(ngModel)]="newsletterAbonnieren"
-					name="newsletter" (onClick)="onNewsletterChanged($event)"> Ja, ich möchte Informationen per Mail erhalten.
-			</div>			
-			<div *ngIf="!showInfoNewsletter" class="col-2">
-				<button type="button" class="btn btn-primary" data-placement="bottom" title="mehr Informationen" (click)="toggleInfoNewsletter()">
-					<i class="fa fa-info" aria-hidden="true"></i> Info
-				</button>
-			</div>
-		</div>
-		<div *ngIf="showInfoNewsletter" class="row mt-3 ml-1 mr-1 mb-3">
-			<div class="col-10">
-				<p>{{textNewsletter}}</p>
-			</div>
-			<div class="col-2">
-				<button type="button" class="btn btn-primary" data-placement="bottom" title="weniger Informationen" (click)="toggleInfoNewsletter()" >
-					<i class="fa fa-close" aria-hidden="true"></i> Info
-				</button>
+		<div class="btn-group d-inline" role="group">
+			<label for="switch-agb" class="label-bold w-100"> Möchten Sie Informationen per Mail erhalten?</label>
+			<div class="row">
+				<div class="col-3">
+					<mk-switch id="switch-agb" (switchClicked)="onCheckboxNewsletterClicked($event)"></mk-switch>
+				</div>
+				<div class="col-6">
+					<button type="button" class="btn btn-outline-dark" title="Infos zu Mailbenachrichtigungen" (click)="showInfoNewsletter()">
+						<i class="fa fa-info" aria-hidden="true"></i> Info
+					</button>
+				</div>
 			</div>
 		</div>
 
@@ -56,5 +47,21 @@
 			</div>
 		</div>
 	</div>
-
 </div>
+
+<p *ngIf="devMode">Newsletter abonnieren: {{newsletterAbonnieren}}</p>
+
+<ng-template #dialogNewsletterInfo let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Mailbenachrichtigungen</h4>
+    </div>
+    <div class="modal-body">
+        <p>In diesem Fall werden Sie über den Wettbewerb betreffende Dinge von allgemeinem Interesse, z.B Beginn des Anmeldezeitraums oder Freischaltung der Unterlagen, per E-Mail informiert.</p>
+		<p>Sie können die Einwilligung jederzeit per E-Mail an minikaenguru@egladil.de oder mit einem einzigen Klick nach dem Einloggen widerrufen.</p>
+		<p><small>Privat durch mich erforderliche Kontaktaufnahme per Mail ist davon unberührt.</small></p>
+	</div>
+    <div class="modal-footer">
+		<button type="button" class="btn btn-outline-dark" (click)="modal.close('OK')">OK</button>
+    </div>
+</ng-template>
+

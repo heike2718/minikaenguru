@@ -13,7 +13,17 @@
 	</div>
 </div>
 
-<mkv-wettbewerb-info></mkv-wettbewerb-info>
+<div *ngIf="isLoggedOut$ | async" class="row d-md-none d-lg-none d-xl-none mt-3">
+	<div class="btn-group d-inline" role="group">
+		<button class="btn btn-secondary w-100 m-3" (click)="login()"><i class="fa fa-sign-in fa-1x" aria-hidden="true"></i> einloggen</button>
+		<button class="btn btn-secondary w-100 m-3" (click)="gotoRegistrierung()"><i class="fa fa-user-o fa-1x" aria-hidden="true"></i> Konto anlegen </button>
+		<button class="btn btn-secondary w-100 m-3" (click)="gotoInfo()"><i class="fa fa-info fa-1x" aria-hidden="true"></i> Info / Termine</button>
+	</div>
+</div>	
+
+<div class="d-none d-md-block mt-2">
+	<mkv-wettbewerb-info></mkv-wettbewerb-info>
+</div>
 
 <div class="mkv-container conditionally-bordered">
 
