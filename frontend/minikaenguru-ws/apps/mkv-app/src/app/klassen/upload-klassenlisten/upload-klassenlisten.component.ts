@@ -8,7 +8,7 @@ import { KlassenFacade } from '../klassen.facade';
 import { ResponsePayload } from '@minikaenguru-ws/common-messages';
 import { UploadComponentModel } from '@minikaenguru-ws/common-components';
 import { WettbewerbFacade } from '../../wettbewerb/wettbewerb.facade';
-import { map } from 'rxjs/operators';
+import { LogService } from '@minikaenguru-ws/common-logging';
 
 @Component({
   selector: 'mkv-upload-klassenlisten',
@@ -19,13 +19,13 @@ export class UploadKlassenlistenComponent implements OnInit, OnDestroy {
 
   devMode = environment.envName = 'DEV';
 
-  schule: Schule;
+  schule!: Schule;
 
-  uploadModel: UploadComponentModel;
+  uploadModel!: UploadComponentModel;
 
-	spracheEnglisch: boolean;
+	spracheEnglisch!: boolean;
 
-  nachnameVerbergen: boolean;
+  nachnameVerbergen!: boolean;
 
 	subUrl = '';
 
@@ -33,23 +33,24 @@ export class UploadKlassenlistenComponent implements OnInit, OnDestroy {
 
   textNachname = 'Die Nachnamen werden in das Feld Nachname importiert und erscheinen auf der Urkunde.';
 
-  private schuleUndWettbewerbSubscription: Subscription;
+  private schuleUndWettbewerbSubscription: Subscription = new Subscription();
 
 
   constructor(private router: Router,
      private wettbewerbFacade: WettbewerbFacade,
      public klassenFacade: KlassenFacade,
-     private lehrerFacade: LehrerFacade) { }
+     private lehrerFacade: LehrerFacade,
+     private logger: LogService) { }
 
   ngOnInit(): void {
 
     this.schuleUndWettbewerbSubscription = combineLatest([this.wettbewerbFacade.aktuellerWettbewerb$, this.lehrerFacade.selectedSchule$]).subscribe(
       result => {
 
-        const w = result[0];
-        const s: Schule = result[1];
+        if (result[0] && result[1]) {
 
-        if (w && s) {
+          const w = result[0];
+          const s: Schule = result[1];
           const jahr = w.jahr;
           this.schule = s;
           this.subUrl = '/uploads/klassenlisten/' + jahr + '/' + s.kuerzelLand + '/' + s.kuerzel;
@@ -77,7 +78,7 @@ export class UploadKlassenlistenComponent implements OnInit, OnDestroy {
     }
   }
 
-	onCheckboxSpracheChanged(_event$): void {
+	onCheckboxSpracheChanged(): void {
 
 		this.uploadModel = {...this.uploadModel, subUrl: this.getQueryParameters()};
 
@@ -85,16 +86,20 @@ export class UploadKlassenlistenComponent implements OnInit, OnDestroy {
 
 	}
 
-	onCheckboxNachnameVerbergenChanged(_event$): void {
+	onCheckboxNachnameVerbergenChanged(): void {
 
 		this.uploadModel = {...this.uploadModel, subUrl: this.getQueryParameters()};
 
     this.textNachname = this.nachnameVerbergen ? 'Die Nachnamen werden in das Feld Zusatz importiert und erscheinen nicht auf der Urkunde.' : 'Die Nachnamen werden in das Feld Nachname importiert und erscheinen auf der Urkunde.';
 	}  
 
-  onDateiAusgewaehlt(event$): void {
+  onDateiAusgewaehlt(): void {
 
-		this.klassenFacade.dateiAusgewaelt();
+    if (this.uploadModel.subUrl !== '') {
+		  this.klassenFacade.dateiAusgewaelt();
+    } else {
+      this.logger.warn('Upload nicht möglich: queryParams nicht gesetzt! (sollte nicht vorkommen, alle Varianten abgedeckt');
+    }
 	}
 
 	onResponse(rp: ResponsePayload | any): void {
@@ -121,5 +126,7 @@ export class UploadKlassenlistenComponent implements OnInit, OnDestroy {
     if (!this.spracheEnglisch && this.nachnameVerbergen) {
       return this.subUrl + '?nachnameAlsZusatz=true&sprache=de'
     }
+
+    return '';
   }
 }
