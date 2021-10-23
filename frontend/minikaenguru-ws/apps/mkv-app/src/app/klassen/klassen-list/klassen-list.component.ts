@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { KlassenFacade } from '../klassen.facade';
 import { LehrerFacade } from '../../lehrer/lehrer.facade';
 import { Subscription } from 'rxjs';
-import { Klasse } from '@minikaenguru-ws/common-components';
 import { Schule } from '../../lehrer/schulen/schulen.model';
 import { environment } from '../../../environments/environment';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -77,6 +76,13 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 
 	gotoMeineSchulen(): void {
 		this.router.navigateByUrl('/lehrer/schulen');
+	}
+
+	gotoUploadKklassenlisten(): void {
+		
+		if (this.schule) {
+			this.router.navigateByUrl('/klassen/uploads/' + this.schule.kuerzel);
+		}
 	}
 
 	gotoSchulauswertung(): void {

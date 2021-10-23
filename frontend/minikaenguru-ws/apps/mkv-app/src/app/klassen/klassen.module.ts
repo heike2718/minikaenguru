@@ -9,6 +9,8 @@ import { KlasseEditorComponent } from './klasse-editor/klasse-editor.component';
 import { FormsModule } from '@angular/forms';
 import { KlasseNameValidatorDirective } from './klasse-editor/klasse-name-validator.directive';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
+import { UploadKlassenlistenComponent } from './upload-klassenlisten/upload-klassenlisten.component';
 
 
 
@@ -17,10 +19,12 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 		KlassenListComponent,
 		KlasseDetailsComponent,
 		KlasseEditorComponent,
-		KlasseNameValidatorDirective
+		KlasseNameValidatorDirective,
+  UploadKlassenlistenComponent
 	],
 	imports: [
 		CommonModule,
+		CommonComponentsModule,
 		FormsModule,
 		NgbModule,
 		KlassenRoutingModule,

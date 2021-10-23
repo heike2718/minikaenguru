@@ -55,11 +55,11 @@ export class UploadAuswertungComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 
-		this.schuleUploadModelSubscription.unsubscribe();
+    	this.schuleUploadModelSubscription.unsubscribe();
 	}
 
 	onCheckboxChanged(): void {
-
+		
 		if (this.spracheEnglisch) {
 			this.uploadModel = { ...this.uploadModel, subUrl: this.subUrl + '?sprache=en' }
 		} else {
