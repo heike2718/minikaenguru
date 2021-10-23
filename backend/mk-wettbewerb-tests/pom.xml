@@ -7,7 +7,6 @@
 	<artifactId>mk-wettbewerb-tests</artifactId>
 	<version>1.6.1</version>
 
-
 	<properties>
 		<minikaenguru-version>1.6.1</minikaenguru-version>
 		<commons.version>1.7.0</commons.version>

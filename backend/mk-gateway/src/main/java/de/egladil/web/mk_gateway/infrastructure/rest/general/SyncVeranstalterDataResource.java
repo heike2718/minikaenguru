@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.general;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.Consumes;
@@ -44,7 +45,8 @@ import de.egladil.web.mk_gateway.infrastructure.messaging.SyncHandshake;
  * <li>Löschung eines Benutzerkontos</li>
  * </ul>
  */
-@Path(value = "/sync")
+@RequestScoped
+@Path(value = "sync")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class SyncVeranstalterDataResource {

@@ -1,3 +1,15 @@
+28.08.2021
+-------------------
+
+fertig ist upload Klassenliste ohne Fehler, aber auch ohne Auswertung des Reports im frontend
+
+=> upload Klassenlisten: 
+
+- Auswertung des Reports
+- errorhandling vulnerable
+- errorhandling Import unvollständig
+
+
 04.07.2021
 ------------------
 
@@ -9,4 +21,4 @@
 + Import Auswertung als Lehrer ohne Wettbewerbsjahr
 + mk-admin-app: upload auswertung fuer schule
 + errorhandling in upload componente (zum Test vulnerable verwenden)
-- upgrade to angular 12
++ upgrade to angular 12

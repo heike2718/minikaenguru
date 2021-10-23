@@ -1,0 +1,62 @@
+<div class="mkv-container mt-1">
+	<div class="col-12">
+
+		<p *ngIf="devMode">(upload-klassenlisten.component)</p>
+
+		<ng-container *ngIf="schule !== undefined else loading">
+
+			<h3>Klassenlisten hochladen</h3>
+
+			<div class="row">
+				<div class="col-sm-12 col-md-3">Schule:</div>
+				<div class="col-sm-12 col-md-9">{{schule.name }}</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12 col-md-3">Ort:</div>
+				<div class="col-sm-12 col-md-9">{{schule.ort }}</div>
+			</div>
+			<div class="row" *ngIf="(klassenFacade.anzahlKlassen$ | async) as anzahl">
+				<div class="col-sm-12 col-md-3">Anzahl Klassen:</div>
+				<div class="col-sm-12 col-md-9">{{anzahl}}</div>
+			</div>
+
+			<div class="mkv-bordered w-100 m-1 p-1">
+
+				<div class="row">
+					<div class="col-sm-12 col-md-2">Sprache englisch:</div>
+					<div class="col-sm-12 col-md-2"><input type="checkbox" id="chkEnglisch"
+							[(ngModel)]="spracheEnglisch" (change)="onCheckboxSpracheChanged()" /></div>
+					<div class="col-sm-12 col-md-8">{{textSprache}}</div>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-12 col-md-2">Nachname als Zusatz:</div>
+					<div class="col-sm-12 col-md-2"><input type="checkbox" id="chkNachnameVerbergen"
+							[(ngModel)]="nachnameVerbergen" (change)="onCheckboxNachnameVerbergenChanged()" /></div>
+					<div class="col-sm-12 col-md-8">{{textNachname}}</div>
+				</div>
+
+				<small *ngIf="subUrl.length > 0">{{uploadModel.subUrl}}</small>
+
+				<div class="row">
+					<div class="col-12" *ngIf="subUrl.length > 0">
+						<mk-upload [uploadModel]="uploadModel" (dateiAusgewaehlt)="onDateiAusgewaehlt()"
+							(responsePayload)="onResponse($event)"></mk-upload>
+					</div>
+				</div>
+<!--
+				<div *ngIf="fehlermeldungen$| async as fehlermeldungen">
+					<p *ngIf="fehlermeldungen.length > 0">Es gab Fehler:</p>
+					<div *ngFor="let fehler of fehlermeldungen; let indexOfelement=index;" class="col-12">
+						{{indexOfelement+1}}: {{fehler}}</div>
+				</div>
+			-->
+			</div>
+			
+	</ng-container>
+</div>
+
+<ng-template #loading>
+	<h3>Schule</h3>
+	Lade Schule... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
+</ng-template>

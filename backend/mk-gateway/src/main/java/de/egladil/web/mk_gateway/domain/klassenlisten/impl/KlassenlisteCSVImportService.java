@@ -20,6 +20,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
@@ -170,6 +171,11 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 				responsePayload = new ResponsePayload(MessagePayload.info(msg), payloadData);
 				updateUploadstatusQuietly(uploadMetadata, UploadStatus.IMPORTIERT);
 			}
+
+			LOGGER.info("Benutzer {}: Upload-UUID {} für Wettbewerb {} importiert. Schulkürzel={}",
+				StringUtils.abbreviate(uploadMetadata.getBenutzerUuid(), 11),
+				StringUtils.abbreviate(uploadMetadata.getUuid(), 12), uploadKlassenlisteContext.getWettbewerb().id(),
+				uploadMetadata.getTeilnahmenummer());
 
 			return responsePayload;
 		} catch (PersistenceException e) {
