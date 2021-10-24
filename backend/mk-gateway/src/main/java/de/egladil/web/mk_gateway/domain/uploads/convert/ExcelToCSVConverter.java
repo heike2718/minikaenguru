@@ -6,6 +6,7 @@ package de.egladil.web.mk_gateway.domain.uploads.convert;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +54,12 @@ public class ExcelToCSVConverter implements UploadToCSVConverter {
 			throw new MkGatewayRuntimeException(
 				"Die Datei " + pathUpload + " zum upload " + uuid + " konnte nicht konvertiert werden.", e);
 		}
+	}
+
+	@Override
+	public Optional<String> detectEncoding(final String pathUpload) {
+
+		return MSSpreadSheetContentReader.getDefault().detectEncoding(pathUpload, excelFileType);
 	}
 
 }

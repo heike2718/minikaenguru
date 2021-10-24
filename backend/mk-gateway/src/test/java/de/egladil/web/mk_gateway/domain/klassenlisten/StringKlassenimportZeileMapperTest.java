@@ -107,7 +107,7 @@ public class StringKlassenimportZeileMapperTest {
 	void should_applyReturnOptionalWithFehlermeldung_when_zeileZuLang() {
 
 		// Arrange
-		String kommaseparierteZeile = "2a ; Grüter ; Marie; Luise ;2";
+		String kommaseparierteZeile = "2a ; Grüter ; Marie; Luise ;2.0";
 		Pair<Integer, String> zeileMitIndex = Pair.of(Integer.valueOf(42), kommaseparierteZeile);
 		StringKlassenimportZeileMapper mapper = new StringKlassenimportZeileMapper(klassenlisteUeberschrift);
 
@@ -120,7 +120,7 @@ public class StringKlassenimportZeileMapperTest {
 		KlassenimportZeile result = optResult.get();
 		assertEquals(42, result.getIndex());
 		assertEquals(
-			"Fehler! Zeile \"2a ; Grüter ; Marie; Luise ;2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+			"Fehler! Zeile \"2a ; Grüter ; Marie; Luise ;2.0\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
 			result.getFehlermeldung());
 		assertFalse(result.ok());
 		assertNull(result.getKlasse());
@@ -158,5 +158,41 @@ public class StringKlassenimportZeileMapperTest {
 
 			assertEquals("semikolonseparierteZeileMitIndex", e.getMessage());
 		}
+	}
+
+	@Test
+	void should_applyConvertDoubleString() {
+
+		// Arrange
+		StringKlassenimportZeileMapper mapper = new StringKlassenimportZeileMapper(klassenlisteUeberschrift);
+		String zeile = "Szymon;Wanowski;1b;1.0";
+		Pair<Integer, String> pair = Pair.of(Integer.valueOf(42), zeile);
+
+		// Act
+		Optional<KlassenimportZeile> result = mapper.apply(pair);
+
+		// Assert
+		assertTrue(result.isPresent());
+		KlassenimportZeile importierteZeile = result.get();
+		assertNull(importierteZeile.getFehlermeldung());
+		assertEquals("1", importierteZeile.getKlassenstufe());
+	}
+
+	@Test
+	void should_applyWork() {
+
+		// Arrange
+		StringKlassenimportZeileMapper mapper = new StringKlassenimportZeileMapper(klassenlisteUeberschrift);
+		String zeile = "Szymon;Wanowski;1b;1";
+		Pair<Integer, String> pair = Pair.of(Integer.valueOf(42), zeile);
+
+		// Act
+		Optional<KlassenimportZeile> result = mapper.apply(pair);
+
+		// Assert
+		assertTrue(result.isPresent());
+		KlassenimportZeile importierteZeile = result.get();
+		assertNull(importierteZeile.getFehlermeldung());
+		assertEquals("1", importierteZeile.getKlassenstufe());
 	}
 }

@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,11 @@ import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
  * MkGatewayFileUtils
  */
 public final class MkGatewayFileUtils {
+
+	/**
+	 *
+	 */
+	private static final String DEFAULT_ENCODING = "UTF-8";
 
 	private static final String CONTENT_TYPE_HEADER = "Content-Type";
 
@@ -85,10 +91,12 @@ public final class MkGatewayFileUtils {
 	 * Liest die Datei zeilenweise ein.
 	 *
 	 * @param  path
-	 *              Pfad zu einer Textdatei.
-	 * @return      List
+	 *                  Pfad zu einer Textdatei.
+	 * @param  encoding
+	 *                  String - darf null sein. Wenn null, dann wird UTF-8 verwendet.
+	 * @return          List
 	 */
-	public static List<String> readLines(final String path) {
+	public static List<String> readLines(final String path, final String encoding) {
 
 		File file = new File(path);
 
@@ -102,7 +110,8 @@ public final class MkGatewayFileUtils {
 
 				if (StringUtils.isNotBlank(line)) {
 
-					lines.add(index++, line);
+					String converted = convertToUnicode(line, encoding);
+					lines.add(index++, converted);
 				}
 			}
 
@@ -116,6 +125,19 @@ public final class MkGatewayFileUtils {
 			throw new MkGatewayRuntimeException(msg, e);
 
 		}
+	}
+
+	static String convertToUnicode(final String line, final String encoding) {
+
+		String theEncoding = encoding == null ? DEFAULT_ENCODING : encoding;
+
+		if (DEFAULT_ENCODING.equals(theEncoding)) {
+
+			return line;
+		}
+
+		byte[] bytes = line.getBytes(Charset.forName(theEncoding));
+		return new String(bytes, Charset.forName(DEFAULT_ENCODING));
 	}
 
 	public static File writeLines(final List<String> lines, final String path) {

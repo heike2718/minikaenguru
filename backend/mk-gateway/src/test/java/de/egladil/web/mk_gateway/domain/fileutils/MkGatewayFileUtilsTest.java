@@ -82,7 +82,7 @@ public class MkGatewayFileUtilsTest {
 		// Act + Assert
 		try {
 
-			MkGatewayFileUtils.readLines(path);
+			MkGatewayFileUtils.readLines(path, "UTF-8");
 			fail("keine MkGatewayRuntimeException");
 		} catch (MkGatewayRuntimeException e) {
 
@@ -100,7 +100,7 @@ public class MkGatewayFileUtilsTest {
 		String path = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste-mit-leerzeilen.csv";
 
 		// Act
-		List<String> lines = MkGatewayFileUtils.readLines(path);
+		List<String> lines = MkGatewayFileUtils.readLines(path, "UTF-8");
 
 		// Assert
 		assertEquals(5, lines.size());

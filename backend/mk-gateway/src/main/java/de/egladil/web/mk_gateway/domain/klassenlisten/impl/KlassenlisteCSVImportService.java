@@ -96,9 +96,9 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 
 		String path = getUploadDir() + File.separator + uploadMetadata.getUuid() + ".csv";
 
-		List<String> lines = MkGatewayFileUtils.readLines(path);
+		List<String> lines = MkGatewayFileUtils.readLines(path, uploadMetadata.getEncoding());
 
-		if (lines.isEmpty()) {
+		if (lines.size() < 2) {
 
 			ResponsePayload responsePayload = ResponsePayload
 				.messageOnly(MessagePayload.error(applicationMessages.getString("leer")));
@@ -114,7 +114,7 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 
 		List<Pair<Integer, String>> zeilenMitIndex = new ArrayList<>();
 
-		for (int i = 0; i < lines.size(); i++) {
+		for (int i = 1; i < lines.size(); i++) {
 
 			String line = lines.get(i);
 			zeilenMitIndex.add(Pair.of(Integer.valueOf(i), line));
@@ -142,9 +142,9 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 			long anzahlMitUnklarerKlassenstufe = importErgebnis.getKindImportDaten().stream().filter(k -> k.isKlassenstufePruefen())
 				.count();
 
-			String msg = getImportMessage(anzahlMitFehlern, anzahlMitUnklarerKlassenstufe, anzahlDubletten);
-
 			List<KlasseAPIModel> klasseAPIModels = klassenService.klassenZuSchuleLaden(schulkuerzel, veranstalterID.identifier());
+
+			String msg = getImportMessage(klasseAPIModels.size(), anzahlMitFehlern, anzahlMitUnklarerKlassenstufe, anzahlDubletten);
 
 			KlassenlisteImportReport payloadData = new KlassenlisteImportReport()
 				.withKlassen(klasseAPIModels).withAnzahlDubletten(anzahlDubletten)
@@ -153,7 +153,7 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 
 			payloadData.setNichtImportierteZeilen(nichtImportierteZeilen);
 
-			if (anzahlMitFehlern > 0) {
+			if (klasseAPIModels.isEmpty() || anzahlMitFehlern > 0) {
 
 				String pathFehlerreport = getUploadDir() + File.separator + uploadMetadata.getUuid() + "-fehlerreport.csv";
 				MkGatewayFileUtils.writeLines(nichtImportierteZeilen, pathFehlerreport);
@@ -162,7 +162,7 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 
 			ResponsePayload responsePayload = null;
 
-			if (anzahlMitFehlern + anzahlDubletten + anzahlMitUnklarerKlassenstufe > 0) {
+			if (klasseAPIModels.isEmpty() || anzahlMitFehlern + anzahlDubletten + anzahlMitUnklarerKlassenstufe > 0) {
 
 				responsePayload = new ResponsePayload(MessagePayload.warn(msg), payloadData);
 				updateUploadstatusQuietly(uploadMetadata, UploadStatus.DATENFEHLER);
@@ -209,7 +209,12 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 
 	}
 
-	String getImportMessage(final long anzahlMitFehlern, final long anzahlMitUnklarerKlassenstufe, final long anzahlDubletten) {
+	String getImportMessage(final int anzahlImportierteKlassen, final long anzahlMitFehlern, final long anzahlMitUnklarerKlassenstufe, final long anzahlDubletten) {
+
+		if (anzahlImportierteKlassen == 0) {
+
+			return applicationMessages.getString("klassenimport.keineKlasseImportiert");
+		}
 
 		if (anzahlMitFehlern > 0) {
 

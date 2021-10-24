@@ -79,9 +79,13 @@ public class StringKlassenimportZeileMapper implements Function<Pair<Integer, St
 			return Optional.of(result);
 		}
 
+		String klassenstufeString = tokens[feldartenIndizes.get(KlassenlisteFeldart.KLASSENSTUFE).intValue()].trim();
+
+		Integer klassenstufe = Integer.valueOf(Double.valueOf(klassenstufeString).intValue());
+
 		KlassenimportZeile result = new KlassenimportZeile()
 			.withKlasse(tokens[feldartenIndizes.get(KlassenlisteFeldart.KLASSE).intValue()].trim())
-			.withKlassenstufe(tokens[feldartenIndizes.get(KlassenlisteFeldart.KLASSENSTUFE).intValue()].trim())
+			.withKlassenstufe(klassenstufe.toString())
 			.withVorname(tokens[feldartenIndizes.get(KlassenlisteFeldart.VORNAME).intValue()].trim())
 			.withNachname(tokens[feldartenIndizes.get(KlassenlisteFeldart.NACHNAME).intValue()].trim())
 			.withIndex(semikolonseparierteZeileMitIndex.getLeft());

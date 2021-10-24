@@ -5,6 +5,7 @@
 package de.egladil.web.mk_gateway.domain.uploads.convert;
 
 import java.io.File;
+import java.util.Optional;
 
 import de.egladil.web.commons_exceltools.FileType;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
@@ -25,6 +26,14 @@ public interface UploadToCSVConverter {
 	 * @return            File handle auf die CSV-Datei.
 	 */
 	File convertToCSVAndPersistInFilesystem(String pathUpload, String uuid);
+
+	/**
+	 * Ermittelt das Encoding
+	 *
+	 * @param  pathUpload
+	 * @return
+	 */
+	Optional<String> detectEncoding(final String pathUpload);
 
 	/**
 	 * Gibt den passeden Converter zurück.

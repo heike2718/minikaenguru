@@ -249,6 +249,13 @@ public class UploadManagerImpl implements UploadManager {
 
 		UploadToCSVConverter uploadConverter = UploadToCSVConverter.createForDateityp(dateiTyp);
 
+		Optional<String> optEncoding = uploadConverter.detectEncoding(pathFile);
+
+		if (optEncoding.isPresent()) {
+
+			persistenterUpload.setEncoding(optEncoding.get());
+		}
+
 		File csvFile = uploadConverter.convertToCSVAndPersistInFilesystem(pathFile, persistenterUpload.getUuid());
 
 		LOGGER.info("upload " + persistenterUpload.getUuid() + " konvertiert: " + csvFile.getAbsolutePath());

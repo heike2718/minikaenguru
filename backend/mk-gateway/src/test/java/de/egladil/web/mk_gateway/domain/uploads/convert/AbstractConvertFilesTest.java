@@ -74,7 +74,7 @@ public abstract class AbstractConvertFilesTest {
 
 	protected void printResult(final File file) {
 
-		List<String> lines = MkGatewayFileUtils.readLines(file.getAbsolutePath());
+		List<String> lines = MkGatewayFileUtils.readLines(file.getAbsolutePath(), "UTF-8");
 
 		lines.forEach(l -> System.out.println(l));
 
