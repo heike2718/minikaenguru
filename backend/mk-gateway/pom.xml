@@ -10,7 +10,7 @@
 
 
 	<properties>
-		<commons.version>1.7.2</commons.version>
+		<commons.version>1.7.3</commons.version>
 		<filescanner.version>2.0.0</filescanner.version>
 		<poi.version>5.0.0</poi.version>
 		<quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
@@ -68,19 +68,13 @@
 
 		<dependency>
 			<groupId>de.egladil.web</groupId>
-			<artifactId>commons-openofficetools</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>de.egladil.web</groupId>
-			<artifactId>commons-exeltools</artifactId>
+			<artifactId>commons-officetools</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>de.egladil.web</groupId>
 			<artifactId>commons-security</artifactId>
 		</dependency>
-
 
 
 		<dependency>

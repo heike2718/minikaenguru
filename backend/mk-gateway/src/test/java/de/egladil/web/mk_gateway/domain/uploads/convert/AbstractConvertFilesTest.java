@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
-import de.egladil.web.mk_gateway.domain.uploads.impl.DateiTyp;
 
 /**
  * AbstractConvertFilesTest
@@ -54,18 +53,6 @@ public abstract class AbstractConvertFilesTest {
 			intermediateFiles.forEach(f -> FileUtils.deleteQuietly(f));
 		}
 	}
-
-	protected String getNameSourcefileAuswertung() {
-
-		return "auswertung" + getDateiTyp().getSuffixWithPoint();
-	}
-
-	protected String getNameSourcefileKlassenliste() {
-
-		return "klassenliste" + getDateiTyp().getSuffixWithPoint();
-	}
-
-	protected abstract DateiTyp getDateiTyp();
 
 	protected void clearResult(final String path) {
 

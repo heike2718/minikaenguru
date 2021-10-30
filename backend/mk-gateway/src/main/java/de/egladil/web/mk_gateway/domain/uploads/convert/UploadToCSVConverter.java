@@ -7,7 +7,7 @@ package de.egladil.web.mk_gateway.domain.uploads.convert;
 import java.io.File;
 import java.util.Optional;
 
-import de.egladil.web.commons_exceltools.FileType;
+import de.egladil.web.commons_officetools.FileType;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.error.UploadFormatException;
 import de.egladil.web.mk_gateway.domain.uploads.impl.DateiTyp;
@@ -49,11 +49,14 @@ public interface UploadToCSVConverter {
 			return new CSVToCSVConverter();
 
 		case ODS:
-			return new OpenOfficeToCSVConverter();
-
 		case EXCEL_ALT:
 		case EXCEL_NEU:
-			return new ExcelToCSVConverter(FileType.valueOf(dateiTyp.toString()));
+			FileType fileType = dateiTyp.getFileType();
+			if (fileType == null) {
+
+				throw new UploadFormatException("Dateityp " + dateiTyp + " kann nicht verarbeitet werden");
+			}
+			return new TableDocumentToCSVConverter(fileType);
 
 		default:
 			throw new UploadFormatException("Dateityp " + dateiTyp + " kann nicht verarbeitet werden");
@@ -72,6 +75,5 @@ public interface UploadToCSVConverter {
 		}
 
 		return file;
-
 	}
 }
