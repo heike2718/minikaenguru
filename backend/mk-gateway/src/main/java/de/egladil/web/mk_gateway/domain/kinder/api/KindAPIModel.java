@@ -92,6 +92,8 @@ public class KindAPIModel implements Serializable {
 			result = result.withKlasseId(kind.klasseID().identifier());
 		}
 
+		result.setDublettePruefen(kind.isDublettePruefen());
+		result.setKlassenstufePruefen(kind.isKlassenstufePruefen());
 		return result;
 	}
 

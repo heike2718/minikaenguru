@@ -26,6 +26,7 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 /**
  * KinderServiceTest
  */
+@Deprecated
 public class KinderServiceTest extends AbstractDomainServiceTest {
 
 	private KinderServiceImpl service;
@@ -37,7 +38,8 @@ public class KinderServiceTest extends AbstractDomainServiceTest {
 		super.setUp();
 
 		AuthorizationService authService = AuthorizationService.createForTest(getVeranstalterRepository(), getUserRepository());
-		OnlineLoesungszettelService loesungszettelService = OnlineLoesungszettelService.createForTest(authService, getWettbewerbService(),
+		OnlineLoesungszettelService loesungszettelService = OnlineLoesungszettelService.createForTest(authService,
+			getWettbewerbService(),
 			getKinderRepository(),
 			getLoesungszettelRepository());
 

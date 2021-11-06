@@ -100,7 +100,7 @@ public class MkGatewayFileUtilsTest {
 		String path = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste-mit-leerzeilen.csv";
 
 		// Act
-		List<String> lines = MkGatewayFileUtils.readLines(path, "UTF-8");
+		List<String> lines = MkGatewayFileUtils.readLines(path, MkGatewayFileUtils.DEFAULT_ENCODING);
 
 		// Assert
 		assertEquals(5, lines.size());

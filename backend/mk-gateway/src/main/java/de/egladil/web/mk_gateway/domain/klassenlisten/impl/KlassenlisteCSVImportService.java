@@ -96,16 +96,14 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 
 		String path = getUploadDir() + File.separator + uploadMetadata.getUuid() + ".csv";
 
-		List<String> lines = MkGatewayFileUtils.readLines(path, uploadMetadata.getEncoding());
+		String encoding = uploadMetadata.getEncoding();
+		List<String> lines = MkGatewayFileUtils.readLines(path, encoding);
 
 		if (lines.size() < 2) {
 
-			ResponsePayload responsePayload = ResponsePayload
-				.messageOnly(MessagePayload.error(applicationMessages.getString("leer")));
-
 			updateUploadstatusQuietly(uploadMetadata, UploadStatus.LEER);
-
-			return responsePayload;
+			String msg = applicationMessages.getString("klassenimport.dateiLeer");
+			return ResponsePayload.messageOnly(MessagePayload.warn(msg));
 		}
 
 		KlassenlisteUeberschrift ueberschrift = new KlassenlisteUeberschrift(lines.get(0));
@@ -144,7 +142,8 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 
 			List<KlasseAPIModel> klasseAPIModels = klassenService.klassenZuSchuleLaden(schulkuerzel, veranstalterID.identifier());
 
-			String msg = getImportMessage(klasseAPIModels.size(), anzahlMitFehlern, anzahlMitUnklarerKlassenstufe, anzahlDubletten);
+			String msg = getImportMessage(klasseAPIModels.size(), anzahlMitFehlern, anzahlMitUnklarerKlassenstufe, anzahlDubletten,
+				encoding);
 
 			KlassenlisteImportReport payloadData = new KlassenlisteImportReport()
 				.withKlassen(klasseAPIModels).withAnzahlDubletten(anzahlDubletten)
@@ -180,6 +179,7 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 			return responsePayload;
 		} catch (PersistenceException e) {
 
+			// klassenimport.dateiLeer
 			String msg = applicationMessages.getString("klassenimport.error");
 			LOGGER.error("{}: {}", msg, e.getMessage(), e);
 
@@ -209,7 +209,7 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 
 	}
 
-	String getImportMessage(final int anzahlImportierteKlassen, final long anzahlMitFehlern, final long anzahlMitUnklarerKlassenstufe, final long anzahlDubletten) {
+	String getImportMessage(final int anzahlImportierteKlassen, final long anzahlMitFehlern, final long anzahlMitUnklarerKlassenstufe, final long anzahlDubletten, final String encoding) {
 
 		if (anzahlImportierteKlassen == 0) {
 
@@ -218,30 +218,62 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 
 		if (anzahlMitFehlern > 0) {
 
-			return applicationMessages.getString("klassenimport.nichtVollstaendig");
+			String message = applicationMessages.getString("klassenimport.nichtVollstaendig");
+
+			if (!MkGatewayFileUtils.DEFAULT_ENCODING.equals(encoding)) {
+
+				message += " " + applicationMessages.getString("klassenimport.additionallyCheckUmlaute.text");
+			}
+			return message;
 		}
 
 		if (anzahlDubletten > 0 && anzahlMitUnklarerKlassenstufe > 0) {
 
-			return applicationMessages.getString("klassenimport.vollstaendigMitWarnung");
+			String message = applicationMessages.getString("klassenimport.vollstaendigMitWarnung");
+
+			if (!MkGatewayFileUtils.DEFAULT_ENCODING.equals(encoding)) {
+
+				message += " " + applicationMessages.getString("klassenimport.additionallyCheckUmlaute.text");
+			}
+			return message;
 		}
 
 		if (anzahlDubletten > 0) {
 
-			return applicationMessages.getString("klassenimport.vollstaendigMitWarnungNurDublette");
+			String message = applicationMessages.getString("klassenimport.vollstaendigMitWarnungNurDublette");
+
+			if (!MkGatewayFileUtils.DEFAULT_ENCODING.equals(encoding)) {
+
+				message += " " + applicationMessages.getString("klassenimport.additionallyCheckUmlaute.text");
+			}
+			return message;
 
 		}
 
 		if (anzahlMitUnklarerKlassenstufe > 0) {
 
-			return applicationMessages.getString("klassenimport.vollstaendigMitWarnungNurKlassenstufe");
+			String message = applicationMessages.getString("klassenimport.vollstaendigMitWarnungNurKlassenstufe");
+
+			if (!MkGatewayFileUtils.DEFAULT_ENCODING.equals(encoding)) {
+
+				message += " " + applicationMessages.getString("klassenimport.additionallyCheckUmlaute.text");
+			}
+			return message;
 		}
 
-		return applicationMessages.getString("klassenimport.success");
+		String message = applicationMessages.getString("klassenimport.success");
+
+		if (!MkGatewayFileUtils.DEFAULT_ENCODING.equals(encoding)) {
+
+			message += " " + applicationMessages.getString("klassenimport.checkUmlaute.text");
+		}
+		return message;
 	}
 
 	@Transactional
 	KlassenImportErgebnis doTheImport(final Identifier veranstalterID, final String schulkuerzel, final UploadKlassenlisteContext uploadKlassenlisteContext, final List<KlassenimportZeile> klassenimportZeilen, final List<Kind> vorhandeneKinder) {
+
+		vorhandeneKinder.stream().forEach(k -> System.out.println(k));
 
 		Map<String, Klasse> klassenMap = this.createAndImportKlassen(veranstalterID, schulkuerzel, klassenimportZeilen);
 
@@ -265,7 +297,8 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 
 		Map<String, KlasseRequestData> klassenMap = new HashMap<>();
 
-		for (int i = 1; i < importZeilen.size(); i++) {
+		// Hier ist die Überschrift bereits ausgeschlossen
+		for (int i = 0; i < importZeilen.size(); i++) {
 
 			KlassenimportZeile zeile = importZeilen.get(i);
 
@@ -297,7 +330,7 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 
 		List<KindImportDaten> importDaten = new ArrayList<>();
 
-		for (int i = 1; i < klassenimportZeilen.size(); i++) {
+		for (int i = 0; i < klassenimportZeilen.size(); i++) {
 
 			KlassenimportZeile zeile = klassenimportZeilen.get(i);
 

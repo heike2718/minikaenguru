@@ -34,7 +34,6 @@ import de.egladil.web.mk_gateway.domain.kinder.Dublettenpruefer;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KindAdaptable;
 import de.egladil.web.mk_gateway.domain.kinder.KindAdapter;
-import de.egladil.web.mk_gateway.domain.kinder.KindDublettenpruefer;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
 import de.egladil.web.mk_gateway.domain.kinder.KinderService;
 import de.egladil.web.mk_gateway.domain.kinder.Klasse;
@@ -69,9 +68,9 @@ public class KinderServiceImpl implements KinderService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(KinderServiceImpl.class);
 
-	private final KindDublettenpruefer _dublettenpruefer = new KindDublettenpruefer();
-
 	private final Dublettenpruefer dublettenpruefer = new Dublettenpruefer();
+
+	private final KindAdapter kindAdapter = new KindAdapter();
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
@@ -320,6 +319,11 @@ public class KinderServiceImpl implements KinderService {
 
 		for (KindImportDaten item : importDaten) {
 
+			KindAdaptable kind1 = kindAdapter.adaptKindImportDaten(item);
+
+			boolean dublettenresult = checkAndMarkDubletten(kind1, vorhandeneKinder);
+			item.setDublettePruefen(dublettenresult);
+
 			if (item.getKindRequestData() != null) {
 
 				KindRequestData kindRequestData = item.getKindRequestData();
@@ -350,6 +354,24 @@ public class KinderServiceImpl implements KinderService {
 				kinderRepository.changeKind(kind);
 			}
 		}
+		return result;
+	}
+
+	private boolean checkAndMarkDubletten(final KindAdaptable neuesKind, final List<Kind> vorhandeneKinder) {
+
+		boolean result = false;
+
+		for (Kind vorhandenes : vorhandeneKinder) {
+
+			boolean dublette = dublettenpruefer.apply(neuesKind, kindAdapter.adaptKind(vorhandenes));
+
+			if (dublette) {
+
+				result = true;
+				vorhandenes.setDublettePruefen(true);
+			}
+		}
+
 		return result;
 	}
 
@@ -509,7 +531,8 @@ public class KinderServiceImpl implements KinderService {
 	@Override
 	public List<KindAPIModel> kinderZuTeilnahmeLaden(final String teilnahmenummer, final String veranstalterUuid) {
 
-		this.authService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(veranstalterUuid), new Identifier(teilnahmenummer),
+		this.authService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(veranstalterUuid),
+			new Identifier(teilnahmenummer),
 			"[kinderZuTeilnahmeLaden - " + teilnahmenummer + "]");
 
 		Veranstalter veranstalter = veranstalterRepository.ofId(new Identifier(veranstalterUuid)).get();

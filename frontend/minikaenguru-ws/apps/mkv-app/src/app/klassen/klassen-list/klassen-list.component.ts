@@ -78,7 +78,7 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 		this.router.navigateByUrl('/lehrer/schulen');
 	}
 
-	gotoUploadKklassenlisten(): void {
+	gotoUploadKlassenlisten(): void {
 		
 		if (this.schule) {
 			this.router.navigateByUrl('/klassen/uploads/' + this.schule.kuerzel);

@@ -47,5 +47,4 @@ public interface KindAdaptable {
 	 * @return
 	 */
 	Object getAdaptedObject();
-
 }

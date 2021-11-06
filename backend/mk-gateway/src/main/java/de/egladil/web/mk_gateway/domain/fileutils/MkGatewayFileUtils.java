@@ -37,7 +37,7 @@ public final class MkGatewayFileUtils {
 	/**
 	 *
 	 */
-	private static final String DEFAULT_ENCODING = "UTF-8";
+	public static final String DEFAULT_ENCODING = "UTF-8";
 
 	private static final String CONTENT_TYPE_HEADER = "Content-Type";
 

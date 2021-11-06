@@ -24,6 +24,7 @@ import de.egladil.web.mk_gateway.domain.auth.AuthResult;
 import de.egladil.web.mk_gateway.domain.auth.session.tokens.TokenExchangeService;
 import de.egladil.web.mk_gateway.domain.error.AuthException;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 
 /**
  * AuthResultToResourceOwnerMapperTest
@@ -84,7 +85,7 @@ public class AuthResultToResourceOwnerMapperTest {
 		try (InputStream in = AuthResultToResourceOwnerMapperTest.class.getResourceAsStream("/long-lasting-jwt-without-name.txt");
 			StringWriter sw = new StringWriter()) {
 
-			IOUtils.copy(in, sw, Charset.forName("UTF-8"));
+			IOUtils.copy(in, sw, Charset.forName(MkGatewayFileUtils.DEFAULT_ENCODING));
 			jwt = sw.toString();
 		}
 
@@ -123,7 +124,7 @@ public class AuthResultToResourceOwnerMapperTest {
 		try (InputStream in = AuthResultToResourceOwnerMapperTest.class.getResourceAsStream("/long-lasting-jwt-with-name.txt");
 			StringWriter sw = new StringWriter()) {
 
-			IOUtils.copy(in, sw, Charset.forName("UTF-8"));
+			IOUtils.copy(in, sw, Charset.forName(MkGatewayFileUtils.DEFAULT_ENCODING));
 			jwt = sw.toString();
 		}
 
@@ -159,7 +160,7 @@ public class AuthResultToResourceOwnerMapperTest {
 		try (InputStream in = getClass().getResourceAsStream("/expired-jwt.txt");
 			StringWriter sw = new StringWriter()) {
 
-			IOUtils.copy(in, sw, Charset.forName("UTF-8"));
+			IOUtils.copy(in, sw, Charset.forName(MkGatewayFileUtils.DEFAULT_ENCODING));
 			expiredJwt = sw.toString();
 		}
 

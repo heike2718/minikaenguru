@@ -1,10 +1,10 @@
 <div class="card mt-2">
 	<div class="card-body">
 		<div class="card-title">{{titel}} <span *ngIf="kind.punkte" class="badge badge-success">Punkte:
-				{{kind.punkte.punkte}}</span></div>
+				{{kind.punkte.punkte}}</span><span *ngIf="kind.dublettePruefen" class="badge badge-warning">Dublette?</span></div>
 		<div class="card-text">
 			<div class="row">
-				<div class="card-subtitle text-muted col-sm-12 col-md-9">{{kind.klassenstufe.label}}</div>
+				<div class="card-subtitle text-muted col-sm-12 col-md-9">{{kind.klassenstufe.label}} <span *ngIf="kind.klassenstufePruefen" class="badge badge-warning">stimmt die Klassenstufe?</span></div>
 				<div class="card-subtitle text-muted col-sm-12 col-md-9">Sprache: {{kind.sprache.label}}</div>
 
 				<div *ngIf="kind.punkte" class="card-subtitle text-muted col-sm-12 col-md-9">Länge Kängurusprung:

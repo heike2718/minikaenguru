@@ -32,6 +32,7 @@ import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.UploadFormatException;
+import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderService;
 import de.egladil.web.mk_gateway.domain.kinder.Klasse;
@@ -272,118 +273,246 @@ public class KlassenlisteCSVImportServiceTest {
 	@Nested
 	class ResponseMessageTests {
 
-		@Test
-		void should_getImportMessageReturnSuccess_when_keinFehlerUndKeineDubletten() {
+		@Nested
+		class EncodingUTF8Tests {
 
-			// Act
-			String msg = service.getImportMessage(2, 0, 0, 0);
+			private final String encoding = MkGatewayFileUtils.DEFAULT_ENCODING;
 
-			// Assert
-			assertEquals("Die Daten wurden erfolgreich importiert. Bitte prüfen Sie, ob Umlaute korrekt angezeigt werden.", msg);
+			@Test
+			void should_getImportMessageReturnSuccess_when_keinFehlerUndKeineDublettenUndUTF8() {
+
+				// Act
+				String msg = service.getImportMessage(2, 0, 0, 0, encoding);
+
+				// Assert
+				assertEquals("Die Daten wurden erfolgreich importiert.", msg);
+
+			}
+
+			@Test
+			void should_getImportMessageReturnNichtVollstaending_when_nurFehler() {
+
+				// Act
+				String msg = service.getImportMessage(2, 1, 0, 0, encoding);
+
+				// Assert
+				assertEquals(
+					"Einige Kinder konnten nicht importiert werden. Einen Fehlerreport können Sie mit dem Link herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert.",
+					msg);
+
+			}
+
+			@Test
+			void should_getImportMessageReturnNichtVollstaending_when_fehlerUndKlassenstufe() {
+
+				// Act
+				String msg = service.getImportMessage(2, 1, 3, 0, encoding);
+
+				// Assert
+				assertEquals(
+					"Einige Kinder konnten nicht importiert werden. Einen Fehlerreport können Sie mit dem Link herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert.",
+					msg);
+
+			}
+
+			@Test
+			void should_getImportMessageReturnNichtVollstaending_when_fehlerUndDublette() {
+
+				// Act
+				String msg = service.getImportMessage(2, 2, 0, 5, encoding);
+
+				// Assert
+				assertEquals(
+					"Einige Kinder konnten nicht importiert werden. Einen Fehlerreport können Sie mit dem Link herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert.",
+					msg);
+
+			}
+
+			@Test
+			void should_getImportMessageReturnNichtVollstaending_when_fehlerUndKlassenstufeUndDubletten() {
+
+				// Act
+				String msg = service.getImportMessage(2, 2, 5, 3, encoding);
+
+				// Assert
+				assertEquals(
+					"Einige Kinder konnten nicht importiert werden. Einen Fehlerreport können Sie mit dem Link herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert.",
+					msg);
+
+			}
+
+			@Test
+			void should_getImportMessageReturnVollstaendingMitWarnung_when_KlassenstufeUndDubletten() {
+
+				// Act
+				String msg = service.getImportMessage(2, 0, 5, 3, encoding);
+
+				// Assert
+				assertEquals(
+					"Bei einigen Kindern war die Klassenstufe nicht korrekt und wurde automatisch auf 2 gesetzt. Es gab möglicherweise Doppeleinträge. Alle betroffenen Kinder wurden markiert.",
+					msg);
+
+			}
+
+			@Test
+			void should_getImportMessageReturnVollstaendingMitWarnungKlassenstufe_when_nurKlassenstufe() {
+
+				// Act
+				String msg = service.getImportMessage(2, 0, 5, 0, encoding);
+
+				// Assert
+				assertEquals(
+					"Bei einigen Kindern war die Klassenstufe nicht korrekt und wurde automatisch auf 2 gesetzt.",
+					msg);
+
+			}
+
+			@Test
+			void should_getImportMessageReturnVollstaendingMitWarnungDublette_when_nurDublette() {
+
+				// Act
+				String msg = service.getImportMessage(2, 0, 0, 2, encoding);
+
+				// Assert
+				assertEquals(
+					"Es gab möglicherweise Doppeleinträge. Alle betroffenen Kinder wurden markiert.",
+					msg);
+
+			}
+
+			@Test
+			void should_getImportMessageReturnImportFehlgeschlagen_when_keineKlasseImportiert() {
+
+				// Act
+				String msg = service.getImportMessage(0, 20, 0, 0, encoding);
+
+				// Assert
+				assertEquals(
+					"Die Klassenliste konnte nicht importiert werden: alle Zeilen waren fehlerhaft. Bitte prüfen Sie die hochgeladene Datei. Einen Fehlerreport können Sie mit dem Link herunterladen.",
+					msg);
+
+			}
 
 		}
 
-		@Test
-		void should_getImportMessageReturnNichtVollstaending_when_nurFehler() {
+		@Nested
+		class UnknownEncodingTests {
 
-			// Act
-			String msg = service.getImportMessage(2, 1, 0, 0);
+			@Test
+			void should_getImportMessageReturnSuccess_when_keinFehlerUndKeineDublettenUndNichtUTF8() {
 
-			// Assert
-			assertEquals(
-				"Einige Kinder konnten nicht importiert werden. Einen Fehlerreport können Sie mit dem Link herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
-				msg);
+				// Act
+				String msg = service.getImportMessage(2, 0, 0, 0, null);
 
-		}
+				// Assert
+				assertEquals("Die Daten wurden erfolgreich importiert. Bitte prüfen Sie, ob Umlaute korrekt angezeigt werden.",
+					msg);
 
-		@Test
-		void should_getImportMessageReturnNichtVollstaending_when_fehlerUndKlassenstufe() {
+			}
 
-			// Act
-			String msg = service.getImportMessage(2, 1, 3, 0);
+			@Test
+			void should_getImportMessageReturnNichtVollstaending_when_nurFehler() {
 
-			// Assert
-			assertEquals(
-				"Einige Kinder konnten nicht importiert werden. Einen Fehlerreport können Sie mit dem Link herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
-				msg);
+				// Act
+				String msg = service.getImportMessage(2, 1, 0, 0, null);
 
-		}
+				// Assert
+				assertEquals(
+					"Einige Kinder konnten nicht importiert werden. Einen Fehlerreport können Sie mit dem Link herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
+					msg);
 
-		@Test
-		void should_getImportMessageReturnNichtVollstaending_when_fehlerUndDublette() {
+			}
 
-			// Act
-			String msg = service.getImportMessage(2, 2, 0, 5);
+			@Test
+			void should_getImportMessageReturnNichtVollstaending_when_fehlerUndKlassenstufe() {
 
-			// Assert
-			assertEquals(
-				"Einige Kinder konnten nicht importiert werden. Einen Fehlerreport können Sie mit dem Link herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
-				msg);
+				// Act
+				String msg = service.getImportMessage(2, 1, 3, 0, null);
 
-		}
+				// Assert
+				assertEquals(
+					"Einige Kinder konnten nicht importiert werden. Einen Fehlerreport können Sie mit dem Link herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
+					msg);
 
-		@Test
-		void should_getImportMessageReturnNichtVollstaending_when_fehlerUndKlassenstufeUndDubletten() {
+			}
 
-			// Act
-			String msg = service.getImportMessage(2, 2, 5, 3);
+			@Test
+			void should_getImportMessageReturnNichtVollstaending_when_fehlerUndDublette() {
 
-			// Assert
-			assertEquals(
-				"Einige Kinder konnten nicht importiert werden. Einen Fehlerreport können Sie mit dem Link herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
-				msg);
+				// Act
+				String msg = service.getImportMessage(2, 2, 0, 5, null);
 
-		}
+				// Assert
+				assertEquals(
+					"Einige Kinder konnten nicht importiert werden. Einen Fehlerreport können Sie mit dem Link herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
+					msg);
 
-		@Test
-		void should_getImportMessageReturnVollstaendingMitWarnung_when_KlassenstufeUndDubletten() {
+			}
 
-			// Act
-			String msg = service.getImportMessage(2, 0, 5, 3);
+			@Test
+			void should_getImportMessageReturnNichtVollstaending_when_fehlerUndKlassenstufeUndDubletten() {
 
-			// Assert
-			assertEquals(
-				"Bei einigen Kindern war die Klassenstufe nicht korrekt und wurde automatisch auf 2 gesetzt. Es gab möglicherweise Doppeleinträge. Alle betroffenen Kinder wurden markiert. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
-				msg);
+				// Act
+				String msg = service.getImportMessage(2, 2, 5, 3, null);
 
-		}
+				// Assert
+				assertEquals(
+					"Einige Kinder konnten nicht importiert werden. Einen Fehlerreport können Sie mit dem Link herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
+					msg);
 
-		@Test
-		void should_getImportMessageReturnVollstaendingMitWarnungKlassenstufe_when_nurKlassenstufe() {
+			}
 
-			// Act
-			String msg = service.getImportMessage(2, 0, 5, 0);
+			@Test
+			void should_getImportMessageReturnVollstaendingMitWarnung_when_KlassenstufeUndDubletten() {
 
-			// Assert
-			assertEquals(
-				"Bei einigen Kindern war die Klassenstufe nicht korrekt und wurde automatisch auf 2 gesetzt. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
-				msg);
+				// Act
+				String msg = service.getImportMessage(2, 0, 5, 3, null);
 
-		}
+				// Assert
+				assertEquals(
+					"Bei einigen Kindern war die Klassenstufe nicht korrekt und wurde automatisch auf 2 gesetzt. Es gab möglicherweise Doppeleinträge. Alle betroffenen Kinder wurden markiert. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
+					msg);
 
-		@Test
-		void should_getImportMessageReturnVollstaendingMitWarnungDublette_when_nurDublette() {
+			}
 
-			// Act
-			String msg = service.getImportMessage(2, 0, 0, 2);
+			@Test
+			void should_getImportMessageReturnVollstaendingMitWarnungKlassenstufe_when_nurKlassenstufe() {
 
-			// Assert
-			assertEquals(
-				"Es gab möglicherweise Doppeleinträge. Alle betroffenen Kinder wurden markiert.",
-				msg);
+				// Act
+				String msg = service.getImportMessage(2, 0, 5, 0, null);
 
-		}
+				// Assert
+				assertEquals(
+					"Bei einigen Kindern war die Klassenstufe nicht korrekt und wurde automatisch auf 2 gesetzt. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
+					msg);
 
-		@Test
-		void should_getImportMessageReturnImportFehlgeschlagen_when_keineKlasseImportiert() {
+			}
 
-			// Act
-			String msg = service.getImportMessage(0, 20, 0, 0);
+			@Test
+			void should_getImportMessageReturnVollstaendingMitWarnungDublette_when_nurDublette() {
 
-			// Assert
-			assertEquals(
-				"Die Klassenliste konnte nicht importiert werden: alle Zeilen waren fehlerhaft. Bitte prüfen Sie die hochgeladene Datei. Einen Fehlerreport können Sie mit dem Link herunterladen.",
-				msg);
+				// Act
+				String msg = service.getImportMessage(2, 0, 0, 2, null);
+
+				// Assert
+				assertEquals(
+					"Es gab möglicherweise Doppeleinträge. Alle betroffenen Kinder wurden markiert. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
+					msg);
+
+			}
+
+			@Test
+			void should_getImportMessageReturnImportFehlgeschlagen_when_keineKlasseImportiert() {
+
+				// Act
+				String msg = service.getImportMessage(0, 20, 0, 0, null);
+
+				// Assert
+				assertEquals(
+					"Die Klassenliste konnte nicht importiert werden: alle Zeilen waren fehlerhaft. Bitte prüfen Sie die hochgeladene Datei. Einen Fehlerreport können Sie mit dem Link herunterladen.",
+					msg);
+
+			}
 
 		}
 

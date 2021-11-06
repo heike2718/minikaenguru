@@ -114,6 +114,10 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 		this.zugangUnterlagenSubscription.unsubscribe();
 	}
 
+	korrigiereKlassenstufe(): void {
+		console.log('jetzt editor öffnen mit status klassenstufe Korrektur => führt dazu, dass klassenlisteKorrigieren false gesetzt wird');
+	}
+
 	editKind(): void {
 		this.kinderFacade.editKind(this.kind);
 		const url = '/kinder/kind-editor/' + this.kind.uuid;

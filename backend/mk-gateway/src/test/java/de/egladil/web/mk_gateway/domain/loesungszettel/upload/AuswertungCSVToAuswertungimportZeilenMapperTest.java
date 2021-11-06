@@ -129,7 +129,7 @@ public class AuswertungCSVToAuswertungimportZeilenMapperTest {
 			// Arrange
 			String path = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload/auswertung.csv";
 
-			List<String> zeilen = MkGatewayFileUtils.readLines(path, "UTF-8");
+			List<String> zeilen = MkGatewayFileUtils.readLines(path, MkGatewayFileUtils.DEFAULT_ENCODING);
 
 			// Act
 			List<AuswertungimportZeile> result = mapper.apply(zeilen);
