@@ -103,7 +103,7 @@ public class UploadManagerImpl implements UploadManager {
 	@Inject
 	DomainEventHandler domainEventHandler;
 
-	public static UploadManager createForIntegrationTests(final EntityManager em) {
+	public static UploadManagerImpl createForIntegrationTests(final EntityManager em) {
 
 		UploadManagerImpl result = new UploadManagerImpl();
 		result.scanService = ScanService.createForIntegrationTest();

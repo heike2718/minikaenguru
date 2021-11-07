@@ -23,10 +23,12 @@ fertig ist upload Klassenliste ohne Fehler, aber auch ohne Auswertung des Report
 + errorhandling in upload componente (zum Test vulnerable verwenden)
 + upgrade to angular 12
 + dubletten werden nicht mehr erkannt
-- nach dem upload ist die Klassenliste leer => die Klassen aus dem upload-Ergebnis müssen in den state geschrieben werden. reducer implementierung fehlt
++ nach dem upload ist die Klassenliste leer => die Klassen aus dem upload-Ergebnis müssen in den state geschrieben werden. reducer implementierung fehlt
 + Hinweis auf Umlaute kann entfallen, wenn encoding UTF-8
-- mehrere uploads testen, wenn z.B. einzelne Klassen nacheinander importiert werden
++ mehrere uploads testen, wenn z.B. einzelne Klassen nacheinander importiert werden
 - Upload-Report, wenn es unklarheiten gab. Hierfür muss ein download-Button eingeblendet werden
 - alle Klassen löschen, wenn noch keine Lösungszettel erfasst sind
-- das Ändern eines Kindes löscht das flag klassenstufePruefen
-- beim Speichern eines Kindes mit flag dublettePruefen wird nochmals dublette geprueft und flag entfernt, wenn möglich
+- alle importierten Kinder löschen, wenn noch keine Lösungszettel erfasst sind
++ das Ändern eines Kindes löscht das flag klassenstufePruefen: das war ein Beifang, weil das EditorModel das Flag nicht kennt und es per default false ist.
++ beim Speichern eines Kindes mit flag dublettePruefen wird nochmals dublette geprueft und flag entfernt, wenn möglich
++ Merkmal importiert für durch Import erstellte Kinder

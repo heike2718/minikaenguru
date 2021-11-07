@@ -162,6 +162,7 @@ export class KlassenFacade {
 
 		this.klassenService.deleteKlasse(klasse.uuid).subscribe(
 			rp => {
+				this.store.dispatch(KinderActions.resetModule());
 				this.store.dispatch(KlassenActions.klasseDeleted({ klasse: rp.data }));
 				this.messageService.showMessage(rp.message);
 			},
@@ -185,6 +186,7 @@ export class KlassenFacade {
 		if (responsePayload.data) {
 
 			const report: KlassenlisteImportReport = responsePayload.data;
+			this.store.dispatch(KinderActions.resetModule());
 			this.store.dispatch(KlassenActions.klassenlisteImportiert({ report: report }));
 		}
 

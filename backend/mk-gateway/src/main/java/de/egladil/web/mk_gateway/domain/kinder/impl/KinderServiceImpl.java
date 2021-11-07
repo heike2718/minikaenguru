@@ -333,6 +333,7 @@ public class KinderServiceImpl implements KinderService {
 					.withKlasseID(new Identifier(kindRequestData.klasseUuid()));
 				kind.setDublettePruefen(item.isDublettePruefen());
 				kind.setKlassenstufePruefen(item.isKlassenstufePruefen());
+				kind.setImportiert(true);
 
 				Kind gespeichertesKind = kinderRepository.addKind(kind);
 				result.add(gespeichertesKind);
@@ -347,13 +348,13 @@ public class KinderServiceImpl implements KinderService {
 			}
 		}
 
-		for (Kind kind : vorhandeneKinder) {
-
-			if (kind.isDublettePruefen()) {
-
-				kinderRepository.changeKind(kind);
-			}
-		}
+		// for (Kind kind : vorhandeneKinder) {
+		//
+		// if (kind.isDublettePruefen()) {
+		//
+		// kinderRepository.changeKind(kind);
+		// }
+		// }
 		return result;
 	}
 

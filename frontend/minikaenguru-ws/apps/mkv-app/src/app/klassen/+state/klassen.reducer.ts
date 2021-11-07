@@ -196,7 +196,22 @@ const klassenReducer = createReducer(initialKlassenState,
 	}),
 
 	on(KlassenActions.klassenlisteImportiert, (state, action) => {
-		return state;
+
+		const klassen: Klasse[] = action.report.klassen;
+
+		if (klassen.length === 0) {
+			return state;
+		}
+
+		let klasse: Klasse = klassen[0];
+		let neueMap = new KlassenMap(state.klassenMap).merge(klasse);
+
+		for (let index = 1; index < klassen.length; index++) {
+			const klasse: Klasse = klassen[index];
+			neueMap = new KlassenMap(neueMap).merge(klasse);
+		}
+
+		return {...state, loading: false, klassenMap: neueMap};
 	})
 
 );

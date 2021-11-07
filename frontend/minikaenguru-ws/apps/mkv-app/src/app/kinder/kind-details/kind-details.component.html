@@ -3,15 +3,34 @@
 		<div class="card-title">{{titel}} <span *ngIf="kind.punkte" class="badge badge-success">Punkte:
 				{{kind.punkte.punkte}}</span><span *ngIf="kind.dublettePruefen" class="badge badge-warning">Dublette?</span></div>
 		<div class="card-text">
-			<div class="row">
-				<div class="card-subtitle text-muted col-sm-12 col-md-9">{{kind.klassenstufe.label}} <span *ngIf="kind.klassenstufePruefen" class="badge badge-warning">stimmt die Klassenstufe?</span></div>
-				<div class="card-subtitle text-muted col-sm-12 col-md-9">Sprache: {{kind.sprache.label}}</div>
+			<div *ngIf="!kind.klassenstufePruefen" class="row">
+				<div class="card-subtitle text-muted col-12">{{kind.klassenstufe.label}}</div>
+				<div class="card-subtitle text-muted col-12">Sprache: {{kind.sprache.label}}</div>
+	
+				<div *ngIf="kind.punkte" class="card-subtitle text-muted col-12">Länge Kängurusprung:
+					{{kind.punkte.laengeKaengurusprung}}</div>
+
+				<div *ngIf="showHinweisUrkunde" class="col-12 mt-1 card-subtitle text-primary">Bitte Urkunden nicht für jedes
+						Kind einzeln erstellen, sondern in der Ansicht "Klassen" für die ganze Schule</div>				
+			</div>
+			<div *ngIf="kind.klassenstufePruefen" class="row">
+
+				<div class="card-subtitle text-muted col-12">{{kind.klassenstufe.label}}</div>
+				<label for="switch-klassenstufePruefen" class="ml-3 text-primary">Stimmt diese Klassenstufe? Falls ja, bitte bestätigen, falls nicht, bitte "ändern" wählen.</label>
+				<div class="row ml-1 mb-2">
+					<div class="col-3">
+						<mk-switch id="switch-klassenstufePruefen" (switchClicked)="onCheckboxKlassenstufeClicked($event)"></mk-switch>
+					</div>
+					<!--<div class="col-sm-12 col-md-8 mt-2">{{textKlassenstufePruefen}}</div>-->
+				</div>
+				
+				<div class="card-subtitle text-muted mt-1 col-12">Sprache: {{kind.sprache.label}}</div>
 
 				<div *ngIf="kind.punkte" class="card-subtitle text-muted col-sm-12 col-md-9">Länge Kängurusprung:
 					{{kind.punkte.laengeKaengurusprung}}</div>
-
-				<div *ngIf="showHinweisUrkunde" class="mt-1 card-subtitle text-primary">Bitte Urkunden nicht für jedes
-					Kind einzeln erstellen, sondern in der Ansicht "Klassen" für die ganze Schule</div>
+	
+				<div *ngIf="showHinweisUrkunde" class="col-2 mt-1 card-subtitle text-primary">Bitte Urkunden nicht für jedes
+					Kind einzeln erstellen, sondern in der Ansicht "Klassen" für die ganze Schule</div>				
 			</div>
 		</div>
 

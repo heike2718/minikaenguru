@@ -45,7 +45,6 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.api.AnonymisierteTeilnahmeAPI
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
 import de.egladil.web.mk_gateway.domain.uploads.UploadData;
-import de.egladil.web.mk_gateway.domain.uploads.UploadManager;
 import de.egladil.web.mk_gateway.domain.uploads.UploadRepository;
 import de.egladil.web.mk_gateway.domain.uploads.UploadRequestPayload;
 import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
@@ -65,7 +64,7 @@ import de.egladil.web.mkv_server_tests.AbstractIntegrationTest;
  */
 public class UploadManagerImplIT extends AbstractIntegrationTest {
 
-	private UploadManager uploadManager;
+	private UploadManagerImpl uploadManager;
 
 	private KinderRepository kinderRepository;
 
@@ -149,7 +148,6 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 				assertEquals(3, klasse.anzahlKinder());
 				assertEquals(schulkuerzel, klasse.schulkuerzel());
 				assertEquals(0, klasse.anzahlLoesungszettel());
-
 			}
 
 			{
@@ -250,9 +248,22 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 
 			List<Kind> dubletten = kinder.stream().filter(k -> "Mirkovitz".equals(k.nachname())).collect(Collectors.toList());
 			assertEquals(2, dubletten.size());
-			assertFalse(dubletten.get(0).equals(dubletten.get(1)));
-			assertTrue(dubletten.get(0).isDublettePruefen());
-			assertTrue(dubletten.get(1).isDublettePruefen());
+
+			{
+
+				Kind kind = dubletten.get(0);
+				assertFalse(kind.equals(dubletten.get(1)));
+				assertTrue(kind.isDublettePruefen());
+				assertFalse(kind.isImportiert());
+			}
+
+			{
+
+				Kind kind = dubletten.get(1);
+				assertFalse(kind.equals(dubletten.get(0)));
+				assertTrue(kind.isDublettePruefen());
+				assertTrue(kind.isImportiert());
+			}
 
 			PersistenterUpload persistenterUpload = uploads.get(0);
 			assertEquals(UploadStatus.DATENFEHLER, persistenterUpload.getStatus());

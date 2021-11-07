@@ -129,7 +129,7 @@ public class KinderHibernateRepository implements KinderRepository {
 			throw new IllegalStateException("Das Kind wurde bereits hinzugefuegt mit UUID=" + kind.identifier().identifier());
 		}
 		PersistentesKind persistentesKind = new PersistentesKind();
-		this.copyAttributesFromKindWithoutUuid(kind, persistentesKind);
+		new KindPersistentesKindAttributeMapper().copyAttributesFromKindWithoutUuid(kind, persistentesKind);
 
 		em.persist(persistentesKind);
 
@@ -147,7 +147,7 @@ public class KinderHibernateRepository implements KinderRepository {
 			return false;
 		}
 
-		this.copyAttributesFromKindWithoutUuid(kind, persistentesKind);
+		new KindPersistentesKindAttributeMapper().copyAttributesFromKindWithoutUuid(kind, persistentesKind);
 
 		em.merge(persistentesKind);
 
@@ -219,37 +219,6 @@ public class KinderHibernateRepository implements KinderRepository {
 		}
 
 		return trefferliste.get(0).longValue();
-	}
-
-	void copyAttributesFromKindWithoutUuid(final Kind source, final PersistentesKind target) {
-
-		target.setKlassenstufe(source.klassenstufe());
-
-		if (source.klasseID() != null) {
-
-			target.setKlasseUUID(source.klasseID().identifier());
-		} else {
-
-			target.setKlasseUUID(null);
-		}
-
-		if (source.loesungszettelID() != null) {
-
-			target.setLoesungszettelUUID(source.loesungszettelID().identifier());
-		} else {
-
-			target.setLoesungszettelUUID(null);
-		}
-
-		target.setNachname(source.nachname());
-		target.setSprache(source.sprache());
-		target.setTeilnahmeart(source.teilnahmeIdentifier().teilnahmeart());
-		target.setTeilnahmenummer(source.teilnahmeIdentifier().teilnahmenummer());
-		target.setVorname(source.vorname());
-		target.setZusatz(source.zusatz());
-		target.setLandkuerzel(source.landkuerzel());
-		target.setDublettePruefen(source.isDublettePruefen());
-		target.setKlassenstufePruefen(source.isKlassenstufePruefen());
 	}
 
 }

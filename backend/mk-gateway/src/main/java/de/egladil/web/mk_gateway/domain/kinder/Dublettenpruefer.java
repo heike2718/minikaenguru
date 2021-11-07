@@ -20,16 +20,14 @@ public class Dublettenpruefer implements BiFunction<KindAdaptable, KindAdaptable
 	@Override
 	public Boolean apply(final KindAdaptable kind1, final KindAdaptable kind2) {
 
-		LOGGER.info("kind1: {}", kind1);
-		LOGGER.info("kind2: {}", kind2);
+		LOGGER.debug("kind1: {}", kind1);
+		LOGGER.debug("kind2: {}", kind2);
 
 		boolean b = new EqualsBuilder().append(kind1.klasseID(), kind2.klasseID())
 			.append(kind1.getKlassenstufe(), kind2.getKlassenstufe())
 			.append(kind1.getLowerVornameNullSafe(), kind2.getLowerVornameNullSafe())
 			.append(kind1.getLowerNachnameNullSafe(), kind2.getLowerNachnameNullSafe())
 			.append(kind1.getLowerZusatzNullSafe(), kind2.getLowerZusatzNullSafe()).isEquals();
-
-		LOGGER.info("b={}", b);
 
 		if (!b) {
 

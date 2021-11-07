@@ -81,6 +81,9 @@ public class PersistentesKind extends ConcurrencySafeEntity {
 	@Column(name = "DUBLETTE_PRUEFEN")
 	private boolean dublettePruefen;
 
+	@Column(name = "IMPORTIERT")
+	private boolean importiert;
+
 	public Klassenstufe getKlassenstufe() {
 
 		return klassenstufe;
@@ -199,6 +202,16 @@ public class PersistentesKind extends ConcurrencySafeEntity {
 	public void setDublettePruefen(final boolean dublettePruefen) {
 
 		this.dublettePruefen = dublettePruefen;
+	}
+
+	public boolean isImportiert() {
+
+		return importiert;
+	}
+
+	public void setImportiert(final boolean importiert) {
+
+		this.importiert = importiert;
 	}
 
 }

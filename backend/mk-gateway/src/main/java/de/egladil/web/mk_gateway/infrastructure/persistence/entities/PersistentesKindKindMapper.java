@@ -26,6 +26,7 @@ public class PersistentesKindKindMapper implements Function<PersistentesKind, Ki
 			persistentesKind.getTeilnahmenummer(), persistentesKind.getTeilnahmeart());
 
 		return new Kind(new Identifier(persistentesKind.getUuid()))
+			.withImportiert(persistentesKind.isImportiert())
 			.withDublettePruefen(persistentesKind.isDublettePruefen())
 			.withKlassenstufePruefen(persistentesKind.isKlassenstufePruefen())
 			.withKlasseID(klasse)
