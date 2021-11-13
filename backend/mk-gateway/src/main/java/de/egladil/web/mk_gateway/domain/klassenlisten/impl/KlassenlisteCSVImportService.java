@@ -42,6 +42,7 @@ import de.egladil.web.mk_gateway.domain.kinder.api.KlasseRequestData;
 import de.egladil.web.mk_gateway.domain.kinder.events.KindCreated;
 import de.egladil.web.mk_gateway.domain.kinder.impl.KinderServiceImpl;
 import de.egladil.web.mk_gateway.domain.kinder.impl.KlassenServiceImpl;
+import de.egladil.web.mk_gateway.domain.klassenlisten.KindImportVO;
 import de.egladil.web.mk_gateway.domain.klassenlisten.KlassenimportZeile;
 import de.egladil.web.mk_gateway.domain.klassenlisten.KlassenlisteImportService;
 import de.egladil.web.mk_gateway.domain.klassenlisten.KlassenlisteUeberschrift;
@@ -150,12 +151,25 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 				.withAnzahlKlassenstufeUnklar(anzahlMitUnklarerKlassenstufe).withAnzahlNichtImportiert(anzahlMitFehlern)
 				.withAnzahlKlassen(klasseAPIModels.size()).withAnzahlKinderImportiert(importErgebnis.getKinder().size());
 
-			payloadData.setNichtImportierteZeilen(nichtImportierteZeilen);
+			payloadData.setFehler(nichtImportierteZeilen);
 
-			if (klasseAPIModels.isEmpty() || anzahlMitFehlern > 0) {
+			importErgebnis.getKindImportDaten().forEach(d -> {
+
+				if (d.getWarnmeldungDublette() != null) {
+
+					payloadData.addWarnung(d.getWarnmeldungDublette());
+				}
+
+				if (d.getWarnmeldungKlassenstufe() != null) {
+
+					payloadData.addWarnung(d.getWarnmeldungKlassenstufe());
+				}
+			});
+
+			if (!payloadData.getFehlerUndWarnungen().isEmpty()) {
 
 				String pathFehlerreport = getUploadDir() + File.separator + uploadMetadata.getUuid() + "-fehlerreport.csv";
-				MkGatewayFileUtils.writeLines(nichtImportierteZeilen, pathFehlerreport);
+				MkGatewayFileUtils.writeLines(payloadData.getFehlerUndWarnungen(), pathFehlerreport);
 				payloadData.setUuidImportReport(uploadMetadata.getUuid());
 			}
 
@@ -273,7 +287,7 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 	@Transactional
 	KlassenImportErgebnis doTheImport(final Identifier veranstalterID, final String schulkuerzel, final UploadKlassenlisteContext uploadKlassenlisteContext, final List<KlassenimportZeile> klassenimportZeilen, final List<Kind> vorhandeneKinder) {
 
-		vorhandeneKinder.stream().forEach(k -> System.out.println(k));
+		vorhandeneKinder.stream().forEach(k -> LOGGER.debug(k.toString()));
 
 		Map<String, Klasse> klassenMap = this.createAndImportKlassen(veranstalterID, schulkuerzel, klassenimportZeilen);
 
@@ -328,7 +342,7 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 
 	KlassenImportErgebnis createAndImportKinder(final Identifier veranstalterID, final String schulkuerzel, final List<KlassenimportZeile> klassenimportZeilen, final Map<String, Klasse> klassenMap, final UploadKlassenlisteContext uploadKlassenlisteContext, final List<Kind> vorhandeneKinder) {
 
-		List<KindImportDaten> importDaten = new ArrayList<>();
+		List<KindImportVO> importDaten = new ArrayList<>();
 
 		for (int i = 0; i < klassenimportZeilen.size(); i++) {
 
@@ -336,7 +350,9 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 
 			if (!zeile.ok()) {
 
-				importDaten.add(KindImportDaten.createWithFehlermeldung(zeile.getFehlermeldung()));
+				KindImportDaten kindImportDaten = KindImportDaten.createWithFehlermeldung(zeile.getFehlermeldung());
+				KindImportVO kindImportVO = new KindImportVO(zeile, kindImportDaten);
+				importDaten.add(kindImportVO);
 				continue;
 			}
 
@@ -372,22 +388,43 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 				.withUuid(KindRequestData.KEINE_UUID);
 
 			KindImportDaten kindImportDaten = new KindImportDaten(kindRequestData);
-			kindImportDaten.setKlassenstufePruefen(klassenstufePruefen);
 
-			importDaten.add(kindImportDaten);
+			KindImportVO kindImportVO = new KindImportVO(zeile, kindImportDaten);
+
+			if (klassenstufePruefen) {
+
+				kindImportVO.setWarnungKlassenstufe("Zeile " + zeile.getIndex() + ": " + zeile.getImportRohdaten()
+					+ ": diese Klassenstufe gibt es nicht. Die Klassenstufe wurde auf \"2\" gesetzt.");
+				// kindImportVO.setKlassenstufePruefen(true);
+			}
+
+			importDaten.add(kindImportVO);
 		}
 
-		int anzahlDublettenInImportdatei = new ImportDublettenPruefer().pruefeUndMarkiereDublettenImportDaten(importDaten);
+		List<KindImportVO> dublettenErgebnis = new ImportDublettenPruefer()
+			.pruefeUndMarkiereDublettenImportDaten(importDaten);
 
-		if (anzahlDublettenInImportdatei > 0) {
+		long anzahlDubletten = dublettenErgebnis.stream().filter(z -> z.isDublettePruefen()).count();
+
+		if (anzahlDubletten > 0) {
 
 			LOGGER.warn("Im Import von Schule {} wurden Dubletten gefunden. Anzahl = {}", schulkuerzel,
-				anzahlDublettenInImportdatei);
+				anzahlDubletten);
 		}
+
+		List<KindImportDaten> kinderImportDaten = new ArrayList<>();
+
+		importDaten.stream().forEach(p -> {
+
+			KindImportDaten kindDaten = p.getKindImportDaten();
+			kindDaten.setWarnmeldungDublette(p.getWarnungDublette());
+			kindDaten.setWarnmeldungKlassenstufe(p.getWarnungKlassenstufe());
+			kinderImportDaten.add(kindDaten);
+		});
 
 		List<Kind> kinder = this.kinderService.importiereKinder(veranstalterID, schulkuerzel, importDaten, vorhandeneKinder);
 
-		return new KlassenImportErgebnis(importDaten, kinder);
+		return new KlassenImportErgebnis(kinderImportDaten, kinder);
 	}
 
 	List<KindCreated> getKindCreatedEventPayloads() {

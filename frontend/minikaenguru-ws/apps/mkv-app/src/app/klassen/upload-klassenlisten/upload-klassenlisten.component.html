@@ -45,6 +45,10 @@
 							(responsePayload)="onResponse($event)"></mk-upload>
 					</div>
 				</div>
+
+				<div *ngIf="klassenFacade.klassenimportReport$ | async">
+					<mkv-import-report></mkv-import-report>
+				</div>
 <!--
 				<div *ngIf="fehlermeldungen$| async as fehlermeldungen">
 					<p *ngIf="fehlermeldungen.length > 0">Es gab Fehler:</p>

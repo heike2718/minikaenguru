@@ -81,6 +81,14 @@ public interface KinderRepository {
 	long countKinderInKlasse(Klasse klasse);
 
 	/**
+	 * Gibt die Anzahl der Kinder der Klasse zurück, die Dubletten sind oder bei denen die Klassenstufe unklar ist.
+	 * 
+	 * @param  klasse
+	 * @return
+	 */
+	long countKinderZuPruefen(Klasse klasse);
+
+	/**
 	 * Gib die Anzahl von Kindern MIT einem Lösungszettel in der gegebenen Klasse zurück.
 	 *
 	 * @param  klasse

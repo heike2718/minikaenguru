@@ -188,6 +188,7 @@ export class KinderFacade {
 			nachname: selectedKind.nachname ? selectedKind.nachname : '',
 			zusatz: selectedKind.zusatz ? selectedKind.zusatz : '',
 			klassenstufe: selectedKind.klassenstufe,
+			klasseUuid: selectedKind.klasseId,
 			sprache: selectedKind.sprache
 		};
 

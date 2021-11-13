@@ -13,6 +13,8 @@ import de.egladil.web.mk_gateway.domain.kinder.Dublettenpruefer;
 import de.egladil.web.mk_gateway.domain.kinder.KindAdaptable;
 import de.egladil.web.mk_gateway.domain.kinder.KindAdapter;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
+import de.egladil.web.mk_gateway.domain.klassenlisten.KindImportVO;
+import de.egladil.web.mk_gateway.domain.klassenlisten.KlassenimportZeile;
 import de.egladil.web.mk_gateway.domain.klassenlisten.impl.KindImportDaten;
 
 /**
@@ -30,53 +32,63 @@ public class ImportDublettenPruefer {
 	 *
 	 * @param  importDaten
 	 *                     List
-	 * @return             int die Anzhal an Dubletten in der gesamten Importdatei.
+	 * @return             List mit dem warn-Text, falls Dubletten gefunden wurden.
 	 */
-	public int pruefeUndMarkiereDublettenImportDaten(final List<KindImportDaten> importDaten) {
+	public List<KindImportVO> pruefeUndMarkiereDublettenImportDaten(final List<KindImportVO> importDaten) {
 
-		Map<String, List<KindImportDaten>> klassenKinderMap = new HashMap<>();
+		Map<String, List<KindImportVO>> klassenKinderMap = new HashMap<>();
 
-		for (KindImportDaten daten : importDaten) {
+		List<KindImportVO> result = new ArrayList<>();
+
+		for (KindImportVO kindImportDaten : importDaten) {
+
+			KindImportDaten daten = kindImportDaten.getKindImportDaten();
 
 			if (daten.getKindRequestData() != null) {
 
 				KindEditorModel kind = daten.getKindRequestData().kind();
 
-				List<KindImportDaten> kinderInKlasse = klassenKinderMap.getOrDefault(kind.klasseUuid(), new ArrayList<>());
-				kinderInKlasse.add(daten);
+				List<KindImportVO> kinderInKlasse = klassenKinderMap.getOrDefault(kind.klasseUuid(),
+					new ArrayList<>());
+				kinderInKlasse.add(kindImportDaten);
 				klassenKinderMap.put(kind.klasseUuid(), kinderInKlasse);
 			}
+
 		}
 
-		int anzahlDubletten = 0;
+		for (List<KindImportVO> kinder : klassenKinderMap.values()) {
 
-		for (List<KindImportDaten> kinder : klassenKinderMap.values()) {
-
-			anzahlDubletten += this.markiereDublettenInEinerKlasse(kinder);
+			result.addAll(this.markiereDublettenInEinerKlasse(kinder));
 		}
 
-		return anzahlDubletten;
+		return result;
 	}
 
-	int markiereDublettenInEinerKlasse(final List<KindImportDaten> kinderInKlasse) {
+	List<KindImportVO> markiereDublettenInEinerKlasse(final List<KindImportVO> kinderInKlasse) {
 
+		List<KindImportVO> result = new ArrayList<>();
 		List<KindImportDaten> gepruefte = new ArrayList<>();
-		int anzahlDubletten = 0;
 
-		for (KindImportDaten daten : kinderInKlasse) {
+		for (KindImportVO kindImportVO : kinderInKlasse) {
+
+			KindImportDaten daten = kindImportVO.getKindImportDaten();
+			KlassenimportZeile zeile = kindImportVO.getImportZeile();
 
 			boolean dublette = this.dubletteGefunden(gepruefte, daten);
 
 			if (dublette) {
 
-				daten.setDublettePruefen(true);
-				anzahlDubletten++;
+				// kindImportVO.setDublettePruefen(true);
+				kindImportVO.setWarnungDublette(
+					"Zeile " + zeile.getIndex() + ": " + kindImportVO.getImportRohdaten() + ": In Klasse " + zeile.getKlasse()
+						+ " gibt es bereits ein Kind mit diesem Namen und dieser Klassenstufe");
 
 			}
+			result.add(kindImportVO);
 			gepruefte.add(daten);
 		}
 
-		return anzahlDubletten;
+		return result;
 	}
 
 	boolean dubletteGefunden(final List<KindImportDaten> gepruefteKinder, final KindImportDaten neuesKind) {
@@ -89,7 +101,6 @@ public class ImportDublettenPruefer {
 
 			if (dublettenpruefer.apply(geprueftesKindAdapted, neuesKindAdapted)) {
 
-				geprueftesKind.setDublettePruefen(true);
 				return true;
 			}
 		}

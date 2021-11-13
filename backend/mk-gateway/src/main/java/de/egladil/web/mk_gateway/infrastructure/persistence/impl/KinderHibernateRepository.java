@@ -205,6 +205,26 @@ public class KinderHibernateRepository implements KinderRepository {
 	}
 
 	@Override
+	public long countKinderZuPruefen(final Klasse klasse) {
+
+		String stmt = "select count(*) from KINDER k where k.KLASSE_UUID = :klasseUuid and (k.KLASSENSTUFE_PRUEFEN = :klassenstufePruefen || k.DUBLETTE_PRUEFEN = :dublettePruefen)";
+
+		@SuppressWarnings("unchecked")
+		List<BigInteger> trefferliste = em.createNativeQuery(stmt)
+			.setParameter("klasseUuid", klasse.identifier().identifier())
+			.setParameter("klassenstufePruefen", 1)
+			.setParameter("dublettePruefen", 1)
+			.getResultList();
+
+		if (trefferliste.isEmpty()) {
+
+			return 0;
+		}
+
+		return trefferliste.get(0).longValue();
+	}
+
+	@Override
 	public long countLoesungszettelInKlasse(final Klasse klasse) {
 
 		String stmt = "select count(*) from KINDER k where k.KLASSE_UUID = :klasseUuid AND k.LOESUNGSZETTEL_UUID IS NOT NULL";

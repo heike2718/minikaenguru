@@ -199,7 +199,7 @@ public class KlassenlisteCSVImportServiceTest {
 			assertEquals(0L, report.getAnzahlKlassenstufeUnklar());
 			assertEquals(0, report.getAnzahlNichtImportiert());
 			assertNull(report.getUuidImportReport());
-			List<String> fehlermeldungen = report.getNichtImportierteZeilen();
+			List<String> fehlermeldungen = report.getFehlerUndWarnungen();
 			assertEquals(0, fehlermeldungen.size());
 
 			verify(klassenService).importiereKlassen(any(), any(), anyList());
@@ -252,15 +252,25 @@ public class KlassenlisteCSVImportServiceTest {
 			assertEquals(1L, report.getAnzahlKlassenstufeUnklar());
 			assertEquals(2, report.getAnzahlNichtImportiert());
 			assertEquals("mit-ueberschrift-alle-anderen-faelle", report.getUuidImportReport());
-			List<String> fehlermeldungen = report.getNichtImportierteZeilen();
-			assertEquals(2, fehlermeldungen.size());
+			List<String> fehlerUndWarnungen = report.getFehlerUndWarnungen();
+
+			fehlerUndWarnungen.stream().forEach(m -> System.out.println(m));
+
+			assertEquals(4, fehlerUndWarnungen.size());
 
 			assertEquals(
-				"Fehler! Zeile \"Amiera; Maria;Kaled;2a;2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
-				fehlermeldungen.get(0));
+				"Zeile 1: Fehler! \"Amiera; Maria;Kaled;2a;2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+				fehlerUndWarnungen.get(0));
 			assertEquals(
-				"Fehler! Zeile \"Benedikt;2a;0\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
-				fehlermeldungen.get(1));
+				"Zeile 2: Fehler! \"Benedikt;2a;0\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+				fehlerUndWarnungen.get(1));
+
+			assertEquals("Zeile 3: Özcan;Bakir;2b;3: diese Klassenstufe gibt es nicht. Die Klassenstufe wurde auf \"2\" gesetzt.",
+				fehlerUndWarnungen.get(2));
+
+			assertEquals(
+				"Zeile 6: Thomas; Grütze;2b;2: In Klasse 2b gibt es bereits ein Kind mit diesem Namen und dieser Klassenstufe",
+				fehlerUndWarnungen.get(3));
 
 			verify(klassenService).importiereKlassen(any(), any(), anyList());
 			verify(kinderService).importiereKinder(any(), any(), any(), any());

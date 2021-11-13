@@ -93,7 +93,7 @@ public class StringKlassenimportZeileMapperTest {
 		KlassenimportZeile result = optResult.get();
 		assertEquals(42, result.getIndex());
 		assertEquals(
-			"Fehler! Zeile \"2a ; Grüter ;2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+			"Zeile 1: Fehler! \"2a ; Grüter ;2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
 			result.getFehlermeldung());
 		assertFalse(result.ok());
 		assertNull(result.getKlasse());
@@ -120,7 +120,33 @@ public class StringKlassenimportZeileMapperTest {
 		KlassenimportZeile result = optResult.get();
 		assertEquals(42, result.getIndex());
 		assertEquals(
-			"Fehler! Zeile \"2a ; Grüter ; Marie; Luise ;2.0\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+			"Zeile 1: Fehler! \"2a ; Grüter ; Marie; Luise ;2.0\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+			result.getFehlermeldung());
+		assertFalse(result.ok());
+		assertNull(result.getKlasse());
+		assertNull(result.getKlassenstufe());
+		assertNull(result.getNachname());
+		assertNull(result.getVorname());
+	}
+
+	@Test
+	void should_applyReturnOptionalWithFehlermeldung_when_zeileZuKurz() {
+
+		// Arrange
+		String kommaseparierteZeile = "Grüter ; 2a";
+		Pair<Integer, String> zeileMitIndex = Pair.of(Integer.valueOf(42), kommaseparierteZeile);
+		StringKlassenimportZeileMapper mapper = new StringKlassenimportZeileMapper(klassenlisteUeberschrift);
+
+		// Act
+		Optional<KlassenimportZeile> optResult = mapper.apply(zeileMitIndex);
+
+		// Assert
+		assertTrue(optResult.isPresent());
+
+		KlassenimportZeile result = optResult.get();
+		assertEquals(42, result.getIndex());
+		assertEquals(
+			"Zeile 1: Fehler! \"Grüter ; 2a\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
 			result.getFehlermeldung());
 		assertFalse(result.ok());
 		assertNull(result.getKlasse());

@@ -113,6 +113,7 @@ export interface Klasse {
 	readonly schulkuerzel: string;
 	anzahlKinder: number;
 	anzahlLoesungszettel: number;
+	anzahlKinderZuPruefen: number;
 };
 
 export interface KlasseEditorModel {

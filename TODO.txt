@@ -32,3 +32,6 @@ fertig ist upload Klassenliste ohne Fehler, aber auch ohne Auswertung des Report
 + das Ändern eines Kindes löscht das flag klassenstufePruefen: das war ein Beifang, weil das EditorModel das Flag nicht kennt und es per default false ist.
 + beim Speichern eines Kindes mit flag dublettePruefen wird nochmals dublette geprueft und flag entfernt, wenn möglich
 + Merkmal importiert für durch Import erstellte Kinder
+- nach Import: Wechsel zu Klassenliste => Kinder: Status verschluckt sich und man landet auf dem Schule-Dashboard
+- Klassen mit zu prüfenden Kindern markieren
+- Import-Report: zu prüfende Kinder sollten ebenfalls aufgenommen werden, am besten mit dem Namen und der UUID ihrer Klasse, damit man schnell dort hinoddeln kann zum Korrigieren

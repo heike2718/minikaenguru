@@ -21,6 +21,7 @@ import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +45,7 @@ import de.egladil.web.mk_gateway.domain.kinder.api.KindRequestData;
 import de.egladil.web.mk_gateway.domain.kinder.events.KindChanged;
 import de.egladil.web.mk_gateway.domain.kinder.events.KindCreated;
 import de.egladil.web.mk_gateway.domain.kinder.events.KindDeleted;
+import de.egladil.web.mk_gateway.domain.klassenlisten.KindImportVO;
 import de.egladil.web.mk_gateway.domain.klassenlisten.impl.KindImportDaten;
 import de.egladil.web.mk_gateway.domain.loesungszettel.online.OnlineLoesungszettelService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
@@ -313,26 +315,42 @@ public class KinderServiceImpl implements KinderService {
 	}
 
 	@Override
-	public List<Kind> importiereKinder(final Identifier veranstalterID, final String schulkuerzel, final List<KindImportDaten> importDaten, final List<Kind> vorhandeneKinder) {
+	public List<Kind> importiereKinder(final Identifier veranstalterID, final String schulkuerzel, final List<KindImportVO> importDaten, final List<Kind> vorhandeneKinder) {
 
 		List<Kind> result = new ArrayList<>();
 
-		for (KindImportDaten item : importDaten) {
+		for (KindImportVO item : importDaten) {
 
-			KindAdaptable kind1 = kindAdapter.adaptKindImportDaten(item);
+			KindImportDaten kindImportDaten = item.getKindImportDaten();
 
-			boolean dublettenresult = checkAndMarkDubletten(kind1, vorhandeneKinder);
-			item.setDublettePruefen(dublettenresult);
+			if (kindImportDaten.isNichtImportiert()) {
 
-			if (item.getKindRequestData() != null) {
+				continue;
+			}
 
-				KindRequestData kindRequestData = item.getKindRequestData();
+			KindAdaptable kind1 = kindAdapter.adaptKindImportDaten(kindImportDaten);
+
+			boolean dublettenresult = isDublette(kind1, vorhandeneKinder);
+
+			if (dublettenresult) {
+
+				String warnmeldung = "Zeile " + item.getImportZeile().getIndex() + ": \"" + item.getImportRohdaten()
+					+ "\" In Klasse " + item.getImportZeile().getKlasse()
+					+ " gibt es bereits ein Kind mit diesem Namen und dieser Klassenstufe";
+
+				item.setWarnungDublette(warnmeldung);
+				// item.setDublettePruefen(true);
+			}
+
+			if (kindImportDaten.getKindRequestData() != null) {
+
+				KindRequestData kindRequestData = kindImportDaten.getKindRequestData();
 				Kind kind = new Kind().withDaten(kindRequestData.kind())
 					.withTeilnahmeIdentifier(TeilnahmeIdentifierAktuellerWettbewerb.createForSchulteilnahme(schulkuerzel))
 					.withLandkuerzel(kindRequestData.kuerzelLand())
 					.withKlasseID(new Identifier(kindRequestData.klasseUuid()));
 				kind.setDublettePruefen(item.isDublettePruefen());
-				kind.setKlassenstufePruefen(item.isKlassenstufePruefen());
+				kind.setKlassenstufePruefen(kindImportDaten.isKlassenstufePruefen());
 				kind.setImportiert(true);
 
 				Kind gespeichertesKind = kinderRepository.addKind(kind);
@@ -347,20 +365,10 @@ public class KinderServiceImpl implements KinderService {
 				domainEventHandler.handleEvent(kindCreated);
 			}
 		}
-
-		// for (Kind kind : vorhandeneKinder) {
-		//
-		// if (kind.isDublettePruefen()) {
-		//
-		// kinderRepository.changeKind(kind);
-		// }
-		// }
 		return result;
 	}
 
-	private boolean checkAndMarkDubletten(final KindAdaptable neuesKind, final List<Kind> vorhandeneKinder) {
-
-		boolean result = false;
+	private boolean isDublette(final KindAdaptable neuesKind, final List<Kind> vorhandeneKinder) {
 
 		for (Kind vorhandenes : vorhandeneKinder) {
 
@@ -368,12 +376,11 @@ public class KinderServiceImpl implements KinderService {
 
 			if (dublette) {
 
-				result = true;
-				vorhandenes.setDublettePruefen(true);
+				return true;
 			}
 		}
 
-		return result;
+		return false;
 	}
 
 	@Override
@@ -643,19 +650,21 @@ public class KinderServiceImpl implements KinderService {
 	}
 
 	/**
-	 * Gibt für die gegebenen Klassen die Anzahl der KinderDatenTeilnahmeurkundenMapper zurück.
+	 * Gibt für die gegebenen Klassen die Anzahl der Kinder zurück und die Anzahl der Kinder mit möglichen Fehlern.
 	 *
 	 * @param  klassen
-	 * @return         Map mit klasse.identifier als key
+	 * @return         Map mit klasse.identifier als key und Pair als value. L ist Anzahl der Kinder, R ist Anzahl der zu prüfenden
+	 *                 Kinder
 	 */
-	Map<Identifier, Long> countKinder(final List<Klasse> klassen) {
+	Map<Identifier, Pair<Long, Long>> countKinder(final List<Klasse> klassen) {
 
-		Map<Identifier, Long> result = new HashMap<>();
+		Map<Identifier, Pair<Long, Long>> result = new HashMap<>();
 
 		for (Klasse klasse : klassen) {
 
 			long anzahlKinder = this.kinderRepository.countKinderInKlasse(klasse);
-			result.put(klasse.identifier(), Long.valueOf(anzahlKinder));
+			long anzahlZuPruefen = this.kinderRepository.countKinderZuPruefen(klasse);
+			result.put(klasse.identifier(), Pair.of(anzahlKinder, anzahlZuPruefen));
 
 		}
 

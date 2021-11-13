@@ -11,6 +11,8 @@ import { KlasseNameValidatorDirective } from './klasse-editor/klasse-name-valida
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
 import { UploadKlassenlistenComponent } from './upload-klassenlisten/upload-klassenlisten.component';
+import { ImportReportComponent } from './import-report/import-report.component';
+import { ImportFehlerComponent } from './import-fehler/import-fehler.component';
 
 
 
@@ -20,7 +22,9 @@ import { UploadKlassenlistenComponent } from './upload-klassenlisten/upload-klas
 		KlasseDetailsComponent,
 		KlasseEditorComponent,
 		KlasseNameValidatorDirective,
-  UploadKlassenlistenComponent
+  		UploadKlassenlistenComponent,
+  		ImportReportComponent,
+  		ImportFehlerComponent
 	],
 	imports: [
 		CommonModule,

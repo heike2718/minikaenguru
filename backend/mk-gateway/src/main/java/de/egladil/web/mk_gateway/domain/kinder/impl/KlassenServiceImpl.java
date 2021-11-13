@@ -21,6 +21,7 @@ import javax.transaction.Transactional;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -160,13 +161,16 @@ public class KlassenServiceImpl implements KlassenService {
 			return new ArrayList<>();
 		}
 
-		final Map<Identifier, Long> anzahlenKinder = this.kinderService.countKinder(klassen);
+		final Map<Identifier, Pair<Long, Long>> anzahlenKinder = this.kinderService.countKinder(klassen);
 		final Map<Identifier, Long> anzahlenLoesungszettel = this.kinderService.countLoesungszettel(klassen);
 
-		return klassen.stream()
-			.map(kl -> KlasseAPIModel.createFromKlasse(kl).withAnzahlKinder(anzahlenKinder.get(kl.identifier()))
+		List<KlasseAPIModel> result = klassen.stream()
+			.map(kl -> KlasseAPIModel.createFromKlasse(kl).withAnzahlKinder(anzahlenKinder.get(kl.identifier()).getLeft())
+				.withAnzahlKinderZuPruefen(anzahlenKinder.get(kl.identifier()).getRight())
 				.withAnzahlLoesungszettel(anzahlenLoesungszettel.get(kl.identifier())))
 			.collect(Collectors.toList());
+
+		return result;
 	}
 
 	/**
@@ -315,9 +319,11 @@ public class KlassenServiceImpl implements KlassenService {
 			System.out.println(klasseChanged.serializeQuietly());
 		}
 
-		final Map<Identifier, Long> anzahlenKinder = this.kinderService.countKinder(Arrays.asList(new Klasse[] { geaenderte }));
+		final Map<Identifier, Pair<Long, Long>> anzahlenKinder = this.kinderService
+			.countKinder(Arrays.asList(new Klasse[] { geaenderte }));
 
-		return KlasseAPIModel.createFromKlasse(geaenderte).withAnzahlKinder(anzahlenKinder.get(geaenderte.identifier()));
+		return KlasseAPIModel.createFromKlasse(geaenderte).withAnzahlKinder(anzahlenKinder.get(geaenderte.identifier()).getLeft())
+			.withAnzahlKinderZuPruefen(anzahlenKinder.get(geaenderte.identifier()).getRight());
 	}
 
 	/**

@@ -8,7 +8,7 @@
 	<ng-container *ngIf="aktuellerWettbewerb$ | async as wettbewerb">
 		<div *ngIf="details$ | async">
 			<div *ngIf="schule">
-				<h2>Schulübersicht</h2>
+				<h2>Schulübersicht <span *ngIf="devMode">{{schule.kuerzel}}</span></h2>
 
 				<div class="row mt-4 ml-2">
 					<div class="col-12">

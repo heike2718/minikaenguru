@@ -5,9 +5,10 @@
 package de.egladil.web.mk_gateway.domain.kinder.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -28,6 +29,8 @@ import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
 import de.egladil.web.mk_gateway.domain.kinder.KlassenRepository;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindRequestData;
+import de.egladil.web.mk_gateway.domain.klassenlisten.KindImportVO;
+import de.egladil.web.mk_gateway.domain.klassenlisten.KlassenimportZeile;
 import de.egladil.web.mk_gateway.domain.klassenlisten.impl.KindImportDaten;
 import de.egladil.web.mk_gateway.domain.loesungszettel.online.OnlineLoesungszettelService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
@@ -79,7 +82,7 @@ public class KinderServiceImplTest {
 		String klasseUUID = "hasfhioahijdq";
 		Identifier kindID = new Identifier("hhohpjp");
 		Identifier kindIDNeuesKind = new Identifier("kpdoupooquo");
-		List<KindImportDaten> importDaten = new ArrayList<>();
+		List<KindImportVO> importDaten = new ArrayList<>();
 		List<Kind> vorhandeneKinder = new ArrayList<>();
 
 		KindEditorModel kindEditorModel = new KindEditorModel(Klassenstufe.EINS, Sprache.de).withKlasseUuid(klasseUUID)
@@ -90,7 +93,13 @@ public class KinderServiceImplTest {
 			KindRequestData kindRequestData = new KindRequestData().withKind(kindEditorModel).withKuerzelLand(kuerzelLand)
 				.withUuid("neu");
 			KindImportDaten kindImportDaten = new KindImportDaten(kindRequestData);
-			importDaten.add(kindImportDaten);
+
+			KlassenimportZeile zeile = new KlassenimportZeile().withImportRohdaten("Holger;Kröte;1a;1").withKlassenstufe("1")
+				.withKlasse("1a")
+				.withVorname("Holger")
+				.withNachname("Kröte");
+
+			importDaten.add(new KindImportVO(zeile, kindImportDaten));
 		}
 
 		Kind vorhandenesKind = new Kind().withDaten(kindEditorModel).withIdentifier(kindID);
@@ -98,17 +107,16 @@ public class KinderServiceImplTest {
 
 		when(kinderRepository.addKind(any())).thenReturn(new Kind().withDaten(kindEditorModel).withIdentifier(kindIDNeuesKind));
 		doNothing().when(domainEventHandler).handleEvent(any());
-		when(kinderRepository.changeKind(vorhandenesKind)).thenReturn(Boolean.TRUE);
 
 		// Act
 		List<Kind> importergebnis = service.importiereKinder(veranstalterID, schulkuerzel, importDaten, vorhandeneKinder);
 
 		// Assert
 		assertEquals(1, importergebnis.size());
-		verify(kinderRepository).changeKind(vorhandenesKind);
+		verify(kinderRepository, never()).changeKind(vorhandenesKind);
 		verify(kinderRepository).addKind(any());
 		verify(domainEventHandler).handleEvent(any());
-		assertTrue(vorhandenesKind.isDublettePruefen());
+		assertFalse(vorhandenesKind.isDublettePruefen());
 	}
 
 }

@@ -35,7 +35,7 @@ public class KlassenlisteImportReport {
 	private String uuidImportReport;
 
 	@JsonProperty
-	private List<String> nichtImportierteZeilen = new ArrayList<>();
+	private List<String> fehlerUndWarnungen = new ArrayList<>();
 
 	@JsonProperty
 	private List<KlasseAPIModel> klassen = new ArrayList<>();
@@ -116,14 +116,31 @@ public class KlassenlisteImportReport {
 		return this;
 	}
 
-	public List<String> getNichtImportierteZeilen() {
+	public List<String> getFehlerUndWarnungen() {
 
-		return nichtImportierteZeilen;
+		return fehlerUndWarnungen;
 	}
 
-	public void setNichtImportierteZeilen(final List<String> nichtImportierteZeilen) {
+	public void setFehler(final List<String> nichtImportierteZeilen) {
 
-		this.nichtImportierteZeilen = nichtImportierteZeilen;
+		this.fehlerUndWarnungen.addAll(nichtImportierteZeilen);
+	}
+
+	public void addWarnung(final String warnung) {
+
+		if (!this.fehlerUndWarnungen.contains(warnung)) {
+
+			this.fehlerUndWarnungen.add(warnung);
+		}
+
+	}
+
+	public String printErrorsAndWarnings() {
+
+		StringBuffer sb = new StringBuffer();
+		this.fehlerUndWarnungen.stream().forEach(z -> sb.append(z));
+		return sb.toString();
+
 	}
 
 }

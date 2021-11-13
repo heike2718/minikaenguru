@@ -1,6 +1,6 @@
 import { createReducer, Action, on } from '@ngrx/store';
 import * as KlassenActions from './klassen.actions';
-import { KlasseWithID, KlassenMap } from '../klassen.model';
+import { KlasseWithID, KlassenMap, KlassenlisteImportReport } from '../klassen.model';
 import { KlasseEditorModel, initialKlasseEditorModel, Klasse, Kind } from '@minikaenguru-ws/common-components';
 
 
@@ -12,7 +12,7 @@ export interface KlassenState {
 	loading: boolean;
 	editorModel?: KlasseEditorModel;
 	selectedKlasse?: Klasse;
-	fehlermeldungenUploadReport: string[];
+	importReport?: KlassenlisteImportReport;
 };
 
 const initialKlassenState: KlassenState = {
@@ -21,7 +21,7 @@ const initialKlassenState: KlassenState = {
 	loading: false,
 	editorModel: undefined,
 	selectedKlasse: undefined,
-	fehlermeldungenUploadReport: []
+	importReport: undefined
 };
 
 const klassenReducer = createReducer(initialKlassenState,
@@ -211,7 +211,7 @@ const klassenReducer = createReducer(initialKlassenState,
 			neueMap = new KlassenMap(neueMap).merge(klasse);
 		}
 
-		return {...state, loading: false, klassenMap: neueMap};
+		return {...state, loading: false, klassenMap: neueMap, importReport: action.report};
 	})
 
 );

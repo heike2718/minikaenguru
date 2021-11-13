@@ -175,11 +175,11 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 			List<Kind> kinder = kinderRepository.withTeilnahme(teilnahmeIdentifier);
 			assertEquals(10, kinder.size());
 
-			List<String> fehlermeldungen = importReport.getNichtImportierteZeilen();
-			assertEquals(1, fehlermeldungen.size());
+			List<String> fehlerUndWarnungen = importReport.getFehlerUndWarnungen();
+			assertEquals(1, fehlerUndWarnungen.size());
 			assertEquals(
-				"Fehler! Zeile \"2a;Heinz;2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
-				fehlermeldungen.get(0));
+				"Zeile 7: Fehler! \"2a;Heinz;2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+				fehlerUndWarnungen.get(0));
 
 			List<PersistenterUpload> uploads = uploadRepository.findUploadsWithTeilnahmenummer(schulkuerzel);
 
@@ -273,6 +273,93 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 
 			File fehlerfile = new File(path);
 			assertFalse(fehlerfile.exists());
+		}
+
+		@Test
+		void should_uploadKlassenlisteDetectFehler() {
+
+			// Arrange
+			String benutzerUuid = "474943bd-277c-4502-a32c-b67bf960e42c";
+			String schulkuerzel = "M5ZD2NL2";
+			TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdentifier = TeilnahmeIdentifierAktuellerWettbewerb
+				.createForSchulteilnahme(schulkuerzel);
+
+			List<PersistenterUpload> uploadsVorher = uploadRepository.findUploadsWithTeilnahmenummer(schulkuerzel);
+
+			byte[] data = loadData("/klassenlisten/klassenliste-M5ZD2NL2-mit-fehlern.csv");
+			UploadData uploadData = new UploadData("Irgendein Schulname.csv", data);
+
+			UploadKlassenlisteContext contextObject = new UploadKlassenlisteContext().withKuerzelLand("DE-HB")
+				.withNachnameAlsZusatz(false).withSprache(Sprache.de).withWettbewerb(wettbewerb);
+
+			UploadRequestPayload uploadRequestPayload = new UploadRequestPayload().withContext(contextObject)
+				.withUploadData(uploadData)
+				.withTeilnahmenummer(schulkuerzel).withUploadType(UploadType.KLASSENLISTE)
+				.withBenutzerID(new Identifier(benutzerUuid));
+
+			// Act
+			EntityTransaction transaction = startTransaction();
+			ResponsePayload result = uploadManager.processUpload(uploadRequestPayload);
+			commit(transaction);
+
+			// Assert
+			MessagePayload messagePayload = result.getMessage();
+			assertEquals("WARN", messagePayload.getLevel());
+			assertEquals(
+				"Einige Kinder konnten nicht importiert werden. Einen Fehlerreport können Sie mit dem Link herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
+				messagePayload.getMessage());
+
+			KlassenlisteImportReport importReport = (KlassenlisteImportReport) result.getData();
+
+			List<String> fehlerUndWarnungen = importReport.getFehlerUndWarnungen();
+			fehlerUndWarnungen.stream().forEach(m -> System.out.println(m));
+
+			assertEquals(2, importReport.getAnzahlKlassen());
+			assertEquals(6, importReport.getAnzahlKinderImportiert());
+			assertEquals(Long.valueOf(1), importReport.getAnzahlKlassenstufeUnklar());
+			assertEquals(1, importReport.getAnzahlNichtImportiert());
+			assertEquals(Long.valueOf(2L), Long.valueOf(importReport.getAnzahlDubletten()));
+
+			assertEquals(4, fehlerUndWarnungen.size());
+			assertEquals(
+				"Zeile 3: Fehler! \"Malte;Fischer\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+				fehlerUndWarnungen.get(0));
+			assertEquals("Zeile 1: Heide;Witzka;2a;3: diese Klassenstufe gibt es nicht. Die Klassenstufe wurde auf \"2\" gesetzt.",
+				fehlerUndWarnungen.get(1));
+			assertEquals(
+				"Zeile 4: \"Tarja;Müller;2a;2\" In Klasse 2a gibt es bereits ein Kind mit diesem Namen und dieser Klassenstufe",
+				fehlerUndWarnungen.get(2));
+			assertEquals(
+				"Zeile 5: Heide;Witzka;2a;2: In Klasse 2a gibt es bereits ein Kind mit diesem Namen und dieser Klassenstufe",
+				fehlerUndWarnungen.get(3));
+
+			List<KlasseAPIModel> klassen = importReport.getKlassen();
+
+			assertEquals(2, klassen.size());
+
+			List<Kind> kinder = kinderRepository.withTeilnahme(teilnahmeIdentifier);
+			assertEquals(7, kinder.size());
+
+			List<Kind> importierte = kinder.stream().filter(k -> k.isImportiert()).collect(Collectors.toList());
+			assertEquals(6, importierte.size());
+
+			List<Kind> dubletten = kinder.stream().filter(k -> k.isDublettePruefen()).collect(Collectors.toList());
+			assertEquals(2, dubletten.size());
+
+			List<PersistenterUpload> uploads = uploadRepository.findUploadsWithTeilnahmenummer(schulkuerzel);
+
+			assertEquals(uploadsVorher.size() + 1, uploads.size());
+
+			Optional<PersistenterUpload> optNeuer = uploads.stream().filter(u -> !uploadsVorher.contains(u)).findFirst();
+
+			PersistenterUpload persistenterUpload = optNeuer.get();
+			assertEquals(UploadStatus.DATENFEHLER, persistenterUpload.getStatus());
+
+			String path = "/home/heike/git/testdaten/minikaenguru/integrationtests/upload/" + persistenterUpload.getUuid()
+				+ "-fehlerreport.csv";
+
+			File fehlerfile = new File(path);
+			assertTrue(fehlerfile.exists());
 		}
 	}
 

@@ -1,8 +1,8 @@
 <div class="mkv-container mt-1">
 	<div class="col-12">
 
-		<h3><span *ngIf="schule">{{schule.name}}</span> Klassen <span
-				*ngIf="(klassenFacade.anzahlKlassen$ | async) as anzahl" class="badge badge-secondary">{{anzahl}}</span>
+		<h3><span *ngIf="schule">{{schule.name}}</span> <span *ngIf="devMode">({{schule?.kuerzel}})</span> Klassen <span
+				*ngIf="(klassenFacade.anzahlKlassen$ | async) as anzahl" class="badge badge-secondary">{{anzahl}}</span>				
 		</h3>
 		<p *ngIf="devMode">(klassen-list.component)</p>
 
