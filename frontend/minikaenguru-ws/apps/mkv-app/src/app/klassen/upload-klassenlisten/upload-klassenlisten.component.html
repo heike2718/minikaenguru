@@ -22,20 +22,21 @@
 
 			<div class="mkv-bordered w-100 m-1 p-1">
 
+				<label for="switch-sprache" class="label-bold w-100"><strong> Sprache englisch:</strong></label>
 				<div class="row">
-					<div class="col-sm-12 col-md-2">Sprache englisch:</div>
-					<div class="col-sm-12 col-md-2"><input type="checkbox" id="chkEnglisch"
-							[(ngModel)]="spracheEnglisch" (change)="onCheckboxSpracheChanged()" /></div>
-					<div class="col-sm-12 col-md-8">{{textSprache}}</div>
+					<div class="col-3">
+						<mk-switch id="switch-sprache" (switchClicked)="onCheckboxSpracheClicked($event)"></mk-switch>
+					</div>
+					<div class="col-sm-12 col-md-8 mt-2" [innerHTML]="textSprache"></div>
 				</div>
 
+				<label for="switch-nachname" class="label-bold w-100 mt-3"><strong> Nachname als Zusatz:</strong></label>
 				<div class="row">
-					<div class="col-sm-12 col-md-2">Nachname als Zusatz:</div>
-					<div class="col-sm-12 col-md-2"><input type="checkbox" id="chkNachnameVerbergen"
-							[(ngModel)]="nachnameVerbergen" (change)="onCheckboxNachnameVerbergenChanged()" /></div>
-					<div class="col-sm-12 col-md-8">{{textNachname}}</div>
+					<div class="col-3">
+						<mk-switch id="switch-nachname" (switchClicked)="onCheckboxNachnameVerbergenClicked($event)"></mk-switch>
+					</div>
+					<div class="col-sm-12 col-md-8 mt-2" [innerHTML]="textNachname"></div>
 				</div>
-
 				<small *ngIf="subUrl.length > 0">{{uploadModel.subUrl}}</small>
 
 				<div class="row">
@@ -43,6 +44,10 @@
 						<mk-upload [uploadModel]="uploadModel" (dateiAusgewaehlt)="onDateiAusgewaehlt()"
 							(responsePayload)="onResponse($event)"></mk-upload>
 					</div>
+				</div>
+
+				<div *ngIf="klassenFacade.klassenimportReport$ | async">
+					<mkv-import-report></mkv-import-report>
 				</div>
 <!--
 				<div *ngIf="fehlermeldungen$| async as fehlermeldungen">
@@ -54,6 +59,31 @@
 			</div>
 			
 	</ng-container>
+
+	<div class="d-none d-md-block">
+		<div class="btn-group d-flex" role="group">
+			<button *ngIf="schule" class="btn btn-primary w-100 ml-1" title="zur Klassenliste" 
+				(click)="gotoKlassen()">
+				<i class="fa fa-arrow-left" aria-hidden="true"></i>Klassenliste</button>
+
+			<button *ngIf="schule" class="btn btn-primary w-100 ml-1" (click)="gotoDashboard()"
+				title="{{tooltipBtnSchuluebersicht}}"><i class="fa fa-arrow-left"
+					aria-hidden="true"></i>Schulübersicht</button>
+		</div>
+	</div>
+	<div class="d-md-none d-lg-none d-xl-none">
+		<div class="btn-group d-inline" role="group">
+
+			<button *ngIf="schule" class="btn btn-primary w-100 ml-1"  title="zur Klassenliste"
+				(click)="gotoKlassen()">
+				<i class="fa fa-arrow-left" aria-hidden="true"></i>Klassenliste</button>
+
+			<button *ngIf="schule" class="btn btn-primary w-100 ml-1" (click)="gotoDashboard()"
+				title="{{tooltipBtnSchuluebersicht}}"><i class="fa fa-arrow-left"
+					aria-hidden="true"></i>Schulübersicht</button>
+
+		</div>
+	</div>
 </div>
 
 <ng-template #loading>

@@ -32,6 +32,7 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.kinder.KlassenService;
 import de.egladil.web.mk_gateway.domain.veranstalter.CheckCanRemoveSchuleService;
 import de.egladil.web.mk_gateway.domain.veranstalter.LehrerService;
 import de.egladil.web.mk_gateway.domain.veranstalter.SchulenAnmeldeinfoService;
@@ -65,6 +66,9 @@ public class LehrerResource {
 
 	@Inject
 	LehrerService lehrerService;
+
+	@Inject
+	KlassenService klassenService;
 
 	static LehrerResource createForPermissionTest(final AuthorizationService veranstalterAuthService, final LehrerService lehrerService, final SecurityContext securityContext) {
 
@@ -117,7 +121,8 @@ public class LehrerResource {
 		final Identifier lehrerID = new Identifier(principal.getName());
 		final Identifier schuleID = new Identifier(schulkuerzel);
 
-		veranstalterAuthService.checkPermissionForTeilnahmenummerAndReturnRolle(lehrerID, schuleID, "[getSchuleDetails - " + schulkuerzel + "]");
+		veranstalterAuthService.checkPermissionForTeilnahmenummerAndReturnRolle(lehrerID, schuleID,
+			"[getSchuleDetails - " + schulkuerzel + "]");
 
 		SchuleAPIModel schule = this.schulenAnmeldeinfoService.getSchuleWithWettbewerbsdetails(schulkuerzel, principal.getName());
 
@@ -165,6 +170,19 @@ public class LehrerResource {
 		}
 
 		ResponsePayload responsePayload = this.lehrerService.removeSchule(lehrerID, schuleID);
+
+		return Response.ok(responsePayload).build();
+	}
+
+	@DELETE
+	@Path("schulen/{schulkuerzel}/klassen")
+	public Response removeKlassen(@PathParam(value = "schulkuerzel") @Kuerzel final String schulkuerzel) {
+
+		Principal principal = securityContext.getUserPrincipal();
+
+		final Identifier schuleID = new Identifier(schulkuerzel);
+
+		ResponsePayload responsePayload = this.klassenService.alleKlassenLoeschen(schuleID, principal.getName());
 
 		return Response.ok(responsePayload).build();
 	}

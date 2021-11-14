@@ -179,6 +179,32 @@ export class KinderFacade {
 
 	}
 
+	public markKlassenstufeKorrekt(selectedKind: Kind, schule?: Schule): void {
+
+		this.store.dispatch(KinderActions.startLoading());
+
+		const kindEditorModel: KindEditorModel = {
+			vorname: selectedKind.vorname,
+			nachname: selectedKind.nachname ? selectedKind.nachname : '',
+			zusatz: selectedKind.zusatz ? selectedKind.zusatz : '',
+			klassenstufe: selectedKind.klassenstufe,
+			klasseUuid: selectedKind.klasseId,
+			sprache: selectedKind.sprache
+		};
+
+		const data: KindRequestData = this.mapFromEditorModel(selectedKind.uuid, kindEditorModel, schule);
+
+		this.kinderService.updateKind(data).subscribe(
+			responsePayload => {
+				this.store.dispatch(KinderActions.kindSaved({ kind: responsePayload.data, outcome: responsePayload.message }));
+			},
+			(error) => {
+				this.store.dispatch(KinderActions.finishedWithError());
+				this.errorHandler.handleError(error);
+			}
+		);
+	}
+
 	public moveKind(kind: Kind, editorModel: KindEditorModel, schule: Schule): void {
 
 		if (!kind.klasseId || !editorModel.klasseUuid) {

@@ -22,6 +22,7 @@ import de.egladil.web.commons_crypto.JWTService;
 import de.egladil.web.commons_crypto.impl.JWTServiceImpl;
 import de.egladil.web.mk_gateway.domain.DecodedJWTReader;
 import de.egladil.web.mk_gateway.domain.auth.session.SessionUtils;
+import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 
 /**
  * DecodedJWTReaderTest
@@ -46,7 +47,7 @@ public class DecodedJWTReaderTest {
 			StringWriter sw = new StringWriter()) {
 
 			// Arrange
-			IOUtils.copy(in, sw, Charset.forName("UTF-8"));
+			IOUtils.copy(in, sw, Charset.forName(MkGatewayFileUtils.DEFAULT_ENCODING));
 			jwtWithName = sw.toString();
 		}
 
@@ -54,7 +55,7 @@ public class DecodedJWTReaderTest {
 			StringWriter sw = new StringWriter()) {
 
 			// Arrange
-			IOUtils.copy(in, sw, Charset.forName("UTF-8"));
+			IOUtils.copy(in, sw, Charset.forName(MkGatewayFileUtils.DEFAULT_ENCODING));
 			jwtWithoutName = sw.toString();
 		}
 	}

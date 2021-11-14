@@ -6,21 +6,32 @@ package de.egladil.web.mk_gateway.domain.uploads.convert;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.egladil.web.commons_openofficetools.OpenOfficeContentReader;
+import de.egladil.web.commons_officetools.EncodingDetector;
+import de.egladil.web.commons_officetools.FileType;
+import de.egladil.web.commons_officetools.TableDocumentContentReader;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.uploads.impl.DateiTyp;
 
 /**
- * OpenOfficeToCSVConverter
+ * TableDocumentToCSVConverter
  */
-public class OpenOfficeToCSVConverter implements UploadToCSVConverter {
+public class TableDocumentToCSVConverter implements UploadToCSVConverter {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(OpenOfficeToCSVConverter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TableDocumentToCSVConverter.class);
+
+	private final FileType fileType;
+
+	public TableDocumentToCSVConverter(final FileType fileType) {
+
+		super();
+		this.fileType = fileType;
+	}
 
 	@Override
 	public File convertToCSVAndPersistInFilesystem(final String pathUpload, final String uuid) {
@@ -29,7 +40,9 @@ public class OpenOfficeToCSVConverter implements UploadToCSVConverter {
 
 		try {
 
-			List<String> lines = new OpenOfficeContentReader().readContentAsLines(uploadFile);
+			TableDocumentContentReader contentReader = TableDocumentContentReader.getContentReader(fileType);
+
+			List<String> lines = contentReader.readContentAsLines(uploadFile);
 
 			String pathUploadDir = uploadFile.getParent();
 
@@ -42,8 +55,14 @@ public class OpenOfficeToCSVConverter implements UploadToCSVConverter {
 			LOGGER.error(e.getMessage(), e);
 			throw new MkGatewayRuntimeException(
 				"Die Datei " + pathUpload + " zum upload " + uuid + " konnte nicht verarbeitet werden: " + e.getMessage(), e);
-
 		}
+	}
+
+	@Override
+	public Optional<String> detectEncoding(final String pathUpload) {
+
+		EncodingDetector encodingDetector = EncodingDetector.getEncodingDetector(fileType);
+		return encodingDetector.detectEncoding(pathUpload);
 	}
 
 	private File writeUploadFile(final String pathUploadDir, final List<String> lines, final String uuid) {
@@ -52,5 +71,4 @@ public class OpenOfficeToCSVConverter implements UploadToCSVConverter {
 
 		return MkGatewayFileUtils.writeLines(lines, path);
 	}
-
 }

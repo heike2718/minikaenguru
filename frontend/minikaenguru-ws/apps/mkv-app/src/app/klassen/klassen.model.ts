@@ -13,11 +13,12 @@ export interface KlasseWithID {
 
 export interface KlassenlisteImportReport {
 	readonly anzahlKlassen: number;
+	readonly anzahlKlassenImportiert: number;
 	readonly anzahlKinderImportiert: number;
 	readonly anzahlNichtImportiert: number;
 	readonly anzahlKlassenstufeUnklar: number;
 	readonly anzahlDubletten: number;
-	readonly nichtImportierteZeilen: string[];
+	readonly fehlerUndWarnungen: string[];
 	readonly klassen: Klasse[];
 };
 
@@ -111,6 +112,19 @@ export class KlassenMap {
 		for (const item of this.items) {
 
 			count+= item.klasse.anzahlLoesungszettel;
+		}
+
+		return count;
+
+	}
+
+	public countKinder(): number {
+
+		let count = 0;
+
+		for (const item of this.items) {
+
+			count+= item.klasse.anzahlKinder;
 		}
 
 		return count;

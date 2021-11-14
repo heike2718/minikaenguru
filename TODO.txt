@@ -22,3 +22,21 @@ fertig ist upload Klassenliste ohne Fehler, aber auch ohne Auswertung des Report
 + mk-admin-app: upload auswertung fuer schule
 + errorhandling in upload componente (zum Test vulnerable verwenden)
 + upgrade to angular 12
++ dubletten werden nicht mehr erkannt
++ nach dem upload ist die Klassenliste leer => die Klassen aus dem upload-Ergebnis müssen in den state geschrieben werden. reducer implementierung fehlt
++ Hinweis auf Umlaute kann entfallen, wenn encoding UTF-8
++ mehrere uploads testen, wenn z.B. einzelne Klassen nacheinander importiert werden
++ Upload-Report, wenn es unklarheiten gab.
+- Download des Upload-Reports bereitstellen Hierfür muss ein download-Button eingeblendet werden
++ alle Klassen löschen mit Warndialog. Sichtbar, wenn kein Lösungszettel erfasst
++ das Ändern eines Kindes löscht das flag klassenstufePruefen: das war ein Beifang, weil das EditorModel das Flag nicht kennt und es per default false ist.
++ beim Speichern eines Kindes mit flag dublettePruefen wird nochmals dublette geprueft und flag entfernt, wenn möglich
++ Merkmal importiert für durch Import erstellte Kinder
+- !!beobachten (konnte nach letztem Import nicht reproduziert werden)'': nach Import: Wechsel zu Klassenliste => Kinder: Status verschluckt sich und man landet auf dem Schule-Dashboard
++ Klassen mit zu prüfenden Kindern markieren
++ Button, mit dem man bestätigen kann, dass die Kinder korrigiert wurden (keine Backendaktion erforderlich)
++ Import-Report: zu prüfende Kinder sollten ebenfalls aufgenommen werden
++ Import-Report: es sollte zusätzlich die Anzahl der importierten Klassen angezeigt werden. Z.Z. sieht man die gesamtzahl der Klassen.
++ beim Wechsel zu uploads muss der Import-Report zurückgesetzt werden
+- !!beobachten (konnte nicht zuverlässig reproduziert werden)!! nach dem Importieren weiterer Kinder stimmt die Anzahl der Kinder in der Klassenlist-Details-Anzeige nicht mehr
++ testen, ob Dubletten richtig erkannt werden, wenn man Nachname als Zusatz wählt

@@ -12,6 +12,12 @@
 			</ng-container>
 		</ng-container>
 
+		<ng-container *ngIf="(selectedKlasse$ | async) as kl">
+			<div *ngIf="kl && kl.anzahlKinderZuPruefen > 0">								
+				<mkv-klasse-geprueft [klasseID]="kl.uuid"></mkv-klasse-geprueft>
+			</div>
+		</ng-container>
+
 		<div class="btn-group d-flex" role="group">
 			<button class="btn btn-primary w-100 ml-1" (click)="addKind()"><i class="fa fa-plus"
 					aria-hidden="true"></i>neues Kind</button>

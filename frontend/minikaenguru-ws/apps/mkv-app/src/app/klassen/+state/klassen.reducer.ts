@@ -1,6 +1,6 @@
 import { createReducer, Action, on } from '@ngrx/store';
 import * as KlassenActions from './klassen.actions';
-import { KlasseWithID, KlassenMap } from '../klassen.model';
+import { KlasseWithID, KlassenMap, KlassenlisteImportReport } from '../klassen.model';
 import { KlasseEditorModel, initialKlasseEditorModel, Klasse, Kind } from '@minikaenguru-ws/common-components';
 
 
@@ -12,7 +12,7 @@ export interface KlassenState {
 	loading: boolean;
 	editorModel?: KlasseEditorModel;
 	selectedKlasse?: Klasse;
-	fehlermeldungenUploadReport: string[];
+	importReport?: KlassenlisteImportReport;
 };
 
 const initialKlassenState: KlassenState = {
@@ -21,7 +21,7 @@ const initialKlassenState: KlassenState = {
 	loading: false,
 	editorModel: undefined,
 	selectedKlasse: undefined,
-	fehlermeldungenUploadReport: []
+	importReport: undefined
 };
 
 const klassenReducer = createReducer(initialKlassenState,
@@ -195,8 +195,57 @@ const klassenReducer = createReducer(initialKlassenState,
 		return {...state, fehlermeldungenUploadReport: []};
 	}),
 
+	on(KlassenActions.navigatedToUploads, (state, _action) => {
+
+		return {...state, importReport: undefined};
+	}),
+
 	on(KlassenActions.klassenlisteImportiert, (state, action) => {
-		return state;
+
+		const klassen: Klasse[] = action.report.klassen;
+
+		if (klassen.length === 0) {
+			return state;
+		}
+
+		let klasse: Klasse = klassen[0];
+		let neueMap = new KlassenMap(state.klassenMap).merge(klasse);
+
+		for (let index = 1; index < klassen.length; index++) {
+			const klasse: Klasse = klassen[index];
+			neueMap = new KlassenMap(neueMap).merge(klasse);
+		}
+
+		return {...state, loading: false, klassenMap: neueMap, importReport: action.report};
+	}),
+
+	on(KlassenActions.markKlasseKorrigiert, (state, action) => {
+
+		const klasseID = action.klasseID;
+
+		if (state.selectedKlasse) {
+			const selectedKlasse = state.selectedKlasse;
+			if (klasseID === state.selectedKlasse.uuid) {
+				const neueKlasse: Klasse = {...selectedKlasse, anzahlKinderZuPruefen: 0};
+				const neueKlassenmap: KlasseWithID[] = new KlassenMap(state.klassenMap).merge(neueKlasse);
+				return {...state, klassenMap: neueKlassenmap, selectedKlasse: neueKlasse};
+			}
+		}
+
+		const klassenMap = new KlassenMap(state.klassenMap);
+
+		if (klassenMap.has(klasseID)) {
+			let geaenderteKlasse = {...klassenMap.get(klasseID), anzahlKinderZuPruefen: 0} as Klasse;
+			const neueKlassenmap: KlasseWithID[] = klassenMap.merge(geaenderteKlasse);
+			return {...state, klassenMap: neueKlassenmap};
+		}
+
+		return {...state};
+	}),
+
+	on(KlassenActions.alleKlassenGeloescht, (_state, _action) => {
+
+		return initialKlassenState;
 	})
 
 );

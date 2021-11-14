@@ -90,6 +90,19 @@ export const klassenlisteImportiert = createAction(
 	props<{report: KlassenlisteImportReport}>()
 );
 
+export const navigatedToUploads = createAction(
+	'[KlassenFacade] prepareShowUpload'
+);
+
+export const markKlasseKorrigiert = createAction(
+	'[KlassenFacade] markKlasseKorrigiert',
+	props<{klasseID: string}>()
+);
+
+export const alleKlassenGeloescht = createAction(
+	'[KlassenFacade] alleKlassenLoeschen'
+);
+
 export const resetModule = createAction(
 	'[KlassenFacade] reset'
 );

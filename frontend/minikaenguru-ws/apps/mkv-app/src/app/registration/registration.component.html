@@ -3,10 +3,10 @@
 		<h2>Benutzerkonto anlegen <span *ngIf="devMode">(registration.component)</span> </h2>
 
 		<div class="btn-group d-inline" role="group">
-			<label for="switch-agb" class="label-bold w-100"> Möchten Sie Informationen per Mail erhalten?</label>
+			<label for="switch-newsletter" class="label-bold w-100"><strong>Möchten Sie Informationen per Mail erhalten?</strong> </label>
 			<div class="row">
 				<div class="col-3">
-					<mk-switch id="switch-agb" (switchClicked)="onCheckboxNewsletterClicked($event)"></mk-switch>
+					<mk-switch id="switch-newsletter" (switchClicked)="onCheckboxNewsletterClicked($event)"></mk-switch>
 				</div>
 				<div class="col-6">
 					<button type="button" class="btn btn-outline-dark" title="Infos zu Mailbenachrichtigungen" (click)="showInfoNewsletter()">
@@ -50,13 +50,15 @@
 </div>
 
 <p *ngIf="devMode">Newsletter abonnieren: {{newsletterAbonnieren}}</p>
+<p *ngIf="newsletterAbonnieren">Ich möchte Informationen zum Wettbewerb per Mail erhalten.</p>
 
 <ng-template #dialogNewsletterInfo let-modal>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Mailbenachrichtigungen</h4>
     </div>
     <div class="modal-body">
-        <p>In diesem Fall werden Sie über den Wettbewerb betreffende Dinge von allgemeinem Interesse, z.B Beginn des Anmeldezeitraums oder Freischaltung der Unterlagen, per E-Mail informiert.</p>
+        <p>In diesem Fall werden Sie über den Wettbewerb betreffende Dinge von allgemeinem Interesse wie z.B Beginn des Anmeldezeitraums oder
+			Freischaltung der Unterlagen per E-Mail informiert.</p>
 		<p>Sie können die Einwilligung jederzeit per E-Mail an minikaenguru@egladil.de oder mit einem einzigen Klick nach dem Einloggen widerrufen.</p>
 		<p><small>Privat durch mich erforderliche Kontaktaufnahme per Mail ist davon unberührt.</small></p>
 	</div>

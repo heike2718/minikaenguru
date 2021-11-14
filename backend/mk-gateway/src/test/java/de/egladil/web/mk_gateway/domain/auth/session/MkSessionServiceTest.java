@@ -41,6 +41,7 @@ import de.egladil.web.commons_net.exception.SessionExpiredException;
 import de.egladil.web.mk_gateway.domain.auth.events.UserLoggedIn;
 import de.egladil.web.mk_gateway.domain.auth.events.UserLoggedOut;
 import de.egladil.web.mk_gateway.domain.error.AuthException;
+import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.user.UserRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
@@ -71,7 +72,7 @@ public class MkSessionServiceTest {
 			StringWriter sw = new StringWriter()) {
 
 			String uuid = "4d8ed03a-575a-442e-89f4-0e54e51dd0d8";
-			IOUtils.copy(in, sw, Charset.forName("UTF-8"));
+			IOUtils.copy(in, sw, Charset.forName(MkGatewayFileUtils.DEFAULT_ENCODING));
 			String jwt = sw.toString();
 
 			User user = new User();
@@ -244,7 +245,7 @@ public class MkSessionServiceTest {
 			StringWriter sw = new StringWriter()) {
 
 			String uuid = "4d8ed03a-575a-442e-89f4-0e54e51dd0d8";
-			IOUtils.copy(in, sw, Charset.forName("UTF-8"));
+			IOUtils.copy(in, sw, Charset.forName(MkGatewayFileUtils.DEFAULT_ENCODING));
 			String jwt = sw.toString();
 
 			User user = new User();

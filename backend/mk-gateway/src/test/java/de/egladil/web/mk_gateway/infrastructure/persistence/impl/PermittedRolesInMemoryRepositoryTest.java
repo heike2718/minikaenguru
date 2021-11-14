@@ -77,6 +77,18 @@ public class PermittedRolesInMemoryRepositoryTest {
 		}
 
 		@Test
+		void should_permittedRollen_deleteAllKlassen_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/lehrer/schulen/JUHZTGF5/klassen", HttpMethod.DELETE);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.LEHRER));
+
+		}
+
+		@Test
 		void should_permittedRollen_getSchuleDetails_beOk() {
 
 			// Act

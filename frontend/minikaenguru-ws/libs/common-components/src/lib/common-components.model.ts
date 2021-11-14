@@ -87,6 +87,8 @@ export interface Kind {
 	readonly sprache: Sprache;
 	readonly punkte?: LoesungszettelResponse;
 	readonly klasseId?: string;
+	readonly klassenstufePruefen: boolean;
+	readonly dublettePruefen: boolean;
 };
 
 export interface KindEditorModel {
@@ -111,6 +113,7 @@ export interface Klasse {
 	readonly schulkuerzel: string;
 	anzahlKinder: number;
 	anzahlLoesungszettel: number;
+	anzahlKinderZuPruefen: number;
 };
 
 export interface KlasseEditorModel {

@@ -69,6 +69,9 @@ public class KindAPIModel implements Serializable {
 	@JsonProperty
 	private boolean dublettePruefen;
 
+	@JsonProperty
+	private boolean importiert;
+
 	public static KindAPIModel create(final Klassenstufe klassenstufe, final Sprache sprache) {
 
 		KindAPIModel result = new KindAPIModel();
@@ -92,6 +95,9 @@ public class KindAPIModel implements Serializable {
 			result = result.withKlasseId(kind.klasseID().identifier());
 		}
 
+		result.setDublettePruefen(kind.isDublettePruefen());
+		result.setKlassenstufePruefen(kind.isKlassenstufePruefen());
+		result.setImportiert(kind.isImportiert());
 		return result;
 	}
 
@@ -216,5 +222,15 @@ public class KindAPIModel implements Serializable {
 	public void setDublettePruefen(final boolean dublettePruefen) {
 
 		this.dublettePruefen = dublettePruefen;
+	}
+
+	public boolean isImportiert() {
+
+		return importiert;
+	}
+
+	public void setImportiert(final boolean importiert) {
+
+		this.importiert = importiert;
 	}
 }

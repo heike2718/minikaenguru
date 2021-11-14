@@ -21,6 +21,7 @@ import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +35,6 @@ import de.egladil.web.mk_gateway.domain.kinder.Dublettenpruefer;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KindAdaptable;
 import de.egladil.web.mk_gateway.domain.kinder.KindAdapter;
-import de.egladil.web.mk_gateway.domain.kinder.KindDublettenpruefer;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
 import de.egladil.web.mk_gateway.domain.kinder.KinderService;
 import de.egladil.web.mk_gateway.domain.kinder.Klasse;
@@ -45,6 +45,7 @@ import de.egladil.web.mk_gateway.domain.kinder.api.KindRequestData;
 import de.egladil.web.mk_gateway.domain.kinder.events.KindChanged;
 import de.egladil.web.mk_gateway.domain.kinder.events.KindCreated;
 import de.egladil.web.mk_gateway.domain.kinder.events.KindDeleted;
+import de.egladil.web.mk_gateway.domain.klassenlisten.KindImportVO;
 import de.egladil.web.mk_gateway.domain.klassenlisten.impl.KindImportDaten;
 import de.egladil.web.mk_gateway.domain.loesungszettel.online.OnlineLoesungszettelService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
@@ -68,8 +69,6 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.impl.VeranstalterHib
 public class KinderServiceImpl implements KinderService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(KinderServiceImpl.class);
-
-	private final KindDublettenpruefer _dublettenpruefer = new KindDublettenpruefer();
 
 	private final Dublettenpruefer dublettenpruefer = new Dublettenpruefer();
 
@@ -314,21 +313,29 @@ public class KinderServiceImpl implements KinderService {
 	}
 
 	@Override
-	public List<Kind> importiereKinder(final Identifier veranstalterID, final String schulkuerzel, final List<KindImportDaten> importDaten, final List<Kind> vorhandeneKinder) {
+	public List<Kind> importiereKinder(final Identifier veranstalterID, final String schulkuerzel, final List<KindImportVO> importDaten) {
 
 		List<Kind> result = new ArrayList<>();
 
-		for (KindImportDaten item : importDaten) {
+		for (KindImportVO item : importDaten) {
 
-			if (item.getKindRequestData() != null) {
+			KindImportDaten kindImportDaten = item.getKindImportDaten();
 
-				KindRequestData kindRequestData = item.getKindRequestData();
+			if (kindImportDaten.isNichtImportiert()) {
+
+				continue;
+			}
+
+			if (kindImportDaten.getKindRequestData() != null) {
+
+				KindRequestData kindRequestData = kindImportDaten.getKindRequestData();
 				Kind kind = new Kind().withDaten(kindRequestData.kind())
 					.withTeilnahmeIdentifier(TeilnahmeIdentifierAktuellerWettbewerb.createForSchulteilnahme(schulkuerzel))
 					.withLandkuerzel(kindRequestData.kuerzelLand())
 					.withKlasseID(new Identifier(kindRequestData.klasseUuid()));
 				kind.setDublettePruefen(item.isDublettePruefen());
-				kind.setKlassenstufePruefen(item.isKlassenstufePruefen());
+				kind.setKlassenstufePruefen(kindImportDaten.isKlassenstufePruefen());
+				kind.setImportiert(true);
 
 				Kind gespeichertesKind = kinderRepository.addKind(kind);
 				result.add(gespeichertesKind);
@@ -340,14 +347,6 @@ public class KinderServiceImpl implements KinderService {
 					.withTeilnahmenummer(schulkuerzel);
 
 				domainEventHandler.handleEvent(kindCreated);
-			}
-		}
-
-		for (Kind kind : vorhandeneKinder) {
-
-			if (kind.isDublettePruefen()) {
-
-				kinderRepository.changeKind(kind);
 			}
 		}
 		return result;
@@ -509,7 +508,8 @@ public class KinderServiceImpl implements KinderService {
 	@Override
 	public List<KindAPIModel> kinderZuTeilnahmeLaden(final String teilnahmenummer, final String veranstalterUuid) {
 
-		this.authService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(veranstalterUuid), new Identifier(teilnahmenummer),
+		this.authService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(veranstalterUuid),
+			new Identifier(teilnahmenummer),
 			"[kinderZuTeilnahmeLaden - " + teilnahmenummer + "]");
 
 		Veranstalter veranstalter = veranstalterRepository.ofId(new Identifier(veranstalterUuid)).get();
@@ -619,19 +619,21 @@ public class KinderServiceImpl implements KinderService {
 	}
 
 	/**
-	 * Gibt für die gegebenen Klassen die Anzahl der KinderDatenTeilnahmeurkundenMapper zurück.
+	 * Gibt für die gegebenen Klassen die Anzahl der Kinder zurück und die Anzahl der Kinder mit möglichen Fehlern.
 	 *
 	 * @param  klassen
-	 * @return         Map mit klasse.identifier als key
+	 * @return         Map mit klasse.identifier als key und Pair als value. L ist Anzahl der Kinder, R ist Anzahl der zu prüfenden
+	 *                 Kinder
 	 */
-	Map<Identifier, Long> countKinder(final List<Klasse> klassen) {
+	Map<Identifier, Pair<Long, Long>> countKinder(final List<Klasse> klassen) {
 
-		Map<Identifier, Long> result = new HashMap<>();
+		Map<Identifier, Pair<Long, Long>> result = new HashMap<>();
 
 		for (Klasse klasse : klassen) {
 
 			long anzahlKinder = this.kinderRepository.countKinderInKlasse(klasse);
-			result.put(klasse.identifier(), Long.valueOf(anzahlKinder));
+			long anzahlZuPruefen = this.kinderRepository.countKinderZuPruefen(klasse);
+			result.put(klasse.identifier(), Pair.of(anzahlKinder, anzahlZuPruefen));
 
 		}
 
@@ -662,7 +664,7 @@ public class KinderServiceImpl implements KinderService {
 
 	// #291: Erkenntnis - Dies war ein Experiment zum DDD, aber es hat sich gezeigt, dass die Wahrscheinlichkeit von inkonsistenten
 	// Daten nicht 0 ist
-	// und inkonsistente Daten durch kapseln in eine Transaktion hier besser vermieden werden sollteb, weil das Erreichen
+	// und inkonsistente Daten durch kapseln in eine Transaktion hier besser vermieden werden sollten, weil das Erreichen
 	// konsistenter Daten anderenfalls zu vollkommen unnötig komplexem Code mit kaum zu beherrschender Testbasis führt.
 
 	// @Transactional

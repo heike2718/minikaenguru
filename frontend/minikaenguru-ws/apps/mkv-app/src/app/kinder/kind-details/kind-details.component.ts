@@ -11,6 +11,7 @@ import { LoesungszettelFacade } from '../../loesungszettel/loesungszettel.facade
 import { User, STORAGE_KEY_USER } from '@minikaenguru-ws/common-auth';
 import { environment } from '../../../environments/environment';
 import { LehrerFacade } from '../../lehrer/lehrer.facade';
+import { Schule } from '../../lehrer/schulen/schulen.model';
 
 @Component({
 	selector: 'mkv-kind-details',
@@ -35,7 +36,13 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 
 	showHinweisUrkunde: boolean = false;
 
+	klassenstufeStimmt = false;
+
 	zugangUnterlagen = false;
+
+	private selectedSchule?: Schule;
+
+	private schuleSubscription: Subscription = new Subscription();
 
 	private klasseSubscription: Subscription = new Subscription();
 
@@ -105,13 +112,29 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 			}
 		);
 
+		if (this.lehrerFacade) {
 
+			this.schuleSubscription = this.lehrerFacade.selectedSchule$.subscribe(
+
+				sch => {
+					if (sch) {
+						this.selectedSchule = sch;
+					}
+				}
+
+			);
+		}
 	}
 
 	ngOnDestroy(): void {
 		this.klasseSubscription.unsubscribe();
 		this.klassenSubscription.unsubscribe();
 		this.zugangUnterlagenSubscription.unsubscribe();
+		this.schuleSubscription.unsubscribe();
+	}
+
+	korrigiereKlassenstufe(): void {
+		console.log('jetzt editor öffnen mit status klassenstufe Korrektur => führt dazu, dass klassenlisteKorrigieren false gesetzt wird');
 	}
 
 	editKind(): void {
@@ -153,6 +176,12 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 		}
 
 		this.router.navigateByUrl('/loesungszettel');
+	}
+
+	onCheckboxKlassenstufeClicked(event: boolean) {
+		if (event) {
+			this.kinderFacade.markKlassenstufeKorrekt(this.kind, this.selectedSchule);
+		}		
 	}
 
 	urkundeErstellen(): void {

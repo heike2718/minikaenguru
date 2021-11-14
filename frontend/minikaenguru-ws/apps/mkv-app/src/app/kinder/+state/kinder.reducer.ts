@@ -87,7 +87,9 @@ const kinderReducer = createReducer(initialKinderState,
 			vorname: '',
 			punkte: undefined,
 			nachname: undefined,
-			zusatz: undefined
+			zusatz: undefined,
+			klassenstufePruefen: false,
+			dublettePruefen: false
 		};
 
 		return {

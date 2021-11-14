@@ -33,6 +33,8 @@ export class UploadKlassenlistenComponent implements OnInit, OnDestroy {
 
   textNachname = 'Die Nachnamen werden in das Feld Nachname importiert und erscheinen auf der Urkunde.';
 
+  tooltipBtnSchuluebersicht: string = 'Übersicht';
+
   private schuleUndWettbewerbSubscription: Subscription = new Subscription();
 
 
@@ -48,12 +50,12 @@ export class UploadKlassenlistenComponent implements OnInit, OnDestroy {
       result => {
 
         if (result[0] && result[1]) {
-
           const w = result[0];
           const s: Schule = result[1];
           const jahr = w.jahr;
           this.schule = s;
           this.subUrl = '/uploads/klassenlisten/' + jahr + '/' + s.kuerzelLand + '/' + s.kuerzel;
+          this.tooltipBtnSchuluebersicht = 'Übersicht ' + this.schule.name;
           this.uploadModel = {
             subUrl: this.subUrl + '?nachnameAlsZusatz=false&sprache=de'
             , titel: ''
@@ -78,21 +80,6 @@ export class UploadKlassenlistenComponent implements OnInit, OnDestroy {
     }
   }
 
-	onCheckboxSpracheChanged(): void {
-
-		this.uploadModel = {...this.uploadModel, subUrl: this.getQueryParameters()};
-
-    this.textSprache = this.spracheEnglisch ? 'Die Kinder werden mit der Sprache englisch importiert.' : 'Die Kinder werden mit der Sprache deutsch importiert.';
-
-	}
-
-	onCheckboxNachnameVerbergenChanged(): void {
-
-		this.uploadModel = {...this.uploadModel, subUrl: this.getQueryParameters()};
-
-    this.textNachname = this.nachnameVerbergen ? 'Die Nachnamen werden in das Feld Zusatz importiert und erscheinen nicht auf der Urkunde.' : 'Die Nachnamen werden in das Feld Nachname importiert und erscheinen auf der Urkunde.';
-	}  
-
   onDateiAusgewaehlt(): void {
 
     if (this.uploadModel.subUrl !== '') {
@@ -107,6 +94,32 @@ export class UploadKlassenlistenComponent implements OnInit, OnDestroy {
 		if (rp) {
 			this.klassenFacade.klassenlisteImportiert(rp);
 		}
+	}
+
+  onCheckboxSpracheClicked(event: boolean) {
+    this.spracheEnglisch = event;
+		this.uploadModel = {...this.uploadModel, subUrl: this.getQueryParameters()};
+    this.textSprache = this.spracheEnglisch ? 'Die Kinder werden mit der Sprache <strong>englisch</strong> importiert.' : 'Die Kinder werden mit der Sprache deutsch importiert.';
+	}
+
+  onCheckboxNachnameVerbergenClicked(event: boolean) {
+    this.nachnameVerbergen = event;
+		this.uploadModel = {...this.uploadModel, subUrl: this.getQueryParameters()};
+    this.textNachname = this.nachnameVerbergen ? 'Die Nachnamen werden in das Feld Zusatz importiert und erscheinen <strong>nicht</strong> auf der Urkunde.' : 'Die Nachnamen werden in das Feld Nachname importiert und erscheinen auf der Urkunde.';
+	}
+
+  gotoKlassen(): void {
+    this.router.navigateByUrl('/klassen/' + this.schule.kuerzel);
+  }
+
+  gotoDashboard(): void {
+
+		let url = '/lehrer/dashboard';
+		if (this.schule) {
+			url = '/lehrer/schule-dashboard/' + this.schule.kuerzel;
+		}
+
+		this.router.navigateByUrl(url);
 	}
 
   private getQueryParameters(): string {

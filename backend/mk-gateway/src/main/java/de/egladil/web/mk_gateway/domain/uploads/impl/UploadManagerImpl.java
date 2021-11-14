@@ -103,7 +103,7 @@ public class UploadManagerImpl implements UploadManager {
 	@Inject
 	DomainEventHandler domainEventHandler;
 
-	public static UploadManager createForIntegrationTests(final EntityManager em) {
+	public static UploadManagerImpl createForIntegrationTests(final EntityManager em) {
 
 		UploadManagerImpl result = new UploadManagerImpl();
 		result.scanService = ScanService.createForIntegrationTest();
@@ -248,6 +248,13 @@ public class UploadManagerImpl implements UploadManager {
 		String pathFile = writeUploadFile(uploadPayload.getUploadData(), dateiTyp, persistenterUpload.getUuid());
 
 		UploadToCSVConverter uploadConverter = UploadToCSVConverter.createForDateityp(dateiTyp);
+
+		Optional<String> optEncoding = uploadConverter.detectEncoding(pathFile);
+
+		if (optEncoding.isPresent()) {
+
+			persistenterUpload.setEncoding(optEncoding.get());
+		}
 
 		File csvFile = uploadConverter.convertToCSVAndPersistInFilesystem(pathFile, persistenterUpload.getUuid());
 

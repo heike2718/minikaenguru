@@ -17,6 +17,7 @@ import org.apache.commons.io.IOUtils;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 
 /**
  * SessionUtils
@@ -35,7 +36,7 @@ public final class SessionUtils {
 		try (InputStream in = SessionUtils.class.getResourceAsStream("/META-INF/authprov_public_key.pem");
 			StringWriter sw = new StringWriter()) {
 
-			IOUtils.copy(in, sw, Charset.forName("UTF-8"));
+			IOUtils.copy(in, sw, Charset.forName(MkGatewayFileUtils.DEFAULT_ENCODING));
 
 			return sw.toString().getBytes();
 		} catch (IOException e) {

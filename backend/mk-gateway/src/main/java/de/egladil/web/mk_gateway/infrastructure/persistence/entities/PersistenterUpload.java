@@ -54,6 +54,9 @@ public class PersistenterUpload extends ConcurrencySafeEntity {
 	@Column(name = "MEDIATYPE")
 	private String mediatype;
 
+	@Column(name = "CHARSET")
+	private String encoding;
+
 	@Column(name = "CHECKSUMME")
 	private Long checksumme;
 
@@ -142,6 +145,16 @@ public class PersistenterUpload extends ConcurrencySafeEntity {
 	public void setChecksumme(final Long checksumme) {
 
 		this.checksumme = checksumme;
+	}
+
+	public String getEncoding() {
+
+		return encoding;
+	}
+
+	public void setEncoding(final String encoding) {
+
+		this.encoding = encoding;
 	}
 
 }
