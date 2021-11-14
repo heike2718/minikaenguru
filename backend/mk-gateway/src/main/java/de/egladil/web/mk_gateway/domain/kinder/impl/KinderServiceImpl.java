@@ -72,8 +72,6 @@ public class KinderServiceImpl implements KinderService {
 
 	private final Dublettenpruefer dublettenpruefer = new Dublettenpruefer();
 
-	private final KindAdapter kindAdapter = new KindAdapter();
-
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
 	@Inject
@@ -666,7 +664,7 @@ public class KinderServiceImpl implements KinderService {
 
 	// #291: Erkenntnis - Dies war ein Experiment zum DDD, aber es hat sich gezeigt, dass die Wahrscheinlichkeit von inkonsistenten
 	// Daten nicht 0 ist
-	// und inkonsistente Daten durch kapseln in eine Transaktion hier besser vermieden werden sollteb, weil das Erreichen
+	// und inkonsistente Daten durch kapseln in eine Transaktion hier besser vermieden werden sollten, weil das Erreichen
 	// konsistenter Daten anderenfalls zu vollkommen unnötig komplexem Code mit kaum zu beherrschender Testbasis führt.
 
 	// @Transactional

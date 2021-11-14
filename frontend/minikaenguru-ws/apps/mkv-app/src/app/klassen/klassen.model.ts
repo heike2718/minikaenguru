@@ -13,11 +13,12 @@ export interface KlasseWithID {
 
 export interface KlassenlisteImportReport {
 	readonly anzahlKlassen: number;
+	readonly anzahlKlassenImportiert: number;
 	readonly anzahlKinderImportiert: number;
 	readonly anzahlNichtImportiert: number;
 	readonly anzahlKlassenstufeUnklar: number;
 	readonly anzahlDubletten: number;
-	readonly nichtImportierteZeilen: string[];
+	readonly fehlerUndWarnungen: string[];
 	readonly klassen: Klasse[];
 };
 

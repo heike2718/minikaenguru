@@ -149,7 +149,8 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 			KlassenlisteImportReport payloadData = new KlassenlisteImportReport()
 				.withKlassen(klasseAPIModels).withAnzahlDubletten(anzahlDubletten)
 				.withAnzahlKlassenstufeUnklar(anzahlMitUnklarerKlassenstufe).withAnzahlNichtImportiert(anzahlMitFehlern)
-				.withAnzahlKlassen(klasseAPIModels.size()).withAnzahlKinderImportiert(importErgebnis.getKinder().size());
+				.withAnzahlKlassenImportiert(importErgebnis.getKlassen().size())
+				.withAnzahlKinderImportiert(importErgebnis.getKinder().size());
 
 			payloadData.setFehler(nichtImportierteZeilen);
 

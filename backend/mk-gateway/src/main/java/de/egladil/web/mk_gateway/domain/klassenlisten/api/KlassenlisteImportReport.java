@@ -20,6 +20,9 @@ public class KlassenlisteImportReport {
 	private int anzahlKlassen;
 
 	@JsonProperty
+	private int anzahlKlassenImportiert;
+
+	@JsonProperty
 	private int anzahlKinderImportiert;
 
 	@JsonProperty
@@ -53,6 +56,7 @@ public class KlassenlisteImportReport {
 	public KlassenlisteImportReport withKlassen(final List<KlasseAPIModel> klassen) {
 
 		this.klassen = klassen;
+		this.anzahlKlassen = this.klassen.size();
 		return this;
 	}
 
@@ -110,12 +114,6 @@ public class KlassenlisteImportReport {
 		return anzahlKlassen;
 	}
 
-	public KlassenlisteImportReport withAnzahlKlassen(final int anzahlKlassen) {
-
-		this.anzahlKlassen = anzahlKlassen;
-		return this;
-	}
-
 	public List<String> getFehlerUndWarnungen() {
 
 		return fehlerUndWarnungen;
@@ -141,6 +139,17 @@ public class KlassenlisteImportReport {
 		this.fehlerUndWarnungen.stream().forEach(z -> sb.append(z));
 		return sb.toString();
 
+	}
+
+	public int getAnzahlKlassenImportiert() {
+
+		return anzahlKlassenImportiert;
+	}
+
+	public KlassenlisteImportReport withAnzahlKlassenImportiert(final int anzahlKlassenImportiert) {
+
+		this.anzahlKlassenImportiert = anzahlKlassenImportiert;
+		return this;
 	}
 
 }
