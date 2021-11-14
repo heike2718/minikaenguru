@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
+import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindRequestData;
 import de.egladil.web.mk_gateway.domain.klassenlisten.KindImportVO;
@@ -30,11 +32,12 @@ public class ImportDublettenPrueferTest {
 
 		// Arrange
 		List<KindImportVO> daten = createTestdaten();
+		List<Kind> vorhandeneKinder = createVorhandeneKinder();
 
 		ImportDublettenPruefer dublettenPruefer = new ImportDublettenPruefer();
 
 		// Act
-		List<KindImportVO> result = dublettenPruefer.pruefeUndMarkiereDublettenImportDaten(daten);
+		List<KindImportVO> result = dublettenPruefer.pruefeUndMarkiereDublettenImportDaten(daten, vorhandeneKinder);
 
 		// Assert
 		assertEquals(10, result.size());
@@ -42,12 +45,34 @@ public class ImportDublettenPrueferTest {
 		List<KindImportVO> zeilenMitDublette = result.stream().filter(z -> z.getWarnungDublette() != null)
 			.collect(Collectors.toList());
 
-		assertEquals(1, zeilenMitDublette.size());
+		assertEquals(3, zeilenMitDublette.size());
 
-		int indexDublette = zeilenMitDublette.get(0).getImportZeile().getIndex();
-		assertEquals(8, indexDublette);
-		assertEquals("Zeile 8: Amira;Kaled;2a;2: In Klasse 2a gibt es bereits ein Kind mit diesem Namen und dieser Klassenstufe",
-			zeilenMitDublette.get(0).getWarnungDublette());
+		{
+
+			int indexDublette = zeilenMitDublette.get(0).getImportZeile().getIndex();
+			assertEquals(8, indexDublette);
+			assertEquals(
+				"Zeile 8: Amira;Kaled;2a;2: In Klasse 2a gibt es bereits ein Kind mit diesem Namen und dieser Klassenstufe",
+				zeilenMitDublette.get(0).getWarnungDublette());
+		}
+
+		{
+
+			int indexDublette = zeilenMitDublette.get(1).getImportZeile().getIndex();
+			assertEquals(3, indexDublette);
+			assertEquals(
+				"Zeile 3: \"Katja;Fassbinder;1a;1\" In Klasse 1a gibt es bereits ein Kind mit diesem Namen und dieser Klassenstufe",
+				zeilenMitDublette.get(1).getWarnungDublette());
+		}
+
+		{
+
+			int indexDublette = zeilenMitDublette.get(2).getImportZeile().getIndex();
+			assertEquals(10, indexDublette);
+			assertEquals(
+				"Zeile 10: \"Ruth;Admin;2b;2\" In Klasse 2b gibt es bereits ein Kind mit diesem Namen und dieser Klassenstufe",
+				zeilenMitDublette.get(2).getWarnungDublette());
+		}
 
 	}
 
@@ -97,11 +122,11 @@ public class ImportDublettenPrueferTest {
 		{
 
 			KlassenimportZeile zeile = new KlassenimportZeile().withIndex(3)
-				.withKlasse("1a").withKlassenstufe("2")
+				.withKlasse("1a").withKlassenstufe("1")
 				.withNachname("Fassbinder").withVorname("Katja");
 			zeile.setImportRohdaten("Katja;Fassbinder;1a;1");
 
-			KindEditorModel kindEditorModel = new KindEditorModel(Klassenstufe.ZWEI, sprache).withVorname("Katja")
+			KindEditorModel kindEditorModel = new KindEditorModel(Klassenstufe.EINS, sprache).withVorname("Katja")
 				.withNachname("Fassbinder").withKlasseUuid(uuid1a);
 			KindRequestData kindRequestData = new KindRequestData().withUuid(KindRequestData.KEINE_UUID).withKind(kindEditorModel);
 			KindImportDaten daten = new KindImportDaten(kindRequestData);
@@ -215,6 +240,30 @@ public class ImportDublettenPrueferTest {
 		}
 
 		return result;
+	}
+
+	private List<Kind> createVorhandeneKinder() {
+
+		String uuid1a = "uuid-1a";
+		String uuid2a = "uuid-2a";
+		String uuid2b = "uuid-2b";
+
+		List<Kind> result = new ArrayList<>();
+
+		result.add(new Kind().withIdentifier(new Identifier("kind-1")).withKlasseID(new Identifier(uuid2b))
+			.withKlassenstufe(Klassenstufe.ZWEI)
+			.withNachname("Admin").withSprache(Sprache.de).withVorname("Ruth"));
+
+		result.add(new Kind().withIdentifier(new Identifier("kind-2")).withKlasseID(new Identifier(uuid1a))
+			.withKlassenstufe(Klassenstufe.EINS)
+			.withNachname("Fassbinder").withSprache(Sprache.de).withVorname("Katja"));
+
+		result.add(new Kind().withIdentifier(new Identifier("kind-3")).withKlasseID(new Identifier(uuid2a))
+			.withKlassenstufe(Klassenstufe.ZWEI)
+			.withNachname("Blumenwiese").withSprache(Sprache.de).withVorname("Anneliese"));
+
+		return result;
+
 	}
 
 }

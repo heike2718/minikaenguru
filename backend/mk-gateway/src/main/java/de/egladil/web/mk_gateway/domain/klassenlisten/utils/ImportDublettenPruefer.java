@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.egladil.web.mk_gateway.domain.kinder.Dublettenpruefer;
+import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KindAdaptable;
 import de.egladil.web.mk_gateway.domain.kinder.KindAdapter;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
@@ -34,7 +35,7 @@ public class ImportDublettenPruefer {
 	 *                     List
 	 * @return             List mit dem warn-Text, falls Dubletten gefunden wurden.
 	 */
-	public List<KindImportVO> pruefeUndMarkiereDublettenImportDaten(final List<KindImportVO> importDaten) {
+	public List<KindImportVO> pruefeUndMarkiereDublettenImportDaten(final List<KindImportVO> importDaten, final List<Kind> vorhandeneKinder) {
 
 		Map<String, List<KindImportVO>> klassenKinderMap = new HashMap<>();
 
@@ -61,7 +62,48 @@ public class ImportDublettenPruefer {
 			result.addAll(this.markiereDublettenInEinerKlasse(kinder));
 		}
 
+		markiereDublettenMitVorhandenenKindern(result, vorhandeneKinder);
+
 		return result;
+	}
+
+	/**
+	 * @param result
+	 * @param vorhandeneKinder
+	 */
+	private void markiereDublettenMitVorhandenenKindern(final List<KindImportVO> result, final List<Kind> vorhandeneKinder) {
+
+		for (KindImportVO item : result) {
+
+			KindAdaptable kind1 = kindAdapter.adaptKindImportDaten(item.getKindImportDaten());
+
+			boolean dublettenresult = isDublette(kind1, vorhandeneKinder);
+
+			if (dublettenresult) {
+
+				String warnmeldung = "Zeile " + item.getImportZeile().getIndex() + ": \"" + item.getImportRohdaten()
+					+ "\" In Klasse " + item.getImportZeile().getKlasse()
+					+ " gibt es bereits ein Kind mit diesem Namen und dieser Klassenstufe";
+
+				item.setWarnungDublette(warnmeldung);
+				// item.setDublettePruefen(true);
+			}
+		}
+	}
+
+	private boolean isDublette(final KindAdaptable neuesKind, final List<Kind> vorhandeneKinder) {
+
+		for (Kind vorhandenes : vorhandeneKinder) {
+
+			boolean dublette = dublettenpruefer.apply(neuesKind, kindAdapter.adaptKind(vorhandenes));
+
+			if (dublette) {
+
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	List<KindImportVO> markiereDublettenInEinerKlasse(final List<KindImportVO> kinderInKlasse) {

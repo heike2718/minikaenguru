@@ -65,11 +65,9 @@ public interface KinderService {
 	 * @param  veranstalterID
 	 * @param  schulkuerzel
 	 * @param  importDaten
-	 * @param  vorhandeneKinder
-	 *                          List die Kinder, die vor dem Start des Imports bereits in der DB vorhanden waren.
 	 * @return                  List
 	 */
-	List<Kind> importiereKinder(Identifier veranstalterID, String schulkuerzel, final List<KindImportVO> importDaten, List<Kind> vorhandeneKinder);
+	List<Kind> importiereKinder(Identifier veranstalterID, String schulkuerzel, final List<KindImportVO> importDaten);
 
 	/**
 	 * Gibt alle Kinder zu einer gegebenen Schulteilnahme am aktuellen Wettbewerb zurück.

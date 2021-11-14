@@ -402,7 +402,7 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 		}
 
 		List<KindImportVO> dublettenErgebnis = new ImportDublettenPruefer()
-			.pruefeUndMarkiereDublettenImportDaten(importDaten);
+			.pruefeUndMarkiereDublettenImportDaten(importDaten, vorhandeneKinder);
 
 		long anzahlDubletten = dublettenErgebnis.stream().filter(z -> z.isDublettePruefen()).count();
 
@@ -422,7 +422,7 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 			kinderImportDaten.add(kindDaten);
 		});
 
-		List<Kind> kinder = this.kinderService.importiereKinder(veranstalterID, schulkuerzel, importDaten, vorhandeneKinder);
+		List<Kind> kinder = this.kinderService.importiereKinder(veranstalterID, schulkuerzel, importDaten);
 
 		return new KlassenImportErgebnis(kinderImportDaten, kinder);
 	}

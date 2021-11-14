@@ -93,7 +93,7 @@ public class StringKlassenimportZeileMapperTest {
 		KlassenimportZeile result = optResult.get();
 		assertEquals(42, result.getIndex());
 		assertEquals(
-			"Zeile 1: Fehler! \"2a ; Grüter ;2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+			"Zeile 42: Fehler! \"2a ; Grüter ;2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
 			result.getFehlermeldung());
 		assertFalse(result.ok());
 		assertNull(result.getKlasse());
@@ -120,7 +120,7 @@ public class StringKlassenimportZeileMapperTest {
 		KlassenimportZeile result = optResult.get();
 		assertEquals(42, result.getIndex());
 		assertEquals(
-			"Zeile 1: Fehler! \"2a ; Grüter ; Marie; Luise ;2.0\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+			"Zeile 42: Fehler! \"2a ; Grüter ; Marie; Luise ;2.0\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
 			result.getFehlermeldung());
 		assertFalse(result.ok());
 		assertNull(result.getKlasse());
@@ -146,7 +146,7 @@ public class StringKlassenimportZeileMapperTest {
 		KlassenimportZeile result = optResult.get();
 		assertEquals(42, result.getIndex());
 		assertEquals(
-			"Zeile 1: Fehler! \"Grüter ; 2a\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+			"Zeile 42: Fehler! \"Grüter ; 2a\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
 			result.getFehlermeldung());
 		assertFalse(result.ok());
 		assertNull(result.getKlasse());

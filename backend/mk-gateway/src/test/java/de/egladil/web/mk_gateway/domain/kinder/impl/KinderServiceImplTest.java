@@ -109,7 +109,7 @@ public class KinderServiceImplTest {
 		doNothing().when(domainEventHandler).handleEvent(any());
 
 		// Act
-		List<Kind> importergebnis = service.importiereKinder(veranstalterID, schulkuerzel, importDaten, vorhandeneKinder);
+		List<Kind> importergebnis = service.importiereKinder(veranstalterID, schulkuerzel, importDaten);
 
 		// Assert
 		assertEquals(1, importergebnis.size());

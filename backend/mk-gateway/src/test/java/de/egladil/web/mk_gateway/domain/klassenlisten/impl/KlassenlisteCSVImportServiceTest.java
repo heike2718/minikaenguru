@@ -127,7 +127,7 @@ public class KlassenlisteCSVImportServiceTest {
 					e.getMessage());
 
 				verify(klassenService, never()).importiereKlassen(any(), any(), anyList());
-				verify(kinderService, never()).importiereKinder(any(), any(), any(), any());
+				verify(kinderService, never()).importiereKinder(any(), any(), any());
 				verify(kinderService, never()).findWithSchulteilname(any());
 				verify(klassenService, never()).klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID);
 				verify(uploadRepository, never()).updateUpload(persistenterUpload);
@@ -177,7 +177,7 @@ public class KlassenlisteCSVImportServiceTest {
 					.withLandkuerzel("DE-HE").withNachname("Hinremöller").withSprache(Sprache.de).withVorname("Lucie"));
 
 			when(klassenService.importiereKlassen(any(), any(), anyList())).thenReturn(klassen);
-			when(kinderService.importiereKinder(any(), any(), any(), any())).thenReturn(kinder);
+			when(kinderService.importiereKinder(any(), any(), any())).thenReturn(kinder);
 			when(kinderService.findWithSchulteilname(any())).thenReturn(vorhandeneKinder);
 			when(klassenService.klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID)).thenReturn(klassenAPIModels);
 			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
@@ -203,7 +203,7 @@ public class KlassenlisteCSVImportServiceTest {
 			assertEquals(0, fehlermeldungen.size());
 
 			verify(klassenService).importiereKlassen(any(), any(), anyList());
-			verify(kinderService).importiereKinder(any(), any(), any(), any());
+			verify(kinderService).importiereKinder(any(), any(), any());
 			verify(kinderService).findWithSchulteilname(any());
 			verify(klassenService).klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID);
 			verify(uploadRepository).updateUpload(persistenterUpload);
@@ -228,8 +228,12 @@ public class KlassenlisteCSVImportServiceTest {
 				new Kind(new Identifier("shdiqhio")).withKlasseID(new Identifier("uuid-2a")).withKlassenstufe(Klassenstufe.ZWEI)
 					.withLandkuerzel("DE-HE").withNachname("Fichtenholz").withSprache(Sprache.de).withVorname("Genadi"));
 
+			vorhandeneKinder.add(
+				new Kind(new Identifier("lhsdugui")).withKlasseID(new Identifier("uuid-2a")).withKlassenstufe(Klassenstufe.ZWEI)
+					.withLandkuerzel("DE-HE").withNachname("Lang").withSprache(Sprache.de).withVorname("Ellen"));
+
 			when(klassenService.importiereKlassen(any(), any(), anyList())).thenReturn(klassen);
-			when(kinderService.importiereKinder(any(), any(), any(), any())).thenReturn(kinder);
+			when(kinderService.importiereKinder(any(), any(), any())).thenReturn(kinder);
 			when(kinderService.findWithSchulteilname(any())).thenReturn(vorhandeneKinder);
 			when(klassenService.klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID)).thenReturn(klassenAPIModels);
 			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
@@ -256,7 +260,7 @@ public class KlassenlisteCSVImportServiceTest {
 
 			fehlerUndWarnungen.stream().forEach(m -> System.out.println(m));
 
-			assertEquals(4, fehlerUndWarnungen.size());
+			assertEquals(5, fehlerUndWarnungen.size());
 
 			assertEquals(
 				"Zeile 1: Fehler! \"Amiera; Maria;Kaled;2a;2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
@@ -269,11 +273,15 @@ public class KlassenlisteCSVImportServiceTest {
 				fehlerUndWarnungen.get(2));
 
 			assertEquals(
-				"Zeile 6: Thomas; Grütze;2b;2: In Klasse 2b gibt es bereits ein Kind mit diesem Namen und dieser Klassenstufe",
+				"Zeile 5: \"Ellen;Lang;2a;2\" In Klasse 2a gibt es bereits ein Kind mit diesem Namen und dieser Klassenstufe",
 				fehlerUndWarnungen.get(3));
 
+			assertEquals(
+				"Zeile 6: Thomas; Grütze;2b;2: In Klasse 2b gibt es bereits ein Kind mit diesem Namen und dieser Klassenstufe",
+				fehlerUndWarnungen.get(4));
+
 			verify(klassenService).importiereKlassen(any(), any(), anyList());
-			verify(kinderService).importiereKinder(any(), any(), any(), any());
+			verify(kinderService).importiereKinder(any(), any(), any());
 			verify(kinderService).findWithSchulteilname(any());
 			verify(klassenService).klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID);
 			verify(uploadRepository).updateUpload(persistenterUpload);

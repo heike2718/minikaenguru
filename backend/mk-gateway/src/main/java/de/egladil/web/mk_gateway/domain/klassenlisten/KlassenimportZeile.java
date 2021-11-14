@@ -31,8 +31,7 @@ public class KlassenimportZeile {
 	@Override
 	public String toString() {
 
-		return "KlassenimportZeile [vorname=" + vorname + ", nachname=" + nachname + ", klasse=" + klasse + ", klassenstufe="
-			+ klassenstufe + "]";
+		return "KlassenimportZeile [" + importRohdaten + "]";
 	}
 
 	@Override
