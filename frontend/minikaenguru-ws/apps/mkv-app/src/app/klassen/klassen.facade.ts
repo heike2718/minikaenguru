@@ -182,6 +182,13 @@ export class KlassenFacade {
 
 	}
 
+	public prepareShowUpload(): void {
+		
+		this.messageService.clear();
+
+		this.store.dispatch(KlassenActions.navigatedToUploads());
+	}
+
 	public klassenlisteImportiert(responsePayload: ResponsePayload): void {
 
 		if (responsePayload.data) {

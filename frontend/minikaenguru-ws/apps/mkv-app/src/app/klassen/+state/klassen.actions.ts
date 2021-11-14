@@ -90,6 +90,10 @@ export const klassenlisteImportiert = createAction(
 	props<{report: KlassenlisteImportReport}>()
 );
 
+export const navigatedToUploads = createAction(
+	'[KlassenFacade] prepareShowUpload'
+);
+
 export const resetModule = createAction(
 	'[KlassenFacade] reset'
 );
