@@ -12,6 +12,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { KindEditorResolver } from './kind-editor/kind-editor.resolver';
 import { KlasseWechselnComponent } from './klasse-wechseln/klasse-wechseln.component';
 import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
+import { KlassenModule } from '../klassen/klassen.module';
 
 
 
@@ -25,6 +26,7 @@ import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
 	imports: [
 		CommonModule,
 		CommonComponentsModule,
+		KlassenModule,
 		ReactiveFormsModule,
 		KinderRoutingModule,
 		NgbModule,

@@ -53,6 +53,11 @@ export class KlasseDetailsComponent implements OnInit, OnDestroy {
 
 	}
 
+	onCheckboxKlasseKorrigiertClicked(event: boolean) {
+		if (event) {
+			this.klassenFacade.markKlasseKorrigiert(this.klasse.uuid);
+		}		
+	}
 
 	editKlasse(): void {
 		this.klassenFacade.editKlasse(this.klasse);
@@ -63,6 +68,7 @@ export class KlasseDetailsComponent implements OnInit, OnDestroy {
 	gotoKinder(): void {
 		this.klassenFacade.insertUpdateKinder(this.klasse);
 	}
+	
 
 	deleteKlasse(): void {
 

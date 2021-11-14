@@ -217,6 +217,30 @@ const klassenReducer = createReducer(initialKlassenState,
 		}
 
 		return {...state, loading: false, klassenMap: neueMap, importReport: action.report};
+	}),
+
+	on(KlassenActions.markKlasseKorrigiert, (state, action) => {
+
+		const klasseID = action.klasseID;
+
+		if (state.selectedKlasse) {
+			const selectedKlasse = state.selectedKlasse;
+			if (klasseID === state.selectedKlasse.uuid) {
+				const neueKlasse: Klasse = {...selectedKlasse, anzahlKinderZuPruefen: 0};
+				const neueKlassenmap: KlasseWithID[] = new KlassenMap(state.klassenMap).merge(neueKlasse);
+				return {...state, klassenMap: neueKlassenmap, selectedKlasse: neueKlasse};
+			}
+		}
+
+		const klassenMap = new KlassenMap(state.klassenMap);
+
+		if (klassenMap.has(klasseID)) {
+			let geaenderteKlasse = {...klassenMap.get(klasseID), anzahlKinderZuPruefen: 0} as Klasse;
+			const neueKlassenmap: KlasseWithID[] = klassenMap.merge(geaenderteKlasse);
+			return {...state, klassenMap: neueKlassenmap};
+		}
+
+		return {...state};
 	})
 
 );

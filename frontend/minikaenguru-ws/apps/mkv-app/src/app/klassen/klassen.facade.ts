@@ -202,6 +202,11 @@ export class KlassenFacade {
 
 	};
 
+	public markKlasseKorrigiert(klasseID: string): void {
+
+		this.store.dispatch(KlassenActions.markKlasseKorrigiert({klasseID: klasseID}));
+	}
+
 	public resetState(): void {
 		this.kinderFacade.resetState();
 		this.store.dispatch(KlassenActions.resetModule());

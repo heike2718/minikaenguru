@@ -13,6 +13,7 @@ import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
 import { UploadKlassenlistenComponent } from './upload-klassenlisten/upload-klassenlisten.component';
 import { ImportReportComponent } from './import-report/import-report.component';
 import { ImportFehlerComponent } from './import-fehler/import-fehler.component';
+import { KlasseGeprueftComponent } from './klassen-geprueft/klasse-geprueft.component';
 
 
 
@@ -24,7 +25,8 @@ import { ImportFehlerComponent } from './import-fehler/import-fehler.component';
 		KlasseNameValidatorDirective,
   		UploadKlassenlistenComponent,
   		ImportReportComponent,
-  		ImportFehlerComponent
+  		ImportFehlerComponent,
+		KlasseGeprueftComponent
 	],
 	imports: [
 		CommonModule,
@@ -33,6 +35,9 @@ import { ImportFehlerComponent } from './import-fehler/import-fehler.component';
 		NgbModule,
 		KlassenRoutingModule,
 		StoreModule.forFeature(fromKlassen.klassenFeatureKey, fromKlassen.reducer)
+	],
+	exports: [
+		KlasseGeprueftComponent
 	]
 })
 export class KlassenModule { }

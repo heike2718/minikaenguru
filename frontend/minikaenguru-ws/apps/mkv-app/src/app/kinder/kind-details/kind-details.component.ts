@@ -178,10 +178,6 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 		this.router.navigateByUrl('/loesungszettel');
 	}
 
-	confirmKlassenstufe(): void {
-
-	}
-
 	onCheckboxKlassenstufeClicked(event: boolean) {
 		if (event) {
 			this.kinderFacade.markKlassenstufeKorrekt(this.kind, this.selectedSchule);
