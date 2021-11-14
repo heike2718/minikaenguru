@@ -30,6 +30,7 @@ export class KlassenFacade {
 	public editorModel$: Observable<KlasseEditorModel | undefined> = this.store.select(KlassenSelectors.klasseEditorModel);
 	public klassenMap$: Observable<KlasseWithID[]> = this.store.select(KlassenSelectors.klassenMap);
 	public selectedKlasse$: Observable<Klasse | undefined> = this.store.select(KlassenSelectors.selectedKlasse);
+	public anzahlKinder$: Observable<number> = this.store.select(KlassenSelectors.anzahlKinder);
 	public anzahlLoesungszettel$: Observable<number> = this.store.select(KlassenSelectors.anzahlLoesungszettel);
 	public klassenimportReport$ : Observable<KlassenlisteImportReport | undefined> = this.store.select(KlassenSelectors.klassenimportReport);
 
@@ -205,6 +206,29 @@ export class KlassenFacade {
 	public markKlasseKorrigiert(klasseID: string): void {
 
 		this.store.dispatch(KlassenActions.markKlasseKorrigiert({klasseID: klasseID}));
+	}
+
+	public alleKlassenLoeschen(schulkuerzel: string | undefined): void {
+		
+		if (!schulkuerzel) {
+			return;
+		}
+
+		this.klassenService.deleteAllKlassen(schulkuerzel).subscribe(
+
+			(rp: ResponsePayload) => {
+
+				if (rp.message.level === 'INFO') {
+					this.messageService.showMessage(rp.message);
+					this.store.dispatch(KinderActions.resetModule());
+					this.store.dispatch(KlassenActions.alleKlassenGeloescht());
+				}
+			},
+			(error => {
+				this.store.dispatch(KlassenActions.finishedLoadig());
+				this.errorHandler.handleError(error);
+			})
+		);
 	}
 
 	public resetState(): void {

@@ -26,6 +26,16 @@
 					(click)="gotoSchulauswertung()"><i class="fa fa-graduation-cap" aria-hidden="true"></i>Urkunden
 					generieren</button>
 
+				<ng-container *ngIf="anzahlKinder > 0 && (klassenFacade.anzahlKlassen$ | async) as anzahl">
+					<button *ngIf="anzahl > 0" class="btn btn-danger w-100 ml-1"
+						(click)="deleteKlassen()"><i class="fa fa-trash" aria-hidden="true"></i>alle Klassen löschen</button>				
+				</ng-container>
+	
+				<ng-container *ngIf="anzahlKinder === 0 && (klassenFacade.anzahlKlassen$ | async) as anzahl">
+					<button *ngIf="anzahl > 0" class="btn btn-primary w-100 ml-1"
+						(click)="forceDeleteKlassen()"><i class="fa fa-trash" aria-hidden="true"></i>alle Klassen löschen</button>				
+				</ng-container>
+
 				<button *ngIf="schule" class="btn btn-primary w-100 ml-1" (click)="gotoDashboard()"
 					title="{{tooltipBtnSchuluebersicht}}"><i class="fa fa-arrow-left"
 						aria-hidden="true"></i>Schulübersicht</button>
@@ -46,10 +56,19 @@
 					(click)="gotoSchulauswertung()"><i class="fa fa-graduation-cap" aria-hidden="true"></i>Urkunden
 					generieren</button>
 
+				<ng-container *ngIf="anzahlKinder > 0 && (klassenFacade.anzahlKlassen$ | async) as anzahl">
+					<button *ngIf="anzahl > 0" class="btn btn-danger w-100 ml-1"
+						(click)="deleteKlassen()"><i class="fa fa-trash" aria-hidden="true"></i>alle Klassen löschen</button>
+				</ng-container>
+
+				<ng-container *ngIf="anzahlKinder === 0 && (klassenFacade.anzahlKlassen$ | async) as anzahl">
+					<button *ngIf="anzahl > 0" class="btn btn-primary w-100 ml-1"
+						(click)="forceDeleteKlassen()"><i class="fa fa-trash" aria-hidden="true"></i>alle Klassen löschen</button>
+				</ng-container>
+
 				<button *ngIf="schule" class="btn btn-primary w-100 ml-1" (click)="gotoDashboard()"
 					title="{{tooltipBtnSchuluebersicht}}"><i class="fa fa-arrow-left"
 						aria-hidden="true"></i>Schulübersicht</button>
-
 			</div>
 		</div>
 	</div>
@@ -58,4 +77,23 @@
 <ng-template #loading>
 	<h3>Klassen</h3>
 	Lade Klassen... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
+</ng-template>
+
+<ng-template #loeschenWarndialog let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">Alle Klassen löschen</h4>
+		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<p><strong>Sind Sie sicher, dass Sie alle Klassen der Schule {{schule?.name}} löschen möchten?</strong></p>
+		<p>Alle Kinder und alle Daten der Kinder werden vollständig gelöscht. <span class="text-danger">Das kann nicht
+				rückgängig
+				gemacht werden.</span></p>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('nein')">besser nicht löschen</button>
+		<button type="button" class="btn btn-danger" (click)="modal.close('ja')">löschen</button>
+	</div>
 </ng-template>

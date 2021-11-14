@@ -117,4 +117,17 @@ export class KlassenMap {
 		return count;
 
 	}
+
+	public countKinder(): number {
+
+		let count = 0;
+
+		for (const item of this.items) {
+
+			count+= item.klasse.anzahlKinder;
+		}
+
+		return count;
+
+	}
 };

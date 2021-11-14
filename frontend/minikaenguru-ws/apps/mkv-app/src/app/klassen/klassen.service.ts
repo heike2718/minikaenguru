@@ -54,6 +54,13 @@ export class KlassenService {
 
 	}
 
+	public deleteAllKlassen(schulkuerzel: string): Observable<ResponsePayload> {
 
+		const url = environment.apiUrl + '/lehrer/schulen/' + schulkuerzel + '/klassen';
+		
+		return this.http.delete(url).pipe(
+			map(body => body as ResponsePayload)
+		);
 
+	}
 }

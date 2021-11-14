@@ -25,6 +25,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
@@ -352,7 +354,14 @@ public class KlassenServiceImpl implements KlassenService {
 
 		this.authorizeAction(schulkuerzel, lehrerUuid, "klasseLoeschen");
 
-		List<Kind> kinder = kinderService.findKinderMitKlasseWithoutAuthorization(klasseID,
+		this.deleteKlasseWithoutAuthorizationCheck(schulkuerzel, klasse, lehrerUuid);
+
+		return KlasseAPIModel.createFromKlasse(klasse);
+	}
+
+	boolean deleteKlasseWithoutAuthorizationCheck(final String schulkuerzel, final Klasse klasse, final String lehrerUuid) {
+
+		List<Kind> kinder = kinderService.findKinderMitKlasseWithoutAuthorization(klasse.identifier(),
 			new TeilnahmeIdentifierAktuellerWettbewerb(schulkuerzel, Teilnahmeart.SCHULE));
 
 		if (!kinder.isEmpty()) {
@@ -361,10 +370,9 @@ public class KlassenServiceImpl implements KlassenService {
 
 				kinderService.kindLoeschenWithoutAuthorizationCheck(kind, lehrerUuid);
 			}
-
 		}
 
-		klassenRepository.removeKlasse(klasse);
+		boolean result = klassenRepository.removeKlasse(klasse);
 
 		klasseDeleted = (KlasseDeleted) new KlasseDeleted(lehrerUuid)
 			.withKlasseID(klasse.identifier().identifier())
@@ -378,7 +386,25 @@ public class KlassenServiceImpl implements KlassenService {
 
 			System.out.println(klasseDeleted.serializeQuietly());
 		}
-		return KlasseAPIModel.createFromKlasse(klasse);
+
+		return result;
+
+	}
+
+	@Override
+	@Transactional
+	public ResponsePayload alleKlassenLoeschen(final Identifier schuleId, final String lehrerUuid) {
+
+		this.authorizeAction(schuleId.identifier(), lehrerUuid, "alleKlassenLoeschen");
+
+		List<Klasse> klassen = klassenRepository.findKlassenWithSchule(schuleId);
+
+		for (Klasse klasse : klassen) {
+
+			this.deleteKlasseWithoutAuthorizationCheck(schuleId.identifier(), klasse, lehrerUuid);
+		}
+
+		return ResponsePayload.messageOnly(MessagePayload.info(applicationMessages.getString("deleteAllKlassen.success")));
 	}
 
 	@Override

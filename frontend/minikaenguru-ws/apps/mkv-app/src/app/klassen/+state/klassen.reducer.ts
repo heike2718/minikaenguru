@@ -241,6 +241,11 @@ const klassenReducer = createReducer(initialKlassenState,
 		}
 
 		return {...state};
+	}),
+
+	on(KlassenActions.alleKlassenGeloescht, (_state, _action) => {
+
+		return initialKlassenState;
 	})
 
 );
