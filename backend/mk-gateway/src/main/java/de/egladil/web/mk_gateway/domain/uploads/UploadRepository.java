@@ -27,6 +27,12 @@ public interface UploadRepository {
 	Optional<PersistenterUpload> findUploadByIdentifier(UploadIdentifier uploadIdentifier);
 
 	/**
+	 * @param  uuid
+	 * @return
+	 */
+	Optional<PersistenterUpload> findByUuid(String uuid);
+
+	/**
 	 * @param  upload
 	 * @return        PersistenterUpload
 	 */

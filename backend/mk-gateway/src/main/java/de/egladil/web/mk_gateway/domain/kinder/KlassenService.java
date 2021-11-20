@@ -87,5 +87,4 @@ public interface KlassenService {
 	 * @return
 	 */
 	List<Klasse> importiereKlassen(Identifier lehrerID, Identifier schuleID, List<KlasseRequestData> klassendaten);
-
 }

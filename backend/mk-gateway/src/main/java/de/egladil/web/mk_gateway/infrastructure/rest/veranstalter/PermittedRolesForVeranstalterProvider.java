@@ -173,6 +173,9 @@ public final class PermittedRolesForVeranstalterProvider {
 
 			result.put((new PathWithMethod("/klassen/*", HttpMethod.DELETE)),
 				rollen);
+
+			result.put((new PathWithMethod("/klassen/importreport/*", HttpMethod.GET)),
+				rollen);
 		}
 
 		{

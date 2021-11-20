@@ -49,13 +49,6 @@
 				<div *ngIf="klassenFacade.klassenimportReport$ | async">
 					<mkv-import-report></mkv-import-report>
 				</div>
-<!--
-				<div *ngIf="fehlermeldungen$| async as fehlermeldungen">
-					<p *ngIf="fehlermeldungen.length > 0">Es gab Fehler:</p>
-					<div *ngFor="let fehler of fehlermeldungen; let indexOfelement=index;" class="col-12">
-						{{indexOfelement+1}}: {{fehler}}</div>
-				</div>
-			-->
 			</div>
 			
 	</ng-container>

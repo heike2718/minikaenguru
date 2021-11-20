@@ -81,6 +81,14 @@ public class UploadHibernateRepository implements UploadRepository {
 	}
 
 	@Override
+	public Optional<PersistenterUpload> findByUuid(final String uuid) {
+
+		PersistenterUpload result = entityManager.find(PersistenterUpload.class, uuid);
+
+		return result != null ? Optional.of(result) : Optional.empty();
+	}
+
+	@Override
 	public PersistenterUpload addUploadMetaData(final PersistenterUpload upload) {
 
 		entityManager.persist(upload);

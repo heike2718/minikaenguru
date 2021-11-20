@@ -20,6 +20,8 @@
             <div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let fehler of report.fehlerUndWarnungen">
               <mkv-import-fehler [fehler]="fehler"></mkv-import-fehler>
             </div>
+            <mk-download-button class="w-100 ml-1" [model]="importReportDownloadModel">
+            </mk-download-button>
           </div>          
         </div>
       </div>

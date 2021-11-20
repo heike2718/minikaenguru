@@ -5,6 +5,7 @@
 package de.egladil.web.mk_gateway.domain.klassenlisten;
 
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 
 /**
@@ -23,5 +24,14 @@ public interface KlassenlisteImportService {
 	 * @return                           ResponsePayload mit einem KlassenlisteImportReport - Payload
 	 */
 	ResponsePayload importiereKinder(final UploadKlassenlisteContext uploadKlassenlisteContext, final PersistenterUpload uploadMetadata);
+
+	/**
+	 * Stellt die CSV-Datei mit dem Importfehlerreport zur Verfügung.
+	 *
+	 * @param  lehrerUuid
+	 * @param  reportUuid
+	 * @return            DownloadData
+	 */
+	DownloadData getImportReport(String lehrerUuid, String reportUuid);
 
 }

@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
+import javax.ws.rs.NotFoundException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -28,6 +29,8 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.AuthorizationService;
+import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
@@ -72,6 +75,9 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 	String pathExternalFiles;
 
 	@Inject
+	AuthorizationService authService;
+
+	@Inject
 	KlassenService klassenService;
 
 	@Inject
@@ -85,6 +91,7 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 	public static KlassenlisteImportService createForIntegrationTests(final EntityManager em) {
 
 		KlassenlisteCSVImportService result = new KlassenlisteCSVImportService();
+		result.authService = AuthorizationService.createForIntegrationTest(em);
 		result.klassenService = KlassenServiceImpl.createForIntegrationTest(em);
 		result.kinderService = KinderServiceImpl.createForIntegrationTest(em);
 		result.uploadRepository = UploadHibernateRepository.createForIntegrationTests(em);
@@ -426,6 +433,30 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 		List<Kind> kinder = this.kinderService.importiereKinder(veranstalterID, schulkuerzel, importDaten);
 
 		return new KlassenImportErgebnis(kinderImportDaten, kinder);
+	}
+
+	@Override
+	public DownloadData getImportReport(final String lehrerUuid, final String reportUuid) {
+
+		Optional<PersistenterUpload> optUpload = uploadRepository.findByUuid(reportUuid);
+
+		if (optUpload.isEmpty()) {
+
+			throw new NotFoundException();
+		}
+
+		PersistenterUpload uploadMetadata = optUpload.get();
+
+		Identifier schuleIdentifier = new Identifier(uploadMetadata.getTeilnahmenummer());
+
+		authService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(lehrerUuid),
+			schuleIdentifier, "[getVertragAuftragsdatenverarbeitung - " + uploadMetadata.getTeilnahmenummer() + "]");
+
+		String pathFehlerreport = getUploadDir() + File.separator + uploadMetadata.getUuid() + "-fehlerreport.csv";
+
+		byte[] data = MkGatewayFileUtils.readBytesFromFile(pathFehlerreport);
+
+		return new DownloadData(uploadMetadata.getUuid() + "-fehlerreport.csv", data);
 	}
 
 	List<KindCreated> getKindCreatedEventPayloads() {

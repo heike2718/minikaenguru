@@ -34,7 +34,7 @@ public class KlassenlisteImportReport {
 	@JsonProperty
 	private long anzahlDubletten;
 
-	@JsonProperty
+	@JsonProperty("id")
 	private String uuidImportReport;
 
 	@JsonProperty

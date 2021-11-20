@@ -175,6 +175,10 @@ export class KlassenFacade {
 		);
 	}
 
+	downloadImportFehlerreport(): void {
+		
+	}
+
 	public dateiAusgewaelt(): void {
 
 		this.messageService.clear();

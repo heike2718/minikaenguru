@@ -12,6 +12,7 @@ export interface KlasseWithID {
 };
 
 export interface KlassenlisteImportReport {
+	readonly id: string;
 	readonly anzahlKlassen: number;
 	readonly anzahlKlassenImportiert: number;
 	readonly anzahlKinderImportiert: number;

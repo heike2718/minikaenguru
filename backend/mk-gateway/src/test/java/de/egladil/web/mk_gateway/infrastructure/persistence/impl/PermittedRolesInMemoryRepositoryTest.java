@@ -373,6 +373,17 @@ public class PermittedRolesInMemoryRepositoryTest {
 		}
 
 		@Test
+		void should_permittedRollen_klassenImportreport_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/klassen/importreport/zuitz-9698", HttpMethod.GET);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.LEHRER));
+		}
+
+		@Test
 		void should_permittedRollen_loesungszettel_beOk() {
 
 			{
