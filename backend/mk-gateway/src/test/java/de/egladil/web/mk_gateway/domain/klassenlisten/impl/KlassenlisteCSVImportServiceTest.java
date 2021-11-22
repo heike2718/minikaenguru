@@ -244,7 +244,7 @@ public class KlassenlisteCSVImportServiceTest {
 			MessagePayload messagePayload = responsePayload.getMessage();
 			assertEquals("WARN", messagePayload.getLevel());
 			assertEquals(
-				"Einige Kinder konnten nicht importiert werden. Einen Fehlerreport können Sie mit dem Link herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
+				"Einige Kinder konnten nicht importiert werden. Den Fehlerreport können Sie herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
 				messagePayload.getMessage());
 
 			assertNotNull(responsePayload.getData());
@@ -315,7 +315,7 @@ public class KlassenlisteCSVImportServiceTest {
 
 				// Assert
 				assertEquals(
-					"Einige Kinder konnten nicht importiert werden. Einen Fehlerreport können Sie mit dem Link herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert.",
+					"Einige Kinder konnten nicht importiert werden. Den Fehlerreport können Sie herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert.",
 					msg);
 
 			}
@@ -328,7 +328,7 @@ public class KlassenlisteCSVImportServiceTest {
 
 				// Assert
 				assertEquals(
-					"Einige Kinder konnten nicht importiert werden. Einen Fehlerreport können Sie mit dem Link herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert.",
+					"Einige Kinder konnten nicht importiert werden. Den Fehlerreport können Sie herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert.",
 					msg);
 
 			}
@@ -341,7 +341,7 @@ public class KlassenlisteCSVImportServiceTest {
 
 				// Assert
 				assertEquals(
-					"Einige Kinder konnten nicht importiert werden. Einen Fehlerreport können Sie mit dem Link herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert.",
+					"Einige Kinder konnten nicht importiert werden. Den Fehlerreport können Sie herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert.",
 					msg);
 
 			}
@@ -354,7 +354,7 @@ public class KlassenlisteCSVImportServiceTest {
 
 				// Assert
 				assertEquals(
-					"Einige Kinder konnten nicht importiert werden. Einen Fehlerreport können Sie mit dem Link herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert.",
+					"Einige Kinder konnten nicht importiert werden. Den Fehlerreport können Sie herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert.",
 					msg);
 
 			}
@@ -406,7 +406,7 @@ public class KlassenlisteCSVImportServiceTest {
 
 				// Assert
 				assertEquals(
-					"Die Klassenliste konnte nicht importiert werden: alle Zeilen waren fehlerhaft. Bitte prüfen Sie die hochgeladene Datei. Einen Fehlerreport können Sie mit dem Link herunterladen.",
+					"Die Klassenliste konnte nicht importiert werden: alle Zeilen waren fehlerhaft. Bitte prüfen Sie die hochgeladene Datei. Den Fehlerreport können Sie herunterladen.",
 					msg);
 
 			}
@@ -436,7 +436,7 @@ public class KlassenlisteCSVImportServiceTest {
 
 				// Assert
 				assertEquals(
-					"Einige Kinder konnten nicht importiert werden. Einen Fehlerreport können Sie mit dem Link herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
+					"Einige Kinder konnten nicht importiert werden. Den Fehlerreport können Sie herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
 					msg);
 
 			}
@@ -449,7 +449,7 @@ public class KlassenlisteCSVImportServiceTest {
 
 				// Assert
 				assertEquals(
-					"Einige Kinder konnten nicht importiert werden. Einen Fehlerreport können Sie mit dem Link herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
+					"Einige Kinder konnten nicht importiert werden. Den Fehlerreport können Sie herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
 					msg);
 
 			}
@@ -462,7 +462,7 @@ public class KlassenlisteCSVImportServiceTest {
 
 				// Assert
 				assertEquals(
-					"Einige Kinder konnten nicht importiert werden. Einen Fehlerreport können Sie mit dem Link herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
+					"Einige Kinder konnten nicht importiert werden. Den Fehlerreport können Sie herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
 					msg);
 
 			}
@@ -475,7 +475,7 @@ public class KlassenlisteCSVImportServiceTest {
 
 				// Assert
 				assertEquals(
-					"Einige Kinder konnten nicht importiert werden. Einen Fehlerreport können Sie mit dem Link herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
+					"Einige Kinder konnten nicht importiert werden. Den Fehlerreport können Sie herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
 					msg);
 
 			}
@@ -527,7 +527,7 @@ public class KlassenlisteCSVImportServiceTest {
 
 				// Assert
 				assertEquals(
-					"Die Klassenliste konnte nicht importiert werden: alle Zeilen waren fehlerhaft. Bitte prüfen Sie die hochgeladene Datei. Einen Fehlerreport können Sie mit dem Link herunterladen.",
+					"Die Klassenliste konnte nicht importiert werden: alle Zeilen waren fehlerhaft. Bitte prüfen Sie die hochgeladene Datei. Den Fehlerreport können Sie herunterladen.",
 					msg);
 
 			}

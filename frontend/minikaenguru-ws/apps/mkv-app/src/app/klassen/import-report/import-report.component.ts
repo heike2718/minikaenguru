@@ -22,15 +22,17 @@ export class ImportReportComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.importReportSubscription = this.klassenFacade.klassenimportReport$.subscribe( r => {
-      this.importReportDownloadModel = {
-        id: '',
-        url: environment.apiUrl + '/klassen/importreport/{uuid}',
-        dateiname: 'importreport-' + r?.id + '.csv',
-        mimetype: 'csv',
-        buttonLabel: 'speichern',
-        tooltip: 'Fehlerreport speichern',
-        class: 'btn btn-outline-dark w-100 ml-1'
-      };
+      if (r) {
+        this.importReportDownloadModel = {
+          id: 'import-report-' + r.id.substr(0,8),
+          url: environment.apiUrl + '/klassen/importreport/' + r.id,
+          dateiname: 'importreport-' + r?.id + '.csv',
+          mimetype: 'csv',
+          buttonLabel: 'Fehlerreport speichern',
+          tooltip: 'Fehlerreport speichern',
+          class: 'btn btn-outline-dark w-100 ml-1'
+        };
+      }
     });
   }
 

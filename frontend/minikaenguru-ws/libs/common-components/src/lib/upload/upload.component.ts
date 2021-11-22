@@ -81,6 +81,7 @@ export class UploadComponent implements OnInit {
 				this.canSubmit = true;
 				const msg: Message = this.errorMapper.extractMessageObject(error);
 				this.responsePayload.emit({ message: msg });
+				window.scroll(0,0);
 			})
 		);		
 	}
