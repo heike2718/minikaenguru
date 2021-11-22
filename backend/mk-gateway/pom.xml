@@ -15,13 +15,13 @@
 		<poi.version>5.0.0</poi.version>
 		<quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
 		<quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-		<quarkus.platform.version>2.1.2.Final</quarkus.platform.version>
+		<quarkus.platform.version>2.4.2.Final</quarkus.platform.version>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<surefire-plugin.version>2.22.0</surefire-plugin.version>
-		<dependency-check.version>6.1.6</dependency-check.version>
+		<surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
+		<dependency-check.version>6.5.0</dependency-check.version>
 	</properties>
 
 

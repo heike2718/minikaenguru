@@ -36,9 +36,12 @@ image::./images/startseite-hauptmenue-sign-up.png[width=60%]
 Mit einem Klick auf den Menüpunkt "Konto anlegen", der im Bild rot umrandet ist, gelangen Sie in folgendes Formular:
 
 
-image::./images/konto-anlegen-einstieg.png[width=60%]
+image::./images/konto-anlegen-einstieg-kein-newsletter.png[width=60%]
 
 Sie können auswählen, ob Sie Mailbenachrichtigungen erhalten möchten. Informationen hierzu sehen Sie nach einem Klick auf "Info".
+
+image::./images/konto-anlegen-einstieg-kein-newsletterinfo.png[width=60%]
+
 Nach dem Anlegen des Kontos können Sie Ihre Entscheidung in der Minikänguru-Anwendung jederzeit ändern.
 
 Klicken Sie nun bitte auf die Schaltfläche "Lehrer/Lehrerin". Privatkonten sind nicht geeignet, um den Wettbewerb an einer Schule durchzuführen.
@@ -85,47 +88,37 @@ Ihr Name wird allen Kolleginnen und Kollegen Ihrer Schule ebenfalls angezeigt.
 
 Ihre Mailadresse wird zu keiner Zeit in der Anwendung sichbar sein. Die Mailadresse benötigen Sie, um sich später einzuloggen.
 
-Ist das Formular vollständig ausgefüllt, senden Sie es bitte mit Klick auf die Schaltfläche "registrieren" ab. Anschließend sollten Sie
-eine Erfolgsmeldung sehen:
+Ist das Formular vollständig ausgefüllt, senden Sie es bitte mit Klick auf die Schaltfläche "registrieren" ab. Anschließend sollten Sie eine Erfolgsmeldung sehen:
 
 image::./images/benutzerkonto-angelegt-info.png[width=70%]
 
-Die Information enthält den Hinweis, dass das Konto noch aktiviert werden muss. Hierzu wurde an die Mailadresse, die Sie in das Formular eingetragen hatten,
-eine Mail mit einem Aktivierungslink versendet, der 24h gültig ist.
+Die Information enthält den Hinweis, dass das Konto noch aktiviert werden muss. Hierzu wurde an die Mailadresse, die Sie in das Formular eingetragen hatten, eine Mail mit einem Aktivierungslink versendet, der 24h gültig ist.
 
-Die Mail erhalten Sie innerhalb weniger Minuten. Sollten Sie sie nicht finden, schauen Sie bitte zunächst nach, ob Ihr Mailprogramm sie als Spam
-verschoben hat. Falls nicht, könnte es sein, dass Sie einen Tippfehler in der Mailadresse hatten oder die Mail nicht zugestellt werden konnte,
-weil Ihr Postfach voll ist.
+Die Mail erhalten Sie innerhalb weniger Minuten. Sollten Sie sie nicht finden, schauen Sie bitte zunächst nach, ob Ihr Mailprogramm sie als Spam verschoben hat. Falls nicht, könnte es sein, dass Sie einen Tippfehler in der Mailadresse hatten oder die Mail nicht zugestellt werden konnte, weil Ihr Postfach voll ist.
 
-Wenn Sie die Mail erhalten haben, klicken Sie bitte den dort entahltenen Link an. Bitte klicken Sie den link nur an, wenn er so aussieht:
+Wenn Sie die Mail erhalten haben, klicken Sie bitte den dort enthaltenen Link an. Bitte klicken Sie den link nur an, wenn er so aussieht:
 
 image::./images/aktivierungslink.png[width=100%]
 
-Der rot umrandete Teil gehört zu der Webseite opa-wetterwachs.de, die mir gehört. Hinter dem rot umrandeten Teil steht ein Fragezeichen. Daran
-schließt sich der blau umrandete Teil mit einem zufällig generierten Code an. *Nach dem Gleichheitszeichen dürfen nur Buchstaben und Ziffenn stehen*
+Der rot umrandete Teil gehört zu der Webseite opa-wetterwachs.de, die mir gehört. Hinter dem rot umrandeten Teil steht ein Fragezeichen. Daran schließt sich der blau umrandete Teil mit einem zufällig generierten Code an. *Nach dem Gleichheitszeichen dürfen nur Buchstaben und Ziffern stehen*
 
-Wenn Sie dort also Sonderzeichen sehen, z.B. %, & oder ähnliche, handelt es sich nicht um den von mir versendeten Link. Klicken Sie einen Ihnen
-verdächtig erscheinenden Link bitte *nicht* an, sondern nehmen Sie in diesem Fall per Mail Kontakt zu mir auf.
+Wenn Sie dort also Sonderzeichen sehen, z.B. %, & oder ähnliche, handelt es sich nicht um den von mir versendeten Link. Klicken Sie einen Ihnen verdächtig erscheinenden Link bitte *nicht* an, sondern nehmen Sie in diesem Fall per Mail Kontakt zu mir auf.
 
 Schule im Katalog nicht gefunden
 --------------------------------
 
-Wenn Sie Im Schulkatalog bei der Suche nach dem Ort oder der Schule keine Treffer hatten, klicken Sie bitte auf die Schaltflächen "Ort nicht gefunden"
-oder "Schule nicht gefunden", die an verschiedenen Stellen im Formular des Schulkatalogs angezeigt werden.
+Wenn Sie Im Schulkatalog bei der Suche nach dem Ort oder der Schule keine Treffer hatten, klicken Sie bitte auf die Schaltflächen "Ort nicht gefunden" oder "Schule nicht gefunden", die an verschiedenen Stellen im Formular des Schulkatalogs angezeigt werden.
 
 Sie gelangen damit in ein Formular, mit dem Sie Ihre Schule in den Katalog eintragen lassen können:
 
 image::./images/schulkatalogantrag.png[width=70%]
 
-Nach dem Absenden des Formulars erhalten Sie eine Mail an die Mailadresse, die Sie eingegeben hatten. Ich trage die Schule sobald wie möglich ein,
-in der Regel am Abend.
+Nach dem Absenden des Formulars erhalten Sie eine Mail an die Mailadresse, die Sie eingegeben hatten. Ich trage die Schule sobald wie möglich ein, in der Regel am Abend.
 
 
 Sie erhalten eine weitere Mail, wenn ich die Schule in den Katalog eingetragen habe.
 
-Sollten Sie die Mails nicht finden, schauen Sie bitte zunächst nach, ob Ihr Mailprogramm sie als Spam verschoben hat. Falls nicht, könnte es sein,
-dass Sie einen Tippfehler in der Mailadresse hatten oder die Mail nicht zugestellt werden konnte,
-weil Ihr Postfach voll ist.
+Sollten Sie die Mails nicht finden, schauen Sie bitte zunächst nach, ob Ihr Mailprogramm sie als Spam verschoben hat. Falls nicht, könnte es sein, dass Sie einen Tippfehler in der Mailadresse hatten oder die Mail nicht zugestellt werden konnte, weil Ihr Postfach voll ist.
 
 
 Einloggen und Übersichtsseite
@@ -137,34 +130,28 @@ Rufen Sie hierzu die https://mathe-jung-alt.de/mkv-app[Startseite] der Minikäng
 
 image::./images/startseite-hauptmenue-login.png[width=50%]
 
-Mit einem Klick auf den Menüpunkt "einloggen", der im Bild blau umrandet ist, gelangen Sie in ein
-Formular, in dem Sie Ihre Mailadresse und Ihr Passwort eingeben.
+Mit einem Klick auf den Menüpunkt "einloggen", der im Bild blau umrandet ist, gelangen Sie in ein Formular, in dem Sie bitte die Mailadresse und das Passwort eingeben, mit dem Sie das Konto angelegt hatten.
 
 Waren die Angaben korrekt, gelangen Sie auf Ihre Übersichtsseite:
 
 image::./images/dashboard-lehrer.png[width=75%]
 
 Die Kachel "Unterlagen XXXX" sehen Sie nur dann, wenn Sie Ihre Schule (bei mehreren Schulen mindestens eine Schule)
-für das aktuelle Wettbewerbsjahr angemeldet haben und die Unterlagen zum Herunterlagen freigeschaltet sind. Die Termine, an denen die Unterlagen
-freigeschaltet werden, werden in der Startseite der Minikänguru-Anwendung angezeigt. Wenn Sie eingeloggt sind, können Sie sich die Termine durch
-Klick auf den Menüpunkt "Info" anzeigen lassen.
+für das aktuelle Wettbewerbsjahr angemeldet haben *und* die Unterlagen zum Herunterlagen freigeschaltet sind. Die Termine, an denen die Unterlagen freigeschaltet werden, werden in der Startseite der Minikänguru-Anwendung angezeigt. Wenn Sie eingeloggt sind, können Sie sich die Termine jederzeit durch Klick auf den Menüpunkt "Info" anzeigen lassen.
 
 Eigene Schulen
 --------------
 
-Da Sie mit der neuen Minikänguru-Anwendung mit einem Benutzerkonto mehrere Schulen verwalten können,
-sehen Sie auf der Übersichtsseite eine Kachel mit der Aufschrift "Meine Schulen"
+Da Sie mit der Minikänguru-Anwendung mit einem Benutzerkonto mehrere Schulen verwalten können, sehen Sie auf der Übersichtsseite eine Kachel mit der Aufschrift "Meine Schulen".
 
 Der Einstieg in die Schulliste erfolgt von Ihrer Startseite, die Sie nach dem Einloggen sehen, mit einem Klick auf die Kachel
 "Meine Schulen" oder jederzeit über den Menüpunkt "Schulen" im Hauptmenü.
 
 Beide Aktionen öffnen Ihre Schulliste.
 
-Hier sehen Sie die Schulen, bei denen Sie sich als Lehrerin / Lehrer eingetragen haben und welche dieser
-Schulen bereits für den laufenden Minikänguru-Wettbewerb angemeldet sind.
+Hier sehen Sie die Schulen, bei denen Sie sich als Lehrerin / Lehrer eingetragen haben. Schulen, die bereits für den laufenden Minikänguru-Wettbewerb angemeldet sind, sind markiert.
 
 image::./images/schulliste-optionen.png[width=55%]
-
 
 Je nach dem, ob Ihre Schule bereits zum laufenden Wettbewerb angemeldet ist oder nicht, haben Sie in der Schulliste verschiedene
 Optionen. Sie können
@@ -177,6 +164,9 @@ Optionen. Sie können
 Klicken Sie auf die Schaltfläche "neue Schule", wenn Sie sich als Lehrerin oder Lehrer einer weiteren Schule eintragen
 möchten. Sie gelangen dann in den Ihnen bereits von der Registrierung bekannten Schulkatalog siehe Kapitel ("Ein Benutzerkonto anlegen").
 
+*Bitte beachten Sie:* Den Lehrerinnen bzw. Lehrern, die für die jeweilige Schule ebenfalls eingetragen sind, wird Ihr Name
+auf der Übersichtsseite der Schule angezeigt. Ebenso sehen Sie die Namen Ihrer Kolleginnen und Kollegen.
+
 Eine Schule anmelden
 --------------------
 
@@ -185,9 +175,6 @@ Um eine noch nicht angemeldete Schule anzumelden, klicken Sie bitte auf den Butt
 Sie gelangen auf die Übersichtsseite der gewählten Schule:
 
 image::./images/schuluebersicht-nicht-angemeldet.png[width=75%]
-
-*Bitte beachten Sie:* Den Lehrerinnen bzw. Lehrern, die für die jeweilige Schule ebenfalls eingetragen sind, wird Ihr Name
-auf der Übersichtsseite der Schule angezeigt. Ebenso sehen Sie die Namen Ihrer Kolleginnen und Kollegen.
 
 Wenn der Anmeldezeitraum begonnen hat, sehen Sie eine Kachel mit der Aufschrift "Anmelden". Sie melden
 die Schule für den laufenden Wettbewerb durch einen Klick auf diese Kachel an.
@@ -201,11 +188,35 @@ unterstützen:
 
 image::./images/schuluebersicht-angemeldet.png[width=75%]
 
+Klassenlisten mit Excel hochladen
+------------------------------
+
+Mit der neuen Version der Minikänguru-Anwendung haben Sie die Möglichkeit, Ihre Kinder mit Hilfe von Excel-Tabellen
+hochzuladen. Das erspart das zeitaufwendige Eintragen der Kinder Ihrer Schule.
+
+Format der Excel-Datei zum Hochladen der Klassenlisten
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Maske zum Hochladen der Klassenlisten
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Um Klassenlisten für den Wettbewerb hochzuladen, klicken Sie bitte in der Schuübersicht auf die Kachel "Auswertung XXXX":
+
+image::./images/schuluebersicht-angemeldet.png[width=75%]
+
+Mit einem Klick auf die Schaltfläche "Klassenlisten hochladen" gelangen Sie in die Ansicht "Klassenlisten hochladen":
+
+
+
+
+
 Klassen- und Kinderdaten pflegen
 --------------------------------
 
-Klassen anlegen und ändern
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Klassen manuell anlegen und ändern
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Um Klassen anzulegen oder zu bearbeiten, gibt es 2 Einstiegspunkte:
 

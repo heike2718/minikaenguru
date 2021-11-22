@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from 'apps/mkv-app/src/environments/environment';
 import { Subscription, combineLatest } from 'rxjs';
@@ -9,6 +9,8 @@ import { ResponsePayload } from '@minikaenguru-ws/common-messages';
 import { UploadComponentModel } from '@minikaenguru-ws/common-components';
 import { WettbewerbFacade } from '../../wettbewerb/wettbewerb.facade';
 import { LogService } from '@minikaenguru-ws/common-logging';
+import { modalOptions } from '@minikaenguru-ws/common-components';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'mkv-upload-klassenlisten',
@@ -17,7 +19,10 @@ import { LogService } from '@minikaenguru-ws/common-logging';
 })
 export class UploadKlassenlistenComponent implements OnInit, OnDestroy {
 
-  devMode = environment.envName = 'DEV';
+  devMode = environment.envName === 'DEV';
+
+  @ViewChild('dialogUploadFormatInfo')
+	dialogUploadFormatInfo!: TemplateRef<HTMLElement>;
 
   schule!: Schule;
 
@@ -42,6 +47,7 @@ export class UploadKlassenlistenComponent implements OnInit, OnDestroy {
      private wettbewerbFacade: WettbewerbFacade,
      public klassenFacade: KlassenFacade,
      private lehrerFacade: LehrerFacade,
+     private modalService: NgbModal,
      private logger: LogService) { }
 
   ngOnInit(): void {
@@ -106,6 +112,13 @@ export class UploadKlassenlistenComponent implements OnInit, OnDestroy {
     this.nachnameVerbergen = event;
 		this.uploadModel = {...this.uploadModel, subUrl: this.getQueryParameters()};
     this.textNachname = this.nachnameVerbergen ? 'Die Nachnamen werden in das Feld Zusatz importiert und erscheinen <strong>nicht</strong> auf der Urkunde.' : 'Die Nachnamen werden in das Feld Nachname importiert und erscheinen auf der Urkunde.';
+	}
+
+  showInfoUploadFormat() {
+		this.modalService.open(this.dialogUploadFormatInfo, modalOptions).result.then((_result) => {
+			
+			// do nothing
+	  });
 	}
 
   gotoKlassen(): void {

@@ -27,7 +27,7 @@ fertig ist upload Klassenliste ohne Fehler, aber auch ohne Auswertung des Report
 + Hinweis auf Umlaute kann entfallen, wenn encoding UTF-8
 + mehrere uploads testen, wenn z.B. einzelne Klassen nacheinander importiert werden
 + Upload-Report, wenn es unklarheiten gab.
-- Download des Upload-Reports bereitstellen Hierfür muss ein download-Button eingeblendet werden
++ Download des Upload-Reports bereitstellen Hierfür muss ein download-Button eingeblendet werden
 + alle Klassen löschen mit Warndialog. Sichtbar, wenn kein Lösungszettel erfasst
 + das Ändern eines Kindes löscht das flag klassenstufePruefen: das war ein Beifang, weil das EditorModel das Flag nicht kennt und es per default false ist.
 + beim Speichern eines Kindes mit flag dublettePruefen wird nochmals dublette geprueft und flag entfernt, wenn möglich
@@ -40,3 +40,9 @@ fertig ist upload Klassenliste ohne Fehler, aber auch ohne Auswertung des Report
 + beim Wechsel zu uploads muss der Import-Report zurückgesetzt werden
 - !!beobachten (konnte nicht zuverlässig reproduziert werden)!! nach dem Importieren weiterer Kinder stimmt die Anzahl der Kinder in der Klassenlist-Details-Anzeige nicht mehr
 + testen, ob Dubletten richtig erkannt werden, wenn man Nachname als Zusatz wählt
+-----------------------------------------
+Testphase 2.0.0 - Fehler
+-----------------------------------------
+- Teilnahmedetails: Anzahl Kinder ist falsch. Obwohl es zu einer Schule Kinder gibt, wird deren Anzahl bei den Teilnahmen falsch angezeigt
+- Nach dem Erfassen des neuen Wettbewerbs wird in mkv-app - Schulübersicht / Privatübersicht der falsche aktuelle Wettbewerb angezeigt. Wird er gecacht?
+
