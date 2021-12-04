@@ -11,7 +11,7 @@ import { KlassenFacade } from '../klassen.facade';
 })
 export class ImportReportComponent implements OnInit, OnDestroy {
 
-  devMode = !environment.production;
+  devMode = environment.envName === 'DEV';
 
   importReportDownloadModel!: DownloadButtonModel;
 

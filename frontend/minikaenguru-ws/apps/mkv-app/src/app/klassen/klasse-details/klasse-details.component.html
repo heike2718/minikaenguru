@@ -3,9 +3,6 @@
 		<div class="card-title">{{klasse.name}} <span *ngIf="anzahlKinder > 0 && anzahlKinder === anzahlLoesungszettel"
 				class="badge badge-success">alle Lösungszettel erfasst</span> <span *ngIf="klasse.anzahlKinderZuPruefen > 0"
 					class="badge badge-warning">bitte importierte Kinder prüfen</span> </div>
-		<div *ngIf="klasse.anzahlKinderZuPruefen > 0">								
-			<mkv-klasse-geprueft [klasseID]="klasse.uuid"></mkv-klasse-geprueft>
-		</div>
 		<div class="card-text">
 			<div class="row">
 				<div class="card-subtitle text-muted col-sm-12 col-md-9">Anzahl Kinder: {{anzahlKinder}}</div>

@@ -41,8 +41,10 @@ fertig ist upload Klassenliste ohne Fehler, aber auch ohne Auswertung des Report
 - !!beobachten (konnte nicht zuverlässig reproduziert werden)!! nach dem Importieren weiterer Kinder stimmt die Anzahl der Kinder in der Klassenlist-Details-Anzeige nicht mehr
 + testen, ob Dubletten richtig erkannt werden, wenn man Nachname als Zusatz wählt
 -----------------------------------------
-Testphase 2.0.0 - Fehler
+Testphase 1.7.0 - Fehler
 -----------------------------------------
 - Teilnahmedetails: Anzahl Kinder ist falsch. Obwohl es zu einer Schule Kinder gibt, wird deren Anzahl bei den Teilnahmen falsch angezeigt
 - Nach dem Erfassen des neuen Wettbewerbs wird in mkv-app - Schulübersicht / Privatübersicht der falsche aktuelle Wettbewerb angezeigt. Wird er gecacht?
+- Klasse erfassen -> speichern. Nochmaliges Speichern führt zu Fehlermeldung bad request.
+- Wechsel auf Klassenliste führt zu "unerwarteter GUI error: cannot read property of undefined"
 
