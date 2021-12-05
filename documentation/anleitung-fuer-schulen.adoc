@@ -1,5 +1,5 @@
-Minikänguru-Anwendung für Lehrerinnen und Lehrer
-================================================
+Minikänguru-Anwendung für Schulen
+=================================
 Heike Winkelvoß
 :Author Initials: HW
 :toc:
@@ -13,16 +13,12 @@ Heike Winkelvoß
 ***********************************************************************************************
 Dieses Dokument beschreibt alle Funktionen, die Sie benötgen, um den Minikänguru-Wettbewerb an
 Ihrer Schule zu organisieren.
-
-Er wird in den kommenden Monaten zusammen mit der Anwendung vervollständigt.
 ***********************************************************************************************
-
-Um Die Minikänguru-Anwendung nutzen zu können, benötigen Sie ein Benutzerkonto.
 
 Ein Benutzerkonto anlegen
 -------------------------
 
-Um mit Ihrer Schule am Minikänguru- Wettbewerb teilzunehmen, benötigen Sie ein Benutzerkonto für Lehrerinnen und Lehrer.
+Um mit Ihrer Schule am Minikänguru- Wettbewerb teilzunehmen, benötigen Sie ein Benutzerkonto für Lehrer:innen.
 
 Mit diesem Benutzerkonto können Sie anschließend den Wettbewerb für mehrere Schulen organsieren.
 
@@ -32,14 +28,14 @@ image::./images/startseite-hauptmenue-sign-up.png[width=60%]
 
 Mit einem Klick auf den Menüpunkt "Konto anlegen", der im Bild rot umrandet ist, gelangen Sie in folgendes Formular:
 
-
 image::./images/konto-anlegen-einstieg-kein-newsletter.png[width=45%]
 
-Sie können auswählen, ob Sie Mailbenachrichtigungen erhalten möchten. Informationen hierzu sehen Sie nach einem Klick auf "Info".
+Mit dem Schiebeschalter können Sie auswählen, ob Sie Mailbenachrichtigungen erhalten möchten. Informationen hierzu sehen Sie nach einem Klick auf
+"Info".
 
-image::./images/konto-anlegen-einstieg-kein-newsletter.png[width=45%]
+image::./images/konto-anlegen-einstieg-newsletter.png[width=45%]
 
-Nach dem Anlegen des Kontos können Sie Ihre Entscheidung in der Minikänguru-Anwendung jederzeit ändern.
+Nach dem Anlegen des Kontos werden Sie Ihre Entscheidung in der Minikänguru-Anwendung jederzeit ändern können.
 
 Klicken Sie nun bitte auf die Schaltfläche "Lehrer/Lehrerin". Privatkonten sind nicht geeignet, um den Wettbewerb an einer Schule durchzuführen.
 
@@ -83,7 +79,7 @@ image::./images/benutzerkonto-formular.png[width=60%]
 
 Bitte wählen Sie ein sicheres Passwort, da Sie mit diesem Benutzerkonto personenbezogene Daten der Kinder Ihrer Schule erfassen.
 
-Ihr Name wird später allen Kolleginnen und Kollegen Ihrer Schule ebenfalls angezeigt.
+Ihr Name wird später allen Kolleg:innen Ihrer Schule angezeigt. Ebenso sehen Sie die Namen Ihrer Kolleg:innen.
 
 Ihre Mailadresse wird zu keiner Zeit in der Anwendung sichbar sein. Die Mailadresse benötigen Sie, um sich später einzuloggen.
 
@@ -107,12 +103,13 @@ Der rot umrandete Teil gehört zu der Webseite opa-wetterwachs.de, die mir gehö
 schließt sich der blau umrandete Teil mit einem zufällig generierten Code an. *Nach dem Gleichheitszeichen dürfen nur Buchstaben und Ziffern stehen*
 
 Wenn Sie dort also Sonderzeichen sehen, z.B. %, & oder ähnliche, handelt es sich nicht um den von mir versendeten Link. Klicken Sie einen Ihnen
-verdächtig erscheinenden Link bitte *nicht* an, sondern nehmen Sie in diesem Fall per Mail Kontakt zu mir auf.
+verdächtig erscheinenden Link bitte *nicht* an, sondern nehmen Sie in diesem Fall per Mail Kontakt zu mir auf. Ich kann in diesem Fall Ihr
+Benutzerkonto aktivieren.
 
 Schule im Katalog nicht gefunden
 --------------------------------
 
-Wenn Sie Im Schulkatalog bei der Suche nach dem Ort oder der Schule keine Treffer hatten, klicken Sie bitte auf die Schaltflächen
+Wenn Sie im Schulkatalog bei der Suche nach dem Ort oder der Schule keine Treffer hatten, klicken Sie bitte auf die Schaltflächen
 "Ort nicht gefunden" oder "Schule nicht gefunden", die an verschiedenen Stellen im Formular des Schulkatalogs angezeigt werden.
 
 Sie gelangen damit in ein Formular, mit dem Sie Ihre Schule in den Katalog eintragen lassen können:
@@ -144,10 +141,19 @@ Waren die Angaben korrekt, gelangen Sie auf Ihre Übersichtsseite:
 
 image::./images/dashboard-lehrer.png[width=75%]
 
-Die Kachel "Unterlagen XXXX" sehen Sie nur dann, wenn Sie Ihre Schule (bei mehreren Schulen mindestens eine Schule)
-für das aktuelle Wettbewerbsjahr angemeldet haben *und* die Unterlagen zum Herunterlagen freigeschaltet sind. Die Termine, an denen die Unterlagen
-freigeschaltet werden, werden in der Startseite der Minikänguru-Anwendung angezeigt. Wenn Sie eingeloggt sind, können Sie sich die Termine
-jederzeit durch Klick auf den Menüpunkt "Info" anzeigen lassen.
+Die Kachel "Unterlagen..." sehen Sie nur dann, wenn Sie Ihre Schule (bei mehreren Schulen mindestens eine Schule)
+für das aktuelle Wettbewerbsjahr angemeldet haben *und* die Unterlagen zum Herunterladen freigeschaltet sind.
+
+Die Termine, an denen die Unterlagen freigeschaltet werden, werden in der Startseite der Minikänguru-Anwendung angezeigt. Wenn Sie eingeloggt sind,
+können Sie sich die Termine jederzeit durch Klick auf den Menüpunkt "Info" oder einen Klick auf die Kachel "Infos" in Ihrer Übersichtsseite
+anzeigen lassen.
+
+Auf dieser Seite können sie auch mit einem Klick auf die Kachel "Newsletter" den Newsletter abbestellen, wenn Sie in momentan abonniert haben
+oder abonnieren, wenn Sie ihn nicht abonniert haben.
+
+Wenn Sie Ihren Namen, Ihre Mailadresse oder Ihr Passwort ändern *oder Ihr Benutzerkonto vollständig löschen* möchten. Klicken Sie bitte auf die
+Kachel "Mein Profil" oder den Menüpunkt "Benutzerdaten". Sie werden dann ausgeloggt und auf in die Benutzerkontenverwaltung umgeleitet,
+wo sie sich zunächst neu einloggen müssen, bevor Sie Ihre Daten ändern oder Ihr Konto löschen können.
 
 Eigene Schulen
 --------------
@@ -160,7 +166,7 @@ Der Einstieg in die Schulliste erfolgt von Ihrer Startseite, die Sie nach dem Ei
 
 Beide Aktionen öffnen Ihre Schulliste.
 
-Hier sehen Sie die Schulen, bei denen Sie sich als Lehrerin / Lehrer eingetragen haben. Schulen, die bereits für den laufenden
+Hier sehen Sie die Schulen, bei denen Sie sich als Lehrer:in eingetragen haben. Schulen, die bereits für den laufenden
 Minikänguru- Wettbewerb angemeldet sind, sind markiert.
 
 image::./images/schulliste-optionen.png[width=55%]
@@ -170,14 +176,14 @@ Optionen. Sie können
 
 * die Übersichtsseite der Schule aufrufen (im Bild: rot umrandete Schaltfläche)
 * zur Auswertung des laufenden Wettbewerbs an dieser Schule wechseln (im Bild: blau umrandete Schaltfläche)
-* sich als Lehrerin / Lehrer von einer Schule abmelden (im Bild: orange umrandete Schaltfläche)
-* sich als Lehrer / Lehrerin einer weiteren Schule eintragen (im Bild: schwarz umrandete Schaltfläche)
+* sich als Lehrer:in von einer Schule abmelden (im Bild: orange umrandete Schaltfläche)
+* sich als Lehrer:in einer weiteren Schule eintragen (im Bild: dunkel umrandete Schaltfläche)
 
-Klicken Sie auf die Schaltfläche "neue Schule", wenn Sie sich als Lehrerin oder Lehrer einer weiteren Schule eintragen
-möchten. Sie gelangen dann in den Ihnen bereits von der Registrierung bekannten Schulkatalog siehe Kapitel ("Ein Benutzerkonto anlegen").
+Klicken Sie auf die Schaltfläche "neue Schule", wenn Sie sich als Lehrer:in einer weiteren Schule eintragen
+möchten. Sie gelangen dann in den Ihnen bereits von der Registrierung bekannten Schulkatalog siehe Kapitel "Ein Benutzerkonto anlegen".
 
-*Bitte beachten Sie:* Den Lehrerinnen bzw. Lehrern, die für die jeweilige Schule ebenfalls eingetragen sind, wird Ihr Name
-auf der Übersichtsseite der Schule angezeigt. Ebenso sehen Sie die Namen Ihrer Kolleginnen und Kollegen.
+*Bitte beachten Sie:* Den Lehrer:innen, die für die jeweilige Schule ebenfalls eingetragen sind, wird Ihr Name
+auf der Übersichtsseite der Schule angezeigt. Ebenso sehen Sie die Namen Ihrer Kolleg:innen.
 
 Eine Schule anmelden
 --------------------
@@ -204,9 +210,8 @@ image::./images/schuluebersicht-angemeldet.png[width=75%]
 Klassenlisten als Excel hochladen
 ---------------------------------
 
-Mit der neuen Version der Minikänguru-Anwendung haben Sie die Möglichkeit, Ihre Kinder mit Hilfe von Excel-Tabellen
-hochzuladen. Das erspart das zeitaufwendige manuelle Eintragen der Kinder Ihrer Schule. Sie kennen eine ähnliche Funktion vielleicht bereits vom
-Känguru- Wettbewerb.
+Sie können alle teilnehmenden Kinder mit Hilfe von Excel-Tabellen importieren. Das erspart das zeitaufwendige manuelle Eintragen der Kinder Ihrer Schule.
+Vielleicht kennen Sie eine ähnliche Funktion bereits vom Känguru- Wettbewerb.
 
 
 Maske zum Hochladen einer Klassenliste
@@ -278,7 +283,7 @@ Manuelle Fehlerkorrektur
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 Falls sich nicht alle Kinder problemlos importieren ließen, können Sie diese nun manuell korrigieren. Wechseln Sie hierzu mit einem Klick
-auf die Schaltfläche "Klassenliste" in die Übersichtsseite der Klassen ihrer Schule. Hier sind diejenigen Klassen auffällig markiert, bei denen Sie
+auf die Schaltfläche "Klassen" in die Übersichtsseite der Klassen ihrer Schule. Hier sind diejenigen Klassen auffällig markiert, bei denen Sie
 die importierten Kinder noch einmal prüfen und korrigieren sollten:
 
 image::./images/upload-klassenlisten-klassenuebersicht.png[width=75%]
@@ -289,11 +294,11 @@ sind die Kinder gekennzeichnet, die Sie noch einmal prüfen und ggf. korrigieren
 image::./images/upload-klassenlisten-kinder-fehler.png[width=75%]
 
 Versehentlich doppelt erfasste Kinder können Sie einfach löschen. Gibt es tatsächlich 2 Kinder mit gleichem Vor- und Nachnamen und der gleichen
-Klassenstufe in dieser Klasse (sehr unwahrscheinlich), erfassen Sie bitte nach Klick auf "bearbeiten" für jedes Kind einen unterschiedlichen
+Klassenstufe in dieser Klasse (sehr unwahrscheinlich), erfassen Sie bitte nach Klick auf "ändern" für jedes Kind einen unterschiedlichen
 Zusatztext, damit Sie später die Urkunde richtig zuordnen können.
 
 Wenn die Klassenstufe unklar war (also nicht 0, 1 oder 2), wurde
-beim Import die Klassenstufe auf 2 gesetzt. Dies können Sie mit dem Schiebeschalter bestätigen oder nach Klick auf "bearbeiten" korrigieren.
+beim Import die Klassenstufe auf 2 gesetzt. Dies können Sie mit dem Schiebeschalter bestätigen oder nach Klick auf "ändern" korrigieren.
 
 Haben Sie alle Kinder der Klasse korrigiert, betätigen Sie bitte einmal den Schiebeschalter "Prüfung Import abgeschlossen" unterhalb der
 Liste der Kinder:
@@ -308,6 +313,9 @@ noch einmal hochzuladen.
 Sie können alle importierten Daten auf einmal löschen, indem Sie in der Klassenübersicht Ihrer Schule die Schaltfläche "alle Klassen löschen" anklicken:
 
 image::./images/upload-klassenliste-korrektur-alles-loeschen.png[width=75%]
+
+Nach der Bestätigung des Warndialogs werden alle Kinder und Klassen vollständig gelöscht. Daher ist Vorsicht von Nöten, falls Ihre Kolleg:innen
+bereits Klassen und Kinder erfasst oder importiert haben. In diesem Fall sollten Sie Ihre eigenen Klassen besser einzeln löschen.
 
 
 Format der Excel-Dateien zum Hochladen der Klassenlisten
@@ -327,7 +335,7 @@ image::./images/upload-klassenlisten-aufbau-excel.png[width=30%]
 * Alle Spalten müssen vollständig gefüllt sein.
 
 * Als Klassenstufe werden die Ziffern 0 (Inklusion), 1 (Klasse 1) und 2 (Klasse 2) erwartet. Bei einer anderen Zahl wird das betreffende Kind
-zunächst mit Klassenstufe 2 importiert. Das kann nachträglich manuell korrigiert werden.
+zunächst mit Klassenstufe 2 importiert und markiert. Das kann nachträglich manuell korrigiert werden.
 
 * Die Spalte *Klasse* enthält den Namen der Klasse, so wie er auf den Urkunden erscheinen soll.
 
@@ -335,7 +343,7 @@ zunächst mit Klassenstufe 2 importiert. Das kann nachträglich manuell korrigie
 der Exceldatei gefunden werden.
 
 Die Maske zum Hochladen von Klassenlisten enthält eine Schaltfläche "Wie muss die Excel-Datei aussehen". Der Dialog, der sich nach Klick auf diese
-Schaltfläche öffnet, fasst dies noch einmal kurz zusammen:
+Schaltfläche öffnet, fasst die eben genannten Anforderungen noch einmal kurz zusammen:
 
 image::./images/upload-klassenlisten-info.png[width=20%]
 
@@ -389,9 +397,9 @@ Kinder anlegen und ändern
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Um zu einer Klasse Kinder zu erfassen oder die Kinder einer Klasse zu bearbeiten, klicken Sie in der Klassenliste auf
-der Kachel der Klasse bitte auf die Schaltfläche "Kinder bearbeiten", die im Bild rot umrandet gezeigt ist:
+der Kachel der Klasse bitte auf die Schaltfläche "Kinder bearbeiten":
 
-image::./images/klassenliste-ohne-kinder.png[width=60%]
+image::./images/klassenliste-mit-kindern.png[width=60%]
 
 Sie gelangen in die Kinderliste der gewählten Klasse:
 
@@ -414,7 +422,7 @@ Der Name der Klasse, zu der ein Kind gehört, erscheint auf der Urkunde. Abhäng
 * der vollständige Name, wenn Sie für ein Kind den Vornamen *und* den Nachnamen eingetragen haben
 * nur der Vorname, wenn Sie für ein Kind nur den Vornamen eingetragen haben.
 
-Der Zusatztext erscheint *nicht* auf der Urkunde.
+Der Zusatz erscheint *nicht* auf der Urkunde.
 
 Nachdem alle Pflichtfelder gefüllt sind, können Sie das Kind durch Klick auf die Schaltfläche "speichern" speichern.
 
@@ -437,7 +445,7 @@ Sie können durch Klick auf die entsprechenden Schaltflächen in der Kachel eine
 
 * die Daten dieses Kindes ändern (Schaltfläche "ändern")
 * das Kind in eine andere Klasse verschieben (Schaltfläche "andere Klasse")
-* den Lösungszettel dieses Kindes erfassen (Schaltfläche
+* den Lösungszettel dieses Kindes erfassen (Schaltfläche "Lösungszettel")
 * die Urkunde dieses Kindes noch einmal ausdrucken (Schaltfläche "Urkunde korrigieren")
 * das Kind löschen (Schaltfläche "löschen")
 
@@ -474,7 +482,7 @@ Kindern zwischen Klassen möglich. Ist das der Fall, wird ein Warndialog angezei
 image::./images/mehrfacherfassung-kind.png[width=40%]
 
 Der Warntext enthält dabei jeweils einen kontextbezogenen Hinweis darauf, was Sie tun können, um die Urkunde später dem
-richtigen Kind aushändigen zu können. Wählen Sie im gezeigten Beispiel "nein" und tragen einen Text im Eingabefeld "Zusatztext"
+richtigen Kind aushändigen zu können. Wählen Sie im gezeigten Beispiel "nein" und tragen einen Text im Eingabefeld "Zusatz"
 ein, so können Sie das Kind anschließend ohne Warnung speichern, da Sie so die Mehrfacherfassung umgangen haben.
 
 *Kinder zwischen Klassen verschieben*
@@ -529,16 +537,17 @@ Bestätigen Sie die Frage mit "ja", wird der leere Lösungszettel gespeichert.
 Sie können einen Lösungszettel auch jederzeit löschen. Die Löschung erfolgt erst, nachdem Sie einen Warndiaog bestätigt haben.
 Die Schaltfläche "löschen" ist nur aktiviert, wenn für das Kind bereits einmal ein Lösungszettel gespeichert wurde.
 
-Nach dem Löschen gelangen Sie automatisch zurück in die Klassenliste.
+Nach dem Löschen gelangen Sie automatisch zurück in die Liste der Kiner dieser Klasse.
 
-Sie können aus dem Formular "Lösungszettel" zurück in die Klassenliste gelangen, indem Sie sie Schaltfläche "zurück" anklicken.
+Sie können aus dem Formular "Lösungszettel" zurück in die Liste der Kiner dieser Klasse gelangen, indem Sie sie Schaltfläche "zurück" anklicken.
 
 *Urkunde korrigieren*
 
 In der Kinderliste einer Klasse gibt es für jedes Kind die Möglichkeit, eine Urkunde zu erstellen (Schaltfläche "Urkunde korrigieren").
 Das Erstellen einer Urkunde erfordert mehrere Klicks und daher gibt es diese Möglichkeit für ein einzelnes Kind nur, um eine Urkunde zu
 korrigieren, beispielsweise wenn Sie die Auswertung für die Schule mit allen Urkunden bereits erstellt hatten und feststellen, dass Sie sich
-beim Namen des Kindes verschrieben haben. Dann können Sie den Namen des Kindes korrigieren und eine einzelne Urkunde für dieses Kind noch einmal ausdrucken.
+beim Namen des Kindes verschrieben hatten. Dann können Sie den Namen des Kindes korrigieren und eine einzelne Urkunde für dieses Kind noch einmal
+ausdrucken.
 
 Bitte verwenden Sie diese Schaltfläche nicht, um für jedes Kind einzeln eine Urkunde zu erstellen. Das würde viel zu lange dauern und Sie bekämen dann auch keine
 Gesamtübersicht mit den Platzierungen der Kinder.
@@ -551,7 +560,7 @@ Urkunden für die Schule generieren
 
 Den Einstiegpunkt zum Generieren der Schulauswertung finden Sie in der Schulübersicht:
 Klick auf den Menüpunkt "Schulen", Klick auf die Schaltfläche "Schulübersicht"
-Ihrer Schule und Klick auf die Kachel "Auswertung xxxx". Sie gelangen in die Ansicht mit den Klassen:
+Ihrer Schule und Klick auf die Kachel "Auswertung...". Sie gelangen in die Ansicht mit den Klassen:
 
 
 image::./images/klassenuebersicht-optionen.png[width=60%]
@@ -585,20 +594,20 @@ Bitte wählen Sie hier am besten die Option "Datei speichern" und bestätigen Si
 
 Die Datei wird automatisch meist in das Verzeichnis "Downloads" gespeichert, von wo aus Sie sie mit Doppelcklick öffnen können.
 
-Die erste Seite der Datei enthält die Auflistung aller Kinder in der Reihenfolge ihrer Platzierungen:
+Die ersten Seiten der Datei enthalten die Auflistung aller Kinder in der Reihenfolge ihrer Platzierungen:
 
-image::./images/urkunden-uebersichtsseite.png[width=70%]
+image::./images/urkunden-uebersichtsseite.png[width=50%]
 
 Es schließen sich die Seiten mit den Urkunden für die Kinder an.
 
 Eine Urkunde für den weitesten Kängurusprung in einer Klassenstufe wird nur generiert, wenn es ein einziges Kind mit dem weitesten Kängurusprung gibt.
 Falls das nicht der Fall war, enthält die Übersichtsseite einen Hinweistext mit den Namen der Kinder, die den weitesten Kängurusprung gemacht haben.
-Sie können die Kängurusprungurkunden für diese Kinder einzeln generieren (siehe folgenden Abschnitt).
+Sie können die Kängurusprungurkunden für diese Kinder nachträglich einzeln generieren (siehe folgenden Abschnitt).
 
 Urkunden für einzelne Kinder generieren
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Sie gelangen in diese Funktion wie folgt: Menüpunkt "Schulen" -> Schaltfläche "Auswertung xxxx" -> Schaltfläche "Kinder bearbeiten" auf
+Sie gelangen in diese Funktion wie folgt: Menüpunkt "Schulen" -> Schaltfläche "Auswertung ..." -> Schaltfläche "Kinder bearbeiten" auf
 der Kachel, die die Klasse des Kindes anzeigt.
 
 Klicken Sie hier auf die Schaltfläche "Urkunde korrigieren". Sie gelangen in ein Formular, das ähnlich aufgebaut ist, wie das Formular zum Generieren
@@ -617,6 +626,45 @@ Die Datei wird automatisch meist in das Verzeichnis "Downloads" gespeichert, von
 
 Nochmals der Hinweis: verwenden Sie diese Funktion nicht, um nacheinander die Urkunden für jedes Kind Ihrer Schule zu erstellen, da das sehr zeitaufwendig
 wäre und Sie außerdem so keine Rangliste erhalten.
+
+Vertrag zur Auftragsverwaltung (DSGVO)
+--------------------------------------
+
+Als Schule übertragen Sie mir durch die Nutzung der Onlineauswertung den Auftrag, Daten der Kinder Ihrer Schule zu verarbeiten. Daher schließen Sie
+bitte einen Vertrag zur Auftragsverarbeitung gemäßt DSGVO Artikel 28 mit mir ab.
+
+Das Abschließen eines Vertrages ist je Schule nur einmal erforderlich und gilt von da an für alle kommenden Jahre.
+
+Jede Lehrer:in kann diesen Vertrag im Namen der Schule abschießen. Die Schule fungiert in diesem Fall als juristische Person. *Ihr Name wird
+nicht in den Vertrag übernommen*.
+
+Falls für Ihre Schule noch kein Vertrag abgeschlossen wurde, sehen Sie in der Schulübersicht die Kachel "DSGVO" mit dem Zusatztext "Vertrag zur
+Auftragsverarbeitung abschließen" (im Sceenshot rot umrandet dargestellt):
+
+image::./images/auftragsverarbeitung-nicht-vorhanden.png[width=50%]
+
+Nach Klick auf die Kachel "DSGVO" gelangen Sie in das Formular "Vertrag zur Auftragverarbeitung...":
+
+image::./images/auftragsverarbeitung-formular-ausgefüllt.png[width=50%]
+
+Falls der Name Ihrer Schule nicht korrekt ist, brechen Sie bitte ab und nehmen Sie Mailkontakt mit mir auf, damit ich den Namen zunächst korrigiere.
+
+Bevor Sie das Formular ausfüllen und absenden, können Sie den Text des Vertrages herunterladen.
+
+Dieser Text wird bei Vertragsabschluss um die Angaben zu Ihrer Schule ergänzt. Daher muss die Anschrift der Schule vollständig und korrekt
+ausgefüllt werden.
+
+Ist das Formular vollständig ausgefüllt, wird die Schaltfläche "Vertrag abschließen" aktiviert. Klicken Sie diese bitte an. Der Vertrag wird nun
+erstellt und es erscheint eine Erfolgsmeldung:
+
+image::./images/auftragsverarbeitung-erfolgsmeldung.png[width=50%]
+
+Sie können den Vertrag nun herunterladen und speichern.
+
+Wenn für Ihre Schule ein Vertrag zur Auftragsverarbeitung abgeschlossen wurde, kann dieser jederzeit erneut heruntergeladen werden. Klicken Sie
+dazu in der Übersichtsseite Ihrer Schule auf die im Bild blau umrandete Kachel "DSGVO", die nun den Zusatztext "Vertrag Auftragsverarbeitung herunterladen (PDF)" enthält
+
+image::./images/auftragsverarbeitung-vorhanden.png[width=50%]
 
 Fehlersituationen
 -----------------

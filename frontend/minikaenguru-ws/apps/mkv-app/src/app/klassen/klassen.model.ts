@@ -1,11 +1,15 @@
 import { Klasse, compareKlassen } from '@minikaenguru-ws/common-components';
 
+export interface KlasseUIModel {
+	uuid: string;
+	name: string;
+	saved: boolean;
+};
+
 export interface KinderKlasseLocalStorageModel {
 	readonly schulkuerzel: string;
 	readonly klasseUuid: string
 };
-
-
 export interface KlasseWithID {
 	readonly uuid: string;
 	readonly klasse: Klasse
@@ -98,7 +102,7 @@ export class KlassenMap {
 
 		for (const item of this.items) {
 
-			if (item.uuid !== param.uuid && item.klasse.name.toLocaleLowerCase() === param.name.trim().toLocaleLowerCase()) {
+			if (item.uuid !== param.uuid && item.klasse.name === param.name.trim()) {
 				return true;
 			}
 

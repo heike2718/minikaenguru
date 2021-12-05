@@ -81,8 +81,8 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 						id: this.schule.kuerzel,
 						url: environment.apiUrl + '/adv/' + this.schule.kuerzel,
 						cardTitle: 'DSGVO',
-						subtext: 'Vertrag Auftragsdatenverarbeitung herunterladen (PDF)',
-						dateiname: 'Vertrag-Auftragsdatenverarbeitung-Minikaenguru',
+						subtext: 'Vertrag Auftragsverarbeitung herunterladen (PDF)',
+						dateiname: 'Vertrag-Auftragsverarbeitung-Minikaenguru',
 						mimetype: 'pdf'
 					};
 				} else {
@@ -90,8 +90,8 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 						id: '',
 						url: '',
 						cardTitle: 'DSGVO',
-						subtext: 'Vertrag Auftragsdatenverarbeitung herunterladen (PDF)',
-						dateiname: 'Vertrag-Auftragsdatenverarbeitung-Minikaenguru',
+						subtext: 'Vertrag Auftragsverarbeitung herunterladen (PDF)',
+						dateiname: 'Vertrag-Auftragsverarbeitung-Minikaenguru',
 						mimetype: 'pdf'
 					};
 				}

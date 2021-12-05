@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 import { Klasse, KlasseEditorModel, KlasseRequestData } from '@minikaenguru-ws/common-components';
 import { KlassenService } from './klassen.service';
 import { Router } from '@angular/router';
-import { KlassenlisteImportReport, KlasseWithID } from './klassen.model';
+import { KlassenlisteImportReport, KlasseUIModel, KlasseWithID } from './klassen.model';
 import { MessageService, ResponsePayload } from '@minikaenguru-ws/common-messages';
 import * as KinderActions from '../kinder/+state/kinder.actions';
 import * as KinderSelectors from '../kinder/+state/kinder.selectors';
@@ -27,7 +27,7 @@ export class KlassenFacade {
 	public klassenGeladen$: Observable<boolean> = this.store.select(KlassenSelectors.klassenGeladen);
 	public klassen$: Observable<Klasse[]> = this.store.select(KlassenSelectors.klassen);
 	public anzahlKlassen$: Observable<number> = this.store.select(KlassenSelectors.anzahlKlassen);
-	public editorModel$: Observable<KlasseEditorModel | undefined> = this.store.select(KlassenSelectors.klasseEditorModel);
+	public klasseUIModel$: Observable<KlasseUIModel | undefined> = this.store.select(KlassenSelectors.klasseUIModel);
 	public klassenMap$: Observable<KlasseWithID[]> = this.store.select(KlassenSelectors.klassenMap);
 	public selectedKlasse$: Observable<Klasse | undefined> = this.store.select(KlassenSelectors.selectedKlasse);
 	public anzahlKinder$: Observable<number> = this.store.select(KlassenSelectors.anzahlKinder);

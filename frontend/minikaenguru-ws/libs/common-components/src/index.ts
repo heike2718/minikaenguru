@@ -31,7 +31,6 @@ export {
 	KlasseEditorModel,
 	KlasseRequestData,
 	initialKindEditorModel,
-	initialKlasseEditorModel,
 	getKlassenstufeByLabel,
 	getSpracheByLabel,
 	compareKinder,

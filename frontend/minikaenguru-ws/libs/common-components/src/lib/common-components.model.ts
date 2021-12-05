@@ -152,10 +152,6 @@ export const initialKindEditorModel: KindEditorModel = {
 	sprache: ALL_SPRACHEN[0],
 };
 
-export const initialKlasseEditorModel: KlasseEditorModel = {
-	name: ''
-};
-
 export function getKlassenstufeByLabel(label: string): Klassenstufe {
 
 	for (let index = 0; index < ALL_KLASSENSTUFEN.length; index++) {

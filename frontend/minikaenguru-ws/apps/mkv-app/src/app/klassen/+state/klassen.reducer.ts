@@ -1,7 +1,7 @@
 import { createReducer, Action, on } from '@ngrx/store';
 import * as KlassenActions from './klassen.actions';
-import { KlasseWithID, KlassenMap, KlassenlisteImportReport } from '../klassen.model';
-import { KlasseEditorModel, initialKlasseEditorModel, Klasse, Kind } from '@minikaenguru-ws/common-components';
+import { KlasseWithID, KlassenMap, KlassenlisteImportReport, KlasseUIModel } from '../klassen.model';
+import { KlasseEditorModel, Klasse, Kind } from '@minikaenguru-ws/common-components';
 
 
 export const klassenFeatureKey = 'mkv-app-klassen';
@@ -10,7 +10,7 @@ export interface KlassenState {
 	klassenMap: KlasseWithID[];
 	klassenLoaded: boolean;
 	loading: boolean;
-	editorModel?: KlasseEditorModel;
+	klasseUIModel?: KlasseUIModel;
 	selectedKlasse?: Klasse;
 	importReport?: KlassenlisteImportReport;
 };
@@ -19,7 +19,7 @@ const initialKlassenState: KlassenState = {
 	klassenMap: [],
 	klassenLoaded: false,
 	loading: false,
-	editorModel: undefined,
+	klasseUIModel: undefined,
 	selectedKlasse: undefined,
 	importReport: undefined
 };
@@ -42,19 +42,15 @@ const klassenReducer = createReducer(initialKlassenState,
 
 	on(KlassenActions.createNewKlasse, (state, _action) => {
 
-		return { ...state, editorModel: initialKlasseEditorModel };
-
-
+		const klasseUIModel: KlasseUIModel = {uuid: 'neu', name: '', saved: false};
+		return { ...state, klasseUIModel: klasseUIModel };
 	}),
 
 	on(KlassenActions.startEditingKlasse, (state, action) => {
 
 		const klasse = action.klasse;
-		const klasseEditorModel: KlasseEditorModel = {
-			name: klasse.name
-		};
 
-		return { ...state, editorModel: klasseEditorModel, selectedKlasse: klasse };
+		return { ...state, selectedKlasse: klasse, klasseUIModel: {name:klasse.name, uuid: klasse.uuid, saved: false} };
 
 	}),
 
@@ -143,8 +139,15 @@ const klassenReducer = createReducer(initialKlassenState,
 
 	on(KlassenActions.klasseSaved, (state, action) => {
 
+		const klasse = action.klasse;
+
 		const neueMap = new KlassenMap(state.klassenMap).merge(action.klasse);
-		return { ...state, klassenMap: neueMap, loading: false };
+		
+		if (state.klasseUIModel) {
+			return {...state, klassenMap: neueMap, klasseUIModel: {...state.klasseUIModel, uuid: klasse.uuid, name: klasse.name, saved: true}};
+		}  else {
+			return { ...state, klassenMap: neueMap, loading: false };
+		}
 	}),
 
 	on(KlassenActions.klasseDeleted, (state, action) => {

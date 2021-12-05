@@ -5,6 +5,7 @@ import { LehrerFacade } from '../../lehrer/lehrer.facade';
 import { Schule } from '../../lehrer/schulen/schulen.model';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MessageService } from '@minikaenguru-ws/common-messages';
+import { KlasseUIModel } from '../klassen.model';
 
 @Component({
 	selector: 'mkv-klasse-editor',
@@ -17,15 +18,13 @@ export class KlasseEditorComponent implements OnInit, OnDestroy {
 
 	name: string = '';
 
-	submitted = false;
+	private submitted = false;
 
 	warntextDuplikat = '';
 
 	private uuid: string = '';
 
 	private schulkuerzel: string = '';
-
-	private saveInProgress = false;
 
 	private modelSubscription: Subscription = new Subscription();
 
@@ -55,10 +54,12 @@ export class KlasseEditorComponent implements OnInit, OnDestroy {
 			}
 		);
 
-		this.modelSubscription = this.klassenFacade.editorModel$.subscribe(
-			em => {
-				if (em) {
-					this.name = em.name;
+		this.modelSubscription = this.klassenFacade.klasseUIModel$.subscribe(
+			model => {
+				if (model) {
+					this.name = model.name;
+					this.uuid = model.uuid;
+					this.submitted = model.saved;
 				} else {
 					const url = '/lehrer/dashboard';
 					this.router.navigateByUrl(url);
@@ -76,7 +77,7 @@ export class KlasseEditorComponent implements OnInit, OnDestroy {
 
 	submitDisabled(): boolean {
 
-		if (this.saveInProgress) {
+		if (this.submitted) {
 			return true;
 		}
 
@@ -93,7 +94,6 @@ export class KlasseEditorComponent implements OnInit, OnDestroy {
 
 
 	onSubmit(): void {
-		this.submitted = true;
 		if (this.uuid === 'neu') {
 			this.klassenFacade.insertKlasse(this.uuid, this.schulkuerzel, { name: this.name });
 		} else {
@@ -103,7 +103,7 @@ export class KlasseEditorComponent implements OnInit, OnDestroy {
 
 
 	addKlasse(): void {
-		this.saveInProgress = false;
+		this.submitted = false;
 		this.messageService.clear();
 		this.name = '';
 		this.klassenFacade.startCreateKlasse();
