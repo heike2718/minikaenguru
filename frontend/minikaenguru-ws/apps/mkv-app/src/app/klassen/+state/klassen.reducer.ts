@@ -195,7 +195,7 @@ const klassenReducer = createReducer(initialKlassenState,
 	}), 
 
 	on(KlassenActions.dateiAusgewaehlt, (state, _action) => {
-		return {...state, fehlermeldungenUploadReport: []};
+		return {...state, importReport: undefined};
 	}),
 
 	on(KlassenActions.navigatedToUploads, (state, _action) => {

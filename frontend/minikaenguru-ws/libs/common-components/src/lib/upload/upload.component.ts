@@ -78,6 +78,7 @@ export class UploadComponent implements OnInit {
 			},
 			(error => {
 				this.uploading = false;
+				this.currentFile = undefined;
 				this.canSubmit = true;
 				const msg: Message = this.errorMapper.extractMessageObject(error);
 				this.responsePayload.emit({ message: msg });
