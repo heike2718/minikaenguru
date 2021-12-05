@@ -22,7 +22,7 @@ export class ImportReportComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.importReportSubscription = this.klassenFacade.klassenimportReport$.subscribe( r => {
-      if (r) {
+      if (r && r.id) {
         this.importReportDownloadModel = {
           id: 'import-report-' + r.id.substr(0,8),
           url: environment.apiUrl + '/klassen/importreport/' + r.id,

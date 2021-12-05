@@ -39,16 +39,15 @@
 				</div>
 				<small *ngIf="devMode && subUrl.length > 0">{{uploadModel.subUrl}}</small>
 
-				<div class="row">
-					<div *ngIf="subUrl.length > 0" class="w-100 ml-1">
-						<mk-upload [uploadModel]="uploadModel" (dateiAusgewaehlt)="onDateiAusgewaehlt()"
-							(responsePayload)="onResponse($event)"></mk-upload>
-					</div>
-					<button type="button" class="btn btn-outline-primary w-75 ml-4" title="Infos zum Inhalt der Datei" (click)="showInfoUploadFormat()">
-						<i class="fa fa-info" aria-hidden="true"></i> Wie muss die Excel-Datei aussehen?
-					</button>
-
+				<div *ngIf="subUrl.length > 0" class="row">
+					<mk-upload [uploadModel]="uploadModel" (dateiAusgewaehlt)="onDateiAusgewaehlt()"
+					(responsePayload)="onResponse($event)"></mk-upload>
 				</div>
+
+				<button type="button" class="btn btn-outline-primary col-12" title="Infos zum Inhalt der Datei" (click)="showInfoUploadFormat()">
+					<i class="fa fa-info" aria-hidden="true"></i> Wie muss die Excel-Datei aussehen?
+				</button>	
+				
 
 				<div *ngIf="klassenFacade.klassenimportReport$ | async">
 					<mkv-import-report></mkv-import-report>
