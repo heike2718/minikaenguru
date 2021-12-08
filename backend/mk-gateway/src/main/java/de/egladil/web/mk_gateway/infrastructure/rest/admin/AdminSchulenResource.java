@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.admin;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.context.RequestScoped;
@@ -23,6 +24,8 @@ import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.teilnahmen.admin.AdminSchulenService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.admin.SchuleAdminOverview;
+import de.egladil.web.mk_gateway.domain.uploadmonitoring.api.UploadMonitoringInfo;
+import de.egladil.web.mk_gateway.domain.uploadmonitoring.api.UploadMonitoringService;
 
 /**
  * AdminSchulenResource
@@ -39,6 +42,9 @@ public class AdminSchulenResource {
 	@Inject
 	AdminSchulenService adminSchulenService;
 
+	@Inject
+	UploadMonitoringService uploadMonitoringService;
+
 	@GET
 	@Path("{schulkuerzel}")
 	public Response getSchulinfos(@PathParam(
@@ -53,6 +59,17 @@ public class AdminSchulenResource {
 		}
 
 		return Response.ok(new ResponsePayload(MessagePayload.ok(), optSchule.get())).build();
+	}
+
+	@GET
+	@Path("{schulkuerzel}/uploads/klassenlisten")
+	public Response getUploadsKlassenlisten(@PathParam(
+		value = "schulkuerzel") final String schulkuerzel) {
+
+		List<UploadMonitoringInfo> trefferliste = uploadMonitoringService
+			.findUploadsKlassenlisteWithTeilnahmenummer(schulkuerzel);
+
+		return Response.ok().entity(new ResponsePayload(MessagePayload.ok(), trefferliste)).build();
 	}
 
 }

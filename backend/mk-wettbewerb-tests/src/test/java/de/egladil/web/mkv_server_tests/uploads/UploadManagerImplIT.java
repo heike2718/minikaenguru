@@ -53,7 +53,7 @@ import de.egladil.web.mk_gateway.domain.uploads.impl.UploadManagerImpl;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
-import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
+import de.egladil.web.mk_gateway.infrastructure.persistence.entities.UploadsMonitoringViewItem;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KinderHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UploadHibernateRepository;
@@ -181,11 +181,13 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 				"Zeile 7: Fehler! \"2a;Heinz;2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
 				fehlerUndWarnungen.get(0));
 
-			List<PersistenterUpload> uploads = uploadRepository.findUploadsWithTeilnahmenummer(schulkuerzel);
+			List<UploadsMonitoringViewItem> uploads = uploadRepository.findUploadsWithUploadTypeAndTeilnahmenummer(
+				UploadType.KLASSENLISTE,
+				schulkuerzel);
 
 			assertEquals(1, uploads.size());
 
-			PersistenterUpload persistenterUpload = uploads.get(0);
+			UploadsMonitoringViewItem persistenterUpload = uploads.get(0);
 			assertEquals(UploadStatus.DATENFEHLER, persistenterUpload.getStatus());
 
 			String path = "/home/heike/git/testdaten/minikaenguru/integrationtests/upload/" + persistenterUpload.getUuid()
@@ -239,7 +241,9 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 
 			assertEquals(1, klassen.size());
 
-			List<PersistenterUpload> uploads = uploadRepository.findUploadsWithTeilnahmenummer(schulkuerzel);
+			List<UploadsMonitoringViewItem> uploads = uploadRepository.findUploadsWithUploadTypeAndTeilnahmenummer(
+				UploadType.KLASSENLISTE,
+				schulkuerzel);
 
 			assertEquals(1, uploads.size());
 
@@ -265,7 +269,7 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 				assertTrue(kind.isImportiert());
 			}
 
-			PersistenterUpload persistenterUpload = uploads.get(0);
+			UploadsMonitoringViewItem persistenterUpload = uploads.get(0);
 			assertEquals(UploadStatus.DATENFEHLER, persistenterUpload.getStatus());
 
 			String path = "/home/heike/git/testdaten/minikaenguru/integrationtests/upload/" + persistenterUpload.getUuid()
@@ -284,7 +288,8 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 			TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdentifier = TeilnahmeIdentifierAktuellerWettbewerb
 				.createForSchulteilnahme(schulkuerzel);
 
-			List<PersistenterUpload> uploadsVorher = uploadRepository.findUploadsWithTeilnahmenummer(schulkuerzel);
+			List<UploadsMonitoringViewItem> uploadsVorher = uploadRepository
+				.findUploadsWithUploadTypeAndTeilnahmenummer(UploadType.KLASSENLISTE, schulkuerzel);
 
 			byte[] data = loadData("/klassenlisten/klassenliste-M5ZD2NL2-mit-fehlern.csv");
 			UploadData uploadData = new UploadData("Irgendein Schulname.csv", data);
@@ -346,13 +351,15 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 			List<Kind> dubletten = kinder.stream().filter(k -> k.isDublettePruefen()).collect(Collectors.toList());
 			assertEquals(2, dubletten.size());
 
-			List<PersistenterUpload> uploads = uploadRepository.findUploadsWithTeilnahmenummer(schulkuerzel);
+			List<UploadsMonitoringViewItem> uploads = uploadRepository.findUploadsWithUploadTypeAndTeilnahmenummer(
+				UploadType.KLASSENLISTE,
+				schulkuerzel);
 
 			assertEquals(uploadsVorher.size() + 1, uploads.size());
 
-			Optional<PersistenterUpload> optNeuer = uploads.stream().filter(u -> !uploadsVorher.contains(u)).findFirst();
+			Optional<UploadsMonitoringViewItem> optNeuer = uploads.stream().filter(u -> !uploadsVorher.contains(u)).findFirst();
 
-			PersistenterUpload persistenterUpload = optNeuer.get();
+			UploadsMonitoringViewItem persistenterUpload = optNeuer.get();
 			assertEquals(UploadStatus.DATENFEHLER, persistenterUpload.getStatus());
 
 			String path = "/home/heike/git/testdaten/minikaenguru/integrationtests/upload/" + persistenterUpload.getUuid()

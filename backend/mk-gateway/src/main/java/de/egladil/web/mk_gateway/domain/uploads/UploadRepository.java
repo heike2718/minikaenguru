@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
+import de.egladil.web.mk_gateway.infrastructure.persistence.entities.UploadsMonitoringViewItem;
 
 /**
  * UploadRepository
@@ -18,7 +19,23 @@ public interface UploadRepository {
 	 * @param  teilnahmenummer
 	 * @return                 List
 	 */
-	List<PersistenterUpload> findUploadsWithTeilnahmenummer(String teilnahmenummer);
+	List<UploadsMonitoringViewItem> findUploadsWithUploadTypeAndTeilnahmenummer(UploadType uploadRType, String teilnahmenummer);
+
+	/**
+	 * Läd die Page.
+	 *
+	 * @param  limit
+	 *                int die Anzahl, die gelesen werden soll
+	 * @param  offset
+	 *                int der Index, an dem das Lesen beginnen soll.
+	 * @return        List
+	 */
+	List<UploadsMonitoringViewItem> loadUploadsPage(int limit, int offset);
+
+	/**
+	 * @return long
+	 */
+	long countUploads();
 
 	/**
 	 * @param  uploadIdentifier
@@ -43,5 +60,12 @@ public interface UploadRepository {
 	 * @return                    PersistenterUpload
 	 */
 	PersistenterUpload updateUpload(PersistenterUpload persistenterUpload);
+
+	/**
+	 * @param  uploadType
+	 * @param  teilnahmenummer
+	 * @return                 long
+	 */
+	long countUploadsWithUploadTypeAndTeilnahmenummer(UploadType uploadType, String teilnahmenummer);
 
 }

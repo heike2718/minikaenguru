@@ -9,6 +9,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -122,6 +123,21 @@ public class VeranstalterHibernateRepositoryIT extends AbstractIntegrationTest {
 
 		// Act
 		List<Veranstalter> result = veranstalterRepository.findVeranstalter(suchanfrage);
+
+		// Assert
+		assertEquals(3, result.size());
+	}
+
+	@Test
+	void should_loadVeranstalterByUuids_work() {
+
+		// Arrange
+		List<String> uuids = Arrays
+			.asList(new String[] { "a6bf38f2-5450-4720-9688-9c239a2e87c8", "eea92cc4-65b9-48b2-b30c-8f7b0b72c8de",
+				"412b67dc-132f-465a-a3c3-468269e866cb" });
+
+		// Act
+		List<Veranstalter> result = veranstalterRepository.loadVeranstalterByUuids(uuids);
 
 		// Assert
 		assertEquals(3, result.size());

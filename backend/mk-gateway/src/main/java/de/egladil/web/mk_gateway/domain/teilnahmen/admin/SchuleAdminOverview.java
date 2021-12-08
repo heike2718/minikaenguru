@@ -37,6 +37,9 @@ public class SchuleAdminOverview {
 	private int anzahlKinder;
 
 	@JsonProperty
+	private long anzahlUploadKlassenlisten;
+
+	@JsonProperty
 	private List<AnonymisierteTeilnahmeAPIModel> schulteilnahmen;
 
 	public SchuleKatalogData getKatalogData() {
@@ -115,5 +118,15 @@ public class SchuleAdminOverview {
 
 		this.anzahlKinder = anzahlKinder;
 		return this;
+	}
+
+	public long getAnzahlUploadKlassenlisten() {
+
+		return anzahlUploadKlassenlisten;
+	}
+
+	public void setAnzahlUploadKlassenlisten(final long anzahlUploadKlassenlisten) {
+
+		this.anzahlUploadKlassenlisten = anzahlUploadKlassenlisten;
 	}
 }

@@ -37,9 +37,11 @@ export {
 	compareKlassen,
 	kindToString,
 	UploadComponentModel,
+	PaginationComponentModel,
 	WettbewerbStatus,
 	initialUploadComponentModel,
-	modalOptions
+	modalOptions,
+	initialPaginationComponentModel
 } from './lib/common-components.model';
 
 export { AnonymisierteTeilnahmeComponent } from './lib/anonymisierte-teilnahme/anonymisierte-teilnahme.component';

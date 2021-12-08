@@ -10,6 +10,7 @@ import { resetSchulteilnahmen } from '../schulteilnahmen/+state/schulteilnahmen.
 import { resetNewsletters } from '../newsletter/+state/newsletter.actions';
 import { dateCleared } from '../eventlog/+state/eventlog.actions';
 import { NewsletterFacade } from '../newsletter/newsletter.facade';
+import {  resetUploads } from '../uploads/+state/uploads.actions';
 
 
 @Injectable({
@@ -31,6 +32,7 @@ export class LogoutService {
 		this.appStore.dispatch(resetSchulteilnahmen());
 		this.appStore.dispatch(dateCleared());
 		this.appStore.dispatch(resetNewsletters());
+		this.appStore.dispatch(resetUploads());
 
 		localStorage.removeItem(STORAGE_KEY_INVALID_SESSION);
 	}

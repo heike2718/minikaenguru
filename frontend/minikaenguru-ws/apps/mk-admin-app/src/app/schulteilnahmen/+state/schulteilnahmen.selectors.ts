@@ -9,6 +9,8 @@ export const selectedSchule = createSelector(schulteilnahmenState, s => s.select
 export const selectedTeilnahme = createSelector(schulteilnahmenState, s => s.selectedTeilnahme);
 export const schuleLoading = createSelector(schulteilnahmenState, s => s.loading);
 export const fehlermeldungen = createSelector(schulteilnahmenState, s => s.fehlermeldungenUploadReport);
+export const uploadsKlassenlisteInfos = createSelector(schulteilnahmenState, s => s.uploadKlassenlisteInfos);
+export const uploadsKlassenlisteInfosLoaded = createSelector(schulteilnahmenState, s => s.uploadKlassenlisteInfosLoaded);
 
 export const schuleUploadModel = createSelector(selectedSchule, selectedTeilnahme, (s, t) => {
 	if (s && t) {

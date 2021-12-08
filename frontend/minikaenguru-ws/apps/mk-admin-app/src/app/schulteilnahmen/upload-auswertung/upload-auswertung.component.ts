@@ -49,8 +49,7 @@ export class UploadAuswertungComponent implements OnInit, OnDestroy {
 					};
 				}
 			}
-		)
-
+		);
 	}
 
 	ngOnDestroy(): void {

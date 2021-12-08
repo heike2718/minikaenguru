@@ -2,6 +2,7 @@ import { Action, createReducer, on } from '@ngrx/store';
 import * as SchulteilnahmenActions from './schulteilnahmen.actions';
 import { SchuleAdminOverviewWithID, SchuleAdminOverview, SchulenOverviewMap, replaceTeilnahme } from '../schulteilnahmen.model';
 import { Teilnahme } from '@minikaenguru-ws/common-components';
+import { UploadMonitoringInfo } from '../../uploads/uploads.model';
 
 export const schulteilnahmenFeatureKey = 'mk-admin-app-schulteilnahmen';
 
@@ -10,7 +11,9 @@ export interface SchulteilnahmenState {
 	selectedSchule?: SchuleAdminOverview,
 	selectedTeilnahme?: Teilnahme,
 	fehlermeldungenUploadReport: string[];
-	loading: boolean
+	loading: boolean;
+	uploadKlassenlisteInfos: UploadMonitoringInfo[];
+	uploadKlassenlisteInfosLoaded: boolean;
 };
 
 const initialSchulteilnahmenState: SchulteilnahmenState = {
@@ -18,7 +21,9 @@ const initialSchulteilnahmenState: SchulteilnahmenState = {
 	selectedSchule: undefined,
 	selectedTeilnahme: undefined,
 	fehlermeldungenUploadReport: [],
-	loading: false
+	loading: false,
+	uploadKlassenlisteInfos: [],
+	uploadKlassenlisteInfosLoaded: false
 };
 
 const schulteilnahmenReducer = createReducer(initialSchulteilnahmenState,
@@ -38,6 +43,11 @@ const schulteilnahmenReducer = createReducer(initialSchulteilnahmenState,
 
 		return {...state};
 
+	}),
+
+	on(SchulteilnahmenActions.startLoadUploadInfos, (state, _action) => {
+
+		return {...state, loading: true};
 	}),
 
 	on(SchulteilnahmenActions.anonymisierteTeilnahmeSelected, (state, action) => {

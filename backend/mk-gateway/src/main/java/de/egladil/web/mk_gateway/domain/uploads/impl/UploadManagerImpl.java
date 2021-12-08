@@ -211,7 +211,7 @@ public class UploadManagerImpl implements UploadManager {
 		upload.setMediatype(scanResult.getMediaType());
 		upload.setStatus(UploadStatus.HOCHGELADEN);
 		upload.setTeilnahmenummer(uploadPayload.getTeilnahmenummer());
-		upload.setUploadTyp(uploadPayload.getUploadType());
+		upload.setUploadType(uploadPayload.getUploadType());
 		upload.setBenutzerUuid(uploadPayload.getBenutzerID().identifier());
 
 		PersistenterUpload persistenterUpload = uploadRepository.addUploadMetaData(upload);

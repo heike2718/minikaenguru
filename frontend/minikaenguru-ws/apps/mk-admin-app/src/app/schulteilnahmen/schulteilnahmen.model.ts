@@ -21,6 +21,7 @@ export interface SchuleAdminOverview {
 	readonly minikaenguruData: SchuleMinikaenguruData;
 	readonly angemeldetDurch?: string;
 	readonly nameUrkunde?: string;
+	readonly anzahlUploadKlassenlisten: number;
 	readonly schulteilnahmen: Teilnahme[];
 };
 

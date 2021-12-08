@@ -40,6 +40,7 @@ import { NewsletterModule } from './newsletter/newsletter.module';
 import { VersandinfoProgressComponent } from './versandinfo-progress/versandinfo-progress.component';
 import { StoreDevModules } from './store-config/store-devtools';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { UploadsModule } from './uploads/uploads.module';
 
 registerLocaleData(localeDe);
 
@@ -99,6 +100,7 @@ registerLocaleData(localeDe);
 		SchulteilnahmenModule,
 		EventlogModule,
 		NewsletterModule,
+		UploadsModule,
 		LayouttestsModule,
 		AppRoutingModule, // <-- immer am Ende, damit die wildcard-route als letzte deklariert bleibt
 	],

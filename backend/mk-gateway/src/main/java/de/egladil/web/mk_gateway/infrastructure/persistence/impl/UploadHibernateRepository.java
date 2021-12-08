@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.persistence.impl;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +22,9 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.uploads.UploadIdentifier;
 import de.egladil.web.mk_gateway.domain.uploads.UploadRepository;
+import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
+import de.egladil.web.mk_gateway.infrastructure.persistence.entities.UploadsMonitoringViewItem;
 
 /**
  * UploadHibernateRepository
@@ -42,7 +45,7 @@ public class UploadHibernateRepository implements UploadRepository {
 	}
 
 	@Override
-	public List<PersistenterUpload> findUploadsWithTeilnahmenummer(final String teilnahmenummer) {
+	public List<UploadsMonitoringViewItem> findUploadsWithUploadTypeAndTeilnahmenummer(final UploadType uploadType, final String teilnahmenummer) {
 
 		if (teilnahmenummer == null) {
 
@@ -50,8 +53,50 @@ public class UploadHibernateRepository implements UploadRepository {
 			return new ArrayList<>();
 		}
 
-		return entityManager.createNamedQuery(PersistenterUpload.FIND_BY_TEILNAHMENUMMER, PersistenterUpload.class)
-			.setParameter("teilnahmenummer", teilnahmenummer).getResultList();
+		return entityManager
+			.createNamedQuery(UploadsMonitoringViewItem.FIND_BY_UPLOAD_TYPE_AND_TEILNAHMENUMMER, UploadsMonitoringViewItem.class)
+			.setParameter("teilnahmenummer", teilnahmenummer).setParameter("uploadType", uploadType).getResultList();
+	}
+
+	@Override
+	public long countUploads() {
+
+		String stmt = "select count(*) from VW_UPLOADS";
+
+		@SuppressWarnings("unchecked")
+		List<BigInteger> trefferliste = entityManager.createNativeQuery(stmt).getResultList();
+
+		if (trefferliste.isEmpty()) {
+
+			return 0;
+		}
+
+		return trefferliste.get(0).longValue();
+	}
+
+	@Override
+	public List<UploadsMonitoringViewItem> loadUploadsPage(final int limit, final int offset) {
+
+		return entityManager
+			.createNamedQuery(UploadsMonitoringViewItem.LOAD_PAGE, UploadsMonitoringViewItem.class)
+			.setFirstResult(offset).setMaxResults(limit).getResultList();
+	}
+
+	@Override
+	public long countUploadsWithUploadTypeAndTeilnahmenummer(final UploadType uploadType, final String teilnahmenummer) {
+
+		String stmt = "select count(*) from VW_UPLOADS u where u.TEILNAHMENUMMER = :teilnahmenummer and UPLOAD_TYPE = :uploadType";
+
+		@SuppressWarnings("unchecked")
+		List<BigInteger> trefferliste = entityManager.createNativeQuery(stmt)
+			.setParameter("teilnahmenummer", teilnahmenummer).setParameter("uploadType", uploadType.toString()).getResultList();
+
+		if (trefferliste.isEmpty()) {
+
+			return 0;
+		}
+
+		return trefferliste.get(0).longValue();
 	}
 
 	@Override

@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
 import { Router } from '@angular/router';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription, combineLatest } from 'rxjs';
 
 import { SchulteilnahmenService } from './schulteilnahmen.service';
 import * as SchulteilnamenActions from './+state/schulteilnahmen.actions';
@@ -12,6 +12,8 @@ import { SchuleAdminOverview, SchuleAdminOverviewWithID, SchulenOverviewMap, Sch
 import { take } from 'rxjs/operators';
 import { Teilnahme } from '@minikaenguru-ws/common-components';
 import { ResponsePayload, MessageService, Message } from '@minikaenguru-ws/common-messages';
+import { UploadsFacade } from '../uploads/uploads.facade';
+import { UploadMonitoringInfo, UploadMonitoringInfoMap } from '../uploads/uploads.model';
 
 @Injectable({
 	providedIn: 'root'
@@ -26,9 +28,14 @@ export class SchulteilnahmenFacade {
 
 	public fehlermeldungen$: Observable<string[]> = this.store.select(SchulteilnahmenSelectors.fehlermeldungen);
 
+	public uploadsKlassenlisteInfos$: Observable<UploadMonitoringInfo[]> = this.store.select(SchulteilnahmenSelectors.uploadsKlassenlisteInfos);
+
+	public uploadInfosLOaded$: Observable<boolean> = this.store.select(SchulteilnahmenSelectors.uploadsKlassenlisteInfosLoaded);
+
 	private schulenMap: SchuleAdminOverviewWithID[] = [];
 
 	constructor(private schulteilnahmenService: SchulteilnahmenService,
+		private uploadsFacade: UploadsFacade,
 		private messageService: MessageService,
 		private store: Store<AppState>,
 		private router: Router,
@@ -39,6 +46,20 @@ export class SchulteilnahmenFacade {
 			map => this.schulenMap = map
 		);
 
+		combineLatest([this.schuleOverview$, this.uploadsFacade.uploadInfos$] ).subscribe(
+
+			result => {
+
+				if (result[0]) {
+					const teilnahmenummer = result[0].kuerzel;
+
+					if (result[1]) {
+						const uploadInfosKlassenliste: UploadMonitoringInfo[] = result[1].filter(info => teilnahmenummer === info.teilnahmenummer && info.uploadType === 'KLASSENLISTE' );
+						this.store.dispatch(SchulteilnamenActions.uploadsKlassenlisteInfosLoaded({uploadInfos: uploadInfosKlassenliste}));
+					}
+				}
+			}
+		);
 	}
 
 	public clearSchuleSelection(): void {
@@ -91,7 +112,7 @@ export class SchulteilnahmenFacade {
 					this.router.navigateByUrl('/schulteilnahme');
 				},
 				(error => {
-					this.store.dispatch(SchulteilnamenActions.loadSchuleFinishedWithError());
+					this.store.dispatch(SchulteilnamenActions.loadFinishedWithError());
 					this.errorService.handleError(error);
 				})
 			)

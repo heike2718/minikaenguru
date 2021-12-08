@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { UploadService } from './upload.service';
 import { UploadComponentModel } from '../common-components.model';
 import { ResponsePayload, Message, ErrorMappingService } from '@minikaenguru-ws/common-messages';

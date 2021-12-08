@@ -347,6 +347,14 @@ Schaltfläche öffnet, fasst die eben genannten Anforderungen noch einmal kurz z
 
 image::./images/upload-klassenlisten-info.png[width=20%]
 
+__Zeichensatz__
+
+Neben Excel 2007... können Sie auch LibreOffice- oder OpenOffice-Dateien sowie CSV- oder Excel 97-2003-Dateien hochladen. Da sich der Zeichensatz
+bei Excel 97-2003- und CSV-Dateien nicht eindeutig ermitteln lässt, kann es sein, das bei Verwendung dieser beiden Dateitypen die Umlaute nicht
+korrekt importiert werden. Daher wir empfohlen, entweder Excel 2007...- oder OpenOffice- oder LibreOffice-Dateien zu verwenden, weil sonst die
+Nachkorrektur aufwendig werden könnte.
+
+
 
 Klassen- und Kinderdaten pflegen (manuell)
 ------------------------------------------

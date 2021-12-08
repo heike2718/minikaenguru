@@ -144,6 +144,22 @@ export const initialUploadComponentModel: UploadComponentModel = {
 	acceptMessage: ''	
 };
 
+export interface PaginationComponentModel {
+	readonly pageSize: number; // number: Anzahl Items, die in einer Page gezeigt werden
+	readonly maxSize: number; // number: Anzahl numerierter Links - bestimmt die Breite des Paginators
+	readonly collectionSize: number; // number: Gesamtzahl der Items
+	readonly ellipses: boolean; // boolean: bei true sind das 3 Punkte, hinter denen die Gesamtzahl der verfügbaren Seiten steht.
+	readonly boundaryLinks: boolean;  // boolean: mit diesen kann man ganz ans Ende oder ganz an den Anfang hopsen
+};
+
+export const initialPaginationComponentModel: PaginationComponentModel = {
+	pageSize: 10,
+	maxSize: 5,
+	collectionSize: 100,
+	ellipses: false,
+	boundaryLinks: true
+};
+
 export const initialKindEditorModel: KindEditorModel = {
 	vorname: '',
 	nachname: '',

@@ -13,6 +13,7 @@ import { AnonymisierteTeilnahmeComponent } from './anonymisierte-teilnahme/anony
 import { UnterlagenComponent } from './unterlagen/unterlagen.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SwitchComponent } from './switch/switch.component';
+import { PaginationComponent } from './pagination/pagination.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { SwitchComponent } from './switch/switch.component';
 		UploadComponent,
 		AnonymisierteTeilnahmeComponent,
 		UnterlagenComponent, 
-		SwitchComponent
+		SwitchComponent,
+		PaginationComponent
 	],
 	exports: [
 		DownloadButtonComponent,
@@ -38,7 +40,8 @@ import { SwitchComponent } from './switch/switch.component';
 		UploadComponent,
 		AnonymisierteTeilnahmeComponent,
 		UnterlagenComponent,
-		SwitchComponent
+		SwitchComponent,
+		PaginationComponent
 	]
 })
 export class CommonComponentsModule {

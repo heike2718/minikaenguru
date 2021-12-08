@@ -44,6 +44,9 @@ public final class PermittedRolesForAdminProvider {
 
 		List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
 		result.put(new PathWithMethod("/admin/uploads/auswertung/*/*/*", HttpMethod.POST), rollen);
+		result.put(new PathWithMethod("/admin/uploads", HttpMethod.GET), rollen);
+		result.put(new PathWithMethod("/admin/uploads/size", HttpMethod.GET), rollen);
+
 	}
 
 	/**
@@ -210,6 +213,13 @@ public final class PermittedRolesForAdminProvider {
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
 			result.put(new PathWithMethod("/admin/schulen/*", HttpMethod.GET), rollen);
+
+		}
+
+		{
+
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			result.put(new PathWithMethod("/admin/schulen/*/uploads/klassenlisten", HttpMethod.GET), rollen);
 
 		}
 
