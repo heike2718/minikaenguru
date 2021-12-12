@@ -5,8 +5,8 @@ import * as UploadsSelectors from './+state/uploads.selectors';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
-import { Observable, of } from 'rxjs';
-import { UploadMonitoringInfo, UploadMonitoringInfoMap, UploadMonitoringInfoWithID, UploadType } from './uploads.model';
+import { Observable } from 'rxjs';
+import { UploadMonitoringInfo, UploadMonitoringInfoMap, UploadMonitoringInfoWithID, UploadsMonitoringPage, UploadsMonitoringPageMap, UploadType } from './uploads.model';
 
 @Injectable(
     {providedIn: 'root'}
@@ -16,7 +16,9 @@ export class UploadsFacade {
     public loading$: Observable<boolean> = this.store.select(UploadsSelectors.loading);
     public uploadInfos$: Observable<UploadMonitoringInfo[]> = this.store.select(UploadsSelectors.uploadInfos);
     public anzahlUploads$: Observable<number> = this.store.select(UploadsSelectors.anzahlUploads);
-    public selectedPage$: Observable<UploadMonitoringInfo[]> = this.store.select(UploadsSelectors.selectedPage);
+    public pageContent$: Observable<UploadMonitoringInfo[]> = this.store.select(UploadsSelectors.pageContent);
+    
+    private pages: UploadsMonitoringPage[] = [];
 
     private uploadsMap!: UploadMonitoringInfoMap;
 
@@ -32,6 +34,10 @@ export class UploadsFacade {
                     uploadInfos.forEach(uploadInfo => items.push({uuid: uploadInfo.uuid, uploadMonitoringInfo: uploadInfo}));
                     this.uploadsMap = new UploadMonitoringInfoMap(items);
                 }
+            );
+
+            this.store.select(UploadsSelectors.pages).subscribe(
+                pages => this.pages = pages
             );
     }
 
@@ -55,29 +61,18 @@ export class UploadsFacade {
 
     public getOrLoadNextPage(page: number, pageSize: number) {
 
-        const uploadInfos: UploadMonitoringInfo[] = this.uploadsMap.toArray();
-        const offset = (page-1) * pageSize;
+        const map: UploadsMonitoringPageMap = new UploadsMonitoringPageMap(this.pages);
 
-        if (uploadInfos.length >= (page-1) * pageSize + pageSize) {
-
-            const uploadsInfoPage: UploadMonitoringInfo[] = uploadInfos.slice(offset, (page-1) * pageSize + pageSize);
-            this.store.dispatch(UploadsActions.uploadPageSelected({uploadInfos: uploadsInfoPage}));
+        if (map.has(page)) {
+            this.store.dispatch(UploadsActions.uploadPageLoaded({pageNumber: page, content: map.getContent(page)}));    
+        } else {
+            this.loadPage(page, pageSize);
         }
-
-       this.uploadsService.loadPage(pageSize, offset).subscribe(
-            
-        uploadInfos => {
-            this.store.dispatch(UploadsActions.uploadPageSelected({uploadInfos: uploadInfos}));
-        },
-        (error => {
-            this.store.dispatch(UploadsActions.serviceCallFinishedWithError());
-            this.errorHandler.handleError(error);
-        }));
-
-
     }
 
     public getOrLoadUploadInfos(uploadType: UploadType, teilnahmenummer: string): void {
+
+        // TODO: hier muss noch bissel was getan werden
 
         const uploadInfos: UploadMonitoringInfo[] = this.uploadsMap.findUploadInfoByTeilnahmeNummer(uploadType, teilnahmenummer);
 
@@ -99,6 +94,21 @@ export class UploadsFacade {
 
 // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private loadPage(page: number, pageSize: number): void {
+
+        const offset = (page-1) * pageSize;
+
+        this.uploadsService.loadPage(pageSize, offset).subscribe(
+            
+            uploadInfos => {
+                this.store.dispatch(UploadsActions.uploadPageLoaded({pageNumber: page, content: uploadInfos})); 
+            },
+            (error => {
+                this.store.dispatch(UploadsActions.serviceCallFinishedWithError());
+                this.errorHandler.handleError(error);
+            }));
+    }
+
 
     private loadUploadsKlassenlistenByTeilnahmenummer(teilnahmenummer: string): void {
 
@@ -115,8 +125,5 @@ export class UploadsFacade {
                 this.store.dispatch(UploadsActions.serviceCallFinishedWithError());
                 this.errorHandler.handleError(error);
             }));
-
-
-    }
-    
+    }    
 }

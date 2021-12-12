@@ -1,5 +1,5 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { UploadMonitoringInfo, UploadMonitoringInfoWithID, UploadMonitoringInfoMap } from '../uploads.model';
+import { UploadMonitoringInfo, UploadMonitoringInfoWithID, UploadMonitoringInfoMap, UploadsMonitoringPage, UploadsMonitoringPageMap } from '../uploads.model';
 import * as UploadsActions from './uploads.actions';
 
 export const uploadsFeatureKey = 'mk-admin-app-uploads';
@@ -8,16 +8,18 @@ export interface UploadsState  {
     readonly loading: boolean;
     readonly anzahlUploads: number;
     readonly uploadsMap: UploadMonitoringInfoWithID[];
-    readonly selectedPage: UploadMonitoringInfo[]
     readonly selectedUploadInfo?: UploadMonitoringInfo;
+    readonly pages: UploadsMonitoringPage[];
+    readonly pageContent: UploadMonitoringInfo[];
 };
 
 const initialUploadsState: UploadsState = {
     loading: false,
     anzahlUploads: 0,
     uploadsMap: [],
-    selectedPage: [],
-    selectedUploadInfo: undefined
+    selectedUploadInfo: undefined,
+    pages: [],
+    pageContent: []
 };
 
 const uploadsReducer = createReducer(initialUploadsState, 
@@ -36,15 +38,17 @@ const uploadsReducer = createReducer(initialUploadsState,
         return {...state, loading: false, anzahlUploads: action.size};
     }),
 
+    on (UploadsActions.uploadPageLoaded, (state, action) => {
+
+        const newPage: UploadsMonitoringPage = {pageNumber: action.pageNumber, content: action.content};
+        const newPages: UploadsMonitoringPage[] = new UploadsMonitoringPageMap(state.pages).merge(newPage);
+
+        return {...state, loading: false, pages: newPages, pageContent: newPage.content};
+    }),
+
     on(UploadsActions.uploadInfosLoaded, (state, action) => {        
         const uploadsMap: UploadMonitoringInfoWithID[] = new UploadMonitoringInfoMap(state.uploadsMap).add(action.uploadInfos);
         return {...state, loading: false, uploadsMap: uploadsMap};
-    }),
-
-    on (UploadsActions.uploadPageSelected, (state, action) => {
-
-        const uploadsMap: UploadMonitoringInfoWithID[] = new UploadMonitoringInfoMap(state.uploadsMap).merge(action.uploadInfos);
-        return {...state, loading: false, uploadsMap: uploadsMap, selectedPage: action.uploadInfos};
     }),
 
     on(UploadsActions.resetUploads, (_state, _action) => {

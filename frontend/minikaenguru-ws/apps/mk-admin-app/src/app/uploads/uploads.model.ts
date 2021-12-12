@@ -22,6 +22,59 @@ export interface UploadMonitoringInfoWithID {
 	readonly uploadMonitoringInfo: UploadMonitoringInfo;
 };
 
+export interface UploadsMonitoringPage {
+	readonly pageNumber: number;
+	readonly content: UploadMonitoringInfo[]; 
+};
+
+export class UploadsMonitoringPageMap {
+
+
+	private pages: Map<number, UploadMonitoringInfo[]> = new Map();
+
+	constructor(readonly items: UploadsMonitoringPage[]) {
+
+		for (let item of items) {
+			this.pages.set(item.pageNumber, item.content);
+		}
+
+	}
+
+	public has(pageNumber: number): boolean {
+
+        return this.pages.has(pageNumber);
+    }
+
+    public getContent(pageNumber: number): UploadMonitoringInfo[] {
+
+        if (!this.has(pageNumber)) {
+            return [];
+        }
+
+        return this.pages.get(pageNumber)!;
+    }
+
+    public merge(page: UploadsMonitoringPage): UploadsMonitoringPage[] {
+
+        const result : UploadsMonitoringPage[] = [];
+
+        if (!this.has(page.pageNumber)) {
+            result.push(page);            
+        }
+
+        for (let p of this.items) {
+
+            if (p.pageNumber !== page.pageNumber) {
+                result.push(p);
+            } else {
+                result.push(page);
+            }
+        }
+
+        return result;
+    }
+};
+
 
 export class UploadMonitoringInfoMap {
 

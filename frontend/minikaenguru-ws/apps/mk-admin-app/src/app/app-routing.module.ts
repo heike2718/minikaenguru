@@ -21,7 +21,8 @@ const routes: Routes = [
 	{ path: 'schulteilnahme', loadChildren: () => import('./schulteilnahmen/schulteilnahmen.module').then(m => m.SchulteilnahmenModule) },
 	{ path: 'eventlog', loadChildren: () => import('./eventlog/eventlog.module').then(m => m.EventlogModule) },
 	{ path: 'newsletters', loadChildren: () => import('./newsletter/newsletter.module').then(m => m.NewsletterModule) },
-	{ path: 'uploads', loadChildren: () => import('./uploads/uploads.module').then(m => m.UploadsModule) }
+	{ path: 'uploads', loadChildren: () => import('./uploads/uploads.module').then(m => m.UploadsModule) },
+	{ path: 'loesungszettel', loadChildren: () => import('./loesungszettel/loesungszettel.module').then(m => m.LoesungszettelModule) },
 	{ path: 'irgendwas', pathMatch: 'full', component: IrgendwasListComponent },
 	{ path: '', pathMatch: 'full', component: LandingComponent },
 	{ path: '**', component: NotFoundComponent },

@@ -127,7 +127,7 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 			MessagePayload messagePayload = result.getMessage();
 			assertEquals("WARN", messagePayload.getLevel());
 			assertEquals(
-				"Einige Kinder konnten nicht importiert werden. Einen Fehlerreport können Sie mit dem Link herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert.",
+				"Einige Kinder konnten nicht importiert werden. Den Fehlerreport können Sie herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
 				messagePayload.getMessage());
 
 			KlassenlisteImportReport importReport = (KlassenlisteImportReport) result.getData();

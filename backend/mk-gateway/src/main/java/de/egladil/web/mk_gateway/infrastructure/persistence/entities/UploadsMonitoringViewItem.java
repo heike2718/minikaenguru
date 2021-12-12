@@ -27,10 +27,10 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 @NamedQueries({
 	@NamedQuery(
 		name = "UploadsMonitoringViewItem.FIND_BY_UPLOAD_TYPE_AND_TEILNAHMENUMMER",
-		query = "select u from UploadsMonitoringViewItem u where u.teilnahmenummer = :teilnahmenummer and u.uploadType = :uploadType order by u.uploadDate"),
+		query = "select u from UploadsMonitoringViewItem u where u.teilnahmenummer = :teilnahmenummer and u.uploadType = :uploadType order by u.sortNumber desc"),
 	@NamedQuery(
 		name = "UploadsMonitoringViewItem.LOAD_PAGE",
-		query = "select u from UploadsMonitoringViewItem u ORDER by u.uploadDate"),
+		query = "select u from UploadsMonitoringViewItem u ORDER by u.sortNumber desc"),
 })
 public class UploadsMonitoringViewItem {
 
@@ -79,6 +79,9 @@ public class UploadsMonitoringViewItem {
 
 	@Column(name = "EMAIL")
 	private String emailLehrer;
+
+	@Column(name = "SORTNR")
+	private long sortNumber;
 
 	@Override
 	public int hashCode() {
@@ -170,6 +173,16 @@ public class UploadsMonitoringViewItem {
 	public String getEmailLehrer() {
 
 		return emailLehrer;
+	}
+
+	public long getSortNumber() {
+
+		return sortNumber;
+	}
+
+	public void setSortNumber(final long sortNumber) {
+
+		this.sortNumber = sortNumber;
 	}
 
 }

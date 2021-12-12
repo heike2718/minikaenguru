@@ -14,13 +14,13 @@ export const sizeUploadInfosLoaded = createAction(
     props<{size: number}>()
 );
 
-export const uploadInfosLoaded = createAction(
-    '[UploadsFacade] getOrLoadUploadInfos',
-    props<{uploadInfos: UploadMonitoringInfo[]}>()
+export const uploadPageLoaded = createAction(
+    '[UploadsFacade] getOrLoadNextPage',
+    props<{pageNumber: number, content: UploadMonitoringInfo[]}>()
 );
 
-export const uploadPageSelected = createAction(
-    '[UploadsFacade] getOrLoadNextPage',
+export const uploadInfosLoaded = createAction(
+    '[UploadsFacade] getOrLoadUploadInfos',
     props<{uploadInfos: UploadMonitoringInfo[]}>()
 );
 

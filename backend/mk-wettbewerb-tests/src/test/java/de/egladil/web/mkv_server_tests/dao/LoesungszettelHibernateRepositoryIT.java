@@ -365,6 +365,45 @@ public class LoesungszettelHibernateRepositoryIT extends AbstractIntegrationTest
 		assertEquals(48, optUpload.get().getRight().intValue());
 	}
 
+	@Test
+	void should_anzahlForWettbewerb_work() {
+
+		// Act
+		long result = loesungszettelRepository.anzahlForWettbewerb(new WettbewerbID(2018));
+
+		// Assert
+		assertEquals(230L, result);
+
+	}
+
+	@Test
+	void should_loadLoadPageForWettbewerb_work() {
+
+		// Arrange
+		WettbewerbID wettbewerbID = new WettbewerbID(2018);
+
+		// Act
+		List<Loesungszettel> result = loesungszettelRepository.loadLoadPageForWettbewerb(wettbewerbID, 20, 35);
+
+		// Assert
+		assertEquals(20, result.size());
+
+	}
+
+	@Test
+	void should_loadLoadPageForWettbewerb_work_when_trefferlsteEmpty() {
+
+		// Arrange
+		WettbewerbID wettbewerbID = new WettbewerbID(2015);
+
+		// Act
+		List<Loesungszettel> result = loesungszettelRepository.loadLoadPageForWettbewerb(wettbewerbID, 20, 35);
+
+		// Assert
+		assertEquals(0, result.size());
+
+	}
+
 	private Loesungszettel addLoesungszettel(final Loesungszettel loesungszettel) {
 
 		EntityTransaction trx = entityManager.getTransaction();

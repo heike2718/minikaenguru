@@ -1,3 +1,19 @@
-<p>
-  loesungszettel-list works!
-</p>
+<div class="mkv-container mt-5">
+  <div class="col-12">
+
+    <h1>Lösungszettel <span *ngIf="jahr">{{jahr}}</span> <span *ngIf="loesungszettelFacade.anzahl$ | async as anzahl">: {{anzahl}}</span></h1>
+    <p *ngIf="devMode">loesungszettel-list.component.ts</p>
+  
+    <input id="jahrInput" type="text" name="jahrInput" placeholder="Wettbewerbsjahr"
+							[(ngModel)]="jahr" class="btn-block" (change)="onJahrChanged()" />
+
+    <div *ngIf="loesungszettelFacade.pageContent$ | async as trefferliste" class="mt-2">
+    
+      <div *ngFor="let loesungszettel of trefferliste" class="col-12 mb-3">
+        <mka-loesungszettel-card [loesungszettel]="loesungszettel"></mka-loesungszettel-card>
+      </div>
+
+      <mk-pagination [options]="paginationComponentModel" (pageSelected)="onPageChanged($event)"></mk-pagination>
+    </div>
+  </div>
+</div>

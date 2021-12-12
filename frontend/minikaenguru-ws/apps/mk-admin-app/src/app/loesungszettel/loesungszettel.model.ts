@@ -10,6 +10,12 @@ export interface Schule {
 	readonly nameLand: string;
 };
 
+export interface LoesungszettelRohdaten {
+    readonly nutzereingabe: string;
+    readonly antwortcode?: string;
+    readonly wertungscode: string;
+}
+
 export interface Loesungszettel {
     readonly uuid: string;
     readonly sortnumber: number;
@@ -20,11 +26,9 @@ export interface Loesungszettel {
     readonly sprache: Sprachtyp;
     readonly punkte: string;
     readonly kaengurusprung: number;
-    readonly schule?: Schule;
-    readonly nutzereingabe: string;
-    readonly antwortcode?: string;
-    readonly wertungscode: string;
+    readonly schule?: Schule;    
     readonly kindUuid?: string;
+    readonly rohdaten: LoesungszettelRohdaten;
 };
 
 
@@ -33,54 +37,53 @@ export interface LoesungszettelWithID {
     readonly loesungszettel: Loesungszettel;
 };
 
-export class LoesungszettelMap {
+export interface LoesungszettelPage {
+    readonly pageNumber: number;
+    readonly content: Loesungszettel[];
+};
 
-    private alleLoesungszettel: Map<string, Loesungszettel> = new Map();
+export class LoesungszettelPageMap {
 
-    constructor(private items: LoesungszettelWithID[]) {
+    private pages: Map<number, Loesungszettel[]> = new Map();
 
-        for (const item of items) {
-            this.alleLoesungszettel.set(item.uuid, item.loesungszettel);
+    constructor (private items: LoesungszettelPage[]) {
+        
+        for (const item of items ) {
+            this.pages.set(item.pageNumber, item.content);
         }
     }
 
-    public merge(loesungszettel: Loesungszettel[]): LoesungszettelWithID[] {
+    public has(pageNumber: number): boolean {
 
-        const result: LoesungszettelWithID[] = [];
+        return this.pages.has(pageNumber);
+    }
 
-        if (loesungszettel.length === 0) {
-            return this.add(loesungszettel);
+    public getContent(pageNumber: number): Loesungszettel[] {
+
+        if (!this.has(pageNumber)) {
+            return [];
         }
 
-        const itemsSorted: LoesungszettelWithID[] = this.items.sort((item1, item2) => item1.loesungszettel.sortnumber - item2.loesungszettel.sortnumber);
+        return this.pages.get(pageNumber)!;
+    }
 
-        for (let l of loesungszettel) {
+    public merge(loesungszettelPage: LoesungszettelPage): LoesungszettelPage[] {
 
-            for (let item of itemsSorted) {
-                if (item.uuid !== l.uuid) {
-                    result.push(item);
-                } else {
-                    result.push({uuid: l.uuid, loesungszettel: l});
-                }
+        const result : LoesungszettelPage[] = [];
+
+        if (!this.has(loesungszettelPage.pageNumber)) {
+            result.push(loesungszettelPage);            
+        }
+
+        for (let p of this.items) {
+
+            if (p.pageNumber !== loesungszettelPage.pageNumber) {
+                result.push(p);
+            } else {
+                result.push(loesungszettelPage);
             }
         }
 
         return result;
     }
-
-    public add(loesungszettel: Loesungszettel[]): LoesungszettelWithID[] {
-
-		const result: LoesungszettelWithID[] = [...this.items];
-
-		if (loesungszettel.length === 0) {
-			return result;
-		}
-
-		for (const l of loesungszettel) {
-			result.push({uuid: l.uuid, loesungszettel: l});
-		}
-
-		return result;
-	}
-
 };

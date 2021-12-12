@@ -11,6 +11,7 @@ import { resetNewsletters } from '../newsletter/+state/newsletter.actions';
 import { dateCleared } from '../eventlog/+state/eventlog.actions';
 import { NewsletterFacade } from '../newsletter/newsletter.facade';
 import {  resetUploads } from '../uploads/+state/uploads.actions';
+import { resetLoesungszettel } from '../loesungszettel/+state/loesungszettel.actions';
 
 
 @Injectable({
@@ -33,6 +34,7 @@ export class LogoutService {
 		this.appStore.dispatch(dateCleared());
 		this.appStore.dispatch(resetNewsletters());
 		this.appStore.dispatch(resetUploads());
+		this.appStore.dispatch(resetLoesungszettel());
 
 		localStorage.removeItem(STORAGE_KEY_INVALID_SESSION);
 	}

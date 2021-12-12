@@ -5,6 +5,11 @@ export const startLoading = createAction(
     '[LoesungszettelFacade] start backendcall'
 );
 
+export const jahrSelected = createAction(
+    '[LoesungszettelFacade] selectJahr',
+    props<{jahr: number}>()
+);
+
 export const anzahlLoesungszettelLoaded = createAction(
     '[LoesungszettelFacade] getAnzahl',
     props<{size: number}>()
@@ -16,9 +21,9 @@ export const backendCallFinishedWithError = createAction(
 
 export const loesungszettelLoaded = createAction(
     '[LoesungszettelFacade] loadPage',
-    props<{loesungszettel: Loesungszettel[]}>()
+    props<{pageNumber: number, loesungszettel: Loesungszettel[]}>()
 );
 
-export const clearLoesungszettel = createAction(
-    '[LoesungszettelFacade] reset'
+export const resetLoesungszettel = createAction(
+    '[Navbar/Loesungszettelfacade] reset'
 );

@@ -16,7 +16,7 @@ export class UploadsListComponent implements OnInit, OnDestroy {
 
   paginationComponentModel!: PaginationComponentModel;
 
-  private pageSize = 5;
+  pageSize = 5;
 
   private anzahlUploadsSubscription: Subscription = new Subscription();
 
@@ -30,6 +30,9 @@ export class UploadsListComponent implements OnInit, OnDestroy {
         this.paginationComponentModel = {...initialPaginationComponentModel, collectionSize: anzahlUploads, pageSize: this.pageSize};
       }
     );
+
+    this.uploadsFacade.countUploads();
+    this.uploadsFacade.getOrLoadNextPage(1, this.pageSize);
   }
 
   ngOnDestroy(): void {

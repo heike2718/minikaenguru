@@ -44,4 +44,8 @@ export class DashboardComponent implements OnInit {
 	gotoUplodsMonitoring() {
 		this.router.navigateByUrl('/uploads');
 	}
+
+	gotoLoesungszettel() {
+		this.router.navigateByUrl('/loesungszettel');
+	}
 }

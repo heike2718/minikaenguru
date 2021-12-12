@@ -65,6 +65,9 @@ public class PersistenterUpload extends ConcurrencySafeEntity {
 	@Column(name = "DATE_UPLOAD")
 	private Date uploadDate;
 
+	@Column(name = "SORTNR")
+	private long sortNumber;
+
 	public String getBenutzerUuid() {
 
 		return benutzerUuid;
@@ -153,6 +156,16 @@ public class PersistenterUpload extends ConcurrencySafeEntity {
 	public void setEncoding(final String encoding) {
 
 		this.encoding = encoding;
+	}
+
+	public long getSortNumber() {
+
+		return sortNumber;
+	}
+
+	public void setSortNumber(final long sortNumber) {
+
+		this.sortNumber = sortNumber;
 	}
 
 }

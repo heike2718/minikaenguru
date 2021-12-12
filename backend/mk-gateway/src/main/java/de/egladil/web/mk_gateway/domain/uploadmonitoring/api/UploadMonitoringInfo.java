@@ -43,7 +43,7 @@ public class UploadMonitoringInfo {
 	private String uploadDatum;
 
 	@JsonProperty
-	private int sortnumber;
+	private long sortnumber;
 
 	public String getUuid() {
 
@@ -143,12 +143,12 @@ public class UploadMonitoringInfo {
 		this.uploadDatum = uploadDatum;
 	}
 
-	public int getSortnumber() {
+	public long getSortnumber() {
 
 		return sortnumber;
 	}
 
-	public UploadMonitoringInfo withSortnumber(final int sortnumber) {
+	public UploadMonitoringInfo withSortnumber(final long sortnumber) {
 
 		this.sortnumber = sortnumber;
 		return this;

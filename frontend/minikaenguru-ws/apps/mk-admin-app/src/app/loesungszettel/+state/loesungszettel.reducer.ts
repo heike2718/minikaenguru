@@ -1,20 +1,22 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { Loesungszettel, LoesungszettelMap, LoesungszettelWithID } from "../loesungszettel.model";
+import { Loesungszettel, LoesungszettelPage, LoesungszettelPageMap } from "../loesungszettel.model";
 import * as LoesungszettelActions from './loesungszettel.actions';
 
 export const loesungszettelFeatureKey = 'mk-admin-app-loesungszettel';
 
 export interface LoesungszettelState {
     readonly loading: boolean;
+    readonly selectedJahr?: number;
     readonly anzahlLoesungszettel: number;
-    readonly loesungszettelMap: LoesungszettelWithID[];
+    readonly pages: LoesungszettelPage[];
     readonly pageContent: Loesungszettel[];
 };
 
 const initialLoesungszettelState: LoesungszettelState = {
     loading: false,
+    selectedJahr: undefined,
     anzahlLoesungszettel: 0,
-    loesungszettelMap: [],
+    pages: [],
     pageContent: []
 };
 
@@ -28,6 +30,17 @@ const loesungszettelReducer = createReducer(initialLoesungszettelState,
         return {...state, loading: false};
     }),
 
+    on(LoesungszettelActions.jahrSelected, (state, action) => {
+
+        if (state.selectedJahr === action.jahr) {
+
+            return {...state, selectedJahr: action.jahr};
+        } else {
+
+            return {...initialLoesungszettelState, selectedJahr: action.jahr};
+        }
+    }),
+
     on(LoesungszettelActions.anzahlLoesungszettelLoaded, (state, action) => {
 
         return {...state, loading: false, anzahlLoesungszettel: action.size};
@@ -35,11 +48,12 @@ const loesungszettelReducer = createReducer(initialLoesungszettelState,
 
     on(LoesungszettelActions.loesungszettelLoaded, (state, action) => {
 
-       const zettelMap: LoesungszettelWithID[] = new LoesungszettelMap(state.loesungszettelMap).merge(action.loesungszettel);
-       return {...state, loading: false, loesungszettelMap: zettelMap, pageContent: action.loesungszettel};
+       const newPage: LoesungszettelPage = {pageNumber: action.pageNumber, content: action.loesungszettel};
+       const zettelPages: LoesungszettelPage[] = new LoesungszettelPageMap(state.pages).merge(newPage);
+       return {...state, loading: false, pages: zettelPages, pageContent: action.loesungszettel};
     }),
 
-    on(LoesungszettelActions.clearLoesungszettel, (_state, _action) => {
+    on(LoesungszettelActions.resetLoesungszettel, (_state, _action) => {
         return initialLoesungszettelState;
     }),
 

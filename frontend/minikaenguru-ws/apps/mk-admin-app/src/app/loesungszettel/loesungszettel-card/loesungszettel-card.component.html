@@ -1,0 +1,23 @@
+<div class="row">
+	<div class="col-12">
+    <div [style.background-color]="loesungszettel.teilnahmeart === 'SCHULE' ? '#d5e7cb' : '#faedca'">
+      <div class="card-body">
+        <div class="card-title">{{loesungszettel.sortnumber}} - {{loesungszettel.teilnahmenummer}} <span class="badge badge-success">P:
+          {{loesungszettel.punkte}} - KS: {{loesungszettel.kaengurusprung}}</span></div>
+        <div class="card-subtitle text-muted">UUID: {{loesungszettel.uuid}}</div>
+        <div class="card-subtitle text-muted">Klassenstufe: {{loesungszettel.klassenstufe}}</div>
+        <div class="card-subtitle text-muted">Quelle: {{loesungszettel.quelle}}</div>
+        <div *ngIf="loesungszettel.kindUuid" class="card-subtitle text-muted">Kind: {{loesungszettel.kindUuid}}</div>
+        <div *ngIf="loesungszettel.schule" class="card-subtitle text-muted">Schule: hier jetzt die SchuleCard einbinden</div>
+    
+        <p *ngIf="devMode">
+          loesungszettel-card.component.ts
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+

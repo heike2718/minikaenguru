@@ -1,17 +1,20 @@
 <div class="mkv-container mt-1">
-  <p *ngIf="devMode">uploads-list.component.ts</p>
 
-  <ng-container *ngIf="(uploadsFacade.uploadInfos$| async ) as uploadInfos else loading">
+  <h1>Uploads</h1>
+
+  <p *ngIf="devMode">uploads-list.component.ts</p>
+  <p *ngIf="uploadsFacade.anzahlUploads$ | async as anzahl">Anzahl: {{anzahl}}</p>
+
+  <ng-container *ngIf="(uploadsFacade.pageContent$| async ) as uploadInfos else loading">
 		<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let uploadInfo of uploadInfos">
 			<mka-uploads-card [uploadInfo]="uploadInfo"></mka-uploads-card>
 		</div>
 	</ng-container>
 
-  <mk-pagination [options]="paginationComponentModel" (pageSelected)="onPageChanged($event)"></mk-pagination>
+    <div * ngIf="anzahl > pageSize">
+  		<mk-pagination [options]="paginationComponentModel" (pageSelected)="onPageChanged($event)"></mk-pagination>
+	</div>
 </div>
-
-
-
 <ng-template #loading>
 	Lade Uploadinfos... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
 </ng-template>

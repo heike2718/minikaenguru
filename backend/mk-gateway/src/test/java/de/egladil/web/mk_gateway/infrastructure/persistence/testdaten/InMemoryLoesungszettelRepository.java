@@ -284,4 +284,16 @@ public class InMemoryLoesungszettelRepository implements LoesungszettelRepositor
 		}
 		return result;
 	}
+
+	@Override
+	public List<Loesungszettel> loadLoadPageForWettbewerb(final WettbewerbID wettbewerbId, final int limit, final int offset) {
+
+		return new ArrayList<>(alleLoesungszettel.values());
+	}
+
+	@Override
+	public long anzahlForWettbewerb(final WettbewerbID wettbewerbID) {
+
+		return alleLoesungszettel.size();
+	}
 }

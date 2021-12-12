@@ -65,8 +65,7 @@ public class AdminUploadResource {
 
 	@GET
 	@Path("size")
-	@Consumes(MediaType.APPLICATION_JSON)
-	private Response getUploadsCount() {
+	public Response getUploadsCount() {
 
 		Long result = uploadMonitoringService.countUploads();
 
@@ -74,8 +73,7 @@ public class AdminUploadResource {
 	}
 
 	@GET
-	@Consumes(MediaType.APPLICATION_JSON)
-	private Response getUploads(@QueryParam(value = "limit") final int limit, @QueryParam(
+	public Response getUploads(@QueryParam(value = "limit") final int limit, @QueryParam(
 		value = "offset") final int offset) {
 
 		List<UploadMonitoringInfo> uploads = uploadMonitoringService.loadUploads(limit, offset);

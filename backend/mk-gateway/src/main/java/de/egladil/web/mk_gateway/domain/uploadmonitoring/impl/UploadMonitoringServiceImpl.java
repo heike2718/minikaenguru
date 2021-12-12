@@ -6,6 +6,7 @@ package de.egladil.web.mk_gateway.domain.uploadmonitoring.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -63,20 +64,12 @@ public class UploadMonitoringServiceImpl implements UploadMonitoringService {
 
 	public List<UploadMonitoringInfo> mapResultList(final List<UploadsMonitoringViewItem> viewItems, final int offset) {
 
-		List<UploadMonitoringInfo> result = new ArrayList<>();
-
 		if (viewItems.isEmpty()) {
 
-			return result;
+			return new ArrayList<>();
 		}
 
-		for (int i = 0; i < viewItems.size(); i++) {
-
-			int sortnumber = offset + i;
-			result.add(map(viewItems.get(i), sortnumber));
-
-		}
-		return result;
+		return viewItems.stream().map(vi -> map(vi)).collect(Collectors.toList());
 	}
 
 	/**
@@ -84,7 +77,7 @@ public class UploadMonitoringServiceImpl implements UploadMonitoringService {
 	 * @param  viewItem
 	 * @return
 	 */
-	private UploadMonitoringInfo map(final UploadsMonitoringViewItem viewItem, final int sortnumber) {
+	private UploadMonitoringInfo map(final UploadsMonitoringViewItem viewItem) {
 
 		UploadMonitoringInfo uploadInfo = new UploadMonitoringInfo()
 			.withDateiTyp(DateiTyp.valueOfTikaName(viewItem.getMediatype()))
@@ -95,7 +88,7 @@ public class UploadMonitoringServiceImpl implements UploadMonitoringService {
 			.withUuid(viewItem.getUuid())
 			.withEmailLehrer(viewItem.getEmailLehrer())
 			.withNameLehrer(viewItem.getNameLehrer())
-			.withSortnumber(sortnumber);
+			.withSortnumber(viewItem.getSortNumber());
 
 		String uploadDate = CommonTimeUtils.format(CommonTimeUtils.transformFromDate(viewItem.getUploadDate()));
 		uploadInfo.setUploadDatum(uploadDate);

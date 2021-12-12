@@ -41,6 +41,7 @@ import { VersandinfoProgressComponent } from './versandinfo-progress/versandinfo
 import { StoreDevModules } from './store-config/store-devtools';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UploadsModule } from './uploads/uploads.module';
+import { LoesungszettelModule } from './loesungszettel/loesungszettel.module';
 
 registerLocaleData(localeDe);
 
@@ -101,6 +102,7 @@ registerLocaleData(localeDe);
 		EventlogModule,
 		NewsletterModule,
 		UploadsModule,
+		LoesungszettelModule,
 		LayouttestsModule,
 		AppRoutingModule, // <-- immer am Ende, damit die wildcard-route als letzte deklariert bleibt
 	],

@@ -992,6 +992,30 @@ public class PermittedRolesInMemoryRepositoryTest {
 			assertTrue(rollen.contains(Rolle.ADMIN));
 
 		}
+
+		@Test
+		void should_permittedRollen_getLoesungszettel_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/admin/loesungszettel/2017", HttpMethod.GET);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.ADMIN));
+
+		}
+
+		@Test
+		void should_permittedRollen_getAnzahlLoesungszettel_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/admin/loesungszettel/2017/size", HttpMethod.GET);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.ADMIN));
+
+		}
 	}
 
 	@Nested

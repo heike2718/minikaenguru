@@ -23,6 +23,7 @@ import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.uploads.UploadIdentifier;
 import de.egladil.web.mk_gateway.domain.uploads.UploadRepository;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
+import de.egladil.web.mk_gateway.infrastructure.persistence.SortNumberGenerator;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.UploadsMonitoringViewItem;
 
@@ -37,10 +38,14 @@ public class UploadHibernateRepository implements UploadRepository {
 	@Inject
 	EntityManager entityManager;
 
+	@Inject
+	SortNumberGenerator sortNumberGenerator;
+
 	public static UploadHibernateRepository createForIntegrationTests(final EntityManager em) {
 
 		UploadHibernateRepository result = new UploadHibernateRepository();
 		result.entityManager = em;
+		result.sortNumberGenerator = SortNumberGeneratorImpl.createForIntegrationTest(em);
 		return result;
 	}
 
@@ -136,6 +141,7 @@ public class UploadHibernateRepository implements UploadRepository {
 	@Override
 	public PersistenterUpload addUploadMetaData(final PersistenterUpload upload) {
 
+		upload.setSortNumber(sortNumberGenerator.getNextSortnumberUploads());
 		entityManager.persist(upload);
 		return upload;
 	}
