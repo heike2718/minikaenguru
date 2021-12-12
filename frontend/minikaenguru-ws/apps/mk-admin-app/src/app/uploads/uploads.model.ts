@@ -15,6 +15,7 @@ export interface UploadMonitoringInfo {
 	readonly uploadType: UploadType;
 	readonly uploadDatum: string;
 	readonly sortnumber: number;
+	readonly fileName: string;
 };
 
 export interface UploadMonitoringInfoWithID {

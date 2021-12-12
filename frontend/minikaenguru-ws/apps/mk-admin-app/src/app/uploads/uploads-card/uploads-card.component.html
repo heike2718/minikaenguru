@@ -15,7 +15,15 @@
 							<div class="card-subtitle text-muted col-sm-12 col-md-9">Lehrer:in: {{uploadInfo.nameLehrer}}</div>
 							<div class="card-subtitle text-muted col-sm-12 col-md-9">Email: {{uploadInfo.emailLehrer}}</div>
 							<div class="card-subtitle text-muted col-sm-12 col-md-9">Datum: {{uploadInfo.uploadDatum}}</div>
-						</div>			
+						</div>
+						
+						<ng-container *ngIf="uploadInfo.uploadStatus === 'DATENFEHLER'">
+							<mk-download-button [model]="fehlerreportDownloadButtonModel">
+							</mk-download-button>
+
+							<mk-download-button [model]="fileDownloadButtonModel">
+							</mk-download-button>
+						</ng-container>
 					</div>
 				  </div>
 			</div>	

@@ -28,7 +28,9 @@ import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.annotations.LandKuerzel;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.loesungszettel.upload.AuswertungImportService;
 import de.egladil.web.mk_gateway.domain.loesungszettel.upload.UploadAuswertungContext;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
@@ -48,7 +50,6 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
  */
 @RequestScoped
 @Path("admin/uploads")
-@Produces(MediaType.APPLICATION_JSON)
 public class AdminUploadResource {
 
 	@Context
@@ -65,6 +66,7 @@ public class AdminUploadResource {
 
 	@GET
 	@Path("size")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUploadsCount() {
 
 		Long result = uploadMonitoringService.countUploads();
@@ -73,6 +75,7 @@ public class AdminUploadResource {
 	}
 
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUploads(@QueryParam(value = "limit") final int limit, @QueryParam(
 		value = "offset") final int offset) {
 
@@ -83,6 +86,7 @@ public class AdminUploadResource {
 	@POST
 	@Path("auswertung/{jahr}/{kuerzelLand}/{schulkuerzel}")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response uploadAuswertung(@PathParam(value = "jahr") final Integer jahr, @PathParam(
 		value = "kuerzelLand") @LandKuerzel final String kuerzelLand, @PathParam(
 			value = "schulkuerzel") @Kuerzel final String schulkuerzel, @QueryParam(
@@ -108,5 +112,23 @@ public class AdminUploadResource {
 		ResponsePayload responsePayload = uploadManager.processUpload(uploadPayload);
 
 		return Response.ok(responsePayload).build();
+	}
+
+	@GET
+	@Path("{uuid}/fehlerreport")
+	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON }) // text/plain, damit man kein encoding-Problem bekommt
+	public Response getFehlerreport(@PathParam(value = "uuid") final String uuid) {
+
+		DownloadData downloadData = this.uploadMonitoringService.getFehlerReport(uuid);
+		return MkGatewayFileUtils.createDownloadResponse(downloadData);
+	}
+
+	@GET
+	@Path("{uuid}/file")
+	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON }) // text/plain, damit man kein encoding-Problem bekommt
+	public Response getFile(@PathParam(value = "uuid") final String uuid) {
+
+		DownloadData downloadData = this.uploadMonitoringService.getUploadedFile(uuid);
+		return MkGatewayFileUtils.createDownloadResponse(downloadData);
 	}
 }

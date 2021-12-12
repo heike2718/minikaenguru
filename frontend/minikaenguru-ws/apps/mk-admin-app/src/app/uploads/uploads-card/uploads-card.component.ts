@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { DownloadButtonModel } from '@minikaenguru-ws/common-components';
 import { environment } from 'apps/mk-admin-app/src/environments/environment';
+import { initialDownloadButtonModel } from 'libs/common-components/src/lib/download/download.model';
 import { UploadMonitoringInfo } from '../uploads.model';
 
 @Component({
@@ -14,9 +16,31 @@ export class UploadsCardComponent implements OnInit {
   @Input()
   uploadInfo!: UploadMonitoringInfo;
 
+  fehlerreportDownloadButtonModel: DownloadButtonModel = initialDownloadButtonModel;
+  fileDownloadButtonModel: DownloadButtonModel = initialDownloadButtonModel;
+
   constructor() { }
 
   ngOnInit() {
-  }
 
+   this.fehlerreportDownloadButtonModel =  {
+			id: this.uploadInfo.uuid + '-fehlerreport',
+			url: environment.apiUrl + '/uplads/' + this.uploadInfo.uuid + '/fehlerreport',
+			buttonLabel: 'Fehlerreport',
+			dateiname: this.uploadInfo.teilnahmenummer + '-' + this.uploadInfo.uuid + '-fehlerreport.csv',
+			mimetype: 'application/octet-stream',
+			tooltip: 'Fehlerreport herunterladen',
+			class: 'btn btn-outline-dark w-100 ml-1'
+		};
+
+    this.fileDownloadButtonModel =  {
+			id: this.uploadInfo.uuid + '-file',
+			url: environment.apiUrl + '/uplads/' + this.uploadInfo.uuid + '/file',
+			buttonLabel: 'Datei',
+			dateiname: this.uploadInfo.fileName,
+			mimetype: 'application/octet-stream',
+			tooltip: 'Datei herunterladen',
+			class: 'btn btn-outline-dark w-100 ml-1'
+		};
+  }
 }

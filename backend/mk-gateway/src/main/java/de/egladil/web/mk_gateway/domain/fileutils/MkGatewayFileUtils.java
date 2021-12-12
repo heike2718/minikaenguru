@@ -56,7 +56,9 @@ public final class MkGatewayFileUtils {
 
 	public static byte[] readBytesFromFile(final String path) {
 
-		try (InputStream in = new FileInputStream(new File(path)); ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+		File file = new File(path);
+
+		try (InputStream in = new FileInputStream(file); ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
 
 			IOUtils.copy(in, bos);
 

@@ -45,6 +45,12 @@ public class UploadMonitoringInfo {
 	@JsonProperty
 	private long sortnumber;
 
+	@JsonProperty
+	private String fileName;
+
+	@JsonProperty
+	private String nameFehlerreport;
+
 	public String getUuid() {
 
 		return uuid;
@@ -151,6 +157,28 @@ public class UploadMonitoringInfo {
 	public UploadMonitoringInfo withSortnumber(final long sortnumber) {
 
 		this.sortnumber = sortnumber;
+		return this;
+	}
+
+	public String getFileName() {
+
+		return fileName;
+	}
+
+	public UploadMonitoringInfo withFileName(final String fileName) {
+
+		this.fileName = fileName;
+		return this;
+	}
+
+	public String getNameFehlerreport() {
+
+		return nameFehlerreport;
+	}
+
+	public UploadMonitoringInfo withNameFehlerreport(final String nameFehlerreport) {
+
+		this.nameFehlerreport = nameFehlerreport;
 		return this;
 	}
 }
