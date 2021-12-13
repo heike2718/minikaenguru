@@ -4,10 +4,10 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.loesungszettel.online;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -220,7 +220,8 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 
 		when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(aktuellerWettbewerb));
 		when(kinderRepository.ofId(REQUEST_KIND_ID)).thenReturn(Optional.of(kind));
-		when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any())).thenThrow(new AccessDeniedException("nö"));
+		when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any()))
+			.thenThrow(new AccessDeniedException("nö"));
 
 		// Act
 		try {
@@ -290,7 +291,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 
 		for (int i = 0; i < zeilen.size(); i++) {
 
-			assertEquals("Fehler bei Index= " + i, zeilen.get(i), actualZeilen.get(i));
+			assertEquals(zeilen.get(i), actualZeilen.get(i), "Fehler bei Index= " + i);
 		}
 
 		verify(wettbewerbService, times(1)).aktuellerWettbewerb();
@@ -395,7 +396,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 
 		for (int i = 0; i < zeilen.size(); i++) {
 
-			assertEquals("Fehler bei Index= " + i, zeilen.get(i), actualZeilen.get(i));
+			assertEquals(zeilen.get(i), actualZeilen.get(i), "Fehler bei Index= " + i);
 		}
 
 		verify(wettbewerbService, times(1)).aktuellerWettbewerb();

@@ -4,11 +4,11 @@
 // =====================================================
 package de.egladil.web.mkv_server_tests.domain.loesungszettel;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Optional;
 
@@ -93,7 +93,7 @@ public class LoesungszettelAnlegenIntegrationIT extends AbstractLoesungszettelTe
 		assertTrue(optKind.isPresent());
 
 		Kind karla = optKind.get();
-		assertNull("DB muss zurückgesetzt werden", karla.loesungszettelID());
+		assertNull(karla.loesungszettelID(), "DB muss zurückgesetzt werden");
 
 		LoesungszettelAPIModel requestDaten = TestUtils
 			.createLoesungszettelRequestDatenKlasseZWEIKreuzeABC(LOESUNGSZETTEL_REQUEST_UUID, kindUuid);
@@ -116,20 +116,20 @@ public class LoesungszettelAnlegenIntegrationIT extends AbstractLoesungszettelTe
 
 			if (responseZeile.name().startsWith("A")) {
 
-				assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.A,
-					responseZeile.eingabe());
+				assertEquals(OnlineLoesungszetteleingabe.A,
+					responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 			}
 
 			if (responseZeile.name().startsWith("B")) {
 
-				assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.B,
-					responseZeile.eingabe());
+				assertEquals(OnlineLoesungszetteleingabe.B,
+					responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 			}
 
 			if (responseZeile.name().startsWith("C")) {
 
-				assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.C,
-					responseZeile.eingabe());
+				assertEquals(OnlineLoesungszetteleingabe.C,
+					responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 			}
 
 		}
@@ -157,12 +157,13 @@ public class LoesungszettelAnlegenIntegrationIT extends AbstractLoesungszettelTe
 		String loesungszettelUuid = "0bf5e030-94c9-4d33-b39c-b5d52cbd74d2";
 
 		Optional<Loesungszettel> optLoesungszettel = loesungszettelRepository.ofID(new Identifier(loesungszettelUuid));
-		assertTrue("DB muss zurückgesetzt werden", optLoesungszettel.isPresent());
+		assertTrue(optLoesungszettel.isPresent(), "DB muss zurückgesetzt werden");
 
 		Optional<Kind> optKind = kinderRepository.ofId(new Identifier(kindUuid));
-		assertTrue("DB muss zurückgesetzt werden", optKind.isPresent());
+		assertTrue(optKind.isPresent(), "DB muss zurückgesetzt werden");
 
-		assertEquals("DB muss zurückgesetzt werden", optKind.get().identifier(), optLoesungszettel.get().kindID());
+		assertEquals(optKind.get().identifier(), optLoesungszettel.get().kindID(),
+			"DB muss zurückgesetzt werden");
 
 		LoesungszettelRohdaten rohdaten = optLoesungszettel.get().rohdaten();
 		assertEquals("AAAABBBBCCCC", rohdaten.nutzereingabe());
@@ -191,20 +192,20 @@ public class LoesungszettelAnlegenIntegrationIT extends AbstractLoesungszettelTe
 
 			if (responseZeile.name().startsWith("A")) {
 
-				assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.A,
-					responseZeile.eingabe());
+				assertEquals(OnlineLoesungszetteleingabe.A,
+					responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 			}
 
 			if (responseZeile.name().startsWith("B")) {
 
-				assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.B,
-					responseZeile.eingabe());
+				assertEquals(OnlineLoesungszetteleingabe.B,
+					responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 			}
 
 			if (responseZeile.name().startsWith("C")) {
 
-				assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.C,
-					responseZeile.eingabe());
+				assertEquals(OnlineLoesungszetteleingabe.C,
+					responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 			}
 
 		}
@@ -222,13 +223,14 @@ public class LoesungszettelAnlegenIntegrationIT extends AbstractLoesungszettelTe
 		String loesungszettelUuid = "1358724b-2685-41df-b2ec-40e77aea874d";
 
 		Optional<Loesungszettel> optLoesungszettel = loesungszettelRepository.ofID(new Identifier(loesungszettelUuid));
-		assertFalse("DB muss zurückgesetzt werden", optLoesungszettel.isPresent());
+		assertFalse(optLoesungszettel.isPresent(), "DB muss zurückgesetzt werden");
 
 		Optional<Kind> optKind = kinderRepository.ofId(new Identifier(kindUuid));
 		assertTrue(optKind.isPresent());
 
 		Kind wilma = optKind.get();
-		assertEquals("DB muss zurückgesetzt werden", loesungszettelUuid, wilma.loesungszettelID().identifier());
+		assertEquals(loesungszettelUuid, wilma.loesungszettelID().identifier(),
+			"DB muss zurückgesetzt werden");
 
 		LoesungszettelAPIModel requestDaten = TestUtils
 			.createLoesungszettelRequestDatenKlasseEinsKreuzeABC(LOESUNGSZETTEL_REQUEST_UUID, kindUuid);
@@ -251,20 +253,20 @@ public class LoesungszettelAnlegenIntegrationIT extends AbstractLoesungszettelTe
 
 			if (responseZeile.name().startsWith("A")) {
 
-				assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.A,
-					responseZeile.eingabe());
+				assertEquals(OnlineLoesungszetteleingabe.A,
+					responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 			}
 
 			if (responseZeile.name().startsWith("B")) {
 
-				assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.B,
-					responseZeile.eingabe());
+				assertEquals(OnlineLoesungszetteleingabe.B,
+					responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 			}
 
 			if (responseZeile.name().startsWith("C")) {
 
-				assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.C,
-					responseZeile.eingabe());
+				assertEquals(OnlineLoesungszetteleingabe.C,
+					responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 			}
 
 		}

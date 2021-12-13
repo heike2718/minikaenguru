@@ -4,7 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.wettbewerb.api;
 
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;

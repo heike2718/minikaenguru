@@ -4,9 +4,9 @@
 // =====================================================
 package de.egladil.web.mkv_server_tests.domain.loesungszettel;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -51,20 +51,20 @@ public class OnlineLoesungszettelServiceIT extends AbstractLoesungszettelTest {
 
 			if (responseZeile.name().startsWith("A")) {
 
-				assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.A,
-					responseZeile.eingabe());
+				assertEquals(OnlineLoesungszetteleingabe.A,
+					responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 			}
 
 			if (responseZeile.name().startsWith("B")) {
 
-				assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.B,
-					responseZeile.eingabe());
+				assertEquals(OnlineLoesungszetteleingabe.B,
+					responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 			}
 
 			if (responseZeile.name().startsWith("C")) {
 
-				assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.C,
-					responseZeile.eingabe());
+				assertEquals(OnlineLoesungszetteleingabe.C,
+					responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 			}
 		}
 
@@ -82,20 +82,20 @@ public class OnlineLoesungszettelServiceIT extends AbstractLoesungszettelTest {
 
 			if (responseZeile.name().startsWith("A")) {
 
-				assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.D,
-					responseZeile.eingabe());
+				assertEquals(OnlineLoesungszetteleingabe.D,
+					responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 			}
 
 			if (responseZeile.name().startsWith("B")) {
 
-				assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.E,
-					responseZeile.eingabe());
+				assertEquals(OnlineLoesungszetteleingabe.E,
+					responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 			}
 
 			if (responseZeile.name().startsWith("C")) {
 
-				assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.N,
-					responseZeile.eingabe());
+				assertEquals(OnlineLoesungszetteleingabe.N,
+					responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 			}
 
 		}

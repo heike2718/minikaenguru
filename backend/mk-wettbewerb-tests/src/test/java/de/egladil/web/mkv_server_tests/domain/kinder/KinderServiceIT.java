@@ -4,11 +4,11 @@
 // =====================================================
 package de.egladil.web.mkv_server_tests.domain.kinder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
 
@@ -270,21 +270,21 @@ public class KinderServiceIT extends AbstractIntegrationTest {
 
 		Optional<Kind> optKind = kinderRepository.ofId(kindID);
 
-		assertTrue("DB muss zurückgesetzt werden", optKind.isPresent());
+		assertTrue(optKind.isPresent(), "DB muss zurückgesetzt werden");
 
 		Kind kind = optKind.get();
 
-		assertEquals("DB muss zurückgesetzt werden", loesungszettelID, kind.loesungszettelID());
-		assertEquals("DB muss zurückgesetzt werden", Sprache.de, kind.sprache());
+		assertEquals(loesungszettelID, kind.loesungszettelID(), "DB muss zurückgesetzt werden");
+		assertEquals(Sprache.de, kind.sprache(), "DB muss zurückgesetzt werden");
 
 		Optional<Loesungszettel> optLoesungszettel = loesungszettelRepository.ofID(loesungszettelID);
-		assertTrue("DB muss zurückgesetzt werden", optLoesungszettel.isPresent());
+		assertTrue(optLoesungszettel.isPresent(), "DB muss zurückgesetzt werden");
 
 		Loesungszettel loesungszettel = optLoesungszettel.get();
 
 		int expectedVersion = loesungszettel.version() + 1;
 
-		assertEquals("DB muss zurückgesetzt werden", Sprache.de, loesungszettel.sprache());
+		assertEquals(Sprache.de, loesungszettel.sprache(), "DB muss zurückgesetzt werden");
 
 		KindEditorModel kindEditorModel = new KindEditorModel(kind.klassenstufe(), Sprache.en).withVorname(kind.vorname())
 			.withNachname(kind.nachname()).withZusatz(kind.zusatz()).withKlasseUuid(kind.klasseID().identifier());

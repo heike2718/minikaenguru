@@ -4,12 +4,12 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.kinder.impl;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +30,6 @@ import de.egladil.web.mk_gateway.domain.kinder.Klasse;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseAPIModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseEditorModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseRequestData;
-import de.egladil.web.mk_gateway.domain.kinder.impl.KinderServiceImpl;
-import de.egladil.web.mk_gateway.domain.kinder.impl.KlassenServiceImpl;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.online.OnlineLoesungszettelService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
@@ -55,7 +53,8 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 		AuthorizationService authService = AuthorizationService.createForTest(getVeranstalterRepository(), getUserRepository());
 
 		klassenService = KlassenServiceImpl.createForTest(authService,
-			KinderServiceImpl.createForTest(authService, getKinderRepository(), getTeilnahmenRepository(), getVeranstalterRepository(),
+			KinderServiceImpl.createForTest(authService, getKinderRepository(), getTeilnahmenRepository(),
+				getVeranstalterRepository(),
 				getWettbewerbService(),
 				OnlineLoesungszettelService.createForTest(authService, getWettbewerbService(), getKinderRepository(),
 					getLoesungszettelRepository()),
@@ -410,10 +409,10 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 
 		for (Kind kind : kinderMitKlasse) {
 
-			assertNull("Fehler bei Kind " + kind + ": Lösungszettelreferenz nicht gelöscht", kind.loesungszettelID());
+			assertNull(kind.loesungszettelID(), "Fehler bei Kind " + kind + ": Lösungszettelreferenz nicht gelöscht");
 
 			Optional<Kind> optKind = kinderHinterher.stream().filter(k -> k.equals(kind)).findAny();
-			assertTrue("Fehler bei Kind " + kind + ": Kind nicht gelöscht", optKind.isEmpty());
+			assertTrue(optKind.isEmpty(), "Fehler bei Kind " + kind + ": Kind nicht gelöscht");
 
 		}
 

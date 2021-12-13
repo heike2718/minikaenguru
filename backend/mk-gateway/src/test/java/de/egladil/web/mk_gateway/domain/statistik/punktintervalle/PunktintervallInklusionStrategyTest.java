@@ -4,7 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.statistik.punktintervalle;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
@@ -70,7 +70,7 @@ public class PunktintervallInklusionStrategyTest {
 
 		for (int i = 0; i < expected.size(); i++) {
 
-			assertEquals("Fehler bei " + i, expected.get(i), actual.get(i));
+			assertEquals(expected.get(i), actual.get(i), "Fehler bei " + i);
 		}
 	}
 

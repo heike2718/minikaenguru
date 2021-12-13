@@ -4,8 +4,8 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.persistence.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
@@ -1074,8 +1074,9 @@ public class PermittedRolesInMemoryRepositoryTest {
 
 			for (Klassenstufe klassenstufe : Klassenstufe.values()) {
 
-				assertTrue("Fehler bei Klassenstufe " + klassenstufe, repository
-					.permittedRollen("/open-data/statistik/2019/" + klassenstufe.toString() + "/xml", HttpMethod.GET).isEmpty());
+				assertTrue(repository
+					.permittedRollen("/open-data/statistik/2019/" + klassenstufe.toString() + "/xml", HttpMethod.GET).isEmpty(),
+					"Fehler bei Klassenstufe " + klassenstufe);
 			}
 		}
 

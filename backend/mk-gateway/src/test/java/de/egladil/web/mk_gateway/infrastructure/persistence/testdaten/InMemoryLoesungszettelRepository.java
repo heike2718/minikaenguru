@@ -4,7 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.persistence.testdaten;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.HashMap;

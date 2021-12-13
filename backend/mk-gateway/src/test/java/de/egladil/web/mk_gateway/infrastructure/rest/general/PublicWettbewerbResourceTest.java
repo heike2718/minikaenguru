@@ -4,7 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.general;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Optional;
 

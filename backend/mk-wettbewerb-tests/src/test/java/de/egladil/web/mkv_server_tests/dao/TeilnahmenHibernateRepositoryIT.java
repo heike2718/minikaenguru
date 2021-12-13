@@ -4,7 +4,7 @@
 // =====================================================
 package de.egladil.web.mkv_server_tests.dao;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
