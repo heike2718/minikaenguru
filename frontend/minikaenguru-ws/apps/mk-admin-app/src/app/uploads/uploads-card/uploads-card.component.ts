@@ -25,7 +25,7 @@ export class UploadsCardComponent implements OnInit {
 
    this.fehlerreportDownloadButtonModel =  {
 			id: this.uploadInfo.uuid + '-fehlerreport',
-			url: environment.apiUrl + '/uplads/' + this.uploadInfo.uuid + '/fehlerreport',
+			url: environment.apiUrl + '/uploads/' + this.uploadInfo.uuid + '/fehlerreport',
 			buttonLabel: 'Fehlerreport',
 			dateiname: this.uploadInfo.teilnahmenummer + '-' + this.uploadInfo.uuid + '-fehlerreport.csv',
 			mimetype: 'application/octet-stream',
@@ -35,7 +35,7 @@ export class UploadsCardComponent implements OnInit {
 
     this.fileDownloadButtonModel =  {
 			id: this.uploadInfo.uuid + '-file',
-			url: environment.apiUrl + '/uplads/' + this.uploadInfo.uuid + '/file',
+			url: environment.apiUrl + '/uploads/' + this.uploadInfo.uuid + '/file',
 			buttonLabel: 'Datei',
 			dateiname: this.uploadInfo.fileName,
 			mimetype: 'application/octet-stream',

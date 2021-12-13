@@ -70,7 +70,7 @@ public final class MkGatewayFileUtils {
 		} catch (IOException e) {
 
 			LOGGER.error(e.getMessage(), e);
-			throw new MkGatewayRuntimeException("Konnte Datei mit Pfad " + path + " nicht laden");
+			throw new MkGatewayRuntimeException("Konnte Datei mit Pfad " + path + " nicht laden", e);
 		}
 	}
 

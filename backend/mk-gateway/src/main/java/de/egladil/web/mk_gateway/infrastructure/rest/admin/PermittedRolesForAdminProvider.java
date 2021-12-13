@@ -47,7 +47,8 @@ public final class PermittedRolesForAdminProvider {
 		result.put(new PathWithMethod("/admin/uploads/auswertung/*/*/*", HttpMethod.POST), rollen);
 		result.put(new PathWithMethod("/admin/uploads", HttpMethod.GET), rollen);
 		result.put(new PathWithMethod("/admin/uploads/size", HttpMethod.GET), rollen);
-
+		result.put(new PathWithMethod("/admin/uploads/*/file", HttpMethod.GET), rollen);
+		result.put(new PathWithMethod("/admin/uploads/*/fehlerreport", HttpMethod.GET), rollen);
 	}
 
 	private static void addPathsAndMethodsForLoesungszettel(final Map<PathWithMethod, List<Rolle>> result) {

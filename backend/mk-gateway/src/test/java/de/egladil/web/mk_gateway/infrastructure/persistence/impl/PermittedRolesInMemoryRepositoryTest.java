@@ -746,6 +746,30 @@ public class PermittedRolesInMemoryRepositoryTest {
 		}
 
 		@Test
+		void should_permittedRollen_downloadUploadedFile_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/admin/uploads/abcde/file", HttpMethod.GET);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.ADMIN));
+
+		}
+
+		@Test
+		void should_permittedRollen_downloadFehlerreport_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/admin/uploads/abcde/fehlerreport", HttpMethod.GET);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.ADMIN));
+
+		}
+
+		@Test
 		void should_permittedRollen_uploadAuswertung_beOk() {
 
 			// Act

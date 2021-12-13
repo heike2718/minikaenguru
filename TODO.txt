@@ -40,8 +40,8 @@ fertig ist upload Klassenliste ohne Fehler, aber auch ohne Auswertung des Report
 + beim Wechsel zu uploads muss der Import-Report zurückgesetzt werden
 - !!beobachten (konnte nicht zuverlässig reproduziert werden)!! nach dem Importieren weiterer Kinder stimmt die Anzahl der Kinder in der Klassenlist-Details-Anzeige nicht mehr
 + testen, ob Dubletten richtig erkannt werden, wenn man Nachname als Zusatz wählt
-- path protection fuer download uploaded files + fehlerreport
-- upload und fehlerreport werden nicht gefunden
++ path protection fuer download uploaded files + fehlerreport
++ upload und fehlerreport werden nicht gefunden
 -----------------------------------------
 Testphase 1.7.0 - Fehler
 -----------------------------------------

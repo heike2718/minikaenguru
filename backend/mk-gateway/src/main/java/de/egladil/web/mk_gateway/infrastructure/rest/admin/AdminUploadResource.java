@@ -117,7 +117,7 @@ public class AdminUploadResource {
 	@GET
 	@Path("{uuid}/fehlerreport")
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON }) // text/plain, damit man kein encoding-Problem bekommt
-	public Response getFehlerreport(@PathParam(value = "uuid") final String uuid) {
+	public Response downloadFehlerreport(@PathParam(value = "uuid") final String uuid) {
 
 		DownloadData downloadData = this.uploadMonitoringService.getFehlerReport(uuid);
 		return MkGatewayFileUtils.createDownloadResponse(downloadData);
@@ -126,7 +126,7 @@ public class AdminUploadResource {
 	@GET
 	@Path("{uuid}/file")
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON }) // text/plain, damit man kein encoding-Problem bekommt
-	public Response getFile(@PathParam(value = "uuid") final String uuid) {
+	public Response downloadUploadedFile(@PathParam(value = "uuid") final String uuid) {
 
 		DownloadData downloadData = this.uploadMonitoringService.getUploadedFile(uuid);
 		return MkGatewayFileUtils.createDownloadResponse(downloadData);

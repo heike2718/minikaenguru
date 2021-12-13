@@ -5,6 +5,7 @@
 package de.egladil.web.mk_gateway.domain.uploadmonitoring.impl;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.mk_gateway.domain.DownloadData;
+import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.uploadmonitoring.api.UploadMonitoringInfo;
 import de.egladil.web.mk_gateway.domain.uploadmonitoring.api.UploadMonitoringService;
@@ -136,14 +138,24 @@ public class UploadMonitoringServiceImpl implements UploadMonitoringService {
 
 		DateiTyp dateiTyp = DateiTyp.valueOfTikaName(upload.getMediatype());
 		String path = getPathUploadedFile(dateiTyp, uploadUuid);
-		byte[] bytes = MkGatewayFileUtils.readBytesFromFile(path);
 
-		String filename = upload.getTeilnahmenummer() + "-" + upload.getUuid() + dateiTyp.getSuffixWithPoint();
+		try {
 
-		DownloadData result = new DownloadData(filename, bytes);
+			byte[] bytes = MkGatewayFileUtils.readBytesFromFile(path);
 
-		return result;
+			String filename = getFilenameWithoutSuffix(upload) + dateiTyp.getSuffixWithPoint();
+			DownloadData result = new DownloadData(filename, bytes);
 
+			return result;
+		} catch (MkGatewayRuntimeException e) {
+
+			if (e.getCause() instanceof FileNotFoundException) {
+
+				throw new NotFoundException();
+			}
+
+			throw e;
+		}
 	}
 
 	@Override
@@ -161,14 +173,24 @@ public class UploadMonitoringServiceImpl implements UploadMonitoringService {
 
 		PersistenterUpload upload = optUpload.get();
 
-		DateiTyp dateiTyp = DateiTyp.valueOfTikaName(upload.getMediatype());
 		String path = getPathFehlerreport(uploadUuid);
 
-		byte[] bytes = MkGatewayFileUtils.readBytesFromFile(path);
-		String filename = upload.getTeilnahmenummer() + "-" + upload.getUuid() + dateiTyp.getSuffixWithPoint();
-		DownloadData result = new DownloadData(filename, bytes);
+		try {
 
-		return result;
+			byte[] bytes = MkGatewayFileUtils.readBytesFromFile(path);
+			String filename = getFilenameWithoutSuffix(upload) + "-fehlerreport.csv";
+			DownloadData result = new DownloadData(filename, bytes);
+
+			return result;
+		} catch (MkGatewayRuntimeException e) {
+
+			if (e.getCause() instanceof FileNotFoundException) {
+
+				throw new NotFoundException();
+			}
+
+			throw e;
+		}
 	}
 
 	/**
@@ -194,5 +216,10 @@ public class UploadMonitoringServiceImpl implements UploadMonitoringService {
 	private String getPathUploadDir() {
 
 		return pathExternalFiles + File.separator + NAME_UPLOAD_DIR;
+	}
+
+	private String getFilenameWithoutSuffix(final PersistenterUpload upload) {
+
+		return upload.getTeilnahmenummer() + "-" + upload.getUuid();
 	}
 }
