@@ -53,7 +53,7 @@ public class SortNumberGeneratorImpl implements SortNumberGenerator {
 
 			lastSortnumberLoesungszettel = new AtomicLong(value);
 
-			LOGGER.info("=======> LOESUNGSZETTEL: MAX(SORTNR) = ", value);
+			LOGGER.info("=======> LOESUNGSZETTEL: MAX(SORTNR) = " + value);
 
 		}
 
@@ -74,7 +74,7 @@ public class SortNumberGeneratorImpl implements SortNumberGenerator {
 
 			lastSortnumberUploads = new AtomicLong(value);
 
-			LOGGER.info("=======> UPLOADS: MAX(SORTNR) = ", value);
+			LOGGER.info("=======> UPLOADS: MAX(SORTNR) = " + value);
 
 		}
 
