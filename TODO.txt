@@ -42,7 +42,7 @@ fertig ist upload Klassenliste ohne Fehler, aber auch ohne Auswertung des Report
 + testen, ob Dubletten richtig erkannt werden, wenn man Nachname als Zusatz wählt
 + path protection fuer download uploaded files + fehlerreport
 + upload und fehlerreport werden nicht gefunden
-- Lösungszettel / UploadInfo: Schule ergänzen
++ Lösungszettel / UploadInfo: Schule ergänzen
 -----------------------------------------
 Testphase 1.7.0 - Fehler
 -----------------------------------------
