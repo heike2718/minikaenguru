@@ -6,6 +6,7 @@ import { StoreModule } from '@ngrx/store';
 import { UploadsCardComponent } from './uploads-card/uploads-card.component';
 import { UploadsRoutingModule } from './uploads-routing.module';
 import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
     CommonModule,
     UploadsRoutingModule,
     CommonComponentsModule,
-    StoreModule.forFeature(fromUploads.uploadsFeatureKey, fromUploads.reducer)
+    SharedModule,
+    StoreModule.forFeature(fromUploads.uploadsFeatureKey, fromUploads.reducer)    
   ]
 })
 export class UploadsModule { }

@@ -1,7 +1,8 @@
+import { SchulkatalogData } from "../shared/shared-entities.model";
+
 export type DateiTyp = 'EXCEL_ALT' | 'EXCEL_NEU' | 'ODS' | 'TEXT';
 export type UploadStatus = 'ABGEWIESEN' | 'HOCHGELADEN' | 'IMPORTIERT' | 'DATENFEHLER' | 'LEER' | 'EXCEPTION';
 export type UploadType = 'KLASSENLISTE' | 'AUSWERTUNG';
-
 
 
 export interface UploadMonitoringInfo {
@@ -16,6 +17,7 @@ export interface UploadMonitoringInfo {
 	readonly uploadDatum: string;
 	readonly sortnumber: number;
 	readonly fileName: string;
+	readonly schule?: SchulkatalogData;
 };
 
 export interface UploadMonitoringInfoWithID {

@@ -13,7 +13,7 @@ import { take } from 'rxjs/operators';
 import { Teilnahme } from '@minikaenguru-ws/common-components';
 import { ResponsePayload, MessageService, Message } from '@minikaenguru-ws/common-messages';
 import { UploadsFacade } from '../uploads/uploads.facade';
-import { UploadMonitoringInfo, UploadMonitoringInfoMap } from '../uploads/uploads.model';
+import { UploadMonitoringInfo } from '../uploads/uploads.model';
 
 @Injectable({
 	providedIn: 'root'

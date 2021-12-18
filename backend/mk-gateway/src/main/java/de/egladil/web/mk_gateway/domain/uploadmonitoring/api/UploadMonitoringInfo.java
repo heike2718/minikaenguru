@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.domain.uploads.impl.DateiTyp;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 
 /**
  * UploadMonitoringInfo
@@ -50,6 +51,9 @@ public class UploadMonitoringInfo {
 
 	@JsonProperty
 	private String nameFehlerreport;
+
+	@JsonProperty
+	private SchuleAPIModel schule;
 
 	public String getUuid() {
 
@@ -180,5 +184,15 @@ public class UploadMonitoringInfo {
 
 		this.nameFehlerreport = nameFehlerreport;
 		return this;
+	}
+
+	public SchuleAPIModel getSchule() {
+
+		return schule;
+	}
+
+	public void setSchule(final SchuleAPIModel schulkatalogItem) {
+
+		this.schule = schulkatalogItem;
 	}
 }

@@ -75,8 +75,8 @@
 	</div>
 
 	<div class="btn-group d-flex mt-2" role="group">
-		<button class="btn btn-primary w-100 ml-1" (click)="gotoSelectedVeranstalter()"><i class="fa fa-arrow-left"
-				aria-hidden="true"></i>zurück</button>
+		<button *ngIf="(veranstalterFacade.selectedVeranstalter$ | async) !== undefined" class="btn btn-primary w-100 ml-1" (click)="gotoSelectedVeranstalter()"><i class="fa fa-arrow-left"
+				aria-hidden="true"></i>Veranstalter</button>
 
 		<button class="btn btn-primary w-100 ml-1" (click)="gotoVeranstalterList()"><i class="fa fa-users"
 				aria-hidden="true"></i>Veranstalterliste</button>

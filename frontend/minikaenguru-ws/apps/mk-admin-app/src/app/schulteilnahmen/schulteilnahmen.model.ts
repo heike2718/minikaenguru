@@ -1,12 +1,7 @@
 import { Teilnahme } from '@minikaenguru-ws/common-components';
+import { SchulkatalogData } from '../shared/shared-entities.model';
 
-export interface SchulkatalogData {
-	readonly kuerzel: string;
-	readonly name: string;
-	readonly ort: string;
-	readonly land: string;
-	readonly kuerzelLand: string;
-};
+
 
 export interface SchuleMinikaenguruData {
 	readonly aktuellAngemeldet: boolean;

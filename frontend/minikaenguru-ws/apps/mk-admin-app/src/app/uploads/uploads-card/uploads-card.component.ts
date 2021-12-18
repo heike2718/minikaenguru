@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { DownloadButtonModel } from '@minikaenguru-ws/common-components';
 import { environment } from 'apps/mk-admin-app/src/environments/environment';
 import { initialDownloadButtonModel } from 'libs/common-components/src/lib/download/download.model';
+import { SchulteilnahmenFacade } from '../../schulteilnahmen/schulteilnahmen.facade';
 import { UploadMonitoringInfo } from '../uploads.model';
 
 @Component({
@@ -11,19 +12,19 @@ import { UploadMonitoringInfo } from '../uploads.model';
 })
 export class UploadsCardComponent implements OnInit {
 
-  devMode = environment.envName === 'DEV';
+	devMode = environment.envName === 'DEV';
 
-  @Input()
-  uploadInfo!: UploadMonitoringInfo;
+	@Input()
+  	uploadInfo!: UploadMonitoringInfo;
 
-  fehlerreportDownloadButtonModel: DownloadButtonModel = initialDownloadButtonModel;
-  fileDownloadButtonModel: DownloadButtonModel = initialDownloadButtonModel;
+  	fehlerreportDownloadButtonModel: DownloadButtonModel = initialDownloadButtonModel;
+  	fileDownloadButtonModel: DownloadButtonModel = initialDownloadButtonModel;
 
-  constructor() { }
+  	constructor(private schulteilnahmenFacade: SchulteilnahmenFacade) { }
 
-  ngOnInit() {
+  	ngOnInit() {
 
-   this.fehlerreportDownloadButtonModel =  {
+	this.fehlerreportDownloadButtonModel =  {
 			id: this.uploadInfo.uuid + '-fehlerreport',
 			url: environment.apiUrl + '/uploads/' + this.uploadInfo.uuid + '/fehlerreport',
 			buttonLabel: 'Fehlerreport',
@@ -42,5 +43,12 @@ export class UploadsCardComponent implements OnInit {
 			tooltip: 'Datei herunterladen',
 			class: 'btn btn-outline-dark w-100 ml-1'
 		};
-  }
+  	}
+
+
+
+  	onSchuleClicked() {
+
+    	this.schulteilnahmenFacade.findOrLoadSchuleAdminOverview(this.uploadInfo.teilnahmenummer);
+  	}
 }

@@ -4,5 +4,12 @@ export interface InvalidProperty {
 	readonly message: string;
 };
 
+export interface SchulkatalogData {
+	readonly kuerzel: string;
+	readonly name: string;
+	readonly ort: string;
+	readonly land: string;
+	readonly kuerzelLand: string;
+};
 
 

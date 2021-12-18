@@ -42,6 +42,7 @@ import { StoreDevModules } from './store-config/store-devtools';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UploadsModule } from './uploads/uploads.module';
 import { LoesungszettelModule } from './loesungszettel/loesungszettel.module';
+import { SharedModule } from './shared/shared.module';
 
 registerLocaleData(localeDe);
 
@@ -55,7 +56,8 @@ registerLocaleData(localeDe);
 		DashboardComponent,
 		NotAuthorizedComponent,
 		SessionTimeoutComponent,
-		VersandinfoProgressComponent],
+		VersandinfoProgressComponent,
+		],
 	imports: [
 		BrowserModule,
 		ReactiveFormsModule,
@@ -104,6 +106,7 @@ registerLocaleData(localeDe);
 		UploadsModule,
 		LoesungszettelModule,
 		LayouttestsModule,
+		SharedModule,
 		AppRoutingModule, // <-- immer am Ende, damit die wildcard-route als letzte deklariert bleibt
 	],
 	providers: [

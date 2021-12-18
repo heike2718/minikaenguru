@@ -24,11 +24,13 @@ import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
+import de.egladil.web.mk_gateway.domain.kataloge.SchulkatalogService;
 import de.egladil.web.mk_gateway.domain.uploadmonitoring.api.UploadMonitoringInfo;
 import de.egladil.web.mk_gateway.domain.uploadmonitoring.api.UploadMonitoringService;
 import de.egladil.web.mk_gateway.domain.uploads.UploadRepository;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.domain.uploads.impl.DateiTyp;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.UploadsMonitoringViewItem;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UploadHibernateRepository;
@@ -49,10 +51,14 @@ public class UploadMonitoringServiceImpl implements UploadMonitoringService {
 	@Inject
 	UploadRepository uploadRepository;
 
+	@Inject
+	SchulkatalogService schulkatalogService;
+
 	public static UploadMonitoringServiceImpl createForIntegrationTests(final EntityManager em) {
 
 		UploadMonitoringServiceImpl result = new UploadMonitoringServiceImpl();
 		result.uploadRepository = UploadHibernateRepository.createForIntegrationTests(em);
+
 		result.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/integrationtests";
 		return result;
 	}
@@ -118,6 +124,19 @@ public class UploadMonitoringServiceImpl implements UploadMonitoringService {
 
 		String uploadDate = CommonTimeUtils.format(CommonTimeUtils.transformFromDate(viewItem.getUploadDate()));
 		uploadInfo.setUploadDatum(uploadDate);
+
+		if (this.schulkatalogService != null) {
+
+			// kann in einigen Tests null sein
+			Optional<SchuleAPIModel> optSchule = this.schulkatalogService.findSchuleQuietly(viewItem.getTeilnahmenummer());
+
+			if (optSchule.isPresent()) {
+
+				uploadInfo.setSchule(optSchule.get());
+			}
+
+		}
+
 		return uploadInfo;
 	}
 

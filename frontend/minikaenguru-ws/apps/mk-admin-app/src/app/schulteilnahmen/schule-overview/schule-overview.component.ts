@@ -32,7 +32,7 @@ export class SchuleOverviewComponent implements OnInit, OnDestroy {
 
 	constructor(private router: Router,
 		private schulteilnahmenFacade: SchulteilnahmenFacade,
-		private veranstalterFacade: VeranstalterFacade,
+		public veranstalterFacade: VeranstalterFacade,
 		private uploadsFacade: UploadsFacade) { }
 
 	ngOnInit(): void {
