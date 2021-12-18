@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SchulteilnahmenFacade } from '../../schulteilnahmen/schulteilnahmen.facade';
-import { SchulkatalogData } from '../../shared/shared-entities.model';
+import { SchulkatalogData } from '../shared-entities.model';
 
 @Component({
   selector: 'mka-schulkatalogdata',
