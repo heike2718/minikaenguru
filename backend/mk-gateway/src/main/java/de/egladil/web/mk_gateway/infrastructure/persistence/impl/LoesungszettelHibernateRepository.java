@@ -119,7 +119,6 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 		List<PersistenterLoesungszettel> trefferliste = entityManager
 			.createNamedQuery(PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID_ASC, PersistenterLoesungszettel.class)
 			.setParameter("wettbewerbUuid", wettbewerbID.toString())
-			.setParameter("sortOrder", "asc")
 			.getResultList();
 
 		return trefferliste.stream().map(pl -> mapFromDB(pl)).collect(Collectors.toList());

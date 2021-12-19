@@ -5,25 +5,35 @@ import * as UploadsSelectors from './+state/uploads.selectors';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { UploadMonitoringInfo, UploadMonitoringInfoMap, UploadMonitoringInfoWithID, UploadsMonitoringPage, UploadsMonitoringPageMap, UploadType } from './uploads.model';
+import { AuthService } from '@minikaenguru-ws/common-auth';
+import { textChangeRangeIsUnchanged } from 'typescript';
 
 @Injectable(
     {providedIn: 'root'}
 )
 export class UploadsFacade {
 
+    public sizeLoadedAndAnzahl$: Observable<{sizeLoaded: boolean, size: number}> = this.store.select(UploadsSelectors.sizeLoadedAndAnzahl);
     public loading$: Observable<boolean> = this.store.select(UploadsSelectors.loading);
     public uploadInfos$: Observable<UploadMonitoringInfo[]> = this.store.select(UploadsSelectors.uploadInfos);
     public anzahlUploads$: Observable<number> = this.store.select(UploadsSelectors.anzahlUploads);
     public pageContent$: Observable<UploadMonitoringInfo[]> = this.store.select(UploadsSelectors.pageContent);
+
+
     
     private pages: UploadsMonitoringPage[] = [];
 
     private uploadsMap!: UploadMonitoringInfoMap;
 
+    private loggingOut: boolean = false;
+
+    private sizeLoaded = false;
+
     constructor(private store: Store<AppState>
         , private uploadsService: UploadsService
+        , private authService: AuthService
         , private errorHandler: GlobalErrorHandlerService){
 
 
@@ -39,34 +49,63 @@ export class UploadsFacade {
             this.store.select(UploadsSelectors.pages).subscribe(
                 pages => this.pages = pages
             );
-    }
 
-    public countUploads(): void {
+            this.authService.onLoggingOut$.subscribe(
+                loggingOut => this.loggingOut = loggingOut
+            );
+
+            this.store.select(UploadsSelectors.sizeLoaded).subscribe(
+                loaded => this.sizeLoaded = loaded
+            );
+
+            this.countUploads();
+    }    
+
+
+    private countUploads(): void {
+
+        if (this.loggingOut || this.sizeLoaded) {
+			return;
+		}
 
         this.store.dispatch(UploadsActions.startLoading());
 
         this.uploadsService.countUploads().subscribe(
 
-
             anzahl => {
-
-                this.store.dispatch(UploadsActions.sizeUploadInfosLoaded({size: anzahl}));
+                this.store.dispatch(UploadsActions.sizeUploadInfosLoaded({size: anzahl}))
+                this.sizeLoaded = true;
             },
             (error => {
+                this.sizeLoaded = true;
                 this.store.dispatch(UploadsActions.serviceCallFinishedWithError());
                 this.errorHandler.handleError(error);
-            })
-        );
+            }));
     }
 
     public getOrLoadNextPage(page: number, pageSize: number) {
 
-        const map: UploadsMonitoringPageMap = new UploadsMonitoringPageMap(this.pages);
+        if (!this.sizeLoaded) {
 
-        if (map.has(page)) {
-            this.store.dispatch(UploadsActions.uploadPageLoaded({pageNumber: page, content: map.getContent(page)}));    
+            this.uploadsService.countUploads().subscribe(
+
+                anzahl => {
+                    this.store.dispatch(UploadsActions.sizeUploadInfosLoaded({size: anzahl}))                    
+                },
+                (error => {
+                    this.store.dispatch(UploadsActions.serviceCallFinishedWithError());
+                    this.errorHandler.handleError(error);
+                }));
         } else {
-            this.loadPage(page, pageSize);
+
+            const map: UploadsMonitoringPageMap = new UploadsMonitoringPageMap(this.pages);
+
+            if (map.has(page)) {
+                this.store.dispatch(UploadsActions.uploadPageLoaded({pageNumber: page, content: map.getContent(page)}));    
+            } else {
+                this.loadPage(page, pageSize);
+            }
+
         }
     }
 

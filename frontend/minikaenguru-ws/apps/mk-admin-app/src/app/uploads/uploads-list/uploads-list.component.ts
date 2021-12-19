@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { environment } from 'apps/mk-admin-app/src/environments/environment';
-import { Observable, Subscription } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 import { UploadsFacade } from '../uploads.facade';
-import { UploadMonitoringInfo } from '../uploads.model';
 import { initialPaginationComponentModel, PaginationComponentModel } from '@minikaenguru-ws/common-components';
+import { LogService } from '@minikaenguru-ws/common-logging';
+import { anzahlUploads } from '../+state/uploads.selectors';
 
 @Component({
   selector: 'mka-uploads-list',
@@ -16,23 +17,25 @@ export class UploadsListComponent implements OnInit, OnDestroy {
 
   paginationComponentModel!: PaginationComponentModel;
 
+  anzahl = 0;
+
   pageSize = 5;
+
+  sizeLoaded = false;
 
   private anzahlUploadsSubscription: Subscription = new Subscription();
 
-  constructor(public uploadsFacade: UploadsFacade) { }
+  constructor(public uploadsFacade: UploadsFacade, private logger: LogService) { }
 
   ngOnInit(): void {
 
     this.anzahlUploadsSubscription = this.uploadsFacade.anzahlUploads$.subscribe(
 
-      anzahlUploads => {
-        this.paginationComponentModel = {...initialPaginationComponentModel, collectionSize: anzahlUploads, pageSize: this.pageSize};
+      anzahl => {
+        this.paginationComponentModel = {...initialPaginationComponentModel, collectionSize: anzahl};
+        this.uploadsFacade.getOrLoadNextPage(1, this.pageSize);
       }
     );
-
-    this.uploadsFacade.countUploads();
-    this.uploadsFacade.getOrLoadNextPage(1, this.pageSize);
   }
 
   ngOnDestroy(): void {
@@ -44,5 +47,4 @@ export class UploadsListComponent implements OnInit, OnDestroy {
   onPageChanged(page: number): void {
     this.uploadsFacade.getOrLoadNextPage(page, this.pageSize);   
 	}
-
 }

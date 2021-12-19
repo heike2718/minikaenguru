@@ -8,6 +8,7 @@ const uploadsRoutes: Routes = [
     {
 		path: 'uploads',
 		canActivate: [AuthGuardService],
+		//resolve: UploadsListResolver,
 		component: UploadsListComponent
 	},
 

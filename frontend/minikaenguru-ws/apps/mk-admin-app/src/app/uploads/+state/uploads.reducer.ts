@@ -6,6 +6,7 @@ export const uploadsFeatureKey = 'mk-admin-app-uploads';
 
 export interface UploadsState  {
     readonly loading: boolean;
+    readonly sizeLoaded: boolean;
     readonly anzahlUploads: number;
     readonly uploadsMap: UploadMonitoringInfoWithID[];
     readonly selectedUploadInfo?: UploadMonitoringInfo;
@@ -15,6 +16,7 @@ export interface UploadsState  {
 
 const initialUploadsState: UploadsState = {
     loading: false,
+    sizeLoaded: false,
     anzahlUploads: 0,
     uploadsMap: [],
     selectedUploadInfo: undefined,
@@ -23,6 +25,10 @@ const initialUploadsState: UploadsState = {
 };
 
 const uploadsReducer = createReducer(initialUploadsState, 
+
+    on(UploadsActions.loadSize, (state, _action) => {
+        return {...state, loading: true}
+    }),
   
     on(UploadsActions.startLoading, (state, _action) => {
 
@@ -35,7 +41,7 @@ const uploadsReducer = createReducer(initialUploadsState,
     }),
 
     on(UploadsActions.sizeUploadInfosLoaded, (state, action) => {
-        return {...state, loading: false, anzahlUploads: action.size};
+        return {...state, loading: false, anzahlUploads: action.size, sizeLoaded: true};
     }),
 
     on (UploadsActions.uploadPageLoaded, (state, action) => {

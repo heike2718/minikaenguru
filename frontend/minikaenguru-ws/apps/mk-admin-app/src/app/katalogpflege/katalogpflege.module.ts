@@ -35,8 +35,7 @@ import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
 		SchulenListComponent,
 		KatalogpflegeItemComponent
 	],
-	exports: [
-		],
+	exports: [],
 	providers: [
 		KatalogpflegeFacade,
 		LaenderListResolver

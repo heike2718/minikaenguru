@@ -52,7 +52,7 @@ public class UploadHibernateRepositoryIT extends AbstractIntegrationTest {
 
 		// Arrange
 		// Act
-		List<UploadsMonitoringViewItem> uploads = repository.loadUploadsPage(10, 0);
+		List<UploadsMonitoringViewItem> uploads = repository.loadUploadsPage(5, 0);
 
 		// Assert
 		assertEquals(2, uploads.size());

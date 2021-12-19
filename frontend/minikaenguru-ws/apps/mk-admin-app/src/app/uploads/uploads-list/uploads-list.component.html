@@ -1,9 +1,10 @@
 <div class="mkv-container mt-1">
 
-  <h1>Uploads</h1>
+  <h1>Uploads 
+	  <span *ngIf="uploadsFacade.anzahlUploads$ | async as anzahl">: {{anzahl}}</span>
+  </h1>
 
   <p *ngIf="devMode">uploads-list.component.ts</p>
-  <p *ngIf="uploadsFacade.anzahlUploads$ | async as anzahl">Anzahl: {{anzahl}}</p>
 
   <ng-container *ngIf="(uploadsFacade.pageContent$| async ) as uploadInfos else loading">
 		<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let uploadInfo of uploadInfos">
@@ -11,9 +12,7 @@
 		</div>
 	</ng-container>
 
-    <div * ngIf="anzahl > pageSize">
-  		<mk-pagination [options]="paginationComponentModel" (pageSelected)="onPageChanged($event)"></mk-pagination>
-	</div>
+	<mk-pagination [options]="paginationComponentModel" (pageSelected)="onPageChanged($event)"></mk-pagination>
 </div>
 <ng-template #loading>
 	Lade Uploadinfos... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>

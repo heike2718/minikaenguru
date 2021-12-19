@@ -1,6 +1,10 @@
 import { createAction, props } from '@ngrx/store';
 import { UploadMonitoringInfo } from '../uploads.model';
 
+export const loadSize = createAction(
+    '[UploadsListResolver] resolve'
+);
+
 export const startLoading = createAction(
     '[UploadsFacade] diverse'
 );
@@ -10,7 +14,7 @@ export const serviceCallFinishedWithError = createAction(
 );
 
 export const sizeUploadInfosLoaded = createAction(
-    '[UploadsFacade] countUploads',
+    '[UploadsFacade] after result',
     props<{size: number}>()
 );
 

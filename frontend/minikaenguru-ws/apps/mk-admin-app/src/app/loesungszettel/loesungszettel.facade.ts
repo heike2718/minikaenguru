@@ -29,7 +29,7 @@ export class LoesungszettelFacade {
             );
     }
 
-    public selectJahr(jahr: number | undefined): void {
+    public selectJahr(jahr: number | undefined, pageSize: number): void {
 
         this.jahr = jahr;
 
@@ -44,7 +44,7 @@ export class LoesungszettelFacade {
 
             anzahl => {
                 this.store.dispatch(LoesungszettelActions.anzahlLoesungszettelLoaded({size: anzahl}));
-                this.getOrLoadPage(1, 5);
+                this.getOrLoadPage(1, pageSize);
             },
             (error => {
                 this.store.dispatch(LoesungszettelActions.backendCallFinishedWithError());

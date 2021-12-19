@@ -3,6 +3,7 @@ import { environment } from 'apps/mk-admin-app/src/environments/environment';
 import { LoesungszettelFacade } from '../loesungszettel.facade';
 import { initialPaginationComponentModel, PaginationComponentModel } from '@minikaenguru-ws/common-components';
 import { Subscription } from 'rxjs';
+import { LogService } from '@minikaenguru-ws/common-logging';
 
 @Component({
   selector: 'mka-loesungszettel-list',
@@ -17,17 +18,21 @@ export class LoesungszettelListComponent implements OnInit, OnDestroy {
 
   paginationComponentModel!: PaginationComponentModel;
 
+  anzahl?: number;
+
   private pageSize = 5;
 
   private anzahlSubscription: Subscription = new Subscription();
 
-  constructor(public loesungszettelFacade: LoesungszettelFacade) { }
+  constructor(public loesungszettelFacade: LoesungszettelFacade, private logger: LogService) { }
 
   ngOnInit(): void { 
 
     this.anzahlSubscription = this.loesungszettelFacade.anzahl$.subscribe(
       anzahl => {
-        this.paginationComponentModel = {...initialPaginationComponentModel, collectionSize: anzahl, pageSize: this.pageSize}
+        this.anzahl = anzahl;
+        this.logger.debug('init paginator with collectionSize=' + anzahl)
+        this.paginationComponentModel = {...initialPaginationComponentModel, collectionSize: anzahl}
       }
     );
   }
@@ -38,7 +43,7 @@ export class LoesungszettelListComponent implements OnInit, OnDestroy {
 
   onJahrChanged(): void {
 
-    this.loesungszettelFacade.selectJahr(this.jahr);
+    this.loesungszettelFacade.selectJahr(this.jahr, this.pageSize);
 
   }
 

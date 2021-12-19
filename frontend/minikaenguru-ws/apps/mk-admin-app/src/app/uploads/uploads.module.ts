@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { EffectsModule } from '@ngrx/effects';
 import { UploadsListComponent } from './uploads-list/uploads-list.component';
 import * as fromUploads from './+state/uploads.reducer';
 import { StoreModule } from '@ngrx/store';
@@ -18,7 +19,10 @@ import { SharedModule } from '../shared/shared.module';
     UploadsRoutingModule,
     CommonComponentsModule,
     SharedModule,
-    StoreModule.forFeature(fromUploads.uploadsFeatureKey, fromUploads.reducer)    
+    StoreModule.forFeature(fromUploads.uploadsFeatureKey, fromUploads.reducer)
+  ],
+  providers: [
+
   ]
 })
 export class UploadsModule { }
