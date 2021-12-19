@@ -10,7 +10,7 @@ export interface AuthResult {
 	expiresAt?: number;
 	state?: string;
 	nonce?: string;
-	idToken: string;
+	idToken?: string;
 }
 
 export interface User {
@@ -20,8 +20,8 @@ export interface User {
 }
 
 export interface Session {
-	readonly sessionId?: string;
+	readonly sessionId: string | null;
 	readonly expiresAt: number;
-	readonly user?: User;
+	readonly user: User | null;
 }
 

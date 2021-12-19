@@ -118,7 +118,7 @@ public class AuswertungImportService {
 		String path = getPathUploadDir() + File.separator + persistenterUpload.getUuid() + ".csv";
 
 		List<AuswertungimportZeile> zeilen = new AuswertungCSVToAuswertungimportZeilenMapper()
-			.apply(MkGatewayFileUtils.readLines(path));
+			.apply(MkGatewayFileUtils.readLines(path, persistenterUpload.getEncoding()));
 
 		AuswertungimportZeileSensor sensor = new AuswertungimportZeileSensor();
 		AuswertungimportZeile ueberschrift = zeilen.isEmpty() ? null : zeilen.get(0);

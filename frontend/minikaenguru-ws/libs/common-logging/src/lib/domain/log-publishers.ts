@@ -4,7 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { publishLast, refCount } from 'rxjs/operators';
 
 export abstract class LogPublisher {
-	location: string;
+	
+	location?: string;
 
 	abstract log(record: LogEntry): Observable<boolean>;
 	abstract clear(): Observable<boolean>;

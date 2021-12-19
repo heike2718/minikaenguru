@@ -1,6 +1,6 @@
 <div class="mkv-container mt-1">
-	<div *ngIf="(veranstalter$ | async) as veranstalter">
-		<ng-container *ngIf="veranstalter !== undefined else loading">
+	<div *ngIf="(veranstalter$ | async) as veranstalter else loading">
+		<ng-container *ngIf="veranstalter && veranstalter.privatOverview">
 
 			<h3>{{veranstalter.fullName}} - {{veranstalter.teilnahmenummern[0]}}</h3>
 
@@ -23,7 +23,7 @@
 						<div class="card-title">Aktuelle Teilnahme</div>
 						<div class="card-text">
 							<div class="row">
-								<div class="col-sm-12 col-md-3">Anzahl Kinder:</div>
+								<div class="col-sm-12 col-md-3">Anzahl Lösungszettel:</div>
 								<div class="col-sm-12 col-md-9">
 									{{veranstalter.privatOverview.aktuelleTeilnahme.anzahlKinder}}</div>
 							</div>

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { DownloadFacade } from '../download.facade';
-import { DownloadCardModel } from '../download.model';
+import { DownloadCardModel, initialDownloadCardModel } from '../download.model';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -12,12 +12,12 @@ export class DownloadCardComponent implements OnInit, OnDestroy {
 
 	downloadInProgress$ = this.downloadFacade.downloadInProgress$;
 
-	private clickEventDisabled: boolean;
+	private clickEventDisabled = false;
 
-	private downloadProgressSubscription: Subscription;
+	private downloadProgressSubscription: Subscription = new Subscription();
 
 	@Input()
-	model: DownloadCardModel;
+	model: DownloadCardModel = initialDownloadCardModel;
 
 	constructor(private downloadFacade: DownloadFacade) { }
 
@@ -26,15 +26,10 @@ export class DownloadCardComponent implements OnInit, OnDestroy {
 		this.downloadProgressSubscription = this.downloadInProgress$.subscribe(
 			progress => this.clickEventDisabled = progress
 		);
-
 	}
 
 	ngOnDestroy(): void {
-
-		if (this.downloadProgressSubscription) {
-			this.downloadProgressSubscription.unsubscribe();
-		}
-
+		this.downloadProgressSubscription.unsubscribe();
 	}
 
 	startDownload(): void {

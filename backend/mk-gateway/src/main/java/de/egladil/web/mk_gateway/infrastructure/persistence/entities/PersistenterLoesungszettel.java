@@ -25,19 +25,22 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 @NamedQueries({
 	@NamedQuery(
 		name = "PersistenterLoesungszettel.LOAD_ALL_WITH_TEILNAHME_IDENTIFIER",
-		query = "select l from PersistenterLoesungszettel l where l.teilnahmenummer = :teilnahmenummer and l.wettbewerbUuid = :wettbewerbUuid and l.teilnahmeart = :teilnahmeart order by l.uuid"),
+		query = "select l from PersistenterLoesungszettel l where l.teilnahmenummer = :teilnahmenummer and l.wettbewerbUuid = :wettbewerbUuid and l.teilnahmeart = :teilnahmeart order by l.sortNumber"),
 	@NamedQuery(
 		name = "PersistenterLoesungszettel.LOAD_ALL_WITH_TEILNAHMENUMMER_AND_JAHR",
-		query = "select l from PersistenterLoesungszettel l where l.teilnahmenummer = :teilnahmenummer and l.wettbewerbUuid = :wettbewerbUuid order by l.uuid"),
+		query = "select l from PersistenterLoesungszettel l where l.teilnahmenummer = :teilnahmenummer and l.wettbewerbUuid = :wettbewerbUuid order by l.sortNumber"),
 	@NamedQuery(
-		name = "PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID",
-		query = "select l from PersistenterLoesungszettel l where l.wettbewerbUuid = :wettbewerbUuid order by l.uuid"),
+		name = "PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID_ASC",
+		query = "select l from PersistenterLoesungszettel l where l.wettbewerbUuid = :wettbewerbUuid order by l.sortNumber"),
+	@NamedQuery(
+		name = "PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID_DESC",
+		query = "select l from PersistenterLoesungszettel l where l.wettbewerbUuid = :wettbewerbUuid order by l.sortNumber desc"),
 	@NamedQuery(
 		name = "PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID_KLASSENSTUFE",
-		query = "select l from PersistenterLoesungszettel l where l.wettbewerbUuid = :wettbewerbUuid and l.klassenstufe = :klassenstufe order by l.uuid"),
+		query = "select l from PersistenterLoesungszettel l where l.wettbewerbUuid = :wettbewerbUuid and l.klassenstufe = :klassenstufe order by l.sortNumber"),
 	@NamedQuery(
 		name = "PersistenterLoesungszettel.FIND_LOESUNGSZETTEL_WITH_KIND",
-		query = "select l from PersistenterLoesungszettel l where l.kindID = :kindID order by l.uuid"),
+		query = "select l from PersistenterLoesungszettel l where l.kindID = :kindID order by l.sortNumber"),
 
 })
 public class PersistenterLoesungszettel extends ConcurrencySafeEntity {
@@ -48,7 +51,9 @@ public class PersistenterLoesungszettel extends ConcurrencySafeEntity {
 
 	public static final String LOAD_ALL_WITH_TEILNAHMENUMMER_AND_JAHR = "PersistenterLoesungszettel.LOAD_ALL_WITH_TEILNAHMENUMMER_AND_JAHR";
 
-	public static final String LOAD_ALL_WITH_WETTBEWERBID = "PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID";
+	public static final String LOAD_ALL_WITH_WETTBEWERBID_ASC = "PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID_ASC";
+
+	public static final String LOAD_ALL_WITH_WETTBEWERBID_DESC = "PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID_DESC";
 
 	public static final String LOAD_ALL_WITH_WETTBEWERBID_KLASSENSTUFE = "PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID_KLASSENSTUFE";
 
@@ -110,6 +115,9 @@ public class PersistenterLoesungszettel extends ConcurrencySafeEntity {
 	@Column(name = "SPRACHE")
 	@Enumerated(EnumType.STRING)
 	private Sprache sprache;
+
+	@Column(name = "SORTNR")
+	private long sortNumber;
 
 	public String getKindID() {
 
@@ -257,6 +265,16 @@ public class PersistenterLoesungszettel extends ConcurrencySafeEntity {
 	public void setSprache(final Sprache sprache) {
 
 		this.sprache = sprache;
+	}
+
+	public long getSortNumber() {
+
+		return sortNumber;
+	}
+
+	public void setSortNumber(final long sortNumber) {
+
+		this.sortNumber = sortNumber;
 	}
 
 }

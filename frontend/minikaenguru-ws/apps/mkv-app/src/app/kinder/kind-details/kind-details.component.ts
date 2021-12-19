@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
-import { Kind, kindToString } from '@minikaenguru-ws/common-components';
+import { Kind, kindToString, modalOptions } from '@minikaenguru-ws/common-components';
 import { Router } from '@angular/router';
 import { PrivatveranstalterFacade } from '../../privatveranstalter/privatveranstalter.facade';
 import { KinderFacade } from '../kinder.facade';
@@ -8,10 +8,10 @@ import { LogService } from '@minikaenguru-ws/common-logging';
 import { Subscription } from 'rxjs';
 import { KlassenFacade } from '../../klassen/klassen.facade';
 import { LoesungszettelFacade } from '../../loesungszettel/loesungszettel.facade';
-import { UrkundenFacade } from '../../urkunden/urkunden.facade';
 import { User, STORAGE_KEY_USER } from '@minikaenguru-ws/common-auth';
 import { environment } from '../../../environments/environment';
 import { LehrerFacade } from '../../lehrer/lehrer.facade';
+import { Schule } from '../../lehrer/schulen/schulen.model';
 
 @Component({
 	selector: 'mkv-kind-details',
@@ -21,10 +21,10 @@ import { LehrerFacade } from '../../lehrer/lehrer.facade';
 export class KindDetailsComponent implements OnInit, OnDestroy {
 
 	@ViewChild('loeschenWarndialog')
-	loeschenWarndialog: TemplateRef<HTMLElement>;
+	loeschenWarndialog!: TemplateRef<HTMLElement>;
 
 	@Input()
-	kind: Kind
+	kind!: Kind
 
 	showKlasseWechselnButton = false;
 
@@ -34,19 +34,25 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 
 	btnUrkundeTooltip = 'Urkunde erstellen';
 
-	showHinweisUrkunde = false;
+	showHinweisUrkunde: boolean = false;
+
+	klassenstufeStimmt = false;
 
 	zugangUnterlagen = false;
 
-	private klasseSubscription: Subscription;
+	private selectedSchule?: Schule;
 
-	private klasseUuid: string;
+	private schuleSubscription: Subscription = new Subscription();
 
-	private klassenSubscription: Subscription;
+	private klasseSubscription: Subscription = new Subscription();
 
-	private zugangUnterlagenSubscription: Subscription;
+	private klasseUuid: string = '';
 
-	titel: string;
+	private klassenSubscription: Subscription = new Subscription();
+
+	private zugangUnterlagenSubscription: Subscription = new Subscription();
+
+	titel: string = '';
 
 	constructor(private router: Router,
 		private modalService: NgbModal,
@@ -62,18 +68,28 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 
 		this.titel = kindToString(this.kind);
 
-		const user: User = this.readUser();
+		const user: User | undefined = this.readUser();
 
 		if (user && user.rolle === 'LEHRER') {
 			this.btnUrkundeLabel = 'Urkunde korrigieren';
 			this.btnUrkundeTooltip = 'Urkunde dieses Kindes korrigieren';
-			this.showHinweisUrkunde = this.kind.punkte && this.kind.punkte.loesungszettelId !== 'neu';
+			if (this.kind.punkte && this.kind.punkte.loesungszettelId) {
+				this.showHinweisUrkunde = this.kind.punkte.loesungszettelId !== 'neu'
+			}
 			this.zugangUnterlagenSubscription = this.lehrerFacade.hatZugangZuUnterlagen$.subscribe(
-				z => this.zugangUnterlagen = z
+				z => {
+					if (z !== undefined) {
+						this.zugangUnterlagen = z;
+					}
+				}
 			);
 		} else {
 			this.zugangUnterlagenSubscription = this.privatveranstalterFacade.hatZugangZuUnterlagen$.subscribe(
-				z => this.zugangUnterlagen = z
+				z => {
+					if (z !== undefined) {
+						this.zugangUnterlagen = z;
+					}
+				}
 			);
 		}
 
@@ -96,19 +112,29 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 			}
 		);
 
+		if (this.lehrerFacade) {
 
+			this.schuleSubscription = this.lehrerFacade.selectedSchule$.subscribe(
+
+				sch => {
+					if (sch) {
+						this.selectedSchule = sch;
+					}
+				}
+
+			);
+		}
 	}
 
 	ngOnDestroy(): void {
-		if (this.klasseSubscription) {
-			this.klasseSubscription.unsubscribe();
-		}
-		if (this.klassenSubscription) {
-			this.klassenSubscription.unsubscribe();
-		}
-		if (this.zugangUnterlagenSubscription) {
-			this.zugangUnterlagenSubscription.unsubscribe();
-		}
+		this.klasseSubscription.unsubscribe();
+		this.klassenSubscription.unsubscribe();
+		this.zugangUnterlagenSubscription.unsubscribe();
+		this.schuleSubscription.unsubscribe();
+	}
+
+	korrigiereKlassenstufe(): void {
+		console.log('jetzt editor öffnen mit status klassenstufe Korrektur => führt dazu, dass klassenlisteKorrigieren false gesetzt wird');
 	}
 
 	editKind(): void {
@@ -128,7 +154,7 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 
 	deleteKind(): void {
 
-		this.modalService.open(this.loeschenWarndialog, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+		this.modalService.open(this.loeschenWarndialog, modalOptions).result.then((result) => {
 
 			if (result === 'ja') {
 				this.kinderFacade.deleteKind(this.kind, this.klasseUuid);
@@ -152,13 +178,19 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 		this.router.navigateByUrl('/loesungszettel');
 	}
 
+	onCheckboxKlassenstufeClicked(event: boolean) {
+		if (event) {
+			this.kinderFacade.markKlassenstufeKorrekt(this.kind, this.selectedSchule);
+		}		
+	}
+
 	urkundeErstellen(): void {
 		this.kinderFacade.selectKind(this.kind);
 		this.router.navigateByUrl('/einzelurkunden');
 	}
 
 
-	private readUser(): User {
+	private readUser(): User | undefined {
 		const obj = localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_USER);
 		if (obj) {
 			return JSON.parse(obj);

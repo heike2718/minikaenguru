@@ -13,21 +13,20 @@ export class NewsletterCardComponent implements OnInit {
 	devMode = environment.envName === 'DEV'
 
 	@Input()
-	newsletter: Newsletter;
+	newsletter!: Newsletter;
 
-	sendMailpartVisible: boolean;
+	sendMailpartVisible: boolean = false;
 
-	empfaengertyp: string;
-
+	empfaengertyp: string = '';
 	constructor(public newsletterFacade: NewsletterFacade) { }
 
-	ngOnInit(): void {
-		this.sendMailpartVisible = false;
-		this.empfaengertyp = undefined;
-	}
+	ngOnInit(): void { }
 
 	editNewsletter(): void {
-		this.newsletterFacade.startEditNewsletter(this.newsletter);
+
+		if (this.newsletter) {
+			this.newsletterFacade.startEditNewsletter(this.newsletter);
+		}
 	}
 
 	toggleSendMail(): void {
@@ -49,14 +48,15 @@ export class NewsletterCardComponent implements OnInit {
 	}
 
 	deleteNewsletter(): void {
-		this.newsletterFacade.deleteNewsletter(this.newsletter);
+
+		if (this.newsletter) {
+			this.newsletterFacade.deleteNewsletter(this.newsletter);
+		}
 	}
 
-	onChangeEmpfaengertyp($event): void {
+	onChangeEmpfaengertyp($event: any): void {
 
 		this.empfaengertyp = $event.target.value;
-
-		console.log('neuer Empfaengertyp=' + this.empfaengertyp);
 	}
 
 }

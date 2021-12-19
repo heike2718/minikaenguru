@@ -35,6 +35,7 @@ public final class PermittedRolesForAdminProvider {
 		addPathsAndMethodsForStatistik(result);
 		addPathsAndMethodsForMails(result);
 		addPathsAndMethodsForUpload(result);
+		addPathsAndMethodsForLoesungszettel(result);
 
 		return result;
 
@@ -44,6 +45,18 @@ public final class PermittedRolesForAdminProvider {
 
 		List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
 		result.put(new PathWithMethod("/admin/uploads/auswertung/*/*/*", HttpMethod.POST), rollen);
+		result.put(new PathWithMethod("/admin/uploads", HttpMethod.GET), rollen);
+		result.put(new PathWithMethod("/admin/uploads/size", HttpMethod.GET), rollen);
+		result.put(new PathWithMethod("/admin/uploads/*/file", HttpMethod.GET), rollen);
+		result.put(new PathWithMethod("/admin/uploads/*/fehlerreport", HttpMethod.GET), rollen);
+	}
+
+	private static void addPathsAndMethodsForLoesungszettel(final Map<PathWithMethod, List<Rolle>> result) {
+
+		List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+		result.put(new PathWithMethod("/admin/loesungszettel/*", HttpMethod.GET), rollen);
+		result.put(new PathWithMethod("/admin/loesungszettel/*/size", HttpMethod.GET), rollen);
+
 	}
 
 	/**
@@ -210,6 +223,13 @@ public final class PermittedRolesForAdminProvider {
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
 			result.put(new PathWithMethod("/admin/schulen/*", HttpMethod.GET), rollen);
+
+		}
+
+		{
+
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			result.put(new PathWithMethod("/admin/schulen/*/uploads/klassenlisten", HttpMethod.GET), rollen);
 
 		}
 

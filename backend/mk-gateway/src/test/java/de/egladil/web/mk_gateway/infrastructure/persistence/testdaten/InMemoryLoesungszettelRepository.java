@@ -4,7 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.persistence.testdaten;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -283,5 +283,17 @@ public class InMemoryLoesungszettelRepository implements LoesungszettelRepositor
 			result.setUuid(loesungszettel.identifier().identifier());
 		}
 		return result;
+	}
+
+	@Override
+	public List<Loesungszettel> loadLoadPageForWettbewerb(final WettbewerbID wettbewerbId, final int limit, final int offset) {
+
+		return new ArrayList<>(alleLoesungszettel.values());
+	}
+
+	@Override
+	public long anzahlForWettbewerb(final WettbewerbID wettbewerbID) {
+
+		return alleLoesungszettel.size();
 	}
 }

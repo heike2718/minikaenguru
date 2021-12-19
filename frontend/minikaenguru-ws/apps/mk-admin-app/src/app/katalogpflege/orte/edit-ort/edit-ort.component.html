@@ -71,13 +71,22 @@
 				<mk-form-error path="kuerzelLand" text="Kürzel Land"></mk-form-error>
 			</div>
 
-			<div class="btn-group d-flex" role="group">
-				<button type="button" [disabled]="!submited && (!editOrtForm.valid || submitDisabled)"
-					class="btn btn-primary w-100 ml-1" (click)="submitForm()">senden</button>
-
-				<button type="button" class="btn btn-primary w-100 ml-1" (click)="cancel()">zurücksetzen</button>
-
-				<button type="button" class="btn btn-primary w-100 ml-1" (click)="gotoKataloge()">Kataloge</button>
+			<div class="d-none d-md-block">
+				<div class="d-flex flex-row hidden-xs" role="group">
+					<button class="btn btn-primary w-100 ml-1" [disabled]="!submited && (!editOrtForm.valid || submitDisabled)" 
+						(click)="submitForm()">senden</button>
+					<button class="btn btn-primary w-100 ml-1" (click)="cancel()">zurücksetzen</button>
+					<button class="btn btn-primary w-100 ml-1" (click)="gotoKataloge()">Schulkatalog</button>
+				</div>
+			</div>
+		
+			<div class="d-md-none d-lg-none d-xl-none">
+				<div class="btn-group d-inline" role="group">
+					<button class="btn btn-primary w-100 ml-1" [disabled]="!submited && (!editOrtForm.valid || submitDisabled)" 
+						(click)="submitForm()">senden</button>
+					<button class="btn btn-primary w-100 ml-1" (click)="cancel()">zurücksetzen</button>
+					<button class="btn btn-primary w-100 ml-1" (click)="gotoKataloge()">Schulkatalog</button>
+				</div>
 			</div>
 		</form>
 	</ng-container>

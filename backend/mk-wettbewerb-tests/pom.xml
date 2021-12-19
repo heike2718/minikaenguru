@@ -5,16 +5,15 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mk-wettbewerb-tests</artifactId>
-	<version>1.6.1</version>
-
+	<version>1.7.0</version>
 
 	<properties>
-		<minikaenguru-version>1.6.1</minikaenguru-version>
-		<commons.version>1.7.0</commons.version>
-		<filescanner.version>2.0.0</filescanner.version>
-		<dependency-check.version>6.0.1</dependency-check.version>
+		<minikaenguru-version>1.7.0</minikaenguru-version>
+		<commons.version>1.7.4</commons.version>
+		<filescanner.version>2.0.1</filescanner.version>
+		<dependency-check.version>6.5.0</dependency-check.version>
 		<slf4j.version>1.7.25</slf4j.version>
-		<log4j.version>2.13.3</log4j.version>
+		<log4j.version>2.16.0</log4j.version>
 		<mockito.version>3.1.0</mockito.version>
 		<maven.compiler.source>1.11</maven.compiler.source>
 		<maven.compiler.target>1.11</maven.compiler.target>
@@ -31,6 +30,14 @@
 				<version>${commons.version}</version>
 				<scope>import</scope>
 				<type>pom</type>
+			</dependency>
+
+			<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>5.8.1</version>
+				<type>pom</type>
+				<scope>import</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -76,22 +83,7 @@
 		<!-- Test START -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.7.1</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-engine</artifactId>
-			<version>5.7.1</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.junit.platform</groupId>
-			<artifactId>junit-platform-runner</artifactId>
-			<version>1.7.1</version>
+			<artifactId>junit-jupiter</artifactId>
 			<scope>test</scope>
 		</dependency>
 
@@ -157,7 +149,7 @@
 						<configuration>
 							<images>
 								<image>
-									<name>heik2718/it-mk_wettbewerb-db:v26</name>
+									<name>heik2718/it-mk_wettbewerb-db:v29</name>
 									<alias>it-mk_wettbewerb-db</alias>
 									<run>
 										<ports>

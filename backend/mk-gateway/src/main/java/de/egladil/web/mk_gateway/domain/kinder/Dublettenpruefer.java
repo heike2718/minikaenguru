@@ -7,14 +7,21 @@ package de.egladil.web.mk_gateway.domain.kinder;
 import java.util.function.BiFunction;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Dublettenpruefer
  */
 public class Dublettenpruefer implements BiFunction<KindAdaptable, KindAdaptable, Boolean> {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(Dublettenpruefer.class);
+
 	@Override
 	public Boolean apply(final KindAdaptable kind1, final KindAdaptable kind2) {
+
+		LOGGER.debug("kind1: {}", kind1);
+		LOGGER.debug("kind2: {}", kind2);
 
 		boolean b = new EqualsBuilder().append(kind1.klasseID(), kind2.klasseID())
 			.append(kind1.getKlassenstufe(), kind2.getKlassenstufe())

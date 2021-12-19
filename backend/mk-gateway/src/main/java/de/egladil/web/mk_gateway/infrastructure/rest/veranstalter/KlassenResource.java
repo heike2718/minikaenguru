@@ -27,11 +27,14 @@ import javax.ws.rs.core.SecurityContext;
 import de.egladil.web.commons_validation.annotations.UuidString;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.DuplikatWarnungModel;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.Duplikatkontext;
+import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.kinder.KlassenService;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseAPIModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseRequestData;
+import de.egladil.web.mk_gateway.domain.klassenlisten.KlassenlisteImportService;
 
 /**
  * KlassenResource
@@ -49,6 +52,9 @@ public class KlassenResource {
 
 	@Inject
 	KlassenService klassenService;
+
+	@Inject
+	KlassenlisteImportService klassenlisteImportService;
 
 	@GET
 	@Path("{schulkuerzel}")
@@ -125,5 +131,17 @@ public class KlassenResource {
 		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.info(msg), geloeschteKlasse);
 
 		return Response.ok(responsePayload).build();
+	}
+
+	@GET
+	@Path("importreport/{uuid}")
+	@Produces({ MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_JSON })
+	public Response downloadImportReport(@PathParam(value = "uuid") final String reportUuid) {
+
+		String lehrerUuid = securityContext.getUserPrincipal().getName();
+
+		final DownloadData data = klassenlisteImportService.getImportReport(lehrerUuid, reportUuid);
+
+		return MkGatewayFileUtils.createDownloadResponse(data);
 	}
 }

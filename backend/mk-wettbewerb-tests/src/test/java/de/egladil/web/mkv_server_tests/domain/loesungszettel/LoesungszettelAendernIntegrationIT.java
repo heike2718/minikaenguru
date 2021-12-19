@@ -4,11 +4,11 @@
 // =====================================================
 package de.egladil.web.mkv_server_tests.domain.loesungszettel;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Optional;
 
@@ -87,7 +87,7 @@ public class LoesungszettelAendernIntegrationIT extends AbstractLoesungszettelTe
 			assertEquals("9b14ce6e-7390-451d-8dc1-ea6e6db0466b", clumsy.loesungszettelID().identifier());
 
 			Optional<Loesungszettel> optLoesungszettel = loesungszettelRepository.ofID(new Identifier(loesungszettelUuid));
-			assertTrue("DB muss zurückgesetzt werden", optLoesungszettel.isPresent());
+			assertTrue(optLoesungszettel.isPresent(), "DB muss zurückgesetzt werden");
 
 			Loesungszettel loesungszettel = optLoesungszettel.get();
 			assertEquals("2017", loesungszettel.teilnahmeIdentifier().wettbewerbID());
@@ -131,10 +131,11 @@ public class LoesungszettelAendernIntegrationIT extends AbstractLoesungszettelTe
 			assertTrue(optKind.isEmpty());
 
 			Optional<Loesungszettel> optLoesungszettel = loesungszettelRepository.ofID(new Identifier(loesungszettelUuid));
-			assertTrue("DB muss zurückgesetzt werden", optLoesungszettel.isPresent());
+			assertTrue(optLoesungszettel.isPresent(), "DB muss zurückgesetzt werden");
 
 			Loesungszettel loesungszettel = optLoesungszettel.get();
-			assertEquals("DB muss zurückgesetzt werden", new Identifier(kindUuid), loesungszettel.kindID());
+			assertEquals(new Identifier(kindUuid), loesungszettel.kindID(),
+				"DB muss zurückgesetzt werden");
 
 			LoesungszettelAPIModel requestDaten = TestUtils
 				.createLoesungszettelRequestDatenKlasseZWEIKreuzeABC(loesungszettelUuid, kindUuid)
@@ -175,7 +176,7 @@ public class LoesungszettelAendernIntegrationIT extends AbstractLoesungszettelTe
 			assertEquals(loesungszettelUuid, benjamin.loesungszettelID().identifier());
 
 			Optional<Loesungszettel> optLoesungszettel = loesungszettelRepository.ofID(new Identifier(loesungszettelUuid));
-			assertTrue("DB muss zurückgesetzt werden", optLoesungszettel.isEmpty());
+			assertTrue(optLoesungszettel.isEmpty(), "DB muss zurückgesetzt werden");
 
 			LoesungszettelAPIModel requestDaten = TestUtils
 				.createLoesungszettelRequestDatenKlasseEinsKreuzeABC(loesungszettelUuid, kindUuid)
@@ -192,20 +193,20 @@ public class LoesungszettelAendernIntegrationIT extends AbstractLoesungszettelTe
 
 				if (responseZeile.name().startsWith("A")) {
 
-					assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.A,
-						responseZeile.eingabe());
+					assertEquals(OnlineLoesungszetteleingabe.A,
+						responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 				}
 
 				if (responseZeile.name().startsWith("B")) {
 
-					assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.B,
-						responseZeile.eingabe());
+					assertEquals(OnlineLoesungszetteleingabe.B,
+						responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 				}
 
 				if (responseZeile.name().startsWith("C")) {
 
-					assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.C,
-						responseZeile.eingabe());
+					assertEquals(OnlineLoesungszetteleingabe.C,
+						responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 				}
 
 			}
@@ -242,7 +243,7 @@ public class LoesungszettelAendernIntegrationIT extends AbstractLoesungszettelTe
 
 			Optional<Loesungszettel> optLoesungszettel = loesungszettelRepository
 				.findLoesungszettelWithKindID(new Identifier(kindUuid));
-			assertTrue("DB muss zurückgesetzt werden", optLoesungszettel.isEmpty());
+			assertTrue(optLoesungszettel.isEmpty(), "DB muss zurückgesetzt werden");
 
 			LoesungszettelAPIModel requestDaten = TestUtils
 				.createLoesungszettelRequestDatenKlasseEinsKreuzeABC(loesungszettelUuid, kindUuid)
@@ -259,20 +260,20 @@ public class LoesungszettelAendernIntegrationIT extends AbstractLoesungszettelTe
 
 				if (responseZeile.name().startsWith("A")) {
 
-					assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.A,
-						responseZeile.eingabe());
+					assertEquals(OnlineLoesungszetteleingabe.A,
+						responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 				}
 
 				if (responseZeile.name().startsWith("B")) {
 
-					assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.B,
-						responseZeile.eingabe());
+					assertEquals(OnlineLoesungszetteleingabe.B,
+						responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 				}
 
 				if (responseZeile.name().startsWith("C")) {
 
-					assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.C,
-						responseZeile.eingabe());
+					assertEquals(OnlineLoesungszetteleingabe.C,
+						responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 				}
 
 			}
@@ -305,7 +306,7 @@ public class LoesungszettelAendernIntegrationIT extends AbstractLoesungszettelTe
 			assertTrue(optKind.isPresent());
 
 			Kind astrid = optKind.get();
-			assertEquals("DB muss zurückgesetzt werden", requestLoesungszettelUuid, astrid.loesungszettelID().identifier());
+			assertEquals(requestLoesungszettelUuid, astrid.loesungszettelID().identifier());
 
 			Optional<Loesungszettel> referenzierterLoesungszettel = loesungszettelRepository
 				.ofID(new Identifier(requestLoesungszettelUuid));
@@ -313,7 +314,7 @@ public class LoesungszettelAendernIntegrationIT extends AbstractLoesungszettelTe
 
 			Optional<Loesungszettel> optExistierenderLoesungszettel = loesungszettelRepository
 				.ofID(new Identifier(loesungszettelExistingLoesungszettelUuid));
-			assertTrue("DB muss zurückgesetzt werden", optExistierenderLoesungszettel.isPresent());
+			assertTrue(optExistierenderLoesungszettel.isPresent(), "DB muss zurückgesetzt werden");
 			assertEquals(kindUuid, optExistierenderLoesungszettel.get().kindID().identifier());
 			assertEquals("NNNNNNNNNNNA", optExistierenderLoesungszettel.get().rohdaten().nutzereingabe());
 
@@ -332,20 +333,20 @@ public class LoesungszettelAendernIntegrationIT extends AbstractLoesungszettelTe
 
 				if (responseZeile.name().startsWith("A")) {
 
-					assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.A,
-						responseZeile.eingabe());
+					assertEquals(OnlineLoesungszetteleingabe.A,
+						responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 				}
 
 				if (responseZeile.name().startsWith("B")) {
 
-					assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.B,
-						responseZeile.eingabe());
+					assertEquals(OnlineLoesungszetteleingabe.B,
+						responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 				}
 
 				if (responseZeile.name().startsWith("C")) {
 
-					assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.C,
-						responseZeile.eingabe());
+					assertEquals(OnlineLoesungszetteleingabe.C,
+						responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 				}
 
 			}
@@ -389,13 +390,13 @@ public class LoesungszettelAendernIntegrationIT extends AbstractLoesungszettelTe
 			assertTrue(optKind.isPresent());
 
 			Kind inge = optKind.get();
-			assertEquals("DB muss zurückgesetzt werden", loesungszettelUuid, inge.loesungszettelID().identifier());
+			assertEquals(loesungszettelUuid, inge.loesungszettelID().identifier());
 
 			Optional<Loesungszettel> optExistierenderLoesungszettel = loesungszettelRepository
 				.ofID(new Identifier(loesungszettelUuid));
 
-			assertTrue("DB muss zurückgesetzt werden", optExistierenderLoesungszettel.isPresent());
-			assertEquals("DB muss zurückgesetzt werden", anderesKindUuid,
+			assertTrue(optExistierenderLoesungszettel.isPresent(), "DB muss zurückgesetzt werden");
+			assertEquals(anderesKindUuid,
 				optExistierenderLoesungszettel.get().kindID().identifier());
 			assertEquals("EDABDBAEABNE", optExistierenderLoesungszettel.get().rohdaten().nutzereingabe());
 
@@ -451,7 +452,7 @@ public class LoesungszettelAendernIntegrationIT extends AbstractLoesungszettelTe
 			Optional<Loesungszettel> optExistierenderLoesungszettel = loesungszettelRepository
 				.ofID(new Identifier(loesungszettelUuid));
 
-			assertTrue("DB muss zurückgesetzt werden", optExistierenderLoesungszettel.isPresent());
+			assertTrue(optExistierenderLoesungszettel.isPresent(), "DB muss zurückgesetzt werden");
 			assertEquals(expectedNutzereingabe, optExistierenderLoesungszettel.get().rohdaten().nutzereingabe());
 
 			LoesungszettelAPIModel requestDaten = TestUtils
@@ -485,16 +486,17 @@ public class LoesungszettelAendernIntegrationIT extends AbstractLoesungszettelTe
 			String kindUuid = "41825d54-de55-4424-b6e3-4dec8b01b7e9";
 
 			Optional<Kind> optKind = kinderRepository.ofId(new Identifier(kindUuid));
-			assertTrue("DB muss zurückgesetzt werden", optKind.isPresent());
+			assertTrue(optKind.isPresent(), "DB muss zurückgesetzt werden");
 
 			Kind frank = optKind.get();
-			assertNull("DB muss zurückgesetzt werden", frank.loesungszettelID());
+			assertNull(frank.loesungszettelID(), "DB muss zurückgesetzt werden");
 
 			Optional<Loesungszettel> optLoesungszettel = loesungszettelRepository.ofID(new Identifier(loesungszettelUuid));
-			assertTrue("DB muss zurückgesetzt werden", optLoesungszettel.isPresent());
+			assertTrue(optLoesungszettel.isPresent(), "DB muss zurückgesetzt werden");
 
 			Loesungszettel loesungszettel = optLoesungszettel.get();
-			assertEquals("DB muss zurückgesetzt werden", new Identifier(kindUuid), loesungszettel.kindID());
+			assertEquals(new Identifier(kindUuid), loesungszettel.kindID(),
+				"DB muss zurückgesetzt werden");
 
 			LoesungszettelAPIModel requestDaten = TestUtils
 				.createLoesungszettelRequestDatenKlasseEinsKreuzeABC(loesungszettelUuid, kindUuid).withVersion(0);
@@ -518,20 +520,20 @@ public class LoesungszettelAendernIntegrationIT extends AbstractLoesungszettelTe
 
 				if (responseZeile.name().startsWith("A")) {
 
-					assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.A,
-						responseZeile.eingabe());
+					assertEquals(OnlineLoesungszetteleingabe.A,
+						responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 				}
 
 				if (responseZeile.name().startsWith("B")) {
 
-					assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.B,
-						responseZeile.eingabe());
+					assertEquals(OnlineLoesungszetteleingabe.B,
+						responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 				}
 
 				if (responseZeile.name().startsWith("C")) {
 
-					assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.C,
-						responseZeile.eingabe());
+					assertEquals(OnlineLoesungszetteleingabe.C,
+						responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 				}
 
 			}
@@ -556,17 +558,18 @@ public class LoesungszettelAendernIntegrationIT extends AbstractLoesungszettelTe
 			String kindUuid = "51fef8ee-0b6c-4923-9ab9-14dbf0f522a9";
 
 			Optional<Kind> optKind = kinderRepository.ofId(new Identifier(kindUuid));
-			assertTrue("DB muss zurückgesetzt werden", optKind.isPresent());
+			assertTrue(optKind.isPresent(), "DB muss zurückgesetzt werden");
 
 			Kind heinBloed = optKind.get();
-			assertEquals("DB muss zurückgesetzt werden", loesungszettelUuid, heinBloed.loesungszettelID().identifier());
+			assertEquals(loesungszettelUuid, heinBloed.loesungszettelID().identifier());
 
 			Optional<Loesungszettel> optLoesungszettel = loesungszettelRepository.ofID(new Identifier(loesungszettelUuid));
-			assertTrue("DB muss zurückgesetzt werden", optLoesungszettel.isPresent());
+			assertTrue(optLoesungszettel.isPresent(), "DB muss zurückgesetzt werden");
 
 			Loesungszettel loesungszettel = optLoesungszettel.get();
-			assertEquals("DB muss zurückgesetzt werden", new Identifier(kindUuid), loesungszettel.kindID());
-			assertEquals("DB muss zurückgesetzt werden", 0, loesungszettel.version());
+			assertEquals(new Identifier(kindUuid), loesungszettel.kindID(),
+				"DB muss zurückgesetzt werden");
+			assertEquals(0, loesungszettel.version(), "DB muss zurückgesetzt werden");
 
 			LoesungszettelAPIModel requestDaten = TestUtils
 				.createLoesungszettelRequestDatenKlasseEinsKreuzeABC(loesungszettelUuid, kindUuid).withVersion(0);
@@ -595,20 +598,20 @@ public class LoesungszettelAendernIntegrationIT extends AbstractLoesungszettelTe
 
 					if (responseZeile.name().startsWith("A")) {
 
-						assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.A,
-							responseZeile.eingabe());
+						assertEquals(OnlineLoesungszetteleingabe.A,
+							responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 					}
 
 					if (responseZeile.name().startsWith("B")) {
 
-						assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.B,
-							responseZeile.eingabe());
+						assertEquals(OnlineLoesungszetteleingabe.B,
+							responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 					}
 
 					if (responseZeile.name().startsWith("C")) {
 
-						assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.C,
-							responseZeile.eingabe());
+						assertEquals(OnlineLoesungszetteleingabe.C,
+							responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 					}
 
 				}
@@ -651,20 +654,20 @@ public class LoesungszettelAendernIntegrationIT extends AbstractLoesungszettelTe
 
 					if (responseZeile.name().startsWith("A")) {
 
-						assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.D,
-							responseZeile.eingabe());
+						assertEquals(OnlineLoesungszetteleingabe.D,
+							responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 					}
 
 					if (responseZeile.name().startsWith("B")) {
 
-						assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.E,
-							responseZeile.eingabe());
+						assertEquals(OnlineLoesungszetteleingabe.E,
+							responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 					}
 
 					if (responseZeile.name().startsWith("C")) {
 
-						assertEquals("Fehler bei Zeile " + responseZeile.name(), OnlineLoesungszetteleingabe.N,
-							responseZeile.eingabe());
+						assertEquals(OnlineLoesungszetteleingabe.N,
+							responseZeile.eingabe(), "Fehler bei Zeile " + responseZeile.name());
 					}
 
 				}

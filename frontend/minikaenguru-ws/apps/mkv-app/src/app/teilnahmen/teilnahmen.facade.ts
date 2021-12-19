@@ -9,20 +9,22 @@ import { tap, finalize, take } from 'rxjs/operators';
 import { LehrerFacade } from '../lehrer/lehrer.facade';
 import { PrivatveranstalterFacade } from '../privatveranstalter/privatveranstalter.facade';
 import { AuthService, User } from '@minikaenguru-ws/common-auth';
-import { forkJoin, ObjectUnsubscribedError, Subscription } from 'rxjs';
+import { forkJoin, ObjectUnsubscribedError, Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { TeilnahmenummerAndName } from './+state/teilnahmen.reducer';
+import { AnonymisierteTeilnahme } from '../wettbewerb/wettbewerb.model';
 
 
 @Injectable({ providedIn: 'root' })
 export class TeilnahmenFacade {
 
-	public teilnahmenummerAndName$ = this.appStore.select(selectTeilnahmenummerAndName);
-	public loading$ = this.appStore.select(loading);
-	public anonymisierteTeilnahmenGeladen$ = this.appStore.select(anonymisierteTeilnahmenGeladen);
-	public anonymisierteTeilnahmen$ = this.appStore.select(anonymisierteTeilnahmen);
+	public teilnahmenummerAndName$: Observable<TeilnahmenummerAndName | undefined> = this.appStore.select(selectTeilnahmenummerAndName);
+	public loading$: Observable<boolean> = this.appStore.select(loading);
+	public anonymisierteTeilnahmenGeladen$: Observable<boolean> = this.appStore.select(anonymisierteTeilnahmenGeladen);
+	public anonymisierteTeilnahmen$: Observable<AnonymisierteTeilnahme[]> = this.appStore.select(anonymisierteTeilnahmen);
 
 
-	private loggingOut: boolean;
+	private loggingOut: boolean = false;
 
 	constructor(private appStore: Store<AppState>,
 		private authService: AuthService,

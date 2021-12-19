@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { VeranstalterService } from './veranstalter.service';
-import { Observable, Subscription, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
 import { LogService } from '@minikaenguru-ws/common-logging';
@@ -22,9 +22,9 @@ export class VeranstalterFacade {
 	public veranstalters$: Observable<Veranstalter[]> = this.store.select(VeranstalterSelectors.veranstalter);
 	public sucheFinished$: Observable<boolean> = this.store.select(VeranstalterSelectors.sucheFinished);
 	public loading$: Observable<boolean> = this.store.select(VeranstalterSelectors.veranstalterLoading);
-	public selectedVeranstalter$: Observable<Veranstalter> = this.store.select(VeranstalterSelectors.selectedVeranstalter);
+	public selectedVeranstalter$: Observable<Veranstalter | undefined> = this.store.select(VeranstalterSelectors.selectedVeranstalter);
 
-	private selectedVeranstalter: Veranstalter;
+	private selectedVeranstalter: Veranstalter | undefined;
 
 	constructor(private veranstalterService: VeranstalterService,
 		private store: Store<AppState>,

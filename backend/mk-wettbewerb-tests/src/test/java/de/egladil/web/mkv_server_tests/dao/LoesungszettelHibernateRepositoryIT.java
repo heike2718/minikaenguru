@@ -4,10 +4,10 @@
 // =====================================================
 package de.egladil.web.mkv_server_tests.dao;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
 import java.util.Optional;
@@ -184,14 +184,14 @@ public class LoesungszettelHibernateRepositoryIT extends AbstractIntegrationTest
 		String expectedNutzereingabe = "EBCACCBDBNBN";
 
 		Optional<Loesungszettel> optResult = loesungszettelRepository.findLoesungszettelWithKindID(kindID);
-		assertTrue("DB muss zurückgesetzt werden", optResult.isPresent());
+		assertTrue(optResult.isPresent(), "DB muss zurückgesetzt werden");
 
 		Loesungszettel loesungszettel = optResult.get();
-		assertEquals("DB muss zurückgesetzt werden", kindID, loesungszettel.kindID());
-		assertEquals("DB muss zurückgesetzt werden", new Identifier("fae8ff6e-194e-4257-a1ff-14a670c476ab"),
-			loesungszettel.identifier());
-		assertEquals("DB muss zurückgesetzt werden", expectedNutzereingabe, loesungszettel.rohdaten().nutzereingabe());
-		assertEquals("DB muss zurückgesetzt werden", 0, loesungszettel.version());
+		assertEquals(kindID, loesungszettel.kindID(), "DB muss zurückgesetzt werden");
+		assertEquals(new Identifier("fae8ff6e-194e-4257-a1ff-14a670c476ab"),
+			loesungszettel.identifier(), "DB muss zurückgesetzt werden");
+		assertEquals(expectedNutzereingabe, loesungszettel.rohdaten().nutzereingabe(), "DB muss zurückgesetzt werden");
+		assertEquals(0, loesungszettel.version(), "DB muss zurückgesetzt werden");
 
 		// Act
 		try {
@@ -216,11 +216,12 @@ public class LoesungszettelHibernateRepositoryIT extends AbstractIntegrationTest
 
 		String expectedNutzereingabe = "BADNACACBENNNNC";
 
-		assertTrue("DB muss zurückgesetzt werden", optVorhandener.isPresent());
+		assertTrue(optVorhandener.isPresent(), "DB muss zurückgesetzt werden");
 		Loesungszettel vorhandener = optVorhandener.get();
 
-		assertEquals("DB muss zurückgesetzt werden", 3, vorhandener.version());
-		assertEquals("DB muss zurückgesetzt werden", expectedNutzereingabe, vorhandener.rohdaten().nutzereingabe());
+		assertEquals(3, vorhandener.version(), "DB muss zurückgesetzt werden");
+		assertEquals(expectedNutzereingabe, vorhandener.rohdaten().nutzereingabe(),
+			"DB muss zurückgesetzt werden");
 
 		LoesungszettelRohdaten rohdaten = vorhandener.rohdaten().withNutzereingabe("HALLOHALLOHALLO");
 		vorhandener = vorhandener.withVersion(2).withRohdaten(rohdaten);
@@ -253,11 +254,12 @@ public class LoesungszettelHibernateRepositoryIT extends AbstractIntegrationTest
 
 		String expectedNutzereingabe = "AAAABBBBCCCC";
 
-		assertTrue("DB muss zurückgesetzt werden", optVorhandener.isPresent());
+		assertTrue(optVorhandener.isPresent(), "DB muss zurückgesetzt werden");
 		Loesungszettel vorhandener = optVorhandener.get();
 
-		assertEquals("DB muss zurückgesetzt werden", 1, vorhandener.version());
-		assertEquals("DB muss zurückgesetzt werden", "ANNCNNNNNNNN", vorhandener.rohdaten().nutzereingabe());
+		assertEquals(1, vorhandener.version(), "DB muss zurückgesetzt werden");
+		assertEquals("ANNCNNNNNNNN", vorhandener.rohdaten().nutzereingabe(),
+			"DB muss zurückgesetzt werden");
 
 		LoesungszettelRohdaten rohdaten = vorhandener.rohdaten().withNutzereingabe("AAAABBBBCCCC")
 			.withAntwortcode("AAAABBBBCCCC")
@@ -281,7 +283,7 @@ public class LoesungszettelHibernateRepositoryIT extends AbstractIntegrationTest
 		String loesungszettelUuid = "c5f54cc3-db7f-4c2e-a03c-680b16311e83";
 		Optional<Loesungszettel> optVorhandener = loesungszettelRepository.ofID(new Identifier(loesungszettelUuid));
 
-		assertTrue("DB muss zurückgesetzt werden", optVorhandener.isPresent());
+		assertTrue(optVorhandener.isPresent(), "DB muss zurückgesetzt werden");
 
 		// Act
 		Optional<PersistenterLoesungszettel> optResult = this.removeLoesungszettel(optVorhandener.get());
@@ -363,6 +365,45 @@ public class LoesungszettelHibernateRepositoryIT extends AbstractIntegrationTest
 			.findFirst();
 		assertTrue(optUpload.isPresent());
 		assertEquals(48, optUpload.get().getRight().intValue());
+	}
+
+	@Test
+	void should_anzahlForWettbewerb_work() {
+
+		// Act
+		long result = loesungszettelRepository.anzahlForWettbewerb(new WettbewerbID(2018));
+
+		// Assert
+		assertEquals(230L, result);
+
+	}
+
+	@Test
+	void should_loadLoadPageForWettbewerb_work() {
+
+		// Arrange
+		WettbewerbID wettbewerbID = new WettbewerbID(2018);
+
+		// Act
+		List<Loesungszettel> result = loesungszettelRepository.loadLoadPageForWettbewerb(wettbewerbID, 20, 35);
+
+		// Assert
+		assertEquals(20, result.size());
+
+	}
+
+	@Test
+	void should_loadLoadPageForWettbewerb_work_when_trefferlsteEmpty() {
+
+		// Arrange
+		WettbewerbID wettbewerbID = new WettbewerbID(2015);
+
+		// Act
+		List<Loesungszettel> result = loesungszettelRepository.loadLoadPageForWettbewerb(wettbewerbID, 20, 35);
+
+		// Assert
+		assertEquals(0, result.size());
+
 	}
 
 	private Loesungszettel addLoesungszettel(final Loesungszettel loesungszettel) {

@@ -43,7 +43,7 @@
 		<div class="row ml-3 mb-2"><strong>Datum Urkunde*:</strong></div>
 		<ngb-datepicker class="ml-1" #dp [(ngModel)]="dateModel" (dateSelect)="onDateSelect($event)"
 			[minDate]="urkundeDateModel.minDate" [maxDate]="urkundeDateModel.maxDate"
-			(navigate)="dateModel = $event.next">
+			(navigate)="date = $event.next">
 		</ngb-datepicker>
 	</div>
 

@@ -2,6 +2,7 @@ import { createAction, props } from '@ngrx/store';
 import { TeilnahmeIdentifierAktuellerWettbewerb, Klasse, Duplikatwarnung, Kind } from '@minikaenguru-ws/common-components';
 import { Message } from '@minikaenguru-ws/common-messages';
 import { createAttribute } from '@angular/compiler/src/core';
+import { KlassenlisteImportReport } from '../klassen.model';
 
 
 
@@ -78,6 +79,28 @@ export const loesungszettelAdded = createAction(
 export const loesungszettelDeleted = createAction(
 	'[LoesungszettelFacade] deleteLoesungszettel second',
 	props<{kind: Kind}>()
+);
+
+export const dateiAusgewaehlt = createAction(
+	'[KlassenFacade] klassenlisteAusgewaehlt'
+);
+
+export const klassenlisteImportiert = createAction(
+	'[KlassenFacade] klassenlisteImportiert',
+	props<{report: KlassenlisteImportReport}>()
+);
+
+export const navigatedToUploads = createAction(
+	'[KlassenFacade] prepareShowUpload'
+);
+
+export const markKlasseKorrigiert = createAction(
+	'[KlassenFacade] markKlasseKorrigiert',
+	props<{klasseID: string}>()
+);
+
+export const alleKlassenGeloescht = createAction(
+	'[KlassenFacade] alleKlassenLoeschen'
 );
 
 export const resetModule = createAction(

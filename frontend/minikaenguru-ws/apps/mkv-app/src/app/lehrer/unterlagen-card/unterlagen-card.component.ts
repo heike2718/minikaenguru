@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Wettbewerb } from '../../wettbewerb/wettbewerb.model';
 import { WettbewerbFacade } from '../../wettbewerb/wettbewerb.facade';
 import { environment } from '../../../environments/environment';
 import { Subscription } from 'rxjs';
@@ -16,29 +15,33 @@ export class UnterlagenCardComponent implements OnInit, OnDestroy {
 	unterlagenDeutschUrl = environment.apiUrl + '/unterlagen/schulen/de';
 	unterlagenEnglischUrl = environment.apiUrl + '/unterlagen/schulen/en';
 
-	userIdRef: string;
+	userIdRef!: string;
 
 	hatZugangZuUnterlagen = false;
 
-	private zugangUnterlagenSubscription: Subscription;
+	private zugangUnterlagenSubscription: Subscription = new Subscription();
 
 
 	constructor(public wettbewerbFacade: WettbewerbFacade, private lehrerFacade: LehrerFacade) { }
 
 	ngOnInit(): void {
-		const user: User = JSON.parse(localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_USER));
-		this.userIdRef = user.idReference;
+		const obj: string | null = localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_USER);
+		if (obj) {
+			const user: User = JSON.parse(obj);
+			this.userIdRef = user.idReference;
+		} else {
+			this.userIdRef = '';
+		}
 
 		this.zugangUnterlagenSubscription = this.lehrerFacade.hatZugangZuUnterlagen$.subscribe(hat => {
-			this.hatZugangZuUnterlagen = hat;
+				if (hat !== undefined) {
+					this.hatZugangZuUnterlagen = hat;
+				}
 		});
 	}
 
 	ngOnDestroy(): void {
-
-		if (this.zugangUnterlagenSubscription) {
-			this.zugangUnterlagenSubscription.unsubscribe();
-		}
+		this.zugangUnterlagenSubscription.unsubscribe();
 	}
 
 }

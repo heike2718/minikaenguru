@@ -66,4 +66,13 @@ public interface VeranstalterRepository {
 	 */
 	List<String> findEmailsNewsletterAbonnenten(Empfaengertyp empfaengertyp);
 
+	/**
+	 * Läd die Veranstalter mit den gegebenen Identifiern.
+	 *
+	 * @param  veranstalterUUIDs
+	 *                           List
+	 * @return                   List
+	 */
+	List<Veranstalter> loadVeranstalterByUuids(final List<String> veranstalterUUIDs);
+
 }

@@ -24,8 +24,8 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 @Table(name = "UPLOADS")
 @NamedQueries({
 	@NamedQuery(
-		name = "PersistenterUpload.FIND_BY_TEILNAHMENUMMER",
-		query = "select u from PersistenterUpload u where u.teilnahmenummer = :teilnahmenummer"),
+		name = "PersistenterUpload.FIND_BY_UPLOAD_TYPE_AND_TEILNAHMENUMMER",
+		query = "select u from PersistenterUpload u where u.teilnahmenummer = :teilnahmenummer and u.uploadType = :uploadType order by u.uploadDate"),
 	@NamedQuery(
 		name = "PersistenterUpload.FIND_BY_IDENTIFIER",
 		query = "select u from PersistenterUpload u where u.teilnahmenummer = :teilnahmenummer and u.checksumme = :checksumme")
@@ -33,8 +33,6 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 public class PersistenterUpload extends ConcurrencySafeEntity {
 
 	private static final long serialVersionUID = 1L;
-
-	public static final String FIND_BY_TEILNAHMENUMMER = "PersistenterUpload.FIND_BY_TEILNAHMENUMMER";
 
 	public static final String FIND_BY_IDENTIFIER = "PersistenterUpload.FIND_BY_IDENTIFIER";
 
@@ -49,10 +47,13 @@ public class PersistenterUpload extends ConcurrencySafeEntity {
 
 	@Column(name = "UPLOAD_TYPE")
 	@Enumerated(EnumType.STRING)
-	private UploadType uploadTyp;
+	private UploadType uploadType;
 
 	@Column(name = "MEDIATYPE")
 	private String mediatype;
+
+	@Column(name = "CHARSET")
+	private String encoding;
 
 	@Column(name = "CHECKSUMME")
 	private Long checksumme;
@@ -63,6 +64,9 @@ public class PersistenterUpload extends ConcurrencySafeEntity {
 
 	@Column(name = "DATE_UPLOAD")
 	private Date uploadDate;
+
+	@Column(name = "SORTNR")
+	private long sortNumber;
 
 	public String getBenutzerUuid() {
 
@@ -94,14 +98,14 @@ public class PersistenterUpload extends ConcurrencySafeEntity {
 		this.dateiname = dateiname;
 	}
 
-	public UploadType getUploadTyp() {
+	public UploadType getUploadType() {
 
-		return uploadTyp;
+		return uploadType;
 	}
 
-	public void setUploadTyp(final UploadType uploadTyp) {
+	public void setUploadType(final UploadType uploadTyp) {
 
-		this.uploadTyp = uploadTyp;
+		this.uploadType = uploadTyp;
 	}
 
 	public String getMediatype() {
@@ -142,6 +146,26 @@ public class PersistenterUpload extends ConcurrencySafeEntity {
 	public void setChecksumme(final Long checksumme) {
 
 		this.checksumme = checksumme;
+	}
+
+	public String getEncoding() {
+
+		return encoding;
+	}
+
+	public void setEncoding(final String encoding) {
+
+		this.encoding = encoding;
+	}
+
+	public long getSortNumber() {
+
+		return sortNumber;
+	}
+
+	public void setSortNumber(final long sortNumber) {
+
+		this.sortNumber = sortNumber;
 	}
 
 }

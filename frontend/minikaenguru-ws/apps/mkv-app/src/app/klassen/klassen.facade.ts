@@ -9,8 +9,8 @@ import { Observable } from 'rxjs';
 import { Klasse, KlasseEditorModel, KlasseRequestData } from '@minikaenguru-ws/common-components';
 import { KlassenService } from './klassen.service';
 import { Router } from '@angular/router';
-import { KlasseWithID } from './klassen.model';
-import { MessageService } from '@minikaenguru-ws/common-messages';
+import { KlassenlisteImportReport, KlasseUIModel, KlasseWithID } from './klassen.model';
+import { MessageService, ResponsePayload } from '@minikaenguru-ws/common-messages';
 import * as KinderActions from '../kinder/+state/kinder.actions';
 import * as KinderSelectors from '../kinder/+state/kinder.selectors';
 import * as LehrerActions from '../lehrer/+state/lehrer.actions';
@@ -27,10 +27,12 @@ export class KlassenFacade {
 	public klassenGeladen$: Observable<boolean> = this.store.select(KlassenSelectors.klassenGeladen);
 	public klassen$: Observable<Klasse[]> = this.store.select(KlassenSelectors.klassen);
 	public anzahlKlassen$: Observable<number> = this.store.select(KlassenSelectors.anzahlKlassen);
-	public editorModel$: Observable<KlasseEditorModel> = this.store.select(KlassenSelectors.klasseEditorModel);
+	public klasseUIModel$: Observable<KlasseUIModel | undefined> = this.store.select(KlassenSelectors.klasseUIModel);
 	public klassenMap$: Observable<KlasseWithID[]> = this.store.select(KlassenSelectors.klassenMap);
-	public selectedKlasse$: Observable<Klasse> = this.store.select(KlassenSelectors.selectedKlasse);
+	public selectedKlasse$: Observable<Klasse | undefined> = this.store.select(KlassenSelectors.selectedKlasse);
+	public anzahlKinder$: Observable<number> = this.store.select(KlassenSelectors.anzahlKinder);
 	public anzahlLoesungszettel$: Observable<number> = this.store.select(KlassenSelectors.anzahlLoesungszettel);
+	public klassenimportReport$ : Observable<KlassenlisteImportReport | undefined> = this.store.select(KlassenSelectors.klassenimportReport);
 
 	private loggingOut = false;
 
@@ -162,6 +164,7 @@ export class KlassenFacade {
 
 		this.klassenService.deleteKlasse(klasse.uuid).subscribe(
 			rp => {
+				this.store.dispatch(KinderActions.resetModule());
 				this.store.dispatch(KlassenActions.klasseDeleted({ klasse: rp.data }));
 				this.messageService.showMessage(rp.message);
 			},
@@ -172,6 +175,65 @@ export class KlassenFacade {
 		);
 	}
 
+	downloadImportFehlerreport(): void {
+		
+	}
+
+	public dateiAusgewaelt(): void {
+
+		this.messageService.clear();
+
+		this.store.dispatch(KlassenActions.dateiAusgewaehlt());
+
+	}
+
+	public prepareShowUpload(): void {
+		
+		this.messageService.clear();
+
+		this.store.dispatch(KlassenActions.navigatedToUploads());
+	}
+
+	public klassenlisteImportiert(responsePayload: ResponsePayload): void {
+
+		if (responsePayload.data) {
+
+			const report: KlassenlisteImportReport = responsePayload.data;
+			this.store.dispatch(KinderActions.resetModule());
+			this.store.dispatch(KlassenActions.klassenlisteImportiert({ report: report }));
+		}
+
+		this.messageService.showMessage(responsePayload.message);
+
+	};
+
+	public markKlasseKorrigiert(klasseID: string): void {
+
+		this.store.dispatch(KlassenActions.markKlasseKorrigiert({klasseID: klasseID}));
+	}
+
+	public alleKlassenLoeschen(schulkuerzel: string | undefined): void {
+		
+		if (!schulkuerzel) {
+			return;
+		}
+
+		this.klassenService.deleteAllKlassen(schulkuerzel).subscribe(
+
+			(rp: ResponsePayload) => {
+
+				if (rp.message.level === 'INFO') {
+					this.messageService.showMessage(rp.message);
+					this.store.dispatch(KinderActions.resetModule());
+					this.store.dispatch(KlassenActions.alleKlassenGeloescht());
+				}
+			},
+			(error => {
+				this.store.dispatch(KlassenActions.finishedLoadig());
+				this.errorHandler.handleError(error);
+			})
+		);
+	}
 
 	public resetState(): void {
 		this.kinderFacade.resetState();

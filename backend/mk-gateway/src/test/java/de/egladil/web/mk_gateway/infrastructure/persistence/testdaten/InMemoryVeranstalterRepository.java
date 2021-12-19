@@ -219,6 +219,13 @@ public class InMemoryVeranstalterRepository implements VeranstalterRepository {
 	}
 
 	@Override
+	public List<Veranstalter> loadVeranstalterByUuids(final List<String> veranstalterUUIDs) {
+
+		return this.alleVeranstalter.stream().filter(v -> veranstalterUUIDs.contains(v.person().uuid()))
+			.collect(Collectors.toList());
+	}
+
+	@Override
 	public List<Veranstalter> findVeranstalter(final VeranstalterSuchanfrage suchanfrage) {
 
 		return null;

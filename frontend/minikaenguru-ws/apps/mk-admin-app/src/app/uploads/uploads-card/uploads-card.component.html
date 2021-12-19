@@ -1,0 +1,36 @@
+<div class="row">
+	<div class="col-12">
+		<p *ngIf="devMode">uploads-card.component.ts</p>
+		<div class="card mt-2">
+			<div [style.background-color]="uploadInfo.uploadType === 'KLASSENLISTE' ? '#d5e7cb' : '#faedca'">
+				<div class="card-body">
+					<div class="card-title">{{uploadInfo.sortnumber}} -  {{uploadInfo.teilnahmenummer}}
+						<span *ngIf="uploadInfo.uploadStatus === 'IMPORTIERT'" class="badge badge-success">{{uploadInfo.uploadStatus}}</span>
+						<span *ngIf="uploadInfo.uploadStatus !== 'IMPORTIERT'" class="badge badge-warning">{{uploadInfo.uploadStatus}}</span> </div>
+					<div class="card-text">
+						<div class="row">
+							<div class="card-subtitle text-muted col-sm-12 col-md-9">UUID: {{uploadInfo.uuid}}</div>
+							<div class="card-subtitle text-muted col-sm-12 col-md-9">Typ: {{uploadInfo.uploadType}}</div>
+							<div class="card-subtitle text-muted col-sm-12 col-md-9">Dateityp: {{uploadInfo.dateiTyp}}</div>
+							<div class="card-subtitle text-muted col-sm-12 col-md-9">Lehrer:in: {{uploadInfo.nameLehrer}}</div>
+							<div class="card-subtitle text-muted col-sm-12 col-md-9">Email: {{uploadInfo.emailLehrer}}</div>
+							<div class="card-subtitle text-muted col-sm-12 col-md-9">Datum: {{uploadInfo.uploadDatum}}</div>
+						</div>
+
+						<ng-container *ngIf="uploadInfo.schule">
+							<mka-schulkatalogdata [schulkatalogData] ="uploadInfo.schule" (click)="onSchuleClicked()" ></mka-schulkatalogdata>
+						</ng-container>
+						
+						<ng-container *ngIf="uploadInfo.uploadStatus === 'DATENFEHLER'">
+							<mk-download-button [model]="fehlerreportDownloadButtonModel">
+							</mk-download-button>
+
+							<mk-download-button [model]="fileDownloadButtonModel">
+							</mk-download-button>
+						</ng-container>
+					</div>
+				  </div>
+			</div>	
+		</div>
+	</div>
+</div>

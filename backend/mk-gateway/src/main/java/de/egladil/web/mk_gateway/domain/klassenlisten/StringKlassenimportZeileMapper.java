@@ -24,7 +24,7 @@ public class StringKlassenimportZeileMapper implements Function<Pair<Integer, St
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(StringKlassenimportZeileMapper.class);
 
-	private static final String FEHLERMESSAGE_PATTERN = "Fehler! Zeile \"{0}\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.";
+	private static final String FEHLERMESSAGE_PATTERN = "Zeile {0}: Fehler! \"{1}\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.";
 
 	private Map<KlassenlisteFeldart, Integer> feldartenIndizes = new HashMap<>();
 
@@ -71,20 +71,26 @@ public class StringKlassenimportZeileMapper implements Function<Pair<Integer, St
 		if (tokens.length != 4) {
 
 			fehlermeldung = MessageFormat.format(FEHLERMESSAGE_PATTERN,
-				new Object[] { semikolonseparierteZeileMitIndex.getRight() });
+				new Object[] { semikolonseparierteZeileMitIndex.getLeft(), semikolonseparierteZeileMitIndex.getRight() });
 
 			KlassenimportZeile result = new KlassenimportZeile().withFehlermeldung(fehlermeldung)
-				.withIndex(semikolonseparierteZeileMitIndex.getLeft().intValue());
+				.withIndex(semikolonseparierteZeileMitIndex.getLeft().intValue())
+				.withImportRohdaten(semikolonseparierteZeileMitIndex.getRight());
 
 			return Optional.of(result);
 		}
 
+		String klassenstufeString = tokens[feldartenIndizes.get(KlassenlisteFeldart.KLASSENSTUFE).intValue()].trim();
+
+		Integer klassenstufe = Integer.valueOf(Double.valueOf(klassenstufeString).intValue());
+
 		KlassenimportZeile result = new KlassenimportZeile()
 			.withKlasse(tokens[feldartenIndizes.get(KlassenlisteFeldart.KLASSE).intValue()].trim())
-			.withKlassenstufe(tokens[feldartenIndizes.get(KlassenlisteFeldart.KLASSENSTUFE).intValue()].trim())
+			.withKlassenstufe(klassenstufe.toString())
 			.withVorname(tokens[feldartenIndizes.get(KlassenlisteFeldart.VORNAME).intValue()].trim())
 			.withNachname(tokens[feldartenIndizes.get(KlassenlisteFeldart.NACHNAME).intValue()].trim())
-			.withIndex(semikolonseparierteZeileMitIndex.getLeft());
+			.withIndex(semikolonseparierteZeileMitIndex.getLeft())
+			.withImportRohdaten(semikolonseparierteZeileMitIndex.getRight());
 
 		return Optional.of(result);
 	}

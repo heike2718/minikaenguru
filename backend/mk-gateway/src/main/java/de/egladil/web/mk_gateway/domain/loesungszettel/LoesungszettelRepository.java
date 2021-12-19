@@ -23,6 +23,22 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.entities.Persistente
 public interface LoesungszettelRepository {
 
 	/**
+	 * @return long
+	 */
+	long anzahlForWettbewerb(WettbewerbID wettbewerbID);
+
+	/**
+	 * Läd eine Page.
+	 *
+	 * @param  limit
+	 *                int die Anzahl, die gelesen werden soll
+	 * @param  offset
+	 *                int der Index, an dem das Lesen beginnen soll.
+	 * @return        List
+	 */
+	List<Loesungszettel> loadLoadPageForWettbewerb(WettbewerbID wettbewerbID, int limit, int offset);
+
+	/**
 	 * Läd alle Lösungszettel zum gegebenen Wettbewerb.
 	 *
 	 * @param  wettbewerbID

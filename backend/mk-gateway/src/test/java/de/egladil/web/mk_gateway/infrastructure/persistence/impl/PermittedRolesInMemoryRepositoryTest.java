@@ -4,8 +4,8 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.persistence.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
@@ -69,6 +69,18 @@ public class PermittedRolesInMemoryRepositoryTest {
 
 			// Act
 			List<Rolle> rollen = repository.permittedRollen("/lehrer/schulen", HttpMethod.GET);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.LEHRER));
+
+		}
+
+		@Test
+		void should_permittedRollen_deleteAllKlassen_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/lehrer/schulen/JUHZTGF5/klassen", HttpMethod.DELETE);
 
 			// Assert
 			assertEquals(1, rollen.size());
@@ -361,6 +373,17 @@ public class PermittedRolesInMemoryRepositoryTest {
 		}
 
 		@Test
+		void should_permittedRollen_klassenImportreport_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/klassen/importreport/zuitz-9698", HttpMethod.GET);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.LEHRER));
+		}
+
+		@Test
 		void should_permittedRollen_loesungszettel_beOk() {
 
 			{
@@ -468,7 +491,7 @@ public class PermittedRolesInMemoryRepositoryTest {
 			{
 
 				// Act
-				List<Rolle> rollen = repository.permittedRollen("/uploads/klassenliste/DE-HE/en", HttpMethod.POST);
+				List<Rolle> rollen = repository.permittedRollen("/uploads/klassenliste/2021/DE-HE/5RTG67F", HttpMethod.POST);
 
 				// Assert
 				assertEquals(1, rollen.size());
@@ -699,6 +722,54 @@ public class PermittedRolesInMemoryRepositoryTest {
 		}
 
 		@Test
+		void should_permittedRollen_countUploads_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/admin/uploads/size", HttpMethod.GET);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.ADMIN));
+
+		}
+
+		@Test
+		void should_permittedRollen_getUploads_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/admin/uploads", HttpMethod.GET);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.ADMIN));
+
+		}
+
+		@Test
+		void should_permittedRollen_downloadUploadedFile_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/admin/uploads/abcde/file", HttpMethod.GET);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.ADMIN));
+
+		}
+
+		@Test
+		void should_permittedRollen_downloadFehlerreport_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/admin/uploads/abcde/fehlerreport", HttpMethod.GET);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.ADMIN));
+
+		}
+
+		@Test
 		void should_permittedRollen_uploadAuswertung_beOk() {
 
 			// Act
@@ -739,6 +810,18 @@ public class PermittedRolesInMemoryRepositoryTest {
 
 			// Act
 			List<Rolle> rollen = repository.permittedRollen("/admin/schulen/KUERZEL", HttpMethod.GET);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.ADMIN));
+
+		}
+
+		@Test
+		void should_permittedRollen_getSchuleUploadsKlassenlisten_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/admin/schulen/KUERZEL/uploads/klassenlisten", HttpMethod.GET);
 
 			// Assert
 			assertEquals(1, rollen.size());
@@ -933,6 +1016,30 @@ public class PermittedRolesInMemoryRepositoryTest {
 			assertTrue(rollen.contains(Rolle.ADMIN));
 
 		}
+
+		@Test
+		void should_permittedRollen_getLoesungszettel_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/admin/loesungszettel/2017", HttpMethod.GET);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.ADMIN));
+
+		}
+
+		@Test
+		void should_permittedRollen_getAnzahlLoesungszettel_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/admin/loesungszettel/2017/size", HttpMethod.GET);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.ADMIN));
+
+		}
 	}
 
 	@Nested
@@ -967,8 +1074,9 @@ public class PermittedRolesInMemoryRepositoryTest {
 
 			for (Klassenstufe klassenstufe : Klassenstufe.values()) {
 
-				assertTrue("Fehler bei Klassenstufe " + klassenstufe, repository
-					.permittedRollen("/open-data/statistik/2019/" + klassenstufe.toString() + "/xml", HttpMethod.GET).isEmpty());
+				assertTrue(repository
+					.permittedRollen("/open-data/statistik/2019/" + klassenstufe.toString() + "/xml", HttpMethod.GET).isEmpty(),
+					"Fehler bei Klassenstufe " + klassenstufe);
 			}
 		}
 

@@ -16,7 +16,7 @@ export class AktuelleMeldungFacade {
 	public aktuelleMeldungGeladen$ = this.appStore.select(aktuelleMeldungGeladen);
 	public aktuelleMeldungNichtLeer$ = this.appStore.select(habenAktuelleMeldung);
 
-	private loggingOut: boolean;
+	private loggingOut: boolean = false;
 
 	constructor(private appStore: Store<AppState>,
 		private authService: AuthService,

@@ -6,7 +6,7 @@ import { LogoutService } from '../../services/logout.service';
 import { environment } from '../../../environments/environment';
 import { KlassenFacade } from '../../klassen/klassen.facade';
 import { STORAGE_KEY_USER, User } from '@minikaenguru-ws/common-auth';
-import { Subscribable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'mkv-lehrer-dashboard',
@@ -24,11 +24,11 @@ export class LehrerDashboardComponent implements OnInit, OnDestroy {
 	unterlagenDeutschUrl  = environment.apiUrl + '/unterlagen/schulen/de';
 	unterlagenEnglischUrl  = environment.apiUrl + '/unterlagen/schulen/en';
 
-	userIdRef: string;
+	userIdRef?: string;
 
-	hatZugangZuUnterlagen = false;
+	hatZugangZuUnterlagen: boolean = false;
 
-	private zugangUnterlagenSubscription: Subscription;
+	private zugangUnterlagenSubscription: Subscription = new Subscription();
 
 	constructor(private lehrerFacade: LehrerFacade,
 		private klassenFacade: KlassenFacade,
@@ -38,11 +38,18 @@ export class LehrerDashboardComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 
-		const user: User = JSON.parse(localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_USER));
-		this.userIdRef = user.idReference;
+		const userSerialized = localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_USER);
+
+		if (userSerialized) {
+			const user: User = JSON.parse(userSerialized);
+			this.userIdRef = user.idReference;
+		}
 
 		this.zugangUnterlagenSubscription = this.lehrerFacade.hatZugangZuUnterlagen$.subscribe(hat => {
-			this.hatZugangZuUnterlagen = hat;
+
+			if (hat !== undefined) {
+				this.hatZugangZuUnterlagen = hat;
+			}
 		});
 
 		this.klassenFacade.resetState();
@@ -50,10 +57,7 @@ export class LehrerDashboardComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-
-		if (this.zugangUnterlagenSubscription) {
-			this.zugangUnterlagenSubscription.unsubscribe();
-		}
+		this.zugangUnterlagenSubscription.unsubscribe();
 	}
 
 	gotoSchulen() {
@@ -70,7 +74,7 @@ export class LehrerDashboardComponent implements OnInit, OnDestroy {
 	}
 
 	toggleTextFeatureFlagAnzeigen(): void {
-		this.textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
+		this.textFeatureFlag = 'Das ist im Moment noch nicht möglich.';
 		this.textFeatureFlagAnzeigen = !this.textFeatureFlagAnzeigen;
 	}
 

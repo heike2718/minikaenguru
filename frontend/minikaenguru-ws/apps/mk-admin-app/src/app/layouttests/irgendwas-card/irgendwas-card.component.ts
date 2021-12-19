@@ -9,7 +9,7 @@ import { Irgendwas } from '../layouttests.model';
 export class IrgendwasCardComponent implements OnInit {
 
 	@Input()
-	irgendwas: Irgendwas;
+	irgendwas!: Irgendwas;
 
 	constructor() { }
 

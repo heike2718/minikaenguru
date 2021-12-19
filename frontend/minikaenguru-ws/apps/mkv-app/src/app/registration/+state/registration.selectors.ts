@@ -6,6 +6,7 @@ export const selectRegistrationState = createFeatureSelector<fromRegistration.Re
 	fromRegistration.registrationFeatureKey
 );
 
+export const registrationFormReady = createSelector(selectRegistrationState, s => s.ready);
 export const selectRegistrationMode = createSelector(selectRegistrationState, s => s.mode);
 export const selectNewsletterAboState = createSelector(selectRegistrationState, s => s.newsletterAbonieren);
 export const selectSubmitStatus = createSelector(selectRegistrationState, s => s.submitEnabled);

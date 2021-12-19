@@ -25,7 +25,7 @@ export class KatalogpflegeFacade {
 	public editOrtInput$ = this.store.select(editOrtInput);
 	public editLandInput$ = this.store.select(editLandInput);
 
-	private loggingOut: boolean;
+	private loggingOut: boolean = false;
 
 	constructor(private katalogHttpService: KatalogHttpService,
 		private authService: AuthService,
@@ -147,66 +147,72 @@ export class KatalogpflegeFacade {
 		);
 	}
 
-	public switchToRenameKatalogItemEditor(item: KatalogpflegeItem) {
+	public switchToRenameKatalogItemEditor(item?: KatalogpflegeItem) {
 
 		let url = '/katalogpflege';
-		switch (item.typ) {
-			case 'LAND': url += '/land-'; break;
-			case 'ORT': url += '/ort-'; break;
-			case 'SCHULE': url += '/schule-'; break;
-		}
-		url += 'editor';
+		
+		if (item) {
+			switch (item.typ) {
+				case 'LAND': url += '/land-'; break;
+				case 'ORT': url += '/ort-'; break;
+				case 'SCHULE': url += '/schule-'; break;
+			}
+			
+			url += 'editor';
 
-		this.store.dispatch(KatalogpflegeActions.selectKatalogItem({ katalogItem: item }));
+			this.store.dispatch(KatalogpflegeActions.selectKatalogItem({ katalogItem: item }));
 
-		switch (item.typ) {
-			case 'LAND': {
-				this.store.dispatch(KatalogpflegeActions.landPayloadCreated({
+			switch (item.typ) {
+				case 'LAND': {
+					this.store.dispatch(KatalogpflegeActions.landPayloadCreated({
 					landPayload: {
 						kuerzel: item.kuerzel,
 						name: item.name
 					}
-				}));
-				break;
-			}
-			case 'ORT': {
-				this.store.dispatch(KatalogpflegeActions.ortPayloadCreated({
-					ortPayload: {
-						kuerzel: item.kuerzel,
-						name: item.name,
-						kuerzelLand: item.parent.kuerzel,
-						nameLand: item.parent.name
+					}));
+					break;
+				}
+				case 'ORT': {
+					this.store.dispatch(KatalogpflegeActions.ortPayloadCreated({
+						ortPayload: {
+							kuerzel: item.kuerzel,
+							name: item.name,
+							kuerzelLand: item.parent? item.parent.kuerzel : '',
+							nameLand: item.parent ? item.parent.name : ''
 					}
 				}));
 				break;
 			}
-			case 'SCHULE':
+				case 'SCHULE':
 				{
-					const schulePayload: SchulePayload = {
-						emailAuftraggeber: '',
-						kuerzel: item.kuerzel,
-						name: item.name,
-						kuerzelLand: item.parent.parent.kuerzel,
-						nameLand: item.parent.parent.name,
-						kuerzelOrt: item.parent.kuerzel,
-						nameOrt: item.parent.name
-					};
+						const schulePayload: SchulePayload = {
+							emailAuftraggeber: '',
+							kuerzel: item.kuerzel,
+							name: item.name,
+							kuerzelLand: item.parent && item.parent.parent ? item.parent.parent.kuerzel : '',
+							nameLand: item.parent && item.parent.parent ? item.parent.parent.name : '',
+							kuerzelOrt: item.parent? item.parent.kuerzel : '',
+							nameOrt: item.parent ? item.parent.name : ''
+						};
 
-					const schuleEditorModel: SchuleEditorModel = {
-						kuerzelLandDisabled: true,
-						modusCreate: false,
-						nameLandDisabled: true,
-						nameOrtDisabled: true,
-						schulePayload: schulePayload
-					};
+						const schuleEditorModel: SchuleEditorModel = {
+							kuerzelLandDisabled: true,
+							modusCreate: false,
+							nameLandDisabled: true,
+							nameOrtDisabled: true,
+							schulePayload: schulePayload
+						};
 
-					this.store.dispatch(KatalogpflegeActions.schulePayloadCreated({ schuleEditorModel: schuleEditorModel}));
-					break;
+						this.store.dispatch(KatalogpflegeActions.schulePayloadCreated({ schuleEditorModel: schuleEditorModel}));
+						break;
 				}
 		}
 
 		this.router.navigateByUrl(url);
+
 	}
+	}
+
 
 
 
@@ -306,7 +312,7 @@ export class KatalogpflegeFacade {
 
 	// ================= private methods ========================================//
 
-	createTheNeueSchuleEditorModel(kuerzelAPIModel: KuerzelAPIModel, item: KatalogpflegeItem): SchuleEditorModel {
+	createTheNeueSchuleEditorModel(kuerzelAPIModel: KuerzelAPIModel, item?: KatalogpflegeItem): SchuleEditorModel {
 
 		let kuerzelLandDisabled = false;
 		let nameLandDisabled = false;
@@ -335,8 +341,8 @@ export class KatalogpflegeFacade {
 					break;
 				case 'ORT': payload = {
 					...payload,
-					kuerzelLand: item.parent.kuerzel,
-					nameLand: item.parent.name,
+					kuerzelLand: item.parent ? item.parent.kuerzel : '',
+					nameLand: item.parent ? item.parent.name : '',
 					kuerzelOrt: item.kuerzel,
 					nameOrt: item.name
 				};

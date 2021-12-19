@@ -26,11 +26,12 @@ public class KlassenimportZeile {
 
 	private String fehlermeldung;
 
+	private String importRohdaten;
+
 	@Override
 	public String toString() {
 
-		return "KlassenimportZeile [vorname=" + vorname + ", nachname=" + nachname + ", klasse=" + klasse + ", klassenstufe="
-			+ klassenstufe + "]";
+		return "KlassenimportZeile [" + importRohdaten + "]";
 	}
 
 	@Override
@@ -72,6 +73,11 @@ public class KlassenimportZeile {
 
 		return result == null ? Optional.empty() : Optional.of(result);
 
+	}
+
+	public boolean ok() {
+
+		return this.fehlermeldung == null;
 	}
 
 	public String getVorname() {
@@ -140,9 +146,19 @@ public class KlassenimportZeile {
 		return this;
 	}
 
-	public boolean ok() {
+	public String getImportRohdaten() {
 
-		return this.fehlermeldung == null;
+		return importRohdaten;
 	}
 
+	public KlassenimportZeile withImportRohdaten(final String importRohdaten) {
+
+		this.importRohdaten = importRohdaten;
+		return this;
+	}
+
+	public void setImportRohdaten(final String importRohdaten) {
+
+		this.importRohdaten = importRohdaten;
+	}
 }

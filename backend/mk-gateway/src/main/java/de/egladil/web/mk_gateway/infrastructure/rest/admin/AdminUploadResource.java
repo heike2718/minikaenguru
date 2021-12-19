@@ -4,6 +4,8 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.admin;
 
+import java.util.List;
+
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.validation.constraints.NotBlank;
@@ -24,11 +26,16 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.annotations.LandKuerzel;
+import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.loesungszettel.upload.AuswertungImportService;
 import de.egladil.web.mk_gateway.domain.loesungszettel.upload.UploadAuswertungContext;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
+import de.egladil.web.mk_gateway.domain.uploadmonitoring.api.UploadMonitoringInfo;
+import de.egladil.web.mk_gateway.domain.uploadmonitoring.api.UploadMonitoringService;
 import de.egladil.web.mk_gateway.domain.uploads.MultipartUtils;
 import de.egladil.web.mk_gateway.domain.uploads.UploadData;
 import de.egladil.web.mk_gateway.domain.uploads.UploadManager;
@@ -54,17 +61,26 @@ public class AdminUploadResource {
 	@Inject
 	AuswertungImportService klassenlisteImportService;
 
-	@GET
-	@Path("auswertung/{jahr}/{kuerzelLand}/{schulkuerzel}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.TEXT_PLAIN)
-	private Response sayExists(@PathParam(value = "jahr") final String jahr, @PathParam(
-		value = "kuerzelLand") @LandKuerzel final String kuerzelLand, @PathParam(
-			value = "schulkuerzel") @Kuerzel final String schulkuerzel, @QueryParam(
-				value = "sprache") @NotBlank final String sprache) {
+	@Inject
+	UploadMonitoringService uploadMonitoringService;
 
-		return Response.ok("Mission accomblished: jahr=" + jahr + ", land=" + kuerzelLand + ", teilnahmenummer=" + schulkuerzel
-			+ ", sprache=" + sprache).build();
+	@GET
+	@Path("size")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getUploadsCount() {
+
+		Long result = uploadMonitoringService.countUploads();
+
+		return Response.ok().entity(new ResponsePayload(MessagePayload.ok(), result)).build();
+	}
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getUploads(@QueryParam(value = "limit") final int limit, @QueryParam(
+		value = "offset") final int offset) {
+
+		List<UploadMonitoringInfo> uploads = uploadMonitoringService.loadUploads(limit, offset);
+		return Response.ok().entity(new ResponsePayload(MessagePayload.ok(), uploads)).build();
 	}
 
 	@POST
@@ -96,5 +112,23 @@ public class AdminUploadResource {
 		ResponsePayload responsePayload = uploadManager.processUpload(uploadPayload);
 
 		return Response.ok(responsePayload).build();
+	}
+
+	@GET
+	@Path("{uuid}/fehlerreport")
+	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON }) // text/plain, damit man kein encoding-Problem bekommt
+	public Response downloadFehlerreport(@PathParam(value = "uuid") final String uuid) {
+
+		DownloadData downloadData = this.uploadMonitoringService.getFehlerReport(uuid);
+		return MkGatewayFileUtils.createDownloadResponse(downloadData);
+	}
+
+	@GET
+	@Path("{uuid}/file")
+	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON }) // text/plain, damit man kein encoding-Problem bekommt
+	public Response downloadUploadedFile(@PathParam(value = "uuid") final String uuid) {
+
+		DownloadData downloadData = this.uploadMonitoringService.getUploadedFile(uuid);
+		return MkGatewayFileUtils.createDownloadResponse(downloadData);
 	}
 }

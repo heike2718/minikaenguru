@@ -4,11 +4,12 @@ import { KinderFacade } from '../../kinder/kinder.facade';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { Subscription } from 'rxjs';
-import { Kind, kindToString, TeilnahmeIdentifierAktuellerWettbewerb } from '@minikaenguru-ws/common-components';
+import { Kind, kindToString, modalOptions, TeilnahmeIdentifierAktuellerWettbewerb } from '@minikaenguru-ws/common-components';
 import { Loesungszettel, loesungszettelIsLeer } from '../loesungszettel.model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MessageService } from '@minikaenguru-ws/common-messages';
 import { User } from '@minikaenguru-ws/common-auth';
+import { LogService } from '@minikaenguru-ws/common-logging';
 
 @Component({
 	selector: 'mkv-loesungszettel-editor',
@@ -18,56 +19,58 @@ import { User } from '@minikaenguru-ws/common-auth';
 export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 
 	@ViewChild('dialogContentLeererLoesungszettel')
-	dialogContentLeererLoesungszettel: TemplateRef<HTMLElement>;
+	dialogContentLeererLoesungszettel!: TemplateRef<HTMLElement>;
 
 	@ViewChild('dialogContentLoeschen')
-	dialogContentLoeschen: TemplateRef<HTMLElement>;
+	dialogContentLoeschen!: TemplateRef<HTMLElement>;
 
 	devMode = environment.envName === 'DEV'
 
-	titel: string;
+	titel: string = '';
 
-	nameKind: string;
+	nameKind: string = '';
 
-	loesungszetteleingaben: string;
+	loesungszetteleingaben: string = '';
 
 	saveInProgress = false;
 
 	showSaveMessage = false;
 
-	uuid: string;
+	uuid?: string;
 
-	private selectedKindSubscription: Subscription;
+	loesungszettel?: Loesungszettel;
 
-	private loesungszettelSubscription: Subscription;
+	kind?: Kind;
 
-	private teilnahmeIdentifierSubscription: Subscription;
+	private selectedKindSubscription: Subscription = new Subscription();
 
-	private loesungszettel: Loesungszettel;
+	private loesungszettelSubscription: Subscription = new Subscription();
 
-	private kind: Kind;
+	private teilnahmeIdentifierSubscription: Subscription = new Subscription();		
 
-	private teilnahmeIdentifier: TeilnahmeIdentifierAktuellerWettbewerb;
+	private teilnahmeIdentifier?: TeilnahmeIdentifierAktuellerWettbewerb;
 
 
-	constructor(public loesungszettelFacade: LoesungszettelFacade,
+	constructor(private loesungszettelFacade: LoesungszettelFacade,
 		private kinderFacade: KinderFacade,
 		private modalService: NgbModal,
 		private messageService: MessageService,
+		private logger: LogService,
 		private router: Router) { }
 
 	ngOnInit(): void {
 
 		this.selectedKindSubscription = this.kinderFacade.selectedKind$.subscribe(
 			kind => {
-				this.kind = kind;
 
 				if (kind) {
-					this.nameKind = kindToString(this.kind);
+					this.nameKind = kindToString(kind);
 					this.titel = this.nameKind + ': Antworten erfassen oder ändern';
 				} else {
 					this.titel = 'kein Kind ausgewählt';
 				}
+
+				this.kind = kind;				
 			}
 		);
 
@@ -75,20 +78,18 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 
 			zettel => {
 
-				if (zettel && !zettel.zeilen) {
-					// Lösungszettel wurde vermutlich konkurrierend geöscht!
-					this.messageService.warn('Der Lösungszettel wurde möglicherweise inzwischen gelöscht. Bitte klären Sie das im Kollegium.');
-					this.onCancel();
-				}
-
-				this.loesungszetteleingaben = this.initEingaben(zettel);
-				this.loesungszettel = zettel;
-
 				if (zettel) {
+					if (!zettel.zeilen) {
+						// Lösungszettel wurde vermutlich konkurrierend geöscht!
+						this.messageService.warn('Der Lösungszettel wurde möglicherweise inzwischen gelöscht. Bitte klären Sie das im Kollegium.');
+						this.onCancel();
+					}
+
+					this.loesungszetteleingaben = this.initEingaben(zettel);
 					this.uuid = zettel.uuid;
-				} else {
-					this.uuid = undefined;
 				}
+
+				this.loesungszettel = zettel;
 			}
 
 		);
@@ -99,21 +100,21 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-
-		if (this.selectedKindSubscription) {
-			this.selectedKindSubscription.unsubscribe();
-		}
-
-		if (this.loesungszettelSubscription) {
-			this.loesungszettelSubscription.unsubscribe();
-		}
-
-		if (this.teilnahmeIdentifierSubscription) {
-			this.teilnahmeIdentifierSubscription.unsubscribe();
-		}
+		this.selectedKindSubscription.unsubscribe();
+		this.loesungszettelSubscription.unsubscribe();
+		this.teilnahmeIdentifierSubscription.unsubscribe();
 	}
 
 	onSubmit(): void {
+
+		if (!this.loesungszettel) {
+			this.logger.debug('selectedLoesungszettel was undefined');
+			return;
+		}
+		if (!this.kind) {
+			this.logger.debug('kind was undefined');
+			return;
+		}
 
 		this.saveInProgress = true;
 
@@ -132,15 +133,31 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 	}
 
 	onDelete(): void {
+
+		if (!this.loesungszettel) {
+			this.logger.debug('selectedLoesungszette was undefined');
+			return;
+		}
+		if (!this.kind) {
+			this.logger.debug('kind was undefined');
+			return;
+		}
 		this.openWarndialogLoesungszettelLoeschen();
 	}
 
 	private forceDelete(): void {
+		if (!this.kind || !this.loesungszettel) {
+			return;
+		}
 		this.loesungszettelFacade.deleteLoesungszettel(this.kind, this.loesungszettel);
 		this.navigateBack();
 	}
 
 	private forceSave(): void {
+
+		if (!this.kind || !this.loesungszettel) {
+			return;
+		}
 
 		this.saveInProgress = false;
 		this.loesungszettelFacade.saveLoesungszettel(this.kind, this.loesungszettel);
@@ -174,7 +191,7 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 	private openWarndialogLeererLoesungszettel() {
 
 		this.saveInProgress = false;
-		this.modalService.open(this.dialogContentLeererLoesungszettel, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+		this.modalService.open(this.dialogContentLeererLoesungszettel, modalOptions).result.then((result) => {
 
 			if (result === 'ja') {
 				this.forceSave();
@@ -185,7 +202,7 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 
 	private openWarndialogLoesungszettelLoeschen() {
 
-		this.modalService.open(this.dialogContentLoeschen, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+		this.modalService.open(this.dialogContentLoeschen, modalOptions).result.then((result) => {
 
 			if (result === 'ja') {
 				this.forceDelete();

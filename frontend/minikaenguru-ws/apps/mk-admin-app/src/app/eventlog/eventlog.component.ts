@@ -3,6 +3,7 @@ import { NgbDateStruct, NgbCalendar, NgbDate } from '@ng-bootstrap/ng-bootstrap'
 import { EventlogFacade } from './eventlog.facade';
 import { Subscription } from 'rxjs';
 import { DownloadButtonModel } from '@minikaenguru-ws/common-components';
+import { initialDownloadButtonModel } from 'libs/common-components/src/lib/download/download.model';
 
 @Component({
 	selector: 'mka-eventlog',
@@ -15,16 +16,16 @@ export class EventlogComponent implements OnInit, OnDestroy {
 
 	selectedDatum$ = this.eventlogFacade.selectedDatum$;
 
-	model: NgbDateStruct;
-	date: { year: number, month: number };
+	model?: NgbDateStruct;
+	date: { year: number, month: number } = {year: 2020, month: 8};
 
-	downloadButtonModel: DownloadButtonModel;
+	downloadButtonModel: DownloadButtonModel = initialDownloadButtonModel;
 
 
 	minDate: NgbDate = new NgbDate(2020, 8, 26);
-	maxDate: NgbDate;
+	maxDate: NgbDate = new NgbDate(4000, 12, 31);
 
-	private selectedDatumSubscription: Subscription;
+	private selectedDatumSubscription: Subscription = new Subscription();
 
 
 	constructor(private calendar: NgbCalendar, private eventlogFacade: EventlogFacade) { }
@@ -45,11 +46,7 @@ export class EventlogComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-
-		if (this.selectedDatumSubscription) {
-			this.selectedDatumSubscription.unsubscribe();
-		}
-
+		this.selectedDatumSubscription.unsubscribe();
 	}
 
 

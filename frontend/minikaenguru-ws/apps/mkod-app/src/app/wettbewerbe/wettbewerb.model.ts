@@ -31,10 +31,10 @@ export class WettbewerbeMap {
 		return this.wettbewerbe.has(jahr);
 	}
 
-	public get(jahr: number): Wettbewerb {
+	public get(jahr: number): Wettbewerb | undefined {
 
 		if (!this.has(jahr)) {
-			return null;
+			return undefined;
 		}
 
 		return this.wettbewerbe.get(jahr);

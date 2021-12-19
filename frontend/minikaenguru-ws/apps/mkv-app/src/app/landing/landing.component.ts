@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { WettbewerbFacade } from '../wettbewerb/wettbewerb.facade';
 import { AktuelleMeldungFacade } from '../aktuelle-meldung/aktuelle-meldung.facade';
 import { environment } from '../../environments/environment';
-import { STORAGE_KEY_USER, User } from '@minikaenguru-ws/common-auth';
+import { AuthService, STORAGE_KEY_USER, User } from '@minikaenguru-ws/common-auth';
 import { Router } from '@angular/router';
 
 @Component({
@@ -12,10 +12,12 @@ import { Router } from '@angular/router';
 })
 export class LandingComponent implements OnInit {
 
+	isLoggedOut$ = this.authService.isLoggedOut$;
 	aktuelleMeldungNichtLeer$ = this.aktuelleMeldungFacade.aktuelleMeldungNichtLeer$;
 	aktuellerWettbewerb$ = this.wettbewerbFacade.aktuellerWettbewerb$;
 
 	constructor(private wettbewerbFacade: WettbewerbFacade
+		, private authService: AuthService
 		, private aktuelleMeldungFacade: AktuelleMeldungFacade
 		, private router: Router) { }
 
@@ -36,5 +38,17 @@ export class LandingComponent implements OnInit {
 				this.router.navigateByUrl('/privat/dashboard');
 			}
 		}
+	}
+
+	login() {
+		this.authService.login();
+	}
+
+	gotoRegistrierung(): void {
+		this.router.navigateByUrl('/registrierung');
+	}
+
+	gotoInfo(): void {
+		this.router.navigateByUrl('/info');
 	}
 }

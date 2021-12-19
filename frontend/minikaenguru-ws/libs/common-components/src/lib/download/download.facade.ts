@@ -39,6 +39,7 @@ export class DownloadFacade {
 			(error => {
 				this.appStore.dispatch(DownloadActions.downloadFinished());
 				this.handleError(error);
+				window.scroll(0,0);
 			})
 		);
 	}
@@ -56,7 +57,7 @@ export class DownloadFacade {
 		URL.revokeObjectURL(objectUrl);
 	}
 
-	private getFilenameFromContentDispositionHeader(contentDispositionHeader: string, defaultFilename: string) {
+	private getFilenameFromContentDispositionHeader(contentDispositionHeader: string | null, defaultFilename: string) {
 
 		if (!contentDispositionHeader) {
 			return defaultFilename;
@@ -115,6 +116,9 @@ export class DownloadFacade {
 				case 403:
 					this.messageService.error('Sie haben keine Berechtigung, diese Resource aufzurufen.');
 					break;
+				case 404:
+						this.messageService.error('Die Datei existiert leider nicht oder nicht mehr.');
+						break;
 				case 908:
 					this.messageService.error('Ihre Session ist abgelaufen. Bitte loggen Sie sich erneut ein.');
 					break;

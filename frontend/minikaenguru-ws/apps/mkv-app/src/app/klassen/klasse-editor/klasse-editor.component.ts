@@ -5,6 +5,7 @@ import { LehrerFacade } from '../../lehrer/lehrer.facade';
 import { Schule } from '../../lehrer/schulen/schulen.model';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MessageService } from '@minikaenguru-ws/common-messages';
+import { KlasseUIModel } from '../klassen.model';
 
 @Component({
 	selector: 'mkv-klasse-editor',
@@ -13,25 +14,23 @@ import { MessageService } from '@minikaenguru-ws/common-messages';
 })
 export class KlasseEditorComponent implements OnInit, OnDestroy {
 
-	schule$: Observable<Schule> = this.lehrerFacade.selectedSchule$;
+	schule$: Observable<Schule | undefined> = this.lehrerFacade.selectedSchule$;
 
-	name: string;
+	name: string = '';
 
-	submitted = false;
+	private submitted = false;
 
 	warntextDuplikat = '';
 
-	private uuid: string;
+	private uuid: string = '';
 
-	private schulkuerzel: string;
+	private schulkuerzel: string = '';
 
-	private saveInProgress = false;
+	private modelSubscription: Subscription = new Subscription();
 
-	private modelSubscription: Subscription;
+	private routeParamsSubcription: Subscription = new Subscription();
 
-	private routeParamsSubcription: Subscription;
-
-	private schuleSubscription: Subscription;
+	private schuleSubscription: Subscription = new Subscription();
 
 	constructor(private router: Router,
 		private route: ActivatedRoute,
@@ -55,10 +54,12 @@ export class KlasseEditorComponent implements OnInit, OnDestroy {
 			}
 		);
 
-		this.modelSubscription = this.klassenFacade.editorModel$.subscribe(
-			em => {
-				if (em) {
-					this.name = em.name;
+		this.modelSubscription = this.klassenFacade.klasseUIModel$.subscribe(
+			model => {
+				if (model) {
+					this.name = model.name;
+					this.uuid = model.uuid;
+					this.submitted = model.saved;
 				} else {
 					const url = '/lehrer/dashboard';
 					this.router.navigateByUrl(url);
@@ -69,23 +70,14 @@ export class KlasseEditorComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 
-		if (this.routeParamsSubcription) {
-			this.routeParamsSubcription.unsubscribe();
-		}
-
-		if (this.schuleSubscription) {
-			this.schuleSubscription.unsubscribe();
-		}
-
-		if (this.modelSubscription) {
-			this.modelSubscription.unsubscribe();
-		}
-
+		this.routeParamsSubcription.unsubscribe();
+		this.schuleSubscription.unsubscribe();
+		this.modelSubscription.unsubscribe();
 	}
 
 	submitDisabled(): boolean {
 
-		if (this.saveInProgress) {
+		if (this.submitted) {
 			return true;
 		}
 
@@ -102,7 +94,6 @@ export class KlasseEditorComponent implements OnInit, OnDestroy {
 
 
 	onSubmit(): void {
-		this.submitted = true;
 		if (this.uuid === 'neu') {
 			this.klassenFacade.insertKlasse(this.uuid, this.schulkuerzel, { name: this.name });
 		} else {
@@ -112,7 +103,7 @@ export class KlasseEditorComponent implements OnInit, OnDestroy {
 
 
 	addKlasse(): void {
-		this.saveInProgress = false;
+		this.submitted = false;
 		this.messageService.clear();
 		this.name = '';
 		this.klassenFacade.startCreateKlasse();

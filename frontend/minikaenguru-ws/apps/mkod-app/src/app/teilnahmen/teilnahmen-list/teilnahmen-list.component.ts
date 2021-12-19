@@ -11,7 +11,7 @@ import { TeilnahmenFacade } from '../teilnahmen.facade';
 })
 export class TeilnahmenListComponent implements OnInit, OnDestroy {
 
-  private selectedAnmeldunngenSubscription: Subscription;
+  private selectedAnmeldunngenSubscription: Subscription = new Subscription();
 
   constructor(public teilnahmenFacade: TeilnahmenFacade,
     private logger: LogService,
@@ -31,9 +31,7 @@ export class TeilnahmenListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.selectedAnmeldunngenSubscription) {
-      this.selectedAnmeldunngenSubscription.unsubscribe();
-    }
+    this.selectedAnmeldunngenSubscription.unsubscribe();
   }
 
   gotoWettbewerbe(): void {

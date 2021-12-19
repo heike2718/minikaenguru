@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 import { TeilnahmenFacade } from './teilnahmen.facade';
 import { selectedWettbewerb } from '../wettbewerbe/+state/wettbewerbe.selectors';
 import { filter, first, tap } from 'rxjs/operators';
-import { loadTeilnhahmen } from './+state/teilnahmen.actions';
 
 
 
@@ -19,7 +18,7 @@ export class TeilnahmenJahrResolver implements Resolve<any> {
     resolve(route: ActivatedRouteSnapshot,
 		_state: RouterStateSnapshot): Observable<any> {
 
-            let jahr: number;
+            let jahr: number | undefined;
 
             try {
 				jahr = parseInt(route.params.id, 0);
@@ -29,12 +28,12 @@ export class TeilnahmenJahrResolver implements Resolve<any> {
 
             return this.store.pipe(
 				select(selectedWettbewerb),
-				tap(_w => {
-					if (jahr !== null) {
+				tap(w => {
+					if (w && jahr) {
 						this.teilnahmenFacade.loadTeilnahmen(jahr);
 					}
 				}),
-				filter(wettbewerb => wettbewerb && wettbewerb.jahr === jahr),
+				//filter(wettbewerb => wettbewerb && wettbewerb.jahr === jahr),
 				first()
 			);
     }

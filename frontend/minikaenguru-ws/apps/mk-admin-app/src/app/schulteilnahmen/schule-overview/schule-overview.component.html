@@ -53,6 +53,11 @@
 								<div class="col-sm-12 col-md-3">Angemeldet durch:</div>
 								<div class="col-sm-12 col-md-9">{{schule.angemeldetDurch}}</div>
 							</div>
+
+							<div class="row">
+								<div class="col-sm-12 col-md-3"># Uploads Klassenlisten:</div>
+								<div class="col-sm-12 col-md-9">{{schule.anzahlUploadKlassenlisten}}</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -70,8 +75,8 @@
 	</div>
 
 	<div class="btn-group d-flex mt-2" role="group">
-		<button class="btn btn-primary w-100 ml-1" (click)="gotoSelectedVeranstalter()"><i class="fa fa-arrow-left"
-				aria-hidden="true"></i>zurück</button>
+		<button *ngIf="(veranstalterFacade.selectedVeranstalter$ | async) !== undefined" class="btn btn-primary w-100 ml-1" (click)="gotoSelectedVeranstalter()"><i class="fa fa-arrow-left"
+				aria-hidden="true"></i>Veranstalter</button>
 
 		<button class="btn btn-primary w-100 ml-1" (click)="gotoVeranstalterList()"><i class="fa fa-users"
 				aria-hidden="true"></i>Veranstalterliste</button>

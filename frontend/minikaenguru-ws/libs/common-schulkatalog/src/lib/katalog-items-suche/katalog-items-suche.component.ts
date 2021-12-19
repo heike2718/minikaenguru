@@ -3,7 +3,6 @@ import { BehaviorSubject, Subscription, Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, tap, filter } from 'rxjs/operators';
 import { KatalogItem, Katalogtyp } from '../domain/entities';
 import { SchulkatalogConfigService } from '../configuration/schulkatalog-config';
-import { SchulkatalogFacade } from '../application-services/schulkatalog.facade';
 import { SchulkatalogState } from '../+state/schulkatalog.reducer';
 import { InternalFacade } from '../application-services/internal.facade';
 import { Router } from '@angular/router';
@@ -16,29 +15,29 @@ import { Router } from '@angular/router';
 })
 export class KatalogItemsSucheComponent implements OnInit, OnDestroy {
 
-	searchTerm: BehaviorSubject<string>;
+	searchTerm!: BehaviorSubject<string>;
 
-	searchFormInputValue: string;
+	searchFormInputValue!: string;
 
-	private selectedKatalogtyp: Katalogtyp;
+	private selectedKatalogtyp!: Katalogtyp;
 
-	private selectedKatalogItem: KatalogItem;
+	private selectedKatalogItem?: KatalogItem;
 
 	schulkatalogState$: Observable<SchulkatalogState> = this.schulkatalogFacade.schulkatalogState$;
 
-	private schulkatalogStateSubscription: Subscription;
+	private schulkatalogStateSubscription: Subscription = new Subscription();
 
-	constructor(@Inject(SchulkatalogConfigService) public readonly config,
+	constructor(@Inject(SchulkatalogConfigService) public readonly config : any,
 		public schulkatalogFacade: InternalFacade, private router: Router) { }
 
 	ngOnInit() {
 
 		this.schulkatalogStateSubscription = this.schulkatalogState$.subscribe(
 
-			model => {
-				this.selectedKatalogtyp = model.currentKatalogtyp;
-				this.selectedKatalogItem = model.selectedKatalogItem;
-				this.searchFormInputValue = model.searchTerm;
+			state => {
+				this.selectedKatalogtyp = state.currentKatalogtyp;
+				this.selectedKatalogItem = state.selectedKatalogItem;
+				this.searchFormInputValue = state.searchTerm;
 			}
 
 		);
@@ -56,18 +55,19 @@ export class KatalogItemsSucheComponent implements OnInit, OnDestroy {
 	}
 
 	private startSearch(term: string): void {
-		this.schulkatalogFacade.startSearch(this.selectedKatalogtyp, this.selectedKatalogItem, term);
+
+		this.schulkatalogFacade.startSearch(term, this.selectedKatalogtyp, this.selectedKatalogItem);
 	}
 
 	ngOnDestroy() {
-		if (this.schulkatalogStateSubscription) {
-			this.schulkatalogStateSubscription.unsubscribe();
-		}
+		this.schulkatalogStateSubscription.unsubscribe();
 	}
 
-	onKeyup($event) {
+	onKeyup($event: any, context: string) {
 
-		const btn = $event.target;
+		if (context !== 'KATALOGE') {
+			return;
+		}
 
 		const value = $event.target.value;
 		this.searchTerm.next(value);

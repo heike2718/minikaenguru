@@ -1,12 +1,7 @@
-import { TeilnahmeIdentifier, Teilnahme, TeilnahmeIdentifierAktuellerWettbewerb } from '@minikaenguru-ws/common-components';
+import { Teilnahme } from '@minikaenguru-ws/common-components';
+import { SchulkatalogData } from '../shared/shared-entities.model';
 
-export interface SchulkatalogData {
-	readonly kuerzel: string;
-	readonly name: string;
-	readonly ort: string;
-	readonly land: string;
-	readonly kuerzelLand: string;
-};
+
 
 export interface SchuleMinikaenguruData {
 	readonly aktuellAngemeldet: boolean;
@@ -21,6 +16,7 @@ export interface SchuleAdminOverview {
 	readonly minikaenguruData: SchuleMinikaenguruData;
 	readonly angemeldetDurch?: string;
 	readonly nameUrkunde?: string;
+	readonly anzahlUploadKlassenlisten: number;
 	readonly schulteilnahmen: Teilnahme[];
 };
 
@@ -62,7 +58,7 @@ export class SchulenOverviewMap {
 		return this.schulen.has(kuerzel);
 	}
 
-	public get(kuerzel: string): SchuleAdminOverview {
+	public get(kuerzel: string): SchuleAdminOverview | undefined {
 
 		if (kuerzel === undefined) {
 			return undefined;
@@ -85,7 +81,11 @@ export class SchulenOverviewMap {
 
 };
 
-export function replaceTeilnahme(teilnahme: Teilnahme, teilnahmen: Teilnahme[]): Teilnahme[] {
+export function replaceTeilnahme(teilnahme?: Teilnahme, teilnahmen?: Teilnahme[]): Teilnahme[] {
+
+	if (!teilnahme || !teilnahmen) {
+		return [];
+	}
 
 	const result: Teilnahme[] = [];
 

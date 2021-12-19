@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { KinderFacade } from '../kinder.facade';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 import { LogService } from '@minikaenguru-ws/common-logging';
 import { MessageService } from '@minikaenguru-ws/common-messages';
@@ -15,7 +15,9 @@ import {
 	Duplikatwarnung,
 	getSpracheByLabel,
 	TeilnahmeIdentifier,
-	TeilnahmeIdentifierAktuellerWettbewerb
+	TeilnahmeIdentifierAktuellerWettbewerb,
+	initialKindEditorModel,
+	modalOptions
 } from '@minikaenguru-ws/common-components';
 import { Subscription } from 'rxjs';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
@@ -31,21 +33,21 @@ import { User, Rolle } from '@minikaenguru-ws/common-auth';
 export class KindEditorComponent implements OnInit, OnDestroy {
 
 	@ViewChild('dialogContent')
-	dialogContent: TemplateRef<HTMLElement>;
+	dialogContent!: TemplateRef<HTMLElement>;
 
 	devMode = environment.envName === 'DEV';
 
-	kindForm: FormGroup;
+	kindForm!: FormGroup;
 
-	vornameFormControl: FormControl;
+	vornameFormControl!: FormControl;
 
-	nachnameFormControl: FormControl;
+	nachnameFormControl!: FormControl;
 
-	zusatzFormControl: FormControl;
+	zusatzFormControl!: FormControl;
 
-	klassenstufeFormControl: FormControl;
+	klassenstufeFormControl!: FormControl;
 
-	spracheFormControl: FormControl;
+	spracheFormControl!: FormControl;
 
 	klassenstufen: string[];
 
@@ -53,37 +55,37 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	saveInProgress = false;
 
-	duplikatwarnung: Duplikatwarnung;
+	duplikatwarnung?: Duplikatwarnung;
 
 	editorInitialized = false;
 
-	private selectedSchule: Schule;
+	private selectedSchule?: Schule;
 
 	private showSaveMessage = false;
 
-	private teilnahmeIdentifier: TeilnahmeIdentifierAktuellerWettbewerb;
+	private teilnahmeIdentifier?: TeilnahmeIdentifierAktuellerWettbewerb;
 
-	private initialGuiModel: KindEditorModel;
+	private initialGuiModel: KindEditorModel = initialKindEditorModel;
 
-	private editorModelSubscription: Subscription;
+	private editorModelSubscription: Subscription = new Subscription();
 
-	private duplikatwarnungSubscription: Subscription;
+	private duplikatwarnungSubscription: Subscription = new Subscription();
 
-	private kindDaten: KindEditorModel;
+	private kindDaten!: KindEditorModel;
 
-	private queryParamsSubscription: Subscription;
+	private queryParamsSubscription: Subscription = new Subscription();
 
-	private saveOutcomeSubscription: Subscription;
+	private saveOutcomeSubscription: Subscription = new Subscription();
 
-	private teilnahmeIdentifierSubscription: Subscription;
+	private teilnahmeIdentifierSubscription: Subscription = new Subscription();
 
-	private klasseUuid: string;
+	private klasseUuid?: string;
 
-	private selectedKindUUID: string;
+	private selectedKindUUID?: string;
 
-	private schuleSubscription: Subscription;
+	private schuleSubscription: Subscription = new Subscription();
 
-	private selectedKindSubscription: Subscription;
+	private selectedKindSubscription: Subscription = new Subscription();
 
 	constructor(private fb: FormBuilder,
 		private modalService: NgbModal,
@@ -123,12 +125,41 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 				if (ke) {
 
 					this.initialGuiModel = { ...ke };
-					this.kindForm.get('vorname').setValue(this.initialGuiModel.vorname, { onlySelf: true });
-					this.kindForm.get('nachname').setValue(this.initialGuiModel.nachname, { onlySelf: true });
-					this.kindForm.get('zusatz').setValue(this.initialGuiModel.zusatz, { onlySelf: true });
-					this.kindForm.get('klassenstufe').setValue(this.initialGuiModel.klassenstufe ? this.initialGuiModel.klassenstufe.label : null, { onlySelf: true });
-					this.kindForm.get('sprache').setValue(this.initialGuiModel.sprache ? this.initialGuiModel.sprache.label : null, { onlySelf: true });
 
+					{
+						const control: AbstractControl | null = this.kindForm.get('vorname');
+						if (control) {
+							control.setValue(this.initialGuiModel.vorname, { onlySelf: true });
+						}
+					}
+
+					{
+						const control: AbstractControl | null = this.kindForm.get('nachname');
+						if (control) {
+							control.setValue(this.initialGuiModel.nachname, { onlySelf: true });
+						}
+					}
+
+					{
+						const control: AbstractControl | null = this.kindForm.get('zusatz');
+						if (control) {
+							control.setValue(this.initialGuiModel.zusatz, { onlySelf: true });
+						}
+					}
+
+					{
+						const control: AbstractControl | null = this.kindForm.get('klassenstufe');
+						if (control) {
+							control.setValue(this.initialGuiModel.klassenstufe.label, { onlySelf: true });
+						}
+					}
+
+					{
+						const control: AbstractControl | null = this.kindForm.get('sprache');
+						if (control) {
+							control.setValue(this.initialGuiModel.sprache ? this.initialGuiModel.sprache.label : null, { onlySelf: true });
+						}
+					}
 
 					this.editorInitialized = true;
 					if (!this.klasseUuid) {
@@ -159,7 +190,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 		this.saveOutcomeSubscription = this.kinderFacade.saveOutcome$.subscribe(
 			message => {
-				if (this.showSaveMessage) {
+				if (message && this.showSaveMessage) {
 					this.messageService.showMessage(message);
 					this.showSaveMessage = false;
 					this.saveInProgress = false;
@@ -187,33 +218,13 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 
-		if (this.selectedKindSubscription) {
-			this.selectedKindSubscription.unsubscribe();
-		}
-
-		if (this.editorModelSubscription) {
-			this.editorModelSubscription.unsubscribe();
-		}
-
-		if (this.duplikatwarnungSubscription) {
-			this.duplikatwarnungSubscription.unsubscribe();
-		}
-
-		if (this.queryParamsSubscription) {
-			this.queryParamsSubscription.unsubscribe();
-		}
-
-		if (this.saveOutcomeSubscription) {
-			this.saveOutcomeSubscription.unsubscribe();
-		}
-
-		if (this.teilnahmeIdentifierSubscription) {
-			this.teilnahmeIdentifierSubscription.unsubscribe();
-		}
-
-		if (this.schuleSubscription) {
-			this.schuleSubscription.unsubscribe();
-		}
+		this.selectedKindSubscription.unsubscribe();
+		this.editorModelSubscription.unsubscribe();
+		this.duplikatwarnungSubscription.unsubscribe();
+		this.queryParamsSubscription.unsubscribe();
+		this.saveOutcomeSubscription.unsubscribe();
+		this.teilnahmeIdentifierSubscription.unsubscribe();
+		this.schuleSubscription.unsubscribe();
 	}
 
 	onCancel(): void {
@@ -242,6 +253,11 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 	}
 
 	onSubmit(): void {
+
+		if (!this.selectedKindUUID) {
+			this.logger.debug('selectedKindUUID was undefined');
+			return;
+		}
 
 		this.saveInProgress = true;
 		const formValue = this.kindForm.value;
@@ -283,7 +299,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 	private openWarndialog(content: TemplateRef<HTMLElement>) {
 
 		this.saveInProgress = false;
-		this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+		this.modalService.open(content, modalOptions).result.then((result) => {
 
 			if (result === 'ja') {
 				this.saveKind();
@@ -295,6 +311,12 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 	}
 
 	private saveKind(): void {
+
+		if (!this.selectedKindUUID) {
+			this.logger.debug('selectedKindUUID wa undefined');
+			return;
+		}
+
 		this.showSaveMessage = true;
 		if (this.selectedKindUUID === 'neu') {
 			this.kinderFacade.insertKind(this.selectedKindUUID, this.kindDaten, this.selectedSchule);
@@ -305,6 +327,11 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 
 	addKind(): void {
+
+		if (!this.klasseUuid) {
+			this.logger.debug('klasseUUId was undefined');
+			return;
+		}
 
 		this.messageService.clear();
 

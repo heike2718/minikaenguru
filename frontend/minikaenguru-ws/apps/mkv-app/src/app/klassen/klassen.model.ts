@@ -1,14 +1,30 @@
 import { Klasse, compareKlassen } from '@minikaenguru-ws/common-components';
 
+export interface KlasseUIModel {
+	uuid: string;
+	name: string;
+	saved: boolean;
+};
+
 export interface KinderKlasseLocalStorageModel {
 	readonly schulkuerzel: string;
 	readonly klasseUuid: string
 };
-
-
 export interface KlasseWithID {
 	readonly uuid: string;
 	readonly klasse: Klasse
+};
+
+export interface KlassenlisteImportReport {
+	readonly id: string;
+	readonly anzahlKlassen: number;
+	readonly anzahlKlassenImportiert: number;
+	readonly anzahlKinderImportiert: number;
+	readonly anzahlNichtImportiert: number;
+	readonly anzahlKlassenstufeUnklar: number;
+	readonly anzahlDubletten: number;
+	readonly fehlerUndWarnungen: string[];
+	readonly klassen: Klasse[];
 };
 
 
@@ -32,10 +48,10 @@ export class KlassenMap {
 		return this.klassen.has(uuid);
 	}
 
-	public get(uuid: string): Klasse {
+	public get(uuid: string): Klasse | undefined {
 
 		if (!this.has(uuid)) {
-			return null;
+			return undefined;
 		}
 
 		return this.klassen.get(uuid);
@@ -78,7 +94,7 @@ export class KlassenMap {
 		return result;
 	}
 
-	public containsName(param: {uuid: string, name: string}): boolean {
+	public containsName(param: {uuid?: string, name?: string}): boolean {
 
 		if (!param.name || !param.uuid) {
 			return false;
@@ -86,7 +102,7 @@ export class KlassenMap {
 
 		for (const item of this.items) {
 
-			if (item.uuid !== param.uuid && item.klasse.name.toLocaleLowerCase() === param.name.trim().toLocaleLowerCase()) {
+			if (item.uuid !== param.uuid && item.klasse.name === param.name.trim()) {
 				return true;
 			}
 
@@ -101,6 +117,19 @@ export class KlassenMap {
 		for (const item of this.items) {
 
 			count+= item.klasse.anzahlLoesungszettel;
+		}
+
+		return count;
+
+	}
+
+	public countKinder(): number {
+
+		let count = 0;
+
+		for (const item of this.items) {
+
+			count+= item.klasse.anzahlKinder;
 		}
 
 		return count;

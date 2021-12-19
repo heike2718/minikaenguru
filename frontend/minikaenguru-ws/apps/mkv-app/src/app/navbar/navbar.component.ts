@@ -16,7 +16,7 @@ import { MessageService } from '@minikaenguru-ws/common-messages';
 export class NavbarComponent implements OnInit {
 
 	collapsed = true;
-	logo: string;
+	logo: string = '';
 
 	activateRegistration = true;
 	// activateRegistration = false;
@@ -27,7 +27,7 @@ export class NavbarComponent implements OnInit {
 	aktuellerWettbewerb$ = this.wettbewerbFacade.aktuellerWettbewerb$;
 
 
-	@ViewChild(NgbCollapse, { static: true }) navbarToggler: NgbCollapse;
+	@ViewChild(NgbCollapse, { static: true }) navbarToggler!: NgbCollapse;
 
 	constructor(private authService: AuthService
 		, private logoutService: LogoutService

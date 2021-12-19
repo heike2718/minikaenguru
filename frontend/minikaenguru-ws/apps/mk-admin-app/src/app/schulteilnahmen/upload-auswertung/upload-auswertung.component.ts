@@ -1,10 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SchulteilnahmenFacade } from '../schulteilnahmen.facade';
 import { Router } from '@angular/router';
-import { environment } from '../../../environments/environment';
-import { Subscription, combineLatest } from 'rxjs';
-import { UploadComponentModel } from '@minikaenguru-ws/common-components';
-import { SchuleUploadModel } from '../schulteilnahmen.model';
+import { Subscription } from 'rxjs';
+import { initialUploadComponentModel, UploadComponentModel } from '@minikaenguru-ws/common-components';
 import { ResponsePayload } from '@minikaenguru-ws/common-messages';
 
 
@@ -21,15 +19,13 @@ export class UploadAuswertungComponent implements OnInit, OnDestroy {
 
 	fehlermeldungen$ = this.schulteilnahmenFacade.fehlermeldungen$;
 
-	uploadModel: UploadComponentModel;
+	uploadModel: UploadComponentModel = initialUploadComponentModel;
 
-	spracheEnglisch: boolean;
+	spracheEnglisch: boolean = false;
 
 	subUrl = '';
 
-
-
-	private schuleUploadModelSubscription: Subscription;
+	private schuleUploadModelSubscription: Subscription = new Subscription();
 
 	constructor(private schulteilnahmenFacade: SchulteilnahmenFacade, private router: Router) { }
 
@@ -53,12 +49,16 @@ export class UploadAuswertungComponent implements OnInit, OnDestroy {
 					};
 				}
 			}
-		)
-
+		);
 	}
 
-	onCheckboxChanged(_event$): void {
+	ngOnDestroy(): void {
 
+    	this.schuleUploadModelSubscription.unsubscribe();
+	}
+
+	onCheckboxChanged(): void {
+		
 		if (this.spracheEnglisch) {
 			this.uploadModel = { ...this.uploadModel, subUrl: this.subUrl + '?sprache=en' }
 		} else {
@@ -67,7 +67,7 @@ export class UploadAuswertungComponent implements OnInit, OnDestroy {
 
 	}
 
-	onDateiAusgewaehlt(event$): void {
+	onDateiAusgewaehlt(_event$ : any): void {
 
 		this.schulteilnahmenFacade.dateiAusgewaelt();
 	}
@@ -76,13 +76,6 @@ export class UploadAuswertungComponent implements OnInit, OnDestroy {
 
 		if (rp) {
 			this.schulteilnahmenFacade.auswertungImportiert(rp);
-		}
-	}
-
-	ngOnDestroy(): void {
-
-		if (this.schuleUploadModelSubscription) {
-			this.schuleUploadModelSubscription.unsubscribe();
 		}
 	}
 

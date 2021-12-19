@@ -1,19 +1,19 @@
 import { createReducer, Action, on } from '@ngrx/store';
 import * as KinderActions from './kinder.actions';
-import { KindWithID, KinderMap, KindEditorVorbelegung, KlassenwechselDaten } from '../kinder.model';
-import { initialKindEditorModel, KindEditorModel, Duplikatwarnung, Teilnahmeart, TeilnahmeIdentifierAktuellerWettbewerb, Klassenstufe, Kind } from '@minikaenguru-ws/common-components';
+import { KindWithID, KinderMap, KindEditorVorbelegung } from '../kinder.model';
+import { initialKindEditorModel, KindEditorModel, Duplikatwarnung, TeilnahmeIdentifierAktuellerWettbewerb, Kind, ALL_KLASSENSTUFEN } from '@minikaenguru-ws/common-components';
 import { Message } from '@minikaenguru-ws/common-messages';
 
 export const kinderFeatureKey = 'mkv-app-kinder';
 
 export interface KinderState {
-	readonly teilnahmeIdentifier: TeilnahmeIdentifierAktuellerWettbewerb;
+	readonly teilnahmeIdentifier?: TeilnahmeIdentifierAktuellerWettbewerb;
 	readonly kinderMap: KindWithID[];
-	readonly selectedKind: Kind,
+	readonly selectedKind?: Kind,
 	readonly kinderLoaded: boolean;
 	readonly loading: boolean;
-	readonly saveOutcome: Message;
-	readonly duplikatwarnung: Duplikatwarnung;
+	readonly saveOutcome?: Message;
+	readonly duplikatwarnung?: Duplikatwarnung;
 	readonly editorModel: KindEditorModel;
 	readonly editorVorbelegung: KindEditorVorbelegung;
 
@@ -28,7 +28,7 @@ const initialKinderState: KinderState = {
 	saveOutcome: undefined,
 	duplikatwarnung: undefined,
 	editorModel: initialKindEditorModel,
-	editorVorbelegung: { klassenstufe: null, sprache: { sprache: 'de', label: 'deutsch' } }
+	editorVorbelegung: { klassenstufe: ALL_KLASSENSTUFEN[1], sprache: { sprache: 'de', label: 'deutsch' } }
 };
 
 const kinderReducer = createReducer(initialKinderState,
@@ -47,7 +47,7 @@ const kinderReducer = createReducer(initialKinderState,
 	on(KinderActions.allKinderLoaded, (state, action) => {
 
 		const alle = action.kinder;
-		const newMap = [];
+		const newMap : KindWithID[] = [];
 		alle.forEach(k => newMap.push({ uuid: k.uuid, kind: k }));
 
 		return { ...state, loading: false, kinderLoaded: true, kinderMap: newMap };
@@ -87,7 +87,9 @@ const kinderReducer = createReducer(initialKinderState,
 			vorname: '',
 			punkte: undefined,
 			nachname: undefined,
-			zusatz: undefined
+			zusatz: undefined,
+			klassenstufePruefen: false,
+			dublettePruefen: false
 		};
 
 		return {
@@ -140,9 +142,9 @@ const kinderReducer = createReducer(initialKinderState,
 
 	on(KinderActions.kindLoesungszettelDeleted, (state, action) => {
 
-		const theKind = new KinderMap(state.kinderMap).get(action.kindID);
+		const theKind : Kind | undefined = new KinderMap(state.kinderMap).get(action.kindID);
 
-		if (theKind !== null) {
+		if (theKind) {
 			const neuesKind = { ...theKind, punkte: undefined };
 
 
@@ -168,7 +170,7 @@ const kinderReducer = createReducer(initialKinderState,
 	}),
 
 	on(KinderActions.editCancelled, (state, _action) => {
-		return { ...state, selectedKind: undefined, editorModel: undefined, saveOutcome: undefined, loading: false, duplikatwarnung: undefined };
+		return { ...state, selectedKind: undefined, editorModel: initialKindEditorModel, saveOutcome: undefined, loading: false, duplikatwarnung: undefined };
 	}),
 
 	on(KinderActions.kindDeleted, (state, action) => {

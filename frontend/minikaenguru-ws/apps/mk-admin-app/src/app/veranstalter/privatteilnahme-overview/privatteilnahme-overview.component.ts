@@ -12,7 +12,7 @@ export class PrivatteilnahmeOverviewComponent implements OnInit, OnDestroy {
 
 	veranstalter$ = this.veranstalterFacade.selectedVeranstalter$;
 
-	private veranstalterSubscription: Subscription;
+	private veranstalterSubscription: Subscription = new Subscription();
 
 	constructor(private router: Router, private veranstalterFacade: VeranstalterFacade) { }
 
@@ -29,9 +29,7 @@ export class PrivatteilnahmeOverviewComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 
-		if (this.veranstalterSubscription) {
-			this.veranstalterSubscription.unsubscribe();
-		}
+		this.veranstalterSubscription.unsubscribe();
 		this.veranstalterFacade.clearVeranstalterSelection();
 
 	}

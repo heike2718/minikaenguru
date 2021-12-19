@@ -60,6 +60,9 @@ public class Kind {
 	@JsonProperty
 	private boolean dublettePruefen;
 
+	@JsonProperty
+	private boolean importiert;
+
 	public Kind() {
 
 	}
@@ -296,6 +299,12 @@ public class Kind {
 		this.klassenstufePruefen = klassenstufePruefen;
 	}
 
+	public Kind withKlassenstufePruefen(final boolean klassenstufePruefen) {
+
+		this.klassenstufePruefen = klassenstufePruefen;
+		return this;
+	}
+
 	public boolean isDublettePruefen() {
 
 		return dublettePruefen;
@@ -304,6 +313,28 @@ public class Kind {
 	public void setDublettePruefen(final boolean dublettePruefen) {
 
 		this.dublettePruefen = dublettePruefen;
+	}
+
+	public Kind withDublettePruefen(final boolean dublettePruefen) {
+
+		this.dublettePruefen = dublettePruefen;
+		return this;
+	}
+
+	public boolean isImportiert() {
+
+		return importiert;
+	}
+
+	public void setImportiert(final boolean importiert) {
+
+		this.importiert = importiert;
+	}
+
+	public Kind withImportiert(final boolean importiert) {
+
+		this.importiert = importiert;
+		return this;
 	}
 
 }

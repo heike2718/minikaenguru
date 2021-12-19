@@ -18,13 +18,13 @@ export class WettbewerbDetailsResolver implements Resolve<any> {
 
 
 		const id = route.params.id;
-		let jahr: number;
+		let jahr: number | null;
 		if (id === 'neu') {
 			jahr = initialWettbewerbEditorModel.jahr;
 
 			return this.store.pipe(
 				select(wettbewerbEditorModel),
-				filter(editorModel => editorModel && editorModel.jahr === jahr),
+				filter(editorModel => editorModel !== undefined && editorModel.jahr === jahr),
 				first()
 			);
 		} else {
@@ -37,11 +37,11 @@ export class WettbewerbDetailsResolver implements Resolve<any> {
 			return this.store.pipe(
 				select(selectedWettbewerb),
 				tap(w => {
-					if (jahr !== null && !w.teilnahmenuebersicht) {
+					if (jahr !== null && w && !w.teilnahmenuebersicht) {
 						this.store.dispatch(loadWettbewerbDetails({ jahr: jahr }))
 					}
 				}),
-				filter(wettbewerb => wettbewerb && wettbewerb.jahr === jahr),
+				filter(wettbewerb => wettbewerb !== undefined && wettbewerb.jahr === jahr),
 				first()
 			);
 		}

@@ -4,10 +4,10 @@
 // =====================================================
 package de.egladil.web.mkv_server_tests.domain.kinder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Optional;
@@ -179,19 +179,22 @@ public class KlassenServiceIT extends AbstractIntegrationTest {
 			.createForSchulteilnahme(schulkuerzel);
 
 		Optional<Klasse> optKlasse = this.klassenRepository.ofIdentifier(klasseID);
-		assertTrue("DB muss zurückgesetzt werden", optKlasse.isPresent());
+		assertTrue(optKlasse.isPresent(), "DB muss zurückgesetzt werden");
 
 		Klasse klasse = optKlasse.get();
 		assertEquals("2a", klasse.name());
 		List<Kind> kinder = kinderRepository.withTeilnahme(teilnahmeIdentifier);
 
-		assertEquals("DB muss zurückgesetzt werden", 20, kinder.size());
+		assertEquals(20, kinder.size(), "DB muss zurückgesetzt werden");
 
-		assertTrue("DB muss zurückgesetzt werden", this.klassenRepository.ofIdentifier(klasseID).isPresent());
-		assertTrue("DB muss zurückgesetzt werden", this.kinderRepository.ofId(new Identifier(uuidOskar)).isPresent());
-		assertTrue("DB muss zurückgesetzt werden", this.kinderRepository.ofId(new Identifier(uuidPaulina)).isPresent());
-		assertTrue("DB muss zurückgesetzt werden",
-			this.loesungszettelRepository.ofID(new Identifier(uuidLoesungszettel)).isPresent());
+		assertTrue(this.klassenRepository.ofIdentifier(klasseID).isPresent(),
+			"DB muss zurückgesetzt werden");
+		assertTrue(this.kinderRepository.ofId(new Identifier(uuidOskar)).isPresent(),
+			"DB muss zurückgesetzt werden");
+		assertTrue(this.kinderRepository.ofId(new Identifier(uuidPaulina)).isPresent(),
+			"DB muss zurückgesetzt werden");
+		assertTrue(this.loesungszettelRepository.ofID(new Identifier(uuidLoesungszettel)).isPresent(),
+			"DB muss zurückgesetzt werden");
 
 		// Act
 		KlasseAPIModel result = this.klasseLoeschen(klasseUuid, lehrerUuid);

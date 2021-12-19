@@ -4,11 +4,11 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.loesungszettel.online;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -186,7 +186,7 @@ public class OnlineLoesungszettelServiceTest extends AbstractLoesungszettelServi
 
 			for (int i = 0; i < zeilen.size(); i++) {
 
-				assertEquals("Fehler bei Index= " + i, zeilen.get(i), actualZeilen.get(i));
+				assertEquals(zeilen.get(i), actualZeilen.get(i), "Fehler bei Index= " + i);
 			}
 
 			verify(loesungszettelRepository, times(1)).ofID(REQUEST_LOESUNGSZETTEL_ID);
@@ -272,7 +272,8 @@ public class OnlineLoesungszettelServiceTest extends AbstractLoesungszettelServi
 				.withAuswertungsquelle(Auswertungsquelle.UPLOAD);
 
 			when(loesungszettelRepository.ofID(REQUEST_LOESUNGSZETTEL_ID)).thenReturn(Optional.of(loesungszettel));
-			when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any())).thenThrow(new AccessDeniedException());
+			when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any()))
+				.thenThrow(new AccessDeniedException());
 
 			// Act
 			try {
@@ -395,7 +396,8 @@ public class OnlineLoesungszettelServiceTest extends AbstractLoesungszettelServi
 
 			when(loesungszettelRepository.findPersistentenLoesungszettel(REQUEST_LOESUNGSZETTEL_ID))
 				.thenReturn(Optional.of(persistenter));
-			when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any())).thenThrow(new AccessDeniedException());
+			when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any()))
+				.thenThrow(new AccessDeniedException());
 
 			// Act
 			try {

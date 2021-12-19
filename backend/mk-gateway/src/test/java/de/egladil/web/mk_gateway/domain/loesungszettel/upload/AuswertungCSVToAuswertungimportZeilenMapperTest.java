@@ -4,8 +4,8 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.loesungszettel.upload;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
@@ -129,7 +129,7 @@ public class AuswertungCSVToAuswertungimportZeilenMapperTest {
 			// Arrange
 			String path = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload/auswertung.csv";
 
-			List<String> zeilen = MkGatewayFileUtils.readLines(path);
+			List<String> zeilen = MkGatewayFileUtils.readLines(path, MkGatewayFileUtils.DEFAULT_ENCODING);
 
 			// Act
 			List<AuswertungimportZeile> result = mapper.apply(zeilen);

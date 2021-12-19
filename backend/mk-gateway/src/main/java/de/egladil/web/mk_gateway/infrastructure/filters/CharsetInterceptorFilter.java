@@ -13,6 +13,8 @@ import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
+
 /**
  * CharsetInterceptorFilter
  */
@@ -26,9 +28,9 @@ public class CharsetInterceptorFilter implements ContainerRequestFilter {
 
 		Object charsetProperty = requestContext.getProperty(InputPart.DEFAULT_CHARSET_PROPERTY);
 
-		if (charsetProperty == null || !"UTF-8".equalsIgnoreCase(charsetProperty.toString())) {
+		if (charsetProperty == null || !MkGatewayFileUtils.DEFAULT_ENCODING.equalsIgnoreCase(charsetProperty.toString())) {
 
-			requestContext.setProperty(InputPart.DEFAULT_CHARSET_PROPERTY, "UTF-8");
+			requestContext.setProperty(InputPart.DEFAULT_CHARSET_PROPERTY, MkGatewayFileUtils.DEFAULT_ENCODING);
 
 			Object newCharsetProperty = requestContext.getProperty(InputPart.DEFAULT_CHARSET_PROPERTY);
 

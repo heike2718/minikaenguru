@@ -10,7 +10,7 @@ import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindAPIModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindRequestData;
-import de.egladil.web.mk_gateway.domain.klassenlisten.impl.KindImportDaten;
+import de.egladil.web.mk_gateway.domain.klassenlisten.KindImportVO;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 
 /**
@@ -65,11 +65,9 @@ public interface KinderService {
 	 * @param  veranstalterID
 	 * @param  schulkuerzel
 	 * @param  importDaten
-	 * @param  vorhandeneKinder
-	 *                          List die Kinder, die vor dem Start des Imports bereits in der DB vorhanden waren.
 	 * @return                  List
 	 */
-	List<Kind> importiereKinder(Identifier veranstalterID, String schulkuerzel, List<KindImportDaten> importDaten, List<Kind> vorhandeneKinder);
+	List<Kind> importiereKinder(Identifier veranstalterID, String schulkuerzel, final List<KindImportVO> importDaten);
 
 	/**
 	 * Gibt alle Kinder zu einer gegebenen Schulteilnahme am aktuellen Wettbewerb zurück.

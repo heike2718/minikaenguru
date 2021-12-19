@@ -56,6 +56,9 @@ public class Loesungszettel {
 	@JsonIgnore
 	private int version;
 
+	@JsonProperty
+	private long sortnumber;
+
 	public Loesungszettel() {
 
 	}
@@ -224,6 +227,7 @@ public class Loesungszettel {
 		return new PunkteStringMapper().apply(this.punkte);
 	}
 
+	@JsonIgnore
 	public Identifier getTheTeilnahmenummer() {
 
 		return new Identifier(this.teilnahmeIdentifier.teilnahmenummer());
@@ -237,6 +241,17 @@ public class Loesungszettel {
 	public Loesungszettel withVersion(final int version) {
 
 		this.version = version;
+		return this;
+	}
+
+	public long sortnumber() {
+
+		return sortnumber;
+	}
+
+	public Loesungszettel withSortnumber(final long sortnumber) {
+
+		this.sortnumber = sortnumber;
 		return this;
 	}
 }

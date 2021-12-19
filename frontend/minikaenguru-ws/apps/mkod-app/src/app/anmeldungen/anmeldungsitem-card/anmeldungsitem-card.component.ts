@@ -9,7 +9,7 @@ import { Anmeldungsitem } from '../../shared/beteiligungen.model';
 export class AnmeldungsitemCardComponent implements OnInit {
 
 	@Input()
-	anmeldungsitem: Anmeldungsitem;
+	anmeldungsitem!: Anmeldungsitem;
 
 	constructor() { }
 

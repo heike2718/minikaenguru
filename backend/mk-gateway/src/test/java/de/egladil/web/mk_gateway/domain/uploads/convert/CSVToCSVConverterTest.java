@@ -4,14 +4,13 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.uploads.convert;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.uploads.impl.DateiTyp;
 
 /**
  * CSVToCSVConverterTest
@@ -26,12 +25,6 @@ public class CSVToCSVConverterTest extends AbstractConvertFilesTest {
 	public void setUp() {
 
 		converter = new CSVToCSVConverter();
-	}
-
-	@Override
-	protected DateiTyp getDateiTyp() {
-
-		return DateiTyp.TEXT;
 	}
 
 	@Test

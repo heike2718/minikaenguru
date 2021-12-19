@@ -34,6 +34,9 @@ public class KlasseAPIModel implements Serializable {
 	@JsonProperty
 	private long anzahlLoesungszettel;
 
+	@JsonProperty
+	private long anzahlKinderZuPruefen;
+
 	public static KlasseAPIModel createFromKlasse(final Klasse klasse) {
 
 		KlasseAPIModel result = new KlasseAPIModel(klasse.identifier().identifier());
@@ -97,6 +100,17 @@ public class KlasseAPIModel implements Serializable {
 	public KlasseAPIModel withAnzahlLoesungszettel(final long anzahlLoesungszettel) {
 
 		this.anzahlLoesungszettel = anzahlLoesungszettel;
+		return this;
+	}
+
+	public long getAnzahlKinderZuPruefen() {
+
+		return anzahlKinderZuPruefen;
+	}
+
+	public KlasseAPIModel withAnzahlKinderZuPruefen(final long anzahlKinderZuPruefen) {
+
+		this.anzahlKinderZuPruefen = anzahlKinderZuPruefen;
 		return this;
 	}
 }

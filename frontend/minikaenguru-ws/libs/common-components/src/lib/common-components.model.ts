@@ -1,3 +1,5 @@
+import { NgbModalOptions } from "@ng-bootstrap/ng-bootstrap";
+
 export type Teilnahmeart = 'PRIVAT' | 'SCHULE';
 export type Klassenstufenart = 'IKID' | 'EINS' | 'ZWEI';
 export type Sprachtyp = 'de' | 'en';
@@ -5,6 +7,12 @@ export type Duplikatkontext = 'KIND' | 'KLASSE';
 export type ZulaessigeEingabe = 'A' | 'B' | 'C' | 'D' | 'E' | 'N';
 export type ConcurrentModificationType = 'DETETED' | 'INSERTED' | 'UPDATED';
 export type WettbewerbStatus = 'ERFASST' | 'ANMELDUNG' | 'DOWNLOAD_PRIVAT' | 'DOWNLOAD_LEHRER' | 'BEENDET';
+
+export const modalOptions: NgbModalOptions = {
+    backdrop:'static',
+    centered:true,
+    ariaLabelledBy: 'modal-basic-title'
+};
 
 export interface TeilnahmeIdentifier {
 	readonly jahr: number;
@@ -79,6 +87,8 @@ export interface Kind {
 	readonly sprache: Sprache;
 	readonly punkte?: LoesungszettelResponse;
 	readonly klasseId?: string;
+	readonly klassenstufePruefen: boolean;
+	readonly dublettePruefen: boolean;
 };
 
 export interface KindEditorModel {
@@ -86,7 +96,7 @@ export interface KindEditorModel {
 	nachname: string;
 	zusatz: string;
 	klassenstufe: Klassenstufe,
-	sprache: Sprache;
+	sprache: Sprache,
 	klasseUuid?: string;
 };
 
@@ -101,8 +111,9 @@ export interface Klasse {
 	readonly uuid: string;
 	readonly name: string;
 	readonly schulkuerzel: string;
-	anzahlKinder?: number;
-	anzahlLoesungszettel?: number;
+	anzahlKinder: number;
+	anzahlLoesungszettel: number;
+	anzahlKinderZuPruefen: number;
 };
 
 export interface KlasseEditorModel {
@@ -124,16 +135,37 @@ export interface UploadComponentModel {
 	readonly acceptMessage: string;
 };
 
+export const initialUploadComponentModel: UploadComponentModel = {
+	subUrl: '',
+	titel: '',
+	maxSizeBytes: 0,
+	errorMessageSize: '',
+	accept: '',
+	acceptMessage: ''	
+};
+
+export interface PaginationComponentModel {
+	readonly maxSize: number; // number: Anzahl numerierter Links - bestimmt die Breite des Paginators
+	readonly collectionSize: number; // number: Gesamtzahl der Items
+	readonly ellipses: boolean; // boolean: bei true sind das 3 Punkte, hinter denen die Gesamtzahl der verfügbaren Seiten steht.
+	readonly boundaryLinks: boolean;  // boolean: mit diesen kann man ganz ans Ende oder ganz an den Anfang hopsen
+	readonly showCollectionSize: boolean;
+};
+
+export const initialPaginationComponentModel: PaginationComponentModel = {
+	maxSize: 5,
+	collectionSize: 100,
+	ellipses: true,
+	boundaryLinks: true,
+	showCollectionSize: false
+};
+
 export const initialKindEditorModel: KindEditorModel = {
 	vorname: '',
 	nachname: '',
 	zusatz: '',
-	klassenstufe: null,
-	sprache: null,
-};
-
-export const initialKlasseEditorModel: KlasseEditorModel = {
-	name: ''
+	klassenstufe: ALL_KLASSENSTUFEN[1],
+	sprache: ALL_SPRACHEN[0],
 };
 
 export function getKlassenstufeByLabel(label: string): Klassenstufe {
@@ -146,7 +178,7 @@ export function getKlassenstufeByLabel(label: string): Klassenstufe {
 		}
 	}
 
-	return undefined;
+	return ALL_KLASSENSTUFEN[1];
 }
 
 export function getSpracheByLabel(label: string): Sprache {
@@ -159,19 +191,36 @@ export function getSpracheByLabel(label: string): Sprache {
 		}
 	}
 
-	return undefined;
+	return ALL_SPRACHEN[0];
 }
 
-function compareKlassenstufen(klassenstufe1: Klassenstufe, klassenstufe2: Klassenstufe): number {
+function compareKlassenstufen(klassenstufe1?: Klassenstufe, klassenstufe2?: Klassenstufe): number {
 
-	const indexKlassenstufe1 = ALL_KLASSENSTUFEN.findIndex(kl => kl.klassenstufe === klassenstufe1.klassenstufe);
-	const indexKlassenstufe2 = ALL_KLASSENSTUFEN.findIndex(kl => kl.klassenstufe === klassenstufe2.klassenstufe);
+	if (!klassenstufe1 && !klassenstufe2) {
+		return 0;
+	}
 
-	return indexKlassenstufe1 - indexKlassenstufe2;
+	if(!klassenstufe1 && klassenstufe2) {
+		return -1;
+	}
+	if (klassenstufe1 && !klassenstufe2) {
+		return 1;
+	}
+
+	if (klassenstufe1 && klassenstufe2) {
+
+		const indexKlassenstufe1 = ALL_KLASSENSTUFEN.findIndex(kl => kl.klassenstufe === klassenstufe1.klassenstufe);
+		const indexKlassenstufe2 = ALL_KLASSENSTUFEN.findIndex(kl => kl.klassenstufe === klassenstufe2.klassenstufe);
+
+		return indexKlassenstufe1 - indexKlassenstufe2;
+
+	}
+
+	return 0;
 
 }
 
-function compareStrings(str1: string, str2: string): number {
+function compareStrings(str1?: string, str2?: string): number {
 
 	const result = str1 && str2 ? str1.localeCompare(str2) : 0;
 	if (result !== 0) {

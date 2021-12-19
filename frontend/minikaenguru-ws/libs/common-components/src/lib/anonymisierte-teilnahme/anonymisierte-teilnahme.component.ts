@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { Teilnahme } from '../common-components.model';
-import { DownloadButtonModel } from '../download/download.model';
+import { DownloadButtonModel, initialDownloadButtonModel } from '../download/download.model';
 import { DownloadFacade } from '../download/download.facade';
 
 
@@ -12,22 +12,22 @@ import { DownloadFacade } from '../download/download.facade';
 export class AnonymisierteTeilnahmeComponent implements OnInit {
 
 	@Input()
-	teilnahme: Teilnahme;
+	teilnahme!: Teilnahme;
 
 	@Input()
-	statistikUrlPrefix: string;
+	statistikUrlPrefix!: string;
 
 	@Input()
-	showUploadButton: boolean;
+	showUploadButton!: boolean;
 
 	@Output()
 	uploadButtonClicked: EventEmitter<Teilnahme> = new EventEmitter<Teilnahme>();
 
-	statistikBtnModel: DownloadButtonModel;
+	statistikBtnModel: DownloadButtonModel = initialDownloadButtonModel;
 
 	showDownloadButton = false;
 
-	downloadId: string;
+	downloadId: string = '';
 
 
 	constructor(public downloadFacade: DownloadFacade) { }

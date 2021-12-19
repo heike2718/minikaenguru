@@ -4,7 +4,7 @@
 // =====================================================
 package de.egladil.web.mkv_server_tests.domain.wettbewerb;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Optional;
 

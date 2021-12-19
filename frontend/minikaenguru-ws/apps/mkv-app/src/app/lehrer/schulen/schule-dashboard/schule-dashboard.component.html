@@ -7,108 +7,113 @@
 	</div>
 	<ng-container *ngIf="aktuellerWettbewerb$ | async as wettbewerb">
 		<div *ngIf="details$ | async">
-			<h2>Schulübersicht</h2>
+			<div *ngIf="schule">
+				<h2>Schulübersicht <span *ngIf="devMode">{{schule.kuerzel}}</span></h2>
 
-			<div class="row mt-4 ml-2">
-				<div class="col-12">
-					<h3>{{schule.name}} <span *ngIf="schule.aktuellAngemeldet"
-							class="ml-1 badge badge-success">angemeldet
-							für {{wettbewerb.jahr}}</span></h3>
-					<p>{{schule.ort}} - {{schule.land}}</p>
+				<div class="row mt-4 ml-2">
+					<div class="col-12">
+						<h3>{{schule.name}} <span *ngIf="schule.aktuellAngemeldet"
+								class="ml-1 badge badge-success">angemeldet
+								für {{wettbewerb.jahr}}</span></h3>
+						<p>{{schule.ort}} - {{schule.land}}</p>
 
-					<p *ngIf="schule.details.kollegen && schule.details.kollegen.length > 0">Kollegen:
-						{{schule.details.kollegen}}</p>
+						<p *ngIf="schule.details && schule.details.kollegen && schule.details.kollegen.length > 0">Kollegen:
+							{{schule.details.kollegen}}</p>
 
-					<p *ngIf="wettbewerb.status === 'ERFASST'">Der Anmeldezeitraum für {{wettbewerb.jahr}} beginnt
-						am
-						{{wettbewerb.wettbewerbsbeginn}}</p>
+						<p *ngIf="wettbewerb.status === 'ERFASST'">Der Anmeldezeitraum für {{wettbewerb.jahr}} beginnt
+							am
+							{{wettbewerb.wettbewerbsbeginn}}</p>
 
-					<p *ngIf="schule.aktuellAngemeldet">Anmeldung {{wettbewerb.jahr}} durch
-						{{schule.details.angemeldetDurch}}
-					</p>
-				</div>
-			</div>
-
-			<div class="card-deck">
-
-				<div *ngIf="hatZugangZuUnterlagen$ | async">
-
-					<mkv-unterlagen-card></mkv-unterlagen-card>
-
-				</div>
-
-				<div *ngIf="schule.aktuellAngemeldet" class="card clickable" (click)="gotoKlassenliste()">
-					<div class="card-body">
-						<div class="card-title">Auswertung {{wettbewerb.jahr}}</div>
-						<div class="mb-2 text-muted">Kinder erfassen und Urkunden generieren</div>
+						<p *ngIf="schule.details && schule.aktuellAngemeldet">Anmeldung {{wettbewerb.jahr}} durch
+							{{schule.details.angemeldetDurch}}
+						</p>
 					</div>
 				</div>
 
-				<div *ngIf="schule.details.kollegen && schule.details.kollegen.length > 0" class="card clickable" (click)="vonSchuleAbmelden()">
-					<div class="card-body">
-						<div class="card-title">Entfernen</div>
-						<div class="mb-2 text-muted">von dieser Schule abmelden</div>
-					</div>
-				</div>
+				<div class="card-deck">
 
-				<!--
-				<div *ngIf="schule.aktuellAngemeldet" class="card clickable" (click)="gotoKlassenlisteHochladen()">
-					<div class="card-body">
-						<div class="card-title">Klassenlisten hochladen</div>
-						<div class="mb-2 text-muted">Klassen und Kinderdaten als Excel hochladen</div>
+					<div *ngIf="hatZugangZuUnterlagen$ | async">
+
+						<mkv-unterlagen-card></mkv-unterlagen-card>
+
 					</div>
-				</div>
-				-->
-				<!--
-				<div *ngIf="schule.aktuellAngemeldet && hatZugangZuUnterlagen$ | async" class="col-md-4 col-sm-12 mt-2">
-					<div class="card clickable">
+
+					<div *ngIf="schule.aktuellAngemeldet" class="card clickable" (click)="gotoKlassenliste()">
 						<div class="card-body">
-							<div class="card-title">Auswertungstabelle hochladen</div>
-							<div class="mb-2  text-danger">Achtung: nur wenn Sie die Urkunden selbst erstellen möchten
+							<div class="card-title">Auswertung {{wettbewerb.jahr}}</div>
+							<div class="mb-2 text-muted">Kinder erfassen und Urkunden generieren</div>
+						</div>
+					</div>
+
+					<div *ngIf="schule.details && schule.details.kollegen && schule.details.kollegen.length > 0" class="card clickable" (click)="vonSchuleAbmelden()">
+						<div class="card-body">
+							<div class="card-title">Entfernen</div>
+							<div class="mb-2 text-muted">von dieser Schule abmelden</div>
+						</div>
+					</div>
+
+				
+					<!--
+					<div *ngIf="schule.aktuellAngemeldet" class="card clickable" (click)="gotoKlassenlisteHochladen()">
+						<div class="card-body">
+							<div class="card-title">Klassenlisten hochladen</div>
+							<div class="mb-2 text-muted">Klassen und Kinderdaten als Excel hochladen</div>
+						</div>
+					</div>
+					-->
+				
+					<!--
+					<div *ngIf="schule.aktuellAngemeldet && hatZugangZuUnterlagen$ | async" class="col-md-4 col-sm-12 mt-2">
+						<div class="card clickable">
+							<div class="card-body">
+								<div class="card-title">Auswertungstabelle hochladen</div>
+								<div class="mb-2  text-danger">Achtung: nur wenn Sie die Urkunden selbst erstellen möchten
 							</div>
 							<div class="mb-2 text-muted">
 								Excel-Auswertungstabelle hochladen</div>
+							</div>
 						</div>
 					</div>
-				</div>
-				-->
+					-->
 
-				<div *ngIf="(wettbewerb.status !== 'ERFASST' && wettbewerb.status !== 'BEENDET' && !schule.aktuellAngemeldet)"
-					class="card clickable" (click)="anmelden()">
-					<div class="card-body">
-						<div class="card-title">Anmelden</div>
-						<div class="mb-2 text-muted"> für {{wettbewerb.jahr}}</div>
-					</div>
-				</div>
-
-
-			</div>
-
-			<div class="card-deck mt-3">
-
-				<div *ngIf="schule.details.anzahlTeilnahmen > 0" class="card clickable" (click)="gotoTeilnahmen()">
-					<div class="card-body">
-						<div class="card-title">alle Teilnahmen <span
-								class="ml-1 badge badge-primary">{{schule.details.anzahlTeilnahmen}}</span>
+					<div *ngIf="(wettbewerb.status !== 'ERFASST' && wettbewerb.status !== 'BEENDET' && !schule.aktuellAngemeldet)"
+						class="card clickable" (click)="anmelden()">
+						<div class="card-body">
+							<div class="card-title">Anmelden</div>
+							<div class="mb-2 text-muted"> für {{wettbewerb.jahr}}</div>
 						</div>
-						<div class="mb-2 text-muted">Schulstatistiken</div>
 					</div>
+
+
 				</div>
 
-				<div *ngIf="schule.details.hatAdv">
-					<mk-download-card [model]="vertragAdvModel"></mk-download-card>
-				</div>
+				<div class="card-deck mt-3">
 
-				<div *ngIf="!schule.details.hatAdv" class="card clickable" (click)="gotoVertragAdv()">
-					<div class="card-body">
-						<div class="card-title">DSGVO</div>
-						<div class="mb-2 text-muted">Vertrag zur Auftragsdatenverarbeitung abschließen</div>
+					<div *ngIf="schule.details && schule.details.anzahlTeilnahmen > 0" class="card clickable" (click)="gotoTeilnahmen()">
+						<div class="card-body">
+							<div class="card-title">alle Teilnahmen <span
+									class="ml-1 badge badge-primary">{{schule.details.anzahlTeilnahmen}}</span>
+							</div>
+							<div class="mb-2 text-muted">Schulstatistiken</div>
+						</div>
+					</div>
+
+					<div *ngIf="schule.details && schule.details.hatAdv">
+						<mk-download-card [model]="vertragAdvModel"></mk-download-card>
+					</div>
+
+					<div *ngIf="schule.details && !schule.details.hatAdv" class="card clickable" (click)="gotoVertragAdv()">
+						<div class="card-body">
+							<div class="card-title">DSGVO</div>
+							<div class="mb-2 text-muted">Vertrag zur Auftragsverarbeitung abschließen</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 
 	</ng-container>
+	
 	<div *ngIf="textFeatureFlagAnzeigen" class="row ml-3 mr-3 mt-3 hinweis">
 		<div class="col-11">
 			<div class="mkv-bordered">{{textFeatureFlag}}</div>

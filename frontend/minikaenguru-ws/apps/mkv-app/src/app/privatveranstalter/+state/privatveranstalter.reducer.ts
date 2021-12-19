@@ -6,7 +6,7 @@ import { Privatveranstalter } from '../../wettbewerb/wettbewerb.model';
 export const privatveranstalterFeatureKey = 'mkv-app-privatveranstalter';
 
 export interface PrivatveranstalterState {
-	readonly veranstalter: Privatveranstalter;
+	readonly veranstalter?: Privatveranstalter;
 	readonly aktuelleTeilnahmeGeladen: boolean;
 	readonly loading: boolean;
 }
@@ -43,6 +43,10 @@ const privatveranstalterReducer = createReducer(initialPrivatveranstalterState,
 
 	on(PrivatveranstalterActions.aboNewsletterChanged, (state, _action) => {
 
+		if (!state.veranstalter) {
+			return {...state, loading: false};
+		}
+
 		const abonniert = !state.veranstalter.newsletterAbonniert;
 		const neuerVeranstalter = {...state.veranstalter, newsletterAbonniert: abonniert};
 		return { ...state, loading: false, veranstalter: neuerVeranstalter };
@@ -50,6 +54,10 @@ const privatveranstalterReducer = createReducer(initialPrivatveranstalterState,
 
 
 	on(PrivatveranstalterActions.privatveranstalterAngemeldet, (state, action) => {
+
+		if (!state.veranstalter) {
+			return {...state, loading: false};
+		}
 
 		const neuerVeranstalter: Privatveranstalter = { ...state.veranstalter, aktuellAngemeldet: true, aktuelleTeilnahme: action.teilnahme };
 

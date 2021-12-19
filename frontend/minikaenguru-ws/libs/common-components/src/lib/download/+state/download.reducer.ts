@@ -5,7 +5,7 @@ export const downloadFeatureKey = 'mk-download';
 
 export interface DownloadState {
 	downloadInProgress: boolean;
-	id: string;
+	id?: string;
 }
 
 const initialDownloadState: DownloadState = {

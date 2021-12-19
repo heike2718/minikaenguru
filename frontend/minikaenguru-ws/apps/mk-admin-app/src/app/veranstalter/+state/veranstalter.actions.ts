@@ -17,7 +17,7 @@ export const sucheFinishedWithError = createAction(
 
 export const veranstalterSelected = createAction(
 	'[VeranstalterFacade] selectVeranstalter',
-	props<{veranstalter: Veranstalter}>()
+	props<{veranstalter: Veranstalter | undefined}>()
 );
 
 export const resetVeranstalters = createAction(

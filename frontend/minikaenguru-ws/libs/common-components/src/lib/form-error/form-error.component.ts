@@ -8,8 +8,11 @@ import { FormGroup, FormGroupDirective, NgForm } from '@angular/forms';
 })
 export class FormErrorComponent implements OnInit {
 
-	@Input() path;
-	@Input() text = '';
+	@Input() 
+	path! : string;
+	
+	@Input()
+	text = '';
 
 
 	constructor(@Optional() private ngForm: NgForm,
@@ -18,7 +21,7 @@ export class FormErrorComponent implements OnInit {
 	ngOnInit() {
 	}
 
-	get errorMessages(): string[] {
+	get errorMessages(): string[] | null {
 		let form: FormGroup;
 
 		if (this.ngForm) {

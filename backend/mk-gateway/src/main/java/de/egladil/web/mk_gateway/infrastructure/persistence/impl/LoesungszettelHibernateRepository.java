@@ -28,6 +28,7 @@ import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.infrastructure.persistence.SortNumberGenerator;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.LoesungszettelNonIdentifiingAttributesMapper;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterLoesungszettel;
 
@@ -40,12 +41,16 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 	private static final Logger LOG = LoggerFactory.getLogger(LoesungszettelHibernateRepository.class);
 
 	@Inject
-	EntityManager em;
+	EntityManager entityManager;
+
+	@Inject
+	SortNumberGenerator sortNumberGenerator;
 
 	public static LoesungszettelHibernateRepository createForIntegrationTest(final EntityManager em) {
 
 		LoesungszettelHibernateRepository result = new LoesungszettelHibernateRepository();
-		result.em = em;
+		result.entityManager = em;
+		result.sortNumberGenerator = SortNumberGeneratorImpl.createForIntegrationTest(em);
 		return result;
 	}
 
@@ -55,7 +60,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 		String stmt = "select count(*) from LOESUNGSZETTEL where TEILNAHMENUMMER = :teilnahmenummer and WETTBEWERB_UUID = :wettbewerbUuid and TEILNAHMEART = :teilnahmeart";
 
 		@SuppressWarnings("unchecked")
-		List<BigInteger> trefferliste = em.createNativeQuery(stmt)
+		List<BigInteger> trefferliste = entityManager.createNativeQuery(stmt)
 			.setParameter("teilnahmenummer", teilnahmeIdentifier.teilnahmenummer())
 			.setParameter("wettbewerbUuid", teilnahmeIdentifier.wettbewerbID())
 			.setParameter("teilnahmeart", teilnahmeIdentifier.teilnahmeart().toString()).getResultList();
@@ -71,7 +76,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 
 		String stmt = "select QUELLE, count(*) from LOESUNGSZETTEL where TEILNAHMENUMMER = :teilnahmenummer and WETTBEWERB_UUID = :wettbewerbUuid and TEILNAHMEART = :teilnahmeart group by QUELLE";
 
-		List<Object[]> trefferliste = em.createNativeQuery(stmt)
+		List<Object[]> trefferliste = entityManager.createNativeQuery(stmt)
 			.setParameter("teilnahmenummer", teilnahmeIdentifier.teilnahmenummer())
 			.setParameter("wettbewerbUuid", teilnahmeIdentifier.wettbewerbID())
 			.setParameter("teilnahmeart", teilnahmeIdentifier.teilnahmeart().toString()).getResultList();
@@ -86,7 +91,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 		String stmt = "select QUELLE, count(*) from LOESUNGSZETTEL where WETTBEWERB_UUID = :wettbewerbUuid group by QUELLE";
 
 		@SuppressWarnings("unchecked")
-		List<Object[]> trefferliste = em.createNativeQuery(stmt)
+		List<Object[]> trefferliste = entityManager.createNativeQuery(stmt)
 			.setParameter("wettbewerbUuid", wettbewerbID.jahr().toString()).getResultList();
 
 		List<Pair<Auswertungsquelle, Integer>> result = mapQuellenWithAnzahl(trefferliste);
@@ -111,8 +116,8 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 	@Override
 	public List<Loesungszettel> loadAllForWettbewerb(final WettbewerbID wettbewerbID) {
 
-		List<PersistenterLoesungszettel> trefferliste = em
-			.createNamedQuery(PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID, PersistenterLoesungszettel.class)
+		List<PersistenterLoesungszettel> trefferliste = entityManager
+			.createNamedQuery(PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID_ASC, PersistenterLoesungszettel.class)
 			.setParameter("wettbewerbUuid", wettbewerbID.toString())
 			.getResultList();
 
@@ -120,9 +125,34 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 	}
 
 	@Override
+	public long anzahlForWettbewerb(final WettbewerbID wettbewerbID) {
+
+		String stmt = "select count(*) from LOESUNGSZETTEL where WETTBEWERB_UUID = :wettbewerbUuid";
+
+		@SuppressWarnings("unchecked")
+		List<BigInteger> trefferliste = entityManager.createNativeQuery(stmt)
+			.setParameter("wettbewerbUuid", wettbewerbID.jahr()).getResultList();
+
+		long anzahl = trefferliste.get(0).longValue();
+
+		return anzahl;
+	}
+
+	@Override
+	public List<Loesungszettel> loadLoadPageForWettbewerb(final WettbewerbID wettbewerbID, final int limit, final int offset) {
+
+		List<PersistenterLoesungszettel> trefferliste = entityManager
+			.createNamedQuery(PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID_DESC, PersistenterLoesungszettel.class)
+			.setParameter("wettbewerbUuid", wettbewerbID.jahr().toString())
+			.setFirstResult(offset).setMaxResults(limit).getResultList();
+
+		return trefferliste.stream().map(pl -> mapFromDB(pl)).collect(Collectors.toList());
+	}
+
+	@Override
 	public List<Loesungszettel> loadAllForWettbewerbAndKlassenstufe(final WettbewerbID wettbewerbID, final Klassenstufe klassenstufe) {
 
-		List<PersistenterLoesungszettel> trefferliste = em
+		List<PersistenterLoesungszettel> trefferliste = entityManager
 			.createNamedQuery(PersistenterLoesungszettel.LOAD_ALL_WITH_WETTBEWERBID_KLASSENSTUFE, PersistenterLoesungszettel.class)
 			.setParameter("wettbewerbUuid", wettbewerbID.toString())
 			.setParameter("klassenstufe", klassenstufe)
@@ -134,7 +164,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 	@Override
 	public List<Loesungszettel> loadAll(final TeilnahmeIdentifier teilnahmeIdentifier) {
 
-		List<PersistenterLoesungszettel> trefferliste = em
+		List<PersistenterLoesungszettel> trefferliste = entityManager
 			.createNamedQuery(PersistenterLoesungszettel.LOAD_ALL_WITH_TEILNAHME_IDENTIFIER, PersistenterLoesungszettel.class)
 			.setParameter("teilnahmenummer", teilnahmeIdentifier.teilnahmenummer())
 			.setParameter("wettbewerbUuid", teilnahmeIdentifier.wettbewerbID())
@@ -147,7 +177,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 	@Override
 	public List<Loesungszettel> loadAllWithTeilnahmenummerForWettbewerb(final String teilnahmenummer, final WettbewerbID wettbewerbID) {
 
-		List<PersistenterLoesungszettel> trefferliste = em
+		List<PersistenterLoesungszettel> trefferliste = entityManager
 			.createNamedQuery(PersistenterLoesungszettel.LOAD_ALL_WITH_TEILNAHMENUMMER_AND_JAHR, PersistenterLoesungszettel.class)
 			.setParameter("teilnahmenummer", teilnahmenummer)
 			.setParameter("wettbewerbUuid", wettbewerbID.jahr().toString())
@@ -164,7 +194,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 			return Optional.empty();
 		}
 
-		PersistenterLoesungszettel result = em.find(PersistenterLoesungszettel.class, identifier.identifier());
+		PersistenterLoesungszettel result = entityManager.find(PersistenterLoesungszettel.class, identifier.identifier());
 
 		return result == null ? Optional.empty() : Optional.of(result);
 	}
@@ -206,7 +236,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 			return null;
 		}
 
-		List<PersistenterLoesungszettel> trefferliste = em
+		List<PersistenterLoesungszettel> trefferliste = entityManager
 			.createNamedQuery(PersistenterLoesungszettel.FIND_LOESUNGSZETTEL_WITH_KIND, PersistenterLoesungszettel.class)
 			.setParameter("kindID", kindID.identifier())
 			.getResultList();
@@ -248,7 +278,8 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 			.withRohdaten(rohdaten)
 			.withSprache(persistenter.getSprache())
 			.withTeilnahmeIdentifier(teilnahmeIdentifier)
-			.withVersion(persistenter.getVersion());
+			.withVersion(persistenter.getVersion())
+			.withSortnumber(persistenter.getSortNumber());
 
 		if (persistenter.getKindID() != null) {
 
@@ -276,8 +307,9 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 
 		PersistenterLoesungszettel zuPeristierenderLoesungszettel = new PersistenterLoesungszettel();
 		this.copyAllAttributesButIdentifier(zuPeristierenderLoesungszettel, loesungszettel);
+		zuPeristierenderLoesungszettel.setSortNumber(sortNumberGenerator.getNextSortnumberLoesungszettel());
 
-		em.persist(zuPeristierenderLoesungszettel);
+		entityManager.persist(zuPeristierenderLoesungszettel);
 
 		Loesungszettel result = this.mapFromDB(zuPeristierenderLoesungszettel);
 
@@ -310,7 +342,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 
 		this.copyAllAttributesButIdentifier(persistenter, loesungszettel);
 
-		PersistenterLoesungszettel merged = em.merge(persistenter);
+		PersistenterLoesungszettel merged = entityManager.merge(persistenter);
 
 		int neueVersion = merged.getVersion() + 1;
 
@@ -322,7 +354,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 	@Override
 	public PersistenterLoesungszettel updateLoesungszettelInTransaction(final PersistenterLoesungszettel persistenterLoesungszettel) {
 
-		return em.merge(persistenterLoesungszettel);
+		return entityManager.merge(persistenterLoesungszettel);
 	}
 
 	@Override
@@ -332,7 +364,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 
 		if (optExisting.isPresent()) {
 
-			em.remove(optExisting.get());
+			entityManager.remove(optExisting.get());
 		}
 
 		return optExisting;

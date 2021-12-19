@@ -4,7 +4,7 @@ import * as EventlogActions from './eventlog.actions';
 export const eventlogFeatureKey = 'mka-eventlog';
 
 export interface EventlogState {
-	readonly datum: string;
+	readonly datum?: string;
 };
 
 const initialEventlogState: EventlogState = {

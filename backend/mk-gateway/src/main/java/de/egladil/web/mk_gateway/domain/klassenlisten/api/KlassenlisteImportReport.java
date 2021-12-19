@@ -20,6 +20,9 @@ public class KlassenlisteImportReport {
 	private int anzahlKlassen;
 
 	@JsonProperty
+	private int anzahlKlassenImportiert;
+
+	@JsonProperty
 	private int anzahlKinderImportiert;
 
 	@JsonProperty
@@ -31,11 +34,11 @@ public class KlassenlisteImportReport {
 	@JsonProperty
 	private long anzahlDubletten;
 
-	@JsonProperty
+	@JsonProperty("id")
 	private String uuidImportReport;
 
 	@JsonProperty
-	private List<String> nichtImportierteZeilen = new ArrayList<>();
+	private List<String> fehlerUndWarnungen = new ArrayList<>();
 
 	@JsonProperty
 	private List<KlasseAPIModel> klassen = new ArrayList<>();
@@ -53,6 +56,7 @@ public class KlassenlisteImportReport {
 	public KlassenlisteImportReport withKlassen(final List<KlasseAPIModel> klassen) {
 
 		this.klassen = klassen;
+		this.anzahlKlassen = this.klassen.size();
 		return this;
 	}
 
@@ -110,20 +114,42 @@ public class KlassenlisteImportReport {
 		return anzahlKlassen;
 	}
 
-	public KlassenlisteImportReport withAnzahlKlassen(final int anzahlKlassen) {
+	public List<String> getFehlerUndWarnungen() {
 
-		this.anzahlKlassen = anzahlKlassen;
+		return fehlerUndWarnungen;
+	}
+
+	public void setFehler(final List<String> nichtImportierteZeilen) {
+
+		this.fehlerUndWarnungen.addAll(nichtImportierteZeilen);
+	}
+
+	public void addWarnung(final String warnung) {
+
+		if (!this.fehlerUndWarnungen.contains(warnung)) {
+
+			this.fehlerUndWarnungen.add(warnung);
+		}
+
+	}
+
+	public String printErrorsAndWarnings() {
+
+		StringBuffer sb = new StringBuffer();
+		this.fehlerUndWarnungen.stream().forEach(z -> sb.append(z));
+		return sb.toString();
+
+	}
+
+	public int getAnzahlKlassenImportiert() {
+
+		return anzahlKlassenImportiert;
+	}
+
+	public KlassenlisteImportReport withAnzahlKlassenImportiert(final int anzahlKlassenImportiert) {
+
+		this.anzahlKlassenImportiert = anzahlKlassenImportiert;
 		return this;
-	}
-
-	public List<String> getNichtImportierteZeilen() {
-
-		return nichtImportierteZeilen;
-	}
-
-	public void setNichtImportierteZeilen(final List<String> nichtImportierteZeilen) {
-
-		this.nichtImportierteZeilen = nichtImportierteZeilen;
 	}
 
 }

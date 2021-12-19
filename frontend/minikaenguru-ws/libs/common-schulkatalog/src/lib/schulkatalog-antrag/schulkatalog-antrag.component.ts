@@ -15,29 +15,29 @@ import { SchulkatalogConfigService, SchulkatalogConfig } from '../configuration/
 export class SchulkatalogAntragComponent implements OnInit, OnDestroy {
 
 
-	antragForm: FormGroup;
+	antragForm!: FormGroup;
 
-	email: AbstractControl;
+	email!: AbstractControl;
 
-	schulname: AbstractControl;
+	schulname!: AbstractControl;
 
-	ort: AbstractControl;
+	ort!: AbstractControl;
 
-	plz: AbstractControl;
+	plz!: AbstractControl;
 
-	strasseUndHausnummer: AbstractControl;
+	strasseUndHausnummer!: AbstractControl;
 
-	land: AbstractControl;
+	land!: AbstractControl;
 
-	kleber: AbstractControl;
+	kleber!: AbstractControl;
 
-	submitDisabled: boolean;
+	submitDisabled: boolean = false;
 
-	showInfoLand: boolean;
+	showInfoLand: boolean = false;
 
 	private submitted: boolean = false;
 
-	private katalogantragSuccessSubscription: Subscription;
+	private katalogantragSuccessSubscription: Subscription = new Subscription();
 
 	constructor(@Inject(SchulkatalogConfigService) private config: SchulkatalogConfig, private fb: FormBuilder, private internalFacade: InternalFacade, private router: Router) { }
 
@@ -74,9 +74,7 @@ export class SchulkatalogAntragComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		if (this.katalogantragSuccessSubscription) {
-			this.katalogantragSuccessSubscription.unsubscribe();
-		}
+		this.katalogantragSuccessSubscription.unsubscribe();
 	}
 
 	toggleInfoLand() {

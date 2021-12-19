@@ -4,7 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.fileutils;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
@@ -82,7 +82,7 @@ public class MkGatewayFileUtilsTest {
 		// Act + Assert
 		try {
 
-			MkGatewayFileUtils.readLines(path);
+			MkGatewayFileUtils.readLines(path, "UTF-8");
 			fail("keine MkGatewayRuntimeException");
 		} catch (MkGatewayRuntimeException e) {
 
@@ -100,7 +100,7 @@ public class MkGatewayFileUtilsTest {
 		String path = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste-mit-leerzeilen.csv";
 
 		// Act
-		List<String> lines = MkGatewayFileUtils.readLines(path);
+		List<String> lines = MkGatewayFileUtils.readLines(path, MkGatewayFileUtils.DEFAULT_ENCODING);
 
 		// Assert
 		assertEquals(5, lines.size());

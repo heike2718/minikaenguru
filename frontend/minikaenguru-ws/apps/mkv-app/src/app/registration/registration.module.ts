@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import * as fromRegistration from './+state/registration.reducer';
 import { StoreModule } from '@ngrx/store';
@@ -12,7 +12,7 @@ import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
 @NgModule({
 	imports: [
 		CommonModule,
-		FormsModule,
+		ReactiveFormsModule,
 		HttpClientModule,
 		CommonSchulkatalogModule,
 		CommonComponentsModule,

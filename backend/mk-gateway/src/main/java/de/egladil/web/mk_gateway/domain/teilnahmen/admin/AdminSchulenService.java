@@ -18,6 +18,8 @@ import de.egladil.web.mk_gateway.domain.kataloge.SchulkatalogService;
 import de.egladil.web.mk_gateway.domain.statistik.AnonymisierteTeilnahmenService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.SchuleDetailsService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.AnonymisierteTeilnahmeAPIModel;
+import de.egladil.web.mk_gateway.domain.uploads.UploadRepository;
+import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleDetails;
 
@@ -37,6 +39,9 @@ public class AdminSchulenService {
 
 	@Inject
 	AnonymisierteTeilnahmenService anonymisierteTeilnahmenService;
+
+	@Inject
+	UploadRepository uploadRepository;
 
 	/**
 	 * Sammelt die Schuldaten mit den Details zusammen.
@@ -82,6 +87,11 @@ public class AdminSchulenService {
 
 			result.withAngemeldetDurch(schuleDetails.angemeldetDurch()).withNameUrkunde(schuleDetails.nameUrkunde());
 		}
+
+		long anzahlUploadsKlassenliste = uploadRepository.countUploadsWithUploadTypeAndTeilnahmenummer(UploadType.KLASSENLISTE,
+			schulkuerzel);
+
+		result.setAnzahlUploadKlassenlisten(anzahlUploadsKlassenliste);
 
 		return Optional.of(result);
 	}

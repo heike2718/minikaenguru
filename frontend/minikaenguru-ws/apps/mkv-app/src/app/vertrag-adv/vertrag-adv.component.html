@@ -1,6 +1,6 @@
 <div *ngIf="vertragAdvEditorModel$ | async as vertrag" class="mkv-container mt-1 col-12">
 
-	<h2>Vertrag zur Auftragsdatenverarbeitung</h2>
+	<h2>Vertrag zur Auftragsverarbeitung</h2>
 	<h3>zwischen {{vertrag.schulname}} und Heike Winkelvoß</h3>
 
 	<p>Bitte füllen Sie das Formular korrekt aus. Die Angaben werden in den Vertrag übernommen.</p>
@@ -9,7 +9,7 @@
 
 	<div *ngIf="selectedSchule$ | async as schule">
 
-		<div *ngIf="!schule.details.hatAdv" class="col-12">
+		<div *ngIf="schule.details && !schule.details.hatAdv" class="col-12">
 			<mk-download-button class="w-100 ml-1" [model]="vertragstextBtnModel">
 			</mk-download-button>
 
@@ -81,15 +81,15 @@
 		</div>
 		<div class="btn-group d-flex" role="group">
 
-			<button class="btn btn-primary w-100 ml-1" [disabled]="submitDisabled$ | async" (click)="submit()"><i
+			<button class="btn btn-primary w-100 ml-1" [disabled]="!this.initialEditorModel || (submitDisabled$ | async)" (click)="submit()"><i
 					class="fa fa-floppy-o" aria-hidden="true"></i>
 				Vertrag abschließen</button>
 
-			<button class="btn btn-primary w-100 ml-1" (click)="gotoSchule()"><i class="fa fa-arrow-left"
+			<button class="btn btn-primary w-100 ml-1" [disabled]="!initialEditorModel" (click)="gotoSchule()"><i class="fa fa-arrow-left"
 					aria-hidden="true"></i>zurück zur Schule</button>
 		</div>
 
-		<div *ngIf="schule.details.hatAdv" class="col-12">
+		<div *ngIf="vertragBtnModel && schule.details && schule.details.hatAdv" class="col-12">
 			<mk-download-button class="w-100 ml-1" [model]="vertragBtnModel">
 			</mk-download-button>
 		</div>

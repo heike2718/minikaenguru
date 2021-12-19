@@ -4,7 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_kataloge.domain;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
 import java.util.Optional;

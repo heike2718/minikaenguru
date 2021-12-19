@@ -79,6 +79,13 @@ public class KindAdapter {
 
 				return kind;
 			}
+
+			@Override
+			public String toString() {
+
+				return kind.toString();
+			}
+
 		};
 
 	}
@@ -148,6 +155,12 @@ public class KindAdapter {
 
 				return kindImportDaten;
 			}
+
+			@Override
+			public String toString() {
+
+				return kindImportDaten.toString();
+			}
 		};
 	}
 
@@ -214,6 +227,13 @@ public class KindAdapter {
 
 				return kind;
 			}
+
+			@Override
+			public String toString() {
+
+				return kind.toString();
+			}
+
 		};
 	}
 

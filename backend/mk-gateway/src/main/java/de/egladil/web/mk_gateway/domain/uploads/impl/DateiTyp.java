@@ -4,15 +4,49 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.uploads.impl;
 
+import de.egladil.web.commons_officetools.FileType;
+
 /**
  * DateiTyp
  */
 public enum DateiTyp {
 
-	EXCEL_ALT("application/vnd.ms-excel", ".xls"),
-	EXCEL_NEU("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx"),
-	ODS("application/vnd.oasis.opendocument.spreadsheet", ".ods"),
-	TEXT("text/plain", ".csv");
+	EXCEL_ALT("application/vnd.ms-excel", ".xls") {
+
+		@Override
+		public FileType getFileType() {
+
+			return FileType.EXCEL_ALT;
+		}
+
+	},
+	EXCEL_NEU("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx") {
+
+		@Override
+		public FileType getFileType() {
+
+			return FileType.EXCEL_NEU;
+		}
+
+	},
+	ODS("application/vnd.oasis.opendocument.spreadsheet", ".ods") {
+
+		@Override
+		public FileType getFileType() {
+
+			return FileType.ODS;
+		}
+
+	},
+	TEXT("text/plain", ".csv") {
+
+		@Override
+		public FileType getFileType() {
+
+			return null;
+		}
+
+	};
 
 	private final String tikaName;
 
@@ -47,5 +81,7 @@ public enum DateiTyp {
 
 		return suffixWithPoint;
 	}
+
+	public abstract FileType getFileType();
 
 }

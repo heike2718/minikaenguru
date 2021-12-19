@@ -121,24 +121,16 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 
 	private PersistenterVeranstalter findByUuid(final String uuid) {
 
-		TypedQuery<PersistenterVeranstalter> query = em
-			.createNamedQuery(PersistenterVeranstalter.FIND_BY_UUID_QUERY, PersistenterVeranstalter.class)
-			.setParameter("uuid", uuid);
+		return em.find(PersistenterVeranstalter.class, uuid);
+	}
 
-		List<PersistenterVeranstalter> trefferliste = query.getResultList();
+	@Override
+	public List<Veranstalter> loadVeranstalterByUuids(final List<String> veranstalterUUIDs) {
 
-		if (trefferliste.isEmpty()) {
+		List<PersistenterVeranstalter> trefferliste = em.createNamedQuery(PersistenterVeranstalter.FIND_BY_UUIDS_QUERY,
+			PersistenterVeranstalter.class).setParameter("uuids", veranstalterUUIDs).getResultList();
 
-			return null;
-		}
-
-		if (trefferliste.size() > 1) {
-
-			throw new MkGatewayRuntimeException("mehr als ein Veranstalter mit der UUID=" + uuid
-				+ " vorhanden. Du solltest mal über Deine Datenbank nachdenken.");
-		}
-
-		return trefferliste.get(0);
+		return trefferliste.stream().map(pv -> mapper.apply(pv)).collect(Collectors.toList());
 	}
 
 	@Override

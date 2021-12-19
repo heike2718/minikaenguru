@@ -10,7 +10,7 @@ export interface LoesungszettelState {
 
 	readonly loading: boolean;
 	readonly loesungszettelMap: LoesungszettelWithID[];
-	readonly selectedLoesungszettel: Loesungszettel;
+	readonly selectedLoesungszettel?: Loesungszettel;
 
 
 };
@@ -55,31 +55,39 @@ const loesungszettelReducer = createReducer(initialLoesungszettelState,
 	on(LoesungszettelActions.loesungszettelChanged, (state, action) => {
 
 
-		const zettel: Loesungszettel = state.selectedLoesungszettel;
+		const zettel: Loesungszettel | undefined = state.selectedLoesungszettel;
 
-		const zeile: Loesungszettelzeile = action.zeile;
+		if (zettel) {
+			const zeile: Loesungszettelzeile = action.zeile;
 
-		const neueZeilen: Loesungszettelzeile[] = [];
+			const neueZeilen: Loesungszettelzeile[] = [];
 
-		for (let i = 0; i < zettel.zeilen.length; i++) {
-			const z: Loesungszettelzeile = zettel.zeilen[i];
-			if (z.index !== zeile.index) {
-				neueZeilen.push(z);
-			} else {
-				neueZeilen.push(zeile);
+			for (let i = 0; i < zettel.zeilen.length; i++) {
+				const z: Loesungszettelzeile = zettel.zeilen[i];
+				if (z.index !== zeile.index) {
+					neueZeilen.push(z);
+				} else {
+					neueZeilen.push(zeile);
+				}
 			}
+
+			const neuerLoesungszettel = { ...zettel, zeilen: neueZeilen };
+
+			let neueMap = new LoesungszettelMap(state.loesungszettelMap).remove(neuerLoesungszettel.uuid);
+			neueMap = new LoesungszettelMap(neueMap).merge(neuerLoesungszettel);
+
+			return { ...state, loading: false, loesungszettelMap: neueMap,  selectedLoesungszettel: neuerLoesungszettel };
+
 		}
 
-		const neuerLoesungszettel = { ...zettel, zeilen: neueZeilen };
-
-		let neueMap = new LoesungszettelMap(state.loesungszettelMap).remove(neuerLoesungszettel.uuid);
-		neueMap = new LoesungszettelMap(neueMap).merge(neuerLoesungszettel);
-
-		return { ...state, loading: false, loesungszettelMap: neueMap,  selectedLoesungszettel: neuerLoesungszettel };
-
+		return {...state};
 	}),
 
 	on(LoesungszettelActions.loesungszettelSaved, (state, action) => {
+
+		if (!state.selectedLoesungszettel) {
+			return {...state};
+		}
 
 		const neuerLoesungszettel: Loesungszettel = { ...state.selectedLoesungszettel, uuid: action.loesungszettelNeu.loesungszettelId, zeilen: action.loesungszettelNeu.zeilen, version: action.loesungszettelNeu.version };
 
@@ -101,9 +109,9 @@ const loesungszettelReducer = createReducer(initialLoesungszettelState,
 
 	on(LoesungszettelActions.kindDeleted, (state, action) => {
 
-		const loesungszettelMitKind: Loesungszettel = new LoesungszettelMap(state.loesungszettelMap).findWithKindUuid(action.kindUuid);
+		const loesungszettelMitKind: Loesungszettel | undefined = new LoesungszettelMap(state.loesungszettelMap).findWithKindUuid(action.kindUuid);
 
-		if (loesungszettelMitKind !== null) {
+		if (loesungszettelMitKind) {
 			const neueMap = new LoesungszettelMap(state.loesungszettelMap).remove(loesungszettelMitKind.uuid);
 
 			return {...state, loesungszettelMap: neueMap};

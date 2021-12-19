@@ -4,7 +4,8 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.kinder;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -37,6 +38,9 @@ public class PersistentesKindKindMapperTest {
 		persistentesKind.setUuid("6ee4e726-b7a2-4554-9f15-74b07d835e16");
 		persistentesKind.setVorname("Fiona");
 		persistentesKind.setZusatz("blond");
+		persistentesKind.setDublettePruefen(true);
+		persistentesKind.setKlassenstufePruefen(true);
+		persistentesKind.setImportiert(true);
 
 		// Act
 		Kind kind = new PersistentesKindKindMapper().apply(persistentesKind);
@@ -52,6 +56,10 @@ public class PersistentesKindKindMapperTest {
 		assertEquals(new Identifier("6ee4e726-b7a2-4554-9f15-74b07d835e16"), kind.identifier());
 		assertEquals("Fiona", kind.vorname());
 		assertEquals("blond", kind.zusatz());
+		assertTrue(kind.isKlassenstufePruefen());
+		assertTrue(kind.isDublettePruefen());
+		assertTrue(kind.isImportiert());
+
 	}
 
 }

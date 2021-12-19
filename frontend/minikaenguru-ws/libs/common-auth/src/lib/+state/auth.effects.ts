@@ -17,8 +17,9 @@ export class AuthEffects {
 
 					const user = action.session.user;
 					if (user) {
+
 						localStorage.setItem(this.config.storagePrefix + STORAGE_KEY_ID_REFERENCE,
-							JSON.stringify(action.session.user.idReference));
+							JSON.stringify(user.idReference));
 
 						if (action.session.sessionId) {
 							localStorage.setItem(this.config.storagePrefix + STORAGE_KEY_DEV_SESSION_ID, action.session.sessionId)

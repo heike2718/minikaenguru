@@ -18,31 +18,31 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 
 	devMode = environment.envName === 'DEV';
 
-	wettbewerbForm: FormGroup;
+	wettbewerbForm!: FormGroup;
 
 	wettbewerbEditorModel$ = this.wettbewerbFacade.wettbewerbEditorModel$;
 
-	jahrFormControl: FormControl;
+	jahrFormControl!: FormControl;
 
-	statusFormControl: FormControl;
+	statusFormControl!: FormControl;
 
-	wettbewerbsbeginnFormControl: FormControl;
+	wettbewerbsbeginnFormControl!: FormControl;
 
-	wettbewerbsendeFormControl: FormControl;
+	wettbewerbsendeFormControl!: FormControl;
 
-	datumFreischaltungLehrerFormControl: FormControl;
+	datumFreischaltungLehrerFormControl!: FormControl;
 
-	datumFreischaltungPrivatFormControl: FormControl;
+	datumFreischaltungPrivatFormControl!: FormControl;
 
-	loesungsbuchstabenIkidsFormControl: FormControl;
+	loesungsbuchstabenIkidsFormControl!: FormControl;
 
-	loesungsbuchstabenKlasse1FormControl: FormControl;
+	loesungsbuchstabenKlasse1FormControl!: FormControl;
 
-	loesungsbuchstabenKlasse2FormControl: FormControl;
+	loesungsbuchstabenKlasse2FormControl!: FormControl;
 
-	private wettbewerbEditorModelSubscription: Subscription;
+	private wettbewerbEditorModelSubscription: Subscription = new Subscription();
 
-	private saveOutcomeSubscription: Subscription;
+	private saveOutcomeSubscription: Subscription = new Subscription();
 
 	private initialWettbewerbGuiModel = {} as WettbewerbEditorModel;
 
@@ -57,7 +57,10 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 
 		this.wettbewerbEditorModelSubscription = this.wettbewerbEditorModel$.subscribe(
 			wb => {
-				this.initialWettbewerbGuiModel = {...wb};
+
+				if (wb) {
+					this.initialWettbewerbGuiModel = {...wb};
+				}
 
 				this.jahrFormControl = new FormControl({ value: '' }, Validators.required);
 				this.statusFormControl = new FormControl({ value: '', disabled: true });
@@ -98,12 +101,8 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		if (this.wettbewerbEditorModelSubscription) {
-			this.wettbewerbEditorModelSubscription.unsubscribe();
-		}
-		if (this.saveOutcomeSubscription) {
-			this.saveOutcomeSubscription.unsubscribe();
-		}
+		this.wettbewerbEditorModelSubscription.unsubscribe();
+		this.saveOutcomeSubscription.unsubscribe();
 	}
 
 	submitDisabled(): boolean {
@@ -112,11 +111,12 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 
 	onSubmit() {
 		const formValue: WettbewerbEditorModel = this.wettbewerbForm.value;
+
 		const neuerWettbewerb: WettbewerbEditorModel= {...formValue,
-			datumFreischaltungLehrer: formValue.datumFreischaltungLehrer.trim(),
-			datumFreischaltungPrivat: formValue.datumFreischaltungPrivat.trim(),
-			wettbewerbsbeginn: formValue.wettbewerbsbeginn.trim(),
-			wettbewerbsende: formValue.wettbewerbsende.trim(),
+			datumFreischaltungLehrer: formValue.datumFreischaltungLehrer ? formValue.datumFreischaltungLehrer.trim() : '',
+			datumFreischaltungPrivat: formValue.datumFreischaltungPrivat ? formValue.datumFreischaltungPrivat.trim() : '',
+			wettbewerbsbeginn: formValue.wettbewerbsbeginn ? formValue.wettbewerbsbeginn.trim() : '',
+			wettbewerbsende: formValue.wettbewerbsende ? formValue.wettbewerbsende.trim() : '',
 			status: this.initialWettbewerbGuiModel.status, // wird sowieso ignoriert
 			loesungsbuchstabenIkids: formValue.loesungsbuchstabenIkids.trim(),
 			loesungsbuchstabenKlasse1: formValue.loesungsbuchstabenKlasse1.trim(),

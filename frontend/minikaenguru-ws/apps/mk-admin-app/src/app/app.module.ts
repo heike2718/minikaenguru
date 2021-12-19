@@ -39,6 +39,10 @@ import { SessionTimeoutComponent } from './session-timeout/session-timeout.compo
 import { NewsletterModule } from './newsletter/newsletter.module';
 import { VersandinfoProgressComponent } from './versandinfo-progress/versandinfo-progress.component';
 import { StoreDevModules } from './store-config/store-devtools';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { UploadsModule } from './uploads/uploads.module';
+import { LoesungszettelModule } from './loesungszettel/loesungszettel.module';
+import { SharedModule } from './shared/shared.module';
 
 registerLocaleData(localeDe);
 
@@ -52,12 +56,14 @@ registerLocaleData(localeDe);
 		DashboardComponent,
 		NotAuthorizedComponent,
 		SessionTimeoutComponent,
-		VersandinfoProgressComponent],
+		VersandinfoProgressComponent,
+		],
 	imports: [
 		BrowserModule,
 		ReactiveFormsModule,
 		HttpClientModule,
 		BrowserAnimationsModule,
+		NgbModule,
 		CommonMessagesModule,
 		CommonComponentsModule.forRoot({
 			baseUrl: environment.apiUrl
@@ -97,7 +103,10 @@ registerLocaleData(localeDe);
 		SchulteilnahmenModule,
 		EventlogModule,
 		NewsletterModule,
+		UploadsModule,
+		LoesungszettelModule,
 		LayouttestsModule,
+		SharedModule,
 		AppRoutingModule, // <-- immer am Ende, damit die wildcard-route als letzte deklariert bleibt
 	],
 	providers: [

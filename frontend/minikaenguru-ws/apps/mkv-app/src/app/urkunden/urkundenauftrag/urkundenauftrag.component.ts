@@ -6,6 +6,7 @@ import { Kind, kindToString } from '@minikaenguru-ws/common-components';
 import { KinderFacade } from '../../kinder/kinder.facade';
 import { Urkundenart, Farbschema, UrkundenauftragEinzelkind, getLabelFarbe, getLabelUrkundenart, UrkundeDateModel } from '../urkunden.model';
 import { NgForm } from '@angular/forms';
+import { LogService } from '@minikaenguru-ws/common-logging';
 
 @Component({
 	selector: 'mkv-urkundenauftrag',
@@ -18,20 +19,22 @@ export class UrkundenauftragComponent implements OnInit, OnDestroy {
 
 	showWarntext = false;
 
-	kind: Kind;
+	kind?: Kind;
 
-	nameKind: string;
-	dateModel: NgbDateStruct;
+	nameKind: string = '';
+	dateModel!: NgbDateStruct;
+	date: { year: number, month: number } = {year: 2020, month: 8};
 
-	urkundeDateModel: UrkundeDateModel;
+	urkundeDateModel!: UrkundeDateModel;
 
-	urkundenart: Urkundenart;
-	farbe: Farbschema;
+	urkundenart!: Urkundenart;
+	farbe!: Farbschema;
 
-	private selectedKindSubscription: Subscription;
+	private selectedKindSubscription: Subscription = new Subscription();
 
 	constructor(public urkundenFacade: UrkundenFacade,
-		private kinderFacade: KinderFacade) {}
+		private kinderFacade: KinderFacade,
+		private logger: LogService) {}
 
 	ngOnInit(): void {
 
@@ -55,10 +58,7 @@ export class UrkundenauftragComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-
-		if (this.selectedKindSubscription) {
-			this.selectedKindSubscription.unsubscribe();
-		}
+		this.selectedKindSubscription.unsubscribe();
 	}
 
 
@@ -69,6 +69,11 @@ export class UrkundenauftragComponent implements OnInit, OnDestroy {
 	}
 
 	onFormSubmit(form: NgForm): void {
+
+		if (!this.kind) {
+			this.logger.debug('selectedKund was undefined');
+			return;
+		}
 
 		const value = form.value;
 

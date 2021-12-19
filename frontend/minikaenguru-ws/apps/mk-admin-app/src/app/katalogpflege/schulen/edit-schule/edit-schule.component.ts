@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { KatalogpflegeFacade } from '../../katalogpflege.facade';
 import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
-import { SchulePayload } from '../../katalogpflege.model';
+import { initialSchulePayload, SchulePayload } from '../../katalogpflege.model';
 import { Subscription } from 'rxjs';
-import { SchuleEditorModel } from '../../+state/katalogpflege.reducer';
+import { initialSchuleEditorModel, SchuleEditorModel } from '../../+state/katalogpflege.reducer';
 import { emailValidator } from '@minikaenguru-ws/common-components';
 import { environment } from '../../../../environments/environment';
 
@@ -18,31 +18,31 @@ export class EditSchuleComponent implements OnInit, OnDestroy {
 
 	editSchuleInput$ = this.katalogFacade.editSchuleInput$;
 
-	editSchuleForm: FormGroup;
+	editSchuleForm!: FormGroup;
 
-	name: AbstractControl;
+	name!: AbstractControl;
 
-	kuerzel: AbstractControl;
+	kuerzel!: AbstractControl;
 
-	nameOrt: AbstractControl;
+	nameOrt!: AbstractControl;
 
-	kuerzelOrt: AbstractControl;
+	kuerzelOrt!: AbstractControl;
 
-	nameLand: AbstractControl;
+	nameLand!: AbstractControl;
 
-	kuerzelLand: AbstractControl;
+	kuerzelLand!: AbstractControl;
 
-	emailAuftraggeber: AbstractControl;
+	emailAuftraggeber!: AbstractControl;
 
-	submitDisabled: boolean;
+	submitDisabled: boolean = false;
 
-	headlineText: string;
+	headlineText: string = '';
 
 	submited: boolean = false;
 
-	private schuleEditorModel: SchuleEditorModel;
+	private schuleEditorModel: SchuleEditorModel = initialSchuleEditorModel;
 
-	private editSchuleInputSubscription: Subscription;
+	private editSchuleInputSubscription: Subscription = new Subscription();
 
 	constructor(private fb: FormBuilder, private katalogFacade: KatalogpflegeFacade) { }
 
@@ -102,13 +102,22 @@ export class EditSchuleComponent implements OnInit, OnDestroy {
 		this.editSchuleForm.setValue(this.schuleEditorModel.schulePayload);
 
 		if (this.schuleEditorModel.kuerzelLandDisabled) {
-			this.editSchuleForm.get('kuerzelLand').disable();
+			const input = this.editSchuleForm.get('kuerzelLand');
+			if (input) {
+				input.disable();
+			}
 		}
-		if (this.schuleEditorModel.nameLandDisabled) {
-			this.editSchuleForm.get('nameLand').disable();
+		if (this.editSchuleForm && this.schuleEditorModel.nameLandDisabled) {
+			const input = this.editSchuleForm.get('nameLand');
+			if (input) {
+				input.disable();
+			}
 		}
-		if (this.schuleEditorModel.nameOrtDisabled) {
-			this.editSchuleForm.get('nameOrt').disable();
+		if (this.editSchuleForm && this.schuleEditorModel.nameOrtDisabled) {
+			const input = this.editSchuleForm.get('nameOrt');
+			if (input) {
+				input.disable();
+			}
 		}
 	}
 
@@ -118,13 +127,13 @@ export class EditSchuleComponent implements OnInit, OnDestroy {
 		this.submited = true;
 
 		const schulePayload: SchulePayload = {
-			name: this.name.value.trim(),
-			kuerzel: this.kuerzel.value,
-			nameOrt: this.nameOrt.value.trim(),
-			kuerzelOrt: this.kuerzelOrt.value,
-			nameLand: this.nameLand.value.trim(),
-			kuerzelLand: this.kuerzelLand.value,
-			emailAuftraggeber: this.emailAuftraggeber.value !== '' ? this.emailAuftraggeber.value.trim() : null
+			name: this.name ? this.name.value.trim() : '',
+			kuerzel: this.kuerzel ? this.kuerzel.value : '',
+			nameOrt: this.nameOrt ? this.nameOrt.value.trim() : '',
+			kuerzelOrt: this.kuerzelOrt ? this.kuerzelOrt.value : '',
+			nameLand: this.nameLand ? this.nameLand.value.trim() : '',
+			kuerzelLand: this.kuerzelLand ? this.kuerzelLand.value : '',
+			emailAuftraggeber: this.emailAuftraggeber && this.emailAuftraggeber.value !== '' ? this.emailAuftraggeber.value.trim() : null
 		};
 
 		if (this.schuleEditorModel.modusCreate) {

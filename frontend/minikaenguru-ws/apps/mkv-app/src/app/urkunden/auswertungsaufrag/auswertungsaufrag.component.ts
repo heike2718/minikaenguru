@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { NgbDateStruct, NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { UrkundeDateModel, Farbschema, UrkundenauftragSchule } from '../urkunden.model';
 import { NgForm } from '@angular/forms';
+import { LogService } from '@minikaenguru-ws/common-logging';
 
 @Component({
 	selector: 'mkv-auswertungsaufrag',
@@ -14,19 +15,20 @@ import { NgForm } from '@angular/forms';
 })
 export class AuswertungsaufragComponent implements OnInit, OnDestroy {
 
-	schule: Schule;
+	schule?: Schule;
 	nameSchule = '';
 
-	dateModel: NgbDateStruct;
+	dateModel!: NgbDateStruct;
 
-	urkundeDateModel: UrkundeDateModel;
+	urkundeDateModel!: UrkundeDateModel;
 
-	farbe: Farbschema;
+	farbe!: Farbschema;
 
-	private selectedSchuleSubscription: Subscription;
+	private selectedSchuleSubscription: Subscription = new Subscription();
 
 	constructor(public urkundenFacade: UrkundenFacade,
-		public lehrerFacade: LehrerFacade) { }
+		public lehrerFacade: LehrerFacade, 
+		private logger: LogService) { }
 
 	ngOnInit(): void {
 
@@ -48,13 +50,15 @@ export class AuswertungsaufragComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-
-		if (this.selectedSchuleSubscription) {
-			this.selectedSchuleSubscription.unsubscribe();
-		}
+		this.selectedSchuleSubscription.unsubscribe();
 	}
 
 	onFormSubmit(form: NgForm): void {
+
+		if (!this.schule) {
+			this.logger.debug('selectedSchule was undefined');
+			return;
+		}
 
 		const value = form.value;
 

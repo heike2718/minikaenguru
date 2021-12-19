@@ -6,16 +6,18 @@ import * as RegistrationActions from './registration.actions';
 export const registrationFeatureKey = 'mkv-app-registration';
 
 export interface RegistrationState {
-	readonly mode: RegistrationMode;
+	readonly ready: boolean;
+	readonly mode?: RegistrationMode;
 	readonly newsletterAbonieren: boolean;
-	readonly schulkuerzel: string;
+	readonly schulkuerzel?: string;
 	readonly showSchulkatalog: boolean;
 	readonly submitEnabled: boolean;
 	readonly showRegistrationSuccessDialog: boolean;
-	readonly registrationSuccessMessage: string;
+	readonly registrationSuccessMessage?: string;
 }
 
 export const initialRegistrationState: RegistrationState = {
+	ready: true,
 	mode: undefined,
 	newsletterAbonieren: false,
 	schulkuerzel: undefined,
@@ -29,12 +31,18 @@ const registrationReducer = createReducer(initialRegistrationState,
 
 	on(RegistrationActions.registrationModeChanged, (state, action) => {
 
-		let showSchulkatalog = false;
-		if (action.mode && action.mode === 'LEHRER' && !state.schulkuerzel) {
-			showSchulkatalog = true;
+		switch (action.mode) {
+			case 'LEHRER': {
+				if (!state.schulkuerzel) {
+					return {...state, mode: action.mode, showSchulkatalog: true, submitEnabled: false};				
+				} else {
+					return {...state, mode: action.mode, showSchulkatalog: false, submitEnabled: true};
+				}
+			}
+			case 'PRIVAT': {
+				return {...state, mode: action.mode, showSchulkatalog: false, submitEnabled: true};
+			}
 		}
-
-		return { mode: action.mode, schulkuerzel: state.schulkuerzel, showSchulkatalog: showSchulkatalog, submitEnabled: false, newsletterAbonieren: state.newsletterAbonieren }
 	}),
 
 	on(RegistrationActions.newsletterAbonierenChanged, (state, action) => {

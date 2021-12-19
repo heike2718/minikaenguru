@@ -13,9 +13,9 @@ export class WettbewerbCardComponent implements OnInit {
 	devMode = environment.envName === 'DEV';
 
 	@Input()
-	wettbewerb: Wettbewerb;
+	wettbewerb!: Wettbewerb;
 
-	wettbewerbUndefined: boolean;
+	wettbewerbUndefined: boolean = false;
 
 	constructor(private wettbewerbFacade: WettbewerbFacade) { }
 

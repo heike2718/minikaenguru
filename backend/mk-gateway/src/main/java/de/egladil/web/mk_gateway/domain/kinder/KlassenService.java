@@ -6,6 +6,7 @@ package de.egladil.web.mk_gateway.domain.kinder;
 
 import java.util.List;
 
+import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseAPIModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseRequestData;
@@ -56,6 +57,22 @@ public interface KlassenService {
 	 */
 	KlasseAPIModel klasseLoeschen(String klasseUuid, String lehrerUuid);
 
+	/**
+	 * Löscht rekursiv alle Klassen der gegebenen Schule.
+	 *
+	 * @param  schuleId
+	 *                    Identifier
+	 * @param  lehrerUuid
+	 *                    String die UUID des Lehrers.
+	 * @return
+	 */
+	ResponsePayload alleKlassenLoeschen(Identifier schuleId, String lehrerUuid);
+
+	/**
+	 * Gibt die ID des aktuellen Wettbewerbs zurück.
+	 *
+	 * @return WettbewerbID
+	 */
 	WettbewerbID getWettbewerbID();
 
 	/**
@@ -70,5 +87,4 @@ public interface KlassenService {
 	 * @return
 	 */
 	List<Klasse> importiereKlassen(Identifier lehrerID, Identifier schuleID, List<KlasseRequestData> klassendaten);
-
 }

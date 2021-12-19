@@ -6,9 +6,9 @@ export const newsletterFeatureKey = 'mk-admin-app-newsletters';
 
 export interface NewslettersState {
 	readonly newsletterMap: NewsletterWithID[];
-	readonly selectedNewsletter: Newsletter;
-	readonly newsletterEditorModel: Newsletter;
-	readonly versandinfo: Versandinfo;
+	readonly selectedNewsletter?: Newsletter;
+	readonly newsletterEditorModel?: Newsletter;
+	readonly versandinfo?: Versandinfo;
 	readonly newslettersLoaded: boolean;
 	readonly loading: boolean;
 

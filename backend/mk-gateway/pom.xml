@@ -5,23 +5,23 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mk-gateway</artifactId>
-	<version>1.6.1</version>
+	<version>1.7.0</version>
 	<packaging>jar</packaging>
 
 
 	<properties>
-		<commons.version>1.7.0</commons.version>
-		<filescanner.version>2.0.0</filescanner.version>
+		<commons.version>1.7.4</commons.version>
+		<filescanner.version>2.0.1</filescanner.version>
 		<poi.version>5.0.0</poi.version>
 		<quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
 		<quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-		<quarkus.platform.version>2.1.2.Final</quarkus.platform.version>
+		<quarkus.platform.version>2.5.2.Final</quarkus.platform.version>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<surefire-plugin.version>2.22.0</surefire-plugin.version>
-		<dependency-check.version>6.1.6</dependency-check.version>
+		<surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
+		<dependency-check.version>6.5.0</dependency-check.version>
 	</properties>
 
 
@@ -40,6 +40,13 @@
 				<version>${commons.version}</version>
 				<scope>import</scope>
 				<type>pom</type>
+			</dependency>
+			<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>5.8.1</version>
+				<type>pom</type>
+				<scope>import</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -68,19 +75,13 @@
 
 		<dependency>
 			<groupId>de.egladil.web</groupId>
-			<artifactId>commons-openofficetools</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>de.egladil.web</groupId>
-			<artifactId>commons-exeltools</artifactId>
+			<artifactId>commons-officetools</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>de.egladil.web</groupId>
 			<artifactId>commons-security</artifactId>
 		</dependency>
-
 
 
 		<dependency>
@@ -179,19 +180,7 @@
 		<!-- Test START -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-engine</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.junit.platform</groupId>
-			<artifactId>junit-platform-runner</artifactId>
+			<artifactId>junit-jupiter</artifactId>
 			<scope>test</scope>
 		</dependency>
 

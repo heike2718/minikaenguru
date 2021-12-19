@@ -13,11 +13,11 @@ import { Subscription } from 'rxjs';
 export class AddSchuleComponent implements OnInit, OnDestroy {
 
 	devMode = environment.envName === 'DEV';
-	neueSchule: KatalogItem;
+	neueSchule?: KatalogItem;
 
 	textSchuleBereitsZugeordnet = 'Sie sind bereits in dieser Schule eingetragen.';
 
-	private selectedKatalogItemSubscription: Subscription;
+	private selectedKatalogItemSubscription: Subscription = new Subscription();
 
 	constructor(public lehrerFacade: LehrerFacade
 		, public schulkatalogFacade: SchulkatalogFacade
@@ -48,7 +48,9 @@ export class AddSchuleComponent implements OnInit, OnDestroy {
 	}
 
 	schuleHinzufuegen(): void {
-		this.lehrerFacade.schuleHinzufuegen(this.neueSchule);
+		if (this.neueSchule) {
+			this.lehrerFacade.schuleHinzufuegen(this.neueSchule);
+		}
 	}
 
 	resetSuche(): void {

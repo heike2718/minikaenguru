@@ -13,11 +13,15 @@ public class KindImportDaten {
 
 	private KindRequestData kindRequestData;
 
-	private boolean klassenstufePruefen;
-
-	private boolean dublettePruefen;
+	// private boolean klassenstufePruefen;
+	//
+	// private boolean dublettePruefen;
 
 	private String fehlermeldung;
+
+	private String warnmeldungKlassenstufe;
+
+	private String warnmeldungDublette;
 
 	public static KindImportDaten createWithFehlermeldung(final String fehlermeldung) {
 
@@ -39,8 +43,10 @@ public class KindImportDaten {
 	@Override
 	public String toString() {
 
-		return "KindImportDaten [kindRequestData=" + kindRequestData + ", klassenstufePruefen=" + klassenstufePruefen
-			+ ", dublettePruefen=" + dublettePruefen + "]";
+		// return "KindImportDaten [kindRequestData=" + kindRequestData + ", klassenstufePruefen=" + klassenstufePruefen
+		// + ", dublettePruefen=" + dublettePruefen + "]";
+
+		return kindRequestData.toString();
 	}
 
 	public KindRequestData getKindRequestData() {
@@ -50,23 +56,23 @@ public class KindImportDaten {
 
 	public boolean isKlassenstufePruefen() {
 
-		return klassenstufePruefen;
+		return warnmeldungKlassenstufe != null;
 	}
 
-	public void setKlassenstufePruefen(final boolean klassenstufePruefen) {
-
-		this.klassenstufePruefen = klassenstufePruefen;
-	}
+	// public void setKlassenstufePruefen(final boolean klassenstufePruefen) {
+	//
+	// this.klassenstufePruefen = klassenstufePruefen;
+	// }
 
 	public boolean isDublettePruefen() {
 
-		return dublettePruefen;
+		return warnmeldungDublette != null;
 	}
 
-	public void setDublettePruefen(final boolean dublettePruefen) {
-
-		this.dublettePruefen = dublettePruefen;
-	}
+	// public void setDublettePruefen(final boolean dublettePruefen) {
+	//
+	// this.dublettePruefen = dublettePruefen;
+	// }
 
 	public boolean isNichtImportiert() {
 
@@ -81,5 +87,25 @@ public class KindImportDaten {
 	public void setFehlermeldung(final String fehlermeldung) {
 
 		this.fehlermeldung = fehlermeldung;
+	}
+
+	public String getWarnmeldungKlassenstufe() {
+
+		return warnmeldungKlassenstufe;
+	}
+
+	public void setWarnmeldungKlassenstufe(final String warnmeldungKlassenstufe) {
+
+		this.warnmeldungKlassenstufe = warnmeldungKlassenstufe;
+	}
+
+	public String getWarnmeldungDublette() {
+
+		return warnmeldungDublette;
+	}
+
+	public void setWarnmeldungDublette(final String warnmeldungDublette) {
+
+		this.warnmeldungDublette = warnmeldungDublette;
 	}
 }

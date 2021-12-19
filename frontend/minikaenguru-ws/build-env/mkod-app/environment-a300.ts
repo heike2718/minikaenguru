@@ -8,7 +8,7 @@ export const environment = {
   assetsUrl: 'http://a300/mkod-app/assets',
   apiUrl: 'http://a300/mk-gateway',
   storageKeyPrefix: 'mkod_',
-  version: '1.6.1',
+  version: '1.7.0',
   consoleLogActive: true,
   serverLogActive: false,
   loglevel: 1

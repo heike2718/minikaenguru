@@ -28,7 +28,7 @@ export const unselectKind = createAction(
 
 export const createNewKind = createAction(
 	'[KinderFacade] createNewKind',
-	props<{ klasseUuid: string }>()
+	props<{ klasseUuid?: string }>()
 );
 
 export const selectKind = createAction(

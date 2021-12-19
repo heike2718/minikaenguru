@@ -1,30 +1,18 @@
 <div class="mkv-container mt-1">
-	<div class="col--12">
+	<div *ngIf="registrationFacade.registrationReady$ | async">
 		<h2>Benutzerkonto anlegen <span *ngIf="devMode">(registration.component)</span> </h2>
 
-		<div class="row">
-			<div class="col-1">
-				<input type="checkbox" class="form-control" id="newsletterAbonieren"
-					title="bitte wählen, wenn Sie Mailbenachrichtigungen wünschen" [(ngModel)]="newsletterAbonnieren"
-					name="newsletter" (change)="onNewsletterChanged($event.target.checked)">
-			</div>
-			<div class="col-9">
-				<label for="newsletterAbonieren" class="checkboxlabel form-control">Ja, ich möchte Informationen per Mail erhalten.</label>
-			</div>
-			<div *ngIf="!showInfoNewsletter" class="col-2">
-				<button type="button" class="btn btn-primary" data-placement="bottom" title="mehr Informationen" (click)="toggleInfoNewsletter()">
-					<i class="fa fa-info" aria-hidden="true"></i> Info
-				</button>
-			</div>
-		</div>
-		<div *ngIf="showInfoNewsletter" class="row mt-3 ml-1 mr-1 mb-3">
-			<div class="col-10">
-				<p>{{textNewsletter}}</p>
-			</div>
-			<div class="col-2">
-				<button type="button" class="btn btn-primary" data-placement="bottom" title="weniger Informationen" (click)="toggleInfoNewsletter()" >
-					<i class="fa fa-close" aria-hidden="true"></i> Info
-				</button>
+		<div class="btn-group d-inline" role="group">
+			<label for="switch-newsletter" class="label-bold w-100"><strong>Möchten Sie Informationen per Mail erhalten?</strong> </label>
+			<div class="row">
+				<div class="col-3">
+					<mk-switch id="switch-newsletter" (switchClicked)="onCheckboxNewsletterClicked($event)"></mk-switch>
+				</div>
+				<div class="col-6">
+					<button type="button" class="btn btn-outline-dark" title="Infos zu Mailbenachrichtigungen" (click)="showInfoNewsletter()">
+						<i class="fa fa-info" aria-hidden="true"></i> Info
+					</button>
+				</div>
 			</div>
 		</div>
 
@@ -48,7 +36,7 @@
 		<p *ngIf="selectedKatalogItem">{{selectedKatalogItem.pfad}}</p>
 		<div class="row">
 			<div class="btn-group d-flex" role="group">
-				<button type="button" [disabled]="!(registrationFacade.submitState$ | async)" class="btn btn-primary w-100 ml-1"
+				<button type="button" [disabled]="!selectedKatalogItem || !(registrationFacade.submitState$ | async)" class="btn btn-primary w-100 ml-1"
 					(click)="lehrerkontoAnlegen()">Konto anlegen</button>
 			</div>
 			<div *ngIf="(registrationFacade.registrationMode$ | async) && (registrationFacade.registrationMode$ | async) === 'LEHRER'" class="btn-group d-flex">
@@ -59,5 +47,23 @@
 			</div>
 		</div>
 	</div>
-
 </div>
+
+<p *ngIf="devMode">Newsletter abonnieren: {{newsletterAbonnieren}}</p>
+<p *ngIf="newsletterAbonnieren">Ich möchte Informationen zum Wettbewerb per Mail erhalten.</p>
+
+<ng-template #dialogNewsletterInfo let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Mailbenachrichtigungen</h4>
+    </div>
+    <div class="modal-body">
+        <p>In diesem Fall werden Sie über den Wettbewerb betreffende Dinge von allgemeinem Interesse wie z.B Beginn des Anmeldezeitraums oder
+			Freischaltung der Unterlagen per E-Mail informiert.</p>
+		<p>Sie können die Einwilligung jederzeit per E-Mail an minikaenguru@egladil.de oder mit einem einzigen Klick nach dem Einloggen widerrufen.</p>
+		<p><small>Privat durch mich erforderliche Kontaktaufnahme per Mail ist davon unberührt.</small></p>
+	</div>
+    <div class="modal-footer">
+		<button type="button" class="btn btn-outline-dark" (click)="modal.close('OK')">OK</button>
+    </div>
+</ng-template>
+
