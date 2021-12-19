@@ -28,9 +28,10 @@ import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
-import de.egladil.web.mk_gateway.infrastructure.persistence.SortNumberGenerator;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.LoesungszettelNonIdentifiingAttributesMapper;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterLoesungszettel;
+import de.egladil.web.mk_gateway.infrastructure.persistence.sortnumbers.SortNumberGenerator;
+import de.egladil.web.mk_gateway.infrastructure.persistence.sortnumbers.impl.SortNumberGeneratorImpl;
 
 /**
  * LoesungszettelHibernateRepository
@@ -307,7 +308,8 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 
 		PersistenterLoesungszettel zuPeristierenderLoesungszettel = new PersistenterLoesungszettel();
 		this.copyAllAttributesButIdentifier(zuPeristierenderLoesungszettel, loesungszettel);
-		zuPeristierenderLoesungszettel.setSortNumber(sortNumberGenerator.getNextSortnumberLoesungszettel());
+		long nextSortnumberLoesungszettel = sortNumberGenerator.getNextSortnumberLoesungszettel();
+		zuPeristierenderLoesungszettel.setSortNumber(nextSortnumberLoesungszettel);
 
 		entityManager.persist(zuPeristierenderLoesungszettel);
 

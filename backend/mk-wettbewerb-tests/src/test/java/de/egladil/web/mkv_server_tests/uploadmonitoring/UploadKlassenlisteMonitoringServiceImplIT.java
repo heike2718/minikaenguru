@@ -54,7 +54,6 @@ public class UploadKlassenlisteMonitoringServiceImplIT extends AbstractIntegrati
 			assertEquals(DateiTyp.ODS, info.getDateiTyp());
 			assertEquals(UploadType.KLASSENLISTE, info.getUploadType());
 			assertEquals(teilnahmenummer, info.getTeilnahmenummer());
-			assertEquals("Grundschule \"Im Rosental\"", info.getNameSchule());
 			assertEquals("06.11.2021 18:59:34", info.getUploadDatum());
 		}
 
@@ -67,7 +66,6 @@ public class UploadKlassenlisteMonitoringServiceImplIT extends AbstractIntegrati
 			assertEquals(DateiTyp.ODS, info.getDateiTyp());
 			assertEquals(UploadType.KLASSENLISTE, info.getUploadType());
 			assertEquals(teilnahmenummer, info.getTeilnahmenummer());
-			assertEquals("Grundschule \"Im Rosental\"", info.getNameSchule());
 			assertEquals("06.11.2021 20:04:05", info.getUploadDatum());
 		}
 	}
@@ -93,7 +91,6 @@ public class UploadKlassenlisteMonitoringServiceImplIT extends AbstractIntegrati
 			assertEquals(DateiTyp.ODS, info.getDateiTyp());
 			assertEquals(UploadType.KLASSENLISTE, info.getUploadType());
 			assertEquals(teilnahmenummer, info.getTeilnahmenummer());
-			assertEquals("Grundschule \"Im Rosental\"", info.getNameSchule());
 			assertEquals("06.11.2021 18:59:34", info.getUploadDatum());
 		}
 
@@ -106,7 +103,6 @@ public class UploadKlassenlisteMonitoringServiceImplIT extends AbstractIntegrati
 			assertEquals(DateiTyp.ODS, info.getDateiTyp());
 			assertEquals(UploadType.KLASSENLISTE, info.getUploadType());
 			assertEquals(teilnahmenummer, info.getTeilnahmenummer());
-			assertEquals("Grundschule \"Im Rosental\"", info.getNameSchule());
 			assertEquals("06.11.2021 20:04:05", info.getUploadDatum());
 		}
 	}

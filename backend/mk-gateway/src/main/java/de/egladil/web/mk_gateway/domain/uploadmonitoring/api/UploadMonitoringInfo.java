@@ -23,9 +23,6 @@ public class UploadMonitoringInfo {
 	private String teilnahmenummer;
 
 	@JsonProperty
-	private String nameSchule;
-
-	@JsonProperty
 	private String nameLehrer;
 
 	@JsonProperty
@@ -74,17 +71,6 @@ public class UploadMonitoringInfo {
 	public UploadMonitoringInfo withTeilnahmenummer(final String teilnahmenummer) {
 
 		this.teilnahmenummer = teilnahmenummer;
-		return this;
-	}
-
-	public String getNameSchule() {
-
-		return nameSchule;
-	}
-
-	public UploadMonitoringInfo withNameSchule(final String nameSchule) {
-
-		this.nameSchule = nameSchule;
 		return this;
 	}
 

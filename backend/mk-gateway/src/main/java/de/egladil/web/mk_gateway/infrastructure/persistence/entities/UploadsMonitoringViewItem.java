@@ -68,12 +68,6 @@ public class UploadsMonitoringViewItem {
 	@Column(name = "DATE_UPLOAD")
 	private Date uploadDate;
 
-	@Column(name = "SCHULNAME")
-	private String nameSchule;
-
-	@Column(name = "WETTBEWERB_UUID")
-	private String wettbewerbId;
-
 	@Column(name = "FULL_NAME")
 	private String nameLehrer;
 
@@ -153,16 +147,6 @@ public class UploadsMonitoringViewItem {
 	public Date getUploadDate() {
 
 		return uploadDate;
-	}
-
-	public String getNameSchule() {
-
-		return nameSchule;
-	}
-
-	public String getWettbewerbId() {
-
-		return wettbewerbId;
 	}
 
 	public String getNameLehrer() {

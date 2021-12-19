@@ -112,7 +112,6 @@ public class UploadMonitoringServiceImpl implements UploadMonitoringService {
 		UploadMonitoringInfo uploadInfo = new UploadMonitoringInfo()
 			.withDateiTyp(dateiTyp)
 			.withTeilnahmenummer(viewItem.getTeilnahmenummer())
-			.withNameSchule(viewItem.getNameSchule())
 			.withUploadStatus(viewItem.getStatus())
 			.withUploadType(viewItem.getUploadType())
 			.withUuid(viewItem.getUuid())
