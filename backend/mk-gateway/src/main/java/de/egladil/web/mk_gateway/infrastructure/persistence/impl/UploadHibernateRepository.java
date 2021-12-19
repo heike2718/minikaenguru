@@ -23,9 +23,10 @@ import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.uploads.UploadIdentifier;
 import de.egladil.web.mk_gateway.domain.uploads.UploadRepository;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
-import de.egladil.web.mk_gateway.infrastructure.persistence.SortNumberGenerator;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.UploadsMonitoringViewItem;
+import de.egladil.web.mk_gateway.infrastructure.persistence.sortnumbers.SortNumberGenerator;
+import de.egladil.web.mk_gateway.infrastructure.persistence.sortnumbers.impl.SortNumberGeneratorImpl;
 
 /**
  * UploadHibernateRepository

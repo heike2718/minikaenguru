@@ -8,7 +8,6 @@ export type UploadType = 'KLASSENLISTE' | 'AUSWERTUNG';
 export interface UploadMonitoringInfo {
 	readonly uuid: string;
 	readonly teilnahmenummer: string;
-	readonly nameSchule: string;
 	readonly nameLehrer: string;
 	readonly emailLehrer: string;
 	readonly dateiTyp: DateiTyp;

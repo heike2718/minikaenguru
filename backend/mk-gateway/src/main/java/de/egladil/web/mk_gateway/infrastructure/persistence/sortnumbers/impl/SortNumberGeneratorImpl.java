@@ -2,20 +2,18 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.infrastructure.persistence.impl;
+package de.egladil.web.mk_gateway.infrastructure.persistence.sortnumbers.impl;
 
-import java.math.BigInteger;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import de.egladil.web.mk_gateway.infrastructure.persistence.SortNumberGenerator;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.SortnumberHibernateRepositoryImpl;
+import de.egladil.web.mk_gateway.infrastructure.persistence.sortnumbers.SortNumberGenerator;
+import de.egladil.web.mk_gateway.infrastructure.persistence.sortnumbers.SortedTable;
+import de.egladil.web.mk_gateway.infrastructure.persistence.sortnumbers.SortnumberRepository;
 
 /**
  * SortNumberGeneratorImpl
@@ -23,10 +21,8 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.SortNumberGenerator;
 @ApplicationScoped
 public class SortNumberGeneratorImpl implements SortNumberGenerator {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(SortNumberGeneratorImpl.class);
-
 	@Inject
-	EntityManager entityManager;
+	SortnumberRepository sortnumberRepository;
 
 	private AtomicLong lastSortnumberLoesungszettel;
 
@@ -35,7 +31,7 @@ public class SortNumberGeneratorImpl implements SortNumberGenerator {
 	public static SortNumberGeneratorImpl createForIntegrationTest(final EntityManager entityManager) {
 
 		SortNumberGeneratorImpl result = new SortNumberGeneratorImpl();
-		result.entityManager = entityManager;
+		result.sortnumberRepository = SortnumberHibernateRepositoryImpl.createForIntegrationTests(entityManager);
 		return result;
 	}
 
@@ -44,16 +40,9 @@ public class SortNumberGeneratorImpl implements SortNumberGenerator {
 
 		if (lastSortnumberLoesungszettel == null) {
 
-			String stmt = "SELECT MAX(SORTNR) FROM LOESUNGSZETTEL";
-
-			@SuppressWarnings("unchecked")
-			List<BigInteger> trefferliste = entityManager.createNativeQuery(stmt).getResultList();
-
-			long value = trefferliste.get(0).longValue();
+			long value = sortnumberRepository.getMaxSortnumber(SortedTable.LOESUNGSZETTEL);
 
 			lastSortnumberLoesungszettel = new AtomicLong(value);
-
-			LOGGER.info("=======> LOESUNGSZETTEL: MAX(SORTNR) = " + value);
 
 		}
 
@@ -65,16 +54,9 @@ public class SortNumberGeneratorImpl implements SortNumberGenerator {
 
 		if (lastSortnumberUploads == null) {
 
-			String stmt = "SELECT MAX(SORTNR) FROM UPLOADS";
-
-			@SuppressWarnings("unchecked")
-			List<BigInteger> trefferliste = entityManager.createNativeQuery(stmt).getResultList();
-
-			long value = trefferliste.get(0).longValue();
+			long value = sortnumberRepository.getMaxSortnumber(SortedTable.UPLOADS);
 
 			lastSortnumberUploads = new AtomicLong(value);
-
-			LOGGER.info("=======> UPLOADS: MAX(SORTNR) = " + value);
 
 		}
 
