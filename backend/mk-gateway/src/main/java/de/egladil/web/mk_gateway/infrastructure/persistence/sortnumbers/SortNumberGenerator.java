@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.infrastructure.persistence;
+package de.egladil.web.mk_gateway.infrastructure.persistence.sortnumbers;
 
 /**
  * SortNumberGenerator
