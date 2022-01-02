@@ -1,5 +1,20 @@
 # minikaenguru Release Notes
 
+__Release 1.7.0__:
+
+* [Uploads-View-Component für Admin-App](https://github.com/heike2718/minikaenguru/issues/311)
+* [Sort number wird nicht incremented](https://github.com/heike2718/minikaenguru/issues/350)
+* [Anleitung ADV aktualisieren](https://github.com/heike2718/minikaenguru/issues/283)
+* [Session wird beim Wechsel zu Benutzereinstellungen nicht invalidatet](https://github.com/heike2718/minikaenguru/issues/335)
+* [Anleitung Klassenupload erstellen und verlinken](https://github.com/heike2718/minikaenguru/issues/340)
+* [Sicherheitsabfrage beim Deaktivieren des Newsletters](https://github.com/heike2718/minikaenguru/issues/278)
+* [Download Klassenimport-Report](https://github.com/heike2718/minikaenguru/issues/341)
+* [Loading indicator beim Fileupload](https://github.com/heike2718/minikaenguru/issues/321)
+* [Uploadfunktion zum Import der Kinderdaten für Schulen](https://github.com/heike2718/minikaenguru/issues/79)
+* [Alle Klassen einer Schule vollständig löschen](https://github.com/heike2718/minikaenguru/issues/331)
+* [Importierte Kinder markieren](https://github.com/heike2718/minikaenguru/issues/339)
+* [Login-Button / Registrieren auf Landing-Page bei small devices](https://github.com/heike2718/minikaenguru/issues/338)
+
 __Release 1.6.1__:
 
 * [Patch Session wird beim Wechsel zu Benutzereinstellungen nicht invalidatet](https://github.com/heike2718/minikaenguru/issues/335)
