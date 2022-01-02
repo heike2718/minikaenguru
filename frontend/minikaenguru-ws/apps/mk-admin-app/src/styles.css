@@ -6,7 +6,7 @@
 html,
 body {
   height: 100%;
-  width: 90%;
+  width: 100%;
 }
 
 body {
@@ -105,14 +105,12 @@ footer {
 ;
 
 
-/* ===== small devices ==== */
 
-
-@media (min-width: 576px) {
-
-  body {
-    width: 100%;
-  }
+/* Extra small devices (phones, 600px and down) */
+/* Smartphones */
+@media only screen 
+and (min-device-width : 320px) 
+and (max-device-width : 480px) {
 
   .h4,
   body {
@@ -128,8 +126,22 @@ footer {
     font-size: 1.2rem;
   }
 
-  .clickabe-stacked {
-    width: 95%;
+  .checkbox-text {
+    font-size: 1rem;
+    font-weight: bold;
   }
 
+  .cell {
+    background: white;
+    border: 1px solid black;
+  }
+
+}
+
+/* Desktops and Laptops */
+@media screen and (min-width: 1200px) {
+  
+  body {
+    width: 60%;
+  }
 }

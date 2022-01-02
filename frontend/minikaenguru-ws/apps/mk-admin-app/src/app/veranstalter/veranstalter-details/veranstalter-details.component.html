@@ -27,6 +27,12 @@
 				<div class="col-sm-12 col-md-9">{{teilnahmenummernAsString}}</div>
 			</div>
 
+			<div *ngIf="veranstalter.newsletterAbonniert" class="row">
+				<div class="col-sm-12 col-md-3">Newsletterempfang:</div>
+				<div class="col-sm-12 col-md-9"><button type="submit" class="btn btn-outline-danger w-100 ml-1" (click)="newsletterDeaktivieren()"
+			title="Newsletter deaktivieren">deaktivieren</button></div>
+			</div>
+
 			<div class="row">
 				<div class="col-sm-12 col-md-3">Teilnahmen:</div>
 			</div>
@@ -37,12 +43,6 @@
 				</ng-container>
 			</div>
 		</ng-container>
-
-		<div *ngIf="veranstalter.newsletterAbonniert" class="row">
-				<div class="col-sm-12 col-md-3">Newsletterempfang:</div>
-				<div class="col-sm-12 col-md-9"><button type="submit" class="btn btn-outline-danger w-100 ml-1" (click)="newsletterDeaktivieren()"
-			title="Newsletter deaktivieren">deaktivieren</button></div>
-			</div>
 
 		<mka-zugang-unterlagen></mka-zugang-unterlagen>
 

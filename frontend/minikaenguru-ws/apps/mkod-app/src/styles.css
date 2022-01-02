@@ -6,7 +6,7 @@
 html,
 body {
   height: 100%;
-  width: 90%;
+  width: 100%;
 }
 
 body {
@@ -101,18 +101,12 @@ footer {
 .irgendwas-bordered-blue {
   border: 1px solid blue;
 }
-
 ;
 
-
-/* ===== small devices ==== */
-
-
-@media (min-width: 576px) {
-
-  body {
-    width: 100%;
-  }
+/* Smartphones */
+@media only screen 
+  and (min-device-width : 320px) 
+  and (max-device-width : 480px) {
 
   .h4,
   body {
@@ -127,9 +121,11 @@ footer {
   h2 {
     font-size: 1.2rem;
   }
+};
 
-  .clickabe-stacked {
-    width: 95%;
+/* Desktops and Laptops */
+@media screen and (min-width: 1200px) {
+  body {
+    width: 60%;
   }
-
 }

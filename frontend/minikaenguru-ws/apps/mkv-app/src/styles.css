@@ -6,7 +6,7 @@
 html,
 body {
   height: 100%;
-  width: 90%;
+  width: 100%;
 }
 
 body {
@@ -103,11 +103,10 @@ footer {
 }
 
 /* Extra small devices (phones, 600px and down) */
-@media only screen and (max-width: 600px) {
-
-  body {
-    width: 100%;
-  }
+/* Smartphones */
+@media only screen 
+and (min-device-width : 320px) 
+and (max-device-width : 480px) {
 
   .checkbox-text {
     font-size: 1rem;
@@ -118,5 +117,11 @@ footer {
     background: white;
     border: 1px solid black;
   }
+}
 
+/* Desktops and Laptops */
+@media screen and (min-width: 1200px) {
+  body {
+    width: 80%;
+  }
 }
