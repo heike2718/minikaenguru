@@ -21,7 +21,7 @@
 							<mka-schulkatalogdata [schulkatalogData] ="uploadInfo.schule" (click)="onSchuleClicked()" ></mka-schulkatalogdata>
 						</ng-container>
 						
-						<ng-container *ngIf="uploadInfo.uploadStatus === 'DATENFEHLER'">
+						<ng-container *ngIf="showDownloadButtons()">
 							<mk-download-button [model]="fehlerreportDownloadButtonModel">
 							</mk-download-button>
 

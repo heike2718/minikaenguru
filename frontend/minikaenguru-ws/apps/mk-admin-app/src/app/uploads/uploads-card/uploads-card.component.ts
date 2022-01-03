@@ -45,6 +45,11 @@ export class UploadsCardComponent implements OnInit {
 		};
   	}
 
+	showDownloadButtons(): boolean {
+
+		return this.uploadInfo.uploadStatus === 'DATENFEHLER' || this.uploadInfo.uploadStatus === 'HOCHGELADEN';
+	}
+
 
 
   	onSchuleClicked() {
