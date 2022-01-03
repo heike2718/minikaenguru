@@ -2,6 +2,7 @@
 
 __Release 1.7.0__:
 
+* [Uploads mit Status HOCHGELADEN sollen sich auch über die Admin-Anwendung herunterladen lassen](https://github.com/heike2718/minikaenguru/issues/352)
 * [Uploads-View-Component für Admin-App](https://github.com/heike2718/minikaenguru/issues/311)
 * [Sort number wird nicht incremented](https://github.com/heike2718/minikaenguru/issues/350)
 * [Anleitung ADV aktualisieren](https://github.com/heike2718/minikaenguru/issues/283)

@@ -213,6 +213,43 @@ Klassenlisten als Excel hochladen
 Sie können alle teilnehmenden Kinder mit Hilfe von Excel-Tabellen importieren. Das erspart das zeitaufwendige manuelle Eintragen der Kinder Ihrer Schule.
 Vielleicht kennen Sie eine ähnliche Funktion bereits vom Känguru- Wettbewerb.
 
+Format der Excel-Dateien zum Hochladen der Klassenlisten
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Sie können alle Kinder Ihrer Schule mit einer einzigen Datei hochladen oder jede Klassenliste einzeln nacheinander hochladen. Die Exceldateien
+müssen dabei wie wie folgt aufgebaut sein:
+
+image::./images/upload-klassenlisten-aufbau-excel.png[width=30%]
+
+* Sie dürfen nur ein einziges Tabellenblatt enthalten. Es wird beim Import immer nur das erste Tabellenblatt berücksichtigt
+
+* Sie müssen 4 lückenlos aufeinanderfolgende Spalten mit den Überschriften *Vorname*, *Nachname*, *Klasse*, *Klassenstufe* enthalten.
+
+* Sie dürfen keine weiteren als diese 4 Spalten haben.
+
+* Die Spalten können in beliebiger Reihenfolge stehen. Die Zuordnung erfolgt anhand der Überschriften.
+
+* Alle Spalten müssen vollständig gefüllt sein.
+
+* Als Klassenstufe werden die Ziffern 0 (Inklusion), 1 (Klasse 1) und 2 (Klasse 2) erwartet. Bei einer anderen Zahl wird das betreffende Kind
+zunächst mit Klassenstufe 2 importiert und markiert. Das kann nachträglich manuell korrigiert werden.
+
+* Die Spalte *Klasse* enthält den Namen der Klasse, so wie er auf den Urkunden erscheinen soll.
+
+* Die Klassennamen müssen nicht in irgendeiner Reihenfolge sortiert sein. Es werden so viele Klassen angelegt, wie verschiedene Klassennamen in
+der Exceldatei gefunden werden.
+
+Die Maske zum Hochladen von Klassenlisten enthält eine Schaltfläche "Wie muss die Excel-Datei aussehen". Der Dialog, der sich nach Klick auf diese
+Schaltfläche öffnet, fasst die eben genannten Anforderungen noch einmal kurz zusammen:
+
+image::./images/upload-klassenlisten-info.png[width=20%]
+
+__Zeichensatz__
+
+Neben Excel 2007... können Sie auch LibreOffice- oder OpenOffice-Dateien sowie CSV- oder Excel 97-2003-Dateien hochladen. Da sich der Zeichensatz
+bei Excel 97-2003- und CSV-Dateien nicht eindeutig ermitteln lässt, kann es sein, das bei Verwendung dieser beiden Dateitypen die Umlaute nicht
+korrekt importiert werden. Daher wir empfohlen, entweder Excel 2007...- oder OpenOffice- oder LibreOffice-Dateien zu verwenden, weil sonst die
+Nachkorrektur aufwendig werden könnte.
 
 Maske zum Hochladen einer Klassenliste
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -317,42 +354,6 @@ image::./images/upload-klassenliste-korrektur-alles-loeschen.png[width=75%]
 Nach der Bestätigung des Warndialogs werden alle Kinder und Klassen vollständig gelöscht. Daher ist Vorsicht von Nöten, falls Ihre Kolleg:innen
 bereits Klassen und Kinder erfasst oder importiert haben. In diesem Fall sollten Sie Ihre eigenen Klassen besser einzeln löschen.
 
-
-Format der Excel-Dateien zum Hochladen der Klassenlisten
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Sie können alle Kinder Ihrer Schule mit einer einzigen Datei hochladen oder jede Klassenliste einzeln nacheinander hochladen. Die Exceldateien
-müssen dabei wie wie folgt aufgebaut sein:
-
-image::./images/upload-klassenlisten-aufbau-excel.png[width=30%]
-
-* Sie dürfen nur ein einziges Tabellenblatt enthalten. Es wird beim Import immer nur das erste Tabellenblatt berücksichtigt
-
-* Sie müssen 4 lückenlos aufeinanderfolgende Spalten mit den Überschriften *Vorname*, *Nachname*, *Klasse*, *Klassenstufe* enthalten.
-
-* Die Spalten können in beliebiger Reihenfolge stehen. Die Zuordnung erfolgt anhand der Überschriften.
-
-* Alle Spalten müssen vollständig gefüllt sein.
-
-* Als Klassenstufe werden die Ziffern 0 (Inklusion), 1 (Klasse 1) und 2 (Klasse 2) erwartet. Bei einer anderen Zahl wird das betreffende Kind
-zunächst mit Klassenstufe 2 importiert und markiert. Das kann nachträglich manuell korrigiert werden.
-
-* Die Spalte *Klasse* enthält den Namen der Klasse, so wie er auf den Urkunden erscheinen soll.
-
-* Die Klassennamen müssen nicht in irgendeiner Reihenfolge sortiert sein. Es werden so viele Klassen angelegt, wie verschiedene Klassennamen in
-der Exceldatei gefunden werden.
-
-Die Maske zum Hochladen von Klassenlisten enthält eine Schaltfläche "Wie muss die Excel-Datei aussehen". Der Dialog, der sich nach Klick auf diese
-Schaltfläche öffnet, fasst die eben genannten Anforderungen noch einmal kurz zusammen:
-
-image::./images/upload-klassenlisten-info.png[width=20%]
-
-__Zeichensatz__
-
-Neben Excel 2007... können Sie auch LibreOffice- oder OpenOffice-Dateien sowie CSV- oder Excel 97-2003-Dateien hochladen. Da sich der Zeichensatz
-bei Excel 97-2003- und CSV-Dateien nicht eindeutig ermitteln lässt, kann es sein, das bei Verwendung dieser beiden Dateitypen die Umlaute nicht
-korrekt importiert werden. Daher wir empfohlen, entweder Excel 2007...- oder OpenOffice- oder LibreOffice-Dateien zu verwenden, weil sonst die
-Nachkorrektur aufwendig werden könnte.
 
 
 

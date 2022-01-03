@@ -85,6 +85,10 @@ export class UploadsFacade {
 
     public getOrLoadNextPage(page: number, pageSize: number) {
 
+        if (this.loggingOut) {
+            return;
+        }
+
         if (!this.sizeLoaded) {
 
             this.uploadsService.countUploads().subscribe(
@@ -111,7 +115,9 @@ export class UploadsFacade {
 
     public getOrLoadUploadInfos(uploadType: UploadType, teilnahmenummer: string): void {
 
-        // TODO: hier muss noch bissel was getan werden
+        if (this.loggingOut) {
+            return;
+        }
 
         const uploadInfos: UploadMonitoringInfo[] = this.uploadsMap.findUploadInfoByTeilnahmeNummer(uploadType, teilnahmenummer);
 
