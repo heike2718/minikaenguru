@@ -7,6 +7,7 @@ import * as LoesungszettelActions from './+state/loesungszettel.actions';
 import * as LoesungszettelSelectors from './+state/loesungszettel.selectors';
 import { Observable } from 'rxjs';
 import { Loesungszettel, LoesungszettelPage, LoesungszettelPageMap } from './loesungszettel.model';
+import { AuthService } from '@minikaenguru-ws/common-auth';
 
 @Injectable({
 	providedIn: 'root'
@@ -17,15 +18,22 @@ export class LoesungszettelFacade {
 
     private pages: LoesungszettelPage[] = [];
 
+    private loggingOut: boolean = false;
+
     public pageContent$: Observable<Loesungszettel[]> = this.store.select(LoesungszettelSelectors.pageContent);
     public anzahl$: Observable<number> = this.store.select(LoesungszettelSelectors.anzahlLoesungszettel);
 
     constructor(private store: Store<AppState>
         , private loesungszettelService: LoesungszettelService
+        , private authService: AuthService
         , private errorHandler: GlobalErrorHandlerService){
 
             this.store.select(LoesungszettelSelectors.pages).subscribe(
                 pages => this.pages = pages
+            );
+
+            this.authService.onLoggingOut$.subscribe(
+                loggingOut => this.loggingOut = loggingOut
             );
     }
 
@@ -55,7 +63,7 @@ export class LoesungszettelFacade {
 
     public getOrLoadPage(page: number, pageSize: number): void {
 
-        if (this.jahr === undefined) {
+        if (this.loggingOut || this.jahr === undefined) {
             return;
         }
 
