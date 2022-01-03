@@ -11,7 +11,7 @@
 		<minikaenguru-version>1.7.0</minikaenguru-version>
 		<commons.version>1.7.4</commons.version>
 		<slf4j.version>1.7.25</slf4j.version>
-		<log4j.version>2.16.0</log4j.version>
+		<log4j.version>2.17.0</log4j.version>
 		<maven.compiler.source>1.11</maven.compiler.source>
 		<maven.compiler.target>1.11</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
