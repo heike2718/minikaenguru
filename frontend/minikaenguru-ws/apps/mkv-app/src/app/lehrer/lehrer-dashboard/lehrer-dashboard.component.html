@@ -28,8 +28,7 @@
 				</div>
 			</div><div *ngIf="hatZugangZuUnterlagen">
 				<mkv-unterlagen-card></mkv-unterlagen-card>
-			</div>
-			
+			</div>			
 		</div>
 
 		<!-- card-deck 2 -->
@@ -51,15 +50,6 @@
 					</div>
 				</div>
 			</div>
-			<div class="card clickable" (click)="gotoProfil()">
-				<div class="card-body">
-					<div class="card-title">Mein Profil</div>
-					<div class="mb-2 text-muted">Name, Mailadresse, Passwort ändern</div>
-					<div class="mb-2 text-danger">Achtung: hierfür werden Sie ausgeloggt und auf eine andere Webseite
-						umgeleitet.</div>
-				</div>
-			</div>
-
 			<div class="card clickable" (click)="gotoInfos()">
 				<div class="card-body">
 					<div class="card-title">Infos</div>
@@ -69,7 +59,14 @@
 						nicht?</div>
 				</div>
 			</div>
-
+			<div class="card clickable" (click)="gotoProfil()">
+				<div class="card-body">
+					<div class="card-title">Mein Profil</div>
+					<div class="mb-2 text-muted">Name, Mailadresse, Passwort ändern</div>
+					<div class="mb-2 text-danger">Achtung: hierfür werden Sie ausgeloggt und auf eine andere Webseite
+						umgeleitet.</div>
+				</div>
+			</div>
 		</div>
 
 

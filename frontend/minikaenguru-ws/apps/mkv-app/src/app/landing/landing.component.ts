@@ -1,22 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { WettbewerbFacade } from '../wettbewerb/wettbewerb.facade';
 import { AktuelleMeldungFacade } from '../aktuelle-meldung/aktuelle-meldung.facade';
 import { environment } from '../../environments/environment';
 import { AuthService, STORAGE_KEY_USER, User } from '@minikaenguru-ws/common-auth';
 import { Router } from '@angular/router';
 import { VersionService } from 'libs/common-components/src/lib/version/version.service';
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'mkv-landing',
 	templateUrl: './landing.component.html',
 	styleUrls: ['./landing.component.css']
 })
-export class LandingComponent implements OnInit {
+export class LandingComponent implements OnInit, OnDestroy {
 
 	isLoggedOut$ = this.authService.isLoggedOut$;
 	aktuelleMeldungNichtLeer$ = this.aktuelleMeldungFacade.aktuelleMeldungNichtLeer$;
 	aktuellerWettbewerb$ = this.wettbewerbFacade.aktuellerWettbewerb$;
-	version = environment.version;
+	version = '';
+
+	private versionSubscription: Subscription = new Subscription();
 
 	constructor(private wettbewerbFacade: WettbewerbFacade
 		, private authService: AuthService
@@ -27,8 +30,7 @@ export class LandingComponent implements OnInit {
 	ngOnInit(): void {
 		this.wettbewerbFacade.ladeAktuellenWettbewerb();
 		this.aktuelleMeldungFacade.ladeAktuelleMeldung();
-		this.versionService.ladeExpectedGuiVersion();
-
+		
 		const obj = localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_USER);
 
 		if (obj) {
@@ -42,6 +44,14 @@ export class LandingComponent implements OnInit {
 				this.router.navigateByUrl('/privat/dashboard');
 			}
 		}
+
+		this.versionSubscription = this.versionService.ladeExpectedGuiVersion().subscribe(
+			v => this.version = v
+		);
+	}
+
+	ngOnDestroy(): void {
+		this.versionSubscription.unsubscribe();
 	}
 
 	login() {

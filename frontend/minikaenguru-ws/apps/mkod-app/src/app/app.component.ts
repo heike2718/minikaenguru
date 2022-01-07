@@ -9,16 +9,14 @@ import { VersionService } from 'libs/common-components/src/lib/version/version.s
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent {
 
 	envName = environment.envName;
 	showEnv = this.envName === 'DEV';
 	api = environment.apiUrl;
-	version = '';
+	version = environment.version;
 
-	private versionSubscription: Subscription = new Subscription();
-
-	constructor(private router: Router, private versionService: VersionService) {
+	constructor(private router: Router) {
 		
 		const hash = window.location.hash;
 
@@ -47,16 +45,6 @@ export class AppComponent implements OnInit, OnDestroy {
 				}			
 			}
 		}
-	}
-
-	ngOnInit(): void {
-		this.versionSubscription = this.versionService.ladeExpectedGuiVersion().subscribe(
-			v => this.version = v
-		);
-	}
-
-	ngOnDestroy(): void {
-		this.versionSubscription.unsubscribe();
 	}
 
 	getAnimationData(outlet: RouterOutlet) {

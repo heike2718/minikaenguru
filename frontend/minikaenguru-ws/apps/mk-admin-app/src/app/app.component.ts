@@ -1,10 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { environment } from '../environments/environment';
 import { AuthService, AuthResult } from '@minikaenguru-ws/common-auth';
 import { slideInAnimation } from './animations';
 import { RouterOutlet } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { VersionService } from 'libs/common-components/src/lib/version/version.service';
 
 @Component({
 	selector: 'mka-root',
@@ -12,16 +10,14 @@ import { VersionService } from 'libs/common-components/src/lib/version/version.s
 	styleUrls: ['./app.component.css'],
 	animations: [slideInAnimation]
 })
-export class AppComponent implements OnInit, OnDestroy{
+export class AppComponent {
 
 	envName = environment.envName;
 	showEnv = this.envName === 'DEV';
 	api = environment.apiUrl;
-	version = '';
+	version = environment.version;
 
-	private versionSubscription: Subscription = new Subscription();
-
-	constructor(private authService: AuthService, private versionService: VersionService) {
+	constructor(private authService: AuthService) {
 
 
 		this.authService.clearOrRestoreSession();
@@ -40,18 +36,7 @@ export class AppComponent implements OnInit, OnDestroy{
 				window.location.hash = '';
 			}
 		}
-	}
-
-	ngOnInit(): void {
-		this.versionSubscription = this.versionService.ladeExpectedGuiVersion().subscribe(
-			v => this.version = v
-		);		
-	}
-
-	ngOnDestroy(): void {
-		
-		this.versionSubscription.unsubscribe();
-	}
+	}	
 
 	getAnimationData(outlet: RouterOutlet) {
 		return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];

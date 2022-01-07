@@ -11,17 +11,16 @@ import { Subscription } from 'rxjs';
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent {
 
 	envName = environment.envName;
 	showEnv = environment.envName === 'DEV';
 	api = environment.apiUrl;
-	version = '';
+	version = environment.version;
 
 	private versionSubscription: Subscription = new Subscription();
 
 	constructor(private authService: AuthService
-		, private versionService: VersionService
 		, private messageService: MessageService) {
 
 
@@ -46,18 +45,7 @@ export class AppComponent implements OnInit, OnDestroy {
 			}
 		}
 
-	}
-
-	ngOnInit(): void {
-		
-		this.versionSubscription = this.versionService.ladeExpectedGuiVersion().subscribe(
-			v => this.version = v
-		);
-	}
-
-	ngOnDestroy(): void {
-		this.versionSubscription.unsubscribe();
-	}
+	}	
 
 	getAnimationData(outlet: RouterOutlet) {
 		return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
