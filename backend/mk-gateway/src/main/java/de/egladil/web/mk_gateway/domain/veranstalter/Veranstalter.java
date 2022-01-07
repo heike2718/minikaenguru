@@ -178,4 +178,10 @@ public abstract class Veranstalter {
 		this.zugangUnterlagen = zugangUnterlagen;
 		return this;
 	}
+
+	public List<String> teilnahmenummernAsStrings() {
+
+		return teilnahmeIdentifier().stream().map(i -> i.identifier())
+			.collect(Collectors.toList());
+	}
 }
