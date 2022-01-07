@@ -34,7 +34,7 @@
 			</ng-container>
 			<ng-container *ngIf="(user$ | async) as user">
 				<li *ngIf="user.rolle === 'LEHRER'" routerLinkActive="active"><a routerLink="/lehrer/schulen"
-						(click)="collapseNav()" class="nav-link" title="Schulen">
+						(click)="collapseNav()" class="nav-link" title="meine Schulen">
 						<span class="fa fa-building-o fa-1x" aria-hidden="true"></span> Schulen</a></li>
 			</ng-container>
 			<li *ngIf="isLoggedIn$ | async" routerLinkActive="active">
