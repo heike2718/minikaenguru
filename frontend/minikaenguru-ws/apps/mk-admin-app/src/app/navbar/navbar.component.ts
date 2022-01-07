@@ -18,6 +18,7 @@ export class NavbarComponent implements OnInit {
 	isLoggedIn$ = this.authStore.select(isLoggedIn);
 	isLoggedOut$ = this.authStore.select(isLoggedOut);
 	user$ = this.sessionStore.select(user);
+	version = environment.version;
 
 	@ViewChild(NgbCollapse, { static: true }) navbarToggler?: NgbCollapse;
 

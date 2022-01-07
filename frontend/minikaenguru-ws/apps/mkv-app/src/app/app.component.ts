@@ -1,30 +1,32 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { environment } from '../environments/environment';
 import { AuthService, AuthResult } from '@minikaenguru-ws/common-auth';
-import { RegistrationService } from './registration/registration.service';
 import { MessageService } from '@minikaenguru-ws/common-messages';
 import { RouterOutlet } from '@angular/router';
+import { VersionService } from 'libs/common-components/src/lib/version/version.service';
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'mkv-root',
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-
-
+export class AppComponent implements OnInit, OnDestroy {
 
 	envName = environment.envName;
 	showEnv = environment.envName === 'DEV';
 	api = environment.apiUrl;
-	version = environment.version;
+	version = '';
+
+	private versionSubscription: Subscription = new Subscription();
 
 	constructor(private authService: AuthService
-		, private registrationService: RegistrationService
+		, private versionService: VersionService
 		, private messageService: MessageService) {
 
 
 		this.authService.clearOrRestoreSession();
+		
 
 		const hash = window.location.hash;
 
@@ -45,6 +47,18 @@ export class AppComponent {
 		}
 
 	}
+
+	ngOnInit(): void {
+		
+		this.versionSubscription = this.versionService.ladeExpectedGuiVersion().subscribe(
+			v => this.version = v
+		);
+	}
+
+	ngOnDestroy(): void {
+		this.versionSubscription.unsubscribe();
+	}
+
 	getAnimationData(outlet: RouterOutlet) {
 		return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
 	}

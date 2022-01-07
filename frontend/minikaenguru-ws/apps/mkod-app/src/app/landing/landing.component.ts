@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
 	selector: 'mkod-landing',
@@ -7,6 +8,8 @@ import { Router } from '@angular/router';
 	styleUrls: ['./landing.component.css']
 })
 export class LandingComponent implements OnInit {
+
+	version = environment.version;
 
 	constructor(private router: Router) { }
 

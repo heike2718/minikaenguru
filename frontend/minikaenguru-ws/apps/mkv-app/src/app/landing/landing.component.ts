@@ -4,6 +4,7 @@ import { AktuelleMeldungFacade } from '../aktuelle-meldung/aktuelle-meldung.faca
 import { environment } from '../../environments/environment';
 import { AuthService, STORAGE_KEY_USER, User } from '@minikaenguru-ws/common-auth';
 import { Router } from '@angular/router';
+import { VersionService } from 'libs/common-components/src/lib/version/version.service';
 
 @Component({
 	selector: 'mkv-landing',
@@ -15,15 +16,18 @@ export class LandingComponent implements OnInit {
 	isLoggedOut$ = this.authService.isLoggedOut$;
 	aktuelleMeldungNichtLeer$ = this.aktuelleMeldungFacade.aktuelleMeldungNichtLeer$;
 	aktuellerWettbewerb$ = this.wettbewerbFacade.aktuellerWettbewerb$;
+	version = environment.version;
 
 	constructor(private wettbewerbFacade: WettbewerbFacade
 		, private authService: AuthService
 		, private aktuelleMeldungFacade: AktuelleMeldungFacade
+		, private versionService: VersionService
 		, private router: Router) { }
 
 	ngOnInit(): void {
 		this.wettbewerbFacade.ladeAktuellenWettbewerb();
 		this.aktuelleMeldungFacade.ladeAktuelleMeldung();
+		this.versionService.ladeExpectedGuiVersion();
 
 		const obj = localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_USER);
 
