@@ -13,5 +13,5 @@ export const klassenMap = createSelector(klassenState, s => s.klassenMap);
 export const selectedKlasse = createSelector(klassenState, s => s.selectedKlasse);
 export const klassenimportReport = createSelector(klassenState, s => s.importReport);
 
-export const anzahlKinder = createSelector(klassenState, s => new KlassenMap(s.klassenMap).countKinder() );
-export const anzahlLoesungszettel = createSelector(klassenState, s => new KlassenMap(s.klassenMap).countLoesungszettel() );
+export const anzahlKinderSchule = createSelector(klassenState, s => new KlassenMap(s.klassenMap).countKinder() );
+export const anzahlLoesungszettelSchule = createSelector(klassenState, s => new KlassenMap(s.klassenMap).countLoesungszettel() );

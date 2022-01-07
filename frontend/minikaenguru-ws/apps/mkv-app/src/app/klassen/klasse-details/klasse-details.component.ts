@@ -19,10 +19,11 @@ export class KlasseDetailsComponent implements OnInit, OnDestroy {
 	@Input()
 	klasse!: Klasse;
 
-	anzahlKinder: number = 0;
-	anzahlLoesungszettel: number = 0;
+	anzahlKinder = 0;
+	anzahlLoesungszettel = 0;
 
-	private selectedKlasseSubscription: Subscription = new Subscription();
+	private anzahlLoesungszettelSubsciption = new Subscription();
+	private anzahlKinderSubscription = new Subscription();
 
 	constructor(private router: Router,
 		private modalService: NgbModal,
@@ -32,25 +33,18 @@ export class KlasseDetailsComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 
-		this.anzahlKinder = this.klasse.anzahlKinder? this.klasse.anzahlKinder : 0;
-		this.anzahlLoesungszettel = this.klasse.anzahlLoesungszettel? this.klasse.anzahlLoesungszettel : 0;
+		this.anzahlKinderSubscription = this.klassenFacade.getAnzahlKinderInKlasse(this.klasse.uuid).subscribe(
+			anz => this.anzahlKinder = anz
+		);
 
-		this.selectedKlasseSubscription = this.klassenFacade.selectedKlasse$.subscribe(
-			klasse => {
-				if (klasse && klasse.uuid === this.klasse.uuid) {
-					this.anzahlKinder = klasse.anzahlKinder ? klasse.anzahlKinder : 0;
-					this.anzahlLoesungszettel = klasse.anzahlLoesungszettel ? klasse.anzahlLoesungszettel : 0;
-				}
-			}
+		this.anzahlLoesungszettelSubsciption = this.klassenFacade.getAnzahlLoesungszettelInKlasse(this.klasse.uuid).subscribe(
+			anz => this.anzahlLoesungszettel = anz
 		);
 	}
 
 	ngOnDestroy(): void {
-
-		if(this.selectedKlasseSubscription ) {
-			this.selectedKlasseSubscription.unsubscribe();
-		}
-
+		this.anzahlKinderSubscription.unsubscribe();
+		this.anzahlLoesungszettelSubsciption.unsubscribe();
 	}
 
 	onCheckboxKlasseKorrigiertClicked(event: boolean) {
