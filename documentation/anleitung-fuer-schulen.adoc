@@ -6,14 +6,16 @@ Heike Winkelvoß
 :icons:
 :numbered:
 :website: https://mathe-jung-alt.de/
-:imagesdir: /home/heike/git/minikaenguru/documentation
+:imagesdir: https://mathe-jung-alt.de/minikaenguru/anleitungen/images
 :toc-title: Inhaltsverzeichnis
 
 .Dieses Dokument
-***********************************************************************************************
+****************************************************************************************************************************
 Dieses Dokument beschreibt alle Funktionen, die Sie benötgen, um den Minikänguru-Wettbewerb an
-Ihrer Schule zu organisieren.
-***********************************************************************************************
+Ihrer Schule zu organisieren. Ich habe versucht, die Anwendung so zu bauen, dass sie sich möglichst intuitiv benutzen lässt.
+
+Falls Sie Verbesserungsvorschläge haben, teilen Sie mir diese bitte gern per Mail mit.
+****************************************************************************************************************************
 
 Ein Benutzerkonto anlegen
 -------------------------
@@ -24,16 +26,16 @@ Mit diesem Benutzerkonto können Sie anschließend den Wettbewerb für mehrere S
 
 Rufen Sie die https://mathe-jung-alt.de/mkv-app[Startseite] der Minikänguru-Anwendung auf
 
-image::./images/startseite-hauptmenue-sign-up.png[width=60%]
+image::startseite-hauptmenue-sign-up.png[width=60%]
 
 Mit einem Klick auf den Menüpunkt "Konto anlegen", der im Bild rot umrandet ist, gelangen Sie in folgendes Formular:
 
-image::./images/konto-anlegen-einstieg-kein-newsletter.png[width=45%]
+image::konto-anlegen-einstieg-kein-newsletter.png[width=45%]
 
 Mit dem Schiebeschalter können Sie auswählen, ob Sie Mailbenachrichtigungen erhalten möchten. Informationen hierzu sehen Sie nach einem Klick auf
 "Info".
 
-image::./images/konto-anlegen-einstieg-newsletter.png[width=45%]
+image::konto-anlegen-einstieg-newsletter.png[width=45%]
 
 Nach dem Anlegen des Kontos werden Sie Ihre Entscheidung in der Minikänguru-Anwendung jederzeit ändern können.
 
@@ -41,24 +43,24 @@ Klicken Sie nun bitte auf die Schaltfläche "Lehrer/Lehrerin". Privatkonten sind
 
 Sie gelangen in den Schulkatalog:
 
-image::./images/lehrerkonto-ortsuche.png[width=45%]
+image::lehrerkonto-ortsuche.png[width=45%]
 
 Sie starten die Suche, indem Sie mindestens die ersten 3 Buchstaben Ihres Ortes in das Eingabefeld eintragen.
 
 Wurden Orte gefunden, wird anschließend eine Trefferliste eingeblendet:
 
-image::./images/lehrerkonto-orte.png[width=50%]
+image::lehrerkonto-orte.png[width=50%]
 
 Bitte achten Sie auf das angezeigte Bundesland, da es gleichnamige Orte in verschiedenen Bundesländern geben kann. Haben Sie Ihren Ort gefunden,
 klicken Sie diesen bitte an.
 
 *Wenn der Ort nur wenige Schulen hat*, wird anschließend eine Liste der Schulen dieses Ortes angezeigt:
 
-image::./images/lehrerkonto-schulliste.png[width=60%]
+image::lehrerkonto-schulliste.png[width=60%]
 
 *Hat der Ort sehr viele Schulen*, öffnet sich ein Formular zur Schulsuche:
 
-image::./images/lehrerkonto-schulsuche.png[width=60%]
+image::lehrerkonto-schulsuche.png[width=60%]
 
 Hier geben Sie bitte 3 aufeinanderfolgende Buchstaben des Namens Ihrer Schule ein. Es empfiehlt sich, nicht unbedingt die ersten Buchstaben zu
 wählen, sollte Ihre Schule "Grundschule xxx" heißen, sondern den Teil des Schulnamens einzugeben, der sich von anderen Schulnamen am deutlichsten
@@ -67,7 +69,7 @@ unterscheiden wird.
 Wurden Schulen in dem Ort mit dem gegeben Namen gefunden, werden diese mit Bundesland und Ort angezeigt und Sie können Ihre Schule mit einem Klick
 auswählen:
 
-image::./images/lehrerkonto-schule-ausgewaehlt.png[width=60%]
+image::lehrerkonto-schule-ausgewaehlt.png[width=60%]
 
 Konnten Sie Ihre Schule im Katalog nicht finden, können Sie diese mit einem Klick auf "Schule nicht gefunden" eintragen lassen: siehe folgendes Kapitel
 "Schule im Katalog nicht gefunden".
@@ -75,7 +77,7 @@ Konnten Sie Ihre Schule im Katalog nicht finden, können Sie diese mit einem Kli
 Wenn Sie die Schule gefunden haben, ist die die Schaltfläche "Konto anlegen" aktiviert. Mit Klick auf diese Schaltfläche werden Sie in ein Formular
 geleitet, in das Sie die für ein Benutzerkonto erforderlichen Angaben eintragen können.
 
-image::./images/benutzerkonto-formular.png[width=60%]
+image::benutzerkonto-formular.png[width=60%]
 
 Bitte wählen Sie ein sicheres Passwort, da Sie mit diesem Benutzerkonto personenbezogene Daten der Kinder Ihrer Schule erfassen.
 
@@ -86,7 +88,7 @@ Ihre Mailadresse wird zu keiner Zeit in der Anwendung sichbar sein. Die Mailadre
 Ist das Formular vollständig ausgefüllt, senden Sie es bitte mit Klick auf die Schaltfläche "registrieren" ab. Anschließend sollten Sie eine
 Erfolgsmeldung sehen:
 
-image::./images/benutzerkonto-angelegt-info.png[width=70%]
+image::benutzerkonto-angelegt-info.png[width=70%]
 
 Die Information enthält den Hinweis, dass das Konto noch aktiviert werden muss. Hierzu wurde an die Mailadresse, die Sie in das Formular eingetragen
 hatten, eine Mail mit einem Aktivierungslink versendet, der 24 Stunden gültig ist.
@@ -97,7 +99,7 @@ weil Ihr Postfach voll ist.
 
 Wenn Sie die Mail erhalten haben, klicken Sie bitte den dort enthaltenen Link an. Bitte klicken Sie den link nur an, wenn er so aussieht:
 
-image::./images/aktivierungslink.png[width=100%]
+image::aktivierungslink.png[width=100%]
 
 Der rot umrandete Teil gehört zu der Webseite opa-wetterwachs.de, die mir gehört. Hinter dem rot umrandeten Teil steht ein Fragezeichen. Daran
 schließt sich der blau umrandete Teil mit einem zufällig generierten Code an. *Nach dem Gleichheitszeichen dürfen nur Buchstaben und Ziffern stehen*
@@ -114,7 +116,7 @@ Wenn Sie im Schulkatalog bei der Suche nach dem Ort oder der Schule keine Treffe
 
 Sie gelangen damit in ein Formular, mit dem Sie Ihre Schule in den Katalog eintragen lassen können:
 
-image::./images/schulkatalogantrag.png[width=70%]
+image::schulkatalogantrag.png[width=70%]
 
 Nach dem Absenden des Formulars erhalten Sie eine Mail an die Mailadresse, die Sie eingegeben hatten. Ich trage die Schule sobald wie möglich ein,
 in der Regel am Abend.
@@ -132,14 +134,20 @@ Wenn Sie erfolgreich ein Benutzerkonto für Lehrerinnen / Lehrer angelegt und di
 
 Rufen Sie hierzu die https://mathe-jung-alt.de/mkv-app[Startseite] der Minikänguru-Anwendung auf
 
-image::./images/startseite-hauptmenue-login.png[width=50%]
+image::startseite-hauptmenue-login.png[width=50%]
 
 Mit einem Klick auf den Menüpunkt "einloggen", der im Bild blau umrandet ist, gelangen Sie in ein Formular, in dem Sie bitte die Mailadresse und
 das Passwort eingeben, mit dem Sie das Konto angelegt hatten.
 
-Waren die Angaben korrekt, gelangen Sie auf Ihre Übersichtsseite:
+Waren die Angaben korrekt, gelangen Sie auf Ihre Übersichtsseite. 
 
-image::./images/dashboard-lehrer.png[width=75%]
+Das erste Bild zeigt die Übersichtsseite, wenn Sie nur für eine einzige Schule eingetragen sind:
+
+image::dashboard-lehrer-eine-schule.png[width=75%]
+
+Das zweite Bild zeigt die Übersichtsseite, wenn Sie für mehr als eine Schule eingetragen sind:
+
+image::dashboard-lehrer-mehrere-schulen.png[width=75%]
 
 Die Kachel "Unterlagen..." sehen Sie nur dann, wenn Sie Ihre Schule (bei mehreren Schulen mindestens eine Schule)
 für das aktuelle Wettbewerbsjahr angemeldet haben *und* die Unterlagen zum Herunterladen freigeschaltet sind.
@@ -152,24 +160,59 @@ Auf dieser Seite können sie auch mit einem Klick auf die Kachel "Newsletter" de
 oder abonnieren, wenn Sie ihn nicht abonniert haben.
 
 Wenn Sie Ihren Namen, Ihre Mailadresse oder Ihr Passwort ändern *oder Ihr Benutzerkonto vollständig löschen* möchten. Klicken Sie bitte auf die
-Kachel "Mein Profil" oder den Menüpunkt "Benutzerdaten". Sie werden dann ausgeloggt und auf in die Benutzerkontenverwaltung umgeleitet,
+Kachel "Mein Profil" oder den Menüpunkt "Benutzerdaten". Sie werden dann ausgeloggt und in die Benutzerkontenverwaltung umgeleitet,
 wo sie sich zunächst neu einloggen müssen, bevor Sie Ihre Daten ändern oder Ihr Konto löschen können.
 
 Eigene Schulen
 --------------
 
-Da Sie mit der Minikänguru-Anwendung mit einem Benutzerkonto mehrere Schulen verwalten können, sehen Sie auf der Übersichtsseite eine Kachel mit
-der Aufschrift "Meine Schulen".
+In der Regel werden Sie nur an einer Schule als Lehrer:in angemeldet sein. Es ist aber möglich, den Minikänguru- Wettbewerb an mehreren Schulen mit einem 
+Benutzerkonto zu organisieren.
 
-Der Einstieg in die Schulliste erfolgt von Ihrer Startseite, die Sie nach dem Einloggen sehen, mit einem Klick auf die Kachel
-"Meine Schulen" oder jederzeit über den Menüpunkt "Schulen" im Hauptmenü.
+Weitere Schulen eintragen
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Beide Aktionen öffnen Ihre Schulliste.
+Wenn Sie Ihr Lehrer:innenkonto neu erstellt haben, sehen Sie auf der Übersichtsseite eine Kachel mit der Schule, die Sie beim Erstellen des Benutzerkontos
+gewählt hatten.
 
-Hier sehen Sie die Schulen, bei denen Sie sich als Lehrer:in eingetragen haben. Schulen, die bereits für den laufenden
+Weitere Schulen können Sie wie folgt eintragen:
+
+_Startpunkt Übersichtsseite:_ Klick auf die Kachel mit dem Text "Weitere Schule - als Lehrer:in an einer weiteren Schule anmelden".
+
+_schwarze Menüleiste:_ Klick auf den Menüpunkt "Schulen". Sie gelangen in die Schulliste. Dort Klick auf die Schaltfläche "+ weitere Schule"
+
+Beide Aktionen öffnen die Suchmaske des Schulkatalogs, das sie bereits vom Anlegen Ihres Benutzerkontos kennen. Suchen Sie hier bitte wie bereits bei der Registrierung
+über Ihren Ort die Schule und klicken dann auf die Schaltfläche "+ hinzufügen":
+
+image::weitere-schule-hinzufuegen.png[width=75%]
+
+Sie werden auf die Maske "Meine Schulen" umgeleitet und sehen hier eine Erfolgsmeldung, die Sie mit einem Klick schließen können, sowie zusätzlich zu den bereits zuvor
+eingetragenen Schulen die neu hinzugefügte Schule.
+
+image::weitere-schule-hinzugefuegt.png[width=75%]
+
+Wenn Sie auf die Übersichtsseite wechseln, werden Sie nun die Kachel mit der Aufschrift "Meine Schulen" sehen und die Anzahl der Schulen, an denen Sie eingetragen sind, wird
+Ihnen angezeigt. Der Einstiegspunkt zu einer bestimmten Schule erfolgt ab dann immer über diese Kachel oder den Menüpunkt "Schulen".
+
+*Bitte beachten Sie:* Den Lehrer:innen, die für die jeweilige Schule ebenfalls eingetragen sind, wird Ihr Name
+auf der Übersichtsseite der Schule angezeigt. Ebenso sehen Sie die Namen Ihrer Kolleg:innen an dieser Schule.
+
+Von einer Schule abmelden
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Solange eine Schule noch nicht zum laufenden Wettbewerb angemeldet ist, sehen bei der Schule eine Schaltfläche "entfernen". Durch Klick auf diese Schaltfläche
+werden Sie von der Schule als Lehrer:in abgemeldet. Die Schule verschwindet dann aus Ihrer Schulliste.
+
+Ist eine Schule zu einem laufenden Wettbewerb angemeldet, haben Sie die Möglichkeit, sich von der Schule abzumelden, nicht. Sie können entweder warten, bis
+der Wettbewerb beendet ist und sich dann von der Schule abmelden. Oder Sie nehmen Mailkontakt mit mir auf und ich trage Sie als Lehrer:in bei der Schule aus.
+
+Handlungsoptionen für Schulen
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In der Schulliste sehen Sie die Schulen, bei denen Sie sich als Lehrer:in eingetragen haben. Schulen, die bereits für den laufenden
 Minikänguru- Wettbewerb angemeldet sind, sind markiert.
 
-image::./images/schulliste-optionen.png[width=55%]
+image::schulliste-optionen.png[width=55%]
 
 Je nach dem, ob Ihre Schule bereits zum laufenden Wettbewerb angemeldet ist oder nicht, haben Sie in der Schulliste verschiedene
 Optionen. Sie können
@@ -177,22 +220,16 @@ Optionen. Sie können
 * die Übersichtsseite der Schule aufrufen (im Bild: rot umrandete Schaltfläche)
 * zur Auswertung des laufenden Wettbewerbs an dieser Schule wechseln (im Bild: blau umrandete Schaltfläche)
 * sich als Lehrer:in von einer Schule abmelden (im Bild: orange umrandete Schaltfläche)
-* sich als Lehrer:in einer weiteren Schule eintragen (im Bild: dunkel umrandete Schaltfläche)
+* sich als Lehrer:in einer weiteren Schule eintragen (im Bild: dunkel umrandete Schaltfläche "+ weitere Schule")
 
-Klicken Sie auf die Schaltfläche "neue Schule", wenn Sie sich als Lehrer:in einer weiteren Schule eintragen
-möchten. Sie gelangen dann in den Ihnen bereits von der Registrierung bekannten Schulkatalog siehe Kapitel "Ein Benutzerkonto anlegen".
-
-*Bitte beachten Sie:* Den Lehrer:innen, die für die jeweilige Schule ebenfalls eingetragen sind, wird Ihr Name
-auf der Übersichtsseite der Schule angezeigt. Ebenso sehen Sie die Namen Ihrer Kolleg:innen.
-
-Eine Schule anmelden
---------------------
+Eine Schule zum Wettbewerb anmelden
+-----------------------------------
 
 Um eine noch nicht angemeldete Schule anzumelden, klicken Sie bitte auf den Button "Schulübersicht" dieser Schule.
 
 Sie gelangen auf die Übersichtsseite der gewählten Schule:
 
-image::./images/schuluebersicht-nicht-angemeldet.png[width=75%]
+image::schuluebersicht-nicht-angemeldet.png[width=75%]
 
 Wenn der Anmeldezeitraum begonnen hat, sehen Sie eine Kachel mit der Aufschrift "Anmelden". Sie melden
 die Schule für den laufenden Wettbewerb durch einen Klick auf diese Kachel an.
@@ -204,7 +241,7 @@ Nach der Anmeldung Ihrer Schule zum laufenden Wettbewerb, sehen Sie auf der Übe
 Kacheln mit denen Sie Funktionen aufrufen können, durch die Sie bei der Durchführung des Wettbewerbs an Ihrer Schule
 unterstützt werden:
 
-image::./images/schuluebersicht-angemeldet.png[width=75%]
+image::schuluebersicht-angemeldet.png[width=75%]
 
 
 Klassenlisten als Excel hochladen
@@ -219,7 +256,7 @@ Format der Excel-Dateien zum Hochladen der Klassenlisten
 Sie können alle Kinder Ihrer Schule mit einer einzigen Datei hochladen oder jede Klassenliste einzeln nacheinander hochladen. Die Exceldateien
 müssen dabei wie wie folgt aufgebaut sein:
 
-image::./images/upload-klassenlisten-aufbau-excel.png[width=30%]
+image::upload-klassenlisten-aufbau-excel.png[width=30%]
 
 * Sie dürfen nur ein einziges Tabellenblatt enthalten. Es wird beim Import immer nur das erste Tabellenblatt berücksichtigt
 
@@ -242,9 +279,11 @@ der Exceldatei gefunden werden.
 Die Maske zum Hochladen von Klassenlisten enthält eine Schaltfläche "Wie muss die Excel-Datei aussehen". Der Dialog, der sich nach Klick auf diese
 Schaltfläche öffnet, fasst die eben genannten Anforderungen noch einmal kurz zusammen:
 
-image::./images/upload-klassenlisten-info.png[width=20%]
+image::upload-klassenlisten-info.png[width=20%]
 
-__Zeichensatz__
+
+
+__Der Zeichensatz__
 
 Neben Excel 2007... können Sie auch LibreOffice- oder OpenOffice-Dateien sowie CSV- oder Excel 97-2003-Dateien hochladen. Da sich der Zeichensatz
 bei Excel 97-2003- und CSV-Dateien nicht eindeutig ermitteln lässt, kann es sein, das bei Verwendung dieser beiden Dateitypen die Umlaute nicht
@@ -254,24 +293,27 @@ Nachkorrektur aufwendig werden könnte.
 Maske zum Hochladen einer Klassenliste
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Um Klassen als Excel zu importieren, gibt es 2 Einstiegspunkte:
+Um Klassen als Excel zu importieren, gibt es 3 Einstiegspunkte:
 
-* klick auf die Kachel "Auswertung" in der Schulübersicht (im Bild blau umrandet):
+* klick auf die Kachel "Auswertung" in der Schulübersicht (im Bild rot umrandet):
 
-image::./images/schuluebersicht-angemeldet-optionen.png[width=50%]
+image::schuluebersicht-angemeldete-schule.png[width=50%]
 
-* klick auf die Schaltfläche "Auswertung" in der Schulliste (im Bild blau umrandet):
+* klick auf die Schaltfläche "Auswertung" in der Übersichtsseite (im linken Bild, rot umrandet) oder
+in der Schulliste (im rechten Bild, rot umrandet):
 
-image::./images/schulliste-optionen.png[width=50%]
+image:dashboard-lehrer-eine-angemeldete-schule.png[width=300%] image:schulliste-einstieg-auswertung.png[width=300%]
 
 Sie gelangen auf die Seite "(Schulname) Klassen", in der Sie Klassenlisten hochladen oder Klassen manuell anlegen können:
 
-image::./images/klassen-erfassen-start.png[width=50%]
+image::klassen-erfassen-start.png[width=50%]
 
+Wenn Sie den Weg Excelimport gewählt haben, müssen Sie keine Klassen manuell erfassen, da die Klassen beim
+Import automatisch mit erstellt werden.
 
 Mit einem Klick auf die Schaltfläche "Klassenlisten hochladen" gelangen Sie in die Ansicht "Klassenlisten hochladen":
 
-image::./images/upload-klassenlisten-start.png[width=60%]
+image::upload-klassenlisten-start.png[width=60%]
 
 Vor dem Hochladen können Sie festlegen, mit welcher Sprache die Kinder importiert werden sollen und ob der Nachname auf der Urkunde erscheinen soll.
 Soll er nicht auf der Urkunde erscheinen, wählen Sie bitte  "JA" in der Option "Nachname als Zusatz". *Dies gilt dann für alle Kinder*.
@@ -282,20 +324,20 @@ in der Option "Sprache englisch". *Dies gilt dann für alle Kinder*.
 Wenn Sie Klassen mit gemischten Sprachen haben, können Sie die Sprachoption mit den meisten Kindern wählen und die Sprache für die Kinder mit der
 anderen Sprache später manuell korrigieren oder die Kinder nacheinander mit zwei verschiedenen Exceltabellen hochladen.
 
-Nachdem Sie die Sparchoption ausgewählt und festgelegt haben, ob der Nachname auf der Urkunde erscheinen soll, klicken Sie bitte auf die
+Nachdem Sie die Sprachoption ausgewählt und festgelegt haben, ob der Nachname auf der Urkunde erscheinen soll, klicken Sie bitte auf die
 Schaltfläche "Datei auswählen". Es öffnet sich ein Dialog, der Ihre Dateien zeigt. Das Startverzeichnis ist browserabhängig bereits ausgewählt,
 meist das Verzeichnis, aus dem Sie das letzte Mal Dateien mit dem Broser hochgeladen haben oder Ihr "Dokumente"-Verzeichnis.
 Die Minikänguru-Anwendung kann dies nicht beeinflussen.
 
 Suchen Sie hier bitte das Verzeichnis mit den Exceltabellen und klicken Sie auf die hochzuladende Datei:
 
-image::./images/upload-klassenlisten-dateiauswahl.png[width=60%]
+image::upload-klassenlisten-dateiauswahl.png[width=60%]
 
 
 Danach wird der Name der ausgewählten Datei angezeigt und die Schaltfläche "Datei auswählen" ist durch die Schaltfläche
 "hochladen" ersetzt:
 
-image::./images/upload-klassenlisten-datei-ausgewaehlt.png[width=60%]
+image::upload-klassenlisten-datei-ausgewaehlt.png[width=60%]
 
 
 Der Import beginnt, sobald Sie die Schaltfläche "hochladen" angeklickt haben. Da der Import einige Sekunden dauern kann, wird Ihnen angezeigt,
@@ -304,12 +346,12 @@ dass Kinderdaten importiert werden, bis der Import abgeschlossen ist.
 Sobald der Import beendet ist, erscheint eine Meldung. In diesem Fall ist es eine Warnung, weil einige der Einträge in der Exceltabelle nicht
 problemlos importiert werden konnten.
 
-image::./images/upload-klassenlisten-meldung.png[width=100%]
+image::upload-klassenlisten-meldung.png[width=100%]
 
 Weiter unten in der Ansicht wird ein Fehlerreport angezeigt, der mit einem Klick auf die Schaltfläche "Fehlerreport speichern"
 heruntergeladen werden kann:
 
-image::./images/upload-klassenlisten-fehlerreport.png[width=75%]
+image::upload-klassenlisten-fehlerreport.png[width=75%]
 
 *Bitte speichern Sie den Fehlerreport sofort, da er momentan nur direkt nach dem Import der Klassenliste bereitgestellt wird.*
 
@@ -323,12 +365,12 @@ Falls sich nicht alle Kinder problemlos importieren ließen, können Sie diese n
 auf die Schaltfläche "Klassen" in die Übersichtsseite der Klassen ihrer Schule. Hier sind diejenigen Klassen auffällig markiert, bei denen Sie
 die importierten Kinder noch einmal prüfen und korrigieren sollten:
 
-image::./images/upload-klassenlisten-klassenuebersicht.png[width=75%]
+image::upload-klassenlisten-klassenuebersicht.png[width=75%]
 
 Klicken Sie bei einer betroffenen Klasse auf die im Screenshot blau umrandet dargestellte Schaltfläche "Kinder bearbeiten". In der Kinderliste
 sind die Kinder gekennzeichnet, die Sie noch einmal prüfen und ggf. korrigieren sollten:
 
-image::./images/upload-klassenlisten-kinder-fehler.png[width=75%]
+image::upload-klassenlisten-kinder-fehler.png[width=75%]
 
 Versehentlich doppelt erfasste Kinder können Sie einfach löschen. Gibt es tatsächlich 2 Kinder mit gleichem Vor- und Nachnamen und der gleichen
 Klassenstufe in dieser Klasse (sehr unwahrscheinlich), erfassen Sie bitte nach Klick auf "ändern" für jedes Kind einen unterschiedlichen
@@ -340,7 +382,7 @@ beim Import die Klassenstufe auf 2 gesetzt. Dies können Sie mit dem Schiebescha
 Haben Sie alle Kinder der Klasse korrigiert, betätigen Sie bitte einmal den Schiebeschalter "Prüfung Import abgeschlossen" unterhalb der
 Liste der Kinder:
 
-image::./images/upload-klassenlisten-pruefung-abgeschlossen.png[width=75%]
+image::upload-klassenlisten-pruefung-abgeschlossen.png[width=75%]
 
 *Tipp:*
 
@@ -349,12 +391,11 @@ noch einmal hochzuladen.
 
 Sie können alle importierten Daten auf einmal löschen, indem Sie in der Klassenübersicht Ihrer Schule die Schaltfläche "alle Klassen löschen" anklicken:
 
-image::./images/upload-klassenliste-korrektur-alles-loeschen.png[width=75%]
+image::upload-klassenliste-korrektur-alles-loeschen.png[width=75%]
 
 Nach der Bestätigung des Warndialogs werden alle Kinder und Klassen vollständig gelöscht. Daher ist Vorsicht von Nöten, falls Ihre Kolleg:innen
-bereits Klassen und Kinder erfasst oder importiert haben. In diesem Fall sollten Sie Ihre eigenen Klassen besser einzeln löschen.
-
-
+bereits Klassen und Kinder erfasst oder importiert haben. In diesem Fall sollten Sie Ihre eigenen Klassen besser einzeln löschen. Wie das funktioniert, ist im folgenden Abschnitt
+beschrieben.
 
 
 Klassen- und Kinderdaten pflegen (manuell)
@@ -364,30 +405,31 @@ Klassen- und Kinderdaten pflegen (manuell)
 Klassen anlegen und ändern
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Um Klassen anzulegen oder zu bearbeiten, gibt es 2 Einstiegspunkte:
+Um Klassen anzulegen und zu bearbeiten, gibt es 3 Einstiegspunkte:
 
-* klick auf die Kachel "Auswertung" in der Schulübersicht (im Bild blau umrandet):
+* klick auf die Kachel "Auswertung" in der Schulübersicht (im Bild rot umrandet):
 
-image::./images/schuluebersicht-angemeldet-optionen.png[width=50%]
+image::schuluebersicht-angemeldete-schule.png[width=50%]
 
-* klick auf die Schaltfläche "Auswertung" in der Schulliste (im Bild blau umrandet):
+* klick auf die Schaltfläche "Auswertung" in der Übersichtsseite (im linken Bild, rot umrandet) oder
+in der Schulliste (im rechten Bild, rot umrandet):
 
-image::./images/schulliste-optionen.png[width=50%]
+image:dashboard-lehrer-eine-angemeldete-schule.png[width=300%] image:schulliste-einstieg-auswertung.png[width=300%]
 
-Sie gelangen in die Klassenliste, die zunächst leer ist:
+Sie gelangen auf die Seite "(Schulname) Klassen", in der Sie Klassenlisten hochladen oder Klassen manuell anlegen können:
 
-image::./images/klassen-erfassen-start.png[width=50%]
+image::klassen-erfassen-start.png[width=50%]
 
 Eine neue Klasse erfassen Sie nach einem Klick auf die Schaltfläche "neue Klasse":
 
-image::./images/neue-klasse-1.png[width=60%]
+image::neue-klasse-1.png[width=60%]
 
 Sie können alle Klassen zügig nacheinander anlegen, indem Sie jeweils nach dem Speichern die Schaltfläche "neue Klasse"
 (im Bild rot umrandet) erneut anklicken
 
 Mit Klick auf die Schaltfläche "zurück" gelangen Sie zurück in Ihre Klassenliste:
 
-image::./images/klassenliste-mit-kindern.png[width=60%]
+image::klassenliste-mit-kindern.png[width=60%]
 
 Für jede Klasse haben Sie folgende Optionen:
 
@@ -398,7 +440,7 @@ Für jede Klasse haben Sie folgende Optionen:
 Sie können jede Klasse löschen, also auch Klassen, zu denen bereits Kinder eingetragen wurden. In diesem Fall öffnet sich ein
 Warndialog, denn es wird dann nicht nur die Klasse vollständig gelöscht, sondern auch alle Kinder dieser Klasse:
 
-image::./images/klasse-loeschen-warndialog.png[width=30%]
+image::klasse-loeschen-warndialog.png[width=30%]
 
 Beim Löschen einer Klasse ohne Kinder erscheint kein Warndialog.
 
@@ -408,15 +450,15 @@ Kinder anlegen und ändern
 Um zu einer Klasse Kinder zu erfassen oder die Kinder einer Klasse zu bearbeiten, klicken Sie in der Klassenliste auf
 der Kachel der Klasse bitte auf die Schaltfläche "Kinder bearbeiten":
 
-image::./images/klassenliste-mit-kindern.png[width=60%]
+image::klassenliste-mit-kindern.png[width=60%]
 
 Sie gelangen in die Kinderliste der gewählten Klasse:
 
-image::./images/kinder-bearbeiten.png[width=60%]
+image::kinder-bearbeiten.png[width=60%]
 
 Ein neues Kind erfassen Sie nach dem Klick auf die Schaltfläche "neues Kind":
 
-image::./images/kind-erfassen-1.png[width=60%]
+image:kind-erfassen-1.png[width=300%]
 
 Pflichtfelder sind:
 
@@ -446,7 +488,7 @@ anlegen, kommen Sie mit den wenigsten Klicks beim Anlegen der Kinder aus.
 
 Mit einem Klick auf die Schaltfläche "zurück" gelangen Sie zurück in die Klassenübersicht:
 
-image::./images/kinderliste.png[width=60%]
+image::kinderliste.png[width=60%]
 
 Alle Kinder der Klasse werden nach Vornamen und Nachnamen sortiert in je einer Kachel angezeigt.
 
@@ -463,7 +505,7 @@ Sie können durch Klick auf die entsprechenden Schaltflächen in der Kachel eine
 
 Das Löschen eines Kindes bestätigen Sie bitte extra in dem Warndialog, der nach Klick auf "löschen" angezeigt wird:
 
-image::./images/kind-loeschen-warndialog.png[width=30%]
+image::kind-loeschen-warndialog.png[width=30%]
 
 
 *Mehrfacherfassungen vermeiden - der Zusatztext*
@@ -488,7 +530,7 @@ die Urkunden korrekt austeilen können.
 Potenziell sind Mehrfacherfassungen sowohl beim Erfassen von Kindern einer Klasse, als auch beim Verschieben von
 Kindern zwischen Klassen möglich. Ist das der Fall, wird ein Warndialog angezeigt:
 
-image::./images/mehrfacherfassung-kind.png[width=40%]
+image::mehrfacherfassung-kind.png[width=40%]
 
 Der Warntext enthält dabei jeweils einen kontextbezogenen Hinweis darauf, was Sie tun können, um die Urkunde später dem
 richtigen Kind aushändigen zu können. Wählen Sie im gezeigten Beispiel "nein" und tragen einen Text im Eingabefeld "Zusatz"
@@ -502,7 +544,7 @@ Schaltfläche "andere Klasse".
 Sie gelangen in ein Formuar, in dem Sie die neue Klasse mit einer Auswahlliste wählen können (das Bild zeigt das
 Formular, nachdem die neue Klasse ausgewählt wurde).
 
-image::./images/kind-verschieben-nach-auswahl-klasse.png[width=60%]
+image::kind-verschieben-nach-auswahl-klasse.png[width=60%]
 
 Beim Klick auf "speichern" wird automatisch überprüft, ob es ein Kind mit gleichem Namen und gleicher Klassenstufe
 in der neuen Klasse bereits gibt. In diesem Fall öffnet sich wieder der Warndialog "Merfacherfassung" und Sie können das
@@ -512,9 +554,10 @@ es anschließend in der Liste der Kinder der neuen Klasse.
 Lösungszettel der Kinder erfassen
 ---------------------------------
 
-Der Einstieg zum Erfassen der Lösungszettel erfolgt über Schulübersicht -> Auswertung -> "Kinder bearbeiten" -> "Lösungszettel"
+Der schnellste Einstieg zum Erfassen der Lösungszettel erfolgt bei nur einer Schule über "Auswertung -> Kinder bearbeiten -> Lösungszettel" oder über "Schulübersicht -> Auswertung -> "Kinder bearbeiten" -> "Lösungszettel",
+bei mehr als einer Schule über "Meine Schulen -> Auswertung -> Kinder bearbeiten -> Lösungszettel".
 
-image::./images/klassenliste-teilweise-vollstaendig.png[width=60%]
+image::klassenliste-teilweise-vollstaendig.png[width=60%]
 
 Kinder, für die Sie bereits einen Lösungszettel erfasst haben, erkennen Sie in der Übersicht an der grünen Markierung neben dem Namen, die die Punkte anzeigt, der Zeile
 mit der Angabe der Länge des Kängurusprungs, sowie der Schaltfläche "Urkunde korrigieren".
@@ -522,7 +565,7 @@ mit der Angabe der Länge des Kängurusprungs, sowie der Schaltfläche "Urkunde 
 Nach Klick auf die Schaltfläche "Lösungszettel" gelangen Sie in das Formular zum Erfassen des Lösungszettels für dieses Kind.
 Das Bild zeigt das Formular für ein Inklusionskind, da hier das gesamte Formular in ein Bildschirmfoto passt:
 
-image::./images/loesungszettel-inklusion.png[width=20%]
+image:loesungszettel-inklusion.png[width=100%]
 
 Sie sehen den Namen des Kindes und eine Tabelle mit den Aufgabennummern. Die Aufgaben in den Kategorien A (leicht), B (mittelschwer) und C (schwer) sind
 jeweils mit einer anderen Farbe hinterlegt, um es zu erleichtern, den Überblick zu behalten.
@@ -538,7 +581,7 @@ Punktzahl und die Länge des Kängurusprungs.
 Hat das Kind einen leeren Zettel abgegeben, so erhält es trotzdem Punkte und eine Urkunde. Daher
 ist es möglich, einen leeren Lösungszettel zu speichern. In diesem Fall erscheint ein Warndialog:
 
-image::./images/dialog-leerer-loesungszettel.png[width=70%]
+image::dialog-leerer-loesungszettel.png[width=70%]
 
 Bestätigen Sie die Frage mit "ja", wird der leere Lösungszettel gespeichert.
 
@@ -567,36 +610,39 @@ Urkunden und Schulauswertung generieren
 Urkunden für die Schule generieren
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Den Einstiegpunkt zum Generieren der Schulauswertung finden Sie in der Schulübersicht:
-Klick auf den Menüpunkt "Schulen", Klick auf die Schaltfläche "Schulübersicht"
-Ihrer Schule und Klick auf die Kachel "Auswertung...". Sie gelangen in die Ansicht mit den Klassen:
+Den Einstiegpunkt zum Generieren der Schulauswertung finden Sie in der Schulübersicht. Haben Sie
+nur eine Schule: Klick auf "Auswertung" in der Kachel mit Ihrer Schule in Ihrer Übersichtsseite
+oder Klick auf "Schulübersicht" in der Kachel mit Ihrer Schule in Ihrer Übersichtsseite uns anschließend
+Klick auf "Auswertung" in der Schulübersicht.
 
+Wenn Sie mehrere Schulen haben, wechseln Sie zunächst auf die Schulliste und klicken dann auf "Auswertung" 
+in der Kachel mit der Schule.
 
-image::./images/klassenuebersicht-optionen.png[width=60%]
+Sie gelangen in die Ansicht mit den Klassen:
+
+image::klassenuebersicht-optionen.png[width=60%]
 
 In der Leiste unter den Klassen sehen Sie eine grüne Schaltfläche "Urkunden generieren".
 
-Bei der Schulauswertung werden nur die Kinder berücksichtigt, für die Sie Lösungszettel erfasst haben. Daher müssen Sie Kinder, die Sie bereits
+*Hinweis:* Bei der Schulauswertung werden nur die Kinder berücksichtigt, für die Sie Lösungszettel erfasst haben. Daher müssen Sie Kinder, die Sie bereits
 eingetragen hatten, die dann aber doch nicht teilgenommen haben, nicht löschen. Sie werden am 1.8. jedes Jahres durch mich mit gelöscht.
 
-Nach Klick auf diese Schaltfläche gelangen Sie in das Formular "Auswertung und Urkunden erstellen":
+Nach Klick auf diese Schaltfläche gelangen Sie in das Formular "Auswertung und Urkunden erstellen".
 
-image::./images/urkunden-formular-inaktiv.png[width=70%]
-
-Bitte wählen Sie hier eine der 3 angebotenen Farben aus. Mit dem Kalender können Sie das Datum wählen, das auf
-die Urkunden gedruckt werden soll. Voreingestellt ist das aktuelle Datum.
+Bitte wählen Sie hier eine der 3 angebotenen Farben aus und das Datum, das auf
+die Urkunden gedruckt werden soll.
 
 Oberhalb der Buttonleiste wird nach Auswahl der Farbe und des Datums angezeigt, was durch Klick auf die Schaltfläche
 "Auswertung erstellen" generiert wird:
 
-image::./images/urkunden-formular-aktiv.png[width=70%]
+image:urkunden-formular-aktiv.png[width=300%]
 
 Das Generieren der Auswertung und Urkunden kann einen Moment dauern. Nach dem Fertigstellen wird je nach Browser entweder ein Dialog geöffnet (Firefox)
 oder die Datei gespeichert und im unteren Browserbereich angezeigt (Chrome).
 
 Beim Firefox öffnet sich ein Dialog:
 
-image::./images/urkunden-downloaddialog.png[width=70%]
+image::urkunden-downloaddialog.png[width=70%]
 
 
 Bitte wählen Sie hier am besten die Option "Datei speichern" und bestätigen Sie mit OK.
@@ -605,7 +651,7 @@ Die Datei wird automatisch meist in das Verzeichnis "Downloads" gespeichert, von
 
 Die ersten Seiten der Datei enthalten die Auflistung aller Kinder in der Reihenfolge ihrer Platzierungen:
 
-image::./images/urkunden-uebersichtsseite.png[width=50%]
+image::urkunden-uebersichtsseite.png[width=50%]
 
 Es schließen sich die Seiten mit den Urkunden für die Kinder an.
 
@@ -622,11 +668,9 @@ der Kachel, die die Klasse des Kindes anzeigt.
 Klicken Sie hier auf die Schaltfläche "Urkunde korrigieren". Sie gelangen in ein Formular, das ähnlich aufgebaut ist, wie das Formular zum Generieren
 der Schulauswertung.
 
-Hier sind 2 Dinge auszuwählen: die Art der Urkunde (Teilnahme oder Kängurusprung) sowie die Farbe der Urkunde:
+Hier sind 3 Dinge auszuwählen: die Art der Urkunde (Teilnahme oder Kängurusprung), die Farbe der Urkunde sowie das Datum:
 
-image::./images/urkunde-einzelkind-aktiviert.png[width=60%]
-
-Sie können das voreingestellte Datum, das auf die Urkunde gedruckt werden soll, über den Kalender ändern.
+image::urkunde-einzelkind-aktiviert.png[width=60%]
 
 Mit Klick auf die Schaltfläche "Urkunde erstellen" generieren Sie die Urkunde. Sie wird im Browser Chrome automatisch heruntergeladen, in anderen Browsern
 öffnet sich nach Fertigstellung ein Dialog. Bitte wählen Sie hier am besten die Option "Datei speichern" und bestätigen Sie mit OK.
@@ -650,11 +694,11 @@ nicht in den Vertrag übernommen*.
 Falls für Ihre Schule noch kein Vertrag abgeschlossen wurde, sehen Sie in der Schulübersicht die Kachel "DSGVO" mit dem Zusatztext "Vertrag zur
 Auftragsverarbeitung abschließen" (im Sceenshot rot umrandet dargestellt):
 
-image::./images/auftragsverarbeitung-nicht-vorhanden.png[width=50%]
+image::auftragsverarbeitung-nicht-vorhanden.png[width=50%]
 
 Nach Klick auf die Kachel "DSGVO" gelangen Sie in das Formular "Vertrag zur Auftragverarbeitung...":
 
-image::./images/auftragsverarbeitung-formular-ausgefüllt.png[width=50%]
+image::auftragsverarbeitung-formular-ausgefuellt.png[width=50%]
 
 Falls der Name Ihrer Schule nicht korrekt ist, brechen Sie bitte ab und nehmen Sie Mailkontakt mit mir auf, damit ich den Namen zunächst korrigiere.
 
@@ -666,14 +710,14 @@ ausgefüllt werden.
 Ist das Formular vollständig ausgefüllt, wird die Schaltfläche "Vertrag abschließen" aktiviert. Klicken Sie diese bitte an. Der Vertrag wird nun
 erstellt und es erscheint eine Erfolgsmeldung:
 
-image::./images/auftragsverarbeitung-erfolgsmeldung.png[width=50%]
+image::auftragsverarbeitung-erfolgsmeldung.png[width=50%]
 
 Sie können den Vertrag nun herunterladen und speichern.
 
 Wenn für Ihre Schule ein Vertrag zur Auftragsverarbeitung abgeschlossen wurde, kann dieser jederzeit erneut heruntergeladen werden. Klicken Sie
 dazu in der Übersichtsseite Ihrer Schule auf die im Bild blau umrandete Kachel "DSGVO", die nun den Zusatztext "Vertrag Auftragsverarbeitung herunterladen (PDF)" enthält
 
-image::./images/auftragsverarbeitung-vorhanden.png[width=50%]
+image::auftragsverarbeitung-vorhanden.png[width=50%]
 
 Fehlersituationen
 -----------------
@@ -695,7 +739,7 @@ Berechtigungsfehlermeldung, obwohl man eingeloggt zu sein scheint
 Sporadisch kommt es vor, dass man eine Fehlermeldung "Sie haben keine Berechtigung, bitte loggen Sie sich ein" angezeigt bekommt, obwohl das Menü anzeigt,
 man sei eingeloggt:
 
-image::./images/browser-denkt-noch-angemeldet.png[width=80%]
+image::browser-denkt-noch-angemeldet.png[width=80%]
 
 Wie dies zustande kommt, ist noch nicht vollständig klar. Es könnte sein, dass man sich nicht ausgeloggt hatte und nach längerer Zeit ( > 1h) die Anwendung öffnet.
 Der Browser cached die Anmeldeinformation, aber die Session ist bereits abgelaufen.
