@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { environment } from '../environments/environment';
 import { Router, RouterOutlet } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { VersionService } from 'libs/common-components/src/lib/version/version.service';
 
 @Component({
 	selector: 'mkod-root',
@@ -24,7 +26,7 @@ export class AppComponent {
 
 			if (hashLower.indexOf('anmeldungen') >= 0) {
 				window.location.hash = '';
-				router.navigateByUrl('/anmeldungen');
+				this.router.navigateByUrl('/anmeldungen');
 			}
 
 			if (hashLower.indexOf('teilnahmen') >= 0) {
@@ -39,7 +41,7 @@ export class AppComponent {
 
 				if (jahr) {
 					window.location.hash = '';
-					router.navigateByUrl('/teilnahmen/' + jahr);
+					this.router.navigateByUrl('/teilnahmen/' + jahr);
 				}			
 			}
 		}
@@ -48,5 +50,4 @@ export class AppComponent {
 	getAnimationData(outlet: RouterOutlet) {
 		return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
 	}
-
 }

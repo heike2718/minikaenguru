@@ -1,12 +1,12 @@
-Wenn ich meine Zugangsdaten vergessen habe
-==========================================
+Minikänguru-Anwendung: Wenn ich meine Zugangsdaten vergessen habe
+=================================================================
 Heike Winkelvoß
 :Author Initials: HW
 :toc:
 :icons:
 :numbered:
 :website: https://mathe-jung-alt.de/
-:imagesdir: https://github.com/heike2718/minikaenguru/tree/master/documentation/images
+:imagesdir: https://mathe-jung-alt.de/minikaenguru/anleitungen/images
 :toc-title: Inhaltsverzeichnis
 
 .Über dieses Dokument
@@ -25,13 +25,13 @@ Passwort vergessen
 
 Rufen Sie die https://mathe-jung-alt.de/mkv-app[Startseite] der Minikänguru-Anwendung auf
 
-image::./images/startseite-hauptmenue-login.png[width=60%]
+image::startseite-hauptmenue-login.png[width=60%]
 
 und klicken auf den Menüpunkt "einloggen".
 
 Sie werden auf die Loginseite umgeleitet:
 
-image::./images/loginseite.png[width=60%]
+image::loginseite.png[width=60%]
 
 *Hinweis:* Diese Webseite unterliegt den gleichen Datenschutzbestimmungen wie die
 Webseite des Minikänguru-Wettbewerbs, da sie ebenfalls mir gehört.
@@ -39,21 +39,20 @@ Webseite des Minikänguru-Wettbewerbs, da sie ebenfalls mir gehört.
 Klicken Sie nun bitte unter dem Formular auf die Schaltfläche "Passwort vergessen". Sie gelangen in ein anderes Formular,
 in dem Sie eine Mailadresse eintragen können:
 
-image::./images/passwort-reset-link.png[width=60%]
+image::passwort-reset-link.png[width=60%]
 
 Nach dem Absenden des Formulars wird ein Link mit einem Einmalpasswort erzeugt, an die eingetragene Mailadresse gesendet (Betreff "Minikänguru: Einmalpasswort")
 und es öffnet sich eine Erfolgsmeldung:
 
-image::./images/einmalpasswort-dialog.png[width=30%]
+image::einmalpasswort-dialog.png[width=30%]
 
 *wichtiger Hinweis:* Bitte beachten Sie, dass Sie die Mailadresse Ihres Benutzerkontos eintragen müssen, da Sie nur mit dieser Mailadresse
 ein gültiges Einmalpasswort zugesendet bekommen. Aus Sicherheitsgründen erhalten Sie keine Warnung, wenn die
-eingetragene Mailadresse nicht bekannt ist. Der Link mit dem Einmalpasswort wird in jedem Fall erzeugt und versendet, ist aber
-nutzlos, wenn die Mailadresse nicht bekannt war.
+eingetragene Mailadresse nicht bekannt ist. Eine Mail wird in jedem Fall erzeugt und versendet.
 
 Öffnen Sie die Mail mit Ihrem Mailprogramm. Sie hat folgenden Inhalt:
 
-image::./images/pwd-vergessen-mail.png[width=100%]
+image::pwd-vergessen-mail.png[width=100%]
 
 Klicken Sie den Link in der Email an. Falls Sie Bedenken haben, einen Link in einer Email anzuklicken:
 
@@ -63,7 +62,7 @@ mathe-jung-alt.de in Deutschland gehostet wird.
 
 Nach Anklicken des Links sehen Sie im Browser ein Formular, mit dem Sie das Einmalpasswort ändern können:
 
-image::./images/einmalpasswort-aendern.png[width=60%]
+image::einmalpasswort-aendern.png[width=60%]
 
 Auch hier tragen Sie bitte die Mailadresse ein, mit der Sie registriert sind, da das Einmalpasswort nur für diese Mailadresse gültig ist.
 
@@ -72,7 +71,7 @@ Felder aus und senden Sie das ausgefüllte Formular mit einem Klick auf die Scha
 
 Hat alles geklappt, öffnet sich ein Erfolgsdialog
 
-image::./images/einmalpasswort-aendern-success.png[width=30%]
+image::einmalpasswort-aendern-success.png[width=30%]
 
 und nach dem Schließen des Dialogs werden Sie in die Minikänguru-Anwendung zurückgeleitet, wo Sie sich mit Ihrem neuen Passwort einloggen können.
 

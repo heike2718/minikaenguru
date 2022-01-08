@@ -35,7 +35,7 @@ public class KaengurusprungurkundeGeneratorDeutschTest {
 
 		Schulteilnahme schulteilnahme = new Schulteilnahme(new WettbewerbID(2020), new Identifier("GHZTZZIT"),
 			"Grundschule \"Johann Wolfgang von Goethe\"", new Identifier("jkasdkjq"));
-		Klasse klasse = new Klasse(new Identifier("sdhuqwo")).withName("Klasse 2b");
+		Klasse klasse = new Klasse(new Identifier("sdhuqwo")).withName("2a");
 
 		FontSizeAndLines fontSizeAndLinesSchulname = new SplitSchulnameStrategie().getFontSizeAndLines(schulteilnahme.nameSchule());
 
@@ -61,7 +61,7 @@ public class KaengurusprungurkundeGeneratorDeutschTest {
 		// jetzt in Datei schreiben
 		DownloadData downloadData = new DownloadData("name.pdf", daten);
 
-		StatistikTestUtils.print(downloadData, true);
+		StatistikTestUtils.print(downloadData, false);
 	}
 
 }

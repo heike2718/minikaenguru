@@ -14,6 +14,7 @@ import { UnterlagenComponent } from './unterlagen/unterlagen.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SwitchComponent } from './switch/switch.component';
 import { PaginationComponent } from './pagination/pagination.component';
+import { VersionService } from './version/version.service';
 
 
 @NgModule({
@@ -58,8 +59,10 @@ export class CommonComponentsModule {
 				},
 				{
 					provide: UploadService
+				},
+				{
+					provide: VersionService
 				}
-
 			]
 		}
 	}

@@ -2,6 +2,8 @@ import { createReducer, Action, on } from '@ngrx/store';
 import { SchuleWithID, Schule, mergeSchulenMap, findSchuleMitId, SchuleDetails, SchulenMap, compareSchulen } from './../schulen/schulen.model';
 import * as LehrerActions from './lehrer.actions';
 import { Schulteilnahme, Lehrer } from '../../wettbewerb/wettbewerb.model';
+import { lehrer } from './lehrer.selectors';
+import { state } from '@angular/animations';
 export const lehrerFeatureKey = 'mkv-app-lehrer';
 
 export interface AddSchuleState {
@@ -138,24 +140,46 @@ const lehrerReducer = createReducer(initalLehrerState,
 	on(LehrerActions.schuleAdded, (state, action) => {
 
 		const schule = action.schule;
+		if (state.lehrer) {
+			const neueTeilnahmenummern = [...state.lehrer.teilnahmenummern];
+			neueTeilnahmenummern.push(schule.kuerzel);
+		
+			const neueMap = new SchulenMap(state.schulen).merge(schule);
 
-		const neueMap = new SchulenMap(state.schulen).merge(schule);
+			return {
+				...state,
+				schulen: neueMap,
+				addSchuleState: initialAddSchuleState,
+				loading: false,
+				schulenLoaded: true,
+				selectedSchule: undefined,
+				lehrer: {...state.lehrer, teilnahmenummern: neueTeilnahmenummern}			
+			};
+		}
 
-		return {
-			...state,
-			schulen: neueMap,
-			addSchuleState: initialAddSchuleState,
-			loading: false,
-			schulenLoaded: true,
-			selectedSchule: undefined
-		};
+		return {...state};
 	}),
 
 	on(LehrerActions.schuleRemoved, (state, action) => {
 
-		const neueMap = new SchulenMap(state.schulen).remove(action.kuerzel);
+		const neueMap = new SchulenMap(state.schulen).remove(action.kuerzel);		
 
-		return { ...state, selectedSchule: undefined, addSchuleState: initialAddSchuleState, schulen: neueMap };
+		if (state.lehrer) {
+
+			const neueTeilnahmenummern = [];
+
+			for (let t of state.lehrer.teilnahmenummern) {
+
+				if (action.kuerzel !== t) {
+					neueTeilnahmenummern.push(t);
+				}
+			
+			}
+			return { ...state, selectedSchule: undefined, schulenLoaded: false, addSchuleState: initialAddSchuleState, schulen: neueMap
+				, lehrer: {...state.lehrer, teilnahmenummern: neueTeilnahmenummern}};
+		}
+
+		return {...state};
 	}),
 
 	on(LehrerActions.schulkatalogEinblenden, (state, _action) => {

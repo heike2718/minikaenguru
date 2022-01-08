@@ -355,7 +355,7 @@ public class LehrerService {
 		}
 
 		LehrerAPIModel result = LehrerAPIModel
-			.create(hatZugang, lehrer.isNewsletterEmpfaenger());
+			.create(hatZugang, lehrer.isNewsletterEmpfaenger()).withTeilnahmenummern(veranstalter.teilnahmenummernAsStrings());
 
 		return result;
 	}

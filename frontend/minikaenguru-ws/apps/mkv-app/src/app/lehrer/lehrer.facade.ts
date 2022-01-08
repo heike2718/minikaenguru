@@ -8,7 +8,7 @@ import { GlobalErrorHandlerService } from '../infrastructure/global-error-handle
 import { Schule } from './schulen/schulen.model';
 import { VeranstalterService } from '../services/veranstalter.service';
 import { TeilnahmenService } from '../services/teilnahmen.service';
-import { Schulteilnahme } from '../wettbewerb/wettbewerb.model';
+import { Lehrer, Schulteilnahme } from '../wettbewerb/wettbewerb.model';
 import { Message, MessageService } from '@minikaenguru-ws/common-messages';
 import { User, AuthService } from '@minikaenguru-ws/common-auth';
 import { take } from 'rxjs/operators';
@@ -66,6 +66,10 @@ export class LehrerFacade {
 			data => {
 				this.appStore.dispatch(LehrerActions.datenLehrerGeladen({ lehrer: data }));
 				this.appStore.dispatch(WettbewerbActions.veranstalterLoaded({ veranstalter: data }));
+				const lehrer = data as Lehrer;
+				if (lehrer.teilnahmenummern.length === 1) {
+					this.loadSchulen();					
+				}
 			},
 			(error => {
 				this.errorHandler.handleError(error);

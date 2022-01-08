@@ -299,7 +299,7 @@ public class ProzentrangEinzelpunktzahlServiceTest {
 			} catch (InvalidInputException e) {
 
 				ResponsePayload responsePayload = e.getResponsePayload();
-				assertEquals("Es liegen nur Daten ab 2010 bis 2021 vor", responsePayload.getMessage().getMessage());
+				assertEquals("Es liegen nur Daten ab 2010 bis 2022 vor", responsePayload.getMessage().getMessage());
 				assertEquals("WARN", responsePayload.getMessage().getLevel());
 			}
 		}

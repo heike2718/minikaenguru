@@ -27,7 +27,6 @@ export class AktuelleMeldungFacade {
 		this.aktuelleMeldungService.loadAktuelleMeldung().pipe(
 			first()
 		).subscribe(
-
 			m => this.appStore.dispatch(AktuelleMeldungActions.aktuelleMeldungGeladen({ aktuelleMeldung: m })),
 			(error => this.errorHandler.handleError(error))
 		);

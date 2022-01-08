@@ -16,18 +16,19 @@ export interface AbstractVeranstalter {
 
 // tslint:disable-next-line:no-empty-interface
 export interface Lehrer extends AbstractVeranstalter {
-}
+	readonly teilnahmenummern: string[];
+};
 
 export interface Privatveranstalter extends AbstractVeranstalter {
 	readonly anzahlTeilnahmen: number;
 	readonly aktuellAngemeldet: boolean;
 	readonly aktuelleTeilnahme?: Privatteilnahme;
 	readonly teilnahmenummer: string;
-}
+};
 
 // tslint:disable-next-line:no-empty-interface
 export interface Privatteilnahme extends Teilnahme {	
-}
+};
 
 export interface Schulteilnahme extends Teilnahme {
 	readonly nameUrkunde: string;

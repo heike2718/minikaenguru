@@ -7,6 +7,7 @@ import { environment } from '../../../environments/environment';
 import { KlassenFacade } from '../../klassen/klassen.facade';
 import { STORAGE_KEY_USER, User } from '@minikaenguru-ws/common-auth';
 import { Subscription } from 'rxjs';
+import { Schule, SchuleWithID } from '../schulen/schulen.model';
 
 @Component({
 	selector: 'mkv-lehrer-dashboard',
@@ -17,6 +18,7 @@ export class LehrerDashboardComponent implements OnInit, OnDestroy {
 
 	aktuellerWettbewerb$ = this.wettbewerbFacade.aktuellerWettbewerb$;
 	lehrer$ = this.lehrerFacade.lehrer$;
+	schulen$ = this.lehrerFacade.schulen$;	
 
 	textFeatureFlagAnzeigen = false;
 	textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
@@ -26,9 +28,13 @@ export class LehrerDashboardComponent implements OnInit, OnDestroy {
 
 	userIdRef?: string;
 
+	schule: Schule | undefined;
+
 	hatZugangZuUnterlagen: boolean = false;
 
 	private zugangUnterlagenSubscription: Subscription = new Subscription();
+
+	private schulenSubscription: Subscription = new Subscription();
 
 	constructor(private lehrerFacade: LehrerFacade,
 		private klassenFacade: KlassenFacade,
@@ -52,16 +58,29 @@ export class LehrerDashboardComponent implements OnInit, OnDestroy {
 			}
 		});
 
+		this.schulenSubscription = this.lehrerFacade.schulen$.subscribe(
+			s => {
+				if (s.length === 1) {
+					this.schule = s[0].schule;
+				}
+			}
+		);
+
 		this.klassenFacade.resetState();
 
 	}
 
 	ngOnDestroy(): void {
 		this.zugangUnterlagenSubscription.unsubscribe();
+		this.schulenSubscription.unsubscribe();
 	}
 
 	gotoSchulen() {
 		this.router.navigateByUrl('/lehrer/schulen');
+	}
+
+	gotoSchuleDashboard() {
+
 	}
 
 	gotoProfil() {
@@ -80,5 +99,10 @@ export class LehrerDashboardComponent implements OnInit, OnDestroy {
 
 	changeAboNewsletter(): void {
 		this.lehrerFacade.changeAboNewsletter();
+	}
+
+	addSchule(): void {
+		this.lehrerFacade.neueSchulsuche();
+		this.router.navigateByUrl('/lehrer/schulen/add-schule')
 	}
 }

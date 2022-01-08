@@ -5,13 +5,13 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mk-kataloge-tests</artifactId>
-	<version>1.7.0</version>
+	<version>1.7.1</version>
 
 	<properties>
-		<minikaenguru-version>1.7.0</minikaenguru-version>
-		<commons.version>1.7.4</commons.version>
-		<slf4j.version>1.7.25</slf4j.version>
-		<log4j.version>2.16.0</log4j.version>
+		<minikaenguru-version>1.7.1</minikaenguru-version>
+		<commons.version>1.7.5</commons.version>
+		<slf4j.version>1.7.32</slf4j.version>
+		<logback.version>1.2.10</logback.version>
 		<maven.compiler.source>1.11</maven.compiler.source>
 		<maven.compiler.target>1.11</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -60,9 +60,9 @@
 
 		<!-- Test START -->
 		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-			<version>${log4j.version}</version>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>${logback.version}</version>
 			<scope>test</scope>
 		</dependency>
 

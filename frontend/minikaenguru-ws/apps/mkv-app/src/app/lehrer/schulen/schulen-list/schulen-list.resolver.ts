@@ -1,7 +1,7 @@
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { AppState } from '../../../reducers';
 import { Store, select } from '@ngrx/store';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable } from 'rxjs';
 import { schulenLoaded } from '../../+state/lehrer.selectors';
 import { tap, first, finalize, filter } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
@@ -12,7 +12,7 @@ export class SchulenListResolver implements Resolve<any> {
 
 	private loading = false;
 
-	constructor(private store: Store<AppState>, private schulenFacade: LehrerFacade) { }
+	constructor(private store: Store<AppState>, private lehrerFacade: LehrerFacade) { }
 
 	resolve(_route: ActivatedRouteSnapshot,
 		_state: RouterStateSnapshot): Observable<any> {
@@ -24,7 +24,7 @@ export class SchulenListResolver implements Resolve<any> {
 				if (!areLoaded) {
 					if (!this.loading) {
 						this.loading = true;
-						this.schulenFacade.loadSchulen();
+						this.lehrerFacade.loadSchulen();
 					}
 				}
 			}),

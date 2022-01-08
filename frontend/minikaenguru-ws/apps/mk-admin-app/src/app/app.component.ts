@@ -36,7 +36,7 @@ export class AppComponent {
 				window.location.hash = '';
 			}
 		}
-	}
+	}	
 
 	getAnimationData(outlet: RouterOutlet) {
 		return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];

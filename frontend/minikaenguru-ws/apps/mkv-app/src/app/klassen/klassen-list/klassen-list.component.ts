@@ -68,11 +68,11 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 			}
 		);
 
-		this.anzahlLoesungszettelSubsciption = this.klassenFacade.anzahlLoesungszettel$.subscribe(
+		this.anzahlLoesungszettelSubsciption = this.klassenFacade.anzahlLoesungszettelSchule$.subscribe(
 			anzahl => this.anzahlLoesungszettel = anzahl
 		);
 
-		this.anzahlKinderSubscription = this.klassenFacade.anzahlKinder$.subscribe(
+		this.anzahlKinderSubscription = this.klassenFacade.anzahlKinderSchule$.subscribe(
 			anzahl => this.anzahlKinder = anzahl
 		);
 

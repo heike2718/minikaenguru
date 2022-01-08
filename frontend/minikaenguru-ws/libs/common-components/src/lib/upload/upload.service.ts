@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
-import { HttpClient, HttpRequest, HttpEventType, HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { MkComponentsConfig, MkComponentsConfigService } from '../configuration/mk-components-config';
 import { ResponsePayload } from '@minikaenguru-ws/common-messages';
 import { map } from 'rxjs/operators';

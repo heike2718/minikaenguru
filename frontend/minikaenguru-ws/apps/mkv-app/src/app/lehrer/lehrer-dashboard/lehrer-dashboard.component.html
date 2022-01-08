@@ -1,4 +1,4 @@
-<div class="mkv-container mt-1">
+<div *ngIf="lehrer$ | async as lehrer" class="mkv-container mt-1">
 	<div class="col--12">
 		<h2>Übersicht</h2>
 	</div>
@@ -10,24 +10,31 @@
 
 		<!-- card-deck 1 -->
 		<div class="card-deck">
-			<div class="card clickable" (click)="gotoSchulen()">
+			<div *ngIf="lehrer.teilnahmenummern.length !== 1" class="card clickable" (click)="gotoSchulen()">
 				<div class="card-body">
-					<div class="card-title">Meine Schulen</div>
+					<div class="card-title">Meine Schulen <span class="ml-1 badge badge-success">{{lehrer.teilnahmenummern.length}}</span></div>
 					<div class="mb-2 text-muted">Schulen verwalten</div>
 					<div class="mb-2 text-muted">Wettbewerb auswerten</div>
 				</div>
 			</div>
-			<div *ngIf="hatZugangZuUnterlagen">
-				<mkv-unterlagen-card></mkv-unterlagen-card>
+			<div *ngIf="lehrer.teilnahmenummern.length === 1 && schule">
+				<mkv-schule-card [schule]="schule"></mkv-schule-card>
 			</div>
+			<div *ngIf="lehrer.teilnahmenummern.length < 2"  class="card clickable" (click)="addSchule()">
+				<div class="card-body">
+					<div class="card-title">Weitere Schule</div>
+					<div class="mb-2 text-muted">als Lehrer:in</div>
+					<div class="text-muted">an einer weiteren Schule anmelden</div>
+				</div>
+			</div><div *ngIf="hatZugangZuUnterlagen">
+				<mkv-unterlagen-card></mkv-unterlagen-card>
+			</div>			
 		</div>
-
-
 
 		<!-- card-deck 2 -->
 		<div class="card-deck mt-3">
 
-			<div *ngIf="lehrer$ | async as lehrer" class="card clickable" (click)="changeAboNewsletter()">
+			<div class="card clickable" (click)="changeAboNewsletter()">
 				<div class="card-body">
 					<div *ngIf="lehrer.newsletterAbonniert">
 						<div class="card-title">Newsletter <span class="ml-1 badge badge-success">abonniert</span>
@@ -43,16 +50,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="card clickable" (click)="gotoProfil()">
-				<div class="card-body">
-					<div class="card-title">Mein Profil</div>
-					<div class="mb-2 text-muted">Name, Mailadresse, Passwort ändern</div>
-					<div class="mb-2 text-danger">Achtung: hierfür werden Sie ausgeloggt und auf eine andere Webseite
-						umgeleitet.</div>
-				</div>
-			</div>
-
-			<div *ngIf="lehrer$ | async as lehrer" class="card clickable" (click)="gotoInfos()">
+			<div class="card clickable" (click)="gotoInfos()">
 				<div class="card-body">
 					<div class="card-title">Infos</div>
 					<div class="mb-2 text-muted">Informationen über den Wettbewerb</div>
@@ -61,7 +59,14 @@
 						nicht?</div>
 				</div>
 			</div>
-
+			<div class="card clickable" (click)="gotoProfil()">
+				<div class="card-body">
+					<div class="card-title">Mein Profil</div>
+					<div class="mb-2 text-muted">Name, Mailadresse, Passwort ändern</div>
+					<div class="mb-2 text-danger">Achtung: hierfür werden Sie ausgeloggt und auf eine andere Webseite
+						umgeleitet.</div>
+				</div>
+			</div>
 		</div>
 
 

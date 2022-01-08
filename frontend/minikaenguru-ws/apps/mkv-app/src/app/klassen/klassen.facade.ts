@@ -5,11 +5,11 @@ import { AuthService } from '@minikaenguru-ws/common-auth';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
 import * as KlassenActions from './+state/klassen.actions';
 import * as KlassenSelectors from './+state/klassen.selectors';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Klasse, KlasseEditorModel, KlasseRequestData } from '@minikaenguru-ws/common-components';
 import { KlassenService } from './klassen.service';
 import { Router } from '@angular/router';
-import { KlassenlisteImportReport, KlasseUIModel, KlasseWithID } from './klassen.model';
+import { KlassenlisteImportReport, KlassenMap, KlasseUIModel, KlasseWithID } from './klassen.model';
 import { MessageService, ResponsePayload } from '@minikaenguru-ws/common-messages';
 import * as KinderActions from '../kinder/+state/kinder.actions';
 import * as KinderSelectors from '../kinder/+state/kinder.selectors';
@@ -30,8 +30,8 @@ export class KlassenFacade {
 	public klasseUIModel$: Observable<KlasseUIModel | undefined> = this.store.select(KlassenSelectors.klasseUIModel);
 	public klassenMap$: Observable<KlasseWithID[]> = this.store.select(KlassenSelectors.klassenMap);
 	public selectedKlasse$: Observable<Klasse | undefined> = this.store.select(KlassenSelectors.selectedKlasse);
-	public anzahlKinder$: Observable<number> = this.store.select(KlassenSelectors.anzahlKinder);
-	public anzahlLoesungszettel$: Observable<number> = this.store.select(KlassenSelectors.anzahlLoesungszettel);
+	public anzahlKinderSchule$: Observable<number> = this.store.select(KlassenSelectors.anzahlKinderSchule);
+	public anzahlLoesungszettelSchule$: Observable<number> = this.store.select(KlassenSelectors.anzahlLoesungszettelSchule);
 	public klassenimportReport$ : Observable<KlassenlisteImportReport | undefined> = this.store.select(KlassenSelectors.klassenimportReport);
 
 	private loggingOut = false;
@@ -39,6 +39,8 @@ export class KlassenFacade {
 	private klassenGeladen = false;
 
 	private kinderGeladen = false;
+
+	private klassenMap: KlasseWithID[] = [];
 
 	constructor(private store: Store<AppState>,
 		private kinderFacade: KinderFacade,
@@ -60,6 +62,10 @@ export class KlassenFacade {
 
 		this.store.select(KinderSelectors.kinderGeladen).subscribe(
 			geladen => this.kinderGeladen = geladen
+		);
+
+		this.klassenMap$.subscribe(
+			map => this.klassenMap = map
 		);
 	}
 
@@ -233,6 +239,28 @@ export class KlassenFacade {
 				this.errorHandler.handleError(error);
 			})
 		);
+	}
+
+	public getAnzahlKinderInKlasse(klasseUuid: string): Observable<number> {
+
+		const klasse: Klasse | undefined =  new KlassenMap(this.klassenMap).get(klasseUuid);
+
+		if (!klasse) {
+			return of(0);
+		}
+
+		return of(klasse.anzahlKinder);
+	}
+
+	public getAnzahlLoesungszettelInKlasse(klasseUuid: string): Observable<number> {
+
+		const klasse: Klasse | undefined =  new KlassenMap(this.klassenMap).get(klasseUuid);
+
+		if (!klasse) {
+			return of(0);
+		}
+
+		return of(klasse.anzahlLoesungszettel);
 	}
 
 	public resetState(): void {
