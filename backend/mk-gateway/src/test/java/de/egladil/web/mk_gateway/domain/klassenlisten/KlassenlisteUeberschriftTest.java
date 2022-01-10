@@ -5,8 +5,8 @@
 package de.egladil.web.mk_gateway.domain.klassenlisten;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -162,6 +162,20 @@ public class KlassenlisteUeberschriftTest {
 			assertEquals(Integer.valueOf(0), ueberschrift.getIndexFeldart(KlassenlisteFeldart.KLASSENSTUFE).get());
 			assertEquals(Integer.valueOf(2), ueberschrift.getIndexFeldart(KlassenlisteFeldart.VORNAME).get());
 			assertEquals(Integer.valueOf(3), ueberschrift.getIndexFeldart(KlassenlisteFeldart.NACHNAME).get());
+		}
+
+		@Test
+		void should_getIndexReturnTheCorrectValues_when_andereZeichen() {
+
+			// Arrange
+			String zeileKommasepariert = "Vorname;�Nachname;�Klasse;�Klassenstufe";
+			KlassenlisteUeberschrift ueberschrift = new KlassenlisteUeberschrift(zeileKommasepariert);
+
+			// Act + Assert
+			assertEquals(Integer.valueOf(2), ueberschrift.getIndexFeldart(KlassenlisteFeldart.KLASSE).get());
+			assertEquals(Integer.valueOf(3), ueberschrift.getIndexFeldart(KlassenlisteFeldart.KLASSENSTUFE).get());
+			assertEquals(Integer.valueOf(0), ueberschrift.getIndexFeldart(KlassenlisteFeldart.VORNAME).get());
+			assertEquals(Integer.valueOf(1), ueberschrift.getIndexFeldart(KlassenlisteFeldart.NACHNAME).get());
 		}
 	}
 }
