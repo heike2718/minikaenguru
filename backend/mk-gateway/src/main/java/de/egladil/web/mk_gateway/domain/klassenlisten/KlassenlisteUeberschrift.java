@@ -19,17 +19,17 @@ public class KlassenlisteUeberschrift {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(KlassenlisteUeberschrift.class);
 
-	private final String[] eingaben;
+	private final KlassenlisteFeldart[] feldarten;
 
 	/**
 	 * @param  zeileSemikolonsepariert
-	 *                               String
+	 *                                 String
 	 * @throws UploadFormatException
-	 *                               wenn zeileKommasepariert null oder es nicht genau 4 Token sind.
+	 *                                 wenn zeileKommasepariert null oder es nicht genau 4 Token sind.
 	 */
 	public KlassenlisteUeberschrift(final String zeileSemikolonsepariert) throws UploadFormatException {
 
-		eingaben = StringUtils.split(zeileSemikolonsepariert, ';');
+		String[] eingaben = StringUtils.split(zeileSemikolonsepariert, ';');
 
 		if (eingaben == null || eingaben.length != 4) {
 
@@ -37,6 +37,22 @@ public class KlassenlisteUeberschrift {
 			throw new UploadFormatException(KlassenlisteFeldart.getMessageExpectedContents());
 		}
 
+		this.feldarten = new KlassenlisteFeldart[eingaben.length];
+		int index = 0;
+
+		for (String eingabe : eingaben) {
+
+			String trimed = eingabe.trim().toUpperCase();
+
+			try {
+
+				this.feldarten[index] = KlassenlisteFeldart.detectFromString(trimed);
+			} catch (IllegalArgumentException e) {
+
+				LOGGER.error(e.getMessage());
+			}
+			index++;
+		}
 	}
 
 	/**
@@ -48,22 +64,11 @@ public class KlassenlisteUeberschrift {
 	 */
 	public Optional<Integer> getIndexFeldart(final KlassenlisteFeldart feldart) {
 
-		for (int i = 0; i < eingaben.length; i++) {
+		for (int i = 0; i < this.feldarten.length; i++) {
 
-			String name = eingaben[i];
+			if (feldart == this.feldarten[i]) {
 
-			try {
-
-				KlassenlisteFeldart result = KlassenlisteFeldart.valueOf(name.trim().toUpperCase());
-
-				if (result == feldart) {
-
-					return Optional.of(Integer.valueOf(i));
-				}
-			} catch (IllegalArgumentException e) {
-
-				LOGGER.error(e.getMessage());
-
+				return Optional.of(Integer.valueOf(i));
 			}
 
 		}

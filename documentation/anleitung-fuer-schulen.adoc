@@ -225,14 +225,22 @@ Optionen. Sie können
 Eine Schule zum Wettbewerb anmelden
 -----------------------------------
 
-Um eine noch nicht angemeldete Schule anzumelden, klicken Sie bitte auf den Button "Schulübersicht" dieser Schule.
+Eine Schule kann erst zum Wettbewerb angemeldet werden, wenn ich diesen gestartet habe. In der Regel erfolgt das kurz nach dem Jahreswechsel.
 
-Sie gelangen auf die Übersichtsseite der gewählten Schule:
+Ist Ihre Schule noch nicht zum laufenden Wettbewerb angemeldet, sehen Sie an verschiedenen Stellen in der Minikänguru- Anwendung
+Schaltflächen oder Kacheln mit der Beschriftung "anmelden für 20xy": 
+
+* falls Sie nur eine Schule haben, in der Übersichtsseite, auf der sie nach dem Einloggen landen oder in der Übersichtsseite Ihrer Schule
+
+* falls Sie mehrere Schulen haben, nach klick auf "Meine Schulen" oder den Menüpunkt "Schulen" in den Kacheln der einzelnen Schulen oder 
+auf der Übersichtsseite der einzelnen Schule.
+
+Die Abbildung zeigt die Übersichtsseite einer Schule:
 
 image::schuluebersicht-nicht-angemeldet.png[width=75%]
 
-Wenn der Anmeldezeitraum begonnen hat, sehen Sie eine Kachel mit der Aufschrift "Anmelden". Sie melden
-die Schule für den laufenden Wettbewerb durch einen Klick auf diese Kachel an.
+Sie melden die Schule für den laufenden Wettbewerb durch einen Klick auf diese Kachel oder eine grüne Schaltfläche in einer Schulkachel auf der Startseite
+oder Ihrer Schulliste an.
 
 *Die Anmeldung ist unverbindlich.* Falls Sie später am laufenden Wettbewerb doch nicht teilnehmen können,
 ist das unkritisch.
@@ -243,6 +251,11 @@ unterstützt werden:
 
 image::schuluebersicht-angemeldet.png[width=75%]
 
+*Hinweis:* Die Kachel zum Herunterladen der Aufgaben wird Ihnen erst angezeigt, nachdem ich die Aufgaben zum Download bereitgestellt habe.
+
+
+Sie können nach dem Anmelden bereits beginnen, Ihre Klassen und Kinder einzutragen, entweder durch das Hochladen einer oder mehrerer Exceltabellen oder manuell.
+Dies wird in den folgenden Abschnitten beschrieben.
 
 Klassenlisten als Excel hochladen
 ---------------------------------
@@ -299,10 +312,13 @@ Um Klassen als Excel zu importieren, gibt es 3 Einstiegspunkte:
 
 image::schuluebersicht-angemeldete-schule.png[width=50%]
 
-* klick auf die Schaltfläche "Auswertung" in der Übersichtsseite (im linken Bild, rot umrandet) oder
-in der Schulliste (im rechten Bild, rot umrandet):
+* klick auf die Schaltfläche "Auswertung" in der Übersichtsseite (im Bild, rot umrandet) 
 
-image:dashboard-lehrer-eine-angemeldete-schule.png[width=300%] image:schulliste-einstieg-auswertung.png[width=300%]
+image::dashboard-lehrer-eine-angemeldete-schule.png[width=60%] 
+
+* klick auf die Schaltfläche "Auswertung" in der Schulliste (im Bild, rot umrandet):
+
+image:schulliste-einstieg-auswertung.png[width=60%]
 
 Sie gelangen auf die Seite "(Schulname) Klassen", in der Sie Klassenlisten hochladen oder Klassen manuell anlegen können:
 
@@ -386,7 +402,7 @@ image::upload-klassenlisten-pruefung-abgeschlossen.png[width=75%]
 
 *Tipp:*
 
-Sollten sich zu viele Fehler eingeschlichen haben, geht es vermutlich schneller, alle Klassen zu löschen,  die Exceldatei zu korrigieren anschließend
+Sollten sich zu viele Fehler eingeschlichen haben, geht es vermutlich schneller, alle Klassen zu löschen,  die Exceldatei zu korrigieren und anschließend
 noch einmal hochzuladen.
 
 Sie können alle importierten Daten auf einmal löschen, indem Sie in der Klassenübersicht Ihrer Schule die Schaltfläche "alle Klassen löschen" anklicken:
@@ -411,10 +427,13 @@ Um Klassen anzulegen und zu bearbeiten, gibt es 3 Einstiegspunkte:
 
 image::schuluebersicht-angemeldete-schule.png[width=50%]
 
-* klick auf die Schaltfläche "Auswertung" in der Übersichtsseite (im linken Bild, rot umrandet) oder
-in der Schulliste (im rechten Bild, rot umrandet):
+* klick auf die Schaltfläche "Auswertung" in der Übersichtsseite (im Bild, rot umrandet) 
 
-image:dashboard-lehrer-eine-angemeldete-schule.png[width=300%] image:schulliste-einstieg-auswertung.png[width=300%]
+image::dashboard-lehrer-eine-angemeldete-schule.png[width=60%] 
+
+* klick auf die Schaltfläche "Auswertung" in der Schulliste (im Bild, rot umrandet):
+
+image:schulliste-einstieg-auswertung.png[width=60%]
 
 Sie gelangen auf die Seite "(Schulname) Klassen", in der Sie Klassenlisten hochladen oder Klassen manuell anlegen können:
 
@@ -458,7 +477,7 @@ image::kinder-bearbeiten.png[width=60%]
 
 Ein neues Kind erfassen Sie nach dem Klick auf die Schaltfläche "neues Kind":
 
-image:kind-erfassen-1.png[width=300%]
+image::kind-erfassen-1.png[width=60%]
 
 Pflichtfelder sind:
 
@@ -565,7 +584,7 @@ mit der Angabe der Länge des Kängurusprungs, sowie der Schaltfläche "Urkunde 
 Nach Klick auf die Schaltfläche "Lösungszettel" gelangen Sie in das Formular zum Erfassen des Lösungszettels für dieses Kind.
 Das Bild zeigt das Formular für ein Inklusionskind, da hier das gesamte Formular in ein Bildschirmfoto passt:
 
-image:loesungszettel-inklusion.png[width=100%]
+image::loesungszettel-inklusion.png[width=60%]
 
 Sie sehen den Namen des Kindes und eine Tabelle mit den Aufgabennummern. Die Aufgaben in den Kategorien A (leicht), B (mittelschwer) und C (schwer) sind
 jeweils mit einer anderen Farbe hinterlegt, um es zu erleichtern, den Überblick zu behalten.
@@ -589,7 +608,7 @@ Bestätigen Sie die Frage mit "ja", wird der leere Lösungszettel gespeichert.
 Sie können einen Lösungszettel auch jederzeit löschen. Die Löschung erfolgt erst, nachdem Sie einen Warndiaog bestätigt haben.
 Die Schaltfläche "löschen" ist nur aktiviert, wenn für das Kind bereits einmal ein Lösungszettel gespeichert wurde.
 
-Nach dem Löschen gelangen Sie automatisch zurück in die Liste der Kiner dieser Klasse.
+Nach dem Löschen gelangen Sie automatisch zurück in die Liste der Kinder dieser Klasse.
 
 Sie können aus dem Formular "Lösungszettel" zurück in die Liste der Kiner dieser Klasse gelangen, indem Sie sie Schaltfläche "zurück" anklicken.
 
@@ -635,7 +654,7 @@ die Urkunden gedruckt werden soll.
 Oberhalb der Buttonleiste wird nach Auswahl der Farbe und des Datums angezeigt, was durch Klick auf die Schaltfläche
 "Auswertung erstellen" generiert wird:
 
-image:urkunden-formular-aktiv.png[width=300%]
+image::urkunden-formular-aktiv.png[width=60%]
 
 Das Generieren der Auswertung und Urkunden kann einen Moment dauern. Nach dem Fertigstellen wird je nach Browser entweder ein Dialog geöffnet (Firefox)
 oder die Datei gespeichert und im unteren Browserbereich angezeigt (Chrome).

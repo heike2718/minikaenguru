@@ -34,4 +34,29 @@ public enum KlassenlisteFeldart {
 		String result = "Die erste Zeile muss folgenden Inhalt in beliebiger Reihenfolge haben: " + StringUtils.join(felder, ',');
 		return result;
 	}
+
+	/**
+	 * Resilientere Implementierung als valueOf(str), da das Excel nicht druckbare Zeichen enthalten kann.
+	 *
+	 * @param  str
+	 * @return     KlassenlisteFeldart
+	 */
+	public static KlassenlisteFeldart detectFromString(final String str) throws IllegalArgumentException {
+
+		if (str.contains(KLASSENSTUFE.toString())) {
+
+			return KLASSENSTUFE;
+		} else {
+
+			for (KlassenlisteFeldart feldart : KlassenlisteFeldart.values()) {
+
+				if (str.contains(feldart.toString())) {
+
+					return feldart;
+				}
+			}
+		}
+
+		throw new IllegalArgumentException(str);
+	}
 }

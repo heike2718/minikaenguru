@@ -1,5 +1,19 @@
 # minikaenguru Release Notes
 
+__Release 1.7.1.1__:
+
+* [Uploadfunktion Klassenliste: Steuerzeichen in Spaltenüberschriften verhindern Import](https://github.com/heike2718/minikaenguru/issues/363)
+* [java.lang.NoSuchFieldError: RETURN_NULL_AND_BLANK beim Import von Klassenlisten](https://github.com/heike2718/minikaenguru/issues/364)
+* [Download-Button beim Status HOCHGELADEN und EXCEPTION nicht einblenden](https://github.com/heike2718/minikaenguru/issues/366)
+
+__Release 1.7.1__:
+
+* [Vereinfachte Navigation für Lehrer mit nur einer Schule](https://github.com/heike2718/minikaenguru/issues/234)
+* [Anzahl Schulen eines Lehrers direkt nach dem Anmelden verfügbar machen](https://github.com/heike2718/minikaenguru/issues/239)
+* [Anleitung für Schulen überarbeiten wegen Issue 234](https://github.com/heike2718/minikaenguru/issues/359)
+* [Nach dem Verschieben eines Kindes wird in der Klasse die Anzahl Kinder nicht aktualisiert](https://github.com/heike2718/minikaenguru/issues/360)
+* [Browsercache: erwartete Version muss vom Server kommen](https://github.com/heike2718/minikaenguru/issues/361)
+
 __Release 1.7.0__:
 
 * [Uploads mit Status HOCHGELADEN sollen sich auch über die Admin-Anwendung herunterladen lassen](https://github.com/heike2718/minikaenguru/issues/352)
