@@ -1,5 +1,11 @@
 # minikaenguru Release Notes
 
+__Release 1.7.1.1__:
+
+* [Uploadfunktion Klassenliste: Steuerzeichen in Spaltenüberschriften verhindern Import](https://github.com/heike2718/minikaenguru/issues/363)
+* [java.lang.NoSuchFieldError: RETURN_NULL_AND_BLANK beim Import von Klassenlisten](https://github.com/heike2718/minikaenguru/issues/364)
+* [Download-Button beim Status HOCHGELADEN und EXCEPTION nicht einblenden](https://github.com/heike2718/minikaenguru/issues/366)
+
 __Release 1.7.1__:
 
 * [Vereinfachte Navigation für Lehrer mit nur einer Schule](https://github.com/heike2718/minikaenguru/issues/234)
