@@ -2,7 +2,7 @@
 	<div class="col-12">
 		<p *ngIf="devMode">uploads-card.component.ts</p>
 		<div class="card mt-2">
-			<div [style.background-color]="uploadInfo.uploadType === 'KLASSENLISTE' ? '#d5e7cb' : '#faedca'">
+			<div [style.background-color]="uploadInfo.uploadType === 'KLASSENLISTE' ? '#fff3cd' : '#e3efdc'">
 				<div class="card-body">
 					<div class="card-title">{{uploadInfo.sortnumber}} -  {{uploadInfo.teilnahmenummer}}
 						<span *ngIf="uploadInfo.uploadStatus === 'IMPORTIERT'" class="badge badge-success">{{uploadInfo.uploadStatus}}</span>
@@ -21,8 +21,8 @@
 							<mka-schulkatalogdata [schulkatalogData] ="uploadInfo.schule" (click)="onSchuleClicked()" ></mka-schulkatalogdata>
 						</ng-container>
 						
-						<ng-container *ngIf="showDownloadButtons()">
-							<mk-download-button [model]="fehlerreportDownloadButtonModel">
+						<ng-container *ngIf="showDownloadButtons()">						
+							<mk-download-button *ngIf="uploadInfo.uploadStatus === 'DATENFEHLER'" [model]="fehlerreportDownloadButtonModel">
 							</mk-download-button>
 
 							<mk-download-button [model]="fileDownloadButtonModel">
