@@ -48,4 +48,8 @@ export class DashboardComponent implements OnInit {
 	gotoLoesungszettel() {
 		this.router.navigateByUrl('/loesungszettel');
 	}
+
+	gotoStatistik() {
+		this.router.navigateByUrl('/statistik');
+	}
 }

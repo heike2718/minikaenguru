@@ -23,6 +23,7 @@ const routes: Routes = [
 	{ path: 'newsletters', loadChildren: () => import('./newsletter/newsletter.module').then(m => m.NewsletterModule) },
 	{ path: 'uploads', loadChildren: () => import('./uploads/uploads.module').then(m => m.UploadsModule) },
 	{ path: 'loesungszettel', loadChildren: () => import('./loesungszettel/loesungszettel.module').then(m => m.LoesungszettelModule) },
+	{ path: 'statistik', loadChildren: () => import('./statistik/statistik.module').then(m => m.StatistikModule)},
 	{ path: 'irgendwas', pathMatch: 'full', component: IrgendwasListComponent },
 	{ path: '', pathMatch: 'full', component: LandingComponent },
 	{ path: '**', component: NotFoundComponent },

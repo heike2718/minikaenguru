@@ -854,10 +854,10 @@ public class PermittedRolesInMemoryRepositoryTest {
 		}
 
 		@Test
-		void should_permittedRollen_getStatistikAnmeldungen_beOk() {
+		void should_permittedRollen_getStatistikKinder_beOk() {
 
 			// Act
-			List<Rolle> rollen = repository.permittedRollen("/admin/statistik/anmeldungen", HttpMethod.GET);
+			List<Rolle> rollen = repository.permittedRollen("/admin/statistik/kinder", HttpMethod.GET);
 
 			// Assert
 			assertEquals(1, rollen.size());

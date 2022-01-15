@@ -1,0 +1,16 @@
+<div class="mkv-container mt-1">
+    <h1>Statistik</h1>
+
+    <ngb-accordion 
+        #statistikAccordeon="ngbAccordion" 
+        type="'success'"
+        (panelChange)="beforeChange($event)">
+        <ngb-panel title="Kinder">
+            <ng-template ngbPanelContent *ngIf="statistikFacade.expandedStatistik$ | async as statistik">
+                <p>{{statistik.name}}</p>
+            </ng-template>
+        </ngb-panel>
+    </ngb-accordion>
+</div>
+
+

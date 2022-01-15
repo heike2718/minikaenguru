@@ -4,16 +4,21 @@
 // =====================================================
 package de.egladil.web.mkv_server_tests.dao;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
+
+import java.util.List;
 
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
+import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
@@ -63,6 +68,75 @@ public class KinderHibernateRepositoryIT extends AbstractIntegrationTest {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
+	}
+
+	@Nested
+	class StatistikTests {
+
+		@Test
+		void should_countAuspraegungenByColumnNameReurnTheAuspraegungen_when_klassenstufe() {
+
+			// Act
+			List<Auspraegung> auspraegungen = repository.countAuspraegungenByColumnName("KLASSENSTUFE");
+
+			// Assert
+			assertEquals(3, auspraegungen.size());
+
+			for (Auspraegung auspraegung : auspraegungen) {
+
+				System.out.println(auspraegung.toString());
+			}
+
+		}
+
+		@Test
+		void should_countAuspraegungenByColumnNameReurnTheAuspraegungen_when_teilnahmeart() {
+
+			// Act
+			List<Auspraegung> auspraegungen = repository.countAuspraegungenByColumnName("TEILNAHMEART");
+
+			// Assert
+			assertEquals(2, auspraegungen.size());
+
+			for (Auspraegung auspraegung : auspraegungen) {
+
+				System.out.println(auspraegung.toString());
+			}
+
+		}
+
+		@Test
+		void should_countAuspraegungenByColumnNameReurnTheAuspraegungen_when_sprache() {
+
+			// Act
+			List<Auspraegung> auspraegungen = repository.countAuspraegungenByColumnName("SPRACHE");
+
+			// Assert
+			assertEquals(2, auspraegungen.size());
+
+			for (Auspraegung auspraegung : auspraegungen) {
+
+				System.out.println(auspraegung.toString());
+			}
+
+		}
+
+		@Test
+		void should_countAuspraegungenByColumnNameReurnTheAuspraegungen_when_erfassungsart() {
+
+			// Act
+			List<Auspraegung> auspraegungen = repository.countAuspraegungenByColumnName("IMPORTIERT");
+
+			// Assert
+			assertEquals(1, auspraegungen.size());
+
+			for (Auspraegung auspraegung : auspraegungen) {
+
+				System.out.println(auspraegung.toString());
+			}
+
+		}
+
 	}
 
 }

@@ -7,13 +7,13 @@ import { UploadMonitoringInfo } from '../../uploads/uploads.model';
 export const schulteilnahmenFeatureKey = 'mk-admin-app-schulteilnahmen';
 
 export interface SchulteilnahmenState {
-	schulenMap: SchuleAdminOverviewWithID[],
-	selectedSchule?: SchuleAdminOverview,
-	selectedTeilnahme?: Teilnahme,
-	fehlermeldungenUploadReport: string[];
-	loading: boolean;
-	uploadKlassenlisteInfos: UploadMonitoringInfo[];
-	uploadKlassenlisteInfosLoaded: boolean;
+	readonly schulenMap: SchuleAdminOverviewWithID[],
+	readonly selectedSchule?: SchuleAdminOverview,
+	readonly selectedTeilnahme?: Teilnahme,
+	readonly fehlermeldungenUploadReport: string[];
+	readonly loading: boolean;
+	readonly uploadKlassenlisteInfos: UploadMonitoringInfo[];
+	readonly uploadKlassenlisteInfosLoaded: boolean;
 };
 
 const initialSchulteilnahmenState: SchulteilnahmenState = {

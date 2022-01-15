@@ -43,6 +43,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UploadsModule } from './uploads/uploads.module';
 import { LoesungszettelModule } from './loesungszettel/loesungszettel.module';
 import { SharedModule } from './shared/shared.module';
+import { StatistikModule } from './statistik/statistik.module';
 
 registerLocaleData(localeDe);
 
@@ -105,6 +106,7 @@ registerLocaleData(localeDe);
 		NewsletterModule,
 		UploadsModule,
 		LoesungszettelModule,
+		StatistikModule,
 		LayouttestsModule,
 		SharedModule,
 		AppRoutingModule, // <-- immer am Ende, damit die wildcard-route als letzte deklariert bleibt

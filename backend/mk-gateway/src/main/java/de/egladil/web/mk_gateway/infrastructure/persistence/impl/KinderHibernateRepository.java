@@ -22,6 +22,7 @@ import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
 import de.egladil.web.mk_gateway.domain.kinder.Klasse;
+import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistentesKind;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistentesKindKindMapper;
@@ -241,4 +242,27 @@ public class KinderHibernateRepository implements KinderRepository {
 		return trefferliste.get(0).longValue();
 	}
 
+	@Override
+	public List<Auspraegung> countAuspraegungenByColumnName(final String columnName) {
+
+		List<Auspraegung> result = new ArrayList<>();
+
+		String stmt = "select k." + columnName + ", count(*) from KINDER k group by k." + columnName;
+
+		// System.out.println(stmt);
+
+		@SuppressWarnings("unchecked")
+		List<Object[]> trefferliste = em.createNativeQuery(stmt).getResultList();
+
+		for (Object[] treffer : trefferliste) {
+
+			String wert = treffer[0].toString();
+			BigInteger anzahl = (BigInteger) treffer[1];
+
+			result.add(new Auspraegung(wert, anzahl.longValue()));
+
+		}
+
+		return result;
+	}
 }
