@@ -4,7 +4,7 @@ import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ResponsePayload } from '@minikaenguru-ws/common-messages';
-import { StatistikGruppeninfo } from './statistik.model';
+import { StatistikEntity, StatistikGruppeninfo } from './statistik.model';
 
 
 @Injectable({
@@ -15,10 +15,10 @@ export class StatistikService {
 
     constructor(private http: HttpClient) {}
 
-    public loadStatistikKinder() : Observable<StatistikGruppeninfo> {
+    public loadStatistik(statistikEntity: StatistikEntity) : Observable<StatistikGruppeninfo> {
 
 
-        const url = environment.apiUrl + '/statistik/kinder';
+        const url = environment.apiUrl + '/statistik/' + statistikEntity.toLocaleLowerCase();
 
 		return this.http.get(url).pipe(
 			map(body => body as ResponsePayload),

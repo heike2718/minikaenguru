@@ -61,4 +61,9 @@ public class Gruppenitem {
 		this.auspraegungen = auspraegungen;
 	}
 
+	public long getAnzahlElemente() {
+
+		return 0l;
+	}
+
 }

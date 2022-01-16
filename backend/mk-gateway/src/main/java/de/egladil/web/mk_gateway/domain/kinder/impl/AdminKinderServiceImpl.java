@@ -23,24 +23,6 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KinderHibernate
 @ApplicationScoped
 public class AdminKinderServiceImpl implements AdminKinderService {
 
-	private enum KinderGruppeninfoAuspraegungsart {
-		IMPORTIERT("importiert"),
-		KLASSENSTUFE("Klassenstufe"),
-		SPRACHE("Sprache"),
-		TEILNAHMEART("Teilnahmeart");
-
-		final String name;
-
-		/**
-		 * @param name
-		 */
-		private KinderGruppeninfoAuspraegungsart(final String name) {
-
-			this.name = name;
-		}
-
-	}
-
 	@Inject
 	KinderRepository kinderRepository;
 
@@ -54,18 +36,43 @@ public class AdminKinderServiceImpl implements AdminKinderService {
 	@Override
 	public Gruppeninfo createKurzstatistikKinder() {
 
-		Gruppeninfo gruppeninfo = new Gruppeninfo("KINDER", "Kinder");
+		Gruppeninfo gruppeninfo = new Gruppeninfo("KINDER");
 
 		for (KinderGruppeninfoAuspraegungsart auspaegungsart : KinderGruppeninfoAuspraegungsart.values()) {
 
 			Gruppenitem item = new Gruppenitem(auspaegungsart.name);
 			List<Auspraegung> auspraegungen = kinderRepository.countAuspraegungenByColumnName(auspaegungsart.toString());
 			item.setAuspraegungen(auspraegungen);
-
 			gruppeninfo.addItem(item);
 
 		}
 
+		if (!gruppeninfo.getGruppenItems().isEmpty()) {
+
+			Gruppenitem erstes = gruppeninfo.getGruppenItems().get(0);
+			long anzahlElemente = erstes.getAuspraegungen().stream().mapToLong(auspraegung -> auspraegung.getAnzahl()).sum();
+			gruppeninfo.setAnzahlElemente(anzahlElemente);
+		}
+
 		return gruppeninfo;
 	}
+
+	private enum KinderGruppeninfoAuspraegungsart {
+		KLASSENSTUFE("Klassenstufe"),
+		SPRACHE("Sprache"),
+		TEILNAHMEART("Teilnahmeart"),
+		IMPORTIERT("importiert");
+
+		final String name;
+
+		/**
+		 * @param name
+		 */
+		private KinderGruppeninfoAuspraegungsart(final String name) {
+
+			this.name = name;
+		}
+
+	}
+
 }

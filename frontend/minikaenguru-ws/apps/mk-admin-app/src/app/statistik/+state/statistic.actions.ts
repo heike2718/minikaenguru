@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { StatistikGruppeninfo } from '../statistik.model';
+import { StatistikEntity, StatistikGruppeninfo, StatistikGruppenitem } from '../statistik.model';
 
 export const startLoading = createAction(
     '[StatistikFacade] any action'
@@ -16,11 +16,12 @@ export const statistikLoaded = createAction(
 
 export const expandStatistik = createAction(
     '[StatistikFacade] expand',
-    props<{statistik?: StatistikGruppeninfo}>()
+    props<{entity: StatistikEntity, statistik?: StatistikGruppeninfo}>()
 );
 
 export const collapsStatistik = createAction(
-    '[StatistikFacade] collapse'
+    '[StatistikFacade] collapse',
+    props<{entity: StatistikEntity}>()
 );
 
 export const resetStatistiken = createAction(

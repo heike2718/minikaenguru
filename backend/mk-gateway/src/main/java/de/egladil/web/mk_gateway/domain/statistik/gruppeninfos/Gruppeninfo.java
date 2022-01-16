@@ -18,7 +18,7 @@ public class Gruppeninfo {
 	private String uuid;
 
 	@JsonProperty
-	private String name;
+	private long anzahlElemente;
 
 	@JsonProperty
 	private List<Gruppenitem> gruppenItems = new ArrayList<>();
@@ -33,12 +33,10 @@ public class Gruppeninfo {
 	}
 
 	/**
-	 * @param name
 	 */
-	public Gruppeninfo(final String uuid, final String name) {
+	public Gruppeninfo(final String uuid) {
 
 		this.uuid = uuid;
-		this.name = name;
 	}
 
 	public void addItem(final Gruppenitem item) {
@@ -46,19 +44,19 @@ public class Gruppeninfo {
 		gruppenItems.add(item);
 	}
 
-	public String getName() {
-
-		return name;
-	}
-
-	public void setName(final String name) {
-
-		this.name = name;
-	}
-
 	public List<Gruppenitem> getGruppenItems() {
 
 		return gruppenItems;
+	}
+
+	public long getAnzahlElemente() {
+
+		return anzahlElemente;
+	}
+
+	public void setAnzahlElemente(final long anzahlElemente) {
+
+		this.anzahlElemente = anzahlElemente;
 	}
 
 }

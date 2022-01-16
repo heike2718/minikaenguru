@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { StatistikGruppenitem } from '../statistik.model';
+import { StatistikGruppeninfo } from '../statistik.model';
 
 @Component({
   selector: 'mka-gruppeninfo-details',
@@ -10,11 +10,12 @@ export class GruppeninfoDetailsComponent implements OnInit {
 
 
   @Input()
-  gruppenItem!: StatistikGruppenitem;
+  gruppeninfo?: StatistikGruppeninfo;
 
   constructor() { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
+
+  
 
 }

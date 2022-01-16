@@ -21,6 +21,7 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.kinder.AdminKinderService;
+import de.egladil.web.mk_gateway.domain.loesungszettel.AdminLoesungszettelService;
 import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Gruppeninfo;
 import de.egladil.web.mk_gateway.infrastructure.rest.general.statistik.PersonalizedStatisticsResourceDelegate;
 
@@ -41,6 +42,9 @@ public class AdminStatistikResource {
 
 	@Inject
 	AdminKinderService adminKinderService;
+
+	@Inject
+	AdminLoesungszettelService adminLoesungszettelService;
 
 	// TODO: path und auth
 	public Response getStatistikFuerOrt() {
@@ -67,9 +71,19 @@ public class AdminStatistikResource {
 
 	@GET
 	@Path("kinder")
-	public Response getKurzstaistikKinder() {
+	public Response getKurzstatistikKinder() {
 
 		Gruppeninfo gruppeninfo = adminKinderService.createKurzstatistikKinder();
+		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), gruppeninfo);
+
+		return Response.ok(responsePayload).build();
+	}
+
+	@GET
+	@Path("loesungszettel")
+	public Response getKurzstatistikLoesungszettel() {
+
+		Gruppeninfo gruppeninfo = adminLoesungszettelService.createKurzstatistikLoesungszettel();
 		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), gruppeninfo);
 
 		return Response.ok(responsePayload).build();

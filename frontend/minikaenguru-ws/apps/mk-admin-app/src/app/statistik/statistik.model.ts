@@ -1,4 +1,4 @@
-export type StatistikEntity = 'KINDER';
+export type StatistikEntity = 'KINDER' | 'LOESUNGSZETTEL';
 
 export interface Auspraegung {
     readonly wert: string;
@@ -12,8 +12,8 @@ export interface StatistikGruppenitem {
 
 export interface StatistikGruppeninfo {
     readonly uuid: string;
-    readonly name: string;
-    readonly items: StatistikGruppenitem[];
+	readonly anzahlElemente: number;
+    readonly gruppenItems: StatistikGruppenitem[];
 };
 
 export interface StatistikGruppeninfoWithID {

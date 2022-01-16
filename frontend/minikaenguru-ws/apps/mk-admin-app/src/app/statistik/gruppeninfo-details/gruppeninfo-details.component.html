@@ -1,5 +1,7 @@
-<ngb-panel title="{{gruppenItem.name}}">
-    <ng-template ngbPanelContent>
-               
-    </ng-template>
-</ngb-panel>
+
+
+<div *ngIf="gruppeninfo" class="mkv-container mt-1">
+    <div *ngFor="let item of gruppeninfo.gruppenItems">
+        <mka-statistik-item [statistikItem]="item"></mka-statistik-item>
+    </div>
+</div>

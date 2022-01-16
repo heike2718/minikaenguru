@@ -7,4 +7,6 @@ const statistikState = createFeatureSelector<fromStatistikReducer.StatistikState
 export const statistikLoading = createSelector(statistikState, s => s.loading);
 export const statistikMap = createSelector(statistikState, s => s.statistiken);
 export const statistiken = createSelector(statistikMap, m => new StatistikGruppeninfoMap(m).toArray());
-export const expandedStatistik = createSelector(statistikState, s => s.expandedStatistik);
+export const statistikKinder = createSelector(statistikState, s => s.statistikKinder);
+export const statistikLoesungszettel = createSelector(statistikState, s => s.statistikLoesungszettel);
+

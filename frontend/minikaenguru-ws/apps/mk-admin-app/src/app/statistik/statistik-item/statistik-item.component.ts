@@ -9,7 +9,7 @@ import { StatistikGruppenitem } from '../statistik.model';
 export class StatistikItemComponent implements OnInit {
 
   @Input()
-  item!: StatistikGruppenitem;
+  statistikItem!: StatistikGruppenitem;
 
   constructor() { }
 

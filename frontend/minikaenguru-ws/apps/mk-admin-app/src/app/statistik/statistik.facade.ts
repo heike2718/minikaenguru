@@ -16,7 +16,8 @@ export class StatistikFacade {
 
     public statistikenLoading$: Observable<boolean> = this.store.select(StatistikSelectors.statistikLoading);
     public statistiken$: Observable<StatistikGruppeninfo[]> = this.store.select(StatistikSelectors.statistiken);
-    public expandedStatistik$: Observable<StatistikGruppeninfo | undefined> = this.store.select(StatistikSelectors.expandedStatistik);
+    public statistikKinder$: Observable<StatistikGruppeninfo | undefined> = this.store.select(StatistikSelectors.statistikKinder);
+    public statistikLoesungszettel$: Observable<StatistikGruppeninfo | undefined> = this.store.select(StatistikSelectors.statistikLoesungszettel);
 
     private statistikenMap: StatistikGruppeninfoWithID[] = [];
 
@@ -29,7 +30,9 @@ export class StatistikFacade {
             this.store.select(StatistikSelectors.statistikMap).subscribe(
                 m => this.statistikenMap = m
             );
-        }
+    }
+
+
 
     public expandStatistik(entity: StatistikEntity): void {
 
@@ -38,36 +41,43 @@ export class StatistikFacade {
         if (map.has(entity)) {
 
            const statistik =  map.get(entity);
-           this.store.dispatch(StatistikActions.expandStatistik({statistik: statistik}));
+           this.store.dispatch(StatistikActions.expandStatistik({entity: entity, statistik: statistik}));
            return;
 
         }
 
-        if (entity === 'KINDER') {
-
-            this.statistikService.loadStatistikKinder().subscribe(
-
-                statistik => {
-
-                    this.store.dispatch(StatistikActions.statistikLoaded({statistik: statistik}));
-
-                },
-				(error => {
-					this.store.dispatch(StatistikActions.loadFinishedWithError());
-					this.errorService.handleError(error);
-				})
-            )
-
-        }
+       this.forceReload(entity);
     }
 
-    public collapseStatistik(): void {
+    public collapseStatistik(entity: StatistikEntity): void {
 
-        this.store.dispatch(StatistikActions.collapsStatistik());
+        this.store.dispatch(StatistikActions.collapsStatistik({entity: entity}));
     }
 
     public resetModule(): void {
 
         this.store.dispatch(StatistikActions.resetStatistiken());
+    }
+
+    public forceReloadAll(): void {
+
+        this.forceReload('KINDER');
+        this.forceReload('LOESUNGSZETTEL');
+    }
+
+    private forceReload(entity: StatistikEntity): void {
+
+        this.statistikService.loadStatistik(entity).subscribe(
+
+            statistik => {
+
+                this.store.dispatch(StatistikActions.statistikLoaded({statistik: statistik}));
+
+            },
+            (error => {
+                this.store.dispatch(StatistikActions.loadFinishedWithError());
+                this.errorService.handleError(error);
+            })
+        );
     }
 }

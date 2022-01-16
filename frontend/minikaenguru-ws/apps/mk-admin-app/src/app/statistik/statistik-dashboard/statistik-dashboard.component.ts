@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { StatistikFacade } from '../statistik.facade';
 import { StatistikEntity, StatistikGruppeninfo } from '../statistik.model';
 
@@ -9,23 +10,25 @@ import { StatistikEntity, StatistikGruppeninfo } from '../statistik.model';
 })
 export class StatistikDashboardComponent implements OnInit, OnDestroy {
 
-  private panelMap: Map<string, StatistikEntity> = new Map();
+  constructor(public statistikFacade: StatistikFacade) {}
 
-  constructor(public statistikFacade: StatistikFacade) {
+  private expandedGruppeninfoSubscription: Subscription = new Subscription();
 
-    this.panelMap.set('ngb-panel-0', 'KINDER');
+  ngOnInit(): void { }
 
+  ngOnDestroy(): void {   
+    this.expandedGruppeninfoSubscription.unsubscribe(); 
   }
 
-  ngOnInit(): void {
-  }
+  reloadContent(): void {
 
-  ngOnDestroy(): void {    
+    this.statistikFacade.forceReloadAll();
+
   }
 
   beforeChange($event: any): void {
 
-    const entity: StatistikEntity | undefined = this.panelMap.get($event.panelId);
+    const entity = $event.panelId as StatistikEntity;
     const expanded: boolean = $event.nextState;
 
     if (entity) {
@@ -33,7 +36,7 @@ export class StatistikDashboardComponent implements OnInit, OnDestroy {
       if (expanded) {
         this.statistikFacade.expandStatistik(entity);
       } else {
-        this.statistikFacade.collapseStatistik();
+        this.statistikFacade.collapseStatistik(entity);
       }
     }
   }

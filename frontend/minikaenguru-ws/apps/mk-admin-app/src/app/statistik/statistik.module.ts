@@ -6,6 +6,8 @@ import { StoreModule } from '@ngrx/store';
 import * as fromStatistik from './+state/statistik.reducer';
 import { StatistikRoutingModule } from './statistik-routing.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { StatistikResolver } from './+state/statistik.resolver';
+import { StatistikFacade } from './statistik.facade';
 import { StatistikItemComponent } from './statistik-item/statistik-item.component';
 
 
@@ -20,6 +22,10 @@ import { StatistikItemComponent } from './statistik-item/statistik-item.componen
     StatistikRoutingModule,
     NgbModule,
     StoreModule.forFeature(fromStatistik.statistikFeatureKey, fromStatistik.reducer)
+  ],
+  providers: [
+    StatistikResolver,
+    StatistikFacade
   ]
 })
 export class StatistikModule { }

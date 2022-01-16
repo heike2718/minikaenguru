@@ -1,5 +1,4 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { StatistikService } from '../statistic.service';
 import { StatistikGruppeninfo, StatistikGruppeninfoMap, StatistikGruppeninfoWithID } from '../statistik.model';
 import * as StatistikActions from './statistic.actions';
 
@@ -8,13 +7,15 @@ export const statistikFeatureKey = 'mk-admin-app-statistik';
 export interface StatistikState {
     readonly loading: boolean;
     readonly statistiken: StatistikGruppeninfoWithID[];
-    readonly expandedStatistik: StatistikGruppeninfo | undefined;    
+    readonly statistikKinder: StatistikGruppeninfo | undefined;
+    readonly statistikLoesungszettel: StatistikGruppeninfo | undefined;    
 };
 
 const initialStatistikState: StatistikState = {
     loading: false,
     statistiken: [],
-    expandedStatistik: undefined
+    statistikKinder: undefined,
+    statistikLoesungszettel: undefined
 };
 
 const statistikReducer = createReducer(initialStatistikState,
@@ -36,12 +37,20 @@ const statistikReducer = createReducer(initialStatistikState,
 
     on (StatistikActions.expandStatistik, (state, action) => {
 
-        return {...state, expandedStatistik: action.statistik};
+        switch(action.entity) {
+            case 'KINDER': return {...state, statistikKinder: action.statistik};
+            case 'LOESUNGSZETTEL' : return {...state, statistikLoesungszettel: action.statistik};
+            default: return {...state};
+        }
     }),
 
-    on (StatistikActions.collapsStatistik, (state, _action) => {
+    on (StatistikActions.collapsStatistik, (state, action) => {
 
-        return {...state, expandedStatistik: undefined};
+        switch(action.entity) {
+            case 'KINDER': return {...state, statistikKinder: undefined};
+            case 'LOESUNGSZETTEL' : return {...state, statistikLoesungszettel: undefined};
+            default: return {...state};
+        }
     }),
 
 	on(StatistikActions.resetStatistiken, (_state, _action) => {
