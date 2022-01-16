@@ -1,0 +1,33 @@
+<div class="mkv-container mt-1">
+    <h1>Statistik (aktueller Wettbewerb)</h1>
+
+    <ngb-accordion 
+        #statistikAccordeon="ngbAccordion" 
+        type="'dark'"
+        (panelChange)="beforeChange($event)">
+        <ngb-panel title="Kinder" id="KINDER">
+            <ng-template ngbPanelContent> 
+                <div *ngIf="statistikFacade.statistikKinder$ | async as expandedGruppeninfo">
+
+                    <div class="row">
+                        <div class="col-md-10 col-sm-12">Gesamt: {{expandedGruppeninfo.anzahlElemente}}</div>
+                        <div class="col-md-2 col-sm-12"><button class="btn btn-outline-dark" (click)="reloadContent('KINDER')">aktualisieren</button></div>
+                    </div>
+                    <mka-gruppeninfo-details [gruppeninfo]="expandedGruppeninfo"></mka-gruppeninfo-details>
+                </div>
+            </ng-template>
+        </ngb-panel>
+        <ngb-panel title="Lösungszettel" id="LOESUNGSZETTEL" >
+            <ng-template ngbPanelContent> 
+                <div *ngIf="statistikFacade.statistikLoesungszettel$ | async as expandedGruppeninfo">
+
+                    <div class="row">
+                        <div class="col-md-10 col-sm-12">Gesamt: {{expandedGruppeninfo.anzahlElemente}}</div>
+                        <div class="col-md-2 col-sm-12"><button class="btn btn-outline-dark" (click)="reloadContent('LOESUNGSZETTEL')">aktualisieren</button></div>
+                    </div>
+                    <mka-gruppeninfo-details [gruppeninfo]="expandedGruppeninfo"></mka-gruppeninfo-details>
+                </div>
+            </ng-template>
+        </ngb-panel>
+    </ngb-accordion>    
+</div>

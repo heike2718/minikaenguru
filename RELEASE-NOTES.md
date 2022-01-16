@@ -1,5 +1,9 @@
 # minikaenguru Release Notes
 
+__Release 1.7.1.2__:
+
+* [Schnellstatistik Kinder in Admin-Anwendung](https://github.com/heike2718/minikaenguru/issues/368)
+
 __Release 1.7.1.1__:
 
 * [Uploadfunktion Klassenliste: Steuerzeichen in Spaltenüberschriften verhindern Import](https://github.com/heike2718/minikaenguru/issues/363)

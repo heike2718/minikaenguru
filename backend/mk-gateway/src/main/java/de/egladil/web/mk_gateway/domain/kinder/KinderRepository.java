@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
 
 /**
@@ -82,7 +83,7 @@ public interface KinderRepository {
 
 	/**
 	 * Gibt die Anzahl der Kinder der Klasse zurück, die Dubletten sind oder bei denen die Klassenstufe unklar ist.
-	 * 
+	 *
 	 * @param  klasse
 	 * @return
 	 */
@@ -101,4 +102,11 @@ public interface KinderRepository {
 	 * @return
 	 */
 	Optional<Kind> findKindWithLoesungszettelId(Identifier loesungszettelID);
+
+	/**
+	 * @param  columnName
+	 *                    String
+	 * @return            List
+	 */
+	List<Auspraegung> countAuspraegungenByColumnName(String columnName);
 }

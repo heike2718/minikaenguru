@@ -24,8 +24,10 @@ import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRohdaten;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
+import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
+import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterLoesungszettel;
 
@@ -295,5 +297,11 @@ public class InMemoryLoesungszettelRepository implements LoesungszettelRepositor
 	public long anzahlForWettbewerb(final WettbewerbID wettbewerbID) {
 
 		return alleLoesungszettel.size();
+	}
+
+	@Override
+	public List<Auspraegung> countAuspraegungenForWettbewerbByColumnName(final Wettbewerb wettbewerb, final String columnName) {
+
+		return null;
 	}
 }

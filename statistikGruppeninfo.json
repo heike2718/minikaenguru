@@ -1,0 +1,68 @@
+{
+  "message": {
+    "level": "INFO",
+    "message": "ok"
+  },
+  "data": {
+    "uuid": "KINDER",
+    "name": "Kinder",
+    "gruppenItems": [
+      {
+        "name": "importiert",
+        "auspraegungen": [
+          {
+            "wert": "false",
+            "anzahl": 120
+          },
+          {
+            "wert": "true",
+            "anzahl": 14
+          }
+        ]
+      },
+      {
+        "name": "Klassenstufe",
+        "auspraegungen": [
+          {
+            "wert": "EINS",
+            "anzahl": 63
+          },
+          {
+            "wert": "IKID",
+            "anzahl": 12
+          },
+          {
+            "wert": "ZWEI",
+            "anzahl": 59
+          }
+        ]
+      },
+      {
+        "name": "Sprache",
+        "auspraegungen": [
+          {
+            "wert": "de",
+            "anzahl": 130
+          },
+          {
+            "wert": "en",
+            "anzahl": 4
+          }
+        ]
+      },
+      {
+        "name": "Teilnahmeart",
+        "auspraegungen": [
+          {
+            "wert": "PRIVAT",
+            "anzahl": 5
+          },
+          {
+            "wert": "SCHULE",
+            "anzahl": 129
+          }
+        ]
+      }
+    ]
+  }
+}

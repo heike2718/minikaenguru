@@ -12,8 +12,10 @@ import org.apache.commons.lang3.tuple.Pair;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.EntityConcurrentlyModifiedException;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
+import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
+import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterLoesungszettel;
 
@@ -159,4 +161,15 @@ public interface LoesungszettelRepository {
 	 * @return            Optional den gelöschten Lösungszettel oder empty.
 	 */
 	Optional<PersistenterLoesungszettel> removeLoesungszettel(Identifier identifier);
+
+	/**
+	 * Selektiert die Lösungszettel des gegebenen Wettbewerbs und gruppiert sie nach der gewünschten Spalte.
+	 *
+	 * @param  wettbewerb
+	 *                    Wettbewerb
+	 * @param  columnName
+	 *                    String name des group by- Kriteriums.
+	 * @return
+	 */
+	List<Auspraegung> countAuspraegungenForWettbewerbByColumnName(Wettbewerb wettbewerb, String columnName);
 }
