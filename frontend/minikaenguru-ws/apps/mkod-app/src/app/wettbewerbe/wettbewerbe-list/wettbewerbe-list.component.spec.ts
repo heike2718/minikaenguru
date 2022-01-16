@@ -8,9 +8,9 @@ describe('WettbewerbeListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ WettbewerbeListComponent ]
-    })
-    .compileComponents();
+      declarations: [WettbewerbeListComponent],
+      teardown: { destroyAfterEach: false },
+    }).compileComponents();
   });
 
   beforeEach(() => {

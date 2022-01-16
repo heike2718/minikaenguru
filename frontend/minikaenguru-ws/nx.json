@@ -10,51 +10,20 @@
     "tslint.json": "*",
     "nx.json": "*"
   },
-  "projects": {
-    "mkv-app": {
-      "tags": ["domain:mkv-app", "type:app"]
+  "affected": {
+    "defaultBase": "master"
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/angular"
+  },
+  "defaultProject": "mkv-app",
+  "generators": {
+    "@nrwl/angular:application": {
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
     },
-    "mkv-app-e2e": {
-      "tags": [],
-      "implicitDependencies": ["mkv-app"]
-    },
-    "mk-admin-app": {
-      "tags": ["domain:mk-admin-app", "type:app"]
-    },
-    "mk-admin-app-e2e": {
-      "tags": [],
-      "implicitDependencies": ["mk-admin-app"]
-    },
-    "mkod-app": {
-      "tags": ["domain:mkod-app", "type:app"]
-    },
-    "mkod-app-e2e": {
-      "tags": [],
-      "implicitDependencies": ["mkod-app"]
-    },
-    "common-schulkatalog": {
-      "tags": []
-    },
-    "shared-util-messages": {
-      "tags": []
-    },
-    "shared-util-logging": {
-      "tags": []
-    },
-    "common-messages": {
-      "tags": []
-    },
-    "common-logging": {
-      "tags": []
-    },
-    "test-lib": {
-      "tags": []
-    },
-    "common-auth": {
-      "tags": []
-    },
-    "common-components": {
-      "tags": []
+    "@nrwl/angular:library": {
+      "unitTestRunner": "jest"
     }
   }
 }
