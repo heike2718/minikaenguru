@@ -134,7 +134,7 @@ export class KindDetailsComponent implements OnInit, OnDestroy {
 	}
 
 	korrigiereKlassenstufe(): void {
-		console.log('jetzt editor öffnen mit status klassenstufe Korrektur => führt dazu, dass klassenlisteKorrigieren false gesetzt wird');
+		// console.log('jetzt editor öffnen mit status klassenstufe Korrektur => führt dazu, dass klassenlisteKorrigieren false gesetzt wird');
 	}
 
 	editKind(): void {

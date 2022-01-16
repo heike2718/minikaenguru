@@ -20,9 +20,9 @@ export class StatistikDashboardComponent implements OnInit, OnDestroy {
     this.expandedGruppeninfoSubscription.unsubscribe(); 
   }
 
-  reloadContent(): void {
+  reloadContent($payload: StatistikEntity): void {
 
-    this.statistikFacade.forceReloadAll();
+    this.statistikFacade.forceReload($payload);
 
   }
 

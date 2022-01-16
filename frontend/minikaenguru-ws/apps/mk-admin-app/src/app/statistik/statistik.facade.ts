@@ -59,13 +59,7 @@ export class StatistikFacade {
         this.store.dispatch(StatistikActions.resetStatistiken());
     }
 
-    public forceReloadAll(): void {
-
-        this.forceReload('KINDER');
-        this.forceReload('LOESUNGSZETTEL');
-    }
-
-    private forceReload(entity: StatistikEntity): void {
+    public forceReload(entity: StatistikEntity): void {
 
         this.statistikService.loadStatistik(entity).subscribe(
 

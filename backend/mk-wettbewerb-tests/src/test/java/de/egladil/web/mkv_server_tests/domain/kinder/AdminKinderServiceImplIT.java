@@ -40,7 +40,7 @@ public class AdminKinderServiceImplIT extends AbstractIntegrationTest {
 		Gruppeninfo gruppeninfo = service.createKurzstatistikKinder();
 
 		// Assert
-		assertEquals("Kinder", gruppeninfo.getName());
+		assertEquals("KINDER", gruppeninfo.getUuid());
 		List<Gruppenitem> items = gruppeninfo.getGruppenItems();
 		assertEquals(4, items.size());
 

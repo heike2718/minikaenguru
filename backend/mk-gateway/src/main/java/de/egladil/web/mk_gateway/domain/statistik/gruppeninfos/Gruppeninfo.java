@@ -59,4 +59,9 @@ public class Gruppeninfo {
 		this.anzahlElemente = anzahlElemente;
 	}
 
+	public String getUuid() {
+
+		return uuid;
+	}
+
 }
