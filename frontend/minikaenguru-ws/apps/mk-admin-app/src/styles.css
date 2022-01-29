@@ -96,15 +96,9 @@ footer {
   border: 1px solid red;
 }
 
-;
-
 .irgendwas-bordered-blue {
   border: 1px solid blue;
 }
-
-;
-
-
 
 /* Extra small devices (phones, 600px and down) */
 /* Smartphones */
@@ -139,8 +133,7 @@ and (max-device-width : 480px) {
 }
 
 /* Desktops and Laptops */
-@media screen and (min-width: 1200px) {
-  
+@media screen and (min-width: 1200px) {  
   body {
     width: 60%;
   }

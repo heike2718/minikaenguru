@@ -96,12 +96,9 @@ footer {
   border: 1px solid red;
 }
 
-;
-
 .irgendwas-bordered-blue {
   border: 1px solid blue;
 }
-;
 
 /* Smartphones */
 @media only screen 
