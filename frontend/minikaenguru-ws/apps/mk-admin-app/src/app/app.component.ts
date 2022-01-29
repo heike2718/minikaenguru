@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { environment } from '../environments/environment';
 import { AuthService, AuthResult } from '@minikaenguru-ws/common-auth';
 import { slideInAnimation } from './animations';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 
 @Component({
 	selector: 'mka-root',
@@ -17,7 +17,7 @@ export class AppComponent {
 	api = environment.apiUrl;
 	version = environment.version;
 
-	constructor(private authService: AuthService) {
+	constructor(public authService: AuthService, private router: Router) {
 
 
 		this.authService.clearOrRestoreSession();
@@ -40,6 +40,10 @@ export class AppComponent {
 
 	getAnimationData(outlet: RouterOutlet) {
 		return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
+	}
+
+	gotoDashboad(): void {
+		this.router.navigateByUrl('/dashboard');
 	}
 
 }

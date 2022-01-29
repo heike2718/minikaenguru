@@ -28,9 +28,11 @@ export class AuthInterceptor implements HttpInterceptor {
 			let cloned = req.clone({
 				headers: req.headers.set('X-SESSIONID', sessionId)
 			});
+			/*
 			cloned = cloned.clone({
 				headers: req.headers.set('Cache-Control', 'no-cache')
 			});
+			*/
 			return next.handle(cloned);
 
 		} else {
