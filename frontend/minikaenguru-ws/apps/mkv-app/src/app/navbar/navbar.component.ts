@@ -40,8 +40,7 @@ export class NavbarComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.logo = environment.assetsUrl + '/mja-logo.png';
-		this.wettbewerbFacade.ladeAktuellenWettbewerb();
+		this.logo = environment.assetsUrl + '/mja-logo.png';		
 	}
 
 	login() {

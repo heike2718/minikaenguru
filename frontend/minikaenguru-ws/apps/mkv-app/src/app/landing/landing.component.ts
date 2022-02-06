@@ -31,6 +31,7 @@ export class LandingComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.aktuelleMeldungFacade.ladeAktuelleMeldung();
+		this.wettbewerbFacade.ladeAktuellenWettbewerb();
 		
 		const obj = localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_USER);
 
