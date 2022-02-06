@@ -2,10 +2,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { WettbewerbFacade } from '../wettbewerb/wettbewerb.facade';
 import { AktuelleMeldungFacade } from '../aktuelle-meldung/aktuelle-meldung.facade';
 import { environment } from '../../environments/environment';
-import { AuthService, STORAGE_KEY_USER, User } from '@minikaenguru-ws/common-auth';
+import { AuthService, STORAGE_KEY_GUI_VERSION, STORAGE_KEY_USER, User } from '@minikaenguru-ws/common-auth';
 import { Router } from '@angular/router';
 import { VersionService } from 'libs/common-components/src/lib/version/version.service';
 import { Subscription } from 'rxjs';
+import { LogService } from '@minikaenguru-ws/common-logging';
 
 @Component({
 	selector: 'mkv-landing',
@@ -25,10 +26,10 @@ export class LandingComponent implements OnInit, OnDestroy {
 		, private authService: AuthService
 		, private aktuelleMeldungFacade: AktuelleMeldungFacade
 		, private versionService: VersionService
+		, private logger: LogService
 		, private router: Router) { }
 
 	ngOnInit(): void {
-		this.wettbewerbFacade.ladeAktuellenWettbewerb();
 		this.aktuelleMeldungFacade.ladeAktuelleMeldung();
 		
 		const obj = localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_USER);
@@ -46,7 +47,17 @@ export class LandingComponent implements OnInit, OnDestroy {
 		}
 
 		this.versionSubscription = this.versionService.ladeExpectedGuiVersion().subscribe(
-			v => this.version = v
+			v => {
+
+				const storedGuiVersion = localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_GUI_VERSION);
+				this.version = v;
+
+				if (this.version !== storedGuiVersion) {
+					this.versionService.storeGuiVersionAndReloadApp(environment.storageKeyPrefix + STORAGE_KEY_GUI_VERSION, this.version);
+				} else {
+					this.logger.info('GUI-Version ist aktuell');
+				}
+			}
 		);
 	}
 

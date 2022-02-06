@@ -4,7 +4,7 @@ export const environment = {
 	assetsUrl: 'https://mathe-jung-alt.de/mkod-app/assets',
     apiUrl: 'https://mathe-jung-alt.de/mk-gateway',
     storageKeyPrefix: 'mkod_',
-	version: '1.7.1',
+	version: '1.7.2',
 	consoleLogActive: false,
 	serverLogActive: true,
 	loglevel: 4

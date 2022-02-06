@@ -1,14 +1,14 @@
 import { HttpClient } from "@angular/common/http";
 import { Inject, Injectable } from "@angular/core";
 import { Message, ResponsePayload } from "@minikaenguru-ws/common-messages";
-import { Observable, of } from "rxjs";
+import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { MkComponentsConfig, MkComponentsConfigService } from "../configuration/mk-components-config";
 
 @Injectable()
 export class VersionService {
 
-    constructor(private http: HttpClient, @Inject(MkComponentsConfigService) private config: MkComponentsConfig) { }
+   constructor(private http: HttpClient, @Inject(MkComponentsConfigService) private config: MkComponentsConfig) { }
 
     public ladeExpectedGuiVersion(): Observable<string> {
 
@@ -21,6 +21,10 @@ export class VersionService {
         );
     }
 
+    public storeGuiVersionAndReloadApp(storageKey: string, guiVersion: string): void {		
+		localStorage.setItem(storageKey, guiVersion);
+		window.location.reload();
+	}
 
     private getVersion(message: Message): string {
 

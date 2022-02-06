@@ -3,8 +3,6 @@ import { environment } from '../environments/environment';
 import { AuthService, AuthResult } from '@minikaenguru-ws/common-auth';
 import { MessageService } from '@minikaenguru-ws/common-messages';
 import { RouterOutlet } from '@angular/router';
-import { VersionService } from 'libs/common-components/src/lib/version/version.service';
-import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'mkv-root',
@@ -17,8 +15,6 @@ export class AppComponent {
 	showEnv = environment.envName === 'DEV';
 	api = environment.apiUrl;
 	version = environment.version;
-
-	private versionSubscription: Subscription = new Subscription();
 
 	constructor(private authService: AuthService
 		, private messageService: MessageService) {

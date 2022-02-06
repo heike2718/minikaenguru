@@ -3,8 +3,10 @@ import { AuthService, isLoggedOut } from '@minikaenguru-ws/common-auth';
 import { Store } from '@ngrx/store';
 import { VersionService } from 'libs/common-components/src/lib/version/version.service';
 import { Subscription } from 'rxjs';
+import { STORAGE_KEY_GUI_VERSION} from '@minikaenguru-ws/common-auth';
 import { environment } from '../../environments/environment';
 import { AppState } from '../reducers';
+import { LogService } from '@minikaenguru-ws/common-logging';
 
 @Component({
   selector: 'mka-landing',
@@ -22,11 +24,22 @@ export class LandingComponent implements OnInit, OnDestroy {
 
   constructor(private authStore: Store<AppState>
     , private authService: AuthService
-    , private versionService: VersionService) { }
+    , private versionService: VersionService
+    , private logger: LogService) { }
 
     ngOnInit(): void {
       this.versionSubscription = this.versionService.ladeExpectedGuiVersion().subscribe(
-        v => this.version = v
+        v => {
+  
+          const storedGuiVersion = localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_GUI_VERSION);
+          this.version = v;
+  
+          if (this.version !== storedGuiVersion) {
+            this.versionService.storeGuiVersionAndReloadApp(environment.storageKeyPrefix + STORAGE_KEY_GUI_VERSION, this.version);
+          } else {
+            this.logger.info('GUI-Version ist aktuell');
+          }
+        }
       );		
     }
 
