@@ -21,4 +21,8 @@ export class ErrorMappingService {
 
 		return { level: 'ERROR', message: 'Es ist ein unerwarteter Fehler aufgetreten. Bitte schreiben Sie eine Mail an minikaenguru@egladil.de' };
 	}
+
+	public extractHttpStatusCode(error: HttpErrorResponse): number {
+		return error.status;
+	}
 }

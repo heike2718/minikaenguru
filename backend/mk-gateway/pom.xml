@@ -5,13 +5,13 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mk-gateway</artifactId>
-	<version>1.7.1.2</version>
+	<version>1.7.2</version>
 	<packaging>jar</packaging>
 
 
 	<properties>
 		<commons.version>1.7.5</commons.version>
-		<filescanner.version>2.0.2</filescanner.version>
+		<filescanner.version>2.0.3</filescanner.version>
 		<quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
 		<quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
 		<quarkus.platform.version>2.5.3.Final</quarkus.platform.version>

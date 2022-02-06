@@ -23,10 +23,14 @@ export class UploadComponent implements OnInit {
 	dateiAusgewaehlt: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	maxFileSizeInfo!: string;
+	fileSize = '';
+	
 
 	uploading = false;
 	uploadSuccessful = false;
 	canSubmit = false;
+	showMaxSizeExceeded = false;
+	errmMaxFileSize = 'die gewählte Datei ist zu groß. Bitte wählen Sie eine andere Datei.'
 
 	selectedFiles?: FileList;
   	currentFile?: File;
@@ -45,16 +49,30 @@ export class UploadComponent implements OnInit {
 
 	onFileAdded($event: any) {
 		this.selectedFiles = $event.target.files;
+		this.showMaxSizeExceeded = false;
 
 		if (this.selectedFiles && this.selectedFiles.length === 1) {
-			this.currentFile = this.selectedFiles[0];
-			this.canSubmit = true;
-			this.uploading = false;
-			this.dateiAusgewaehlt.emit(true);			
+			
+			const size = this.selectedFiles[0].size;
+			this.calculateFileSize(size);
+
+			if (size <= this.uploadModel.maxSizeBytes) {				
+				this.currentFile = this.selectedFiles[0];
+				this.showMaxSizeExceeded = true;
+				this.canSubmit = true;	
+				this.dateiAusgewaehlt.emit(true);	
+				this.uploading = false;	
+			} else {
+				this.showMaxSizeExceeded = true;
+			}									
 		}
 	}
 
+
+
 	submitUpload(): void {
+
+		this.showMaxSizeExceeded = false;
 
 		if (this.uploadSuccessful) {
 			return;
@@ -80,10 +98,34 @@ export class UploadComponent implements OnInit {
 				this.uploading = false;
 				this.currentFile = undefined;
 				this.canSubmit = true;
-				const msg: Message = this.errorMapper.extractMessageObject(error);
-				this.responsePayload.emit({ message: msg });
+
+				const status = this.errorMapper.extractHttpStatusCode(error);			
+
+				if (status === 0) {
+					const msg: Message = {
+						level: 'ERROR',
+						message: 'Die Datei konnte nicht hochgeladen werden. Dateigröße: ' + this.fileSize + '. Bitte machen Sie einen Screenshot und senden diesen als Mail an info@egladil.de'
+					};
+					this.responsePayload.emit({ message: msg });
+				} else {
+					const msg: Message = this.errorMapper.extractMessageObject(error);
+					this.responsePayload.emit({ message: msg });
+				}				
 				window.scroll(0,0);
 			})
 		);		
+	}
+
+	private calculateFileSize(size: number): void {
+
+		let kb = size / 1024;
+
+		console.log('kb: ' + kb);
+
+		if (Math.round(size / 1024 ) < 2048) {
+			this.fileSize = Math.round(size / 1024) + ' kB';					
+		} else {
+			this.fileSize = Math.round(size / 1024 / 1024) + ' MB';
+		}
 	}
 }
