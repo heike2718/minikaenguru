@@ -59,4 +59,9 @@ public enum KlassenlisteFeldart {
 
 		throw new IllegalArgumentException(str);
 	}
+
+	public String getLabel() {
+
+		return label;
+	}
 }

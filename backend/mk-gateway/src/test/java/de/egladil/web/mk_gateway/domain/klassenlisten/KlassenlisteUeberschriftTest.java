@@ -115,6 +115,7 @@ public class KlassenlisteUeberschriftTest {
 					e.getMessage());
 			}
 		}
+
 	}
 
 	@Nested
@@ -176,6 +177,125 @@ public class KlassenlisteUeberschriftTest {
 			assertEquals(Integer.valueOf(3), ueberschrift.getIndexFeldart(KlassenlisteFeldart.KLASSENSTUFE).get());
 			assertEquals(Integer.valueOf(0), ueberschrift.getIndexFeldart(KlassenlisteFeldart.VORNAME).get());
 			assertEquals(Integer.valueOf(1), ueberschrift.getIndexFeldart(KlassenlisteFeldart.NACHNAME).get());
+		}
+
+		@Test
+		void should_getIndexReturnExpectedValues_when_NameStattNachnamePos1() {
+
+			// Arrange
+			String zeileKommasepariert = "name;Klasse;VorName;klassenstufe";
+			KlassenlisteUeberschrift ueberschrift = new KlassenlisteUeberschrift(zeileKommasepariert);
+
+			// Act + Assert
+			assertEquals(Integer.valueOf(0), ueberschrift.getIndexFeldart(KlassenlisteFeldart.NACHNAME).get());
+			assertEquals(Integer.valueOf(1), ueberschrift.getIndexFeldart(KlassenlisteFeldart.KLASSE).get());
+			assertEquals(Integer.valueOf(2), ueberschrift.getIndexFeldart(KlassenlisteFeldart.VORNAME).get());
+			assertEquals(Integer.valueOf(3), ueberschrift.getIndexFeldart(KlassenlisteFeldart.KLASSENSTUFE).get());
+
+		}
+	}
+
+	@Nested
+	class DetectIndexNachnameTests {
+
+		@Test
+		void should_detectIndexNachnameReturn0_whenPosition0() {
+
+			String[] eingaben = new String[] { " NaMe ", "  Vorname", "Klasse ", "Klassenstufe" };
+
+			// Act + Assert
+			assertEquals(0, new KlassenlisteUeberschrift().detectIndexNachname(eingaben));
+
+		}
+
+		@Test
+		void should_detectIndexNachnameReturn1_whenPosition1() {
+
+			String[] eingaben = new String[] { "  Vorname", " NaMe ", "Klasse ", "Klassenstufe" };
+
+			// Act + Assert
+			assertEquals(1, new KlassenlisteUeberschrift().detectIndexNachname(eingaben));
+
+		}
+
+		@Test
+		void should_detectIndexNachnameReturn2_whenPosition2() {
+
+			String[] eingaben = new String[] { "  Vorname", "Klasse ", " NaMe ", "Klassenstufe" };
+
+			// Act + Assert
+			assertEquals(2, new KlassenlisteUeberschrift().detectIndexNachname(eingaben));
+
+		}
+
+		@Test
+		void should_detectIndexNachnameReturn3_whenPosition3() {
+
+			String[] eingaben = new String[] { "  Vorname", "Klasse ", "Klassenstufe", " NaMe " };
+
+			// Act + Assert
+			assertEquals(3, new KlassenlisteUeberschrift().detectIndexNachname(eingaben));
+
+		}
+
+		@Test
+		void should_detectIndexNachnameReturnNegative_whenNotPresent() {
+
+			String[] eingaben = new String[] { "  Vorname", "Klasse ", "Klassenstufe", " Heinz " };
+
+			// Act + Assert
+			assertEquals(-1, new KlassenlisteUeberschrift().detectIndexNachname(eingaben));
+
+		}
+
+		@Test
+		void should_detectIndexNachnameReturn0_whenNachnamePosition0() {
+
+			String[] eingaben = new String[] { " NachName ", "  Vorname", "Klasse ", "Klassenstufe" };
+
+			// Act + Assert
+			assertEquals(0, new KlassenlisteUeberschrift().detectIndexNachname(eingaben));
+
+		}
+
+		@Test
+		void should_detectIndexNachnameReturn1_whenNachnamePosition1() {
+
+			String[] eingaben = new String[] { "  Vorname", " Nachname ", "Klasse ", "Klassenstufe" };
+
+			// Act + Assert
+			assertEquals(1, new KlassenlisteUeberschrift().detectIndexNachname(eingaben));
+
+		}
+
+		@Test
+		void should_detectIndexNachnameReturn2_whenNachnamePosition2() {
+
+			String[] eingaben = new String[] { "  Vorname", "Klasse ", " Nachname ", "Klassenstufe" };
+
+			// Act + Assert
+			assertEquals(2, new KlassenlisteUeberschrift().detectIndexNachname(eingaben));
+
+		}
+
+		@Test
+		void should_detectIndexNachnameReturn3_whenNachnamePosition3() {
+
+			String[] eingaben = new String[] { "  Vorname", "Klasse ", "Klassenstufe", " NaMe " };
+
+			// Act + Assert
+			assertEquals(3, new KlassenlisteUeberschrift().detectIndexNachname(eingaben));
+
+		}
+
+		@Test
+		void should_detectIndexNachnameReturnNegative_whenOneItemNull() {
+
+			String[] eingaben = new String[] { "  Vorname", "Klasse ", null, " NaMe " };
+
+			// Act + Assert
+			assertEquals(-1, new KlassenlisteUeberschrift().detectIndexNachname(eingaben));
+
 		}
 	}
 }

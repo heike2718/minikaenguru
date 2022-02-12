@@ -22,6 +22,14 @@ public class KlassenlisteUeberschrift {
 	private final KlassenlisteFeldart[] feldarten;
 
 	/**
+	 *
+	 */
+	KlassenlisteUeberschrift() {
+
+		feldarten = new KlassenlisteFeldart[0];
+	}
+
+	/**
 	 * @param  zeileSemikolonsepariert
 	 *                                 String
 	 * @throws UploadFormatException
@@ -36,6 +44,16 @@ public class KlassenlisteUeberschrift {
 			LOGGER.error("ungueltige erste Zeile: -{}-", zeileSemikolonsepariert);
 			throw new UploadFormatException(KlassenlisteFeldart.getMessageExpectedContents());
 		}
+
+		int indexNachname = this.detectIndexNachname(eingaben);
+
+		if (indexNachname < 0) {
+
+			LOGGER.error("ungueltige erste Zeile: -{}-", zeileSemikolonsepariert);
+			throw new UploadFormatException(KlassenlisteFeldart.getMessageExpectedContents());
+		}
+
+		eingaben[indexNachname] = "Nachname";
 
 		this.feldarten = new KlassenlisteFeldart[eingaben.length];
 		int index = 0;
@@ -74,6 +92,30 @@ public class KlassenlisteUeberschrift {
 		}
 
 		return Optional.empty();
+	}
+
+	int detectIndexNachname(final String[] eingaben) {
+
+		for (int i = 0; i < eingaben.length; i++) {
+
+			if (eingaben[i] == null) {
+
+				return -1;
+			}
+
+			String str = eingaben[i].toUpperCase();
+
+			if (str.contains("NAME")) {
+
+				if (!str.contains(KlassenlisteFeldart.VORNAME.getLabel().toUpperCase())) {
+
+					return i;
+				}
+			}
+
+		}
+
+		return -1;
 	}
 
 }
