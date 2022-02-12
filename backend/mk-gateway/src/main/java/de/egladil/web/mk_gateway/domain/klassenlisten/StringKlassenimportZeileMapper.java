@@ -5,6 +5,7 @@
 package de.egladil.web.mk_gateway.domain.klassenlisten;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -65,6 +66,11 @@ public class StringKlassenimportZeileMapper implements Function<Pair<Integer, St
 		}
 
 		String[] tokens = StringUtils.split(semikolonseparierteZeileMitIndex.getRight(), ';');
+
+		if (Arrays.stream(tokens).filter(t -> StringUtils.isNotBlank(t)).count() == 0) {
+
+			return Optional.empty();
+		}
 
 		String fehlermeldung = null;
 

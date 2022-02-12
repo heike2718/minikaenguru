@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Optional;
+import java.util.Random;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.BeforeEach;
@@ -220,5 +221,44 @@ public class StringKlassenimportZeileMapperTest {
 		KlassenimportZeile importierteZeile = result.get();
 		assertNull(importierteZeile.getFehlermeldung());
 		assertEquals("1", importierteZeile.getKlassenstufe());
+	}
+
+	@Test
+	void should_applyIgnore_when_zeile3SemikolonsUndSonstNix() {
+
+		// Arrange
+		StringKlassenimportZeileMapper mapper = new StringKlassenimportZeileMapper(klassenlisteUeberschrift);
+		String zeile = ";;;";
+		Pair<Integer, String> pair = Pair.of(Integer.valueOf(42), zeile);
+
+		// Act
+		Optional<KlassenimportZeile> result = mapper.apply(pair);
+
+		// Assert
+		assertTrue(result.isEmpty());
+	}
+
+	@Test
+	void should_applyIgnore_when_zeileBeliebigeAnzahlSemikolonsUndSonstNix() {
+
+		// Arrange
+		StringKlassenimportZeileMapper mapper = new StringKlassenimportZeileMapper(klassenlisteUeberschrift);
+		int anzahlSemikolons = new Random().nextInt(10) + 3;
+
+		StringBuffer sb = new StringBuffer();
+
+		for (int i = 0; i < anzahlSemikolons; i++) {
+
+			sb.append(";");
+		}
+
+		String zeile = sb.toString();
+		Pair<Integer, String> pair = Pair.of(Integer.valueOf(42), zeile);
+
+		// Act
+		Optional<KlassenimportZeile> result = mapper.apply(pair);
+
+		// Assert
+		assertTrue(result.isEmpty());
 	}
 }

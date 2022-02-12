@@ -4,11 +4,11 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.klassenlisten.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.never;
@@ -140,6 +140,81 @@ public class KlassenlisteCSVImportServiceTest {
 
 			// Arrange
 			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt";
+
+			List<Klasse> klassen = new ArrayList<>();
+			klassen.add(new Klasse(new Identifier("uuid-1a")).withName("1a").withSchuleID(new Identifier(SCHULKUERZEL)));
+			klassen.add(new Klasse(new Identifier("uuid-1b")).withName("1b").withSchuleID(new Identifier(SCHULKUERZEL)));
+			klassen.add(new Klasse(new Identifier("uuid-2a")).withName("2a").withSchuleID(new Identifier(SCHULKUERZEL)));
+			klassen.add(new Klasse(new Identifier("uuid-2b")).withName("2b").withSchuleID(new Identifier(SCHULKUERZEL)));
+
+			List<KlasseAPIModel> klassenAPIModels = klassen.stream().map(k -> KlasseAPIModel.createFromKlasse(k))
+				.collect(Collectors.toList());
+
+			List<Kind> kinder = new ArrayList<>();
+			kinder.add(
+				new Kind(new Identifier("1")).withKlasseID(new Identifier("uuid-1a")).withKlassenstufe(Klassenstufe.EINS)
+					.withLandkuerzel("DE-HE").withNachname("Granach").withSprache(Sprache.de).withVorname("Lukas"));
+			kinder.add(
+				new Kind(new Identifier("2")).withKlasseID(new Identifier("uuid-1a")).withKlassenstufe(Klassenstufe.EINS)
+					.withLandkuerzel("DE-HE").withNachname("Weiß").withSprache(Sprache.de).withVorname("Natalie"));
+			kinder.add(
+				new Kind(new Identifier("3")).withKlasseID(new Identifier("uuid-1b")).withKlassenstufe(Klassenstufe.EINS)
+					.withLandkuerzel("DE-HE").withNachname("Wanowski").withSprache(Sprache.de).withVorname("Szymon"));
+			kinder.add(
+				new Kind(new Identifier("4")).withKlasseID(new Identifier("uuid-1b")).withKlassenstufe(Klassenstufe.EINS)
+					.withLandkuerzel("DE-HE").withNachname("Schöner").withSprache(Sprache.de).withVorname("Patrick"));
+			kinder.add(
+				new Kind(new Identifier("5")).withKlasseID(new Identifier("uuid-2a")).withKlassenstufe(Klassenstufe.ZWEI)
+					.withLandkuerzel("DE-HE").withNachname("Hofstedter").withSprache(Sprache.de).withVorname("Lennart"));
+			kinder.add(
+				new Kind(new Identifier("6")).withKlasseID(new Identifier("uuid-2a")).withKlassenstufe(Klassenstufe.ZWEI)
+					.withLandkuerzel("DE-HE").withNachname("Gfauna").withSprache(Sprache.de).withVorname("Flora"));
+			kinder.add(
+				new Kind(new Identifier("7")).withKlasseID(new Identifier("uuid-2b")).withKlassenstufe(Klassenstufe.ZWEI)
+					.withLandkuerzel("DE-HE").withNachname("Gröblin").withSprache(Sprache.de).withVorname("Pauline"));
+			kinder.add(
+				new Kind(new Identifier("8")).withKlasseID(new Identifier("uuid-2b")).withKlassenstufe(Klassenstufe.ZWEI)
+					.withLandkuerzel("DE-HE").withNachname("Hinremöller").withSprache(Sprache.de).withVorname("Lucie"));
+
+			when(klassenService.importiereKlassen(any(), any(), anyList())).thenReturn(klassen);
+			when(kinderService.importiereKinder(any(), any(), any())).thenReturn(kinder);
+			when(kinderService.findWithSchulteilname(any())).thenReturn(vorhandeneKinder);
+			when(klassenService.klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID)).thenReturn(klassenAPIModels);
+			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
+
+			// Act
+			ResponsePayload responsePayload = service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
+
+			MessagePayload messagePayload = responsePayload.getMessage();
+			assertTrue(messagePayload.isOk());
+			assertEquals("Die Daten wurden erfolgreich importiert. Bitte prüfen Sie, ob Umlaute korrekt angezeigt werden.",
+				messagePayload.getMessage());
+
+			assertNotNull(responsePayload.getData());
+
+			KlassenlisteImportReport report = (KlassenlisteImportReport) responsePayload.getData();
+			assertEquals(4, report.getKlassen().size());
+			assertEquals(8, report.getAnzahlKinderImportiert());
+			assertEquals(0L, report.getAnzahlDubletten());
+			assertEquals(0L, report.getAnzahlKlassenstufeUnklar());
+			assertEquals(0, report.getAnzahlNichtImportiert());
+			assertNull(report.getUuidImportReport());
+			List<String> fehlermeldungen = report.getFehlerUndWarnungen();
+			assertEquals(0, fehlermeldungen.size());
+
+			verify(klassenService).importiereKlassen(any(), any(), anyList());
+			verify(kinderService).importiereKinder(any(), any(), any());
+			verify(kinderService).findWithSchulteilname(any());
+			verify(klassenService).klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID);
+			verify(uploadRepository).updateUpload(persistenterUpload);
+		}
+
+		@Test
+		void should_importiereKlassenIgnoreLeereZeilen() throws IOException {
+
+			// Arrange
+			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt";
+			persistenterUpload.setUuid("klassenliste-mit-leerzeilen");
 
 			List<Klasse> klassen = new ArrayList<>();
 			klassen.add(new Klasse(new Identifier("uuid-1a")).withName("1a").withSchuleID(new Identifier(SCHULKUERZEL)));
