@@ -7,7 +7,7 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mk-kataloge</artifactId>
-	<version>1.7.2.1</version>
+	<version>1.7.3</version>
 
 	<properties>
 		<commons.version>1.7.5</commons.version>

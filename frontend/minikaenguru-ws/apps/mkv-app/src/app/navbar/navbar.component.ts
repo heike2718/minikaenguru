@@ -54,4 +54,9 @@ export class NavbarComponent implements OnInit {
 	gotProfilApp(): void {
 		this.logoutService.logoutForUserSettings();
 	}
+
+	reloadApplication(): void {
+		window.location.reload();
+	}
+
 }

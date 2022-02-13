@@ -37,7 +37,17 @@ public class SecureHeadersFilter implements ContainerResponseFilter {
 
 		if (headers.get("Cache-Control") == null) {
 
-			headers.add("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+			headers.add("Cache-Control", "no-store, no-cache, must-revalidate max-age=0");
+		}
+
+		if (headers.get("Pragma") == null) {
+
+			headers.add("Pragma", "no-cache");
+		}
+
+		if (headers.get("expires") == null) {
+
+			headers.add("expires", "0");
 		}
 
 		if (headers.get("X-Content-Type-Options") == null) {

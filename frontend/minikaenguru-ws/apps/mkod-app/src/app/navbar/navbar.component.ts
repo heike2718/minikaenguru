@@ -27,4 +27,8 @@ export class NavbarComponent implements OnInit {
 		this.logo = environment.assetsUrl + '/mja-logo.png';
 		this.wettbewerbeFacade.loadWettbewerbe();
 	}
+
+	reloadApplication(): void {
+		window.location.reload();
+	}
 }
