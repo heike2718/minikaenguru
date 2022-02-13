@@ -17,8 +17,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import de.egladil.web.mk_gateway.domain.error.UploadFormatException;
-
 /**
  * StringKlassenimportZeileMapperTest
  */
@@ -30,25 +28,6 @@ public class StringKlassenimportZeileMapperTest {
 	void setUp() {
 
 		klassenlisteUeberschrift = new KlassenlisteUeberschrift("Klasse;Nachname;Vorname;Klassenstufe");
-	}
-
-	@Test
-	void should_constructorThrowUploadFormatException_when_ueberschriftNichtWieGefordert() {
-
-		KlassenlisteUeberschrift ueberschrift = new KlassenlisteUeberschrift("blau;grün;Vorname;Klassenstufe");
-
-		try {
-
-			new StringKlassenimportZeileMapper(ueberschrift);
-			fail("keine UploadFormatException");
-
-		} catch (UploadFormatException e) {
-
-			assertEquals(
-				"Die hochgeladene Datei kann nicht verarbeitet werden. Die erste Zeile enthält nicht die Felder \"Nachname\", \"Vorname\", \"Klasse\", \"Klassenstufe\".",
-				e.getMessage());
-		}
-
 	}
 
 	@Test
@@ -94,7 +73,7 @@ public class StringKlassenimportZeileMapperTest {
 		KlassenimportZeile result = optResult.get();
 		assertEquals(42, result.getIndex());
 		assertEquals(
-			"Zeile 42: Fehler! \"2a ; Grüter ;2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+			"Zeile 42: Fehler! \"2a ; Grüter ;2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen. Es sind weniger als 4 Angaben.",
 			result.getFehlermeldung());
 		assertFalse(result.ok());
 		assertNull(result.getKlasse());
@@ -121,7 +100,7 @@ public class StringKlassenimportZeileMapperTest {
 		KlassenimportZeile result = optResult.get();
 		assertEquals(42, result.getIndex());
 		assertEquals(
-			"Zeile 42: Fehler! \"2a ; Grüter ; Marie; Luise ;2.0\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+			"Zeile 42: Fehler! \"2a ; Grüter ; Marie; Luise ;2.0\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen. Es sind mehr als 4 Angaben.",
 			result.getFehlermeldung());
 		assertFalse(result.ok());
 		assertNull(result.getKlasse());
@@ -147,7 +126,7 @@ public class StringKlassenimportZeileMapperTest {
 		KlassenimportZeile result = optResult.get();
 		assertEquals(42, result.getIndex());
 		assertEquals(
-			"Zeile 42: Fehler! \"Grüter ; 2a\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+			"Zeile 42: Fehler! \"Grüter ; 2a\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen. Es sind weniger als 4 Angaben.",
 			result.getFehlermeldung());
 		assertFalse(result.ok());
 		assertNull(result.getKlasse());

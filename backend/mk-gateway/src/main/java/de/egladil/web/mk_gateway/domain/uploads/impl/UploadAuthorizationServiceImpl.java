@@ -200,7 +200,7 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 			if (optOnline.isPresent()) {
 
 				LOGGER.warn(
-					"{} - {} - {} versucht, Auswertungen fuer Schule {} hochzuladen, aber es gibt bereits Onlineloesungszettel",
+					"{} - {} versucht, Auswertungen fuer Schule {} hochzuladen, aber es gibt bereits Onlineloesungszettel",
 					rolle, benutzerID, schulkuerzel);
 				throw new ActionNotAuthorizedException(
 					applicationMessages.getString("auswertungimport.forbidden.nurOnline"));
@@ -216,7 +216,7 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 			if (optUpload.isPresent()) {
 
 				LOGGER.warn(
-					"{} - {} - {} versucht, Klassenliste fuer Schule {} hochzuladen, aber es gibt bereits Onlineloesungszettel",
+					"{} - {} versucht, Klassenliste fuer Schule {} hochzuladen, aber es gibt bereits importierte Auswertungen",
 					rolle, benutzerID, schulkuerzel);
 				throw new ActionNotAuthorizedException(
 					applicationMessages.getString("klassenimport.forbidden.hochgeladeneAuswertung"));

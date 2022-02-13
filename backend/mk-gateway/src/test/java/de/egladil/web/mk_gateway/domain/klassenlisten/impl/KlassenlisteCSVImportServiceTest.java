@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.PersistenceException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -109,6 +111,139 @@ public class KlassenlisteCSVImportServiceTest {
 	class ImportTests {
 
 		@Test
+		void should_importiereKlassenHandlePersistenceException() {
+
+			// Arrange
+			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt";
+			when(kinderService.findWithSchulteilname(any())).thenThrow(new PersistenceException("böse böse"));
+			when(uploadRepository.updateUpload(any())).thenReturn(persistenterUpload);
+
+			// Act
+			ResponsePayload result = service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
+
+			// Assert
+			MessagePayload messagePayload = result.getMessage();
+			assertEquals("ERROR", messagePayload.getLevel());
+			assertEquals(
+				"Die Klassenliste konnte wegen eines Fehlers leider nicht importiert werden. Bitte senden Sie eine Mail an info@egladil.de.",
+				messagePayload.getMessage());
+
+			assertNull(result.getData());
+
+			verify(uploadRepository).updateUpload(any());
+
+		}
+
+		@Test
+		void should_importiereKlassenThrowUploadFormatException_when_NullZeilen() {
+
+			// Arrange
+			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/fehlerhaft";
+			persistenterUpload.setUuid("null-zeilen");
+			when(uploadRepository.updateUpload(any())).thenReturn(persistenterUpload);
+
+			// Act + Assert
+			try {
+
+				service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
+				fail("keine UploadFormatException");
+			} catch (UploadFormatException e) {
+
+				assertEquals(
+					"Die Klassenliste konnte nicht importiert werden: sie enthält keine Kinder. Bitte prüfen Sie die hochgeladene Datei.",
+					e.getMessage());
+
+				verify(klassenService, never()).importiereKlassen(any(), any(), anyList());
+				verify(kinderService, never()).importiereKinder(any(), any(), any());
+				verify(kinderService, never()).findWithSchulteilname(any());
+				verify(klassenService, never()).klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID);
+				verify(uploadRepository).updateUpload(persistenterUpload);
+			}
+
+		}
+
+		@Test
+		void should_importiereKlassenThrowUploadFormatException_when_eineZeileAberBlank() {
+
+			// Arrange
+			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/fehlerhaft";
+			persistenterUpload.setUuid("eine-zeile-blank");
+
+			// Act + Assert
+			try {
+
+				service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
+				fail("keine UploadFormatException");
+			} catch (UploadFormatException e) {
+
+				assertEquals(
+					"Die Klassenliste kann nicht verarbeitet werden. Ihre Tabelle hat nicht die erwarteten Spalten. Es werden genau 4 Spalten mit den Überschriften Klasse,Klassenstufe,Nachname,Vorname in beliebiger Reihenfolge erwartet. Ihre Spaltenüberschriften sind leer.",
+					e.getMessage());
+
+				verify(klassenService, never()).importiereKlassen(any(), any(), anyList());
+				verify(kinderService, never()).importiereKinder(any(), any(), any());
+				verify(kinderService, never()).findWithSchulteilname(any());
+				verify(klassenService, never()).klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID);
+				verify(uploadRepository, never()).updateUpload(persistenterUpload);
+			}
+
+		}
+
+		@Test
+		void should_importiereKlassenThrowUploadFormatException_when_eineZeileAberKeineUeberschrift() {
+
+			// Arrange
+			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/fehlerhaft";
+			persistenterUpload.setUuid("eine-zeile-keine-ueberschrift");
+
+			// Act + Assert
+			try {
+
+				service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
+				fail("keine UploadFormatException");
+			} catch (UploadFormatException e) {
+
+				assertEquals(
+					"Die Klassenliste kann nicht verarbeitet werden. Es werden genau 4 Spalten mit den Überschriften Klasse,Klassenstufe,Nachname,Vorname in beliebiger Reihenfolge erwartet. Gefunden wurden die Spaltenüberschriften Amira;Emami;2a;2.",
+					e.getMessage());
+
+				verify(klassenService, never()).importiereKlassen(any(), any(), anyList());
+				verify(kinderService, never()).importiereKinder(any(), any(), any());
+				verify(kinderService, never()).findWithSchulteilname(any());
+				verify(klassenService, never()).klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID);
+				verify(uploadRepository, never()).updateUpload(persistenterUpload);
+			}
+
+		}
+
+		@Test
+		void should_importiereKlassenThrowUploadFormatException_when_alleZeilenFehlerhaft() {
+
+			// Arrange
+			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/fehlerhaft";
+			persistenterUpload.setUuid("alle-zeilen-falsch");
+
+			// Act + Assert
+			try {
+
+				service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
+				fail("keine UploadFormatException");
+			} catch (UploadFormatException e) {
+
+				assertEquals(
+					"Die Klassenliste kann nicht verarbeitet werden. keine Zeile enthält die erforderlichen Angaben Vorname, Nachname, Klasse, Klassenstufe.",
+					e.getMessage());
+
+				verify(klassenService, never()).importiereKlassen(any(), any(), anyList());
+				verify(kinderService, never()).importiereKinder(any(), any(), any());
+				verify(kinderService, never()).findWithSchulteilname(any());
+				verify(klassenService, never()).klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID);
+				verify(uploadRepository, never()).updateUpload(persistenterUpload);
+			}
+
+		}
+
+		@Test
 		void should_importiereKlassenThrowUploadFormatException_when_keineUeberschrift() {
 
 			// Arrange
@@ -123,7 +258,7 @@ public class KlassenlisteCSVImportServiceTest {
 			} catch (UploadFormatException e) {
 
 				assertEquals(
-					"Die erste Zeile muss folgenden Inhalt in beliebiger Reihenfolge haben: Klasse,Klassenstufe,Nachname,Vorname",
+					"Die Klassenliste kann nicht verarbeitet werden. Es werden genau 4 Spalten mit den Überschriften Klasse,Klassenstufe,Nachname,Vorname in beliebiger Reihenfolge erwartet. Gefunden wurden die Spaltenüberschriften Amiera;Kaled;2a;2.",
 					e.getMessage());
 
 				verify(klassenService, never()).importiereKlassen(any(), any(), anyList());
@@ -131,6 +266,34 @@ public class KlassenlisteCSVImportServiceTest {
 				verify(kinderService, never()).findWithSchulteilname(any());
 				verify(klassenService, never()).klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID);
 				verify(uploadRepository, never()).updateUpload(persistenterUpload);
+			}
+
+		}
+
+		@Test
+		void should_importiereKlassenThrowUploadFormatException_when_nurUeberschrift() {
+
+			// Arrange
+			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/fehlerhaft";
+			persistenterUpload.setUuid("eine-zeile-nur-ueberschrift");
+			when(uploadRepository.updateUpload(any())).thenReturn(persistenterUpload);
+
+			// Act + Assert
+			try {
+
+				service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
+				fail("keine UploadFormatException");
+			} catch (UploadFormatException e) {
+
+				assertEquals(
+					"Die Klassenliste konnte nicht importiert werden: sie enthält keine Kinder. Bitte prüfen Sie die hochgeladene Datei.",
+					e.getMessage());
+
+				verify(klassenService, never()).importiereKlassen(any(), any(), anyList());
+				verify(kinderService, never()).importiereKinder(any(), any(), any());
+				verify(kinderService, never()).findWithSchulteilname(any());
+				verify(klassenService, never()).klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID);
+				verify(uploadRepository).updateUpload(persistenterUpload);
 			}
 
 		}
@@ -413,10 +576,10 @@ public class KlassenlisteCSVImportServiceTest {
 			assertEquals(5, fehlerUndWarnungen.size());
 
 			assertEquals(
-				"Zeile 1: Fehler! \"Amiera; Maria;Kaled;2a;2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+				"Zeile 1: Fehler! \"Amiera; Maria;Kaled;2a;2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen. Es sind mehr als 4 Angaben.",
 				fehlerUndWarnungen.get(0));
 			assertEquals(
-				"Zeile 2: Fehler! \"Benedikt;2a;0\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+				"Zeile 2: Fehler! \"Benedikt;2a;0\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen. Es sind weniger als 4 Angaben.",
 				fehlerUndWarnungen.get(1));
 
 			assertEquals("Zeile 3: Özcan;Bakir;2b;3: diese Klassenstufe gibt es nicht. Die Klassenstufe wurde auf \"2\" gesetzt.",

@@ -4,8 +4,8 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.fileutils;
 
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
 
@@ -103,11 +103,17 @@ public class MkGatewayFileUtilsTest {
 		List<String> lines = MkGatewayFileUtils.readLines(path, MkGatewayFileUtils.DEFAULT_ENCODING);
 
 		// Assert
-		assertEquals(5, lines.size());
-		assertEquals("Vorname,Nachname,Klasse,Klassenstufe", lines.get(0));
-		assertEquals("Amiera,Kaled,2a,2", lines.get(1));
-		assertEquals("Benedikt,Fichtenholz ,2a,0", lines.get(2));
-		assertEquals("Özcan,Bakir,2b,2", lines.get(3));
-		assertEquals("Thomas, Grütze,2b,2", lines.get(4));
+		assertEquals(11, lines.size());
+		assertEquals("Vorname;Nachname;Klasse;Klassenstufe", lines.get(0));
+		assertEquals("Lukas;Granach;1a;1.0", lines.get(1));
+		assertEquals("Nathalie;Weiß;1a;1.0", lines.get(2));
+		assertEquals("Szymon;Wanowski;1b;1.0", lines.get(3));
+		assertEquals("Patrick;Schöner;1b;1.0", lines.get(4));
+		assertEquals("Lennart;Hofstedter;2a;2.0", lines.get(5));
+		assertEquals("Flora;Gfauna;2a;2.0", lines.get(6));
+		assertEquals("Pauline;Gröblin;2b;2.0", lines.get(7));
+		assertEquals("Lucie;Hinremöller;2b;2.0", lines.get(8));
+		assertEquals(";;;", lines.get(9));
+		assertEquals(";;;", lines.get(10));
 	}
 }
