@@ -46,7 +46,7 @@ public class UploadHibernateRepository implements UploadRepository {
 
 		UploadHibernateRepository result = new UploadHibernateRepository();
 		result.entityManager = em;
-		result.sortNumberGenerator = SortNumberGeneratorImpl.createForIntegrationTest(em);
+		result.sortNumberGenerator = SortNumberGeneratorImpl.createForIntegrationTests(em);
 		return result;
 	}
 

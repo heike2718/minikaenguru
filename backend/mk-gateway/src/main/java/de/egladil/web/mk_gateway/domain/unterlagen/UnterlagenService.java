@@ -28,6 +28,7 @@ import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.ZugangUnterlagenService;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 
 /**
@@ -37,14 +38,6 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 public class UnterlagenService {
 
 	private static final String PATH_SUBDIR_UNTERLAGEN = "/unterlagen/";
-
-	private static final String MESSAGE_FORMAT_PRIVAT_DEUTSCH = "{0}-minikaenguru-deutsch-privat.zip";
-
-	private static final String MESSAGE_FORMAT_PRIVAT_ENGLISCH = "{0}-minikangaru-english-private.zip";
-
-	private static final String MESSAGE_FORMAT_SCHULEN_DEUTSCH = "{0}-minikaenguru-deutsch-schulen.zip";
-
-	private static final String MESSAGE_FORMAT_SCHULEN_ENGLISCH = "{0}-minikangaroo-english-schools.zip";
 
 	private static final Logger LOG = LoggerFactory.getLogger(UnterlagenService.class);
 
@@ -62,6 +55,9 @@ public class UnterlagenService {
 
 	@Inject
 	ZugangUnterlagenService zugangUnterlagenService;
+
+	@Inject
+	DownloadsRepository downloadsRepository;
 
 	private SecurityIncidentRegistered securityIncidentEventPayload;
 
@@ -86,11 +82,15 @@ public class UnterlagenService {
 
 		Wettbewerb aktuellerWettbewerb = checkPreconditionsAndGetWettbewerb(lehrerID, Rolle.LEHRER);
 
-		String pattern = sprache == Sprache.de ? MESSAGE_FORMAT_SCHULEN_DEUTSCH : MESSAGE_FORMAT_SCHULEN_ENGLISCH;
+		DownloadType downloadType = sprache == Sprache.de ? DownloadType.SCHULE_DEUTSCH : DownloadType.SCHULE_ENGLISCH;
+
+		String pattern = downloadType.getMessageFormatPatternFileName();
 		String dateiname = MessageFormat.format(pattern, new Object[] { aktuellerWettbewerb.id().toString() });
 		String path = pathExternalFiles + PATH_SUBDIR_UNTERLAGEN + dateiname;
 
 		final byte[] data = MkGatewayFileUtils.readBytesFromFile(path);
+
+		this.markDownloadQuietly(lehrerID, aktuellerWettbewerb.id(), downloadType);
 
 		return new DownloadData(dateiname, data);
 	}
@@ -107,11 +107,15 @@ public class UnterlagenService {
 
 		Wettbewerb aktuellerWettbewerb = checkPreconditionsAndGetWettbewerb(privatveranstalterID, Rolle.PRIVAT);
 
-		String pattern = sprache == Sprache.de ? MESSAGE_FORMAT_PRIVAT_DEUTSCH : MESSAGE_FORMAT_PRIVAT_ENGLISCH;
+		DownloadType downloadType = sprache == Sprache.de ? DownloadType.PRIVAT_DEUTSCH : DownloadType.PRIVAT_ENGLISCH;
+
+		String pattern = downloadType.getMessageFormatPatternFileName();
 		String dateiname = MessageFormat.format(pattern, new Object[] { aktuellerWettbewerb.id().toString() });
 		String path = pathExternalFiles + PATH_SUBDIR_UNTERLAGEN + dateiname;
 
 		final byte[] data = MkGatewayFileUtils.readBytesFromFile(path);
+
+		this.markDownloadQuietly(privatveranstalterID, aktuellerWettbewerb.id(), downloadType);
 
 		return new DownloadData(dateiname, data);
 	}
@@ -189,6 +193,24 @@ public class UnterlagenService {
 
 		}
 		return optVeranstalter;
+	}
+
+	private void markDownloadQuietly(final Identifier veranstalterID, final WettbewerbID wettbewerbID, final DownloadType downloadType) {
+
+		if (downloadsRepository != null) {
+
+			Download download = Download.createInstance().withDownloadTyp(downloadType).withVeranstalterID(veranstalterID)
+				.withWettbewerbID(wettbewerbID);
+
+			try {
+
+				downloadsRepository.addOrUpdate(download);
+
+			} catch (Exception e) {
+
+				LOG.error("Schade: {} konnte nicht gespeichert werden: {}", download.printUniqueKey(), e.getMessage(), e);
+			}
+		}
 	}
 
 	SecurityIncidentRegistered securityIncidentEventPayload() {

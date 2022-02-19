@@ -53,7 +53,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 
 		LoesungszettelHibernateRepository result = new LoesungszettelHibernateRepository();
 		result.entityManager = em;
-		result.sortNumberGenerator = SortNumberGeneratorImpl.createForIntegrationTest(em);
+		result.sortNumberGenerator = SortNumberGeneratorImpl.createForIntegrationTests(em);
 		return result;
 	}
 

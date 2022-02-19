@@ -172,6 +172,9 @@ public class WettbewerbService {
 	 */
 	public WettbewerbStatus starteNaechstePhase(final Integer jahr) {
 
+		// TODO: wenn nächste Phase BEENDET, dann Kinder löschen, Klassen löschen, alle Zugangsstatus zurück auf DEFAULT, Uploads
+		// Klassenlisten löschen (Filesystem und Datenbank). Events mit den namen KlasseXXX, KindXXX, LoesungszettelXXX löschen
+
 		Optional<Wettbewerb> optWettbewerb = wettbewerbRepository.wettbewerbMitID(new WettbewerbID(jahr));
 
 		if (!optWettbewerb.isPresent()) {

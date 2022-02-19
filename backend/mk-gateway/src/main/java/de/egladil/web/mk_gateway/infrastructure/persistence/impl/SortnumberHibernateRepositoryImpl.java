@@ -43,7 +43,8 @@ public class SortnumberHibernateRepositoryImpl implements SortnumberRepository {
 		@SuppressWarnings("unchecked")
 		List<BigInteger> trefferliste = entityManager.createNativeQuery(stmt).getResultList();
 
-		long value = trefferliste.get(0).longValue();
+		long value = trefferliste == null || trefferliste.isEmpty() ? 0
+			: trefferliste.get(0) == null ? 0 : trefferliste.get(0).longValue();
 
 		LOGGER.info("=======> {}: MAX(SORTNR) = {}", sortedTable, value);
 
