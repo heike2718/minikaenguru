@@ -136,7 +136,7 @@ public class TeilnahmenHibernateRepository implements TeilnahmenRepository {
 	}
 
 	@Override
-	public void changeTeilnahme(final Schulteilnahme teilnahme, final String uuidAenderer) throws IllegalStateException {
+	public void changeTeilnahme(final Schulteilnahme teilnahme) throws IllegalStateException {
 
 		List<PersistenteTeilnahme> persistenteTeilnahmen = this.findAllByNummer(teilnahme.teilnahmenummer().identifier());
 

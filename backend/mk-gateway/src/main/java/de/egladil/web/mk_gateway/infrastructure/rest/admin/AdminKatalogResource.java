@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.annotations.StringLatin;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
+import de.egladil.web.mk_gateway.domain.kataloge.SchulkatalogService;
 import de.egladil.web.mk_gateway.domain.kataloge.api.LandPayload;
 import de.egladil.web.mk_gateway.domain.kataloge.api.OrtPayload;
 import de.egladil.web.mk_gateway.domain.kataloge.api.SchulePayload;
@@ -50,6 +51,9 @@ public class AdminKatalogResource {
 
 	@Inject
 	MkKatalogeResourceAdapter katalogResourceAdapter;
+
+	@Inject
+	SchulkatalogService schulkatalogService;
 
 	@GET
 	@Path("laender")
@@ -95,7 +99,8 @@ public class AdminKatalogResource {
 	public Response renameSchule(final SchulePayload requestPayload) {
 
 		String uuid = securityContext.getUserPrincipal().getName();
-		return katalogResourceAdapter.renameSchule(uuid, katalogAdminSecret, requestPayload);
+		return this.schulkatalogService.renameSchule(uuid, katalogAdminSecret, requestPayload);
+
 	}
 
 	@POST
