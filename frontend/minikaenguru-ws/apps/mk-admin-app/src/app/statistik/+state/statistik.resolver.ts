@@ -7,9 +7,10 @@ export class StatistikResolver implements Resolve<any> {
 
     constructor(private statistikFacade: StatistikFacade) {}
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    resolve(_route: ActivatedRouteSnapshot, _state: RouterStateSnapshot) {
 
        this.statistikFacade.expandStatistik('KINDER');
+       this.statistikFacade.expandStatistik('DOWNLOADS');
        this.statistikFacade.expandStatistik('LOESUNGSZETTEL');
         
     }

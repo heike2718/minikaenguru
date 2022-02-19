@@ -1,4 +1,4 @@
-export type StatistikEntity = 'KINDER' | 'LOESUNGSZETTEL';
+export type StatistikEntity = 'KINDER' | 'LOESUNGSZETTEL' | 'DOWNLOADS';
 
 export interface Auspraegung {
     readonly wert: string;

@@ -4,6 +4,8 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.persistence.impl;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,6 +17,7 @@ import javax.transaction.Transactional;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
 import de.egladil.web.mk_gateway.domain.unterlagen.Download;
 import de.egladil.web.mk_gateway.domain.unterlagen.DownloadsRepository;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
@@ -94,6 +97,30 @@ public class DownloadsHibernateRepository implements DownloadsRepository {
 		PersistenteDownloadInfo persisted = entityManager.merge(vorhandene);
 
 		return mapFromDB(persisted);
+	}
+
+	@Override
+	public List<Auspraegung> countAuspraegungenByColumnName(final String columnName, final Integer jahr) {
+
+		List<Auspraegung> result = new ArrayList<>();
+
+		String stmt = "select d." + columnName + ", sum(d.anzahl) from DOWNLOADS d where d.jahr = :jahr group by d." + columnName;
+
+		// System.out.println(stmt);
+
+		@SuppressWarnings("unchecked")
+		List<Object[]> trefferliste = entityManager.createNativeQuery(stmt).setParameter("jahr", jahr).getResultList();
+
+		for (Object[] treffer : trefferliste) {
+
+			String wert = treffer[0].toString();
+			BigDecimal anzahl = (BigDecimal) treffer[1];
+
+			result.add(new Auspraegung(wert, anzahl.longValue()));
+
+		}
+
+		return result;
 	}
 
 	private PersistenteDownloadInfo findDownload(final Download download) {

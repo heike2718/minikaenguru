@@ -8,5 +8,6 @@ export const statistikLoading = createSelector(statistikState, s => s.loading);
 export const statistikMap = createSelector(statistikState, s => s.statistiken);
 export const statistiken = createSelector(statistikMap, m => new StatistikGruppeninfoMap(m).toArray());
 export const statistikKinder = createSelector(statistikState, s => s.statistikKinder);
+export const statistikDownloads = createSelector(statistikState, s => s.statistikDownloads);
 export const statistikLoesungszettel = createSelector(statistikState, s => s.statistikLoesungszettel);
 
