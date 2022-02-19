@@ -1,6 +1,6 @@
 import { PrivatteilnahmeAdminOverview } from './teilnahmen.model';
 
-export type VeranstalterSuchkriterium = 'EMAIL' | 'NAME' | 'TEILNAHMENUMMER' | 'UUID';
+export type VeranstalterSuchkriterium = 'EMAIL' | 'NAME' | 'TEILNAHMENUMMER' | 'UUID' | 'ZUGANGSSTATUS';
 export type VeranstalterRolle = 'LEHRER' | 'PRIVAT';
 export type ZugangUnterlagen = 'DEFAULT' | 'ERTEILT' | 'ENTZOGEN';
 

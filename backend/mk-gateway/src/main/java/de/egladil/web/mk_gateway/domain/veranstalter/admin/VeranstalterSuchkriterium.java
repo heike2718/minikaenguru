@@ -12,6 +12,19 @@ public enum VeranstalterSuchkriterium {
 	EMAIL,
 	NAME,
 	TEILNAHMENUMMER,
-	UUID;
+	UUID,
+	ZUGANGSSTATUS {
 
+		@Override
+		public boolean isLikeQuery() {
+
+			return false;
+		}
+
+	};
+
+	public boolean isLikeQuery() {
+
+		return true;
+	}
 }
