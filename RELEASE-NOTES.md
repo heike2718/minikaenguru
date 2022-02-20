@@ -1,5 +1,17 @@
 # minikaenguru Release Notes
 
+__Release 1.7.3.1__:
+
+* [Änderung eines Schulnamens propagieren zu Teilnahme](https://github.com/heike2718/minikaenguru/issues/217)
+* [Zähler für Download Unterlagen beim Veranstalter im aktuellen Wettbewerb]{https://github.com/heike2718/minikaenguru/issues/272}
+* [Suche nach Veranstaltern mit Zugangsstatus](https://github.com/heike2718/minikaenguru/issues/357)
+
+__Release 1.7.3__:
+
+* [Fehlerresistentere Spaltenüberschriften](https://github.com/heike2718/minikaenguru/issues/374)
+* [Import Klassenlisten: Leerzeilen werden ignoriert](https://github.com/heike2718/minikaenguru/issues/376)
+
+
 __Release 1.7.2__:
 
 * [Validierung Upload size im Frontend fixed](https://github.com/heike2718/minikaenguru/issues/375)
