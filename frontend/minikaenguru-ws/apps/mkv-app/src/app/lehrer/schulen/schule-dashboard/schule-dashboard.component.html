@@ -20,6 +20,12 @@
 						<p *ngIf="schule.details && schule.details.kollegen && schule.details.kollegen.length > 0">Kollegen:
 							{{schule.details.kollegen}}</p>
 
+						<p *ngIf="devMode && schule.details">Onlineauswertung begonnen:
+								{{schule.details.onlineauswertungBegonnen}}</p>
+
+						<p *ngIf="devMode && schule.details">Upload Auswertungen begonnen:
+								{{schule.details.offlineauswertungBegonnen}}</p>
+
 						<p *ngIf="wettbewerb.status === 'ERFASST'">Der Anmeldezeitraum für {{wettbewerb.jahr}} beginnt
 							am
 							{{wettbewerb.wettbewerbsbeginn}}</p>

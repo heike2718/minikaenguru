@@ -8,6 +8,7 @@ import { SchuleDashboardComponent } from './schulen/schule-dashboard/schule-dash
 import { SchuleDashboardResolver } from './schulen/schule-dashboard/schule-dashboard.resolver';
 import { SchulenListResolver } from './schulen/schulen-list/schulen-list.resolver';
 import { AddSchuleComponent } from './schulen/add-schule/add-schule.component';
+import { UploadAuswertungComponent } from './schulen/upload-auswertung/upload-auswertung.component';
 
 
 const lehrerRoutes: Routes = [
@@ -33,6 +34,10 @@ const lehrerRoutes: Routes = [
 				canActivate: [LehrerGuardService],
 				resolve: { schuleDashboard: SchuleDashboardResolver },
 				component: SchuleDashboardComponent
+			}, {
+				path: 'upload-auswertung',
+				canActivate: [LehrerGuardService],
+				component: UploadAuswertungComponent
 			}
 		]
 	}

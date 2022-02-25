@@ -15,13 +15,13 @@ public class AnonymisierteTeilnahmeAPIModel {
 	private TeilnahmeIdentifier identifier;
 
 	@JsonProperty
-	private int anzahlKinder;
+	private long anzahlKinder;
 
 	@JsonProperty
-	private int anzahlLoesungszettelOnline;
+	private long anzahlLoesungszettelOnline;
 
 	@JsonProperty
-	private int anzahlLoesungszettelUpload;
+	private long anzahlLoesungszettelUpload;
 
 	AnonymisierteTeilnahmeAPIModel() {
 
@@ -39,34 +39,34 @@ public class AnonymisierteTeilnahmeAPIModel {
 		return identifier;
 	}
 
-	public int anzahlKinder() {
+	public long anzahlKinder() {
 
 		return anzahlKinder;
 	}
 
-	public AnonymisierteTeilnahmeAPIModel withAnzahlKinder(final int anzahlKinder) {
+	public AnonymisierteTeilnahmeAPIModel withAnzahlKinder(final long anzahlKinder) {
 
 		this.anzahlKinder = anzahlKinder;
 		return this;
 	}
 
-	public int getAnzahlLoesungszettelOnline() {
+	public long getAnzahlLoesungszettelOnline() {
 
 		return anzahlLoesungszettelOnline;
 	}
 
-	public AnonymisierteTeilnahmeAPIModel withAnzahlLoesungszettelOnline(final int anzahlLoesungszettelOnline) {
+	public AnonymisierteTeilnahmeAPIModel withAnzahlLoesungszettelOnline(final long anzahlLoesungszettelOnline) {
 
 		this.anzahlLoesungszettelOnline = anzahlLoesungszettelOnline;
 		return this;
 	}
 
-	public int getAnzahlLoesungszettelUpload() {
+	public long getAnzahlLoesungszettelUpload() {
 
 		return anzahlLoesungszettelUpload;
 	}
 
-	public AnonymisierteTeilnahmeAPIModel withAnzahlLoesungszettelUpload(final int anzahlLoesungszettelUpload) {
+	public AnonymisierteTeilnahmeAPIModel withAnzahlLoesungszettelUpload(final long anzahlLoesungszettelUpload) {
 
 		this.anzahlLoesungszettelUpload = anzahlLoesungszettelUpload;
 		return this;

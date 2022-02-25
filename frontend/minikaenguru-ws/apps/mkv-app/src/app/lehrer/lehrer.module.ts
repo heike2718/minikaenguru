@@ -14,6 +14,7 @@ import { CommonComponentsModule  } from '@minikaenguru-ws/common-components';
 import { CommonSchulkatalogModule } from '@minikaenguru-ws/common-schulkatalog';
 import { AddSchuleComponent } from './schulen/add-schule/add-schule.component';
 import { UnterlagenCardComponent } from './unterlagen-card/unterlagen-card.component';
+import { UploadAuswertungComponent } from './schulen/upload-auswertung/upload-auswertung.component';
 
 
 
@@ -31,7 +32,8 @@ import { UnterlagenCardComponent } from './unterlagen-card/unterlagen-card.compo
 		SchuleDashboardComponent,
 		SchuleCardComponent,
 		AddSchuleComponent,
-		UnterlagenCardComponent
+		UnterlagenCardComponent,
+  UploadAuswertungComponent
 	],
 	exports: [
 		LehrerDashboardComponent

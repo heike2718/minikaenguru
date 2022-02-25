@@ -498,6 +498,20 @@ public class PermittedRolesInMemoryRepositoryTest {
 				assertTrue(rollen.contains(Rolle.LEHRER));
 			}
 		}
+
+		@Test
+		void should_permittedRollen_uploadsAuswertung_beOk() {
+
+			{
+
+				// Act
+				List<Rolle> rollen = repository.permittedRollen("/uploads/auswertung/2021/DE-HE/5RTG67F", HttpMethod.POST);
+
+				// Assert
+				assertEquals(1, rollen.size());
+				assertTrue(rollen.contains(Rolle.LEHRER));
+			}
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

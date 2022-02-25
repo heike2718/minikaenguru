@@ -6,39 +6,35 @@ package de.egladil.web.mk_gateway.domain.statistik;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
-import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
 
 /**
  * AnonymisierteTeilnahmenServiceTest
  */
+@ExtendWith(MockitoExtension.class)
 public class AnonymisierteTeilnahmenServiceTest {
 
+	@Mock
 	private AuthorizationService authService;
 
-	private LoesungszettelRepository loesungszettelRepository;
-
+	@Mock
 	private TeilnahmenRepository teilnahmenRepository;
 
+	@Mock
+	private ErfassungLoesungszettelInfoService erfassungLoesungszettelInoService;
+
+	@InjectMocks
 	private AnonymisierteTeilnahmenService service;
-
-	@BeforeEach
-	void setUp() throws Exception {
-
-		authService = Mockito.mock(AuthorizationService.class);
-		loesungszettelRepository = Mockito.mock(LoesungszettelRepository.class);
-		teilnahmenRepository = Mockito.mock(TeilnahmenRepository.class);
-
-		service = AnonymisierteTeilnahmenService.createForTest(authService, teilnahmenRepository, loesungszettelRepository);
-
-	}
 
 	@Test
 	void should_loadAnonymisierteTeilnahmen_call_AuthService() {

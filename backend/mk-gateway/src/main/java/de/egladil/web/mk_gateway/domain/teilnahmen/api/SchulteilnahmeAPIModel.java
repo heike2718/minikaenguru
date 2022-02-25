@@ -19,6 +19,12 @@ public class SchulteilnahmeAPIModel {
 	@JsonProperty
 	private String angemeldetDurch;
 
+	@JsonProperty
+	private long anzahlLoesungszettelOnline;
+
+	@JsonProperty
+	private long anzahlLoesungszettelUpload;
+
 	public static SchulteilnahmeAPIModel create(final Schulteilnahme teilnahme) {
 
 		SchulteilnahmeAPIModel result = new SchulteilnahmeAPIModel();
@@ -39,6 +45,28 @@ public class SchulteilnahmeAPIModel {
 	public SchulteilnahmeAPIModel withAngemeldetDurch(final String angemeldetDurch) {
 
 		this.angemeldetDurch = angemeldetDurch;
+		return this;
+	}
+
+	public long getAnzahlLoesungszettelOnline() {
+
+		return anzahlLoesungszettelOnline;
+	}
+
+	public SchulteilnahmeAPIModel withAnzahlLoesungszettelOnline(final long anzahlLoesungszettelOnline) {
+
+		this.anzahlLoesungszettelOnline = anzahlLoesungszettelOnline;
+		return this;
+	}
+
+	public long getAnzahlLoesungszettelUpload() {
+
+		return anzahlLoesungszettelUpload;
+	}
+
+	public SchulteilnahmeAPIModel withAnzahlLoesungszettelUpload(final long anzahlLoesungszettelUpload) {
+
+		this.anzahlLoesungszettelUpload = anzahlLoesungszettelUpload;
 		return this;
 	}
 

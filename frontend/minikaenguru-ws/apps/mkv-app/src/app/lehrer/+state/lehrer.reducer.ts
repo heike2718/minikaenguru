@@ -2,8 +2,6 @@ import { createReducer, Action, on } from '@ngrx/store';
 import { SchuleWithID, Schule, mergeSchulenMap, findSchuleMitId, SchuleDetails, SchulenMap, compareSchulen } from './../schulen/schulen.model';
 import * as LehrerActions from './lehrer.actions';
 import { Schulteilnahme, Lehrer } from '../../wettbewerb/wettbewerb.model';
-import { lehrer } from './lehrer.selectors';
-import { state } from '@angular/animations';
 export const lehrerFeatureKey = 'mkv-app-lehrer';
 
 export interface AddSchuleState {
@@ -93,7 +91,12 @@ const lehrerReducer = createReducer(initalLehrerState,
 
 			if (alteDetails) {
 				const anzahlTeilnahmen = alteDetails.anzahlTeilnahmen + 1;
-				const neueDetails: SchuleDetails = { ...alteDetails, angemeldetDurch: action.angemeldetDurch, anzahlTeilnahmen: anzahlTeilnahmen };
+				const neueDetails: SchuleDetails = { ...alteDetails
+					, angemeldetDurch: action.angemeldetDurch
+					, anzahlTeilnahmen: anzahlTeilnahmen
+					, offlineauswertungBegonnen: false
+					, onlineauswertungBegonnen: false
+				};
 				const neueSchule: Schule = { ...alteSchule, aktuellAngemeldet: true, details: neueDetails };
 				const neueMap = mergeSchulenMap(state.schulen, neueSchule);
 				const neuerState = { ...state, schulen: neueMap, selectedSchule: neueSchule };

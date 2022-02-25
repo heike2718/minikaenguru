@@ -84,6 +84,11 @@ export const aboNewsletterChanged = createAction(
 	'[LehrerFacade] changeAboNewsletter'
 );
 
+export const statusOnlineauswertungChanged = createAction(
+	'[diverse] add/remove Klasse/Kind/Loesungszettel',
+	props<{onlineauswertung: boolean}>()
+);
+
 export const resetLehrer = createAction(
 	'[LehrerFacade] resetState()'
 );

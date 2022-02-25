@@ -39,6 +39,12 @@ public class SchuleDetails {
 	@JsonProperty
 	private boolean hatAdv;
 
+	@JsonProperty
+	private boolean offlineauswertungBegonnen;
+
+	@JsonProperty
+	private boolean onlineauswertungBegonnen;
+
 	SchuleDetails() {
 
 	}
@@ -46,6 +52,33 @@ public class SchuleDetails {
 	public SchuleDetails(final String kuerzel) {
 
 		this.kuerzel = kuerzel;
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(kuerzel);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+
+		if (this == obj) {
+
+			return true;
+		}
+
+		if (obj == null) {
+
+			return false;
+		}
+
+		if (getClass() != obj.getClass()) {
+
+			return false;
+		}
+		SchuleDetails other = (SchuleDetails) obj;
+		return Objects.equals(kuerzel, other.kuerzel);
 	}
 
 	public SchuleDetails withKollegen(final List<Kollege> kollegen) {
@@ -110,31 +143,24 @@ public class SchuleDetails {
 		return this;
 	}
 
-	@Override
-	public int hashCode() {
+	public boolean isOfflineauswertungBegonnen() {
 
-		return Objects.hash(kuerzel);
+		return offlineauswertungBegonnen;
 	}
 
-	@Override
-	public boolean equals(final Object obj) {
+	public void setOfflineauswertungBegonnen(final boolean offlineauswertungBegonnen) {
 
-		if (this == obj) {
+		this.offlineauswertungBegonnen = offlineauswertungBegonnen;
+	}
 
-			return true;
-		}
+	public boolean isOnlineauswertungBegonnen() {
 
-		if (obj == null) {
+		return onlineauswertungBegonnen;
+	}
 
-			return false;
-		}
+	public void setOnlineauswertungBegonnen(final boolean onlineauswertungBegonnen) {
 
-		if (getClass() != obj.getClass()) {
-
-			return false;
-		}
-		SchuleDetails other = (SchuleDetails) obj;
-		return Objects.equals(kuerzel, other.kuerzel);
+		this.onlineauswertungBegonnen = onlineauswertungBegonnen;
 	}
 
 }

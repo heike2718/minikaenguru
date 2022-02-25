@@ -27,6 +27,7 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.klassenlisten.KlassenlisteImportService;
 import de.egladil.web.mk_gateway.domain.klassenlisten.UploadKlassenlisteContext;
+import de.egladil.web.mk_gateway.domain.loesungszettel.upload.UploadAuswertungContext;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.uploads.MultipartUtils;
 import de.egladil.web.mk_gateway.domain.uploads.UploadData;
@@ -92,4 +93,32 @@ public class UploadResource {
 		return Response.ok(responsePayload).build();
 	}
 
+	@POST
+	@Path("klassenlisten/{jahr}/{kuerzelLand}/{schulkuerzel}")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response uploadAuswertung(@PathParam(value = "jahr") final Integer jahr, @PathParam(
+		value = "kuerzelLand") @LandKuerzel final String kuerzelLand, @PathParam(
+			value = "schulkuerzel") @Kuerzel final String schulkuerzel, final MultipartFormDataInput input) {
+
+		String veranstalterUuid = securityContext.getUserPrincipal().getName();
+		UploadType uploadType = UploadType.AUSWERTUNG;
+
+		Pair<Rolle, Wettbewerb> rolleUndWettbewerb = uploadManager.authorizeUpload(veranstalterUuid, schulkuerzel, uploadType,
+			new WettbewerbID(jahr));
+
+		UploadData uploadData = MultipartUtils.getUploadData(input);
+
+		UploadAuswertungContext contextObject = new UploadAuswertungContext().withKuerzelLand(kuerzelLand)
+			.withSprache(Sprache.de).withRolle(rolleUndWettbewerb.getLeft())
+			.withWettbewerb(rolleUndWettbewerb.getRight());
+
+		UploadRequestPayload uploadPayload = new UploadRequestPayload().withTeilnahmenummer(schulkuerzel)
+			.withBenutzerID(new Identifier(veranstalterUuid)).withUploadType(uploadType).withUploadData(uploadData)
+			.withContext(contextObject);
+
+		ResponsePayload responsePayload = uploadManager.processUpload(uploadPayload);
+
+		return Response.ok(responsePayload).build();
+	}
 }

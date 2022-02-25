@@ -18,6 +18,8 @@ export interface SchuleDetails {
 	readonly vergangeneTeilnahmenGeladen?: boolean;
 	readonly vergangeneTeilnahmen?: AnonymisierteTeilnahme[];
 	readonly hatAdv: boolean;
+	readonly offlineauswertungBegonnen: boolean;
+	readonly onlineauswertungBegonnen: boolean;
 };
 
 export interface SchuleWithID {

@@ -7,22 +7,19 @@ package de.egladil.web.mk_gateway.domain.statistik;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
+import de.egladil.web.mk_gateway.domain.statistik.impl.ErfassungLoesungszettelInfoServiceImpl;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.AnonymisierteTeilnahmeAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.TeilnahmenHibernateRepository;
 
 /**
@@ -35,7 +32,7 @@ public class AnonymisierteTeilnahmenService {
 	TeilnahmenRepository teilnahmenRepository;
 
 	@Inject
-	LoesungszettelRepository loesungszettelRepository;
+	ErfassungLoesungszettelInfoService erfassungLoesungszettelInfoService;
 
 	@Inject
 	AuthorizationService authorizationService;
@@ -44,17 +41,8 @@ public class AnonymisierteTeilnahmenService {
 
 		AnonymisierteTeilnahmenService result = new AnonymisierteTeilnahmenService();
 		result.teilnahmenRepository = TeilnahmenHibernateRepository.createForIntegrationTest(em);
-		result.loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(em);
 		result.authorizationService = AuthorizationService.createForIntegrationTest(em);
-		return result;
-	}
-
-	public static AnonymisierteTeilnahmenService createForTest(final AuthorizationService authorizationService, final TeilnahmenRepository teilnahmenRepository, final LoesungszettelRepository loesungszettelRepository) {
-
-		AnonymisierteTeilnahmenService result = new AnonymisierteTeilnahmenService();
-		result.authorizationService = authorizationService;
-		result.loesungszettelRepository = loesungszettelRepository;
-		result.teilnahmenRepository = teilnahmenRepository;
+		result.erfassungLoesungszettelInfoService = ErfassungLoesungszettelInfoServiceImpl.createForIntegrationTests(em);
 		return result;
 	}
 
@@ -71,32 +59,13 @@ public class AnonymisierteTeilnahmenService {
 
 			TeilnahmeIdentifier identifier = TeilnahmeIdentifier.createFromTeilnahme(teilnahme);
 
-			final List<Pair<Auswertungsquelle, Integer>> quellenMitAnzahl = loesungszettelRepository
-				.getAuswertungsquellenMitAnzahl(identifier);
+			Map<Auswertungsquelle, Long> auswertungsquellenMap = erfassungLoesungszettelInfoService
+				.ermittleLoesungszettelMitAuswertungsquellenForTeilnahme(teilnahme);
 
-			int anzahlOnline = 0;
-			int anzahlUpload = 0;
+			long anzahlOnline = auswertungsquellenMap.get(Auswertungsquelle.ONLINE);
+			long anzahlUpload = auswertungsquellenMap.get(Auswertungsquelle.UPLOAD);
 
-			if (!quellenMitAnzahl.isEmpty()) {
-
-				Optional<Pair<Auswertungsquelle, Integer>> optOnline = quellenMitAnzahl.stream()
-					.filter(q -> Auswertungsquelle.ONLINE == q.getLeft()).findFirst();
-
-				if (optOnline.isPresent()) {
-
-					anzahlOnline = optOnline.get().getRight().intValue();
-				}
-
-				Optional<Pair<Auswertungsquelle, Integer>> optUpload = quellenMitAnzahl.stream()
-					.filter(q -> Auswertungsquelle.UPLOAD == q.getLeft()).findFirst();
-
-				if (optUpload.isPresent()) {
-
-					anzahlUpload = optUpload.get().getRight().intValue();
-				}
-			}
-
-			final int anzahlLoesungszettel = anzahlOnline + anzahlUpload;
+			final long anzahlLoesungszettel = anzahlOnline + anzahlUpload;
 
 			result.add(AnonymisierteTeilnahmeAPIModel.create(identifier).withAnzahlKinder(anzahlLoesungszettel)
 				.withAnzahlLoesungszettelOnline(anzahlOnline).withAnzahlLoesungszettelUpload(anzahlUpload));
