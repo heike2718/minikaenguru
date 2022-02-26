@@ -165,7 +165,7 @@ public class UploadHibernateRepository implements UploadRepository {
 			+ ", count(*) from UPLOADS u where u.TEILNAHMENUMMER = :teilnahmenummer group by u."
 			+ columnName;
 
-		System.out.println(stmt);
+		// System.out.println(stmt);
 
 		@SuppressWarnings("unchecked")
 		List<Object[]> trefferliste = entityManager.createNativeQuery(stmt)

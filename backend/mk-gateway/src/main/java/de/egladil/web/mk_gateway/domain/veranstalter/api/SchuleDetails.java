@@ -39,9 +39,6 @@ public class SchuleDetails {
 	@JsonProperty
 	private boolean hatAdv;
 
-	@JsonProperty
-	private Wettbewerbsauswertungsart wettbewerbsauswertungsart;
-
 	SchuleDetails() {
 
 	}
@@ -138,16 +135,6 @@ public class SchuleDetails {
 
 		this.nameUrkunde = nameUrkunde;
 		return this;
-	}
-
-	public Wettbewerbsauswertungsart getWettbewerbsauswertungsart() {
-
-		return wettbewerbsauswertungsart;
-	}
-
-	public void setWettbewerbsauswertungsart(final Wettbewerbsauswertungsart wettbewerbsauswertungsart) {
-
-		this.wettbewerbsauswertungsart = wettbewerbsauswertungsart;
 	}
 
 }

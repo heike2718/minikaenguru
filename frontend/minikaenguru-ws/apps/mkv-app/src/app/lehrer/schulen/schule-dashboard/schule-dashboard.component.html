@@ -20,8 +20,8 @@
 						<p *ngIf="schule.details && schule.details.kollegen && schule.details.kollegen.length > 0">Kollegen:
 							{{schule.details.kollegen}}</p>
 
-						<p *ngIf="devMode && schule.details">Auswertungsart:
-								{{schule.details.wettbewerbsauswertungsart}}</p>
+						<p *ngIf="devMode">Auswertungsart:
+								{{schule.wettbewerbsauswertungsart}}</p>
 
 						<p *ngIf="wettbewerb.status === 'ERFASST'">Der Anmeldezeitraum für {{wettbewerb.jahr}} beginnt
 							am
@@ -41,17 +41,17 @@
 
 					</div>
 
-					<div *ngIf="schule.aktuellAngemeldet && (schule.details && schule.details.wettbewerbsauswertungsart !== 'OFFLINE')" class="card clickable" (click)="gotoKlassenliste()">
+					<div *ngIf="schule.aktuellAngemeldet && schule.wettbewerbsauswertungsart !== 'OFFLINE'" class="card clickable" (click)="gotoKlassenliste()">
 						<div class="card-body">
 							<div class="card-title">Auswertung {{wettbewerb.jahr}}</div>
 							<div class="mb-2 text-muted">Kinder erfassen und Urkunden generieren</div>
 						</div>
 					</div>
 
-					<div *ngIf="schule.aktuellAngemeldet && (hatZugangZuUnterlagen$ | async) && (schule.details && schule.details.wettbewerbsauswertungsart !== 'ONLINE')"  class="card clickable" (click)="gotoUploadAuswertung()">
+					<div *ngIf="schule.aktuellAngemeldet && (hatZugangZuUnterlagen$ | async) && schule.wettbewerbsauswertungsart !== 'ONLINE'"  class="card clickable" (click)="gotoUploadAuswertung()">
 						<div class="card-body">
 							<div class="card-title">Auswertungstabelle hochladen</div>
-							<div *ngIf="(schule.details && schule.details.wettbewerbsauswertungsart === 'INDIFFERENT')" class="mb-2  text-danger">
+							<div *ngIf="schule.wettbewerbsauswertungsart === 'INDIFFERENT'" class="mb-2  text-danger">
 								Achtung: nur wenn Sie die Online-Auswertung nicht nutzen möchten
 						</div>
 						<div class="mb-2 text-muted">

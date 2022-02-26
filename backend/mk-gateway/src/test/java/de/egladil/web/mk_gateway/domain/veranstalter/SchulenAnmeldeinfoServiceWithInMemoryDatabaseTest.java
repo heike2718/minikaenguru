@@ -48,7 +48,7 @@ public class SchulenAnmeldeinfoServiceWithInMemoryDatabaseTest extends AbstractD
 		auswertungsartInfoService = Mockito.mock(WettbewerbsauswertungsartInfoService.class);
 
 		SchulenOverviewService schulenOverviewService = SchulenOverviewService.createForTest(getVeranstalterRepository(),
-			teilnahmenService);
+			teilnahmenService, auswertungsartInfoService);
 		SchuleDetailsService schuleDetailsService = SchuleDetailsService.createForTest(teilnahmenService,
 			getSchulkollegienRepository(), getTeilnahmenRepository(), getVeranstalterRepository(), advRepository,
 			auswertungsartInfoService);

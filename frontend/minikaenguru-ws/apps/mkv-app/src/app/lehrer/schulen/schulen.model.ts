@@ -8,6 +8,7 @@ export interface Schule {
 	readonly land: string;
 	readonly kuerzelLand: string,
 	readonly aktuellAngemeldet: boolean;
+	readonly wettbewerbsauswertungsart: Wettbewerbsauswertungsart;
 	readonly details?: SchuleDetails;
 };
 
@@ -18,8 +19,7 @@ export interface SchuleDetails {
 	readonly anzahlTeilnahmen: number;
 	readonly vergangeneTeilnahmenGeladen?: boolean;
 	readonly vergangeneTeilnahmen?: AnonymisierteTeilnahme[];
-	readonly hatAdv: boolean;
-	readonly wettbewerbsauswertungsart: Wettbewerbsauswertungsart;
+	readonly hatAdv: boolean;	
 };
 
 export interface SchuleWithID {

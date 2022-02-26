@@ -19,9 +19,11 @@ import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
+import de.egladil.web.mk_gateway.domain.statistik.WettbewerbsauswertungsartInfoService;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.Wettbewerbsauswertungsart;
 
 /**
  * SchulenOverviewService
@@ -41,13 +43,17 @@ public class SchulenOverviewService {
 	@Inject
 	DomainEventHandler domainEventHandler;
 
+	@Inject
+	WettbewerbsauswertungsartInfoService auswertungsartInfoService;
+
 	private SecurityIncidentRegistered securityIncidentRegistered;
 
-	public static SchulenOverviewService createForTest(final VeranstalterRepository veranstalterRepo, final AktuelleTeilnahmeService teilnahmenService) {
+	public static SchulenOverviewService createForTest(final VeranstalterRepository veranstalterRepo, final AktuelleTeilnahmeService teilnahmenService, final WettbewerbsauswertungsartInfoService auswertungsartInfoService) {
 
 		SchulenOverviewService result = new SchulenOverviewService();
 		result.aktuelleTeilnahmeService = teilnahmenService;
 		result.veranstalterRepository = veranstalterRepo;
+		result.auswertungsartInfoService = auswertungsartInfoService;
 		return result;
 
 	}
@@ -83,11 +89,16 @@ public class SchulenOverviewService {
 
 			if (optTeilnahme.isPresent()) {
 
-				items.add(SchuleAPIModel.withKuerzel(schulID.identifier()).withAngemeldet(true));
+				Wettbewerbsauswertungsart auswertungsart = auswertungsartInfoService
+					.ermittleAuswertungsartFuerTeilnahme(optTeilnahme.get().teilnahmeIdentifier());
+
+				items.add(SchuleAPIModel.withKuerzel(schulID.identifier()).withAngemeldet(true)
+					.withWettbewerbsauswertungsart(auswertungsart));
 
 			} else {
 
-				items.add(SchuleAPIModel.withKuerzel(schulID.identifier()));
+				items.add(SchuleAPIModel.withKuerzel(schulID.identifier())
+					.withWettbewerbsauswertungsart(Wettbewerbsauswertungsart.INDIFFERENT));
 			}
 		}
 

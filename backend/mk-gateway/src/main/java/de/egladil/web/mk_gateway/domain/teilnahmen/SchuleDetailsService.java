@@ -24,7 +24,6 @@ import de.egladil.web.mk_gateway.domain.veranstalter.Schulkollegium;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleDetails;
-import de.egladil.web.mk_gateway.domain.veranstalter.api.Wettbewerbsauswertungsart;
 
 /**
  * SchuleDetailsService
@@ -51,9 +50,6 @@ public class SchuleDetailsService {
 	@Inject
 	VertragAuftragsverarbeitungRepository advRepository;
 
-	@Inject
-	WettbewerbsauswertungsartInfoService auswertungsartInfoService;
-
 	public static SchuleDetailsService createForTest(final AktuelleTeilnahmeService aktuelleTeilnahmeService, final SchulkollegienRepository schulkollegienRepository, final TeilnahmenRepository teilnahmenRepository, final VeranstalterRepository veranstalterRepository, final VertragAuftragsverarbeitungRepository advRepository, final WettbewerbsauswertungsartInfoService auswertungsartInfoService) {
 
 		SchuleDetailsService result = new SchuleDetailsService();
@@ -63,7 +59,6 @@ public class SchuleDetailsService {
 		result.teilnahmenRepository = teilnahmenRepository;
 		result.veranstalterRepository = veranstalterRepository;
 		result.advRepository = advRepository;
-		result.auswertungsartInfoService = auswertungsartInfoService;
 
 		return result;
 	}
@@ -119,11 +114,6 @@ public class SchuleDetailsService {
 						result.withAngemeldetDurch(Kollege.fromPerson(optAnmelder.get().person()));
 					}
 				}
-
-				Wettbewerbsauswertungsart auswertungsart = auswertungsartInfoService
-					.ermittleAuswertungsartFuerTeilnahme(schulteilnahme.teilnahmeIdentifier());
-
-				result.setWettbewerbsauswertungsart(auswertungsart);
 			}
 		}
 

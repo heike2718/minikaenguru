@@ -14,9 +14,11 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.statistik.WettbewerbsauswertungsartInfoService;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 
@@ -27,16 +29,21 @@ public class SchulenOverviewServiceTest extends AbstractDomainServiceTest {
 
 	private SchulenOverviewService service;
 
+	private WettbewerbsauswertungsartInfoService auswertungsartInfoService;
+
 	@BeforeEach
 	@Override
 	protected void setUp() {
 
 		super.setUp();
+
+		auswertungsartInfoService = Mockito.mock(WettbewerbsauswertungsartInfoService.class);
 		WettbewerbService wettbewerbService = WettbewerbService.createForTest(getMockitoBasedWettbewerbRepository());
 		AktuelleTeilnahmeService aktuelleTeilnahmeService = AktuelleTeilnahmeService.createForTest(getTeilnahmenRepository(),
 			wettbewerbService, getVeranstalterRepository());
 
-		service = SchulenOverviewService.createForTest(getVeranstalterRepository(), aktuelleTeilnahmeService);
+		service = SchulenOverviewService.createForTest(getVeranstalterRepository(), aktuelleTeilnahmeService,
+			auswertungsartInfoService);
 	}
 
 	@Test

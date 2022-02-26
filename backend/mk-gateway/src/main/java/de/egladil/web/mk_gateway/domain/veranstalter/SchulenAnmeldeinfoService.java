@@ -152,7 +152,9 @@ public class SchulenAnmeldeinfoService {
 
 			if (opt.isPresent()) {
 
-				schule.withAngemeldet(opt.get().aktuellAngemeldet());
+				SchuleAPIModel schuleAPIModel = opt.get();
+				schule.withAngemeldet(schuleAPIModel.aktuellAngemeldet())
+					.withWettbewerbsauswertungsart(schuleAPIModel.getWettbewerbsauswertungsart());
 			}
 		});
 
