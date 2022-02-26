@@ -15,6 +15,7 @@ import org.mockito.Mockito;
 import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.adv.VertragAuftragsverarbeitungRepository;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
+import de.egladil.web.mk_gateway.domain.statistik.WettbewerbsauswertungsartInfoService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.AktuelleTeilnahmeService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.SchuleDetailsService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.SchulenOverviewService;
@@ -31,6 +32,8 @@ public class SchulenAnmeldeinfoServiceWithInMemoryDatabaseTest extends AbstractD
 
 	private VertragAuftragsverarbeitungRepository advRepository;
 
+	private WettbewerbsauswertungsartInfoService auswertungsartInfoService;
+
 	@Override
 	@BeforeEach
 	protected void setUp() {
@@ -42,10 +45,13 @@ public class SchulenAnmeldeinfoServiceWithInMemoryDatabaseTest extends AbstractD
 		katalogeAdapter = Mockito.mock(MkKatalogeResourceAdapter.class);
 		advRepository = Mockito.mock(VertragAuftragsverarbeitungRepository.class);
 
+		auswertungsartInfoService = Mockito.mock(WettbewerbsauswertungsartInfoService.class);
+
 		SchulenOverviewService schulenOverviewService = SchulenOverviewService.createForTest(getVeranstalterRepository(),
 			teilnahmenService);
 		SchuleDetailsService schuleDetailsService = SchuleDetailsService.createForTest(teilnahmenService,
-			getSchulkollegienRepository(), getTeilnahmenRepository(), getVeranstalterRepository(), advRepository);
+			getSchulkollegienRepository(), getTeilnahmenRepository(), getVeranstalterRepository(), advRepository,
+			auswertungsartInfoService);
 		service = SchulenAnmeldeinfoService.createForTest(katalogeAdapter, schulenOverviewService, schuleDetailsService);
 
 	}

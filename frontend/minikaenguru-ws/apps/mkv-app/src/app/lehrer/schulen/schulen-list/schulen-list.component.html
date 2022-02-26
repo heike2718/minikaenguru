@@ -9,16 +9,32 @@
 		</ng-container>
 	</div>
 
-	<div class="btn-group d-flex" role="group">
+	<div class="d-none d-md-block">
+		<div class="btn-group d-flex" role="group">
 
-		<button class="btn btn-primary w-100 ml-1" (click)="addSchule()" title="als Lehrer:in an einer weiteren Schule anmelden"><i class="fa fa-plus"
+			<button class="btn btn-primary w-100 ml-1" (click)="addSchule()" title="als Lehrer:in an einer weiteren Schule anmelden"><i class="fa fa-plus"
 				aria-hidden="true"></i>weitere
-			Schule</button>
+				Schule</button>
 
-		<button class="btn btn-primary w-100 ml-1" (click)="gotoDashboard()"><i class="fa fa-home"
+			<button class="btn btn-primary w-100 ml-1" (click)="gotoDashboard()"><i class="fa fa-home"
 				aria-hidden="true"></i>zur
-			Übersicht</button>
+				Übersicht</button>
+		</div>
 	</div>
+
+	<div class="d-md-none d-lg-none d-xl-none">
+		<div class="btn-group d-inline" role="group">
+			<button class="btn btn-primary w-100 ml-1" (click)="addSchule()" title="als Lehrer:in an einer weiteren Schule anmelden"><i class="fa fa-plus"
+				aria-hidden="true"></i>weitere
+				Schule</button>
+
+			<button class="btn btn-primary w-100 ml-1" (click)="gotoDashboard()"><i class="fa fa-home"
+				aria-hidden="true"></i>zur
+				Übersicht</button>
+		</div>
+	</div>
+	
+
 
 	<div *ngIf="textFeatureFlagAnzeigen" class="row ml-3 mr-3 hinweis">
 		<div class="col-11">

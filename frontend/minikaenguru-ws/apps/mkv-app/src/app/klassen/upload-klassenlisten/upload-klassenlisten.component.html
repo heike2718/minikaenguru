@@ -8,19 +8,24 @@
 			<h3>Klassenlisten hochladen</h3>
 
 			<div class="row">
-				<div class="col-sm-12 col-md-3">Schule:</div>
+				<div class="col-sm-12 col-md-3 font-weight-bold">Schule:</div>
 				<div class="col-sm-12 col-md-9">{{schule.name }}</div>
 			</div>
 			<div class="row">
-				<div class="col-sm-12 col-md-3">Ort:</div>
+				<div class="col-sm-12 col-md-3 font-weight-bold">Ort:</div>
 				<div class="col-sm-12 col-md-9">{{schule.ort }}</div>
 			</div>
+			<div class="row">
+				<div class="col-sm-12 col-md-3 font-weight-bold">Land:</div>
+				<div class="col-sm-12 col-md-9">{{schule.land}}</div>
+			</div>
+
 			<div class="row" *ngIf="(klassenFacade.anzahlKlassen$ | async) as anzahl">
-				<div class="col-sm-12 col-md-3">Anzahl Klassen:</div>
+				<div class="col-sm-12 col-md-3 font-weight-bold">Anzahl Klassen:</div>
 				<div class="col-sm-12 col-md-9">{{anzahl}}</div>
 			</div>
 
-			<div class="mkv-bordered w-100 m-1 p-1">
+			<div class="mkv-bordered w-100 mt-2 m-1 p-2">
 
 				<label for="switch-sprache" class="label-bold w-100"><strong> Sprache englisch:</strong></label>
 				<div class="row">
@@ -52,8 +57,8 @@
 				<div *ngIf="klassenFacade.klassenimportReport$ | async">
 					<mkv-import-report></mkv-import-report>
 				</div>
-			</div>
-			
+			</div>		
+						
 	</ng-container>
 
 	<div class="d-none d-md-block">

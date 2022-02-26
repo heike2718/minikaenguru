@@ -46,6 +46,9 @@ import de.egladil.web.mk_gateway.domain.klassenlisten.UploadKlassenlisteContext;
 import de.egladil.web.mk_gateway.domain.klassenlisten.impl.KlassenlisteCSVImportService;
 import de.egladil.web.mk_gateway.domain.loesungszettel.upload.AuswertungImportService;
 import de.egladil.web.mk_gateway.domain.loesungszettel.upload.UploadAuswertungContext;
+import de.egladil.web.mk_gateway.domain.statistik.WettbewerbsauswertungsartInfoService;
+import de.egladil.web.mk_gateway.domain.statistik.impl.WettbewerbsauswertungsartInfoServiceImpl;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.uploads.UploadAuthorizationService;
 import de.egladil.web.mk_gateway.domain.uploads.UploadData;
 import de.egladil.web.mk_gateway.domain.uploads.UploadIdentifier;
@@ -56,6 +59,7 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.domain.uploads.convert.UploadToCSVConverter;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.Wettbewerbsauswertungsart;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
@@ -101,6 +105,9 @@ public class UploadManagerImpl implements UploadManager {
 	UploadRepository uploadRepository;
 
 	@Inject
+	WettbewerbsauswertungsartInfoService auswertungsartInfoService;
+
+	@Inject
 	DomainEventHandler domainEventHandler;
 
 	public static UploadManagerImpl createForIntegrationTests(final EntityManager em) {
@@ -116,6 +123,7 @@ public class UploadManagerImpl implements UploadManager {
 		result.domainEventHandler = DomainEventHandler.createForIntegrationTest(em);
 		result.scanService = ScanService.createForIntegrationTest();
 		result.auswertungImportService = AuswertungImportService.createForIntegrationTest(em);
+		result.auswertungsartInfoService = WettbewerbsauswertungsartInfoServiceImpl.createForIntegrationTests(em);
 		result.maxFilesizeBytes = "2097152";
 		return result;
 
@@ -229,6 +237,26 @@ public class UploadManagerImpl implements UploadManager {
 	@Override
 	public ResponsePayload processUpload(final UploadRequestPayload uploadPayload) throws UploadFormatException {
 
+		UploadType uploadType = uploadPayload.getUploadType();
+
+		if (UploadType.AUSWERTUNG == uploadType) {
+
+			UploadAuswertungContext uploadAuswertungContext = (UploadAuswertungContext) uploadPayload.getContext();
+
+			TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier()
+				.withTeilnahmenummer(uploadPayload.getTeilnahmenummer())
+				.withWettbewerbID(uploadAuswertungContext.getWettbewerb().id());
+
+			Wettbewerbsauswertungsart auswertungsart = auswertungsartInfoService
+				.ermittleAuswertungsartFuerTeilnahme(teilnahmeIdentifier);
+
+			if (Wettbewerbsauswertungsart.ONLINE == auswertungsart) {
+
+				return ResponsePayload.messageOnly(MessagePayload.warn(
+					"Der Wettbewerb an dieser Schule wurde bereits online ausgewertet. Die Auswertungstabelle wird ignoriert."));
+			}
+		}
+
 		ScanResult scanResult = this.scanUpload(uploadPayload);
 
 		Long checksumme = this.getCRC32Checksum(uploadPayload.getUploadData().getDataBASE64());
@@ -262,7 +290,7 @@ public class UploadManagerImpl implements UploadManager {
 
 		ResponsePayload responsePayload = null;
 
-		switch (uploadPayload.getUploadType()) {
+		switch (uploadType) {
 
 		case KLASSENLISTE:
 
@@ -272,6 +300,7 @@ public class UploadManagerImpl implements UploadManager {
 			break;
 
 		case AUSWERTUNG:
+
 			UploadAuswertungContext uploadAuswertungContext = (UploadAuswertungContext) uploadPayload.getContext();
 			responsePayload = auswertungImportService.importiereAuswertung(uploadAuswertungContext, persistenterUpload);
 			break;

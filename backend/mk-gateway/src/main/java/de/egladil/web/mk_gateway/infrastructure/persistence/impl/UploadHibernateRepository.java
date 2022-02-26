@@ -162,10 +162,10 @@ public class UploadHibernateRepository implements UploadRepository {
 		List<Auspraegung> result = new ArrayList<>();
 
 		String stmt = "select u." + columnName
-			+ ", count(*) from UPLOADS u where u.TEILNAHMENUMMER = :teilnahmenummer and group by u."
+			+ ", count(*) from UPLOADS u where u.TEILNAHMENUMMER = :teilnahmenummer group by u."
 			+ columnName;
 
-		// System.out.println(stmt);
+		System.out.println(stmt);
 
 		@SuppressWarnings("unchecked")
 		List<Object[]> trefferliste = entityManager.createNativeQuery(stmt)

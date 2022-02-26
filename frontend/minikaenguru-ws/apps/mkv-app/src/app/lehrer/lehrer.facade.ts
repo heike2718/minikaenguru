@@ -9,7 +9,7 @@ import { Schule } from './schulen/schulen.model';
 import { VeranstalterService } from '../services/veranstalter.service';
 import { TeilnahmenService } from '../services/teilnahmen.service';
 import { Lehrer, Schulteilnahme } from '../wettbewerb/wettbewerb.model';
-import { Message, MessageService } from '@minikaenguru-ws/common-messages';
+import { Message, MessageService, ResponsePayload } from '@minikaenguru-ws/common-messages';
 import { User, AuthService } from '@minikaenguru-ws/common-auth';
 import { take } from 'rxjs/operators';
 import * as WettbewerbActions from '../wettbewerb/+state/wettbewerb.actions';

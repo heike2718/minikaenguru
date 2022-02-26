@@ -41,10 +41,21 @@
 
 					</div>
 
-					<div *ngIf="schule.aktuellAngemeldet" class="card clickable" (click)="gotoKlassenliste()">
+					<div *ngIf="schule.aktuellAngemeldet && (schule.details && schule.details.wettbewerbsauswertungsart !== 'OFFLINE')" class="card clickable" (click)="gotoKlassenliste()">
 						<div class="card-body">
 							<div class="card-title">Auswertung {{wettbewerb.jahr}}</div>
 							<div class="mb-2 text-muted">Kinder erfassen und Urkunden generieren</div>
+						</div>
+					</div>
+
+					<div *ngIf="schule.aktuellAngemeldet && (hatZugangZuUnterlagen$ | async) && (schule.details && schule.details.wettbewerbsauswertungsart !== 'ONLINE')"  class="card clickable" (click)="gotoUploadAuswertung()">
+						<div class="card-body">
+							<div class="card-title">Auswertungstabelle hochladen</div>
+							<div *ngIf="(schule.details && schule.details.wettbewerbsauswertungsart === 'INDIFFERENT')" class="mb-2  text-danger">
+								Achtung: nur wenn Sie die Online-Auswertung nicht nutzen möchten
+						</div>
+						<div class="mb-2 text-muted">
+							anonyme Excel-Auswertungstabelle für die Statistik hochladen</div>
 						</div>
 					</div>
 
@@ -54,31 +65,7 @@
 							<div class="mb-2 text-muted">von dieser Schule abmelden</div>
 						</div>
 					</div>
-
 				
-					<!--
-					<div *ngIf="schule.aktuellAngemeldet" class="card clickable" (click)="gotoKlassenlisteHochladen()">
-						<div class="card-body">
-							<div class="card-title">Klassenlisten hochladen</div>
-							<div class="mb-2 text-muted">Klassen und Kinderdaten als Excel hochladen</div>
-						</div>
-					</div>
-					-->
-				
-					<!--
-					<div *ngIf="schule.aktuellAngemeldet && hatZugangZuUnterlagen$ | async" class="col-md-4 col-sm-12 mt-2">
-						<div class="card clickable">
-							<div class="card-body">
-								<div class="card-title">Auswertungstabelle hochladen</div>
-								<div class="mb-2  text-danger">Achtung: nur wenn Sie die Urkunden selbst erstellen möchten
-							</div>
-							<div class="mb-2 text-muted">
-								Excel-Auswertungstabelle hochladen</div>
-							</div>
-						</div>
-					</div>
-					-->
-
 					<div *ngIf="(wettbewerb.status !== 'ERFASST' && wettbewerb.status !== 'BEENDET' && !schule.aktuellAngemeldet)"
 						class="card clickable" (click)="anmelden()">
 						<div class="card-body">
@@ -86,7 +73,6 @@
 							<div class="mb-2 text-muted"> für {{wettbewerb.jahr}}</div>
 						</div>
 					</div>
-
 
 				</div>
 

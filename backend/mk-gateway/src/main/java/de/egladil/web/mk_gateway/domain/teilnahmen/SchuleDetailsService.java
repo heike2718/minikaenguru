@@ -54,7 +54,7 @@ public class SchuleDetailsService {
 	@Inject
 	WettbewerbsauswertungsartInfoService auswertungsartInfoService;
 
-	public static SchuleDetailsService createForTest(final AktuelleTeilnahmeService aktuelleTeilnahmeService, final SchulkollegienRepository schulkollegienRepository, final TeilnahmenRepository teilnahmenRepository, final VeranstalterRepository veranstalterRepository, final VertragAuftragsverarbeitungRepository advRepository) {
+	public static SchuleDetailsService createForTest(final AktuelleTeilnahmeService aktuelleTeilnahmeService, final SchulkollegienRepository schulkollegienRepository, final TeilnahmenRepository teilnahmenRepository, final VeranstalterRepository veranstalterRepository, final VertragAuftragsverarbeitungRepository advRepository, final WettbewerbsauswertungsartInfoService auswertungsartInfoService) {
 
 		SchuleDetailsService result = new SchuleDetailsService();
 
@@ -63,6 +63,7 @@ public class SchuleDetailsService {
 		result.teilnahmenRepository = teilnahmenRepository;
 		result.veranstalterRepository = veranstalterRepository;
 		result.advRepository = advRepository;
+		result.auswertungsartInfoService = auswertungsartInfoService;
 
 		return result;
 	}

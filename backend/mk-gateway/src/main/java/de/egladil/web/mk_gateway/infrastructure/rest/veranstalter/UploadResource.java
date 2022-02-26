@@ -94,7 +94,7 @@ public class UploadResource {
 	}
 
 	@POST
-	@Path("klassenlisten/{jahr}/{kuerzelLand}/{schulkuerzel}")
+	@Path("auswertung/{jahr}/{kuerzelLand}/{schulkuerzel}")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response uploadAuswertung(@PathParam(value = "jahr") final Integer jahr, @PathParam(
