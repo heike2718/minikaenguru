@@ -5,7 +5,6 @@
 package de.egladil.web.mk_gateway.domain.teilnahmen;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -18,14 +17,14 @@ import de.egladil.web.mk_gateway.domain.adv.VertragAuftragsdatenverarbeitung;
 import de.egladil.web.mk_gateway.domain.adv.VertragAuftragsverarbeitungRepository;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
-import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
-import de.egladil.web.mk_gateway.domain.statistik.ErfassungLoesungszettelInfoService;
+import de.egladil.web.mk_gateway.domain.statistik.WettbewerbsauswertungsartInfoService;
 import de.egladil.web.mk_gateway.domain.veranstalter.Kollege;
 import de.egladil.web.mk_gateway.domain.veranstalter.SchulkollegienRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.Schulkollegium;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleDetails;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.Wettbewerbsauswertungsart;
 
 /**
  * SchuleDetailsService
@@ -53,7 +52,7 @@ public class SchuleDetailsService {
 	VertragAuftragsverarbeitungRepository advRepository;
 
 	@Inject
-	ErfassungLoesungszettelInfoService erfassungLoesungszettelInfoService;
+	WettbewerbsauswertungsartInfoService auswertungsartInfoService;
 
 	public static SchuleDetailsService createForTest(final AktuelleTeilnahmeService aktuelleTeilnahmeService, final SchulkollegienRepository schulkollegienRepository, final TeilnahmenRepository teilnahmenRepository, final VeranstalterRepository veranstalterRepository, final VertragAuftragsverarbeitungRepository advRepository) {
 
@@ -120,11 +119,10 @@ public class SchuleDetailsService {
 					}
 				}
 
-				Map<Auswertungsquelle, Long> auswertungsquellenMap = erfassungLoesungszettelInfoService
-					.ermittleLoesungszettelMitAuswertungsquellenForTeilnahme(aktuelle);
+				Wettbewerbsauswertungsart auswertungsart = auswertungsartInfoService
+					.ermittleAuswertungsartFuerTeilnahme(schulteilnahme.teilnahmeIdentifier());
 
-				result.setOfflineauswertungBegonnen(auswertungsquellenMap.get(Auswertungsquelle.UPLOAD) > 0);
-				result.setOnlineauswertungBegonnen(auswertungsquellenMap.get(Auswertungsquelle.ONLINE) > 0);
+				result.setWettbewerbsauswertungsart(auswertungsart);
 			}
 		}
 

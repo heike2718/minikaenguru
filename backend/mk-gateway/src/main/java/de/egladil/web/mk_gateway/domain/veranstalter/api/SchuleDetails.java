@@ -40,10 +40,7 @@ public class SchuleDetails {
 	private boolean hatAdv;
 
 	@JsonProperty
-	private boolean offlineauswertungBegonnen;
-
-	@JsonProperty
-	private boolean onlineauswertungBegonnen;
+	private Wettbewerbsauswertungsart wettbewerbsauswertungsart;
 
 	SchuleDetails() {
 
@@ -143,24 +140,14 @@ public class SchuleDetails {
 		return this;
 	}
 
-	public boolean isOfflineauswertungBegonnen() {
+	public Wettbewerbsauswertungsart getWettbewerbsauswertungsart() {
 
-		return offlineauswertungBegonnen;
+		return wettbewerbsauswertungsart;
 	}
 
-	public void setOfflineauswertungBegonnen(final boolean offlineauswertungBegonnen) {
+	public void setWettbewerbsauswertungsart(final Wettbewerbsauswertungsart wettbewerbsauswertungsart) {
 
-		this.offlineauswertungBegonnen = offlineauswertungBegonnen;
-	}
-
-	public boolean isOnlineauswertungBegonnen() {
-
-		return onlineauswertungBegonnen;
-	}
-
-	public void setOnlineauswertungBegonnen(final boolean onlineauswertungBegonnen) {
-
-		this.onlineauswertungBegonnen = onlineauswertungBegonnen;
+		this.wettbewerbsauswertungsart = wettbewerbsauswertungsart;
 	}
 
 }

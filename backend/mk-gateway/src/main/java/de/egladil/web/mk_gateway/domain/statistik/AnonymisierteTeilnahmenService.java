@@ -60,7 +60,7 @@ public class AnonymisierteTeilnahmenService {
 			TeilnahmeIdentifier identifier = TeilnahmeIdentifier.createFromTeilnahme(teilnahme);
 
 			Map<Auswertungsquelle, Long> auswertungsquellenMap = erfassungLoesungszettelInfoService
-				.ermittleLoesungszettelMitAuswertungsquellenForTeilnahme(teilnahme);
+				.ermittleLoesungszettelMitAuswertungsquellenForTeilnahme(teilnahme.teilnahmeIdentifier());
 
 			long anzahlOnline = auswertungsquellenMap.get(Auswertungsquelle.ONLINE);
 			long anzahlUpload = auswertungsquellenMap.get(Auswertungsquelle.UPLOAD);

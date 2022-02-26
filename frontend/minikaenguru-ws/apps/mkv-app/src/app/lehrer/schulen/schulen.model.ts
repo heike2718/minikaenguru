@@ -1,3 +1,4 @@
+import { Wettbewerbsauswertungsart } from '@minikaenguru-ws/common-components';
 import { AnonymisierteTeilnahme } from '../../wettbewerb/wettbewerb.model';
 
 export interface Schule {
@@ -18,8 +19,7 @@ export interface SchuleDetails {
 	readonly vergangeneTeilnahmenGeladen?: boolean;
 	readonly vergangeneTeilnahmen?: AnonymisierteTeilnahme[];
 	readonly hatAdv: boolean;
-	readonly offlineauswertungBegonnen: boolean;
-	readonly onlineauswertungBegonnen: boolean;
+	readonly wettbewerbsauswertungsart: Wettbewerbsauswertungsart;
 };
 
 export interface SchuleWithID {

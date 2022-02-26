@@ -6,7 +6,7 @@ package de.egladil.web.mk_gateway.domain.statistik;
 
 import java.util.Map;
 
-import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 
 /**
  * ErfassungLoesungszettelInfoService
@@ -21,6 +21,6 @@ public interface ErfassungLoesungszettelInfoService {
 	 *                   Teilnahme
 	 * @return           Map
 	 */
-	Map<Auswertungsquelle, Long> ermittleLoesungszettelMitAuswertungsquellenForTeilnahme(Teilnahme teilnahme);
+	Map<Auswertungsquelle, Long> ermittleLoesungszettelMitAuswertungsquellenForTeilnahme(TeilnahmeIdentifier teilnahme);
 
 }

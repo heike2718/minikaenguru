@@ -19,6 +19,7 @@ import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
 import de.egladil.web.mk_gateway.domain.kinder.Klasse;
 import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.entities.InMemoryKinderList;
 
@@ -161,6 +162,12 @@ public class InMemoryKinderRepository implements KinderRepository {
 	public List<Auspraegung> countAuspraegungenByColumnName(final String columnName) {
 
 		return null;
+	}
+
+	@Override
+	public long countKinderZuTeilnahme(final TeilnahmeIdentifier teilnahmeIdentifier) {
+
+		return 0;
 	}
 
 }

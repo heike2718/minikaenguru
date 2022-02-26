@@ -27,7 +27,6 @@ import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRohdaten;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
-import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.LoesungszettelNonIdentifiingAttributesMapper;
@@ -169,7 +168,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 	}
 
 	@Override
-	public List<Auspraegung> countAuspraegungenForTeilnahmeByColumnName(final Teilnahme teilnahme, final String columnName) {
+	public List<Auspraegung> countAuspraegungenForTeilnahmeByColumnName(final TeilnahmeIdentifier teilnahme, final String columnName) {
 
 		List<Auspraegung> result = new ArrayList<>();
 
@@ -181,8 +180,8 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 
 		@SuppressWarnings("unchecked")
 		List<Object[]> trefferliste = entityManager.createNativeQuery(stmt)
-			.setParameter("teilnahmenummer", teilnahme.teilnahmenummer().identifier())
-			.setParameter("wettbewerbUuid", "" + teilnahme.teilnahmeIdentifier().jahr())
+			.setParameter("teilnahmenummer", teilnahme.teilnahmenummer())
+			.setParameter("wettbewerbUuid", teilnahme.wettbewerbID())
 			.getResultList();
 
 		for (Object[] treffer : trefferliste) {

@@ -23,6 +23,7 @@ import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
 import de.egladil.web.mk_gateway.domain.kinder.Klasse;
 import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistentesKind;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistentesKindKindMapper;
@@ -186,6 +187,23 @@ public class KinderHibernateRepository implements KinderRepository {
 		}
 
 		return count;
+	}
+
+	@Override
+	public long countKinderZuTeilnahme(final TeilnahmeIdentifier teilnahmeIdentifier) {
+
+		String stmt = "select count(*) from KINDER k where k.TEILNAHMENUMMER = :teilnahmenummer";
+
+		@SuppressWarnings("unchecked")
+		List<BigInteger> trefferliste = em.createNativeQuery(stmt)
+			.setParameter("teilnahmenummer", teilnahmeIdentifier.teilnahmenummer()).getResultList();
+
+		if (trefferliste.isEmpty()) {
+
+			return 0;
+		}
+
+		return trefferliste.get(0).longValue();
 	}
 
 	@Override

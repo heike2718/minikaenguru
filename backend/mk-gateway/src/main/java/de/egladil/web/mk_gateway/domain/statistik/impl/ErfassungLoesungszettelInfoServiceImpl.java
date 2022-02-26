@@ -17,7 +17,7 @@ import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.statistik.ErfassungLoesungszettelInfoService;
 import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
-import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
 
 /**
@@ -37,34 +37,27 @@ public class ErfassungLoesungszettelInfoServiceImpl implements ErfassungLoesungs
 	}
 
 	@Override
-	public Map<Auswertungsquelle, Long> ermittleLoesungszettelMitAuswertungsquellenForTeilnahme(final Teilnahme teilnahme) {
+	public Map<Auswertungsquelle, Long> ermittleLoesungszettelMitAuswertungsquellenForTeilnahme(final TeilnahmeIdentifier identifier) {
 
 		List<Auspraegung> auspraegungen = loesungszettelRepository
-			.countAuspraegungenForTeilnahmeByColumnName(teilnahme, "QUELLE");
-
-		long anzahlOnline = 0;
-		long anzahlUpload = 0;
-
-		Optional<Auspraegung> optOnline = auspraegungen.stream()
-			.filter(a -> Auswertungsquelle.ONLINE.toString().equals(a.getWert())).findFirst();
-
-		if (optOnline.isPresent()) {
-
-			anzahlOnline = optOnline.get().getAnzahl();
-		}
-
-		Optional<Auspraegung> optUpload = auspraegungen.stream()
-			.filter(a -> Auswertungsquelle.UPLOAD.toString().equals(a.getWert())).findFirst();
-
-		if (optUpload.isPresent()) {
-
-			anzahlUpload = optUpload.get().getAnzahl();
-		}
+			.countAuspraegungenForTeilnahmeByColumnName(identifier, "QUELLE");
 
 		Map<Auswertungsquelle, Long> result = new HashMap<>();
 
-		result.put(Auswertungsquelle.ONLINE, Long.valueOf(anzahlOnline));
-		result.put(Auswertungsquelle.UPLOAD, Long.valueOf(anzahlUpload));
+		for (Auswertungsquelle auswertungsquelle : Auswertungsquelle.values()) {
+
+			Optional<Auspraegung> optAuspraegung = auspraegungen.stream()
+				.filter(a -> auswertungsquelle.toString().equals(a.getWert())).findFirst();
+
+			if (optAuspraegung.isPresent()) {
+
+				result.put(auswertungsquelle, Long.valueOf(optAuspraegung.get().getAnzahl()));
+			} else {
+
+				result.put(auswertungsquelle, Long.valueOf(0));
+			}
+
+		}
 
 		return result;
 	}

@@ -14,7 +14,6 @@ import de.egladil.web.mk_gateway.domain.error.EntityConcurrentlyModifiedExceptio
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
-import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterLoesungszettel;
@@ -176,11 +175,11 @@ public interface LoesungszettelRepository {
 	/**
 	 * Selektiert die Lösungszettel des gegebenen Wettbewerbs und gruppiert sie nach der gewünschten Spalte.
 	 *
-	 * @param  teilnahme
-	 *                    Teilnahme
+	 * @param  teilnahmeIdentifier
+	 *                             TeilnahmeIdentifier
 	 * @param  columnName
-	 *                    String name des group by- Kriteriums.
+	 *                             String name des group by- Kriteriums.
 	 * @return
 	 */
-	List<Auspraegung> countAuspraegungenForTeilnahmeByColumnName(Teilnahme teilnahme, String columnName);
+	List<Auspraegung> countAuspraegungenForTeilnahmeByColumnName(TeilnahmeIdentifier teilnahmeIdentifier, String columnName);
 }

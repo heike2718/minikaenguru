@@ -94,8 +94,7 @@ const lehrerReducer = createReducer(initalLehrerState,
 				const neueDetails: SchuleDetails = { ...alteDetails
 					, angemeldetDurch: action.angemeldetDurch
 					, anzahlTeilnahmen: anzahlTeilnahmen
-					, offlineauswertungBegonnen: false
-					, onlineauswertungBegonnen: false
+					, wettbewerbsauswertungsart: 'INDIFFERENT'
 				};
 				const neueSchule: Schule = { ...alteSchule, aktuellAngemeldet: true, details: neueDetails };
 				const neueMap = mergeSchulenMap(state.schulen, neueSchule);

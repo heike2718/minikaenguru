@@ -7,6 +7,8 @@ package de.egladil.web.mk_gateway.domain.uploads;
 import java.util.List;
 import java.util.Optional;
 
+import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.UploadsMonitoringViewItem;
 
@@ -67,5 +69,16 @@ public interface UploadRepository {
 	 * @return                 long
 	 */
 	long countUploadsWithUploadTypeAndTeilnahmenummer(UploadType uploadType, String teilnahmenummer);
+
+	/**
+	 * Selektiert die Uploads der gegebenen Teilnahme und gruppiert sie nach der gewünschten Spalte.
+	 *
+	 * @param  teilnahmeIdentifier
+	 *                             TeilnahmeIdentifier
+	 * @param  columnName
+	 *                             String name des group by- Kriteriums.
+	 * @return
+	 */
+	List<Auspraegung> countAuspraegungenForTeilnahmeByColumnName(TeilnahmeIdentifier teilnahmeIdentifier, String columnName);
 
 }
