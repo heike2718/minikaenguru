@@ -25,7 +25,7 @@ import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.klassenlisten.KlassenlisteImportService;
 import de.egladil.web.mk_gateway.domain.loesungszettel.upload.AuswertungImportService;
 import de.egladil.web.mk_gateway.domain.loesungszettel.upload.UploadAuswertungContext;
-import de.egladil.web.mk_gateway.domain.statistik.WettbewerbsauswertungsartInfoService;
+import de.egladil.web.mk_gateway.domain.statistik.AuswertungsmodusInfoService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.uploads.UploadAuthorizationService;
@@ -34,7 +34,7 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadRepository;
 import de.egladil.web.mk_gateway.domain.uploads.UploadRequestPayload;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
-import de.egladil.web.mk_gateway.domain.veranstalter.api.Wettbewerbsauswertungsart;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.Auswertungsmodus;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 
@@ -66,7 +66,7 @@ public class UploadManagerImplTest {
 	DomainEventHandler domainEventHandler;
 
 	@Mock
-	WettbewerbsauswertungsartInfoService auswertungsartInfoService;
+	AuswertungsmodusInfoService auswertungsmodusInfoService;
 
 	@InjectMocks
 	UploadManagerImpl uploadManager;
@@ -100,19 +100,19 @@ public class UploadManagerImplTest {
 		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmenummer(schulkuerzel)
 			.withWettbewerbID(wettbewerbID);
 
-		when(auswertungsartInfoService.ermittleAuswertungsartFuerTeilnahme(teilnahmeIdentifier))
-			.thenReturn(Wettbewerbsauswertungsart.ONLINE);
+		when(auswertungsmodusInfoService.ermittleAuswertungsmodusFuerTeilnahme(teilnahmeIdentifier))
+			.thenReturn(Auswertungsmodus.ONLINE);
 
 		// Act
 		ResponsePayload responsePayload = uploadManager.processUpload(uploadPayload);
 
 		// Assert
 		MessagePayload messagePayload = responsePayload.getMessage();
-		assertEquals("WARN", messagePayload.getLevel());
+		assertEquals("ERROR", messagePayload.getLevel());
 		assertEquals("Der Wettbewerb an dieser Schule wurde bereits online ausgewertet. Die Auswertungstabelle wird ignoriert.",
 			messagePayload.getMessage());
 
-		verify(auswertungsartInfoService).ermittleAuswertungsartFuerTeilnahme(teilnahmeIdentifier);
+		verify(auswertungsmodusInfoService).ermittleAuswertungsmodusFuerTeilnahme(teilnahmeIdentifier);
 		verify(scanService, never()).scanFile(any());
 		verify(uploadRepository, never()).findUploadByIdentifier(any());
 		verify(auswertungImportService, never()).importiereAuswertung(any(), any());

@@ -54,7 +54,7 @@ export class LandingComponent implements OnInit, OnDestroy {
 				this.version = v;
 
 				if (this.version !== storedGuiVersion) {
-					this.versionService.storeGuiVersionAndReloadApp(environment.storageKeyPrefix + STORAGE_KEY_GUI_VERSION, this.version);
+					this.versionService.storeGuiVersion(environment.storageKeyPrefix + STORAGE_KEY_GUI_VERSION, this.version);
 				} else {
 					this.logger.info('GUI-Version ist aktuell');
 				}

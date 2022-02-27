@@ -5,9 +5,9 @@
 package de.egladil.web.mk_gateway.domain.veranstalter.api;
 
 /**
- * Schulauswertungsart
+ * Auswertungsmodus
  */
-public enum Wettbewerbsauswertungsart {
+public enum Auswertungsmodus {
 
 	INDIFFERENT,
 	OFFLINE,

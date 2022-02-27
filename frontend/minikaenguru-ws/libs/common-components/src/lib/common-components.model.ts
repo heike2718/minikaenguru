@@ -7,7 +7,7 @@ export type Duplikatkontext = 'KIND' | 'KLASSE';
 export type ZulaessigeEingabe = 'A' | 'B' | 'C' | 'D' | 'E' | 'N';
 export type ConcurrentModificationType = 'DETETED' | 'INSERTED' | 'UPDATED';
 export type WettbewerbStatus = 'ERFASST' | 'ANMELDUNG' | 'DOWNLOAD_PRIVAT' | 'DOWNLOAD_LEHRER' | 'BEENDET';
-export type Wettbewerbsauswertungsart = 'INDIFFERENT' | 'OFFLINE' | 'ONLINE';
+export type Auswertungsmodus = 'INDIFFERENT' | 'OFFLINE' | 'ONLINE';
 
 export const modalOptions: NgbModalOptions = {
     backdrop:'static',

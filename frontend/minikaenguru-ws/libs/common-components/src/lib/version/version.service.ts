@@ -21,9 +21,9 @@ export class VersionService {
         );
     }
 
-    public storeGuiVersionAndReloadApp(storageKey: string, guiVersion: string): void {		
+    public storeGuiVersion(storageKey: string, guiVersion: string): void {		
 		localStorage.setItem(storageKey, guiVersion);
-		window.location.reload();
+		// window.location.reload();
 	}
 
     private getVersion(message: Message): string {

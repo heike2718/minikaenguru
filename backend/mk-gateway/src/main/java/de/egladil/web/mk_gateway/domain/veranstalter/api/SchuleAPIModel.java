@@ -50,7 +50,7 @@ public class SchuleAPIModel {
 	private boolean aktuellAngemeldet;
 
 	@JsonProperty
-	private Wettbewerbsauswertungsart wettbewerbsauswertungsart;
+	private Auswertungsmodus auswertungsmodus;
 
 	@JsonProperty
 	private SchuleDetails details;
@@ -221,14 +221,14 @@ public class SchuleAPIModel {
 		return this;
 	}
 
-	public Wettbewerbsauswertungsart getWettbewerbsauswertungsart() {
+	public Auswertungsmodus getAuswertungsmodus() {
 
-		return wettbewerbsauswertungsart;
+		return auswertungsmodus;
 	}
 
-	public SchuleAPIModel withWettbewerbsauswertungsart(final Wettbewerbsauswertungsart wettbewerbsauswertungsart) {
+	public SchuleAPIModel withAuswertungsmodus(final Auswertungsmodus auswertungsmodus) {
 
-		this.wettbewerbsauswertungsart = wettbewerbsauswertungsart;
+		this.auswertungsmodus = auswertungsmodus;
 		return this;
 	}
 }

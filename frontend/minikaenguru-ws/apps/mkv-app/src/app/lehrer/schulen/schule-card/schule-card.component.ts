@@ -39,8 +39,8 @@ export class SchuleCardComponent implements OnInit, OnDestroy {
 			u => this.user = u
 		);
 
-		this.showBtnOnlineauswertung = this.schule.aktuellAngemeldet && this.schule.wettbewerbsauswertungsart !== 'OFFLINE';
-		this.showBtnUploadAuswertung = this.schule.aktuellAngemeldet && this.schule.wettbewerbsauswertungsart !== 'ONLINE';
+		this.showBtnOnlineauswertung = this.schule.aktuellAngemeldet && this.schule.auswertungsmodus !== 'OFFLINE';
+		this.showBtnUploadAuswertung = this.schule.aktuellAngemeldet && this.schule.auswertungsmodus !== 'ONLINE';
 	}
 
 	ngOnDestroy(): void {

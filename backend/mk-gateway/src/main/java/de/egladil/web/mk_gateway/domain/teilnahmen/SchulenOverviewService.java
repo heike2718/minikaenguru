@@ -19,11 +19,11 @@ import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
-import de.egladil.web.mk_gateway.domain.statistik.WettbewerbsauswertungsartInfoService;
+import de.egladil.web.mk_gateway.domain.statistik.AuswertungsmodusInfoService;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
-import de.egladil.web.mk_gateway.domain.veranstalter.api.Wettbewerbsauswertungsart;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.Auswertungsmodus;
 
 /**
  * SchulenOverviewService
@@ -44,16 +44,16 @@ public class SchulenOverviewService {
 	DomainEventHandler domainEventHandler;
 
 	@Inject
-	WettbewerbsauswertungsartInfoService auswertungsartInfoService;
+	AuswertungsmodusInfoService auswertungsmodusInfoService;
 
 	private SecurityIncidentRegistered securityIncidentRegistered;
 
-	public static SchulenOverviewService createForTest(final VeranstalterRepository veranstalterRepo, final AktuelleTeilnahmeService teilnahmenService, final WettbewerbsauswertungsartInfoService auswertungsartInfoService) {
+	public static SchulenOverviewService createForTest(final VeranstalterRepository veranstalterRepo, final AktuelleTeilnahmeService teilnahmenService, final AuswertungsmodusInfoService auswertungsmodusInfoService) {
 
 		SchulenOverviewService result = new SchulenOverviewService();
 		result.aktuelleTeilnahmeService = teilnahmenService;
 		result.veranstalterRepository = veranstalterRepo;
-		result.auswertungsartInfoService = auswertungsartInfoService;
+		result.auswertungsmodusInfoService = auswertungsmodusInfoService;
 		return result;
 
 	}
@@ -89,16 +89,16 @@ public class SchulenOverviewService {
 
 			if (optTeilnahme.isPresent()) {
 
-				Wettbewerbsauswertungsart auswertungsart = auswertungsartInfoService
-					.ermittleAuswertungsartFuerTeilnahme(optTeilnahme.get().teilnahmeIdentifier());
+				Auswertungsmodus auswertungsmodus = auswertungsmodusInfoService
+					.ermittleAuswertungsmodusFuerTeilnahme(optTeilnahme.get().teilnahmeIdentifier());
 
 				items.add(SchuleAPIModel.withKuerzel(schulID.identifier()).withAngemeldet(true)
-					.withWettbewerbsauswertungsart(auswertungsart));
+					.withAuswertungsmodus(auswertungsmodus));
 
 			} else {
 
 				items.add(SchuleAPIModel.withKuerzel(schulID.identifier())
-					.withWettbewerbsauswertungsart(Wettbewerbsauswertungsart.INDIFFERENT));
+					.withAuswertungsmodus(Auswertungsmodus.INDIFFERENT));
 			}
 		}
 

@@ -95,15 +95,28 @@ const lehrerReducer = createReducer(initalLehrerState,
 					, angemeldetDurch: action.angemeldetDurch
 					, anzahlTeilnahmen: anzahlTeilnahmen					
 				};
-				const neueSchule: Schule = { ...alteSchule, aktuellAngemeldet: true, details: neueDetails, wettbewerbsauswertungsart: 'INDIFFERENT' };
+				const neueSchule: Schule = { ...alteSchule, aktuellAngemeldet: true, details: neueDetails, auswertungsmodus: 'INDIFFERENT' };
 				const neueMap = mergeSchulenMap(state.schulen, neueSchule);
-				const neuerState = { ...state, schulen: neueMap, selectedSchule: neueSchule };
-				return neuerState;
+				return { ...state, schulen: neueMap, selectedSchule: neueSchule };
 			}			
 		}
 
 		return {...state};
 		
+	}),
+
+	on(LehrerActions.auswertungstabelleHochgeladen, (state, action) => {
+
+		const alteSchule = state.selectedSchule;
+
+		if (alteSchule) {
+
+			const neueSchule: Schule = {...alteSchule, auswertungsmodus: 'OFFLINE'};
+			const neueMap = mergeSchulenMap(state.schulen, neueSchule);
+			return { ...state, schulen: neueMap, selectedSchule: neueSchule };
+		}
+
+		return {...state};
 	}),
 
 	on(LehrerActions.restoreDetailsFromCache, (state, action) => {

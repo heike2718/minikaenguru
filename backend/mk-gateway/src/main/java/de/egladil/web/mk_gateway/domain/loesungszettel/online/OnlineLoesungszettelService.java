@@ -44,11 +44,11 @@ import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRohdaten;
 import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelAPIModel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelZeileAPIModel;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
-import de.egladil.web.mk_gateway.domain.statistik.WettbewerbsauswertungsartInfoService;
-import de.egladil.web.mk_gateway.domain.statistik.impl.WettbewerbsauswertungsartInfoServiceImpl;
+import de.egladil.web.mk_gateway.domain.statistik.AuswertungsmodusInfoService;
+import de.egladil.web.mk_gateway.domain.statistik.impl.AuswertungsmodusInfoServiceImpl;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
-import de.egladil.web.mk_gateway.domain.veranstalter.api.Wettbewerbsauswertungsart;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.Auswertungsmodus;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
@@ -82,7 +82,7 @@ public class OnlineLoesungszettelService {
 	WettbewerbService wettbewerbService;
 
 	@Inject
-	WettbewerbsauswertungsartInfoService auswertungsartInfoService;
+	AuswertungsmodusInfoService auswertungsmodusInfoService;
 
 	private LoesungszettelCreated loesungszettelCreated;
 
@@ -98,20 +98,20 @@ public class OnlineLoesungszettelService {
 		result.authService = AuthorizationService.createForIntegrationTest(entityManager);
 		result.wettbewerbService = WettbewerbService.createForIntegrationTest(entityManager);
 		result.domainEventHandler = DomainEventHandler.createForIntegrationTest(entityManager);
-		result.auswertungsartInfoService = WettbewerbsauswertungsartInfoServiceImpl.createForIntegrationTests(entityManager);
+		result.auswertungsmodusInfoService = AuswertungsmodusInfoServiceImpl.createForIntegrationTests(entityManager);
 		return result;
 
 	}
 
 	@Deprecated
-	public static OnlineLoesungszettelService createForTest(final AuthorizationService authService, final WettbewerbService wettbewerbService, final KinderRepository kinderRepository, final LoesungszettelRepository loesungszettelRepository, final WettbewerbsauswertungsartInfoService auswertungsartInfoService) {
+	public static OnlineLoesungszettelService createForTest(final AuthorizationService authService, final WettbewerbService wettbewerbService, final KinderRepository kinderRepository, final LoesungszettelRepository loesungszettelRepository, final AuswertungsmodusInfoService auswertungsmodusInfoService) {
 
 		OnlineLoesungszettelService result = new OnlineLoesungszettelService();
 		result.authService = authService;
 		result.wettbewerbService = wettbewerbService;
 		result.kinderRepository = kinderRepository;
 		result.loesungszettelRepository = loesungszettelRepository;
-		result.auswertungsartInfoService = auswertungsartInfoService;
+		result.auswertungsmodusInfoService = auswertungsmodusInfoService;
 		return result;
 	}
 
@@ -410,10 +410,10 @@ public class OnlineLoesungszettelService {
 			new Identifier(teilnahmeIdentifier.teilnahmenummer()),
 			"[loesungszettelAnlegen - kindID=" + kindID + "]");
 
-		Wettbewerbsauswertungsart auswertungsart = auswertungsartInfoService
-			.ermittleAuswertungsartFuerTeilnahme(teilnahmeIdentifier);
+		Auswertungsmodus auswertungsmodus = auswertungsmodusInfoService
+			.ermittleAuswertungsmodusFuerTeilnahme(teilnahmeIdentifier);
 
-		if (auswertungsart == Wettbewerbsauswertungsart.OFFLINE) {
+		if (auswertungsmodus == Auswertungsmodus.OFFLINE) {
 
 			LOG.warn("Zu Teilnahme {} gibt es bereits hochgeladene Auswertungen. Veranstalter={}", teilnahmeIdentifier,
 				veranstalterID);

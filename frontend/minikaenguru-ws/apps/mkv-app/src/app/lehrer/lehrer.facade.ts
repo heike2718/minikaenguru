@@ -216,6 +216,16 @@ export class LehrerFacade {
 		);
 	}
 
+	public handleAuswertungstabelleHochgeladen(schule: Schule, responsePayload:  ResponsePayload): void {
+
+		const message: Message = responsePayload.message;
+
+		if (message.level !== 'ERROR') {
+			this.appStore.dispatch(LehrerActions.auswertungstabelleHochgeladen({schule: schule}));
+		}		
+		this.messageService.showMessage(responsePayload.message);
+	}
+
 	public restoreDetailsFromCache(schulkuerzel: string): void {
 		this.appStore.dispatch(LehrerActions.restoreDetailsFromCache({ kuerzel: schulkuerzel }));
 	}
@@ -239,5 +249,4 @@ export class LehrerFacade {
 			}
 		)
 	}
-
 }

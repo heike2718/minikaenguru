@@ -46,8 +46,8 @@ import de.egladil.web.mk_gateway.domain.klassenlisten.UploadKlassenlisteContext;
 import de.egladil.web.mk_gateway.domain.klassenlisten.impl.KlassenlisteCSVImportService;
 import de.egladil.web.mk_gateway.domain.loesungszettel.upload.AuswertungImportService;
 import de.egladil.web.mk_gateway.domain.loesungszettel.upload.UploadAuswertungContext;
-import de.egladil.web.mk_gateway.domain.statistik.WettbewerbsauswertungsartInfoService;
-import de.egladil.web.mk_gateway.domain.statistik.impl.WettbewerbsauswertungsartInfoServiceImpl;
+import de.egladil.web.mk_gateway.domain.statistik.AuswertungsmodusInfoService;
+import de.egladil.web.mk_gateway.domain.statistik.impl.AuswertungsmodusInfoServiceImpl;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.uploads.UploadAuthorizationService;
 import de.egladil.web.mk_gateway.domain.uploads.UploadData;
@@ -59,7 +59,7 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.domain.uploads.convert.UploadToCSVConverter;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
-import de.egladil.web.mk_gateway.domain.veranstalter.api.Wettbewerbsauswertungsart;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.Auswertungsmodus;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
@@ -105,7 +105,7 @@ public class UploadManagerImpl implements UploadManager {
 	UploadRepository uploadRepository;
 
 	@Inject
-	WettbewerbsauswertungsartInfoService auswertungsartInfoService;
+	AuswertungsmodusInfoService auswertungsmodusInfoService;
 
 	@Inject
 	DomainEventHandler domainEventHandler;
@@ -123,7 +123,7 @@ public class UploadManagerImpl implements UploadManager {
 		result.domainEventHandler = DomainEventHandler.createForIntegrationTest(em);
 		result.scanService = ScanService.createForIntegrationTest();
 		result.auswertungImportService = AuswertungImportService.createForIntegrationTest(em);
-		result.auswertungsartInfoService = WettbewerbsauswertungsartInfoServiceImpl.createForIntegrationTests(em);
+		result.auswertungsmodusInfoService = AuswertungsmodusInfoServiceImpl.createForIntegrationTests(em);
 		result.maxFilesizeBytes = "2097152";
 		return result;
 
@@ -247,12 +247,12 @@ public class UploadManagerImpl implements UploadManager {
 				.withTeilnahmenummer(uploadPayload.getTeilnahmenummer())
 				.withWettbewerbID(uploadAuswertungContext.getWettbewerb().id());
 
-			Wettbewerbsauswertungsart auswertungsart = auswertungsartInfoService
-				.ermittleAuswertungsartFuerTeilnahme(teilnahmeIdentifier);
+			Auswertungsmodus auswertungsmodus = auswertungsmodusInfoService
+				.ermittleAuswertungsmodusFuerTeilnahme(teilnahmeIdentifier);
 
-			if (Wettbewerbsauswertungsart.ONLINE == auswertungsart) {
+			if (Auswertungsmodus.ONLINE == auswertungsmodus) {
 
-				return ResponsePayload.messageOnly(MessagePayload.warn(
+				return ResponsePayload.messageOnly(MessagePayload.error(
 					"Der Wettbewerb an dieser Schule wurde bereits online ausgewertet. Die Auswertungstabelle wird ignoriert."));
 			}
 		}

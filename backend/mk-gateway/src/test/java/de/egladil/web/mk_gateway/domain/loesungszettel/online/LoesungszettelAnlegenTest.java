@@ -41,10 +41,10 @@ import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelAPIModel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelZeileAPIModel;
-import de.egladil.web.mk_gateway.domain.statistik.WettbewerbsauswertungsartInfoService;
+import de.egladil.web.mk_gateway.domain.statistik.AuswertungsmodusInfoService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
-import de.egladil.web.mk_gateway.domain.veranstalter.api.Wettbewerbsauswertungsart;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.Auswertungsmodus;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 
 /**
@@ -71,7 +71,7 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 	private WettbewerbService wettbewerbService;
 
 	@Mock
-	private WettbewerbsauswertungsartInfoService auswertungsartInfoService;
+	private AuswertungsmodusInfoService auswertungsmodusInfoService;
 
 	@InjectMocks
 	private OnlineLoesungszettelService service;
@@ -185,8 +185,8 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 		when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any())).thenReturn(Rolle.LEHRER);
 		// when(loesungszettelRepository.loadAll(any())).thenReturn(Collections.singletonList(loesungszettel));
 
-		when(auswertungsartInfoService.ermittleAuswertungsartFuerTeilnahme(teilnahmeIdentifier))
-			.thenReturn(Wettbewerbsauswertungsart.OFFLINE);
+		when(auswertungsmodusInfoService.ermittleAuswertungsmodusFuerTeilnahme(teilnahmeIdentifier))
+			.thenReturn(Auswertungsmodus.OFFLINE);
 
 		ResponsePayload responsePayload = service.loesungszettelAnlegen(requestDaten, VERANSTALTER_ID);
 

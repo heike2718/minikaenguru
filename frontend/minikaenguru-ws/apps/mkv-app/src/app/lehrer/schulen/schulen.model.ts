@@ -1,4 +1,4 @@
-import { Wettbewerbsauswertungsart } from '@minikaenguru-ws/common-components';
+import { Auswertungsmodus } from '@minikaenguru-ws/common-components';
 import { AnonymisierteTeilnahme } from '../../wettbewerb/wettbewerb.model';
 
 export interface Schule {
@@ -8,7 +8,7 @@ export interface Schule {
 	readonly land: string;
 	readonly kuerzelLand: string,
 	readonly aktuellAngemeldet: boolean;
-	readonly wettbewerbsauswertungsart: Wettbewerbsauswertungsart;
+	readonly auswertungsmodus: Auswertungsmodus;
 	readonly details?: SchuleDetails;
 };
 

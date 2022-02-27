@@ -18,7 +18,7 @@ import org.mockito.Mockito;
 
 import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.statistik.WettbewerbsauswertungsartInfoService;
+import de.egladil.web.mk_gateway.domain.statistik.AuswertungsmodusInfoService;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 
@@ -29,7 +29,7 @@ public class SchulenOverviewServiceTest extends AbstractDomainServiceTest {
 
 	private SchulenOverviewService service;
 
-	private WettbewerbsauswertungsartInfoService auswertungsartInfoService;
+	private AuswertungsmodusInfoService auswertungsmodusInfoService;
 
 	@BeforeEach
 	@Override
@@ -37,13 +37,13 @@ public class SchulenOverviewServiceTest extends AbstractDomainServiceTest {
 
 		super.setUp();
 
-		auswertungsartInfoService = Mockito.mock(WettbewerbsauswertungsartInfoService.class);
+		auswertungsmodusInfoService = Mockito.mock(AuswertungsmodusInfoService.class);
 		WettbewerbService wettbewerbService = WettbewerbService.createForTest(getMockitoBasedWettbewerbRepository());
 		AktuelleTeilnahmeService aktuelleTeilnahmeService = AktuelleTeilnahmeService.createForTest(getTeilnahmenRepository(),
 			wettbewerbService, getVeranstalterRepository());
 
 		service = SchulenOverviewService.createForTest(getVeranstalterRepository(), aktuelleTeilnahmeService,
-			auswertungsartInfoService);
+			auswertungsmodusInfoService);
 	}
 
 	@Test

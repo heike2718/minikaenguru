@@ -20,9 +20,6 @@
 						<p *ngIf="schule.details && schule.details.kollegen && schule.details.kollegen.length > 0">Kollegen:
 							{{schule.details.kollegen}}</p>
 
-						<p *ngIf="devMode">Auswertungsart:
-								{{schule.wettbewerbsauswertungsart}}</p>
-
 						<p *ngIf="wettbewerb.status === 'ERFASST'">Der Anmeldezeitraum für {{wettbewerb.jahr}} beginnt
 							am
 							{{wettbewerb.wettbewerbsbeginn}}</p>
@@ -30,7 +27,11 @@
 						<p *ngIf="schule.details && schule.aktuellAngemeldet">Anmeldung {{wettbewerb.jahr}} durch
 							{{schule.details.angemeldetDurch}}
 						</p>
-					</div>
+
+						<p *ngIf="devMode" class="small">Auswertungsart:
+							{{schule.auswertungsmodus}}</p>
+
+				</div>
 				</div>
 
 				<div class="card-deck">
@@ -41,17 +42,17 @@
 
 					</div>
 
-					<div *ngIf="schule.aktuellAngemeldet && schule.wettbewerbsauswertungsart !== 'OFFLINE'" class="card clickable" (click)="gotoKlassenliste()">
+					<div *ngIf="schule.aktuellAngemeldet && schule.auswertungsmodus !== 'OFFLINE'" class="card clickable" (click)="gotoKlassenliste()">
 						<div class="card-body">
 							<div class="card-title">Auswertung {{wettbewerb.jahr}}</div>
 							<div class="mb-2 text-muted">Kinder erfassen und Urkunden generieren</div>
 						</div>
 					</div>
 
-					<div *ngIf="schule.aktuellAngemeldet && (hatZugangZuUnterlagen$ | async) && schule.wettbewerbsauswertungsart !== 'ONLINE'"  class="card clickable" (click)="gotoUploadAuswertung()">
+					<div *ngIf="schule.aktuellAngemeldet && (hatZugangZuUnterlagen$ | async) && schule.auswertungsmodus !== 'ONLINE'"  class="card clickable" (click)="gotoUploadAuswertung()">
 						<div class="card-body">
 							<div class="card-title">Auswertungstabelle hochladen</div>
-							<div *ngIf="schule.wettbewerbsauswertungsart === 'INDIFFERENT'" class="mb-2  text-danger">
+							<div *ngIf="schule.auswertungsmodus === 'INDIFFERENT'" class="mb-2  text-danger">
 								Achtung: nur wenn Sie die Online-Auswertung nicht nutzen möchten
 						</div>
 						<div class="mb-2 text-muted">

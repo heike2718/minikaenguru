@@ -30,7 +30,7 @@ export {
 	Klasse,
 	KlasseEditorModel,
 	KlasseRequestData,
-	Wettbewerbsauswertungsart,
+	Auswertungsmodus,
 	initialKindEditorModel,
 	getKlassenstufeByLabel,
 	getSpracheByLabel,

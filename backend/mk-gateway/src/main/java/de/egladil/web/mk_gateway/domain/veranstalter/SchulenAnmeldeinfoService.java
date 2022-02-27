@@ -27,10 +27,14 @@ import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
+import de.egladil.web.mk_gateway.domain.statistik.AuswertungsmodusInfoService;
+import de.egladil.web.mk_gateway.domain.teilnahmen.AktuelleTeilnahmeService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.SchuleDetailsService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.SchulenOverviewService;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleDetails;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.Auswertungsmodus;
 
 /**
  * SchulenAnmeldeinfoService
@@ -52,6 +56,12 @@ public class SchulenAnmeldeinfoService {
 
 	@Inject
 	MkKatalogeResourceAdapter katalogeAdapter;
+
+	@Inject
+	AuswertungsmodusInfoService auswertungsmodusInfoService;
+
+	@Inject
+	AktuelleTeilnahmeService aktuelleTeilnahmeService;
 
 	private DataInconsistencyRegistered dataInconsistencyRegistered;
 
@@ -136,7 +146,18 @@ public class SchulenAnmeldeinfoService {
 
 		SchuleAPIModel result = SchuleAPIModel.merge(schuleAusKatalog, schuleDetails);
 
-		return result;
+		Optional<Teilnahme> optAktuelleTeilnahme = aktuelleTeilnahmeService.aktuelleTeilnahme(schulkuerzel);
+
+		if (optAktuelleTeilnahme.isPresent()) {
+
+			Teilnahme teilnahme = optAktuelleTeilnahme.get();
+			Auswertungsmodus auswertungsmodus = auswertungsmodusInfoService
+				.ermittleAuswertungsmodusFuerTeilnahme(teilnahme.teilnahmeIdentifier());
+
+			return result.withAngemeldet(true).withAuswertungsmodus(auswertungsmodus);
+		}
+
+		return result.withAuswertungsmodus(Auswertungsmodus.INDIFFERENT);
 
 	}
 
@@ -154,7 +175,7 @@ public class SchulenAnmeldeinfoService {
 
 				SchuleAPIModel schuleAPIModel = opt.get();
 				schule.withAngemeldet(schuleAPIModel.aktuellAngemeldet())
-					.withWettbewerbsauswertungsart(schuleAPIModel.getWettbewerbsauswertungsart());
+					.withAuswertungsmodus(schuleAPIModel.getAuswertungsmodus());
 			}
 		});
 

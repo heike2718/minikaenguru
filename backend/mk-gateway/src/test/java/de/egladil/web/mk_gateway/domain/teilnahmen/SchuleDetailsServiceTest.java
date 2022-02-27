@@ -7,27 +7,22 @@ package de.egladil.web.mk_gateway.domain.teilnahmen;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.adv.VertragAuftragsdatenverarbeitung;
 import de.egladil.web.mk_gateway.domain.adv.VertragAuftragsverarbeitungRepository;
 import de.egladil.web.mk_gateway.domain.adv.Vertragstext;
-import de.egladil.web.mk_gateway.domain.statistik.WettbewerbsauswertungsartInfoService;
 import de.egladil.web.mk_gateway.domain.veranstalter.Kollege;
 import de.egladil.web.mk_gateway.domain.veranstalter.SchulkollegienRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.Schulkollegium;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleDetails;
-import de.egladil.web.mk_gateway.domain.veranstalter.api.Wettbewerbsauswertungsart;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 
 /**
@@ -36,8 +31,6 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 public class SchuleDetailsServiceTest extends AbstractDomainServiceTest {
 
 	private SchuleDetailsService service;
-
-	private WettbewerbsauswertungsartInfoService auswertungsartInfoService;
 
 	@BeforeEach
 	@Override
@@ -52,10 +45,8 @@ public class SchuleDetailsServiceTest extends AbstractDomainServiceTest {
 
 		VertragAuftragsverarbeitungRepository advRepository = createAdvRepository();
 
-		auswertungsartInfoService = Mockito.mock(WettbewerbsauswertungsartInfoService.class);
-
 		service = SchuleDetailsService.createForTest(aktuelleTeilnahmeService, schulkollegienRepository, getTeilnahmenRepository(),
-			getVeranstalterRepository(), advRepository, auswertungsartInfoService);
+			getVeranstalterRepository(), advRepository);
 	}
 
 	/**
@@ -160,9 +151,6 @@ public class SchuleDetailsServiceTest extends AbstractDomainServiceTest {
 
 	@Test
 	void should_ermittleSchuldetailsWork_when_angemeldet() {
-
-		// Arrange
-		when(auswertungsartInfoService.ermittleAuswertungsartFuerTeilnahme(any())).thenReturn(Wettbewerbsauswertungsart.ONLINE);
 
 		// Act
 		SchuleDetails details = service.ermittleSchuldetails(new Identifier(SCHULKUERZEL_1), new Identifier(UUID_LEHRER_1));

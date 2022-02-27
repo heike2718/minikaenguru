@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { initialUploadComponentModel, UploadComponentModel } from '@minikaenguru-ws/common-components';
 import { LogService } from '@minikaenguru-ws/common-logging';
-import { MessageService, ResponsePayload } from '@minikaenguru-ws/common-messages';
+import { ResponsePayload } from '@minikaenguru-ws/common-messages';
 import { environment } from 'apps/mkv-app/src/environments/environment';
-import { combineLatest, Observable, Subscription } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 import { WettbewerbFacade } from '../../../wettbewerb/wettbewerb.facade';
 import { LehrerFacade } from '../../lehrer.facade';
 import { Schule } from '../schulen.model';
@@ -33,7 +33,6 @@ export class UploadAuswertungComponent implements OnInit, OnDestroy {
   constructor(private router: Router,
     private lehrerFacade: LehrerFacade,
     private wettbewerbFacade: WettbewerbFacade,
-    private messageService: MessageService,
     private logger: LogService) { }
 
   ngOnInit(): void {
@@ -78,8 +77,9 @@ export class UploadAuswertungComponent implements OnInit, OnDestroy {
 	}
 
 	onResponse(rp: ResponsePayload | any): void {
-		if (rp) {
-			this.messageService.showMessage(rp.message);
+		if (rp && this.schule) {
+			// this.messageService.showMessage(rp.message);
+      this.lehrerFacade.handleAuswertungstabelleHochgeladen(this.schule, rp);
 		}
 	}
 

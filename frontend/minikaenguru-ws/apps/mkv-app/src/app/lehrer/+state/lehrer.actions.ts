@@ -84,6 +84,11 @@ export const aboNewsletterChanged = createAction(
 	'[LehrerFacade] changeAboNewsletter'
 );
 
+export const auswertungstabelleHochgeladen = createAction(
+	'[LehrerFacade] handleAuswertungstabelleHochgeladen',
+	props<{schule: Schule}>()
+)
+
 export const resetLehrer = createAction(
 	'[LehrerFacade] resetState()'
 );

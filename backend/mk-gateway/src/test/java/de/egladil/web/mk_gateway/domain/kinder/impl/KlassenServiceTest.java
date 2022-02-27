@@ -33,7 +33,7 @@ import de.egladil.web.mk_gateway.domain.kinder.api.KlasseEditorModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseRequestData;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.online.OnlineLoesungszettelService;
-import de.egladil.web.mk_gateway.domain.statistik.WettbewerbsauswertungsartInfoService;
+import de.egladil.web.mk_gateway.domain.statistik.AuswertungsmodusInfoService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
@@ -59,13 +59,13 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 				getVeranstalterRepository(),
 				getWettbewerbService(),
 				OnlineLoesungszettelService.createForTest(authService, getWettbewerbService(), getKinderRepository(),
-					getLoesungszettelRepository(), Mockito.mock(WettbewerbsauswertungsartInfoService.class)),
+					getLoesungszettelRepository(), Mockito.mock(AuswertungsmodusInfoService.class)),
 				getKlassenRepository()),
 			getTeilnahmenRepository(),
 			getVeranstalterRepository(),
 			getWettbewerbService(),
 			OnlineLoesungszettelService.createForTest(authService, getWettbewerbService(), getKinderRepository(),
-				getLoesungszettelRepository(), Mockito.mock(WettbewerbsauswertungsartInfoService.class)),
+				getLoesungszettelRepository(), Mockito.mock(AuswertungsmodusInfoService.class)),
 			getKlassenRepository());
 	}
 

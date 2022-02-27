@@ -14,17 +14,17 @@ import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.statistik.ErfassungLoesungszettelInfoService;
 import de.egladil.web.mk_gateway.domain.statistik.UploadTypeInfoService;
-import de.egladil.web.mk_gateway.domain.statistik.WettbewerbsauswertungsartInfoService;
+import de.egladil.web.mk_gateway.domain.statistik.AuswertungsmodusInfoService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
-import de.egladil.web.mk_gateway.domain.veranstalter.api.Wettbewerbsauswertungsart;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.Auswertungsmodus;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KinderHibernateRepository;
 
 /**
- * WettbewerbsauswertungsartInfoServiceImpl
+ * AuswertungsmodusInfoServiceImpl
  */
 @RequestScoped
-public class WettbewerbsauswertungsartInfoServiceImpl implements WettbewerbsauswertungsartInfoService {
+public class AuswertungsmodusInfoServiceImpl implements AuswertungsmodusInfoService {
 
 	@Inject
 	KinderRepository kinderRepository;
@@ -35,9 +35,9 @@ public class WettbewerbsauswertungsartInfoServiceImpl implements Wettbewerbsausw
 	@Inject
 	ErfassungLoesungszettelInfoService erfassungLoesungszettelInfoService;
 
-	public static WettbewerbsauswertungsartInfoServiceImpl createForIntegrationTests(final EntityManager entityManager) {
+	public static AuswertungsmodusInfoServiceImpl createForIntegrationTests(final EntityManager entityManager) {
 
-		WettbewerbsauswertungsartInfoServiceImpl result = new WettbewerbsauswertungsartInfoServiceImpl();
+		AuswertungsmodusInfoServiceImpl result = new AuswertungsmodusInfoServiceImpl();
 		result.kinderRepository = KinderHibernateRepository.createForIntegrationTest(entityManager);
 		result.uploadTypeInfoService = UploadTypeInfoServiceImpl.createForIntegrationTests(entityManager);
 		result.erfassungLoesungszettelInfoService = ErfassungLoesungszettelInfoServiceImpl.createForIntegrationTests(entityManager);
@@ -45,41 +45,41 @@ public class WettbewerbsauswertungsartInfoServiceImpl implements Wettbewerbsausw
 	}
 
 	@Override
-	public Wettbewerbsauswertungsart ermittleAuswertungsartFuerTeilnahme(final TeilnahmeIdentifier teilnahmeIdentifier) {
+	public Auswertungsmodus ermittleAuswertungsmodusFuerTeilnahme(final TeilnahmeIdentifier teilnahmeIdentifier) {
 
 		Map<Auswertungsquelle, Long> auswertungsquellenMap = erfassungLoesungszettelInfoService
 			.ermittleLoesungszettelMitAuswertungsquellenForTeilnahme(teilnahmeIdentifier);
 
 		if (auswertungsquellenMap.get(Auswertungsquelle.ONLINE).longValue() > 0) {
 
-			return Wettbewerbsauswertungsart.ONLINE;
+			return Auswertungsmodus.ONLINE;
 		}
 
 		if (auswertungsquellenMap.get(Auswertungsquelle.UPLOAD).longValue() > 0) {
 
-			return Wettbewerbsauswertungsart.OFFLINE;
+			return Auswertungsmodus.OFFLINE;
 		}
 
 		Map<UploadType, Long> uploadTypesMap = uploadTypeInfoService.ermittleUploadTypesForTeilnahme(teilnahmeIdentifier);
 
 		if (uploadTypesMap.get(UploadType.AUSWERTUNG).longValue() > 0) {
 
-			return Wettbewerbsauswertungsart.OFFLINE;
+			return Auswertungsmodus.OFFLINE;
 		}
 
 		if (uploadTypesMap.get(UploadType.KLASSENLISTE).longValue() > 0) {
 
-			return Wettbewerbsauswertungsart.ONLINE;
+			return Auswertungsmodus.ONLINE;
 		}
 
 		long anzahlKinder = kinderRepository.countKinderZuTeilnahme(teilnahmeIdentifier);
 
 		if (anzahlKinder > 0) {
 
-			return Wettbewerbsauswertungsart.ONLINE;
+			return Auswertungsmodus.ONLINE;
 		}
 
-		return Wettbewerbsauswertungsart.INDIFFERENT;
+		return Auswertungsmodus.INDIFFERENT;
 	}
 
 }
