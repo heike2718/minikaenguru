@@ -8,12 +8,13 @@ import { Wettbewerb, WettbewerbEditorModel } from '../wettbewerbe/wettbewerbe.mo
 import { LogService } from '@minikaenguru-ws/common-logging';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
-import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
 import { wettbewerbe, selectedWettbewerb, wettbewerbEditorModel, saveOutcome } from '../wettbewerbe/+state/wettbewerbe.selectors';
 import { Router } from '@angular/router';
 
 import * as WettbewerbActions from '../wettbewerbe/+state/wettbewerbe.actions';
 import { AuthService } from '@minikaenguru-ws/common-auth';
+
+export const WETTBEWERB_STORAGE_KEY = 'mka_wettbewerb';
 
 @Injectable({
 	providedIn: 'root'
@@ -33,7 +34,6 @@ export class WettbewerbFacade {
 		private router: Router,
 		private logger: LogService,
 		private errorMapper: ErrorMappingService,
-		private errorService: GlobalErrorHandlerService,
 		private messageService: MessageService) {
 
 		this.authService.onLoggingOut$.subscribe(
@@ -56,6 +56,21 @@ export class WettbewerbFacade {
 		this.router.navigateByUrl('/wettbewerbe/wettbewerb-editor/' + wettbewerb.jahr);
 	}
 
+	public ladeAktuellenWettbewerb(): void {
+
+		const url = environment.apiUrl + '/wettbewerbe/aktueller';
+
+		this.http.get(url).pipe(
+				map(body => body as ResponsePayload),
+				map(payload => payload.data)
+			).subscribe(
+				(wettbewerb: Wettbewerb) => {
+
+					localStorage.setItem(WETTBEWERB_STORAGE_KEY, JSON.stringify(wettbewerb));
+
+				}
+		);
+	}
 
 	public loadWettbewerbe(): Observable<Wettbewerb[]> {
 

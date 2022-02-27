@@ -7,6 +7,7 @@ import { STORAGE_KEY_GUI_VERSION} from '@minikaenguru-ws/common-auth';
 import { environment } from '../../environments/environment';
 import { AppState } from '../reducers';
 import { LogService } from '@minikaenguru-ws/common-logging';
+import { WettbewerbFacade } from '../services/wettbewerb.facade';
 
 @Component({
   selector: 'mka-landing',
@@ -25,6 +26,7 @@ export class LandingComponent implements OnInit, OnDestroy {
   constructor(private authStore: Store<AppState>
     , private authService: AuthService
     , private versionService: VersionService
+    , private wettbewerbFacade: WettbewerbFacade
     , private logger: LogService) { }
 
     ngOnInit(): void {
@@ -40,7 +42,9 @@ export class LandingComponent implements OnInit, OnDestroy {
             this.logger.info('GUI-Version ist aktuell');
           }
         }
-      );		
+      );
+      
+      this.wettbewerbFacade.ladeAktuellenWettbewerb();
     }
 
   login() {

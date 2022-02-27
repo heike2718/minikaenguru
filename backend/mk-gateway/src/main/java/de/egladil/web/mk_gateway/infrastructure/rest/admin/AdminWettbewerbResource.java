@@ -12,6 +12,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -28,6 +29,7 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.EditWettbewerbModel;
+import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbDetailsAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbListAPIModel;
 
@@ -112,5 +114,24 @@ public class AdminWettbewerbResource extends AbstractAdminResource {
 			neuerStatus.toString());
 
 		return Response.ok(payload).build();
+	}
+
+	@GET
+	@Path("aktueller")
+	public Response getAktuellenWettbewerb() {
+
+		Optional<Wettbewerb> optWettbewerb = this.wettbewerbService.aktuellerWettbewerb();
+
+		if (!optWettbewerb.isPresent()) {
+
+			throw new NotFoundException();
+		}
+
+		WettbewerbAPIModel wettbewerbAPIModel = WettbewerbAPIModel.fromWettbewerb(optWettbewerb.get());
+
+		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), wettbewerbAPIModel);
+
+		return Response.ok(responsePayload).build();
+
 	}
 }

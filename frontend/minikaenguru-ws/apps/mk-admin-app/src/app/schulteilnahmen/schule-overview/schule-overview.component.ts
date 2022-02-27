@@ -7,6 +7,8 @@ import { VeranstalterFacade } from '../../veranstalter/veranstalter.facade';
 import { Teilnahme } from '@minikaenguru-ws/common-components';
 import { UploadsFacade } from '../../uploads/uploads.facade';
 import { UploadType } from '../../uploads/uploads.model';
+import { WettbewerbFacade, WETTBEWERB_STORAGE_KEY } from '../../services/wettbewerb.facade';
+import { Wettbewerb } from '../../wettbewerbe/wettbewerbe.model';
 
 @Component({
 	selector: 'mka-schule-overview',
@@ -33,6 +35,7 @@ export class SchuleOverviewComponent implements OnInit, OnDestroy {
 	constructor(private router: Router,
 		private schulteilnahmenFacade: SchulteilnahmenFacade,
 		public veranstalterFacade: VeranstalterFacade,
+		private wettbewerbFacade: WettbewerbFacade,
 		private uploadsFacade: UploadsFacade) { }
 
 	ngOnInit(): void {
@@ -54,6 +57,23 @@ export class SchuleOverviewComponent implements OnInit, OnDestroy {
 			this.schulteilnahmenFacade.clearSchuleSelection();
 		}
 		this.uploadInfosSubscription.unsubscribe();
+	}
+
+	showUploadButton(teilnahme: Teilnahme): boolean {
+
+		const optWettbewerb = localStorage.getItem(WETTBEWERB_STORAGE_KEY);
+
+		if (optWettbewerb) {
+			const wettbewerb: Wettbewerb =JSON.parse(optWettbewerb);
+
+			if (teilnahme.identifier.jahr !== wettbewerb.jahr) {
+				return false;
+			}
+
+			return teilnahme.anzahlLoesungszettelOnline === 0;
+		}
+
+		return false;
 	}
 
 	onUploadButtonClicked(event: Teilnahme | any): void {
