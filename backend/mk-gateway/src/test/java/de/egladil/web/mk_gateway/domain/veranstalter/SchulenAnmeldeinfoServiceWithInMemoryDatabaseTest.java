@@ -51,7 +51,9 @@ public class SchulenAnmeldeinfoServiceWithInMemoryDatabaseTest extends AbstractD
 			teilnahmenService, auswertungsmodusInfoService);
 		SchuleDetailsService schuleDetailsService = SchuleDetailsService.createForTest(teilnahmenService,
 			getSchulkollegienRepository(), getTeilnahmenRepository(), getVeranstalterRepository(), advRepository);
-		service = SchulenAnmeldeinfoService.createForTest(katalogeAdapter, schulenOverviewService, schuleDetailsService);
+		service = SchulenAnmeldeinfoService.createForTest(katalogeAdapter, schulenOverviewService, schuleDetailsService,
+			Mockito.mock(AuswertungsmodusInfoService.class),
+			Mockito.mock(AktuelleTeilnahmeService.class));
 
 	}
 

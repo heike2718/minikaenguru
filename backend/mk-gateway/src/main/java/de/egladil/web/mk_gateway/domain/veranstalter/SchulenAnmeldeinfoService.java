@@ -32,9 +32,9 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.AktuelleTeilnahmeService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.SchuleDetailsService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.SchulenOverviewService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.Auswertungsmodus;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleDetails;
-import de.egladil.web.mk_gateway.domain.veranstalter.api.Auswertungsmodus;
 
 /**
  * SchulenAnmeldeinfoService
@@ -65,12 +65,14 @@ public class SchulenAnmeldeinfoService {
 
 	private DataInconsistencyRegistered dataInconsistencyRegistered;
 
-	static SchulenAnmeldeinfoService createForTest(final MkKatalogeResourceAdapter katalogeAdapter, final SchulenOverviewService schulenOverviewService, final SchuleDetailsService schuleDetailsService) {
+	static SchulenAnmeldeinfoService createForTest(final MkKatalogeResourceAdapter katalogeAdapter, final SchulenOverviewService schulenOverviewService, final SchuleDetailsService schuleDetailsService, final AuswertungsmodusInfoService auswertungsmodusInfoService, final AktuelleTeilnahmeService aktuelleTeilnahmeService) {
 
 		SchulenAnmeldeinfoService result = new SchulenAnmeldeinfoService();
 		result.katalogeAdapter = katalogeAdapter;
 		result.schulenOverviewService = schulenOverviewService;
 		result.schuleDetailsService = schuleDetailsService;
+		result.auswertungsmodusInfoService = auswertungsmodusInfoService;
+		result.aktuelleTeilnahmeService = aktuelleTeilnahmeService;
 		return result;
 
 	}

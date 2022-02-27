@@ -22,7 +22,7 @@
 						</ng-container>
 						
 						<ng-container *ngIf="showDownloadButtons()">						
-							<mk-download-button *ngIf="uploadInfo.uploadStatus === 'DATENFEHLER'" [model]="fehlerreportDownloadButtonModel">
+							<mk-download-button *ngIf="showFehlerreportButton()" [model]="fehlerreportDownloadButtonModel">
 							</mk-download-button>
 
 							<mk-download-button [model]="fileDownloadButtonModel">

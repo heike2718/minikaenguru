@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.error.UploadFormatException;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
@@ -184,8 +185,44 @@ public class AuswertungImportService {
 
 		}
 
-		Klassenstufe klassenstufe = sensor.detectKlassenstufe(ueberschrift.getRohdaten());
-		boolean auswertungMitNamen = sensor.hasNamenSpalte(ueberschrift);
+		Klassenstufe klassenstufe = null;
+		boolean auswertungMitNamen = false;
+
+		try {
+
+			klassenstufe = sensor.detectKlassenstufe(ueberschrift.getRohdaten());
+			auswertungMitNamen = sensor.hasNamenSpalte(ueberschrift);
+
+		} catch (UploadFormatException e) {
+
+			LOGGER.warn(
+				"Upload Auswertung durch {} misslungen: wettbewerbsjahr {}: benutzerUUID={}, teilnahmenummer={}, fehler={}",
+				rolle, uploadContext.getWettbewerb(),
+				persistenterUpload.getBenutzerUuid(), persistenterUpload.getTeilnahmenummer(), e.getMessage());
+
+			MessagePayload messagePayload = null;
+
+			if (rolle == Rolle.ADMIN) {
+
+				messagePayload = MessagePayload
+					.warn(MessageFormat.format(applicationMessages.getString("auswertungimport.leer.admin "),
+						persistenterUpload.getDateiname(),
+						persistenterUpload.getUuid(),
+						persistenterUpload.getTeilnahmenummer()));
+
+			} else {
+
+				messagePayload = MessagePayload.info(applicationMessages.getString("auswertungimport.datenfehler.lehrer"));
+
+			}
+
+			ResponsePayload responsePayload = new ResponsePayload(messagePayload,
+				report);
+
+			this.updateUploadstatusQuietly(persistenterUpload, UploadStatus.HOCHGELADEN);
+
+			return responsePayload;
+		}
 
 		final ExtractWertungscodeRohdatenMapper extractWertungscodeMapper = new ExtractWertungscodeRohdatenMapper(
 			auswertungMitNamen);
