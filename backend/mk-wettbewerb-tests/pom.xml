@@ -5,10 +5,10 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mk-wettbewerb-tests</artifactId>
-	<version>1.7.3.1</version>
+	<version>1.8.0</version>
 
 	<properties>
-		<minikaenguru-version>1.7.3.1</minikaenguru-version>
+		<minikaenguru-version>1.8.0</minikaenguru-version>
 		<commons.version>1.7.5</commons.version>
 		<filescanner.version>2.0.2</filescanner.version>
 		<dependency-check.version>6.5.0</dependency-check.version>

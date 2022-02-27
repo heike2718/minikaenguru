@@ -750,7 +750,7 @@ Ihr Browser speichert eine alte Version der Minikänguru- Anwendung und läd die
 
 Bitte löschen Sie Ihren Browsercache.
 
-Eine Anleitung für den Firefox finden Sie hier: https://support.mozilla.org/de/kb/Wie-Sie-den-Cache-leeren-konnen[Leeren des Caches - Firefox].
+Eine Anleitung für den Firefox finden Sie hier: https://support.mozilla.org/de/kb/neueste-surf-such-und-download-chronik-loeschen#w_eine-einzelne-website-aus-ihrer-chronik-loschen[Leeren des Caches - Firefox].
 
 Eine Anleitung für Chrome finden Sie hier: https://browser-cache-leeren.de/de/windows/google-chrome.html[Leeren des Caches - Chrome].
 

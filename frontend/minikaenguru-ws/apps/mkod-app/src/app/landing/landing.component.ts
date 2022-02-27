@@ -13,14 +13,15 @@ import { environment } from '../../environments/environment';
 })
 export class LandingComponent implements OnInit, OnDestroy {
 
+
 	version = '';
 
 	private versionSubscription: Subscription = new Subscription();
 
-	constructor(private router: Router, private versionService: VersionService, private logger: LogService) { }
+	constructor(private router: Router, public versionService: VersionService, private logger: LogService) { }
 
 	ngOnInit(): void {
-		this.versionSubscription = this.versionService.ladeExpectedGuiVersion().subscribe(
+		this.versionSubscription = this.versionService.expectedVersionSubject.subscribe(
 			v => {
 
 				const storedGuiVersion = localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_GUI_VERSION);
@@ -30,9 +31,11 @@ export class LandingComponent implements OnInit, OnDestroy {
 					this.versionService.storeGuiVersion(environment.storageKeyPrefix + STORAGE_KEY_GUI_VERSION, this.version);
 				} else {
 					this.logger.info('GUI-Version ist aktuell');
-				}
+				}				
 			}
 		);
+
+		this.versionService.ladeExpectedGuiVersion();
 	}
 
 	ngOnDestroy(): void {
@@ -46,5 +49,7 @@ export class LandingComponent implements OnInit, OnDestroy {
 	gotoAnmeldungen(): void {
 		this.router.navigateByUrl('/anmeldungen');
 	}
+
+	
 
 }

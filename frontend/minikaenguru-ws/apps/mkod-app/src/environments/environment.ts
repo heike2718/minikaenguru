@@ -9,7 +9,7 @@ export const environment = {
         assetsUrl: '/home/heike/git/minikaenguru/frontend/minikaenguru-ws/apps/mkod-app/src/assets',
         apiUrl: 'http://localhost:9510/mk-gateway',
         storageKeyPrefix: 'mkod_',
-        version: '1.7.3',
+        version: '1.8.0',
         consoleLogActive: true,
         serverLogActive: false,
         loglevel: 1

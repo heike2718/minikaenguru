@@ -12,6 +12,10 @@
 
 	<div class="mkv-container mt-5 mb-5">
 
+		<div *ngIf="versionService.expectedVersionSubject | async" class="col-md-12 mb-2 ml-0 pl-1">
+			Wenn Sie in der Fußleiste nicht die Version {{version}} sehen, leeren Sie bitte den Browser-Cache.
+		</div>
+
 		<div class="card-deck m-3">
 			<div class="card clickable" (click)="gotoAnmeldungen()">
 				<div class="card-body">

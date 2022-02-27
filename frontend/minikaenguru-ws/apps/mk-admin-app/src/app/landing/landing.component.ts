@@ -25,12 +25,12 @@ export class LandingComponent implements OnInit, OnDestroy {
 
   constructor(private authStore: Store<AppState>
     , private authService: AuthService
-    , private versionService: VersionService
+    , public versionService: VersionService
     , private wettbewerbFacade: WettbewerbFacade
     , private logger: LogService) { }
 
     ngOnInit(): void {
-      this.versionSubscription = this.versionService.ladeExpectedGuiVersion().subscribe(
+      this.versionSubscription = this.versionService.expectedVersionSubject.subscribe(
         v => {
   
           const storedGuiVersion = localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_GUI_VERSION);
@@ -43,7 +43,8 @@ export class LandingComponent implements OnInit, OnDestroy {
           }
         }
       );
-      
+
+      this.versionService.ladeExpectedGuiVersion();      
       this.wettbewerbFacade.ladeAktuellenWettbewerb();
     }
 
