@@ -1,5 +1,11 @@
 # minikaenguru Release Notes
 
+__Release 1.8.0__:
+
+* [Hinweis auf Browser-Cache auf der Landing-Page und Dokumentation](https://github.com/heike2718/minikaenguru/issues/377)
+* [Upload Auswertung als Lehrer](https://github.com/heike2718/minikaenguru/issues/310)
+
+
 __Release 1.7.3.1__:
 
 * [Änderung eines Schulnamens propagieren zu Teilnahme](https://github.com/heike2718/minikaenguru/issues/217)
