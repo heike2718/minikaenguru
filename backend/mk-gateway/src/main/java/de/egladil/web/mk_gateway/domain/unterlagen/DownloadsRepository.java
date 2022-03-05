@@ -22,7 +22,7 @@ public interface DownloadsRepository {
 	 * @param  wettbewerbID
 	 * @return
 	 */
-	List<Download> findDoenloadsByVeranstalterAndWettbewerb(Identifier veranstalterID, WettbewerbID wettbewerbID);
+	List<Download> findDownloadsByVeranstalterAndWettbewerb(Identifier veranstalterID, WettbewerbID wettbewerbID);
 
 	/**
 	 * @param download

@@ -46,7 +46,7 @@ public class DownloadsHibernateRepository implements DownloadsRepository {
 	}
 
 	@Override
-	public List<Download> findDoenloadsByVeranstalterAndWettbewerb(final Identifier veranstalterID, final WettbewerbID wettbewerbID) {
+	public List<Download> findDownloadsByVeranstalterAndWettbewerb(final Identifier veranstalterID, final WettbewerbID wettbewerbID) {
 
 		List<PersistenteDownloadInfo> trefferliste = entityManager
 			.createNamedQuery(PersistenteDownloadInfo.FIND_DOWNLOAD_BY_VERANSTALTER_JAHR, PersistenteDownloadInfo.class)
