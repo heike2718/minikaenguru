@@ -5,6 +5,7 @@
 package de.egladil.web.mk_gateway.domain.mustertexte;
 
 import java.util.List;
+import java.util.Optional;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 
@@ -20,6 +21,12 @@ public interface MustertexteRepository {
 	 * @return           List
 	 */
 	List<Mustertext> loadMustertexteByKategorie(Mustertextkategorie kategorie);
+
+	/**
+	 * @param  identifier
+	 * @return            Optional
+	 */
+	Optional<Mustertext> findMustertextByIdentifier(Identifier identifier);
 
 	/**
 	 * Fügt einen Mustertext hinzu oder aktualsiert einen vorgandenen.

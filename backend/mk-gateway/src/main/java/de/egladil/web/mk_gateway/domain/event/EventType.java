@@ -30,6 +30,8 @@ public enum EventType {
 	USER_CREATED("UserCreated"),
 	USER_LOGGED_IN("UserLoggedIn"),
 	USER_LOGGED_OUT("UserLoggedOut"),
+	MUSTERTEXT_SAVED("MustertextSaved"),
+	MUSTERTEXT_DELETED("MustertextDeleted"),
 	NEWSLETTERVERSAND_FAILED("NewsletterversandFailed"),
 	NEWSLETTERVERSAND_FINISHED("NewsletterversandFinished"),
 	NEWSLETTERVERSAND_PROGRESS("NewsletterversandProgress"),

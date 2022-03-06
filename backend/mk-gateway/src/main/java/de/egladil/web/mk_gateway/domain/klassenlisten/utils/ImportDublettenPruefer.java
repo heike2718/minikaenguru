@@ -49,8 +49,9 @@ public class ImportDublettenPruefer {
 
 				KindEditorModel kind = daten.getKindRequestData().kind();
 
-				List<KindImportVO> kinderInKlasse = klassenKinderMap.getOrDefault(kind.klasseUuid(),
-					new ArrayList<>());
+				List<KindImportVO> list = klassenKinderMap.get(kind.klasseUuid());
+				List<KindImportVO> kinderInKlasse = list == null ? new ArrayList<>()
+					: list;
 				kinderInKlasse.add(kindImportDaten);
 				klassenKinderMap.put(kind.klasseUuid(), kinderInKlasse);
 			}

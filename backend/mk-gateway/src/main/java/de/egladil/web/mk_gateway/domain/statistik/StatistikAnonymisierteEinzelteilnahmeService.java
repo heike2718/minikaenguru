@@ -143,7 +143,9 @@ public class StatistikAnonymisierteEinzelteilnahmeService {
 
 			Klassenstufe klassenstufe = z.klassenstufe();
 
-			List<Loesungszettel> zettel = result.getOrDefault(klassenstufe, new ArrayList<>());
+			List<Loesungszettel> list = result.get(klassenstufe);
+
+			List<Loesungszettel> zettel = list == null ? new ArrayList<>() : list;
 			zettel.add(z);
 			result.put(klassenstufe, zettel);
 

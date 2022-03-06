@@ -6,6 +6,7 @@ package de.egladil.web.mk_gateway.infrastructure.persistence.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.RequestScoped;
@@ -53,23 +54,21 @@ public class MustertexteHibernateRepository implements MustertexteRepository {
 	}
 
 	@Override
+	public Optional<Mustertext> findMustertextByIdentifier(final Identifier identifier) {
+
+		PersistenterMustertext persistenterMustertext = internalFind(identifier);
+		return persistenterMustertext == null ? Optional.empty() : Optional.of(mapFromDB(persistenterMustertext));
+	}
+
+	@Override
 	@Transactional
 	public Mustertext addOrUpdate(final Mustertext mustertext) {
 
-		PersistenterMustertext persistenterMustertext = null;
+		PersistenterMustertext persistenterMustertext = internalFind(mustertext.getIdentifier());
 
-		if (mustertext.getIdentifier() != null) {
+		if (persistenterMustertext == null) {
 
-			persistenterMustertext = entityManager.find(PersistenterMustertext.class, mustertext.getIdentifier().identifier());
-
-			if (persistenterMustertext == null) {
-
-				throw new MkGatewayRuntimeException("Mustertext mit UUID = " + mustertext.getIdentifier() + " aus DB verschwunden");
-			}
-
-		} else {
-
-			persistenterMustertext = new PersistenterMustertext();
+			throw new MkGatewayRuntimeException("Mustertext mit UUID = " + mustertext.getIdentifier() + " aus DB verschwunden");
 		}
 
 		persistenterMustertext.setKategorie(mustertext.getKategorie());
@@ -85,6 +84,25 @@ public class MustertexteHibernateRepository implements MustertexteRepository {
 		}
 
 		return mapFromDB(persistenterMustertext);
+	}
+
+	/**
+	 * @param  mustertext
+	 * @return
+	 */
+	private PersistenterMustertext internalFind(final Identifier identifier) {
+
+		PersistenterMustertext persistenterMustertext = null;
+
+		if (identifier.identifier() != null) {
+
+			return persistenterMustertext = entityManager.find(PersistenterMustertext.class, identifier.identifier());
+
+		} else {
+
+			persistenterMustertext = new PersistenterMustertext();
+		}
+		return persistenterMustertext;
 	}
 
 	@Override

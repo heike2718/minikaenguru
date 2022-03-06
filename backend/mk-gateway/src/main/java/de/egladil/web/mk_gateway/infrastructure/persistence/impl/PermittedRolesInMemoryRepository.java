@@ -86,7 +86,8 @@ public class PermittedRolesInMemoryRepository implements PermittedRolesRepositor
 			return new ArrayList<>();
 		}
 
-		return pathWithMethods2Rollen.getOrDefault(optPathWithMethod.get(), new ArrayList<>());
+		return pathWithMethods2Rollen.get(optPathWithMethod.get()) == null ? new ArrayList<>()
+			: pathWithMethods2Rollen.get(optPathWithMethod.get());
 	}
 
 	public <T extends TokenizablePath> List<T> ofPath(final String path, final Set<T> set) {

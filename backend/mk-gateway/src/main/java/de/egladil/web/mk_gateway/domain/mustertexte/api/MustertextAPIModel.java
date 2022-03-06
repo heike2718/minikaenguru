@@ -13,9 +13,9 @@ import de.egladil.web.commons_validation.annotations.UuidString;
 import de.egladil.web.mk_gateway.domain.mustertexte.Mustertextkategorie;
 
 /**
- * MustertextDetailsAPIModel
+ * MustertextAPIModel
  */
-public class MustertextDetailsAPIModel implements Serializable {
+public class MustertextAPIModel implements Serializable {
 
 	public static final String KEINE_UUID = "neu";
 

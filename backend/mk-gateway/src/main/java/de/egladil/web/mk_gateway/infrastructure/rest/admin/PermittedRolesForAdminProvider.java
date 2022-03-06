@@ -33,7 +33,8 @@ public final class PermittedRolesForAdminProvider {
 		addPathsAndMethodsForSchulen(result);
 		addPathsAndMethodsForPrivatteilnahmen(result);
 		addPathsAndMethodsForStatistik(result);
-		addPathsAndMethodsForMails(result);
+		addPathsAndMethodsForNewsletters(result);
+		addPathsAndMethodsForMustertexte(result);
 		addPathsAndMethodsForUpload(result);
 		addPathsAndMethodsForLoesungszettel(result);
 
@@ -238,7 +239,7 @@ public final class PermittedRolesForAdminProvider {
 	/**
 	 * @param result
 	 */
-	private static void addPathsAndMethodsForMails(final Map<PathWithMethod, List<Rolle>> result) {
+	private static void addPathsAndMethodsForNewsletters(final Map<PathWithMethod, List<Rolle>> result) {
 
 		{
 
@@ -271,40 +272,26 @@ public final class PermittedRolesForAdminProvider {
 			result.put(new PathWithMethod("/admin/newsletterversand/*", HttpMethod.GET), rollen);
 		}
 
+	}
+
+	private static void addPathsAndMethodsForMustertexte(final Map<PathWithMethod, List<Rolle>> result) {
+
 		{
 
-			final String path = "/admin/mail/mustertexte";
+			final String path = "/admin/mustertexte";
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
 			result.put(new PathWithMethod(path, HttpMethod.GET), rollen);
 			result.put(new PathWithMethod(path, HttpMethod.POST), rollen);
+
+		}
+
+		{
+
+			final String path = "/admin/mustertexte/*";
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			result.put(new PathWithMethod(path, HttpMethod.GET), rollen);
 			result.put(new PathWithMethod(path, HttpMethod.PUT), rollen);
-
-		}
-
-		{
-
-			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			String path = "/admin/mail/mustertexte/*";
 			result.put(new PathWithMethod(path, HttpMethod.DELETE), rollen);
-
-		}
-
-		{
-
-			// Zum Umwandeln eines Newletters in einen Mustertext
-			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			String path = "/admin/mail/mustertexte/newsletter/*";
-			result.put(new PathWithMethod(path, HttpMethod.POST), rollen);
-
-		}
-
-		{
-
-			// Zum Erzeugen eines Newsletters aus einem Mustertext
-			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
-			String path = "/admin/newsletters/mustertext/*";
-			result.put(new PathWithMethod(path, HttpMethod.POST), rollen);
-
 		}
 	}
 

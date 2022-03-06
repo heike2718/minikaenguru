@@ -9,7 +9,7 @@ package de.egladil.web.mk_gateway.domain.mustertexte;
  */
 public enum Mustertextkategorie {
 
-	SUPPORTMAILS,
+	MAIL,
 	NEWSLETTER;
 
 }
