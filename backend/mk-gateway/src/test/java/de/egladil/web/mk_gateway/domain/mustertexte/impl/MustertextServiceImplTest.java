@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -59,19 +60,28 @@ public class MustertextServiceImplTest {
 	class LoadMustertexteTests {
 
 		@Test
-		void should_getMustertexteByKategorieReturnList_when_mustertexteArePresent() {
+		void should_loadMustertexteWork() {
 
 			// Arrange
-			Mustertextkategorie kategorie = Mustertextkategorie.MAIL;
+			Mustertextkategorie kategorieMail = Mustertextkategorie.MAIL;
+			Mustertextkategorie kategorieNewletter = Mustertextkategorie.NEWSLETTER;
 
-			List<Mustertext> trefferliste = new ArrayList<>();
-			trefferliste.add(new Mustertext(new Identifier("id-1")).withKategorie(kategorie).withName("Browsercache"));
-			trefferliste.add(new Mustertext(new Identifier("id-2")).withKategorie(kategorie).withName("Passwort vergessen"));
+			List<Mustertext> trefferlisteMail = new ArrayList<>();
+			trefferlisteMail.add(new Mustertext(new Identifier("id-1")).withKategorie(kategorieMail).withName("Browsercache"));
+			trefferlisteMail
+				.add(new Mustertext(new Identifier("id-2")).withKategorie(kategorieMail).withName("Passwort vergessen"));
 
-			when(mustertexteRepository.loadMustertexteByKategorie(kategorie)).thenReturn(trefferliste);
+			List<Mustertext> trefferlisteNewletter = new ArrayList<>();
+			trefferlisteNewletter
+				.add(new Mustertext(new Identifier("id-3")).withKategorie(kategorieNewletter).withName("Anmeldung gestartet"));
+			trefferlisteNewletter.add(new Mustertext(new Identifier("id-4")).withKategorie(kategorieNewletter)
+				.withName("Freischaltung Unterlagen Lehrer"));
+
+			doReturn(trefferlisteMail).when(mustertexteRepository).loadMustertexteByKategorie(kategorieMail);
+			doReturn(trefferlisteNewletter).when(mustertexteRepository).loadMustertexteByKategorie(kategorieNewletter);
 
 			// Act
-			ResponsePayload result = service.getMustertexteByKategorie(kategorie);
+			ResponsePayload result = service.loadMustertexte();
 
 			// Assert
 			assertTrue(result.isOk());
@@ -79,13 +89,13 @@ public class MustertextServiceImplTest {
 			@SuppressWarnings("unchecked")
 			List<MustertextAPIModel> liste = (List<MustertextAPIModel>) result.getData();
 
-			assertEquals(2, liste.size());
+			assertEquals(4, liste.size());
 
 			{
 
 				MustertextAPIModel apiModel = liste.get(0);
 				assertEquals("id-1", apiModel.getUuid());
-				assertEquals(kategorie, apiModel.getKategorie());
+				assertEquals(kategorieMail, apiModel.getKategorie());
 				assertEquals("Browsercache", apiModel.getName());
 				assertNull(apiModel.getText());
 			}
@@ -94,17 +104,36 @@ public class MustertextServiceImplTest {
 
 				MustertextAPIModel apiModel = liste.get(1);
 				assertEquals("id-2", apiModel.getUuid());
-				assertEquals(kategorie, apiModel.getKategorie());
+				assertEquals(kategorieMail, apiModel.getKategorie());
 				assertEquals("Passwort vergessen", apiModel.getName());
 				assertNull(apiModel.getText());
 			}
 
-			verify(mustertexteRepository).loadMustertexteByKategorie(kategorie);
+			{
+
+				MustertextAPIModel apiModel = liste.get(2);
+				assertEquals("id-3", apiModel.getUuid());
+				assertEquals(kategorieNewletter, apiModel.getKategorie());
+				assertEquals("Anmeldung gestartet", apiModel.getName());
+				assertNull(apiModel.getText());
+			}
+
+			{
+
+				MustertextAPIModel apiModel = liste.get(3);
+				assertEquals("id-4", apiModel.getUuid());
+				assertEquals(kategorieNewletter, apiModel.getKategorie());
+				assertEquals("Freischaltung Unterlagen Lehrer", apiModel.getName());
+				assertNull(apiModel.getText());
+			}
+
+			verify(mustertexteRepository).loadMustertexteByKategorie(kategorieMail);
+			verify(mustertexteRepository).loadMustertexteByKategorie(kategorieNewletter);
 
 		}
 
 		@Test
-		void should_getMustertexteByKategorieReturnAnEmptyList_when_noMustertexteArePresent() {
+		void should_loadMustertexteReturnAnEmptyList_when_noMustertexteArePresent() {
 
 			// Arrange
 			Mustertextkategorie kategorie = Mustertextkategorie.MAIL;
@@ -112,7 +141,7 @@ public class MustertextServiceImplTest {
 			when(mustertexteRepository.loadMustertexteByKategorie(kategorie)).thenReturn(new ArrayList<>());
 
 			// Act
-			ResponsePayload result = service.getMustertexteByKategorie(kategorie);
+			ResponsePayload result = service.loadMustertexte();
 
 			// Assert
 			assertTrue(result.isOk());

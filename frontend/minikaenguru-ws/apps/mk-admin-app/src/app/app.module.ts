@@ -36,6 +36,7 @@ import { LayouttestsModule } from './layouttests/layouttests.module';
 import { SchulteilnahmenModule } from './schulteilnahmen/schulteilnahmen.module';
 import { EventlogModule } from './eventlog/eventlog.module';
 import { SessionTimeoutComponent } from './session-timeout/session-timeout.component';
+import { MustertexteModule } from './mustertexte/mustertexte.module';
 import { NewsletterModule } from './newsletter/newsletter.module';
 import { VersandinfoProgressComponent } from './versandinfo-progress/versandinfo-progress.component';
 import { StoreDevModules } from './store-config/store-devtools';
@@ -103,6 +104,7 @@ registerLocaleData(localeDe);
 		VeranstalterModule,
 		SchulteilnahmenModule,
 		EventlogModule,
+		MustertexteModule,
 		NewsletterModule,
 		UploadsModule,
 		LoesungszettelModule,

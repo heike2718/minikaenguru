@@ -5,6 +5,7 @@
 package de.egladil.web.mk_gateway.domain.mustertexte.impl;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -47,9 +48,14 @@ public class MustertextServiceImpl implements MustertexteService {
 	DomainEventHandler domainEventHandler;
 
 	@Override
-	public ResponsePayload getMustertexteByKategorie(final Mustertextkategorie kategorie) {
+	public ResponsePayload loadMustertexte() {
 
-		List<Mustertext> mustertexte = mustertexteRepository.loadMustertexteByKategorie(kategorie);
+		List<Mustertext> mustertexte = new ArrayList<>();
+
+		for (Mustertextkategorie k : Mustertextkategorie.values()) {
+
+			mustertexte.addAll(this.mustertexteRepository.loadMustertexteByKategorie(k));
+		}
 
 		List<MustertextAPIModel> data = mustertexte.stream().map(mt -> mapFromDomainObject(mt)).collect(Collectors.toList());
 

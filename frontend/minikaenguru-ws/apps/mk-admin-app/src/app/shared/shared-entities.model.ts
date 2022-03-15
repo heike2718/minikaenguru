@@ -1,3 +1,5 @@
+export type MUSTRETEXT_KATEGORIE = 'MAIL' | 'NEWSLETTER' | 'UNDEFINED';
+
 export interface InvalidProperty {
 	readonly sortnumber: number;
 	readonly name: string;
@@ -12,4 +14,10 @@ export interface SchulkatalogData {
 	readonly kuerzelLand: string;
 };
 
+export interface Mustertext {
+	readonly uuid: string;
+	readonly kategorie: MUSTRETEXT_KATEGORIE;
+	readonly name: string;
+	readonly text?: string;
+};
 

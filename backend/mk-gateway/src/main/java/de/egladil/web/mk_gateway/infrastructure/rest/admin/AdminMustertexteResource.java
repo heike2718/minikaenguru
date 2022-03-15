@@ -14,18 +14,15 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import de.egladil.web.commons_validation.annotations.UuidString;
-import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.mustertexte.MustertexteService;
-import de.egladil.web.mk_gateway.domain.mustertexte.Mustertextkategorie;
 import de.egladil.web.mk_gateway.domain.mustertexte.api.MustertextAPIModel;
 
 /**
@@ -44,18 +41,11 @@ public class AdminMustertexteResource {
 	SecurityContext securityContext;
 
 	@GET
-	public Response loadMustertexte(@QueryParam(value = "kategorie") final String kategorie) {
+	public Response loadMustertexte() {
 
-		try {
+		ResponsePayload responsePayload = mustertexteService.loadMustertexte();
 
-			Mustertextkategorie mustertextkategorie = Mustertextkategorie.valueOf(kategorie);
-			ResponsePayload responsePayload = mustertexteService.getMustertexteByKategorie(mustertextkategorie);
-
-			return Response.ok(responsePayload).build();
-		} catch (IllegalArgumentException e) {
-
-			return Response.status(400).entity(ResponsePayload.messageOnly(MessagePayload.error("ungültige Kategorie"))).build();
-		}
+		return Response.ok(responsePayload).build();
 	}
 
 	@GET

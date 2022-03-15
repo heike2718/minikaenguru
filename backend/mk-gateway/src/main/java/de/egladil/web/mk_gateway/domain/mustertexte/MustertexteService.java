@@ -14,12 +14,11 @@ import de.egladil.web.mk_gateway.domain.mustertexte.api.MustertextAPIModel;
 public interface MustertexteService {
 
 	/**
-	 * Läd die Mustertexte ohne den Text zu der gegebenen Kategorie.
+	 * Läd alle Mustertexte
 	 *
-	 * @param  kategorie
-	 * @return           ResponsePayload mit einer Liste von MustertextAPIModel-Instanzen ohne text.
+	 * @return ResponsePayload mit einer Liste von MustertextAPIModel-Instanzen ohne text.
 	 */
-	ResponsePayload getMustertexteByKategorie(final Mustertextkategorie kategorie);
+	ResponsePayload loadMustertexte();
 
 	/**
 	 * Läd die Details ds gegebenen Mustertextes.

@@ -153,11 +153,6 @@ export class NewsletterFacade {
 		);
 	}
 
-	public resetState(): void {
-		this.store.dispatch(NewsletterActions.resetNewsletters());
-	}
-
-
 	public startPollVersandinfo(versandinfo: Versandinfo): void {
 
 		const optVersandinfo: Observable<Versandinfo> = timer(1, 10000).pipe(

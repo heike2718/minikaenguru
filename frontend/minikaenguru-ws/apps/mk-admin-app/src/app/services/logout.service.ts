@@ -7,6 +7,7 @@ import { resetKataloge } from '../katalogpflege/+state/katalogpflege.actions';
 import { resetVeranstalters } from '../veranstalter/+state/veranstalter.actions';
 import { resetAktuelleMeldung } from '../aktuelle-meldung/+state/aktuelle-meldung.actions';
 import { resetSchulteilnahmen } from '../schulteilnahmen/+state/schulteilnahmen.actions';
+import { resetMustertexte } from '../mustertexte/+state/mustertexte.actions';
 import { resetNewsletters } from '../newsletter/+state/newsletter.actions';
 import { dateCleared } from '../eventlog/+state/eventlog.actions';
 import { NewsletterFacade } from '../newsletter/newsletter.facade';
@@ -33,10 +34,12 @@ export class LogoutService {
 		this.appStore.dispatch(resetAktuelleMeldung());
 		this.appStore.dispatch(resetSchulteilnahmen());
 		this.appStore.dispatch(dateCleared());
+		this.appStore.dispatch(resetMustertexte());
 		this.appStore.dispatch(resetNewsletters());
 		this.appStore.dispatch(resetUploads());
 		this.appStore.dispatch(resetLoesungszettel());
 		this.appStore.dispatch(resetStatistiken());
+		
 
 		localStorage.removeItem(STORAGE_KEY_INVALID_SESSION);
 	}
