@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.mustertexte.impl;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -26,6 +27,7 @@ import de.egladil.web.mk_gateway.domain.mustertexte.MustertexteRepository;
 import de.egladil.web.mk_gateway.domain.mustertexte.MustertexteService;
 import de.egladil.web.mk_gateway.domain.mustertexte.Mustertextkategorie;
 import de.egladil.web.mk_gateway.domain.mustertexte.api.MustertextAPIModel;
+import de.egladil.web.mk_gateway.domain.mustertexte.events.MustertextDeletedEvent;
 import de.egladil.web.mk_gateway.domain.mustertexte.events.MustertextSavedEvent;
 
 /**
@@ -72,6 +74,16 @@ public class MustertextServiceImpl implements MustertexteService {
 	@Override
 	public ResponsePayload mustertextSpeichern(final MustertextAPIModel apiModel, final String uuidAdmin) {
 
+		Optional<Mustertext> optMustertext = this.findByName(apiModel);
+
+		if (optMustertext.isPresent()) {
+
+			String msg = MessageFormat.format(applicationMessages.getString("mustertexte.save.dublette"),
+				new Object[] { apiModel.getKategorie(), apiModel.getName() });
+
+			return ResponsePayload.messageOnly(MessagePayload.warn(msg));
+		}
+
 		Mustertext mustertext = mapFromAPIModel(apiModel);
 
 		Mustertext persisted = mustertexteRepository.addOrUpdate(mustertext);
@@ -83,6 +95,40 @@ public class MustertextServiceImpl implements MustertexteService {
 		domainEventHandler.handleEvent(event);
 
 		return new ResponsePayload(MessagePayload.info(applicationMessages.getString("mustertexte.save.success")), data);
+	}
+
+	Optional<Mustertext> findByName(final MustertextAPIModel apiModel) {
+
+		List<Mustertext> vorhandeneMustertexte = mustertexteRepository.loadMustertexteByKategorie(apiModel.getKategorie());
+
+		Optional<Mustertext> optMustertext = vorhandeneMustertexte.stream()
+			.filter(
+				m -> !apiModel.getUuid().equals(m.getIdentifier().identifier()) && apiModel.getName().equalsIgnoreCase(m.getName()))
+			.findAny();
+
+		return optMustertext;
+
+	}
+
+	@Override
+	public ResponsePayload mustertextLoeschen(final Identifier identifier, final String uuidAdmin) {
+
+		boolean deleted = mustertexteRepository.deleteMustertext(identifier);
+
+		if (deleted) {
+
+			MustertextDeletedEvent event = new MustertextDeletedEvent(uuidAdmin);
+			domainEventHandler.handleEvent(event);
+
+			String msg = MessageFormat.format(applicationMessages.getString("mustertexte.delete.success"),
+				new Object[] { identifier });
+			return ResponsePayload.messageOnly(MessagePayload.info(msg));
+
+		}
+
+		String msg = MessageFormat.format(applicationMessages.getString("mustertexte.delete.bereitsGeloescht"),
+			new Object[] { identifier });
+		return ResponsePayload.messageOnly(MessagePayload.warn(msg));
 	}
 
 	/**

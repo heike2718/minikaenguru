@@ -19,6 +19,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import de.egladil.web.commons_validation.annotations.UuidString;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
@@ -60,7 +61,7 @@ public class AdminNewsletterResource {
 
 	@DELETE
 	@Path("{newsletterID}")
-	public Response deleteNewsletter(@PathParam(value = "newsletterID") final String newsletterID) {
+	public Response deleteNewsletter(@UuidString @PathParam(value = "newsletterID") final String newsletterID) {
 
 		Identifier identifier = new Identifier(newsletterID);
 		this.newsletterService.newsletterLoeschen(identifier);
