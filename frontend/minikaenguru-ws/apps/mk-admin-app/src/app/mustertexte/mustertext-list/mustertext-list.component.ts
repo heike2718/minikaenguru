@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from 'apps/mk-admin-app/src/environments/environment';
+import { Subscription } from 'rxjs';
 import { MustertexteFacade } from '../mustertexte.facade';
 
 @Component({
@@ -8,9 +9,9 @@ import { MustertexteFacade } from '../mustertexte.facade';
   templateUrl: './mustertext-list.component.html',
   styleUrls: ['./mustertext-list.component.css']
 })
-export class MustertextListComponent implements OnInit {
+export class MustertextListComponent implements OnInit, OnDestroy {
 
-  devMode = environment.envName === 'DEV'
+  devMode = environment.envName === 'DEV';
 
   constructor(public mustertextFacade: MustertexteFacade, 
     private router: Router) { }
@@ -18,8 +19,10 @@ export class MustertextListComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  ngOnDestroy(): void {
+  }
 
-  public loadMustertexte(): void {
+  loadMustertexte(): void {
 
     this.mustertextFacade.loadMustertexte();
 

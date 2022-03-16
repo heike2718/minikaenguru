@@ -1,1 +1,27 @@
-<p>mustertext-card works!</p>
+<div class="row">
+	<div class="col-12">
+		<div [style.background-color]="mustertext.kategorie === 'MAIL' ? '#e3efdc' : '#fff3cd'">
+			<div class="card-body">
+				<div class="card-title">{{mustertext.name}}
+					<span class="ml-1 badge badge-success">{{mustertext.kategorie}}</span>
+				</div>
+				<div class="card-subtitle text-muted">UUID: {{mustertext.uuid}}</div>
+
+                <div class="d-none d-md-block">
+                    <div class="btn-group d-flex" role="group">
+            
+                        <button class="btn btn-outline-dark w-100 ml-1" (click)="aendern()"><i class="fa fa-pencil"
+                                aria-hidden="true"></i>ändern</button>
+                
+                        <button class="btn btn-outline-dark w-100 ml-1" (click)="mailErzeugen()" title="{{btnMailTooltip}}"><i class="fa fa-mail"
+                                aria-hidden="true"></i>{{btnMailLabel}}</button>
+                
+                        <button class="btn btn-outline-danger w-100 ml-1" (click)="loeschen()"><i class="fa fa-trash"
+                                aria-hidden="true"></i>löschen</button>
+                    </div>	
+                </div>
+			</div>
+		</div>
+	</div>    
+</div>
+

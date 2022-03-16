@@ -59,5 +59,14 @@ export class MustertexteFacade {
 		);
 		*/
 	}
+
+	public deleteMustertext(mustertext: Mustertext): void {
+
+		this.store.dispatch(MustertexteActions.startBackendCall());
+
+		this.store.dispatch(MustertexteActions.mustertextDeleted({mustertext: mustertext}));
+
+
+	}
 };
 

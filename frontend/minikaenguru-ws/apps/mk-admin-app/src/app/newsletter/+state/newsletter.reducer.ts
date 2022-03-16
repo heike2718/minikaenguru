@@ -33,6 +33,12 @@ const newsletterReducer = createReducer(initialNewsletterState,
 		return { ...state, newslettersLoaded: true, loading: false, newsletterMap: newMap };
 	}),
 
+	on(NewsletterActions.backendCallFinishedWithError, (state, _action) => {
+
+		return { ...state, loading: false };
+
+	}),
+
 	on(NewsletterActions.createNewNewsletter, (state, _action) => {
 
 		return { ...state, newsletterEditorModel: initialNewsletterEditorModel };

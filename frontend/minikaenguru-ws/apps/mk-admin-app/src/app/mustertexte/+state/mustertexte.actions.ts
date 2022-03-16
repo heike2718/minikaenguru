@@ -15,6 +15,11 @@ export const mustertexteLoaded = createAction(
 	props<{mustertexte: Mustertext[]}>()
 );
 
+export const mustertextDeleted = createAction(
+	'[MustertexteFacade] deleteMustertext',
+	props<{mustertext: Mustertext}>()
+);
+
 export const resetMustertexte = createAction(
 	'[MustertexteFacade] resetState'
 );
