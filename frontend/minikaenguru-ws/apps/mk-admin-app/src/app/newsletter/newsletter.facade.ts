@@ -69,7 +69,7 @@ export class NewsletterFacade {
 
 	public cancelEditNewsletter(): void {
 
-		this.store.dispatch(NewsletterActions.edidCanceled());
+		this.store.dispatch(NewsletterActions.editCanceled());
 
 	}
 

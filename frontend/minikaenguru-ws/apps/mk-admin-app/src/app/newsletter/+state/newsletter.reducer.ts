@@ -45,9 +45,9 @@ const newsletterReducer = createReducer(initialNewsletterState,
 
 	}),
 
-	on(NewsletterActions.edidCanceled, (state, _action) => {
+	on(NewsletterActions.editCanceled, (state, _action) => {
 
-		return {...state, newsletterEditorModel: undefined, loading: false };
+		return {...state, newsletterEditorModel: undefined, selectedNewsletter: undefined };
 
 	}),
 

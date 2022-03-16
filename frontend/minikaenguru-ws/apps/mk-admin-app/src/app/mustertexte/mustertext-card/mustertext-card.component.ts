@@ -26,6 +26,8 @@ export class MustertextCardComponent implements OnInit {
 
   aendern(): void {
 
+    this.mustertexteFacade.startEditMustertext(this.mustertext);
+
   }
 
   mailErzeugen(): void {

@@ -24,5 +24,40 @@ export class MustertexteService {
 		);
     }
 
+	public loadMustertext(uuid: string): Observable<Mustertext> {
 
+        const url = environment.apiUrl + '/mustertexte/' + uuid;
+
+		return this.http.get(url).pipe(
+			map(body => body as ResponsePayload),
+			map(payload => payload.data)
+		);
+    }
+
+	public insertMustertext(mustertext: Mustertext): Observable<ResponsePayload> {
+
+		const url = environment.apiUrl + '/mustertexte';
+
+		return this.http.post(url, mustertext).pipe(
+			map(body => body as ResponsePayload)
+		);
+	}
+
+	public updateMustertext(mustertext: Mustertext): Observable<ResponsePayload> {
+
+		const url = environment.apiUrl + '/mustertexte/' + mustertext.uuid;
+
+		return this.http.put(url, mustertext).pipe(
+			map(body => body as ResponsePayload)
+		);
+	}
+
+	public deleteMustertext(mustertext: Mustertext): Observable<ResponsePayload> {
+
+		const url = environment.apiUrl + '/mustertexte/' + mustertext.uuid;
+
+		return this.http.delete(url).pipe(
+			map(body => body as ResponsePayload)
+		);
+	}
 };

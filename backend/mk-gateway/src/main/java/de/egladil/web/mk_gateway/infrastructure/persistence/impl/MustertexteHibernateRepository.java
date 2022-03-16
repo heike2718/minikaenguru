@@ -94,7 +94,7 @@ public class MustertexteHibernateRepository implements MustertexteRepository {
 
 		PersistenterMustertext persistenterMustertext = null;
 
-		if (identifier.identifier() != null) {
+		if (identifier != null) {
 
 			return persistenterMustertext = entityManager.find(PersistenterMustertext.class, identifier.identifier());
 

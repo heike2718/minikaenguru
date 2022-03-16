@@ -19,7 +19,7 @@ export const newslettersLoaded = createAction(
 	props<{newsletters: Newsletter[]}>()
 );
 
-export const edidCanceled = createAction(
+export const editCanceled = createAction(
 	'[NewsletterFacade]: cancelEdit'
 );
 

@@ -44,9 +44,7 @@ export function validateAllFormFields(formGroup: FormGroup): void {
 
 
 
-// =============================  private functions =========================
-
-function extractTheValueAsString(control: AbstractControl): string {
+export function extractTheValueAsString(control: AbstractControl): string {
 
 
 	if (control) {

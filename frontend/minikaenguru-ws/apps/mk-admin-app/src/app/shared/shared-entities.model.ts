@@ -21,3 +21,10 @@ export interface Mustertext {
 	readonly text?: string;
 };
 
+export const NEUER_MUSTERTEXT: Mustertext = {
+	uuid: 'neu',
+	kategorie: 'UNDEFINED',
+	name: '',
+	text: ''
+};
+

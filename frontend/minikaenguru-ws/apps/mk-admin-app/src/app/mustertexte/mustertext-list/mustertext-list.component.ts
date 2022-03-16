@@ -40,14 +40,10 @@ export class MustertextListComponent implements OnInit, OnDestroy {
   }
 
   addMustertext(): void {
-		//
+		this.mustertextFacade.createNewMustertext();
 	}
 
 	gotoDashboard(): void {
 		this.router.navigateByUrl('/dashboard');
 	}
-
- 
-
-
 }

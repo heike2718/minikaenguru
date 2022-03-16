@@ -12,3 +12,4 @@ export const selectedMustertext = createSelector(mustertexteState, s => s.select
 export const mustertextEditoModel = createSelector(mustertexteState, s => s.mustertextEditorModel);
 export const mustertexteLoaded = createSelector(mustertexteState, s => s.mustertexteLoaded);
 export const loading = createSelector(mustertexteState, s => s.loading);
+

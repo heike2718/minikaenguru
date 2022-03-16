@@ -84,7 +84,9 @@ public class AdminMustertexteResource {
 	@Path("{mustertextID}")
 	public Response deleteMustertext(@UuidString @PathParam(value = "mustertextID") final String mustertextID) {
 
-		ResponsePayload responsePayload = mustertexteService.loadDetails(new Identifier(mustertextID));
+		String adminUuid = securityContext.getUserPrincipal().getName();
+
+		ResponsePayload responsePayload = mustertexteService.mustertextLoeschen(new Identifier(mustertextID), adminUuid);
 
 		return Response.ok(responsePayload).build();
 	}

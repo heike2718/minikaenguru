@@ -1,5 +1,5 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { Mustertext, MUSTRETEXT_KATEGORIE } from '../../shared/shared-entities.model';
+import { Mustertext, MUSTRETEXT_KATEGORIE, NEUER_MUSTERTEXT } from '../../shared/shared-entities.model';
 import { MustertexteMap, MustertextWithID } from '../mustertexte.model';
 import * as MustertexteActions from './mustertexte.actions';
 
@@ -49,7 +49,30 @@ const mustertexteReducer = createReducer(initialMustertexteState,
 
 	}),
 
+    on(MustertexteActions.mustertextDetailsLoaded, (state, action) => {
+
+        const mustertext: Mustertext = action.mustertext;
+        const newMap: MustertextWithID[] = new MustertexteMap(state.mustertexteMap).merge(mustertext);
+        const filteredMap = new MustertexteMap(newMap).filterByKategorie(state.filterKategorie);
+
+        return {...state, selectedMustertext: mustertext, mustertexteMap: newMap, filteredMustertexte: filteredMap};
+	}),
     
+    on(MustertexteActions.mustertextSaved, (state, action) => {
+
+        const mustertext: Mustertext = action.mustertext;
+        const newMap: MustertextWithID[] = new MustertexteMap(state.mustertexteMap).merge(mustertext);
+        const filteredMap = new MustertexteMap(newMap).filterByKategorie(state.filterKategorie);
+
+        return {...state, loading: false, selectedMustertext: mustertext, mustertexteMap: newMap, filteredMustertexte: filteredMap, mustertextEditorModel: mustertext};
+	}),
+    
+    on(MustertexteActions.createNewMustertext, (state, _action) => {
+
+		return {...state, mustertextEditorModel: NEUER_MUSTERTEXT};
+	}),
+
+
     on(MustertexteActions.filterkriteriumChanged, (state, action) => {
 
         const filteredMap = new MustertexteMap(state.mustertexteMap).filterByKategorie(action.neuerFilter);
@@ -58,13 +81,25 @@ const mustertexteReducer = createReducer(initialMustertexteState,
 	}),
 
     
+    on(MustertexteActions.editMustertextTriggered, (state, action) => {
+
+		return {...state, mustertextEditorModel: {...action.mustertext}};
+
+	}),
+
+ 
+    on(MustertexteActions.editCanceled, (state, _action) => {
+
+		return {...state, mustertextEditorModel: undefined, selectedMustertext: undefined};
+
+	}),
 
     on(MustertexteActions.mustertextDeleted, (state, action) => {
 
         const newMap: MustertextWithID[] = new MustertexteMap(state.mustertexteMap).remove(action.mustertext);
         const filteredMap = new MustertexteMap(newMap).filterByKategorie(state.filterKategorie);
 
-		return {...state, loading: false, mustertextEditorModel: undefined, selectedMustertext: undefined, mustertexteMap: newMap, filteredMustertexte: filteredMap};
+		return {...state, loading: false, mustertextEditorModel: NEUER_MUSTERTEXT, selectedMustertext: undefined, mustertexteMap: newMap, filteredMustertexte: filteredMap};
 
 	}),
 

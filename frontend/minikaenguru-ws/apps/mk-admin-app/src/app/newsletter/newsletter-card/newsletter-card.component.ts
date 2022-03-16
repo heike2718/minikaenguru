@@ -24,9 +24,7 @@ export class NewsletterCardComponent implements OnInit {
 
 	editNewsletter(): void {
 
-		if (this.newsletter) {
-			this.newsletterFacade.startEditNewsletter(this.newsletter);
-		}
+		this.newsletterFacade.startEditNewsletter(this.newsletter);
 	}
 
 	toggleSendMail(): void {

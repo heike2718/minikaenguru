@@ -1,6 +1,6 @@
 export * from './lib/common-components.module';
 
-export { emailValidator, landValidator } from './lib/validation/app.validators';
+export { emailValidator, landValidator, extractTheValueAsString } from './lib/validation/app.validators';
 
 export { DownloadFacade } from './lib/download/download.facade';
 
@@ -42,7 +42,7 @@ export {
 	WettbewerbStatus,
 	initialUploadComponentModel,
 	modalOptions,
-	initialPaginationComponentModel
+	initialPaginationComponentModel	
 } from './lib/common-components.model';
 
 export { AnonymisierteTeilnahmeComponent } from './lib/anonymisierte-teilnahme/anonymisierte-teilnahme.component';
