@@ -1,4 +1,4 @@
-import { Mustertext } from "../shared/shared-entities.model";
+import { Mustertext, MUSTRETEXT_KATEGORIE } from "../shared/shared-entities.model";
 
 
 
@@ -42,6 +42,27 @@ export class MustertexteMap {
     public toArray(): Mustertext[] {
 
 		return [...this.mustertexte.values()];
+	}
+
+	public filterByKategorie(kategorie: MUSTRETEXT_KATEGORIE): MustertextWithID[] {
+
+		const result: MustertextWithID[] = [];
+
+		if (kategorie === 'UNDEFINED') {
+			for(const item of this.items) {
+				result.push(item);
+			}
+		} else {
+
+			for(const item of this.items) {
+
+				if (kategorie === item.mustertext.kategorie) {
+					result.push(item);
+				}
+			}
+		}
+
+		return result;
 	}
 
     public merge(mustertext: Mustertext): MustertextWithID[] {

@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Mustertext } from '../../shared/shared-entities.model';
+import { Mustertext, MUSTRETEXT_KATEGORIE } from '../../shared/shared-entities.model';
 
 
 export const startBackendCall = createAction(
@@ -14,6 +14,11 @@ export const mustertexteLoaded = createAction(
 	'[MustertexteFacade]: loadMustertexte',
 	props<{mustertexte: Mustertext[]}>()
 );
+
+export const filterkriteriumChanged = createAction(
+	'[MustertexteFacade] selectFilter',
+	props<{neuerFilter: MUSTRETEXT_KATEGORIE}>()
+)
 
 export const mustertextDeleted = createAction(
 	'[MustertexteFacade] deleteMustertext',

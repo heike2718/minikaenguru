@@ -7,7 +7,7 @@ import * as MustertexteActions from './+state/mustertexte.actions';
 import * as MustertexteSelectors from './+state/mustertexte.selectors';
 import { AppState } from "../reducers";
 import { Store } from "@ngrx/store";
-import { Mustertext } from "../shared/shared-entities.model";
+import { Mustertext, MUSTRETEXT_KATEGORIE } from "../shared/shared-entities.model";
 import { Observable } from "rxjs";
 
 
@@ -58,6 +58,10 @@ export class MustertexteFacade {
 			})
 		);
 		*/
+	}
+
+	public selectFilter(filter: MUSTRETEXT_KATEGORIE): void {
+		this.store.dispatch(MustertexteActions.filterkriteriumChanged({neuerFilter: filter}));
 	}
 
 	public deleteMustertext(mustertext: Mustertext): void {

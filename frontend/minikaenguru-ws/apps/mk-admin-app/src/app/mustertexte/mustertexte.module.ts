@@ -4,7 +4,7 @@ import { MustertextListComponent } from './mustertext-list/mustertext-list.compo
 import { MustertexteRoutingModule } from './mustertexte-routing.module';
 import { StoreModule } from '@ngrx/store';
 import * as fromMustertexte from './+state/mustertexte.reducer';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MustertextCardComponent } from './mustertext-card/mustertext-card.component';
 import { EditMustertextComponent } from './edit-mustertext/edit-mustertext.component';
 
@@ -18,6 +18,7 @@ import { EditMustertextComponent } from './edit-mustertext/edit-mustertext.compo
   ],
   imports: [
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     MustertexteRoutingModule,
     StoreModule.forFeature(fromMustertexte.mustertexteFeatureKey, fromMustertexte.reducer)

@@ -3,6 +3,14 @@
         class="badge badge-secondary">{{mustertexte.length}}</span></h3>
     <p *ngIf="devMode">(mustertexte-list.component)</p>
 
+	<div *ngIf="mustertextFacade.mustertexteLoaded$ | async" class="form-group">
+		<label for="filterKriterium">Filtern nach Kategorie:</label>
+		<select class="form-control" (change)="filterKriteriumChanged()" id="filterKriterium" required [(ngModel)]="filterKriterium"
+			name="filterKriterium" #suchkriterium="ngModel">
+			<option *ngFor="let krit of filter" [value]="krit">{{krit}}</option>
+		</select>
+	</div>
+
     <ng-container *ngIf="(mustertextFacade.mustertexte$ | async ) as mustertexte else loading">
 		<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let mustertext of mustertexte">
 			<mka-mustertext-card [mustertext]="mustertext"></mka-mustertext-card>
