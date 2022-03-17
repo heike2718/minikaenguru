@@ -6,6 +6,11 @@ export const createNewNewsletter = createAction(
 	'[NewsletterFacade] createNewNewsletter'
 );
 
+export const newsletterFromMustertextCreated = createAction(
+	'[NewsletterFacade] createNewsletterFromMustertext',
+	props<{newsletter: Newsletter}>()
+);
+
 export const startBackendCall = createAction(
 	'[NewsletterFacade] diverse'
 );

@@ -21,10 +21,9 @@ export interface Mustertext {
 	readonly text?: string;
 };
 
-export const NEUER_MUSTERTEXT: Mustertext = {
-	uuid: 'neu',
-	kategorie: 'UNDEFINED',
-	name: '',
-	text: ''
+export interface Mail {
+	readonly betreff: string;
+	readonly empfaenger?: string;
+	readonly mailtext: string;
 };
 

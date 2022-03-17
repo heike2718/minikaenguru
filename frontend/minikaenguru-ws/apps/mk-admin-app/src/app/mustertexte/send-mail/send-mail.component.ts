@@ -6,7 +6,7 @@ import { MessageService } from '@minikaenguru-ws/common-messages';
 import { environment } from 'apps/mk-admin-app/src/environments/environment';
 import { Subscription } from 'rxjs';
 import { MustertexteFacade } from '../mustertexte.facade';
-import { Mail } from '../mustertexte.model';
+import { Mail } from '../../shared/shared-entities.model';
 
 @Component({
   selector: 'mka-send-mail',

@@ -1,16 +1,15 @@
 import { Mustertext, MUSTRETEXT_KATEGORIE } from "../shared/shared-entities.model";
 
-
+export const NEUER_MUSTERTEXT: Mustertext = {
+	uuid: 'neu',
+	kategorie: 'UNDEFINED',
+	name: '',
+	text: ''
+};
 
 export interface MustertextWithID {
 	readonly uuid: string;
 	readonly mustertext: Mustertext;
-};
-
-export interface Mail {
-	readonly betreff: string;
-	readonly empfaenger?: string;
-	readonly mailtext: string;
 };
 
 export class MustertexteMap {

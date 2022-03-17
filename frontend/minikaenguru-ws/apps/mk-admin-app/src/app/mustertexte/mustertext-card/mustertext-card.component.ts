@@ -36,6 +36,10 @@ export class MustertextCardComponent implements OnInit {
       this.mustertexteFacade.createMail(this.mustertext);
     }
 
+    if (this.mustertext.kategorie === 'NEWSLETTER') {
+      this.mustertexteFacade.createNewsletter(this.mustertext);
+    }
+
   }
 
   loeschen(): void {

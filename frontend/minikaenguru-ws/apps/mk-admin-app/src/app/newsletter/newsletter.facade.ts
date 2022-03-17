@@ -4,12 +4,13 @@ import { AppState } from '../reducers';
 import * as NewsletterActions from './+state/newsletter.actions';
 import * as NewsletterSelectors from './+state/newsletter.selectors';
 import { Observable, timer, Subject } from 'rxjs';
-import { Newsletter, Empfaengertyp, NewsletterVersandauftrag, Versandinfo, VersandinfoMap } from './newsletter.model';
+import { Newsletter, NewsletterVersandauftrag, Versandinfo, initialNewsletterEditorModel } from './newsletter.model';
 import { NewsletterService } from './newsletter.service';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
 import { Router } from '@angular/router';
 import { MessageService } from '@minikaenguru-ws/common-messages';
 import { switchMap, retry, share, takeUntil } from 'rxjs/operators';
+import { Mustertext } from '../shared/shared-entities.model';
 
 
 
@@ -42,6 +43,17 @@ export class NewsletterFacade {
 		this.store.dispatch(NewsletterActions.createNewNewsletter());
 		this.router.navigateByUrl('/newsletter-editor/neu');
 	}
+
+	public createNewsletterFromMustertext(mustertext: Mustertext): void {
+
+		if (mustertext.text) {
+			const betreff = initialNewsletterEditorModel.betreff + ' ' + mustertext.name;
+			const newsletter = {...initialNewsletterEditorModel, betreff: betreff, text: mustertext.text};
+			this.store.dispatch(NewsletterActions.newsletterFromMustertextCreated({newsletter: newsletter}));
+
+			this.router.navigateByUrl('/newsletter-editor/neu');
+		}
+	}	
 
 	public loadNewsletters(): void {
 

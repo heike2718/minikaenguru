@@ -7,9 +7,10 @@ import * as MustertexteActions from './+state/mustertexte.actions';
 import * as MustertexteSelectors from './+state/mustertexte.selectors';
 import { AppState } from "../reducers";
 import { Store } from "@ngrx/store";
-import { Mustertext, MUSTRETEXT_KATEGORIE } from "../shared/shared-entities.model";
-import { Observable } from "rxjs";
-import { Mail } from "./mustertexte.model";
+import { Mail, Mustertext, MUSTRETEXT_KATEGORIE } from "../shared/shared-entities.model";
+import { Observable, of } from "rxjs";
+import { initialNewsletterEditorModel, Newsletter } from "../newsletter/newsletter.model";
+import { NewsletterFacade } from "../newsletter/newsletter.facade";
 
 
 @Injectable({
@@ -25,6 +26,7 @@ export class MustertexteFacade {
     constructor(private mustertexteService: MustertexteService,
         private errorHandler: GlobalErrorHandlerService,
 		private messageService: MessageService,
+		private newsletterFacade: NewsletterFacade,
 		private store: Store<AppState>,
 		private router: Router) {}
 
@@ -43,25 +45,6 @@ export class MustertexteFacade {
 				this.errorHandler.handleError(error);
 			})
 		);
-	}
-
-	public loadMustertextDetails(selectedMustertext: Mustertext): void {
-
-		if (selectedMustertext.text === undefined) {
-			this.store.dispatch(MustertexteActions.startBackendCall());
-
-			this.mustertexteService.loadMustertext(selectedMustertext.uuid).subscribe(
-				m => {
-					this.store.dispatch(MustertexteActions.mustertextDetailsLoaded({mustertext: m}));
-				},
-				(error => {
-					this.store.dispatch(MustertexteActions.backendCallFinishedWithError());
-					this.errorHandler.handleError(error);
-				})
-			);		
-		} else {
-			this.store.dispatch(MustertexteActions.mustertextDetailsLoaded({mustertext: selectedMustertext}));
-		}
 	}
 
 	public createNewMustertext(): void {
@@ -165,19 +148,26 @@ export class MustertexteFacade {
 		let mail!: Mail;
 		
 		if (!mustertext.text) {
+
+			this.store.dispatch(MustertexteActions.startBackendCall());
+
 			this.mustertexteService.loadMustertext(mustertext.uuid).subscribe(
 				m => {
-
-					const text = m.text ? m.text : '';
-
-					mail = {
-						betreff: m.name,
-						mailtext: text
-					};
+					this.store.dispatch(MustertexteActions.mustertextDetailsLoaded({mustertext: m}));
+					if (m && m.text) {
+						mail = {
+							betreff: m.name,
+							mailtext: m.text
+						}
+					}
 
 					this.propagateMailCreated(mustertext, mail);
-				}
-			)
+				},
+				(error => {
+					this.store.dispatch(MustertexteActions.backendCallFinishedWithError());
+					this.errorHandler.handleError(error);
+				})
+			);
 		} else {
 			mail = {
 				betreff: mustertext.name,
@@ -186,6 +176,29 @@ export class MustertexteFacade {
 
 			this.propagateMailCreated(mustertext, mail);
 		}		
+	}
+
+	public createNewsletter(mustertext: Mustertext): void {
+
+		if (!mustertext.text) {
+
+			this.store.dispatch(MustertexteActions.startBackendCall());
+
+			this.mustertexteService.loadMustertext(mustertext.uuid).subscribe(
+				m => {
+					this.store.dispatch(MustertexteActions.mustertextDetailsLoaded({mustertext: m}));
+					if (m && m.text) {
+						this.triggerCreateNewsletter(m);
+					}
+				},
+				(error => {
+					this.store.dispatch(MustertexteActions.backendCallFinishedWithError());
+					this.errorHandler.handleError(error);
+				})
+			);
+		} else {
+			this.triggerCreateNewsletter(mustertext);
+		}
 	}
 
 	public sendMail(mail: Mail): void {
@@ -212,9 +225,39 @@ export class MustertexteFacade {
 
 	// ////////////////////////////////////////////////////////////////////////////
 
+	private triggerCreateNewsletter(mustertext: Mustertext | undefined): void {
+
+		if (mustertext) {
+			this.newsletterFacade.createNewsletterFromMustertext(mustertext);
+		}
+
+	}
+
 	private propagateMailCreated(mustertext: Mustertext, mail: Mail): void {
 		this.store.dispatch(MustertexteActions.mailCreated({mustertext: mustertext, mail: mail}));
 		this.router.navigateByUrl('/mail');
+	}
+
+	private propagateMustertextDetailsLoaded(mustertext: Mustertext): void {
+		this.store.dispatch(MustertexteActions.mustertextDetailsLoaded({mustertext: mustertext}));
+	}
+
+	private loadMustertextDetails(selectedMustertext: Mustertext): Observable<Mustertext | undefined> {
+
+		this.store.dispatch(MustertexteActions.startBackendCall());
+
+		this.mustertexteService.loadMustertext(selectedMustertext.uuid).subscribe(
+			m => {
+				this.store.dispatch(MustertexteActions.mustertextDetailsLoaded({mustertext: m}));
+				return of(m);
+			},
+			(error => {
+				this.store.dispatch(MustertexteActions.backendCallFinishedWithError());
+				this.errorHandler.handleError(error);
+			})
+		);		
+
+		return of(undefined);
 	}
 };
 

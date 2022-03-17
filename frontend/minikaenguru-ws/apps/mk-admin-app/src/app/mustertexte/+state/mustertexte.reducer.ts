@@ -1,6 +1,6 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { Mustertext, MUSTRETEXT_KATEGORIE, NEUER_MUSTERTEXT } from '../../shared/shared-entities.model';
-import { Mail, MustertexteMap, MustertextWithID } from '../mustertexte.model';
+import { Mail, Mustertext, MUSTRETEXT_KATEGORIE } from '../../shared/shared-entities.model';
+import { MustertexteMap, MustertextWithID, NEUER_MUSTERTEXT } from '../mustertexte.model';
 import * as MustertexteActions from './mustertexte.actions';
 
 export const mustertexteFeatureKey = 'mk-admin-app-mustertexte';

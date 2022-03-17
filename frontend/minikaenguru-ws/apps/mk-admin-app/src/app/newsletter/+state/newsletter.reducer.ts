@@ -45,6 +45,12 @@ const newsletterReducer = createReducer(initialNewsletterState,
 
 	}),
 
+	on(NewsletterActions.newsletterFromMustertextCreated, (state, action) => {
+
+		return { ...state, newsletterEditorModel: action.newsletter };
+
+	}),
+
 	on(NewsletterActions.editCanceled, (state, _action) => {
 
 		return {...state, newsletterEditorModel: undefined, selectedNewsletter: undefined };

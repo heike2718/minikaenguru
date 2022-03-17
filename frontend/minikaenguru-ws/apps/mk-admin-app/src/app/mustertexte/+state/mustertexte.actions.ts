@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { Mustertext, MUSTRETEXT_KATEGORIE } from '../../shared/shared-entities.model';
-import { Mail } from '../mustertexte.model';
+import { Mail } from '../../shared/shared-entities.model';
 
 
 export const startBackendCall = createAction(

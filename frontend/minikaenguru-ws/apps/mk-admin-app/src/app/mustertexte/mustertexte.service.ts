@@ -4,8 +4,7 @@ import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Message, ResponsePayload } from '@minikaenguru-ws/common-messages';
-import { Mustertext } from '../shared/shared-entities.model';
-import { Mail } from './mustertexte.model';
+import { Mail, Mustertext } from '../shared/shared-entities.model';
 
 
 @Injectable({
