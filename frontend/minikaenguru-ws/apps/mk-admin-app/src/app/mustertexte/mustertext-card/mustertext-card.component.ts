@@ -32,6 +32,10 @@ export class MustertextCardComponent implements OnInit {
 
   mailErzeugen(): void {
 
+    if (this.mustertext.kategorie === 'MAIL') {
+      this.mustertexteFacade.createMail(this.mustertext);
+    }
+
   }
 
   loeschen(): void {

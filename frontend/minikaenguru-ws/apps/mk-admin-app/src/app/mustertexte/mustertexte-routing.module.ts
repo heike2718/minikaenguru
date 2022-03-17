@@ -3,6 +3,7 @@ import { AuthGuardService } from '../infrastructure/auth-guard.service';
 import { NgModule } from '@angular/core';
 import { MustertextListComponent } from './mustertext-list/mustertext-list.component';
 import { EditMustertextComponent } from './edit-mustertext/edit-mustertext.component';
+import { SendMailComponent } from './send-mail/send-mail.component';
 
 
 const mustertexteRoutes: Routes = [
@@ -16,6 +17,11 @@ const mustertexteRoutes: Routes = [
 		path: 'mustertext-editor/:id',
 		canActivate: [AuthGuardService],
 		component: EditMustertextComponent
+	},
+	{
+		path: 'mail',
+		canActivate: [AuthGuardService],
+		component: SendMailComponent
 	}
 ];
 

@@ -3,8 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ResponsePayload } from '@minikaenguru-ws/common-messages';
+import { Message, ResponsePayload } from '@minikaenguru-ws/common-messages';
 import { Mustertext } from '../shared/shared-entities.model';
+import { Mail } from './mustertexte.model';
 
 
 @Injectable({
@@ -58,6 +59,16 @@ export class MustertexteService {
 
 		return this.http.delete(url).pipe(
 			map(body => body as ResponsePayload)
+		);
+	}
+
+	public sendMail(mail: Mail): Observable<Message> {
+
+		const url = environment.apiUrl + '/mails';
+
+		return this.http.post(url, mail).pipe(
+			map(body => body as ResponsePayload),
+			map(payload => payload.message)
 		);
 	}
 };

@@ -39,6 +39,7 @@ export class EditMustertextComponent implements OnInit, OnDestroy {
     private router: Router,
     public mustertexteFacade: MustertexteFacade,
     private messageService: MessageService) { 
+
       this.initForm()
     }
 
@@ -66,13 +67,13 @@ export class EditMustertextComponent implements OnInit, OnDestroy {
             text.setValue(model.text, { onlySelf: true });
           }
 
-          this.saveInProgress = false;
-				  this.editorInitialized = true;
-
 				  this.uuid = model.uuid;
         }
        }
     );
+
+    this.saveInProgress = false;
+    this.editorInitialized = true;
   }
 
   ngOnDestroy(): void {

@@ -1019,6 +1019,22 @@ public class PermittedRolesInMemoryRepositoryTest {
 		}
 
 		@Test
+		void should_permittedRollen_veranstaltermails_beOk() {
+
+			final String path = "/admin/mails";
+
+			{
+
+				// Act
+				List<Rolle> rollen = repository.permittedRollen(path, HttpMethod.POST);
+
+				// Assert
+				assertEquals(1, rollen.size());
+				assertTrue(rollen.contains(Rolle.ADMIN));
+			}
+		}
+
+		@Test
 		void should_permittedRollen_postVersand_beOk() {
 
 			// Act

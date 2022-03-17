@@ -37,6 +37,7 @@ public final class PermittedRolesForAdminProvider {
 		addPathsAndMethodsForMustertexte(result);
 		addPathsAndMethodsForUpload(result);
 		addPathsAndMethodsForLoesungszettel(result);
+		addPathsAndMethodsForVeranstaltermails(result);
 
 		return result;
 
@@ -292,6 +293,17 @@ public final class PermittedRolesForAdminProvider {
 			result.put(new PathWithMethod(path, HttpMethod.GET), rollen);
 			result.put(new PathWithMethod(path, HttpMethod.PUT), rollen);
 			result.put(new PathWithMethod(path, HttpMethod.DELETE), rollen);
+		}
+	}
+
+	private static void addPathsAndMethodsForVeranstaltermails(final Map<PathWithMethod, List<Rolle>> result) {
+
+		{
+
+			final String path = "/admin/mails";
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.ADMIN });
+			result.put(new PathWithMethod(path, HttpMethod.POST), rollen);
+
 		}
 	}
 

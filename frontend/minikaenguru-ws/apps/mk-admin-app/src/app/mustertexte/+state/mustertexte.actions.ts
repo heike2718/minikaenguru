@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { Mustertext, MUSTRETEXT_KATEGORIE } from '../../shared/shared-entities.model';
+import { Mail } from '../mustertexte.model';
 
 
 export const startBackendCall = createAction(
@@ -47,6 +48,19 @@ export const mustertextSaved = createAction(
 export const mustertextDeleted = createAction(
 	'[MustertexteFacade] deleteMustertext',
 	props<{mustertext: Mustertext}>()
+);
+
+export const mailCreated = createAction(
+	'[MustertexteFacade] createMail',
+	props<{mustertext: Mustertext, mail: Mail}>()
+);
+
+export const mailSent = createAction(
+	'[MustertexteFacade] sendMail'
+);
+
+export const clearMail  = createAction(
+	'[MustertexteFacade] clearMail'
 );
 
 export const resetMustertexte = createAction(

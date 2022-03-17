@@ -94,7 +94,7 @@ public class AdminMailService {
 					new SendFailedExceptionAdapter());
 			}
 
-			LOGGER.debug("Mail mit Betreff " + maildaten.getBetreff() + " wurde an "
+			LOGGER.info("Mail mit Betreff " + maildaten.getBetreff() + " wurde an "
 				+ maildaten.alleEmpfaengerFuersLog() + " gesendet (TO=" + maildaten.getEmpfaenger() + "):\n" + maildaten.getText());
 		}
 

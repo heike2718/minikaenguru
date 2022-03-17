@@ -8,7 +8,8 @@ import * as MustertexteSelectors from './+state/mustertexte.selectors';
 import { AppState } from "../reducers";
 import { Store } from "@ngrx/store";
 import { Mustertext, MUSTRETEXT_KATEGORIE } from "../shared/shared-entities.model";
-import { Observable, of } from "rxjs";
+import { Observable } from "rxjs";
+import { Mail } from "./mustertexte.model";
 
 
 @Injectable({
@@ -19,7 +20,7 @@ export class MustertexteFacade {
 	public mustertexte$: Observable<Mustertext[]> = this.store.select(MustertexteSelectors.mustertexte);
 	public mustertexteLoaded$: Observable<boolean> = this.store.select(MustertexteSelectors.mustertexteLoaded);
     public editorModel$: Observable<Mustertext | undefined> = this.store.select(MustertexteSelectors.mustertextEditoModel);
-
+	public mail$: Observable<Mail | undefined> = this.store.select(MustertexteSelectors.mail);
 
     constructor(private mustertexteService: MustertexteService,
         private errorHandler: GlobalErrorHandlerService,
@@ -159,14 +160,61 @@ export class MustertexteFacade {
 		);
 	}
 
+	public createMail(mustertext: Mustertext): void {
 
-	/*
-	private loadDetails(mustertext: Mustertext): Observable<Mustertext> {
+		let mail!: Mail;
+		
+		if (!mustertext.text) {
+			this.mustertexteService.loadMustertext(mustertext.uuid).subscribe(
+				m => {
 
-		const vollstaendigerMustertext: Mustertext = {...mustertext, text: 'bitte verwenden Sie die Bla-Funktion, wenn Sie nicht weiterkommen'};
+					const text = m.text ? m.text : '';
 
-		return of(vollstaendigerMustertext);
+					mail = {
+						betreff: m.name,
+						mailtext: text
+					};
+
+					this.propagateMailCreated(mustertext, mail);
+				}
+			)
+		} else {
+			mail = {
+				betreff: mustertext.name,
+				mailtext: mustertext.text
+			};
+
+			this.propagateMailCreated(mustertext, mail);
+		}		
 	}
-	*/
+
+	public sendMail(mail: Mail): void {
+
+		this.store.dispatch(MustertexteActions.startBackendCall());
+
+		this.mustertexteService.sendMail(mail).subscribe(
+
+			message => {
+				this.messageService.showMessage(message);
+				this.store.dispatch(MustertexteActions.mailSent());
+			},
+			(error => {
+				this.store.dispatch(MustertexteActions.backendCallFinishedWithError());
+				this.errorHandler.handleError(error);
+			})
+		)
+	}
+
+	public clearMail(): void {
+		
+		this.store.dispatch(MustertexteActions.clearMail());
+	}
+
+	// ////////////////////////////////////////////////////////////////////////////
+
+	private propagateMailCreated(mustertext: Mustertext, mail: Mail): void {
+		this.store.dispatch(MustertexteActions.mailCreated({mustertext: mustertext, mail: mail}));
+		this.router.navigateByUrl('/mail');
+	}
 };
 

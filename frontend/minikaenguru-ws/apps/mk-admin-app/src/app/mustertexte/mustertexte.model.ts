@@ -7,6 +7,12 @@ export interface MustertextWithID {
 	readonly mustertext: Mustertext;
 };
 
+export interface Mail {
+	readonly betreff: string;
+	readonly empfaenger?: string;
+	readonly mailtext: string;
+};
+
 export class MustertexteMap {
 
     private mustertexte : Map<string, Mustertext> = new Map();

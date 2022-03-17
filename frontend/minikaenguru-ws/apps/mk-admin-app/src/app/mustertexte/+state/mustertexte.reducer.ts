@@ -1,6 +1,6 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { Mustertext, MUSTRETEXT_KATEGORIE, NEUER_MUSTERTEXT } from '../../shared/shared-entities.model';
-import { MustertexteMap, MustertextWithID } from '../mustertexte.model';
+import { Mail, MustertexteMap, MustertextWithID } from '../mustertexte.model';
 import * as MustertexteActions from './mustertexte.actions';
 
 export const mustertexteFeatureKey = 'mk-admin-app-mustertexte';
@@ -13,6 +13,7 @@ export interface MustertexteState {
     readonly mustertextEditorModel?: Mustertext;
 	readonly mustertexteLoaded: boolean;
 	readonly loading: boolean;
+    readonly mail?: Mail;
 };
 
 const initialMustertexteState: MustertexteState = {
@@ -22,7 +23,8 @@ const initialMustertexteState: MustertexteState = {
     selectedMustertext: undefined,
     mustertextEditorModel: undefined,
     mustertexteLoaded: false,
-    loading: false
+    loading: false,
+    mail: undefined
 };
 
 const mustertexteReducer = createReducer(initialMustertexteState, 
@@ -103,7 +105,21 @@ const mustertexteReducer = createReducer(initialMustertexteState,
 
 	}),
 
+    on(MustertexteActions.mailCreated, (state, action) => {
 
+		return {...state, mail: action.mail};
+	}),
+
+    on(MustertexteActions.mailSent, (state, _action) => {
+
+		return {...state, loading: false};
+	}),
+
+
+    on(MustertexteActions.clearMail, (state, _action) => {
+
+		return {...state, mail: undefined};
+	}),
 
     on(MustertexteActions.resetMustertexte, (_state, _action) => {
 

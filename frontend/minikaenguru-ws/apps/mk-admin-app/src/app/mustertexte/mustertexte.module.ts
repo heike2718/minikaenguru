@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MustertextCardComponent } from './mustertext-card/mustertext-card.component';
 import { EditMustertextComponent } from './edit-mustertext/edit-mustertext.component';
 import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
+import { SendMailComponent } from './send-mail/send-mail.component';
 
 
 
@@ -15,7 +16,8 @@ import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
   declarations: [
     MustertextListComponent,
     MustertextCardComponent,
-    EditMustertextComponent
+    EditMustertextComponent,
+    SendMailComponent
   ],
   imports: [
     CommonModule,
