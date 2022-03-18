@@ -82,6 +82,13 @@ public class LoginLogoutServiceImpl implements LoginLogoutService {
 
 		String jwt = this.tokenExchangeService.exchangeTheOneTimeToken(clientId(authMode), clientSecret(authMode), oneTimeToken);
 
+		/*
+		 * Generierung eines lang laufenden Tokens für Tests: Doku siehe xwiki/wiki/heikeswiki/view/01%20Development/FAQ/
+		 * System.err.println("==================");
+		 * System.out.println(jwt);
+		 * System.err.println("==================");
+		 */
+
 		Session session = sessionService.initSession(jwt);
 
 		NewCookie sessionCookie = SessionUtils.createSessionCookie(SESSION_COOKIE_NAME, session.sessionId());

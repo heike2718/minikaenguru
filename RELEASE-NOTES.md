@@ -1,5 +1,14 @@
 # minikaenguru Release Notes
 
+__Release 1.8.1__:
+
+* [Mustertexte anlegen, ändern und löschen](https://github.com/heike2718/minikaenguru/issues/206)
+* [Mustertext auswählen und daraus Newsletter erzeugen](https://github.com/heike2718/minikaenguru/issues/207)
+* [Pagination funktioniert nicht: es werden nicht für alle Einträge Seiten erstellt](https://github.com/heike2718/minikaenguru/issues/371)
+* [Admin - Veranstalterdetails: Abstand zwischen Aktions- und Navigationsbuttons vergrößern](https://github.com/heike2718/minikaenguru/issues/379)
+* [Mustertext auswählen und daraus Mail an Veranstalter erzeugen und versenden](https://github.com/heike2718/minikaenguru/issues/380)
+* [Klasse wird nach Umbenennen nicht vollständiggeladen](https://github.com/heike2718/minikaenguru/issues/381)
+
 __Release 1.8.0__:
 
 * [Hinweis auf Browser-Cache auf der Landing-Page und Dokumentation](https://github.com/heike2718/minikaenguru/issues/377)

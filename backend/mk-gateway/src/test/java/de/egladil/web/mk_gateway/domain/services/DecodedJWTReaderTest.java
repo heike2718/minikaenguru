@@ -71,11 +71,12 @@ public class DecodedJWTReaderTest {
 		String fullName = reader.getFullName();
 
 		// Assert
-		assertEquals("Max Mustermann", fullName);
+		assertEquals("Frodo Beutlin aus Beutelsend", fullName);
 
 	}
 
-	@Test
+	// TODO: eher Test für Checklistenapp
+	// @Test
 	void should_GetFullNameReturnNull_when_isNotPresent() {
 
 		// Arrange

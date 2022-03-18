@@ -5,7 +5,7 @@ export const environment = {
     apiUrl: 'https://mathe-jung-alt.de/mk-gateway/admin',
 	profileUrl: 'https://opa-wetterwachs.de/profil-app',
     storageKeyPrefix: 'mka_',
-	version: '1.8.0',
+	version: '1.8.1',
 	consoleLogActive: false,
 	serverLogActive: true,
 	loglevel: 4

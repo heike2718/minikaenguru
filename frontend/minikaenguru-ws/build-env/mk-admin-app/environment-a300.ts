@@ -10,7 +10,7 @@ export const environment = {
         apiUrl: 'http://a300/mk-gateway/admin',
         profileUrl: 'http://a300/profil-app',
         storageKeyPrefix: 'mka_',
-        version: '1.8.0',
+        version: '1.8.1',
         consoleLogActive: true,
         serverLogActive: false,
         loglevel: 1
