@@ -1,10 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { environment } from 'apps/mk-admin-app/src/environments/environment';
-import { combineLatest, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { UploadsFacade } from '../uploads.facade';
 import { initialPaginationComponentModel, PaginationComponentModel } from '@minikaenguru-ws/common-components';
 import { LogService } from '@minikaenguru-ws/common-logging';
-import { anzahlUploads } from '../+state/uploads.selectors';
 
 @Component({
   selector: 'mka-uploads-list',
@@ -19,7 +18,7 @@ export class UploadsListComponent implements OnInit, OnDestroy {
 
   anzahl = 0;
 
-  pageSize = 5;
+  private pageSize = 10;
 
   sizeLoaded = false;
 
@@ -32,7 +31,7 @@ export class UploadsListComponent implements OnInit, OnDestroy {
     this.anzahlUploadsSubscription = this.uploadsFacade.anzahlUploads$.subscribe(
 
       anzahl => {
-        this.paginationComponentModel = {...initialPaginationComponentModel, collectionSize: anzahl};
+        this.paginationComponentModel = {...initialPaginationComponentModel, pageSize: this.pageSize, collectionSize: anzahl};
         this.uploadsFacade.getOrLoadNextPage(1, this.pageSize);
       }
     );
