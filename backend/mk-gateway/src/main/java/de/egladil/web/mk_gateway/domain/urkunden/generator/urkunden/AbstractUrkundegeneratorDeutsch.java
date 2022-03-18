@@ -44,7 +44,16 @@ public abstract class AbstractUrkundegeneratorDeutsch implements UrkundeGenerato
 			final PdfContentByte content = stamper.getOverContent(1);
 
 			// header
-			int verschiebungVonTop = headerRenderer.printSectionAndShiftVerticalPosition(content, "Beim Mathewettbewerb");
+			int verschiebungVonTop = 0;
+
+			if (datenUrkunde.isZeroPoints()) {
+
+				verschiebungVonTop = headerRenderer.printSectionAndShiftVerticalPosition(content, "Am Mathewettbewerb");
+
+			} else {
+
+				verschiebungVonTop = headerRenderer.printSectionAndShiftVerticalPosition(content, "Beim Mathewettbewerb");
+			}
 
 			// hauptabschnitt
 			verschiebungVonTop = getHauptabschnittRenderer().printAbschnittAndShiftVerticalPosition(content, datenUrkunde,

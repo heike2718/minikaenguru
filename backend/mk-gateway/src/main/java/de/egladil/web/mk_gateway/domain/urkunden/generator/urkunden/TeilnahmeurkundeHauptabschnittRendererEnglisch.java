@@ -80,17 +80,28 @@ public class TeilnahmeurkundeHauptabschnittRendererEnglisch implements UrkundeHa
 
 		deltaY += UrkundePDFUtils.POINTS_BETWEEN_PARAGRAPHS;
 
-		text = "has succesfully participated with a score of";
+		if (datenUrkunde.isZeroPoints()) {
+
+			text = "has participated";
+		} else {
+
+			text = "has succesfully participated with a score of";
+		}
 
 		UrkundeLinePrinter.printTextCenter(content, text, UrkundePDFUtils.getFontBlack(UrkundePDFUtils.SIZE_TEXT_NORMAL),
 			deltaY);
 		deltaY += UrkundePDFUtils.POINTS_BETWEEN_ROWS;
 
 		fontSize = UrkundePDFUtils.SIZE_TEXT_NORMAL;
-		text = MessageFormat.format(MF_PATTERN_PUNKTE, new Object[] { datenUrkunde.punktvalue() });
 
-		deltaY = fontCalculator.berechneDeltaY(text, deltaY, fontSize);
-		UrkundeLinePrinter.printTextCenter(content, text, UrkundePDFUtils.getFontBlack(fontSize), deltaY);
+		if (!datenUrkunde.isZeroPoints()) {
+
+			text = MessageFormat.format(MF_PATTERN_PUNKTE, new Object[] { datenUrkunde.punktvalue() });
+
+			deltaY = fontCalculator.berechneDeltaY(text, deltaY, fontSize);
+			UrkundeLinePrinter.printTextCenter(content, text, UrkundePDFUtils.getFontBlack(fontSize), deltaY);
+
+		}
 
 		deltaY += UrkundePDFUtils.POINTS_BETWEEN_ROWS;
 		return deltaY;
