@@ -5,18 +5,18 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mk-gateway</artifactId>
-	<version>1.8.1</version>
+	<version>1.8.2</version>
 	<packaging>jar</packaging>
 
 
 	<properties>
-		<commons.version>1.7.5</commons.version>
-		<filescanner.version>2.0.3</filescanner.version>
+		<commons.version>1.7.6</commons.version>
+		<filescanner.version>2.0.4</filescanner.version>
 		<quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
 		<quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-		<quarkus.platform.version>2.7.0.Final</quarkus.platform.version>
+		<quarkus.platform.version>2.7.5.Final</quarkus.platform.version>
 		<surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
-		<dependency-check.version>6.5.3</dependency-check.version>
+		<dependency-check.version>7.0.4</dependency-check.version>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
