@@ -1,8 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { environment } from '../environments/environment';
 import { Router, RouterOutlet } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { VersionService } from 'libs/common-components/src/lib/version/version.service';
 
 @Component({
 	selector: 'mkod-root',

@@ -12,7 +12,7 @@
 		<div class="row mt-3">
 			<div class="col-12 text-center">
 				<h1>Minikänguru Admin</h1>
-				<p *ngIf="versionService.expectedVersionSubject | async">Version : {{version}}</p>
+				<p *ngIf="versionService.expectedVersion$| async as version">Version : {{version}}</p>
 			</div>
 		</div>
 	</div>

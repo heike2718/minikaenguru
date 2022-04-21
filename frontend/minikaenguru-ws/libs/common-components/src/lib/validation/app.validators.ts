@@ -3,16 +3,16 @@ import { AbstractControl, FormGroup, FormControl } from '@angular/forms';
 
 export function emailValidator(control: AbstractControl): {
 	[key: string]: any
-} | null {
+} | null {	
 
-	const theValue: string = extractTheValueAsString(control);
+	const value: string = extractTheValueAsString(control);
 
-	if (theValue === '') {
+	if (value === '') {
 		return null;
 	}
 
 	const re = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
-	if (re.test(theValue.toLowerCase())) {
+	if (re.test(value.toLowerCase())) {
 		return null;
 	} else {
 		return { 'invalidEMail': true };
@@ -24,6 +24,10 @@ export function landValidator(control: AbstractControl): {
 	[key: string]: any
 } | null {
 	const value: string = extractTheValueAsString(control).toLowerCase();
+
+	if (value === '') {
+		return null;
+	}
 
 	if (value.includes('deutsch') || value.includes('bundesrepublik') || value.toUpperCase() === 'BRD' || value.toUpperCase() === 'DE') {
 		return { 'invalidLandDeutschland': true };
@@ -46,8 +50,12 @@ export function validateAllFormFields(formGroup: FormGroup): void {
 
 export function extractTheValueAsString(control: AbstractControl): string {
 
-
 	if (control) {
+
+		if (!control.dirty) {
+			return '';
+		}
+
 		if (control.value) {
 			if (control.value.value) {
 				return control.value.value;

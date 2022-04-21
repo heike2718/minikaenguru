@@ -25,7 +25,7 @@
 	<mkv-wettbewerb-info></mkv-wettbewerb-info>
 </div>
 
-<div *ngIf="versionService.expectedVersionSubject | async" class="mt-3 p-2 mkv-bordered text-center">
+<div *ngIf="versionService.expectedVersion$ | async" class="mt-3 p-2 mkv-bordered text-center">
 	Wenn Sie nicht das aktuelle Wettbewerbsjahr angezeigt bekommen, leeren Sie bitte Ihren Browser-Cache.
 </div>
 

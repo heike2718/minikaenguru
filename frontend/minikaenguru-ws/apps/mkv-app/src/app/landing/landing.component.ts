@@ -18,9 +18,6 @@ export class LandingComponent implements OnInit, OnDestroy {
 	isLoggedOut$ = this.authService.isLoggedOut$;
 	aktuelleMeldungNichtLeer$ = this.aktuelleMeldungFacade.aktuelleMeldungNichtLeer$;
 	aktuellerWettbewerb$ = this.wettbewerbFacade.aktuellerWettbewerb$;
-	version = '';
-
-	private versionSubscription: Subscription = new Subscription();
 
 	constructor(private wettbewerbFacade: WettbewerbFacade
 		, private authService: AuthService
@@ -47,25 +44,11 @@ export class LandingComponent implements OnInit, OnDestroy {
 			}
 		}
 
-		this.versionSubscription = this.versionService.expectedVersionSubject.subscribe(
-			v => {
-
-				const storedGuiVersion = localStorage.getItem(environment.storageKeyPrefix + STORAGE_KEY_GUI_VERSION);
-				this.version = v;
-
-				if (this.version !== storedGuiVersion) {
-					this.versionService.storeGuiVersion(environment.storageKeyPrefix + STORAGE_KEY_GUI_VERSION, this.version);
-				} else {
-					this.logger.info('GUI-Version ist aktuell');
-				}
-			}
-		);
-
 		this.versionService.ladeExpectedGuiVersion();
 	}
 
 	ngOnDestroy(): void {
-		this.versionSubscription.unsubscribe();
+		
 	}
 
 	login() {
