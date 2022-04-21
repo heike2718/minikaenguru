@@ -2,6 +2,8 @@
 
 __Release 1.8.1__:
 
+* [Mail aus Mustertext erzeugen ist kaputtgegangen](https://github.com/heike2718/minikaenguru/issues/387)
+* [Neue Schule in Kalatlog eintragen ist kaputt :(](https://github.com/heike2718/minikaenguru/issues/386)
 * [Mustertexte anlegen, ändern und löschen](https://github.com/heike2718/minikaenguru/issues/206)
 * [Mustertext auswählen und daraus Newsletter erzeugen](https://github.com/heike2718/minikaenguru/issues/207)
 * [Pagination funktioniert nicht: es werden nicht für alle Einträge Seiten erstellt](https://github.com/heike2718/minikaenguru/issues/371)
