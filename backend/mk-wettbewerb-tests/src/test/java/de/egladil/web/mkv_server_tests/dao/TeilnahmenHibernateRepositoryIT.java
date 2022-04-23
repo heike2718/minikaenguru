@@ -4,8 +4,8 @@
 // =====================================================
 package de.egladil.web.mkv_server_tests.dao;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
@@ -53,7 +53,7 @@ public class TeilnahmenHibernateRepositoryIT extends AbstractIntegrationTest {
 		List<Teilnahme> teilnahmen = teilnahmenRepository.loadAllForWettbewerb(wettbewerbID);
 
 		// Assert
-		assertEquals(33, teilnahmen.size());
+		assertEquals(37, teilnahmen.size());
 
 	}
 }

@@ -554,8 +554,8 @@ public class LoesungszettelAendernIntegrationIT extends AbstractLoesungszettelTe
 		void should_aendernReturnCorrectVersion() {
 
 			// Arrange
-			String loesungszettelUuid = "21b1765f-8305-4907-8ed9-390cd48b2f1c";
-			String kindUuid = "51fef8ee-0b6c-4923-9ab9-14dbf0f522a9";
+			String loesungszettelUuid = "fae8ff6e-194e-4257-a1ff-14a670c476ab";
+			String kindUuid = "cd9c85a2-966f-48c9-bf3e-3f844669dedb";
 
 			Optional<Kind> optKind = kinderRepository.ofId(new Identifier(kindUuid));
 			assertTrue(optKind.isPresent(), "DB muss zurückgesetzt werden");

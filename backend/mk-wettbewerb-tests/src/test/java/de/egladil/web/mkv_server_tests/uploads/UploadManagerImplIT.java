@@ -4,11 +4,11 @@
 // =====================================================
 package de.egladil.web.mkv_server_tests.uploads;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.File;
 import java.io.IOException;
@@ -84,7 +84,8 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 		uploadRepository = UploadHibernateRepository.createForIntegrationTests(entityManager);
 		loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(entityManager);
 
-		wettbewerb = new Wettbewerb(new WettbewerbID(2020));
+		wettbewerb = new Wettbewerb(new WettbewerbID(2020)).withLoesungsbuchstabenIKids("AA-CB-BC")
+			.withLoesungsbuchstabenKlasse1("EBCA-CCDB-EBAD").withLoesungsbuchstabenKlasse2("DBCEA-ABCED-BCBEB");
 		WettbewerbStatus status = wettbewerb.status();
 
 		while (WettbewerbStatus.DOWNLOAD_PRIVAT != status) {
@@ -131,7 +132,7 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 				messagePayload.getMessage());
 
 			KlassenlisteImportReport importReport = (KlassenlisteImportReport) result.getData();
-			assertEquals(Long.valueOf(2L), Long.valueOf(importReport.getAnzahlDubletten()));
+			assertEquals(Long.valueOf(1L), Long.valueOf(importReport.getAnzahlDubletten()));
 			assertEquals(10, importReport.getAnzahlKinderImportiert());
 			assertEquals(3, importReport.getAnzahlKlassen());
 			assertEquals(Long.valueOf(2L), importReport.getAnzahlKlassenstufeUnklar());
@@ -176,10 +177,24 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 			assertEquals(10, kinder.size());
 
 			List<String> fehlerUndWarnungen = importReport.getFehlerUndWarnungen();
-			assertEquals(1, fehlerUndWarnungen.size());
+
+			System.out.println(fehlerUndWarnungen);
+
+			assertEquals(4, fehlerUndWarnungen.size());
 			assertEquals(
-				"Zeile 7: Fehler! \"2a;Heinz;2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+				"Zeile 8: Fehler! \"2a;Heinz;2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen. Es sind weniger als 4 Angaben.",
 				fehlerUndWarnungen.get(0));
+
+			assertEquals(
+				"Zeile 3: Katja;Fassbinder;1a;4: diese Klassenstufe gibt es nicht. Die Klassenstufe wurde auf \"2\" gesetzt.",
+				fehlerUndWarnungen.get(1));
+
+			assertEquals(
+				"Zeile 9: Amiera;Kaled;2a;2: In Klasse 2a gibt es bereits ein Kind mit diesem Namen und dieser Klassenstufe",
+				fehlerUndWarnungen.get(2));
+
+			assertEquals("Zeile 10: Annalena;Log;2b;3: diese Klassenstufe gibt es nicht. Die Klassenstufe wurde auf \"2\" gesetzt.",
+				fehlerUndWarnungen.get(3));
 
 			List<UploadsMonitoringViewItem> uploads = uploadRepository.findUploadsWithUploadTypeAndTeilnahmenummer(
 				UploadType.KLASSENLISTE,
@@ -253,21 +268,43 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 			List<Kind> dubletten = kinder.stream().filter(k -> "Mirkovitz".equals(k.nachname())).collect(Collectors.toList());
 			assertEquals(2, dubletten.size());
 
+			int anzahlMitDublettePruefen = 0;
+			int anzahlImportiert = 0;
+
 			{
 
 				Kind kind = dubletten.get(0);
 				assertFalse(kind.equals(dubletten.get(1)));
-				assertTrue(kind.isDublettePruefen());
-				assertFalse(kind.isImportiert());
+
+				if (kind.isImportiert()) {
+
+					anzahlImportiert++;
+				}
+
+				if (kind.isDublettePruefen()) {
+
+					anzahlMitDublettePruefen++;
+				}
 			}
 
 			{
 
 				Kind kind = dubletten.get(1);
 				assertFalse(kind.equals(dubletten.get(0)));
-				assertTrue(kind.isDublettePruefen());
-				assertTrue(kind.isImportiert());
+
+				if (kind.isImportiert()) {
+
+					anzahlImportiert++;
+				}
+
+				if (kind.isDublettePruefen()) {
+
+					anzahlMitDublettePruefen++;
+				}
 			}
+
+			assertEquals(1, anzahlMitDublettePruefen);
+			assertEquals(1, anzahlImportiert);
 
 			UploadsMonitoringViewItem persistenterUpload = uploads.get(0);
 			assertEquals(UploadStatus.DATENFEHLER, persistenterUpload.getStatus());
@@ -276,15 +313,15 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 				+ "-fehlerreport.csv";
 
 			File fehlerfile = new File(path);
-			assertFalse(fehlerfile.exists());
+			assertTrue(fehlerfile.exists());
 		}
 
 		@Test
 		void should_uploadKlassenlisteDetectFehler() {
 
 			// Arrange
-			String benutzerUuid = "474943bd-277c-4502-a32c-b67bf960e42c";
-			String schulkuerzel = "M5ZD2NL2";
+			String benutzerUuid = "41ede553-a5ba-4167-bfa6-fea0faacf8d7";
+			String schulkuerzel = "R31VPEJH";
 			TeilnahmeIdentifierAktuellerWettbewerb teilnahmeIdentifier = TeilnahmeIdentifierAktuellerWettbewerb
 				.createForSchulteilnahme(schulkuerzel);
 
@@ -311,7 +348,7 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 			MessagePayload messagePayload = result.getMessage();
 			assertEquals("WARN", messagePayload.getLevel());
 			assertEquals(
-				"Einige Kinder konnten nicht importiert werden. Einen Fehlerreport können Sie mit dem Link herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
+				"Einige Kinder konnten nicht importiert werden. Den Fehlerreport können Sie herunterladen. Kinder mit unklarer Klassenstufe oder Doppeleinträge wurden markiert. Bitte prüfen Sie außerdem, ob Umlaute korrekt angezeigt werden.",
 				messagePayload.getMessage());
 
 			KlassenlisteImportReport importReport = (KlassenlisteImportReport) result.getData();
@@ -323,33 +360,30 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 			assertEquals(6, importReport.getAnzahlKinderImportiert());
 			assertEquals(Long.valueOf(1), importReport.getAnzahlKlassenstufeUnklar());
 			assertEquals(1, importReport.getAnzahlNichtImportiert());
-			assertEquals(Long.valueOf(2L), Long.valueOf(importReport.getAnzahlDubletten()));
+			assertEquals(Long.valueOf(1L), Long.valueOf(importReport.getAnzahlDubletten()));
 
-			assertEquals(4, fehlerUndWarnungen.size());
+			assertEquals(3, fehlerUndWarnungen.size());
 			assertEquals(
-				"Zeile 3: Fehler! \"Malte;Fischer\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+				"Zeile 3: Fehler! \"Malte;Fischer\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen. Es sind weniger als 4 Angaben.",
 				fehlerUndWarnungen.get(0));
 			assertEquals("Zeile 1: Heide;Witzka;2a;3: diese Klassenstufe gibt es nicht. Die Klassenstufe wurde auf \"2\" gesetzt.",
 				fehlerUndWarnungen.get(1));
 			assertEquals(
-				"Zeile 4: \"Tarja;Müller;2a;2\" In Klasse 2a gibt es bereits ein Kind mit diesem Namen und dieser Klassenstufe",
-				fehlerUndWarnungen.get(2));
-			assertEquals(
 				"Zeile 5: Heide;Witzka;2a;2: In Klasse 2a gibt es bereits ein Kind mit diesem Namen und dieser Klassenstufe",
-				fehlerUndWarnungen.get(3));
+				fehlerUndWarnungen.get(2));
 
 			List<KlasseAPIModel> klassen = importReport.getKlassen();
 
 			assertEquals(2, klassen.size());
 
 			List<Kind> kinder = kinderRepository.withTeilnahme(teilnahmeIdentifier);
-			assertEquals(7, kinder.size());
+			assertEquals(6, kinder.size());
 
 			List<Kind> importierte = kinder.stream().filter(k -> k.isImportiert()).collect(Collectors.toList());
 			assertEquals(6, importierte.size());
 
 			List<Kind> dubletten = kinder.stream().filter(k -> k.isDublettePruefen()).collect(Collectors.toList());
-			assertEquals(2, dubletten.size());
+			assertEquals(1, dubletten.size());
 
 			List<UploadsMonitoringViewItem> uploads = uploadRepository.findUploadsWithUploadTypeAndTeilnahmenummer(
 				UploadType.KLASSENLISTE,
@@ -434,14 +468,49 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 		}
 
 		@Test
-		void should_uploadAuswertungByAdmin_returnWarn_whenNamenspalteAberKeineNamen() {
+		void should_uploadAuswertungByAdmin_rejectUpload_when_AuswertungOnline() {
 
 			// Arrange
 			String benutzerUuid = "it-db-inside-docker";
 			String schulkuerzel = "M5ZD2NL2";
 
-			byte[] data = loadData("/auswertungen/auswertung-M5ZD2NL2.xlsx");
+			byte[] data = loadData("/auswertungen/auswertung-GSJIS9J8.xlsx");
 			UploadData uploadData = new UploadData("Auswertung-Rosental.xslx", data);
+
+			UploadAuswertungContext contextObject = new UploadAuswertungContext().withWettbewerb(wettbewerb)
+				.withKuerzelLand("DE-ST")
+				.withSprache(Sprache.de);
+
+			UploadRequestPayload uploadRequestPayload = new UploadRequestPayload().withContext(contextObject)
+				.withUploadData(uploadData)
+				.withTeilnahmenummer(schulkuerzel).withUploadType(UploadType.AUSWERTUNG)
+				.withBenutzerID(new Identifier(benutzerUuid));
+
+			// Act
+			EntityTransaction transaction = startTransaction();
+			ResponsePayload result = uploadManager.processUpload(uploadRequestPayload);
+			commit(transaction);
+
+			// Assert
+			MessagePayload messagePayload = result.getMessage();
+			assertEquals("ERROR", messagePayload.getLevel());
+			assertEquals(
+				"Der Wettbewerb an dieser Schule wurde bereits online ausgewertet. Die Auswertungstabelle wird ignoriert.",
+				messagePayload.getMessage());
+
+			AuswertungImportReport report = (AuswertungImportReport) result.getData();
+			assertNull(report);
+		}
+
+		@Test
+		void should_uploadAuswertungByAdmin_returnWarn_whenNamenspalteAberKeineNamen() {
+
+			// Arrange
+			String benutzerUuid = "it-db-inside-docker";
+			String schulkuerzel = "GSJIS9J8";
+
+			byte[] data = loadData("/auswertungen/auswertung-GSJIS9J8.xlsx");
+			UploadData uploadData = new UploadData("Auswertung-Grundschule-Geusa.xslx", data);
 
 			UploadAuswertungContext contextObject = new UploadAuswertungContext().withWettbewerb(wettbewerb)
 				.withKuerzelLand("DE-ST")

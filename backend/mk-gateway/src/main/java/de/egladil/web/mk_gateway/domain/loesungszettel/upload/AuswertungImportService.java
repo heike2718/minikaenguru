@@ -241,7 +241,28 @@ public class AuswertungImportService {
 
 			try {
 
-				String rohdaten = extractWertungscodeMapper.apply(zeile.getRohdaten());
+				String loesungsbuchstaben = null;
+
+				switch (klassenstufe) {
+
+				case IKID:
+					loesungsbuchstaben = wettbewerb.loesungsbuchstabenIkids();
+					break;
+
+				case EINS:
+					loesungsbuchstaben = wettbewerb.loesungsbuchstabenKlasse1();
+					break;
+
+				default:
+					loesungsbuchstaben = wettbewerb.loesungsbuchstabenKlasse2();
+					break;
+				}
+
+				loesungsbuchstaben = loesungsbuchstaben.replaceAll("-", "");
+
+				String nutzereingabe = zeile.getRohdaten();
+
+				String rohdaten = extractWertungscodeMapper.apply(nutzereingabe, loesungsbuchstaben);
 				rohdaten = rohdaten.replaceAll(";", "");
 
 				if (rohdaten.isEmpty()) {
@@ -251,7 +272,7 @@ public class AuswertungImportService {
 
 				Wettbewerbswertung wertung = wertungsrechner.getWertung(rohdaten, klassenstufe);
 
-				LoesungszettelRohdaten loesungszettelRohdaten = new LoesungszettelRohdaten().withNutzereingabe(rohdaten)
+				LoesungszettelRohdaten loesungszettelRohdaten = new LoesungszettelRohdaten().withNutzereingabe(nutzereingabe)
 					.withTypo(false)
 					.withWertungscode(rohdaten);
 

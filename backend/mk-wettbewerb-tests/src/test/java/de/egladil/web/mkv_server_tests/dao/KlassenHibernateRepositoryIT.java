@@ -41,7 +41,7 @@ public class KlassenHibernateRepositoryIT extends AbstractIntegrationTest {
 		List<Klasse> klassen = repository.findKlassenWithSchule(new Identifier(schulkuerzel));
 
 		// Assert
-		assertEquals(0, klassen.size());
+		assertEquals(4, klassen.size());
 	}
 
 }
