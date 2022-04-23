@@ -164,4 +164,9 @@ public abstract class AbstractDatenUrkunde {
 
 		this.uuid = uuid;
 	}
+
+	public boolean isZeroPoints() {
+
+		return "0".equals(punktvalue());
+	}
 }

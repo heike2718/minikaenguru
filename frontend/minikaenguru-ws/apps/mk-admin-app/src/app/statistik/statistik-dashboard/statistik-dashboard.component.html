@@ -17,6 +17,18 @@
                 </div>
             </ng-template>
         </ngb-panel>
+        <ngb-panel title="Downloads" id="DOWNLOADS">
+            <ng-template ngbPanelContent> 
+                <div *ngIf="statistikFacade.statistikDownloads$ | async as expandedGruppeninfo">
+
+                    <div class="row">
+                        <div class="col-md-10 col-sm-12">Gesamt: {{expandedGruppeninfo.anzahlElemente}}</div>
+                        <div class="col-md-3 col-sm-12"><button class="btn btn-outline-dark" (click)="reloadContent('DOWNLOADS')">aktualisieren</button></div>
+                    </div>
+                    <mka-gruppeninfo-details [gruppeninfo]="expandedGruppeninfo"></mka-gruppeninfo-details>
+                </div>
+            </ng-template>
+        </ngb-panel>
         <ngb-panel title="Lösungszettel" id="LOESUNGSZETTEL" >
             <ng-template ngbPanelContent> 
                 <div *ngIf="statistikFacade.statistikLoesungszettel$ | async as expandedGruppeninfo">

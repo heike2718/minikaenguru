@@ -9,6 +9,7 @@ package de.egladil.web.mk_gateway.infrastructure.persistence.sortnumbers;
  */
 public enum SortedTable {
 
+	DOWNLOADS,
 	LOESUNGSZETTEL,
 	UPLOADS;
 

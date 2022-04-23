@@ -11,12 +11,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Optional;
+import java.util.Random;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import de.egladil.web.mk_gateway.domain.error.UploadFormatException;
 
 /**
  * StringKlassenimportZeileMapperTest
@@ -29,25 +28,6 @@ public class StringKlassenimportZeileMapperTest {
 	void setUp() {
 
 		klassenlisteUeberschrift = new KlassenlisteUeberschrift("Klasse;Nachname;Vorname;Klassenstufe");
-	}
-
-	@Test
-	void should_constructorThrowUploadFormatException_when_ueberschriftNichtWieGefordert() {
-
-		KlassenlisteUeberschrift ueberschrift = new KlassenlisteUeberschrift("blau;grün;Vorname;Klassenstufe");
-
-		try {
-
-			new StringKlassenimportZeileMapper(ueberschrift);
-			fail("keine UploadFormatException");
-
-		} catch (UploadFormatException e) {
-
-			assertEquals(
-				"Die hochgeladene Datei kann nicht verarbeitet werden. Die erste Zeile enthält nicht die Felder \"Nachname\", \"Vorname\", \"Klasse\", \"Klassenstufe\".",
-				e.getMessage());
-		}
-
 	}
 
 	@Test
@@ -93,7 +73,7 @@ public class StringKlassenimportZeileMapperTest {
 		KlassenimportZeile result = optResult.get();
 		assertEquals(42, result.getIndex());
 		assertEquals(
-			"Zeile 42: Fehler! \"2a ; Grüter ;2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+			"Zeile 42: Fehler! \"2a ; Grüter ;2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen. Es sind weniger als 4 Angaben.",
 			result.getFehlermeldung());
 		assertFalse(result.ok());
 		assertNull(result.getKlasse());
@@ -120,7 +100,7 @@ public class StringKlassenimportZeileMapperTest {
 		KlassenimportZeile result = optResult.get();
 		assertEquals(42, result.getIndex());
 		assertEquals(
-			"Zeile 42: Fehler! \"2a ; Grüter ; Marie; Luise ;2.0\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+			"Zeile 42: Fehler! \"2a ; Grüter ; Marie; Luise ;2.0\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen. Es sind mehr als 4 Angaben.",
 			result.getFehlermeldung());
 		assertFalse(result.ok());
 		assertNull(result.getKlasse());
@@ -146,7 +126,7 @@ public class StringKlassenimportZeileMapperTest {
 		KlassenimportZeile result = optResult.get();
 		assertEquals(42, result.getIndex());
 		assertEquals(
-			"Zeile 42: Fehler! \"Grüter ; 2a\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+			"Zeile 42: Fehler! \"Grüter ; 2a\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen. Es sind weniger als 4 Angaben.",
 			result.getFehlermeldung());
 		assertFalse(result.ok());
 		assertNull(result.getKlasse());
@@ -220,5 +200,44 @@ public class StringKlassenimportZeileMapperTest {
 		KlassenimportZeile importierteZeile = result.get();
 		assertNull(importierteZeile.getFehlermeldung());
 		assertEquals("1", importierteZeile.getKlassenstufe());
+	}
+
+	@Test
+	void should_applyIgnore_when_zeile3SemikolonsUndSonstNix() {
+
+		// Arrange
+		StringKlassenimportZeileMapper mapper = new StringKlassenimportZeileMapper(klassenlisteUeberschrift);
+		String zeile = ";;;";
+		Pair<Integer, String> pair = Pair.of(Integer.valueOf(42), zeile);
+
+		// Act
+		Optional<KlassenimportZeile> result = mapper.apply(pair);
+
+		// Assert
+		assertTrue(result.isEmpty());
+	}
+
+	@Test
+	void should_applyIgnore_when_zeileBeliebigeAnzahlSemikolonsUndSonstNix() {
+
+		// Arrange
+		StringKlassenimportZeileMapper mapper = new StringKlassenimportZeileMapper(klassenlisteUeberschrift);
+		int anzahlSemikolons = new Random().nextInt(10) + 3;
+
+		StringBuffer sb = new StringBuffer();
+
+		for (int i = 0; i < anzahlSemikolons; i++) {
+
+			sb.append(";");
+		}
+
+		String zeile = sb.toString();
+		Pair<Integer, String> pair = Pair.of(Integer.valueOf(42), zeile);
+
+		// Act
+		Optional<KlassenimportZeile> result = mapper.apply(pair);
+
+		// Assert
+		assertTrue(result.isEmpty());
 	}
 }

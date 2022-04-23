@@ -2,6 +2,7 @@ import { createAction, props } from '@ngrx/store';
 import { Schule } from './../schulen/schulen.model';
 import { Schulteilnahme, Lehrer } from '../../wettbewerb/wettbewerb.model';
 import { KatalogItem } from '@minikaenguru-ws/common-schulkatalog';
+import { ResponsePayload } from '@minikaenguru-ws/common-messages';
 
 
 export const datenLehrerGeladen = createAction(
@@ -63,8 +64,7 @@ export const neueSchuleSelected = createAction(
 export const schuleRemoved = createAction(
 	'[LehrerFacade] schuleEntfernen',
 	props<{ kuerzel: string }>()
-)
-
+);
 
 export const schuleAdded = createAction(
 	'[LehrerFacade] schuleHinzufuegen',
@@ -83,6 +83,11 @@ export const closeSchulsuche = createAction(
 export const aboNewsletterChanged = createAction(
 	'[LehrerFacade] changeAboNewsletter'
 );
+
+export const auswertungstabelleHochgeladen = createAction(
+	'[LehrerFacade] handleAuswertungstabelleHochgeladen',
+	props<{schule: Schule}>()
+)
 
 export const resetLehrer = createAction(
 	'[LehrerFacade] resetState()'

@@ -9,7 +9,7 @@ import { VeranstalterSuchkriterium, VeranstalterSuchanfrage } from '../veranstal
 })
 export class VeranstalterSucheComponent implements OnInit {
 
-	suchkriterien: VeranstalterSuchkriterium[] = ['EMAIL', 'NAME', 'TEILNAHMENUMMER', 'UUID'];
+	suchkriterien: VeranstalterSuchkriterium[] = ['EMAIL', 'NAME', 'TEILNAHMENUMMER', 'UUID', 'ZUGANGSSTATUS'];
 
 	model: VeranstalterSuchanfrage = {suchkriterium: 'EMAIL', suchstring: undefined};
 
@@ -20,7 +20,14 @@ export class VeranstalterSucheComponent implements OnInit {
 
 	onSubmit(): void {
 
-		this.veranstalterFacade.sucheVeranstalter(this.model);
+		if (this.model.suchkriterium === 'ZUGANGSSTATUS') {
+
+			this.veranstalterFacade.sucheVeranstalter({...this.model, suchstring: this.model.suchstring?.toUpperCase()});
+
+		} else {
+
+			this.veranstalterFacade.sucheVeranstalter(this.model);
+		}
 	}
 
 }

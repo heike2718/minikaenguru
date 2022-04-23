@@ -741,6 +741,20 @@ image::auftragsverarbeitung-vorhanden.png[width=50%]
 Fehlersituationen
 -----------------
 
+Nach dem Aufruf der Anwendung oder dem Einloggen wird ein früheres Wettbewerbsjahr angezeigt
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Ihr Browser speichert eine alte Version der Minikänguru- Anwendung und läd diese nicht neu aus dem Internet.
+
+*Was hilft in diesem Fall?*
+
+Bitte löschen Sie Ihren Browsercache.
+
+Eine Anleitung für den Firefox finden Sie hier: https://support.mozilla.org/de/kb/neueste-surf-such-und-download-chronik-loeschen#w_eine-einzelne-website-aus-ihrer-chronik-loschen[Leeren des Caches - Firefox].
+
+Eine Anleitung für Chrome finden Sie hier: https://browser-cache-leeren.de/de/windows/google-chrome.html[Leeren des Caches - Chrome].
+
+
 Hängenbleiben zwischen Login- Formular und Startseite
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

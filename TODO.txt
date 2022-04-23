@@ -5,9 +5,9 @@ fertig ist upload Klassenliste ohne Fehler, aber auch ohne Auswertung des Report
 
 => upload Klassenlisten: 
 
-- Auswertung des Reports
-- errorhandling vulnerable
-- errorhandling Import unvollständig
++ Auswertung des Reports
++ errorhandling vulnerable
++ errorhandling Import unvollständig
 
 
 04.07.2021
@@ -46,6 +46,6 @@ fertig ist upload Klassenliste ohne Fehler, aber auch ohne Auswertung des Report
 -----------------------------------------
 Testphase 1.7.0 - Fehler
 -----------------------------------------
-- Nach dem Erfassen des neuen Wettbewerbs wird in mkv-app - Schulübersicht / Privatübersicht der falsche aktuelle Wettbewerb angezeigt. Wird er gecacht?
++ Nach dem Erfassen des neuen Wettbewerbs wird in mkv-app - Schulübersicht / Privatübersicht der falsche aktuelle Wettbewerb angezeigt. Wird er gecacht?
 - Kalenderkomponente Urkunde: aktueller Tag ist nicht vorbelegt, sondern 31.12.
 

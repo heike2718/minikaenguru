@@ -32,6 +32,7 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.error.UploadFormatException;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderService;
@@ -107,14 +108,21 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 		String encoding = uploadMetadata.getEncoding();
 		List<String> lines = MkGatewayFileUtils.readLines(path, encoding);
 
-		if (lines.size() < 2) {
+		if (lines.isEmpty()) {
 
 			updateUploadstatusQuietly(uploadMetadata, UploadStatus.LEER);
 			String msg = applicationMessages.getString("klassenimport.dateiLeer");
-			return ResponsePayload.messageOnly(MessagePayload.warn(msg));
+			throw new UploadFormatException(msg);
 		}
 
 		KlassenlisteUeberschrift ueberschrift = new KlassenlisteUeberschrift(lines.get(0));
+
+		if (lines.size() == 1) {
+
+			updateUploadstatusQuietly(uploadMetadata, UploadStatus.LEER);
+			String msg = applicationMessages.getString("klassenimport.dateiLeer");
+			throw new UploadFormatException(msg);
+		}
 
 		StringKlassenimportZeileMapper zeilenMapper = new StringKlassenimportZeileMapper(ueberschrift);
 
@@ -133,6 +141,12 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 			.filter(z -> z.getFehlermeldung() != null).map(z -> z.getFehlermeldung()).collect(Collectors.toList());
 
 		long anzahlMitFehlern = nichtImportierteZeilen.size();
+
+		if (anzahlMitFehlern == klassenimportZeilen.size()) {
+
+			LOGGER.warn("Datei, bei der alle Zeilen fehlerhaft sind: ");
+			throw new UploadFormatException(applicationMessages.getString("upload.klassenliste.alleZeilenFehlerhaft"));
+		}
 
 		Identifier veranstalterID = new Identifier(uploadMetadata.getBenutzerUuid());
 		String schulkuerzel = uploadMetadata.getTeilnahmenummer();
@@ -201,7 +215,7 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 			return responsePayload;
 		} catch (PersistenceException e) {
 
-			// klassenimport.dateiLeer
+			// klassenimport.error
 			String msg = applicationMessages.getString("klassenimport.error");
 			LOGGER.error("{}: {}", msg, e.getMessage(), e);
 

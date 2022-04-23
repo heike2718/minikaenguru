@@ -1,4 +1,3 @@
-import * as moment_ from 'moment';
 import { Injectable, Inject } from '@angular/core';
 import { MkAuthConfigService, MkAuthConfig } from './configuration/mk-auth-config';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
@@ -11,7 +10,6 @@ import { AuthState } from './+state/auth.reducer';
 import { login, logout, refreshSession, startLoggingOut } from './+state/auth.actions';
 import { Router } from '@angular/router';
 import { user, isLoggedIn, isLoggedOut, onLoggingOut } from './+state/auth.selectors';
-const moment = moment_;
 
 @Injectable({
 	providedIn: 'root'
@@ -32,8 +30,8 @@ export class AuthService {
 		, private messagesService: MessageService
 		, private logger: LogService) {
 
-			this.sessionUrl = this.config.baseUrl + '/session';
-		}
+		this.sessionUrl = this.config.baseUrl + '/session';
+	}
 
 
 	public lehrerkontoAnlegen(schulkuerzel: string, newsletterAbo: boolean) {
@@ -223,13 +221,14 @@ export class AuthService {
 		this.logger.debug('check session');
 
 		// session expires at ist in Millisekunden seit 01.01.1970
-		const expiration = this.getExpirationAsMoment();
+		const expiration = localStorage.getItem(this.config.storagePrefix + STORAGE_KEY_SESSION_EXPIRES_AT);
 		if (expiration === null) {
 			return true;
 		}
-		const expired = moment().isAfter(expiration);
+		const nowMilliseconds = new Date().getMilliseconds();
+		const expiresAt: number = JSON.parse(expiration);
 
-		return expired;
+		return nowMilliseconds > expiresAt;
 	}
 
 
@@ -245,7 +244,7 @@ export class AuthService {
 		const user = localStorage.getItem(this.config.storagePrefix + STORAGE_KEY_USER);
 		if (expiration) {
 
-			const userObject = user ? JSON.parse(user): null;
+			const userObject = user ? JSON.parse(user) : null;
 
 			const session: Session = {
 				expiresAt: JSON.parse(expiration),
@@ -255,20 +254,6 @@ export class AuthService {
 
 			this.store.dispatch(refreshSession({ session: session }));
 		}
-	}
-
-	private getExpirationAsMoment() {
-
-		const expiration = localStorage.getItem(this.config.storagePrefix + STORAGE_KEY_SESSION_EXPIRES_AT);
-		if (!expiration || expiration === '0') {
-			console.log('no session present');
-			this.logger.debug('no session present');
-			return null;
-		}
-
-		console.log('session present');
-		const expiresAt = JSON.parse(expiration);
-		return moment(expiresAt);
 	}
 }
 

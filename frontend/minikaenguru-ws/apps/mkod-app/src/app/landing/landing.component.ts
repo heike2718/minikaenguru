@@ -1,7 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { LogService } from '@minikaenguru-ws/common-logging';
 import { VersionService } from 'libs/common-components/src/lib/version/version.service';
+import { STORAGE_KEY_GUI_VERSION} from '@minikaenguru-ws/common-auth';
 import { Subscription } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Component({
 	selector: 'mkod-landing',
@@ -10,20 +13,14 @@ import { Subscription } from 'rxjs';
 })
 export class LandingComponent implements OnInit, OnDestroy {
 
-	version = '';
 
-	private versionSubscription: Subscription = new Subscription();
-
-	constructor(private router: Router, private versionService: VersionService) { }
+	constructor(private router: Router, public versionService: VersionService, private logger: LogService) { }
 
 	ngOnInit(): void {
-		this.versionSubscription = this.versionService.ladeExpectedGuiVersion().subscribe(
-			v => this.version = v
-		);
+		this.versionService.ladeExpectedGuiVersion();
 	}
 
 	ngOnDestroy(): void {
-		this.versionSubscription.unsubscribe();
 	}
 
 	gotoWettbewerbe(): void {
@@ -33,5 +30,7 @@ export class LandingComponent implements OnInit, OnDestroy {
 	gotoAnmeldungen(): void {
 		this.router.navigateByUrl('/anmeldungen');
 	}
+
+	
 
 }

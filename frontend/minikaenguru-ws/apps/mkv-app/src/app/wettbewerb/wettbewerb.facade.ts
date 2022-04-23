@@ -27,7 +27,7 @@ export class WettbewerbFacade {
 		const w = localStorage.getItem(WETTBEWERB_STORAGE_KEY);
 		if (w) {
 			const wettbewerb: Wettbewerb = JSON.parse(w);
-			this.appStore.dispatch(WettbewerbActions.aktuellerWettbewerbGeladen({ wettbewerb: wettbewerb }))
+			this.appStore.dispatch(WettbewerbActions.aktuellerWettbewerbGeladen({ wettbewerb: wettbewerb }));
 
 		} else {
 

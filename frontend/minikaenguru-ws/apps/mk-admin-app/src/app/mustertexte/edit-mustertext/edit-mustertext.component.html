@@ -1,0 +1,78 @@
+<div class="mkv-container mt-1">
+	<h3>Mustertext anlegen oder ändern</h3>
+	<p *ngIf="devMode">edit-mustertext.component.ts</p>
+
+    <div *ngIf="editorInitialized">
+
+        <div class="col-12">
+
+            <form class="mb-4" [formGroup]="mustertextForm">
+
+                <div class="form-group mt-4">
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <label for="kategorieSelect">Kategorie*</label>
+                        </div>
+                    </div>
+    
+                    <div class="row">
+                        <div class="col-12">
+                            <select id="kategorieSelect" class="custom-select" formControlName="kategorie">
+                                <option [ngValue]="null" disabled>Bitte Kategorie wählen</option>
+                                <option *ngFor="let kg of kategorien" [ngValue]="kg">
+                                    {{ kg }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <mk-form-error path="email" text="Email"></mk-form-error>                
+                </div>
+
+                <div class="form-group mt-4">
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <label for="nameInput">Name*</label>
+                        </div>
+                    </div>
+    
+                    <div class="row">
+                        <div class="col-12">
+                            <input [class.error]="nameControl.touched && !nameControl.valid"
+                                class="form-control" type="text" id="nameInput" placeholder="Name"
+                                formControlName="name" autocomplete="true">
+                        </div>
+                    </div>
+                </div>               
+
+                <div class="form-group mt-4">
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <label for="textInput">Text*</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <textarea [class.error]="textControl.touched && !textControl.valid"
+                                class="form-control" rows="15" type="text" id="textInput" placeholder="Text"
+                                formControlName="text" autocomplete="true"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                
+
+            </form>
+
+        </div>
+
+        <div class="btn-group d-flex" role="group">
+			<button class="btn btn-primary w-100 ml-1" [disabled]="!mustertextForm.valid || saveInProgress"
+				(click)="onSubmit()"><i class="fa fa-floppy-o" aria-hidden="true"></i>
+				speichern</button>
+
+			<button class="btn btn-primary w-100 ml-1" (click)="onCancel()"><i class="fa fa-arrow-left"
+					aria-hidden="true"></i>zurück</button>
+		</div>
+
+    </div>
+</div>

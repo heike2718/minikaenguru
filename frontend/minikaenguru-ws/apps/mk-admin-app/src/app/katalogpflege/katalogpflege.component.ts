@@ -21,5 +21,4 @@ export class KatalogpflegeComponent {
 	selectSchulen(): void {
 		this.katalogFacade.selectKatalogpflegeTyp('SCHULE');
 	}
-
 }

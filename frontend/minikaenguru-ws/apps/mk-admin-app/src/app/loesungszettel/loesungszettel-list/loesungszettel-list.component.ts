@@ -20,7 +20,7 @@ export class LoesungszettelListComponent implements OnInit, OnDestroy {
 
   anzahl?: number;
 
-  private pageSize = 5;
+  private pageSize = 20;
 
   private anzahlSubscription: Subscription = new Subscription();
 
@@ -32,7 +32,7 @@ export class LoesungszettelListComponent implements OnInit, OnDestroy {
       anzahl => {
         this.anzahl = anzahl;
         this.logger.debug('init paginator with collectionSize=' + anzahl)
-        this.paginationComponentModel = {...initialPaginationComponentModel, collectionSize: anzahl}
+        this.paginationComponentModel = {...initialPaginationComponentModel, pageSize: this.pageSize, collectionSize: anzahl}
       }
     );
   }

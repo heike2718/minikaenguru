@@ -17,6 +17,7 @@ export class StatistikFacade {
     public statistikenLoading$: Observable<boolean> = this.store.select(StatistikSelectors.statistikLoading);
     public statistiken$: Observable<StatistikGruppeninfo[]> = this.store.select(StatistikSelectors.statistiken);
     public statistikKinder$: Observable<StatistikGruppeninfo | undefined> = this.store.select(StatistikSelectors.statistikKinder);
+    public statistikDownloads$: Observable<StatistikGruppeninfo | undefined> = this.store.select(StatistikSelectors.statistikDownloads);
     public statistikLoesungszettel$: Observable<StatistikGruppeninfo | undefined> = this.store.select(StatistikSelectors.statistikLoesungszettel);
 
     private statistikenMap: StatistikGruppeninfoWithID[] = [];

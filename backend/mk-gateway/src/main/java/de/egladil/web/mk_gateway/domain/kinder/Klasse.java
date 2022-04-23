@@ -97,27 +97,6 @@ public class Klasse {
 		return Collections.unmodifiableList(kinder);
 	}
 
-	/**
-	 * Prüft, ob es in dieser Klasse bereits ein Kind mit den gegebenen Attributen gibt.
-	 *
-	 * @param  kind
-	 *              Kind
-	 * @return      boolean beim ersten Treffer.
-	 */
-	public boolean kindKoennteDuplikatSein(final Kind kind) {
-
-		final KindDublettenpruefer dublettenpruefer = new KindDublettenpruefer();
-
-		for (Kind k : kinder) {
-
-			if (dublettenpruefer.apply(k, kind) == Boolean.TRUE) {
-
-				return true;
-			}
-		}
-		return false;
-	}
-
 	@Override
 	public int hashCode() {
 

@@ -2,8 +2,6 @@ import { createReducer, Action, on } from '@ngrx/store';
 import { SchuleWithID, Schule, mergeSchulenMap, findSchuleMitId, SchuleDetails, SchulenMap, compareSchulen } from './../schulen/schulen.model';
 import * as LehrerActions from './lehrer.actions';
 import { Schulteilnahme, Lehrer } from '../../wettbewerb/wettbewerb.model';
-import { lehrer } from './lehrer.selectors';
-import { state } from '@angular/animations';
 export const lehrerFeatureKey = 'mkv-app-lehrer';
 
 export interface AddSchuleState {
@@ -93,16 +91,32 @@ const lehrerReducer = createReducer(initalLehrerState,
 
 			if (alteDetails) {
 				const anzahlTeilnahmen = alteDetails.anzahlTeilnahmen + 1;
-				const neueDetails: SchuleDetails = { ...alteDetails, angemeldetDurch: action.angemeldetDurch, anzahlTeilnahmen: anzahlTeilnahmen };
-				const neueSchule: Schule = { ...alteSchule, aktuellAngemeldet: true, details: neueDetails };
+				const neueDetails: SchuleDetails = { ...alteDetails
+					, angemeldetDurch: action.angemeldetDurch
+					, anzahlTeilnahmen: anzahlTeilnahmen					
+				};
+				const neueSchule: Schule = { ...alteSchule, aktuellAngemeldet: true, details: neueDetails, auswertungsmodus: 'INDIFFERENT' };
 				const neueMap = mergeSchulenMap(state.schulen, neueSchule);
-				const neuerState = { ...state, schulen: neueMap, selectedSchule: neueSchule };
-				return neuerState;
+				return { ...state, schulen: neueMap, selectedSchule: neueSchule };
 			}			
 		}
 
 		return {...state};
 		
+	}),
+
+	on(LehrerActions.auswertungstabelleHochgeladen, (state, action) => {
+
+		const alteSchule = state.selectedSchule;
+
+		if (alteSchule) {
+
+			const neueSchule: Schule = {...alteSchule, auswertungsmodus: 'OFFLINE'};
+			const neueMap = mergeSchulenMap(state.schulen, neueSchule);
+			return { ...state, schulen: neueMap, selectedSchule: neueSchule };
+		}
+
+		return {...state};
 	}),
 
 	on(LehrerActions.restoreDetailsFromCache, (state, action) => {

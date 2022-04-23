@@ -8,9 +8,9 @@ describe('MedianComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MedianComponent ]
-    })
-    .compileComponents();
+      declarations: [MedianComponent],
+      teardown: { destroyAfterEach: false },
+    }).compileComponents();
   });
 
   beforeEach(() => {

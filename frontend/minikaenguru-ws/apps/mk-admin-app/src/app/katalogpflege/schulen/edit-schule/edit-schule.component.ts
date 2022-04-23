@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { KatalogpflegeFacade } from '../../katalogpflege.facade';
 import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
-import { initialSchulePayload, SchulePayload } from '../../katalogpflege.model';
+import { SchulePayload } from '../../katalogpflege.model';
 import { Subscription } from 'rxjs';
 import { initialSchuleEditorModel, SchuleEditorModel } from '../../+state/katalogpflege.reducer';
 import { emailValidator } from '@minikaenguru-ws/common-components';

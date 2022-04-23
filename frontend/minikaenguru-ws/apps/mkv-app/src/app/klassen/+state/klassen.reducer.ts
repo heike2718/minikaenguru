@@ -141,7 +141,18 @@ const klassenReducer = createReducer(initialKlassenState,
 
 		const klasse = action.klasse;
 
-		const neueMap = new KlassenMap(state.klassenMap).merge(action.klasse);
+		const map = new KlassenMap(state.klassenMap);
+
+		const cachedKlasse: Klasse | undefined =  map.get(klasse.uuid);
+		let mergedKlasse: Klasse;
+
+		if (cachedKlasse) {
+			mergedKlasse = {...cachedKlasse, name: klasse.name};
+		} else {
+			mergedKlasse = klasse;
+		}
+
+		const neueMap = new KlassenMap(state.klassenMap).merge(mergedKlasse);
 		
 		if (state.klasseUIModel) {
 			return {...state, klassenMap: neueMap, klasseUIModel: {...state.klasseUIModel, uuid: klasse.uuid, name: klasse.name, saved: true}};

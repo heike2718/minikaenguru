@@ -48,6 +48,33 @@ public class SchuleDetails {
 		this.kuerzel = kuerzel;
 	}
 
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(kuerzel);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+
+		if (this == obj) {
+
+			return true;
+		}
+
+		if (obj == null) {
+
+			return false;
+		}
+
+		if (getClass() != obj.getClass()) {
+
+			return false;
+		}
+		SchuleDetails other = (SchuleDetails) obj;
+		return Objects.equals(kuerzel, other.kuerzel);
+	}
+
 	public SchuleDetails withKollegen(final List<Kollege> kollegen) {
 
 		this.kollegen = StringUtils.join(kollegen.stream().map(p -> p.fullName()).collect(Collectors.toList()),
@@ -108,33 +135,6 @@ public class SchuleDetails {
 
 		this.nameUrkunde = nameUrkunde;
 		return this;
-	}
-
-	@Override
-	public int hashCode() {
-
-		return Objects.hash(kuerzel);
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-
-		if (this == obj) {
-
-			return true;
-		}
-
-		if (obj == null) {
-
-			return false;
-		}
-
-		if (getClass() != obj.getClass()) {
-
-			return false;
-		}
-		SchuleDetails other = (SchuleDetails) obj;
-		return Objects.equals(kuerzel, other.kuerzel);
 	}
 
 }

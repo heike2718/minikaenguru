@@ -5,12 +5,16 @@
 package de.egladil.web.mkv_server_tests.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.UploadsMonitoringViewItem;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UploadHibernateRepository;
@@ -72,6 +76,25 @@ public class UploadHibernateRepositoryIT extends AbstractIntegrationTest {
 		// Assert
 		assertEquals(2, uploads);
 
+	}
+
+	@Test
+	void should_countAuspraegungenForTeilnahmeByColumnNameWork() {
+
+		// Arrange
+		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmenummer("M5ZD2NL2");
+
+		// Act
+		List<Auspraegung> result = repository.countAuspraegungenForTeilnahmeByColumnName(teilnahmeIdentifier, "UPLOAD_TYPE");
+
+		// Assert
+		Optional<Auspraegung> optAuspraegung = result.stream().filter(a -> UploadType.AUSWERTUNG.toString().equals(a.getWert()))
+			.findFirst();
+		assertTrue(optAuspraegung.isEmpty());
+
+		optAuspraegung = result.stream().filter(a -> UploadType.KLASSENLISTE.toString().equals(a.getWert()))
+			.findFirst();
+		assertEquals(Long.valueOf(2), Long.valueOf(optAuspraegung.get().getAnzahl()));
 	}
 
 }

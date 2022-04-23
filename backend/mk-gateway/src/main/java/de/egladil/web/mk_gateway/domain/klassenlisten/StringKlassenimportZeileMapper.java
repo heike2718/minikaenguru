@@ -5,17 +5,18 @@
 package de.egladil.web.mk_gateway.domain.klassenlisten;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.function.Function;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import de.egladil.web.mk_gateway.domain.error.UploadFormatException;
 
 /**
  * StringKlassenimportZeileMapper
@@ -24,7 +25,7 @@ public class StringKlassenimportZeileMapper implements Function<Pair<Integer, St
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(StringKlassenimportZeileMapper.class);
 
-	private static final String FEHLERMESSAGE_PATTERN = "Zeile {0}: Fehler! \"{1}\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.";
+	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
 	private Map<KlassenlisteFeldart, Integer> feldartenIndizes = new HashMap<>();
 
@@ -32,21 +33,7 @@ public class StringKlassenimportZeileMapper implements Function<Pair<Integer, St
 
 		for (KlassenlisteFeldart feldart : KlassenlisteFeldart.values()) {
 
-			Optional<Integer> optIndex = klassenlisteUeberschrift.getIndexFeldart(feldart);
-
-			if (optIndex.isEmpty()) {
-
-				String message = "klassenlisteUeberschrift wurde nicht korrekt ermittelt: kein Mapping für KlassenlisteFeldart "
-					+ feldart
-					+ " moeglich";
-
-				LOGGER.warn(message);
-
-				throw new UploadFormatException(
-					"Die hochgeladene Datei kann nicht verarbeitet werden. Die erste Zeile enthält nicht die Felder \"Nachname\", \"Vorname\", \"Klasse\", \"Klassenstufe\".");
-			}
-
-			feldartenIndizes.put(feldart, optIndex.get());
+			feldartenIndizes.put(feldart, klassenlisteUeberschrift.getIndexFeldart(feldart).get());
 		}
 	}
 
@@ -66,12 +53,20 @@ public class StringKlassenimportZeileMapper implements Function<Pair<Integer, St
 
 		String[] tokens = StringUtils.split(semikolonseparierteZeileMitIndex.getRight(), ';');
 
+		if (Arrays.stream(tokens).filter(t -> StringUtils.isNotBlank(t)).count() == 0) {
+
+			return Optional.empty();
+		}
+
 		String fehlermeldung = null;
 
 		if (tokens.length != 4) {
 
-			fehlermeldung = MessageFormat.format(FEHLERMESSAGE_PATTERN,
-				new Object[] { semikolonseparierteZeileMitIndex.getLeft(), semikolonseparierteZeileMitIndex.getRight() });
+			fehlermeldung = tokens.length < 4
+				? MessageFormat.format(applicationMessages.getString("upload.klassenliste.zeile.zuWenigeAngaben"),
+					new Object[] { semikolonseparierteZeileMitIndex.getLeft(), semikolonseparierteZeileMitIndex.getRight() })
+				: MessageFormat.format(applicationMessages.getString("upload.klassenliste.zeile.zuVieleAngaben"),
+					new Object[] { semikolonseparierteZeileMitIndex.getLeft(), semikolonseparierteZeileMitIndex.getRight() });
 
 			KlassenimportZeile result = new KlassenimportZeile().withFehlermeldung(fehlermeldung)
 				.withIndex(semikolonseparierteZeileMitIndex.getLeft().intValue())

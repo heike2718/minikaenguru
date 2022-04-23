@@ -498,6 +498,20 @@ public class PermittedRolesInMemoryRepositoryTest {
 				assertTrue(rollen.contains(Rolle.LEHRER));
 			}
 		}
+
+		@Test
+		void should_permittedRollen_uploadsAuswertung_beOk() {
+
+			{
+
+				// Act
+				List<Rolle> rollen = repository.permittedRollen("/uploads/auswertung/2021/DE-HE/5RTG67F", HttpMethod.POST);
+
+				// Assert
+				assertEquals(1, rollen.size());
+				assertTrue(rollen.contains(Rolle.LEHRER));
+			}
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -878,6 +892,18 @@ public class PermittedRolesInMemoryRepositoryTest {
 		}
 
 		@Test
+		void should_permittedRollen_getStatistikDownloads_beOk() {
+
+			// Act
+			List<Rolle> rollen = repository.permittedRollen("/admin/statistik/downloads", HttpMethod.GET);
+
+			// Assert
+			assertEquals(1, rollen.size());
+			assertTrue(rollen.contains(Rolle.ADMIN));
+
+		}
+
+		@Test
 		void should_permittedRollen_getEventsFromDate_beOk() {
 
 			// Act
@@ -934,23 +960,12 @@ public class PermittedRolesInMemoryRepositoryTest {
 				assertTrue(rollen.contains(Rolle.ADMIN));
 			}
 
-			{
-
-				// Act
-				List<Rolle> rollen = repository.permittedRollen(path + "/mustertext/abddef-012345",
-					HttpMethod.POST);
-
-				// Assert
-				assertEquals(1, rollen.size());
-				assertTrue(rollen.contains(Rolle.ADMIN));
-			}
-
 		}
 
 		@Test
 		void should_permittedRollen_mustertexte_beOk() {
 
-			final String path = "/admin/mail/mustertexte";
+			final String path = "/admin/mustertexte";
 
 			{
 
@@ -975,7 +990,17 @@ public class PermittedRolesInMemoryRepositoryTest {
 			{
 
 				// Act
-				List<Rolle> rollen = repository.permittedRollen(path, HttpMethod.PUT);
+				List<Rolle> rollen = repository.permittedRollen(path + "/4353-37", HttpMethod.GET);
+
+				// Assert
+				assertEquals(1, rollen.size());
+				assertTrue(rollen.contains(Rolle.ADMIN));
+			}
+
+			{
+
+				// Act
+				List<Rolle> rollen = repository.permittedRollen(path + "/4353-37", HttpMethod.PUT);
 
 				// Assert
 				assertEquals(1, rollen.size());
@@ -991,18 +1016,22 @@ public class PermittedRolesInMemoryRepositoryTest {
 				assertEquals(1, rollen.size());
 				assertTrue(rollen.contains(Rolle.ADMIN));
 			}
+		}
+
+		@Test
+		void should_permittedRollen_veranstaltermails_beOk() {
+
+			final String path = "/admin/mails";
 
 			{
 
 				// Act
-				List<Rolle> rollen = repository.permittedRollen(path + "/newsletter/abddef-012345",
-					HttpMethod.POST);
+				List<Rolle> rollen = repository.permittedRollen(path, HttpMethod.POST);
 
 				// Assert
 				assertEquals(1, rollen.size());
 				assertTrue(rollen.contains(Rolle.ADMIN));
 			}
-
 		}
 
 		@Test

@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
 
 /**
@@ -109,4 +110,9 @@ public interface KinderRepository {
 	 * @return            List
 	 */
 	List<Auspraegung> countAuspraegungenByColumnName(String columnName);
+
+	/**
+	 * @param teilnahmeIdentifier
+	 */
+	long countKinderZuTeilnahme(TeilnahmeIdentifier teilnahmeIdentifier);
 }

@@ -68,7 +68,7 @@
 				<div class="m-12 mt-2 alert-info"><strong class="ml-2">anonymisierte Teilnahmen:</strong></div>
 
 				<div *ngFor="let teilnahme of schule.schulteilnahmen">
-					<mk-anonymisierte-teilnahme [teilnahme]="teilnahme" [statistikUrlPrefix]="statistikUrlPrefix" [showUploadButton]="teilnahme.anzahlLoesungszettelOnline===0" (uploadButtonClicked)="onUploadButtonClicked($event)"></mk-anonymisierte-teilnahme>
+					<mk-anonymisierte-teilnahme [teilnahme]="teilnahme" [statistikUrlPrefix]="statistikUrlPrefix" [showUploadButton]="showUploadButton(teilnahme)" (uploadButtonClicked)="onUploadButtonClicked($event)"></mk-anonymisierte-teilnahme>
 				</div>
 			</ng-container>
 		</ng-container>

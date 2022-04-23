@@ -8,12 +8,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.ws.rs.core.Response;
 
@@ -27,10 +29,15 @@ import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
+import de.egladil.web.mk_gateway.domain.statistik.AuswertungsmodusInfoService;
+import de.egladil.web.mk_gateway.domain.teilnahmen.AktuelleTeilnahmeService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.SchuleDetailsService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.SchulenOverviewService;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Schulteilnahme;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.Auswertungsmodus;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleDetails;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 
 /**
  * SchulenAnmeldeinfoServiceTest
@@ -45,15 +52,23 @@ public class SchulenAnmeldeinfoServiceTest {
 
 	private SchuleDetailsService schuleDetailsService;
 
+	private AuswertungsmodusInfoService auswertungsmodusInfoService;
+
+	private AktuelleTeilnahmeService aktuelleTeilnahmeService;
+
 	private SchulenAnmeldeinfoService service;
 
 	@BeforeEach
 	void setUp() {
 
+		auswertungsmodusInfoService = Mockito.mock(AuswertungsmodusInfoService.class);
+		aktuelleTeilnahmeService = Mockito.mock(AktuelleTeilnahmeService.class);
 		katalogeAdapter = Mockito.mock(MkKatalogeResourceAdapter.class);
 		schulenOverviewService = Mockito.mock(SchulenOverviewService.class);
 		schuleDetailsService = Mockito.mock(SchuleDetailsService.class);
-		service = SchulenAnmeldeinfoService.createForTest(katalogeAdapter, schulenOverviewService, schuleDetailsService);
+		service = SchulenAnmeldeinfoService.createForTest(katalogeAdapter, schulenOverviewService, schuleDetailsService,
+			auswertungsmodusInfoService,
+			aktuelleTeilnahmeService);
 	}
 
 	@Test
@@ -421,6 +436,12 @@ public class SchulenAnmeldeinfoServiceTest {
 
 		Mockito.when(katalogeAdapter.findSchulen("12345")).thenReturn(katalogeResponse);
 
+		Mockito.when(auswertungsmodusInfoService.ermittleAuswertungsmodusFuerTeilnahme(any()))
+			.thenReturn(Auswertungsmodus.INDIFFERENT);
+
+		Mockito.when(aktuelleTeilnahmeService.aktuelleTeilnahme("12345")).thenReturn(Optional.of(
+			new Schulteilnahme(new WettbewerbID(2020), new Identifier("12345"), "Irgendein Name", new Identifier(LEHRER_UUID))));
+
 		// Act
 		SchuleAPIModel schule = service.getSchuleWithWettbewerbsdetails("12345", LEHRER_UUID);
 
@@ -430,6 +451,7 @@ public class SchulenAnmeldeinfoServiceTest {
 		assertEquals("Schule 12345", schule.name());
 		assertEquals("Darmstadt", schule.ort());
 		assertEquals("Hessen", schule.land());
+		assertEquals(Auswertungsmodus.INDIFFERENT, schule.getAuswertungsmodus());
 
 		SchuleDetails details = schule.details();
 		assertEquals("John Doe", details.angemeldetDurch());
@@ -474,6 +496,8 @@ public class SchulenAnmeldeinfoServiceTest {
 			.thenReturn(Arrays.asList(new SchuleAPIModel[] { SchuleAPIModel.withKuerzel("12345").withAngemeldet(true) }));
 		Mockito.when(schuleDetailsService.ermittleSchuldetails(new Identifier("12345"), new Identifier(LEHRER_UUID)))
 			.thenReturn(schuleDetails);
+
+		Mockito.when(aktuelleTeilnahmeService.aktuelleTeilnahme("12345")).thenReturn(Optional.empty());
 
 		Map<String, Object> schuleKatalogeMap = new HashMap<>();
 

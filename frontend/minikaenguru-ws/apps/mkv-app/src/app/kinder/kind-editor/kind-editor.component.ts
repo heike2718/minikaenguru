@@ -7,14 +7,11 @@ import { LogService } from '@minikaenguru-ws/common-logging';
 import { MessageService } from '@minikaenguru-ws/common-messages';
 import {
 	KindEditorModel,
-	Klassenstufe,
-	Sprache,
 	ALL_KLASSENSTUFEN,
 	ALL_SPRACHEN,
 	getKlassenstufeByLabel,
 	Duplikatwarnung,
 	getSpracheByLabel,
-	TeilnahmeIdentifier,
 	TeilnahmeIdentifierAktuellerWettbewerb,
 	initialKindEditorModel,
 	modalOptions

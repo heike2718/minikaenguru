@@ -67,9 +67,9 @@ export class UploadKlassenlistenComponent implements OnInit, OnDestroy {
             , titel: ''
             // , accept: '.*'
             , accept: '.csv, .ods, .xls, .xlsx'
-            , maxSizeBytes: 2097152
+            , maxSizeBytes: 1048576
             // , maxSizeBytes: 61440
-            , errorMessageSize: 'Die Datei ist zu groß. Die maximale erlaubte Größe ist 2 MB'
+            , errorMessageSize: 'Die Datei ist zu groß. Die maximale erlaubte Größe ist 1 MB'
             , acceptMessage: 'Erlaubte Dateitypen: csv, Excel, OpenOffice, LibreOffice'
           };
         } else {

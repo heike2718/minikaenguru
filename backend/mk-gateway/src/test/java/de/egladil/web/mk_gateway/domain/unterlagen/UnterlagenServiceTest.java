@@ -269,7 +269,7 @@ public class UnterlagenServiceTest extends AbstractDomainServiceTest {
 
 			// Assert
 			assertNotNull(result);
-			assertEquals("2020-minikangaru-english-private.zip", result.filename());
+			assertEquals("2020-minikangaroo-english-private.zip", result.filename());
 			assertTrue(result.data().length > 10);
 		}
 	}

@@ -57,12 +57,10 @@ public interface TeilnahmenRepository {
 	 * @param  teilnahme
 	 *                               Schulteilnahme, muss eine Schulteilnahme sein es muss bereits eine gespeicherte Teilnahme
 	 *                               geben.
-	 * @param  uuidAenderer
-	 *                               String die UUID desjenigen, der die Schulteilnahme geändert hat.
 	 * @throws IllegalStateException
 	 *                               falls es noch keine Teilnahme gibt.
 	 */
-	void changeTeilnahme(Schulteilnahme teilnahme, String uuidAenderer) throws IllegalStateException;
+	void changeTeilnahme(Schulteilnahme teilnahme) throws IllegalStateException;
 
 	/**
 	 * Läd alle Teilnahmen eines gegebenen Wettbewerbsjahrs.

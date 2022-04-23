@@ -12,6 +12,10 @@
 
 	<div class="mkv-container mt-5 mb-5">
 
+		<div *ngIf="versionService.expectedVersion$ | async as version" class="col-md-12 mb-2 ml-0 pl-1">
+			Wenn Sie in der Fußleiste nicht die Version {{version}} sehen, leeren Sie bitte den Browser-Cache.
+		</div>
+
 		<div class="card-deck m-3">
 			<div class="card clickable" (click)="gotoAnmeldungen()">
 				<div class="card-body">
@@ -34,17 +38,5 @@
 
 		<div class="col-md-12 mb-2 ml-0 pl-1">
 			Momentan gibt es noch keinen automatisierten Abruf von Rohdaten. Wenn Sie diese benötigen, nehmen Sie bitte per Mail Kontakt mit mir auf.
-	</div>
-
-	<div class="mkv-container">
-		<div class="d-none d-md-block col-md-12 mb-2 ml-0 pl-1">
-			Aktuelle Version ist {{version}}. Bitte einmal die Seite komplett neu laden (Strg + F5), falls Sie in der Fußleiste
-			eine andere Version angezeigt bekommen.
-		</div>
-
-		<div class="d-md-none d-lg-none d-xl-none col-md-12 mb-3 ml-0 pl-1 mt-2">
-			Aktuelle Version ist {{version}}. Bitte einmal die Seite komplett neu laden (wisch nach unten), falls Sie in der Fußleiste
-			eine andere Version angezeigt bekommen.
-		</div>
 	</div>
 </div>

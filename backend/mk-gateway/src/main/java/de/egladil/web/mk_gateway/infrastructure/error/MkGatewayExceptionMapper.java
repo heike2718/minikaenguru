@@ -47,7 +47,7 @@ import de.egladil.web.mk_gateway.domain.error.UploadFormatException;
 import de.egladil.web.mk_gateway.infrastructure.rest.XmlSerializer;
 
 /**
- * MkvApiGatewayExceptionMapper.<br>
+ * MkGatewayExceptionMapper.<br>
  * <br>
  * <strong>Achtung: </strong> Die Serialisierung des ResponsePayloads muss man selbst vornehmen, da der Response als
  * Payload einen String ewartet. Wenn man ein
@@ -55,9 +55,9 @@ import de.egladil.web.mk_gateway.infrastructure.rest.XmlSerializer;
  * Client ein OK-Response an.
  */
 @Provider
-public class MkvApiGatewayExceptionMapper implements ExceptionMapper<Throwable> {
+public class MkGatewayExceptionMapper implements ExceptionMapper<Throwable> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(MkvApiGatewayExceptionMapper.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MkGatewayExceptionMapper.class);
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 

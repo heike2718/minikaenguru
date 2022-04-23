@@ -40,8 +40,7 @@ export class NavbarComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.logo = environment.assetsUrl + '/mja-logo.png';
-		this.wettbewerbFacade.ladeAktuellenWettbewerb();
+		this.logo = environment.assetsUrl + '/mja-logo.png';		
 	}
 
 	login() {
@@ -55,4 +54,9 @@ export class NavbarComponent implements OnInit {
 	gotProfilApp(): void {
 		this.logoutService.logoutForUserSettings();
 	}
+
+	reloadApplication(): void {
+		window.location.reload();
+	}
+
 }

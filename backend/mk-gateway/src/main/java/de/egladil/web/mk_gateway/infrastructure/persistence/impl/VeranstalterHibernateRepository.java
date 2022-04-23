@@ -29,6 +29,8 @@ import de.egladil.web.mk_gateway.domain.veranstalter.Person;
 import de.egladil.web.mk_gateway.domain.veranstalter.Privatveranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
+import de.egladil.web.mk_gateway.domain.veranstalter.ZugangUnterlagen;
+import de.egladil.web.mk_gateway.domain.veranstalter.admin.VeranstalterSuchkriterium;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.VeranstalterSuchanfrage;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterVeranstalter;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterVeranstalterVeranstalterMapper;
@@ -233,12 +235,33 @@ public class VeranstalterHibernateRepository implements VeranstalterRepository {
 			query = em.createNamedQuery(PersistenterVeranstalter.FIND_BY_PARTIAL_UUID_QUERY, PersistenterVeranstalter.class);
 			break;
 
+		case ZUGANGSSTATUS:
+			query = em.createNamedQuery(PersistenterVeranstalter.FIND_BY_ZUGANGSSTATUS_QUERY, PersistenterVeranstalter.class);
+			break;
+
 		default:
 			LOG.error("Unbekanntes Suchkriterium: geben leere Liste zurueck");
 			return new ArrayList<>();
 		}
 
-		String value = "%" + suchanfrage.getSuchstring().trim().toLowerCase() + "%";
+		Object value = null;
+
+		if (suchanfrage.getSuchkriterium() == VeranstalterSuchkriterium.ZUGANGSSTATUS) {
+
+			try {
+
+				value = ZugangUnterlagen.valueOf(suchanfrage.getSuchstring().toUpperCase());
+
+			} catch (IllegalArgumentException e) {
+
+				LOG.error(e.getMessage());
+
+				return new ArrayList<>();
+			}
+		} else {
+
+			value = "%" + suchanfrage.getSuchstring().trim().toLowerCase() + "%";
+		}
 
 		List<PersistenterVeranstalter> trefferliste = query.setParameter("suchstring", value).getResultList();
 

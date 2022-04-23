@@ -7,6 +7,7 @@ export type Duplikatkontext = 'KIND' | 'KLASSE';
 export type ZulaessigeEingabe = 'A' | 'B' | 'C' | 'D' | 'E' | 'N';
 export type ConcurrentModificationType = 'DETETED' | 'INSERTED' | 'UPDATED';
 export type WettbewerbStatus = 'ERFASST' | 'ANMELDUNG' | 'DOWNLOAD_PRIVAT' | 'DOWNLOAD_LEHRER' | 'BEENDET';
+export type Auswertungsmodus = 'INDIFFERENT' | 'OFFLINE' | 'ONLINE';
 
 export const modalOptions: NgbModalOptions = {
     backdrop:'static',
@@ -146,6 +147,7 @@ export const initialUploadComponentModel: UploadComponentModel = {
 
 export interface PaginationComponentModel {
 	readonly maxSize: number; // number: Anzahl numerierter Links - bestimmt die Breite des Paginators
+	readonly pageSize: number; // number: Anzahl items je page (default im ngb-pagination ist 10)
 	readonly collectionSize: number; // number: Gesamtzahl der Items
 	readonly ellipses: boolean; // boolean: bei true sind das 3 Punkte, hinter denen die Gesamtzahl der verfügbaren Seiten steht.
 	readonly boundaryLinks: boolean;  // boolean: mit diesen kann man ganz ans Ende oder ganz an den Anfang hopsen
@@ -154,6 +156,7 @@ export interface PaginationComponentModel {
 
 export const initialPaginationComponentModel: PaginationComponentModel = {
 	maxSize: 5,
+	pageSize: 10,
 	collectionSize: 100,
 	ellipses: true,
 	boundaryLinks: true,

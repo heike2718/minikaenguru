@@ -23,4 +23,11 @@ public interface SortNumberGenerator {
 	 */
 	long getNextSortnumberUploads();
 
+	/**
+	 * Erzeugt die nächste Sortnumber für DOWNLOADS.
+	 *
+	 * @return long
+	 */
+	long getNextSortnumberDownloads();
+
 }

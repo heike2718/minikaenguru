@@ -28,7 +28,9 @@ public class SortNumberGeneratorImpl implements SortNumberGenerator {
 
 	private AtomicLong lastSortnumberUploads;
 
-	public static SortNumberGeneratorImpl createForIntegrationTest(final EntityManager entityManager) {
+	private AtomicLong lastSortnumberDownloads;
+
+	public static SortNumberGeneratorImpl createForIntegrationTests(final EntityManager entityManager) {
 
 		SortNumberGeneratorImpl result = new SortNumberGeneratorImpl();
 		result.sortnumberRepository = SortnumberHibernateRepositoryImpl.createForIntegrationTests(entityManager);
@@ -61,5 +63,18 @@ public class SortNumberGeneratorImpl implements SortNumberGenerator {
 		}
 
 		return lastSortnumberUploads.incrementAndGet();
+	}
+
+	@Override
+	public synchronized long getNextSortnumberDownloads() {
+
+		if (lastSortnumberDownloads == null) {
+
+			long value = sortnumberRepository.getMaxSortnumber(SortedTable.DOWNLOADS);
+
+			lastSortnumberDownloads = new AtomicLong(value);
+		}
+
+		return lastSortnumberDownloads.incrementAndGet();
 	}
 }

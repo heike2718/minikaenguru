@@ -29,6 +29,12 @@ public interface KinderService {
 	 */
 	boolean pruefeDublette(KindRequestData daten, String veranstalterUuid);
 
+	/**
+	 * Gibt den Warntext für Mehrfacherfassung zurück.
+	 *
+	 * @param  kind
+	 * @return
+	 */
 	String getWarnungstext(KindEditorModel kind);
 
 	/**
@@ -65,7 +71,7 @@ public interface KinderService {
 	 * @param  veranstalterID
 	 * @param  schulkuerzel
 	 * @param  importDaten
-	 * @return                  List
+	 * @return                List
 	 */
 	List<Kind> importiereKinder(Identifier veranstalterID, String schulkuerzel, final List<KindImportVO> importDaten);
 

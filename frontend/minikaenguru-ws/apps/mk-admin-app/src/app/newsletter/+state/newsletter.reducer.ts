@@ -33,15 +33,27 @@ const newsletterReducer = createReducer(initialNewsletterState,
 		return { ...state, newslettersLoaded: true, loading: false, newsletterMap: newMap };
 	}),
 
+	on(NewsletterActions.backendCallFinishedWithError, (state, _action) => {
+
+		return { ...state, loading: false };
+
+	}),
+
 	on(NewsletterActions.createNewNewsletter, (state, _action) => {
 
 		return { ...state, newsletterEditorModel: initialNewsletterEditorModel };
 
 	}),
 
-	on(NewsletterActions.edidCanceled, (state, _action) => {
+	on(NewsletterActions.newsletterFromMustertextCreated, (state, action) => {
 
-		return {...state, newsletterEditorModel: undefined, loading: false };
+		return { ...state, newsletterEditorModel: action.newsletter };
+
+	}),
+
+	on(NewsletterActions.editCanceled, (state, _action) => {
+
+		return {...state, newsletterEditorModel: undefined, selectedNewsletter: undefined };
 
 	}),
 

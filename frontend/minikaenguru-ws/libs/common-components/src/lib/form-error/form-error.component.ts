@@ -54,6 +54,9 @@ export class FormErrorComponent implements OnInit {
 					case 'invalidLandDeutschland':
 						message = `Bitte geben Sie eins der 16 Bundesländer an.`;
 						break;
+					case 'invalidMustertextKategorie':
+						message = `UNDEFINED ist keine gültige Mustertextkategorie`;
+						break;
 				}
 
 				messages.push(message);

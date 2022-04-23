@@ -119,7 +119,7 @@ public class InMemoryTeilnahmenRepository implements TeilnahmenRepository {
 	}
 
 	@Override
-	public void changeTeilnahme(final Schulteilnahme teilnahme, final String uuidAenderer) throws IllegalStateException {
+	public void changeTeilnahme(final Schulteilnahme teilnahme) throws IllegalStateException {
 
 		teilnahmeChanged++;
 

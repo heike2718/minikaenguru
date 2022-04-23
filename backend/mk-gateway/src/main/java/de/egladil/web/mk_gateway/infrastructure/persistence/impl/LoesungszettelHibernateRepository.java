@@ -28,7 +28,6 @@ import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
-import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.LoesungszettelNonIdentifiingAttributesMapper;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterLoesungszettel;
@@ -53,7 +52,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 
 		LoesungszettelHibernateRepository result = new LoesungszettelHibernateRepository();
 		result.entityManager = em;
-		result.sortNumberGenerator = SortNumberGeneratorImpl.createForIntegrationTest(em);
+		result.sortNumberGenerator = SortNumberGeneratorImpl.createForIntegrationTests(em);
 		return result;
 	}
 
@@ -142,7 +141,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 	}
 
 	@Override
-	public List<Auspraegung> countAuspraegungenForWettbewerbByColumnName(final Wettbewerb wettbewerb, final String columnName) {
+	public List<Auspraegung> countAuspraegungenForWettbewerbByColumnName(final WettbewerbID wettbewerbID, final String columnName) {
 
 		List<Auspraegung> result = new ArrayList<>();
 
@@ -153,7 +152,36 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 
 		@SuppressWarnings("unchecked")
 		List<Object[]> trefferliste = entityManager.createNativeQuery(stmt)
-			.setParameter("wettbewerbUuid", wettbewerb.id().jahr().toString())
+			.setParameter("wettbewerbUuid", wettbewerbID.jahr().toString())
+			.getResultList();
+
+		for (Object[] treffer : trefferliste) {
+
+			String wert = treffer[0].toString();
+			BigInteger anzahl = (BigInteger) treffer[1];
+
+			result.add(new Auspraegung(wert, anzahl.longValue()));
+
+		}
+
+		return result;
+	}
+
+	@Override
+	public List<Auspraegung> countAuspraegungenForTeilnahmeByColumnName(final TeilnahmeIdentifier teilnahme, final String columnName) {
+
+		List<Auspraegung> result = new ArrayList<>();
+
+		String stmt = "select l." + columnName
+			+ ", count(*) from LOESUNGSZETTEL l where l.TEILNAHMENUMMER = :teilnahmenummer and l.WETTBEWERB_UUID = :wettbewerbUuid  group by l."
+			+ columnName;
+
+		// System.out.println(stmt);
+
+		@SuppressWarnings("unchecked")
+		List<Object[]> trefferliste = entityManager.createNativeQuery(stmt)
+			.setParameter("teilnahmenummer", teilnahme.teilnahmenummer())
+			.setParameter("wettbewerbUuid", teilnahme.wettbewerbID())
 			.getResultList();
 
 		for (Object[] treffer : trefferliste) {

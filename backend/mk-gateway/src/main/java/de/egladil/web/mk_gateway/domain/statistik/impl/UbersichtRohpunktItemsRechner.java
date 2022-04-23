@@ -21,7 +21,7 @@ public class UbersichtRohpunktItemsRechner {
 
 	/**
 	 * @param  loesungszettelKlassenstufe
-	 *                            List
+	 *                                    List
 	 * @return
 	 */
 	public List<RohpunktItem> berechneRohpunktItems(final List<Loesungszettel> loesungszettelKlassenstufe) {
@@ -54,7 +54,9 @@ public class UbersichtRohpunktItemsRechner {
 
 			Integer punkte = loesungszettel.punkte();
 
-			List<Loesungszettel> loesungszettelKlasse = result.getOrDefault(punkte, new ArrayList<>());
+			List<Loesungszettel> list = result.get(punkte);
+
+			List<Loesungszettel> loesungszettelKlasse = list == null ? new ArrayList<>() : list;
 			loesungszettelKlasse.add(loesungszettel);
 			result.put(punkte, loesungszettelKlasse);
 		}

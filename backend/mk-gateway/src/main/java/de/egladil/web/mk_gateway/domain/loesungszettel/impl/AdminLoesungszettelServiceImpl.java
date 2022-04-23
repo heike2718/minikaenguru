@@ -49,7 +49,7 @@ public class AdminLoesungszettelServiceImpl implements AdminLoesungszettelServic
 			Gruppenitem item = new Gruppenitem(auspraegungsart.name);
 
 			List<Auspraegung> auspraegungen = loesungszettelRepository
-				.countAuspraegungenForWettbewerbByColumnName(aktuellerWettbewerb, auspraegungsart.toString());
+				.countAuspraegungenForWettbewerbByColumnName(aktuellerWettbewerb.id(), auspraegungsart.toString());
 
 			item.setAuspraegungen(auspraegungen);
 			gruppeninfo.addItem(item);

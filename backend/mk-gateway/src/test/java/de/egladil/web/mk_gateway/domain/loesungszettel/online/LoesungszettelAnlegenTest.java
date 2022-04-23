@@ -13,7 +13,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +33,6 @@ import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.LoesungszettelpunkteAPIModel;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
-import de.egladil.web.mk_gateway.domain.error.ActionNotAuthorizedException;
 import de.egladil.web.mk_gateway.domain.error.ConcurrentModificationType;
 import de.egladil.web.mk_gateway.domain.error.EntityConcurrentlyModifiedException;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
@@ -43,9 +41,10 @@ import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelAPIModel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelZeileAPIModel;
-import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
+import de.egladil.web.mk_gateway.domain.statistik.AuswertungsmodusInfoService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.Auswertungsmodus;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 
 /**
@@ -70,6 +69,9 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 
 	@Mock
 	private WettbewerbService wettbewerbService;
+
+	@Mock
+	private AuswertungsmodusInfoService auswertungsmodusInfoService;
 
 	@InjectMocks
 	private OnlineLoesungszettelService service;
@@ -173,40 +175,40 @@ public class LoesungszettelAnlegenTest extends AbstractLoesungszettelServiceTest
 	void should_loesungszettelAnlegenThrowActionNotAuthorized_when_AuswertungHochgeladen() {
 
 		// Arrange
-		Kind kind = kindOhneIDs.withIdentifier(REQUEST_KIND_ID);
+		Kind kind = kindOhneIDs.withIdentifier(REQUEST_KIND_ID).withTeilnahmeIdentifier(teilnahmeIdentifierKind);
 		requestDaten = requestDaten.withUuid(NEU);
 
-		Loesungszettel loesungszettel = new Loesungszettel().withAuswertungsquelle(Auswertungsquelle.UPLOAD);
+		// Loesungszettel loesungszettel = new Loesungszettel().withAuswertungsquelle(Auswertungsquelle.UPLOAD);
 
 		when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(aktuellerWettbewerb));
 		when(kinderRepository.ofId(REQUEST_KIND_ID)).thenReturn(Optional.of(kind));
 		when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any())).thenReturn(Rolle.LEHRER);
-		when(loesungszettelRepository.loadAll(any())).thenReturn(Collections.singletonList(loesungszettel));
+		// when(loesungszettelRepository.loadAll(any())).thenReturn(Collections.singletonList(loesungszettel));
 
-		// Act
-		try {
+		when(auswertungsmodusInfoService.ermittleAuswertungsmodusFuerTeilnahme(teilnahmeIdentifier))
+			.thenReturn(Auswertungsmodus.OFFLINE);
 
-			service.loesungszettelAnlegen(requestDaten, VERANSTALTER_ID);
-			fail("keine ActionNotAuthorizedException");
-		} catch (ActionNotAuthorizedException e) {
+		ResponsePayload responsePayload = service.loesungszettelAnlegen(requestDaten, VERANSTALTER_ID);
 
-			assertEquals("Der Lösungszettel konnte leider nicht gespeichert werden, da bereits Auswertungen hochgeladen wurden.",
-				e.getMessage());
+		MessagePayload messagePayload = responsePayload.getMessage();
 
-			verify(wettbewerbService, times(1)).aktuellerWettbewerb();
-			verify(loesungszettelRepository, times(0)).ofID(any());
-			verify(kinderRepository, times(1)).ofId(any());
-			verify(authService, times(1)).checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any());
+		assertEquals("Der Lösungszettel konnte leider nicht gespeichert werden, da bereits Auswertungen hochgeladen wurden.",
+			messagePayload.getMessage());
+		assertEquals("WARN", messagePayload.getLevel());
 
-			verify(loesungszettelRepository, times(0)).addLoesungszettel(any());
-			verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
-			verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
-			verify(kinderRepository, times(0)).changeKind(any());
+		verify(wettbewerbService, times(1)).aktuellerWettbewerb();
+		verify(loesungszettelRepository, times(0)).ofID(any());
+		verify(kinderRepository, times(1)).ofId(any());
+		verify(authService, times(1)).checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any());
 
-			assertNull(service.getLoesungszettelCreated());
-			assertNull(service.getLoesungszettelChanged());
-			assertNull(service.getLoesungszettelDeleted());
-		}
+		verify(loesungszettelRepository, times(0)).addLoesungszettel(any());
+		verify(loesungszettelRepository, times(0)).updateLoesungszettel(any());
+		verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
+		verify(kinderRepository, times(0)).changeKind(any());
+
+		assertNull(service.getLoesungszettelCreated());
+		assertNull(service.getLoesungszettelChanged());
+		assertNull(service.getLoesungszettelDeleted());
 
 	}
 

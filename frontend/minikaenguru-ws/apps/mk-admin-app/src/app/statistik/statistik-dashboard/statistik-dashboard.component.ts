@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { StatistikFacade } from '../statistik.facade';
-import { StatistikEntity, StatistikGruppeninfo } from '../statistik.model';
+import { StatistikEntity } from '../statistik.model';
 
 @Component({
   selector: 'mka-statistik-dashboard',

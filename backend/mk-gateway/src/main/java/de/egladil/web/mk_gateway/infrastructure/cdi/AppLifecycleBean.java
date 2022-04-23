@@ -23,6 +23,8 @@ import io.quarkus.runtime.StartupEvent;
 @ApplicationScoped
 public class AppLifecycleBean {
 
+	private static final String NAME_DOWNLOAD_DIR = "unterlagen";
+
 	private static final String NAME_UPLOAD_DIR = "upload";
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AppLifecycleBean.class);
@@ -32,8 +34,29 @@ public class AppLifecycleBean {
 
 	void onStartup(@Observes final StartupEvent ev) {
 
+		LOGGER.info(" ===========>  the download dir is {}", getPathDownloadDir());
 		LOGGER.info(" ===========>  the upload dir is {}", getPathUploadDir());
 
+	}
+
+	private String getPathDownloadDir() {
+
+		String result = pathExternalFiles + File.separator + NAME_DOWNLOAD_DIR;
+
+		File uploadDir = new File(result);
+
+		if (!uploadDir.exists()) {
+
+			try {
+
+				FileUtils.forceMkdir(uploadDir);
+			} catch (IOException e) {
+
+				LOGGER.error("Verzeichnis {} konnte nicht ereugt werden: {}", e.getMessage());
+			}
+		}
+
+		return result;
 	}
 
 	private String getPathUploadDir() {

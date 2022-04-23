@@ -14,12 +14,14 @@ import javax.ws.rs.NotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindRequestData;
 import de.egladil.web.mk_gateway.domain.loesungszettel.online.OnlineLoesungszettelService;
+import de.egladil.web.mk_gateway.domain.statistik.AuswertungsmodusInfoService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 
@@ -41,7 +43,8 @@ public class KinderServiceTest extends AbstractDomainServiceTest {
 		OnlineLoesungszettelService loesungszettelService = OnlineLoesungszettelService.createForTest(authService,
 			getWettbewerbService(),
 			getKinderRepository(),
-			getLoesungszettelRepository());
+			getLoesungszettelRepository(),
+			Mockito.mock(AuswertungsmodusInfoService.class));
 
 		service = KinderServiceImpl.createForTest(authService, getKinderRepository(), getTeilnahmenRepository(),
 			getVeranstalterRepository(), getWettbewerbService(), loesungszettelService, getKlassenRepository());

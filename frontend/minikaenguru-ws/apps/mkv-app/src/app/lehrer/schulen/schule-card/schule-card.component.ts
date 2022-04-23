@@ -21,6 +21,9 @@ export class SchuleCardComponent implements OnInit, OnDestroy {
 
 	wettbewerb$ = this.wettbewerbFacade.aktuellerWettbewerb$;
 
+    showBtnOnlineauswertung = false;
+	showBtnUploadAuswertung = false;
+
 	private user!: User | null;
 
 	private userSubscription: Subscription = new Subscription();
@@ -35,6 +38,9 @@ export class SchuleCardComponent implements OnInit, OnDestroy {
 		this.userSubscription = this.authService.user$.subscribe(
 			u => this.user = u
 		);
+
+		this.showBtnOnlineauswertung = this.schule.aktuellAngemeldet && this.schule.auswertungsmodus !== 'OFFLINE';
+		this.showBtnUploadAuswertung = this.schule.aktuellAngemeldet && this.schule.auswertungsmodus !== 'ONLINE';
 	}
 
 	ngOnDestroy(): void {
@@ -59,6 +65,11 @@ export class SchuleCardComponent implements OnInit, OnDestroy {
 	gotoAuswertung(): void {
 		this.lehrerFacade.selectSchule(this.schule);
 		this.router.navigateByUrl('/klassen/' + this.schule.kuerzel);
+	}
+
+	gotoUploadAuswertung(): void {
+		this.lehrerFacade.selectSchule(this.schule);
+		this.router.navigateByUrl('lehrer/upload-auswertung');
 	}
 
 	vonSchuleAbmelden(): void {

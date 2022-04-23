@@ -50,6 +50,9 @@ public class SchuleAPIModel {
 	private boolean aktuellAngemeldet;
 
 	@JsonProperty
+	private Auswertungsmodus auswertungsmodus;
+
+	@JsonProperty
 	private SchuleDetails details;
 
 	SchuleAPIModel() {
@@ -215,6 +218,17 @@ public class SchuleAPIModel {
 	public SchuleAPIModel withLand(final String land) {
 
 		this.land = land;
+		return this;
+	}
+
+	public Auswertungsmodus getAuswertungsmodus() {
+
+		return auswertungsmodus;
+	}
+
+	public SchuleAPIModel withAuswertungsmodus(final Auswertungsmodus auswertungsmodus) {
+
+		this.auswertungsmodus = auswertungsmodus;
 		return this;
 	}
 }

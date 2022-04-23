@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { LogService } from '@minikaenguru-ws/common-logging';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ResponsePayload, Message } from '@minikaenguru-ws/common-messages';
@@ -13,10 +12,7 @@ import { Newsletter, NewsletterVersandauftrag, Versandinfo } from './newsletter.
 export class NewsletterService {
 
 
-	constructor(private http: HttpClient,
-		private logger: LogService) { }
-
-
+	constructor(private http: HttpClient) { }
 
 	public loadNewsletters(): Observable<Newsletter[]> {
 

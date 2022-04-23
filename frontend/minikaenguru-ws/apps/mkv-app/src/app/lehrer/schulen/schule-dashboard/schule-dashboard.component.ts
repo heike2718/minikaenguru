@@ -162,9 +162,8 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 		this.router.navigateByUrl('/klassen/' + this.schule.kuerzel);
 	}
 
-	gotoKlassenlisteHochladen(): void {
-		// TODO
-		this.textFeatureFlagAnzeigen = true;
+	gotoUploadAuswertung(): void {
+		this.router.navigateByUrl('lehrer/upload-auswertung');
 	}
 
 	backToSchulen(): void {

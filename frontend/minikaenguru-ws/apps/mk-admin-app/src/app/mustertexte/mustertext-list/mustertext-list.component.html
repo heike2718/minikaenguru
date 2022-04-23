@@ -1,0 +1,47 @@
+<div class="mkv-container mt-1">
+    <h3>Mustertexte  <span *ngIf="(mustertextFacade.mustertexte$ | async) as mustertexte"
+        class="badge badge-secondary">{{mustertexte.length}}</span></h3>
+    <p *ngIf="devMode">(mustertexte-list.component)</p>
+
+	<div *ngIf="mustertextFacade.mustertexteLoaded$ | async" class="form-group">
+		<label for="filterKriterium">Filtern nach Kategorie:</label>
+		<select class="form-control" (change)="filterKriteriumChanged()" id="filterKriterium" required [(ngModel)]="filterKriterium"
+			name="filterKriterium" #suchkriterium="ngModel">
+			<option *ngFor="let krit of filter" [value]="krit">{{krit}}</option>
+		</select>
+	</div>
+
+    <ng-container *ngIf="(mustertextFacade.mustertexte$ | async ) as mustertexte else loading">
+		<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let mustertext of mustertexte">
+			<mka-mustertext-card [mustertext]="mustertext"></mka-mustertext-card>
+		</div>
+	</ng-container>
+
+    <div class="d-none d-md-block">
+		<div class="btn-group d-flex" role="group">
+
+			<button class="btn btn-primary w-100 ml-1" [disabled]="mustertextFacade.mustertexteLoaded$ | async" (click)="loadMustertexte()"><i class="fa fa-download"
+					aria-hidden="true"></i>laden</button>
+	
+			<button class="btn btn-primary w-100 ml-1" [disabled]="!(mustertextFacade.mustertexteLoaded$ | async)" (click)="addMustertext()"><i class="fa fa-plus"
+					aria-hidden="true"></i>neuer
+				Mustertext</button>
+	
+			<button class="btn btn-primary w-100 ml-1" (click)="gotoDashboard()"><i class="fa fa-arrow-left"
+					aria-hidden="true"></i>Dashboard</button>
+		</div>	
+	</div>
+	
+	<div class="row d-md-none d-lg-none d-xl-none mt-3 mr-3">
+		<div class="btn-group d-inline" role="group">
+			<button class="btn btn-secondary w-100 m-3" [disabled]="mustertextFacade.mustertexteLoaded$ | async" (click)="loadMustertexte()"><i class="fa fa-download" aria-hidden="true"></i> laden</button>
+			<button class="btn btn-secondary w-100 m-3" [disabled]="!(mustertextFacade.mustertexteLoaded$ | async)" (click)="addMustertext()"><i class="fa fa-plus" aria-hidden="true"></i> neuer Mustertext</button>
+			<button class="btn btn-secondary w-100 m-3" (click)="gotoDashboard()"><i class="fa fa-arrow-left" aria-hidden="true"></i> Dashboard</button>
+		</div>
+	</div>
+
+</div>
+
+<ng-template #loading>
+	Lade Mustertexte... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
+</ng-template>

@@ -8,6 +8,7 @@ export interface StatistikState {
     readonly loading: boolean;
     readonly statistiken: StatistikGruppeninfoWithID[];
     readonly statistikKinder: StatistikGruppeninfo | undefined;
+    readonly statistikDownloads: StatistikGruppeninfo | undefined;
     readonly statistikLoesungszettel: StatistikGruppeninfo | undefined;    
 };
 
@@ -15,6 +16,7 @@ const initialStatistikState: StatistikState = {
     loading: false,
     statistiken: [],
     statistikKinder: undefined,
+    statistikDownloads: undefined,
     statistikLoesungszettel: undefined
 };
 
@@ -39,6 +41,7 @@ const statistikReducer = createReducer(initialStatistikState,
 
         switch(action.entity) {
             case 'KINDER': return {...state, statistikKinder: action.statistik};
+            case 'DOWNLOADS': return {...state, statistikDownloads: action.statistik};
             case 'LOESUNGSZETTEL' : return {...state, statistikLoesungszettel: action.statistik};
             default: return {...state};
         }
@@ -48,6 +51,7 @@ const statistikReducer = createReducer(initialStatistikState,
 
         switch(action.entity) {
             case 'KINDER': return {...state, statistikKinder: undefined};
+            case 'DOWNLOADS': return {...state, statistikDownloads: undefined};
             case 'LOESUNGSZETTEL' : return {...state, statistikLoesungszettel: undefined};
             default: return {...state};
         }

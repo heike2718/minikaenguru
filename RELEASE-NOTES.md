@@ -1,5 +1,43 @@
 # minikaenguru Release Notes
 
+__Release 1.8.2.1__:
+
+* [Upload Lösungszettel wandelt unerlaubte Einträge nicht in n um](https://github.com/heike2718/minikaenguru/issues/389)
+
+__Release 1.8.2__:
+
+* [Mail aus Mustertext erzeugen ist kaputtgegangen](https://github.com/heike2718/minikaenguru/issues/387)
+* [Neue Schule in Kalatlog eintragen ist kaputt :(](https://github.com/heike2718/minikaenguru/issues/386)
+* [Mustertexte anlegen, ändern und löschen](https://github.com/heike2718/minikaenguru/issues/206)
+* [Mustertext auswählen und daraus Newsletter erzeugen](https://github.com/heike2718/minikaenguru/issues/207)
+* [Pagination funktioniert nicht: es werden nicht für alle Einträge Seiten erstellt](https://github.com/heike2718/minikaenguru/issues/371)
+* [Admin - Veranstalterdetails: Abstand zwischen Aktions- und Navigationsbuttons vergrößern](https://github.com/heike2718/minikaenguru/issues/379)
+* [Mustertext auswählen und daraus Mail an Veranstalter erzeugen und versenden](https://github.com/heike2718/minikaenguru/issues/380)
+* [Klasse wird nach Umbenennen nicht vollständiggeladen](https://github.com/heike2718/minikaenguru/issues/381)
+
+__Release 1.8.0__:
+
+* [Hinweis auf Browser-Cache auf der Landing-Page und Dokumentation](https://github.com/heike2718/minikaenguru/issues/377)
+* [Upload Auswertung als Lehrer](https://github.com/heike2718/minikaenguru/issues/310)
+
+
+__Release 1.7.3.1__:
+
+* [Änderung eines Schulnamens propagieren zu Teilnahme](https://github.com/heike2718/minikaenguru/issues/217)
+* [Zähler für Download Unterlagen beim Veranstalter im aktuellen Wettbewerb]{https://github.com/heike2718/minikaenguru/issues/272}
+* [Suche nach Veranstaltern mit Zugangsstatus](https://github.com/heike2718/minikaenguru/issues/357)
+
+__Release 1.7.3__:
+
+* [Fehlerresistentere Spaltenüberschriften](https://github.com/heike2718/minikaenguru/issues/374)
+* [Import Klassenlisten: Leerzeilen werden ignoriert](https://github.com/heike2718/minikaenguru/issues/376)
+
+
+__Release 1.7.2__:
+
+* [Validierung Upload size im Frontend fixed](https://github.com/heike2718/minikaenguru/issues/375)
+* page reload wenn neue guiversion
+
 __Release 1.7.1.2__:
 
 * [Schnellstatistik Kinder in Admin-Anwendung](https://github.com/heike2718/minikaenguru/issues/368)

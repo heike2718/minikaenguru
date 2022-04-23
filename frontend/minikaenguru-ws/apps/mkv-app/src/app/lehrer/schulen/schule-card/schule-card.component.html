@@ -14,7 +14,9 @@
 				</div>
 				<div class="card-subtitle mb-2 text-muted">{{schule.ort}}</div>
 				<div class="card-subtitle mb-2 text-muted">
-					{{schule.land}}</div>
+					{{schule.land}}
+				</div>
+				<div *ngIf="devMode" class="small">Auswertungsmodus: {{schule.auswertungsmodus}}</div>
 
 				<div class="d-none d-md-block">
 					<div class="btn-group d-flex" role="group">
@@ -28,11 +30,16 @@
 								class="fa fa-building-o" aria-hidden="true"></i>
 							Schulübersicht</button>
 
-						<button *ngIf="schule.aktuellAngemeldet" class="btn btn-outline-dark w-100 ml-1"
+						<button *ngIf="showBtnOnlineauswertung" class="btn btn-outline-dark w-100 ml-1"
 							(click)="gotoAuswertung()" title="Kinder erfassen und Urkunden generieren"><i
 								class="fa fa-pencil-square-o" aria-hidden="true"></i>
 							Auswertung <span *ngIf="wettbewerb$ | async as wettbewerb">
 								{{wettbewerb.jahr}}</span></button>
+
+						<button *ngIf="showBtnUploadAuswertung" class="btn btn-outline-dark w-100 ml-1"
+								(click)="gotoUploadAuswertung()" title="anonyme Excel-Auswertungstabelle für die Statistik hochladen"><i
+									class="fa fa-pencil-square-o" aria-hidden="true"></i>
+									Auswertungstabelle hochladen</button>
 
 						<button *ngIf="!schule.aktuellAngemeldet" class="btn btn-outline-dark w-100 ml-1"
 							(click)="vonSchuleAbmelden()" title="als Lehrerin/Lehrer von dieser Schule abmelden"><i
@@ -53,11 +60,16 @@
 								class="fa fa-building-o" aria-hidden="true"></i>
 							Schulübersicht</button>
 
-						<button *ngIf="schule.aktuellAngemeldet" class="btn btn-outline-dark w-100 ml-1"
+						<button *ngIf="showBtnOnlineauswertung" class="btn btn-outline-dark w-100 ml-1"
 							(click)="gotoAuswertung()" title="Kinder erfassen und Urkunden generieren"><i
 								class="fa fa-pencil-square-o" aria-hidden="true"></i>
 							Auswertung <span *ngIf="wettbewerb$ | async as wettbewerb">
 								{{wettbewerb.jahr}}</span></button>
+
+						<button *ngIf="showBtnUploadAuswertung" class="btn btn-outline-dark w-100 ml-1"
+								(click)="gotoUploadAuswertung()" title="anonyme Excel-Auswertungstabelle für die Statistik hochladen"><i
+									class="fa fa-pencil-square-o" aria-hidden="true"></i>
+									Auswertungstabelle hochladen</button>
 
 						<button *ngIf="!schule.aktuellAngemeldet" class="btn btn-outline-dark w-100 ml-1"
 							(click)="vonSchuleAbmelden()" title="als Lehrerin/Lehrer von dieser Schule abmelden"><i

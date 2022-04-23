@@ -81,15 +81,25 @@ public class TeilnahmeurkundeHauptabschnittRendererDeutsch implements UrkundeHau
 		deltaY += UrkundePDFUtils.POINTS_BETWEEN_PARAGRAPHS;
 
 		fontSize = UrkundePDFUtils.SIZE_TEXT_NORMAL;
-		text = MessageFormat.format(MF_PATTERN_PUNKTE, new Object[] { datenUrkunde.punktvalue() });
 
-		deltaY = fontCalculator.berechneDeltaY(text, deltaY, fontSize);
-		UrkundeLinePrinter.printTextCenter(content, text, UrkundePDFUtils.getFontBlack(fontSize), deltaY);
+		if (!datenUrkunde.isZeroPoints()) {
 
-		deltaY += UrkundePDFUtils.POINTS_BETWEEN_ROWS;
-		text = "erreicht.";
-		UrkundeLinePrinter.printTextCenter(content, text, UrkundePDFUtils.getFontBlack(UrkundePDFUtils.SIZE_TEXT_NORMAL),
-			deltaY);
+			text = MessageFormat.format(MF_PATTERN_PUNKTE, new Object[] { datenUrkunde.punktvalue() });
+
+			deltaY = fontCalculator.berechneDeltaY(text, deltaY, fontSize);
+			UrkundeLinePrinter.printTextCenter(content, text, UrkundePDFUtils.getFontBlack(fontSize), deltaY);
+
+			deltaY += UrkundePDFUtils.POINTS_BETWEEN_ROWS;
+			text = "erreicht.";
+			UrkundeLinePrinter.printTextCenter(content, text, UrkundePDFUtils.getFontBlack(UrkundePDFUtils.SIZE_TEXT_NORMAL),
+				deltaY);
+		} else {
+
+			deltaY += UrkundePDFUtils.POINTS_BETWEEN_ROWS;
+			text = "teilgenommen.";
+			UrkundeLinePrinter.printTextCenter(content, text, UrkundePDFUtils.getFontBlack(UrkundePDFUtils.SIZE_TEXT_NORMAL),
+				deltaY);
+		}
 
 		return deltaY;
 	}

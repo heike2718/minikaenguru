@@ -29,7 +29,6 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.LoesungszettelpunkteAPIModel;
-import de.egladil.web.mk_gateway.domain.error.ActionNotAuthorizedException;
 import de.egladil.web.mk_gateway.domain.error.ConcurrentModificationType;
 import de.egladil.web.mk_gateway.domain.error.EntityConcurrentlyModifiedException;
 import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
@@ -45,8 +44,11 @@ import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRohdaten;
 import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelAPIModel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelZeileAPIModel;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
+import de.egladil.web.mk_gateway.domain.statistik.AuswertungsmodusInfoService;
+import de.egladil.web.mk_gateway.domain.statistik.impl.AuswertungsmodusInfoServiceImpl;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.Auswertungsmodus;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
@@ -79,6 +81,9 @@ public class OnlineLoesungszettelService {
 	@Inject
 	WettbewerbService wettbewerbService;
 
+	@Inject
+	AuswertungsmodusInfoService auswertungsmodusInfoService;
+
 	private LoesungszettelCreated loesungszettelCreated;
 
 	private LoesungszettelChanged loesungszettelChanged;
@@ -93,18 +98,20 @@ public class OnlineLoesungszettelService {
 		result.authService = AuthorizationService.createForIntegrationTest(entityManager);
 		result.wettbewerbService = WettbewerbService.createForIntegrationTest(entityManager);
 		result.domainEventHandler = DomainEventHandler.createForIntegrationTest(entityManager);
+		result.auswertungsmodusInfoService = AuswertungsmodusInfoServiceImpl.createForIntegrationTests(entityManager);
 		return result;
 
 	}
 
 	@Deprecated
-	public static OnlineLoesungszettelService createForTest(final AuthorizationService authService, final WettbewerbService wettbewerbService, final KinderRepository kinderRepository, final LoesungszettelRepository loesungszettelRepository) {
+	public static OnlineLoesungszettelService createForTest(final AuthorizationService authService, final WettbewerbService wettbewerbService, final KinderRepository kinderRepository, final LoesungszettelRepository loesungszettelRepository, final AuswertungsmodusInfoService auswertungsmodusInfoService) {
 
 		OnlineLoesungszettelService result = new OnlineLoesungszettelService();
 		result.authService = authService;
 		result.wettbewerbService = wettbewerbService;
 		result.kinderRepository = kinderRepository;
 		result.loesungszettelRepository = loesungszettelRepository;
+		result.auswertungsmodusInfoService = auswertungsmodusInfoService;
 		return result;
 	}
 
@@ -403,16 +410,17 @@ public class OnlineLoesungszettelService {
 			new Identifier(teilnahmeIdentifier.teilnahmenummer()),
 			"[loesungszettelAnlegen - kindID=" + kindID + "]");
 
-		List<Loesungszettel> vorhandeneLoesungszettel = loesungszettelRepository.loadAll(teilnahmeIdentifier);
+		Auswertungsmodus auswertungsmodus = auswertungsmodusInfoService
+			.ermittleAuswertungsmodusFuerTeilnahme(teilnahmeIdentifier);
 
-		Optional<Loesungszettel> optUploaded = vorhandeneLoesungszettel.stream()
-			.filter(l -> l.auswertungsquelle() == Auswertungsquelle.UPLOAD).findFirst();
+		if (auswertungsmodus == Auswertungsmodus.OFFLINE) {
 
-		if (optUploaded.isPresent()) {
-
-			LOG.warn("Zuu Teilnahme {} gibt es bereits hochgeladene Auswertungen. Veranstalter={}", teilnahmeIdentifier,
+			LOG.warn("Zu Teilnahme {} gibt es bereits hochgeladene Auswertungen. Veranstalter={}", teilnahmeIdentifier,
 				veranstalterID);
-			throw new ActionNotAuthorizedException(applicationMessages.getString("loesungszettel.add.nurUpload"));
+
+			MessagePayload messagePayload = MessagePayload.warn(applicationMessages.getString("loesungszettel.add.nurUpload"));
+			ResponsePayload responsePayload = new ResponsePayload(messagePayload, loesungszetteldaten);
+			return responsePayload;
 		}
 
 		Loesungszettel loesungszettel = null;

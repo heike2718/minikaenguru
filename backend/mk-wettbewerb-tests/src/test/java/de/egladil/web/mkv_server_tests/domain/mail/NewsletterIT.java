@@ -103,7 +103,7 @@ public class NewsletterIT extends AbstractIntegrationTest {
 		String text = "Das ist der erste Entwurf. Aber der Text wurde überarbeitet";
 
 		List<Newsletter> allNewsletters = newsletterRepository.loadAll();
-		assertEquals(1, allNewsletters.size());
+		assertEquals(3, allNewsletters.size());
 
 		Newsletter theNewsletter = allNewsletters.get(0);
 
@@ -140,7 +140,7 @@ public class NewsletterIT extends AbstractIntegrationTest {
 		int anzahlEmpfaenger = 81;
 
 		List<Newsletter> allNewsletters = newsletterRepository.loadAll();
-		assertEquals(1, allNewsletters.size());
+		assertEquals(3, allNewsletters.size());
 
 		Newsletter theNewsletter = allNewsletters.get(0);
 
@@ -197,7 +197,7 @@ public class NewsletterIT extends AbstractIntegrationTest {
 		int anzahlEmpfaenger = 81;
 
 		List<Newsletter> allNewsletters = newsletterRepository.loadAll();
-		assertEquals(1, allNewsletters.size());
+		assertEquals(3, allNewsletters.size());
 
 		Newsletter theNewsletter = allNewsletters.get(0);
 
@@ -229,7 +229,7 @@ public class NewsletterIT extends AbstractIntegrationTest {
 		int anzahlEmpfaenger = 35;
 
 		List<Newsletter> allNewsletters = newsletterRepository.loadAll();
-		assertEquals(1, allNewsletters.size());
+		assertEquals(3, allNewsletters.size());
 
 		Newsletter theNewsletter = allNewsletters.get(0);
 
@@ -286,7 +286,7 @@ public class NewsletterIT extends AbstractIntegrationTest {
 		int anzahlEmpfaenger = 35;
 
 		List<Newsletter> allNewsletters = newsletterRepository.loadAll();
-		assertEquals(1, allNewsletters.size());
+		assertEquals(3, allNewsletters.size());
 
 		Newsletter theNewsletter = allNewsletters.get(0);
 
@@ -319,7 +319,7 @@ public class NewsletterIT extends AbstractIntegrationTest {
 		int anzahlEmpfaenger = 1;
 
 		List<Newsletter> allNewsletters = newsletterRepository.loadAll();
-		assertEquals(1, allNewsletters.size());
+		assertEquals(3, allNewsletters.size());
 
 		Newsletter theNewsletter = allNewsletters.get(0);
 
@@ -376,7 +376,7 @@ public class NewsletterIT extends AbstractIntegrationTest {
 		int anzahlEmpfaenger = 1;
 
 		List<Newsletter> allNewsletters = newsletterRepository.loadAll();
-		assertEquals(1, allNewsletters.size());
+		assertEquals(3, allNewsletters.size());
 
 		Newsletter theNewsletter = allNewsletters.get(0);
 

@@ -20,6 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.uploads.UploadIdentifier;
 import de.egladil.web.mk_gateway.domain.uploads.UploadRepository;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
@@ -46,7 +48,7 @@ public class UploadHibernateRepository implements UploadRepository {
 
 		UploadHibernateRepository result = new UploadHibernateRepository();
 		result.entityManager = em;
-		result.sortNumberGenerator = SortNumberGeneratorImpl.createForIntegrationTest(em);
+		result.sortNumberGenerator = SortNumberGeneratorImpl.createForIntegrationTests(em);
 		return result;
 	}
 
@@ -152,5 +154,33 @@ public class UploadHibernateRepository implements UploadRepository {
 	public PersistenterUpload updateUpload(final PersistenterUpload persistenterUpload) {
 
 		return entityManager.merge(persistenterUpload);
+	}
+
+	@Override
+	public List<Auspraegung> countAuspraegungenForTeilnahmeByColumnName(final TeilnahmeIdentifier teilnahmeIdentifier, final String columnName) {
+
+		List<Auspraegung> result = new ArrayList<>();
+
+		String stmt = "select u." + columnName
+			+ ", count(*) from UPLOADS u where u.TEILNAHMENUMMER = :teilnahmenummer group by u."
+			+ columnName;
+
+		// System.out.println(stmt);
+
+		@SuppressWarnings("unchecked")
+		List<Object[]> trefferliste = entityManager.createNativeQuery(stmt)
+			.setParameter("teilnahmenummer", teilnahmeIdentifier.teilnahmenummer())
+			.getResultList();
+
+		for (Object[] treffer : trefferliste) {
+
+			String wert = treffer[0].toString();
+			BigInteger anzahl = (BigInteger) treffer[1];
+
+			result.add(new Auspraegung(wert, anzahl.longValue()));
+
+		}
+
+		return result;
 	}
 }

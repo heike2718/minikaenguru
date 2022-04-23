@@ -15,16 +15,24 @@ export class AuthInterceptor implements HttpInterceptor {
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
 		if (this.config.production) {
-			return next.handle(req);
+			const cloned = req.clone({
+				headers: req.headers.set('Cache-Control', 'no-cache')
+			});
+			return next.handle(cloned);
 		}
 
 		// da auf localhost das cookie nicht in den Browser gesetzt und folglich zurückgesendet werden kann,
 		// machen wir hier den Umweg über localstorage.
 		const sessionId = localStorage.getItem(this.config.storagePrefix + STORAGE_KEY_DEV_SESSION_ID);
 		if (sessionId) {
-			const cloned = req.clone({
+			let cloned = req.clone({
 				headers: req.headers.set('X-SESSIONID', sessionId)
 			});
+			/*
+			cloned = cloned.clone({
+				headers: req.headers.set('Cache-Control', 'no-cache')
+			});
+			*/
 			return next.handle(cloned);
 
 		} else {

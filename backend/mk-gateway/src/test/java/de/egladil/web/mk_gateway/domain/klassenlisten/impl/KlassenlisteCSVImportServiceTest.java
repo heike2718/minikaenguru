@@ -4,11 +4,11 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.klassenlisten.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.never;
@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.persistence.PersistenceException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -109,6 +111,139 @@ public class KlassenlisteCSVImportServiceTest {
 	class ImportTests {
 
 		@Test
+		void should_importiereKlassenHandlePersistenceException() {
+
+			// Arrange
+			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt";
+			when(kinderService.findWithSchulteilname(any())).thenThrow(new PersistenceException("böse böse"));
+			when(uploadRepository.updateUpload(any())).thenReturn(persistenterUpload);
+
+			// Act
+			ResponsePayload result = service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
+
+			// Assert
+			MessagePayload messagePayload = result.getMessage();
+			assertEquals("ERROR", messagePayload.getLevel());
+			assertEquals(
+				"Die Klassenliste konnte wegen eines Fehlers leider nicht importiert werden. Bitte senden Sie eine Mail an info@egladil.de.",
+				messagePayload.getMessage());
+
+			assertNull(result.getData());
+
+			verify(uploadRepository).updateUpload(any());
+
+		}
+
+		@Test
+		void should_importiereKlassenThrowUploadFormatException_when_NullZeilen() {
+
+			// Arrange
+			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/fehlerhaft";
+			persistenterUpload.setUuid("null-zeilen");
+			when(uploadRepository.updateUpload(any())).thenReturn(persistenterUpload);
+
+			// Act + Assert
+			try {
+
+				service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
+				fail("keine UploadFormatException");
+			} catch (UploadFormatException e) {
+
+				assertEquals(
+					"Die Klassenliste konnte nicht importiert werden: sie enthält keine Kinder. Bitte prüfen Sie die hochgeladene Datei.",
+					e.getMessage());
+
+				verify(klassenService, never()).importiereKlassen(any(), any(), anyList());
+				verify(kinderService, never()).importiereKinder(any(), any(), any());
+				verify(kinderService, never()).findWithSchulteilname(any());
+				verify(klassenService, never()).klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID);
+				verify(uploadRepository).updateUpload(persistenterUpload);
+			}
+
+		}
+
+		@Test
+		void should_importiereKlassenThrowUploadFormatException_when_eineZeileAberBlank() {
+
+			// Arrange
+			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/fehlerhaft";
+			persistenterUpload.setUuid("eine-zeile-blank");
+
+			// Act + Assert
+			try {
+
+				service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
+				fail("keine UploadFormatException");
+			} catch (UploadFormatException e) {
+
+				assertEquals(
+					"Die Klassenliste kann nicht verarbeitet werden. Ihre Tabelle hat nicht die erwarteten Spalten. Es werden genau 4 Spalten mit den Überschriften Klasse,Klassenstufe,Nachname,Vorname in beliebiger Reihenfolge erwartet. Ihre Spaltenüberschriften sind leer.",
+					e.getMessage());
+
+				verify(klassenService, never()).importiereKlassen(any(), any(), anyList());
+				verify(kinderService, never()).importiereKinder(any(), any(), any());
+				verify(kinderService, never()).findWithSchulteilname(any());
+				verify(klassenService, never()).klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID);
+				verify(uploadRepository, never()).updateUpload(persistenterUpload);
+			}
+
+		}
+
+		@Test
+		void should_importiereKlassenThrowUploadFormatException_when_eineZeileAberKeineUeberschrift() {
+
+			// Arrange
+			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/fehlerhaft";
+			persistenterUpload.setUuid("eine-zeile-keine-ueberschrift");
+
+			// Act + Assert
+			try {
+
+				service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
+				fail("keine UploadFormatException");
+			} catch (UploadFormatException e) {
+
+				assertEquals(
+					"Die Klassenliste kann nicht verarbeitet werden. Es werden genau 4 Spalten mit den Überschriften Klasse,Klassenstufe,Nachname,Vorname in beliebiger Reihenfolge erwartet. Gefunden wurden die Spaltenüberschriften Amira;Emami;2a;2.",
+					e.getMessage());
+
+				verify(klassenService, never()).importiereKlassen(any(), any(), anyList());
+				verify(kinderService, never()).importiereKinder(any(), any(), any());
+				verify(kinderService, never()).findWithSchulteilname(any());
+				verify(klassenService, never()).klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID);
+				verify(uploadRepository, never()).updateUpload(persistenterUpload);
+			}
+
+		}
+
+		@Test
+		void should_importiereKlassenThrowUploadFormatException_when_alleZeilenFehlerhaft() {
+
+			// Arrange
+			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/fehlerhaft";
+			persistenterUpload.setUuid("alle-zeilen-falsch");
+
+			// Act + Assert
+			try {
+
+				service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
+				fail("keine UploadFormatException");
+			} catch (UploadFormatException e) {
+
+				assertEquals(
+					"Die Klassenliste kann nicht verarbeitet werden. keine Zeile enthält die erforderlichen Angaben Vorname, Nachname, Klasse, Klassenstufe.",
+					e.getMessage());
+
+				verify(klassenService, never()).importiereKlassen(any(), any(), anyList());
+				verify(kinderService, never()).importiereKinder(any(), any(), any());
+				verify(kinderService, never()).findWithSchulteilname(any());
+				verify(klassenService, never()).klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID);
+				verify(uploadRepository, never()).updateUpload(persistenterUpload);
+			}
+
+		}
+
+		@Test
 		void should_importiereKlassenThrowUploadFormatException_when_keineUeberschrift() {
 
 			// Arrange
@@ -123,7 +258,7 @@ public class KlassenlisteCSVImportServiceTest {
 			} catch (UploadFormatException e) {
 
 				assertEquals(
-					"Die hochgeladene Datei kann nicht verarbeitet werden. Die erste Zeile enthält nicht die Felder \"Nachname\", \"Vorname\", \"Klasse\", \"Klassenstufe\".",
+					"Die Klassenliste kann nicht verarbeitet werden. Es werden genau 4 Spalten mit den Überschriften Klasse,Klassenstufe,Nachname,Vorname in beliebiger Reihenfolge erwartet. Gefunden wurden die Spaltenüberschriften Amiera;Kaled;2a;2.",
 					e.getMessage());
 
 				verify(klassenService, never()).importiereKlassen(any(), any(), anyList());
@@ -136,10 +271,188 @@ public class KlassenlisteCSVImportServiceTest {
 		}
 
 		@Test
+		void should_importiereKlassenThrowUploadFormatException_when_nurUeberschrift() {
+
+			// Arrange
+			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/fehlerhaft";
+			persistenterUpload.setUuid("eine-zeile-nur-ueberschrift");
+			when(uploadRepository.updateUpload(any())).thenReturn(persistenterUpload);
+
+			// Act + Assert
+			try {
+
+				service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
+				fail("keine UploadFormatException");
+			} catch (UploadFormatException e) {
+
+				assertEquals(
+					"Die Klassenliste konnte nicht importiert werden: sie enthält keine Kinder. Bitte prüfen Sie die hochgeladene Datei.",
+					e.getMessage());
+
+				verify(klassenService, never()).importiereKlassen(any(), any(), anyList());
+				verify(kinderService, never()).importiereKinder(any(), any(), any());
+				verify(kinderService, never()).findWithSchulteilname(any());
+				verify(klassenService, never()).klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID);
+				verify(uploadRepository).updateUpload(persistenterUpload);
+			}
+
+		}
+
+		@Test
 		void should_importiereKlassenWork() throws IOException {
 
 			// Arrange
 			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt";
+
+			List<Klasse> klassen = new ArrayList<>();
+			klassen.add(new Klasse(new Identifier("uuid-1a")).withName("1a").withSchuleID(new Identifier(SCHULKUERZEL)));
+			klassen.add(new Klasse(new Identifier("uuid-1b")).withName("1b").withSchuleID(new Identifier(SCHULKUERZEL)));
+			klassen.add(new Klasse(new Identifier("uuid-2a")).withName("2a").withSchuleID(new Identifier(SCHULKUERZEL)));
+			klassen.add(new Klasse(new Identifier("uuid-2b")).withName("2b").withSchuleID(new Identifier(SCHULKUERZEL)));
+
+			List<KlasseAPIModel> klassenAPIModels = klassen.stream().map(k -> KlasseAPIModel.createFromKlasse(k))
+				.collect(Collectors.toList());
+
+			List<Kind> kinder = new ArrayList<>();
+			kinder.add(
+				new Kind(new Identifier("1")).withKlasseID(new Identifier("uuid-1a")).withKlassenstufe(Klassenstufe.EINS)
+					.withLandkuerzel("DE-HE").withNachname("Granach").withSprache(Sprache.de).withVorname("Lukas"));
+			kinder.add(
+				new Kind(new Identifier("2")).withKlasseID(new Identifier("uuid-1a")).withKlassenstufe(Klassenstufe.EINS)
+					.withLandkuerzel("DE-HE").withNachname("Weiß").withSprache(Sprache.de).withVorname("Natalie"));
+			kinder.add(
+				new Kind(new Identifier("3")).withKlasseID(new Identifier("uuid-1b")).withKlassenstufe(Klassenstufe.EINS)
+					.withLandkuerzel("DE-HE").withNachname("Wanowski").withSprache(Sprache.de).withVorname("Szymon"));
+			kinder.add(
+				new Kind(new Identifier("4")).withKlasseID(new Identifier("uuid-1b")).withKlassenstufe(Klassenstufe.EINS)
+					.withLandkuerzel("DE-HE").withNachname("Schöner").withSprache(Sprache.de).withVorname("Patrick"));
+			kinder.add(
+				new Kind(new Identifier("5")).withKlasseID(new Identifier("uuid-2a")).withKlassenstufe(Klassenstufe.ZWEI)
+					.withLandkuerzel("DE-HE").withNachname("Hofstedter").withSprache(Sprache.de).withVorname("Lennart"));
+			kinder.add(
+				new Kind(new Identifier("6")).withKlasseID(new Identifier("uuid-2a")).withKlassenstufe(Klassenstufe.ZWEI)
+					.withLandkuerzel("DE-HE").withNachname("Gfauna").withSprache(Sprache.de).withVorname("Flora"));
+			kinder.add(
+				new Kind(new Identifier("7")).withKlasseID(new Identifier("uuid-2b")).withKlassenstufe(Klassenstufe.ZWEI)
+					.withLandkuerzel("DE-HE").withNachname("Gröblin").withSprache(Sprache.de).withVorname("Pauline"));
+			kinder.add(
+				new Kind(new Identifier("8")).withKlasseID(new Identifier("uuid-2b")).withKlassenstufe(Klassenstufe.ZWEI)
+					.withLandkuerzel("DE-HE").withNachname("Hinremöller").withSprache(Sprache.de).withVorname("Lucie"));
+
+			when(klassenService.importiereKlassen(any(), any(), anyList())).thenReturn(klassen);
+			when(kinderService.importiereKinder(any(), any(), any())).thenReturn(kinder);
+			when(kinderService.findWithSchulteilname(any())).thenReturn(vorhandeneKinder);
+			when(klassenService.klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID)).thenReturn(klassenAPIModels);
+			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
+
+			// Act
+			ResponsePayload responsePayload = service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
+
+			MessagePayload messagePayload = responsePayload.getMessage();
+			assertTrue(messagePayload.isOk());
+			assertEquals("Die Daten wurden erfolgreich importiert. Bitte prüfen Sie, ob Umlaute korrekt angezeigt werden.",
+				messagePayload.getMessage());
+
+			assertNotNull(responsePayload.getData());
+
+			KlassenlisteImportReport report = (KlassenlisteImportReport) responsePayload.getData();
+			assertEquals(4, report.getKlassen().size());
+			assertEquals(8, report.getAnzahlKinderImportiert());
+			assertEquals(0L, report.getAnzahlDubletten());
+			assertEquals(0L, report.getAnzahlKlassenstufeUnklar());
+			assertEquals(0, report.getAnzahlNichtImportiert());
+			assertNull(report.getUuidImportReport());
+			List<String> fehlermeldungen = report.getFehlerUndWarnungen();
+			assertEquals(0, fehlermeldungen.size());
+
+			verify(klassenService).importiereKlassen(any(), any(), anyList());
+			verify(kinderService).importiereKinder(any(), any(), any());
+			verify(kinderService).findWithSchulteilname(any());
+			verify(klassenService).klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID);
+			verify(uploadRepository).updateUpload(persistenterUpload);
+		}
+
+		@Test
+		void should_importiereKlassenIgnoreLeereZeilen() throws IOException {
+
+			// Arrange
+			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt";
+			persistenterUpload.setUuid("klassenliste-mit-leerzeilen");
+
+			List<Klasse> klassen = new ArrayList<>();
+			klassen.add(new Klasse(new Identifier("uuid-1a")).withName("1a").withSchuleID(new Identifier(SCHULKUERZEL)));
+			klassen.add(new Klasse(new Identifier("uuid-1b")).withName("1b").withSchuleID(new Identifier(SCHULKUERZEL)));
+			klassen.add(new Klasse(new Identifier("uuid-2a")).withName("2a").withSchuleID(new Identifier(SCHULKUERZEL)));
+			klassen.add(new Klasse(new Identifier("uuid-2b")).withName("2b").withSchuleID(new Identifier(SCHULKUERZEL)));
+
+			List<KlasseAPIModel> klassenAPIModels = klassen.stream().map(k -> KlasseAPIModel.createFromKlasse(k))
+				.collect(Collectors.toList());
+
+			List<Kind> kinder = new ArrayList<>();
+			kinder.add(
+				new Kind(new Identifier("1")).withKlasseID(new Identifier("uuid-1a")).withKlassenstufe(Klassenstufe.EINS)
+					.withLandkuerzel("DE-HE").withNachname("Granach").withSprache(Sprache.de).withVorname("Lukas"));
+			kinder.add(
+				new Kind(new Identifier("2")).withKlasseID(new Identifier("uuid-1a")).withKlassenstufe(Klassenstufe.EINS)
+					.withLandkuerzel("DE-HE").withNachname("Weiß").withSprache(Sprache.de).withVorname("Natalie"));
+			kinder.add(
+				new Kind(new Identifier("3")).withKlasseID(new Identifier("uuid-1b")).withKlassenstufe(Klassenstufe.EINS)
+					.withLandkuerzel("DE-HE").withNachname("Wanowski").withSprache(Sprache.de).withVorname("Szymon"));
+			kinder.add(
+				new Kind(new Identifier("4")).withKlasseID(new Identifier("uuid-1b")).withKlassenstufe(Klassenstufe.EINS)
+					.withLandkuerzel("DE-HE").withNachname("Schöner").withSprache(Sprache.de).withVorname("Patrick"));
+			kinder.add(
+				new Kind(new Identifier("5")).withKlasseID(new Identifier("uuid-2a")).withKlassenstufe(Klassenstufe.ZWEI)
+					.withLandkuerzel("DE-HE").withNachname("Hofstedter").withSprache(Sprache.de).withVorname("Lennart"));
+			kinder.add(
+				new Kind(new Identifier("6")).withKlasseID(new Identifier("uuid-2a")).withKlassenstufe(Klassenstufe.ZWEI)
+					.withLandkuerzel("DE-HE").withNachname("Gfauna").withSprache(Sprache.de).withVorname("Flora"));
+			kinder.add(
+				new Kind(new Identifier("7")).withKlasseID(new Identifier("uuid-2b")).withKlassenstufe(Klassenstufe.ZWEI)
+					.withLandkuerzel("DE-HE").withNachname("Gröblin").withSprache(Sprache.de).withVorname("Pauline"));
+			kinder.add(
+				new Kind(new Identifier("8")).withKlasseID(new Identifier("uuid-2b")).withKlassenstufe(Klassenstufe.ZWEI)
+					.withLandkuerzel("DE-HE").withNachname("Hinremöller").withSprache(Sprache.de).withVorname("Lucie"));
+
+			when(klassenService.importiereKlassen(any(), any(), anyList())).thenReturn(klassen);
+			when(kinderService.importiereKinder(any(), any(), any())).thenReturn(kinder);
+			when(kinderService.findWithSchulteilname(any())).thenReturn(vorhandeneKinder);
+			when(klassenService.klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID)).thenReturn(klassenAPIModels);
+			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
+
+			// Act
+			ResponsePayload responsePayload = service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
+
+			MessagePayload messagePayload = responsePayload.getMessage();
+			assertTrue(messagePayload.isOk());
+			assertEquals("Die Daten wurden erfolgreich importiert. Bitte prüfen Sie, ob Umlaute korrekt angezeigt werden.",
+				messagePayload.getMessage());
+
+			assertNotNull(responsePayload.getData());
+
+			KlassenlisteImportReport report = (KlassenlisteImportReport) responsePayload.getData();
+			assertEquals(4, report.getKlassen().size());
+			assertEquals(8, report.getAnzahlKinderImportiert());
+			assertEquals(0L, report.getAnzahlDubletten());
+			assertEquals(0L, report.getAnzahlKlassenstufeUnklar());
+			assertEquals(0, report.getAnzahlNichtImportiert());
+			assertNull(report.getUuidImportReport());
+			List<String> fehlermeldungen = report.getFehlerUndWarnungen();
+			assertEquals(0, fehlermeldungen.size());
+
+			verify(klassenService).importiereKlassen(any(), any(), anyList());
+			verify(kinderService).importiereKinder(any(), any(), any());
+			verify(kinderService).findWithSchulteilname(any());
+			verify(klassenService).klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID);
+			verify(uploadRepository).updateUpload(persistenterUpload);
+		}
+
+		@Test
+		void should_importiereKlassenAcceptNameInsteadOfNachname() throws IOException {
+
+			// Arrange
+			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt";
+			persistenterUpload.setUuid("klassenliste-mit-name-statt-nachname");
 
 			List<Klasse> klassen = new ArrayList<>();
 			klassen.add(new Klasse(new Identifier("uuid-1a")).withName("1a").withSchuleID(new Identifier(SCHULKUERZEL)));
@@ -263,10 +576,10 @@ public class KlassenlisteCSVImportServiceTest {
 			assertEquals(5, fehlerUndWarnungen.size());
 
 			assertEquals(
-				"Zeile 1: Fehler! \"Amiera; Maria;Kaled;2a;2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+				"Zeile 1: Fehler! \"Amiera; Maria;Kaled;2a;2\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen. Es sind mehr als 4 Angaben.",
 				fehlerUndWarnungen.get(0));
 			assertEquals(
-				"Zeile 2: Fehler! \"Benedikt;2a;0\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen.",
+				"Zeile 2: Fehler! \"Benedikt;2a;0\" wird nicht importiert: Vorname, Nachname, Klasse und Klassenstufe lassen sich nicht zuordnen. Es sind weniger als 4 Angaben.",
 				fehlerUndWarnungen.get(1));
 
 			assertEquals("Zeile 3: Özcan;Bakir;2b;3: diese Klassenstufe gibt es nicht. Die Klassenstufe wurde auf \"2\" gesetzt.",
