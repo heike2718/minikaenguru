@@ -179,16 +179,16 @@ public class LoesungszettelHibernateRepositoryIT extends AbstractIntegrationTest
 	void should_addLoesungszettelThrowEntityConcurrentlyModified_when_thereIsAnEntityWithThisKindID() {
 
 		// Arrange
-		Identifier kindID = new Identifier("cd9c85a2-966f-48c9-bf3e-3f844669dedb");
+		Identifier kindID = new Identifier("64eb1db7-630b-43d7-8049-f8f75e765522");
 
-		String expectedNutzereingabe = "EBCACCBDBNBN";
+		String expectedNutzereingabe = "CEBENNECBCAE";
 
 		Optional<Loesungszettel> optResult = loesungszettelRepository.findLoesungszettelWithKindID(kindID);
 		assertTrue(optResult.isPresent(), "DB muss zurückgesetzt werden");
 
 		Loesungszettel loesungszettel = optResult.get();
 		assertEquals(kindID, loesungszettel.kindID(), "DB muss zurückgesetzt werden");
-		assertEquals(new Identifier("fae8ff6e-194e-4257-a1ff-14a670c476ab"),
+		assertEquals(new Identifier("219c7a7a-c701-4fcf-997f-398c597a09f0"),
 			loesungszettel.identifier(), "DB muss zurückgesetzt werden");
 		assertEquals(expectedNutzereingabe, loesungszettel.rohdaten().nutzereingabe(), "DB muss zurückgesetzt werden");
 		assertEquals(0, loesungszettel.version(), "DB muss zurückgesetzt werden");

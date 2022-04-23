@@ -51,6 +51,12 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.entities.Persistente
 @ExtendWith(MockitoExtension.class)
 public class AuswertungImportServiceTest {
 
+	private static final String LOESUNGSBUCHSTABEN_IKID = "AB-CB-CB";
+
+	private static final String LOESUNGSBUCHSTABEN_EINS = "CDDE-EDBB-ADCE";
+
+	private static final String LOESUNGSBUCHSTABEN_ZWEI = "CDCEA-DEABB-BEABA";
+
 	private static final String SCHULKUERZEL = "ZUTFG654F";
 
 	private static final String BENUTZER_UUID = "9515636f-9909-45b2-9132-85e2e0af3cb4";
@@ -86,8 +92,12 @@ public class AuswertungImportServiceTest {
 	@BeforeEach
 	void setUp() {
 
-		wettbewerbe.add(new Wettbewerb(new WettbewerbID(JAHR_WETTBEWERB_BEENDET)).withStatus(WettbewerbStatus.BEENDET));
-		wettbewerbe.add(new Wettbewerb(new WettbewerbID(JAHR_WETTBEWERB_RUNNING)).withStatus(WettbewerbStatus.DOWNLOAD_PRIVAT));
+		wettbewerbe.add(new Wettbewerb(new WettbewerbID(JAHR_WETTBEWERB_BEENDET)).withStatus(WettbewerbStatus.BEENDET)
+			.withLoesungsbuchstabenIKids(LOESUNGSBUCHSTABEN_IKID).withLoesungsbuchstabenKlasse1(LOESUNGSBUCHSTABEN_EINS)
+			.withLoesungsbuchstabenKlasse2(LOESUNGSBUCHSTABEN_ZWEI));
+		wettbewerbe.add(new Wettbewerb(new WettbewerbID(JAHR_WETTBEWERB_RUNNING)).withStatus(WettbewerbStatus.DOWNLOAD_PRIVAT)
+			.withLoesungsbuchstabenIKids(LOESUNGSBUCHSTABEN_IKID).withLoesungsbuchstabenKlasse1(LOESUNGSBUCHSTABEN_EINS)
+			.withLoesungsbuchstabenKlasse2(LOESUNGSBUCHSTABEN_ZWEI));
 
 		uploadContxtWettbewerbBeendet = new UploadAuswertungContext().withKuerzelLand(KUERZEL_LAND).withSprache(SPRACHE)
 			.withWettbewerb(wettbewerbe.get(0));

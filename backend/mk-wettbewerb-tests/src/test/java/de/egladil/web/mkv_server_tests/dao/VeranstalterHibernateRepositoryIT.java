@@ -161,7 +161,7 @@ public class VeranstalterHibernateRepositoryIT extends AbstractIntegrationTest {
 		List<String> mailadressen = veranstalterRepository.findEmailsNewsletterAbonnenten(Empfaengertyp.LEHRER);
 
 		// Assert
-		assertEquals(79, mailadressen.size());
+		assertEquals(78, mailadressen.size());
 
 	}
 
@@ -172,7 +172,7 @@ public class VeranstalterHibernateRepositoryIT extends AbstractIntegrationTest {
 		List<String> mailadressen = veranstalterRepository.findEmailsNewsletterAbonnenten(Empfaengertyp.PRIVATVERANSTALTER);
 
 		// Assert
-		assertEquals(45, mailadressen.size());
+		assertEquals(46, mailadressen.size());
 
 	}
 
