@@ -1,5 +1,9 @@
 # minikaenguru Release Notes
 
+__Release 1.8.2.2__:
+
+Hochgeladene Auswertungen übernehmen keine Namen
+
 __Release 1.8.2.1__:
 
 * [Upload Lösungszettel wandelt unerlaubte Einträge nicht in n um](https://github.com/heike2718/minikaenguru/issues/389)

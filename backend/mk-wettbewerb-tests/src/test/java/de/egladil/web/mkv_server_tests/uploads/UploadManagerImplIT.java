@@ -601,11 +601,13 @@ public class UploadManagerImplIT extends AbstractIntegrationTest {
 				assertEquals(Sprache.de, loesungszettel.sprache());
 				LoesungszettelRohdaten rohdaten = loesungszettel.rohdaten();
 				assertFalse(rohdaten.hatTypo());
-				assertEquals(rohdaten.nutzereingabe(), rohdaten.wertungscode());
 				assertNull(rohdaten.antwortcode());
 
-			}
+				System.out.println(rohdaten.nutzereingabe());
 
+				char[] nutzereingabeTokens = rohdaten.nutzereingabe().toCharArray();
+				assertEquals(12, nutzereingabeTokens.length, "Name wurde nicht entfernt bei " + loesungszettel.identifier());
+			}
 		}
 	}
 
