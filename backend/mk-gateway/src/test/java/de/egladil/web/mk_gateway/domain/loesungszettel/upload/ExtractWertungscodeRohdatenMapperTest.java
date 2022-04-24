@@ -7,6 +7,7 @@ package de.egladil.web.mk_gateway.domain.loesungszettel.upload;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -34,10 +35,11 @@ public class ExtractWertungscodeRohdatenMapperTest {
 			ExtractWertungscodeRohdatenMapper mapper = new ExtractWertungscodeRohdatenMapper(false);
 
 			// Act
-			String result = mapper.apply(rohdaten, LOESUNGSBUCHSTABEN_ZWEI);
+			Pair<String, String> result = mapper.apply(rohdaten, LOESUNGSBUCHSTABEN_ZWEI);
 
 			// Assert
-			assertEquals(expected, result);
+			assertEquals(expected, result.getLeft());
+			assertEquals("r;f;r;c;f;f;f;n;r;n;f;f;n;f;f", result.getRight());
 
 		}
 
@@ -51,10 +53,11 @@ public class ExtractWertungscodeRohdatenMapperTest {
 			ExtractWertungscodeRohdatenMapper mapper = new ExtractWertungscodeRohdatenMapper(true);
 
 			// Act
-			String result = mapper.apply(rohdaten, LOESUNGSBUCHSTABEN_ZWEI);
+			Pair<String, String> result = mapper.apply(rohdaten, LOESUNGSBUCHSTABEN_ZWEI);
 
 			// Assert
-			assertEquals(expected, result);
+			assertEquals(expected, result.getLeft());
+			assertEquals("r;f;r;e;f;f;f;n;r;n;f;f;n;f;f", result.getRight());
 
 		}
 
@@ -68,10 +71,11 @@ public class ExtractWertungscodeRohdatenMapperTest {
 			ExtractWertungscodeRohdatenMapper mapper = new ExtractWertungscodeRohdatenMapper(true);
 
 			// Act
-			String result = mapper.apply(rohdaten, LOESUNGSBUCHSTABEN_ZWEI);
+			Pair<String, String> result = mapper.apply(rohdaten, LOESUNGSBUCHSTABEN_ZWEI);
 
 			// Assert
-			assertEquals(expected, result);
+			assertEquals(expected, result.getLeft());
+			assertEquals("r;f;r;n;f;f;f;n;r;n;f;f;n;f;f", result.getRight());
 
 		}
 
@@ -85,10 +89,11 @@ public class ExtractWertungscodeRohdatenMapperTest {
 			ExtractWertungscodeRohdatenMapper mapper = new ExtractWertungscodeRohdatenMapper(true);
 
 			// Act
-			String result = mapper.apply(rohdaten, LOESUNGSBUCHSTABEN_ZWEI);
+			Pair<String, String> result = mapper.apply(rohdaten, LOESUNGSBUCHSTABEN_ZWEI);
 
 			// Assert
-			assertEquals(expected, result);
+			assertEquals(expected, result.getLeft());
+			assertEquals("f;f;r;r;r;r;r;f;r;n;n;n", result.getRight());
 
 		}
 	}
@@ -106,10 +111,11 @@ public class ExtractWertungscodeRohdatenMapperTest {
 			ExtractWertungscodeRohdatenMapper mapper = new ExtractWertungscodeRohdatenMapper(true);
 
 			// Act
-			String result = mapper.apply(rohdaten, LOESUNGSBUCHSTABEN_EINS);
+			Pair<String, String> result = mapper.apply(rohdaten, LOESUNGSBUCHSTABEN_EINS);
 
 			// Assert
-			assertEquals(expected, result);
+			assertEquals(expected, result.getLeft());
+			assertEquals("f;f;r;r;r;r;r;f;r;y;n;n", result.getRight());
 
 		}
 
@@ -123,10 +129,11 @@ public class ExtractWertungscodeRohdatenMapperTest {
 			ExtractWertungscodeRohdatenMapper mapper = new ExtractWertungscodeRohdatenMapper(true);
 
 			// Act
-			String result = mapper.apply(rohdaten, LOESUNGSBUCHSTABEN_EINS);
+			Pair<String, String> result = mapper.apply(rohdaten, LOESUNGSBUCHSTABEN_EINS);
 
 			// Assert
-			assertEquals(expected, result);
+			assertEquals(expected, result.getLeft());
+			assertEquals("f;f;r;r;r;r;r;f;a;y;n;n", result.getRight());
 
 		}
 
@@ -140,10 +147,11 @@ public class ExtractWertungscodeRohdatenMapperTest {
 			ExtractWertungscodeRohdatenMapper mapper = new ExtractWertungscodeRohdatenMapper(false);
 
 			// Act
-			String result = mapper.apply(rohdaten, LOESUNGSBUCHSTABEN_EINS);
+			Pair<String, String> result = mapper.apply(rohdaten, LOESUNGSBUCHSTABEN_EINS);
 
 			// Assert
-			assertEquals(expected, result);
+			assertEquals(expected, result.getLeft());
+			assertEquals("f;f;r;r;r;r;r;f;r;y;n;a", result.getRight());
 
 		}
 
@@ -162,10 +170,11 @@ public class ExtractWertungscodeRohdatenMapperTest {
 			ExtractWertungscodeRohdatenMapper mapper = new ExtractWertungscodeRohdatenMapper(true);
 
 			// Act
-			String result = mapper.apply(rohdaten, LOESUNGSBUCHSTABEN_IKID);
+			Pair<String, String> result = mapper.apply(rohdaten, LOESUNGSBUCHSTABEN_IKID);
 
 			// Assert
-			assertEquals(expected, result);
+			assertEquals(expected, result.getLeft());
+			assertEquals("d;f;r;r;r;r", result.getRight());
 
 		}
 
@@ -179,10 +188,11 @@ public class ExtractWertungscodeRohdatenMapperTest {
 			ExtractWertungscodeRohdatenMapper mapper = new ExtractWertungscodeRohdatenMapper(true);
 
 			// Act
-			String result = mapper.apply(rohdaten, LOESUNGSBUCHSTABEN_IKID);
+			Pair<String, String> result = mapper.apply(rohdaten, LOESUNGSBUCHSTABEN_IKID);
 
 			// Assert
-			assertEquals(expected, result);
+			assertEquals(expected, result.getLeft());
+			assertEquals("A;f;r;r;r;r", result.getRight());
 
 		}
 
@@ -196,10 +206,11 @@ public class ExtractWertungscodeRohdatenMapperTest {
 			ExtractWertungscodeRohdatenMapper mapper = new ExtractWertungscodeRohdatenMapper(false);
 
 			// Act
-			String result = mapper.apply(rohdaten, LOESUNGSBUCHSTABEN_IKID);
+			Pair<String, String> result = mapper.apply(rohdaten, LOESUNGSBUCHSTABEN_IKID);
 
 			// Assert
-			assertEquals(expected, result);
+			assertEquals(expected, result.getLeft());
+			assertEquals("f;f;r;r;r;a", result.getRight());
 
 		}
 
@@ -218,10 +229,11 @@ public class ExtractWertungscodeRohdatenMapperTest {
 			ExtractWertungscodeRohdatenMapper mapper = new ExtractWertungscodeRohdatenMapper(true);
 
 			// Act
-			String result = mapper.apply(rohdaten, LOESUNGSBUCHSTABEN_ZWEI);
+			Pair<String, String> result = mapper.apply(rohdaten, LOESUNGSBUCHSTABEN_ZWEI);
 
 			// Assert
-			assertEquals(expected, result);
+			assertEquals(expected, result.getLeft());
+			assertEquals("", result.getRight());
 
 		}
 
@@ -235,10 +247,11 @@ public class ExtractWertungscodeRohdatenMapperTest {
 			ExtractWertungscodeRohdatenMapper mapper = new ExtractWertungscodeRohdatenMapper(false);
 
 			// Act
-			String result = mapper.apply(rohdaten, LOESUNGSBUCHSTABEN_ZWEI);
+			Pair<String, String> result = mapper.apply(rohdaten, LOESUNGSBUCHSTABEN_ZWEI);
 
 			// Assert
-			assertEquals(expected, result);
+			assertEquals(expected, result.getLeft());
+			assertEquals("", result.getRight());
 
 		}
 
@@ -252,10 +265,11 @@ public class ExtractWertungscodeRohdatenMapperTest {
 			ExtractWertungscodeRohdatenMapper mapper = new ExtractWertungscodeRohdatenMapper(false);
 
 			// Act
-			String result = mapper.apply(rohdaten, LOESUNGSBUCHSTABEN_ZWEI);
+			Pair<String, String> result = mapper.apply(rohdaten, LOESUNGSBUCHSTABEN_ZWEI);
 
 			// Assert
-			assertEquals(expected, result);
+			assertEquals(expected, result.getLeft());
+			assertEquals("", result.getRight());
 
 		}
 
