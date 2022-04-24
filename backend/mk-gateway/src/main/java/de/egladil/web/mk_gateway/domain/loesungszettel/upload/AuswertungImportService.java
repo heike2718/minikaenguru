@@ -19,6 +19,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -262,8 +263,10 @@ public class AuswertungImportService {
 
 				String nutzereingabe = zeile.getRohdaten();
 
-				String rohdaten = extractWertungscodeMapper.apply(nutzereingabe, loesungsbuchstaben);
-				rohdaten = rohdaten.replaceAll(";", "");
+				Pair<String, String> extracted = extractWertungscodeMapper.apply(nutzereingabe, loesungsbuchstaben);
+
+				String rohdaten = extracted.getLeft().replaceAll(";", "");
+				String nutzereibgabenOhneName = extracted.getRight().replaceAll(";", "");
 
 				if (rohdaten.isEmpty()) {
 
@@ -272,7 +275,8 @@ public class AuswertungImportService {
 
 				Wettbewerbswertung wertung = wertungsrechner.getWertung(rohdaten, klassenstufe);
 
-				LoesungszettelRohdaten loesungszettelRohdaten = new LoesungszettelRohdaten().withNutzereingabe(nutzereingabe)
+				LoesungszettelRohdaten loesungszettelRohdaten = new LoesungszettelRohdaten()
+					.withNutzereingabe(nutzereibgabenOhneName)
 					.withTypo(false)
 					.withWertungscode(rohdaten);
 

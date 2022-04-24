@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +20,7 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 /**
  * ExtractWertungscodeRohdatenMapper
  */
-public class ExtractWertungscodeRohdatenMapper implements BiFunction<String, String, String> {
+public class ExtractWertungscodeRohdatenMapper implements BiFunction<String, String, Pair<String, String>> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExtractWertungscodeRohdatenMapper.class);
 
@@ -35,14 +36,16 @@ public class ExtractWertungscodeRohdatenMapper implements BiFunction<String, Str
 	}
 
 	@Override
-	public String apply(final String rohdaten, final String loesungsbuchstaben) {
+	public Pair<String, String> apply(final String nutzereingabe, final String loesungsbuchstaben) {
 
-		if (rohdaten == null) {
+		if (nutzereingabe == null) {
 
 			throw new IllegalArgumentException("rohdaten null");
 		}
 
-		String[] tokens = StringUtils.splitPreserveAllTokens(rohdaten, ';');
+		List<String> nutzertokenOhneName = new ArrayList<>();
+
+		String[] tokens = StringUtils.splitPreserveAllTokens(nutzereingabe, ';');
 		char[] loesungsbuchstabenArray = loesungsbuchstaben.toCharArray();
 
 		List<String> nans = new ArrayList<>();
@@ -59,6 +62,8 @@ public class ExtractWertungscodeRohdatenMapper implements BiFunction<String, Str
 			} catch (NumberFormatException e) {
 
 				if (trToken.length() == 1) {
+
+					nutzertokenOhneName.add(trToken);
 
 					try {
 
@@ -85,7 +90,7 @@ public class ExtractWertungscodeRohdatenMapper implements BiFunction<String, Str
 			}
 		}
 
-		return StringUtils.join(nans, ";");
+		return Pair.of(StringUtils.join(nans, ";"), StringUtils.join(nutzertokenOhneName, ";"));
 	}
 
 	private String versucheEingabefehlerZuKorrigieren(final String input, final int index, final String korrekterLoesungsbuchstabe, final Klassenstufe klassenstufe) {
