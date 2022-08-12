@@ -107,7 +107,7 @@ public class LoesungszettelHibernateRepositoryIT extends AbstractIntegrationTest
 		LoesungszettelList liste = new LoesungszettelList();
 		liste.setLoesungszettel(trefferliste);
 
-		objectMapper.writeValue(System.out, liste);
+		// objectMapper.writeValue(System.out, liste);
 	}
 
 	@Test
@@ -153,7 +153,7 @@ public class LoesungszettelHibernateRepositoryIT extends AbstractIntegrationTest
 		LoesungszettelList liste = new LoesungszettelList();
 		liste.setLoesungszettel(trefferliste);
 
-		objectMapper.writeValue(System.out, liste);
+		// objectMapper.writeValue(System.out, liste);
 	}
 
 	@Test

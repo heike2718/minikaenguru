@@ -10,10 +10,14 @@
 	<version>1.8.3</version>
 
 	<properties>
-		<commons.version>1.7.6</commons.version>
+		<commons.version>1.7.7</commons.version>
 		<quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
 		<quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-		<quarkus.platform.version>2.7.5.Final</quarkus.platform.version>
+		<quarkus.platform.version>2.11.1.Final</quarkus.platform.version>
+		<!--
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		-->
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<compiler-plugin.version>3.8.1</compiler-plugin.version>
