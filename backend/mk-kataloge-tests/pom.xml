@@ -5,10 +5,10 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mk-kataloge-tests</artifactId>
-	<version>1.8.2.2</version>
+	<version>1.8.3</version>
 
 	<properties>
-		<minikaenguru-version>1.8.2.2</minikaenguru-version>
+		<minikaenguru-version>1.8.3</minikaenguru-version>
 		<commons.version>1.7.5</commons.version>
 		<slf4j.version>1.7.32</slf4j.version>
 		<logback.version>1.2.10</logback.version>
