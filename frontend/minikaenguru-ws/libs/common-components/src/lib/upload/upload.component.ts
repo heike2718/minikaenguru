@@ -58,7 +58,7 @@ export class UploadComponent implements OnInit {
 
 			if (size <= this.uploadModel.maxSizeBytes) {				
 				this.currentFile = this.selectedFiles[0];
-				this.showMaxSizeExceeded = true;
+				this.showMaxSizeExceeded = false;
 				this.canSubmit = true;	
 				this.dateiAusgewaehlt.emit(true);	
 				this.uploading = false;	

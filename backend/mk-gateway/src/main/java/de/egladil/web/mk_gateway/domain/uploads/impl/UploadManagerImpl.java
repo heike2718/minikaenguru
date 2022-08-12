@@ -121,7 +121,6 @@ public class UploadManagerImpl implements UploadManager {
 		result.klassenlisteImportService = KlassenlisteCSVImportService.createForIntegrationTests(em);
 		result.uploadRepository = UploadHibernateRepository.createForIntegrationTests(em);
 		result.domainEventHandler = DomainEventHandler.createForIntegrationTest(em);
-		result.scanService = ScanService.createForIntegrationTest();
 		result.auswertungImportService = AuswertungImportService.createForIntegrationTest(em);
 		result.auswertungsmodusInfoService = AuswertungsmodusInfoServiceImpl.createForIntegrationTests(em);
 		result.maxFilesizeBytes = "2097152";

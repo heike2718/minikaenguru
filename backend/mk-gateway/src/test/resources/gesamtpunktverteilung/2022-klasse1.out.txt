@@ -1,0 +1,496 @@
+
+\documentclass[12pt,a4paper,twoside,german]{article}
+\input{../include/vorspann}
+\input{../include/commands}
+\pagestyle{empty}
+\begin{document}
+\renewcommand\arraystretch{1.3}
+Heike Winkelvoß, www.mathe-jung-alt.de/minikaenguru\par\vspace{1cm}
+
+	
+\begin{minipage}{2cm}
+\input{../branding/aglogo_level_4_20mm}
+\end{minipage}
+\begin{minipage}[c]{10cm}
+\begin{center}
+\LARGE Ergebnisse 2022 - Klasse 1
+\end{center}
+\end{minipage}
+\begin{minipage}{3.5cm}
+\bild{3.0cm}{../resources/001/00140.eps}
+\end{minipage}
+\\
+\rule{16cm}{0.5pt}\\
+\rule[5ex]{16cm}{0.5pt}
+	Die Punktverteilung wurde auf der Grundlage der zurückgesendeten Ergebnisse von 5019 Kindern ermittelt.
+		\par
+	Die Kinder erhielten ein Startguthaben von 12,00 Punkten. Für falsch gelöste Aufgaben wurden abgezogen: 0,75 Punkte bei 3-Punkte-Aufgaben, 1 Punkt bei 4-Punkte-Aufgaben, 1,25 Punkte bei 5-Punkte-Aufgaben.
+\begin{center}
+\begin{longtable}{*{3}{|r}|}
+\hline
+{\bf Punkte}  &  {\bf Anzahl}  &  {\bf Prozentrang}\\\hline\hline
+	60,00-60,00 & 27 & 100,0
+\\ \hline
+	55,00-57,00 & 40 & 99,46
+\\ \hline
+	50,00-54,00 & 45 & 98,67
+\\ \hline
+	45,00-49,75 & 90 & 97,77
+\\ \hline
+	40,00-44,75 & 178 & 95,98
+\\ \hline
+	35,00-39,75 & 273 & 92,43
+\\ \hline
+	30,00-34,75 & 396 & 86,99
+\\ \hline
+	25,00-29,75 & 575 & 79,1
+\\ \hline
+	20,00-24,75 & 696 & 67,64
+\\ \hline
+	15,00-19,75 & 946 & 53,78
+\\ \hline
+	10,00-14,75 & 979 & 34,93
+\\ \hline
+	5,00-9,75 & 543 & 15,42
+\\ \hline
+	0-4,75 & 231 & 4,6
+\\ \hline
+	 &  {\bf 5019} & 
+	\\ \hline
+	
+\end{longtable}
+\end{center}
+	
+Der Median (Prozentrang 50) liegt bei {\bf 18,75 Punkten} .\newpage {\large \bf Prozentränge}\par
+    
+\begin{center}
+\begin{longtable}{*{3}{|r}|}
+\hline
+{\bf Punkte}  &  {\bf Anzahl}  &  {\bf Prozentrang}\\\hline\hline
+	60,00 & 27 & 100,0
+\\ \hline
+	56,25 & 8 & 99,46
+\\ \hline
+	56,00 & 1 & 99,3
+\\ \hline
+	55,00 & 31 & 99,28
+\\ \hline
+	53,75 & 15 & 98,67
+\\ \hline
+	53,00 & 1 & 98,37
+\\ \hline
+	52,00 & 1 & 98,35
+\\ \hline
+	51,25 & 8 & 98,33
+\\ \hline
+	51,00 & 2 & 98,17
+\\ \hline
+	50,00 & 18 & 98,13
+\\ \hline
+	49,75 & 2 & 97,77
+\\ \hline
+	48,75 & 26 & 97,73
+\\ \hline
+	48,25 & 1 & 97,21
+\\ \hline
+	48,00 & 1 & 97,19
+\\ \hline
+	47,50 & 11 & 97,17
+\\ \hline
+	47,00 & 2 & 96,95
+\\ \hline
+	46,75 & 3 & 96,91
+\\ \hline
+	46,25 & 10 & 96,85
+\\ \hline
+	46,00 & 5 & 96,65
+\\ \hline
+	45,75 & 7 & 96,55
+\\ \hline
+	45,00 & 22 & 96,41
+\\ \hline
+	44,75 & 4 & 95,98
+\\ \hline
+	44,50 & 1 & 95,9
+\\ \hline
+	44,00 & 1 & 95,88
+\\ \hline
+	43,75 & 38 & 95,86
+\\ \hline
+	43,50 & 2 & 95,1
+\\ \hline
+	43,00 & 4 & 95,06
+\\ \hline
+	42,75 & 1 & 94,98
+\\ \hline
+	42,50 & 39 & 94,96
+\\ \hline
+	42,25 & 3 & 94,18
+\\ \hline
+	42,00 & 2 & 94,12
+\\ \hline
+	41,75 & 3 & 94,08
+\\ \hline
+	41,25 & 26 & 94,02
+\\ \hline
+	41,00 & 16 & 93,5
+\\ \hline
+	40,75 & 3 & 93,19
+\\ \hline
+	40,00 & 35 & 93,13
+\\ \hline
+	39,75 & 7 & 92,43
+\\ \hline
+	39,50 & 2 & 92,29
+\\ \hline
+	39,25 & 1 & 92,25
+\\ \hline
+	38,75 & 56 & 92,23
+\\ \hline
+	38,50 & 3 & 91,11
+\\ \hline
+	38,25 & 3 & 91,05
+\\ \hline
+	38,00 & 10 & 90,99
+\\ \hline
+	37,75 & 1 & 90,79
+\\ \hline
+	37,50 & 52 & 90,78
+\\ \hline
+	37,25 & 5 & 89,74
+\\ \hline
+	37,00 & 9 & 89,64
+\\ \hline
+	36,75 & 4 & 89,46
+\\ \hline
+	36,50 & 3 & 89,38
+\\ \hline
+	36,25 & 44 & 89,32
+\\ \hline
+	36,00 & 11 & 88,44
+\\ \hline
+	35,75 & 11 & 88,22
+\\ \hline
+	35,50 & 2 & 88,01
+\\ \hline
+	35,25 & 1 & 87,97
+\\ \hline
+	35,00 & 48 & 87,95
+\\ \hline
+	34,75 & 8 & 86,99
+\\ \hline
+	34,50 & 5 & 86,83
+\\ \hline
+	34,25 & 2 & 86,73
+\\ \hline
+	34,00 & 2 & 86,69
+\\ \hline
+	33,75 & 71 & 86,65
+\\ \hline
+	33,50 & 7 & 85,24
+\\ \hline
+	33,25 & 7 & 85,1
+\\ \hline
+	33,00 & 14 & 84,96
+\\ \hline
+	32,75 & 1 & 84,68
+\\ \hline
+	32,50 & 66 & 84,66
+\\ \hline
+	32,25 & 4 & 83,34
+\\ \hline
+	32,00 & 16 & 83,26
+\\ \hline
+	31,75 & 6 & 82,94
+\\ \hline
+	31,50 & 2 & 82,83
+\\ \hline
+	31,25 & 78 & 82,79
+\\ \hline
+	31,00 & 20 & 81,23
+\\ \hline
+	30,75 & 15 & 80,83
+\\ \hline
+	30,50 & 6 & 80,53
+\\ \hline
+	30,25 & 2 & 80,41
+\\ \hline
+	30,00 & 64 & 80,37
+\\ \hline
+	29,75 & 22 & 79,1
+\\ \hline
+	29,50 & 13 & 78,66
+\\ \hline
+	29,25 & 2 & 78,4
+\\ \hline
+	29,00 & 3 & 78,36
+\\ \hline
+	28,75 & 89 & 78,3
+\\ \hline
+	28,50 & 20 & 76,53
+\\ \hline
+	28,25 & 13 & 76,13
+\\ \hline
+	28,00 & 9 & 75,87
+\\ \hline
+	27,75 & 8 & 75,69
+\\ \hline
+	27,50 & 101 & 75,53
+\\ \hline
+	27,25 & 21 & 73,52
+\\ \hline
+	27,00 & 24 & 73,1
+\\ \hline
+	26,75 & 13 & 72,62
+\\ \hline
+	26,50 & 8 & 72,37
+\\ \hline
+	26,25 & 79 & 72,21
+\\ \hline
+	26,00 & 16 & 70,63
+\\ \hline
+	25,75 & 28 & 70,31
+\\ \hline
+	25,50 & 10 & 69,75
+\\ \hline
+	25,25 & 4 & 69,56
+\\ \hline
+	25,00 & 92 & 69,48
+\\ \hline
+	24,75 & 17 & 67,64
+\\ \hline
+	24,50 & 24 & 67,3
+\\ \hline
+	24,25 & 14 & 66,83
+\\ \hline
+	24,00 & 13 & 66,55
+\\ \hline
+	23,75 & 94 & 66,29
+\\ \hline
+	23,50 & 16 & 64,42
+\\ \hline
+	23,25 & 22 & 64,1
+\\ \hline
+	23,00 & 20 & 63,66
+\\ \hline
+	22,75 & 13 & 63,26
+\\ \hline
+	22,50 & 115 & 63,0
+\\ \hline
+	22,25 & 18 & 60,71
+\\ \hline
+	22,00 & 26 & 60,35
+\\ \hline
+	21,75 & 15 & 59,83
+\\ \hline
+	21,50 & 9 & 59,53
+\\ \hline
+	21,25 & 95 & 59,35
+\\ \hline
+	21,00 & 27 & 57,46
+\\ \hline
+	20,75 & 31 & 56,92
+\\ \hline
+	20,50 & 10 & 56,31
+\\ \hline
+	20,25 & 15 & 56,11
+\\ \hline
+	20,00 & 102 & 55,81
+\\ \hline
+	19,75 & 31 & 53,78
+\\ \hline
+	19,50 & 42 & 53,16
+\\ \hline
+	19,25 & 15 & 52,32
+\\ \hline
+	19,00 & 15 & 52,02
+\\ \hline
+	18,75 & 126 & 51,72
+\\ \hline
+	18,50 & 29 & 49,21
+\\ \hline
+	18,25 & 38 & 48,64
+\\ \hline
+	18,00 & 29 & 47,88
+\\ \hline
+	17,75 & 21 & 47,3
+\\ \hline
+	17,50 & 115 & 46,88
+\\ \hline
+	17,25 & 37 & 44,59
+\\ \hline
+	17,00 & 28 & 43,85
+\\ \hline
+	16,75 & 16 & 43,3
+\\ \hline
+	16,50 & 18 & 42,98
+\\ \hline
+	16,25 & 124 & 42,62
+\\ \hline
+	16,00 & 28 & 40,15
+\\ \hline
+	15,75 & 47 & 39,59
+\\ \hline
+	15,50 & 26 & 38,65
+\\ \hline
+	15,25 & 25 & 38,14
+\\ \hline
+	15,00 & 136 & 37,64
+\\ \hline
+	14,75 & 42 & 34,93
+\\ \hline
+	14,50 & 46 & 34,09
+\\ \hline
+	14,25 & 34 & 33,17
+\\ \hline
+	14,00 & 21 & 32,5
+\\ \hline
+	13,75 & 137 & 32,08
+\\ \hline
+	13,50 & 41 & 29,35
+\\ \hline
+	13,25 & 36 & 28,53
+\\ \hline
+	13,00 & 21 & 27,81
+\\ \hline
+	12,75 & 26 & 27,4
+\\ \hline
+	12,50 & 126 & 26,88
+\\ \hline
+	12,25 & 33 & 24,37
+\\ \hline
+	12,00 & 63 & 23,71
+\\ \hline
+	11,75 & 19 & 22,45
+\\ \hline
+	11,50 & 19 & 22,08
+\\ \hline
+	11,25 & 96 & 21,7
+\\ \hline
+	11,00 & 23 & 19,78
+\\ \hline
+	10,75 & 55 & 19,33
+\\ \hline
+	10,50 & 22 & 18,23
+\\ \hline
+	10,25 & 15 & 17,79
+\\ \hline
+	10,00 & 104 & 17,49
+\\ \hline
+	9,75 & 20 & 15,42
+\\ \hline
+	9,50 & 34 & 15,02
+\\ \hline
+	9,25 & 17 & 14,35
+\\ \hline
+	9,00 & 15 & 14,01
+\\ \hline
+	8,75 & 95 & 13,71
+\\ \hline
+	8,50 & 15 & 11,82
+\\ \hline
+	8,25 & 24 & 11,52
+\\ \hline
+	8,00 & 7 & 11,04
+\\ \hline
+	7,75 & 18 & 10,9
+\\ \hline
+	7,50 & 78 & 10,54
+\\ \hline
+	7,25 & 22 & 8,99
+\\ \hline
+	7,00 & 32 & 8,55
+\\ \hline
+	6,75 & 14 & 7,91
+\\ \hline
+	6,50 & 12 & 7,63
+\\ \hline
+	6,25 & 42 & 7,39
+\\ \hline
+	6,00 & 13 & 6,56
+\\ \hline
+	5,75 & 24 & 6,3
+\\ \hline
+	5,50 & 8 & 5,82
+\\ \hline
+	5,25 & 12 & 5,66
+\\ \hline
+	5,00 & 41 & 5,42
+\\ \hline
+	4,75 & 13 & 4,6
+\\ \hline
+	4,50 & 32 & 4,34
+\\ \hline
+	4,25 & 2 & 3,71
+\\ \hline
+	4,00 & 1 & 3,67
+\\ \hline
+	3,75 & 74 & 3,65
+\\ \hline
+	3,50 & 7 & 2,17
+\\ \hline
+	3,25 & 6 & 2,03
+\\ \hline
+	3,00 & 5 & 1,91
+\\ \hline
+	2,75 & 4 & 1,81
+\\ \hline
+	2,50 & 4 & 1,73
+\\ \hline
+	2,25 & 1 & 1,65
+\\ \hline
+	2,00 & 6 & 1,63
+\\ \hline
+	1,75 & 4 & 1,51
+\\ \hline
+	1,50 & 5 & 1,43
+\\ \hline
+	1,25 & 7 & 1,33
+\\ \hline
+	1,00 & 3 & 1,2
+\\ \hline
+	,75 & 12 & 1,14
+\\ \hline
+	0 & 45 & 0,9
+\\ \hline
+	
+\end{longtable}
+\end{center}
+	 \newpage {\large \bf
+        Lösungen je Aufgabe }
+		
+\begin{center}
+\begin{tabular}{|c||r|r||r|r||r|r|}
+\hline
+{\bf Aufgabe}  &  {\bf richtig}  &  {\bf \% richtig}  &  {\bf falsch}  &  {\bf \% falsch}  &   {\bf nicht gelöst}  &   {\bf \% nicht gelöst} \\\hline\hline
+	A-1 & 3155 & 62,86 & 1620 & 32,28 & 244 & 4,86
+\\ \hline
+	A-2 & 2061 & 41,06 & 1934 & 38,53 & 1024 & 20,4
+\\ \hline
+	A-3 & 2785 & 55,49 & 1315 & 26,2 & 919 & 18,31
+\\ \hline
+	A-4 & 2242 & 44,67 & 2358 & 46,98 & 419 & 8,35
+\\ \hline
+	B-1 & 2236 & 44,55 & 2091 & 41,66 & 692 & 13,79
+\\ \hline
+	B-2 & 1261 & 25,12 & 2959 & 58,96 & 799 & 15,92
+\\ \hline
+	B-3 & 907 & 18,07 & 3570 & 71,13 & 542 & 10,8
+\\ \hline
+	B-4 & 789 & 15,72 & 3225 & 64,26 & 1005 & 20,02
+\\ \hline
+	C-1 & 1021 & 20,34 & 2758 & 54,95 & 1240 & 24,71
+\\ \hline
+	C-2 & 696 & 13,87 & 3257 & 64,89 & 1066 & 21,24
+\\ \hline
+	C-3 & 1851 & 36,88 & 2191 & 43,65 & 977 & 19,47
+\\ \hline
+	C-4 & 1212 & 24,15 & 2771 & 55,21 & 1036 & 20,64
+\\ \hline
+	
+\end{tabular}
+\end{center}
+	
+
+\end{document}
+	
