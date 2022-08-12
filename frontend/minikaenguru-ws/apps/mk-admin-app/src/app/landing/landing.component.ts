@@ -19,7 +19,7 @@ export class LandingComponent implements OnInit, OnDestroy {
   isLoggedOut$ = this.authStore.select(isLoggedOut);
 
   constructor(private authStore: Store<AppState>
-    , private authService: AuthService
+    , public authService: AuthService
     , public versionService: VersionService
     , private wettbewerbFacade: WettbewerbFacade
     , private logger: LogService) { }

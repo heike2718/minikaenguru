@@ -14,7 +14,7 @@ export class NavbarComponent implements OnInit {
 
 	collapsed = true;
 	logo: string = '';
-
+	
 	isLoggedIn$ = this.authStore.select(isLoggedIn);
 	isLoggedOut$ = this.authStore.select(isLoggedOut);
 	user$ = this.sessionStore.select(user);

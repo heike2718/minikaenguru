@@ -2,11 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { WettbewerbFacade } from '../wettbewerb/wettbewerb.facade';
 import { AktuelleMeldungFacade } from '../aktuelle-meldung/aktuelle-meldung.facade';
 import { environment } from '../../environments/environment';
-import { AuthService, STORAGE_KEY_GUI_VERSION, STORAGE_KEY_USER, User } from '@minikaenguru-ws/common-auth';
+import { AuthService, STORAGE_KEY_USER, User } from '@minikaenguru-ws/common-auth';
 import { Router } from '@angular/router';
 import { VersionService } from 'libs/common-components/src/lib/version/version.service';
-import { Subscription } from 'rxjs';
-import { LogService } from '@minikaenguru-ws/common-logging';
 
 @Component({
 	selector: 'mkv-landing',
@@ -20,10 +18,9 @@ export class LandingComponent implements OnInit, OnDestroy {
 	aktuellerWettbewerb$ = this.wettbewerbFacade.aktuellerWettbewerb$;
 
 	constructor(private wettbewerbFacade: WettbewerbFacade
-		, private authService: AuthService
+		, public authService: AuthService
 		, private aktuelleMeldungFacade: AktuelleMeldungFacade
 		, public versionService: VersionService
-		, private logger: LogService
 		, private router: Router) { }
 
 	ngOnInit(): void {
