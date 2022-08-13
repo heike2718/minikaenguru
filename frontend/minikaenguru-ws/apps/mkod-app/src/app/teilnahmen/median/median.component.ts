@@ -23,7 +23,7 @@ export class MedianComponent implements OnInit {
   private klassenstufeText(): string {
 
     switch(this.median.klassenstufe) {
-      case 'IKID': return 'Integration';
+      case 'IKID': return 'Inklusion';
       case 'EINS': return 'Klasse 1';
       case 'ZWEI': return 'Klasse 2';
     };
