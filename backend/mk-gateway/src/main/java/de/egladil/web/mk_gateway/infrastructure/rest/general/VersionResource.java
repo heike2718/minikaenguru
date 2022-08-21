@@ -28,7 +28,7 @@ public class VersionResource {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(VersionResource.class);
 
-	@ConfigProperty(name = "quarkus.application.version")
+	@ConfigProperty(name = "quarkus.application.version", defaultValue = "")
 	String version;
 
 	@ConfigProperty(name = "env")

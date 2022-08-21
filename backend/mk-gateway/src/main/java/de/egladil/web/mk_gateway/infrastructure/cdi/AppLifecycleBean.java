@@ -32,10 +32,14 @@ public class AppLifecycleBean {
 	@ConfigProperty(name = "path.external.files")
 	String pathExternalFiles;
 
+	@ConfigProperty(name = "quarkus.http.cors.origins", defaultValue = "")
+	String corsAllowedOrigins;
+
 	void onStartup(@Observes final StartupEvent ev) {
 
 		LOGGER.info(" ===========>  the download dir is {}", getPathDownloadDir());
 		LOGGER.info(" ===========>  the upload dir is {}", getPathUploadDir());
+		LOGGER.info(" ===========>  quarkus.http.cors.origins={}", corsAllowedOrigins);
 
 	}
 

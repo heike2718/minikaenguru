@@ -33,7 +33,7 @@ public class SecureHeadersFilter implements ContainerResponseFilter {
 
 		final MultivaluedMap<String, Object> headers = responseContext.getHeaders();
 
-		addCORSHeaders(headers);
+		// addCORSHeaders(headers);
 
 		if (headers.get("Cache-Control") == null) {
 
