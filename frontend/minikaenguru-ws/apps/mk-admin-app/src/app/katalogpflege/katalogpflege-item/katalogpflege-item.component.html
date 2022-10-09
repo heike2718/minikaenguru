@@ -1,8 +1,8 @@
 <div class="card">
 	<p *ngIf="devMode">katalogpflege-item.component</p>
 	<div class="card-body">
-		<div class="card-title col-12">{{katalogItem?.name}} ({{katalogItem?.kuerzel}})
-			<span *ngIf="katalogItem?.typ !=='SCHULE'" class="ml-1 badge badge-dark">{{anzahlText}}
+		<div class="card-title col-12">{{katalogItem.name}} ({{katalogItem.kuerzel}})
+			<span *ngIf="katalogItem.typ !=='SCHULE'" class="ml-1 badge badge-dark">{{anzahlText}}
 				{{katalogItem.anzahlKinder}}</span>
 		</div>
 		<div *ngIf="katalogItem.parent" class="card-subtitle mb-2 text-muted col-12">

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators, UntypedFormBuilder } from '@angular/forms';
 import { VertragAdvFacade } from './vertrag-adv.facade';
 import { Subscription } from 'rxjs';
 import { VertragAdvEditorModel } from './vertrag-adv.model';
@@ -16,7 +16,7 @@ import { LogService } from '@minikaenguru-ws/common-logging';
 })
 export class VertragAdvComponent implements OnInit, OnDestroy {
 
-	vertragAdvForm: FormGroup;
+	vertragAdvForm: UntypedFormGroup;
 
 	vertragAdvEditorModel$ = this.vertragAdvFacade.vertragAdvEditorModel$;
 	submitDisabled$ = this.vertragAdvFacade.submitDisabled$;
@@ -37,31 +37,31 @@ export class VertragAdvComponent implements OnInit, OnDestroy {
 
 	initialEditorModel?: VertragAdvEditorModel;
 
-	schulnameFormControl: FormControl;
+	schulnameFormControl: UntypedFormControl;
 
-	plzFormControl: FormControl;
+	plzFormControl: UntypedFormControl;
 
-	ortFormControl: FormControl;
+	ortFormControl: UntypedFormControl;
 
-	strasseFormControl: FormControl;
+	strasseFormControl: UntypedFormControl;
 
-	hausnummerFormControl: FormControl;
+	hausnummerFormControl: UntypedFormControl;
 
 	formChangeSubscription: Subscription = new Subscription();
 
 	advEditorModelSubscription: Subscription = new Subscription();
 
-	constructor(private fb: FormBuilder,
+	constructor(private fb: UntypedFormBuilder,
 		private router: Router,
 		private vertragAdvFacade: VertragAdvFacade,
 		private lehrerFacade: LehrerFacade,
 		private logger: LogService) {
 
-		this.schulnameFormControl = new FormControl({ value: '', disabled: true }),
-			this.plzFormControl = new FormControl({ value: '' }, Validators.required);
-		this.ortFormControl = new FormControl({ value: '', disabled: true }),
-			this.strasseFormControl = new FormControl({ value: '' }, Validators.required);
-		this.hausnummerFormControl = new FormControl({ value: '' }, Validators.required);
+		this.schulnameFormControl = new UntypedFormControl({ value: '', disabled: true }),
+			this.plzFormControl = new UntypedFormControl({ value: '' }, Validators.required);
+		this.ortFormControl = new UntypedFormControl({ value: '', disabled: true }),
+			this.strasseFormControl = new UntypedFormControl({ value: '' }, Validators.required);
+		this.hausnummerFormControl = new UntypedFormControl({ value: '' }, Validators.required);
 
 
 		this.vertragAdvForm = this.fb.group({

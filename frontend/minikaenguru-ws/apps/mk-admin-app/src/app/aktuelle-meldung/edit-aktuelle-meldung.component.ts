@@ -3,7 +3,7 @@ import { AktuelleMeldungFacade } from './aktuelle-meldung.facade';
 import { Subscription } from 'rxjs';
 import { AktuelleMeldung, initialAktuelleMeldung } from './aktuelle-meldung.model';
 import { MessageService } from '@minikaenguru-ws/common-messages';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { LogService } from '@minikaenguru-ws/common-logging';
 
 @Component({
@@ -21,7 +21,7 @@ export class EditAktuelleMeldungComponent implements OnInit, OnDestroy {
 	aktuelleMeldungGeladen$ = this.aktuelleMeldungFacade.aktuelleMeldungGeladen$;
 	aktuelleMeldung: AktuelleMeldung = initialAktuelleMeldung;
 
-	constructor(private fb: FormBuilder,
+	constructor(private fb: UntypedFormBuilder,
 		private aktuelleMeldungFacade: AktuelleMeldungFacade,
 		private logger: LogService) { }
 

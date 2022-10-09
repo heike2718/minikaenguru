@@ -1,4 +1,4 @@
-import { AbstractControl, FormGroup, FormControl } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 
 
 export function emailValidator(control: AbstractControl): {
@@ -35,12 +35,12 @@ export function landValidator(control: AbstractControl): {
 	return null;
 };
 
-export function validateAllFormFields(formGroup: FormGroup): void {
+export function validateAllFormFields(formGroup: UntypedFormGroup): void {
 	Object.keys(formGroup.controls).forEach(field => {
 		const control = formGroup.get(field);
-		if (control instanceof FormControl) {
+		if (control instanceof UntypedFormControl) {
 			control.markAsTouched({ onlySelf: true });
-		} else if (control instanceof FormGroup) {
+		} else if (control instanceof UntypedFormGroup) {
 			validateAllFormFields(control);
 		}
 	});

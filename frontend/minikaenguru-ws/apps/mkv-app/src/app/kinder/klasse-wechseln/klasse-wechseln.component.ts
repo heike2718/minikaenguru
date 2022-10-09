@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy, ViewChild, TemplateRef } from '@an
 import { Kind, Klasse, kindToString, Duplikatwarnung, KindEditorModel, modalOptions } from '@minikaenguru-ws/common-components';
 import { KinderFacade } from '../kinder.facade';
 import { Subscription, Observable, of } from 'rxjs';
-import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, Validators, UntypedFormGroup } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MessageService } from '@minikaenguru-ws/common-messages';
@@ -39,9 +39,9 @@ export class KlasseWechselnComponent implements OnInit, OnDestroy {
 
 	klassenNamen: string[] = [];
 
-	klassenForm!: FormGroup;
+	klassenForm!: UntypedFormGroup;
 
-	klassenFormControl!: FormControl;
+	klassenFormControl!: UntypedFormControl;
 
 	duplikatwarnung!: Duplikatwarnung;
 
@@ -65,7 +65,7 @@ export class KlasseWechselnComponent implements OnInit, OnDestroy {
 
 	private schuleSubscription: Subscription = new Subscription();
 
-	constructor(private fb: FormBuilder,
+	constructor(private fb: UntypedFormBuilder,
 		private modalService: NgbModal,
 		private kinderFacade: KinderFacade,
 		private klassenFacade: KlassenFacade,
@@ -211,7 +211,7 @@ export class KlasseWechselnComponent implements OnInit, OnDestroy {
 
 	private initForm(): void {
 
-		this.klassenFormControl = new FormControl({ value: '' }, Validators.required);
+		this.klassenFormControl = new UntypedFormControl({ value: '' }, Validators.required);
 
 		this.klassenForm = this.fb.group({
 			klasse: this.klassenFormControl

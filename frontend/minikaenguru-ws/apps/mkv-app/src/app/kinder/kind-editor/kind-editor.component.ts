@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { KinderFacade } from '../kinder.facade';
-import { FormBuilder, FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, UntypedFormControl, Validators, AbstractControl } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 import { LogService } from '@minikaenguru-ws/common-logging';
 import { MessageService } from '@minikaenguru-ws/common-messages';
@@ -34,17 +34,17 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	devMode = environment.envName === 'DEV';
 
-	kindForm!: FormGroup;
+	kindForm!: UntypedFormGroup;
 
-	vornameFormControl!: FormControl;
+	vornameFormControl!: UntypedFormControl;
 
-	nachnameFormControl!: FormControl;
+	nachnameFormControl!: UntypedFormControl;
 
-	zusatzFormControl!: FormControl;
+	zusatzFormControl!: UntypedFormControl;
 
-	klassenstufeFormControl!: FormControl;
+	klassenstufeFormControl!: UntypedFormControl;
 
-	spracheFormControl!: FormControl;
+	spracheFormControl!: UntypedFormControl;
 
 	klassenstufen: string[];
 
@@ -84,7 +84,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	private selectedKindSubscription: Subscription = new Subscription();
 
-	constructor(private fb: FormBuilder,
+	constructor(private fb: UntypedFormBuilder,
 		private modalService: NgbModal,
 		private kinderFacade: KinderFacade,
 		private lehrerFacade: LehrerFacade,
@@ -277,11 +277,11 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	private initForm(): void {
 
-		this.vornameFormControl = new FormControl({ value: '' }, { validators: [Validators.required, Validators.maxLength(55)] });
-		this.nachnameFormControl = new FormControl({ value: '' }, { validators: [Validators.maxLength(55)] });
-		this.zusatzFormControl = new FormControl({ value: '' }, { validators: [Validators.maxLength(55)] });
-		this.klassenstufeFormControl = new FormControl({ value: '' }, { validators: [Validators.required] });
-		this.spracheFormControl = new FormControl({ value: '' }, Validators.required);
+		this.vornameFormControl = new UntypedFormControl({ value: '' }, { validators: [Validators.required, Validators.maxLength(55)] });
+		this.nachnameFormControl = new UntypedFormControl({ value: '' }, { validators: [Validators.maxLength(55)] });
+		this.zusatzFormControl = new UntypedFormControl({ value: '' }, { validators: [Validators.maxLength(55)] });
+		this.klassenstufeFormControl = new UntypedFormControl({ value: '' }, { validators: [Validators.required] });
+		this.spracheFormControl = new UntypedFormControl({ value: '' }, Validators.required);
 
 		this.kindForm = this.fb.group({
 			vorname: this.vornameFormControl,

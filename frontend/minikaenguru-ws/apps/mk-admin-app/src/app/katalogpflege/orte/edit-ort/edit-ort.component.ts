@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { KatalogpflegeFacade } from '../../katalogpflege.facade';
-import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { initialOrtPayload, OrtPayload } from '../../katalogpflege.model';
 import { environment } from '../../../../environments/environment';
@@ -16,7 +16,7 @@ export class EditOrtComponent implements OnInit, OnDestroy {
 
 	editOrtInput$ = this.katalogFacade.editOrtInput$;
 
-	editOrtForm!: FormGroup;
+	editOrtForm!: UntypedFormGroup;
 
 	name!: AbstractControl;
 
@@ -34,7 +34,7 @@ export class EditOrtComponent implements OnInit, OnDestroy {
 
 	private ortPayload: OrtPayload = initialOrtPayload;
 
-	constructor(private fb: FormBuilder, private katalogFacade: KatalogpflegeFacade) { }
+	constructor(private fb: UntypedFormBuilder, private katalogFacade: KatalogpflegeFacade) { }
 
 	ngOnInit(): void {
 

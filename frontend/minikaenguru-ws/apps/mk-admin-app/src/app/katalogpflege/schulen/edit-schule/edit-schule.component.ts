@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { KatalogpflegeFacade } from '../../katalogpflege.facade';
-import { FormGroup, AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { SchulePayload } from '../../katalogpflege.model';
 import { Subscription } from 'rxjs';
 import { initialSchuleEditorModel, SchuleEditorModel } from '../../+state/katalogpflege.reducer';
@@ -18,7 +18,7 @@ export class EditSchuleComponent implements OnInit, OnDestroy {
 
 	editSchuleInput$ = this.katalogFacade.editSchuleInput$;
 
-	editSchuleForm!: FormGroup;
+	editSchuleForm!: UntypedFormGroup;
 
 	name!: AbstractControl;
 
@@ -44,7 +44,7 @@ export class EditSchuleComponent implements OnInit, OnDestroy {
 
 	private editSchuleInputSubscription: Subscription = new Subscription();
 
-	constructor(private fb: FormBuilder, private katalogFacade: KatalogpflegeFacade) { }
+	constructor(private fb: UntypedFormBuilder, private katalogFacade: KatalogpflegeFacade) { }
 
 	ngOnInit(): void {
 

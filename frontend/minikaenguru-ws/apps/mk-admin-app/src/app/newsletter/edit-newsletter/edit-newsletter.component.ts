@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { NewsletterFacade } from '../newsletter.facade';
 import { Subscription } from 'rxjs';
 import { initialNewsletter, Newsletter } from '../newsletter.model';
@@ -16,11 +16,11 @@ export class EditNewsletterComponent implements OnInit, OnDestroy {
 
 	devMode = environment.envName === 'DEV';
 
-	newsletterForm!: FormGroup;
+	newsletterForm!: UntypedFormGroup;
 
-	betreffControl!: FormControl;
+	betreffControl!: UntypedFormControl;
 
-	textControl!: FormControl;
+	textControl!: UntypedFormControl;
 
 	editorInitialized = false;
 
@@ -30,7 +30,7 @@ export class EditNewsletterComponent implements OnInit, OnDestroy {
 
 	private editorModelSubscription: Subscription = new Subscription();
 
-	constructor(private fb: FormBuilder,
+	constructor(private fb: UntypedFormBuilder,
 		private router: Router,
 		public newsletterFacade: NewsletterFacade,
 		private messageService: MessageService) {
@@ -96,8 +96,8 @@ export class EditNewsletterComponent implements OnInit, OnDestroy {
 
 	private initForm(): void {
 
-		this.betreffControl = new FormControl({value: ''}, { validators: [Validators.required, Validators.maxLength(100)] })
-		this.textControl = new FormControl({value: ''}, { validators: [Validators.required, Validators.minLength(1)] })
+		this.betreffControl = new UntypedFormControl({value: ''}, { validators: [Validators.required, Validators.maxLength(100)] })
+		this.textControl = new UntypedFormControl({value: ''}, { validators: [Validators.required, Validators.minLength(1)] })
 
 
 		this.newsletterForm = this.fb.group({

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, AbstractControl, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, AbstractControl, Validators } from '@angular/forms';
 import { KatalogpflegeFacade } from '../../katalogpflege.facade';
 import { Subscription } from 'rxjs';
 import { initialLandPayload, LandPayload } from '../../katalogpflege.model';
@@ -13,7 +13,7 @@ export class EditLandComponent implements OnInit, OnDestroy {
 
 	edtitLandInput$ = this.katalogFacade.editLandInput$;
 
-	editLandForm!: FormGroup;
+	editLandForm!: UntypedFormGroup;
 
 	name!: AbstractControl;
 
@@ -27,7 +27,7 @@ export class EditLandComponent implements OnInit, OnDestroy {
 
 	private landPayload: LandPayload = initialLandPayload;
 
-	constructor(private fb: FormBuilder, private katalogFacade: KatalogpflegeFacade) { }
+	constructor(private fb: UntypedFormBuilder, private katalogFacade: KatalogpflegeFacade) { }
 
 	ngOnInit(): void {
 
