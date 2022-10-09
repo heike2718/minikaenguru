@@ -11,12 +11,12 @@
 
 	<properties>
 		<commons.version>1.7.7</commons.version>
-		<filescanner.version>2.0.6</filescanner.version>
+		<filescanner.version>2.1.1</filescanner.version>
 		<quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
 		<quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-		<quarkus.platform.version>2.11.1.Final</quarkus.platform.version>
+		<quarkus.platform.version>2.13.0.Final</quarkus.platform.version>
 		<surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
-		<dependency-check.version>7.0.4</dependency-check.version>
+		<dependency-check.version>7.1.0</dependency-check.version>
 		<!--
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
