@@ -233,10 +233,7 @@
           }
         }
       },
-      "tags": [
-        "domain:mk-admin-app",
-        "type:app"
-      ]
+      "tags": ["domain:mk-admin-app", "type:app"]
     },
     "mk-admin-app-e2e": {
       "root": "apps/mk-admin-app-e2e",
@@ -258,9 +255,7 @@
         }
       },
       "tags": [],
-      "implicitDependencies": [
-        "mk-admin-app"
-      ]
+      "implicitDependencies": ["mk-admin-app"]
     },
     "mkod-app": {
       "projectType": "application",
@@ -401,19 +396,14 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/apps/mkod-app"
-          ],
+          "outputs": ["coverage/apps/mkod-app"],
           "options": {
             "jestConfig": "apps/mkod-app/jest.config.js",
             "passWithNoTests": true
           }
         }
       },
-      "tags": [
-        "domain:mkod-app",
-        "type:app"
-      ]
+      "tags": ["domain:mkod-app", "type:app"]
     },
     "mkod-app-e2e": {
       "root": "apps/mkod-app-e2e",
@@ -436,16 +426,12 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/mkod-app-e2e/**/*.{js,ts}"
-            ]
+            "lintFilePatterns": ["apps/mkod-app-e2e/**/*.{js,ts}"]
           }
         }
       },
       "tags": [],
-      "implicitDependencies": [
-        "mkod-app"
-      ]
+      "implicitDependencies": ["mkod-app"]
     },
     "mkv-app": {
       "projectType": "application",
@@ -585,10 +571,7 @@
           }
         }
       },
-      "tags": [
-        "domain:mkv-app",
-        "type:app"
-      ]
+      "tags": ["domain:mkv-app", "type:app"]
     },
     "mkv-app-e2e": {
       "root": "apps/mkv-app-e2e",
@@ -610,9 +593,7 @@
         }
       },
       "tags": [],
-      "implicitDependencies": [
-        "mkv-app"
-      ]
+      "implicitDependencies": ["mkv-app"]
     },
     "shared-util-logging": {
       "projectType": "library",
@@ -652,6 +633,48 @@
       "schematics": {},
       "tags": []
     },
+    "shared-util-mk": {
+      "projectType": "library",
+      "root": "libs/shared/util-mk",
+      "sourceRoot": "libs/shared/util-mk/src",
+      "prefix": "mk",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "outputs": ["dist/libs/shared/util-mk"],
+          "options": {
+            "project": "libs/shared/util-mk/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/shared/util-mk/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "libs/shared/util-mk/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/shared/util-mk"],
+          "options": {
+            "jestConfig": "libs/shared/util-mk/jest.config.ts",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/shared/util-mk/**/*.ts",
+              "libs/shared/util-mk/**/*.html"
+            ]
+          }
+        }
+      },
+      "tags": ["domain:shared", "type:util"]
+    },
     "test-lib": {
       "projectType": "library",
       "root": "libs/test-lib",
@@ -671,5 +694,8 @@
       "schematics": {},
       "tags": []
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

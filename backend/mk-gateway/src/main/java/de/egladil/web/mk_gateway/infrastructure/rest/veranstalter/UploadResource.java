@@ -38,6 +38,7 @@ import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * UploadResource
@@ -58,6 +59,9 @@ public class UploadResource {
 	@Inject
 	WettbewerbService wettbewerbService;
 
+	@Inject
+	DevDelayService delayService;
+
 	@POST
 	@Path("klassenlisten/{jahr}/{kuerzelLand}/{schulkuerzel}")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -67,6 +71,8 @@ public class UploadResource {
 			value = "schulkuerzel") @Kuerzel final String schulkuerzel, @QueryParam(
 				value = "nachnameAlsZusatz") final String nachnameAlsZusatzString, @QueryParam(
 					value = "sprache") @NotBlank final String sprache, final MultipartFormDataInput input) {
+
+		this.delayService.pause();
 
 		String veranstalterUuid = securityContext.getUserPrincipal().getName();
 		UploadType uploadType = UploadType.KLASSENLISTE;
@@ -100,6 +106,8 @@ public class UploadResource {
 	public Response uploadAuswertung(@PathParam(value = "jahr") final Integer jahr, @PathParam(
 		value = "kuerzelLand") @LandKuerzel final String kuerzelLand, @PathParam(
 			value = "schulkuerzel") @Kuerzel final String schulkuerzel, final MultipartFormDataInput input) {
+
+		this.delayService.pause();
 
 		String veranstalterUuid = securityContext.getUserPrincipal().getName();
 		UploadType uploadType = UploadType.AUSWERTUNG;

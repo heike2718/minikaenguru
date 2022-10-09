@@ -15,10 +15,6 @@ export const schulenLoaded = createAction(
 	props<{ schulen: Schule[] }>()
 );
 
-export const startLoading = createAction(
-	'[LehrerFacade] before request'
-);
-
 export const finishedWithError = createAction(
 	'[LehrerFacade] on error'
 );

@@ -14,6 +14,7 @@ import de.egladil.web.mk_gateway.domain.statistik.StatistikAnonymisierteEinzelte
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * PersonalizedStatisticsResourceDelegate
@@ -24,7 +25,12 @@ public class PersonalizedStatisticsResourceDelegate {
 	@Inject
 	StatistikAnonymisierteEinzelteilnahmeService statistikAnonymisierteEinzelteilnahmeService;
 
+	@Inject
+	DevDelayService delayService;
+
 	public DownloadData erstelleStatistikPDFEinzelteilnahme(@NotNull final String teilnahmeart, @NotNull final String teilnahmenummer, @NotNull final String jahr, @NotNull final String userUuid) {
+
+		this.delayService.pause();
 
 		WettbewerbID wettbewerbID = null;
 

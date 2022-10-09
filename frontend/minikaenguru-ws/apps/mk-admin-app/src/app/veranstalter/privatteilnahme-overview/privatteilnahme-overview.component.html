@@ -1,5 +1,5 @@
 <div class="mkv-container mt-1">
-	<div *ngIf="(veranstalter$ | async) as veranstalter else loading">
+	<div *ngIf="(veranstalter$ | async) as veranstalter">
 		<ng-container *ngIf="veranstalter && veranstalter.privatOverview">
 
 			<h3>{{veranstalter.fullName}} - {{veranstalter.teilnahmenummern[0]}}</h3>
@@ -43,7 +43,3 @@
 
 	<mka-veranstalter-nav></mka-veranstalter-nav>
 </div>
-<ng-template #loading>
-	<h3>Teilnahme</h3>
-	Lade Overview... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
-</ng-template>

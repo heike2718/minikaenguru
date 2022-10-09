@@ -27,8 +27,6 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 
 	aktuellerWettbewerb$ = this.wettbewerbFacade.aktuellerWettbewerb$;
 
-	loading$ = this.lehrerFacade.loading$;
-
 	textFeatureFlagAnzeigen = false;
 	textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber bis März.';
 

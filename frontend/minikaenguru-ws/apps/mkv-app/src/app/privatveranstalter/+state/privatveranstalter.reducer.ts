@@ -8,26 +8,18 @@ export const privatveranstalterFeatureKey = 'mkv-app-privatveranstalter';
 export interface PrivatveranstalterState {
 	readonly veranstalter?: Privatveranstalter;
 	readonly aktuelleTeilnahmeGeladen: boolean;
-	readonly loading: boolean;
 }
 
 const initialPrivatveranstalterState: PrivatveranstalterState = {
 	veranstalter: undefined,
 	aktuelleTeilnahmeGeladen: false,
-	loading: false,
 };
 
 const privatveranstalterReducer = createReducer(initialPrivatveranstalterState,
 
-	on(PrivatveranstalterActions.startLoading, (state, _action) => {
-
-		return { ...state, loading: true };
-	}),
-
-
 	on(PrivatveranstalterActions.finishedWithError, (state, _action) => {
 
-		return { ...state, loading: false };
+		return { ...state };
 	}),
 
 
@@ -44,19 +36,19 @@ const privatveranstalterReducer = createReducer(initialPrivatveranstalterState,
 	on(PrivatveranstalterActions.aboNewsletterChanged, (state, _action) => {
 
 		if (!state.veranstalter) {
-			return {...state, loading: false};
+			return {...state};
 		}
 
 		const abonniert = !state.veranstalter.newsletterAbonniert;
 		const neuerVeranstalter = {...state.veranstalter, newsletterAbonniert: abonniert};
-		return { ...state, loading: false, veranstalter: neuerVeranstalter };
+		return { ...state, veranstalter: neuerVeranstalter };
 	}),
 
 
 	on(PrivatveranstalterActions.privatveranstalterAngemeldet, (state, action) => {
 
 		if (!state.veranstalter) {
-			return {...state, loading: false};
+			return {...state};
 		}
 
 		const neuerVeranstalter: Privatveranstalter = { ...state.veranstalter, aktuellAngemeldet: true, aktuelleTeilnahme: action.teilnahme };

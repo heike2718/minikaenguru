@@ -25,6 +25,7 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.mail.NewsletterService;
 import de.egladil.web.mk_gateway.domain.mail.api.NewsletterAPIModel;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * AdminNewsletterResource
@@ -38,8 +39,13 @@ public class AdminNewsletterResource {
 	@Inject
 	NewsletterService newsletterService;
 
+	@Inject
+	DevDelayService delayService;
+
 	@GET
 	public Response loadNewsletters() {
+
+		this.delayService.pause();
 
 		List<NewsletterAPIModel> newsletters = this.newsletterService.getAllNewsletters();
 
@@ -49,11 +55,15 @@ public class AdminNewsletterResource {
 	@POST
 	public Response addNewsletter(final NewsletterAPIModel newsletter) {
 
+		this.delayService.pause();
+
 		return insertOrUpdateNewsletter(newsletter);
 	}
 
 	@PUT
 	public Response changeNewsletter(final NewsletterAPIModel newsletter) {
+
+		this.delayService.pause();
 
 		return insertOrUpdateNewsletter(newsletter);
 
@@ -62,6 +72,8 @@ public class AdminNewsletterResource {
 	@DELETE
 	@Path("{newsletterID}")
 	public Response deleteNewsletter(@UuidString @PathParam(value = "newsletterID") final String newsletterID) {
+
+		this.delayService.pause();
 
 		Identifier identifier = new Identifier(newsletterID);
 		this.newsletterService.newsletterLoeschen(identifier);

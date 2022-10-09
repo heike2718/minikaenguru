@@ -18,6 +18,7 @@ import javax.ws.rs.core.SecurityContext;
 
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 import de.egladil.web.mk_gateway.infrastructure.rest.general.statistik.PersonalizedStatisticsResourceDelegate;
 
 /**
@@ -34,11 +35,16 @@ public class StatistikResource {
 	@Inject
 	PersonalizedStatisticsResourceDelegate statisticsResourceDelegate;
 
+	@Inject
+	DevDelayService delayService;
+
 	@GET
 	@Path("{teilnahmeart}/{teilnahmenummer}/{jahr}")
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_JSON })
 	public Response downloadStatistik(@PathParam(value = "teilnahmeart") final String teilnahmeart, @PathParam(
 		value = "teilnahmenummer") final String teilnahmenummer, @PathParam(value = "jahr") final String jahr) {
+
+		this.delayService.pause();
 
 		DownloadData data = this.statisticsResourceDelegate.erstelleStatistikPDFEinzelteilnahme(teilnahmeart, teilnahmenummer, jahr,
 			securityContext.getUserPrincipal().getName());

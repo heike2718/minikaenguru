@@ -26,6 +26,7 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.admin.AdminSchulenService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.admin.SchuleAdminOverview;
 import de.egladil.web.mk_gateway.domain.uploadmonitoring.api.UploadMonitoringInfo;
 import de.egladil.web.mk_gateway.domain.uploadmonitoring.api.UploadMonitoringService;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * AdminSchulenResource
@@ -45,10 +46,15 @@ public class AdminSchulenResource {
 	@Inject
 	UploadMonitoringService uploadMonitoringService;
 
+	@Inject
+	DevDelayService delayService;
+
 	@GET
 	@Path("{schulkuerzel}")
 	public Response getSchulinfos(@PathParam(
 		value = "schulkuerzel") final String schulkuerzel) {
+
+		this.delayService.pause();
 
 		Optional<SchuleAdminOverview> optSchule = adminSchulenService.ermittleSchuleMitDetails(schulkuerzel,
 			securityContext.getUserPrincipal().getName());
@@ -65,6 +71,8 @@ public class AdminSchulenResource {
 	@Path("{schulkuerzel}/uploads/klassenlisten")
 	public Response getUploadsKlassenlisten(@PathParam(
 		value = "schulkuerzel") final String schulkuerzel) {
+
+		this.delayService.pause();
 
 		List<UploadMonitoringInfo> trefferliste = uploadMonitoringService
 			.findUploadsKlassenlisteWithTeilnahmenummer(schulkuerzel);

@@ -9,21 +9,19 @@ export const laender = createSelector(katalogflegeState, s => new KatalogPflegeI
 export const orte = createSelector(katalogflegeState, s => s.filteredOrte);
 export const schulen = createSelector(katalogflegeState, s => s.filteredSchulen);
 export const selectedItem = createSelector(katalogflegeState, s => s.selectedKatalogItem);
-export const loading = createSelector(katalogflegeState, s => s.showLoadingIndicator);
 
 const schuleEditorModel = createSelector(katalogflegeState, s => s.schuleEditorModel);
 
-export const editSchuleInput = createSelector(schuleEditorModel, selectedItem, loading, (e, it, lo) => combineSchulePayloadWithModus(e, it, lo));
+export const editSchuleInput = createSelector(schuleEditorModel, selectedItem, (e, it) => combineSchulePayloadWithModus(e, it));
 export const editOrtInput = createSelector(katalogflegeState, s => s.ortEditorPayload);
 export const editLandInput = createSelector(katalogflegeState, s => s.landEditorPayload);
 
 
 
-function combineSchulePayloadWithModus(e: fromKatalogpflege.SchuleEditorModel, it?: KatalogpflegeItem, lo?: boolean): 
-{ 'schuleEditorModel': fromKatalogpflege.SchuleEditorModel, 'selectedItem'?: KatalogpflegeItem, 'loading': boolean } {
+function combineSchulePayloadWithModus(e: fromKatalogpflege.SchuleEditorModel, it?: KatalogpflegeItem): 
+{ 'schuleEditorModel': fromKatalogpflege.SchuleEditorModel, 'selectedItem'?: KatalogpflegeItem } {
 	return {
 		schuleEditorModel: e,
-		selectedItem: it,
-		loading: lo ? lo : false
+		selectedItem: it
 	};
-}
+};

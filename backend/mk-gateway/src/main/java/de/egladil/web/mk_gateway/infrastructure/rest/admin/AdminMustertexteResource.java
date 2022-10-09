@@ -24,6 +24,7 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.mustertexte.MustertexteService;
 import de.egladil.web.mk_gateway.domain.mustertexte.api.MustertextAPIModel;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * AdminMustertexteResource
@@ -37,11 +38,16 @@ public class AdminMustertexteResource {
 	@Inject
 	MustertexteService mustertexteService;
 
+	@Inject
+	DevDelayService delayService;
+
 	@Context
 	SecurityContext securityContext;
 
 	@GET
 	public Response loadMustertexte() {
+
+		this.delayService.pause();
 
 		ResponsePayload responsePayload = mustertexteService.loadMustertexte();
 
@@ -52,6 +58,8 @@ public class AdminMustertexteResource {
 	@Path("{mustertextID}")
 	public Response loadMustertextDetails(@UuidString @PathParam(value = "mustertextID") final String mustertextID) {
 
+		this.delayService.pause();
+
 		ResponsePayload responsePayload = mustertexteService.loadDetails(new Identifier(mustertextID));
 
 		return Response.ok(responsePayload).build();
@@ -60,6 +68,8 @@ public class AdminMustertexteResource {
 
 	@POST
 	public Response insertMustertext(final MustertextAPIModel mustertextApiModel) {
+
+		this.delayService.pause();
 
 		String adminUuid = securityContext.getUserPrincipal().getName();
 
@@ -73,6 +83,8 @@ public class AdminMustertexteResource {
 	public Response updateMustertext(@UuidString @PathParam(
 		value = "mustertextID") final String mustertextID, final MustertextAPIModel mustertextApiModel) {
 
+		this.delayService.pause();
+
 		String adminUuid = securityContext.getUserPrincipal().getName();
 
 		ResponsePayload responsePayload = mustertexteService.mustertextSpeichern(mustertextApiModel, adminUuid);
@@ -83,6 +95,8 @@ public class AdminMustertexteResource {
 	@DELETE
 	@Path("{mustertextID}")
 	public Response deleteMustertext(@UuidString @PathParam(value = "mustertextID") final String mustertextID) {
+
+		this.delayService.pause();
 
 		String adminUuid = securityContext.getUserPrincipal().getName();
 

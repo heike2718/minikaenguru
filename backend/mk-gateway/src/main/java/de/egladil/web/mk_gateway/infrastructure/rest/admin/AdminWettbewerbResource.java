@@ -32,6 +32,7 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.api.EditWettbewerbModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbDetailsAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbListAPIModel;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * AdminWettbewerbResource .../mk-gateway/admin/...
@@ -45,8 +46,13 @@ public class AdminWettbewerbResource extends AbstractAdminResource {
 	@Inject
 	WettbewerbService wettbewerbService;
 
+	@Inject
+	DevDelayService delayService;
+
 	@GET
 	public Response loadWettbewerbe() {
+
+		this.delayService.pause();
 
 		List<WettbewerbListAPIModel> wettbewerbe = this.wettbewerbService.alleWettbewerbeHolen();
 
@@ -57,6 +63,8 @@ public class AdminWettbewerbResource extends AbstractAdminResource {
 	@GET
 	@Path("wettbewerb/{jahr}")
 	public Response wettbewerbMitJahr(@PathParam(value = "jahr") final Integer jahr) {
+
+		this.delayService.pause();
 
 		Optional<WettbewerbDetailsAPIModel> optDaten = this.wettbewerbService.wettbewerbMitJahr(jahr);
 
@@ -72,6 +80,8 @@ public class AdminWettbewerbResource extends AbstractAdminResource {
 	@POST
 	@Path("wettbewerb")
 	public Response wettbewerbAnlegen(final EditWettbewerbModel data) {
+
+		this.delayService.pause();
 
 		Optional<WettbewerbDetailsAPIModel> optVorhanden = this.wettbewerbService.wettbewerbMitJahr(data.getJahr());
 
@@ -95,6 +105,8 @@ public class AdminWettbewerbResource extends AbstractAdminResource {
 	@Path("wettbewerb")
 	public Response wettbewerbAendern(final EditWettbewerbModel data) {
 
+		this.delayService.pause();
+
 		this.wettbewerbService.wettbewerbAendern(data);
 
 		ResponsePayload payload = ResponsePayload
@@ -106,6 +118,8 @@ public class AdminWettbewerbResource extends AbstractAdminResource {
 	@PUT
 	@Path("wettbewerb/status")
 	public Response starteNaechstePhase(final WettbewerbID wettbewerbId) {
+
+		this.delayService.pause();
 
 		WettbewerbStatus neuerStatus = wettbewerbService.starteNaechstePhase(wettbewerbId.jahr());
 
@@ -119,6 +133,8 @@ public class AdminWettbewerbResource extends AbstractAdminResource {
 	@GET
 	@Path("aktueller")
 	public Response getAktuellenWettbewerb() {
+
+		this.delayService.pause();
 
 		Optional<Wettbewerb> optWettbewerb = this.wettbewerbService.aktuellerWettbewerb();
 

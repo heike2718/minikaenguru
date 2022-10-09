@@ -31,6 +31,7 @@ import de.egladil.web.mk_gateway.domain.kataloge.SchulkatalogService;
 import de.egladil.web.mk_gateway.domain.kataloge.api.LandPayload;
 import de.egladil.web.mk_gateway.domain.kataloge.api.OrtPayload;
 import de.egladil.web.mk_gateway.domain.kataloge.api.SchulePayload;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * AdminKatalogResource
@@ -55,9 +56,14 @@ public class AdminKatalogResource {
 	@Inject
 	SchulkatalogService schulkatalogService;
 
+	@Inject
+	DevDelayService delayService;
+
 	@GET
 	@Path("laender")
 	public Response loadLaender() {
+
+		this.delayService.pause();
 
 		return katalogResourceAdapter.loadLaender(securityContext.getUserPrincipal().getName(), katalogAdminSecret);
 	}
@@ -66,12 +72,16 @@ public class AdminKatalogResource {
 	@Path("laender/{kuerzel}/orte")
 	public Response loadOrteInLand(@PathParam(value = "kuerzel") @Kuerzel final String kuerzel) {
 
+		this.delayService.pause();
+
 		return katalogResourceAdapter.loadOrteInLand(kuerzel);
 	}
 
 	@GET
 	@Path("orte/{kuerzel}/schulen")
 	public Response loadSchulenInOrt(@PathParam(value = "kuerzel") @Kuerzel final String kuerzel) {
+
+		this.delayService.pause();
 
 		return katalogResourceAdapter.loadSchulenInOrt(kuerzel);
 	}
@@ -80,6 +90,8 @@ public class AdminKatalogResource {
 	@Path("laender")
 	public Response renameLand(final LandPayload requestPayload) {
 
+		this.delayService.pause();
+
 		String uuid = securityContext.getUserPrincipal().getName();
 		return katalogResourceAdapter.renameLand(uuid, katalogAdminSecret, requestPayload);
 	}
@@ -87,6 +99,8 @@ public class AdminKatalogResource {
 	@PUT
 	@Path("orte")
 	public Response renameOrt(final OrtPayload requestPayload) {
+
+		this.delayService.pause();
 
 		String uuid = securityContext.getUserPrincipal().getName();
 
@@ -98,6 +112,8 @@ public class AdminKatalogResource {
 	@Path("schulen")
 	public Response renameSchule(final SchulePayload requestPayload) {
 
+		this.delayService.pause();
+
 		String uuid = securityContext.getUserPrincipal().getName();
 		return this.schulkatalogService.renameSchule(uuid, katalogAdminSecret, requestPayload);
 
@@ -106,6 +122,8 @@ public class AdminKatalogResource {
 	@POST
 	@Path("schulen")
 	public Response createSchule(final SchulePayload requestPayload) {
+
+		this.delayService.pause();
 
 		String uuid = securityContext.getUserPrincipal().getName();
 		return katalogResourceAdapter.createSchule(uuid, katalogAdminSecret, requestPayload);
@@ -117,12 +135,16 @@ public class AdminKatalogResource {
 	public Response sucheItems(@PathParam(
 		value = "typ") final String typ, @NotBlank @StringLatin @QueryParam("search") final String searchTerm) {
 
+		this.delayService.pause();
+
 		return katalogResourceAdapter.sucheItems(typ, searchTerm);
 	}
 
 	@GET
 	@Path("kuerzel")
 	public Response generateKuerzel() {
+
+		this.delayService.pause();
 
 		return katalogResourceAdapter.generateKuerzel(katalogAdminSecret);
 	}

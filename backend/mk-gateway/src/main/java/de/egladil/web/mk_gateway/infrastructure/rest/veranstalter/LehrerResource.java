@@ -38,6 +38,7 @@ import de.egladil.web.mk_gateway.domain.veranstalter.LehrerService;
 import de.egladil.web.mk_gateway.domain.veranstalter.SchulenAnmeldeinfoService;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.LehrerAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * LehrerResource
@@ -70,6 +71,9 @@ public class LehrerResource {
 	@Inject
 	KlassenService klassenService;
 
+	@Inject
+	DevDelayService delayService;
+
 	static LehrerResource createForPermissionTest(final AuthorizationService veranstalterAuthService, final LehrerService lehrerService, final SecurityContext securityContext) {
 
 		LehrerResource result = new LehrerResource();
@@ -81,6 +85,8 @@ public class LehrerResource {
 
 	@GET
 	public Response getLehrer() {
+
+		this.delayService.pause();
 
 		Principal principal = securityContext.getUserPrincipal();
 
@@ -94,6 +100,8 @@ public class LehrerResource {
 	@GET
 	@Path("schulen")
 	public Response findSchulen() {
+
+		this.delayService.pause();
 
 		Principal principal = securityContext.getUserPrincipal();
 
@@ -116,6 +124,8 @@ public class LehrerResource {
 	@Path("schulen/{schulkuerzel}/details")
 	public Response getSchuleDetails(@PathParam(value = "schulkuerzel") final String schulkuerzel) {
 
+		this.delayService.pause();
+
 		Principal principal = securityContext.getUserPrincipal();
 
 		final Identifier lehrerID = new Identifier(principal.getName());
@@ -134,6 +144,8 @@ public class LehrerResource {
 	@Path("schulen/{schulkuerzel}")
 	public Response addSchule(@PathParam(value = "schulkuerzel") @Kuerzel final String schulkuerzel) {
 
+		this.delayService.pause();
+
 		Principal principal = securityContext.getUserPrincipal();
 
 		final Identifier lehrerID = new Identifier(principal.getName());
@@ -151,6 +163,8 @@ public class LehrerResource {
 	@DELETE
 	@Path("schulen/{schulkuerzel}")
 	public Response removeSchule(@PathParam(value = "schulkuerzel") @Kuerzel final String schulkuerzel) {
+
+		this.delayService.pause();
 
 		Principal principal = securityContext.getUserPrincipal();
 
@@ -177,6 +191,8 @@ public class LehrerResource {
 	@DELETE
 	@Path("schulen/{schulkuerzel}/klassen")
 	public Response removeKlassen(@PathParam(value = "schulkuerzel") @Kuerzel final String schulkuerzel) {
+
+		this.delayService.pause();
 
 		Principal principal = securityContext.getUserPrincipal();
 

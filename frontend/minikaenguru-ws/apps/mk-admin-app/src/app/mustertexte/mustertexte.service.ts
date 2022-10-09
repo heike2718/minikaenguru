@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Message, ResponsePayload } from '@minikaenguru-ws/common-messages';
 import { Mail, Mustertext } from '../shared/shared-entities.model';
+import { LoadingIndicatorService } from '@minikaenguru-ws/shared/util-mk';
 
 
 @Injectable({
@@ -12,62 +13,74 @@ import { Mail, Mustertext } from '../shared/shared-entities.model';
 })
 export class MustertexteService {
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private loadingIndicatorService: LoadingIndicatorService) { }
 
     public loadMustertexte(): Observable<Mustertext[]> {
 
         const url = environment.apiUrl + '/mustertexte';
 
-		return this.http.get(url).pipe(
+		const obs$ = this.http.get(url).pipe(
 			map(body => body as ResponsePayload),
 			map(payload => payload.data)
 		);
+
+		return this.loadingIndicatorService.showLoaderUntilCompleted(obs$);
     }
 
 	public loadMustertext(uuid: string): Observable<Mustertext> {
 
         const url = environment.apiUrl + '/mustertexte/' + uuid;
 
-		return this.http.get(url).pipe(
+		const obs$ = this.http.get(url).pipe(
 			map(body => body as ResponsePayload),
 			map(payload => payload.data)
 		);
+
+		return this.loadingIndicatorService.showLoaderUntilCompleted(obs$);
     }
 
 	public insertMustertext(mustertext: Mustertext): Observable<ResponsePayload> {
 
 		const url = environment.apiUrl + '/mustertexte';
 
-		return this.http.post(url, mustertext).pipe(
+		const obs$ = this.http.post(url, mustertext).pipe(
 			map(body => body as ResponsePayload)
 		);
+
+		return this.loadingIndicatorService.showLoaderUntilCompleted(obs$);
 	}
 
 	public updateMustertext(mustertext: Mustertext): Observable<ResponsePayload> {
 
 		const url = environment.apiUrl + '/mustertexte/' + mustertext.uuid;
 
-		return this.http.put(url, mustertext).pipe(
+		const obs$ = this.http.put(url, mustertext).pipe(
 			map(body => body as ResponsePayload)
 		);
+
+		return this.loadingIndicatorService.showLoaderUntilCompleted(obs$);
 	}
 
 	public deleteMustertext(mustertext: Mustertext): Observable<ResponsePayload> {
 
 		const url = environment.apiUrl + '/mustertexte/' + mustertext.uuid;
 
-		return this.http.delete(url).pipe(
+		const obs$ = this.http.delete(url).pipe(
 			map(body => body as ResponsePayload)
 		);
+
+		return this.loadingIndicatorService.showLoaderUntilCompleted(obs$);
 	}
 
 	public sendMail(mail: Mail): Observable<Message> {
 
 		const url = environment.apiUrl + '/mails';
 
-		return this.http.post(url, mail).pipe(
+		const obs$ = this.http.post(url, mail).pipe(
 			map(body => body as ResponsePayload),
 			map(payload => payload.message)
 		);
+
+		return this.loadingIndicatorService.showLoaderUntilCompleted(obs$);
 	}
 };

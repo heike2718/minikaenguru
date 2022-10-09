@@ -25,6 +25,7 @@ import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.unterlagen.UnterlagenService;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * UnterlagenResource
@@ -42,6 +43,9 @@ public class UnterlagenResource {
 	@Inject
 	UnterlagenService unterlagenService;
 
+	@Inject
+	DevDelayService delayService;
+
 	/**
 	 * Läd die Unterlagen für Schulen herunter.
 	 *
@@ -54,6 +58,8 @@ public class UnterlagenResource {
 	@Path("schulen/{sprache}")
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM })
 	public Response getUnterlagenSchule(@PathParam(value = "sprache") final String sprache) {
+
+		this.delayService.pause();
 
 		Sprache theSprache = null;
 
@@ -86,6 +92,8 @@ public class UnterlagenResource {
 	@Path("privat/{sprache}")
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM })
 	public Response getUnterlagenPrivat(@PathParam(value = "sprache") final String sprache) {
+
+		this.delayService.pause();
 
 		Sprache theSprache = null;
 

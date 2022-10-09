@@ -22,6 +22,7 @@ import de.egladil.web.commons_validation.annotations.LandKuerzel;
 import de.egladil.web.commons_validation.annotations.StringLatin;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
 import de.egladil.web.mk_gateway.domain.kataloge.api.SchulkatalogAntrag;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * PublicKatalogsucheResource
@@ -34,10 +35,15 @@ public class PublicKatalogsucheResource {
 	@Inject
 	MkKatalogeResourceAdapter katalogResourceAdapter;
 
+	@Inject
+	DevDelayService delayService;
+
 	@GET
 	@Path("suche/{typ}")
 	public Response findItems(@PathParam(
 		value = "typ") final String typ, @NotBlank @StringLatin @QueryParam("search") final String searchTerm) {
+
+		this.delayService.pause();
 
 		return katalogResourceAdapter.findItems(typ, searchTerm);
 	}
@@ -47,6 +53,8 @@ public class PublicKatalogsucheResource {
 	public Response findOrteInLand(@LandKuerzel @PathParam(
 		value = "land") final String landKuerzel, @NotBlank @StringLatin @QueryParam("search") final String searchTerm) {
 
+		this.delayService.pause();
+
 		return katalogResourceAdapter.findOrteInLand(landKuerzel, searchTerm);
 	}
 
@@ -54,6 +62,8 @@ public class PublicKatalogsucheResource {
 	@Path("suche/orte/{ort}/schulen")
 	public Response findSchulenInOrt(@Kuerzel @PathParam(
 		value = "ort") final String ortKuerzel, @NotBlank @StringLatin @QueryParam("search") final String searchTerm) {
+
+		this.delayService.pause();
 
 		return katalogResourceAdapter.findSchulenInOrt(ortKuerzel, searchTerm);
 
@@ -64,6 +74,8 @@ public class PublicKatalogsucheResource {
 	public Response loadSchulenInOrt(@Kuerzel @PathParam(
 		value = "ort") final String ortKuerzel) {
 
+		this.delayService.pause();
+
 		return katalogResourceAdapter.loadSchulenInOrt(ortKuerzel);
 	}
 
@@ -71,6 +83,8 @@ public class PublicKatalogsucheResource {
 	@Path("laender/{land}/orte")
 	public Response loadOrteInLand(@LandKuerzel @PathParam(
 		value = "land") final String landKuerzel) {
+
+		this.delayService.pause();
 
 		return katalogResourceAdapter.loadOrteInLand(landKuerzel);
 
@@ -80,6 +94,8 @@ public class PublicKatalogsucheResource {
 	@Path("katalogantrag")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response sendeKatalogantrag(final SchulkatalogAntrag antrag) {
+
+		this.delayService.pause();
 
 		return this.katalogResourceAdapter.sendeSchulkatalogAntrag(antrag);
 	}

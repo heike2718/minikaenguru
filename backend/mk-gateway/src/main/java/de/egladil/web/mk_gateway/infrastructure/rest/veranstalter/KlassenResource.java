@@ -35,6 +35,7 @@ import de.egladil.web.mk_gateway.domain.kinder.KlassenService;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseAPIModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseRequestData;
 import de.egladil.web.mk_gateway.domain.klassenlisten.KlassenlisteImportService;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * KlassenResource
@@ -56,9 +57,14 @@ public class KlassenResource {
 	@Inject
 	KlassenlisteImportService klassenlisteImportService;
 
+	@Inject
+	DevDelayService delayService;
+
 	@GET
 	@Path("{schulkuerzel}")
 	public Response getKlassen(@PathParam(value = "schulkuerzel") @UuidString final String schulkuerzel) {
+
+		this.delayService.pause();
 
 		String lehrerUuid = securityContext.getUserPrincipal().getName();
 
@@ -70,6 +76,8 @@ public class KlassenResource {
 	@POST
 	@Path("duplikate")
 	public Response pruefeMehrfacherfassung(final KlasseRequestData data) {
+
+		this.delayService.pause();
 
 		String lehrerUuid = securityContext.getUserPrincipal().getName();
 
@@ -90,6 +98,8 @@ public class KlassenResource {
 	@POST
 	public Response klasseAnlegen(final KlasseRequestData data) {
 
+		this.delayService.pause();
+
 		String lehrerUuid = securityContext.getUserPrincipal().getName();
 
 		KlasseAPIModel klasse = this.klassenService.klasseAnlegen(data, lehrerUuid);
@@ -104,6 +114,8 @@ public class KlassenResource {
 
 	@PUT
 	public Response klasseAendern(final KlasseRequestData data) {
+
+		this.delayService.pause();
 
 		String lehrerUuid = securityContext.getUserPrincipal().getName();
 
@@ -121,6 +133,8 @@ public class KlassenResource {
 	@Path("{uuid}")
 	public Response klasseLoeschen(@PathParam(value = "uuid") final String uuid) {
 
+		this.delayService.pause();
+
 		String lehrerUuid = securityContext.getUserPrincipal().getName();
 
 		KlasseAPIModel geloeschteKlasse = this.klassenService.klasseLoeschen(uuid, lehrerUuid);
@@ -137,6 +151,8 @@ public class KlassenResource {
 	@Path("importreport/{uuid}")
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_JSON })
 	public Response downloadImportReport(@PathParam(value = "uuid") final String reportUuid) {
+
+		this.delayService.pause();
 
 		String lehrerUuid = securityContext.getUserPrincipal().getName();
 

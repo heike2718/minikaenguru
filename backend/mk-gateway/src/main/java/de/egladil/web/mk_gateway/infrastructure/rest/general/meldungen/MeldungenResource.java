@@ -16,6 +16,7 @@ import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.meldungen.Meldung;
 import de.egladil.web.mk_gateway.domain.meldungen.MeldungenService;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * MeldungenResource
@@ -28,9 +29,14 @@ public class MeldungenResource {
 	@Inject
 	MeldungenService meldungenService;
 
+	@Inject
+	DevDelayService delayService;
+
 	@Path("aktuelle-meldung")
 	@GET
 	public Response getMeldung() {
+
+		this.delayService.pause();
 
 		Meldung meldung = meldungenService.loadMeldung();
 

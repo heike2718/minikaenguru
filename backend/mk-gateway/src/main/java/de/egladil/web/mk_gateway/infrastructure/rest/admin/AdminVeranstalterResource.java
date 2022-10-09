@@ -24,6 +24,7 @@ import de.egladil.web.mk_gateway.domain.veranstalter.admin.VeranstalterZugangsst
 import de.egladil.web.mk_gateway.domain.veranstalter.api.VeranstalterSuchanfrage;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.VeranstalterUserAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.ZugangsstatusPayload;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * AdminVeranstalterResource
@@ -43,9 +44,14 @@ public class AdminVeranstalterResource {
 	@Inject
 	VeranstalterNewsletterService veranstalterNewsletterService;
 
+	@Inject
+	DevDelayService delayService;
+
 	@POST
 	@Path("suche")
 	public Response findVeranstalter(final VeranstalterSuchanfrage suchanfrage) {
+
+		this.delayService.pause();
 
 		List<VeranstalterUserAPIModel> treffer = veranstalterSucheService.findVeranstalter(suchanfrage);
 
@@ -58,6 +64,8 @@ public class AdminVeranstalterResource {
 	public Response changeZugangsstatus(@PathParam(
 		value = "uuidPrefix") final String uuidPrefix, final ZugangsstatusPayload zugangsstatus) {
 
+		this.delayService.pause();
+
 		ResponsePayload responsePayload = this.veranstalterZugangsstatusService.aendereVeranstalter(uuidPrefix,
 			zugangsstatus.getZugangsstatus());
 
@@ -68,6 +76,8 @@ public class AdminVeranstalterResource {
 	@Path("{uuidPrefix}/newsletter")
 	public Response deactivateNewsletter(@PathParam(
 		value = "uuidPrefix") final String uuidPrefix) {
+
+		this.delayService.pause();
 
 		ResponsePayload responsePayload = this.veranstalterNewsletterService.aendereVeranstalter(uuidPrefix, null);
 

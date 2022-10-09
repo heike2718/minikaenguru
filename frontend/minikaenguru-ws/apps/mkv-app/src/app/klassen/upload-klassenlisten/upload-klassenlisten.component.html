@@ -3,7 +3,7 @@
 
 		<p *ngIf="devMode">(upload-klassenlisten.component)</p>
 
-		<ng-container *ngIf="schule !== undefined else loading">
+		<ng-container *ngIf="schule">
 
 			<h3>Klassenlisten hochladen</h3>
 
@@ -86,11 +86,6 @@
 		</div>
 	</div>
 </div>
-
-<ng-template #loading>
-	<h3>Schule</h3>
-	Lade Schule... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
-</ng-template>
 
 <ng-template #dialogUploadFormatInfo let-modal>
     <div class="modal-header">

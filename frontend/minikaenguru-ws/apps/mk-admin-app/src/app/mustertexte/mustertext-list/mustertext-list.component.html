@@ -11,7 +11,7 @@
 		</select>
 	</div>
 
-    <ng-container *ngIf="(mustertextFacade.mustertexte$ | async ) as mustertexte else loading">
+    <ng-container *ngIf="(mustertextFacade.mustertexte$ | async ) as mustertexte">
 		<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let mustertext of mustertexte">
 			<mka-mustertext-card [mustertext]="mustertext"></mka-mustertext-card>
 		</div>
@@ -41,7 +41,3 @@
 	</div>
 
 </div>
-
-<ng-template #loading>
-	Lade Mustertexte... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
-</ng-template>

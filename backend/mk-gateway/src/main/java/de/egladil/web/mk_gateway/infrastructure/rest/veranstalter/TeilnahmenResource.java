@@ -26,6 +26,7 @@ import de.egladil.web.mk_gateway.domain.statistik.AnonymisierteTeilnahmenService
 import de.egladil.web.mk_gateway.domain.teilnahmen.AktuelleTeilnahmeService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.AnonymisierteTeilnahmeAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.SchulanmeldungRequestPayload;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * AnonymisierteTeilnahmenResource
@@ -48,10 +49,15 @@ public class TeilnahmenResource {
 	@Inject
 	AnonymisierteTeilnahmenService anonTeilnahmenService;
 
+	@Inject
+	DevDelayService delayService;
+
 	@GET
 	@Path("veranstalter/{teilnahmenummer}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAnonymisierteTeilnahmen(@PathParam(value = "teilnahmenummer") final String teilnahmenummer) {
+
+		this.delayService.pause();
 
 		List<AnonymisierteTeilnahmeAPIModel> teilnahmen = anonTeilnahmenService.loadAnonymisierteTeilnahmen(teilnahmenummer,
 			securityContext.getUserPrincipal().getName());
@@ -63,6 +69,8 @@ public class TeilnahmenResource {
 	@POST
 	@Path("privat")
 	public Response meldePrivatmenschZumAktuellenWettbewerbAn() {
+
+		this.delayService.pause();
 
 		final String principalName = securityContext.getUserPrincipal().getName();
 
@@ -77,6 +85,8 @@ public class TeilnahmenResource {
 	@Path("schule")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response meldeSchuleZumAktuellenWettbewerbAn(final SchulanmeldungRequestPayload payload) {
+
+		this.delayService.pause();
 
 		final String principalName = securityContext.getUserPrincipal().getName();
 

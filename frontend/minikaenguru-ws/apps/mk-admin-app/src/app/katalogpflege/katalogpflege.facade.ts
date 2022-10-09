@@ -56,8 +56,6 @@ export class KatalogpflegeFacade {
 			return;
 		}
 
-		this.store.dispatch(KatalogpflegeActions.showLoadingIndicator());
-
 		this.katalogHttpService.loadLaender().subscribe(
 			theLaender => {
 				this.store.dispatch(KatalogpflegeActions.loadLaenderFinished({ laender: theLaender }));
@@ -90,8 +88,7 @@ export class KatalogpflegeFacade {
 	}
 
 	public searchKatalogItems(typ: Katalogpflegetyp, searchTerm: string) {
-		this.store.dispatch(KatalogpflegeActions.showLoadingIndicator());
-
+		
 		this.katalogHttpService.searchKatalogItems(typ, searchTerm).subscribe(
 			items => {
 				this.store.dispatch(KatalogpflegeActions.sucheFinished({ typ: typ, katalogItems: items }));
@@ -124,8 +121,6 @@ export class KatalogpflegeFacade {
 	}
 
 	public switchToCreateNeueSchuleEditor(): void {
-
-		this.store.dispatch(KatalogpflegeActions.showLoadingIndicator());
 
 		this.katalogHttpService.getKuerzel().subscribe(
 			kuerzelAPIModel => {
@@ -218,8 +213,6 @@ export class KatalogpflegeFacade {
 
 	public sendCreateSchule(payload: SchulePayload): void {
 
-		this.store.dispatch(KatalogpflegeActions.showLoadingIndicator());
-
 		this.katalogHttpService.createSchule(payload).subscribe(
 			responsePayload => {
 				this.store.dispatch(KatalogpflegeActions.editSchuleFinished({ schulePayload: responsePayload.data }));
@@ -242,8 +235,6 @@ export class KatalogpflegeFacade {
 
 	public sendRenameSchule(schulePayload: SchulePayload): void {
 
-		this.store.dispatch(KatalogpflegeActions.showLoadingIndicator());
-
 		this.katalogHttpService.renameSchule(schulePayload).subscribe(
 			responsePayload => {
 				this.store.dispatch(KatalogpflegeActions.editSchuleFinished({ schulePayload: responsePayload.data }));
@@ -263,8 +254,6 @@ export class KatalogpflegeFacade {
 	}
 
 	public sendRenameOrt(ortPayload: OrtPayload) {
-
-		this.store.dispatch(KatalogpflegeActions.showLoadingIndicator());
 
 		this.katalogHttpService.renameOrt(ortPayload).subscribe(
 			responsePayload => {
@@ -286,8 +275,6 @@ export class KatalogpflegeFacade {
 	}
 
 	public sendRenameLand(landPayload: LandPayload) {
-
-		this.store.dispatch(KatalogpflegeActions.showLoadingIndicator());
 
 		this.katalogHttpService.renameLand(landPayload).subscribe(
 			responsePayload => {
@@ -370,8 +357,6 @@ export class KatalogpflegeFacade {
 		if (this.loggingOut) {
 			return;
 		}
-
-		this.store.dispatch(KatalogpflegeActions.showLoadingIndicator());
 
 		this.katalogHttpService.loadChildItems(item).subscribe(
 			items => {

@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.GuiVersionService;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * AdminGuiVersionResource
@@ -27,8 +28,13 @@ public class AdminGuiVersionResource {
 	@Inject
 	GuiVersionService guiVersionService;
 
+	@Inject
+	DevDelayService delayService;
+
 	@GET
 	public Response getExcpectedGuiVersion() {
+
+		this.delayService.pause();
 
 		String guiVersion = guiVersionService.getExcpectedGuiVersion();
 

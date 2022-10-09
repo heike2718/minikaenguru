@@ -22,6 +22,7 @@ import de.egladil.web.mk_gateway.domain.urkunden.EinzelkindUrkundenservice;
 import de.egladil.web.mk_gateway.domain.urkunden.SchuleUrkundenservice;
 import de.egladil.web.mk_gateway.domain.urkunden.api.UrkundenauftragEinzelkind;
 import de.egladil.web.mk_gateway.domain.urkunden.api.UrkundenauftragSchule;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * UrkundenResource
@@ -40,6 +41,9 @@ public class UrkundenResource {
 	@Inject
 	SchuleUrkundenservice schulurkundenservice;
 
+	@Inject
+	DevDelayService delayService;
+
 	/**
 	 * Generiert eine einzelne Teilnehmerurkunde für das gegebene Kind, sofern es einen Lösungszettel hat.
 	 *
@@ -51,6 +55,8 @@ public class UrkundenResource {
 	@Path("urkunde")
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM })
 	public Response generiereEinzelurkunde(final UrkundenauftragEinzelkind urkundenauftrag) {
+
+		this.delayService.pause();
 
 		Identifier veranstalterID = new Identifier(securityContext.getUserPrincipal().getName());
 
@@ -70,6 +76,8 @@ public class UrkundenResource {
 	@Path("schule")
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM })
 	public Response generiereSchulauswertung(final UrkundenauftragSchule urkundenauftrag) {
+
+		this.delayService.pause();
 
 		Identifier veranstalterID = new Identifier(securityContext.getUserPrincipal().getName());
 

@@ -6,7 +6,7 @@
 		</h3>
 		<p *ngIf="devMode">(klassen-list.component)</p>
 
-		<ng-container *ngIf="(klassenFacade.klassen$ | async) as klassen else loading">
+		<ng-container *ngIf="(klassenFacade.klassen$ | async) as klassen">
 
 			<div class="col-12 mt-1 mb-1 " *ngFor="let klasse of klassen">
 				<mkv-klasse-details [klasse]="klasse"></mkv-klasse-details>
@@ -73,11 +73,6 @@
 		</div>
 	</div>
 </div>
-
-<ng-template #loading>
-	<h3>Klassen</h3>
-	Lade Klassen... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
-</ng-template>
 
 <ng-template #loeschenWarndialog let-modal>
 	<div class="modal-header">

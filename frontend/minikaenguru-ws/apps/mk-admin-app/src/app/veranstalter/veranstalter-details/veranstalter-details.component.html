@@ -1,7 +1,7 @@
 <div class="mkv-container mt-1">
 
 	<div class="mb-5" *ngIf="(selectedVeranstalter$ | async) as veranstalter">
-		<ng-container *ngIf="veranstalter !== undefined else loading">
+		<ng-container *ngIf="veranstalter">
 
 			<h3>{{veranstalter.fullName}} - {{veranstalter.rolle}}</h3>
 
@@ -67,10 +67,4 @@
 		<button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('CANCEL')">besser nicht</button>
 		<button type="button" class="btn btn-outline-danger" (click)="modal.close('OK')">ja schon</button>
 	</div>
-</ng-template>
-
-
-<ng-template #loading>
-	<h3>Veranstalter</h3>
-	Lade Details... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
 </ng-template>

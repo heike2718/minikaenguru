@@ -37,6 +37,7 @@ import de.egladil.web.mk_gateway.domain.kinder.KinderService;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindAPIModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindEditorModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindRequestData;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * KinderResource
@@ -54,12 +55,17 @@ public class KinderResource {
 	@Inject
 	KinderService kinderService;
 
+	@Inject
+	DevDelayService delayService;
+
 	@Context
 	SecurityContext securityContext;
 
 	@GET
 	@Path("{teilnahmenummer}")
 	public Response getKinderMitTeilnahmenummer(@PathParam(value = "teilnahmenummer") @UuidString final String teilnahmenummer) {
+
+		this.delayService.pause();
 
 		String uuid = securityContext.getUserPrincipal().getName();
 
@@ -71,6 +77,8 @@ public class KinderResource {
 	@POST
 	@Path("duplikate")
 	public Response pruefeMehrfacherfassung(final KindRequestData data) {
+
+		this.delayService.pause();
 
 		String veranstalterUuid = securityContext.getUserPrincipal().getName();
 
@@ -92,6 +100,8 @@ public class KinderResource {
 
 	@POST
 	public Response kindAnlegen(final KindRequestData data) {
+
+		this.delayService.pause();
 
 		String uuid = securityContext.getUserPrincipal().getName();
 
@@ -115,6 +125,8 @@ public class KinderResource {
 	@PUT
 	public Response kindAendern(final KindRequestData data) {
 
+		this.delayService.pause();
+
 		String uuid = securityContext.getUserPrincipal().getName();
 
 		KindAPIModel result = this.kinderService.kindAendern(data, uuid);
@@ -137,6 +149,8 @@ public class KinderResource {
 	@DELETE
 	@Path("{uuid}")
 	public Response kindLoeschen(@PathParam(value = "uuid") @UuidString final String uuid) {
+
+		this.delayService.pause();
 
 		LOG.debug("Kind mit uuid = {} soll gelöscht werden.", uuid);
 

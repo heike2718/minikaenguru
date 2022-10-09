@@ -23,6 +23,7 @@ import de.egladil.web.mk_gateway.domain.auth.AuthMode;
 import de.egladil.web.mk_gateway.domain.auth.AuthResult;
 import de.egladil.web.mk_gateway.domain.auth.session.loginlogout.LoginLogoutService;
 import de.egladil.web.mk_gateway.domain.auth.urls.AuthLoginSignupUrlService;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * VeranstalterSessionResource ist der Endpoint für mkv-app, um sich ein- und auszuloggen.
@@ -42,6 +43,9 @@ public class VeranstalterSessionResource {
 	@Inject
 	LoginLogoutService loginLogoutService;
 
+	@Inject
+	DevDelayService delayService;
+
 	@GET
 	@Path("authurls/login")
 	public Response getLoginUrl() {
@@ -55,6 +59,8 @@ public class VeranstalterSessionResource {
 	public Response getSignupLehrerUrl(@PathParam(value = "schulkuerzel") final String schulkuerzel, @PathParam(
 		value = "newsletterAbonnieren") final String newsletterAbonnieren) {
 
+		this.delayService.pause();
+
 		return authUrlService.getSignupLehrerUrl(schulkuerzel, newsletterAbonnieren);
 	}
 
@@ -63,12 +69,16 @@ public class VeranstalterSessionResource {
 	public Response getSignupPrivatmenschUrl(@PathParam(
 		value = "newsletterAbonnieren") final String newsletterAbonnieren) {
 
+		this.delayService.pause();
+
 		return authUrlService.getSignupPrivatUrl(newsletterAbonnieren);
 	}
 
 	@POST
 	@Path("login")
 	public Response login(final AuthResult authResult) {
+
+		this.delayService.pause();
 
 		return loginLogoutService.login(authResult, AuthMode.VERANSTALTER);
 	}
@@ -77,6 +87,8 @@ public class VeranstalterSessionResource {
 	@Path("logout")
 	public Response logout(@CookieParam(value = SESSION_COOKIE_NAME) final String sessionId) {
 
+		this.delayService.pause();
+
 		return loginLogoutService.logout(sessionId);
 	}
 
@@ -84,6 +96,7 @@ public class VeranstalterSessionResource {
 	@Path("dev/logout/{sessionId}")
 	public Response logoutDev(@PathParam(value = "sessionId") final String sessionId) {
 
+		this.delayService.pause();
 		return loginLogoutService.logoutDev(sessionId);
 	}
 }

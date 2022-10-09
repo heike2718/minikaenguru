@@ -1,5 +1,5 @@
 <div class="mkv-container mt-1">
-	<div *ngIf="(selectedSchule$ | async) as schule else loading" class="col-12">
+	<div *ngIf="(selectedSchule$ | async) as schule" class="col-12">
 
 		<p *ngIf="devMode">(upload-klassenlisten.component)</p>
 
@@ -57,9 +57,3 @@
         </div>
     </div>
 </div>
-
-<ng-template #loading>
-	<h3>Schule</h3>
-	Lade Schule... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
-</ng-template>
-

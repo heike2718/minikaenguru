@@ -26,7 +26,6 @@ export interface KatalogpflegeState {
 	readonly filteredSchulen: KatalogpflegeItem[],
 	readonly selectedKatalogItem?: KatalogpflegeItem;
 	readonly selectedKatalogTyp?: Katalogpflegetyp;
-	readonly showLoadingIndicator: boolean;
 	readonly sucheBeendet: boolean;
 	readonly schuleEditorModel: SchuleEditorModel;
 	readonly ortEditorPayload?: OrtPayload;
@@ -47,7 +46,6 @@ const initialState: KatalogpflegeState = {
 	filteredSchulen: [],
 	selectedKatalogItem: undefined,
 	selectedKatalogTyp: undefined,
-	showLoadingIndicator: false,
 	sucheBeendet: false,
 	schuleEditorModel: initialSchuleEditorModelState,
 	ortEditorPayload: undefined,
@@ -66,11 +64,6 @@ const katalogpflegeReducer = createReducer(initialState,
 
 	}),
 
-	on(KatalogpflegeActions.showLoadingIndicator, (state, _action) => {
-
-		return { ...state, showLoadingIndicator: true };
-	}),
-
 	on(KatalogpflegeActions.sucheFinished, (state, action) => {
 
 		const alle: KatalogpflegeItem[] = action.katalogItems;
@@ -84,7 +77,7 @@ const katalogpflegeReducer = createReducer(initialState,
 			case 'SCHULE': filteredSchulen = alle; break;
 		}
 
-		return { ...state, kataloge: kataloge, filteredOrte: filteredOrte, filteredSchulen: filteredSchulen, showLoadingIndicator: false };
+		return { ...state, kataloge: kataloge, filteredOrte: filteredOrte, filteredSchulen: filteredSchulen };
 	}),
 
 	on(KatalogpflegeActions.katalogDashboardSelected, (_state, _action) => {
@@ -110,7 +103,7 @@ const katalogpflegeReducer = createReducer(initialState,
 			schulen: [...state.kataloge.schulen]
 		};
 
-		return { ...state, kataloge: kataloge, showLoadingIndicator: false };
+		return { ...state, kataloge: kataloge };
 	}),
 
 	on(KatalogpflegeActions.loadChildItemsFinished, (state, action) => {
@@ -141,13 +134,13 @@ const katalogpflegeReducer = createReducer(initialState,
 		);
 
 		kataloge = mergeKatalogItems(children, kataloge);
-		return { ...state, kataloge: kataloge, showLoadingIndicator: false };
+		return { ...state, kataloge: kataloge };
 	}),
 
 
 
 	on(KatalogpflegeActions.finishedWithError, (state, _action) => {
-		return { ...state, showLoadingIndicator: false };
+		return { ...state };
 	}),
 
 	on(KatalogpflegeActions.selectKatalogItem, (state, action) => {
@@ -168,7 +161,7 @@ const katalogpflegeReducer = createReducer(initialState,
 
 	on(KatalogpflegeActions.schulePayloadCreated, (state, action) => {
 
-		return { ...state, schuleEditorModel: action.schuleEditorModel, showLoadingIndicator: false };
+		return { ...state, schuleEditorModel: action.schuleEditorModel };
 
 	}),
 
@@ -179,7 +172,7 @@ const katalogpflegeReducer = createReducer(initialState,
 			schuleEditorModel: initialSchuleEditorModelState,
 			ortEditorPayload: action.ortPayload,
 			landEditorPayload: undefined,
-			showLoadingIndicator: false
+			
 		};
 
 	}),
@@ -190,8 +183,7 @@ const katalogpflegeReducer = createReducer(initialState,
 			...state,
 			schuleEditorModel: initialSchuleEditorModelState,
 			ortEditorPayload: undefined,
-			landEditorPayload: action.landPayload,
-			showLoadingIndicator: false
+			landEditorPayload: action.landPayload
 		};
 
 	}),
@@ -210,7 +202,6 @@ const katalogpflegeReducer = createReducer(initialState,
 
 		return {
 			...state,
-			showLoadingIndicator: false,
 			sucheBeendet: true,
 			schuleEditorModel: schuleEditorModel,
 			kataloge: kataloge, filteredOrte: [],
@@ -232,7 +223,6 @@ const katalogpflegeReducer = createReducer(initialState,
 
 		return {
 			...state,
-			showLoadingIndicator: false,
 			sucheBeendet: true,
 			schuleEditorModel: initialSchuleEditorModelState,
 			kataloge: kataloge, filteredOrte: [],
@@ -254,7 +244,6 @@ const katalogpflegeReducer = createReducer(initialState,
 
 		return {
 			...state,
-			showLoadingIndicator: false,
 			sucheBeendet: true,
 			schuleEditorModel: initialSchuleEditorModelState,
 			kataloge: kataloge, filteredOrte: [],
@@ -271,7 +260,6 @@ const katalogpflegeReducer = createReducer(initialState,
 			filteredOrte: [],
 			filteredSchulen: [],
 			selectedKatalogItem: undefined,
-			showLoadingIndicator: false,
 			sucheBeendet: true
 		};
 	})

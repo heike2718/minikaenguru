@@ -1,6 +1,6 @@
 <div class="mkv-container mt-5">
 	<div class="col-12">
-		<div *ngIf="teilnahmenFacade.selectedAnmeldung$| async as anmeldungen else loading">
+		<div *ngIf="teilnahmenFacade.selectedAnmeldung$| async as anmeldungen">
 			<ng-container>
 				<h3>Teilnahmen am Wettbewerb {{anmeldungen.wettbewerbsjahr}}</h3>
 				<div>
@@ -47,9 +47,3 @@
 		</div>
 	</div>
 </div>
-
-<ng-template #loading>
-	<h3>Anmeldungen</h3>
-	Bitte warten... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
-</ng-template>
-

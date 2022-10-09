@@ -1,6 +1,6 @@
 <div class="mkv-container mt-1">
 	<div *ngIf="(schuleOverview$ | async) as schule">
-		<ng-container *ngIf="schule !== undefined else loading">
+		<ng-container *ngIf="schule">
 
 			<h3>{{schule.katalogData.name}} - {{schule.katalogData.kuerzel}}</h3>
 
@@ -82,9 +82,3 @@
 				aria-hidden="true"></i>Veranstalterliste</button>
 	</div>
 </div>
-
-
-<ng-template #loading>
-	<h3>Schule</h3>
-	Lade Schule... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
-</ng-template>

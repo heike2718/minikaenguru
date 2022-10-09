@@ -48,10 +48,6 @@
 			<button class="btn btn-outline-primary" [disabled]="!uploading && !canSubmit"
 					(click)="submitUpload()">hochladen</button>
 		</div>
-
-		<div *ngIf="uploading">
-			Import läuft, bitte warten... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
-		</div>
 	</div>
 </div>
 

@@ -50,13 +50,9 @@
 
 	<p class="mt-4 mb-1" *ngIf="kind && urkundenauftragForm.valid">{{zusammenfassung()}}</p>
 
-	<div class="col-12 mb-2 mt-2" *ngIf="urkundenFacade.loading$ | async">
-		die Urkunde wird erstellt... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
-	</div>
-
 	<div class="btn-group d-flex" role="group">
 		<button class="btn btn-primary w-100 ml-1"
-			[disabled]="!kind || !urkundenauftragForm.valid || (urkundenFacade.loading$ | async)"
+			[disabled]="!kind || !urkundenauftragForm.valid"
 			(click)="onFormSubmit(urkundenauftragForm)"><i class="fa fa-graduation-cap" aria-hidden="true"></i>
 			Urkunde erstellen</button>
 

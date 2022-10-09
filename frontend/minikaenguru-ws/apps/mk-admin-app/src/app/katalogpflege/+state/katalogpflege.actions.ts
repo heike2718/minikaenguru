@@ -12,10 +12,6 @@ export const selectKatalogTyp = createAction(
 	props<{ typ: Katalogpflegetyp }>()
 );
 
-export const showLoadingIndicator = createAction(
-	'[KatalogpflegeFacade] suchen'
-);
-
 export const sucheFinished = createAction(
 	'[KatalogpflegeFacade] searchKatalogItems',
 	props<{ typ: Katalogpflegetyp, katalogItems: KatalogpflegeItem[] }>()

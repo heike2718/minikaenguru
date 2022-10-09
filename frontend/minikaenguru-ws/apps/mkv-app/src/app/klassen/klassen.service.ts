@@ -5,42 +5,38 @@ import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
 import { ResponsePayload } from '@minikaenguru-ws/common-messages';
 import { Klasse, KlasseRequestData } from '@minikaenguru-ws/common-components';
+import { LoadingIndicatorService } from '@minikaenguru-ws/shared/util-mk';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class KlassenService {
 
-	constructor(private http: HttpClient) { }
+	constructor(private http: HttpClient, private loadingIndicatorService: LoadingIndicatorService) { }
 
 
 	public loadKlassen(schulkuerzel: string): Observable<Klasse[]> {
 
 		const url = environment.apiUrl + '/klassen/' + schulkuerzel;
 
-		return this.http.get(url).pipe(
+		return this.loadingIndicatorService.showLoaderUntilCompleted(this.http.get(url).pipe(
 			map(body => body as ResponsePayload),
 			map(payload => payload.data)
-		);
+		));
 	}
 
 	public insertKlasse(klasseRequestData: KlasseRequestData): Observable<ResponsePayload> {
 
 		const url = environment.apiUrl + '/klassen';
 
-		return this.http.post(url, klasseRequestData).pipe(
-			map(body => body as ResponsePayload)
-		);
-
+		return this.loadingIndicatorService.showLoaderUntilCompleted(this.http.post<ResponsePayload>(url, klasseRequestData));
 	}
 
 	public updateKlasse(klasseRequestData: KlasseRequestData): Observable<ResponsePayload> {
 
 		const url = environment.apiUrl + '/klassen';
 
-		return this.http.put(url, klasseRequestData).pipe(
-			map(body => body as ResponsePayload)
-		);
+		return this.loadingIndicatorService.showLoaderUntilCompleted(this.http.put<ResponsePayload>(url, klasseRequestData));
 
 	}
 
@@ -48,9 +44,7 @@ export class KlassenService {
 
 		const url = environment.apiUrl + '/klassen/' + uuid;
 
-		return this.http.delete(url).pipe(
-			map(body => body as ResponsePayload)
-		);
+		return this.loadingIndicatorService.showLoaderUntilCompleted(this.http.delete<ResponsePayload>(url));
 
 	}
 
@@ -58,9 +52,6 @@ export class KlassenService {
 
 		const url = environment.apiUrl + '/lehrer/schulen/' + schulkuerzel + '/klassen';
 		
-		return this.http.delete(url).pipe(
-			map(body => body as ResponsePayload)
-		);
-
+		return this.loadingIndicatorService.showLoaderUntilCompleted(this.http.delete<ResponsePayload>(url));
 	}
 }

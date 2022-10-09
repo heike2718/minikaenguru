@@ -31,6 +31,7 @@ import de.egladil.web.mk_gateway.domain.veranstalter.PrivatveranstalterService;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.ZugangUnterlagenService;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.PrivatveranstalterAPIModel;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * VeranstalterResource ist die Resource zu den Minikänguru-Veranstaltern.
@@ -64,11 +65,16 @@ public class VeranstalterResource {
 	@Inject
 	AuthResultToResourceOwnerMapper authResultMapper;
 
+	@Inject
+	DevDelayService delayService;
+
 	private SecurityIncidentRegistered securityIncidentRegistered;
 
 	@PUT
 	@Path("newsletter")
 	public Response changeStatusNewsletter() {
+
+		this.delayService.pause();
 
 		Veranstalter veranstalter = this.changeNewsletterAboService
 			.changeStatusNewsletter(securityContext.getUserPrincipal().getName());
@@ -85,6 +91,8 @@ public class VeranstalterResource {
 	@GET
 	@Path("privat")
 	public Response getPrivatveranstalter() {
+
+		this.delayService.pause();
 
 		Principal principal = securityContext.getUserPrincipal();
 

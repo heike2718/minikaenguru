@@ -26,6 +26,7 @@ import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.adv.AdvService;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.VertragAdvAPIModel;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * AdvResource
@@ -43,10 +44,15 @@ public class AdvResource {
 	@Inject
 	AdvService advService;
 
+	@Inject
+	DevDelayService delayService;
+
 	@GET
 	@Path("{schulkuerzel}")
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_JSON })
 	public Response downloadVertragAuftragsdatenverarbeitung(@PathParam(value = "schulkuerzel") final String schulkuerzel) {
+
+		this.delayService.pause();
 
 		final DownloadData data = advService.getVertragAuftragsdatenverarbeitung(schulkuerzel,
 			securityContext.getUserPrincipal().getName());
@@ -60,6 +66,8 @@ public class AdvResource {
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_JSON })
 	public Response downloadVertragstext() {
 
+		this.delayService.pause();
+
 		final DownloadData data = advService.getAktuellenVertragstextAlsPdf();
 
 		return MkGatewayFileUtils.createDownloadResponse(data);
@@ -68,6 +76,8 @@ public class AdvResource {
 
 	@POST
 	public Response createVertragAuftragsdatenverarbeitung(final VertragAdvAPIModel requestPayload) {
+
+		this.delayService.pause();
 
 		this.advService.createVertragAuftragsdatenverarbeitung(requestPayload,
 			securityContext.getUserPrincipal().getName());

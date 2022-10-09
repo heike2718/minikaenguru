@@ -17,7 +17,6 @@ import * as WettbewerbActions from '../wettbewerb/+state/wettbewerb.actions';
 @Injectable({ providedIn: 'root' })
 export class PrivatveranstalterFacade {
 
-	public loading$ = this.appStore.select(VeranstalterSelectors.loading);
 	public veranstalter$ = this.appStore.select(VeranstalterSelectors.privatveranstalter);
 	public aktuelleTeilnahmeGeladen$ = this.appStore.select(VeranstalterSelectors.aktuelleTeilnahmeGeladen);
 	public hatZugangZuUnterlagen$ = this.appStore.select(VeranstalterSelectors.zugangUnterlagen);
@@ -48,8 +47,6 @@ export class PrivatveranstalterFacade {
 		if (this.loggingOut) {
 			return;
 		}
-
-		this.appStore.dispatch(PrivatveranstalterActions.startLoading());
 
 		this.veranstalterService.loadPrivatveranstalter().pipe(
 			take(1)
@@ -88,8 +85,6 @@ export class PrivatveranstalterFacade {
 	}
 
 	public changeAboNewsletter(): void {
-
-		this.appStore.dispatch(PrivatveranstalterActions.startLoading());
 
 		this.veranstalterService.toggleAboNewsletter().pipe(
 			take(1)

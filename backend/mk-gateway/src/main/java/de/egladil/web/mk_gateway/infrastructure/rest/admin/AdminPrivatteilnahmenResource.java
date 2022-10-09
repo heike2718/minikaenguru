@@ -23,6 +23,7 @@ import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.teilnahmen.admin.AdminPrivatteilnahmenService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.admin.PrivatteilnahmeAdminOverview;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * AdminPrivatteilnahmenResource
@@ -36,6 +37,9 @@ public class AdminPrivatteilnahmenResource {
 	@Inject
 	AdminPrivatteilnahmenService privatteilnahmenService;
 
+	@Inject
+	DevDelayService delayService;
+
 	@Context
 	SecurityContext securityContext;
 
@@ -43,6 +47,8 @@ public class AdminPrivatteilnahmenResource {
 	@Path("{teilnahmenummer}")
 	public Response getTeilnahmeInfos(@PathParam(
 		value = "teilnahmenummer") final String teilnahmenummer) {
+
+		this.delayService.pause();
 
 		String userUuid = securityContext.getUserPrincipal().getName();
 

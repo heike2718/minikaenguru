@@ -23,6 +23,7 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbListAPIModel;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * PublicWettbewerbResource
@@ -35,6 +36,9 @@ public class PublicWettbewerbResource {
 
 	@Inject
 	WettbewerbService wettewerbService;
+
+	@Inject
+	DevDelayService delayService;
 
 	/**
 	 * @param  wettbewerbService
@@ -50,6 +54,8 @@ public class PublicWettbewerbResource {
 	@GET
 	@Path("aktueller")
 	public Response getAktuellenWettbewerb() {
+
+		this.delayService.pause();
 
 		Optional<Wettbewerb> optWettbewerb = this.wettewerbService.aktuellerWettbewerb();
 
@@ -68,6 +74,8 @@ public class PublicWettbewerbResource {
 
 	@GET
 	public Response loadWettbewerbe() {
+
+		this.delayService.pause();
 
 		List<WettbewerbListAPIModel> wettbewerbe = this.wettewerbService.alleWettbewerbeHolen();
 

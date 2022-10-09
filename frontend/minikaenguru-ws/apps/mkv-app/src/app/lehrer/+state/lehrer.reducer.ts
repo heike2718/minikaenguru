@@ -22,7 +22,6 @@ export interface LehrerState {
 	readonly selectedSchule?: Schule;
 	readonly schulenLoaded: boolean;
 	readonly addSchuleState: AddSchuleState;
-	readonly loading: boolean;
 
 };
 
@@ -31,14 +30,13 @@ const initalLehrerState: LehrerState = {
 	schulen: [],
 	selectedSchule: undefined,
 	schulenLoaded: false,
-	addSchuleState: initialAddSchuleState,
-	loading: false
+	addSchuleState: initialAddSchuleState
 };
 
 const lehrerReducer = createReducer(initalLehrerState,
 
 	on(LehrerActions.datenLehrerGeladen, (state, action) => {
-		return { ...state, lehrer: action.lehrer, loading: false }
+		return { ...state, lehrer: action.lehrer }
 	}),
 
 	on(LehrerActions.aboNewsletterChanged, (state, _action) => {
@@ -46,18 +44,14 @@ const lehrerReducer = createReducer(initalLehrerState,
 		if (state.lehrer) {
 			const abonniert = !state.lehrer.newsletterAbonniert;
 			const lehrer = { ...state.lehrer, newsletterAbonniert: abonniert };
-			return { ...state, loading: false, lehrer: lehrer };
+			return { ...state, lehrer: lehrer };
 		}
 
-		return {...state, loading: false};		
-	}),
-
-	on(LehrerActions.startLoading, (state, _action) => {
-		return { ...state, loading: true };
+		return {...state};		
 	}),
 
 	on(LehrerActions.finishedWithError, (state, _action) => {
-		return { ...state, loading: false };
+		return { ...state };
 	}),
 
 	on(LehrerActions.schulenLoaded, (state, action) => {
@@ -66,7 +60,7 @@ const lehrerReducer = createReducer(initalLehrerState,
 		schulen.sort((s1, s2) => compareSchulen(s1, s2)); const newMap: SchuleWithID[] = [];
 
 		schulen.forEach(s => newMap.push({ kuerzel: s.kuerzel, schule: s }));
-		return { ...state, schulen: newMap, selectedSchule: undefined, schulenLoaded: true, loading: false }
+		return { ...state, schulen: newMap, selectedSchule: undefined, schulenLoaded: true }
 	}),
 
 	on(LehrerActions.selectSchule, (state, action) => {
@@ -76,7 +70,7 @@ const lehrerReducer = createReducer(initalLehrerState,
 	on(LehrerActions.schuleDetailsLoaded, (state, action) => {
 
 		const neueMap = mergeSchulenMap(state.schulen, action.schule);
-		return { ...state, selectedSchule: action.schule, schulen: neueMap, loading: false };
+		return { ...state, selectedSchule: action.schule, schulen: neueMap };
 	}),
 
 	on(LehrerActions.schuleAngemeldet, (state, action) => {

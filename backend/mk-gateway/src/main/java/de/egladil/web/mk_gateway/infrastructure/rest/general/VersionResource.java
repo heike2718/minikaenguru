@@ -5,6 +5,7 @@
 package de.egladil.web.mk_gateway.infrastructure.rest.general;
 
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * VersionResource
@@ -37,8 +39,13 @@ public class VersionResource {
 	@ConfigProperty(name = "stage")
 	String stage;
 
+	@Inject
+	DevDelayService delayService;
+
 	@GET
 	public Response getVersion() {
+
+		this.delayService.pause();
 
 		String message = "MkGatewayApp running version " + version + " on stage " + stage + " and env " + env;
 

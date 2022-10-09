@@ -24,8 +24,6 @@ export class PrivatDashboardComponent implements OnInit, OnDestroy {
 
 	privatveranstalter$ = this.veranstalterFacade.veranstalter$;
 
-	loading$ = this.veranstalterFacade.loading$;
-
 	textFeatureFlagAnzeigen = false;
 	textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
 

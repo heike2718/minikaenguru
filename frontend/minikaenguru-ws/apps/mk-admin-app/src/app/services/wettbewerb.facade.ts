@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 
 import * as WettbewerbActions from '../wettbewerbe/+state/wettbewerbe.actions';
 import { AuthService } from '@minikaenguru-ws/common-auth';
+import { LoadingIndicatorService } from '@minikaenguru-ws/shared/util-mk';
 
 export const WETTBEWERB_STORAGE_KEY = 'mka_wettbewerb';
 
@@ -34,7 +35,8 @@ export class WettbewerbFacade {
 		private router: Router,
 		private logger: LogService,
 		private errorMapper: ErrorMappingService,
-		private messageService: MessageService) {
+		private messageService: MessageService,
+		private loadingIndicatorService: LoadingIndicatorService) {
 
 		this.authService.onLoggingOut$.subscribe(
 			loggingOut => this.loggingOut = loggingOut
@@ -60,15 +62,17 @@ export class WettbewerbFacade {
 
 		const url = environment.apiUrl + '/wettbewerbe/aktueller';
 
-		this.http.get(url).pipe(
-				map(body => body as ResponsePayload),
-				map(payload => payload.data)
-			).subscribe(
-				(wettbewerb: Wettbewerb) => {
+		const obs$ = this.loadingIndicatorService.showLoaderUntilCompleted(this.http.get(url).pipe(
+			map(body => body as ResponsePayload),
+			map(payload => payload.data)
+		));
 
-					localStorage.setItem(WETTBEWERB_STORAGE_KEY, JSON.stringify(wettbewerb));
+		obs$.subscribe(
+			(wettbewerb: Wettbewerb) => {
 
-				}
+				localStorage.setItem(WETTBEWERB_STORAGE_KEY, JSON.stringify(wettbewerb));
+
+			}
 		);
 	}
 
@@ -82,10 +86,12 @@ export class WettbewerbFacade {
 
 		this.logger.debug(url);
 
-		return this.http.get(url).pipe(
+		const obs$ = this.http.get(url).pipe(
 			map(body => body as ResponsePayload),
 			map(payload => payload.data)
 		);
+
+		return this.loadingIndicatorService.showLoaderUntilCompleted(obs$);
 	}
 
 	public loadWettbewerbDetails(jahr: number): Observable<Wettbewerb | undefined> {
@@ -99,10 +105,12 @@ export class WettbewerbFacade {
 
 		this.logger.debug(url);
 
-		return this.http.get(url).pipe(
+		const obs$ = this.http.get(url).pipe(
 			map(body => body as ResponsePayload),
 			map(payload => payload.data)
 		);
+
+		return this.loadingIndicatorService.showLoaderUntilCompleted(obs$);
 
 	}
 
@@ -119,9 +127,11 @@ export class WettbewerbFacade {
 
 		const url = environment.apiUrl + '/wettbewerbe/wettbewerb';
 
-		this.http.post(url, wettbewerb).pipe(
+		const obs$ = this.loadingIndicatorService.showLoaderUntilCompleted(this.http.post(url, wettbewerb).pipe(
 			map(body => body as ResponsePayload),
-		).subscribe(
+		));
+		
+		obs$.subscribe(
 			(responsePayload) => {
 				this.messageService.info(responsePayload.message.message);
 				this.store.dispatch(WettbewerbActions.wettbewerbInserted({ wettbewerb: wettbewerb, outcome: responsePayload.message }));
@@ -140,9 +150,11 @@ export class WettbewerbFacade {
 
 		const url = environment.apiUrl + '/wettbewerbe/wettbewerb';
 
-		this.http.put(url, wettbewerb).pipe(
+		const obs$ = this.loadingIndicatorService.showLoaderUntilCompleted(this.http.put(url, wettbewerb).pipe(
 			map(body => body as ResponsePayload),
-		).subscribe(
+		));
+
+		obs$.subscribe(
 			(responsePayload) => {
 				this.messageService.info(responsePayload.message.message);
 				this.store.dispatch(WettbewerbActions.wettbewerbUpdated({ wettbewerb: wettbewerb, outcome: responsePayload.message }));
@@ -163,9 +175,11 @@ export class WettbewerbFacade {
 
 		const payload = { jahr: wettbewerb.jahr };
 
-		this.http.put(url, payload).pipe(
+		const obs$ = this.loadingIndicatorService.showLoaderUntilCompleted(this.http.put(url, payload).pipe(
 			map(body => body as ResponsePayload),
-		).subscribe(
+		));
+		
+		obs$.subscribe(
 			(responsePayload) => {
 				this.messageService.info(responsePayload.message.message);
 				this.store.dispatch(WettbewerbActions.wettbewerbMovedOn({ wettbewerb: wettbewerb, neuerStatus: responsePayload.data, outcome: responsePayload.message }));

@@ -5,6 +5,7 @@ import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ResponsePayload, Message } from '@minikaenguru-ws/common-messages';
 import { Newsletter, NewsletterVersandauftrag, Versandinfo } from './newsletter.model';
+import { LoadingIndicatorService } from '@minikaenguru-ws/shared/util-mk';
 
 @Injectable({
 	providedIn: 'root'
@@ -12,16 +13,18 @@ import { Newsletter, NewsletterVersandauftrag, Versandinfo } from './newsletter.
 export class NewsletterService {
 
 
-	constructor(private http: HttpClient) { }
+	constructor(private http: HttpClient, private loadingIndicatorService: LoadingIndicatorService) { }
 
 	public loadNewsletters(): Observable<Newsletter[]> {
 
 		const url = environment.apiUrl + '/newsletters';
 
-		return this.http.get(url).pipe(
+		const obs$ = this.http.get(url).pipe(
 			map(body => body as ResponsePayload),
 			map(payload => payload.data)
 		);
+
+		return this.loadingIndicatorService.showLoaderUntilCompleted(obs$);
 
 	}
 
@@ -29,30 +32,36 @@ export class NewsletterService {
 
 		const url = environment.apiUrl + '/newsletters';
 
-		return this.http.post(url, newsletter).pipe(
+		const obs$ = this.http.post(url, newsletter).pipe(
 			map(body => body as ResponsePayload),
 			map(payload => payload.data)
 		);
+
+		return this.loadingIndicatorService.showLoaderUntilCompleted(obs$);
 	}
 
 	public updateNewsletter(newsletter: Newsletter): Observable<Newsletter> {
 
 		const url = environment.apiUrl + '/newsletters';
 
-		return this.http.put(url, newsletter).pipe(
+		const obs$ = this.http.put(url, newsletter).pipe(
 			map(body => body as ResponsePayload),
 			map(payload => payload.data)
 		);
+
+		return this.loadingIndicatorService.showLoaderUntilCompleted(obs$);
 	}
 
 	public deleteNewsletter(uuid: string): Observable<Message> {
 
 		const url = environment.apiUrl + '/newsletters/' + uuid;
 
-		return this.http.delete(url).pipe(
+		const obs$ = this.http.delete(url).pipe(
 			map(body => body as ResponsePayload),
 			map(payload => payload.message)
 		);
+
+		return this.loadingIndicatorService.showLoaderUntilCompleted(obs$);
 
 	}
 
@@ -60,9 +69,11 @@ export class NewsletterService {
 
 		const url = environment.apiUrl + '/newsletterversand';
 
-		return this.http.post(url, auftrag).pipe(
+		const obs$ = this.http.post(url, auftrag).pipe(
 			map(body => body as ResponsePayload)
 		);
+
+		return this.loadingIndicatorService.showLoaderUntilCompleted(obs$);
 
 	}
 

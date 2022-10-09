@@ -6,13 +6,14 @@ import { Loesungszettel} from './loesungszettel.model';
 import { Kind, Klassenstufe, LoesungszettelResponse, Loesungszettelzeile } from '@minikaenguru-ws/common-components';
 import { ResponsePayload } from '@minikaenguru-ws/common-messages';
 import { map } from 'rxjs/operators';
+import { LoadingIndicatorService } from '@minikaenguru-ws/shared/util-mk';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class LoesungszettelService {
 
-	constructor(private http: HttpClient) { }
+	constructor(private http: HttpClient, private loadingIndicatorService: LoadingIndicatorService) { }
 
 	public loadLoesungszettelWithID(kind: Kind): Observable<Loesungszettel> {
 
@@ -22,10 +23,10 @@ export class LoesungszettelService {
 
 		const url = environment.apiUrl + '/loesungszettel/' + kind.punkte.loesungszettelId;
 
-		return this.http.get(url).pipe(
+		return this.loadingIndicatorService.showLoaderUntilCompleted(this.http.get(url).pipe(
 			map(body => body as ResponsePayload),
 			map(payload => payload.data)
-		);
+		));
 	}
 
 
@@ -43,26 +44,20 @@ export class LoesungszettelService {
 	public deleteLoesungszettel(loesungszettelID: string): Observable<ResponsePayload> {
 		const url = environment.apiUrl + '/loesungszettel/' + loesungszettelID;
 
-		return this.http.delete(url).pipe(
-			map(body => body as ResponsePayload)
-		);
+		return this.loadingIndicatorService.showLoaderUntilCompleted(this.http.delete<ResponsePayload>(url));
 	}
 
 	// /////////////////////////////
 
 	private insertLoesungszettel(url: string, loesungszettel: Loesungszettel): Observable<ResponsePayload> {
 
-		return this.http.post(url, loesungszettel).pipe(
-			map(body => body as ResponsePayload)
-		);
+		return this.loadingIndicatorService.showLoaderUntilCompleted(this.http.post<ResponsePayload>(url, loesungszettel));
 
 	}
 
 	private updateLoesungszettel(url: string, loesungszettel: Loesungszettel): Observable<ResponsePayload> {
 
-		return this.http.put(url, loesungszettel).pipe(
-			map(body => body as ResponsePayload)
-		);
+		return this.loadingIndicatorService.showLoaderUntilCompleted(this.http.put<ResponsePayload>(url, loesungszettel));
 
 	}
 

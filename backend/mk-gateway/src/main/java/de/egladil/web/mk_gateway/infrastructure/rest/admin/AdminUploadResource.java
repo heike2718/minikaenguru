@@ -44,6 +44,7 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * AdminUploadResource
@@ -64,10 +65,15 @@ public class AdminUploadResource {
 	@Inject
 	UploadMonitoringService uploadMonitoringService;
 
+	@Inject
+	DevDelayService delayService;
+
 	@GET
 	@Path("size")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUploadsCount() {
+
+		this.delayService.pause();
 
 		Long result = uploadMonitoringService.countUploads();
 
@@ -78,6 +84,8 @@ public class AdminUploadResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUploads(@QueryParam(value = "limit") final int limit, @QueryParam(
 		value = "offset") final int offset) {
+
+		this.delayService.pause();
 
 		List<UploadMonitoringInfo> uploads = uploadMonitoringService.loadUploads(limit, offset);
 		return Response.ok().entity(new ResponsePayload(MessagePayload.ok(), uploads)).build();
@@ -91,6 +99,8 @@ public class AdminUploadResource {
 		value = "kuerzelLand") @LandKuerzel final String kuerzelLand, @PathParam(
 			value = "schulkuerzel") @Kuerzel final String schulkuerzel, @QueryParam(
 				value = "sprache") @NotBlank final String sprache, final MultipartFormDataInput input) {
+
+		this.delayService.pause();
 
 		String benutzerUuid = securityContext.getUserPrincipal().getName();
 		UploadType uploadType = UploadType.AUSWERTUNG;
@@ -119,6 +129,8 @@ public class AdminUploadResource {
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON }) // text/plain, damit man kein encoding-Problem bekommt
 	public Response downloadFehlerreport(@PathParam(value = "uuid") final String uuid) {
 
+		this.delayService.pause();
+
 		DownloadData downloadData = this.uploadMonitoringService.getFehlerReport(uuid);
 		return MkGatewayFileUtils.createDownloadResponse(downloadData);
 	}
@@ -127,6 +139,8 @@ public class AdminUploadResource {
 	@Path("{uuid}/file")
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON }) // text/plain, damit man kein encoding-Problem bekommt
 	public Response downloadUploadedFile(@PathParam(value = "uuid") final String uuid) {
+
+		this.delayService.pause();
 
 		DownloadData downloadData = this.uploadMonitoringService.getUploadedFile(uuid);
 		return MkGatewayFileUtils.createDownloadResponse(downloadData);

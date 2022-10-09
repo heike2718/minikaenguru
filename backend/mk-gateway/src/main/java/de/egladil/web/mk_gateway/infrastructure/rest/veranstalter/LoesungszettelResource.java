@@ -29,6 +29,7 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.loesungszettel.online.OnlineLoesungszettelService;
 import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelAPIModel;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * LoesungszettelResource
@@ -45,12 +46,17 @@ public class LoesungszettelResource {
 	@Inject
 	OnlineLoesungszettelService loesungszettelService;
 
+	@Inject
+	DevDelayService delayService;
+
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
 	@GET
 	@Path("{loesungszettelID}")
 	public Response getLoesungszettelWithID(@PathParam(
 		value = "loesungszettelID") @NotBlank @UuidString final String loesungszettelID) {
+
+		this.delayService.pause();
 
 		Identifier veranstalterID = new Identifier(securityContext.getUserPrincipal().getName());
 
@@ -65,6 +71,8 @@ public class LoesungszettelResource {
 	@POST
 	public Response addLoesungszettel(final LoesungszettelAPIModel loesungszetteldaten) {
 
+		this.delayService.pause();
+
 		Identifier veranstalterID = new Identifier(securityContext.getUserPrincipal().getName());
 
 		ResponsePayload responsePayload = loesungszettelService.loesungszettelAnlegen(loesungszetteldaten, veranstalterID);
@@ -74,6 +82,8 @@ public class LoesungszettelResource {
 
 	@PUT
 	public Response changeLoesungszettel(final LoesungszettelAPIModel loesungszetteldaten) {
+
+		this.delayService.pause();
 
 		Identifier veranstalterID = new Identifier(securityContext.getUserPrincipal().getName());
 
@@ -86,6 +96,8 @@ public class LoesungszettelResource {
 	@Path("{loesungszettelID}")
 	public Response deleteLoesungszettelWithID(@PathParam(
 		value = "loesungszettelID") @NotBlank @UuidString final String loesungszettelID) {
+
+		this.delayService.pause();
 
 		Identifier veranstalterID = new Identifier(securityContext.getUserPrincipal().getName());
 

@@ -4,6 +4,7 @@ import { AuthResult } from '@minikaenguru-ws/common-auth';
 import { environment } from '../../environments/environment';
 
 import { Observable } from 'rxjs';
+import { LoadingIndicatorService } from '@minikaenguru-ws/shared/util-mk';
 
 
 @Injectable({
@@ -11,14 +12,14 @@ import { Observable } from 'rxjs';
 })
 export class RegistrationService {
 
-	constructor(private http: HttpClient) { }
+	constructor(private http: HttpClient, private loadingIndicatorService: LoadingIndicatorService) { }
 
 	public createVeranstalter(authResult: AuthResult): Observable<any> {
 
 		const url = environment.apiUrl + '/veranstalter';
 		window.location.hash = '';
 
-		return this.http.post(url, authResult);
+		return this.loadingIndicatorService.showLoaderUntilCompleted(this.http.post(url, authResult));
 
 	}
 

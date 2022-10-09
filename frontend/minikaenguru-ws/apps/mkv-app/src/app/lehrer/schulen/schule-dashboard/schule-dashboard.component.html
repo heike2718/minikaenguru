@@ -1,10 +1,4 @@
 <div class="mkv-container mt-1">
-	<div *ngIf="loading$ | async">
-		<h2>Schübersicht</h2>
-		<div class="col-12">
-			Lade Daten... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
-		</div>
-	</div>
 	<ng-container *ngIf="aktuellerWettbewerb$ | async as wettbewerb">
 		<div *ngIf="details$ | async">
 			<div *ngIf="schule">

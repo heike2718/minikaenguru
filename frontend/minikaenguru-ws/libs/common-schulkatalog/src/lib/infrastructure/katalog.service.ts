@@ -6,6 +6,7 @@ import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LogService } from '@minikaenguru-ws/common-logging';
 import { ResponsePayload, Message } from '@minikaenguru-ws/common-messages';
+import { LoadingIndicatorService } from '@minikaenguru-ws/shared/util-mk';
 
 @Injectable({
 	providedIn: 'root'
@@ -16,7 +17,8 @@ export class KatalogService {
 
 	constructor(@Inject(SchulkatalogConfigService) private config: SchulkatalogConfig
 		, private http: HttpClient
-		, private logger: LogService) { }
+		, private logger: LogService
+		, private loadingIndicatorService: LoadingIndicatorService) { }
 
 	public searchKatalogItems(typ: Katalogtyp, serachTerm: string): Observable<KatalogItem[]> {
 
