@@ -1,10 +1,11 @@
+/* eslint-disable */
 module.exports = {
-  name: 'mk-admin-app',
+  name: 'common-schulkatalog',
   preset: '../../jest.config.js',
-  coverageDirectory: '../../coverage/apps/mk-admin-app',
+  coverageDirectory: '../../coverage/libs/common-schulkatalog',
   snapshotSerializers: [
     'jest-preset-angular/build/AngularNoNgAttributesSnapshotSerializer.js',
     'jest-preset-angular/build/AngularSnapshotSerializer.js',
-    'jest-preset-angular/build/HTMLCommentSerializer.js'
-  ]
+    'jest-preset-angular/build/HTMLCommentSerializer.js',
+  ],
 };

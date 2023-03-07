@@ -1,10 +1,11 @@
+/* eslint-disable */
 module.exports = {
-  name: 'common-auth',
+  name: 'mk-admin-app',
   preset: '../../jest.config.js',
-  coverageDirectory: '../../coverage/libs/common-auth',
+  coverageDirectory: '../../coverage/apps/mk-admin-app',
   snapshotSerializers: [
     'jest-preset-angular/build/AngularNoNgAttributesSnapshotSerializer.js',
     'jest-preset-angular/build/AngularSnapshotSerializer.js',
-    'jest-preset-angular/build/HTMLCommentSerializer.js'
-  ]
+    'jest-preset-angular/build/HTMLCommentSerializer.js',
+  ],
 };

@@ -1,10 +1,11 @@
+/* eslint-disable */
 module.exports = {
-  name: 'common-messages',
+  name: 'common-auth',
   preset: '../../jest.config.js',
-  coverageDirectory: '../../coverage/libs/common-messages',
+  coverageDirectory: '../../coverage/libs/common-auth',
   snapshotSerializers: [
     'jest-preset-angular/build/AngularNoNgAttributesSnapshotSerializer.js',
     'jest-preset-angular/build/AngularSnapshotSerializer.js',
-    'jest-preset-angular/build/HTMLCommentSerializer.js'
-  ]
+    'jest-preset-angular/build/HTMLCommentSerializer.js',
+  ],
 };

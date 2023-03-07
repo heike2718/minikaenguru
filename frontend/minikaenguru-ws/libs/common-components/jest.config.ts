@@ -1,10 +1,11 @@
+/* eslint-disable */
 module.exports = {
-  name: 'mkod-app',
+  name: 'common-components',
   preset: '../../jest.config.js',
-  coverageDirectory: '../../coverage/apps/mkod-app',
+  coverageDirectory: '../../coverage/libs/common-components',
   snapshotSerializers: [
     'jest-preset-angular/build/AngularNoNgAttributesSnapshotSerializer.js',
     'jest-preset-angular/build/AngularSnapshotSerializer.js',
-    'jest-preset-angular/build/HTMLCommentSerializer.js'
-  ]
+    'jest-preset-angular/build/HTMLCommentSerializer.js',
+  ],
 };

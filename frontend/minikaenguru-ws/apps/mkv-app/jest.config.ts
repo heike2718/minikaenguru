@@ -1,10 +1,11 @@
+/* eslint-disable */
 module.exports = {
-  name: 'common-components',
+  name: 'mkv-app',
   preset: '../../jest.config.js',
-  coverageDirectory: '../../coverage/libs/common-components',
+  coverageDirectory: '../../coverage/apps/mkv-app',
   snapshotSerializers: [
     'jest-preset-angular/build/AngularNoNgAttributesSnapshotSerializer.js',
     'jest-preset-angular/build/AngularSnapshotSerializer.js',
-    'jest-preset-angular/build/HTMLCommentSerializer.js'
-  ]
+    'jest-preset-angular/build/HTMLCommentSerializer.js',
+  ],
 };

@@ -1,10 +1,11 @@
+/* eslint-disable */
 module.exports = {
-  name: 'common-schulkatalog',
+  name: 'mkod-app',
   preset: '../../jest.config.js',
-  coverageDirectory: '../../coverage/libs/common-schulkatalog',
+  coverageDirectory: '../../coverage/apps/mkod-app',
   snapshotSerializers: [
     'jest-preset-angular/build/AngularNoNgAttributesSnapshotSerializer.js',
     'jest-preset-angular/build/AngularSnapshotSerializer.js',
-    'jest-preset-angular/build/HTMLCommentSerializer.js'
-  ]
+    'jest-preset-angular/build/HTMLCommentSerializer.js',
+  ],
 };

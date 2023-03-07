@@ -10,7 +10,7 @@
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/common-auth/jest.config.js",
+            "jestConfig": "libs/common-auth/jest.config.ts",
             "tsConfig": "libs/common-auth/tsconfig.spec.json",
             "passWithNoTests": true,
             "setupFile": "libs/common-auth/src/test-setup.ts"
@@ -29,7 +29,7 @@
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/common-components/jest.config.js",
+            "jestConfig": "libs/common-components/jest.config.ts",
             "tsConfig": "libs/common-components/tsconfig.spec.json",
             "passWithNoTests": true,
             "setupFile": "libs/common-components/src/test-setup.ts"
@@ -48,7 +48,7 @@
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/common-logging/jest.config.js",
+            "jestConfig": "libs/common-logging/jest.config.ts",
             "tsConfig": "libs/common-logging/tsconfig.spec.json",
             "setupFile": "libs/common-logging/src/test-setup.ts",
             "passWithNoTests": true
@@ -67,7 +67,7 @@
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/common-messages/jest.config.js",
+            "jestConfig": "libs/common-messages/jest.config.ts",
             "tsConfig": "libs/common-messages/tsconfig.spec.json",
             "setupFile": "libs/common-messages/src/test-setup.ts",
             "passWithNoTests": true
@@ -86,7 +86,7 @@
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/common-schulkatalog/jest.config.js",
+            "jestConfig": "libs/common-schulkatalog/jest.config.ts",
             "tsConfig": "libs/common-schulkatalog/tsconfig.spec.json",
             "setupFile": "libs/common-schulkatalog/src/test-setup.ts",
             "passWithNoTests": true
@@ -226,7 +226,7 @@
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "apps/mk-admin-app/jest.config.js",
+            "jestConfig": "apps/mk-admin-app/jest.config.ts",
             "tsConfig": "apps/mk-admin-app/tsconfig.spec.json",
             "passWithNoTests": true,
             "setupFile": "apps/mk-admin-app/src/test-setup.ts"
@@ -398,7 +398,7 @@
           "builder": "@nrwl/jest:jest",
           "outputs": ["coverage/apps/mkod-app"],
           "options": {
-            "jestConfig": "apps/mkod-app/jest.config.js",
+            "jestConfig": "apps/mkod-app/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -564,7 +564,7 @@
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "apps/mkv-app/jest.config.js",
+            "jestConfig": "apps/mkv-app/jest.config.ts",
             "tsConfig": "apps/mkv-app/tsconfig.spec.json",
             "setupFile": "apps/mkv-app/src/test-setup.ts",
             "passWithNoTests": true
