@@ -45,7 +45,7 @@
     "@ngrx/router-store": "14.0.2",
     "@ngrx/store": "14.0.2",
     "@ngrx/store-devtools": "14.0.2",
-    "@nrwl/angular": "14.8.6",
+    "@nrwl/angular": "15.8.5",
     "@popperjs/core": "^2.11.6",
     "ansi-html-community": "^0.0.8",
     "bootstrap": "^4.6.2",
