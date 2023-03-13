@@ -54,7 +54,7 @@
 <ng-template #loeschenWarndialog let-modal>
 	<div class="modal-header">
 		<h4 class="modal-title" id="modal-basic-title">{{klasse.name}} löschen</h4>
-		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+		<button type="button" class="close" aria-label="Close" (click)="modal.close('Cross click')">
 			<span aria-hidden="true">&times;</span>
 		</button>
 	</div>
@@ -65,7 +65,7 @@
 				gemacht werden.</span></p>
 	</div>
 	<div class="modal-footer">
-		<button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('nein')">besser nicht löschen</button>
+		<button type="button" class="btn btn-outline-dark" (click)="modal.close('nein')">besser nicht löschen</button>
 		<button type="button" class="btn btn-danger" (click)="modal.close('ja')">löschen</button>
 	</div>
 </ng-template>

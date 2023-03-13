@@ -196,7 +196,6 @@ export class LoesungszettelEditorComponent implements OnInit, OnDestroy {
 			if (result === 'ja') {
 				this.forceSave();
 			}
-
 		});
 	}
 

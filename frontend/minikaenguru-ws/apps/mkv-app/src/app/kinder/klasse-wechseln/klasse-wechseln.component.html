@@ -58,7 +58,7 @@
 <ng-template #dialogContent let-modal>
 	<div class="modal-header">
 		<h4 class="modal-title" id="modal-basic-title">Mehrfacherfassung?</h4>
-		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+		<button type="button" class="close" aria-label="Close" (click)="modal.close('Cross click')">
 			<span aria-hidden="true">&times;</span>
 		</button>
 	</div>
@@ -67,7 +67,7 @@
 		<p> Möchten Sie das Kind trotzdem verschieben?</p>
 	</div>
 	<div class="modal-footer">
-		<button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss('nein')">nein</button>
+		<button type="button" class="btn btn-outline-secondary" (click)="modal.close('nein')">nein</button>
 		<button type="button" class="btn btn-outline-secondary" (click)="modal.close('ja')">ja</button>
 	</div>
 </ng-template>
