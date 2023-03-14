@@ -66,11 +66,11 @@ export class UploadKlassenlistenComponent implements OnInit, OnDestroy {
             subUrl: this.subUrl + '?nachnameAlsZusatz=false&sprache=de'
             , titel: ''
             // , accept: '.*'
-            , accept: '.csv, .ods, .xls, .xlsx'
+            , accept: '.csv, .ods, .xlsx'
             , maxSizeBytes: 1048576
             // , maxSizeBytes: 61440
             , errorMessageSize: 'Die Datei ist zu groß. Die maximale erlaubte Größe ist 1 MB'
-            , acceptMessage: 'Erlaubte Dateitypen: csv, Excel, OpenOffice, LibreOffice'
+            , acceptMessage: 'Erlaubte Dateitypen: xlsx, ods, csv. Achtung! Das alte MS-Office-Format xls wird nicht unterstützt.'
           };
         } else {
           this.router.navigateByUrl('/lehrer/schulen');
