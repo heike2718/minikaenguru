@@ -41,11 +41,11 @@ export class UploadAuswertungComponent implements OnInit, OnDestroy {
 						subUrl: this.subUrl + '?sprache=de'
 						, titel: ''
 						// , accept: '.*'
-						, accept: '.txt, .csv, .ods, .xls, .xlsx'
+						, accept: '.csv, .ods, .xlsx'
 						, maxSizeBytes: 2097152
 						// , maxSizeBytes: 61440
 						, errorMessageSize: 'Die Datei ist zu groß. Die maximale erlaubte Größe ist 2 MB'
-						, acceptMessage: 'Erlaubte Dateitypen: csv, Excel, OpenOffice, LibreOffice'
+						, acceptMessage: 'Erlaubte Dateitypen: xlsx, ods, csv. Achtung! Das alte MS-Office-Format xls wird nicht unterstützt.'
 					};
 				}
 			}
