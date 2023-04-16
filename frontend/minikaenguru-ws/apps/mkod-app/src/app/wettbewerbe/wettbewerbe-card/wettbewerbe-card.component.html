@@ -3,7 +3,7 @@
 		<div class="card">
 			<div class="card-body">
 				<div class="card-title">Minikänguru {{wettbewerb.jahr}}
-				<span class="ml-1 badge badge-success">{{wettbewerb.status}}</span>
+				<span class="ml-1 badge bg-success">{{wettbewerb.status}}</span>
 				</div>
 			</div>
 
@@ -21,13 +21,13 @@
 			</div>
 	
 			<div class="d-md-none d-lg-none d-xl-none">
-				<button *ngIf="showBtnAnmeldungen" class="btn btn-outline-dark w-100 ml-1" (click)="gotoAnmeldungen()">
+				<button *ngIf="showBtnAnmeldungen" class="btn btn-outline-dark w-75 ml-1" (click)="gotoAnmeldungen()">
 					Übersicht Anmeldungen</button>
 
-				<button *ngIf="!showBtnAnmeldungen" class="btn btn-outline-dark w-100 ml-1" (click)="gotoTeilnahmen()">
+				<button *ngIf="!showBtnAnmeldungen" class="btn btn-outline-dark w-75 ml-1" (click)="gotoTeilnahmen()">
 					Übersicht Teilnahmen</button>
 
-				<button *ngIf="!showBtnAnmeldungen" class="btn btn-outline-dark w-100 ml-1" (click)="gotoAufgaben()">
+				<button *ngIf="!showBtnAnmeldungen" class="btn btn-outline-dark w-75 ml-1" (click)="gotoAufgaben()">
 						Aufgaben</button>
 		</div>
 		</div>

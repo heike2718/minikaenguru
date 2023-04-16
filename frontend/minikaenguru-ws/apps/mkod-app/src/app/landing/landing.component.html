@@ -16,22 +16,25 @@
 			Wenn Sie in der Fußleiste nicht die Version {{version}} sehen, leeren Sie bitte den Browser-Cache.
 		</div>
 
-		<div class="card-deck m-3">
-			<div class="card clickable" (click)="gotoAnmeldungen()">
-				<div class="card-body">
-					<div class="card-title">Anmeldungen</div>
-					<div class="mb-2 text-muted">Anmeldungen zum aktuellen Wettbewerb</div>
+		<div class="row row-cols-1 row-cols-md-3 g-4">
+			<div class="col">
+				<div class="card clickable" (click)="gotoAnmeldungen()">
+					<div class="card-body">
+						<div class="card-title">Anmeldungen</div>
+						<div class="mb-2 text-muted">Anmeldungen zum aktuellen Wettbewerb</div>
+					</div>
 				</div>
 			</div>
 
-			<div class="card clickable" (click)="gotoWettbewerbe()">
-				<div class="card-body">
-					<div class="card-title">Wettbewerbe</div>
-					<div class="mb-2 text-muted">Statistiken vergangener Wettbewerbe</div>
+			<div class="col">
+				<div class="card clickable" (click)="gotoWettbewerbe()">
+					<div class="card-body">
+						<div class="card-title">Wettbewerbe</div>
+						<div class="mb-2 text-muted">Statistiken vergangener Wettbewerbe</div>
+					</div>
 				</div>
 			</div>
 		</div>
-
 	</div>
 
 	<div class="mkv-container conditionally-bordered">
