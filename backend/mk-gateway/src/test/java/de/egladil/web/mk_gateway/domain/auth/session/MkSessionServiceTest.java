@@ -21,13 +21,11 @@ import java.nio.charset.Charset;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
@@ -45,23 +43,25 @@ import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.user.UserRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * MkSessionServiceTest
  */
-@ExtendWith(MockitoExtension.class)
+@QuarkusTest
 public class MkSessionServiceTest {
 
-	@Mock
+	@InjectMock
 	private JWTService jwtService;
 
-	@Mock
+	@InjectMock
 	private UserRepository userRepository;
 
-	@Mock
+	@InjectMock
 	private CryptoService cryptoService;
 
-	@InjectMocks
+	@Inject
 	private MkSessionService service;
 
 	@Test

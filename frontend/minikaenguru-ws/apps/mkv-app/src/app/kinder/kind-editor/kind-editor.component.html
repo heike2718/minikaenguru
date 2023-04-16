@@ -53,7 +53,7 @@
 				</div>
 				<div class="row">
 					<div class="col-12">
-						<select id="klassenstufeSelect" class="custom-select" formControlName="klassenstufe">
+						<select id="klassenstufeSelect" class="form-select" formControlName="klassenstufe">
 							<option [ngValue]="null" disabled>Bitte Klassenstufe wählen</option>
 							<option *ngFor="let ks of klassenstufen" [ngValue]="ks">
 								{{ ks }}
@@ -69,7 +69,7 @@
 				</div>
 				<div class="row">
 					<div class="col-12">
-						<select id="spracheSelect" class="custom-select" formControlName="sprache">
+						<select id="spracheSelect" class="form-select" formControlName="sprache">
 							<option *ngFor="let spr of sprachen" [ngValue]="spr">
 								{{ spr }}
 							</option>

@@ -18,15 +18,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
@@ -44,11 +42,13 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * AuswertungImportServiceTest
  */
-@ExtendWith(MockitoExtension.class)
+@QuarkusTest
 public class AuswertungImportServiceTest {
 
 	private static final String LOESUNGSBUCHSTABEN_IKID = "AB-CB-CB";
@@ -77,16 +77,16 @@ public class AuswertungImportServiceTest {
 
 	private List<Wettbewerb> wettbewerbe = new ArrayList<>();
 
-	@Mock
+	@InjectMock
 	private UploadRepository uploadRepository;
 
-	@Mock
+	@InjectMock
 	private LoesungszettelRepository loesungszettelRepository;
 
-	@Mock
+	@InjectMock
 	private AnonymisierteTeilnahmenService anonymisierteTeilnahmenService;
 
-	@InjectMocks
+	@Inject
 	private AuswertungImportService service;
 
 	@BeforeEach

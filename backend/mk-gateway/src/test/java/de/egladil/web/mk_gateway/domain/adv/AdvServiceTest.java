@@ -13,34 +13,34 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.inject.Inject;
+
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.VertragAdvAPIModel;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * AdvServiceTest
  */
-@ExtendWith(MockitoExtension.class)
+@QuarkusTest
 public class AdvServiceTest {
 
 	private static final String LEHRER_UUID = "guowdgqog";
 
-	@Mock
+	@InjectMock
 	private AuthorizationService authService;
 
-	@Mock
+	@InjectMock
 	private VertragAuftragsverarbeitungRepository vertragRepository;
 
-	@InjectMocks
+	@Inject
 	private AdvService advService;
 
 	@Test

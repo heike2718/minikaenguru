@@ -12,13 +12,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.egladil.web.commons_validation.exception.InvalidInputException;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
@@ -32,20 +30,22 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbRepository;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * ProzentrangEinzelpunktzahlServiceTest
  */
-@ExtendWith(MockitoExtension.class)
+@QuarkusTest
 public class ProzentrangEinzelpunktzahlServiceTest {
 
-	@Mock
+	@InjectMock
 	LoesungszettelRepository loesungszettelRepository;
 
-	@Mock
+	@InjectMock
 	WettbewerbRepository wettbewerbRepository;
 
-	@InjectMocks
+	@Inject
 	ProzentrangEinzelpunktzahlService service;
 
 	@Nested

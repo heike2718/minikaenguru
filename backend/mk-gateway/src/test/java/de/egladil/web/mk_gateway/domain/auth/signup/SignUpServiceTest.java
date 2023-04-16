@@ -15,11 +15,9 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
+import javax.inject.Inject;
+
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.egladil.web.mk_gateway.domain.auth.events.LehrerCreated;
 import de.egladil.web.mk_gateway.domain.auth.events.PrivatveranstalterCreated;
@@ -29,26 +27,28 @@ import de.egladil.web.mk_gateway.domain.user.UserRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.SynchronizeVeranstalterService;
 import de.egladil.web.mk_gateway.infrastructure.messaging.PropagateUserService;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * SignUpServiceTest
  */
-@ExtendWith(MockitoExtension.class)
+@QuarkusTest
 public class SignUpServiceTest {
 
-	@Mock
+	@InjectMock
 	UserRepository userRepository;
 
-	@Mock
+	@InjectMock
 	SynchronizeVeranstalterService syncVeranstalterService;
 
-	@Mock
+	@InjectMock
 	DomainEventHandler domainEventHandler;
 
-	@Mock
+	@InjectMock
 	PropagateUserService propagateUserService;
 
-	@InjectMocks
+	@Inject
 	SignUpService service;
 
 	@Test

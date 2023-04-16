@@ -7,15 +7,14 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mk-kataloge</artifactId>
-	<version>1.8.3</version>
+	<version>1.8.4</version>
 
 	<properties>
-		<commons.version>1.7.7</commons.version>
+		<commons.version>1.8.0</commons.version>
 		<quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
 		<quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-		<quarkus.platform.version>2.13.0.Final</quarkus.platform.version>
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
+		<quarkus.platform.version>2.16.6.Final</quarkus.platform.version>
+		<java.version>17</java.version>
 		<compiler-plugin.version>3.8.1</compiler-plugin.version>
 		<maven.compiler.parameters>true</maven.compiler.parameters>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -166,8 +165,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.0</version>
 				<configuration>
-					<source>${maven.compiler.source}</source>
-					<target>${maven.compiler.target}</target>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
 				</configuration>
 			</plugin>
 			<plugin>

@@ -19,15 +19,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
@@ -43,23 +40,25 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * SchulkatalogServiceTest
  */
-@ExtendWith(MockitoExtension.class)
+@QuarkusTest
 public class SchulkatalogServiceTest {
 
-	@Mock
+	@InjectMock
 	private MkKatalogeResourceAdapter katalogeResourceAdapter;
 
-	@Mock
+	@InjectMock
 	WettbewerbService wettbewerbService;
 
-	@Mock
+	@InjectMock
 	TeilnahmenRepository teilnahmenRepository;
 
-	@InjectMocks
+	@Inject
 	private SchulkatalogService service;
 
 	@Nested

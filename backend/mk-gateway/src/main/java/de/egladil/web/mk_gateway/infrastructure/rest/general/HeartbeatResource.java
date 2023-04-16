@@ -8,9 +8,9 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -42,11 +42,11 @@ public class HeartbeatResource {
 	String expectedHeartbeatId;
 
 	@GET
-	public Response check(@QueryParam("heartbeatId") final String heartbeatId) {
+	public Response check(@HeaderParam("X-HEARTBEAT-ID") final String heartbeatId) {
 
 		if (!expectedHeartbeatId.equals(heartbeatId)) {
 
-			LOG.warn(LogmessagePrefixes.BOT + "Aufruf mit fehlerhaftem QueryParam " + heartbeatId);
+			LOG.warn(LogmessagePrefixes.BOT + "Aufruf mit fehlerhaftem X-HEARTBEAT-ID-Header value " + heartbeatId);
 			return Response.status(401)
 				.entity(ResponsePayload.messageOnly(MessagePayload.error("keine Berechtigung für diese Resource"))).build();
 		}

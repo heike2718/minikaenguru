@@ -6,34 +6,34 @@ package de.egladil.web.mk_gateway.domain.statistik;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
+import javax.inject.Inject;
+
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * AnonymisierteTeilnahmenServiceTest
  */
-@ExtendWith(MockitoExtension.class)
+@QuarkusTest
 public class AnonymisierteTeilnahmenServiceTest {
 
-	@Mock
+	@InjectMock
 	private AuthorizationService authService;
 
-	@Mock
+	@InjectMock
 	private TeilnahmenRepository teilnahmenRepository;
 
-	@Mock
+	@InjectMock
 	private ErfassungLoesungszettelInfoService erfassungLoesungszettelInoService;
 
-	@InjectMocks
+	@Inject
 	private AnonymisierteTeilnahmenService service;
 
 	@Test

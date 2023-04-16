@@ -21,7 +21,7 @@
 				</div>
 				<div *ngIf="!selectDisabled" class="row">
 					<div class="col-12">
-						<select id="klasseSelect" class="custom-select" formControlName="klasse">
+						<select id="klasseSelect" class="form-select" formControlName="klasse">
 							<option [ngValue]="null" disabled>Bitte neue Klasse wählen</option>
 							<option *ngFor="let name of klassenNamen" [ngValue]="name">
 								{{ name }}

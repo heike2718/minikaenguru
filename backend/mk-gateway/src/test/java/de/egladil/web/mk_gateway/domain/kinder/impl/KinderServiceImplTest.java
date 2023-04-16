@@ -15,11 +15,9 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
@@ -38,38 +36,40 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * KinderServiceImplTest
  */
-@ExtendWith(MockitoExtension.class)
+@QuarkusTest
 public class KinderServiceImplTest {
 
-	@Mock
+	@InjectMock
 	AuthorizationService authService;
 
-	@Mock
+	@InjectMock
 	KinderRepository kinderRepository;
 
-	@Mock
+	@InjectMock
 	TeilnahmenRepository teilnahmenRepository;
 
-	@Mock
+	@InjectMock
 	VeranstalterRepository veranstalterRepository;
 
-	@Mock
+	@InjectMock
 	KlassenRepository klassenRepository;
 
-	@Mock
+	@InjectMock
 	WettbewerbService wettbewerbService;
 
-	@Mock
+	@InjectMock
 	OnlineLoesungszettelService loesungszettelService;
 
-	@Mock
+	@InjectMock
 	DomainEventHandler domainEventHandler;
 
-	@InjectMocks
+	@Inject
 	KinderServiceImpl service;
 
 	@Test

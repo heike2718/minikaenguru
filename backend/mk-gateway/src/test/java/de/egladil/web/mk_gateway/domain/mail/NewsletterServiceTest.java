@@ -19,13 +19,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import javax.inject.Inject;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
@@ -34,34 +32,36 @@ import de.egladil.web.mk_gateway.domain.mail.api.NewsletterAPIModel;
 import de.egladil.web.mk_gateway.domain.mail.api.NewsletterVersandauftrag;
 import de.egladil.web.mk_gateway.domain.mail.api.VersandinfoAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterMailinfoService;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * NewsletterServiceTest
  */
-@ExtendWith(MockitoExtension.class)
+@QuarkusTest
 public class NewsletterServiceTest {
 
 	private List<List<String>> empfaengergruppen;
 
-	@Mock
+	@InjectMock
 	NewsletterRepository newsletterRepositiory;
 
-	@Mock
+	@InjectMock
 	VersandinfoService versandinfoService;
 
-	@Mock
+	@InjectMock
 	ScheduleNewsletterDelegate scheduleNewsletterDelegate;
 
-	@Mock
+	@InjectMock
 	VeranstalterMailinfoService veranstalterMailinfoService;
 
-	@Mock
+	@InjectMock
 	AdminMailService mailService;
 
-	@Mock
+	@InjectMock
 	ConcurrentSendMailDelegate sendMailDelegate;
 
-	@InjectMocks
+	@Inject
 	NewsletterService newsletterService;
 
 	@BeforeEach

@@ -207,4 +207,18 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 
 		return this.schule.auswertungsmodus === 'OFFLINE';
 	}
+
+	getAuswertungsmodus(): string {
+
+		if (!this.schule) {
+			return '';
+		}
+
+		if (this.schule.auswertungsmodus === 'INDIFFERENT') {
+			return 'noch nicht entschieden'
+		}
+
+		return '' + this.schule.auswertungsmodus;
+		
+	}
 }

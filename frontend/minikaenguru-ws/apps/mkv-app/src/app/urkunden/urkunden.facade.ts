@@ -161,7 +161,7 @@ export class UrkundenFacade {
 		}
 
 		return 'Bitte verwenden Sie diese Funktion nur, um Urkunden für einzelne Kinder zu korrigieren.'
-			+ ' Alle Urkunden für Ihre Schule können Sie zusammen mit einer Auswertungsseite in einem einzigen Schritt in der Ansicht "Klassen" (Klick auf "Klassenliste") erstellen.';
+			+ ' Alle Urkunden für Ihre Schule können Sie zusammen mit einer Auswertungsseite in einem einzigen Schritt in der Ansicht "Klassen" (Klick auf "Klassen") erstellen.';
 	}
 
 

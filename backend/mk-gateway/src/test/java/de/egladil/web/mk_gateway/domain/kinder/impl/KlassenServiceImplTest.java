@@ -14,12 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.inject.Inject;
+
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
@@ -38,29 +36,31 @@ import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * KlassenServiceImplTest
  */
-@ExtendWith(MockitoExtension.class)
+@QuarkusTest
 public class KlassenServiceImplTest {
 
-	@Mock
+	@InjectMock
 	AuthorizationService authService;
 
-	@Mock
+	@InjectMock
 	KlassenRepository klassenRepository;
 
-	@Mock
+	@InjectMock
 	KinderServiceImpl kinderService;
 
-	@Mock
+	@InjectMock
 	WettbewerbService wettbewerbService;
 
-	@Mock
+	@InjectMock
 	TeilnahmenRepository teilnahmenRepository;
 
-	@InjectMocks
+	@Inject
 	KlassenServiceImpl service;
 
 	@Nested

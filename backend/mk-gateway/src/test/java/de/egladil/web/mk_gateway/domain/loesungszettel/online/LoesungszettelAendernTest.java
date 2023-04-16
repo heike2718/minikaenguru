@@ -16,14 +16,12 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Optional;
 
+import javax.inject.Inject;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.egladil.web.commons_validation.exception.InvalidInputException;
 import de.egladil.web.commons_validation.payload.MessagePayload;
@@ -50,26 +48,28 @@ import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterLoesungszettel;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * LoesungszettelAendernTest
  */
-@ExtendWith(MockitoExtension.class)
+@QuarkusTest
 public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest {
 
-	@Mock
+	@InjectMock
 	private KinderRepository kinderRepository;
 
-	@Mock
+	@InjectMock
 	private LoesungszettelRepository loesungszettelRepository;
 
-	@Mock
+	@InjectMock
 	private AuthorizationService authService;
 
-	@Mock
+	@InjectMock
 	private WettbewerbService wettbewerbService;
 
-	@InjectMocks
+	@Inject
 	private OnlineLoesungszettelService service;
 
 	@BeforeEach

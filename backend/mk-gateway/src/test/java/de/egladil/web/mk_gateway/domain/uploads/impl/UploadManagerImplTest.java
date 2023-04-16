@@ -10,11 +10,9 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import javax.inject.Inject;
+
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
@@ -37,38 +35,40 @@ import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.Auswertungsmodus;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * UploadManagerImplTest
  */
-@ExtendWith(MockitoExtension.class)
+@QuarkusTest
 public class UploadManagerImplTest {
 
-	@Mock
+	@InjectMock
 	AuthorizationService authService;
 
-	@Mock
+	@InjectMock
 	UploadAuthorizationService uploadAuthService;
 
-	@Mock
+	@InjectMock
 	ScanService scanService;
 
-	@Mock
+	@InjectMock
 	KlassenlisteImportService klassenlisteImportService;
 
-	@Mock
+	@InjectMock
 	AuswertungImportService auswertungImportService;
 
-	@Mock
+	@InjectMock
 	UploadRepository uploadRepository;
 
-	@Mock
+	@InjectMock
 	DomainEventHandler domainEventHandler;
 
-	@Mock
+	@InjectMock
 	AuswertungsmodusInfoService auswertungsmodusInfoService;
 
-	@InjectMocks
+	@Inject
 	UploadManagerImpl uploadManager;
 
 	@Test

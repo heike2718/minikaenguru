@@ -21,14 +21,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
@@ -40,20 +37,22 @@ import de.egladil.web.mk_gateway.domain.mustertexte.Mustertextkategorie;
 import de.egladil.web.mk_gateway.domain.mustertexte.api.MustertextAPIModel;
 import de.egladil.web.mk_gateway.domain.mustertexte.events.MustertextDeletedEvent;
 import de.egladil.web.mk_gateway.domain.mustertexte.events.MustertextSavedEvent;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * MustertextServiceImplTest
  */
-@ExtendWith(MockitoExtension.class)
+@QuarkusTest
 public class MustertextServiceImplTest {
 
-	@Mock
+	@InjectMock
 	MustertexteRepository mustertexteRepository;
 
-	@Mock
+	@InjectMock
 	DomainEventHandler domainEventHandler;
 
-	@InjectMocks
+	@Inject
 	MustertextServiceImpl service;
 
 	@Nested

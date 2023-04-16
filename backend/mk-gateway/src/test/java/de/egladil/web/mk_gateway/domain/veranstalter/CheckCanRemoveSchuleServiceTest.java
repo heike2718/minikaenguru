@@ -5,9 +5,9 @@
 package de.egladil.web.mk_gateway.domain.veranstalter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -16,11 +16,9 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
@@ -28,20 +26,22 @@ import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.teilnahmen.SchuleDetailsService;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleDetails;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * CheckCanRemoveSchuleServiceTest
  */
-@ExtendWith(MockitoExtension.class)
+@QuarkusTest
 public class CheckCanRemoveSchuleServiceTest {
 
-	@Mock
+	@InjectMock
 	AuthorizationService veranstalterAuthService;
 
-	@Mock
+	@InjectMock
 	SchuleDetailsService schuleDetailsService;
 
-	@InjectMocks
+	@Inject
 	CheckCanRemoveSchuleService service;
 
 	@Test

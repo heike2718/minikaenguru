@@ -8,25 +8,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import javax.inject.Inject;
+
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.egladil.web.mk_gateway.infrastructure.persistence.sortnumbers.SortedTable;
 import de.egladil.web.mk_gateway.infrastructure.persistence.sortnumbers.SortnumberRepository;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * SortNumberGeneratorImplTest
  */
-@ExtendWith(MockitoExtension.class)
+@QuarkusTest
 public class SortNumberGeneratorImplTest {
 
-	@Mock
+	@InjectMock
 	SortnumberRepository repositoy;
 
-	@InjectMocks
+	@Inject
 	SortNumberGeneratorImpl generator;
 
 	@Test

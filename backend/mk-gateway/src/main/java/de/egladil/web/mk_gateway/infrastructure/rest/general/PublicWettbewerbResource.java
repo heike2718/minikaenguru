@@ -40,17 +40,6 @@ public class PublicWettbewerbResource {
 	@Inject
 	DevDelayService delayService;
 
-	/**
-	 * @param  wettbewerbService
-	 * @return
-	 */
-	public static PublicWettbewerbResource createForTest(final WettbewerbService wettbewerbService) {
-
-		PublicWettbewerbResource result = new PublicWettbewerbResource();
-		result.wettewerbService = wettbewerbService;
-		return result;
-	}
-
 	@GET
 	@Path("aktueller")
 	public Response getAktuellenWettbewerb() {

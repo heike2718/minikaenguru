@@ -13,21 +13,21 @@ import static org.mockito.Mockito.times;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.mail.api.NewsletterVersandauftrag;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * ScheduleNewsletterDelegateTest
  */
-@ExtendWith(MockitoExtension.class)
+@QuarkusTest
 public class ScheduleNewsletterDelegateTest {
 
 	private static final String BEGONNEN_AM = "26.04.2021 10:10:10";
@@ -40,10 +40,10 @@ public class ScheduleNewsletterDelegateTest {
 
 	public static final Identifier VERSANDINFO_ID = new Identifier("hhsfhowho");
 
-	@Mock
+	@InjectMock
 	VersandinfoService versandinfoService;
 
-	@InjectMocks
+	@Inject
 	ScheduleNewsletterDelegate delegate;
 
 	@Nested

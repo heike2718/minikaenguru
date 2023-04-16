@@ -20,15 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
@@ -49,11 +46,13 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * KlassenlisteCSVImportServiceTest
  */
-@ExtendWith(MockitoExtension.class)
+@QuarkusTest
 public class KlassenlisteCSVImportServiceTest {
 
 	private static final String SCHULKUERZEL = "ZUTFG654F";
@@ -68,16 +67,16 @@ public class KlassenlisteCSVImportServiceTest {
 
 	private Wettbewerb wettbewerb;
 
-	@Mock
+	@InjectMock
 	private KlassenService klassenService;
 
-	@Mock
+	@InjectMock
 	private KinderService kinderService;
 
-	@Mock
+	@InjectMock
 	private UploadRepository uploadRepository;
 
-	@InjectMocks
+	@Inject
 	private KlassenlisteCSVImportService service;
 
 	@BeforeEach
