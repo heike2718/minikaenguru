@@ -30,7 +30,7 @@ export class VertragAdvComponent implements OnInit, OnDestroy {
 		mimetype: 'pdf',
 		buttonLabel: 'Vertragstext herunterladen',
 		tooltip: 'allgemeinen Vertragstext herunterladen (PDF)',
-		class: 'btn btn-outline-dark w-100 ml-1'
+		class: 'btn btn-outline-dark'
 	};
 
 	vertragBtnModel?: DownloadButtonModel;
@@ -90,7 +90,7 @@ export class VertragAdvComponent implements OnInit, OnDestroy {
 						mimetype: 'pdf',
 						buttonLabel: 'Vertrag herunterladen',
 						tooltip: 'Vertrag Auftragsverarbeitung herunterladen (PDF)',
-						class: 'btn btn-outline-dark w-100 ml-1'
+						class: 'btn btn-outline-dark'
 					};
 
 					this.formChangeSubscription = this.vertragAdvForm.statusChanges.subscribe(

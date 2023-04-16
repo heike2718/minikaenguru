@@ -189,4 +189,22 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 		this.lehrerFacade.removeSchule(this.schule);
 		this.gotoDashboard();
 	}
+
+	showTextModusIndifferent(): boolean {
+
+		if (this.schule === undefined) {
+			return false;
+		}
+
+		return this.schule.auswertungsmodus === 'INDIFFERENT';
+	}
+
+	showTextModusOffline(): boolean {
+
+		if (this.schule === undefined) {
+			return false;
+		}
+
+		return this.schule.auswertungsmodus === 'OFFLINE';
+	}
 }

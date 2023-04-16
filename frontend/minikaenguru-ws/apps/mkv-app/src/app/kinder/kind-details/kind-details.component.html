@@ -1,84 +1,83 @@
 <div class="card mt-2">
 	<div class="card-body">
-		<div class="card-title">{{titel}} <span *ngIf="kind.punkte" class="badge badge-success">Punkte:
-				{{kind.punkte.punkte}}</span><span *ngIf="kind.dublettePruefen" class="badge badge-warning">Dublette?</span></div>
+		<div class="card-title">{{titel}} <span *ngIf="kind.punkte" class="badge bg-success">Punkte:
+				{{kind.punkte.punkte}}</span><span *ngIf="kind.dublettePruefen"
+				class="badge bg-warning">Dublette?</span></div>
 		<div class="card-text">
 			<div *ngIf="!kind.klassenstufePruefen" class="row">
 				<div class="card-subtitle text-muted col-12">{{kind.klassenstufe.label}}</div>
 				<div class="card-subtitle text-muted col-12">Sprache: {{kind.sprache.label}}</div>
-	
+
 				<div *ngIf="kind.punkte" class="card-subtitle text-muted col-12">Länge Kängurusprung:
 					{{kind.punkte.laengeKaengurusprung}}</div>
 
-				<div *ngIf="showHinweisUrkunde" class="col-12 mt-1 card-subtitle text-primary">Bitte Urkunden nicht für jedes
-						Kind einzeln erstellen, sondern in der Ansicht "Klassen" für die ganze Schule</div>				
+				<div *ngIf="showHinweisUrkunde" class="col-12 mt-1 card-subtitle text-primary">Bitte Urkunden nicht für
+					jedes
+					Kind einzeln erstellen, sondern in der Ansicht "Klassen" für die ganze Schule</div>
 			</div>
 			<div *ngIf="kind.klassenstufePruefen" class="row">
 
 				<div class="card-subtitle text-muted col-12">{{kind.klassenstufe.label}}</div>
-				<label for="switch-klassenstufePruefen" class="ml-3 text-primary">Stimmt diese Klassenstufe? Falls ja, bitte bestätigen, falls nicht, bitte "ändern" wählen.</label>
-				<div class="row ml-1 mb-2">
+				<label for="switch-klassenstufePruefen" class="ml-3 text-primary">Stimmt diese Klassenstufe? Falls ja,
+					bitte bestätigen, falls nicht, bitte "ändern" wählen.</label>
+				<div class="row mb-2">
 					<div class="col-3">
-						<mk-switch id="switch-klassenstufePruefen" (switchClicked)="onCheckboxKlassenstufeClicked($event)"></mk-switch>
+						<mk-switch id="switch-klassenstufePruefen"
+							(switchClicked)="onCheckboxKlassenstufeClicked($event)"></mk-switch>
 					</div>
 					<!--<div class="col-sm-12 col-md-8 mt-2">{{textKlassenstufePruefen}}</div>-->
 				</div>
-				
+
 				<div class="card-subtitle text-muted mt-1 col-12">Sprache: {{kind.sprache.label}}</div>
 
 				<div *ngIf="kind.punkte" class="card-subtitle text-muted col-sm-12 col-md-9">Länge Kängurusprung:
 					{{kind.punkte.laengeKaengurusprung}}</div>
-	
-				<div *ngIf="showHinweisUrkunde" class="col-2 mt-1 card-subtitle text-primary">Bitte Urkunden nicht für jedes
-					Kind einzeln erstellen, sondern in der Ansicht "Klassen" für die ganze Schule</div>				
+
+				<div *ngIf="showHinweisUrkunde" class="col-2 mt-1 card-subtitle text-primary">Bitte Urkunden nicht für
+					jedes
+					Kind einzeln erstellen, sondern in der Ansicht "Klassen" für die ganze Schule</div>
 			</div>
 		</div>
 
 		<div class="d-none d-md-block">
 			<div class="btn-group d-flex hidden-xs" role="group">
-				<button class="btn btn-outline-dark w-100 ml-1" (click)="editKind()"><i class="fa fa-pencil"
+				<button class="btn btn-outline-dark w-100" (click)="editKind()"><i class="fa fa-pencil"
 						aria-hidden="true"></i>ändern</button>
 
-				<button *ngIf="showKlasseWechselnButton" class="btn btn-outline-dark w-100 ml-1"
-					(click)="klasseWechseln()" title="Kind in andere Klasse verschieben"><i class="fa fa-arrow-right"
-						aria-hidden="true"></i>andere
+				<button *ngIf="showKlasseWechselnButton" class="btn btn-outline-dark w-100" (click)="klasseWechseln()"
+					title="Kind in andere Klasse verschieben"><i class="fa fa-arrow-right" aria-hidden="true"></i>andere
 					Klasse</button>
 
-				<button *ngIf="zugangUnterlagen" class="btn btn-outline-dark w-100 ml-1"
-					(click)="editLoesungszettel()"><i class="fa fa-bars" aria-hidden="true"></i>Lösungszettel</button>
+				<button *ngIf="zugangUnterlagen" class="btn btn-outline-dark w-100" (click)="editLoesungszettel()"><i
+						class="fa fa-bars" aria-hidden="true"></i>Lösungszettel</button>
 
-				<button *ngIf="kind.punkte && kind.punkte.loesungszettelId !=='neu'"
-					class="btn btn-outline-dark w-100 ml-1" (click)="urkundeErstellen()"
-					title="{{btnUrkundeTooltip}}"><i class="fa fa-graduation-cap"
+				<button *ngIf="kind.punkte && kind.punkte.loesungszettelId !=='neu'" class="btn btn-outline-dark w-100"
+					(click)="urkundeErstellen()" title="{{btnUrkundeTooltip}}"><i class="fa fa-graduation-cap"
 						aria-hidden="true"></i>{{btnUrkundeLabel}}</button>
 
-				<button class="btn btn-outline-danger w-100 ml-1" (click)="deleteKind()"><i class="fa fa-trash"
+				<button class="btn btn-outline-danger w-100" (click)="deleteKind()"><i class="fa fa-trash"
 						aria-hidden="true"></i>löschen</button>
 			</div>
 		</div>
 
 		<div class="d-md-none d-lg-none d-xl-none">
 
-			<div class="btn-group d-inline hidden-xs" role="group">
-				<button class="btn btn-outline-dark w-100 ml-1" (click)="editKind()"><i class="fa fa-pencil"
-						aria-hidden="true"></i>ändern</button>
+			<button class="btn btn-outline-dark w-75" (click)="editKind()"><i class="fa fa-pencil"
+					aria-hidden="true"></i>ändern</button>
 
-				<button *ngIf="showKlasseWechselnButton" class="btn btn-outline-dark w-100 ml-1"
-					(click)="klasseWechseln()" title="Kind in andere Klasse verschieben"><i class="fa fa-arrow-right"
-						aria-hidden="true"></i>andere
-					Klasse</button>
+			<button *ngIf="showKlasseWechselnButton" class="btn btn-outline-dark w-75" (click)="klasseWechseln()"
+				title="Kind in andere Klasse verschieben"><i class="fa fa-arrow-right" aria-hidden="true"></i>andere
+				Klasse</button>
 
-				<button *ngIf="zugangUnterlagen" class="btn btn-outline-dark w-100 ml-1"
-					(click)="editLoesungszettel()"><i class="fa fa-bars" aria-hidden="true"></i>Lösungszettel</button>
+			<button *ngIf="zugangUnterlagen" class="btn btn-outline-dark w-75" (click)="editLoesungszettel()"><i
+					class="fa fa-bars" aria-hidden="true"></i>Lösungszettel</button>
 
-				<button *ngIf="kind.punkte && kind.punkte.loesungszettelId !=='neu'"
-					class="btn btn-outline-dark w-100 ml-1" (click)="urkundeErstellen()"
-					title="{{btnUrkundeTooltip}}"><i class="fa fa-graduation-cap"
-						aria-hidden="true"></i>{{btnUrkundeLabel}}</button>
+			<button *ngIf="kind.punkte && kind.punkte.loesungszettelId !=='neu'" class="btn btn-outline-dark w-75"
+				(click)="urkundeErstellen()" title="{{btnUrkundeTooltip}}"><i class="fa fa-graduation-cap"
+					aria-hidden="true"></i>{{btnUrkundeLabel}}</button>
 
-				<button class="btn btn-outline-danger w-100 ml-1" (click)="deleteKind()"><i class="fa fa-trash"
-						aria-hidden="true"></i>löschen</button>
-			</div>
+			<button class="btn btn-outline-danger w-75" (click)="deleteKind()"><i class="fa fa-trash"
+					aria-hidden="true"></i>löschen</button>
 		</div>
 	</div>
 </div>

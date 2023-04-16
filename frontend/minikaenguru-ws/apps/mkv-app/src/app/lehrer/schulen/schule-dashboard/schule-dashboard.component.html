@@ -4,14 +4,28 @@
 			<div *ngIf="schule">
 				<h2>Schulübersicht <span *ngIf="devMode">{{schule.kuerzel}}</span></h2>
 
+				<p *ngIf="showTextModusIndifferent()">Sie können einmalig wählen, ob Sie die Onlineauswertung nutzen
+					wollen oder die Auswertung vollständig
+					offline erstellen und alle Urkunden selbst schreiben wollen. Falls Sie die Onlineauswetzung nutzen
+					möchten, klicken Sie bitte auf "Onlineauswertung" und erfassen Klassen und Kinder oder laden eine
+					Klassenliste hoch.
+				</p>
+
+				<p *ngIf="showTextModusOffline()">Sie haben bereits eine Auswertungstabelle hochgeladen und können daher
+					keine Klassen und Kinder mehr erfassen.
+					Falls das ein Versehen war, wenden Sie sich bitte per Mail
+					an minikaenguru(at)egladil.de.
+				</p>
+
 				<div class="row mt-4 ml-2">
 					<div class="col-12">
 						<h3>{{schule.name}} <span *ngIf="schule.aktuellAngemeldet"
-								class="ml-1 badge badge-success">angemeldet
+								class="ml-1 badge bg-success">angemeldet
 								für {{wettbewerb.jahr}}</span></h3>
 						<p>{{schule.ort}} - {{schule.land}}</p>
 
-						<p *ngIf="schule.details && schule.details.kollegen && schule.details.kollegen.length > 0">Kollegen:
+						<p *ngIf="schule.details && schule.details.kollegen && schule.details.kollegen.length > 0">
+							Kollegen:
 							{{schule.details.kollegen}}</p>
 
 						<p *ngIf="wettbewerb.status === 'ERFASST'">Der Anmeldezeitraum für {{wettbewerb.jahr}} beginnt
@@ -25,71 +39,101 @@
 						<p *ngIf="devMode" class="small">Auswertungsart:
 							{{schule.auswertungsmodus}}</p>
 
-				</div>
-				</div>
-
-				<div class="card-deck">
-
-					<div *ngIf="hatZugangZuUnterlagen$ | async">
-
-						<mkv-unterlagen-card></mkv-unterlagen-card>
-
 					</div>
-
-					<div *ngIf="schule.aktuellAngemeldet && schule.auswertungsmodus !== 'OFFLINE'" class="card clickable" (click)="gotoKlassenliste()">
-						<div class="card-body">
-							<div class="card-title">Auswertung {{wettbewerb.jahr}}</div>
-							<div class="mb-2 text-muted">Kinder erfassen und Urkunden generieren</div>
-						</div>
-					</div>
-
-					<div *ngIf="schule.aktuellAngemeldet && (hatZugangZuUnterlagen$ | async) && schule.auswertungsmodus !== 'ONLINE'"  class="card clickable" (click)="gotoUploadAuswertung()">
-						<div class="card-body">
-							<div class="card-title">Auswertungstabelle hochladen</div>
-							<div *ngIf="schule.auswertungsmodus === 'INDIFFERENT'" class="mb-2  text-danger">
-								Achtung: nur wenn Sie die Online-Auswertung nicht nutzen möchten
-						</div>
-						<div class="mb-2 text-muted">
-							anonyme Excel-Auswertungstabelle für die Statistik hochladen</div>
-						</div>
-					</div>
-
-					<div *ngIf="schule.details && schule.details.kollegen && schule.details.kollegen.length > 0" class="card clickable" (click)="vonSchuleAbmelden()">
-						<div class="card-body">
-							<div class="card-title">Entfernen</div>
-							<div class="mb-2 text-muted">von dieser Schule abmelden</div>
-						</div>
-					</div>
-				
-					<div *ngIf="(wettbewerb.status !== 'ERFASST' && wettbewerb.status !== 'BEENDET' && !schule.aktuellAngemeldet)"
-						class="card clickable" (click)="anmelden()">
-						<div class="card-body">
-							<div class="card-title">Anmelden</div>
-							<div class="mb-2 text-muted"> für {{wettbewerb.jahr}}</div>
-						</div>
-					</div>
-
 				</div>
 
-				<div class="card-deck mt-3">
+				<div class="row row-cols-1 row-cols-md-3 g-4">
+					<div class="col">
 
-					<div *ngIf="schule.details && schule.details.anzahlTeilnahmen > 0" class="card clickable" (click)="gotoTeilnahmen()">
-						<div class="card-body">
-							<div class="card-title">alle Teilnahmen <span
-									class="ml-1 badge badge-primary">{{schule.details.anzahlTeilnahmen}}</span>
+						<div *ngIf="hatZugangZuUnterlagen$ | async">
+
+							<mkv-unterlagen-card></mkv-unterlagen-card>
+
+						</div>
+					</div>
+
+					<div class="col">
+						<div *ngIf="schule.aktuellAngemeldet && schule.auswertungsmodus !== 'OFFLINE'"
+							class="card clickable" (click)="gotoKlassenliste()">
+							<div class="card-body">
+								<div class="card-title">Onlineauswertung {{wettbewerb.jahr}}</div>
+								<div class="mb-2 text-muted">Kinder erfassen und Urkunden generieren</div>
 							</div>
-							<div class="mb-2 text-muted">Schulstatistiken</div>
 						</div>
 					</div>
 
-					<div *ngIf="schule.details && schule.details.hatAdv">
-						<mk-download-card [model]="vertragAdvModel"></mk-download-card>
+					<div class="col" *ngIf="showTextModusOffline()">
+						<div class="card">
+							<div class="card-body">
+								<div class="card-title">keine Onlineauswertung mehr möglich</div>
+								<div class="mb-2 text-danger">Sie haben bereits eine Auswertungstabelle hochgeladen und
+									können daher
+									keine Klassen und Kinder mehr erfassen.
+									Falls das ein Versehen war, wenden Sie sich bitte per Mail
+									an minikaenguru(at)egladil.de.</div>
+							</div>
+						</div>
 					</div>
 
-					<div *ngIf="schule.details && !schule.details.hatAdv" class="card clickable" (click)="gotoVertragAdv()">
-						<div class="card-body">
-							<div class="card-title">DSGVO</div>
-							<div class="mb-2 text-muted">Vertrag zur Auftragsverarbeitung abschließen</div>
+					<div class="col">
+						<div *ngIf="schule.aktuellAngemeldet && (hatZugangZuUnterlagen$ | async) && schule.auswertungsmodus !== 'ONLINE'"
+							class="card clickable" (click)="gotoUploadAuswertung()">
+							<div class="card-body">
+								<div class="card-title">Auswertungstabelle hochladen</div>
+								<div *ngIf="schule.auswertungsmodus === 'INDIFFERENT'" class="mb-2  text-danger">
+									Achtung: nur wenn Sie die Online-Auswertung nicht nutzen möchten
+								</div>
+								<div class="mb-2 text-muted">
+									anonyme Excel-Auswertungstabelle für die Statistik hochladen</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col">
+						<div *ngIf="schule.details && schule.details.kollegen && schule.details.kollegen.length > 0"
+							class="card clickable" (click)="vonSchuleAbmelden()">
+							<div class="card-body">
+								<div class="card-title">Entfernen</div>
+								<div class="mb-2 text-muted">von dieser Schule abmelden</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col">
+						<div *ngIf="(wettbewerb.status !== 'ERFASST' && wettbewerb.status !== 'BEENDET' && !schule.aktuellAngemeldet)"
+							class="card clickable" (click)="anmelden()">
+							<div class="card-body">
+								<div class="card-title">Anmelden</div>
+								<div class="mb-2 text-muted"> für {{wettbewerb.jahr}}</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col">
+						<div *ngIf="schule.details && schule.details.anzahlTeilnahmen > 0" class="card clickable"
+							(click)="gotoTeilnahmen()">
+							<div class="card-body">
+								<div class="card-title">alle Teilnahmen <span
+										class="ml-1 badge bg-primary">{{schule.details.anzahlTeilnahmen}}</span>
+								</div>
+								<div class="mb-2 text-muted">Schulstatistiken</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col">
+						<div *ngIf="schule.details && schule.details.hatAdv">
+							<mk-download-card [model]="vertragAdvModel"></mk-download-card>
+						</div>
+					</div>
+
+					<div class="col">
+						<div *ngIf="schule.details && !schule.details.hatAdv" class="card clickable"
+							(click)="gotoVertragAdv()">
+							<div class="card-body">
+								<div class="card-title">DSGVO</div>
+								<div class="mb-2 text-muted">Vertrag zur Auftragsverarbeitung abschließen</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -97,7 +141,7 @@
 		</div>
 
 	</ng-container>
-	
+
 	<div *ngIf="textFeatureFlagAnzeigen" class="row ml-3 mr-3 mt-3 hinweis">
 		<div class="col-11">
 			<div class="mkv-bordered">{{textFeatureFlag}}</div>

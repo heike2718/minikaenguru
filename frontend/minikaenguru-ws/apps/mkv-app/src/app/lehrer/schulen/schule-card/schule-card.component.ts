@@ -76,4 +76,23 @@ export class SchuleCardComponent implements OnInit, OnDestroy {
 		this.lehrerFacade.removeSchule(this.schule);
 	}
 
+	showTextModusIndifferent(): boolean {
+
+		if (this.schule === undefined) {
+			return false;
+		}
+
+		return this.schule.aktuellAngemeldet && this.schule.auswertungsmodus === 'INDIFFERENT';
+	}
+
+	showTextModusOffline(): boolean {
+
+		if (this.schule === undefined) {
+			return false;
+		}
+
+		return this.schule.aktuellAngemeldet && this.schule.auswertungsmodus === 'OFFLINE';
+	}
+	
+
 }

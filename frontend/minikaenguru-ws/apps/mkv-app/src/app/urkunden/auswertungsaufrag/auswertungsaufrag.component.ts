@@ -3,7 +3,7 @@ import { Schule } from '../../lehrer/schulen/schulen.model';
 import { UrkundenFacade } from '../urkunden.facade';
 import { LehrerFacade } from '../../lehrer/lehrer.facade';
 import { Subscription } from 'rxjs';
-import { NgbDateStruct, NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct, NgbDate, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { UrkundeDateModel, Farbschema, UrkundenauftragSchule } from '../urkunden.model';
 import { NgForm } from '@angular/forms';
 import { LogService } from '@minikaenguru-ws/common-logging';
@@ -15,8 +15,7 @@ import { LogService } from '@minikaenguru-ws/common-logging';
 })
 export class AuswertungsaufragComponent implements OnInit, OnDestroy {
 
-	schule?: Schule;
-	nameSchule = '';
+	#schule?: Schule;
 
 	dateModel!: NgbDateStruct;
 
@@ -28,21 +27,19 @@ export class AuswertungsaufragComponent implements OnInit, OnDestroy {
 
 	constructor(public urkundenFacade: UrkundenFacade,
 		public lehrerFacade: LehrerFacade, 
+		private calendar: NgbCalendar,
 		private logger: LogService) { }
 
 	ngOnInit(): void {
 
 		this.urkundeDateModel = this.urkundenFacade.getUrkundeDateModel();
-		this.dateModel = this.urkundeDateModel.maxDate;
+		this.dateModel = this.calendar.getToday();
 
 		this.selectedSchuleSubscription = this.lehrerFacade.selectedSchule$.subscribe(
 
 			schule => {
 				if (schule) {
-					this.schule = schule;
-					this.nameSchule = schule.name;
-				} else {
-					this.nameSchule = '';
+					this.#schule = schule;
 				}
 			}
 		);
@@ -55,7 +52,7 @@ export class AuswertungsaufragComponent implements OnInit, OnDestroy {
 
 	onFormSubmit(form: NgForm): void {
 
-		if (!this.schule) {
+		if (!this.#schule) {
 			this.logger.debug('selectedSchule was undefined');
 			return;
 		}
@@ -63,7 +60,7 @@ export class AuswertungsaufragComponent implements OnInit, OnDestroy {
 		const value = form.value;
 
 		const auftrag: UrkundenauftragSchule = {
-			schulkuerzel: this.schule.kuerzel,
+			schulkuerzel: this.#schule.kuerzel,
 			dateString: this.urkundeDateModel.selectedDate,
 			farbschema: value['farbe']
 		};

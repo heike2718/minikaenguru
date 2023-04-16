@@ -10,7 +10,7 @@
 	<div *ngIf="selectedSchule$ | async as schule">
 
 		<div *ngIf="schule.details && !schule.details.hatAdv" class="col-12">
-			<mk-download-button class="w-100 ml-1" [model]="vertragstextBtnModel">
+			<mk-download-button [model]="vertragstextBtnModel">
 			</mk-download-button>
 
 			<form class="mb-4" [formGroup]="vertragAdvForm">
@@ -90,7 +90,7 @@
 		</div>
 
 		<div *ngIf="vertragBtnModel && schule.details && schule.details.hatAdv" class="col-12">
-			<mk-download-button class="w-100 ml-1" [model]="vertragBtnModel">
+			<mk-download-button [model]="vertragBtnModel">
 			</mk-download-button>
 		</div>
 

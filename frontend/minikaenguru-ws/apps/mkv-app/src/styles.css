@@ -73,6 +73,25 @@ button>i {
   background-color: #e6e6e6;
 }
 
+.badge {
+  margin-left: 1em;
+}
+
+.btn {
+  border-radius: 4px;
+  margin: 1rem;
+}
+
+/*
+.btn-group .btn {
+  margin: 1rem;
+}
+
+.d-md-none .btn {
+  margin: 1rem;
+}
+*/
+
 footer {
   position: relative;
   margin-top: 350px;

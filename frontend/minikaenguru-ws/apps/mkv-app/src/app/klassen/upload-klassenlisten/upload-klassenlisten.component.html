@@ -7,102 +7,118 @@
 
 			<h3>Klassenlisten hochladen</h3>
 
+			<p>Sie können alle Kinder mit dem Hochladen von Klassenlisten in die Anwendung importieren. Diese Funktion
+				ist sinnvoll, wenn Sie bereits Klassenlisten im Excel-Format haben. Ggf. müssen Sie diese nur noch etwas
+				anpassen (siehe Hinweise).</p>
+
+			<p> Wenn Sie noch keine Excel-Tabellen haben, ist es effizienter, die Kinder
+				manuell einzutragen.</p>
+
+			<p class="text-danger"><strong>Bitte laden Sie hier keine Auswertungstabellen hoch.</strong></p>
+
 			<div class="row">
-				<div class="col-sm-12 col-md-3 font-weight-bold">Schule:</div>
+				<div class="col-sm-12 col-md-3 fw-bold">Schule:</div>
 				<div class="col-sm-12 col-md-9">{{schule.name }}</div>
 			</div>
 			<div class="row">
-				<div class="col-sm-12 col-md-3 font-weight-bold">Ort:</div>
+				<div class="col-sm-12 col-md-3 fw-bold">Ort:</div>
 				<div class="col-sm-12 col-md-9">{{schule.ort }}</div>
 			</div>
 			<div class="row">
-				<div class="col-sm-12 col-md-3 font-weight-bold">Land:</div>
+				<div class="col-sm-12 col-md-3 fw-bold">Land:</div>
 				<div class="col-sm-12 col-md-9">{{schule.land}}</div>
 			</div>
 
 			<div class="row" *ngIf="(klassenFacade.anzahlKlassen$ | async) as anzahl">
-				<div class="col-sm-12 col-md-3 font-weight-bold">Anzahl Klassen:</div>
+				<div class="col-sm-12 col-md-3 fw-bold">Anzahl Klassen:</div>
 				<div class="col-sm-12 col-md-9">{{anzahl}}</div>
 			</div>
 
-			<div class="mkv-bordered w-100 mt-2 m-1 p-2">
+			<div class="row">
 
-				<label for="switch-sprache" class="label-bold w-100"><strong> Sprache englisch:</strong></label>
-				<div class="row">
-					<div class="col-3">
-						<mk-switch id="switch-sprache" (switchClicked)="onCheckboxSpracheClicked($event)"></mk-switch>
+				<div class="col mkv-bordered mt-2 m-1 p-2">
+
+					<p><strong>Bevor Sie eine Datei hochladen: bitte schauen Sie, ob diese die folgenden Voraussetzungen
+							erfüllt und passen Sie Ihre Dateien ggf. an:</strong></p>
+
+					<p>Die Daten müssen im <strong>ersten Tabellenblatt</strong> stehen, denn es wird nur dieses
+						berücksichtigt.</p>
+					<p>Das Tabellenblatt muss 4 Spalten haben.</p>
+					<p>Die Spaltenüberschriften müssen wie folgt heißen (Reihenfolge ist beliebig):
+						<strong>"Vorname"</strong>,
+						<strong>"Nachname"</strong>,
+						<strong>"Klasse"</strong>, <strong>"Klassenstufe"</strong>.
+					</p>
+					<p>In die Spalte <strong>"Klassenstufe"</strong> tragen Sie bitte eine 0 für Inklusion, eine 1 für
+						Klassestufe 1 und eine 2 für Klassenstufe 2 ein.</p>
+					<p>In die Spalte <strong>"Klasse"</strong> tragen Sie bitte den Namen der Klasse ein, wie er auf den
+						Urkunden erscheinen soll. Für verschiedene Klassennamen werden verschiedene Klassen generiert.
+					</p>
+					<p>Alle Spalten müssen vollständig gefüllt sein. Wenn der Nachname nicht auf der Urkunde erscheinen
+						soll,
+						wählen Sie bitte "Nachname verbergen" aus.</p>
+					<p>Sie können auch mehrere Excel-Dateien nacheinander hochladen.</p>
+					<p>Falls Sie keine eigenen Excel-Klassenlisten haben, können Sie hier eine leere Datei
+						herunterladen.</p>
+					<a class="btn btn-outline-danger"
+						href="https://mathe-jung-alt.de/minikaenguru/auswertungshilfen.html" target="_blank">Download
+						leere
+						Klassenliste</a>
+				</div>
+
+				<div class="col mkv-bordered mt-2 m-1 p-2">
+
+					<label for="switch-sprache" class="label-bold w-100"><strong> Sprache englisch:</strong></label>
+					<div class="row">
+						<div class="col-3">
+							<mk-switch id="switch-sprache"
+								(switchClicked)="onCheckboxSpracheClicked($event)"></mk-switch>
+						</div>
+						<div class="col-sm-12 col-md-8 mt-2" [innerHTML]="textSprache"></div>
 					</div>
-					<div class="col-sm-12 col-md-8 mt-2" [innerHTML]="textSprache"></div>
-				</div>
 
-				<label for="switch-nachname" class="label-bold w-100 mt-3"><strong> Nachname als Zusatz:</strong></label>
-				<div class="row">
-					<div class="col-3">
-						<mk-switch id="switch-nachname" (switchClicked)="onCheckboxNachnameVerbergenClicked($event)"></mk-switch>
+					<label for="switch-nachname" class="label-bold w-100 mt-3"><strong> Nachname
+							verbergen:</strong></label>
+					<div class="row">
+						<div class="col-3">
+							<mk-switch id="switch-nachname"
+								(switchClicked)="onCheckboxNachnameVerbergenClicked($event)"></mk-switch>
+						</div>
+						<div class="col-sm-12 col-md-8 mt-2" [innerHTML]="textNachname"></div>
 					</div>
-					<div class="col-sm-12 col-md-8 mt-2" [innerHTML]="textNachname"></div>
+					<small *ngIf="devMode && subUrl.length > 0">{{uploadModel.subUrl}}</small>
+
+					<div *ngIf="subUrl.length > 0" class="row">
+						<mk-upload [uploadModel]="uploadModel" (dateiAusgewaehlt)="onDateiAusgewaehlt()"
+							(responsePayload)="onResponse($event)"></mk-upload>
+					</div>
+
+					<div *ngIf="klassenFacade.klassenimportReport$ | async">
+						<mkv-import-report></mkv-import-report>
+					</div>
 				</div>
-				<small *ngIf="devMode && subUrl.length > 0">{{uploadModel.subUrl}}</small>
 
-				<div *ngIf="subUrl.length > 0" class="row">
-					<mk-upload [uploadModel]="uploadModel" (dateiAusgewaehlt)="onDateiAusgewaehlt()"
-					(responsePayload)="onResponse($event)"></mk-upload>
-				</div>
+			</div>
 
-				<button type="button" class="btn btn-outline-primary col-12" title="Infos zum Inhalt der Datei" (click)="showInfoUploadFormat()">
-					<i class="fa fa-info" aria-hidden="true"></i> Wie muss die Excel-Datei aussehen?
-				</button>	
-				
 
-				<div *ngIf="klassenFacade.klassenimportReport$ | async">
-					<mkv-import-report></mkv-import-report>
-				</div>
-			</div>		
-						
-	</ng-container>
+		</ng-container>
 
-	<div class="d-none d-md-block">
-		<div class="btn-group d-flex" role="group">
-			<button *ngIf="schule" class="btn btn-primary w-100 ml-1" title="zur Klassenliste" 
-				(click)="gotoKlassen()">
+		<div class="d-none d-md-block">
+			<div class="btn-group d-flex" role="group">
+				<button *ngIf="schule" class="btn btn-primary w-100" title="zur Klassenliste" (click)="gotoKlassen()">
+					<i class="fa fa-arrow-left" aria-hidden="true"></i>Klassen</button>
+
+				<button *ngIf="schule" class="btn btn-primary w-100" (click)="gotoDashboard()"
+					title="{{tooltipBtnSchuluebersicht}}"><i class="fa fa-arrow-left"
+						aria-hidden="true"></i>Schulübersicht</button>
+			</div>
+		</div>
+		<div class="d-md-none d-lg-none d-xl-none">
+			<button *ngIf="schule" class="btn btn-primary w-75" title="zur Klassenliste" (click)="gotoKlassen()">
 				<i class="fa fa-arrow-left" aria-hidden="true"></i>Klassen</button>
 
-			<button *ngIf="schule" class="btn btn-primary w-100 ml-1" (click)="gotoDashboard()"
+			<button *ngIf="schule" class="btn btn-primary w-75" (click)="gotoDashboard()"
 				title="{{tooltipBtnSchuluebersicht}}"><i class="fa fa-arrow-left"
 					aria-hidden="true"></i>Schulübersicht</button>
 		</div>
 	</div>
-	<div class="d-md-none d-lg-none d-xl-none">
-		<div class="btn-group d-inline" role="group">
-
-			<button *ngIf="schule" class="btn btn-primary w-100 ml-1"  title="zur Klassenliste"
-				(click)="gotoKlassen()">
-				<i class="fa fa-arrow-left" aria-hidden="true"></i>Klassen</button>
-
-			<button *ngIf="schule" class="btn btn-primary w-100 ml-1" (click)="gotoDashboard()"
-				title="{{tooltipBtnSchuluebersicht}}"><i class="fa fa-arrow-left"
-					aria-hidden="true"></i>Schulübersicht</button>
-
-		</div>
-	</div>
-</div>
-
-<ng-template #dialogUploadFormatInfo let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Wie muss die Excel-Datei aussehen?</h4>
-    </div>
-    <div class="modal-body">
-        <p>Die Excel-Datei darf nur aus <strong>einem</strong> Tabellenblatt bestehen, denn es wird nur das erste Tabellenblatt berücksichtigt.</p>
-		<p>Das Tabellenblatt muss 4 Spalten haben.</p>
-		<p>Die Spaltenüberschriften müssen wie folgt heißen (Reihenfolge ist beliebig): <strong>"Vorname"</strong>, <strong>"Nachname"</strong>, 
-			<strong>"Klasse"</strong>, <strong>"Klassenstufe"</strong>.</p>
-		<p>In die Spalte <strong>"Klassenstufe"</strong> tragen Sie bitte eine 0 für Inklusion, eine 1 für Klassestufe 1 und eine 2 für Klassenstufe 2 ein.</p>
-		<p>In die Spalte <strong>"Klasse"</strong> tragen Sie bitte den Namen der Klasse ein, wie er auf den Urkunden erscheinen soll. Für verschiedene Klassennamen werden verschiedene Klassen generiert.</p>
-		<p>Alle Spalten müssen vollständig gefüllt sein. Wenn der Nachname nicht auf der Urkunde erscheinen soll, wählen Sie bitte "Nachname als Zusatz" aus.</p>
-		<p>Sie können auch mehrere Excel-Dateien nacheinander hochladen.</p>
-		<p>Weitere Informationen mit Screenshots finden Sie auf der Minikänguru-Seite.</p>
-	</div>
-    <div class="modal-footer">
-		<button type="button" class="btn btn-outline-dark" (click)="modal.close('OK')">OK</button>
-    </div>
-</ng-template>

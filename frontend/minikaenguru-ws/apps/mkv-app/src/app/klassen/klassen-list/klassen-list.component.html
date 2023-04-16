@@ -2,7 +2,7 @@
 	<div class="col-12">
 
 		<h3><span *ngIf="schule">{{schule.name}}</span> <span *ngIf="devMode">({{schule?.kuerzel}})</span> Klassen <span
-				*ngIf="(klassenFacade.anzahlKlassen$ | async) as anzahl" class="badge badge-secondary">{{anzahl}}</span>				
+				*ngIf="(klassenFacade.anzahlKlassen$ | async) as anzahl" class="badge bg-secondary">{{anzahl}}</span>				
 		</h3>
 		<p *ngIf="devMode">(klassen-list.component)</p>
 
@@ -15,61 +15,58 @@
 
 		<div class="d-none d-md-block">
 			<div class="btn-group d-flex" role="group">
-				<button *ngIf="schule" class="btn btn-primary w-100 ml-1" title="Laden Sie Ihre Klassen als Excel/Open Office hoch" 
+				<button *ngIf="schule" class="btn btn-primary w-100" title="Laden Sie Ihre Klassen als Excel/Open Office hoch" 
 					(click)="gotoUploadKlassenlisten()">
 					<i class="fa fa-upload" aria-hidden="true"></i>Klassenlisten hochladen</button>
 
-				<button class="btn btn-primary w-100 ml-1" (click)="addKlasse()"><i class="fa fa-plus"
+				<button class="btn btn-primary w-100" (click)="addKlasse()"><i class="fa fa-plus"
 						aria-hidden="true"></i>neue Klasse</button>
 
-				<button *ngIf="anzahlLoesungszettel > 0" class="btn btn-success w-100 ml-1"
+				<button *ngIf="anzahlLoesungszettel > 0" class="btn btn-success w-100"
 					(click)="gotoSchulauswertung()"><i class="fa fa-graduation-cap" aria-hidden="true"></i>Urkunden
 					generieren</button>
 
 				<ng-container *ngIf="anzahlKinder > 0 && (klassenFacade.anzahlKlassen$ | async) as anzahl">
-					<button *ngIf="anzahl > 0" class="btn btn-danger w-100 ml-1"
+					<button *ngIf="anzahl > 0" class="btn btn-danger w-100"
 						(click)="deleteKlassen()"><i class="fa fa-trash" aria-hidden="true"></i>alle Klassen löschen</button>				
 				</ng-container>
 	
 				<ng-container *ngIf="anzahlKinder === 0 && (klassenFacade.anzahlKlassen$ | async) as anzahl">
-					<button *ngIf="anzahl > 0" class="btn btn-primary w-100 ml-1"
+					<button *ngIf="anzahl > 0" class="btn btn-primary w-100"
 						(click)="forceDeleteKlassen()"><i class="fa fa-trash" aria-hidden="true"></i>alle Klassen löschen</button>				
 				</ng-container>
 
-				<button *ngIf="schule" class="btn btn-primary w-100 ml-1" (click)="gotoDashboard()"
+				<button *ngIf="schule" class="btn btn-primary w-100" (click)="gotoDashboard()"
 					title="{{tooltipBtnSchuluebersicht}}"><i class="fa fa-arrow-left"
 						aria-hidden="true"></i>Schulübersicht</button>
 			</div>
 		</div>
 		<div class="d-md-none d-lg-none d-xl-none">
-			<div class="btn-group d-inline" role="group">
-
-				<button *ngIf="schule" class="btn btn-primary w-100 ml-1"  title="Laden Sie Ihre Klassen als Excel/Open Office hoch"
+			<button *ngIf="schule" class="btn btn-primary w-75"  title="Laden Sie Ihre Klassen als Excel/Open Office hoch"
 					(click)="gotoUploadKlassenlisten()">
 					<i class="fa fa-upload" aria-hidden="true"></i>Klassenlisten hochladen</button>
 		
 		
-				<button class="btn btn-primary w-100 ml-1" (click)="addKlasse()"><i class="fa fa-plus"
+				<button class="btn btn-primary w-75" (click)="addKlasse()"><i class="fa fa-plus"
 						aria-hidden="true"></i>neue Klasse</button>
 
-				<button *ngIf="anzahlLoesungszettel > 0" class="btn btn-success w-100 ml-1"
+				<button *ngIf="anzahlLoesungszettel > 0" class="btn btn-success w-75"
 					(click)="gotoSchulauswertung()"><i class="fa fa-graduation-cap" aria-hidden="true"></i>Urkunden
 					generieren</button>
 
 				<ng-container *ngIf="anzahlKinder > 0 && (klassenFacade.anzahlKlassen$ | async) as anzahl">
-					<button *ngIf="anzahl > 0" class="btn btn-danger w-100 ml-1"
+					<button *ngIf="anzahl > 0" class="btn btn-danger w-75"
 						(click)="deleteKlassen()"><i class="fa fa-trash" aria-hidden="true"></i>alle Klassen löschen</button>
 				</ng-container>
 
 				<ng-container *ngIf="anzahlKinder === 0 && (klassenFacade.anzahlKlassen$ | async) as anzahl">
-					<button *ngIf="anzahl > 0" class="btn btn-primary w-100 ml-1"
+					<button *ngIf="anzahl > 0" class="btn btn-primary w-75"
 						(click)="forceDeleteKlassen()"><i class="fa fa-trash" aria-hidden="true"></i>alle Klassen löschen</button>
 				</ng-container>
 
-				<button *ngIf="schule" class="btn btn-primary w-100 ml-1" (click)="gotoDashboard()"
+				<button *ngIf="schule" class="btn btn-primary w-75" (click)="gotoDashboard()"
 					title="{{tooltipBtnSchuluebersicht}}"><i class="fa fa-arrow-left"
 						aria-hidden="true"></i>Schulübersicht</button>
-			</div>
 		</div>
 	</div>
 </div>
