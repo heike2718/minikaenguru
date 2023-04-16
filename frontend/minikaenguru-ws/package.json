@@ -48,7 +48,7 @@
     "@nrwl/angular": "14.8.6",
     "@popperjs/core": "^2.11.6",
     "ansi-html-community": "^0.0.8",
-    "bootstrap": "^4.6.2",
+    "bootstrap": "5.2.3",
     "core-js": "^2.5.4",
     "font-awesome": "^4.7.0",
     "rxjs": "6.5.5",
