@@ -22,7 +22,7 @@
 
 		<div class="form-group">
 				<label for="power">Empfängertyp</label>
-				<select class="form-control" id="selectEmpfaengertyp" (change)="onChangeEmpfaengertyp($event)" required>
+				<select class="form-select" id="selectEmpfaengertyp" (change)="onChangeEmpfaengertyp($event)" required>
 					<option *ngFor="let typ of newsletterFacade.empfaengertypen" [value]="typ">{{typ}}
 					</option>
 				</select>

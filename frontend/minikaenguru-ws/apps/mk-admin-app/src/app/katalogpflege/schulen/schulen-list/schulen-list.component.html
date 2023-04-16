@@ -29,17 +29,17 @@
 		</div>
 	</div>
 	<div class="btn-group d-flex" role="group">
-		<button *ngIf="selectedKatalogItem$ | async" class="btn btn-primary w-100 ml-1" (click)="addSchule()"><i
+		<button *ngIf="selectedKatalogItem$ | async" class="btn btn-primary w-100" (click)="addSchule()"><i
 				class="fa fa-plus" aria-hidden="true" title="neue Schule im gleichen Ort"></i>neue
 			Schule</button>
 
-		<button class="btn btn-primary w-100 ml-1" (click)="gotoKataloge()"><i class="fa fa-arrow-left"
+		<button class="btn btn-primary w-100" (click)="gotoKataloge()"><i class="fa fa-arrow-left"
 				aria-hidden="true"></i>Kataloge</button>
 
-		<button class="btn btn-primary w-100 ml-1" (click)="gotoDashboard()"><i class="fa fa-puzzle-piece"
+		<button class="btn btn-primary w-100" (click)="gotoDashboard()"><i class="fa fa-puzzle-piece"
 				aria-hidden="true"></i>Dashboard</button>
 
-		<button class="btn btn-primary w-100 ml-1" (click)="clearRearchResults()"><i class="fa fa-remove"
+		<button class="btn btn-primary w-100" (click)="clearRearchResults()"><i class="fa fa-remove"
 				aria-hidden="true"></i>neue Suche</button>
 	</div>
 </div>

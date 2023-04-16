@@ -4,7 +4,7 @@
 
 		<div class="form-group">
 			<label for="suchkriterium">Suchkriterium*</label>
-			<select class="form-control" id="suchkriterium" required [(ngModel)]="model.suchkriterium"
+			<select class="form-select" aria-label="Suchkriterium auswählen" id="suchkriterium" required [(ngModel)]="model.suchkriterium"
 				name="suchkriterium" #suchkriterium="ngModel">
 				<option *ngFor="let krit of suchkriterien" [value]="krit">{{krit}}</option>
 			</select>

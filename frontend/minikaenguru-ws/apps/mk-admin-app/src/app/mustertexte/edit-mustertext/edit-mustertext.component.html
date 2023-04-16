@@ -17,7 +17,7 @@
     
                     <div class="row">
                         <div class="col-12">
-                            <select id="kategorieSelect" class="custom-select" formControlName="kategorie">
+                            <select id="kategorieSelect" class="form-select" formControlName="kategorie">
                                 <option [ngValue]="null" disabled>Bitte Kategorie wählen</option>
                                 <option *ngFor="let kg of kategorien" [ngValue]="kg">
                                     {{ kg }}

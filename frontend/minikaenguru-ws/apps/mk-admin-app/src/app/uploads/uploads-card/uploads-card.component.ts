@@ -31,7 +31,7 @@ export class UploadsCardComponent implements OnInit {
 			dateiname: this.uploadInfo.teilnahmenummer + '-' + this.uploadInfo.uuid + '-fehlerreport.csv',
 			mimetype: 'application/octet-stream',
 			tooltip: 'Fehlerreport herunterladen',
-			class: 'btn btn-outline-dark w-100 ml-1'
+			class: 'btn btn-outline-dark'
 		};
 
     this.fileDownloadButtonModel =  {
@@ -41,7 +41,7 @@ export class UploadsCardComponent implements OnInit {
 			dateiname: this.uploadInfo.fileName,
 			mimetype: 'application/octet-stream',
 			tooltip: 'Datei herunterladen',
-			class: 'btn btn-outline-dark w-100 ml-1'
+			class: 'btn btn-outline-dark'
 		};
   	}
 

@@ -1,6 +1,6 @@
 <div *ngIf="(wettbewerb$ | async) as wettbewerb" class="mkv-container mt-1">
 	<div *ngIf="wettbewerb" class="col-12">
-		<h2>Minikänguru {{wettbewerb.jahr}} <span class="ml-1 badge badge-success">{{wettbewerb.status}}</span></h2>
+		<h2>Minikänguru {{wettbewerb.jahr}} <span class="ml-1 badge bg-success">{{wettbewerb.status}}</span></h2>
 		<p *ngIf="devMode">(wettbewerb-dashboard.component)</p>
 		<p class="card-subtitle mb-2 text-muted">Beginn: {{wettbewerb.wettbewerbsbeginn}}</p>
 		<p class="card-subtitle mb-2 text-muted">Ende: {{wettbewerb.wettbewerbsende}}</p>
