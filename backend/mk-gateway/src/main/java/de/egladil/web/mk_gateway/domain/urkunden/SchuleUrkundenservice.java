@@ -98,6 +98,9 @@ public class SchuleUrkundenservice {
 	@Inject
 	WettbewerbService wettbewerbService;
 
+	@Inject
+	LoggableEventDelegate eventDelegate;
+
 	public static SchuleUrkundenservice createForIntegrationTests(final EntityManager entityManager) {
 
 		SchuleUrkundenservice result = new SchuleUrkundenservice();
@@ -243,7 +246,7 @@ public class SchuleUrkundenservice {
 				String msg = "generiereSchulauswertung: Loesungszettel zu Kind wurde nicht gefunden: kindUUID="
 					+ kind.identifier().identifier() + " - Kind wird weggelassen";
 				LOG.warn(msg);
-				new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
+				eventDelegate.fireDataInconsistencyEvent(msg, domainEventHandler);
 			}
 
 		}

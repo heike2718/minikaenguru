@@ -60,6 +60,9 @@ public class SyncVeranstalterDataResource {
 	DomainEventHandler domainEventHandler;
 
 	@Inject
+	LoggableEventDelegate eventDelegate;
+
+	@Inject
 	SynchronizeVeranstalterService syncService;
 
 	@Inject
@@ -73,7 +76,7 @@ public class SyncVeranstalterDataResource {
 
 			String msg = "Aufruf POST /sync/ack mit falscher ClientID '" + data.sendingClientId() + "'";
 			LOGGER.warn("{}: {}", msg, data);
-			new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new AccessDeniedException(msg);
 		}
 

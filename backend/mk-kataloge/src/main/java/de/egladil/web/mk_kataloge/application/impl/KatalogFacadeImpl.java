@@ -47,6 +47,9 @@ public class KatalogFacadeImpl implements KatalogFacade {
 	@Inject
 	Event<DataInconsistencyRegistered> dataInconcistencyEvent;
 
+	@Inject
+	LoggableEventDelegate eventDelegate;
+
 	public static KatalogFacadeImpl createForIntegrationTest(final EntityManager entityManager) {
 
 		KatalogFacadeImpl result = new KatalogFacadeImpl();
@@ -112,7 +115,7 @@ public class KatalogFacadeImpl implements KatalogFacade {
 
 			LOG.warn(msg);
 
-			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconcistencyEvent);
+			eventDelegate.fireDataInconsistencyEvent(msg, dataInconcistencyEvent);
 		}
 
 		List<Schule> schulen = katalogRepository.findSchulenWithKuerzeln(relevanteKuerzel);

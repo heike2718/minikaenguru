@@ -62,6 +62,9 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 	@Inject
 	DomainEventHandler domainEventHandler;
 
+	@Inject
+	LoggableEventDelegate eventDelegate;
+
 	@Override
 	public void filter(final ContainerRequestContext requestContext) throws IOException {
 
@@ -92,7 +95,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 			String msg = "restricted path " + path + " ohne sessionId aufgerufen";
 			LOG.warn(msg);
 
-			new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 
 			throw new AuthException();
 		}
@@ -105,7 +108,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
 			LOG.warn(msg);
 
-			new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new AuthException();
 		}
 
@@ -117,7 +120,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
 			LOG.warn(msg);
 
-			new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new AuthException();
 		}
 
@@ -128,7 +131,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 			String msg = "[" + method + " " + path + "] durch user " + user + " aufgerufen. Das ist nicht erlaubt";
 			LOG.warn(msg);
 
-			new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new AccessDeniedException("keine Berechtigung, diese API aufzurufen");
 		}
 

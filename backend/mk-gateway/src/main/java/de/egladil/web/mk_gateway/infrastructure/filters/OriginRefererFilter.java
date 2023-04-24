@@ -47,6 +47,9 @@ public class OriginRefererFilter implements ContainerRequestFilter {
 	@Inject
 	DomainEventHandler domainEventHandler;
 
+	@Inject
+	LoggableEventDelegate eventDelegate;
+
 	@Override
 	public void filter(final ContainerRequestContext requestContext) throws IOException {
 
@@ -122,7 +125,7 @@ public class OriginRefererFilter implements ContainerRequestFilter {
 
 		LOG.warn(msg);
 
-		new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+		eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 		throw new AuthException();
 	}
 

@@ -20,10 +20,8 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
 import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
-import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Privatteilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
@@ -45,12 +43,11 @@ public class PrivatveranstalterService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(PrivatveranstalterService.class);
 
-	private SecurityIncidentRegistered securityIncidentRegistered;
-
-	private DataInconsistencyRegistered dataInconsistencyRegistered;
-
 	@Inject
 	DomainEventHandler domainEventHandler;
+
+	@Inject
+	LoggableEventDelegate eventDelegate;
 
 	@Inject
 	VeranstalterRepository repository;
@@ -66,17 +63,6 @@ public class PrivatveranstalterService {
 
 	@Inject
 	PrivatteilnahmeKuerzelService teilnahmenKuerzelService;
-
-	public static PrivatveranstalterService createForTest(final VeranstalterRepository veranstalterRepository, final ZugangUnterlagenService zugangUnterlagenService, final WettbewerbService wettbewerbSerivice, final TeilnahmenRepository teilnahmenRepository, final PrivatteilnahmeKuerzelService teilnahmeKuerzelService) {
-
-		PrivatveranstalterService result = new PrivatveranstalterService();
-		result.repository = veranstalterRepository;
-		result.zugangUnterlagenService = zugangUnterlagenService;
-		result.wettbewerbService = wettbewerbSerivice;
-		result.teilnahmenRepository = teilnahmenRepository;
-		result.teilnahmenKuerzelService = teilnahmeKuerzelService;
-		return result;
-	}
 
 	public PrivatveranstalterAPIModel findPrivatperson(final String uuid) {
 
@@ -107,7 +93,7 @@ public class PrivatveranstalterService {
 
 				LOG.warn(msg);
 
-				this.dataInconsistencyRegistered = new LoggableEventDelegate().fireDataInconsistencyEvent(msg,
+				eventDelegate.fireDataInconsistencyEvent(msg,
 					domainEventHandler);
 
 				throw new MkGatewayRuntimeException("Kann aktuelle Teilnahme nicht ermitteln");
@@ -155,7 +141,7 @@ public class PrivatveranstalterService {
 			String msg = "Versuch, nicht vorhandenen Veranstalter mit UUID=" + uuid + " zu finden";
 			LOG.warn(msg);
 
-			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new NotFoundException("Kennen keinen Veranstalter mit dieser ID");
 		}
 
@@ -165,7 +151,7 @@ public class PrivatveranstalterService {
 
 			String msg = "Falsche Rolle: erwarten Privatveranstalter, war aber " + veranstalter.toString();
 			LOG.warn(msg);
-			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new NotFoundException("Kennen keinen Privatveranstalter mit dieser ID");
 		}
 
@@ -197,16 +183,6 @@ public class PrivatveranstalterService {
 
 		repository.addVeranstalter(privatveranstalter);
 		return true;
-	}
-
-	SecurityIncidentRegistered getSecurityIncidentRegistered() {
-
-		return securityIncidentRegistered;
-	}
-
-	DataInconsistencyRegistered getDataInconsistencyRegistered() {
-
-		return dataInconsistencyRegistered;
 	}
 
 	/**

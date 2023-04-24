@@ -5,10 +5,10 @@
 package de.egladil.web.mk_gateway.domain.veranstalter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -27,7 +27,7 @@ import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
+import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
 import de.egladil.web.mk_gateway.domain.statistik.AuswertungsmodusInfoService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.AktuelleTeilnahmeService;
@@ -38,38 +38,37 @@ import de.egladil.web.mk_gateway.domain.veranstalter.api.Auswertungsmodus;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleDetails;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * SchulenAnmeldeinfoServiceTest
  */
+@QuarkusTest
 public class SchulenAnmeldeinfoServiceTest {
 
 	private static final String LEHRER_UUID = "jahflhwl";
 
-	private MkKatalogeResourceAdapter katalogeAdapter;
+	@InjectMock
+	MkKatalogeResourceAdapter katalogeAdapter;
 
-	private SchulenOverviewService schulenOverviewService;
+	@InjectMock
+	SchulenOverviewService schulenOverviewService;
 
-	private SchuleDetailsService schuleDetailsService;
+	@InjectMock
+	SchuleDetailsService schuleDetailsService;
 
-	private AuswertungsmodusInfoService auswertungsmodusInfoService;
+	@InjectMock
+	AuswertungsmodusInfoService auswertungsmodusInfoService;
 
-	private AktuelleTeilnahmeService aktuelleTeilnahmeService;
+	@InjectMock
+	AktuelleTeilnahmeService aktuelleTeilnahmeService;
 
-	private SchulenAnmeldeinfoService service;
+	@InjectMock
+	LoggableEventDelegate eventDelegate;
 
-	@BeforeEach
-	void setUp() {
-
-		auswertungsmodusInfoService = Mockito.mock(AuswertungsmodusInfoService.class);
-		aktuelleTeilnahmeService = Mockito.mock(AktuelleTeilnahmeService.class);
-		katalogeAdapter = Mockito.mock(MkKatalogeResourceAdapter.class);
-		schulenOverviewService = Mockito.mock(SchulenOverviewService.class);
-		schuleDetailsService = Mockito.mock(SchuleDetailsService.class);
-		service = SchulenAnmeldeinfoService.createForTest(katalogeAdapter, schulenOverviewService, schuleDetailsService,
-			auswertungsmodusInfoService,
-			aktuelleTeilnahmeService);
-	}
+	@Inject
+	SchulenAnmeldeinfoService service;
 
 	@Test
 	void should_FindSchulenMitAnmeldeinfoThrowMkGatewayRuntimeException_when_KatalogEndpointNotPresent() {
@@ -400,13 +399,7 @@ public class SchulenAnmeldeinfoServiceTest {
 			assertEquals(true, schule.aktuellAngemeldet());
 		}
 
-		DataInconsistencyRegistered event = service.getDataInconsistencyRegistered();
-		assertNotNull(event);
-		assertNotNull(event.occuredOn());
-		assertEquals(
-			"Nicht alle Schulen auf beiden Seiten gefunden: Kataloge: [SchuleAPIModel [kuerzel=98765]], Lehrer: [SchuleAPIModel [kuerzel=12345], SchuleAPIModel [kuerzel=98765]]",
-			event.message());
-		assertEquals("DataInconsistencyRegistered", event.typeName());
+		verify(eventDelegate).fireDataInconsistencyEvent(any(), any());
 
 	}
 

@@ -56,6 +56,9 @@ public class KatalogsucheResource {
 	@Inject
 	Event<SecurityIncidentRegistered> securityEvent;
 
+	@Inject
+	LoggableEventDelegate eventDelegate;
+
 	/**
 	 *
 	 */
@@ -85,24 +88,24 @@ public class KatalogsucheResource {
 
 			switch (katalogtyp) {
 
-			case SCHULE:
-				result = katalogsucheFacade.sucheSchulenMitNameEnthaltend(searchTerm);
-				break;
+				case SCHULE:
+					result = katalogsucheFacade.sucheSchulenMitNameEnthaltend(searchTerm);
+					break;
 
-			case ORT:
-				result = katalogsucheFacade.sucheOrteMitNameBeginnendMit(searchTerm);
-				break;
+				case ORT:
+					result = katalogsucheFacade.sucheOrteMitNameBeginnendMit(searchTerm);
+					break;
 
-			case LAND:
-				result = katalogsucheFacade.sucheLaenderMitNameBeginnendMit(searchTerm);
-				break;
+				case LAND:
+					result = katalogsucheFacade.sucheLaenderMitNameBeginnendMit(searchTerm);
+					break;
 
-			default:
-				String msg = "Aufruf von findItems mit unerwartetem Katalogtyp " + typ + ": geben leeres result zurück";
-				LOG.warn(msg);
-				new LoggableEventDelegate().fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
-				ResponsePayload responsePayload = ResponsePayload.messageOnly(MessagePayload.error("Unbeannte URL"));
-				return Response.status(Status.NOT_FOUND).entity(responsePayload).build();
+				default:
+					String msg = "Aufruf von findItems mit unerwartetem Katalogtyp " + typ + ": geben leeres result zurück";
+					LOG.warn(msg);
+					eventDelegate.fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
+					ResponsePayload responsePayload = ResponsePayload.messageOnly(MessagePayload.error("Unbeannte URL"));
+					return Response.status(Status.NOT_FOUND).entity(responsePayload).build();
 			}
 
 			ResponsePayload responsePayload = new ResponsePayload(MessagePayload.info("OK"), result);
@@ -111,7 +114,7 @@ public class KatalogsucheResource {
 
 			String msg = "Aufruf von findItems mit ungültigem typ-Parameter " + typ;
 			LOG.warn(msg);
-			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+			eventDelegate.fireSecurityEvent(msg, securityEvent);
 			ResponsePayload responsePayload = ResponsePayload.messageOnly(MessagePayload.error("Fehlerhafte URL"));
 			return Response.status(Status.NOT_FOUND).entity(responsePayload).build();
 

@@ -4,10 +4,22 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.event;
 
+import javax.enterprise.context.RequestScoped;
+
 /**
  * LoggableEventDelegate
  */
+@RequestScoped
 public class LoggableEventDelegate {
+
+	/**
+	 *
+	 */
+	public LoggableEventDelegate() {
+
+		super();
+
+	}
 
 	/**
 	 * Erzeugt ein DataInconsistencyRegistered-Objekt und feuert, falls der EventBus zur Verfügung steht.

@@ -33,6 +33,9 @@ public class ChangeNewsletterAboService {
 	DomainEventHandler domainEventHandler;
 
 	@Inject
+	LoggableEventDelegate eventDelegate;
+
+	@Inject
 	VeranstalterRepository veranstalterRepository;
 
 	public static ChangeNewsletterAboService createForTest(final VeranstalterRepository veranstalterRepository) {
@@ -55,7 +58,7 @@ public class ChangeNewsletterAboService {
 			String msg = "Versuch, einen nicht existierenden Veranstalter zu ändern: " + uuid;
 
 			this.securityIncidentEventPayload = new SecurityIncidentRegistered(msg);
-			new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 
 			LOG.warn(msg);
 

@@ -38,9 +38,8 @@ public class KatalogAntragService {
 	@Inject
 	Event<KatalogAntragReceived> katalogAntragReceivedEvent;
 
-	private SecurityIncidentRegistered securityIncident;
-
-	private KatalogAntragReceived katalogAntragEventObject;
+	@Inject
+	LoggableEventDelegate eventDelegate;
 
 	public static KatalogAntragService createForTest() {
 
@@ -66,13 +65,13 @@ public class KatalogAntragService {
 
 			String msg = "Honeypot des Schulkatalogantrags war nicht blank: " + antrag.toSecurityLog();
 
-			this.securityIncident = new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+			eventDelegate.fireSecurityEvent(msg, securityEvent);
 			LOG.warn(msg);
 
 			return false;
 		}
 
-		katalogAntragEventObject = new KatalogAntragReceived(antrag);
+		KatalogAntragReceived katalogAntragEventObject = new KatalogAntragReceived(antrag);
 
 		DefaultEmailDaten emailDaten = createMailDaten(antrag);
 		this.katalogMailService.sendMail(emailDaten);
@@ -95,16 +94,6 @@ public class KatalogAntragService {
 		result.addHiddenEmpfaenger(bccEmpfaenger);
 		return result;
 
-	}
-
-	SecurityIncidentRegistered getSecurityIncident() {
-
-		return securityIncident;
-	}
-
-	KatalogAntragReceived getKatalogAntragEventObject() {
-
-		return katalogAntragEventObject;
 	}
 
 }

@@ -65,6 +65,9 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 	@Inject
 	LoesungszettelRepository loesungszettelRepository;
 
+	@Inject
+	LoggableEventDelegate eventDelegate;
+
 	public static UploadAuthorizationServiceImpl createForIntegrationTests(final EntityManager em) {
 
 		UploadAuthorizationServiceImpl result = new UploadAuthorizationServiceImpl();
@@ -84,7 +87,7 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 			String eventMessagePrefix = this.getClass().getSimpleName() + ".authorizeUpload(...) - uploadType=" + uploadType + ": ";
 
 			String msg = "Privatveranstalter " + benutzerID + " versucht, Datei hochzuladen";
-			new LoggableEventDelegate().fireSecurityEvent(eventMessagePrefix + msg,
+			eventDelegate.fireSecurityEvent(eventMessagePrefix + msg,
 				domainEventHandler);
 			LOGGER.warn(msg);
 
@@ -99,16 +102,16 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 
 			switch (uploadType) {
 
-			case KLASSENLISTE:
-				msg = applicationMessages.getString("klassenimport.forbidden.nochKeineAnmeldungen");
-				break;
+				case KLASSENLISTE:
+					msg = applicationMessages.getString("klassenimport.forbidden.nochKeineAnmeldungen");
+					break;
 
-			case AUSWERTUNG:
-				msg = applicationMessages.getString("auswertungimport.forbidden.nochKeineAnmeldungen");
-				break;
+				case AUSWERTUNG:
+					msg = applicationMessages.getString("auswertungimport.forbidden.nochKeineAnmeldungen");
+					break;
 
-			default:
-				break;
+				default:
+					break;
 			}
 
 			LOGGER.warn("Uploadversuch durch Veranstalter {}, kein Wettbewerb, UploadTyp={}", benutzerID, uploadType);
@@ -125,16 +128,16 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 
 				switch (uploadType) {
 
-				case KLASSENLISTE:
-					msg = applicationMessages.getString("klassenimport.forbidden.nochKeineAnmeldungen");
-					break;
+					case KLASSENLISTE:
+						msg = applicationMessages.getString("klassenimport.forbidden.nochKeineAnmeldungen");
+						break;
 
-				case AUSWERTUNG:
-					msg = applicationMessages.getString("auswertungimport.forbidden.nochKeineAnmeldungen");
-					break;
+					case AUSWERTUNG:
+						msg = applicationMessages.getString("auswertungimport.forbidden.nochKeineAnmeldungen");
+						break;
 
-				default:
-					break;
+					default:
+						break;
 				}
 
 				LOGGER.warn("Uploadversuch durch Veranstalter {}, Wettbewerbsstatus={}, UploadTyp={}", benutzerID,
@@ -148,19 +151,19 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 
 				switch (uploadType) {
 
-				case KLASSENLISTE:
-					msg = applicationMessages.getString("klassenimport.forbidden.wettbewerbBeendet");
-					break;
+					case KLASSENLISTE:
+						msg = applicationMessages.getString("klassenimport.forbidden.wettbewerbBeendet");
+						break;
 
-				case AUSWERTUNG:
-					if (!rolle.isAdmin()) {
+					case AUSWERTUNG:
+						if (!rolle.isAdmin()) {
 
-						msg = applicationMessages.getString("auswertungimport.forbidden.wettbewerbBeendet");
-					}
-					break;
+							msg = applicationMessages.getString("auswertungimport.forbidden.wettbewerbBeendet");
+						}
+						break;
 
-				default:
-					break;
+					default:
+						break;
 				}
 
 				LOGGER.warn("Uploadversuch durch Veranstalter {}, Wettbewerbsstatus={}, UploadTyp={}", benutzerID,
@@ -239,7 +242,7 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 			if (optVeranstalter.isEmpty()) {
 
 				String msg = "Veranstalter mit UUID=" + veranstalterID.identifier() + " nicht gefunden";
-				new LoggableEventDelegate().fireSecurityEvent(eventMessagePrefix + msg, domainEventHandler);
+				eventDelegate.fireSecurityEvent(eventMessagePrefix + msg, domainEventHandler);
 				LOGGER.warn(msg);
 
 				throw new ActionNotAuthorizedException(applicationMessages.getString("general.actionNotAuthorized"));
@@ -250,7 +253,7 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 			if (veranstalter.zugangUnterlagen() == ZugangUnterlagen.ENTZOGEN) {
 
 				String msg = "Lehrer " + veranstalterID + " mit entzogenem Zugang zu Unterlagen versucht, Datei hochzuladen";
-				new LoggableEventDelegate().fireSecurityEvent(eventMessagePrefix + msg, domainEventHandler);
+				eventDelegate.fireSecurityEvent(eventMessagePrefix + msg, domainEventHandler);
 				LOGGER.warn(msg);
 
 				throw new ActionNotAuthorizedException(applicationMessages.getString("general.actionNotAuthorized"));
@@ -269,21 +272,21 @@ public class UploadAuthorizationServiceImpl implements UploadAuthorizationServic
 				+ schulkuerzel + " ist nicht zum aktuellen Wettbewerb (" + aktuellerWettbewerb.id()
 				+ ") angemeldet. veranstalterUUID=" + veranstalterID.toString();
 
-			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
+			eventDelegate.fireDataInconsistencyEvent(msg, domainEventHandler);
 			LOGGER.warn(msg);
 
 			switch (uploadType) {
 
-			case KLASSENLISTE:
-				msg = applicationMessages.getString("klassenimport.forbidden.nichtAngemeldet");
-				break;
+				case KLASSENLISTE:
+					msg = applicationMessages.getString("klassenimport.forbidden.nichtAngemeldet");
+					break;
 
-			case AUSWERTUNG:
-				msg = applicationMessages.getString("auswertungimport.forbidden.nichtAngemeldet");
-				break;
+				case AUSWERTUNG:
+					msg = applicationMessages.getString("auswertungimport.forbidden.nichtAngemeldet");
+					break;
 
-			default:
-				break;
+				default:
+					break;
 			}
 
 			throw new ActionNotAuthorizedException(msg);

@@ -29,7 +29,6 @@ import de.egladil.web.mk_gateway.domain.error.LogmessagePrefixes;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
-import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 
 /**
  * AuthResultToResourceOwnerMapper
@@ -54,32 +53,13 @@ public class AuthResultToResourceOwnerMapper implements Function<AuthResult, Sig
 	@Inject
 	DomainEventHandler domainEventHandler;
 
-	private SecurityIncidentRegistered securityIncident;
+	@Inject
+	LoggableEventDelegate eventDelegate;
 
 	AuthResultToResourceOwnerMapper() {
 
 		super();
 
-	}
-
-	/**
-	 * @param jwtService
-	 */
-	public static AuthResultToResourceOwnerMapper createForTest(final JWTService jwtService, final TokenExchangeService tokenExchangeService, final String clientId, final String clientSecret) {
-
-		if (jwtService == null) {
-
-			throw new IllegalArgumentException("jwtService darf nicht null sein");
-		}
-
-		AuthResultToResourceOwnerMapper result = new AuthResultToResourceOwnerMapper();
-
-		result.jwtService = jwtService;
-		result.tokenExchangeService = tokenExchangeService;
-		result.clientId = clientId;
-		result.clientSecret = clientSecret;
-
-		return result;
 	}
 
 	@Override
@@ -126,15 +106,10 @@ public class AuthResultToResourceOwnerMapper implements Function<AuthResult, Sig
 
 			String msg = LogmessagePrefixes.BOT + "JWT " + StringUtils.abbreviate(jwt, 20) + " invalid: " + e.getMessage();
 
-			this.securityIncident = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 
 			LOG.warn(msg);
 			throw new AuthException("invalid JWT");
 		}
-	}
-
-	public SecurityIncidentRegistered getSecurityIncident() {
-
-		return securityIncident;
 	}
 }

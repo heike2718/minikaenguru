@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -39,6 +40,8 @@ import de.egladil.web.commons_net.exception.SessionExpiredException;
 import de.egladil.web.mk_gateway.domain.auth.events.UserLoggedIn;
 import de.egladil.web.mk_gateway.domain.auth.events.UserLoggedOut;
 import de.egladil.web.mk_gateway.domain.error.AuthException;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
+import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.user.UserRepository;
@@ -61,8 +64,18 @@ public class MkSessionServiceTest {
 	@InjectMock
 	private CryptoService cryptoService;
 
+	@InjectMock
+	DomainEventHandler domainEventHandler;
+
+	@InjectMock
+	LoggableEventDelegate eventDelegate;
+
 	@Inject
 	private MkSessionService service;
+
+	void setUp() {
+
+	}
 
 	@Test
 	void should_InitSessionWork() throws Exception {
@@ -114,16 +127,10 @@ public class MkSessionServiceTest {
 			assertTrue(serialized.contains("fullName"));
 
 			// System.out.println(serialized);
-			assertNull(service.getSecurityIncident());
-			assertNull(service.getLogoutEventObject());
-			UserLoggedIn loginEventObject = service.getLoginEventObject();
-			assertNotNull(loginEventObject);
-			assertNotNull(loginEventObject.occuredOn());
-			assertEquals(Rolle.PRIVAT, loginEventObject.rolle());
-			assertEquals("4d8ed03a-575a-442e-89f4-0e54e51dd0d8", loginEventObject.uuid());
-
+			verify(eventDelegate, never()).fireSecurityEvent(any(), any());
+			verify(domainEventHandler, never()).handleEvent(any(UserLoggedOut.class));
+			verify(domainEventHandler).handleEvent(any(UserLoggedIn.class));
 		}
-
 	}
 
 	@Test
@@ -151,20 +158,18 @@ public class MkSessionServiceTest {
 		when(cryptoService.generateSessionId()).thenReturn("Hallo Hallo");
 
 		Session session = service.initSession(jwt);
+		verify(domainEventHandler).handleEvent(any(UserLoggedIn.class));
 
 		// Act
 		service.invalidateSession(session.sessionId());
 
 		// Assert
+		verify(eventDelegate, never()).fireSecurityEvent(any(), any());
+		verify(domainEventHandler).handleEvent(any(UserLoggedOut.class));
+		// nur bei initSession, nicht ein zweites Mal!
+		verify(domainEventHandler).handleEvent(any(UserLoggedIn.class));
+
 		assertNull(service.getAndRefreshSessionIfValid(session.sessionId()));
-		assertNull(service.getSecurityIncident());
-
-		UserLoggedOut logoutEventObject = service.getLogoutEventObject();
-		assertNotNull(logoutEventObject);
-		assertNotNull(logoutEventObject.occuredOn());
-		assertEquals(Rolle.PRIVAT, logoutEventObject.rolle());
-		assertEquals("4d8ed03a-575a-442e-89f4-0e54e51dd0d8", logoutEventObject.uuid());
-
 	}
 
 	@Test
@@ -178,11 +183,8 @@ public class MkSessionServiceTest {
 
 		// Assert
 		assertNull(service.getAndRefreshSessionIfValid(sessionToken));
-		assertNull(service.getSecurityIncident());
-
-		UserLoggedOut logoutEventObject = service.getLogoutEventObject();
-		assertNull(logoutEventObject);
-
+		verify(eventDelegate, never()).fireSecurityEvent(any(), any());
+		verify(domainEventHandler, never()).handleEvent(any(UserLoggedOut.class));
 	}
 
 	@Test
@@ -200,7 +202,10 @@ public class MkSessionServiceTest {
 		} catch (AuthException e) {
 
 			assertEquals("JWT expired", e.getMessage());
-			assertNull(service.getSecurityIncident());
+
+			verify(eventDelegate, never()).fireSecurityEvent(any(), any());
+			verify(domainEventHandler, never()).handleEvent(any(UserLoggedOut.class));
+			verify(domainEventHandler, never()).handleEvent(any(UserLoggedIn.class));
 
 			verify(jwtService, times(1)).verify(any(), any());
 			verify(userRepository, times(0)).ofId(any());
@@ -225,11 +230,9 @@ public class MkSessionServiceTest {
 		} catch (AuthException e) {
 
 			assertEquals("JWT invalid", e.getMessage());
-			assertNotNull(service.getSecurityIncident());
-			assertEquals(
-				"Possible BOT Attack: JWT eyJ0eXAiOiJKV1QiL... invalid: ungültig",
-				service.getSecurityIncident().message());
-
+			verify(eventDelegate).fireSecurityEvent(any(), any());
+			verify(domainEventHandler, never()).handleEvent(any(UserLoggedOut.class));
+			verify(domainEventHandler, never()).handleEvent(any(UserLoggedIn.class));
 			verify(jwtService, times(1)).verify(any(), any());
 			verify(userRepository, times(0)).ofId(any());
 			verify(cryptoService, times(0)).generateSessionId();
@@ -271,9 +274,9 @@ public class MkSessionServiceTest {
 			} catch (AuthException e) {
 
 				assertEquals("USER mit UUID 4d8ed03a-575a-442e-89f4-0e54e51dd0d8 existiert nicht", e.getMessage());
-				assertNotNull(service.getSecurityIncident());
-				assertEquals("USER mit UUID 4d8ed03a-575a-442e-89f4-0e54e51dd0d8 existiert nicht",
-					service.getSecurityIncident().message());
+				verify(eventDelegate).fireSecurityEvent(any(), any());
+				verify(domainEventHandler, never()).handleEvent(any(UserLoggedOut.class));
+				verify(domainEventHandler, never()).handleEvent(any(UserLoggedIn.class));
 
 				verify(jwtService, times(1)).verify(any(), any());
 				verify(cryptoService, times(0)).generateSessionId();
@@ -308,6 +311,7 @@ public class MkSessionServiceTest {
 		when(cryptoService.generateSessionId()).thenReturn("Hallo Hallo");
 
 		Session session = service.initSession(jwt);
+		verify(domainEventHandler).handleEvent(any(UserLoggedIn.class));
 
 		long expiresAt = session.getExpiresAt();
 
@@ -320,7 +324,11 @@ public class MkSessionServiceTest {
 		assertEquals(session, refreshedSession);
 		assertEquals(session.user(), refreshedSession.user());
 		assertTrue(refreshedSession.getExpiresAt() > expiresAt);
-		assertNull(service.getSecurityIncident());
+		verify(eventDelegate, never()).fireSecurityEvent(any(), any());
+		verify(domainEventHandler, never()).handleEvent(any(UserLoggedOut.class));
+
+		// nur bei initSession, nicht ein zweites Mal!
+		verify(domainEventHandler).handleEvent(any(UserLoggedIn.class));
 	}
 
 	@Test

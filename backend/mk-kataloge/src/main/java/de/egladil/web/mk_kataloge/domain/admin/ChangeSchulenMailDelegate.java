@@ -35,7 +35,8 @@ public class ChangeSchulenMailDelegate {
 	@Inject
 	Event<MailNotSent> mailNotSentEvent;
 
-	private MailNotSent mailNotSent;
+	@Inject
+	LoggableEventDelegate eventDelegate;
 
 	static ChangeSchulenMailDelegate createForTest(final KatalogMailService mailService) {
 
@@ -43,11 +44,6 @@ public class ChangeSchulenMailDelegate {
 		result.mailService = mailService;
 		return result;
 
-	}
-
-	MailNotSent getMailNotSent() {
-
-		return mailNotSent;
 	}
 
 	boolean sendSchuleCreatedMailQuietly(final SchulePayload schulePayload) {
@@ -62,7 +58,7 @@ public class ChangeSchulenMailDelegate {
 			String msg = "Die Mail konnte nicht gesendet werden: " + e.getMessage();
 			LOG.warn(msg);
 
-			this.mailNotSent = new LoggableEventDelegate().fireMailNotSentEvent(msg, mailNotSentEvent);
+			eventDelegate.fireMailNotSentEvent(msg, mailNotSentEvent);
 			return false;
 		}
 	}

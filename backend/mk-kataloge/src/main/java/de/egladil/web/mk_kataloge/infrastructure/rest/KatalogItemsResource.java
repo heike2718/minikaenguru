@@ -75,6 +75,9 @@ public class KatalogItemsResource {
 	@Inject
 	RenameLandService renameLandService;
 
+	@Inject
+	LoggableEventDelegate eventDelegate;
+
 	@GET
 	@Path("laender")
 	public Response loadLaender(@HeaderParam(
@@ -87,7 +90,7 @@ public class KatalogItemsResource {
 
 			LOG.warn(msg);
 
-			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+			eventDelegate.fireSecurityEvent(msg, securityEvent);
 
 			return Response.status(Status.FORBIDDEN)
 				.entity(ResponsePayload.messageOnly(MessagePayload.error("Netter Versuch, aber leider keine Berechtigung")))
@@ -126,7 +129,7 @@ public class KatalogItemsResource {
 
 			LOG.warn(msg);
 
-			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+			eventDelegate.fireSecurityEvent(msg, securityEvent);
 
 			return Response.status(Status.FORBIDDEN)
 				.entity(ResponsePayload.messageOnly(MessagePayload.error("Netter Versuch, aber leider keine Berechtigung")))
@@ -168,7 +171,7 @@ public class KatalogItemsResource {
 
 			LOG.warn(msg);
 
-			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+			eventDelegate.fireSecurityEvent(msg, securityEvent);
 
 			return Response.status(Status.FORBIDDEN)
 				.entity(ResponsePayload.messageOnly(MessagePayload.error("Netter Versuch, aber leider keine Berechtigung")))
@@ -210,7 +213,7 @@ public class KatalogItemsResource {
 
 			LOG.warn(msg);
 
-			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+			eventDelegate.fireSecurityEvent(msg, securityEvent);
 
 			return Response.status(Status.FORBIDDEN)
 				.entity(ResponsePayload.messageOnly(MessagePayload.error("Netter Versuch, aber leider keine Berechtigung")))
@@ -250,7 +253,7 @@ public class KatalogItemsResource {
 
 			LOG.warn(msg);
 
-			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+			eventDelegate.fireSecurityEvent(msg, securityEvent);
 
 			return Response.status(Status.FORBIDDEN)
 				.entity(ResponsePayload.messageOnly(MessagePayload.error("Netter Versuch, aber leider keine Berechtigung")))

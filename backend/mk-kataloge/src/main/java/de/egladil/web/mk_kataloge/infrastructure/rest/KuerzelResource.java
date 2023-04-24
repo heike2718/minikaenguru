@@ -51,6 +51,9 @@ public class KuerzelResource {
 	@Inject
 	Event<SecurityIncidentRegistered> securityEvent;
 
+	@Inject
+	LoggableEventDelegate eventDelegate;
+
 	/**
 	 * Gibt ein KuerzelAPIModel zurück.
 	 *
@@ -67,7 +70,7 @@ public class KuerzelResource {
 
 			LOG.warn(msg);
 
-			new LoggableEventDelegate().fireSecurityEvent(msg, securityEvent);
+			eventDelegate.fireSecurityEvent(msg, securityEvent);
 
 			return Response.status(Status.FORBIDDEN).entity(ResponsePayload
 				.messageOnly(MessagePayload.error(applicationMessages.getString("general.forbidden")))).build();

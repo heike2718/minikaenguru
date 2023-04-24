@@ -65,6 +65,9 @@ public class AktuelleTeilnahmeService {
 	DomainEventHandler domainEventHandler;
 
 	@Inject
+	LoggableEventDelegate eventDelegate;
+
+	@Inject
 	VeranstalterRepository veranstalterRepository;
 
 	@Inject
@@ -160,7 +163,7 @@ public class AktuelleTeilnahmeService {
 
 				LOG.warn(msg);
 
-				this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+				this.securityIncidentRegistered = eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 				throw new AccessDeniedException("keinen Veranstalter mit UUID=" + uuid + " gefunden");
 			}
 
@@ -172,7 +175,7 @@ public class AktuelleTeilnahmeService {
 
 				LOG.warn(msg);
 
-				this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+				this.securityIncidentRegistered = eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 				throw new AccessDeniedException(
 					"Der Veranstalter ist ein Lehrer. Nur Privatprsonen dürfen diese Funktion aufrufen.");
 			}
@@ -184,7 +187,7 @@ public class AktuelleTeilnahmeService {
 
 				LOG.warn(msg);
 
-				this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+				this.securityIncidentRegistered = eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 				throw new AccessDeniedException("Dem Veranstalter wurde der Zugang zu den Unterlagen entzogen.");
 			}
 
@@ -197,7 +200,7 @@ public class AktuelleTeilnahmeService {
 
 				LOG.warn(msg);
 
-				this.dataInconsistencyRegistered = new LoggableEventDelegate().fireDataInconsistencyEvent(msg,
+				this.dataInconsistencyRegistered = eventDelegate.fireDataInconsistencyEvent(msg,
 					domainEventHandler);
 
 				throw new MkGatewayRuntimeException("Kann aktuelle Teilnahme nicht ermitteln");
@@ -285,7 +288,7 @@ public class AktuelleTeilnahmeService {
 
 				LOG.warn(msg);
 
-				this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+				this.securityIncidentRegistered = eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 
 				throw new AccessDeniedException("keinen Veranstalter mit UUID=" + uuid + " gefunden");
 			}
@@ -298,7 +301,7 @@ public class AktuelleTeilnahmeService {
 
 				LOG.warn(msg);
 
-				this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+				this.securityIncidentRegistered = eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 				throw new AccessDeniedException("Dies ist ein Privatveranstalter. Nur Lehrer dürfen diese Funktion aufrufen.");
 			}
 
@@ -309,7 +312,7 @@ public class AktuelleTeilnahmeService {
 
 				LOG.warn(msg);
 
-				this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+				this.securityIncidentRegistered = eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 
 				throw new AccessDeniedException("Dem Veranstalter wurde der Zugang zu den Unterlagen entzogen.");
 			}
@@ -325,7 +328,7 @@ public class AktuelleTeilnahmeService {
 
 				LOG.warn(msg);
 
-				this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+				this.securityIncidentRegistered = eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 
 				throw new AccessDeniedException("Der Lehrer gehört nicht zur anzumeldenden Schule.");
 

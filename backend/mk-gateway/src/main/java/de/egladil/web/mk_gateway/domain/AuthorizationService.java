@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
-import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.user.UserRepository;
@@ -44,15 +43,8 @@ public class AuthorizationService {
 	@Inject
 	DomainEventHandler domainEventHandler;
 
-	private SecurityIncidentRegistered securityIncidentRegistered;
-
-	public static AuthorizationService createForTest(final VeranstalterRepository veranstalterRepository, final UserRepository userRepository) {
-
-		AuthorizationService service = new AuthorizationService();
-		service.userRepository = userRepository;
-		service.veranstalterRepository = veranstalterRepository;
-		return service;
-	}
+	@Inject
+	LoggableEventDelegate eventDelegate;
 
 	public static AuthorizationService createForIntegrationTest(final EntityManager entityManager) {
 
@@ -82,7 +74,7 @@ public class AuthorizationService {
 
 			LOG.warn(msg);
 
-			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new AccessDeniedException();
 		}
 
@@ -104,7 +96,7 @@ public class AuthorizationService {
 
 			LOG.warn(msg);
 
-			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new AccessDeniedException();
 		}
 
@@ -119,15 +111,10 @@ public class AuthorizationService {
 
 			LOG.warn(msg);
 
-			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new AccessDeniedException();
 		}
 
 		return user.getRolle();
-	}
-
-	SecurityIncidentRegistered getSecurityIncidentRegistered() {
-
-		return securityIncidentRegistered;
 	}
 }

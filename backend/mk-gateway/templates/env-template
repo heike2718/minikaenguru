@@ -1,0 +1,37 @@
+ENV=dev
+STAGE=dev
+
+
+DELAY_MILLISECONDS = 0
+
+AUTH_APP_URL=http://heikedeb:80/auth-app
+MK_ADMIN_APP_REDIRECT_URL_LOGIN=http://localhost:4200
+MKV_APP_REDIRECT_URL_LOGIN=http://localhost:4200
+MKV_APP_REDIRECT_URL_SIGNUP=http://localhost:4200
+
+QUARKUS_LOG_FILE_PATH=/home/heike/log/quarkus/mk-gateway.log
+UARKUS_LOG_LEVEL=INFO
+
+QUARKUS_HTTP_CORS_ORIGINS = http://heikedeb:9000,http://localhost:9510,http://localhost:9530,http://localhost:4200
+TARGET_ORIGIN: heikedeb,heikedeb:4200,heikedeb:4300,localhost:4200,localhost:4300,heikedeb:9600
+
+CLAMAV_HOST = 192.168.10.176
+CLAMAV_PORT = 3310
+
+PATH_EXTERNAL_FILES=/home/heike/git/testdaten/minikaenguru
+ZIP_MAX__EXPECTED__COMPRESSION__RATIO = 100
+
+EMAIL_HOST = will-be-replaced
+EMAIL_PORT = 111
+EMAIL_USER = WILL-BE-REPLACED
+EMAIL_PASSWORD = WILL-BE-REPLACED
+EMAIL_TO = WILL-BE-REPLACED
+#email.credentials.path=/home/heike/git/konfigurationen/commons-mailer/mailprovider.properties
+
+SYNCTOKEN_VALIDITY_PERIOD_MINUTES=5
+ADMIN_CREATED_URI_PREFIX=http://localhost:9510/mk-gateway/admin
+EMAILS_GROUPSIZE=17
+ADMIN_SECRET=pflaume123
+
+
+

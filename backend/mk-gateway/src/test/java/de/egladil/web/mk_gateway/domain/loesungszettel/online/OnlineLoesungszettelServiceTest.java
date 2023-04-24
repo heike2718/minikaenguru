@@ -5,11 +5,11 @@
 package de.egladil.web.mk_gateway.domain.loesungszettel.online;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -29,7 +29,12 @@ import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.LoesungszettelpunkteAPIModel;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
+import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
+import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelChanged;
+import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelCreated;
+import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelDeleted;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelAPIModel;
@@ -50,19 +55,25 @@ import io.quarkus.test.junit.mockito.InjectMock;
 public class OnlineLoesungszettelServiceTest extends AbstractLoesungszettelServiceTest {
 
 	@InjectMock
-	private KinderRepository kinderRepository;
+	KinderRepository kinderRepository;
 
 	@InjectMock
-	private LoesungszettelRepository loesungszettelRepository;
+	LoesungszettelRepository loesungszettelRepository;
 
 	@InjectMock
-	private AuthorizationService authService;
+	AuthorizationService authService;
 
 	@InjectMock
-	private WettbewerbService wettbewerbService;
+	WettbewerbService wettbewerbService;
+
+	@InjectMock
+	LoggableEventDelegate eventDelegate;
+
+	@InjectMock
+	DomainEventHandler domainEventHandler;
 
 	@Inject
-	private OnlineLoesungszettelService service;
+	OnlineLoesungszettelService service;
 
 	@BeforeEach
 	void setUp() {
@@ -337,9 +348,9 @@ public class OnlineLoesungszettelServiceTest extends AbstractLoesungszettelServi
 
 			verify(loesungszettelRepository, times(1)).updateLoesungszettelInTransaction(any());
 
-			assertNull(service.getLoesungszettelCreated());
-			assertNotNull(service.getLoesungszettelChanged());
-			assertNull(service.getLoesungszettelDeleted());
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelCreated.class));
+			verify(domainEventHandler).handleEvent(any(LoesungszettelChanged.class));
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelDeleted.class));
 
 		}
 

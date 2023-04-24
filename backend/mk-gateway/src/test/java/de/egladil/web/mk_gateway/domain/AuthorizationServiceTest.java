@@ -4,29 +4,35 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
+import javax.inject.Inject;
+
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
+import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.user.UserRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.Person;
 import de.egladil.web.mk_gateway.domain.veranstalter.Privatveranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * AuthorizationServiceTest
  */
+@QuarkusTest
 public class AuthorizationServiceTest {
 
 	/**
@@ -34,20 +40,17 @@ public class AuthorizationServiceTest {
 	 */
 	private static final String USER_UUID = "agdqiqq";
 
-	private VeranstalterRepository veranstalterRepository;
+	@InjectMock
+	LoggableEventDelegate eventDelegate;
 
-	private UserRepository userRepository;
+	@InjectMock
+	VeranstalterRepository veranstalterRepository;
 
-	private AuthorizationService service;
+	@InjectMock
+	UserRepository userRepository;
 
-	@BeforeEach
-	void setUp() {
-
-		userRepository = Mockito.mock(UserRepository.class);
-		veranstalterRepository = Mockito.mock(VeranstalterRepository.class);
-		service = AuthorizationService.createForTest(veranstalterRepository, userRepository);
-
-	}
+	@Inject
+	AuthorizationService service;
 
 	@Test
 	void should_checkPermissionForTeilnahmenummerThrowException_when_UserNotFound() {
@@ -57,8 +60,8 @@ public class AuthorizationServiceTest {
 		Identifier veranstalterId = new Identifier(USER_UUID);
 		Identifier teilnahmeId = new Identifier("vhyxaksgk");
 
-		Mockito.when(userRepository.ofId(USER_UUID)).thenReturn(Optional.empty());
-		Mockito.when(veranstalterRepository.ofId(veranstalterId)).thenReturn(Optional.empty());
+		when(userRepository.ofId(USER_UUID)).thenReturn(Optional.empty());
+		when(veranstalterRepository.ofId(veranstalterId)).thenReturn(Optional.empty());
 
 		// Act + Assert
 		try {
@@ -67,7 +70,7 @@ public class AuthorizationServiceTest {
 			fail("keine AccessDeniedException");
 		} catch (AccessDeniedException e) {
 
-			assertNotNull(service.getSecurityIncidentRegistered());
+			verify(eventDelegate).fireSecurityEvent(any(), any());
 		}
 
 	}
@@ -83,8 +86,8 @@ public class AuthorizationServiceTest {
 		user.setUuid(USER_UUID);
 		user.setRolle(Rolle.LEHRER);
 
-		Mockito.when(userRepository.ofId(USER_UUID)).thenReturn(Optional.of(user));
-		Mockito.when(veranstalterRepository.ofId(veranstalterId)).thenReturn(Optional.empty());
+		when(userRepository.ofId(USER_UUID)).thenReturn(Optional.of(user));
+		when(veranstalterRepository.ofId(veranstalterId)).thenReturn(Optional.empty());
 
 		// Act + Assert
 		try {
@@ -93,7 +96,7 @@ public class AuthorizationServiceTest {
 			fail("keine AccessDeniedException");
 		} catch (AccessDeniedException e) {
 
-			assertNotNull(service.getSecurityIncidentRegistered());
+			verify(eventDelegate).fireSecurityEvent(any(), any());
 		}
 
 	}
@@ -109,12 +112,12 @@ public class AuthorizationServiceTest {
 		user.setUuid(USER_UUID);
 		user.setRolle(Rolle.LEHRER);
 
-		Mockito.when(userRepository.ofId(USER_UUID)).thenReturn(Optional.of(user));
+		when(userRepository.ofId(USER_UUID)).thenReturn(Optional.of(user));
 
 		Privatveranstalter veranstalter = new Privatveranstalter(new Person("azdqi", "Karl"), true,
 			Arrays.asList(new Identifier[] { new Identifier("gagdgq") }));
 
-		Mockito.when(veranstalterRepository.ofId(veranstalterId)).thenReturn(Optional.of(veranstalter));
+		when(veranstalterRepository.ofId(veranstalterId)).thenReturn(Optional.of(veranstalter));
 
 		// Act + Assert
 		try {
@@ -123,7 +126,7 @@ public class AuthorizationServiceTest {
 			fail("keine AccessDeniedException");
 		} catch (AccessDeniedException e) {
 
-			assertNotNull(service.getSecurityIncidentRegistered());
+			verify(eventDelegate).fireSecurityEvent(any(), any());
 		}
 
 	}
@@ -139,16 +142,16 @@ public class AuthorizationServiceTest {
 		user.setUuid(USER_UUID);
 		user.setRolle(Rolle.PRIVAT);
 
-		Mockito.when(userRepository.ofId(USER_UUID)).thenReturn(Optional.of(user));
+		when(userRepository.ofId(USER_UUID)).thenReturn(Optional.of(user));
 
 		Privatveranstalter veranstalter = new Privatveranstalter(new Person(USER_UUID, "Karl"), false,
 			Arrays.asList(new Identifier[] { teilnahmeId }));
 
-		Mockito.when(veranstalterRepository.ofId(veranstalterId)).thenReturn(Optional.of(veranstalter));
+		when(veranstalterRepository.ofId(veranstalterId)).thenReturn(Optional.of(veranstalter));
 
 		// Act
 		assertEquals(Rolle.PRIVAT, service.checkPermissionForTeilnahmenummerAndReturnRolle(veranstalterId, teilnahmeId, "kontext"));
-		assertNull(service.getSecurityIncidentRegistered());
+		verify(eventDelegate, never()).fireSecurityEvent(any(), any());
 	}
 
 	@Test
@@ -161,11 +164,11 @@ public class AuthorizationServiceTest {
 		user.setUuid(USER_UUID);
 		user.setRolle(Rolle.ADMIN);
 
-		Mockito.when(userRepository.ofId(USER_UUID)).thenReturn(Optional.of(user));
-		Mockito.when(veranstalterRepository.ofId(veranstalterId)).thenReturn(Optional.empty());
+		when(userRepository.ofId(USER_UUID)).thenReturn(Optional.of(user));
+		when(veranstalterRepository.ofId(veranstalterId)).thenReturn(Optional.empty());
 
 		assertEquals(Rolle.ADMIN, service.checkPermissionForTeilnahmenummerAndReturnRolle(veranstalterId, teilnahmeId, "kontext"));
-		assertNull(service.getSecurityIncidentRegistered());
+		verify(eventDelegate, never()).fireSecurityEvent(any(), any());
 	}
 
 }

@@ -33,7 +33,6 @@ import de.egladil.web.mk_gateway.domain.error.AuthException;
 import de.egladil.web.mk_gateway.domain.error.LogmessagePrefixes;
 import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
-import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.user.UserRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
 
@@ -59,11 +58,8 @@ public class MkSessionService {
 	@Inject
 	DomainEventHandler domainEventHandler;
 
-	private SecurityIncidentRegistered securityIncident;
-
-	private UserLoggedIn loginEventObject;
-
-	private UserLoggedOut logoutEventObject;
+	@Inject
+	LoggableEventDelegate eventDelegate;
 
 	private ConcurrentHashMap<String, Session> sessions = new ConcurrentHashMap<>();
 
@@ -114,7 +110,7 @@ public class MkSessionService {
 
 				String msg = "USER mit UUID " + uuid + " existiert nicht";
 
-				this.securityIncident = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+				eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 				throw new AuthException(msg);
 			}
 
@@ -132,14 +128,14 @@ public class MkSessionService {
 
 			sessions.put(sessionId, session);
 
-			this.loginEventObject = new UserLoggedIn(uuid, user.getRolle());
+			UserLoggedIn userLoggedIn = new UserLoggedIn(uuid, user.getRolle());
 
 			if (domainEventHandler != null) {
 
-				domainEventHandler.handleEvent(loginEventObject);
+				domainEventHandler.handleEvent(userLoggedIn);
 			} else {
 
-				System.out.println(loginEventObject.serializeQuietly());
+				System.out.println(userLoggedIn.serializeQuietly());
 			}
 
 			return session;
@@ -151,7 +147,7 @@ public class MkSessionService {
 
 			String msg = LogmessagePrefixes.BOT + "JWT " + StringUtils.abbreviate(jwt, 20) + " invalid: " + e.getMessage();
 
-			this.securityIncident = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 
 			LOG.warn(msg);
 			throw new AuthException("JWT invalid");
@@ -170,35 +166,20 @@ public class MkSessionService {
 
 			LOG.debug("Session invalidated: {} - {}", sessionId, session.user().uuid().substring(0, 8));
 
-			logoutEventObject = new UserLoggedOut(session.user().uuid(), session.user().rolle());
+			UserLoggedOut userLoggedOut = new UserLoggedOut(session.user().uuid(), session.user().rolle());
 
 			if (domainEventHandler != null) {
 
-				domainEventHandler.handleEvent(logoutEventObject);
+				domainEventHandler.handleEvent(userLoggedOut);
 			} else {
 
-				System.out.println(logoutEventObject.serializeQuietly());
+				System.out.println(userLoggedOut.serializeQuietly());
 			}
 		} else {
 
 			LOG.info("session was null");
 		}
 
-	}
-
-	SecurityIncidentRegistered getSecurityIncident() {
-
-		return securityIncident;
-	}
-
-	UserLoggedIn getLoginEventObject() {
-
-		return loginEventObject;
-	}
-
-	UserLoggedOut getLogoutEventObject() {
-
-		return logoutEventObject;
 	}
 
 	void initSessionForTest(final Session session) {

@@ -26,7 +26,6 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
-import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.LehrerAPIModel;
@@ -60,9 +59,8 @@ public class LehrerService {
 	@Inject
 	DomainEventHandler domainEventHandler;
 
-	private LehrerChanged lehrerChangedEventPayload;
-
-	private SecurityIncidentRegistered securityIncidentEventPayload;
+	@Inject
+	LoggableEventDelegate eventDelegate;
 
 	public static LehrerService createServiceForTest(final VeranstalterRepository lehrerRepository, final SchulkollegienService schulkollegienService, final ZugangUnterlagenService zugangUnterlagenService, final WettbewerbService wettbewerbService) {
 
@@ -96,7 +94,7 @@ public class LehrerService {
 
 		veranstalterRepository.addVeranstalter(lehrer);
 
-		lehrerChangedEventPayload = new LehrerChanged(person, "", neueSchulkuerzel, data.newsletterEmpfaenger());
+		LehrerChanged lehrerChangedEventPayload = new LehrerChanged(person, "", neueSchulkuerzel, data.newsletterEmpfaenger());
 
 		schulkollegienService.handleLehrerChanged(lehrerChangedEventPayload);
 
@@ -122,7 +120,7 @@ public class LehrerService {
 			String msg = "Versuch, einen nicht existierenden Lehrer zu ändern: " + data.toString();
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			return false;
 		}
 
@@ -133,7 +131,7 @@ public class LehrerService {
 			String msg = "Versuch, einen Veranstalter zu ändern, der kein Lehrer ist: " + data.toString() + " - " + veranstalter;
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			return false;
 		}
 
@@ -155,7 +153,7 @@ public class LehrerService {
 
 		veranstalterRepository.changeVeranstalter(geaenderterLehrer);
 
-		lehrerChangedEventPayload = new LehrerChanged(geaenderterLehrer.person(), alteSchulkuerzel, neueSchulkuerzel,
+		LehrerChanged lehrerChangedEventPayload = new LehrerChanged(geaenderterLehrer.person(), alteSchulkuerzel, neueSchulkuerzel,
 			data.newsletterEmpfaenger());
 
 		if (domainEventHandler != null) {
@@ -187,7 +185,7 @@ public class LehrerService {
 			String msg = "Unbekannter Lehrer mit UUID=" + lehrerID + " versucht, Schule mit KUERZEL=" + schuleID + " hinzuzufügen.";
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new NotFoundException();
 		}
 
@@ -198,7 +196,7 @@ public class LehrerService {
 			String msg = "Privatveranstalter mit UUID=" + lehrerID + " versucht, Schule mit KUERZEL=" + schuleID + " hinzuzufügen.";
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new NotFoundException();
 		}
 
@@ -220,7 +218,7 @@ public class LehrerService {
 		veranstalterRepository.changeVeranstalter(lehrer);
 
 		Person person = lehrer.person();
-		lehrerChangedEventPayload = new LehrerChanged(person, alteSchulkuerzel, neueSchulkuerzel,
+		LehrerChanged lehrerChangedEventPayload = new LehrerChanged(person, alteSchulkuerzel, neueSchulkuerzel,
 			lehrer.isNewsletterEmpfaenger());
 
 		schulkollegienService.handleLehrerChanged(lehrerChangedEventPayload);
@@ -256,7 +254,7 @@ public class LehrerService {
 				+ " abzumelden.";
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new NotFoundException();
 		}
 
@@ -268,7 +266,7 @@ public class LehrerService {
 				+ " abzumelden.";
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new NotFoundException();
 		}
 
@@ -283,7 +281,7 @@ public class LehrerService {
 				+ " nicht zugeordnet.";
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 
 			return ResponsePayload
 				.messageOnly(MessagePayload.warn(applicationMessages.getString("lehrer.schulen.remove.nicht_registriert.warn")));
@@ -295,7 +293,7 @@ public class LehrerService {
 		veranstalterRepository.changeVeranstalter(lehrer);
 
 		Person person = lehrer.person();
-		lehrerChangedEventPayload = new LehrerChanged(person, alteSchulkuerzel, neueSchulkuerzel,
+		LehrerChanged lehrerChangedEventPayload = new LehrerChanged(person, alteSchulkuerzel, neueSchulkuerzel,
 			lehrer.isNewsletterEmpfaenger());
 
 		schulkollegienService.handleLehrerChanged(lehrerChangedEventPayload);
@@ -330,7 +328,7 @@ public class LehrerService {
 			String msg = "Versuch, nicht vorhandenen Veranstalter mit UUID=" + uuid + " zu finden";
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new NotFoundException("Kennen keinen Veranstalter mit dieser ID");
 		}
 
@@ -340,7 +338,7 @@ public class LehrerService {
 
 			String msg = "Falsche Rolle: erwarten Lehrer, war aber " + veranstalter.toString();
 			LOG.warn(msg);
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new NotFoundException("Kennen keinen Lehrer mit dieser ID");
 		}
 
@@ -358,15 +356,5 @@ public class LehrerService {
 			.create(hatZugang, lehrer.isNewsletterEmpfaenger()).withTeilnahmenummern(veranstalter.teilnahmenummernAsStrings());
 
 		return result;
-	}
-
-	LehrerChanged lehrerChangedEventPayload() {
-
-		return lehrerChangedEventPayload;
-	}
-
-	SecurityIncidentRegistered securityIncidentEventPayload() {
-
-		return securityIncidentEventPayload;
 	}
 }

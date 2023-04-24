@@ -20,7 +20,6 @@ import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.UnterlagenNichtVerfuegbarException;
 import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
-import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
@@ -59,7 +58,8 @@ public class UnterlagenService {
 	@Inject
 	DownloadsRepository downloadsRepository;
 
-	private SecurityIncidentRegistered securityIncidentEventPayload;
+	@Inject
+	LoggableEventDelegate eventDelegate;
 
 	public static UnterlagenService createForTest(final WettbewerbService wettbewerbService, final VeranstalterRepository veranstalterRepository, final ZugangUnterlagenService zugangUnterlagenService) {
 
@@ -153,7 +153,7 @@ public class UnterlagenService {
 				+ " versucht, Wettbewerbsunterlagen herunterzuladen.";
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new UnterlagenNichtVerfuegbarException();
 		}
 	}
@@ -170,7 +170,7 @@ public class UnterlagenService {
 				+ " versucht, Wettbewerbsunterlagen über die falsche URL herunterzuladen.";
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new NotFoundException();
 		}
 	}
@@ -188,7 +188,7 @@ public class UnterlagenService {
 			String msg = "Unbekannter Veranstalter mit UUID=" + lehrerID + " versucht, Wettbewerbsunterlagen herunterzuladen.";
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new NotFoundException();
 
 		}
@@ -211,11 +211,6 @@ public class UnterlagenService {
 				LOG.error("Schade: {} konnte nicht gespeichert werden: {}", download.printUniqueKey(), e.getMessage(), e);
 			}
 		}
-	}
-
-	SecurityIncidentRegistered securityIncidentEventPayload() {
-
-		return securityIncidentEventPayload;
 	}
 
 	private Wettbewerb getWettbewerb() {

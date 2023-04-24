@@ -6,25 +6,36 @@ package de.egladil.web.mk_gateway.domain.veranstalter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import org.junit.jupiter.api.BeforeEach;
+import java.util.Collections;
+import java.util.Optional;
+
+import javax.inject.Inject;
+
 import org.junit.jupiter.api.Test;
 
-import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MessagingAuthException;
-import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
+import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
+import de.egladil.web.mk_gateway.domain.user.UserRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.ChangeUserCommand;
 import de.egladil.web.mk_gateway.infrastructure.messaging.HandshakeAck;
 import de.egladil.web.mk_gateway.infrastructure.messaging.LoescheVeranstalterCommand;
 import de.egladil.web.mk_gateway.infrastructure.messaging.SyncHandshake;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * SynchronizeVeranstalterServiceTest
  */
-public class SynchronizeVeranstalterServiceTest extends AbstractDomainServiceTest {
+@QuarkusTest
+public class SynchronizeVeranstalterServiceTest {
 
 	/**
 	 *
@@ -33,19 +44,27 @@ public class SynchronizeVeranstalterServiceTest extends AbstractDomainServiceTes
 
 	private static final String NONCE = "guagfuowge";
 
+	private static final String UUID_LEHRER_1 = "UUID_LEHRER_1";
+
+	@InjectMock
+	DomainEventHandler domainEventHandler;
+
+	@InjectMock
+	LoggableEventDelegate eventDelegate;
+
+	@InjectMock
+	VeranstalterRepository veranstalterRepository;
+
+	@InjectMock
+	UserRepository userRepository;
+
+	@InjectMock
+	SchulkollegienService schulkollegienService;
+
+	@Inject
 	private SynchronizeVeranstalterService service;
 
 	private SyncHandshake handshake = SyncHandshake.create(CLIENT_ID, NONCE);
-
-	@Override
-	@BeforeEach
-	protected void setUp() {
-
-		super.setUp();
-
-		service = SynchronizeVeranstalterService.createForTest(getVeranstalterRepository(), getUserRepository(),
-			SchulkollegienService.createForTest(getSchulkollegienRepository()));
-	}
 
 	@Test
 	void should_createHandshakeAck_return_validSyncToken() {
@@ -84,8 +103,7 @@ public class SynchronizeVeranstalterServiceTest extends AbstractDomainServiceTes
 			// Assert
 			assertEquals(expectedMessage, e.getMessage());
 
-			SecurityIncidentRegistered secIncedent = service.securityIncidentPayload();
-			assertEquals(expectedMessage, secIncedent.message());
+			verify(eventDelegate).fireSecurityEvent(any(), any());
 		}
 	}
 
@@ -95,6 +113,11 @@ public class SynchronizeVeranstalterServiceTest extends AbstractDomainServiceTes
 		// Arrange
 		HandshakeAck ack = service.createHandshakeAck(handshake);
 
+		Veranstalter veranstalter = new Lehrer(new Person(UUID_LEHRER_1, "Hans Weißwurst"), false,
+			Collections.singletonList(new Identifier("A12345678")));
+
+		when(veranstalterRepository.ofId(new Identifier(UUID_LEHRER_1))).thenReturn(Optional.of(veranstalter));
+
 		ChangeUserCommand cmd = new ChangeUserCommand().withEmail("hans-weisswurst@web.de").withNachname("Weißwurst")
 			.withUuid(UUID_LEHRER_1)
 			.withVorname("Hans").withSyncToken(ack.syncToken());
@@ -102,18 +125,9 @@ public class SynchronizeVeranstalterServiceTest extends AbstractDomainServiceTes
 		// Act
 		service.changeVeranstalterDaten(cmd);
 
-		assertEquals(0, getVeranstalterRepository().getCountLehrerAdded());
-		assertEquals(1, getVeranstalterRepository().getCountLehrerChanged());
-
-		assertEquals(0, getVeranstalterRepository().getCountPrivatpersonAdded());
-		assertEquals(0, getVeranstalterRepository().getCountPrivatpersonChanged());
-
-		assertEquals(0, getSchulkollegienRepository().getCountKollegiumAdded());
-		assertEquals(2, getSchulkollegienRepository().getCountKollegiumChanged()); // da der Lehrer 2 Schulen hat
-		assertEquals(0, getSchulkollegienRepository().getCountKollegiumDeleted());
-
-		Person person = getVeranstalterRepository().ofId(new Identifier(UUID_LEHRER_1)).get().person();
-		assertEquals("hans-weisswurst@web.de", person.email());
+		// Assert
+		verify(veranstalterRepository).changeVeranstalter(veranstalter);
+		verify(schulkollegienService, times(1)).handleLehrerChanged(any());
 	}
 
 	@Test
@@ -139,8 +153,7 @@ public class SynchronizeVeranstalterServiceTest extends AbstractDomainServiceTes
 			// Assert
 			assertEquals(expectedMessage, e.getMessage());
 
-			SecurityIncidentRegistered secIncedent = service.securityIncidentPayload();
-			assertEquals(expectedMessage, secIncedent.message());
+			verify(eventDelegate).fireSecurityEvent(any(), any());
 		}
 	}
 
@@ -150,24 +163,19 @@ public class SynchronizeVeranstalterServiceTest extends AbstractDomainServiceTes
 		// Arrange
 		HandshakeAck ack = service.createHandshakeAck(handshake);
 
+		Veranstalter veranstalter = new Lehrer(new Person(UUID_LEHRER_1, "Hans Weißwurst"), false,
+			Collections.singletonList(new Identifier("A12345678")));
+
+		when(veranstalterRepository.ofId(new Identifier(UUID_LEHRER_1))).thenReturn(Optional.of(veranstalter));
+
 		LoescheVeranstalterCommand cmd = new LoescheVeranstalterCommand().withUuid(UUID_LEHRER_1)
 			.withSyncToken(ack.syncToken());
 
 		// Act
 		service.loescheVeranstalter(cmd);
 
-		assertEquals(0, getVeranstalterRepository().getCountLehrerAdded());
-		assertEquals(0, getVeranstalterRepository().getCountLehrerChanged());
-		assertEquals(1, getVeranstalterRepository().getCountVeranstalterRemoved());
-
-		assertEquals(0, getVeranstalterRepository().getCountPrivatpersonAdded());
-		assertEquals(0, getVeranstalterRepository().getCountPrivatpersonChanged());
-
-		assertEquals(0, getSchulkollegienRepository().getCountKollegiumAdded());
-		assertEquals(1, getSchulkollegienRepository().getCountKollegiumChanged());
-		assertEquals(1, getSchulkollegienRepository().getCountKollegiumDeleted());
-
-		assertTrue(getVeranstalterRepository().ofId(new Identifier(UUID_LEHRER_1)).isEmpty());
+		// Assert
+		verify(schulkollegienService).entferneSpurenDesLehrers((Lehrer) veranstalter);
 	}
 
 }

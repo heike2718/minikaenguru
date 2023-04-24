@@ -10,73 +10,101 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.Klasse;
+import de.egladil.web.mk_gateway.domain.kinder.KlassenRepository;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseAPIModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseEditorModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseRequestData;
+import de.egladil.web.mk_gateway.domain.kinder.events.KlasseChanged;
+import de.egladil.web.mk_gateway.domain.kinder.events.KlasseCreated;
+import de.egladil.web.mk_gateway.domain.kinder.events.KlasseDeleted;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.online.OnlineLoesungszettelService;
-import de.egladil.web.mk_gateway.domain.statistik.AuswertungsmodusInfoService;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Schulteilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
+import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
+import de.egladil.web.mk_gateway.domain.veranstalter.Lehrer;
+import de.egladil.web.mk_gateway.domain.veranstalter.Person;
+import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
+import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
+import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * KlassenServiceTest
  */
+@QuarkusTest
 public class KlassenServiceTest extends AbstractDomainServiceTest {
 
-	private KlassenServiceImpl klassenService;
+	@InjectMock
+	KlassenRepository klassenRepository;
 
-	@Override
-	@BeforeEach
-	protected void setUp() {
+	@InjectMock
+	AuthorizationService authService;
 
-		super.setUp();
+	@InjectMock
+	VeranstalterRepository veranstalterRepository;
 
-		AuthorizationService authService = AuthorizationService.createForTest(getVeranstalterRepository(), getUserRepository());
+	@InjectMock
+	TeilnahmenRepository teilnahmenRepository;
 
-		klassenService = KlassenServiceImpl.createForTest(authService,
-			KinderServiceImpl.createForTest(authService, getKinderRepository(), getTeilnahmenRepository(),
-				getVeranstalterRepository(),
-				getWettbewerbService(),
-				OnlineLoesungszettelService.createForTest(authService, getWettbewerbService(), getKinderRepository(),
-					getLoesungszettelRepository(), Mockito.mock(AuswertungsmodusInfoService.class)),
-				getKlassenRepository()),
-			getTeilnahmenRepository(),
-			getVeranstalterRepository(),
-			getWettbewerbService(),
-			OnlineLoesungszettelService.createForTest(authService, getWettbewerbService(), getKinderRepository(),
-				getLoesungszettelRepository(), Mockito.mock(AuswertungsmodusInfoService.class)),
-			getKlassenRepository());
-	}
+	@InjectMock
+	KinderServiceImpl kinderService;
+
+	@InjectMock
+	OnlineLoesungszettelService loesungszettelService;
+
+	@InjectMock
+	WettbewerbService wettbewerbService;
+
+	@InjectMock
+	DomainEventHandler domainEventHandler;
+
+	@Inject
+	KlassenServiceImpl klassenService;
 
 	@Test
 	void should_klassenZuSchuleLaden_callTheAuthorizationService() {
+
+		// Arrange
+		doThrow(new AccessDeniedException()).when(authService).checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any());
 
 		// Act
 		try {
 
 			klassenService.klassenZuSchuleLaden(SCHULKUERZEL_1, UUID_LEHRER_ANDERE_SCHULE);
-			fail("keine AuthException");
+			fail("keine AccessDeniedException");
 
 		} catch (AccessDeniedException e) {
 
@@ -85,6 +113,19 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 
 	@Test
 	void should_klassenZuSchuleLadenThrowNotFound_when_nichtAngemeldet() {
+
+		// Arrange
+		Veranstalter veranstalter = new Lehrer(new Person(UUID_LEHRER_1, NEWSLETTER_LEHRER_UUID), false,
+			Collections.singletonList(new Identifier(SCHULKUERZEL_1)));
+
+		when(veranstalterRepository.ofId(new Identifier(UUID_LEHRER_1))).thenReturn(Optional.of(veranstalter));
+
+		WettbewerbID wettbewerbID = new WettbewerbID(2020);
+		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(veranstalter.teilnahmeart())
+			.withTeilnahmenummer(SCHULKUERZEL_1).withWettbewerbID(wettbewerbID);
+
+		when(teilnahmenRepository.ofTeilnahmeIdentifier(teilnahmeIdentifier)).thenReturn(Optional.empty());
+		when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(new Wettbewerb(wettbewerbID)));
 
 		// Act
 		try {
@@ -100,15 +141,51 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 	@Test
 	void should_klassenZuSchuleLadenReturnTheKlassen_when_schuleAngemeldet() {
 
+		// Arrange
+		Veranstalter veranstalter = new Lehrer(new Person(UUID_LEHRER_1, NEWSLETTER_LEHRER_UUID), false,
+			Collections.singletonList(new Identifier(SCHULKUERZEL_1)));
+
+		when(veranstalterRepository.ofId(new Identifier(UUID_LEHRER_1))).thenReturn(Optional.of(veranstalter));
+
+		WettbewerbID wettbewerbID = new WettbewerbID(2020);
+		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(veranstalter.teilnahmeart())
+			.withTeilnahmenummer(SCHULKUERZEL_1).withWettbewerbID(wettbewerbID);
+
+		when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(new Wettbewerb(wettbewerbID)));
+
+		Schulteilnahme teilnahme = new Schulteilnahme(wettbewerbID, new Identifier(SCHULKUERZEL_1), "Schule",
+			new Identifier(UUID_LEHRER_1));
+
+		when(teilnahmenRepository.ofTeilnahmeIdentifier(teilnahmeIdentifier)).thenReturn(Optional.of(teilnahme));
+
+		List<Klasse> klassenDB = new ArrayList<>();
+		Klasse klasse = new Klasse(new Identifier(TEILNAHMENUMMER_PRIVAT)).withName("2a")
+			.withSchuleID(new Identifier(SCHULKUERZEL_1));
+		klassenDB.add(klasse);
+
+		when(klassenRepository.findKlassenWithSchule(new Identifier(SCHULKUERZEL_1))).thenReturn(klassenDB);
+
+		Map<Identifier, Pair<Long, Long>> anzahlenKinder = new HashMap<>();
+		anzahlenKinder.put(new Identifier(TEILNAHMENUMMER_PRIVAT), Pair.of(12L, 1L));
+
+		Map<Identifier, Long> anzahlenLoesungszettel = new HashMap<>();
+		anzahlenLoesungszettel.put(new Identifier(TEILNAHMENUMMER_PRIVAT), 5L);
+
+		when(kinderService.countKinder(any())).thenReturn(anzahlenKinder);
+		when(kinderService.countLoesungszettel(any())).thenReturn(anzahlenLoesungszettel);
+
 		// Act
 		List<KlasseAPIModel> klassen = klassenService.klassenZuSchuleLaden(SCHULKUERZEL_1, UUID_LEHRER_1);
 
 		// Assert
-		assertEquals(2, klassen.size());
+		assertEquals(1, klassen.size());
 	}
 
 	@Test
 	void should_pruefeDuplikat_callTheAuthorizationService() {
+
+		// Arrange
+		doThrow(new AccessDeniedException()).when(authService).checkPermissionForTeilnahmenummerAndReturnRolle(any(), any(), any());
 
 		// Arrange
 		KlasseRequestData data = new KlasseRequestData().withUuid("neu").withSchulkuerzel(SCHULKUERZEL_1)
@@ -126,14 +203,21 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 	}
 
 	@Test
-	void should_pruefeDuplikatReturnFalse_when_KeineUeberschneidungWegenUUID() {
+	void should_pruefeDuplikatWithoutAuthorizationReturnFalse_when_KeineUeberschneidungWegenUUID() {
 
 		// Arrange
 		KlasseRequestData data = new KlasseRequestData().withUuid("SCHULKUERZEL_1_KLASSE_2A").withSchulkuerzel(SCHULKUERZEL_1)
 			.withKlasse(new KlasseEditorModel().withName("2c"));
 
+		List<Klasse> klassen = new ArrayList<>();
+		Klasse klasse = new Klasse(new Identifier("SCHULKUERZEL_1_KLASSE_2A")).withName("2a")
+			.withSchuleID(new Identifier(SCHULKUERZEL_1));
+		klassen.add(klasse);
+
+		when(klassenRepository.findKlassenWithSchule(new Identifier(SCHULKUERZEL_1))).thenReturn(klassen);
+
 		// Act
-		boolean result = klassenService.pruefeDuplikat(data, UUID_LEHRER_1);
+		boolean result = klassenService.pruefeDuplikatWithoutAuthorization(data);
 
 		// Assert
 		assertFalse(result);
@@ -141,14 +225,20 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 	}
 
 	@Test
-	void should_pruefeDuplikatReturnFalse_when_KeineUeberschneidungWegenName() {
+	void should_pruefeDuplikatWithoutAuthorizationReturnFalse_when_KeineUeberschneidungWegenName() {
 
 		// Arrange
 		KlasseRequestData data = new KlasseRequestData().withUuid("neu").withSchulkuerzel(SCHULKUERZEL_1)
 			.withKlasse(new KlasseEditorModel().withName("2c"));
 
+		List<Klasse> klassen = new ArrayList<>();
+		Klasse klasse = new Klasse(new Identifier("hjlah")).withName("2a").withSchuleID(new Identifier(SCHULKUERZEL_1));
+		klassen.add(klasse);
+
+		when(klassenRepository.findKlassenWithSchule(new Identifier(SCHULKUERZEL_1))).thenReturn(klassen);
+
 		// Act
-		boolean result = klassenService.pruefeDuplikat(data, UUID_LEHRER_1);
+		boolean result = klassenService.pruefeDuplikatWithoutAuthorization(data);
 
 		// Assert
 		assertFalse(result);
@@ -156,14 +246,20 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 	}
 
 	@Test
-	void should_pruefeDuplikatReturnTrue_when_UeberschneidungNeueKlasse() {
+	void should_pruefeDuplikatWithoutAuthorizationReturnTrue_when_UeberschneidungNeueKlasse() {
 
 		// Arrange
 		KlasseRequestData data = new KlasseRequestData().withUuid("neu").withSchulkuerzel(SCHULKUERZEL_1)
 			.withKlasse(new KlasseEditorModel().withName("2b"));
 
+		List<Klasse> klassen = new ArrayList<>();
+		Klasse klasse = new Klasse(new Identifier("hjlah")).withName("2b").withSchuleID(new Identifier(SCHULKUERZEL_1));
+		klassen.add(klasse);
+
+		when(klassenRepository.findKlassenWithSchule(new Identifier(SCHULKUERZEL_1))).thenReturn(klassen);
+
 		// Act
-		boolean result = klassenService.pruefeDuplikat(data, UUID_LEHRER_1);
+		boolean result = klassenService.pruefeDuplikatWithoutAuthorization(data);
 
 		// Assert
 		assertTrue(result);
@@ -171,14 +267,20 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 	}
 
 	@Test
-	void should_pruefeDuplikatReturnTrue_when_UeberschneidungUnzulaessigerNamenswechsel() {
+	void should_pruefeDuplikatWithoutAuthorizationTrue_when_UeberschneidungUnzulaessigerNamenswechsel() {
 
 		// Arrange
 		KlasseRequestData data = new KlasseRequestData().withUuid("SCHULKUERZEL_1_KLASSE_2A").withSchulkuerzel(SCHULKUERZEL_1)
 			.withKlasse(new KlasseEditorModel().withName("2B"));
 
+		List<Klasse> klassen = new ArrayList<>();
+		Klasse klasse = new Klasse(new Identifier("hjlah")).withName("2b").withSchuleID(new Identifier(SCHULKUERZEL_1));
+		klassen.add(klasse);
+
+		when(klassenRepository.findKlassenWithSchule(new Identifier(SCHULKUERZEL_1))).thenReturn(klassen);
+
 		// Act
-		boolean result = klassenService.pruefeDuplikat(data, UUID_LEHRER_1);
+		boolean result = klassenService.pruefeDuplikatWithoutAuthorization(data);
 
 		// Assert
 		assertTrue(result);
@@ -218,9 +320,8 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 
 		} catch (NotFoundException e) {
 
-			assertEquals(
-				"KlassenServiceImpl.klasseAnlegen(...): Schule mit UUID=SCHULKUERZEL_2 ist nicht zum aktuellen Wettbewerb (2020) angemeldet",
-				e.getMessage());
+			assertTrue(e.getMessage().endsWith(
+				"klasseAnlegen(...): Schule mit UUID=SCHULKUERZEL_2 ist nicht zum aktuellen Wettbewerb (2020) angemeldet"));
 		}
 	}
 
@@ -228,8 +329,28 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 	void should_klasseAnlegen_triggerEvent() {
 
 		// Arrange
+		Veranstalter veranstalter = new Lehrer(new Person(UUID_LEHRER_1, NEWSLETTER_LEHRER_UUID), false,
+			Collections.singletonList(new Identifier(SCHULKUERZEL_1)));
+
+		when(veranstalterRepository.ofId(new Identifier(UUID_LEHRER_1))).thenReturn(Optional.of(veranstalter));
+
+		WettbewerbID wettbewerbID = new WettbewerbID(2020);
+		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(veranstalter.teilnahmeart())
+			.withTeilnahmenummer(SCHULKUERZEL_1).withWettbewerbID(wettbewerbID);
+
+		Schulteilnahme teilnahme = new Schulteilnahme(wettbewerbID, new Identifier(SCHULKUERZEL_1), "Schule",
+			new Identifier(UUID_LEHRER_1));
+
+		when(teilnahmenRepository.ofTeilnahmeIdentifier(teilnahmeIdentifier)).thenReturn(Optional.of(teilnahme));
+		when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(new Wettbewerb(wettbewerbID)));
+
+		// Arrange
 		KlasseRequestData data = new KlasseRequestData().withUuid("neu").withSchulkuerzel(SCHULKUERZEL_1)
 			.withKlasse(new KlasseEditorModel().withName("2c"));
+
+		Klasse neueKlasse = new Klasse(new Identifier("hjshdkqh")).withName("2c").withSchuleID(new Identifier(SCHULKUERZEL_1));
+
+		when(klassenRepository.addKlasse(any())).thenReturn(neueKlasse);
 
 		// Act
 		KlasseAPIModel klasse = klassenService.klasseAnlegen(data, UUID_LEHRER_1);
@@ -238,7 +359,7 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 		assertEquals("2c", klasse.name());
 		assertNotNull(klasse.uuid());
 
-		assertNotNull(klassenService.getKlasseCreated());
+		verify(domainEventHandler).handleEvent(any(KlasseCreated.class));
 	}
 
 	@Test
@@ -266,6 +387,18 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 		KlasseRequestData data = new KlasseRequestData().withUuid("SCHULKUERZEL_1_KLASSE_2A").withSchulkuerzel(SCHULKUERZEL_2)
 			.withKlasse(new KlasseEditorModel().withName("2c"));
 
+		Veranstalter veranstalter = new Lehrer(new Person(UUID_LEHRER_1, NEWSLETTER_LEHRER_UUID), false,
+			Collections.singletonList(new Identifier(SCHULKUERZEL_1)));
+
+		when(veranstalterRepository.ofId(new Identifier(UUID_LEHRER_1))).thenReturn(Optional.of(veranstalter));
+
+		WettbewerbID wettbewerbID = new WettbewerbID(2020);
+		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(veranstalter.teilnahmeart())
+			.withTeilnahmenummer(SCHULKUERZEL_1).withWettbewerbID(wettbewerbID);
+
+		when(teilnahmenRepository.ofTeilnahmeIdentifier(teilnahmeIdentifier)).thenReturn(Optional.empty());
+		when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(new Wettbewerb(wettbewerbID)));
+
 		// Act
 		try {
 
@@ -274,9 +407,11 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 
 		} catch (NotFoundException e) {
 
-			assertEquals(
-				"KlassenServiceImpl.klasseUmbenennen(...): Schule mit UUID=SCHULKUERZEL_2 ist nicht zum aktuellen Wettbewerb (2020) angemeldet",
-				e.getMessage());
+			System.out.println(e.getMessage());
+
+			assertTrue(e.getMessage().endsWith(
+				".klasseUmbenennen(...): Schule mit UUID=SCHULKUERZEL_2 ist nicht zum aktuellen Wettbewerb (2020) angemeldet"));
+
 		}
 	}
 
@@ -286,6 +421,21 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 		// Arrange
 		KlasseRequestData data = new KlasseRequestData().withUuid("SCHULKUERZEL_1_KLASSE_2C").withSchulkuerzel(SCHULKUERZEL_1)
 			.withKlasse(new KlasseEditorModel().withName("2c"));
+
+		Veranstalter veranstalter = new Lehrer(new Person(UUID_LEHRER_1, NEWSLETTER_LEHRER_UUID), false,
+			Collections.singletonList(new Identifier(SCHULKUERZEL_1)));
+
+		when(veranstalterRepository.ofId(new Identifier(UUID_LEHRER_1))).thenReturn(Optional.of(veranstalter));
+
+		WettbewerbID wettbewerbID = new WettbewerbID(2020);
+		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(veranstalter.teilnahmeart())
+			.withTeilnahmenummer(SCHULKUERZEL_1).withWettbewerbID(wettbewerbID);
+
+		Schulteilnahme schulteilnahme = new Schulteilnahme(wettbewerbID, new Identifier(SCHULKUERZEL_1), "Baumschule",
+			new Identifier(UUID_LEHRER_1));
+
+		when(teilnahmenRepository.ofTeilnahmeIdentifier(teilnahmeIdentifier)).thenReturn(Optional.of(schulteilnahme));
+		when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(new Wettbewerb(wettbewerbID)));
 
 		// Act
 		try {
@@ -307,22 +457,19 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 		KlasseRequestData data = new KlasseRequestData().withUuid("SCHULKUERZEL_1_KLASSE_2A").withSchulkuerzel(SCHULKUERZEL_1)
 			.withKlasse(new KlasseEditorModel().withName(expectedName));
 
+		List<Klasse> klassen = new ArrayList<>();
+		Klasse klasseDB = new Klasse(new Identifier("SCHULKUERZEL_1_KLASSE_2A")).withName("2a")
+			.withSchuleID(new Identifier(SCHULKUERZEL_1));
+		klassen.add(klasseDB);
+
+		when(klassenRepository.findKlassenWithSchule(new Identifier(SCHULKUERZEL_1))).thenReturn(klassen);
+
 		// Act
-		KlasseAPIModel klasse = klassenService.klasseUmbenennen(data, UUID_LEHRER_1);
+		klassenService.klasseUmbenennen(data, UUID_LEHRER_1);
 
 		// Assert
-		assertEquals("SCHULKUERZEL_1_KLASSE_2A", klasse.uuid());
-		assertEquals(expectedName, klasse.name());
-		assertEquals(SCHULKUERZEL_1, klasse.schulkuerzel());
-
-		Optional<Klasse> opt = getKlassenRepository().ofIdentifier(new Identifier(klasse.uuid()));
-
-		assertFalse(opt.isEmpty());
-
-		Klasse gespeichert = opt.get();
-		assertEquals(expectedName, gespeichert.name());
-
-		assertNotNull(klassenService.getKlasseChanged());
+		verify(klassenRepository.changeKlasse(any(Klasse.class)));
+		verify(domainEventHandler).handleEvent(any(KlasseChanged.class));
 
 	}
 
@@ -369,6 +516,8 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 			fail("keine NotFoundException");
 
 		} catch (NotFoundException e) {
+
+			verify(domainEventHandler, never()).handleEvent(any(KlasseDeleted.class));
 
 		}
 	}
@@ -418,7 +567,7 @@ public class KlassenServiceTest extends AbstractDomainServiceTest {
 
 		}
 
-		assertNotNull(klassenService.getKlasseDeleted());
+		verify(domainEventHandler).handleEvent(any(KlasseDeleted.class));
 
 	}
 

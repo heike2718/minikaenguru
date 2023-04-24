@@ -4,40 +4,73 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.unterlagen;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.Collections;
+import java.util.Optional;
+
+import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
-import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
-import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.UnterlagenNichtVerfuegbarException;
-import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
+import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
+import de.egladil.web.mk_gateway.domain.veranstalter.Lehrer;
+import de.egladil.web.mk_gateway.domain.veranstalter.Person;
+import de.egladil.web.mk_gateway.domain.veranstalter.Privatveranstalter;
+import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
+import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.ZugangUnterlagenService;
+import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * UnterlagenServiceTest
  */
-public class UnterlagenServiceTest extends AbstractDomainServiceTest {
+@QuarkusTest
+public class UnterlagenServiceTest {
 
-	private UnterlagenService service;
+	private static final String UUID = "UUID";
 
-	@BeforeEach
-	@Override
-	protected void setUp() {
+	private static final Integer WETTBEWERBSJAHR_AKTUELL = 2020;
 
-		super.setUp();
-		service = UnterlagenService.createForTest(getWettbewerbService(), getVeranstalterRepository(),
-			getZugangUnterlagenService());
+	@InjectMock
+	DomainEventHandler domainEventHandler;
+
+	@InjectMock
+	WettbewerbService wettbewerbService;
+
+	@InjectMock
+	VeranstalterRepository veranstalterRepository;
+
+	@InjectMock
+	ZugangUnterlagenService zugangUnterlagenService;
+
+	@InjectMock
+	DownloadsRepository downloadsRepository;
+
+	@InjectMock
+	LoggableEventDelegate eventDelegate;
+
+	@Inject
+	UnterlagenService service;
+
+	void setUp() {
+
 	}
 
 	@Nested
@@ -47,22 +80,18 @@ public class UnterlagenServiceTest extends AbstractDomainServiceTest {
 		void should_getUnterlagenFuerSchuleThrowNotFoundExceptionAndAddSecurityEvent_when_LehrerNichtVorhanden() {
 
 			// Arrange
-			String uuid = "UUID_LEHRER_4";
-			Identifier lehrerID = new Identifier(uuid);
+			Identifier userId = new Identifier(UUID);
+
+			when(veranstalterRepository.ofId(userId)).thenReturn(Optional.empty());
 
 			// Act
 			try {
 
-				service.getUnterlagenFuerSchule(lehrerID, Sprache.de);
+				service.getUnterlagenFuerSchule(userId, Sprache.de);
 				fail("keine NotFoundException");
 			} catch (NotFoundException e) {
 
-				SecurityIncidentRegistered secEventPayload = service.securityIncidentEventPayload();
-				assertNotNull(secEventPayload);
-
-				assertEquals("SecurityIncidentRegistered", secEventPayload.typeName());
-				assertEquals("Unbekannter Veranstalter mit UUID=UUID_LEHRER_4 versucht, Wettbewerbsunterlagen herunterzuladen.",
-					secEventPayload.message());
+				verify(eventDelegate).fireSecurityEvent(any(), any());
 			}
 		}
 
@@ -70,22 +99,21 @@ public class UnterlagenServiceTest extends AbstractDomainServiceTest {
 		void should_getUnterlagenFuerSchuleThrowNotFoundExceptionAndAddSecurityEvent_when_uuidPrivat() {
 
 			// Arrange
-			Identifier lehrerID = new Identifier(UUID_PRIVAT);
+			Identifier userId = new Identifier(UUID);
+
+			Veranstalter veranstalter = new Privatveranstalter(new Person(UUID, "Privatmensch"), false,
+				Collections.singletonList(new Identifier(UUID)));
+
+			when(veranstalterRepository.ofId(userId)).thenReturn(Optional.of(veranstalter));
 
 			// Act
 			try {
 
-				service.getUnterlagenFuerSchule(lehrerID, Sprache.de);
+				service.getUnterlagenFuerSchule(userId, Sprache.de);
 				fail("keine NotFoundException");
 			} catch (NotFoundException e) {
 
-				SecurityIncidentRegistered secEventPayload = service.securityIncidentEventPayload();
-				assertNotNull(secEventPayload);
-
-				assertEquals("SecurityIncidentRegistered", secEventPayload.typeName());
-				assertEquals(
-					"Veranstalter mit UUID=UUID_PRIVAT und Rolle PRIVAT versucht, Wettbewerbsunterlagen über die falsche URL herunterzuladen.",
-					secEventPayload.message());
+				verify(eventDelegate).fireSecurityEvent(any(), any());
 			}
 		}
 
@@ -93,68 +121,32 @@ public class UnterlagenServiceTest extends AbstractDomainServiceTest {
 		void should_getUnterlagenFuerSchuleThrowUnterlagenNichtVerfuegbarException_when_zugangUnterlagenEntzogen() {
 
 			// Arrange
-			Identifier lehrerID = new Identifier(UUID_LEHRER_GESPERRT);
+			Identifier userId = new Identifier(UUID);
+			Wettbewerb aktuellerWettbewerb = new Wettbewerb(new WettbewerbID(WETTBEWERBSJAHR_AKTUELL))
+				.withStatus(WettbewerbStatus.ANMELDUNG)
+				.withWettbewerbsbeginn(LocalDate.of(WETTBEWERBSJAHR_AKTUELL, Month.JANUARY, 1))
+				.withDatumFreischaltungLehrer(LocalDate.of(WETTBEWERBSJAHR_AKTUELL, Month.MARCH, 1))
+				.withDatumFreischaltungPrivat(LocalDate.of(WETTBEWERBSJAHR_AKTUELL, Month.JUNE, 1))
+				.withWettbewerbsende(LocalDate.of(WETTBEWERBSJAHR_AKTUELL, Month.AUGUST, 1));
+
+			Veranstalter veranstalter = new Lehrer(new Person(UUID, "Lehrer"), false,
+				Collections.singletonList(new Identifier(UUID)));
+
+			when(veranstalterRepository.ofId(userId)).thenReturn(Optional.of(veranstalter));
+			when(zugangUnterlagenService.hatZugang(UUID)).thenReturn(Boolean.FALSE);
+			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(aktuellerWettbewerb));
 
 			// Act
 			try {
 
-				service.getUnterlagenFuerSchule(lehrerID, Sprache.de);
+				service.getUnterlagenFuerSchule(userId, Sprache.de);
 				fail("keine UnterlagenNichtVerfuegbarException");
 			} catch (UnterlagenNichtVerfuegbarException e) {
 
-				SecurityIncidentRegistered secEventPayload = service.securityIncidentEventPayload();
-				assertNotNull(secEventPayload);
-
-				assertEquals("SecurityIncidentRegistered", secEventPayload.typeName());
-				assertEquals(
-					"Veranstalter UUID=UUID_LEHRER_GESPERRT, Zugang Unterlagen=ENTZOGEN, Wettbewerbsstatus=ANMELDUNG versucht, Wettbewerbsunterlagen herunterzuladen.",
-					secEventPayload.message());
+				verify(eventDelegate).fireSecurityEvent(any(), any());
 			}
 		}
 
-		@Test
-		void should_getUnterlagenFuerSchule_returnDeutschZip_when_spracheDeutsch() {
-
-			// Arrange
-			Identifier lehrerID = new Identifier(UUID_LEHRER_1);
-
-			ZugangUnterlagenService zugangsservice = Mockito.mock(ZugangUnterlagenService.class);
-			Mockito.when(zugangsservice.hatZugang(UUID_LEHRER_1)).thenReturn(Boolean.TRUE);
-
-			UnterlagenService theService = UnterlagenService.createForTest(getWettbewerbService(), getVeranstalterRepository(),
-				zugangsservice);
-			theService.setPathExternalFiles("/home/heike/git/testdaten/minikaenguru");
-
-			// Act
-			DownloadData result = theService.getUnterlagenFuerSchule(lehrerID, Sprache.de);
-
-			// Assert
-			assertNotNull(result);
-			assertEquals("2020-minikaenguru-deutsch-schulen.zip", result.filename());
-			assertTrue(result.data().length > 10);
-		}
-
-		@Test
-		void should_getUnterlagenFuerSchule_returnDeutschZip_when_spracheEnglisch() {
-
-			// Arrange
-			Identifier lehrerID = new Identifier(UUID_LEHRER_1);
-
-			ZugangUnterlagenService zugangsservice = Mockito.mock(ZugangUnterlagenService.class);
-			Mockito.when(zugangsservice.hatZugang(UUID_LEHRER_1)).thenReturn(Boolean.TRUE);
-
-			UnterlagenService theService = UnterlagenService.createForTest(getWettbewerbService(), getVeranstalterRepository(),
-				zugangsservice);
-			theService.setPathExternalFiles("/home/heike/git/testdaten/minikaenguru");
-
-			// Act
-			DownloadData result = theService.getUnterlagenFuerSchule(lehrerID, Sprache.en);
-
-			// Assert
-			assertNotNull(result);
-			assertEquals("2020-minikangaroo-english-schools.zip", result.filename());
-			assertTrue(result.data().length > 10);
-		}
 	}
 
 	@Nested
@@ -164,22 +156,18 @@ public class UnterlagenServiceTest extends AbstractDomainServiceTest {
 		void should_getUnterlagenFuerPrivatanmeldungThrowNotFoundExceptionAndAddSecurityEvent_when_VeranstalterNichtVorhanden() {
 
 			// Arrange
-			String uuid = "HEINZ";
-			Identifier veranstalterID = new Identifier(uuid);
+			Identifier userId = new Identifier(UUID);
+
+			when(veranstalterRepository.ofId(userId)).thenReturn(Optional.empty());
 
 			// Act
 			try {
 
-				service.getUnterlagenFuerPrivatanmeldung(veranstalterID, Sprache.de);
+				service.getUnterlagenFuerPrivatanmeldung(userId, Sprache.de);
 				fail("keine NotFoundException");
 			} catch (NotFoundException e) {
 
-				SecurityIncidentRegistered secEventPayload = service.securityIncidentEventPayload();
-				assertNotNull(secEventPayload);
-
-				assertEquals("SecurityIncidentRegistered", secEventPayload.typeName());
-				assertEquals("Unbekannter Veranstalter mit UUID=HEINZ versucht, Wettbewerbsunterlagen herunterzuladen.",
-					secEventPayload.message());
+				verify(eventDelegate).fireSecurityEvent(any(), any());
 			}
 		}
 
@@ -187,90 +175,53 @@ public class UnterlagenServiceTest extends AbstractDomainServiceTest {
 		void should_getUnterlagenFuerPrivatanmeldungThrowNotFoundExceptionAndAddSecurityEvent_when_uuidLehrer() {
 
 			// Arrange
-			Identifier veranstalterID = new Identifier(UUID_LEHRER_1);
+			Identifier userId = new Identifier(UUID);
+			Veranstalter veranstalter = new Lehrer(new Person(UUID, "Lehrer"), false,
+				Collections.singletonList(new Identifier(UUID)));
+
+			when(veranstalterRepository.ofId(userId)).thenReturn(Optional.of(veranstalter));
 
 			// Act
 			try {
 
-				service.getUnterlagenFuerPrivatanmeldung(veranstalterID, Sprache.de);
+				service.getUnterlagenFuerPrivatanmeldung(userId, Sprache.de);
 				fail("keine NotFoundException");
 			} catch (NotFoundException e) {
 
-				SecurityIncidentRegistered secEventPayload = service.securityIncidentEventPayload();
-				assertNotNull(secEventPayload);
-
-				assertEquals("SecurityIncidentRegistered", secEventPayload.typeName());
-				assertEquals(
-					"Veranstalter mit UUID=UUID_LEHRER_1 und Rolle LEHRER versucht, Wettbewerbsunterlagen über die falsche URL herunterzuladen.",
-					secEventPayload.message());
+				verify(eventDelegate).fireSecurityEvent(any(), any());
 			}
 		}
 
 		@Test
-		void should_getUnterlagenFuerPrivatanmeldungThrowUnterlagenNichtVerfuegbarException_when_zugangUnterlagenEntzogen() {
+		void should_getUnterlagenFuerSchuleThrowUnterlagenNichtVerfuegbarException_when_zugangUnterlagenEntzogen() {
 
 			// Arrange
-			Identifier veranstalterID = new Identifier(UUID_PRIVAT_GESPERRT);
+			Identifier userId = new Identifier(UUID);
+			Wettbewerb aktuellerWettbewerb = new Wettbewerb(new WettbewerbID(WETTBEWERBSJAHR_AKTUELL))
+				.withStatus(WettbewerbStatus.ANMELDUNG)
+				.withWettbewerbsbeginn(LocalDate.of(WETTBEWERBSJAHR_AKTUELL, Month.JANUARY, 1))
+				.withDatumFreischaltungLehrer(LocalDate.of(WETTBEWERBSJAHR_AKTUELL, Month.MARCH, 1))
+				.withDatumFreischaltungPrivat(LocalDate.of(WETTBEWERBSJAHR_AKTUELL, Month.JUNE, 1))
+				.withWettbewerbsende(LocalDate.of(WETTBEWERBSJAHR_AKTUELL, Month.AUGUST, 1));
+
+			Veranstalter veranstalter = new Privatveranstalter(new Person(UUID, "Privatmensch"), false,
+				Collections.singletonList(new Identifier(UUID)));
+
+			when(veranstalterRepository.ofId(userId)).thenReturn(Optional.of(veranstalter));
+			when(zugangUnterlagenService.hatZugang(UUID)).thenReturn(Boolean.FALSE);
+			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(aktuellerWettbewerb));
 
 			// Act
 			try {
 
-				service.getUnterlagenFuerPrivatanmeldung(veranstalterID, Sprache.de);
+				service.getUnterlagenFuerPrivatanmeldung(userId, Sprache.de);
 				fail("keine UnterlagenNichtVerfuegbarException");
 			} catch (UnterlagenNichtVerfuegbarException e) {
 
-				SecurityIncidentRegistered secEventPayload = service.securityIncidentEventPayload();
-				assertNotNull(secEventPayload);
-
-				assertEquals("SecurityIncidentRegistered", secEventPayload.typeName());
-				assertEquals(
-					"Veranstalter UUID=UUID_PRIVAT_GESPERRT, Zugang Unterlagen=ENTZOGEN, Wettbewerbsstatus=ANMELDUNG versucht, Wettbewerbsunterlagen herunterzuladen.",
-					secEventPayload.message());
+				verify(eventDelegate).fireSecurityEvent(any(), any());
 			}
 		}
 
-		@Test
-		void should_getUnterlagenFuerPrivatanmeldung_returnDeutschZip_when_spracheDeutsch() {
-
-			// Arrange
-			Identifier lehrerID = new Identifier(UUID_PRIVAT);
-
-			ZugangUnterlagenService zugangsservice = Mockito.mock(ZugangUnterlagenService.class);
-			Mockito.when(zugangsservice.hatZugang(UUID_PRIVAT)).thenReturn(Boolean.TRUE);
-
-			UnterlagenService theService = UnterlagenService.createForTest(getWettbewerbService(), getVeranstalterRepository(),
-				zugangsservice);
-			theService.setPathExternalFiles("/home/heike/git/testdaten/minikaenguru");
-
-			// Act
-			DownloadData result = theService.getUnterlagenFuerPrivatanmeldung(lehrerID, Sprache.de);
-
-			// Assert
-			assertNotNull(result);
-			assertEquals("2020-minikaenguru-deutsch-privat.zip", result.filename());
-			assertTrue(result.data().length > 10);
-		}
-
-		@Test
-		void should_getUnterlagenFuerPrivatanmeldung_returnDeutschZip_when_spracheEnglisch() {
-
-			// Arrange
-			Identifier lehrerID = new Identifier(UUID_PRIVAT);
-
-			ZugangUnterlagenService zugangsservice = Mockito.mock(ZugangUnterlagenService.class);
-			Mockito.when(zugangsservice.hatZugang(UUID_PRIVAT)).thenReturn(Boolean.TRUE);
-
-			UnterlagenService theService = UnterlagenService.createForTest(getWettbewerbService(), getVeranstalterRepository(),
-				zugangsservice);
-			theService.setPathExternalFiles("/home/heike/git/testdaten/minikaenguru");
-
-			// Act
-			DownloadData result = theService.getUnterlagenFuerPrivatanmeldung(lehrerID, Sprache.en);
-
-			// Assert
-			assertNotNull(result);
-			assertEquals("2020-minikangaroo-english-private.zip", result.filename());
-			assertTrue(result.data().length > 10);
-		}
 	}
+
 }

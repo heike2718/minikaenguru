@@ -22,7 +22,6 @@ import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
 import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
@@ -49,6 +48,9 @@ public class SchulenAnmeldeinfoService {
 	DomainEventHandler domainEventHandler;
 
 	@Inject
+	LoggableEventDelegate eventDelegate;
+
+	@Inject
 	SchulenOverviewService schulenOverviewService;
 
 	@Inject
@@ -62,20 +64,6 @@ public class SchulenAnmeldeinfoService {
 
 	@Inject
 	AktuelleTeilnahmeService aktuelleTeilnahmeService;
-
-	private DataInconsistencyRegistered dataInconsistencyRegistered;
-
-	static SchulenAnmeldeinfoService createForTest(final MkKatalogeResourceAdapter katalogeAdapter, final SchulenOverviewService schulenOverviewService, final SchuleDetailsService schuleDetailsService, final AuswertungsmodusInfoService auswertungsmodusInfoService, final AktuelleTeilnahmeService aktuelleTeilnahmeService) {
-
-		SchulenAnmeldeinfoService result = new SchulenAnmeldeinfoService();
-		result.katalogeAdapter = katalogeAdapter;
-		result.schulenOverviewService = schulenOverviewService;
-		result.schuleDetailsService = schuleDetailsService;
-		result.auswertungsmodusInfoService = auswertungsmodusInfoService;
-		result.aktuelleTeilnahmeService = aktuelleTeilnahmeService;
-		return result;
-
-	}
 
 	public List<SchuleAPIModel> findSchulenMitAnmeldeinfo(final String lehrerUUID) {
 
@@ -188,7 +176,7 @@ public class SchulenAnmeldeinfoService {
 
 			LOG.warn(msg);
 
-			this.dataInconsistencyRegistered = new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
+			eventDelegate.fireDataInconsistencyEvent(msg, domainEventHandler);
 		}
 
 		if (schulenOfLehrer.size() > schulenAusKatalg.size()) {
@@ -230,10 +218,4 @@ public class SchulenAnmeldeinfoService {
 
 		}
 	}
-
-	DataInconsistencyRegistered getDataInconsistencyRegistered() {
-
-		return dataInconsistencyRegistered;
-	}
-
 }

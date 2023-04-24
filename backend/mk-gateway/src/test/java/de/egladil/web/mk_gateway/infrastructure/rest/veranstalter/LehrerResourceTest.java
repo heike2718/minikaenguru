@@ -68,8 +68,8 @@ public class LehrerResourceTest {
 			"[getSchuleDetails - " + schulkuerzel + "]"))
 				.thenThrow(new AccessDeniedException());
 
-		Response response = given()
-			.when().get("schulen/bjkasgca/details");
+		Response response = given().pathParam("schulkuerzel", schulkuerzel)
+			.when().get("schulen/{schulkuerzel}/details");
 
 		// Assert
 		assertEquals(401, response.getStatusCode());

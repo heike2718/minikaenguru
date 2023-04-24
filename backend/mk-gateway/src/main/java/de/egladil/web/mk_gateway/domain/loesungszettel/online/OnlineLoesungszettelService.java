@@ -43,8 +43,8 @@ import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRohdaten;
 import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelAPIModel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelZeileAPIModel;
-import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.statistik.AuswertungsmodusInfoService;
+import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.statistik.impl.AuswertungsmodusInfoServiceImpl;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
@@ -84,11 +84,8 @@ public class OnlineLoesungszettelService {
 	@Inject
 	AuswertungsmodusInfoService auswertungsmodusInfoService;
 
-	private LoesungszettelCreated loesungszettelCreated;
-
-	private LoesungszettelChanged loesungszettelChanged;
-
-	private LoesungszettelDeleted loesungszettelDeleted;
+	@Inject
+	LoggableEventDelegate eventDelegate;
 
 	public static OnlineLoesungszettelService createForIntegrationTest(final EntityManager entityManager) {
 
@@ -174,7 +171,7 @@ public class OnlineLoesungszettelService {
 
 			String msg = "Veranstalter " + StringUtils.abbreviate(veranstalterID.identifier(), 11)
 				+ ": versucht Lösungszettel aus Jahr " + lzJahr + " zu löschen. UUID=" + identifier.identifier();
-			new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 
 			String message = MessageFormat.format(applicationMessages.getString("loesungszettel.delete.gesperrt"),
 				new Object[] { lzWettbewerbID });
@@ -204,6 +201,8 @@ public class OnlineLoesungszettelService {
 		Optional<PersistenterLoesungszettel> optPersistenter = this.loesungszettelRepository.removeLoesungszettel(identifier);
 
 		Optional<Kind> optKind = kinderRepository.findKindWithLoesungszettelId(identifier);
+
+		LoesungszettelDeleted loesungszettelDeleted = null;
 
 		if (optPersistenter.isPresent()) {
 
@@ -244,9 +243,9 @@ public class OnlineLoesungszettelService {
 			this.kinderRepository.changeKind(kind);
 		}
 
-		if (this.loesungszettelDeleted != null) {
+		if (loesungszettelDeleted != null) {
 
-			propagateLoesungszettelDeleted();
+			propagateLoesungszettelDeleted(loesungszettelDeleted);
 		}
 
 		return optPersistenter.isPresent();
@@ -257,7 +256,7 @@ public class OnlineLoesungszettelService {
 	 * Sendet das loesungszettelDeleted-Objekt. Einer der EventHandler ist KinderServiceImpl, der dafür sorgt, dass die
 	 * Loesungszettel-Referenz genullt wird.
 	 */
-	private void propagateLoesungszettelDeleted() {
+	private void propagateLoesungszettelDeleted(final LoesungszettelDeleted loesungszettelDeleted) {
 
 		if (domainEventHandler != null) {
 
@@ -301,7 +300,7 @@ public class OnlineLoesungszettelService {
 				+ persistenterLoesungszettel.getWettbewerbUuid() + " zu aendern: UUID=" + identifier;
 			LOG.warn(msg);
 
-			new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 
 			String errorMessage = MessageFormat.format(applicationMessages.getString("loesungszettel.change.gesperrt"),
 				new Object[] { persistenterLoesungszettel.getWettbewerbUuid() });
@@ -324,7 +323,7 @@ public class OnlineLoesungszettelService {
 
 		this.loesungszettelRepository.updateLoesungszettelInTransaction(persistenterLoesungszettel);
 
-		loesungszettelChanged = (LoesungszettelChanged) new LoesungszettelChanged(veranstalterUuid)
+		LoesungszettelChanged loesungszettelChanged = (LoesungszettelChanged) new LoesungszettelChanged(veranstalterUuid)
 			.withKindID(persistenterLoesungszettel.getKindID())
 			.withRohdatenAlt(rohdaten)
 			.withRohdatenNeu(rohdaten)
@@ -460,7 +459,7 @@ public class OnlineLoesungszettelService {
 
 		kinderRepository.changeKind(kind);
 
-		loesungszettelCreated = (LoesungszettelCreated) new LoesungszettelCreated(veranstalterID)
+		LoesungszettelCreated loesungszettelCreated = (LoesungszettelCreated) new LoesungszettelCreated(veranstalterID)
 			.withKindID(kind.identifier().identifier())
 			.withRohdatenNeu(loesungszettel.rohdaten())
 			.withSpracheNeu(loesungszettel.sprache())
@@ -484,7 +483,7 @@ public class OnlineLoesungszettelService {
 	 */
 	private void doFireInconsistentDataAndExitMethodWithInvalidInputException(final String msg) {
 
-		new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
+		eventDelegate.fireDataInconsistencyEvent(msg, domainEventHandler);
 
 		String message = MessageFormat.format(applicationMessages.getString("loesungszettel.addOrChange.invalidArguments"),
 			"es gibt inkonsistente Daten in der Datenbank");
@@ -652,7 +651,7 @@ public class OnlineLoesungszettelService {
 
 			String msg = "Veranstalter " + StringUtils.abbreviate(veranstalterID.identifier(), 11)
 				+ ": versucht Lösungszettel aus Jahr " + lzJahr + " zu ändern. UUID=" + lz.identifier();
-			new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 
 			String message = MessageFormat.format(applicationMessages.getString("loesungszettel.change.gesperrt"),
 				new Object[] { lz.teilnahmeIdentifier().wettbewerbID() });
@@ -745,7 +744,7 @@ public class OnlineLoesungszettelService {
 				+ ": versucht Lösungszettel aus Jahr " + teilnahmeIdentifierZuLoeschenderLoesungszettel.jahr()
 				+ " zu ändern. UUID="
 				+ zuLoesschenderLoesungszettelID;
-			new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 
 			String message = MessageFormat.format(
 				applicationMessages.getString("loesungszettel.addOrChange.invalidArguments"),
@@ -788,7 +787,7 @@ public class OnlineLoesungszettelService {
 		kind.withLoesungszettelID(loesungszettelID);
 		kinderRepository.changeKind(kind);
 
-		loesungszettelChanged = (LoesungszettelChanged) new LoesungszettelChanged(veranstalterID)
+		LoesungszettelChanged loesungszettelChanged = (LoesungszettelChanged) new LoesungszettelChanged(veranstalterID)
 			.withKindID(kind.identifier().identifier())
 			.withRohdatenAlt(persistenter.rohdaten())
 			.withRohdatenNeu(loesungszettel.rohdaten())
@@ -843,20 +842,5 @@ public class OnlineLoesungszettelService {
 	private Wettbewerb getWettbewerb() {
 
 		return this.wettbewerbService.aktuellerWettbewerb().get();
-	}
-
-	LoesungszettelCreated getLoesungszettelCreated() {
-
-		return loesungszettelCreated;
-	}
-
-	LoesungszettelChanged getLoesungszettelChanged() {
-
-		return loesungszettelChanged;
-	}
-
-	LoesungszettelDeleted getLoesungszettelDeleted() {
-
-		return loesungszettelDeleted;
 	}
 }

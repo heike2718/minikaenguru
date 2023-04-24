@@ -77,6 +77,9 @@ public class EinzelkindUrkundenservice {
 	@Inject
 	WettbewerbService wettbewerbService;
 
+	@Inject
+	LoggableEventDelegate eventDelegate;
+
 	/**
 	 * Generiert eine einzelne Teilnehmerurkunde für das gegebene Privatkind.
 	 *
@@ -120,7 +123,7 @@ public class EinzelkindUrkundenservice {
 			String msg = "Loesungszettel mit UUID " + kind.loesungszettelID() + " existiert nicht, ist aber mit Kind "
 				+ kind.identifier() + " verknuepft";
 			LOG.warn(msg);
-			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
+			eventDelegate.fireDataInconsistencyEvent(msg, domainEventHandler);
 
 			throw new NotFoundException();
 		}
@@ -159,15 +162,15 @@ public class EinzelkindUrkundenservice {
 
 			switch (urkundenart) {
 
-			case KAENGURUSPRUNG:
+				case KAENGURUSPRUNG:
 
-				return new CreateDatenKaengurusprungPrivatStrategie();
+					return new CreateDatenKaengurusprungPrivatStrategie();
 
-			case TEILNAHME:
-				return new CreateDatenTeilnahmePrivatStrategie();
+				case TEILNAHME:
+					return new CreateDatenTeilnahmePrivatStrategie();
 
-			default:
-				throw new IllegalArgumentException("Privatteilnahme unzulaessige Urkundenart " + urkundenart);
+				default:
+					throw new IllegalArgumentException("Privatteilnahme unzulaessige Urkundenart " + urkundenart);
 			}
 
 		}
@@ -177,7 +180,7 @@ public class EinzelkindUrkundenservice {
 			String msg = "Kind aus Schulteilnahme " + kind.identifier() + ", " + kind.teilnahmeIdentifier()
 				+ " ist keiner Klasse zugeordnet.";
 			LOG.error(msg);
-			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
+			eventDelegate.fireDataInconsistencyEvent(msg, domainEventHandler);
 			throw new NotFoundException();
 		}
 
@@ -191,7 +194,7 @@ public class EinzelkindUrkundenservice {
 			String msg = "Das sollte hier nicht mehr passieren: konnte keine Teilnahme mit Identifier " + teilnahmeIdentifier
 				+ " finden";
 			LOG.error(msg);
-			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
+			eventDelegate.fireDataInconsistencyEvent(msg, domainEventHandler);
 			throw new MkGatewayRuntimeException(msg);
 		}
 
@@ -203,7 +206,7 @@ public class EinzelkindUrkundenservice {
 
 			String msg = "Klasse mit UUID " + kind.klasseID() + " nicht gefunden";
 			LOG.error(msg);
-			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
+			eventDelegate.fireDataInconsistencyEvent(msg, domainEventHandler);
 			throw new MkGatewayRuntimeException(msg);
 		}
 
@@ -214,15 +217,15 @@ public class EinzelkindUrkundenservice {
 
 		switch (urkundenart) {
 
-		case KAENGURUSPRUNG:
+			case KAENGURUSPRUNG:
 
-			return new CreateDatenKaengurusprungSchuleStrategie(fontSizeAndLinesSchulname, klasse);
+				return new CreateDatenKaengurusprungSchuleStrategie(fontSizeAndLinesSchulname, klasse);
 
-		case TEILNAHME:
-			return new CreateDatenTeilnahmeSchuleStrategie(fontSizeAndLinesSchulname, klasse);
+			case TEILNAHME:
+				return new CreateDatenTeilnahmeSchuleStrategie(fontSizeAndLinesSchulname, klasse);
 
-		default:
-			throw new IllegalArgumentException("Schulteilnahme: unzulaessige Urkundenart " + urkundenart);
+			default:
+				throw new IllegalArgumentException("Schulteilnahme: unzulaessige Urkundenart " + urkundenart);
 		}
 	}
 

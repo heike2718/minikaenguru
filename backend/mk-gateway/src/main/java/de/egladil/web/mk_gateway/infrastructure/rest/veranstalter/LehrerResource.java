@@ -60,7 +60,7 @@ public class LehrerResource {
 	SchulenAnmeldeinfoService schulenAnmeldeinfoService;
 
 	@Inject
-	AuthorizationService veranstalterAuthService;
+	AuthorizationService authorizationService;
 
 	@Inject
 	CheckCanRemoveSchuleService checkRemoveSchuleService;
@@ -77,7 +77,7 @@ public class LehrerResource {
 	static LehrerResource createForPermissionTest(final AuthorizationService veranstalterAuthService, final LehrerService lehrerService, final SecurityContext securityContext) {
 
 		LehrerResource result = new LehrerResource();
-		result.veranstalterAuthService = veranstalterAuthService;
+		result.authorizationService = veranstalterAuthService;
 		result.lehrerService = lehrerService;
 		result.securityContext = securityContext;
 		return result;
@@ -131,7 +131,7 @@ public class LehrerResource {
 		final Identifier lehrerID = new Identifier(principal.getName());
 		final Identifier schuleID = new Identifier(schulkuerzel);
 
-		veranstalterAuthService.checkPermissionForTeilnahmenummerAndReturnRolle(lehrerID, schuleID,
+		authorizationService.checkPermissionForTeilnahmenummerAndReturnRolle(lehrerID, schuleID,
 			"[getSchuleDetails - " + schulkuerzel + "]");
 
 		SchuleAPIModel schule = this.schulenAnmeldeinfoService.getSchuleWithWettbewerbsdetails(schulkuerzel, principal.getName());

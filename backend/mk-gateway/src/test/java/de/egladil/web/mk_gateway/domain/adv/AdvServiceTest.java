@@ -37,9 +37,6 @@ public class AdvServiceTest {
 	@InjectMock
 	private AuthorizationService authService;
 
-	@InjectMock
-	private VertragAuftragsverarbeitungRepository vertragRepository;
-
 	@Inject
 	private AdvService advService;
 

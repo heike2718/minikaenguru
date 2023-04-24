@@ -59,6 +59,9 @@ public class AdvService {
 	@Inject
 	VertragAuftragsverarbeitungPdfGenerator pdfGenerator;
 
+	@Inject
+	LoggableEventDelegate eventDelegate;
+
 	/**
 	 * Falls die Schule einen Vertrag abgeschlossen hat und der gegebene Lehrer dieser Schule angehört, wird das PDF generiert und
 	 * zurückgegeben.
@@ -167,7 +170,7 @@ public class AdvService {
 			String msg = "Es gibt keinen Vertragstext";
 
 			LOG.error(msg);
-			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
+			eventDelegate.fireDataInconsistencyEvent(msg, domainEventHandler);
 
 			throw new MkGatewayRuntimeException(msg);
 		}

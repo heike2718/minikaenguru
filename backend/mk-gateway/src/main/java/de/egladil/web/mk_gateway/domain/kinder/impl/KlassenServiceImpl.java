@@ -90,12 +90,6 @@ public class KlassenServiceImpl implements KlassenService {
 	@Inject
 	DomainEventHandler domainEventHandler;
 
-	private KlasseCreated klasseCreated;
-
-	private KlasseChanged klasseChanged;
-
-	private KlasseDeleted klasseDeleted;
-
 	private WettbewerbID wettbewerbID;
 
 	public static KlassenServiceImpl createForTest(final AuthorizationService authService, final KinderServiceImpl kinderRepository, final TeilnahmenRepository teilnahmenRepository, final VeranstalterRepository veranstalterRepository, final WettbewerbService wettbewerbService, final OnlineLoesungszettelService loesungszettelService, final KlassenRepository klassenRepository) {
@@ -251,7 +245,7 @@ public class KlassenServiceImpl implements KlassenService {
 
 		Klasse neueKlasse = klassenRepository.addKlasse(klasse);
 
-		klasseCreated = (KlasseCreated) new KlasseCreated(lehrerUuid)
+		KlasseCreated klasseCreated = (KlasseCreated) new KlasseCreated(lehrerUuid)
 			.withKlasseID(neueKlasse.identifier().identifier())
 			.withName(neueKlasse.name())
 			.withSchulkuerzel(schulkuerzel);
@@ -307,7 +301,7 @@ public class KlassenServiceImpl implements KlassenService {
 		klasse = klasse.withName(data.klasse().name());
 		Klasse geaenderte = klassenRepository.changeKlasse(klasse);
 
-		klasseChanged = (KlasseChanged) new KlasseChanged(lehrerUuid)
+		KlasseChanged klasseChanged = (KlasseChanged) new KlasseChanged(lehrerUuid)
 			.withNameAlt(nameAlt)
 			.withName(klasse.name())
 			.withKlasseID(klasseID.identifier())
@@ -374,7 +368,7 @@ public class KlassenServiceImpl implements KlassenService {
 
 		boolean result = klassenRepository.removeKlasse(klasse);
 
-		klasseDeleted = (KlasseDeleted) new KlasseDeleted(lehrerUuid)
+		KlasseDeleted klasseDeleted = (KlasseDeleted) new KlasseDeleted(lehrerUuid)
 			.withKlasseID(klasse.identifier().identifier())
 			.withName(klasse.name())
 			.withSchulkuerzel(schulkuerzel);
@@ -463,20 +457,4 @@ public class KlassenServiceImpl implements KlassenService {
 
 		return wettbewerbID;
 	}
-
-	KlasseCreated getKlasseCreated() {
-
-		return klasseCreated;
-	}
-
-	KlasseChanged getKlasseChanged() {
-
-		return klasseChanged;
-	}
-
-	KlasseDeleted getKlasseDeleted() {
-
-		return klasseDeleted;
-	}
-
 }

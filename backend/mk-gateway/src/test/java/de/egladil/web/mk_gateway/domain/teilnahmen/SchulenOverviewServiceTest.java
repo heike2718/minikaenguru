@@ -5,46 +5,58 @@
 package de.egladil.web.mk_gateway.domain.teilnahmen;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
+import javax.inject.Inject;
+
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
-import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
+import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.statistik.AuswertungsmodusInfoService;
+import de.egladil.web.mk_gateway.domain.veranstalter.Lehrer;
+import de.egladil.web.mk_gateway.domain.veranstalter.Person;
+import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
+import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * SchulenAnmeldeinfoServiceWithInMemoryDatabaseTest
  */
-public class SchulenOverviewServiceTest extends AbstractDomainServiceTest {
+@QuarkusTest
+public class SchulenOverviewServiceTest {
 
-	private SchulenOverviewService service;
+	private static final String UUID_LEHRER_1 = "UUID_LEHRER_1";
 
-	private AuswertungsmodusInfoService auswertungsmodusInfoService;
+	private static final String SCHULKUERZEL_1 = "SCHULKUERZEL_1";
 
-	@BeforeEach
-	@Override
-	protected void setUp() {
+	@Inject
+	SchulenOverviewService service;
 
-		super.setUp();
+	@InjectMock
+	AuswertungsmodusInfoService auswertungsmodusInfoService;
 
-		auswertungsmodusInfoService = Mockito.mock(AuswertungsmodusInfoService.class);
-		WettbewerbService wettbewerbService = WettbewerbService.createForTest(getMockitoBasedWettbewerbRepository());
-		AktuelleTeilnahmeService aktuelleTeilnahmeService = AktuelleTeilnahmeService.createForTest(getTeilnahmenRepository(),
-			wettbewerbService, getVeranstalterRepository());
+	@InjectMock
+	VeranstalterRepository veranstalterRepository;
 
-		service = SchulenOverviewService.createForTest(getVeranstalterRepository(), aktuelleTeilnahmeService,
-			auswertungsmodusInfoService);
-	}
+	@InjectMock
+	AktuelleTeilnahmeService aktuelleTeilnahmeService;
+
+	@InjectMock
+	DomainEventHandler domainEventHandler;
+
+	@InjectMock
+	LoggableEventDelegate eventDelegate;
 
 	@Test
 	void should_ermittleAnmeldedatenFuerSchulenReturnSchulen_when_zweiSchulen() {
@@ -52,71 +64,55 @@ public class SchulenOverviewServiceTest extends AbstractDomainServiceTest {
 		// Arrange
 		Identifier identifier = new Identifier(UUID_LEHRER_1);
 
+		List<Identifier> schulenIDs = new ArrayList<>();
+		schulenIDs.add(new Identifier(SCHULKUERZEL_1));
+		schulenIDs.add(new Identifier(UUID_LEHRER_1));
+
+		Veranstalter veranstalter = new Lehrer(new Person(UUID_LEHRER_1, UUID_LEHRER_1), false,
+			schulenIDs);
+		when(veranstalterRepository.ofId(new Identifier(UUID_LEHRER_1))).thenReturn(Optional.of(veranstalter));
+
 		// Act
 		List<SchuleAPIModel> schulen = service.ermittleAnmeldedatenFuerSchulen(identifier);
 
 		// Assert
 		assertEquals(2, schulen.size());
-		assertNull(service.getSecurityIncidentRegistered());
-
-		{
-
-			SchuleAPIModel schule = schulen.get(0);
-			assertEquals(SCHULKUERZEL_1, schule.kuerzel());
-			assertTrue(schule.aktuellAngemeldet());
-			assertNull(schule.land());
-			assertNull(schule.ort());
-			assertNull(schule.name());
-			assertNull(schule.details());
-		}
-
-		{
-
-			SchuleAPIModel schule = schulen.get(1);
-			assertEquals(SCHULKUERZEL_2, schule.kuerzel());
-			assertFalse(schule.aktuellAngemeldet());
-			assertNull(schule.land());
-			assertNull(schule.ort());
-			assertNull(schule.name());
-			assertNull(schule.details());
-		}
-
+		verify(eventDelegate, never()).fireSecurityEvent(any(), any());
 	}
 
 	@Test
 	void should_ermittleAnmeldedatenFuerSchulenReturnSchulen_when_eineSchulen() {
 
 		// Arrange
-		Identifier identifier = new Identifier(UUID_LEHRER_2);
+		Identifier identifier = new Identifier(UUID_LEHRER_1);
+
+		List<Identifier> schulenIDs = new ArrayList<>();
+		schulenIDs.add(new Identifier(SCHULKUERZEL_1));
+
+		Veranstalter veranstalter = new Lehrer(new Person(UUID_LEHRER_1, UUID_LEHRER_1), false,
+			schulenIDs);
+		when(veranstalterRepository.ofId(new Identifier(UUID_LEHRER_1))).thenReturn(Optional.of(veranstalter));
 
 		// Act
 		List<SchuleAPIModel> schulen = service.ermittleAnmeldedatenFuerSchulen(identifier);
 
 		// Assert
 		assertEquals(1, schulen.size());
-		assertNull(service.getSecurityIncidentRegistered());
-
-		{
-
-			SchuleAPIModel schule = schulen.get(0);
-			assertEquals(SCHULKUERZEL_1, schule.kuerzel());
-			assertTrue(schule.aktuellAngemeldet());
-			assertNull(schule.land());
-			assertNull(schule.ort());
-			assertNull(schule.name());
-			assertNull(schule.details());
-		}
+		verify(eventDelegate, never()).fireSecurityEvent(any(), any());
 
 	}
 
 	@Test
 	void should_ermittleAnmeldedatenFuerSchulen_returnEmptyArray_when_LehrerUnbekannt() {
 
+		// Arrange
+		when(veranstalterRepository.ofId(new Identifier(UUID_LEHRER_1))).thenReturn(Optional.empty());
+
 		// Act
-		List<SchuleAPIModel> schulen = service.ermittleAnmeldedatenFuerSchulen(new Identifier("lajsodzqowzo"));
+		List<SchuleAPIModel> schulen = service.ermittleAnmeldedatenFuerSchulen(new Identifier(UUID_LEHRER_1));
 
 		// Assert
 		assertEquals(0, schulen.size());
-		assertNotNull(service.getSecurityIncidentRegistered());
+		verify(eventDelegate).fireSecurityEvent(any(), any());
 	}
 }

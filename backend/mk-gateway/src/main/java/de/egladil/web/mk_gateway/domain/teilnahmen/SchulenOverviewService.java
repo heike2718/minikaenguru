@@ -17,13 +17,12 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
-import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
 import de.egladil.web.mk_gateway.domain.statistik.AuswertungsmodusInfoService;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
-import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.Auswertungsmodus;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 
 /**
  * SchulenOverviewService
@@ -44,9 +43,10 @@ public class SchulenOverviewService {
 	DomainEventHandler domainEventHandler;
 
 	@Inject
-	AuswertungsmodusInfoService auswertungsmodusInfoService;
+	LoggableEventDelegate eventDelegate;
 
-	private SecurityIncidentRegistered securityIncidentRegistered;
+	@Inject
+	AuswertungsmodusInfoService auswertungsmodusInfoService;
 
 	public static SchulenOverviewService createForTest(final VeranstalterRepository veranstalterRepo, final AktuelleTeilnahmeService teilnahmenService, final AuswertungsmodusInfoService auswertungsmodusInfoService) {
 
@@ -71,7 +71,7 @@ public class SchulenOverviewService {
 
 			LOG.warn(msg);
 
-			this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 
 			return items;
 		}
@@ -103,10 +103,5 @@ public class SchulenOverviewService {
 		}
 
 		return items;
-	}
-
-	SecurityIncidentRegistered getSecurityIncidentRegistered() {
-
-		return securityIncidentRegistered;
 	}
 }
