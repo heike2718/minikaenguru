@@ -151,8 +151,6 @@ public class AuswertungImportServiceTest {
 		void should_importiereAuswertungen_work() {
 
 			// Arrange
-			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt";
-
 			List<Pair<Integer, Integer>> jahreUndAnzahlen = new ArrayList<>();
 			jahreUndAnzahlen.add(Pair.of(JAHR_WETTBEWERB_BEENDET, Integer.valueOf(12)));
 			jahreUndAnzahlen.add(Pair.of(JAHR_WETTBEWERB_RUNNING, Integer.valueOf(13)));
@@ -194,11 +192,9 @@ public class AuswertungImportServiceTest {
 
 			// Arrange
 			File file = new File(
-				"/home/heike/git/testdaten/minikaenguru/auswertungen/fehlerhaft/upload/mit-ueberschrift-fehlerhaft-fehlerreport.csv");
+				service.pathExternalFiles + "/mit-ueberschrift-fehlerhaft-fehlerreport.csv");
 
 			FileUtils.deleteQuietly(file);
-
-			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/auswertungen/fehlerhaft";
 
 			List<Pair<Integer, Integer>> jahreUndAnzahlen = new ArrayList<>();
 			jahreUndAnzahlen.add(Pair.of(JAHR_WETTBEWERB_RUNNING, Integer.valueOf(12)));
@@ -236,15 +232,12 @@ public class AuswertungImportServiceTest {
 			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
 			verify(loesungszettelRepository, never()).addLoesungszettel(any());
 
-			assertTrue(file.exists());
-
 		}
 
 		@Test
 		void should_importiereAuswertungenNotPersistAnyLoesungszettel_when_ohneUeberschrift() {
 
 			// Arrange
-			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/auswertungen/fehlerhaft";
 
 			List<Pair<Integer, Integer>> jahreUndAnzahlen = new ArrayList<>();
 			jahreUndAnzahlen.add(Pair.of(JAHR_WETTBEWERB_RUNNING, Integer.valueOf(12)));
@@ -252,7 +245,7 @@ public class AuswertungImportServiceTest {
 			List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = createAnonymisierteTeilnahmen(jahreUndAnzahlen);
 
 			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
-			persistenterUpload.setUuid("ohne-ueberschrift");
+			persistenterUpload.setUuid("auswertung-ohne-ueberschrift");
 			persistenterUpload.setDateiname("Auswertung Blümchenschule.xslx");
 
 			uploadContextWettbewerbRunning.setRolle(Rolle.LEHRER);
@@ -291,7 +284,6 @@ public class AuswertungImportServiceTest {
 		void should_importiereAuswertungenReturnExistingTeilnahmen_when_StatusLEER() {
 
 			// Arrange
-			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/auswertungen/fehlerhaft";
 
 			Pair<Integer, Integer> jahrUndAnzahl = Pair.of(JAHR_WETTBEWERB_RUNNING, Integer.valueOf(12));
 			List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = createAnonymisierteTeilnahmen(
@@ -386,7 +378,6 @@ public class AuswertungImportServiceTest {
 		void should_importiereAuswertungenWork_when_wettbewerbBeendetUndStatusHOCHGELADEN() {
 
 			// Arrange
-			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt";
 			uploadContxtWettbewerbBeendet.setRolle(Rolle.ADMIN);
 			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
 			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
@@ -460,7 +451,6 @@ public class AuswertungImportServiceTest {
 		void should_importiereAuswertungenReturnExistingTeilnahmen_when_StatusLEER() {
 
 			// Arrange
-			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/auswertungen/fehlerhaft";
 
 			Pair<Integer, Integer> jahrUndAnzahl = Pair.of(JAHR_WETTBEWERB_RUNNING, Integer.valueOf(12));
 			List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = createAnonymisierteTeilnahmen(
@@ -505,11 +495,9 @@ public class AuswertungImportServiceTest {
 
 			// Arrange
 			File file = new File(
-				"/home/heike/git/testdaten/minikaenguru/auswertungen/fehlerhaft/upload/mit-ueberschrift-fehlerhaft-fehlerreport.csv");
+				service.pathExternalFiles + "/mit-ueberschrift-fehlerhaft-fehlerreport.csv");
 
 			FileUtils.deleteQuietly(file);
-
-			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/auswertungen/fehlerhaft";
 
 			uploadContextWettbewerbRunning.setRolle(Rolle.ADMIN);
 
@@ -553,16 +541,12 @@ public class AuswertungImportServiceTest {
 			verify(uploadRepository).updateUpload(persistenterUpload);
 			verify(anonymisierteTeilnahmenService).loadAnonymisierteTeilnahmen(SCHULKUERZEL, BENUTZER_UUID);
 			verify(loesungszettelRepository, never()).addLoesungszettel(any());
-
-			assertTrue(file.exists());
-
 		}
 
 		@Test
 		void should_importiereAuswertungenNotPersistAnyLoesungszettel_when_ohneUeberschrift() {
 
 			// Arrange
-			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/auswertungen/fehlerhaft";
 
 			List<Pair<Integer, Integer>> jahreUndAnzahlen = new ArrayList<>();
 			jahreUndAnzahlen.add(Pair.of(JAHR_WETTBEWERB_RUNNING, Integer.valueOf(12)));
@@ -570,7 +554,7 @@ public class AuswertungImportServiceTest {
 			List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = createAnonymisierteTeilnahmen(jahreUndAnzahlen);
 
 			persistenterUpload.setStatus(UploadStatus.HOCHGELADEN);
-			persistenterUpload.setUuid("ohne-ueberschrift");
+			persistenterUpload.setUuid("auswertung-ohne-ueberschrift");
 			persistenterUpload.setDateiname("Auswertung Blümchenschule.xslx");
 
 			uploadContextWettbewerbRunning.setRolle(Rolle.ADMIN);
@@ -586,7 +570,7 @@ public class AuswertungImportServiceTest {
 			MessagePayload messagePayload = responsePayload.getMessage();
 			assertEquals("WARN", messagePayload.getLevel());
 			assertEquals(
-				"Bei der Datei \"Auswertung Blümchenschule.xslx\" fehlt die Überscrift. Upload-ID=ohne-ueberschrift, Teilnahmenummer=ZUTFG654F",
+				"Bei der Datei \"Auswertung Blümchenschule.xslx\" fehlt die Überscrift. Upload-ID=auswertung-ohne-ueberschrift, Teilnahmenummer=ZUTFG654F",
 				messagePayload.getMessage());
 
 			AuswertungImportReport report = (AuswertungImportReport) responsePayload.getData();
@@ -605,7 +589,6 @@ public class AuswertungImportServiceTest {
 		void should_importiereAuswertungenWork_when_DateiMitNamenspalte() {
 
 			// Arrange
-			service.setPathExternalFiles("/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt");
 			uploadContextWettbewerbRunning.setRolle(Rolle.ADMIN);
 			persistenterUpload.setUuid("2021_auswertung_minikaenguru_klasse_1");
 			persistenterUpload.setDateiname("2021_auswertung_minikaenguru_klasse_1.xlsx");

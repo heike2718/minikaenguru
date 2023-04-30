@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.kinder.KlassenService;
@@ -60,9 +59,6 @@ public class LehrerResource {
 	SchulenAnmeldeinfoService schulenAnmeldeinfoService;
 
 	@Inject
-	AuthorizationService authorizationService;
-
-	@Inject
 	CheckCanRemoveSchuleService checkRemoveSchuleService;
 
 	@Inject
@@ -73,15 +69,6 @@ public class LehrerResource {
 
 	@Inject
 	DevDelayService delayService;
-
-	static LehrerResource createForPermissionTest(final AuthorizationService veranstalterAuthService, final LehrerService lehrerService, final SecurityContext securityContext) {
-
-		LehrerResource result = new LehrerResource();
-		result.authorizationService = veranstalterAuthService;
-		result.lehrerService = lehrerService;
-		result.securityContext = securityContext;
-		return result;
-	}
 
 	@GET
 	public Response getLehrer() {
@@ -127,12 +114,6 @@ public class LehrerResource {
 		this.delayService.pause();
 
 		Principal principal = securityContext.getUserPrincipal();
-
-		final Identifier lehrerID = new Identifier(principal.getName());
-		final Identifier schuleID = new Identifier(schulkuerzel);
-
-		authorizationService.checkPermissionForTeilnahmenummerAndReturnRolle(lehrerID, schuleID,
-			"[getSchuleDetails - " + schulkuerzel + "]");
 
 		SchuleAPIModel schule = this.schulenAnmeldeinfoService.getSchuleWithWettbewerbsdetails(schulkuerzel, principal.getName());
 

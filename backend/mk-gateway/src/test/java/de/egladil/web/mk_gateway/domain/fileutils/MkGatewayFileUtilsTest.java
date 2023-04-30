@@ -15,10 +15,12 @@ import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import io.quarkus.test.junit.QuarkusTest;
 
 /**
  * MkGatewayFileUtilsTest
  */
+@QuarkusTest
 public class MkGatewayFileUtilsTest {
 
 	@Test
@@ -97,7 +99,7 @@ public class MkGatewayFileUtilsTest {
 	void should_readFileContent_IgnoreEmptyLines() {
 
 		// Arrange
-		String path = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste-mit-leerzeilen.csv";
+		String path = "/home/heike/git/testdaten/minikaenguru/upload/klassenliste-mit-leerzeilen.csv";
 
 		// Act
 		List<String> lines = MkGatewayFileUtils.readLines(path, MkGatewayFileUtils.DEFAULT_ENCODING);

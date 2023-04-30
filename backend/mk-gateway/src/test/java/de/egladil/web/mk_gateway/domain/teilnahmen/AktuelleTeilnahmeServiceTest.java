@@ -5,53 +5,72 @@
 package de.egladil.web.mk_gateway.domain.teilnahmen;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.TestConstants;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
+import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.PrivatteilnahmeAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.SchulanmeldungRequestPayload;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.SchulteilnahmeAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.events.PrivatteilnahmeCreated;
 import de.egladil.web.mk_gateway.domain.teilnahmen.events.SchulteilnahmeCreated;
+import de.egladil.web.mk_gateway.domain.veranstalter.Lehrer;
+import de.egladil.web.mk_gateway.domain.veranstalter.Person;
+import de.egladil.web.mk_gateway.domain.veranstalter.Privatveranstalter;
+import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
+import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
+import de.egladil.web.mk_gateway.domain.veranstalter.ZugangUnterlagen;
+import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * AktuelleTeilnahmeServiceTest
  */
-public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
+@QuarkusTest
+public class AktuelleTeilnahmeServiceTest {
 
-	private AktuelleTeilnahmeService service;
+	@InjectMock
+	DomainEventHandler domainEventHandler;
 
-	private WettbewerbService wettbewerbService;
+	@InjectMock
+	LoggableEventDelegate eventDelegate;
 
-	@Override
-	@BeforeEach
-	protected void setUp() {
+	@InjectMock
+	VeranstalterRepository veranstalterRepository;
 
-		super.setUp();
+	@InjectMock
+	WettbewerbService wettbewerbService;
 
-		wettbewerbService = WettbewerbService.createForTest(getMockitoBasedWettbewerbRepository());
+	@InjectMock
+	TeilnahmenRepository teilnahmenRepository;
 
-		service = AktuelleTeilnahmeService.createForTest(getTeilnahmenRepository(), wettbewerbService, getVeranstalterRepository());
-	}
+	@Inject
+	AktuelleTeilnahmeService service;
 
 	@Nested
 	@DisplayName("Aktuelle Teilnahme Feature")
@@ -110,6 +129,7 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 
 			// Arrange
 			String teilnahmenummer = "HJKGDTDTU";
+			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.empty());
 
 			// Act
 			Optional<Teilnahme> opt = service.aktuelleTeilnahme(teilnahmenummer);
@@ -124,6 +144,8 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 
 			// Arrange
 			String teilnahmenummer = "HJKGDTDTU";
+			when(wettbewerbService.aktuellerWettbewerb())
+				.thenReturn(Optional.of(getAktuellerWettbewerb(TestConstants.WETTBEWERBSJAHR_AKTUELL, WettbewerbStatus.ANMELDUNG)));
 
 			// Act
 			Optional<Teilnahme> opt = service.aktuelleTeilnahme(teilnahmenummer);
@@ -137,15 +159,17 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 		void should_GetAktuelleTeilnahmeReturnNonEmpty_when_Angemeldet() {
 
 			// Arrange
-			Teilnahme vorhandene = new Privatteilnahme(getAktuellerWettbewerb(WETTBEWERBSJAHR_AKTUELL).id(),
-				new Identifier(TEILNAHMENUMMER_PRIVAT));
+			Teilnahme vorhandene = new Privatteilnahme(
+				getAktuellerWettbewerb(TestConstants.WETTBEWERBSJAHR_AKTUELL, WettbewerbStatus.ANMELDUNG).id(),
+				new Identifier(TestConstants.TEILNAHMENUMMER_PRIVAT));
+
+			when(teilnahmenRepository.addTeilnahme(vorhandene)).thenReturn(Boolean.FALSE);
 
 			// Act
-			Optional<Teilnahme> opt = service.aktuelleTeilnahme(TEILNAHMENUMMER_PRIVAT);
+			service.aktuelleTeilnahme(TestConstants.TEILNAHMENUMMER_PRIVAT);
 
 			// Assert
-			assertEquals(vorhandene, opt.get());
-			assertEquals(0, getTeilnahmenRepository().getTeilnahmeAdded());
+			verify(teilnahmenRepository, never()).addTeilnahme(vorhandene);
 
 		}
 
@@ -168,10 +192,10 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			} catch (BadRequestException e) {
 
 				assertEquals("payload darf nicht null sein.", e.getMessage());
-				assertNull(service.schulteilnahmeCreated());
-				assertNull(service.privatteilnahmeCreatedEvent());
-				assertNull(service.getSecurityIncidentRegistered());
-				assertNull(service.getDataInconsistencyRegistered());
+				verify(domainEventHandler, never()).handleEvent(any(SchulteilnahmeCreated.class));
+				verify(domainEventHandler, never()).handleEvent(any(PrivatteilnahmeCreated.class));
+				verify(eventDelegate, never()).fireDataInconsistencyEvent(any(), any());
+				verify(eventDelegate, never()).fireSecurityEvent(any(), any());
 			}
 		}
 
@@ -191,10 +215,10 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			} catch (BadRequestException e) {
 
 				assertEquals("uuid darf nicht blank sein.", e.getMessage());
-				assertNull(service.schulteilnahmeCreated());
-				assertNull(service.privatteilnahmeCreatedEvent());
-				assertNull(service.getSecurityIncidentRegistered());
-				assertNull(service.getDataInconsistencyRegistered());
+				verify(domainEventHandler, never()).handleEvent(any(SchulteilnahmeCreated.class));
+				verify(domainEventHandler, never()).handleEvent(any(PrivatteilnahmeCreated.class));
+				verify(eventDelegate, never()).fireDataInconsistencyEvent(any(), any());
+				verify(eventDelegate, never()).fireSecurityEvent(any(), any());
 			}
 		}
 
@@ -213,10 +237,10 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			} catch (BadRequestException e) {
 
 				assertEquals("uuid darf nicht blank sein.", e.getMessage());
-				assertNull(service.schulteilnahmeCreated());
-				assertNull(service.privatteilnahmeCreatedEvent());
-				assertNull(service.getSecurityIncidentRegistered());
-				assertNull(service.getDataInconsistencyRegistered());
+				verify(domainEventHandler, never()).handleEvent(any(SchulteilnahmeCreated.class));
+				verify(domainEventHandler, never()).handleEvent(any(PrivatteilnahmeCreated.class));
+				verify(eventDelegate, never()).fireDataInconsistencyEvent(any(), any());
+				verify(eventDelegate, never()).fireSecurityEvent(any(), any());
 			}
 		}
 
@@ -235,10 +259,10 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			} catch (BadRequestException e) {
 
 				assertEquals("schulkuerzel darf nicht blank sein.", e.getMessage());
-				assertNull(service.schulteilnahmeCreated());
-				assertNull(service.privatteilnahmeCreatedEvent());
-				assertNull(service.getSecurityIncidentRegistered());
-				assertNull(service.getDataInconsistencyRegistered());
+				verify(domainEventHandler, never()).handleEvent(any(SchulteilnahmeCreated.class));
+				verify(domainEventHandler, never()).handleEvent(any(PrivatteilnahmeCreated.class));
+				verify(eventDelegate, never()).fireDataInconsistencyEvent(any(), any());
+				verify(eventDelegate, never()).fireSecurityEvent(any(), any());
 			}
 		}
 
@@ -257,10 +281,10 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			} catch (BadRequestException e) {
 
 				assertEquals("schulkuerzel darf nicht blank sein.", e.getMessage());
-				assertNull(service.schulteilnahmeCreated());
-				assertNull(service.privatteilnahmeCreatedEvent());
-				assertNull(service.getSecurityIncidentRegistered());
-				assertNull(service.getDataInconsistencyRegistered());
+				verify(domainEventHandler, never()).handleEvent(any(SchulteilnahmeCreated.class));
+				verify(domainEventHandler, never()).handleEvent(any(PrivatteilnahmeCreated.class));
+				verify(eventDelegate, never()).fireDataInconsistencyEvent(any(), any());
+				verify(eventDelegate, never()).fireSecurityEvent(any(), any());
 			}
 		}
 
@@ -279,10 +303,10 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			} catch (BadRequestException e) {
 
 				assertEquals("schulname darf nicht blank sein.", e.getMessage());
-				assertNull(service.schulteilnahmeCreated());
-				assertNull(service.privatteilnahmeCreatedEvent());
-				assertNull(service.getSecurityIncidentRegistered());
-				assertNull(service.getDataInconsistencyRegistered());
+				verify(domainEventHandler, never()).handleEvent(any(SchulteilnahmeCreated.class));
+				verify(domainEventHandler, never()).handleEvent(any(PrivatteilnahmeCreated.class));
+				verify(eventDelegate, never()).fireDataInconsistencyEvent(any(), any());
+				verify(eventDelegate, never()).fireSecurityEvent(any(), any());
 			}
 		}
 
@@ -301,10 +325,10 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			} catch (BadRequestException e) {
 
 				assertEquals("schulname darf nicht blank sein.", e.getMessage());
-				assertNull(service.schulteilnahmeCreated());
-				assertNull(service.privatteilnahmeCreatedEvent());
-				assertNull(service.getSecurityIncidentRegistered());
-				assertNull(service.getDataInconsistencyRegistered());
+				verify(domainEventHandler, never()).handleEvent(any(SchulteilnahmeCreated.class));
+				verify(domainEventHandler, never()).handleEvent(any(PrivatteilnahmeCreated.class));
+				verify(eventDelegate, never()).fireDataInconsistencyEvent(any(), any());
+				verify(eventDelegate, never()).fireSecurityEvent(any(), any());
 			}
 		}
 
@@ -312,31 +336,23 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 		void should_SchuleAnmelden_call_WettbewerbImAnmeldemodus() {
 
 			// Arrange
-			String expectedMessage = "keine Anmeldung möglich hähähä";
-
-			WettbewerbService mockService = Mockito.mock(WettbewerbService.class);
-			Mockito.when(mockService.aktuellerWettbewerbImAnmeldemodus())
-				.thenThrow(new IllegalStateException(expectedMessage));
+			when(wettbewerbService.aktuellerWettbewerbImAnmeldemodus()).thenThrow(new IllegalStateException());
 
 			String uuid = "TZUTUFFZUF";
 			String schulkuerzel = "UTGFR56FR";
 			SchulanmeldungRequestPayload payload = SchulanmeldungRequestPayload.create(schulkuerzel, "Antonschule");
 
-			service = AktuelleTeilnahmeService.createForTest(getTeilnahmenRepository(), mockService, getVeranstalterRepository());
-
 			// Act
 			ResponsePayload responsePayload = service.schuleAnmelden(payload, uuid);
 
-			// Assert
+			verify(veranstalterRepository, never()).ofId(any());
+			verify(teilnahmenRepository, never()).ofTeilnahmeIdentifier(any());
+			verify(domainEventHandler, never()).handleEvent(any(SchulteilnahmeCreated.class));
+			verify(domainEventHandler, never()).handleEvent(any(PrivatteilnahmeCreated.class));
+			verify(eventDelegate, never()).fireDataInconsistencyEvent(any(), any());
+			verify(eventDelegate, never()).fireSecurityEvent(any(), any());
 
-			MessagePayload messagePayload = responsePayload.getMessage();
-
-			assertEquals(expectedMessage, messagePayload.getMessage());
-			assertEquals("WARN", messagePayload.getLevel());
-			assertNull(service.schulteilnahmeCreated());
-			assertNull(service.privatteilnahmeCreatedEvent());
-			assertNull(service.getSecurityIncidentRegistered());
-			assertNull(service.getDataInconsistencyRegistered());
+			assertEquals("WARN", responsePayload.getMessage().getLevel());
 
 		}
 
@@ -357,10 +373,10 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			} catch (AccessDeniedException e) {
 
 				assertEquals("keinen Veranstalter mit UUID=basghoqh gefunden", e.getMessage());
-				assertNull(service.schulteilnahmeCreated());
-				assertNotNull(service.getSecurityIncidentRegistered());
-				assertNull(service.privatteilnahmeCreatedEvent());
-				assertNull(service.getDataInconsistencyRegistered());
+				verify(domainEventHandler, never()).handleEvent(any(SchulteilnahmeCreated.class));
+				verify(domainEventHandler, never()).handleEvent(any(PrivatteilnahmeCreated.class));
+				verify(eventDelegate, never()).fireDataInconsistencyEvent(any(), any());
+				verify(eventDelegate).fireSecurityEvent(any(), any());
 
 			}
 
@@ -370,23 +386,28 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 		void should_SchuleAnmeldenThrowException_when_ZugangUnterlagenEntzogen() {
 
 			// Arrange
-			String uuid = UUID_LEHRER_GESPERRT;
-			String schulkuerzel = SCHULKUERZEL_1;
-			SchulanmeldungRequestPayload payload = SchulanmeldungRequestPayload.create(schulkuerzel, "Antonschule");
+			SchulanmeldungRequestPayload payload = SchulanmeldungRequestPayload.create(TestConstants.SCHULKUERZEL_1, "Antonschule");
+
+			Veranstalter veranstalter = new Lehrer(new Person(TestConstants.UUID_LEHRER_GESPERRT, "bösewicht"), false,
+				Collections.singletonList(new Identifier(TestConstants.SCHULKUERZEL_1)))
+					.withZugangUnterlagen(ZugangUnterlagen.ENTZOGEN);
+
+			when(veranstalterRepository.ofId(new Identifier(TestConstants.UUID_LEHRER_GESPERRT)))
+				.thenReturn(Optional.of(veranstalter));
 
 			// Act
 			try {
 
-				service.schuleAnmelden(payload, uuid);
+				service.schuleAnmelden(payload, TestConstants.UUID_LEHRER_GESPERRT);
 				fail("keine AccessDeniedException");
 
 			} catch (AccessDeniedException e) {
 
 				assertEquals("Dem Veranstalter wurde der Zugang zu den Unterlagen entzogen.", e.getMessage());
-				assertNull(service.schulteilnahmeCreated());
-				assertNotNull(service.getSecurityIncidentRegistered());
-				assertNull(service.privatteilnahmeCreatedEvent());
-				assertNull(service.getDataInconsistencyRegistered());
+				verify(domainEventHandler, never()).handleEvent(any(SchulteilnahmeCreated.class));
+				verify(domainEventHandler, never()).handleEvent(any(PrivatteilnahmeCreated.class));
+				verify(eventDelegate, never()).fireDataInconsistencyEvent(any(), any());
+				verify(eventDelegate).fireSecurityEvent(any(), any());
 			}
 		}
 
@@ -394,9 +415,18 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 		void should_SchuleAnmeldenThrowException_when_VeranstalterKeinLehrer() {
 
 			// Arrange
-			String uuid = UUID_PRIVAT;
-			String schulkuerzel = SCHULKUERZEL_1;
+			String uuid = TestConstants.UUID_PRIVAT;
+			String schulkuerzel = TestConstants.SCHULKUERZEL_1;
 			SchulanmeldungRequestPayload payload = SchulanmeldungRequestPayload.create(schulkuerzel, "Antonschule");
+
+			Veranstalter veranstalter = new Privatveranstalter(new Person(TestConstants.UUID_PRIVAT, "bösewicht"), false,
+				Collections.singletonList(new Identifier(TestConstants.SCHULKUERZEL_1)));
+
+			Wettbewerb wettbewerb = getAktuellerWettbewerb(2020, WettbewerbStatus.DOWNLOAD_LEHRER);
+			when(wettbewerbService.aktuellerWettbewerbImAnmeldemodus()).thenReturn(wettbewerb);
+
+			when(veranstalterRepository.ofId(new Identifier(TestConstants.UUID_PRIVAT)))
+				.thenReturn(Optional.of(veranstalter));
 
 			// Act
 			try {
@@ -407,10 +437,10 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			} catch (AccessDeniedException e) {
 
 				assertEquals("Dies ist ein Privatveranstalter. Nur Lehrer dürfen diese Funktion aufrufen.", e.getMessage());
-				assertNull(service.schulteilnahmeCreated());
-				assertNotNull(service.getSecurityIncidentRegistered());
-				assertNull(service.privatteilnahmeCreatedEvent());
-				assertNull(service.getDataInconsistencyRegistered());
+				verify(domainEventHandler, never()).handleEvent(any(SchulteilnahmeCreated.class));
+				verify(domainEventHandler, never()).handleEvent(any(PrivatteilnahmeCreated.class));
+				verify(eventDelegate, never()).fireDataInconsistencyEvent(any(), any());
+				verify(eventDelegate).fireSecurityEvent(any(), any());
 			}
 		}
 
@@ -418,9 +448,18 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 		void should_SchuleAnmeldenThrowException_when_LehrerAndererSchule() {
 
 			// Arrange
-			String uuid = UUID_LEHRER_ANDERE_SCHULE;
-			String schulkuerzel = SCHULKUERZEL_1;
+			String uuid = TestConstants.UUID_LEHRER_ANDERE_SCHULE;
+			String schulkuerzel = TestConstants.SCHULKUERZEL_1;
 			SchulanmeldungRequestPayload payload = SchulanmeldungRequestPayload.create(schulkuerzel, "Antonschule");
+
+			Wettbewerb wettbewerb = getAktuellerWettbewerb(2020, WettbewerbStatus.DOWNLOAD_LEHRER);
+			when(wettbewerbService.aktuellerWettbewerbImAnmeldemodus()).thenReturn(wettbewerb);
+
+			Veranstalter veranstalter = new Lehrer(new Person(TestConstants.UUID_LEHRER_ANDERE_SCHULE, "bösewicht"), false,
+				Collections.singletonList(new Identifier(TestConstants.SCHULKUERZEL_2)));
+
+			when(veranstalterRepository.ofId(new Identifier(TestConstants.UUID_LEHRER_ANDERE_SCHULE)))
+				.thenReturn(Optional.of(veranstalter));
 
 			// Act
 			try {
@@ -431,10 +470,10 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			} catch (AccessDeniedException e) {
 
 				assertEquals("Der Lehrer gehört nicht zur anzumeldenden Schule.", e.getMessage());
-				assertNull(service.schulteilnahmeCreated());
-				assertNotNull(service.getSecurityIncidentRegistered());
-				assertNull(service.privatteilnahmeCreatedEvent());
-				assertNull(service.getDataInconsistencyRegistered());
+				verify(domainEventHandler, never()).handleEvent(any(SchulteilnahmeCreated.class));
+				verify(domainEventHandler, never()).handleEvent(any(PrivatteilnahmeCreated.class));
+				verify(eventDelegate, never()).fireDataInconsistencyEvent(any(), any());
+				verify(eventDelegate).fireSecurityEvent(any(), any());
 			}
 		}
 
@@ -442,48 +481,60 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 		void should_SchuleAnmeldenDoNothing_when_TeilnahmeVorhanden() {
 
 			// Arrange
-			String uuid = UUID_LEHRER_1;
-			String schulkuerzel = SCHULKUERZEL_1;
+			String uuid = TestConstants.UUID_LEHRER_1;
+			String schulkuerzel = TestConstants.SCHULKUERZEL_1;
 			SchulanmeldungRequestPayload payload = SchulanmeldungRequestPayload.create(schulkuerzel, "Antonschule");
 
-			// Act
-			SchulteilnahmeAPIModel actual = (SchulteilnahmeAPIModel) service.schuleAnmelden(payload, uuid).getData();
+			Veranstalter veranstalter = new Lehrer(new Person(TestConstants.UUID_LEHRER_1, "Herr Müller"), false,
+				Collections.singletonList(new Identifier(TestConstants.SCHULKUERZEL_1)));
 
-			// Assert
-			assertEquals("Christaschule", actual.nameUrkunde());
-			assertEquals("Hans Wurst", actual.angemeldetDurch());
-			assertNull(service.schulteilnahmeCreated());
-			assertNull(service.getSecurityIncidentRegistered());
-			assertNull(service.privatteilnahmeCreatedEvent());
-			assertNull(service.getDataInconsistencyRegistered());
-		}
+			Wettbewerb wettbewerb = getAktuellerWettbewerb(2020, WettbewerbStatus.DOWNLOAD_LEHRER);
+			when(wettbewerbService.aktuellerWettbewerbImAnmeldemodus()).thenReturn(wettbewerb);
 
-		@Test
-		void should_SchuleAnmeldenCreateNew_when_TeilnahmeNichtVorhanden() {
+			when(veranstalterRepository.ofId(new Identifier(TestConstants.UUID_LEHRER_1)))
+				.thenReturn(Optional.of(veranstalter));
 
-			// Arrange
-			String uuid = UUID_LEHRER_1;
-			String schulkuerzel = SCHULKUERZEL_2;
-			SchulanmeldungRequestPayload payload = SchulanmeldungRequestPayload.create(schulkuerzel, "Antonschule");
+			Teilnahme teilnahme = new Schulteilnahme(wettbewerb.id(), new Identifier(TestConstants.SCHULKUERZEL_1),
+				payload.schulname(), new Identifier(TestConstants.UUID_LEHRER_1));
+			when(teilnahmenRepository.ofTeilnahmeIdentifier(any())).thenReturn(Optional.of(teilnahme));
 
 			// Act
 			SchulteilnahmeAPIModel actual = (SchulteilnahmeAPIModel) service.schuleAnmelden(payload, uuid).getData();
 
 			// Assert
 			assertEquals("Antonschule", actual.nameUrkunde());
-			assertEquals("Hans Wurst", actual.angemeldetDurch());
+			assertEquals("Herr Müller", actual.angemeldetDurch());
+			verify(domainEventHandler, never()).handleEvent(any(SchulteilnahmeCreated.class));
+			verify(domainEventHandler, never()).handleEvent(any(PrivatteilnahmeCreated.class));
+			verify(eventDelegate, never()).fireDataInconsistencyEvent(any(), any());
+			verify(eventDelegate, never()).fireSecurityEvent(any(), any());
+		}
 
-			SchulteilnahmeCreated event = service.schulteilnahmeCreated();
+		@Test
+		void should_SchuleAnmeldenCreateNew_when_TeilnahmeNichtVorhanden() {
 
-			assertNotNull(event);
-			assertEquals("Antonschule", event.schulname());
-			assertEquals(SCHULKUERZEL_2, event.teilnahmenummer());
-			assertEquals(UUID_LEHRER_1, event.triggeringUser());
-			assertEquals(Integer.valueOf(2020), event.wettbewerbsjahr());
+			// Arrange
+			String uuid = TestConstants.UUID_LEHRER_1;
+			String schulkuerzel = TestConstants.SCHULKUERZEL_1;
+			SchulanmeldungRequestPayload payload = SchulanmeldungRequestPayload.create(schulkuerzel, "Antonschule");
 
-			assertNull(service.getSecurityIncidentRegistered());
-			assertNull(service.privatteilnahmeCreatedEvent());
-			assertNull(service.getDataInconsistencyRegistered());
+			Veranstalter veranstalter = new Lehrer(new Person(TestConstants.UUID_LEHRER_1, "Herr Müller"), false,
+				Collections.singletonList(new Identifier(TestConstants.SCHULKUERZEL_1)));
+
+			Wettbewerb wettbewerb = getAktuellerWettbewerb(2020, WettbewerbStatus.DOWNLOAD_LEHRER);
+			when(wettbewerbService.aktuellerWettbewerbImAnmeldemodus()).thenReturn(wettbewerb);
+
+			when(veranstalterRepository.ofId(new Identifier(TestConstants.UUID_LEHRER_1)))
+				.thenReturn(Optional.of(veranstalter));
+
+			// Act
+			service.schuleAnmelden(payload, uuid).getData();
+
+			// Assert
+			verify(domainEventHandler).handleEvent(any(SchulteilnahmeCreated.class));
+			verify(domainEventHandler, never()).handleEvent(any(PrivatteilnahmeCreated.class));
+			verify(eventDelegate, never()).fireDataInconsistencyEvent(any(), any());
+			verify(eventDelegate, never()).fireSecurityEvent(any(), any());
 		}
 
 	}
@@ -505,9 +556,10 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			} catch (BadRequestException e) {
 
 				assertEquals("uuid darf nicht blank sein.", e.getMessage());
-				assertNull(service.privatteilnahmeCreatedEvent());
-				assertNull(service.getSecurityIncidentRegistered());
-				assertNull(service.getDataInconsistencyRegistered());
+				verify(domainEventHandler, never()).handleEvent(any(SchulteilnahmeCreated.class));
+				verify(domainEventHandler, never()).handleEvent(any(PrivatteilnahmeCreated.class));
+				verify(eventDelegate, never()).fireDataInconsistencyEvent(any(), any());
+				verify(eventDelegate, never()).fireSecurityEvent(any(), any());
 			}
 
 		}
@@ -525,9 +577,10 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			} catch (BadRequestException e) {
 
 				assertEquals("uuid darf nicht blank sein.", e.getMessage());
-				assertNull(service.privatteilnahmeCreatedEvent());
-				assertNull(service.getSecurityIncidentRegistered());
-				assertNull(service.getDataInconsistencyRegistered());
+				verify(domainEventHandler, never()).handleEvent(any(SchulteilnahmeCreated.class));
+				verify(domainEventHandler, never()).handleEvent(any(PrivatteilnahmeCreated.class));
+				verify(eventDelegate, never()).fireDataInconsistencyEvent(any(), any());
+				verify(eventDelegate, never()).fireSecurityEvent(any(), any());
 			}
 
 		}
@@ -547,9 +600,10 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 			} catch (AccessDeniedException e) {
 
 				assertEquals("keinen Veranstalter mit UUID=basghoqh gefunden", e.getMessage());
-				assertNull(service.privatteilnahmeCreatedEvent());
-				assertNotNull(service.getSecurityIncidentRegistered());
-				assertNull(service.getDataInconsistencyRegistered());
+				verify(domainEventHandler, never()).handleEvent(any(SchulteilnahmeCreated.class));
+				verify(domainEventHandler, never()).handleEvent(any(PrivatteilnahmeCreated.class));
+				verify(eventDelegate, never()).fireDataInconsistencyEvent(any(), any());
+				verify(eventDelegate).fireSecurityEvent(any(), any());
 			}
 
 		}
@@ -558,18 +612,29 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 		void should_PrivatpersonAnmeldenThrowException_when_ZugangUnterlagenEntzogen() {
 
 			// Arrange
+			Veranstalter veranstalter = new Privatveranstalter(new Person(TestConstants.UUID_PRIVAT_GESPERRT, "bösewicht"), false,
+				Collections.singletonList(new Identifier(TestConstants.SCHULKUERZEL_1)))
+					.withZugangUnterlagen(ZugangUnterlagen.ENTZOGEN);
+
+			Wettbewerb wettbewerb = getAktuellerWettbewerb(2020, WettbewerbStatus.DOWNLOAD_LEHRER);
+			when(wettbewerbService.aktuellerWettbewerbImAnmeldemodus()).thenReturn(wettbewerb);
+
+			when(veranstalterRepository.ofId(new Identifier(TestConstants.UUID_PRIVAT_GESPERRT)))
+				.thenReturn(Optional.of(veranstalter));
+
 			// Act
 			try {
 
-				service.privatpersonAnmelden(UUID_PRIVAT_GESPERRT);
+				service.privatpersonAnmelden(TestConstants.UUID_PRIVAT_GESPERRT);
 				fail("keine AccessDeniedException");
 
 			} catch (AccessDeniedException e) {
 
 				assertEquals("Dem Veranstalter wurde der Zugang zu den Unterlagen entzogen.", e.getMessage());
-				assertNull(service.privatteilnahmeCreatedEvent());
-				assertNotNull(service.getSecurityIncidentRegistered());
-				assertNull(service.getDataInconsistencyRegistered());
+				verify(domainEventHandler, never()).handleEvent(any(SchulteilnahmeCreated.class));
+				verify(domainEventHandler, never()).handleEvent(any(PrivatteilnahmeCreated.class));
+				verify(eventDelegate, never()).fireDataInconsistencyEvent(any(), any());
+				verify(eventDelegate).fireSecurityEvent(any(), any());
 			}
 		}
 
@@ -577,86 +642,119 @@ public class AktuelleTeilnahmeServiceTest extends AbstractDomainServiceTest {
 		void should_PrivatpersonAnmeldenThrowException_when_VeranstalterLehrer() {
 
 			// Arrange
+			Veranstalter veranstalter = new Lehrer(new Person(TestConstants.UUID_LEHRER_1, "Herr Müller"), false,
+				Collections.singletonList(new Identifier(TestConstants.SCHULKUERZEL_1)));
+
+			when(veranstalterRepository.ofId(new Identifier(TestConstants.UUID_LEHRER_1)))
+				.thenReturn(Optional.of(veranstalter));
+
 			// Act
 			try {
 
-				service.privatpersonAnmelden(UUID_LEHRER_3);
+				service.privatpersonAnmelden(TestConstants.UUID_LEHRER_1);
 				fail("keine AccessDeniedException");
 
 			} catch (AccessDeniedException e) {
 
 				assertEquals("Der Veranstalter ist ein Lehrer. Nur Privatprsonen dürfen diese Funktion aufrufen.", e.getMessage());
-				assertNull(service.privatteilnahmeCreatedEvent());
-				assertNotNull(service.getSecurityIncidentRegistered());
-				assertNull(service.getDataInconsistencyRegistered());
+				verify(domainEventHandler, never()).handleEvent(any(SchulteilnahmeCreated.class));
+				verify(domainEventHandler, never()).handleEvent(any(PrivatteilnahmeCreated.class));
+				verify(eventDelegate, never()).fireDataInconsistencyEvent(any(), any());
+				verify(eventDelegate).fireSecurityEvent(any(), any());
 			}
 		}
 
 		@Test
-		void should_PrivatpersonAnmelden_call_WettbewerbImAnmeldemodus() {
+		void should_PrivatpersonAnmelden_call_WettbewerbErfasst() {
 
 			// Arrange
-			String expectedMessage = "keine Anmeldung möglich hähähä";
-
-			WettbewerbService mockService = Mockito.mock(WettbewerbService.class);
-			Mockito.when(mockService.aktuellerWettbewerbImAnmeldemodus())
-				.thenThrow(new IllegalStateException(expectedMessage));
-
-			service = AktuelleTeilnahmeService.createForTest(getTeilnahmenRepository(), mockService, getVeranstalterRepository());
+			when(wettbewerbService.aktuellerWettbewerbImAnmeldemodus()).thenThrow(new IllegalStateException());
 
 			// Act
-			ResponsePayload responsePayload = service.privatpersonAnmelden(UUID_PRIVAT_NICHT_ANGEMELDET);
+			ResponsePayload responsePayload = service.privatpersonAnmelden(TestConstants.UUID_PRIVAT);
 
 			// Assert
 			MessagePayload messagePayload = responsePayload.getMessage();
-			assertEquals(expectedMessage, messagePayload.getMessage());
 			assertEquals("WARN", messagePayload.getLevel());
-			assertNull(service.privatteilnahmeCreatedEvent());
-			assertNull(service.getSecurityIncidentRegistered());
-			assertNull(service.getDataInconsistencyRegistered());
+			verify(veranstalterRepository, never()).ofId(any());
+			verify(teilnahmenRepository, never()).ofTeilnahmeIdentifier(any());
+			verify(domainEventHandler, never()).handleEvent(any(SchulteilnahmeCreated.class));
+			verify(domainEventHandler, never()).handleEvent(any(PrivatteilnahmeCreated.class));
+			verify(eventDelegate, never()).fireDataInconsistencyEvent(any(), any());
+			verify(eventDelegate, never()).fireSecurityEvent(any(), any());
 
 		}
 
 		@Test
 		void should_PrivatpersonAnmeldenCreateNew_when_NichtVorhanden() {
 
+			Veranstalter veranstalter = new Privatveranstalter(new Person(TestConstants.UUID_PRIVAT_NICHT_ANGEMELDET, "bösewicht"),
+				false,
+				Collections.singletonList(new Identifier(TestConstants.TEILNAHMENUMMER_PRIVAT_NICHT_ANGEMELDET)));
+
+			when(veranstalterRepository.ofId(new Identifier(TestConstants.UUID_PRIVAT_NICHT_ANGEMELDET)))
+				.thenReturn(Optional.of(veranstalter));
+
+			Wettbewerb wettbewerb = getAktuellerWettbewerb(2020, WettbewerbStatus.DOWNLOAD_LEHRER);
+			when(wettbewerbService.aktuellerWettbewerbImAnmeldemodus()).thenReturn(wettbewerb);
+
+			when(teilnahmenRepository.ofTeilnahmeIdentifier(any())).thenReturn(Optional.empty());
+
 			// Act
-			PrivatteilnahmeAPIModel teilnahme = (PrivatteilnahmeAPIModel) service.privatpersonAnmelden(UUID_PRIVAT_NICHT_ANGEMELDET)
+			PrivatteilnahmeAPIModel teilnahme = (PrivatteilnahmeAPIModel) service
+				.privatpersonAnmelden(TestConstants.UUID_PRIVAT_NICHT_ANGEMELDET)
 				.getData();
 
 			// Assert
-			assertEquals(1, getTeilnahmenRepository().getTeilnahmeAdded());
 			assertEquals(Teilnahmeart.PRIVAT, teilnahme.identifier().teilnahmeart());
-			assertEquals(TEILNAHMENUMMER_PRIVAT_NICHT_ANGEMELDET, teilnahme.identifier().teilnahmenummer());
-			assertEquals(WETTBEWERBSJAHR_AKTUELL.intValue(), teilnahme.identifier().jahr());
+			assertEquals(TestConstants.TEILNAHMENUMMER_PRIVAT_NICHT_ANGEMELDET, teilnahme.identifier().teilnahmenummer());
+			assertEquals(TestConstants.WETTBEWERBSJAHR_AKTUELL.intValue(), teilnahme.identifier().jahr());
 
-			PrivatteilnahmeCreated event = service.privatteilnahmeCreatedEvent();
-
-			assertNotNull(event);
-			assertEquals(TEILNAHMENUMMER_PRIVAT_NICHT_ANGEMELDET, event.teilnahmenummer());
-			assertEquals(UUID_PRIVAT_NICHT_ANGEMELDET, event.triggeringUser());
-			assertEquals(WETTBEWERBSJAHR_AKTUELL, event.wettbewerbsjahr());
-
-			assertNull(service.getSecurityIncidentRegistered());
-			assertNull(service.getDataInconsistencyRegistered());
+			verify(domainEventHandler, never()).handleEvent(any(SchulteilnahmeCreated.class));
+			verify(domainEventHandler).handleEvent(any(PrivatteilnahmeCreated.class));
+			verify(eventDelegate, never()).fireDataInconsistencyEvent(any(), any());
+			verify(eventDelegate, never()).fireSecurityEvent(any(), any());
 
 		}
 
 		@Test
 		void should_PrivatpersonAnmeldenDoNothing_when_vorhanden() {
 
+			// Arrange
+			Veranstalter veranstalter = new Privatveranstalter(new Person(TestConstants.UUID_PRIVAT, "bösewicht"),
+				false,
+				Collections.singletonList(new Identifier(TestConstants.TEILNAHMENUMMER_PRIVAT)));
+
+			when(veranstalterRepository.ofId(new Identifier(TestConstants.UUID_PRIVAT)))
+				.thenReturn(Optional.of(veranstalter));
+
+			Wettbewerb wettbewerb = getAktuellerWettbewerb(2020, WettbewerbStatus.DOWNLOAD_LEHRER);
+			when(wettbewerbService.aktuellerWettbewerbImAnmeldemodus()).thenReturn(wettbewerb);
+
+			Teilnahme teilnahme = new Privatteilnahme(new WettbewerbID(TestConstants.WETTBEWERBSJAHR_AKTUELL),
+				new Identifier(TestConstants.TEILNAHMENUMMER_PRIVAT));
+			when(teilnahmenRepository.ofTeilnahmeIdentifier(any())).thenReturn(Optional.of(teilnahme));
+
 			// Act
-			PrivatteilnahmeAPIModel teilnahme = (PrivatteilnahmeAPIModel) service.privatpersonAnmelden(UUID_PRIVAT).getData();
+			PrivatteilnahmeAPIModel result = (PrivatteilnahmeAPIModel) service.privatpersonAnmelden(TestConstants.UUID_PRIVAT)
+				.getData();
 
 			// Assert
-			assertEquals(0, getTeilnahmenRepository().getTeilnahmeAdded());
-			assertEquals(Teilnahmeart.PRIVAT, teilnahme.identifier().teilnahmeart());
-			assertEquals(TEILNAHMENUMMER_PRIVAT, teilnahme.identifier().teilnahmenummer());
-			assertEquals(WETTBEWERBSJAHR_AKTUELL.toString(), teilnahme.identifier().wettbewerbID());
+			assertEquals(teilnahme.teilnahmeIdentifier(), result.identifier());
 
-			assertNull(service.privatteilnahmeCreatedEvent());
-			assertNull(service.getSecurityIncidentRegistered());
-			assertNull(service.getDataInconsistencyRegistered());
+			verify(domainEventHandler, never()).handleEvent(any(SchulteilnahmeCreated.class));
+			verify(domainEventHandler, never()).handleEvent(any(PrivatteilnahmeCreated.class));
+			verify(eventDelegate, never()).fireDataInconsistencyEvent(any(), any());
+			verify(eventDelegate, never()).fireSecurityEvent(any(), any());
 		}
+	}
+
+	/**
+	 * @param  jahr
+	 * @return
+	 */
+	public Wettbewerb getAktuellerWettbewerb(final Integer jahr, final WettbewerbStatus status) {
+
+		return new Wettbewerb(new WettbewerbID(jahr)).withStatus(status);
 	}
 }

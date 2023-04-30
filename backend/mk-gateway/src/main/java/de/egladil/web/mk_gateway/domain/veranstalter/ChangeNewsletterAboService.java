@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
-import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 
 /**
  * ChangeNewsletterAboService
@@ -26,8 +25,6 @@ import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 public class ChangeNewsletterAboService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ChangeNewsletterAboService.class);
-
-	private SecurityIncidentRegistered securityIncidentEventPayload;
 
 	@Inject
 	DomainEventHandler domainEventHandler;
@@ -57,7 +54,6 @@ public class ChangeNewsletterAboService {
 
 			String msg = "Versuch, einen nicht existierenden Veranstalter zu ändern: " + uuid;
 
-			this.securityIncidentEventPayload = new SecurityIncidentRegistered(msg);
 			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 
 			LOG.warn(msg);
@@ -72,10 +68,4 @@ public class ChangeNewsletterAboService {
 
 		return veranstalter;
 	}
-
-	SecurityIncidentRegistered securityIncidentEventPayload() {
-
-		return securityIncidentEventPayload;
-	}
-
 }

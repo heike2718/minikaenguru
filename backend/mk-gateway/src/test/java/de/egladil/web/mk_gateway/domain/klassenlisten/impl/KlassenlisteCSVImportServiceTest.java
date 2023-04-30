@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -66,6 +67,9 @@ public class KlassenlisteCSVImportServiceTest {
 	private List<Kind> vorhandeneKinder;
 
 	private Wettbewerb wettbewerb;
+
+	@ConfigProperty(name = "path.external.files")
+	String pathExternalFiles;
 
 	@InjectMock
 	private KlassenService klassenService;
@@ -113,7 +117,6 @@ public class KlassenlisteCSVImportServiceTest {
 		void should_importiereKlassenHandlePersistenceException() {
 
 			// Arrange
-			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt";
 			when(kinderService.findWithSchulteilname(any())).thenThrow(new PersistenceException("böse böse"));
 			when(uploadRepository.updateUpload(any())).thenReturn(persistenterUpload);
 
@@ -137,7 +140,6 @@ public class KlassenlisteCSVImportServiceTest {
 		void should_importiereKlassenThrowUploadFormatException_when_NullZeilen() {
 
 			// Arrange
-			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/fehlerhaft";
 			persistenterUpload.setUuid("null-zeilen");
 			when(uploadRepository.updateUpload(any())).thenReturn(persistenterUpload);
 
@@ -165,7 +167,6 @@ public class KlassenlisteCSVImportServiceTest {
 		void should_importiereKlassenThrowUploadFormatException_when_eineZeileAberBlank() {
 
 			// Arrange
-			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/fehlerhaft";
 			persistenterUpload.setUuid("eine-zeile-blank");
 
 			// Act + Assert
@@ -192,7 +193,6 @@ public class KlassenlisteCSVImportServiceTest {
 		void should_importiereKlassenThrowUploadFormatException_when_eineZeileAberKeineUeberschrift() {
 
 			// Arrange
-			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/fehlerhaft";
 			persistenterUpload.setUuid("eine-zeile-keine-ueberschrift");
 
 			// Act + Assert
@@ -219,7 +219,6 @@ public class KlassenlisteCSVImportServiceTest {
 		void should_importiereKlassenThrowUploadFormatException_when_alleZeilenFehlerhaft() {
 
 			// Arrange
-			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/fehlerhaft";
 			persistenterUpload.setUuid("alle-zeilen-falsch");
 
 			// Act + Assert
@@ -246,8 +245,7 @@ public class KlassenlisteCSVImportServiceTest {
 		void should_importiereKlassenThrowUploadFormatException_when_keineUeberschrift() {
 
 			// Arrange
-			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/fehlerhaft";
-			persistenterUpload.setUuid("ohne-ueberschrift");
+			persistenterUpload.setUuid("klassenliste-ohne-ueberschrift");
 
 			// Act + Assert
 			try {
@@ -257,7 +255,7 @@ public class KlassenlisteCSVImportServiceTest {
 			} catch (UploadFormatException e) {
 
 				assertEquals(
-					"Die Klassenliste kann nicht verarbeitet werden. Es werden genau 4 Spalten mit den Überschriften Klasse,Klassenstufe,Nachname,Vorname in beliebiger Reihenfolge erwartet. Gefunden wurden die Spaltenüberschriften Amiera;Kaled;2a;2.",
+					"Die Klassenliste kann nicht verarbeitet werden. Es werden genau 4 Spalten mit den Überschriften Klasse,Klassenstufe,Nachname,Vorname in beliebiger Reihenfolge erwartet. Gefunden wurden die Spaltenüberschriften Lukas;Granach;1a;1.0.",
 					e.getMessage());
 
 				verify(klassenService, never()).importiereKlassen(any(), any(), anyList());
@@ -273,7 +271,6 @@ public class KlassenlisteCSVImportServiceTest {
 		void should_importiereKlassenThrowUploadFormatException_when_nurUeberschrift() {
 
 			// Arrange
-			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/fehlerhaft";
 			persistenterUpload.setUuid("eine-zeile-nur-ueberschrift");
 			when(uploadRepository.updateUpload(any())).thenReturn(persistenterUpload);
 
@@ -301,8 +298,6 @@ public class KlassenlisteCSVImportServiceTest {
 		void should_importiereKlassenWork() throws IOException {
 
 			// Arrange
-			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt";
-
 			List<Klasse> klassen = new ArrayList<>();
 			klassen.add(new Klasse(new Identifier("uuid-1a")).withName("1a").withSchuleID(new Identifier(SCHULKUERZEL)));
 			klassen.add(new Klasse(new Identifier("uuid-1b")).withName("1b").withSchuleID(new Identifier(SCHULKUERZEL)));
@@ -375,7 +370,6 @@ public class KlassenlisteCSVImportServiceTest {
 		void should_importiereKlassenIgnoreLeereZeilen() throws IOException {
 
 			// Arrange
-			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt";
 			persistenterUpload.setUuid("klassenliste-mit-leerzeilen");
 
 			List<Klasse> klassen = new ArrayList<>();
@@ -450,7 +444,6 @@ public class KlassenlisteCSVImportServiceTest {
 		void should_importiereKlassenAcceptNameInsteadOfNachname() throws IOException {
 
 			// Arrange
-			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt";
 			persistenterUpload.setUuid("klassenliste-mit-name-statt-nachname");
 
 			List<Klasse> klassen = new ArrayList<>();
@@ -525,7 +518,6 @@ public class KlassenlisteCSVImportServiceTest {
 		void should_importiereKlassenWork_withFehlern() throws IOException {
 
 			// Arrange
-			service.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/klassenlisten/fehlerhaft";
 			persistenterUpload.setUuid("mit-ueberschrift-alle-anderen-faelle");
 
 			List<Klasse> klassen = new ArrayList<>();

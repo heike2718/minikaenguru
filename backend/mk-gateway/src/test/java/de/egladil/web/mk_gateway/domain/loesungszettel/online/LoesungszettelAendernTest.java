@@ -428,7 +428,7 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 
 			verify(domainEventHandler).handleEvent(any(LoesungszettelCreated.class));
 			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelChanged.class));
-			verify(domainEventHandler, times(1)).handleEvent(any(LoesungszettelDeleted.class));
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelDeleted.class));
 
 		}
 

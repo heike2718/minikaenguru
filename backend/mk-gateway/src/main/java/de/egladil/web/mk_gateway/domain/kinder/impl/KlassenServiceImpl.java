@@ -457,4 +457,9 @@ public class KlassenServiceImpl implements KlassenService {
 
 		return wettbewerbID;
 	}
+
+	void resetWettbewerbIDForTest() {
+
+		this.wettbewerbID = null;
+	}
 }

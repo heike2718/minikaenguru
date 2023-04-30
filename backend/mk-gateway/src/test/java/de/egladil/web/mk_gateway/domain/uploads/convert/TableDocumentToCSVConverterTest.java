@@ -4,23 +4,29 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.uploads.convert;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.commons_officetools.FileType;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.uploads.impl.DateiTyp;
+import io.quarkus.test.junit.QuarkusTest;
 
 /**
  * TableDocumentToCSVConverterTest
  */
+@QuarkusTest
 public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
+
+	@ConfigProperty(name = "path.external.files")
+	String pathExternalFiles;
 
 	@Nested
 	class ExcelAltTests {
@@ -36,11 +42,11 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 			void should_convertToCSVAndPersistInFilesystemWork_when_excelFile() {
 
 				// Arrange
-				String path = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/" + NAME_TARGET
+				String path = pathExternalFiles + "/upload/" + NAME_TARGET
 					+ DateiTyp.TEXT.getSuffixWithPoint();
 				clearResult(path);
 
-				String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.xls";
+				String pathSourceFile = pathExternalFiles + "/upload/klassenliste.xls";
 
 				// Act
 				File result = converter.convertToCSVAndPersistInFilesystem(pathSourceFile, NAME_TARGET);
@@ -57,7 +63,7 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 			void should_convertToCSVAndPersistInFilesystemThrowMkGatewayRuntimeException_when_textFile() {
 
 				// Arrange
-				String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.csv";
+				String pathSourceFile = pathExternalFiles + "/upload/klassenliste.csv";
 
 				try {
 
@@ -66,7 +72,8 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 				} catch (MkGatewayRuntimeException e) {
 
 					assertEquals(
-						"Die Datei /home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.csv zum upload ff573035-70ff-40e8-bcad-09d781788324 konnte nicht verarbeitet werden: Fehler beim Lesen einer MSOffice-Datei: Invalid header signature; read 0x3B656D616E726F56, expected 0xE11AB1A1E011CFD0 - Your file appears not to be a valid OLE2 document",
+						"Die Datei " + pathExternalFiles
+							+ "/upload/klassenliste.csv zum upload ff573035-70ff-40e8-bcad-09d781788324 konnte nicht verarbeitet werden: Fehler beim Lesen einer MSOffice-Datei: Invalid header signature; read 0x3B656D616E726F56, expected 0xE11AB1A1E011CFD0 - Your file appears not to be a valid OLE2 document",
 						e.getMessage());
 				}
 
@@ -76,7 +83,7 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 			void should_convertToCSVAndPersistInFilesystemThrowMkGatewayRuntimeException_when_odsFile() {
 
 				// Arrange
-				String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.ods";
+				String pathSourceFile = pathExternalFiles + "/upload/klassenliste.ods";
 
 				try {
 
@@ -85,7 +92,8 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 				} catch (MkGatewayRuntimeException e) {
 
 					assertEquals(
-						"Die Datei /home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.ods zum upload ff573035-70ff-40e8-bcad-09d781788324 konnte nicht verarbeitet werden: Fehler beim Lesen einer MSOffice-Datei: The supplied data appears to be in the Office 2007+ XML. You are calling the part of POI that deals with OLE2 Office Documents. You need to call a different part of POI to process this data (eg XSSF instead of HSSF)",
+						"Die Datei " + pathExternalFiles
+							+ "/upload/klassenliste.ods zum upload ff573035-70ff-40e8-bcad-09d781788324 konnte nicht verarbeitet werden: Fehler beim Lesen einer MSOffice-Datei: The supplied data appears to be in the Office 2007+ XML. You are calling the part of POI that deals with OLE2 Office Documents. You need to call a different part of POI to process this data (eg XSSF instead of HSSF)",
 						e.getMessage());
 				}
 			}
@@ -99,11 +107,11 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 			void should_convertToCSVAndPersistInFilesystemWork_when_excelFile() {
 
 				// Arrange
-				String path = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload/" + NAME_TARGET
+				String path = pathExternalFiles + "/upload/" + NAME_TARGET
 					+ DateiTyp.TEXT.getSuffixWithPoint();
 				clearResult(path);
 
-				String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload/auswertung.xls";
+				String pathSourceFile = pathExternalFiles + "/upload/auswertung.xls";
 
 				// Act
 				File result = converter.convertToCSVAndPersistInFilesystem(pathSourceFile, NAME_TARGET);
@@ -120,7 +128,7 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 			void should_convertToCSVAndPersistInFilesystemThrowMkGatewayRuntimeException_when_textFile() {
 
 				// Arrange
-				String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload/auswertung.csv";
+				String pathSourceFile = pathExternalFiles + "/upload/auswertung.csv";
 
 				try {
 
@@ -129,7 +137,8 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 				} catch (MkGatewayRuntimeException e) {
 
 					assertEquals(
-						"Die Datei /home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload/auswertung.csv zum upload ff573035-70ff-40e8-bcad-09d781788324 konnte nicht verarbeitet werden: Fehler beim Lesen einer MSOffice-Datei: Invalid header signature; read 0x3A64656D616E6E55, expected 0xE11AB1A1E011CFD0 - Your file appears not to be a valid OLE2 document",
+						"Die Datei " + pathExternalFiles
+							+ "/upload/auswertung.csv zum upload ff573035-70ff-40e8-bcad-09d781788324 konnte nicht verarbeitet werden: Fehler beim Lesen einer MSOffice-Datei: Invalid header signature; read 0x3A64656D616E6E55, expected 0xE11AB1A1E011CFD0 - Your file appears not to be a valid OLE2 document",
 						e.getMessage());
 				}
 
@@ -139,7 +148,7 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 			void should_convertToCSVAndPersistInFilesystemThrowMkGatewayRuntimeException_when_odsFile() {
 
 				// Arrange
-				String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload/auswertung.ods";
+				String pathSourceFile = pathExternalFiles + "/upload/auswertung.ods";
 
 				try {
 
@@ -148,7 +157,8 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 				} catch (MkGatewayRuntimeException e) {
 
 					assertEquals(
-						"Die Datei /home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload/auswertung.ods zum upload ff573035-70ff-40e8-bcad-09d781788324 konnte nicht verarbeitet werden: Fehler beim Lesen einer MSOffice-Datei: The supplied data appears to be in the Office 2007+ XML. You are calling the part of POI that deals with OLE2 Office Documents. You need to call a different part of POI to process this data (eg XSSF instead of HSSF)",
+						"Die Datei " + pathExternalFiles
+							+ "/upload/auswertung.ods zum upload ff573035-70ff-40e8-bcad-09d781788324 konnte nicht verarbeitet werden: Fehler beim Lesen einer MSOffice-Datei: The supplied data appears to be in the Office 2007+ XML. You are calling the part of POI that deals with OLE2 Office Documents. You need to call a different part of POI to process this data (eg XSSF instead of HSSF)",
 						e.getMessage());
 				}
 
@@ -169,11 +179,11 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 			void should_convertToCSVAndPersistInFilesystemWork_when_excelFile() {
 
 				// Arrange
-				String path = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/" + NAME_TARGET
+				String path = pathExternalFiles + "/upload/" + NAME_TARGET
 					+ DateiTyp.TEXT.getSuffixWithPoint();
 				clearResult(path);
 
-				String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.xlsx";
+				String pathSourceFile = pathExternalFiles + "/upload/klassenliste.xlsx";
 
 				// Act
 				File result = converter.convertToCSVAndPersistInFilesystem(pathSourceFile, NAME_TARGET);
@@ -190,7 +200,7 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 			void should_convertToCSVAndPersistInFilesystemThrowMkGatewayRuntimeException_when_textFile() {
 
 				// Arrange
-				String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.csv";
+				String pathSourceFile = pathExternalFiles + "/upload/klassenliste.csv";
 
 				try {
 
@@ -199,7 +209,8 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 				} catch (MkGatewayRuntimeException e) {
 
 					assertEquals(
-						"Die Datei /home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.csv zum upload 642cd963-2c8a-49f9-be95-f31a1b7e251a konnte nicht verarbeitet werden: Fehler beim Lesen einer MSOffice-Datei: No valid entries or contents found, this is not a valid OOXML (Office Open XML) file",
+						"Die Datei " + pathExternalFiles
+							+ "/upload/klassenliste.csv zum upload 642cd963-2c8a-49f9-be95-f31a1b7e251a konnte nicht verarbeitet werden: Fehler beim Lesen einer MSOffice-Datei: No valid entries or contents found, this is not a valid OOXML (Office Open XML) file",
 						e.getMessage());
 				}
 
@@ -209,7 +220,7 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 			void should_convertToCSVAndPersistInFilesystemThrowMkGatewayRuntimeException_when_odsFile() {
 
 				// Arrange
-				String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.ods";
+				String pathSourceFile = pathExternalFiles + "/upload/klassenliste.ods";
 
 				try {
 
@@ -218,7 +229,8 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 				} catch (MkGatewayRuntimeException e) {
 
 					assertEquals(
-						"Die Datei /home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.ods zum upload 642cd963-2c8a-49f9-be95-f31a1b7e251a konnte nicht verarbeitet werden: Fehler beim Lesen einer MSOffice-Datei: The supplied data appears to be in ODF (Open Document) Format. Formats like these (eg ODS, ODP) are not supported, try Apache ODFToolkit",
+						"Die Datei " + pathExternalFiles
+							+ "/upload/klassenliste.ods zum upload 642cd963-2c8a-49f9-be95-f31a1b7e251a konnte nicht verarbeitet werden: Fehler beim Lesen einer MSOffice-Datei: The supplied data appears to be in ODF (Open Document) Format. Formats like these (eg ODS, ODP) are not supported, try Apache ODFToolkit",
 						e.getMessage());
 				}
 
@@ -232,11 +244,11 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 			void should_convertToCSVAndPersistInFilesystemWork_when_auswertungAusProduktion() {
 
 				// Arrange
-				String path = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload" + NAME_TARGET
+				String path = pathExternalFiles + "/upload/" + NAME_TARGET
 					+ DateiTyp.TEXT.getSuffixWithPoint();
 				clearResult(path);
 
-				String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload/2021_auswertung_minikaenguru_klasse_1.xlsx";
+				String pathSourceFile = pathExternalFiles + "/upload/2021_auswertung_minikaenguru_klasse_1.xlsx";
 
 				// Act
 				File result = converter.convertToCSVAndPersistInFilesystem(pathSourceFile, NAME_TARGET);
@@ -253,11 +265,11 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 			void should_convertToCSVAndPersistInFilesystemWork_when_auswertungExcelFile() {
 
 				// Arrange
-				String path = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload/" + NAME_TARGET
+				String path = pathExternalFiles + "/upload/" + NAME_TARGET
 					+ DateiTyp.TEXT.getSuffixWithPoint();
 				clearResult(path);
 
-				String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload/auswertung.xlsx";
+				String pathSourceFile = pathExternalFiles + "/upload/auswertung.xlsx";
 
 				// Act
 				File result = converter.convertToCSVAndPersistInFilesystem(pathSourceFile, NAME_TARGET);
@@ -284,11 +296,11 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 		void should_convertToCSVAndPersistInFilesystemWork_when_klassenliste() {
 
 			// Arrange
-			String path = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/" + NAME_TARGET
+			String path = pathExternalFiles + "/upload/" + NAME_TARGET
 				+ DateiTyp.TEXT.getSuffixWithPoint();
 			clearResult(path);
 
-			String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.ods";
+			String pathSourceFile = pathExternalFiles + "/upload/klassenliste.ods";
 
 			// Act
 			File result = converter.convertToCSVAndPersistInFilesystem(pathSourceFile, NAME_TARGET);
@@ -305,11 +317,11 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 		void should_convertToCSVAndPersistInFilesystemWork_when_auswertung() {
 
 			// Arrange
-			String path = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload/" + NAME_TARGET
+			String path = pathExternalFiles + "/upload/" + NAME_TARGET
 				+ DateiTyp.TEXT.getSuffixWithPoint();
 			clearResult(path);
 
-			String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload/auswertung.ods";
+			String pathSourceFile = pathExternalFiles + "/upload/auswertung.ods";
 
 			// Act
 			File result = converter.convertToCSVAndPersistInFilesystem(pathSourceFile, NAME_TARGET);
@@ -326,7 +338,7 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 		void should_convertToCSVAndPersistInFilesystemThrowMkGatewayRuntimeException_when_altesExcelFile() {
 
 			// Arrange
-			String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.xls";
+			String pathSourceFile = pathExternalFiles + "/upload/klassenliste.xls";
 
 			try {
 
@@ -335,7 +347,8 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 			} catch (MkGatewayRuntimeException e) {
 
 				assertEquals(
-					"Die Datei /home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.xls zum upload 40f991fe-4ab1-4207-b118-26670b7fd181 konnte nicht verarbeitet werden: Exception Erzeugen eines ZipFiles (vermutlich kein Zip-Archiv): zip END header not found",
+					"Die Datei " + pathExternalFiles
+						+ "/upload/klassenliste.xls zum upload 40f991fe-4ab1-4207-b118-26670b7fd181 konnte nicht verarbeitet werden: Exception Erzeugen eines ZipFiles (vermutlich kein Zip-Archiv): zip END header not found",
 					e.getMessage());
 			}
 
@@ -345,7 +358,7 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 		void should_convertToCSVAndPersistInFilesystemThrowMkGatewayRuntimeException_when_fileDoesNotExist() {
 
 			// Arrange
-			String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/bla.csv";
+			String pathSourceFile = pathExternalFiles + "/upload/bla.csv";
 
 			try {
 
@@ -354,7 +367,8 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 			} catch (MkGatewayRuntimeException e) {
 
 				assertEquals(
-					"Die Datei /home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/bla.csv zum upload 40f991fe-4ab1-4207-b118-26670b7fd181 existiert nicht oder ist keine Datei oder hat Zugriffsbeschraenkungen",
+					"Die Datei " + pathExternalFiles
+						+ "/upload/bla.csv zum upload 40f991fe-4ab1-4207-b118-26670b7fd181 existiert nicht oder ist keine Datei oder hat Zugriffsbeschraenkungen",
 					e.getMessage());
 			}
 
@@ -364,7 +378,7 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 		void should_convertToCSVAndPersistInFilesystemThrowMkGatewayRuntimeException_when_neuesExcelFile() {
 
 			// Arrange
-			String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.xlsx";
+			String pathSourceFile = pathExternalFiles + "/upload/klassenliste.xlsx";
 
 			try {
 
@@ -373,7 +387,8 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 			} catch (MkGatewayRuntimeException e) {
 
 				assertEquals(
-					"Die Datei /home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.xlsx zum upload 40f991fe-4ab1-4207-b118-26670b7fd181 konnte nicht verarbeitet werden: Das Zip-Archiv enthält keinen ZipEntry mit Namen 'content.xml' in oberster Ebene.",
+					"Die Datei " + pathExternalFiles
+						+ "/upload/klassenliste.xlsx zum upload 40f991fe-4ab1-4207-b118-26670b7fd181 konnte nicht verarbeitet werden: Das Zip-Archiv enthält keinen ZipEntry mit Namen 'content.xml' in oberster Ebene.",
 					e.getMessage());
 			}
 
@@ -383,7 +398,7 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 		void should_convertToCSVAndPersistInFilesystemThrowMkGatewayRuntimeException_when_textFile() {
 
 			// Arrange
-			String pathSourceFile = "/home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.csv";
+			String pathSourceFile = pathExternalFiles + "/upload/klassenliste.csv";
 
 			try {
 
@@ -392,7 +407,8 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 			} catch (MkGatewayRuntimeException e) {
 
 				assertEquals(
-					"Die Datei /home/heike/git/testdaten/minikaenguru/klassenlisten/korrekt/upload/klassenliste.csv zum upload 40f991fe-4ab1-4207-b118-26670b7fd181 konnte nicht verarbeitet werden: Exception Erzeugen eines ZipFiles (vermutlich kein Zip-Archiv): zip END header not found",
+					"Die Datei " + pathExternalFiles
+						+ "/upload/klassenliste.csv zum upload 40f991fe-4ab1-4207-b118-26670b7fd181 konnte nicht verarbeitet werden: Exception Erzeugen eines ZipFiles (vermutlich kein Zip-Archiv): zip END header not found",
 					e.getMessage());
 			}
 

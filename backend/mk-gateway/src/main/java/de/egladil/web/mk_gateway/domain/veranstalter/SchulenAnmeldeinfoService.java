@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
@@ -43,6 +44,9 @@ import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleDetails;
 public class SchulenAnmeldeinfoService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SchulenAnmeldeinfoService.class);
+
+	@Inject
+	AuthorizationService authorizationService;
 
 	@Inject
 	DomainEventHandler domainEventHandler;
@@ -104,6 +108,11 @@ public class SchulenAnmeldeinfoService {
 	 * @return              SchuleAPIModel
 	 */
 	public SchuleAPIModel getSchuleWithWettbewerbsdetails(final String schulkuerzel, final String lehrerId) {
+
+		String kontext = "[getSchuleDetails - " + schulkuerzel + "]";
+		authorizationService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(lehrerId),
+			new Identifier(schulkuerzel),
+			kontext);
 
 		Response katalogItemsResponse = katalogeAdapter.findSchulen(schulkuerzel);
 

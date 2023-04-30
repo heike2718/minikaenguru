@@ -4,38 +4,52 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.veranstalter;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.util.Collections;
+import java.util.Optional;
+
+import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.TestConstants;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
+import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * ChangeNewsletterAboServiceTest
  */
-public class ChangeNewsletterAboServiceTest extends AbstractDomainServiceTest {
+@QuarkusTest
+public class ChangeNewsletterAboServiceTest {
 
-	private ChangeNewsletterAboService service;
+	@InjectMock
+	DomainEventHandler domainEventHandler;
 
-	@Override
-	@BeforeEach
-	protected void setUp() {
+	@InjectMock
+	LoggableEventDelegate eventDelegate;
 
-		super.setUp();
-		this.service = ChangeNewsletterAboService.createForTest(getVeranstalterRepository());
-	}
+	@InjectMock
+	VeranstalterRepository veranstalterRepository;
+
+	@Inject
+	ChangeNewsletterAboService service;
 
 	@Test
 	void should_CreateSecurityIncidentAndThrowException_when_VeranstalterNotPresent() {
 
 		// Arrange
 		String uuid = "987676H";
+
+		when(veranstalterRepository.ofId(new Identifier(uuid))).thenReturn(Optional.empty());
 
 		// Act + Assert
 		try {
@@ -44,9 +58,7 @@ public class ChangeNewsletterAboServiceTest extends AbstractDomainServiceTest {
 			fail("BadRequestException");
 		} catch (BadRequestException e) {
 
-			assertNotNull(service.securityIncidentEventPayload());
-			assertEquals("Versuch, einen nicht existierenden Veranstalter zu ändern: 987676H",
-				service.securityIncidentEventPayload().message());
+			verify(eventDelegate).fireSecurityEvent(any(), any());
 		}
 
 	}
@@ -55,15 +67,20 @@ public class ChangeNewsletterAboServiceTest extends AbstractDomainServiceTest {
 	void should_changeStatusNewsletterToggleTheFlag_when_VeranstalterPresent() {
 
 		// Arrange
-		Veranstalter veranstalter = this.getVeranstalterRepository().ofId(new Identifier(UUID_LEHRER_1)).get();
-		boolean expected = !veranstalter.isNewsletterEmpfaenger();
+		Veranstalter veranstalter = new Lehrer(new Person(TestConstants.UUID_LEHRER_1, "GGGG"), true,
+			Collections.singletonList(new Identifier(TestConstants.SCHULKUERZEL_1)));
+
+		when(veranstalterRepository.ofId(new Identifier(TestConstants.UUID_LEHRER_1))).thenReturn(Optional.of(veranstalter));
+
+		when(veranstalterRepository.changeVeranstalter(veranstalter)).thenReturn(Boolean.TRUE);
 
 		// Act
-		Veranstalter changed = service.changeStatusNewsletter(UUID_LEHRER_1);
+		service.changeStatusNewsletter(TestConstants.UUID_LEHRER_1);
 
 		// Assert
-		assertEquals(expected, changed.isNewsletterEmpfaenger());
-		assertEquals(1, this.getVeranstalterRepository().getCountLehrerChanged());
+		verify(veranstalterRepository).ofId(new Identifier(TestConstants.UUID_LEHRER_1));
+		verify(veranstalterRepository).changeVeranstalter(veranstalter);
+		verify(domainEventHandler, never()).handleEvent(any());
 	}
 
 }
