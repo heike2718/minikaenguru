@@ -41,15 +41,6 @@ public class KatalogAntragService {
 	@Inject
 	LoggableEventDelegate eventDelegate;
 
-	public static KatalogAntragService createForTest() {
-
-		KatalogAntragService result = new KatalogAntragService();
-		result.katalogMailService = KatalogMailService.createForTest();
-		result.bccEmpfaenger = "minikaenguru@egladil.de";
-		return result;
-
-	}
-
 	public KatalogAntragService() {
 
 		super();
@@ -76,10 +67,7 @@ public class KatalogAntragService {
 		DefaultEmailDaten emailDaten = createMailDaten(antrag);
 		this.katalogMailService.sendMail(emailDaten);
 
-		if (katalogAntragReceivedEvent != null) {
-
-			katalogAntragReceivedEvent.fire(katalogAntragEventObject);
-		}
+		eventDelegate.fireKatalogAntragReceived(katalogAntragEventObject, katalogAntragReceivedEvent);
 
 		return true;
 

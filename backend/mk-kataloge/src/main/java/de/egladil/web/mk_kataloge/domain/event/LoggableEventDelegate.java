@@ -4,11 +4,15 @@
 // =====================================================
 package de.egladil.web.mk_kataloge.domain.event;
 
+import javax.enterprise.context.RequestScoped;
 import javax.enterprise.event.Event;
+
+import de.egladil.web.mk_kataloge.domain.katalogantrag.KatalogAntragReceived;
 
 /**
  * LoggableEventDelegate
  */
+@RequestScoped
 public class LoggableEventDelegate {
 
 	/**
@@ -71,6 +75,15 @@ public class LoggableEventDelegate {
 		}
 
 		return result;
+
+	}
+
+	public void fireKatalogAntragReceived(final KatalogAntragReceived katalogAntragEventObject, final Event<KatalogAntragReceived> event) {
+
+		if (event != null) {
+
+			event.fire(katalogAntragEventObject);
+		}
 
 	}
 }

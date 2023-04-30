@@ -15,10 +15,12 @@ import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_kataloge.domain.apimodel.SchulkatalogAntrag;
+import io.quarkus.test.junit.QuarkusTest;
 
 /**
  * KatalogAntragMailtextGeneratorTest
  */
+@QuarkusTest
 public class KatalogAntragMailtextGeneratorTest {
 
 	@Test

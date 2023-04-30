@@ -17,10 +17,12 @@ import de.egladil.web.mk_kataloge.domain.apimodel.KuerzelAPIModel;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Land;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Ort;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
+import io.quarkus.test.junit.QuarkusTest;
 
 /**
  * KuerzelGeneratorServiceTest
  */
+@QuarkusTest
 public class KuerzelGeneratorServiceTest {
 
 	@Test

@@ -21,7 +21,7 @@ import de.egladil.web.commons_mailer.exception.InvalidMailAddressException;
 @ApplicationScoped
 public class KatalogMailService {
 
-	@ConfigProperty(name = "mockTheMailserver", defaultValue = "false")
+	@ConfigProperty(name = "mockTheMailserver")
 	boolean mockTheMailserver;
 
 	@Inject
@@ -31,23 +31,6 @@ public class KatalogMailService {
 	CommonEmailService commonMailService;
 
 	private boolean mailSent;
-
-	private boolean shouldThrowMailException = false;
-
-	public static KatalogMailService createForTest() {
-
-		KatalogMailService result = new KatalogMailService();
-		result.mockTheMailserver = true;
-		return result;
-	}
-
-	public static KatalogMailService createForTestWithMailException() {
-
-		KatalogMailService result = new KatalogMailService();
-		result.mockTheMailserver = true;
-		result.shouldThrowMailException = true;
-		return result;
-	}
 
 	/**
 	 * Sendet die Mail.
@@ -62,11 +45,6 @@ public class KatalogMailService {
 
 			this.commonMailService.sendMail(maildaten, emailServiceCredentials);
 		} else {
-
-			if (shouldThrowMailException) {
-
-				throw new EmailException("Das ist eine gemockte Mailexception");
-			}
 
 			System.out.println("Mail mit Betreff " + maildaten.getBetreff() + " wurde an "
 				+ maildaten.alleEmpfaengerFuersLog() + " gesendet (TO=" + maildaten.getEmpfaenger() + "):\n" + maildaten.getText());

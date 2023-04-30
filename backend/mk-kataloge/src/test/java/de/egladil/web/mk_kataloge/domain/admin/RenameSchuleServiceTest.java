@@ -8,19 +8,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.WebApplicationException;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
@@ -28,25 +30,23 @@ import de.egladil.web.mk_kataloge.domain.SchuleRepository;
 import de.egladil.web.mk_kataloge.domain.apimodel.SchulePayload;
 import de.egladil.web.mk_kataloge.domain.error.KatalogAPIException;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * RenameSchuleServiceTest
  */
+@QuarkusTest
 public class RenameSchuleServiceTest {
 
-	private SchuleRepository schuleRepository;
+	@InjectMock
+	SchuleRepository schuleRepository;
 
-	private ChangeSchulenMailDelegate mailDelegate;
+	@InjectMock
+	ChangeSchulenMailDelegate mailDelegate;
 
-	private RenameSchuleService service;
-
-	@BeforeEach
-	void setUp() {
-
-		mailDelegate = Mockito.mock(ChangeSchulenMailDelegate.class);
-		schuleRepository = Mockito.mock(SchuleRepository.class);
-		service = RenameSchuleService.createForTest(schuleRepository, mailDelegate);
-	}
+	@Inject
+	RenameSchuleService service;
 
 	@Test
 	void should_ThrowNotFoundException_when_NichtVorhanden() {
@@ -55,7 +55,7 @@ public class RenameSchuleServiceTest {
 		SchulePayload schulePayload = ChangeKatalogTestUtils.createSchulePayloadForTest();
 		schulePayload = schulePayload.withEmailAuftraggeber("heike@web.de");
 
-		Mockito.when(schuleRepository.getSchule(schulePayload.kuerzel()))
+		when(schuleRepository.getSchule(schulePayload.kuerzel()))
 			.thenReturn(Optional.empty());
 
 		// Act + Assert
@@ -74,7 +74,7 @@ public class RenameSchuleServiceTest {
 			assertEquals("Diese Schule gibt es nicht.", messagePayload.getMessage());
 			assertEquals(schulePayload, responsePayload.getData());
 
-			Mockito.verify(mailDelegate, Mockito.times(0)).sendSchuleCreatedMailQuietly(schulePayload);
+			verify(mailDelegate, times(0)).sendSchuleCreatedMailQuietly(schulePayload);
 		}
 
 	}
@@ -92,7 +92,7 @@ public class RenameSchuleServiceTest {
 		assertFalse(schulePayload.kuerzelOrt().equals(schule.getOrtKuerzel()));
 		assertEquals(schulePayload.kuerzelLand(), schule.getLandKuerzel());
 
-		Mockito.when(schuleRepository.getSchule(schulePayload.kuerzel()))
+		when(schuleRepository.getSchule(schulePayload.kuerzel()))
 			.thenReturn(Optional.of(schule));
 
 		// Act + Assert
@@ -111,7 +111,7 @@ public class RenameSchuleServiceTest {
 			assertEquals("Umbenennung abgelehnt: Ort oder Land passt nicht.", messagePayload.getMessage());
 			assertNull(responsePayload.getData());
 
-			Mockito.verify(mailDelegate, Mockito.times(0)).sendSchuleCreatedMailQuietly(schulePayload);
+			verify(mailDelegate, times(0)).sendSchuleCreatedMailQuietly(schulePayload);
 		}
 
 	}
@@ -129,7 +129,7 @@ public class RenameSchuleServiceTest {
 		assertFalse(schulePayload.kuerzelLand().equals(schule.getLandKuerzel()));
 		assertEquals(schulePayload.kuerzelOrt(), schule.getOrtKuerzel());
 
-		Mockito.when(schuleRepository.getSchule(schulePayload.kuerzel()))
+		when(schuleRepository.getSchule(schulePayload.kuerzel()))
 			.thenReturn(Optional.of(schule));
 
 		// Act + Assert
@@ -148,7 +148,7 @@ public class RenameSchuleServiceTest {
 			assertEquals("Umbenennung abgelehnt: Ort oder Land passt nicht.", messagePayload.getMessage());
 			assertNull(responsePayload.getData());
 
-			Mockito.verify(mailDelegate, Mockito.times(0)).sendSchuleCreatedMailQuietly(schulePayload);
+			verify(mailDelegate, times(0)).sendSchuleCreatedMailQuietly(schulePayload);
 		}
 
 	}
@@ -165,13 +165,13 @@ public class RenameSchuleServiceTest {
 		Schule andereSchule = ChangeKatalogTestUtils.mapFromSchulePayload(schulePayload);
 		andereSchule.setKuerzel("GJLFUFUFU");
 
-		Mockito.when(schuleRepository.getSchule(schulePayload.kuerzel())).thenReturn(Optional.of(dieSchule));
+		when(schuleRepository.getSchule(schulePayload.kuerzel())).thenReturn(Optional.of(dieSchule));
 
 		List<Schule> trefferliste = new ArrayList<>();
 		trefferliste.add(dieSchule);
 		trefferliste.add(andereSchule);
 
-		Mockito.when(schuleRepository.findSchulenInOrt(andereSchule.getOrtKuerzel()))
+		when(schuleRepository.findSchulenInOrt(andereSchule.getOrtKuerzel()))
 			.thenReturn(trefferliste);
 
 		// Act
@@ -187,7 +187,7 @@ public class RenameSchuleServiceTest {
 		SchulePayload responseData = (SchulePayload) responsePayload.getData();
 		assertEquals("GJLFUFUFU", responseData.kuerzel());
 
-		Mockito.verify(mailDelegate, Mockito.times(1)).sendSchuleCreatedMailQuietly(schulePayload);
+		verify(mailDelegate, times(1)).sendSchuleCreatedMailQuietly(schulePayload);
 	}
 
 	@Test
@@ -202,13 +202,13 @@ public class RenameSchuleServiceTest {
 		Schule andereSchule = ChangeKatalogTestUtils.mapFromSchulePayload(schulePayload);
 		andereSchule.setKuerzel("GJLFUFUFU");
 
-		Mockito.when(schuleRepository.getSchule(schulePayload.kuerzel())).thenReturn(Optional.of(dieSchule));
+		when(schuleRepository.getSchule(schulePayload.kuerzel())).thenReturn(Optional.of(dieSchule));
 
 		List<Schule> trefferliste = new ArrayList<>();
 		trefferliste.add(dieSchule);
 		trefferliste.add(andereSchule);
 
-		Mockito.when(schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt()))
+		when(schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt()))
 			.thenReturn(trefferliste);
 
 		// Act
@@ -224,7 +224,7 @@ public class RenameSchuleServiceTest {
 		SchulePayload responseData = (SchulePayload) responsePayload.getData();
 		assertEquals("GJLFUFUFU", responseData.kuerzel());
 
-		Mockito.verify(mailDelegate, Mockito.times(0)).sendSchuleCreatedMailQuietly(schulePayload);
+		verify(mailDelegate, times(0)).sendSchuleCreatedMailQuietly(schulePayload);
 	}
 
 	@Test
@@ -235,15 +235,15 @@ public class RenameSchuleServiceTest {
 		Schule schule = ChangeKatalogTestUtils.mapFromSchulePayload(schulePayload);
 		schule.setKuerzel(schulePayload.kuerzel());
 
-		Mockito.when(schuleRepository.getSchule(schulePayload.kuerzel())).thenReturn(Optional.of(schule));
+		when(schuleRepository.getSchule(schulePayload.kuerzel())).thenReturn(Optional.of(schule));
 
 		List<Schule> trefferliste = new ArrayList<>();
 		trefferliste.add(schule);
 
-		Mockito.when(schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt()))
+		when(schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt()))
 			.thenReturn(trefferliste);
 
-		Mockito.when(schuleRepository.replaceSchulen(Arrays.asList(new Schule[] { schule })))
+		when(schuleRepository.replaceSchulen(Arrays.asList(new Schule[] { schule })))
 			.thenThrow(new PersistenceException("DB-Exception beim Speichern."));
 
 		// Act + Assert
@@ -256,7 +256,7 @@ public class RenameSchuleServiceTest {
 
 			assertEquals("Die Schule konnte wegen eines Serverfehlers nicht geändert werden.", e.getMessage());
 
-			Mockito.verify(mailDelegate, Mockito.times(0)).sendSchuleCreatedMailQuietly(schulePayload);
+			verify(mailDelegate, times(0)).sendSchuleCreatedMailQuietly(schulePayload);
 		}
 
 	}
@@ -273,15 +273,15 @@ public class RenameSchuleServiceTest {
 
 		assertFalse("Baumschule".equals(schule.getName()));
 
-		Mockito.when(schuleRepository.getSchule(schulePayload.kuerzel())).thenReturn(Optional.of(schule));
+		when(schuleRepository.getSchule(schulePayload.kuerzel())).thenReturn(Optional.of(schule));
 
 		List<Schule> trefferliste = new ArrayList<>();
 		trefferliste.add(schule);
 
-		Mockito.when(schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt()))
+		when(schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt()))
 			.thenReturn(trefferliste);
 
-		Mockito.when(schuleRepository.replaceSchulen(Arrays.asList(new Schule[] { schule })))
+		when(schuleRepository.replaceSchulen(Arrays.asList(new Schule[] { schule })))
 			.thenReturn(Boolean.TRUE);
 
 		// Act
@@ -298,7 +298,7 @@ public class RenameSchuleServiceTest {
 		SchulePayload responseData = (SchulePayload) responsePayload.getData();
 		assertEquals(schulePayload, responseData);
 
-		Mockito.verify(mailDelegate, Mockito.times(1)).sendSchuleCreatedMailQuietly(schulePayload);
+		verify(mailDelegate, times(1)).sendSchuleCreatedMailQuietly(schulePayload);
 	}
 
 	@Test
@@ -315,15 +315,15 @@ public class RenameSchuleServiceTest {
 
 		assertFalse("Baumschule".equals(schule.getName()));
 
-		Mockito.when(schuleRepository.getSchule(schulePayload.kuerzel())).thenReturn(Optional.of(schule));
+		when(schuleRepository.getSchule(schulePayload.kuerzel())).thenReturn(Optional.of(schule));
 
 		List<Schule> trefferliste = new ArrayList<>();
 		trefferliste.add(schule);
 
-		Mockito.when(schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt()))
+		when(schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt()))
 			.thenReturn(trefferliste);
 
-		Mockito.when(schuleRepository.replaceSchulen(Arrays.asList(new Schule[] { schule })))
+		when(schuleRepository.replaceSchulen(Arrays.asList(new Schule[] { schule })))
 			.thenReturn(Boolean.TRUE);
 
 		// Act
@@ -340,7 +340,7 @@ public class RenameSchuleServiceTest {
 		SchulePayload responseData = (SchulePayload) responsePayload.getData();
 		assertEquals(schulePayload, responseData);
 
-		Mockito.verify(mailDelegate, Mockito.times(0)).sendSchuleCreatedMailQuietly(schulePayload);
+		verify(mailDelegate, times(0)).sendSchuleCreatedMailQuietly(schulePayload);
 	}
 
 }

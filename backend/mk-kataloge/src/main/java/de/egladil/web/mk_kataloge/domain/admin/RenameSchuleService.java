@@ -40,18 +40,6 @@ public class RenameSchuleService {
 	@Inject
 	ChangeSchulenMailDelegate mailDelegate;
 
-	private boolean test;
-
-	static RenameSchuleService createForTest(final SchuleRepository schuleRepository, final ChangeSchulenMailDelegate mailDelegate) {
-
-		RenameSchuleService result = new RenameSchuleService();
-		result.schuleRepository = schuleRepository;
-		result.mailDelegate = mailDelegate;
-		result.test = true;
-		return result;
-
-	}
-
 	/**
 	 * Bennent die gegebene Schule um und gibt sie als KatalogItem zurück.
 	 *
@@ -102,12 +90,6 @@ public class RenameSchuleService {
 						+ schulePayload.name()
 						+ ". Diese wurde zurückgegeben."),
 					result);
-			}
-
-			if (test) {
-
-				// Mockito-Tests beruhen auf schule.equals(), also gleichen kuerzeln. Daher im Test vorher das kuerzel setzen.
-				schule.setKuerzel(schulePayload.kuerzel());
 			}
 
 			schule.setName(schulePayload.name());

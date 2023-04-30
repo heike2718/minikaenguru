@@ -37,17 +37,6 @@ public class CreateSchuleService {
 	@Inject
 	ChangeSchulenMailDelegate mailDelegate;
 
-	private boolean test;
-
-	public static CreateSchuleService createForTest(final SchuleRepository schuleRepo, final ChangeSchulenMailDelegate mailDelegate) {
-
-		CreateSchuleService result = new CreateSchuleService();
-		result.schuleRepository = schuleRepo;
-		result.mailDelegate = mailDelegate;
-		result.test = true;
-		return result;
-	}
-
 	/**
 	 * Falls es die Schule noch nicht gibt (Gleichheit ortKuerzel und Name), wird sie angelegt und persistiert. Eine Meil wird an
 	 * die Adresse des Auftraggebers gesendet, sofern diese angegeben ist. Wenn es den Ort oder das Land noch nicgt gibt, wird es
@@ -77,12 +66,6 @@ public class CreateSchuleService {
 			}
 
 			Schule schule = mapFromSchulePayload(schulePayload);
-
-			if (test) {
-
-				// Mockito-Tests beruhen auf schule.equals(), also gleichen kuerzeln. Daher im Test vorher das kuerzel setzen.
-				schule.setKuerzel(schulePayload.kuerzel());
-			}
 
 			boolean added = schuleRepository.addSchule(schule);
 			LOG.debug("Schule added=" + added);

@@ -7,17 +7,19 @@ package de.egladil.web.mk_kataloge.domain.admin;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
@@ -26,22 +28,20 @@ import de.egladil.web.mk_kataloge.domain.apimodel.LandPayload;
 import de.egladil.web.mk_kataloge.domain.error.KatalogAPIException;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Land;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 
 /**
  * RenameLandServiceTest
  */
+@QuarkusTest
 public class RenameLandServiceTest {
 
-	private SchuleRepository schuleRepository;
+	@InjectMock
+	SchuleRepository schuleRepository;
 
-	private RenameLandService service;
-
-	@BeforeEach
-	void setUp() {
-
-		schuleRepository = Mockito.mock(SchuleRepository.class);
-		service = RenameLandService.createForTest(schuleRepository);
-	}
+	@Inject
+	RenameLandService service;
 
 	@Test
 	void should_ThrowNotFoundException_when_NichtVorhanden() {
@@ -49,7 +49,7 @@ public class RenameLandServiceTest {
 		// Arrange
 		LandPayload landPayload = ChangeKatalogTestUtils.createLandPayloadForTest();
 
-		Mockito.when(schuleRepository.loadLaender()).thenReturn(new ArrayList<>());
+		when(schuleRepository.loadLaender()).thenReturn(new ArrayList<>());
 
 		// Act + Assert
 		try {
@@ -68,7 +68,7 @@ public class RenameLandServiceTest {
 			assertEquals("Dieses Land gibt es nicht.", messagePayload.getMessage());
 			assertEquals(landPayload, responsePayload.getData());
 
-			Mockito.verify(schuleRepository, Mockito.times(0)).replaceSchulen(new ArrayList<>());
+			verify(schuleRepository, times(0)).replaceSchulen(new ArrayList<>());
 		}
 
 	}
@@ -87,13 +87,13 @@ public class RenameLandServiceTest {
 		laender.add(dasLand);
 		laender.add(anderesLand);
 
-		Mockito.when(schuleRepository.loadLaender()).thenReturn(laender);
+		when(schuleRepository.loadLaender()).thenReturn(laender);
 
 		// Act
 		ResponsePayload responsePayload = service.landUmbenennen(landPayload);
 
 		// Assert
-		Mockito.verify(schuleRepository, Mockito.times(0)).replaceSchulen(new ArrayList<>());
+		verify(schuleRepository, times(0)).replaceSchulen(new ArrayList<>());
 
 		MessagePayload messagePayload = responsePayload.getMessage();
 		assertEquals("WARN", messagePayload.getLevel());
@@ -122,7 +122,7 @@ public class RenameLandServiceTest {
 		laender.add(dasLand);
 		laender.add(anderesLand);
 
-		Mockito.when(schuleRepository.loadLaender()).thenReturn(laender);
+		when(schuleRepository.loadLaender()).thenReturn(laender);
 
 		List<Schule> schulen = new ArrayList<Schule>();
 
@@ -152,14 +152,14 @@ public class RenameLandServiceTest {
 
 		assertFalse(schulen.get(0).equals(schulen.get(1)));
 
-		Mockito.when(schuleRepository.findSchulenInLand(landPayload.kuerzel())).thenReturn(schulen);
+		when(schuleRepository.findSchulenInLand(landPayload.kuerzel())).thenReturn(schulen);
 
-		Mockito.when(schuleRepository.replaceSchulen(schulen)).thenReturn(Boolean.TRUE);
+		when(schuleRepository.replaceSchulen(schulen)).thenReturn(Boolean.TRUE);
 
 		// Act
 		ResponsePayload responsePayload = service.landUmbenennen(landPayload);
 
-		Mockito.verify(schuleRepository, Mockito.times(1)).replaceSchulen(schulen);
+		verify(schuleRepository, times(1)).replaceSchulen(schulen);
 
 		MessagePayload messagePayload = responsePayload.getMessage();
 		assertEquals("INFO", messagePayload.getLevel());
@@ -211,7 +211,7 @@ public class RenameLandServiceTest {
 		laender.add(dasLand);
 		laender.add(anderesLand);
 
-		Mockito.when(schuleRepository.loadLaender()).thenReturn(laender);
+		when(schuleRepository.loadLaender()).thenReturn(laender);
 
 		List<Schule> schulen = new ArrayList<Schule>();
 
@@ -241,9 +241,9 @@ public class RenameLandServiceTest {
 
 		assertFalse(schulen.get(0).equals(schulen.get(1)));
 
-		Mockito.when(schuleRepository.findSchulenInLand(landPayload.kuerzel())).thenReturn(schulen);
+		when(schuleRepository.findSchulenInLand(landPayload.kuerzel())).thenReturn(schulen);
 
-		Mockito.when(schuleRepository.replaceSchulen(schulen))
+		when(schuleRepository.replaceSchulen(schulen))
 			.thenThrow(new PersistenceException("DB-Fehler beim Speichern von Schulen"));
 
 		// Act + Assert
@@ -254,7 +254,7 @@ public class RenameLandServiceTest {
 			fail("keine KatalogAPIException");
 		} catch (KatalogAPIException e) {
 
-			Mockito.verify(schuleRepository, Mockito.times(1)).replaceSchulen(schulen);
+			verify(schuleRepository, times(1)).replaceSchulen(schulen);
 			assertEquals("Das Land konnte wegen eines Serverfehlers nicht umbenannt werden.", e.getMessage());
 		}
 	}
