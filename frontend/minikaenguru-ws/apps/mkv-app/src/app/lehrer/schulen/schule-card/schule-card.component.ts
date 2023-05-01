@@ -16,12 +16,14 @@ export class SchuleCardComponent implements OnInit, OnDestroy {
 
 	devMode = environment.envName === 'DEV';
 
+	textAuswertungsmodus = 'noch nicht entschieden';
+
 	@Input()
 	schule!: Schule;
 
 	wettbewerb$ = this.wettbewerbFacade.aktuellerWettbewerb$;
 
-    showBtnOnlineauswertung = false;
+	showBtnOnlineauswertung = false;
 	showBtnUploadAuswertung = false;
 
 	private user!: User | null;
@@ -38,6 +40,12 @@ export class SchuleCardComponent implements OnInit, OnDestroy {
 		this.userSubscription = this.authService.user$.subscribe(
 			u => this.user = u
 		);
+
+		switch (this.schule.auswertungsmodus) {
+			case 'OFFLINE': this.textAuswertungsmodus = 'OFFLINE (Sie erstellen die Auswertung und die Urkunden selbst)'; break;
+			case 'ONLINE': this.textAuswertungsmodus = 'ONLINE'; break;
+			default: break;
+		}
 
 		this.showBtnOnlineauswertung = this.schule.aktuellAngemeldet && this.schule.auswertungsmodus !== 'OFFLINE';
 		this.showBtnUploadAuswertung = this.schule.aktuellAngemeldet && this.schule.auswertungsmodus !== 'ONLINE';
@@ -75,24 +83,4 @@ export class SchuleCardComponent implements OnInit, OnDestroy {
 	vonSchuleAbmelden(): void {
 		this.lehrerFacade.removeSchule(this.schule);
 	}
-
-	showTextModusIndifferent(): boolean {
-
-		if (this.schule === undefined) {
-			return false;
-		}
-
-		return this.schule.aktuellAngemeldet && this.schule.auswertungsmodus === 'INDIFFERENT';
-	}
-
-	showTextModusOffline(): boolean {
-
-		if (this.schule === undefined) {
-			return false;
-		}
-
-		return this.schule.aktuellAngemeldet && this.schule.auswertungsmodus === 'OFFLINE';
-	}
-	
-
 }

@@ -4,14 +4,14 @@
 			<div *ngIf="schule">
 				<h2>Schulübersicht <span *ngIf="devMode">{{schule.kuerzel}}</span></h2>
 
-				<p *ngIf="showTextModusIndifferent()">Sie können einmalig wählen, ob Sie die Onlineauswertung nutzen
+				<p *ngIf="schule.aktuellAngemeldet && textAuswertungsmodus.length === 0">Sie können einmalig wählen, ob Sie die Onlineauswertung nutzen
 					wollen oder die Auswertung vollständig
 					offline erstellen und alle Urkunden selbst schreiben wollen. Falls Sie die Onlineauswetzung nutzen
 					möchten, klicken Sie bitte auf "Onlineauswertung" und erfassen Klassen und Kinder oder laden eine
 					Klassenliste hoch.
 				</p>
 
-				<p *ngIf="showTextModusOffline()">Sie haben bereits eine Auswertungstabelle hochgeladen und können daher
+				<p *ngIf="schule.aktuellAngemeldet && textAuswertungsmodus === 'OFFLINE'">Sie haben bereits eine Auswertungstabelle hochgeladen und können daher
 					keine Klassen und Kinder mehr erfassen.
 					Falls das ein Versehen war, wenden Sie sich bitte per Mail
 					an minikaenguru(at)egladil.de.
@@ -36,7 +36,7 @@
 							{{schule.details.angemeldetDurch}}
 						</p>
 
-						<p class="small">Auswertungsmodus: {{getAuswertungsmodus()}}</p>
+						<p class="small">Auswertungsmodus: {{textAuswertungsmodus}}</p>
 
 					</div>
 				</div>
@@ -61,7 +61,7 @@
 						</div>
 					</div>
 
-					<div class="col" *ngIf="showTextModusOffline()">
+					<div class="col" *ngIf="textAuswertungsmodus === 'OFFLINE'">
 						<div class="card">
 							<div class="card-body">
 								<div class="card-title">keine Onlineauswertung mehr möglich</div>

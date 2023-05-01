@@ -16,13 +16,13 @@
 				<div class="card-subtitle mb-2 text-muted">
 					{{schule.land}}
 				</div>
-				<div *ngIf="devMode" class="small">Auswertungsmodus: {{schule.auswertungsmodus}}</div>
+				<div *ngIf="devMode" class="small">Auswertungsmodus: {{textAuswertungsmodus}}</div>
 
-				<div *ngIf="showTextModusOffline()" class="card-subtitle mb-2 text-danger">
+				<div *ngIf="schule.aktuellAngemeldet && schule.auswertungsmodus === 'OFFLINE'" class="card-subtitle mb-2 text-danger">
 					Sie haben bereits eine Auswertung hochgeladen und sehen daher den Button "Onlineauswertung" nicht mehr.
 				</div>
 
-				<div *ngIf="showTextModusIndifferent()" class="card-subtitle mb-2 text-danger">
+				<div *ngIf="schule.aktuellAngemeldet && schule.auswertungsmodus === 'INDIFFERENT'" class="card-subtitle mb-2 text-danger">
 					Wenn Sie den Button "Auswertungstabelle hochladen" klicken und dann tatsächlich eine Auswertungstabelle hochladen, haben Sie keine Möglichkeit mehr, 
 					die Onlineauswertung zu nutzen und können Ihre Urkunden nur selbst erstellen.
 				</div>

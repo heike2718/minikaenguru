@@ -32,6 +32,8 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 
 	vertragAdvModel!: DownloadCardModel;
 
+	textAuswertungsmodus = 'noch nicht entschieden';
+
 	private user?: User;
 
 	schule?: Schule;
@@ -74,6 +76,11 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 
 					this.logger.debug(JSON.stringify(this.schule));
 
+					switch(this.schule.auswertungsmodus) {
+						case 'OFFLINE': this.textAuswertungsmodus = 'OFFLINE (Sie erstellen die Auswertung und die Urkunden selbst)'; break;
+						case 'ONLINE': this.textAuswertungsmodus = 'ONLINE'; break;
+						default: break;
+					}
 
 					this.vertragAdvModel = {
 						id: this.schule.kuerzel,
@@ -188,37 +195,5 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 
 		this.lehrerFacade.removeSchule(this.schule);
 		this.gotoDashboard();
-	}
-
-	showTextModusIndifferent(): boolean {
-
-		if (this.schule === undefined) {
-			return false;
-		}
-
-		return this.schule.auswertungsmodus === 'INDIFFERENT';
-	}
-
-	showTextModusOffline(): boolean {
-
-		if (this.schule === undefined) {
-			return false;
-		}
-
-		return this.schule.auswertungsmodus === 'OFFLINE';
-	}
-
-	getAuswertungsmodus(): string {
-
-		if (!this.schule) {
-			return '';
-		}
-
-		if (this.schule.auswertungsmodus === 'INDIFFERENT') {
-			return 'noch nicht entschieden'
-		}
-
-		return '' + this.schule.auswertungsmodus;
-		
 	}
 }
