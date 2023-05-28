@@ -40,7 +40,7 @@ public interface MkKatalogeRestClient {
 
 	@GET
 	@Path("heartbeats")
-	public Response getHeartbeat(@NotBlank @StringLatin @QueryParam("heartbeatId") final String searchTerm);
+	public Response checkKataloge(@HeaderParam("X-HEARTBEAT-ID") final String heartbeatId);
 
 	@GET
 	@Path("katalogsuche/global/{typ}")

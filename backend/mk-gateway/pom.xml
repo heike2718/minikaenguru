@@ -14,7 +14,7 @@
 		<quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
 		<quarkus.platform.version>2.16.6.Final</quarkus.platform.version>
 		<surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
-		<dependency-check.version>7.1.0</dependency-check.version>
+		<dependency-check.version>8.2.1</dependency-check.version>
 		<compiler-plugin.version>3.8.1</compiler-plugin.version>
 		<java.version>17</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -242,7 +242,7 @@ public class MkKatalogeResourceAdapter extends AbstractMkResourceAdapter {
 
 		try {
 
-			Response response = restClient.getHeartbeat(heartbeatSecret);
+			Response response = restClient.checkKataloge(heartbeatSecret);
 			return response;
 		} catch (Exception e) {
 
