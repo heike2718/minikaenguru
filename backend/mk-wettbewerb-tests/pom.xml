@@ -5,11 +5,11 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mk-wettbewerb-tests</artifactId>
-	<version>1.8.3</version>
+	<version>1.8.5</version>
 
 	<properties>
-		<minikaenguru-version>1.8.4</minikaenguru-version>
-		<commons.version>1.8.0</commons.version>
+		<minikaenguru-version>${project.version}</minikaenguru-version>
+		<commons.version>2.0.0</commons.version>
 		<filescanner.version>3.0.0</filescanner.version>
 		<dependency-check.version>6.5.0</dependency-check.version>
 		<slf4j.version>1.7.32</slf4j.version>

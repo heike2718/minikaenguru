@@ -165,11 +165,47 @@ public class SchuleUrkundenservice {
 			SchulurkundenGenerator urkundenGenerator = new SchulurkundenGenerator();
 			seiten.addAll(urkundenGenerator.generiereUrkunden(datenRepository));
 
-			byte[] daten = new PdfMerger().concatPdf(seiten);
+			PdfMerger pdfMerger = new PdfMerger();
 
-			String dateiname = this.getDateiname(schulteilnahme);
+			if (seiten.size() > 100) {
 
-			return new DownloadData(dateiname, daten);
+				byte[] datenBunch1 = null;
+				byte[] datenBunch2 = null;
+				List<byte[]> bunch = new ArrayList<>();
+
+				for (int i = 0; i < 100; i++) {
+
+					bunch.add(seiten.get(i));
+				}
+
+				datenBunch1 = pdfMerger.concatPdf(bunch);
+				bunch = new ArrayList<>();
+
+				for (int i = 100; i < seiten.size(); i++) {
+
+					bunch.add(seiten.get(i));
+
+				}
+
+				datenBunch2 = pdfMerger.concatPdf(bunch);
+
+				List<byte[]> bunches = new ArrayList<>();
+				bunches.add(datenBunch1);
+				bunches.add(datenBunch2);
+
+				byte[] daten = pdfMerger.concatPdf(bunches);
+				String dateiname = this.getDateiname(schulteilnahme);
+
+				return new DownloadData(dateiname, daten);
+
+			} else {
+
+				byte[] daten = pdfMerger.concatPdf(seiten);
+				String dateiname = this.getDateiname(schulteilnahme);
+
+				return new DownloadData(dateiname, daten);
+			}
+
 		} finally {
 
 			// Memory-Leak

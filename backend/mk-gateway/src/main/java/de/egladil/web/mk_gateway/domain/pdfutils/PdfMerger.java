@@ -9,6 +9,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfCopy;
@@ -20,6 +23,8 @@ import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
  * PdfMerger
  */
 public class PdfMerger {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(PdfMerger.class);
 
 	/**
 	 * Fasst die List von pdfs zu einem pdf zusammen.
@@ -39,6 +44,7 @@ public class PdfMerger {
 			return pdfs.get(0);
 		}
 		final Document document = new Document();
+		LOGGER.info("merge: {} Seiten", pdfs.size());
 
 		PdfReader first = null;
 		PdfReader second = null;
@@ -55,6 +61,7 @@ public class PdfMerger {
 				first = new PdfReader(firstChunk);
 				second = new PdfReader(pdfs.get(i));
 				firstChunk = concat(first, second, document);
+				printMemoryUsage();
 			}
 
 			return firstChunk;
@@ -65,6 +72,8 @@ public class PdfMerger {
 
 			close(first);
 			close(second);
+			LOGGER.info("calling gc");
+			System.gc();
 		}
 	}
 
@@ -90,5 +99,22 @@ public class PdfMerger {
 
 			reader.close();
 		}
+	}
+
+	private void printMemoryUsage() {
+
+		Runtime runtime = Runtime.getRuntime();
+		long memory = runtime.totalMemory() - runtime.freeMemory();
+		LOGGER.info("Used memory is megabytes: " + bytesToMegabytes(memory));
+
+	}
+
+	/**
+	 * @param  memory
+	 * @return
+	 */
+	private long bytesToMegabytes(final long memory) {
+
+		return memory / 1024;
 	}
 }

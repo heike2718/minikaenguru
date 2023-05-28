@@ -10,7 +10,7 @@ export const environment = {
         apiUrl: 'http://localhost:9510/mk-gateway/admin',
         profileUrl: 'http://localhost:80/profil-app',
         storageKeyPrefix: 'mka_',
-        version: '1.8.4',
+        version: '1.8.5',
         consoleLogActive: true,
         serverLogActive: false,
         loglevel: 1
