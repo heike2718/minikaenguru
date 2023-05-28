@@ -167,6 +167,7 @@ public class SchuleUrkundenservice {
 
 			PdfMerger pdfMerger = new PdfMerger();
 
+			// FIXME: I0407: Dieser Teil kann wieder raus, sobald wir mehr RAM haben. Bleibt nur noch der else-Teil übrig.
 			if (seiten.size() > 100) {
 
 				byte[] datenBunch1 = null;

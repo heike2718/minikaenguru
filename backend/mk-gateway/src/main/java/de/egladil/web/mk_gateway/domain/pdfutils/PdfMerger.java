@@ -61,7 +61,11 @@ public class PdfMerger {
 				first = new PdfReader(firstChunk);
 				second = new PdfReader(pdfs.get(i));
 				firstChunk = concat(first, second, document);
-				printMemoryUsage();
+
+				if (LOGGER.isDebugEnabled()) {
+
+					printMemoryUsage();
+				}
 			}
 
 			return firstChunk;
@@ -72,8 +76,10 @@ public class PdfMerger {
 
 			close(first);
 			close(second);
-			LOGGER.info("calling gc");
-			System.gc();
+
+			// FIXME: I0407
+			// LOGGER.info("calling gc");
+			// System.gc();
 		}
 	}
 
@@ -105,7 +111,7 @@ public class PdfMerger {
 
 		Runtime runtime = Runtime.getRuntime();
 		long memory = runtime.totalMemory() - runtime.freeMemory();
-		LOGGER.info("Used memory is megabytes: " + bytesToMegabytes(memory));
+		LOGGER.debug("Used memory is megabytes: " + bytesToMegabytes(memory));
 
 	}
 
