@@ -56,8 +56,7 @@ image::pwd-vergessen-mail.png[width=100%]
 
 Klicken Sie den Link in der Email an. Falls Sie Bedenken haben, einen Link in einer Email anzuklicken:
 
-*der Link hat immer die im Bild gezeigte Form.* Der Teil hinter tokenId= ist eine einmalig für Sie generierte Zeichenkette. Wichtig
-ist, dass der Teil vor tokenId so aussieht, wie im Bild gezeigt. opa-wetterwachs.de ist eine Domain, die mir gehört und wie die Domain
+*der Link hat immer die im Bild gezeigte Form.* Der Teil hinter tokenId= ist eine einmalig für Sie generierte Zeichenkette. Der Teil vor tokenId zeigt entweder mathe-jung-alt.de an oder opa-wetterwachs.de. opa-wetterwachs.de ist eine Domain, die mir ebenfalls gehört und wie die Domain
 mathe-jung-alt.de in Deutschland gehostet wird.
 
 Nach Anklicken des Links sehen Sie im Browser ein Formular, mit dem Sie das Einmalpasswort ändern können:
@@ -74,6 +73,18 @@ Hat alles geklappt, öffnet sich ein Erfolgsdialog
 image::einmalpasswort-aendern-success.png[width=30%]
 
 und nach dem Schließen des Dialogs werden Sie in die Minikänguru-Anwendung zurückgeleitet, wo Sie sich mit Ihrem neuen Passwort einloggen können.
+
+
+Wenn keine Mail mit dem Link ankommt
+------------------------------------
+
+Folgende Gründe sind möglich:
+
+* die Mailadresse war falsch
+* die Mail ist im SPAM-Ordner gelandet
+* das Postfach ist voll
+
+Falls das Postfach voll ist, versuchen Sie zunächst, Ihr Postfach aufzuräumen (Löschen nicht mehr erforderlicher Mails und Mailanhänge). Wenn das nicht hilft, nehmen Sie bitte Kontakt zum Administrator für Ihr Mailaccount auf. Sobald das Postfach wieder Mails entgegennimmt, können Sie die Schritte aus dem Abschnitt "Passwort vergessen" wiederholen.
 
 
 Wenn der Link mit dem Einmalpasswort nicht funktioniert
