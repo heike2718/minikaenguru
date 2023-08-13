@@ -4,10 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_kataloge.domain.admin;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +13,9 @@ import de.egladil.web.mk_kataloge.domain.apimodel.SchulePayload;
 import de.egladil.web.mk_kataloge.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_kataloge.domain.event.MailNotSent;
 import de.egladil.web.mk_kataloge.domain.katalogantrag.KatalogMailService;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Event;
+import jakarta.inject.Inject;
 
 /**
  * ChangeSchulenMailDelegate

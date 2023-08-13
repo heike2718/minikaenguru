@@ -12,12 +12,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 
-import javax.ws.rs.core.NewCookie;
-
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
-import de.egladil.web.mk_gateway.domain.auth.session.SessionUtils;
+import jakarta.ws.rs.core.NewCookie;
 
 /**
  * SessionUtilsTest
@@ -66,7 +64,7 @@ public class SessionUtilsTest {
 		assertEquals(sessionId, cookie.getValue());
 		assertTrue(cookie.isHttpOnly());
 		assertTrue(cookie.isSecure());
-		assertEquals(7200, cookie.getMaxAge());
+		assertEquals(360000, cookie.getMaxAge());
 
 	}
 

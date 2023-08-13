@@ -4,7 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.uploads;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.apache.commons.lang3.tuple.Pair;
 

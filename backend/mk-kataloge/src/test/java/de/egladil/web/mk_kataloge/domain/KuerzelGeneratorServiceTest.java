@@ -11,8 +11,6 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
-import de.egladil.web.commons_crypto.CryptoService;
-import de.egladil.web.commons_crypto.impl.CryptoServiceImpl;
 import de.egladil.web.mk_kataloge.domain.apimodel.KuerzelAPIModel;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Land;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Ort;
@@ -134,9 +132,7 @@ public class KuerzelGeneratorServiceTest {
 			}
 		};
 
-		CryptoService cryptoService = new CryptoServiceImpl();
-
-		KuerzelGeneratorService kuerzelGeneratorService = KuerzelGeneratorService.createForTest(katalogeRepository, cryptoService);
+		KuerzelGeneratorService kuerzelGeneratorService = KuerzelGeneratorService.createForTest(katalogeRepository);
 
 		// Act
 		KuerzelAPIModel kuerzel = kuerzelGeneratorService.generateKuerzel();

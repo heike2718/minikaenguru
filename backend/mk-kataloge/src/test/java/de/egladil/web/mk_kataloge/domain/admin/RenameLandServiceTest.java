@@ -14,11 +14,6 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.persistence.PersistenceException;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.Response;
-
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
@@ -28,8 +23,12 @@ import de.egladil.web.mk_kataloge.domain.apimodel.LandPayload;
 import de.egladil.web.mk_kataloge.domain.error.KatalogAPIException;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Land;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
+import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.mockito.InjectMock;
+import jakarta.inject.Inject;
+import jakarta.persistence.PersistenceException;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.core.Response;
 
 /**
  * RenameLandServiceTest

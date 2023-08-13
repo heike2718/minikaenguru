@@ -4,8 +4,8 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.veranstalter.admin;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.transaction.Transactional;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 
 import org.jboss.weld.exceptions.IllegalArgumentException;
 

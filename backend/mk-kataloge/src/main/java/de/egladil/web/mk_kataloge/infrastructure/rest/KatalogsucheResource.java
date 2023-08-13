@@ -8,19 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-import javax.validation.constraints.NotBlank;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +23,18 @@ import de.egladil.web.mk_kataloge.domain.Katalogtyp;
 import de.egladil.web.mk_kataloge.domain.event.DataInconsistencyRegistered;
 import de.egladil.web.mk_kataloge.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_kataloge.domain.event.SecurityIncidentRegistered;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Event;
+import jakarta.inject.Inject;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * KatalogsucheResource
@@ -88,24 +87,24 @@ public class KatalogsucheResource {
 
 			switch (katalogtyp) {
 
-				case SCHULE:
-					result = katalogsucheFacade.sucheSchulenMitNameEnthaltend(searchTerm);
-					break;
+			case SCHULE:
+				result = katalogsucheFacade.sucheSchulenMitNameEnthaltend(searchTerm);
+				break;
 
-				case ORT:
-					result = katalogsucheFacade.sucheOrteMitNameBeginnendMit(searchTerm);
-					break;
+			case ORT:
+				result = katalogsucheFacade.sucheOrteMitNameBeginnendMit(searchTerm);
+				break;
 
-				case LAND:
-					result = katalogsucheFacade.sucheLaenderMitNameBeginnendMit(searchTerm);
-					break;
+			case LAND:
+				result = katalogsucheFacade.sucheLaenderMitNameBeginnendMit(searchTerm);
+				break;
 
-				default:
-					String msg = "Aufruf von findItems mit unerwartetem Katalogtyp " + typ + ": geben leeres result zurück";
-					LOG.warn(msg);
-					eventDelegate.fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
-					ResponsePayload responsePayload = ResponsePayload.messageOnly(MessagePayload.error("Unbeannte URL"));
-					return Response.status(Status.NOT_FOUND).entity(responsePayload).build();
+			default:
+				String msg = "Aufruf von findItems mit unerwartetem Katalogtyp " + typ + ": geben leeres result zurück";
+				LOG.warn(msg);
+				eventDelegate.fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
+				ResponsePayload responsePayload = ResponsePayload.messageOnly(MessagePayload.error("Unbeannte URL"));
+				return Response.status(Status.NOT_FOUND).entity(responsePayload).build();
 			}
 
 			ResponsePayload responsePayload = new ResponsePayload(MessagePayload.info("OK"), result);

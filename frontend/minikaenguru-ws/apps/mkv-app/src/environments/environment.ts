@@ -9,7 +9,7 @@ export const environment = {
   apiUrl: 'http://localhost:9510/mk-gateway',
   profileUrl: 'http://localhost:80/profil-app',
   storageKeyPrefix: 'mkv_',
-  version: '1.8.5',
+  version: '2.0.0',
   consoleLogActive: true,
   serverLogActive: false,
   loglevel: 1

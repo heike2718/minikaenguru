@@ -7,8 +7,8 @@ package de.egladil.web.mkv_server_tests;
 import java.io.File;
 import java.io.FileOutputStream;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 
 import org.apache.commons.io.IOUtils;
 

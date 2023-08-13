@@ -4,9 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_kataloge.domain.katalogantrag;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import de.egladil.web.commons_mailer.CommonEmailService;
@@ -14,6 +11,8 @@ import de.egladil.web.commons_mailer.DefaultEmailDaten;
 import de.egladil.web.commons_mailer.EmailServiceCredentials;
 import de.egladil.web.commons_mailer.exception.EmailException;
 import de.egladil.web.commons_mailer.exception.InvalidMailAddressException;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 /**
  * KatalogMailService

@@ -1,8 +1,8 @@
 // =====================================================
-// Project: mk-kataloge-tests
+// Project: mk-kataloge
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mkv_kataloge_tests;
+package de.egladil.web.mk_kataloge.application;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -11,26 +11,23 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.egladil.web.mk_kataloge.application.impl.KatalogFacadeImpl;
 import de.egladil.web.mk_kataloge.domain.apimodel.SchuleAPIModel;
+import io.quarkus.test.junit.QuarkusTest;
+import jakarta.inject.Inject;
 
 /**
- * KatalogFacadeImplIT
+ * KatalogFacadeImplTest
  */
-public class KatalogFacadeImplIT extends AbstractIntegrationTest {
+@QuarkusTest
+public class KatalogFacadeImplTest {
 
-	private KatalogFacadeImpl facade;
-
-	@BeforeEach
-	void setUp() {
-
-		init();
-
-		facade = KatalogFacadeImpl.createForIntegrationTest(entityManager);
-	}
+	@Inject
+	KatalogFacadeImpl facade;
 
 	@Test
 	void should_findSchulen_work() throws Exception {
@@ -51,10 +48,8 @@ public class KatalogFacadeImplIT extends AbstractIntegrationTest {
 			assertNotNull(schule.getKuerzelLand(), "Fehler bei " + schule.getKuerzel());
 		}
 
-		// String json = new ObjectMapper().writeValueAsString(schulen);
-		//
-		// System.out.println(json);
+		String json = new ObjectMapper().writeValueAsString(schulen);
 
+		System.out.println(json);
 	}
-
 }

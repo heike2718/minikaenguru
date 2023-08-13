@@ -7,9 +7,9 @@ package de.egladil.web.mk_gateway.domain.mail;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.event.Event;
+import jakarta.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

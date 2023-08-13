@@ -4,7 +4,7 @@
 // =====================================================
 package de.egladil.web.mkv_server_tests;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.ConcurrencySafeEntity;
 

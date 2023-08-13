@@ -7,7 +7,7 @@ package de.egladil.web.mk_gateway.domain.urkunden;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * UrkundenmotivRepository

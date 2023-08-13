@@ -4,13 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.event;
 
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.context.control.ActivateRequestContext;
-import javax.enterprise.event.Observes;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +13,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.StoredEvent;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.EventRepositoryHibernate;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.control.ActivateRequestContext;
+import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceException;
 
 /**
  * DomainEventHandler

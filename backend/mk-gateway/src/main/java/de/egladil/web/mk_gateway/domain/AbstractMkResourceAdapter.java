@@ -7,9 +7,9 @@ package de.egladil.web.mk_gateway.domain;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
 
 import org.slf4j.Logger;
 

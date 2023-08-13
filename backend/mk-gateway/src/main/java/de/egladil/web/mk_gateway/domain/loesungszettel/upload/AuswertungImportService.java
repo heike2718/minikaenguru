@@ -13,12 +13,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceException;
-import javax.transaction.Transactional;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
@@ -47,6 +41,11 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UploadHibernateRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceException;
+import jakarta.transaction.Transactional;
 
 /**
  * AuswertungImportService
@@ -493,7 +492,7 @@ public class AuswertungImportService {
 	}
 
 	@Transactional
-	private void doUpdateTheUploadStatus(final PersistenterUpload persistenterUpload, final UploadStatus uploadStatus) {
+	void doUpdateTheUploadStatus(final PersistenterUpload persistenterUpload, final UploadStatus uploadStatus) {
 
 		persistenterUpload.setStatus(uploadStatus);
 		uploadRepository.updateUpload(persistenterUpload);

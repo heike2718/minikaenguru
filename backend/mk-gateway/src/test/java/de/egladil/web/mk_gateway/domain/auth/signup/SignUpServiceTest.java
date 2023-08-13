@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +28,7 @@ import de.egladil.web.mk_gateway.domain.veranstalter.SynchronizeVeranstalterServ
 import de.egladil.web.mk_gateway.infrastructure.messaging.PropagateUserService;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
 import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.mockito.InjectMock;
+import io.quarkus.test.InjectMock;
 
 /**
  * SignUpServiceTest

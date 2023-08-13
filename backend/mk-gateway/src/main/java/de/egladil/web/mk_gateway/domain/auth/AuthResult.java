@@ -6,7 +6,7 @@ package de.egladil.web.mk_gateway.domain.auth;
 
 import java.util.Objects;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * AuthResult ist das AuthResult vom SignUp / LogIn.

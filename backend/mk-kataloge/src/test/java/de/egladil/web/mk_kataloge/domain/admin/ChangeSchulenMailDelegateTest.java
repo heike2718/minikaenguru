@@ -11,16 +11,15 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
-import javax.inject.Inject;
-
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.commons_mailer.exception.EmailException;
 import de.egladil.web.mk_kataloge.domain.apimodel.SchulePayload;
 import de.egladil.web.mk_kataloge.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_kataloge.domain.katalogantrag.KatalogMailService;
+import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.mockito.InjectMock;
+import jakarta.inject.Inject;
 
 /**
  * ChangeSchulenMailDelegateTest

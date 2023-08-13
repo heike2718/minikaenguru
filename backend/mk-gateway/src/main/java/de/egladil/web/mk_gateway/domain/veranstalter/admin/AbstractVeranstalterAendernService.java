@@ -6,7 +6,7 @@ package de.egladil.web.mk_gateway.domain.veranstalter.admin;
 
 import java.util.List;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;

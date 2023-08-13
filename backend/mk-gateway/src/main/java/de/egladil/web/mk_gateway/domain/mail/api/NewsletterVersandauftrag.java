@@ -6,7 +6,7 @@ package de.egladil.web.mk_gateway.domain.mail.api;
 
 import java.util.Objects;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

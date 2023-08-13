@@ -9,11 +9,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +27,10 @@ import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.OrtToKatal
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.SchuleToKatalogItemMapper;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.impl.KatalogeHibernateRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Event;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 /**
  * KatalogFacadeImpl

@@ -11,7 +11,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import javax.enterprise.event.Event;
+import jakarta.enterprise.event.Event;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;

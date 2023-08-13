@@ -1,33 +1,27 @@
 // =====================================================
-// Project: mk-kataloge-tests
+// Project: mk-kataloge
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mkv_kataloge_tests.dao;
+package de.egladil.web.mk_kataloge.infrastructure.persistence.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
-import de.egladil.web.mk_kataloge.infrastructure.persistence.impl.KatalogeHibernateRepository;
-import de.egladil.web.mkv_kataloge_tests.AbstractIntegrationTest;
+import io.quarkus.test.junit.QuarkusTest;
+import jakarta.inject.Inject;
 
 /**
  * KatalogeHibernateRepositoryTest
  */
-public class KatalogeHibernateRepositoryIT extends AbstractIntegrationTest {
+@QuarkusTest
+public class KatalogeHibernateRepositoryTest {
 
-	private KatalogeHibernateRepository repository;
-
-	@BeforeEach
-	void setUp() {
-
-		super.init();
-		repository = KatalogeHibernateRepository.createForIntegrationTests(entityManager);
-	}
+	@Inject
+	KatalogeHibernateRepository repository;
 
 	@Test
 	void should_findSchulenInOrtWork() {
