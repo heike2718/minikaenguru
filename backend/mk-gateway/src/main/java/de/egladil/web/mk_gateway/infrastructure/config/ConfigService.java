@@ -4,9 +4,9 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.config;
 
-import jakarta.enterprise.context.ApplicationScoped;
-
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * ConfigService
@@ -23,9 +23,6 @@ public class ConfigService {
 	@ConfigProperty(name = "stage")
 	String stage;
 
-	@ConfigProperty(name = "allowedOrigin", defaultValue = "https://mathe-jung-alt.de")
-	String allowedOrigin;
-
 	public boolean isBlockOnMissingOriginReferer() {
 
 		return blockOnMissingOriginReferer;
@@ -40,10 +37,4 @@ public class ConfigService {
 
 		return stage;
 	}
-
-	public String getAllowedOrigin() {
-
-		return allowedOrigin;
-	}
-
 }

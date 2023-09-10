@@ -4,13 +4,11 @@
 // =====================================================
 package de.egladil.web.mk_gateway;
 
-import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 
 /**
  * MkGatewayApp
  */
-@ApplicationPath("/mk-gateway")
 public class MkGatewayApp extends Application {
 
 	public static final String CLIENT_COOKIE_PREFIX = "mk";

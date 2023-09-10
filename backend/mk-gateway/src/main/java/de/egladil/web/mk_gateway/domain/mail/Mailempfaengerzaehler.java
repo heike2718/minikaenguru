@@ -5,10 +5,9 @@
 package de.egladil.web.mk_gateway.domain.mail;
 
 import java.util.List;
+import java.util.function.Function;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
-import com.google.common.base.Function;
+import jakarta.annotation.Nullable;
 
 /**
  * Mailempfaengerzaehler

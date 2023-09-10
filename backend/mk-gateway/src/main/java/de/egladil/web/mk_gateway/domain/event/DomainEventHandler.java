@@ -14,8 +14,6 @@ import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.StoredEvent;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.EventRepositoryHibernate;
 import jakarta.enterprise.context.RequestScoped;
-import jakarta.enterprise.context.control.ActivateRequestContext;
-import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
@@ -38,14 +36,13 @@ public class DomainEventHandler {
 		return result;
 	}
 
-	@ActivateRequestContext
-	public void handleEvent(@Observes final MkGatewayDomainEvent event) {
+	public void handleEvent(final MkGatewayDomainEvent event) {
 
 		try {
 
 			String body = new ObjectMapper().writeValueAsString(event);
 
-			LOG.debug("Event body = " + body);
+			LOG.info("Event body = " + body);
 
 			StoredEvent storedEvent = StoredEvent.createEvent(event.occuredOn(), event.typeName(), body);
 
@@ -63,7 +60,7 @@ public class DomainEventHandler {
 	 * @param body
 	 * @param storedEvent
 	 */
-	private void storeEventQuietly(final String body, final StoredEvent storedEvent) {
+	void storeEventQuietly(final String body, final StoredEvent storedEvent) {
 
 		try {
 

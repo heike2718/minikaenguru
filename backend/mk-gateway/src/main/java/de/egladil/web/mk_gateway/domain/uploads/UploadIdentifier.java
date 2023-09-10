@@ -5,7 +5,6 @@
 package de.egladil.web.mk_gateway.domain.uploads;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jboss.weld.exceptions.IllegalArgumentException;
 
 /**
  * UploadIdentifier ist der fachliche Schlüssel.

@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import org.jboss.weld.exceptions.IllegalArgumentException;
-
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 
 /**
