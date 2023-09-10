@@ -45,6 +45,7 @@ public class AppLifecycleBean {
 
 	void onStartup(@Observes final StartupEvent ev) {
 
+		LOGGER.info("mk-gateway is starting...");
 		LOGGER.info(" ===========>  the download dir is {}", getPathDownloadDir());
 		LOGGER.info(" ===========>  the upload dir is {}", getPathUploadDir());
 		LOGGER.info(" ===========>  quarkus.http.cors.origins={}", corsAllowedOrigins);

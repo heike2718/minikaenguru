@@ -37,13 +37,6 @@ public class KatalogeHibernateRepository implements KatalogeRepository {
 	@Inject
 	EntityManager em;
 
-	public static KatalogeHibernateRepository createForIntegrationTests(final EntityManager entityManager) {
-
-		KatalogeHibernateRepository result = new KatalogeHibernateRepository();
-		result.em = entityManager;
-		return result;
-	}
-
 	@Override
 	public List<Land> loadLaender() {
 
@@ -75,9 +68,9 @@ public class KatalogeHibernateRepository implements KatalogeRepository {
 	@Override
 	public List<Ort> findOrteInLand(final String landKuerzel, final String searchTerm) {
 
-		TypedQuery<Ort> query = em.createQuery(Ort.QUERY_FIND_ORTE_IN_LAND, Ort.class);
-		query.setParameter("name", searchTerm.toLowerCase() + "%").setParameter("landKuerzel", landKuerzel).setParameter("excluded",
-			UNBEKANNT);
+		TypedQuery<Ort> query = em.createNamedQuery(Ort.QUERY_FIND_ORTE_IN_LAND, Ort.class);
+		query.setParameter("name", searchTerm.toLowerCase() + "%").setParameter("landKuerzel", landKuerzel)
+			.setParameter("excluded", UNBEKANNT);
 
 		return query.getResultList();
 	}

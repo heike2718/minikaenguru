@@ -41,14 +41,14 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * KatalogItemsResource
+ * KatalogeResource
  */
 @ApplicationScoped
 @Path("kataloge")
 @Produces(MediaType.APPLICATION_JSON)
-public class KatalogItemsResource {
+public class KatalogeResource {
 
-	private static final Logger LOG = LoggerFactory.getLogger(KatalogItemsResource.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(KatalogeResource.class);
 
 	@ConfigProperty(name = "admin.secret")
 	String expectedSecret;
@@ -87,7 +87,7 @@ public class KatalogItemsResource {
 
 			String msg = "Unautorisierter Versuch, die Länder zu laden: angemeldeter ADMIN=" + adminUuid + ", secret=" + secret;
 
-			LOG.warn(msg);
+			LOGGER.warn(msg);
 
 			eventDelegate.fireSecurityEvent(msg, securityEvent);
 
@@ -126,7 +126,7 @@ public class KatalogItemsResource {
 				+ " umzubenennen: angemeldeter ADMIN=" + adminUuid + ", secret="
 				+ secret;
 
-			LOG.warn(msg);
+			LOGGER.warn(msg);
 
 			eventDelegate.fireSecurityEvent(msg, securityEvent);
 
@@ -138,7 +138,7 @@ public class KatalogItemsResource {
 
 		ResponsePayload responsePayload = renameLandService.landUmbenennen(requestPayload);
 
-		LOG.info("ADMIN {} hat Land {} umbenannt: Erfolg = {}", StringUtils.abbreviate(adminUuid, 11), requestPayload,
+		LOGGER.info("ADMIN {} hat Land {} umbenannt: Erfolg = {}", StringUtils.abbreviate(adminUuid, 11), requestPayload,
 			responsePayload.getMessage().getMessage());
 
 		return Response.ok(responsePayload).build();
@@ -168,7 +168,7 @@ public class KatalogItemsResource {
 				+ " umzubenennen: angemeldeter ADMIN=" + adminUuid + ", secret="
 				+ secret;
 
-			LOG.warn(msg);
+			LOGGER.warn(msg);
 
 			eventDelegate.fireSecurityEvent(msg, securityEvent);
 
@@ -180,7 +180,7 @@ public class KatalogItemsResource {
 
 		ResponsePayload responsePayload = renameOrtService.ortUmbenennen(requestPayload);
 
-		LOG.info("ADMIN {} hat Ort {} umbenannt: Erfolg = {}", StringUtils.abbreviate(adminUuid, 11), requestPayload,
+		LOGGER.info("ADMIN {} hat Ort {} umbenannt: Erfolg = {}", StringUtils.abbreviate(adminUuid, 11), requestPayload,
 			responsePayload.getMessage().getMessage());
 
 		return Response.ok(responsePayload).build();
@@ -210,7 +210,7 @@ public class KatalogItemsResource {
 				+ " umzubenennen: angemeldeter ADMIN=" + adminUuid + ", secret="
 				+ secret;
 
-			LOG.warn(msg);
+			LOGGER.warn(msg);
 
 			eventDelegate.fireSecurityEvent(msg, securityEvent);
 
@@ -222,7 +222,7 @@ public class KatalogItemsResource {
 
 		ResponsePayload responsePayload = renameSchuleService.schuleUmbenennen(requestPayload);
 
-		LOG.info("ADMIN {} hat Schule {} umbenannt: Erfolg = {}", StringUtils.abbreviate(adminUuid, 11), requestPayload,
+		LOGGER.info("ADMIN {} hat Schule {} umbenannt: Erfolg = {}", StringUtils.abbreviate(adminUuid, 11), requestPayload,
 			responsePayload.getMessage().getMessage());
 
 		return Response.ok(responsePayload).build();
@@ -250,7 +250,7 @@ public class KatalogItemsResource {
 
 			String msg = "Unautorisierter Versuch, eine Schule anzulegen: angemeldeter ADMIN=" + adminUuid + ", secret=" + secret;
 
-			LOG.warn(msg);
+			LOGGER.warn(msg);
 
 			eventDelegate.fireSecurityEvent(msg, securityEvent);
 
@@ -262,7 +262,7 @@ public class KatalogItemsResource {
 
 		ResponsePayload responsePayload = createSchuleService.schuleAnlegen(requestPayload);
 
-		LOG.info("ADMIN {} hat Schule {} angelegt: Erfolg = {}", StringUtils.abbreviate(adminUuid, 11), requestPayload,
+		LOGGER.info("ADMIN {} hat Schule {} angelegt: Erfolg = {}", StringUtils.abbreviate(adminUuid, 11), requestPayload,
 			responsePayload.getMessage().getMessage());
 
 		return Response.ok(responsePayload).build();
@@ -273,6 +273,8 @@ public class KatalogItemsResource {
 	public Response loadOrteInLand(@PathParam(value = "kuerzel") @Kuerzel final String kuerzel) {
 
 		int anzahlTreffer = katalogFacade.countOrteInLand(kuerzel);
+
+		LOGGER.info("land={}, Anzahl Orte={}", kuerzel, anzahlTreffer);
 
 		if (anzahlTreffer > maximaleAnzahlTreffer) {
 

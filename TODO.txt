@@ -1,6 +1,12 @@
+xx.09.2023
+-----------------
+- a300: mk-kataloge startet nicht, vermutlich wegen flyway
+- a300: mkv-app: Bad Gateway 502- Hatte @ApplicationPath("/mk-gateway") ersetzt durch quarkus.http.root-path=mk-gateway. Aber es muss so sein, sonst gibt es testfehler
+
+
 xx.08.2023
 ------------------
-bump aurakus to 3
+bump qurakus to 3
 
 
 28.08.2021

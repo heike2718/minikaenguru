@@ -26,11 +26,9 @@ import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Ort;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.OrtToKatalogItemMapper;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.SchuleToKatalogItemMapper;
-import de.egladil.web.mk_kataloge.infrastructure.persistence.impl.KatalogeHibernateRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Event;
 import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
 
 /**
  * KatalogFacadeImpl
@@ -48,13 +46,6 @@ public class KatalogFacadeImpl implements KatalogFacade {
 
 	@Inject
 	LoggableEventDelegate eventDelegate;
-
-	public static KatalogFacadeImpl createForIntegrationTest(final EntityManager entityManager) {
-
-		KatalogFacadeImpl result = new KatalogFacadeImpl();
-		result.katalogRepository = KatalogeHibernateRepository.createForIntegrationTests(entityManager);
-		return result;
-	}
 
 	@Override
 	public List<KatalogItem> loadLaender() {

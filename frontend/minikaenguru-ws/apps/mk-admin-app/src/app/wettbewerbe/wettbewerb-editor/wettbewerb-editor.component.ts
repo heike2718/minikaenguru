@@ -118,9 +118,9 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 			wettbewerbsbeginn: formValue.wettbewerbsbeginn ? formValue.wettbewerbsbeginn.trim() : '',
 			wettbewerbsende: formValue.wettbewerbsende ? formValue.wettbewerbsende.trim() : '',
 			status: this.initialWettbewerbGuiModel.status, // wird sowieso ignoriert
-			loesungsbuchstabenIkids: formValue.loesungsbuchstabenIkids.trim(),
-			loesungsbuchstabenKlasse1: formValue.loesungsbuchstabenKlasse1.trim(),
-			loesungsbuchstabenKlasse2: formValue.loesungsbuchstabenKlasse2.trim()
+			loesungsbuchstabenIkids: formValue.loesungsbuchstabenIkids ? formValue.loesungsbuchstabenIkids.trim() : '',
+			loesungsbuchstabenKlasse1: formValue.loesungsbuchstabenKlasse1.trim() ? formValue.loesungsbuchstabenKlasse1.trim() : '',
+			loesungsbuchstabenKlasse2: formValue.loesungsbuchstabenKlasse2.trim() ? formValue.loesungsbuchstabenKlasse2.trim() : ''
 		}
 		this.logger.debug('neuerWettbewerb: ' + JSON.stringify(neuerWettbewerb));
 		this.wettbewerbFacade.saveWettbewerb(neuerWettbewerb, this.initialWettbewerbGuiModel.jahr === 0);

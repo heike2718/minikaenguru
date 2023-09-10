@@ -61,7 +61,7 @@ public class KuerzelResource {
 	 */
 	@GET
 	public Response generateKuerzelFuerSchuleUndOrt(@HeaderParam(
-		value = KatalogAPIApp.UUID_HEADER_NAME) final String secret) {
+		value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret) {
 
 		if (!expectedSecret.equals(secret)) {
 
