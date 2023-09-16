@@ -6,13 +6,12 @@ package de.egladil.web.mk_kataloge.domain.apimodel;
 
 import java.util.Objects;
 
-import javax.validation.constraints.NotBlank;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.annotations.StringLatin;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Land;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * LandPayload zum Umbenennen von Land, Ort oder Schule. Alle Umbenennungen ändern ein bis viele Einträge in der

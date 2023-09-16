@@ -4,7 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.event;
 
-import javax.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.RequestScoped;
 
 /**
  * LoggableEventDelegate

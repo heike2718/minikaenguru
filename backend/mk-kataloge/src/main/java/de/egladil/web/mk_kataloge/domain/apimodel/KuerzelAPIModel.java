@@ -31,6 +31,12 @@ public class KuerzelAPIModel {
 
 	}
 
+	@Override
+	public String toString() {
+
+		return "KuerzelAPIModel [kuerzelOrt=" + kuerzelOrt + ", kuerzelSchule=" + kuerzelSchule + "]";
+	}
+
 	public String kuerzelSchule() {
 
 		return kuerzelSchule;

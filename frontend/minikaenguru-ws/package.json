@@ -1,10 +1,13 @@
 {
   "name": "minikaenguru-ws",
-  "version": "1.8.5",
+  "version": "2.0.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
     "nx": "nx",
+    "mkv-app": "npx nx serve mkv-app",
+    "mk-admin-app": "npx nx serve mk-admin-app",
+    "mkod-app": "npx nx serve mkod-app",
     "build:a300:mk-admin-app": "npx nx build mk-admin-app -c a300 --output-hashing=all --base-href /mk-admin-app --deploy-url mk-admin-app/",
     "build:a300:mkv-app": "npx nx build mkv-app -c a300 --output-hashing=all --base-href /mkv-app --deploy-url mkv-app/",
     "build:a300:mkod-app": "npx nx build mkod-app -c a300 --output-hashing=all --base-href /mkod-app --deploy-url mkod-app/",

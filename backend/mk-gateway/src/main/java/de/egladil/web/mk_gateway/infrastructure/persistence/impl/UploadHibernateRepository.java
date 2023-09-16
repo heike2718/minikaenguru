@@ -4,16 +4,10 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.persistence.impl;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -29,6 +23,10 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.entities.Persistente
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.UploadsMonitoringViewItem;
 import de.egladil.web.mk_gateway.infrastructure.persistence.sortnumbers.SortNumberGenerator;
 import de.egladil.web.mk_gateway.infrastructure.persistence.sortnumbers.impl.SortNumberGeneratorImpl;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 /**
  * UploadHibernateRepository
@@ -72,7 +70,7 @@ public class UploadHibernateRepository implements UploadRepository {
 		String stmt = "select count(*) from VW_UPLOADS";
 
 		@SuppressWarnings("unchecked")
-		List<BigInteger> trefferliste = entityManager.createNativeQuery(stmt).getResultList();
+		List<Long> trefferliste = entityManager.createNativeQuery(stmt).getResultList();
 
 		if (trefferliste.isEmpty()) {
 
@@ -96,7 +94,7 @@ public class UploadHibernateRepository implements UploadRepository {
 		String stmt = "select count(*) from VW_UPLOADS u where u.TEILNAHMENUMMER = :teilnahmenummer and UPLOAD_TYPE = :uploadType";
 
 		@SuppressWarnings("unchecked")
-		List<BigInteger> trefferliste = entityManager.createNativeQuery(stmt)
+		List<Long> trefferliste = entityManager.createNativeQuery(stmt)
 			.setParameter("teilnahmenummer", teilnahmenummer).setParameter("uploadType", uploadType.toString()).getResultList();
 
 		if (trefferliste.isEmpty()) {
@@ -175,7 +173,7 @@ public class UploadHibernateRepository implements UploadRepository {
 		for (Object[] treffer : trefferliste) {
 
 			String wert = treffer[0].toString();
-			BigInteger anzahl = (BigInteger) treffer[1];
+			Long anzahl = (Long) treffer[1];
 
 			result.add(new Auspraegung(wert, anzahl.longValue()));
 

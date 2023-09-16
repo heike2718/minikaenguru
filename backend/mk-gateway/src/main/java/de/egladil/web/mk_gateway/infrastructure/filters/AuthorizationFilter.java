@@ -8,17 +8,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import javax.annotation.Priority;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.ws.rs.Priorities;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.container.PreMatching;
-import javax.ws.rs.container.ResourceInfo;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.ext.Provider;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,11 +19,20 @@ import de.egladil.web.mk_gateway.domain.auth.session.MkvSecurityContext;
 import de.egladil.web.mk_gateway.domain.auth.session.Session;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.error.AuthException;
-import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.permissions.PermittedRolesRepository;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.infrastructure.config.ConfigService;
+import jakarta.annotation.Priority;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Priorities;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerRequestFilter;
+import jakarta.ws.rs.container.PreMatching;
+import jakarta.ws.rs.container.ResourceInfo;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.ext.Provider;
 
 /**
  * AuthorizationFilter
@@ -45,7 +43,7 @@ import de.egladil.web.mk_gateway.infrastructure.config.ConfigService;
 @Priority(Priorities.AUTHORIZATION)
 public class AuthorizationFilter implements ContainerRequestFilter {
 
-	private static final Logger LOG = LoggerFactory.getLogger(AuthorizationFilter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AuthorizationFilter.class);
 
 	@Inject
 	ConfigService configService;
@@ -60,9 +58,6 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 	PermittedRolesRepository permittedRolesRepository;
 
 	@Inject
-	DomainEventHandler domainEventHandler;
-
-	@Inject
 	LoggableEventDelegate eventDelegate;
 
 	@Override
@@ -72,13 +67,13 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
 		if ("OPTIONS".equals(method)) {
 
-			LOG.info("keine Auth bei OPTIONS");
+			LOGGER.info("keine Auth bei OPTIONS");
 
 			return;
 		}
 
 		String path = requestContext.getUriInfo().getPath();
-		LOG.debug("entering AuthorizationFilter: path={}", path);
+		LOGGER.info("path={}", path);
 
 		List<Rolle> rollen = permittedRolesRepository.permittedRollen(path, method);
 
@@ -93,9 +88,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 		if (sessionId == null) {
 
 			String msg = "restricted path " + path + " ohne sessionId aufgerufen";
-			LOG.warn(msg);
-
-			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
+			LOGGER.warn(msg);
 
 			throw new AuthException();
 		}
@@ -106,9 +99,8 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
 			String msg = "restricted path " + path + " ohne gueltige Session aufgerufen";
 
-			LOG.warn(msg);
+			LOGGER.warn(msg);
 
-			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new AuthException();
 		}
 
@@ -118,9 +110,8 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
 			String msg = "restricted path " + path + " mit anonymer Session aufgerufen";
 
-			LOG.warn(msg);
+			LOGGER.warn(msg);
 
-			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new AuthException();
 		}
 
@@ -129,9 +120,8 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 		if (optPermittedRolle.isEmpty()) {
 
 			String msg = "[" + method + " " + path + "] durch user " + user + " aufgerufen. Das ist nicht erlaubt";
-			LOG.warn(msg);
+			LOGGER.warn(msg);
 
-			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new AccessDeniedException("keine Berechtigung, diese API aufzurufen");
 		}
 

@@ -8,19 +8,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-import javax.validation.constraints.NotBlank;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.enums.ParameterIn;
+import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameters;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +31,18 @@ import de.egladil.web.mk_kataloge.domain.Katalogtyp;
 import de.egladil.web.mk_kataloge.domain.event.DataInconsistencyRegistered;
 import de.egladil.web.mk_kataloge.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_kataloge.domain.event.SecurityIncidentRegistered;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Event;
+import jakarta.inject.Inject;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * KatalogsucheResource
@@ -45,7 +52,7 @@ import de.egladil.web.mk_kataloge.domain.event.SecurityIncidentRegistered;
 @Produces(MediaType.APPLICATION_JSON)
 public class KatalogsucheResource {
 
-	private static final Logger LOG = LoggerFactory.getLogger(KatalogsucheResource.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(KatalogsucheResource.class);
 
 	@Inject
 	KatalogsucheFacade katalogsucheFacade;
@@ -71,7 +78,7 @@ public class KatalogsucheResource {
 	public Response findItems(@PathParam(
 		value = "typ") final String typ, @NotBlank @StringLatin @QueryParam("search") final String searchTerm) {
 
-		LOG.debug("{} - {}", typ, searchTerm);
+		LOGGER.debug("{} - {}", typ, searchTerm);
 
 		Response response = validateSearchTerm(searchTerm);
 
@@ -88,24 +95,24 @@ public class KatalogsucheResource {
 
 			switch (katalogtyp) {
 
-				case SCHULE:
-					result = katalogsucheFacade.sucheSchulenMitNameEnthaltend(searchTerm);
-					break;
+			case SCHULE:
+				result = katalogsucheFacade.sucheSchulenMitNameEnthaltend(searchTerm);
+				break;
 
-				case ORT:
-					result = katalogsucheFacade.sucheOrteMitNameBeginnendMit(searchTerm);
-					break;
+			case ORT:
+				result = katalogsucheFacade.sucheOrteMitNameBeginnendMit(searchTerm);
+				break;
 
-				case LAND:
-					result = katalogsucheFacade.sucheLaenderMitNameBeginnendMit(searchTerm);
-					break;
+			case LAND:
+				result = katalogsucheFacade.sucheLaenderMitNameBeginnendMit(searchTerm);
+				break;
 
-				default:
-					String msg = "Aufruf von findItems mit unerwartetem Katalogtyp " + typ + ": geben leeres result zurück";
-					LOG.warn(msg);
-					eventDelegate.fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
-					ResponsePayload responsePayload = ResponsePayload.messageOnly(MessagePayload.error("Unbeannte URL"));
-					return Response.status(Status.NOT_FOUND).entity(responsePayload).build();
+			default:
+				String msg = "Aufruf von findItems mit unerwartetem Katalogtyp " + typ + ": geben leeres result zurück";
+				LOGGER.warn(msg);
+				eventDelegate.fireDataInconsistencyEvent(msg, dataInconsistencyEvent);
+				ResponsePayload responsePayload = ResponsePayload.messageOnly(MessagePayload.error("Unbeannte URL"));
+				return Response.status(Status.NOT_FOUND).entity(responsePayload).build();
 			}
 
 			ResponsePayload responsePayload = new ResponsePayload(MessagePayload.info("OK"), result);
@@ -113,16 +120,30 @@ public class KatalogsucheResource {
 		} catch (IllegalArgumentException e) {
 
 			String msg = "Aufruf von findItems mit ungültigem typ-Parameter " + typ;
-			LOG.warn(msg);
+			LOGGER.warn(msg);
 			eventDelegate.fireSecurityEvent(msg, securityEvent);
-			ResponsePayload responsePayload = ResponsePayload.messageOnly(MessagePayload.error("Fehlerhafte URL"));
-			return Response.status(Status.NOT_FOUND).entity(responsePayload).build();
+			ResponsePayload responsePayload = ResponsePayload.messageOnly(MessagePayload.error("Fehlerhafte URL: typ=" + typ));
+			return Response.status(Status.BAD_REQUEST).entity(responsePayload).build();
 
 		}
 	}
 
 	@GET
 	@Path("laender/{land}/orte")
+	@Operation(
+		operationId = "findOrteInLand", summary = "Gibt alle Orte im gegebenen Land zurück, die auf die Anfrage passen.")
+	@Parameters({
+		@Parameter(
+			in = ParameterIn.QUERY,
+			name = "search",
+			description = "Teil des Ortsnamen"),
+	})
+	@APIResponse(
+		name = "OKResponse",
+		responseCode = "200",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(type = SchemaType.ARRAY, implementation = ResponsePayload.class)))
 	public Response findOrteInLand(@LandKuerzel @PathParam(
 		value = "land") final String landKuerzel, @NotBlank @StringLatin @QueryParam("search") final String searchTerm) {
 
@@ -176,7 +197,7 @@ public class KatalogsucheResource {
 	public Response findSchulenInOrt(@Kuerzel @PathParam(
 		value = "ort") final String ortKuerzel, @NotBlank @StringLatin @QueryParam("search") final String searchTerm) {
 
-		LOG.debug("{} - {}", ortKuerzel, searchTerm);
+		LOGGER.debug("{} - {}", ortKuerzel, searchTerm);
 
 		Response response = validateSearchTerm(searchTerm);
 

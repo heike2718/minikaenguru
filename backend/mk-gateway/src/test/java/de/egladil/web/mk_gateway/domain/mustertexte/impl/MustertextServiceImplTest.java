@@ -21,8 +21,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import javax.inject.Inject;
-import javax.ws.rs.NotFoundException;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.NotFoundException;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -38,7 +38,7 @@ import de.egladil.web.mk_gateway.domain.mustertexte.api.MustertextAPIModel;
 import de.egladil.web.mk_gateway.domain.mustertexte.events.MustertextDeletedEvent;
 import de.egladil.web.mk_gateway.domain.mustertexte.events.MustertextSavedEvent;
 import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.mockito.InjectMock;
+import io.quarkus.test.InjectMock;
 
 /**
  * MustertextServiceImplTest

@@ -1,0 +1,1 @@
+alter table EVENTS modify ID BIGINT NOT NULL AUTO_INCREMENT;

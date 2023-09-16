@@ -6,8 +6,8 @@ package de.egladil.web.mk_gateway.domain.auth.signup;
 
 import java.util.function.Function;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;

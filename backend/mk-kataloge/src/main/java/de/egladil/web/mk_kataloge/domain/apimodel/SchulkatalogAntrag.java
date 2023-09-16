@@ -4,13 +4,12 @@
 // =====================================================
 package de.egladil.web.mk_kataloge.domain.apimodel;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_validation.annotations.StringLatin;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * SchulkatalogAntrag
@@ -100,6 +99,48 @@ public class SchulkatalogAntrag {
 
 		return "SchulkatalogAntrag [email=" + email + ", land=" + land + ", ort=" + ort + ", plz=" + plz + ", schulname="
 			+ schulname + ", strasseUndHausnummer=" + strasseUndHausnummer + ", kleber=" + kleber + "]";
+	}
+
+	public SchulkatalogAntrag withEmail(final String email) {
+
+		this.email = email;
+		return this;
+	}
+
+	public SchulkatalogAntrag withLand(final String land) {
+
+		this.land = land;
+		return this;
+	}
+
+	public SchulkatalogAntrag withOrt(final String ort) {
+
+		this.ort = ort;
+		return this;
+	}
+
+	public SchulkatalogAntrag withPlz(final String plz) {
+
+		this.plz = plz;
+		return this;
+	}
+
+	public SchulkatalogAntrag withSchulname(final String schulname) {
+
+		this.schulname = schulname;
+		return this;
+	}
+
+	public SchulkatalogAntrag withStrasseUndHausnummer(final String strasseUndHausnummer) {
+
+		this.strasseUndHausnummer = strasseUndHausnummer;
+		return this;
+	}
+
+	public SchulkatalogAntrag withKleber(final String kleber) {
+
+		this.kleber = kleber;
+		return this;
 	}
 
 }

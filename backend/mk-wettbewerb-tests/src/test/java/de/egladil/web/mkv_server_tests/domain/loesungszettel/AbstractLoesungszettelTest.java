@@ -4,9 +4,9 @@
 // =====================================================
 package de.egladil.web.mkv_server_tests.domain.loesungszettel;
 
-import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceException;
-import javax.ws.rs.NotFoundException;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.PersistenceException;
+import jakarta.ws.rs.NotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
 

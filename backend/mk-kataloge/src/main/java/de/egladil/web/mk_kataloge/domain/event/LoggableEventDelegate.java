@@ -4,10 +4,9 @@
 // =====================================================
 package de.egladil.web.mk_kataloge.domain.event;
 
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.event.Event;
-
 import de.egladil.web.mk_kataloge.domain.katalogantrag.KatalogAntragReceived;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.event.Event;
 
 /**
  * LoggableEventDelegate

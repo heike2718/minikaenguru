@@ -8,25 +8,22 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.annotation.Priority;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.container.PreMatching;
-import javax.ws.rs.core.NoContentException;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.ext.Provider;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_net.utils.CommonHttpUtils;
 import de.egladil.web.mk_gateway.domain.error.AuthException;
-import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
-import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.infrastructure.config.ConfigService;
+import jakarta.annotation.Priority;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerRequestFilter;
+import jakarta.ws.rs.container.PreMatching;
+import jakarta.ws.rs.core.NoContentException;
+import jakarta.ws.rs.core.UriInfo;
+import jakarta.ws.rs.ext.Provider;
 
 /**
  * OriginRefererFilter
@@ -37,24 +34,20 @@ import de.egladil.web.mk_gateway.infrastructure.config.ConfigService;
 @Priority(900)
 public class OriginRefererFilter implements ContainerRequestFilter {
 
-	private static final Logger LOG = LoggerFactory.getLogger(OriginRefererFilter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(OriginRefererFilter.class);
 
 	private static final List<String> NO_CONTENT_PATHS = Arrays.asList(new String[] { "/favicon.ico" });
 
 	@Inject
 	ConfigService configService;
 
-	@Inject
-	DomainEventHandler domainEventHandler;
-
-	@Inject
-	LoggableEventDelegate eventDelegate;
-
 	@Override
 	public void filter(final ContainerRequestContext requestContext) throws IOException {
 
 		UriInfo uriInfo = requestContext.getUriInfo();
 		String pathInfo = uriInfo.getPath();
+
+		LOGGER.debug("path={}", pathInfo);
 
 		if ("OPTIONS".equals(requestContext.getMethod()) || NO_CONTENT_PATHS.contains(pathInfo)) {
 
@@ -69,7 +62,7 @@ public class OriginRefererFilter implements ContainerRequestFilter {
 		final String origin = requestContext.getHeaderString("Origin");
 		final String referer = requestContext.getHeaderString("Referer");
 
-		LOG.debug("Origin = [{}], Referer=[{}]", origin, referer);
+		LOGGER.debug("Origin = [{}], Referer=[{}]", origin, referer);
 
 		if (StringUtils.isBlank(origin) && StringUtils.isBlank(referer)) {
 
@@ -123,9 +116,8 @@ public class OriginRefererFilter implements ContainerRequestFilter {
 
 		String msg = "Possible CSRF-Attack: " + details + ", " + dump;
 
-		LOG.warn(msg);
+		LOGGER.warn(msg);
 
-		eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 		throw new AuthException();
 	}
 

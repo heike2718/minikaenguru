@@ -4,12 +4,11 @@
 // =====================================================
 package de.egladil.web.mk_kataloge.infrastructure.persistence.impl;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-
 import de.egladil.web.mk_kataloge.domain.health.PacemakerRepository;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Pacemaker;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 /**
  * PacemakerHibernateRepository

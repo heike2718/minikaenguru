@@ -4,15 +4,12 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.veranstalter.admin;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.transaction.Transactional;
-
-import org.jboss.weld.exceptions.IllegalArgumentException;
-
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.ZugangUnterlagen;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 
 /**
  * VeranstalterZugangsstatusService

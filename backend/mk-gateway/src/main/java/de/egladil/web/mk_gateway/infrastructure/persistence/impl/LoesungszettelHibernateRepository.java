@@ -4,15 +4,10 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.persistence.impl;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
@@ -33,6 +28,9 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.entities.Loesungszet
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterLoesungszettel;
 import de.egladil.web.mk_gateway.infrastructure.persistence.sortnumbers.SortNumberGenerator;
 import de.egladil.web.mk_gateway.infrastructure.persistence.sortnumbers.impl.SortNumberGeneratorImpl;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 /**
  * LoesungszettelHibernateRepository
@@ -62,7 +60,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 		String stmt = "select count(*) from LOESUNGSZETTEL where TEILNAHMENUMMER = :teilnahmenummer and WETTBEWERB_UUID = :wettbewerbUuid and TEILNAHMEART = :teilnahmeart";
 
 		@SuppressWarnings("unchecked")
-		List<BigInteger> trefferliste = entityManager.createNativeQuery(stmt)
+		List<Long> trefferliste = entityManager.createNativeQuery(stmt)
 			.setParameter("teilnahmenummer", teilnahmeIdentifier.teilnahmenummer())
 			.setParameter("wettbewerbUuid", teilnahmeIdentifier.wettbewerbID())
 			.setParameter("teilnahmeart", teilnahmeIdentifier.teilnahmeart().toString()).getResultList();
@@ -107,7 +105,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 		for (Object[] obj : trefferliste) {
 
 			Auswertungsquelle auswertungsquelle = Auswertungsquelle.valueOf((String) obj[0]);
-			BigInteger bi = (BigInteger) obj[1];
+			Long bi = (Long) obj[1];
 
 			result.add(Pair.of(auswertungsquelle, bi.intValue()));
 		}
@@ -132,7 +130,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 		String stmt = "select count(*) from LOESUNGSZETTEL where WETTBEWERB_UUID = :wettbewerbUuid";
 
 		@SuppressWarnings("unchecked")
-		List<BigInteger> trefferliste = entityManager.createNativeQuery(stmt)
+		List<Long> trefferliste = entityManager.createNativeQuery(stmt)
 			.setParameter("wettbewerbUuid", wettbewerbID.jahr()).getResultList();
 
 		long anzahl = trefferliste.get(0).longValue();
@@ -158,7 +156,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 		for (Object[] treffer : trefferliste) {
 
 			String wert = treffer[0].toString();
-			BigInteger anzahl = (BigInteger) treffer[1];
+			Long anzahl = (Long) treffer[1];
 
 			result.add(new Auspraegung(wert, anzahl.longValue()));
 
@@ -187,7 +185,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 		for (Object[] treffer : trefferliste) {
 
 			String wert = treffer[0].toString();
-			BigInteger anzahl = (BigInteger) treffer[1];
+			Long anzahl = (Long) treffer[1];
 
 			result.add(new Auspraegung(wert, anzahl.longValue()));
 

@@ -7,15 +7,14 @@ package de.egladil.web.mk_gateway.infrastructure.cdi;
 import java.io.File;
 import java.io.IOException;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
-
 import org.apache.commons.io.FileUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.quarkus.runtime.StartupEvent;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
 
 /**
  * AppLifecycleBean
@@ -35,11 +34,24 @@ public class AppLifecycleBean {
 	@ConfigProperty(name = "quarkus.http.cors.origins", defaultValue = "")
 	String corsAllowedOrigins;
 
+	@ConfigProperty(name = "quarkus.http.root-path")
+	String rootPath;
+
+	@ConfigProperty(name = "quarkus.http.port")
+	String port;
+
+	@ConfigProperty(name = "clamav.host")
+	String clamAVHost;
+
 	void onStartup(@Observes final StartupEvent ev) {
 
+		LOGGER.info("mk-gateway is starting...");
 		LOGGER.info(" ===========>  the download dir is {}", getPathDownloadDir());
 		LOGGER.info(" ===========>  the upload dir is {}", getPathUploadDir());
 		LOGGER.info(" ===========>  quarkus.http.cors.origins={}", corsAllowedOrigins);
+		LOGGER.info(" ===========>  quarkus.http.root-path={}", rootPath);
+		LOGGER.info(" ===========>  quarkus.http.port={}", port);
+		LOGGER.info(" ===========>  clamav.host={}", clamAVHost);
 
 	}
 

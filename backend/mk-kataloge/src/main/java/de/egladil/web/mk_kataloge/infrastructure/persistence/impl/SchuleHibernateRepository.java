@@ -7,11 +7,6 @@ package de.egladil.web.mk_kataloge.infrastructure.persistence.impl;
 import java.util.List;
 import java.util.Optional;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-
 import org.apache.commons.lang3.StringUtils;
 
 import de.egladil.web.mk_kataloge.domain.KatalogeRepository;
@@ -20,6 +15,10 @@ import de.egladil.web.mk_kataloge.domain.error.DuplicateEntityException;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Land;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Ort;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 /**
  * SchuleHibernateRepository
@@ -32,14 +31,6 @@ public class SchuleHibernateRepository implements SchuleRepository {
 
 	@Inject
 	KatalogeRepository katalogRepository;
-
-	public static SchuleHibernateRepository createForIntegrationTests(final EntityManager entityManager) {
-
-		SchuleHibernateRepository result = new SchuleHibernateRepository();
-		result.em = entityManager;
-		result.katalogRepository = KatalogeHibernateRepository.createForIntegrationTests(entityManager);
-		return result;
-	}
 
 	@Transactional
 	@Override

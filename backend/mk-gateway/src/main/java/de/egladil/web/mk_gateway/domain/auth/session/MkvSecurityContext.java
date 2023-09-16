@@ -6,7 +6,7 @@ package de.egladil.web.mk_gateway.domain.auth.session;
 
 import java.security.Principal;
 
-import javax.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.core.SecurityContext;
 
 /**
  * MkvSecurityContext

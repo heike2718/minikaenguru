@@ -1,0 +1,12 @@
+CREATE TABLE PACEMAKERS (
+	`ID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`MONITOR_ID` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+	`WERT` varchar(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+	`VERSION` int(10) DEFAULT 0,
+	`DATE_MODIFIED` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY (`ID`),
+  	UNIQUE KEY `uk_pacemakers_1` (`MONITOR_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='registriert herzschrittmacher für mk_gateway';
+
+INSERT INTO mk_wettbewerb.PACEMAKERS (MONITOR_ID, WERT) VALUES ('mk_gateway','erster');
+

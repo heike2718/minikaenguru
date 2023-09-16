@@ -4,8 +4,8 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.auth.session.loginlogout;
 
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.core.Response;
 
 import de.egladil.web.mk_gateway.domain.auth.AuthMode;
 import de.egladil.web.mk_gateway.domain.auth.AuthResult;

@@ -7,15 +7,14 @@ package de.egladil.web.mk_gateway.infrastructure.filters;
 
 import java.io.IOException;
 
-import javax.inject.Inject;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerResponseContext;
-import javax.ws.rs.container.ContainerResponseFilter;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.ext.Provider;
-
 import de.egladil.web.mk_gateway.MkGatewayApp;
 import de.egladil.web.mk_gateway.infrastructure.config.ConfigService;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerResponseContext;
+import jakarta.ws.rs.container.ContainerResponseFilter;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.ext.Provider;
 
 /**
  * SecureHeadersFilter packt die SecureHeaders in den Response.
@@ -94,52 +93,6 @@ public class SecureHeadersFilter implements ContainerResponseFilter {
 		if (headers.get("X-Frame-Options") == null) {
 
 			headers.add("X-Frame-Options", "deny");
-		}
-	}
-
-	/**
-	 * Theoretisch könnte man dies auch über die Quarkus-Konfigurationsprameter machen. Es hat sich aber herausgestellt, dass dies
-	 * zu
-	 * volatil ist und die Browser mit den Konstanten nicht gut zurecht kommen und CORS-Blockaden erzeugen. Daher bitte nicht in
-	 * application.properties mit den Quarkus-CORS-Parametern konfigurieren, sondern hier.
-	 *
-	 * @param headers
-	 */
-	private void addCORSHeaders(final MultivaluedMap<String, Object> headers) {
-
-		if (headers.get("Access-Control-Allow-Origin") == null) {
-
-			headers.add("Access-Control-Allow-Origin", configService.getAllowedOrigin());
-		}
-
-		if (headers.get("Access-Control-Allow-Credentials") == null) {
-
-			headers.add("Access-Control-Allow-Credentials", "true");
-		}
-
-		// Achtung: mod-security verbietet standardmäßig PUT und DELETE.
-		// Daher parallel in /etc/apache2/sites-available/opa-wetterwachs.conf die rule 911100 für checklistenserver entfernen,
-		// sonst bekommt man 403
-		if (headers.get("Access-Control-Allow-Methods") == null) {
-
-			headers.add("Access-Control-Allow-Methods", "POST, PUT, GET, HEAD, OPTIONS, DELETE");
-		}
-
-		if (headers.get("Access-Control-Allow-Headers") == null) {
-
-			headers.add("Access-Control-Allow-Headers",
-				"Content-Type, Accept, X-Requested-With, Content-Disposition, X-SESSIONID");
-		}
-
-		if (headers.get("Access-Control-Max-Age") == null) {
-
-			headers.add("Access-Control-Max-Age", "3600");
-		}
-
-		if (headers.get("Access-Control-Expose-Headers") == null) {
-
-			headers.add("Access-Control-Expose-Headers",
-				"Content-Type, Content-Disposition, X-SESSIONID");
 		}
 	}
 }

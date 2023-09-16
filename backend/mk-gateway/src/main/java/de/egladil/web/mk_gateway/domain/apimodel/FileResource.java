@@ -6,10 +6,10 @@ package de.egladil.web.mk_gateway.domain.apimodel;
 
 import java.io.InputStream;
 
-import javax.ws.rs.FormParam;
-import javax.ws.rs.core.MediaType;
+import org.jboss.resteasy.reactive.PartType;
 
-import org.jboss.resteasy.annotations.providers.multipart.PartType;
+import jakarta.ws.rs.FormParam;
+import jakarta.ws.rs.core.MediaType;
 
 /**
  * FileResource

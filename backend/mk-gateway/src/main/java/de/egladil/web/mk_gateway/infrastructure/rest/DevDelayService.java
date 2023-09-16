@@ -4,9 +4,9 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest;
 
-import javax.enterprise.context.ApplicationScoped;
-
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * DevDelayService

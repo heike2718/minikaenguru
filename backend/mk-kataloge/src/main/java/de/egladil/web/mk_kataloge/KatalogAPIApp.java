@@ -4,13 +4,12 @@
 // =====================================================
 package de.egladil.web.mk_kataloge;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 /**
  * KatalogAPIApp
  */
-@ApplicationPath("/mk-kataloge")
+// @ApplicationPath("/mk-kataloge")
 public class KatalogAPIApp extends Application {
 
 	public static final String CLIENT_COOKIE_PREFIX = "KAT";

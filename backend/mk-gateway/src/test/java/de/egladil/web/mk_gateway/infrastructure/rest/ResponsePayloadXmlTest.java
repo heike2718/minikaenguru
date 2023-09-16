@@ -4,12 +4,11 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest;
 
-import javax.xml.bind.JAXBContext;
-
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import jakarta.xml.bind.JAXBContext;
 
 /**
  * ResponsePayloadXmlTest

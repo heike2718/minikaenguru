@@ -11,8 +11,6 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
-import javax.inject.Inject;
-
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Test;
 
@@ -20,8 +18,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import de.egladil.web.mk_kataloge.domain.apimodel.SchulkatalogAntrag;
 import de.egladil.web.mk_kataloge.domain.event.LoggableEventDelegate;
+import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.mockito.InjectMock;
+import jakarta.inject.Inject;
 
 /**
  * KatalogAntragServiceTest

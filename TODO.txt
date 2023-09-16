@@ -1,3 +1,15 @@
+xx.09.2023
+-----------------
+- a300: mk-kataloge startet nicht: flyway
+- a300: mkv-app: Bad Gateway 502- hatte die auarkus-ap von checklisten deploed ':facepalm'
+- a300: servererror beim aufruf login-seite von mkv-app : vermutlich properties noch falsch oder CLIENTS.REDIRECT_URLs?
+
+
+xx.08.2023
+------------------
+bump qurakus to 3
+
+
 28.08.2021
 -------------------
 

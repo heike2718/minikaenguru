@@ -6,8 +6,8 @@ package de.egladil.web.mk_gateway.domain.mail;
 
 import java.util.Objects;
 
-import javax.mail.Address;
-import javax.mail.SendFailedException;
+import jakarta.mail.Address;
+import jakarta.mail.SendFailedException;
 
 /**
  * SendFailedExceptionAdapter
