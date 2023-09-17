@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
+import de.egladil.web.mk_gateway.domain.uploads.UploadRepository;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.UploadsMonitoringViewItem;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UploadHibernateRepository;
@@ -25,7 +26,7 @@ import de.egladil.web.mkv_server_tests.AbstractIntegrationTest;
  */
 public class UploadHibernateRepositoryIT extends AbstractIntegrationTest {
 
-	UploadHibernateRepository repository;
+	UploadRepository repository;
 
 	@Override
 	@BeforeEach

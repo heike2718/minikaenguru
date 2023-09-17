@@ -14,13 +14,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceException;
-import jakarta.transaction.Transactional;
-import jakarta.ws.rs.NotFoundException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -59,6 +52,12 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadRepository;
 import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UploadHibernateRepository;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceException;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.NotFoundException;
 
 /**
  * KlassenlisteCSVImportService importiert die Kinder aus einer CSV-Datei.
@@ -107,6 +106,12 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 
 		String encoding = uploadMetadata.getEncoding();
 		List<String> lines = MkGatewayFileUtils.readLines(path, encoding);
+
+		return importiereKinder(uploadKlassenlisteContext, uploadMetadata, encoding, lines);
+	}
+
+	@Override
+	public ResponsePayload importiereKinder(final UploadKlassenlisteContext uploadKlassenlisteContext, final PersistenterUpload uploadMetadata, final String encoding, final List<String> lines) {
 
 		if (lines.isEmpty()) {
 
@@ -229,7 +234,8 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 	 * @param uploadMetadata
 	 * @param leer
 	 */
-	private void updateUploadstatusQuietly(final PersistenterUpload uploadMetadata, final UploadStatus leer) {
+	@Override
+	public void updateUploadstatusQuietly(final PersistenterUpload uploadMetadata, final UploadStatus leer) {
 
 		try {
 

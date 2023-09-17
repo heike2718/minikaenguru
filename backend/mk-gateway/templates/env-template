@@ -6,6 +6,7 @@ DELAY_MILLISECONDS=0
 HEARTBEAT_ID=heartbeat
 
 PATH_EXTERNAL_FILES=/usr/local/bin/mk-gateway/files
+QUARKUS_HTTP_BODY-HANDLER_UPLOADS-DIRECTORY=/home/heike/git/testdaten/minikaenguru/upload
 
 UUID_TESTLEHRER=62f5b221-20e5-4dd0-8992-c7a51b1b826e
 

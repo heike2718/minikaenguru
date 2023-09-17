@@ -13,13 +13,11 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +26,8 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 /**
  * MkGatewayFileUtils
@@ -71,6 +71,25 @@ public final class MkGatewayFileUtils {
 
 			LOGGER.error(e.getMessage(), e);
 			throw new MkGatewayRuntimeException("Konnte Datei mit Pfad " + path + " nicht laden", e);
+		}
+	}
+
+	public static byte[] readBytesFromClasspathPath(final String pathClasspath) {
+
+		try (InputStream in = MkGatewayFileUtils.class.getResourceAsStream(pathClasspath);
+			ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+
+			IOUtils.copy(in, bos);
+
+			final byte[] result = bos.toByteArray();
+			bos.flush();
+
+			return result;
+
+		} catch (IOException e) {
+
+			LOGGER.error(e.getMessage(), e);
+			throw new MkGatewayRuntimeException("Konnte Datei mit " + pathClasspath + " im Classpath nicht laden", e);
 		}
 	}
 
@@ -122,6 +141,45 @@ public final class MkGatewayFileUtils {
 		} catch (IOException e) {
 
 			String msg = "Fehler beim Laden der Textdatei " + path + ": " + e.getMessage();
+			LOGGER.error(msg, e);
+
+			throw new MkGatewayRuntimeException(msg, e);
+
+		}
+	}
+
+	/**
+	 * Liest die Datei zeilenweise ein.
+	 *
+	 * @param  path
+	 *                  Pfad zu einer Textdatei.
+	 * @param  encoding
+	 *                  String - darf null sein. Wenn null, dann wird UTF-8 verwendet.
+	 * @return          List
+	 */
+	public static List<String> readLinesFromClasspath(final String pathClasspath) {
+
+		try (InputStream in = MkGatewayFileUtils.class.getResourceAsStream(pathClasspath);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
+
+			List<String> lines = new ArrayList<>();
+			String line = null;
+			int index = 0;
+
+			while ((line = br.readLine()) != null) {
+
+				if (StringUtils.isNotBlank(line)) {
+
+					String converted = convertToUnicode(line, DEFAULT_ENCODING);
+					lines.add(index++, converted);
+				}
+			}
+
+			return lines;
+
+		} catch (IOException e) {
+
+			String msg = "Fehler beim Laden der Textdatei aus dem Classpath" + pathClasspath + ": " + e.getMessage();
 			LOGGER.error(msg, e);
 
 			throw new MkGatewayRuntimeException(msg, e);

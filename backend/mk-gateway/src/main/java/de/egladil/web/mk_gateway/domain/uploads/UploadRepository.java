@@ -81,4 +81,6 @@ public interface UploadRepository {
 	 */
 	List<Auspraegung> countAuspraegungenForTeilnahmeByColumnName(TeilnahmeIdentifier teilnahmeIdentifier, String columnName);
 
+	void deleteUpload(final String uuid);
+
 }

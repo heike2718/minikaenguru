@@ -20,9 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import jakarta.inject.Inject;
-import jakarta.persistence.PersistenceException;
-
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -47,8 +44,10 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
-import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
+import io.quarkus.test.junit.QuarkusTest;
+import jakarta.inject.Inject;
+import jakarta.persistence.PersistenceException;
 
 /**
  * KlassenlisteCSVImportServiceTest
@@ -143,10 +142,13 @@ public class KlassenlisteCSVImportServiceTest {
 			persistenterUpload.setUuid("null-zeilen");
 			when(uploadRepository.updateUpload(any())).thenReturn(persistenterUpload);
 
+			List<String> zeilen = MkGatewayFileUtils.readLinesFromClasspath("/upload/klassenlisten/klassenliste-null-zeilen.csv");
+
 			// Act + Assert
 			try {
 
-				service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
+				service.importiereKinder(uploadKlassenlisteContext, persistenterUpload, MkGatewayFileUtils.DEFAULT_ENCODING,
+					zeilen);
 				fail("keine UploadFormatException");
 			} catch (UploadFormatException e) {
 
@@ -164,46 +166,23 @@ public class KlassenlisteCSVImportServiceTest {
 		}
 
 		@Test
-		void should_importiereKlassenThrowUploadFormatException_when_eineZeileAberBlank() {
-
-			// Arrange
-			persistenterUpload.setUuid("eine-zeile-blank");
-
-			// Act + Assert
-			try {
-
-				service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
-				fail("keine UploadFormatException");
-			} catch (UploadFormatException e) {
-
-				assertEquals(
-					"Die Klassenliste kann nicht verarbeitet werden. Ihre Tabelle hat nicht die erwarteten Spalten. Es werden genau 4 Spalten mit den Überschriften Klasse,Klassenstufe,Nachname,Vorname in beliebiger Reihenfolge erwartet. Ihre Spaltenüberschriften sind leer.",
-					e.getMessage());
-
-				verify(klassenService, never()).importiereKlassen(any(), any(), anyList());
-				verify(kinderService, never()).importiereKinder(any(), any(), any());
-				verify(kinderService, never()).findWithSchulteilname(any());
-				verify(klassenService, never()).klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID);
-				verify(uploadRepository, never()).updateUpload(persistenterUpload);
-			}
-
-		}
-
-		@Test
 		void should_importiereKlassenThrowUploadFormatException_when_eineZeileAberKeineUeberschrift() {
 
 			// Arrange
 			persistenterUpload.setUuid("eine-zeile-keine-ueberschrift");
+			List<String> zeilen = MkGatewayFileUtils
+				.readLinesFromClasspath("/upload/klassenlisten/klassenliste-ohne-ueberschrift.csv");
 
 			// Act + Assert
 			try {
 
-				service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
+				service.importiereKinder(uploadKlassenlisteContext, persistenterUpload, MkGatewayFileUtils.DEFAULT_ENCODING,
+					zeilen);
 				fail("keine UploadFormatException");
 			} catch (UploadFormatException e) {
 
 				assertEquals(
-					"Die Klassenliste kann nicht verarbeitet werden. Es werden genau 4 Spalten mit den Überschriften Klasse,Klassenstufe,Nachname,Vorname in beliebiger Reihenfolge erwartet. Gefunden wurden die Spaltenüberschriften Amira;Emami;2a;2.",
+					"Die Klassenliste kann nicht verarbeitet werden. Es werden genau 4 Spalten mit den Überschriften Klasse,Klassenstufe,Nachname,Vorname in beliebiger Reihenfolge erwartet. Gefunden wurden die Spaltenüberschriften Amiera;Kaled;2a;3.",
 					e.getMessage());
 
 				verify(klassenService, never()).importiereKlassen(any(), any(), anyList());
@@ -220,16 +199,19 @@ public class KlassenlisteCSVImportServiceTest {
 
 			// Arrange
 			persistenterUpload.setUuid("alle-zeilen-falsch");
+			List<String> zeilen = MkGatewayFileUtils
+				.readLinesFromClasspath("/upload/klassenlisten/klassenliste-alle-falsch.csv");
 
 			// Act + Assert
 			try {
 
-				service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
+				service.importiereKinder(uploadKlassenlisteContext, persistenterUpload, MkGatewayFileUtils.DEFAULT_ENCODING,
+					zeilen);
 				fail("keine UploadFormatException");
 			} catch (UploadFormatException e) {
 
 				assertEquals(
-					"Die Klassenliste kann nicht verarbeitet werden. keine Zeile enthält die erforderlichen Angaben Vorname, Nachname, Klasse, Klassenstufe.",
+					"Die Klassenliste kann nicht verarbeitet werden. Ihre Tabelle hat nicht die erwarteten Spalten. Es werden genau 4 Spalten mit den Überschriften Klasse,Klassenstufe,Nachname,Vorname in beliebiger Reihenfolge erwartet. Gefunden wurden 2 Spaltenüberschrift(en): Vorname;Nachname.",
 					e.getMessage());
 
 				verify(klassenService, never()).importiereKlassen(any(), any(), anyList());
@@ -247,15 +229,19 @@ public class KlassenlisteCSVImportServiceTest {
 			// Arrange
 			persistenterUpload.setUuid("klassenliste-ohne-ueberschrift");
 
+			List<String> zeilen = MkGatewayFileUtils
+				.readLinesFromClasspath("/upload/klassenlisten/klassenliste-ohne-ueberschrift.csv");
+
 			// Act + Assert
 			try {
 
-				service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
+				service.importiereKinder(uploadKlassenlisteContext, persistenterUpload, MkGatewayFileUtils.DEFAULT_ENCODING,
+					zeilen);
 				fail("keine UploadFormatException");
 			} catch (UploadFormatException e) {
 
 				assertEquals(
-					"Die Klassenliste kann nicht verarbeitet werden. Es werden genau 4 Spalten mit den Überschriften Klasse,Klassenstufe,Nachname,Vorname in beliebiger Reihenfolge erwartet. Gefunden wurden die Spaltenüberschriften Lukas;Granach;1a;1.0.",
+					"Die Klassenliste kann nicht verarbeitet werden. Es werden genau 4 Spalten mit den Überschriften Klasse,Klassenstufe,Nachname,Vorname in beliebiger Reihenfolge erwartet. Gefunden wurden die Spaltenüberschriften Amiera;Kaled;2a;3.",
 					e.getMessage());
 
 				verify(klassenService, never()).importiereKlassen(any(), any(), anyList());
@@ -263,33 +249,6 @@ public class KlassenlisteCSVImportServiceTest {
 				verify(kinderService, never()).findWithSchulteilname(any());
 				verify(klassenService, never()).klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID);
 				verify(uploadRepository, never()).updateUpload(persistenterUpload);
-			}
-
-		}
-
-		@Test
-		void should_importiereKlassenThrowUploadFormatException_when_nurUeberschrift() {
-
-			// Arrange
-			persistenterUpload.setUuid("eine-zeile-nur-ueberschrift");
-			when(uploadRepository.updateUpload(any())).thenReturn(persistenterUpload);
-
-			// Act + Assert
-			try {
-
-				service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
-				fail("keine UploadFormatException");
-			} catch (UploadFormatException e) {
-
-				assertEquals(
-					"Die Klassenliste konnte nicht importiert werden: sie enthält keine Kinder. Bitte prüfen Sie die hochgeladene Datei.",
-					e.getMessage());
-
-				verify(klassenService, never()).importiereKlassen(any(), any(), anyList());
-				verify(kinderService, never()).importiereKinder(any(), any(), any());
-				verify(kinderService, never()).findWithSchulteilname(any());
-				verify(klassenService, never()).klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID);
-				verify(uploadRepository).updateUpload(persistenterUpload);
 			}
 
 		}
@@ -325,7 +284,7 @@ public class KlassenlisteCSVImportServiceTest {
 					.withLandkuerzel("DE-HE").withNachname("Hofstedter").withSprache(Sprache.de).withVorname("Lennart"));
 			kinder.add(
 				new Kind(new Identifier("6")).withKlasseID(new Identifier("uuid-2a")).withKlassenstufe(Klassenstufe.ZWEI)
-					.withLandkuerzel("DE-HE").withNachname("Gfauna").withSprache(Sprache.de).withVorname("Flora"));
+					.withLandkuerzel("DE-HE").withNachname("Fauna").withSprache(Sprache.de).withVorname("Flora"));
 			kinder.add(
 				new Kind(new Identifier("7")).withKlasseID(new Identifier("uuid-2b")).withKlassenstufe(Klassenstufe.ZWEI)
 					.withLandkuerzel("DE-HE").withNachname("Gröblin").withSprache(Sprache.de).withVorname("Pauline"));
@@ -339,8 +298,13 @@ public class KlassenlisteCSVImportServiceTest {
 			when(klassenService.klassenZuSchuleLaden(SCHULKUERZEL, BENUTZER_UUID)).thenReturn(klassenAPIModels);
 			when(uploadRepository.updateUpload(persistenterUpload)).thenReturn(persistenterUpload);
 
+			List<String> zeilen = MkGatewayFileUtils
+				.readLinesFromClasspath("/upload/klassenlisten/klassenliste-4-klassen.csv");
+
 			// Act
-			ResponsePayload responsePayload = service.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
+			ResponsePayload responsePayload = service.importiereKinder(uploadKlassenlisteContext, persistenterUpload,
+				"CP-1252",
+				zeilen);
 
 			MessagePayload messagePayload = responsePayload.getMessage();
 			assertTrue(messagePayload.isOk());

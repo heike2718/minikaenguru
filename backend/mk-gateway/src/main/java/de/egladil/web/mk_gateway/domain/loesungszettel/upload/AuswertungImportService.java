@@ -53,14 +53,12 @@ import jakarta.transaction.Transactional;
 @ApplicationScoped
 public class AuswertungImportService {
 
-	private static final String NAME_UPLOAD_DIR = "upload";
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(AuswertungImportService.class);
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
-	@ConfigProperty(name = "path.external.files")
-	String pathExternalFiles;
+	@ConfigProperty(name = "quarkus.http.body-handler.uploads-directory")
+	String uploadsDir;
 
 	@Inject
 	UploadRepository uploadRepository;
@@ -77,15 +75,16 @@ public class AuswertungImportService {
 		result.uploadRepository = UploadHibernateRepository.createForIntegrationTests(em);
 		result.loesungszettelRepository = LoesungszettelHibernateRepository.createForIntegrationTest(em);
 		result.anonymisierteTeilnahmenService = AnonymisierteTeilnahmenService.createForIntegrationTest(em);
-		result.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/integrationtests";
+		result.uploadsDir = "/home/heike/git/testdaten/minikaenguru/integrationtests";
 		return result;
 	}
 
 	/**
 	 * @param uploadContext
 	 * @param persistenterUpload
+	 * @param lines
 	 */
-	public ResponsePayload importiereAuswertung(final UploadAuswertungContext uploadContext, final PersistenterUpload persistenterUpload) {
+	public ResponsePayload importiereAuswertung(final UploadAuswertungContext uploadContext, final PersistenterUpload persistenterUpload, final List<String> lines) {
 
 		Wettbewerb wettbewerb = uploadContext.getWettbewerb();
 
@@ -116,10 +115,8 @@ public class AuswertungImportService {
 
 		}
 
-		String path = getPathUploadDir() + File.separator + persistenterUpload.getUuid() + ".csv";
-
 		List<AuswertungimportZeile> zeilen = new AuswertungCSVToAuswertungimportZeilenMapper()
-			.apply(MkGatewayFileUtils.readLines(path, persistenterUpload.getEncoding()));
+			.apply(lines);
 
 		AuswertungimportZeileSensor sensor = new AuswertungimportZeileSensor();
 		AuswertungimportZeile ueberschrift = zeilen.isEmpty() ? null : zeilen.get(0);
@@ -296,11 +293,13 @@ public class AuswertungImportService {
 
 		if (!fehlerhafteZeilen.isEmpty()) {
 
-			String pathFehlerreport = getPathUploadDir() + File.separator + persistenterUpload.getUuid() + "-fehlerreport.csv";
+			String pathFehlerreport = uploadsDir + File.separator + persistenterUpload.getUuid() + "-fehlerreport.csv";
 
 			List<String> fehlermeldungen = fehlerhafteZeilen.stream().map(AuswertungimportZeile::getFehlerreportItem)
 				.collect(Collectors.toList());
 			MkGatewayFileUtils.writeLines(fehlermeldungen, pathFehlerreport);
+
+			LOGGER.info("fehlerreport fuer {}: {}", persistenterUpload.getTeilnahmenummer(), pathFehlerreport);
 
 			Optional<AnonymisierteTeilnahmeAPIModel> optTeilnahme = getTeilnahme(persistenterUpload, wettbewerb.id());
 
@@ -465,7 +464,7 @@ public class AuswertungImportService {
 	 * @param uploadMetadata
 	 * @param neuerStatus
 	 */
-	private void updateUploadstatusQuietly(final PersistenterUpload uploadMetadata, final UploadStatus neuerStatus) {
+	public void updateUploadstatusQuietly(final PersistenterUpload uploadMetadata, final UploadStatus neuerStatus) {
 
 		try {
 
@@ -497,16 +496,6 @@ public class AuswertungImportService {
 		persistenterUpload.setStatus(uploadStatus);
 		uploadRepository.updateUpload(persistenterUpload);
 
-	}
-
-	private String getPathUploadDir() {
-
-		return pathExternalFiles + File.separator + NAME_UPLOAD_DIR;
-	}
-
-	void setPathExternalFiles(final String pathExternalFiles) {
-
-		this.pathExternalFiles = pathExternalFiles;
 	}
 
 }

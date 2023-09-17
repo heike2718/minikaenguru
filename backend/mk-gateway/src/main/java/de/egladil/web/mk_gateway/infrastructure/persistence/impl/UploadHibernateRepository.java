@@ -42,7 +42,7 @@ public class UploadHibernateRepository implements UploadRepository {
 	@Inject
 	SortNumberGenerator sortNumberGenerator;
 
-	public static UploadHibernateRepository createForIntegrationTests(final EntityManager em) {
+	public static UploadRepository createForIntegrationTests(final EntityManager em) {
 
 		UploadHibernateRepository result = new UploadHibernateRepository();
 		result.entityManager = em;
@@ -152,6 +152,18 @@ public class UploadHibernateRepository implements UploadRepository {
 	public PersistenterUpload updateUpload(final PersistenterUpload persistenterUpload) {
 
 		return entityManager.merge(persistenterUpload);
+	}
+
+	@Override
+	@Transactional
+	public void deleteUpload(final String uuid) {
+
+		Optional<PersistenterUpload> opt = findByUuid(uuid);
+
+		if (opt.isPresent()) {
+
+			entityManager.remove(opt.get());
+		}
 	}
 
 	@Override

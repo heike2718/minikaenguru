@@ -24,12 +24,13 @@ public class AppLifecycleBean {
 
 	private static final String NAME_DOWNLOAD_DIR = "unterlagen";
 
-	private static final String NAME_UPLOAD_DIR = "upload";
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(AppLifecycleBean.class);
 
 	@ConfigProperty(name = "path.external.files")
 	String pathExternalFiles;
+
+	@ConfigProperty(name = "quarkus.http.body-handler.uploads-directory")
+	String quarkusUploadsDir;
 
 	@ConfigProperty(name = "quarkus.http.cors.origins", defaultValue = "")
 	String corsAllowedOrigins;
@@ -47,7 +48,7 @@ public class AppLifecycleBean {
 
 		LOGGER.info("mk-gateway is starting...");
 		LOGGER.info(" ===========>  the download dir is {}", getPathDownloadDir());
-		LOGGER.info(" ===========>  the upload dir is {}", getPathUploadDir());
+		LOGGER.info(" ===========>  the upload dir is {}", quarkusUploadsDir);
 		LOGGER.info(" ===========>  quarkus.http.cors.origins={}", corsAllowedOrigins);
 		LOGGER.info(" ===========>  quarkus.http.root-path={}", rootPath);
 		LOGGER.info(" ===========>  quarkus.http.port={}", port);
@@ -75,24 +76,24 @@ public class AppLifecycleBean {
 		return result;
 	}
 
-	private String getPathUploadDir() {
-
-		String result = pathExternalFiles + File.separator + NAME_UPLOAD_DIR;
-
-		File uploadDir = new File(result);
-
-		if (!uploadDir.exists()) {
-
-			try {
-
-				FileUtils.forceMkdir(uploadDir);
-			} catch (IOException e) {
-
-				LOGGER.error("Verzeichnis {} konnte nicht ereugt werden: {}", e.getMessage());
-			}
-		}
-
-		return result;
-	}
+	// private String getPathUploadDir() {
+	//
+	// String result = pathExternalFiles + File.separator + NAME_UPLOAD_DIR;
+	//
+	// File uploadDir = new File(result);
+	//
+	// if (!uploadDir.exists()) {
+	//
+	// try {
+	//
+	// FileUtils.forceMkdir(uploadDir);
+	// } catch (IOException e) {
+	//
+	// LOGGER.error("Verzeichnis {} konnte nicht ereugt werden: {}", e.getMessage());
+	// }
+	// }
+	//
+	// return result;
+	// }
 
 }
