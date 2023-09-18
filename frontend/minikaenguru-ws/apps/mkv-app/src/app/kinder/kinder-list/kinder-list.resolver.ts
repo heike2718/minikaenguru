@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import { tap, first, finalize } from 'rxjs/operators';
 import { KinderFacade } from '../kinder.facade';
 
 @Injectable()
-export class KinderListResolver implements Resolve<any> {
+export class KinderListResolver  {
 
 
 	private loading = false;

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { StatistikFacade } from '../statistik.facade';
 
 @Injectable()
-export class StatistikResolver implements Resolve<any> {
+export class StatistikResolver  {
 
     constructor(private statistikFacade: StatistikFacade) {}
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { AppState } from '../../reducers';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -8,7 +8,7 @@ import { LehrerFacade } from '../lehrer.facade';
 import { lehrer } from '../+state/lehrer.selectors';
 
 @Injectable()
-export class LehrerDashboardResolver implements Resolve<any> {
+export class LehrerDashboardResolver  {
 
 	private loading = false;
 

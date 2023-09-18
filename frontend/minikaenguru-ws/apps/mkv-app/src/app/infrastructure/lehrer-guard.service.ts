@@ -1,4 +1,4 @@
-import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Session, isLoggedIn, STORAGE_KEY_USER, User, Rolle } from '@minikaenguru-ws/common-auth';
 import { Injectable } from '@angular/core';
 import { Store, select } from '@ngrx/store';
@@ -10,7 +10,7 @@ import { environment } from '../../environments/environment';
 @Injectable({
 	providedIn: 'root'
 })
-export class LehrerGuardService implements CanActivate {
+export class LehrerGuardService  {
 
 	constructor(private router: Router, private sessionStore: Store<Session>) { }
 

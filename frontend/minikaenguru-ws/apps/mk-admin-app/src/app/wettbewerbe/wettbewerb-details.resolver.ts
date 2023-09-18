@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { AppState } from '../reducers';
 import { Observable } from 'rxjs';
@@ -9,7 +9,7 @@ import { loadWettbewerbDetails } from './+state/wettbewerbe.actions';
 import { initialWettbewerbEditorModel } from './wettbewerbe.model';
 
 @Injectable()
-export class WettbewerbDetailsResolver implements Resolve<any> {
+export class WettbewerbDetailsResolver  {
 
 	constructor(private store: Store<AppState>) { }
 
