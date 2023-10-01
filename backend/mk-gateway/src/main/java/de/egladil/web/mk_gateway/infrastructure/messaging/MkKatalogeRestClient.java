@@ -5,13 +5,11 @@
 package de.egladil.web.mk_gateway.infrastructure.messaging;
 
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
-import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.annotations.LandKuerzel;
 import de.egladil.web.commons_validation.annotations.StringLatin;
 import de.egladil.web.mk_gateway.MkGatewayApp;
-import de.egladil.web.mk_gateway.domain.apimodel.FileResource;
 import de.egladil.web.mk_gateway.domain.kataloge.api.LandPayload;
 import de.egladil.web.mk_gateway.domain.kataloge.api.OrtPayload;
 import de.egladil.web.mk_gateway.domain.kataloge.api.SchulePayload;
@@ -139,12 +137,6 @@ public interface MkKatalogeRestClient {
 	@Consumes(MediaType.APPLICATION_JSON)
 	Response generateKuerzel(@HeaderParam(
 		value = MkGatewayApp.SECRET_HEADER_NAME) final String secret);
-
-	@POST
-	@Path("upload/schulen/csv")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	Response uploadSchulkatalog(@HeaderParam(
-		value = MkGatewayApp.SECRET_HEADER_NAME) final String secret, @MultipartForm final FileResource input);
 
 	@POST
 	@Path("katalogantrag")

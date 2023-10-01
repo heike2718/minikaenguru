@@ -41,18 +41,31 @@ public class AppLifecycleBean {
 	@ConfigProperty(name = "quarkus.http.port")
 	String port;
 
-	@ConfigProperty(name = "clamav.host")
-	String clamAVHost;
+	@ConfigProperty(name = "quarkus.rest-client.\"de.egladil.web.mk_gateway.infrastructure.restclient.FilescannerRestClient\".url")
+	String filescannerUrl;
+
+	@ConfigProperty(name = "quarkus.rest-client.\"de.egladil.web.mk_gateway.domain.auth.client.InitAccessTokenRestClient\".url")
+	String initAccesstokenUrl;
+
+	@ConfigProperty(
+		name = "quarkus.rest-client.\"de.egladil.web.mk_gateway.domain.auth.session.tokens.TokenExchangeRestClient\".url")
+	String tokenExchangeRestClientUrl;
+
+	@ConfigProperty(name = "quarkus.rest-client.\"de.egladil.web.mk_gateway.infrastructure.messaging.MkKatalogeRestClient\".url")
+	String katalogeUrl;
 
 	void onStartup(@Observes final StartupEvent ev) {
 
 		LOGGER.info("mk-gateway is starting...");
+		LOGGER.info(" ===========>  filescannerUrl={}", filescannerUrl);
+		LOGGER.info(" ===========>  initAccesstokenUrl={}", initAccesstokenUrl);
+		LOGGER.info(" ===========>  tokenExchangeRestClientUrl={}", tokenExchangeRestClientUrl);
+		LOGGER.info(" ===========>  katalogeUrl={}", katalogeUrl);
 		LOGGER.info(" ===========>  the download dir is {}", getPathDownloadDir());
 		LOGGER.info(" ===========>  the upload dir is {}", quarkusUploadsDir);
 		LOGGER.info(" ===========>  quarkus.http.cors.origins={}", corsAllowedOrigins);
 		LOGGER.info(" ===========>  quarkus.http.root-path={}", rootPath);
 		LOGGER.info(" ===========>  quarkus.http.port={}", port);
-		LOGGER.info(" ===========>  clamav.host={}", clamAVHost);
 
 	}
 

@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.filescanner_service.scan.ScanResult;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
@@ -46,6 +45,7 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadRequestPayload;
 import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.domain.uploads.convert.UploadToCSVConverter;
+import de.egladil.web.mk_gateway.domain.uploads.scan.FileScanResult;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.Auswertungsmodus;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
@@ -131,7 +131,7 @@ public class UploadManagerImpl implements UploadManager {
 	}
 
 	@Transactional
-	PersistenterUpload transformAndPersistUploadMetadata(final UploadRequestPayload uploadPayload, final ScanResult scanResult, final Long checksumme) {
+	PersistenterUpload transformAndPersistUploadMetadata(final UploadRequestPayload uploadPayload, final FileScanResult scanResult, final Long checksumme) {
 
 		PersistenterUpload upload = new PersistenterUpload();
 		upload.setChecksumme(checksumme);
@@ -177,7 +177,7 @@ public class UploadManagerImpl implements UploadManager {
 			}
 		}
 
-		ScanResult scanResult = this.uploadScannerDelegate.scanUpload(uploadPayload);
+		FileScanResult scanResult = this.uploadScannerDelegate.scanUpload(uploadPayload);
 
 		Long checksumme = this.getCRC32Checksum(uploadPayload.getUploadData().getDataBASE64());
 		UploadIdentifier uploadIdentifier = new UploadIdentifier(uploadPayload.getTeilnahmenummer(), checksumme);

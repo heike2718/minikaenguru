@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Test;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.filescanner_service.scan.ScanResult;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.UploadFormatException;
@@ -39,6 +38,7 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadRepository;
 import de.egladil.web.mk_gateway.domain.uploads.UploadRequestPayload;
 import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
+import de.egladil.web.mk_gateway.domain.uploads.scan.FileScanResult;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.Auswertungsmodus;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
@@ -173,7 +173,7 @@ public class UploadManagerImplTest {
 		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmenummer(schulkuerzel)
 			.withWettbewerbID(wettbewerbID);
 
-		ScanResult scanResult = new ScanResult().withMediaType("text/plain").withUserID("zoazodq");
+		FileScanResult scanResult = new FileScanResult().withMediaType("text/plain").withUserID("zoazodq");
 
 		when(uploadScannerDelegate.scanUpload(any(UploadRequestPayload.class))).thenReturn(scanResult);
 
@@ -244,7 +244,7 @@ public class UploadManagerImplTest {
 		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmenummer(schulkuerzel)
 			.withWettbewerbID(wettbewerbID);
 
-		ScanResult scanResult = new ScanResult().withMediaType("text/plain").withUserID("zoazodq");
+		FileScanResult scanResult = new FileScanResult().withMediaType("text/plain").withUserID("zoazodq");
 
 		when(uploadScannerDelegate.scanUpload(any(UploadRequestPayload.class))).thenReturn(scanResult);
 
@@ -315,7 +315,7 @@ public class UploadManagerImplTest {
 		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmenummer(schulkuerzel)
 			.withWettbewerbID(wettbewerbID);
 
-		ScanResult scanResult = new ScanResult().withMediaType("text/plain").withUserID("zoazodq");
+		FileScanResult scanResult = new FileScanResult().withMediaType("text/plain").withUserID("zoazodq");
 
 		when(uploadScannerDelegate.scanUpload(any(UploadRequestPayload.class))).thenReturn(scanResult);
 
@@ -388,7 +388,7 @@ public class UploadManagerImplTest {
 		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmenummer(schulkuerzel)
 			.withWettbewerbID(wettbewerbID);
 
-		ScanResult scanResult = new ScanResult().withMediaType("text/plain").withUserID("zoazodq");
+		FileScanResult scanResult = new FileScanResult().withMediaType("text/plain").withUserID("zoazodq");
 
 		when(uploadScannerDelegate.scanUpload(any(UploadRequestPayload.class))).thenReturn(scanResult);
 

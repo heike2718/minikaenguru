@@ -6,8 +6,8 @@ package de.egladil.web.mk_gateway.domain.uploads;
 
 import java.util.Base64;
 
-import de.egladil.web.filescanner_service.scan.Upload;
 import de.egladil.web.mk_gateway.domain.semantik.ValueObject;
+import de.egladil.web.mk_gateway.domain.uploads.scan.Upload;
 
 /**
  * UploadData ein Upload

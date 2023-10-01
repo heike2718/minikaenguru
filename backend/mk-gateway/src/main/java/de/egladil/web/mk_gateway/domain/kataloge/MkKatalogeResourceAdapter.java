@@ -4,23 +4,21 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.kataloge;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.ws.rs.core.Response;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.domain.AbstractMkResourceAdapter;
-import de.egladil.web.mk_gateway.domain.apimodel.FileResource;
 import de.egladil.web.mk_gateway.domain.apimodel.StringsAPIModel;
 import de.egladil.web.mk_gateway.domain.kataloge.api.LandPayload;
 import de.egladil.web.mk_gateway.domain.kataloge.api.OrtPayload;
 import de.egladil.web.mk_gateway.domain.kataloge.api.SchulePayload;
 import de.egladil.web.mk_gateway.domain.kataloge.api.SchulkatalogAntrag;
 import de.egladil.web.mk_gateway.infrastructure.messaging.MkKatalogeRestClient;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Response;
 
 /**
  * MkKatalogeResourceAdapter
@@ -208,21 +206,6 @@ public class MkKatalogeResourceAdapter extends AbstractMkResourceAdapter {
 
 			return handleException(e, LOG, "[generateKuerzel]");
 		}
-	}
-
-	@Deprecated(forRemoval = true)
-	public Response uploadSchulkatalog(final String secret, final FileResource input) {
-
-		try {
-
-			Response response = restClient.uploadSchulkatalog(secret, input);
-			return response;
-
-		} catch (Exception e) {
-
-			return handleException(e, LOG, "[uploadSchulkatalog]");
-		}
-
 	}
 
 	public Response sendeSchulkatalogAntrag(final SchulkatalogAntrag antrag) {

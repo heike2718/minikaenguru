@@ -7,20 +7,7 @@ package de.egladil.web.mk_gateway.infrastructure.error;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import jakarta.ws.rs.BadRequestException;
-import jakarta.ws.rs.NotFoundException;
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.NoContentException;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
-import jakarta.ws.rs.core.SecurityContext;
-import jakarta.ws.rs.ext.ExceptionMapper;
-import jakarta.ws.rs.ext.Provider;
-
 import org.apache.commons.lang3.StringUtils;
-import org.jboss.resteasy.core.NoMessageBodyWriterFoundFailure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +31,16 @@ import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.error.StatistikKeineDatenException;
 import de.egladil.web.mk_gateway.domain.error.UnterlagenNichtVerfuegbarException;
 import de.egladil.web.mk_gateway.domain.error.UploadFormatException;
-import de.egladil.web.mk_gateway.infrastructure.rest.XmlSerializer;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.NoContentException;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
+import jakarta.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.Provider;
 
 /**
  * MkGatewayExceptionMapper.<br>
@@ -195,20 +191,6 @@ public class MkGatewayExceptionMapper implements ExceptionMapper<Throwable> {
 			return Response.status(status).entity(serializeAsJson(payload)).build();
 		}
 
-		if (exception instanceof NoMessageBodyWriterFoundFailure) {
-
-			NoMessageBodyWriterFoundFailure failure = (NoMessageBodyWriterFoundFailure) exception;
-
-			if (failure.getMessage().contains(MediaType.APPLICATION_XML)) {
-
-				ResponsePayload payload = ResponsePayload
-					.messageOnly(MessagePayload.error(applicationMessages.getString("general.internalServerError")));
-
-				return Response.status(500).entity(serializeAsXml(payload)).build();
-
-			}
-		}
-
 		if (exception instanceof MkGatewayRuntimeException || exception instanceof ClientAuthException) {
 
 			// nicht loggen, wurde schon
@@ -230,12 +212,6 @@ public class MkGatewayExceptionMapper implements ExceptionMapper<Throwable> {
 			.messageOnly(MessagePayload.error(applicationMessages.getString("general.internalServerError")));
 
 		return Response.status(500).entity(serializeAsJson(payload)).build();
-	}
-
-	private String serializeAsXml(final ResponsePayload rp) {
-
-		return XmlSerializer.getInstance().writeAsString(ResponsePayload.class, rp);
-
 	}
 
 	private String serializeAsJson(final ResponsePayload rp) {
