@@ -3,7 +3,7 @@ import { AuthService, AuthState, isLoggedIn, isLoggedOut, Session, user } from '
 import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
 import { environment } from '../../environments/environment';
-import { LogoutService } from '../services/logout.service';
+import { AdminLogoutService } from '../services/admin-logout.service';
 
 @Component({
 	selector: 'mka-navbar',
@@ -25,7 +25,7 @@ export class NavbarComponent implements OnInit {
 	constructor(private authService: AuthService
 		, private authStore: Store<AuthState>
 		, private sessionStore: Store<Session>
-		, private logoutService: LogoutService) { }
+		, private logoutService: AdminLogoutService) { }
 
 	collapseNav() {
 		if (this.navbarToggler) {

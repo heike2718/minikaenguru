@@ -29,7 +29,7 @@
 
 				<ng-container *ngIf="wettbewerb$ | async as wettbewerb">
 					<button
-						*ngIf="(wettbewerb.status !== 'ERFASST' && wettbewerb.status !== 'BEENDET' && !schule.aktuellAngemeldet)"
+						*ngIf="showBtnAnmelden()"
 						class="btn btn-outline-success w-75" (click)="schuleAnmelden()">
 						anmelden für {{wettbewerb.jahr}}</button>
 				</ng-container>

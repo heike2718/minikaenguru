@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
-import { WettbewerbFacade } from '../../services/wettbewerb.facade';
+import { AdminWettbewerbFacade } from '../../services/admin-wettbewerb.facade';
 import { Observable } from 'rxjs';
 import { Wettbewerb } from '../wettbewerbe.model';
 
@@ -16,7 +16,7 @@ export class WettbewerbeListComponent implements OnInit {
 	wettbewerbe$: Observable<Wettbewerb[]> = this.wettbewerbFacade.wettbewerbe$;
 
 
-	constructor(private wettbewerbFacade: WettbewerbFacade, private router: Router) { }
+	constructor(private wettbewerbFacade: AdminWettbewerbFacade, private router: Router) { }
 
 	ngOnInit(): void {
 	}

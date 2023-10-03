@@ -20,7 +20,7 @@ export const WETTBEWERB_STORAGE_KEY = 'mka_wettbewerb';
 @Injectable({
 	providedIn: 'root'
 })
-export class WettbewerbFacade {
+export class AdminWettbewerbFacade {
 
 	public wettbewerbe$: Observable<Wettbewerb[]> = this.store.select(wettbewerbe);
 	public wettbewerb$: Observable<Wettbewerb | undefined> = this.store.select(selectedWettbewerb);
@@ -192,6 +192,13 @@ export class WettbewerbFacade {
 				this.store.dispatch(WettbewerbActions.saveFailed({ outcome: message }));
 			}
 		);
+	}
+
+	public resetState(): void {
+
+		localStorage.removeItem(WETTBEWERB_STORAGE_KEY);
+		this.store.dispatch(WettbewerbActions.resetWettbewerbe());
+
 	}
 };
 

@@ -4,7 +4,7 @@ import { UntypedFormBuilder, Validators, UntypedFormGroup, UntypedFormControl } 
 import { environment } from '../../../environments/environment';
 import { Subscription } from 'rxjs';
 import { WettbewerbEditorModel } from '../wettbewerbe.model';
-import { WettbewerbFacade } from '../../services/wettbewerb.facade';
+import { AdminWettbewerbFacade } from '../../services/admin-wettbewerb.facade';
 import { LogService } from '@minikaenguru-ws/common-logging';
 import { Router } from '@angular/router';
 import { MessageService } from '@minikaenguru-ws/common-messages';
@@ -47,7 +47,7 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 	private initialWettbewerbGuiModel = {} as WettbewerbEditorModel;
 
 	constructor(private fb: UntypedFormBuilder,
-		private wettbewerbFacade: WettbewerbFacade,
+		private wettbewerbFacade: AdminWettbewerbFacade,
 		// @Inject(DOCUMENT) private document: Document,
 		private router: Router,
 		private messageService: MessageService,

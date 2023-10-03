@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
-import { WettbewerbFacade } from '../../services/wettbewerb.facade';
+import { AdminWettbewerbFacade } from '../../services/admin-wettbewerb.facade';
 import { Subscription } from 'rxjs';
 import { Wettbewerb } from '../wettbewerbe.model';
 import { LogService } from '@minikaenguru-ws/common-logging';
@@ -21,7 +21,7 @@ export class WettbewerbDashboardComponent implements OnInit, OnDestroy {
 
 	private selectedWettbewerbSubscription: Subscription = new Subscription();
 
-	constructor(private wettbewerbFacade: WettbewerbFacade, private router: Router, private logger: LogService) { }
+	constructor(private wettbewerbFacade: AdminWettbewerbFacade, private router: Router, private logger: LogService) { }
 
 	ngOnInit(): void {
 

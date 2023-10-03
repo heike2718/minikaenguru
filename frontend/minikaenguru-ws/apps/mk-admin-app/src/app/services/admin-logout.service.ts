@@ -14,21 +14,26 @@ import { NewsletterFacade } from '../newsletter/newsletter.facade';
 import { resetUploads } from '../uploads/+state/uploads.actions';
 import { resetLoesungszettel } from '../loesungszettel/+state/loesungszettel.actions';
 import { resetStatistiken } from '../statistik/+state/statistic.actions';
+import { AdminWettbewerbFacade } from './admin-wettbewerb.facade';
 
 
 @Injectable({
 	providedIn: 'root'
 })
-export class LogoutService {
+export class AdminLogoutService {
 
 	constructor(private authService: AuthService
-		, private appStore: Store<AppState>, private newsletterFacade: NewsletterFacade) { }
+		, private appStore: Store<AppState>, private newsletterFacade: NewsletterFacade, private aminWettbewerbFacade: AdminWettbewerbFacade) { }
 
 
 	logout(): void {
+
+		// I0419: status darf nicht im localStorage verbleiben!
+		this.aminWettbewerbFacade.resetState();
+
 		this.newsletterFacade.stopPollVersandinfo();
 		this.authService.logOut(false);
-		this.appStore.dispatch(resetWettbewerbe());
+		// this.appStore.dispatch(resetWettbewerbe());
 		this.appStore.dispatch(resetKataloge());
 		this.appStore.dispatch(resetVeranstalters());
 		this.appStore.dispatch(resetAktuelleMeldung());

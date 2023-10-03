@@ -63,3 +63,4 @@ export const selectedWettbewerbLoaded = createAction(
 export const resetWettbewerbe = createAction(
 	'[NavbarComponent] - wettbewerbe login/logout'
 );
+

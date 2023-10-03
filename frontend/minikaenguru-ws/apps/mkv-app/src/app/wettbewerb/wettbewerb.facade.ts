@@ -24,33 +24,26 @@ export class WettbewerbFacade {
 
 	public ladeAktuellenWettbewerb(): void {
 
-		const w = localStorage.getItem(WETTBEWERB_STORAGE_KEY);
-		if (w) {
-			const wettbewerb: Wettbewerb = JSON.parse(w);
-			this.appStore.dispatch(WettbewerbActions.aktuellerWettbewerbGeladen({ wettbewerb: wettbewerb }));
-
-		} else {
-
-			this.aktuellerWettbewerb$.pipe(
-				tap(
-					wettbewerb => {
-						if (!wettbewerb) {
-							this.teilnahmenService.getAktuellenWettbewerb().pipe(
-								take(1)
-							).subscribe(
-								wb => {
-									localStorage.setItem(WETTBEWERB_STORAGE_KEY, JSON.stringify(wb));
-									this.appStore.dispatch(WettbewerbActions.aktuellerWettbewerbGeladen({ wettbewerb: wb }))
-								},
-								(error => {
-									this.errorHandler.handleError(error);
-								})
-							)
-						}
+		// I0419: aktueller Wettbewerb muss immer neu geladen werden!
+		this.aktuellerWettbewerb$.pipe(
+			tap(
+				wettbewerb => {
+					if (!wettbewerb) {
+						this.teilnahmenService.getAktuellenWettbewerb().pipe(
+							take(1)
+						).subscribe(
+							wb => {
+								localStorage.setItem(WETTBEWERB_STORAGE_KEY, JSON.stringify(wb));
+								this.appStore.dispatch(WettbewerbActions.aktuellerWettbewerbGeladen({ wettbewerb: wb }))
+							},
+							(error => {
+								this.errorHandler.handleError(error);
+							})
+						)
 					}
-				)
-			).subscribe();
-		}
+				}
+			)
+		).subscribe();
 	}
 
 	public resetState(): void {

@@ -15,6 +15,7 @@ import { CommonSchulkatalogModule } from '@minikaenguru-ws/common-schulkatalog';
 import { AddSchuleComponent } from './schulen/add-schule/add-schule.component';
 import { UnterlagenCardComponent } from './unterlagen-card/unterlagen-card.component';
 import { UploadAuswertungComponent } from './schulen/upload-auswertung/upload-auswertung.component';
+import { CommonLoggingModule } from '@minikaenguru-ws/common-logging';
 
 
 
@@ -24,6 +25,7 @@ import { UploadAuswertungComponent } from './schulen/upload-auswertung/upload-au
 		CommonComponentsModule,
 		LehrerRoutingModule,
 		CommonSchulkatalogModule,
+		CommonLoggingModule,
 		StoreModule.forFeature(fromLehrer.lehrerFeatureKey, fromLehrer.reducer),
 	],
 	declarations: [

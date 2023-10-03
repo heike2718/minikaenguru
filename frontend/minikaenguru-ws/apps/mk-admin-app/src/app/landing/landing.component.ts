@@ -7,7 +7,7 @@ import { STORAGE_KEY_GUI_VERSION } from '@minikaenguru-ws/common-auth';
 import { environment } from '../../environments/environment';
 import { AppState } from '../reducers';
 import { LogService } from '@minikaenguru-ws/common-logging';
-import { WettbewerbFacade } from '../services/wettbewerb.facade';
+import { AdminWettbewerbFacade } from '../services/admin-wettbewerb.facade';
 
 @Component({
   selector: 'mka-landing',
@@ -21,7 +21,7 @@ export class LandingComponent implements OnInit, OnDestroy {
   constructor(private authStore: Store<AppState>
     , public authService: AuthService
     , public versionService: VersionService
-    , private wettbewerbFacade: WettbewerbFacade
+    , private wettbewerbFacade: AdminWettbewerbFacade
     , private logger: LogService) { }
 
   ngOnInit(): void {
