@@ -45,3 +45,6 @@ Thumbs.db
 /.prettierignore
 /.prettierrc
 /.eslintrc.json
+
+# jEdit
+*~
