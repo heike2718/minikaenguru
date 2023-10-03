@@ -76,18 +76,18 @@ export class SchuleCardComponent implements OnInit, OnDestroy {
 	showBtnAnmelden(): boolean {
 
 		if (!this.#wettbewerb) {
-			this.#logService.info('this.#wettbewerb is undefined');
+			this.#logService.debug('this.#wettbewerb is undefined');
 			return false;
 		}
 		if (this.schule.aktuellAngemeldet) {
-			this.#logService.info('this.schule is angemeldet');
+			this.#logService.debug('this.schule is angemeldet');
 			return false;
 		}
 
-		this.#logService.info('this.schule is not angemeldet');
+		this.#logService.debug('this.schule is not angemeldet');
 
 		const result = this.#wettbewerb.status === 'ANMELDUNG' || this.#wettbewerb.status === 'DOWNLOAD_LEHRER' || this.#wettbewerb.status === 'DOWNLOAD_PRIVAT';
-		this.#logService.info('result=' + result + ', #wettbewerb.status=' + this.#wettbewerb.status);
+		this.#logService.debug('result=' + result + ', #wettbewerb.status=' + this.#wettbewerb.status);
 		return result;
 
 	}

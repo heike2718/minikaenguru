@@ -352,16 +352,16 @@ export class KatalogpflegeFacade {
 		};
 	}
 
-	ladeKinder(item: KatalogpflegeItem) {
+	ladeKinder(parent: KatalogpflegeItem) {
 
 		if (this.loggingOut) {
 			return;
 		}
 
-		this.katalogHttpService.loadChildItems(item).subscribe(
+		this.katalogHttpService.loadChildItems(parent).subscribe(
 			items => {
-				this.store.dispatch(KatalogpflegeActions.loadChildItemsFinished({ parent: item, katalogItems: items }));
-				this.store.dispatch(KatalogpflegeActions.selectKatalogItem({ katalogItem: item }));
+				this.store.dispatch(KatalogpflegeActions.loadChildItemsFinished({ parent: parent, katalogItems: items }));
+				this.store.dispatch(KatalogpflegeActions.selectKatalogItem({ katalogItem: parent }));
 			},
 			(error => {
 				this.store.dispatch(KatalogpflegeActions.finishedWithError());

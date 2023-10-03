@@ -22,14 +22,14 @@ export class KatalogHttpService {
 		return this.loadingIndicatorService.showLoaderUntilCompleted(this.loadKatalogItems(url));
 	}
 
-	public loadChildItems(item: KatalogpflegeItem): Observable<KatalogpflegeItem[]> {
+	public loadChildItems(parent: KatalogpflegeItem): Observable<KatalogpflegeItem[]> {
 
 
 		let url = environment.apiUrl + '/kataloge/';
 
-		switch (item.typ) {
-			case 'LAND': url += 'laender/' + item.kuerzel + '/orte'; break;
-			case 'ORT': url += 'orte/' + item.kuerzel + '/schulen'; break;
+		switch (parent.typ) {
+			case 'LAND': url += 'laender/' + parent.kuerzel + '/orte'; break;
+			case 'ORT': url += 'orte/' + parent.kuerzel + '/schulen'; break;
 		}
 
 		return this.loadingIndicatorService.showLoaderUntilCompleted(this.loadKatalogItems(url));
