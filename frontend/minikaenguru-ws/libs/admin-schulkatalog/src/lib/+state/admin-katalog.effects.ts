@@ -41,7 +41,7 @@ export class AdminSchulkatalogEffects {
         () => this.#actions$.pipe(
             ofType(KatalogActions.loadOrte),
             switchMap(action => this.#schulkatalogHttpService.loadOrte(action.land)),
-            map((sucheResult) => KatalogActions.orteGeladen({land: sucheResult.land, orte: sucheResult.orte}))
+            map((sucheResult) => KatalogActions.orteGeladen({ land: sucheResult.land, orte: sucheResult.orte }))
         )
     );
 
@@ -55,7 +55,7 @@ export class AdminSchulkatalogEffects {
         () => this.#actions$.pipe(
             ofType(KatalogActions.loadSchulen),
             switchMap(action => this.#schulkatalogHttpService.loadSchulen(action.ort)),
-            map((sucheResult) => KatalogActions.schulenGeladen({ort: sucheResult.ort, schulen: sucheResult.schulen}))
+            map((sucheResult) => KatalogActions.schulenGeladen({ ort: sucheResult.ort, schulen: sucheResult.schulen }))
         )
     );
 
@@ -63,5 +63,20 @@ export class AdminSchulkatalogEffects {
         () => this.#actions$.pipe(
             ofType(KatalogActions.schuleSelected),
             tap(() => this.#router.navigateByUrl('schulkatalog/schule'))
+        ), { dispatch: false });
+
+
+    createKuerzel$ = createEffect(
+        () => this.#actions$.pipe(
+            ofType(KatalogActions.createKuerzel),
+            switchMap(() => this.#schulkatalogHttpService.getKuerzel()),
+            map((kuerzel) => KatalogActions.kuerzelCreated({ kuerzel }))
+        )
+    );
+
+    startEditSchule$ = createEffect(
+        () => this.#actions$.pipe(
+            ofType(KatalogActions.startEditSchule),
+            tap(() => this.#router.navigateByUrl('schulkatalog/schule-editor'))
         ), { dispatch: false });
 }

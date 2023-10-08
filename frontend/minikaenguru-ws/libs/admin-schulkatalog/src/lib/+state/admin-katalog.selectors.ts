@@ -14,3 +14,7 @@ export const selectedOrt = createSelector(schulkatalogState, state => state.sele
 export const schulen = createSelector(schulkatalogState, state => state.schulen);
 export const schulenGeladen = createSelector(schulen, schulen => schulen.length > 0);
 export const selectedSchule = createSelector(schulkatalogState, state => state.selectedSchule);
+
+export const schuleEditorModel = createSelector(schulkatalogState, state => state.schuleEditorModel);
+
+export const kuerzel = createSelector(schulkatalogState, state => state.kuerzel);

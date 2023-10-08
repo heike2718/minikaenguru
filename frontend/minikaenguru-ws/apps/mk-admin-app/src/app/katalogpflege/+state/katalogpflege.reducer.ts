@@ -1,11 +1,11 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { KatalogpflegeItem, Katalogpflegetyp, mergeKatalogItems, Kataloge, childrenAsArray, SchulePayload, OrtPayload, LandPayload, KatalogPflegeItemsMap, initialSchulePayload } from '../katalogpflege.model';
+import { KatalogpflegeItem, Katalogpflegetyp, mergeKatalogItems, Kataloge, childrenAsArray, DeprecatedSchulePayload, DeprecatedOrtPayload, DeprecatedLandPayload, KatalogPflegeItemsMap, initialSchulePayload } from '../katalogpflege.model';
 import * as KatalogpflegeActions from './katalogpflege.actions';
 
 export const katalogpflegeFeatureKey = 'mk-admin-app-kataloge';
 
 export interface SchuleEditorModel {
-	readonly schulePayload?: SchulePayload;
+	readonly schulePayload?: DeprecatedSchulePayload;
 	readonly modusCreate: boolean;
 	readonly kuerzelLandDisabled: boolean;
 	readonly nameLandDisabled: boolean;
@@ -28,8 +28,8 @@ export interface KatalogpflegeState {
 	readonly selectedKatalogTyp?: Katalogpflegetyp;
 	readonly sucheBeendet: boolean;
 	readonly schuleEditorModel: SchuleEditorModel;
-	readonly ortEditorPayload?: OrtPayload;
-	readonly landEditorPayload?: LandPayload;
+	readonly ortEditorPayload?: DeprecatedOrtPayload;
+	readonly landEditorPayload?: DeprecatedLandPayload;
 };
 
 const initialSchuleEditorModelState: SchuleEditorModel = {

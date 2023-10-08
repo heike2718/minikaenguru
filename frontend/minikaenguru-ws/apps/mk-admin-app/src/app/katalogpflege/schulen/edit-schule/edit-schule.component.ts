@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { KatalogpflegeFacade } from '../../katalogpflege.facade';
 import { UntypedFormGroup, AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
-import { SchulePayload } from '../../katalogpflege.model';
+import { DeprecatedSchulePayload } from '../../katalogpflege.model';
 import { Subscription } from 'rxjs';
 import { initialSchuleEditorModel, SchuleEditorModel } from '../../+state/katalogpflege.reducer';
 import { emailValidator } from '@minikaenguru-ws/common-components';
@@ -126,7 +126,7 @@ export class EditSchuleComponent implements OnInit, OnDestroy {
 		this.submitDisabled = true;
 		this.submited = true;
 
-		const schulePayload: SchulePayload = {
+		const schulePayload: DeprecatedSchulePayload = {
 			name: this.name ? this.name.value.trim() : '',
 			kuerzel: this.kuerzel ? this.kuerzel.value : '',
 			nameOrt: this.nameOrt ? this.nameOrt.value.trim() : '',

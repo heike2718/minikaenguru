@@ -12,8 +12,11 @@
         <mka-schulen></mka-schulen>
     </div>
 
-    <p>Buttonleiste - 2 Buttons: 1. ändern - öffnet Dialog, in dem der Name oder das Kürzel des Landes geändert werden
-        kann. 2. zurück zu länder</p>
+    <div class="btn-group d-flex" role="group">
+        <button class="btn btn-primary w-100" (click)="neueSchule()"><i class="fa fa-plus" aria-hidden="true"
+                title="neue Schule im gleichen Ort"></i>neue
+            Schule</button>
+    </div>
 </div>
 
 <ng-template #keinOrt>

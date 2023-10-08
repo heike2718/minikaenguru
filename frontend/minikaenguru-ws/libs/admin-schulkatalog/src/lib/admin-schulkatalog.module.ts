@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { HttpClientModule } from "@angular/common/http";
 import { ModuleWithProviders, NgModule } from "@angular/core";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { ReactiveFormsModule } from "@angular/forms";
 import { AdminSchulkatalogRoutingModule } from "./admin-schulkatalog-routing.module";
 import { StoreModule } from "@ngrx/store";
 import * as fromSchulkatalog from './+state/admin-katalog.reducer';
@@ -20,19 +20,22 @@ import { SchuleComponent } from "./schulen/schule/schule.component";
 import { SchulenListComponent } from "./schulen/schulen-list/schulen-list.component";
 import { OrtDetailsComponent } from "./orte/ort-details/ort-details.component";
 import { SchuleDetailsComponent } from "./schulen/schule-details/schule-details.component";
+import { CommonComponentsModule } from "@minikaenguru-ws/common-components";
+import { EditSchuleComponent } from "./schulen/edit-schule/edit-schule.component";
 
 @NgModule({
     imports: [
         CommonModule,
-        FormsModule,
+        // FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
         AdminSchulkatalogRoutingModule,
         StoreModule.forFeature(fromSchulkatalog.adminSchulkatalogFeatureKey, fromSchulkatalog.reducer),
         EffectsModule.forFeature([AdminSchulkatalogEffects]),
+        CommonComponentsModule,
         CommonMessagesModule,
         CommonLoggingModule,
-        CommonAuthModule
+        CommonAuthModule,        
     ],
     declarations: [
         LandComponent,
@@ -43,7 +46,8 @@ import { SchuleDetailsComponent } from "./schulen/schule-details/schule-details.
         OrtDetailsComponent,
         SchuleComponent, 
         SchulenListComponent,
-        SchuleDetailsComponent              
+        SchuleDetailsComponent,
+        EditSchuleComponent             
     ],
     exports: [
 

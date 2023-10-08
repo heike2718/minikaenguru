@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
 import { ResponsePayload, MessageService, Message } from '@minikaenguru-ws/common-messages';
 
-import { KatalogpflegeItem, Katalogpflegetyp, KuerzelAPIModel, SchulePayload, OrtPayload, LandPayload } from '../katalogpflege/katalogpflege.model';
+import { KatalogpflegeItem, Katalogpflegetyp, KuerzelAPIModel, DeprecatedSchulePayload, DeprecatedOrtPayload, DeprecatedLandPayload } from '../katalogpflege/katalogpflege.model';
 import { LoadingIndicatorService } from '@minikaenguru-ws/shared/util-mk';
 
 @Injectable({
@@ -64,7 +64,7 @@ export class KatalogHttpService {
 		return this.loadingIndicatorService.showLoaderUntilCompleted(obs$);
 	}
 
-	public createSchule(schulePayload: SchulePayload): Observable<ResponsePayload> {
+	public createSchule(schulePayload: DeprecatedSchulePayload): Observable<ResponsePayload> {
 
 		let url = environment.apiUrl + '/kataloge/schulen';
 
@@ -76,7 +76,7 @@ export class KatalogHttpService {
 
 	}
 
-	public renameSchule(schulePayload: SchulePayload): Observable<ResponsePayload> {
+	public renameSchule(schulePayload: DeprecatedSchulePayload): Observable<ResponsePayload> {
 
 		let url = environment.apiUrl + '/kataloge/schulen';
 
@@ -88,7 +88,7 @@ export class KatalogHttpService {
 
 	}
 
-	public renameOrt(ortPayload: OrtPayload): Observable<ResponsePayload> {
+	public renameOrt(ortPayload: DeprecatedOrtPayload): Observable<ResponsePayload> {
 
 		let url = environment.apiUrl + '/kataloge/orte';
 
@@ -99,7 +99,7 @@ export class KatalogHttpService {
 		return this.loadingIndicatorService.showLoaderUntilCompleted(obs$);
 	}
 
-	public renameLand(landPayload: LandPayload): Observable<ResponsePayload> {
+	public renameLand(landPayload: DeprecatedLandPayload): Observable<ResponsePayload> {
 
 		let url = environment.apiUrl + '/kataloge/laender';
 

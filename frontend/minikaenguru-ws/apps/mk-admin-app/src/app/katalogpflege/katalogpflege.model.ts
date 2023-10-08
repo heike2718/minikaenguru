@@ -23,31 +23,31 @@ export interface Kataloge {
 	readonly schulen: KatalogpflegeItemWithID[];
 };
 
-export interface LandPayload {
+export interface DeprecatedLandPayload {
 	readonly name: string;
 	readonly kuerzel: string;
 };
 
-export const initialLandPayload: LandPayload = {
+export const initialLandPayload: DeprecatedLandPayload = {
 	name: '',
 	kuerzel: ''
 };
 
-export interface OrtPayload {
+export interface DeprecatedOrtPayload {
 	readonly name: string;
 	readonly kuerzel: string;
 	readonly kuerzelLand: string;
 	readonly nameLand: string;
 };
 
-export const initialOrtPayload: OrtPayload = {
+export const initialOrtPayload: DeprecatedOrtPayload = {
 	name: '',
 	kuerzel: '',
 	kuerzelLand: '',
 	nameLand: ''
 };
 
-export interface SchulePayload {
+export interface DeprecatedSchulePayload {
 	readonly name: string;
 	readonly kuerzel: string;
 	readonly kuerzelOrt: string;
@@ -57,7 +57,7 @@ export interface SchulePayload {
 	readonly emailAuftraggeber?: string;
 };
 
-export const initialSchulePayload: SchulePayload = {
+export const initialSchulePayload: DeprecatedSchulePayload = {
 	name: '',
 	kuerzel: '',
 	kuerzelOrt: '',

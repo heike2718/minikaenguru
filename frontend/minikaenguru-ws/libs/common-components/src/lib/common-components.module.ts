@@ -20,6 +20,7 @@ import { PaginationComponent } from './pagination/pagination.component';
 import { VersionService } from './version/version.service';
 import { LoadingIndicatorComponent } from './loading-indicator/loading-indicator.component';
 import { SharedUtilMkModule } from '@minikaenguru-ws/shared/util-mk';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -44,6 +45,7 @@ import { SharedUtilMkModule } from '@minikaenguru-ws/shared/util-mk';
     LoadingIndicatorComponent,
   ],
   exports: [
+    ReactiveFormsModule,
     DownloadButtonComponent,
     DownloadCardComponent,
     FormErrorComponent,

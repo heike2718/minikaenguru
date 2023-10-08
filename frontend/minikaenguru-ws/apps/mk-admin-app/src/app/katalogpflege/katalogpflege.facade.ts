@@ -5,7 +5,7 @@ import { GlobalErrorHandlerService } from '../infrastructure/global-error-handle
 
 import * as KatalogpflegeActions from '../katalogpflege/+state/katalogpflege.actions';
 import { KatalogHttpService } from '../services/katalog-http.service';
-import { Katalogpflegetyp, KatalogpflegeItem, SchulePayload, KuerzelAPIModel, OrtPayload, LandPayload } from './katalogpflege.model';
+import { Katalogpflegetyp, KatalogpflegeItem, DeprecatedSchulePayload, KuerzelAPIModel, DeprecatedOrtPayload, DeprecatedLandPayload } from './katalogpflege.model';
 import { Router } from '@angular/router';
 import { laender, orte, schulen, selectedItem, editSchuleInput, editOrtInput, editLandInput } from './+state/katalogpflege.selectors';
 import { tap, take } from 'rxjs/operators';
@@ -180,7 +180,7 @@ export class KatalogpflegeFacade {
 			}
 				case 'SCHULE':
 				{
-						const schulePayload: SchulePayload = {
+						const schulePayload: DeprecatedSchulePayload = {
 							emailAuftraggeber: '',
 							kuerzel: item.kuerzel,
 							name: item.name,
@@ -211,7 +211,7 @@ export class KatalogpflegeFacade {
 
 
 
-	public sendCreateSchule(payload: SchulePayload): void {
+	public sendCreateSchule(payload: DeprecatedSchulePayload): void {
 
 		this.katalogHttpService.createSchule(payload).subscribe(
 			responsePayload => {
@@ -233,7 +233,7 @@ export class KatalogpflegeFacade {
 
 	}
 
-	public sendRenameSchule(schulePayload: SchulePayload): void {
+	public sendRenameSchule(schulePayload: DeprecatedSchulePayload): void {
 
 		this.katalogHttpService.renameSchule(schulePayload).subscribe(
 			responsePayload => {
@@ -253,7 +253,7 @@ export class KatalogpflegeFacade {
 		);
 	}
 
-	public sendRenameOrt(ortPayload: OrtPayload) {
+	public sendRenameOrt(ortPayload: DeprecatedOrtPayload) {
 
 		this.katalogHttpService.renameOrt(ortPayload).subscribe(
 			responsePayload => {
@@ -274,7 +274,7 @@ export class KatalogpflegeFacade {
 
 	}
 
-	public sendRenameLand(landPayload: LandPayload) {
+	public sendRenameLand(landPayload: DeprecatedLandPayload) {
 
 		this.katalogHttpService.renameLand(landPayload).subscribe(
 			responsePayload => {
@@ -305,7 +305,7 @@ export class KatalogpflegeFacade {
 		let nameLandDisabled = false;
 		let nameOrtDisabled = false;
 
-		let payload: SchulePayload = {
+		let payload: DeprecatedSchulePayload = {
 			name: '',
 			kuerzel: kuerzelAPIModel.kuerzelSchule,
 			kuerzelOrt: kuerzelAPIModel.kuerzelOrt,

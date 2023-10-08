@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { KatalogitemResponseDto, Land, Ort, Schule } from '../admin-katalog.model';
+import { KatalogitemResponseDto, KuerzelResponseDto, Land, Ort, Schule, SchuleEditorModel, SchulePayload } from '../admin-katalog.model';
 
 
 export const loadLaender = createAction(
@@ -67,6 +67,30 @@ export const schuleDeselected = createAction(
 export const schulenGeladen = createAction(
     '[AdminSchulkatalog] schulenGeladen',
     props<{ort: Ort, schulen: KatalogitemResponseDto[]}>()
+);
+
+export const createKuerzel = createAction(
+    '[AdminSchulkatalog] createKuerzel'
+);
+
+export const kuerzelCreated = createAction(
+    '[AdminSchulkatalog] kuerzelCreated',
+    props<{kuerzel: KuerzelResponseDto}>()
+)
+
+export const startEditSchule = createAction(
+    '[AdminSchulkatalog] startEditSchule',
+    props<{schuleEditorModel: SchuleEditorModel}>()
+);
+
+export const schuleAnlegen = createAction(
+    '[AdminSchulkatalog] schuleAnlegen',
+    props<{schulePayload: SchulePayload}>()
+);
+
+export const schuleUmbenennen = createAction(
+    '[AdminSchulkatalog] schuleUmbenennen',
+    props<{schulePayload: SchulePayload}>()
 );
 
 export const resetState = createAction(

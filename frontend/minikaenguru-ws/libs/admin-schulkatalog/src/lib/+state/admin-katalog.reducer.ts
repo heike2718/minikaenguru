@@ -1,5 +1,5 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { Land, Ort, Schule, mapToLand, mapToOrtInLand, mapToSchuleInOrt } from "../admin-katalog.model";
+import { KuerzelResponseDto, Land, Ort, Schule, SchuleEditorModel, SchulePayload, initialSchuleEditorModel, initialSchulePayload, mapToLand, mapToOrtInLand, mapToSchuleInOrt } from "../admin-katalog.model";
 import * as AdminSchulkatalogActions from './admin-katalog.actions';
 
 export const adminSchulkatalogFeatureKey = 'mk-admin-app-schulkatalog';
@@ -11,6 +11,8 @@ export interface AdminSchulkatalogState {
     readonly selectedOrt: Ort | undefined;
     readonly schulen: Schule[];
     readonly selectedSchule: Schule | undefined;
+    readonly kuerzel: KuerzelResponseDto | undefined;
+    readonly schuleEditorModel: SchuleEditorModel | undefined;
 
 };
 
@@ -20,7 +22,9 @@ const initialAdminSchulkatalogState: AdminSchulkatalogState = {
     orte: [],
     selectedOrt: undefined,
     schulen: [],
-    selectedSchule: undefined
+    selectedSchule: undefined,
+    kuerzel: undefined,
+    schuleEditorModel: undefined
 };
 
 const adminSchulkatalogReducer = createReducer(initialAdminSchulkatalogState,
@@ -113,6 +117,23 @@ const adminSchulkatalogReducer = createReducer(initialAdminSchulkatalogState,
             ...state,
             selectedSchule: undefined
         };
+    }),
+
+    on(AdminSchulkatalogActions.kuerzelCreated, (state, action) => {
+        return {
+            ...
+            state,
+            kuerzel: action.kuerzel
+        };
+    }),
+
+    on(AdminSchulkatalogActions.startEditSchule, (state, action) => {
+
+        return {
+            ...state,
+            kuerzel: undefined,
+            schuleEditorModel: action.schuleEditorModel
+        }
     }),
 
     on(AdminSchulkatalogActions.resetState, (_state, _action) => initialAdminSchulkatalogState)

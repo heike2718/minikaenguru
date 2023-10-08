@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { KatalogpflegeFacade } from '../../katalogpflege.facade';
 import { UntypedFormGroup, AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { initialOrtPayload, OrtPayload } from '../../katalogpflege.model';
+import { initialOrtPayload, DeprecatedOrtPayload } from '../../katalogpflege.model';
 import { environment } from '../../../../environments/environment';
 
 @Component({
@@ -32,7 +32,7 @@ export class EditOrtComponent implements OnInit, OnDestroy {
 
 	private editOrtInputSubscription: Subscription = new Subscription();
 
-	private ortPayload: OrtPayload = initialOrtPayload;
+	private ortPayload: DeprecatedOrtPayload = initialOrtPayload;
 
 	constructor(private fb: UntypedFormBuilder, private katalogFacade: KatalogpflegeFacade) { }
 
@@ -92,7 +92,7 @@ export class EditOrtComponent implements OnInit, OnDestroy {
 		this.submitDisabled = true;
 		this.submited = true;
 
-		const ortPayload: OrtPayload = {
+		const ortPayload: DeprecatedOrtPayload = {
 			name: this.name ? this.name.value.trim() : '',
 			kuerzel: this.kuerzel ? this.kuerzel.value : '',
 			nameLand: this.nameLand ? this.nameLand.value : '',

@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, AbstractControl, Validators } from '@angular/forms';
 import { KatalogpflegeFacade } from '../../katalogpflege.facade';
 import { Subscription } from 'rxjs';
-import { initialLandPayload, LandPayload } from '../../katalogpflege.model';
+import { initialLandPayload, DeprecatedLandPayload } from '../../katalogpflege.model';
 
 @Component({
 	selector: 'mka-edit-land',
@@ -25,7 +25,7 @@ export class EditLandComponent implements OnInit, OnDestroy {
 
 	private editLandInputSubscription: Subscription = new Subscription();
 
-	private landPayload: LandPayload = initialLandPayload;
+	private landPayload: DeprecatedLandPayload = initialLandPayload;
 
 	constructor(private fb: UntypedFormBuilder, private katalogFacade: KatalogpflegeFacade) { }
 
@@ -80,7 +80,7 @@ export class EditLandComponent implements OnInit, OnDestroy {
 		this.submitDisabled = true;
 		this.submited = true;
 
-		const landPayload: LandPayload = {
+		const landPayload: DeprecatedLandPayload = {
 			name: this.name? this.name.value.trim() : '',
 			kuerzel: this.kuerzel ? this.kuerzel.value : ''
 		};

@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Katalogpflegetyp, KatalogpflegeItem, SchulePayload, OrtPayload, LandPayload } from '../katalogpflege.model';
+import { Katalogpflegetyp, KatalogpflegeItem, DeprecatedSchulePayload, DeprecatedOrtPayload, DeprecatedLandPayload } from '../katalogpflege.model';
 import { SchuleEditorModel } from './katalogpflege.reducer';
 
 
@@ -43,27 +43,27 @@ export const schulePayloadCreated = createAction(
 
 export const ortPayloadCreated = createAction(
 	'[KatalogpflegeFacade] switchToRenameKatalogItemEditor (ort)',
-	props<{ ortPayload: OrtPayload }>()
+	props<{ ortPayload: DeprecatedOrtPayload }>()
 );
 
 export const editOrtFinished = createAction(
 	'[KatalogpflegeFacade] sendRenameOrt',
-	props<{ ortPayload: OrtPayload }>()
+	props<{ ortPayload: DeprecatedOrtPayload }>()
 );
 
 export const landPayloadCreated = createAction(
 	'[KatalogpflegeFacade] switchToRenameKatalogItemEditor (land)',
-	props<{ landPayload: LandPayload }>()
+	props<{ landPayload: DeprecatedLandPayload }>()
 );
 
 export const editLandFinished = createAction(
 	'[KatalogpflegeFacade] sendRenameLand',
-	props<{ landPayload: LandPayload }>()
+	props<{ landPayload: DeprecatedLandPayload }>()
 );
 
 export const editSchuleFinished = createAction(
 	'[KatalogpflegeFacade] finishEditSchule',
-	props<{ schulePayload: SchulePayload }>()
+	props<{ schulePayload: DeprecatedSchulePayload }>()
 );
 
 export const clearSearchResults = createAction(
