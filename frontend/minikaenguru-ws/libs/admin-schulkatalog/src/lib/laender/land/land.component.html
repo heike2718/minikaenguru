@@ -1,0 +1,8 @@
+<div class="card clickable" (click)="selectLand()">
+    <div class="card-body col-12">
+        <div class="card-title">
+            {{land.name}} ({{land.kuerzel}}) <span class="ml-1 badge bg-dark">{{land.anzahlKinder}}</span> <span
+                *ngIf="devMode">land.component</span>
+        </div>
+    </div>
+</div>

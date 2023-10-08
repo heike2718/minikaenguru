@@ -3,10 +3,10 @@ import { KatalogpflegeFacade } from '../../katalogpflege.facade';
 
 @Component({
 	selector: 'mka-laender-list',
-	templateUrl: './laender-list.component.html',
-	styleUrls: ['./laender-list.component.css']
+	templateUrl: './deprecated-laender-list.component.html',
+	styleUrls: ['./deprecated-laender-list.component.css']
 })
-export class LaenderListComponent implements OnInit {
+export class DeprecatedLaenderListComponent implements OnInit {
 
 	laender$ = this.katalogFacade.laender$;
 

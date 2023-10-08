@@ -18,6 +18,7 @@ import { CommonMessagesModule } from '@minikaenguru-ws/common-messages';
 import { CommonAuthModule } from '@minikaenguru-ws/common-auth';
 import { CommonLoggingModule } from '@minikaenguru-ws/common-logging';
 import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
+import { AdminSchulkatalogModule } from '@minikaenguru-ws/admin-schulkatalog'
 
 import { NotFoundComponent } from './not-found/not-found.component';
 import { LandingComponent } from './landing/landing.component';
@@ -82,6 +83,7 @@ registerLocaleData(localeDe);
 			loginSuccessUrl: '/dashboard',
 			profileUrl: environment.profileUrl
 		}),
+		AdminSchulkatalogModule,
 		StoreModule.forRoot(reducers, {
 			metaReducers,
 			runtimeChecks: {
@@ -101,6 +103,10 @@ registerLocaleData(localeDe);
 		AktuelleMeldungModule,
 		WettbewerbeModule,
 		KatalogpflegeModule,
+		AdminSchulkatalogModule.forRoot({
+			baseUrl: environment.apiUrl,
+			devmode: environment.envName === 'DEV'
+		}),
 		VeranstalterModule,
 		SchulteilnahmenModule,
 		EventlogModule,
@@ -110,7 +116,7 @@ registerLocaleData(localeDe);
 		LoesungszettelModule,
 		StatistikModule,
 		LayouttestsModule,
-		SharedModule,
+		SharedModule,		
 		AppRoutingModule, // <-- immer am Ende, damit die wildcard-route als letzte deklariert bleibt
 	],
 	providers: [

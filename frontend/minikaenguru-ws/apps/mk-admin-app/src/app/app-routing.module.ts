@@ -16,6 +16,7 @@ const routes: Routes = [
 	{ path: 'timeout', pathMatch: 'full', component: SessionTimeoutComponent},
 	{ path: 'aktuelle-meldung', loadChildren: () => import('./aktuelle-meldung/aktuelle-meldung.module').then(m => m.AktuelleMeldungModule) },
 	{ path: 'wettbewerbe', loadChildren: () => import('./wettbewerbe/wettbewerbe.module').then(m => m.WettbewerbeModule) },
+	{ path: 'schulkatalog', loadChildren: () => import('@minikaenguru-ws/admin-schulkatalog').then(m => m.AdminSchulkatalogModule)},
 	{ path: 'katalogpflege', loadChildren: () => import('./katalogpflege/katalogpflege.module').then(m => m.KatalogpflegeModule) },
 	{ path: 'veranstalter', loadChildren: () => import('./veranstalter/veranstalter.module').then(m => m.VeranstalterModule) },
 	{ path: 'schulteilnahme', loadChildren: () => import('./schulteilnahmen/schulteilnahmen.module').then(m => m.SchulteilnahmenModule) },

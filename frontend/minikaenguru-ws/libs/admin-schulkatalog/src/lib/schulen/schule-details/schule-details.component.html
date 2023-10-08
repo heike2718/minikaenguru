@@ -1,0 +1,14 @@
+<div *ngIf="katalogFacade.schule$ | async as schule; else keineSchule">
+
+    <h1>{{schule.name}} - {{schule.kuerzel}}</h1>
+
+    <p>{{schule.pfad}}</p>
+
+
+    <p>Buttonleiste - 2 Buttons: 1. ändern - öffnet Dialog, in dem der Name oder das Kürzel des Landes geändert werden
+        kann. 2. zurück zu länder</p>
+</div>
+
+<ng-template #keineSchule>
+    <h1>keine Schule ausgewählt</h1>
+</ng-template>

@@ -5,10 +5,10 @@ import { KatalogpflegeComponent } from './katalogpflege.component';
 import { EditOrtComponent } from './orte/edit-ort/edit-ort.component';
 import { EditLandComponent } from './laender/edit-land/edit-land.component';
 import { EditSchuleComponent } from './schulen/edit-schule/edit-schule.component';
-import { LaenderListComponent } from './laender/laender-list/laender-list.component';
+import { DeprecatedLaenderListComponent } from './laender/laender-list/deprecated-laender-list.component';
 import { OrteListComponent } from './orte/orte-list/orte-list.component';
 import { SchulenListComponent } from './schulen/schulen-list/schulen-list.component';
-import { LaenderListResolver } from './laender/laender-list/laender-list.resolver';
+import { DeprecatedLaenderListResolver } from './laender/laender-list/deprecadet-laender-list.resolver';
 
 
 const katalogpflegeRoutes: Routes = [
@@ -20,8 +20,8 @@ const katalogpflegeRoutes: Routes = [
 	{
 		path: 'laender',
 		canActivate: [AuthGuardService],
-		component: LaenderListComponent,
-		resolve: { laender: LaenderListResolver },
+		component: DeprecatedLaenderListComponent,
+		resolve: { laender: DeprecatedLaenderListResolver },
 	},
 	{
 		path: 'orte',

@@ -9,7 +9,7 @@ import { AuthResult, STORAGE_KEY_DEV_SESSION_ID, STORAGE_KEY_SESSION_EXPIRES_AT,
 import { AuthState } from './+state/auth.reducer';
 import { login, logout, refreshSession, startLoggingOut } from './+state/auth.actions';
 import { Router } from '@angular/router';
-import { user, isLoggedIn, isLoggedOut, onLoggingOut } from './+state/auth.selectors';
+import { user, isLoggedIn, isLoggedOut, onLoggingOut, isAuthorized } from './+state/auth.selectors';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
@@ -20,7 +20,9 @@ export class AuthService {
 	public user$ = this.store.select(user);
 	isLoggedIn$ = this.store.select(isLoggedIn);
 	isLoggedOut$ = this.store.select(isLoggedOut);
+	isAuthorized$ = this.store.select(isAuthorized)
 	onLoggingOut$ = this.store.select(onLoggingOut);
+
 
 	#loadingSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 

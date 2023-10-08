@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { KatalogpflegeFacade } from './katalogpflege.facade';
+import { AdminSchulkatalogFacade } from 'libs/admin-schulkatalog/src/lib/admin-schulkatalog.facade';
 
 @Component({
 	selector: 'mka-katalogpflege',
@@ -8,17 +9,19 @@ import { KatalogpflegeFacade } from './katalogpflege.facade';
 })
 export class KatalogpflegeComponent {
 
-	constructor(private katalogFacade: KatalogpflegeFacade) { }
+	#katalogFacade = inject(KatalogpflegeFacade);
+	#adminKatalogFacade = inject(AdminSchulkatalogFacade);
+
 
 	selectLaender(): void {
-		this.katalogFacade.selectKatalogpflegeTyp('LAND');
+		this.#adminKatalogFacade.loadLaender();
 	}
 
 	selectOrte(): void {
-		this.katalogFacade.selectKatalogpflegeTyp('ORT');
+		this.#katalogFacade.selectKatalogpflegeTyp('ORT');
 	}
 
 	selectSchulen(): void {
-		this.katalogFacade.selectKatalogpflegeTyp('SCHULE');
+		this.#katalogFacade.selectKatalogpflegeTyp('SCHULE');
 	}
 }

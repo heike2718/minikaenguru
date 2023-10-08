@@ -40,6 +40,9 @@
       "@minikaenguru-ws/common-schulkatalog": [
         "libs/common-schulkatalog/src/index.ts"
       ],
+      "@minikaenguru-ws/admin-schulkatalog": [
+        "libs/admin-schulkatalog/src/index.ts"
+      ],
       "@minikaenguru-ws/shared/util-mk": [
         "libs/shared/util-mk/src/index.ts"
       ]

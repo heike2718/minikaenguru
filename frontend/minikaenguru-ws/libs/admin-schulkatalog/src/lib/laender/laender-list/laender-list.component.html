@@ -1,0 +1,14 @@
+<div class="mkv-container mt-1">
+	<div class="col-12">
+		<h2>Länder</h2>
+		<ng-container *ngIf="laender$ | async as laender">
+			<p>Anzahl Länder: {{laender.length}}</p>
+
+			<div *ngIf="laender.length > 0" class="row">
+				<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let land of laender">
+					<mka-land [land]="land"></mka-land>
+				</div>
+			</div>
+		</ng-container>
+	</div>	
+</div>

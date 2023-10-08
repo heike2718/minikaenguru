@@ -19,7 +19,7 @@ export class KatalogHttpService {
 
 		const url = environment.apiUrl + '/kataloge/laender';
 
-		return this.loadingIndicatorService.showLoaderUntilCompleted(this.loadKatalogItems(url));
+		return this.loadKatalogItems(url);
 	}
 
 	public loadChildItems(parent: KatalogpflegeItem): Observable<KatalogpflegeItem[]> {

@@ -1,5 +1,5 @@
 import { AuthService, STORAGE_KEY_INVALID_SESSION } from '@minikaenguru-ws/common-auth';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
 import { resetWettbewerbe } from '../wettbewerbe/+state/wettbewerbe.actions';
@@ -15,12 +15,15 @@ import { resetUploads } from '../uploads/+state/uploads.actions';
 import { resetLoesungszettel } from '../loesungszettel/+state/loesungszettel.actions';
 import { resetStatistiken } from '../statistik/+state/statistic.actions';
 import { AdminWettbewerbFacade } from './admin-wettbewerb.facade';
+import { AdminSchulkatalogFacade } from '@minikaenguru-ws/admin-schulkatalog';
 
 
 @Injectable({
 	providedIn: 'root'
 })
 export class AdminLogoutService {
+
+	#adminKatalogFacade = inject(AdminSchulkatalogFacade);
 
 	constructor(private authService: AuthService
 		, private appStore: Store<AppState>, private newsletterFacade: NewsletterFacade, private aminWettbewerbFacade: AdminWettbewerbFacade) { }
@@ -30,6 +33,7 @@ export class AdminLogoutService {
 
 		// I0419: status darf nicht im localStorage verbleiben!
 		this.aminWettbewerbFacade.resetState();
+		this.#adminKatalogFacade.onLogout();
 
 		this.newsletterFacade.stopPollVersandinfo();
 		this.authService.logOut(false);

@@ -6,10 +6,10 @@ import { KatalogpflegeRoutingModule } from './katalogpflege-routing.module';
 import { KatalogpflegeComponent } from './katalogpflege.component';
 import * as fromKatalogpflege from './+state/katalogpflege.reducer';
 import { KatalogpflegeFacade } from './katalogpflege.facade';
-import { LaenderListComponent } from './laender/laender-list/laender-list.component';
+import { DeprecatedLaenderListComponent } from './laender/laender-list/deprecated-laender-list.component';
 import { OrteListComponent } from './orte/orte-list/orte-list.component';
 import { SchulenListComponent } from './schulen/schulen-list/schulen-list.component';
-import { LaenderListResolver } from './laender/laender-list/laender-list.resolver';
+import { DeprecatedLaenderListResolver } from './laender/laender-list/deprecadet-laender-list.resolver';
 import { EditOrtComponent } from './orte/edit-ort/edit-ort.component';
 import { EditLandComponent } from './laender/edit-land/edit-land.component';
 import { EditSchuleComponent } from './schulen/edit-schule/edit-schule.component';
@@ -30,7 +30,7 @@ import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
 		EditOrtComponent,
 		EditLandComponent,
 		EditSchuleComponent,
-		LaenderListComponent,
+		DeprecatedLaenderListComponent,
 		OrteListComponent,
 		SchulenListComponent,
 		KatalogpflegeItemComponent
@@ -38,7 +38,7 @@ import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
 	exports: [],
 	providers: [
 		KatalogpflegeFacade,
-		LaenderListResolver
+		DeprecatedLaenderListResolver
 	]
 })
 export class KatalogpflegeModule {}

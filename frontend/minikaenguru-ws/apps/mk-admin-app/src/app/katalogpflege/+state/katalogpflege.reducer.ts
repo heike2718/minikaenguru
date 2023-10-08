@@ -1,5 +1,5 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { KatalogpflegeItem, Katalogpflegetyp, mergeKatalogItems, Kataloge, childrenAsArray, SchulePayload, KatalogpflegeItemWithID, OrtPayload, LandPayload, KatalogPflegeItemsMap, initialSchulePayload } from '../katalogpflege.model';
+import { KatalogpflegeItem, Katalogpflegetyp, mergeKatalogItems, Kataloge, childrenAsArray, SchulePayload, OrtPayload, LandPayload, KatalogPflegeItemsMap, initialSchulePayload } from '../katalogpflege.model';
 import * as KatalogpflegeActions from './katalogpflege.actions';
 
 export const katalogpflegeFeatureKey = 'mk-admin-app-kataloge';

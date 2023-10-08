@@ -4,11 +4,14 @@
 // =====================================================
 package de.egladil.web.mk_kataloge.domain;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * KatalogItem
  */
+@Schema(name = "KatalogItem", description = "Element eines hierarchisch aufgebauten Katalogs")
 public class KatalogItem {
 
 	@JsonProperty

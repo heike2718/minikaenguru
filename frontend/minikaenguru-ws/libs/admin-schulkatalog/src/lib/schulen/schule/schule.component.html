@@ -1,0 +1,8 @@
+<div class="card clickable" (click)="selectSchule()">
+    <div class="card-body col-12">
+        <div class="card-title">
+            {{schule.name}} ({{schule.kuerzel}}) <span *ngIf="devMode">ort.component</span>
+        </div>
+        <div class="card-text">{{schule.pfad}}</div>
+    </div>
+</div>

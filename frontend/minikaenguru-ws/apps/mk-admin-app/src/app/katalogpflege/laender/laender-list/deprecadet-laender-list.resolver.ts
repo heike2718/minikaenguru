@@ -8,7 +8,7 @@ import { KatalogpflegeFacade } from '../../katalogpflege.facade';
 import { laender } from '../../+state/katalogpflege.selectors';
 
 @Injectable()
-export class LaenderListResolver  {
+export class DeprecatedLaenderListResolver  {
 
 	private loading = false;
 

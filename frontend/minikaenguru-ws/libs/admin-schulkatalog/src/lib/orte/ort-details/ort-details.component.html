@@ -1,0 +1,21 @@
+<div *ngIf="katalogFacade.ort$ | async as ort; else keinOrt">
+
+    <h1>{{ort.name}} - {{ort.kuerzel}}</h1>
+    <p>{{ort.pfad}}</p>
+    <p>Anzahl Schulen: {{ort.anzahlKinder}}</p>
+
+    <div *ngIf="ort.anzahlKinder > 25">
+        <p>Suchstring: Input-Field - Button -> Schule suchen</p>
+    </div>
+
+    <div *ngIf="katalogFacade.schulenGeladen$ | async">
+        <mka-schulen></mka-schulen>
+    </div>
+
+    <p>Buttonleiste - 2 Buttons: 1. ändern - öffnet Dialog, in dem der Name oder das Kürzel des Landes geändert werden
+        kann. 2. zurück zu länder</p>
+</div>
+
+<ng-template #keinOrt>
+    <h1>kein Ort ausgewählt</h1>
+</ng-template>

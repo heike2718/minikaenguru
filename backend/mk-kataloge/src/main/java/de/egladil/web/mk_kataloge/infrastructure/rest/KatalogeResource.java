@@ -8,6 +8,11 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,6 +84,14 @@ public class KatalogeResource {
 
 	@GET
 	@Path("laender")
+	@Operation(
+		operationId = "loadLaender", summary = "Läd die Länder des Schulkatalogs.")
+	@APIResponse(
+		name = "loadLaenderOKResponse",
+		responseCode = "200",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(type = SchemaType.ARRAY, implementation = KatalogItem.class)))
 	public Response loadLaender(@HeaderParam(
 		value = KatalogAPIApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
 			value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret) {
