@@ -1,7 +1,7 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
-import { Observable } from "rxjs";
-import { KatalogitemResponseDto, KuerzelResponseDto, Land, Ort, OrtSucheResult, SchuleEditorModel, SchuleEditorModelAndKuerzel, SchulePayload, SchuleSucheResult } from "./admin-katalog.model";
+import { Observable, of } from "rxjs";
+import { KatalogitemResponseDto, KuerzelResponseDto, Land, LandPayload, Ort, OrtPayload, OrtSucheResult, SchuleEditorModel, SchuleEditorModelAndKuerzel, SchulePayload, SchuleSucheResult } from "./admin-katalog.model";
 import { LoadingIndicatorService } from '@minikaenguru-ws/shared/util-mk';
 import { AdminSchulkatalogConfigService } from "./configuration/schulkatalog-config";
 import { ResponsePayload } from "@minikaenguru-ws/common-messages";
@@ -52,7 +52,6 @@ export class AdminSchulkatalogHttpService {
 
     getKuerzel(): Observable<KuerzelResponseDto> {
 
-
         const url = this.#config.baseUrl + '/kataloge/kuerzel';
 
         const obs$ = this.#httpClient.get(url).pipe(
@@ -63,28 +62,69 @@ export class AdminSchulkatalogHttpService {
         return this.#loadingIndicator.showLoaderUntilCompleted(obs$);
     }
 
-    createSchule(schulePayload: SchulePayload): Observable<ResponsePayload> {
+    findOrte(land: Land, suchstring: string): Observable<OrtSucheResult> {
+
+        const url = this.#config.baseUrl + '/kataloge/suche/laender/' + land.kuerzel + '/orte';
+
+        let params = new HttpParams().set('search', suchstring);
+        const headers = new HttpHeaders().set('Accept', 'application/json');
+
+        const obs$ = this.#httpClient.get(url, { headers, params }).pipe(
+            map(body => body as ResponsePayload),
+            map((payload) => this.#toOrtSucheResult(land, payload.data))
+        );
+
+        return this.#loadingIndicator.showLoaderUntilCompleted(obs$);
+    }
+
+    createSchule(schulePayload: SchulePayload): Observable<SchulePayload> {
 
         const url = this.#config.baseUrl + '/kataloge/schulen';
 
         const obs$ = this.#httpClient.post(url, schulePayload).pipe(
-            map(body => body as ResponsePayload)
+            map(body => body as ResponsePayload),
+            map(payload => payload.data as SchulePayload)
         );
 
         return this.#loadingIndicator.showLoaderUntilCompleted(obs$);
 
     }
 
-    renameSchule(schulePayload: SchulePayload): Observable<ResponsePayload> {
+    renameSchule(schulePayload: SchulePayload): Observable<SchulePayload> {
 
         const url = this.#config.baseUrl + '/kataloge/schulen';
 
         const obs$ = this.#httpClient.put(url, schulePayload).pipe(
-            map(body => body as ResponsePayload)
+            map(body => body as ResponsePayload),
+            map(payload => payload.data as SchulePayload)
         );
 
         return this.#loadingIndicator.showLoaderUntilCompleted(obs$);
 
+    }
+
+    updateLand(landPayload: LandPayload): Observable<LandPayload> {
+
+        const url = this.#config.baseUrl + '/kataloge/laender';
+
+        const obs$ = this.#httpClient.put(url, landPayload).pipe(
+            map(body => body as ResponsePayload),
+            map(payload => payload.data as LandPayload)
+        );
+
+        return this.#loadingIndicator.showLoaderUntilCompleted(obs$);
+    }
+
+    updateOrt(ortPayload: OrtPayload): Observable<OrtPayload> {
+
+        const url = this.#config.baseUrl + '/kataloge/orte';
+
+        const obs$ = this.#httpClient.put(url, ortPayload).pipe(
+            map(body => body as ResponsePayload),
+            map(payload => payload.data as OrtPayload)
+        );
+
+        return this.#loadingIndicator.showLoaderUntilCompleted(obs$);
     }
 
     #toOrtSucheResult(land: Land, orte: any | undefined): OrtSucheResult {

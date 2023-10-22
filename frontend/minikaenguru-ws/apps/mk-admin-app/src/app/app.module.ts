@@ -30,7 +30,6 @@ import { WettbewerbeModule } from './wettbewerbe/wettbewerbe.module';
 import { HttpClientModule } from '@angular/common/http';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { KatalogpflegeModule } from './katalogpflege/katalogpflege.module';
 import { AktuelleMeldungModule } from './aktuelle-meldung/aktuelle-meldung.module';
 import { VeranstalterModule } from './veranstalter/veranstalter.module';
 import { LayouttestsModule } from './layouttests/layouttests.module';
@@ -102,7 +101,6 @@ registerLocaleData(localeDe);
 		StoreDevModules,
 		AktuelleMeldungModule,
 		WettbewerbeModule,
-		KatalogpflegeModule,
 		AdminSchulkatalogModule.forRoot({
 			baseUrl: environment.apiUrl,
 			devmode: environment.envName === 'DEV'

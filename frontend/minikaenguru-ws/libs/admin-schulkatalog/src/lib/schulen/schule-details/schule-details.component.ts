@@ -20,8 +20,6 @@ export class SchuleDetailsComponent implements OnInit, OnDestroy {
     #schule: Schule | undefined;
     #schuleSubscription = new Subscription();
 
-
-
     ngOnInit(): void {
 
         this.#schuleSubscription = this.katalogFacade.schule$.subscribe((schule) => {
@@ -33,6 +31,20 @@ export class SchuleDetailsComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.#schuleSubscription.unsubscribe();
+    }
+
+    schuleUmbenennenDisabled(): boolean {
+        return this.#schule === undefined;
+    }
+
+    schuleUmbenennen(): void {
+        if (this.#schule) {
+            this.katalogFacade.startRenameSchule(this.#schule);
+        }
+    }
+
+    gotoSchulkatalog(): void {
+        this.katalogFacade.navigateToSchulkatalog();
     }
 
 }

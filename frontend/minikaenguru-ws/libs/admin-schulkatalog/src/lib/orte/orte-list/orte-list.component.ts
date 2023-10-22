@@ -1,5 +1,7 @@
-import { Component, inject } from "@angular/core";
+import { Component, OnDestroy, OnInit, inject } from "@angular/core";
 import { AdminSchulkatalogFacade } from "../../admin-schulkatalog.facade";
+import { AdminSchulkatalogConfigService } from "../../configuration/schulkatalog-config";
+import { Subscription } from "rxjs";
 
 
 @Component({
@@ -7,10 +9,38 @@ import { AdminSchulkatalogFacade } from "../../admin-schulkatalog.facade";
     templateUrl: './orte-list.component.html',
     styleUrls: ['./orte-list.component.css']
 })
-export class OrteListComponent {
+export class OrteListComponent implements OnInit, OnDestroy {
 
+    #config = inject(AdminSchulkatalogConfigService);
     katalogFacade = inject(AdminSchulkatalogFacade);
 
-    orte$ = this.katalogFacade.orte$;
+    devMode = this.#config.devmode;
+
+    #landSubscription: Subscription = new Subscription();
+    #orteSubscription: Subscription = new Subscription();
+
+    #anzahlOrteImLand = 0;
+    #anzahlTreffer = 0;
+
+    ngOnInit(): void {
+
+        this.#orteSubscription = this.katalogFacade.orte$.subscribe((orte) => this.#anzahlTreffer = orte.length);
+
+        this.#landSubscription = this.katalogFacade.land$.subscribe ((land) => {
+            if (land) {
+                this.#anzahlOrteImLand = land.anzahlKinder;
+            }
+        });
+        
+    }
+
+    ngOnDestroy(): void {
+        this.#orteSubscription.unsubscribe();
+        this.#landSubscription.unsubscribe();
+    }
+
+    showAnzahlTreffer(): boolean {
+        return this.#anzahlOrteImLand !== this.#anzahlTreffer;
+    }
 
 }

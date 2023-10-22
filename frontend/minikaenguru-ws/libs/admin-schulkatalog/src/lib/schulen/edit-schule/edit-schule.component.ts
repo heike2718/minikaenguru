@@ -75,7 +75,7 @@ export class EditSchuleComponent implements OnInit, OnDestroy {
 			'kuerzelOrt': this.#fb.control({ value: '', disabled: true }),
 			'nameLand': this.#fb.control({ value: '' }, { validators: [Validators.required, Validators.maxLength(100)] }),
 			'kuerzelLand': this.#fb.control({ value: '' }, { validators: [Validators.required, Validators.maxLength(10)] }),
-			'emailAuftraggeber': this.#fb.control({ value: '' }, { validators: [emailValidator] }),
+			'emailAuftraggeber': this.#fb.control({ value: '' }, { validators: [Validators.required, emailValidator] }),
 		});
 
 		this.name = this.editSchuleForm.controls['name'];
@@ -85,6 +85,7 @@ export class EditSchuleComponent implements OnInit, OnDestroy {
 		this.kuerzelLand = this.editSchuleForm.controls['kuerzelLand'];
 		this.nameLand = this.editSchuleForm.controls['nameLand'];
 		this.emailAuftraggeber = this.editSchuleForm.controls['emailAuftraggeber'];
+
 
 	}
 
@@ -97,25 +98,27 @@ export class EditSchuleComponent implements OnInit, OnDestroy {
 		this.editSchuleForm.reset();
 
 		this.headlineText = this.#schuleEditorModel.modusCreate ? 'Schule anlegen' : 'Schule ändern';
-		this.editSchuleForm.setValue(this.#schuleEditorModel.schulePayload);
+
+		// set by property names funktioniert anscheinend nicht mehr?
+		// this.editSchuleForm.setValue(this.#schuleEditorModel.schulePayload);
+
+		this.editSchuleForm.controls['kuerzel'].setValue(this.#schuleEditorModel.schulePayload.kuerzel);
+		this.editSchuleForm.controls['name'].setValue(this.#schuleEditorModel.schulePayload.name);
+		this.editSchuleForm.controls['kuerzelOrt'].setValue(this.#schuleEditorModel.schulePayload.kuerzelOrt);
+		this.editSchuleForm.controls['nameOrt'].setValue(this.#schuleEditorModel.schulePayload.nameOrt);
+		this.editSchuleForm.controls['kuerzelLand'].setValue(this.#schuleEditorModel.schulePayload.kuerzelLand);
+		this.editSchuleForm.controls['nameLand'].setValue(this.#schuleEditorModel.schulePayload.nameLand);
+
+
 
 		if (this.#schuleEditorModel.kuerzelLandDisabled) {
-			const input = this.editSchuleForm.get('kuerzelLand');
-			if (input) {
-				input.disable();
-			}
+			this.editSchuleForm.controls['kuerzelLand'].disable();
 		}
 		if (this.editSchuleForm && this.#schuleEditorModel.nameLandDisabled) {
-			const input = this.editSchuleForm.get('nameLand');
-			if (input) {
-				input.disable();
-			}
+			this.editSchuleForm.controls['nameLand'].disable();
 		}
 		if (this.editSchuleForm && this.#schuleEditorModel.nameOrtDisabled) {
-			const input = this.editSchuleForm.get('nameOrt');
-			if (input) {
-				input.disable();
-			}
+			this.editSchuleForm.controls['nameOrt'].disable();
 		}
 	}
 
@@ -137,7 +140,7 @@ export class EditSchuleComponent implements OnInit, OnDestroy {
 		if (this.#schuleEditorModel.modusCreate) {
 			this.#katalogFacade.createSchule(schulePayload);
 		} else {
-			this.#katalogFacade.renameSchule(schulePayload);
+			this.#katalogFacade.updateSchule(schulePayload);
 		}
 	}
 
@@ -149,7 +152,7 @@ export class EditSchuleComponent implements OnInit, OnDestroy {
 
 	}
 
-	gotoKataloge(): void {
-
+	gotoSchulkatalog(): void {
+		this.#katalogFacade.navigateToSchulkatalog();
 	}
 }

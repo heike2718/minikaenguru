@@ -1,9 +1,12 @@
 <div class="card clickable" (click)="selectOrt()">
     <div class="card-body col-12">
         <div class="card-title">
-            {{ort.name}} ({{ort.kuerzel}}) <span class="ml-1 badge bg-dark">{{ort.anzahlKinder}}</span> <span
-                *ngIf="devMode">ort.component</span>
+            {{ort.name}} <span *ngIf="ort.anzahlKinder === 1" class="ml-1 badge bg-dark">{{ort.anzahlKinder}}
+                Schule</span>
+            <span *ngIf="ort.anzahlKinder !== 1" class="ml-1 badge bg-dark">{{ort.anzahlKinder}} Schulen</span>
         </div>
         <div class="card-text">{{ort.pfad}}</div>
+        <div class="card-text">Kürzel: {{ort.kuerzel}}</div>
+        <div *ngIf="devMode" class="card-text">ort.component</div>
     </div>
 </div>

@@ -75,6 +75,23 @@ public class KatalogsucheResource {
 
 	@GET
 	@Path("global/{typ}")
+	@Operation(
+		operationId = "findItems", summary = "Gibt alle KatalogItems vom Typ typ zurück, die auf die gegebene Suchanfrage passen.")
+	@Parameters({
+		@Parameter(
+			in = ParameterIn.PATH,
+			name = "typ",
+			description = "Katalogtyp: LAND, ORT, SCHULE"),
+		@Parameter(
+			in = ParameterIn.QUERY,
+			name = "search", description = "Suchstring, mit dem nach KatalogItems im Namen gesucht wird."),
+	})
+	@APIResponse(
+		name = "OKResponse",
+		responseCode = "200",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(type = SchemaType.ARRAY, implementation = KatalogItem.class)))
 	public Response findItems(@PathParam(
 		value = "typ") final String typ, @NotBlank @StringLatin @QueryParam("search") final String searchTerm) {
 
@@ -131,12 +148,12 @@ public class KatalogsucheResource {
 	@GET
 	@Path("laender/{land}/orte")
 	@Operation(
-		operationId = "findOrteInLand", summary = "Gibt alle Orte im gegebenen Land zurück, die auf die Anfrage passen.")
+		operationId = "findOrteInLand", summary = "Gibt alle Orte im gegebenen Land zurück, deren Name mit dem Suchstring beginnt.")
 	@Parameters({
 		@Parameter(
 			in = ParameterIn.QUERY,
 			name = "search",
-			description = "Teil des Ortsnamen"),
+			description = "Anfangsbuchstaben des Ortsnamens"),
 	})
 	@APIResponse(
 		name = "OKResponse",
@@ -194,6 +211,20 @@ public class KatalogsucheResource {
 
 	@GET
 	@Path("orte/{ort}/schulen")
+	@Operation(
+		operationId = "findSchulenInOrt", summary = "Gibt alle Schulen im gegebenen Ort zurück, deren Name den Suchstring enthält.")
+	@Parameters({
+		@Parameter(
+			in = ParameterIn.QUERY,
+			name = "search",
+			description = "Teil des Schulnamens"),
+	})
+	@APIResponse(
+		name = "OKResponse",
+		responseCode = "200",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(type = SchemaType.ARRAY, implementation = ResponsePayload.class)))
 	public Response findSchulenInOrt(@Kuerzel @PathParam(
 		value = "ort") final String ortKuerzel, @NotBlank @StringLatin @QueryParam("search") final String searchTerm) {
 

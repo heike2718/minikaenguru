@@ -1,6 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { KatalogitemResponseDto, KuerzelResponseDto, Land, Ort, Schule, SchuleEditorModel, SchulePayload } from '../admin-katalog.model';
-
+import { KatalogitemResponseDto, KuerzelResponseDto, Land, LandPayload, Ort, OrtPayload, Schule, SchuleEditorModel, SchulePayload } from '../admin-katalog.model';
 
 export const loadLaender = createAction(
 	'[AdminSchulkatalog] ladeLaender'
@@ -19,7 +18,6 @@ export const landSelected = createAction(
 export const landDeselected = createAction(
     '[AdminSchulkatalog] landDeselected'
 );
-
 
 export const loadOrte = createAction(
     '[AdminSchulkatalog] loadOrte',
@@ -83,14 +81,54 @@ export const startEditSchule = createAction(
     props<{schuleEditorModel: SchuleEditorModel}>()
 );
 
-export const schuleAnlegen = createAction(
-    '[AdminSchulkatalog] schuleAnlegen',
+export const createSchule = createAction(
+    '[AdminSchulkatalog] createSchule',
     props<{schulePayload: SchulePayload}>()
 );
 
-export const schuleUmbenennen = createAction(
-    '[AdminSchulkatalog] schuleUmbenennen',
+export const updateSchule = createAction(
+    '[AdminSchulkatalog] updateSchule',
     props<{schulePayload: SchulePayload}>()
+);
+
+export const createSchuleSuccess = createAction(
+    '[AdminSchulkatalog] createSchuleSuccess',
+    props<{schulePayload: SchulePayload}>()
+);
+
+export const updateSchuleSuccess = createAction(
+    '[AdminSchulkatalog] updateSchuleSuccess',
+    props<{schulePayload: SchulePayload}>()
+);
+
+export const startEditOrt = createAction(
+    '[AdminSchulkatalog] startEditOrt',
+    props<{ortPayload: OrtPayload}>()
+);
+
+export const updateOrt = createAction(
+    '[AdminSchulkatalog] updateOrt',
+    props<{ortPayload: OrtPayload}>()
+);
+
+export const updateOrtSuccess = createAction(
+    '[AdminSchulkatalog] updateOrtSuccess',
+    props<{ortPayload: OrtPayload}>()
+);
+
+export const startEditLand = createAction(
+    '[AdminSchulkatalog] startEditLand',
+    props<{landPayload: LandPayload}>()
+);
+
+export const updateLand = createAction(
+    '[AdminSchulkatalog] updateLand',
+    props<{landPayload: LandPayload}>()
+);
+
+export const updateLandSuccess = createAction(
+    '[AdminSchulkatalog] updateLandSuccess',
+    props<{landPayload: LandPayload}>()
 );
 
 export const resetState = createAction(

@@ -53,7 +53,7 @@ public class RenameLandServiceTest {
 		// Act + Assert
 		try {
 
-			service.landUmbenennen(landPayload);
+			service.updateLand(landPayload);
 			fail("keine NotFoundException");
 
 		} catch (NotFoundException e) {
@@ -89,7 +89,7 @@ public class RenameLandServiceTest {
 		when(schuleRepository.loadLaender()).thenReturn(laender);
 
 		// Act
-		ResponsePayload responsePayload = service.landUmbenennen(landPayload);
+		ResponsePayload responsePayload = service.updateLand(landPayload);
 
 		// Assert
 		verify(schuleRepository, times(0)).replaceSchulen(new ArrayList<>());
@@ -156,7 +156,7 @@ public class RenameLandServiceTest {
 		when(schuleRepository.replaceSchulen(schulen)).thenReturn(Boolean.TRUE);
 
 		// Act
-		ResponsePayload responsePayload = service.landUmbenennen(landPayload);
+		ResponsePayload responsePayload = service.updateLand(landPayload);
 
 		verify(schuleRepository, times(1)).replaceSchulen(schulen);
 
@@ -248,7 +248,7 @@ public class RenameLandServiceTest {
 		// Act + Assert
 		try {
 
-			service.landUmbenennen(landPayload);
+			service.updateLand(landPayload);
 
 			fail("keine KatalogAPIException");
 		} catch (KatalogAPIException e) {

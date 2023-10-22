@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { HttpClientModule } from "@angular/common/http";
 import { ModuleWithProviders, NgModule } from "@angular/core";
-import { ReactiveFormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { AdminSchulkatalogRoutingModule } from "./admin-schulkatalog-routing.module";
 import { StoreModule } from "@ngrx/store";
 import * as fromSchulkatalog from './+state/admin-katalog.reducer';
@@ -22,11 +22,13 @@ import { OrtDetailsComponent } from "./orte/ort-details/ort-details.component";
 import { SchuleDetailsComponent } from "./schulen/schule-details/schule-details.component";
 import { CommonComponentsModule } from "@minikaenguru-ws/common-components";
 import { EditSchuleComponent } from "./schulen/edit-schule/edit-schule.component";
+import { EditLandComponent } from "./laender/edit-land/edit-land.component";
+import { EditOrtComponent } from "./orte/edit-ort/edit-ort.component";
 
 @NgModule({
     imports: [
         CommonModule,
-        // FormsModule,
+        FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
         AdminSchulkatalogRoutingModule,
@@ -47,7 +49,9 @@ import { EditSchuleComponent } from "./schulen/edit-schule/edit-schule.component
         SchuleComponent, 
         SchulenListComponent,
         SchuleDetailsComponent,
-        EditSchuleComponent             
+        EditSchuleComponent,
+        EditOrtComponent,
+        EditLandComponent             
     ],
     exports: [
 

@@ -1,10 +1,11 @@
 <div class="mkv-container mt-1">
 	<div class="col-12">
 		<h2>Orte</h2>
-		<ng-container *ngIf="orte$ | async as orte">
-			
-			<p *ngIf="orte.length > 25">Hier noch Suchfilter für Orte</p>
+		<p *ngIf="devMode">orte-list.component</p>		
+		<ng-container *ngIf="katalogFacade.orte$| async as orte">
 
+			<p *ngIf="showAnzahlTreffer()">Anzahl Treffer: {{orte.length}}</p>
+			
 			<div *ngIf="orte.length > 0" class="row">
 				<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let ort of orte">
 					<mka-ort [ort]="ort"></mka-ort>

@@ -1,6 +1,7 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import { KuerzelResponseDto, Land, Ort, Schule, SchuleEditorModel, SchulePayload, initialSchuleEditorModel, initialSchulePayload, mapToLand, mapToOrtInLand, mapToSchuleInOrt } from "../admin-katalog.model";
+import { KuerzelResponseDto, Land, LandPayload, Ort, OrtPayload, Schule, SchuleEditorModel, SchulePayload, initialSchuleEditorModel, initialSchulePayload, mapToLand, mapToOrtInLand, mapToSchuleInOrt } from "../admin-katalog.model";
 import * as AdminSchulkatalogActions from './admin-katalog.actions';
+import { ortPayload } from './admin-katalog.selectors';
 
 export const adminSchulkatalogFeatureKey = 'mk-admin-app-schulkatalog';
 
@@ -12,8 +13,9 @@ export interface AdminSchulkatalogState {
     readonly schulen: Schule[];
     readonly selectedSchule: Schule | undefined;
     readonly kuerzel: KuerzelResponseDto | undefined;
+    readonly landPayload: LandPayload | undefined;
+    readonly ortPayload: OrtPayload | undefined;
     readonly schuleEditorModel: SchuleEditorModel | undefined;
-
 };
 
 const initialAdminSchulkatalogState: AdminSchulkatalogState = {
@@ -24,6 +26,8 @@ const initialAdminSchulkatalogState: AdminSchulkatalogState = {
     schulen: [],
     selectedSchule: undefined,
     kuerzel: undefined,
+    landPayload: undefined,
+    ortPayload: undefined,
     schuleEditorModel: undefined
 };
 
@@ -133,6 +137,64 @@ const adminSchulkatalogReducer = createReducer(initialAdminSchulkatalogState,
             ...state,
             kuerzel: undefined,
             schuleEditorModel: action.schuleEditorModel
+        }
+    }),
+
+    on(AdminSchulkatalogActions.startEditOrt, (state, action) => {
+
+        return {
+            ...state,
+            ortPayload: action.ortPayload
+        }
+
+    }),
+
+    on(AdminSchulkatalogActions.startEditLand, (state, action) => {
+
+        return {
+            ...state,
+            landPayload: action.landPayload
+        }
+
+    }),
+
+    on(AdminSchulkatalogActions.updateLandSuccess, (state, action) => {
+
+        if (state.landPayload) {
+            return {
+                ...state,
+                landPayload: action.landPayload
+            };
+        } else {
+            return { ...state };
+        }
+    }),
+
+    on(AdminSchulkatalogActions.updateOrtSuccess, (state, action) => {
+
+        if (state.ortPayload) {
+
+            return {
+                ...state,
+                ortPayload: action.ortPayload
+            };
+        } else {
+            return { ...state };
+        }
+    }),
+
+    on(AdminSchulkatalogActions.updateSchuleSuccess, (state, action) => {
+
+        if (state.schuleEditorModel) {
+            const schulePayload: SchulePayload = action.schulePayload;
+            const schuleEditorModel: SchuleEditorModel = { ...state.schuleEditorModel, schulePayload: schulePayload };
+
+            return {
+                ...state,
+                schuleEditorModel: schuleEditorModel
+            };
+        } else {
+            return { ...state };
         }
     }),
 

@@ -2,8 +2,6 @@ import { AuthService, STORAGE_KEY_INVALID_SESSION } from '@minikaenguru-ws/commo
 import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
-import { resetWettbewerbe } from '../wettbewerbe/+state/wettbewerbe.actions';
-import { resetKataloge } from '../katalogpflege/+state/katalogpflege.actions';
 import { resetVeranstalters } from '../veranstalter/+state/veranstalter.actions';
 import { resetAktuelleMeldung } from '../aktuelle-meldung/+state/aktuelle-meldung.actions';
 import { resetSchulteilnahmen } from '../schulteilnahmen/+state/schulteilnahmen.actions';
@@ -37,8 +35,6 @@ export class AdminLogoutService {
 
 		this.newsletterFacade.stopPollVersandinfo();
 		this.authService.logOut(false);
-		// this.appStore.dispatch(resetWettbewerbe());
-		this.appStore.dispatch(resetKataloge());
 		this.appStore.dispatch(resetVeranstalters());
 		this.appStore.dispatch(resetAktuelleMeldung());
 		this.appStore.dispatch(resetSchulteilnahmen());

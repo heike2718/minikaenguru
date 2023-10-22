@@ -119,22 +119,28 @@
 				</div>
 
 				<div class="d-none d-md-block">
-					<div class="d-flex flex-row hidden-xs" role="group">
-						<button class="btn btn-primary w-100 ml-1" [disabled]="!submited && (!editSchuleForm.valid || submitDisabled)" 
-							(click)="submitForm()">senden</button>
-						<button class="btn btn-primary w-100 ml-1" (click)="cancel()">zurücksetzen</button>
-						<button class="btn btn-primary w-100 ml-1" (click)="gotoKataloge()">Schulkatalog</button>
-					</div>
-				</div>
+					<div class="btn-group d-flex" role="group">
 			
-				<div class="d-md-none d-lg-none d-xl-none">
-					<div class="btn-group d-inline" role="group">
-						<button class="btn btn-primary w-75 ml-1" [disabled]="!submited && (!editSchuleForm.valid || submitDisabled)" 
-							(click)="submitForm()">senden</button>
-						<button class="btn btn-primary w-75 ml-1" (click)="cancel()">zurücksetzen</button>
-						<button class="btn btn-primary w-75 ml-1" (click)="gotoKataloge()">Schulkatalog</button>
-					</div>
+						<button class="btn btn-primary w-100 ml-1" [disabled]="!submited && (!editSchuleForm.valid || submitDisabled)" 
+							(click)="submitForm()">senden</button>				
+						<button class="btn btn-primary w-75 ml-1" (click)="cancel()">zurücksetzen</button>				
+						<button class="btn btn-primary w-100 ml-1" (click)="gotoSchulkatalog()"><i class="fa fa-arrow-left"
+							aria-hidden="true"></i> Schulkatalog</button>
+
+					</div>	
 				</div>
+				
+				<div class="row d-md-none d-lg-none d-xl-none mt-3 mr-3">
+					<div class="btn-group d-inline" role="group">
+						
+						<button class="btn btn-primary w-100 ml-1" [disabled]="!submited && (!editSchuleForm.valid || submitDisabled)" 
+							(click)="submitForm()">senden</button>				
+						<button class="btn btn-primary w-75 ml-1" (click)="cancel()">zurücksetzen</button>				
+						<button class="btn btn-primary w-100 ml-1" (click)="gotoSchulkatalog()"><i class="fa fa-arrow-left"
+							aria-hidden="true"></i>Schulkatalog</button>
+
+					</div>
+				</div>				
 			</form>
 		</div>
 	</ng-container>

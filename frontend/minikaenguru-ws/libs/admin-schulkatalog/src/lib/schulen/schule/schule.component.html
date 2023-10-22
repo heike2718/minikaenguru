@@ -1,8 +1,10 @@
 <div class="card clickable" (click)="selectSchule()">
     <div class="card-body col-12">
         <div class="card-title">
-            {{schule.name}} ({{schule.kuerzel}}) <span *ngIf="devMode">ort.component</span>
+            {{schule.name}}
         </div>
         <div class="card-text">{{schule.pfad}}</div>
+        <div class="card-text">Kürzel: {{schule.kuerzel}}</div>
+        <div *ngIf="devMode" class="card-text">schule.component</div>
     </div>
 </div>

@@ -116,7 +116,8 @@ public class KatalogeResource {
 	}
 
 	/**
-	 * Ändert den Namen des gegebenen Landes und gibt das geänderte LandPayload zurück. Bei einem konkurrierenden Update wird
+	 * Ändert den Namen und evtl das Kürzel des gegebenen Landes und gibt das geänderte LandPayload zurück. Bei einem
+	 * konkurrierenden Update wird
 	 * das aktuell neueste Item zurückgegeben, damit es sofort im Editor angezeigt werden kann.
 	 *
 	 * @param  adminUuid
@@ -129,7 +130,7 @@ public class KatalogeResource {
 	 */
 	@PUT
 	@Path("laender")
-	public Response renameLand(@HeaderParam(
+	public Response updateLand(@HeaderParam(
 		value = KatalogAPIApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
 			value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret, final LandPayload requestPayload) {
 
@@ -149,7 +150,7 @@ public class KatalogeResource {
 
 		}
 
-		ResponsePayload responsePayload = renameLandService.landUmbenennen(requestPayload);
+		ResponsePayload responsePayload = renameLandService.updateLand(requestPayload);
 
 		LOGGER.info("ADMIN {} hat Land {} umbenannt: Erfolg = {}", StringUtils.abbreviate(adminUuid, 11), requestPayload,
 			responsePayload.getMessage().getMessage());

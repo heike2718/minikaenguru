@@ -7,6 +7,8 @@ import { LandDetailsComponent } from "./laender/land-details/land-details.compon
 import { OrtDetailsComponent } from "./orte/ort-details/ort-details.component";
 import { SchuleDetailsComponent } from "./schulen/schule-details/schule-details.component";
 import { EditSchuleComponent } from "./schulen/edit-schule/edit-schule.component";
+import { EditLandComponent } from "./laender/edit-land/edit-land.component";
+import { EditOrtComponent } from "./orte/edit-ort/edit-ort.component";
 
 
 const routes: Routes = [
@@ -22,9 +24,19 @@ const routes: Routes = [
 		component: LandDetailsComponent
 	},
 	{
+		path: 'land-editor',
+		canActivate: [AdminKatalogeGuardService],
+		component: EditLandComponent
+	},
+	{
 		path: 'ort',
 		canActivate: [AdminKatalogeGuardService],
 		component: OrtDetailsComponent
+	},
+	{
+		path: 'ort-editor',
+		canActivate: [AdminKatalogeGuardService],
+		component: EditOrtComponent
 	},
 	{
 		path: 'schule',

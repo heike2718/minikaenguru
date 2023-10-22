@@ -41,7 +41,7 @@ public class RenameLandService {
 		return result;
 	}
 
-	public ResponsePayload landUmbenennen(final LandPayload landPayload) {
+	public ResponsePayload updateLand(final LandPayload landPayload) {
 
 		try {
 
@@ -69,7 +69,11 @@ public class RenameLandService {
 
 			List<Schule> schulen = schuleRepository.findSchulenInLand(landPayload.kuerzel());
 
-			schulen.forEach(s -> s.setLandName(landPayload.name()));
+			schulen.forEach(s -> {
+
+				s.setLandName(landPayload.name());
+				s.setLandKuerzel(s.getLandKuerzel());
+			});
 
 			schuleRepository.replaceSchulen(schulen);
 

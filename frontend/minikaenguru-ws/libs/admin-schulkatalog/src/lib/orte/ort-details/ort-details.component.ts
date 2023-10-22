@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit, inject } from "@angular/core";
 import { AdminSchulkatalogConfigService } from "../../configuration/schulkatalog-config";
 import { AdminSchulkatalogFacade } from "../../admin-schulkatalog.facade";
 import { Subscription } from "rxjs";
-import { Land, Ort } from "../../admin-katalog.model";
+import { Land, Ort, OrtPayload } from "../../admin-katalog.model";
 import { tap } from "rxjs/operators";
 import { kuerzel } from "../../+state/admin-katalog.selectors";
 
@@ -51,7 +51,28 @@ export class OrtDetailsComponent implements OnInit, OnDestroy {
 
     neueSchule(): void {
         this.neueSchuleDisabled = true;
+        this.#neueSchuleClicked = true;
         this.katalogFacade.triggerCreateKuerzel();
+    }
+
+    editOrt(): void {
+
+        if (this.#ort) {
+
+            const ortPayload: OrtPayload = {
+                kuerzel: this.#ort.kuerzel,
+                name: this.#ort.name,
+                kuerzelLand: this.#ort.land.kuerzel,
+                nameLand: this.#ort.land.name
+            }
+
+            this.katalogFacade.startEditOrt(ortPayload);
+        }
+
+    }
+
+    gotoSchulkatalog(): void {
+        this.katalogFacade.navigateToSchulkatalog();
     }
 
 }

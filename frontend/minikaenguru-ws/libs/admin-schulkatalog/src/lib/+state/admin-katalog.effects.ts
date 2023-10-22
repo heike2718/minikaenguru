@@ -4,7 +4,7 @@ import { Actions, createEffect, ofType } from "@ngrx/effects";
 import * as KatalogActions from './admin-katalog.actions';
 import { map, switchMap, tap } from "rxjs/operators";
 import { Router } from "@angular/router";
-import { dispatch } from "rxjs/internal/observable/pairs";
+import { MessageService } from "@minikaenguru-ws/common-messages";
 
 
 @Injectable({
@@ -15,6 +15,7 @@ export class AdminSchulkatalogEffects {
 
     #router = inject(Router);
     #schulkatalogHttpService = inject(AdminSchulkatalogHttpService);
+    #messageService = inject(MessageService);
     #actions$ = inject(Actions);
 
     loadLaender$ = createEffect(
@@ -74,9 +75,90 @@ export class AdminSchulkatalogEffects {
         )
     );
 
+    findOrte$ = createEffect(
+        () => this.#actions$.pipe(
+            ofType(KatalogActions.findOrte),
+            switchMap(action => this.#schulkatalogHttpService.findOrte(action.land, action.suchstring)),
+            map((sucheResult) => KatalogActions.orteGeladen({ land: sucheResult.land, orte: sucheResult.orte }))
+        )
+    );
+
+
     startEditSchule$ = createEffect(
         () => this.#actions$.pipe(
             ofType(KatalogActions.startEditSchule),
             tap(() => this.#router.navigateByUrl('schulkatalog/schule-editor'))
+        ), { dispatch: false });
+
+    createSchule$ = createEffect(
+        () => this.#actions$.pipe(
+            ofType(KatalogActions.createSchule),
+            switchMap(action => this.#schulkatalogHttpService.createSchule(action.schulePayload)),
+            map((schulePayload) => KatalogActions.createSchuleSuccess({ schulePayload }))
+        )
+    );
+
+    updateSchule$ = createEffect(
+        () => this.#actions$.pipe(
+            ofType(KatalogActions.updateSchule),
+            switchMap(action => this.#schulkatalogHttpService.renameSchule(action.schulePayload)),
+            map((schulePayload) => KatalogActions.updateSchuleSuccess({ schulePayload }))
+        )
+    );
+
+    createSchuleSuccess$ = createEffect(
+        () => this.#actions$.pipe(
+            ofType(KatalogActions.createSchuleSuccess),
+            tap(() => this.#messageService.info('Schule erfolgreich angelegt'))
+        ), { dispatch: false });
+
+    updateSchuleSuccess$ = createEffect(
+        () => this.#actions$.pipe(
+            ofType(KatalogActions.updateSchuleSuccess),
+            tap(() => this.#messageService.info('Schule erfolgreich geändert'))
+        ), { dispatch: false });
+
+
+    startEditOrt$ = createEffect(
+        () => this.#actions$.pipe(
+            ofType(KatalogActions.startEditOrt),
+            tap(() => this.#router.navigateByUrl('schulkatalog/ort-editor'))
+        ), { dispatch: false });
+
+
+
+    updateOrt$ = createEffect(
+        () => this.#actions$.pipe(
+            ofType(KatalogActions.updateOrt),
+            switchMap(action => this.#schulkatalogHttpService.updateOrt(action.ortPayload)),
+            map((ortPayload) => KatalogActions.updateOrtSuccess({ ortPayload }))
+        )
+    );
+
+    updateOrtSuccess$ = createEffect(
+        () => this.#actions$.pipe(
+            ofType(KatalogActions.updateOrtSuccess),
+            tap(() => this.#messageService.info('Ort erfolgreich geändert'))
+        ), { dispatch: false });
+
+    startEditLand$ = createEffect(
+        () => this.#actions$.pipe(
+            ofType(KatalogActions.startEditLand),
+            tap(() => this.#router.navigateByUrl('schulkatalog/land-editor'))
+        ), { dispatch: false });
+
+
+    updateLand$ = createEffect(
+        () => this.#actions$.pipe(
+            ofType(KatalogActions.updateLand),
+            switchMap(action => this.#schulkatalogHttpService.updateLand(action.landPayload)),
+            map((landPayload) => KatalogActions.updateLandSuccess({ landPayload }))
+        )
+    );
+
+    updateLandSuccess$ = createEffect(
+        () => this.#actions$.pipe(
+            ofType(KatalogActions.updateLandSuccess),
+            tap(() => this.#messageService.info('Land erfolgreich geändert'))
         ), { dispatch: false });
 }

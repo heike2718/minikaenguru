@@ -3,9 +3,11 @@ import { Store } from "@ngrx/store";
 import { AdminSchulkatalogState } from "./+state/admin-katalog.reducer";
 import * as SchulkatalogSelectors from './+state/admin-katalog.selectors';
 import * as SchulkatalogActions from './+state/admin-katalog.actions';
-import { KuerzelResponseDto, Land, Ort, Schule, SchuleEditorModel, SchulePayload, initialSchuleEditorModel, initialSchulePayload } from "./admin-katalog.model";
+import { KuerzelResponseDto, Land, LandPayload, Ort, OrtPayload, Schule, SchuleEditorModel, SchulePayload, initialSchuleEditorModel, initialSchulePayload } from "./admin-katalog.model";
 import { Observable } from "rxjs";
 import { filterDefined } from "@minikaenguru-ws/shared/util-mk";
+import { Router } from "@angular/router";
+import { filter } from "rxjs/operators";
 
 @Injectable({
     providedIn: 'root'
@@ -13,6 +15,7 @@ import { filterDefined } from "@minikaenguru-ws/shared/util-mk";
 export class AdminSchulkatalogFacade {
 
     #store = inject(Store<AdminSchulkatalogState>);
+    #router = inject(Router);
 
     laender$: Observable<Land[]> = this.#store.select(SchulkatalogSelectors.laender);
     land$: Observable<Land | undefined> = this.#store.select(SchulkatalogSelectors.selectedLand);
@@ -25,6 +28,8 @@ export class AdminSchulkatalogFacade {
     schulenGeladen$: Observable<boolean> = this.#store.select(SchulkatalogSelectors.schulenGeladen);
     schule$: Observable<Schule | undefined> = this.#store.select(SchulkatalogSelectors.selectedSchule);
 
+    landPayload$: Observable<LandPayload> = this.#store.select(SchulkatalogSelectors.landPayload).pipe(p => filterDefined(p));
+    ortPayload$: Observable<OrtPayload> = this.#store.select(SchulkatalogSelectors.ortPayload).pipe(p => filterDefined(p));
     schuleEditorModel$: Observable<SchuleEditorModel> = this.#store.select(SchulkatalogSelectors.schuleEditorModel).pipe(i => filterDefined(i));
 
     kuerzel$: Observable<KuerzelResponseDto> = this.#store.select(SchulkatalogSelectors.kuerzel).pipe(k => filterDefined(k));
@@ -57,16 +62,28 @@ export class AdminSchulkatalogFacade {
         this.#store.dispatch(SchulkatalogActions.schuleSelected({ schule }));
     }
 
+    sucheSchulenInOrt(kuerzelOrt: string, searchTerm: string): void {
+
+    }
+
+    sucheOrteInLand(land: Land, suchstring: string): void {
+
+        this.#store.dispatch(SchulkatalogActions.findOrte({ land, suchstring }));
+
+    }
+
     triggerCreateKuerzel(): void {
 
         this.#store.dispatch(SchulkatalogActions.createKuerzel());
     }
 
-    startCreateSchuleInOrt(ort: Ort, kuerzel: KuerzelResponseDto): void {
+    startCreateSchuleInOrt(ort: Ort, kuerzelResponseDto: KuerzelResponseDto): void {
 
         const schulePayload: SchulePayload = {
             ...initialSchulePayload,
-            kuerzel: kuerzel.kuerzelSchule,
+            kuerzel: kuerzelResponseDto.kuerzelSchule,
+            kuerzelOrt: ort.kuerzel,
+            nameOrt: ort.name,
             kuerzelLand: ort.land.kuerzel,
             nameLand: ort.land.name
         };
@@ -76,12 +93,13 @@ export class AdminSchulkatalogFacade {
             schulePayload: schulePayload,
             nameOrtDisabled: true,
             kuerzelLandDisabled: true,
-            nameLandDisabled: true    
+            nameLandDisabled: true
         }
 
+        this.#store.dispatch(SchulkatalogActions.startEditSchule({ schuleEditorModel }));
     }
 
-    startCreateSchuleInLand(land: Land, kuerzel: KuerzelResponseDto): void {
+    startCreateOrtUndSchuleInLand(land: Land, kuerzel: KuerzelResponseDto): void {
 
         const schulePayload: SchulePayload = {
             ...initialSchulePayload,
@@ -95,16 +113,87 @@ export class AdminSchulkatalogFacade {
             ...initialSchuleEditorModel,
             schulePayload: schulePayload,
             kuerzelLandDisabled: true,
-            nameLandDisabled: true    
+            nameLandDisabled: true
         }
+
+        this.#store.dispatch(SchulkatalogActions.startEditSchule({ schuleEditorModel }));
+    }
+
+    startCreateLandOrtUndSchule(kuerzel: KuerzelResponseDto): void {
+
+        const schulePayload: SchulePayload = {
+            ...initialSchulePayload,
+            kuerzel: kuerzel.kuerzelSchule,
+            kuerzelOrt: kuerzel.kuerzelOrt
+        };
+
+        const schuleEditorModel: SchuleEditorModel = {
+            ...initialSchuleEditorModel,
+            schulePayload: schulePayload
+        };
+
+        this.#store.dispatch(SchulkatalogActions.startEditSchule({ schuleEditorModel }));
     }
 
     createSchule(schulePayload: SchulePayload): void {
 
+        this.#store.dispatch(SchulkatalogActions.createSchule({ schulePayload }));
+
     }
 
-    renameSchule(schulePayload: SchulePayload): void {
-        
+    startRenameSchule(schule: Schule): void {
+
+        const schulePayload: SchulePayload = {
+            kuerzel: schule.kuerzel,
+            kuerzelLand: schule.ort.land.kuerzel,
+            kuerzelOrt: schule.ort.kuerzel,
+            name: schule.name,
+            nameLand: schule.land.name,
+            nameOrt: schule.ort.name
+        };
+
+        const schuleEditorModel: SchuleEditorModel = {
+            ...initialSchuleEditorModel,
+            schulePayload: schulePayload,
+            kuerzelLandDisabled: true,
+            nameLandDisabled: true,
+            modusCreate: false,
+            nameOrtDisabled: true
+        }
+
+        this.#store.dispatch(SchulkatalogActions.startEditSchule({ schuleEditorModel }));
+
+    }
+
+    updateSchule(schulePayload: SchulePayload): void {
+
+        this.#store.dispatch(SchulkatalogActions.updateSchule({ schulePayload }));
+
+    }
+
+    startEditOrt(ortPayload: OrtPayload): void {
+        this.#store.dispatch(SchulkatalogActions.startEditOrt({ ortPayload }));
+    }
+
+    updateOrt(ortPayload: OrtPayload): void {
+
+        this.#store.dispatch(SchulkatalogActions.updateOrt({ ortPayload }));
+
+    }
+
+    startEditLand(landPayload: LandPayload): void {
+        this.#store.dispatch(SchulkatalogActions.startEditLand({ landPayload }));
+    }
+
+    updateLand(landPayload: LandPayload): void {
+
+        this.#store.dispatch(SchulkatalogActions.updateLand({ landPayload }));
+
+    }
+
+    navigateToSchulkatalog(): void {
+        this.#store.dispatch(SchulkatalogActions.resetState());
+        this.#router.navigateByUrl('schulkatalog/laender');
     }
 
     onLogout(): void {

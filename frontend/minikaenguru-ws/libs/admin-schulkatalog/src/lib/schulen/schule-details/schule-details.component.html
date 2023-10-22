@@ -1,12 +1,28 @@
 <div *ngIf="katalogFacade.schule$ | async as schule; else keineSchule">
 
-    <h1>{{schule.name}} - {{schule.kuerzel}}</h1>
+    <h1>{{schule.name}}</h1>
 
     <p>{{schule.pfad}}</p>
+	<p>Kürzel: {{schule.kuerzel}}</p>
 
 
-    <p>Buttonleiste - 2 Buttons: 1. ändern - öffnet Dialog, in dem der Name oder das Kürzel des Landes geändert werden
-        kann. 2. zurück zu länder</p>
+    <div class="d-none d-md-block">
+		<div class="btn-group d-flex" role="group">
+
+			<button [disabled]="schuleUmbenennenDisabled()" (click)="schuleUmbenennen()" class="btn btn-primary w-100 ml-1" >Schule umbenennen</button>
+	
+			<button class="btn btn-primary w-100 ml-1" (click)="gotoSchulkatalog()" ><i class="fa fa-arrow-left"
+                aria-hidden="true"></i>Schulkatalog</button>
+		</div>	
+	</div>
+	
+	<div class="row d-md-none d-lg-none d-xl-none mt-3 mr-3">
+		<div class="btn-group d-inline" role="group">
+			<button [disabled]="schuleUmbenennenDisabled()" (click)="schuleUmbenennen()" class="btn btn-secondary w-75 m-3">Schule umbenennen</button>
+			<button class="btn btn-secondary w-75 m-3" (click)="gotoSchulkatalog()" ><i class="fa fa-arrow-left"
+                aria-hidden="true"></i>Schulkatalog</button>
+		</div>
+	</div>
 </div>
 
 <ng-template #keineSchule>
