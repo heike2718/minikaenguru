@@ -7,6 +7,11 @@ package de.egladil.web.mk_kataloge.infrastructure.rest;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_kataloge.domain.apimodel.SchulkatalogAntrag;
@@ -35,6 +40,21 @@ public class KatalogAntragResource {
 	KatalogAntragService service;
 
 	@POST
+	@Operation(
+		operationId = "submitSchule", summary = "Sendet die Daten des Schulantragsformulars an die konfgurierte Mailadresse.")
+	@APIResponse(
+		name = "OKResponse",
+		responseCode = "200",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = ResponsePayload.class)))
+	@APIResponse(
+		name = "BadRequest",
+		description = "bei Fehlern in der Input-Validierung",
+		responseCode = "400",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = ResponsePayload.class)))
 	public Response submitSchule(final SchulkatalogAntrag antrag) {
 
 		service.validateAndSend(antrag);

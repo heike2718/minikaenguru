@@ -5,9 +5,26 @@
 package de.egladil.web.mk_gateway.infrastructure.rest.admin;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
+import de.egladil.web.mk_gateway.domain.wettbewerb.api.EditWettbewerbModel;
+import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbAPIModel;
+import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbDetailsAPIModel;
+import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbListAPIModel;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -22,18 +39,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
-import de.egladil.web.commons_validation.payload.MessagePayload;
-import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
-import de.egladil.web.mk_gateway.domain.wettbewerb.api.EditWettbewerbModel;
-import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbAPIModel;
-import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbDetailsAPIModel;
-import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbListAPIModel;
-import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
-
 /**
  * AdminWettbewerbResource .../mk-gateway/admin/...
  */
@@ -41,7 +46,12 @@ import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 @Path("admin/wettbewerbe")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class AdminWettbewerbResource extends AbstractAdminResource {
+public class AdminWettbewerbResource {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(AdminWettbewerbResource.class);
+
+	@ConfigProperty(name = "admin.created.uri.prefix", defaultValue = "https://mathe-jung-alt.de/mk-gateway/admin")
+	String createdUriPrefix;
 
 	@Inject
 	WettbewerbService wettbewerbService;
@@ -149,5 +159,17 @@ public class AdminWettbewerbResource extends AbstractAdminResource {
 
 		return Response.ok(responsePayload).build();
 
+	}
+
+	URI createdUri(final String locationString) {
+
+		try {
+
+			return new URI(locationString);
+		} catch (URISyntaxException e) {
+
+			LOGGER.error("Fehlerhafte URI {}: {} ", locationString, e.getMessage(), e);
+			throw new MkGatewayRuntimeException("Fehlerhafte URI: " + locationString, e);
+		}
 	}
 }

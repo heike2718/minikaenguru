@@ -9,9 +9,12 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.enums.ParameterIn;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameters;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +37,7 @@ import de.egladil.web.mk_kataloge.domain.event.SecurityIncidentRegistered;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Event;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
@@ -87,7 +91,7 @@ public class KatalogeResource {
 	@Operation(
 		operationId = "loadLaender", summary = "Läd die Länder des Schulkatalogs.")
 	@APIResponse(
-		name = "loadLaenderOKResponse",
+		name = "OKResponse",
 		responseCode = "200",
 		content = @Content(
 			mediaType = "application/json",
@@ -130,9 +134,34 @@ public class KatalogeResource {
 	 */
 	@PUT
 	@Path("laender")
+	@Operation(
+		operationId = "updateLand", summary = "Ändert die Daten eines Landes im Schulkatalog")
+	@Parameters({
+		@Parameter(name = "X-UUID", in = ParameterIn.HEADER, description = "UUID des Admins", required = true),
+		@Parameter(name = "X-SECRET", in = ParameterIn.HEADER, description = "ein secret", required = true) })
+	@APIResponse(
+		name = "loadLaenderOKResponse",
+		responseCode = "200",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = ResponsePayload.class)))
+	@APIResponse(
+		name = "Bad Request",
+		description = "Input-Validierung",
+		responseCode = "400",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = ResponsePayload.class)))
+	@APIResponse(
+		name = "Forbidden",
+		description = "wenn im Header X-SECRET was falsches steht.",
+		responseCode = "403",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = ResponsePayload.class)))
 	public Response updateLand(@HeaderParam(
 		value = KatalogAPIApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
-			value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret, final LandPayload requestPayload) {
+			value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret, @Valid final LandPayload requestPayload) {
 
 		if (!expectedSecret.equals(secret)) {
 
@@ -172,9 +201,34 @@ public class KatalogeResource {
 	 */
 	@PUT
 	@Path("orte")
+	@Operation(
+		operationId = "renameOrt", summary = "Ändert den Namen des Orts im Schulkatalog")
+	@Parameters({
+		@Parameter(name = "X-UUID", in = ParameterIn.HEADER, description = "UUID des Admins", required = true),
+		@Parameter(name = "X-SECRET", in = ParameterIn.HEADER, description = "ein secret", required = true) })
+	@APIResponse(
+		name = "OKResponse",
+		responseCode = "200",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = ResponsePayload.class)))
+	@APIResponse(
+		name = "Bad Request",
+		description = "Input-Validierung",
+		responseCode = "400",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = ResponsePayload.class)))
+	@APIResponse(
+		name = "Forbidden",
+		description = "wenn im Header X-SECRET was falsches steht.",
+		responseCode = "403",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = ResponsePayload.class)))
 	public Response renameOrt(@HeaderParam(
 		value = KatalogAPIApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
-			value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret, final OrtPayload requestPayload) {
+			value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret, @Valid final OrtPayload requestPayload) {
 
 		if (!expectedSecret.equals(secret)) {
 
@@ -214,9 +268,34 @@ public class KatalogeResource {
 	 */
 	@PUT
 	@Path("schulen")
+	@Operation(
+		operationId = "renameSchule", summary = "Ändert den Namen der Schule im Schulkatalog")
+	@Parameters({
+		@Parameter(name = "X-UUID", in = ParameterIn.HEADER, description = "UUID des Admins", required = true),
+		@Parameter(name = "X-SECRET", in = ParameterIn.HEADER, description = "ein secret", required = true) })
+	@APIResponse(
+		name = "OKResponse",
+		responseCode = "200",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = ResponsePayload.class)))
+	@APIResponse(
+		name = "Bad Request",
+		description = "Input-Validierung",
+		responseCode = "400",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = ResponsePayload.class)))
+	@APIResponse(
+		name = "Forbidden",
+		description = "wenn im Header X-SECRET was falsches steht.",
+		responseCode = "403",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = ResponsePayload.class)))
 	public Response renameSchule(@HeaderParam(
 		value = KatalogAPIApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
-			value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret, final SchulePayload requestPayload) {
+			value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret, @Valid final SchulePayload requestPayload) {
 
 		if (!expectedSecret.equals(secret)) {
 
@@ -256,9 +335,34 @@ public class KatalogeResource {
 	 */
 	@POST
 	@Path("schulen")
+	@Operation(
+		operationId = "createSchule", summary = "Legt eine neue Schule an")
+	@Parameters({
+		@Parameter(name = "X-UUID", in = ParameterIn.HEADER, description = "UUID des Admins", required = true),
+		@Parameter(name = "X-SECRET", in = ParameterIn.HEADER, description = "ein secret", required = true) })
+	@APIResponse(
+		name = "OKResponse",
+		responseCode = "200",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = ResponsePayload.class)))
+	@APIResponse(
+		name = "Bad Request",
+		description = "Input-Validierung",
+		responseCode = "400",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = ResponsePayload.class)))
+	@APIResponse(
+		name = "Forbidden",
+		description = "wenn im Header X-SECRET was falsches steht.",
+		responseCode = "403",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = ResponsePayload.class)))
 	public Response createSchule(@HeaderParam(
 		value = KatalogAPIApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
-			value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret, final SchulePayload requestPayload) {
+			value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret, @Valid final SchulePayload requestPayload) {
 
 		if (!expectedSecret.equals(secret)) {
 
@@ -284,6 +388,23 @@ public class KatalogeResource {
 
 	@GET
 	@Path("laender/{kuerzel}/orte")
+	@Operation(
+		operationId = "loadOrteInLand", summary = "Läd die Orte des Schulkatalogs, die im gegebenen Land liegen.")
+	@Parameters({
+		@Parameter(name = "kuerzel", in = ParameterIn.PATH, description = "Kürzel des Lands im Schulkatalog", required = true) })
+	@APIResponse(
+		name = "OKResponse",
+		responseCode = "200",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(type = SchemaType.ARRAY, implementation = KatalogItem.class)))
+	@APIResponse(
+		name = "BadRequest",
+		description = "Wenn die Treffermenge größer als die konfigurierte maximale Anzahl ist (default = 25).",
+		responseCode = "400",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = ResponsePayload.class)))
 	public Response loadOrteInLand(@PathParam(value = "kuerzel") @Kuerzel final String kuerzel) {
 
 		int anzahlTreffer = katalogFacade.countOrteInLand(kuerzel);
@@ -308,6 +429,23 @@ public class KatalogeResource {
 
 	@GET
 	@Path("orte/{kuerzel}/schulen")
+	@Operation(
+		operationId = "loadSchulenInOrt", summary = "Läd die Schulen des Schulkatalogs, die im gegebenen Ort liegen.")
+	@Parameters({
+		@Parameter(name = "kuerzel", in = ParameterIn.PATH, description = "Kürzel des Orts im Schulkatalog", required = true) })
+	@APIResponse(
+		name = "OKResponse",
+		responseCode = "200",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(type = SchemaType.ARRAY, implementation = KatalogItem.class)))
+	@APIResponse(
+		name = "BadRequest",
+		description = "Wenn die Treffermenge größer als die konfigurierte maximale Anzahl ist (default = 25).",
+		responseCode = "400",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = ResponsePayload.class)))
 	public Response loadSchulenInOrt(@PathParam(value = "kuerzel") @Kuerzel final String kuerzel) {
 
 		int anzahlTreffer = katalogFacade.countSchulenInOrt(kuerzel);

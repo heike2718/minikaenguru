@@ -8,6 +8,13 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.enums.ParameterIn;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameters;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,6 +67,24 @@ public class KuerzelResource {
 	 * @return
 	 */
 	@GET
+	@Operation(
+		operationId = "generateKuerzelFuerSchuleUndOrt",
+		summary = "Generiert zwei neue Kürzel, eins für den Ort, eins für die Schule.")
+	@Parameters({
+		@Parameter(name = "X-SECRET", in = ParameterIn.HEADER, description = "ein secret", required = true) })
+	@APIResponse(
+		name = "OKResponse",
+		responseCode = "200",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = KuerzelAPIModel.class)))
+	@APIResponse(
+		name = "Forbidden",
+		description = "wenn im Header X-SECRET was falsches steht.",
+		responseCode = "403",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = ResponsePayload.class)))
 	public Response generateKuerzelFuerSchuleUndOrt(@HeaderParam(
 		value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret) {
 
