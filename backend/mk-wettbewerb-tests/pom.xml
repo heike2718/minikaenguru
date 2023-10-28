@@ -5,7 +5,7 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mk-wettbewerb-tests</artifactId>
-	<version>2.0.4</version>
+	<version>2.0.5-SNAPSHOT</version>
 
 	<properties>
 		<minikaenguru-version>${project.version}</minikaenguru-version>
