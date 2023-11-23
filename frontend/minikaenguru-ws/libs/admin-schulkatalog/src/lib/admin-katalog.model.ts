@@ -31,12 +31,12 @@ export interface KatalogitemResponseDto {
 	readonly kinderGeladen?: boolean;
 };
 
-export interface OrtSucheResult {
+export interface OrteSucheResult {
     readonly land: Land;
     readonly orte: KatalogitemResponseDto[];
 };
 
-export interface SchuleSucheResult {
+export interface SchulenSucheResult {
     readonly ort: Ort;
     readonly schulen: KatalogitemResponseDto[];
 }

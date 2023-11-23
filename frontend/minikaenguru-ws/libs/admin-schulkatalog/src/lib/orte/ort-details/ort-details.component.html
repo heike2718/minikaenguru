@@ -7,7 +7,15 @@
     <p>Anzahl Schulen: {{ort.anzahlKinder}}</p>
 
     <div *ngIf="ort.anzahlKinder > 25">
-        <p>Suchstring: Input-Field - Button -> Schule suchen</p>
+        <div class="row ml-3">
+			<div class="col-xs-12 col-sm-12 col-md-1">
+				<label for="sucheInput">Schule:</label>
+			</div>
+			<div class="col-xs-12 col-sm-12 col-md-11">
+				<input id="sucheInput" type="text" name="sucheInput" placeholder="Teil des Schulnamen"
+					(keyup)="onKeyup($event)" [ngModel]="searchFormInputValue" />
+			</div>
+		</div>
     </div>
 
     <div *ngIf="katalogFacade.schulenGeladen$ | async">

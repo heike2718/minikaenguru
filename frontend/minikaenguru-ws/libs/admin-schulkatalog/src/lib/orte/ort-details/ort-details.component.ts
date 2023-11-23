@@ -1,9 +1,9 @@
 import { Component, Input, OnDestroy, OnInit, inject } from "@angular/core";
 import { AdminSchulkatalogConfigService } from "../../configuration/schulkatalog-config";
 import { AdminSchulkatalogFacade } from "../../admin-schulkatalog.facade";
-import { Subscription } from "rxjs";
+import { BehaviorSubject, Subscription } from "rxjs";
 import { Land, Ort, OrtPayload } from "../../admin-katalog.model";
-import { tap } from "rxjs/operators";
+import { debounceTime, distinctUntilChanged, filter, tap } from "rxjs/operators";
 import { kuerzel } from "../../+state/admin-katalog.selectors";
 
 
@@ -14,12 +14,15 @@ import { kuerzel } from "../../+state/admin-katalog.selectors";
 })
 export class OrtDetailsComponent implements OnInit, OnDestroy {
 
+    searchFormInputValue!: string;
+    #searchTerm!: BehaviorSubject<string>;
+
     #config = inject(AdminSchulkatalogConfigService);
     katalogFacade = inject(AdminSchulkatalogFacade);
 
     devMode = this.#config.devmode;
     neueSchuleDisabled = false;
-    
+
 
     #ort!: Ort;
     #ortSubscription = new Subscription();
@@ -29,6 +32,17 @@ export class OrtDetailsComponent implements OnInit, OnDestroy {
 
 
     ngOnInit(): void {
+
+        this.#searchTerm = new BehaviorSubject<string>('');
+
+        this.#searchTerm.pipe(
+            debounceTime(1000),
+            distinctUntilChanged(),
+            filter(term => term.length > 2),
+            tap(term => {
+                this.#startSearch(term)
+            })
+        ).subscribe();
 
         this.#ortSubscription = this.katalogFacade.ort$.subscribe((ort) => this.#ort = ort);
 
@@ -73,6 +87,20 @@ export class OrtDetailsComponent implements OnInit, OnDestroy {
 
     gotoSchulkatalog(): void {
         this.katalogFacade.navigateToSchulkatalog();
+    }
+
+    onKeyup($event: any) {
+
+		const value = $event.target.value;
+		this.#searchTerm.next(value);
+	}
+
+    #startSearch(term: string): void {
+
+        if (term.trim().length > 2) {
+            this.katalogFacade.sucheSchulenInOrt(this.#ort, term.trim());
+        }
+
     }
 
 }

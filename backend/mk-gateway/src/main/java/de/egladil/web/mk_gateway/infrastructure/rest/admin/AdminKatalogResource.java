@@ -293,7 +293,7 @@ public class AdminKatalogResource {
 		responseCode = "200",
 		content = @Content(
 			mediaType = "application/json",
-			schema = @Schema(type = SchemaType.ARRAY, implementation = ResponsePayload.class)))
+			schema = @Schema(type = SchemaType.ARRAY, implementation = KatalogItem.class)))
 	@APIResponse(
 		name = "BadRequest",
 		responseCode = "400",
@@ -329,7 +329,7 @@ public class AdminKatalogResource {
 		responseCode = "200",
 		content = @Content(
 			mediaType = "application/json",
-			schema = @Schema(type = SchemaType.ARRAY, implementation = ResponsePayload.class)))
+			schema = @Schema(type = SchemaType.ARRAY, implementation = KatalogItem.class)))
 	@APIResponse(
 		name = "BadRequest",
 		responseCode = "400",

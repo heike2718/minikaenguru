@@ -83,6 +83,14 @@ export class AdminSchulkatalogEffects {
         )
     );
 
+    findSchuken$ = createEffect(
+        () => this.#actions$.pipe(
+            ofType(KatalogActions.findSchulen),
+            switchMap(action => this.#schulkatalogHttpService.findSchulen(action.ort, action.suchstring)),
+            map((sucheResult) => KatalogActions.schulenGeladen({ ort: sucheResult.ort, schulen: sucheResult.schulen }))
+        )
+    );
+
 
     startEditSchule$ = createEffect(
         () => this.#actions$.pipe(

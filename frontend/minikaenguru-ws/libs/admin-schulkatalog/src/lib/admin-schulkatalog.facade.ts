@@ -62,7 +62,9 @@ export class AdminSchulkatalogFacade {
         this.#store.dispatch(SchulkatalogActions.schuleSelected({ schule }));
     }
 
-    sucheSchulenInOrt(kuerzelOrt: string, searchTerm: string): void {
+    sucheSchulenInOrt(ort: Ort, suchstring: string): void {
+
+        this.#store.dispatch(SchulkatalogActions.findSchulen({ort, suchstring}));
 
     }
 

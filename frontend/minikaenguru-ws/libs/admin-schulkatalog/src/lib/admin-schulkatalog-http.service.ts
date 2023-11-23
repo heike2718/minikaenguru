@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { Observable, of } from "rxjs";
-import { KatalogitemResponseDto, KuerzelResponseDto, Land, LandPayload, Ort, OrtPayload, OrtSucheResult, SchuleEditorModel, SchuleEditorModelAndKuerzel, SchulePayload, SchuleSucheResult } from "./admin-katalog.model";
+import { KatalogitemResponseDto, KuerzelResponseDto, Land, LandPayload, Ort, OrtPayload, OrteSucheResult, SchuleEditorModel, SchuleEditorModelAndKuerzel, SchulePayload, SchulenSucheResult } from "./admin-katalog.model";
 import { LoadingIndicatorService } from '@minikaenguru-ws/shared/util-mk';
 import { AdminSchulkatalogConfigService } from "./configuration/schulkatalog-config";
 import { ResponsePayload } from "@minikaenguru-ws/common-messages";
@@ -28,7 +28,7 @@ export class AdminSchulkatalogHttpService {
         return this.#loadingIndicator.showLoaderUntilCompleted(obs$);
     }
 
-    loadOrte(land: Land): Observable<OrtSucheResult> {
+    loadOrte(land: Land): Observable<OrteSucheResult> {
 
         const url = this.#config.baseUrl + '/kataloge/laender/' + land.kuerzel + '/orte';
         const obs$ = this.#httpClient.get(url).pipe(
@@ -39,7 +39,7 @@ export class AdminSchulkatalogHttpService {
         return this.#loadingIndicator.showLoaderUntilCompleted(obs$);
     }
 
-    loadSchulen(ort: Ort): Observable<SchuleSucheResult> {
+    loadSchulen(ort: Ort): Observable<SchulenSucheResult> {
 
         const url = this.#config.baseUrl + '/kataloge/orte/' + ort.kuerzel + '/schulen';
         const obs$ = this.#httpClient.get(url).pipe(
@@ -62,7 +62,7 @@ export class AdminSchulkatalogHttpService {
         return this.#loadingIndicator.showLoaderUntilCompleted(obs$);
     }
 
-    findOrte(land: Land, suchstring: string): Observable<OrtSucheResult> {
+    findOrte(land: Land, suchstring: string): Observable<OrteSucheResult> {
 
         const url = this.#config.baseUrl + '/kataloge/suche/laender/' + land.kuerzel + '/orte';
 
@@ -72,6 +72,21 @@ export class AdminSchulkatalogHttpService {
         const obs$ = this.#httpClient.get(url, { headers, params }).pipe(
             map(body => body as ResponsePayload),
             map((payload) => this.#toOrtSucheResult(land, payload.data))
+        );
+
+        return this.#loadingIndicator.showLoaderUntilCompleted(obs$);
+    }
+
+    findSchulen(ort: Ort, suchstring: string): Observable<SchulenSucheResult> {
+
+        const url = this.#config.baseUrl + '/kataloge/suche/orte/' + ort.kuerzel + '/schulen';
+
+        let params = new HttpParams().set('search', suchstring);
+        const headers = new HttpHeaders().set('Accept', 'application/json');
+
+        const obs$ = this.#httpClient.get(url, { headers, params }).pipe(
+            map(body => body as ResponsePayload),
+            map((payload) => this.#toSchuleSucheResult(ort, payload.data))
         );
 
         return this.#loadingIndicator.showLoaderUntilCompleted(obs$);
@@ -127,7 +142,7 @@ export class AdminSchulkatalogHttpService {
         return this.#loadingIndicator.showLoaderUntilCompleted(obs$);
     }
 
-    #toOrtSucheResult(land: Land, orte: any | undefined): OrtSucheResult {
+    #toOrtSucheResult(land: Land, orte: any | undefined): OrteSucheResult {
 
         let theOrte: KatalogitemResponseDto[] = [];
 
@@ -136,7 +151,7 @@ export class AdminSchulkatalogHttpService {
         }
 
 
-        const result: OrtSucheResult = {
+        const result: OrteSucheResult = {
             land: land,
             orte: theOrte
         }
@@ -144,7 +159,7 @@ export class AdminSchulkatalogHttpService {
         return result;
     }
 
-    #toSchuleSucheResult(ort: Ort, schulen: any | undefined): SchuleSucheResult {
+    #toSchuleSucheResult(ort: Ort, schulen: any | undefined): SchulenSucheResult {
 
         let theSchulen: KatalogitemResponseDto[] = [];
 
@@ -153,7 +168,7 @@ export class AdminSchulkatalogHttpService {
         }
 
 
-        const result: SchuleSucheResult = {
+        const result: SchulenSucheResult = {
             ort: ort,
             schulen: theSchulen
         }
