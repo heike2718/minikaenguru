@@ -76,7 +76,7 @@ public class AdminKatalogResource {
 	@Operation(
 		operationId = "loadLaender", summary = "Läd die Länder des Schulkatalogs.")
 	@APIResponse(
-		name = "loadLaenderOKResponse",
+		name = "admin.loadLaenderOKResponse",
 		responseCode = "200",
 		content = @Content(
 			mediaType = "application/json",
@@ -91,7 +91,7 @@ public class AdminKatalogResource {
 	@GET
 	@Path("laender/{kuerzel}/orte")
 	@Operation(
-		operationId = "loadOrteInLand", summary = "Läd die Orte des Schulkatalogs, die im gegebenen Land liegen.")
+		operationId = "admin.loadOrteInLand", summary = "Läd die Orte des Schulkatalogs, die im gegebenen Land liegen.")
 	@Parameters({
 		@Parameter(name = "kuerzel", in = ParameterIn.PATH, description = "Kürzel des Lands im Schulkatalog", required = true) })
 	@APIResponse(
@@ -117,7 +117,7 @@ public class AdminKatalogResource {
 	@GET
 	@Path("orte/{kuerzel}/schulen")
 	@Operation(
-		operationId = "loadSchulenInOrt", summary = "Läd die Schulen des Schulkatalogs, die im gegebenen Ort liegen.")
+		operationId = "admin.loadSchulenInOrt", summary = "Läd die Schulen des Schulkatalogs, die im gegebenen Ort liegen.")
 	@Parameters({
 		@Parameter(name = "kuerzel", in = ParameterIn.PATH, description = "Kürzel des Orts im Schulkatalog", required = true) })
 	@APIResponse(
@@ -143,7 +143,7 @@ public class AdminKatalogResource {
 	@PUT
 	@Path("laender")
 	@Operation(
-		operationId = "renameLand", summary = "Ändert die Daten eines Landes im Schulkatalog")
+		operationId = "admin.renameLand", summary = "Ändert die Daten eines Landes im Schulkatalog")
 	@APIResponse(
 		name = "loadLaenderOKResponse",
 		responseCode = "200",
@@ -175,7 +175,7 @@ public class AdminKatalogResource {
 	@PUT
 	@Path("orte")
 	@Operation(
-		operationId = "renameOrt", summary = "Ändert den Namen des Orts im Schulkatalog")
+		operationId = "admin.renameOrt", summary = "Ändert den Namen des Orts im Schulkatalog")
 	@APIResponse(
 		name = "OKResponse",
 		responseCode = "200",
@@ -209,7 +209,7 @@ public class AdminKatalogResource {
 	@PUT
 	@Path("schulen")
 	@Operation(
-		operationId = "renameSchule", summary = "Ändert den Namen der Schule im Schulkatalog")
+		operationId = "admin.renameSchule", summary = "Ändert den Namen der Schule im Schulkatalog")
 	@APIResponse(
 		name = "OKResponse",
 		responseCode = "200",
@@ -242,7 +242,7 @@ public class AdminKatalogResource {
 	@POST
 	@Path("schulen")
 	@Operation(
-		operationId = "createSchule", summary = "Legt eine neue Schule an und sendet eine Erfolgsmail an den Auftraggeber.")
+		operationId = "admin.createSchule", summary = "Legt eine neue Schule an und sendet eine Erfolgsmail an den Auftraggeber.")
 	@APIResponse(
 		name = "OKResponse",
 		responseCode = "200",
@@ -275,7 +275,8 @@ public class AdminKatalogResource {
 	@GET
 	@Path("suche/laender/{kuerzel}/orte")
 	@Operation(
-		operationId = "findOrteInLand", summary = "Gibt alle Orte im gegebenen Land zurück, deren Name mit dem Suchstring beginnt.")
+		operationId = "admin.findOrteInLand",
+		summary = "Gibt alle Orte im gegebenen Land zurück, deren Name mit dem Suchstring beginnt.")
 	@Parameters({
 		@Parameter(
 			in = ParameterIn.PATH,
@@ -311,7 +312,8 @@ public class AdminKatalogResource {
 	@GET
 	@Path("suche/orte/{kuerzel}/schulen")
 	@Operation(
-		operationId = "findSchulenInOrt", summary = "Gibt alle Schulen im gegebenen Ort zurück, deren Name den Suchstring enthält.")
+		operationId = "admin.findSchulenInOrt",
+		summary = "Gibt alle Schulen im gegebenen Ort zurück, deren Name den Suchstring enthält.")
 	@Parameters({
 		@Parameter(
 			in = ParameterIn.PATH,
@@ -347,7 +349,8 @@ public class AdminKatalogResource {
 	@GET
 	@Path("suche/global/{typ}")
 	@Operation(
-		operationId = "findItems", summary = "Gibt alle KatalogItems vom Typ typ zurück, die auf die gegebene Suchanfrage passen.")
+		operationId = "admin.findItems",
+		summary = "Gibt alle KatalogItems vom Typ typ zurück, die auf die gegebene Suchanfrage passen.")
 	@Parameters({
 		@Parameter(
 			in = ParameterIn.PATH,
@@ -382,7 +385,7 @@ public class AdminKatalogResource {
 	@GET
 	@Path("kuerzel")
 	@Operation(
-		operationId = "generateKuerzelFuerSchuleUndOrt",
+		operationId = "admin.generateKuerzelFuerSchuleUndOrt",
 		summary = "Generiert zwei neue Kürzel, eins für den Ort, eins für die Schule.")
 	@APIResponse(
 		name = "OKResponse",

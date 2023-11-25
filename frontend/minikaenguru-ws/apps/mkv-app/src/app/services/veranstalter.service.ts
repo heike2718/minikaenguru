@@ -5,7 +5,6 @@ import { environment } from '../../environments/environment';
 import { ResponsePayload, Message } from '@minikaenguru-ws/common-messages';
 import { map } from 'rxjs/operators';
 import { Privatveranstalter, Lehrer } from '../wettbewerb/wettbewerb.model';
-import { Schule } from '../lehrer/schulen/schulen.model';
 import { LoadingIndicatorService } from '@minikaenguru-ws/shared/util-mk';
 
 

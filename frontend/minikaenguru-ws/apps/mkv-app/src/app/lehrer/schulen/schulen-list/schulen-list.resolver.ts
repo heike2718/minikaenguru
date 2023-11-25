@@ -20,13 +20,8 @@ export class SchulenListResolver  {
 
 		return this.store.pipe(
 			select(schulenLoaded),
-			tap(areLoaded => {
-				if (!areLoaded) {
-					if (!this.loading) {
-						this.loading = true;
-						this.lehrerFacade.loadSchulen();
-					}
-				}
+			tap(() => {
+				this.lehrerFacade.loadSchulen();
 			}),
 			filter(loaded => loaded),
 			first(),

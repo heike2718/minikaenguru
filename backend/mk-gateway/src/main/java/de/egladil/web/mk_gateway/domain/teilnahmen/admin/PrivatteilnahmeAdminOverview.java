@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.teilnahmen.admin;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,16 +18,16 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.api.PrivatteilnahmeAPIModel;
 public class PrivatteilnahmeAdminOverview {
 
 	@JsonProperty
-	private boolean aktuellAngemeldet;
+	private boolean aktuellAngemeldet = false;
 
 	@JsonProperty
-	private int anzahlTeilnahmen;
+	private int anzahlTeilnahmen = 0;
 
 	@JsonProperty
 	private PrivatteilnahmeAPIModel aktuelleTeilnahme;
 
 	@JsonProperty
-	private List<AnonymisierteTeilnahmeAPIModel> teilnahmen;
+	private List<AnonymisierteTeilnahmeAPIModel> teilnahmen = new ArrayList<>();
 
 	public boolean aktuellAngemeldet() {
 
