@@ -8,24 +8,26 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.mail.api.NewsletterVersandauftrag;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 
-import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.mail.api.NewsletterVersandauftrag;
-
 /**
  * ScheduleNewsletterDelegate
+ *
+ * @deprecated wird durch NewsletterAuftraegeService übernommen.
  */
 @ApplicationScoped
+@Deprecated
 public class ScheduleNewsletterDelegate {
 
 	@Inject
-	VersandinfoService versandinfoService;
+	NewsletterAuftraegeService versandinfoService;
 
-	public static ScheduleNewsletterDelegate createForTest(final VersandinfoService versandinfoService) {
+	public static ScheduleNewsletterDelegate createForTest(final NewsletterAuftraegeService versandinfoService) {
 
 		ScheduleNewsletterDelegate result = new ScheduleNewsletterDelegate();
 		result.versandinfoService = versandinfoService;
@@ -35,21 +37,21 @@ public class ScheduleNewsletterDelegate {
 	public static ScheduleNewsletterDelegate createForIntegrationTest(final EntityManager etityManager) {
 
 		ScheduleNewsletterDelegate result = new ScheduleNewsletterDelegate();
-		result.versandinfoService = VersandinfoService.createForIntegrationTest(etityManager);
+		result.versandinfoService = NewsletterAuftraegeService.createForIntegrationTest(etityManager);
 		return result;
 	}
 
 	@Transactional
-	public Versandinformation scheduleMailversand(final NewsletterVersandauftrag auftrag) {
+	public Versandauftrag scheduleMailversand(final NewsletterVersandauftrag auftrag) {
 
 		Identifier newsletterID = new Identifier(auftrag.newsletterID());
-		List<Versandinformation> vorhandene = versandinfoService
+		List<Versandauftrag> vorhandene = versandinfoService
 			.getVersandinformationenZuNewsletter(newsletterID);
 
-		List<Versandinformation> nichtZumTestGesendete = vorhandene.stream().filter(v -> Empfaengertyp.TEST != v.empfaengertyp())
+		List<Versandauftrag> nichtZumTestGesendete = vorhandene.stream().filter(v -> Empfaengertyp.TEST != v.empfaengertyp())
 			.collect(Collectors.toList());
 
-		Optional<Versandinformation> optDiejenige = nichtZumTestGesendete.stream()
+		Optional<Versandauftrag> optDiejenige = nichtZumTestGesendete.stream()
 			.filter(v -> auftrag.emfaengertyp() == v.empfaengertyp())
 			.findFirst();
 
@@ -66,7 +68,7 @@ public class ScheduleNewsletterDelegate {
 
 		if (auftrag.emfaengertyp() == Empfaengertyp.LEHRER || auftrag.emfaengertyp() == Empfaengertyp.PRIVATVERANSTALTER) {
 
-			Optional<Versandinformation> optAnAlleGesendete = nichtZumTestGesendete.stream()
+			Optional<Versandauftrag> optAnAlleGesendete = nichtZumTestGesendete.stream()
 				.filter(v -> Empfaengertyp.ALLE == v.empfaengertyp())
 				.findFirst();
 
@@ -78,13 +80,13 @@ public class ScheduleNewsletterDelegate {
 
 		}
 
-		Versandinformation versandinformation = new Versandinformation()
+		Versandauftrag versandinformation = new Versandauftrag()
 			.withEmpfaengertyp(auftrag.emfaengertyp())
 			.withNewsletterID(newsletterID);
 
 		if (auftrag.emfaengertyp() == Empfaengertyp.TEST) {
 
-			Optional<Versandinformation> optTest = vorhandene.stream()
+			Optional<Versandauftrag> optTest = vorhandene.stream()
 				.filter(v -> auftrag.emfaengertyp() == v.empfaengertyp())
 				.findFirst();
 
@@ -94,7 +96,7 @@ public class ScheduleNewsletterDelegate {
 			}
 		}
 
-		return versandinfoService.versandinformationSpeichern(versandinformation);
+		return versandinfoService.versandauftragSpeichern(versandinformation);
 	}
 
 }

@@ -5,6 +5,8 @@ DELAY_MILLISECONDS=0
 
 HEARTBEAT_ID=heartbeat
 
+NEWSLETTERVERSAND_CRON_EXPR=0 0/2 * 1/1 * ? *
+
 PATH_EXTERNAL_FILES=/usr/local/bin/mk-gateway/files
 QUARKUS_HTTP_BODY-HANDLER_UPLOADS-DIRECTORY=/home/heike/git/testdaten/minikaenguru/upload
 

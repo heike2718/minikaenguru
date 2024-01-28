@@ -27,7 +27,7 @@ public class VersandinformationTest {
 	void should_serializeWork() throws JsonProcessingException {
 
 		// Arrange
-		Versandinformation versandinfo = new Versandinformation()
+		Versandauftrag versandinfo = new Versandauftrag()
 			.withAnzahlAktuellVersendet(13)
 			.withAnzahlEmpaenger(42)
 			.withIdentifier(new Identifier(AbstractDomainServiceTest.VERSANDINFO_ALLE_UUID))
@@ -54,11 +54,11 @@ public class VersandinformationTest {
 	void createInMemoryDaten() throws JsonProcessingException {
 
 		// Arrange
-		List<Versandinformation> versandinfos = new ArrayList<>();
+		List<Versandauftrag> versandinfos = new ArrayList<>();
 
 		{
 
-			Versandinformation versandinfo = new Versandinformation()
+			Versandauftrag versandinfo = new Versandauftrag()
 				.withAnzahlAktuellVersendet(42)
 				.withAnzahlEmpaenger(42)
 				.withIdentifier(new Identifier(AbstractDomainServiceTest.VERSANDINFO_ALLE_UUID))
@@ -72,7 +72,7 @@ public class VersandinformationTest {
 
 		{
 
-			Versandinformation versandinfo = new Versandinformation()
+			Versandauftrag versandinfo = new Versandauftrag()
 				.withAnzahlAktuellVersendet(0)
 				.withAnzahlEmpaenger(2)
 				.withIdentifier(new Identifier(AbstractDomainServiceTest.VERSANDINFO_TEST_UUID))
@@ -84,7 +84,7 @@ public class VersandinformationTest {
 
 		{
 
-			Versandinformation versandinfo = new Versandinformation()
+			Versandauftrag versandinfo = new Versandauftrag()
 				.withAnzahlAktuellVersendet(13)
 				.withAnzahlEmpaenger(42)
 				.withIdentifier(new Identifier(AbstractDomainServiceTest.VERSANDINFO_LEHRER_UUID))
@@ -97,7 +97,7 @@ public class VersandinformationTest {
 
 		{
 
-			Versandinformation versandinfo = new Versandinformation()
+			Versandauftrag versandinfo = new Versandauftrag()
 				.withAnzahlAktuellVersendet(0)
 				.withAnzahlEmpaenger(9)
 				.withIdentifier(new Identifier(AbstractDomainServiceTest.VERSANDINFO_PRIVATVERANSTALTER_UUID))
@@ -108,7 +108,7 @@ public class VersandinformationTest {
 		}
 
 		// Act
-		String serialisierung = new ObjectMapper().writeValueAsString(versandinfos.toArray(new Versandinformation[0]));
+		String serialisierung = new ObjectMapper().writeValueAsString(versandinfos.toArray(new Versandauftrag[0]));
 
 		System.out.println(serialisierung);
 	}

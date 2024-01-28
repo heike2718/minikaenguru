@@ -6,6 +6,8 @@ package de.egladil.web.mk_gateway.infrastructure.persistence.entities;
 
 import java.time.LocalDateTime;
 
+import de.egladil.web.mk_gateway.domain.mail.Empfaengertyp;
+import de.egladil.web.mk_gateway.domain.mail.StatusAuslieferung;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,26 +16,31 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
-import de.egladil.web.mk_gateway.domain.mail.Empfaengertyp;
-
 /**
- * PersistenteVersandinfo
+ * PersistenterVersandauftrag
  */
 @Entity
-@Table(name = "VERSANDINFOS")
+@Table(name = "NEWSLETTER_VERSANDAUFTRAEGE")
 @NamedQueries({
 	@NamedQuery(
-		name = "PersistenteVersandinfo.FIND_FOR_NEWSLETTER",
-		query = "select v from PersistenteVersandinfo v where v.newsletterID = :newsletterID order by v.empfaengertyp"),
-	@NamedQuery(name = "PersistenteVersandinfo.FIND_BY_UUID", query = "select v from PersistenteVersandinfo v where v.uuid = :uuid")
+		name = "PersistenterVersandauftrag.FIND_FOR_NEWSLETTER",
+		query = "select v from PersistenterVersandauftrag v where v.newsletterID = :newsletterID order by v.empfaengertyp"),
+	@NamedQuery(
+		name = "PersistenterVersandauftrag.FIND_BY_UUID",
+		query = "select v from PersistenterVersandauftrag v where v.uuid = :uuid"),
+	@NamedQuery(
+		name = "PersistenterVersandauftrag.FIND_NOT_COMPLETED",
+		query = "select v from PersistenterVersandauftrag v where v.status != :statusCompleted and v.status != :statusErrors order by v.erfasstAm")
 })
-public class PersistenteVersandinfo extends ConcurrencySafeEntity {
+public class PersistenterVersandauftrag extends ConcurrencySafeEntity {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final String FIND_FOR_NEWSLETTER = "PersistenteVersandinfo.FIND_FOR_NEWSLETTER";
+	public static final String FIND_FOR_NEWSLETTER = "PersistenterVersandauftrag.FIND_FOR_NEWSLETTER";
 
-	public static final String FIND_BY_UUID = "PersistenteVersandinfo.FIND_BY_UUID";
+	public static final String FIND_BY_UUID = "PersistenterVersandauftrag.FIND_BY_UUID";
+
+	public static final String FIND_NOT_COMPLETED = "PersistenterVersandauftrag.FIND_NOT_COMPLETED";
 
 	@Column(name = "NEWSLETTER_UUID")
 	private String newsletterID;
@@ -41,6 +48,13 @@ public class PersistenteVersandinfo extends ConcurrencySafeEntity {
 	@Column(name = "EMPFAENGERTYP")
 	@Enumerated(EnumType.STRING)
 	private Empfaengertyp empfaengertyp;
+
+	@Column(name = "STATUS")
+	@Enumerated(EnumType.STRING)
+	private StatusAuslieferung status;
+
+	@Column(name = "ERFASST_AM")
+	private LocalDateTime erfasstAm;
 
 	@Column(name = "VERSAND_BEGONNEN_AM")
 	private LocalDateTime versandBegonnenAm;
@@ -125,6 +139,26 @@ public class PersistenteVersandinfo extends ConcurrencySafeEntity {
 	public void setVersandMitFehlern(final boolean versandMitFehlern) {
 
 		this.versandMitFehlern = versandMitFehlern;
+	}
+
+	public StatusAuslieferung getStatus() {
+
+		return status;
+	}
+
+	public void setStatus(final StatusAuslieferung status) {
+
+		this.status = status;
+	}
+
+	public LocalDateTime getErfasstAm() {
+
+		return erfasstAm;
+	}
+
+	public void setErfasstAm(final LocalDateTime erfasstAm) {
+
+		this.erfasstAm = erfasstAm;
 	}
 
 }

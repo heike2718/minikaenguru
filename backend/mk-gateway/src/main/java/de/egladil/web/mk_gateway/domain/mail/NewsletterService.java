@@ -8,12 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.enterprise.event.Event;
-import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +23,11 @@ import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandFinished;
 import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandProgress;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterMailinfoService;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.NewsletterHibernateRepository;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.event.Event;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 /**
  * NewsletterService
@@ -42,7 +41,7 @@ public class NewsletterService {
 	NewsletterRepository newsletterRepositiory;
 
 	@Inject
-	VersandinfoService versandinfoService;
+	NewsletterAuftraegeService versandinfoService;
 
 	@Inject
 	ScheduleNewsletterDelegate scheduleNewsletterDelegate;
@@ -54,9 +53,6 @@ public class NewsletterService {
 	AdminMailService mailService;
 
 	@Inject
-	ConcurrentSendMailDelegate sendMailDelegate;
-
-	@Inject
 	Event<NewsletterversandFailed> versandFailedEvent;
 
 	@Inject
@@ -65,7 +61,7 @@ public class NewsletterService {
 	@Inject
 	Event<NewsletterversandProgress> versandProgress;
 
-	public static NewsletterService createForTest(final NewsletterRepository newsletterRepository, final VersandinfoService versandinfoService, final VeranstalterMailinfoService veranstalterMailinfoService, final AdminMailService mailService) {
+	public static NewsletterService createForTest(final NewsletterRepository newsletterRepository, final NewsletterAuftraegeService versandinfoService, final VeranstalterMailinfoService veranstalterMailinfoService, final AdminMailService mailService) {
 
 		NewsletterService result = new NewsletterService();
 		result.newsletterRepositiory = newsletterRepository;
@@ -81,11 +77,10 @@ public class NewsletterService {
 
 		NewsletterService result = new NewsletterService();
 		result.newsletterRepositiory = NewsletterHibernateRepository.createForIntegrationTest(entityManager);
-		result.versandinfoService = VersandinfoService.createForIntegrationTest(entityManager);
+		result.versandinfoService = NewsletterAuftraegeService.createForIntegrationTest(entityManager);
 		result.scheduleNewsletterDelegate = ScheduleNewsletterDelegate.createForIntegrationTest(entityManager);
 		result.veranstalterMailinfoService = VeranstalterMailinfoService.createForIntegrationTest(entityManager);
 		result.mailService = AdminMailService.createForTest(result.veranstalterMailinfoService.getMailConfiguration());
-		result.sendMailDelegate = new ConcurrentSendMailDelegate();
 		return result;
 	}
 
@@ -106,7 +101,7 @@ public class NewsletterService {
 
 		newsletters.stream().forEach(nl -> {
 
-			addTheVersantinfosNewsletter(nl);
+			addTheVersandinfosNewsletter(nl);
 			result.add(NewsletterAPIModel.createFromNewsletter(nl));
 
 		});
@@ -114,9 +109,10 @@ public class NewsletterService {
 		return result;
 	}
 
-	private void addTheVersantinfosNewsletter(final Newsletter newsletter) {
+	// FIXME: keine Ahnung, was das soll
+	private void addTheVersandinfosNewsletter(final Newsletter newsletter) {
 
-		List<Versandinformation> versandinfos = versandinfoService.getVersandinformationenZuNewsletter(newsletter.identifier());
+		List<Versandauftrag> versandinfos = versandinfoService.getVersandinformationenZuNewsletter(newsletter.identifier());
 
 		versandinfos.stream().forEach(i -> newsletter.addIdVersandinformation(i.identifier()));
 
@@ -145,19 +141,19 @@ public class NewsletterService {
 		} else {
 
 			persistierter = newsletterRepositiory.updateNewsletter(newsletter.withIdentifier(new Identifier(model.uuid())));
-			this.addTheVersantinfosNewsletter(persistierter);
+			this.addTheVersandinfosNewsletter(persistierter);
 		}
 
 		return NewsletterAPIModel.createFromNewsletter(persistierter);
 	}
 
 	/**
-	 * Startet den Mailversand asynchron.
+	 * Erzeugt einen neuen Versandauftrag mit zugehörigen Auslieferungen.
 	 *
 	 * @param  auftrag
 	 * @return         ResponsePayload
 	 */
-	public ResponsePayload scheduleAndStartMailversand(final NewsletterVersandauftrag auftrag) {
+	public ResponsePayload createVersandauftrag(final NewsletterVersandauftrag auftrag) {
 
 		Optional<Newsletter> optNewsletter = this.newsletterRepositiory.ofId(new Identifier(auftrag.newsletterID()));
 
@@ -165,7 +161,7 @@ public class NewsletterService {
 
 			String fehlermeldung = "kein Newsletter mit UUID=" + auftrag.newsletterID() + " vorhanden";
 
-			Versandinformation finished = this.createFinishedVersandinfo(auftrag).withFehlermeldung(fehlermeldung);
+			Versandauftrag finished = this.createFinishedVersandinfo(auftrag).withFehlermeldung(fehlermeldung);
 
 			return new ResponsePayload(MessagePayload.error(
 				fehlermeldung),
@@ -177,14 +173,14 @@ public class NewsletterService {
 
 		if (mailempfaengerGruppen.isEmpty()) {
 
-			Versandinformation finished = this.createFinishedVersandinfo(auftrag);
+			Versandauftrag finished = this.createFinishedVersandinfo(auftrag);
 
 			return new ResponsePayload(MessagePayload.warn(
 				"Keine Empfängeradressen für " + auftrag.emfaengertyp() + " gefunden."),
 				VersandinfoAPIModel.createFromVersandinfo(finished));
 		}
 
-		Versandinformation versandinformation = null;
+		Versandauftrag versandinformation = null;
 
 		try {
 
@@ -215,7 +211,7 @@ public class NewsletterService {
 		Newsletter newsletter = optNewsletter.get();
 		NewsletterTask task = new NewsletterTask(this, newsletter, versandinformation, mailempfaengerGruppen);
 
-		sendMailDelegate.mailsVersenden(task, versandinformation);
+		// sendMailDelegate.mailsVersenden(task, versandinformation);
 
 		return new ResponsePayload(MessagePayload.info(
 			"Versand an " + versandinformation.empfaengertyp() + " begonnen "),
@@ -233,14 +229,14 @@ public class NewsletterService {
 	 * Erzeugt eine transiente beendete Versandiformation bei leerer Empfängerliste.
 	 *
 	 * @param  versandinformation
-	 *                            Versandinformation
-	 * @return                    Versandinformation
+	 *                            Versandauftrag
+	 * @return                    Versandauftrag
 	 */
-	Versandinformation createFinishedVersandinfo(final NewsletterVersandauftrag auftrag) {
+	Versandauftrag createFinishedVersandinfo(final NewsletterVersandauftrag auftrag) {
 
 		String jetzt = CommonTimeUtils.format(CommonTimeUtils.now());
 
-		Versandinformation result = new Versandinformation().withIdentifier(new Identifier("neu"))
+		Versandauftrag result = new Versandauftrag().withIdentifier(new Identifier("neu"))
 			.withNewsletterID(new Identifier(auftrag.newsletterID())).withAnzahlEmpaenger(0).withAnzahlAktuellVersendet(0)
 			.withVersandBegonnenAm(jetzt)
 			.withVersandBeendetAm(jetzt);

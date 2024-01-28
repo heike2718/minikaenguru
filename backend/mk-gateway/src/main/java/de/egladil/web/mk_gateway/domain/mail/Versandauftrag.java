@@ -15,10 +15,10 @@ import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.semantik.AggregateRoot;
 
 /**
- * Versandinformation
+ * Versandauftrag ist ein Auftrag zur Versendung eines Newsletters. Er wird von sogenannten NewsletterAuslieferungen referenziert.
  */
 @AggregateRoot
-public class Versandinformation {
+public class Versandauftrag {
 
 	@JsonProperty
 	private Identifier identifier;
@@ -36,6 +36,12 @@ public class Versandinformation {
 	private int anzahlEmpaenger;
 
 	@JsonProperty
+	private StatusAuslieferung status;
+
+	@JsonProperty
+	private String erfasstAm;
+
+	@JsonProperty
 	private String versandBegonnenAm;
 
 	@JsonProperty
@@ -44,9 +50,9 @@ public class Versandinformation {
 	@JsonProperty
 	private String fehlermeldung;
 
-	public static Versandinformation copy(final Versandinformation source) {
+	public static Versandauftrag copy(final Versandauftrag source) {
 
-		Versandinformation target = new Versandinformation();
+		Versandauftrag target = new Versandauftrag();
 		target.anzahlAktuellVersendet = source.anzahlAktuellVersendet;
 		target.anzahlEmpaenger = source.anzahlEmpaenger;
 		target.empfaengertyp = source.empfaengertyp;
@@ -81,14 +87,14 @@ public class Versandinformation {
 
 			return false;
 		}
-		Versandinformation other = (Versandinformation) obj;
+		Versandauftrag other = (Versandauftrag) obj;
 		return Objects.equals(identifier, other.identifier);
 	}
 
 	@Override
 	public String toString() {
 
-		return "Versandinformation [identifier=" + identifier + ", newsletterID=" + newsletterID + ", empfaengertyp="
+		return "Versandauftrag [identifier=" + identifier + ", newsletterID=" + newsletterID + ", empfaengertyp="
 			+ empfaengertyp + ", versandBegonnenAm=" + versandBegonnenAm + ", versandBeendetAm=" + versandBeendetAm + "]";
 	}
 
@@ -97,7 +103,7 @@ public class Versandinformation {
 		return identifier;
 	}
 
-	public Versandinformation withIdentifier(final Identifier identifier) {
+	public Versandauftrag withIdentifier(final Identifier identifier) {
 
 		if (this.identifier != null && !this.identifier.equals(identifier)) {
 
@@ -117,7 +123,7 @@ public class Versandinformation {
 		return newsletterID;
 	}
 
-	public Versandinformation withNewsletterID(final Identifier newsletterID) {
+	public Versandauftrag withNewsletterID(final Identifier newsletterID) {
 
 		this.newsletterID = newsletterID;
 		return this;
@@ -128,7 +134,7 @@ public class Versandinformation {
 		return empfaengertyp;
 	}
 
-	public Versandinformation withEmpfaengertyp(final Empfaengertyp empfaengertyp) {
+	public Versandauftrag withEmpfaengertyp(final Empfaengertyp empfaengertyp) {
 
 		if (this.empfaengertyp != null && this.empfaengertyp != empfaengertyp) {
 
@@ -144,10 +150,15 @@ public class Versandinformation {
 		return anzahlAktuellVersendet;
 	}
 
-	public Versandinformation withAnzahlAktuellVersendet(final int anzahlAktuellVersendet) {
+	public Versandauftrag withAnzahlAktuellVersendet(final int anzahlAktuellVersendet) {
 
 		this.anzahlAktuellVersendet = anzahlAktuellVersendet;
 		return this;
+	}
+
+	public void setAnzahlAktuellVersendet(final int anzahlAktuellVersendet) {
+
+		this.anzahlAktuellVersendet = anzahlAktuellVersendet;
 	}
 
 	public int anzahlEmpaenger() {
@@ -155,7 +166,7 @@ public class Versandinformation {
 		return anzahlEmpaenger;
 	}
 
-	public Versandinformation withAnzahlEmpaenger(final int anzahlEmpaenger) {
+	public Versandauftrag withAnzahlEmpaenger(final int anzahlEmpaenger) {
 
 		this.anzahlEmpaenger = anzahlEmpaenger;
 		return this;
@@ -166,7 +177,7 @@ public class Versandinformation {
 		return versandBegonnenAm;
 	}
 
-	public Versandinformation withVersandBegonnenAm(final String versandBegonnenAm) {
+	public Versandauftrag withVersandBegonnenAm(final String versandBegonnenAm) {
 
 		this.versandBegonnenAm = versandBegonnenAm;
 		return this;
@@ -177,7 +188,7 @@ public class Versandinformation {
 		return versandBeendetAm;
 	}
 
-	public Versandinformation withVersandBeendetAm(final String versandBeendetAm) {
+	public Versandauftrag withVersandBeendetAm(final String versandBeendetAm) {
 
 		this.versandBeendetAm = versandBeendetAm;
 		return this;
@@ -188,9 +199,36 @@ public class Versandinformation {
 		return fehlermeldung;
 	}
 
-	public Versandinformation withFehlermeldung(final String fehlermeldung) {
+	public Versandauftrag withFehlermeldung(final String fehlermeldung) {
 
 		this.fehlermeldung = fehlermeldung;
+		return this;
+	}
+
+	public StatusAuslieferung getStatus() {
+
+		return status;
+	}
+
+	public Versandauftrag withStatus(final StatusAuslieferung status) {
+
+		this.status = status;
+		return this;
+	}
+
+	public void setStatus(final StatusAuslieferung status) {
+
+		this.status = status;
+	}
+
+	public String getErfasstAm() {
+
+		return erfasstAm;
+	}
+
+	public Versandauftrag withErfasstAm(final String erfasstAm) {
+
+		this.erfasstAm = erfasstAm;
 		return this;
 	}
 
@@ -205,4 +243,10 @@ public class Versandinformation {
 
 		return StringUtils.isNotBlank(versandBeendetAm);
 	}
+
+	public void setVersandBeendetAm(final String versandBeendetAm) {
+
+		this.versandBeendetAm = versandBeendetAm;
+	}
+
 }

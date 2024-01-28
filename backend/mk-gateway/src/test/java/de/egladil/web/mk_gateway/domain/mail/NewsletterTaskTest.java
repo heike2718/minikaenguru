@@ -23,7 +23,7 @@ import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterMailinfoService
  */
 public class NewsletterTaskTest extends AbstractDomainServiceTest {
 
-	private VersandinfoService versandinfoService;
+	private NewsletterAuftraegeService versandinfoService;
 
 	private VeranstalterMailinfoService veranstalterMailinfoService;
 
@@ -36,7 +36,7 @@ public class NewsletterTaskTest extends AbstractDomainServiceTest {
 		super.setUp();
 
 		mailConfiguration = AdminEmailsConfiguration.createForTest("hdwinkel@egladil.de", 3);
-		versandinfoService = VersandinfoService.createForTest(getVersandinfosRepository());
+		versandinfoService = NewsletterAuftraegeService.createForTest(getVersandinfosRepository());
 		veranstalterMailinfoService = VeranstalterMailinfoService.createForTest(getVeranstalterRepository(), mailConfiguration);
 	}
 
@@ -53,13 +53,13 @@ public class NewsletterTaskTest extends AbstractDomainServiceTest {
 		List<List<String>> mailempfaengerGruppen = veranstalterMailinfoService
 			.getMailempfaengerGroups(Empfaengertyp.PRIVATVERANSTALTER);
 
-		Versandinformation versandinfo = getVersandinfosRepository().ofId(new Identifier(VERSANDINFO_PRIVATVERANSTALTER_UUID))
+		Versandauftrag versandinfo = getVersandinfosRepository().ofId(new Identifier(VERSANDINFO_PRIVATVERANSTALTER_UUID))
 			.get();
 
 		NewsletterTask task = new NewsletterTask(newsletterService, newsletter, versandinfo, mailempfaengerGruppen);
 
 		// Act
-		Versandinformation result = task.call();
+		Versandauftrag result = task.call();
 
 		// Assert
 		assertEquals(6, result.anzahlEmpaenger());
@@ -77,7 +77,7 @@ public class NewsletterTaskTest extends AbstractDomainServiceTest {
 		NewsletterService newsletterService = NewsletterService.createForTest(getNewsletterRepository(), versandinfoService,
 			veranstalterMailinfoService, adminMailservice);
 
-		Versandinformation versandinfo = getVersandinfosRepository().ofId(new Identifier(VERSANDINFO_PRIVATVERANSTALTER_UUID))
+		Versandauftrag versandinfo = getVersandinfosRepository().ofId(new Identifier(VERSANDINFO_PRIVATVERANSTALTER_UUID))
 			.get();
 
 		Newsletter newsletter = getNewsletterRepository().ofId(new Identifier(NEWSLETTER_PRIVATVERANSTALTER_UUID)).get();
@@ -107,7 +107,7 @@ public class NewsletterTaskTest extends AbstractDomainServiceTest {
 		NewsletterService newsletterService = NewsletterService.createForTest(getNewsletterRepository(), versandinfoService,
 			veranstalterMailinfoService, adminMailservice);
 
-		Versandinformation versandinfo = getVersandinfosRepository().ofId(new Identifier(VERSANDINFO_PRIVATVERANSTALTER_UUID))
+		Versandauftrag versandinfo = getVersandinfosRepository().ofId(new Identifier(VERSANDINFO_PRIVATVERANSTALTER_UUID))
 			.get();
 
 		Newsletter newsletter = getNewsletterRepository().ofId(new Identifier(NEWSLETTER_PRIVATVERANSTALTER_UUID)).get();

@@ -15,27 +15,27 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.mail.Versandinformation;
-import de.egladil.web.mk_gateway.domain.mail.VersandinformationenRepository;
+import de.egladil.web.mk_gateway.domain.mail.Versandauftrag;
+import de.egladil.web.mk_gateway.domain.mail.VersandauftraegeRepository;
 
 /**
- * InMemoryVersandinfosRepository
+ * InMemoryVersandauftraegeRepository
  */
-public class InMemoryVersandinfosRepository implements VersandinformationenRepository {
+public class InMemoryVersandauftraegeRepository implements VersandauftraegeRepository {
 
-	private final List<Versandinformation> versandinfos = new ArrayList<>();
+	private final List<Versandauftrag> versandinfos = new ArrayList<>();
 
 	private int versandinfoAdded = 0;
 
 	private int versandinfoChanged = 0;
 
-	public InMemoryVersandinfosRepository() {
+	public InMemoryVersandauftraegeRepository() {
 
 		try (InputStream in = getClass().getResourceAsStream("/versandinformationen.json")) {
 
 			ObjectMapper objectMapper = new ObjectMapper();
 
-			Versandinformation[] list = objectMapper.readValue(in, Versandinformation[].class);
+			Versandauftrag[] list = objectMapper.readValue(in, Versandauftrag[].class);
 
 			Arrays.stream(list).forEach(l -> versandinfos.add(l));
 
@@ -46,19 +46,19 @@ public class InMemoryVersandinfosRepository implements VersandinformationenRepos
 	}
 
 	@Override
-	public List<Versandinformation> findForNewsletter(final Identifier newsletterID) {
+	public List<Versandauftrag> findForNewsletter(final Identifier newsletterID) {
 
 		return versandinfos.stream().filter(i -> newsletterID.equals(i.newsletterID())).collect(Collectors.toList());
 	}
 
 	@Override
-	public Optional<Versandinformation> ofId(final Identifier identifier) {
+	public Optional<Versandauftrag> ofId(final Identifier identifier) {
 
 		return versandinfos.stream().filter(i -> identifier.equals(i.identifier())).findFirst();
 	}
 
 	@Override
-	public Versandinformation addVersandinformation(final Versandinformation versandinformation) {
+	public Versandauftrag addVersandinformation(final Versandauftrag versandinformation) {
 
 		Identifier neueId = new Identifier(UUID.randomUUID().toString());
 
@@ -74,9 +74,9 @@ public class InMemoryVersandinfosRepository implements VersandinformationenRepos
 	}
 
 	@Override
-	public Versandinformation updateVersandinformation(final Versandinformation versandinformation) {
+	public Versandauftrag updateVersandinformation(final Versandauftrag versandinformation) {
 
-		Optional<Versandinformation> optVorhandene = this.ofId(versandinformation.identifier());
+		Optional<Versandauftrag> optVorhandene = this.ofId(versandinformation.identifier());
 
 		if (optVorhandene.isPresent()) {
 
@@ -91,7 +91,7 @@ public class InMemoryVersandinfosRepository implements VersandinformationenRepos
 	@Override
 	public int removeAll(final Identifier newsletterID) {
 
-		List<Versandinformation> mitNewsletter = this.findForNewsletter(newsletterID);
+		List<Versandauftrag> mitNewsletter = this.findForNewsletter(newsletterID);
 
 		versandinfos.removeAll(mitNewsletter);
 
@@ -106,6 +106,12 @@ public class InMemoryVersandinfosRepository implements VersandinformationenRepos
 	public int getVersandinfoChanged() {
 
 		return versandinfoChanged;
+	}
+
+	@Override
+	public List<Versandauftrag> findNichtBeendeteVersandinfos() {
+
+		return new ArrayList<>();
 	}
 
 }

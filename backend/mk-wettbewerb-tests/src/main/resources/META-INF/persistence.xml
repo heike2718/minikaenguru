@@ -22,7 +22,7 @@
 		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistentesSchulkollegium</class>
 		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenteTeilnahme</class>
 		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload</class>
-		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenteVersandinfo</class>
+		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterVersandauftrag</class>
 		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.StoredEvent</class>
 		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.UploadsMonitoringViewItem</class>
 		<class>de.egladil.web.mk_gateway.infrastructure.persistence.entities.User</class>

@@ -31,7 +31,7 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemorySc
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryTeilnahmenRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryUserRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryVeranstalterRepository;
-import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryVersandinfosRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryVersandauftraegeRepository;
 
 /**
  * AbstractDomainServiceTest
@@ -120,7 +120,7 @@ public abstract class AbstractDomainServiceTest {
 
 	private InMemoryNewsletterRepository newsletterRepository;
 
-	private InMemoryVersandinfosRepository versandinfosRepository;
+	private InMemoryVersandauftraegeRepository versandinfosRepository;
 
 	private int countWettbewerbInsert = 0;
 
@@ -270,7 +270,7 @@ public abstract class AbstractDomainServiceTest {
 		};
 
 		newsletterRepository = new InMemoryNewsletterRepository();
-		versandinfosRepository = new InMemoryVersandinfosRepository();
+		versandinfosRepository = new InMemoryVersandauftraegeRepository();
 
 	}
 
@@ -374,7 +374,7 @@ public abstract class AbstractDomainServiceTest {
 		return newsletterRepository;
 	}
 
-	protected InMemoryVersandinfosRepository getVersandinfosRepository() {
+	protected InMemoryVersandauftraegeRepository getVersandinfosRepository() {
 
 		return versandinfosRepository;
 	}

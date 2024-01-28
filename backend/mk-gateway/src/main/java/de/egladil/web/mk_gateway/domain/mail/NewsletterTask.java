@@ -11,8 +11,6 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import jakarta.enterprise.event.Event;
-
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,18 +23,20 @@ import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandFailed;
 import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandFinished;
 import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandProgress;
+import jakarta.enterprise.event.Event;
 
 /**
  * NewsletterTask
  */
 // Wenn man ein Future verwendet, wartet der Endpoint bis das Teil fertig ist. Daher Runnable!
+@Deprecated
 public class NewsletterTask implements Runnable {
 
 	private static final Logger LOG = LoggerFactory.getLogger(NewsletterTask.class);
 
 	private final Newsletter newsletter;
 
-	private final Versandinformation versandinformation;
+	private final Versandauftrag versandinformation;
 
 	private final List<List<String>> mailempfaengerGruppen;
 
@@ -48,7 +48,7 @@ public class NewsletterTask implements Runnable {
 
 	private final Event<NewsletterversandFinished> versandFinished;
 
-	public NewsletterTask(final NewsletterService newsletterService, final Newsletter newsletter, final Versandinformation versandinformation, final List<List<String>> mailempfaengerGruppen) {
+	public NewsletterTask(final NewsletterService newsletterService, final Newsletter newsletter, final Versandauftrag versandinformation, final List<List<String>> mailempfaengerGruppen) {
 
 		this.mailService = newsletterService.mailService;
 		this.versandFailedEvent = newsletterService.versandFailedEvent;
@@ -74,7 +74,7 @@ public class NewsletterTask implements Runnable {
 
 	}
 
-	public Versandinformation call() throws Exception {
+	public Versandauftrag call() throws Exception {
 
 		int count = 0;
 		int anzahlEmpfaenger = new Mailempfaengerzaehler().apply(mailempfaengerGruppen);

@@ -1,3 +1,20 @@
+28.01.2024
+--------------------
+
+Umstellung Newsletterversand auf quarkus_scheduler:
+
+Der Service, der auf den beiden Tabellen NEWSLETTER_... arbeitet, ist fertig
+
+offen:
+
+- der Teil, der die Einträge generiert
+- der Teil, der das Housekeeping macht, also completed-Zeug entfernt
+- der Teil, der den Status des Versands über die API zur Verfügung stellt muss komplett umgebaut werden
+- Im frontend soll es eine neue Maske zum Thema Newsletterversand geben, die alle Aufträge anzeigt
+- das Pollen soll weg
+
+
+
 xx.09.2023
 -----------------
 - a300: mk-kataloge startet nicht: flyway

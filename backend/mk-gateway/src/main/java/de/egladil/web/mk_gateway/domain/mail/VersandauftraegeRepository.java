@@ -10,9 +10,9 @@ import java.util.Optional;
 import de.egladil.web.mk_gateway.domain.Identifier;
 
 /**
- * VersandinformationenRepository
+ * VersandauftraegeRepository
  */
-public interface VersandinformationenRepository {
+public interface VersandauftraegeRepository {
 
 	/**
 	 * Gibt alle Versandinformationen zum gegebenen Newsletter zurück.
@@ -21,33 +21,33 @@ public interface VersandinformationenRepository {
 	 *                      Identifier
 	 * @return              List
 	 */
-	List<Versandinformation> findForNewsletter(Identifier newsletterID);
+	List<Versandauftrag> findForNewsletter(Identifier newsletterID);
 
 	/**
-	 * Gibt eine Versandinformation mit einer ID zurück.
+	 * Gibt eine Versandauftrag mit einer ID zurück.
 	 *
 	 * @param  identifier
 	 *                    Identifier
 	 * @return            Optional
 	 */
-	Optional<Versandinformation> ofId(Identifier identifier);
+	Optional<Versandauftrag> ofId(Identifier identifier);
 
 	/**
-	 * Speichert eine neue Versandinformation und gibt sie mit der generierten ID zurück.
+	 * Speichert eine neue Versandauftrag und gibt sie mit der generierten ID zurück.
 	 *
 	 * @param  versandinformation
-	 *                            Versandinformation
-	 * @return                    Versandinformation
+	 *                            Versandauftrag
+	 * @return                    Versandauftrag
 	 */
-	Versandinformation addVersandinformation(Versandinformation versandinformation);
+	Versandauftrag addVersandinformation(Versandauftrag versandinformation);
 
 	/**
-	 * Ändert eine vorhandene Versandinformation und gibt die geänderte zurück.
+	 * Ändert eine vorhandene Versandauftrag und gibt die geänderte zurück.
 	 *
 	 * @param  versandinformation
 	 * @return
 	 */
-	Versandinformation updateVersandinformation(Versandinformation versandinformation);
+	Versandauftrag updateVersandinformation(Versandauftrag versandinformation);
 
 	/**
 	 * Löscht alle Versandinformationen, die den gegebenen Newsletter referenzieren.
@@ -57,5 +57,12 @@ public interface VersandinformationenRepository {
 	 * @return              int die Anzahl der gelöschten Versandinformationen.
 	 */
 	int removeAll(Identifier newsletterID);
+
+	/**
+	 * Gibt eine Liste aller nicht beendeten Auslieferungen.
+	 *
+	 * @return List
+	 */
+	List<Versandauftrag> findNichtBeendeteVersandinfos();
 
 }

@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -18,8 +17,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
-import jakarta.inject.Inject;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -32,8 +29,9 @@ import de.egladil.web.mk_gateway.domain.mail.api.NewsletterAPIModel;
 import de.egladil.web.mk_gateway.domain.mail.api.NewsletterVersandauftrag;
 import de.egladil.web.mk_gateway.domain.mail.api.VersandinfoAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterMailinfoService;
-import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
+import io.quarkus.test.junit.QuarkusTest;
+import jakarta.inject.Inject;
 
 /**
  * NewsletterServiceTest
@@ -47,7 +45,7 @@ public class NewsletterServiceTest {
 	NewsletterRepository newsletterRepositiory;
 
 	@InjectMock
-	VersandinfoService versandinfoService;
+	NewsletterAuftraegeService versandinfoService;
 
 	@InjectMock
 	ScheduleNewsletterDelegate scheduleNewsletterDelegate;
@@ -57,9 +55,6 @@ public class NewsletterServiceTest {
 
 	@InjectMock
 	AdminMailService mailService;
-
-	@InjectMock
-	ConcurrentSendMailDelegate sendMailDelegate;
 
 	@Inject
 	NewsletterService newsletterService;
@@ -85,10 +80,10 @@ public class NewsletterServiceTest {
 		newsletters.add(new Newsletter().withBetreff("Betreff 2").withIdentifier(newsletterID2)
 			.withText("Text 2"));
 
-		List<Versandinformation> versandinfosNL1 = new ArrayList<>();
+		List<Versandauftrag> versandinfosNL1 = new ArrayList<>();
 
 		versandinfosNL1.add(
-			new Versandinformation().withAnzahlAktuellVersendet(35).withAnzahlEmpaenger(35).withEmpfaengertyp(Empfaengertyp.LEHRER)
+			new Versandauftrag().withAnzahlAktuellVersendet(35).withAnzahlEmpaenger(35).withEmpfaengertyp(Empfaengertyp.LEHRER)
 				.withIdentifier(new Identifier("VERSANDINFO-NL1")).withNewsletterID(newsletterID1)
 				.withVersandBeendetAm("30.07.2021 10:45:20"));
 
@@ -125,7 +120,7 @@ public class NewsletterServiceTest {
 
 			final Identifier versandinfoID = new Identifier("VERSANDINFO_LEHRER_UUID");
 
-			Versandinformation neueVersandinformation = new Versandinformation().withEmpfaengertyp(empfaengertyp)
+			Versandauftrag neueVersandinformation = new Versandauftrag().withEmpfaengertyp(empfaengertyp)
 				.withNewsletterID(newsletterID).withIdentifier(versandinfoID);
 
 			when(veranstalterMailinfoService.getMailempfaengerGroups(empfaengertyp)).thenReturn(empfaengergruppen);
@@ -135,17 +130,17 @@ public class NewsletterServiceTest {
 			NewsletterTask newsletterTask = new NewsletterTask(newsletterService, newsletter, neueVersandinformation,
 				Collections.emptyList());
 
-			doAnswer(invocation -> {
-
-				Versandinformation arg1 = invocation.getArgument(1);
-
-				assertEquals(versandinfoID, arg1.identifier());
-				return null;
-
-			}).when(sendMailDelegate).mailsVersenden(newsletterTask, neueVersandinformation);
+			// doAnswer(invocation -> {
+			//
+			// Versandauftrag arg1 = invocation.getArgument(1);
+			//
+			// assertEquals(versandinfoID, arg1.identifier());
+			// return null;
+			//
+			// }).when(sendMailDelegate).mailsVersenden(newsletterTask, neueVersandinformation);
 
 			// Act
-			ResponsePayload responsePayload = newsletterService.scheduleAndStartMailversand(auftrag);
+			ResponsePayload responsePayload = newsletterService.createVersandauftrag(auftrag);
 
 			// Assert
 			VersandinfoAPIModel model = (VersandinfoAPIModel) responsePayload.getData();
@@ -161,7 +156,7 @@ public class NewsletterServiceTest {
 			verify(scheduleNewsletterDelegate).scheduleMailversand(auftrag);
 			verify(veranstalterMailinfoService).getMailempfaengerGroups(empfaengertyp);
 			verify(newsletterRepositiory).ofId(newsletterID);
-			verify(sendMailDelegate).mailsVersenden(newsletterTask, neueVersandinformation);
+			// verify(sendMailDelegate).mailsVersenden(newsletterTask, neueVersandinformation);
 		}
 
 		@Test
@@ -177,7 +172,7 @@ public class NewsletterServiceTest {
 
 			final Identifier versandinfoID = new Identifier("VERSANDINFO_LEHRER_UUID");
 
-			Versandinformation neueVersandinformation = new Versandinformation().withEmpfaengertyp(empfaengertyp)
+			Versandauftrag neueVersandinformation = new Versandauftrag().withEmpfaengertyp(empfaengertyp)
 				.withNewsletterID(newsletterID).withIdentifier(versandinfoID).withVersandBegonnenAm("12.08.2021 00:00:00")
 				.withVersandBeendetAm("12.08.2021 00:03:10");
 
@@ -189,7 +184,7 @@ public class NewsletterServiceTest {
 				Collections.emptyList());
 
 			// Act
-			ResponsePayload responsePayload = newsletterService.scheduleAndStartMailversand(auftrag);
+			ResponsePayload responsePayload = newsletterService.createVersandauftrag(auftrag);
 
 			// Assert
 			VersandinfoAPIModel model = (VersandinfoAPIModel) responsePayload.getData();
@@ -205,7 +200,7 @@ public class NewsletterServiceTest {
 			verify(scheduleNewsletterDelegate).scheduleMailversand(auftrag);
 			verify(veranstalterMailinfoService).getMailempfaengerGroups(empfaengertyp);
 			verify(newsletterRepositiory).ofId(newsletterID);
-			verify(sendMailDelegate, never()).mailsVersenden(newsletterTask, neueVersandinformation);
+			// verify(sendMailDelegate, never()).mailsVersenden(newsletterTask, neueVersandinformation);
 		}
 
 		@Test
@@ -222,7 +217,7 @@ public class NewsletterServiceTest {
 
 			final Identifier versandinfoID = new Identifier("VERSANDINFO_LEHRER_UUID");
 
-			Versandinformation neueVersandinformation = new Versandinformation().withEmpfaengertyp(empfaengertyp)
+			Versandauftrag neueVersandinformation = new Versandauftrag().withEmpfaengertyp(empfaengertyp)
 				.withNewsletterID(newsletterID).withIdentifier(versandinfoID);
 
 			NewsletterTask newsletterTask = new NewsletterTask(newsletterService, newsletter, neueVersandinformation,
@@ -231,14 +226,14 @@ public class NewsletterServiceTest {
 			when(newsletterRepositiory.ofId(newsletterID)).thenReturn(Optional.empty());
 
 			// Act
-			ResponsePayload responsePayload = newsletterService.scheduleAndStartMailversand(auftrag);
+			ResponsePayload responsePayload = newsletterService.createVersandauftrag(auftrag);
 
 			// Assert
 			MessagePayload messagePayload = responsePayload.getMessage();
 
 			verify(scheduleNewsletterDelegate, never()).scheduleMailversand(auftrag);
 			verify(newsletterRepositiory).ofId(newsletterID);
-			verify(sendMailDelegate, never()).mailsVersenden(newsletterTask, neueVersandinformation);
+			// verify(sendMailDelegate, never()).mailsVersenden(newsletterTask, neueVersandinformation);
 			verify(veranstalterMailinfoService, never()).getMailempfaengerGroups(empfaengertyp);
 
 			assertEquals("kein Newsletter mit UUID=NEWSLETTER_LEHRER_UUID vorhanden", messagePayload.getMessage());
@@ -268,7 +263,7 @@ public class NewsletterServiceTest {
 
 			final Identifier versandinfoID = new Identifier("VERSANDINFO_LEHRER_UUID");
 
-			Versandinformation neueVersandinformation = new Versandinformation().withEmpfaengertyp(empfaengertyp)
+			Versandauftrag neueVersandinformation = new Versandauftrag().withEmpfaengertyp(empfaengertyp)
 				.withNewsletterID(newsletterID).withIdentifier(versandinfoID).withVersandBegonnenAm("12.08.2021 00:00:00")
 				.withVersandBeendetAm("12.08.2021 00:03:10");
 
@@ -279,17 +274,17 @@ public class NewsletterServiceTest {
 			NewsletterTask newsletterTask = new NewsletterTask(newsletterService, newsletter, neueVersandinformation,
 				empfaengergruppen);
 
-			doAnswer(invocation -> {
-
-				Versandinformation arg1 = invocation.getArgument(1);
-
-				assertEquals(versandinfoID, arg1.identifier());
-				return null;
-
-			}).when(sendMailDelegate).mailsVersenden(newsletterTask, neueVersandinformation);
+			// doAnswer(invocation -> {
+			//
+			// Versandauftrag arg1 = invocation.getArgument(1);
+			//
+			// assertEquals(versandinfoID, arg1.identifier());
+			// return null;
+			//
+			// }).when(sendMailDelegate).mailsVersenden(newsletterTask, neueVersandinformation);
 
 			// Act
-			ResponsePayload responsePayload = newsletterService.scheduleAndStartMailversand(auftrag);
+			ResponsePayload responsePayload = newsletterService.createVersandauftrag(auftrag);
 
 			// Assert
 			VersandinfoAPIModel model = (VersandinfoAPIModel) responsePayload.getData();
@@ -305,7 +300,7 @@ public class NewsletterServiceTest {
 			verify(scheduleNewsletterDelegate).scheduleMailversand(auftrag);
 			verify(newsletterRepositiory).ofId(newsletterID);
 			verify(veranstalterMailinfoService).getMailempfaengerGroups(empfaengertyp);
-			verify(sendMailDelegate).mailsVersenden(newsletterTask, neueVersandinformation);
+			// verify(sendMailDelegate).mailsVersenden(newsletterTask, neueVersandinformation);
 		}
 
 		@Test
@@ -321,7 +316,7 @@ public class NewsletterServiceTest {
 
 			final Identifier versandinfoID = new Identifier("VERSANDINFO_UUID");
 
-			Versandinformation neueVersandinformation = new Versandinformation().withEmpfaengertyp(empfaengertyp)
+			Versandauftrag neueVersandinformation = new Versandauftrag().withEmpfaengertyp(empfaengertyp)
 				.withIdentifier(versandinfoID).withNewsletterID(newsletterID);
 
 			NewsletterTask newsletterTask = new NewsletterTask(newsletterService, newsletter, neueVersandinformation,
@@ -334,7 +329,7 @@ public class NewsletterServiceTest {
 				.thenThrow(new RuntimeException("Exception beim Erzeugen einer Versantinformation"));
 
 			// Act
-			ResponsePayload responsePayload = newsletterService.scheduleAndStartMailversand(auftrag);
+			ResponsePayload responsePayload = newsletterService.createVersandauftrag(auftrag);
 
 			// Assert
 			VersandinfoAPIModel model = (VersandinfoAPIModel) responsePayload.getData();
@@ -354,7 +349,7 @@ public class NewsletterServiceTest {
 			verify(veranstalterMailinfoService).getMailempfaengerGroups(empfaengertyp);
 			verify(scheduleNewsletterDelegate).scheduleMailversand(auftrag);
 			verify(newsletterRepositiory).ofId(newsletterID);
-			verify(sendMailDelegate, never()).mailsVersenden(newsletterTask, neueVersandinformation);
+			// verify(sendMailDelegate, never()).mailsVersenden(newsletterTask, neueVersandinformation);
 		}
 
 		@Test
@@ -370,7 +365,7 @@ public class NewsletterServiceTest {
 
 			final Identifier versandinfoID = new Identifier("VERSANDINFO_UUID");
 
-			Versandinformation neueVersandinformation = new Versandinformation().withEmpfaengertyp(empfaengertyp)
+			Versandauftrag neueVersandinformation = new Versandauftrag().withEmpfaengertyp(empfaengertyp)
 				.withIdentifier(versandinfoID).withNewsletterID(newsletterID);
 
 			NewsletterTask newsletterTask = new NewsletterTask(newsletterService, newsletter, neueVersandinformation,
@@ -380,7 +375,7 @@ public class NewsletterServiceTest {
 			when(veranstalterMailinfoService.getMailempfaengerGroups(empfaengertyp)).thenReturn(Collections.emptyList());
 
 			// Act
-			ResponsePayload responsePayload = newsletterService.scheduleAndStartMailversand(auftrag);
+			ResponsePayload responsePayload = newsletterService.createVersandauftrag(auftrag);
 
 			// Assert
 			VersandinfoAPIModel model = (VersandinfoAPIModel) responsePayload.getData();
@@ -398,7 +393,7 @@ public class NewsletterServiceTest {
 			verify(veranstalterMailinfoService).getMailempfaengerGroups(empfaengertyp);
 			verify(scheduleNewsletterDelegate, never()).scheduleMailversand(auftrag);
 			verify(newsletterRepositiory).ofId(newsletterID);
-			verify(sendMailDelegate, never()).mailsVersenden(newsletterTask, neueVersandinformation);
+			// verify(sendMailDelegate, never()).mailsVersenden(newsletterTask, neueVersandinformation);
 
 		}
 	}
@@ -416,7 +411,7 @@ public class NewsletterServiceTest {
 			NewsletterVersandauftrag auftrag = NewsletterVersandauftrag.create(newsletterID, empfaengertyp);
 
 			// Act
-			Versandinformation result = newsletterService.createFinishedVersandinfo(auftrag);
+			Versandauftrag result = newsletterService.createFinishedVersandinfo(auftrag);
 
 			// Assert
 			assertNotNull(result.versandBegonnenAm());

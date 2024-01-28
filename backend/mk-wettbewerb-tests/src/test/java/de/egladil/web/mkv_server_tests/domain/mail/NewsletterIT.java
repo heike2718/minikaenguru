@@ -28,16 +28,16 @@ import de.egladil.web.mk_gateway.domain.mail.Empfaengertyp;
 import de.egladil.web.mk_gateway.domain.mail.Newsletter;
 import de.egladil.web.mk_gateway.domain.mail.NewsletterRepository;
 import de.egladil.web.mk_gateway.domain.mail.NewsletterService;
-import de.egladil.web.mk_gateway.domain.mail.VersandinfoService;
+import de.egladil.web.mk_gateway.domain.mail.NewsletterAuftraegeService;
 import de.egladil.web.mk_gateway.domain.mail.Versandinformation;
-import de.egladil.web.mk_gateway.domain.mail.VersandinformationenRepository;
+import de.egladil.web.mk_gateway.domain.mail.VersandauftraegeRepository;
 import de.egladil.web.mk_gateway.domain.mail.api.NewsletterAPIModel;
 import de.egladil.web.mk_gateway.domain.mail.api.NewsletterVersandauftrag;
 import de.egladil.web.mk_gateway.domain.mail.api.VersandinfoAPIModel;
 import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandFinished;
 import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandProgress;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.NewsletterHibernateRepository;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.VersandinformationenHibernateRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.VersandauftraegeHibernateRepository;
 import de.egladil.web.mkv_server_tests.AbstractIntegrationTest;
 
 /**
@@ -50,9 +50,9 @@ public class NewsletterIT extends AbstractIntegrationTest {
 
 	private NewsletterRepository newsletterRepository;
 
-	private VersandinformationenRepository versandinfoRepo;
+	private VersandauftraegeRepository versandinfoRepo;
 
-	private VersandinfoService versandinfoService;
+	private NewsletterAuftraegeService versandinfoService;
 
 	@BeforeEach
 	@Override
@@ -61,8 +61,8 @@ public class NewsletterIT extends AbstractIntegrationTest {
 		super.setUp();
 		newsletterService = NewsletterService.createForIntegrationTest(entityManager);
 		newsletterRepository = NewsletterHibernateRepository.createForIntegrationTest(entityManager);
-		versandinfoRepo = VersandinformationenHibernateRepository.createForTest(entityManager);
-		versandinfoService = VersandinfoService.createForIntegrationTest(entityManager);
+		versandinfoRepo = VersandauftraegeHibernateRepository.createForTest(entityManager);
+		versandinfoService = NewsletterAuftraegeService.createForIntegrationTest(entityManager);
 	}
 
 	@Test
@@ -454,7 +454,7 @@ public class NewsletterIT extends AbstractIntegrationTest {
 
 			trx.begin();
 
-			ResponsePayload result = newsletterService.scheduleAndStartMailversand(auftrag);
+			ResponsePayload result = newsletterService.createVersandauftrag(auftrag);
 
 			commit(trx);
 

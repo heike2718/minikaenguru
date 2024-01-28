@@ -41,7 +41,7 @@ public class ScheduleNewsletterDelegateTest {
 	public static final Identifier VERSANDINFO_ID = new Identifier("hhsfhowho");
 
 	@InjectMock
-	VersandinfoService versandinfoService;
+	NewsletterAuftraegeService versandinfoService;
 
 	@Inject
 	ScheduleNewsletterDelegate delegate;
@@ -55,17 +55,17 @@ public class ScheduleNewsletterDelegateTest {
 			// Arrange
 			NewsletterVersandauftrag auftrag = NewsletterVersandauftrag.create(NEWSLETTER_ID.identifier(), Empfaengertyp.TEST);
 
-			List<Versandinformation> vorhandene = new ArrayList<>();
+			List<Versandauftrag> vorhandene = new ArrayList<>();
 
-			Versandinformation neue = new Versandinformation()
+			Versandauftrag neue = new Versandauftrag()
 				.withEmpfaengertyp(Empfaengertyp.TEST)
 				.withNewsletterID(NEWSLETTER_ID);
 
 			Mockito.when(versandinfoService.getVersandinformationenZuNewsletter(NEWSLETTER_ID)).thenReturn(vorhandene);
-			Mockito.when(versandinfoService.versandinformationSpeichern(any())).thenReturn(neue);
+			Mockito.when(versandinfoService.versandauftragSpeichern(any())).thenReturn(neue);
 
 			// Act
-			Versandinformation versandinformation = delegate.scheduleMailversand(auftrag);
+			Versandauftrag versandinformation = delegate.scheduleMailversand(auftrag);
 
 			// Assert
 			assertEquals(0, versandinformation.anzahlAktuellVersendet());
@@ -75,7 +75,7 @@ public class ScheduleNewsletterDelegateTest {
 			assertFalse(versandinformation.bereitsVersendet());
 			assertEquals(Empfaengertyp.TEST, versandinformation.empfaengertyp());
 
-			Mockito.verify(versandinfoService, times(1)).versandinformationSpeichern(any());
+			Mockito.verify(versandinfoService, times(1)).versandauftragSpeichern(any());
 		}
 
 		@Test
@@ -84,21 +84,21 @@ public class ScheduleNewsletterDelegateTest {
 			// Arrange
 			NewsletterVersandauftrag auftrag = NewsletterVersandauftrag.create(NEWSLETTER_ID.identifier(), Empfaengertyp.TEST);
 
-			List<Versandinformation> vorhandene = new ArrayList<>();
-			Versandinformation info = new Versandinformation().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
+			List<Versandauftrag> vorhandene = new ArrayList<>();
+			Versandauftrag info = new Versandauftrag().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
 				.withEmpfaengertyp(Empfaengertyp.ALLE).withNewsletterID(NEWSLETTER_ID).withIdentifier(VERSANDINFO_ID)
 				.withVersandBeendetAm(BEENDET_AM).withVersandBegonnenAm(BEGONNEN_AM);
 			vorhandene.add(info);
 
-			Versandinformation neue = new Versandinformation()
+			Versandauftrag neue = new Versandauftrag()
 				.withEmpfaengertyp(Empfaengertyp.TEST)
 				.withNewsletterID(NEWSLETTER_ID);
 
 			Mockito.when(versandinfoService.getVersandinformationenZuNewsletter(NEWSLETTER_ID)).thenReturn(vorhandene);
-			Mockito.when(versandinfoService.versandinformationSpeichern(any())).thenReturn(neue);
+			Mockito.when(versandinfoService.versandauftragSpeichern(any())).thenReturn(neue);
 
 			// Act
-			Versandinformation versandinformation = delegate.scheduleMailversand(auftrag);
+			Versandauftrag versandinformation = delegate.scheduleMailversand(auftrag);
 
 			// Assert
 			assertEquals(0, versandinformation.anzahlAktuellVersendet());
@@ -108,7 +108,7 @@ public class ScheduleNewsletterDelegateTest {
 			assertFalse(versandinformation.bereitsVersendet());
 			assertEquals(Empfaengertyp.TEST, versandinformation.empfaengertyp());
 
-			Mockito.verify(versandinfoService, times(1)).versandinformationSpeichern(any());
+			Mockito.verify(versandinfoService, times(1)).versandauftragSpeichern(any());
 		}
 
 		@Test
@@ -117,21 +117,21 @@ public class ScheduleNewsletterDelegateTest {
 			// Arrange
 			NewsletterVersandauftrag auftrag = NewsletterVersandauftrag.create(NEWSLETTER_ID.identifier(), Empfaengertyp.TEST);
 
-			List<Versandinformation> vorhandene = new ArrayList<>();
-			Versandinformation info = new Versandinformation().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
+			List<Versandauftrag> vorhandene = new ArrayList<>();
+			Versandauftrag info = new Versandauftrag().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
 				.withEmpfaengertyp(Empfaengertyp.LEHRER).withNewsletterID(NEWSLETTER_ID).withIdentifier(VERSANDINFO_ID)
 				.withVersandBeendetAm(BEENDET_AM).withVersandBegonnenAm(BEGONNEN_AM);
 			vorhandene.add(info);
 
-			Versandinformation neue = new Versandinformation()
+			Versandauftrag neue = new Versandauftrag()
 				.withEmpfaengertyp(Empfaengertyp.TEST)
 				.withNewsletterID(NEWSLETTER_ID);
 
 			Mockito.when(versandinfoService.getVersandinformationenZuNewsletter(NEWSLETTER_ID)).thenReturn(vorhandene);
-			Mockito.when(versandinfoService.versandinformationSpeichern(any())).thenReturn(neue);
+			Mockito.when(versandinfoService.versandauftragSpeichern(any())).thenReturn(neue);
 
 			// Act
-			Versandinformation versandinformation = delegate.scheduleMailversand(auftrag);
+			Versandauftrag versandinformation = delegate.scheduleMailversand(auftrag);
 
 			// Assert
 			assertEquals(0, versandinformation.anzahlAktuellVersendet());
@@ -141,7 +141,7 @@ public class ScheduleNewsletterDelegateTest {
 			assertFalse(versandinformation.bereitsVersendet());
 			assertEquals(Empfaengertyp.TEST, versandinformation.empfaengertyp());
 
-			Mockito.verify(versandinfoService, times(1)).versandinformationSpeichern(any());
+			Mockito.verify(versandinfoService, times(1)).versandauftragSpeichern(any());
 		}
 
 		@Test
@@ -150,21 +150,21 @@ public class ScheduleNewsletterDelegateTest {
 			// Arrange
 			NewsletterVersandauftrag auftrag = NewsletterVersandauftrag.create(NEWSLETTER_ID.identifier(), Empfaengertyp.TEST);
 
-			List<Versandinformation> vorhandene = new ArrayList<>();
-			Versandinformation info = new Versandinformation().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
+			List<Versandauftrag> vorhandene = new ArrayList<>();
+			Versandauftrag info = new Versandauftrag().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
 				.withEmpfaengertyp(Empfaengertyp.PRIVATVERANSTALTER).withNewsletterID(NEWSLETTER_ID).withIdentifier(VERSANDINFO_ID)
 				.withVersandBeendetAm(BEENDET_AM).withVersandBegonnenAm(BEGONNEN_AM);
 			vorhandene.add(info);
 
-			Versandinformation neue = new Versandinformation()
+			Versandauftrag neue = new Versandauftrag()
 				.withEmpfaengertyp(Empfaengertyp.TEST)
 				.withNewsletterID(NEWSLETTER_ID);
 
 			Mockito.when(versandinfoService.getVersandinformationenZuNewsletter(NEWSLETTER_ID)).thenReturn(vorhandene);
-			Mockito.when(versandinfoService.versandinformationSpeichern(any())).thenReturn(neue);
+			Mockito.when(versandinfoService.versandauftragSpeichern(any())).thenReturn(neue);
 
 			// Act
-			Versandinformation versandinformation = delegate.scheduleMailversand(auftrag);
+			Versandauftrag versandinformation = delegate.scheduleMailversand(auftrag);
 
 			// Assert
 			assertEquals(0, versandinformation.anzahlAktuellVersendet());
@@ -174,7 +174,7 @@ public class ScheduleNewsletterDelegateTest {
 			assertFalse(versandinformation.bereitsVersendet());
 			assertEquals(Empfaengertyp.TEST, versandinformation.empfaengertyp());
 
-			Mockito.verify(versandinfoService, times(1)).versandinformationSpeichern(any());
+			Mockito.verify(versandinfoService, times(1)).versandauftragSpeichern(any());
 		}
 
 		@Test
@@ -183,21 +183,21 @@ public class ScheduleNewsletterDelegateTest {
 			// Arrange
 			NewsletterVersandauftrag auftrag = NewsletterVersandauftrag.create(NEWSLETTER_ID.identifier(), Empfaengertyp.TEST);
 
-			List<Versandinformation> vorhandene = new ArrayList<>();
-			Versandinformation info = new Versandinformation().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
+			List<Versandauftrag> vorhandene = new ArrayList<>();
+			Versandauftrag info = new Versandauftrag().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
 				.withEmpfaengertyp(Empfaengertyp.TEST).withNewsletterID(NEWSLETTER_ID).withIdentifier(VERSANDINFO_ID)
 				.withVersandBeendetAm(BEENDET_AM).withVersandBegonnenAm(BEGONNEN_AM);
 			vorhandene.add(info);
 
-			Versandinformation neue = new Versandinformation()
+			Versandauftrag neue = new Versandauftrag()
 				.withEmpfaengertyp(Empfaengertyp.TEST)
 				.withNewsletterID(NEWSLETTER_ID).withNewsletterID(NEWSLETTER_ID).withIdentifier(VERSANDINFO_ID);
 
 			Mockito.when(versandinfoService.getVersandinformationenZuNewsletter(NEWSLETTER_ID)).thenReturn(vorhandene);
-			Mockito.when(versandinfoService.versandinformationSpeichern(info)).thenReturn(neue);
+			Mockito.when(versandinfoService.versandauftragSpeichern(info)).thenReturn(neue);
 
 			// Act
-			Versandinformation versandinformation = delegate.scheduleMailversand(auftrag);
+			Versandauftrag versandinformation = delegate.scheduleMailversand(auftrag);
 
 			// Assert
 			assertEquals(0, versandinformation.anzahlAktuellVersendet());
@@ -207,7 +207,7 @@ public class ScheduleNewsletterDelegateTest {
 			assertFalse(versandinformation.bereitsVersendet());
 			assertEquals(Empfaengertyp.TEST, versandinformation.empfaengertyp());
 
-			Mockito.verify(versandinfoService, times(1)).versandinformationSpeichern(any());
+			Mockito.verify(versandinfoService, times(1)).versandauftragSpeichern(any());
 		}
 
 	}
@@ -221,17 +221,17 @@ public class ScheduleNewsletterDelegateTest {
 			// Arrange
 			NewsletterVersandauftrag auftrag = NewsletterVersandauftrag.create(NEWSLETTER_ID.identifier(), Empfaengertyp.ALLE);
 
-			List<Versandinformation> vorhandene = new ArrayList<>();
+			List<Versandauftrag> vorhandene = new ArrayList<>();
 
-			Versandinformation neue = new Versandinformation()
+			Versandauftrag neue = new Versandauftrag()
 				.withEmpfaengertyp(Empfaengertyp.ALLE)
 				.withNewsletterID(NEWSLETTER_ID);
 
 			Mockito.when(versandinfoService.getVersandinformationenZuNewsletter(NEWSLETTER_ID)).thenReturn(vorhandene);
-			Mockito.when(versandinfoService.versandinformationSpeichern(any())).thenReturn(neue);
+			Mockito.when(versandinfoService.versandauftragSpeichern(any())).thenReturn(neue);
 
 			// Act
-			Versandinformation versandinformation = delegate.scheduleMailversand(auftrag);
+			Versandauftrag versandinformation = delegate.scheduleMailversand(auftrag);
 
 			// Assert
 			assertEquals(0, versandinformation.anzahlAktuellVersendet());
@@ -241,7 +241,7 @@ public class ScheduleNewsletterDelegateTest {
 			assertFalse(versandinformation.bereitsVersendet());
 			assertEquals(Empfaengertyp.ALLE, versandinformation.empfaengertyp());
 
-			Mockito.verify(versandinfoService, times(1)).versandinformationSpeichern(any());
+			Mockito.verify(versandinfoService, times(1)).versandauftragSpeichern(any());
 		}
 
 		@Test
@@ -250,21 +250,21 @@ public class ScheduleNewsletterDelegateTest {
 			// Arrange
 			NewsletterVersandauftrag auftrag = NewsletterVersandauftrag.create(NEWSLETTER_ID.identifier(), Empfaengertyp.ALLE);
 
-			List<Versandinformation> vorhandene = new ArrayList<>();
-			Versandinformation info = new Versandinformation().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
+			List<Versandauftrag> vorhandene = new ArrayList<>();
+			Versandauftrag info = new Versandauftrag().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
 				.withEmpfaengertyp(Empfaengertyp.TEST).withNewsletterID(NEWSLETTER_ID).withIdentifier(VERSANDINFO_ID)
 				.withVersandBeendetAm(BEENDET_AM).withVersandBegonnenAm(BEGONNEN_AM);
 			vorhandene.add(info);
 
-			Versandinformation neue = new Versandinformation()
+			Versandauftrag neue = new Versandauftrag()
 				.withEmpfaengertyp(Empfaengertyp.ALLE)
 				.withNewsletterID(NEWSLETTER_ID);
 
 			Mockito.when(versandinfoService.getVersandinformationenZuNewsletter(NEWSLETTER_ID)).thenReturn(vorhandene);
-			Mockito.when(versandinfoService.versandinformationSpeichern(any())).thenReturn(neue);
+			Mockito.when(versandinfoService.versandauftragSpeichern(any())).thenReturn(neue);
 
 			// Act
-			Versandinformation versandinformation = delegate.scheduleMailversand(auftrag);
+			Versandauftrag versandinformation = delegate.scheduleMailversand(auftrag);
 
 			// Assert
 			assertEquals(0, versandinformation.anzahlAktuellVersendet());
@@ -274,7 +274,7 @@ public class ScheduleNewsletterDelegateTest {
 			assertFalse(versandinformation.bereitsVersendet());
 			assertEquals(Empfaengertyp.ALLE, versandinformation.empfaengertyp());
 
-			Mockito.verify(versandinfoService, times(1)).versandinformationSpeichern(any());
+			Mockito.verify(versandinfoService, times(1)).versandauftragSpeichern(any());
 		}
 
 		@Test
@@ -283,8 +283,8 @@ public class ScheduleNewsletterDelegateTest {
 			// Arrange
 			NewsletterVersandauftrag auftrag = NewsletterVersandauftrag.create(NEWSLETTER_ID.identifier(), Empfaengertyp.ALLE);
 
-			List<Versandinformation> vorhandene = new ArrayList<>();
-			Versandinformation info = new Versandinformation().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
+			List<Versandauftrag> vorhandene = new ArrayList<>();
+			Versandauftrag info = new Versandauftrag().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
 				.withEmpfaengertyp(Empfaengertyp.LEHRER).withNewsletterID(NEWSLETTER_ID).withIdentifier(VERSANDINFO_ID)
 				.withVersandBeendetAm(BEENDET_AM).withVersandBegonnenAm(BEGONNEN_AM);
 			vorhandene.add(info);
@@ -292,7 +292,7 @@ public class ScheduleNewsletterDelegateTest {
 			Mockito.when(versandinfoService.getVersandinformationenZuNewsletter(NEWSLETTER_ID)).thenReturn(vorhandene);
 
 			// Act
-			Versandinformation versandinformation = delegate.scheduleMailversand(auftrag);
+			Versandauftrag versandinformation = delegate.scheduleMailversand(auftrag);
 
 			// Assert
 			assertEquals(ANZAHL, versandinformation.anzahlAktuellVersendet());
@@ -302,7 +302,7 @@ public class ScheduleNewsletterDelegateTest {
 			assertTrue(versandinformation.bereitsVersendet());
 			assertEquals(Empfaengertyp.LEHRER, versandinformation.empfaengertyp());
 
-			Mockito.verify(versandinfoService, times(0)).versandinformationSpeichern(any());
+			Mockito.verify(versandinfoService, times(0)).versandauftragSpeichern(any());
 
 		}
 
@@ -312,8 +312,8 @@ public class ScheduleNewsletterDelegateTest {
 			// Arrange
 			NewsletterVersandauftrag auftrag = NewsletterVersandauftrag.create(NEWSLETTER_ID.identifier(), Empfaengertyp.ALLE);
 
-			List<Versandinformation> vorhandene = new ArrayList<>();
-			Versandinformation info = new Versandinformation().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
+			List<Versandauftrag> vorhandene = new ArrayList<>();
+			Versandauftrag info = new Versandauftrag().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
 				.withEmpfaengertyp(Empfaengertyp.PRIVATVERANSTALTER).withNewsletterID(NEWSLETTER_ID).withIdentifier(VERSANDINFO_ID)
 				.withVersandBeendetAm(BEENDET_AM).withVersandBegonnenAm(BEGONNEN_AM);
 			vorhandene.add(info);
@@ -321,7 +321,7 @@ public class ScheduleNewsletterDelegateTest {
 			Mockito.when(versandinfoService.getVersandinformationenZuNewsletter(NEWSLETTER_ID)).thenReturn(vorhandene);
 
 			// Act
-			Versandinformation versandinformation = delegate.scheduleMailversand(auftrag);
+			Versandauftrag versandinformation = delegate.scheduleMailversand(auftrag);
 
 			// Assert
 			assertEquals(ANZAHL, versandinformation.anzahlAktuellVersendet());
@@ -331,7 +331,7 @@ public class ScheduleNewsletterDelegateTest {
 			assertTrue(versandinformation.bereitsVersendet());
 			assertEquals(Empfaengertyp.PRIVATVERANSTALTER, versandinformation.empfaengertyp());
 
-			Mockito.verify(versandinfoService, times(0)).versandinformationSpeichern(any());
+			Mockito.verify(versandinfoService, times(0)).versandauftragSpeichern(any());
 		}
 
 		@Test
@@ -340,8 +340,8 @@ public class ScheduleNewsletterDelegateTest {
 			// Arrange
 			NewsletterVersandauftrag auftrag = NewsletterVersandauftrag.create(NEWSLETTER_ID.identifier(), Empfaengertyp.ALLE);
 
-			List<Versandinformation> vorhandene = new ArrayList<>();
-			Versandinformation info = new Versandinformation().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
+			List<Versandauftrag> vorhandene = new ArrayList<>();
+			Versandauftrag info = new Versandauftrag().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
 				.withEmpfaengertyp(Empfaengertyp.ALLE).withNewsletterID(NEWSLETTER_ID).withIdentifier(VERSANDINFO_ID)
 				.withVersandBeendetAm(BEENDET_AM).withVersandBegonnenAm(BEGONNEN_AM);
 			vorhandene.add(info);
@@ -349,7 +349,7 @@ public class ScheduleNewsletterDelegateTest {
 			Mockito.when(versandinfoService.getVersandinformationenZuNewsletter(NEWSLETTER_ID)).thenReturn(vorhandene);
 
 			// Act
-			Versandinformation versandinformation = delegate.scheduleMailversand(auftrag);
+			Versandauftrag versandinformation = delegate.scheduleMailversand(auftrag);
 
 			// Assert
 			assertEquals(ANZAHL, versandinformation.anzahlAktuellVersendet());
@@ -359,7 +359,7 @@ public class ScheduleNewsletterDelegateTest {
 			assertTrue(versandinformation.bereitsVersendet());
 			assertEquals(Empfaengertyp.ALLE, versandinformation.empfaengertyp());
 
-			Mockito.verify(versandinfoService, times(0)).versandinformationSpeichern(any());
+			Mockito.verify(versandinfoService, times(0)).versandauftragSpeichern(any());
 		}
 
 	}
@@ -373,17 +373,17 @@ public class ScheduleNewsletterDelegateTest {
 			// Arrange
 			NewsletterVersandauftrag auftrag = NewsletterVersandauftrag.create(NEWSLETTER_ID.identifier(), Empfaengertyp.LEHRER);
 
-			List<Versandinformation> vorhandene = new ArrayList<>();
+			List<Versandauftrag> vorhandene = new ArrayList<>();
 
-			Versandinformation neue = new Versandinformation()
+			Versandauftrag neue = new Versandauftrag()
 				.withEmpfaengertyp(Empfaengertyp.LEHRER)
 				.withNewsletterID(NEWSLETTER_ID);
 
 			Mockito.when(versandinfoService.getVersandinformationenZuNewsletter(NEWSLETTER_ID)).thenReturn(vorhandene);
-			Mockito.when(versandinfoService.versandinformationSpeichern(any())).thenReturn(neue);
+			Mockito.when(versandinfoService.versandauftragSpeichern(any())).thenReturn(neue);
 
 			// Act
-			Versandinformation versandinformation = delegate.scheduleMailversand(auftrag);
+			Versandauftrag versandinformation = delegate.scheduleMailversand(auftrag);
 
 			// Assert
 			assertEquals(0, versandinformation.anzahlAktuellVersendet());
@@ -393,7 +393,7 @@ public class ScheduleNewsletterDelegateTest {
 			assertFalse(versandinformation.bereitsVersendet());
 			assertEquals(Empfaengertyp.LEHRER, versandinformation.empfaengertyp());
 
-			Mockito.verify(versandinfoService, times(1)).versandinformationSpeichern(any());
+			Mockito.verify(versandinfoService, times(1)).versandauftragSpeichern(any());
 		}
 
 		@Test
@@ -402,21 +402,21 @@ public class ScheduleNewsletterDelegateTest {
 			// Arrange
 			NewsletterVersandauftrag auftrag = NewsletterVersandauftrag.create(NEWSLETTER_ID.identifier(), Empfaengertyp.LEHRER);
 
-			List<Versandinformation> vorhandene = new ArrayList<>();
-			Versandinformation info = new Versandinformation().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
+			List<Versandauftrag> vorhandene = new ArrayList<>();
+			Versandauftrag info = new Versandauftrag().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
 				.withEmpfaengertyp(Empfaengertyp.TEST).withNewsletterID(NEWSLETTER_ID).withIdentifier(VERSANDINFO_ID)
 				.withVersandBeendetAm(BEENDET_AM).withVersandBegonnenAm(BEGONNEN_AM);
 			vorhandene.add(info);
 
-			Versandinformation neue = new Versandinformation()
+			Versandauftrag neue = new Versandauftrag()
 				.withEmpfaengertyp(Empfaengertyp.LEHRER)
 				.withNewsletterID(NEWSLETTER_ID);
 
 			Mockito.when(versandinfoService.getVersandinformationenZuNewsletter(NEWSLETTER_ID)).thenReturn(vorhandene);
-			Mockito.when(versandinfoService.versandinformationSpeichern(any())).thenReturn(neue);
+			Mockito.when(versandinfoService.versandauftragSpeichern(any())).thenReturn(neue);
 
 			// Act
-			Versandinformation versandinformation = delegate.scheduleMailversand(auftrag);
+			Versandauftrag versandinformation = delegate.scheduleMailversand(auftrag);
 
 			// Assert
 			assertEquals(0, versandinformation.anzahlAktuellVersendet());
@@ -426,7 +426,7 @@ public class ScheduleNewsletterDelegateTest {
 			assertFalse(versandinformation.bereitsVersendet());
 			assertEquals(Empfaengertyp.LEHRER, versandinformation.empfaengertyp());
 
-			Mockito.verify(versandinfoService, times(1)).versandinformationSpeichern(any());
+			Mockito.verify(versandinfoService, times(1)).versandauftragSpeichern(any());
 		}
 
 		@Test
@@ -435,8 +435,8 @@ public class ScheduleNewsletterDelegateTest {
 			// Arrange
 			NewsletterVersandauftrag auftrag = NewsletterVersandauftrag.create(NEWSLETTER_ID.identifier(), Empfaengertyp.LEHRER);
 
-			List<Versandinformation> vorhandene = new ArrayList<>();
-			Versandinformation info = new Versandinformation().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
+			List<Versandauftrag> vorhandene = new ArrayList<>();
+			Versandauftrag info = new Versandauftrag().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
 				.withEmpfaengertyp(Empfaengertyp.LEHRER).withNewsletterID(NEWSLETTER_ID).withIdentifier(VERSANDINFO_ID)
 				.withVersandBeendetAm(BEENDET_AM).withVersandBegonnenAm(BEGONNEN_AM);
 			vorhandene.add(info);
@@ -444,7 +444,7 @@ public class ScheduleNewsletterDelegateTest {
 			Mockito.when(versandinfoService.getVersandinformationenZuNewsletter(NEWSLETTER_ID)).thenReturn(vorhandene);
 
 			// Act
-			Versandinformation versandinformation = delegate.scheduleMailversand(auftrag);
+			Versandauftrag versandinformation = delegate.scheduleMailversand(auftrag);
 
 			// Assert
 			assertEquals(ANZAHL, versandinformation.anzahlAktuellVersendet());
@@ -454,7 +454,7 @@ public class ScheduleNewsletterDelegateTest {
 			assertTrue(versandinformation.bereitsVersendet());
 			assertEquals(Empfaengertyp.LEHRER, versandinformation.empfaengertyp());
 
-			Mockito.verify(versandinfoService, times(0)).versandinformationSpeichern(any());
+			Mockito.verify(versandinfoService, times(0)).versandauftragSpeichern(any());
 
 		}
 
@@ -464,21 +464,21 @@ public class ScheduleNewsletterDelegateTest {
 			// Arrange
 			NewsletterVersandauftrag auftrag = NewsletterVersandauftrag.create(NEWSLETTER_ID.identifier(), Empfaengertyp.LEHRER);
 
-			List<Versandinformation> vorhandene = new ArrayList<>();
-			Versandinformation info = new Versandinformation().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
+			List<Versandauftrag> vorhandene = new ArrayList<>();
+			Versandauftrag info = new Versandauftrag().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
 				.withEmpfaengertyp(Empfaengertyp.PRIVATVERANSTALTER).withNewsletterID(NEWSLETTER_ID).withIdentifier(VERSANDINFO_ID)
 				.withVersandBeendetAm(BEENDET_AM).withVersandBegonnenAm(BEGONNEN_AM);
 			vorhandene.add(info);
 
-			Versandinformation neue = new Versandinformation()
+			Versandauftrag neue = new Versandauftrag()
 				.withEmpfaengertyp(Empfaengertyp.LEHRER)
 				.withNewsletterID(NEWSLETTER_ID);
 
 			Mockito.when(versandinfoService.getVersandinformationenZuNewsletter(NEWSLETTER_ID)).thenReturn(vorhandene);
-			Mockito.when(versandinfoService.versandinformationSpeichern(any())).thenReturn(neue);
+			Mockito.when(versandinfoService.versandauftragSpeichern(any())).thenReturn(neue);
 
 			// Act
-			Versandinformation versandinformation = delegate.scheduleMailversand(auftrag);
+			Versandauftrag versandinformation = delegate.scheduleMailversand(auftrag);
 
 			// Assert
 			assertEquals(0, versandinformation.anzahlAktuellVersendet());
@@ -488,7 +488,7 @@ public class ScheduleNewsletterDelegateTest {
 			assertFalse(versandinformation.bereitsVersendet());
 			assertEquals(Empfaengertyp.LEHRER, versandinformation.empfaengertyp());
 
-			Mockito.verify(versandinfoService, times(1)).versandinformationSpeichern(any());
+			Mockito.verify(versandinfoService, times(1)).versandauftragSpeichern(any());
 		}
 
 		@Test
@@ -497,8 +497,8 @@ public class ScheduleNewsletterDelegateTest {
 			// Arrange
 			NewsletterVersandauftrag auftrag = NewsletterVersandauftrag.create(NEWSLETTER_ID.identifier(), Empfaengertyp.LEHRER);
 
-			List<Versandinformation> vorhandene = new ArrayList<>();
-			Versandinformation info = new Versandinformation().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
+			List<Versandauftrag> vorhandene = new ArrayList<>();
+			Versandauftrag info = new Versandauftrag().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
 				.withEmpfaengertyp(Empfaengertyp.ALLE).withNewsletterID(NEWSLETTER_ID).withIdentifier(VERSANDINFO_ID)
 				.withVersandBeendetAm(BEENDET_AM).withVersandBegonnenAm(BEGONNEN_AM);
 			vorhandene.add(info);
@@ -506,7 +506,7 @@ public class ScheduleNewsletterDelegateTest {
 			Mockito.when(versandinfoService.getVersandinformationenZuNewsletter(NEWSLETTER_ID)).thenReturn(vorhandene);
 
 			// Act
-			Versandinformation versandinformation = delegate.scheduleMailversand(auftrag);
+			Versandauftrag versandinformation = delegate.scheduleMailversand(auftrag);
 
 			// Assert
 			assertEquals(ANZAHL, versandinformation.anzahlAktuellVersendet());
@@ -516,7 +516,7 @@ public class ScheduleNewsletterDelegateTest {
 			assertTrue(versandinformation.bereitsVersendet());
 			assertEquals(Empfaengertyp.ALLE, versandinformation.empfaengertyp());
 
-			Mockito.verify(versandinfoService, times(0)).versandinformationSpeichern(any());
+			Mockito.verify(versandinfoService, times(0)).versandauftragSpeichern(any());
 		}
 
 	}
@@ -531,17 +531,17 @@ public class ScheduleNewsletterDelegateTest {
 			NewsletterVersandauftrag auftrag = NewsletterVersandauftrag.create(NEWSLETTER_ID.identifier(),
 				Empfaengertyp.PRIVATVERANSTALTER);
 
-			List<Versandinformation> vorhandene = new ArrayList<>();
+			List<Versandauftrag> vorhandene = new ArrayList<>();
 
-			Versandinformation neue = new Versandinformation()
+			Versandauftrag neue = new Versandauftrag()
 				.withEmpfaengertyp(Empfaengertyp.PRIVATVERANSTALTER)
 				.withNewsletterID(NEWSLETTER_ID);
 
 			Mockito.when(versandinfoService.getVersandinformationenZuNewsletter(NEWSLETTER_ID)).thenReturn(vorhandene);
-			Mockito.when(versandinfoService.versandinformationSpeichern(any())).thenReturn(neue);
+			Mockito.when(versandinfoService.versandauftragSpeichern(any())).thenReturn(neue);
 
 			// Act
-			Versandinformation versandinformation = delegate.scheduleMailversand(auftrag);
+			Versandauftrag versandinformation = delegate.scheduleMailversand(auftrag);
 
 			// Assert
 			assertEquals(0, versandinformation.anzahlAktuellVersendet());
@@ -551,7 +551,7 @@ public class ScheduleNewsletterDelegateTest {
 			assertFalse(versandinformation.bereitsVersendet());
 			assertEquals(Empfaengertyp.PRIVATVERANSTALTER, versandinformation.empfaengertyp());
 
-			Mockito.verify(versandinfoService, times(1)).versandinformationSpeichern(any());
+			Mockito.verify(versandinfoService, times(1)).versandauftragSpeichern(any());
 		}
 
 		@Test
@@ -561,21 +561,21 @@ public class ScheduleNewsletterDelegateTest {
 			NewsletterVersandauftrag auftrag = NewsletterVersandauftrag.create(NEWSLETTER_ID.identifier(),
 				Empfaengertyp.PRIVATVERANSTALTER);
 
-			List<Versandinformation> vorhandene = new ArrayList<>();
-			Versandinformation info = new Versandinformation().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
+			List<Versandauftrag> vorhandene = new ArrayList<>();
+			Versandauftrag info = new Versandauftrag().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
 				.withEmpfaengertyp(Empfaengertyp.TEST).withNewsletterID(NEWSLETTER_ID).withIdentifier(VERSANDINFO_ID)
 				.withVersandBeendetAm(BEENDET_AM).withVersandBegonnenAm(BEGONNEN_AM);
 			vorhandene.add(info);
 
-			Versandinformation neue = new Versandinformation()
+			Versandauftrag neue = new Versandauftrag()
 				.withEmpfaengertyp(Empfaengertyp.PRIVATVERANSTALTER)
 				.withNewsletterID(NEWSLETTER_ID);
 
 			Mockito.when(versandinfoService.getVersandinformationenZuNewsletter(NEWSLETTER_ID)).thenReturn(vorhandene);
-			Mockito.when(versandinfoService.versandinformationSpeichern(any())).thenReturn(neue);
+			Mockito.when(versandinfoService.versandauftragSpeichern(any())).thenReturn(neue);
 
 			// Act
-			Versandinformation versandinformation = delegate.scheduleMailversand(auftrag);
+			Versandauftrag versandinformation = delegate.scheduleMailversand(auftrag);
 
 			// Assert
 			assertEquals(0, versandinformation.anzahlAktuellVersendet());
@@ -585,7 +585,7 @@ public class ScheduleNewsletterDelegateTest {
 			assertFalse(versandinformation.bereitsVersendet());
 			assertEquals(Empfaengertyp.PRIVATVERANSTALTER, versandinformation.empfaengertyp());
 
-			Mockito.verify(versandinfoService, times(1)).versandinformationSpeichern(any());
+			Mockito.verify(versandinfoService, times(1)).versandauftragSpeichern(any());
 		}
 
 		@Test
@@ -595,8 +595,8 @@ public class ScheduleNewsletterDelegateTest {
 			NewsletterVersandauftrag auftrag = NewsletterVersandauftrag.create(NEWSLETTER_ID.identifier(),
 				Empfaengertyp.PRIVATVERANSTALTER);
 
-			List<Versandinformation> vorhandene = new ArrayList<>();
-			Versandinformation info = new Versandinformation().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
+			List<Versandauftrag> vorhandene = new ArrayList<>();
+			Versandauftrag info = new Versandauftrag().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
 				.withEmpfaengertyp(Empfaengertyp.PRIVATVERANSTALTER).withNewsletterID(NEWSLETTER_ID).withIdentifier(VERSANDINFO_ID)
 				.withVersandBeendetAm(BEENDET_AM).withVersandBegonnenAm(BEGONNEN_AM);
 			vorhandene.add(info);
@@ -604,7 +604,7 @@ public class ScheduleNewsletterDelegateTest {
 			Mockito.when(versandinfoService.getVersandinformationenZuNewsletter(NEWSLETTER_ID)).thenReturn(vorhandene);
 
 			// Act
-			Versandinformation versandinformation = delegate.scheduleMailversand(auftrag);
+			Versandauftrag versandinformation = delegate.scheduleMailversand(auftrag);
 
 			// Assert
 			assertEquals(ANZAHL, versandinformation.anzahlAktuellVersendet());
@@ -614,7 +614,7 @@ public class ScheduleNewsletterDelegateTest {
 			assertTrue(versandinformation.bereitsVersendet());
 			assertEquals(Empfaengertyp.PRIVATVERANSTALTER, versandinformation.empfaengertyp());
 
-			Mockito.verify(versandinfoService, times(0)).versandinformationSpeichern(any());
+			Mockito.verify(versandinfoService, times(0)).versandauftragSpeichern(any());
 
 		}
 
@@ -625,21 +625,21 @@ public class ScheduleNewsletterDelegateTest {
 			NewsletterVersandauftrag auftrag = NewsletterVersandauftrag.create(NEWSLETTER_ID.identifier(),
 				Empfaengertyp.PRIVATVERANSTALTER);
 
-			List<Versandinformation> vorhandene = new ArrayList<>();
-			Versandinformation info = new Versandinformation().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
+			List<Versandauftrag> vorhandene = new ArrayList<>();
+			Versandauftrag info = new Versandauftrag().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
 				.withEmpfaengertyp(Empfaengertyp.LEHRER).withNewsletterID(NEWSLETTER_ID).withIdentifier(VERSANDINFO_ID)
 				.withVersandBeendetAm(BEENDET_AM).withVersandBegonnenAm(BEGONNEN_AM);
 			vorhandene.add(info);
 
-			Versandinformation neue = new Versandinformation()
+			Versandauftrag neue = new Versandauftrag()
 				.withEmpfaengertyp(Empfaengertyp.PRIVATVERANSTALTER)
 				.withNewsletterID(NEWSLETTER_ID);
 
 			Mockito.when(versandinfoService.getVersandinformationenZuNewsletter(NEWSLETTER_ID)).thenReturn(vorhandene);
-			Mockito.when(versandinfoService.versandinformationSpeichern(any())).thenReturn(neue);
+			Mockito.when(versandinfoService.versandauftragSpeichern(any())).thenReturn(neue);
 
 			// Act
-			Versandinformation versandinformation = delegate.scheduleMailversand(auftrag);
+			Versandauftrag versandinformation = delegate.scheduleMailversand(auftrag);
 
 			// Assert
 			assertEquals(0, versandinformation.anzahlAktuellVersendet());
@@ -649,7 +649,7 @@ public class ScheduleNewsletterDelegateTest {
 			assertFalse(versandinformation.bereitsVersendet());
 			assertEquals(Empfaengertyp.PRIVATVERANSTALTER, versandinformation.empfaengertyp());
 
-			Mockito.verify(versandinfoService, times(1)).versandinformationSpeichern(any());
+			Mockito.verify(versandinfoService, times(1)).versandauftragSpeichern(any());
 		}
 
 		@Test
@@ -659,8 +659,8 @@ public class ScheduleNewsletterDelegateTest {
 			NewsletterVersandauftrag auftrag = NewsletterVersandauftrag.create(NEWSLETTER_ID.identifier(),
 				Empfaengertyp.PRIVATVERANSTALTER);
 
-			List<Versandinformation> vorhandene = new ArrayList<>();
-			Versandinformation info = new Versandinformation().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
+			List<Versandauftrag> vorhandene = new ArrayList<>();
+			Versandauftrag info = new Versandauftrag().withAnzahlAktuellVersendet(ANZAHL).withAnzahlEmpaenger(ANZAHL)
 				.withEmpfaengertyp(Empfaengertyp.ALLE).withNewsletterID(NEWSLETTER_ID).withIdentifier(VERSANDINFO_ID)
 				.withVersandBeendetAm(BEENDET_AM).withVersandBegonnenAm(BEGONNEN_AM);
 			vorhandene.add(info);
@@ -668,7 +668,7 @@ public class ScheduleNewsletterDelegateTest {
 			Mockito.when(versandinfoService.getVersandinformationenZuNewsletter(NEWSLETTER_ID)).thenReturn(vorhandene);
 
 			// Act
-			Versandinformation versandinformation = delegate.scheduleMailversand(auftrag);
+			Versandauftrag versandinformation = delegate.scheduleMailversand(auftrag);
 
 			// Assert
 			assertEquals(ANZAHL, versandinformation.anzahlAktuellVersendet());
@@ -678,7 +678,7 @@ public class ScheduleNewsletterDelegateTest {
 			assertTrue(versandinformation.bereitsVersendet());
 			assertEquals(Empfaengertyp.ALLE, versandinformation.empfaengertyp());
 
-			Mockito.verify(versandinfoService, times(0)).versandinformationSpeichern(any());
+			Mockito.verify(versandinfoService, times(0)).versandauftragSpeichern(any());
 		}
 
 	}

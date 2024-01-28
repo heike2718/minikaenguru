@@ -12,6 +12,7 @@ import de.egladil.web.mk_gateway.domain.event.EventType;
 /**
  * NewsletterversandFinished
  */
+@Deprecated
 public class NewsletterversandFinished extends AbstractDomainEvent {
 
 	@JsonProperty

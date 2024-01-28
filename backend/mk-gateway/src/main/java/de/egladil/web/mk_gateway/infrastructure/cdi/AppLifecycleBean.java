@@ -41,6 +41,9 @@ public class AppLifecycleBean {
 	@ConfigProperty(name = "quarkus.http.port")
 	String port;
 
+	@ConfigProperty(name = "quarkus.datasource.jdbc.url")
+	String jdbcUrl;
+
 	@ConfigProperty(name = "quarkus.rest-client.\"de.egladil.web.mk_gateway.infrastructure.restclient.FilescannerRestClient\".url")
 	String filescannerUrl;
 
@@ -54,13 +57,18 @@ public class AppLifecycleBean {
 	@ConfigProperty(name = "quarkus.rest-client.\"de.egladil.web.mk_gateway.infrastructure.messaging.MkKatalogeRestClient\".url")
 	String katalogeUrl;
 
+	@ConfigProperty(name = "newsletterversand.cron.expr")
+	String newsletterversandCronExpression;
+
 	void onStartup(@Observes final StartupEvent ev) {
 
 		LOGGER.info("mk-gateway is starting...");
+		LOGGER.info(" ===========>  newsletterversandCron={}", newsletterversandCronExpression);
 		LOGGER.info(" ===========>  filescannerUrl={}", filescannerUrl);
 		LOGGER.info(" ===========>  initAccesstokenUrl={}", initAccesstokenUrl);
 		LOGGER.info(" ===========>  tokenExchangeRestClientUrl={}", tokenExchangeRestClientUrl);
 		LOGGER.info(" ===========>  katalogeUrl={}", katalogeUrl);
+		LOGGER.info(" ===========>  jdbcUrl={}", jdbcUrl);
 		LOGGER.info(" ===========>  the download dir is {}", getPathDownloadDir());
 		LOGGER.info(" ===========>  the upload dir is {}", quarkusUploadsDir);
 		LOGGER.info(" ===========>  quarkus.http.cors.origins={}", corsAllowedOrigins);

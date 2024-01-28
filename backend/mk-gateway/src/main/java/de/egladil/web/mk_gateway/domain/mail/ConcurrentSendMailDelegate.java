@@ -7,21 +7,21 @@ package de.egladil.web.mk_gateway.domain.mail;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.enterprise.event.Event;
-import jakarta.inject.Inject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandFailed;
 import de.egladil.web.mk_gateway.domain.mail.events.NewsletterversandFinished;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.event.Event;
+import jakarta.inject.Inject;
 
 /**
  * ConcurrentSendMailDelegate
  */
 @RequestScoped
+@Deprecated
 public class ConcurrentSendMailDelegate {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ConcurrentSendMailDelegate.class);
@@ -32,7 +32,7 @@ public class ConcurrentSendMailDelegate {
 	@Inject
 	Event<NewsletterversandFailed> versandFailedEvent;
 
-	public void mailsVersenden(final NewsletterTask newsletterTask, final Versandinformation versandinformation) {
+	public void mailsVersenden(final NewsletterTask newsletterTask, final Versandauftrag versandinformation) {
 
 		ExecutorService executorservice = Executors.newSingleThreadExecutor();
 

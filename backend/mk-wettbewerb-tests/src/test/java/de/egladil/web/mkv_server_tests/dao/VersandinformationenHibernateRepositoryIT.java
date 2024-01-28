@@ -21,7 +21,7 @@ import de.egladil.web.mk_gateway.domain.mail.Empfaengertyp;
 import de.egladil.web.mk_gateway.domain.mail.Newsletter;
 import de.egladil.web.mk_gateway.domain.mail.Versandinformation;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.NewsletterHibernateRepository;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.VersandinformationenHibernateRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.impl.VersandauftraegeHibernateRepository;
 import de.egladil.web.mkv_server_tests.AbstractIntegrationTest;
 
 /**
@@ -31,7 +31,7 @@ public class VersandinformationenHibernateRepositoryIT extends AbstractIntegrati
 
 	private NewsletterHibernateRepository newsletterRepo;
 
-	private VersandinformationenHibernateRepository versandinfoRepo;
+	private VersandauftraegeHibernateRepository versandinfoRepo;
 
 	private Identifier newsletterID;
 
@@ -42,7 +42,7 @@ public class VersandinformationenHibernateRepositoryIT extends AbstractIntegrati
 		super.setUp();
 
 		newsletterRepo = NewsletterHibernateRepository.createForIntegrationTest(entityManager);
-		versandinfoRepo = VersandinformationenHibernateRepository.createForTest(entityManager);
+		versandinfoRepo = VersandauftraegeHibernateRepository.createForTest(entityManager);
 
 		createANewsletter();
 	}

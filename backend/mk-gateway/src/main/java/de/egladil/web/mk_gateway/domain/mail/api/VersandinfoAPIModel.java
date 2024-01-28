@@ -7,7 +7,7 @@ package de.egladil.web.mk_gateway.domain.mail.api;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.mk_gateway.domain.mail.Empfaengertyp;
-import de.egladil.web.mk_gateway.domain.mail.Versandinformation;
+import de.egladil.web.mk_gateway.domain.mail.Versandauftrag;
 
 /**
  * VersandinfoAPIModel
@@ -38,7 +38,7 @@ public class VersandinfoAPIModel {
 	@JsonProperty
 	private boolean versandMitFehler;
 
-	public static VersandinfoAPIModel createFromVersandinfo(final Versandinformation versandinfo) {
+	public static VersandinfoAPIModel createFromVersandinfo(final Versandauftrag versandinfo) {
 
 		VersandinfoAPIModel result = new VersandinfoAPIModel();
 		result.uuid = versandinfo.identifier().identifier();
