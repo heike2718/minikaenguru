@@ -23,8 +23,8 @@ import de.egladil.web.commons_validation.annotations.UuidString;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.mail.NewsletterService;
-import de.egladil.web.mk_gateway.domain.mail.api.NewsletterAPIModel;
+import de.egladil.web.mk_gateway.domain.newsletters.NewsletterAPIModel;
+import de.egladil.web.mk_gateway.domain.newsletters.NewsletterService;
 import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**

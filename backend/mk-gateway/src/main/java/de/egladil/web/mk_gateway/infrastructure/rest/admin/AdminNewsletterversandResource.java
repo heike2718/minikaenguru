@@ -6,18 +6,22 @@ package de.egladil.web.mk_gateway.infrastructure.rest.admin;
 
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 import de.egladil.web.commons_validation.annotations.UuidString;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_gateway.domain.mail.NewsletterAuftraegeService;
-import de.egladil.web.mk_gateway.domain.mail.NewsletterService;
-import de.egladil.web.mk_gateway.domain.mail.api.NewsletterVersandauftrag;
-import de.egladil.web.mk_gateway.domain.mail.api.VersandinfoAPIModel;
+import de.egladil.web.mk_gateway.domain.error.ErrorResponseDto;
+import de.egladil.web.mk_gateway.domain.newsletterversand.NewsletterVersandauftragService;
+import de.egladil.web.mk_gateway.domain.newsletterversand.Versandauftrag;
+import de.egladil.web.mk_gateway.domain.newsletterversand.api.NewsletterVersandauftrag;
+import de.egladil.web.mk_gateway.domain.newsletterversand.api.VersandinfoAPIModel;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -36,21 +40,47 @@ import jakarta.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 public class AdminNewsletterversandResource {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AdminNewsletterversandResource.class);
-
 	@Inject
-	NewsletterService newsletterService;
-
-	@Inject
-	NewsletterAuftraegeService versandinfoService;
+	NewsletterVersandauftragService newsletterVersandauftragService;
 
 	@GET
 	@Path("/{versandinfoUuid}")
-	public Response getVersandinfo(@UuidString @PathParam(value = "versandinfoUuid") final String versandinfoUuid) {
+	@Operation(
+		operationId = "getVersandinfo",
+		summary = "Gibt die Versandinformation zurück, also den Status des Versands eines NewsletterVersandauftrags.")
+	@APIResponse(
+		name = "OKResponse",
+		responseCode = "200",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = VersandinfoAPIModel.class)))
+	@APIResponse(
+		name = "BadRequestResponse",
+		responseCode = "400",
+		description = "fehlgeschlagene Input-Validierung",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = ErrorResponseDto.class)))
+	@APIResponse(
+		name = "NotAuthorized",
+		responseCode = "401",
+		content = @Content(
+			mediaType = "application/json"))
+	@APIResponse(
+		name = "NotFound",
+		responseCode = "404")
+	@APIResponse(
+		name = "ServerError",
+		description = "server error",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = ErrorResponseDto.class)))
+	public Response getVersandinfo(@UuidString @PathParam(value = "versandinfoUuid") final String versandauftragID) {
 
 		// werden hier eine Übersicht über alle Versandauftraege zurückgeben, die in einer eigenen Maske angezeigt werden soll
 
-		Optional<VersandinfoAPIModel> optVersandInfo = this.versandinfoService.getStatusNewsletterVersand(versandinfoUuid);
+		Optional<VersandinfoAPIModel> optVersandInfo = this.newsletterVersandauftragService
+			.getStatusNewsletterVersand(versandauftragID);
 
 		if (optVersandInfo.isEmpty()) {
 
@@ -66,16 +96,42 @@ public class AdminNewsletterversandResource {
 	}
 
 	@POST
-	public Response scheduleNewsletterversand(final NewsletterVersandauftrag auftrag) {
+	@Operation(
+		operationId = "scheduleNewsletterversand",
+		summary = "Erstellt einen Newsletterversandauftrag mit hinreichend vielen Auslieferungen (Gruppen von Mailempfängern). Die Aufträge werden durch einen Scheduler abgearbeitet. Das kann viele Stunden dauern wegen der Beschränkungen durch den Provider.")
+	@APIResponse(
+		name = "OKResponse",
+		responseCode = "200",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = Versandauftrag.class)))
+	@APIResponse(
+		name = "BadRequestResponse",
+		responseCode = "400",
+		description = "fehlgeschlagene Input-Validierung",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = ErrorResponseDto.class)))
+	@APIResponse(
+		name = "NotAuthorized",
+		responseCode = "401",
+		content = @Content(
+			mediaType = "application/json"))
+	@APIResponse(
+		name = "NotFound",
+		responseCode = "404",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = ErrorResponseDto.class)))
+	@APIResponse(
+		name = "ServerError",
+		description = "server error",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = ErrorResponseDto.class)))
+	public Response scheduleNewsletterversand(@Valid final NewsletterVersandauftrag auftrag) {
 
-		ResponsePayload responsePayload = newsletterService.createVersandauftrag(auftrag);
-
-		if (!responsePayload.isOk()) {
-
-			LOGGER.info(responsePayload.getMessage().toString());
-		}
-
-		return Response.ok(responsePayload).build();
+		Versandauftrag versandauftrag = newsletterVersandauftragService.createVersandauftrag(auftrag);
+		return Response.ok(versandauftrag).build();
 	}
-
 }

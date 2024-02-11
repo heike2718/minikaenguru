@@ -1,3 +1,15 @@
+11.02.2024
+--------------------
+
+- Bei Fehlern iim Versand soll ein Event ins Eventlog
+- Tests für Versandservice schlagen jetzt bestimmt fehl
+- Frontend: Fehlermeldung wird noch nicht angezeigt
+- Frontend: neue Maske mit Übersicht über die Auslieferungen bzw. Versandaufträge
+- Frontend: actions zum Pollen des Versandstatus zurückbauen
+- Backend: der housekeeping-Job ist noch nicht implementiert. Es ist die Frage, ob man die Aufträge wirklich täglich wegräumen will für den Fall, dass ich mal ne Amnesie erleide
+  und nicht weiß, ob ich einen bestimmten Newsletter schon versendet hatte. Man könnte das Housekeeping auch manuell triggern in der GUI
+
+
 28.01.2024
 --------------------
 

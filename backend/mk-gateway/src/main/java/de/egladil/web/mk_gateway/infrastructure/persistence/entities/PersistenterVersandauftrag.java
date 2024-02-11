@@ -7,7 +7,7 @@ package de.egladil.web.mk_gateway.infrastructure.persistence.entities;
 import java.time.LocalDateTime;
 
 import de.egladil.web.mk_gateway.domain.mail.Empfaengertyp;
-import de.egladil.web.mk_gateway.domain.mail.StatusAuslieferung;
+import de.egladil.web.mk_gateway.domain.newsletterversand.StatusAuslieferung;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

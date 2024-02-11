@@ -9,8 +9,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.mail.NewsletterAuslieferung;
-import de.egladil.web.mk_gateway.domain.mail.StatusAuslieferung;
+import de.egladil.web.mk_gateway.domain.newsletterversand.NewsletterAuslieferung;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenteNewsletterauslieferung;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -31,18 +30,50 @@ public class NewsletterauslieferungenRepository {
 	 * @param  versandauftragId
 	 * @return
 	 */
+	public List<NewsletterAuslieferung> findAllPendingWithVersandauftrag(final Identifier versandauftragId) {
+
+		List<PersistenteNewsletterauslieferung> persistenteAuslieferungen = em
+			.createNamedQuery(PersistenteNewsletterauslieferung.FIND_ALL_BY_VERDANDAUFTRAG_ID,
+				PersistenteNewsletterauslieferung.class)
+			.setParameter("versandauftragId", versandauftragId.identifier())
+			.getResultList();
+
+		List<NewsletterAuslieferung> mapped = persistenteAuslieferungen.stream().map(this::mapFromDB).toList();
+		List<NewsletterAuslieferung> result = mapped.stream().filter(a -> !a.getStatus().isCompleted()).toList();
+
+		return result;
+	}
+
+	/**
+	 * Gibt die Liste aller Auslieferungen zu diesem Newsletter zurück.
+	 *
+	 * @param  versandauftragId
+	 * @return
+	 */
 	public List<NewsletterAuslieferung> findAllWithVersandauftrag(final Identifier versandauftragId) {
 
 		List<PersistenteNewsletterauslieferung> persistenteAuslieferungen = em
 			.createNamedQuery(PersistenteNewsletterauslieferung.FIND_ALL_BY_VERDANDAUFTRAG_ID,
 				PersistenteNewsletterauslieferung.class)
-			.setParameter("versandauftragId", versandauftragId)
-			.setParameter("statusCompleted", StatusAuslieferung.COMPLETED)
+			.setParameter("versandauftragId", versandauftragId.identifier())
 			.getResultList();
 
 		List<NewsletterAuslieferung> result = persistenteAuslieferungen.stream().map(this::mapFromDB).toList();
 
 		return result;
+	}
+
+	public String addAuslieferung(final NewsletterAuslieferung auslieferung) {
+
+		PersistenteNewsletterauslieferung persistente = new PersistenteNewsletterauslieferung();
+		persistente.setEmpfaengergruppe(StringUtils.join(auslieferung.getEmpfaenger(), ","));
+		persistente.setSortnummer(auslieferung.getSortnummer());
+		persistente.setStatus(auslieferung.getStatus());
+		persistente.setVersandauftragId(auslieferung.getVersandauftragId().identifier());
+
+		em.persist(persistente);
+
+		return persistente.getUuid();
 	}
 
 	/**

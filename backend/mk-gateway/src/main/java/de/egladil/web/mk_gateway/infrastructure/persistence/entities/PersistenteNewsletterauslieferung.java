@@ -4,7 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.persistence.entities;
 
-import de.egladil.web.mk_gateway.domain.mail.StatusAuslieferung;
+import de.egladil.web.mk_gateway.domain.newsletterversand.StatusAuslieferung;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -21,7 +21,7 @@ import jakarta.persistence.Table;
 @NamedQueries({
 	@NamedQuery(
 		name = "PersistenteNewsletterauslieferung.FIND_ALL_BY_VERDANDAUFTRAG_ID",
-		query = "select a from PersistenteNewsletterauslieferung a where a.versandauftragId = :versandauftragId order by a.sortnummer")
+		query = "select a from PersistenteNewsletterauslieferung a where a.versandauftragId = :versandauftragId order by a.sortnummer"),
 })
 public class PersistenteNewsletterauslieferung extends ConcurrencySafeEntity {
 

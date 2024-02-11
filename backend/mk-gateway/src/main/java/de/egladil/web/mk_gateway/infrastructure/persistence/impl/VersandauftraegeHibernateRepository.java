@@ -14,13 +14,14 @@ import org.apache.commons.lang3.StringUtils;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.mail.StatusAuslieferung;
-import de.egladil.web.mk_gateway.domain.mail.Versandauftrag;
-import de.egladil.web.mk_gateway.domain.mail.VersandauftraegeRepository;
+import de.egladil.web.mk_gateway.domain.newsletterversand.StatusAuslieferung;
+import de.egladil.web.mk_gateway.domain.newsletterversand.VersandauftraegeRepository;
+import de.egladil.web.mk_gateway.domain.newsletterversand.Versandauftrag;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterVersandauftrag;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 /**
  * VersandauftraegeHibernateRepository
@@ -61,19 +62,7 @@ public class VersandauftraegeHibernateRepository implements VersandauftraegeRepo
 	}
 
 	@Override
-	public Versandauftrag addVersandinformation(final Versandauftrag versandinformation) {
-
-		if (versandinformation.identifier() != null) {
-
-			Optional<PersistenterVersandauftrag> optExisting = this
-				.findTheExistingVersandinfo(versandinformation.identifier().identifier());
-
-			if (optExisting.isPresent()) {
-
-				throw new IllegalStateException(
-					"Versandauftrag mit UUID=" + versandinformation.identifier() + " existiert schon");
-			}
-		}
+	public Versandauftrag addVersandauftrag(final Versandauftrag versandinformation) {
 
 		PersistenterVersandauftrag persistenteVersandinfo = new PersistenterVersandauftrag();
 		copyAttributesButUuid(persistenteVersandinfo, versandinformation);
@@ -84,7 +73,7 @@ public class VersandauftraegeHibernateRepository implements VersandauftraegeRepo
 	}
 
 	@Override
-	public Versandauftrag updateVersandinformation(final Versandauftrag versandinformation) {
+	public Versandauftrag updateVersandauftrag(final Versandauftrag versandinformation) {
 
 		Optional<PersistenterVersandauftrag> optExisting = this
 			.findTheExistingVersandinfo(versandinformation.identifier().identifier());
@@ -101,6 +90,17 @@ public class VersandauftraegeHibernateRepository implements VersandauftraegeRepo
 		PersistenterVersandauftrag merged = em.merge(existing);
 
 		return mapFromDB(merged);
+	}
+
+	@Override
+	public Versandauftrag saveVersandauftrag(final Versandauftrag versandauftrag) {
+
+		if (versandauftrag.identifier() == null) {
+
+			return this.addVersandauftrag(versandauftrag);
+		}
+
+		return this.updateVersandauftrag(versandauftrag);
 	}
 
 	@Override
@@ -176,14 +176,29 @@ public class VersandauftraegeHibernateRepository implements VersandauftraegeRepo
 	}
 
 	@Override
-	public List<Versandauftrag> findNichtBeendeteVersandinfos() {
+	public List<Versandauftrag> findVersandauftraegeNotCompleted() {
 
 		List<PersistenterVersandauftrag> trefferliste = em
 			.createNamedQuery(PersistenterVersandauftrag.FIND_NOT_COMPLETED, PersistenterVersandauftrag.class)
 			.setParameter("statusCompleted", StatusAuslieferung.COMPLETED)
+			.setParameter("statusErrors", StatusAuslieferung.ERRORS)
 			.getResultList();
 
 		return trefferliste.stream().map(this::mapFromDB).toList();
+	}
+
+	@Override
+	@Transactional
+	public void delete(final Versandauftrag versandauftrag) {
+
+		PersistenterVersandauftrag persistenter = em.find(PersistenterVersandauftrag.class,
+			versandauftrag.identifier().identifier());
+
+		if (persistenter != null) {
+
+			em.remove(persistenter);
+		}
+
 	}
 
 }

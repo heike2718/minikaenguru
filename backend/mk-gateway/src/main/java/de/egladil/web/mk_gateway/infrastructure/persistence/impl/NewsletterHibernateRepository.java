@@ -18,8 +18,8 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.mail.Newsletter;
-import de.egladil.web.mk_gateway.domain.mail.NewsletterRepository;
+import de.egladil.web.mk_gateway.domain.newsletters.Newsletter;
+import de.egladil.web.mk_gateway.domain.newsletters.NewsletterRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterNewsletter;
 
 /**

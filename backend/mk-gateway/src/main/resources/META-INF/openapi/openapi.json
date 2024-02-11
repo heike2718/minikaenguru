@@ -1,0 +1,3853 @@
+{
+  "openapi" : "3.0.3",
+  "info" : {
+    "title" : "mk-gateway-api",
+    "description" : "API f�r die Minik�nguru-Anwendungen",
+    "contact" : {
+      "name" : "Heike Winkelvo�",
+      "url" : "https://mathe-jung-alt.de",
+      "email" : "info@egladil.de"
+    },
+    "license" : {
+      "url" : "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version" : "2.2.4"
+  },
+  "servers" : [ {
+    "url" : "http://localhost:9510",
+    "description" : "Auto generated value"
+  }, {
+    "url" : "http://0.0.0.0:9510",
+    "description" : "Auto generated value"
+  } ],
+  "tags" : [ {
+    "name" : "statistik"
+  } ],
+  "paths" : {
+    "/mk-gateway/admin/events/{ab}" : {
+      "get" : {
+        "tags" : [ "Admin Eventlog Resource" ],
+        "summary" : "Gibt die Daten des Eventlogs ab einem gegebenen Datum zurück.",
+        "operationId" : "getEventLogBeginningWithDate",
+        "parameters" : [ {
+          "name" : "ab",
+          "in" : "path",
+          "description" : "Tagesdatum im Format yyyy-MM-dd",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Eventlog erfolgreich erstellt",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DownloadData"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/guiversion" : {
+      "get" : {
+        "tags" : [ "Admin Gui Version Resource" ],
+        "summary" : "Gibt die erwartete GUI-Version zurück.",
+        "operationId" : "getExcpectedGuiVersion",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessagePayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/kataloge/kuerzel" : {
+      "get" : {
+        "tags" : [ "Admin Katalog Resource" ],
+        "summary" : "Generiert zwei neue Kürzel, eins für den Ort, eins für die Schule.",
+        "operationId" : "admin.generateKuerzelFuerSchuleUndOrt",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/KuerzelAPIModel"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "wenn im Header X-SECRET was falsches steht.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/kataloge/laender" : {
+      "get" : {
+        "tags" : [ "Admin Katalog Resource" ],
+        "summary" : "Läd die Länder des Schulkatalogs.",
+        "operationId" : "loadLaender",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/KatalogItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Admin Katalog Resource" ],
+        "summary" : "Ändert die Daten eines Landes im Schulkatalog",
+        "operationId" : "admin.renameLand",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/LandPayload"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Input-Validierung",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "ist Konfigurationsfehler beim Aufruf der kataloge-OpenAPI",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/kataloge/laender/{kuerzel}/orte" : {
+      "get" : {
+        "tags" : [ "Admin Katalog Resource" ],
+        "summary" : "Läd die Orte des Schulkatalogs, die im gegebenen Land liegen.",
+        "operationId" : "admin.loadOrteInLand",
+        "parameters" : [ {
+          "name" : "kuerzel",
+          "in" : "path",
+          "description" : "Kürzel des Lands im Schulkatalog",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/KatalogItem"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Wenn die Treffermenge größer als die konfigurierte maximale Anzahl ist (default = 25).",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/kataloge/orte" : {
+      "put" : {
+        "tags" : [ "Admin Katalog Resource" ],
+        "summary" : "Ändert den Namen des Orts im Schulkatalog",
+        "operationId" : "admin.renameOrt",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OrtPayload"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Input-Validierung",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "ist Konfigurationsfehler beim Aufruf der kataloge-OpenAPI",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/kataloge/orte/{kuerzel}/schulen" : {
+      "get" : {
+        "tags" : [ "Admin Katalog Resource" ],
+        "summary" : "Läd die Schulen des Schulkatalogs, die im gegebenen Ort liegen.",
+        "operationId" : "admin.loadSchulenInOrt",
+        "parameters" : [ {
+          "name" : "kuerzel",
+          "in" : "path",
+          "description" : "Kürzel des Orts im Schulkatalog",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/KatalogItem"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Wenn die Treffermenge größer als die konfigurierte maximale Anzahl ist (default = 25).",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/kataloge/schulen" : {
+      "put" : {
+        "tags" : [ "Admin Katalog Resource" ],
+        "summary" : "Ändert den Namen der Schule im Schulkatalog",
+        "operationId" : "admin.renameSchule",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SchulePayload"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Input-Validierung",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "ist Konfigurationsfehler beim Aufruf der kataloge-OpenAPI",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Admin Katalog Resource" ],
+        "summary" : "Legt eine neue Schule an und sendet eine Erfolgsmail an den Auftraggeber.",
+        "operationId" : "admin.createSchule",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SchulePayload"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Input-Validierung",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "ist Konfigurationsfehler beim Aufruf der kataloge-OpenAPI",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/kataloge/suche/global/{typ}" : {
+      "get" : {
+        "tags" : [ "Admin Katalog Resource" ],
+        "summary" : "Gibt alle KatalogItems vom Typ typ zurück, die auf die gegebene Suchanfrage passen.",
+        "operationId" : "admin.findItems",
+        "parameters" : [ {
+          "name" : "typ",
+          "in" : "path",
+          "description" : "Katalogtyp: LAND, ORT, SCHULE",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "search",
+          "in" : "query",
+          "description" : "Suchstring, mit dem nach KatalogItems im Namen gesucht wird.",
+          "required" : true,
+          "schema" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/KatalogItem"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/kataloge/suche/laender/{kuerzel}/orte" : {
+      "get" : {
+        "tags" : [ "Admin Katalog Resource" ],
+        "summary" : "Gibt alle Orte im gegebenen Land zurück, deren Name mit dem Suchstring beginnt.",
+        "operationId" : "admin.findOrteInLand",
+        "parameters" : [ {
+          "name" : "search",
+          "in" : "query",
+          "description" : "Anfangsbuchstaben des Ortsnamens",
+          "required" : true,
+          "schema" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          }
+        }, {
+          "name" : "kuerzel",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/KatalogItem"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/kataloge/suche/orte/{kuerzel}/schulen" : {
+      "get" : {
+        "tags" : [ "Admin Katalog Resource" ],
+        "summary" : "Gibt alle Schulen im gegebenen Ort zurück, deren Name den Suchstring enthält.",
+        "operationId" : "admin.findSchulenInOrt",
+        "parameters" : [ {
+          "name" : "search",
+          "in" : "query",
+          "description" : "Teil des Schulnamens",
+          "required" : true,
+          "schema" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          }
+        }, {
+          "name" : "kuerzel",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/KatalogItem"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/loesungszettel/{jahr}" : {
+      "get" : {
+        "tags" : [ "Admin Loesungszettel Resource" ],
+        "parameters" : [ {
+          "name" : "jahr",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/loesungszettel/{jahr}/size" : {
+      "get" : {
+        "tags" : [ "Admin Loesungszettel Resource" ],
+        "parameters" : [ {
+          "name" : "jahr",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/mails" : {
+      "post" : {
+        "tags" : [ "Admin Mails Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/MailAPIModel"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/meldungen/aktuelle-meldung" : {
+      "get" : {
+        "tags" : [ "Admin Meldungen Resource" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Admin Meldungen Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Meldung"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Admin Meldungen Resource" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/mustertexte" : {
+      "get" : {
+        "tags" : [ "Admin Mustertexte Resource" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Admin Mustertexte Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/MustertextAPIModel"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/mustertexte/{mustertextID}" : {
+      "get" : {
+        "tags" : [ "Admin Mustertexte Resource" ],
+        "parameters" : [ {
+          "name" : "mustertextID",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Admin Mustertexte Resource" ],
+        "parameters" : [ {
+          "name" : "mustertextID",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/MustertextAPIModel"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Admin Mustertexte Resource" ],
+        "parameters" : [ {
+          "name" : "mustertextID",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/newsletters" : {
+      "get" : {
+        "tags" : [ "Admin Newsletter Resource" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Admin Newsletter Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/NewsletterAPIModel"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Admin Newsletter Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/NewsletterAPIModel"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/newsletters/{newsletterID}" : {
+      "delete" : {
+        "tags" : [ "Admin Newsletter Resource" ],
+        "parameters" : [ {
+          "name" : "newsletterID",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/newsletterversand" : {
+      "post" : {
+        "tags" : [ "Admin Newsletterversand Resource" ],
+        "summary" : "Erstellt einen Newsletterversandauftrag mit hinreichend vielen Auslieferungen (Gruppen von Mailempfängern). Die Aufträge werden durch einen Scheduler abgearbeitet. Das kann viele Stunden dauern wegen der Beschränkungen durch den Provider.",
+        "operationId" : "scheduleNewsletterversand",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/NewsletterVersandauftrag"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "default" : {
+            "description" : "server error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Versandauftrag"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "fehlgeschlagene Input-Validierung",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "401" : {
+            "content" : {
+              "application/json" : { }
+            }
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/newsletterversand/{versandinfoUuid}" : {
+      "get" : {
+        "tags" : [ "Admin Newsletterversand Resource" ],
+        "summary" : "Gibt die Versandinformation zurück, also den Status des Versands eines NewsletterVersandauftrags.",
+        "operationId" : "getVersandinfo",
+        "parameters" : [ {
+          "name" : "versandinfoUuid",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "server error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/VersandinfoAPIModel"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "fehlgeschlagene Input-Validierung",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "401" : {
+            "content" : {
+              "application/json" : { }
+            }
+          },
+          "404" : { }
+        }
+      }
+    },
+    "/mk-gateway/admin/privatteilnahmen/{teilnahmenummer}" : {
+      "get" : {
+        "tags" : [ "Admin Privatteilnahmen Resource" ],
+        "parameters" : [ {
+          "name" : "teilnahmenummer",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/schulen/{schulkuerzel}" : {
+      "get" : {
+        "tags" : [ "Admin Schulen Resource" ],
+        "parameters" : [ {
+          "name" : "schulkuerzel",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/schulen/{schulkuerzel}/uploads/klassenlisten" : {
+      "get" : {
+        "tags" : [ "Admin Schulen Resource" ],
+        "parameters" : [ {
+          "name" : "schulkuerzel",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/session/authurls/login" : {
+      "get" : {
+        "tags" : [ "Admin Session Resource" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/session/dev/logout/{sessionId}" : {
+      "delete" : {
+        "tags" : [ "Admin Session Resource" ],
+        "parameters" : [ {
+          "name" : "sessionId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/session/login" : {
+      "post" : {
+        "tags" : [ "Admin Session Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AuthResult"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/session/logout" : {
+      "delete" : {
+        "tags" : [ "Admin Session Resource" ],
+        "parameters" : [ {
+          "name" : "mk_SESSIONID",
+          "in" : "cookie",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/statistik/downloads" : {
+      "get" : {
+        "tags" : [ "Admin Statistik Resource" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/statistik/kinder" : {
+      "get" : {
+        "tags" : [ "Admin Statistik Resource" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/statistik/loesungszettel" : {
+      "get" : {
+        "tags" : [ "Admin Statistik Resource" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/statistik/{teilnahmeart}/{teilnahmenummer}/{jahr}" : {
+      "get" : {
+        "tags" : [ "Admin Statistik Resource" ],
+        "parameters" : [ {
+          "name" : "jahr",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "teilnahmeart",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "teilnahmenummer",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/uploads" : {
+      "get" : {
+        "tags" : [ "Admin Upload Resource" ],
+        "parameters" : [ {
+          "name" : "limit",
+          "in" : "query",
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/uploads/auswertung/{jahr}/{kuerzelLand}/{schulkuerzel}" : {
+      "post" : {
+        "tags" : [ "Admin Upload Resource" ],
+        "parameters" : [ {
+          "name" : "jahr",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }, {
+          "name" : "kuerzelLand",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "schulkuerzel",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "sprache",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/MultipartFormDataInput"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/uploads/size" : {
+      "get" : {
+        "tags" : [ "Admin Upload Resource" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/uploads/{uuid}/fehlerreport" : {
+      "get" : {
+        "tags" : [ "Admin Upload Resource" ],
+        "parameters" : [ {
+          "name" : "uuid",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/uploads/{uuid}/file" : {
+      "get" : {
+        "tags" : [ "Admin Upload Resource" ],
+        "parameters" : [ {
+          "name" : "uuid",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/veranstalter/suche" : {
+      "post" : {
+        "tags" : [ "Admin Veranstalter Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/VeranstalterSuchanfrage"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/veranstalter/{uuidPrefix}/newsletter" : {
+      "post" : {
+        "tags" : [ "Admin Veranstalter Resource" ],
+        "parameters" : [ {
+          "name" : "uuidPrefix",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/veranstalter/{uuidPrefix}/zugangsstatus" : {
+      "post" : {
+        "tags" : [ "Admin Veranstalter Resource" ],
+        "parameters" : [ {
+          "name" : "uuidPrefix",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ZugangsstatusPayload"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/wettbewerbe" : {
+      "get" : {
+        "tags" : [ "Admin Wettbewerb Resource" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/wettbewerbe/aktueller" : {
+      "get" : {
+        "tags" : [ "Admin Wettbewerb Resource" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/wettbewerbe/wettbewerb" : {
+      "put" : {
+        "tags" : [ "Admin Wettbewerb Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/EditWettbewerbModel"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Admin Wettbewerb Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/EditWettbewerbModel"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/wettbewerbe/wettbewerb/status" : {
+      "put" : {
+        "tags" : [ "Admin Wettbewerb Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/WettbewerbID"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/admin/wettbewerbe/wettbewerb/{jahr}" : {
+      "get" : {
+        "tags" : [ "Admin Wettbewerb Resource" ],
+        "parameters" : [ {
+          "name" : "jahr",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/adv" : {
+      "post" : {
+        "tags" : [ "Adv Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/VertragAdvAPIModel"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/adv/vertragstext" : {
+      "get" : {
+        "tags" : [ "Adv Resource" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/adv/{schulkuerzel}" : {
+      "get" : {
+        "tags" : [ "Adv Resource" ],
+        "parameters" : [ {
+          "name" : "schulkuerzel",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/guiversion" : {
+      "get" : {
+        "tags" : [ "Gui Version Resource" ],
+        "summary" : "Gibt das zurück, was in der GUI im Footer stehen sollte. Wegen der hartnäckigen Weigerung von Browsern, die trotz nocache eine neuere Version vom Server zu laden.",
+        "operationId" : "getExpectedGuiVersion",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/MessagePayload"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mk-gateway/heartbeats" : {
+      "get" : {
+        "tags" : [ "Heartbeat Resource" ],
+        "parameters" : [ {
+          "name" : "X-HEARTBEAT-ID",
+          "in" : "header",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/kinder" : {
+      "put" : {
+        "tags" : [ "Kinder Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/KindRequestData"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Kinder Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/KindRequestData"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/kinder/duplikate" : {
+      "post" : {
+        "tags" : [ "Kinder Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/KindRequestData"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/kinder/{teilnahmenummer}" : {
+      "get" : {
+        "tags" : [ "Kinder Resource" ],
+        "parameters" : [ {
+          "name" : "teilnahmenummer",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/kinder/{uuid}" : {
+      "delete" : {
+        "tags" : [ "Kinder Resource" ],
+        "parameters" : [ {
+          "name" : "uuid",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/klassen" : {
+      "put" : {
+        "tags" : [ "Klassen Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/KlasseRequestData"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Klassen Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/KlasseRequestData"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/klassen/duplikate" : {
+      "post" : {
+        "tags" : [ "Klassen Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/KlasseRequestData"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/klassen/importreport/{uuid}" : {
+      "get" : {
+        "tags" : [ "Klassen Resource" ],
+        "parameters" : [ {
+          "name" : "uuid",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/klassen/{schulkuerzel}" : {
+      "get" : {
+        "tags" : [ "Klassen Resource" ],
+        "parameters" : [ {
+          "name" : "schulkuerzel",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/klassen/{uuid}" : {
+      "delete" : {
+        "tags" : [ "Klassen Resource" ],
+        "parameters" : [ {
+          "name" : "uuid",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/lehrer" : {
+      "get" : {
+        "tags" : [ "Lehrer Resource" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/lehrer/schulen" : {
+      "get" : {
+        "tags" : [ "Lehrer Resource" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/lehrer/schulen/{schulkuerzel}" : {
+      "post" : {
+        "tags" : [ "Lehrer Resource" ],
+        "parameters" : [ {
+          "name" : "schulkuerzel",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Lehrer Resource" ],
+        "parameters" : [ {
+          "name" : "schulkuerzel",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/lehrer/schulen/{schulkuerzel}/details" : {
+      "get" : {
+        "tags" : [ "Lehrer Resource" ],
+        "parameters" : [ {
+          "name" : "schulkuerzel",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/lehrer/schulen/{schulkuerzel}/klassen" : {
+      "delete" : {
+        "tags" : [ "Lehrer Resource" ],
+        "parameters" : [ {
+          "name" : "schulkuerzel",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/loesungszettel" : {
+      "put" : {
+        "tags" : [ "Loesungszettel Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/LoesungszettelAPIModel"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Loesungszettel Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/LoesungszettelAPIModel"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/loesungszettel/{loesungszettelID}" : {
+      "get" : {
+        "tags" : [ "Loesungszettel Resource" ],
+        "parameters" : [ {
+          "name" : "loesungszettelID",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Loesungszettel Resource" ],
+        "parameters" : [ {
+          "name" : "loesungszettelID",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/log" : {
+      "post" : {
+        "tags" : [ "Log Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/LogEntry"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/meldungen/aktuelle-meldung" : {
+      "get" : {
+        "tags" : [ "Meldungen Resource" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/open-data/statistik/anmeldungen" : {
+      "get" : {
+        "tags" : [ "statistik" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/open-data/statistik/prozentrang" : {
+      "get" : {
+        "tags" : [ "statistik" ],
+        "parameters" : [ {
+          "name" : "jahr",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "klasse",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "punkte",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/open-data/statistik/teilnahmen" : {
+      "get" : {
+        "tags" : [ "statistik" ],
+        "parameters" : [ {
+          "name" : "jahr",
+          "in" : "query",
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Liste der Anmeldungen und Beteiligungen nach Ländern zu einem Wettbewerbsjahr",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "description" : "Liste der Anmeldungen und Teilnahmen nach Ländern",
+                  "type" : "object",
+                  "properties" : {
+                    "wettbewerbsjahr" : {
+                      "type" : "string"
+                    },
+                    "statusWettbewerb" : {
+                      "$ref" : "#/components/schemas/WettbewerbStatus"
+                    },
+                    "mediane" : {
+                      "type" : "array",
+                      "items" : {
+                        "$ref" : "#/components/schemas/MedianAPIModel"
+                      }
+                    },
+                    "privatanmeldungen" : {
+                      "$ref" : "#/components/schemas/AnmeldungsitemAPIModel"
+                    },
+                    "schulanmeldungen" : {
+                      "$ref" : "#/components/schemas/AnmeldungsitemAPIModel"
+                    },
+                    "laender" : {
+                      "type" : "array",
+                      "items" : {
+                        "$ref" : "#/components/schemas/AnmeldungsitemAPIModel"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Fehler beim Laden der Teilnahmestatistik",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "message" : {
+                      "$ref" : "#/components/schemas/MessagePayload"
+                    }
+                  },
+                  "xml" : {
+                    "name" : "response-payload"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mk-gateway/open-data/statistik/{jahr}/EINS/xml" : {
+      "get" : {
+        "tags" : [ "statistik" ],
+        "parameters" : [ {
+          "name" : "jahr",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/open-data/statistik/{jahr}/IKID/xml" : {
+      "get" : {
+        "tags" : [ "statistik" ],
+        "parameters" : [ {
+          "name" : "jahr",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/open-data/statistik/{jahr}/ZWEI/xml" : {
+      "get" : {
+        "tags" : [ "statistik" ],
+        "parameters" : [ {
+          "name" : "jahr",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/open-data/statistik/{jahr}/mediane" : {
+      "get" : {
+        "tags" : [ "statistik" ],
+        "parameters" : [ {
+          "name" : "jahr",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/open-data/statistik/{jahr}/pdf" : {
+      "get" : {
+        "tags" : [ "statistik" ],
+        "parameters" : [ {
+          "name" : "jahr",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/schulkatalog/katalogantrag" : {
+      "post" : {
+        "tags" : [ "Public Katalogsuche Resource" ],
+        "summary" : "Sendet die Daten des Schulantragsformulars an die konfgurierte Mailadresse.",
+        "operationId" : "submitSchule",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SchulkatalogAntrag"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "bei Fehlern in der Input-Validierung",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mk-gateway/schulkatalog/laender/{land}/orte" : {
+      "get" : {
+        "tags" : [ "Public Katalogsuche Resource" ],
+        "summary" : "Läd die Orte des Schulkatalogs, die im gegebenen Land liegen.",
+        "operationId" : "loadOrteInLand",
+        "parameters" : [ {
+          "name" : "land",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/KatalogItem"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Wenn die Treffermenge größer als die konfigurierte maximale Anzahl ist (default = 25).",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mk-gateway/schulkatalog/orte/{ort}/schulen" : {
+      "get" : {
+        "tags" : [ "Public Katalogsuche Resource" ],
+        "summary" : "Läd die Schulen des Schulkatalogs, die im gegebenen Ort liegen.",
+        "operationId" : "loadSchulenInOrt",
+        "parameters" : [ {
+          "name" : "ort",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/KatalogItem"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Wenn die Treffermenge größer als die konfigurierte maximale Anzahl ist (default = 25).",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mk-gateway/schulkatalog/suche/laender/{land}/orte" : {
+      "get" : {
+        "tags" : [ "Public Katalogsuche Resource" ],
+        "summary" : "Gibt alle Orte im gegebenen Land zurück, deren Name mit dem Suchstring beginnt.",
+        "operationId" : "findOrteInLand",
+        "parameters" : [ {
+          "name" : "land",
+          "in" : "path",
+          "description" : "Kürzel des Lands im Schulkatalog",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "search",
+          "in" : "query",
+          "description" : "Anfangsbuchstaben des Ortsnamens",
+          "required" : true,
+          "schema" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/ResponsePayload"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mk-gateway/schulkatalog/suche/orte/{ort}/schulen" : {
+      "get" : {
+        "tags" : [ "Public Katalogsuche Resource" ],
+        "summary" : "Gibt alle Schulen im gegebenen Ort zurück, deren Name den Suchstring enthält.",
+        "operationId" : "findSchulenInOrt",
+        "parameters" : [ {
+          "name" : "ort",
+          "in" : "path",
+          "description" : "Kürzel des Orts im Schulkatalog",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "search",
+          "in" : "query",
+          "description" : "Teil des Schulnamens",
+          "required" : true,
+          "schema" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/ResponsePayload"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mk-gateway/schulkatalog/suche/{typ}" : {
+      "get" : {
+        "tags" : [ "Public Katalogsuche Resource" ],
+        "summary" : "Gibt alle KatalogItems vom Typ typ zurück, die auf die gegebene Suchanfrage passen.",
+        "operationId" : "findItems",
+        "parameters" : [ {
+          "name" : "typ",
+          "in" : "path",
+          "description" : "Katalogtyp: LAND, ORT, SCHULE",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "search",
+          "in" : "query",
+          "description" : "Suchstring, mit dem nach KatalogItems im Namen gesucht wird.",
+          "required" : true,
+          "schema" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/KatalogItem"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mk-gateway/statistik/{teilnahmeart}/{teilnahmenummer}/{jahr}" : {
+      "get" : {
+        "tags" : [ "Statistik Resource" ],
+        "parameters" : [ {
+          "name" : "jahr",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "teilnahmeart",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "teilnahmenummer",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/sync/ack" : {
+      "post" : {
+        "tags" : [ "Sync Veranstalter Data Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SyncHandshake"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/sync/veranstalter" : {
+      "put" : {
+        "tags" : [ "Sync Veranstalter Data Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ChangeUserCommand"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Sync Veranstalter Data Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateUserCommand"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Sync Veranstalter Data Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/LoescheVeranstalterCommand"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/teilnahmen/privat" : {
+      "post" : {
+        "tags" : [ "Teilnahmen Resource" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/teilnahmen/schule" : {
+      "post" : {
+        "tags" : [ "Teilnahmen Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SchulanmeldungRequestPayload"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/teilnahmen/veranstalter/{teilnahmenummer}" : {
+      "get" : {
+        "tags" : [ "Teilnahmen Resource" ],
+        "parameters" : [ {
+          "name" : "teilnahmenummer",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/unterlagen/privat/{sprache}" : {
+      "get" : {
+        "tags" : [ "Unterlagen Resource" ],
+        "parameters" : [ {
+          "name" : "sprache",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/unterlagen/schulen/{sprache}" : {
+      "get" : {
+        "tags" : [ "Unterlagen Resource" ],
+        "parameters" : [ {
+          "name" : "sprache",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/uploads/auswertung/{jahr}/{kuerzelLand}/{schulkuerzel}" : {
+      "post" : {
+        "tags" : [ "Upload Resource" ],
+        "parameters" : [ {
+          "name" : "jahr",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }, {
+          "name" : "kuerzelLand",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "schulkuerzel",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/MultipartFormDataInput"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/uploads/klassenlisten/{jahr}/{kuerzelLand}/{schulkuerzel}" : {
+      "post" : {
+        "tags" : [ "Upload Resource" ],
+        "parameters" : [ {
+          "name" : "jahr",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }, {
+          "name" : "kuerzelLand",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "schulkuerzel",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "nachnameAlsZusatz",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "sprache",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/MultipartFormDataInput"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/urkunden/schule" : {
+      "post" : {
+        "tags" : [ "Urkunden Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UrkundenauftragSchule"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/urkunden/urkunde" : {
+      "post" : {
+        "tags" : [ "Urkunden Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UrkundenauftragEinzelkind"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/veranstalter/newsletter" : {
+      "put" : {
+        "tags" : [ "Veranstalter Resource" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/veranstalter/privat" : {
+      "get" : {
+        "tags" : [ "Veranstalter Resource" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/veranstalter/session/authurls/login" : {
+      "get" : {
+        "tags" : [ "Veranstalter Session Resource" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/veranstalter/session/authurls/signup/lehrer/{schulkuerzel}/{newsletterAbonnieren}" : {
+      "get" : {
+        "tags" : [ "Veranstalter Session Resource" ],
+        "parameters" : [ {
+          "name" : "newsletterAbonnieren",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "schulkuerzel",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/veranstalter/session/authurls/signup/privat/{newsletterAbonnieren}" : {
+      "get" : {
+        "tags" : [ "Veranstalter Session Resource" ],
+        "parameters" : [ {
+          "name" : "newsletterAbonnieren",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/veranstalter/session/dev/logout/{sessionId}" : {
+      "delete" : {
+        "tags" : [ "Veranstalter Session Resource" ],
+        "parameters" : [ {
+          "name" : "sessionId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/veranstalter/session/login" : {
+      "post" : {
+        "tags" : [ "Veranstalter Session Resource" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AuthResult"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/veranstalter/session/logout" : {
+      "delete" : {
+        "tags" : [ "Veranstalter Session Resource" ],
+        "parameters" : [ {
+          "name" : "mk_SESSIONID",
+          "in" : "cookie",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/version" : {
+      "get" : {
+        "tags" : [ "Version Resource" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/wettbewerbe" : {
+      "get" : {
+        "tags" : [ "Public Wettbewerb Resource" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/mk-gateway/wettbewerbe/aktueller" : {
+      "get" : {
+        "tags" : [ "Public Wettbewerb Resource" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "AnmeldungsitemAPIModel" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "anzahlAnmeldungen" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "anzahlLoesungszettel" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "mediane" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MedianAPIModel"
+            }
+          }
+        }
+      },
+      "AuthResult" : {
+        "required" : [ "nonce", "idToken" ],
+        "type" : "object",
+        "properties" : {
+          "expiresAt" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "state" : {
+            "type" : "string"
+          },
+          "nonce" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          },
+          "idToken" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          }
+        }
+      },
+      "ChangeUserCommand" : {
+        "type" : "object",
+        "properties" : {
+          "syncToken" : {
+            "type" : "string"
+          },
+          "uuid" : {
+            "type" : "string"
+          },
+          "vorname" : {
+            "type" : "string"
+          },
+          "nachname" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          }
+        }
+      },
+      "CreateUserCommand" : {
+        "type" : "object",
+        "properties" : {
+          "syncToken" : {
+            "type" : "string"
+          },
+          "uuid" : {
+            "type" : "string"
+          },
+          "fullName" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "nonce" : {
+            "type" : "string"
+          },
+          "clientId" : {
+            "type" : "string"
+          }
+        }
+      },
+      "DownloadData" : {
+        "type" : "object",
+        "properties" : {
+          "filename" : {
+            "type" : "string"
+          },
+          "data" : {
+            "format" : "binary",
+            "type" : "string"
+          }
+        }
+      },
+      "EditWettbewerbModel" : {
+        "required" : [ "wettbewerbsbeginn", "wettbewerbsende", "datumFreischaltungLehrer", "datumFreischaltungPrivat" ],
+        "type" : "object",
+        "properties" : {
+          "jahr" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "status" : {
+            "type" : "string"
+          },
+          "wettbewerbsbeginn" : {
+            "pattern" : "\\d{2}.\\d{2}.\\d{4}",
+            "type" : "string"
+          },
+          "wettbewerbsende" : {
+            "pattern" : "\\d{2}.\\d{2}.\\d{4}",
+            "type" : "string"
+          },
+          "datumFreischaltungLehrer" : {
+            "pattern" : "\\d{2}.\\d{2}.\\d{4}",
+            "type" : "string"
+          },
+          "datumFreischaltungPrivat" : {
+            "pattern" : "\\d{2}.\\d{2}.\\d{4}",
+            "type" : "string"
+          },
+          "loesungsbuchstabenIkids" : {
+            "type" : "string"
+          },
+          "loesungsbuchstabenKlasse1" : {
+            "type" : "string"
+          },
+          "loesungsbuchstabenKlasse2" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Empfaengertyp" : {
+        "enum" : [ "ALLE", "LEHRER", "PRIVATVERANSTALTER", "TEST" ],
+        "type" : "string"
+      },
+      "ErrorResponseDto" : {
+        "type" : "object",
+        "properties" : {
+          "level" : {
+            "type" : "string"
+          },
+          "message" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Farbschema" : {
+        "enum" : [ "BLUE", "GREEN", "ORANGE" ],
+        "type" : "string"
+      },
+      "FileItem" : {
+        "type" : "object",
+        "properties" : {
+          "inMemory" : {
+            "type" : "boolean"
+          },
+          "file" : {
+            "$ref" : "#/components/schemas/Path"
+          },
+          "fileSize" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "inputStream" : {
+            "format" : "binary",
+            "type" : "string"
+          }
+        }
+      },
+      "FileScanResult" : {
+        "description" : "Ergebnisse des Scans",
+        "type" : "object",
+        "properties" : {
+          "userID" : {
+            "type" : "string"
+          },
+          "uploadName" : {
+            "type" : "string"
+          },
+          "mediaType" : {
+            "type" : "string"
+          },
+          "virusDetection" : {
+            "$ref" : "#/components/schemas/VirusDetection"
+          },
+          "threadDetection" : {
+            "$ref" : "#/components/schemas/ThreadDetection"
+          }
+        }
+      },
+      "FileStore" : {
+        "type" : "object",
+        "properties" : {
+          "readOnly" : {
+            "type" : "boolean"
+          },
+          "totalSpace" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "usableSpace" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "unallocatedSpace" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "blockSize" : {
+            "format" : "int64",
+            "type" : "integer"
+          }
+        }
+      },
+      "FileSystem" : {
+        "type" : "object",
+        "properties" : {
+          "open" : {
+            "type" : "boolean"
+          },
+          "readOnly" : {
+            "type" : "boolean"
+          },
+          "separator" : {
+            "type" : "string"
+          },
+          "rootDirectories" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Path"
+            }
+          },
+          "fileStores" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/FileStore"
+            }
+          },
+          "userPrincipalLookupService" : {
+            "$ref" : "#/components/schemas/UserPrincipalLookupService"
+          }
+        }
+      },
+      "FormValue" : {
+        "type" : "object",
+        "properties" : {
+          "value" : {
+            "type" : "string"
+          },
+          "charset" : {
+            "type" : "string"
+          },
+          "fileItem" : {
+            "$ref" : "#/components/schemas/FileItem"
+          },
+          "fileName" : {
+            "type" : "string"
+          },
+          "headers" : {
+            "$ref" : "#/components/schemas/MultivaluedMapStringString"
+          }
+        }
+      },
+      "Identifier" : {
+        "type" : "object",
+        "properties" : {
+          "identifier" : {
+            "type" : "string"
+          }
+        }
+      },
+      "KatalogItem" : {
+        "description" : "Element eines hierarchisch aufgebauten Katalogs",
+        "type" : "object",
+        "properties" : {
+          "typ" : {
+            "$ref" : "#/components/schemas/Katalogtyp"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "pfad" : {
+            "type" : "string"
+          },
+          "kuerzel" : {
+            "type" : "string"
+          },
+          "parent" : {
+            "$ref" : "#/components/schemas/KatalogItem"
+          },
+          "anzahlKinder" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "leaf" : {
+            "type" : "boolean"
+          }
+        }
+      },
+      "Katalogtyp" : {
+        "enum" : [ "LAND", "ORT", "SCHULE" ],
+        "type" : "string"
+      },
+      "KindEditorModel" : {
+        "required" : [ "vorname", "klassenstufe", "sprache" ],
+        "type" : "object",
+        "properties" : {
+          "vorname" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          },
+          "nachname" : {
+            "type" : "string"
+          },
+          "zusatz" : {
+            "type" : "string"
+          },
+          "klassenstufe" : {
+            "$ref" : "#/components/schemas/KlassenstufeAPIModel"
+          },
+          "sprache" : {
+            "$ref" : "#/components/schemas/SpracheAPIModel"
+          },
+          "klasseUuid" : {
+            "type" : "string"
+          }
+        }
+      },
+      "KindRequestData" : {
+        "required" : [ "uuid", "kind" ],
+        "type" : "object",
+        "properties" : {
+          "uuid" : {
+            "type" : "string"
+          },
+          "kuerzelLand" : {
+            "type" : "string"
+          },
+          "kind" : {
+            "$ref" : "#/components/schemas/KindEditorModel"
+          }
+        }
+      },
+      "KlasseEditorModel" : {
+        "required" : [ "name" ],
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          }
+        }
+      },
+      "KlasseRequestData" : {
+        "required" : [ "uuid", "schulkuerzel", "klasse" ],
+        "type" : "object",
+        "properties" : {
+          "uuid" : {
+            "type" : "string"
+          },
+          "schulkuerzel" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          },
+          "klasse" : {
+            "$ref" : "#/components/schemas/KlasseEditorModel"
+          }
+        }
+      },
+      "Klassenstufe" : {
+        "enum" : [ "IKID", "EINS", "ZWEI" ],
+        "type" : "string"
+      },
+      "KlassenstufeAPIModel" : {
+        "type" : "object",
+        "properties" : {
+          "klassenstufe" : {
+            "$ref" : "#/components/schemas/Klassenstufe"
+          },
+          "label" : {
+            "type" : "string"
+          }
+        }
+      },
+      "KuerzelAPIModel" : {
+        "type" : "object",
+        "properties" : {
+          "kuerzelSchule" : {
+            "type" : "string"
+          },
+          "kuerzelOrt" : {
+            "type" : "string"
+          }
+        }
+      },
+      "LandPayload" : {
+        "required" : [ "kuerzel", "name" ],
+        "type" : "object",
+        "properties" : {
+          "kuerzel" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          },
+          "name" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          }
+        }
+      },
+      "LoescheVeranstalterCommand" : {
+        "type" : "object",
+        "properties" : {
+          "syncToken" : {
+            "type" : "string"
+          },
+          "uuid" : {
+            "type" : "string"
+          }
+        }
+      },
+      "LoesungszettelAPIModel" : {
+        "type" : "object",
+        "properties" : {
+          "uuid" : {
+            "type" : "string"
+          },
+          "version" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "kindID" : {
+            "type" : "string"
+          },
+          "klassenstufe" : {
+            "$ref" : "#/components/schemas/Klassenstufe"
+          },
+          "zeilen" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/LoesungszettelZeileAPIModel"
+            }
+          }
+        }
+      },
+      "LoesungszettelZeileAPIModel" : {
+        "type" : "object",
+        "properties" : {
+          "index" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "anzahlSpalten" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "eingabe" : {
+            "$ref" : "#/components/schemas/OnlineLoesungszetteleingabe"
+          }
+        }
+      },
+      "LogEntry" : {
+        "type" : "object",
+        "properties" : {
+          "timestamp" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "level" : {
+            "$ref" : "#/components/schemas/TSLogLevel"
+          }
+        }
+      },
+      "MailAPIModel" : {
+        "type" : "object",
+        "properties" : {
+          "betreff" : {
+            "type" : "string"
+          },
+          "empfaenger" : {
+            "type" : "string"
+          },
+          "mailtext" : {
+            "type" : "string"
+          }
+        }
+      },
+      "MedianAPIModel" : {
+        "type" : "object",
+        "properties" : {
+          "klassenstufe" : {
+            "$ref" : "#/components/schemas/Klassenstufe"
+          },
+          "median" : {
+            "type" : "string"
+          },
+          "anzahlLoesungszettel" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }
+      },
+      "Meldung" : {
+        "type" : "object",
+        "properties" : {
+          "text" : {
+            "type" : "string"
+          }
+        }
+      },
+      "MessagePayload" : {
+        "type" : "object",
+        "properties" : {
+          "level" : {
+            "type" : "string"
+          },
+          "message" : {
+            "type" : "string"
+          }
+        },
+        "xml" : {
+          "name" : "gesamtpunktverteilung"
+        }
+      },
+      "MultipartFormDataInput" : {
+        "type" : "object",
+        "properties" : {
+          "values" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/components/schemas/FormValue"
+              }
+            }
+          }
+        }
+      },
+      "MultivaluedMapStringString" : {
+        "type" : "object",
+        "additionalProperties" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "MustertextAPIModel" : {
+        "type" : "object",
+        "properties" : {
+          "uuid" : {
+            "type" : "string"
+          },
+          "kategorie" : {
+            "$ref" : "#/components/schemas/Mustertextkategorie"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "text" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Mustertextkategorie" : {
+        "enum" : [ "MAIL", "NEWSLETTER" ],
+        "type" : "string"
+      },
+      "NewsletterAPIModel" : {
+        "type" : "object",
+        "properties" : {
+          "uuid" : {
+            "type" : "string"
+          },
+          "betreff" : {
+            "type" : "string"
+          },
+          "text" : {
+            "type" : "string"
+          },
+          "versandinfoIDs" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "NewsletterVersandauftrag" : {
+        "required" : [ "newsletterID", "emfaengertyp" ],
+        "type" : "object",
+        "properties" : {
+          "newsletterID" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          },
+          "emfaengertyp" : {
+            "$ref" : "#/components/schemas/Empfaengertyp"
+          }
+        }
+      },
+      "OnlineLoesungszetteleingabe" : {
+        "enum" : [ "A", "B", "C", "D", "E", "N" ],
+        "type" : "string"
+      },
+      "OrtPayload" : {
+        "required" : [ "kuerzel", "name", "kuerzelLand", "nameLand" ],
+        "type" : "object",
+        "properties" : {
+          "kuerzel" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          },
+          "name" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          },
+          "kuerzelLand" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          },
+          "nameLand" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          }
+        }
+      },
+      "Path" : {
+        "type" : "object",
+        "properties" : {
+          "fileSystem" : {
+            "$ref" : "#/components/schemas/FileSystem"
+          },
+          "absolute" : {
+            "type" : "boolean"
+          },
+          "root" : {
+            "$ref" : "#/components/schemas/Path"
+          },
+          "fileName" : {
+            "$ref" : "#/components/schemas/Path"
+          },
+          "parent" : {
+            "$ref" : "#/components/schemas/Path"
+          },
+          "nameCount" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }
+      },
+      "ResponsePayload" : {
+        "type" : "object",
+        "properties" : {
+          "message" : {
+            "$ref" : "#/components/schemas/MessagePayload"
+          }
+        },
+        "xml" : {
+          "name" : "response-payload"
+        }
+      },
+      "ScanRequestPayload" : {
+        "description" : "Payload mit einem File, das auf Viren geprüft werden soll.",
+        "required" : [ "clientId", "upload" ],
+        "type" : "object",
+        "properties" : {
+          "clientId" : {
+            "type" : "string"
+          },
+          "fileOwner" : {
+            "type" : "string"
+          },
+          "upload" : {
+            "$ref" : "#/components/schemas/Upload"
+          }
+        }
+      },
+      "SchulanmeldungRequestPayload" : {
+        "type" : "object",
+        "properties" : {
+          "schulkuerzel" : {
+            "type" : "string"
+          },
+          "schulname" : {
+            "type" : "string"
+          }
+        }
+      },
+      "SchulePayload" : {
+        "required" : [ "kuerzel", "name", "kuerzelOrt", "nameOrt", "kuerzelLand", "nameLand" ],
+        "type" : "object",
+        "properties" : {
+          "kuerzel" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          },
+          "name" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          },
+          "kuerzelOrt" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          },
+          "nameOrt" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          },
+          "kuerzelLand" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          },
+          "nameLand" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          },
+          "emailAuftraggeber" : {
+            "type" : "string"
+          }
+        }
+      },
+      "SchulkatalogAntrag" : {
+        "required" : [ "email", "land", "ort", "schulname" ],
+        "type" : "object",
+        "properties" : {
+          "email" : {
+            "type" : "string"
+          },
+          "land" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          },
+          "ort" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          },
+          "plz" : {
+            "type" : "string"
+          },
+          "schulname" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          },
+          "strasseUndHausnummer" : {
+            "type" : "string"
+          },
+          "kleber" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Sprache" : {
+        "enum" : [ "de", "en" ],
+        "type" : "string"
+      },
+      "SpracheAPIModel" : {
+        "type" : "object",
+        "properties" : {
+          "sprache" : {
+            "$ref" : "#/components/schemas/Sprache"
+          },
+          "label" : {
+            "type" : "string"
+          }
+        }
+      },
+      "StatusAuslieferung" : {
+        "enum" : [ "NEU", "WAITING", "IN_PROGRESS", "COMPLETED", "ERRORS" ],
+        "type" : "string"
+      },
+      "SyncHandshake" : {
+        "type" : "object",
+        "properties" : {
+          "sendingClientId" : {
+            "type" : "string"
+          },
+          "nonce" : {
+            "type" : "string"
+          }
+        }
+      },
+      "TSLogLevel" : {
+        "enum" : [ "All", "Debug", "Info", "Warn", "Error", "Fatal", "Off" ],
+        "type" : "string"
+      },
+      "ThreadDetection" : {
+        "type" : "object",
+        "properties" : {
+          "securityThreadDetected" : {
+            "type" : "boolean"
+          },
+          "securityCheckMessage" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Upload" : {
+        "description" : "Das zu scannende File. Daten sind base64-encodet",
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "dataBase64" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Urkundenart" : {
+        "enum" : [ "KAENGURUSPRUNG", "TEILNAHME" ],
+        "type" : "string"
+      },
+      "UrkundenauftragEinzelkind" : {
+        "required" : [ "urkundenart", "kindUuid", "farbschema" ],
+        "type" : "object",
+        "properties" : {
+          "urkundenart" : {
+            "$ref" : "#/components/schemas/Urkundenart"
+          },
+          "kindUuid" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          },
+          "dateString" : {
+            "type" : "string"
+          },
+          "farbschema" : {
+            "$ref" : "#/components/schemas/Farbschema"
+          }
+        }
+      },
+      "UrkundenauftragSchule" : {
+        "required" : [ "schulkuerzel", "farbschema" ],
+        "type" : "object",
+        "properties" : {
+          "schulkuerzel" : {
+            "pattern" : "\\S",
+            "type" : "string"
+          },
+          "dateString" : {
+            "type" : "string"
+          },
+          "farbschema" : {
+            "$ref" : "#/components/schemas/Farbschema"
+          },
+          "forceCreateUrkundenKaengurusprung" : {
+            "type" : "boolean"
+          }
+        }
+      },
+      "UserPrincipalLookupService" : {
+        "type" : "object"
+      },
+      "VeranstalterSuchanfrage" : {
+        "type" : "object",
+        "properties" : {
+          "suchkriterium" : {
+            "$ref" : "#/components/schemas/VeranstalterSuchkriterium"
+          },
+          "suchstring" : {
+            "type" : "string"
+          }
+        }
+      },
+      "VeranstalterSuchkriterium" : {
+        "enum" : [ "EMAIL", "NAME", "TEILNAHMENUMMER", "UUID", "ZUGANGSSTATUS" ],
+        "type" : "string"
+      },
+      "Versandauftrag" : {
+        "type" : "object",
+        "properties" : {
+          "identifier" : {
+            "$ref" : "#/components/schemas/Identifier"
+          },
+          "newsletterID" : {
+            "$ref" : "#/components/schemas/Identifier"
+          },
+          "empfaengertyp" : {
+            "$ref" : "#/components/schemas/Empfaengertyp"
+          },
+          "anzahlAktuellVersendet" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "anzahlEmpaenger" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "status" : {
+            "$ref" : "#/components/schemas/StatusAuslieferung"
+          },
+          "erfasstAm" : {
+            "type" : "string"
+          },
+          "versandBegonnenAm" : {
+            "type" : "string"
+          },
+          "versandBeendetAm" : {
+            "type" : "string"
+          },
+          "fehlermeldung" : {
+            "type" : "string"
+          }
+        }
+      },
+      "VersandinfoAPIModel" : {
+        "type" : "object",
+        "properties" : {
+          "uuid" : {
+            "type" : "string"
+          },
+          "newsletterID" : {
+            "type" : "string"
+          },
+          "empfaengertyp" : {
+            "$ref" : "#/components/schemas/Empfaengertyp"
+          },
+          "anzahlAktuellVersendet" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "anzahlEmpaenger" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "versandBegonnenAm" : {
+            "type" : "string"
+          },
+          "versandBeendetAm" : {
+            "type" : "string"
+          },
+          "versandMitFehler" : {
+            "type" : "boolean"
+          }
+        }
+      },
+      "VertragAdvAPIModel" : {
+        "required" : [ "schulname", "plz", "ort", "strasse", "hausnummer" ],
+        "type" : "object",
+        "properties" : {
+          "schulkuerzel" : {
+            "type" : "string"
+          },
+          "schulname" : {
+            "maxLength" : 100,
+            "minLength" : 1,
+            "pattern" : "\\S",
+            "type" : "string"
+          },
+          "plz" : {
+            "maxLength" : 10,
+            "minLength" : 1,
+            "pattern" : "\\S",
+            "type" : "string"
+          },
+          "ort" : {
+            "maxLength" : 100,
+            "minLength" : 1,
+            "pattern" : "\\S",
+            "type" : "string"
+          },
+          "strasse" : {
+            "maxLength" : 100,
+            "minLength" : 1,
+            "pattern" : "\\S",
+            "type" : "string"
+          },
+          "hausnummer" : {
+            "maxLength" : 10,
+            "minLength" : 1,
+            "pattern" : "\\S",
+            "type" : "string"
+          }
+        }
+      },
+      "VirusDetection" : {
+        "type" : "object",
+        "properties" : {
+          "virusDetected" : {
+            "type" : "boolean"
+          },
+          "scannerMessage" : {
+            "type" : "string"
+          }
+        }
+      },
+      "WettbewerbID" : {
+        "type" : "object",
+        "properties" : {
+          "jahr" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }
+      },
+      "WettbewerbStatus" : {
+        "enum" : [ "ERFASST", "ANMELDUNG", "DOWNLOAD_LEHRER", "DOWNLOAD_PRIVAT", "BEENDET" ],
+        "type" : "string"
+      },
+      "ZugangUnterlagen" : {
+        "enum" : [ "DEFAULT", "ERTEILT", "ENTZOGEN" ],
+        "type" : "string"
+      },
+      "ZugangsstatusPayload" : {
+        "type" : "object",
+        "properties" : {
+          "zugangsstatus" : {
+            "$ref" : "#/components/schemas/ZugangUnterlagen"
+          }
+        }
+      },
+      "teilnahmen" : {
+        "type" : "object",
+        "properties" : {
+          "wettbewerbsjahr" : {
+            "type" : "string"
+          },
+          "statusWettbewerb" : {
+            "$ref" : "#/components/schemas/WettbewerbStatus"
+          },
+          "mediane" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MedianAPIModel"
+            }
+          },
+          "privatanmeldungen" : {
+            "$ref" : "#/components/schemas/AnmeldungsitemAPIModel"
+          },
+          "schulanmeldungen" : {
+            "$ref" : "#/components/schemas/AnmeldungsitemAPIModel"
+          },
+          "laender" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/AnmeldungsitemAPIModel"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes" : {
+      "SecurityScheme" : {
+        "type" : "http",
+        "description" : "Authentication",
+        "scheme" : "bearer",
+        "bearerFormat" : "JWT"
+      }
+    }
+  }
+}

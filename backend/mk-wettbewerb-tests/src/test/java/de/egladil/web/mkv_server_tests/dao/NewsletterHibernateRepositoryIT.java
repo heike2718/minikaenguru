@@ -17,7 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.mail.Newsletter;
+import de.egladil.web.mk_gateway.domain.newsletters.Newsletter;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.NewsletterHibernateRepository;
 import de.egladil.web.mkv_server_tests.AbstractIntegrationTest;
 
