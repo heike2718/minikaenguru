@@ -15,12 +15,12 @@ import jakarta.inject.Inject;
 public class NewsletterversandScheduler {
 
 	@Inject
-	NewsletterversandService newsletterversandService;
+	NewsletterAuslieferungProcessor newsletterversandService;
 
 	@Scheduled(cron = "{newsletterversand.cron.expr}")
 	void cronJob() {
 
-		newsletterversandService.checkAndSend();
+		newsletterversandService.processNextAuslieferung();
 	}
 
 }

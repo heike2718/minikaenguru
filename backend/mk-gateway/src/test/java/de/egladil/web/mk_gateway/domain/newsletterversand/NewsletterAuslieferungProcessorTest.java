@@ -31,11 +31,6 @@ import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.mail.AdminMailService;
 import de.egladil.web.mk_gateway.domain.newsletters.Newsletter;
 import de.egladil.web.mk_gateway.domain.newsletters.NewsletterRepository;
-import de.egladil.web.mk_gateway.domain.newsletterversand.NewsletterAuslieferung;
-import de.egladil.web.mk_gateway.domain.newsletterversand.NewsletterVersandauftragService;
-import de.egladil.web.mk_gateway.domain.newsletterversand.NewsletterversandService;
-import de.egladil.web.mk_gateway.domain.newsletterversand.StatusAuslieferung;
-import de.egladil.web.mk_gateway.domain.newsletterversand.Versandauftrag;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.NewsletterauslieferungenRepository;
 import de.egladil.web.mk_gateway.profiles.FullDatabaseTestProfile;
 import io.quarkus.test.InjectMock;
@@ -45,17 +40,17 @@ import jakarta.inject.Inject;
 import jakarta.mail.SendFailedException;
 
 /**
- * NewsletterversandServiceTest
+ * NewsletterAuslieferungProcessorTest
  */
 @QuarkusTest
 @TestProfile(value = FullDatabaseTestProfile.class)
-public class NewsletterversandServiceTest {
+public class NewsletterAuslieferungProcessorTest {
 
 	@ConfigProperty(name = "emails.testempfaenger")
 	String emailEmpfaenger;
 
 	@Inject
-	NewsletterversandService service;
+	NewsletterAuslieferungProcessor processor;
 
 	@InjectMock
 	NewsletterauslieferungenRepository newsletterAuslieferungenRepository;
@@ -76,7 +71,7 @@ public class NewsletterversandServiceTest {
 		when(newsletterAuftraegeService.findNichtBeendeteVersandauftraege()).thenReturn(new ArrayList<>());
 
 		// Act
-		service.checkAndSend();
+		processor.processNextAuslieferung();
 
 		// Assert
 		verify(newsletterAuftraegeService).findNichtBeendeteVersandauftraege();
@@ -114,7 +109,7 @@ public class NewsletterversandServiceTest {
 		// Act + Assert
 		try {
 
-			service.checkAndSend();
+			processor.processNextAuslieferung();
 			fail("keine MkGatewayRuntimeException");
 		} catch (MkGatewayRuntimeException e) {
 
@@ -170,7 +165,7 @@ public class NewsletterversandServiceTest {
 		when(newsletterAuftraegeService.versandauftragSpeichern(any(Versandauftrag.class))).thenReturn(versandinfos.get(0));
 
 		// Act
-		service.checkAndSend();
+		processor.processNextAuslieferung();
 
 		// Assert
 		verify(newsletterAuftraegeService).findNichtBeendeteVersandauftraege();
@@ -219,7 +214,7 @@ public class NewsletterversandServiceTest {
 		when(newsletterAuftraegeService.versandauftragSpeichern(any(Versandauftrag.class))).thenReturn(versandinfos.get(0));
 
 		// Act
-		service.checkAndSend();
+		processor.processNextAuslieferung();
 
 		// Assert
 		verify(newsletterAuftraegeService).findNichtBeendeteVersandauftraege();
@@ -262,7 +257,7 @@ public class NewsletterversandServiceTest {
 		when(newsletterAuftraegeService.versandauftragSpeichern(any(Versandauftrag.class))).thenReturn(versandinfos.get(0));
 
 		// Act
-		service.checkAndSend();
+		processor.processNextAuslieferung();
 
 		// Assert
 		verify(newsletterAuftraegeService).findNichtBeendeteVersandauftraege();
@@ -310,7 +305,7 @@ public class NewsletterversandServiceTest {
 		when(newsletterAuftraegeService.versandauftragSpeichern(any(Versandauftrag.class))).thenReturn(versandinfos.get(0));
 
 		// Act
-		service.checkAndSend();
+		processor.processNextAuslieferung();
 
 		// Assert
 		verify(newsletterAuftraegeService).findNichtBeendeteVersandauftraege();
@@ -360,7 +355,7 @@ public class NewsletterversandServiceTest {
 		doNothing().when(mailService).sendMail(any(DefaultEmailDaten.class));
 
 		// Act
-		service.checkAndSend();
+		processor.processNextAuslieferung();
 
 		// Assert
 		verify(newsletterAuftraegeService).findNichtBeendeteVersandauftraege();
@@ -412,7 +407,7 @@ public class NewsletterversandServiceTest {
 				.sendMail(any(DefaultEmailDaten.class));
 
 		// Act
-		service.checkAndSend();
+		processor.processNextAuslieferung();
 
 		// Assert
 		verify(newsletterAuftraegeService).findNichtBeendeteVersandauftraege();
@@ -463,7 +458,7 @@ public class NewsletterversandServiceTest {
 			.sendMail(any(DefaultEmailDaten.class));
 
 		// Act
-		service.checkAndSend();
+		processor.processNextAuslieferung();
 
 		// Assert
 		verify(newsletterAuftraegeService).findNichtBeendeteVersandauftraege();
@@ -514,7 +509,7 @@ public class NewsletterversandServiceTest {
 			.sendMail(any(DefaultEmailDaten.class));
 
 		// Act
-		service.checkAndSend();
+		processor.processNextAuslieferung();
 
 		// Assert
 		verify(newsletterAuftraegeService).findNichtBeendeteVersandauftraege();
