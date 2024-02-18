@@ -15,6 +15,13 @@ import de.egladil.web.mk_gateway.domain.Identifier;
 public interface VersandauftraegeRepository {
 
 	/**
+	 * Läd alle.
+	 *
+	 * @return
+	 */
+	List<Versandauftrag> loadAll();
+
+	/**
 	 * Gibt alle Versandinformationen zum gegebenen Newsletter zurück.
 	 *
 	 * @param  newsletterID
@@ -71,11 +78,10 @@ public interface VersandauftraegeRepository {
 	 *
 	 * @return List
 	 */
-	List<Versandauftrag> findVersandauftraegeNotCompleted();
+	List<Versandauftrag> findAuftraegeNotCompleted();
 
 	/**
-	 * @param  versandauftrag
-	 * @return                TODO
+	 * @param versandauftrag
 	 */
 	void delete(Versandauftrag versandauftrag);
 

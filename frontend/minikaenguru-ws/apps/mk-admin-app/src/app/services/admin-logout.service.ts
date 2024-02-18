@@ -8,12 +8,12 @@ import { resetSchulteilnahmen } from '../schulteilnahmen/+state/schulteilnahmen.
 import { resetMustertexte } from '../mustertexte/+state/mustertexte.actions';
 import { resetNewsletters } from '../newsletter/+state/newsletter.actions';
 import { dateCleared } from '../eventlog/+state/eventlog.actions';
-import { NewsletterFacade } from '../newsletter/newsletter.facade';
 import { resetUploads } from '../uploads/+state/uploads.actions';
 import { resetLoesungszettel } from '../loesungszettel/+state/loesungszettel.actions';
 import { resetStatistiken } from '../statistik/+state/statistic.actions';
 import { AdminWettbewerbFacade } from './admin-wettbewerb.facade';
 import { AdminSchulkatalogFacade } from '@minikaenguru-ws/admin-schulkatalog';
+import { resetVersandauftraege } from '../versandauftraege/+state/versandauftraege.actions';
 
 
 @Injectable({
@@ -24,7 +24,7 @@ export class AdminLogoutService {
 	#adminKatalogFacade = inject(AdminSchulkatalogFacade);
 
 	constructor(private authService: AuthService
-		, private appStore: Store<AppState>, private newsletterFacade: NewsletterFacade, private aminWettbewerbFacade: AdminWettbewerbFacade) { }
+		, private appStore: Store<AppState>, private aminWettbewerbFacade: AdminWettbewerbFacade) { }
 
 
 	logout(): void {
@@ -32,8 +32,6 @@ export class AdminLogoutService {
 		// I0419: status darf nicht im localStorage verbleiben!
 		this.aminWettbewerbFacade.resetState();
 		this.#adminKatalogFacade.onLogout();
-
-		this.newsletterFacade.stopPollVersandinfo();
 		this.authService.logOut(false);
 		this.appStore.dispatch(resetVeranstalters());
 		this.appStore.dispatch(resetAktuelleMeldung());
@@ -41,6 +39,7 @@ export class AdminLogoutService {
 		this.appStore.dispatch(dateCleared());
 		this.appStore.dispatch(resetMustertexte());
 		this.appStore.dispatch(resetNewsletters());
+		this.appStore.dispatch(resetVersandauftraege())
 		this.appStore.dispatch(resetUploads());
 		this.appStore.dispatch(resetLoesungszettel());
 		this.appStore.dispatch(resetStatistiken());

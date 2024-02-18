@@ -11,9 +11,9 @@ info:
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 2.2.4
 servers:
-- url: http://localhost:9512
+- url: http://localhost:9510
   description: Auto generated value
-- url: http://0.0.0.0:9512
+- url: http://0.0.0.0:9510
   description: Auto generated value
 tags:
 - name: statistik
@@ -540,82 +540,6 @@ paths:
       responses:
         "200":
           description: OK
-  /mk-gateway/admin/newsletterversand:
-    post:
-      tags:
-      - Admin Newsletterversand Resource
-      summary: Erstellt einen Newsletterversandauftrag mit hinreichend vielen Auslieferungen
-        (Gruppen von Mailempfängern). Die Aufträge werden durch einen Scheduler abgearbeitet.
-        Das kann viele Stunden dauern wegen der Beschränkungen durch den Provider.
-      operationId: scheduleNewsletterversand
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/NewsletterVersandauftrag'
-      responses:
-        default:
-          description: server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponseDto'
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Versandauftrag'
-        "400":
-          description: fehlgeschlagene Input-Validierung
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponseDto'
-        "401":
-          content:
-            application/json: {}
-        "404":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponseDto'
-  /mk-gateway/admin/newsletterversand/{versandinfoUuid}:
-    get:
-      tags:
-      - Admin Newsletterversand Resource
-      summary: "Gibt die Versandinformation zurück, also den Status des Versands eines\
-        \ NewsletterVersandauftrags."
-      operationId: getVersandinfo
-      parameters:
-      - name: versandinfoUuid
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        default:
-          description: server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponseDto'
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/VersandinfoAPIModel'
-        "400":
-          description: fehlgeschlagene Input-Validierung
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponseDto'
-        "401":
-          content:
-            application/json: {}
-        "404": {}
   /mk-gateway/admin/privatteilnahmen/{teilnahmenummer}:
     get:
       tags:
@@ -872,6 +796,103 @@ paths:
       responses:
         "200":
           description: OK
+  /mk-gateway/admin/versandauftraege:
+    get:
+      tags:
+      - Admin Newsletterversand Resource
+      summary: Läd alle Versandaufträge sortiert nach Erstellungsdatum.
+      operationId: loadVersandauftraege
+      responses:
+        default:
+          description: server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersandauftragDTO'
+        "401":
+          content:
+            application/json: {}
+    post:
+      tags:
+      - Admin Newsletterversand Resource
+      summary: Erstellt einen Newsletterversandauftrag mit hinreichend vielen Auslieferungen
+        (Gruppen von Mailempfängern). Die Aufträge werden durch einen Scheduler abgearbeitet.
+        Das kann viele Stunden dauern wegen der Beschränkungen durch den Provider.
+      operationId: scheduleNewsletterversand
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewsletterVersandauftrag'
+      responses:
+        default:
+          description: server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponsePayload'
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponsePayload'
+        "400":
+          description: fehlgeschlagene Input-Validierung
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponsePayload'
+        "401":
+          content:
+            application/json: {}
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponsePayload'
+  /mk-gateway/admin/versandauftraege/{versandauftragID}:
+    get:
+      tags:
+      - Admin Newsletterversand Resource
+      summary: "Gibt die Versandinformation zurück, also den Status des Versands eines\
+        \ NewsletterVersandauftrags."
+      operationId: getVersandinfo
+      parameters:
+      - name: versandauftragID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersandauftragDTO'
+        "400":
+          description: fehlgeschlagene Input-Validierung
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+        "401":
+          content:
+            application/json: {}
+        "404": {}
   /mk-gateway/admin/wettbewerbe:
     get:
       tags:
@@ -2115,11 +2136,6 @@ components:
           type: string
         headers:
           $ref: '#/components/schemas/MultivaluedMapStringString'
-    Identifier:
-      type: object
-      properties:
-        identifier:
-          type: string
     KatalogItem:
       description: Element eines hierarchisch aufgebauten Katalogs
       type: object
@@ -2506,7 +2522,7 @@ components:
           type: string
     StatusAuslieferung:
       enum:
-      - NEU
+      - NEW
       - WAITING
       - IN_PROGRESS
       - COMPLETED
@@ -2597,40 +2613,19 @@ components:
       - UUID
       - ZUGANGSSTATUS
       type: string
-    Versandauftrag:
-      type: object
-      properties:
-        identifier:
-          $ref: '#/components/schemas/Identifier'
-        newsletterID:
-          $ref: '#/components/schemas/Identifier'
-        empfaengertyp:
-          $ref: '#/components/schemas/Empfaengertyp'
-        anzahlAktuellVersendet:
-          format: int32
-          type: integer
-        anzahlEmpaenger:
-          format: int32
-          type: integer
-        status:
-          $ref: '#/components/schemas/StatusAuslieferung'
-        erfasstAm:
-          type: string
-        versandBegonnenAm:
-          type: string
-        versandBeendetAm:
-          type: string
-        fehlermeldung:
-          type: string
-    VersandinfoAPIModel:
+    VersandauftragDTO:
       type: object
       properties:
         uuid:
           type: string
         newsletterID:
           type: string
+        newsletterBetreff:
+          type: string
         empfaengertyp:
           $ref: '#/components/schemas/Empfaengertyp'
+        status:
+          $ref: '#/components/schemas/StatusAuslieferung'
         anzahlAktuellVersendet:
           format: int32
           type: integer

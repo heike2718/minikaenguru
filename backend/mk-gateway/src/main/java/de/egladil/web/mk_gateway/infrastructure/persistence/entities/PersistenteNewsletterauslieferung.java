@@ -22,10 +22,15 @@ import jakarta.persistence.Table;
 	@NamedQuery(
 		name = "PersistenteNewsletterauslieferung.FIND_ALL_BY_VERDANDAUFTRAG_ID",
 		query = "select a from PersistenteNewsletterauslieferung a where a.versandauftragId = :versandauftragId order by a.sortnummer"),
+	@NamedQuery(
+		name = "PersistenteNewsletterauslieferung.FIND_ALL_PENDING",
+		query = "select a from PersistenteNewsletterauslieferung a where a.status = :statusWaiting order by a.sortnummer"),
 })
 public class PersistenteNewsletterauslieferung extends ConcurrencySafeEntity {
 
 	public static final String FIND_ALL_BY_VERDANDAUFTRAG_ID = "PersistenteNewsletterauslieferung.FIND_ALL_BY_VERDANDAUFTRAG_ID";
+
+	public static final String FIND_ALL_PENDING = "PersistenteNewsletterauslieferung.FIND_ALL_PENDING";
 
 	private static final long serialVersionUID = 1L;
 

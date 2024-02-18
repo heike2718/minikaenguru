@@ -8,9 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -22,9 +20,11 @@ import de.egladil.web.commons_mailer.DefaultEmailDaten;
 import de.egladil.web.commons_mailer.exception.EmailException;
 import de.egladil.web.commons_mailer.exception.InvalidMailAddressException;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.mail.AdminMailService;
 import de.egladil.web.mk_gateway.domain.newsletters.Newsletter;
+import de.egladil.web.mk_gateway.domain.newsletterversand.event.NewsletterversandFailed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -51,6 +51,9 @@ public class NewsletterAuslieferungProcessor {
 	@Inject
 	AdminMailService mailService;
 
+	@Inject
+	DomainEventHandler domainEventHandler;
+
 	/**
 	 * Prüft, ob es eine wartende Auslieferung gibt. Falls ja, wird
 	 * versendet und der Status dieser Ausliefreung über IN_PROGRESS auf COMPLETED gesetzt. Außerdem wird der Versandauftrag
@@ -60,65 +63,69 @@ public class NewsletterAuslieferungProcessor {
 
 		LOGGER.info("pruefe Warteschlange");
 
-		NewsletterAuslieferung currentAuslieferung = auslieferungPicker.getFirstPendingAuslieferung();
+		NewsletterAuslieferung pendingAuslieferung = auslieferungPicker.getNextPendingAuslieferung();
 
-		if (currentAuslieferung == null) {
+		if (pendingAuslieferung == null) {
 
 			LOGGER.info("keine Auslieferung in der Warteschlange. Tue nix.");
 			return;
 		}
 
-		Pair<Versandauftrag, Newsletter> versandauftragAndNewsletter = newsletterAuftraegeService
-			.getVersandauftragAndNewsletterWithVersandauftragID(currentAuslieferung.getVersandauftragId());
+		Pair<Versandauftrag, Newsletter> versandauftragAndNewsletter = null;
 
-		Versandauftrag versandauftrag = versandauftragAndNewsletter.getLeft();
-		Newsletter newsletter = versandauftragAndNewsletter.getRight();
+		try {
 
-		if (newsletter == null) {
+			versandauftragAndNewsletter = newsletterAuftraegeService
+				.getVersandauftragAndNewsletterWithVersandauftragID(pendingAuslieferung.getVersandauftragId());
+		} catch (MkGatewayRuntimeException e) {
 
-			if (versandauftrag != null) {
+			LOGGER.error(e.getMessage());
 
-				versandauftragStatusUpdater.markVersandauftragCompletedWithDataError(versandauftrag);
+			pendingAuslieferung.setStatus(StatusAuslieferung.ERRORS);
+			auslieferungStatusUpdater.markAuslieferungCompleted(pendingAuslieferung);
 
-				throw new MkGatewayRuntimeException(
-					"Datenmatsch: es gibt einen Versandauftrag und NewsletterAuslieferung mit newsletterID="
-						+ versandauftrag.newsletterID()
-						+ "', aber keinen Newsletter mehr mit dieser ID");
-			} else {
-
-				throw new MkGatewayRuntimeException(
-					"Datenmatsch: es gibt NewsletterAuslieferungen ohne Versandauftrag und newletterID: NewsletterAuslieferung.ID="
-						+ currentAuslieferung.getIdentifier());
-			}
-
+			throw e;
 		}
 
-		if (currentAuslieferung.getStatus() == StatusAuslieferung.IN_PROGRESS) {
+		if (pendingAuslieferung.getStatus() != StatusAuslieferung.WAITING) {
 
-			LOGGER.debug("Auslieferung {} läuft gerade. Tue nix", currentAuslieferung.getIdentifier());
+			LOGGER.debug("Auslieferung {} hat Status {}. Tue nix", pendingAuslieferung.getIdentifier(),
+				pendingAuslieferung.getStatus());
 			return;
 		}
+
+		boolean fehler = false;
+		List<String> empfaenger = Arrays.asList(pendingAuslieferung.getEmpfaenger());
+
+		Versandauftrag versandauftrag = versandauftragAndNewsletter.getLeft();
 
 		if (versandauftrag.getStatus() == StatusAuslieferung.WAITING) {
 
 			versandauftragStatusUpdater.markVersandauftragStarted(versandauftrag);
 		}
 
-		boolean fehler = false;
-		List<String> empfaenger = Arrays.asList(currentAuslieferung.getEmpfaenger());
+		auslieferungStatusUpdater.markAuslieferungStarted(pendingAuslieferung);
+
+		LOGGER.info("starte mit Versand an Auslieferung {}: anzahl Empfänger={}", pendingAuslieferung.getIdentifier(),
+			empfaenger.size());
 
 		try {
 
-			auslieferungStatusUpdater.markAuslieferungStarted(currentAuslieferung);
-
-			LOGGER.info("starte mit Versand an Auslieferung {}: anzahl Empfänger={}", currentAuslieferung.getIdentifier(),
-				empfaenger.size());
-
-			this.sendeMail(newsletter, empfaenger);
+			this.sendeMail(versandauftragAndNewsletter.getRight(), empfaenger);
 
 		} catch (InvalidMailAddressException e) {
 
-			LOGGER.warn(e.getMessage());
+			String msg = "Mail konnte nicht an alle Empfänger versendet werden";
+
+			NewsletterversandFailed versandFailedEventPayload = new NewsletterversandFailed()
+				.withUuid(pendingAuslieferung.getIdentifier().identifier())
+				.withInvalidMailaddresses(e.getAllInvalidAdresses())
+				.withMessage(msg)
+				.withValidSentAddresses(e.getAllValidSentAddresses())
+				.withValidUnsentAddresses(e.getAllValidUnsentAddresses());
+
+			domainEventHandler.handleEvent(versandFailedEventPayload);
+
 			fehler = true;
 
 		} catch (EmailException e) {
@@ -133,23 +140,10 @@ public class NewsletterAuslieferungProcessor {
 
 		} finally {
 
-			currentAuslieferung.setStatus(fehler ? StatusAuslieferung.ERRORS : StatusAuslieferung.COMPLETED);
-			auslieferungStatusUpdater.markAuslieferungCompleted(currentAuslieferung);
-			versandauftragStatusUpdater.updateStatusVersandauftrag(versandauftrag, currentAuslieferung.getEmpfaenger().length);
-
+			pendingAuslieferung.setStatus(fehler ? StatusAuslieferung.ERRORS : StatusAuslieferung.COMPLETED);
+			auslieferungStatusUpdater.markAuslieferungCompleted(pendingAuslieferung);
+			versandauftragStatusUpdater.updateStatusVersandauftrag(versandauftrag, pendingAuslieferung.getEmpfaenger().length);
 		}
-	}
-
-	/**
-	 * @param versandauftrag
-	 */
-	void markVersandauftragStarted(final Versandauftrag versandauftrag) {
-
-		String begonnenAm = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date());
-		versandauftrag.setStatus(StatusAuslieferung.IN_PROGRESS);
-		versandauftrag.setVersandBegonnenAm(begonnenAm);
-
-		newsletterAuftraegeService.versandauftragSpeichern(versandauftrag);
 	}
 
 	void sendeMail(final Newsletter newsletter, final List<String> gruppe) {

@@ -54,12 +54,24 @@
 				</div>
 
 				<div class="col-3">
+					<div class="card clickable" (click)="gotoVersandauftraege()">
+						<div class="card-body">
+							<div class="card-title"><i class="fa fa-envelope fa-1x" aria-hidden="true"></i> Versandaufträge</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-3">
 					<div class="card clickable" (click)="gotoUplodsMonitoring()">
 						<div class="card-body">
 							<div class="card-title"><i class="fa fa-upload fa-1x" aria-hidden="true"></i> Uploads</div>
 						</div>
 					</div>
 				</div>
+
+				
+			</div>
+			<div class="row ml-1 mt-2 mr-1">
 
 				<div class="col-3">
 					<div class="card clickable" (click)="gotoLoesungszettel()">
@@ -68,8 +80,6 @@
 						</div>
 					</div>
 				</div>
-			</div>
-			<div class="row ml-1 mt-2 mr-1">
 				<div class="col-3">
 					<div class="card clickable" (click)="gotoStatistik()">
 						<div class="card-body">
@@ -95,6 +105,7 @@
                 <button class="btn btn-secondary w-75 m-3" (click)="gotoWettbewerbe()"><i class="fa fa-files-o fa-1x" aria-hidden="true"></i> Wettbewerbe</button>
                 <button class="btn btn-secondary w-75 m-3" (click)="gotoEventlog()"><i class="fa fa-history fa-1x" aria-hidden="true"></i> Eventlog</button>
                 <button class="btn btn-secondary w-75 m-3" (click)="gotoNewsletters()"><i class="fa fa-envelope fa-1x" aria-hidden="true"></i> Newsletters</button>
+                <button class="btn btn-secondary w-75 m-3" (click)="gotoVersandauftraege()"><i class="fa fa-envelope fa-1x" aria-hidden="true"></i> Versandaufträge</button>
 				<button class="btn btn-secondary w-75 m-3" (click)="gotoUplodsMonitoring()"><i class="fa fa-upload fa-1x" aria-hidden="true"></i> Uploads</button>
 				<button class="btn btn-secondary w-75 m-3" (click)="gotoLoesungszettel()"><i class="fa fa-bars fa-1x" aria-hidden="true"></i> Lösungszettel</button>
 				<button class="btn btn-secondary w-75 m-3" (click)="gotoStatistik()"><i class="fa fa-area-chart fa-1x" aria-hidden="true"></i> Statistik</button>

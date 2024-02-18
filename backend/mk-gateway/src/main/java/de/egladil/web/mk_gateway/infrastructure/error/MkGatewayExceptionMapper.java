@@ -28,9 +28,13 @@ import de.egladil.web.mk_gateway.domain.error.ClientAuthException;
 import de.egladil.web.mk_gateway.domain.error.InaccessableEndpointException;
 import de.egladil.web.mk_gateway.domain.error.MessagingAuthException;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.error.MkGatewayWebApplicationException;
 import de.egladil.web.mk_gateway.domain.error.StatistikKeineDatenException;
 import de.egladil.web.mk_gateway.domain.error.UnterlagenNichtVerfuegbarException;
 import de.egladil.web.mk_gateway.domain.error.UploadFormatException;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
+import de.egladil.web.mk_gateway.domain.event.GeneralErrorEvent;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.WebApplicationException;
@@ -53,12 +57,15 @@ import jakarta.ws.rs.ext.Provider;
 @Provider
 public class MkGatewayExceptionMapper implements ExceptionMapper<Throwable> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(MkGatewayExceptionMapper.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MkGatewayExceptionMapper.class);
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
 	@Context
 	SecurityContext securityContext;
+
+	@Inject
+	DomainEventHandler domainEventHandler;
 
 	@Override
 	public Response toResponse(final Throwable exception) {
@@ -176,6 +183,12 @@ public class MkGatewayExceptionMapper implements ExceptionMapper<Throwable> {
 			return Response.status(brException.getResponse().getStatus()).entity(payload).build();
 		}
 
+		if (exception instanceof MkGatewayWebApplicationException) {
+
+			MkGatewayWebApplicationException waException = (MkGatewayWebApplicationException) exception;
+			return waException.getResponse();
+		}
+
 		if (exception instanceof WebApplicationException) {
 
 			WebApplicationException waException = (WebApplicationException) exception;
@@ -186,12 +199,18 @@ public class MkGatewayExceptionMapper implements ExceptionMapper<Throwable> {
 			ResponsePayload payload = ResponsePayload
 				.messageOnly(MessagePayload.error(msg));
 
-			LOG.error(msg);
+			LOGGER.error(msg);
+
+			GeneralErrorEvent errorEvent = new GeneralErrorEvent(exception.getClass().getSimpleName(), msg);
+			domainEventHandler.handleEvent(errorEvent);
 
 			return Response.status(status).entity(serializeAsJson(payload)).build();
 		}
 
 		if (exception instanceof MkGatewayRuntimeException || exception instanceof ClientAuthException) {
+
+			GeneralErrorEvent errorEvent = new GeneralErrorEvent(exception.getClass().getSimpleName(), exception.getMessage());
+			domainEventHandler.handleEvent(errorEvent);
 
 			// nicht loggen, wurde schon
 		} else {
@@ -200,16 +219,19 @@ public class MkGatewayExceptionMapper implements ExceptionMapper<Throwable> {
 
 				// TODO: MDC stattdessen verwenden und konfigurieren
 				LoggedInUser sessionUser = (LoggedInUser) securityContext.getUserPrincipal();
-				LOG.error("idRef={} - uuid={}: {}", sessionUser.idReference(),
+				LOGGER.error("idRef={} - uuid={}: {}", sessionUser.idReference(),
 					StringUtils.abbreviate(sessionUser.uuid(), 11), exception.getMessage(), exception);
 			} else {
 
-				LOG.error(exception.getMessage(), exception);
+				LOGGER.error(exception.getMessage(), exception);
 			}
 		}
 
 		ResponsePayload payload = ResponsePayload
 			.messageOnly(MessagePayload.error(applicationMessages.getString("general.internalServerError")));
+
+		GeneralErrorEvent errorEvent = new GeneralErrorEvent(exception.getClass().getSimpleName(), exception.getMessage());
+		domainEventHandler.handleEvent(errorEvent);
 
 		return Response.status(500).entity(serializeAsJson(payload)).build();
 	}

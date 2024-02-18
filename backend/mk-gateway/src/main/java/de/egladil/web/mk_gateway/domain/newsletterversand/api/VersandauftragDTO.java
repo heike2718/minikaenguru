@@ -7,12 +7,13 @@ package de.egladil.web.mk_gateway.domain.newsletterversand.api;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.mk_gateway.domain.mail.Empfaengertyp;
+import de.egladil.web.mk_gateway.domain.newsletterversand.StatusAuslieferung;
 import de.egladil.web.mk_gateway.domain.newsletterversand.Versandauftrag;
 
 /**
- * VersandinfoAPIModel
+ * VersandauftragDTO
  */
-public class VersandinfoAPIModel {
+public class VersandauftragDTO {
 
 	@JsonProperty
 	private String uuid;
@@ -21,7 +22,13 @@ public class VersandinfoAPIModel {
 	private String newsletterID;
 
 	@JsonProperty
+	private String newsletterBetreff;
+
+	@JsonProperty
 	private Empfaengertyp empfaengertyp;
+
+	@JsonProperty
+	private StatusAuslieferung status;
 
 	@JsonProperty
 	private int anzahlAktuellVersendet;
@@ -38,17 +45,18 @@ public class VersandinfoAPIModel {
 	@JsonProperty
 	private boolean versandMitFehler;
 
-	public static VersandinfoAPIModel createFromVersandinfo(final Versandauftrag versandinfo) {
+	public static VersandauftragDTO createFromVersandauftrag(final Versandauftrag versandauftrag) {
 
-		VersandinfoAPIModel result = new VersandinfoAPIModel();
-		result.uuid = versandinfo.identifier().identifier();
-		result.newsletterID = versandinfo.newsletterID().identifier();
-		result.empfaengertyp = versandinfo.empfaengertyp();
-		result.anzahlAktuellVersendet = versandinfo.anzahlAktuellVersendet();
-		result.anzahlEmpaenger = versandinfo.anzahlEmpaenger();
-		result.versandBegonnenAm = versandinfo.versandBegonnenAm();
-		result.versandBeendetAm = versandinfo.versandBeendetAm();
-		result.versandMitFehler = versandinfo.mitFehler();
+		VersandauftragDTO result = new VersandauftragDTO();
+		result.uuid = versandauftrag.identifier().identifier();
+		result.newsletterID = versandauftrag.newsletterID().identifier();
+		result.empfaengertyp = versandauftrag.empfaengertyp();
+		result.anzahlAktuellVersendet = versandauftrag.anzahlAktuellVersendet();
+		result.anzahlEmpaenger = versandauftrag.anzahlEmpaenger();
+		result.versandBegonnenAm = versandauftrag.versandBegonnenAm();
+		result.versandBeendetAm = versandauftrag.versandBeendetAm();
+		result.versandMitFehler = versandauftrag.mitFehler();
+		result.status = versandauftrag.getStatus();
 		return result;
 	}
 
@@ -90,6 +98,21 @@ public class VersandinfoAPIModel {
 	public boolean versandMitFehler() {
 
 		return versandMitFehler;
+	}
+
+	public StatusAuslieferung status() {
+
+		return status;
+	}
+
+	public String getNewsletterBetreff() {
+
+		return newsletterBetreff;
+	}
+
+	public void setNewsletterBetreff(final String newsletterBetreff) {
+
+		this.newsletterBetreff = newsletterBetreff;
 	}
 
 }

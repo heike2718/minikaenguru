@@ -176,12 +176,12 @@ public class VersandauftraegeHibernateRepository implements VersandauftraegeRepo
 	}
 
 	@Override
-	public List<Versandauftrag> findVersandauftraegeNotCompleted() {
+	public List<Versandauftrag> findAuftraegeNotCompleted() {
 
 		List<PersistenterVersandauftrag> trefferliste = em
 			.createNamedQuery(PersistenterVersandauftrag.FIND_NOT_COMPLETED, PersistenterVersandauftrag.class)
-			.setParameter("statusCompleted", StatusAuslieferung.COMPLETED)
-			.setParameter("statusErrors", StatusAuslieferung.ERRORS)
+			.setParameter("statusWaiting", StatusAuslieferung.WAITING)
+			.setParameter("statusInProgress", StatusAuslieferung.IN_PROGRESS)
 			.getResultList();
 
 		return trefferliste.stream().map(this::mapFromDB).toList();
@@ -199,6 +199,19 @@ public class VersandauftraegeHibernateRepository implements VersandauftraegeRepo
 			em.remove(persistenter);
 		}
 
+	}
+
+	@Override
+	public List<Versandauftrag> loadAll() {
+
+		List<PersistenterVersandauftrag> trefferliste = em
+			.createNamedQuery(PersistenterVersandauftrag.LOAD_ALL, PersistenterVersandauftrag.class).getResultList();
+
+		if (trefferliste.isEmpty()) {
+
+			return new ArrayList<>();
+		}
+		return trefferliste.stream().map(t -> mapFromDB(t)).collect(Collectors.toList());
 	}
 
 }

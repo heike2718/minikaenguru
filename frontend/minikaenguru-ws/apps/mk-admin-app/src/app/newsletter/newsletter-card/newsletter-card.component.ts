@@ -1,7 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Newsletter, Empfaengertyp, NewsletterVersandauftrag, Versandinfo } from '../newsletter.model';
+import { Newsletter, Empfaengertyp, NewsletterVersandauftrag } from '../../shared/newsletter-versandauftrage.model';
 import { environment } from '../../../environments/environment';
 import { NewsletterFacade } from '../newsletter.facade';
+import { VersandauftraegeFacade } from '../../versandauftraege/versandauftraege.facade';
 
 @Component({
 	selector: 'mka-newsletter-card',
@@ -18,7 +19,7 @@ export class NewsletterCardComponent implements OnInit {
 	sendMailpartVisible: boolean = false;
 
 	empfaengertyp: string = '';
-	constructor(public newsletterFacade: NewsletterFacade) { }
+	constructor(public newsletterFacade: NewsletterFacade, private versandauftraegeFacade: VersandauftraegeFacade) { }
 
 	ngOnInit(): void { }
 
@@ -40,7 +41,7 @@ export class NewsletterCardComponent implements OnInit {
 				emfaengertyp: this.empfaengertyp as Empfaengertyp
 			};
 
-			this.newsletterFacade.scheduleMailversand(auftrag);
+			this.versandauftraegeFacade.scheduleMailversand(auftrag);
 			this.sendMailpartVisible = false;
 		}
 	}

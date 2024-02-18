@@ -38,13 +38,13 @@ import { EventlogModule } from './eventlog/eventlog.module';
 import { SessionTimeoutComponent } from './session-timeout/session-timeout.component';
 import { MustertexteModule } from './mustertexte/mustertexte.module';
 import { NewsletterModule } from './newsletter/newsletter.module';
-import { VersandinfoProgressComponent } from './versandinfo-progress/versandinfo-progress.component';
 import { StoreDevModules } from './store-config/store-devtools';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UploadsModule } from './uploads/uploads.module';
 import { LoesungszettelModule } from './loesungszettel/loesungszettel.module';
 import { SharedModule } from './shared/shared.module';
 import { StatistikModule } from './statistik/statistik.module';
+import { VersandauftraegeModule } from './versandauftraege/versandauftraege.module';
 
 registerLocaleData(localeDe);
 
@@ -58,7 +58,6 @@ registerLocaleData(localeDe);
 		DashboardComponent,
 		NotAuthorizedComponent,
 		SessionTimeoutComponent,
-		VersandinfoProgressComponent,
 		],
 	imports: [
 		BrowserModule,
@@ -110,6 +109,7 @@ registerLocaleData(localeDe);
 		EventlogModule,
 		MustertexteModule,
 		NewsletterModule,
+		VersandauftraegeModule,
 		UploadsModule,
 		LoesungszettelModule,
 		StatistikModule,

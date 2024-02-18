@@ -9,7 +9,6 @@ import { AppState } from "../reducers";
 import { Store } from "@ngrx/store";
 import { Mail, Mustertext, MUSTRETEXT_KATEGORIE } from "../shared/shared-entities.model";
 import { Observable, of } from "rxjs";
-import { initialNewsletterEditorModel, Newsletter } from "../newsletter/newsletter.model";
 import { NewsletterFacade } from "../newsletter/newsletter.facade";
 
 

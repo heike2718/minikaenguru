@@ -9,7 +9,7 @@ package de.egladil.web.mk_gateway.domain.newsletterversand;
  */
 public enum StatusAuslieferung {
 
-	NEU {
+	NEW {
 
 		@Override
 		public boolean isCompleted() {

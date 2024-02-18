@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.admin;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -16,9 +17,8 @@ import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.error.ErrorResponseDto;
 import de.egladil.web.mk_gateway.domain.newsletterversand.NewsletterVersandauftragService;
-import de.egladil.web.mk_gateway.domain.newsletterversand.Versandauftrag;
 import de.egladil.web.mk_gateway.domain.newsletterversand.api.NewsletterVersandauftrag;
-import de.egladil.web.mk_gateway.domain.newsletterversand.api.VersandinfoAPIModel;
+import de.egladil.web.mk_gateway.domain.newsletterversand.api.VersandauftragDTO;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -35,7 +35,7 @@ import jakarta.ws.rs.core.Response;
  * AdminNewsletterversandResource
  */
 @RequestScoped
-@Path("admin/newsletterversand")
+@Path("admin/versandauftraege")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class AdminNewsletterversandResource {
@@ -44,7 +44,38 @@ public class AdminNewsletterversandResource {
 	NewsletterVersandauftragService newsletterVersandauftragService;
 
 	@GET
-	@Path("/{versandinfoUuid}")
+	@Operation(
+		operationId = "loadVersandauftraege",
+		summary = "Läd alle Versandaufträge sortiert nach Erstellungsdatum.")
+	@APIResponse(
+		name = "OKResponse",
+		responseCode = "200",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = VersandauftragDTO.class)))
+	@APIResponse(
+		name = "NotAuthorized",
+		responseCode = "401",
+		content = @Content(
+			mediaType = "application/json"))
+	@APIResponse(
+		name = "ServerError",
+		description = "server error",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = ErrorResponseDto.class)))
+	public Response loadVersandauftraege() {
+
+		List<VersandauftragDTO> result = this.newsletterVersandauftragService
+			.loadAll();
+
+		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), result);
+
+		return Response.ok(responsePayload).build();
+	}
+
+	@GET
+	@Path("/{versandauftragID}")
 	@Operation(
 		operationId = "getVersandinfo",
 		summary = "Gibt die Versandinformation zurück, also den Status des Versands eines NewsletterVersandauftrags.")
@@ -53,7 +84,7 @@ public class AdminNewsletterversandResource {
 		responseCode = "200",
 		content = @Content(
 			mediaType = "application/json",
-			schema = @Schema(implementation = VersandinfoAPIModel.class)))
+			schema = @Schema(implementation = VersandauftragDTO.class)))
 	@APIResponse(
 		name = "BadRequestResponse",
 		responseCode = "400",
@@ -75,11 +106,9 @@ public class AdminNewsletterversandResource {
 		content = @Content(
 			mediaType = "application/json",
 			schema = @Schema(implementation = ErrorResponseDto.class)))
-	public Response getVersandinfo(@UuidString @PathParam(value = "versandinfoUuid") final String versandauftragID) {
+	public Response getVersandauftrag(@UuidString @PathParam(value = "versandauftragID") final String versandauftragID) {
 
-		// werden hier eine Übersicht über alle Versandauftraege zurückgeben, die in einer eigenen Maske angezeigt werden soll
-
-		Optional<VersandinfoAPIModel> optVersandInfo = this.newsletterVersandauftragService
+		Optional<VersandauftragDTO> optVersandInfo = this.newsletterVersandauftragService
 			.getStatusNewsletterVersand(versandauftragID);
 
 		if (optVersandInfo.isEmpty()) {
@@ -104,14 +133,14 @@ public class AdminNewsletterversandResource {
 		responseCode = "200",
 		content = @Content(
 			mediaType = "application/json",
-			schema = @Schema(implementation = Versandauftrag.class)))
+			schema = @Schema(implementation = ResponsePayload.class)))
 	@APIResponse(
 		name = "BadRequestResponse",
 		responseCode = "400",
 		description = "fehlgeschlagene Input-Validierung",
 		content = @Content(
 			mediaType = "application/json",
-			schema = @Schema(implementation = ErrorResponseDto.class)))
+			schema = @Schema(implementation = ResponsePayload.class)))
 	@APIResponse(
 		name = "NotAuthorized",
 		responseCode = "401",
@@ -122,16 +151,20 @@ public class AdminNewsletterversandResource {
 		responseCode = "404",
 		content = @Content(
 			mediaType = "application/json",
-			schema = @Schema(implementation = ErrorResponseDto.class)))
+			schema = @Schema(implementation = ResponsePayload.class)))
 	@APIResponse(
 		name = "ServerError",
 		description = "server error",
 		content = @Content(
 			mediaType = "application/json",
-			schema = @Schema(implementation = ErrorResponseDto.class)))
+			schema = @Schema(implementation = ResponsePayload.class)))
 	public Response scheduleNewsletterversand(@Valid final NewsletterVersandauftrag auftrag) {
 
-		Versandauftrag versandauftrag = newsletterVersandauftragService.createVersandauftrag(auftrag);
-		return Response.ok(versandauftrag).build();
+		// Versandauftrag versandauftrag = newsletterVersandauftragService.createVersandauftrag(auftrag);
+		// ResponsePayload responsePayload = new ResponsePayload(MessagePayload.info("Newsletterversand erfolgreich beauftragt"),
+		// VersandauftragDTO.createFromVersandauftrag(versandauftrag));
+
+		ResponsePayload responsePayload = newsletterVersandauftragService.createVersandauftrag(auftrag);
+		return Response.ok(responsePayload).build();
 	}
 }

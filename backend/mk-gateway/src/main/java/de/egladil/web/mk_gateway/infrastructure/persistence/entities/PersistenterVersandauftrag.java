@@ -29,8 +29,11 @@ import jakarta.persistence.Table;
 		name = "PersistenterVersandauftrag.FIND_BY_UUID",
 		query = "select v from PersistenterVersandauftrag v where v.uuid = :uuid"),
 	@NamedQuery(
+		name = "PersistenterVersandauftrag.LOAD_ALL",
+		query = "select v from PersistenterVersandauftrag v order by v.erfasstAm"),
+	@NamedQuery(
 		name = "PersistenterVersandauftrag.FIND_NOT_COMPLETED",
-		query = "select v from PersistenterVersandauftrag v where v.status != :statusCompleted and v.status != :statusErrors order by v.erfasstAm")
+		query = "select v from PersistenterVersandauftrag v where v.status = :statusWaiting or v.status = :statusInProgress order by v.erfasstAm")
 })
 public class PersistenterVersandauftrag extends ConcurrencySafeEntity {
 
@@ -39,6 +42,8 @@ public class PersistenterVersandauftrag extends ConcurrencySafeEntity {
 	public static final String FIND_FOR_NEWSLETTER = "PersistenterVersandauftrag.FIND_FOR_NEWSLETTER";
 
 	public static final String FIND_BY_UUID = "PersistenterVersandauftrag.FIND_BY_UUID";
+
+	public static final String LOAD_ALL = "PersistenterVersandauftrag.LOAD_ALL";
 
 	public static final String FIND_NOT_COMPLETED = "PersistenterVersandauftrag.FIND_NOT_COMPLETED";
 

@@ -45,6 +45,10 @@ export class DashboardComponent implements OnInit {
 		this.router.navigateByUrl('/newsletters');
 	}
 
+	gotoVersandauftraege() {
+		this.router.navigateByUrl('/versandauftraege');
+	}
+
 	gotoUplodsMonitoring() {
 		this.router.navigateByUrl('/uploads');
 	}

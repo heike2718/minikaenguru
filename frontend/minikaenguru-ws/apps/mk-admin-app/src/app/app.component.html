@@ -6,7 +6,6 @@
 	<div [@routeAnimation]="getAnimationData(routerOutlet)">
 		<router-outlet #routerOutlet="outlet"></router-outlet>
 	</div>
-	<mka-versandinfo-progress></mka-versandinfo-progress>
 
 	<div *ngIf="authService.isLoggedIn$ | async" class="row d-md-none d-lg-none d-xl-none mt-3">
 		<button class="btn btn-secondary w-75 m-3" (click)="gotoDashboad()"><i class="fa fa-puzzle-piece fa-1x" aria-hidden="true"></i> Dashboard</button>

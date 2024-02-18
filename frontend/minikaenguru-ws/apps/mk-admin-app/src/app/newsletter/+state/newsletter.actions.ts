@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Newsletter, Versandinfo } from '../newsletter.model';
+import { Newsletter, Versandauftrag } from '../../shared/newsletter-versandauftrage.model';
 
 
 export const createNewNewsletter = createAction(
@@ -41,12 +41,12 @@ export const newsletterSaved = createAction(
 
 export const mailversandScheduled = createAction(
 	'[NewsletterFacade]: scheduleMailversand',
-	props<{versandinfo: Versandinfo}>()
+	props<{versandinfo: Versandauftrag}>()
 );
 
 export const versandinfoAktualisiert = createAction(
 	'[NewsletterFacade]: pollVersandinfo - running',
-	props<{versandinfo: Versandinfo}>()
+	props<{versandinfo: Versandauftrag}>()
 );
 
 export const versandBeendet = createAction(

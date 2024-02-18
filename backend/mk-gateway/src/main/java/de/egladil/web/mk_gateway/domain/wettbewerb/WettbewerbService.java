@@ -9,14 +9,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceException;
-import jakarta.ws.rs.NotFoundException;
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Response;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,11 +18,18 @@ import de.egladil.web.commons_validation.exception.InvalidInputException;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.error.MkGatewayWebApplicationException;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.EditWettbewerbModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.TeilnahmenuebersichtAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbDetailsAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbListAPIModel;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.WettbewerbHibernateRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceException;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.core.Response;
 
 /**
  * WettbewerbService
@@ -196,7 +195,7 @@ public class WettbewerbService {
 			LOG.error("{} - {}", e.getMessage(), wettbewerb);
 			ResponsePayload responsePayload = ResponsePayload
 				.messageOnly(MessagePayload.error(e.getMessage()));
-			throw new WebApplicationException(Response.status(412).entity(responsePayload).build());
+			throw new MkGatewayWebApplicationException(Response.status(412).entity(responsePayload).build());
 		} catch (PersistenceException e) {
 
 			LOG.error("Der wettbewerb {} konnte nicht gespeichert werden: {}", wettbewerb, e.getMessage(), e);
@@ -223,7 +222,7 @@ public class WettbewerbService {
 			LOG.warn("Versuch, den beendeten Wettbewerb {} zu ändern", wettbewerb);
 			ResponsePayload responsePayload = ResponsePayload
 				.messageOnly(MessagePayload.error("Wettbewerb hat sein Lebensende erreicht und kann nicht mehr geändert werden."));
-			throw new WebApplicationException(Response.status(412).entity(responsePayload).build());
+			throw new MkGatewayWebApplicationException(Response.status(412).entity(responsePayload).build());
 		}
 
 		Wettbewerb geaendert = new Wettbewerb(wettbewerb.id()).withStatus(wettbewerb.status())

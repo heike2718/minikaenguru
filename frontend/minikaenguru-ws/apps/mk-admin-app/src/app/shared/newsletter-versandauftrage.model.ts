@@ -1,4 +1,5 @@
 export type Empfaengertyp = 'ALLE' | 'LEHRER' | 'PRIVATVERANSTALTER' | 'TEST';
+export type StatusAuslieferung = 'WAITING' | 'IN_PROGRESS' | 'COMPLETED' | 'ERRORS';
 
 
 export interface Newsletter {
@@ -27,10 +28,12 @@ export const initialNewsletterEditorModel: Newsletter = {
 	versandinfoIDs: []
 };
 
-export interface Versandinfo {
+export interface Versandauftrag {
 	readonly uuid: string;
 	readonly newsletterID: string;
+    readonly newsletterBetreff: string;
 	readonly empfaengertyp: Empfaengertyp;
+	readonly status: StatusAuslieferung;
 	readonly anzahlAktuellVersendet: number;
 	readonly anzahlEmpaenger: number;
 	readonly versandBegonnenAm: string;
@@ -40,16 +43,13 @@ export interface Versandinfo {
 
 export interface VersandinfoWithID {
 	readonly uuid: string;
-	readonly versandinfo: Versandinfo;
+	readonly versandinfo: Versandauftrag;
 };
 
 export interface NewsletterVersandauftrag {
 	readonly newsletterID: string;
 	readonly emfaengertyp: Empfaengertyp;
 };
-
-
-
 
 export class NewsletterMap {
 
@@ -124,7 +124,7 @@ export class NewsletterMap {
 
 export class VersandinfoMap {
 
-	private versandinfos: Map<string,Versandinfo> = new Map();
+	private versandinfos: Map<string,Versandauftrag> = new Map();
 
 	constructor(readonly items: VersandinfoWithID[]) {
 
@@ -144,7 +144,7 @@ export class VersandinfoMap {
 		return this.versandinfos.has(uuid);
 	}
 
-	public get(uuid: string): Versandinfo | undefined {
+	public get(uuid: string): Versandauftrag | undefined {
 
 		if (!this.has(uuid)) {
 			return undefined;
@@ -153,13 +153,13 @@ export class VersandinfoMap {
 		return this.versandinfos.get(uuid);
 	}
 
-	public toArray(): Versandinfo[] {
+	public toArray(): Versandauftrag[] {
 
 		return [...this.versandinfos.values()];
 	}
 
 
-	public merge(versandinfo: Versandinfo): VersandinfoWithID[] {
+	public merge(versandinfo: Versandauftrag): VersandinfoWithID[] {
 
 		const result: VersandinfoWithID[] = [];
 

@@ -3,7 +3,7 @@ import { environment } from '../../../environments/environment';
 import { UntypedFormGroup, UntypedFormControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { NewsletterFacade } from '../newsletter.facade';
 import { Subscription } from 'rxjs';
-import { initialNewsletter, Newsletter } from '../newsletter.model';
+import { Newsletter } from '../../shared/newsletter-versandauftrage.model';
 import { MessageService } from '@minikaenguru-ws/common-messages';
 import { Router } from '@angular/router';
 

@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.newsletterversand.NewsletterAuslieferung;
+import de.egladil.web.mk_gateway.domain.newsletterversand.StatusAuslieferung;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenteNewsletterauslieferung;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -42,6 +43,22 @@ public class NewsletterauslieferungenRepository {
 		List<NewsletterAuslieferung> result = mapped.stream().filter(a -> !a.getStatus().isCompleted()).toList();
 
 		return result;
+	}
+
+	/**
+	 * Gibt alle wartenden Auslieferungen sortiert nach sortnr zurück.
+	 *
+	 * @return
+	 */
+	public List<NewsletterAuslieferung> findAllPendingAuslieferungen() {
+
+		List<PersistenteNewsletterauslieferung> persistenteAuslieferungen = em
+			.createNamedQuery(PersistenteNewsletterauslieferung.FIND_ALL_PENDING,
+				PersistenteNewsletterauslieferung.class)
+			.setParameter("statusWaiting", StatusAuslieferung.WAITING)
+			.getResultList();
+
+		return persistenteAuslieferungen.stream().map(this::mapFromDB).toList();
 	}
 
 	/**

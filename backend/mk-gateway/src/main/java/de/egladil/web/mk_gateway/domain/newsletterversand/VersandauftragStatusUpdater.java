@@ -10,12 +10,14 @@ import java.util.List;
 import java.util.Optional;
 
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.NewsletterauslieferungenRepository;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 /**
  * VersandauftragStatusUpdater
  */
+@ApplicationScoped
 public class VersandauftragStatusUpdater {
 
 	private static final String DATE_TIME_FORMAT_PATTERN = "dd.MM.yyyy HH:mm:ss";

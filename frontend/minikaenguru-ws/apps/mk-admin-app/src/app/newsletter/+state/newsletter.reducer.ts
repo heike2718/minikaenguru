@@ -1,6 +1,6 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import * as NewsletterActions from './newsletter.actions';
-import { NewsletterWithID, Newsletter, NewsletterMap, initialNewsletterEditorModel, Versandinfo } from '../newsletter.model';
+import { NewsletterWithID, Newsletter, NewsletterMap, initialNewsletterEditorModel, Versandauftrag } from '../../shared/newsletter-versandauftrage.model';
 
 export const newsletterFeatureKey = 'mk-admin-app-newsletters';
 
@@ -8,7 +8,7 @@ export interface NewslettersState {
 	readonly newsletterMap: NewsletterWithID[];
 	readonly selectedNewsletter?: Newsletter;
 	readonly newsletterEditorModel?: Newsletter;
-	readonly versandinfo?: Versandinfo;
+	readonly versandinfo?: Versandauftrag;
 	readonly newslettersLoaded: boolean;
 	readonly loading: boolean;
 

@@ -24,9 +24,10 @@ import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.error.ErrorResponseDto;
-import de.egladil.web.mk_gateway.domain.error.Schweregrad;
+import de.egladil.web.mk_gateway.domain.error.MkGatewayWebApplicationException;
 import de.egladil.web.mk_gateway.domain.mail.Empfaengertyp;
 import de.egladil.web.mk_gateway.domain.newsletters.Newsletter;
 import de.egladil.web.mk_gateway.domain.newsletters.NewsletterService;
@@ -36,7 +37,6 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.impl.Newsletterausli
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 
 /**
@@ -80,7 +80,7 @@ public class NewsletterVersandauftragServiceTest {
 			assertEquals(empfaengertyp, result.empfaengertyp());
 			assertNull(result.fehlermeldung());
 			assertNull(result.getErfasstAm());
-			assertEquals(StatusAuslieferung.NEU, result.getStatus());
+			assertEquals(StatusAuslieferung.NEW, result.getStatus());
 			assertNull(result.identifier());
 			assertFalse(result.mitFehler());
 			assertEquals(newsletterIdentifier, result.newsletterID());
@@ -93,7 +93,7 @@ public class NewsletterVersandauftragServiceTest {
 	class CreateVersandauftragTests {
 
 		@Test
-		void should_createVersandauftragThrowWebApplicationException_when_keinNewsletter() {
+		void should_createVersandauftragThrowMkGatewayWebApplicationException_when_keinNewsletter() {
 
 			// Arrange
 			String newsletterId = "hklashl";
@@ -106,12 +106,13 @@ public class NewsletterVersandauftragServiceTest {
 
 				service.createVersandauftrag(newsletterVersandauftrag);
 				fail("keine WebapplicationException");
-			} catch (WebApplicationException e) {
+			} catch (MkGatewayWebApplicationException e) {
 
 				Response response = e.getResponse();
 				assertEquals(404, response.getStatus());
-				ErrorResponseDto errorPayload = (ErrorResponseDto) response.getEntity();
-				assertEquals(Schweregrad.ERROR.toString(), errorPayload.getLevel());
+				ResponsePayload responsePayload = (ResponsePayload) response.getEntity();
+				MessagePayload errorPayload = responsePayload.getMessage();
+				assertEquals("ERROR", errorPayload.getLevel());
 				assertEquals("kein Newsletter mit der ID vorhanden", errorPayload.getMessage());
 
 				verify(newsletterService).findNewsletterWithID(any(Identifier.class));
@@ -124,7 +125,7 @@ public class NewsletterVersandauftragServiceTest {
 		}
 
 		@Test
-		void should_createVersandauftragThrowWebApplicationException_when_keineEmpfaenger() {
+		void should_createVersandauftragThrowMkGatewayWebApplicationException_when_keineEmpfaenger() {
 
 			// Arrange
 			String newsletterId = "hklashl";
@@ -141,12 +142,13 @@ public class NewsletterVersandauftragServiceTest {
 
 				service.createVersandauftrag(newsletterVersandauftrag);
 				fail("keine WebapplicationException");
-			} catch (WebApplicationException e) {
+			} catch (MkGatewayWebApplicationException e) {
 
 				Response response = e.getResponse();
 				assertEquals(412, response.getStatus());
-				ErrorResponseDto errorPayload = (ErrorResponseDto) response.getEntity();
-				assertEquals(Schweregrad.WARNING.toString(), errorPayload.getLevel());
+				ResponsePayload responsePayload = (ResponsePayload) response.getEntity();
+				MessagePayload errorPayload = responsePayload.getMessage();
+				assertEquals("WARN", errorPayload.getLevel());
 				assertEquals("keine Empfänger => kein Versand", errorPayload.getMessage());
 
 				verify(newsletterService).findNewsletterWithID(any(Identifier.class));
@@ -159,7 +161,7 @@ public class NewsletterVersandauftragServiceTest {
 		}
 
 		@Test
-		void should_createVersandauftragThrowWebApplicationException_when_versandBereitsBeendet() {
+		void should_createVersandauftragThrowMkGatewayWebApplicationException_when_versandBereitsBeendet() {
 
 			// Arrange
 			String expectedMessage = "Newsletter wurde bereits am 14.01.2024 an 12 LEHRER versendet";
@@ -196,12 +198,13 @@ public class NewsletterVersandauftragServiceTest {
 
 				service.createVersandauftrag(newsletterVersandauftrag);
 				fail("keine WebapplicationException");
-			} catch (WebApplicationException e) {
+			} catch (MkGatewayWebApplicationException e) {
 
 				Response response = e.getResponse();
 				assertEquals(409, response.getStatus());
-				ErrorResponseDto errorPayload = (ErrorResponseDto) response.getEntity();
-				assertEquals(Schweregrad.WARNING.toString(), errorPayload.getLevel());
+				ResponsePayload responsePayload = (ResponsePayload) response.getEntity();
+				MessagePayload errorPayload = responsePayload.getMessage();
+				assertEquals("WARN", errorPayload.getLevel());
 				assertEquals(expectedMessage, errorPayload.getMessage());
 
 				verify(newsletterService).findNewsletterWithID(any(Identifier.class));
@@ -211,10 +214,10 @@ public class NewsletterVersandauftragServiceTest {
 		}
 
 		@Test
-		void should_createVersandauftragThrowWebApplicationException_when_versandNEU() {
+		void should_createVersandauftragThrowMkGatewayWebApplicationException_when_versandNEU() {
 
 			// Arrange
-			String expectedMessage = "Newsletter wurde bereits am 13.01.2024 gespeichert. Empfaengertyp=LEHRER, Status=NEU";
+			String expectedMessage = "Newsletterversand wurde bereits am 13.01.2024 gespeichert. Empfaengertyp=LEHRER, Status=NEW, Anzahl Empfänger=12";
 
 			String newsletterId = "hklashl";
 			Empfaengertyp empfaengertyp = Empfaengertyp.LEHRER;
@@ -228,7 +231,7 @@ public class NewsletterVersandauftragServiceTest {
 				.withAnzahlEmpaenger(12)
 				.withErfasstAm("13.01.2024")
 				.withIdentifier(new Identifier(newsletterId))
-				.withStatus(StatusAuslieferung.NEU)
+				.withStatus(StatusAuslieferung.NEW)
 				.withEmpfaengertyp(empfaengertyp);
 
 			List<Versandauftrag> vorhandene = Arrays.asList(new Versandauftrag[] { auftrag });
@@ -248,14 +251,15 @@ public class NewsletterVersandauftragServiceTest {
 
 				service.createVersandauftrag(newsletterVersandauftrag);
 				fail("keine WebapplicationException");
-			} catch (WebApplicationException e) {
+			} catch (MkGatewayWebApplicationException e) {
 
 				Response response = e.getResponse();
 				assertEquals(409, response.getStatus());
-				ErrorResponseDto errorPayload = (ErrorResponseDto) response.getEntity();
-				assertEquals(Schweregrad.WARNING.toString(), errorPayload.getLevel());
+				ResponsePayload responsePayload = (ResponsePayload) response.getEntity();
+				MessagePayload errorPayload = responsePayload.getMessage();
+				assertEquals("WARN", errorPayload.getLevel());
 				assertEquals(
-					"Newsletter wurde bereits am 13.01.2024 gespeichert. Empfaengertyp=LEHRER, Status=NEU, Anzahl Empfänger=12",
+					expectedMessage,
 					errorPayload.getMessage());
 
 				verify(newsletterService).findNewsletterWithID(any(Identifier.class));
@@ -265,7 +269,7 @@ public class NewsletterVersandauftragServiceTest {
 		}
 
 		@Test
-		void should_createVersandauftragThrowWebApplicationException_when_versandWAITING() {
+		void should_createVersandauftragThrowMkGatewayWebApplicationException_when_versandWAITING() {
 
 			// Arrange
 			String newsletterId = "hklashl";
@@ -300,14 +304,15 @@ public class NewsletterVersandauftragServiceTest {
 
 				service.createVersandauftrag(newsletterVersandauftrag);
 				fail("keine WebapplicationException");
-			} catch (WebApplicationException e) {
+			} catch (MkGatewayWebApplicationException e) {
 
 				Response response = e.getResponse();
 				assertEquals(409, response.getStatus());
-				ErrorResponseDto errorPayload = (ErrorResponseDto) response.getEntity();
-				assertEquals(Schweregrad.WARNING.toString(), errorPayload.getLevel());
+				ResponsePayload responsePayload = (ResponsePayload) response.getEntity();
+				MessagePayload errorPayload = responsePayload.getMessage();
+				assertEquals("WARN", errorPayload.getLevel());
 				assertEquals(
-					"Newsletter wurde bereits am 13.01.2024 gespeichert. Empfaengertyp=LEHRER, Status=WAITING, Anzahl Empfänger=12",
+					"Newsletterversand wurde bereits am 13.01.2024 gespeichert. Empfaengertyp=LEHRER, Status=WAITING, Anzahl Empfänger=12",
 					errorPayload.getMessage());
 
 				verify(newsletterService).findNewsletterWithID(any(Identifier.class));
@@ -317,7 +322,7 @@ public class NewsletterVersandauftragServiceTest {
 		}
 
 		@Test
-		void should_createVersandauftragThrowWebApplicationException_when_versandIN_PROGESS() {
+		void should_createVersandauftragThrowMkGatewayWebApplicationException_when_versandIN_PROGESS() {
 
 			// Arrange
 			String newsletterId = "hklashl";
@@ -352,14 +357,15 @@ public class NewsletterVersandauftragServiceTest {
 
 				service.createVersandauftrag(newsletterVersandauftrag);
 				fail("keine WebapplicationException");
-			} catch (WebApplicationException e) {
+			} catch (MkGatewayWebApplicationException e) {
 
 				Response response = e.getResponse();
 				assertEquals(409, response.getStatus());
-				ErrorResponseDto errorPayload = (ErrorResponseDto) response.getEntity();
-				assertEquals(Schweregrad.WARNING.toString(), errorPayload.getLevel());
+				ResponsePayload responsePayload = (ResponsePayload) response.getEntity();
+				MessagePayload errorPayload = responsePayload.getMessage();
+				assertEquals("WARN", errorPayload.getLevel());
 				assertEquals(
-					"Newsletter wurde bereits am 13.01.2024 gespeichert. Empfaengertyp=LEHRER, Status=IN_PROGRESS, Anzahl Empfänger=12",
+					"Newsletterversand wurde bereits am 13.01.2024 gespeichert. Empfaengertyp=LEHRER, Status=IN_PROGRESS, Anzahl Empfänger=12",
 					errorPayload.getMessage());
 
 				verify(newsletterService).findNewsletterWithID(any(Identifier.class));
@@ -407,7 +413,7 @@ public class NewsletterVersandauftragServiceTest {
 			when(auslieferungenRepository.addAuslieferung(any(NewsletterAuslieferung.class))).thenReturn("ID");
 
 			// Act
-			Versandauftrag result = service.createVersandauftrag(newsletterVersandauftrag);
+			ResponsePayload result = service.createVersandauftrag(newsletterVersandauftrag);
 
 			// Assert
 			verify(newsletterService).findNewsletterWithID(any(Identifier.class));
@@ -418,6 +424,9 @@ public class NewsletterVersandauftragServiceTest {
 			verify(auslieferungenRepository, times(4)).addAuslieferung(any(NewsletterAuslieferung.class));
 
 			assertNotNull(result);
+			assertNotNull(result.getData());
+			assertEquals("Newsletterversand erfolgreich beauftragt", result.getMessage().getMessage());
+			assertEquals("INFO", result.getMessage().getLevel());
 
 		}
 
@@ -450,7 +459,7 @@ public class NewsletterVersandauftragServiceTest {
 			when(auslieferungenRepository.addAuslieferung(any(NewsletterAuslieferung.class))).thenReturn("ID");
 
 			// Act
-			Versandauftrag result = service.createVersandauftrag(newsletterVersandauftrag);
+			ResponsePayload result = service.createVersandauftrag(newsletterVersandauftrag);
 
 			// Assert
 			verify(newsletterService).findNewsletterWithID(any(Identifier.class));
@@ -461,11 +470,14 @@ public class NewsletterVersandauftragServiceTest {
 			verify(auslieferungenRepository, times(4)).addAuslieferung(any(NewsletterAuslieferung.class));
 
 			assertNotNull(result);
+			assertNotNull(result.getData());
+			assertEquals("Newsletterversand erfolgreich beauftragt", result.getMessage().getMessage());
+			assertEquals("INFO", result.getMessage().getLevel());
 
 		}
 
 		@Test
-		void should_createVersandauftragThrowWebApplicationException_when_ExceptionOnSaveVersandauftrag() {
+		void should_createVersandauftragThrowMkGatewayMkGatewayWebApplicationException_when_ExceptionOnSaveVersandauftrag() {
 
 			// Arrange
 			String expectedMessage = "Beim Anlegen des Versandauftrags ist ein Fehler aufgetreten: anzahl empfänger=12";
@@ -492,12 +504,13 @@ public class NewsletterVersandauftragServiceTest {
 
 				service.createVersandauftrag(newsletterVersandauftrag);
 				fail("keine WebapplicationException");
-			} catch (WebApplicationException e) {
+			} catch (MkGatewayWebApplicationException e) {
 
 				Response response = e.getResponse();
 				assertEquals(500, response.getStatus());
-				ErrorResponseDto errorPayload = (ErrorResponseDto) response.getEntity();
-				assertEquals(Schweregrad.ERROR.toString(), errorPayload.getLevel());
+				ResponsePayload responsePayload = (ResponsePayload) response.getEntity();
+				MessagePayload errorPayload = responsePayload.getMessage();
+				assertEquals("ERROR", errorPayload.getLevel());
 				assertEquals(expectedMessage, errorPayload.getMessage());
 
 				verify(newsletterService).findNewsletterWithID(any(Identifier.class));
@@ -510,7 +523,7 @@ public class NewsletterVersandauftragServiceTest {
 		}
 
 		@Test
-		void should_createVersandauftragThrowWebApplicationException_when_ExceptionOnAddAuslieferung() {
+		void should_createVersandauftragThrowMkGatewayMkGatewayWebApplicationException_when_ExceptionOnAddAuslieferung() {
 
 			// Arrange
 			String expectedMessage = "Beim Anlegen des Versandauftrags ist ein Fehler aufgetreten: anzahl empfänger=12";
@@ -544,12 +557,13 @@ public class NewsletterVersandauftragServiceTest {
 
 				service.createVersandauftrag(newsletterVersandauftrag);
 				fail("keine WebapplicationException");
-			} catch (WebApplicationException e) {
+			} catch (MkGatewayWebApplicationException e) {
 
 				Response response = e.getResponse();
 				assertEquals(500, response.getStatus());
-				ErrorResponseDto errorPayload = (ErrorResponseDto) response.getEntity();
-				assertEquals(Schweregrad.ERROR.toString(), errorPayload.getLevel());
+				ResponsePayload responsePayload = (ResponsePayload) response.getEntity();
+				MessagePayload errorPayload = responsePayload.getMessage();
+				assertEquals("ERROR", errorPayload.getLevel());
 				assertEquals(expectedMessage, errorPayload.getMessage());
 
 				verify(newsletterService).findNewsletterWithID(any(Identifier.class));

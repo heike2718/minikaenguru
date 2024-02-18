@@ -22,9 +22,15 @@ public class AuslieferungPicker {
 	@Inject
 	NewsletterauslieferungenRepository newsletterAuslieferungenRepository;
 
-	public NewsletterAuslieferung getFirstPendingAuslieferung() {
+	/**
+	 * Gibt die nächste Auslieferung in der Warteschlange zurück: die mit dem ältesten eingestellten Versandauftrag, der noch nicht
+	 * beendet ist sortiert nach sortnr.
+	 *
+	 * @return NewsletterAuslieferung oder null
+	 */
+	public NewsletterAuslieferung getNextPendingAuslieferung() {
 
-		List<Versandauftrag> offeneVersandauftraege = newsletterAuftraegeService.findNichtBeendeteVersandauftraege();
+		List<Versandauftrag> offeneVersandauftraege = newsletterAuftraegeService.findAllNotCompleted();
 
 		for (Versandauftrag auftrag : offeneVersandauftraege) {
 
