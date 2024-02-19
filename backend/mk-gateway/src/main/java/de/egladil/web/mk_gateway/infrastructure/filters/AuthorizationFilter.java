@@ -67,13 +67,13 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
 		if ("OPTIONS".equals(method)) {
 
-			LOGGER.info("keine Auth bei OPTIONS");
+			LOGGER.debug("keine Auth bei OPTIONS");
 
 			return;
 		}
 
 		String path = requestContext.getUriInfo().getPath();
-		LOGGER.info("path={}", path);
+		LOGGER.debug("path={}", path);
 
 		List<Rolle> rollen = permittedRolesRepository.permittedRollen(path, method);
 

@@ -13,7 +13,7 @@
 		<commons.version>2.0.0</commons.version>
 		<quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
 		<quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-		<quarkus.platform.version>3.6.7</quarkus.platform.version>
+		<quarkus.platform.version>3.7.3</quarkus.platform.version>
 		<surefire-plugin.version>3.1.2</surefire-plugin.version>
 		<dependency-check.version>9.0.5</dependency-check.version>
 		<java.version>17</java.version>
@@ -259,6 +259,11 @@
 				<groupId>org.owasp</groupId>
 				<artifactId>dependency-check-maven</artifactId>
 				<version>${dependency-check.version}</version>
+				<configuration>
+					<suppressionFiles>
+						<suppressionFile>./suppressions.xml</suppressionFile>
+					</suppressionFiles>
+				</configuration>
 				<executions>
 					<execution>
 						<phase>package</phase>

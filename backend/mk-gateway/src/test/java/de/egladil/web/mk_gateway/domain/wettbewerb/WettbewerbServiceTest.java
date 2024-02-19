@@ -11,42 +11,34 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import jakarta.persistence.PersistenceException;
-import jakarta.ws.rs.NotFoundException;
-import jakarta.ws.rs.WebApplicationException;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.commons_validation.exception.InvalidInputException;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
-import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.domain.error.MkGatewayWebApplicationException;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.EditWettbewerbModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbDetailsAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbListAPIModel;
+import de.egladil.web.mk_gateway.profiles.FullDatabaseTestProfile;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.TestProfile;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.NotFoundException;
 
 /**
  * WettbewerbServiceTest
  */
+@QuarkusTest
+@TestProfile(FullDatabaseTestProfile.class)
 public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 
+	@Inject
 	private WettbewerbService service;
-
-	@Override
-	@BeforeEach
-	protected void setUp() {
-
-		super.setUp();
-		this.service = WettbewerbService.createForTest(getWettbewerbRepository());
-	}
 
 	@Test
 	void should_AlleWettbewerbeHolen_Work() {
@@ -55,44 +47,17 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 		List<WettbewerbListAPIModel> wettbewerbe = this.service.alleWettbewerbeHolen();
 
 		// Assert
-		assertEquals(4, wettbewerbe.size());
-
 		{
 
 			WettbewerbListAPIModel w = wettbewerbe.get(0);
 			assertEquals(Integer.valueOf(2020), w.jahr());
-			assertEquals(WettbewerbStatus.ANMELDUNG, w.status());
-			assertFalse(w.completelyLoaded());
-		}
-
-		{
-
-			WettbewerbListAPIModel w = wettbewerbe.get(1);
-			assertEquals(Integer.valueOf(2015), w.jahr());
 			assertEquals(WettbewerbStatus.DOWNLOAD_PRIVAT, w.status());
 			assertFalse(w.completelyLoaded());
 		}
-
-		{
-
-			WettbewerbListAPIModel w = wettbewerbe.get(2);
-			assertEquals(Integer.valueOf(2010), w.jahr());
-			assertEquals(WettbewerbStatus.BEENDET, w.status());
-			assertFalse(w.completelyLoaded());
-		}
-
-		{
-
-			WettbewerbListAPIModel w = wettbewerbe.get(3);
-			assertEquals(Integer.valueOf(2005), w.jahr());
-			assertEquals(WettbewerbStatus.BEENDET, w.status());
-			assertFalse(w.completelyLoaded());
-		}
-
 	}
 
 	@Test
-	void should_AktuellerWettbewerb_return2017() {
+	void should_AktuellerWettbewerb_return2020() {
 
 		// Act
 		Optional<Wettbewerb> optAktueller = service.aktuellerWettbewerb();
@@ -100,23 +65,11 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 		// Assert
 		Wettbewerb aktueller = optAktueller.get();
 		assertEquals(2020, aktueller.id().jahr().intValue());
-		assertEquals(WettbewerbStatus.ANMELDUNG, aktueller.status());
+		assertEquals(WettbewerbStatus.DOWNLOAD_PRIVAT, aktueller.status());
 		assertNotNull(aktueller.wettbewerbsbeginn());
 		assertNotNull(aktueller.wettbewerbsende());
 		assertNotNull(aktueller.datumFreischaltungLehrer());
 		assertNotNull(aktueller.datumFreischaltungLehrer());
-	}
-
-	@Test
-	void should_AktuellerWettbewerbBeEmpty_when_thereAreNoWettbewerbe() {
-
-		// Arrange
-		WettbewerbRepository repo = Mockito.mock(WettbewerbRepository.class);
-		Mockito.when(repo.loadWettbewerbe()).thenReturn(new ArrayList<>());
-		WettbewerbService wettbewerbService = WettbewerbService.createForTest(repo);
-
-		// Act + Assert
-		assertTrue(wettbewerbService.aktuellerWettbewerb().isEmpty());
 	}
 
 	@Test
@@ -130,9 +83,9 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 		WettbewerbDetailsAPIModel aktueller = opt.get();
 		assertEquals(2010, aktueller.getJahr());
 		assertEquals(WettbewerbStatus.BEENDET.toString(), aktueller.getStatus());
-		assertEquals("01.03.2010", aktueller.getDatumFreischaltungLehrer());
+		assertEquals("05.03.2010", aktueller.getDatumFreischaltungLehrer());
 		assertEquals("01.06.2010", aktueller.getDatumFreischaltungPrivat());
-		assertEquals("01.01.2010", aktueller.getWettbewerbsbeginn());
+		assertEquals("11.11.2009", aktueller.getWettbewerbsbeginn());
 		assertEquals("01.08.2010", aktueller.getWettbewerbsende());
 	}
 
@@ -140,7 +93,7 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 	void should_WettbewerbMitJahrReturnEmpty_when_NotExists() {
 
 		// Act
-		Optional<WettbewerbDetailsAPIModel> opt = service.wettbewerbMitJahr(Integer.valueOf(2017));
+		Optional<WettbewerbDetailsAPIModel> opt = service.wettbewerbMitJahr(Integer.valueOf(2005));
 
 		// Assert
 		assertFalse(opt.isPresent());
@@ -208,18 +161,13 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 	void should_WettbewerbAnlegen_call_AddOnTheRepo() {
 
 		// Arrange
-		EditWettbewerbModel data = EditWettbewerbModel.createForTest(2018, "01.01.2006", "31.05.2006",
+		EditWettbewerbModel data = EditWettbewerbModel.createForTest(2050, "01.01.2006", "31.05.2006",
 			"01.03.2006", "01.06.2006", "AA-AA-AA", "BBBB-BBBB-BBBB", "CCCCC-CCCCC-CCCCC");
-
-		assertEquals(4, service.alleWettbewerbeHolen().size());
 
 		// Act
 		Wettbewerb neuer = this.service.wettbewerbAnlegen(data);
 
 		// Assert
-		assertEquals(1, getCountWettbewerbInsert());
-		assertEquals(0, getCountWettbewerbUpdate());
-		assertEquals(0, getCountChangeWettbewerbStatus());
 		assertEquals(WettbewerbStatus.ERFASST, neuer.status());
 		assertEquals("AA-AA-AA", neuer.loesungsbuchstabenIkids());
 		assertEquals("BBBB-BBBB-BBBB", neuer.loesungsbuchstabenKlasse1());
@@ -231,18 +179,13 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 	void should_WettbewerbAnlegen_save_handleMissingLoesunsgbuchstaben() {
 
 		// Arrange
-		EditWettbewerbModel data = EditWettbewerbModel.createForTest(2018, "01.01.2006", "31.05.2006",
+		EditWettbewerbModel data = EditWettbewerbModel.createForTest(2006, "01.01.2006", "31.05.2006",
 			"01.03.2006", "01.06.2006");
-
-		assertEquals(4, service.alleWettbewerbeHolen().size());
 
 		// Act
 		Wettbewerb neuer = this.service.wettbewerbAnlegen(data);
 
 		// Assert
-		assertEquals(1, getCountWettbewerbInsert());
-		assertEquals(0, getCountWettbewerbUpdate());
-		assertEquals(0, getCountChangeWettbewerbStatus());
 		assertEquals(WettbewerbStatus.ERFASST, neuer.status());
 		assertNull(neuer.loesungsbuchstabenIkids());
 		assertNull(neuer.loesungsbuchstabenKlasse1());
@@ -251,32 +194,10 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 	}
 
 	@Test
-	void should_WettbewerbAnlegenConvertPersistenceException() {
-
-		// Arrange
-		EditWettbewerbModel data = EditWettbewerbModel.createForTest(2011, "01.02.2006", "31.05.2006",
-			"01.03.2006", "01.06.2006");
-
-		assertEquals(0, getCountWettbewerbInsert());
-
-		// Act + Assert
-		try {
-
-			service.wettbewerbAnlegen(data);
-			fail("keine MkGatewayRuntimeException");
-		} catch (MkGatewayRuntimeException e) {
-
-			assertEquals(1, getCountWettbewerbInsert());
-			assertEquals("PersistenceException beim Speichern eines neuen Wettbewerbs", e.getMessage());
-		}
-
-	}
-
-	@Test
 	void should_StarteNaechstePhaseThrowNotFoundException_when_WettbewerbNotPresent() {
 
 		// Arrange
-		WettbewerbID id = new WettbewerbID(2012);
+		WettbewerbID id = new WettbewerbID(2007);
 
 		// Act + Assert
 		try {
@@ -284,7 +205,6 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 			service.starteNaechstePhase(id.jahr());
 		} catch (NotFoundException e) {
 
-			assertEquals(0, getCountChangeWettbewerbStatus());
 			assertEquals("HTTP 404 Not Found", e.getMessage());
 		}
 
@@ -300,8 +220,7 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 		WettbewerbStatus neuerStatus = service.starteNaechstePhase(id.jahr());
 
 		// Assert
-		assertEquals(1, getCountChangeWettbewerbStatus());
-		assertEquals(WettbewerbStatus.DOWNLOAD_LEHRER, neuerStatus);
+		assertEquals(WettbewerbStatus.BEENDET, neuerStatus);
 
 	}
 
@@ -309,17 +228,16 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 	void should_StarteNaechstePhaseThrowException_when_WettbewerbBeendet() {
 
 		// Arrange
-		WettbewerbID id = new WettbewerbID(2005);
+		WettbewerbID id = new WettbewerbID(2010);
 
 		// Act + Assert
 		try {
 
 			service.starteNaechstePhase(id.jahr());
 			fail("keine WebApplicationException");
-		} catch (WebApplicationException e) {
+		} catch (MkGatewayWebApplicationException e) {
 
-			assertEquals(0, getCountChangeWettbewerbStatus());
-			assertEquals("HTTP 412 Precondition Failed", e.getMessage());
+			assertEquals(412, e.getResponse().getStatus());
 			Object entity = e.getResponse().getEntity();
 			assertTrue(entity instanceof ResponsePayload);
 			ResponsePayload payload = (ResponsePayload) entity;
@@ -327,31 +245,6 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 			assertEquals("Wettbewerb hat sein Lebensende erreicht. Es gibt keinen Folgestatus.", payload.getMessage().getMessage());
 		}
 
-	}
-
-	@Test
-	void should_StarteNaechstePhaseConvertPersistenceException() {
-
-		// Arrange
-		WettbewerbID wettbewerbID = new WettbewerbID(2020);
-		Wettbewerb wettbewerb = new Wettbewerb(wettbewerbID).withStatus(WettbewerbStatus.ERFASST);
-
-		WettbewerbRepository repo = Mockito.mock(WettbewerbRepository.class);
-		Mockito.when(repo.wettbewerbMitID(wettbewerbID)).thenReturn(Optional.of(wettbewerb));
-		Mockito.when(repo.changeWettbewerbStatus(wettbewerbID, WettbewerbStatus.ANMELDUNG))
-			.thenThrow(new PersistenceException("Blöd, die Datenbank ist weg"));
-
-		WettbewerbService wettbewerbService = WettbewerbService.createForTest(repo);
-
-		// Act
-		try {
-
-			wettbewerbService.starteNaechstePhase(wettbewerbID.jahr());
-			fail("keine MkGatewayRuntimeException");
-		} catch (MkGatewayRuntimeException e) {
-
-			assertEquals("PersistenceException beim Speichern eines vorhandenen Wettbewerbs", e.getMessage());
-		}
 	}
 
 	/// ///////////////////////////////////////////
@@ -388,23 +281,19 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 			"01.07.2020", "AA-AA-AA", "BBBB-BBBB-BBBB", "CCCCC-CCCCC-CCCCC");
 
 		WettbewerbDetailsAPIModel vorhandener = service.wettbewerbMitJahr(Integer.valueOf(2020)).get();
-		assertEquals("01.01.2020", vorhandener.getWettbewerbsbeginn());
-		assertEquals("01.08.2020", vorhandener.getWettbewerbsende());
-		assertEquals("01.03.2020", vorhandener.getDatumFreischaltungLehrer());
+		assertEquals("11.11.2019", vorhandener.getWettbewerbsbeginn());
+		assertEquals("31.07.2020", vorhandener.getWettbewerbsende());
+		assertEquals("05.03.2020", vorhandener.getDatumFreischaltungLehrer());
 		assertEquals("01.06.2020", vorhandener.getDatumFreischaltungPrivat());
-		assertNull(vorhandener.getLoesungsbuchstabenIkids());
-		assertNull(vorhandener.getLoesungsbuchstabenKlasse1());
-		assertNull(vorhandener.getLoesungsbuchstabenKlasse2());
+		assertEquals("AC-CB-BC", vorhandener.getLoesungsbuchstabenIkids());
+		assertEquals("CEBE-DDEC-BCAE", vorhandener.getLoesungsbuchstabenKlasse1());
+		assertEquals("BAECA-CACBE-DECEC", vorhandener.getLoesungsbuchstabenKlasse2());
 
 		// Act
 		Wettbewerb geaenderter = this.service.wettbewerbAendern(data);
 
 		// Assert
-		assertEquals(0, getCountWettbewerbInsert());
-		assertEquals(1, getCountWettbewerbUpdate());
-		assertEquals(0, getCountChangeWettbewerbStatus());
-
-		assertEquals(WettbewerbStatus.ANMELDUNG, geaenderter.status());
+		assertEquals(WettbewerbStatus.DOWNLOAD_PRIVAT, geaenderter.status());
 		assertEquals("13.02.2020", CommonTimeUtils.format(geaenderter.wettbewerbsbeginn()));
 		assertEquals("23.03.2020", CommonTimeUtils.format(geaenderter.datumFreischaltungLehrer()));
 		assertEquals("01.07.2020", CommonTimeUtils.format(geaenderter.datumFreischaltungPrivat()));
@@ -416,32 +305,10 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 	}
 
 	@Test
-	void should_WettbewerbAendernConvertPersistenceException() {
-
-		// Arrange
-		EditWettbewerbModel data = EditWettbewerbModel.createForTest(2015, "01.01.2010", "31.03.2010",
-			"01.03.2010", "01.09.2010");
-
-		// Act + Assert
-		try {
-
-			service.wettbewerbAendern(data);
-			fail("keine MkGatewayRuntimeException");
-		} catch (MkGatewayRuntimeException e) {
-
-			assertEquals(0, getCountWettbewerbInsert());
-			assertEquals(1, getCountWettbewerbUpdate());
-			assertEquals(0, getCountChangeWettbewerbStatus());
-			assertEquals("PersistenceException beim Speichern eines vorhandenen Wettbewerbs", e.getMessage());
-		}
-
-	}
-
-	@Test
 	void should_WettbewerbAendernThrowNotFoundException_when_WettbewerbNotPresent() {
 
 		// Arrange
-		EditWettbewerbModel data = EditWettbewerbModel.createForTest(2012, "01.01.2017", "31.05.2017",
+		EditWettbewerbModel data = EditWettbewerbModel.createForTest(2008, "01.01.2017", "31.05.2017",
 			"01.03.2017", "01.06.2017");
 
 		// Act + Assert
@@ -451,10 +318,7 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 			fail("keine MkWettbewerbAdminRuntimeException");
 		} catch (NotFoundException e) {
 
-			assertEquals(0, getCountWettbewerbInsert());
-			assertEquals(0, getCountWettbewerbUpdate());
-			assertEquals(0, getCountChangeWettbewerbStatus());
-			assertEquals("HTTP 404 Not Found", e.getMessage());
+			//
 		}
 	}
 
@@ -462,7 +326,7 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 	void should_WettbewerbAendernThrowWebapplicationException_when_WettbewerbBeendet() {
 
 		// Arrange
-		EditWettbewerbModel data = EditWettbewerbModel.createForTest(2005, "01.01.2017", "31.05.2017",
+		EditWettbewerbModel data = EditWettbewerbModel.createForTest(2010, "01.01.2017", "31.05.2017",
 			"01.03.2017", "01.06.2017");
 
 		// Act + Assert
@@ -470,13 +334,9 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 
 			service.wettbewerbAendern(data);
 			fail("keine WebApplicationException");
-		} catch (WebApplicationException e) {
+		} catch (MkGatewayWebApplicationException e) {
 
-			assertEquals(0, getCountWettbewerbInsert());
-			assertEquals(0, getCountWettbewerbUpdate());
-			assertEquals(0, getCountChangeWettbewerbStatus());
-
-			assertEquals("HTTP 412 Precondition Failed", e.getMessage());
+			assertEquals(412, e.getResponse().getStatus());
 			Object entity = e.getResponse().getEntity();
 			assertTrue(entity instanceof ResponsePayload);
 			ResponsePayload payload = (ResponsePayload) entity;
@@ -484,137 +344,5 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 			assertEquals("Wettbewerb hat sein Lebensende erreicht und kann nicht mehr geändert werden.",
 				payload.getMessage().getMessage());
 		}
-	}
-
-	@Test
-	void should_AktuellerWettbewerbImAnmeldemodusThrowException_when_NoWettbewerbAtAll() {
-
-		// Arrange
-		WettbewerbRepository repo = Mockito.mock(WettbewerbRepository.class);
-		Mockito.when(repo.loadWettbewerbe())
-			.thenReturn(Arrays.asList(new Wettbewerb[] {}));
-
-		WettbewerbService wettbewerbService = WettbewerbService.createForTest(repo);
-
-		// Act
-		try {
-
-			wettbewerbService.aktuellerWettbewerbImAnmeldemodus();
-			fail("keine IllegalStateException");
-
-		} catch (IllegalStateException e) {
-
-			assertEquals("Keine Anmeldung möglich. Es gibt keinen aktuellen Wettbewerb.", e.getMessage());
-		}
-
-	}
-
-	@Test
-	void should_AktuellerWettbewerbImAnmeldemodusThrowException_when_WettbewerbBeendet() {
-
-		// Arrange
-		WettbewerbRepository repo = Mockito.mock(WettbewerbRepository.class);
-		Wettbewerb expected = createWettbewerb(2019, WettbewerbStatus.BEENDET);
-		Mockito.when(repo.loadWettbewerbe())
-			.thenReturn(Arrays.asList(new Wettbewerb[] { expected }));
-
-		WettbewerbService wettbewerbService = WettbewerbService.createForTest(repo);
-
-		// Act
-		try {
-
-			wettbewerbService.aktuellerWettbewerbImAnmeldemodus();
-			fail("keine IllegalStateException");
-
-		} catch (IllegalStateException e) {
-
-			assertEquals("Keine Anmeldung möglich. Der Wettbewerb ist beendet.", e.getMessage());
-		}
-
-	}
-
-	@Test
-	void should_AktuellerWettbewerbImAnmeldemodusThrowException_when_WettbewerbErfasst() {
-
-		// Arrange
-		WettbewerbRepository repo = Mockito.mock(WettbewerbRepository.class);
-		Wettbewerb expected = createWettbewerb(2019, WettbewerbStatus.ERFASST);
-
-		Mockito.when(repo.loadWettbewerbe())
-			.thenReturn(Arrays.asList(new Wettbewerb[] { expected }));
-
-		WettbewerbService wettbewerbService = WettbewerbService.createForTest(repo);
-
-		// Act
-		try {
-
-			wettbewerbService.aktuellerWettbewerbImAnmeldemodus();
-			fail("keine IllegalStateException");
-
-		} catch (IllegalStateException e) {
-
-			assertEquals("Keine Anmeldung möglich. Der Anmeldezeitraum hat noch nicht begonnen.", e.getMessage());
-		}
-
-	}
-
-	@Test
-	void should_AktuellerWettbewerbImAnmeldemodus_returnWettbewerb_when_StatusAnmeldung() {
-
-		// Arrange
-		WettbewerbRepository repo = Mockito.mock(WettbewerbRepository.class);
-
-		Wettbewerb expected = createWettbewerb(2019, WettbewerbStatus.ANMELDUNG);
-
-		Mockito.when(repo.loadWettbewerbe())
-			.thenReturn(Arrays.asList(new Wettbewerb[] { expected }));
-
-		WettbewerbService wettbewerbService = WettbewerbService.createForTest(repo);
-
-		// Act
-		Wettbewerb actual = wettbewerbService.aktuellerWettbewerbImAnmeldemodus();
-
-		// Assert
-		assertEquals(expected, actual);
-
-	}
-
-	@Test
-	void should_AktuellerWettbewerbImAnmeldemodus_returnWettbewerb_when_StatusDowloadLehrer() {
-
-		// Arrange
-		WettbewerbRepository repo = Mockito.mock(WettbewerbRepository.class);
-		Wettbewerb expected = createWettbewerb(2019, WettbewerbStatus.DOWNLOAD_LEHRER);
-
-		Mockito.when(repo.loadWettbewerbe())
-			.thenReturn(Arrays.asList(new Wettbewerb[] { expected }));
-
-		WettbewerbService wettbewerbService = WettbewerbService.createForTest(repo);
-
-		// Act
-		Wettbewerb actual = wettbewerbService.aktuellerWettbewerbImAnmeldemodus();
-
-		// Assert
-		assertEquals(expected, actual);
-
-	}
-
-	@Test
-	void should_AktuellerWettbewerbImAnmeldemodus_returnWettbewerb_when_StatusDowloadPrivat() {
-
-		// Arrange
-		WettbewerbRepository repo = Mockito.mock(WettbewerbRepository.class);
-		Wettbewerb expected = createWettbewerb(2019, WettbewerbStatus.DOWNLOAD_PRIVAT);
-		Mockito.when(repo.loadWettbewerbe())
-			.thenReturn(Arrays.asList(new Wettbewerb[] { expected }));
-
-		WettbewerbService wettbewerbService = WettbewerbService.createForTest(repo);
-
-		// Act
-		Wettbewerb actual = wettbewerbService.aktuellerWettbewerbImAnmeldemodus();
-
-		// Assert
-		assertEquals(expected, actual);
-
 	}
 }

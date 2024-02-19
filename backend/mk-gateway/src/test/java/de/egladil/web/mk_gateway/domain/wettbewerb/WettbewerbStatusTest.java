@@ -8,8 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
-
 /**
  * WettbewerbStatusTest
  */
