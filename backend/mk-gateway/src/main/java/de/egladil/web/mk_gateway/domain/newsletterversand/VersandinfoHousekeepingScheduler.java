@@ -4,7 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.newsletterversand;
 
-import io.quarkus.scheduler.Scheduled;
 import jakarta.enterprise.context.ApplicationScoped;
 
 /**
@@ -13,7 +12,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class VersandinfoHousekeepingScheduler {
 
-	@Scheduled(cron = "{versandinfos.housekeeping.expr}")
+	// @Scheduled(cron = "{versandinfos.housekeeping.expr}")
 	void cronJob() {
 
 	}

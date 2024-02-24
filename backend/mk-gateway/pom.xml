@@ -13,7 +13,7 @@
 		<commons.version>2.0.0</commons.version>
 		<quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
 		<quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-		<quarkus.platform.version>3.7.3</quarkus.platform.version>
+		<quarkus.platform.version>3.7.4</quarkus.platform.version>
 		<surefire-plugin.version>3.1.2</surefire-plugin.version>
 		<dependency-check.version>9.0.5</dependency-check.version>
 		<java.version>17</java.version>
@@ -156,11 +156,6 @@
 			<groupId>io.quarkiverse.tika</groupId>
 			<artifactId>quarkus-tika</artifactId>
 			<version>2.0.2</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.quarkus</groupId>
-			<artifactId>quarkus-smallrye-openapi</artifactId>
 		</dependency>
 
 		<!-- Flyway specific dependencies -->
