@@ -9,7 +9,15 @@ package de.egladil.web.mk_gateway.domain.wettbewerb;
  */
 public enum WettbewerbStatus {
 
-	ERFASST,
+	ERFASST {
+
+		@Override
+		public boolean isAllowedForScoring() {
+
+			return false;
+		}
+
+	},
 	ANMELDUNG,
 	DOWNLOAD_LEHRER,
 	DOWNLOAD_PRIVAT,
@@ -43,5 +51,15 @@ public enum WettbewerbStatus {
 		default:
 			throw new IllegalArgumentException("unbekannter Status " + currentStatus);
 		}
+	}
+
+	/**
+	 * Die Status, ab denen eine Bewertung möglich sein soll.
+	 *
+	 * @return
+	 */
+	public boolean isAllowedForScoring() {
+
+		return true;
 	}
 }

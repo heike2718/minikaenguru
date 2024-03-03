@@ -1286,6 +1286,34 @@ paths:
       responses:
         "200":
           description: OK
+  /mk-gateway/mja-api/aufgaben/{klasse}:
+    get:
+      tags:
+      - Restricted Mja Resource
+      operationId: Läd die Aufgaben der gegebenen Klassenstufe es aktuellen Wettbewerbs
+        vom mja-api
+      parameters:
+      - name: klasse
+        in: path
+        description: die Klassenstufe.
+        required: true
+        schema:
+          $ref: '#/components/schemas/Klassenstufe'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AufgabenvorschauDto'
+        "404":
+          description: Gibt es nicht
+        "500":
+          description: Serverfehler
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessagePayload'
   /mk-gateway/open-data/statistik/anmeldungen:
     get:
       tags:
@@ -1956,6 +1984,60 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MedianAPIModel'
+    Aufgabe:
+      description: Eine Aufgabe eines Minkänguru-Wettbewerbs
+      type: object
+      properties:
+        nummer:
+          description: Nummer der Aufgabe im Wettbewerb
+          type: string
+        punkte:
+          format: int32
+          description: Punkte für diese Aufgabe.
+          type: integer
+        loesungsbuchstabe:
+          description: der korrekte Lösungsbuchstabe
+          type: string
+        quelle:
+          description: Quelle ür eine Zitatsection
+          type: string
+        images:
+          description: "AufgabeImages, die angezeigt werden können. Frage und optionale\
+            \ Lösung"
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/AufgabeImages'
+    AufgabeImages:
+      description: Objekt das ein png mit dem Text für die Frage/Quizaufgabe und ein
+        png mit dem Text für die Lösung enthält
+      type: object
+      properties:
+        imageFrage:
+          format: binary
+          description: Base64-encodetes png mit dem Text der Frage/Quizaufgabe. Kann
+            mit einem img src="data:image/png;base64- Tag angezeigt werden
+          type: string
+        imageLoesung:
+          format: binary
+          description: Base64-encodetes png mit dem Text der Lösung. Kann mit einem
+            img src="data:image/png;base64- Tag angezeigt werden
+          type: string
+    AufgabenvorschauDto:
+      description: Aufgaben und Lösungen eines Minkänguru-Wettbewerbs für eine gegebene
+        Klassenstufe
+      type: object
+      properties:
+        wettbewerbsjahr:
+          description: Jahr des Wettbewerbs
+          type: string
+        klassenstufe:
+          description: Klassenstufe in menschenlesbarer Form
+          type: string
+        aufgaben:
+          description: die einzelnen Aufgaben mit Lösungen
+          type: array
+          items:
+            $ref: '#/components/schemas/Aufgabe'
     AuthResult:
       required:
       - nonce

@@ -31,7 +31,7 @@ public class NewsletterTest {
 		Newsletter newsletter = new Newsletter()
 			.withIdentifier(new Identifier(AbstractDomainServiceTest.NEWSLETTER_TEST_UND_ALLE_UUID))
 			.withBetreff("Wichtige Information")
-			.withText("Bla bla bla blablablabla bla bla");
+			.withText("MjaApiRestClient bla bla blablablabla bla bla");
 
 		NewsletterAPIModel apiModel = NewsletterAPIModel.createFromNewsletter(newsletter);
 
@@ -40,10 +40,10 @@ public class NewsletterTest {
 
 		System.out.println(serialisierung);
 
-		// {"uuid":"NEWSLETTER_TEST_UND_ALLE_UUID","betreff":"Wichtige Information","text":"Bla bla bla blablablabla bla
+		// {"uuid":"NEWSLETTER_TEST_UND_ALLE_UUID","betreff":"Wichtige Information","text":"MjaApiRestClient bla bla blablablabla bla
 		// bla","versandinfoIDs":[]}
 		assertEquals(
-			"{\"uuid\":\"NEWSLETTER_TEST_UND_ALLE_UUID\",\"betreff\":\"Wichtige Information\",\"text\":\"Bla bla bla blablablabla bla bla\",\"versandinfoIDs\":[]}",
+			"{\"uuid\":\"NEWSLETTER_TEST_UND_ALLE_UUID\",\"betreff\":\"Wichtige Information\",\"text\":\"MjaApiRestClient bla bla blablablabla bla bla\",\"versandinfoIDs\":[]}",
 			serialisierung);
 	}
 
@@ -54,7 +54,7 @@ public class NewsletterTest {
 		Newsletter newsletter = new Newsletter()
 			.withIdentifier(new Identifier(Newsletter.KEINE_UUID))
 			.withBetreff("Wichtige Information")
-			.withText("Bla bla bla blablablabla bla bla");
+			.withText("MjaApiRestClient bla bla blablablabla bla bla");
 
 		NewsletterAPIModel apiModel = NewsletterAPIModel.createFromNewsletter(newsletter);
 
@@ -63,9 +63,9 @@ public class NewsletterTest {
 
 		System.out.println(serialisierung);
 
-		// {"uuid":"neu","betreff":"Wichtige Information","text":"Bla bla bla blablablabla bla bla","versandinfoIDs":[]}
+		// {"uuid":"neu","betreff":"Wichtige Information","text":"MjaApiRestClient bla bla blablablabla bla bla","versandinfoIDs":[]}
 		assertEquals(
-			"{\"uuid\":\"neu\",\"betreff\":\"Wichtige Information\",\"text\":\"Bla bla bla blablablabla bla bla\",\"versandinfoIDs\":[]}",
+			"{\"uuid\":\"neu\",\"betreff\":\"Wichtige Information\",\"text\":\"MjaApiRestClient bla bla blablablabla bla bla\",\"versandinfoIDs\":[]}",
 			serialisierung);
 	}
 
@@ -80,7 +80,7 @@ public class NewsletterTest {
 			Newsletter newsletter = new Newsletter()
 				.withIdentifier(new Identifier(AbstractDomainServiceTest.NEWSLETTER_TEST_UND_ALLE_UUID))
 				.withBetreff("Wichtige Information an alle")
-				.withText("Bla bla bla blablablabla bla bla")
+				.withText("MjaApiRestClient bla bla blablablabla bla bla")
 				.addIdVersandinformation(new Identifier(AbstractDomainServiceTest.VERSANDINFO_ALLE_UUID))
 				.addIdVersandinformation(new Identifier(AbstractDomainServiceTest.VERSANDINFO_TEST_UUID));
 

@@ -1,0 +1,17 @@
+{
+	"info": {
+		"_postman_id": "31c4a8a6-582d-44d6-af04-7f8319469f6f",
+		"name": "mk-gateway",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "local: aufgabenvorschau - 200",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}

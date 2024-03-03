@@ -46,7 +46,7 @@ public class NewsletterHibernateRepositoryIT extends AbstractIntegrationTest {
 		int expectedAnzahl = alle.size() + 1;
 
 		Newsletter newsletter = new Newsletter().withBetreff("Test")
-			.withText("Bla blabla blablablabla bla bla\nblubb blubberdiblubb.");
+			.withText("MjaApiRestClient blabla blablablabla bla bla\nblubb blubberdiblubb.");
 
 		EntityTransaction trx = entityManager.getTransaction();
 
@@ -74,7 +74,7 @@ public class NewsletterHibernateRepositoryIT extends AbstractIntegrationTest {
 			Newsletter theNewsletter = alle.get(0);
 			assertEquals(generatedID, theNewsletter.identifier());
 			assertEquals("Test", theNewsletter.betreff());
-			assertEquals("Bla blabla blablablabla bla bla\nblubb blubberdiblubb.", theNewsletter.text());
+			assertEquals("MjaApiRestClient blabla blablablabla bla bla\nblubb blubberdiblubb.", theNewsletter.text());
 		}
 
 		Optional<Newsletter> optNewsletter = repo.ofId(generatedID);
@@ -84,7 +84,7 @@ public class NewsletterHibernateRepositoryIT extends AbstractIntegrationTest {
 		newsletter = optNewsletter.get();
 		assertEquals(generatedID, newsletter.identifier());
 		assertEquals("Test", newsletter.betreff());
-		assertEquals("Bla blabla blablablabla bla bla\nblubb blubberdiblubb.", newsletter.text());
+		assertEquals("MjaApiRestClient blabla blablablabla bla bla\nblubb blubberdiblubb.", newsletter.text());
 
 		newsletter.withBetreff("Testbetreff");
 		newsletter.withText("Nönö nö! " + newsletter.text());
@@ -99,7 +99,7 @@ public class NewsletterHibernateRepositoryIT extends AbstractIntegrationTest {
 
 			assertEquals(generatedID, geaenderter.identifier());
 			assertEquals("Testbetreff", geaenderter.betreff());
-			assertEquals("Nönö nö! Bla blabla blablablabla bla bla\nblubb blubberdiblubb.", geaenderter.text());
+			assertEquals("Nönö nö! MjaApiRestClient blabla blablablabla bla bla\nblubb blubberdiblubb.", geaenderter.text());
 
 			trx.commit();
 
