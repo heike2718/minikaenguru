@@ -8,6 +8,17 @@ import java.security.Principal;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.auth.signup.AuthResultToResourceOwnerMapper;
+import de.egladil.web.mk_gateway.domain.auth.signup.SignUpService;
+import de.egladil.web.mk_gateway.domain.veranstalter.ChangeNewsletterAboService;
+import de.egladil.web.mk_gateway.domain.veranstalter.LehrerService;
+import de.egladil.web.mk_gateway.domain.veranstalter.PrivatveranstalterService;
+import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
+import de.egladil.web.mk_gateway.domain.veranstalter.ZugangUnterlagenService;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.PrivatveranstalterAPIModel;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -19,19 +30,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
-
-import de.egladil.web.commons_validation.payload.MessagePayload;
-import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_gateway.domain.auth.signup.AuthResultToResourceOwnerMapper;
-import de.egladil.web.mk_gateway.domain.auth.signup.SignUpService;
-import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
-import de.egladil.web.mk_gateway.domain.veranstalter.ChangeNewsletterAboService;
-import de.egladil.web.mk_gateway.domain.veranstalter.LehrerService;
-import de.egladil.web.mk_gateway.domain.veranstalter.PrivatveranstalterService;
-import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
-import de.egladil.web.mk_gateway.domain.veranstalter.ZugangUnterlagenService;
-import de.egladil.web.mk_gateway.domain.veranstalter.api.PrivatveranstalterAPIModel;
-import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * VeranstalterResource ist die Resource zu den Minikänguru-Veranstaltern.
@@ -68,8 +66,6 @@ public class VeranstalterResource {
 	@Inject
 	DevDelayService delayService;
 
-	private SecurityIncidentRegistered securityIncidentRegistered;
-
 	@PUT
 	@Path("newsletter")
 	public Response changeStatusNewsletter() {
@@ -102,10 +98,4 @@ public class VeranstalterResource {
 		return Response.ok(responsePayload).build();
 
 	}
-
-	SecurityIncidentRegistered getSecurityIncidentRegistered() {
-
-		return securityIncidentRegistered;
-	}
-
 }

@@ -17,6 +17,9 @@ public class LehrerAPIModel {
 	private boolean hatZugangZuUnterlagen;
 
 	@JsonProperty
+	private boolean bewertungsfragebogenAnzeigen;
+
+	@JsonProperty
 	private boolean newsletterAbonniert;
 
 	@JsonProperty
@@ -49,5 +52,15 @@ public class LehrerAPIModel {
 
 		this.teilnahmenummern = teilnahmenummern;
 		return this;
+	}
+
+	public boolean isBewertungsfragebogenAnzeigen() {
+
+		return bewertungsfragebogenAnzeigen;
+	}
+
+	public void setBewertungsfragebogenAnzeigen(final boolean bewertungsfragebogenAnzeigen) {
+
+		this.bewertungsfragebogenAnzeigen = bewertungsfragebogenAnzeigen;
 	}
 }

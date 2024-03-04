@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
@@ -20,6 +17,8 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 /**
  * ZugangUnterlagenService
@@ -35,14 +34,14 @@ public class ZugangUnterlagenService {
 	VeranstalterRepository veranstalterRepository;
 
 	@Inject
-	WettbewerbService wettbewerbSerivice;
+	WettbewerbService wettbewerbService;
 
 	public static ZugangUnterlagenService createForTest(final TeilnahmenRepository teilnahmenRepository, final VeranstalterRepository veranstalterRepository, final WettbewerbService wettbewerbSerivice) {
 
 		ZugangUnterlagenService result = new ZugangUnterlagenService();
 		result.teilnahmenRepository = teilnahmenRepository;
 		result.veranstalterRepository = veranstalterRepository;
-		result.wettbewerbSerivice = wettbewerbSerivice;
+		result.wettbewerbService = wettbewerbSerivice;
 		return result;
 
 	}
@@ -51,6 +50,7 @@ public class ZugangUnterlagenService {
 	 * Ermittelt, ob der Veranstalter mit der gegebenen ID Zugang zu den Unterlagen des aktuellen Wettbewerbs hat.
 	 *
 	 * @param  uuid
+	 *              String die ID des Veranstalters.
 	 * @return      boolean
 	 */
 	public boolean hatZugang(final String uuid) {
@@ -62,7 +62,7 @@ public class ZugangUnterlagenService {
 			return false;
 		}
 
-		Optional<Wettbewerb> optWettbewerb = wettbewerbSerivice.aktuellerWettbewerb();
+		Optional<Wettbewerb> optWettbewerb = wettbewerbService.aktuellerWettbewerb();
 
 		if (optWettbewerb.isEmpty()) {
 

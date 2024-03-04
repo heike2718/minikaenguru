@@ -35,6 +35,16 @@ Je Gesamtbewertung einer Klassenstufe genau eine Zeile:
 | ----- | ---- | ------------ | ------------ | ----- | ------------- | ---------- |
 | abcde | 2024 | ZWEI         | TH           | 3     | 4             | blabla bla |
 
+## Wann soll LehrerAPIDto neu geladen werden, um den Status bewertungsfragebogenAnzeigen zu aktualisieren?
+
+Nur bei Lehrern!
+
++ Auswertung Schule erstellen - neuer Button zum Bewertungsfragebogen sollte ständig sichtbar sein.
++ Auswertungen hochladen
++ Lösungszettel speichern
++ Lösungszettel löschen
++ Klasse löschen
++ alle Klassen löschen
 
 
 # Kontaktformular für Anregungen, Fragen, Kritik

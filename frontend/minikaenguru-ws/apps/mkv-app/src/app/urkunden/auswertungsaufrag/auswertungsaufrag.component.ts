@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { Schule } from '../../lehrer/schulen/schulen.model';
 import { UrkundenFacade } from '../urkunden.facade';
 import { LehrerFacade } from '../../lehrer/lehrer.facade';
@@ -7,6 +7,7 @@ import { NgbDateStruct, NgbDate, NgbCalendar } from '@ng-bootstrap/ng-bootstrap'
 import { UrkundeDateModel, Farbschema, UrkundenauftragSchule } from '../urkunden.model';
 import { NgForm } from '@angular/forms';
 import { LogService } from '@minikaenguru-ws/common-logging';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'mkv-auswertungsaufrag',
@@ -17,6 +18,13 @@ export class AuswertungsaufragComponent implements OnInit, OnDestroy {
 
 	#schule?: Schule;
 
+	lehrerFacade = inject(LehrerFacade);
+	urkundenFacade = inject(UrkundenFacade);
+
+
+	#router = inject(Router);
+	#logger = inject(LogService);	
+
 	dateModel!: NgbDateStruct;
 
 	urkundeDateModel!: UrkundeDateModel;
@@ -25,10 +33,7 @@ export class AuswertungsaufragComponent implements OnInit, OnDestroy {
 
 	private selectedSchuleSubscription: Subscription = new Subscription();
 
-	constructor(public urkundenFacade: UrkundenFacade,
-		public lehrerFacade: LehrerFacade, 
-		private calendar: NgbCalendar,
-		private logger: LogService) { }
+	constructor(private calendar: NgbCalendar) { }
 
 	ngOnInit(): void {
 
@@ -53,7 +58,7 @@ export class AuswertungsaufragComponent implements OnInit, OnDestroy {
 	onFormSubmit(form: NgForm): void {
 
 		if (!this.#schule) {
-			this.logger.debug('selectedSchule was undefined');
+			this.#logger.debug('selectedSchule was undefined');
 			return;
 		}
 
@@ -83,6 +88,10 @@ export class AuswertungsaufragComponent implements OnInit, OnDestroy {
 	zusammenfassung(): string {
 
 		return this.urkundenFacade.zusammenfassungAuswertungsauftrag(this.farbe, this.urkundeDateModel);
+	}
+
+	gotoBewertung() {
+		this.#router.navigateByUrl('/lehrer/bewertung');
 	}
 
 }

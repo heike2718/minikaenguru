@@ -1,59 +1,64 @@
 <div class="mkv-container mt-1">
-	<div *ngIf="(selectedSchule$ | async) as schule" class="col-12">
 
-		<p *ngIf="devMode">(upload-auswertung.component)</p>
+	<p *ngIf="devMode">(upload-auswertung.component)</p>
+	<h3>Auswertungstabellen hochladen</h3>
 
+	<p class="text-muted">Indem Sie Ihre Auswertungstabelle(n) hochladen, können sie eine anonyme Statistik für Ihre
+		Schule erstellen.</p>
 
-		<h3>Auswertungstabellen hochladen</h3>
+	<p class="text-danger"><strong>Bitte beachten Sie: es ist dann nicht mehr möglich, die Onlineauswertung zu
+			nutzen, um Urkunden zu
+			erstellen.</strong></p>
 
-		<p class="text-muted">Indem Sie Ihre Auswertungstabelle(n) hochladen, können sie eine anonyme Statistik für Ihre
-			Schule erstellen.</p>
+	<div class="row">
+		<div class="col-sm-12 col-md-3 fw-bold">Schule:</div>
+		<div class="col-sm-12 col-md-9">{{schule.name }}</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12 col-md-3 fw-bold">Ort:</div>
+		<div class="col-sm-12 col-md-9">{{schule.ort }}</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12 col-md-3 fw-bold">Land:</div>
+		<div class="col-sm-12 col-md-9">{{schule.land}}</div>
+	</div>
 
-		<p class="text-danger"><strong>Bitte beachten Sie: es ist dann nicht mehr möglich, die Onlineauswertung zu nutzen, um Urkunden zu
-				erstellen.</strong></p>
+	<div class="mkv-bordered w-100 mt-2 m-1 p-2">
 
-		<div class="row">
-			<div class="col-sm-12 col-md-3 fw-bold">Schule:</div>
-			<div class="col-sm-12 col-md-9">{{schule.name }}</div>
+		<small *ngIf="devMode && subUrl.length > 0">{{uploadModel.subUrl}}</small>
+
+		<div *ngIf="subUrl.length > 0" class="row">
+			<mk-upload [uploadModel]="uploadModel" (dateiAusgewaehlt)="onDateiAusgewaehlt()"
+				(responsePayload)="onResponse($event)"></mk-upload>
 		</div>
-		<div class="row">
-			<div class="col-sm-12 col-md-3 fw-bold">Ort:</div>
-			<div class="col-sm-12 col-md-9">{{schule.ort }}</div>
-		</div>
-		<div class="row">
-			<div class="col-sm-12 col-md-3 fw-bold">Land:</div>
-			<div class="col-sm-12 col-md-9">{{schule.land}}</div>
-		</div>
 
-		<div class="mkv-bordered w-100 mt-2 m-1 p-2">
-
-			<small *ngIf="devMode && subUrl.length > 0">{{uploadModel.subUrl}}</small>
-
-			<div *ngIf="subUrl.length > 0" class="row">
-				<mk-upload [uploadModel]="uploadModel" (dateiAusgewaehlt)="onDateiAusgewaehlt()"
-					(responsePayload)="onResponse($event)"></mk-upload>
-			</div>
-
-		</div>
-		<div class="d-none d-md-block">
-			<div class="btn-group d-flex" role="group">
-				<button *ngIf="schule" class="btn btn-primary w-100" (click)="gotoSchuleDashboard()"
-					title="{{tooltipBtnSchuluebersicht}}"><i class="fa fa-arrow-left"
-						aria-hidden="true"></i>Schulübersicht</button>
-
-				<button class="btn btn-primary w-100" (click)="gotoDashboard()"><i class="fa fa-home"
-						aria-hidden="true"></i>zur
-					Übersicht</button>
-			</div>
-		</div>
-		<div class="d-md-none d-lg-none d-xl-none">
-			<button *ngIf="schule" class="btn btn-primary w-75" (click)="gotoSchuleDashboard()"
-				title="{{tooltipBtnSchuluebersicht}}"><i class="fa fa-arrow-left"
+	</div>
+	<div class="d-none d-md-block">
+		<div class="btn-group d-flex" role="group">
+			<button class="btn btn-primary w-100"
+				(click)="gotoSchuleDashboard()" title="{{tooltipBtnSchuluebersicht}}"><i class="fa fa-arrow-left"
 					aria-hidden="true"></i>Schulübersicht</button>
 
-			<button class="btn btn-primary w-75" (click)="gotoDashboard()"><i class="fa fa-home"
+			<button class="btn btn-primary w-100" (click)="gotoDashboard()"><i class="fa fa-home"
 					aria-hidden="true"></i>zur
 				Übersicht</button>
+
+			<button class="btn btn-primary w-100 ml-1" (click)="gotoBewertung()"
+				title="Bitte bewerten Sie die Aufgaben des Wettbewerbs."><i class="fa fa-comment"
+					aria-hidden="true"></i>Wettbewerbsaufgaben bewerten</button>
 		</div>
 	</div>
+	<div class="d-md-none d-lg-none d-xl-none">
+		<button class="btn btn-primary w-75"
+			(click)="gotoSchuleDashboard()" title="{{tooltipBtnSchuluebersicht}}"><i class="fa fa-arrow-left"
+				aria-hidden="true"></i>Schulübersicht</button>
+
+		<button class="btn btn-primary w-75" (click)="gotoDashboard()"><i class="fa fa-home" aria-hidden="true"></i>zur
+			Übersicht</button>
+
+		<button class="btn btn-primary w-75" (click)="gotoBewertung()"
+			title="Bitte bewerten Sie die Aufgaben des Wettbewerbs."><i class="fa fa-comment"
+				aria-hidden="true"></i>Wettbewerbsaufgaben bewerten</button>
+	</div>
+
 </div>

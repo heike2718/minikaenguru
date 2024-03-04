@@ -12,11 +12,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
-import jakarta.ws.rs.NotFoundException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,12 +21,21 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
+import de.egladil.web.mk_gateway.domain.feedback.ActivateFeedbackDelegate;
+import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.LehrerAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.events.LehrerChanged;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.NotFoundException;
 
 /**
  * LehrerService
@@ -44,11 +48,16 @@ public class LehrerService {
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
+	private final ActivateFeedbackDelegate activateFeedbackDelegate = new ActivateFeedbackDelegate();
+
 	@Inject
 	WettbewerbService wettbewerbService;
 
 	@Inject
 	VeranstalterRepository veranstalterRepository;
+
+	@Inject
+	LoesungszettelRepository loesungszettelRepository;
 
 	@Inject
 	SchulkollegienService schulkollegienService;
@@ -312,7 +321,7 @@ public class LehrerService {
 
 	/**
 	 * @param  name
-	 * @return
+	 * @return      LehrerAPIModel
 	 */
 	public LehrerAPIModel findLehrer(final String uuid) {
 
@@ -344,17 +353,50 @@ public class LehrerService {
 
 		Lehrer lehrer = (Lehrer) veranstalter;
 		boolean hatZugang = false;
+		boolean bewertungAnzeigen = false;
 
 		Optional<Wettbewerb> optWettbewerb = wettbewerbService.aktuellerWettbewerb();
 
 		if (optWettbewerb.isPresent()) {
 
-			hatZugang = zugangUnterlagenService.hatZugang(lehrer, optWettbewerb.get());
+			Wettbewerb wettbewerb = optWettbewerb.get();
+			hatZugang = zugangUnterlagenService.hatZugang(lehrer, wettbewerb);
+			bewertungAnzeigen = this.isActivateFeedback(wettbewerb, lehrer);
 		}
+
+		lehrer.setBewertungsfragebogenAnzeigen(bewertungAnzeigen);
 
 		LehrerAPIModel result = LehrerAPIModel
 			.create(hatZugang, lehrer.isNewsletterEmpfaenger()).withTeilnahmenummern(veranstalter.teilnahmenummernAsStrings());
+		result.setBewertungsfragebogenAnzeigen(bewertungAnzeigen);
 
 		return result;
+	}
+
+	boolean isActivateFeedback(final Wettbewerb wettbewerb, final Lehrer lehrer) {
+
+		boolean activateFeedback = activateFeedbackDelegate.canActivateFeedback(wettbewerb.status(),
+			lehrer.zugangUnterlagen());
+
+		if (activateFeedback) {
+
+			for (Identifier schuleId : lehrer.schulen()) {
+
+				TeilnahmeIdentifier teilnahmeIdentifier = TeilnahmeIdentifier
+					.createFromTeilnahmeIdentifierAktuellesJahr(new TeilnahmeIdentifierAktuellerWettbewerb(
+						schuleId.identifier(), Teilnahmeart.SCHULE))
+					.withWettbewerbID(wettbewerb.id());
+
+				int anzahlLoesungszettel = loesungszettelRepository.anzahlLoesungszettel(teilnahmeIdentifier);
+
+				if (anzahlLoesungszettel > 0) {
+
+					return true;
+				}
+
+			}
+		}
+
+		return false;
 	}
 }

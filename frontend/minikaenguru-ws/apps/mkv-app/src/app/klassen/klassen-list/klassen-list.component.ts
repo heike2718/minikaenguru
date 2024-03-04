@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, inject } from '@angular/core';
 import { KlassenFacade } from '../klassen.facade';
 import { LehrerFacade } from '../../lehrer/lehrer.facade';
 import { Subscription } from 'rxjs';
@@ -26,6 +26,15 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 
 	anzahlKinder: number = 0;
 
+	#router = inject(Router);
+	#route = inject(ActivatedRoute);
+	#lehrerFacade = inject(LehrerFacade);
+	#logger = inject(LogService);
+
+	#modalService = inject(NgbModal);
+
+	klassenFacade = inject(KlassenFacade);
+
 	@ViewChild('loeschenWarndialog')
 	loeschenWarndialog!: TemplateRef<HTMLElement>;
 
@@ -34,19 +43,11 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 	private anzahlLoesungszettelSubsciption = new Subscription();
 	private anzahlKinderSubscription = new Subscription();
 
-	constructor(private router: Router,
-		private route: ActivatedRoute,
-		public klassenFacade: KlassenFacade,
-		private modalService: NgbModal,
-		private lehrerFacade: LehrerFacade,
-		private logger: LogService
-		) { }
-
 	ngOnInit(): void {
 
 		this.tooltipBtnSchuluebersicht = 'Übersicht';
 
-		this.routeSubscription = this.route.paramMap.subscribe(
+		this.routeSubscription = this.#route.paramMap.subscribe(
 
 			paramMap => {
 				const param = paramMap.get('schulkuerzel');
@@ -57,13 +58,13 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 
 		);
 
-		this.schuleSubscription = this.lehrerFacade.selectedSchule$.subscribe(
+		this.schuleSubscription = this.#lehrerFacade.selectedSchule$.subscribe(
 			s => {
 				if (s) {
 					this.schule = s;
 					this.tooltipBtnSchuluebersicht = 'Übersicht ' + this.schule.name;
 				} else {
-					this.router.navigateByUrl('/lehrer/schulen');
+					this.#router.navigateByUrl('/lehrer/schulen');
 				}
 			}
 		);
@@ -91,19 +92,19 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 	}
 
 	gotoMeineSchulen(): void {
-		this.router.navigateByUrl('/lehrer/schulen');
+		this.#router.navigateByUrl('/lehrer/schulen');
 	}
 
 	gotoUploadKlassenlisten(): void {
 		
 		if (this.schule) {
 			this.klassenFacade.prepareShowUpload();
-			this.router.navigateByUrl('/klassen/uploads/' + this.schule.kuerzel);
+			this.#router.navigateByUrl('/klassen/uploads/' + this.schule.kuerzel);
 		}
 	}
 
 	gotoSchulauswertung(): void {
-		this.router.navigateByUrl('/schulauswertung');
+		this.#router.navigateByUrl('/schulauswertung');
 	}
 
 	gotoDashboard(): void {
@@ -113,7 +114,7 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 			url = '/lehrer/schule-dashboard/' + this.schule.kuerzel;
 		}
 
-		this.router.navigateByUrl(url);
+		this.#router.navigateByUrl(url);
 	}
 
 	deleteKlassen(): void {
@@ -122,14 +123,14 @@ export class KlassenListComponent implements OnInit, OnDestroy {
 			return;
 		}
 
-		this.modalService.open(this.loeschenWarndialog, modalOptions).result.then((result) => {
+		this.#modalService.open(this.loeschenWarndialog, modalOptions).result.then((result) => {
 
 			if (result === 'ja') {
 				this.forceDeleteKlassen();
 			}
 
 		}, (reason) => {
-			this.logger.debug('closed with reason=' + reason);
+			this.#logger.debug('closed with reason=' + reason);
 		});
 	}
 

@@ -10,12 +10,13 @@ import * as fromLehrer from './+state/lehrer.reducer';
 import { LehrerRoutingModule } from './lehrer-routing.module';
 import { SchulenListResolver } from './schulen/schulen-list/schulen-list.resolver';
 import { SchuleDashboardResolver } from './schulen/schule-dashboard/schule-dashboard.resolver';
-import { CommonComponentsModule  } from '@minikaenguru-ws/common-components';
+import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
 import { CommonSchulkatalogModule } from '@minikaenguru-ws/common-schulkatalog';
 import { AddSchuleComponent } from './schulen/add-schule/add-schule.component';
 import { UnterlagenCardComponent } from './unterlagen-card/unterlagen-card.component';
 import { UploadAuswertungComponent } from './schulen/upload-auswertung/upload-auswertung.component';
 import { CommonLoggingModule } from '@minikaenguru-ws/common-logging';
+import { BewertungsfragebogenComponent } from './bewertungsfragebogen/bewertungsfragebogen.component';
 
 
 
@@ -35,7 +36,8 @@ import { CommonLoggingModule } from '@minikaenguru-ws/common-logging';
 		SchuleCardComponent,
 		AddSchuleComponent,
 		UnterlagenCardComponent,
-  UploadAuswertungComponent
+		UploadAuswertungComponent,
+		BewertungsfragebogenComponent
 	],
 	exports: [
 		LehrerDashboardComponent

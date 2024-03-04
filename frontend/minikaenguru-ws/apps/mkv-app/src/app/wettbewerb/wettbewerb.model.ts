@@ -16,6 +16,7 @@ export interface AbstractVeranstalter {
 
 // tslint:disable-next-line:no-empty-interface
 export interface Lehrer extends AbstractVeranstalter {
+	readonly bewertungsfragebogenAnzeigen: boolean;
 	readonly teilnahmenummern: string[];
 };
 

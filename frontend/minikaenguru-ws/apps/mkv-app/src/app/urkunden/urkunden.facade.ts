@@ -72,7 +72,7 @@ export class UrkundenFacade {
 			take(1)
 		).subscribe(
 			blob => {
-				this.downloadFacade.saveAs(blob, defaultFilename);
+				this.downloadFacade.saveAs(blob, defaultFilename);				
 			},
 			(error => {
 				this.errorHandler.handleError(error);
@@ -89,6 +89,9 @@ export class UrkundenFacade {
 		).subscribe(
 			blob => {
 				this.downloadFacade.saveAs(blob, defaultFilename);
+				if (this.selectedSchule) {
+					this.lehrerFacace.loadLehrer();
+				}				
 			},
 			(error => {
 				this.errorHandler.handleError(error);

@@ -12,18 +12,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.auth.s2s.MkGatewayAuthConfig;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayWebApplicationException;
+import de.egladil.web.mk_gateway.domain.feedback.ActivateFeedbackDelegate;
 import de.egladil.web.mk_gateway.domain.feedback.scores.dto.AufgabenvorschauDto;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
+import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
+import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_gateway.infrastructure.restclient.MjaApiRestClient;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 
 /**
  * AufgabenVorschauService
@@ -33,17 +39,37 @@ public class AufgabenVorschauService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AufgabenVorschauService.class);
 
+	private final ActivateFeedbackDelegate activateFeedbackDelegate = new ActivateFeedbackDelegate();
+
 	@Inject
 	MkGatewayAuthConfig authConfig;
 
+	@Context
+	SecurityContext securityContext;
+
 	@Inject
 	WettbewerbService wettbewerbService;
+
+	@Inject
+	VeranstalterRepository veranstalterRepository;
 
 	@RestClient
 	@Inject
 	MjaApiRestClient mjaApiRestClient;
 
 	public AufgabenvorschauDto getAufgabenvorschauAktuellerWettbewerb(final Klassenstufe klassenstufe) {
+
+		String veranstalterID = securityContext.getUserPrincipal().getName();
+
+		Optional<Veranstalter> optVeranstalter = veranstalterRepository.ofId(new Identifier(veranstalterID));
+
+		if (optVeranstalter.isEmpty()) {
+
+			LOGGER.warn("Unbekannter Veranstalter mit UUID={} greift auf Aufgabenvorschau zu.", veranstalterID);
+			MessagePayload messagePayload = MessagePayload.error("keine Berechtigung!");
+			Response response = Response.status(401).entity(messagePayload).build();
+			throw new MkGatewayWebApplicationException(response);
+		}
 
 		Optional<Wettbewerb> optAktuellerWettbewerb = wettbewerbService.aktuellerWettbewerb();
 
@@ -56,11 +82,16 @@ public class AufgabenVorschauService {
 		}
 
 		Wettbewerb wettbewerb = optAktuellerWettbewerb.get();
+		Veranstalter veranstalter = optVeranstalter.get();
 
-		if (!wettbewerb.status().isAllowedForScoring()) {
+		boolean canActivateFeedback = activateFeedbackDelegate.canActivateFeedback(wettbewerb.status(),
+			veranstalter.zugangUnterlagen());
 
-			LOGGER.error("Der Wettbewerb kann noch nicht bewertet werden: Status={}", wettbewerb.status());
-			MessagePayload messagePayload = MessagePayload.error("Der Wettbewerb kann noch nicht bewertet werden");
+		if (!canActivateFeedback) {
+
+			LOGGER.error("Bewertung nicht freigeschaltet: wettbewerb.status={}, veranstalter.zugangUnterlagen", wettbewerb.status(),
+				veranstalter.zugangUnterlagen());
+			MessagePayload messagePayload = MessagePayload.error("Bewertung nicht freigeschaltet");
 			Response response = Response.status(400).entity(messagePayload).build();
 			throw new MkGatewayWebApplicationException(response);
 		}
@@ -69,7 +100,6 @@ public class AufgabenVorschauService {
 
 			Response response = mjaApiRestClient.getAufgabenMinikaenguruwettbewerb(authConfig.client(),
 				new String(Base64.getEncoder().encode(authConfig.header().getBytes())),
-				wettbewerb.status(),
 				wettbewerb.id().toString(), klassenstufe);
 
 			AufgabenvorschauDto result = response.readEntity(new GenericType<AufgabenvorschauDto>() {
@@ -83,8 +113,6 @@ public class AufgabenVorschauService {
 			MessagePayload messagePayload = MessagePayload.error("Aufgabenvorschau konnte nicht geladen werden");
 			Response response = Response.status(500).entity(messagePayload).build();
 			throw new MkGatewayWebApplicationException(response);
-
 		}
-
 	}
 }

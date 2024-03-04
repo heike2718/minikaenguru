@@ -22,6 +22,9 @@ import de.egladil.web.mk_gateway.domain.user.Rolle;
 public class Lehrer extends Veranstalter {
 
 	@JsonProperty
+	private boolean bewertungsfragebogenAnzeigen;
+
+	@JsonProperty
 	private List<Identifier> schulen;
 
 	/**
@@ -101,5 +104,15 @@ public class Lehrer extends Veranstalter {
 		String schulkuerzel = StringUtils.join(schulen.stream().map(i -> i.identifier()).collect(Collectors.toList()),
 			",");
 		return schulkuerzel;
+	}
+
+	public boolean bewertungsfragebogenAnzeigen() {
+
+		return bewertungsfragebogenAnzeigen;
+	}
+
+	public void setBewertungsfragebogenAnzeigen(final boolean bewertungsfragebogenAnzeigen) {
+
+		this.bewertungsfragebogenAnzeigen = bewertungsfragebogenAnzeigen;
 	}
 }

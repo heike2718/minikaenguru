@@ -47,7 +47,7 @@ const lehrerReducer = createReducer(initalLehrerState,
 			return { ...state, lehrer: lehrer };
 		}
 
-		return {...state};		
+		return { ...state };
 	}),
 
 	on(LehrerActions.finishedWithError, (state, _action) => {
@@ -85,32 +85,34 @@ const lehrerReducer = createReducer(initalLehrerState,
 
 			if (alteDetails) {
 				const anzahlTeilnahmen = alteDetails.anzahlTeilnahmen + 1;
-				const neueDetails: SchuleDetails = { ...alteDetails
+				const neueDetails: SchuleDetails = {
+					...alteDetails
 					, angemeldetDurch: action.angemeldetDurch
-					, anzahlTeilnahmen: anzahlTeilnahmen					
+					, anzahlTeilnahmen: anzahlTeilnahmen
 				};
 				const neueSchule: Schule = { ...alteSchule, aktuellAngemeldet: true, details: neueDetails, auswertungsmodus: 'INDIFFERENT' };
 				const neueMap = mergeSchulenMap(state.schulen, neueSchule);
 				return { ...state, schulen: neueMap, selectedSchule: neueSchule };
-			}			
+			}
 		}
 
-		return {...state};
-		
+		return { ...state };
+
 	}),
 
 	on(LehrerActions.auswertungstabelleHochgeladen, (state, action) => {
 
 		const alteSchule = state.selectedSchule;
+		let neueSchule: Schule;
 
 		if (alteSchule) {
-
-			const neueSchule: Schule = {...alteSchule, auswertungsmodus: 'OFFLINE'};
-			const neueMap = mergeSchulenMap(state.schulen, neueSchule);
-			return { ...state, schulen: neueMap, selectedSchule: neueSchule };
+			neueSchule = { ...alteSchule, auswertungsmodus: 'OFFLINE' };
+		} else {
+			neueSchule = { ...action.schule, auswertungsmodus: 'OFFLINE' };
 		}
 
-		return {...state};
+		const neueMap = mergeSchulenMap(state.schulen, neueSchule);
+		return { ...state, schulen: neueMap, selectedSchule: neueSchule };
 	}),
 
 	on(LehrerActions.restoreDetailsFromCache, (state, action) => {
@@ -139,10 +141,10 @@ const lehrerReducer = createReducer(initalLehrerState,
 
 				return { ...state, schulen: neueSchuleMap, selectedSchule: changedSchule };
 			}
-			
+
 		}
 
-		return {...state};
+		return { ...state };
 	}),
 
 	on(LehrerActions.schuleAdded, (state, action) => {
@@ -151,7 +153,7 @@ const lehrerReducer = createReducer(initalLehrerState,
 		if (state.lehrer) {
 			const neueTeilnahmenummern = [...state.lehrer.teilnahmenummern];
 			neueTeilnahmenummern.push(schule.kuerzel);
-		
+
 			const neueMap = new SchulenMap(state.schulen).merge(schule);
 
 			return {
@@ -161,16 +163,16 @@ const lehrerReducer = createReducer(initalLehrerState,
 				loading: false,
 				schulenLoaded: true,
 				selectedSchule: undefined,
-				lehrer: {...state.lehrer, teilnahmenummern: neueTeilnahmenummern}			
+				lehrer: { ...state.lehrer, teilnahmenummern: neueTeilnahmenummern }
 			};
 		}
 
-		return {...state};
+		return { ...state };
 	}),
 
 	on(LehrerActions.schuleRemoved, (state, action) => {
 
-		const neueMap = new SchulenMap(state.schulen).remove(action.kuerzel);		
+		const neueMap = new SchulenMap(state.schulen).remove(action.kuerzel);
 
 		if (state.lehrer) {
 
@@ -181,13 +183,15 @@ const lehrerReducer = createReducer(initalLehrerState,
 				if (action.kuerzel !== t) {
 					neueTeilnahmenummern.push(t);
 				}
-			
+
 			}
-			return { ...state, selectedSchule: undefined, schulenLoaded: false, addSchuleState: initialAddSchuleState, schulen: neueMap
-				, lehrer: {...state.lehrer, teilnahmenummern: neueTeilnahmenummern}};
+			return {
+				...state, selectedSchule: undefined, schulenLoaded: false, addSchuleState: initialAddSchuleState, schulen: neueMap
+				, lehrer: { ...state.lehrer, teilnahmenummern: neueTeilnahmenummern }
+			};
 		}
 
-		return {...state};
+		return { ...state };
 	}),
 
 	on(LehrerActions.schulkatalogEinblenden, (state, _action) => {

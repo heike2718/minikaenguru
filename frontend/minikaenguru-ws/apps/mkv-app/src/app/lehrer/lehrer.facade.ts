@@ -209,6 +209,7 @@ export class LehrerFacade {
 			this.appStore.dispatch(LehrerActions.auswertungstabelleHochgeladen({schule: schule}));
 		}		
 		this.messageService.showMessage(responsePayload.message);
+		this.loadLehrer();
 	}
 
 	public restoreDetailsFromCache(schulkuerzel: string): void {

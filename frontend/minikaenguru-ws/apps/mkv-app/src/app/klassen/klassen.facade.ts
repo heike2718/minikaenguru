@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
 import { AuthService } from '@minikaenguru-ws/common-auth';
@@ -16,6 +16,7 @@ import * as KinderSelectors from '../kinder/+state/kinder.selectors';
 import * as LehrerActions from '../lehrer/+state/lehrer.actions';
 import { KinderService } from '../kinder/kinder.service';
 import { KinderFacade } from '../kinder/kinder.facade';
+import { LehrerFacade } from '../lehrer/lehrer.facade';
 
 
 
@@ -41,6 +42,8 @@ export class KlassenFacade {
 	private kinderGeladen = false;
 
 	private klassenMap: KlasseWithID[] = [];
+
+	#lehrerFacade = inject(LehrerFacade);
 
 	constructor(private store: Store<AppState>,
 		private kinderFacade: KinderFacade,
@@ -173,6 +176,7 @@ export class KlassenFacade {
 				this.store.dispatch(KinderActions.resetModule());
 				this.store.dispatch(KlassenActions.klasseDeleted({ klasse: rp.data }));
 				this.messageService.showMessage(rp.message);
+				this.#lehrerFacade.loadLehrer();
 			},
 			(error => {
 				this.store.dispatch(KlassenActions.finishedLoadig());
@@ -233,6 +237,8 @@ export class KlassenFacade {
 					this.store.dispatch(KinderActions.resetModule());
 					this.store.dispatch(KlassenActions.alleKlassenGeloescht());
 				}
+
+				this.#lehrerFacade.loadLehrer();
 			},
 			(error => {
 				this.store.dispatch(KlassenActions.finishedLoadig());

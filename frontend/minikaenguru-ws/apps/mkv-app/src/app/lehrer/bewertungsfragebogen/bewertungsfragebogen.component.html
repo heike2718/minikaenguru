@@ -1,0 +1,21 @@
+<h1>Bewertungsfragebögen</h1>
+
+<div *ngIf="lehrerFacade.lehrer$ | async as lehrer">
+
+    <div *ngIf="lehrer.bewertungsfragebogenAnzeigen else keineTeilnahme">
+        <p>Bitte nehmen Sie sich einige Minuten Zeit, die Aufgaben des aktuellen Wettbewerbs zu bewerten. Ihre Antworten
+            werden vollkommen anonym gespeichert. Es sind keine Rückschlüsse auf Sie oder Ihre Schule möglich.</p>
+        <p>Sie bekommen die Möglichkeit zur Bewertung daher immer dann angezeigt, wenn Ihre Schule aktiv am Wettbewerb
+            teilgenommen
+            hat, auch wenn Sie die Aufgaben bereits bewertet hatten.</p>
+        <p>Füllen Sie jeden Fragebogen deshalb bitte nur einmal im aktuellen Wettbewerb aus.</p>
+    </div>
+
+
+
+</div>
+
+<ng-template #keineTeilnahme>
+    <p>Ihre Schule hat am diesjährigen Wettbewerb nicht aktiv teilgenommen. Daher wird Ihnen keine Möglichkeit zur
+        Bewertung angeboten.</p>
+</ng-template>

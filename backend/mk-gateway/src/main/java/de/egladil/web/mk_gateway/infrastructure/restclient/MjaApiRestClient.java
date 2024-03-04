@@ -7,7 +7,6 @@ package de.egladil.web.mk_gateway.infrastructure.restclient;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
@@ -32,7 +31,6 @@ public interface MjaApiRestClient {
 	Response getAufgabenMinikaenguruwettbewerb(
 		@HeaderParam(value = "X-CLIENT-ID") final String clientId,
 		@HeaderParam(value = "Authorization") final String authHeader,
-		@HeaderParam(value = "X-STATUS-WETTBEWERB") final WettbewerbStatus statusWettbewerb,
 		@PathParam(value = "jahr") final String jahr,
 		@PathParam(value = "klasse") final Klassenstufe schwierigkeitsgrad);
 	// @formatter:on

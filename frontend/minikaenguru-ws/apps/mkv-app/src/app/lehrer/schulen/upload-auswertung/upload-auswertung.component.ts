@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { initialUploadComponentModel, UploadComponentModel } from '@minikaenguru-ws/common-components';
 import { LogService } from '@minikaenguru-ws/common-logging';
@@ -18,7 +18,12 @@ export class UploadAuswertungComponent implements OnInit, OnDestroy {
 
   devMode = environment.envName === 'DEV';
 
-  selectedSchule$ = this.lehrerFacade.selectedSchule$;
+  #lehrerFacade = inject(LehrerFacade);
+  #wettbewerbFacade = inject(WettbewerbFacade);
+  #logger = inject(LogService);
+  #router = inject(Router);
+
+  // selectedSchule$ = this.#lehrerFacade.selectedSchule$;
 
   uploadModel: UploadComponentModel = initialUploadComponentModel;
 
@@ -28,24 +33,22 @@ export class UploadAuswertungComponent implements OnInit, OnDestroy {
 
   private schuleUndWettbewerbSubscription: Subscription = new Subscription();
 
-  private schule?: Schule;
-
-  constructor(private router: Router,
-    private lehrerFacade: LehrerFacade,
-    private wettbewerbFacade: WettbewerbFacade,
-    private logger: LogService) { }
+  schule!: Schule;
+  
 
   ngOnInit(): void {
 
     this.tooltipBtnSchuluebersicht = 'Übersicht';
 
-    this.schuleUndWettbewerbSubscription = combineLatest([this.lehrerFacade.selectedSchule$, this.wettbewerbFacade.aktuellerWettbewerb$]).subscribe(
+    this.schuleUndWettbewerbSubscription = combineLatest([this.#lehrerFacade.selectedSchule$, this.#wettbewerbFacade.aktuellerWettbewerb$]).subscribe(
       result => {
 
         if (result[0] && result[1]) {
 
           this.schule = result[0];
           this.tooltipBtnSchuluebersicht = 'Übersicht ' + this.schule.name;
+
+          this.#logger.debug('schule: ' + this.schule.name);
 
           this.subUrl = '/uploads/auswertung/' + result[1].jahr + '/' + this.schule.kuerzelLand + '/' + this.schule.kuerzel;
 					this.uploadModel = {
@@ -72,26 +75,30 @@ export class UploadAuswertungComponent implements OnInit, OnDestroy {
     if (this.uploadModel.subUrl !== '') {
 		  // machen mal nix
     } else {
-      this.logger.warn('Upload nicht möglich: queryParams nicht gesetzt! (sollte nicht vorkommen, alle Varianten abgedeckt');
+      this.#logger.warn('Upload nicht möglich: queryParams nicht gesetzt! (sollte nicht vorkommen, alle Varianten abgedeckt');
     }
 	}
 
 	onResponse(rp: ResponsePayload | any): void {
 		if (rp && this.schule) {
 			// this.messageService.showMessage(rp.message);
-      this.lehrerFacade.handleAuswertungstabelleHochgeladen(this.schule, rp);
+      this.#lehrerFacade.handleAuswertungstabelleHochgeladen(this.schule, rp);
 		}
 	}
 
   gotoDashboard(): void {
-		this.router.navigateByUrl('/lehrer/dashboard');
+		this.#router.navigateByUrl('/lehrer/dashboard');
 	}
 
   gotoSchuleDashboard(): void {
 
 		if (this.schule) {
 			const url = '/lehrer/schule-dashboard/' + this.schule.kuerzel;
-      this.router.navigateByUrl(url);
+      this.#router.navigateByUrl(url);
 		}
+	}
+
+  gotoBewertung() {
+		this.#router.navigateByUrl('/lehrer/bewertung');
 	}
 }

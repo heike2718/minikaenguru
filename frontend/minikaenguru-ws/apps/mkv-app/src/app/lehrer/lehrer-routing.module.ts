@@ -9,6 +9,7 @@ import { SchuleDashboardResolver } from './schulen/schule-dashboard/schule-dashb
 import { SchulenListResolver } from './schulen/schulen-list/schulen-list.resolver';
 import { AddSchuleComponent } from './schulen/add-schule/add-schule.component';
 import { UploadAuswertungComponent } from './schulen/upload-auswertung/upload-auswertung.component';
+import { BewertungsfragebogenComponent } from './bewertungsfragebogen/bewertungsfragebogen.component';
 
 
 const lehrerRoutes: Routes = [
@@ -38,6 +39,10 @@ const lehrerRoutes: Routes = [
 				path: 'upload-auswertung',
 				canActivate: [LehrerGuardService],
 				component: UploadAuswertungComponent
+			}, {
+				path: 'bewertung',
+				canActivate: [LehrerGuardService],
+				component: BewertungsfragebogenComponent
 			}
 		]
 	}

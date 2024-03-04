@@ -18,13 +18,13 @@ export class LehrerDashboardComponent implements OnInit, OnDestroy {
 
 	aktuellerWettbewerb$ = this.wettbewerbFacade.aktuellerWettbewerb$;
 	lehrer$ = this.lehrerFacade.lehrer$;
-	schulen$ = this.lehrerFacade.schulen$;	
+	schulen$ = this.lehrerFacade.schulen$;
 
 	textFeatureFlagAnzeigen = false;
 	textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber im Herbst 2020.';
 
-	unterlagenDeutschUrl  = environment.apiUrl + '/unterlagen/schulen/de';
-	unterlagenEnglischUrl  = environment.apiUrl + '/unterlagen/schulen/en';
+	unterlagenDeutschUrl = environment.apiUrl + '/unterlagen/schulen/de';
+	unterlagenEnglischUrl = environment.apiUrl + '/unterlagen/schulen/en';
 
 	userIdRef?: string;
 
@@ -90,6 +90,10 @@ export class LehrerDashboardComponent implements OnInit, OnDestroy {
 
 	gotoInfos(): void {
 		this.router.navigateByUrl('/info');
+	}
+
+	gotoBewertung(): void {
+		this.router.navigateByUrl('/lehrer/bewertung');
 	}
 
 	toggleTextFeatureFlagAnzeigen(): void {
