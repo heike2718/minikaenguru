@@ -6,22 +6,28 @@ package de.egladil.web.mk_gateway.infrastructure.persistence.entities;
 
 import java.util.Date;
 
+import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
+import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.NamedNativeQueries;
+import jakarta.persistence.NamedNativeQuery;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
-
-import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
-import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 
 /**
  * PersistenterUpload
  */
 @Entity
 @Table(name = "UPLOADS")
+@NamedNativeQueries({
+	@NamedNativeQuery(
+		name = "PersistenterUpload.DELETE_ALL_KLASSENLISTEN",
+		query = "delete from UPLOADS u where u.TEILNAHMENUMMER = ? AND u.UPLOAD_TYPE = 'KLASSENLISTE'")
+})
 @NamedQueries({
 	@NamedQuery(
 		name = "PersistenterUpload.FIND_BY_UPLOAD_TYPE_AND_TEILNAHMENUMMER",
@@ -35,6 +41,8 @@ public class PersistenterUpload extends ConcurrencySafeEntity {
 	private static final long serialVersionUID = 1L;
 
 	public static final String FIND_BY_IDENTIFIER = "PersistenterUpload.FIND_BY_IDENTIFIER";
+
+	public static final String DELETE_ALL_KLASSENLISTEN = "PersistenterUpload.DELETE_ALL_KLASSENLISTEN";
 
 	@Column(name = "BENUTZER_UUID")
 	private String benutzerUuid;

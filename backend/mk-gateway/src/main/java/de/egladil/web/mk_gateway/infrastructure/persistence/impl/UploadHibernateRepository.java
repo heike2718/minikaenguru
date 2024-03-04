@@ -167,6 +167,19 @@ public class UploadHibernateRepository implements UploadRepository {
 	}
 
 	@Override
+	@Transactional
+	public void deleteUploadsKlassenlisten(final String teilnahmenummer) {
+
+		String stmt = "delete from UPLOADS where TEILNAHMENUMMER = ? AND UPLOAD_TYPE = ?";
+
+		entityManager.createNativeQuery(stmt)
+			.setParameter(1, teilnahmenummer)
+			.setParameter(2, UploadType.KLASSENLISTE.toString())
+			.executeUpdate();
+
+	}
+
+	@Override
 	public List<Auspraegung> countAuspraegungenForTeilnahmeByColumnName(final TeilnahmeIdentifier teilnahmeIdentifier, final String columnName) {
 
 		List<Auspraegung> result = new ArrayList<>();

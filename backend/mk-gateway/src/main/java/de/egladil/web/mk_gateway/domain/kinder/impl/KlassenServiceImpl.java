@@ -14,13 +14,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
-import jakarta.ws.rs.BadRequestException;
-import jakarta.ws.rs.NotFoundException;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +39,7 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
+import de.egladil.web.mk_gateway.domain.uploads.UploadRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
@@ -53,6 +47,12 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KlassenHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.TeilnahmenHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.VeranstalterHibernateRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.NotFoundException;
 
 /**
  * KlassenServiceImpl
@@ -86,6 +86,9 @@ public class KlassenServiceImpl implements KlassenService {
 
 	@Inject
 	WettbewerbService wettbewerbService;
+
+	@Inject
+	UploadRepository uploadRepository;
 
 	@Inject
 	DomainEventHandler domainEventHandler;
@@ -397,6 +400,9 @@ public class KlassenServiceImpl implements KlassenService {
 
 			this.deleteKlasseWithoutAuthorizationCheck(schuleId.identifier(), klasse, lehrerUuid);
 		}
+
+		// I0436: auch die klassenlistenuploads alle löschen.
+		uploadRepository.deleteUploadsKlassenlisten(schuleId.identifier());
 
 		return ResponsePayload.messageOnly(MessagePayload.info(applicationMessages.getString("deleteAllKlassen.success")));
 	}
