@@ -10,7 +10,9 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.mk_gateway.domain.feedback.scores.BewertungService;
 import de.egladil.web.mk_gateway.domain.feedback.scores.dto.BewertungsbogenKlassenstufe;
+import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -26,6 +28,9 @@ import jakarta.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class FeedbackResource {
+
+	@Inject
+	BewertungService bewertungService;
 
 	@POST
 	@Operation(
@@ -48,7 +53,9 @@ public class FeedbackResource {
 		content = @Content(schema = @Schema(implementation = MessagePayload.class)))
 	public Response bewertungAbgeben(@Valid final BewertungsbogenKlassenstufe bewertungsbogen) {
 
-		return null;
+		MessagePayload messagePayload = bewertungService.bewertungSpeichern(bewertungsbogen);
+
+		return Response.ok(messagePayload).build();
 	}
 
 }

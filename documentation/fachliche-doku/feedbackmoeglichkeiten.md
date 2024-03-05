@@ -22,17 +22,17 @@ Score soll nach Ländern aggregiert werden können. Bei Lehrern, die in mehreren
 
 Je Bewertung einer Aufgabe genau eine Zeile:
 
-| UUID  | JAHR | KLASSENSTUFE | AUFGABE_NR | LAND_KUERZEL | SCHWIERIGKEITSGRAD | KATEGORIE | LEHRPLAN | VERSTAENDLICHKEIT | FREITEXT   |
-| ----- | ---- | ------------ | ---------- | ------------ | ------------------ | --------- | -------- | ----------------- | ---------- |
-| abcde | 2024 | ZWEI         | A-1        | TH           | 4                  | B         | 1        | 1                 | blabla bla |
+| UUID  | JAHR | KLASSENSTUFE | AUFGABE_NR | LANDKUERZEL | SCORE_SCHWIERIGKEITSGRAD | SCORE_KATEGORIE | SCORE_LEHRPLAN | SCORE_VERSTAENDLICHKEIT | FREITEXT   |
+| ----- | ---- | ------------ | ---------- | ----------- | ------------------------ | --------------- | -------------- | ----------------------- | ---------- |
+| abcde | 2024 | ZWEI         | A-1        | TH          | 4                        | B               | 1              | 1                       | blabla bla |
 
 ### Tabelle SCORES_KLASSENSTUFEN
 
 Je Gesamtbewertung einer Klassenstufe genau eine Zeile:
 
-| UUID  | JAHR | KLASSENSTUFE | LAND_KUERZEL | SPASS | ZUFRIEDENHEIT | FREITEXT   |
-| ----- | ---- | ------------ | ------------ | ----- | ------------- | ---------- |
-| abcde | 2024 | ZWEI         | TH           | 3     | 4             | blabla bla |
+| UUID  | JAHR | KLASSENSTUFE | LANDKUERZEL | SCORE_SPASS | SCORE_ZUFRIEDENHEIT | FREITEXT   |
+| ----- | ---- | ------------ | ----------- | ----------- | ------------------- | ---------- |
+| abcde | 2024 | ZWEI         | TH          | 3           | 4                   | blabla bla |
 
 ## Wann soll LehrerAPIModel neu geladen werden, um den Status bewertungsfragebogenAnzeigen zu aktualisieren?
 

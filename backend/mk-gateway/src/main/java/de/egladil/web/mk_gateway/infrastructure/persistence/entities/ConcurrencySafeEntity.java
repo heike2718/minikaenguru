@@ -7,6 +7,11 @@ package de.egladil.web.mk_gateway.infrastructure.persistence.entities;
 import java.io.Serializable;
 import java.util.Objects;
 
+import org.hibernate.annotations.GenericGenerator;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import de.egladil.web.commons_validation.annotations.UuidString;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,12 +21,6 @@ import jakarta.persistence.Transient;
 import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
-import org.hibernate.annotations.GenericGenerator;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import de.egladil.web.commons_validation.annotations.UuidString;
 
 /**
  * ConcurrencySafeEntity
@@ -37,7 +36,7 @@ public abstract class ConcurrencySafeEntity implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "uuid_generator")
 	@GenericGenerator(
-		name = "uuid_generator", strategy = "de.egladil.web.mk_gateway.infrastructure.persistence.entities.UuidGenerator")
+		name = "uuid_generator", type = UuidGenerator.class)
 	@UuidString
 	@NotNull
 	@Size(min = 1, max = 40)

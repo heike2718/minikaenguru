@@ -12,8 +12,14 @@ Flyway liegt hier: /opt/flyway-5.2.4
 
 Hier VXXX durch die aktuelle Version ersetzen!!!
 
+Wie ermittelt man die IP des Hosts?
+
 ```
-mysqldump --databases mk_wettbwerb --dump-date --add-drop-database -h 172.21.0.2  -u root -p  > VXX__mk_wettbewerb_complete_dump.sql
+docker container inspect mariadb-all_mariadb-local_1 | grep IPAddress
+```
+
+```
+mysqldump --databases mk_wettbewerb --dump-date --add-drop-database -h 172.21.0.2  -u root -p  > V35__mk_wettbewerb_complete_dump.sql
 ```
 
 ### migrate

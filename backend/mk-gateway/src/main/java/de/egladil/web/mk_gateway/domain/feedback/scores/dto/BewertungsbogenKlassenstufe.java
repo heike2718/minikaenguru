@@ -52,4 +52,59 @@ public class BewertungsbogenKlassenstufe {
 	@StringLatin
 	@Size(max = 500, message = "maximal 500 Zeichen")
 	private String freitext;
+
+	public Klassenstufe getKlassenstufe() {
+
+		return klassenstufe;
+	}
+
+	public BewertungsbogenKlassenstufe withKlassenstufe(final Klassenstufe klassenstufe) {
+
+		this.klassenstufe = klassenstufe;
+		return this;
+	}
+
+	public int getScoreSpassfaktor() {
+
+		return scoreSpassfaktor;
+	}
+
+	public BewertungsbogenKlassenstufe withScoreSpassfaktor(final int scoreSpassfaktor) {
+
+		this.scoreSpassfaktor = scoreSpassfaktor;
+		return this;
+	}
+
+	public int getScoreZufriedenheit() {
+
+		return scoreZufriedenheit;
+	}
+
+	public BewertungsbogenKlassenstufe withScoreZufriedenheit(final int scoreZufriedenheit) {
+
+		this.scoreZufriedenheit = scoreZufriedenheit;
+		return this;
+	}
+
+	public List<BewertungAufgabe> getBewertungenAufgaben() {
+
+		return bewertungenAufgaben;
+	}
+
+	public BewertungsbogenKlassenstufe withBewertungenAufgaben(final List<BewertungAufgabe> bewertungenAufgaben) {
+
+		this.bewertungenAufgaben = bewertungenAufgaben;
+		return this;
+	}
+
+	public String getFreitext() {
+
+		return freitext;
+	}
+
+	public BewertungsbogenKlassenstufe withFreitext(final String freitext) {
+
+		this.freitext = freitext;
+		return this;
+	}
 }

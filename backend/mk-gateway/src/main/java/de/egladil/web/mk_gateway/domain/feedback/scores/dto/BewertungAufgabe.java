@@ -36,8 +36,9 @@ public class BewertungAufgabe {
 	@JsonProperty
 	@Schema(
 		description = "Kategorie, in die die Lehrperson diese Aufgabe eingeordnet hätte",
-		example = "C")
-	@Pattern(regexp = "^[ABC]{1}$", message = "empfohleneKategorie enthält ungültige Zeichen oder ist nicht genau 1 Zeichen lang")
+		example = "SCHWER")
+	@Pattern(
+		regexp = "^LEICHT|MITTEL|SCHWER$", message = "empfohleneKategorie muss einen der Werte LEICHT, MITTEL oder SCHWER haben")
 	private Aufgabenkategorie empfohleneKategorie;
 
 	@JsonProperty
@@ -57,5 +58,71 @@ public class BewertungAufgabe {
 	@StringLatin
 	@Size(max = 500, message = "maximal 500 Zeichen")
 	private String freitext;
+
+	public String getNummer() {
+
+		return nummer;
+	}
+
+	public BewertungAufgabe withNummer(final String nummer) {
+
+		this.nummer = nummer;
+		return this;
+	}
+
+	public int getScoreSchwierigkeitsgrad() {
+
+		return scoreSchwierigkeitsgrad;
+	}
+
+	public BewertungAufgabe withScoreSchwierigkeitsgrad(final int scoreSchwierigkeitsgrad) {
+
+		this.scoreSchwierigkeitsgrad = scoreSchwierigkeitsgrad;
+		return this;
+	}
+
+	public Aufgabenkategorie getEmpfohleneKategorie() {
+
+		return empfohleneKategorie;
+	}
+
+	public BewertungAufgabe withEmpfohleneKategorie(final Aufgabenkategorie empfohleneKategorie) {
+
+		this.empfohleneKategorie = empfohleneKategorie;
+		return this;
+	}
+
+	public int getScoreLehrplankompatibilitaet() {
+
+		return scoreLehrplankompatibilitaet;
+	}
+
+	public BewertungAufgabe withScoreLehrplankompatibilitaet(final int scoreLehrplankompatibilitaet) {
+
+		this.scoreLehrplankompatibilitaet = scoreLehrplankompatibilitaet;
+		return this;
+	}
+
+	public int getScoreVerstaendlichkeit() {
+
+		return scoreVerstaendlichkeit;
+	}
+
+	public BewertungAufgabe withScoreVerstaendlichkeit(final int scoreVerstaendlichkeit) {
+
+		this.scoreVerstaendlichkeit = scoreVerstaendlichkeit;
+		return this;
+	}
+
+	public String getFreitext() {
+
+		return freitext;
+	}
+
+	public BewertungAufgabe withFreitext(final String freitext) {
+
+		this.freitext = freitext;
+		return this;
+	}
 
 }

@@ -2109,11 +2109,11 @@ components:
         empfohleneKategorie:
           description: "Kategorie, in die die Lehrperson diese Aufgabe eingeordnet\
             \ hätte"
-          pattern: "^[ABC]{1}$"
+          pattern: ^LEICHT|MITTEL|SCHWER$
           type: string
           allOf:
           - $ref: '#/components/schemas/Aufgabenkategorie'
-          example: C
+          example: SCHWER
         scoreLehrplankompatibilitaet:
           format: int32
           description: "Punkte für Kompatibiliät mit dem Lehrplan des Schwierigkeitsgrads\
