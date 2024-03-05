@@ -54,7 +54,7 @@ public class AppLifecycleBean {
 		name = "quarkus.rest-client.\"de.egladil.web.mk_gateway.domain.auth.session.tokens.TokenExchangeRestClient\".url")
 	String tokenExchangeRestClientUrl;
 
-	@ConfigProperty(name = "quarkus.rest-client.\"de.egladil.web.mk_gateway.infrastructure.messaging.MkKatalogeRestClient\".url")
+	@ConfigProperty(name = "quarkus.rest-client.\"de.egladil.web.mk_gateway.infrastructure.restclient.MkKatalogeRestClient\".url")
 	String katalogeUrl;
 
 	@ConfigProperty(name = "newsletterversand.cron.expr")

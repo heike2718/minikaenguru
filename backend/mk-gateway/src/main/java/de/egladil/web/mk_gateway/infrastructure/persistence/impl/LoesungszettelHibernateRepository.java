@@ -24,7 +24,7 @@ import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
-import de.egladil.web.mk_gateway.infrastructure.persistence.entities.LoesungszettelNonIdentifiingAttributesMapper;
+import de.egladil.web.mk_gateway.infrastructure.persistence.entities.LoesungszettelNonIdentifyingAttributesMapper;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterLoesungszettel;
 import de.egladil.web.mk_gateway.infrastructure.persistence.sortnumbers.SortNumberGenerator;
 import de.egladil.web.mk_gateway.infrastructure.persistence.sortnumbers.impl.SortNumberGeneratorImpl;
@@ -347,7 +347,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 
 	void copyAllAttributesButIdentifier(final PersistenterLoesungszettel target, final Loesungszettel loesungszettel) {
 
-		new LoesungszettelNonIdentifiingAttributesMapper().copyAllAttributesButIdentifier(target, loesungszettel);
+		new LoesungszettelNonIdentifyingAttributesMapper().copyAllAttributesButIdentifier(target, loesungszettel);
 	}
 
 	@Override

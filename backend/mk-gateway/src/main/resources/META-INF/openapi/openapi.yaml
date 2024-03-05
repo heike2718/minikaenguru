@@ -988,6 +988,33 @@ paths:
       responses:
         "200":
           description: OK
+  /mk-gateway/feedback:
+    post:
+      tags:
+      - Feedback Resource
+      description: Gibt eine Bewertung der Aufgaben einer Klassenstufe im aktuellen
+        Wettbewerb ab
+      operationId: bewertungAbgeben
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BewertungsbogenKlassenstufe'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessagePayload'
+        "404":
+          description: Inputvalidierung schlug fehl.
+        "500":
+          description: Serverfehler
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessagePayload'
   /mk-gateway/guiversion:
     get:
       tags:
@@ -2022,6 +2049,12 @@ components:
           description: Base64-encodetes png mit dem Text der Lösung. Kann mit einem
             img src="data:image/png;base64- Tag angezeigt werden
           type: string
+    Aufgabenkategorie:
+      enum:
+      - LEICHT
+      - MITTEL
+      - SCHWER
+      type: string
     AufgabenvorschauDto:
       description: Aufgaben und Lösungen eines Minkänguru-Wettbewerbs für eine gegebene
         Klassenstufe
@@ -2055,6 +2088,85 @@ components:
         idToken:
           pattern: \S
           type: string
+    BewertungAufgabe:
+      description: Einzelbewertungen einer gegebenen Aufgabe. Kontext ergibt sich
+        aus der Einbettung in BewertungsbogenKlassenstufe
+      required:
+      - nummer
+      type: object
+      properties:
+        nummer:
+          description: Aufgabennummer
+          pattern: "^[ABC\\-\\d]{3}$"
+          type: string
+          example: B-3
+        scoreSchwierigkeitsgrad:
+          format: int32
+          description: "Punkte für Angemessenheit des Schwierigkeitsgrads (0 - 3,\
+            \ 0 = keine Bewertung, 1 = zu leicht, 2 = angemessen, 3 = zu schwer)"
+          type: integer
+          example: 2
+        empfohleneKategorie:
+          description: "Kategorie, in die die Lehrperson diese Aufgabe eingeordnet\
+            \ hätte"
+          pattern: "^[ABC]{1}$"
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/Aufgabenkategorie'
+          example: C
+        scoreLehrplankompatibilitaet:
+          format: int32
+          description: "Punkte für Kompatibiliät mit dem Lehrplan des Schwierigkeitsgrads\
+            \ (-1, 0 oder 1, -1 = passt nicht, 0 = keine Bewertung, 1 = passt)"
+          type: integer
+          example: 2
+        scoreVerstaendlichkeit:
+          format: int32
+          description: "Punkte für Verständlichkeit der Aufgabe (-1, 0 oder 1, -1\
+            \ = nicht gut verständlich, 0 = keine Bewertung, 1 = verständlich)"
+          type: integer
+          example: 2
+        freitext:
+          description: ein Freitext für eigene Kommentare
+          maxLength: 500
+          type: string
+          example: Multiplikation ist noch nicht Teil des Lehrplans.
+    BewertungsbogenKlassenstufe:
+      description: Daten eines Bewertungsbogens für eine einzelne Klassenstufe. Zuordnung
+        zum Wettbewerb erfolgt über den jeweils eindeutig bestimmten aktuellen Wettbewerb.
+      required:
+      - klassenstufe
+      type: object
+      properties:
+        klassenstufe:
+          description: Klassenstufe
+          pattern: ^IKID|EINS|ZWEI$
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/Klassenstufe'
+          example: ZWEI
+        scoreSpassfaktor:
+          format: int32
+          description: Punkte für Spaßfaktor für Kinder von 0 bis 5 (0 = keine Bewertung)
+          type: integer
+          example: 4
+        scoreZufriedenheit:
+          format: int32
+          description: Punkte für Zufriedenheit der Lehrperson mit den Aufgaben insgesamt
+            von 0 bis 5 (0 = keine Bewertung)
+          type: integer
+          example: 1
+        bewertungenAufgaben:
+          description: Einzelbewertungen der Aufgaben
+          type: array
+          items:
+            $ref: '#/components/schemas/BewertungAufgabe'
+        freitext:
+          description: ein Freitext für eigene Kommentare
+          maxLength: 500
+          type: string
+          example: Die Aufgaben waren dieses Jahr viel schwerer als im vergangenen
+            Jahr.
     ChangeUserCommand:
       type: object
       properties:

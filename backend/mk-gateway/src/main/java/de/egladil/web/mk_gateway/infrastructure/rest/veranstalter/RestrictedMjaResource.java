@@ -16,7 +16,6 @@ import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.mk_gateway.domain.feedback.scores.AufgabenVorschauService;
 import de.egladil.web.mk_gateway.domain.feedback.scores.dto.AufgabenvorschauDto;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
-import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -37,7 +36,6 @@ public class RestrictedMjaResource {
 	@Path("aufgaben/{klasse}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@PermitAll
 	@Operation(
 		operationId = "Läd die Aufgaben der gegebenen Klassenstufe es aktuellen Wettbewerbs vom mja-api")
 	@Parameters({

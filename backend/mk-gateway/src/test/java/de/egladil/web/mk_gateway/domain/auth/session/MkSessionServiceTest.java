@@ -19,10 +19,9 @@ import static org.mockito.Mockito.when;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
+import java.time.Instant;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-
-import jakarta.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
@@ -46,8 +45,9 @@ import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.user.UserRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
-import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
+import io.quarkus.test.junit.QuarkusTest;
+import jakarta.inject.Inject;
 
 /**
  * MkSessionServiceTest
@@ -192,7 +192,7 @@ public class MkSessionServiceTest {
 
 		String jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9";
 
-		when(jwtService.verify(any(), any())).thenThrow(new TokenExpiredException("hallo"));
+		when(jwtService.verify(any(), any())).thenThrow(new TokenExpiredException("hallo", Instant.now()));
 
 		// Act
 		try {

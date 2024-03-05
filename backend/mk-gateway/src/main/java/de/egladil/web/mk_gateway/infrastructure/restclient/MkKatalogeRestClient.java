@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.infrastructure.messaging;
+package de.egladil.web.mk_gateway.infrastructure.restclient;
 
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 

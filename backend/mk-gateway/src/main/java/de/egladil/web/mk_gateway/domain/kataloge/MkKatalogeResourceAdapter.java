@@ -15,7 +15,7 @@ import de.egladil.web.mk_gateway.domain.kataloge.api.LandPayload;
 import de.egladil.web.mk_gateway.domain.kataloge.api.OrtPayload;
 import de.egladil.web.mk_gateway.domain.kataloge.api.SchulePayload;
 import de.egladil.web.mk_gateway.domain.kataloge.api.SchulkatalogAntrag;
-import de.egladil.web.mk_gateway.infrastructure.messaging.MkKatalogeRestClient;
+import de.egladil.web.mk_gateway.infrastructure.restclient.MkKatalogeRestClient;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;

@@ -8,9 +8,9 @@ import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRohdaten;
 
 /**
- * LoesungszettelNonIdentifiingAttributesMapper
+ * LoesungszettelNonIdentifyingAttributesMapper
  */
-public class LoesungszettelNonIdentifiingAttributesMapper {
+public class LoesungszettelNonIdentifyingAttributesMapper {
 
 	public void copyAllAttributesButIdentifier(final PersistenterLoesungszettel target, final Loesungszettel loesungszettel) {
 
