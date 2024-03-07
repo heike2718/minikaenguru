@@ -2,6 +2,7 @@ import { createReducer, Action, on } from '@ngrx/store';
 import { SchuleWithID, Schule, mergeSchulenMap, findSchuleMitId, SchuleDetails, SchulenMap, compareSchulen } from './../schulen/schulen.model';
 import * as LehrerActions from './lehrer.actions';
 import { Schulteilnahme, Lehrer } from '../../wettbewerb/wettbewerb.model';
+
 export const lehrerFeatureKey = 'mkv-app-lehrer';
 
 export interface AddSchuleState {

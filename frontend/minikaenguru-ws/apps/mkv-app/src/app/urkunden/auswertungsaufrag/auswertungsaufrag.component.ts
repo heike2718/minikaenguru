@@ -91,7 +91,7 @@ export class AuswertungsaufragComponent implements OnInit, OnDestroy {
 	}
 
 	gotoBewertung() {
-		this.#router.navigateByUrl('/lehrer/bewertung');
+		this.#router.navigateByUrl('/feedback/wettbewerb');
 	}
 
 }

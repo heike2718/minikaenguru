@@ -38,6 +38,10 @@ const routes: Routes = [
 		component: SessionTimeoutComponent
 	},
 	{
+		path: 'feedback',
+		loadChildren: () => import('./feedback/feedback.module').then(m => m.FeedbackModule)
+	},
+	{
 		path: 'lehrer',
 		loadChildren: () => import('./lehrer/lehrer.module').then(m => m.LehrerModule)
 	},

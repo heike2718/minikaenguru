@@ -16,7 +16,6 @@ import { AddSchuleComponent } from './schulen/add-schule/add-schule.component';
 import { UnterlagenCardComponent } from './unterlagen-card/unterlagen-card.component';
 import { UploadAuswertungComponent } from './schulen/upload-auswertung/upload-auswertung.component';
 import { CommonLoggingModule } from '@minikaenguru-ws/common-logging';
-import { BewertungsfragebogenComponent } from './bewertungsfragebogen/bewertungsfragebogen.component';
 
 
 
@@ -36,8 +35,7 @@ import { BewertungsfragebogenComponent } from './bewertungsfragebogen/bewertungs
 		SchuleCardComponent,
 		AddSchuleComponent,
 		UnterlagenCardComponent,
-		UploadAuswertungComponent,
-		BewertungsfragebogenComponent
+		UploadAuswertungComponent
 	],
 	exports: [
 		LehrerDashboardComponent

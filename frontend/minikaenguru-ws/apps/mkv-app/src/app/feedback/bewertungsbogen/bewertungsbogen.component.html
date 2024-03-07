@@ -1,0 +1,20 @@
+<div *ngIf="feedbackFacade.bewertungsbogenCreated$ | async else notloaded" class="mkv-container mt-1">
+    <div *ngIf="feedbackFacade.bewertungsformularModel$ | async as guiModel" class="col-12">
+        <h3>Bewertungsbogen {{guiModel.klassenstufe}}</h3>
+        <p *ngIf="devMode">bewertungsbogen.component</p>
+
+        <p>Bitte bewerten Sie die einzelnen Aufgaben.</p>
+
+        <div *ngFor="let item of guiModel.items" class="col-12 mb-3">
+            <mkv-bewertung-aufgabe [vorschau]="item.vorschau"
+                [bewertungAufgabe]="item.bewertungAufgabe"></mkv-bewertung-aufgabe>
+        </div>
+    </div>
+</div>
+
+<ng-template #notloaded>
+    <div class="mkv-container mt-1">
+        <h3>Bewertungsbogen</h3>
+        <p *ngIf="devMode">bewertungsbogen.component</p>
+    </div>
+</ng-template>

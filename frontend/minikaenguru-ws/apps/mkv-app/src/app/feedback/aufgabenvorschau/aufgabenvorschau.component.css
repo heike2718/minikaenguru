@@ -1,0 +1,10 @@
+img {
+    max-width: 100%;
+    /* Ensure the image doesn't exceed its container */
+    height: auto;
+    /* Maintain aspect ratio */
+    display: block;
+    /* Remove any extra space beneath the image */
+    margin: auto;
+    /* Center the image horizontally */
+}

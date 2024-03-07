@@ -9,6 +9,7 @@ import { KinderFacade } from '../kinder/kinder.facade';
 import { Router } from '@angular/router';
 import { KlassenFacade } from '../klassen/klassen.facade';
 import { MessageService } from '@minikaenguru-ws/common-messages';
+import { FeedbackFacade } from '../feedback/feedback.facade';
 
 
 @Injectable({
@@ -26,6 +27,7 @@ export class LogoutService {
 		, private kinderFacade: KinderFacade
 		, private klassenFacade: KlassenFacade
 		, private messageService: MessageService
+		, private feedbackFacade: FeedbackFacade
 	) { }
 
 
@@ -38,6 +40,7 @@ export class LogoutService {
 		this.vertragAdvFacade.resetState();
 		this.kinderFacade.resetState();
 		this.klassenFacade.resetState();
+		this.feedbackFacade.resetState();
 
 		this.messageService.clear();
 

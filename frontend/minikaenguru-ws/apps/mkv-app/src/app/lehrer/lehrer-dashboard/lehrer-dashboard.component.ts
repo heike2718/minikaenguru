@@ -93,7 +93,7 @@ export class LehrerDashboardComponent implements OnInit, OnDestroy {
 	}
 
 	gotoBewertung(): void {
-		this.router.navigateByUrl('/lehrer/bewertung');
+		this.router.navigateByUrl('/feedback/wettbewerb');
 	}
 
 	toggleTextFeatureFlagAnzeigen(): void {

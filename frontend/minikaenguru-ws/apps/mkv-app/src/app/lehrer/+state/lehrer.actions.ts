@@ -2,7 +2,6 @@ import { createAction, props } from '@ngrx/store';
 import { Schule } from './../schulen/schulen.model';
 import { Schulteilnahme, Lehrer } from '../../wettbewerb/wettbewerb.model';
 import { KatalogItem } from '@minikaenguru-ws/common-schulkatalog';
-import { ResponsePayload } from '@minikaenguru-ws/common-messages';
 
 
 export const datenLehrerGeladen = createAction(
