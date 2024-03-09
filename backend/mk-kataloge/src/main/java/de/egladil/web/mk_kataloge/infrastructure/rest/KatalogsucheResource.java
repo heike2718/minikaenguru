@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.ParameterIn;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
@@ -204,7 +205,7 @@ public class KatalogsucheResource {
 	 */
 	private Response validateSearchTerm(final String searchTerm) {
 
-		if (searchTerm.isBlank()) {
+		if (StringUtils.isBlank(searchTerm)) {
 
 			ResponsePayload payload = new ResponsePayload(MessagePayload.error("Die Eingaben sind nicht korrekt."),
 				Arrays.asList(

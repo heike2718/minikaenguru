@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_kataloge.domain.KatalogItem;
-import de.egladil.web.mk_kataloge.infrastructure.rest.KatalogsucheResource;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 
