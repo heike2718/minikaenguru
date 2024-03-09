@@ -1,5 +1,4 @@
 import { Component, Input } from "@angular/core";
-import { Aufgabe } from "../feedback.model";
 
 
 @Component({
@@ -9,6 +8,12 @@ import { Aufgabe } from "../feedback.model";
 })
 export class AufgabenvorschauComponent {
 
-    @Input()
-    aufgabe!: Aufgabe;
+	@Input()
+    nummer!: string;
+
+	@Input()
+    imageBase64!: string;
+
+	@Input()
+	style!: Object;
 }

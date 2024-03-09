@@ -3,23 +3,63 @@
 <div *ngIf="lehrerFacade.lehrer$ | async as lehrer">
 
     <div *ngIf="lehrer.bewertungsfragebogenAnzeigen else keineTeilnahme">
-        <p>Bitte nehmen Sie sich einige Minuten Zeit, die Aufgaben des aktuellen Wettbewerbs zu bewerten. Ihre Antworten
+        <p>Bitte nehmen Sie sich etwas Zeit, um die Aufgaben des aktuellen Wettbewerbs zu bewerten. Ihre Antworten
             werden vollkommen anonym gespeichert. Es sind keine Rückschlüsse auf Sie oder Ihre Schule möglich.</p>
         <p>Sie bekommen die Möglichkeit zur Bewertung daher immer dann angezeigt, wenn Ihre Schule aktiv am Wettbewerb
-            teilgenommen
-            hat, auch wenn Sie die Aufgaben bereits bewertet hatten.</p>
-        <p>Füllen Sie jeden Fragebogen deshalb bitte nur einmal im aktuellen Wettbewerb aus.</p>
+            teilgenommen hat, auch wenn Sie die Aufgaben bereits bewertet hatten.</p>
+        <p>Füllen Sie jeden Bewertungsbogen deshalb bitte nur einmal im aktuellen Wettbewerb aus.</p>
     </div>
 
-    <div class="btn-group d-flex" role="group">
-        <button class="btn btn-primary w-100 ml-1" (click)="startBewertungKlasseEins()"><i class="fa fa-floppy-o"
-                aria-hidden="true"></i>
-            Klassenstufe 1</button>
+    <div class="mkv-bordered mkv-p mkv-m">
+        <p>Die Aufgaben für Inklusionskinder können nicht bewertet werden. Gern nehme ich dafür allgemeine Anregungen
+            und Hinweise per Mail entgegen.</p>
+        <p>Die Aufgaben der Einstufungen A, B und C haben unterschiedliche Schwierigkeitsgrade.</p>
 
-        <button class="btn btn-primary w-100 ml-1" (click)="startBewertungKlasseZwei()"><i class="fa fa-floppy-o"
-                aria-hidden="true"></i>
-            Klassenstufe 2</button>
+        <ul>
+            <li>Aufgaben der Kategorie A sollen von ungefähr 80% der Kinder gelöst werden können.</li>
+            <li>Aufgaben der Kategorie B sollen von ungefähr 50% der Kinder gelöst werden können.</li>
+            <li>Aufgaben der Kategorie C sollen von ungefähr 10% der Kinder gelöst werden können.</li>
+        </ul>
+
+        <p>Der Wettbewerb soll gut differenzieren und vor allem für die leistungsstarken Kinder herausfordernd sein.</p>
+
+        <p>Bitte bewerten Sie im Folgenden den Schwierigkeitsgrad die Eingruppierung der Aufgaben unter
+            diesem Gesichtspunkt.</p>
     </div>
+
+
+    <div class="d-none d-md-block">
+
+        <div *ngIf="!(feedbackFacade.bewertungsboegenSubmitted$ | async)" class="btn-group d-flex" role="group">
+            <button *ngIf="!(feedbackFacade.bewertungsbogenEINSSubmitted$ | async)" class="btn btn-primary w-100 ml-1" (click)="startBewertungKlasseEins()"><i class="fa fa-comment"
+                    aria-hidden="true" title="Aufgaben für Klasse 1 bewerten"></i>
+                Klassenstufe 1</button>
+
+            <button *ngIf="!(feedbackFacade.bewertungsbogenZWEISubmitted$ | async)" class="btn btn-primary w-100 ml-1" (click)="startBewertungKlasseZwei()"><i class="fa fa-comment"
+                    aria-hidden="true"  title="Aufgaben für Klasse 2 bewerten"></i>
+                Klassenstufe 2</button>
+
+            <button class="btn btn-primary w-100 ml-1" (click)="gotoDashboard()"><i class="fa fa-arrow-left"
+                    aria-hidden="true" title="zurück zur Übersicht"></i>
+                zurück</button>
+        </div>
+    </div>
+
+    <div class="d-md-none d-lg-none d-xl-none">
+
+        <div class="mkv-bordered hinweis mkv-p mt-5">
+            <p>Die Wettbewerbsaufgaben werden in den Bewertungsbögen als Bilder eingeblendet, die auf Smartphones nicht
+                gut
+                dargestellt werden können.</p>
+            <p>Bitte verwenden Sie daher ein Tablet oder einen PC, um den Wettbewerb zu bewerten.</p>
+            <p>Ich danke Ihnen vielmals, wenn Sie sich zum Bewerten etwas Zeit nehmen.</p>
+        </div>
+
+        <button class="btn btn-primary w-75" (click)="gotoDashboard()"><i class="fa fa-arrow-left"
+                aria-hidden="true"></i>
+            zurück</button>
+    </div>
+
 
 </div>
 

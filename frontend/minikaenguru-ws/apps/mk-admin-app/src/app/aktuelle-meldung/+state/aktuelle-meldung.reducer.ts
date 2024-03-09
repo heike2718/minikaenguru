@@ -1,7 +1,6 @@
 import { createReducer, Action, on } from '@ngrx/store';
 import { AktuelleMeldung, initialAktuelleMeldung } from '../aktuelle-meldung.model';
 import * as AktuelleMeldungActions from './aktuelle-meldung.actions';
-import { Message } from '@minikaenguru-ws/common-messages';
 export const aktuelleMeldungFeatureKey = 'mkv-app-aktuelle-meldung';
 
 export interface AktuelleMeldungState {

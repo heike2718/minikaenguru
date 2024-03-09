@@ -8,11 +8,13 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.quarkus.runtime.StartupEvent;
+import io.quarkus.runtime.configuration.ConfigUtils;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
 
@@ -60,9 +62,14 @@ public class AppLifecycleBean {
 	@ConfigProperty(name = "newsletterversand.cron.expr")
 	String newsletterversandCronExpression;
 
+	@ConfigProperty(name = "quarkus.application.version")
+	String version;
+
 	void onStartup(@Observes final StartupEvent ev) {
 
-		LOGGER.info("mk-gateway is starting...");
+		LOGGER.info(" ===========> Version {} of the application is starting with profiles {}", version,
+			StringUtils.join(ConfigUtils.getProfiles()));
+
 		LOGGER.info(" ===========>  newsletterversandCron={}", newsletterversandCronExpression);
 		LOGGER.info(" ===========>  filescannerUrl={}", filescannerUrl);
 		LOGGER.info(" ===========>  initAccesstokenUrl={}", initAccesstokenUrl);

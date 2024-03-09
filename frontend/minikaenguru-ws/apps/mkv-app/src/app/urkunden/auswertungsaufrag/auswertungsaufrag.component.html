@@ -39,15 +39,30 @@
 
 		<p class="mt-4 mb-1" *ngIf="farbe && urkundenauftragForm.valid">{{zusammenfassung()}}</p>
 
-		<div class="btn-group d-flex" role="group">
-			<button class="btn btn-primary w-100 ml-1" [disabled]="!schule || !urkundenauftragForm.valid"
+		<div class="d-none d-md-block">
+			<div class="btn-group d-flex" role="group">
+				<button class="btn btn-primary w-100 ml-1" [disabled]="!schule || !urkundenauftragForm.valid"
+					(click)="onFormSubmit(urkundenauftragForm)"><i class="fa fa-graduation-cap" aria-hidden="true"></i>
+					Auswertung erstellen</button>
+
+				<button class="btn btn-primary w-100 ml-1" (click)="onCancel()"><i class="fa fa-arrow-left"
+						aria-hidden="true"></i>zurück zur Klassenliste</button>
+
+				<button class="btn btn-primary w-100 ml-1" (click)="gotoBewertung()"
+					title="Bitte bewerten Sie die Aufgaben des Wettbewerbs."><i class="fa fa-comment"
+						aria-hidden="true"></i>Wettbewerbsaufgaben bewerten</button>
+			</div>
+		</div>
+
+		<div class="d-md-none d-lg-none d-xl-none">
+			<button class="btn btn-primary w-75" [disabled]="!schule || !urkundenauftragForm.valid"
 				(click)="onFormSubmit(urkundenauftragForm)"><i class="fa fa-graduation-cap" aria-hidden="true"></i>
 				Auswertung erstellen</button>
 
-			<button class="btn btn-primary w-100 ml-1" (click)="onCancel()"><i class="fa fa-arrow-left"
+			<button class="btn btn-primary w-75" (click)="onCancel()"><i class="fa fa-arrow-left"
 					aria-hidden="true"></i>zurück zur Klassenliste</button>
 
-			<button class="btn btn-primary w-100 ml-1" (click)="gotoBewertung()"
+			<button class="btn btn-primary w-75" (click)="gotoBewertung()"
 				title="Bitte bewerten Sie die Aufgaben des Wettbewerbs."><i class="fa fa-comment"
 					aria-hidden="true"></i>Wettbewerbsaufgaben bewerten</button>
 		</div>

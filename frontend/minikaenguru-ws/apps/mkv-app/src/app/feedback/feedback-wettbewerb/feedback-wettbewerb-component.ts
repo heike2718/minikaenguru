@@ -1,6 +1,7 @@
 import { Component, inject } from "@angular/core";
 import { FeedbackFacade } from "../feedback.facade";
 import { LehrerFacade } from "../../lehrer/lehrer.facade";
+import { Router } from "@angular/router";
 
 
 @Component({
@@ -11,14 +12,19 @@ import { LehrerFacade } from "../../lehrer/lehrer.facade";
 export class FeedbackWettbewerbComponent {
 
 	lehrerFacade = inject(LehrerFacade);
-	#feedbackFacade = inject(FeedbackFacade);
+	feedbackFacade = inject(FeedbackFacade);
+	#router = inject(Router);
 
 	startBewertungKlasseEins(): void {
-		this.#feedbackFacade.loadAufgabenvorschau('EINS');		
+		this.feedbackFacade.loadAufgabenvorschau('EINS');
 	}
 
 	startBewertungKlasseZwei(): void {
-		this.#feedbackFacade.loadAufgabenvorschau('ZWEI');
+		this.feedbackFacade.loadAufgabenvorschau('ZWEI');
+	}
+
+	gotoDashboard(): void {
+		this.#router.navigateByUrl('lehrer/dashboard')
 	}
 
 }

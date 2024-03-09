@@ -1,18 +1,24 @@
 import { Action, createReducer, on } from "@ngrx/store";
-import { Aufgabenvorschau, BewertungAufgabe, BewertungAufgabeGUIModel, BewertungsbogenGUIModel, BewertungsbogenKlassenstufe, createBewertungAufgabe, createBewertungAufgabeGUIModel } from "../feedback.model";
+import { BewertungAufgabe, BewertungAufgabeGUIModel, BewertungsbogenGUIModel, BewertungsbogenKlassenstufe, createBewertungAufgabe, createBewertungAufgabeGUIModel } from "../feedback.model";
 import * as FeedbacActions from './feedback.actions';
-import { ALL_KLASSENSTUFEN, getKlassenstufeByLabel } from "@minikaenguru-ws/common-components";
+import { getKlassenstufeByLabel } from "@minikaenguru-ws/common-components";
 
 export const feedbackFeatureKey = 'mkv-app-feedback';
 
 export interface FeedbackState {
 
     readonly bewertungsbogenCreated: boolean;
+    readonly bewertungsbogenEINSSubmitted: boolean;
+    readonly bewertungsbogenZWEISubmitted: boolean;
+    readonly bewertungsboegenSubmitted: boolean;
     readonly guiModel?: BewertungsbogenGUIModel;
 }
 
 const initialFeedbackState: FeedbackState = {
     bewertungsbogenCreated: false,
+    bewertungsbogenEINSSubmitted: false,
+    bewertungsbogenZWEISubmitted: false,
+    bewertungsboegenSubmitted: false,
     guiModel: undefined
 };
 
@@ -40,9 +46,18 @@ const feedbackReducer = createReducer(initialFeedbackState,
 
         return { ...state, guiModel: guiModel, bewertungsbogenCreated: true }
     }),
+    on(FeedbacActions.submitBewertung, (state, action) => {
+
+        const theKlassenstufe = action.bewertungsbogen.klassenstufe;
+        const einSubmitted = theKlassenstufe === "EINS";
+        const zweiSubmitted = theKlassenstufe === "ZWEI";
+        return {...state, bewertungsbogenEINSSubmitted: einSubmitted, bewertungsbogenZWEISubmitted: zweiSubmitted};
+    }),
     on(FeedbacActions.bewertungSubmitted, (state, _action) => {
 
-        return initialFeedbackState;
+        const isBeideSubmitted = state.bewertungsbogenEINSSubmitted && state.bewertungsbogenZWEISubmitted;
+
+        return {...state, bewertungsboegenSubmitted: isBeideSubmitted};
     }),
     on(FeedbacActions.resetState, (_state, _action) => {
 

@@ -3,18 +3,187 @@
         <h3>Bewertungsbogen {{guiModel.klassenstufe}}</h3>
         <p *ngIf="devMode">bewertungsbogen.component</p>
 
-        <p>Bitte bewerten Sie die einzelnen Aufgaben.</p>
+        <div class="d-none d-md-block">
 
-        <div *ngFor="let item of guiModel.items" class="col-12 mb-3">
-            <mkv-bewertung-aufgabe [vorschau]="item.vorschau"
-                [bewertungAufgabe]="item.bewertungAufgabe"></mkv-bewertung-aufgabe>
+
+
+            <div *ngIf="showFormular else schonAbgesendet">
+
+
+                <p>Bitte nutzen Sie auch gern die Möglichkeit für weitergehende <strong>Anmerkungen</strong> zu den
+                    einzelnen
+                    Aufgaben und zum Wettbewerb insgesamt.
+                </p>
+
+                <div class="mkv-bordered mkv-p mkv-m">
+                    <ul>
+                        <li>Aufgaben der Kategorie A sollen von ungefähr 80% der Kinder gelöst werden können.</li>
+                        <li>Aufgaben der Kategorie B sollen von ungefähr 50% der Kinder gelöst werden können.</li>
+                        <li>Aufgaben der Kategorie C sollen von ungefähr 10% der Kinder gelöst werden können.</li>
+                    </ul>
+                </div>
+
+                <p></p>
+
+                <div class="d-none d-md-block">
+                    <form [formGroup]="form" novalidate>
+
+                        <div formArrayName="items">
+
+                            <div *ngFor="let bewertungAufgabe of items.controls; let i = index" [formGroupName]="i"
+                                class="card  mkv-m-l mkv-p-l">
+
+                                <!-- Nummer der Aufgabe oder aufgabenvorschau.component-->
+                                <mkv-feedback-aufgabenvorschau [nummer]="bewertungAufgabe.value.nummer"
+                                    [imageBase64]="getImageSource(bewertungAufgabe.value)"
+                                    [style]="{'with': '40%;'}"></mkv-feedback-aufgabenvorschau>
+
+                                <div class="card-body">
+                                    <fieldset class="form-group mb-5">
+                                        <legend>Bewertung Schwierigkeitsgrad</legend>
+                                        <div *ngIf="bewertungAufgabe.value.aufgabeKategorie === 'A'" class="helptext">80% der Kinder sollten diese Aufgabe lösen können.</div>
+                                        <div *ngIf="bewertungAufgabe.value.aufgabeKategorie === 'B'" class="helptext">50% der Kinder sollten diese Aufgabe lösen können.</div>
+                                        <div *ngIf="bewertungAufgabe.value.aufgabeKategorie === 'C'" class="helptext">10% der Kinder sollten diese Aufgabe lösen können.</div>
+                                        <div class="feedback-frage">Wie beurteilen Sie den Schwierigkeitsgrad dieser
+                                            Aufgabe für Kategorie {{bewertungAufgabe.value.aufgabeKategorie}}?</div>
+                                        <div class="form-check form-check-inline"
+                                            *ngFor="let option of schwierigkeitsgradOptions">
+                                            <input class="form-check-input" type="radio" [id]="'schwierigkeitsgrad'+i"
+                                                formControlName="schwierigkeitsgrad" [value]="option">
+                                            <label class="form-check-label" [for]="'schwierigkeitsgrad'+i">{{ option
+                                                }}</label>
+                                        </div>
+                                    </fieldset>
+
+                                    <fieldset class="form-group mb-5">
+                                        <legend>Einstufung der Aufgabe (A,B,C)</legend>
+                                        <div class="feedback-frage">Wenn Sie die Aufgabe für zu leicht oder zu schwer für Kategorie 
+                                            {{bewertungAufgabe.value.aufgabeKategorie}} halten, welche
+                                            Einstufung hätten Sie stattdessen dieser Aufgabe gegeben?</div>
+                                        <div class="form-check form-check-inline"
+                                            *ngFor="let option of kategorieOptions">
+                                            <input class="form-check-input" type="radio" [id]="'kategorie'+i"
+                                                formControlName="kategorie" [value]="option">
+                                            <label class="form-check-label" [for]="'kategorie'+i">{{ option }}</label>
+                                        </div>
+                                    </fieldset>
+
+
+                                    <fieldset class="form-group mb-5">
+                                        <legend>Verständlichkeit</legend>
+                                        <div class="feedback-frage">War der Text der Aufgabe verständlich? Enthielt er
+                                            z.B.
+                                            keine
+                                            unbekannten
+                                            Begriffe?</div>
+                                        <div class="form-check form-check-inline" *ngFor="let option of jaNeinOptions">
+                                            <input class="form-check-input" type="radio" [id]="'verstaendlichkeit'+i"
+                                                formControlName="verstaendlichkeit" [value]="option">
+                                            <label class="form-check-label" [for]="'verstaendlichkeit'+i">{{ option
+                                                }}</label>
+                                        </div>
+                                    </fieldset>
+
+                                    <fieldset class="form-group mb-5">
+                                        <legend>Passung mit Lehrplan</legend>
+                                        <div class="feedback-frage">Konnte diese Aufgabe auf Grundlage des aktuellen
+                                            Lehrplans
+                                            bearbeitet
+                                            werden?</div>
+                                        <div class="form-check form-check-inline" *ngFor="let option of jaNeinOptions">
+                                            <input class="form-check-input" type="radio" [id]="'lehrplan'+i"
+                                                formControlName="lehrplan" [value]="option">
+                                            <label class="form-check-label" [for]="'lehrplan'+i">{{ option }}</label>
+                                        </div>
+                                    </fieldset>
+
+                                </div>
+
+                                <div class="form-group mb-5">
+                                    <legend>Anmerkungen zur Aufgabe</legend>
+                                    <div class="feedback-frage">Haben Sie Anmerkungen zu dieser Aufgabe?</div>
+                                    <textarea id="freitextAufgabe{{i}}" formControlName="freitextAufgabe"
+                                        class="form-control"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <fieldset class="form-group mb-5">
+                            <legend>Spaßfaktor</legend>
+                            <div class="feedback-frage">Wie viel Spaß hatten die Kinder Ihrer Meinung nach insgesamt am
+                                Wettbewerb?
+                            </div>
+                            <div class="form-check form-check-inline" *ngFor="let option of spassOptions">
+                                <input class="form-check-input" type="radio" [id]="'scoreSpass'"
+                                    formControlName="scoreSpass" [value]="option">
+                                <label class="form-check-label" [for]="'scoreSpass'">{{ option }}</label>
+                            </div>
+
+                        </fieldset>
+
+                        <fieldset class="form-group mb-5">
+                            <legend>Persönliche Zufriedenheit</legend>
+                            <div class="feedback-frage">Wie zufrieden waren Sie persönlich insgesamt mit den Aufgaben
+                                des
+                                Wettbewerbs?</div>
+                            <div class="form-check form-check-inline" *ngFor="let option of zufriedenheitOptions">
+                                <input class="form-check-input" type="radio" [id]="'scoreZufriedenheit'"
+                                    formControlName="scoreZufriedenheit" [value]="option">
+                                <label class="form-check-label" [for]="'scoreZufriedenheit'">{{ option }}</label>
+                            </div>
+
+                        </fieldset>
+
+                        <div class="form-group">
+                            <legend>Anmerkungen</legend>
+                            <div class="feedback-frage">Haben Sie Anmerkungen zum Wettbewerb oder auch zum Fragebogen?</div>
+                            <textarea id="freitextWettbewerb" formControlName="freitextWettbewerb"
+                                class="form-control"></textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="btn-group d-flex" role="group">
+                    <button class="btn btn-primary w-100 ml-1" [disabled]="submitDisabled()" (click)="onSubmit()"><i
+                            class="fa fa-mail" aria-hidden="true"></i>
+                        speichern</button>
+
+                    <button class="btn btn-primary w-100 ml-1" (click)="onCancel()"><i class="fa fa-arrow-left"
+                            aria-hidden="true"></i>zurück</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-md-none d-lg-none d-xl-none">
+            <div class="mkv-bordered hinweis mkv-p mt-5">
+                <p>Sie sehen den Bewertungsbogen nicht, da die Bilder der Wettbewerbsaufgaben zu breit für ein
+                    Smartphone
+                    sind. </p>
+                <p>Bitte verwenden Sie daher ein Tablet oder einen PC, um den Wettbewerb zu bewerten.</p>
+                <p>Ich danke Ihnen vielmals, wenn Sie sich zum Bewerten etwas Zeit nehmen.</p>
+
+                <button class="btn btn-primary w-75" (click)="onCancel()"><i class="fa fa-arrow-left"
+                    aria-hidden="true"></i>zurück</button>
+            </div>
         </div>
     </div>
 </div>
-
 <ng-template #notloaded>
     <div class="mkv-container mt-1">
         <h3>Bewertungsbogen</h3>
         <p *ngIf="devMode">bewertungsbogen.component</p>
+    </div>
+</ng-template>
+
+<ng-template #schonAbgesendet>
+    <p>Sie haben für diese Klassenstufe vor kurzem ein Bewertungsformular abgesendet. Ganz herzlichen Dank dafür. Diese
+        Meldung wird angezeigt, bis Sie sich
+        ausloggen und wieder neu einlogge. Aber bitte geben Sie für jede Klassenstufe nur einmal im laufenden Wettbewerb
+        eine Bewertung ab.
+    </p>
+
+    <div class="btn-group d-flex" role="group">
+        <button class="btn btn-primary w-100 ml-1" (click)="onCancel()"><i class="fa fa-arrow-left"
+                aria-hidden="true"></i>zurück</button>
     </div>
 </ng-template>

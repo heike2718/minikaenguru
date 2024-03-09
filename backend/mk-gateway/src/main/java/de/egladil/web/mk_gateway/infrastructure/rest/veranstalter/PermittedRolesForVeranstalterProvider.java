@@ -225,6 +225,14 @@ public final class PermittedRolesForVeranstalterProvider {
 
 		}
 
+		{
+
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
+			result.put((new PathWithMethod("/feedback", HttpMethod.POST)),
+				rollen);
+
+		}
+
 		return result;
 
 	}

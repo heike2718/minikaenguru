@@ -16,11 +16,20 @@ export class FeedbackFacade {
     #store = inject(Store);
 
     bewertungsbogenCreated$: Observable<boolean> = this.#store.select(FeedbackState.bewertungsbogenCreated$);
+    bewertungsbogenEINSSubmitted$: Observable<boolean> = this.#store.select(FeedbackState.bewertungsbogenEINSSubmitted$);
+    bewertungsbogenZWEISubmitted$: Observable<boolean> = this.#store.select(FeedbackState.bewertungsbogenZWEISubmitted$);
+    bewertungsboegenSubmitted$: Observable<boolean> = this.#store.select(FeedbackState.bewertungsboegenSubmitted$);
     bewertungsformularModel$: Observable<BewertungsbogenGUIModel> = this.#store.select(FeedbackState.guiModel$).pipe(filterDefined);
 
     loadAufgabenvorschau(klassenstufe: Klassenstufenart): void {
 
         this.#store.dispatch(FeedbackActions.loadAufabenvorschau({ klassenstufe }));
+
+    }
+
+    saveBewertungsbogen(bewertungsbogen: BewertungsbogenKlassenstufe): void {
+
+        this.#store.dispatch(FeedbackActions.submitBewertung({ bewertungsbogen }));
 
     }
 

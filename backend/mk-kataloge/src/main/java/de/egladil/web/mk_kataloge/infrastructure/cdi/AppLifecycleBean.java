@@ -4,11 +4,13 @@
 // =====================================================
 package de.egladil.web.mk_kataloge.infrastructure.cdi;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.quarkus.runtime.StartupEvent;
+import io.quarkus.runtime.configuration.ConfigUtils;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
 
@@ -26,9 +28,13 @@ public class AppLifecycleBean {
 	@ConfigProperty(name = "quarkus.http.port")
 	String port;
 
+	@ConfigProperty(name = "quarkus.application.version")
+	String version;
+
 	void onStartup(@Observes final StartupEvent ev) {
 
-		LOGGER.info("mk-kataloge is starting...");
+		LOGGER.info(" ===========> Version {} of the application is starting with profiles {}", version,
+			StringUtils.join(ConfigUtils.getProfiles()));
 
 		LOGGER.info(" ===========>  quarkus.http.root-path={}", rootPath);
 		LOGGER.info(" ===========>  quarkus.http.port={}", port);
