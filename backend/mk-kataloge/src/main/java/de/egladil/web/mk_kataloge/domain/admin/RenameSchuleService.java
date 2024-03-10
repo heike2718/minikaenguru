@@ -8,13 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.PersistenceException;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +18,12 @@ import de.egladil.web.mk_kataloge.domain.SchuleRepository;
 import de.egladil.web.mk_kataloge.domain.apimodel.SchulePayload;
 import de.egladil.web.mk_kataloge.domain.error.KatalogAPIException;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.PersistenceException;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
 
 /**
  * RenameSchuleService
@@ -39,18 +38,6 @@ public class RenameSchuleService {
 
 	@Inject
 	ChangeSchulenMailDelegate mailDelegate;
-
-	private boolean test;
-
-	static RenameSchuleService createForTest(final SchuleRepository schuleRepository, final ChangeSchulenMailDelegate mailDelegate) {
-
-		RenameSchuleService result = new RenameSchuleService();
-		result.schuleRepository = schuleRepository;
-		result.mailDelegate = mailDelegate;
-		result.test = true;
-		return result;
-
-	}
 
 	/**
 	 * Bennent die gegebene Schule um und gibt sie als KatalogItem zurück.
@@ -102,12 +89,6 @@ public class RenameSchuleService {
 						+ schulePayload.name()
 						+ ". Diese wurde zurückgegeben."),
 					result);
-			}
-
-			if (test) {
-
-				// Mockito-Tests beruhen auf schule.equals(), also gleichen kuerzeln. Daher im Test vorher das kuerzel setzen.
-				schule.setKuerzel(schulePayload.kuerzel());
 			}
 
 			schule.setName(schulePayload.name());

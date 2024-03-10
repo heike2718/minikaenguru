@@ -7,13 +7,12 @@ package de.egladil.web.mk_gateway.infrastructure.persistence.impl;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-
 import de.egladil.web.mk_gateway.domain.event.EventRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.StoredEvent;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 /**
  * EventRepositoryHibernate

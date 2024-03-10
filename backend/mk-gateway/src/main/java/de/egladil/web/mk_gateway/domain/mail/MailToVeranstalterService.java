@@ -8,8 +8,8 @@ import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import de.egladil.web.commons_mailer.DefaultEmailDaten;
 import de.egladil.web.commons_validation.payload.MessagePayload;

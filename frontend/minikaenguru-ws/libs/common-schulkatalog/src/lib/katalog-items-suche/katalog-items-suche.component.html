@@ -12,17 +12,14 @@
 					(keyup)="onKeyup($event, 'KATALOGE')" [ngModel]="searchFormInputValue" />
 			</div>
 		</div>
-	</ng-container>
-	<div class="col-12 mb-2 mt-2" *ngIf="viewModel.guiModel.showLoadingIndicator">
-		Suche läuft... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
-	</div>
+	</ng-container>	
 	<div class="col-12 description" *ngIf="viewModel.guiModel.showAuswahlDescription">{{viewModel.guiModel.texte.auswahlDescription}}</div>
 	<div *ngIf="viewModel.loadedKatalogItems.length > 0" class="row">
 		<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let item of schulkatalogFacade.katalogItems$ | async">
 			<mk-katalog-item [katalogItem]="item"></mk-katalog-item>
 		</div>
 	</div>
-	<div *ngIf="!viewModel.guiModel.showLoadingIndicator" class="col-md-6 mt-4">
+	<div class="col-md-6 mt-4">
 		<button class="btn btn-primary" title="Eintrag in Schulkatalog beantragen" (click)="handleNichtGefunden()">{{viewModel.guiModel.texte.btnNichtGefundenText}}</button>
 	</div>
 </div>

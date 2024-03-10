@@ -5,6 +5,7 @@ import { Schule } from '../lehrer/schulen/schulen.model';
 import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
 import { ResponsePayload } from '@minikaenguru-ws/common-messages';
+import { LoadingIndicatorService } from '@minikaenguru-ws/shared/util-mk';
 
 
 @Injectable({
@@ -12,28 +13,26 @@ import { ResponsePayload } from '@minikaenguru-ws/common-messages';
 })
 export class SchulenService {
 
-	constructor(private http: HttpClient) { }
+	constructor(private http: HttpClient, private loadingIndicatorService: LoadingIndicatorService) { }
 
 
 	findSchulen(): Observable<Schule[]> {
 
 		const url = environment.apiUrl + '/lehrer/schulen';
 
-		return this.http.get(url).pipe(
+		return this.loadingIndicatorService.showLoaderUntilCompleted(this.http.get(url).pipe(
 			map(body => body as ResponsePayload),
 			map(payload => payload.data)
-		);
+		));
 	}
 
 	public loadDetails(schulkuerzel: string): Observable<Schule> {
 
 		const url = environment.apiUrl + '/lehrer/schulen/' + schulkuerzel + '/details';
 
-		return this.http.get(url).pipe(
+		return this.loadingIndicatorService.showLoaderUntilCompleted(this.http.get(url).pipe(
 			map(body => body as ResponsePayload),
 			map(payload => payload.data)
-		);
-
+		));
 	}
-
 }

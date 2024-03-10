@@ -4,8 +4,8 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.wettbewerb.api;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 

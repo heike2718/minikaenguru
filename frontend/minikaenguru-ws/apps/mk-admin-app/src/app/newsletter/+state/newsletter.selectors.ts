@@ -1,6 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import * as fromNewsletters from './newsletter.reducer';
-import { NewsletterMap } from '../newsletter.model';
+import { NewsletterMap } from '../../shared/newsletter-versandauftrage.model';
 
 const newsletterState = createFeatureSelector<fromNewsletters.NewslettersState>(fromNewsletters.newsletterFeatureKey);
 

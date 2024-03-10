@@ -12,8 +12,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
 
-import javax.persistence.EntityTransaction;
-import javax.persistence.RollbackException;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.RollbackException;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;

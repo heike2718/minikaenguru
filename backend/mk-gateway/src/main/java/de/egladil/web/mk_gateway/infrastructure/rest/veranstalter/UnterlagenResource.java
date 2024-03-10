@@ -4,18 +4,18 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.veranstalter;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +25,7 @@ import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.unterlagen.UnterlagenService;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * UnterlagenResource
@@ -42,6 +43,9 @@ public class UnterlagenResource {
 	@Inject
 	UnterlagenService unterlagenService;
 
+	@Inject
+	DevDelayService delayService;
+
 	/**
 	 * Läd die Unterlagen für Schulen herunter.
 	 *
@@ -54,6 +58,8 @@ public class UnterlagenResource {
 	@Path("schulen/{sprache}")
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM })
 	public Response getUnterlagenSchule(@PathParam(value = "sprache") final String sprache) {
+
+		this.delayService.pause();
 
 		Sprache theSprache = null;
 
@@ -86,6 +92,8 @@ public class UnterlagenResource {
 	@Path("privat/{sprache}")
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM })
 	public Response getUnterlagenPrivat(@PathParam(value = "sprache") final String sprache) {
+
+		this.delayService.pause();
 
 		Sprache theSprache = null;
 

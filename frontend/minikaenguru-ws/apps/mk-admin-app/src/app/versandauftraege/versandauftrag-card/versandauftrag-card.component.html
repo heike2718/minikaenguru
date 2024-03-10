@@ -1,0 +1,19 @@
+<div class="mkv-container mt-1">
+	<p *ngIf="devMode">versandauftrag-card.component</p>
+	<div class="card mt-2">
+		<div class="card-body">
+			<div class="card-title">{{versandauftrag.newsletterBetreff}}</div>
+			<div class="card-text">
+				<div class="row">
+					<div class="card-subtitle text-muted">Status: {{versandauftrag.status}}</div>
+					<div class="card-subtitle text-muted">Betreff: {{versandauftrag.newsletterBetreff}}</div>
+					<div class="card-subtitle text-muted">Empfängertyp: {{versandauftrag.empfaengertyp}}</div>
+					<div class="card-subtitle text-muted">Anzahl Empfänger: {{versandauftrag.anzahlEmpaenger}}</div>
+					<div class="card-subtitle text-muted">Anzahl aktuell versendet: {{versandauftrag.anzahlAktuellVersendet}}</div>
+					<div class="card-subtitle text-muted">Begonnen am: {{versandauftrag.versandBegonnenAm}}</div>
+					<div class="card-subtitle text-muted">Beendet am: {{versandauftrag.versandBeendetAm}}</div>
+				</div>
+			</div>			
+		</div>
+	</div>
+</div>

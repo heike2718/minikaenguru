@@ -4,8 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.kinder;
 
-import org.jboss.weld.exceptions.IllegalArgumentException;
-
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.kinder.api.KindRequestData;
 import de.egladil.web.mk_gateway.domain.klassenlisten.impl.KindImportDaten;

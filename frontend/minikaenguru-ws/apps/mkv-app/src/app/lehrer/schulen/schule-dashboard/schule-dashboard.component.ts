@@ -27,12 +27,12 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 
 	aktuellerWettbewerb$ = this.wettbewerbFacade.aktuellerWettbewerb$;
 
-	loading$ = this.lehrerFacade.loading$;
-
 	textFeatureFlagAnzeigen = false;
 	textFeatureFlag = 'Das ist im Moment noch nicht möglich, kommt aber bis März.';
 
 	vertragAdvModel!: DownloadCardModel;
+
+	textAuswertungsmodus = 'noch nicht entschieden';
 
 	private user?: User;
 
@@ -76,6 +76,11 @@ export class SchuleDashboardComponent implements OnInit, OnDestroy {
 
 					this.logger.debug(JSON.stringify(this.schule));
 
+					switch(this.schule.auswertungsmodus) {
+						case 'OFFLINE': this.textAuswertungsmodus = 'OFFLINE (Sie erstellen die Auswertung und die Urkunden selbst)'; break;
+						case 'ONLINE': this.textAuswertungsmodus = 'ONLINE'; break;
+						default: break;
+					}
 
 					this.vertragAdvModel = {
 						id: this.schule.kuerzel,

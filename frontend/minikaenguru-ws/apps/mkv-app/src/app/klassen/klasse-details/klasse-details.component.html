@@ -1,51 +1,52 @@
 <div class="card mt-2">
 	<div class="card-body">
 		<div class="card-title">{{klasse.name}} <span *ngIf="anzahlKinder > 0 && anzahlKinder === anzahlLoesungszettel"
-				class="badge badge-success">alle Lösungszettel erfasst</span> <span *ngIf="klasse.anzahlKinderZuPruefen > 0"
-					class="badge badge-warning">bitte importierte Kinder prüfen</span> </div>
+				class="badge bg-success">alle Lösungszettel erfasst</span> <span
+				*ngIf="klasse.anzahlKinderZuPruefen > 0" class="badge bg-warning">bitte importierte Kinder prüfen</span>
+		</div>
 		<div class="card-text">
 			<div class="row">
 				<div class="card-subtitle text-muted col-sm-12 col-md-9">Anzahl Kinder: {{anzahlKinder}}</div>
-				<div class="card-subtitle text-muted col-sm-12 col-md-9">Anzahl Lösungszettel: {{anzahlLoesungszettel}}</div>
-				<div *ngIf="klasse.anzahlKinderZuPruefen > 0" class="card-subtitle text-primary col-sm-12 col-md-9">einige importierte Kinder müssen geprüft werden</div>
+				<div class="card-subtitle text-muted col-sm-12 col-md-9">Anzahl Lösungszettel: {{anzahlLoesungszettel}}
+				</div>
+				<div *ngIf="klasse.anzahlKinderZuPruefen > 0" class="card-subtitle text-primary col-sm-12 col-md-9">
+					einige importierte Kinder müssen geprüft werden</div>
 			</div>
-			
+
 		</div>
 
 		<div class="d-none d-md-block">
 			<div class="btn-group d-flex" role="group">
-				<button class="btn btn-outline-dark w-100 ml-1" (click)="editKlasse()"><i class="fa fa-pencil-square-o"
+				<button class="btn btn-outline-dark w-100" (click)="editKlasse()"><i class="fa fa-pencil-square-o"
 						aria-hidden="true"></i>
 					Name ändern</button>
 
-				<button class="btn btn-outline-dark w-100 ml-1" (click)="gotoKinder()"><i class="fa fa-users"
+				<button class="btn btn-outline-dark w-100" (click)="gotoKinder()"><i class="fa fa-users"
 						aria-hidden="true"></i>
 					Kinder bearbeiten</button>
 
-				<button *ngIf="klasse.anzahlKinder > 0" class="btn btn-outline-danger w-100 ml-1"
+				<button *ngIf="klasse.anzahlKinder > 0" class="btn btn-outline-danger w-100"
 					(click)="deleteKlasse()"><i class="fa fa-trash" aria-hidden="true"></i>löschen</button>
 
-				<button *ngIf="klasse.anzahlKinder === 0" class="btn btn-outline-dark w-100 ml-1"
+				<button *ngIf="klasse.anzahlKinder === 0" class="btn btn-outline-dark w-100"
 					(click)="deleteKlasse()"><i class="fa fa-trash" aria-hidden="true"></i>löschen</button>
 			</div>
 		</div>
 
 		<div class="d-md-none d-lg-none d-xl-none">
-			<div class="btn-group d-inline" role="group">
-				<button class="btn btn-outline-dark w-100 ml-1" (click)="editKlasse()"><i class="fa fa-pencil-square-o"
-						aria-hidden="true"></i>
-					Name ändern</button>
+			<button class="btn btn-outline-dark w-75" (click)="editKlasse()"><i class="fa fa-pencil-square-o"
+					aria-hidden="true"></i>
+				Name ändern</button>
 
-				<button class="btn btn-outline-dark w-100 ml-1" (click)="gotoKinder()"><i class="fa fa-users"
-						aria-hidden="true"></i>
-					Kinder bearbeiten</button>
+			<button class="btn btn-outline-dark w-75" (click)="gotoKinder()"><i class="fa fa-users"
+					aria-hidden="true"></i>
+				Kinder bearbeiten</button>
 
-				<button *ngIf="klasse.anzahlKinder > 0" class="btn btn-outline-danger w-100 ml-1"
-					(click)="deleteKlasse()"><i class="fa fa-trash" aria-hidden="true"></i>löschen</button>
+			<button *ngIf="klasse.anzahlKinder > 0" class="btn btn-outline-danger w-75" (click)="deleteKlasse()"><i
+					class="fa fa-trash" aria-hidden="true"></i>löschen</button>
 
-				<button *ngIf="klasse.anzahlKinder === 0" class="btn btn-outline-dark w-100 ml-1"
-					(click)="deleteKlasse()"><i class="fa fa-trash" aria-hidden="true"></i>löschen</button>
-			</div>
+			<button *ngIf="klasse.anzahlKinder === 0" class="btn btn-outline-dark w-75" (click)="deleteKlasse()"><i
+					class="fa fa-trash" aria-hidden="true"></i>löschen</button>
 		</div>
 
 	</div>
@@ -54,7 +55,7 @@
 <ng-template #loeschenWarndialog let-modal>
 	<div class="modal-header">
 		<h4 class="modal-title" id="modal-basic-title">{{klasse.name}} löschen</h4>
-		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+		<button type="button" class="close" aria-label="Close" (click)="modal.close('Cross click')">
 			<span aria-hidden="true">&times;</span>
 		</button>
 	</div>
@@ -65,7 +66,7 @@
 				gemacht werden.</span></p>
 	</div>
 	<div class="modal-footer">
-		<button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('nein')">besser nicht löschen</button>
+		<button type="button" class="btn btn-outline-dark" (click)="modal.close('nein')">besser nicht löschen</button>
 		<button type="button" class="btn btn-danger" (click)="modal.close('ja')">löschen</button>
 	</div>
 </ng-template>

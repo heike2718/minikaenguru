@@ -7,10 +7,6 @@ package de.egladil.web.mk_kataloge.domain.admin;
 import java.util.List;
 import java.util.Optional;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.PersistenceException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +18,9 @@ import de.egladil.web.mk_kataloge.domain.apimodel.SchulePayload;
 import de.egladil.web.mk_kataloge.domain.error.DuplicateEntityException;
 import de.egladil.web.mk_kataloge.domain.error.KatalogAPIException;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.PersistenceException;
 
 /**
  * CreateSchuleService
@@ -36,17 +35,6 @@ public class CreateSchuleService {
 
 	@Inject
 	ChangeSchulenMailDelegate mailDelegate;
-
-	private boolean test;
-
-	public static CreateSchuleService createForTest(final SchuleRepository schuleRepo, final ChangeSchulenMailDelegate mailDelegate) {
-
-		CreateSchuleService result = new CreateSchuleService();
-		result.schuleRepository = schuleRepo;
-		result.mailDelegate = mailDelegate;
-		result.test = true;
-		return result;
-	}
 
 	/**
 	 * Falls es die Schule noch nicht gibt (Gleichheit ortKuerzel und Name), wird sie angelegt und persistiert. Eine Meil wird an
@@ -77,12 +65,6 @@ public class CreateSchuleService {
 			}
 
 			Schule schule = mapFromSchulePayload(schulePayload);
-
-			if (test) {
-
-				// Mockito-Tests beruhen auf schule.equals(), also gleichen kuerzeln. Daher im Test vorher das kuerzel setzen.
-				schule.setKuerzel(schulePayload.kuerzel());
-			}
 
 			boolean added = schuleRepository.addSchule(schule);
 			LOG.debug("Schule added=" + added);

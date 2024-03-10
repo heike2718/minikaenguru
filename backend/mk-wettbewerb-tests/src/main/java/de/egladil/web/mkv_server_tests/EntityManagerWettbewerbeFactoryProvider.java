@@ -4,8 +4,8 @@
 // =====================================================
 package de.egladil.web.mkv_server_tests;
 
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 
 /**
  * EntityManagerWettbewerbeFactoryProvider

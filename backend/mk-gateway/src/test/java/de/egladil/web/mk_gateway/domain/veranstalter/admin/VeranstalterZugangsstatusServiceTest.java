@@ -14,11 +14,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import jakarta.inject.Inject;
+
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
@@ -30,17 +28,19 @@ import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.ZugangUnterlagen;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.VeranstalterSuchanfrage;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.InjectMock;
 
 /**
  * VeranstalterZugangsstatusServiceTest
  */
-@ExtendWith(MockitoExtension.class)
+@QuarkusTest
 public class VeranstalterZugangsstatusServiceTest {
 
-	@Mock
+	@InjectMock
 	private VeranstalterRepository veranstalterRepository;
 
-	@InjectMocks
+	@Inject
 	private VeranstalterZugangsstatusService service;
 
 	@Test

@@ -5,10 +5,12 @@
 package de.egladil.web.mk_gateway.domain.veranstalter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,17 +19,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.ws.rs.core.Response;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Response;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
+import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
 import de.egladil.web.mk_gateway.domain.statistik.AuswertungsmodusInfoService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.AktuelleTeilnahmeService;
@@ -38,38 +41,40 @@ import de.egladil.web.mk_gateway.domain.veranstalter.api.Auswertungsmodus;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleDetails;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.InjectMock;
 
 /**
  * SchulenAnmeldeinfoServiceTest
  */
+@QuarkusTest
 public class SchulenAnmeldeinfoServiceTest {
 
 	private static final String LEHRER_UUID = "jahflhwl";
 
-	private MkKatalogeResourceAdapter katalogeAdapter;
+	@InjectMock
+	AuthorizationService authorizationService;
 
-	private SchulenOverviewService schulenOverviewService;
+	@InjectMock
+	MkKatalogeResourceAdapter katalogeAdapter;
 
-	private SchuleDetailsService schuleDetailsService;
+	@InjectMock
+	SchulenOverviewService schulenOverviewService;
 
-	private AuswertungsmodusInfoService auswertungsmodusInfoService;
+	@InjectMock
+	SchuleDetailsService schuleDetailsService;
 
-	private AktuelleTeilnahmeService aktuelleTeilnahmeService;
+	@InjectMock
+	AuswertungsmodusInfoService auswertungsmodusInfoService;
 
-	private SchulenAnmeldeinfoService service;
+	@InjectMock
+	AktuelleTeilnahmeService aktuelleTeilnahmeService;
 
-	@BeforeEach
-	void setUp() {
+	@InjectMock
+	LoggableEventDelegate eventDelegate;
 
-		auswertungsmodusInfoService = Mockito.mock(AuswertungsmodusInfoService.class);
-		aktuelleTeilnahmeService = Mockito.mock(AktuelleTeilnahmeService.class);
-		katalogeAdapter = Mockito.mock(MkKatalogeResourceAdapter.class);
-		schulenOverviewService = Mockito.mock(SchulenOverviewService.class);
-		schuleDetailsService = Mockito.mock(SchuleDetailsService.class);
-		service = SchulenAnmeldeinfoService.createForTest(katalogeAdapter, schulenOverviewService, schuleDetailsService,
-			auswertungsmodusInfoService,
-			aktuelleTeilnahmeService);
-	}
+	@Inject
+	SchulenAnmeldeinfoService service;
 
 	@Test
 	void should_FindSchulenMitAnmeldeinfoThrowMkGatewayRuntimeException_when_KatalogEndpointNotPresent() {
@@ -78,14 +83,14 @@ public class SchulenAnmeldeinfoServiceTest {
 		List<SchuleAPIModel> schulenWettbewerb = new ArrayList<>();
 		schulenWettbewerb.add(SchuleAPIModel.withKuerzel("12345").withAngemeldet(false));
 
-		Mockito.when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID)))
+		when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID)))
 			.thenReturn(schulenWettbewerb);
 
 		Response responseKataloge = Response.status(400)
 			.entity(ResponsePayload.messageOnly(MessagePayload.error("Bad Request")))
 			.build();
 
-		Mockito.when(katalogeAdapter.findSchulen("12345")).thenReturn(responseKataloge);
+		when(katalogeAdapter.findSchulen("12345")).thenReturn(responseKataloge);
 
 		// Act
 		try {
@@ -133,12 +138,12 @@ public class SchulenAnmeldeinfoServiceTest {
 		schulenWettbewerb.add(SchuleAPIModel.withKuerzel("12345").withAngemeldet(true));
 		schulenWettbewerb.add(SchuleAPIModel.withKuerzel("98765").withAngemeldet(false));
 
-		Mockito.when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID)))
+		when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID)))
 			.thenReturn(schulenWettbewerb);
 
 		Response responseKataloge = Response.ok(new ResponsePayload(MessagePayload.ok(), dataKataloge)).build();
 
-		Mockito.when(katalogeAdapter.findSchulen("12345,98765")).thenReturn(responseKataloge);
+		when(katalogeAdapter.findSchulen("12345,98765")).thenReturn(responseKataloge);
 
 		// Act
 		List<SchuleAPIModel> result = service.findSchulenMitAnmeldeinfo(LEHRER_UUID);
@@ -400,13 +405,7 @@ public class SchulenAnmeldeinfoServiceTest {
 			assertEquals(true, schule.aktuellAngemeldet());
 		}
 
-		DataInconsistencyRegistered event = service.getDataInconsistencyRegistered();
-		assertNotNull(event);
-		assertNotNull(event.occuredOn());
-		assertEquals(
-			"Nicht alle Schulen auf beiden Seiten gefunden: Kataloge: [SchuleAPIModel [kuerzel=98765]], Lehrer: [SchuleAPIModel [kuerzel=12345], SchuleAPIModel [kuerzel=98765]]",
-			event.message());
-		assertEquals("DataInconsistencyRegistered", event.typeName());
+		verify(eventDelegate).fireDataInconsistencyEvent(any(), any());
 
 	}
 
@@ -429,17 +428,17 @@ public class SchulenAnmeldeinfoServiceTest {
 		Response katalogeResponse = Response
 			.ok(new ResponsePayload(MessagePayload.ok(), Arrays.asList(new Map[] { schuleKatalogeMap }))).build();
 
-		Mockito.when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID)))
+		when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID)))
 			.thenReturn(Arrays.asList(new SchuleAPIModel[] { SchuleAPIModel.withKuerzel("12345").withAngemeldet(true) }));
-		Mockito.when(schuleDetailsService.ermittleSchuldetails(new Identifier("12345"), new Identifier(LEHRER_UUID)))
+		when(schuleDetailsService.ermittleSchuldetails(new Identifier("12345"), new Identifier(LEHRER_UUID)))
 			.thenReturn(schuleDetails);
 
-		Mockito.when(katalogeAdapter.findSchulen("12345")).thenReturn(katalogeResponse);
+		when(katalogeAdapter.findSchulen("12345")).thenReturn(katalogeResponse);
 
-		Mockito.when(auswertungsmodusInfoService.ermittleAuswertungsmodusFuerTeilnahme(any()))
+		when(auswertungsmodusInfoService.ermittleAuswertungsmodusFuerTeilnahme(any()))
 			.thenReturn(Auswertungsmodus.INDIFFERENT);
 
-		Mockito.when(aktuelleTeilnahmeService.aktuelleTeilnahme("12345")).thenReturn(Optional.of(
+		when(aktuelleTeilnahmeService.aktuelleTeilnahme("12345")).thenReturn(Optional.of(
 			new Schulteilnahme(new WettbewerbID(2020), new Identifier("12345"), "Irgendein Name", new Identifier(LEHRER_UUID))));
 
 		// Act
@@ -467,9 +466,9 @@ public class SchulenAnmeldeinfoServiceTest {
 		Response katalogeResponse = Response
 			.status(400).entity(ResponsePayload.messageOnly(MessagePayload.error("bad request"))).build();
 
-		Mockito.when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID)))
+		when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID)))
 			.thenReturn(new ArrayList<>());
-		Mockito.when(katalogeAdapter.findSchulen("12345")).thenReturn(katalogeResponse);
+		when(katalogeAdapter.findSchulen("12345")).thenReturn(katalogeResponse);
 
 		// Act
 		try {
@@ -484,6 +483,37 @@ public class SchulenAnmeldeinfoServiceTest {
 	}
 
 	@Test
+	void should_getSchuleWithWettbewerbDetailsThrowAccessDeniedException_when_keineBerechtigung() {
+
+		// Arrange
+		String schulkuerzel = "bjkasgca";
+
+		Identifier lehrerId = new Identifier(LEHRER_UUID);
+		Identifier teilnahmeId = new Identifier(schulkuerzel);
+
+		when(authorizationService.checkPermissionForTeilnahmenummerAndReturnRolle(lehrerId, teilnahmeId,
+			"[getSchuleDetails - " + schulkuerzel + "]"))
+				.thenThrow(new AccessDeniedException());
+
+		// Act
+		try {
+
+			service.getSchuleWithWettbewerbsdetails(schulkuerzel, LEHRER_UUID);
+			fail("keine AccessDeniedException");
+		} catch (AccessDeniedException e) {
+
+			// das Event wird vom authorizationService erzeugt.
+			verify(eventDelegate, never()).fireSecurityEvent(any(), any());
+			verify(katalogeAdapter, never()).findSchulen(schulkuerzel);
+			verify(schuleDetailsService, never()).ermittleSchuldetails(teilnahmeId,
+				lehrerId);
+			verify(aktuelleTeilnahmeService, never()).aktuelleTeilnahme(schulkuerzel);
+			verify(auswertungsmodusInfoService, never()).ermittleAuswertungsmodusFuerTeilnahme(any());
+		}
+
+	}
+
+	@Test
 	void should_getSchuleWithWettbewerbsdetailsReturnIncompleteObject_when_KatalogeintragFehlt() {
 
 		// Arrange
@@ -492,12 +522,12 @@ public class SchulenAnmeldeinfoServiceTest {
 		SchuleDetails schuleDetails = new SchuleDetails("12345").withAngemeldetDurch(new Kollege("ghagdqg", "John Doe"))
 			.withAnzahlTeilnahmen(1).withKollegen(kollegen).withNameUrkunde("Schule 12345");
 
-		Mockito.when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID)))
+		when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID)))
 			.thenReturn(Arrays.asList(new SchuleAPIModel[] { SchuleAPIModel.withKuerzel("12345").withAngemeldet(true) }));
-		Mockito.when(schuleDetailsService.ermittleSchuldetails(new Identifier("12345"), new Identifier(LEHRER_UUID)))
+		when(schuleDetailsService.ermittleSchuldetails(new Identifier("12345"), new Identifier(LEHRER_UUID)))
 			.thenReturn(schuleDetails);
 
-		Mockito.when(aktuelleTeilnahmeService.aktuelleTeilnahme("12345")).thenReturn(Optional.empty());
+		when(aktuelleTeilnahmeService.aktuelleTeilnahme("12345")).thenReturn(Optional.empty());
 
 		Map<String, Object> schuleKatalogeMap = new HashMap<>();
 
@@ -509,7 +539,7 @@ public class SchulenAnmeldeinfoServiceTest {
 		Response katalogeResponse = Response
 			.ok(new ResponsePayload(MessagePayload.ok(), new ArrayList<>())).build();
 
-		Mockito.when(katalogeAdapter.findSchulen("12345")).thenReturn(katalogeResponse);
+		when(katalogeAdapter.findSchulen("12345")).thenReturn(katalogeResponse);
 
 		// Act
 		SchuleAPIModel schule = service.getSchuleWithWettbewerbsdetails("12345", LEHRER_UUID);

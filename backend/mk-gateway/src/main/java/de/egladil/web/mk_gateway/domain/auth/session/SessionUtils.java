@@ -11,13 +11,12 @@ import java.nio.charset.Charset;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
-import javax.ws.rs.core.NewCookie;
-
 import org.apache.commons.io.IOUtils;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
+import jakarta.ws.rs.core.NewCookie;
 
 /**
  * SessionUtils
@@ -67,20 +66,16 @@ public final class SessionUtils {
 	public static NewCookie createSessionCookie(final String cookieName, final String sessionId) {
 
 		// @formatter:off
-		NewCookie sessionCookie = new NewCookie(cookieName,
-			sessionId,
-			"/", // path
-			null, // domain muss null sein, wird vom Browser anhand des restlichen Responses abgeleitet. Sonst wird das Cookie nicht gesetzt.
-			1,  // version
-			null, // comment
-			7200, // expires (minutes)
-			null,
-			true, // secure
-			true  // httpOnly
-			);
+		return new NewCookie.Builder(cookieName)
+				.value(sessionId)
+				.path("/")
+				.domain(null)
+				.comment(null)
+				.maxAge(360000) // maximum age of the cookie in seconds
+				.httpOnly(true)
+				.secure(true).build();
 		// @formatter:on
 
-		return sessionCookie;
 	}
 
 }

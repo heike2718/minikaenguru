@@ -1,16 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '../reducers';
 import { environment } from '../../environments/environment';
 
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
 import { UrkundenService } from './urkunden.service';
-import { Kind, DownloadFacade, TeilnahmeIdentifierAktuellerWettbewerb } from '@minikaenguru-ws/common-components';
-import * as UrkundenActions from './+state/urkunden.actions';
-import * as UrkundenSelecors from './+state/urkunden.selectors';
+import {  DownloadFacade, TeilnahmeIdentifierAktuellerWettbewerb } from '@minikaenguru-ws/common-components';
 import { UrkundenauftragEinzelkind, getLabelFarbe, getLabelUrkundenart, Farbschema, Urkundenart, UrkundeDateModel, UrkundenauftragSchule } from './urkunden.model';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { NgbDate, NgbDateStruct, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { KinderFacade } from '../kinder/kinder.facade';
@@ -24,16 +19,13 @@ import { LehrerFacade } from '../lehrer/lehrer.facade';
 })
 export class UrkundenFacade {
 
-	public loading$: Observable<boolean> = this.store.select(UrkundenSelecors.loading);
-
 	public warntext: string;
 
 	private teilnahmeIdentifier?: TeilnahmeIdentifierAktuellerWettbewerb;
 
 	private selectedSchule?: Schule;
 
-	constructor(private store: Store<AppState>,
-		private urkundenService: UrkundenService,
+	constructor(private urkundenService: UrkundenService,
 		private kinderFacade: KinderFacade,
 		private lehrerFacace: LehrerFacade,
 		private downloadFacade: DownloadFacade,
@@ -73,8 +65,6 @@ export class UrkundenFacade {
 
 	public downloadUrkunde(auftrag: UrkundenauftragEinzelkind): void {
 
-		this.store.dispatch(UrkundenActions.startLoading());
-
 		const defaultFilename = 'teilnahmeurkunde_e0f2467a.pdf';
 
 
@@ -82,18 +72,15 @@ export class UrkundenFacade {
 			take(1)
 		).subscribe(
 			blob => {
-				this.downloadFacade.saveAs(blob, defaultFilename);
-				this.store.dispatch(UrkundenActions.downloadFinished());
+				this.downloadFacade.saveAs(blob, defaultFilename);				
 			},
 			(error => {
-				this.store.dispatch(UrkundenActions.downloadFinished());
 				this.errorHandler.handleError(error);
 			})
 		);
 	}
 
 	public downloadAuswertung(auftrag: UrkundenauftragSchule): void {
-		this.store.dispatch(UrkundenActions.startLoading());
 
 		const defaultFilename = 'schulauswertung_e0f2467a.pdf';
 
@@ -102,10 +89,11 @@ export class UrkundenFacade {
 		).subscribe(
 			blob => {
 				this.downloadFacade.saveAs(blob, defaultFilename);
-				this.store.dispatch(UrkundenActions.downloadFinished());
+				if (this.selectedSchule) {
+					this.lehrerFacace.loadLehrer();
+				}				
 			},
 			(error => {
-				this.store.dispatch(UrkundenActions.downloadFinished());
 				this.errorHandler.handleError(error);
 			})
 		);
@@ -161,7 +149,7 @@ export class UrkundenFacade {
 
 	public resetState(): void {
 
-		this.store.dispatch(UrkundenActions.resetModule());
+		// hat sich erledigt
 
 	}
 
@@ -176,7 +164,7 @@ export class UrkundenFacade {
 		}
 
 		return 'Bitte verwenden Sie diese Funktion nur, um Urkunden für einzelne Kinder zu korrigieren.'
-			+ ' Alle Urkunden für Ihre Schule können Sie zusammen mit einer Auswertungsseite in einem einzigen Schritt in der Ansicht "Klassen" (Klick auf "Klassenliste") erstellen.';
+			+ ' Alle Urkunden für Ihre Schule können Sie zusammen mit einer Auswertungsseite in einem einzigen Schritt in der Ansicht "Klassen" (Klick auf "Klassen") erstellen.';
 	}
 
 

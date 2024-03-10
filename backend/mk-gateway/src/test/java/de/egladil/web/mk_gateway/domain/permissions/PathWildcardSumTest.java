@@ -7,7 +7,7 @@ package de.egladil.web.mk_gateway.domain.permissions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import javax.ws.rs.HttpMethod;
+import jakarta.ws.rs.HttpMethod;
 
 import org.junit.jupiter.api.Test;
 

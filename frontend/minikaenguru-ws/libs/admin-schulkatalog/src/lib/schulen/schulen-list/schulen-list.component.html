@@ -1,0 +1,16 @@
+<div class="mkv-container mt-1">
+	<div class="col-12">
+		<h2>Schulen</h2>
+		<p *ngIf="devMode">schulen-list.component</p>
+		<ng-container *ngIf="this.katalogFacade.schulen$ | async as schulen">
+
+			<p *ngIf="showAnzahlTreffer()">Anzahl Treffer: {{anzahlTreffer}}</p>
+
+			<div *ngIf="schulen.length > 0" class="row">
+				<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let schule of schulen">
+					<mka-schule [schule]="schule"></mka-schule>
+				</div>
+			</div>
+		</ng-container>
+	</div>	
+</div>

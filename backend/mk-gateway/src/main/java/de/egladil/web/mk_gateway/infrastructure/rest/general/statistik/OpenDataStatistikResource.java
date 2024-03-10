@@ -12,16 +12,16 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
@@ -47,6 +47,7 @@ import de.egladil.web.mk_gateway.domain.statistik.api.ProzentrangAPIModel;
 import de.egladil.web.mk_gateway.domain.statistik.functions.StringPunkteMapper;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * OpenDataStatistikResource
@@ -67,12 +68,17 @@ public class OpenDataStatistikResource {
 	@Inject
 	ProzentrangEinzelpunktzahlService prozentrangService;
 
+	@Inject
+	DevDelayService delayService;
+
 	@GET
 	@Produces({ MediaType.APPLICATION_XML })
 	@Path("{jahr}/IKID/xml")
 	public Response getGesamtstatistikIKidsFuerJahr(@PathParam(value = "jahr") final String jahr) {
 
 		Response checkResponse = this.checkJahr(jahr, "/open-data/statistik/{jahr}/IKID/xml");
+
+		this.delayService.pause();
 
 		if (checkResponse.getStatus() != 200) {
 
@@ -89,6 +95,8 @@ public class OpenDataStatistikResource {
 	@Produces({ MediaType.APPLICATION_XML })
 	@Path("{jahr}/EINS/xml")
 	public Response getGesamtstatistikIKlasse1FuerJahr(@PathParam(value = "jahr") final String jahr) {
+
+		this.delayService.pause();
 
 		Response checkResponse = this.checkJahr(jahr, "/open-data/statistik/{jahr}/EINS/xml");
 
@@ -108,6 +116,8 @@ public class OpenDataStatistikResource {
 	@Path("{jahr}/ZWEI/xml")
 	public Response getGesamtstatistikIKlasse2FuerJahr(@PathParam(value = "jahr") final String jahr) {
 
+		this.delayService.pause();
+
 		Response checkResponse = this.checkJahr(jahr, "/open-data/statistik/{jahr}/ZWEI/xml");
 
 		if (checkResponse.getStatus() != 200) {
@@ -125,6 +135,8 @@ public class OpenDataStatistikResource {
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM })
 	@Path("{jahr}/pdf")
 	public Response downloadGesamtstatistikFuerJahr(@PathParam(value = "jahr") final String jahr) {
+
+		this.delayService.pause();
 
 		Response checkJahrResponse = this.checkJahr(jahr, "/open-data/statistik/{jahr}/pdf");
 
@@ -145,6 +157,8 @@ public class OpenDataStatistikResource {
 	@Path("{jahr}/mediane")
 	public Response getMediane(@PathParam(
 		value = "jahr") final String jahr) {
+
+		this.delayService.pause();
 
 		Response checkResponse = this.checkJahr(jahr, "/open-data/statistik/{jahr}/mediane");
 
@@ -174,6 +188,8 @@ public class OpenDataStatistikResource {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("anmeldungen")
 	public Response getAnmeldungenUndBeteiligungenAktuellerWettbewerb() {
+
+		this.delayService.pause();
 
 		AnmeldungenAPIModel anmeldungen = statistikWettbewerbService.berechneAnmeldungsstatistikAktuellerWettbewerb();
 
@@ -210,6 +226,8 @@ public class OpenDataStatistikResource {
 	@Path("teilnahmen")
 	public Response getAnmeldungenUndBeteiligungenNachWettbewerbsjahr(@QueryParam(value = "jahr") final Integer jahr) {
 
+		this.delayService.pause();
+
 		Response checkResponse = this.checkJahr(jahr.toString(), "/open-data/statistik/teilnahmen/{jahr}");
 
 		if (checkResponse.getStatus() != 200) {
@@ -228,6 +246,8 @@ public class OpenDataStatistikResource {
 	public Response getProzentrang(@QueryParam(value = "jahr") final String jahr, @QueryParam(
 		value = "klasse") final String klasse, @QueryParam(
 			value = "punkte") final String punkte) {
+
+		this.delayService.pause();
 
 		String fehlertext = "Die Anfrage ist ungültig: jahr muss eine Zahl ab 2010 sein, Klasse muss eins von IKID (0), EINS (1) oder ZWEI (2) sein, Punkte werden in der Form 56,5 erwartet. Beispiel  /open-data/statistik/prozentrang?jahr=2019&klasse=ZWEI&punkte=56,5";
 

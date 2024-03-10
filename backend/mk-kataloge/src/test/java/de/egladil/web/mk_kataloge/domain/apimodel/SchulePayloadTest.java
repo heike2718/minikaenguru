@@ -10,9 +10,12 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.quarkus.test.junit.QuarkusTest;
+
 /**
  * SchulePayloadTest
  */
+@QuarkusTest
 public class SchulePayloadTest {
 
 	@Test

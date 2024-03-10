@@ -13,8 +13,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.ws.rs.HttpMethod;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.HttpMethod;
 
 import de.egladil.web.mk_gateway.domain.permissions.PathWildcardSum;
 import de.egladil.web.mk_gateway.domain.permissions.PathWithMethod;

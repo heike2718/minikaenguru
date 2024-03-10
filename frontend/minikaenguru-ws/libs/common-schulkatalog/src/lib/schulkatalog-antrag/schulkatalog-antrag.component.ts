@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, AbstractControl, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, AbstractControl, Validators } from '@angular/forms';
 import { InternalFacade } from '../application-services/internal.facade';
 import { SchulkatalogAntrag } from '../domain/entities';
 import { emailValidator, landValidator } from '@minikaenguru-ws/common-components';
@@ -15,7 +15,7 @@ import { SchulkatalogConfigService, SchulkatalogConfig } from '../configuration/
 export class SchulkatalogAntragComponent implements OnInit, OnDestroy {
 
 
-	antragForm!: FormGroup;
+	antragForm!: UntypedFormGroup;
 
 	email!: AbstractControl;
 
@@ -39,7 +39,7 @@ export class SchulkatalogAntragComponent implements OnInit, OnDestroy {
 
 	private katalogantragSuccessSubscription: Subscription = new Subscription();
 
-	constructor(@Inject(SchulkatalogConfigService) private config: SchulkatalogConfig, private fb: FormBuilder, private internalFacade: InternalFacade, private router: Router) { }
+	constructor(@Inject(SchulkatalogConfigService) private config: SchulkatalogConfig, private fb: UntypedFormBuilder, private internalFacade: InternalFacade, private router: Router) { }
 
 	ngOnInit(): void {
 

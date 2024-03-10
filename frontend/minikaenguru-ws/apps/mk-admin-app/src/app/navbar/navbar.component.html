@@ -1,34 +1,35 @@
-<nav class="navbar navbar-expand-md navbar-dark navbar-static-top bg-dark header-nav">
-	<button class="navbar-toggler d-lg-none" id="navbarToggler" type="button" (click)="collapsed = !collapsed"
-		[attr.aria-expanded]="!collapsed" aria-controls="navbarsExampleDefault" aria-label="Toggle navigation">
-		<span class="navbar-toggler-icon"></span>
-	</button>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	<div class="container-fluid">
+		<button class="navbar-toggler d-lg-none" id="navbarToggler" type="button" (click)="collapsed = !collapsed"
+			[attr.aria-expanded]="!collapsed" aria-controls="navbarsExampleDefault" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div id="navbarSupportedContent" class="collapse navbar-collapse" [class.collapse]="collapsed"
+			(window:resize)="collapsed = true">
+			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+				<li routerLinkActive="active"><a routerLink="/" (click)="collapseNav()" class="nav-link"
+						title="Startseite">
+						<span class="fa fa-home fa-1x" aria-hidden="true"></span> MK-ADMIN ({{version}}) </a>
+				</li>
+			</ul>
+			<ul class="nav navbar-nav me-2">
+				<li class="nav-link" *ngIf="(user$ | async) as user">Moin,{{user.fullName}}</li>
 
-	<div id="navbarSupportedContent" class="collapse navbar-collapse" [class.collapse]="collapsed"
-		(window:resize)="collapsed = true">
-		<ul class="navbar-nav mr-auto">
+				<li *ngIf="isLoggedIn$ | async" routerLinkActive="active"><a routerLink="/dashboard"
+						(click)="collapseNav()" class="nav-link" title="Dashboard">
+						<span class="fa fa-puzzle-piece fa-1x" aria-hidden="true"></span> Dashboard </a>
+				</li>
 
-			<li routerLinkActive="active"><a routerLink="/" (click)="collapseNav()" class="nav-link" title="Startseite">
-					<span class="fa fa-home fa-1x" aria-hidden="true"></span> MK-ADMIN ({{version}}) </a></li>
+				<li *ngIf="isLoggedOut$ | async" routerLinkActive="active">
+					<a class="nav-link" (click)="login()"><span class="fa fa-sign-in fa-1x" aria-hidden="true"></span>
+						Einloggen <span class="sr-only">(current)</span></a>
+				</li>
 
-		</ul>
-
-		<ul class="nav navbar-nav navbar-right">
-			<li class="nav-link" *ngIf="(user$ | async) as user">Moin,{{user.fullName}}</li>
-
-			<li *ngIf="isLoggedIn$ | async" routerLinkActive="active"><a routerLink="/dashboard" (click)="collapseNav()"
-					class="nav-link" title="Dashboard">
-					<span class="fa fa-puzzle-piece fa-1x" aria-hidden="true"></span> Dashboard </a></li>
-
-			<li *ngIf="isLoggedOut$ | async" routerLinkActive="active">
-				<a class="nav-link" (click)="login()"><span class="fa fa-sign-in fa-1x" aria-hidden="true"></span>
-					Einloggen <span class="sr-only">(current)</span></a></li>
-
-			<li routerLinkActive="active" *ngIf="isLoggedIn$ | async">
-				<a class="nav-link" (click)="logout()"><span class="fa fa-sign-out fa-1x" aria-hidden="true"></span>
-					Ausloggen</a>
-			</li>
-		</ul>
-
+				<li routerLinkActive="active" *ngIf="isLoggedIn$ | async">
+					<a class="nav-link" (click)="logout()"><span class="fa fa-sign-out fa-1x" aria-hidden="true"></span>
+						Ausloggen</a>
+				</li>
+			</ul>
+		</div>
 	</div>
 </nav>

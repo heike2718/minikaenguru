@@ -18,6 +18,7 @@ import { CommonMessagesModule } from '@minikaenguru-ws/common-messages';
 import { CommonAuthModule } from '@minikaenguru-ws/common-auth';
 import { CommonLoggingModule } from '@minikaenguru-ws/common-logging';
 import { CommonComponentsModule } from '@minikaenguru-ws/common-components';
+import { AdminSchulkatalogModule } from '@minikaenguru-ws/admin-schulkatalog'
 
 import { NotFoundComponent } from './not-found/not-found.component';
 import { LandingComponent } from './landing/landing.component';
@@ -29,7 +30,6 @@ import { WettbewerbeModule } from './wettbewerbe/wettbewerbe.module';
 import { HttpClientModule } from '@angular/common/http';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { KatalogpflegeModule } from './katalogpflege/katalogpflege.module';
 import { AktuelleMeldungModule } from './aktuelle-meldung/aktuelle-meldung.module';
 import { VeranstalterModule } from './veranstalter/veranstalter.module';
 import { LayouttestsModule } from './layouttests/layouttests.module';
@@ -38,13 +38,13 @@ import { EventlogModule } from './eventlog/eventlog.module';
 import { SessionTimeoutComponent } from './session-timeout/session-timeout.component';
 import { MustertexteModule } from './mustertexte/mustertexte.module';
 import { NewsletterModule } from './newsletter/newsletter.module';
-import { VersandinfoProgressComponent } from './versandinfo-progress/versandinfo-progress.component';
 import { StoreDevModules } from './store-config/store-devtools';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UploadsModule } from './uploads/uploads.module';
 import { LoesungszettelModule } from './loesungszettel/loesungszettel.module';
 import { SharedModule } from './shared/shared.module';
 import { StatistikModule } from './statistik/statistik.module';
+import { VersandauftraegeModule } from './versandauftraege/versandauftraege.module';
 
 registerLocaleData(localeDe);
 
@@ -58,7 +58,6 @@ registerLocaleData(localeDe);
 		DashboardComponent,
 		NotAuthorizedComponent,
 		SessionTimeoutComponent,
-		VersandinfoProgressComponent,
 		],
 	imports: [
 		BrowserModule,
@@ -82,6 +81,7 @@ registerLocaleData(localeDe);
 			loginSuccessUrl: '/dashboard',
 			profileUrl: environment.profileUrl
 		}),
+		AdminSchulkatalogModule,
 		StoreModule.forRoot(reducers, {
 			metaReducers,
 			runtimeChecks: {
@@ -100,17 +100,21 @@ registerLocaleData(localeDe);
 		StoreDevModules,
 		AktuelleMeldungModule,
 		WettbewerbeModule,
-		KatalogpflegeModule,
+		AdminSchulkatalogModule.forRoot({
+			baseUrl: environment.apiUrl,
+			devmode: environment.envName === 'DEV'
+		}),
 		VeranstalterModule,
 		SchulteilnahmenModule,
 		EventlogModule,
 		MustertexteModule,
 		NewsletterModule,
+		VersandauftraegeModule,
 		UploadsModule,
 		LoesungszettelModule,
 		StatistikModule,
 		LayouttestsModule,
-		SharedModule,
+		SharedModule,		
 		AppRoutingModule, // <-- immer am Ende, damit die wildcard-route als letzte deklariert bleibt
 	],
 	providers: [

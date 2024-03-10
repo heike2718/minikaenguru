@@ -1,4 +1,4 @@
-import { Validator, NG_VALIDATORS, FormControl } from '@angular/forms'
+import { Validator, NG_VALIDATORS, UntypedFormControl } from '@angular/forms'
 import { Directive, OnInit, forwardRef, OnDestroy } from '@angular/core';
 import { KlassenFacade } from '../klassen.facade';
 import { ActivatedRoute } from '@angular/router';
@@ -52,7 +52,7 @@ export class KlasseNameValidatorDirective implements OnInit, OnDestroy, Validato
 
 	}
 
-	validate(c: FormControl) {
+	validate(c: UntypedFormControl) {
 
 		const name: string = c.value;
 

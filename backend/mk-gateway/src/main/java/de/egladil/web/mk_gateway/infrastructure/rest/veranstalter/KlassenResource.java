@@ -9,20 +9,20 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 
 import de.egladil.web.commons_validation.annotations.UuidString;
 import de.egladil.web.commons_validation.payload.MessagePayload;
@@ -35,6 +35,7 @@ import de.egladil.web.mk_gateway.domain.kinder.KlassenService;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseAPIModel;
 import de.egladil.web.mk_gateway.domain.kinder.api.KlasseRequestData;
 import de.egladil.web.mk_gateway.domain.klassenlisten.KlassenlisteImportService;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * KlassenResource
@@ -56,9 +57,14 @@ public class KlassenResource {
 	@Inject
 	KlassenlisteImportService klassenlisteImportService;
 
+	@Inject
+	DevDelayService delayService;
+
 	@GET
 	@Path("{schulkuerzel}")
 	public Response getKlassen(@PathParam(value = "schulkuerzel") @UuidString final String schulkuerzel) {
+
+		this.delayService.pause();
 
 		String lehrerUuid = securityContext.getUserPrincipal().getName();
 
@@ -70,6 +76,8 @@ public class KlassenResource {
 	@POST
 	@Path("duplikate")
 	public Response pruefeMehrfacherfassung(final KlasseRequestData data) {
+
+		this.delayService.pause();
 
 		String lehrerUuid = securityContext.getUserPrincipal().getName();
 
@@ -90,6 +98,8 @@ public class KlassenResource {
 	@POST
 	public Response klasseAnlegen(final KlasseRequestData data) {
 
+		this.delayService.pause();
+
 		String lehrerUuid = securityContext.getUserPrincipal().getName();
 
 		KlasseAPIModel klasse = this.klassenService.klasseAnlegen(data, lehrerUuid);
@@ -104,6 +114,8 @@ public class KlassenResource {
 
 	@PUT
 	public Response klasseAendern(final KlasseRequestData data) {
+
+		this.delayService.pause();
 
 		String lehrerUuid = securityContext.getUserPrincipal().getName();
 
@@ -121,6 +133,8 @@ public class KlassenResource {
 	@Path("{uuid}")
 	public Response klasseLoeschen(@PathParam(value = "uuid") final String uuid) {
 
+		this.delayService.pause();
+
 		String lehrerUuid = securityContext.getUserPrincipal().getName();
 
 		KlasseAPIModel geloeschteKlasse = this.klassenService.klasseLoeschen(uuid, lehrerUuid);
@@ -137,6 +151,8 @@ public class KlassenResource {
 	@Path("importreport/{uuid}")
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_JSON })
 	public Response downloadImportReport(@PathParam(value = "uuid") final String reportUuid) {
+
+		this.delayService.pause();
 
 		String lehrerUuid = securityContext.getUserPrincipal().getName();
 

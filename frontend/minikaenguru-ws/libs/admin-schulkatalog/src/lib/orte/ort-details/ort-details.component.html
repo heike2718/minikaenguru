@@ -1,0 +1,51 @@
+<div *ngIf="katalogFacade.ort$ | async as ort; else keinOrt">
+
+    <h1>{{ort.name}}</h1>
+    <p *ngIf="devMode">ort-details.component</p>
+    <p>{{ort.pfad}}</p>
+	<p>Kürzel: {{ort.kuerzel}}</p>
+    <p>Anzahl Schulen: {{ort.anzahlKinder}}</p>
+
+    <div *ngIf="ort.anzahlKinder > 25">
+        <div class="row ml-3">
+			<div class="col-xs-12 col-sm-12 col-md-1">
+				<label for="sucheInput">Schule:</label>
+			</div>
+			<div class="col-xs-12 col-sm-12 col-md-11">
+				<input id="sucheInput" type="text" name="sucheInput" placeholder="Teil des Schulnamen"
+					(keyup)="onKeyup($event)" [ngModel]="searchFormInputValue" />
+			</div>
+		</div>
+    </div>
+
+    <div *ngIf="katalogFacade.schulenGeladen$ | async">
+        <mka-schulen></mka-schulen>
+    </div>
+
+    <div class="d-none d-md-block">
+		<div class="btn-group d-flex" role="group">
+
+			<button class="btn btn-primary w-100 ml-1" title="neue Schule in {{ort.name}}" (click)="neueSchule()"><i class="fa fa-plus"
+					aria-hidden="true"></i>neue Schule</button>
+	
+			<button class="btn btn-primary w-100 ml-1" (click)="editOrt()" >Ort umbenennen</button>
+	
+			<button class="btn btn-primary w-100 ml-1" (click)="gotoSchulkatalog()"><i class="fa fa-arrow-left"
+					aria-hidden="true"></i>Schulkatalog</button>
+		</div>	
+	</div>
+	
+	<div class="row d-md-none d-lg-none d-xl-none mt-3 mr-3">
+		<div class="btn-group d-inline" role="group">
+			<button class="btn btn-secondary w-75 m-3" title="neue Schule in {{ort.name}}" (click)="neueSchule()"><i class="fa fa-plus"
+                aria-hidden="true"></i>neue Schule</button>
+			<button class="btn btn-secondary w-75 m-3" (click)="editOrt()"> Ort umbenennen</button>
+			<button class="btn btn-secondary w-75 m-3" (click)="gotoSchulkatalog()" ><i class="fa fa-arrow-left"
+                aria-hidden="true"></i>Schulkatalog</button>
+		</div>
+	</div>
+</div>
+
+<ng-template #keinOrt>
+    <h1>kein Ort ausgewählt</h1>
+</ng-template>

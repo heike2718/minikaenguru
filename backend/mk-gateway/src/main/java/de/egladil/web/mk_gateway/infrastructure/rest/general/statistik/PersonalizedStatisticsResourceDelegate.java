@@ -4,16 +4,17 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.general.statistik;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.BadRequestException;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.BadRequestException;
 
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.statistik.StatistikAnonymisierteEinzelteilnahmeService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * PersonalizedStatisticsResourceDelegate
@@ -24,7 +25,12 @@ public class PersonalizedStatisticsResourceDelegate {
 	@Inject
 	StatistikAnonymisierteEinzelteilnahmeService statistikAnonymisierteEinzelteilnahmeService;
 
+	@Inject
+	DevDelayService delayService;
+
 	public DownloadData erstelleStatistikPDFEinzelteilnahme(@NotNull final String teilnahmeart, @NotNull final String teilnahmenummer, @NotNull final String jahr, @NotNull final String userUuid) {
+
+		this.delayService.pause();
 
 		WettbewerbID wettbewerbID = null;
 

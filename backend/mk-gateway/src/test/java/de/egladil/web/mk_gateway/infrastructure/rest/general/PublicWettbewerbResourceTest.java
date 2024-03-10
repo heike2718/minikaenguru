@@ -4,40 +4,42 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.general;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static io.restassured.RestAssured.given;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
-import javax.ws.rs.NotFoundException;
-
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
+import io.quarkus.test.common.http.TestHTTPEndpoint;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.InjectMock;
+import io.restassured.response.Response;
 
 /**
  * PublicWettbewerbResourceTest
  */
+@QuarkusTest
+@TestHTTPEndpoint(PublicWettbewerbResource.class)
 public class PublicWettbewerbResourceTest {
+
+	@InjectMock
+	WettbewerbService wettbewerbService;
 
 	@Test
 	void should_getAktuellenWettbewerbThrowNotFound_when_noWettbewerb() {
 
 		// Arrange
-		WettbewerbService wettbewerbService = Mockito.mock(WettbewerbService.class);
-		Mockito.when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.empty());
-
-		PublicWettbewerbResource resource = PublicWettbewerbResource.createForTest(wettbewerbService);
+		when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.empty());
 
 		// Act
-		try {
+		Response response = given()
+			.when().get("/aktueller");
 
-			resource.getAktuellenWettbewerb();
-			fail("keine NotFoundException");
-		} catch (NotFoundException e) {
-
-			// nüscht
-		}
+		// Assert
+		assertEquals(404, response.getStatusCode());
 
 	}
 

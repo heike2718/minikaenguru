@@ -9,10 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.HttpMethod;
-
 import de.egladil.web.mk_gateway.domain.permissions.PathWithMethod;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
+import jakarta.ws.rs.HttpMethod;
 
 /**
  * PermittedRolesForVeranstalterProvider
@@ -216,6 +215,22 @@ public final class PermittedRolesForVeranstalterProvider {
 
 			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
 			result.put(new PathWithMethod("/uploads/auswertung/*/*/*", HttpMethod.POST), rollen);
+		}
+
+		{
+
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
+			result.put((new PathWithMethod("/mja-api/aufgaben/*", HttpMethod.GET)),
+				rollen);
+
+		}
+
+		{
+
+			List<Rolle> rollen = Arrays.asList(new Rolle[] { Rolle.LEHRER });
+			result.put((new PathWithMethod("/feedback", HttpMethod.POST)),
+				rollen);
+
 		}
 
 		return result;

@@ -7,15 +7,16 @@ package de.egladil.web.mk_gateway.infrastructure.cdi;
 import java.io.File;
 import java.io.IOException;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
-
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.quarkus.runtime.StartupEvent;
+import io.quarkus.runtime.configuration.ConfigUtils;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
 
 /**
  * AppLifecycleBean
@@ -25,17 +26,61 @@ public class AppLifecycleBean {
 
 	private static final String NAME_DOWNLOAD_DIR = "unterlagen";
 
-	private static final String NAME_UPLOAD_DIR = "upload";
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(AppLifecycleBean.class);
 
 	@ConfigProperty(name = "path.external.files")
 	String pathExternalFiles;
 
+	@ConfigProperty(name = "quarkus.http.body-handler.uploads-directory")
+	String quarkusUploadsDir;
+
+	@ConfigProperty(name = "quarkus.http.cors.origins", defaultValue = "")
+	String corsAllowedOrigins;
+
+	@ConfigProperty(name = "quarkus.http.root-path")
+	String rootPath;
+
+	@ConfigProperty(name = "quarkus.http.port")
+	String port;
+
+	@ConfigProperty(name = "quarkus.datasource.jdbc.url")
+	String jdbcUrl;
+
+	@ConfigProperty(name = "quarkus.rest-client.\"de.egladil.web.mk_gateway.infrastructure.restclient.FilescannerRestClient\".url")
+	String filescannerUrl;
+
+	@ConfigProperty(name = "quarkus.rest-client.\"de.egladil.web.mk_gateway.domain.auth.client.InitAccessTokenRestClient\".url")
+	String initAccesstokenUrl;
+
+	@ConfigProperty(
+		name = "quarkus.rest-client.\"de.egladil.web.mk_gateway.domain.auth.session.tokens.TokenExchangeRestClient\".url")
+	String tokenExchangeRestClientUrl;
+
+	@ConfigProperty(name = "quarkus.rest-client.\"de.egladil.web.mk_gateway.infrastructure.restclient.MkKatalogeRestClient\".url")
+	String katalogeUrl;
+
+	@ConfigProperty(name = "newsletterversand.cron.expr")
+	String newsletterversandCronExpression;
+
+	@ConfigProperty(name = "quarkus.application.version")
+	String version;
+
 	void onStartup(@Observes final StartupEvent ev) {
 
+		LOGGER.info(" ===========> Version {} of the application is starting with profiles {}", version,
+			StringUtils.join(ConfigUtils.getProfiles()));
+
+		LOGGER.info(" ===========>  newsletterversandCron={}", newsletterversandCronExpression);
+		LOGGER.info(" ===========>  filescannerUrl={}", filescannerUrl);
+		LOGGER.info(" ===========>  initAccesstokenUrl={}", initAccesstokenUrl);
+		LOGGER.info(" ===========>  tokenExchangeRestClientUrl={}", tokenExchangeRestClientUrl);
+		LOGGER.info(" ===========>  katalogeUrl={}", katalogeUrl);
+		LOGGER.info(" ===========>  jdbcUrl={}", jdbcUrl);
 		LOGGER.info(" ===========>  the download dir is {}", getPathDownloadDir());
-		LOGGER.info(" ===========>  the upload dir is {}", getPathUploadDir());
+		LOGGER.info(" ===========>  the upload dir is {}", quarkusUploadsDir);
+		LOGGER.info(" ===========>  quarkus.http.cors.origins={}", corsAllowedOrigins);
+		LOGGER.info(" ===========>  quarkus.http.root-path={}", rootPath);
+		LOGGER.info(" ===========>  quarkus.http.port={}", port);
 
 	}
 
@@ -59,24 +104,24 @@ public class AppLifecycleBean {
 		return result;
 	}
 
-	private String getPathUploadDir() {
-
-		String result = pathExternalFiles + File.separator + NAME_UPLOAD_DIR;
-
-		File uploadDir = new File(result);
-
-		if (!uploadDir.exists()) {
-
-			try {
-
-				FileUtils.forceMkdir(uploadDir);
-			} catch (IOException e) {
-
-				LOGGER.error("Verzeichnis {} konnte nicht ereugt werden: {}", e.getMessage());
-			}
-		}
-
-		return result;
-	}
+	// private String getPathUploadDir() {
+	//
+	// String result = pathExternalFiles + File.separator + NAME_UPLOAD_DIR;
+	//
+	// File uploadDir = new File(result);
+	//
+	// if (!uploadDir.exists()) {
+	//
+	// try {
+	//
+	// FileUtils.forceMkdir(uploadDir);
+	// } catch (IOException e) {
+	//
+	// LOGGER.error("Verzeichnis {} konnte nicht ereugt werden: {}", e.getMessage());
+	// }
+	// }
+	//
+	// return result;
+	// }
 
 }

@@ -57,6 +57,7 @@ export class KatalogItemsSucheComponent implements OnInit, OnDestroy {
 	private startSearch(term: string): void {
 
 		this.schulkatalogFacade.startSearch(term, this.selectedKatalogtyp, this.selectedKatalogItem);
+		this.searchTerm.next('');
 	}
 
 	ngOnDestroy() {

@@ -14,11 +14,11 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import javax.ws.rs.NotFoundException;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.NotFoundException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -98,13 +98,10 @@ public class KinderServiceImpl implements KinderService {
 	@Inject
 	DomainEventHandler domainEventHandler;
 
+	@Inject
+	LoggableEventDelegate eventDelegate;
+
 	private WettbewerbID wettbewerbID;
-
-	private KindCreated kindCreated;
-
-	private KindChanged kindChanged;
-
-	private KindDeleted kindDeleted;
 
 	public static KinderServiceImpl createForTest(final AuthorizationService authService, final KinderRepository kinderRepository, final TeilnahmenRepository teilnahmenRepository, final VeranstalterRepository veranstalterRepository, final WettbewerbService wettbewerbService, final OnlineLoesungszettelService loesungszettelService, final KlassenRepository klassenRepository) {
 
@@ -287,14 +284,14 @@ public class KinderServiceImpl implements KinderService {
 			String msg = "Schulkind wird ohne landkuerzel angelegt: " + daten.logData();
 			LOG.warn(msg);
 
-			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
+			eventDelegate.fireDataInconsistencyEvent(msg, domainEventHandler);
 		}
 
 		Kind gespeichertesKind = kinderRepository.addKind(kind);
 
 		KindAPIModel result = KindAPIModel.createFromKind(gespeichertesKind, Optional.empty());
 
-		kindCreated = (KindCreated) new KindCreated(veranstalterUuid)
+		KindCreated kindCreated = (KindCreated) new KindCreated(veranstalterUuid)
 			.withKindID(result.uuid())
 			.withKlassenstufe(gespeichertesKind.klassenstufe())
 			.withSprache(gespeichertesKind.sprache())
@@ -340,7 +337,7 @@ public class KinderServiceImpl implements KinderService {
 				Kind gespeichertesKind = kinderRepository.addKind(kind);
 				result.add(gespeichertesKind);
 
-				kindCreated = (KindCreated) new KindCreated().withKindID(gespeichertesKind.identifier().identifier())
+				KindCreated kindCreated = (KindCreated) new KindCreated().withKindID(gespeichertesKind.identifier().identifier())
 					.withKlasseID(gespeichertesKind.klasseID().identifier())
 					.withKlassenstufe(gespeichertesKind.klassenstufe())
 					.withSprache(gespeichertesKind.sprache())
@@ -399,7 +396,7 @@ public class KinderServiceImpl implements KinderService {
 				+ kind.landkuerzel();
 			LOG.warn(msg);
 
-			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
+			eventDelegate.fireDataInconsistencyEvent(msg, domainEventHandler);
 		}
 
 		boolean changed = this.kinderRepository.changeKind(geaendertesKind);
@@ -415,7 +412,7 @@ public class KinderServiceImpl implements KinderService {
 			String loesungszettelID = geaendertesKind.loesungszettelID() == null ? null
 				: geaendertesKind.loesungszettelID().identifier();
 
-			kindChanged = (KindChanged) new KindChanged(veranstalterUuid)
+			KindChanged kindChanged = (KindChanged) new KindChanged(veranstalterUuid)
 				.withKlassenstufe(geaendertesKind.klassenstufe())
 				.withSprache(geaendertesKind.sprache())
 				.withTeilnahmenummer(geaendertesKind.teilnahmeIdentifier().teilnahmenummer())
@@ -484,7 +481,7 @@ public class KinderServiceImpl implements KinderService {
 
 		if (removed) {
 
-			kindDeleted = (KindDeleted) new KindDeleted(veranstalterUuid)
+			KindDeleted kindDeleted = (KindDeleted) new KindDeleted(veranstalterUuid)
 				.withKindID(kind.identifier().identifier())
 				.withKlassenstufe(kind.klassenstufe())
 				.withSprache(kind.sprache())
@@ -610,7 +607,7 @@ public class KinderServiceImpl implements KinderService {
 			String msg = this.getClass().getSimpleName() + "." + callingMethod + "(...): " + "Veranstalter mit UUID="
 				+ veranstalterUuid + " ist nicht zum aktuellen Wettbewerb (" + wettbewerbID + ") angemeldet";
 
-			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
+			eventDelegate.fireDataInconsistencyEvent(msg, domainEventHandler);
 			throw new NotFoundException(
 				msg);
 		}
@@ -683,11 +680,6 @@ public class KinderServiceImpl implements KinderService {
 	// }
 	// }
 	// }
-
-	KindCreated getKindCreated() {
-
-		return kindCreated;
-	}
 
 	@Override
 	public WettbewerbID getWettbewerbID() {

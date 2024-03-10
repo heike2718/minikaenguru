@@ -4,12 +4,13 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.general;
 
-import javax.enterprise.context.RequestScoped;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * VersionResource
@@ -28,7 +30,7 @@ public class VersionResource {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(VersionResource.class);
 
-	@ConfigProperty(name = "quarkus.application.version")
+	@ConfigProperty(name = "quarkus.application.version", defaultValue = "")
 	String version;
 
 	@ConfigProperty(name = "env")
@@ -37,8 +39,13 @@ public class VersionResource {
 	@ConfigProperty(name = "stage")
 	String stage;
 
+	@Inject
+	DevDelayService delayService;
+
 	@GET
 	public Response getVersion() {
+
+		this.delayService.pause();
 
 		String message = "MkGatewayApp running version " + version + " on stage " + stage + " and env " + env;
 

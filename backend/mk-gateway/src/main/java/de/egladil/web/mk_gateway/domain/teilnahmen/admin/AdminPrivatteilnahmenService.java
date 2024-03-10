@@ -7,9 +7,6 @@ package de.egladil.web.mk_gateway.domain.teilnahmen.admin;
 import java.util.List;
 import java.util.Optional;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
 import de.egladil.web.mk_gateway.domain.statistik.AnonymisierteTeilnahmenService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.AktuelleTeilnahmeService;
@@ -17,6 +14,8 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Privatteilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.AnonymisierteTeilnahmeAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.PrivatteilnahmeAPIModel;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 /**
  * AdminPrivatteilnahmenService
@@ -42,10 +41,10 @@ public class AdminPrivatteilnahmenService {
 		List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = anonymisierteTeilnahmenService
 			.loadAnonymisierteTeilnahmen(teilnahmenummer, userUuid);
 
-		if (anonymisierteTeilnahmen.isEmpty()) {
-
-			return Optional.empty();
-		}
+		// if (anonymisierteTeilnahmen.isEmpty()) {
+		//
+		// return Optional.empty();
+		// }
 
 		PrivatteilnahmeAdminOverview result = new PrivatteilnahmeAdminOverview().withTeilnahmen(anonymisierteTeilnahmen);
 

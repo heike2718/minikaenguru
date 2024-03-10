@@ -4,7 +4,7 @@ import { AppState } from '../reducers';
 import * as NewsletterActions from './+state/newsletter.actions';
 import * as NewsletterSelectors from './+state/newsletter.selectors';
 import { Observable, timer, Subject } from 'rxjs';
-import { Newsletter, NewsletterVersandauftrag, Versandinfo, initialNewsletterEditorModel } from './newsletter.model';
+import { Newsletter, NewsletterVersandauftrag, Versandauftrag, initialNewsletterEditorModel } from './../shared/newsletter-versandauftrage.model';
 import { NewsletterService } from './newsletter.service';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
 import { Router } from '@angular/router';
@@ -25,7 +25,7 @@ export class NewsletterFacade {
 	public newsletters$: Observable<Newsletter[]> = this.store.select(NewsletterSelectors.newsletters);
 	public newslettersLoaded$: Observable<boolean> = this.store.select(NewsletterSelectors.newslettersLoaded);
 	public selectedNewsletter$: Observable<Newsletter | undefined> = this.store.select(NewsletterSelectors.selectedNewsletter);
-	public versandinfo$: Observable<Versandinfo | undefined> = this.store.select(NewsletterSelectors.versandinfo);
+	public versandinfo$: Observable<Versandauftrag | undefined> = this.store.select(NewsletterSelectors.versandinfo);
 
 	public empfaengertypen: string[] = ['', 'TEST', 'ALLE', 'LEHRER', 'PRIVATVERANSTALTER'];
 
@@ -137,77 +137,5 @@ export class NewsletterFacade {
 			})
 
 		);
-	}
-
-	public scheduleMailversand(auftrag: NewsletterVersandauftrag): void {
-
-		this.store.dispatch(NewsletterActions.startBackendCall());
-
-		this.newsletterService.scheduleMailversand(auftrag).subscribe(
-
-			responsePayload => {			
-
-				if (responsePayload.data) {
-					const versandinfo = responsePayload.data;
-					this.store.dispatch(NewsletterActions.mailversandScheduled({ versandinfo: versandinfo }));
-					this.messageService.showMessage(responsePayload.message);
-				
-					if (responsePayload.message.level === 'INFO') {
-						this.startPollVersandinfo(versandinfo);
-					}
-				}				
-			},
-			(error => {
-				this.store.dispatch(NewsletterActions.backendCallFinishedWithError());
-				this.errorHandler.handleError(error);
-			})
-
-		);
-	}
-
-	public startPollVersandinfo(versandinfo: Versandinfo): void {
-
-		const optVersandinfo: Observable<Versandinfo> = timer(1, 10000).pipe(
-			switchMap(() => this.newsletterService.getStatusNewsletterversand(versandinfo)),
-			retry(),
-			share(),
-			takeUntil(this.stopPolling)
-		);
-
-		optVersandinfo.subscribe(
-			info => {
-				this.store.dispatch(NewsletterActions.versandinfoAktualisiert({ versandinfo: info }));
-
-				if (!info) {
-					this.propagateVersandBeendet(undefined);
-				} else {
-					if (info.versandBeendetAm) {
-						this.propagateVersandBeendet(info.versandBeendetAm);
-					}
-				}
-			},
-			(error => {
-				this.stopPollVersandinfo();
-				this.errorHandler.handleError(error);
-			})
-		);
-	}
-
-	private propagateVersandBeendet(am: string | undefined): void {
-
-		this.stopPollVersandinfo();
-
-		if (am) {
-			this.messageService.info('Mailversand beendet ' + am);
-		} else {
-			this.messageService.info('Mailversand beendet');
-		}
-
-		this.store.dispatch(NewsletterActions.versandBeendet());
-	}
-
-	public stopPollVersandinfo(): void {
-
-		this.stopPolling.next();
 	}
 };

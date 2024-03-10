@@ -38,6 +38,10 @@ const routes: Routes = [
 		component: SessionTimeoutComponent
 	},
 	{
+		path: 'feedback',
+		loadChildren: () => import('./feedback/feedback.module').then(m => m.FeedbackModule)
+	},
+	{
 		path: 'lehrer',
 		loadChildren: () => import('./lehrer/lehrer.module').then(m => m.LehrerModule)
 	},
@@ -83,7 +87,7 @@ const routes: Routes = [
 @NgModule({
 	imports: [RouterModule.forRoot(
 		routes,
-		{ enableTracing: false, useHash: true, relativeLinkResolution: 'legacy' })
+		{ enableTracing: false, useHash: true })
 	],
 	exports: [RouterModule]
 })

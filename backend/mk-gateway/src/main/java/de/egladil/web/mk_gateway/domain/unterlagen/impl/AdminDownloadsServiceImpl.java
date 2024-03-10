@@ -7,8 +7,8 @@ package de.egladil.web.mk_gateway.domain.unterlagen.impl;
 import java.util.List;
 import java.util.Optional;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
 import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Gruppeninfo;

@@ -5,13 +5,14 @@ import { Observable } from 'rxjs';
 import { SchuleAdminOverview } from './schulteilnahmen.model';
 import { map } from 'rxjs/operators';
 import { ResponsePayload } from '@minikaenguru-ws/common-messages';
+import { LoadingIndicatorService } from '@minikaenguru-ws/shared/util-mk';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class SchulteilnahmenService {
 
-	constructor(private http: HttpClient) { }
+	constructor(private http: HttpClient, private loadingIndicatorService: LoadingIndicatorService) { }
 
 
 
@@ -19,10 +20,12 @@ export class SchulteilnahmenService {
 
 		const url = environment.apiUrl + '/schulen/' + schulkuerzel;
 
-		return this.http.get(url).pipe(
+		const obs$ =  this.http.get(url).pipe(
 			map(body => body as ResponsePayload),
 			map(payload => payload.data)
 		);
+
+		return this.loadingIndicatorService.showLoaderUntilCompleted(obs$);
 	}
 
 }

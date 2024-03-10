@@ -1,11 +1,11 @@
 <div class="mkv-container mt-5">
 	<div class="col-12">
-		<div *ngIf="teilnahmenFacade.selectedAnmeldung$| async as anmeldungen else loading">
+		<div *ngIf="teilnahmenFacade.selectedAnmeldung$| async as anmeldungen">
 			<ng-container>
 				<h3>Teilnahmen am Wettbewerb {{anmeldungen.wettbewerbsjahr}}</h3>
 				<div>
 					<div class="mkv-bordered">
-						<div class="mt-1 ml-1 mb-2" *ngFor="let median of anmeldungen.mediane">
+						<div class="mt-1 ml-1 mb-2 px-2" *ngFor="let median of anmeldungen.mediane">
 							<mkod-median [median]=median></mkod-median>
 						</div>
 					</div>
@@ -47,9 +47,3 @@
 		</div>
 	</div>
 </div>
-
-<ng-template #loading>
-	<h3>Anmeldungen</h3>
-	Bitte warten... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
-</ng-template>
-

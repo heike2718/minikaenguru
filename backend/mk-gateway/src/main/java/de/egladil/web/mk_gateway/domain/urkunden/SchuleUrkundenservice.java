@@ -14,10 +14,10 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.ws.rs.NotFoundException;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.ws.rs.NotFoundException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,6 +98,9 @@ public class SchuleUrkundenservice {
 	@Inject
 	WettbewerbService wettbewerbService;
 
+	@Inject
+	LoggableEventDelegate eventDelegate;
+
 	public static SchuleUrkundenservice createForIntegrationTests(final EntityManager entityManager) {
 
 		SchuleUrkundenservice result = new SchuleUrkundenservice();
@@ -162,11 +165,48 @@ public class SchuleUrkundenservice {
 			SchulurkundenGenerator urkundenGenerator = new SchulurkundenGenerator();
 			seiten.addAll(urkundenGenerator.generiereUrkunden(datenRepository));
 
-			byte[] daten = new PdfMerger().concatPdf(seiten);
+			PdfMerger pdfMerger = new PdfMerger();
 
-			String dateiname = this.getDateiname(schulteilnahme);
+			// FIXME: I0407: Dieser Teil kann wieder raus, sobald wir mehr RAM haben. Bleibt nur noch der else-Teil übrig.
+			if (seiten.size() > 100) {
 
-			return new DownloadData(dateiname, daten);
+				byte[] datenBunch1 = null;
+				byte[] datenBunch2 = null;
+				List<byte[]> bunch = new ArrayList<>();
+
+				for (int i = 0; i < 100; i++) {
+
+					bunch.add(seiten.get(i));
+				}
+
+				datenBunch1 = pdfMerger.concatPdf(bunch);
+				bunch = new ArrayList<>();
+
+				for (int i = 100; i < seiten.size(); i++) {
+
+					bunch.add(seiten.get(i));
+
+				}
+
+				datenBunch2 = pdfMerger.concatPdf(bunch);
+
+				List<byte[]> bunches = new ArrayList<>();
+				bunches.add(datenBunch1);
+				bunches.add(datenBunch2);
+
+				byte[] daten = pdfMerger.concatPdf(bunches);
+				String dateiname = this.getDateiname(schulteilnahme);
+
+				return new DownloadData(dateiname, daten);
+
+			} else {
+
+				byte[] daten = pdfMerger.concatPdf(seiten);
+				String dateiname = this.getDateiname(schulteilnahme);
+
+				return new DownloadData(dateiname, daten);
+			}
+
 		} finally {
 
 			// Memory-Leak
@@ -243,7 +283,7 @@ public class SchuleUrkundenservice {
 				String msg = "generiereSchulauswertung: Loesungszettel zu Kind wurde nicht gefunden: kindUUID="
 					+ kind.identifier().identifier() + " - Kind wird weggelassen";
 				LOG.warn(msg);
-				new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
+				eventDelegate.fireDataInconsistencyEvent(msg, domainEventHandler);
 			}
 
 		}

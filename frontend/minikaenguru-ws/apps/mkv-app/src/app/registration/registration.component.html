@@ -2,6 +2,12 @@
 	<div *ngIf="registrationFacade.registrationReady$ | async">
 		<h2>Benutzerkonto anlegen <span *ngIf="devMode">(registration.component)</span> </h2>
 
+		<div *ngIf="authService.loading$ | async as isLoading" class="mt-4 mb-4">
+			<div *ngIf="isLoading"><i class="fa fa-spinner fa-2x fa-spin"
+					aria-hidden="true"></i>
+			</div>
+		</div>
+
 		<div class="btn-group d-inline" role="group">
 			<label for="switch-newsletter" class="label-bold w-100"><strong>Möchten Sie Informationen per Mail erhalten?</strong> </label>
 			<div class="row">

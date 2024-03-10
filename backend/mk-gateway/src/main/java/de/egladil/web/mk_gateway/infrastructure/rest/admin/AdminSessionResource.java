@@ -4,18 +4,18 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.admin;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.CookieParam;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.CookieParam;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import de.egladil.web.commons_net.utils.CommonHttpUtils;
 import de.egladil.web.mk_gateway.MkGatewayApp;
@@ -23,6 +23,7 @@ import de.egladil.web.mk_gateway.domain.auth.AuthMode;
 import de.egladil.web.mk_gateway.domain.auth.AuthResult;
 import de.egladil.web.mk_gateway.domain.auth.session.loginlogout.LoginLogoutService;
 import de.egladil.web.mk_gateway.domain.auth.urls.AuthLoginUrlService;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * AdminSessionResource ist der Endpoint für mk-admin-app, um sich einzuloggen.
@@ -42,6 +43,9 @@ public class AdminSessionResource {
 	@Inject
 	LoginLogoutService loginLogoutService;
 
+	@Inject
+	DevDelayService delayService;
+
 	@GET
 	@Path("authurls/login")
 	public Response getAdminLoginUrl() {
@@ -54,6 +58,8 @@ public class AdminSessionResource {
 	@Path("login")
 	public Response login(final AuthResult authResult) {
 
+		this.delayService.pause();
+
 		return loginLogoutService.login(authResult, AuthMode.ADMIN);
 	}
 
@@ -61,12 +67,15 @@ public class AdminSessionResource {
 	@Path("logout")
 	public Response logout(@CookieParam(value = SESSION_COOKIE_NAME) final String sessionId) {
 
+		this.delayService.pause();
 		return this.loginLogoutService.logout(sessionId);
 	}
 
 	@DELETE
 	@Path("dev/logout/{sessionId}")
 	public Response logoutDev(@PathParam(value = "sessionId") final String sessionId) {
+
+		this.delayService.pause();
 
 		return this.loginLogoutService.logoutDev(sessionId);
 	}

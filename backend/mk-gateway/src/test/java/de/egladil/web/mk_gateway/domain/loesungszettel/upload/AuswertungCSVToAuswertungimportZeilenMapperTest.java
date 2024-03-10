@@ -4,23 +4,29 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.loesungszettel.upload;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
+import io.quarkus.test.junit.QuarkusTest;
 
 /**
  * AuswertungCSVToAuswertungimportZeilenMapperTest
  */
+@QuarkusTest
 public class AuswertungCSVToAuswertungimportZeilenMapperTest {
+
+	@ConfigProperty(name = "path.external.files")
+	String pathExternalFiles;
 
 	private final AuswertungimportZeileSensor sensor = new AuswertungimportZeileSensor();
 
@@ -127,7 +133,7 @@ public class AuswertungCSVToAuswertungimportZeilenMapperTest {
 		void should_mappingWork_when_convertedFile() {
 
 			// Arrange
-			String path = "/home/heike/git/testdaten/minikaenguru/auswertungen/korrekt/upload/auswertung.csv";
+			String path = pathExternalFiles + "/upload/auswertung.csv";
 
 			List<String> zeilen = MkGatewayFileUtils.readLines(path, MkGatewayFileUtils.DEFAULT_ENCODING);
 

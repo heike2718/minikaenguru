@@ -1,11 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { Privatteilnahme, Privatveranstalter } from '../../wettbewerb/wettbewerb.model';
 
-
-export const startLoading = createAction(
-	'[PrivatveranstalterFacade] before request'
-);
-
 export const finishedWithError = createAction(
 	'[PrivatveranstalterFacade] on error'
 );

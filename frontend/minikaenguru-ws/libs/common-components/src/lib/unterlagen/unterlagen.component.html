@@ -2,9 +2,4 @@
 	<mk-download-button [model]="unterlagenBtnModel">
 	</mk-download-button>
 </div>
-<ng-container *ngIf="downloadFacade.downloadId$ | async as id">
-	<div *ngIf="id === userIdRef" class="row">
-		<div class="col-12 center">Lade Unterlagen... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
-		</div>
-	</div>
-</ng-container>
+

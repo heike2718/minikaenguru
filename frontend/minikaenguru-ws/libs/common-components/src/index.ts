@@ -47,3 +47,5 @@ export {
 
 export { AnonymisierteTeilnahmeComponent } from './lib/anonymisierte-teilnahme/anonymisierte-teilnahme.component';
 export { UnterlagenComponent } from './lib/unterlagen/unterlagen.component';
+export * from './lib/form-error/form-error.component';
+export * from './lib/loading-indicator/loading-indicator.component';

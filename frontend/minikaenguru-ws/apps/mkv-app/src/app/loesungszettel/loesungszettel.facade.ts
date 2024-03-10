@@ -1,5 +1,5 @@
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
 import { Loesungszettel, createLoseungszettelzeilen, LoesungszettelMap } from './loesungszettel.model';
@@ -12,6 +12,7 @@ import { MessageService } from '@minikaenguru-ws/common-messages';
 import { GlobalErrorHandlerService } from '../infrastructure/global-error-handler.service';
 import * as KinderActions from '../kinder/+state/kinder.actions';
 import * as KlassenActons from '../klassen/+state/klassen.actions';
+import { LehrerFacade } from '../lehrer/lehrer.facade';
 
 @Injectable({
 	providedIn: 'root'
@@ -22,6 +23,8 @@ export class LoesungszettelFacade {
 
 
 	private loesungszettelMap!: LoesungszettelMap;
+
+	#lehrerFacade = inject(LehrerFacade);
 
 	constructor(private store: Store<AppState>,
 		private loesungszettelService: LoesungszettelService,
@@ -98,11 +101,11 @@ export class LoesungszettelFacade {
 
 					if (kind.klasseId && loesungszettel.uuid === 'neu') {
 						this.store.dispatch(KlassenActons.loesungszettelAdded({ kind: kind }));
+						this.#lehrerFacade.loadLehrer();
 					}
 				} else {
 					this.handleLoesungszettelDeleted(loesungszettel,kind);
 				}
-
 
 				this.messageService.showMessage(responsePayload.message);
 			},
@@ -128,7 +131,7 @@ export class LoesungszettelFacade {
 			responsePayload => {
 
 				this.handleLoesungszettelDeleted(loesungszettel, kind);
-				this.messageService.showMessage(responsePayload.message);
+				this.messageService.showMessage(responsePayload.message);				
 			},
 			(error => {
 				this.store.dispatch(LoesungszettelActions.finishedWithError());
@@ -166,6 +169,7 @@ export class LoesungszettelFacade {
 
 		if (kind.klasseId) {
 			this.store.dispatch(KlassenActons.loesungszettelDeleted({ kind: kind }));
+			this.#lehrerFacade.loadLehrer();
 		}
 	}
 }

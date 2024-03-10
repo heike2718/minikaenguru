@@ -4,16 +4,10 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.persistence.impl;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +21,10 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistentesKind;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistentesKindKindMapper;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 /**
  * KinderHibernateRepository
@@ -195,7 +193,7 @@ public class KinderHibernateRepository implements KinderRepository {
 		String stmt = "select count(*) from KINDER k where k.TEILNAHMENUMMER = :teilnahmenummer";
 
 		@SuppressWarnings("unchecked")
-		List<BigInteger> trefferliste = em.createNativeQuery(stmt)
+		List<Long> trefferliste = em.createNativeQuery(stmt)
 			.setParameter("teilnahmenummer", teilnahmeIdentifier.teilnahmenummer()).getResultList();
 
 		if (trefferliste.isEmpty()) {
@@ -212,7 +210,7 @@ public class KinderHibernateRepository implements KinderRepository {
 		String stmt = "select count(*) from KINDER k where k.KLASSE_UUID = :klasseUuid";
 
 		@SuppressWarnings("unchecked")
-		List<BigInteger> trefferliste = em.createNativeQuery(stmt)
+		List<Long> trefferliste = em.createNativeQuery(stmt)
 			.setParameter("klasseUuid", klasse.identifier().identifier()).getResultList();
 
 		if (trefferliste.isEmpty()) {
@@ -229,7 +227,7 @@ public class KinderHibernateRepository implements KinderRepository {
 		String stmt = "select count(*) from KINDER k where k.KLASSE_UUID = :klasseUuid and (k.KLASSENSTUFE_PRUEFEN = :klassenstufePruefen || k.DUBLETTE_PRUEFEN = :dublettePruefen)";
 
 		@SuppressWarnings("unchecked")
-		List<BigInteger> trefferliste = em.createNativeQuery(stmt)
+		List<Long> trefferliste = em.createNativeQuery(stmt)
 			.setParameter("klasseUuid", klasse.identifier().identifier())
 			.setParameter("klassenstufePruefen", 1)
 			.setParameter("dublettePruefen", 1)
@@ -249,7 +247,7 @@ public class KinderHibernateRepository implements KinderRepository {
 		String stmt = "select count(*) from KINDER k where k.KLASSE_UUID = :klasseUuid AND k.LOESUNGSZETTEL_UUID IS NOT NULL";
 
 		@SuppressWarnings("unchecked")
-		List<BigInteger> trefferliste = em.createNativeQuery(stmt)
+		List<Long> trefferliste = em.createNativeQuery(stmt)
 			.setParameter("klasseUuid", klasse.identifier().identifier()).getResultList();
 
 		if (trefferliste.isEmpty()) {
@@ -275,7 +273,7 @@ public class KinderHibernateRepository implements KinderRepository {
 		for (Object[] treffer : trefferliste) {
 
 			String wert = treffer[0].toString();
-			BigInteger anzahl = (BigInteger) treffer[1];
+			Long anzahl = (Long) treffer[1];
 
 			result.add(new Auspraegung(wert, anzahl.longValue()));
 

@@ -4,8 +4,11 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.klassenlisten;
 
+import java.util.List;
+
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.DownloadData;
+import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 
 /**
@@ -23,6 +26,7 @@ public interface KlassenlisteImportService {
 	 *                                   CSV-Datei erforderlich sind.
 	 * @return                           ResponsePayload mit einem KlassenlisteImportReport - Payload
 	 */
+	@Deprecated
 	ResponsePayload importiereKinder(final UploadKlassenlisteContext uploadKlassenlisteContext, final PersistenterUpload uploadMetadata);
 
 	/**
@@ -33,5 +37,22 @@ public interface KlassenlisteImportService {
 	 * @return            DownloadData
 	 */
 	DownloadData getImportReport(String lehrerUuid, String reportUuid);
+
+	/**
+	 * Importiert die Kinder aus den Zeilen.
+	 *
+	 * @param  uploadKlassenlisteContext
+	 * @param  uploadMetadata
+	 * @param  encoding
+	 * @param  lines
+	 * @return
+	 */
+	ResponsePayload importiereKinder(final UploadKlassenlisteContext uploadKlassenlisteContext, final PersistenterUpload uploadMetadata, final String encoding, final List<String> lines);
+
+	/**
+	 * @param uploadMetadata
+	 * @param leer
+	 */
+	void updateUploadstatusQuietly(final PersistenterUpload uploadMetadata, final UploadStatus leer);
 
 }

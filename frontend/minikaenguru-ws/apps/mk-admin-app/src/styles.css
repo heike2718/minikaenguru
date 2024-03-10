@@ -83,6 +83,15 @@ button>i {
   background-color: #e6e6e6;
 }
 
+.badge {
+  margin-left: 1em;
+}
+
+.btn-group .btn {
+  margin: 1rem;
+  border-radius: 1px;
+}
+
 
 footer {
   position: relative;

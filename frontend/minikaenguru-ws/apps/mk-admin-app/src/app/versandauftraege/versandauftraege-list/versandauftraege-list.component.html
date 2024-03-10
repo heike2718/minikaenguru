@@ -1,0 +1,13 @@
+<div class="mkv-container mt-1">
+
+	<p *ngIf="devMode">(versandauftraege-list.component)</p>
+
+	<ng-container *ngIf="(versandauftraegeFacade.versandauftraege$ | async) as versandauftraege">
+
+		<h3>Versandaufträge <span class="badge bg-secondary">{{versandauftraege.length}}</span></h3>
+
+		<div class="col-md-12 mt-1 mb-1 mb-2" *ngFor="let versandaufrag of versandauftraege">
+			<mka-versandauftrag-card [versandauftrag]="versandaufrag"></mka-versandauftrag-card>
+		</div>	
+	</ng-container>
+</div>

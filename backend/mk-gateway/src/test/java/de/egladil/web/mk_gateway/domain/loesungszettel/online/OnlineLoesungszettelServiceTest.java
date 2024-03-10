@@ -5,11 +5,11 @@
 package de.egladil.web.mk_gateway.domain.loesungszettel.online;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -17,22 +17,24 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Optional;
 
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.NotFoundException;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.NotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.LoesungszettelpunkteAPIModel;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
+import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
+import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelChanged;
+import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelCreated;
+import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelDeleted;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelAPIModel;
@@ -43,27 +45,35 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterLoesungszettel;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.InjectMock;
 
 /**
  * OnlineLoesungszettelServiceTest
  */
-@ExtendWith(MockitoExtension.class)
+@QuarkusTest
 public class OnlineLoesungszettelServiceTest extends AbstractLoesungszettelServiceTest {
 
-	@Mock
-	private KinderRepository kinderRepository;
+	@InjectMock
+	KinderRepository kinderRepository;
 
-	@Mock
-	private LoesungszettelRepository loesungszettelRepository;
+	@InjectMock
+	LoesungszettelRepository loesungszettelRepository;
 
-	@Mock
-	private AuthorizationService authService;
+	@InjectMock
+	AuthorizationService authService;
 
-	@Mock
-	private WettbewerbService wettbewerbService;
+	@InjectMock
+	WettbewerbService wettbewerbService;
 
-	@InjectMocks
-	private OnlineLoesungszettelService service;
+	@InjectMock
+	LoggableEventDelegate eventDelegate;
+
+	@InjectMock
+	DomainEventHandler domainEventHandler;
+
+	@Inject
+	OnlineLoesungszettelService service;
 
 	@BeforeEach
 	void setUp() {
@@ -338,9 +348,9 @@ public class OnlineLoesungszettelServiceTest extends AbstractLoesungszettelServi
 
 			verify(loesungszettelRepository, times(1)).updateLoesungszettelInTransaction(any());
 
-			assertNull(service.getLoesungszettelCreated());
-			assertNotNull(service.getLoesungszettelChanged());
-			assertNull(service.getLoesungszettelDeleted());
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelCreated.class));
+			verify(domainEventHandler).handleEvent(any(LoesungszettelChanged.class));
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelDeleted.class));
 
 		}
 

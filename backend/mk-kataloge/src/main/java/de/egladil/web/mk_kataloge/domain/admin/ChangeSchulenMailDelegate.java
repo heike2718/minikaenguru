@@ -4,10 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_kataloge.domain.admin;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +13,9 @@ import de.egladil.web.mk_kataloge.domain.apimodel.SchulePayload;
 import de.egladil.web.mk_kataloge.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_kataloge.domain.event.MailNotSent;
 import de.egladil.web.mk_kataloge.domain.katalogantrag.KatalogMailService;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Event;
+import jakarta.inject.Inject;
 
 /**
  * ChangeSchulenMailDelegate
@@ -35,7 +34,8 @@ public class ChangeSchulenMailDelegate {
 	@Inject
 	Event<MailNotSent> mailNotSentEvent;
 
-	private MailNotSent mailNotSent;
+	@Inject
+	LoggableEventDelegate eventDelegate;
 
 	static ChangeSchulenMailDelegate createForTest(final KatalogMailService mailService) {
 
@@ -43,11 +43,6 @@ public class ChangeSchulenMailDelegate {
 		result.mailService = mailService;
 		return result;
 
-	}
-
-	MailNotSent getMailNotSent() {
-
-		return mailNotSent;
 	}
 
 	boolean sendSchuleCreatedMailQuietly(final SchulePayload schulePayload) {
@@ -62,7 +57,7 @@ public class ChangeSchulenMailDelegate {
 			String msg = "Die Mail konnte nicht gesendet werden: " + e.getMessage();
 			LOG.warn(msg);
 
-			this.mailNotSent = new LoggableEventDelegate().fireMailNotSentEvent(msg, mailNotSentEvent);
+			eventDelegate.fireMailNotSentEvent(msg, mailNotSentEvent);
 			return false;
 		}
 	}

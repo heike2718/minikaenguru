@@ -81,4 +81,16 @@ public interface UploadRepository {
 	 */
 	List<Auspraegung> countAuspraegungenForTeilnahmeByColumnName(TeilnahmeIdentifier teilnahmeIdentifier, String columnName);
 
+	/**
+	 * Löscht den Upload mit der gegebenen ID.
+	 *
+	 * @param uuid
+	 */
+	void deleteUpload(final String uuid);
+
+	/**
+	 * @param teilnahmenummer
+	 */
+	void deleteUploadsKlassenlisten(String teilnahmenummer);
+
 }

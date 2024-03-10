@@ -47,7 +47,7 @@ const mustertexteReducer = createReducer(initialMustertexteState,
         action.mustertexte.forEach( m => newMap.push({uuid: m.uuid, mustertext: m}));
 
         const filteredMap = [...newMap];
-		return {...state, loading: false, mustertexteMap: newMap, filterKategorie: 'UNDEFINED', filteredMustertexte: filteredMap, mustertexteLoaded: true};
+		return {...state, loading: false, mustertexteMap: newMap, filteredMustertexte: filteredMap, mustertexteLoaded: true};
 
 	}),
 

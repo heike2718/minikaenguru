@@ -14,8 +14,8 @@ import java.util.UUID;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.mail.Newsletter;
-import de.egladil.web.mk_gateway.domain.mail.NewsletterRepository;
+import de.egladil.web.mk_gateway.domain.newsletters.Newsletter;
+import de.egladil.web.mk_gateway.domain.newsletters.NewsletterRepository;
 
 /**
  * InMemoryNewsletterRepository

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { emailValidator } from '@minikaenguru-ws/common-components';
 import { MessageService } from '@minikaenguru-ws/common-messages';
@@ -17,13 +17,13 @@ export class SendMailComponent implements OnInit, OnDestroy {
 
   devMode = environment.envName === 'DEV';
 
-  mailForm!: FormGroup;
+  mailForm!: UntypedFormGroup;
 
-  emailControl!: FormControl;
+  emailControl!: UntypedFormControl;
 
-  betreffControl!: FormControl;
+  betreffControl!: UntypedFormControl;
 
-  textControl!: FormControl;
+  textControl!: UntypedFormControl;
 
   editorInitialized = false;
 
@@ -31,7 +31,7 @@ export class SendMailComponent implements OnInit, OnDestroy {
 
   private mailSubscription: Subscription = new Subscription();
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
     private router: Router,
     public mustertexteFacade: MustertexteFacade,
     private messageService: MessageService) { 
@@ -102,9 +102,9 @@ export class SendMailComponent implements OnInit, OnDestroy {
 
   private initForm(): void {
 
-    this.emailControl = new FormControl({value: ''}, {validators: [Validators.required, emailValidator]})
-    this.betreffControl = new FormControl({value: ''}, {validators: [Validators.required, Validators.minLength(5)]})
-    this.textControl = new FormControl({value: ''}, {validators: [Validators.required, Validators.minLength(5)]})
+    this.emailControl = new UntypedFormControl({value: ''}, {validators: [Validators.required, emailValidator]})
+    this.betreffControl = new UntypedFormControl({value: ''}, {validators: [Validators.required, Validators.minLength(5)]})
+    this.textControl = new UntypedFormControl({value: ''}, {validators: [Validators.required, Validators.minLength(5)]})
 
     this.mailForm = this.fb.group({
       email: this.emailControl,

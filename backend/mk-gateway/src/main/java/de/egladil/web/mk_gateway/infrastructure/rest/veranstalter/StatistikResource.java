@@ -4,20 +4,21 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.veranstalter;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 import de.egladil.web.mk_gateway.infrastructure.rest.general.statistik.PersonalizedStatisticsResourceDelegate;
 
 /**
@@ -34,11 +35,16 @@ public class StatistikResource {
 	@Inject
 	PersonalizedStatisticsResourceDelegate statisticsResourceDelegate;
 
+	@Inject
+	DevDelayService delayService;
+
 	@GET
 	@Path("{teilnahmeart}/{teilnahmenummer}/{jahr}")
 	@Produces({ MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_JSON })
 	public Response downloadStatistik(@PathParam(value = "teilnahmeart") final String teilnahmeart, @PathParam(
 		value = "teilnahmenummer") final String teilnahmenummer, @PathParam(value = "jahr") final String jahr) {
+
+		this.delayService.pause();
 
 		DownloadData data = this.statisticsResourceDelegate.erstelleStatistikPDFEinzelteilnahme(teilnahmeart, teilnahmenummer, jahr,
 			securityContext.getUserPrincipal().getName());

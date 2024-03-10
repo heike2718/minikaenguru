@@ -8,9 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.ws.rs.NotFoundException;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
@@ -27,6 +25,8 @@ import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.kataloge.SchulkatalogService;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.VertragAdvAPIModel;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.NotFoundException;
 
 /**
  * AdvService
@@ -58,6 +58,9 @@ public class AdvService {
 
 	@Inject
 	VertragAuftragsverarbeitungPdfGenerator pdfGenerator;
+
+	@Inject
+	LoggableEventDelegate eventDelegate;
 
 	/**
 	 * Falls die Schule einen Vertrag abgeschlossen hat und der gegebene Lehrer dieser Schule angehört, wird das PDF generiert und
@@ -167,7 +170,7 @@ public class AdvService {
 			String msg = "Es gibt keinen Vertragstext";
 
 			LOG.error(msg);
-			new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
+			eventDelegate.fireDataInconsistencyEvent(msg, domainEventHandler);
 
 			throw new MkGatewayRuntimeException(msg);
 		}

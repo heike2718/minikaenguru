@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NgbDateStruct, NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { NgbDateStruct, NgbDate, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { UrkundenFacade } from '../urkunden.facade';
 import { Subscription } from 'rxjs';
 import { Kind, kindToString } from '@minikaenguru-ws/common-components';
@@ -34,6 +34,7 @@ export class UrkundenauftragComponent implements OnInit, OnDestroy {
 
 	constructor(public urkundenFacade: UrkundenFacade,
 		private kinderFacade: KinderFacade,
+		private calendar: NgbCalendar,
 		private logger: LogService) {}
 
 	ngOnInit(): void {
@@ -42,8 +43,7 @@ export class UrkundenauftragComponent implements OnInit, OnDestroy {
 		this.showWarntext = this.warntext.length > 0;
 
 		this.urkundeDateModel = this.urkundenFacade.getUrkundeDateModel();
-		this.dateModel = this.urkundeDateModel.maxDate;
-
+		this.dateModel = this.calendar.getToday();
 		this.urkundenart = 'TEILNAHME';
 
 		this.selectedKindSubscription = this.kinderFacade.selectedKind$.subscribe(

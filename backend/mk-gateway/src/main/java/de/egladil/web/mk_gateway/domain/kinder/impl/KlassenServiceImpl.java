@@ -14,13 +14,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.NotFoundException;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +39,7 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
+import de.egladil.web.mk_gateway.domain.uploads.UploadRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
@@ -53,6 +47,12 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KlassenHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.TeilnahmenHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.VeranstalterHibernateRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.NotFoundException;
 
 /**
  * KlassenServiceImpl
@@ -88,13 +88,10 @@ public class KlassenServiceImpl implements KlassenService {
 	WettbewerbService wettbewerbService;
 
 	@Inject
+	UploadRepository uploadRepository;
+
+	@Inject
 	DomainEventHandler domainEventHandler;
-
-	private KlasseCreated klasseCreated;
-
-	private KlasseChanged klasseChanged;
-
-	private KlasseDeleted klasseDeleted;
 
 	private WettbewerbID wettbewerbID;
 
@@ -251,7 +248,7 @@ public class KlassenServiceImpl implements KlassenService {
 
 		Klasse neueKlasse = klassenRepository.addKlasse(klasse);
 
-		klasseCreated = (KlasseCreated) new KlasseCreated(lehrerUuid)
+		KlasseCreated klasseCreated = (KlasseCreated) new KlasseCreated(lehrerUuid)
 			.withKlasseID(neueKlasse.identifier().identifier())
 			.withName(neueKlasse.name())
 			.withSchulkuerzel(schulkuerzel);
@@ -307,7 +304,7 @@ public class KlassenServiceImpl implements KlassenService {
 		klasse = klasse.withName(data.klasse().name());
 		Klasse geaenderte = klassenRepository.changeKlasse(klasse);
 
-		klasseChanged = (KlasseChanged) new KlasseChanged(lehrerUuid)
+		KlasseChanged klasseChanged = (KlasseChanged) new KlasseChanged(lehrerUuid)
 			.withNameAlt(nameAlt)
 			.withName(klasse.name())
 			.withKlasseID(klasseID.identifier())
@@ -374,7 +371,7 @@ public class KlassenServiceImpl implements KlassenService {
 
 		boolean result = klassenRepository.removeKlasse(klasse);
 
-		klasseDeleted = (KlasseDeleted) new KlasseDeleted(lehrerUuid)
+		KlasseDeleted klasseDeleted = (KlasseDeleted) new KlasseDeleted(lehrerUuid)
 			.withKlasseID(klasse.identifier().identifier())
 			.withName(klasse.name())
 			.withSchulkuerzel(schulkuerzel);
@@ -403,6 +400,9 @@ public class KlassenServiceImpl implements KlassenService {
 
 			this.deleteKlasseWithoutAuthorizationCheck(schuleId.identifier(), klasse, lehrerUuid);
 		}
+
+		// I0436: auch die klassenlistenuploads alle löschen.
+		uploadRepository.deleteUploadsKlassenlisten(schuleId.identifier());
 
 		return ResponsePayload.messageOnly(MessagePayload.info(applicationMessages.getString("deleteAllKlassen.success")));
 	}
@@ -464,19 +464,8 @@ public class KlassenServiceImpl implements KlassenService {
 		return wettbewerbID;
 	}
 
-	KlasseCreated getKlasseCreated() {
+	void resetWettbewerbIDForTest() {
 
-		return klasseCreated;
+		this.wettbewerbID = null;
 	}
-
-	KlasseChanged getKlasseChanged() {
-
-		return klasseChanged;
-	}
-
-	KlasseDeleted getKlasseDeleted() {
-
-		return klasseDeleted;
-	}
-
 }

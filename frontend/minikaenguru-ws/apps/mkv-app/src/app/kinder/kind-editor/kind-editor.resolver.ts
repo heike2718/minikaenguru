@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { AppState } from '../../reducers';
 import { Observable } from 'rxjs';
@@ -11,7 +11,7 @@ import { KinderFacade } from '../kinder.facade';
 
 
 @Injectable()
-export class KindEditorResolver implements Resolve<any> {
+export class KindEditorResolver  {
 
 	constructor(private store: Store<AppState>, private kinderFacade: KinderFacade) { }
 

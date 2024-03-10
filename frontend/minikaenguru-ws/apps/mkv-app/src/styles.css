@@ -34,6 +34,54 @@ button>i {
   /*font-size: 1.1rem;*/
 }
 
+.ml-1 {
+  margin-left: 1px;
+}
+
+.ml-2 {
+  margin-left: 2px;
+}
+
+.ml-3 {
+  margin-left: 3px;
+}
+
+.ml-4 {
+  margin-left: 4px;
+}
+
+.pl-1 {
+  padding-left: 1px;
+}
+
+.pl-2 {
+  padding-left: 2px;
+}
+
+.pl-3 {
+  padding-left: 3px;
+}
+
+.pl-4 {
+  padding-left: 4px;
+}
+
+.mkv-p {
+  padding: 2px 4px 2px 4px;
+}
+
+.mkv-m {
+  margin: 2px 4px 2px 4px;
+}
+
+.mkv-p-l {
+  padding: 5px 10px 5px 10px;
+}
+
+.mkv-m-l {
+  margin: 5px 10px 5px 10px;
+}
+
 .mkv-bordered {
   border: 1px solid gray;
   border-radius: 4px;
@@ -73,6 +121,25 @@ button>i {
   background-color: #e6e6e6;
 }
 
+.badge {
+  margin-left: 1em;
+}
+
+.btn {
+  border-radius: 4px;
+  margin: 1rem;
+}
+
+/*
+.btn-group .btn {
+  margin: 1rem;
+}
+
+.d-md-none .btn {
+  margin: 1rem;
+}
+*/
+
 footer {
   position: relative;
   margin-top: 350px;
@@ -104,9 +171,7 @@ footer {
 
 /* Extra small devices (phones, 600px and down) */
 /* Smartphones */
-@media only screen 
-and (min-device-width : 320px) 
-and (max-device-width : 480px) {
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
 
   .checkbox-text {
     font-size: 1rem;

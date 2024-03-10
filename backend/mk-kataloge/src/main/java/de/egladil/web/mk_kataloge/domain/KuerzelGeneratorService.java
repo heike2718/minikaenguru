@@ -4,11 +4,12 @@
 // =====================================================
 package de.egladil.web.mk_kataloge.domain;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import java.security.SecureRandom;
 
-import de.egladil.web.commons_crypto.CryptoService;
 import de.egladil.web.mk_kataloge.domain.apimodel.KuerzelAPIModel;
+import de.egladil.web.mk_kataloge.domain.error.KatalogAPIException;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 /**
  * KuerzelGeneratorService
@@ -25,14 +26,10 @@ public class KuerzelGeneratorService {
 	@Inject
 	KatalogeRepository katalogRepository;
 
-	@Inject
-	CryptoService cryptoService;
-
-	public static KuerzelGeneratorService createForTest(final KatalogeRepository katalogeRepository, final CryptoService cryptoService) {
+	public static KuerzelGeneratorService createForTest(final KatalogeRepository katalogeRepository) {
 
 		KuerzelGeneratorService result = new KuerzelGeneratorService();
 		result.katalogRepository = katalogeRepository;
-		result.cryptoService = cryptoService;
 		return result;
 	}
 
@@ -73,7 +70,22 @@ public class KuerzelGeneratorService {
 
 	private String generiereKuerzel() {
 
-		return cryptoService.generateRandomString(ALGORITHM, LAENGE, CHARS.toCharArray());
+		try {
+
+			SecureRandom secureRandom = SecureRandom.getInstance(ALGORITHM);
+			// nach ESAPI
+			StringBuilder sb = new StringBuilder();
+
+			for (int loop = 0; loop < LAENGE; loop++) {
+
+				int index = secureRandom.nextInt(CHARS.toCharArray().length);
+				sb.append(CHARS.toCharArray()[index]);
+			}
+			return sb.toString();
+		} catch (final Exception e) {
+
+			throw new KatalogAPIException("Fehler beim generieren eines Zufallsstrings: " + e.getMessage(), e);
+		}
 	}
 
 }

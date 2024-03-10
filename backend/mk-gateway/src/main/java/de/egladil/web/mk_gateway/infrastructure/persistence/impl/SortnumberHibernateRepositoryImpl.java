@@ -4,18 +4,16 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.persistence.impl;
 
-import java.math.BigInteger;
 import java.util.List;
-
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.infrastructure.persistence.sortnumbers.SortedTable;
 import de.egladil.web.mk_gateway.infrastructure.persistence.sortnumbers.SortnumberRepository;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 /**
  * SortnumberRepositoryImpl
@@ -41,7 +39,7 @@ public class SortnumberHibernateRepositoryImpl implements SortnumberRepository {
 		String stmt = "SELECT MAX(SORTNR) FROM " + sortedTable.toString();
 
 		@SuppressWarnings("unchecked")
-		List<BigInteger> trefferliste = entityManager.createNativeQuery(stmt).getResultList();
+		List<Long> trefferliste = entityManager.createNativeQuery(stmt).getResultList();
 
 		long value = trefferliste == null || trefferliste.isEmpty() ? 0
 			: trefferliste.get(0) == null ? 0 : trefferliste.get(0).longValue();

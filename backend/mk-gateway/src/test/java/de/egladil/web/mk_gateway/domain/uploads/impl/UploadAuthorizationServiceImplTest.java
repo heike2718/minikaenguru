@@ -18,12 +18,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import jakarta.inject.Inject;
+
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.ActionNotAuthorizedException;
@@ -45,29 +43,31 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.InjectMock;
 
 /**
  * UploadAuthorizationServiceImplTest
  */
-@ExtendWith(MockitoExtension.class)
+@QuarkusTest
 public class UploadAuthorizationServiceImplTest {
 
-	@Mock
+	@InjectMock
 	DomainEventHandler domainEventHandler;
 
-	@Mock
+	@InjectMock
 	VeranstalterRepository veranstalterRepository;
 
-	@Mock
+	@InjectMock
 	WettbewerbService wettbewerbService;
 
-	@Mock
+	@InjectMock
 	TeilnahmenRepository teilnahmenRepository;
 
-	@Mock
+	@InjectMock
 	LoesungszettelRepository loesungszettelRepository;
 
-	@InjectMocks
+	@Inject
 	UploadAuthorizationServiceImpl service;
 
 	@Nested

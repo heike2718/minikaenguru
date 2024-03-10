@@ -4,17 +4,17 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.admin;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
@@ -24,6 +24,7 @@ import de.egladil.web.mk_gateway.domain.kinder.AdminKinderService;
 import de.egladil.web.mk_gateway.domain.loesungszettel.AdminLoesungszettelService;
 import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Gruppeninfo;
 import de.egladil.web.mk_gateway.domain.unterlagen.AdminDownloadsService;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 import de.egladil.web.mk_gateway.infrastructure.rest.general.statistik.PersonalizedStatisticsResourceDelegate;
 
 /**
@@ -50,6 +51,9 @@ public class AdminStatistikResource {
 	@Inject
 	AdminDownloadsService adminDownloadsService;
 
+	@Inject
+	DevDelayService delayService;
+
 	// TODO: path und auth
 	public Response getStatistikFuerOrt() {
 
@@ -67,6 +71,8 @@ public class AdminStatistikResource {
 	public Response downloadStatistikFuerTeilnahme(@PathParam(value = "teilnahmeart") final String teilnahmeart, @PathParam(
 		value = "teilnahmenummer") final String teilnahmenummer, @PathParam(value = "jahr") final String jahr) {
 
+		this.delayService.pause();
+
 		DownloadData data = this.statisticsResourceDelegate.erstelleStatistikPDFEinzelteilnahme(teilnahmeart, teilnahmenummer, jahr,
 			securityContext.getUserPrincipal().getName());
 
@@ -76,6 +82,8 @@ public class AdminStatistikResource {
 	@GET
 	@Path("kinder")
 	public Response getKurzstatistikKinder() {
+
+		this.delayService.pause();
 
 		Gruppeninfo gruppeninfo = adminKinderService.createKurzstatistikKinder();
 		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), gruppeninfo);
@@ -87,6 +95,8 @@ public class AdminStatistikResource {
 	@Path("loesungszettel")
 	public Response getKurzstatistikLoesungszettel() {
 
+		this.delayService.pause();
+
 		Gruppeninfo gruppeninfo = adminLoesungszettelService.createKurzstatistikLoesungszettel();
 		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), gruppeninfo);
 
@@ -96,6 +106,8 @@ public class AdminStatistikResource {
 	@GET
 	@Path("downloads")
 	public Response getKurzstatistikDownloads() {
+
+		this.delayService.pause();
 
 		Gruppeninfo gruppeninfo = adminDownloadsService.createKurzstatistikDownloads();
 		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), gruppeninfo);

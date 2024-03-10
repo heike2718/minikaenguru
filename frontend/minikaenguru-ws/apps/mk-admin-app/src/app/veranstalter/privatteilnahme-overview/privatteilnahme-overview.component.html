@@ -1,5 +1,5 @@
 <div class="mkv-container mt-1">
-	<div *ngIf="(veranstalter$ | async) as veranstalter else loading">
+	<div *ngIf="(veranstalter$ | async) as veranstalter">
 		<ng-container *ngIf="veranstalter && veranstalter.privatOverview">
 
 			<h3>{{veranstalter.fullName}} - {{veranstalter.teilnahmenummern[0]}}</h3>
@@ -7,7 +7,7 @@
 			<div class="card mt-2">
 				<div class="card-body">
 					<div class="card-title">Wettbewerbsdaten<span *ngIf="veranstalter.privatOverview.aktuellAngemeldet"
-							class="ml-1 badge badge-success">angemeldet</span></div>
+							class="ml-1 badge bg-success">angemeldet</span></div>
 					<div class="card-text">
 						<div class="row">
 							<div class="col-sm-12 col-md-3">Anzahl Teilnahmen:</div>
@@ -43,7 +43,3 @@
 
 	<mka-veranstalter-nav></mka-veranstalter-nav>
 </div>
-<ng-template #loading>
-	<h3>Teilnahme</h3>
-	Lade Overview... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
-</ng-template>

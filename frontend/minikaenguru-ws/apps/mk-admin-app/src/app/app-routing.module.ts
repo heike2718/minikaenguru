@@ -16,12 +16,13 @@ const routes: Routes = [
 	{ path: 'timeout', pathMatch: 'full', component: SessionTimeoutComponent},
 	{ path: 'aktuelle-meldung', loadChildren: () => import('./aktuelle-meldung/aktuelle-meldung.module').then(m => m.AktuelleMeldungModule) },
 	{ path: 'wettbewerbe', loadChildren: () => import('./wettbewerbe/wettbewerbe.module').then(m => m.WettbewerbeModule) },
-	{ path: 'katalogpflege', loadChildren: () => import('./katalogpflege/katalogpflege.module').then(m => m.KatalogpflegeModule) },
+	{ path: 'schulkatalog', loadChildren: () => import('@minikaenguru-ws/admin-schulkatalog').then(m => m.AdminSchulkatalogModule)},
 	{ path: 'veranstalter', loadChildren: () => import('./veranstalter/veranstalter.module').then(m => m.VeranstalterModule) },
 	{ path: 'schulteilnahme', loadChildren: () => import('./schulteilnahmen/schulteilnahmen.module').then(m => m.SchulteilnahmenModule) },
 	{ path: 'eventlog', loadChildren: () => import('./eventlog/eventlog.module').then(m => m.EventlogModule) },
 	{ path: 'mustertexte', loadChildren: () => import('./mustertexte/mustertexte.module').then(m => m.MustertexteModule) },
 	{ path: 'newsletters', loadChildren: () => import('./newsletter/newsletter.module').then(m => m.NewsletterModule) },
+	{ path: 'versandauftraege', loadChildren: () => import('./versandauftraege/versandauftraege.module').then(m => m.VersandauftraegeModule) },
 	{ path: 'uploads', loadChildren: () => import('./uploads/uploads.module').then(m => m.UploadsModule) },
 	{ path: 'loesungszettel', loadChildren: () => import('./loesungszettel/loesungszettel.module').then(m => m.LoesungszettelModule) },
 	{ path: 'statistik', loadChildren: () => import('./statistik/statistik.module').then(m => m.StatistikModule)},
@@ -33,7 +34,7 @@ const routes: Routes = [
 @NgModule({
 	imports: [RouterModule.forRoot(
 		routes,
-		{ enableTracing: false, useHash: true, relativeLinkResolution: 'legacy' })
+		{ enableTracing: false, useHash: true })
 	],
 	exports: [RouterModule]
 })

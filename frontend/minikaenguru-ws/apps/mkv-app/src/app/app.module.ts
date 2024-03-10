@@ -23,6 +23,7 @@ import { GlobalErrorHandlerService } from './infrastructure/global-error-handler
 import { EffectsModule } from '@ngrx/effects';
 import { CustomRouterStateSerializer } from './shared/utils';
 import { RegistrationModule } from './registration/registration.module';
+import { FeedbackModule } from './feedback/feedback.module';
 import { LehrerModule } from './lehrer/lehrer.module';
 import { PrivatveranstalterModule } from './privatveranstalter/privatveranstalter.module';
 import { WettbewerbModule } from './wettbewerb/wettbewerb.module';
@@ -79,6 +80,7 @@ registerLocaleData(localeDe);
 		WettbewerbModule,
 		RegistrationModule,
 		LehrerModule,
+		FeedbackModule,
 		PrivatveranstalterModule,
 		KinderModule,
 		KlassenModule,

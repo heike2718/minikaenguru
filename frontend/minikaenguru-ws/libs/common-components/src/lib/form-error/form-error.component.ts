@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Optional } from '@angular/core';
-import { FormGroup, FormGroupDirective, NgForm } from '@angular/forms';
+import { UntypedFormGroup, FormGroupDirective, NgForm } from '@angular/forms';
 
 @Component({
 	selector: 'mk-form-error',
@@ -22,7 +22,7 @@ export class FormErrorComponent implements OnInit {
 	}
 
 	get errorMessages(): string[] | null {
-		let form: FormGroup;
+		let form: UntypedFormGroup;
 
 		if (this.ngForm) {
 			form = this.ngForm.form;

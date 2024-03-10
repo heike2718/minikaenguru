@@ -8,6 +8,7 @@ import { LogService } from '@minikaenguru-ws/common-logging';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { modalOptions } from '@minikaenguru-ws/common-components';
 import { AbstractControl } from '@angular/forms';
+import { AuthService } from '@minikaenguru-ws/common-auth';
 
 @Component({
 	selector: 'mkv-registration',
@@ -32,6 +33,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 	constructor(private router: Router
 		, public registrationFacade: RegistrationFacade
 		, public schulkatalogFacade: SchulkatalogFacade
+		, public authService: AuthService
 		, private logger: LogService
 		, private modalService: NgbModal) {
 

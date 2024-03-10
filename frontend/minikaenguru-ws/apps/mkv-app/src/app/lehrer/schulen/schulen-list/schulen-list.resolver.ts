@@ -1,4 +1,4 @@
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { AppState } from '../../../reducers';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -8,7 +8,7 @@ import { Injectable } from '@angular/core';
 import { LehrerFacade } from '../../lehrer.facade';
 
 @Injectable()
-export class SchulenListResolver implements Resolve<any> {
+export class SchulenListResolver  {
 
 	private loading = false;
 
@@ -20,13 +20,8 @@ export class SchulenListResolver implements Resolve<any> {
 
 		return this.store.pipe(
 			select(schulenLoaded),
-			tap(areLoaded => {
-				if (!areLoaded) {
-					if (!this.loading) {
-						this.loading = true;
-						this.lehrerFacade.loadSchulen();
-					}
-				}
+			tap(() => {
+				this.lehrerFacade.loadSchulen();
 			}),
 			filter(loaded => loaded),
 			first(),

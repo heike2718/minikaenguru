@@ -7,18 +7,17 @@ package de.egladil.web.mk_gateway.domain.uploads;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
-import javax.ws.rs.core.MultivaluedMap;
-
 import org.apache.commons.io.IOUtils;
-import org.jboss.resteasy.plugins.providers.multipart.InputPart;
-import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+import org.jboss.resteasy.reactive.server.multipart.FormValue;
+import org.jboss.resteasy.reactive.server.multipart.MultipartFormDataInput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import jakarta.ws.rs.core.MultivaluedMap;
 
 /**
  * MultipartUtils
@@ -36,8 +35,8 @@ public class MultipartUtils {
 	 */
 	public static UploadData getUploadData(final MultipartFormDataInput input) {
 
-		Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
-		List<InputPart> inputParts = uploadForm.get("uploadedFile");
+		Map<String, Collection<FormValue>> uploadForm = input.getValues();
+		Collection<FormValue> inputParts = uploadForm.get("uploadedFile");
 
 		if (inputParts.size() != 1) {
 
@@ -45,12 +44,12 @@ public class MultipartUtils {
 			throw new MkGatewayRuntimeException("Unerwartete Anzahl hochgeladener Dateien: kann nur genau eine Datei verarbeiten.");
 		}
 
-		InputPart inputPart = inputParts.get(0);
+		FormValue formPart = inputParts.iterator().next();
 
-		MultivaluedMap<String, String> header = inputPart.getHeaders();
+		MultivaluedMap<String, String> header = formPart.getHeaders();
 		String fileName = getFileName(header);
 
-		try (InputStream inputStream = inputPart.getBody(InputStream.class, null);
+		try (InputStream inputStream = formPart.getFileItem().getInputStream();
 			ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
 
 			IOUtils.copy(inputStream, bos);
@@ -64,10 +63,6 @@ public class MultipartUtils {
 
 			LOGGER.error("Exception beim Umwandeln des uploads: " + e.getMessage(), e);
 			throw new MkGatewayRuntimeException("IOException beim Verarbeiten des MultipartFormDataInput");
-		} finally {
-
-			// Call this method to delete any temporary files created from unmarshalling this multipart message
-			input.close();
 		}
 	}
 

@@ -13,8 +13,6 @@ export const schuleDetails = createSelector(selectedSchule, s => s !== undefined
 
 export const schulenLoaded = createSelector(lehrerState, s => s.schulenLoaded);
 
-export const loading = createSelector(lehrerState, s => s.loading);
-
 export const lehrer = createSelector(lehrerState, s => s.lehrer);
 
 export const addSchuleState = createSelector(lehrerState, s => s.addSchuleState);

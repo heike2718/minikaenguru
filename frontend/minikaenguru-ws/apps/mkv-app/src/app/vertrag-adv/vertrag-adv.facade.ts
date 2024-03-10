@@ -10,7 +10,7 @@ import { GlobalErrorHandlerService } from '../infrastructure/global-error-handle
 import { MessageService } from '@minikaenguru-ws/common-messages';
 import { take } from 'rxjs/operators';
 import { Schule } from '../lehrer/schulen/schulen.model';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 
 @Injectable({
 	providedIn: 'root'
@@ -48,7 +48,7 @@ export class VertragAdvFacade {
 	}
 
 
-	public validateForm(form: FormGroup): void {
+	public validateForm(form: UntypedFormGroup): void {
 
 		const valid = form.valid;
 		this.store.dispatch(VertragAdvActions.formValidated({ valid: valid }));

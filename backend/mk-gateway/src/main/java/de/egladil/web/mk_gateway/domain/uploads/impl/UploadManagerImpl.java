@@ -4,42 +4,29 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.uploads.impl;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.shiro.util.StringUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.filescanner_service.clamav.VirusDetection;
-import de.egladil.web.filescanner_service.scan.ScanRequestPayload;
-import de.egladil.web.filescanner_service.scan.ScanResult;
-import de.egladil.web.filescanner_service.scan.ScanService;
-import de.egladil.web.filescanner_service.securitychecks.ThreadDetection;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.error.UploadFormatException;
 import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
-import de.egladil.web.mk_gateway.domain.event.UploadThreadDetected;
-import de.egladil.web.mk_gateway.domain.event.VirusDetected;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.klassenlisten.KlassenlisteImportService;
 import de.egladil.web.mk_gateway.domain.klassenlisten.UploadKlassenlisteContext;
@@ -58,12 +45,17 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadRequestPayload;
 import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.domain.uploads.convert.UploadToCSVConverter;
+import de.egladil.web.mk_gateway.domain.uploads.scan.FileScanResult;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.Auswertungsmodus;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UploadHibernateRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 /**
  * UploadManagerImpl
@@ -83,9 +75,6 @@ public class UploadManagerImpl implements UploadManager {
 	@ConfigProperty(name = "path.external.files")
 	String pathExternalFiles;
 
-	@ConfigProperty(name = "upload.max.bytes")
-	String maxFilesizeBytes;
-
 	@Inject
 	AuthorizationService authService;
 
@@ -93,7 +82,7 @@ public class UploadManagerImpl implements UploadManager {
 	UploadAuthorizationService uploadAuthService;
 
 	@Inject
-	ScanService scanService;
+	UploadScannerDelegate uploadScannerDelegate;
 
 	@Inject
 	KlassenlisteImportService klassenlisteImportService;
@@ -113,7 +102,7 @@ public class UploadManagerImpl implements UploadManager {
 	public static UploadManagerImpl createForIntegrationTests(final EntityManager em) {
 
 		UploadManagerImpl result = new UploadManagerImpl();
-		result.scanService = ScanService.createForIntegrationTest();
+		result.uploadScannerDelegate = UploadScannerDelegate.createForIntegrationTest(em);
 		result.clientId = "integration-test-client";
 		result.pathExternalFiles = "/home/heike/git/testdaten/minikaenguru/integrationtests";
 		result.authService = AuthorizationService.createForIntegrationTest(em);
@@ -121,10 +110,8 @@ public class UploadManagerImpl implements UploadManager {
 		result.klassenlisteImportService = KlassenlisteCSVImportService.createForIntegrationTests(em);
 		result.uploadRepository = UploadHibernateRepository.createForIntegrationTests(em);
 		result.domainEventHandler = DomainEventHandler.createForIntegrationTest(em);
-		result.scanService = ScanService.createForIntegrationTest();
 		result.auswertungImportService = AuswertungImportService.createForIntegrationTest(em);
 		result.auswertungsmodusInfoService = AuswertungsmodusInfoServiceImpl.createForIntegrationTests(em);
-		result.maxFilesizeBytes = "2097152";
 		return result;
 
 	}
@@ -143,75 +130,8 @@ public class UploadManagerImpl implements UploadManager {
 		return Pair.of(rolle, wettbewerb);
 	}
 
-	ScanResult scanUpload(final UploadRequestPayload uploadPayload) {
-
-		String filename = uploadPayload.getUploadData().getFilename();
-		String fileOwnerId = uploadPayload.getBenutzerID().identifier();
-		int maxBytes = Integer.valueOf(maxFilesizeBytes);
-
-		int size = uploadPayload.getUploadData().size();
-
-		if (size > maxBytes) {
-
-			String errorMessage = applicationMessages.getString("upload.maxSizeExceeded");
-
-			UploadThreadDetected threadDetected = new UploadThreadDetected().withClientId(clientId)
-				.withFileName(filename)
-				.withOwnerId(fileOwnerId)
-				.withFilescannerMessage(errorMessage + ": size=" + size + " bytes");
-
-			domainEventHandler.handleEvent(threadDetected);
-
-			throw new UploadFormatException(errorMessage);
-		}
-
-		ScanRequestPayload scanRequestPayload = new ScanRequestPayload().withClientId(clientId)
-			.withFileOwner(fileOwnerId).withUpload(uploadPayload.getUploadData().toUpload());
-
-		ScanResult scanResult = scanService.scanFile(scanRequestPayload);
-
-		VirusDetection virusDetection = scanResult.getVirusDetection();
-
-		if (virusDetection != null && virusDetection.isVirusDetected()) {
-
-			VirusDetected virusDetected = new VirusDetected().withClientId(clientId)
-				.withFileName(filename)
-				.withOwnerId(fileOwnerId)
-				.withVirusScannerMessage(virusDetection.getScannerMessage());
-
-			domainEventHandler.handleEvent(virusDetected);
-
-			throw new UploadFormatException(applicationMessages.getString("upload.dangerousContent"));
-
-		}
-
-		ThreadDetection threadDetection = scanResult.getThreadDetection();
-
-		if (threadDetection != null && threadDetection.isSecurityThreadDetected()) {
-
-			UploadThreadDetected threadDetected = new UploadThreadDetected().withClientId(clientId)
-				.withFileName(filename)
-				.withOwnerId(fileOwnerId)
-				.withFilescannerMessage(threadDetection.getSecurityCheckMessage());
-
-			domainEventHandler.handleEvent(threadDetected);
-
-			throw new UploadFormatException(applicationMessages.getString("upload.dangerousContent"));
-		}
-
-		DateiTyp dateiTyp = DateiTyp.valueOfTikaName(scanResult.getMediaType());
-
-		if (dateiTyp == null) {
-
-			LOGGER.error("Unbekannter MediaType {} - brechen ab.", scanResult.getMediaType());
-			throw new UploadFormatException(applicationMessages.getString("upload.unbekannterMediaType"));
-		}
-
-		return scanResult;
-	}
-
 	@Transactional
-	PersistenterUpload transformAndPersistUploadMetadata(final UploadRequestPayload uploadPayload, final ScanResult scanResult, final Long checksumme) {
+	PersistenterUpload transformAndPersistUploadMetadata(final UploadRequestPayload uploadPayload, final FileScanResult scanResult, final Long checksumme) {
 
 		PersistenterUpload upload = new PersistenterUpload();
 		upload.setChecksumme(checksumme);
@@ -257,7 +177,7 @@ public class UploadManagerImpl implements UploadManager {
 			}
 		}
 
-		ScanResult scanResult = this.scanUpload(uploadPayload);
+		FileScanResult scanResult = this.uploadScannerDelegate.scanUpload(uploadPayload);
 
 		Long checksumme = this.getCRC32Checksum(uploadPayload.getUploadData().getDataBASE64());
 		UploadIdentifier uploadIdentifier = new UploadIdentifier(uploadPayload.getTeilnahmenummer(), checksumme);
@@ -288,6 +208,64 @@ public class UploadManagerImpl implements UploadManager {
 
 		LOGGER.info("upload " + persistenterUpload.getUuid() + " konvertiert: " + csvFile.getAbsolutePath());
 
+		String encoding = optEncoding.isEmpty() ? MkGatewayFileUtils.DEFAULT_ENCODING : optEncoding.get();
+		List<String> lines = MkGatewayFileUtils.readLines(csvFile.getAbsolutePath(), encoding);
+
+		if (lines.size() <= 1) {
+
+			removeFilesQuietly(persistenterUpload.getUuid(), dateiTyp);
+			uploadRepository.deleteUpload(persistenterUpload.getUuid());
+
+			switch (uploadType) {
+
+			case KLASSENLISTE: {
+
+				klassenlisteImportService.updateUploadstatusQuietly(persistenterUpload, UploadStatus.LEER);
+				String msg = applicationMessages.getString("klassenimport.dateiLeer");
+				throw new UploadFormatException(msg);
+			}
+
+			case AUSWERTUNG: {
+
+				auswertungImportService.updateUploadstatusQuietly(persistenterUpload, UploadStatus.LEER);
+				// hier ist es immer ein Lehrer, der die Tabelle hochgeladen hat. Also so tun, als wäre alles in Ordnung, oder?
+				return ResponsePayload.messageOnly(
+					MessagePayload.warn("Die Auswertungstabelle war leider leer. Eine Statistik kann nicht erstellt werden"));
+			}
+
+			default:
+				throw new IllegalArgumentException("Unexpected value: " + uploadType);
+			}
+		}
+
+		UploadType bestGuessOfUploadType = this.guessUploadType(lines);
+
+		if (bestGuessOfUploadType != uploadType) {
+
+			LOGGER.warn("erwarteter UploadType ist {}, aber Daten passen zu {}", uploadType, bestGuessOfUploadType);
+
+			removeFilesQuietly(persistenterUpload.getUuid(), dateiTyp);
+			uploadRepository.deleteUpload(persistenterUpload.getUuid());
+
+			switch (uploadType) {
+
+			case KLASSENLISTE: {
+
+				return ResponsePayload.messageOnly(
+					MessagePayload.warn(applicationMessages.getString("upload.klassenliste.war.auswertung")));
+			}
+
+			case AUSWERTUNG: {
+
+				return ResponsePayload.messageOnly(
+					MessagePayload.warn(applicationMessages.getString("auswertungsimport.war.klassenliste")));
+			}
+
+			default:
+				throw new IllegalArgumentException("Unexpected value: " + uploadType);
+			}
+		}
+
 		ResponsePayload responsePayload = null;
 
 		switch (uploadType) {
@@ -295,27 +273,48 @@ public class UploadManagerImpl implements UploadManager {
 		case KLASSENLISTE:
 
 			UploadKlassenlisteContext uploadKlassenlisteContext = (UploadKlassenlisteContext) uploadPayload.getContext();
-			responsePayload = klassenlisteImportService
-				.importiereKinder(uploadKlassenlisteContext, persistenterUpload);
+			responsePayload = klassenlisteImportService.importiereKinder(uploadKlassenlisteContext, persistenterUpload, encoding,
+				lines);
 			break;
 
 		case AUSWERTUNG:
 
 			UploadAuswertungContext uploadAuswertungContext = (UploadAuswertungContext) uploadPayload.getContext();
-			responsePayload = auswertungImportService.importiereAuswertung(uploadAuswertungContext, persistenterUpload);
+			responsePayload = auswertungImportService.importiereAuswertung(uploadAuswertungContext, persistenterUpload, lines);
 			break;
 
 		default:
 			break;
 		}
 
-		if (responsePayload.isOk()) {
+		if (responsePayload.isOk() && uploadType == UploadType.KLASSENLISTE) {
 
 			removeFilesQuietly(persistenterUpload.getUuid(), dateiTyp);
 
 		}
 
 		return responsePayload;
+	}
+
+	UploadType guessUploadType(final List<String> lines) {
+
+		if (lines.isEmpty()) {
+
+			return null;
+		}
+
+		for (String line : lines) {
+
+			String[] tokens = StringUtils.tokenizeToStringArray(line, ";");
+
+			if (tokens.length > 4) {
+
+				return UploadType.AUSWERTUNG;
+			}
+		}
+
+		return UploadType.KLASSENLISTE;
+
 	}
 
 	/**
@@ -341,12 +340,12 @@ public class UploadManagerImpl implements UploadManager {
 
 		String path = getPathUploadedFile(dateiTyp, uuid);
 
-		File file = new File(path);
+		// File file = new File(path);
 
-		try (FileOutputStream fos = new FileOutputStream(file); InputStream in = new ByteArrayInputStream(uploadData.getData())) {
+		try (FileOutputStream fos = new FileOutputStream(path)) {
 
-			IOUtils.copy(in, fos);
-			fos.flush();
+			fos.write(uploadData.getData());
+			LOGGER.info("Datei gespeichert: {}", path);
 
 			return path;
 		} catch (IOException e) {

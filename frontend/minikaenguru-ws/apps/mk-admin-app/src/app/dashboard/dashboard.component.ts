@@ -30,7 +30,7 @@ export class DashboardComponent implements OnInit {
 	}
 
 	gotoKataloge() {
-		this.router.navigateByUrl('/katalogpflege');
+		this.router.navigateByUrl('/schulkatalog/laender');
 	}
 
 	gotoEventlog() {
@@ -43,6 +43,10 @@ export class DashboardComponent implements OnInit {
 
 	gotoNewsletters() {
 		this.router.navigateByUrl('/newsletters');
+	}
+
+	gotoVersandauftraege() {
+		this.router.navigateByUrl('/versandauftraege');
 	}
 
 	gotoUplodsMonitoring() {

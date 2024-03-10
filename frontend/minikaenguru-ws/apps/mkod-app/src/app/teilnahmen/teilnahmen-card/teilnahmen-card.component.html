@@ -1,12 +1,12 @@
 <div class="row">
 	<div class="col-12">
-		<div class="card-body mkv-bordered" [style.background-color]="anmeldungsitem.anzahlLoesungszettel > 0 ? '#e3efdc' : '#faedca'">
+		<div class="card-body mkv-bordered  p-2" [style.background-color]="anmeldungsitem.anzahlLoesungszettel > 0 ? '#e3efdc' : '#faedca'">
 			<div class="card-title">{{anmeldungsitem.name}}
 			</div>
 			<div *ngIf="isOverview()" class="card-subtitle text-muted">Anzahl: {{anmeldungsitem.anzahlAnmeldungen}}</div>
             <div *ngIf="!isOverview()" class="card-subtitle text-muted">Anzahl Schulen: {{anmeldungsitem.anzahlAnmeldungen}}</div>
 			<div class="card-subtitle text-muted">Anzahl Lösungszettel: {{anmeldungsitem.anzahlLoesungszettel}}</div>
-				<div class="mkv-bordered" *ngIf="anmeldungsitem.mediane && anmeldungsitem.mediane.length > 0">
+				<div class="mkv-bordered px-2" *ngIf="anmeldungsitem.mediane && anmeldungsitem.mediane.length > 0">
 				<div class="col-md-12 mt-1 ml-1 mb-2" *ngFor="let median of anmeldungsitem.mediane">
 					<mkod-median [median]=median></mkod-median>
 				</div>

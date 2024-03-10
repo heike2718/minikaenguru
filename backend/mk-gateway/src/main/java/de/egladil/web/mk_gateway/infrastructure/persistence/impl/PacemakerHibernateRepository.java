@@ -4,9 +4,9 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.persistence.impl;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import de.egladil.web.mk_gateway.domain.health.PacemakerRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.Pacemaker;

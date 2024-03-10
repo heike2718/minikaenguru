@@ -7,10 +7,10 @@ package de.egladil.web.mk_gateway.domain.auth.client;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
 
 import org.eclipse.microprofile.rest.client.RestClientDefinitionException;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -40,6 +40,9 @@ public class ClientAccessTokenService implements IClientAccessTokenService {
 
 	@Inject
 	DomainEventHandler domainEventHandler;
+
+	@Inject
+	LoggableEventDelegate eventDelegate;
 
 	/**
 	 * Holt ein clientAccessToken vom authprovider
@@ -100,7 +103,7 @@ public class ClientAccessTokenService implements IClientAccessTokenService {
 				String msg = LogmessagePrefixes.BOT + "zurückgesendetes nonce stimmt nicht";
 
 				LOG.warn(msg);
-				new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+				eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 				throw new ClientAuthException();
 			}
 		} else {

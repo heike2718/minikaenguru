@@ -5,8 +5,8 @@
 			<div [style.background-color]="uploadInfo.uploadType === 'KLASSENLISTE' ? '#fff3cd' : '#e3efdc'">
 				<div class="card-body">
 					<div class="card-title">{{uploadInfo.sortnumber}} -  {{uploadInfo.teilnahmenummer}}
-						<span *ngIf="uploadInfo.uploadStatus === 'IMPORTIERT'" class="badge badge-success">{{uploadInfo.uploadStatus}}</span>
-						<span *ngIf="uploadInfo.uploadStatus !== 'IMPORTIERT'" class="badge badge-warning">{{uploadInfo.uploadStatus}}</span> </div>
+						<span *ngIf="uploadInfo.uploadStatus === 'IMPORTIERT'" class="badge bg-success">{{uploadInfo.uploadStatus}}</span>
+						<span *ngIf="uploadInfo.uploadStatus !== 'IMPORTIERT'" class="badge bg-warning">{{uploadInfo.uploadStatus}}</span> </div>
 					<div class="card-text">
 						<div class="row">
 							<div class="card-subtitle text-muted col-sm-12 col-md-9">UUID: {{uploadInfo.uuid}}</div>

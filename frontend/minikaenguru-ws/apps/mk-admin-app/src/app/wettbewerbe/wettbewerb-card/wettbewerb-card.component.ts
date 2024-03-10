@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Wettbewerb } from '../wettbewerbe.model';
-import { WettbewerbFacade } from '../../services/wettbewerb.facade';
+import { AdminWettbewerbFacade } from '../../services/admin-wettbewerb.facade';
 
 @Component({
 	selector: 'mka-wettbewerb-card',
@@ -17,7 +17,7 @@ export class WettbewerbCardComponent implements OnInit {
 
 	wettbewerbUndefined: boolean = false;
 
-	constructor(private wettbewerbFacade: WettbewerbFacade) { }
+	constructor(private wettbewerbFacade: AdminWettbewerbFacade) { }
 
 	ngOnInit(): void {
 

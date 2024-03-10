@@ -7,13 +7,14 @@ import { map } from 'rxjs/operators';
 import { ResponsePayload } from '@minikaenguru-ws/common-messages';
 import { Wettbewerb, AnonymisierteTeilnahme } from '../wettbewerb/wettbewerb.model';
 import { Schule, SchulanmeldungRequestPayload } from '../lehrer/schulen/schulen.model';
+import { LoadingIndicatorService } from '@minikaenguru-ws/shared/util-mk';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class TeilnahmenService {
 
-	constructor(private http: HttpClient, private logger: LogService) { }
+	constructor(private http: HttpClient, private logger: LogService, private loadingIndicatorService: LoadingIndicatorService) { }
 
 
 	public getAktuellenWettbewerb(): Observable<Wettbewerb> {
@@ -23,10 +24,10 @@ export class TeilnahmenService {
 
 		this.logger.debug('[TeilnahmenService] getAktuellenWettbewerb - url = ' + url);
 
-		return this.http.get(url).pipe(
+		return this.loadingIndicatorService.showLoaderUntilCompleted(this.http.get(url).pipe(
 			map(body => body as ResponsePayload),
 			map(payload => payload.data)
-		);
+		));
 
 	}
 
@@ -34,9 +35,7 @@ export class TeilnahmenService {
 
 		const url = environment.apiUrl + '/teilnahmen/privat';
 
-		return this.http.post(url, null).pipe(
-			map(body => body as ResponsePayload)
-		);
+		return this.loadingIndicatorService.showLoaderUntilCompleted(this.http.post<ResponsePayload>(url, null));
 	}
 
 	public schuleAnmelden(schule: Schule): Observable<ResponsePayload> {
@@ -48,18 +47,16 @@ export class TeilnahmenService {
 			schulname: schule.name
 		};
 
-		return this.http.post(url, payload).pipe(
-			map(body => body as ResponsePayload)
-		);
+		return this.loadingIndicatorService.showLoaderUntilCompleted(this.http.post<ResponsePayload>(url, payload));
 	}
 
 	public ladeAnonymisierteTeilnahmen(teilnahmenummer: string): Observable<AnonymisierteTeilnahme[]> {
 
 		const url = environment.apiUrl + '/teilnahmen/veranstalter/' + teilnahmenummer;
 
-		return this.http.get(url, {observe: 'body'}).pipe(
+		return this.loadingIndicatorService.showLoaderUntilCompleted(this.http.get(url, {observe: 'body'}).pipe(
 			map(body => body as ResponsePayload),
 			map(responsePayload => responsePayload.data as AnonymisierteTeilnahme[])
-		);
+		));
 	}
 }

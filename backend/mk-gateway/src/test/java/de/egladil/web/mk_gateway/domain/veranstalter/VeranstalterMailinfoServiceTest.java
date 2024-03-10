@@ -4,8 +4,8 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.veranstalter;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -14,29 +14,29 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import jakarta.inject.Inject;
+
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.egladil.web.mk_gateway.domain.mail.AdminEmailsConfiguration;
 import de.egladil.web.mk_gateway.domain.mail.Empfaengertyp;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.InjectMock;
 
 /**
  * VeranstalterMailinfoServiceTest
  */
-@ExtendWith(MockitoExtension.class)
+@QuarkusTest
 public class VeranstalterMailinfoServiceTest {
 
-	@Mock
+	@InjectMock
 	AdminEmailsConfiguration mailConfiguration;
 
-	@Mock
+	@InjectMock
 	VeranstalterRepository veranstalterRepository;
 
-	@InjectMocks
+	@Inject
 	VeranstalterMailinfoService service;
 
 	@Nested

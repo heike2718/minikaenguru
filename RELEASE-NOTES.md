@@ -1,5 +1,21 @@
 # minikaenguru Release Notes
 
+__2023-Q3__
+
+[Tickets](https://github.com/heike2718/minikaenguru/milestone/16?closed=1)
+
+__2023-Q2__
+
+[Tickets](https://github.com/heike2718/minikaenguru/milestone/14?closed=1)
+
+__2022-Q2__
+
+[Tickets](https://github.com/heike2718/minikaenguru/milestone/10?closed=1)
+
+__2022-Q1__
+
+[Tickets](https://github.com/heike2718/minikaenguru/milestone/9?closed=1)
+
 __Release 1.8.2.2__:
 
 Hochgeladene Auswertungen übernehmen keine Namen

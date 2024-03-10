@@ -9,7 +9,8 @@ import { AuthResult, STORAGE_KEY_DEV_SESSION_ID, STORAGE_KEY_SESSION_EXPIRES_AT,
 import { AuthState } from './+state/auth.reducer';
 import { login, logout, refreshSession, startLoggingOut } from './+state/auth.actions';
 import { Router } from '@angular/router';
-import { user, isLoggedIn, isLoggedOut, onLoggingOut } from './+state/auth.selectors';
+import { user, isLoggedIn, isLoggedOut, onLoggingOut, isAuthorized } from './+state/auth.selectors';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root'
@@ -19,7 +20,13 @@ export class AuthService {
 	public user$ = this.store.select(user);
 	isLoggedIn$ = this.store.select(isLoggedIn);
 	isLoggedOut$ = this.store.select(isLoggedOut);
+	isAuthorized$ = this.store.select(isAuthorized)
 	onLoggingOut$ = this.store.select(onLoggingOut);
+
+
+	#loadingSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+	loading$: Observable<boolean> = this.#loadingSubject.asObservable();
 
 	sessionUrl: string;
 
@@ -39,6 +46,8 @@ export class AuthService {
 
 		const url = this.sessionUrl + '/authurls/signup/lehrer/' + schulkuerzel + '/' + newsletterAbo;
 
+		this.#loadingSubject.next(true);
+
 		this.http.get(url).pipe(
 			map(body => body as ResponsePayload)
 		).subscribe(
@@ -54,6 +63,8 @@ export class AuthService {
 	public privatkontoAnlegen(newsletterAbo: boolean) {
 		const url = this.sessionUrl + '/authurls/signup/privat/' + newsletterAbo;
 
+		this.#loadingSubject.next(true);
+
 		this.http.get(url).pipe(
 			map(body => body as ResponsePayload)
 		).subscribe(
@@ -66,7 +77,10 @@ export class AuthService {
 	}
 
 	public login() {
+
 		const url = this.sessionUrl + '/authurls/login';
+
+		this.#loadingSubject.next(true);
 
 		this.http.get(url).pipe(
 			map(body => body as ResponsePayload)

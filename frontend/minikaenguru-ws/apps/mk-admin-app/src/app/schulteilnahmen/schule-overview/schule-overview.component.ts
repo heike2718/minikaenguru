@@ -7,7 +7,7 @@ import { VeranstalterFacade } from '../../veranstalter/veranstalter.facade';
 import { Teilnahme } from '@minikaenguru-ws/common-components';
 import { UploadsFacade } from '../../uploads/uploads.facade';
 import { UploadType } from '../../uploads/uploads.model';
-import { WettbewerbFacade, WETTBEWERB_STORAGE_KEY } from '../../services/wettbewerb.facade';
+import { AdminWettbewerbFacade, WETTBEWERB_STORAGE_KEY } from '../../services/admin-wettbewerb.facade';
 import { Wettbewerb } from '../../wettbewerbe/wettbewerbe.model';
 
 @Component({
@@ -35,7 +35,7 @@ export class SchuleOverviewComponent implements OnInit, OnDestroy {
 	constructor(private router: Router,
 		private schulteilnahmenFacade: SchulteilnahmenFacade,
 		public veranstalterFacade: VeranstalterFacade,
-		private wettbewerbFacade: WettbewerbFacade,
+		private wettbewerbFacade: AdminWettbewerbFacade,
 		private uploadsFacade: UploadsFacade) { }
 
 	ngOnInit(): void {

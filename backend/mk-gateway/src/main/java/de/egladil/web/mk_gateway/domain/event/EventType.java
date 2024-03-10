@@ -11,6 +11,7 @@ public enum EventType {
 
 	DATA_INCONSISTENCY_REGISTERED("DataInconsistencyRegistered"),
 	DELETE_VERANSTALTER_FAILED("DeleteVeranstalterFailed"),
+	GENERAL_ERROR("GeneralError"),
 	KIND_CHANGED("KindChanged"),
 	KIND_CREATED("KindCreated"),
 	KIND_DELETED("KindDeleted"),

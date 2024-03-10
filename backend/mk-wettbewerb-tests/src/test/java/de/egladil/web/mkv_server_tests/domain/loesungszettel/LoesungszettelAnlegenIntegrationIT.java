@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Optional;
 
-import javax.ws.rs.NotFoundException;
+import jakarta.ws.rs.NotFoundException;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

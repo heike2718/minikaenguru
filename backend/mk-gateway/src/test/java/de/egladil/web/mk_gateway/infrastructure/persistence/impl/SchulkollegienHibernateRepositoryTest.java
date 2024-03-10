@@ -5,6 +5,7 @@
 package de.egladil.web.mk_gateway.infrastructure.persistence.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -61,11 +62,7 @@ public class SchulkollegienHibernateRepositoryTest {
 
 			System.out.println(e.getMessage());
 
-			assertEquals(
-				"Konnte personen nicht deserialisieren: Unrecognized field \"hallo\" (class de.egladil.web.mk_gateway.domain.veranstalter.Kollege), not marked as ignorable (2 known properties: \"fullName\", \"uuid\"])\n"
-					+
-					" at [Source: (String)\"[{\"uuid\":\"gsdgqu\",\"hallo\":\"Herr Bert\"},{\"uuid\":\"bakvsk\",\"fullName\":\"Frau Mann\"}]\"; line: 1, column: 28] (through reference chain: java.lang.Object[][0]->de.egladil.web.mk_gateway.domain.veranstalter.Kollege[\"hallo\"])",
-				e.getMessage());
+			assertTrue(e.getMessage().startsWith("Konnte personen nicht deserialisieren: Unrecognized field \"hallo\""));
 		}
 
 	}

@@ -11,9 +11,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
@@ -25,7 +25,6 @@ import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MessagingAuthException;
 import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
-import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.user.UserRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.ChangeUserCommand;
@@ -49,6 +48,9 @@ public class SynchronizeVeranstalterService {
 	DomainEventHandler domainEventHandler;
 
 	@Inject
+	LoggableEventDelegate eventDelegate;
+
+	@Inject
 	VeranstalterRepository veranstalterRepository;
 
 	@Inject
@@ -57,19 +59,7 @@ public class SynchronizeVeranstalterService {
 	@Inject
 	SchulkollegienService schulkollegienService;
 
-	private SecurityIncidentRegistered securityIncidentPayload;
-
 	private Map<String, SyncHandshake> syncSessions = new ConcurrentHashMap<String, SyncHandshake>();
-
-	public static SynchronizeVeranstalterService createForTest(final VeranstalterRepository veranstalterRepository, final UserRepository userRepository, final SchulkollegienService schulkollegienService) {
-
-		SynchronizeVeranstalterService result = new SynchronizeVeranstalterService();
-		result.veranstalterRepository = veranstalterRepository;
-		result.userRepository = userRepository;
-		result.schulkollegienService = schulkollegienService;
-		result.syncTokenValidityPeriod = 1;
-		return result;
-	}
 
 	public HandshakeAck createHandshakeAck(final SyncHandshake handshake) {
 
@@ -154,7 +144,7 @@ public class SynchronizeVeranstalterService {
 
 			String msg = "Aufruf sync mit falscher sessionId '" + syncSessionId + "'";
 			LOG.warn("{}", msg);
-			this.securityIncidentPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new MessagingAuthException(msg);
 		}
 
@@ -163,11 +153,6 @@ public class SynchronizeVeranstalterService {
 			throw new SessionExpiredException("SyncSession ist nicht mehr gültig");
 		}
 
-	}
-
-	SecurityIncidentRegistered securityIncidentPayload() {
-
-		return securityIncidentPayload;
 	}
 
 	/**

@@ -4,15 +4,15 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.general;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
@@ -42,11 +42,11 @@ public class HeartbeatResource {
 	String expectedHeartbeatId;
 
 	@GET
-	public Response check(@QueryParam("heartbeatId") final String heartbeatId) {
+	public Response check(@HeaderParam("X-HEARTBEAT-ID") final String heartbeatId) {
 
 		if (!expectedHeartbeatId.equals(heartbeatId)) {
 
-			LOG.warn(LogmessagePrefixes.BOT + "Aufruf mit fehlerhaftem QueryParam " + heartbeatId);
+			LOG.warn(LogmessagePrefixes.BOT + "Aufruf mit fehlerhaftem X-HEARTBEAT-ID-Header value " + heartbeatId);
 			return Response.status(401)
 				.entity(ResponsePayload.messageOnly(MessagePayload.error("keine Berechtigung für diese Resource"))).build();
 		}

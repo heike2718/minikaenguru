@@ -8,18 +8,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.PersistenceException;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.WebApplicationException;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
@@ -28,22 +25,24 @@ import de.egladil.web.mk_kataloge.domain.apimodel.OrtPayload;
 import de.egladil.web.mk_kataloge.domain.error.KatalogAPIException;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Ort;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
+import io.quarkus.test.InjectMock;
+import io.quarkus.test.junit.QuarkusTest;
+import jakarta.inject.Inject;
+import jakarta.persistence.PersistenceException;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.WebApplicationException;
 
 /**
  * RenameOrtServiceTest
  */
+@QuarkusTest
 public class RenameOrtServiceTest {
 
-	private SchuleRepository schuleRepository;
+	@InjectMock
+	SchuleRepository schuleRepository;
 
-	private RenameOrtService service;
-
-	@BeforeEach
-	void setUp() {
-
-		schuleRepository = Mockito.mock(SchuleRepository.class);
-		service = RenameOrtService.createForTest(schuleRepository);
-	}
+	@Inject
+	RenameOrtService service;
 
 	@Test
 	void should_ThrowNotFoundException_when_NichtVorhanden() {
@@ -51,7 +50,7 @@ public class RenameOrtServiceTest {
 		// Arrange
 		OrtPayload ortPayload = ChangeKatalogTestUtils.createOrtPayloadForTest();
 
-		Mockito.when(schuleRepository.getOrt(ortPayload.kuerzel())).thenReturn(Optional.empty());
+		when(schuleRepository.getOrt(ortPayload.kuerzel())).thenReturn(Optional.empty());
 
 		// Act + Assert
 		try {
@@ -82,7 +81,7 @@ public class RenameOrtServiceTest {
 
 		assertFalse(ortPayload.kuerzelLand().equals(ort.getLandKuerzel()));
 
-		Mockito.when(schuleRepository.getOrt(ortPayload.kuerzel())).thenReturn(Optional.of(ort));
+		when(schuleRepository.getOrt(ortPayload.kuerzel())).thenReturn(Optional.of(ort));
 
 		// Act + Assert
 		try {
@@ -116,19 +115,19 @@ public class RenameOrtServiceTest {
 		trefferliste.add(andererOrt);
 		trefferliste.add(dieserOrt);
 
-		Mockito.when(schuleRepository.getOrt(ortPayload.kuerzel())).thenReturn(Optional.of(dieserOrt));
-		Mockito.when(schuleRepository.findOrteInLand(ortPayload.kuerzelLand())).thenReturn(trefferliste);
+		when(schuleRepository.getOrt(ortPayload.kuerzel())).thenReturn(Optional.of(dieserOrt));
+		when(schuleRepository.findOrteInLand(ortPayload.kuerzelLand())).thenReturn(trefferliste);
 
 		List<Schule> schulen = new ArrayList<Schule>();
 		schulen.add(ChangeKatalogTestUtils.mapFromSchulePayload(ChangeKatalogTestUtils.createSchulePayloadForTest()));
 
-		Mockito.when(schuleRepository.findSchulenInOrt(ortPayload.kuerzel())).thenReturn(schulen);
+		when(schuleRepository.findSchulenInOrt(ortPayload.kuerzel())).thenReturn(schulen);
 
 		// Act
 		ResponsePayload responsePayload = service.ortUmbenennen(ortPayload);
 
 		// Assert
-		Mockito.verify(schuleRepository, Mockito.times(0)).replaceSchulen(schulen);
+		verify(schuleRepository, times(0)).replaceSchulen(schulen);
 
 		MessagePayload messagePayload = responsePayload.getMessage();
 		assertEquals("WARN", messagePayload.getLevel());
@@ -151,8 +150,8 @@ public class RenameOrtServiceTest {
 
 		List<Ort> trefferliste = new ArrayList<>();
 
-		Mockito.when(schuleRepository.getOrt(ortPayload.kuerzel())).thenReturn(Optional.of(dieserOrt));
-		Mockito.when(schuleRepository.findOrteInLand(ortPayload.kuerzelLand())).thenReturn(trefferliste);
+		when(schuleRepository.getOrt(ortPayload.kuerzel())).thenReturn(Optional.of(dieserOrt));
+		when(schuleRepository.findOrteInLand(ortPayload.kuerzelLand())).thenReturn(trefferliste);
 
 		List<Schule> schulen = new ArrayList<Schule>();
 
@@ -182,13 +181,13 @@ public class RenameOrtServiceTest {
 
 		assertFalse(schulen.get(0).equals(schulen.get(1)));
 
-		Mockito.when(schuleRepository.findSchulenInOrt(ortPayload.kuerzel())).thenReturn(schulen);
+		when(schuleRepository.findSchulenInOrt(ortPayload.kuerzel())).thenReturn(schulen);
 
 		// Act
 		ResponsePayload responsePayload = service.ortUmbenennen(ortPayload);
 
 		// Assert
-		Mockito.verify(schuleRepository, Mockito.times(1)).replaceSchulen(schulen);
+		verify(schuleRepository, times(1)).replaceSchulen(schulen);
 
 		MessagePayload messagePayload = responsePayload.getMessage();
 		assertEquals("INFO", messagePayload.getLevel());
@@ -235,8 +234,8 @@ public class RenameOrtServiceTest {
 
 		List<Ort> trefferliste = new ArrayList<>();
 
-		Mockito.when(schuleRepository.getOrt(ortPayload.kuerzel())).thenReturn(Optional.of(dieserOrt));
-		Mockito.when(schuleRepository.findOrteInLand(ortPayload.kuerzelLand())).thenReturn(trefferliste);
+		when(schuleRepository.getOrt(ortPayload.kuerzel())).thenReturn(Optional.of(dieserOrt));
+		when(schuleRepository.findOrteInLand(ortPayload.kuerzelLand())).thenReturn(trefferliste);
 
 		List<Schule> schulen = new ArrayList<Schule>();
 
@@ -268,9 +267,9 @@ public class RenameOrtServiceTest {
 
 		assertFalse(schulen.get(0).equals(schulen.get(1)));
 
-		Mockito.when(schuleRepository.findSchulenInOrt(ortPayload.kuerzel())).thenReturn(schulen);
+		when(schuleRepository.findSchulenInOrt(ortPayload.kuerzel())).thenReturn(schulen);
 
-		Mockito.when(schuleRepository.replaceSchulen(schulen))
+		when(schuleRepository.replaceSchulen(schulen))
 			.thenThrow(new PersistenceException("DB-Fehler beim Speichern von Schulen"));
 
 		// Act + Assert
@@ -281,7 +280,7 @@ public class RenameOrtServiceTest {
 			fail("keine KatalogAPIException");
 		} catch (KatalogAPIException e) {
 
-			Mockito.verify(schuleRepository, Mockito.times(1)).replaceSchulen(schulen);
+			verify(schuleRepository, times(1)).replaceSchulen(schulen);
 
 			assertEquals("Der Ort konnte wegen eines Serverfehlers nicht umbenannt werden.", e.getMessage());
 		}

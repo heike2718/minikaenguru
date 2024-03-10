@@ -2,7 +2,6 @@ import { createAction, props } from '@ngrx/store';
 import { Schule } from './../schulen/schulen.model';
 import { Schulteilnahme, Lehrer } from '../../wettbewerb/wettbewerb.model';
 import { KatalogItem } from '@minikaenguru-ws/common-schulkatalog';
-import { ResponsePayload } from '@minikaenguru-ws/common-messages';
 
 
 export const datenLehrerGeladen = createAction(
@@ -13,10 +12,6 @@ export const datenLehrerGeladen = createAction(
 export const schulenLoaded = createAction(
 	'[LehrerFacade] loadSchulen',
 	props<{ schulen: Schule[] }>()
-);
-
-export const startLoading = createAction(
-	'[LehrerFacade] before request'
 );
 
 export const finishedWithError = createAction(

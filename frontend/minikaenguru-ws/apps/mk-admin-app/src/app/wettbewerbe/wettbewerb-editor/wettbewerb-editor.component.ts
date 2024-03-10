@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 // import { DOCUMENT } from '@angular/common';
-import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
+import { UntypedFormBuilder, Validators, UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 import { Subscription } from 'rxjs';
 import { WettbewerbEditorModel } from '../wettbewerbe.model';
-import { WettbewerbFacade } from '../../services/wettbewerb.facade';
+import { AdminWettbewerbFacade } from '../../services/admin-wettbewerb.facade';
 import { LogService } from '@minikaenguru-ws/common-logging';
 import { Router } from '@angular/router';
 import { MessageService } from '@minikaenguru-ws/common-messages';
@@ -18,27 +18,27 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 
 	devMode = environment.envName === 'DEV';
 
-	wettbewerbForm!: FormGroup;
+	wettbewerbForm!: UntypedFormGroup;
 
 	wettbewerbEditorModel$ = this.wettbewerbFacade.wettbewerbEditorModel$;
 
-	jahrFormControl!: FormControl;
+	jahrFormControl!: UntypedFormControl;
 
-	statusFormControl!: FormControl;
+	statusFormControl!: UntypedFormControl;
 
-	wettbewerbsbeginnFormControl!: FormControl;
+	wettbewerbsbeginnFormControl!: UntypedFormControl;
 
-	wettbewerbsendeFormControl!: FormControl;
+	wettbewerbsendeFormControl!: UntypedFormControl;
 
-	datumFreischaltungLehrerFormControl!: FormControl;
+	datumFreischaltungLehrerFormControl!: UntypedFormControl;
 
-	datumFreischaltungPrivatFormControl!: FormControl;
+	datumFreischaltungPrivatFormControl!: UntypedFormControl;
 
-	loesungsbuchstabenIkidsFormControl!: FormControl;
+	loesungsbuchstabenIkidsFormControl!: UntypedFormControl;
 
-	loesungsbuchstabenKlasse1FormControl!: FormControl;
+	loesungsbuchstabenKlasse1FormControl!: UntypedFormControl;
 
-	loesungsbuchstabenKlasse2FormControl!: FormControl;
+	loesungsbuchstabenKlasse2FormControl!: UntypedFormControl;
 
 	private wettbewerbEditorModelSubscription: Subscription = new Subscription();
 
@@ -46,8 +46,8 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 
 	private initialWettbewerbGuiModel = {} as WettbewerbEditorModel;
 
-	constructor(private fb: FormBuilder,
-		private wettbewerbFacade: WettbewerbFacade,
+	constructor(private fb: UntypedFormBuilder,
+		private wettbewerbFacade: AdminWettbewerbFacade,
 		// @Inject(DOCUMENT) private document: Document,
 		private router: Router,
 		private messageService: MessageService,
@@ -62,15 +62,15 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 					this.initialWettbewerbGuiModel = {...wb};
 				}
 
-				this.jahrFormControl = new FormControl({ value: '' }, Validators.required);
-				this.statusFormControl = new FormControl({ value: '', disabled: true });
-				this.wettbewerbsbeginnFormControl = new FormControl({ value: '' }, Validators.required);
-				this.wettbewerbsendeFormControl = new FormControl({ value: '' }, Validators.required);
-				this.datumFreischaltungLehrerFormControl = new FormControl({ value: '' }, Validators.required);
-				this.datumFreischaltungPrivatFormControl = new FormControl({ value: '' }, Validators.required);
-				this.loesungsbuchstabenIkidsFormControl = new FormControl({ value: '' });
-				this.loesungsbuchstabenKlasse1FormControl = new FormControl({ value: '' });
-				this.loesungsbuchstabenKlasse2FormControl = new FormControl({ value: '' });
+				this.jahrFormControl = new UntypedFormControl({ value: '' }, Validators.required);
+				this.statusFormControl = new UntypedFormControl({ value: '', disabled: true });
+				this.wettbewerbsbeginnFormControl = new UntypedFormControl({ value: '' }, Validators.required);
+				this.wettbewerbsendeFormControl = new UntypedFormControl({ value: '' }, Validators.required);
+				this.datumFreischaltungLehrerFormControl = new UntypedFormControl({ value: '' }, Validators.required);
+				this.datumFreischaltungPrivatFormControl = new UntypedFormControl({ value: '' }, Validators.required);
+				this.loesungsbuchstabenIkidsFormControl = new UntypedFormControl({ value: '' });
+				this.loesungsbuchstabenKlasse1FormControl = new UntypedFormControl({ value: '' });
+				this.loesungsbuchstabenKlasse2FormControl = new UntypedFormControl({ value: '' });
 
 
 				this.wettbewerbForm = this.fb.group({
@@ -118,9 +118,9 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 			wettbewerbsbeginn: formValue.wettbewerbsbeginn ? formValue.wettbewerbsbeginn.trim() : '',
 			wettbewerbsende: formValue.wettbewerbsende ? formValue.wettbewerbsende.trim() : '',
 			status: this.initialWettbewerbGuiModel.status, // wird sowieso ignoriert
-			loesungsbuchstabenIkids: formValue.loesungsbuchstabenIkids.trim(),
-			loesungsbuchstabenKlasse1: formValue.loesungsbuchstabenKlasse1.trim(),
-			loesungsbuchstabenKlasse2: formValue.loesungsbuchstabenKlasse2.trim()
+			loesungsbuchstabenIkids: formValue.loesungsbuchstabenIkids ? formValue.loesungsbuchstabenIkids.trim() : '',
+			loesungsbuchstabenKlasse1: formValue.loesungsbuchstabenKlasse1.trim() ? formValue.loesungsbuchstabenKlasse1.trim() : '',
+			loesungsbuchstabenKlasse2: formValue.loesungsbuchstabenKlasse2.trim() ? formValue.loesungsbuchstabenKlasse2.trim() : ''
 		}
 		this.logger.debug('neuerWettbewerb: ' + JSON.stringify(neuerWettbewerb));
 		this.wettbewerbFacade.saveWettbewerb(neuerWettbewerb, this.initialWettbewerbGuiModel.jahr === 0);

@@ -1,0 +1,1 @@
+ALTER TABLE `KINDER` add COLUMN `IMPORTIERT` TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Flag 0/1  - 1, wenn Kind durch Import erstellt';

@@ -4,11 +4,11 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.auth.session.loginlogout.impl;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.core.NewCookie;
-import javax.ws.rs.core.Response;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.core.NewCookie;
+import jakarta.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -64,6 +64,9 @@ public class LoginLogoutServiceImpl implements LoginLogoutService {
 	@Inject
 	DomainEventHandler domainEventHandler;
 
+	@Inject
+	LoggableEventDelegate eventDelegate;
+
 	@Override
 	public Response login(final AuthResult authResult, final AuthMode authMode) {
 
@@ -71,7 +74,7 @@ public class LoginLogoutServiceImpl implements LoginLogoutService {
 
 			String msg = "login wurde ohne payload aufgerufen";
 
-			new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 
 			throw new BadRequestException("erwarte payload");
 		}
@@ -135,7 +138,7 @@ public class LoginLogoutServiceImpl implements LoginLogoutService {
 
 			LOG.warn(msg);
 
-			new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 
 			return Response.status(401)
 				.entity(ResponsePayload.messageOnly(MessagePayload.error("böse böse. Dieser Request wurde geloggt!")))

@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { ResponsePayload, MessageService, Message } from '@minikaenguru-ws/common-messages';
 import { Kind, Duplikatwarnung, KindRequestData } from '@minikaenguru-ws/common-components';
 import { LogService } from '@minikaenguru-ws/common-logging';
+import { LoadingIndicatorService } from '@minikaenguru-ws/shared/util-mk';
 
 
 @Injectable({
@@ -15,17 +16,18 @@ export class KinderService {
 
 
 	constructor(private http: HttpClient,
-		private logger: LogService) { }
+		private logger: LogService,
+		private loadingIndicatorService: LoadingIndicatorService) { }
 
 
 	public loadKinder(teilnahmenummer: string): Observable<Kind[]> {
 
 		const url = environment.apiUrl + '/kinder/' + teilnahmenummer;
 
-		return this.http.get(url).pipe(
+		return this.loadingIndicatorService.showLoaderUntilCompleted(this.http.get(url).pipe(
 			map(body => body as ResponsePayload),
 			map(payload => payload.data)
-		);
+		));
 	}
 
 	public checkDuplikat(data: KindRequestData): Observable<Duplikatwarnung> {
@@ -35,19 +37,19 @@ export class KinderService {
 		this.logger.debug(JSON.stringify(data));
 
 
-		return this.http.post(url, data, { observe: 'body' }).pipe(
+		return this.loadingIndicatorService.showLoaderUntilCompleted(this.http.post(url, data, { observe: 'body' }).pipe(
 			map(body => body as ResponsePayload),
 			map(payload => payload.data)
-		);
+		));
 	}
 
 	public insertKind(data: KindRequestData): Observable<ResponsePayload> {
 
 		const url = environment.apiUrl + '/kinder';
 
-		return this.http.post(url, data, { observe: 'body' }).pipe(
+		return this.loadingIndicatorService.showLoaderUntilCompleted(this.http.post(url, data, { observe: 'body' }).pipe(
 			map(body => body as ResponsePayload)
-		);
+		));
 
 	}
 
@@ -55,9 +57,9 @@ export class KinderService {
 
 		const url = environment.apiUrl + '/kinder';
 
-		return this.http.put(url, data, { observe: 'body' }).pipe(
+		return this.loadingIndicatorService.showLoaderUntilCompleted(this.http.put(url, data, { observe: 'body' }).pipe(
 			map(body => body as ResponsePayload)
-		);
+		));
 	}
 
 
@@ -65,9 +67,9 @@ export class KinderService {
 
 		const url = environment.apiUrl + '/kinder/' + uuid;
 
-		return this.http.delete(url, { observe: 'body' }).pipe(
+		return this.loadingIndicatorService.showLoaderUntilCompleted(this.http.delete(url, { observe: 'body' }).pipe(
 			map(body => body as ResponsePayload)
-		);
+		));
 	}
 
 };

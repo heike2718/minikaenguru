@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import javax.persistence.PersistenceException;
-
 import org.mockito.Mockito;
 
 import de.egladil.web.mk_gateway.domain.veranstalter.PrivatteilnahmeKuerzelService;
@@ -31,7 +29,7 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemorySc
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryTeilnahmenRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryUserRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryVeranstalterRepository;
-import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryVersandinfosRepository;
+import jakarta.persistence.PersistenceException;
 
 /**
  * AbstractDomainServiceTest
@@ -119,8 +117,6 @@ public abstract class AbstractDomainServiceTest {
 	private InMemorySchulkollegienRepository schulkollegienRepository;
 
 	private InMemoryNewsletterRepository newsletterRepository;
-
-	private InMemoryVersandinfosRepository versandinfosRepository;
 
 	private int countWettbewerbInsert = 0;
 
@@ -270,7 +266,6 @@ public abstract class AbstractDomainServiceTest {
 		};
 
 		newsletterRepository = new InMemoryNewsletterRepository();
-		versandinfosRepository = new InMemoryVersandinfosRepository();
 
 	}
 
@@ -373,10 +368,4 @@ public abstract class AbstractDomainServiceTest {
 
 		return newsletterRepository;
 	}
-
-	protected InMemoryVersandinfosRepository getVersandinfosRepository() {
-
-		return versandinfosRepository;
-	}
-
 }

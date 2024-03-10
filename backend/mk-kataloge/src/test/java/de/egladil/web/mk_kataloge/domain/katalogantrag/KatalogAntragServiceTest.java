@@ -4,44 +4,56 @@
 // =====================================================
 package de.egladil.web.mk_kataloge.domain.katalogantrag;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.egladil.web.mk_kataloge.domain.apimodel.SchulkatalogAntrag;
-import de.egladil.web.mk_kataloge.domain.event.SecurityIncidentRegistered;
+import de.egladil.web.mk_kataloge.domain.event.LoggableEventDelegate;
+import io.quarkus.test.InjectMock;
+import io.quarkus.test.junit.QuarkusTest;
+import jakarta.inject.Inject;
 
 /**
  * KatalogAntragServiceTest
  */
+@QuarkusTest
 public class KatalogAntragServiceTest {
+
+	@ConfigProperty(name = "bccEmpfaengerSchulkatalogantrag", defaultValue = "minikaenguru@egladil.de")
+	String bccEmpfaenger;
+
+	@InjectMock
+	KatalogMailService katalogMailService;
+
+	@InjectMock
+	LoggableEventDelegate eventDelegate;
+
+	@Inject
+	KatalogAntragService service;
 
 	@Test
 	void should_NotSendMail_when_HoneypotNotBlank() {
 
 		// Arrange
 		SchulkatalogAntrag antrag = SchulkatalogAntrag.createForTest("mail@web.de", "land", "ort", null, "schulname", null, "hagh");
-		KatalogAntragService service = new KatalogAntragService();
 
 		// Act
 		boolean sent = service.validateAndSend(antrag);
 
 		// Assert
 		assertFalse(sent);
-		SecurityIncidentRegistered eventObject = service.getSecurityIncident();
-		assertNotNull(eventObject);
-		assertNotNull(eventObject.occuredOn());
-		assertEquals("KATALOG:SecurityIncidentRegistered", eventObject.typeName());
-		assertEquals(
-			"Honeypot des Schulkatalogantrags war nicht blank: SchulkatalogAntrag [email=mail@web.de, land=land, ort=ort, plz=null, schulname=schulname, strasseUndHausnummer=null, kleber=hagh]",
-			eventObject.toString());
+		verify(eventDelegate).fireSecurityEvent(any(), any());
+		verify(katalogMailService, never()).sendMail(any());
+
 	}
 
 	@Test
@@ -50,26 +62,16 @@ public class KatalogAntragServiceTest {
 		// Arrange
 		SchulkatalogAntrag antrag = SchulkatalogAntrag.createForTest("mail@web.de", "land", "ort", null, "schulname", null,
 			"");
-		KatalogAntragService service = KatalogAntragService.createForTest();
+
+		doNothing().when(eventDelegate).fireKatalogAntragReceived(any(), any());
 
 		// Act
 		boolean sent = service.validateAndSend(antrag);
 
 		// Assert
 		assertTrue(sent);
-		assertNull(service.getSecurityIncident());
-
-		KatalogAntragReceived eventObject = service.getKatalogAntragEventObject();
-		assertNotNull(eventObject);
-		assertNotNull(eventObject.occuredOn());
-		assertEquals("KATALOG:KatalogAntragReceived", eventObject.typeName());
-
-		String json = new ObjectMapper().writeValueAsString(eventObject.body());
-
-		assertEquals(
-			"{\"email\":\"mail@web.de\",\"land\":\"land\",\"ort\":\"ort\",\"plz\":null,\"schulname\":\"schulname\",\"strasseUndHausnummer\":null,\"kleber\":\"\"}",
-			json);
-
+		verify(eventDelegate, never()).fireSecurityEvent(any(), any());
+		verify(eventDelegate).fireKatalogAntragReceived(any(), any());
 	}
 
 }

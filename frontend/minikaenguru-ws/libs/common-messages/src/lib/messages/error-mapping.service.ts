@@ -12,10 +12,14 @@ export class ErrorMappingService {
 	public extractMessageObject(error: HttpErrorResponse): Message {
 
 		if (error.error && error.error.message) {
-			return { level: 'ERROR', message: error.error.message['message'] };
+			if (error.error.message['level']) {
+				return { level: error.error.message['level'], message: error.error.message['message'] };
+			} else {
+				return { level: 'ERROR', message: error.error.message['message'] };
+			}			
 		}
 
-		if (error.error && error.message) {
+		if (error.error && error.message) {			
 			return { level: 'ERROR', message: error['message'] };
 		}
 

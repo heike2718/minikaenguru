@@ -29,11 +29,7 @@ export class LehrerFacade {
 	public showSchulkatalog$ = this.appStore.select(LehrerSelectors.showSchulkatalog);
 	public showTextSchuleBereitsZugeordnet$ = this.appStore.select(LehrerSelectors.showTextSchuleBereitsZugeordnet);
 	public btnAddMeToSchuleDisabled$ = this.appStore.select(LehrerSelectors.btnAddMeToSchuleDisabled);
-	public loading$ = this.appStore.select(LehrerSelectors.loading);
-
 	public alleSchulenDesLehrers$ = this.appStore.select(LehrerSelectors.alleSchulen);
-
-
 
 	private loggingOut: boolean = false;
 
@@ -58,8 +54,6 @@ export class LehrerFacade {
 			return;
 		}
 
-		this.appStore.dispatch(LehrerActions.startLoading());
-
 		this.veranstalterService.getLehrer().pipe(
 			take(1)
 		).subscribe(
@@ -83,8 +77,6 @@ export class LehrerFacade {
 			return;
 		}
 
-		this.appStore.dispatch(LehrerActions.startLoading());
-
 		this.schulenService.findSchulen().pipe(
 			take(1)
 		).subscribe(
@@ -103,8 +95,6 @@ export class LehrerFacade {
 		if (this.loggingOut) {
 			return;
 		}
-
-		this.appStore.dispatch(LehrerActions.startLoading());
 
 		this.schulenService.loadDetails(schulkuerzel).pipe(
 			take(1)
@@ -144,8 +134,6 @@ export class LehrerFacade {
 	}
 	public changeAboNewsletter(): void {
 
-		this.appStore.dispatch(LehrerActions.startLoading());
-
 		this.veranstalterService.toggleAboNewsletter().pipe(
 			take(1)
 		).subscribe(
@@ -166,8 +154,6 @@ export class LehrerFacade {
 	}
 
 	public removeSchule(schule: Schule): void {
-
-		this.appStore.dispatch(LehrerActions.startLoading());
 
 		this.veranstalterService.removeSchule(schule.kuerzel).subscribe(
 			message => {
@@ -199,8 +185,7 @@ export class LehrerFacade {
 	}
 
 	public schuleHinzufuegen(katalogItem: KatalogItem): void {
-		this.appStore.dispatch(LehrerActions.startLoading());
-
+		
 		this.veranstalterService.addSchule(katalogItem.kuerzel).pipe(
 			take(1)
 		).subscribe(
@@ -224,6 +209,7 @@ export class LehrerFacade {
 			this.appStore.dispatch(LehrerActions.auswertungstabelleHochgeladen({schule: schule}));
 		}		
 		this.messageService.showMessage(responsePayload.message);
+		this.loadLehrer();
 	}
 
 	public restoreDetailsFromCache(schulkuerzel: string): void {

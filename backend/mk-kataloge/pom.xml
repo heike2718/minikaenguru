@@ -7,21 +7,19 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mk-kataloge</artifactId>
-	<version>1.8.2.2</version>
+	<version>2.3.0</version>
 
 	<properties>
-		<commons.version>1.7.6</commons.version>
-		<quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
+		<commons.version>2.0.2</commons.version>
+		<quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
 		<quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-		<quarkus.platform.version>2.7.5.Final</quarkus.platform.version>
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
-		<compiler-plugin.version>3.8.1</compiler-plugin.version>
+		<quarkus.platform.version>3.8.2</quarkus.platform.version>
+		<java.version>17</java.version>
 		<maven.compiler.parameters>true</maven.compiler.parameters>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
-		<dependency-check.version>7.0.4</dependency-check.version>
+		<surefire-plugin.version>3.1.2</surefire-plugin.version>
+		<dependency-check.version>9.0.5</dependency-check.version>
 	</properties>
 
 	<dependencyManagement>
@@ -63,29 +61,6 @@
 
 		<dependency>
 			<groupId>de.egladil.web</groupId>
-			<artifactId>commons-crypto</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.bouncycastle</groupId>
-					<artifactId>bcprov-jdk15on</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>4.0.1</version>
-		</dependency>
-
-		<!-- quarkus hat noch nicht die gepatchte Version -->
-		<dependency>
-			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcprov-jdk15on</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>de.egladil.web</groupId>
 			<artifactId>commons-mailer</artifactId>
 		</dependency>
 
@@ -96,27 +71,15 @@
 
 		<dependency>
 			<groupId>io.quarkus</groupId>
-			<artifactId>quarkus-resteasy</artifactId>
+			<artifactId>quarkus-resteasy-reactive</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>io.quarkus</groupId>
-			<artifactId>quarkus-resteasy-jackson</artifactId>
+			<artifactId>quarkus-resteasy-reactive-jackson</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-hibernate-orm</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.quarkus</groupId>
-			<artifactId>quarkus-hibernate-validator</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.resteasy</groupId>
-			<artifactId>resteasy-multipart-provider</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.quarkus</groupId>
-			<artifactId>quarkus-smallrye-fault-tolerance</artifactId>
 		</dependency>
 
 		<dependency>
@@ -126,6 +89,17 @@
 		<dependency>
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-jdbc-mariadb</artifactId>
+		</dependency>
+		<!-- Flyway specific dependencies -->
+		<dependency>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-flyway</artifactId>
+		</dependency>
+
+		<!-- Flyway MariaDB/MySQL specific dependencies -->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-mysql</artifactId>
 		</dependency>
 
 		<dependency>
@@ -143,20 +117,42 @@
 			<artifactId>slf4j-jboss-logmanager</artifactId>
 		</dependency>
 
-		<!-- Test START -->
+		<!-- START Test scoped dependencies -->
 		<dependency>
-			<groupId>org.junit.jupiter</groupId>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-junit5</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.testcontainers</groupId>
 			<artifactId>junit-jupiter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>mariadb</artifactId>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-junit5-mockito</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- Test ENDE -->
 
+		<dependency>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-jacoco</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- END Test scoped dependencies -->
 
 	</dependencies>
 
@@ -164,11 +160,12 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.0</version>
 				<configuration>
-					<release>11</release>
-					<source>${maven.compiler.source}</source>
-					<target>${maven.compiler.target}</target>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<compilerArgs>
+						<arg>-parameters</arg>
+					</compilerArgs>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -180,57 +177,31 @@
 					<execution>
 						<goals>
 							<goal>build</goal>
-							<!-- <goal>generate-code</goal> <goal>generate-code-tests</goal> -->
+							<goal>generate-code</goal>
+							<goal>generate-code-tests</goal>
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.5</version>
-				<executions>
-					<execution>
-						<id>prepare-agent</id>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>report</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>post-unit-test</id>
-						<phase>test</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-						<configuration>
-							<!-- Sets the path to the file which contains the execution data. -->
-							<dataFile>target/jacoco.exec</dataFile>
-							<!-- Sets the output directory for the code coverage report. -->
-							<outputDirectory>target/jacoco-out</outputDirectory>
-						</configuration>
-					</execution>
-				</executions>
-				<configuration>
-					<systemPropertyVariables>
-						<jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
-					</systemPropertyVariables>
-				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${surefire-plugin.version}</version>
+				<configuration>
+					<systemPropertyVariables>
+						<java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+						<maven.home>${maven.home}</maven.home>
+					</systemPropertyVariables>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.owasp</groupId>
 				<artifactId>dependency-check-maven</artifactId>
 				<version>${dependency-check.version}</version>
+				<configuration>
+					<suppressionFiles>
+						<suppressionFile>./suppressions.xml</suppressionFile>
+					</suppressionFiles>
+				</configuration>
 				<executions>
 					<execution>
 						<phase>package</phase>

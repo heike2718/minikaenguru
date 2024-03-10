@@ -4,10 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_kataloge.domain.event;
 
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.event.Observes;
-import javax.inject.Inject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +12,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.egladil.web.mk_kataloge.domain.error.KatalogAPIException;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.StoredEvent;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
 
 /**
  * DomainEventHandler

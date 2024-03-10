@@ -7,12 +7,6 @@ package de.egladil.web.mk_kataloge.domain.admin;
 import java.util.List;
 import java.util.Optional;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.PersistenceException;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.Response;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +17,11 @@ import de.egladil.web.mk_kataloge.domain.apimodel.LandPayload;
 import de.egladil.web.mk_kataloge.domain.error.KatalogAPIException;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Land;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.PersistenceException;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.core.Response;
 
 /**
  * RenameLandService
@@ -42,7 +41,7 @@ public class RenameLandService {
 		return result;
 	}
 
-	public ResponsePayload landUmbenennen(final LandPayload landPayload) {
+	public ResponsePayload updateLand(final LandPayload landPayload) {
 
 		try {
 
@@ -70,7 +69,11 @@ public class RenameLandService {
 
 			List<Schule> schulen = schuleRepository.findSchulenInLand(landPayload.kuerzel());
 
-			schulen.forEach(s -> s.setLandName(landPayload.name()));
+			schulen.forEach(s -> {
+
+				s.setLandName(landPayload.name());
+				s.setLandKuerzel(s.getLandKuerzel());
+			});
 
 			schuleRepository.replaceSchulen(schulen);
 

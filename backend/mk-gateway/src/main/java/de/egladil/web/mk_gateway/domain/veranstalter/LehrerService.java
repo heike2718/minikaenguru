@@ -12,11 +12,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-import javax.ws.rs.NotFoundException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,13 +21,21 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
-import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
+import de.egladil.web.mk_gateway.domain.feedback.ActivateFeedbackDelegate;
+import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
+import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.LehrerAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.events.LehrerChanged;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.NotFoundException;
 
 /**
  * LehrerService
@@ -45,11 +48,16 @@ public class LehrerService {
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
+	private final ActivateFeedbackDelegate activateFeedbackDelegate = new ActivateFeedbackDelegate();
+
 	@Inject
 	WettbewerbService wettbewerbService;
 
 	@Inject
 	VeranstalterRepository veranstalterRepository;
+
+	@Inject
+	LoesungszettelRepository loesungszettelRepository;
 
 	@Inject
 	SchulkollegienService schulkollegienService;
@@ -60,9 +68,8 @@ public class LehrerService {
 	@Inject
 	DomainEventHandler domainEventHandler;
 
-	private LehrerChanged lehrerChangedEventPayload;
-
-	private SecurityIncidentRegistered securityIncidentEventPayload;
+	@Inject
+	LoggableEventDelegate eventDelegate;
 
 	public static LehrerService createServiceForTest(final VeranstalterRepository lehrerRepository, final SchulkollegienService schulkollegienService, final ZugangUnterlagenService zugangUnterlagenService, final WettbewerbService wettbewerbService) {
 
@@ -96,7 +103,7 @@ public class LehrerService {
 
 		veranstalterRepository.addVeranstalter(lehrer);
 
-		lehrerChangedEventPayload = new LehrerChanged(person, "", neueSchulkuerzel, data.newsletterEmpfaenger());
+		LehrerChanged lehrerChangedEventPayload = new LehrerChanged(person, "", neueSchulkuerzel, data.newsletterEmpfaenger());
 
 		schulkollegienService.handleLehrerChanged(lehrerChangedEventPayload);
 
@@ -122,7 +129,7 @@ public class LehrerService {
 			String msg = "Versuch, einen nicht existierenden Lehrer zu ändern: " + data.toString();
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			return false;
 		}
 
@@ -133,7 +140,7 @@ public class LehrerService {
 			String msg = "Versuch, einen Veranstalter zu ändern, der kein Lehrer ist: " + data.toString() + " - " + veranstalter;
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			return false;
 		}
 
@@ -155,7 +162,7 @@ public class LehrerService {
 
 		veranstalterRepository.changeVeranstalter(geaenderterLehrer);
 
-		lehrerChangedEventPayload = new LehrerChanged(geaenderterLehrer.person(), alteSchulkuerzel, neueSchulkuerzel,
+		LehrerChanged lehrerChangedEventPayload = new LehrerChanged(geaenderterLehrer.person(), alteSchulkuerzel, neueSchulkuerzel,
 			data.newsletterEmpfaenger());
 
 		if (domainEventHandler != null) {
@@ -187,7 +194,7 @@ public class LehrerService {
 			String msg = "Unbekannter Lehrer mit UUID=" + lehrerID + " versucht, Schule mit KUERZEL=" + schuleID + " hinzuzufügen.";
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new NotFoundException();
 		}
 
@@ -198,7 +205,7 @@ public class LehrerService {
 			String msg = "Privatveranstalter mit UUID=" + lehrerID + " versucht, Schule mit KUERZEL=" + schuleID + " hinzuzufügen.";
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new NotFoundException();
 		}
 
@@ -220,7 +227,7 @@ public class LehrerService {
 		veranstalterRepository.changeVeranstalter(lehrer);
 
 		Person person = lehrer.person();
-		lehrerChangedEventPayload = new LehrerChanged(person, alteSchulkuerzel, neueSchulkuerzel,
+		LehrerChanged lehrerChangedEventPayload = new LehrerChanged(person, alteSchulkuerzel, neueSchulkuerzel,
 			lehrer.isNewsletterEmpfaenger());
 
 		schulkollegienService.handleLehrerChanged(lehrerChangedEventPayload);
@@ -256,7 +263,7 @@ public class LehrerService {
 				+ " abzumelden.";
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new NotFoundException();
 		}
 
@@ -268,7 +275,7 @@ public class LehrerService {
 				+ " abzumelden.";
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new NotFoundException();
 		}
 
@@ -283,7 +290,7 @@ public class LehrerService {
 				+ " nicht zugeordnet.";
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 
 			return ResponsePayload
 				.messageOnly(MessagePayload.warn(applicationMessages.getString("lehrer.schulen.remove.nicht_registriert.warn")));
@@ -295,7 +302,7 @@ public class LehrerService {
 		veranstalterRepository.changeVeranstalter(lehrer);
 
 		Person person = lehrer.person();
-		lehrerChangedEventPayload = new LehrerChanged(person, alteSchulkuerzel, neueSchulkuerzel,
+		LehrerChanged lehrerChangedEventPayload = new LehrerChanged(person, alteSchulkuerzel, neueSchulkuerzel,
 			lehrer.isNewsletterEmpfaenger());
 
 		schulkollegienService.handleLehrerChanged(lehrerChangedEventPayload);
@@ -314,7 +321,7 @@ public class LehrerService {
 
 	/**
 	 * @param  name
-	 * @return
+	 * @return      LehrerAPIModel
 	 */
 	public LehrerAPIModel findLehrer(final String uuid) {
 
@@ -330,7 +337,7 @@ public class LehrerService {
 			String msg = "Versuch, nicht vorhandenen Veranstalter mit UUID=" + uuid + " zu finden";
 			LOG.warn(msg);
 
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new NotFoundException("Kennen keinen Veranstalter mit dieser ID");
 		}
 
@@ -340,33 +347,56 @@ public class LehrerService {
 
 			String msg = "Falsche Rolle: erwarten Lehrer, war aber " + veranstalter.toString();
 			LOG.warn(msg);
-			this.securityIncidentEventPayload = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+			eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 			throw new NotFoundException("Kennen keinen Lehrer mit dieser ID");
 		}
 
 		Lehrer lehrer = (Lehrer) veranstalter;
 		boolean hatZugang = false;
+		boolean bewertungAnzeigen = false;
 
 		Optional<Wettbewerb> optWettbewerb = wettbewerbService.aktuellerWettbewerb();
 
 		if (optWettbewerb.isPresent()) {
 
-			hatZugang = zugangUnterlagenService.hatZugang(lehrer, optWettbewerb.get());
+			Wettbewerb wettbewerb = optWettbewerb.get();
+			hatZugang = zugangUnterlagenService.hatZugang(lehrer, wettbewerb);
+			bewertungAnzeigen = this.isActivateFeedback(wettbewerb, lehrer);
 		}
+
+		lehrer.setBewertungsfragebogenAnzeigen(bewertungAnzeigen);
 
 		LehrerAPIModel result = LehrerAPIModel
 			.create(hatZugang, lehrer.isNewsletterEmpfaenger()).withTeilnahmenummern(veranstalter.teilnahmenummernAsStrings());
+		result.setBewertungsfragebogenAnzeigen(bewertungAnzeigen);
 
 		return result;
 	}
 
-	LehrerChanged lehrerChangedEventPayload() {
+	boolean isActivateFeedback(final Wettbewerb wettbewerb, final Lehrer lehrer) {
 
-		return lehrerChangedEventPayload;
-	}
+		boolean activateFeedback = activateFeedbackDelegate.canActivateFeedback(wettbewerb.status(),
+			lehrer.zugangUnterlagen());
 
-	SecurityIncidentRegistered securityIncidentEventPayload() {
+		if (activateFeedback) {
 
-		return securityIncidentEventPayload;
+			for (Identifier schuleId : lehrer.schulen()) {
+
+				TeilnahmeIdentifier teilnahmeIdentifier = TeilnahmeIdentifier
+					.createFromTeilnahmeIdentifierAktuellesJahr(new TeilnahmeIdentifierAktuellerWettbewerb(
+						schuleId.identifier(), Teilnahmeart.SCHULE))
+					.withWettbewerbID(wettbewerb.id());
+
+				int anzahlLoesungszettel = loesungszettelRepository.anzahlLoesungszettel(teilnahmeIdentifier);
+
+				if (anzahlLoesungszettel > 0) {
+
+					return true;
+				}
+
+			}
+		}
+
+		return false;
 	}
 }

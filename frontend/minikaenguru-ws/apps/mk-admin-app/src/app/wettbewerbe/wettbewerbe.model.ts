@@ -64,7 +64,7 @@ export class WettbewerbeMap {
 
 	public has(jahr: number): boolean {
 
-		if (jahr === NaN) {
+		if (Number.isNaN(jahr)) {
 			return false;
 		}
 		return this.wettbewerbe.has(jahr);

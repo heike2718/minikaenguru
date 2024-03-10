@@ -2,7 +2,7 @@
 
 	<p *ngIf="devMode">(import-report.component)</p>
 
-	<ng-container *ngIf="(klassenFacade.klassenimportReport$ | async ) as report else loading">
+	<ng-container *ngIf="(klassenFacade.klassenimportReport$ | async ) as report">
     <div class="card mt-2">
       <div class="card-body">
         <div class="card-title">Importergebnis</div>
@@ -28,7 +28,3 @@
     </div>		
 	</ng-container>
 </div>
-
-<ng-template #loading>
-	Lade Newsletter... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
-</ng-template>

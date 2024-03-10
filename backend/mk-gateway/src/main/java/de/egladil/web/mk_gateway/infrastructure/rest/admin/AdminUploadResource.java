@@ -6,23 +6,10 @@ package de.egladil.web.mk_gateway.infrastructure.rest.admin;
 
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.validation.constraints.NotBlank;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import jakarta.enterprise.context.RequestScoped;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+import org.jboss.resteasy.reactive.server.multipart.MultipartFormDataInput;
 
 import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.annotations.LandKuerzel;
@@ -44,6 +31,20 @@ import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
+import jakarta.inject.Inject;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 
 /**
  * AdminUploadResource
@@ -64,10 +65,15 @@ public class AdminUploadResource {
 	@Inject
 	UploadMonitoringService uploadMonitoringService;
 
+	@Inject
+	DevDelayService delayService;
+
 	@GET
 	@Path("size")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUploadsCount() {
+
+		this.delayService.pause();
 
 		Long result = uploadMonitoringService.countUploads();
 
@@ -78,6 +84,8 @@ public class AdminUploadResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUploads(@QueryParam(value = "limit") final int limit, @QueryParam(
 		value = "offset") final int offset) {
+
+		this.delayService.pause();
 
 		List<UploadMonitoringInfo> uploads = uploadMonitoringService.loadUploads(limit, offset);
 		return Response.ok().entity(new ResponsePayload(MessagePayload.ok(), uploads)).build();
@@ -91,6 +99,8 @@ public class AdminUploadResource {
 		value = "kuerzelLand") @LandKuerzel final String kuerzelLand, @PathParam(
 			value = "schulkuerzel") @Kuerzel final String schulkuerzel, @QueryParam(
 				value = "sprache") @NotBlank final String sprache, final MultipartFormDataInput input) {
+
+		this.delayService.pause();
 
 		String benutzerUuid = securityContext.getUserPrincipal().getName();
 		UploadType uploadType = UploadType.AUSWERTUNG;
@@ -119,6 +129,8 @@ public class AdminUploadResource {
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON }) // text/plain, damit man kein encoding-Problem bekommt
 	public Response downloadFehlerreport(@PathParam(value = "uuid") final String uuid) {
 
+		this.delayService.pause();
+
 		DownloadData downloadData = this.uploadMonitoringService.getFehlerReport(uuid);
 		return MkGatewayFileUtils.createDownloadResponse(downloadData);
 	}
@@ -127,6 +139,8 @@ public class AdminUploadResource {
 	@Path("{uuid}/file")
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON }) // text/plain, damit man kein encoding-Problem bekommt
 	public Response downloadUploadedFile(@PathParam(value = "uuid") final String uuid) {
+
+		this.delayService.pause();
 
 		DownloadData downloadData = this.uploadMonitoringService.getUploadedFile(uuid);
 		return MkGatewayFileUtils.createDownloadResponse(downloadData);

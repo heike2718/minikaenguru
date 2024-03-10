@@ -10,9 +10,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.ws.rs.core.Response;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -20,9 +20,9 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
 import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
@@ -46,7 +46,13 @@ public class SchulenAnmeldeinfoService {
 	private static final Logger LOG = LoggerFactory.getLogger(SchulenAnmeldeinfoService.class);
 
 	@Inject
+	AuthorizationService authorizationService;
+
+	@Inject
 	DomainEventHandler domainEventHandler;
+
+	@Inject
+	LoggableEventDelegate eventDelegate;
 
 	@Inject
 	SchulenOverviewService schulenOverviewService;
@@ -62,20 +68,6 @@ public class SchulenAnmeldeinfoService {
 
 	@Inject
 	AktuelleTeilnahmeService aktuelleTeilnahmeService;
-
-	private DataInconsistencyRegistered dataInconsistencyRegistered;
-
-	static SchulenAnmeldeinfoService createForTest(final MkKatalogeResourceAdapter katalogeAdapter, final SchulenOverviewService schulenOverviewService, final SchuleDetailsService schuleDetailsService, final AuswertungsmodusInfoService auswertungsmodusInfoService, final AktuelleTeilnahmeService aktuelleTeilnahmeService) {
-
-		SchulenAnmeldeinfoService result = new SchulenAnmeldeinfoService();
-		result.katalogeAdapter = katalogeAdapter;
-		result.schulenOverviewService = schulenOverviewService;
-		result.schuleDetailsService = schuleDetailsService;
-		result.auswertungsmodusInfoService = auswertungsmodusInfoService;
-		result.aktuelleTeilnahmeService = aktuelleTeilnahmeService;
-		return result;
-
-	}
 
 	public List<SchuleAPIModel> findSchulenMitAnmeldeinfo(final String lehrerUUID) {
 
@@ -116,6 +108,11 @@ public class SchulenAnmeldeinfoService {
 	 * @return              SchuleAPIModel
 	 */
 	public SchuleAPIModel getSchuleWithWettbewerbsdetails(final String schulkuerzel, final String lehrerId) {
+
+		String kontext = "[getSchuleDetails - " + schulkuerzel + "]";
+		authorizationService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(lehrerId),
+			new Identifier(schulkuerzel),
+			kontext);
 
 		Response katalogItemsResponse = katalogeAdapter.findSchulen(schulkuerzel);
 
@@ -188,7 +185,7 @@ public class SchulenAnmeldeinfoService {
 
 			LOG.warn(msg);
 
-			this.dataInconsistencyRegistered = new LoggableEventDelegate().fireDataInconsistencyEvent(msg, domainEventHandler);
+			eventDelegate.fireDataInconsistencyEvent(msg, domainEventHandler);
 		}
 
 		if (schulenOfLehrer.size() > schulenAusKatalg.size()) {
@@ -230,10 +227,4 @@ public class SchulenAnmeldeinfoService {
 
 		}
 	}
-
-	DataInconsistencyRegistered getDataInconsistencyRegistered() {
-
-		return dataInconsistencyRegistered;
-	}
-
 }

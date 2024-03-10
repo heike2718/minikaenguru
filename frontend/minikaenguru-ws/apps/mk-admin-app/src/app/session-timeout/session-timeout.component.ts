@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LogoutService } from '../services/logout.service';
+import { AdminLogoutService } from '../services/admin-logout.service';
 import { MessageService, Message } from '@minikaenguru-ws/common-messages';
 import { STORAGE_KEY_INVALID_SESSION } from '@minikaenguru-ws/common-auth';
 
@@ -11,7 +11,7 @@ import { STORAGE_KEY_INVALID_SESSION } from '@minikaenguru-ws/common-auth';
 })
 export class SessionTimeoutComponent implements OnInit {
 
-	constructor(private router: Router, private logoutService: LogoutService, private messageService: MessageService) { }
+	constructor(private router: Router, private logoutService: AdminLogoutService, private messageService: MessageService) { }
 
 	ngOnInit() {
 

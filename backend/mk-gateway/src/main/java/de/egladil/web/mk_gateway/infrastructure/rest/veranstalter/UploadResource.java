@@ -4,22 +4,10 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.veranstalter;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.validation.constraints.NotBlank;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import jakarta.enterprise.context.RequestScoped;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+import org.jboss.resteasy.reactive.server.multipart.MultipartFormDataInput;
 
 import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.annotations.LandKuerzel;
@@ -38,6 +26,19 @@ import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
+import jakarta.inject.Inject;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 
 /**
  * UploadResource
@@ -58,6 +59,9 @@ public class UploadResource {
 	@Inject
 	WettbewerbService wettbewerbService;
 
+	@Inject
+	DevDelayService delayService;
+
 	@POST
 	@Path("klassenlisten/{jahr}/{kuerzelLand}/{schulkuerzel}")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -67,6 +71,8 @@ public class UploadResource {
 			value = "schulkuerzel") @Kuerzel final String schulkuerzel, @QueryParam(
 				value = "nachnameAlsZusatz") final String nachnameAlsZusatzString, @QueryParam(
 					value = "sprache") @NotBlank final String sprache, final MultipartFormDataInput input) {
+
+		this.delayService.pause();
 
 		String veranstalterUuid = securityContext.getUserPrincipal().getName();
 		UploadType uploadType = UploadType.KLASSENLISTE;
@@ -100,6 +106,8 @@ public class UploadResource {
 	public Response uploadAuswertung(@PathParam(value = "jahr") final Integer jahr, @PathParam(
 		value = "kuerzelLand") @LandKuerzel final String kuerzelLand, @PathParam(
 			value = "schulkuerzel") @Kuerzel final String schulkuerzel, final MultipartFormDataInput input) {
+
+		this.delayService.pause();
 
 		String veranstalterUuid = securityContext.getUserPrincipal().getName();
 		UploadType uploadType = UploadType.AUSWERTUNG;

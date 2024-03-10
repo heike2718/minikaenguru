@@ -1,49 +1,72 @@
 <div class="mkv-container mt-1">
 
-	<h3>Auswertung und Urkunden <span *ngIf="lehrerFacade.selectedSchule$ | async">für {{nameSchule}} </span>erstellen</h3>
+	<div *ngIf="lehrerFacade.selectedSchule$ | async as schule">
+		<h3>Auswertung und Urkunden für {{schule.name}} erstellen
+		</h3>
 
-	<form #urkundenauftragForm="ngForm" (ngSubmit)="onFormSubmit(urkundenauftragForm)">
+		<form #urkundenauftragForm="ngForm" (ngSubmit)="onFormSubmit(urkundenauftragForm)">
+
+			<div class="form-group mt-4">
+
+				<div class="row ml-3"><strong>Farbe Urkunden*:</strong></div>
+
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="radio" [(ngModel)]="farbe" name="farbe" value="BLUE" required>
+					<label class="form-check-label" for="farbe">blau</label>
+				</div>
+
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="radio" [(ngModel)]="farbe" name="farbe" value="GREEN"
+						required>
+					<label class="form-check-label" for="farbe">grün</label>
+				</div>
+
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="radio" [(ngModel)]="farbe" name="farbe" value="ORANGE"
+						required>
+					<label class="form-check-label" for="farbe">orange</label>
+				</div>
+			</div>
+		</form>
 
 		<div class="form-group mt-4">
+			<div class="row ml-3 mb-2"><strong>Datum Urkunden*:</strong></div>
+			<ngb-datepicker class="ml-1" #dp [(ngModel)]="dateModel" (dateSelect)="onDateSelect($event)"
+				[minDate]="urkundeDateModel.minDate" [maxDate]="urkundeDateModel.maxDate">
+			</ngb-datepicker>
+		</div>
 
-			<div class="row ml-3"><strong>Farbe Urkunden*:</strong></div>
-			<div class="form-check form-check-inline">
-				<input class="form-check-input ml-3" type="radio" [(ngModel)]="farbe" name="farbe" value="BLUE"
-					required>
-				<label class="form-check-label ml-1" for="farbe">blau</label>
 
-				<input class="form-check-input ml-3" type="radio" [(ngModel)]="farbe" name="farbe" value="GREEN"
-					required>
-				<label class="form-check-label ml-1" for="farbe">grün</label>
+		<p class="mt-4 mb-1" *ngIf="farbe && urkundenauftragForm.valid">{{zusammenfassung()}}</p>
 
-				<input class="form-check-input ml-3" type="radio" [(ngModel)]="farbe" name="farbe" value="ORANGE"
-					required>
-				<label class="form-check-label ml-1" for="farbe">orange</label>
+		<div class="d-none d-md-block">
+			<div class="btn-group d-flex" role="group">
+				<button class="btn btn-primary w-100 ml-1" [disabled]="!schule || !urkundenauftragForm.valid"
+					(click)="onFormSubmit(urkundenauftragForm)"><i class="fa fa-graduation-cap" aria-hidden="true"></i>
+					Auswertung erstellen</button>
+
+				<button class="btn btn-primary w-100 ml-1" (click)="onCancel()"><i class="fa fa-arrow-left"
+						aria-hidden="true"></i>zurück zur Klassenliste</button>
+
+				<button class="btn btn-primary w-100 ml-1" (click)="gotoBewertung()"
+					title="Bitte bewerten Sie die Aufgaben des Wettbewerbs."><i class="fa fa-comment"
+						aria-hidden="true"></i>Wettbewerbsaufgaben bewerten</button>
 			</div>
 		</div>
-	</form>
 
-	<div class="form-group mt-4">
-		<div class="row ml-3 mb-2"><strong>Datum Urkunden*:</strong></div>
-		<ngb-datepicker class="ml-1" #dp [(ngModel)]="dateModel" (dateSelect)="onDateSelect($event)"
-			[minDate]="urkundeDateModel.minDate" [maxDate]="urkundeDateModel.maxDate">
-		</ngb-datepicker>
-	</div>
+		<div class="d-md-none d-lg-none d-xl-none">
+			<button class="btn btn-primary w-75" [disabled]="!schule || !urkundenauftragForm.valid"
+				(click)="onFormSubmit(urkundenauftragForm)"><i class="fa fa-graduation-cap" aria-hidden="true"></i>
+				Auswertung erstellen</button>
+
+			<button class="btn btn-primary w-75" (click)="onCancel()"><i class="fa fa-arrow-left"
+					aria-hidden="true"></i>zurück zur Klassenliste</button>
+
+			<button class="btn btn-primary w-75" (click)="gotoBewertung()"
+				title="Bitte bewerten Sie die Aufgaben des Wettbewerbs."><i class="fa fa-comment"
+					aria-hidden="true"></i>Wettbewerbsaufgaben bewerten</button>
+		</div>
 
 
-	<p class="mt-4 mb-1" *ngIf="farbe && urkundenauftragForm.valid">{{zusammenfassung()}}</p>
-
-	<div class="col-12 mb-2 mt-2" *ngIf="urkundenFacade.loading$ | async">
-		die Auswertung wird erstellt... <i class="fa fa-spinner fa-2x fa-spin" aria-hidden="true"></i>
-	</div>
-
-	<div class="btn-group d-flex" role="group">
-		<button class="btn btn-primary w-100 ml-1"
-			[disabled]="!schule || !urkundenauftragForm.valid || (urkundenFacade.loading$ | async)"
-			(click)="onFormSubmit(urkundenauftragForm)"><i class="fa fa-graduation-cap" aria-hidden="true"></i>
-			Auswertung erstellen</button>
-
-		<button class="btn btn-primary w-100 ml-1" (click)="onCancel()"><i class="fa fa-arrow-left"
-				aria-hidden="true"></i>zurück zur Klassenliste</button>
 	</div>
 </div>

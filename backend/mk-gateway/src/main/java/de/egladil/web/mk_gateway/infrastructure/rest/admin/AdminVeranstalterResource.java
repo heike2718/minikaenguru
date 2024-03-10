@@ -6,15 +6,15 @@ package de.egladil.web.mk_gateway.infrastructure.rest.admin;
 
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
@@ -24,6 +24,7 @@ import de.egladil.web.mk_gateway.domain.veranstalter.admin.VeranstalterZugangsst
 import de.egladil.web.mk_gateway.domain.veranstalter.api.VeranstalterSuchanfrage;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.VeranstalterUserAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.ZugangsstatusPayload;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * AdminVeranstalterResource
@@ -43,9 +44,14 @@ public class AdminVeranstalterResource {
 	@Inject
 	VeranstalterNewsletterService veranstalterNewsletterService;
 
+	@Inject
+	DevDelayService delayService;
+
 	@POST
 	@Path("suche")
 	public Response findVeranstalter(final VeranstalterSuchanfrage suchanfrage) {
+
+		this.delayService.pause();
 
 		List<VeranstalterUserAPIModel> treffer = veranstalterSucheService.findVeranstalter(suchanfrage);
 
@@ -58,6 +64,8 @@ public class AdminVeranstalterResource {
 	public Response changeZugangsstatus(@PathParam(
 		value = "uuidPrefix") final String uuidPrefix, final ZugangsstatusPayload zugangsstatus) {
 
+		this.delayService.pause();
+
 		ResponsePayload responsePayload = this.veranstalterZugangsstatusService.aendereVeranstalter(uuidPrefix,
 			zugangsstatus.getZugangsstatus());
 
@@ -68,6 +76,8 @@ public class AdminVeranstalterResource {
 	@Path("{uuidPrefix}/newsletter")
 	public Response deactivateNewsletter(@PathParam(
 		value = "uuidPrefix") final String uuidPrefix) {
+
+		this.delayService.pause();
 
 		ResponsePayload responsePayload = this.veranstalterNewsletterService.aendereVeranstalter(uuidPrefix, null);
 

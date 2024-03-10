@@ -7,15 +7,15 @@ package de.egladil.web.mk_kataloge.domain.admin;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
@@ -24,25 +24,25 @@ import de.egladil.web.mk_kataloge.domain.apimodel.SchulePayload;
 import de.egladil.web.mk_kataloge.domain.error.DuplicateEntityException;
 import de.egladil.web.mk_kataloge.domain.error.KatalogAPIException;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Schule;
+import io.quarkus.test.InjectMock;
+import io.quarkus.test.junit.QuarkusTest;
+import jakarta.inject.Inject;
+import jakarta.persistence.PersistenceException;
 
 /**
  * CreateSchuleServiceTest
  */
+@QuarkusTest
 public class CreateSchuleServiceTest {
 
-	private SchuleRepository schuleRepository;
+	@InjectMock
+	SchuleRepository schuleRepository;
 
-	private ChangeSchulenMailDelegate mailDelegate;
+	@InjectMock
+	ChangeSchulenMailDelegate mailDelegate;
 
+	@Inject
 	private CreateSchuleService service;
-
-	@BeforeEach
-	void setUp() {
-
-		mailDelegate = Mockito.mock(ChangeSchulenMailDelegate.class);
-		schuleRepository = Mockito.mock(SchuleRepository.class);
-		service = CreateSchuleService.createForTest(schuleRepository, mailDelegate);
-	}
 
 	@Test
 	void should_mapSchulePayloadToSchule() {
@@ -77,8 +77,10 @@ public class CreateSchuleServiceTest {
 		List<Schule> trefferliste = new ArrayList<>();
 		trefferliste.add(schule);
 
-		Mockito.when(schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt()))
+		when(schuleRepository.findSchulenInOrt(any()))
 			.thenReturn(trefferliste);
+
+		when(mailDelegate.sendSchuleCreatedMailQuietly(any())).thenReturn(Boolean.TRUE);
 
 		// Act
 		ResponsePayload responsePayload = service.schuleAnlegen(schulePayload);
@@ -91,7 +93,7 @@ public class CreateSchuleServiceTest {
 		SchulePayload responseData = (SchulePayload) responsePayload.getData();
 		assertEquals("HALLI-HALLO", responseData.kuerzel());
 
-		Mockito.verify(mailDelegate, Mockito.times(1)).sendSchuleCreatedMailQuietly(schulePayload);
+		verify(mailDelegate).sendSchuleCreatedMailQuietly(schulePayload);
 	}
 
 	@Test
@@ -105,7 +107,7 @@ public class CreateSchuleServiceTest {
 		List<Schule> trefferliste = new ArrayList<>();
 		trefferliste.add(schule);
 
-		Mockito.when(schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt()))
+		when(schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt()))
 			.thenReturn(trefferliste);
 
 		// Act
@@ -119,7 +121,7 @@ public class CreateSchuleServiceTest {
 		SchulePayload responseData = (SchulePayload) responsePayload.getData();
 		assertEquals("HALLI-HALLO", responseData.kuerzel());
 
-		Mockito.verify(mailDelegate, Mockito.times(0)).sendSchuleCreatedMailQuietly(schulePayload);
+		verify(mailDelegate, never()).sendSchuleCreatedMailQuietly(schulePayload);
 
 	}
 
@@ -132,10 +134,12 @@ public class CreateSchuleServiceTest {
 		Schule schule = service.mapFromSchulePayload(schulePayload);
 		schule.setKuerzel(schulePayload.kuerzel());
 
-		Mockito.when(schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt()))
+		when(schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt()))
 			.thenReturn(new ArrayList<>());
 
-		Mockito.when(schuleRepository.addSchule(schule)).thenReturn(Boolean.TRUE);
+		when(schuleRepository.addSchule(schule)).thenReturn(Boolean.TRUE);
+
+		when(mailDelegate.sendSchuleCreatedMailQuietly(any())).thenReturn(Boolean.TRUE);
 
 		// Act
 		ResponsePayload responsePayload = service.schuleAnlegen(schulePayload);
@@ -148,7 +152,8 @@ public class CreateSchuleServiceTest {
 		SchulePayload responseData = (SchulePayload) responsePayload.getData();
 		assertEquals(schulePayload, responseData);
 
-		Mockito.verify(mailDelegate, Mockito.times(1)).sendSchuleCreatedMailQuietly(schulePayload);
+		verify(mailDelegate).sendSchuleCreatedMailQuietly(schulePayload);
+		verify(schuleRepository).addSchule(any());
 	}
 
 	@Test
@@ -159,10 +164,10 @@ public class CreateSchuleServiceTest {
 		Schule schule = service.mapFromSchulePayload(schulePayload);
 		schule.setKuerzel(schulePayload.kuerzel());
 
-		Mockito.when(schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt()))
+		when(schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt()))
 			.thenReturn(new ArrayList<>());
 
-		Mockito.when(schuleRepository.addSchule(schule)).thenReturn(Boolean.TRUE);
+		when(schuleRepository.addSchule(schule)).thenReturn(Boolean.TRUE);
 
 		// Act
 		ResponsePayload responsePayload = service.schuleAnlegen(schulePayload);
@@ -175,7 +180,8 @@ public class CreateSchuleServiceTest {
 		SchulePayload responseData = (SchulePayload) responsePayload.getData();
 		assertEquals(schulePayload, responseData);
 
-		Mockito.verify(mailDelegate, Mockito.times(0)).sendSchuleCreatedMailQuietly(schulePayload);
+		verify(mailDelegate, never()).sendSchuleCreatedMailQuietly(schulePayload);
+		verify(schuleRepository).addSchule(any());
 	}
 
 	@Test
@@ -187,11 +193,11 @@ public class CreateSchuleServiceTest {
 		Schule schule = service.mapFromSchulePayload(schulePayload);
 		schule.setKuerzel(schulePayload.kuerzel());
 
-		Mockito.when(schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt()))
+		when(schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt()))
 			.thenReturn(new ArrayList<>());
-		Mockito.when(schuleRepository.addSchule(schule)).thenReturn(Boolean.TRUE);
+		when(schuleRepository.addSchule(schule)).thenReturn(Boolean.TRUE);
 
-		Mockito.when(mailDelegate.sendSchuleCreatedMailQuietly(schulePayload))
+		when(mailDelegate.sendSchuleCreatedMailQuietly(schulePayload))
 			.thenReturn(Boolean.FALSE);
 
 		// Act
@@ -205,7 +211,8 @@ public class CreateSchuleServiceTest {
 		SchulePayload responseData = (SchulePayload) responsePayload.getData();
 		assertEquals(schulePayload, responseData);
 
-		Mockito.verify(mailDelegate, Mockito.times(1)).sendSchuleCreatedMailQuietly(schulePayload);
+		verify(mailDelegate).sendSchuleCreatedMailQuietly(schulePayload);
+		verify(schuleRepository).addSchule(any());
 	}
 
 	@Test
@@ -217,10 +224,10 @@ public class CreateSchuleServiceTest {
 		Schule schule = service.mapFromSchulePayload(schulePayload);
 		schule.setKuerzel(schulePayload.kuerzel());
 
-		Mockito.when(schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt()))
+		when(schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt()))
 			.thenReturn(new ArrayList<>());
 
-		Mockito.when(schuleRepository.addSchule(schule))
+		when(schuleRepository.addSchule(any()))
 			.thenThrow(new DuplicateEntityException("Das Schulkürzel gibet schon."));
 
 		// Act + Assert
@@ -233,7 +240,7 @@ public class CreateSchuleServiceTest {
 
 			assertEquals("schuleAnlegen: Das Schulkürzel gibet schon.", e.getMessage());
 
-			Mockito.verify(mailDelegate, Mockito.times(0)).sendSchuleCreatedMailQuietly(schulePayload);
+			verify(mailDelegate, never()).sendSchuleCreatedMailQuietly(any());
 		}
 
 	}
@@ -247,10 +254,10 @@ public class CreateSchuleServiceTest {
 		Schule schule = service.mapFromSchulePayload(schulePayload);
 		schule.setKuerzel(schulePayload.kuerzel());
 
-		Mockito.when(schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt()))
+		when(schuleRepository.findSchulenInOrt(schulePayload.kuerzelOrt()))
 			.thenReturn(new ArrayList<>());
 
-		Mockito.when(schuleRepository.addSchule(schule))
+		when(schuleRepository.addSchule(any()))
 			.thenThrow(new PersistenceException("irgendwas in der DB ist falsch."));
 
 		// Act + Assert
@@ -263,7 +270,7 @@ public class CreateSchuleServiceTest {
 
 			assertEquals("Die Schule konnte wegen eines Serverfehlers nicht angelegt werden.", e.getMessage());
 
-			Mockito.verify(mailDelegate, Mockito.times(0)).sendSchuleCreatedMailQuietly(schulePayload);
+			verify(mailDelegate, never()).sendSchuleCreatedMailQuietly(any());
 		}
 
 	}

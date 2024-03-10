@@ -8,20 +8,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-import javax.ws.rs.core.Response;
-
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.egladil.web.commons_mailer.DefaultEmailDaten;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.apimodel.StringsAPIModel;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.kataloge.api.SchulePayload;
+import de.egladil.web.mk_gateway.domain.mail.AdminMailService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Schulteilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
@@ -32,6 +30,10 @@ import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.core.Response;
 
 /**
  * SchulkatalogService
@@ -41,6 +43,9 @@ public class SchulkatalogService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(SchulkatalogService.class);
 
+	@ConfigProperty(name = "email.admin")
+	String emailAdmin;
+
 	@Inject
 	MkKatalogeResourceAdapter katalogeResourceAdapter;
 
@@ -49,6 +54,9 @@ public class SchulkatalogService {
 
 	@Inject
 	TeilnahmenRepository teilnahmenRepository;
+
+	@Inject
+	AdminMailService mailService;
 
 	public static final SchulkatalogService createForTest(final MkKatalogeResourceAdapter katalogeResourceAdapter) {
 
@@ -176,7 +184,23 @@ public class SchulkatalogService {
 
 		} catch (Exception e) {
 
-			LOG.error("Schulteilnahme mit Teilnahmenummer " + payload.kuerzel() + ": Schulname wurde nicht umbenannt");
+			String text = "Umbenennung Schule in Teilnahme mit kuerzel=" + payload.kuerzel()
+				+ " fehlgeschlagen. Neuer Schulname='" + payload.name() + "'";
+			LOG.error(text);
+
+			DefaultEmailDaten maildaten = new DefaultEmailDaten();
+			maildaten.setBetreff("Umbenennung Schule in Schulteilnahme fehlgeschlagen");
+			maildaten.setEmpfaenger(emailAdmin);
+			maildaten.setText(text);
+
+			try {
+
+				mailService.sendMail(maildaten);
+			} catch (Exception ex) {
+
+				LOG.error("Mail fehlgeschlagene Umbenennung konnte nicht versendet werden: {}", ex.getMessage(), ex);
+			}
+
 			return false;
 
 		}

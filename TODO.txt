@@ -1,3 +1,48 @@
+18.02.2024
+--------------------
+- Backend: der housekeeping-Job ist noch nicht implementiert. Es ist die Frage, ob man die Aufträge wirklich täglich wegräumen will für den Fall, dass ich mal ne Amnesie erleide
+
+
+
+11.02.2024
+--------------------
+
+/ Bei Fehlern im Versand soll ein Event ins Eventlog
+/ Tests für Versandservice schlagen jetzt bestimmt fehl
+/ Frontend: Fehlermeldung wird noch nicht angezeigt (wegen ErrorResponseDto)
+/ Frontend: neue Maske mit Übersicht über die Auslieferungen bzw. Versandaufträge
+/ Frontend: actions zum Pollen des Versandstatus zurückbauen
+
+
+28.01.2024
+--------------------
+
+Umstellung Newsletterversand auf quarkus_scheduler:
+
+Der Service, der auf den beiden Tabellen NEWSLETTER_... arbeitet, ist fertig
+
+offen:
+
+- der Teil, der die Einträge generiert
+- der Teil, der das Housekeeping macht, also completed-Zeug entfernt
+- der Teil, der den Status des Versands über die API zur Verfügung stellt muss komplett umgebaut werden
+- Im frontend soll es eine neue Maske zum Thema Newsletterversand geben, die alle Aufträge anzeigt
+- das Pollen soll weg
+
+
+
+xx.09.2023
+-----------------
+- a300: mk-kataloge startet nicht: flyway
+- a300: mkv-app: Bad Gateway 502- hatte die auarkus-ap von checklisten deploed ':facepalm'
+- a300: servererror beim aufruf login-seite von mkv-app : vermutlich properties noch falsch oder CLIENTS.REDIRECT_URLs?
+
+
+xx.08.2023
+------------------
+bump qurakus to 3
+
+
 28.08.2021
 -------------------
 

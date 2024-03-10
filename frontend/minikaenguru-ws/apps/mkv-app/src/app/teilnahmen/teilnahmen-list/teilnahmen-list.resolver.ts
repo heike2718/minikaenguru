@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { tap, first, finalize } from 'rxjs/operators';
 import { TeilnahmenFacade } from '../teilnahmen.facade';
@@ -7,7 +7,7 @@ import { AuthService } from '@minikaenguru-ws/common-auth';
 
 
 @Injectable({ providedIn: 'root' })
-export class TeilnahmenListResolver implements Resolve<any> {
+export class TeilnahmenListResolver  {
 
 	private loading = false;
 	private userSubscription: Subscription = new Subscription();

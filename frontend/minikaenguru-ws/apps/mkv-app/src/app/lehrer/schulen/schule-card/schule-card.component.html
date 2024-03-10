@@ -5,10 +5,10 @@
 				<div class="card-title">{{schule.name}}
 					<span *ngIf="devMode">({{schule.kuerzel}})</span>
 					<ng-container *ngIf="wettbewerb$ | async as wettbewerb">
-						<span *ngIf="schule.aktuellAngemeldet" class="ml-1 badge badge-success">angemeldet
+						<span *ngIf="schule.aktuellAngemeldet" class="ml-1 badge bg-success">angemeldet
 							für {{wettbewerb.jahr}}</span>
 
-						<span *ngIf="!schule.aktuellAngemeldet" class="ml-1 badge badge-secondary">noch
+						<span *ngIf="!schule.aktuellAngemeldet" class="ml-1 badge bg-secondary">noch
 							nicht angemeldet für {{wettbewerb.jahr}}</span>
 					</ng-container>
 				</div>
@@ -16,67 +16,43 @@
 				<div class="card-subtitle mb-2 text-muted">
 					{{schule.land}}
 				</div>
-				<div *ngIf="devMode" class="small">Auswertungsmodus: {{schule.auswertungsmodus}}</div>
+				<div *ngIf="devMode" class="small">Auswertungsmodus: {{textAuswertungsmodus}}</div>
 
-				<div class="d-none d-md-block">
-					<div class="btn-group d-flex" role="group">
-						<ng-container *ngIf="wettbewerb$ | async as wettbewerb">
-							<button
-								*ngIf="(wettbewerb.status !== 'ERFASST' && wettbewerb.status !== 'BEENDET' && !schule.aktuellAngemeldet)"
-								class="btn btn-outline-success w-100 ml-1" (click)="schuleAnmelden()">
-								anmelden für {{wettbewerb.jahr}}</button>
-						</ng-container>
-						<button class="btn btn-outline-dark w-100 ml-1" (click)="selectSchule()"><i
-								class="fa fa-building-o" aria-hidden="true"></i>
-							Schulübersicht</button>
-
-						<button *ngIf="showBtnOnlineauswertung" class="btn btn-outline-dark w-100 ml-1"
-							(click)="gotoAuswertung()" title="Kinder erfassen und Urkunden generieren"><i
-								class="fa fa-pencil-square-o" aria-hidden="true"></i>
-							Auswertung <span *ngIf="wettbewerb$ | async as wettbewerb">
-								{{wettbewerb.jahr}}</span></button>
-
-						<button *ngIf="showBtnUploadAuswertung" class="btn btn-outline-dark w-100 ml-1"
-								(click)="gotoUploadAuswertung()" title="anonyme Excel-Auswertungstabelle für die Statistik hochladen"><i
-									class="fa fa-pencil-square-o" aria-hidden="true"></i>
-									Auswertungstabelle hochladen</button>
-
-						<button *ngIf="!schule.aktuellAngemeldet" class="btn btn-outline-dark w-100 ml-1"
-							(click)="vonSchuleAbmelden()" title="als Lehrerin/Lehrer von dieser Schule abmelden"><i
-								class="fa fa-trash" aria-hidden="true"></i>
-							entfernen</button>
-					</div>
+				<div *ngIf="schule.aktuellAngemeldet && schule.auswertungsmodus === 'OFFLINE'" class="card-subtitle mb-2 text-danger">
+					Sie haben bereits eine Auswertung hochgeladen und sehen daher den Button "Onlineauswertung" nicht mehr.
 				</div>
 
-				<div class="d-md-none d-lg-none d-xl-none">
-					<div class="btn-group d-inline" role="group">
-						<ng-container *ngIf="wettbewerb$ | async as wettbewerb">
-							<button
-								*ngIf="(wettbewerb.status !== 'ERFASST' && wettbewerb.status !== 'BEENDET' && !schule.aktuellAngemeldet)"
-								class="btn btn-outline-success w-100 ml-1" (click)="schuleAnmelden()">
-								anmelden für {{wettbewerb.jahr}}</button>
-						</ng-container>
-						<button class="btn btn-outline-dark w-100 ml-1" (click)="selectSchule()"><i
-								class="fa fa-building-o" aria-hidden="true"></i>
-							Schulübersicht</button>
-
-						<button *ngIf="showBtnOnlineauswertung" class="btn btn-outline-dark w-100 ml-1"
-							(click)="gotoAuswertung()" title="Kinder erfassen und Urkunden generieren"><i
-								class="fa fa-pencil-square-o" aria-hidden="true"></i>
-							Auswertung <span *ngIf="wettbewerb$ | async as wettbewerb">
-								{{wettbewerb.jahr}}</span></button>
-
-						<button *ngIf="showBtnUploadAuswertung" class="btn btn-outline-dark w-100 ml-1"
-								(click)="gotoUploadAuswertung()" title="anonyme Excel-Auswertungstabelle für die Statistik hochladen"><i
-									class="fa fa-pencil-square-o" aria-hidden="true"></i>
-									Auswertungstabelle hochladen</button>
-
-						<button *ngIf="!schule.aktuellAngemeldet" class="btn btn-outline-dark w-100 ml-1"
-							(click)="vonSchuleAbmelden()" title="als Lehrerin/Lehrer von dieser Schule abmelden"><i
-								class="fa fa-trash" aria-hidden="true"></i>
-							entfernen</button>
-					</div>
+				<div *ngIf="schule.aktuellAngemeldet && schule.auswertungsmodus === 'INDIFFERENT'" class="card-subtitle mb-2 text-danger">
+					Wenn Sie den Button "Auswertungstabelle hochladen" klicken und dann tatsächlich eine Auswertungstabelle hochladen, haben Sie keine Möglichkeit mehr, 
+					die Onlineauswertung zu nutzen und können Ihre Urkunden nur selbst erstellen.
 				</div>
+
+				<ng-container *ngIf="wettbewerb$ | async as wettbewerb">
+					<button
+						*ngIf="showBtnAnmelden()"
+						class="btn btn-outline-success w-75" (click)="schuleAnmelden()">
+						anmelden für {{wettbewerb.jahr}}</button>
+				</ng-container>
+				<button class="btn btn-outline-dark w-75" (click)="selectSchule()"><i class="fa fa-building-o"
+						aria-hidden="true"></i>
+					Schulübersicht</button>
+
+				<button *ngIf="showBtnOnlineauswertung" class="btn btn-outline-dark w-75"
+					(click)="gotoAuswertung()" title="Kinder erfassen und Urkunden generieren"><i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i>
+						Onlineauswertung <span *ngIf="wettbewerb$ | async as wettbewerb">
+						{{wettbewerb.jahr}}</span></button>
+
+				<button *ngIf="showBtnUploadAuswertung" class="btn btn-outline-danger w-75"
+					(click)="gotoUploadAuswertung()"
+					title="anonyme Excel-Auswertungstabelle für die Statistik hochladen"><i
+						class="fa fa-pencil-square-o" aria-hidden="true"></i>
+					Auswertungstabelle hochladen (Onlineauswertung ist dann nicht mehr möglich!)</button>
+
+				<button *ngIf="!schule.aktuellAngemeldet" class="btn btn-outline-dark w-75"
+					(click)="vonSchuleAbmelden()" title="als Lehrerin/Lehrer von dieser Schule abmelden"><i
+						class="fa fa-trash" aria-hidden="true"></i>
+					entfernen</button>
 
 			</div>
 		</div>

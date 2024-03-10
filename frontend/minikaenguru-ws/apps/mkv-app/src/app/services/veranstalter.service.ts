@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 import { ResponsePayload, Message } from '@minikaenguru-ws/common-messages';
 import { map } from 'rxjs/operators';
 import { Privatveranstalter, Lehrer } from '../wettbewerb/wettbewerb.model';
-import { Schule } from '../lehrer/schulen/schulen.model';
+import { LoadingIndicatorService } from '@minikaenguru-ws/shared/util-mk';
 
 
 @Injectable({
@@ -13,26 +13,26 @@ import { Schule } from '../lehrer/schulen/schulen.model';
 })
 export class VeranstalterService {
 
-	constructor(private http: HttpClient) { }
+	constructor(private http: HttpClient, private loadingIndicatorService: LoadingIndicatorService) { }
 
 	getLehrer(): Observable<Lehrer> {
 
 		const url = environment.apiUrl + '/lehrer';
 
-		return this.http.get(url).pipe(
+		return this.loadingIndicatorService.showLoaderUntilCompleted(this.http.get(url).pipe(
 			map(body => body as ResponsePayload),
 			map(payload => payload.data)
-		);
+		));
 	}
 
 	public loadPrivatveranstalter(): Observable<Privatveranstalter> {
 
 		const url = environment.apiUrl + '/veranstalter/privat';
 
-		return this.http.get(url).pipe(
+		return this.loadingIndicatorService.showLoaderUntilCompleted(this.http.get(url).pipe(
 			map(body => body as ResponsePayload),
 			map(payload => payload.data)
-		);
+		));
 
 	}
 
@@ -40,27 +40,25 @@ export class VeranstalterService {
 
 		const url = environment.apiUrl + '/veranstalter/newsletter';
 
-		return this.http.put(url, {}).pipe(
+		return this.loadingIndicatorService.showLoaderUntilCompleted(this.http.put(url, {}).pipe(
 			map(body => body as ResponsePayload),
 			map(payload => payload.message)
-		);
+		));
 	}
 
 	public addSchule(kuerzel: string): Observable<ResponsePayload> {
 
 		const url = environment.apiUrl + '/lehrer/schulen/' + kuerzel;
 
-		return this.http.post(url, {}).pipe(
-			map(body => body as ResponsePayload)
-		);
+		return this.loadingIndicatorService.showLoaderUntilCompleted(this.http.post<ResponsePayload>(url, {}))
 	}
 
 	public removeSchule(kuerzel: string): Observable<Message> {
 		const url = environment.apiUrl + '/lehrer/schulen/' + kuerzel;
 
-		return this.http.delete(url).pipe(
+		return this.loadingIndicatorService.showLoaderUntilCompleted(this.http.delete(url).pipe(
 			map(body => body as ResponsePayload),
 			map(payload => payload.message)
-		);
+		));
 	}
 }

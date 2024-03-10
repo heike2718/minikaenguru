@@ -6,9 +6,9 @@ package de.egladil.web.mk_gateway.infrastructure.persistence.sortnumbers.impl;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.SortnumberHibernateRepositoryImpl;
 import de.egladil.web.mk_gateway.infrastructure.persistence.sortnumbers.SortNumberGenerator;

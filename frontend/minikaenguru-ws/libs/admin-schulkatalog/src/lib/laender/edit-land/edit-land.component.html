@@ -1,0 +1,70 @@
+<div class="container container-fluid ml-3 mt-5">
+	<p *ngIf="devMode">edit-schule.component</p>
+	<div class="row ml-2">
+		<div class="col-12">
+			<h2>Landeditor</h2>
+		</div>
+	</div>
+
+	<ng-container *ngIf="landPayload$ | async as editInput">
+		<div class="row ml-2">
+
+			<form [formGroup]="editLandForm" class="col-12">				
+
+				<div class="form-group mt-4">
+					<div class="row">
+						<div class="col-md-12">
+							<label for="nameLandInput">Name *</label>
+						</div>
+					</div>
+					<div class="row" [class.error]="nameLand.touched && !nameLand.valid">
+						<div class="col-md-12">
+							<input class="form-control" type="text" id="nameLandInput" placeholder="Land"
+								formControlName="nameLand" autocomplete="true">
+						</div>
+					</div>
+					<mk-form-error path="kuerzelOrt" text="Land"></mk-form-error>
+				</div>
+
+				<div class="form-group mt-4">
+					<div class="row">
+						<div class="col-md-12">
+							<label for="kuerzelLandInput">Kürzel *</label>
+						</div>
+					</div>
+					<div class="row" [class.error]="kuerzelLand.touched && !kuerzelLand.valid">
+						<div class="col-md-12">
+							<input class="form-control" type="text" id="kuerzelLandInput" placeholder="Land"
+								formControlName="kuerzelLand" autocomplete="true">
+						</div>
+					</div>
+					<mk-form-error path="kuerzelLand" text="Kürzel Land"></mk-form-error>
+				</div>
+
+				<div class="d-none d-md-block">
+					<div class="btn-group d-flex" role="group">
+			
+						<button class="btn btn-primary w-100 ml-1" [disabled]="!submited && (!editLandForm.valid || submitDisabled)" 
+							(click)="submitForm()">senden</button>				
+						<button class="btn btn-primary w-75 ml-1" (click)="cancel()">zurücksetzen</button>				
+						<button class="btn btn-primary w-100 ml-1" (click)="gotoSchulkatalog()"><i class="fa fa-arrow-left"
+							aria-hidden="true"></i> Schulkatalog</button>
+
+					</div>	
+				</div>
+				
+				<div class="row d-md-none d-lg-none d-xl-none mt-3 mr-3">
+					<div class="btn-group d-inline" role="group">
+						
+						<button class="btn btn-primary w-100 ml-1" [disabled]="!submited && (!editLandForm.valid || submitDisabled)" 
+							(click)="submitForm()">senden</button>				
+						<button class="btn btn-primary w-75 ml-1" (click)="cancel()">zurücksetzen</button>				
+						<button class="btn btn-primary w-100 ml-1" (click)="gotoSchulkatalog()"><i class="fa fa-arrow-left"
+							aria-hidden="true"></i>Schulkatalog</button>
+
+					</div>
+				</div>				
+			</form>
+		</div>
+	</ng-container>
+</div>

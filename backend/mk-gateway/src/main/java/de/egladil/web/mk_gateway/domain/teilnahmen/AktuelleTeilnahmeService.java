@@ -10,10 +10,10 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-import javax.ws.rs.BadRequestException;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.BadRequestException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -24,10 +24,8 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.event.DataInconsistencyRegistered;
 import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
-import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.PrivatteilnahmeAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.SchulanmeldungRequestPayload;
@@ -53,16 +51,11 @@ public class AktuelleTeilnahmeService {
 
 	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
-	private PrivatteilnahmeCreated privatteilnahmeCreatedEvent;
-
-	private SchulteilnahmeCreated schulteilnahmeCreated;
-
-	private SecurityIncidentRegistered securityIncidentRegistered;
-
-	private DataInconsistencyRegistered dataInconsistencyRegistered;
-
 	@Inject
 	DomainEventHandler domainEventHandler;
+
+	@Inject
+	LoggableEventDelegate eventDelegate;
 
 	@Inject
 	VeranstalterRepository veranstalterRepository;
@@ -160,7 +153,7 @@ public class AktuelleTeilnahmeService {
 
 				LOG.warn(msg);
 
-				this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+				eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 				throw new AccessDeniedException("keinen Veranstalter mit UUID=" + uuid + " gefunden");
 			}
 
@@ -172,7 +165,7 @@ public class AktuelleTeilnahmeService {
 
 				LOG.warn(msg);
 
-				this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+				eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 				throw new AccessDeniedException(
 					"Der Veranstalter ist ein Lehrer. Nur Privatprsonen dürfen diese Funktion aufrufen.");
 			}
@@ -184,7 +177,7 @@ public class AktuelleTeilnahmeService {
 
 				LOG.warn(msg);
 
-				this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+				eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 				throw new AccessDeniedException("Dem Veranstalter wurde der Zugang zu den Unterlagen entzogen.");
 			}
 
@@ -197,7 +190,7 @@ public class AktuelleTeilnahmeService {
 
 				LOG.warn(msg);
 
-				this.dataInconsistencyRegistered = new LoggableEventDelegate().fireDataInconsistencyEvent(msg,
+				eventDelegate.fireDataInconsistencyEvent(msg,
 					domainEventHandler);
 
 				throw new MkGatewayRuntimeException("Kann aktuelle Teilnahme nicht ermitteln");
@@ -219,11 +212,9 @@ public class AktuelleTeilnahmeService {
 
 			teilnahmenRepository.addTeilnahme(neue);
 
-			privatteilnahmeCreatedEvent = PrivatteilnahmeCreated.create(neue, uuid);
-
 			if (domainEventHandler != null) {
 
-				domainEventHandler.handleEvent(privatteilnahmeCreatedEvent);
+				domainEventHandler.handleEvent(PrivatteilnahmeCreated.create(neue, uuid));
 			}
 
 			return new ResponsePayload(
@@ -285,7 +276,7 @@ public class AktuelleTeilnahmeService {
 
 				LOG.warn(msg);
 
-				this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+				eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 
 				throw new AccessDeniedException("keinen Veranstalter mit UUID=" + uuid + " gefunden");
 			}
@@ -298,7 +289,7 @@ public class AktuelleTeilnahmeService {
 
 				LOG.warn(msg);
 
-				this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+				eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 				throw new AccessDeniedException("Dies ist ein Privatveranstalter. Nur Lehrer dürfen diese Funktion aufrufen.");
 			}
 
@@ -309,7 +300,7 @@ public class AktuelleTeilnahmeService {
 
 				LOG.warn(msg);
 
-				this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+				eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 
 				throw new AccessDeniedException("Dem Veranstalter wurde der Zugang zu den Unterlagen entzogen.");
 			}
@@ -325,7 +316,7 @@ public class AktuelleTeilnahmeService {
 
 				LOG.warn(msg);
 
-				this.securityIncidentRegistered = new LoggableEventDelegate().fireSecurityEvent(msg, domainEventHandler);
+				eventDelegate.fireSecurityEvent(msg, domainEventHandler);
 
 				throw new AccessDeniedException("Der Lehrer gehört nicht zur anzumeldenden Schule.");
 
@@ -346,7 +337,7 @@ public class AktuelleTeilnahmeService {
 
 				teilnahmenRepository.addTeilnahme(schulteilnahme);
 
-				this.schulteilnahmeCreated = SchulteilnahmeCreated.create(schulteilnahme);
+				SchulteilnahmeCreated schulteilnahmeCreated = SchulteilnahmeCreated.create(schulteilnahme);
 
 				if (domainEventHandler != null) {
 
@@ -382,23 +373,4 @@ public class AktuelleTeilnahmeService {
 		return teilnahmenRepository.ofTeilnahmeIdentifier(teilnahmeIdentifier);
 	}
 
-	PrivatteilnahmeCreated privatteilnahmeCreatedEvent() {
-
-		return privatteilnahmeCreatedEvent;
-	}
-
-	SchulteilnahmeCreated schulteilnahmeCreated() {
-
-		return schulteilnahmeCreated;
-	}
-
-	SecurityIncidentRegistered getSecurityIncidentRegistered() {
-
-		return securityIncidentRegistered;
-	}
-
-	DataInconsistencyRegistered getDataInconsistencyRegistered() {
-
-		return dataInconsistencyRegistered;
-	}
 }

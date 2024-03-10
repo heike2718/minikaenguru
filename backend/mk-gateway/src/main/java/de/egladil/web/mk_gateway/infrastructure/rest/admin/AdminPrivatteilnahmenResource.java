@@ -6,23 +6,22 @@ package de.egladil.web.mk_gateway.infrastructure.rest.admin;
 
 import java.util.Optional;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
-
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.teilnahmen.admin.AdminPrivatteilnahmenService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.admin.PrivatteilnahmeAdminOverview;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 
 /**
  * AdminPrivatteilnahmenResource
@@ -36,6 +35,9 @@ public class AdminPrivatteilnahmenResource {
 	@Inject
 	AdminPrivatteilnahmenService privatteilnahmenService;
 
+	@Inject
+	DevDelayService delayService;
+
 	@Context
 	SecurityContext securityContext;
 
@@ -44,17 +46,21 @@ public class AdminPrivatteilnahmenResource {
 	public Response getTeilnahmeInfos(@PathParam(
 		value = "teilnahmenummer") final String teilnahmenummer) {
 
+		this.delayService.pause();
+
 		String userUuid = securityContext.getUserPrincipal().getName();
 
 		Optional<PrivatteilnahmeAdminOverview> optOverview = privatteilnahmenService
 			.ermittlePrivatteilnahmeMitDetails(teilnahmenummer, userUuid);
 
-		if (optOverview.isEmpty()) {
+		PrivatteilnahmeAdminOverview payload = optOverview.get();
 
-			throw new NotFoundException();
+		if (payload.anzahlTeilnahmen() == 0) {
+
+			return Response.ok(new ResponsePayload(MessagePayload.warn("Veranstalter hat noch keine Teilnahmen"), payload)).build();
 		}
 
-		return Response.ok(new ResponsePayload(MessagePayload.ok(), optOverview.get())).build();
+		return Response.ok(new ResponsePayload(MessagePayload.ok(), payload)).build();
 	}
 
 }

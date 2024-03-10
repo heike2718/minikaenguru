@@ -8,29 +8,28 @@ import java.security.Principal;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
-
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.auth.signup.AuthResultToResourceOwnerMapper;
 import de.egladil.web.mk_gateway.domain.auth.signup.SignUpService;
-import de.egladil.web.mk_gateway.domain.event.SecurityIncidentRegistered;
 import de.egladil.web.mk_gateway.domain.veranstalter.ChangeNewsletterAboService;
 import de.egladil.web.mk_gateway.domain.veranstalter.LehrerService;
 import de.egladil.web.mk_gateway.domain.veranstalter.PrivatveranstalterService;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.ZugangUnterlagenService;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.PrivatveranstalterAPIModel;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 
 /**
  * VeranstalterResource ist die Resource zu den Minikänguru-Veranstaltern.
@@ -64,11 +63,14 @@ public class VeranstalterResource {
 	@Inject
 	AuthResultToResourceOwnerMapper authResultMapper;
 
-	private SecurityIncidentRegistered securityIncidentRegistered;
+	@Inject
+	DevDelayService delayService;
 
 	@PUT
 	@Path("newsletter")
 	public Response changeStatusNewsletter() {
+
+		this.delayService.pause();
 
 		Veranstalter veranstalter = this.changeNewsletterAboService
 			.changeStatusNewsletter(securityContext.getUserPrincipal().getName());
@@ -86,6 +88,8 @@ public class VeranstalterResource {
 	@Path("privat")
 	public Response getPrivatveranstalter() {
 
+		this.delayService.pause();
+
 		Principal principal = securityContext.getUserPrincipal();
 
 		PrivatveranstalterAPIModel privatveranstalter = privatveranstalterService.findPrivatperson(principal.getName());
@@ -94,10 +98,4 @@ public class VeranstalterResource {
 		return Response.ok(responsePayload).build();
 
 	}
-
-	SecurityIncidentRegistered getSecurityIncidentRegistered() {
-
-		return securityIncidentRegistered;
-	}
-
 }

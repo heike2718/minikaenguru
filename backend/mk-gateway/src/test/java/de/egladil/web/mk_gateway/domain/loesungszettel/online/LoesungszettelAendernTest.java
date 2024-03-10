@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -16,14 +17,12 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Optional;
 
+import jakarta.inject.Inject;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import de.egladil.web.commons_validation.exception.InvalidInputException;
 import de.egladil.web.commons_validation.payload.MessagePayload;
@@ -34,8 +33,13 @@ import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.Loesungszettelpunk
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.error.ConcurrentModificationType;
 import de.egladil.web.mk_gateway.domain.error.EntityConcurrentlyModifiedException;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
+import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
+import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelChanged;
+import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelCreated;
+import de.egladil.web.mk_gateway.domain.kinder.events.LoesungszettelDeleted;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.loesungszettel.online.api.LoesungszettelAPIModel;
@@ -50,27 +54,35 @@ import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterLoesungszettel;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.InjectMock;
 
 /**
  * LoesungszettelAendernTest
  */
-@ExtendWith(MockitoExtension.class)
+@QuarkusTest
 public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest {
 
-	@Mock
-	private KinderRepository kinderRepository;
+	@InjectMock
+	KinderRepository kinderRepository;
 
-	@Mock
-	private LoesungszettelRepository loesungszettelRepository;
+	@InjectMock
+	LoesungszettelRepository loesungszettelRepository;
 
-	@Mock
-	private AuthorizationService authService;
+	@InjectMock
+	AuthorizationService authService;
 
-	@Mock
-	private WettbewerbService wettbewerbService;
+	@InjectMock
+	WettbewerbService wettbewerbService;
 
-	@InjectMocks
-	private OnlineLoesungszettelService service;
+	@InjectMock
+	LoggableEventDelegate eventDelegate;
+
+	@InjectMock
+	DomainEventHandler domainEventHandler;
+
+	@Inject
+	OnlineLoesungszettelService service;
 
 	@BeforeEach
 	void setUp() {
@@ -118,9 +130,7 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 				verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
 				verify(kinderRepository, times(0)).changeKind(any());
 
-				assertNull(service.getLoesungszettelCreated());
-				assertNull(service.getLoesungszettelChanged());
-				assertNull(service.getLoesungszettelDeleted());
+				verify(domainEventHandler, never()).handleEvent(any());
 			}
 		}
 
@@ -161,9 +171,7 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 				verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
 				verify(kinderRepository, times(0)).changeKind(any());
 
-				assertNull(service.getLoesungszettelCreated());
-				assertNull(service.getLoesungszettelChanged());
-				assertNull(service.getLoesungszettelDeleted());
+				verify(domainEventHandler, never()).handleEvent(any());
 			}
 		}
 	}
@@ -211,9 +219,9 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 			verify(loesungszettelRepository, times(1)).removeLoesungszettel(any());
 			verify(kinderRepository, times(0)).changeKind(any());
 
-			assertNull(service.getLoesungszettelCreated());
-			assertNull(service.getLoesungszettelChanged());
-			assertNotNull(service.getLoesungszettelDeleted());
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelCreated.class));
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelChanged.class));
+			verify(domainEventHandler, times(1)).handleEvent(any(LoesungszettelDeleted.class));
 
 		}
 
@@ -259,9 +267,7 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 				verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
 				verify(kinderRepository, times(0)).changeKind(any());
 
-				assertNull(service.getLoesungszettelCreated());
-				assertNull(service.getLoesungszettelChanged());
-				assertNull(service.getLoesungszettelDeleted());
+				verify(domainEventHandler, never()).handleEvent(any());
 			}
 
 		}
@@ -299,9 +305,9 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 			verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
 			verify(kinderRepository, times(0)).changeKind(any());
 
-			assertNull(service.getLoesungszettelCreated());
-			assertNull(service.getLoesungszettelChanged());
-			assertNull(service.getLoesungszettelDeleted());
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelCreated.class));
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelChanged.class));
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelDeleted.class));
 
 		}
 	}
@@ -361,9 +367,9 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 			verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
 			verify(kinderRepository, times(1)).changeKind(any());
 
-			assertNotNull(service.getLoesungszettelCreated());
-			assertNull(service.getLoesungszettelChanged());
-			assertNull(service.getLoesungszettelDeleted());
+			verify(domainEventHandler).handleEvent(any(LoesungszettelCreated.class));
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelChanged.class));
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelDeleted.class));
 		}
 
 		@Test
@@ -420,9 +426,9 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 			verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
 			verify(kinderRepository, times(1)).changeKind(any());
 
-			assertNotNull(service.getLoesungszettelCreated());
-			assertNull(service.getLoesungszettelChanged());
-			assertNull(service.getLoesungszettelDeleted());
+			verify(domainEventHandler).handleEvent(any(LoesungszettelCreated.class));
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelChanged.class));
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelDeleted.class));
 
 		}
 
@@ -499,10 +505,9 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 			verify(loesungszettelRepository, times(1)).removeLoesungszettel(any());
 			verify(kinderRepository, times(1)).changeKind(any());
 
-			assertNotNull(service.getLoesungszettelCreated());
-			assertNull(service.getLoesungszettelChanged());
-			assertNotNull(service.getLoesungszettelDeleted());
-
+			verify(domainEventHandler).handleEvent(any(LoesungszettelCreated.class));
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelChanged.class));
+			verify(domainEventHandler).handleEvent(any(LoesungszettelDeleted.class));
 		}
 
 		@Test
@@ -567,9 +572,9 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 				verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
 				verify(kinderRepository, times(0)).changeKind(any());
 
-				assertNull(service.getLoesungszettelCreated());
-				assertNull(service.getLoesungszettelChanged());
-				assertNull(service.getLoesungszettelDeleted());
+				verify(domainEventHandler, never()).handleEvent(any(LoesungszettelCreated.class));
+				verify(domainEventHandler, never()).handleEvent(any(LoesungszettelChanged.class));
+				verify(domainEventHandler, never()).handleEvent(any(LoesungszettelDeleted.class));
 			}
 		}
 
@@ -631,9 +636,9 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 			verify(loesungszettelRepository, times(1)).removeLoesungszettel(any());
 			verify(kinderRepository, times(1)).changeKind(any());
 
-			assertNotNull(service.getLoesungszettelCreated());
-			assertNull(service.getLoesungszettelChanged());
-			assertNull(service.getLoesungszettelDeleted());
+			verify(domainEventHandler).handleEvent(any(LoesungszettelCreated.class));
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelChanged.class));
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelDeleted.class));
 
 		}
 
@@ -688,9 +693,9 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 				verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
 				verify(kinderRepository, times(0)).changeKind(any());
 
-				assertNull(service.getLoesungszettelCreated());
-				assertNull(service.getLoesungszettelChanged());
-				assertNull(service.getLoesungszettelDeleted());
+				verify(domainEventHandler, never()).handleEvent(any(LoesungszettelCreated.class));
+				verify(domainEventHandler, never()).handleEvent(any(LoesungszettelChanged.class));
+				verify(domainEventHandler, never()).handleEvent(any(LoesungszettelDeleted.class));
 			}
 
 		}
@@ -737,9 +742,9 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 				verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
 				verify(kinderRepository, times(0)).changeKind(any());
 
-				assertNull(service.getLoesungszettelCreated());
-				assertNull(service.getLoesungszettelChanged());
-				assertNull(service.getLoesungszettelDeleted());
+				verify(domainEventHandler, never()).handleEvent(any(LoesungszettelCreated.class));
+				verify(domainEventHandler, never()).handleEvent(any(LoesungszettelChanged.class));
+				verify(domainEventHandler, never()).handleEvent(any(LoesungszettelDeleted.class));
 			}
 
 		}
@@ -802,9 +807,9 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 			verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
 			verify(kinderRepository, times(1)).changeKind(any());
 
-			assertNull(service.getLoesungszettelCreated());
-			assertNotNull(service.getLoesungszettelChanged());
-			assertNull(service.getLoesungszettelDeleted());
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelCreated.class));
+			verify(domainEventHandler).handleEvent(any(LoesungszettelChanged.class));
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelDeleted.class));
 
 			// verify kind.loesungszettelID = request.loesungszettelID
 
@@ -869,9 +874,9 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 			verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
 			verify(kinderRepository, times(1)).changeKind(any());
 
-			assertNull(service.getLoesungszettelCreated());
-			assertNull(service.getLoesungszettelChanged());
-			assertNull(service.getLoesungszettelDeleted());
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelCreated.class));
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelChanged.class));
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelDeleted.class));
 		}
 
 		@Test
@@ -920,9 +925,9 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 				verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
 				verify(kinderRepository, times(0)).changeKind(any());
 
-				assertNull(service.getLoesungszettelCreated());
-				assertNull(service.getLoesungszettelChanged());
-				assertNull(service.getLoesungszettelDeleted());
+				verify(domainEventHandler, never()).handleEvent(any(LoesungszettelCreated.class));
+				verify(domainEventHandler, never()).handleEvent(any(LoesungszettelChanged.class));
+				verify(domainEventHandler, never()).handleEvent(any(LoesungszettelDeleted.class));
 			}
 
 		}
@@ -970,9 +975,9 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 				verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
 				verify(kinderRepository, times(0)).changeKind(any());
 
-				assertNull(service.getLoesungszettelCreated());
-				assertNull(service.getLoesungszettelChanged());
-				assertNull(service.getLoesungszettelDeleted());
+				verify(domainEventHandler, never()).handleEvent(any(LoesungszettelCreated.class));
+				verify(domainEventHandler, never()).handleEvent(any(LoesungszettelChanged.class));
+				verify(domainEventHandler, never()).handleEvent(any(LoesungszettelDeleted.class));
 			}
 
 		}
@@ -1025,9 +1030,9 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 				verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
 				verify(kinderRepository, times(0)).changeKind(any());
 
-				assertNull(service.getLoesungszettelCreated());
-				assertNull(service.getLoesungszettelChanged());
-				assertNull(service.getLoesungszettelDeleted());
+				verify(domainEventHandler, never()).handleEvent(any(LoesungszettelCreated.class));
+				verify(domainEventHandler, never()).handleEvent(any(LoesungszettelChanged.class));
+				verify(domainEventHandler, never()).handleEvent(any(LoesungszettelDeleted.class));
 			}
 		}
 
@@ -1088,9 +1093,9 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 			verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
 			verify(kinderRepository, times(1)).changeKind(any());
 
-			assertNull(service.getLoesungszettelCreated());
-			assertNotNull(service.getLoesungszettelChanged());
-			assertNull(service.getLoesungszettelDeleted());
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelCreated.class));
+			verify(domainEventHandler).handleEvent(any(LoesungszettelChanged.class));
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelDeleted.class));
 		}
 
 		@Test
@@ -1151,9 +1156,9 @@ public class LoesungszettelAendernTest extends AbstractLoesungszettelServiceTest
 			verify(loesungszettelRepository, times(0)).removeLoesungszettel(any());
 			verify(kinderRepository, times(0)).changeKind(any());
 
-			assertNull(service.getLoesungszettelCreated());
-			assertNull(service.getLoesungszettelChanged());
-			assertNull(service.getLoesungszettelDeleted());
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelCreated.class));
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelChanged.class));
+			verify(domainEventHandler, never()).handleEvent(any(LoesungszettelDeleted.class));
 		}
 
 	}

@@ -41,3 +41,10 @@ testem.log
 Thumbs.db
 
 .angular
+/.editorconfig
+/.prettierignore
+/.prettierrc
+/.eslintrc.json
+
+# jEdit
+*~

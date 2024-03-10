@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from '@minikaenguru-ws/common-messages';
 import { environment } from 'apps/mk-admin-app/src/environments/environment';
@@ -17,13 +17,13 @@ export class EditMustertextComponent implements OnInit, OnDestroy {
 
   devMode = environment.envName === 'DEV';
 
-  mustertextForm!: FormGroup;
+  mustertextForm!: UntypedFormGroup;
 
-  kategorieControl!: FormControl;
+  kategorieControl!: UntypedFormControl;
 
-  nameControl!: FormControl;
+  nameControl!: UntypedFormControl;
 
-  textControl!: FormControl;
+  textControl!: UntypedFormControl;
 
   editorInitialized = false;
 
@@ -35,7 +35,7 @@ export class EditMustertextComponent implements OnInit, OnDestroy {
 
   private editorModelSubscription: Subscription = new Subscription();
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
     private router: Router,
     public mustertexteFacade: MustertexteFacade,
     private messageService: MessageService) { 
@@ -106,9 +106,9 @@ export class EditMustertextComponent implements OnInit, OnDestroy {
 
   private initForm(): void {
 
-    this.kategorieControl = new FormControl({value: 'UNDEFINED'}, {validators: [Validators.required, mustertextKategoriValidator]})
-    this.nameControl = new FormControl({value: ''}, {validators: [Validators.required, Validators.maxLength(55)]})
-    this.textControl = new FormControl({value: ''}, {validators: [Validators.required]})
+    this.kategorieControl = new UntypedFormControl({value: 'UNDEFINED'}, {validators: [Validators.required, mustertextKategoriValidator]})
+    this.nameControl = new UntypedFormControl({value: ''}, {validators: [Validators.required, Validators.maxLength(55)]})
+    this.textControl = new UntypedFormControl({value: ''}, {validators: [Validators.required]})
 
     this.mustertextForm = this.fb.group({
       kategorie: this.kategorieControl,

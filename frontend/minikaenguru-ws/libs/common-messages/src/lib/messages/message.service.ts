@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Message } from '../domain/entities';
+import { DOCUMENT } from '@angular/common';
 
 @Injectable({
 	providedIn: 'root'
@@ -11,7 +12,7 @@ export class MessageService {
 
 	message$: Observable<Message | undefined> = this.messageSubject.asObservable();
 
-	constructor() { }
+	constructor(@Inject(DOCUMENT) private document: Document) { }
 
 	showMessage(message: Message) {
 
@@ -23,6 +24,7 @@ export class MessageService {
 			case 'ERROR': this.error(message.message);
 				break;
 		}
+		this.#scrollToTop();
 	}
 
 	info(message: string) {
@@ -49,4 +51,16 @@ export class MessageService {
 	clear() {
 		this.messageSubject.next(undefined);
 	}
+
+	#scrollToTop() {
+        const document = this.document;
+        (function smoothscroll() {
+            const currentScroll = document.documentElement.scrollTop || document.body.scrollTop;
+            // console.log('currentScroll=' + currentScroll);
+            if (currentScroll > 0) {
+                window.requestAnimationFrame(smoothscroll);
+                window.scrollTo(0, currentScroll - (currentScroll / 8));
+            }
+        })();
+    }
 }
