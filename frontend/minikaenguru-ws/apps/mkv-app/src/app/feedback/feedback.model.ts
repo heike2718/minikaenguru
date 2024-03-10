@@ -5,8 +5,11 @@ export const kategorieOptions: string[] = ['keine Angabe', 'A', 'B', 'C'];
 export const jaNeinOptions: string[] = ['keine Angabe', 'ja', 'nein'];
 export const spassOptions: string[] = ['keine Angabe', 'sehr wenig', 'wenig', 'viel', 'sehr viel'];
 export const zufriedenheitOptions: string[] = ['keine Angabe', 'sehr unzufrieden', 'unzufrieden', 'zufrieden', 'sehr zufrieden'];
+export const schriftartOptions: string[] = ['keine Angabe', 'Fibel Nord', 'Fibel Süd', 'Druckschrift Leseanfänger'];
 
 export type Aufgabenkategorie = 'NN' | 'LEICHT' | 'MITTEL' | 'SCHWER';
+
+export type Schriftart = 'NN' | 'DRUCKSCHRIFT' | 'FIBEL_NORD' | 'FIBEL_SUED';
 
 export interface Images {
     readonly imageFrage: string;
@@ -40,6 +43,7 @@ export interface BewertungsbogenKlassenstufe {
     readonly scoreSpassfaktor: number;
     readonly scoreZufriedenheit: number;
     readonly bewertungenAufgaben: BewertungAufgabe[];
+    readonly schriftart?: Schriftart;
     readonly freitext: string;
 };
 
@@ -59,8 +63,6 @@ export interface BewertungsbogenGUIModel {
     readonly bewertungsbogen: BewertungsbogenKlassenstufe;
     readonly items: BewertungAufgabeGUIModel[]
 };
-
-
 
 export function createBewertungAufgabe(aufgabe: Aufgabe): BewertungAufgabe {
 
@@ -103,13 +105,18 @@ export function mapFormValueToBewertungsbogen(klassenstufe: Klassenstufenart, fo
         freitext: freitextWettbewerb.trim(),
         klassenstufe: klassenstufe,
         scoreSpassfaktor: mapSpassfaktor(formValue.scoreSpass as string ?? 'keine Angabe'),
-        scoreZufriedenheit: mapZufriedenheit(formValue.scoreZufriedenheit as string ?? 'keine Angabe')
+        scoreZufriedenheit: mapZufriedenheit(formValue.scoreZufriedenheit as string ?? 'keine Angabe'),
+        schriftart: mapSchriftart(formValue.schriftart as string ?? 'NN')
     }
 };
 
 export function isBewertungsbogenLeer(bewertungsbogen: BewertungsbogenKlassenstufe): boolean {
 
     if ((bewertungsbogen.freitext ?? '').length > 0) {
+        return false;
+    }
+
+    if (bewertungsbogen.schriftart) {
         return false;
     }
 
@@ -120,6 +127,9 @@ export function isBewertungsbogenLeer(bewertungsbogen: BewertungsbogenKlassenstu
             return false;
         }
     }
+
+    
+    
     return true;
 }
 
@@ -261,5 +271,23 @@ function mapSchwierigkeitsgrad(selectedOption: string): number {
     }
 
     return 0;
+}
+
+function mapSchriftart(selectedOption: string): Schriftart | undefined {
+
+    // ['keine Angabe', 'Fibel Nord', 'Fibel Süd', 'Druckschrift Leseanfänger'];
+    if ('Fibel Nord' === selectedOption) {
+        return "FIBEL_NORD";
+    }
+
+    if ('Fibel Süd' === selectedOption) {
+        return "FIBEL_SUED";
+    }
+
+    if ('Druckschrift Leseanfänger' === selectedOption) {
+        return "DRUCKSCHRIFT";
+    }
+
+    return undefined;
 }
 

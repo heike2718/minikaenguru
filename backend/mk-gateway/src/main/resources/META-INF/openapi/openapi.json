@@ -3088,6 +3088,14 @@
             "type" : "integer",
             "example" : 1
           },
+          "schriftart" : {
+            "description" : "Zum Ausdrucken gewählte Schriftart",
+            "type" : "string",
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/Schriftart"
+            } ],
+            "example" : "FIBEL_NORD"
+          },
           "bewertungenAufgaben" : {
             "description" : "Einzelbewertungen der Aufgaben",
             "type" : "array",
@@ -3739,6 +3747,10 @@
             "$ref" : "#/components/schemas/Upload"
           }
         }
+      },
+      "Schriftart" : {
+        "enum" : [ "DRUCKSCHRIFT", "FIBEL_NORD", "FIBEL_SUED" ],
+        "type" : "string"
       },
       "SchulanmeldungRequestPayload" : {
         "type" : "object",

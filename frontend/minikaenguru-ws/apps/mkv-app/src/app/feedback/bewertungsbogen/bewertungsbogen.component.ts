@@ -13,7 +13,8 @@ import {
 	zufriedenheitOptions,
 	BewertungsbogenKlassenstufe,
 	mapFormValueToBewertungsbogen,
-	isBewertungsbogenLeer
+	isBewertungsbogenLeer,
+	schriftartOptions
 } from "../feedback.model";
 import { Router } from "@angular/router";
 import { Klassenstufenart, getKlassenstufeByLabel } from "@minikaenguru-ws/common-components";
@@ -37,6 +38,7 @@ export class BewertungsbogenComponent implements OnInit, OnDestroy {
 	jaNeinOptions: string[] = jaNeinOptions;
 	spassOptions: string[] = spassOptions;
 	zufriedenheitOptions: string[] = zufriedenheitOptions;
+	schriftartOptions: string[] = schriftartOptions;
 
 	#bewertungsbogenGUIModel!: BewertungsbogenGUIModel;
 	#fb = inject(FormBuilder);
@@ -58,6 +60,7 @@ export class BewertungsbogenComponent implements OnInit, OnDestroy {
 		this.form = this.#fb.group({
 			scoreSpass: ['0'],
 			scoreZufriedenheit: ['0'],
+			schriftart: [''],
 			freitextWettbewerb: [''], // TODO: pattern
 			items: this.items
 		});

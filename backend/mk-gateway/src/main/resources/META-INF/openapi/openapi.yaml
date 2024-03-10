@@ -2156,6 +2156,12 @@ components:
             von 0 bis 5 (0 = keine Bewertung)
           type: integer
           example: 1
+        schriftart:
+          description: Zum Ausdrucken gewählte Schriftart
+          type: string
+          allOf:
+          - $ref: '#/components/schemas/Schriftart'
+          example: FIBEL_NORD
         bewertungenAufgaben:
           description: Einzelbewertungen der Aufgaben
           type: array
@@ -2640,6 +2646,12 @@ components:
           type: string
         upload:
           $ref: '#/components/schemas/Upload'
+    Schriftart:
+      enum:
+      - DRUCKSCHRIFT
+      - FIBEL_NORD
+      - FIBEL_SUED
+      type: string
     SchulanmeldungRequestPayload:
       type: object
       properties:

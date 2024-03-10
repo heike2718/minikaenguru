@@ -162,6 +162,7 @@ public class BewertungService {
 		result.setScoreSpass(bewertungsbogen.getScoreSpassfaktor());
 		result.setScoreZufriedenheit(bewertungsbogen.getScoreZufriedenheit());
 		result.setWettbewerbUuid(wettbewerbId);
+		result.setSchriftart(bewertungsbogen.getSchriftart());
 
 		return result;
 

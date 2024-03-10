@@ -49,8 +49,8 @@ const feedbackReducer = createReducer(initialFeedbackState,
     on(FeedbacActions.submitBewertung, (state, action) => {
 
         const theKlassenstufe = action.bewertungsbogen.klassenstufe;
-        const einSubmitted = theKlassenstufe === "EINS";
-        const zweiSubmitted = theKlassenstufe === "ZWEI";
+        const einSubmitted = theKlassenstufe === "EINS" ? true : state.bewertungsbogenEINSSubmitted;
+        const zweiSubmitted = theKlassenstufe === "ZWEI" ? true : state.bewertungsbogenZWEISubmitted;
         return {...state, bewertungsbogenEINSSubmitted: einSubmitted, bewertungsbogenZWEISubmitted: zweiSubmitted};
     }),
     on(FeedbacActions.bewertungSubmitted, (state, _action) => {

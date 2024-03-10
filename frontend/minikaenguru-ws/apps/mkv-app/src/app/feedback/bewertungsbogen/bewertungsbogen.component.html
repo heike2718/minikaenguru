@@ -57,9 +57,12 @@
 
                                     <fieldset class="form-group mb-5">
                                         <legend>Einstufung der Aufgabe (A,B,C)</legend>
-                                        <div class="feedback-frage">Wenn Sie die Aufgabe für zu leicht oder zu schwer für Kategorie 
-                                            {{bewertungAufgabe.value.aufgabeKategorie}} halten, welche
-                                            Einstufung hätten Sie stattdessen dieser Aufgabe gegeben?</div>
+                                        <div *ngIf="bewertungAufgabe.value.aufgabeKategorie === 'A'">Wenn Sie die Aufgabe für zu schwer für Kategorie 
+                                            {{bewertungAufgabe.value.aufgabeKategorie}} halten, welche Einstufung hätten Sie stattdessen dieser Aufgabe gegeben?</div>
+                                        <div *ngIf="bewertungAufgabe.value.aufgabeKategorie === 'B'">Wenn Sie die Aufgabe für zu leicht oder zu schwer für Kategorie 
+                                            {{bewertungAufgabe.value.aufgabeKategorie}} halten, welche Einstufung hätten Sie stattdessen dieser Aufgabe gegeben?</div>
+                                        <div *ngIf="bewertungAufgabe.value.aufgabeKategorie === 'C'">Wenn Sie die Aufgabe für zu leicht für Kategorie 
+                                            {{bewertungAufgabe.value.aufgabeKategorie}} halten, welche Einstufung hätten Sie stattdessen dieser Aufgabe gegeben?</div>
                                         <div class="form-check form-check-inline"
                                             *ngFor="let option of kategorieOptions">
                                             <input class="form-check-input" type="radio" [id]="'kategorie'+i"
@@ -118,7 +121,6 @@
                                     formControlName="scoreSpass" [value]="option">
                                 <label class="form-check-label" [for]="'scoreSpass'">{{ option }}</label>
                             </div>
-
                         </fieldset>
 
                         <fieldset class="form-group mb-5">
@@ -131,7 +133,16 @@
                                     formControlName="scoreZufriedenheit" [value]="option">
                                 <label class="form-check-label" [for]="'scoreZufriedenheit'">{{ option }}</label>
                             </div>
+                        </fieldset>
 
+                        <fieldset class="form-group mb-5">
+                            <legend>Schriftart</legend>
+                            <div class="feedback-frage">Welche Schriftart hatten Sie gewählt?</div>
+                            <div class="form-check form-check-inline" *ngFor="let option of schriftartOptions">
+                                <input class="form-check-input" type="radio" [id]="'schriftart'"
+                                    formControlName="schriftart" [value]="option">
+                                <label class="form-check-label" [for]="'schriftart'">{{ option }}</label>
+                            </div>
                         </fieldset>
 
                         <div class="form-group">

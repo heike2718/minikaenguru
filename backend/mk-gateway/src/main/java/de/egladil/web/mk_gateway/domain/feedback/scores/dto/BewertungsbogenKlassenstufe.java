@@ -11,6 +11,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_validation.annotations.StringLatin;
+import de.egladil.web.mk_gateway.domain.feedback.scores.Schriftart;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -39,6 +40,12 @@ public class BewertungsbogenKlassenstufe {
 		description = "Punkte für Zufriedenheit der Lehrperson mit den Aufgaben insgesamt von 0 bis 5 (0 = keine Bewertung)",
 		example = "1")
 	private int scoreZufriedenheit;
+
+	@JsonProperty
+	@Schema(
+		description = "Zum Ausdrucken gewählte Schriftart",
+		example = "FIBEL_NORD")
+	private Schriftart schriftart;
 
 	@JsonProperty
 	@Schema(description = "Einzelbewertungen der Aufgaben")
@@ -105,6 +112,17 @@ public class BewertungsbogenKlassenstufe {
 	public BewertungsbogenKlassenstufe withFreitext(final String freitext) {
 
 		this.freitext = freitext;
+		return this;
+	}
+
+	public Schriftart getSchriftart() {
+
+		return schriftart;
+	}
+
+	public BewertungsbogenKlassenstufe withSchriftart(final Schriftart schriftart) {
+
+		this.schriftart = schriftart;
 		return this;
 	}
 }

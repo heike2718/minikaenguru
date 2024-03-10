@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.persistence.entities;
 
+import de.egladil.web.mk_gateway.domain.feedback.scores.Schriftart;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,6 +43,10 @@ public class ScoreKlassenstufeEntity {
 
 	@Column(name = "SCORE_ZUFRIEDENHEIT")
 	private int scoreZufriedenheit;
+
+	@Column(name = "FONT")
+	@Enumerated(EnumType.STRING)
+	private Schriftart schriftart;
 
 	@Column
 	private String freitext;
@@ -148,6 +153,16 @@ public class ScoreKlassenstufeEntity {
 	public void setFreitext(final String freitext) {
 
 		this.freitext = freitext;
+	}
+
+	public Schriftart getSchriftart() {
+
+		return schriftart;
+	}
+
+	public void setSchriftart(final Schriftart schriftart) {
+
+		this.schriftart = schriftart;
 	}
 
 }
