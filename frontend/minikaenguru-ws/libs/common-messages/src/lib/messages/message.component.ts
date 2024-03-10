@@ -14,6 +14,8 @@ export class MessagesComponent implements OnInit, OnDestroy {
 
   msg?: Message;
 
+  hideMessageTimeout: any;
+
 	private subscription: Subscription = new Subscription();
 
   constructor(private messageService: MessageService) { }
@@ -21,7 +23,13 @@ export class MessagesComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.subscription = this.messageService.message$.subscribe(
-      message => this.msg = message
+      message => {
+        this.msg = message;
+
+        if (message && message.level === 'INFO') {
+          this.#startHideMessageTimeout();
+        }
+      }
     );
 
   }
@@ -48,4 +56,14 @@ export class MessagesComponent implements OnInit, OnDestroy {
     }
 		return result;
 	}
+
+  #startHideMessageTimeout() {
+    // Clear any existing timeout to avoid multiple timeouts running concurrently
+    clearTimeout(this.hideMessageTimeout);
+
+    // Start a new timeout to hide the message after 3 seconds
+    this.hideMessageTimeout = setTimeout(() => {
+      this.close();
+    }, 3000);
+  }
 }

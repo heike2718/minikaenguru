@@ -12,7 +12,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameters;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
-import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.feedback.scores.AufgabenVorschauService;
 import de.egladil.web.mk_gateway.domain.feedback.scores.dto.AufgabenvorschauDto;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
@@ -58,7 +58,7 @@ public class RestrictedMjaResource {
 		name = "ServerError",
 		description = "Serverfehler",
 		responseCode = "500",
-		content = @Content(schema = @Schema(implementation = MessagePayload.class)))
+		content = @Content(schema = @Schema(implementation = ResponsePayload.class)))
 	// @formatter:off
 	public Response getAufgabenMinikaenguruwettbewerb(
 		@PathParam(value = "klasse") final Klassenstufe klassenstufe) {

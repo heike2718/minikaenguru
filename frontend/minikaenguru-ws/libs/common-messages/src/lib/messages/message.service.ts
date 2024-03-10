@@ -8,7 +8,7 @@ import { DOCUMENT } from '@angular/common';
 })
 export class MessageService {
 
-	private messageSubject = new BehaviorSubject<Message | undefined>(undefined);
+	private messageSubject = new BehaviorSubject<Message | undefined>(undefined);	
 
 	message$: Observable<Message | undefined> = this.messageSubject.asObservable();
 
@@ -23,8 +23,7 @@ export class MessageService {
 				break;
 			case 'ERROR': this.error(message.message);
 				break;
-		}
-		this.#scrollToTop();
+		}		
 	}
 
 	info(message: string) {
@@ -51,16 +50,4 @@ export class MessageService {
 	clear() {
 		this.messageSubject.next(undefined);
 	}
-
-	#scrollToTop() {
-        const document = this.document;
-        (function smoothscroll() {
-            const currentScroll = document.documentElement.scrollTop || document.body.scrollTop;
-            // console.log('currentScroll=' + currentScroll);
-            if (currentScroll > 0) {
-                window.requestAnimationFrame(smoothscroll);
-                window.scrollTo(0, currentScroll - (currentScroll / 8));
-            }
-        })();
-    }
 }

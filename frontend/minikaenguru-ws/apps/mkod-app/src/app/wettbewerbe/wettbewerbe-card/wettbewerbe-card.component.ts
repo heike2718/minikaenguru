@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from '@minikaenguru-ws/common-messages';
-import { TeilnahmenFacade } from '../../teilnahmen/teilnahmen.facade';
 import { Wettbewerb } from '../wettbewerb.model';
 import { WettbewerbeFacade } from '../wettbewerbe.facade';
 
@@ -21,7 +20,6 @@ export class WettbewerbeCardComponent implements OnInit {
 
   constructor(private router: Router,
     private wettbewerbeFacace: WettbewerbeFacade,
-    private teilnahmenFacade: TeilnahmenFacade,
     private messageService: MessageService) { }
 
   ngOnInit(): void {

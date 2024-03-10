@@ -1,6 +1,6 @@
 {
   "name": "minikaenguru-ws",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -76,7 +76,7 @@
     "jest-environment-jsdom": "29.4.3",
     "jest-environment-node": "^29.4.1",
     "jest-preset-angular": "13.1.1",
-    "jsonc-eslint-parser": "^2.3.0",
+    "jsonc-eslint-parser": "^2.3.1",
     "npm-run-all": "^4.1.5",
     "nx": "16.8.1",
     "prettier": "2.6.2",

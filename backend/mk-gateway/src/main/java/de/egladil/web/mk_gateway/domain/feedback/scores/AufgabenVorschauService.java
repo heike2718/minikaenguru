@@ -5,13 +5,16 @@
 package de.egladil.web.mk_gateway.domain.feedback.scores;
 
 import java.util.Base64;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.auth.s2s.MkGatewayAuthConfig;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayWebApplicationException;
@@ -40,6 +43,8 @@ public class AufgabenVorschauService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AufgabenVorschauService.class);
 
 	private final ActivateFeedbackDelegate activateFeedbackDelegate = new ActivateFeedbackDelegate();
+
+	private final ResourceBundle applicationMessages = ResourceBundle.getBundle("ApplicationMessages", Locale.GERMAN);
 
 	@Inject
 	MkGatewayAuthConfig authConfig;
@@ -76,8 +81,8 @@ public class AufgabenVorschauService {
 		if (optAktuellerWettbewerb.isEmpty()) {
 
 			LOGGER.error("Es gibt keinen aktuellen Wettbewerb");
-			MessagePayload messagePayload = MessagePayload.error("aktueller Wettbewerb wurde nicht gefunden");
-			Response response = Response.status(404).entity(messagePayload).build();
+			MessagePayload messagePayload = MessagePayload.error(applicationMessages.getString("aufgabenvorschau.error"));
+			Response response = Response.status(404).entity(ResponsePayload.messageOnly(messagePayload)).build();
 			throw new MkGatewayWebApplicationException(response);
 		}
 
@@ -91,8 +96,8 @@ public class AufgabenVorschauService {
 
 			LOGGER.error("Bewertung nicht freigeschaltet: wettbewerb.status={}, veranstalter.zugangUnterlagen", wettbewerb.status(),
 				veranstalter.zugangUnterlagen());
-			MessagePayload messagePayload = MessagePayload.error("Bewertung nicht freigeschaltet");
-			Response response = Response.status(400).entity(messagePayload).build();
+			MessagePayload messagePayload = MessagePayload.error(applicationMessages.getString("aufgabenvorschau.error"));
+			Response response = Response.status(400).entity(ResponsePayload.messageOnly(messagePayload)).build();
 			throw new MkGatewayWebApplicationException(response);
 		}
 
@@ -110,8 +115,9 @@ public class AufgabenVorschauService {
 		} catch (ProcessingException e) {
 
 			LOGGER.error("ProcessingException bei Kommunikation mit mja-api: {}", e.getMessage());
-			MessagePayload messagePayload = MessagePayload.error("Aufgabenvorschau konnte nicht geladen werden");
-			Response response = Response.status(500).entity(messagePayload).build();
+			MessagePayload messagePayload = MessagePayload
+				.error(applicationMessages.getString("aufgabenvorschau.error"));
+			Response response = Response.status(500).entity(ResponsePayload.messageOnly(messagePayload)).build();
 			throw new MkGatewayWebApplicationException(response);
 		}
 	}
