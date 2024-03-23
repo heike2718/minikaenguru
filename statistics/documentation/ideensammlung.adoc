@@ -21,18 +21,6 @@ Optionen:
 * Bei Klick auf ein Item wird das Bild der Aufgabe geladen und zusammen mit dem Tortendiagramm größer angezeigt.
 
 
-.Startseite
-[cols="2,1"]
-|===
-| +------------------+ | +-------------------+
-| |    Title Bar     | | |     Sidebar       |
-| +------------------+ | +-------------------+
-| |                  | | |                   |
-| |    Main Content  | | |    Sidebar Content|
-| |                  | | |                   |
-| +------------------+ | +-------------------+
-|===
-
 
 
 == Schwellwerte für die Aufgabenkategorien

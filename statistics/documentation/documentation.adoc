@@ -1,0 +1,7 @@
+= Dokumentation Minikängur-Statistiken
+:author: Heike Winkelvoß
+:license: MIT
+:version: 1.0.0
+:description: https://example.com/support
+
+include::ideensammlung.adoc[]
