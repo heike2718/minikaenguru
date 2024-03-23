@@ -1,0 +1,42 @@
+= Entwicklungsdokumentation neue Anwendung
+
+Die neue Anwendung "Minikänguru in Bildern und Zahlen" ist open data, d.h. es gibt keine Zugangshürden. Sie löst die mkod-app ab.
+
+== Use Cases
+
+=== Statistik eines vergangenen Wettbewerbs darstellen
+
+Aus einer Liste vergangenen Wettbewerbe wird einer ausgewählt und man landet auf der Übersichtsseite dieses Wettbewerbs
+
+Optionen:
+
+* Beteilungungsstatistik anzeigen (Anzahl Schulanmeldungen, Anzahl Privatanmeldungen, Anzahl beteiligter Kinder gesamt und nach Klassenstufen und nach Art der Teilnahme und nach Sprache)
+
+* In der Beteiligungsstatistik Unterrubriken für einzelne Länder mit gleicher Aufschlüsselung
+
+* Navigation zu den Aufgaben (nach Klassenstufe)
+
+* Liste soll zunächst nur die Aufgabennummer und das Tortendiagramm r/f/n anzeigen, damit man einen ersten visuellen Eindruck bekommt
+
+* Bei Klick auf ein Item wird das Bild der Aufgabe geladen und zusammen mit dem Tortendiagramm größer angezeigt.
+
+
+.Startseite
+[cols="2,1"]
+|===
+| +------------------+ | +-------------------+
+| |    Title Bar     | | |     Sidebar       |
+| +------------------+ | +-------------------+
+| |                  | | |                   |
+| |    Main Content  | | |    Sidebar Content|
+| |                  | | |                   |
+| +------------------+ | +-------------------+
+|===
+
+
+
+== Schwellwerte für die Aufgabenkategorien
+
+* Kategorie A: [80,100]
+* Kategorie B: (20,80)
+* Kategorie C: [0,20] 
