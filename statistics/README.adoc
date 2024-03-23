@@ -1,0 +1,3 @@
+= Minikänguru-Statistiken
+
+Diese Anwendung wird statistische Daten der Minikänguru-Wettbewerbe visuell aufbereiten und als open data zur Verfügung stellen.
