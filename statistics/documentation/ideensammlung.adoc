@@ -1,4 +1,4 @@
-= Entwicklungsdokumentation neue Anwendung
+= Ideensammlung
 
 Die neue Anwendung "Minikänguru in Bildern und Zahlen" ist open data, d.h. es gibt keine Zugangshürden. Sie löst die mkod-app ab.
 
