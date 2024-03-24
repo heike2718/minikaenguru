@@ -7,10 +7,10 @@ package de.egladil.web.mk_gateway.domain.auth.s2s;
 import io.smallrye.config.ConfigMapping;
 
 /**
- * MkGatewayAuthConfig gruppiert die Konfigurationsparameter mit dem Präfix mkgateway.auth
+ * MkBiZaAuthConfig gruppiert die Konfigurationsparameter mit dem Präfix mkbiza.auth
  */
-@ConfigMapping(prefix = "mkgateway.auth")
-public interface MkGatewayAuthConfig {
+@ConfigMapping(prefix = "mkbiza.auth")
+public interface MkBiZaAuthConfig {
 
 	String client();
 

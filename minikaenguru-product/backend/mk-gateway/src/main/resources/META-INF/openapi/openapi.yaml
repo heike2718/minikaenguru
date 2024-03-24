@@ -1316,7 +1316,7 @@ paths:
   /mk-gateway/mja-api/aufgaben/{klasse}:
     get:
       tags:
-      - Restricted Mja Resource
+      - Mja Api Resource
       operationId: Läd die Aufgaben der gegebenen Klassenstufe es aktuellen Wettbewerbs
         vom mja-api
       parameters:
@@ -1341,6 +1341,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResponsePayload'
+  /mk-gateway/mkbiza/wettbewerbe:
+    get:
+      tags:
+      - Mk Bi Za Resource
+      summary: Gibt Infos über die API zurück.
+      operationId: getInfos
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  format: int32
+                  type: integer
+        "500":
+          description: Serverfehler
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessagePayload'
   /mk-gateway/open-data/statistik/anmeldungen:
     get:
       tags:

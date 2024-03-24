@@ -74,6 +74,22 @@ public class WettbewerbService {
 	}
 
 	/**
+	 * Gibt alle Wettbewerbe mit dem gegebenen Status zurück.
+	 *
+	 * @param  status
+	 *                WettbewerbStatus
+	 * @return        List
+	 */
+	public List<Integer> loadWettbewerbsjahreWithStatus(final WettbewerbStatus status) {
+
+		List<Wettbewerb> wettbewerbe = this.wettbewerbRepository.loadWettbewerbe();
+
+		Collections.sort(wettbewerbe, new WettbewerbeDescendingComparator());
+
+		return wettbewerbe.stream().filter(w -> status == w.status()).map(w -> w.id().jahr()).toList();
+	}
+
+	/**
 	 * Ermittelt den aktuellen Wettbewerb. Es kann auch sein, dass es keinen gibt.
 	 *
 	 * @return Optional

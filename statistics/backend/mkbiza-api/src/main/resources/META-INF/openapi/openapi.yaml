@@ -1,0 +1,101 @@
+---
+openapi: 3.0.3
+info:
+  title: mja-api
+  description: API f�r mein Internet-Aufgabenarchiv
+  contact:
+    name: Heike Winkelvo�
+    url: https://mathe-jung-alt.de
+    email: info@egladil.de
+  license:
+    url: https://mit-license.org/
+  version: 3.0.0
+servers:
+- url: http://localhost:9540
+  description: Auto generated value
+- url: http://0.0.0.0:9540
+  description: Auto generated value
+tags:
+- name: About
+  description: Stellt Informationen über diese API zur Verfügung
+- name: Wettbewerbe
+paths:
+  /mkbiza-api/about:
+    get:
+      tags:
+      - About
+      summary: Gibt Infos über die API zurück.
+      operationId: getInfos
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AboutDto'
+        "500":
+          description: Serverfehler
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessagePayload'
+  /mkbiza-api/wettbewerbe:
+    get:
+      tags:
+      - Wettbewerbe
+      summary: Gibt die Jahre aller beendeten Minikänguru-Wettbewerbe zurück
+      operationId: getWettbewerbsjahre
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  format: int32
+                  type: integer
+        "401":
+          description: S2S-Autentifizierung schlug fehl
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessagePayload'
+        "500":
+          description: Serverfehler
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessagePayload'
+components:
+  schemas:
+    AboutDto:
+      description: Informationen über die API
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        beschreibung:
+          type: string
+        urls:
+          type: array
+          items:
+            type: string
+        schluesselwoerter:
+          type: string
+        keywords:
+          type: string
+        version:
+          type: string
+    MessagePayload:
+      description: eine kategorisierte Meldung
+      type: object
+      properties:
+        level:
+          description: "Level der Message: INFO | WARN | ERROR"
+          type: string
+        message:
+          description: die message
+          type: string

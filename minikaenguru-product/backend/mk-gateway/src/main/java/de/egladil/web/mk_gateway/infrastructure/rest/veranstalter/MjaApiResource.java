@@ -25,10 +25,10 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 /**
- * RestrictedMjaResource
+ * MjaApiResource
  */
 @Path("mja-api")
-public class RestrictedMjaResource {
+public class MjaApiResource {
 
 	@Inject
 	AufgabenVorschauService aufgabenVorschauService;
