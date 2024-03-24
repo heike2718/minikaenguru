@@ -2,7 +2,7 @@
 // Project: mk-kataloge
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_kataloge.application.impl;
+package de.egladil.web.mk_kataloge.domain;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,10 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.egladil.web.mk_kataloge.application.KatalogFacade;
-import de.egladil.web.mk_kataloge.domain.KatalogItem;
-import de.egladil.web.mk_kataloge.domain.KatalogItemNameComparator;
-import de.egladil.web.mk_kataloge.domain.KatalogeRepository;
 import de.egladil.web.mk_kataloge.domain.apimodel.SchuleAPIModel;
 import de.egladil.web.mk_kataloge.domain.event.DataInconsistencyRegistered;
 import de.egladil.web.mk_kataloge.domain.event.LoggableEventDelegate;
@@ -31,12 +27,12 @@ import jakarta.enterprise.event.Event;
 import jakarta.inject.Inject;
 
 /**
- * KatalogFacadeImpl
+ * KatalogFacade
  */
 @ApplicationScoped
-public class KatalogFacadeImpl implements KatalogFacade {
+public class KatalogFacade {
 
-	private static final Logger LOG = LoggerFactory.getLogger(KatalogFacadeImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(KatalogFacade.class);
 
 	@Inject
 	KatalogeRepository katalogRepository;
@@ -47,7 +43,11 @@ public class KatalogFacadeImpl implements KatalogFacade {
 	@Inject
 	LoggableEventDelegate eventDelegate;
 
-	@Override
+	/**
+	 * Läd alle Länder.
+	 *
+	 * @return
+	 */
 	public List<KatalogItem> loadLaender() {
 
 		List<Land> laender = katalogRepository.loadLaender();
@@ -59,13 +59,23 @@ public class KatalogFacadeImpl implements KatalogFacade {
 		return result;
 	}
 
-	@Override
+	/**
+	 * Gibt die Anzahl der Orte im Land mit dem gegebenen Kürzel zurück
+	 *
+	 * @param  kuerzel
+	 * @return
+	 */
 	public int countOrteInLand(final String kuerzel) {
 
 		return katalogRepository.countOrteInLand(kuerzel);
 	}
 
-	@Override
+	/**
+	 * Läd alle Orte in einem Land, sofern es nicht zu viele sind.
+	 *
+	 * @param  kuerzel
+	 * @return         List
+	 */
 	public List<KatalogItem> loadOrteInLand(final String kuerzel) {
 
 		List<Ort> orte = katalogRepository.loadOrteInLand(kuerzel);
@@ -77,20 +87,36 @@ public class KatalogFacadeImpl implements KatalogFacade {
 		return result;
 	}
 
-	@Override
+	/**
+	 * Gibt die Anzahl der Schulen im Ort mit dem gegebenen Kürzel zurück
+	 *
+	 * @param  kuerzel
+	 * @return
+	 */
 	public int countSchulenInOrt(final String kuerzel) {
 
 		return katalogRepository.countSchulenInOrt(kuerzel);
 	}
 
-	@Override
+	/**
+	 * Läd alle Schulen in einem Ort, sofern es nicht zu viele sind.
+	 *
+	 * @param  kuerzel
+	 * @return         List
+	 */
 	public List<KatalogItem> loadSchulenInOrt(final String kuerzel) {
 
 		List<Schule> schulen = katalogRepository.loadSchulenInOrt(kuerzel);
 		return mapSchulenToKatalogItems(schulen);
 	}
 
-	@Override
+	/**
+	 * Holt alle Schulen mit den gegebenen Kürzeln.
+	 *
+	 * @param  kommaseparierteKuerzel
+	 *                                String
+	 * @return                        List
+	 */
 	public List<SchuleAPIModel> findSchulen(final String commaseparatedKuerzel) {
 
 		String[] kuerzeltokens = StringUtils.split(commaseparatedKuerzel, ",");

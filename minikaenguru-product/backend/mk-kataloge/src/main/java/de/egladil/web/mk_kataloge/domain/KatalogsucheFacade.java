@@ -2,16 +2,12 @@
 // Project: mk-kataloge
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_kataloge.application.impl;
+package de.egladil.web.mk_kataloge.domain;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import de.egladil.web.mk_kataloge.application.KatalogsucheFacade;
-import de.egladil.web.mk_kataloge.domain.KatalogItem;
-import de.egladil.web.mk_kataloge.domain.KatalogItemNameComparator;
-import de.egladil.web.mk_kataloge.domain.KatalogeRepository;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Land;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.LandToKatalogItemMapper;
 import de.egladil.web.mk_kataloge.infrastructure.persistence.entities.Ort;
@@ -22,15 +18,21 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 /**
- * KatalogsucheFacadeImpl
+ * KatalogsucheFacade
  */
 @ApplicationScoped
-public class KatalogsucheFacadeImpl implements KatalogsucheFacade {
+public class KatalogsucheFacade {
 
 	@Inject
 	KatalogeRepository katalogeRepository;
 
-	@Override
+	/**
+	 * Gibt alle Länder zurück, deren Name mit suchbegriff beginnt.
+	 *
+	 * @param  suchbegriff
+	 *                     String
+	 * @return             List
+	 */
 	public List<KatalogItem> sucheLaenderMitNameBeginnendMit(final String suchbegriff) {
 
 		List<Land> laender = katalogeRepository.findLander(suchbegriff);
@@ -39,7 +41,12 @@ public class KatalogsucheFacadeImpl implements KatalogsucheFacade {
 		return result;
 	}
 
-	@Override
+	/**
+	 * Gibt alle Orte zurück, deren Name mit suchbegriff beginnt.
+	 *
+	 * @param  suchbegriff
+	 * @return             List
+	 */
 	public List<KatalogItem> sucheOrteMitNameBeginnendMit(final String suchbegriff) {
 
 		List<Ort> orte = katalogeRepository.findOrte(suchbegriff);
@@ -47,7 +54,13 @@ public class KatalogsucheFacadeImpl implements KatalogsucheFacade {
 		return result;
 	}
 
-	@Override
+	/**
+	 * Gibt alle Schulen zurück, deren Name mit suchbegriff beginnt.
+	 *
+	 * @param  suchbegriff
+	 *                     String
+	 * @return             List
+	 */
 	public List<KatalogItem> sucheSchulenMitNameEnthaltend(final String suchbegriff) {
 
 		List<Schule> schulen = katalogeRepository.findSchulen(suchbegriff);
@@ -55,7 +68,15 @@ public class KatalogsucheFacadeImpl implements KatalogsucheFacade {
 		return result;
 	}
 
-	@Override
+	/**
+	 * Gibt alle Orte im Land mit dem Kuerzel landkuerzel zurück, deren Name mit suchbegriff beginnt.
+	 *
+	 * @param  landkuerzel
+	 *                     String
+	 * @param  suchbegriff
+	 *                     String
+	 * @return             List
+	 */
 	public List<KatalogItem> sucheOrteInLandMitNameBeginnendMit(final String landkuerzel, final String suchbegriff) {
 
 		List<Ort> orte = katalogeRepository.findOrteInLand(landkuerzel, suchbegriff);
@@ -63,7 +84,15 @@ public class KatalogsucheFacadeImpl implements KatalogsucheFacade {
 		return result;
 	}
 
-	@Override
+	/**
+	 * Gibt alle Schulen im Ort mit dem Kuerzel ortkuerzel zurück, deren Name mit suchbegriff beginnt.
+	 *
+	 * @param  ortkuerzel
+	 *                     String
+	 * @param  suchbegriff
+	 *                     String
+	 * @return             List
+	 */
 	public List<KatalogItem> sucheSchulenInOrtMitNameEnthaltend(final String ortkuerzel, final String suchbegriff) {
 
 		List<Schule> schulen = katalogeRepository.findSchulenInOrt(ortkuerzel, suchbegriff);

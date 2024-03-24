@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_kataloge.application.KatalogFacade;
+import de.egladil.web.mk_kataloge.domain.KatalogFacade;
 import de.egladil.web.mk_kataloge.domain.apimodel.SchuleAPIModel;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
