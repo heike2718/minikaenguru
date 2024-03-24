@@ -6,42 +6,81 @@
 	},
 	"item": [
 		{
-			"name": "local: aufgabenvorschau - 200",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": "http://localhost:9510/mk-gateway/mja-api/aufgaben/IKID"
-			},
-			"response": []
+			"name": "MjaApiResource",
+			"item": [
+				{
+					"name": "local: aufgabenvorschau - 200",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:9510/mk-gateway/mja-api/aufgaben/IKID"
+					},
+					"response": []
+				},
+				{
+					"name": "local: feedback - 200",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"klassenstufe\": \"ZWEI\",\n  \"scoreSpassfaktor\": 4,\n  \"scoreZufriedenheit\": 1,\n  \"bewertungenAufgaben\": [\n      {\n      \"nummer\": \"A-1\",\n      \"scoreSchwierigkeitsgrad\": 3,\n      \"empfohleneKategorie\": \"LEICHT\",\n      \"scoreLehrplankompatibilitaet\": 1,\n      \"scoreVerstaendlichkeit\": 1\n    },\n    {\n      \"nummer\": \"B-3\",\n      \"scoreSchwierigkeitsgrad\": 1,\n      \"empfohleneKategorie\": \"SCHWER\",\n      \"scoreLehrplankompatibilitaet\": -1,\n      \"scoreVerstaendlichkeit\": -1,\n      \"freitext\": \"Multiplikation ist noch nicht Teil des Lehrplans.\"\n    }\n  ],\n  \"freitext\": \"Die Aufgaben waren dieses Jahr viel schwerer als im vergangenen Jahr.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:9510/mk-gateway/feedback"
+					},
+					"response": []
+				}
+			]
 		},
 		{
-			"name": "local: feedback - 200",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "default"
+			"name": "MkBiZaResource",
+			"item": [
+				{
+					"name": "local : wettbewerbsjahre - 401",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:9510/mk-gateway/mkbiza/wettbewerbe"
 					},
-					{
-						"key": "Accept",
-						"value": "application/json",
-						"type": "default"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"klassenstufe\": \"ZWEI\",\n  \"scoreSpassfaktor\": 4,\n  \"scoreZufriedenheit\": 1,\n  \"bewertungenAufgaben\": [\n      {\n      \"nummer\": \"A-1\",\n      \"scoreSchwierigkeitsgrad\": 3,\n      \"empfohleneKategorie\": \"LEICHT\",\n      \"scoreLehrplankompatibilitaet\": 1,\n      \"scoreVerstaendlichkeit\": 1\n    },\n    {\n      \"nummer\": \"B-3\",\n      \"scoreSchwierigkeitsgrad\": 1,\n      \"empfohleneKategorie\": \"SCHWER\",\n      \"scoreLehrplankompatibilitaet\": -1,\n      \"scoreVerstaendlichkeit\": -1,\n      \"freitext\": \"Multiplikation ist noch nicht Teil des Lehrplans.\"\n    }\n  ],\n  \"freitext\": \"Die Aufgaben waren dieses Jahr viel schwerer als im vergangenen Jahr.\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
+					"response": []
 				},
-				"url": "http://localhost:9510/mk-gateway/feedback"
-			},
-			"response": []
+				{
+					"name": "local : wettbewerbsjahre - 200",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bWtiaXphOmNoYW5nZW1l",
+								"type": "default"
+							},
+							{
+								"key": "X-Client-ID",
+								"value": "mkbiza",
+								"type": "default"
+							}
+						],
+						"url": "localhost:9510/mk-gateway/mkbiza/wettbewerbe"
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
