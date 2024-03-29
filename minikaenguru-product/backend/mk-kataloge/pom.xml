@@ -7,19 +7,18 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mk-kataloge</artifactId>
-	<version>2.3.1</version>
+	<version>2.3.2</version>
 
 	<properties>
 		<commons.version>2.0.2</commons.version>
 		<quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
 		<quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
 		<quarkus.platform.version>3.8.2</quarkus.platform.version>
-		<java.version>17</java.version>
-		<maven.compiler.parameters>true</maven.compiler.parameters>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<surefire-plugin.version>3.1.2</surefire-plugin.version>
 		<dependency-check.version>9.0.6</dependency-check.version>
+		<java.version>17</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
 	<dependencyManagement>
@@ -40,15 +39,6 @@
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
-
-			<dependency>
-				<groupId>org.junit</groupId>
-				<artifactId>junit-bom</artifactId>
-				<version>5.8.1</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-
 		</dependencies>
 	</dependencyManagement>
 
@@ -188,7 +178,8 @@
 				<version>${surefire-plugin.version}</version>
 				<configuration>
 					<systemPropertyVariables>
-						<java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+						<java.util.logging.manager>
+							org.jboss.logmanager.LogManager</java.util.logging.manager>
 						<maven.home>${maven.home}</maven.home>
 					</systemPropertyVariables>
 				</configuration>

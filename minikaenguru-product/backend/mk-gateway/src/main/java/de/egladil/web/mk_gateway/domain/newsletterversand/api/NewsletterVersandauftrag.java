@@ -27,11 +27,15 @@ public class NewsletterVersandauftrag {
 	@JsonProperty
 	private Empfaengertyp emfaengertyp;
 
-	public static NewsletterVersandauftrag create(final String newsletterID, final Empfaengertyp empfaengertyp) {
+	@JsonProperty
+	private boolean nurAngemeldeteVeranstalter;
+
+	public static NewsletterVersandauftrag create(final String newsletterID, final Empfaengertyp empfaengertyp, final boolean nurAngemeldeteVeranstalter) {
 
 		NewsletterVersandauftrag result = new NewsletterVersandauftrag();
 		result.newsletterID = newsletterID;
 		result.emfaengertyp = empfaengertyp;
+		result.nurAngemeldeteVeranstalter = nurAngemeldeteVeranstalter;
 		return result;
 	}
 
@@ -76,6 +80,11 @@ public class NewsletterVersandauftrag {
 	public String toString() {
 
 		return "NewsletterVersandauftrag [newsletterID=" + newsletterID + ", emfaengertyp=" + emfaengertyp + "]";
+	}
+
+	public boolean isNurAngemeldeteVeranstalter() {
+
+		return nurAngemeldeteVeranstalter;
 	}
 
 }

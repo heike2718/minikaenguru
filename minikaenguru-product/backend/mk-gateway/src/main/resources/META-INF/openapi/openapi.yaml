@@ -2581,6 +2581,8 @@ components:
           type: string
         emfaengertyp:
           $ref: '#/components/schemas/Empfaengertyp'
+        nurAngemeldeteVeranstalter:
+          type: boolean
     OnlineLoesungszetteleingabe:
       enum:
       - A

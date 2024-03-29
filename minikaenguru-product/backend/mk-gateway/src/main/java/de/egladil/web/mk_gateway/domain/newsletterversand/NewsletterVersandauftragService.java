@@ -174,7 +174,7 @@ public class NewsletterVersandauftragService {
 		}
 
 		List<List<String>> mailempfaengerGruppen = this.veranstalterMailinfoService
-			.getMailempfaengerGroups(auftrag.emfaengertyp());
+			.getMailempfaengerGroups(auftrag.emfaengertyp(), auftrag.isNurAngemeldeteVeranstalter());
 
 		if (mailempfaengerGruppen.isEmpty()) {
 

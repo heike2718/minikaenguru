@@ -26,6 +26,11 @@
 					<option *ngFor="let typ of newsletterFacade.empfaengertypen" [value]="typ">{{typ}}
 					</option>
 				</select>
+				<div class="row">
+					<div class="col-sm-12 col-md-3">nur angemeldete Veranstalter:</div>
+					<div class="col-sm-12 col-md-9"><input type="checkbox" id="chkAngemeldet"
+							[(ngModel)]="aktuellAngemeldete" (change)="onCheckboxChanged()" /></div>
+				</div>
 				<button class="btn btn-outline-dark w-100 ml-1" [disabled]="!empfaengertyp || empfaengertyp.length === 0" (click)="mailSenden()"><i
 						class="fa fa-mail-forward" aria-hidden="true"></i>Mails senden</button>
 				<button class="btn btn-outline-dark w-100 ml-1" (click)="toggleSendMail()"><i class="fa fa-hand-stop-o"

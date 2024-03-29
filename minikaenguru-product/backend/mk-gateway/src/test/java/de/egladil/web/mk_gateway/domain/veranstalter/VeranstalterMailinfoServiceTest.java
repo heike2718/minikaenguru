@@ -5,6 +5,7 @@
 package de.egladil.web.mk_gateway.domain.veranstalter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -14,15 +15,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import jakarta.inject.Inject;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.mail.AdminEmailsConfiguration;
 import de.egladil.web.mk_gateway.domain.mail.Empfaengertyp;
-import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
+import io.quarkus.test.junit.QuarkusTest;
+import jakarta.inject.Inject;
 
 /**
  * VeranstalterMailinfoServiceTest
@@ -35,6 +35,9 @@ public class VeranstalterMailinfoServiceTest {
 
 	@InjectMock
 	VeranstalterRepository veranstalterRepository;
+
+	@InjectMock
+	VeranstalterService veranstalterService;
 
 	@Inject
 	VeranstalterMailinfoService service;
@@ -138,9 +141,11 @@ public class VeranstalterMailinfoServiceTest {
 			String testempfaenger = "tomate@gmx.de, info@egladil.de";
 			when(mailConfiguration.groupsize()).thenReturn(Integer.valueOf(35));
 			when(mailConfiguration.getTestempfaenger()).thenReturn(testempfaenger);
+			when(veranstalterService.getEmailsNewsletterempfaengerAktuellerWettbewerb())
+				.thenReturn(Arrays.asList(new String[] { "tomate@gmx.de", "info@egladil.de" }));
 
 			// Act
-			List<List<String>> result = service.getMailempfaengerGroups(Empfaengertyp.TEST);
+			List<List<String>> result = service.getMailempfaengerGroups(Empfaengertyp.TEST, true);
 
 			// Assert
 			assertEquals(1, result.size());
@@ -151,7 +156,7 @@ public class VeranstalterMailinfoServiceTest {
 			assertTrue(gruppe.contains("info@egladil.de"));
 
 			verify(veranstalterRepository, never()).findEmailsNewsletterAbonnenten(Empfaengertyp.TEST);
-
+			verify(veranstalterService, never()).getEmailsNewsletterempfaengerAktuellerWettbewerb();
 		}
 
 		@Test
@@ -163,7 +168,7 @@ public class VeranstalterMailinfoServiceTest {
 			when(veranstalterRepository.findEmailsNewsletterAbonnenten(empfaengertyp)).thenReturn(Collections.emptyList());
 
 			// Act
-			List<List<String>> result = service.getMailempfaengerGroups(empfaengertyp);
+			List<List<String>> result = service.getMailempfaengerGroups(empfaengertyp, true);
 
 			// Assert
 			assertEquals(0, result.size());
@@ -171,6 +176,7 @@ public class VeranstalterMailinfoServiceTest {
 			verify(veranstalterRepository).findEmailsNewsletterAbonnenten(empfaengertyp);
 			verify(mailConfiguration, never()).getTestempfaenger();
 			verify(mailConfiguration, never()).groupsize();
+			verify(veranstalterService, never()).getEmailsNewsletterempfaengerAktuellerWettbewerb();
 		}
 
 		@Test
@@ -180,23 +186,26 @@ public class VeranstalterMailinfoServiceTest {
 			Empfaengertyp empfaengertyp = Empfaengertyp.ALLE;
 
 			List<String> alleEmpfaenger = Arrays.asList(new String[] { "1@web.de", "2@web.de", "3@web.de" });
+			List<String> angemeldete = Arrays.asList(new String[] { "1@web.de", "3@web.de" });
 
 			when(mailConfiguration.groupsize()).thenReturn(Integer.valueOf(35));
 			when(veranstalterRepository.findEmailsNewsletterAbonnenten(empfaengertyp)).thenReturn(alleEmpfaenger);
+			when(veranstalterService.getEmailsNewsletterempfaengerAktuellerWettbewerb()).thenReturn(angemeldete);
 
 			// Act
-			List<List<String>> result = service.getMailempfaengerGroups(empfaengertyp);
+			List<List<String>> result = service.getMailempfaengerGroups(empfaengertyp, true);
 
 			// Assert
 			assertEquals(1, result.size());
 			List<String> gruppe = result.get(0);
-			assertEquals(3, gruppe.size());
+			assertEquals(2, gruppe.size());
 
 			assertTrue(gruppe.contains("1@web.de"));
-			assertTrue(gruppe.contains("2@web.de"));
+			assertFalse(gruppe.contains("2@web.de"));
 			assertTrue(gruppe.contains("3@web.de"));
 
 			verify(veranstalterRepository, never()).findEmailsNewsletterAbonnenten(Empfaengertyp.TEST);
+			verify(veranstalterService).getEmailsNewsletterempfaengerAktuellerWettbewerb();
 
 		}
 	}
