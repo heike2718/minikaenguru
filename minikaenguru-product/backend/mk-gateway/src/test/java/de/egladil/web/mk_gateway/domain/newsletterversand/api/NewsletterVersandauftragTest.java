@@ -10,7 +10,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.egladil.web.mk_gateway.domain.mail.Empfaengertyp;
-import de.egladil.web.mk_gateway.domain.newsletterversand.api.NewsletterVersandauftrag;
 
 /**
  * NewsletterVersandauftragTest
@@ -22,7 +21,7 @@ public class NewsletterVersandauftragTest {
 
 		// Arrange
 		NewsletterVersandauftrag auftrag = NewsletterVersandauftrag.create("412b06b1-39a5-4fdc-a4f3-2c9e00ea1af3",
-			Empfaengertyp.TEST);
+			Empfaengertyp.TEST, true);
 
 		// Act
 		String serialized = new ObjectMapper().writeValueAsString(auftrag);

@@ -10,17 +10,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.domain.mail.AdminEmailsConfiguration;
 import de.egladil.web.mk_gateway.domain.mail.Empfaengertyp;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.VeranstalterHibernateRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 /**
  * VeranstalterMailinfoService
@@ -36,19 +34,22 @@ public class VeranstalterMailinfoService {
 	@Inject
 	VeranstalterRepository veranstalterRepository;
 
+	@Inject
+	VeranstalterService veranstalterService;
+
+	@Deprecated
 	public static VeranstalterMailinfoService createForTest(final VeranstalterRepository veranstalterRepository, final AdminEmailsConfiguration mailConfiguration) {
 
 		VeranstalterMailinfoService result = new VeranstalterMailinfoService();
-		result.veranstalterRepository = veranstalterRepository;
 		result.mailConfiguration = mailConfiguration;
 		return result;
 
 	}
 
+	@Deprecated
 	public static VeranstalterMailinfoService createForIntegrationTest(final EntityManager entityManager) {
 
 		VeranstalterMailinfoService result = new VeranstalterMailinfoService();
-		result.veranstalterRepository = VeranstalterHibernateRepository.createForIntegrationTest(entityManager);
 		result.mailConfiguration = AdminEmailsConfiguration.createForTest("hdwinkel@egladil.de", 150);
 		return result;
 	}
@@ -57,7 +58,7 @@ public class VeranstalterMailinfoService {
 	 * @param  empfaengertyp
 	 * @return               List von Lists, kann auch empty sein.
 	 */
-	public List<List<String>> getMailempfaengerGroups(final Empfaengertyp empfaengertyp) {
+	public List<List<String>> getMailempfaengerGroups(final Empfaengertyp empfaengertyp, final boolean nurAngemeldeteVeranstalter) {
 
 		List<String> alleMailempfaenger = new ArrayList<>();
 
@@ -69,8 +70,6 @@ public class VeranstalterMailinfoService {
 			alleMailempfaenger = veranstalterRepository.findEmailsNewsletterAbonnenten(empfaengertyp);
 		}
 
-		LOGGER.info("Mailversand an Empfaengertyp={}, Anzahl Empfaenger={}", empfaengertyp.toString(), alleMailempfaenger.size());
-
 		if (alleMailempfaenger.isEmpty()) {
 
 			LOGGER.warn("keine Mailempfaenger fuer Empfaengertyp={} vorhanden", empfaengertyp);
@@ -79,11 +78,29 @@ public class VeranstalterMailinfoService {
 
 		List<String> trimmedMailempfaenger = alleMailempfaenger.stream().map(e -> e.trim()).collect(Collectors.toList()).stream()
 			.filter(m -> StringUtils.isNotBlank(m)).collect(Collectors.toList());
-		;
 
-		List<List<String>> groups = group(trimmedMailempfaenger);
+		if (Empfaengertyp.TEST != empfaengertyp && nurAngemeldeteVeranstalter) {
 
-		return groups;
+			final List<String> mailsAngemeldeteUndNewsletter = this.veranstalterService
+				.getEmailsNewsletterempfaengerAktuellerWettbewerb();
+
+			LOGGER.info("Mailversand an Empfaengertyp={}, Anzahl Empfaenger={}, nurAngemeldete={}, alleMailempfaenger={}",
+				empfaengertyp.toString(), mailsAngemeldeteUndNewsletter.size(), nurAngemeldeteVeranstalter,
+				alleMailempfaenger.size());
+
+			List<String> filteredEmpfaenger = trimmedMailempfaenger.stream()
+				.filter(email -> mailsAngemeldeteUndNewsletter.contains(email)).toList();
+			List<List<String>> groups = group(filteredEmpfaenger);
+			return groups;
+		} else {
+
+			LOGGER.info("Mailversand an Empfaengertyp={}, Anzahl Empfaenger={}, nurAngemeldete={}, alleMailempfaenger={}",
+				empfaengertyp.toString(),
+				trimmedMailempfaenger.size(), nurAngemeldeteVeranstalter, alleMailempfaenger);
+
+			List<List<String>> groups = group(trimmedMailempfaenger);
+			return groups;
+		}
 	}
 
 	/**

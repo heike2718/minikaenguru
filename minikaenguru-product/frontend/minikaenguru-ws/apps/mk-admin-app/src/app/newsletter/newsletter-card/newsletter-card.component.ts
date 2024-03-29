@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, inject } from '@angular/core';
 import { Newsletter, Empfaengertyp, NewsletterVersandauftrag } from '../../shared/newsletter-versandauftrage.model';
 import { environment } from '../../../environments/environment';
 import { NewsletterFacade } from '../newsletter.facade';
@@ -19,7 +19,10 @@ export class NewsletterCardComponent implements OnInit {
 	sendMailpartVisible: boolean = false;
 
 	empfaengertyp: string = '';
-	constructor(public newsletterFacade: NewsletterFacade, private versandauftraegeFacade: VersandauftraegeFacade) { }
+	aktuellAngemeldete = false;
+
+	newsletterFacade = inject(NewsletterFacade);
+	#versandauftraegeFacade = inject(VersandauftraegeFacade);
 
 	ngOnInit(): void { }
 
@@ -38,10 +41,11 @@ export class NewsletterCardComponent implements OnInit {
 
 			const auftrag: NewsletterVersandauftrag = {
 				newsletterID: this.newsletter.uuid,
-				emfaengertyp: this.empfaengertyp as Empfaengertyp
+				emfaengertyp: this.empfaengertyp as Empfaengertyp,
+				nurAngemeldeteVeranstalter: this.aktuellAngemeldete
 			};
 
-			this.versandauftraegeFacade.scheduleMailversand(auftrag);
+			this.#versandauftraegeFacade.scheduleMailversand(auftrag);
 			this.sendMailpartVisible = false;
 		}
 	}
@@ -56,6 +60,10 @@ export class NewsletterCardComponent implements OnInit {
 	onChangeEmpfaengertyp($event: any): void {
 
 		this.empfaengertyp = $event.target.value;
+	}
+
+	onCheckboxChanged() {
+
 	}
 
 }

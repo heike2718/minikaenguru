@@ -49,6 +49,7 @@ export interface VersandinfoWithID {
 export interface NewsletterVersandauftrag {
 	readonly newsletterID: string;
 	readonly emfaengertyp: Empfaengertyp;
+	readonly nurAngemeldeteVeranstalter: boolean;
 };
 
 export class NewsletterMap {

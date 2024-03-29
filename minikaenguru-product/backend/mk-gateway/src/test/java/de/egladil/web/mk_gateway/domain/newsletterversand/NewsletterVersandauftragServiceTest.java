@@ -99,7 +99,7 @@ public class NewsletterVersandauftragServiceTest {
 			String newsletterId = "hklashl";
 			Empfaengertyp empfaengertyp = Empfaengertyp.LEHRER;
 
-			NewsletterVersandauftrag newsletterVersandauftrag = NewsletterVersandauftrag.create(newsletterId, empfaengertyp);
+			NewsletterVersandauftrag newsletterVersandauftrag = NewsletterVersandauftrag.create(newsletterId, empfaengertyp, false);
 
 			// Act
 			try {
@@ -116,7 +116,7 @@ public class NewsletterVersandauftragServiceTest {
 				assertEquals("kein Newsletter mit der ID vorhanden", errorPayload.getMessage());
 
 				verify(newsletterService).findNewsletterWithID(any(Identifier.class));
-				verify(veranstalterMailinfoService, never()).getMailempfaengerGroups(empfaengertyp);
+				verify(veranstalterMailinfoService, never()).getMailempfaengerGroups(empfaengertyp, false);
 				verify(versandauftraegeRepo, never()).findForNewsletter(any(Identifier.class));
 				verify(versandauftraegeRepo, never()).saveVersandauftrag(any(Versandauftrag.class));
 				verify(versandauftraegeRepo, never()).delete(any(Versandauftrag.class));
@@ -131,11 +131,11 @@ public class NewsletterVersandauftragServiceTest {
 			String newsletterId = "hklashl";
 			Empfaengertyp empfaengertyp = Empfaengertyp.LEHRER;
 
-			NewsletterVersandauftrag newsletterVersandauftrag = NewsletterVersandauftrag.create(newsletterId, empfaengertyp);
+			NewsletterVersandauftrag newsletterVersandauftrag = NewsletterVersandauftrag.create(newsletterId, empfaengertyp, false);
 
 			Newsletter newsletter = new Newsletter();
 			when(newsletterService.findNewsletterWithID(any(Identifier.class))).thenReturn(Optional.of(newsletter));
-			when(veranstalterMailinfoService.getMailempfaengerGroups(empfaengertyp)).thenReturn(new ArrayList<>());
+			when(veranstalterMailinfoService.getMailempfaengerGroups(empfaengertyp, false)).thenReturn(new ArrayList<>());
 
 			// Act
 			try {
@@ -152,7 +152,7 @@ public class NewsletterVersandauftragServiceTest {
 				assertEquals("keine Empfänger => kein Versand", errorPayload.getMessage());
 
 				verify(newsletterService).findNewsletterWithID(any(Identifier.class));
-				verify(veranstalterMailinfoService).getMailempfaengerGroups(empfaengertyp);
+				verify(veranstalterMailinfoService).getMailempfaengerGroups(empfaengertyp, false);
 				verify(versandauftraegeRepo, never()).findForNewsletter(any(Identifier.class));
 				verify(versandauftraegeRepo, never()).saveVersandauftrag(any(Versandauftrag.class));
 				verify(versandauftraegeRepo, never()).delete(any(Versandauftrag.class));
@@ -169,7 +169,8 @@ public class NewsletterVersandauftragServiceTest {
 			String newsletterId = "hklashl";
 			Empfaengertyp empfaengertyp = Empfaengertyp.LEHRER;
 
-			NewsletterVersandauftrag newsletterVersandauftrag = NewsletterVersandauftrag.create(newsletterId, empfaengertyp);
+			NewsletterVersandauftrag newsletterVersandauftrag = NewsletterVersandauftrag.create(newsletterId, Empfaengertyp.ALLE,
+				false);
 
 			List<List<String>> empfaengergruppen = getEmpfaengergruppen();
 
@@ -187,7 +188,7 @@ public class NewsletterVersandauftragServiceTest {
 			newsletter.withIdentifier(new Identifier(newsletterId));
 
 			when(newsletterService.findNewsletterWithID(any(Identifier.class))).thenReturn(Optional.of(newsletter));
-			when(veranstalterMailinfoService.getMailempfaengerGroups(empfaengertyp)).thenReturn(empfaengergruppen);
+			when(veranstalterMailinfoService.getMailempfaengerGroups(empfaengertyp, false)).thenReturn(empfaengergruppen);
 			when(versandauftraegeRepo.findForNewsletter(any(Identifier.class))).thenReturn(vorhandene);
 			verify(versandauftraegeRepo, never()).saveVersandauftrag(any(Versandauftrag.class));
 			verify(versandauftraegeRepo, never()).delete(any(Versandauftrag.class));
@@ -208,7 +209,7 @@ public class NewsletterVersandauftragServiceTest {
 				assertEquals(expectedMessage, errorPayload.getMessage());
 
 				verify(newsletterService).findNewsletterWithID(any(Identifier.class));
-				verify(veranstalterMailinfoService).getMailempfaengerGroups(empfaengertyp);
+				verify(veranstalterMailinfoService).getMailempfaengerGroups(empfaengertyp, false);
 				verify(versandauftraegeRepo).findForNewsletter(any(Identifier.class));
 			}
 		}
@@ -222,7 +223,7 @@ public class NewsletterVersandauftragServiceTest {
 			String newsletterId = "hklashl";
 			Empfaengertyp empfaengertyp = Empfaengertyp.LEHRER;
 
-			NewsletterVersandauftrag newsletterVersandauftrag = NewsletterVersandauftrag.create(newsletterId, empfaengertyp);
+			NewsletterVersandauftrag newsletterVersandauftrag = NewsletterVersandauftrag.create(newsletterId, empfaengertyp, true);
 
 			List<List<String>> empfaengergruppen = getEmpfaengergruppen();
 
@@ -240,11 +241,8 @@ public class NewsletterVersandauftragServiceTest {
 			newsletter.withIdentifier(new Identifier(newsletterId));
 
 			when(newsletterService.findNewsletterWithID(any(Identifier.class))).thenReturn(Optional.of(newsletter));
-			when(veranstalterMailinfoService.getMailempfaengerGroups(empfaengertyp)).thenReturn(empfaengergruppen);
+			when(veranstalterMailinfoService.getMailempfaengerGroups(empfaengertyp, true)).thenReturn(empfaengergruppen);
 			when(versandauftraegeRepo.findForNewsletter(any(Identifier.class))).thenReturn(vorhandene);
-			verify(versandauftraegeRepo, never()).saveVersandauftrag(any(Versandauftrag.class));
-			verify(versandauftraegeRepo, never()).delete(any(Versandauftrag.class));
-			verify(auslieferungenRepository, never()).addAuslieferung(any(NewsletterAuslieferung.class));
 
 			// Act
 			try {
@@ -263,8 +261,11 @@ public class NewsletterVersandauftragServiceTest {
 					errorPayload.getMessage());
 
 				verify(newsletterService).findNewsletterWithID(any(Identifier.class));
-				verify(veranstalterMailinfoService).getMailempfaengerGroups(empfaengertyp);
+				verify(veranstalterMailinfoService).getMailempfaengerGroups(empfaengertyp, true);
 				verify(versandauftraegeRepo).findForNewsletter(any(Identifier.class));
+				verify(versandauftraegeRepo, never()).saveVersandauftrag(any(Versandauftrag.class));
+				verify(versandauftraegeRepo, never()).delete(any(Versandauftrag.class));
+				verify(auslieferungenRepository, never()).addAuslieferung(any(NewsletterAuslieferung.class));
 			}
 		}
 
@@ -275,7 +276,7 @@ public class NewsletterVersandauftragServiceTest {
 			String newsletterId = "hklashl";
 			Empfaengertyp empfaengertyp = Empfaengertyp.LEHRER;
 
-			NewsletterVersandauftrag newsletterVersandauftrag = NewsletterVersandauftrag.create(newsletterId, empfaengertyp);
+			NewsletterVersandauftrag newsletterVersandauftrag = NewsletterVersandauftrag.create(newsletterId, empfaengertyp, true);
 
 			List<List<String>> empfaengergruppen = getEmpfaengergruppen();
 
@@ -293,11 +294,8 @@ public class NewsletterVersandauftragServiceTest {
 			newsletter.withIdentifier(new Identifier(newsletterId));
 
 			when(newsletterService.findNewsletterWithID(any(Identifier.class))).thenReturn(Optional.of(newsletter));
-			when(veranstalterMailinfoService.getMailempfaengerGroups(empfaengertyp)).thenReturn(empfaengergruppen);
+			when(veranstalterMailinfoService.getMailempfaengerGroups(empfaengertyp, true)).thenReturn(empfaengergruppen);
 			when(versandauftraegeRepo.findForNewsletter(any(Identifier.class))).thenReturn(vorhandene);
-			verify(versandauftraegeRepo, never()).saveVersandauftrag(any(Versandauftrag.class));
-			verify(versandauftraegeRepo, never()).delete(any(Versandauftrag.class));
-			verify(auslieferungenRepository, never()).addAuslieferung(any(NewsletterAuslieferung.class));
 
 			// Act
 			try {
@@ -316,8 +314,11 @@ public class NewsletterVersandauftragServiceTest {
 					errorPayload.getMessage());
 
 				verify(newsletterService).findNewsletterWithID(any(Identifier.class));
-				verify(veranstalterMailinfoService).getMailempfaengerGroups(empfaengertyp);
+				verify(veranstalterMailinfoService).getMailempfaengerGroups(empfaengertyp, true);
 				verify(versandauftraegeRepo).findForNewsletter(any(Identifier.class));
+				verify(versandauftraegeRepo, never()).saveVersandauftrag(any(Versandauftrag.class));
+				verify(versandauftraegeRepo, never()).delete(any(Versandauftrag.class));
+				verify(auslieferungenRepository, never()).addAuslieferung(any(NewsletterAuslieferung.class));
 			}
 		}
 
@@ -328,7 +329,7 @@ public class NewsletterVersandauftragServiceTest {
 			String newsletterId = "hklashl";
 			Empfaengertyp empfaengertyp = Empfaengertyp.LEHRER;
 
-			NewsletterVersandauftrag newsletterVersandauftrag = NewsletterVersandauftrag.create(newsletterId, empfaengertyp);
+			NewsletterVersandauftrag newsletterVersandauftrag = NewsletterVersandauftrag.create(newsletterId, empfaengertyp, true);
 
 			List<List<String>> empfaengergruppen = getEmpfaengergruppen();
 
@@ -346,11 +347,8 @@ public class NewsletterVersandauftragServiceTest {
 			newsletter.withIdentifier(new Identifier(newsletterId));
 
 			when(newsletterService.findNewsletterWithID(any(Identifier.class))).thenReturn(Optional.of(newsletter));
-			when(veranstalterMailinfoService.getMailempfaengerGroups(empfaengertyp)).thenReturn(empfaengergruppen);
+			when(veranstalterMailinfoService.getMailempfaengerGroups(empfaengertyp, true)).thenReturn(empfaengergruppen);
 			when(versandauftraegeRepo.findForNewsletter(any(Identifier.class))).thenReturn(vorhandene);
-			verify(versandauftraegeRepo, never()).saveVersandauftrag(any(Versandauftrag.class));
-			verify(versandauftraegeRepo, never()).delete(any(Versandauftrag.class));
-			verify(auslieferungenRepository, never()).addAuslieferung(any(NewsletterAuslieferung.class));
 
 			// Act
 			try {
@@ -369,8 +367,11 @@ public class NewsletterVersandauftragServiceTest {
 					errorPayload.getMessage());
 
 				verify(newsletterService).findNewsletterWithID(any(Identifier.class));
-				verify(veranstalterMailinfoService).getMailempfaengerGroups(empfaengertyp);
+				verify(veranstalterMailinfoService).getMailempfaengerGroups(empfaengertyp, true);
 				verify(versandauftraegeRepo).findForNewsletter(any(Identifier.class));
+				verify(versandauftraegeRepo, never()).saveVersandauftrag(any(Versandauftrag.class));
+				verify(versandauftraegeRepo, never()).delete(any(Versandauftrag.class));
+				verify(auslieferungenRepository, never()).addAuslieferung(any(NewsletterAuslieferung.class));
 			}
 		}
 
@@ -381,7 +382,7 @@ public class NewsletterVersandauftragServiceTest {
 			String newsletterId = "hklashl";
 			Empfaengertyp empfaengertyp = Empfaengertyp.TEST;
 
-			NewsletterVersandauftrag newsletterVersandauftrag = NewsletterVersandauftrag.create(newsletterId, empfaengertyp);
+			NewsletterVersandauftrag newsletterVersandauftrag = NewsletterVersandauftrag.create(newsletterId, empfaengertyp, false);
 
 			List<List<String>> empfaengergruppen = getEmpfaengergruppen();
 
@@ -404,7 +405,7 @@ public class NewsletterVersandauftragServiceTest {
 			newsletter.withIdentifier(new Identifier(newsletterId));
 
 			when(newsletterService.findNewsletterWithID(any(Identifier.class))).thenReturn(Optional.of(newsletter));
-			when(veranstalterMailinfoService.getMailempfaengerGroups(empfaengertyp)).thenReturn(empfaengergruppen);
+			when(veranstalterMailinfoService.getMailempfaengerGroups(empfaengertyp, false)).thenReturn(empfaengergruppen);
 			when(versandauftraegeRepo.findForNewsletter(any(Identifier.class))).thenReturn(vorhandene);
 
 			when(versandauftraegeRepo.saveVersandauftrag(any(Versandauftrag.class))).thenReturn(expected);
@@ -417,7 +418,7 @@ public class NewsletterVersandauftragServiceTest {
 
 			// Assert
 			verify(newsletterService).findNewsletterWithID(any(Identifier.class));
-			verify(veranstalterMailinfoService).getMailempfaengerGroups(empfaengertyp);
+			verify(veranstalterMailinfoService).getMailempfaengerGroups(empfaengertyp, false);
 			verify(versandauftraegeRepo).findForNewsletter(any(Identifier.class));
 			verify(versandauftraegeRepo, times(2)).saveVersandauftrag(any(Versandauftrag.class));
 			verify(versandauftraegeRepo).delete(any(Versandauftrag.class));
@@ -437,7 +438,7 @@ public class NewsletterVersandauftragServiceTest {
 			String newsletterId = "hklashl";
 			Empfaengertyp empfaengertyp = Empfaengertyp.TEST;
 
-			NewsletterVersandauftrag newsletterVersandauftrag = NewsletterVersandauftrag.create(newsletterId, empfaengertyp);
+			NewsletterVersandauftrag newsletterVersandauftrag = NewsletterVersandauftrag.create(newsletterId, empfaengertyp, true);
 
 			List<List<String>> empfaengergruppen = getEmpfaengergruppen();
 
@@ -450,7 +451,7 @@ public class NewsletterVersandauftragServiceTest {
 			newsletter.withIdentifier(new Identifier(newsletterId));
 
 			when(newsletterService.findNewsletterWithID(any(Identifier.class))).thenReturn(Optional.of(newsletter));
-			when(veranstalterMailinfoService.getMailempfaengerGroups(empfaengertyp)).thenReturn(empfaengergruppen);
+			when(veranstalterMailinfoService.getMailempfaengerGroups(empfaengertyp, true)).thenReturn(empfaengergruppen);
 			when(versandauftraegeRepo.findForNewsletter(any(Identifier.class))).thenReturn(vorhandene);
 
 			when(versandauftraegeRepo.saveVersandauftrag(any(Versandauftrag.class))).thenReturn(expected);
@@ -463,7 +464,7 @@ public class NewsletterVersandauftragServiceTest {
 
 			// Assert
 			verify(newsletterService).findNewsletterWithID(any(Identifier.class));
-			verify(veranstalterMailinfoService).getMailempfaengerGroups(empfaengertyp);
+			verify(veranstalterMailinfoService).getMailempfaengerGroups(empfaengertyp, true);
 			verify(versandauftraegeRepo).findForNewsletter(any(Identifier.class));
 			verify(versandauftraegeRepo, times(2)).saveVersandauftrag(any(Versandauftrag.class));
 			verify(versandauftraegeRepo, never()).delete(any(Versandauftrag.class));
@@ -484,7 +485,7 @@ public class NewsletterVersandauftragServiceTest {
 			String newsletterId = "hklashl";
 			Empfaengertyp empfaengertyp = Empfaengertyp.TEST;
 
-			NewsletterVersandauftrag newsletterVersandauftrag = NewsletterVersandauftrag.create(newsletterId, empfaengertyp);
+			NewsletterVersandauftrag newsletterVersandauftrag = NewsletterVersandauftrag.create(newsletterId, empfaengertyp, true);
 
 			List<List<String>> empfaengergruppen = getEmpfaengergruppen();
 			List<Versandauftrag> vorhandene = new ArrayList<>();
@@ -493,7 +494,7 @@ public class NewsletterVersandauftragServiceTest {
 			newsletter.withIdentifier(new Identifier(newsletterId));
 
 			when(newsletterService.findNewsletterWithID(any(Identifier.class))).thenReturn(Optional.of(newsletter));
-			when(veranstalterMailinfoService.getMailempfaengerGroups(empfaengertyp)).thenReturn(empfaengergruppen);
+			when(veranstalterMailinfoService.getMailempfaengerGroups(empfaengertyp, true)).thenReturn(empfaengergruppen);
 			when(versandauftraegeRepo.findForNewsletter(any(Identifier.class))).thenReturn(vorhandene);
 
 			when(versandauftraegeRepo.saveVersandauftrag(any(Versandauftrag.class)))
@@ -514,7 +515,7 @@ public class NewsletterVersandauftragServiceTest {
 				assertEquals(expectedMessage, errorPayload.getMessage());
 
 				verify(newsletterService).findNewsletterWithID(any(Identifier.class));
-				verify(veranstalterMailinfoService).getMailempfaengerGroups(empfaengertyp);
+				verify(veranstalterMailinfoService).getMailempfaengerGroups(empfaengertyp, true);
 				verify(versandauftraegeRepo).findForNewsletter(any(Identifier.class));
 				verify(versandauftraegeRepo, times(1)).saveVersandauftrag(any(Versandauftrag.class));
 				verify(versandauftraegeRepo, never()).delete(any(Versandauftrag.class));
@@ -530,7 +531,7 @@ public class NewsletterVersandauftragServiceTest {
 			String newsletterId = "hklashl";
 			Empfaengertyp empfaengertyp = Empfaengertyp.TEST;
 
-			NewsletterVersandauftrag newsletterVersandauftrag = NewsletterVersandauftrag.create(newsletterId, empfaengertyp);
+			NewsletterVersandauftrag newsletterVersandauftrag = NewsletterVersandauftrag.create(newsletterId, empfaengertyp, true);
 
 			List<List<String>> empfaengergruppen = getEmpfaengergruppen();
 
@@ -543,7 +544,7 @@ public class NewsletterVersandauftragServiceTest {
 			newsletter.withIdentifier(new Identifier(newsletterId));
 
 			when(newsletterService.findNewsletterWithID(any(Identifier.class))).thenReturn(Optional.of(newsletter));
-			when(veranstalterMailinfoService.getMailempfaengerGroups(empfaengertyp)).thenReturn(empfaengergruppen);
+			when(veranstalterMailinfoService.getMailempfaengerGroups(empfaengertyp, true)).thenReturn(empfaengergruppen);
 			when(versandauftraegeRepo.findForNewsletter(any(Identifier.class))).thenReturn(vorhandene);
 
 			when(versandauftraegeRepo.saveVersandauftrag(any(Versandauftrag.class))).thenReturn(expected);
@@ -567,7 +568,7 @@ public class NewsletterVersandauftragServiceTest {
 				assertEquals(expectedMessage, errorPayload.getMessage());
 
 				verify(newsletterService).findNewsletterWithID(any(Identifier.class));
-				verify(veranstalterMailinfoService).getMailempfaengerGroups(empfaengertyp);
+				verify(veranstalterMailinfoService).getMailempfaengerGroups(empfaengertyp, true);
 				verify(versandauftraegeRepo).findForNewsletter(any(Identifier.class));
 				verify(versandauftraegeRepo, times(1)).saveVersandauftrag(any(Versandauftrag.class));
 				verify(versandauftraegeRepo, never()).delete(any(Versandauftrag.class));

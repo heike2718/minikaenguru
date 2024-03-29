@@ -3701,6 +3701,9 @@
           },
           "emfaengertyp" : {
             "$ref" : "#/components/schemas/Empfaengertyp"
+          },
+          "nurAngemeldeteVeranstalter" : {
+            "type" : "boolean"
           }
         }
       },
