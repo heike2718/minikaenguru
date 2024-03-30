@@ -7,7 +7,7 @@ package de.egladil.web.mk_gateway.domain.unterlagen;
 import java.util.List;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikAuspraegung;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 
 /**
@@ -34,5 +34,5 @@ public interface DownloadsRepository {
 	 *                    String
 	 * @return            List
 	 */
-	List<Auspraegung> countAuspraegungenByColumnName(String columnName, Integer wettbewerbsjahr);
+	List<AdminStatistikAuspraegung> countAuspraegungenByColumnName(String columnName, Integer wettbewerbsjahr);
 }

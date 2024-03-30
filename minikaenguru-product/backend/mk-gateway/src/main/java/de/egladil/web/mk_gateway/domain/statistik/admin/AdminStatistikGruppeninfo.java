@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.statistik.gruppeninfos;
+package de.egladil.web.mk_gateway.domain.statistik.admin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +10,9 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Gruppeninfo
+ * AdminStatistikGruppeninfo
  */
-public class Gruppeninfo {
+public class AdminStatistikGruppeninfo {
 
 	@JsonProperty
 	private String uuid;
@@ -21,12 +21,12 @@ public class Gruppeninfo {
 	private long anzahlElemente;
 
 	@JsonProperty
-	private List<Gruppenitem> gruppenItems = new ArrayList<>();
+	private List<AdminStatistikItem> gruppenItems = new ArrayList<>();
 
 	/**
 	 *
 	 */
-	Gruppeninfo() {
+	AdminStatistikGruppeninfo() {
 
 		super();
 
@@ -34,17 +34,17 @@ public class Gruppeninfo {
 
 	/**
 	 */
-	public Gruppeninfo(final String uuid) {
+	public AdminStatistikGruppeninfo(final String uuid) {
 
 		this.uuid = uuid;
 	}
 
-	public void addItem(final Gruppenitem item) {
+	public void addItem(final AdminStatistikItem item) {
 
 		gruppenItems.add(item);
 	}
 
-	public List<Gruppenitem> getGruppenItems() {
+	public List<AdminStatistikItem> getGruppenItems() {
 
 		return gruppenItems;
 	}

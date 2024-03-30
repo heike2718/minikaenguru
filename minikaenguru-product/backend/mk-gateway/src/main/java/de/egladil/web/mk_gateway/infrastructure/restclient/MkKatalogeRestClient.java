@@ -87,6 +87,13 @@ public interface MkKatalogeRestClient {
 			value = MkGatewayApp.SECRET_HEADER_NAME) final String secret);
 
 	@GET
+	@Path("kataloge/laender/v2")
+	@Consumes(MediaType.APPLICATION_JSON)
+	Response loadLaenderV2(@HeaderParam(
+		value = MkGatewayApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
+			value = MkGatewayApp.SECRET_HEADER_NAME) final String secret);
+
+	@GET
 	@Path("kataloge/laender/{kuerzel}/orte")
 	@Consumes(MediaType.APPLICATION_JSON)
 	Response loadOrteInLand(@PathParam(

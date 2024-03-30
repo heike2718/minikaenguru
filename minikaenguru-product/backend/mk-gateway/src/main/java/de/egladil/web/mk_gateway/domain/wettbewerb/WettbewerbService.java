@@ -4,6 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.wettbewerb;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -82,7 +83,8 @@ public class WettbewerbService {
 	 */
 	public List<Integer> loadWettbewerbsjahreWithStatus(final WettbewerbStatus status) {
 
-		List<Wettbewerb> wettbewerbe = this.wettbewerbRepository.loadWettbewerbe();
+		List<Wettbewerb> allWettbewerbe = this.wettbewerbRepository.loadWettbewerbe();
+		List<Wettbewerb> wettbewerbe = new ArrayList<>(allWettbewerbe.stream().filter(w -> status == w.status()).toList());
 
 		Collections.sort(wettbewerbe, new WettbewerbeDescendingComparator());
 

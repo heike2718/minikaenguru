@@ -98,6 +98,65 @@
           }
         }
       }
+    },
+    "/mkbiza-api/wettbewerbe/{jahr}" : {
+      "get" : {
+        "tags" : [ "Wettbewerbe" ],
+        "summary" : "Gibt die Statistik eines Wettbewerbs zurück",
+        "operationId" : "getStatistikWettbewerb",
+        "parameters" : [ {
+          "name" : "jahr",
+          "in" : "path",
+          "description" : "Jahr des Wettbewerbs",
+          "required" : true,
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/WettbewerbDetails"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "S2S-Autentifizierung schlug fehl",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessagePayload"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Jahr existsiert nicht oder Wettbewerb ist noch nicht beendet",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessagePayload"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Serverfehler",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessagePayload"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components" : {
@@ -132,6 +191,22 @@
           }
         }
       },
+      "Gruppierungsitem" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "anzahl" : {
+            "format" : "int64",
+            "type" : "integer"
+          }
+        }
+      },
+      "Klassenstufe" : {
+        "enum" : [ "IKID", "EINS", "ZWEI" ],
+        "type" : "string"
+      },
       "MessagePayload" : {
         "description" : "eine kategorisierte Meldung",
         "type" : "object",
@@ -143,6 +218,50 @@
           "message" : {
             "description" : "die message",
             "type" : "string"
+          }
+        }
+      },
+      "WettbewerbDetails" : {
+        "description" : "Stellt die statistischen Details eine Minikänguru-Wettbewerbs zur Verfügung",
+        "type" : "object",
+        "properties" : {
+          "jahr" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "anzahlKinderGesamt" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "klassenstufen" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Klassenstufe"
+            }
+          },
+          "schulteilnahmenJeLand" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Gruppierungsitem"
+            }
+          },
+          "kinderJeTeilnahmeart" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Gruppierungsitem"
+            }
+          },
+          "kinderJeKlassenstufe" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Gruppierungsitem"
+            }
+          },
+          "kinderJeSprache" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Gruppierungsitem"
+            }
           }
         }
       }

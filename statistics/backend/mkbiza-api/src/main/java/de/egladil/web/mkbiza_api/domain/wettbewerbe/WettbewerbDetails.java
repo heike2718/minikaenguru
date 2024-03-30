@@ -4,12 +4,14 @@
 // =====================================================
 package de.egladil.web.mkbiza_api.domain.wettbewerbe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import de.egladil.web.mkbiza_api.domain.Klassenstufe;
 import de.egladil.web.mkbiza_api.domain.dto.Gruppierungsitem;
 
 /**
@@ -25,10 +27,10 @@ public class WettbewerbDetails {
 	private int anzahlKinderGesamt;
 
 	@JsonProperty
-	private List<Gruppierungsitem> schulteilnahmenJeLand;
+	private List<Klassenstufe> klassenstufen = new ArrayList<>();
 
 	@JsonProperty
-	private List<Gruppierungsitem> teilnahmenJeTeilnahmeart;
+	private List<Gruppierungsitem> schulteilnahmenJeLand;
 
 	@JsonProperty
 	private List<Gruppierungsitem> kinderJeTeilnahmeart;
@@ -58,17 +60,6 @@ public class WettbewerbDetails {
 	public WettbewerbDetails withSchulteilnahmenJeLand(final List<Gruppierungsitem> schulteilnahmenJeLand) {
 
 		this.schulteilnahmenJeLand = schulteilnahmenJeLand;
-		return this;
-	}
-
-	public List<Gruppierungsitem> getTeilnahmenJeTeilnahmeart() {
-
-		return teilnahmenJeTeilnahmeart;
-	}
-
-	public WettbewerbDetails withTeilnahmenJeTeilnahmeart(final List<Gruppierungsitem> teilnahmenJeTeilnahmeart) {
-
-		this.teilnahmenJeTeilnahmeart = teilnahmenJeTeilnahmeart;
 		return this;
 	}
 
@@ -113,6 +104,17 @@ public class WettbewerbDetails {
 	public WettbewerbDetails withKinderJeTeilnahmeart(final List<Gruppierungsitem> kinderJeTeilnahmeart) {
 
 		this.kinderJeTeilnahmeart = kinderJeTeilnahmeart;
+		return this;
+	}
+
+	public List<Klassenstufe> getKlassenstufen() {
+
+		return klassenstufen;
+	}
+
+	public WettbewerbDetails addKlassenstufe(final Klassenstufe klassenstufe) {
+
+		this.klassenstufen.add(klassenstufe);
 		return this;
 	}
 

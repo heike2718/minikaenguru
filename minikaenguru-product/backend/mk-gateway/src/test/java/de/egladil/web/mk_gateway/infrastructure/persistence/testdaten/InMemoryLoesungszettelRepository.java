@@ -24,7 +24,7 @@ import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRohdaten;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
-import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikAuspraegung;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
@@ -299,13 +299,13 @@ public class InMemoryLoesungszettelRepository implements LoesungszettelRepositor
 	}
 
 	@Override
-	public List<Auspraegung> countAuspraegungenForWettbewerbByColumnName(final WettbewerbID wettbewerbID, final String columnName) {
+	public List<AdminStatistikAuspraegung> countAuspraegungenForWettbewerbByColumnName(final WettbewerbID wettbewerbID, final String columnName) {
 
 		return null;
 	}
 
 	@Override
-	public List<Auspraegung> countAuspraegungenForTeilnahmeByColumnName(final TeilnahmeIdentifier teilnahmeIdentifier, final String columnName) {
+	public List<AdminStatistikAuspraegung> countAuspraegungenForTeilnahmeByColumnName(final TeilnahmeIdentifier teilnahmeIdentifier, final String columnName) {
 
 		return null;
 	}

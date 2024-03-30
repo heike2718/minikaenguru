@@ -2,35 +2,35 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.statistik.gruppeninfos;
+package de.egladil.web.mk_gateway.domain.statistik.admin;
 
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Gruppenitem ist ein Element einer Gruppeninfo, das den Namen des Attributs und die Anzahl der Entitäten mit diesem Attribut
+ * AdminStatistikItem ist ein Element einer AdminStatistikGruppeninfo, das den Namen des Attributs und die Anzahl der Entitäten mit diesem Attribut
  * enthält.
  */
-public class Gruppenitem {
+public class AdminStatistikItem {
 
 	@JsonProperty
 	private String name;
 
 	@JsonProperty
-	List<Auspraegung> auspraegungen;
+	List<AdminStatistikAuspraegung> auspraegungen;
 
 	/**
 	 *
 	 */
-	Gruppenitem() {
+	AdminStatistikItem() {
 
 	}
 
 	/**
 	 * @param name
 	 */
-	public Gruppenitem(final String name) {
+	public AdminStatistikItem(final String name) {
 
 		this.name = name;
 	}
@@ -38,7 +38,7 @@ public class Gruppenitem {
 	@Override
 	public String toString() {
 
-		return "Gruppenitem [name=" + name + ", auspraegungen=" + auspraegungen + "]";
+		return "AdminStatistikItem [name=" + name + ", auspraegungen=" + auspraegungen + "]";
 	}
 
 	public String getName() {
@@ -51,12 +51,12 @@ public class Gruppenitem {
 		this.name = name;
 	}
 
-	public List<Auspraegung> getAuspraegungen() {
+	public List<AdminStatistikAuspraegung> getAuspraegungen() {
 
 		return auspraegungen;
 	}
 
-	public void setAuspraegungen(final List<Auspraegung> auspraegungen) {
+	public void setAuspraegungen(final List<AdminStatistikAuspraegung> auspraegungen) {
 
 		this.auspraegungen = auspraegungen;
 	}

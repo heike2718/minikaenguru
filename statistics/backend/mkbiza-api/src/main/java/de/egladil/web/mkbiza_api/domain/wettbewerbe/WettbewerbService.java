@@ -32,12 +32,17 @@ public class WettbewerbService {
 
 	@Inject
 	@RestClient
-	MkGatewayRestClient mkGaetwayRestClient;
+	MkGatewayRestClient mkGatewayRestClient;
 
+	/**
+	 * Läd die Wettbewerbsjahre aller beendeter Wettbewerbe.
+	 *
+	 * @return
+	 */
 	public List<Integer> loadWettbewerbsjahre() {
 
-		Response response = mkGaetwayRestClient.loadWettbewerbsjahre(authConfig.client(),
-			new String(Base64.getEncoder().encode(authConfig.header().getBytes())));
+		Response response = mkGatewayRestClient.loadWettbewerbsjahre(authConfig.client(),
+			getSecretBase64());
 
 		Integer[] result = response.readEntity(new GenericType<Integer[]>() {
 		});
@@ -45,6 +50,25 @@ public class WettbewerbService {
 		LOGGER.info("Anzahl beendete Wettbewerbe={}", result.length);
 
 		return Arrays.asList(result);
+	}
+
+	public WettbewerbDetails getWettbewerbDetails(final Integer jahr) {
+
+		Response response = mkGatewayRestClient.getStatistikWettbewerb(jahr, authConfig.client(),
+			getSecretBase64());
+
+		WettbewerbDetails result = response.readEntity(WettbewerbDetails.class);
+
+		return result;
+
+	}
+
+	/**
+	 * @return
+	 */
+	private String getSecretBase64() {
+
+		return new String(Base64.getEncoder().encode(authConfig.header().getBytes()));
 	}
 
 }

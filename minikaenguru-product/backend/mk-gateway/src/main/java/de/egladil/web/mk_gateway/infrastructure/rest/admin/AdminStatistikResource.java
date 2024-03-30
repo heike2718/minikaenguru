@@ -22,7 +22,7 @@ import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.kinder.AdminKinderService;
 import de.egladil.web.mk_gateway.domain.loesungszettel.AdminLoesungszettelService;
-import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Gruppeninfo;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikGruppeninfo;
 import de.egladil.web.mk_gateway.domain.unterlagen.AdminDownloadsService;
 import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 import de.egladil.web.mk_gateway.infrastructure.rest.general.statistik.PersonalizedStatisticsResourceDelegate;
@@ -85,7 +85,7 @@ public class AdminStatistikResource {
 
 		this.delayService.pause();
 
-		Gruppeninfo gruppeninfo = adminKinderService.createKurzstatistikKinder();
+		AdminStatistikGruppeninfo gruppeninfo = adminKinderService.createKurzstatistikKinder();
 		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), gruppeninfo);
 
 		return Response.ok(responsePayload).build();
@@ -97,7 +97,7 @@ public class AdminStatistikResource {
 
 		this.delayService.pause();
 
-		Gruppeninfo gruppeninfo = adminLoesungszettelService.createKurzstatistikLoesungszettel();
+		AdminStatistikGruppeninfo gruppeninfo = adminLoesungszettelService.createKurzstatistikLoesungszettel();
 		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), gruppeninfo);
 
 		return Response.ok(responsePayload).build();
@@ -109,7 +109,7 @@ public class AdminStatistikResource {
 
 		this.delayService.pause();
 
-		Gruppeninfo gruppeninfo = adminDownloadsService.createKurzstatistikDownloads();
+		AdminStatistikGruppeninfo gruppeninfo = adminDownloadsService.createKurzstatistikDownloads();
 		ResponsePayload responsePayload = new ResponsePayload(MessagePayload.ok(), gruppeninfo);
 
 		return Response.ok(responsePayload).build();

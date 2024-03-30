@@ -14,7 +14,7 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 
 import de.egladil.web.mk_gateway.domain.statistik.UploadTypeInfoService;
-import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikAuspraegung;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.uploads.UploadRepository;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
@@ -41,12 +41,12 @@ public class UploadTypeInfoServiceImpl implements UploadTypeInfoService {
 
 		Map<UploadType, Long> result = new HashMap<>();
 
-		List<Auspraegung> auspraegungen = uploadRepository.countAuspraegungenForTeilnahmeByColumnName(teilnahmeIdentifier,
+		List<AdminStatistikAuspraegung> auspraegungen = uploadRepository.countAuspraegungenForTeilnahmeByColumnName(teilnahmeIdentifier,
 			"UPLOAD_TYPE");
 
 		for (UploadType uploadType : UploadType.values()) {
 
-			Optional<Auspraegung> optAuspraegung = auspraegungen.stream().filter(a -> uploadType.toString().equals(a.getWert()))
+			Optional<AdminStatistikAuspraegung> optAuspraegung = auspraegungen.stream().filter(a -> uploadType.toString().equals(a.getWert()))
 				.findFirst();
 
 			if (optAuspraegung.isPresent()) {

@@ -119,6 +119,38 @@ public class KatalogeResource {
 		return Response.ok(new ResponsePayload(MessagePayload.ok(), result)).build();
 	}
 
+	@GET
+	@Path("laender/v2")
+	@Operation(
+		operationId = "loadLaenderV2", summary = "Läd die Länder des Schulkatalogs.")
+	@APIResponse(
+		name = "OKResponse",
+		responseCode = "200",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(type = SchemaType.ARRAY, implementation = KatalogItem.class)))
+	public Response loadLaenderV2(@HeaderParam(
+		value = KatalogAPIApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
+			value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret) {
+
+		if (!expectedSecret.equals(secret)) {
+
+			String msg = "Unautorisierter Versuch, die Länder zu laden: angemeldeter ADMIN=" + adminUuid + ", secret=" + secret;
+
+			LOGGER.warn(msg);
+
+			eventDelegate.fireSecurityEvent(msg, securityEvent);
+
+			return Response.status(Status.FORBIDDEN)
+				.entity(MessagePayload.error("Netter Versuch, aber leider keine Berechtigung"))
+				.build();
+
+		}
+
+		List<KatalogItem> responsePayload = katalogFacade.loadLaender();
+		return Response.ok(responsePayload).build();
+	}
+
 	/**
 	 * Ändert den Namen und evtl das Kürzel des gegebenen Landes und gibt das geänderte LandPayload zurück. Bei einem
 	 * konkurrierenden Update wird

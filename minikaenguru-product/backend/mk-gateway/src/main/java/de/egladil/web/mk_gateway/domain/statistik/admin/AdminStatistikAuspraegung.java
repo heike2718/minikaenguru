@@ -2,14 +2,14 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.statistik.gruppeninfos;
+package de.egladil.web.mk_gateway.domain.statistik.admin;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Auspraegung
+ * AdminStatistikAuspraegung
  */
-public class Auspraegung {
+public class AdminStatistikAuspraegung {
 
 	@JsonProperty
 	private String wert;
@@ -20,7 +20,7 @@ public class Auspraegung {
 	/**
 	 *
 	 */
-	Auspraegung() {
+	AdminStatistikAuspraegung() {
 
 		super();
 
@@ -30,7 +30,7 @@ public class Auspraegung {
 	 * @param wert
 	 * @param anzahl
 	 */
-	public Auspraegung(final String wert, final long anzahl) {
+	public AdminStatistikAuspraegung(final String wert, final long anzahl) {
 
 		super();
 		this.wert = wert;
@@ -40,7 +40,7 @@ public class Auspraegung {
 	@Override
 	public String toString() {
 
-		return "Auspraegung [wert=" + wert + ", anzahl=" + anzahl + "]";
+		return "AdminStatistikAuspraegung [wert=" + wert + ", anzahl=" + anzahl + "]";
 	}
 
 	public String getWert() {

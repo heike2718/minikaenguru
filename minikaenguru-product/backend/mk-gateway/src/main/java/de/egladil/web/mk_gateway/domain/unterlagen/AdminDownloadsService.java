@@ -4,7 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.unterlagen;
 
-import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Gruppeninfo;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikGruppeninfo;
 
 /**
  * AdminDownloadsService
@@ -14,8 +14,8 @@ public interface AdminDownloadsService {
 	/**
 	 * Statistik für aktuellen Wettbewerb.
 	 *
-	 * @return Gruppeninfo
+	 * @return AdminStatistikGruppeninfo
 	 */
-	Gruppeninfo createKurzstatistikDownloads();
+	AdminStatistikGruppeninfo createKurzstatistikDownloads();
 
 }

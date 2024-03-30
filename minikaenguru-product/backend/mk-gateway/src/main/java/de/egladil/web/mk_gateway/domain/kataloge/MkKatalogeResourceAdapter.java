@@ -99,6 +99,20 @@ public class MkKatalogeResourceAdapter extends AbstractMkResourceAdapter {
 
 	}
 
+	public Response loadLaenderV2(final String uuid, final String secret) {
+
+		try {
+
+			Response response = restClient.loadLaenderV2(uuid, secret);
+			return response;
+
+		} catch (Exception e) {
+
+			return handleException(e, LOG, "[loadLaender]");
+		}
+
+	}
+
 	public Response loadOrteInLand(final String kuerzel) {
 
 		try {

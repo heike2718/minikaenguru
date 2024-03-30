@@ -12,9 +12,9 @@ import jakarta.inject.Inject;
 
 import de.egladil.web.mk_gateway.domain.loesungszettel.AdminLoesungszettelService;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
-import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
-import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Gruppeninfo;
-import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Gruppenitem;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikAuspraegung;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikGruppeninfo;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikItem;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 
@@ -31,9 +31,9 @@ public class AdminLoesungszettelServiceImpl implements AdminLoesungszettelServic
 	LoesungszettelRepository loesungszettelRepository;
 
 	@Override
-	public Gruppeninfo createKurzstatistikLoesungszettel() {
+	public AdminStatistikGruppeninfo createKurzstatistikLoesungszettel() {
 
-		Gruppeninfo gruppeninfo = new Gruppeninfo("LOESUNGSZETTEL");
+		AdminStatistikGruppeninfo gruppeninfo = new AdminStatistikGruppeninfo("LOESUNGSZETTEL");
 
 		Optional<Wettbewerb> optWettbewerb = wettbewerbService.aktuellerWettbewerb();
 
@@ -46,9 +46,9 @@ public class AdminLoesungszettelServiceImpl implements AdminLoesungszettelServic
 
 		for (LoesungszettelGruppeninfoAuspraegungsart auspraegungsart : LoesungszettelGruppeninfoAuspraegungsart.values()) {
 
-			Gruppenitem item = new Gruppenitem(auspraegungsart.name);
+			AdminStatistikItem item = new AdminStatistikItem(auspraegungsart.name);
 
-			List<Auspraegung> auspraegungen = loesungszettelRepository
+			List<AdminStatistikAuspraegung> auspraegungen = loesungszettelRepository
 				.countAuspraegungenForWettbewerbByColumnName(aktuellerWettbewerb.id(), auspraegungsart.toString());
 
 			item.setAuspraegungen(auspraegungen);
@@ -57,7 +57,7 @@ public class AdminLoesungszettelServiceImpl implements AdminLoesungszettelServic
 
 		if (!gruppeninfo.getGruppenItems().isEmpty()) {
 
-			Gruppenitem erstes = gruppeninfo.getGruppenItems().get(0);
+			AdminStatistikItem erstes = gruppeninfo.getGruppenItems().get(0);
 			long anzahlElemente = erstes.getAuspraegungen().stream().mapToLong(auspraegung -> auspraegung.getAnzahl()).sum();
 			gruppeninfo.setAnzahlElemente(anzahlElemente);
 		}

@@ -12,9 +12,9 @@ import jakarta.persistence.EntityManager;
 
 import de.egladil.web.mk_gateway.domain.kinder.AdminKinderService;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
-import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
-import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Gruppeninfo;
-import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Gruppenitem;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikAuspraegung;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikGruppeninfo;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikItem;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KinderHibernateRepository;
 
 /**
@@ -34,14 +34,14 @@ public class AdminKinderServiceImpl implements AdminKinderService {
 	}
 
 	@Override
-	public Gruppeninfo createKurzstatistikKinder() {
+	public AdminStatistikGruppeninfo createKurzstatistikKinder() {
 
-		Gruppeninfo gruppeninfo = new Gruppeninfo("KINDER");
+		AdminStatistikGruppeninfo gruppeninfo = new AdminStatistikGruppeninfo("KINDER");
 
 		for (KinderGruppeninfoAuspraegungsart auspaegungsart : KinderGruppeninfoAuspraegungsart.values()) {
 
-			Gruppenitem item = new Gruppenitem(auspaegungsart.name);
-			List<Auspraegung> auspraegungen = kinderRepository.countAuspraegungenByColumnName(auspaegungsart.toString());
+			AdminStatistikItem item = new AdminStatistikItem(auspaegungsart.name);
+			List<AdminStatistikAuspraegung> auspraegungen = kinderRepository.countAuspraegungenByColumnName(auspaegungsart.toString());
 			item.setAuspraegungen(auspraegungen);
 			gruppeninfo.addItem(item);
 
@@ -49,7 +49,7 @@ public class AdminKinderServiceImpl implements AdminKinderService {
 
 		if (!gruppeninfo.getGruppenItems().isEmpty()) {
 
-			Gruppenitem erstes = gruppeninfo.getGruppenItems().get(0);
+			AdminStatistikItem erstes = gruppeninfo.getGruppenItems().get(0);
 			long anzahlElemente = erstes.getAuspraegungen().stream().mapToLong(auspraegung -> auspraegung.getAnzahl()).sum();
 			gruppeninfo.setAnzahlElemente(anzahlElemente);
 		}

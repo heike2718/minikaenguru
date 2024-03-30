@@ -1988,6 +1988,65 @@
         }
       }
     },
+    "/mk-gateway/mkbiza/wettbewerbe/{jahr}" : {
+      "get" : {
+        "tags" : [ "Mk Bi Za Resource" ],
+        "summary" : "Gibt die Statistik eines Wettbewerbs zurück",
+        "operationId" : "getStatistikWettbewerb",
+        "parameters" : [ {
+          "name" : "jahr",
+          "in" : "path",
+          "description" : "Jahr des Wettbewerbs",
+          "required" : true,
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MkBiZaWettbewerbDetails"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "S2S-Autentifizierung schlug fehl",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessagePayload"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Jahr existsiert nicht oder Wettbewerb ist noch nicht beendet",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessagePayload"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Serverfehler",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessagePayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/mk-gateway/open-data/statistik/anmeldungen" : {
       "get" : {
         "tags" : [ "statistik" ],
@@ -3625,6 +3684,61 @@
         },
         "xml" : {
           "name" : "gesamtpunktverteilung"
+        }
+      },
+      "MkBiZaGruppierungsitem" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "anzahl" : {
+            "format" : "int64",
+            "type" : "integer"
+          }
+        }
+      },
+      "MkBiZaWettbewerbDetails" : {
+        "type" : "object",
+        "properties" : {
+          "jahr" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "anzahlKinderGesamt" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "klassenstufen" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Klassenstufe"
+            }
+          },
+          "schulteilnahmenJeLand" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MkBiZaGruppierungsitem"
+            }
+          },
+          "kinderJeTeilnahmeart" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MkBiZaGruppierungsitem"
+            }
+          },
+          "kinderJeKlassenstufe" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MkBiZaGruppierungsitem"
+            }
+          },
+          "kinderJeSprache" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MkBiZaGruppierungsitem"
+            }
+          }
         }
       },
       "MultipartFormDataInput" : {

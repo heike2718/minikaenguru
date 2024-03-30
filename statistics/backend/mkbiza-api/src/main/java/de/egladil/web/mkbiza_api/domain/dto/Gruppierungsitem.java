@@ -15,6 +15,6 @@ public class Gruppierungsitem {
 	private String name;
 
 	@JsonProperty
-	private int anzahl;
+	private long anzahl;
 
 }

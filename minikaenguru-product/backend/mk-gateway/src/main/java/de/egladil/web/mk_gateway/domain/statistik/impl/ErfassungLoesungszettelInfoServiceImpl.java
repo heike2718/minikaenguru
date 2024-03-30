@@ -16,7 +16,7 @@ import jakarta.persistence.EntityManager;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.statistik.ErfassungLoesungszettelInfoService;
-import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikAuspraegung;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
 
@@ -39,14 +39,14 @@ public class ErfassungLoesungszettelInfoServiceImpl implements ErfassungLoesungs
 	@Override
 	public Map<Auswertungsquelle, Long> ermittleLoesungszettelMitAuswertungsquellenForTeilnahme(final TeilnahmeIdentifier identifier) {
 
-		List<Auspraegung> auspraegungen = loesungszettelRepository
+		List<AdminStatistikAuspraegung> auspraegungen = loesungszettelRepository
 			.countAuspraegungenForTeilnahmeByColumnName(identifier, "QUELLE");
 
 		Map<Auswertungsquelle, Long> result = new HashMap<>();
 
 		for (Auswertungsquelle auswertungsquelle : Auswertungsquelle.values()) {
 
-			Optional<Auspraegung> optAuspraegung = auspraegungen.stream()
+			Optional<AdminStatistikAuspraegung> optAuspraegung = auspraegungen.stream()
 				.filter(a -> auswertungsquelle.toString().equals(a.getWert())).findFirst();
 
 			if (optAuspraegung.isPresent()) {

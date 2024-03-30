@@ -11,7 +11,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikAuspraegung;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 
@@ -28,12 +28,12 @@ public class KinderHibernateRepositoryTest {
 	void should_countAuspraegungenByColumnNameReurnTheAuspraegungen_when_klassenstufe() {
 
 		// Act
-		List<Auspraegung> auspraegungen = repository.countAuspraegungenByColumnName("KLASSENSTUFE");
+		List<AdminStatistikAuspraegung> auspraegungen = repository.countAuspraegungenByColumnName("KLASSENSTUFE");
 
 		// Assert
 		assertEquals(3, auspraegungen.size());
 
-		for (Auspraegung auspraegung : auspraegungen) {
+		for (AdminStatistikAuspraegung auspraegung : auspraegungen) {
 
 			System.out.println(auspraegung.toString());
 		}
@@ -44,12 +44,12 @@ public class KinderHibernateRepositoryTest {
 	void should_countAuspraegungenByColumnNameReurnTheAuspraegungen_when_teilnahmeart() {
 
 		// Act
-		List<Auspraegung> auspraegungen = repository.countAuspraegungenByColumnName("TEILNAHMEART");
+		List<AdminStatistikAuspraegung> auspraegungen = repository.countAuspraegungenByColumnName("TEILNAHMEART");
 
 		// Assert
 		assertEquals(2, auspraegungen.size());
 
-		for (Auspraegung auspraegung : auspraegungen) {
+		for (AdminStatistikAuspraegung auspraegung : auspraegungen) {
 
 			System.out.println(auspraegung.toString());
 		}
@@ -60,12 +60,12 @@ public class KinderHibernateRepositoryTest {
 	void should_countAuspraegungenByColumnNameReurnTheAuspraegungen_when_sprache() {
 
 		// Act
-		List<Auspraegung> auspraegungen = repository.countAuspraegungenByColumnName("SPRACHE");
+		List<AdminStatistikAuspraegung> auspraegungen = repository.countAuspraegungenByColumnName("SPRACHE");
 
 		// Assert
 		assertEquals(2, auspraegungen.size());
 
-		for (Auspraegung auspraegung : auspraegungen) {
+		for (AdminStatistikAuspraegung auspraegung : auspraegungen) {
 
 			System.out.println(auspraegung.toString());
 		}
@@ -76,12 +76,12 @@ public class KinderHibernateRepositoryTest {
 	void should_countAuspraegungenByColumnNameReurnTheAuspraegungen_when_erfassungsart() {
 
 		// Act
-		List<Auspraegung> auspraegungen = repository.countAuspraegungenByColumnName("IMPORTIERT");
+		List<AdminStatistikAuspraegung> auspraegungen = repository.countAuspraegungenByColumnName("IMPORTIERT");
 
 		// Assert
 		assertFalse(auspraegungen.isEmpty());
 
-		for (Auspraegung auspraegung : auspraegungen) {
+		for (AdminStatistikAuspraegung auspraegung : auspraegungen) {
 
 			System.out.println(auspraegung.toString());
 		}

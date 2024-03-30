@@ -7,7 +7,7 @@ package de.egladil.web.mk_gateway.domain.uploads;
 import java.util.List;
 import java.util.Optional;
 
-import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikAuspraegung;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.UploadsMonitoringViewItem;
@@ -79,7 +79,7 @@ public interface UploadRepository {
 	 *                             String name des group by- Kriteriums.
 	 * @return
 	 */
-	List<Auspraegung> countAuspraegungenForTeilnahmeByColumnName(TeilnahmeIdentifier teilnahmeIdentifier, String columnName);
+	List<AdminStatistikAuspraegung> countAuspraegungenForTeilnahmeByColumnName(TeilnahmeIdentifier teilnahmeIdentifier, String columnName);
 
 	/**
 	 * Löscht den Upload mit der gegebenen ID.
