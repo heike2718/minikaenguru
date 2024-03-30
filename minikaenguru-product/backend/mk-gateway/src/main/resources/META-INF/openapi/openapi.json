@@ -1968,8 +1968,7 @@
                 "schema" : {
                   "type" : "array",
                   "items" : {
-                    "format" : "int32",
-                    "type" : "integer"
+                    "$ref" : "#/components/schemas/MkBiZaWettbewerb"
                   }
                 }
               }
@@ -2026,6 +2025,81 @@
           },
           "404" : {
             "description" : "Jahr existsiert nicht oder Wettbewerb ist noch nicht beendet",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessagePayload"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Serverfehler",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessagePayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mk-gateway/mkbiza/wettbewerbe/{jahr}/{klassenstufe}/aufgaben/{nummer}" : {
+      "get" : {
+        "tags" : [ "Mk Bi Za Resource" ],
+        "summary" : "Gibt die Statistik für eine spezielle Aufgabe zurück",
+        "operationId" : "getStatistikAufgabe",
+        "parameters" : [ {
+          "name" : "jahr",
+          "in" : "path",
+          "description" : "Jahr des Wettbewerbs",
+          "required" : true,
+          "schema" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }, {
+          "name" : "klassenstufe",
+          "in" : "path",
+          "description" : "Klassenstufe",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/Klassenstufe"
+          }
+        }, {
+          "name" : "nummer",
+          "in" : "path",
+          "description" : "Nummer der Aufgabe",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MkBiZaWettbewerbDetails"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "S2S-Autentifizierung schlug fehl",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessagePayload"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Jahr existsiert nicht oder Wettbewerb ist noch nicht beendet oder Aufgabennummer existsiert nicht",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -3698,6 +3772,18 @@
           }
         }
       },
+      "MkBiZaWettbewerb" : {
+        "type" : "object",
+        "properties" : {
+          "jahr" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "status" : {
+            "$ref" : "#/components/schemas/WettbewerbStatus"
+          }
+        }
+      },
       "MkBiZaWettbewerbDetails" : {
         "type" : "object",
         "properties" : {
@@ -3709,13 +3795,31 @@
             "format" : "int32",
             "type" : "integer"
           },
+          "anzahlPrivatanmeldungen" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "anzahlSchulanmeldungen" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "teilnehmendeSchulenGesamt" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
           "klassenstufen" : {
             "type" : "array",
             "items" : {
               "$ref" : "#/components/schemas/Klassenstufe"
             }
           },
-          "schulteilnahmenJeLand" : {
+          "schulenJeLand" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MkBiZaGruppierungsitem"
+            }
+          },
+          "schulkinderJeLand" : {
             "type" : "array",
             "items" : {
               "$ref" : "#/components/schemas/MkBiZaGruppierungsitem"

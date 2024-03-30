@@ -25,9 +25,13 @@ import de.egladil.web.mk_gateway.domain.kataloge.api.LandPayload;
 import de.egladil.web.mk_gateway.domain.kataloge.dto.KatalogItem;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
+import de.egladil.web.mk_gateway.domain.statistik.AufgabeErgebnisItem;
+import de.egladil.web.mk_gateway.domain.statistik.AufgabeErgebnisRechner;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
+import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbRepository;
@@ -47,6 +51,8 @@ public class MkBiZaStatistikService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MkBiZaStatistikService.class);
 
+	private final AufgabeErgebnisRechner aufgabeErgebnisRechner = new AufgabeErgebnisRechner();
+
 	@Inject
 	MkGatewayAuthConfig authConfig;
 
@@ -61,6 +67,9 @@ public class MkBiZaStatistikService {
 
 	@Inject
 	MkKatalogeResourceAdapter katalogeResourceAdapter;
+
+	@Inject
+	TeilnahmenRepository teilnahmenRepository;
 
 	/**
 	 * Aggregiert die Statistikdaten für den gegebenen Wettbewerb.
@@ -85,18 +94,12 @@ public class MkBiZaStatistikService {
 
 		Wettbewerb wettbewerb = optWettbewerb.get();
 
-		if (wettbewerb.status() != WettbewerbStatus.BEENDET) {
-
-			LOGGER.warn("Wettbewerb {}: falscher Status {} - Aufruf über MkBiZa", jahr, wettbewerb.status());
-			MessagePayload messagePayload = MessagePayload.error("NotFound");
-			Response response = Response.status(404).entity(messagePayload).build();
-			throw new MkGatewayWebApplicationException(response);
-		}
-
 		MkBiZaWettbewerbDetails result = new MkBiZaWettbewerbDetails();
 		result.setJahr(jahr);
 
 		List<Loesungszettel> alleLoesungszettel = loesungszettelRepository.loadAllForWettbewerb(wettbewerb.id());
+		List<Teilnahme> anmeldungen = teilnahmenRepository.loadAllForWettbewerb(wettbewerb.id());
+
 		result.setAnzahlKinderGesamt(alleLoesungszettel.size());
 
 		for (Klassenstufe klassenstufe : Klassenstufe.valuesSorted()) {
@@ -117,31 +120,54 @@ public class MkBiZaStatistikService {
 
 		for (Teilnahmeart teilnahmeart : Teilnahmeart.values()) {
 
-			long anzahl = alleLoesungszettel.stream().filter(l -> l.teilnahmeIdentifier().teilnahmeart() == teilnahmeart).count();
-			MkBiZaGruppierungsitem gruppierungsitem = new MkBiZaGruppierungsitem().withName(teilnahmeart.toString())
-				.withAnzahl(anzahl);
-			result.addKinderJeTeilnahmeart(gruppierungsitem);
+			{
+
+				long anzahl = alleLoesungszettel.stream().filter(l -> l.teilnahmeIdentifier().teilnahmeart() == teilnahmeart)
+					.count();
+				MkBiZaGruppierungsitem gruppierungsitem = new MkBiZaGruppierungsitem().withName(teilnahmeart.toString())
+					.withAnzahl(anzahl);
+				result.addKinderJeTeilnahmeart(gruppierungsitem);
+			}
+
+			{
+
+				long anzahl = anmeldungen.stream().filter(a -> a.teilnahmeIdentifier().teilnahmeart() == teilnahmeart).count();
+
+				if (Teilnahmeart.SCHULE == teilnahmeart) {
+
+					result.setAnzahlSchulanmeldungen(anzahl);
+				}
+
+				if (Teilnahmeart.PRIVAT == teilnahmeart) {
+
+					result.setAnzahlPrivatanmeldungen(anzahl);
+				}
+			}
+
 		}
 
-		final Map<String, List<Loesungszettel>> groupsByLaendern = this.groupByLaendern(
+		final Map<String, List<Loesungszettel>> loesungszettelgroupsByLaendern = this.groupByLaendern(
 			alleLoesungszettel.stream().filter(l -> l.teilnahmeIdentifier().teilnahmeart() == Teilnahmeart.SCHULE).toList());
 
 		List<LandPayload> laender = getLaender();
 
 		for (LandPayload land : laender) {
 
-			List<Loesungszettel> list = groupsByLaendern.get(land.kuerzel());
+			List<Loesungszettel> loesungszettelgroups = loesungszettelgroupsByLaendern.get(land.kuerzel());
 
-			if (list != null && !list.isEmpty()) {
+			if (loesungszettelgroups != null && !loesungszettelgroups.isEmpty()) {
 
 				MkBiZaGruppierungsitem gruppierungsitem = new MkBiZaGruppierungsitem().withName(land.name())
-					.withAnzahl(list.size());
-				result.addSchulteilnahmenJeLand(gruppierungsitem);
+					.withAnzahl(loesungszettelgroups.size());
+				result.addSchulkinderJeLand(gruppierungsitem);
+
 			}
+
+			// TODO: je land nur Schulen zählen und dann result.addSchulenJeLand(gruppierungsitem);
+			// TODO: MkBiZaGruppierungsitem schulenJeLand addieren und result.setTeilnehmendeSchulenGesamt(...);
 		}
 
 		return result;
-
 	}
 
 	Map<String, List<Loesungszettel>> groupByLaendern(final List<Loesungszettel> alleLoesungszettel) {
@@ -205,5 +231,51 @@ public class MkBiZaStatistikService {
 
 			return new ArrayList<>();
 		}
+	}
+
+	/**
+	 * Zählt durch, wie die gegebene Aufgabe gelöst wurde.
+	 *
+	 * @param  wettbewerbsjahr
+	 * @param  klassenstufe
+	 * @param  nummer
+	 * @return                 StatistikAufgabe
+	 */
+	public StatistikAufgabe getStatistikZuAufgabe(final Integer jahr, final Klassenstufe klassenstufe, final String nummer) {
+
+		Optional<Wettbewerb> optWettbewerb = wettbewerbRepository.wettbewerbMitID(new WettbewerbID(jahr));
+
+		if (optWettbewerb.isEmpty()) {
+
+			LOGGER.warn("Unbekanntes Wettbewerbsjahr {} - Aufruf über MkBiZa", jahr);
+			MessagePayload messagePayload = MessagePayload.error("NotFound");
+			Response response = Response.status(404).entity(messagePayload).build();
+			throw new MkGatewayWebApplicationException(response);
+		}
+
+		Wettbewerb wettbewerb = optWettbewerb.get();
+
+		if (wettbewerb.status() != WettbewerbStatus.BEENDET) {
+
+			LOGGER.warn("Wettbewerb {}: falscher Status {} - Aufruf über MkBiZa", jahr, wettbewerb.status());
+			MessagePayload messagePayload = MessagePayload.error("NotFound");
+			Response response = Response.status(404).entity(messagePayload).build();
+			throw new MkGatewayWebApplicationException(response);
+		}
+
+		List<Loesungszettel> zettelKlassenstufe = loesungszettelRepository.loadAllForWettbewerbAndKlassenstufe(wettbewerb.id(),
+			klassenstufe);
+
+		Map<String, Integer> aufgabennummernWithWertungscodeIndex = klassenstufe
+			.getAufgabennummernWithWertungscodeIndex(jahr);
+
+		Integer index = aufgabennummernWithWertungscodeIndex.get(nummer);
+
+		AufgabeErgebnisItem aufgabeErgenbnisItem = aufgabeErgebnisRechner.berechneAufgabeErgebnisItem(nummer, index,
+			zettelKlassenstufe);
+
+		return new StatistikAufgabe().withAnzahlFalsch(aufgabeErgenbnisItem.anzahlFalschGeloest())
+			.withAnzahlNicht(aufgabeErgenbnisItem.anzahlNichtGeloest())
+			.withAnzahlRichtig(aufgabeErgenbnisItem.anzahlRichtigGeloest());
 	}
 }

@@ -23,10 +23,22 @@ public class MkBiZaWettbewerbDetails {
 	private int anzahlKinderGesamt;
 
 	@JsonProperty
+	private long anzahlPrivatanmeldungen;
+
+	@JsonProperty
+	private long anzahlSchulanmeldungen;
+
+	@JsonProperty
+	private long teilnehmendeSchulenGesamt;
+
+	@JsonProperty
 	private List<Klassenstufe> klassenstufen = new ArrayList<>();
 
 	@JsonProperty
-	private List<MkBiZaGruppierungsitem> schulteilnahmenJeLand = new ArrayList<>();
+	private List<MkBiZaGruppierungsitem> schulenJeLand = new ArrayList<>();
+
+	@JsonProperty
+	private List<MkBiZaGruppierungsitem> schulkinderJeLand = new ArrayList<>();
 
 	@JsonProperty
 	private List<MkBiZaGruppierungsitem> kinderJeTeilnahmeart = new ArrayList<>();;
@@ -63,9 +75,9 @@ public class MkBiZaWettbewerbDetails {
 		this.anzahlKinderGesamt = anzahlKinderGesamt;
 	}
 
-	public List<MkBiZaGruppierungsitem> getSchulteilnahmenJeLand() {
+	public List<MkBiZaGruppierungsitem> getSchulkinderJeLand() {
 
-		return schulteilnahmenJeLand;
+		return schulkinderJeLand;
 	}
 
 	public List<MkBiZaGruppierungsitem> getKinderJeTeilnahmeart() {
@@ -107,8 +119,48 @@ public class MkBiZaWettbewerbDetails {
 
 	}
 
-	public void addSchulteilnahmenJeLand(final MkBiZaGruppierungsitem schulteilnahme) {
+	public void addSchulkinderJeLand(final MkBiZaGruppierungsitem schulkinder) {
 
-		this.schulteilnahmenJeLand.add(schulteilnahme);
+		this.schulkinderJeLand.add(schulkinder);
+	}
+
+	public long getAnzahlPrivatanmeldungen() {
+
+		return anzahlPrivatanmeldungen;
+	}
+
+	public void setAnzahlPrivatanmeldungen(final long anzahlPrivatteilnahmen) {
+
+		this.anzahlPrivatanmeldungen = anzahlPrivatteilnahmen;
+	}
+
+	public long getAnzahlSchulanmeldungen() {
+
+		return anzahlSchulanmeldungen;
+	}
+
+	public void setAnzahlSchulanmeldungen(final long anzahlSchulteilnahmen) {
+
+		this.anzahlSchulanmeldungen = anzahlSchulteilnahmen;
+	}
+
+	public List<MkBiZaGruppierungsitem> getSchulenJeLand() {
+
+		return schulenJeLand;
+	}
+
+	public void addSchulenJeLand(final MkBiZaGruppierungsitem schulenJeLand) {
+
+		this.schulenJeLand.add(schulenJeLand);
+	}
+
+	public long getTeilnehmendeSchulenGesamt() {
+
+		return teilnehmendeSchulenGesamt;
+	}
+
+	public void setTeilnehmendeSchulenGesamt(final long teilnehmendeSchulenGesamt) {
+
+		this.teilnehmendeSchulenGesamt = teilnehmendeSchulenGesamt;
 	}
 }

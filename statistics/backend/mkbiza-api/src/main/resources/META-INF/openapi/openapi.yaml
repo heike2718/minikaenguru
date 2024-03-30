@@ -53,8 +53,7 @@ paths:
               schema:
                 type: array
                 items:
-                  format: int32
-                  type: integer
+                  $ref: '#/components/schemas/Wettbewerb'
         "500":
           description: Serverfehler - Details stehen im server.log
           content:
@@ -82,6 +81,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/WettbewerbDetails'
+        "400":
+          description: Inputvalidierung schlug fehl
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstraintViolation'
         "404":
           description: Wettbewerb existsiert nicht oder ist noch nicht beendet
           content:
@@ -116,6 +121,74 @@ components:
           type: string
         version:
           type: string
+    ConstraintDescriptorObject:
+      type: object
+      properties:
+        annotation: {}
+        messageTemplate:
+          type: string
+        groups:
+          uniqueItems: true
+          type: array
+          items: {}
+        payload:
+          uniqueItems: true
+          type: array
+          items: {}
+        validationAppliesTo:
+          $ref: '#/components/schemas/ConstraintTarget'
+        constraintValidatorClasses:
+          type: array
+          items: {}
+        attributes:
+          type: object
+          additionalProperties: {}
+        composingConstraints:
+          uniqueItems: true
+          type: array
+          items:
+            description: Cyclic reference to jakarta.validation.metadata.ConstraintDescriptor
+        reportAsSingleViolation:
+          type: boolean
+        valueUnwrapping:
+          $ref: '#/components/schemas/ValidateUnwrappedValue'
+    ConstraintTarget:
+      enum:
+      - IMPLICIT
+      - RETURN_VALUE
+      - PARAMETERS
+      type: string
+    ConstraintViolation:
+      type: object
+      properties:
+        message:
+          type: string
+        messageTemplate:
+          type: string
+        rootBean: {}
+        rootBeanClass:
+          type: object
+        leafBean: {}
+        executableParameters:
+          type: array
+          items: {}
+        executableReturnValue: {}
+        propertyPath:
+          $ref: '#/components/schemas/Path'
+        invalidValue: {}
+        constraintDescriptor:
+          $ref: '#/components/schemas/ConstraintDescriptorObject'
+    ElementKind:
+      enum:
+      - BEAN
+      - PROPERTY
+      - METHOD
+      - CONSTRUCTOR
+      - PARAMETER
+      - CROSS_PARAMETER
+      - RETURN_VALUE
+      - CONTAINER_ELEMENT
+      type: string
     Gruppierungsitem:
       type: object
       properties:
@@ -140,6 +213,45 @@ components:
         message:
           description: die message
           type: string
+    Node:
+      type: object
+      properties:
+        name:
+          type: string
+        inIterable:
+          type: boolean
+        index:
+          format: int32
+          type: integer
+        key: {}
+        kind:
+          $ref: '#/components/schemas/ElementKind'
+    Path:
+      type: array
+      items:
+        $ref: '#/components/schemas/Node'
+    StatusWettbewerb:
+      enum:
+      - ERFASST
+      - ANMELDUNG
+      - DOWNLOAD_LEHRER
+      - DOWNLOAD_PRIVAT
+      - BEENDET
+      type: string
+    ValidateUnwrappedValue:
+      enum:
+      - DEFAULT
+      - UNWRAP
+      - SKIP
+      type: string
+    Wettbewerb:
+      type: object
+      properties:
+        jahr:
+          format: int32
+          type: integer
+        status:
+          $ref: '#/components/schemas/StatusWettbewerb'
     WettbewerbDetails:
       description: Stellt die statistischen Details eine Minikänguru-Wettbewerbs zur
         Verfügung
@@ -151,11 +263,21 @@ components:
         anzahlKinderGesamt:
           format: int32
           type: integer
+        anzahlPrivatanmeldungen:
+          format: int64
+          type: integer
+        anzahlSchulanmeldungen:
+          format: int64
+          type: integer
         klassenstufen:
           type: array
           items:
             $ref: '#/components/schemas/Klassenstufe'
-        schulteilnahmenJeLand:
+        schulenJeLand:
+          type: array
+          items:
+            $ref: '#/components/schemas/Gruppierungsitem'
+        schulkinderJeLand:
           type: array
           items:
             $ref: '#/components/schemas/Gruppierungsitem'

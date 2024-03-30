@@ -41,7 +41,37 @@
 							"response": []
 						},
 						{
-							"name": "local : statistik - jahr",
+							"name": "local : statistik - jahr - 400",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"url": "http://localhost:9540/mkbiza-api/wettbewerbe/hallo"
+							},
+							"response": []
+						},
+						{
+							"name": "local : statistik - jahr - 404",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"url": "http://localhost:9540/mkbiza-api/wettbewerbe/2040"
+							},
+							"response": []
+						},
+						{
+							"name": "local : statistik - jahr - beendet",
 							"request": {
 								"method": "GET",
 								"header": [
@@ -52,6 +82,21 @@
 									}
 								],
 								"url": "http://localhost:9540/mkbiza-api/wettbewerbe/2017"
+							},
+							"response": []
+						},
+						{
+							"name": "local : statistik - jahr - nicht beendet",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"url": "http://localhost:9540/mkbiza-api/wettbewerbe/2020"
 							},
 							"response": []
 						}

@@ -4,7 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.wettbewerb;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +19,7 @@ import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayWebApplicationException;
+import de.egladil.web.mk_gateway.domain.statistik.mkbiza.MkBiZaWettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.EditWettbewerbModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.TeilnahmenuebersichtAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbDetailsAPIModel;
@@ -75,20 +75,18 @@ public class WettbewerbService {
 	}
 
 	/**
-	 * Gibt alle Wettbewerbe mit dem gegebenen Status zurück.
+	 * Liest alle Wettbewerbsjahre aus der DB.
 	 *
 	 * @param  status
 	 *                WettbewerbStatus
 	 * @return        List
 	 */
-	public List<Integer> loadWettbewerbsjahreWithStatus(final WettbewerbStatus status) {
+	public List<MkBiZaWettbewerb> loadWettbewerbsjahreWithStatus() {
 
 		List<Wettbewerb> allWettbewerbe = this.wettbewerbRepository.loadWettbewerbe();
-		List<Wettbewerb> wettbewerbe = new ArrayList<>(allWettbewerbe.stream().filter(w -> status == w.status()).toList());
+		Collections.sort(allWettbewerbe, new WettbewerbeDescendingComparator());
 
-		Collections.sort(wettbewerbe, new WettbewerbeDescendingComparator());
-
-		return wettbewerbe.stream().filter(w -> status == w.status()).map(w -> w.id().jahr()).toList();
+		return allWettbewerbe.stream().map(w -> new MkBiZaWettbewerb(w.id().jahr(), w.status())).toList();
 	}
 
 	/**

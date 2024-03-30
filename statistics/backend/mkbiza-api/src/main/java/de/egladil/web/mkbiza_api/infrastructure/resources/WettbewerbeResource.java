@@ -17,6 +17,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import de.egladil.web.mkbiza_api.domain.dto.MessagePayload;
+import de.egladil.web.mkbiza_api.domain.wettbewerbe.Wettbewerb;
 import de.egladil.web.mkbiza_api.domain.wettbewerbe.WettbewerbDetails;
 import de.egladil.web.mkbiza_api.domain.wettbewerbe.WettbewerbService;
 import jakarta.inject.Inject;
@@ -49,7 +50,7 @@ public class WettbewerbeResource {
 		responseCode = "200",
 		content = @Content(
 			mediaType = "application/json",
-			schema = @Schema(type = SchemaType.ARRAY, implementation = Integer.class)))
+			schema = @Schema(type = SchemaType.ARRAY, implementation = Wettbewerb.class)))
 	@APIResponse(
 		name = "ServerError",
 		description = "Serverfehler - Details stehen im server.log",
@@ -57,7 +58,7 @@ public class WettbewerbeResource {
 		content = @Content(schema = @Schema(implementation = MessagePayload.class)))
 	public Response getWettbewerbsjahre() {
 
-		List<Integer> wettbewerbe = wettbewerbService.loadWettbewerbsjahre();
+		List<Wettbewerb> wettbewerbe = wettbewerbService.loadWettbewerbe();
 
 		return Response.ok(wettbewerbe).build();
 

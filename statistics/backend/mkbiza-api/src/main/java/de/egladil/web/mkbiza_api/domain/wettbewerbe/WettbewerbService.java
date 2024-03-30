@@ -42,14 +42,14 @@ public class WettbewerbService {
 	 *
 	 * @return
 	 */
-	public List<Integer> loadWettbewerbsjahre() {
+	public List<Wettbewerb> loadWettbewerbe() {
 
 		try {
 
 			Response response = mkGatewayRestClient.loadWettbewerbsjahre(authConfig.client(),
 				getSecretBase64());
 
-			Integer[] result = response.readEntity(new GenericType<Integer[]>() {
+			Wettbewerb[] result = response.readEntity(new GenericType<Wettbewerb[]>() {
 			});
 
 			LOGGER.info("Anzahl beendete Wettbewerbe={}", result.length);

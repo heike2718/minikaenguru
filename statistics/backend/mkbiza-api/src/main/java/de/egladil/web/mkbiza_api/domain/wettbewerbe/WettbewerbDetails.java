@@ -27,10 +27,22 @@ public class WettbewerbDetails {
 	private int anzahlKinderGesamt;
 
 	@JsonProperty
+	private long anzahlPrivatanmeldungen;
+
+	@JsonProperty
+	private long anzahlSchulanmeldungen;
+
+	@JsonProperty
+	private long teilnehmendeSchulenGesamt;
+
+	@JsonProperty
 	private List<Klassenstufe> klassenstufen = new ArrayList<>();
 
 	@JsonProperty
-	private List<Gruppierungsitem> schulteilnahmenJeLand;
+	private List<Gruppierungsitem> schulenJeLand = new ArrayList<>();
+
+	@JsonProperty
+	private List<Gruppierungsitem> schulkinderJeLand;
 
 	@JsonProperty
 	private List<Gruppierungsitem> kinderJeTeilnahmeart;
@@ -40,82 +52,5 @@ public class WettbewerbDetails {
 
 	@JsonProperty
 	private List<Gruppierungsitem> kinderJeSprache;
-
-	public int getJahr() {
-
-		return jahr;
-	}
-
-	public WettbewerbDetails withJahr(final int jahr) {
-
-		this.jahr = jahr;
-		return this;
-	}
-
-	public List<Gruppierungsitem> getSchulteilnahmenJeLand() {
-
-		return schulteilnahmenJeLand;
-	}
-
-	public WettbewerbDetails withSchulteilnahmenJeLand(final List<Gruppierungsitem> schulteilnahmenJeLand) {
-
-		this.schulteilnahmenJeLand = schulteilnahmenJeLand;
-		return this;
-	}
-
-	public List<Gruppierungsitem> getKinderJeKlassenstufe() {
-
-		return kinderJeKlassenstufe;
-	}
-
-	public WettbewerbDetails withKinderJeKlassenstufe(final List<Gruppierungsitem> kinderJeKlassenstufe) {
-
-		this.kinderJeKlassenstufe = kinderJeKlassenstufe;
-		return this;
-	}
-
-	public List<Gruppierungsitem> getKinderJeSprache() {
-
-		return kinderJeSprache;
-	}
-
-	public WettbewerbDetails withKinderJeSprache(final List<Gruppierungsitem> kinderJeSprache) {
-
-		this.kinderJeSprache = kinderJeSprache;
-		return this;
-	}
-
-	public int getAnzahlKinderGesamt() {
-
-		return anzahlKinderGesamt;
-	}
-
-	public WettbewerbDetails withAnzahlKinderGesamt(final int anzahlKinderGesamt) {
-
-		this.anzahlKinderGesamt = anzahlKinderGesamt;
-		return this;
-	}
-
-	public List<Gruppierungsitem> getKinderJeTeilnahmeart() {
-
-		return kinderJeTeilnahmeart;
-	}
-
-	public WettbewerbDetails withKinderJeTeilnahmeart(final List<Gruppierungsitem> kinderJeTeilnahmeart) {
-
-		this.kinderJeTeilnahmeart = kinderJeTeilnahmeart;
-		return this;
-	}
-
-	public List<Klassenstufe> getKlassenstufen() {
-
-		return klassenstufen;
-	}
-
-	public WettbewerbDetails addKlassenstufe(final Klassenstufe klassenstufe) {
-
-		this.klassenstufen.add(klassenstufe);
-		return this;
-	}
 
 }

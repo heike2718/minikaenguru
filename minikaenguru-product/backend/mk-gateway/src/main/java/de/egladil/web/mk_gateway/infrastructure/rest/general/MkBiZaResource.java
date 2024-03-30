@@ -17,9 +17,11 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.mk_gateway.domain.statistik.mkbiza.MkBiZaStatistikService;
+import de.egladil.web.mk_gateway.domain.statistik.mkbiza.MkBiZaWettbewerb;
 import de.egladil.web.mk_gateway.domain.statistik.mkbiza.MkBiZaWettbewerbDetails;
+import de.egladil.web.mk_gateway.domain.statistik.mkbiza.StatistikAufgabe;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.constraints.NotNull;
@@ -56,7 +58,7 @@ public class MkBiZaResource {
 		responseCode = "200",
 		content = @Content(
 			mediaType = "application/json",
-			schema = @Schema(type = SchemaType.ARRAY, implementation = Integer.class)))
+			schema = @Schema(type = SchemaType.ARRAY, implementation = MkBiZaWettbewerb.class)))
 	@APIResponse(
 		name = "ServerError",
 		description = "Serverfehler",
@@ -64,7 +66,7 @@ public class MkBiZaResource {
 		content = @Content(schema = @Schema(implementation = MessagePayload.class)))
 	public Response getWettbewerbsjahre() {
 
-		List<Integer> wettbewerbe = wettewerbService.loadWettbewerbsjahreWithStatus(WettbewerbStatus.BEENDET);
+		List<MkBiZaWettbewerb> wettbewerbe = wettewerbService.loadWettbewerbsjahreWithStatus();
 
 		return Response.ok(wettbewerbe).build();
 
@@ -106,6 +108,58 @@ public class MkBiZaResource {
 
 		MkBiZaWettbewerbDetails responsePayload = statistikService.getStatistik(wettbewerbsjahr);
 
+		return Response.ok(responsePayload).build();
+	}
+
+	@GET
+	@Path("wettbewerbe/{jahr}/{klassenstufe}/aufgaben/{nummer}")
+	@Operation(
+		operationId = "getStatistikAufgabe",
+		summary = "Gibt die Statistik für eine spezielle Aufgabe zurück")
+	@Parameters({
+		@Parameter(
+			in = ParameterIn.PATH,
+			name = "jahr",
+			description = "Jahr des Wettbewerbs",
+			required = true),
+		@Parameter(
+			in = ParameterIn.PATH,
+			name = "klassenstufe",
+			description = "Klassenstufe",
+			required = true),
+		@Parameter(
+			in = ParameterIn.PATH,
+			name = "nummer",
+			description = "Nummer der Aufgabe",
+			required = true) })
+	@APIResponse(
+		name = "OKResponse",
+		responseCode = "200",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(implementation = MkBiZaWettbewerbDetails.class)))
+	@APIResponse(
+		name = "Unauthorized",
+		description = "S2S-Autentifizierung schlug fehl",
+		responseCode = "401",
+		content = @Content(schema = @Schema(implementation = MessagePayload.class)))
+	@APIResponse(
+		name = "NotFound",
+		description = "Jahr existsiert nicht oder Wettbewerb ist noch nicht beendet oder Aufgabennummer existsiert nicht",
+		responseCode = "404",
+		content = @Content(schema = @Schema(implementation = MessagePayload.class)))
+	@APIResponse(
+		name = "ServerError",
+		description = "Serverfehler",
+		responseCode = "500",
+		content = @Content(schema = @Schema(implementation = MessagePayload.class)))
+	public Response getStatistikAufgabe(@NotNull @PathParam(
+		value = "jahr") final Integer wettbewerbsjahr, @NotNull @PathParam(
+			value = "klassenstufe") final Klassenstufe klassenstufe, @NotNull @PathParam(
+				value = "nummer") final String aufgabennummer) {
+
+		StatistikAufgabe responsePayload = this.statistikService.getStatistikZuAufgabe(wettbewerbsjahr, klassenstufe,
+			aufgabennummer);
 		return Response.ok(responsePayload).build();
 	}
 
