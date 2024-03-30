@@ -80,8 +80,11 @@ public class KlassenHibernateRepository implements KlassenRepository {
 
 	Klasse mapFromDB(final PersistenteKlasse persistenteKlasse) {
 
-		return new Klasse(new Identifier(persistenteKlasse.getUuid())).withName(persistenteKlasse.getName())
-			.withSchuleID(new Identifier(persistenteKlasse.getSchulkuerzel()));
+		Identifier identifier = new Identifier(persistenteKlasse.getUuid());
+		String name = persistenteKlasse.getName();
+		String schulkuerzel = persistenteKlasse.getSchulkuerzel();
+		return new Klasse(identifier).withName(name)
+			.withSchuleID(new Identifier(schulkuerzel));
 	}
 
 	@Override
