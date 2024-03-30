@@ -39,6 +39,21 @@
 								"url": "http://localhost:9540/mkbiza-api/wettbewerbe"
 							},
 							"response": []
+						},
+						{
+							"name": "local : statistik - jahr",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"url": "http://localhost:9540/mkbiza-api/wettbewerbe/2017"
+							},
+							"response": []
 						}
 					]
 				}

@@ -79,6 +79,26 @@
 						"url": "localhost:9510/mk-gateway/mkbiza/wettbewerbe"
 					},
 					"response": []
+				},
+				{
+					"name": "local : statistik  - jahr",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bWtiaXphOmNoYW5nZW1l",
+								"type": "default"
+							},
+							{
+								"key": "X-Client-ID",
+								"value": "mkbiza",
+								"type": "default"
+							}
+						],
+						"url": "localhost:9510/mk-gateway/mkbiza/wettbewerbe/2017"
+					},
+					"response": []
 				}
 			]
 		}

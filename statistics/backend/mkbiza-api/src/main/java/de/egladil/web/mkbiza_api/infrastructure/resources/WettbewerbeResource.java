@@ -20,6 +20,8 @@ import de.egladil.web.mkbiza_api.domain.dto.MessagePayload;
 import de.egladil.web.mkbiza_api.domain.wettbewerbe.WettbewerbDetails;
 import de.egladil.web.mkbiza_api.domain.wettbewerbe.WettbewerbService;
 import jakarta.inject.Inject;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.constraints.Pattern;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -49,20 +51,10 @@ public class WettbewerbeResource {
 			mediaType = "application/json",
 			schema = @Schema(type = SchemaType.ARRAY, implementation = Integer.class)))
 	@APIResponse(
-		name = "Unauthorized",
-		description = "S2S-Autentifizierung schlug fehl",
-		responseCode = "401",
-		content = @Content(schema = @Schema(implementation = MessagePayload.class)))
-	@APIResponse(
 		name = "ServerError",
-		description = "Serverfehler",
+		description = "Serverfehler - Details stehen im server.log",
 		responseCode = "500",
 		content = @Content(schema = @Schema(implementation = MessagePayload.class)))
-	// @APIResponse(
-	// name = "GatewayTimeout",
-	// description = "Gegenstelle war nicht in der konfogurierten Zeit erreichbar",
-	// responseCode = "504",
-	// content = @Content(schema = @Schema(implementation = MessagePayload.class)))
 	public Response getWettbewerbsjahre() {
 
 		List<Integer> wettbewerbe = wettbewerbService.loadWettbewerbsjahre();
@@ -80,7 +72,7 @@ public class WettbewerbeResource {
 		@Parameter(
 			in = ParameterIn.PATH,
 			name = "jahr",
-			description = "Jahr des Wettbewerbs",
+			description = "Jahr des Wettbewerbs - 4stellige Jahreszahl",
 			required = true) })
 	@APIResponse(
 		name = "OKResponse",
@@ -89,23 +81,25 @@ public class WettbewerbeResource {
 			mediaType = "application/json",
 			schema = @Schema(implementation = WettbewerbDetails.class)))
 	@APIResponse(
-		name = "Unauthorized",
-		description = "S2S-Autentifizierung schlug fehl",
-		responseCode = "401",
-		content = @Content(schema = @Schema(implementation = MessagePayload.class)))
+		name = "BadRequest",
+		description = "Inputvalidierung schlug fehl",
+		responseCode = "400",
+		content = @Content(schema = @Schema(implementation = ConstraintViolation.class)))
 	@APIResponse(
 		name = "NotFound",
-		description = "Jahr existsiert nicht oder Wettbewerb ist noch nicht beendet",
+		description = "Wettbewerb existsiert nicht oder ist noch nicht beendet",
 		responseCode = "404",
 		content = @Content(schema = @Schema(implementation = MessagePayload.class)))
 	@APIResponse(
 		name = "ServerError",
-		description = "Serverfehler",
+		description = "Serverfehler - Details stehen im server.log",
 		responseCode = "500",
 		content = @Content(schema = @Schema(implementation = MessagePayload.class)))
-	public Response getStatistikWettbewerb(@PathParam(value = "jahr") final Integer wettbewerbsjahr) {
+	public Response getStatistikWettbewerb(@Pattern(
+		regexp = "^[\\d]{4}$", message = "jahr ist nicht numerisch oder hat nicht die richtige Länge") @PathParam(
+			value = "jahr") final String jahr) {
 
-		WettbewerbDetails responsePayload = wettbewerbService.getWettbewerbDetails(wettbewerbsjahr);
+		WettbewerbDetails responsePayload = wettbewerbService.getWettbewerbDetails(jahr);
 
 		return Response.ok(responsePayload).build();
 	}

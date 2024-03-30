@@ -13,9 +13,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mkbiza_api.domain.auth.MkBiZaAuthConfig;
+import de.egladil.web.mkbiza_api.domain.dto.MessagePayload;
+import de.egladil.web.mkbiza_api.domain.exeptions.MkBiZaCommunicationExcepion;
 import de.egladil.web.mkbiza_api.infrastructure.restclient.MkGatewayRestClient;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.Response;
 
@@ -41,25 +44,46 @@ public class WettbewerbService {
 	 */
 	public List<Integer> loadWettbewerbsjahre() {
 
-		Response response = mkGatewayRestClient.loadWettbewerbsjahre(authConfig.client(),
-			getSecretBase64());
+		try {
 
-		Integer[] result = response.readEntity(new GenericType<Integer[]>() {
-		});
+			Response response = mkGatewayRestClient.loadWettbewerbsjahre(authConfig.client(),
+				getSecretBase64());
 
-		LOGGER.info("Anzahl beendete Wettbewerbe={}", result.length);
+			Integer[] result = response.readEntity(new GenericType<Integer[]>() {
+			});
 
-		return Arrays.asList(result);
+			LOGGER.info("Anzahl beendete Wettbewerbe={}", result.length);
+
+			return Arrays.asList(result);
+		} catch (Exception e) {
+
+			throw new MkBiZaCommunicationExcepion("Beim Aufruf von mk-gateway/mkbiza/wettbewerbe ist ein Fehler aufgetreten", e);
+
+		}
 	}
 
-	public WettbewerbDetails getWettbewerbDetails(final Integer jahr) {
+	public WettbewerbDetails getWettbewerbDetails(final String jahr) {
 
-		Response response = mkGatewayRestClient.getStatistikWettbewerb(jahr, authConfig.client(),
-			getSecretBase64());
+		try {
 
-		WettbewerbDetails result = response.readEntity(WettbewerbDetails.class);
+			Integer wettbewerbsjahr = Integer.valueOf(jahr);
 
-		return result;
+			Response response = mkGatewayRestClient.getStatistikWettbewerb(wettbewerbsjahr, authConfig.client(),
+				getSecretBase64());
+
+			WettbewerbDetails result = response.readEntity(WettbewerbDetails.class);
+
+			return result;
+		} catch (NumberFormatException e) {
+
+			throw new MkBiZaCommunicationExcepion("Bad Request: jahr ist nicht numerisch",
+				new WebApplicationException(Response.status(400).entity(MessagePayload.error("jahr ist nicht numerisch")).build()));
+		} catch (Exception e) {
+
+			throw new MkBiZaCommunicationExcepion(
+				"Beim Aufruf von mk-gateway/mkbiza/wettbewerbe/" + jahr + " ist ein Fehler aufgetreten", e);
+
+		}
 
 	}
 

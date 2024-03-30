@@ -76,18 +76,8 @@
               }
             }
           },
-          "401" : {
-            "description" : "S2S-Autentifizierung schlug fehl",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/MessagePayload"
-                }
-              }
-            }
-          },
           "500" : {
-            "description" : "Serverfehler",
+            "description" : "Serverfehler - Details stehen im server.log",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -107,11 +97,11 @@
         "parameters" : [ {
           "name" : "jahr",
           "in" : "path",
-          "description" : "Jahr des Wettbewerbs",
+          "description" : "Jahr des Wettbewerbs - 4stellige Jahreszahl",
           "required" : true,
           "schema" : {
-            "format" : "int32",
-            "type" : "integer"
+            "pattern" : "^[\\d]{4}$",
+            "type" : "string"
           }
         } ],
         "responses" : {
@@ -125,18 +115,8 @@
               }
             }
           },
-          "401" : {
-            "description" : "S2S-Autentifizierung schlug fehl",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/MessagePayload"
-                }
-              }
-            }
-          },
           "404" : {
-            "description" : "Jahr existsiert nicht oder Wettbewerb ist noch nicht beendet",
+            "description" : "Wettbewerb existsiert nicht oder ist noch nicht beendet",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -146,7 +126,7 @@
             }
           },
           "500" : {
-            "description" : "Serverfehler",
+            "description" : "Serverfehler - Details stehen im server.log",
             "content" : {
               "application/json" : {
                 "schema" : {
