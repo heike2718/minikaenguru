@@ -25,6 +25,7 @@ import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.error.UploadFormatException;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
@@ -347,14 +348,21 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 			if (zeile.ok()) {
 
 				String nameKlasse = zeile.getKlasse();
-				KlasseRequestData klasseRequestData = klassenMap.get(nameKlasse);
 
-				if (klasseRequestData == null) {
+				Optional<String> optKey = klassenMap.keySet().stream().filter(k -> nameKlasse.equalsIgnoreCase(k)).findFirst();
 
-					KlasseEditorModel klasseEditorModel = new KlasseEditorModel().withName(nameKlasse);
-					klasseRequestData = new KlasseRequestData().withKlasse(klasseEditorModel).withSchulkuerzel(schulkuerzel)
-						.withUuid(KlasseRequestData.KEINE_UUID);
-					klassenMap.put(nameKlasse, klasseRequestData);
+				// I0453: schließt aus, dass Klassennamen USb und Usb als verschieden angesehen werden.
+				if (optKey.isEmpty()) {
+
+					KlasseRequestData klasseRequestData = klassenMap.get(nameKlasse);
+
+					if (klasseRequestData == null) {
+
+						KlasseEditorModel klasseEditorModel = new KlasseEditorModel().withName(nameKlasse);
+						klasseRequestData = new KlasseRequestData().withKlasse(klasseEditorModel).withSchulkuerzel(schulkuerzel)
+							.withUuid(KlasseRequestData.KEINE_UUID);
+						klassenMap.put(nameKlasse, klasseRequestData);
+					}
 				}
 			}
 		}
@@ -385,7 +393,19 @@ public class KlassenlisteCSVImportService implements KlassenlisteImportService {
 			}
 
 			String nameKlasse = zeile.getKlasse();
-			Klasse klasse = klassenMap.get(nameKlasse);
+
+			// I0453: in der DB ist der UK der Klassennamen case insensitive!
+			Optional<String> optKeyCI = klassenMap.keySet().stream().filter(k -> k.equalsIgnoreCase(nameKlasse)).findFirst();
+
+			if (optKeyCI.isEmpty()) {
+
+				LOGGER.error(
+					"Fehler beim Umwandeln der Importzeilen in Klassen case insensitive: klassenMap enthält keinen CI-key {}",
+					nameKlasse);
+				throw new MkGatewayRuntimeException("Klassenliste konnte nicht importiert werden. Details im server.log");
+			}
+
+			Klasse klasse = klassenMap.get(optKeyCI.get());
 
 			Optional<Klassenstufe> optKlassenstufe = zeile.mapKlassenstufe();
 			boolean klassenstufePruefen = false;
