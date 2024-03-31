@@ -331,6 +331,12 @@
           },
           "status" : {
             "$ref" : "#/components/schemas/StatusWettbewerb"
+          },
+          "medianeJeKlassenstufe" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Gruppierungsitem"
+            }
           }
         }
       },
@@ -351,6 +357,10 @@
             "type" : "integer"
           },
           "anzahlSchulanmeldungen" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "teilnehmendeSchulenGesamt" : {
             "format" : "int64",
             "type" : "integer"
           },
@@ -385,6 +395,12 @@
             }
           },
           "kinderJeSprache" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Gruppierungsitem"
+            }
+          },
+          "medianeJeKlassenstufe" : {
             "type" : "array",
             "items" : {
               "$ref" : "#/components/schemas/Gruppierungsitem"

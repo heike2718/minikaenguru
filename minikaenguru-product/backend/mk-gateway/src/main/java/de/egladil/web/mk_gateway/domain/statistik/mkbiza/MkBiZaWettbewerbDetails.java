@@ -166,4 +166,14 @@ public class MkBiZaWettbewerbDetails {
 
 		this.teilnehmendeSchulenGesamt = teilnehmendeSchulenGesamt;
 	}
+
+	public List<MkBiZaGruppierungsitem> getMedianeJeKlassenstufe() {
+
+		return medianeJeKlassenstufe;
+	}
+
+	public void addMedianeJeKlassenstufe(final MkBiZaGruppierungsitem medianJeKlassenstufe) {
+
+		this.medianeJeKlassenstufe.add(medianJeKlassenstufe);
+	}
 }

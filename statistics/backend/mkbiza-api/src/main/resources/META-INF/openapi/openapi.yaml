@@ -252,6 +252,10 @@ components:
           type: integer
         status:
           $ref: '#/components/schemas/StatusWettbewerb'
+        medianeJeKlassenstufe:
+          type: array
+          items:
+            $ref: '#/components/schemas/Gruppierungsitem'
     WettbewerbDetails:
       description: Stellt die statistischen Details eine Minikänguru-Wettbewerbs zur
         Verfügung
@@ -267,6 +271,9 @@ components:
           format: int64
           type: integer
         anzahlSchulanmeldungen:
+          format: int64
+          type: integer
+        teilnehmendeSchulenGesamt:
           format: int64
           type: integer
         klassenstufen:
@@ -290,6 +297,10 @@ components:
           items:
             $ref: '#/components/schemas/Gruppierungsitem'
         kinderJeSprache:
+          type: array
+          items:
+            $ref: '#/components/schemas/Gruppierungsitem'
+        medianeJeKlassenstufe:
           type: array
           items:
             $ref: '#/components/schemas/Gruppierungsitem'

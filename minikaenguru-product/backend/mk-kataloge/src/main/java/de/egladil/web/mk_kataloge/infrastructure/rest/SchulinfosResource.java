@@ -64,4 +64,16 @@ public class SchulinfosResource {
 		return Response.ok(responsePayload).build();
 	}
 
+	@Path("v2")
+	@POST
+	@Consumes(MediaType.TEXT_PLAIN)
+	public Response loadSchulenV2(@Kuerzel final String kommaseparierteKuerzel) {
+
+		LOG.debug(StringUtils.abbreviate(kommaseparierteKuerzel, 30));
+
+		List<SchuleAPIModel> trefferliste = katalogFacade.findSchulen(kommaseparierteKuerzel);
+
+		return Response.ok(trefferliste).build();
+	}
+
 }

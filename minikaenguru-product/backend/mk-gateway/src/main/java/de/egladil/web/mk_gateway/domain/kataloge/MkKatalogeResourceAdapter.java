@@ -258,7 +258,28 @@ public class MkKatalogeResourceAdapter extends AbstractMkResourceAdapter {
 
 		} catch (Exception e) {
 
-			return handleException(e, LOG, "[getHeartbeat]");
+			return handleException(e, LOG, "[loadSchulen]");
+		}
+
+	}
+
+	/**
+	 * Läsd die Schulen mit den gegebenen Kürzeln. Die Response-Payload ist ein StringsAPIModel[]
+	 *
+	 * @param  schulkuerzel
+	 * @return              Response
+	 */
+	public Response loadSchulenV2(final StringsAPIModel schulkuerzel) {
+
+		try {
+
+			String kommaseparierteKuerzel = StringUtils.join(schulkuerzel.getStrings(), ",");
+			Response response = restClient.loadSchulenMitKuerzelnV2(kommaseparierteKuerzel);
+			return response;
+
+		} catch (Exception e) {
+
+			return handleException(e, LOG, "[loadSchulenV2]");
 		}
 
 	}

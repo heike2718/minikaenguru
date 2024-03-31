@@ -11,12 +11,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.apimodel.StringsAPIModel;
 import de.egladil.web.mk_gateway.domain.auth.s2s.MkGatewayAuthConfig;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayWebApplicationException;
 import de.egladil.web.mk_gateway.domain.kataloge.LandPayloadComparator;
@@ -32,6 +36,7 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbRepository;
@@ -151,6 +156,12 @@ public class MkBiZaStatistikService {
 
 		List<LandPayload> laender = getLaender();
 
+		Set<Identifier> distinctSchuleLoesungszettel = alleLoesungszettel.stream()
+			.filter(l -> Teilnahmeart.SCHULE == l.teilnahmeIdentifier().teilnahmeart())
+			.map(Loesungszettel::getTheTeilnahmenummer).collect(Collectors.toSet());
+
+		List<SchuleAPIModel> schulen = this.getSchulen(distinctSchuleLoesungszettel);
+
 		for (LandPayload land : laender) {
 
 			List<Loesungszettel> loesungszettelgroups = loesungszettelgroupsByLaendern.get(land.kuerzel());
@@ -163,9 +174,37 @@ public class MkBiZaStatistikService {
 
 			}
 
-			// TODO: je land nur Schulen zählen und dann result.addSchulenJeLand(gruppierungsitem);
-			// TODO: MkBiZaGruppierungsitem schulenJeLand addieren und result.setTeilnehmendeSchulenGesamt(...);
+			long anzahlSchulenImLand = schulen.stream().filter(s -> s.kuerzelLand().equals(land.kuerzel())).count();
+
+			if (anzahlSchulenImLand > 0) {
+
+				result.addSchulenJeLand(new MkBiZaGruppierungsitem().withName(land.name()).withAnzahl(anzahlSchulenImLand));
+			}
 		}
+
+		if (wettbewerb.medianIkids() != null && !wettbewerb.medianIkids().equals(Integer.valueOf(0))) {
+
+			result.addMedianeJeKlassenstufe(
+				new MkBiZaGruppierungsitem().withAnzahl(Long.valueOf(wettbewerb.medianIkids())).withName("Median IKID"));
+		}
+
+		if (wettbewerb.medianKlasseEins() != null && !wettbewerb.medianKlasseEins().equals(Integer.valueOf(0))) {
+
+			result.addMedianeJeKlassenstufe(
+				new MkBiZaGruppierungsitem().withAnzahl(Long.valueOf(wettbewerb.medianKlasseEins())).withName("Median Klasse 1"));
+		}
+
+		if (wettbewerb.medianKlasseZwei() != null && !wettbewerb.medianKlasseZwei().equals(Integer.valueOf(0))) {
+
+			result.addMedianeJeKlassenstufe(
+				new MkBiZaGruppierungsitem().withAnzahl(Long.valueOf(wettbewerb.medianKlasseZwei())).withName("Median Klasse 2"));
+		}
+
+		List<MkBiZaGruppierungsitem> teilnehmendeSchulen = result.getSchulenJeLand();
+
+		long anzahlTeilnehmendeSchulen = teilnehmendeSchulen.stream().mapToLong(MkBiZaGruppierungsitem::getAnzahl).sum();
+
+		result.setTeilnehmendeSchulenGesamt(anzahlTeilnehmendeSchulen);
 
 		return result;
 	}
@@ -222,6 +261,41 @@ public class MkBiZaStatistikService {
 			if (e instanceof ProcessingException) {
 
 				LOGGER.error("endpoint [loadLaender] ist nicht erreichbar: {}", e.getMessage(), e);
+
+				return new ArrayList<>();
+
+			}
+
+			LOGGER.error("Unerwartete Exception - " + e.getMessage(), e);
+
+			return new ArrayList<>();
+		}
+	}
+
+	List<SchuleAPIModel> getSchulen(final Set<Identifier> teilnahmenummern) {
+
+		List<String> teilnahmenummernList = teilnahmenummern.stream().map(Identifier::identifier).toList();
+
+		try {
+
+			Response response = katalogeResourceAdapter.loadSchulenV2(new StringsAPIModel().withStrings(teilnahmenummernList));
+			SchuleAPIModel[] schulen = response.readEntity(new GenericType<SchuleAPIModel[]>() {
+			});
+
+			return Arrays.asList(schulen);
+
+		} catch (Exception e) {
+
+			if (e instanceof WebApplicationException) {
+
+				LOGGER.error("WebApplicationException beim Aufruf von [findSchulen]: {}", e.getMessage(), e);
+				// das hier ist ein klarer Fall von ServerError
+				throw new MkGatewayWebApplicationException(Response.serverError().build());
+			}
+
+			if (e instanceof ProcessingException) {
+
+				LOGGER.error("endpoint [findSchulen] ist nicht erreichbar: {}", e.getMessage(), e);
 
 				return new ArrayList<>();
 
