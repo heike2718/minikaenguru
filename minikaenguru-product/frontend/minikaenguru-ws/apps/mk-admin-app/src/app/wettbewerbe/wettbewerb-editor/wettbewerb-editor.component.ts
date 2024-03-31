@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 // import { DOCUMENT } from '@angular/common';
-import { UntypedFormBuilder, Validators, UntypedFormGroup, UntypedFormControl } from '@angular/forms';
+import { UntypedFormBuilder, Validators, UntypedFormGroup, UntypedFormControl, FormControl } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 import { Subscription } from 'rxjs';
 import { WettbewerbEditorModel } from '../wettbewerbe.model';
@@ -40,6 +40,12 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 
 	loesungsbuchstabenKlasse2FormControl!: UntypedFormControl;
 
+	medianIkidsFormControl!: FormControl;
+
+	medianKlasseEinsFormControl!: FormControl;
+
+	medianKlasseZweiFormControl!: FormControl;
+
 	private wettbewerbEditorModelSubscription: Subscription = new Subscription();
 
 	private saveOutcomeSubscription: Subscription = new Subscription();
@@ -71,6 +77,9 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 				this.loesungsbuchstabenIkidsFormControl = new UntypedFormControl({ value: '' });
 				this.loesungsbuchstabenKlasse1FormControl = new UntypedFormControl({ value: '' });
 				this.loesungsbuchstabenKlasse2FormControl = new UntypedFormControl({ value: '' });
+				this.medianIkidsFormControl = new FormControl<number|null>(null);
+				this.medianKlasseEinsFormControl = new FormControl<number|null>(null);
+				this.medianKlasseZweiFormControl = new FormControl<number|null>(null);
 
 
 				this.wettbewerbForm = this.fb.group({
@@ -82,7 +91,10 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 					datumFreischaltungPrivat: this.datumFreischaltungPrivatFormControl,
 					loesungsbuchstabenIkids: this.loesungsbuchstabenIkidsFormControl,
 					loesungsbuchstabenKlasse1: this.loesungsbuchstabenKlasse1FormControl,
-					loesungsbuchstabenKlasse2: this.loesungsbuchstabenKlasse2FormControl
+					loesungsbuchstabenKlasse2: this.loesungsbuchstabenKlasse2FormControl,
+					medianIkids: this.medianIkidsFormControl,
+					medianKlasseEins: this.medianKlasseEinsFormControl,
+					medianKlasseZwei: this.medianKlasseZweiFormControl
 				});
 
 
@@ -112,6 +124,10 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 	onSubmit() {
 		const formValue: WettbewerbEditorModel = this.wettbewerbForm.value;
 
+		const medianIkidVal = formValue.medianIkids;
+		const medianKlasseEinsVal = formValue.medianKlasseEins;
+		const medianKlasseZweiVal = formValue.medianKlasseZwei;
+
 		const neuerWettbewerb: WettbewerbEditorModel= {...formValue,
 			datumFreischaltungLehrer: formValue.datumFreischaltungLehrer ? formValue.datumFreischaltungLehrer.trim() : '',
 			datumFreischaltungPrivat: formValue.datumFreischaltungPrivat ? formValue.datumFreischaltungPrivat.trim() : '',
@@ -120,7 +136,10 @@ export class WettbewerbEditorComponent implements OnInit, OnDestroy {
 			status: this.initialWettbewerbGuiModel.status, // wird sowieso ignoriert
 			loesungsbuchstabenIkids: formValue.loesungsbuchstabenIkids ? formValue.loesungsbuchstabenIkids.trim() : '',
 			loesungsbuchstabenKlasse1: formValue.loesungsbuchstabenKlasse1.trim() ? formValue.loesungsbuchstabenKlasse1.trim() : '',
-			loesungsbuchstabenKlasse2: formValue.loesungsbuchstabenKlasse2.trim() ? formValue.loesungsbuchstabenKlasse2.trim() : ''
+			loesungsbuchstabenKlasse2: formValue.loesungsbuchstabenKlasse2.trim() ? formValue.loesungsbuchstabenKlasse2.trim() : '',
+			medianIkids: medianIkidVal,
+			medianKlasseEins: medianKlasseEinsVal,
+			medianKlasseZwei: medianKlasseZweiVal
 		}
 		this.logger.debug('neuerWettbewerb: ' + JSON.stringify(neuerWettbewerb));
 		this.wettbewerbFacade.saveWettbewerb(neuerWettbewerb, this.initialWettbewerbGuiModel.jahr === 0);

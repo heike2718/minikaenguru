@@ -4,10 +4,10 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.wettbewerb.api;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * EditWettbewerbModel zum Anlegen und Ändern eines Wettbewerbs
@@ -48,6 +48,15 @@ public class EditWettbewerbModel {
 
 	@JsonProperty
 	private String loesungsbuchstabenKlasse2;
+
+	@JsonProperty
+	private Integer medianIkids;
+
+	@JsonProperty
+	private Integer medianKlasseEins;
+
+	@JsonProperty
+	private Integer medianKlasseZwei;
 
 	public static EditWettbewerbModel createForTest(final int jahr, final String beginn, final String ende, final String freischaltungLehrer, final String freischaltungPrivat) {
 
@@ -112,5 +121,35 @@ public class EditWettbewerbModel {
 	public String getLoesungsbuchstabenKlasse2() {
 
 		return loesungsbuchstabenKlasse2;
+	}
+
+	public Integer getMedianIkids() {
+
+		return medianIkids;
+	}
+
+	public void setMedianIkids(final Integer medianIkids) {
+
+		this.medianIkids = medianIkids;
+	}
+
+	public Integer getMedianKlasseEins() {
+
+		return medianKlasseEins;
+	}
+
+	public void setMedianKlasseEins(final Integer medianEins) {
+
+		this.medianKlasseEins = medianEins;
+	}
+
+	public Integer getMedianKlasseZwei() {
+
+		return medianKlasseZwei;
+	}
+
+	public void setMedianKlasseZwei(final Integer medianZwei) {
+
+		this.medianKlasseZwei = medianZwei;
 	}
 }

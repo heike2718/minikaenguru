@@ -86,7 +86,9 @@ public class WettbewerbService {
 		List<Wettbewerb> allWettbewerbe = this.wettbewerbRepository.loadWettbewerbe();
 		Collections.sort(allWettbewerbe, new WettbewerbeDescendingComparator());
 
-		return allWettbewerbe.stream().map(w -> new MkBiZaWettbewerb(w.id().jahr(), w.status())).toList();
+		return allWettbewerbe.stream()
+			.map(w -> new MkBiZaWettbewerb(w.id().jahr(), w.status(), w.medianIkids(), w.medianKlasseEins(), w.medianKlasseZwei()))
+			.toList();
 	}
 
 	/**
@@ -160,6 +162,18 @@ public class WettbewerbService {
 
 		WettbewerbStatus status = WettbewerbStatus.nextStatus(null);
 
+		Integer medianIkids = isIntegerBlank(data.getMedianIkids())
+			? Integer.valueOf(0)
+			: Integer.valueOf(data.getMedianIkids());
+
+		Integer medianKlasseEins = isIntegerBlank(data.getMedianKlasseEins())
+			? Integer.valueOf(0)
+			: Integer.valueOf(data.getMedianKlasseEins());
+
+		Integer medianKlasseZwei = isIntegerBlank(data.getMedianKlasseZwei())
+			? Integer.valueOf(0)
+			: Integer.valueOf(data.getMedianKlasseZwei());
+
 		Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(data.getJahr())).withStatus(status)
 			.withWettbewerbsbeginn(CommonTimeUtils.parseToLocalDate(data.getWettbewerbsbeginn()))
 			.withWettbewerbsende(CommonTimeUtils.parseToLocalDate(data.getWettbewerbsende()))
@@ -167,7 +181,10 @@ public class WettbewerbService {
 			.withDatumFreischaltungPrivat(CommonTimeUtils.parseToLocalDate(data.getDatumFreischaltungPrivat()))
 			.withLoesungsbuchstabenIKids(data.getLoesungsbuchstabenIkids())
 			.withLoesungsbuchstabenKlasse1(data.getLoesungsbuchstabenKlasse1())
-			.withLoesungsbuchstabenKlasse2(data.getLoesungsbuchstabenKlasse2());
+			.withLoesungsbuchstabenKlasse2(data.getLoesungsbuchstabenKlasse2())
+			.withMedianIkids(medianIkids)
+			.withMedianKlasseEins(medianKlasseEins)
+			.withMedianKlasseZwei(medianKlasseZwei);
 
 		try {
 
@@ -241,6 +258,18 @@ public class WettbewerbService {
 			throw new MkGatewayWebApplicationException(Response.status(412).entity(responsePayload).build());
 		}
 
+		Integer medianIkids = isIntegerBlank(data.getMedianIkids())
+			? Integer.valueOf(0)
+			: Integer.valueOf(data.getMedianIkids());
+
+		Integer medianKlasseEins = isIntegerBlank(data.getMedianKlasseEins())
+			? Integer.valueOf(0)
+			: Integer.valueOf(data.getMedianKlasseEins());
+
+		Integer medianKlasseZwei = isIntegerBlank(data.getMedianKlasseZwei())
+			? Integer.valueOf(0)
+			: Integer.valueOf(data.getMedianKlasseZwei());
+
 		Wettbewerb geaendert = new Wettbewerb(wettbewerb.id()).withStatus(wettbewerb.status())
 			.withWettbewerbsbeginn(CommonTimeUtils.parseToLocalDate(data.getWettbewerbsbeginn()))
 			.withWettbewerbsende(CommonTimeUtils.parseToLocalDate(data.getWettbewerbsende()))
@@ -248,7 +277,10 @@ public class WettbewerbService {
 			.withDatumFreischaltungPrivat(CommonTimeUtils.parseToLocalDate(data.getDatumFreischaltungPrivat()))
 			.withLoesungsbuchstabenIKids(data.getLoesungsbuchstabenIkids())
 			.withLoesungsbuchstabenKlasse1(data.getLoesungsbuchstabenKlasse1())
-			.withLoesungsbuchstabenKlasse2(data.getLoesungsbuchstabenKlasse2());
+			.withLoesungsbuchstabenKlasse2(data.getLoesungsbuchstabenKlasse2())
+			.withMedianIkids(medianIkids)
+			.withMedianKlasseEins(medianKlasseEins)
+			.withMedianKlasseZwei(medianKlasseZwei);
 
 		try {
 
@@ -293,5 +325,14 @@ public class WettbewerbService {
 		}
 
 		return aktuellerWettbewerb;
+	}
+
+	private boolean isIntegerBlank(final Integer value) {
+
+		if (value == null) {
+
+			return true;
+		}
+		return Integer.valueOf(0).equals(value);
 	}
 }

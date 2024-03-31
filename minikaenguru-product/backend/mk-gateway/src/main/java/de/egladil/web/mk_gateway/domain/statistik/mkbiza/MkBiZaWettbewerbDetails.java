@@ -41,13 +41,16 @@ public class MkBiZaWettbewerbDetails {
 	private List<MkBiZaGruppierungsitem> schulkinderJeLand = new ArrayList<>();
 
 	@JsonProperty
-	private List<MkBiZaGruppierungsitem> kinderJeTeilnahmeart = new ArrayList<>();;
+	private List<MkBiZaGruppierungsitem> kinderJeTeilnahmeart = new ArrayList<>();
 
 	@JsonProperty
-	private List<MkBiZaGruppierungsitem> kinderJeKlassenstufe = new ArrayList<>();;
+	private List<MkBiZaGruppierungsitem> kinderJeKlassenstufe = new ArrayList<>();
 
 	@JsonProperty
-	private List<MkBiZaGruppierungsitem> kinderJeSprache = new ArrayList<>();;
+	private List<MkBiZaGruppierungsitem> kinderJeSprache = new ArrayList<>();
+
+	@JsonProperty
+	private List<MkBiZaGruppierungsitem> medianeJeKlassenstufe = new ArrayList<>();
 
 	public MkBiZaWettbewerbDetails addKlassenstufe(final Klassenstufe klassenstufe) {
 

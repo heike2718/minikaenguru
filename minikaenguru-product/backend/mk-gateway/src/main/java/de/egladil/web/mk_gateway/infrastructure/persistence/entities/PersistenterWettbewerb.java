@@ -6,6 +6,7 @@ package de.egladil.web.mk_gateway.infrastructure.persistence.entities;
 
 import java.util.Date;
 
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -13,8 +14,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
-
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
 
 /**
  * PersistenterWettbewerb
@@ -57,6 +56,15 @@ public class PersistenterWettbewerb extends ConcurrencySafeEntity {
 
 	@Column(name = "ZWEI")
 	private String loesungsbuchstabenKlasse2;
+
+	@Column(name = "MEDIAN_IKID")
+	private Integer medianIkids;
+
+	@Column(name = "MEDIAN_EINS")
+	private Integer medianKlasseEins;
+
+	@Column(name = "MEDIAN_ZWEI")
+	private Integer medianKlasseZwei;
 
 	public WettbewerbStatus getStatus() {
 
@@ -136,6 +144,36 @@ public class PersistenterWettbewerb extends ConcurrencySafeEntity {
 	public void setLoesungsbuchstabenKlasse2(final String loesungsbuchstabenKlasse2) {
 
 		this.loesungsbuchstabenKlasse2 = loesungsbuchstabenKlasse2;
+	}
+
+	public Integer getMedianIkids() {
+
+		return medianIkids;
+	}
+
+	public void setMedianIkids(final Integer medianIkids) {
+
+		this.medianIkids = medianIkids;
+	}
+
+	public Integer getMedianKlasseEins() {
+
+		return medianKlasseEins;
+	}
+
+	public void setMedianKlasseEins(final Integer medianKlasseEins) {
+
+		this.medianKlasseEins = medianKlasseEins;
+	}
+
+	public Integer getMedianKlasseZwei() {
+
+		return medianKlasseZwei;
+	}
+
+	public void setMedianKlasseZwei(final Integer medianKlasseZwei) {
+
+		this.medianKlasseZwei = medianKlasseZwei;
 	}
 
 }

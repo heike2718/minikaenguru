@@ -3367,6 +3367,18 @@
           },
           "loesungsbuchstabenKlasse2" : {
             "type" : "string"
+          },
+          "medianIkids" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "medianKlasseEins" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "medianKlasseZwei" : {
+            "format" : "int32",
+            "type" : "integer"
           }
         }
       },
@@ -3781,6 +3793,12 @@
           },
           "status" : {
             "$ref" : "#/components/schemas/WettbewerbStatus"
+          },
+          "medianeJeKlassenstufe" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MkBiZaGruppierungsitem"
+            }
           }
         }
       },
@@ -3838,6 +3856,12 @@
             }
           },
           "kinderJeSprache" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MkBiZaGruppierungsitem"
+            }
+          },
+          "medianeJeKlassenstufe" : {
             "type" : "array",
             "items" : {
               "$ref" : "#/components/schemas/MkBiZaGruppierungsitem"

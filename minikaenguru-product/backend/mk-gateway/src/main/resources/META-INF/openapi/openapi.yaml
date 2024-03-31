@@ -2352,6 +2352,15 @@ components:
           type: string
         loesungsbuchstabenKlasse2:
           type: string
+        medianIkids:
+          format: int32
+          type: integer
+        medianKlasseEins:
+          format: int32
+          type: integer
+        medianKlasseZwei:
+          format: int32
+          type: integer
     Empfaengertyp:
       enum:
       - ALLE
@@ -2654,6 +2663,10 @@ components:
           type: integer
         status:
           $ref: '#/components/schemas/WettbewerbStatus'
+        medianeJeKlassenstufe:
+          type: array
+          items:
+            $ref: '#/components/schemas/MkBiZaGruppierungsitem'
     MkBiZaWettbewerbDetails:
       type: object
       properties:
@@ -2693,6 +2706,10 @@ components:
           items:
             $ref: '#/components/schemas/MkBiZaGruppierungsitem'
         kinderJeSprache:
+          type: array
+          items:
+            $ref: '#/components/schemas/MkBiZaGruppierungsitem'
+        medianeJeKlassenstufe:
           type: array
           items:
             $ref: '#/components/schemas/MkBiZaGruppierungsitem'

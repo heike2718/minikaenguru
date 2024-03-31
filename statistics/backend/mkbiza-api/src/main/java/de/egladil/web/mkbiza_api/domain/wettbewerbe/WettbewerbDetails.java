@@ -53,4 +53,7 @@ public class WettbewerbDetails {
 	@JsonProperty
 	private List<Gruppierungsitem> kinderJeSprache;
 
+	@JsonProperty
+	private List<Gruppierungsitem> medianeJeKlassenstufe;
+
 }
