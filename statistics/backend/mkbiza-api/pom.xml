@@ -7,7 +7,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mkbiza-api</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 
 	<properties>
 		<compiler-plugin.version>3.12.1</compiler-plugin.version>
@@ -16,8 +16,8 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
 		<quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-		<quarkus.platform.version>3.8.3</quarkus.platform.version>
-		<dependency-check.version>9.0.10</dependency-check.version>
+		<quarkus.platform.version>3.9.1</quarkus.platform.version>
+		<dependency-check.version>9.1.0</dependency-check.version>
 		<skipITs>true</skipITs>
 		<surefire-plugin.version>3.2.5</surefire-plugin.version>
 		<jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>

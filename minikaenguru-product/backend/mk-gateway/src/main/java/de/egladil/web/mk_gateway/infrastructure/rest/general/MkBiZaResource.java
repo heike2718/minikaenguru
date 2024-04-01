@@ -16,6 +16,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameters;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.statistik.mkbiza.MkBiZaStatistikService;
 import de.egladil.web.mk_gateway.domain.statistik.mkbiza.MkBiZaWettbewerb;
 import de.egladil.web.mk_gateway.domain.statistik.mkbiza.MkBiZaWettbewerbDetails;
@@ -100,6 +101,11 @@ public class MkBiZaResource {
 		responseCode = "404",
 		content = @Content(schema = @Schema(implementation = MessagePayload.class)))
 	@APIResponse(
+		name = "Unprocessable Entity",
+		description = "keine Daten für das Jahr",
+		responseCode = "422",
+		content = @Content(schema = @Schema(implementation = ResponsePayload.class)))
+	@APIResponse(
 		name = "ServerError",
 		description = "Serverfehler",
 		responseCode = "500",
@@ -137,7 +143,7 @@ public class MkBiZaResource {
 		responseCode = "200",
 		content = @Content(
 			mediaType = "application/json",
-			schema = @Schema(implementation = MkBiZaWettbewerbDetails.class)))
+			schema = @Schema(implementation = StatistikAufgabe.class)))
 	@APIResponse(
 		name = "Unauthorized",
 		description = "S2S-Autentifizierung schlug fehl",
@@ -148,6 +154,11 @@ public class MkBiZaResource {
 		description = "Jahr existsiert nicht oder Wettbewerb ist noch nicht beendet oder Aufgabennummer existsiert nicht",
 		responseCode = "404",
 		content = @Content(schema = @Schema(implementation = MessagePayload.class)))
+	@APIResponse(
+		name = "Unprocessable Entity",
+		description = "keine Daten für das Jahr",
+		responseCode = "422",
+		content = @Content(schema = @Schema(implementation = ResponsePayload.class)))
 	@APIResponse(
 		name = "ServerError",
 		description = "Serverfehler",

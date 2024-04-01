@@ -2033,6 +2033,16 @@
               }
             }
           },
+          "422" : {
+            "description" : "keine Daten für das Jahr",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
+                }
+              }
+            }
+          },
           "500" : {
             "description" : "Serverfehler",
             "content" : {
@@ -2083,7 +2093,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/MkBiZaWettbewerbDetails"
+                  "$ref" : "#/components/schemas/StatistikAufgabe"
                 }
               }
             }
@@ -2104,6 +2114,16 @@
               "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/MessagePayload"
+                }
+              }
+            }
+          },
+          "422" : {
+            "description" : "keine Daten für das Jahr",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ResponsePayload"
                 }
               }
             }
@@ -4116,6 +4136,23 @@
           },
           "label" : {
             "type" : "string"
+          }
+        }
+      },
+      "StatistikAufgabe" : {
+        "type" : "object",
+        "properties" : {
+          "anzahlRichtig" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "anzahlFalsch" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "anzahlNicht" : {
+            "format" : "int64",
+            "type" : "integer"
           }
         }
       },

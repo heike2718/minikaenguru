@@ -4,15 +4,26 @@
 // =====================================================
 package de.egladil.web.mkbiza_api.domain.aufgaben;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * StatistikAufgabe
  */
+@Schema(description = "Statistik zu einer Aufgabe")
 public class StatistikAufgabe {
 
+	@JsonProperty
+	@Schema(description = "Anzahl richtiger Lösungen", example = "245")
 	private long anzahlRichtig;
 
+	@JsonProperty
+	@Schema(description = "Anzahl falscher Lösungen", example = "524")
 	private long anzahlFalsch;
 
+	@JsonProperty
+	@Schema(description = "Anzahl Aufgabe ausgelassen", example = "102")
 	private long anzahlNicht;
 
 	public long getAnzahlRichtig() {

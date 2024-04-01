@@ -13,7 +13,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikAuspraegung;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.uploads.UploadRepository;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
@@ -86,10 +86,12 @@ public class UploadHibernateRepositoryIT extends AbstractIntegrationTest {
 		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmenummer("M5ZD2NL2");
 
 		// Act
-		List<Auspraegung> result = repository.countAuspraegungenForTeilnahmeByColumnName(teilnahmeIdentifier, "UPLOAD_TYPE");
+		List<AdminStatistikAuspraegung> result = repository.countAuspraegungenForTeilnahmeByColumnName(teilnahmeIdentifier,
+			"UPLOAD_TYPE");
 
 		// Assert
-		Optional<Auspraegung> optAuspraegung = result.stream().filter(a -> UploadType.AUSWERTUNG.toString().equals(a.getWert()))
+		Optional<AdminStatistikAuspraegung> optAuspraegung = result.stream()
+			.filter(a -> UploadType.AUSWERTUNG.toString().equals(a.getWert()))
 			.findFirst();
 		assertTrue(optAuspraegung.isEmpty());
 

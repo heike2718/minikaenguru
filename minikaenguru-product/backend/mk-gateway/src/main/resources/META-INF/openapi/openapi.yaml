@@ -1395,6 +1395,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessagePayload'
+        "422":
+          description: keine Daten für das Jahr
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponsePayload'
         "500":
           description: Serverfehler
           content:
@@ -1433,7 +1439,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MkBiZaWettbewerbDetails'
+                $ref: '#/components/schemas/StatistikAufgabe'
         "401":
           description: S2S-Autentifizierung schlug fehl
           content:
@@ -1447,6 +1453,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessagePayload'
+        "422":
+          description: keine Daten für das Jahr
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponsePayload'
         "500":
           description: Serverfehler
           content:
@@ -2915,6 +2927,18 @@ components:
           $ref: '#/components/schemas/Sprache'
         label:
           type: string
+    StatistikAufgabe:
+      type: object
+      properties:
+        anzahlRichtig:
+          format: int64
+          type: integer
+        anzahlFalsch:
+          format: int64
+          type: integer
+        anzahlNicht:
+          format: int64
+          type: integer
     StatusAuslieferung:
       enum:
       - NEW

@@ -6,179 +6,253 @@
 	},
 	"item": [
 		{
-			"name": "MjaApiResource",
+			"name": "local",
 			"item": [
 				{
-					"name": "local: aufgabenvorschau - 200",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "http://localhost:9510/mk-gateway/mja-api/aufgaben/IKID"
-					},
-					"response": []
-				},
-				{
-					"name": "local: feedback - 200",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "default"
+					"name": "MkBiZaResource",
+					"item": [
+						{
+							"name": "local : wettbewerbsjahre - 401",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "localhost:9510/mk-gateway/mkbiza/wettbewerbe"
 							},
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "default"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"klassenstufe\": \"ZWEI\",\n  \"scoreSpassfaktor\": 4,\n  \"scoreZufriedenheit\": 1,\n  \"bewertungenAufgaben\": [\n      {\n      \"nummer\": \"A-1\",\n      \"scoreSchwierigkeitsgrad\": 3,\n      \"empfohleneKategorie\": \"LEICHT\",\n      \"scoreLehrplankompatibilitaet\": 1,\n      \"scoreVerstaendlichkeit\": 1\n    },\n    {\n      \"nummer\": \"B-3\",\n      \"scoreSchwierigkeitsgrad\": 1,\n      \"empfohleneKategorie\": \"SCHWER\",\n      \"scoreLehrplankompatibilitaet\": -1,\n      \"scoreVerstaendlichkeit\": -1,\n      \"freitext\": \"Multiplikation ist noch nicht Teil des Lehrplans.\"\n    }\n  ],\n  \"freitext\": \"Die Aufgaben waren dieses Jahr viel schwerer als im vergangenen Jahr.\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							"response": []
 						},
-						"url": "http://localhost:9510/mk-gateway/feedback"
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "MkBiZaResource",
-			"item": [
-				{
-					"name": "local : wettbewerbsjahre - 401",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "localhost:9510/mk-gateway/mkbiza/wettbewerbe"
-					},
-					"response": []
+						{
+							"name": "local : wettbewerbsjahre - 200",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "bWtiaXphOmNoYW5nZW1l",
+										"type": "default"
+									},
+									{
+										"key": "X-Client-ID",
+										"value": "mkbiza",
+										"type": "default"
+									}
+								],
+								"url": "localhost:9510/mk-gateway/mkbiza/wettbewerbe"
+							},
+							"response": []
+						},
+						{
+							"name": "local : statistik  - jahr - beendet",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "bWtiaXphOmNoYW5nZW1l",
+										"type": "default"
+									},
+									{
+										"key": "X-Client-ID",
+										"value": "mkbiza",
+										"type": "default"
+									}
+								],
+								"url": "localhost:9510/mk-gateway/mkbiza/wettbewerbe/2017"
+							},
+							"response": []
+						},
+						{
+							"name": "local : statistik  - jahr - 422",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "bWtiaXphOmNoYW5nZW1l",
+										"type": "default"
+									},
+									{
+										"key": "X-Client-ID",
+										"value": "mkbiza",
+										"type": "default"
+									}
+								],
+								"url": "localhost:9510/mk-gateway/mkbiza/wettbewerbe/2004"
+							},
+							"response": []
+						},
+						{
+							"name": "local : statistik  - jahr 401",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "localhost:9510/mk-gateway/mkbiza/wettbewerbe/2017"
+							},
+							"response": []
+						},
+						{
+							"name": "local : statistik  - jahr - nicht beendet",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "bWtiaXphOmNoYW5nZW1l",
+										"type": "default"
+									},
+									{
+										"key": "X-Client-ID",
+										"value": "mkbiza",
+										"type": "default"
+									}
+								],
+								"url": "localhost:9510/mk-gateway/mkbiza/wettbewerbe/2020"
+							},
+							"response": []
+						},
+						{
+							"name": "local : statistik  - jahr 404",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "bWtiaXphOmNoYW5nZW1l",
+										"type": "default"
+									},
+									{
+										"key": "X-Client-ID",
+										"value": "mkbiza",
+										"type": "default"
+									}
+								],
+								"url": "localhost:9510/mk-gateway/mkbiza/wettbewerbe/2040"
+							},
+							"response": []
+						},
+						{
+							"name": "local : statistik  - aufgabe 404",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "bWtiaXphOmNoYW5nZW1l",
+										"type": "default"
+									},
+									{
+										"key": "X-Client-ID",
+										"value": "mkbiza",
+										"type": "default"
+									}
+								],
+								"url": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2017/EINS/aufgaben/A-5"
+							},
+							"response": []
+						},
+						{
+							"name": "local : statistik  - aufgabe 422",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "bWtiaXphOmNoYW5nZW1l",
+										"type": "default"
+									},
+									{
+										"key": "X-Client-ID",
+										"value": "mkbiza",
+										"type": "default"
+									}
+								],
+								"url": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2004/EINS/aufgaben/A-5"
+							},
+							"response": []
+						},
+						{
+							"name": "local : statistik  - aufgabe 200",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "bWtiaXphOmNoYW5nZW1l",
+										"type": "default"
+									},
+									{
+										"key": "X-Client-ID",
+										"value": "mkbiza",
+										"type": "default"
+									}
+								],
+								"url": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2017/EINS/aufgaben/B-3"
+							},
+							"response": []
+						},
+						{
+							"name": "local : statistik  - aufgabe 401",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "bWtiaXphOmdhbnotZ2VoZWlt",
+										"type": "default"
+									},
+									{
+										"key": "X-Client-ID",
+										"value": "mkbiza",
+										"type": "default"
+									}
+								],
+								"url": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2017/EINS/aufgaben/B-3"
+							},
+							"response": []
+						}
+					]
 				},
 				{
-					"name": "local : wettbewerbsjahre - 200",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "bWtiaXphOmNoYW5nZW1l",
-								"type": "default"
+					"name": "MjaApiResource",
+					"item": [
+						{
+							"name": "local: aufgabenvorschau - 200",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:9510/mk-gateway/mja-api/aufgaben/IKID"
 							},
-							{
-								"key": "X-Client-ID",
-								"value": "mkbiza",
-								"type": "default"
-							}
-						],
-						"url": "localhost:9510/mk-gateway/mkbiza/wettbewerbe"
-					},
-					"response": []
-				},
-				{
-					"name": "local : statistik  - jahr - beendet",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "bWtiaXphOmNoYW5nZW1l",
-								"type": "default"
+							"response": []
+						},
+						{
+							"name": "local: feedback - 200",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"klassenstufe\": \"ZWEI\",\n  \"scoreSpassfaktor\": 4,\n  \"scoreZufriedenheit\": 1,\n  \"bewertungenAufgaben\": [\n      {\n      \"nummer\": \"A-1\",\n      \"scoreSchwierigkeitsgrad\": 3,\n      \"empfohleneKategorie\": \"LEICHT\",\n      \"scoreLehrplankompatibilitaet\": 1,\n      \"scoreVerstaendlichkeit\": 1\n    },\n    {\n      \"nummer\": \"B-3\",\n      \"scoreSchwierigkeitsgrad\": 1,\n      \"empfohleneKategorie\": \"SCHWER\",\n      \"scoreLehrplankompatibilitaet\": -1,\n      \"scoreVerstaendlichkeit\": -1,\n      \"freitext\": \"Multiplikation ist noch nicht Teil des Lehrplans.\"\n    }\n  ],\n  \"freitext\": \"Die Aufgaben waren dieses Jahr viel schwerer als im vergangenen Jahr.\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:9510/mk-gateway/feedback"
 							},
-							{
-								"key": "X-Client-ID",
-								"value": "mkbiza",
-								"type": "default"
-							}
-						],
-						"url": "localhost:9510/mk-gateway/mkbiza/wettbewerbe/2017"
-					},
-					"response": []
-				},
-				{
-					"name": "local : statistik  - jahr - nicht beendet",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "bWtiaXphOmNoYW5nZW1l",
-								"type": "default"
-							},
-							{
-								"key": "X-Client-ID",
-								"value": "mkbiza",
-								"type": "default"
-							}
-						],
-						"url": "localhost:9510/mk-gateway/mkbiza/wettbewerbe/2020"
-					},
-					"response": []
-				},
-				{
-					"name": "local : statistik  - jahr 404",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "bWtiaXphOmNoYW5nZW1l",
-								"type": "default"
-							},
-							{
-								"key": "X-Client-ID",
-								"value": "mkbiza",
-								"type": "default"
-							}
-						],
-						"url": "localhost:9510/mk-gateway/mkbiza/wettbewerbe/2040"
-					},
-					"response": []
-				},
-				{
-					"name": "local : statistik  - aufgabe 404",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "bWtiaXphOmNoYW5nZW1l",
-								"type": "default"
-							},
-							{
-								"key": "X-Client-ID",
-								"value": "mkbiza",
-								"type": "default"
-							}
-						],
-						"url": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2017/EINS/aufgaben/A-5"
-					},
-					"response": []
-				},
-				{
-					"name": "local : statistik  - aufgabe 200",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "bWtiaXphOmNoYW5nZW1l",
-								"type": "default"
-							},
-							{
-								"key": "X-Client-ID",
-								"value": "mkbiza",
-								"type": "default"
-							}
-						],
-						"url": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2017/EINS/aufgaben/B-3"
-					},
-					"response": []
+							"response": []
+						}
+					]
 				}
 			]
 		}

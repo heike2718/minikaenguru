@@ -30,9 +30,8 @@ public interface MjaApiRestClient {
 		@Path("minikaenguru/{jahr}/{klasse}")
 		Response getAufgabenMinikaenguruwettbewerb(
 			@HeaderParam(value = "X-CLIENT-ID") final String clientId,
-			@HeaderParam(value = "Authorization") final String authHeader,
 			@PathParam(value = "jahr") final String jahr,
 			@PathParam(value = "klasse") final Klassenstufe klassenstufe);
-		// @formatter:on
+	// @formatter:on
 
 }

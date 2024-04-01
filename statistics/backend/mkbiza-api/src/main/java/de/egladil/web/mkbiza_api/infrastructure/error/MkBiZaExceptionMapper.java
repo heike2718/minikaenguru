@@ -34,9 +34,14 @@ public class MkBiZaExceptionMapper implements ExceptionMapper<Throwable> {
 
 		LOGGER.debug(exception.getMessage(), exception);
 
+		if (exception instanceof WebApplicationException) {
+
+			return mapWebApplicationException((WebApplicationException) exception);
+		}
+
 		if (exception instanceof MkBiZaCommunicationExcepion) {
 
-			LOGGER.debug(exception.getMessage());
+			LOGGER.warn(exception.getMessage());
 
 			return this.handleWrappedException(exception.getCause());
 		}
@@ -52,6 +57,7 @@ public class MkBiZaExceptionMapper implements ExceptionMapper<Throwable> {
 		if (exception instanceof ProcessingException) {
 
 			ProcessingException e = (ProcessingException) exception;
+
 			LOGGER.error("ProcessingException bei Kommunikation mit mja-api: {}", e.getMessage());
 			MessagePayload messagePayload = MessagePayload
 				.error(applicationMessages.getString("general.internalServerError"));
@@ -66,7 +72,7 @@ public class MkBiZaExceptionMapper implements ExceptionMapper<Throwable> {
 
 				if (waException.getCause() instanceof WebApplicationException) {
 
-					return mapWebApplicationException(waException.getCause());
+					return mapWebApplicationException((WebApplicationException) waException.getCause());
 				} else {
 
 					LOGGER.error("ClientWebApplicationException mit status {} bei Kommunikation mit mja-api: {}",
@@ -87,7 +93,7 @@ public class MkBiZaExceptionMapper implements ExceptionMapper<Throwable> {
 
 		if (exception instanceof WebApplicationException) {
 
-			return mapWebApplicationException(exception);
+			return mapWebApplicationException((WebApplicationException) exception);
 		}
 
 		LOGGER.error(exception.getMessage(), exception);
@@ -98,17 +104,19 @@ public class MkBiZaExceptionMapper implements ExceptionMapper<Throwable> {
 
 	/**
 	 * @param  exception
-	 * @return
+	 * @return           Response
 	 */
-	private Response mapWebApplicationException(final Throwable exception) {
+	private Response mapWebApplicationException(final WebApplicationException waException) {
 
-		WebApplicationException waException = (WebApplicationException) exception;
+		if (waException.getResponse().getStatus() == 404 || waException.getResponse().getStatus() == 422) {
 
-		if (waException.getResponse().getStatus() != 404) {
+			return Response.status(404).build();
+		} else {
 
 			LOGGER.error("WebApplicationException mit status {} bei Kommunikation mit mja-api: {}",
-				waException.getResponse().getStatus(), exception.getMessage(), exception);
+				waException.getResponse().getStatus(), waException.getMessage(), waException);
 		}
+
 		return waException.getResponse();
 	}
 

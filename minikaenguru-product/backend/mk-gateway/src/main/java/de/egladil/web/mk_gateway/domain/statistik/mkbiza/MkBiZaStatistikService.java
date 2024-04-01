@@ -345,6 +345,14 @@ public class MkBiZaStatistikService {
 
 		Integer index = aufgabennummernWithWertungscodeIndex.get(nummer);
 
+		if (index == null) {
+
+			LOGGER.warn("Wettbewerb {}: falsche nummer {} - Aufruf über MkBiZa", jahr, nummer);
+			MessagePayload messagePayload = MessagePayload.error("NotFound");
+			Response response = Response.status(404).entity(messagePayload).build();
+			throw new MkGatewayWebApplicationException(response);
+		}
+
 		AufgabeErgebnisItem aufgabeErgenbnisItem = aufgabeErgebnisRechner.berechneAufgabeErgebnisItem(nummer, index,
 			zettelKlassenstufe);
 
