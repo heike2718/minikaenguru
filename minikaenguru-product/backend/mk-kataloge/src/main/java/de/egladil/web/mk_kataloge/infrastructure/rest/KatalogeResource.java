@@ -23,7 +23,7 @@ import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_kataloge.KatalogAPIApp;
-import de.egladil.web.mk_kataloge.application.KatalogFacade;
+import de.egladil.web.mk_kataloge.domain.KatalogFacade;
 import de.egladil.web.mk_kataloge.domain.KatalogItem;
 import de.egladil.web.mk_kataloge.domain.admin.CreateSchuleService;
 import de.egladil.web.mk_kataloge.domain.admin.RenameLandService;
@@ -117,6 +117,38 @@ public class KatalogeResource {
 		List<KatalogItem> result = katalogFacade.loadLaender();
 
 		return Response.ok(new ResponsePayload(MessagePayload.ok(), result)).build();
+	}
+
+	@GET
+	@Path("laender/v2")
+	@Operation(
+		operationId = "loadLaenderV2", summary = "Läd die Länder des Schulkatalogs.")
+	@APIResponse(
+		name = "OKResponse",
+		responseCode = "200",
+		content = @Content(
+			mediaType = "application/json",
+			schema = @Schema(type = SchemaType.ARRAY, implementation = KatalogItem.class)))
+	public Response loadLaenderV2(@HeaderParam(
+		value = KatalogAPIApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
+			value = KatalogAPIApp.SECRET_HEADER_NAME) final String secret) {
+
+		if (!expectedSecret.equals(secret)) {
+
+			String msg = "Unautorisierter Versuch, die Länder zu laden: angemeldeter ADMIN=" + adminUuid + ", secret=" + secret;
+
+			LOGGER.warn(msg);
+
+			eventDelegate.fireSecurityEvent(msg, securityEvent);
+
+			return Response.status(Status.FORBIDDEN)
+				.entity(MessagePayload.error("Netter Versuch, aber leider keine Berechtigung"))
+				.build();
+
+		}
+
+		List<KatalogItem> responsePayload = katalogFacade.loadLaender();
+		return Response.ok(responsePayload).build();
 	}
 
 	/**

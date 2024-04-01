@@ -18,6 +18,9 @@ export interface Wettbewerb {
 	readonly loesungsbuchstabenKlasse1: string;
 	readonly loesungsbuchstabenKlasse2: string;
 	readonly teilnahmenuebersicht?: Teilnahmenuebersicht;
+	readonly medianIkids: number;
+	readonly medianKlasseEins: number;
+	readonly medianKlasseZwei: number;
 };
 
 export interface WettbewerbWithID {
@@ -35,6 +38,9 @@ export interface WettbewerbEditorModel {
 	loesungsbuchstabenIkids: string;
 	loesungsbuchstabenKlasse1: string;
 	loesungsbuchstabenKlasse2: string;
+	medianIkids: number;
+	medianKlasseEins: number;
+	medianKlasseZwei: number;
 };
 
 export const initialWettbewerbEditorModel: WettbewerbEditorModel = {
@@ -46,8 +52,11 @@ export const initialWettbewerbEditorModel: WettbewerbEditorModel = {
 	datumFreischaltungPrivat: '',
 	loesungsbuchstabenIkids: '',
 	loesungsbuchstabenKlasse1: '',
-	loesungsbuchstabenKlasse2: ''
-}
+	loesungsbuchstabenKlasse2: '',
+	medianIkids: 0,
+	medianKlasseEins: 0,
+	medianKlasseZwei: 0,
+};
 
 // verpackt häufig erforderliche Operationen auf einem WettbewerbWithID[] etwas handhabbarer.
 export class WettbewerbeMap {

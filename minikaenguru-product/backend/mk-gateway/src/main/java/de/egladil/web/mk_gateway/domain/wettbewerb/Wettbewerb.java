@@ -33,6 +33,12 @@ public class Wettbewerb {
 
 	private String loesungsbuchstabenKlasse2;
 
+	private Integer medianIkids;
+
+	private Integer medianKlasseEins;
+
+	private Integer medianKlasseZwei;
+
 	/**
 	 * @param wettbewerbId
 	 */
@@ -209,6 +215,39 @@ public class Wettbewerb {
 			throw new IllegalArgumentException("existiert keine Implementierung für klassenstufe " + klassenstufe);
 		}
 
+	}
+
+	public Integer medianIkids() {
+
+		return medianIkids;
+	}
+
+	public Wettbewerb withMedianIkids(final Integer medianIkids) {
+
+		this.medianIkids = medianIkids;
+		return this;
+	}
+
+	public Integer medianKlasseEins() {
+
+		return medianKlasseEins;
+	}
+
+	public Wettbewerb withMedianKlasseEins(final Integer medianKlasseEins) {
+
+		this.medianKlasseEins = medianKlasseEins;
+		return this;
+	}
+
+	public Integer medianKlasseZwei() {
+
+		return medianKlasseZwei;
+	}
+
+	public Wettbewerb withMedianKlasseZwei(final Integer medianKlasseZwei) {
+
+		this.medianKlasseZwei = medianKlasseZwei;
+		return this;
 	}
 
 }

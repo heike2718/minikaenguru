@@ -19,6 +19,7 @@ import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayWebApplicationException;
+import de.egladil.web.mk_gateway.domain.statistik.mkbiza.MkBiZaWettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.EditWettbewerbModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.TeilnahmenuebersichtAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbDetailsAPIModel;
@@ -71,6 +72,23 @@ public class WettbewerbService {
 		Collections.sort(wettbewerbe, new WettbewerbeDescendingComparator());
 
 		return wettbewerbe.stream().map(w -> WettbewerbListAPIModel.fromWettbewerb(w)).collect(Collectors.toList());
+	}
+
+	/**
+	 * Liest alle Wettbewerbsjahre aus der DB.
+	 *
+	 * @param  status
+	 *                WettbewerbStatus
+	 * @return        List
+	 */
+	public List<MkBiZaWettbewerb> loadWettbewerbsjahreWithStatus() {
+
+		List<Wettbewerb> allWettbewerbe = this.wettbewerbRepository.loadWettbewerbe();
+		Collections.sort(allWettbewerbe, new WettbewerbeDescendingComparator());
+
+		return allWettbewerbe.stream()
+			.map(w -> new MkBiZaWettbewerb(w.id().jahr(), w.status(), w.medianIkids(), w.medianKlasseEins(), w.medianKlasseZwei()))
+			.toList();
 	}
 
 	/**
@@ -144,6 +162,18 @@ public class WettbewerbService {
 
 		WettbewerbStatus status = WettbewerbStatus.nextStatus(null);
 
+		Integer medianIkids = isIntegerBlank(data.getMedianIkids())
+			? Integer.valueOf(0)
+			: Integer.valueOf(data.getMedianIkids());
+
+		Integer medianKlasseEins = isIntegerBlank(data.getMedianKlasseEins())
+			? Integer.valueOf(0)
+			: Integer.valueOf(data.getMedianKlasseEins());
+
+		Integer medianKlasseZwei = isIntegerBlank(data.getMedianKlasseZwei())
+			? Integer.valueOf(0)
+			: Integer.valueOf(data.getMedianKlasseZwei());
+
 		Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(data.getJahr())).withStatus(status)
 			.withWettbewerbsbeginn(CommonTimeUtils.parseToLocalDate(data.getWettbewerbsbeginn()))
 			.withWettbewerbsende(CommonTimeUtils.parseToLocalDate(data.getWettbewerbsende()))
@@ -151,7 +181,10 @@ public class WettbewerbService {
 			.withDatumFreischaltungPrivat(CommonTimeUtils.parseToLocalDate(data.getDatumFreischaltungPrivat()))
 			.withLoesungsbuchstabenIKids(data.getLoesungsbuchstabenIkids())
 			.withLoesungsbuchstabenKlasse1(data.getLoesungsbuchstabenKlasse1())
-			.withLoesungsbuchstabenKlasse2(data.getLoesungsbuchstabenKlasse2());
+			.withLoesungsbuchstabenKlasse2(data.getLoesungsbuchstabenKlasse2())
+			.withMedianIkids(medianIkids)
+			.withMedianKlasseEins(medianKlasseEins)
+			.withMedianKlasseZwei(medianKlasseZwei);
 
 		try {
 
@@ -225,6 +258,18 @@ public class WettbewerbService {
 			throw new MkGatewayWebApplicationException(Response.status(412).entity(responsePayload).build());
 		}
 
+		Integer medianIkids = isIntegerBlank(data.getMedianIkids())
+			? Integer.valueOf(0)
+			: Integer.valueOf(data.getMedianIkids());
+
+		Integer medianKlasseEins = isIntegerBlank(data.getMedianKlasseEins())
+			? Integer.valueOf(0)
+			: Integer.valueOf(data.getMedianKlasseEins());
+
+		Integer medianKlasseZwei = isIntegerBlank(data.getMedianKlasseZwei())
+			? Integer.valueOf(0)
+			: Integer.valueOf(data.getMedianKlasseZwei());
+
 		Wettbewerb geaendert = new Wettbewerb(wettbewerb.id()).withStatus(wettbewerb.status())
 			.withWettbewerbsbeginn(CommonTimeUtils.parseToLocalDate(data.getWettbewerbsbeginn()))
 			.withWettbewerbsende(CommonTimeUtils.parseToLocalDate(data.getWettbewerbsende()))
@@ -232,7 +277,10 @@ public class WettbewerbService {
 			.withDatumFreischaltungPrivat(CommonTimeUtils.parseToLocalDate(data.getDatumFreischaltungPrivat()))
 			.withLoesungsbuchstabenIKids(data.getLoesungsbuchstabenIkids())
 			.withLoesungsbuchstabenKlasse1(data.getLoesungsbuchstabenKlasse1())
-			.withLoesungsbuchstabenKlasse2(data.getLoesungsbuchstabenKlasse2());
+			.withLoesungsbuchstabenKlasse2(data.getLoesungsbuchstabenKlasse2())
+			.withMedianIkids(medianIkids)
+			.withMedianKlasseEins(medianKlasseEins)
+			.withMedianKlasseZwei(medianKlasseZwei);
 
 		try {
 
@@ -277,5 +325,14 @@ public class WettbewerbService {
 		}
 
 		return aktuellerWettbewerb;
+	}
+
+	private boolean isIntegerBlank(final Integer value) {
+
+		if (value == null) {
+
+			return true;
+		}
+		return Integer.valueOf(0).equals(value);
 	}
 }

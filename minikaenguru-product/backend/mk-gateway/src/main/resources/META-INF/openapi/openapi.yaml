@@ -1316,7 +1316,7 @@ paths:
   /mk-gateway/mja-api/aufgaben/{klasse}:
     get:
       tags:
-      - Restricted Mja Resource
+      - Mja Api Resource
       operationId: Läd die Aufgaben der gegebenen Klassenstufe es aktuellen Wettbewerbs
         vom mja-api
       parameters:
@@ -1341,6 +1341,130 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResponsePayload'
+  /mk-gateway/mkbiza/wettbewerbe:
+    get:
+      tags:
+      - Mk Bi Za Resource
+      summary: Gibt Infos über die API zurück.
+      operationId: getInfos
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MkBiZaWettbewerb'
+        "500":
+          description: Serverfehler
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessagePayload'
+  /mk-gateway/mkbiza/wettbewerbe/{jahr}:
+    get:
+      tags:
+      - Mk Bi Za Resource
+      summary: Gibt die Statistik eines Wettbewerbs zurück
+      operationId: getStatistikWettbewerb
+      parameters:
+      - name: jahr
+        in: path
+        description: Jahr des Wettbewerbs
+        required: true
+        schema:
+          format: int32
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MkBiZaWettbewerbDetails'
+        "401":
+          description: S2S-Autentifizierung schlug fehl
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessagePayload'
+        "404":
+          description: Jahr existsiert nicht oder Wettbewerb ist noch nicht beendet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessagePayload'
+        "422":
+          description: keine Daten für das Jahr
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponsePayload'
+        "500":
+          description: Serverfehler
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessagePayload'
+  /mk-gateway/mkbiza/wettbewerbe/{jahr}/{klassenstufe}/aufgaben/{nummer}:
+    get:
+      tags:
+      - Mk Bi Za Resource
+      summary: Gibt die Statistik für eine spezielle Aufgabe zurück
+      operationId: getStatistikAufgabe
+      parameters:
+      - name: jahr
+        in: path
+        description: Jahr des Wettbewerbs
+        required: true
+        schema:
+          format: int32
+          type: integer
+      - name: klassenstufe
+        in: path
+        description: Klassenstufe
+        required: true
+        schema:
+          $ref: '#/components/schemas/Klassenstufe'
+      - name: nummer
+        in: path
+        description: Nummer der Aufgabe
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatistikAufgabe'
+        "401":
+          description: S2S-Autentifizierung schlug fehl
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessagePayload'
+        "404":
+          description: Jahr existsiert nicht oder Wettbewerb ist noch nicht beendet
+            oder Aufgabennummer existsiert nicht
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessagePayload'
+        "422":
+          description: keine Daten für das Jahr
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponsePayload'
+        "500":
+          description: Serverfehler
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessagePayload'
   /mk-gateway/open-data/statistik/anmeldungen:
     get:
       tags:
@@ -2240,6 +2364,15 @@ components:
           type: string
         loesungsbuchstabenKlasse2:
           type: string
+        medianIkids:
+          format: int32
+          type: integer
+        medianKlasseEins:
+          format: int32
+          type: integer
+        medianKlasseZwei:
+          format: int32
+          type: integer
     Empfaengertyp:
       enum:
       - ALLE
@@ -2526,6 +2659,72 @@ components:
           type: string
       xml:
         name: gesamtpunktverteilung
+    MkBiZaGruppierungsitem:
+      type: object
+      properties:
+        name:
+          type: string
+        anzahl:
+          format: int64
+          type: integer
+    MkBiZaWettbewerb:
+      type: object
+      properties:
+        jahr:
+          format: int32
+          type: integer
+        status:
+          $ref: '#/components/schemas/WettbewerbStatus'
+        medianeJeKlassenstufe:
+          type: array
+          items:
+            $ref: '#/components/schemas/MkBiZaGruppierungsitem'
+    MkBiZaWettbewerbDetails:
+      type: object
+      properties:
+        jahr:
+          format: int32
+          type: integer
+        anzahlKinderGesamt:
+          format: int32
+          type: integer
+        anzahlPrivatanmeldungen:
+          format: int64
+          type: integer
+        anzahlSchulanmeldungen:
+          format: int64
+          type: integer
+        teilnehmendeSchulenGesamt:
+          format: int64
+          type: integer
+        klassenstufen:
+          type: array
+          items:
+            $ref: '#/components/schemas/Klassenstufe'
+        schulenJeLand:
+          type: array
+          items:
+            $ref: '#/components/schemas/MkBiZaGruppierungsitem'
+        schulkinderJeLand:
+          type: array
+          items:
+            $ref: '#/components/schemas/MkBiZaGruppierungsitem'
+        kinderJeTeilnahmeart:
+          type: array
+          items:
+            $ref: '#/components/schemas/MkBiZaGruppierungsitem'
+        kinderJeKlassenstufe:
+          type: array
+          items:
+            $ref: '#/components/schemas/MkBiZaGruppierungsitem'
+        kinderJeSprache:
+          type: array
+          items:
+            $ref: '#/components/schemas/MkBiZaGruppierungsitem'
+        medianeJeKlassenstufe:
+          type: array
+          items:
+            $ref: '#/components/schemas/MkBiZaGruppierungsitem'
     MultipartFormDataInput:
       type: object
       properties:
@@ -2728,6 +2927,18 @@ components:
           $ref: '#/components/schemas/Sprache'
         label:
           type: string
+    StatistikAufgabe:
+      type: object
+      properties:
+        anzahlRichtig:
+          format: int64
+          type: integer
+        anzahlFalsch:
+          format: int64
+          type: integer
+        anzahlNicht:
+          format: int64
+          type: integer
     StatusAuslieferung:
       enum:
       - NEW

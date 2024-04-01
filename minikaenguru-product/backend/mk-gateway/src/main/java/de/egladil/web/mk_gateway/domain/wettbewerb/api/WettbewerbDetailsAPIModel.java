@@ -4,15 +4,14 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.wettbewerb.api;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 /**
  * WettbewerbDetailsAPIModel
@@ -55,6 +54,15 @@ public class WettbewerbDetailsAPIModel {
 	private String loesungsbuchstabenKlasse2 = "";
 
 	@JsonProperty
+	private Integer medianIkids;
+
+	@JsonProperty
+	private Integer medianKlasseEins;
+
+	@JsonProperty
+	private Integer medianKlasseZwei;
+
+	@JsonProperty
 	private TeilnahmenuebersichtAPIModel teilnahmenuebersicht;
 
 	@JsonProperty
@@ -84,6 +92,30 @@ public class WettbewerbDetailsAPIModel {
 		if (wettbewerb.loesungsbuchstabenKlasse2() != null) {
 
 			result.loesungsbuchstabenKlasse2 = wettbewerb.loesungsbuchstabenKlasse2();
+		}
+
+		if (wettbewerb.medianIkids() == null || wettbewerb.medianIkids().equals(Integer.valueOf(0))) {
+
+			result.medianIkids = Integer.valueOf(0);
+		} else {
+
+			result.medianIkids = wettbewerb.medianIkids();
+		}
+
+		if (wettbewerb.medianKlasseEins() == null || wettbewerb.medianKlasseEins().equals(Integer.valueOf(0))) {
+
+			result.medianKlasseEins = Integer.valueOf(0);
+		} else {
+
+			result.medianKlasseEins = wettbewerb.medianKlasseEins();
+		}
+
+		if (wettbewerb.medianKlasseZwei() == null || wettbewerb.medianKlasseZwei().equals(Integer.valueOf(0))) {
+
+			result.medianKlasseZwei = Integer.valueOf(0);
+		} else {
+
+			result.medianKlasseZwei = wettbewerb.medianKlasseZwei();
 		}
 
 		return result;

@@ -17,7 +17,7 @@ import jakarta.transaction.Transactional;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikAuspraegung;
 import de.egladil.web.mk_gateway.domain.unterlagen.Download;
 import de.egladil.web.mk_gateway.domain.unterlagen.DownloadsRepository;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
@@ -100,9 +100,9 @@ public class DownloadsHibernateRepository implements DownloadsRepository {
 	}
 
 	@Override
-	public List<Auspraegung> countAuspraegungenByColumnName(final String columnName, final Integer jahr) {
+	public List<AdminStatistikAuspraegung> countAuspraegungenByColumnName(final String columnName, final Integer jahr) {
 
-		List<Auspraegung> result = new ArrayList<>();
+		List<AdminStatistikAuspraegung> result = new ArrayList<>();
 
 		String stmt = "select d." + columnName + ", sum(d.anzahl) from DOWNLOADS d where d.jahr = :jahr group by d." + columnName;
 
@@ -116,7 +116,7 @@ public class DownloadsHibernateRepository implements DownloadsRepository {
 			String wert = treffer[0].toString();
 			BigDecimal anzahl = (BigDecimal) treffer[1];
 
-			result.add(new Auspraegung(wert, anzahl.longValue()));
+			result.add(new AdminStatistikAuspraegung(wert, anzahl.longValue()));
 
 		}
 

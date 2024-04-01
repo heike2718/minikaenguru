@@ -9,10 +9,9 @@ import java.util.Optional;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
-import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
-import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Gruppeninfo;
-import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Gruppenitem;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikAuspraegung;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikGruppeninfo;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikItem;
 import de.egladil.web.mk_gateway.domain.unterlagen.AdminDownloadsService;
 import de.egladil.web.mk_gateway.domain.unterlagen.DownloadsRepository;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
@@ -31,9 +30,9 @@ public class AdminDownloadsServiceImpl implements AdminDownloadsService {
 	DownloadsRepository downloadsRepository;
 
 	@Override
-	public Gruppeninfo createKurzstatistikDownloads() {
+	public AdminStatistikGruppeninfo createKurzstatistikDownloads() {
 
-		Gruppeninfo gruppeninfo = new Gruppeninfo("DOWNLOADS");
+		AdminStatistikGruppeninfo gruppeninfo = new AdminStatistikGruppeninfo("DOWNLOADS");
 
 		Optional<Wettbewerb> optWettbewerb = wettbewerbService.aktuellerWettbewerb();
 
@@ -44,8 +43,8 @@ public class AdminDownloadsServiceImpl implements AdminDownloadsService {
 
 		for (DownloadsGruppeninfoAuspraegungsart auspaegungsart : DownloadsGruppeninfoAuspraegungsart.values()) {
 
-			Gruppenitem item = new Gruppenitem(auspaegungsart.name);
-			List<Auspraegung> auspraegungen = downloadsRepository.countAuspraegungenByColumnName(auspaegungsart.toString(),
+			AdminStatistikItem item = new AdminStatistikItem(auspaegungsart.name);
+			List<AdminStatistikAuspraegung> auspraegungen = downloadsRepository.countAuspraegungenByColumnName(auspaegungsart.toString(),
 				optWettbewerb.get().id().jahr());
 			item.setAuspraegungen(auspraegungen);
 			gruppeninfo.addItem(item);
@@ -53,7 +52,7 @@ public class AdminDownloadsServiceImpl implements AdminDownloadsService {
 
 		if (!gruppeninfo.getGruppenItems().isEmpty()) {
 
-			Gruppenitem erstes = gruppeninfo.getGruppenItems().get(0);
+			AdminStatistikItem erstes = gruppeninfo.getGruppenItems().get(0);
 			long anzahlElemente = erstes.getAuspraegungen().stream().mapToLong(auspraegung -> auspraegung.getAnzahl()).sum();
 			gruppeninfo.setAnzahlElemente(anzahlElemente);
 		}

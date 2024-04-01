@@ -17,7 +17,7 @@ export class WettbewerbDashboardComponent implements OnInit, OnDestroy {
 
 	wettbewerb$ = this.wettbewerbFacade.wettbewerb$;
 
-	private wettbewerb?: Wettbewerb;
+	#wettbewerb?: Wettbewerb;
 
 	private selectedWettbewerbSubscription: Subscription = new Subscription();
 
@@ -26,7 +26,7 @@ export class WettbewerbDashboardComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 
 		this.selectedWettbewerbSubscription = this.wettbewerb$.subscribe(
-			wb => this.wettbewerb = wb
+			wb => this.#wettbewerb = wb
 		);
 	}
 
@@ -35,16 +35,16 @@ export class WettbewerbDashboardComponent implements OnInit, OnDestroy {
 	}
 
 	editWettbewerb() {
-		if (this.wettbewerb) {
-			this.wettbewerbFacade.editWettbewerb(this.wettbewerb);
+		if (this.#wettbewerb) {
+			this.wettbewerbFacade.editWettbewerb(this.#wettbewerb);
 		} else {
 			this.logger.debug('wettwerb was undefined');
 		}		
 	}
 
 	moveToNextStatus() {
-		if (this.wettbewerb) {
-			this.wettbewerbFacade.moveWettbewerbOn(this.wettbewerb);
+		if (this.#wettbewerb) {
+			this.wettbewerbFacade.moveWettbewerbOn(this.#wettbewerb);
 		} else {
 			this.logger.debug('wettwerb was undefined');
 		}	

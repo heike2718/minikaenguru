@@ -99,6 +99,20 @@ public class MkKatalogeResourceAdapter extends AbstractMkResourceAdapter {
 
 	}
 
+	public Response loadLaenderV2(final String uuid, final String secret) {
+
+		try {
+
+			Response response = restClient.loadLaenderV2(uuid, secret);
+			return response;
+
+		} catch (Exception e) {
+
+			return handleException(e, LOG, "[loadLaender]");
+		}
+
+	}
+
 	public Response loadOrteInLand(final String kuerzel) {
 
 		try {
@@ -244,7 +258,28 @@ public class MkKatalogeResourceAdapter extends AbstractMkResourceAdapter {
 
 		} catch (Exception e) {
 
-			return handleException(e, LOG, "[getHeartbeat]");
+			return handleException(e, LOG, "[loadSchulen]");
+		}
+
+	}
+
+	/**
+	 * Läsd die Schulen mit den gegebenen Kürzeln. Die Response-Payload ist ein StringsAPIModel[]
+	 *
+	 * @param  schulkuerzel
+	 * @return              Response
+	 */
+	public Response loadSchulenV2(final StringsAPIModel schulkuerzel) {
+
+		try {
+
+			String kommaseparierteKuerzel = StringUtils.join(schulkuerzel.getStrings(), ",");
+			Response response = restClient.loadSchulenMitKuerzelnV2(kommaseparierteKuerzel);
+			return response;
+
+		} catch (Exception e) {
+
+			return handleException(e, LOG, "[loadSchulenV2]");
 		}
 
 	}

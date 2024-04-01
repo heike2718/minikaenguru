@@ -18,3 +18,15 @@ Aktuell sind es 3 Anwendungen:
 Neue Webanwendung zur Visualisierung von Statistiken des Minikänguru-Wettbewerbs. Sie wird die mkod-app ablösen.
 
 [Überblick statistics](./statistics/README.adoc)
+
+## ports
+
+| Name              | port |
+| ----------------- | ---- |
+| authprovider      | 9000 |
+| mja-api           | 9210 |
+| checklistenserver | 9300 |
+| mk-gateway        | 9510 |
+| mk-kataloge       | 9530 |
+| mkbiza-api        | 9540 |
+| profil-server     | 9600 |

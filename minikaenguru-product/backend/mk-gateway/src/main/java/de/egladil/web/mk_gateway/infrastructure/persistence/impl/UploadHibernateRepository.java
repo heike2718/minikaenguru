@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikAuspraegung;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.uploads.UploadIdentifier;
 import de.egladil.web.mk_gateway.domain.uploads.UploadRepository;
@@ -180,9 +180,9 @@ public class UploadHibernateRepository implements UploadRepository {
 	}
 
 	@Override
-	public List<Auspraegung> countAuspraegungenForTeilnahmeByColumnName(final TeilnahmeIdentifier teilnahmeIdentifier, final String columnName) {
+	public List<AdminStatistikAuspraegung> countAuspraegungenForTeilnahmeByColumnName(final TeilnahmeIdentifier teilnahmeIdentifier, final String columnName) {
 
-		List<Auspraegung> result = new ArrayList<>();
+		List<AdminStatistikAuspraegung> result = new ArrayList<>();
 
 		String stmt = "select u." + columnName
 			+ ", count(*) from UPLOADS u where u.TEILNAHMENUMMER = :teilnahmenummer group by u."
@@ -200,7 +200,7 @@ public class UploadHibernateRepository implements UploadRepository {
 			String wert = treffer[0].toString();
 			Long anzahl = (Long) treffer[1];
 
-			result.add(new Auspraegung(wert, anzahl.longValue()));
+			result.add(new AdminStatistikAuspraegung(wert, anzahl.longValue()));
 
 		}
 

@@ -10,8 +10,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import de.egladil.web.mk_kataloge.application.impl.KatalogsucheFacadeImpl;
 import de.egladil.web.mk_kataloge.domain.KatalogItem;
+import de.egladil.web.mk_kataloge.domain.KatalogsucheFacade;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 
@@ -22,7 +22,7 @@ import jakarta.inject.Inject;
 public class KatalogsucheFacadeImplTest {
 
 	@Inject
-	KatalogsucheFacadeImpl facade;
+	KatalogsucheFacade facade;
 
 	@Test
 	void should_sucheOrteInLandWork() {

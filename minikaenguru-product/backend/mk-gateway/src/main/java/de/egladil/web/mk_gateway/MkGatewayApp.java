@@ -20,4 +20,6 @@ public class MkGatewayApp extends Application {
 
 	public static final String SECRET_HEADER_NAME = "X-SECRET";
 
+	public static final String X_CLIENT_ID_HEADER_NAME = "X-CLIENT-ID";
+
 }

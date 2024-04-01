@@ -14,8 +14,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.kinder.impl.AdminKinderServiceImpl;
-import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Gruppeninfo;
-import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Gruppenitem;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikGruppeninfo;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikItem;
 import de.egladil.web.mkv_server_tests.AbstractIntegrationTest;
 
 /**
@@ -37,14 +37,14 @@ public class AdminKinderServiceImplIT extends AbstractIntegrationTest {
 	void should_createKurzstatistikKinderWork() {
 
 		// Act
-		Gruppeninfo gruppeninfo = service.createKurzstatistikKinder();
+		AdminStatistikGruppeninfo gruppeninfo = service.createKurzstatistikKinder();
 
 		// Assert
 		assertEquals("KINDER", gruppeninfo.getUuid());
-		List<Gruppenitem> items = gruppeninfo.getGruppenItems();
+		List<AdminStatistikItem> items = gruppeninfo.getGruppenItems();
 		assertEquals(4, items.size());
 
-		Optional<Gruppenitem> optItem = items.stream().filter(i -> "importiert".equals(i.getName())).findFirst();
+		Optional<AdminStatistikItem> optItem = items.stream().filter(i -> "importiert".equals(i.getName())).findFirst();
 		assertTrue(optItem.isPresent());
 
 		System.out.println(optItem.get().toString());

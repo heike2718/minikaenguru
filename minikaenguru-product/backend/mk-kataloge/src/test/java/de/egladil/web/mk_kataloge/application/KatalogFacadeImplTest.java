@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import de.egladil.web.mk_kataloge.application.impl.KatalogFacadeImpl;
+import de.egladil.web.mk_kataloge.domain.KatalogFacade;
 import de.egladil.web.mk_kataloge.domain.apimodel.SchuleAPIModel;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
@@ -27,7 +27,7 @@ import jakarta.inject.Inject;
 public class KatalogFacadeImplTest {
 
 	@Inject
-	KatalogFacadeImpl facade;
+	KatalogFacade facade;
 
 	@Test
 	void should_findSchulen_work() throws Exception {

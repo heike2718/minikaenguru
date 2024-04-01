@@ -8,12 +8,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
-import jakarta.transaction.Transactional;
-
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
@@ -21,6 +15,11 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbRepository;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterWettbewerb;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 
 /**
  * WettbewerbHibernateRepository
@@ -79,7 +78,11 @@ public class WettbewerbHibernateRepository implements WettbewerbRepository {
 			.withStatus(persistenterWettbewerb.getStatus())
 			.withLoesungsbuchstabenIKids(persistenterWettbewerb.getLoesungsbuchstabenIkids())
 			.withLoesungsbuchstabenKlasse1(persistenterWettbewerb.getLoesungsbuchstabenKlasse1())
-			.withLoesungsbuchstabenKlasse2(persistenterWettbewerb.getLoesungsbuchstabenKlasse2());
+			.withLoesungsbuchstabenKlasse2(persistenterWettbewerb.getLoesungsbuchstabenKlasse2())
+			.withMedianIkids(persistenterWettbewerb.getMedianIkids())
+			.withMedianKlasseEins(persistenterWettbewerb.getMedianKlasseEins())
+			.withMedianKlasseZwei(persistenterWettbewerb.getMedianKlasseZwei());
+
 		return wettbewerb;
 	}
 
@@ -153,6 +156,15 @@ public class WettbewerbHibernateRepository implements WettbewerbRepository {
 	 */
 	void mapAllAttributesButStatus(final Wettbewerb wettbewerb, final PersistenterWettbewerb persistenterWettbewerb) {
 
+		Integer medianIkids = wettbewerb.medianIkids() == null || wettbewerb.medianIkids().equals(Integer.valueOf(0)) ? null
+			: wettbewerb.medianIkids();
+
+		Integer medianKlasseEins = wettbewerb.medianKlasseEins() == null || wettbewerb.medianKlasseEins().equals(Integer.valueOf(0)) ? null
+			: wettbewerb.medianKlasseEins();
+
+		Integer medianKlasseZwei = wettbewerb.medianKlasseZwei() == null || wettbewerb.medianKlasseZwei().equals(Integer.valueOf(0)) ? null
+			: wettbewerb.medianKlasseZwei();
+
 		persistenterWettbewerb
 			.setDatumFreischaltungLehrer(CommonTimeUtils.transformFromLocalDate(wettbewerb.datumFreischaltungLehrer()));
 		persistenterWettbewerb
@@ -162,5 +174,8 @@ public class WettbewerbHibernateRepository implements WettbewerbRepository {
 		persistenterWettbewerb.setLoesungsbuchstabenIkids(wettbewerb.loesungsbuchstabenIkids());
 		persistenterWettbewerb.setLoesungsbuchstabenKlasse1(wettbewerb.loesungsbuchstabenKlasse1());
 		persistenterWettbewerb.setLoesungsbuchstabenKlasse2(wettbewerb.loesungsbuchstabenKlasse2());
+		persistenterWettbewerb.setMedianIkids(medianIkids);
+		persistenterWettbewerb.setMedianKlasseEins(medianKlasseEins);
+		persistenterWettbewerb.setMedianKlasseZwei(medianKlasseZwei);
 	}
 }

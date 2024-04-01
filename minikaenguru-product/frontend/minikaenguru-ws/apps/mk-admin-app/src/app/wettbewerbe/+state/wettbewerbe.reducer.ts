@@ -74,7 +74,10 @@ const wettbewerbeReducer = createReducer(initialWettbewerbeState,
 				datumFreischaltungPrivat: wettbewerb.datumFreischaltungPrivat,
 				loesungsbuchstabenIkids: wettbewerb.loesungsbuchstabenIkids,
 				loesungsbuchstabenKlasse1: wettbewerb.loesungsbuchstabenKlasse1,
-				loesungsbuchstabenKlasse2: wettbewerb.loesungsbuchstabenKlasse2
+				loesungsbuchstabenKlasse2: wettbewerb.loesungsbuchstabenKlasse2,
+				medianIkids: wettbewerb.medianIkids ? wettbewerb.medianIkids : 0,
+				medianKlasseEins: wettbewerb.medianKlasseEins ? wettbewerb.medianKlasseEins : 0,
+				medianKlasseZwei: wettbewerb.medianKlasseZwei ? wettbewerb.medianKlasseZwei : 0
 			};
 
 			return { ...state, wettbewerbEditorModel: wettbewerbEditorModel, saveOutcome: undefined };

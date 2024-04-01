@@ -16,7 +16,7 @@ import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.kinder.Kind;
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
 import de.egladil.web.mk_gateway.domain.kinder.Klasse;
-import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikAuspraegung;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistentesKind;
@@ -259,9 +259,9 @@ public class KinderHibernateRepository implements KinderRepository {
 	}
 
 	@Override
-	public List<Auspraegung> countAuspraegungenByColumnName(final String columnName) {
+	public List<AdminStatistikAuspraegung> countAuspraegungenByColumnName(final String columnName) {
 
-		List<Auspraegung> result = new ArrayList<>();
+		List<AdminStatistikAuspraegung> result = new ArrayList<>();
 
 		String stmt = "select k." + columnName + ", count(*) from KINDER k group by k." + columnName;
 
@@ -275,7 +275,7 @@ public class KinderHibernateRepository implements KinderRepository {
 			String wert = treffer[0].toString();
 			Long anzahl = (Long) treffer[1];
 
-			result.add(new Auspraegung(wert, anzahl.longValue()));
+			result.add(new AdminStatistikAuspraegung(wert, anzahl.longValue()));
 
 		}
 

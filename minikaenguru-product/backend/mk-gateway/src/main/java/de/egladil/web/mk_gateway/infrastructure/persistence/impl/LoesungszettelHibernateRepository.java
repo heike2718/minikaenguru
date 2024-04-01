@@ -20,7 +20,7 @@ import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRohdaten;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
-import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikAuspraegung;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
@@ -139,9 +139,9 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 	}
 
 	@Override
-	public List<Auspraegung> countAuspraegungenForWettbewerbByColumnName(final WettbewerbID wettbewerbID, final String columnName) {
+	public List<AdminStatistikAuspraegung> countAuspraegungenForWettbewerbByColumnName(final WettbewerbID wettbewerbID, final String columnName) {
 
-		List<Auspraegung> result = new ArrayList<>();
+		List<AdminStatistikAuspraegung> result = new ArrayList<>();
 
 		String stmt = "select l." + columnName
 			+ ", count(*) from LOESUNGSZETTEL l where l.WETTBEWERB_UUID = :wettbewerbUuid  group by l." + columnName;
@@ -158,7 +158,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 			String wert = treffer[0].toString();
 			Long anzahl = (Long) treffer[1];
 
-			result.add(new Auspraegung(wert, anzahl.longValue()));
+			result.add(new AdminStatistikAuspraegung(wert, anzahl.longValue()));
 
 		}
 
@@ -166,9 +166,9 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 	}
 
 	@Override
-	public List<Auspraegung> countAuspraegungenForTeilnahmeByColumnName(final TeilnahmeIdentifier teilnahme, final String columnName) {
+	public List<AdminStatistikAuspraegung> countAuspraegungenForTeilnahmeByColumnName(final TeilnahmeIdentifier teilnahme, final String columnName) {
 
-		List<Auspraegung> result = new ArrayList<>();
+		List<AdminStatistikAuspraegung> result = new ArrayList<>();
 
 		String stmt = "select l." + columnName
 			+ ", count(*) from LOESUNGSZETTEL l where l.TEILNAHMENUMMER = :teilnahmenummer and l.WETTBEWERB_UUID = :wettbewerbUuid  group by l."
@@ -187,7 +187,7 @@ public class LoesungszettelHibernateRepository implements LoesungszettelReposito
 			String wert = treffer[0].toString();
 			Long anzahl = (Long) treffer[1];
 
-			result.add(new Auspraegung(wert, anzahl.longValue()));
+			result.add(new AdminStatistikAuspraegung(wert, anzahl.longValue()));
 
 		}
 

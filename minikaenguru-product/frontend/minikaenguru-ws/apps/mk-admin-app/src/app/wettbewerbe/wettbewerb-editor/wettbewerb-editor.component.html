@@ -87,7 +87,7 @@
 
 			<div class="row mt-4">
 				<div class="col-12">
-					<label for="loesungIKIDsInput">Lösungen IKIDs</label>
+					<label for="loesungIKIDsInput">Lösungsbuchstaben IKIDs</label>
 				</div>
 			</div>
 			<div class="row">
@@ -102,7 +102,7 @@
 
 			<div class="row mt-4">
 				<div class="col-12">
-					<label for="loesungKlasse1Input">Lösungen Klasse 1</label>
+					<label for="loesungKlasse1Input">Lösungsbuchstaben Klasse 1</label>
 				</div>
 			</div>
 			<div class="row">
@@ -117,7 +117,7 @@
 
 			<div class="row mt-4">
 				<div class="col-12">
-					<label for="loesungKlasse2Input">Lösungen Klasse 2</label>
+					<label for="loesungKlasse2Input">Lösungsbuchstaben Klasse 2</label>
 				</div>
 			</div>
 			<div class="row">
@@ -130,6 +130,50 @@
 				</div>
 			</div>
 
+			<div class="row mt-4">
+				<div class="col-12">
+					<label for="medianIkidsInput">Median IKIDs (x 1000)</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<input
+						[class.error]="medianIkidsFormControl.touched && !medianIkidsFormControl.valid"
+						class="form-control" type="text" id="medianIkidsInput"
+						placeholder="Median Inklusionskinder x 1000" formControlName="medianIkids"
+						autocomplete="false">
+				</div>
+			</div>
+
+			<div class="row mt-4">
+				<div class="col-12">
+					<label for="medianKlasseEinsInput">Median Klasse 1 (x 1000)</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<input
+						[class.error]="medianKlasseEinsFormControl.touched && !medianKlasseEinsFormControl.valid"
+						class="form-control" type="text" id="medianKlasseEinsInput"
+						placeholder="Median Klasse 1 x 1000" formControlName="medianKlasseEins"
+						autocomplete="false">
+				</div>
+			</div>
+
+			<div class="row mt-4">
+				<div class="col-12">
+					<label for="medianKlasseZweiInput">Median Klasse 2 (x 1000)</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<input
+						[class.error]="medianKlasseZweiFormControl.touched && !medianKlasseZweiFormControl.valid"
+						class="form-control" type="text" id="medianKlasseZweiInput"
+						placeholder="Median Klasse 2 x 1000" formControlName="medianKlasseZwei"
+						autocomplete="false">
+				</div>
+			</div>
 		</form>
 
 		<p *ngIf="devMode">

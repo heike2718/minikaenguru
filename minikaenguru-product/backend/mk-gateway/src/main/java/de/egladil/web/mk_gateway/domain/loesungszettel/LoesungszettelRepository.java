@@ -12,7 +12,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.EntityConcurrentlyModifiedException;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
-import de.egladil.web.mk_gateway.domain.statistik.gruppeninfos.Auspraegung;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikAuspraegung;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
@@ -170,7 +170,7 @@ public interface LoesungszettelRepository {
 	 *                      String name des group by- Kriteriums.
 	 * @return
 	 */
-	List<Auspraegung> countAuspraegungenForWettbewerbByColumnName(WettbewerbID wettbewerbID, String columnName);
+	List<AdminStatistikAuspraegung> countAuspraegungenForWettbewerbByColumnName(WettbewerbID wettbewerbID, String columnName);
 
 	/**
 	 * Selektiert die Lösungszettel des gegebenen Wettbewerbs und gruppiert sie nach der gewünschten Spalte.
@@ -181,5 +181,5 @@ public interface LoesungszettelRepository {
 	 *                             String name des group by- Kriteriums.
 	 * @return
 	 */
-	List<Auspraegung> countAuspraegungenForTeilnahmeByColumnName(TeilnahmeIdentifier teilnahmeIdentifier, String columnName);
+	List<AdminStatistikAuspraegung> countAuspraegungenForTeilnahmeByColumnName(TeilnahmeIdentifier teilnahmeIdentifier, String columnName);
 }

@@ -79,10 +79,29 @@ public interface MkKatalogeRestClient {
 	@Consumes(MediaType.TEXT_PLAIN)
 	Response loadSchulenMitKuerzeln(final String schulkuerzel);
 
+	/**
+	 * Response.entity ist eine List von SchuleAPIModel
+	 *
+	 * @param  schulkuerzel
+	 *                      StringsAPIModel
+	 * @return
+	 */
+	@POST
+	@Path("schulinfos/v2")
+	@Consumes(MediaType.TEXT_PLAIN)
+	Response loadSchulenMitKuerzelnV2(final String schulkuerzel);
+
 	@GET
 	@Path("kataloge/laender")
 	@Consumes(MediaType.APPLICATION_JSON)
 	Response loadLaender(@HeaderParam(
+		value = MkGatewayApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
+			value = MkGatewayApp.SECRET_HEADER_NAME) final String secret);
+
+	@GET
+	@Path("kataloge/laender/v2")
+	@Consumes(MediaType.APPLICATION_JSON)
+	Response loadLaenderV2(@HeaderParam(
 		value = MkGatewayApp.UUID_HEADER_NAME) final String adminUuid, @HeaderParam(
 			value = MkGatewayApp.SECRET_HEADER_NAME) final String secret);
 
