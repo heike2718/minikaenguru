@@ -1,7 +1,10 @@
-= Dokumentation Minikänguru-Statistiken
+= Minikänguru-Statistiken
+
 :author: Heike Winkelvoß
 :license: MIT
 :version: 1.0.0
 :description: https://example.com/support
 
+include::navigation.adoc[]
 include::ideensammlung.adoc[]
+include::logbuch-frontend.adoc[]

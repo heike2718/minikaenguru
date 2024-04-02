@@ -1,0 +1,49 @@
+== Aufsetzen der Angular-Anwendung
+
+Hier die Befehle zum Generieren von Dingen für das Frontend
+
+[source,cli]
+----
+npx create-nx-workspace@latest mkbiza-ws
+----
+
+Habe mich für ein integrated monorepo entschieden, weil ich dann den app-namen wählen konnte. Möglicherweise kann man webpack auch bei einem singleproject das Ergebnis nicht app zu nennen, aber inzwischen kenne ich mich mit monorepos besser aus.
+
+=== npm-Pakete hinzugefügt
+
+[source,cli]
+----
+npm install --save @ngrx/store @ngrx/router-store @ngrx/store-devtools ngrx-store-localstorage @ngrx/effects
+npm install --save-dev @ngrx/eslint-plugin
+npm install --save @angular/material material-icons
+npm install --save angular2-uuid
+npm install --save ng2-charts
+----
+
+=== scripts hinzugefügt
+
+[source,json,source-file="package.json"]
+----
+  "scripts": {
+    "ng": "nx",
+    "postinstall": "node ./decorate-angular-cli.js",
+    "start": "nx serve mkbiza-app",
+    "build:mkbiza-app:local": "npx nx build mkbiza-app -c local --output-hashing=all --base-href /mkbiza-app/ --skip-nx-cache",
+    "build:mkbiza-app:a300": "npx nx build mkbiza-app -c a300 --output-hashing=all --base-href /mkbiza-app/ --skip-nx-cache",
+    "build:mkbiza-app:prod": "npx nx run mkbiza-app:build:production --output-hashing=all --base-href /mkbiza-app/ --skip-nx-cache",
+    "test": "npx nx test",
+    "test:all": "npx nx run-many --target=test --all",
+    "lint:all": "npx nx run-many --target=lint --all",
+    "full-check": "npx nx run-s lint:all test:all build",
+    "graph": "npx nx graph"
+  },
+
+----
+
+=== shared lib
+
+[source,cli]
+----
+npx nx generate library shared --dry-run
+----
+

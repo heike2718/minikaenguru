@@ -19,7 +19,6 @@ import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayWebApplicationException;
-import de.egladil.web.mk_gateway.domain.statistik.mkbiza.MkBiZaWettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.EditWettbewerbModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.TeilnahmenuebersichtAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbDetailsAPIModel;
@@ -72,23 +71,6 @@ public class WettbewerbService {
 		Collections.sort(wettbewerbe, new WettbewerbeDescendingComparator());
 
 		return wettbewerbe.stream().map(w -> WettbewerbListAPIModel.fromWettbewerb(w)).collect(Collectors.toList());
-	}
-
-	/**
-	 * Liest alle Wettbewerbsjahre aus der DB.
-	 *
-	 * @param  status
-	 *                WettbewerbStatus
-	 * @return        List
-	 */
-	public List<MkBiZaWettbewerb> loadWettbewerbsjahreWithStatus() {
-
-		List<Wettbewerb> allWettbewerbe = this.wettbewerbRepository.loadWettbewerbe();
-		Collections.sort(allWettbewerbe, new WettbewerbeDescendingComparator());
-
-		return allWettbewerbe.stream()
-			.map(w -> new MkBiZaWettbewerb(w.id().jahr(), w.status(), w.medianIkids(), w.medianKlasseEins(), w.medianKlasseZwei()))
-			.toList();
 	}
 
 	/**

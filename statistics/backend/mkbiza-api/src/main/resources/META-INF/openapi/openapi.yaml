@@ -133,7 +133,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MinikaenguruAufgabenDto'
+                $ref: '#/components/schemas/MinikaenguruKlassenstufeDto'
         "400":
           description: Input-Validierung ging schief.
         "404":
@@ -225,6 +225,37 @@ components:
           type: string
         version:
           type: string
+    Aufgabe:
+      description: Eine Aufgabe eines Minkänguru-Wettbewerbs
+      type: object
+      properties:
+        nummer:
+          description: Nummer der Aufgabe im Wettbewerb
+          type: string
+        punkte:
+          format: int32
+          description: Punkte für diese Aufgabe.
+          type: integer
+        strafpunkte:
+          description: Strafpunkte bei falscher Lösung.
+          type: string
+        loesungsbuchstabe:
+          description: der korrekte Lösungsbuchstabe
+          type: string
+        quelle:
+          description: Quelle ür eine Zitatsection
+          type: string
+        images:
+          description: "Images, die angezeigt werden können. Frage und optionale Lö\
+            sung"
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/Images'
+        statistik:
+          description: Statistik zu dieser Aufgabe
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/StatistikAufgabe'
     ConstraintViolation:
       type: object
       properties:
@@ -289,30 +320,7 @@ components:
         message:
           description: die message
           type: string
-    MinikaenguruAufgabe:
-      description: Eine Aufgabe eines Minkänguru-Wettbewerbs
-      type: object
-      properties:
-        nummer:
-          description: Nummer der Aufgabe im Wettbewerb
-          type: string
-        punkte:
-          format: int32
-          description: Punkte für diese Aufgabe.
-          type: integer
-        loesungsbuchstabe:
-          description: der korrekte Lösungsbuchstabe
-          type: string
-        quelle:
-          description: Quelle ür eine Zitatsection
-          type: string
-        images:
-          description: "Images, die angezeigt werden können. Frage und optionale Lö\
-            sung"
-          type: object
-          allOf:
-          - $ref: '#/components/schemas/Images'
-    MinikaenguruAufgabenDto:
+    MinikaenguruKlassenstufeDto:
       description: Aufgaben und Lösungen eines Minkänguru-Wettbewerbs für eine gegebene
         Klassenstufe
       type: object
@@ -327,7 +335,7 @@ components:
           description: die einzelnen Aufgaben mit Lösungen
           type: array
           items:
-            $ref: '#/components/schemas/MinikaenguruAufgabe'
+            $ref: '#/components/schemas/Aufgabe'
     StatistikAufgabe:
       description: Statistik zu einer Aufgabe
       type: object
@@ -370,6 +378,11 @@ components:
           allOf:
           - $ref: '#/components/schemas/StatusWettbewerb'
           example: BEENDET
+        anzahlKinder:
+          format: int64
+          description: Anzahl der Kinder (ist eine untere Schranke)
+          type: integer
+          example: 12524
         medianeJeKlassenstufe:
           description: Mediane je Klassenstufe
           type: array

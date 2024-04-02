@@ -11,10 +11,10 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * MinikaenguruAufgabenDto
+ * MinikaenguruKlassenstufeDto
  */
 @Schema(description = "Aufgaben und Lösungen eines Minkänguru-Wettbewerbs für eine gegebene Klassenstufe")
-public class MinikaenguruAufgabenDto {
+public class MinikaenguruKlassenstufeDto {
 
 	@JsonProperty
 	@Schema(description = "Jahr des Wettbewerbs")
@@ -26,7 +26,7 @@ public class MinikaenguruAufgabenDto {
 
 	@JsonProperty
 	@Schema(description = "die einzelnen Aufgaben mit Lösungen")
-	private List<MinikaenguruAufgabe> aufgaben;
+	private List<Aufgabe> aufgaben;
 
 	public String getWettbewerbsjahr() {
 
@@ -48,12 +48,12 @@ public class MinikaenguruAufgabenDto {
 		this.klassenstufe = klassenstufe;
 	}
 
-	public List<MinikaenguruAufgabe> getAufgaben() {
+	public List<Aufgabe> getAufgaben() {
 
 		return aufgaben;
 	}
 
-	public void setAufgaben(final List<MinikaenguruAufgabe> aufgaben) {
+	public void setAufgaben(final List<Aufgabe> aufgaben) {
 
 		this.aufgaben = aufgaben;
 	}

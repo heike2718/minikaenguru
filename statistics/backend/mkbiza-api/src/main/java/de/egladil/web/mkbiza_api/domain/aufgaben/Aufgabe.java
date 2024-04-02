@@ -9,10 +9,10 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * MinikaenguruAufgabe
+ * Aufgabe
  */
 @Schema(description = "Eine Aufgabe eines Minkänguru-Wettbewerbs")
-public class MinikaenguruAufgabe {
+public class Aufgabe {
 
 	@JsonProperty
 	@Schema(description = "Nummer der Aufgabe im Wettbewerb")
@@ -21,6 +21,10 @@ public class MinikaenguruAufgabe {
 	@JsonProperty
 	@Schema(description = "Punkte für diese Aufgabe.")
 	private int punkte;
+
+	@JsonProperty
+	@Schema(description = "Strafpunkte bei falscher Lösung.")
+	private String strafpunkte;
 
 	@JsonProperty
 	@Schema(description = "der korrekte Lösungsbuchstabe")
@@ -34,12 +38,16 @@ public class MinikaenguruAufgabe {
 	@Schema(description = "Images, die angezeigt werden können. Frage und optionale Lösung")
 	private Images images;
 
+	@JsonProperty
+	@Schema(description = "Statistik zu dieser Aufgabe")
+	private StatistikAufgabe statistik;
+
 	public String getNummer() {
 
 		return nummer;
 	}
 
-	public MinikaenguruAufgabe withNummer(final String nummer) {
+	public Aufgabe withNummer(final String nummer) {
 
 		this.nummer = nummer;
 		return this;
@@ -50,7 +58,7 @@ public class MinikaenguruAufgabe {
 		return punkte;
 	}
 
-	public MinikaenguruAufgabe withPunkte(final int punkte) {
+	public Aufgabe withPunkte(final int punkte) {
 
 		this.punkte = punkte;
 		return this;
@@ -61,7 +69,7 @@ public class MinikaenguruAufgabe {
 		return loesungsbuchstabe;
 	}
 
-	public MinikaenguruAufgabe withLoesungsbuchstabe(final String loesungsbuchstabe) {
+	public Aufgabe withLoesungsbuchstabe(final String loesungsbuchstabe) {
 
 		this.loesungsbuchstabe = loesungsbuchstabe;
 		return this;
@@ -72,7 +80,7 @@ public class MinikaenguruAufgabe {
 		return images;
 	}
 
-	public MinikaenguruAufgabe withImages(final Images images) {
+	public Aufgabe withImages(final Images images) {
 
 		this.images = images;
 		return this;
@@ -83,9 +91,24 @@ public class MinikaenguruAufgabe {
 		return quelle;
 	}
 
-	public MinikaenguruAufgabe withQuelle(final String quelle) {
+	public Aufgabe withQuelle(final String quelle) {
 
 		this.quelle = quelle;
 		return this;
+	}
+
+	public StatistikAufgabe getStatistik() {
+
+		return statistik;
+	}
+
+	public void setStatistik(final StatistikAufgabe statistik) {
+
+		this.statistik = statistik;
+	}
+
+	public void setStrafpunkte(final String strafpunkte) {
+
+		this.strafpunkte = strafpunkte;
 	}
 }

@@ -22,7 +22,6 @@ import de.egladil.web.mk_gateway.domain.statistik.mkbiza.MkBiZaWettbewerb;
 import de.egladil.web.mk_gateway.domain.statistik.mkbiza.MkBiZaWettbewerbDetails;
 import de.egladil.web.mk_gateway.domain.statistik.mkbiza.StatistikAufgabe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
-import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.constraints.NotNull;
@@ -42,9 +41,6 @@ import jakarta.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class MkBiZaResource {
-
-	@Inject
-	WettbewerbService wettewerbService;
 
 	@Inject
 	MkBiZaStatistikService statistikService;
@@ -67,7 +63,7 @@ public class MkBiZaResource {
 		content = @Content(schema = @Schema(implementation = MessagePayload.class)))
 	public Response getWettbewerbsjahre() {
 
-		List<MkBiZaWettbewerb> wettbewerbe = wettewerbService.loadWettbewerbsjahreWithStatus();
+		List<MkBiZaWettbewerb> wettbewerbe = statistikService.loadWettbewerbeOverview();
 
 		return Response.ok(wettbewerbe).build();
 

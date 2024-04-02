@@ -19,7 +19,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import de.egladil.web.mkbiza_api.domain.ConstraintViolationResponse;
 import de.egladil.web.mkbiza_api.domain.Klassenstufe;
 import de.egladil.web.mkbiza_api.domain.aufgaben.AufgabenService;
-import de.egladil.web.mkbiza_api.domain.aufgaben.MinikaenguruAufgabenDto;
+import de.egladil.web.mkbiza_api.domain.aufgaben.MinikaenguruKlassenstufeDto;
 import de.egladil.web.mkbiza_api.domain.aufgaben.StatistikAufgabe;
 import de.egladil.web.mkbiza_api.domain.dto.MessagePayload;
 import de.egladil.web.mkbiza_api.domain.validation.MkbizaRegexps;
@@ -152,7 +152,7 @@ public class WettbewerbeResource {
 		responseCode = "200",
 		content = @Content(
 			mediaType = "application/json",
-			schema = @Schema(implementation = MinikaenguruAufgabenDto.class)))
+			schema = @Schema(implementation = MinikaenguruKlassenstufeDto.class)))
 	@APIResponse(
 		name = "BadRequest",
 		description = "Input-Validierung ging schief.",
@@ -172,7 +172,7 @@ public class WettbewerbeResource {
 		@PathParam(value = "klassenstufe") final Klassenstufe klassenstufe) {
 	// @formatter:on
 
-		MinikaenguruAufgabenDto aufgaben = wettbewerbService.getAufgabenWettbewerb(jahr, klassenstufe);
+		MinikaenguruKlassenstufeDto aufgaben = wettbewerbService.getAufgabenWettbewerb(jahr, klassenstufe);
 
 		return Response.ok(aufgaben).build();
 	}

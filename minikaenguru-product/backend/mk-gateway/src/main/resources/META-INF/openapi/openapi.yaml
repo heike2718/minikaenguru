@@ -2675,6 +2675,9 @@ components:
           type: integer
         status:
           $ref: '#/components/schemas/WettbewerbStatus'
+        anzahlKinder:
+          format: int64
+          type: integer
         medianeJeKlassenstufe:
           type: array
           items:

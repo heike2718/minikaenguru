@@ -1,12 +1,6 @@
-= Ideensammlung
+== Ideensammlung
 
 Die neue Anwendung "Minikänguru in Bildern und Zahlen" ist open data, d.h. es gibt keine Zugangshürden. Sie löst die mkod-app ab.
-
-== Use Cases
-
-=== Statistik eines vergangenen Wettbewerbs darstellen
-
-Aus einer Liste vergangenen Wettbewerbe wird einer ausgewählt und man landet auf der Übersichtsseite dieses Wettbewerbs
 
 Optionen:
 
@@ -18,10 +12,9 @@ Optionen:
 
 * Liste soll zunächst nur die Aufgabennummer und das Tortendiagramm r/f/n anzeigen, damit man einen ersten visuellen Eindruck bekommt
 
-* Bei Klick auf ein Item wird das Bild der Aufgabe geladen und zusammen mit dem Tortendiagramm größer angezeigt.
+* Bei Klick auf ein Item wird das Bild der Aufgabe geladen und zusammen mit dem Tortendiagramm größer angezeigt. Das bedeutet, dass mkbiza-api die Klassenstufe des Wettbewerbs läd, auspackt, mit den r/f/n-Statistiken merged und dann zurückgibt. Der Rest kann dann komplett im Browser erfolgen. 
 
-
-
+* Aus Trafic-Gründen ist es vielleicht ratsam, die geladenen Wettbewerbe bis zum F5 im Store zu halten.
 
 == Schwellwerte für die Aufgabenkategorien
 

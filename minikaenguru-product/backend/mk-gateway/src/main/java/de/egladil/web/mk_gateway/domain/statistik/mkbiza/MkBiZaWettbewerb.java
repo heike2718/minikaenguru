@@ -23,6 +23,9 @@ public class MkBiZaWettbewerb {
 	private WettbewerbStatus status;
 
 	@JsonProperty
+	private long anzahlKinder;
+
+	@JsonProperty
 	private List<MkBiZaGruppierungsitem> medianeJeKlassenstufe = new ArrayList<>();
 
 	public MkBiZaWettbewerb() {
@@ -54,6 +57,16 @@ public class MkBiZaWettbewerb {
 				.add(new MkBiZaGruppierungsitem().withAnzahl(Long.valueOf(medianKlasseZwei)).withName("Median Klasse 2"));
 		}
 
+	}
+
+	public int getJahr() {
+
+		return jahr;
+	}
+
+	public void setAnzahlKinder(final long anzahlKinder) {
+
+		this.anzahlKinder = anzahlKinder;
 	}
 
 }

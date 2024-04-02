@@ -41,6 +41,7 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbRepository;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbeDescendingComparator;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.ProcessingException;
@@ -75,6 +76,31 @@ public class MkBiZaStatistikService {
 
 	@Inject
 	TeilnahmenRepository teilnahmenRepository;
+
+	/**
+	 * Gibt die Daten für die Übersicht über die Wettbewerbe zurüclḱ.
+	 *
+	 * @param  status
+	 *                WettbewerbStatus
+	 * @return        List
+	 */
+	public List<MkBiZaWettbewerb> loadWettbewerbeOverview() {
+
+		List<Wettbewerb> allWettbewerbe = this.wettbewerbRepository.loadWettbewerbe();
+		Collections.sort(allWettbewerbe, new WettbewerbeDescendingComparator());
+
+		List<MkBiZaWettbewerb> result = allWettbewerbe.stream()
+			.map(w -> new MkBiZaWettbewerb(w.id().jahr(), w.status(), w.medianIkids(), w.medianKlasseEins(), w.medianKlasseZwei()))
+			.toList();
+
+		for (MkBiZaWettbewerb wettbewerb : result) {
+
+			long anzahlLoesungszettel = loesungszettelRepository.anzahlForWettbewerb(new WettbewerbID(wettbewerb.getJahr()));
+			wettbewerb.setAnzahlKinder(anzahlLoesungszettel);
+		}
+
+		return result;
+	}
 
 	/**
 	 * Aggregiert die Statistikdaten für den gegebenen Wettbewerb.
@@ -207,6 +233,17 @@ public class MkBiZaStatistikService {
 		result.setTeilnehmendeSchulenGesamt(anzahlTeilnehmendeSchulen);
 
 		return result;
+	}
+
+	/**
+	 * Gibt die Anzahl
+	 *
+	 * @param  wettbewerbsjahr
+	 * @return
+	 */
+	long getAnzahlLoesungszettel(final Integer wettbewerbsjahr) {
+
+		return loesungszettelRepository.anzahlForWettbewerb(new WettbewerbID(wettbewerbsjahr));
 	}
 
 	Map<String, List<Loesungszettel>> groupByLaendern(final List<Loesungszettel> alleLoesungszettel) {

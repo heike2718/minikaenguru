@@ -27,6 +27,10 @@ public class Wettbewerb {
 	private StatusWettbewerb status;
 
 	@JsonProperty
+	@Schema(description = "Anzahl der Kinder (ist eine untere Schranke)", example = "12524")
+	private long anzahlKinder;
+
+	@JsonProperty
 	@Schema(description = "Mediane je Klassenstufe")
 	private List<Gruppierungsitem> medianeJeKlassenstufe;
 
