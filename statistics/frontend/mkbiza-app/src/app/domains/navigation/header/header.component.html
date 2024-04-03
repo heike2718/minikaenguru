@@ -1,0 +1,29 @@
+<mat-toolbar>
+
+    @if (isHandset === true) {
+    <div>
+        <button mat-icon-button (click)="onToggleSidenav()">
+            <mat-icon>menu</mat-icon>
+        </button>
+    </div>
+    } @else {
+    <a mat-button routerLink="/">
+        <mat-icon class="nav-item">home</mat-icon>
+        <span class="nav-caption">Startseite</span>
+    </a>
+
+
+    <span class="toolbar-spacer"></span>
+
+    <a mat-button href="https://mathe-jung-alt.de/minikaenguru/index.html" target="_blank"
+        matTooltip="Webseite des Minikänguru-Wettbewerbs">
+        <span class="nav-caption">Minikänguru</span>
+    </a>
+
+    <a mat-button href="https://mathe-jung-alt.de/impressum.html" target="_blank">
+        <span class="nav-caption">Impressum</span>
+    </a>
+
+    <span class="nav-caption">Version: {{version}}</span>
+    }
+</mat-toolbar>

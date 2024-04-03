@@ -1,2 +1,14 @@
-<mkbiza-home></mkbiza-home>
-<router-outlet></router-outlet>
+<mkbiza-layout>
+    <mkbiza-layout>
+        <mat-sidenav-container>
+            <mat-sidenav #sidenav mode="push" opened="false" role="navigation">
+                <mkbiza-sidenav (sidenavClose)="sidenav.close()"></mkbiza-sidenav>
+            </mat-sidenav>
+            <mat-sidenav-content>
+                <mkbiza-header (sidenavToggle)="sidenav.toggle()"></mkbiza-header>
+                <main>
+                    <router-outlet></router-outlet>
+                </main>
+            </mat-sidenav-content>
+        </mat-sidenav-container>
+</mkbiza-layout>

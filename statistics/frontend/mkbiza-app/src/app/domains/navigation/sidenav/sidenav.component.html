@@ -1,0 +1,17 @@
+<mat-nav-list (click)="onSidenavClose()">
+    <a mat-list-item routerLink="/">
+        <mat-icon>home</mat-icon>
+        <span class="nav-caption">Startseite</span>
+    </a>
+
+    <a mat-list-item href="https://mathe-jung-alt.de/minikaenguru/index.html" target="_blank">
+        <span class="nav-caption">Minikänguru</span>
+    </a>
+
+    <a mat-list-item href="https://mathe-jung-alt.de/impressum.html" target="_blank">
+        <span class="nav-caption">Impressum</span>
+    </a>
+
+    <span class="nav-caption">{{version}}</span>
+
+</mat-nav-list>

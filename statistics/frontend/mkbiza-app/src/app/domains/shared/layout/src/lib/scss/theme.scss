@@ -1,0 +1,126 @@
+/* You can add global styles to this file, and also import other style files */
+// @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+// @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+@use 'sass:map';
+@use '@angular/material' as mat;
+@include mat.core();
+
+$primary-palette: (
+  50: #e6eaf0,
+  100: #bfcbdb,
+  200: #97aac3,
+  300: #6f89aa,
+  400: #4e709a,
+  500: #2a588c,
+  600: #225083,
+  700: #194778,
+  800: #133d6b,
+  900: #0d2c53,
+  contrast: (50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: rgba(black, 0.87),
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba(black, 0.87),
+    A200: rgba(black, 0.87),
+    A400: white,
+    A700: white,
+  )
+);
+
+$secondary-palette: (
+  50: #ddfff7,
+  100: #bbfae9,
+  200: #9bf6dd,
+  300: #7defcf,
+  400: #6ae7c3,
+  500: #64dfb8,
+  600: #5dcfa9,
+  700: #55bc97,
+  800: #4fab88,
+  900: #448b6b,
+  A100: #f5f5f5,
+  A200: #eaeaeb,
+  A400: #d6d6d7,
+  A700: #838386,
+  contrast: (50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: rgba(black, 0.87),
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba(black, 0.87),
+    A200: rgba(black, 0.87),
+    A400: rgba(black, 0.87),
+    A700: white,
+  )
+);
+
+$warn-palette: (
+  50: #ffebef,
+  100: #ffcdc5,
+  200: #f0999f,
+  300: #e77179,
+  400: #f24e58,
+  500: #f83a40,
+  600: #e9313e,
+  700: #d72638,
+  800: #ca1e30,
+  900: #bb0d24,
+  contrast: (50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  )
+);
+
+$mja-primary: mat.define-palette($primary-palette, 700, 300, 900);
+$mja-accent: mat.define-palette($secondary-palette, 700, 300, 900);
+
+// The warn palette is optional (defaults to red).
+$mja-warn: mat.define-palette($warn-palette, 700);
+
+$mja-theme: mat.define-light-theme((color: (primary: $mja-primary,
+        accent: $mja-accent,
+        warn: $mja-warn,
+      ),
+      typography: mat.define-typography-config(),
+    ));
+
+@include mat.all-component-themes($mja-theme);
+
+//@import '../node_modules/material-design-icons/';
+
+// $custom-typography: mat.define-typography-config(
+//   $font-family: 'Verdana',
+//   $body-1: mat.define-typography-level(1.2rem, 1.2rem, 400),
+// );
+// @include mat.all-component-typographies($custom-typography);
+// @include mat.all-component-themes($mja-theme);
+// @include mat.strong-focus-indicators-theme($mja-theme);
+
+// // Include theme styles for core and each component used in your app.
+// // Alternatively, you can import and @include the theme mixins for each component
+// // that you are using.
+// @include angular-material-theme($custom-typography);
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+
+// ========================================================================================================================================

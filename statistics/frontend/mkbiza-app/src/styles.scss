@@ -1,1 +1,308 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+    margin: 0;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 1.0rem;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+a,
+.link {
+    color: #467096;
+}
+
+.centered {
+    text-align: center;
+}
+
+h1 {
+    font-weight: bold;
+    font-size: 1.3rem;
+}
+
+h2 {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.bordered {
+    border: 1px solid;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+.bordered-red {
+    border: 1px solid;
+    border-radius: 4px;
+    padding: 5px;
+    color: red;
+}
+
+.badge-green {
+    background-color: green;
+    color: white;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.badge-blue {
+    background-color: blue;
+    color: white;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.badge-orange {
+    background-color: rgba(255, 145, 0, 0.692);
+    color: white;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.badge-white {
+    background-color: white;
+    color: black;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.badge-beige {
+    background-color: beige;
+    color: black;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.bg-white {
+    background-color: white;
+}
+
+.bg-beige {
+    background-color: beige !important;
+}
+
+.bg-gray {
+    background-color: rgb(233, 232, 232) !important;
+}
+
+.bg-light-blue {
+    background-color: #d7e6f4;
+}
+
+.btn {
+    width: 160px;
+    margin: 10px;
+}
+
+.unselectable-font {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.cursor-not-allowed {
+    cursor: not-allowed
+}
+
+mat-icon .clickable {
+    cursor: pointer;
+}
+
+.block {
+    display: block;
+}
+
+.formcontrol-hint {
+    font-size: small;
+    margin-left: 1rem;
+}
+
+.hint {
+    font-size: small;
+    color: #467096;
+}
+
+.hint-red {
+    font-size: small;
+    color: red;
+}
+
+.mat-mdc-select-arrow {
+    width: 20px !important;
+}
+
+.mat-sort-header-container {
+    display: flex !important;
+    cursor: pointer !important;
+    align-items: baseline !important;
+    letter-spacing: normal !important;
+    outline: 0 !important;
+}
+
+.mt-1 {
+    margin-top: 1rem;
+}
+
+.mt-2 {
+    margin-top: 2rem;
+}
+
+.mb-1 {
+    margin-bottom: 1rem;
+}
+
+.mb-2 {
+    margin-bottom: 2rem;
+}
+
+.mr-1 {
+    margin-right: 1rem;
+}
+
+.mr-2 {
+    margin-right: 2rem;
+}
+
+.ml-1 {
+    margin-left: 1rem;
+}
+
+.ml-2 {
+    margin-left: 2rem;
+}
+
+.m-1 {
+    margin: 1rem;
+}
+
+.p-5 {
+    padding: 5px;
+}
+
+.p-10 {
+    padding: 10px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+mat-card {
+    width: 80%;
+    min-width: 600px;
+    margin: 26px;
+    align-items: center;
+    padding: 20px;
+}
+
+mat-form-field {
+    width: 100% !important;
+}
+
+mat-card-actions>button {
+    margin: 1em;
+}
+
+.mja-container mat-form-field+mat-form-field {
+    margin-left: 8px;
+}
+
+.mja-container form {
+    margin-bottom: 20px;
+}
+
+.mja-container form>* {
+    margin: 12px 0;
+}
+
+.mja-container .mat-radio-button {
+    margin: 0 12px;
+}
+
+.mja-form {
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+mat-card-content,
+mat-dialog-content {
+    width: 100%;
+}
+
+.block {
+    display: block;
+}
+
+.grid-container-1 {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 1fr);
+    margin-left: 2rem;
+    grid-gap: 2rem;
+}
+
+.grid-container-2 {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    margin-left: 2rem;
+    grid-gap: 2rem;
+}
+
+.button-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(20em, 1fr));
+    align-items: center;
+    margin-left: 2rem;
+    grid-gap: 2rem;
+}
+
+label {
+    font-weight: bold;
+}
+
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: red;
+    color: white;
+    text-align: center;
+}
+
+/* styles.css (or your component-specific styles file) */
+.hover-details {
+    position: fixed;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1; /* Ensure the tooltip is above other elements */
+    max-width: 600px; /* Set a maximum width for the tooltip */
+    max-height: 400px; /* Set a maximum height for the tooltip */
+    overflow-y: auto; /* Add scrollbar for overflow-y (vertical) */
+    white-space: pre-wrap; /* Allow line breaks */
+  }
+  
+  /* Optional: Add transition for a smoother appearance */
+  .hover-details {
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  /* Hide the tooltip by default */
+  .hover-details.hidden {
+    display: none;
+  }
+  
+  /* Show the tooltip when active */
+  .hover-details.active {
+    display: block;
+    opacity: 1;
+  }
+

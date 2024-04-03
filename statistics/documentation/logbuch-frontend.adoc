@@ -150,14 +150,16 @@ Nach prefix suchen und dort app  durch das spezifischere prefix ergänzen.
 
 [source,cli]
 ----
-npm install --save @ngrx/store @ngrx/router-store @ngrx/store-devtools ngrx-store-localstorage @ngrx/effects
-npm install --save-dev @ngrx/eslint-plugin
-npm install --save @angular/material material-icons
-npm install --save angular2-uuid
-npm install --save ng2-charts
+npm i @ngrx/store @ngrx/router-store @ngrx/store-devtools ngrx-store-localstorage @ngrx/effects
+npm i @ngrx/eslint-plugin -D
+npm i @angular/material material-icons
+npm i angular2-uuid
+npm i ng2-charts
 ----
 
 === Sheriff einbinden
+
+Kleines feines [Tutorial](https://angular-camp.de/blog/strategic-design-mit-sheriff-und-standalone/)
 
 Sheriff ist ein tool, das ungewünschte direkte dependencies und damit zyklische Abhänigkeiten verhindert.
 
@@ -168,3 +170,58 @@ npm i @softarc/sheriff-core @softarc/eslint-plugin-sheriff -D
 
 Anschließend in .eslint.rc einbinden:
 
+[source,json,source-file=".eslint.rc"]
+----
+{
+  [...],
+  "overrides": [
+    [...]
+    {
+      "files": ["*.ts"],
+      "extends": ["plugin:@softarc/sheriff/default"]
+    }
+  ]
+}
+----
+
+Sheriff-Konfigurationsdatei sheriff.config.ts im root-Verzeichnis anlegen und mit der Kopie aus dem Tutorial füllen.
+
+=== shared-Libs sollen in ein eigenes Unterverzeichnis
+
+[src,cli]
+----
+cd src/app/domains
+mkdir shared 
+----
+
+=== Material-Layout in eine layout-Lib
+
+[src,cli]
+----
+npx nx generate @nx/angular:library --name=layout --directory=src/app/domains/shared/layout --projectNameAndRootFormat=as-provided --style=scss --tags=domain:shared --no-interactive --dry-run 
+----
+
+Dann theme aus mja-ws kopiert.
+
+*Konfiguration:* in project.json:
+
+[src,json,source-file="project.json"]
+----
+
+----
+
+=== Seitenlayout
+
+==== sidenav
+
+[source,cli]
+----
+npx nx generate @nx/angular:component --name=sidenav --directory=src/app/domains/navigation/sidenav --nameAndDirectoryFormat=as-provided --style=scss --no-interactive 
+----
+
+==== header
+
+[source,cli]
+----
+npx nx generate @nx/angular:component --name=header --directory=src/app/domains/navigation/header --nameAndDirectoryFormat=as-provided --style=scss --no-interactive 
+----
