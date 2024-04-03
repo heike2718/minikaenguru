@@ -8,3 +8,4 @@
 include::navigation.adoc[]
 include::ideensammlung.adoc[]
 include::logbuch-frontend.adoc[]
+include::troubleshooting.adoc[]

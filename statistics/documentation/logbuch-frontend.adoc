@@ -20,6 +20,15 @@ npm install --save angular2-uuid
 npm install --save ng2-charts
 ----
 
+=== default package
+
+[source,json,source-file="nx.json"]
+----
+  },
+  "defaultProject": "mkbiza-app"
+}
+----
+
 === scripts hinzugefügt
 
 [source,json,source-file="package.json"]
@@ -39,6 +48,120 @@ npm install --save ng2-charts
   },
 
 ----
+
+=== buildprofile einrichten
+
+Im root-Verzeichnis des workspaces einen Verzeichnisbaum
+
+----
+mkbiza-ws
+|-- apps
+|-- build-env
+    |-- mkbiza-app
+        |-- environment.a300.ts
+        |-- environment.local.ts
+        |-- index.a300.html
+        |-- index.prod.html
+----
+
+Diese Files werden in project.json verwendet, um die dev-Files zu ersetzen.
+
+Die Profile werden im project.json der app konfiguriert: 
+
+----
+mkbiza-ws
+|-- apps
+    |-- mkbiza-app
+        |-- src
+        |-- project.json
+----
+
+
+[source,json,source-file="project.json"]
+----
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "index": {
+            "input": "build-env/mkbiza-app/index.prod.html",
+            "output": "index.html"
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/mkbiza-app/src/environments/environment.ts",
+              "with": "apps/mkbiza-app/src/environments/environment.prod.ts"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "local": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "fileReplacements": [
+            {
+              "replace": "apps/mkbiza-app/src/environments/environment.ts",
+              "with": "build-env/mkbiza-app/environment.local.ts"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "a300": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "index": {
+            "input": "build-env/mkbiza-app/index.a300.html",
+            "output": "index.html"
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/mkbiza-app/src/environments/environment.ts",
+              "with": "build-env/mkbiza-app/environment.a300.ts"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      }
+----
+
 
 === shared lib
 

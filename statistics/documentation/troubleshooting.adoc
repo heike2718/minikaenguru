@@ -1,0 +1,20 @@
+== Fehlersituationen und deren Behebung
+
+=== npm install: package corrupted
+
+npm install endet mit fehler
+
+----
+npm WARN tarball tarball data for jest-cli@https://registry.npmjs.org/jest-cli/-/jest-cli-29.7.0.tgz (sha512-OVVobw2IubN/GSYsxETi+gOe7Ka59EFMR/twOU3Jb2GnKKeMGJB5SGUUrEz3SFVmkbizaSUdZUzy83sLNNQ2gZslg==) seems to be corrupted. Trying again.
+npm ERR! code EINTEGRITY
+npm ERR! sha512-OVVobw2IubN/GSYsxETi+gOe7Ka59EFMR/twOU3Jb2GnKKeMGJB5SGUUrEz3SFVmkbizaSUdZUzy83sLNNQ2gZslg== integrity checksum failed when using sha512: wanted sha512-OVVobw2IubN/GSYsxETi+gOe7Ka59EFMR/twOU3Jb2GnKKeMGJB5SGUUrEz3SFVmkbizaSUdZUzy83sLNNQ2gZslg== but got sha512-OVVobw2IubN/GSYsxETi+gOe7Ka59EFMR/twOU3Jb2GnKKeMGJB5SGUUrEz3SFVmJASUdZUzy83sLNNQ2gZslg==. (10087 bytes)
+----
+
+*so gelöst*
+
+[source,cli]
+----
+rm -rf node_modules
+npm update
+npm install
+----
