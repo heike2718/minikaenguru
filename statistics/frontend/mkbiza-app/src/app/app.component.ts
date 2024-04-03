@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { LayoutComponent } from './domains/shared/layout/src/lib/layout/layout.component';
+import { LayoutComponent } from '@mkbiza-app/layout';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { SidenavComponent } from './domains/navigation/sidenav/sidenav.component';
