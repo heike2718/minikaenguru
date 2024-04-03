@@ -19,3 +19,25 @@ npm update
 npm install
 ----
 
+=== Die sidenav toggled nicht, obwohl alle events korrekt 
+
+(das hat mich Stunden gekostet :facepalm)
+
+Muss man BrowserAnimationsModule einbinden!!!!
+
+=== Click auf den Start-Link in der Toolbar (Header) hatte keine Wirkung: HomeComponent wurde nicht angezeigt
+
+Man muss neuerdings RouterLinkWithHref importieren, überall wo man 
+
+[source,html]
+----
+<a mat-button routerLink="...">
+----
+
+verwendet.
+
+=== Nachdem BrowserAnimationsModule eingebunden war, wurde die Start-Komponente nicht mehr automatisch geladen
+
+Irgendwas scheint mit der Version 17.3.0 kaputt zu sein.
+
+Habe jetzt in app.component.ts den Router eingebunden und navigiere in ngOnInit aktiv zur Startkomponente.

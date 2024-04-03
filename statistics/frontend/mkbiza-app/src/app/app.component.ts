@@ -1,14 +1,16 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit, inject } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
 import { LayoutComponent } from './domains/shared/layout/src/lib/layout/layout.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { SidenavComponent } from './domains/navigation/sidenav/sidenav.component';
 import { HeaderComponent } from './domains/navigation/header/header.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
   standalone: true,
   imports: [
+    BrowserAnimationsModule,
     MatToolbarModule,
     MatSidenavModule,
     LayoutComponent,
@@ -20,10 +22,12 @@ import { HeaderComponent } from './domains/navigation/header/header.component';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
-  opened = true;
+  #router = inject(Router);
 
-  events: string[] = [];
+  ngOnInit(): void {
+      this.#router.navigateByUrl('/');
+  }
 
 }

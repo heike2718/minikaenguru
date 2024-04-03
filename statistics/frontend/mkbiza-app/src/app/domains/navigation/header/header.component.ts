@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { RouterLinkWithHref } from '@angular/router';
 
 @Component({
   selector: 'mkbiza-header',
@@ -15,7 +16,8 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
     MatListModule,
     MatToolbarModule,
     MatTooltipModule,
-    NgIf
+    NgIf,
+    RouterLinkWithHref
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',

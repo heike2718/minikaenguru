@@ -4,7 +4,6 @@ import { HomeComponent } from './domains/home/home.component';
 export const appRoutes: Routes = [
     {
       path: '',
-      // canActivate: [UserLoaderGuard],
       children: [
         {
           path: '',
