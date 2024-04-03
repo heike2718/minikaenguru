@@ -225,3 +225,6 @@ npx nx generate @nx/angular:component --name=sidenav --directory=src/app/domains
 ----
 npx nx generate @nx/angular:component --name=header --directory=src/app/domains/navigation/header --nameAndDirectoryFormat=as-provided --style=scss --no-interactive 
 ----
+
+
+=== Config-Lib
