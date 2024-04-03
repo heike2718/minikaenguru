@@ -4,10 +4,8 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'mkbiza-home',
   standalone: true,
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
+  styleUrl: './home.component.scss',
 })
 export class HomeComponent {}

@@ -4,30 +4,10 @@ Hier die Befehle zum Generieren von Dingen für das Frontend
 
 [source,cli]
 ----
-npx create-nx-workspace@latest mkbiza-ws
+npx create-nx-workspace@latest mkbiza-app
 ----
 
-Habe mich für ein integrated monorepo entschieden, weil ich dann den app-namen wählen konnte. Möglicherweise kann man webpack auch bei einem singleproject das Ergebnis nicht app zu nennen, aber inzwischen kenne ich mich mit monorepos besser aus.
-
-=== npm-Pakete hinzugefügt
-
-[source,cli]
-----
-npm install --save @ngrx/store @ngrx/router-store @ngrx/store-devtools ngrx-store-localstorage @ngrx/effects
-npm install --save-dev @ngrx/eslint-plugin
-npm install --save @angular/material material-icons
-npm install --save angular2-uuid
-npm install --save ng2-charts
-----
-
-=== default package
-
-[source,json,source-file="nx.json"]
-----
-  },
-  "defaultProject": "mkbiza-app"
-}
-----
+Habe mich für ein stanalone project entschieden, weil es ein sehr überschaubares kleines Angular-Projekt ist, von dem ich keinerlei libs irgendwo verwenden werde.
 
 === scripts hinzugefügt
 
@@ -162,11 +142,29 @@ mkbiza-ws
       }
 ----
 
+=== selector prefix configuriert
 
-=== shared lib
+Nach prefix suchen und dort app  durch das spezifischere prefix ergänzen.
+
+=== npm-Pakete hinzugefügt
 
 [source,cli]
 ----
-npx nx generate library shared --dry-run
+npm install --save @ngrx/store @ngrx/router-store @ngrx/store-devtools ngrx-store-localstorage @ngrx/effects
+npm install --save-dev @ngrx/eslint-plugin
+npm install --save @angular/material material-icons
+npm install --save angular2-uuid
+npm install --save ng2-charts
 ----
+
+=== Sheriff einbinden
+
+Sheriff ist ein tool, das ungewünschte direkte dependencies und damit zyklische Abhänigkeiten verhindert.
+
+[source,cli]
+----
+npm i @softarc/sheriff-core @softarc/eslint-plugin-sheriff -D
+----
+
+Anschließend in .eslint.rc einbinden:
 

@@ -1,26 +1,23 @@
 {
   "name": "mkbiza-app",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "$schema": "node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "prefix": "mkbiza",
-  "sourceRoot": "apps/mkbiza-app/src",
+  "sourceRoot": "./src",
   "tags": [],
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/apps/mkbiza-app",
-        "index": "apps/mkbiza-app/src/index.html",
-        "main": "apps/mkbiza-app/src/main.ts",
+        "outputPath": "dist/mkbiza-app",
+        "index": "./src/index.html",
+        "main": "./src/main.ts",
         "polyfills": ["zone.js"],
-        "tsConfig": "apps/mkbiza-app/tsconfig.app.json",
+        "tsConfig": "./tsconfig.app.json",
         "inlineStyleLanguage": "scss",
-        "assets": [
-          "apps/mkbiza-app/src/favicon.ico",
-          "apps/mkbiza-app/src/assets"
-        ],
-        "styles": ["apps/mkbiza-app/src/styles.scss"],
+        "assets": ["./src/favicon.ico", "./src/assets"],
+        "styles": ["./src/styles.scss"],
         "scripts": []
       },
       "configurations": {
@@ -125,13 +122,16 @@
       }
     },
     "lint": {
-      "executor": "@nx/eslint:lint"
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["./src"]
+      }
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "outputs": ["{workspaceRoot}/coverage/{projectName}"],
       "options": {
-        "jestConfig": "apps/mkbiza-app/jest.config.ts"
+        "jestConfig": "jest.config.ts"
       }
     },
     "serve-static": {
