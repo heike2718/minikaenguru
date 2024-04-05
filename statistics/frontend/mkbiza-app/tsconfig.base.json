@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@mkbiza-app/config": ["src/app/shared/config/src/index.ts"],
       "@mkbiza-app/layout": ["src/app/shared/layout/src/index.ts"]
     }
   },

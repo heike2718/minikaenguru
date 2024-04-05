@@ -186,13 +186,6 @@ Anschließend in .eslint.rc einbinden:
 
 Sheriff-Konfigurationsdatei sheriff.config.ts im root-Verzeichnis anlegen und mit der Kopie aus dem Tutorial füllen.
 
-=== HomeComponent
-
-[source,cli]
-----
-npx nx generate @nx/angular:component --name=home --directory=src/app/home --nameAndDirectoryFormat=as-provided --style=scss --no-interactive 
-----
-
 === shared-Libs sollen in ein eigenes Unterverzeichnis
 
 [src,cli]
@@ -214,7 +207,33 @@ Dann theme aus mja-ws kopiert.
 
 [src,json,source-file="project.json"]
 ----
+...
+        "assets": ["./src/favicon.ico", "./src/assets"],
+        "styles": [
+          "src/app/shared/layout/src/lib/scss/theme.scss",
+          "src/styles.scss",
+          "node_modules/material-icons/iconfont/material-icons.scss"
+        ],
+...
+----
 
+=== Locale konfigurieren in app.config.ts
+
+[src,typescript,source-file="app.config.ts"]
+----
+...
+registerLocaleData(LOCALE_ID, 'de');
+
+...
+
+providers: [
+    ...,
+    {
+      provide: MAT_DATE_LOCALE,
+      useValue: 'de-DE',
+    },
+    { provide: LOCALE_ID, useValue: 'de-DE' },
+]
 ----
 
 === Seitenlayout
@@ -233,5 +252,40 @@ npx nx generate @nx/angular:component --name=sidenav --directory=src/app/navigat
 npx nx generate @nx/angular:component --name=header --directory=src/app/navigation/header --nameAndDirectoryFormat=as-provided --style=scss --no-interactive 
 ----
 
+=== HomeComponent
+
+[source,cli]
+----
+npx nx generate @nx/angular:component --name=home --directory=src/app/home --nameAndDirectoryFormat=as-provided --style=scss --no-interactive 
+----
+
+
 
 === Config-Lib
+
+Soll einen Provider kapseln, der über environmemt initialisiert wird um environment nirgends anders extra importieren zu müssen.
+
+[src,cli]
+----
+npx nx generate @nx/angular:library --name=config --directory=src/app/shared/config --projectNameAndRootFormat=as-provided --skipModule=true --style=scss --no-interactive --dry-run
+----
+
+Dann Configuration in app.config.ts zum Provider machen:
+
+[src,typescript,source-file="app.config.ts"]
+----
+...
+  providers: [
+    ...,
+    {
+      provide: Configuration,
+      useFactory: () =>
+        new Configuration(
+          environment.baseUrl,
+          environment.assetsPath,
+          'mkbiza-app',
+          environment.production
+        ),
+    },
+  ]
+----
