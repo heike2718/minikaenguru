@@ -3,8 +3,8 @@ import { Router, RouterOutlet } from '@angular/router';
 import { LayoutComponent } from '@mkbiza-app/layout';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { SidenavComponent } from './domains/navigation/sidenav/sidenav.component';
-import { HeaderComponent } from './domains/navigation/header/header.component';
+import { SidenavComponent } from './navigation/sidenav/sidenav.component';
+import { HeaderComponent } from './navigation/header/header.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
