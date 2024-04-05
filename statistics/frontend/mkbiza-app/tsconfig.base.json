@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@mkbiza-app/layout": ["src/app/domains/shared/layout/src/index.ts"]
+      "@mkbiza-app/layout": ["src/app/shared/layout/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

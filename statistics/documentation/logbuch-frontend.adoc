@@ -186,11 +186,18 @@ Anschließend in .eslint.rc einbinden:
 
 Sheriff-Konfigurationsdatei sheriff.config.ts im root-Verzeichnis anlegen und mit der Kopie aus dem Tutorial füllen.
 
+=== HomeComponent
+
+[source,cli]
+----
+npx nx generate @nx/angular:component --name=home --directory=src/app/home --nameAndDirectoryFormat=as-provided --style=scss --no-interactive 
+----
+
 === shared-Libs sollen in ein eigenes Unterverzeichnis
 
 [src,cli]
 ----
-cd src/app/domains
+cd src/app/shared
 mkdir shared 
 ----
 
@@ -216,14 +223,14 @@ Dann theme aus mja-ws kopiert.
 
 [source,cli]
 ----
-npx nx generate @nx/angular:component --name=sidenav --directory=src/app/domains/navigation/sidenav --nameAndDirectoryFormat=as-provided --style=scss --no-interactive 
+npx nx generate @nx/angular:component --name=sidenav --directory=src/app/navigation/sidenav --nameAndDirectoryFormat=as-provided --style=scss --no-interactive 
 ----
 
 ==== header
 
 [source,cli]
 ----
-npx nx generate @nx/angular:component --name=header --directory=src/app/domains/navigation/header --nameAndDirectoryFormat=as-provided --style=scss --no-interactive 
+npx nx generate @nx/angular:component --name=header --directory=src/app/navigation/header --nameAndDirectoryFormat=as-provided --style=scss --no-interactive 
 ----
 
 

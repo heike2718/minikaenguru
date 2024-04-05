@@ -41,3 +41,14 @@ verwendet.
 Irgendwas scheint mit der Version 17.3.0 kaputt zu sein.
 
 Habe jetzt in app.component.ts den Router eingebunden und navigiere in ngOnInit aktiv zur Startkomponente.
+
+=== Nach einem refactor - move gibt es unerklärliche Fehlermeldungen beim npm start
+
+Es werden zur Beschleunigung der Entwicklung viele Dinge in .nx/cache gecached. Daher hilft es, das cache zu löschen
+
+[source,cli]
+----
+rm -ft .nx/cache
+----
+
+Vermutlich gibt es auch einen CLI- Befehl, der den cache löscht.
