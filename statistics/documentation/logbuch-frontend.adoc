@@ -385,3 +385,14 @@ dass es mal weitere davon unabhängige fachliche Dinge gibt, über die man Stati
 ----
 npx nx generate @nx/angular:component --name=wettbewerbe-overview --directory=src/app/wettbewerbe/wettbewerbe-overview --nameAndDirectoryFormat=as-provided --selector=mkbiza-wettbewerbe --no-interactive --dry-run
 ----
+
+=== Balkendiagramm mit teilnehmenden Kindern
+
+https://valor-software.com/ng2-charts/[hier] sind die Beispiele
+
+Basteln für jedes Chart eine eigene Komponente (vielleicht auch erstmal, aber vielleicht auch für immer)
+
+[src,cli]
+----
+npx nx generate @nx/angular:component --name=jahre-anzahl-kinder --directory=src/app/wettbewerbe/wettbewerbe-overview/anzahl-kinder --nameAndDirectoryFormat=as-provided --no-interactive --dry-run
+----

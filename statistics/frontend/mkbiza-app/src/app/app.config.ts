@@ -12,6 +12,7 @@ import { ErrorInterceptor, MkbizaAPIHttpInterceptor } from '@mkbiza-app/http';
 import { ErrorHandlerService } from './error/error-handler.service';
 import { provideStore } from '@ngrx/store';
 import { domainDataProvider } from '@mkbiza-app/domain-api';
+import { provideCharts, withDefaultRegisterables} from 'ng2-charts';
 
 if (environment.production) {
   enableProdMode();
@@ -42,6 +43,7 @@ export const appConfig: ApplicationConfig = {
           environment.production
         ),
     },
+    provideCharts(withDefaultRegisterables()),
     {
       provide: MAT_DATE_LOCALE,
       useValue: 'de-DE',

@@ -23,7 +23,8 @@
           "node_modules/material-icons/iconfont/material-icons.scss"
         ],
         "allowedCommonJsDependencies": [
-          "angular2-uuid"
+          "angular2-uuid",
+          "chart.js"
        ],
        "scripts": []
       },
