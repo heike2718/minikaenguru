@@ -1,3 +1,4 @@
+<mkbiza-loading-indicator></mkbiza-loading-indicator>
 <mkbiza-layout>
     <mat-sidenav-container>
         <mat-sidenav #sidenav mode="push" opened="false" role="navigation">
@@ -5,6 +6,7 @@
         </mat-sidenav>
         <mat-sidenav-content>
             <mkbiza-header (sidenavToggle)="sidenav.toggle()"></mkbiza-header>
+            <mkbiza-message></mkbiza-message>
             <main>
                 <router-outlet></router-outlet>
             </main>

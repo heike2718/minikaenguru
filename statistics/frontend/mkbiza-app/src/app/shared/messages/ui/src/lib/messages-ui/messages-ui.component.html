@@ -1,0 +1,33 @@
+@if ((messageService.message$ | async); as msg) {
+    @if (msg) {
+        <div class="mpx-1 cmn-message-section" (click)="close()">
+
+            @switch (msg.level) {
+                @case ('INFO') {
+                    <div class="mpx-1 cmn-message cmn-message-text msg-info">
+                        <mat-icon class="cmn-message-icon">check_circle</mat-icon><span class="cmn-message-text">{{ msg.message }}</span>
+                    </div>
+                }
+                @case ('WARN') {
+                    <div class="mpx-1 cmn-message cmn-message-text msg-warn">
+                        <mat-icon class="cmn-message-icon">warning</mat-icon><span class="cmn-message-text">{{ msg.message }}</span>
+                    </div>
+                }
+                @case ('ERROR') {
+                    <div class="mpx-1 cmn-message cmn-message-text msg-error">
+                        <mat-icon class="cmn-message-icon">warning</mat-icon><span class="cmn-message-text">{{ msg.message }}</span>
+                    </div>
+                }
+            }    
+        </div>
+    }
+}
+
+@if (messageService.message$ | async) {
+    <div (click)="close()" class="mpx-1">
+        <div></div>
+    </div>    
+}
+<div *ngIf="messageService.message$ | async as msg" (click)="close()" class="mpx-1">
+    <div></div>
+</div>

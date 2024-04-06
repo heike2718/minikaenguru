@@ -289,3 +289,26 @@ Dann Configuration in app.config.ts zum Provider machen:
     },
   ]
 ----
+
+=== Messages-Lib
+
+==== messages-api
+
+[src,cli]
+----
+npx nx generate @nx/angular:library --name=messages-api --directory=src/app/shared/messages/api --projectNameAndRootFormat=as-provided --skipModule=true --style=scss --no-interactive --dry-run
+----
+
+==== messages-ui
+
+[src,cli]
+----
+npx nx generate @nx/angular:library --name=messages-ui --directory=src/app/shared/messages/ui --projectNameAndRootFormat=as-provided --skipModule=true --style=scss --selector=mkbiza-message --no-interactive --dry-run
+----
+
+Das generiert eine component messages-ui.component. Dann brauchen wir hier noch den loading-indicator:
+
+[src,cli]
+----
+npx nx generate @nx/angular:component --name=loading-indicator --directory=src/app/shared/messages/ui/src/lib/loading-indicator --nameAndDirectoryFormat=as-provided --selector=mkbiza-loading-indicator --no-interactive --dry-run
+----

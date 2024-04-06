@@ -1,0 +1,45 @@
+.cmn-message-section {
+    position: absolute;
+    width: 80%;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+}
+
+.cmn-message {
+    border: 1px solid;
+    padding: 0.5em;
+    display: inline-block;
+    vertical-align: top;
+    width: 99%;
+    cursor: pointer;
+}
+
+.cmn-message-icon,
+.cmn-message-text {
+    vertical-align: middle;
+}
+
+.cmn-message-text {
+    margin-left: 10px;
+}
+
+.msg-info {
+    background-color: #bfcbdb;
+    border-color: #2a588c;
+    border-radius: 0.1em;
+}
+
+.msg-warn {
+    background-color: #fff4d7;
+    border-color: #f1bd17;
+    border-radius: 0.1em;
+}
+
+.msg-error {
+    background-color: #ffcdc5;
+    border-color: #bb0d24;
+    border-radius: 0.1em;
+}

@@ -16,7 +16,9 @@
     "baseUrl": ".",
     "paths": {
       "@mkbiza-app/config": ["src/app/shared/config/src/index.ts"],
-      "@mkbiza-app/layout": ["src/app/shared/layout/src/index.ts"]
+      "@mkbiza-app/layout": ["src/app/shared/layout/src/index.ts"],
+      "@mkbiza-app/messages-api": ["src/app/shared/messages/api/src/index.ts"],
+      "@mkbiza-app/messages-ui": ["src/app/shared/messages/ui/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
