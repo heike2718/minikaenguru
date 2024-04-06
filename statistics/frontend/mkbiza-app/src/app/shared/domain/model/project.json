@@ -1,0 +1,26 @@
+{
+  "name": "domain-model",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "src/app/shared/domain/model/src",
+  "projectType": "library",
+  "tags": ["type:model"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/src/app/shared/domain/model",
+        "main": "src/app/shared/domain/model/src/index.ts",
+        "tsConfig": "src/app/shared/domain/model/tsconfig.lib.json",
+        "assets": ["src/app/shared/domain/model/*.md"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "src/app/shared/domain/model/jest.config.ts"
+      }
+    }
+  }
+}

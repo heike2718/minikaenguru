@@ -1,0 +1,26 @@
+{
+  "name": "domain-api",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "src/app/shared/domain/api/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/src/app/shared/domain/api",
+        "main": "src/app/shared/domain/api/src/index.ts",
+        "tsConfig": "src/app/shared/domain/api/tsconfig.lib.json",
+        "assets": ["src/app/shared/domain/api/*.md"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "src/app/shared/domain/api/jest.config.ts"
+      }
+    }
+  }
+}

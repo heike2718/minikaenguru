@@ -8,8 +8,12 @@ Die Startseite enthält im oberen Bereich Balkengrafiken mit der Anzahl der Kind
 
 - jahr
 - status
-- anzahlKinder
-- medianeJeKlassenstufe (nur für beendete Wettbewerbe sind die gefüllt)
+- anzahlKinder (ist die Anzahl der Lösungszettel, also der Kinder, die definitiv teilgenommen haben)
+- medianeJeKlassenstufe (nur für beendete Wettbewerbe gefüllt)
+
+==== Komponente WettbewerbeOvierview
+
+Wird in die Home-Component eingebunden
 
 === Detailansicht eines Wettbewerbs
 
@@ -34,6 +38,10 @@ Im oberen Bereich befinden sich die diversen Diagramme. Die Klassenstufen werden
 
 Die Anzahl der Kinder ist jeweils bekannt aus "kinderJeKlassenstufe".
 
+==== Komponente WettbewerbDetails
+
+route: /wettbewerb/:id
+
 === Detailansicht einer Klassenstufe eines Wettbewerbsjahres
 
 In diese Ansicht gelangt man über die URL oder einen Click auf einen der "Klasse"-Buttons.
@@ -45,3 +53,12 @@ Darunter untereinander die Aufgabennummern mit Punkten und Strafpunkten und dem 
 Den Aufgabentext kann man sich durch Aufklappen der Akkordeonlamellen anzeigen lassen. Dann wird auch der Lösungsbuchstabe angezeigt.
 
 Das Aggregierte JSON ist ein MinikaenguruKlassenstufeDto mit eingebetteten Aufgabe-Elementen. 
+
+==== Komponente KlassenstufeDetails
+
+route: /wettbewerb/:id/klassenstufe/:id
+
+
+
+
+

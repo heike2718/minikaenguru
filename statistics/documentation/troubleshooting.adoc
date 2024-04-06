@@ -52,3 +52,27 @@ rm -ft .nx/cache
 ----
 
 Vermutlich gibt es auch einen CLI- Befehl, der den cache löscht.
+
+
+=== Fehlermeldung NG05100 beim Start der Anwendung
+
+[src,cli]
+----
+NG05100: Providers from the `BrowserModule` have already been loaded. If you need access to common directives such as NgIf and NgFor, import the `CommonModule` instead
+----
+
+_Lösung:_
+
+Siehe https://stackoverflow.com/questions/75403140/how-to-use-animations-in-an-angular-standalone-component[hier]
+
+Aus app.component.ts muss BrowserAnimationsModule entfernt werden. Stattdessen wird animations in app.config.ts wie folgt provided:
+
+[src,typescript]
+----
+import { provideAnimations } from '@angular/platform-browser/animations';
+...
+  providers: [
+    provideRouter(appRoutes),
+    provideAnimations(),
+...
+----

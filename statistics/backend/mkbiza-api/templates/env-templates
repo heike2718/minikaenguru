@@ -12,6 +12,7 @@ QUARKUS_REST_CLIENT_MKGATEWAY_URL=http://localhost:9510/mk-gateway
 #       Logging                                                                               #
 #=============================================================================================#
 QUARKUS_HTTP_ACCESS_LOG_LOG_TO_FILE=false
+QUARKUS_LOG_CATEGORY__DE_EGLADIL_MKBIZA_API_INFRASTRUCTURE_FILTERS_SPAROUTEFILTER__LEVEL=DEBUG
 
 
 #=============================================================================================#

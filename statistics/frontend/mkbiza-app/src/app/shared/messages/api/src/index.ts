@@ -1,5 +1,5 @@
 export { MessageService } from './lib/message.servive';
-export { Message,  } from './lib/messaging.model';
+export { Message,  } from './lib/messages.model';
 
 export { LoadingService } from './lib/loading.service';
 export { LoadingInterceptor } from './lib/loading.interceptor';

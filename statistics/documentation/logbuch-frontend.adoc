@@ -159,7 +159,7 @@ npm i ng2-charts
 
 === Sheriff einbinden
 
-Kleines feines [Tutorial](https://angular-camp.de/blog/strategic-design-mit-sheriff-und-standalone/)
+Kleines feines https://angular-camp.de/blog/strategic-design-mit-sheriff-und-standalone/[Tutorial]
 
 Sheriff ist ein tool, das ungewünschte direkte dependencies und damit zyklische Abhänigkeiten verhindert.
 
@@ -346,4 +346,42 @@ npx nx generate @nx/angular:library --name=http --directory=src/app/shared/http 
 
 ist der Service, bei dem alle ungefangenen Errors landen. Er wird zusammen mit den http-Interceptors in app.config.ts konfiguriert:
 
+=== Domain-Libs
 
+In diesen Libraries kommen das Model und die Services unter, die die Daten für die UI bereitstellen werden.
+
+==== domain/api
+
+[src,cli]
+----
+npx nx generate @nx/js:library --name=domain-api --directory=src/app/shared/domain/api --projectNameAndRootFormat=as-provided --unitTestRunner=jest --no-interactive --dry-run
+----
+
+==== domain/data
+
+[src,cli]
+----
+npx nx generate @nx/js:library --name=domain-data --directory=src/app/shared/domain/data --projectNameAndRootFormat=as-provided --tags=type:data --unitTestRunner=jest --no-interactive --dry-run
+----
+
+==== domain/model
+
+[src,cli]
+----
+npx nx generate @nx/js:library --name=domain-model --directory=src/app/shared/domain/model --projectNameAndRootFormat=as-provided --tags=type:model --no-interactive --dry-run 
+----
+
+
+=== Erste fachliche Komponente mit Anbindung von ngrx
+
+==== WettbewerbeOverviewComponent
+
+Dies ist die Komponente, die eine Gesamtstatistik über alle Wettbewerbe sowie die Liste der Wettbewerbe anzeigt, mit der man in die Details navigieren kann.
+
+Frage: sollen alle Komponenten in eigenen Verzeichnissen liegen? Es gibt aktuell nur die Wettbewerbe. Es ist auch nicht abzusehen,
+dass es mal weitere davon unabhängige fachliche Dinge gibt, über die man Statistiken hätte. Alles dreht sich um die Wettbewerbe.
+
+[src,cli]
+----
+npx nx generate @nx/angular:component --name=wettbewerbe-overview --directory=src/app/wettbewerbe/wettbewerbe-overview --nameAndDirectoryFormat=as-provided --selector=mkbiza-wettbewerbe --no-interactive --dry-run
+----

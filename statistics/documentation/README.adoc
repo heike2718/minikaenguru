@@ -3,7 +3,7 @@
 :author: Heike Winkelvoß
 :license: MIT
 :version: 1.0.0
-:description: https://example.com/support
+:description: Eine Anwendung, mit der man sich Statistiken des Minikänguru-Wettbewerbs anschauen kann.
 
 include::navigation.adoc[]
 include::ideensammlung.adoc[]

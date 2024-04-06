@@ -35,8 +35,6 @@ export class ErrorHandlerService implements ErrorHandler {
     }
 
     #handleAnyOtherError(error: unknown, messageService: MessageService): void {
-        messageService.error('Upsi, da ist ein unerwarteter Fehler aufgetreten');
-        // TODO: müssen das noch an die API senden
-        console.error(error);
+        messageService.error('Upsi, da ist ein unerwarteter Fehler aufgetreten. Bitte sende eine Mail an minikaenguru(at)egladil.de, am Besten mit Screenshot');
     }
 }

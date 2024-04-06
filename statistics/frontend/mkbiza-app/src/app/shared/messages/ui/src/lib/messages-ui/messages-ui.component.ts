@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'mkbiza-message',
   standalone: true,
-  imports: [CommonModule,MatIconModule],
+  imports: [CommonModule, MatIconModule],
   templateUrl: './messages-ui.component.html',
   styleUrl: './messages-ui.component.scss',
 })
@@ -18,7 +18,7 @@ export class MessagesUiComponent implements OnInit, OnDestroy {
   #messageSubscription: Subscription = new Subscription();
 
   ngOnInit(): void {
-    
+
     this.#messageSubscription = this.messageService.message$.pipe(
       debounceTime(3000),
       tap((message) => {

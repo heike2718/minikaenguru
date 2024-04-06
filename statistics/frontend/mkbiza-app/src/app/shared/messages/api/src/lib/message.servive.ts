@@ -1,7 +1,7 @@
 import { DOCUMENT } from "@angular/common";
 import { Inject, Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
-import { Message } from "./messaging.model";
+import { Message } from "./messages.model";
 
 
 @Injectable({ providedIn: 'root' })

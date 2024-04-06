@@ -25,6 +25,8 @@ export class MkbizaAPIHttpInterceptor implements HttpInterceptor {
 
     const url = this.#config.baseUrl + req.url;
 
+    console.log(url);
+
     const correlationId = generateUUID();
 
     const headers: HttpHeaders = req.headers.append('X-CLIENT-ID', this.#config.clientId).append('X-CORRELATION-ID', correlationId);
