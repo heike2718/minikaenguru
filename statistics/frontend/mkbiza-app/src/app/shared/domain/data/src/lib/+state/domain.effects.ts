@@ -1,6 +1,6 @@
 import { Injectable, inject } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { MkbizaAPIHttpService } from "../mkbiza-api-http.setvice";
+import { MkbizaAPIHttpService } from "../mkbiza-api-http.service";
 import { domainActions } from "./domain.actions";
 import { map, switchMap } from "rxjs";
 

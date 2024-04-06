@@ -10,14 +10,12 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 export class MkbizaAPIHttpService {
 
     #http = inject(HttpClient);
-    #url = 'mkbiza-api';
+    #url = '/mkbiza-api/wettbewerbe/';
 
     loadWettbewerbe(): Observable<WettbewerbOverview[]> {
 
-        const url = this.#url + '/latexlogs/';
-
+        const url = this.#url;
         const headers = new HttpHeaders().set('Accept', 'application/json');
-
         return this.#http.get<WettbewerbOverview[]>(url, { headers: headers });
     }
 
