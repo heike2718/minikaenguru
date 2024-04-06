@@ -11,6 +11,10 @@ import { tap } from 'rxjs/operators';
 import { LoadingService } from './loading.service';
 import { SILENT_LOAD_CONTEXT } from './silent-load.context';
 
+/**
+ * Aktiviert den LoadingIndicator, solange der backend-Call braucht und deaktiviert ihn, wenn der Response da ist.
+ * Deaktivieren kann man das, indem man SILENT_LOAD_CONTEXT in den request packt. 
+ */
 @Injectable()
 export class LoadingInterceptor implements HttpInterceptor {
     

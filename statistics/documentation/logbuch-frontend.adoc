@@ -306,9 +306,44 @@ npx nx generate @nx/angular:library --name=messages-api --directory=src/app/shar
 npx nx generate @nx/angular:library --name=messages-ui --directory=src/app/shared/messages/ui --projectNameAndRootFormat=as-provided --skipModule=true --style=scss --selector=mkbiza-message --no-interactive --dry-run
 ----
 
-Das generiert eine component messages-ui.component. Dann brauchen wir hier noch den loading-indicator:
+Das generiert eine component messages-ui.component. 
+
+==== Loading indicator
+
+Dann brauchen wir hier noch den loading-indicator
 
 [src,cli]
 ----
 npx nx generate @nx/angular:component --name=loading-indicator --directory=src/app/shared/messages/ui/src/lib/loading-indicator --nameAndDirectoryFormat=as-provided --selector=mkbiza-loading-indicator --no-interactive --dry-run
 ----
+
+Dieser wird mittels eines LoadingInterceptors mit allen http-Calls aktiviert und deaktviert, es sei denn, man schaltet das aktiv aus, indem man folgenden Context mitgibt:
+
+[src,typescript]
+----
+this.#httpClient.get<XDto>('/mkbiza-api/bla', {context: new HttpContext().set(SILENT_LOAD_CONTEXT, true)})
+----
+
+Der LoadingInterceptor hat Zugriff auf den HttpContext und damit das Flag SILENT_LOAD_CONTEXT. Es startet den LoadingIndicator nur dann, wenn SILENT_LOAD_CONTEXT !== true ist.
+
+
+=== util-lib
+
+[src,cli]
+----
+npx nx generate @nx/angular:library --name=util --directory=src/app/shared/util --projectNameAndRootFormat=as-provided --skipModule=true --style=scss --no-interactive --dry-run
+----
+
+
+=== http-Lib
+
+[src,cli]
+----
+npx nx generate @nx/angular:library --name=http --directory=src/app/shared/http --projectNameAndRootFormat=as-provided --skipModule=true --style=scss --no-interactive --dry-run
+----
+
+=== ErrorHandlerService
+
+ist der Service, bei dem alle ungefangenen Errors landen. Er wird zusammen mit den http-Interceptors in app.config.ts konfiguriert:
+
+
