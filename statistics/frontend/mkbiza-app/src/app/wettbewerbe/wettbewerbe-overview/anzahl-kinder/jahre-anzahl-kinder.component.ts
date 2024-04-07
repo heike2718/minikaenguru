@@ -20,15 +20,10 @@ export class JahreAnzahlKinderComponent implements OnInit, OnDestroy {
   @ViewChild(BaseChartDirective) chart: BaseChartDirective<'bar'> | undefined;
 
   #domainFacade = inject(DomainFacade);
-
   #combinedDataSubscription = new Subscription();
 
-  initialized = false;
-
   barChartOptions!: ChartConfiguration<'bar'>['options'];
-
   barChartType = 'bar' as const;
-
   barChartData!: ChartData<'bar'>;
 
   ngOnInit(): void {
@@ -49,6 +44,7 @@ export class JahreAnzahlKinderComponent implements OnInit, OnDestroy {
             legend: {
               display: true,
             },
+            // datalabels are not supported any more :(
             // datalabels: {
             //   anchor: 'end',
             //   align: 'end',
@@ -57,10 +53,6 @@ export class JahreAnzahlKinderComponent implements OnInit, OnDestroy {
         };
         
         this.barChartData = {...chartData};
-        this.initialized = true;
-
-        
-
       }
     });
   }
