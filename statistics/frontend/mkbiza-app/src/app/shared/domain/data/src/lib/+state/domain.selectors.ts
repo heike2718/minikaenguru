@@ -8,6 +8,12 @@ const wettbewerbe = createSelector(
     (state) => state.wettbewerbe
 );
 
+const jahreAnzahlKinder = createSelector(
+    selectDomainState,
+    (state) => state.chartDataJahreAnzahlKinder
+);
+
 export const fromDomain = {
-    wettbewerbe
+    wettbewerbe,
+    jahreAnzahlKinder
 };
