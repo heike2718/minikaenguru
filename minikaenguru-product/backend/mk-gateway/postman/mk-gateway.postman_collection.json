@@ -255,6 +255,35 @@
 					]
 				}
 			]
+		},
+		{
+			"name": "prod",
+			"item": [
+				{
+					"name": "prod - Mediane",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "https://mathe-jung-alt.de/mk-gateway/open-data/statistik/2024/mediane"
+					},
+					"response": []
+				},
+				{
+					"name": "prod - Gesamtpunktverteilung -XML",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/xml",
+								"type": "default"
+							}
+						],
+						"url": "https://mathe-jung-alt.de/mk-gateway/open-data/statistik/2023/IKID/xml"
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
