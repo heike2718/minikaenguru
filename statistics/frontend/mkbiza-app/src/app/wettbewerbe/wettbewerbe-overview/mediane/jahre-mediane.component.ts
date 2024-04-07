@@ -1,21 +1,18 @@
 import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { CommonModule, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ChartConfiguration, ChartData } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { DomainFacade } from '@mkbiza-app/domain-api';
 import { Subscription, combineLatest } from 'rxjs';
-// import DatalabelsPlugin from 'chartjs-plugin-datalabels';
-
-// https://valor-software.com/ng2-charts/bar
 
 @Component({
-  selector: 'mkbiza-jahre-anzahl-kinder',
+  selector: 'mkbiza-jahre-mediane',
   standalone: true,
   imports: [CommonModule, BaseChartDirective],
-  templateUrl: './jahre-anzahl-kinder.component.html',
-  styleUrl: './jahre-anzahl-kinder.component.scss',
+  templateUrl: './jahre-mediane.component.html',
+  styleUrl: './jahre-mediane.component.scss',
 })
-export class JahreAnzahlKinderComponent implements OnInit, OnDestroy {
+export class JahreMedianeComponent implements OnInit, OnDestroy{
 
   @ViewChild(BaseChartDirective) chart: BaseChartDirective<'bar'> | undefined;
 
@@ -28,7 +25,7 @@ export class JahreAnzahlKinderComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.#combinedDataSubscription = combineLatest([this.#domainFacade.wettbewerbe$, this.#domainFacade.jahreAnzahlKinder$])
+    this.#combinedDataSubscription = combineLatest([this.#domainFacade.wettbewerbe$, this.#domainFacade.jahreMediane$])
     .subscribe(([wettbewerbe, chartData]) => {
       if (wettbewerbe.length > 0) {
         
@@ -42,7 +39,7 @@ export class JahreAnzahlKinderComponent implements OnInit, OnDestroy {
           },
           plugins: {
             legend: {
-              display: false,
+              display: true,
             },
             // datalabels are not supported any more :(
             // datalabels: {

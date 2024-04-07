@@ -1,16 +1,15 @@
 import { createFeature, createReducer, on } from "@ngrx/store";
 import { domainActions } from "./domain.actions";
-import { WettbewerbOverview, mapToChartDataJahrAnzahlKinder } from "@mkbiza-app/domain-model";
-import { ChartData } from 'chart.js';
+import { StatistikJahreChartData, WettbewerbOverview, mapToChartDataJahreAnzahlKinder, mapToChartDataJahreKinderKlassenstufe, mapToChartDataJahreMediane } from "@mkbiza-app/domain-model";
 
 export interface DomainState {
     readonly wettbewerbe: WettbewerbOverview[];
-    readonly chartDataJahreAnzahlKinder: ChartData<'bar'> | undefined;
+    readonly statistikJahreChartData: StatistikJahreChartData | undefined;
 };
 
 const initialDomainState: DomainState = {
     wettbewerbe: [],
-    chartDataJahreAnzahlKinder: undefined
+    statistikJahreChartData: undefined    
 };
 
 export const domainFeature = createFeature({
@@ -19,10 +18,18 @@ export const domainFeature = createFeature({
         initialDomainState,
         on(domainActions.wETTBEWERBE_LOADED, (state, action): DomainState => {
 
-            const wettbewerbe = action.wettbewerbe;
-            const chartData = mapToChartDataJahrAnzahlKinder(wettbewerbe);
+            const wettbewerbe = action.wettbewerbe;            
+            const statistikJahreChartData: StatistikJahreChartData = {
+                chartDataJahreAnzahlKinder: mapToChartDataJahreAnzahlKinder(wettbewerbe),
+                chartDataJahreKinderKlassenstufe: mapToChartDataJahreKinderKlassenstufe(wettbewerbe),
+                chartDataJahreMediane: mapToChartDataJahreMediane(wettbewerbe)
+            }
 
-            return { ...state, wettbewerbe: action.wettbewerbe, chartDataJahreAnzahlKinder: chartData }
+            return {
+                ...state,
+                wettbewerbe: action.wettbewerbe,
+                statistikJahreChartData: statistikJahreChartData
+            }
         })
     )
 });

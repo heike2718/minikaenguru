@@ -8,7 +8,7 @@ import {
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Configuration } from '@mkbiza-app/config';
-import { generateUUID } from '@mkbiza-app/util';
+import { UUID } from 'angular2-uuid';
 
 /**
  * Packt eine correlationId und die clientId in den Request
@@ -27,7 +27,7 @@ export class MkbizaAPIHttpInterceptor implements HttpInterceptor {
 
     console.log(url);
 
-    const correlationId = generateUUID();
+    const correlationId = this.#generateUUID();
 
     const headers: HttpHeaders = req.headers.append('X-CLIENT-ID', this.#config.clientId).append('X-CORRELATION-ID', correlationId);
 
@@ -37,5 +37,10 @@ export class MkbizaAPIHttpInterceptor implements HttpInterceptor {
         url: url
       })
     );
+  }
+
+  #generateUUID(): string {
+
+    return UUID.UUID();
   }
 }

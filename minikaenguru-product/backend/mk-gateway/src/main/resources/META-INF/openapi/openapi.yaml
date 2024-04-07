@@ -1345,8 +1345,9 @@ paths:
     get:
       tags:
       - Mk Bi Za Resource
-      summary: Gibt Infos über die API zurück.
-      operationId: getInfos
+      summary: "Gibt die Daten aller Wettbewerbe zurück, die für jahresübergreifende\
+        \ Statistiken nützlich sind."
+      operationId: getWettbewerbe
       responses:
         "200":
           description: OK
@@ -2678,6 +2679,10 @@ components:
         anzahlKinder:
           format: int64
           type: integer
+        kinderJeKlassenstufe:
+          type: array
+          items:
+            $ref: '#/components/schemas/MkBiZaGruppierungsitem'
         medianeJeKlassenstufe:
           type: array
           items:

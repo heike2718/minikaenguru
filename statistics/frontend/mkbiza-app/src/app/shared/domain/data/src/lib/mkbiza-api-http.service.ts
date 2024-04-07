@@ -1,6 +1,6 @@
 import { Injectable, inject } from "@angular/core";
 import { Observable } from "rxjs";
-import { WettbewerbOverview } from "../../../model/src/lib/domain-model";
+import { WettbewerbOverview } from "@mkbiza-app/domain-model";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 

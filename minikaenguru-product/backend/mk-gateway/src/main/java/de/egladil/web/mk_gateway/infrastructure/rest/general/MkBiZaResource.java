@@ -48,8 +48,8 @@ public class MkBiZaResource {
 	@Path("wettbewerbe")
 	@GET
 	@Operation(
-		operationId = "getInfos",
-		summary = "Gibt Infos über die API zurück.")
+		operationId = "getWettbewerbe",
+		summary = "Gibt die Daten aller Wettbewerbe zurück, die für jahresübergreifende Statistiken nützlich sind.")
 	@APIResponse(
 		name = "OKResponse",
 		responseCode = "200",
@@ -61,7 +61,7 @@ public class MkBiZaResource {
 		description = "Serverfehler",
 		responseCode = "500",
 		content = @Content(schema = @Schema(implementation = MessagePayload.class)))
-	public Response getWettbewerbsjahre() {
+	public Response getWettbewerbe() {
 
 		List<MkBiZaWettbewerb> wettbewerbe = statistikService.loadWettbewerbeOverview();
 

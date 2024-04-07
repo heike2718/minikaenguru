@@ -3,6 +3,8 @@ import { CommonModule, NgIf } from '@angular/common';
 import { WettbewerbeOverviewComponent } from '../wettbewerbe/wettbewerbe-overview/wettbewerbe-overview.component';
 import { JahreAnzahlKinderComponent } from '../wettbewerbe/wettbewerbe-overview/anzahl-kinder/jahre-anzahl-kinder.component';
 import { Configuration } from '@mkbiza-app/config';
+import { JahreMedianeComponent } from '../wettbewerbe/wettbewerbe-overview/mediane/jahre-mediane.component';
+import { JahreKinderKlassenstufeComponent } from '../wettbewerbe/wettbewerbe-overview/kinder-klassenstufe/jahre-kinder-klassenstufe.component';
 
 @Component({
   selector: 'mkbiza-home',
@@ -11,6 +13,8 @@ import { Configuration } from '@mkbiza-app/config';
     CommonModule,
     WettbewerbeOverviewComponent,
     JahreAnzahlKinderComponent,
+    JahreMedianeComponent,
+    JahreKinderKlassenstufeComponent,
     NgIf
   ],
   templateUrl: './home.component.html',

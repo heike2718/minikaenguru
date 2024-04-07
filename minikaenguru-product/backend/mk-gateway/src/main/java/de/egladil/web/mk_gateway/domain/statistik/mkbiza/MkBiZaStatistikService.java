@@ -95,8 +95,20 @@ public class MkBiZaStatistikService {
 
 		for (MkBiZaWettbewerb wettbewerb : result) {
 
-			long anzahlLoesungszettel = loesungszettelRepository.anzahlForWettbewerb(new WettbewerbID(wettbewerb.getJahr()));
-			wettbewerb.setAnzahlKinder(anzahlLoesungszettel);
+			List<Loesungszettel> loesungszettel = loesungszettelRepository
+				.loadAllForWettbewerb(new WettbewerbID(wettbewerb.getJahr()));
+
+			long anzahlIKIDs = loesungszettel.stream().filter(l -> l.klassenstufe() == Klassenstufe.IKID).count();
+			long anzahlEINS = loesungszettel.stream().filter(l -> l.klassenstufe() == Klassenstufe.EINS).count();
+			long anzahlZWEI = loesungszettel.stream().filter(l -> l.klassenstufe() == Klassenstufe.ZWEI).count();
+
+			List<MkBiZaGruppierungsitem> kinderJeKlassenstufe = new ArrayList<>();
+			kinderJeKlassenstufe.add(new MkBiZaGruppierungsitem().withAnzahl(anzahlIKIDs).withName("Inklusion"));
+			kinderJeKlassenstufe.add(new MkBiZaGruppierungsitem().withAnzahl(anzahlEINS).withName("Klasse 1"));
+			kinderJeKlassenstufe.add(new MkBiZaGruppierungsitem().withAnzahl(anzahlZWEI).withName("Klasse 2"));
+
+			wettbewerb.setAnzahlKinder(loesungszettel.size());
+			wettbewerb.setKinderJeKlassenstufe(kinderJeKlassenstufe);
 		}
 
 		return result;

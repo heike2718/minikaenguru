@@ -31,6 +31,10 @@ public class Wettbewerb {
 	private long anzahlKinder;
 
 	@JsonProperty
+	@Schema(description = "Kinder je Klassenstufe")
+	private List<Gruppierungsitem> kinderJeKlassenstufe;
+
+	@JsonProperty
 	@Schema(description = "Mediane je Klassenstufe")
 	private List<Gruppierungsitem> medianeJeKlassenstufe;
 

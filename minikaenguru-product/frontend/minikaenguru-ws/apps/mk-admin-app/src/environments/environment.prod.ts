@@ -5,7 +5,7 @@ export const environment = {
     apiUrl: 'https://mathe-jung-alt.de/mk-gateway/admin',
 	profileUrl: 'https://mathe-jung-alt.de/profil-app',
     storageKeyPrefix: 'mka_',
-	version: '2.4.0',
+	version: '2.4.1',
 	consoleLogActive: false,
 	serverLogActive: true,
 	loglevel: 4

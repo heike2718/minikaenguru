@@ -383,6 +383,11 @@ components:
           description: Anzahl der Kinder (ist eine untere Schranke)
           type: integer
           example: 12524
+        kinderJeKlassenstufe:
+          description: Kinder je Klassenstufe
+          type: array
+          items:
+            $ref: '#/components/schemas/Gruppierungsitem'
         medianeJeKlassenstufe:
           description: Mediane je Klassenstufe
           type: array
