@@ -24,7 +24,7 @@ import { RouterLinkWithHref } from '@angular/router';
 })
 export class HeaderComponent {
 
-  version = "1.0.0";
+  version = "1.0.1";
 
   @Output()
   sidenavToggle = new EventEmitter();

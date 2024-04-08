@@ -14,10 +14,6 @@ a,
     color: #467096;
 }
 
-.centered {
-    text-align: center;
-}
-
 h1 {
     font-weight: bold;
     font-size: 1.3rem;
@@ -28,11 +24,22 @@ h2 {
     font-size: 1.1rem;
 }
 
+.centered {
+    text-align: center;
+}
+
 .bordered {
     border: 1px solid;
     border-radius: 4px;
     padding: 5px;
 }
+
+// .chart-container {
+//     display: block;
+//     width: 200px;
+//     height: 500px;
+// }
+
 
 .bordered-red {
     border: 1px solid;
@@ -283,26 +290,30 @@ footer {
     border-radius: 4px;
     padding: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 1; /* Ensure the tooltip is above other elements */
-    max-width: 600px; /* Set a maximum width for the tooltip */
-    max-height: 400px; /* Set a maximum height for the tooltip */
-    overflow-y: auto; /* Add scrollbar for overflow-y (vertical) */
-    white-space: pre-wrap; /* Allow line breaks */
-  }
-  
-  /* Optional: Add transition for a smoother appearance */
-  .hover-details {
+    z-index: 1;
+    /* Ensure the tooltip is above other elements */
+    max-width: 600px;
+    /* Set a maximum width for the tooltip */
+    max-height: 400px;
+    /* Set a maximum height for the tooltip */
+    overflow-y: auto;
+    /* Add scrollbar for overflow-y (vertical) */
+    white-space: pre-wrap;
+    /* Allow line breaks */
+}
+
+/* Optional: Add transition for a smoother appearance */
+.hover-details {
     transition: opacity 0.3s ease-in-out;
-  }
-  
-  /* Hide the tooltip by default */
-  .hover-details.hidden {
+}
+
+/* Hide the tooltip by default */
+.hover-details.hidden {
     display: none;
-  }
-  
-  /* Show the tooltip when active */
-  .hover-details.active {
+}
+
+/* Show the tooltip when active */
+.hover-details.active {
     display: block;
     opacity: 1;
-  }
-
+}

@@ -1,0 +1,13 @@
+<h2>{{headline}}</h2>
+
+@if (isHandset) {
+    <div class="chart-container" style="position: relative; height:30vh; width:80vw">
+        <canvas id={{myCanvasId}} baseChart [data]="barChartData" [options]="barChartOptions" [type]="barChartType">
+        </canvas>
+    </div>
+} @else {
+    <div class="chart-container" style="position: relative; height:50vh; width:100vw">
+        <canvas id={{myCanvasId}} baseChart [data]="barChartData" [options]="barChartOptions" [type]="barChartType">
+        </canvas>
+    </div>
+}
