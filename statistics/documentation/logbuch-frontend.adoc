@@ -386,29 +386,24 @@ dass es mal weitere davon unabhängige fachliche Dinge gibt, über die man Stati
 npx nx generate @nx/angular:component --name=wettbewerbe-overview --directory=src/app/wettbewerbe/wettbewerbe-overview --nameAndDirectoryFormat=as-provided --selector=mkbiza-wettbewerbe --no-interactive --dry-run
 ----
 
-=== Balkendiagramm mit teilnehmenden Kindern
+=== Balkendiagramme
 
 https://valor-software.com/ng2-charts/[hier] sind die Beispiele
 
-Basteln für jedes Chart eine eigene Komponente (vielleicht auch erstmal, aber vielleicht auch für immer)
-
-==== jahre-anzahl-kinder
+==== Generische BarChart-Komponente
 
 [src,cli]
 ----
-npx nx generate @nx/angular:component --name=jahre-anzahl-kinder --directory=src/app/wettbewerbe/wettbewerbe-overview/anzahl-kinder --nameAndDirectoryFormat=as-provided --selector=mkbiza-jahre-anzahl-kinder --no-interactive --dry-run
+npx nx generate @nx/angular:component --name=generic-bar-chart --directory=src/app/wettbewerbe/wettbewerbe-overview/generic-bar-chart --nameAndDirectoryFormat=as-provided --selector=mkbiza-bar-chart --no-interactive --dry-run
 ----
 
-==== jahre-mediane
+Diese löst die 3 anderen Chart-Komponenten ab. Die ChartData und de Überschrift werden als Input übergeben.
 
-[src,cli]
-----
-npx nx generate @nx/angular:component --name=jahre-mediane --directory=src/app/wettbewerbe/wettbewerbe-overview/mediane --nameAndDirectoryFormat=as-provided --selector=mkbiza-jahre-mediane --no-interactive --dry-run
-----
+Wahrscheinlich wird es nochmal geändert. Z.B. könnten auch die ChartOptions übergeben werden, damit sie nicht überall gleich sind. Oder zumindest die Anzeige der Legende sollte dynamisch konfigurierbar werden.
 
-==== jahre-kinder-klassenstufe
+=== wettbewerb-details-component
 
 [src,cli]
 ----
-npx nx generate @nx/angular:component --name=jahre-kinder-klassenstufe --directory=src/app/wettbewerbe/wettbewerbe-overview/kinder-klassenstufe --nameAndDirectoryFormat=as-provided --selector=mkbiza-jahre-kinder-klassenstufe --no-interactive --dry-run
+npx nx generate @nx/angular:component --name=wettbewerb-details --directory=src/app/wettbewerbe/wettbewerb-details/wettbewerb-details --nameAndDirectoryFormat=as-provided --selector=mkbiza-wettbewerb --no-interactive --dry-run
 ----

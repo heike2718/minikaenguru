@@ -20,4 +20,13 @@ export class DomainEffects {
             map((wettbewerbe) => domainActions.wETTBEWERBE_LOADED({ wettbewerbe }))
         );
     });
+
+    loadWettbewerb$ = createEffect(() => {
+
+        return this.#actions.pipe(
+            ofType(domainActions.lOAD_WETTBEWERB),
+            switchMap((action) => this.#httpService.loadWettbewerb(action.jahr)),
+            map((wettbewerb) => domainActions.wETTBEWERB_LOADED({ wettbewerb }))
+        );
+    });
 };

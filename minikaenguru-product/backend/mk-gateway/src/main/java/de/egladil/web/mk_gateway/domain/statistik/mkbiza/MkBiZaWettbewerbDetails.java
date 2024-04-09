@@ -20,6 +20,9 @@ public class MkBiZaWettbewerbDetails {
 	private int jahr;
 
 	@JsonProperty
+	private boolean beendet;
+
+	@JsonProperty
 	private int anzahlKinderGesamt;
 
 	@JsonProperty
@@ -175,5 +178,10 @@ public class MkBiZaWettbewerbDetails {
 	public void addMedianeJeKlassenstufe(final MkBiZaGruppierungsitem medianJeKlassenstufe) {
 
 		this.medianeJeKlassenstufe.add(medianJeKlassenstufe);
+	}
+
+	public void setBeendet(final boolean beendet) {
+
+		this.beendet = beendet;
 	}
 }

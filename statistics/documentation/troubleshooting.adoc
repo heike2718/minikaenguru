@@ -42,6 +42,8 @@ Irgendwas scheint mit der Version 17.3.0 kaputt zu sein.
 
 Habe jetzt in app.component.ts den Router eingebunden und navigiere in ngOnInit aktiv zur Startkomponente.
 
+*update am 09.04.2024*: nachdem ich eine explizite route 'startseite' eingebaut habe, war das sinnlose Verhalten weg und ich konnte das Navigieren in app.component.ts wieder entfernen. Das ist auch gut so, denn zu den einzelnen Wettbewerben soll auch per URL navigiert werden können, so dass man sie bookmarken kann.
+
 === Nach einem refactor - move gibt es unerklärliche Fehlermeldungen beim npm start
 
 Es werden zur Beschleunigung der Entwicklung viele Dinge in .nx/cache gecached. Daher hilft es, das cache zu löschen

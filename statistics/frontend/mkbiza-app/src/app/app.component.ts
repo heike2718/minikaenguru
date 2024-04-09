@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, OnInit, inject } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Component, OnInit, inject } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { LayoutComponent } from '@mkbiza-app/layout';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -26,12 +26,9 @@ import { DomainFacade } from '@mkbiza-app/domain-api';
 })
 export class AppComponent implements OnInit {
 
-  #router = inject(Router);  
   #domainFacade = inject(DomainFacade);
 
   ngOnInit(): void {
-    this.#router.navigateByUrl('/');
-
     this.#domainFacade.loadWettbewerbe();
   }
 }

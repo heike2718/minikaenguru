@@ -25,6 +25,10 @@ public class WettbewerbDetails {
 	private int jahr;
 
 	@JsonProperty
+	@Schema(description = "Flag, ob dieser Wettbewerb beendet ist")
+	private boolean beendet;
+
+	@JsonProperty
 	@Schema(description = "untere Schranke für die Anzahl aller Kinder, die teilgenommen haben", example = "16534")
 	private int anzahlKinderGesamt;
 

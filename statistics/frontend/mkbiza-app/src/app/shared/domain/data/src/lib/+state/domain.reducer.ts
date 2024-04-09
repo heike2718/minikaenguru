@@ -1,15 +1,25 @@
 import { createFeature, createReducer, on } from "@ngrx/store";
 import { domainActions } from "./domain.actions";
-import { StatistikJahreChartData, WettbewerbOverview, mapToChartDataJahreAnzahlKinder, mapToChartDataJahreKinderKlassenstufe, mapToChartDataJahreMediane } from "@mkbiza-app/domain-model";
+import { StatistikJahreChartData,
+    WettbewerbDetailsGUIModel,
+    WettbewerbOverview,
+    mapToChartDataJahreAnzahlKinder,
+    mapToChartDataJahreKinderKlassenstufe,
+    mapToChartDataJahreMediane
+} from "@mkbiza-app/domain-model";
 
 export interface DomainState {
     readonly wettbewerbe: WettbewerbOverview[];
     readonly statistikJahreChartData: StatistikJahreChartData | undefined;
+    readonly wettbewerbdetails: WettbewerbDetailsGUIModel[];
+    readonly selectedWettbewerb: WettbewerbDetailsGUIModel | undefined;
 };
 
 const initialDomainState: DomainState = {
     wettbewerbe: [],
-    statistikJahreChartData: undefined    
+    statistikJahreChartData: undefined,
+    wettbewerbdetails: [],
+    selectedWettbewerb: undefined  
 };
 
 export const domainFeature = createFeature({
@@ -29,6 +39,15 @@ export const domainFeature = createFeature({
                 ...state,
                 wettbewerbe: action.wettbewerbe,
                 statistikJahreChartData: statistikJahreChartData
+            }
+        }),
+        on(domainActions.wETTBEWERB_LOADED, (state, action): DomainState => {
+
+            const wettbewerb = action.wettbewerb;            
+            
+
+            return {
+                ...state
             }
         })
     )

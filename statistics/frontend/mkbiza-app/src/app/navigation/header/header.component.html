@@ -7,11 +7,14 @@
         </button>
     </div>
     } @else {
-    <a mat-button routerLink="/">
-        <mat-icon class="nav-item">home</mat-icon>
-        <span class="nav-caption">Startseite</span>
-    </a>
+    <span class="nav-caption" routerLink="/startseite"><mat-icon>home</mat-icon>Startseite</span>
 
+    <button id="menuWettbewerbe" mat-menu-item [matMenuTriggerFor]="menu">Wettbewerbe</button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item *ngFor="let id of menuIds" (click)="onMenuItemClick(id)">
+            {{ id }}
+        </button>
+    </mat-menu>
 
     <span class="toolbar-spacer"></span>
 

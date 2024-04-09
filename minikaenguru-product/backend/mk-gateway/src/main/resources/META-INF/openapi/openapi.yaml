@@ -2693,6 +2693,8 @@ components:
         jahr:
           format: int32
           type: integer
+        beendet:
+          type: boolean
         anzahlKinderGesamt:
           format: int32
           type: integer

@@ -139,6 +139,7 @@ public class MkBiZaStatistikService {
 
 		MkBiZaWettbewerbDetails result = new MkBiZaWettbewerbDetails();
 		result.setJahr(jahr);
+		result.setBeendet(wettbewerb.isBeendet());
 
 		List<Loesungszettel> alleLoesungszettel = loesungszettelRepository.loadAllForWettbewerb(wettbewerb.id());
 		List<Teilnahme> anmeldungen = teilnahmenRepository.loadAllForWettbewerb(wettbewerb.id());

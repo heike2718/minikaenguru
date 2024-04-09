@@ -23,9 +23,27 @@ const jahreKinderKlassenstufe = createSelector(
     (state) => state.statistikJahreChartData?.chartDataJahreKinderKlassenstufe
 );
 
+const wettbewerbdetails = createSelector(
+    selectDomainState,
+    (state) => state.wettbewerbdetails
+);
+
+const selectedWettbewerb = createSelector(
+    selectDomainState,
+    (state) => state.selectedWettbewerb
+);
+
+const wettbewerbIDs = createSelector(
+    selectDomainState,
+    (state) => state.wettbewerbe.map(w => w.jahr)
+);
+
 export const fromDomain = {
     wettbewerbe,
     jahreAnzahlKinder,
     jahreKinderKlassenstufe,
-    jahreMediane
+    jahreMediane,
+    wettbewerbdetails,
+    selectedWettbewerb,
+    wettbewerbIDs
 };

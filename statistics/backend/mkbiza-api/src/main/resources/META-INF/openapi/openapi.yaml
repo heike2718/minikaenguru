@@ -403,6 +403,9 @@ components:
           description: Wettbewerbsjahr
           type: integer
           example: 2020
+        beendet:
+          description: "Flag, ob dieser Wettbewerb beendet ist"
+          type: boolean
         anzahlKinderGesamt:
           format: int32
           description: "untere Schranke für die Anzahl aller Kinder, die teilgenommen\

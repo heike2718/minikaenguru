@@ -30,3 +30,34 @@ export interface StatistikJahreChartData {
   readonly chartDataJahreMediane: ChartData<'bar'> | undefined;
 }
 
+export interface WettbewerbDetails {
+  readonly jahr: number;
+  readonly beendet: boolean;
+  readonly anzahlKinderGesamt: number;
+  readonly anzahlPrivatanmeldungen: number;
+  readonly anzahlSchulanmeldungen: number;
+  readonly teilnehmendeSchulenGesamt: number;
+  readonly klassenstufen: Klassenstufe[];
+  readonly schulenJeLand: Gruppierungsitem;
+  readonly schulkinderJeLand: Gruppierungsitem;
+  readonly kinderJeTeilnahmeart: Gruppierungsitem;
+  readonly kinderJeKlassenstufe: Gruppierungsitem;
+  readonly kinderJeSprache: Gruppierungsitem;
+  readonly medianeJeKlassenstufe: Gruppierungsitem;
+};
+
+export interface StatistikWettbewerbChartData {
+  readonly chartDataSchulenJeLand: ChartData<'bar'> | undefined;
+  readonly chartDataKinderJeLand: ChartData<'bar'> | undefined;
+  readonly chartDataKinderJeTeilnahmeart: ChartData<'pie'> | undefined;
+  readonly chartDataKinderJeKlassenstufe: ChartData<'pie'> | undefined;
+  readonly chartDataKinderJeSprache: ChartData<'pie'> | undefined;
+  readonly chartDataMedianMaxPunktzahlIKID: ChartData<'pie'> | undefined;
+  readonly chartDataMedianMaxPunktzahlEINS: ChartData<'pie'> | undefined;
+  readonly chartDataMedianMaxPunktzahlZWEI: ChartData<'pie'> | undefined;
+};
+
+export interface WettbewerbDetailsGUIModel {
+  readonly wettbewerb: WettbewerbDetails;
+  readonly chartData: StatistikWettbewerbChartData;
+};
