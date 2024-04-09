@@ -264,7 +264,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "https://mathe-jung-alt.de/mk-gateway/open-data/statistik/2024/mediane"
+						"url": "https://mathe-jung-alt.de/mk-gateway/open-data/statistik/2022/mediane"
 					},
 					"response": []
 				},
