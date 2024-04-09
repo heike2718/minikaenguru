@@ -4,6 +4,10 @@ import { DomainFacade } from '@mkbiza-app/domain-api';
 import { Subscription, combineLatest } from 'rxjs';
 import { ChartData } from "chart.js";
 import { GenericBarChartComponent } from '../generic-bar-chart/generic-bar-chart.component';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+
 @Component({
   selector: 'mkbiza-wettbewerbe',
   standalone: true,
@@ -11,7 +15,8 @@ import { GenericBarChartComponent } from '../generic-bar-chart/generic-bar-chart
     CommonModule,
     NgIf,
     NgFor,
-    GenericBarChartComponent
+    GenericBarChartComponent,
+    MatButtonModule
   ],
   templateUrl: './wettbewerbe-overview.component.html',
   styleUrl: './wettbewerbe-overview.component.scss',
@@ -24,6 +29,7 @@ export class WettbewerbeOverviewComponent implements OnInit, OnDestroy{
   chartDataMediane!: ChartData<'bar'>;
 
 
+  #router = inject(Router);
   #combinedDataSubscription = new Subscription();
 
   ngOnInit(): void {
@@ -51,6 +57,16 @@ export class WettbewerbeOverviewComponent implements OnInit, OnDestroy{
 
   ngOnDestroy(): void {
     this.#combinedDataSubscription.unsubscribe();
+  }
+
+  #breakpointObserver = inject(BreakpointObserver);
+
+  get isHandset(): boolean {
+    return this.#breakpointObserver.isMatched(Breakpoints.Handset);
+  }
+
+  onWettbewerbClick(id: number): void {
+    this.#router.navigate(['/wettbewerbe', id]);
   }
 
 }

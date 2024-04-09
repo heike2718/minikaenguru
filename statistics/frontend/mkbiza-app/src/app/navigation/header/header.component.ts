@@ -50,7 +50,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   onMenuItemClick(id: number): void {
-    console.log('jetzt zu Wettbewerb ' + id + ' navigieren');
     this.#router.navigate(['/wettbewerbe', id]);
   }
 

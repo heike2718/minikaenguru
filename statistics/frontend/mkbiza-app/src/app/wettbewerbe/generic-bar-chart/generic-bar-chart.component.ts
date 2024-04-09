@@ -2,10 +2,7 @@ import { Component, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular
 import { CommonModule, NgIf } from '@angular/common';
 import { ChartConfiguration, ChartData } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
-import { DomainFacade } from '@mkbiza-app/domain-api';
-import { Subscription, combineLatest } from 'rxjs';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { WettbewerbOverview } from '@mkbiza-app/domain-model'
 
 @Component({
   selector: 'mkbiza-bar-chart',
