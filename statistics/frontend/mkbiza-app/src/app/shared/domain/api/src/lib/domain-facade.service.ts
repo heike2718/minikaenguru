@@ -36,7 +36,7 @@ export class DomainFacade {
             take(1)
         ).subscribe((wettbewerbe: WettbewerbDetailsGUIModel[]) => {
             // const wettbewerbLoaded = wettbewerbe.some(w => w.wettbewerb.jahr === jahr);
-            const filtered = wettbewerbe.filter(w => w.wettbewerb.jahr === jahr);
+            const filtered = wettbewerbe.filter(g => '' + g.wettbewerb.jahr === '' + jahr);
             if (filtered.length === 1 && filtered[0].wettbewerb.beendet) {                
                 this.#store.dispatch(domainActions.sELECT_WETTBEWERBDETAILS({wettbewerbGUIModel: filtered[0]}));
             } else {

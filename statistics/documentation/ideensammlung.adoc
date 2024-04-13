@@ -16,6 +16,15 @@ Optionen:
 
 * Aus Trafic-Gründen ist es vielleicht ratsam, die geladenen Wettbewerbe bis zum F5 im Store zu halten.
 
+
+=== Weitere Statistiken
+
+* je Aufgabe: Anzahl Antworten zu jedem Antwortbuchstaben als Balkendiagramm
+
+* Anzahl Kinder je Punktintervall
+
+* Rohpunkte irgendwie auflisten (als Tabelle oder als gekippte Balkengrafik)
+
 == Schwellwerte für die Aufgabenkategorien
 
 * Kategorie A: [80,100]

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild, booleanAttribute, inject } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { ChartConfiguration, ChartData } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
@@ -7,11 +7,11 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 @Component({
   selector: 'mkbiza-bar-chart',
   standalone: true,
-  imports: [CommonModule,BaseChartDirective,NgIf],
+  imports: [CommonModule, BaseChartDirective, NgIf],
   templateUrl: './generic-bar-chart.component.html',
   styleUrl: './generic-bar-chart.component.scss',
 })
-export class GenericBarChartComponent {
+export class GenericBarChartComponent implements OnInit {
 
   @ViewChild(BaseChartDirective) chart: BaseChartDirective<'bar'> | undefined;
 
@@ -19,36 +19,40 @@ export class GenericBarChartComponent {
   headline = '';
 
   @Input()
-  barChartData!: ChartData<'bar'>;
+  chartData!: ChartData<'bar'>;
 
   @Input()
   myCanvasId: string = '';
 
-  barChartType = 'bar' as const;
+  @Input({transform: booleanAttribute})
+  showLegend!: boolean;
 
-  barChartOptions: ChartConfiguration<'bar'>['options'] = {
-    maintainAspectRatio: false,
-    responsive: true,
-    // We use these empty structures as placeholders for dynamic theming.
-    scales: {
-      x: {},
-      y: {
-        min: 0,
-      },
-    },
-    plugins: {
-      legend: {
-        display: true,
-      },
-      // datalabels are not supported any more :(
-      // datalabels: {
-      //   anchor: 'end',
-      //   align: 'end',
-      // },
-    },
-  };
+  chartOptions!: ChartConfiguration<'bar'>['options'];
 
   #breakpointObserver = inject(BreakpointObserver);
+
+  ngOnInit(): void {
+
+    this.chartOptions = {
+      maintainAspectRatio: false,
+      responsive: true,
+      scales: {
+        x: {},
+        y: {
+          min: 0,
+        },
+      },
+      plugins: {
+        legend: {
+          display: this.showLegend,
+        },
+        // datalabels: {
+        //   anchor: 'end',
+        //   align: 'end',
+        // }
+      },
+    }
+  }
 
   get isHandset(): boolean {
     return this.#breakpointObserver.isMatched(Breakpoints.Handset);

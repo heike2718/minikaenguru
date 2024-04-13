@@ -9,6 +9,10 @@ body {
     height: 100%;
 }
 
+main {
+    margin-left: 10px;
+}
+
 a,
 .link {
     color: #467096;
@@ -256,6 +260,13 @@ mat-dialog-content {
 .grid-container-2 {
     display: grid;
     grid-template-columns: 1fr 4fr;
+    margin-left: 2rem;
+    grid-gap: 2rem;
+}
+
+.grid-container-3 {
+    display: grid;
+    grid-template-columns: auto auto auto;
     margin-left: 2rem;
     grid-gap: 2rem;
 }

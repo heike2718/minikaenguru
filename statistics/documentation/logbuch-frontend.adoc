@@ -394,7 +394,7 @@ https://valor-software.com/ng2-charts/[hier] sind die Beispiele
 
 [src,cli]
 ----
-npx nx generate @nx/angular:component --name=generic-bar-chart --directory=src/app/wettbewerbe/wettbewerbe-overview/generic-bar-chart --nameAndDirectoryFormat=as-provided --selector=mkbiza-bar-chart --no-interactive --dry-run
+npx nx generate @nx/angular:component --name=generic-bar-chart --directory=src/app/wettbewerbe/generic-bar-chart --nameAndDirectoryFormat=as-provided --selector=mkbiza-bar-chart --no-interactive --dry-run
 ----
 
 Diese löst die 3 anderen Chart-Komponenten ab. Die ChartData und de Überschrift werden als Input übergeben.
@@ -406,4 +406,11 @@ Wahrscheinlich wird es nochmal geändert. Z.B. könnten auch die ChartOptions ü
 [src,cli]
 ----
 npx nx generate @nx/angular:component --name=wettbewerb-details --directory=src/app/wettbewerbe/wettbewerb-details/wettbewerb-details --nameAndDirectoryFormat=as-provided --selector=mkbiza-wettbewerb --no-interactive --dry-run
+----
+
+==== Generische PieChart-Komponente
+
+[src,cli]
+----
+npx nx generate @nx/angular:component --name=generic-pie-chart --directory=src/app/wettbewerbe/generic-pie-chart --nameAndDirectoryFormat=as-provided --selector=mkbiza-pie-chart --no-interactive --dry-run
 ----

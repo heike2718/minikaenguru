@@ -13,6 +13,7 @@ import { ErrorHandlerService } from './error/error-handler.service';
 import { provideStore } from '@ngrx/store';
 import { domainDataProvider } from '@mkbiza-app/domain-api';
 import { provideCharts, withDefaultRegisterables} from 'ng2-charts';
+import { BarController, Colors, Legend, PieController } from 'chart.js';
 
 if (environment.production) {
   enableProdMode();
@@ -44,6 +45,7 @@ export const appConfig: ApplicationConfig = {
         ),
     },
     provideCharts(withDefaultRegisterables()),
+    // provideCharts({ registerables: [BarController, PieController, Legend, Colors ] }),
     {
       provide: MAT_DATE_LOCALE,
       useValue: 'de-DE',

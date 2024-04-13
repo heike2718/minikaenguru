@@ -4,17 +4,23 @@
     <mkbiza-bar-chart 
         [headline]="'Wie viele Kinder haben teilgenommen?'"
         [myCanvasId]="'jahreAnzahlKinderBarChart'"
-        [barChartData]=chartDataJahreKinder></mkbiza-bar-chart>
+        [chartData]=chartDataJahreKinder
+        [showLegend]="false">             
+    </mkbiza-bar-chart>
 
     <mkbiza-bar-chart 
         [headline]="'Kinder je Klassenstufe'"
         [myCanvasId]="'jahreKlassenstufenKinderBarChart'"
-        [barChartData]=chartDataKinderKlassenstufen></mkbiza-bar-chart>
+        [chartData]=chartDataKinderKlassenstufen
+        [showLegend]="true">
+    </mkbiza-bar-chart>
 
     <mkbiza-bar-chart 
         [headline]="'Mediane'"
         [myCanvasId]="'wettbewerbeOveview.medianeBarChart'"
-        [barChartData]=chartDataMediane></mkbiza-bar-chart>
+        [chartData]=chartDataMediane
+        [showLegend]="true">
+    </mkbiza-bar-chart>
 
     <p>Der Median (Prozentrang 50) ist die mittlere erreichte Punktzahl aller Kinder: die Hälfte aller teilnehmenden
         Kinder mit dieser Klassenstufe hat gleich viele oder weniger Punkte erzielt.</p>

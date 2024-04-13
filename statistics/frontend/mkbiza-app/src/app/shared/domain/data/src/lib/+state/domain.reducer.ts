@@ -1,11 +1,17 @@
 import { createFeature, createReducer, on } from "@ngrx/store";
 import { domainActions } from "./domain.actions";
 import { StatistikJahreChartData,
+    StatistikWettbewerbChartData,
     WettbewerbDetailsGUIModel,
     WettbewerbOverview,
+    mapToAnmeldungenVersusTeilnahmen,
     mapToChartDataJahreAnzahlKinder,
     mapToChartDataJahreKinderKlassenstufe,
-    mapToChartDataJahreMediane
+    mapToChartDataJahreMediane,
+    mapToChartDataKinderLaender,
+    mapToChartDataLaender,
+    mapToChartDataMediane,
+    mapToChartModel
 } from "@mkbiza-app/domain-model";
 
 export interface DomainState {
@@ -43,11 +49,37 @@ export const domainFeature = createFeature({
         }),
         on(domainActions.wETTBEWERB_LOADED, (state, action): DomainState => {
 
-            const wettbewerb = action.wettbewerb;            
+            const wettbewerb = action.wettbewerb;  
+
+            const chartData: StatistikWettbewerbChartData = {
+                chartDataSchulanmeldungenVersusSchulteilnahmen: mapToAnmeldungenVersusTeilnahmen(wettbewerb),
+                chartModelKinderJeKlassenstufe: mapToChartModel(wettbewerb.kinderJeKlassenstufe),
+                chartDataKinderJeLand: mapToChartDataKinderLaender(wettbewerb, 'Kinder'),
+                chartModelKinderJeSprache: mapToChartModel(wettbewerb.kinderJeSprache),
+                chartModelKinderJeTeilnahmeart: mapToChartModel(wettbewerb.kinderJeTeilnahmeart),
+                chartDataMediane: mapToChartDataMediane(wettbewerb),
+                chartDataSchulenJeLand: mapToChartDataLaender(wettbewerb.schulenJeLand, 'Schulen')                
+            };
+
+            const alreadyLoaded = state.wettbewerbdetails.some(w => w.wettbewerb.jahr === wettbewerb.jahr);
+
+            const wettbewerbGuiModel: WettbewerbDetailsGUIModel = {
+                wettbewerb: wettbewerb,
+                chartData: chartData
+            };     
             
 
             return {
-                ...state
+                ...state,
+                wettbewerbdetails: alreadyLoaded ? [...state.wettbewerbdetails] : [...state.wettbewerbdetails, wettbewerbGuiModel],
+                selectedWettbewerb: wettbewerbGuiModel
+            }
+        }),
+        on(domainActions.sELECT_WETTBEWERBDETAILS, (state, action): DomainState => {
+
+            return {
+                ...state,
+                selectedWettbewerb: action.wettbewerbGUIModel
             }
         })
     )

@@ -224,19 +224,19 @@ public class MkBiZaStatistikService {
 		if (wettbewerb.medianIkids() != null && !wettbewerb.medianIkids().equals(Integer.valueOf(0))) {
 
 			result.addMedianeJeKlassenstufe(
-				new MkBiZaGruppierungsitem().withAnzahl(Long.valueOf(wettbewerb.medianIkids())).withName("Median IKID"));
+				new MkBiZaGruppierungsitem().withAnzahl(Long.valueOf(wettbewerb.medianIkids())).withName("Inklusion"));
 		}
 
 		if (wettbewerb.medianKlasseEins() != null && !wettbewerb.medianKlasseEins().equals(Integer.valueOf(0))) {
 
 			result.addMedianeJeKlassenstufe(
-				new MkBiZaGruppierungsitem().withAnzahl(Long.valueOf(wettbewerb.medianKlasseEins())).withName("Median Klasse 1"));
+				new MkBiZaGruppierungsitem().withAnzahl(Long.valueOf(wettbewerb.medianKlasseEins())).withName("Klasse 1"));
 		}
 
 		if (wettbewerb.medianKlasseZwei() != null && !wettbewerb.medianKlasseZwei().equals(Integer.valueOf(0))) {
 
 			result.addMedianeJeKlassenstufe(
-				new MkBiZaGruppierungsitem().withAnzahl(Long.valueOf(wettbewerb.medianKlasseZwei())).withName("Median Klasse 2"));
+				new MkBiZaGruppierungsitem().withAnzahl(Long.valueOf(wettbewerb.medianKlasseZwei())).withName("Klasse 2"));
 		}
 
 		List<MkBiZaGruppierungsitem> teilnehmendeSchulen = result.getSchulenJeLand();

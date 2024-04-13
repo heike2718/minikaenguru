@@ -33,7 +33,6 @@
     "@nx/angular": "18.2.2",
     "angular2-uuid": "^1.1.1",
     "chart.js": "~4.4.2",
-    "chartjs-plugin-datalabels": "^2.2.0",
     "material-icons": "^1.13.12",
     "ng2-charts": "^6.0.0",
     "ngrx-store-localstorage": "^17.0.0",

@@ -47,7 +47,7 @@ export class WettbewerbeOverviewComponent implements OnInit, OnDestroy{
     ]) => {
       if (wettbewerbe.length > 0) {  
         
-        // die Observables sind readonly. Beim rezize des Screens bekommt man einen Fehler, wenn man keine swallow-Kopie macht
+        // die Observables sind readonly. Beim resize des Screens bekommt man einen Fehler, wenn man keine swallow-Kopie macht
         this.chartDataJahreKinder = {...chartDataJahreKinder};
         this.chartDataKinderKlassenstufen = {...chartDataKinderKlassenstufen};
         this.chartDataMediane = {...chartDataMediane};
