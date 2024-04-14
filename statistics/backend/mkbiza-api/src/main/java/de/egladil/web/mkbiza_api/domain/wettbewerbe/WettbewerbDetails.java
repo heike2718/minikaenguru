@@ -53,8 +53,8 @@ public class WettbewerbDetails {
 	private List<Gruppierungsitem> schulenJeLand = new ArrayList<>();
 
 	@JsonProperty
-	@Schema(description = "Anzahl der teilnehmenden Kinder je Land (untere Schranke)")
-	private List<Gruppierungsitem> schulkinderJeLand;
+	@Schema(description = "Histogramm der Kinder je Land, wobei PRIVAT als ein Land interpretiert wird.")
+	private List<Gruppierungsitem> kinderJeLand = new ArrayList<>();
 
 	@JsonProperty
 	@Schema(description = "Anzahl der teilnehmenden Kinder je Teilnahmeart (PRIVAT/SCHULE - untere Schranke)")

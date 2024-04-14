@@ -55,7 +55,7 @@ export interface WettbewerbDetails {
   readonly teilnehmendeSchulenGesamt: number;
   readonly klassenstufen: Klassenstufe[];
   readonly schulenJeLand: Gruppierungsitem[];
-  readonly schulkinderJeLand: Gruppierungsitem[];
+  readonly kinderJeLand: Gruppierungsitem[];
   readonly kinderJeTeilnahmeart: Gruppierungsitem[];
   readonly kinderJeKlassenstufe: Gruppierungsitem[];
   readonly kinderJeSprache: Gruppierungsitem[];

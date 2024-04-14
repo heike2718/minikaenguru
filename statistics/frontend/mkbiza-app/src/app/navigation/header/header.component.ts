@@ -28,7 +28,7 @@ import { Subscription } from 'rxjs';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 
-  version = "1.0.1";
+  version = "1.1.0";
   menuIds: number[] = [];
 
   @Output()

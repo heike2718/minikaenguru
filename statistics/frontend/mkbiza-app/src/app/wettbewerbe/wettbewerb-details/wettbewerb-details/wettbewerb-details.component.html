@@ -2,98 +2,74 @@
 
 <h1>Minikänguru {{wettbewerbGuiModel.wettbewerb.jahr}}</h1>
 
+@if (!wettbewerbGuiModel.wettbewerb.beendet) {
+<p>Hinweis: der Wettbewerb ist noch nicht beendet. Alle Zahlen sind Momentaufnahmen</p>
+}
+
 <h2>Gesamtbeteiligung: {{wettbewerbGuiModel.wettbewerb.anzahlKinderGesamt}} Kinder</h2>
 
 <!-- -->
 @if (isHandset) {
-    <mkbiza-pie-chart 
-        [headline]="'Kinder je Klassentufe'"
-        [myCanvasId]="'wettbewerb.kinderJeKlassenstufe'"
-        [chartData]=chartDataKinderJeKlassenstufe
-        ></mkbiza-pie-chart>
-        
-        <mkbiza-pie-chart 
-        [headline]="'Kinder privat versus Schule'"
-        [myCanvasId]="'wettbewerb.kinderJeTeilnahmeart'"
-        [chartData]=chartDataKinderJeTeilnahmeart
-        ></mkbiza-pie-chart>
-        
-        <mkbiza-pie-chart 
-        [headline]="'Kinder je Sprache'"
-        [myCanvasId]="'wettbewerb.kinderJeSprache'"
-        [chartData]=chartDataKinderJeSprache
-        ></mkbiza-pie-chart>
+<mkbiza-pie-chart [headline]="'Kinder je Klassentufe'" [myCanvasId]="'wettbewerb.kinderJeKlassenstufe'"
+    [chartData]=chartDataKinderJeKlassenstufe></mkbiza-pie-chart>
+
+<mkbiza-pie-chart [headline]="'Kinder privat versus Schule'" [myCanvasId]="'wettbewerb.kinderJeTeilnahmeart'"
+    [chartData]=chartDataKinderJeTeilnahmeart></mkbiza-pie-chart>
+
+<mkbiza-pie-chart [headline]="'Kinder je Sprache'" [myCanvasId]="'wettbewerb.kinderJeSprache'"
+    [chartData]=chartDataKinderJeSprache></mkbiza-pie-chart>
 } @else {
-    <div class="grid-container-3 mt-2 mb-2">
-        <mkbiza-pie-chart 
-        [headline]="'Kinder je Klassentufe'"
-        [myCanvasId]="'wettbewerb.kinderJeKlassenstufe'"
-        [chartData]=chartDataKinderJeKlassenstufe
-        ></mkbiza-pie-chart>
-        
-        <mkbiza-pie-chart 
-        [headline]="'Kinder privat versus Schule'"
-        [myCanvasId]="'wettbewerb.kinderJeTeilnahmeart'"
-        [chartData]=chartDataKinderJeTeilnahmeart
-        ></mkbiza-pie-chart>
-        
-        <mkbiza-pie-chart 
-        [headline]="'Kinder je Sprache'"
-        [myCanvasId]="'wettbewerb.kinderJeSprache'"
-        [chartData]=chartDataKinderJeSprache
-        ></mkbiza-pie-chart>
-    </div>
+<div class="grid-container-3 mt-2 mb-2">
+    <mkbiza-pie-chart [headline]="'Kinder je Klassentufe'" [myCanvasId]="'wettbewerb.kinderJeKlassenstufe'"
+        [chartData]=chartDataKinderJeKlassenstufe></mkbiza-pie-chart>
+
+    <mkbiza-pie-chart [headline]="'Kinder privat versus Schule'" [myCanvasId]="'wettbewerb.kinderJeTeilnahmeart'"
+        [chartData]=chartDataKinderJeTeilnahmeart></mkbiza-pie-chart>
+
+    <mkbiza-pie-chart [headline]="'Kinder je Sprache'" [myCanvasId]="'wettbewerb.kinderJeSprache'"
+        [chartData]=chartDataKinderJeSprache></mkbiza-pie-chart>
+</div>
 }
 
 
-
+@if (wettbewerbGuiModel.wettbewerb.beendet) {
 <h2>Mediane</h2>
 
-<p>Der Median (Prozentrang 50) ist die mittlere erreichte Punktzahl aller Kinder: die Hälfte aller teilnehmenden Kinder hat gleich viele oder weniger Punkte erzielt.
+<p>Der Median (Prozentrang 50) ist die mittlere erreichte Punktzahl aller Kinder: die Hälfte aller teilnehmenden Kinder
+    hat gleich viele oder weniger Punkte erzielt.
 </p>
 
-<p>Die Aufgaben hatten einen angemessenen Schwierigkeitsgrad, wenn der Median ungeähr 1/3 der maximal erreichbaren Punktzahl ist.
+<p>Die Aufgaben hatten einen angemessenen Schwierigkeitsgrad, wenn der Median ungeähr 1/3 der maximal erreichbaren
+    Punktzahl ist.
     Ist er deutlich niedriger waren sie zu schwer, ist er deutlich höher, waren sie zu leicht.</p>
 
 
-<mkbiza-bar-chart 
-    [headline]="''"
-    [myCanvasId]="'wettbewerb.mediane'"
-    [chartData]=statistics.chartDataMediane
-></mkbiza-bar-chart>
-
-<!--    -->
-
-<h2>Anmeldungen versus Teilnahmen</h2>
-
-
-
-<p>Von allen angemeldeten Schulen haben teilgenommen.</p>
-
-
-<mkbiza-bar-chart 
-    [headline]="''"
-    [myCanvasId]="'wettbewerb.anmeldungenTeilnahmen'"
-    [chartData]=statistics.chartDataSchulanmeldungenVersusSchulteilnahmen
-></mkbiza-bar-chart>
-
-
-<h2>Länderstatistiken</h2>        
-    
-<mkbiza-bar-chart 
-[headline]="'Kinder je Land'"
-[myCanvasId]="'wettbewerb.kinderJeLand'"
-[chartData]=statistics.chartDataKinderJeLand
-></mkbiza-bar-chart>
-
-
-<mkbiza-bar-chart 
-[headline]="'Schulen je Land'"
-[myCanvasId]="'wettbewerb.schulenJeLand'"
-[chartData]=statistics.chartDataSchulenJeLand
-></mkbiza-bar-chart>
+<mkbiza-bar-chart [headline]="''" [myCanvasId]="'wettbewerb.mediane'"
+    [chartData]=statistics.chartDataMediane></mkbiza-bar-chart>
 
 }
 
+<!--    -->
+
+<!-- vor 2017 hatten wir noch keinen Schulkatalog und haben alles auf eine fiktive Schule je Land gemapped Diagramme sind da sinnlos.-->
+@if (wettbewerbGuiModel.wettbewerb.jahr >= 2017) {
+    <h2>Schulanmeldungen versus Teilnahmen</h2>
+
+<p>Nicht alle Schulen, die sich angemeldet haben, führen den Wettbewerb auch durch.</p>
 
 
+<mkbiza-bar-chart [headline]="''" [myCanvasId]="'wettbewerb.anmeldungenTeilnahmen'"
+    [chartData]=statistics.chartDataSchulanmeldungenVersusSchulteilnahmen></mkbiza-bar-chart>
+}
+
+<h2>Länderstatistiken</h2>
+
+<mkbiza-bar-chart [headline]="'Kinder je Land'" [myCanvasId]="'wettbewerb.kinderJeLand'"
+    [chartData]=statistics.chartDataKinderJeLand></mkbiza-bar-chart>
+
+<!-- vor 2017 hatten wir noch keinen Schulkatalog und haben alles auf eine fiktive Schule je Land gemapped Diagramme sind da sinnlos.-->
+@if (wettbewerbGuiModel.wettbewerb.jahr >= 2017) {
+<mkbiza-bar-chart [headline]="'Schulen je Land'" [myCanvasId]="'wettbewerb.schulenJeLand'"
+    [chartData]=statistics.chartDataSchulenJeLand></mkbiza-bar-chart>
+}
+}

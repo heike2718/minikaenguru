@@ -142,7 +142,7 @@ export function mapToAnmeldungenVersusTeilnahmen(wettbewerb: WettbewerbDetails):
 
     const labels = ['angemeldet', 'teilgenommen'];
     const anzahlen: number[] = wettbewerb.schulenJeLand.map(g => g.anzahl);
-    const schulenTeilgenommen = anzahlen.reduceRight((acc, cur) => acc + cur, 0);   
+    const schulenTeilgenommen = anzahlen.reduceRight((acc, cur) => acc + cur, 0);
 
     // anscheinend wird die borderColor komplett ignoriert
     const result: ChartData<'bar'> = {
@@ -165,37 +165,45 @@ export function mapToChartDataMediane(wettbewerb: WettbewerbDetails): ChartData<
 
     const mediane: Gruppierungsitem[] = wettbewerb.medianeJeKlassenstufe;
     // const labels: string[] = ['Median', 'Gesamtpunktzahl'];
-    const labels: string[] = [];    
+    const labels: string[] = [];
     const dataMedian: number[] = [];
     const dataGesamtpunkte: number[] = [];
 
     {
-        const filtered : Gruppierungsitem[] = mediane.filter(g => g.name === 'Inklusion');
+        const filtered: Gruppierungsitem[] = mediane.filter(g => g.name === 'Inklusion');
 
-        if (filtered.length > 0) { 
+        if (filtered.length > 0) {
             labels.push(filtered[0].name);
-            dataMedian.push(filtered[0].anzahl/1000);
+            dataMedian.push(filtered[0].anzahl / 1000);
             dataGesamtpunkte.push(36);
         };
     }
 
     {
-        const filtered : Gruppierungsitem[] = mediane.filter(g => g.name === 'Klasse 1');
+        const filtered: Gruppierungsitem[] = mediane.filter(g => g.name === 'Klasse 1');
 
-        if (filtered.length > 0) { 
+        if (filtered.length > 0) {
+
+            let gesamt = 60;
+
+            // vor 2017 gab es keine eigenen Aufgaben für Klasse 2
+            if (wettbewerb.jahr < 2017) {
+                gesamt = 75;
+            }
+
             labels.push(filtered[0].name);
-            dataMedian.push(filtered[0].anzahl/1000);
-            dataGesamtpunkte.push(60);
+            dataMedian.push(filtered[0].anzahl / 1000);
+            dataGesamtpunkte.push(gesamt);
         };
     }
 
     {
-        const filtered : Gruppierungsitem[] = mediane.filter(g => g.name === 'Klasse 2');
+        const filtered: Gruppierungsitem[] = mediane.filter(g => g.name === 'Klasse 2');
 
         if (filtered.length > 0) {
             if (filtered.length > 0) {
-                labels.push(filtered[0].name); 
-                dataMedian.push(filtered[0].anzahl/1000);
+                labels.push(filtered[0].name);
+                dataMedian.push(filtered[0].anzahl / 1000);
                 dataGesamtpunkte.push(75);
             };
         };
@@ -211,7 +219,7 @@ export function mapToChartDataMediane(wettbewerb: WettbewerbDetails): ChartData<
     });
 
     datasets.push({
-        data: [...dataGesamtpunkte.map(p => p/3)],
+        data: [...dataGesamtpunkte.map(p => p / 3)],
         label: '1/3 Gesamtpunktzahl',
         backgroundColor: BAR_BACKGROUND_COLOR_1
     });
@@ -231,7 +239,7 @@ export function mapToChartDataMediane(wettbewerb: WettbewerbDetails): ChartData<
 };
 
 
-export function mapToChartDataLaender(gruppierungsitems: Gruppierungsitem[], chartLabel: string): ChartData<'bar'> {
+export function mapToChartDataSingleDataset(gruppierungsitems: Gruppierungsitem[], chartLabel: string): ChartData<'bar'> {
 
     const labels: string[] = gruppierungsitems.map(g => g.name);
     const data: number[] = gruppierungsitems.map(g => g.anzahl);
@@ -250,19 +258,6 @@ export function mapToChartDataLaender(gruppierungsitems: Gruppierungsitem[], cha
     };
 
     return result;
-};
-
-
-export function mapToChartDataKinderLaender(wettbewerb: WettbewerbDetails, chartLabel: string): ChartData<'bar'> {
-
-    const privat: Gruppierungsitem[] = wettbewerb.kinderJeTeilnahmeart.filter(g => g.name === 'PRIVAT');
-
-    let erweiterteItems: Gruppierungsitem[] = wettbewerb.schulkinderJeLand;
-
-    if (privat.length > 0) {
-        erweiterteItems = [...erweiterteItems, privat[0]];
-    }
-    return mapToChartDataLaender(erweiterteItems, chartLabel);
 };
 
 // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

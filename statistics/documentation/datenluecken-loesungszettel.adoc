@@ -1,0 +1,11 @@
+== Bei den Lösungszetteln gibt es leider ein paar Datenlücken
+
+Bei Schulteilnahmen ist das Land nicht immer gefüllt, so dass eine Statistik nicht angezeigt werden kann.
+
+[source,sql]
+----
+select distinct teilnahmenummer from LOESUNGSZETTEL where teilnahmeart = 'SCHULE' and landkuerzel is null;
+
+update LOESUNGSZETTEL set landkuerzel = 'EG' where teilnahmenummer IN ('T7MKIDCU') and landkuerzel is null;
+----
+

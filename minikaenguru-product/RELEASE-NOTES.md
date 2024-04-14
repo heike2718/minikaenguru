@@ -1,5 +1,30 @@
 # minikaenguru Release Notes
 
+__mk-2.5.0__
+
+Erweiterungen für Bewertungsbogen und Statistikanwendung sowie Verbesserungen und Bugfixes
+
+[Hochladen von Klassenlisten: Klassen case insensitive interpretieren](https://github.com/heike2718/minikaenguru/issues/453)
+
+[Newsletterversand: Möglichkeit schaffen, den Versand auf die aktuell angemeldeten Veranstalter zu beschränken](https://github.com/heike2718/minikaenguru/issues/451)
+
+[Scrollen bei Meldungen entfernen. Erfolgsmeldungen sollen automatisch verschwinden](https://github.com/heike2718/minikaenguru/issues/437)
+
+[Wenn jemand alle Klassen einer Schule löscht, sollten auch alle hochgeladenen Klassenlisten gelöscht werden](https://github.com/heike2718/minikaenguru/issues/436)
+
+[Feedback-Möglichkeit zu einzelnen Aufgaben](https://github.com/heike2718/minikaenguru/issues/260)
+
+[mk-gateway: Erweiterung der API für die Sratistiken](https://github.com/heike2718/minikaenguru/issues/459)
+
+
+[Tickets](https://github.com/heike2718/minikaenguru/milestone/16?closed=1)
+
+__2024-Q1__
+
+Bugfixes
+
+[Tickets](https://github.com/heike2718/minikaenguru/milestone/18?closed=1)
+
 __2023-Q3__
 
 [Tickets](https://github.com/heike2718/minikaenguru/milestone/16?closed=1)

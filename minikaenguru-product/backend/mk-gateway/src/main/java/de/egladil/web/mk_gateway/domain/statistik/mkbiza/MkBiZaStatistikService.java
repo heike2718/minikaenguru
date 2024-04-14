@@ -167,6 +167,8 @@ public class MkBiZaStatistikService {
 			result.addKinderJeSprache(gruppierungsitem);
 		}
 
+		MkBiZaGruppierungsitem gruppierungsitemPrivat = null;
+
 		for (Teilnahmeart teilnahmeart : Teilnahmeart.values()) {
 
 			{
@@ -176,6 +178,11 @@ public class MkBiZaStatistikService {
 				MkBiZaGruppierungsitem gruppierungsitem = new MkBiZaGruppierungsitem().withName(teilnahmeart.toString())
 					.withAnzahl(anzahl);
 				result.addKinderJeTeilnahmeart(gruppierungsitem);
+
+				if (Teilnahmeart.PRIVAT == teilnahmeart) {
+
+					gruppierungsitemPrivat = gruppierungsitem;
+				}
 			}
 
 			{
@@ -214,8 +221,7 @@ public class MkBiZaStatistikService {
 
 				MkBiZaGruppierungsitem gruppierungsitem = new MkBiZaGruppierungsitem().withName(land.name())
 					.withAnzahl(loesungszettelgroups.size());
-				result.addSchulkinderJeLand(gruppierungsitem);
-
+				result.addKinderJeLand(gruppierungsitem);
 			}
 
 			long anzahlSchulenImLand = schulen.stream().filter(s -> s.kuerzelLand().equals(land.kuerzel())).count();
@@ -233,7 +239,7 @@ public class MkBiZaStatistikService {
 			if (median != null) {
 
 				result.addMedianeJeKlassenstufe(
-					new MkBiZaGruppierungsitem().withAnzahl(Long.valueOf(wettbewerb.medianIkids()))
+					new MkBiZaGruppierungsitem().withAnzahl(Long.valueOf(median))
 						.withName(klassenstufe.getLabel()));
 			}
 		}
@@ -242,6 +248,7 @@ public class MkBiZaStatistikService {
 
 		long anzahlTeilnehmendeSchulen = teilnehmendeSchulen.stream().mapToLong(MkBiZaGruppierungsitem::getAnzahl).sum();
 
+		result.addKinderJeLand(gruppierungsitemPrivat);
 		result.setTeilnehmendeSchulenGesamt(anzahlTeilnehmendeSchulen);
 
 		return result;
@@ -417,8 +424,16 @@ public class MkBiZaStatistikService {
 
 			if (median != null) {
 
+				int maximalpunktzahlMal100 = klassenstufe.getMaximalpunktzahlMal100();
+
+				// Bis 2017 gab es keine Extraaufgaben für Klasse 1.
+				if (Klassenstufe.EINS == klassenstufe && wettbewerb.id().jahr().intValue() < 2017) {
+
+					maximalpunktzahlMal100 = 75;
+				}
+
 				result.setMedianUndGesamtpunkte(
-					new MkBiZaMedianDto(median.intValue(), klassenstufe.getMaximalpunktzahlMal100() / 100));
+					new MkBiZaMedianDto(median.intValue(), maximalpunktzahlMal100 / 100));
 			}
 
 			GesamtpunktverteilungKlassenstufeDaten daten = new VerteilungRechner().berechne(wettbewerb.id(), klassenstufe,

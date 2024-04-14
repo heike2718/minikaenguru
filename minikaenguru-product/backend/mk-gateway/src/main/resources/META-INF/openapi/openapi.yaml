@@ -2796,7 +2796,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MkBiZaGruppierungsitem'
-        schulkinderJeLand:
+        kinderJeLand:
+          description: "Histogramm der Kinder je Land, wobei PRIVAT als ein Land interpretiert\
+            \ wird."
           type: array
           items:
             $ref: '#/components/schemas/MkBiZaGruppierungsitem'
@@ -2813,16 +2815,6 @@ components:
           items:
             $ref: '#/components/schemas/MkBiZaGruppierungsitem'
         medianeJeKlassenstufe:
-          type: array
-          items:
-            $ref: '#/components/schemas/MkBiZaGruppierungsitem'
-        kinderJePunktintervall:
-          description: Anzahl der teilnehmenden Kinder je Punktintervall (untere Schranke)
-          type: array
-          items:
-            $ref: '#/components/schemas/MkBiZaGruppierungsitem'
-        kinderJeAbsolutePunktzahl:
-          description: Anzahl der teilnehmenden Kinder je Punktzahl (untere Schranke)
           type: array
           items:
             $ref: '#/components/schemas/MkBiZaGruppierungsitem'

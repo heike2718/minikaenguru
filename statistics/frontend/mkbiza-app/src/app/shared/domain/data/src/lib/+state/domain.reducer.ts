@@ -8,8 +8,7 @@ import { StatistikJahreChartData,
     mapToChartDataJahreAnzahlKinder,
     mapToChartDataJahreKinderKlassenstufe,
     mapToChartDataJahreMediane,
-    mapToChartDataKinderLaender,
-    mapToChartDataLaender,
+    mapToChartDataSingleDataset,
     mapToChartDataMediane,
     mapToChartModel
 } from "@mkbiza-app/domain-model";
@@ -54,11 +53,11 @@ export const domainFeature = createFeature({
             const chartData: StatistikWettbewerbChartData = {
                 chartDataSchulanmeldungenVersusSchulteilnahmen: mapToAnmeldungenVersusTeilnahmen(wettbewerb),
                 chartModelKinderJeKlassenstufe: mapToChartModel(wettbewerb.kinderJeKlassenstufe),
-                chartDataKinderJeLand: mapToChartDataKinderLaender(wettbewerb, 'Kinder'),
+                chartDataKinderJeLand: mapToChartDataSingleDataset(wettbewerb.kinderJeLand, 'Kinder'),
                 chartModelKinderJeSprache: mapToChartModel(wettbewerb.kinderJeSprache),
                 chartModelKinderJeTeilnahmeart: mapToChartModel(wettbewerb.kinderJeTeilnahmeart),
                 chartDataMediane: mapToChartDataMediane(wettbewerb),
-                chartDataSchulenJeLand: mapToChartDataLaender(wettbewerb.schulenJeLand, 'Schulen')                
+                chartDataSchulenJeLand: mapToChartDataSingleDataset(wettbewerb.schulenJeLand, 'Schulen')                
             };
 
             const alreadyLoaded = state.wettbewerbdetails.some(w => w.wettbewerb.jahr === wettbewerb.jahr);

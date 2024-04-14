@@ -720,8 +720,8 @@
               "$ref" : "#/components/schemas/Gruppierungsitem"
             }
           },
-          "schulkinderJeLand" : {
-            "description" : "Anzahl der teilnehmenden Kinder je Land (untere Schranke)",
+          "kinderJeLand" : {
+            "description" : "Histogramm der Kinder je Land, wobei PRIVAT als ein Land interpretiert wird.",
             "type" : "array",
             "items" : {
               "$ref" : "#/components/schemas/Gruppierungsitem"

@@ -43,7 +43,8 @@ public class MkBiZaWettbewerbDetails {
 	private List<MkBiZaGruppierungsitem> schulenJeLand = new ArrayList<>();
 
 	@JsonProperty
-	private List<MkBiZaGruppierungsitem> schulkinderJeLand = new ArrayList<>();
+	@Schema(description = "Histogramm der Kinder je Land, wobei PRIVAT als ein Land interpretiert wird.")
+	private List<MkBiZaGruppierungsitem> kinderJeLand = new ArrayList<>();
 
 	@JsonProperty
 	private List<MkBiZaGruppierungsitem> kinderJeTeilnahmeart = new ArrayList<>();
@@ -56,14 +57,6 @@ public class MkBiZaWettbewerbDetails {
 
 	@JsonProperty
 	private List<MkBiZaGruppierungsitem> medianeJeKlassenstufe = new ArrayList<>();
-
-	@JsonProperty
-	@Schema(description = "Anzahl der teilnehmenden Kinder je Punktintervall (untere Schranke)")
-	private List<MkBiZaGruppierungsitem> kinderJePunktintervall;
-
-	@JsonProperty
-	@Schema(description = "Anzahl der teilnehmenden Kinder je Punktzahl (untere Schranke)")
-	private List<MkBiZaGruppierungsitem> kinderJeAbsolutePunktzahl;
 
 	public MkBiZaWettbewerbDetails addKlassenstufe(final Klassenstufe klassenstufe) {
 
@@ -91,9 +84,9 @@ public class MkBiZaWettbewerbDetails {
 		this.anzahlKinderGesamt = anzahlKinderGesamt;
 	}
 
-	public List<MkBiZaGruppierungsitem> getSchulkinderJeLand() {
+	public List<MkBiZaGruppierungsitem> getKinderJeLand() {
 
-		return schulkinderJeLand;
+		return this.kinderJeLand;
 	}
 
 	public List<MkBiZaGruppierungsitem> getKinderJeTeilnahmeart() {
@@ -135,9 +128,9 @@ public class MkBiZaWettbewerbDetails {
 
 	}
 
-	public void addSchulkinderJeLand(final MkBiZaGruppierungsitem schulkinder) {
+	public void addKinderJeLand(final MkBiZaGruppierungsitem gruppierungsitem) {
 
-		this.schulkinderJeLand.add(schulkinder);
+		this.kinderJeLand.add(gruppierungsitem);
 	}
 
 	public long getAnzahlPrivatanmeldungen() {
