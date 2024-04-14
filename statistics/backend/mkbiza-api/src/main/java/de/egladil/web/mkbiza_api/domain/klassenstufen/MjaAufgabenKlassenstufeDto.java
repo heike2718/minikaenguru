@@ -2,7 +2,7 @@
 // Project: mkbiza-api
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mkbiza_api.domain.aufgaben;
+package de.egladil.web.mkbiza_api.domain.klassenstufen;
 
 import java.util.List;
 
@@ -10,11 +10,15 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import de.egladil.web.mkbiza_api.domain.aufgaben.MjaAufgabeDetails;
+
 /**
- * MinikaenguruKlassenstufeDto
+ * MjaAufgabenKlassenstufeDto. Rsponse-Payload der REST-API mja-api/public/minikaenguru/{jahr}/{klassenstufe}<br>
+ * <br>
+ * Ist das MinikaenguruAufgabenKlassenstufeDto von der mja-api
  */
-@Schema(description = "Aufgaben und Lösungen eines Minkänguru-Wettbewerbs für eine gegebene Klassenstufe")
-public class MinikaenguruKlassenstufeDto {
+@Schema(description = "Aufgaben und Lösungen eines Minkänguru-Wettbewerbs für eine gegebene Klassenstufe.")
+public class MjaAufgabenKlassenstufeDto {
 
 	@JsonProperty
 	@Schema(description = "Jahr des Wettbewerbs")
@@ -26,16 +30,11 @@ public class MinikaenguruKlassenstufeDto {
 
 	@JsonProperty
 	@Schema(description = "die einzelnen Aufgaben mit Lösungen")
-	private List<Aufgabe> aufgaben;
+	private List<MjaAufgabeDetails> aufgaben;
 
 	public String getWettbewerbsjahr() {
 
 		return wettbewerbsjahr;
-	}
-
-	public void setWettbewerbsjahr(final String wettbewerbsjahr) {
-
-		this.wettbewerbsjahr = wettbewerbsjahr;
 	}
 
 	public String getKlassenstufe() {
@@ -43,19 +42,9 @@ public class MinikaenguruKlassenstufeDto {
 		return klassenstufe;
 	}
 
-	public void setKlassenstufe(final String klassenstufe) {
-
-		this.klassenstufe = klassenstufe;
-	}
-
-	public List<Aufgabe> getAufgaben() {
+	public List<MjaAufgabeDetails> getAufgaben() {
 
 		return aufgaben;
-	}
-
-	public void setAufgaben(final List<Aufgabe> aufgaben) {
-
-		this.aufgaben = aufgaben;
 	}
 
 }

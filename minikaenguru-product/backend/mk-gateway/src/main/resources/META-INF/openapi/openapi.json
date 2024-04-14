@@ -2056,11 +2056,11 @@
         }
       }
     },
-    "/mk-gateway/mkbiza/wettbewerbe/{jahr}/{klassenstufe}/aufgaben/{nummer}" : {
+    "/mk-gateway/mkbiza/wettbewerbe/{jahr}/{klasse}" : {
       "get" : {
         "tags" : [ "Mk Bi Za Resource" ],
-        "summary" : "Gibt die Statistik für eine spezielle Aufgabe zurück",
-        "operationId" : "getStatistikAufgabe",
+        "summary" : "Gibt die Statistik für eine Klassenstufe eines Wettbewerbs zurück",
+        "operationId" : "getStatistikJahrKlassenstufe",
         "parameters" : [ {
           "name" : "jahr",
           "in" : "path",
@@ -2071,20 +2071,11 @@
             "type" : "integer"
           }
         }, {
-          "name" : "klassenstufe",
+          "name" : "klasse",
           "in" : "path",
-          "description" : "Klassenstufe",
           "required" : true,
           "schema" : {
             "$ref" : "#/components/schemas/Klassenstufe"
-          }
-        }, {
-          "name" : "nummer",
-          "in" : "path",
-          "description" : "Nummer der Aufgabe",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
           }
         } ],
         "responses" : {
@@ -2093,7 +2084,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/StatistikAufgabe"
+                  "$ref" : "#/components/schemas/MkBiZaStatistikKlassenstufe"
                 }
               }
             }
@@ -3804,6 +3795,121 @@
           }
         }
       },
+      "MkBiZaMedianDto" : {
+        "type" : "object",
+        "properties" : {
+          "medianMalTausend" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "gesamtpunkte" : {
+            "format" : "int32",
+            "type" : "integer"
+          }
+        }
+      },
+      "MkBiZaStatistikAufgabe" : {
+        "description" : "Statistik zu einer Wettbewerbsaufgabe",
+        "type" : "object",
+        "properties" : {
+          "nummer" : {
+            "description" : "Nummer der Aufgabe im Wettbewerb",
+            "type" : "string"
+          },
+          "strafpunkte" : {
+            "description" : "Die Punktzahl die bei falscher Lösung angezogen wird, als String mit Komma",
+            "type" : "string"
+          },
+          "anzahlenJeLoesungsbuchstabe" : {
+            "description" : "Anzahl Kinder die einen gegebenen Lösungsbuchstaben angekreuzt haben. N für nicht gelöst.",
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MkBiZaGruppierungsitem"
+            }
+          },
+          "anzahlenJeWertungscode" : {
+            "description" : "Anzahl Kinder die einen gegebenen Wertungscode erhalten haben f,r,n",
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MkBiZaGruppierungsitem"
+            }
+          }
+        }
+      },
+      "MkBiZaStatistikKlassenstufe" : {
+        "description" : "statistische Daten zu einer Wettbewerbsklassenstufe",
+        "type" : "object",
+        "properties" : {
+          "wettbewerbsjahr" : {
+            "description" : "Jahr des Wettbewerbs",
+            "type" : "string"
+          },
+          "klassenstufe" : {
+            "description" : "Klassenstufe in menschenlesbarer Form",
+            "type" : "string"
+          },
+          "beendet" : {
+            "description" : "Flag, ob der Wettbewerb beendet ist",
+            "type" : "boolean"
+          },
+          "anzahlKinderGesamt" : {
+            "format" : "int32",
+            "description" : "Anzahl der Kinder, zu denen Lösungszettel vorliegen",
+            "type" : "integer"
+          },
+          "anzahlKinderPrivat" : {
+            "format" : "int32",
+            "description" : "Anzahl der Kinder, die privat teilgenommen haben",
+            "type" : "integer"
+          },
+          "medianUndGesamtpunkte" : {
+            "description" : "fasst den Median dieser Klassenstufe und die maximal erreichtbare Anzahl Punkte zusammen",
+            "type" : "object",
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/MkBiZaMedianDto"
+            } ]
+          },
+          "kinderJeLand" : {
+            "description" : "Histogramm der Kinder je Land, wobei PRIVAT als ein Land interpretiert wird.",
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MkBiZaGruppierungsitem"
+            }
+          },
+          "kinderJeTeilnahmeart" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MkBiZaGruppierungsitem"
+            }
+          },
+          "kinderJeSprache" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MkBiZaGruppierungsitem"
+            }
+          },
+          "kinderJePunktintervall" : {
+            "description" : "Anzahl Kinder, die in eins der Punktintervalle in der Gesamtstatistik fallen",
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MkBiZaGruppierungsitem"
+            }
+          },
+          "rohpunkte" : {
+            "description" : "Rohpunktitems der Gesamtstatistik",
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/RohpunktItem"
+            }
+          },
+          "aufgabenstatistiken" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MkBiZaStatistikAufgabe"
+            }
+          }
+        }
+      },
       "MkBiZaWettbewerb" : {
         "type" : "object",
         "properties" : {
@@ -3895,6 +4001,20 @@
             }
           },
           "medianeJeKlassenstufe" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MkBiZaGruppierungsitem"
+            }
+          },
+          "kinderJePunktintervall" : {
+            "description" : "Anzahl der teilnehmenden Kinder je Punktintervall (untere Schranke)",
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MkBiZaGruppierungsitem"
+            }
+          },
+          "kinderJeAbsolutePunktzahl" : {
+            "description" : "Anzahl der teilnehmenden Kinder je Punktzahl (untere Schranke)",
             "type" : "array",
             "items" : {
               "$ref" : "#/components/schemas/MkBiZaGruppierungsitem"
@@ -4043,6 +4163,29 @@
           "name" : "response-payload"
         }
       },
+      "RohpunktItem" : {
+        "type" : "object",
+        "properties" : {
+          "punkte" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "punkte"
+            }
+          },
+          "anzahl" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "anzahl"
+            }
+          },
+          "prozentrang" : {
+            "type" : "string",
+            "xml" : {
+              "name" : "prozentrang"
+            }
+          }
+        }
+      },
       "ScanRequestPayload" : {
         "description" : "Payload mit einem File, das auf Viren geprüft werden soll.",
         "required" : [ "clientId", "upload" ],
@@ -4149,23 +4292,6 @@
           },
           "label" : {
             "type" : "string"
-          }
-        }
-      },
-      "StatistikAufgabe" : {
-        "type" : "object",
-        "properties" : {
-          "anzahlRichtig" : {
-            "format" : "int64",
-            "type" : "integer"
-          },
-          "anzahlFalsch" : {
-            "format" : "int64",
-            "type" : "integer"
-          },
-          "anzahlNicht" : {
-            "format" : "int64",
-            "type" : "integer"
           }
         }
       },

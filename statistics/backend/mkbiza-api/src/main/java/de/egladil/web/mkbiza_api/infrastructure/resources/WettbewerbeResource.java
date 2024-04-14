@@ -18,17 +18,15 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import de.egladil.web.mkbiza_api.domain.ConstraintViolationResponse;
 import de.egladil.web.mkbiza_api.domain.Klassenstufe;
-import de.egladil.web.mkbiza_api.domain.aufgaben.AufgabenService;
-import de.egladil.web.mkbiza_api.domain.aufgaben.MinikaenguruKlassenstufeDto;
-import de.egladil.web.mkbiza_api.domain.aufgaben.StatistikAufgabe;
 import de.egladil.web.mkbiza_api.domain.dto.MessagePayload;
+import de.egladil.web.mkbiza_api.domain.klassenstufen.KlassenstufeDetails;
+import de.egladil.web.mkbiza_api.domain.klassenstufen.KlassenstufeService;
 import de.egladil.web.mkbiza_api.domain.validation.MkbizaRegexps;
 import de.egladil.web.mkbiza_api.domain.wettbewerbe.Wettbewerb;
 import de.egladil.web.mkbiza_api.domain.wettbewerbe.WettbewerbDetails;
 import de.egladil.web.mkbiza_api.domain.wettbewerbe.WettbewerbService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -49,7 +47,7 @@ public class WettbewerbeResource {
 	WettbewerbService wettbewerbService;
 
 	@Inject
-	AufgabenService aufgabenService;
+	KlassenstufeService klassenstufeService;
 
 	@GET
 	@Operation(
@@ -133,9 +131,9 @@ public class WettbewerbeResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@PermitAll
 	@Operation(
-		operationId = "getAufgabenMinikaenguruwettbewerb",
-		summary = "Gibt die Aufgaben eines bestimmten Minikänguru-Wettbewerbs zurück.",
-		description = "Nur freigegebene Wettbewerbe werden geliefert.")
+		operationId = "getStatistikJahrKlassenstufe",
+		summary = "Gibt Aufgaben und Statistik der Klassenstufe eines Wettbewerbs zurück",
+		description = "Aufgaben und Auswertunsgstatistiken werden nur bei beendeten Wettbewerben gliefert. Unverfängliche Statistiken werden auch im laufenden Wettbewerb geliefert.")
 	@Parameters({
 		@Parameter(
 			in = ParameterIn.PATH,
@@ -152,7 +150,7 @@ public class WettbewerbeResource {
 		responseCode = "200",
 		content = @Content(
 			mediaType = "application/json",
-			schema = @Schema(implementation = MinikaenguruKlassenstufeDto.class)))
+			schema = @Schema(implementation = KlassenstufeDetails.class)))
 	@APIResponse(
 		name = "BadRequest",
 		description = "Input-Validierung ging schief.",
@@ -167,83 +165,13 @@ public class WettbewerbeResource {
 		responseCode = "500",
 		content = @Content(schema = @Schema(implementation = MessagePayload.class)))
 	// @formatter:off
-	public Response getAufgabenMinikaenguruwettbewerb(
+	public Response getStatistikJahrKlassenstufe(
 		@Pattern(regexp = MkbizaRegexps.VALID_JAHR, message = MkbizaRegexps.MSG_INVALID_JAHR) @PathParam(value = "jahr") final String jahr,
 		@PathParam(value = "klassenstufe") final Klassenstufe klassenstufe) {
 	// @formatter:on
 
-		MinikaenguruKlassenstufeDto aufgaben = wettbewerbService.getAufgabenWettbewerb(jahr, klassenstufe);
+		KlassenstufeDetails aufgaben = klassenstufeService.loadKlassenstufenDetails(jahr, klassenstufe);
 
 		return Response.ok(aufgaben).build();
-	}
-
-	// TODO GET statistik/{jahr}/{klassenstufe} soll die Prozentränge zurückgeben.
-
-	@GET
-	@Path("{jahr}/{klassenstufe}/aufgaben/{nummer}")
-	@Operation(
-		operationId = "getStatistikAufgabe",
-		summary = "Gibt die Statistik für eine spezielle Aufgabe zurück")
-	@Parameters({
-		@Parameter(
-			in = ParameterIn.PATH,
-			name = "jahr",
-			description = "Jahr des Wettbewerbs",
-			required = true),
-		@Parameter(
-			in = ParameterIn.PATH,
-			name = "klassenstufe",
-			description = "Klassenstufe",
-			required = true),
-		@Parameter(
-			in = ParameterIn.PATH,
-			name = "nummer",
-			description = "Nummer der Aufgabe",
-			required = true) })
-	@APIResponse(
-		name = "OKResponse",
-		responseCode = "200",
-		content = @Content(
-			mediaType = "application/json",
-			schema = @Schema(implementation = StatistikAufgabe.class)))
-	@APIResponse(
-		name = "BadRequest",
-		description = "Inputvalidierung schlug fehl",
-		responseCode = "400",
-		content = @Content(schema = @Schema(implementation = ConstraintViolationResponse.class)))
-	@APIResponse(
-		name = "Unauthorized",
-		description = "S2S-Autentifizierung schlug fehl",
-		responseCode = "401",
-		content = @Content(schema = @Schema(implementation = MessagePayload.class)))
-	@APIResponse(
-		name = "NotFound",
-		description = "Jahr existsiert nicht oder Wettbewerb ist noch nicht beendet oder Aufgabennummer existsiert nicht",
-		responseCode = "404",
-		content = @Content(schema = @Schema(implementation = MessagePayload.class)))
-	@APIResponse(
-		name = "ServerError",
-		description = "Serverfehler",
-		responseCode = "500",
-		content = @Content(schema = @Schema(implementation = MessagePayload.class)))
-	// @formatter:off
-	public Response getStatistikAufgabe(
-		@Pattern(regexp = MkbizaRegexps.VALID_JAHR, message = MkbizaRegexps.MSG_INVALID_JAHR) @PathParam(value = "jahr") final String jahr,
-		@NotNull @PathParam(value = "klassenstufe") final Klassenstufe klassenstufe,
-		@Pattern(regexp = MkbizaRegexps.VALID_AUFGABENNUMMER, message = MkbizaRegexps.MSG_INVALID_AUFGABENNUMMER) @PathParam(value = "nummer") final String aufgabennummer) {
-	// @formatter:on
-
-		try {
-
-			Integer wettbewerbsjahr = Integer.valueOf(jahr);
-
-			StatistikAufgabe responsePayload = aufgabenService.getStatistikZuAufgabe(wettbewerbsjahr, klassenstufe,
-				aufgabennummer);
-
-			return Response.ok(responsePayload).build();
-		} catch (NumberFormatException e) {
-
-			return Response.status(400).entity(MessagePayload.error("jahr ist nicht numerisch")).build();
-		}
 	}
 }

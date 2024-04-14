@@ -130,7 +130,7 @@
 							"response": []
 						},
 						{
-							"name": "local : statistik  - aufgabe 404",
+							"name": "local : statistik  - klassenstufe 404",
 							"request": {
 								"method": "GET",
 								"header": [
@@ -145,12 +145,12 @@
 										"type": "default"
 									}
 								],
-								"url": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2017/EINS/aufgaben/A-5"
+								"url": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2017/IKID"
 							},
 							"response": []
 						},
 						{
-							"name": "local : statistik  - aufgabe 422",
+							"name": "local : statistik  - klassenstufe 200 - beendet",
 							"request": {
 								"method": "GET",
 								"header": [
@@ -165,12 +165,12 @@
 										"type": "default"
 									}
 								],
-								"url": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2004/EINS/aufgaben/A-5"
+								"url": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2020/IKID"
 							},
 							"response": []
 						},
 						{
-							"name": "local : statistik  - aufgabe 200",
+							"name": "local : statistik  - klassenstufe 200 - nicht beendet",
 							"request": {
 								"method": "GET",
 								"header": [
@@ -185,12 +185,12 @@
 										"type": "default"
 									}
 								],
-								"url": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2017/EINS/aufgaben/B-3"
+								"url": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2022/ZWEI"
 							},
 							"response": []
 						},
 						{
-							"name": "local : statistik  - aufgabe 401",
+							"name": "local : statistik  - klassenstufe 401",
 							"request": {
 								"method": "GET",
 								"header": [
@@ -205,7 +205,7 @@
 										"type": "default"
 									}
 								],
-								"url": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2017/EINS/aufgaben/B-3"
+								"url": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2017/EINS"
 							},
 							"response": []
 						}

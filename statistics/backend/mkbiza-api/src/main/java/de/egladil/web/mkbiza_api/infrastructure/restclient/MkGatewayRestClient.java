@@ -42,9 +42,20 @@ public interface MkGatewayRestClient {
 		@HeaderParam(value = "Authorization") final String authHeader);
 	// @formatter:on
 
+	// @formatter:off
+	@GET
+	@Path("wettbewerbe/{jahr}/{klasse}")
+	Response getStatistikKlassenstufe(
+		@PathParam(value = "jahr") final String jahr,
+		@PathParam(value = "klasse") final Klassenstufe klassenstufe,
+		@HeaderParam(value = "X-CLIENT-ID") final String clientId,
+		@HeaderParam(value = "Authorization") final String authHeader);
+	// @formatter:on
+
 	@GET
 	@Path("wettbewerbe/{jahr}/{klassenstufe}/aufgaben/{nummer}")
 	// @formatter:off
+	@Deprecated
 	public Response getStatistikAufgabe(
 		@PathParam(value = "jahr") final Integer wettbewerbsjahr,
 		@PathParam(value = "klassenstufe") final Klassenstufe klassenstufe,

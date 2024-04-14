@@ -110,9 +110,10 @@ paths:
     get:
       tags:
       - Wettbewerbe
-      summary: Gibt die Aufgaben eines bestimmten Minikänguru-Wettbewerbs zurück.
-      description: Nur freigegebene Wettbewerbe werden geliefert.
-      operationId: getAufgabenMinikaenguruwettbewerb
+      summary: Gibt Aufgaben und Statistik der Klassenstufe eines Wettbewerbs zurück
+      description: Aufgaben und Auswertunsgstatistiken werden nur bei beendeten Wettbewerben
+        gliefert. Unverfängliche Statistiken werden auch im laufenden Wettbewerb geliefert.
+      operationId: getStatistikJahrKlassenstufe
       parameters:
       - name: jahr
         in: path
@@ -133,70 +134,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MinikaenguruKlassenstufeDto'
+                $ref: '#/components/schemas/KlassenstufeDetails'
         "400":
           description: Input-Validierung ging schief.
         "404":
           description: Gibt es nicht
-        "500":
-          description: Serverfehler
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessagePayload'
-  /mkbiza-api/wettbewerbe/{jahr}/{klassenstufe}/aufgaben/{nummer}:
-    get:
-      tags:
-      - Wettbewerbe
-      summary: Gibt die Statistik für eine spezielle Aufgabe zurück
-      operationId: getStatistikAufgabe
-      parameters:
-      - name: jahr
-        in: path
-        description: Jahr des Wettbewerbs
-        required: true
-        schema:
-          pattern: "^[\\d]{4}$"
-          type: string
-      - name: klassenstufe
-        in: path
-        description: Klassenstufe
-        required: true
-        schema:
-          $ref: '#/components/schemas/Klassenstufe'
-      - name: nummer
-        in: path
-        description: Nummer der Aufgabe
-        required: true
-        schema:
-          pattern: "^[ABC]-\\d$"
-          type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StatistikAufgabe'
-        "400":
-          description: Inputvalidierung schlug fehl
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ConstraintViolationResponse'
-        "401":
-          description: S2S-Autentifizierung schlug fehl
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessagePayload'
-        "404":
-          description: Jahr existsiert nicht oder Wettbewerb ist noch nicht beendet
-            oder Aufgabennummer existsiert nicht
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MessagePayload'
         "500":
           description: Serverfehler
           content:
@@ -225,12 +167,12 @@ components:
           type: string
         version:
           type: string
-    Aufgabe:
-      description: Eine Aufgabe eines Minkänguru-Wettbewerbs
+    AufgabeDetails:
+      description: Alle Details zu einer Aufgabe eines Minkänguru-Wettbewerbs
       type: object
       properties:
         nummer:
-          description: Nummer der Aufgabe im Wettbewerb
+          description: Nummer der Aufgabe
           type: string
         punkte:
           format: int32
@@ -251,11 +193,16 @@ components:
           type: object
           allOf:
           - $ref: '#/components/schemas/Images'
-        statistik:
-          description: Statistik zu dieser Aufgabe
-          type: object
-          allOf:
-          - $ref: '#/components/schemas/StatistikAufgabe'
+        anzahlenJeLoesungsbuchstabe:
+          description: Anzahl je Lösungsbuchstabe A-E oder N für nicht gelöst
+          type: array
+          items:
+            $ref: '#/components/schemas/Gruppierungsitem'
+        anzahlenJeWertungscode:
+          description: "Anzahl je Wertungscode 'falsch', 'richtig', 'nicht gelöst'"
+          type: array
+          items:
+            $ref: '#/components/schemas/Gruppierungsitem'
     ConstraintViolation:
       type: object
       properties:
@@ -310,6 +257,76 @@ components:
       - EINS
       - ZWEI
       type: string
+    KlassenstufeDetails:
+      title: Statistik und Bilder der Wettbewerbsaufgaben einer Klassenstufe.
+      description: Bei nicht beendeten Wettbewerben ist dies eine Echtzeitstatistik
+        über die Beteiligung an dieser Klassenstufe. Ansonsten auch eine Auswertungsstatistik.
+      type: object
+      properties:
+        wettbewerbsjahr:
+          description: Jahr des Wettbewerbs
+          type: string
+        klassenstufe:
+          description: Klassenstufe in menschenlesbarer Form
+          type: string
+        beendet:
+          description: "Flag, ob der Wettbewerb beendet ist. Falls ja, sind die Statistiken\
+            \ konstant, falls nicht, kann man sie immer wieder neu laden"
+          type: boolean
+        anzahlKinderGesamt:
+          format: int32
+          description: "untere Schranke für die Anzahl aller Kinder, die teilgenommen\
+            \ haben"
+          type: integer
+          example: 16534
+        medianUndGesamtpunkte:
+          description: fasst den Median dieser Klassenstufe und die maximal erreichtbare
+            Anzahl Punkte zusammen
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/MedianDto'
+        kinderJeLand:
+          description: "Histogramm der Kinder je Land, wobei PRIVAT als ein Land interpretiert\
+            \ wird."
+          type: array
+          items:
+            $ref: '#/components/schemas/Gruppierungsitem'
+        kinderJeTeilnahmeart:
+          description: Anzahl der teilnehmenden Kinder je Teilnahmeart (PRIVAT/SCHULE
+            - untere Schranke)
+          type: array
+          items:
+            $ref: '#/components/schemas/Gruppierungsitem'
+        kinderJeSprache:
+          description: Anzahl der teilnehmenden Kinder je Sprache (de/en - untere
+            Schranke)
+          type: array
+          items:
+            $ref: '#/components/schemas/Gruppierungsitem'
+        kinderJePunktintervall:
+          description: Anzahl der teilnehmenden Kinder je Punktzahl (untere Schranke)
+          type: array
+          items:
+            $ref: '#/components/schemas/Gruppierungsitem'
+        rohpunkte:
+          description: Rohpunktitems der Gesamtstatistik
+          type: array
+          items:
+            $ref: '#/components/schemas/RohpunktItem'
+        aufgaben:
+          description: die einzelnen Aufgaben mit Lösungen
+          type: array
+          items:
+            $ref: '#/components/schemas/AufgabeDetails'
+    MedianDto:
+      type: object
+      properties:
+        medianMalTausend:
+          format: int32
+          type: integer
+        gesamtpunkte:
+          format: int32
+          type: integer
     MessagePayload:
       description: eine kategorisierte Meldung
       type: object
@@ -320,9 +337,32 @@ components:
         message:
           description: die message
           type: string
-    MinikaenguruKlassenstufeDto:
+    MjaAufgabeDetails:
+      description: Details einer Aufgabe eines Minkänguru-Wettbewerbs aus der Archivanwendung
+      type: object
+      properties:
+        nummer:
+          description: Nummer der Aufgabe im Wettbewerb
+          type: string
+        punkte:
+          format: int32
+          description: Punkte für diese Aufgabe.
+          type: integer
+        loesungsbuchstabe:
+          description: der korrekte Lösungsbuchstabe
+          type: string
+        quelle:
+          description: Quelle ür eine Zitatsection
+          type: string
+        images:
+          description: "Images, die angezeigt werden können. Frage und optionale Lö\
+            sung"
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/Images'
+    MjaAufgabenKlassenstufeDto:
       description: Aufgaben und Lösungen eines Minkänguru-Wettbewerbs für eine gegebene
-        Klassenstufe
+        Klassenstufe.
       type: object
       properties:
         wettbewerbsjahr:
@@ -335,26 +375,91 @@ components:
           description: die einzelnen Aufgaben mit Lösungen
           type: array
           items:
-            $ref: '#/components/schemas/Aufgabe'
-    StatistikAufgabe:
+            $ref: '#/components/schemas/MjaAufgabeDetails'
+    MkGatewayStatistikAufgabe:
       description: Statistik zu einer Aufgabe
       type: object
       properties:
-        anzahlRichtig:
-          format: int64
-          description: Anzahl richtiger Lösungen
+        nummer:
+          description: Nummer der Aufgabe im Wettbewerb
+          type: string
+        strafpunkte:
+          description: Strafpunkte bei falscher Lösung.
+          type: string
+        anzahlenJeLoesungsbuchstabe:
+          description: Anzahl je Lösungsbuchstabe A-E oder N für nicht gelöst
+          type: array
+          items:
+            $ref: '#/components/schemas/Gruppierungsitem'
+        anzahlenJeWertungscode:
+          description: "Anzahl je Wertungscode 'falsch', 'richtig', 'nicht gelöst'"
+          type: array
+          items:
+            $ref: '#/components/schemas/Gruppierungsitem'
+    MkGatewayStatistikKlassenstufe:
+      description: statistische Daten zu einer Wettbewerbsklassenstufe
+      type: object
+      properties:
+        wettbewerbsjahr:
+          description: Jahr des Wettbewerbs
+          type: string
+        klassenstufe:
+          description: Klassenstufe in menschenlesbarer Form
+          type: string
+        beendet:
+          description: "Flag, ob der Wettbewerb beendet ist"
+          type: boolean
+        anzahlKinderGesamt:
+          format: int32
+          description: "Anzahl der Kinder, zu denen Lösungszettel vorliegen"
           type: integer
-          example: 245
-        anzahlFalsch:
-          format: int64
-          description: Anzahl falscher Lösungen
-          type: integer
-          example: 524
-        anzahlNicht:
-          format: int64
-          description: Anzahl Aufgabe ausgelassen
-          type: integer
-          example: 102
+        medianUndGesamtpunkte:
+          description: fasst den Median dieser Klassenstufe und die maximal erreichtbare
+            Anzahl Punkte zusammen
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/MedianDto'
+        kinderJeLand:
+          description: "Histogramm der Kinder je Land, wobei PRIVAT als ein Land interpretiert\
+            \ wird."
+          type: array
+          items:
+            $ref: '#/components/schemas/Gruppierungsitem'
+        kinderJeTeilnahmeart:
+          type: array
+          items:
+            $ref: '#/components/schemas/Gruppierungsitem'
+        kinderJeSprache:
+          type: array
+          items:
+            $ref: '#/components/schemas/Gruppierungsitem'
+        kinderJePunktintervall:
+          description: "Anzahl Kinder, die in eins der Punktintervalle in der Gesamtstatistik\
+            \ fallen"
+          type: array
+          items:
+            $ref: '#/components/schemas/Gruppierungsitem'
+        rohpunkte:
+          description: Rohpunktitems der Gesamtstatistik
+          type: array
+          items:
+            $ref: '#/components/schemas/RohpunktItem'
+        aufgabenstatistiken:
+          type: array
+          items:
+            $ref: '#/components/schemas/MkGatewayStatistikAufgabe'
+    RohpunktItem:
+      title: Ein Rohpunktitem für die Gesamtstatistik
+      description: "enthält eine Punktzahl als String, die Anzahl der Lösungszettel\
+        \ mit dieser Punktzahl sowie den Prozentrang dieser Punktzahl."
+      type: object
+      properties:
+        punkte:
+          type: string
+        anzahl:
+          type: string
+        prozentrang:
+          type: string
     StatusWettbewerb:
       enum:
       - ERFASST

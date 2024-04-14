@@ -17,10 +17,10 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.statistik.mkbiza.MkBiZaStatistikKlassenstufe;
 import de.egladil.web.mk_gateway.domain.statistik.mkbiza.MkBiZaStatistikService;
 import de.egladil.web.mk_gateway.domain.statistik.mkbiza.MkBiZaWettbewerb;
 import de.egladil.web.mk_gateway.domain.statistik.mkbiza.MkBiZaWettbewerbDetails;
-import de.egladil.web.mk_gateway.domain.statistik.mkbiza.StatistikAufgabe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -108,16 +108,16 @@ public class MkBiZaResource {
 		content = @Content(schema = @Schema(implementation = MessagePayload.class)))
 	public Response getStatistikWettbewerb(@NotNull @PathParam(value = "jahr") final Integer wettbewerbsjahr) {
 
-		MkBiZaWettbewerbDetails responsePayload = statistikService.getStatistik(wettbewerbsjahr);
+		MkBiZaWettbewerbDetails responsePayload = statistikService.getStatistikJahr(wettbewerbsjahr);
 
 		return Response.ok(responsePayload).build();
 	}
 
 	@GET
-	@Path("wettbewerbe/{jahr}/{klassenstufe}/aufgaben/{nummer}")
+	@Path("wettbewerbe/{jahr}/{klasse}")
 	@Operation(
-		operationId = "getStatistikAufgabe",
-		summary = "Gibt die Statistik für eine spezielle Aufgabe zurück")
+		operationId = "getStatistikJahrKlassenstufe",
+		summary = "Gibt die Statistik für eine Klassenstufe eines Wettbewerbs zurück")
 	@Parameters({
 		@Parameter(
 			in = ParameterIn.PATH,
@@ -128,18 +128,13 @@ public class MkBiZaResource {
 			in = ParameterIn.PATH,
 			name = "klassenstufe",
 			description = "Klassenstufe",
-			required = true),
-		@Parameter(
-			in = ParameterIn.PATH,
-			name = "nummer",
-			description = "Nummer der Aufgabe",
 			required = true) })
 	@APIResponse(
 		name = "OKResponse",
 		responseCode = "200",
 		content = @Content(
 			mediaType = "application/json",
-			schema = @Schema(implementation = StatistikAufgabe.class)))
+			schema = @Schema(implementation = MkBiZaStatistikKlassenstufe.class)))
 	@APIResponse(
 		name = "Unauthorized",
 		description = "S2S-Autentifizierung schlug fehl",
@@ -160,13 +155,14 @@ public class MkBiZaResource {
 		description = "Serverfehler",
 		responseCode = "500",
 		content = @Content(schema = @Schema(implementation = MessagePayload.class)))
-	public Response getStatistikAufgabe(@NotNull @PathParam(
-		value = "jahr") final Integer wettbewerbsjahr, @NotNull @PathParam(
-			value = "klassenstufe") final Klassenstufe klassenstufe, @NotNull @PathParam(
-				value = "nummer") final String aufgabennummer) {
+	// @formatter:off
+	public Response getStatistikJahrKlassenstufe(
+		@NotNull @PathParam(value = "jahr") final Integer wettbewerbsjahr,
+		@NotNull @PathParam(value = "klasse") final Klassenstufe klassenstufe) {
+	// @formatter:on
 
-		StatistikAufgabe responsePayload = this.statistikService.getStatistikZuAufgabe(wettbewerbsjahr, klassenstufe,
-			aufgabennummer);
+		MkBiZaStatistikKlassenstufe responsePayload = statistikService.getStatistikJahrKlassenstufe(wettbewerbsjahr, klassenstufe);
+
 		return Response.ok(responsePayload).build();
 	}
 

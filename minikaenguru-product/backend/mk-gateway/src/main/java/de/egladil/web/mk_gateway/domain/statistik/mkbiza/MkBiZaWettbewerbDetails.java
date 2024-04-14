@@ -7,6 +7,8 @@ package de.egladil.web.mk_gateway.domain.statistik.mkbiza;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
@@ -54,6 +56,14 @@ public class MkBiZaWettbewerbDetails {
 
 	@JsonProperty
 	private List<MkBiZaGruppierungsitem> medianeJeKlassenstufe = new ArrayList<>();
+
+	@JsonProperty
+	@Schema(description = "Anzahl der teilnehmenden Kinder je Punktintervall (untere Schranke)")
+	private List<MkBiZaGruppierungsitem> kinderJePunktintervall;
+
+	@JsonProperty
+	@Schema(description = "Anzahl der teilnehmenden Kinder je Punktzahl (untere Schranke)")
+	private List<MkBiZaGruppierungsitem> kinderJeAbsolutePunktzahl;
 
 	public MkBiZaWettbewerbDetails addKlassenstufe(final Klassenstufe klassenstufe) {
 

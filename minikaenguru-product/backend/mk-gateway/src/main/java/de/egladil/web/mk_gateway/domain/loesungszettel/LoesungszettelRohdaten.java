@@ -23,6 +23,9 @@ public class LoesungszettelRohdaten {
 	@JsonProperty
 	private String nutzereingabe;
 
+	/**
+	 * lückenlose Aneinanderreihung aller vom Kind gesetzten Antwortbuchstaben A-E oder N. 15 für Klasse 2, 12 für Klasse 1
+	 */
 	@JsonProperty
 	private String antwortcode;
 
