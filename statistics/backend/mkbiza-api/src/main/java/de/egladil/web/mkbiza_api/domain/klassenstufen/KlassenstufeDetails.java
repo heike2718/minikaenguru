@@ -22,7 +22,6 @@ import de.egladil.web.mkbiza_api.domain.dto.Gruppierungsitem;
 	title = "Statistik und Bilder der Wettbewerbsaufgaben einer Klassenstufe.")
 public class KlassenstufeDetails {
 
-	@JsonProperty
 	@Schema(description = "Jahr des Wettbewerbs")
 	private String wettbewerbsjahr;
 

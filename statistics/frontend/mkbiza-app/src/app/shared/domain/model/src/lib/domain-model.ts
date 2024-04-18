@@ -21,6 +21,11 @@ export const BAR_BACKGROUND_COLOR_3 = '#FD9DB2';
 #FFC234 gelb
 */
 
+export interface ChartModel {
+  readonly labels: string[],
+  readonly data: number[]
+};
+
 
 export interface Images {
   readonly imageFrage: string,
@@ -78,7 +83,61 @@ export interface WettbewerbDetailsGUIModel {
 };
 
 
-export interface ChartModel {
-  readonly labels: string[],
-  readonly data: number[]
+export interface MedianUndGesamtpunkte {
+  readonly medianMalTausend: number;
+  readonly gesamtpunkte: number;
+};
+
+export interface Rohpunktitem {
+  readonly punkte: string;
+  readonly anzahl: string;
+  readonly prozentrang: string;
+};
+
+export interface Aufgabendetails {
+  readonly nummer: string;
+  readonly punkte: number;
+  readonly strafpunkte: string;
+  readonly loesungsbuchstabe: string;
+  readonly quelle: string;
+  readonly images: Images;
+  readonly anzahlenJeLoesungsbuchstabe: Gruppierungsitem[];
+  readonly anzahlenJeWertungscode: Gruppierungsitem[];
+};
+
+export interface KlassenstufeDetails {
+  readonly wettbewerbsjahr: string;
+  readonly klassenstufe: Klassenstufe;
+  readonly beendet: boolean;
+  readonly anzahlKinderGesamt: number;
+  readonly medianUndGesamtpunkte: MedianUndGesamtpunkte | undefined;
+  readonly kinderJeLand: Gruppierungsitem[];
+  readonly kinderJeTeilnahmeart: Gruppierungsitem[];
+  readonly kinderJeSprache: Gruppierungsitem[];
+  readonly kinderJePunktintervall: Gruppierungsitem[];
+  readonly rohpunkte: Rohpunktitem[];
+  readonly aufgaben: Aufgabendetails[];
+};
+
+export interface StatistikKlassenstufeChartData {
+  readonly chartDataKinderJeLand: ChartData<'bar'>;
+  readonly chartModelKinderJeTeilnahmeart: ChartModel;
+  readonly chartModelKinderJeSprache: ChartModel;
+  readonly chartDataKinderJePunktintervall: ChartData<'bar'>;
+}
+
+export interface StatistikAufgabeChartData {
+  readonly chartDataAnzahlenJeLoesungsbuchstabe: ChartData<'bar'>;
+  readonly chartDataAnzahlenJeWertungscode: ChartModel;
+};
+
+export interface AufgabeGUIModel {
+  readonly aufgabendetails: Aufgabendetails;
+  readonly chartData: StatistikAufgabeChartData;
+};
+
+export interface KlassenstufeGUIModel {
+  readonly klassenstufeDetails: KlassenstufeDetails;
+  readonly chartDataKlassenstufe: StatistikKlassenstufeChartData;
+  readonly aufgabenGUI: AufgabeGUIModel[];
 };

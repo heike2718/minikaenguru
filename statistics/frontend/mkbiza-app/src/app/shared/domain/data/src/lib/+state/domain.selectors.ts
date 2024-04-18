@@ -38,6 +38,16 @@ const wettbewerbIDs = createSelector(
     (state) => state.wettbewerbe.map(w => w.jahr)
 );
 
+const klassenstufeDetails = createSelector(
+    selectDomainState,
+    (state) => state.klassenstufendetails
+);
+
+const selectedKlassenstufe = createSelector(
+    selectDomainState,
+    (state) => state.selectedKlassenstufe
+);
+
 export const fromDomain = {
     wettbewerbe,
     jahreAnzahlKinder,
@@ -45,5 +55,7 @@ export const fromDomain = {
     jahreMediane,
     wettbewerbdetails,
     selectedWettbewerb,
-    wettbewerbIDs
+    wettbewerbIDs,
+    klassenstufeDetails,
+    selectedKlassenstufe
 };

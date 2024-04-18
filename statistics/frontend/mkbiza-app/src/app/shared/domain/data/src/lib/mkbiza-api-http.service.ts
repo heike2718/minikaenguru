@@ -1,6 +1,6 @@
 import { Injectable, inject } from "@angular/core";
 import { Observable } from "rxjs";
-import { WettbewerbDetails, WettbewerbOverview } from "@mkbiza-app/domain-model";
+import { Klassenstufe, KlassenstufeDetails, WettbewerbDetails, WettbewerbOverview } from "@mkbiza-app/domain-model";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 
@@ -24,6 +24,13 @@ export class MkbizaAPIHttpService {
         const url = this.#url + jahr;
         const headers = new HttpHeaders().set('Accept', 'application/json');
         return this.#http.get<WettbewerbDetails>(url, { headers: headers });
+    }
+
+    loadKlassenstufe(jahr: number, klassenstufe: Klassenstufe): Observable<KlassenstufeDetails> {
+
+        const url = this.#url + jahr + '/' + klassenstufe;
+        const headers = new HttpHeaders().set('Accept', 'application/json');
+        return this.#http.get<KlassenstufeDetails>(url, { headers: headers });
     }
 
 }

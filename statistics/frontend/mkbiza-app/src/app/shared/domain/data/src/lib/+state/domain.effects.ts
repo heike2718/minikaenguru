@@ -29,4 +29,12 @@ export class DomainEffects {
             map((wettbewerb) => domainActions.wETTBEWERB_LOADED({ wettbewerb }))
         );
     });
+
+    loadKlassenstufe$ = createEffect(() => {
+        return this.#actions.pipe(
+            ofType(domainActions.lOAD_KLASSENSTUFE),
+            switchMap((action) => this.#httpService.loadKlassenstufe(action.jahr, action.klassenstufe)),
+            map((klassenstufeDetails) => domainActions.kLASSENSTUFE_LOADED({klassenstufeDetails}))
+        )
+    });
 };

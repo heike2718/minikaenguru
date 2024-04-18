@@ -3,7 +3,7 @@ import { domainActions, fromDomain } from '@mkbiza-app/domain-data';
 
 import { Store, select } from "@ngrx/store";
 import { Observable, Subscription, take } from "rxjs";
-import { WettbewerbDetailsGUIModel, WettbewerbOverview } from "@mkbiza-app/domain-model";
+import { Klassenstufe, KlassenstufeGUIModel, WettbewerbDetailsGUIModel, WettbewerbOverview } from "@mkbiza-app/domain-model";
 import { ChartData } from "chart.js";
 import { filterDefined } from "./filter-defined";
 
@@ -15,6 +15,7 @@ export class DomainFacade {
     #store = inject(Store);
 
     #loadWettbewerbsdetailsSubscription = new Subscription();
+    #loadKlassenstufeSubscription = new Subscription();
 
     wettbewerbIDs$: Observable<number[]> = this.#store.select(fromDomain.wettbewerbIDs);
     wettbewerbe$: Observable<WettbewerbOverview[]> = this.#store.select(fromDomain.wettbewerbe);
@@ -22,6 +23,7 @@ export class DomainFacade {
     jahreMediane$: Observable<ChartData<'bar'>> = this.#store.select(fromDomain.jahreMediane).pipe(filterDefined);
     jahreKinderKlassenstufe$: Observable<ChartData<'bar'>> = this.#store.select(fromDomain.jahreKinderKlassenstufe).pipe(filterDefined);    
     selectedWettbewewerb$: Observable<WettbewerbDetailsGUIModel> = this.#store.select(fromDomain.selectedWettbewerb).pipe(filterDefined);
+    selectedKlassenstufe$: Observable<KlassenstufeGUIModel> = this.#store.select(fromDomain.selectedKlassenstufe).pipe(filterDefined);
 
     loadWettbewerbe(): void {
         this.#store.dispatch(domainActions.lOAD_WETTBEWERBE());
@@ -41,6 +43,24 @@ export class DomainFacade {
                 this.#store.dispatch(domainActions.sELECT_WETTBEWERBDETAILS({wettbewerbGUIModel: filtered[0]}));
             } else {
                 this.#store.dispatch(domainActions.lOAD_WETTBEWERB({jahr}));
+            }
+        });
+    }
+
+    loadKlassenstufeDetails(jahr: number, klassenstufe: Klassenstufe): void {
+
+        this.#loadKlassenstufeSubscription.unsubscribe();
+
+        this.#loadKlassenstufeSubscription = this.#store.pipe(
+            select(fromDomain.klassenstufeDetails),
+            take(1)
+        ).subscribe((klassenstufen: KlassenstufeGUIModel[]) => {
+
+            const filtered = klassenstufen.filter(k => k.klassenstufeDetails.wettbewerbsjahr === '' + jahr && k.klassenstufeDetails.klassenstufe === klassenstufe);
+            if (filtered.length === 1 && filtered[0].klassenstufeDetails.beendet) {
+                this.#store.dispatch(domainActions.sELECT_KLASSENSTUFEDETAILS({klassenstufeGUIModel: filtered[0]}));
+            } else {
+                this.#store.dispatch(domainActions.lOAD_KLASSENSTUFE({jahr, klassenstufe}));
             }
         });
     }

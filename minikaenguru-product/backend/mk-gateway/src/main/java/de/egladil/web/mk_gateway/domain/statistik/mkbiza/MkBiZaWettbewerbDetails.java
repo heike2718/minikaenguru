@@ -112,7 +112,6 @@ public class MkBiZaWettbewerbDetails {
 	public void addKinderJeKlassenstufe(final MkBiZaGruppierungsitem kinderJeKlassenstufe, final Klassenstufe klassenstufe) {
 
 		this.kinderJeKlassenstufe.add(kinderJeKlassenstufe);
-		this.klassenstufen.add(klassenstufe);
 
 	}
 

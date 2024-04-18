@@ -157,6 +157,33 @@ public class MkBiZaStatistikService {
 			MkBiZaGruppierungsitem gruppierungsitem = new MkBiZaGruppierungsitem().withName(klassenstufe.getLabel())
 				.withAnzahl(anzahl);
 			result.addKinderJeKlassenstufe(gruppierungsitem, klassenstufe);
+
+			switch (klassenstufe) {
+
+			case IKID:
+				if (StringUtils.isNotBlank(wettbewerb.loesungsbuchstabenIkids())) {
+
+					result.addKlassenstufe(klassenstufe);
+				}
+				break;
+
+			case EINS:
+				if (StringUtils.isNotBlank(wettbewerb.loesungsbuchstabenKlasse1())) {
+
+					result.addKlassenstufe(klassenstufe);
+				}
+				break;
+
+			case ZWEI:
+				if (StringUtils.isNotBlank(wettbewerb.loesungsbuchstabenKlasse2())) {
+
+					result.addKlassenstufe(klassenstufe);
+				}
+				break;
+
+			default:
+				LOGGER.error("unerwartete Klassenstufe {}", klassenstufe);
+			}
 		}
 
 		for (Sprache sprache : Sprache.values()) {

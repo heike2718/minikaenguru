@@ -10,7 +10,9 @@ import { StatistikJahreChartData,
     mapToChartDataJahreMediane,
     mapToChartDataSingleDataset,
     mapToChartDataMediane,
-    mapToChartModel
+    mapToChartModel,
+    KlassenstufeGUIModel,
+    KlassenstufeDetails
 } from "@mkbiza-app/domain-model";
 
 export interface DomainState {
@@ -18,13 +20,17 @@ export interface DomainState {
     readonly statistikJahreChartData: StatistikJahreChartData | undefined;
     readonly wettbewerbdetails: WettbewerbDetailsGUIModel[];
     readonly selectedWettbewerb: WettbewerbDetailsGUIModel | undefined;
+    readonly klassenstufendetails: KlassenstufeGUIModel[];
+    readonly selectedKlassenstufe: KlassenstufeGUIModel | undefined;
 };
 
 const initialDomainState: DomainState = {
     wettbewerbe: [],
     statistikJahreChartData: undefined,
     wettbewerbdetails: [],
-    selectedWettbewerb: undefined  
+    selectedWettbewerb: undefined,
+    klassenstufendetails: [],
+    selectedKlassenstufe: undefined
 };
 
 export const domainFeature = createFeature({

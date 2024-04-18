@@ -72,4 +72,13 @@
 <mkbiza-bar-chart [headline]="'Schulen je Land'" [myCanvasId]="'wettbewerb.schulenJeLand'"
     [chartData]=statistics.chartDataSchulenJeLand></mkbiza-bar-chart>
 }
+
+<h2>Statistiken Klassenstufen</h2>
+
+@for (klassenstufe of klassenstufeLabels; track $index) {
+    <div class="centered">
+        <button mat-flat-button color="primary" class="mb-2" (click)="onKlassenstufeClick(klassenstufe)">{{klassenstufe}}</button>
+    </div>
+}
+
 }
