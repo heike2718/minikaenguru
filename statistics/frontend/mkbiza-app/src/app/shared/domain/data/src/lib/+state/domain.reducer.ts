@@ -1,6 +1,7 @@
 import { createFeature, createReducer, on } from "@ngrx/store";
 import { domainActions } from "./domain.actions";
-import { StatistikJahreChartData,
+import {
+    StatistikJahreChartData,
     StatistikWettbewerbChartData,
     WettbewerbDetailsGUIModel,
     WettbewerbOverview,
@@ -12,7 +13,11 @@ import { StatistikJahreChartData,
     mapToChartDataMediane,
     mapToChartModel,
     KlassenstufeGUIModel,
-    KlassenstufeDetails
+    KlassenstufeDetails,
+    StatistikKlassenstufeChartData,
+    mapToKlassenstufeMedianChartData,
+    Aufgabendetails,
+    AufgabeGUIModel
 } from "@mkbiza-app/domain-model";
 
 export interface DomainState {
@@ -39,7 +44,7 @@ export const domainFeature = createFeature({
         initialDomainState,
         on(domainActions.wETTBEWERBE_LOADED, (state, action): DomainState => {
 
-            const wettbewerbe = action.wettbewerbe;            
+            const wettbewerbe = action.wettbewerbe;
             const statistikJahreChartData: StatistikJahreChartData = {
                 chartDataJahreAnzahlKinder: mapToChartDataJahreAnzahlKinder(wettbewerbe),
                 chartDataJahreKinderKlassenstufe: mapToChartDataJahreKinderKlassenstufe(wettbewerbe),
@@ -54,7 +59,7 @@ export const domainFeature = createFeature({
         }),
         on(domainActions.wETTBEWERB_LOADED, (state, action): DomainState => {
 
-            const wettbewerb = action.wettbewerb;  
+            const wettbewerb = action.wettbewerb;
 
             const chartData: StatistikWettbewerbChartData = {
                 chartDataSchulanmeldungenVersusSchulteilnahmen: mapToAnmeldungenVersusTeilnahmen(wettbewerb),
@@ -63,7 +68,7 @@ export const domainFeature = createFeature({
                 chartModelKinderJeSprache: mapToChartModel(wettbewerb.kinderJeSprache),
                 chartModelKinderJeTeilnahmeart: mapToChartModel(wettbewerb.kinderJeTeilnahmeart),
                 chartDataMediane: mapToChartDataMediane(wettbewerb),
-                chartDataSchulenJeLand: mapToChartDataSingleDataset(wettbewerb.schulenJeLand, 'Schulen')                
+                chartDataSchulenJeLand: mapToChartDataSingleDataset(wettbewerb.schulenJeLand, 'Schulen')
             };
 
             const alreadyLoaded = state.wettbewerbdetails.some(w => w.wettbewerb.jahr === wettbewerb.jahr);
@@ -71,8 +76,8 @@ export const domainFeature = createFeature({
             const wettbewerbGuiModel: WettbewerbDetailsGUIModel = {
                 wettbewerb: wettbewerb,
                 chartData: chartData
-            };     
-            
+            };
+
 
             return {
                 ...state,
@@ -86,7 +91,58 @@ export const domainFeature = createFeature({
                 ...state,
                 selectedWettbewerb: action.wettbewerbGUIModel
             }
-        })
+        }),
+        on(domainActions.kLASSENSTUFE_LOADED, (state, action): DomainState => {
+
+            const klassenstufeDetails: KlassenstufeDetails = action.klassenstufeDetails;
+
+            const chartDataKlassenstufe: StatistikKlassenstufeChartData = {
+                chartDataKinderJeLand: mapToChartDataSingleDataset(klassenstufeDetails.kinderJeLand, 'Kinder'),
+                chartDataKinderJePunktintervall: mapToChartDataSingleDataset(klassenstufeDetails.kinderJePunktintervall, 'Kinder je Punktintervall'),
+                chartModelKinderJeSprache: mapToChartModel(klassenstufeDetails.kinderJeSprache),
+                chartModelKinderJeTeilnahmeart: mapToChartModel(klassenstufeDetails.kinderJeTeilnahmeart),
+                chartDataMedianUndGesamtpunkte: mapToKlassenstufeMedianChartData(klassenstufeDetails.medianUndGesamtpunkte)
+            };
+
+            const alreadyLoaded = state.klassenstufendetails.some(kd => kd.klassenstufeDetails.wettbewerbsjahr === klassenstufeDetails.wettbewerbsjahr && kd.klassenstufeDetails.klassenstufe === klassenstufeDetails.klassenstufe);
+
+            const aufgaben: Aufgabendetails[] = klassenstufeDetails.aufgaben;
+            const aufgabenGUIModel: AufgabeGUIModel[] = [];
+
+            for (let i = 0; i < aufgaben.length; i++) {
+
+                const theAufgabendetails: Aufgabendetails = aufgaben[i];
+
+                const guiModel: AufgabeGUIModel = {
+                    aufgabendetails: theAufgabendetails,
+                    chartData: {
+                        chartDataAnzahlenJeLoesungsbuchstabe: mapToChartDataSingleDataset(theAufgabendetails.anzahlenJeLoesungsbuchstabe, 'Anzahl Antworten je Lösungsbuchstabe'),
+                        chartModelAnzahlenJeWertungscode: mapToChartModel(theAufgabendetails.anzahlenJeWertungscode)
+                    }
+                };
+
+                aufgabenGUIModel.push(guiModel);
+            }            
+
+            const klassenstufeGuiModel: KlassenstufeGUIModel = {
+                klassenstufeDetails: klassenstufeDetails,
+                aufgabenGUIModel: aufgabenGUIModel,
+                chartDataKlassenstufe: chartDataKlassenstufe
+            }
+
+            return {
+                ...state,
+                klassenstufendetails: alreadyLoaded ? [...state.klassenstufendetails ] : [...state.klassenstufendetails, klassenstufeGuiModel],
+                selectedKlassenstufe: klassenstufeGuiModel
+            }
+        }),
+        on(domainActions.sELECT_KLASSENSTUFEDETAILS, (state, action): DomainState => {
+
+            return {
+                ...state,
+                selectedKlassenstufe: action.klassenstufeGUIModel
+            }
+        }),
     )
 });
 

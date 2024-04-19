@@ -271,13 +271,7 @@ mat-dialog-content {
     grid-gap: 2rem;
 }
 
-.button-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(20em, 1fr));
-    align-items: center;
-    margin-left: 2rem;
-    grid-gap: 2rem;
-}
+
 
 label {
     font-weight: bold;

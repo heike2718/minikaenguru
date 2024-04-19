@@ -73,10 +73,10 @@
     [chartData]=statistics.chartDataSchulenJeLand></mkbiza-bar-chart>
 }
 
-<h2>Statistiken Klassenstufen</h2>
+<h2>Zu den Statistiken der Klassenstufen</h2>
 
 @for (klassenstufe of klassenstufeLabels; track $index) {
-    <div class="centered">
+    <div class="button-container">
         <button mat-flat-button color="primary" class="mb-2" (click)="onKlassenstufeClick(klassenstufe)">{{klassenstufe}}</button>
     </div>
 }

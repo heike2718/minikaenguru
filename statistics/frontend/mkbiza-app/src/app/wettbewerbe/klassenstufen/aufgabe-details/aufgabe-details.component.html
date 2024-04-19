@@ -1,0 +1,29 @@
+<h3>Aufgabe {{aufgabe.aufgabendetails.nummer}}</h3>
+
+<p>Punkte: {{aufgabe.aufgabendetails.punkte}}, Strafpunkte bei falscher Lösung: {{aufgabe.aufgabendetails.strafpunkte}}
+</p>
+
+
+
+@if (aufgabe.aufgabendetails.images) {
+
+<mkbiza-aufgabe-images [images]="aufgabe.aufgabendetails.images"></mkbiza-aufgabe-images>
+
+} @else {
+
+<p>Die Aufgabe ist leider noch nicht im Aufgabenarchiv</p>
+
+}
+
+@if (aufgabe.aufgabendetails.quelle) {
+<p>Quelle: {{aufgabe.aufgabendetails.quelle}}</p>
+}
+
+<p>Lösunsgbuchstabe: {{aufgabe.aufgabendetails.loesungsbuchstabe}}
+</p>
+
+<mkbiza-pie-chart [headline]="'Anzahl richtig, falsch, nicht gelöst'" [myCanvasId]=chartWertungscodeId
+    [chartData]=chartDataAnzahlenJeWertungscode></mkbiza-pie-chart>
+
+<mkbiza-bar-chart [headline]="'Anzahl je Lösunsgbuchstabe (N=nicht gelöst)'" [myCanvasId]=chartLoesungsbuchstabenId
+    [chartData]=statistics.chartDataAnzahlenJeLoesungsbuchstabe></mkbiza-bar-chart>

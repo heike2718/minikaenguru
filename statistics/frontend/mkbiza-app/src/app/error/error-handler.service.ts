@@ -1,8 +1,9 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { ErrorHandler, Injectable, Injector } from "@angular/core";
+import { ErrorHandler, Injectable, Injector, inject } from "@angular/core";
 import { extractServerErrorMessage, getHttpErrorResponse } from "@mkbiza-app/http";
 import { MessageService } from "@mkbiza-app/messages-api";
 import { Configuration } from "../shared/config/src/lib/config/configuration";
+import { Router } from "@angular/router";
 
 
 @Injectable({
@@ -10,41 +11,47 @@ import { Configuration } from "../shared/config/src/lib/config/configuration";
 })
 export class ErrorHandlerService implements ErrorHandler {
 
-    constructor(private injector: Injector) { }
+    #messageService = inject(MessageService);
+    #configuration = inject(Configuration);
+    #router = inject(Router);
+    
 
     handleError(error: NonNullable<unknown>): void {
-
-        const messageService = this.injector.get(MessageService);
-        
 
         const httpErrorResponse: HttpErrorResponse | undefined = getHttpErrorResponse(error);
 
         if (httpErrorResponse === undefined) {
-            this.#handleAnyOtherError(error, messageService)
+            this.#handleAnyOtherError(error)
         } else {
-            this.#handleHttpError(httpErrorResponse, messageService);
+            this.#handleHttpError(httpErrorResponse);
         }
     }
 
-    #handleHttpError(httpErrorResponse: HttpErrorResponse, messageService: MessageService): void {
+    #handleHttpError(httpErrorResponse: HttpErrorResponse): void {
 
         const message = extractServerErrorMessage(httpErrorResponse);
         if (message.level === 'WARN') {
-            messageService.warn(message.message);
+            this.#messageService.warn(message.message);
         } else {
-            messageService.error(message.message);
+            if (httpErrorResponse.status === 404) {
+                this.#router.navigateByUrl('error');
+                this.#messageService.error('Diesen Wettbewerb gibt es nicht.')
+            } else {
+                this.#messageService.error(message.message);   
+            }                     
         }
     }
 
-    #handleAnyOtherError(error: unknown, messageService: MessageService): void {
-        
-        messageService.error('Upsi, da ist ein unerwarteter Fehler aufgetreten. Bitte sende eine Mail an minikaenguru(at)egladil.de, am Besten mit Screenshot');
-       
-        const configuraton = this.injector.get(Configuration);
+    #handleAnyOtherError(error: unknown): void {
 
-        if (!configuraton.production) {
+        this.#messageService.error('Upsi, da ist ein unerwarteter Fehler aufgetreten. Bitte sende eine Mail an minikaenguru(at)egladil.de, am Besten mit Screenshot');
+
+
+        if (!this.#configuration.production) {
             console.error(error);
             // hier mal schauen, wie nötig ein logging endpoint in der API ist
-        }       
+        }
+
+        
     }
 }

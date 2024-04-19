@@ -419,6 +419,27 @@ npx nx generate @nx/angular:component --name=generic-pie-chart --directory=src/a
 
 [src,cli]
 ----
-npx nx generate @nx/angular:component --name=klassenstufe-details --directory=src/app/wettbewerbe/klassenstufe-details --nameAndDirectoryFormat=as-provided --selector=mkbiza-klassenstufe --no-interactive --dry-run
+npx nx generate @nx/angular:component --name=klassenstufe-details --directory=src/app/wettbewerbe/klassenstufen/klassenstufe-details --nameAndDirectoryFormat=as-provided --selector=mkbiza-klassenstufe --no-interactive --dry-run
+----
+
+=== aufgabe-details-component
+
+[src,cli]
+----
+npx nx generate @nx/angular:component --name=aufgabe-details --directory=src/app/wettbewerbe/klassenstufen/aufgabe-details --nameAndDirectoryFormat=as-provided --selector=mkbiza-aufgabe --no-interactive --dry-run
+----
+
+=== aufgabe-images-component
+
+[src,cli]
+----
+npx nx generate @nx/angular:component --name=aufgabe-images --directory=src/app/wettbewerbe/klassenstufen/aufgabe-images --nameAndDirectoryFormat=as-provided --selector=mkbiza-aufgabe-images --no-interactive --dry-run
+----
+
+=== error-component
+
+[src,cli]
+----
+npx nx generate @nx/angular:component --name=error --directory=src/app/error --nameAndDirectoryFormat=as-provided --selector=mkbiza-error --no-interactive --dry-run
 ----
 

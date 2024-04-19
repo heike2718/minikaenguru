@@ -26,10 +26,9 @@ export interface ChartModel {
   readonly data: number[]
 };
 
-
 export interface Images {
-  readonly imageFrage: string,
-  readonly imageLoesung: string
+  readonly imageFrage: string | null;
+  readonly imageLoesung: string | null;
 };
 
 export interface Gruppierungsitem {
@@ -98,9 +97,9 @@ export interface Aufgabendetails {
   readonly nummer: string;
   readonly punkte: number;
   readonly strafpunkte: string;
-  readonly loesungsbuchstabe: string;
-  readonly quelle: string;
-  readonly images: Images;
+  readonly loesungsbuchstabe: string | undefined;
+  readonly quelle: string | undefined;
+  readonly images: Images | undefined;
   readonly anzahlenJeLoesungsbuchstabe: Gruppierungsitem[];
   readonly anzahlenJeWertungscode: Gruppierungsitem[];
 };
@@ -109,8 +108,9 @@ export interface KlassenstufeDetails {
   readonly wettbewerbsjahr: string;
   readonly klassenstufe: Klassenstufe;
   readonly beendet: boolean;
+  readonly startguthaben: number;
   readonly anzahlKinderGesamt: number;
-  readonly medianUndGesamtpunkte: MedianUndGesamtpunkte | undefined;
+  readonly medianUndGesamtpunkte: MedianUndGesamtpunkte | null;
   readonly kinderJeLand: Gruppierungsitem[];
   readonly kinderJeTeilnahmeart: Gruppierungsitem[];
   readonly kinderJeSprache: Gruppierungsitem[];
@@ -124,11 +124,12 @@ export interface StatistikKlassenstufeChartData {
   readonly chartModelKinderJeTeilnahmeart: ChartModel;
   readonly chartModelKinderJeSprache: ChartModel;
   readonly chartDataKinderJePunktintervall: ChartData<'bar'>;
+  readonly chartDataMedianUndGesamtpunkte: ChartData<'bar'>;
 }
 
 export interface StatistikAufgabeChartData {
   readonly chartDataAnzahlenJeLoesungsbuchstabe: ChartData<'bar'>;
-  readonly chartDataAnzahlenJeWertungscode: ChartModel;
+  readonly chartModelAnzahlenJeWertungscode: ChartModel;
 };
 
 export interface AufgabeGUIModel {
@@ -139,5 +140,5 @@ export interface AufgabeGUIModel {
 export interface KlassenstufeGUIModel {
   readonly klassenstufeDetails: KlassenstufeDetails;
   readonly chartDataKlassenstufe: StatistikKlassenstufeChartData;
-  readonly aufgabenGUI: AufgabeGUIModel[];
+  readonly aufgabenGUIModel: AufgabeGUIModel[];
 };

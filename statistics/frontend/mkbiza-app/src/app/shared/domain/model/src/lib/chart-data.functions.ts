@@ -1,5 +1,5 @@
 import { ChartData, ChartDataset } from 'chart.js';
-import { BAR_BACKGROUND_COLOR_BLUE, BAR_BACKGROUND_COLOR_GREENLY, BAR_BACKGROUND_COLOR_YELLOW, Gruppierungsitem, ChartModel, WettbewerbDetails, WettbewerbOverview, BAR_BACKGROUND_COLOR_1, BAR_BACKGROUND_COLOR_2, BAR_BACKGROUND_COLOR_3 } from './domain-model';
+import { BAR_BACKGROUND_COLOR_BLUE, BAR_BACKGROUND_COLOR_GREENLY, BAR_BACKGROUND_COLOR_YELLOW, Gruppierungsitem, ChartModel, WettbewerbDetails, WettbewerbOverview, BAR_BACKGROUND_COLOR_1, BAR_BACKGROUND_COLOR_2, BAR_BACKGROUND_COLOR_3, MedianUndGesamtpunkte } from './domain-model';
 
 /*
 
@@ -260,6 +260,29 @@ export function mapToChartDataSingleDataset(gruppierungsitems: Gruppierungsitem[
     return result;
 };
 
+export function mapToKlassenstufeMedianChartData(medianUndGesamtpunkte: MedianUndGesamtpunkte | null): ChartData<'bar'> {
+
+    const mediane: Gruppierungsitem[] = [];
+
+    if (medianUndGesamtpunkte) {
+        mediane.push({
+            name: 'Median',
+            anzahl: medianUndGesamtpunkte.medianMalTausend / 1000
+        });
+        mediane.push({
+            name: '1/3 der Gesamtpunktzahl',
+            anzahl: medianUndGesamtpunkte.gesamtpunkte / 3
+        });
+        mediane.push({
+            name: 'Gesamtpunktzahl',
+            anzahl: medianUndGesamtpunkte.gesamtpunkte
+        });
+    }   
+
+    return mapToChartDataSingleDataset(mediane, 'Median');
+
+}
+
 // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //             generische Funktionen
 // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -278,3 +301,5 @@ export function mapToChartModel(items: Gruppierungsitem[]): ChartModel {
     return { labels, data };
 
 };
+
+

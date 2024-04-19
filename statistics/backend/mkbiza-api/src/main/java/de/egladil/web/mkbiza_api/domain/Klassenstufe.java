@@ -9,7 +9,33 @@ package de.egladil.web.mkbiza_api.domain;
  */
 public enum Klassenstufe {
 
-	IKID,
-	EINS,
-	ZWEI;
+	IKID {
+
+		@Override
+		public int getStartguthaben() {
+
+			return 12;
+		}
+
+	},
+	EINS {
+
+		@Override
+		public int getStartguthaben() {
+
+			return 12;
+		}
+
+	},
+	ZWEI {
+
+		@Override
+		public int getStartguthaben() {
+
+			return 15;
+		}
+
+	};
+
+	public abstract int getStartguthaben();
 }

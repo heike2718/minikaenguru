@@ -57,11 +57,12 @@ export class DomainFacade {
         ).subscribe((klassenstufen: KlassenstufeGUIModel[]) => {
 
             const filtered = klassenstufen.filter(k => k.klassenstufeDetails.wettbewerbsjahr === '' + jahr && k.klassenstufeDetails.klassenstufe === klassenstufe);
-            if (filtered.length === 1 && filtered[0].klassenstufeDetails.beendet) {
-                this.#store.dispatch(domainActions.sELECT_KLASSENSTUFEDETAILS({klassenstufeGUIModel: filtered[0]}));
-            } else {
-                this.#store.dispatch(domainActions.lOAD_KLASSENSTUFE({jahr, klassenstufe}));
-            }
+            // if (filtered.length === 1 && filtered[0].klassenstufeDetails.beendet) {
+            //     this.#store.dispatch(domainActions.sELECT_KLASSENSTUFEDETAILS({klassenstufeGUIModel: filtered[0]}));
+            // } else {
+            //     this.#store.dispatch(domainActions.lOAD_KLASSENSTUFE({jahr, klassenstufe}));
+            // }
+            this.#store.dispatch(domainActions.lOAD_KLASSENSTUFE({jahr, klassenstufe}));
         });
     }
 }

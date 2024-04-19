@@ -23,6 +23,7 @@ import de.egladil.web.mkbiza_api.domain.dto.Gruppierungsitem;
 public class KlassenstufeDetails {
 
 	@Schema(description = "Jahr des Wettbewerbs")
+	@JsonProperty
 	private String wettbewerbsjahr;
 
 	@JsonProperty
@@ -33,6 +34,10 @@ public class KlassenstufeDetails {
 	@Schema(
 		description = "Flag, ob der Wettbewerb beendet ist. Falls ja, sind die Statistiken konstant, falls nicht, kann man sie immer wieder neu laden")
 	private boolean beendet;
+
+	@JsonProperty
+	@Schema(description = "Anzahl Punkte des Startpunktguthabens")
+	private int startguthaben;
 
 	@JsonProperty
 	@Schema(description = "untere Schranke für die Anzahl aller Kinder, die teilgenommen haben", example = "16534")
@@ -56,19 +61,21 @@ public class KlassenstufeDetails {
 
 	@JsonProperty
 	@Schema(description = "Anzahl der teilnehmenden Kinder je Punktzahl (untere Schranke)")
-	private List<Gruppierungsitem> kinderJePunktintervall;
+	private List<Gruppierungsitem> kinderJePunktintervall = new ArrayList<>();
 
 	@JsonProperty
 	@Schema(description = "Rohpunktitems der Gesamtstatistik")
-	private List<RohpunktItem> rohpunkte;
+	private List<RohpunktItem> rohpunkte = new ArrayList<>();
 
 	@JsonProperty
 	@Schema(description = "die einzelnen Aufgaben mit Lösungen")
 	private List<AufgabeDetails> aufgaben = new ArrayList<>();
 
-	public void addAufgaben(final AufgabeDetails aufgabe) {
+	@Override
+	public String toString() {
 
-		this.aufgaben.add(aufgabe);
+		return "KlassenstufeDetails [wettbewerbsjahr=" + wettbewerbsjahr + ", klassenstufe=" + klassenstufe + ", beendet=" + beendet
+			+ ", anzahlKinderGesamt=" + anzahlKinderGesamt + "]";
 	}
 
 	public void setWettbewerbsjahr(final String wettbewerbsjahr) {
@@ -114,6 +121,21 @@ public class KlassenstufeDetails {
 	public void setRohpunkte(final List<RohpunktItem> rohpunkte) {
 
 		this.rohpunkte = rohpunkte;
+	}
+
+	public void setAufgaben(final List<AufgabeDetails> aufgaben) {
+
+		this.aufgaben = aufgaben;
+	}
+
+	public void setBeendet(final boolean beendet) {
+
+		this.beendet = beendet;
+	}
+
+	public void setStartguthaben(final int startguthaben) {
+
+		this.startguthaben = startguthaben;
 	}
 
 }

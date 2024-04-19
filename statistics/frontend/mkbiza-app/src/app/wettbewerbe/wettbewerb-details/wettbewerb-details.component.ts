@@ -45,8 +45,6 @@ export class WettbewerbDetailsComponent implements OnInit, OnDestroy {
 
   #wettbewerbSusbcription = new Subscription();
 
-
-
   get isHandset(): boolean {
     return this.#breakpointObserver.isMatched(Breakpoints.Handset);
   }

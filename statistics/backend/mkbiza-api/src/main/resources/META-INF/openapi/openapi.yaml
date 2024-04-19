@@ -273,6 +273,10 @@ components:
           description: "Flag, ob der Wettbewerb beendet ist. Falls ja, sind die Statistiken\
             \ konstant, falls nicht, kann man sie immer wieder neu laden"
           type: boolean
+        startguthaben:
+          format: int32
+          description: Anzahl Punkte des Startpunktguthabens
+          type: integer
         anzahlKinderGesamt:
           format: int32
           description: "untere Schranke für die Anzahl aller Kinder, die teilgenommen\
