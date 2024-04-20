@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { AufgabeGUIModel, StatistikAufgabeChartData } from '@mkbiza-app/domain-model';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
@@ -7,6 +7,7 @@ import { AufgabeImagesComponent } from '../aufgabe-images/aufgabe-images.compone
 import { ChartData } from 'chart.js';
 import { GenericBarChartComponent } from '../../generic-bar-chart/generic-bar-chart.component';
 import { GenericPieChartComponent } from '../../generic-pie-chart/generic-pie-chart.component';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'mkbiza-aufgabe',
@@ -34,6 +35,12 @@ export class AufgabeDetailsComponent implements OnInit {
 
   @Input()
   aufgabe!: AufgabeGUIModel;
+
+  #breakpointObserver = inject(BreakpointObserver);
+
+  get isHandset(): boolean {
+    return this.#breakpointObserver.isMatched(Breakpoints.Handset);
+  }
 
   ngOnInit(): void {
 

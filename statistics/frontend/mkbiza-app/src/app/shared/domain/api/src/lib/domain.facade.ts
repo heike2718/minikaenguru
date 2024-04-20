@@ -47,7 +47,19 @@ export class DomainFacade {
         });
     }
 
-    loadKlassenstufeDetails(jahr: number, klassenstufe: Klassenstufe): void {
+    getKlassenstufeDetails(jahr: number, pathParamKlassenstufe: string): void {
+        let klassenstufe: Klassenstufe = 'IKID';
+
+        switch (pathParamKlassenstufe) {
+            case 'IKID': klassenstufe = 'IKID'; break;
+            case 'EINS': klassenstufe = 'EINS'; break;
+            case 'ZWEI': klassenstufe = 'ZWEI'; break;
+        }
+
+        this.#loadKlassenstufeDetails(jahr, klassenstufe);
+    }
+
+    #loadKlassenstufeDetails(jahr: number, klassenstufe: Klassenstufe): void {
 
         this.#loadKlassenstufeSubscription.unsubscribe();
 
@@ -57,12 +69,12 @@ export class DomainFacade {
         ).subscribe((klassenstufen: KlassenstufeGUIModel[]) => {
 
             const filtered = klassenstufen.filter(k => k.klassenstufeDetails.wettbewerbsjahr === '' + jahr && k.klassenstufeDetails.klassenstufe === klassenstufe);
-            // if (filtered.length === 1 && filtered[0].klassenstufeDetails.beendet) {
-            //     this.#store.dispatch(domainActions.sELECT_KLASSENSTUFEDETAILS({klassenstufeGUIModel: filtered[0]}));
-            // } else {
-            //     this.#store.dispatch(domainActions.lOAD_KLASSENSTUFE({jahr, klassenstufe}));
-            // }
-            this.#store.dispatch(domainActions.lOAD_KLASSENSTUFE({jahr, klassenstufe}));
+            if (filtered.length === 1 && filtered[0].klassenstufeDetails.beendet) {
+                this.#store.dispatch(domainActions.sELECT_KLASSENSTUFEDETAILS({klassenstufeGUIModel: filtered[0]}));
+            } else {
+                this.#store.dispatch(domainActions.lOAD_KLASSENSTUFE({jahr, klassenstufe}));
+            }
+            // this.#store.dispatch(domainActions.lOAD_KLASSENSTUFE({jahr, klassenstufe}));
         });
     }
 }

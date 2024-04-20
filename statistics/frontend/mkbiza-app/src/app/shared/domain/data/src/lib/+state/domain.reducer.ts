@@ -104,7 +104,12 @@ export const domainFeature = createFeature({
                 chartDataMedianUndGesamtpunkte: mapToKlassenstufeMedianChartData(klassenstufeDetails.medianUndGesamtpunkte)
             };
 
-            const alreadyLoaded = state.klassenstufendetails.some(kd => kd.klassenstufeDetails.wettbewerbsjahr === klassenstufeDetails.wettbewerbsjahr && kd.klassenstufeDetails.klassenstufe === klassenstufeDetails.klassenstufe);
+            const klassenstufeKey = klassenstufeDetails.wettbewerbsjahr + '-' + klassenstufeDetails.klassenstufe;
+
+            const alreadyLoaded = state.klassenstufendetails.some(kd => 
+                kd.klassenstufeDetails.wettbewerbsjahr + '-' + kd.klassenstufeDetails.klassenstufe === klassenstufeKey);
+
+            // console.log('klassenstufendetails.length = ' + state.klassenstufendetails.length + ', already loaded: ' + alreadyLoaded);
 
             const aufgaben: Aufgabendetails[] = klassenstufeDetails.aufgaben;
             const aufgabenGUIModel: AufgabeGUIModel[] = [];

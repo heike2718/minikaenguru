@@ -26,6 +26,9 @@ export class GenericBarChartComponent implements OnInit {
 
   @Input({transform: booleanAttribute})
   showLegend!: boolean;
+  
+  @Input()
+  breite =  '90vw;'
 
   chartOptions!: ChartConfiguration<'bar'>['options'];
 
@@ -56,6 +59,10 @@ export class GenericBarChartComponent implements OnInit {
 
   get isHandset(): boolean {
     return this.#breakpointObserver.isMatched(Breakpoints.Handset);
+  }
+
+  getStyle(): string {
+    return 'position: relative; height: 30vh; width: ' + this.breite;
   }
 
 }

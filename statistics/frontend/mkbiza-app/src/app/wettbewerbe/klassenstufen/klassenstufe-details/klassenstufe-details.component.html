@@ -47,7 +47,14 @@
     [chartData]=statistics.chartDataKinderJePunktintervall></mkbiza-bar-chart>
 }
 
-
+<div class="button-container">
+    @for (klassenstufe of klassenstufeLabels; track $index) {
+    <button mat-flat-button color="primary" class="ml-2 mb-2"
+        (click)="onKlassenstufeClick(klassenstufe)">{{klassenstufe}}</button>
+    }
+    <button mat-flat-button color="primary" class="ml-2 mb-2" (click)="gotoWettbewerb()">Minikänguru
+        {{klassenstufeGuiModel.klassenstufeDetails.wettbewerbsjahr}}</button>
+</div>
 
 @for (aufgabe of klassenstufeGuiModel.aufgabenGUIModel; track $index) {
 <div class="section-divider"></div>
@@ -55,4 +62,26 @@
 
 }
 
+@if (isHandset) {
+@for (klassenstufe of klassenstufeLabels; track $index) {
+<div class="centered">
+    <button mat-flat-button color="primary" class="mb-2"
+        (click)="onKlassenstufeClick(klassenstufe)">{{klassenstufe}}</button>
+</div>
+
+}
+<div class="centered">
+    <button mat-flat-button color="primary" class="mb-2" (click)="gotoWettbewerb()">Minikänguru
+        {{klassenstufeGuiModel.klassenstufeDetails.wettbewerbsjahr}}</button>
+</div>
+} @else {
+<div class="button-container">
+    @for (klassenstufe of klassenstufeLabels; track $index) {
+    <button mat-flat-button color="primary" class="ml-2 mb-2"
+        (click)="onKlassenstufeClick(klassenstufe)">{{klassenstufe}}</button>
+    }
+    <button mat-flat-button color="primary" class="ml-2 mb-2" (click)="gotoWettbewerb()">Minikänguru
+        {{klassenstufeGuiModel.klassenstufeDetails.wettbewerbsjahr}}</button>
+</div>
+}
 }

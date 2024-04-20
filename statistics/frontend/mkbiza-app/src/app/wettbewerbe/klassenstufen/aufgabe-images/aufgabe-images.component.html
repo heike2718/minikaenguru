@@ -1,6 +1,7 @@
 @if (images.imageFrage !== null) {
 <div class="bordered bg-white">
-    <img src="data:image/png;base64,{{images.imageFrage}}" class="mja-image" />
+    <img src="data:image/png;base64,{{images.imageFrage}}" class="mja-image"
+    [style.width]="isHandset ? '80%' : '20%'" />
 </div>
 }
 
@@ -16,7 +17,8 @@
             </mat-expansion-panel-header>
 
             <div class="bordered bg-white">
-                <img src="data:image/png;base64,{{images.imageLoesung}}" class="mja-image" />
+                <img src="data:image/png;base64,{{images.imageLoesung}}" class="mja-image"
+                [style.width]="isHandset ? '80%' : '15%'" />
             </div>
         </mat-expansion-panel>
 

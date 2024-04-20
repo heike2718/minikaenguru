@@ -80,7 +80,7 @@ public class KlassenstufeService {
 
 				AufgabeDetails aufgabeDetails = new AufgabeDetails();
 				aufgabeDetails.setAnzahlenJeLoesungsbuchstabe(statistik.getAnzahlenJeLoesungsbuchstabe());
-				aufgabeDetails.setAnzahlenJeWertungscode(statistik.getAnzahlenJeWertungscode());
+				aufgabeDetails.setAnzahlenJeWertungscode(this.sortTheWertungscodes(statistik.getAnzahlenJeWertungscode()));
 				aufgabeDetails.setNummer(statistik.getNummer());
 				aufgabeDetails.setStrafpunkte(statistik.getStrafpunkte());
 				aufgabendetailsList.add(aufgabeDetails);
@@ -224,5 +224,46 @@ public class KlassenstufeService {
 
 		}
 		return result;
+	}
+
+	private List<Gruppierungsitem> sortTheWertungscodes(final List<Gruppierungsitem> gruppierungsitems) {
+
+		List<Gruppierungsitem> result = new ArrayList<>(gruppierungsitems.size());
+
+		{
+
+			Optional<Gruppierungsitem> optItem = gruppierungsitems.stream().filter(g -> "richtig gelöst".equals(g.getName()))
+				.findFirst();
+
+			if (optItem.isPresent()) {
+
+				result.add(optItem.get());
+			}
+		}
+
+		{
+
+			Optional<Gruppierungsitem> optItem = gruppierungsitems.stream().filter(g -> "falsch gelöst".equals(g.getName()))
+				.findFirst();
+
+			if (optItem.isPresent()) {
+
+				result.add(optItem.get());
+			}
+		}
+
+		{
+
+			Optional<Gruppierungsitem> optItem = gruppierungsitems.stream().filter(g -> "nicht gelöst".equals(g.getName()))
+				.findFirst();
+
+			if (optItem.isPresent()) {
+
+				result.add(optItem.get());
+			}
+		}
+
+		return result;
+
 	}
 }

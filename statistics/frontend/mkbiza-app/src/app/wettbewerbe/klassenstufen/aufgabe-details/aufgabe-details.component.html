@@ -22,8 +22,20 @@
 <p>Lösunsgbuchstabe: {{aufgabe.aufgabendetails.loesungsbuchstabe}}
 </p>
 
+@if (isHandset) {
 <mkbiza-pie-chart [headline]="'Anzahl richtig, falsch, nicht gelöst'" [myCanvasId]=chartWertungscodeId
     [chartData]=chartDataAnzahlenJeWertungscode></mkbiza-pie-chart>
 
 <mkbiza-bar-chart [headline]="'Anzahl je Lösunsgbuchstabe (N=nicht gelöst)'" [myCanvasId]=chartLoesungsbuchstabenId
     [chartData]=statistics.chartDataAnzahlenJeLoesungsbuchstabe></mkbiza-bar-chart>
+
+} @else {
+<div class="grid-container-2 mt-2 mb-2">
+    <mkbiza-bar-chart [breite]="'50vw;'" [headline]="'Anzahl je Lösunsgbuchstabe (N=nicht gelöst)'" [myCanvasId]=chartLoesungsbuchstabenId
+        [chartData]=statistics.chartDataAnzahlenJeLoesungsbuchstabe ></mkbiza-bar-chart>
+    <mkbiza-pie-chart [headline]="'Anzahl richtig, falsch, nicht gelöst'" [myCanvasId]=chartWertungscodeId
+        [chartData]=chartDataAnzahlenJeWertungscode></mkbiza-pie-chart>
+
+</div>
+
+}

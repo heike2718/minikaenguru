@@ -22,4 +22,9 @@ public class Gruppierungsitem {
 	@Schema(description = "Anzahl Elemente mit dieser Semantik", example = "356")
 	private long anzahl;
 
+	public String getName() {
+
+		return name;
+	}
+
 }
