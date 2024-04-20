@@ -11,6 +11,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import de.egladil.web.mkbiza_api.domain.Passung;
 import de.egladil.web.mkbiza_api.domain.dto.Gruppierungsitem;
 
 /**
@@ -50,6 +51,18 @@ public class AufgabeDetails {
 	@JsonProperty
 	@Schema(description = "Anzahl je Wertungscode 'falsch', 'richtig', 'nicht gelöst'")
 	private List<Gruppierungsitem> anzahlenJeWertungscode = new ArrayList<>();
+
+	@JsonProperty
+	@Schema(description = "Grad der Zugehörigkeit zur gewählten Aufgabenkatedorie")
+	private String gradZugehoerigkeitZuAufgabenkategorie;
+
+	@JsonProperty
+	@Schema(description = "Passung der Aufgabe zu ihrer Kategorie")
+	private Passung passung;
+
+	@JsonProperty
+	@Schema(description = "prozentualer Anteil richtiger Lösungen")
+	private String prozentRichtigerLoesungen;
 
 	public String getNummer() {
 
@@ -131,4 +144,33 @@ public class AufgabeDetails {
 		this.anzahlenJeWertungscode = anzahlenJeWertungscode;
 	}
 
+	public String getGradZugehoerigkeitZuAufgabenkategorie() {
+
+		return gradZugehoerigkeitZuAufgabenkategorie;
+	}
+
+	public void setGradZugehoerigkeitZuAufgabenkategorie(final String membershipDegree) {
+
+		this.gradZugehoerigkeitZuAufgabenkategorie = membershipDegree;
+	}
+
+	public Passung getPassung() {
+
+		return passung;
+	}
+
+	public void setPassung(final Passung passung) {
+
+		this.passung = passung;
+	}
+
+	public String getProzentRichtigerLoesungen() {
+
+		return prozentRichtigerLoesungen;
+	}
+
+	public void setProzentRichtigerLoesungen(final String prozentRichtigerLoesungen) {
+
+		this.prozentRichtigerLoesungen = prozentRichtigerLoesungen;
+	}
 }

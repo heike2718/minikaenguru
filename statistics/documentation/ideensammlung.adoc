@@ -19,11 +19,17 @@ Optionen:
 
 === Weitere Statistiken
 
-* je Aufgabe: Anzahl Antworten zu jedem Antwortbuchstaben als Balkendiagramm
+[x] je Aufgabe: Anzahl Antworten zu jedem Antwortbuchstaben als Balkendiagramm
 
-* Anzahl Kinder je Punktintervall
+[x] Anzahl Kinder je Punktintervall
 
-* Rohpunkte irgendwie auflisten (als Tabelle oder als gekippte Balkengrafik)
+[x] Rohpunkte irgendwie auflisten (als Tabelle oder als gekippte Balkengrafik)
+
+[x] Anzahl Kinder mit voller Punktzahl
+
+[x] Passung des Schwierigkeitsgrads der Aufgabe
+
+[x] Prozent richtiger Lösungen
 
 == Schwellwerte für die Aufgabenkategorien
 

@@ -44,13 +44,13 @@ export class AufgabeDetailsComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.chartWertungscodeId = 'wertungscode-' + this.aufgabe.aufgabendetails.nummer;  
-    this.chartLoesungsbuchstabenId = 'loesungsbuchstaben-' + this.aufgabe.aufgabendetails.nummer;  
-    
+    this.chartWertungscodeId = 'wertungscode-' + this.aufgabe.aufgabendetails.nummer;
+    this.chartLoesungsbuchstabenId = 'loesungsbuchstaben-' + this.aufgabe.aufgabendetails.nummer;
+
 
     // brauchen swallowCopy, weil die Teile readonly sind
     this.statistics = {
-      chartDataAnzahlenJeLoesungsbuchstabe: { ...this.aufgabe.chartData.chartDataAnzahlenJeLoesungsbuchstabe },
+      chartDataAnzahlenJeLoesungsbuchstabe: this.aufgabe.chartData.chartDataAnzahlenJeLoesungsbuchstabe ? { ...this.aufgabe.chartData.chartDataAnzahlenJeLoesungsbuchstabe } : undefined,
       chartModelAnzahlenJeWertungscode: { ...this.aufgabe.chartData.chartModelAnzahlenJeWertungscode }
     }
 

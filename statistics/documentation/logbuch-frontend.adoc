@@ -443,3 +443,9 @@ npx nx generate @nx/angular:component --name=aufgabe-images --directory=src/app/
 npx nx generate @nx/angular:component --name=error --directory=src/app/error --nameAndDirectoryFormat=as-provided --selector=mkbiza-error --no-interactive --dry-run
 ----
 
+=== rohpunktitem-component
+
+[src,cli]
+----
+npx nx generate @nx/angular:component --name=rohpunktitem --directory=src/app/wettbewerbe/klassenstufen/rohpunktitem --nameAndDirectoryFormat=as-provided --selector=mkbiza-rohpunktitem --no-interactive --dry-run
+----

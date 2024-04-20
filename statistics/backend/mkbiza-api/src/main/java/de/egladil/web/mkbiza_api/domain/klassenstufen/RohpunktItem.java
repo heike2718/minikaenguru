@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @Schema(
 	title = "Ein Rohpunktitem für die Gesamtstatistik",
-	description = "enthält eine Punktzahl als String, die Anzahl der Lösungszettel mit dieser Punktzahl sowie den Prozentrang dieser Punktzahl.")
+	description = "enthält eine Punktzahl als String mit 2 Nachkommastellen, die Anzahl der Lösungszettel mit dieser Punktzahl sowie den Prozentrang dieser Punktzahl.")
 public class RohpunktItem {
 
 	@JsonProperty
@@ -24,5 +24,15 @@ public class RohpunktItem {
 
 	@JsonProperty
 	private String prozentrang;
+
+	public String getPunkte() {
+
+		return punkte;
+	}
+
+	public String getAnzahl() {
+
+		return anzahl;
+	}
 
 }

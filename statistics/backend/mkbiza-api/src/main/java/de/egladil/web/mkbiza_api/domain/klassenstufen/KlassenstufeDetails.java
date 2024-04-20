@@ -44,6 +44,10 @@ public class KlassenstufeDetails {
 	private int anzahlKinderGesamt;
 
 	@JsonProperty
+	@Schema(description = "untere Schranke für die Anzahl aller Kinder mit voller Punktzahl", example = "16534")
+	private int anzahlKinderMitVollerPunktzahl;
+
+	@JsonProperty
 	@Schema(description = "fasst den Median dieser Klassenstufe und die maximal erreichtbare Anzahl Punkte zusammen")
 	private MedianDto medianUndGesamtpunkte;
 
@@ -136,6 +140,11 @@ public class KlassenstufeDetails {
 	public void setStartguthaben(final int startguthaben) {
 
 		this.startguthaben = startguthaben;
+	}
+
+	public void setAnzahlKinderMitVollerPunktzahl(final int anzahlKinderMitVollerPunktzahl) {
+
+		this.anzahlKinderMitVollerPunktzahl = anzahlKinderMitVollerPunktzahl;
 	}
 
 }

@@ -10,6 +10,9 @@ import { GenericBarChartComponent } from '../../generic-bar-chart/generic-bar-ch
 import { GenericPieChartComponent } from '../../generic-pie-chart/generic-pie-chart.component';
 import { AufgabeDetailsComponent } from '../aufgabe-details/aufgabe-details.component';
 import { MatButtonModule } from '@angular/material/button';
+import { CdkAccordionModule } from '@angular/cdk/accordion';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { RohpunktitemComponent } from '../rohpunktitem/rohpunktitem.component';
 
 @Component({
   selector: 'mkbiza-klassenstufe',
@@ -21,7 +24,10 @@ import { MatButtonModule } from '@angular/material/button';
     GenericBarChartComponent,
     GenericPieChartComponent,
     AufgabeDetailsComponent,
-    MatButtonModule
+    RohpunktitemComponent,
+    MatButtonModule,
+    CdkAccordionModule,
+    MatExpansionModule
   ],
   templateUrl: './klassenstufe-details.component.html',
   styleUrl: './klassenstufe-details.component.scss',

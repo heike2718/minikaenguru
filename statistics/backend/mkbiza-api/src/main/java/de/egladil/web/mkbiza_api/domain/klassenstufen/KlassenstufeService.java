@@ -13,7 +13,10 @@ import org.jboss.resteasy.reactive.ClientWebApplicationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.egladil.web.mkbiza_api.domain.Aufgabenkategorie;
+import de.egladil.web.mkbiza_api.domain.FormattingUtils;
 import de.egladil.web.mkbiza_api.domain.Klassenstufe;
+import de.egladil.web.mkbiza_api.domain.StatistikUtils;
 import de.egladil.web.mkbiza_api.domain.aufgaben.AufgabeDetails;
 import de.egladil.web.mkbiza_api.domain.aufgaben.AufgabeDetailsComparator;
 import de.egladil.web.mkbiza_api.domain.aufgaben.MjaAufgabeDetails;
@@ -61,7 +64,10 @@ public class KlassenstufeService {
 		List<AufgabeDetails> aufgabendetailsList = new ArrayList<>();
 
 		KlassenstufeDetails result = new KlassenstufeDetails();
-		result.setAnzahlKinderGesamt(mkGatewayStatistikKlassenstufe.getAnzahlKinderGesamt());
+
+		int anzahlKinderGesamt = mkGatewayStatistikKlassenstufe.getAnzahlKinderGesamt();
+
+		result.setAnzahlKinderGesamt(anzahlKinderGesamt);
 		result.setKinderJeSprache(mkGatewayStatistikKlassenstufe.getKinderJeSprache());
 		result.setKinderJeTeilnahmeart(mkGatewayStatistikKlassenstufe.getKinderJeTeilnahmeart());
 		result.setKlassenstufe(mkGatewayStatistikKlassenstufe.getKlassenstufe());
@@ -72,15 +78,42 @@ public class KlassenstufeService {
 
 		if (mkGatewayStatistikKlassenstufe.isBeendet()) {
 
-			result.setKinderJePunktintervall(reverseTheList(mkGatewayStatistikKlassenstufe.getKinderJePunktintervall()));
+			result.setKinderJePunktintervall(
+				StatistikUtils.listReverse(mkGatewayStatistikKlassenstufe.getKinderJePunktintervall()));
 			result.setRohpunkte(mkGatewayStatistikKlassenstufe.getRohpunkte());
+
+			int anzahlKindermitVollerPunktzahl = StatistikUtils.findAnzahlKindermitVollerPunktzahl(
+				mkGatewayStatistikKlassenstufe.getRohpunkte(), klassenstufe, Integer.valueOf(jahr));
+
+			result.setAnzahlKinderMitVollerPunktzahl(anzahlKindermitVollerPunktzahl);
 			result.setMedianUndGesamtpunkte(mkGatewayStatistikKlassenstufe.getMedianUndGesamtpunkte());
 
 			for (MkGatewayStatistikAufgabe statistik : mkGatewayStatistikKlassenstufe.getAufgabenstatistiken()) {
 
 				AufgabeDetails aufgabeDetails = new AufgabeDetails();
-				aufgabeDetails.setAnzahlenJeLoesungsbuchstabe(statistik.getAnzahlenJeLoesungsbuchstabe());
-				aufgabeDetails.setAnzahlenJeWertungscode(this.sortTheWertungscodes(statistik.getAnzahlenJeWertungscode()));
+				Aufgabenkategorie aufgabenkategorie = Aufgabenkategorie.valueOfNummer(statistik.getNummer());
+
+				Optional<Gruppierungsitem> optRichtig = statistik.getAnzahlenJeWertungscode().stream()
+					.filter(g -> "richtig gelöst".equals(g.getName())).findFirst();
+
+				int anzahlRichtig = optRichtig.isEmpty() ? 0 : Long.valueOf(optRichtig.get().getAnzahl()).intValue();
+
+				double prozentRichtig = anzahlKinderGesamt > 0 ? anzahlRichtig * 100 / anzahlKinderGesamt : 0;
+
+				aufgabeDetails.setProzentRichtigerLoesungen(FormattingUtils.doubleAsString(prozentRichtig));
+				aufgabeDetails.setPassung(StatistikUtils.estimatePassung(aufgabenkategorie, prozentRichtig));
+
+				aufgabeDetails.setGradZugehoerigkeitZuAufgabenkategorie(
+					FormattingUtils.doubleAsString(
+						StatistikUtils.calculateMembershipDegree(aufgabenkategorie, anzahlRichtig, anzahlKinderGesamt)));
+
+				if (StatistikUtils.isDatenVorhanden(statistik.getAnzahlenJeLoesungsbuchstabe())) {
+
+					aufgabeDetails.setAnzahlenJeLoesungsbuchstabe(statistik.getAnzahlenJeLoesungsbuchstabe());
+				}
+
+				aufgabeDetails
+					.setAnzahlenJeWertungscode(StatistikUtils.sortTheWertungscodes(statistik.getAnzahlenJeWertungscode()));
 				aufgabeDetails.setNummer(statistik.getNummer());
 				aufgabeDetails.setStrafpunkte(statistik.getStrafpunkte());
 				aufgabendetailsList.add(aufgabeDetails);
@@ -110,28 +143,9 @@ public class KlassenstufeService {
 
 				for (AufgabeDetails aufgabeDetails : aufgabendetailsList) {
 
-					String kategorie = aufgabeDetails.getNummer().substring(0, 1);
-
-					switch (kategorie) {
-
-					case "A":
-						aufgabeDetails.setPunkte(3);
-						break;
-
-					case "B":
-						aufgabeDetails.setPunkte(4);
-						break;
-
-					case "C":
-						aufgabeDetails.setPunkte(5);
-						break;
-
-					default:
-						break;
-					}
-
+					Aufgabenkategorie aufgabenkategorie = Aufgabenkategorie.valueOfNummer(aufgabeDetails.getNummer());
+					aufgabeDetails.setPunkte(aufgabenkategorie.getPunkte());
 				}
-
 			}
 		}
 
@@ -213,57 +227,4 @@ public class KlassenstufeService {
 		return BaseAuthHeaderUtils.getSecretBase64(authConfig.header());
 	}
 
-	private List<Gruppierungsitem> reverseTheList(final List<Gruppierungsitem> gruppierungsitems) {
-
-		int anzahl = gruppierungsitems.size();
-		List<Gruppierungsitem> result = new ArrayList<>(anzahl);
-
-		for (int i = anzahl - 1; i >= 0; i--) {
-
-			result.add(gruppierungsitems.get(i));
-
-		}
-		return result;
-	}
-
-	private List<Gruppierungsitem> sortTheWertungscodes(final List<Gruppierungsitem> gruppierungsitems) {
-
-		List<Gruppierungsitem> result = new ArrayList<>(gruppierungsitems.size());
-
-		{
-
-			Optional<Gruppierungsitem> optItem = gruppierungsitems.stream().filter(g -> "richtig gelöst".equals(g.getName()))
-				.findFirst();
-
-			if (optItem.isPresent()) {
-
-				result.add(optItem.get());
-			}
-		}
-
-		{
-
-			Optional<Gruppierungsitem> optItem = gruppierungsitems.stream().filter(g -> "falsch gelöst".equals(g.getName()))
-				.findFirst();
-
-			if (optItem.isPresent()) {
-
-				result.add(optItem.get());
-			}
-		}
-
-		{
-
-			Optional<Gruppierungsitem> optItem = gruppierungsitems.stream().filter(g -> "nicht gelöst".equals(g.getName()))
-				.findFirst();
-
-			if (optItem.isPresent()) {
-
-				result.add(optItem.get());
-			}
-		}
-
-		return result;
-
-	}
 }

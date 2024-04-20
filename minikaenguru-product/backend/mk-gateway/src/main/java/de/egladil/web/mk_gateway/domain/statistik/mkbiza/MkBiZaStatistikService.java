@@ -435,7 +435,7 @@ public class MkBiZaStatistikService {
 		List<Loesungszettel> zettelKlassenstufe = loesungszettelRepository.loadAllForWettbewerbAndKlassenstufe(wettbewerb.id(),
 			klassenstufe);
 
-		if (wettbewerb.isBeendet()) {
+		if (wettbewerb.isBeendet() && !zettelKlassenstufe.isEmpty()) {
 
 			Map<String, Integer> aufgabennummernWithWertungscodeIndex = klassenstufe
 				.getAufgabennummernWithWertungscodeIndex(jahr);

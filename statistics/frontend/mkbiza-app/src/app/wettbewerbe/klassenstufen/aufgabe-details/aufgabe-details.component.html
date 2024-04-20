@@ -3,8 +3,6 @@
 <p>Punkte: {{aufgabe.aufgabendetails.punkte}}, Strafpunkte bei falscher Lösung: {{aufgabe.aufgabendetails.strafpunkte}}
 </p>
 
-
-
 @if (aufgabe.aufgabendetails.images) {
 
 <mkbiza-aufgabe-images [images]="aufgabe.aufgabendetails.images"></mkbiza-aufgabe-images>
@@ -26,13 +24,21 @@
 <mkbiza-pie-chart [headline]="'Anzahl richtig, falsch, nicht gelöst'" [myCanvasId]=chartWertungscodeId
     [chartData]=chartDataAnzahlenJeWertungscode></mkbiza-pie-chart>
 
+@if(statistics.chartDataAnzahlenJeLoesungsbuchstabe) {
 <mkbiza-bar-chart [headline]="'Anzahl je Lösunsgbuchstabe (N=nicht gelöst)'" [myCanvasId]=chartLoesungsbuchstabenId
     [chartData]=statistics.chartDataAnzahlenJeLoesungsbuchstabe></mkbiza-bar-chart>
+}
 
 } @else {
 <div class="grid-container-2 mt-2 mb-2">
-    <mkbiza-bar-chart [breite]="'50vw;'" [headline]="'Anzahl je Lösunsgbuchstabe (N=nicht gelöst)'" [myCanvasId]=chartLoesungsbuchstabenId
-        [chartData]=statistics.chartDataAnzahlenJeLoesungsbuchstabe ></mkbiza-bar-chart>
+
+
+    @if (statistics.chartDataAnzahlenJeLoesungsbuchstabe) {
+    <mkbiza-bar-chart [breite]="'50vw;'" [headline]="'Anzahl je Lösunsgbuchstabe (N=nicht gelöst)'"
+        [myCanvasId]=chartLoesungsbuchstabenId
+        [chartData]=statistics.chartDataAnzahlenJeLoesungsbuchstabe></mkbiza-bar-chart>
+    }
+
     <mkbiza-pie-chart [headline]="'Anzahl richtig, falsch, nicht gelöst'" [myCanvasId]=chartWertungscodeId
         [chartData]=chartDataAnzahlenJeWertungscode></mkbiza-pie-chart>
 

@@ -110,6 +110,7 @@ export interface KlassenstufeDetails {
   readonly beendet: boolean;
   readonly startguthaben: number;
   readonly anzahlKinderGesamt: number;
+  readonly anzahlKinderMitVollerPunktzahl: number;
   readonly medianUndGesamtpunkte: MedianUndGesamtpunkte | null;
   readonly kinderJeLand: Gruppierungsitem[];
   readonly kinderJeTeilnahmeart: Gruppierungsitem[];
@@ -128,7 +129,7 @@ export interface StatistikKlassenstufeChartData {
 }
 
 export interface StatistikAufgabeChartData {
-  readonly chartDataAnzahlenJeLoesungsbuchstabe: ChartData<'bar'>;
+  readonly chartDataAnzahlenJeLoesungsbuchstabe: ChartData<'bar'> | undefined;
   readonly chartModelAnzahlenJeWertungscode: ChartModel;
 };
 

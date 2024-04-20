@@ -290,6 +290,21 @@
             "items" : {
               "$ref" : "#/components/schemas/Gruppierungsitem"
             }
+          },
+          "gradZugehoerigkeitZuAufgabenkategorie" : {
+            "description" : "Grad der Zugehörigkeit zur gewählten Aufgabenkatedorie",
+            "type" : "string"
+          },
+          "passung" : {
+            "description" : "Passung der Aufgabe zu ihrer Kategorie",
+            "type" : "string",
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/Passung"
+            } ]
+          },
+          "prozentRichtigerLoesungen" : {
+            "description" : "prozentualer Anteil richtiger Lösungen",
+            "type" : "string"
           }
         }
       },
@@ -384,6 +399,12 @@
           "anzahlKinderGesamt" : {
             "format" : "int32",
             "description" : "untere Schranke für die Anzahl aller Kinder, die teilgenommen haben",
+            "type" : "integer",
+            "example" : 16534
+          },
+          "anzahlKinderMitVollerPunktzahl" : {
+            "format" : "int32",
+            "description" : "untere Schranke für die Anzahl aller Kinder mit voller Punktzahl",
             "type" : "integer",
             "example" : 16534
           },
@@ -613,9 +634,13 @@
           }
         }
       },
+      "Passung" : {
+        "enum" : [ "ZU_LEICHT", "RICHTIG", "ZU_SCHWER" ],
+        "type" : "string"
+      },
       "RohpunktItem" : {
         "title" : "Ein Rohpunktitem für die Gesamtstatistik",
-        "description" : "enthält eine Punktzahl als String, die Anzahl der Lösungszettel mit dieser Punktzahl sowie den Prozentrang dieser Punktzahl.",
+        "description" : "enthält eine Punktzahl als String mit 2 Nachkommastellen, die Anzahl der Lösungszettel mit dieser Punktzahl sowie den Prozentrang dieser Punktzahl.",
         "type" : "object",
         "properties" : {
           "punkte" : {

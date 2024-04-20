@@ -106,7 +106,7 @@ export const domainFeature = createFeature({
 
             const klassenstufeKey = klassenstufeDetails.wettbewerbsjahr + '-' + klassenstufeDetails.klassenstufe;
 
-            const alreadyLoaded = state.klassenstufendetails.some(kd => 
+            const alreadyLoaded = state.klassenstufendetails.some(kd =>
                 kd.klassenstufeDetails.wettbewerbsjahr + '-' + kd.klassenstufeDetails.klassenstufe === klassenstufeKey);
 
             // console.log('klassenstufendetails.length = ' + state.klassenstufendetails.length + ', already loaded: ' + alreadyLoaded);
@@ -118,16 +118,18 @@ export const domainFeature = createFeature({
 
                 const theAufgabendetails: Aufgabendetails = aufgaben[i];
 
+                const anzahl = theAufgabendetails.anzahlenJeLoesungsbuchstabe.map(g => g.anzahl).reduce((sum, current) => sum + current, 0);
+
                 const guiModel: AufgabeGUIModel = {
                     aufgabendetails: theAufgabendetails,
                     chartData: {
-                        chartDataAnzahlenJeLoesungsbuchstabe: mapToChartDataSingleDataset(theAufgabendetails.anzahlenJeLoesungsbuchstabe, 'Anzahl Antworten je Lösungsbuchstabe'),
+                        chartDataAnzahlenJeLoesungsbuchstabe: anzahl > 0 ? mapToChartDataSingleDataset(theAufgabendetails.anzahlenJeLoesungsbuchstabe, 'Anzahl Antworten je Lösungsbuchstabe') : undefined,
                         chartModelAnzahlenJeWertungscode: mapToChartModel(theAufgabendetails.anzahlenJeWertungscode)
                     }
                 };
 
                 aufgabenGUIModel.push(guiModel);
-            }            
+            }
 
             const klassenstufeGuiModel: KlassenstufeGUIModel = {
                 klassenstufeDetails: klassenstufeDetails,
@@ -137,7 +139,7 @@ export const domainFeature = createFeature({
 
             return {
                 ...state,
-                klassenstufendetails: alreadyLoaded ? [...state.klassenstufendetails ] : [...state.klassenstufendetails, klassenstufeGuiModel],
+                klassenstufendetails: alreadyLoaded ? [...state.klassenstufendetails] : [...state.klassenstufendetails, klassenstufeGuiModel],
                 selectedKlassenstufe: klassenstufeGuiModel
             }
         }),

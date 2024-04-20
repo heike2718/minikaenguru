@@ -27,4 +27,21 @@ public class Gruppierungsitem {
 		return name;
 	}
 
+	public long getAnzahl() {
+
+		return anzahl;
+	}
+
+	public Gruppierungsitem withName(final String name) {
+
+		this.name = name;
+		return this;
+	}
+
+	public Gruppierungsitem withAnzahl(final long anzahl) {
+
+		this.anzahl = anzahl;
+		return this;
+	}
+
 }
