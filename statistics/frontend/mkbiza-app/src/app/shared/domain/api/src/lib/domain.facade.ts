@@ -47,7 +47,7 @@ export class DomainFacade {
         });
     }
 
-    getKlassenstufeDetails(jahr: number, pathParamKlassenstufe: string): void {
+    loadKlassenstufeDetails(jahr: number, pathParamKlassenstufe: string): void {
         let klassenstufe: Klassenstufe = 'IKID';
 
         switch (pathParamKlassenstufe) {

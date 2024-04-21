@@ -142,7 +142,7 @@ public class StatistikUtils {
 			return 0;
 		}
 
-		double percentage = anzahlRichtig * 100 / anzahlGesamt;
+		double percentage = (double) anzahlRichtig * 100 / anzahlGesamt;
 
 		return calculateMembershipDegree(aufgabenkategorie, percentage);
 	}
@@ -238,5 +238,19 @@ public class StatistikUtils {
 			throw new IllegalArgumentException("unerwartete aufgabenkategorie " + aufgabenkategorie);
 		}
 
+	}
+
+	/**
+	 * Berechnet den Prozentsatz auf 2 Nachkommastellen gerundet.
+	 *
+	 * @param  anteil
+	 * @param  gesamt
+	 * @return
+	 */
+	public static double calculatePercentRoundedUpTo2Digits(final int anteil, final int gesamt) {
+
+		double prozent = gesamt > 0 ? (double) anteil * 100 / gesamt : 0;
+
+		return new BigDecimal(prozent).setScale(2, RoundingMode.HALF_UP).doubleValue();
 	}
 }

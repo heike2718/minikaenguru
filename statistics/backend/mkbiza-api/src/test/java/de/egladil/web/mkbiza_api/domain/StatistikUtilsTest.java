@@ -4,6 +4,8 @@
 // =====================================================
 package de.egladil.web.mkbiza_api.domain;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -117,6 +119,28 @@ public class StatistikUtilsTest {
 				System.out.println(value + " => " + membershipDegree);
 
 			}
+		}
+
+	}
+
+	@Nested
+	class ProzentTests {
+
+		@Test
+		void testProzent() {
+
+			// Arrange
+			int anteil = 105;
+			int gesamt = 245;
+
+			double expected = 42.86;
+
+			// Act
+			double result = StatistikUtils.calculatePercentRoundedUpTo2Digits(anteil, gesamt);
+
+			// Assert
+			assertEquals(expected, result);
+
 		}
 
 	}

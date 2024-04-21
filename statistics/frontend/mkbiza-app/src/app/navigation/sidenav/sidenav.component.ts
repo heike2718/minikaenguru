@@ -20,13 +20,13 @@ import { RouterLinkWithHref } from '@angular/router';
 })
 export class SidenavComponent {
 
-  version = '1.1.0';
+  version = '1.2.0';
 
   @Output()
   sidenavClose = new EventEmitter();
 
   public onSidenavClose = () => {
-    console.log('onSidenavClose');
+    // console.log('onSidenavClose');
     this.sidenavClose.emit();
   }
 

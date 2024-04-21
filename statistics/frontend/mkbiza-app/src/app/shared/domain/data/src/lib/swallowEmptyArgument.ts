@@ -5,6 +5,6 @@
 export function swallowEmptyArgument(argument: NonNullable<unknown>, doit: boolean): void {
 
     if (doit) {
-        console.log(argument);
+        // console.log(argument);
     }
 };

@@ -52,22 +52,22 @@ h2 {
     color: red;
 }
 
-.badge-green {
-    background-color: green;
-    color: white;
-    padding: 5px;
-    border-radius: 3px;
-}
-
 .badge-blue {
-    background-color: blue;
+    background-color: #059BFF;
     color: white;
     padding: 5px;
     border-radius: 3px;
 }
 
 .badge-orange {
-    background-color: rgba(255, 145, 0, 0.692);
+    background-color: #FF9020;
+    color: white;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.badge-red {
+    background-color: #FF4069;
     color: white;
     padding: 5px;
     border-radius: 3px;

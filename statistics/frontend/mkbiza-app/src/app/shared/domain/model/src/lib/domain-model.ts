@@ -2,6 +2,7 @@ import { ChartData } from "chart.js";
 
 export type StatusWettbewerb = 'ERFASST' | 'ANMELDUNG' | 'DOWNLOAD_LEHRER' | 'DOWNLOAD_PRIVAT' | 'BEENDET';
 export type Klassenstufe = 'IKID' | 'EINS' | 'ZWEI';
+export type Passung = 'ZU_LEICHT' | 'RICHTIG' | 'ZU_SCHWER';
 
 export const BAR_BACKGROUND_COLOR_BLUE = 'rgba(54, 162, 235, 0.5)';
 export const BAR_BACKGROUND_COLOR_YELLOW = 'rgba(255, 229, 169, 1)';
@@ -100,6 +101,9 @@ export interface Aufgabendetails {
   readonly loesungsbuchstabe: string | undefined;
   readonly quelle: string | undefined;
   readonly images: Images | undefined;
+  readonly gradZugehoerigkeitZuAufgabenkategorie: string | undefined;
+  readonly passung: Passung | undefined;
+  readonly prozentRichtigerLoesungen: string | undefined;
   readonly anzahlenJeLoesungsbuchstabe: Gruppierungsitem[];
   readonly anzahlenJeWertungscode: Gruppierungsitem[];
 };
@@ -135,6 +139,7 @@ export interface StatistikAufgabeChartData {
 
 export interface AufgabeGUIModel {
   readonly aufgabendetails: Aufgabendetails;
+  readonly badgeLabel: string;
   readonly chartData: StatistikAufgabeChartData;
 };
 

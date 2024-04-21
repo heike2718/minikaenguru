@@ -28,4 +28,9 @@ public class MedianDto {
 
 		this.gesamtpunkte = gesamtpunkte;
 	}
+
+	public int getMedianMalTausend() {
+
+		return medianMalTausend;
+	}
 }

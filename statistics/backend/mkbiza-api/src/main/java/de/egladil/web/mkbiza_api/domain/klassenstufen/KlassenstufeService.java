@@ -97,8 +97,7 @@ public class KlassenstufeService {
 					.filter(g -> "richtig gelöst".equals(g.getName())).findFirst();
 
 				int anzahlRichtig = optRichtig.isEmpty() ? 0 : Long.valueOf(optRichtig.get().getAnzahl()).intValue();
-
-				double prozentRichtig = anzahlKinderGesamt > 0 ? anzahlRichtig * 100 / anzahlKinderGesamt : 0;
+				double prozentRichtig = StatistikUtils.calculatePercentRoundedUpTo2Digits(anzahlRichtig, anzahlKinderGesamt);
 
 				aufgabeDetails.setProzentRichtigerLoesungen(FormattingUtils.doubleAsString(prozentRichtig));
 				aufgabeDetails.setPassung(StatistikUtils.estimatePassung(aufgabenkategorie, prozentRichtig));
@@ -107,15 +106,35 @@ public class KlassenstufeService {
 					FormattingUtils.doubleAsString(
 						StatistikUtils.calculateMembershipDegree(aufgabenkategorie, anzahlRichtig, anzahlKinderGesamt)));
 
-				if (StatistikUtils.isDatenVorhanden(statistik.getAnzahlenJeLoesungsbuchstabe())) {
+				List<Gruppierungsitem> anzahlenJeLoesungsbuchstabe = statistik.getAnzahlenJeLoesungsbuchstabe();
 
-					aufgabeDetails.setAnzahlenJeLoesungsbuchstabe(statistik.getAnzahlenJeLoesungsbuchstabe());
+				if (StatistikUtils.isDatenVorhanden(anzahlenJeLoesungsbuchstabe)) {
+
+					if (klassenstufe == Klassenstufe.IKID) {
+
+						// hier liefert mk-gateway leider A-E und N, obwohl es nur von A bis C geht.
+						List<Gruppierungsitem> gruppierungsitemsIKID = anzahlenJeLoesungsbuchstabe.stream()
+							.filter(g -> !"D".equals(g.getName()) && !"E".equals(g.getName())).toList();
+
+						aufgabeDetails.setAnzahlenJeLoesungsbuchstabe(gruppierungsitemsIKID);
+					} else {
+
+						aufgabeDetails.setAnzahlenJeLoesungsbuchstabe(anzahlenJeLoesungsbuchstabe);
+					}
+
 				}
 
 				aufgabeDetails
 					.setAnzahlenJeWertungscode(StatistikUtils.sortTheWertungscodes(statistik.getAnzahlenJeWertungscode()));
 				aufgabeDetails.setNummer(statistik.getNummer());
-				aufgabeDetails.setStrafpunkte(statistik.getStrafpunkte());
+				String strafpunkte = statistik.getStrafpunkte();
+
+				if (strafpunkte.startsWith(",")) {
+
+					strafpunkte = "0" + strafpunkte;
+				}
+
+				aufgabeDetails.setStrafpunkte(strafpunkte);
 				aufgabendetailsList.add(aufgabeDetails);
 			}
 

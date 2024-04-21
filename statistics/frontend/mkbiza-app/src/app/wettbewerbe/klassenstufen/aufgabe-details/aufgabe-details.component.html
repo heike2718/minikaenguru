@@ -1,47 +1,89 @@
-<h3>Aufgabe {{aufgabe.aufgabendetails.nummer}}</h3>
+<div class="ml-1">
 
-<p>Punkte: {{aufgabe.aufgabendetails.punkte}}, Strafpunkte bei falscher Lösung: {{aufgabe.aufgabendetails.strafpunkte}}
-</p>
-
-@if (aufgabe.aufgabendetails.images) {
-
-<mkbiza-aufgabe-images [images]="aufgabe.aufgabendetails.images"></mkbiza-aufgabe-images>
-
-} @else {
-
-<p>Die Aufgabe ist leider noch nicht im Aufgabenarchiv</p>
-
-}
-
-@if (aufgabe.aufgabendetails.quelle) {
-<p>Quelle: {{aufgabe.aufgabendetails.quelle}}</p>
-}
-
-<p>Lösunsgbuchstabe: {{aufgabe.aufgabendetails.loesungsbuchstabe}}
-</p>
-
-@if (isHandset) {
-<mkbiza-pie-chart [headline]="'Anzahl richtig, falsch, nicht gelöst'" [myCanvasId]=chartWertungscodeId
-    [chartData]=chartDataAnzahlenJeWertungscode></mkbiza-pie-chart>
-
-@if(statistics.chartDataAnzahlenJeLoesungsbuchstabe) {
-<mkbiza-bar-chart [headline]="'Anzahl je Lösunsgbuchstabe (N=nicht gelöst)'" [myCanvasId]=chartLoesungsbuchstabenId
-    [chartData]=statistics.chartDataAnzahlenJeLoesungsbuchstabe></mkbiza-bar-chart>
-}
-
-} @else {
-<div class="grid-container-2 mt-2 mb-2">
-
-
-    @if (statistics.chartDataAnzahlenJeLoesungsbuchstabe) {
-    <mkbiza-bar-chart [breite]="'50vw;'" [headline]="'Anzahl je Lösunsgbuchstabe (N=nicht gelöst)'"
-        [myCanvasId]=chartLoesungsbuchstabenId
-        [chartData]=statistics.chartDataAnzahlenJeLoesungsbuchstabe></mkbiza-bar-chart>
+    @if (isHandset) {
+        <h3>{{aufgabe.aufgabendetails.nummer}} ({{aufgabe.aufgabendetails.punkte}} P)
+            @if (aufgabe.aufgabendetails.passung) {
+            <span [ngClass]="{
+            'badge-blue': aufgabe.aufgabendetails.passung === 'RICHTIG',
+            'badge-orange': aufgabe.aufgabendetails.passung === 'ZU_LEICHT',
+            'badge-red': aufgabe.aufgabendetails.passung === 'ZU_SCHWER'
+        }">
+                {{aufgabe.badgeLabel}}
+            </span>
+            }
+        </h3>
+    } @else {
+    <h3>Aufgabe {{aufgabe.aufgabendetails.nummer}} ({{aufgabe.aufgabendetails.punkte}} Punkte)
+        @if (aufgabe.aufgabendetails.passung) {
+        <span [ngClass]="{
+            'badge-blue': aufgabe.aufgabendetails.passung === 'RICHTIG',
+            'badge-orange': aufgabe.aufgabendetails.passung === 'ZU_LEICHT',
+            'badge-red': aufgabe.aufgabendetails.passung === 'ZU_SCHWER'
+        }">
+            {{aufgabe.badgeLabel}}
+        </span>
+        }
+    </h3>
     }
 
+
+    <p>Strafpunkte bei falscher Lösung: {{aufgabe.aufgabendetails.strafpunkte}}</p>
+
+    @if (aufgabe.aufgabendetails.prozentRichtigerLoesungen) {
+    <h3>richtig gelöst: {{aufgabe.aufgabendetails.prozentRichtigerLoesungen}}% von {{anzahlKinder}} Kindern
+    </h3>
+    } @else {
+    <h3>Punkte: {{aufgabe.aufgabendetails.punkte}}%
+    </h3>
+    }
+
+
+
+    @if (aufgabe.aufgabendetails.images) {
+
+    <mkbiza-aufgabe-images [images]="aufgabe.aufgabendetails.images"></mkbiza-aufgabe-images>
+
+    } @else {
+
+    <p>Die Aufgabe ist leider noch nicht im Aufgabenarchiv</p>
+
+    }
+
+    @if (aufgabe.aufgabendetails.quelle) {
+    <p>Quelle: {{aufgabe.aufgabendetails.quelle}}</p>
+    }
+
+    <p>Lösunsgbuchstabe: {{aufgabe.aufgabendetails.loesungsbuchstabe}}
+    </p>
+
+    @if (isHandset) {
     <mkbiza-pie-chart [headline]="'Anzahl richtig, falsch, nicht gelöst'" [myCanvasId]=chartWertungscodeId
         [chartData]=chartDataAnzahlenJeWertungscode></mkbiza-pie-chart>
 
-</div>
+    @if(statistics.chartDataAnzahlenJeLoesungsbuchstabe) {
+    <mkbiza-bar-chart [headline]="'Anzahl je Lösunsgbuchstabe (N=nicht gelöst)'" [myCanvasId]=chartLoesungsbuchstabenId
+        [chartData]=statistics.chartDataAnzahlenJeLoesungsbuchstabe></mkbiza-bar-chart>
+    }
 
-}
+    } @else {
+    <div class="grid-container-2 mt-2 mb-2">
+
+
+        @if (statistics.chartDataAnzahlenJeLoesungsbuchstabe) {
+        <mkbiza-bar-chart [breite]="'50vw;'" [headline]="'Anzahl je Lösunsgbuchstabe (N=nicht gelöst)'"
+            [myCanvasId]=chartLoesungsbuchstabenId
+            [chartData]=statistics.chartDataAnzahlenJeLoesungsbuchstabe></mkbiza-bar-chart>
+        }
+
+        <mkbiza-pie-chart [headline]="'Anzahl richtig, falsch, nicht gelöst'" [myCanvasId]=chartWertungscodeId
+            [chartData]=chartDataAnzahlenJeWertungscode></mkbiza-pie-chart>
+
+    </div>
+
+    }
+
+    @if(statistics.chartDataAnzahlenJeLoesungsbuchstabe){
+    <p>Hinweis: Es gab auch Offlineauswertungen ohne Lösungsbuchstaben. Daher sind die Zahlen im Tortendiagramm höher.
+    </p>
+    }
+</div>

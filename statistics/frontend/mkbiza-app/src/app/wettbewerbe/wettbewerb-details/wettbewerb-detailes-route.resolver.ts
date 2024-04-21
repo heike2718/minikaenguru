@@ -2,9 +2,8 @@ import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
 import { DomainFacade } from "@mkbiza-app/domain-api";
 
-
-export const klassenstufeResolver: ResolveFn<any> = (
+export const wettbewerbDetailsResolver: ResolveFn<any> = (
     route: ActivatedRouteSnapshot,
     _state: RouterStateSnapshot) => {
-    return inject(DomainFacade).loadKlassenstufeDetails(route.params['id'], route.params['klassenstufe'])
+    return inject(DomainFacade).loadWettbewerbsdetails(route.params['id'])
 };

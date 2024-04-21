@@ -39,6 +39,9 @@ public class MkGatewayStatistikKlassenstufe {
 	private int anzahlKinderGesamt;
 
 	@JsonProperty
+	private int anzahlKinderPrivat;
+
+	@JsonProperty
 	@Schema(description = "fasst den Median dieser Klassenstufe und die maximal erreichtbare Anzahl Punkte zusammen")
 	private MedianDto medianUndGesamtpunkte;
 

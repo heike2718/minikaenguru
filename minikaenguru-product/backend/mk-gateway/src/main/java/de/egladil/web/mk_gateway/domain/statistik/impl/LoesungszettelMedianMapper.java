@@ -43,7 +43,7 @@ public class LoesungszettelMedianMapper implements Function<java.util.List<Loesu
 
 			int erstes = alleLoesungszettel.get(alleLoesungszettel.size() / 2 - 1).punkte();
 			int zweites = alleLoesungszettel.get(alleLoesungszettel.size() / 2).punkte();
-
+			LOG.debug("Median zwischen index {} und {}", erstes, zweites);
 			result = Double.valueOf((erstes + zweites)) / 200;
 		} else {
 

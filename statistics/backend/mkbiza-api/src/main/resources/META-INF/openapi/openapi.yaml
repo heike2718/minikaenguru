@@ -433,6 +433,9 @@ components:
           format: int32
           description: "Anzahl der Kinder, zu denen Lösungszettel vorliegen"
           type: integer
+        anzahlKinderPrivat:
+          format: int32
+          type: integer
         medianUndGesamtpunkte:
           description: fasst den Median dieser Klassenstufe und die maximal erreichtbare
             Anzahl Punkte zusammen

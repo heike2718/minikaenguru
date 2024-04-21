@@ -120,8 +120,23 @@ export const domainFeature = createFeature({
 
                 const anzahl = theAufgabendetails.anzahlenJeLoesungsbuchstabe.map(g => g.anzahl).reduce((sum, current) => sum + current, 0);
 
+                let badgeLabel = '';
+
+                if (theAufgabendetails.passung) {
+                    switch (theAufgabendetails.passung) {
+                        case 'RICHTIG': badgeLabel = 'angemessen'; break;
+                        case 'ZU_LEICHT': badgeLabel = 'zu leicht'; break;
+                        case 'ZU_SCHWER': badgeLabel = 'zu schwer'; break;
+                    }
+                }
+
+                if (theAufgabendetails.gradZugehoerigkeitZuAufgabenkategorie) {
+                    badgeLabel += ' (' + theAufgabendetails.gradZugehoerigkeitZuAufgabenkategorie + ')';
+                }
+
                 const guiModel: AufgabeGUIModel = {
                     aufgabendetails: theAufgabendetails,
+                    badgeLabel: badgeLabel,
                     chartData: {
                         chartDataAnzahlenJeLoesungsbuchstabe: anzahl > 0 ? mapToChartDataSingleDataset(theAufgabendetails.anzahlenJeLoesungsbuchstabe, 'Anzahl Antworten je Lösungsbuchstabe') : undefined,
                         chartModelAnzahlenJeWertungscode: mapToChartModel(theAufgabendetails.anzahlenJeWertungscode)

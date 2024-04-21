@@ -38,8 +38,6 @@ export class KlassenstufeDetailsComponent implements OnInit, OnDestroy {
   klassenstufeLabel = '';
   statistics!: StatistikKlassenstufeChartData;
 
-  klassenstufeLabels: string[] = [];
-
   chartDataKinderJeTeilnahmeart!: ChartData<'pie', number[], string | string[]>;
   chartDataKinderJeSprache!: ChartData<'pie', number[], string | string[]>;
 
@@ -47,12 +45,9 @@ export class KlassenstufeDetailsComponent implements OnInit, OnDestroy {
   #activatedRoute = inject(ActivatedRoute);
   #router = inject(Router);
   #routeSubscription = new Subscription();
-  #wettbewerbSubscription = new Subscription();
   #klassenstufeSubscription = new Subscription();
 
   #jahr!: number;
-  #klassenstufe!: Klassenstufe;
-  #selectedWettbewerb: WettbewerbDetailsGUIModel | undefined;
 
   get isHandset(): boolean {
     return this.#breakpointObserver.isMatched(Breakpoints.Handset);
@@ -62,12 +57,11 @@ export class KlassenstufeDetailsComponent implements OnInit, OnDestroy {
 
     this.#routeSubscription = this.#activatedRoute.params.subscribe(params => {
       this.#jahr = params['id'];
-      this.#klassenstufe = 'IKID';
 
       switch (params['klassenstufe']) {
-        case 'IKID': this.klassenstufeLabel = 'Inklusion'; this.#klassenstufe = 'IKID'; break;
-        case 'EINS': this.klassenstufeLabel = 'Klasse 1'; this.#klassenstufe = 'EINS'; break;
-        case 'ZWEI': this.klassenstufeLabel = 'Klasse 2'; this.#klassenstufe = 'ZWEI'; break;
+        case 'IKID': this.klassenstufeLabel = 'Inklusion'; break;
+        case 'EINS': this.klassenstufeLabel = 'Klasse 1'; break;
+        case 'ZWEI': this.klassenstufeLabel = 'Klasse 2'; break;
       }
     });
 
@@ -98,18 +92,7 @@ export class KlassenstufeDetailsComponent implements OnInit, OnDestroy {
           }
         ],
         labels: this.statistics.chartModelKinderJeSprache.labels
-      }
-
-      if (this.#selectedWettbewerb) {
-        this.#updateButtonlabels(this.#selectedWettbewerb);
-      }
-    });
-
-    this.#wettbewerbSubscription = this.domainFacade.selectedWettbewewerb$.subscribe((wettbewerb) => {
-      if (wettbewerb) {
-        this.#selectedWettbewerb = wettbewerb;
-        this.#updateButtonlabels(this.#selectedWettbewerb);
-      }
+      }      
     });
   }
 
@@ -118,47 +101,9 @@ export class KlassenstufeDetailsComponent implements OnInit, OnDestroy {
     this.#breakpointObserver.ngOnDestroy();
     this.#routeSubscription.unsubscribe();
     this.#klassenstufeSubscription.unsubscribe();
-    this.#wettbewerbSubscription.unsubscribe();
   }
 
   gotoWettbewerb(): void {
     this.#router.navigate(['/wettbewerbe', this.#jahr]);
-  }
-
-  onKlassenstufeClick(klassenstufeLabel: string): void {
-
-    let klassenstufe: string = 'IKID';
-    if ('Klasse 1' === klassenstufeLabel) {
-      klassenstufe = 'EINS';
-    }
-    if ('Klasse 2' === klassenstufeLabel) {
-      klassenstufe = 'ZWEI';
-    }
-    if ('Inklusion' === klassenstufeLabel) {
-      klassenstufe = 'IKID';
-    }
-
-    this.#router.navigate(['/klassenstufen', this.#jahr, klassenstufe]);
-  }
-
-  #updateButtonlabels(wettbewerb: WettbewerbDetailsGUIModel): void {
-    // leeren
-    this.klassenstufeLabels = [];
-
-    const klassenstufen: Klassenstufe[] = wettbewerb.wettbewerb.klassenstufen;
-
-    for (let i = 0; i < klassenstufen.length; i++) {
-
-      const klassenstufe: Klassenstufe = klassenstufen[i];
-
-      if (this.#klassenstufe !== klassenstufe) {
-
-        switch (klassenstufe) {
-          case 'EINS': this.klassenstufeLabels.push('Klasse 1'); break;
-          case 'IKID': this.klassenstufeLabels.push('Inklusion'); break;
-          case 'ZWEI': this.klassenstufeLabels.push('Klasse 2'); break;
-        }
-      }
-    }
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@mkbiza-app/domain-api",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "dependencies": {
     "tslib": "^2.3.0"
   },

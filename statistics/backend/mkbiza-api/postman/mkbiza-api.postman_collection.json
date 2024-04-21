@@ -89,7 +89,7 @@
 												"type": "default"
 											}
 										],
-										"url": "http://localhost:9540/mkbiza-api/wettbewerbe/2018"
+										"url": "http://localhost:9540/mkbiza-api/wettbewerbe/2010"
 									},
 									"response": []
 								},
@@ -169,7 +169,7 @@
 												"type": "default"
 											}
 										],
-										"url": "http://localhost:9540/mkbiza-api/wettbewerbe/2022/IKID"
+										"url": "http://localhost:9540/mkbiza-api/wettbewerbe/2022/ZWEI"
 									},
 									"response": []
 								},
@@ -184,7 +184,7 @@
 												"type": "default"
 											}
 										],
-										"url": "http://localhost:9540/mkbiza-api/wettbewerbe/2020/IKID"
+										"url": "http://localhost:9540/mkbiza-api/wettbewerbe/2020/EINS"
 									},
 									"response": []
 								},

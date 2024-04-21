@@ -28,7 +28,7 @@ import { Subscription } from 'rxjs';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 
-  version = "1.1.0";
+  version = "1.2.0";
   menuIds: number[] = [];
 
   @Output()
@@ -45,7 +45,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   onToggleSidenav(): void {
-    console.log('onToggleSidenav');
+    // console.log('onToggleSidenav');
     this.sidenavToggle.emit();
   }
 

@@ -150,6 +150,26 @@
 							"response": []
 						},
 						{
+							"name": "local : statistik  - klassenstufe 200 - beendet 0 Loesungszettel",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "bWtiaXphOmNoYW5nZW1l",
+										"type": "default"
+									},
+									{
+										"key": "X-Client-ID",
+										"value": "mkbiza",
+										"type": "default"
+									}
+								],
+								"url": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2012/ZWEI"
+							},
+							"response": []
+						},
+						{
 							"name": "local : statistik  - klassenstufe 200 - beendet",
 							"request": {
 								"method": "GET",
@@ -165,7 +185,7 @@
 										"type": "default"
 									}
 								],
-								"url": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2020/IKID"
+								"url": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2020/EINS"
 							},
 							"response": []
 						},
@@ -253,6 +273,15 @@
 							"response": []
 						}
 					]
+				},
+				{
+					"name": "local - Mediane",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:9510/mk-gateway/open-data/statistik/2020/mediane"
+					},
+					"response": []
 				}
 			]
 		},
@@ -264,7 +293,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "https://mathe-jung-alt.de/mk-gateway/open-data/statistik/2022/mediane"
+						"url": "https://mathe-jung-alt.de/mk-gateway/open-data/statistik/2024/mediane"
 					},
 					"response": []
 				},

@@ -2,14 +2,15 @@
 
 <h1>Minikänguru {{klassenstufeGuiModel.klassenstufeDetails.wettbewerbsjahr}} - {{klassenstufeLabel}}</h1>
 
-@if (!klassenstufeGuiModel.klassenstufeDetails.beendet) {
+<!-- @if (!klassenstufeGuiModel.klassenstufeDetails.beendet) {
 <p>Hinweis: der Wettbewerb ist noch nicht beendet. Alle Zahlen sind Momentaufnahmen</p>
-}
+<h2>Gesamtbeteiligung: {{klassenstufeGuiModel.klassenstufeDetails.anzahlKinderGesamt}} Kinder</h2>
+} -->
 
-<h2>Gesamtbeteiligung: {{klassenstufeGuiModel.klassenstufeDetails.anzahlKinderGesamt}} Kinder, davon mit voller
-    Punktzahl: {{klassenstufeGuiModel.klassenstufeDetails.anzahlKinderMitVollerPunktzahl}}</h2>
 
 @if (klassenstufeGuiModel.klassenstufeDetails.beendet) {
+<h2>Gesamtbeteiligung: {{klassenstufeGuiModel.klassenstufeDetails.anzahlKinderGesamt}} Kinder, davon mit voller
+    Punktzahl: {{klassenstufeGuiModel.klassenstufeDetails.anzahlKinderMitVollerPunktzahl}}</h2>
 
 <mat-accordion class="mt-2 mb-2">
     <mat-expansion-panel>
@@ -109,13 +110,17 @@
         @for (aufgabe of klassenstufeGuiModel.aufgabenGUIModel; track $index) {
         <div class="section-divider"></div>
         <div class="mt-1 mb-2">
-            <mkbiza-aufgabe [aufgabe]=aufgabe></mkbiza-aufgabe>
+            <mkbiza-aufgabe [aufgabe]=aufgabe
+                [anzahlKinder]="klassenstufeGuiModel.klassenstufeDetails.anzahlKinderGesamt"></mkbiza-aufgabe>
         </div>
         }
     </mat-expansion-panel>
 </mat-accordion>
 } @else {
 <!-- nicht beendet -->
+<p>Hinweis: der Wettbewerb ist noch nicht beendet. Alle Zahlen sind Momentaufnahmen</p>
+<h2>Gesamtbeteiligung: {{klassenstufeGuiModel.klassenstufeDetails.anzahlKinderGesamt}} Kinder</h2>
+
 <mkbiza-bar-chart [headline]="'Kinder je Land'" [myCanvasId]="'wettbewerb.kinderJeLand'"
     [chartData]=statistics.chartDataKinderJeLand></mkbiza-bar-chart>
 
@@ -138,28 +143,8 @@
 }
 
 <div class="mt-2">
-    @if (isHandset) {
-    @for (klassenstufe of klassenstufeLabels; track $index) {
-    <div class="centered">
-        <button mat-flat-button color="primary" class="mb-2"
-            (click)="onKlassenstufeClick(klassenstufe)">{{klassenstufe}}</button>
-    </div>
-
-    }
-    <div class="centered">
-        <button mat-flat-button color="primary" class="mb-2" (click)="gotoWettbewerb()">Minikänguru
-            {{klassenstufeGuiModel.klassenstufeDetails.wettbewerbsjahr}}</button>
-    </div>
-    } @else {
-    <div class="button-container">
-        @for (klassenstufe of klassenstufeLabels; track $index) {
-        <button mat-flat-button color="primary" class="ml-2 mb-2"
-            (click)="onKlassenstufeClick(klassenstufe)">{{klassenstufe}}</button>
-        }
-        <button mat-flat-button color="primary" class="ml-2 mb-2" (click)="gotoWettbewerb()">Minikänguru
-            {{klassenstufeGuiModel.klassenstufeDetails.wettbewerbsjahr}}</button>
-    </div>
-    }
+    <button mat-flat-button color="primary" class="ml-2 mb-2" (click)="gotoWettbewerb()">Minikänguru
+        {{klassenstufeGuiModel.klassenstufeDetails.wettbewerbsjahr}}</button>
 </div>
 
 

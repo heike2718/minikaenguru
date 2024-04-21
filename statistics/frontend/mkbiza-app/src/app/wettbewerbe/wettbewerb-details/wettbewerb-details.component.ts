@@ -51,9 +51,7 @@ export class WettbewerbDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.#routeSubscription = this.#activatedRoute.params.subscribe(params => {
-      this.#jahr = params['id'];
-      this.domainFacade.loadWettbewerbsdetails(this.#jahr);
-      ;
+      this.#jahr = params['id'];      
     });
 
     this.#wettbewerbSusbcription = this.domainFacade.selectedWettbewewerb$.subscribe((wettbewerb: WettbewerbDetailsGUIModel) => {
@@ -120,6 +118,10 @@ export class WettbewerbDetailsComponent implements OnInit, OnDestroy {
     }
 
     this.#router.navigate(['/klassenstufen', this.#jahr, klassenstufe]);
+  }
+
+  gotoStart(): void {
+    this.#router.navigateByUrl('/');
   }
 
   #updateButtonlabels(wettbewerb: WettbewerbDetailsGUIModel): void {
