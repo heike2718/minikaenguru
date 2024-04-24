@@ -89,7 +89,8 @@ export const domainFeature = createFeature({
 
             return {
                 ...state,
-                selectedWettbewerb: action.wettbewerbGUIModel
+                selectedWettbewerb: action.wettbewerbGUIModel,
+                selectedKlassenstufe: undefined
             }
         }),
         on(domainActions.kLASSENSTUFE_LOADED, (state, action): DomainState => {
