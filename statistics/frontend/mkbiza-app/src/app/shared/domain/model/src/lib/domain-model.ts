@@ -27,9 +27,15 @@ export interface ChartModel {
   readonly data: number[]
 };
 
+export interface Image {
+  readonly width: number;
+  readonly height: number;
+  readonly data: string;
+}
+
 export interface Images {
-  readonly imageFrage: string | null;
-  readonly imageLoesung: string | null;
+  readonly imageFrage: Image | undefined;
+  readonly imageLoesung: Image | undefined;
 };
 
 export interface Gruppierungsitem {

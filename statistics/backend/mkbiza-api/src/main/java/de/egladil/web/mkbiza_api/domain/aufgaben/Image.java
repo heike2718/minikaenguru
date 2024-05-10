@@ -9,20 +9,22 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Images
+ * Image
  */
-@Schema(
-	name = "Images",
-	description = "Objekt das ein png mit dem Text für die Frage/Quizaufgabe und ein png mit dem Text für die Lösung enthält")
-public class Images {
+@Schema(description = "base64 encodete Daten eines png sowie Breite und Höhe")
+public class Image {
+
+	@JsonProperty
+	@Schema(description = "Breite des Images")
+	private int width;
+
+	@JsonProperty
+	@Schema(description = "Höhe des Images")
+	private int height;
 
 	@JsonProperty
 	@Schema(
-		description = "Das png mit Maßen für die Frage")
-	private Image imageFrage;
+		description = "Base64-encodetes png Kann mit einem img src=\"data:image/png;base64- Tag angezeigt werden")
+	private byte[] data;
 
-	@JsonProperty
-	@Schema(
-		description = "Das png mit Maßen für die Lösung. Es kann null sein.")
-	private Image imageLoesung;
 }

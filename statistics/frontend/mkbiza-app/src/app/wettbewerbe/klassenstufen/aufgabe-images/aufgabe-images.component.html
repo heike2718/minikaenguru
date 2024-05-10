@@ -1,11 +1,11 @@
-@if (images.imageFrage !== null) {
+@if (images.imageFrage) {
 <div class="bordered bg-white">
-    <img src="data:image/png;base64,{{images.imageFrage}}" class="mja-image"
-    [style.width]="isHandset ? '80%' : '20%'" />
+    <img src="data:image/png;base64,{{images.imageFrage.data}}" class="mja-image"
+    [style.width]="calculateScale(images.imageFrage.width)" />
 </div>
 }
 
-@if (images.imageLoesung !== null) {
+@if (images.imageLoesung) {
 
 <div class="mt-1">
     <mat-accordion>
@@ -17,8 +17,8 @@
             </mat-expansion-panel-header>
 
             <div class="bordered bg-white">
-                <img src="data:image/png;base64,{{images.imageLoesung}}" class="mja-image"
-                [style.width]="isHandset ? '80%' : '15%'" />
+                <img src="data:image/png;base64,{{images.imageLoesung.data}}" class="mja-image"
+                [style.width]="calculateScale(images.imageLoesung.width)" />
             </div>
         </mat-expansion-panel>
 

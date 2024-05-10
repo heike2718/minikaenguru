@@ -28,4 +28,13 @@ export class AufgabeImagesComponent {
     return this.#breakpointObserver.isMatched(Breakpoints.Handset);
   }
 
+  calculateScale(width: number): string {
+    if (this.isHandset) {
+      return `${80}%`
+    } else {
+      const maxWidth = 300; // max width for scaling
+      const scaleFactor = Math.min(1, maxWidth / width);
+      return `${scaleFactor * 100}%`;
+    }    
+  }
 }
