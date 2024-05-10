@@ -4,18 +4,13 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.auth.session.loginlogout.impl;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.ws.rs.BadRequestException;
-import jakarta.ws.rs.core.NewCookie;
-import jakarta.ws.rs.core.Response;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_net.utils.CommonHttpUtils;
+// import de.egladil.web.commons_net.utils.CommonHttpUtils;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.MkGatewayApp;
@@ -28,6 +23,11 @@ import de.egladil.web.mk_gateway.domain.auth.session.loginlogout.LoginLogoutServ
 import de.egladil.web.mk_gateway.domain.auth.session.tokens.TokenExchangeService;
 import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.core.NewCookie;
+import jakarta.ws.rs.core.Response;
 
 /**
  * LoginLogoutServiceImpl
@@ -36,12 +36,15 @@ import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 public class LoginLogoutServiceImpl implements LoginLogoutService {
 
 	private static final String SESSION_COOKIE_NAME = MkGatewayApp.CLIENT_COOKIE_PREFIX
-		+ CommonHttpUtils.NAME_SESSIONID_COOKIE;
+		+ "_SESSIONID";
 
 	private static final Logger LOG = LoggerFactory.getLogger(LoginLogoutServiceImpl.class);
 
 	@ConfigProperty(name = "stage")
 	String stage;
+
+	@ConfigProperty(name = "cookies.secure")
+	boolean cookiesSecure;
 
 	@ConfigProperty(name = "mk-admin-app.client-id")
 	String adminClientId;
@@ -94,7 +97,7 @@ public class LoginLogoutServiceImpl implements LoginLogoutService {
 
 		Session session = sessionService.initSession(jwt);
 
-		NewCookie sessionCookie = SessionUtils.createSessionCookie(SESSION_COOKIE_NAME, session.sessionId());
+		NewCookie sessionCookie = SessionUtils.createSessionCookie(SESSION_COOKIE_NAME, session.sessionId(), cookiesSecure);
 
 		if (!MkGatewayApp.STAGE_DEV.equals(stage)) {
 
@@ -118,7 +121,7 @@ public class LoginLogoutServiceImpl implements LoginLogoutService {
 		}
 
 		return Response.ok().entity(ResponsePayload.messageOnly(MessagePayload.info("Sie haben sich erfolreich ausgeloggt")))
-			.cookie(CommonHttpUtils.createSessionInvalidatedCookie(SESSION_COOKIE_NAME)).build();
+			.cookie(SessionUtils.createSessionInvalidatedCookie(SESSION_COOKIE_NAME, cookiesSecure)).build();
 	}
 
 	@Override
@@ -146,7 +149,7 @@ public class LoginLogoutServiceImpl implements LoginLogoutService {
 		}
 
 		return Response.ok(ResponsePayload.messageOnly(MessagePayload.info("Sie haben sich erfolreich ausgeloggt")))
-			.cookie(CommonHttpUtils.createSessionInvalidatedCookie(SESSION_COOKIE_NAME)).build();
+			.cookie(SessionUtils.createSessionInvalidatedCookie(SESSION_COOKIE_NAME, cookiesSecure)).build();
 	}
 
 	private String clientId(final AuthMode authMode) {

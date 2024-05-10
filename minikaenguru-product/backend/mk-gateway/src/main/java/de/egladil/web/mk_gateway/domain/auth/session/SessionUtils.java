@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
@@ -63,7 +65,7 @@ public final class SessionUtils {
 			ChronoUnit.MINUTES).getEndTime().getTime();
 	}
 
-	public static NewCookie createSessionCookie(final String cookieName, final String sessionId) {
+	public static NewCookie createSessionCookie(final String cookieName, final String sessionId, final boolean cookiesSecure) {
 
 		// @formatter:off
 		return new NewCookie.Builder(cookieName)
@@ -73,9 +75,24 @@ public final class SessionUtils {
 				.comment(null)
 				.maxAge(360000) // maximum age of the cookie in seconds
 				.httpOnly(true)
-				.secure(true).build();
+				.secure(cookiesSecure).build();
 		// @formatter:on
 
+	}
+
+	public static NewCookie createSessionInvalidatedCookie(final String name, final boolean cookiesSecure) {
+
+		long dateInThePast = CommonTimeUtils.now().minus(10, ChronoUnit.YEARS).toEpochSecond(ZoneOffset.UTC);
+
+		// @formatter:off
+		return new NewCookie.Builder(name)
+			.maxAge(0) // maximum age of the cookie in seconds
+			.expiry(new Date(dateInThePast))
+			.version(1)
+			.httpOnly(true)
+			.secure(cookiesSecure)
+			.build();
+		// @formatter:on
 	}
 
 }

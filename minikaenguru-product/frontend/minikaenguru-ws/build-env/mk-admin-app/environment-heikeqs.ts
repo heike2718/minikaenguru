@@ -4,11 +4,11 @@
 //
 
 export const environment = {
-        envName: 'QS-a300',
+        envName: 'heikeqs',
         production: false,
         assetsUrl: 'http://mk-admin-app/assets',
-        apiUrl: 'http://a300/mk-gateway/admin',
-        profileUrl: 'http://a300/profil-app',
+        apiUrl: 'http://heikeqs/mk-gateway/admin',
+        profileUrl: 'http://heikeqs/profil-app',
         storageKeyPrefix: 'mka_',
         version: '2.5.0',
         consoleLogActive: true,

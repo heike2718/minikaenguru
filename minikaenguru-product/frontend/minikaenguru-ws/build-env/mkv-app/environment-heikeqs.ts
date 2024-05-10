@@ -3,11 +3,11 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  envName: 'QS-a300',
+  envName: 'heikeqs',
   production: false,
-  assetsUrl: 'http://a300/mkv-app/assets',
-  apiUrl: 'http://a300/mk-gateway',
-  profileUrl: 'http://a300/profil-app',
+  assetsUrl: 'http://heikeqs/mkv-app/assets',
+  apiUrl: 'http://heikeqs/mk-gateway',
+  profileUrl: 'http://heikeqs/profil-app',
   storageKeyPrefix: 'mkv_',
   version: '2.5.0',
   consoleLogActive: true,

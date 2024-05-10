@@ -57,7 +57,7 @@ public class SessionUtilsTest {
 		String sessionId = "hallo";
 
 		// Act
-		NewCookie cookie = SessionUtils.createSessionCookie("sessionID", sessionId);
+		NewCookie cookie = SessionUtils.createSessionCookie("sessionID", sessionId, true);
 
 		// Assert
 		assertNotNull(cookie);

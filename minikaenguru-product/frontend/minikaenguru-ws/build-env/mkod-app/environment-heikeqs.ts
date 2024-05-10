@@ -3,10 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  envName: 'QS-a300',
+  envName: 'heikeqs',
   production: false,
-  assetsUrl: 'http://a300/mkod-app/assets',
-  apiUrl: 'http://a300/mk-gateway',
+  assetsUrl: 'http://heikeqs/mkod-app/assets',
+  apiUrl: 'http://heikeqs/mk-gateway',
   storageKeyPrefix: 'mkod_',
   version: '2.5.0',
   consoleLogActive: true,

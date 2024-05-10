@@ -75,7 +75,7 @@
             ],
             "outputHashing": "all"
           },
-          "a300": {
+          "heikeqs": {
             "budgets": [
               {
                 "type": "initial",
@@ -91,11 +91,11 @@
             "fileReplacements": [
                 {
                   "replace": "apps/mkod-app/src/environments/environment.ts",
-                  "with": "build-env/mkod-app/environment-a300.ts"
+                  "with": "build-env/mkod-app/environment-heikeqs.ts"
                 },
                 {
                   "replace": "apps/mkod-app/src/app/store-config/store-devtools.ts",
-                  "with": "build-env/store-devtools.a300.ts"
+                  "with": "build-env/store-devtools.heikeqs.ts"
                 }
               ],
             "outputHashing": "all",
