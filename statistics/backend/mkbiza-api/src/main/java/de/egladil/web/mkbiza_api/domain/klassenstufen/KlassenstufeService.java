@@ -186,7 +186,17 @@ public class KlassenstufeService {
 
 		try {
 
-			Response response = mjaApiRestClient.getAufgabenMinikaenguruwettbewerb(authConfig.client(), jahr, klassenstufe);
+			Klassenstufe theKlassenstufe = klassenstufe;
+			int theJahr = Integer.valueOf(jahr);
+
+			// https://github.com/heike2718/minikaenguru/issues/464: 2014, 2015 und 2016 lösten Erstklässler die Aufgaben der Klasse
+			// 2
+			if (Klassenstufe.EINS == klassenstufe && theJahr >= 2014 && theJahr <= 2016) {
+
+				theKlassenstufe = Klassenstufe.ZWEI;
+			}
+
+			Response response = mjaApiRestClient.getAufgabenMinikaenguruwettbewerb(authConfig.client(), jahr, theKlassenstufe);
 
 			MjaAufgabenKlassenstufeDto result = response.readEntity(MjaAufgabenKlassenstufeDto.class);
 

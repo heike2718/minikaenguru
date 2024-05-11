@@ -33,13 +33,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AboutDto'
+                $ref: "#/components/schemas/AboutDto"
         "500":
           description: Serverfehler
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MessagePayload'
+                $ref: "#/components/schemas/MessagePayload"
   /mkbiza-api/wettbewerbe:
     get:
       tags:
@@ -54,19 +54,19 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Wettbewerb'
+                  $ref: "#/components/schemas/Wettbewerb"
         "404":
           description: NotFound
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MessagePayload'
+                $ref: "#/components/schemas/MessagePayload"
         "500":
           description: Serverfehler - Details stehen im server.log
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MessagePayload'
+                $ref: "#/components/schemas/MessagePayload"
   /mkbiza-api/wettbewerbe/{jahr}:
     get:
       tags:
@@ -87,25 +87,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WettbewerbDetails'
+                $ref: "#/components/schemas/WettbewerbDetails"
         "400":
           description: Inputvalidierung schlug fehl
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ConstraintViolationResponse'
+                $ref: "#/components/schemas/ConstraintViolationResponse"
         "404":
           description: Wettbewerb existsiert nicht oder ist noch nicht beendet
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MessagePayload'
+                $ref: "#/components/schemas/MessagePayload"
         "500":
           description: Serverfehler - Details stehen im server.log
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MessagePayload'
+                $ref: "#/components/schemas/MessagePayload"
   /mkbiza-api/wettbewerbe/{jahr}/{klassenstufe}:
     get:
       tags:
@@ -127,14 +127,14 @@ paths:
         description: "Eins von IKID,EINS,ZWEI - die Klassenstufe."
         required: true
         schema:
-          $ref: '#/components/schemas/Klassenstufe'
+          $ref: "#/components/schemas/Klassenstufe"
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/KlassenstufeDetails'
+                $ref: "#/components/schemas/KlassenstufeDetails"
         "400":
           description: Input-Validierung ging schief.
         "404":
@@ -144,7 +144,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MessagePayload'
+                $ref: "#/components/schemas/MessagePayload"
 components:
   schemas:
     AboutDto:
@@ -192,17 +192,17 @@ components:
             sung"
           type: object
           allOf:
-          - $ref: '#/components/schemas/Images'
+          - $ref: "#/components/schemas/Images"
         anzahlenJeLoesungsbuchstabe:
           description: Anzahl je Lösungsbuchstabe A-E oder N für nicht gelöst
           type: array
           items:
-            $ref: '#/components/schemas/Gruppierungsitem'
+            $ref: "#/components/schemas/Gruppierungsitem"
         anzahlenJeWertungscode:
           description: "Anzahl je Wertungscode 'falsch', 'richtig', 'nicht gelöst'"
           type: array
           items:
-            $ref: '#/components/schemas/Gruppierungsitem'
+            $ref: "#/components/schemas/Gruppierungsitem"
         gradZugehoerigkeitZuAufgabenkategorie:
           description: Grad der Zugehörigkeit zur gewählten Aufgabenkatedorie
           type: string
@@ -210,7 +210,7 @@ components:
           description: Passung der Aufgabe zu ihrer Kategorie
           type: string
           allOf:
-          - $ref: '#/components/schemas/Passung'
+          - $ref: "#/components/schemas/Passung"
         prozentRichtigerLoesungen:
           description: prozentualer Anteil richtiger Lösungen
           type: string
@@ -232,7 +232,7 @@ components:
         violations:
           type: array
           items:
-            $ref: '#/components/schemas/ConstraintViolation'
+            $ref: "#/components/schemas/ConstraintViolation"
     Gruppierungsitem:
       description: Gruppierungsitem - label und Anzahl
       type: object
@@ -273,12 +273,12 @@ components:
           description: Das png mit Maßen für die Frage
           type: object
           allOf:
-          - $ref: '#/components/schemas/Image'
+          - $ref: "#/components/schemas/Image"
         imageLoesung:
           description: Das png mit Maßen für die Lösung. Es kann null sein.
           type: object
           allOf:
-          - $ref: '#/components/schemas/Image'
+          - $ref: "#/components/schemas/Image"
     Klassenstufe:
       enum:
       - IKID
@@ -321,40 +321,40 @@ components:
             Anzahl Punkte zusammen
           type: object
           allOf:
-          - $ref: '#/components/schemas/MedianDto'
+          - $ref: "#/components/schemas/MedianDto"
         kinderJeLand:
           description: "Histogramm der Kinder je Land, wobei PRIVAT als ein Land interpretiert\
             \ wird."
           type: array
           items:
-            $ref: '#/components/schemas/Gruppierungsitem'
+            $ref: "#/components/schemas/Gruppierungsitem"
         kinderJeTeilnahmeart:
           description: Anzahl der teilnehmenden Kinder je Teilnahmeart (PRIVAT/SCHULE
             - untere Schranke)
           type: array
           items:
-            $ref: '#/components/schemas/Gruppierungsitem'
+            $ref: "#/components/schemas/Gruppierungsitem"
         kinderJeSprache:
           description: Anzahl der teilnehmenden Kinder je Sprache (de/en - untere
             Schranke)
           type: array
           items:
-            $ref: '#/components/schemas/Gruppierungsitem'
+            $ref: "#/components/schemas/Gruppierungsitem"
         kinderJePunktintervall:
           description: Anzahl der teilnehmenden Kinder je Punktzahl (untere Schranke)
           type: array
           items:
-            $ref: '#/components/schemas/Gruppierungsitem'
+            $ref: "#/components/schemas/Gruppierungsitem"
         rohpunkte:
           description: Rohpunktitems der Gesamtstatistik
           type: array
           items:
-            $ref: '#/components/schemas/RohpunktItem'
+            $ref: "#/components/schemas/RohpunktItem"
         aufgaben:
           description: die einzelnen Aufgaben mit Lösungen
           type: array
           items:
-            $ref: '#/components/schemas/AufgabeDetails'
+            $ref: "#/components/schemas/AufgabeDetails"
     MedianDto:
       type: object
       properties:
@@ -396,7 +396,7 @@ components:
             sung"
           type: object
           allOf:
-          - $ref: '#/components/schemas/Images'
+          - $ref: "#/components/schemas/Images"
     MjaAufgabenKlassenstufeDto:
       description: Aufgaben und Lösungen eines Minkänguru-Wettbewerbs für eine gegebene
         Klassenstufe.
@@ -412,7 +412,7 @@ components:
           description: die einzelnen Aufgaben mit Lösungen
           type: array
           items:
-            $ref: '#/components/schemas/MjaAufgabeDetails'
+            $ref: "#/components/schemas/MjaAufgabeDetails"
     MkGatewayStatistikAufgabe:
       description: Statistik zu einer Aufgabe
       type: object
@@ -427,12 +427,12 @@ components:
           description: Anzahl je Lösungsbuchstabe A-E oder N für nicht gelöst
           type: array
           items:
-            $ref: '#/components/schemas/Gruppierungsitem'
+            $ref: "#/components/schemas/Gruppierungsitem"
         anzahlenJeWertungscode:
           description: "Anzahl je Wertungscode 'falsch', 'richtig', 'nicht gelöst'"
           type: array
           items:
-            $ref: '#/components/schemas/Gruppierungsitem'
+            $ref: "#/components/schemas/Gruppierungsitem"
     MkGatewayStatistikKlassenstufe:
       description: statistische Daten zu einer Wettbewerbsklassenstufe
       type: object
@@ -458,36 +458,36 @@ components:
             Anzahl Punkte zusammen
           type: object
           allOf:
-          - $ref: '#/components/schemas/MedianDto'
+          - $ref: "#/components/schemas/MedianDto"
         kinderJeLand:
           description: "Histogramm der Kinder je Land, wobei PRIVAT als ein Land interpretiert\
             \ wird."
           type: array
           items:
-            $ref: '#/components/schemas/Gruppierungsitem'
+            $ref: "#/components/schemas/Gruppierungsitem"
         kinderJeTeilnahmeart:
           type: array
           items:
-            $ref: '#/components/schemas/Gruppierungsitem'
+            $ref: "#/components/schemas/Gruppierungsitem"
         kinderJeSprache:
           type: array
           items:
-            $ref: '#/components/schemas/Gruppierungsitem'
+            $ref: "#/components/schemas/Gruppierungsitem"
         kinderJePunktintervall:
           description: "Anzahl Kinder, die in eins der Punktintervalle in der Gesamtstatistik\
             \ fallen"
           type: array
           items:
-            $ref: '#/components/schemas/Gruppierungsitem'
+            $ref: "#/components/schemas/Gruppierungsitem"
         rohpunkte:
           description: Rohpunktitems der Gesamtstatistik
           type: array
           items:
-            $ref: '#/components/schemas/RohpunktItem'
+            $ref: "#/components/schemas/RohpunktItem"
         aufgabenstatistiken:
           type: array
           items:
-            $ref: '#/components/schemas/MkGatewayStatistikAufgabe'
+            $ref: "#/components/schemas/MkGatewayStatistikAufgabe"
     Passung:
       enum:
       - ZU_LEICHT
@@ -528,7 +528,7 @@ components:
           description: Status des Wettbewerbs
           type: string
           allOf:
-          - $ref: '#/components/schemas/StatusWettbewerb'
+          - $ref: "#/components/schemas/StatusWettbewerb"
           example: BEENDET
         anzahlKinder:
           format: int64
@@ -539,12 +539,12 @@ components:
           description: Kinder je Klassenstufe
           type: array
           items:
-            $ref: '#/components/schemas/Gruppierungsitem'
+            $ref: "#/components/schemas/Gruppierungsitem"
         medianeJeKlassenstufe:
           description: Mediane je Klassenstufe
           type: array
           items:
-            $ref: '#/components/schemas/Gruppierungsitem'
+            $ref: "#/components/schemas/Gruppierungsitem"
     WettbewerbDetails:
       description: Stellt die statistischen Details eine Minikänguru-Wettbewerbs zur
         Verfügung
@@ -584,38 +584,38 @@ components:
           description: "Klassenstufen, zu denen Daten vorliegen"
           type: array
           items:
-            $ref: '#/components/schemas/Klassenstufe'
+            $ref: "#/components/schemas/Klassenstufe"
         schulenJeLand:
           description: Anzahl der teilnehmenden Schulen je Land (untere Schranke)
           type: array
           items:
-            $ref: '#/components/schemas/Gruppierungsitem'
+            $ref: "#/components/schemas/Gruppierungsitem"
         kinderJeLand:
           description: "Histogramm der Kinder je Land, wobei PRIVAT als ein Land interpretiert\
             \ wird."
           type: array
           items:
-            $ref: '#/components/schemas/Gruppierungsitem'
+            $ref: "#/components/schemas/Gruppierungsitem"
         kinderJeTeilnahmeart:
           description: Anzahl der teilnehmenden Kinder je Teilnahmeart (PRIVAT/SCHULE
             - untere Schranke)
           type: array
           items:
-            $ref: '#/components/schemas/Gruppierungsitem'
+            $ref: "#/components/schemas/Gruppierungsitem"
         kinderJeKlassenstufe:
           description: Anzahl der teilnehmenden Kinder je Klassenstufe (IKID/EINS/ZWEI
             - untere Schranke)
           type: array
           items:
-            $ref: '#/components/schemas/Gruppierungsitem'
+            $ref: "#/components/schemas/Gruppierungsitem"
         kinderJeSprache:
           description: Anzahl der teilnehmenden Kinder je Sprache (de/en - untere
             Schranke)
           type: array
           items:
-            $ref: '#/components/schemas/Gruppierungsitem'
+            $ref: "#/components/schemas/Gruppierungsitem"
         medianeJeKlassenstufe:
           description: Mediane je Klassenstufe
           type: array
           items:
-            $ref: '#/components/schemas/Gruppierungsitem'
+            $ref: "#/components/schemas/Gruppierungsitem"
