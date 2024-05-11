@@ -1,9 +1,8 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { Images } from '@mkbiza-app/domain-model';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'mkbiza-aufgabe-images',
@@ -21,20 +20,4 @@ export class AufgabeImagesComponent {
 
   @Input()
   images!: Images;
-
-  #breakpointObserver = inject(BreakpointObserver);
-
-  get isHandset(): boolean {
-    return this.#breakpointObserver.isMatched(Breakpoints.Handset);
-  }
-
-  calculateScale(width: number): string {
-    if (this.isHandset) {
-      return `${80}%`
-    } else {
-      const maxWidth = 300; // max width for scaling
-      const scaleFactor = Math.min(1, maxWidth / width);
-      return `${scaleFactor * 100}%`;
-    }    
-  }
 }

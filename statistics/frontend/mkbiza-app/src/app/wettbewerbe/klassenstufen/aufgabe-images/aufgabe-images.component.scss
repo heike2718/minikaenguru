@@ -1,0 +1,20 @@
+@media(max-width: 959px) {
+    .mja-image {
+        max-width: 80%;
+        width: 600px;
+        height: auto;
+    }
+}
+
+// .mja-image {
+//     max-width: 800px;  /* Maximum width */
+//     min-width: 300px;  /* Minimum width */
+//     width: 30%;       /* Make width responsive to the container size */
+//     height: auto;      /* Maintain aspect ratio */
+//   }
+
+.mja-image {
+    max-width: 100%;
+    width: 500px;
+    height: auto;
+}

@@ -1,7 +1,6 @@
 @if (images.imageFrage) {
 <div class="bordered bg-white">
-    <img src="data:image/png;base64,{{images.imageFrage.data}}" class="mja-image"
-    [style.width]="calculateScale(images.imageFrage.width)" />
+    <img src="data:image/png;base64,{{images.imageFrage.data}}" class="mja-image" />
 </div>
 }
 
@@ -17,8 +16,7 @@
             </mat-expansion-panel-header>
 
             <div class="bordered bg-white">
-                <img src="data:image/png;base64,{{images.imageLoesung.data}}" class="mja-image"
-                [style.width]="calculateScale(images.imageLoesung.width)" />
+                <img src="data:image/png;base64,{{images.imageLoesung.data}}" class="mja-image" />
             </div>
         </mat-expansion-panel>
 
