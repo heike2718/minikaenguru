@@ -9,6 +9,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,6 +90,8 @@ public class AufgabenVorschauService {
 		Wettbewerb wettbewerb = optAktuellerWettbewerb.get();
 		Veranstalter veranstalter = optVeranstalter.get();
 
+		LOGGER.debug("Veranstalter {} ruft Feedbackbogen {} ab.", StringUtils.abbreviate(veranstalterID, 11), klassenstufe);
+
 		boolean canActivateFeedback = activateFeedbackDelegate.canActivateFeedback(wettbewerb.status(),
 			veranstalter.zugangUnterlagen());
 
@@ -103,12 +106,20 @@ public class AufgabenVorschauService {
 
 		try {
 
+			String authHeader = new String(Base64.getEncoder().encode(authConfig.header().getBytes()));
+
+			LOGGER.debug("about to call mja-api with params X-CLIENT-ID={}, auth-header={}, jahr={}, klasse={}",
+				authConfig.client(),
+				StringUtils.abbreviate(authHeader, 20), wettbewerb.id().toString(), klassenstufe);
+
 			Response response = mjaApiRestClient.getAufgabenMinikaenguruwettbewerb(authConfig.client(),
-				new String(Base64.getEncoder().encode(authConfig.header().getBytes())),
+				authHeader,
 				wettbewerb.id().toString(), klassenstufe);
 
 			AufgabenvorschauDto result = response.readEntity(new GenericType<AufgabenvorschauDto>() {
 			});
+
+			LOGGER.debug("response status={}, anzahl aufgaben: ", response.getStatus(), result.getAufgaben().size());
 
 			return result;
 

@@ -11,6 +11,8 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameters;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.feedback.scores.AufgabenVorschauService;
@@ -29,6 +31,8 @@ import jakarta.ws.rs.core.Response;
  */
 @Path("mja-api")
 public class MjaApiResource {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(MjaApiResource.class);
 
 	@Inject
 	AufgabenVorschauService aufgabenVorschauService;
@@ -65,6 +69,8 @@ public class MjaApiResource {
 	// @formatter:on
 
 		AufgabenvorschauDto aufgaben = aufgabenVorschauService.getAufgabenvorschauAktuellerWettbewerb(klassenstufe);
+
+		LOGGER.debug("klassenstufe={}, Anzahl Aufgaben: {}", klassenstufe, aufgaben.getAufgaben().size());
 		return Response.ok(aufgaben).build();
 	}
 }

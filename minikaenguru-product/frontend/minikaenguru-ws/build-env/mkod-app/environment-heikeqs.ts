@@ -8,7 +8,7 @@ export const environment = {
   assetsUrl: 'http://heikeqs/mkod-app/assets',
   apiUrl: 'http://heikeqs/mk-gateway',
   storageKeyPrefix: 'mkod_',
-  version: '2.5.0',
+  version: '2.5.1',
   consoleLogActive: true,
   serverLogActive: false,
   loglevel: 1

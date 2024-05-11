@@ -18,33 +18,11 @@ public class AufgabeImages {
 
 	@JsonProperty
 	@Schema(
-		description = "Base64-encodetes png mit dem Text der Frage/Quizaufgabe. Kann mit einem img src=\"data:image/png;base64- Tag angezeigt werden")
-	private byte[] imageFrage;
+		description = "Das png mit Maßen für die Frage")
+	private AufgabeImage imageFrage;
 
 	@JsonProperty
 	@Schema(
-		description = "Base64-encodetes png mit dem Text der Lösung. Kann mit einem img src=\"data:image/png;base64- Tag angezeigt werden")
-	private byte[] imageLoesung;
-
-	public byte[] getImageFrage() {
-
-		return imageFrage;
-	}
-
-	public AufgabeImages withImageFrage(final byte[] imageFrage) {
-
-		this.imageFrage = imageFrage;
-		return this;
-	}
-
-	public byte[] getImageLoesung() {
-
-		return imageLoesung;
-	}
-
-	public AufgabeImages withImageLoesung(final byte[] imageLoesung) {
-
-		this.imageLoesung = imageLoesung;
-		return this;
-	}
+		description = "Das png mit Maßen für die Lösung. Es kann null sein.")
+	private AufgabeImage imageLoesung;
 }

@@ -3131,19 +3131,48 @@
           }
         }
       },
+      "AufgabeImage" : {
+        "description" : "Daten eines Bildes",
+        "type" : "object",
+        "properties" : {
+          "width" : {
+            "format" : "int32",
+            "description" : "Breite des Images",
+            "type" : "integer"
+          },
+          "height" : {
+            "format" : "int32",
+            "description" : "Höhe des Images",
+            "type" : "integer"
+          },
+          "format" : {
+            "description" : "das image-Format: 'image/png' oder 'image/svg+xml'. Kann im img-Tag verwendet werden als 'data:image/png' bzw. 'data:image/svg+xml'",
+            "type" : "string"
+          },
+          "data" : {
+            "format" : "binary",
+            "description" : "Base64-encodetes png Kann mit einem img src=\"data:image/png;base64- Tag angezeigt werden",
+            "type" : "string"
+          }
+        }
+      },
       "AufgabeImages" : {
         "description" : "Objekt das ein png mit dem Text für die Frage/Quizaufgabe und ein png mit dem Text für die Lösung enthält",
         "type" : "object",
         "properties" : {
           "imageFrage" : {
-            "format" : "binary",
-            "description" : "Base64-encodetes png mit dem Text der Frage/Quizaufgabe. Kann mit einem img src=\"data:image/png;base64- Tag angezeigt werden",
-            "type" : "string"
+            "description" : "Das png mit Maßen für die Frage",
+            "type" : "object",
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/AufgabeImage"
+            } ]
           },
           "imageLoesung" : {
-            "format" : "binary",
-            "description" : "Base64-encodetes png mit dem Text der Lösung. Kann mit einem img src=\"data:image/png;base64- Tag angezeigt werden",
-            "type" : "string"
+            "description" : "Das png mit Maßen für die Lösung. Es kann null sein.",
+            "type" : "object",
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/AufgabeImage"
+            } ]
           }
         }
       },

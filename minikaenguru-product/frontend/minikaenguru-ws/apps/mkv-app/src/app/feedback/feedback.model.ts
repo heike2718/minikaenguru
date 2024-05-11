@@ -11,9 +11,15 @@ export type Aufgabenkategorie = 'NN' | 'LEICHT' | 'MITTEL' | 'SCHWER';
 
 export type Schriftart = 'NN' | 'DRUCKSCHRIFT' | 'FIBEL_NORD' | 'FIBEL_SUED';
 
+export interface Image {
+  readonly width: number;
+  readonly height: number;
+  readonly data: string;
+};
+
 export interface Images {
-    readonly imageFrage: string;
-    readonly imageLoesung: string;
+    readonly imageFrage: Image;
+    readonly imageLoesung: Image | undefined;
 };
 
 export interface Aufgabe {
@@ -87,7 +93,7 @@ export function createBewertungAufgabeGUIModel(aufgabe: Aufgabe): BewertungAufga
         aufgabeKategorie: kategorie,
         empfohleneKategorie: bewertungAufgabe.empfohleneKategorie,
         freitext: bewertungAufgabe.freitext,
-        imageBase64: aufgabe.images.imageFrage,
+        imageBase64: aufgabe.images.imageFrage.data,
         scoreLehrplankompatibilitaet: bewertungAufgabe.scoreLehrplankompatibilitaet,
         scoreSchwierigkeitsgrad: bewertungAufgabe.scoreSchwierigkeitsgrad,
         scoreVerstaendlichkeit: bewertungAufgabe.scoreVerstaendlichkeit
