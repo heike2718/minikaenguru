@@ -75,7 +75,7 @@
           ],
           "outputHashing": "all"
         },
-        "a300": {
+        "heikeqs": {
           "budgets": [
             {
               "type": "initial",
@@ -89,13 +89,13 @@
             }
           ],
           "index": {
-            "input": "build-env/mkbiza-app/index.a300.html",
+            "input": "build-env/mkbiza-app/index.heikeqs.html",
             "output": "index.html"
           },
           "fileReplacements": [
             {
               "replace": "src/environments/environment.ts",
-              "with": "build-env/mkbiza-app/environment.a300.ts"
+              "with": "build-env/mkbiza-app/environment.heikeqs.ts"
             }
           ],
           "outputHashing": "all"

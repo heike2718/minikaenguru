@@ -6,7 +6,7 @@
     "ng": "nx",
     "start": "nx serve",
     "build:mkbiza-app:local": "npx nx build mkbiza-app -c local --output-hashing=all --base-href /mkbiza-app/ --skip-nx-cache",
-    "build:mkbiza-app:a300": "npx nx build mkbiza-app -c a300 --output-hashing=all --base-href /mkbiza-app/ --skip-nx-cache",
+    "build:mkbiza-app:heikeqs": "npx nx build mkbiza-app -c heikeqs --output-hashing=all --base-href /mkbiza-app/ --skip-nx-cache",
     "build:mkbiza-app:prod": "npx nx run mkbiza-app:build:production --output-hashing=all --base-href /mkbiza-app/ --skip-nx-cache",
     "test": "npx nx test",
     "test:all": "npx nx run-many --target=test --all",
