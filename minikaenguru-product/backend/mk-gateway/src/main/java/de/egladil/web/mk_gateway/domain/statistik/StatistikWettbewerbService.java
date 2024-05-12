@@ -13,10 +13,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
@@ -44,6 +40,9 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.TeilnahmenHibernateRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 /**
  * StatistikWettbewerbService
@@ -118,46 +117,6 @@ public class StatistikWettbewerbService {
 				result.addMedian(medianModel);
 			}
 		}
-
-		return result;
-	}
-
-	public AnmeldungenAPIModel berechneAnmeldungsstatistikAktuellerWettbewerb() {
-
-		Optional<Wettbewerb> optAktuellerWettbewerb = wettbewerbService.aktuellerWettbewerb();
-
-		if (optAktuellerWettbewerb.isEmpty()) {
-
-			return this.createEmptyResponsePayload();
-
-		}
-
-		Wettbewerb aktueller = optAktuellerWettbewerb.get();
-
-		List<Teilnahme> teilnahmen = new ArrayList<>();
-		List<Loesungszettel> loesungszettel = new ArrayList<>();
-
-		switch (aktueller.status()) {
-
-		case ERFASST:
-		case BEENDET:
-			return this.createEmptyResponsePayload();
-
-		case ANMELDUNG:
-			teilnahmen = teilnahmenRepository.loadAllForWettbewerb(aktueller.id());
-			break;
-
-		case DOWNLOAD_LEHRER:
-		case DOWNLOAD_PRIVAT:
-			teilnahmen = teilnahmenRepository.loadAllForWettbewerb(aktueller.id());
-			loesungszettel = loesungszettelRepository.loadAllForWettbewerb(aktueller.id());
-			break;
-
-		default:
-			break;
-		}
-
-		AnmeldungenAPIModel result = computeTeilnahmestatistik(aktueller, teilnahmen, loesungszettel, false);
 
 		return result;
 	}

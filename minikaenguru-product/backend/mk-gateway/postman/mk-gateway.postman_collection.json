@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "31c4a8a6-582d-44d6-af04-7f8319469f6f",
 		"name": "mk-gateway",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -16,7 +16,18 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "localhost:9510/mk-gateway/mkbiza/wettbewerbe"
+								"url": {
+									"raw": "localhost:9510/mk-gateway/mkbiza/wettbewerbe",
+									"host": [
+										"localhost"
+									],
+									"port": "9510",
+									"path": [
+										"mk-gateway",
+										"mkbiza",
+										"wettbewerbe"
+									]
+								}
 							},
 							"response": []
 						},
@@ -36,7 +47,18 @@
 										"type": "default"
 									}
 								],
-								"url": "localhost:9510/mk-gateway/mkbiza/wettbewerbe"
+								"url": {
+									"raw": "localhost:9510/mk-gateway/mkbiza/wettbewerbe",
+									"host": [
+										"localhost"
+									],
+									"port": "9510",
+									"path": [
+										"mk-gateway",
+										"mkbiza",
+										"wettbewerbe"
+									]
+								}
 							},
 							"response": []
 						},
@@ -56,7 +78,19 @@
 										"type": "default"
 									}
 								],
-								"url": "localhost:9510/mk-gateway/mkbiza/wettbewerbe/2017"
+								"url": {
+									"raw": "localhost:9510/mk-gateway/mkbiza/wettbewerbe/2017",
+									"host": [
+										"localhost"
+									],
+									"port": "9510",
+									"path": [
+										"mk-gateway",
+										"mkbiza",
+										"wettbewerbe",
+										"2017"
+									]
+								}
 							},
 							"response": []
 						},
@@ -76,7 +110,19 @@
 										"type": "default"
 									}
 								],
-								"url": "localhost:9510/mk-gateway/mkbiza/wettbewerbe/2004"
+								"url": {
+									"raw": "localhost:9510/mk-gateway/mkbiza/wettbewerbe/2004",
+									"host": [
+										"localhost"
+									],
+									"port": "9510",
+									"path": [
+										"mk-gateway",
+										"mkbiza",
+										"wettbewerbe",
+										"2004"
+									]
+								}
 							},
 							"response": []
 						},
@@ -85,7 +131,19 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "localhost:9510/mk-gateway/mkbiza/wettbewerbe/2017"
+								"url": {
+									"raw": "localhost:9510/mk-gateway/mkbiza/wettbewerbe/2017",
+									"host": [
+										"localhost"
+									],
+									"port": "9510",
+									"path": [
+										"mk-gateway",
+										"mkbiza",
+										"wettbewerbe",
+										"2017"
+									]
+								}
 							},
 							"response": []
 						},
@@ -105,7 +163,19 @@
 										"type": "default"
 									}
 								],
-								"url": "localhost:9510/mk-gateway/mkbiza/wettbewerbe/2020"
+								"url": {
+									"raw": "localhost:9510/mk-gateway/mkbiza/wettbewerbe/2020",
+									"host": [
+										"localhost"
+									],
+									"port": "9510",
+									"path": [
+										"mk-gateway",
+										"mkbiza",
+										"wettbewerbe",
+										"2020"
+									]
+								}
 							},
 							"response": []
 						},
@@ -125,7 +195,19 @@
 										"type": "default"
 									}
 								],
-								"url": "localhost:9510/mk-gateway/mkbiza/wettbewerbe/2040"
+								"url": {
+									"raw": "localhost:9510/mk-gateway/mkbiza/wettbewerbe/2040",
+									"host": [
+										"localhost"
+									],
+									"port": "9510",
+									"path": [
+										"mk-gateway",
+										"mkbiza",
+										"wettbewerbe",
+										"2040"
+									]
+								}
 							},
 							"response": []
 						},
@@ -145,7 +227,21 @@
 										"type": "default"
 									}
 								],
-								"url": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2017/IKID"
+								"url": {
+									"raw": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2017/IKID",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9510",
+									"path": [
+										"mk-gateway",
+										"mkbiza",
+										"wettbewerbe",
+										"2017",
+										"IKID"
+									]
+								}
 							},
 							"response": []
 						},
@@ -165,7 +261,21 @@
 										"type": "default"
 									}
 								],
-								"url": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2012/ZWEI"
+								"url": {
+									"raw": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2012/ZWEI",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9510",
+									"path": [
+										"mk-gateway",
+										"mkbiza",
+										"wettbewerbe",
+										"2012",
+										"ZWEI"
+									]
+								}
 							},
 							"response": []
 						},
@@ -185,7 +295,21 @@
 										"type": "default"
 									}
 								],
-								"url": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2020/EINS"
+								"url": {
+									"raw": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2020/EINS",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9510",
+									"path": [
+										"mk-gateway",
+										"mkbiza",
+										"wettbewerbe",
+										"2020",
+										"EINS"
+									]
+								}
 							},
 							"response": []
 						},
@@ -205,7 +329,21 @@
 										"type": "default"
 									}
 								],
-								"url": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2022/ZWEI"
+								"url": {
+									"raw": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2022/ZWEI",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9510",
+									"path": [
+										"mk-gateway",
+										"mkbiza",
+										"wettbewerbe",
+										"2022",
+										"ZWEI"
+									]
+								}
 							},
 							"response": []
 						},
@@ -225,7 +363,21 @@
 										"type": "default"
 									}
 								],
-								"url": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2017/EINS"
+								"url": {
+									"raw": "http://localhost:9510/mk-gateway/mkbiza/wettbewerbe/2017/EINS",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9510",
+									"path": [
+										"mk-gateway",
+										"mkbiza",
+										"wettbewerbe",
+										"2017",
+										"EINS"
+									]
+								}
 							},
 							"response": []
 						}
@@ -239,7 +391,20 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"url": "http://localhost:9510/mk-gateway/mja-api/aufgaben/IKID"
+								"url": {
+									"raw": "http://localhost:9510/mk-gateway/mja-api/aufgaben/IKID",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9510",
+									"path": [
+										"mk-gateway",
+										"mja-api",
+										"aufgaben",
+										"IKID"
+									]
+								}
 							},
 							"response": []
 						},
@@ -268,20 +433,69 @@
 										}
 									}
 								},
-								"url": "http://localhost:9510/mk-gateway/feedback"
+								"url": {
+									"raw": "http://localhost:9510/mk-gateway/feedback",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9510",
+									"path": [
+										"mk-gateway",
+										"feedback"
+									]
+								}
 							},
 							"response": []
 						}
 					]
 				},
 				{
-					"name": "local - Mediane",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "http://localhost:9510/mk-gateway/open-data/statistik/2020/mediane"
-					},
-					"response": []
+					"name": "PublicWettbewerbResource",
+					"item": [
+						{
+							"name": "local - Wettbewerbe",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9510/mk-gateway/wettbewerbe",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9510",
+									"path": [
+										"mk-gateway",
+										"wettbewerbe"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "local - Anmeldungen",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:9510/mk-gateway/open-data/statistik/anmeldungen",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "9510",
+									"path": [
+										"mk-gateway",
+										"open-data",
+										"statistik",
+										"anmeldungen"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		},
@@ -289,11 +503,72 @@
 			"name": "prod",
 			"item": [
 				{
+					"name": "PublicWettbewerbResource Copy",
+					"item": [
+						{
+							"name": "prod - Wettbewerbe",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://mathe-jung-alt.de/mk-gateway/wettbewerbe",
+									"protocol": "https",
+									"host": [
+										"mathe-jung-alt",
+										"de"
+									],
+									"path": [
+										"mk-gateway",
+										"wettbewerbe"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "prod - Anmeldungen",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://mathe-jung-alt.de/mk-gateway/open-data/statistik/anmeldungen",
+									"protocol": "https",
+									"host": [
+										"mathe-jung-alt",
+										"de"
+									],
+									"path": [
+										"mk-gateway",
+										"open-data",
+										"statistik",
+										"anmeldungen"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "prod - Mediane",
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "https://mathe-jung-alt.de/mk-gateway/open-data/statistik/2024/mediane"
+						"url": {
+							"raw": "https://mathe-jung-alt.de/mk-gateway/open-data/statistik/2024/mediane",
+							"protocol": "https",
+							"host": [
+								"mathe-jung-alt",
+								"de"
+							],
+							"path": [
+								"mk-gateway",
+								"open-data",
+								"statistik",
+								"2024",
+								"mediane"
+							]
+						}
 					},
 					"response": []
 				},
@@ -308,7 +583,178 @@
 								"type": "default"
 							}
 						],
-						"url": "https://mathe-jung-alt.de/mk-gateway/open-data/statistik/2023/IKID/xml"
+						"url": {
+							"raw": "https://mathe-jung-alt.de/mk-gateway/open-data/statistik/2023/IKID/xml",
+							"protocol": "https",
+							"host": [
+								"mathe-jung-alt",
+								"de"
+							],
+							"path": [
+								"mk-gateway",
+								"open-data",
+								"statistik",
+								"2023",
+								"IKID",
+								"xml"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "prod - open-data/anmeldungen",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/xml",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "https://mathe-jung-alt.de/mk-gateway/open-data/statistik/anmeldungen",
+							"protocol": "https",
+							"host": [
+								"mathe-jung-alt",
+								"de"
+							],
+							"path": [
+								"mk-gateway",
+								"open-data",
+								"statistik",
+								"anmeldungen"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "heikeqs",
+			"item": [
+				{
+					"name": "PublicWettbewerbResource Copy 2",
+					"item": [
+						{
+							"name": "heikeqs - Wettbewerbe",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://heikeqs/mk-gateway/wettbewerbe",
+									"protocol": "http",
+									"host": [
+										"heikeqs"
+									],
+									"path": [
+										"mk-gateway",
+										"wettbewerbe"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "heikeqs - Anmeldungen",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://heikeqs/mk-gateway/open-data/statistik/anmeldungen",
+									"protocol": "http",
+									"host": [
+										"heikeqs"
+									],
+									"path": [
+										"mk-gateway",
+										"open-data",
+										"statistik",
+										"anmeldungen"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "heikeqs - Mediane",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://heikeqs/mk-gateway/open-data/statistik/2024/mediane",
+							"protocol": "http",
+							"host": [
+								"heikeqs"
+							],
+							"path": [
+								"mk-gateway",
+								"open-data",
+								"statistik",
+								"2024",
+								"mediane"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "heikeqs - Gesamtpunktverteilung -XML",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/xml",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "http://heikeqs/mk-gateway/open-data/statistik/2023/IKID/xml",
+							"protocol": "http",
+							"host": [
+								"heikeqs"
+							],
+							"path": [
+								"mk-gateway",
+								"open-data",
+								"statistik",
+								"2023",
+								"IKID",
+								"xml"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "heikeqs - open-data/anmeldungen",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/xml",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "http://heikeqs/mk-gateway/open-data/statistik/anmeldungen",
+							"protocol": "http",
+							"host": [
+								"heikeqs"
+							],
+							"path": [
+								"mk-gateway",
+								"open-data",
+								"statistik",
+								"anmeldungen"
+							]
+						}
 					},
 					"response": []
 				}

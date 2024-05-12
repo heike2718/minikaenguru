@@ -341,24 +341,6 @@ public class StatistikWettbewerbServiceTest extends AbstractDomainServiceTest {
 	}
 
 	@Nested
-	class AnmeldungenTests {
-
-		@Test
-		void should_anmeldungenReturnJson_when_ok() {
-
-			// Act
-			AnmeldungenAPIModel result = statistikService.berechneAnmeldungsstatistikAktuellerWettbewerb();
-
-			// Assert
-			assertNotNull(result);
-
-			assertEquals("2020", result.getWettbewerbsjahr());
-
-		}
-
-	}
-
-	@Nested
 	class BeteiligungenTests {
 
 		@Test

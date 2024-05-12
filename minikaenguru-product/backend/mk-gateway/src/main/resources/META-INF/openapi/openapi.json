@@ -2132,16 +2132,6 @@
         }
       }
     },
-    "/mk-gateway/open-data/statistik/anmeldungen" : {
-      "get" : {
-        "tags" : [ "statistik" ],
-        "responses" : {
-          "200" : {
-            "description" : "OK"
-          }
-        }
-      }
-    },
     "/mk-gateway/open-data/statistik/prozentrang" : {
       "get" : {
         "tags" : [ "statistik" ],
@@ -2162,24 +2152,6 @@
           "in" : "query",
           "schema" : {
             "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK"
-          }
-        }
-      }
-    },
-    "/mk-gateway/open-data/statistik/teilnahmen" : {
-      "get" : {
-        "tags" : [ "statistik" ],
-        "parameters" : [ {
-          "name" : "jahr",
-          "in" : "query",
-          "schema" : {
-            "format" : "int32",
-            "type" : "integer"
           }
         } ],
         "responses" : {
@@ -3049,16 +3021,6 @@
     "/mk-gateway/version" : {
       "get" : {
         "tags" : [ "Version Resource" ],
-        "responses" : {
-          "200" : {
-            "description" : "OK"
-          }
-        }
-      }
-    },
-    "/mk-gateway/wettbewerbe" : {
-      "get" : {
-        "tags" : [ "Public Wettbewerb Resource" ],
         "responses" : {
           "200" : {
             "description" : "OK"

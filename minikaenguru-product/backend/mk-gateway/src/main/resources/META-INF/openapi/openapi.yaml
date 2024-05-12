@@ -1459,13 +1459,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessagePayload'
-  /mk-gateway/open-data/statistik/anmeldungen:
-    get:
-      tags:
-      - statistik
-      responses:
-        "200":
-          description: OK
   /mk-gateway/open-data/statistik/prozentrang:
     get:
       tags:
@@ -1483,19 +1476,6 @@ paths:
         in: query
         schema:
           type: string
-      responses:
-        "200":
-          description: OK
-  /mk-gateway/open-data/statistik/teilnahmen:
-    get:
-      tags:
-      - statistik
-      parameters:
-      - name: jahr
-        in: query
-        schema:
-          format: int32
-          type: integer
       responses:
         "200":
           description: Liste der Anmeldungen und Beteiligungen nach Ländern zu einem
@@ -2095,13 +2075,6 @@ paths:
     get:
       tags:
       - Version Resource
-      responses:
-        "200":
-          description: OK
-  /mk-gateway/wettbewerbe:
-    get:
-      tags:
-      - Public Wettbewerb Resource
       responses:
         "200":
           description: OK

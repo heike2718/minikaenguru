@@ -12,17 +12,6 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -48,6 +37,16 @@ import de.egladil.web.mk_gateway.domain.statistik.functions.StringPunkteMapper;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 /**
  * OpenDataStatistikResource
@@ -184,18 +183,6 @@ public class OpenDataStatistikResource {
 		return Response.ok(new ResponsePayload(MessagePayload.ok(), mediane)).build();
 	}
 
-	@GET
-	@Produces({ MediaType.APPLICATION_JSON })
-	@Path("anmeldungen")
-	public Response getAnmeldungenUndBeteiligungenAktuellerWettbewerb() {
-
-		this.delayService.pause();
-
-		AnmeldungenAPIModel anmeldungen = statistikWettbewerbService.berechneAnmeldungsstatistikAktuellerWettbewerb();
-
-		return Response.ok(new ResponsePayload(MessagePayload.ok(), anmeldungen)).build();
-	}
-
 	@APIResponses({
 		@APIResponse(
 			description = "Liste der Anmeldungen und Beteiligungen nach Ländern zu einem Wettbewerbsjahr",
@@ -221,24 +208,6 @@ public class OpenDataStatistikResource {
 			})
 
 	})
-	@GET
-	@Produces({ MediaType.APPLICATION_JSON })
-	@Path("teilnahmen")
-	public Response getAnmeldungenUndBeteiligungenNachWettbewerbsjahr(@QueryParam(value = "jahr") final Integer jahr) {
-
-		this.delayService.pause();
-
-		Response checkResponse = this.checkJahr(jahr.toString(), "/open-data/statistik/teilnahmen/{jahr}");
-
-		if (checkResponse.getStatus() != 200) {
-
-			return checkResponse;
-		}
-
-		ResponsePayload responsePayload = statistikWettbewerbService.getBeteiligungen(jahr);
-
-		return Response.ok(responsePayload).build();
-	}
 
 	@GET
 	@Path("prozentrang")
