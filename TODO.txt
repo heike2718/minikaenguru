@@ -1,5 +1,6 @@
-- getSchulenByKuerzel sollte ich eventuell umschreiben, so dass eine Liste von Strings die Payload sein kann. Oder eine neue URL und die andere deprecaten
+12.05.2024 (PROD)
 
-- Das Dto ist bereits modelliert. Jetzt muss der Service nur die Statistiken berechnen.
-
+- reverse-proxies einspielen (wegen permanenten redirects)
+- mk-gateway neu deployen (wegen nicht mehr verwendeter API)
+- aus /ver/www/html das Verzeichnis mkod-app löschen
 
