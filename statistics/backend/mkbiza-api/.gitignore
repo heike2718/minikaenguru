@@ -42,3 +42,7 @@ nb-configuration.xml
 
 # Plugin directory
 /.quarkus/cli/plugins/
+
+#generierte sourcen
+src/main/resources/META-INF/resources/mkbiza-app/
+
