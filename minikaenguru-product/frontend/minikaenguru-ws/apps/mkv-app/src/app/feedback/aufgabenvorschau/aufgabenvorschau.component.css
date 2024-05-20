@@ -1,14 +1,13 @@
-/*
-img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: auto;
+@media(max-width: 959px) {
+    .mk-image {
+        max-width: 80%;
+        width: auto;
+        height: auto;
+    }
 }
-*/
 
-responive-image {
+.mk-image {
     max-width: 100%;
+    width: auto;
     height: auto;
-    width: 40%;
 }
