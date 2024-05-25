@@ -6,7 +6,6 @@ import { LandingComponent } from './landing/landing.component';
 import { WettbewerbInfoComponent } from './wettbewerb/wettbewerb-info.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SessionTimeoutComponent } from './session-timeout/session-timeout.component';
-import { environment } from '../environments/environment';
 
 
 

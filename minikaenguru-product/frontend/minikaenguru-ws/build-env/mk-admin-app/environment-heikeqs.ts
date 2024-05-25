@@ -10,7 +10,7 @@ export const environment = {
         apiUrl: 'http://heikeqs/mk-gateway/admin',
         profileUrl: 'http://heikeqs/profil-app',
         storageKeyPrefix: 'mka_',
-        version: '2.5.2',
+        version: '2.5.3',
         consoleLogActive: true,
         serverLogActive: false,
         loglevel: 1

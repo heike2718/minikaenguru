@@ -9,7 +9,7 @@ export const environment = {
   apiUrl: 'http://heikeqs/mk-gateway',
   profileUrl: 'http://heikeqs/profil-app',
   storageKeyPrefix: 'mkv_',
-  version: '2.5.2',
+  version: '2.5.3',
   consoleLogActive: true,
   serverLogActive: false,
   loglevel: 1

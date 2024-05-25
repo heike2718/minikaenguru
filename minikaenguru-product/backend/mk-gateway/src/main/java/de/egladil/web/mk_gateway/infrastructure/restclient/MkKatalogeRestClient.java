@@ -30,7 +30,7 @@ import jakarta.ws.rs.core.Response;
 /**
  * MkKatalogeRestClient
  */
-@RegisterRestClient
+@RegisterRestClient(configKey = "mk-kataloge")
 @Path("mk-kataloge")
 @Produces(MediaType.APPLICATION_JSON)
 public interface MkKatalogeRestClient {

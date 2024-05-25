@@ -19,7 +19,7 @@ import jakarta.ws.rs.core.Response;
 /**
  * FilescannerRestClient
  */
-@RegisterRestClient
+@RegisterRestClient(configKey = "filescanner")
 @Path("")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)

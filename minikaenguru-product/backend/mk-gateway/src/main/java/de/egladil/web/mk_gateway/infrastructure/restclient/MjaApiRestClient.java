@@ -19,7 +19,7 @@ import jakarta.ws.rs.core.Response;
 /**
  * MjaApiRestClient
  */
-@RegisterRestClient
+@RegisterRestClient(configKey = "mja-api")
 @Path("restricted")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)

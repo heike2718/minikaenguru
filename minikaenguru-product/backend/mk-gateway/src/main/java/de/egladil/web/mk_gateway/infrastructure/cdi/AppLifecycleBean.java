@@ -46,17 +46,17 @@ public class AppLifecycleBean {
 	@ConfigProperty(name = "quarkus.datasource.jdbc.url")
 	String jdbcUrl;
 
-	@ConfigProperty(name = "quarkus.rest-client.\"de.egladil.web.mk_gateway.infrastructure.restclient.FilescannerRestClient\".url")
+	@ConfigProperty(name = "quarkus.rest-client.filescanner.url")
 	String filescannerUrl;
 
-	@ConfigProperty(name = "quarkus.rest-client.\"de.egladil.web.mk_gateway.domain.auth.client.InitAccessTokenRestClient\".url")
+	@ConfigProperty(name = "quarkus.rest-client.accesstoken.url")
 	String initAccesstokenUrl;
 
 	@ConfigProperty(
-		name = "quarkus.rest-client.\"de.egladil.web.mk_gateway.domain.auth.session.tokens.TokenExchangeRestClient\".url")
+		name = "quarkus.rest-client.token-exchange.url")
 	String tokenExchangeRestClientUrl;
 
-	@ConfigProperty(name = "quarkus.rest-client.\"de.egladil.web.mk_gateway.infrastructure.restclient.MkKatalogeRestClient\".url")
+	@ConfigProperty(name = "quarkus.rest-client.mk-kataloge.url")
 	String katalogeUrl;
 
 	@ConfigProperty(name = "newsletterversand.cron.expr")
