@@ -30,6 +30,7 @@ import de.egladil.web.mk_gateway.infrastructure.restclient.MjaApiRestClient;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.Response;
@@ -123,9 +124,9 @@ public class AufgabenVorschauService {
 
 			return result;
 
-		} catch (ProcessingException e) {
+		} catch (WebApplicationException | ProcessingException e) {
 
-			LOGGER.error("ProcessingException bei Kommunikation mit mja-api: {}", e.getMessage());
+			LOGGER.error("{} bei Kommunikation mit mja-api: {}", e.getClass().getSimpleName(), e.getMessage());
 			MessagePayload messagePayload = MessagePayload
 				.error(applicationMessages.getString("aufgabenvorschau.error"));
 			Response response = Response.status(500).entity(ResponsePayload.messageOnly(messagePayload)).build();
