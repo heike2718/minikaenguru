@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "31c4a8a6-582d-44d6-af04-7f8319469f6f",
+		"_postman_id": "fd68decc-e96e-4a67-be0d-da264b04f913",
 		"name": "mk-gateway",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15742019"
 	},
 	"item": [
 		{
@@ -503,53 +504,6 @@
 			"name": "prod",
 			"item": [
 				{
-					"name": "PublicWettbewerbResource Copy",
-					"item": [
-						{
-							"name": "prod - Wettbewerbe",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "https://mathe-jung-alt.de/mk-gateway/wettbewerbe",
-									"protocol": "https",
-									"host": [
-										"mathe-jung-alt",
-										"de"
-									],
-									"path": [
-										"mk-gateway",
-										"wettbewerbe"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "prod - Anmeldungen",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "https://mathe-jung-alt.de/mk-gateway/open-data/statistik/anmeldungen",
-									"protocol": "https",
-									"host": [
-										"mathe-jung-alt",
-										"de"
-									],
-									"path": [
-										"mk-gateway",
-										"open-data",
-										"statistik",
-										"anmeldungen"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
 					"name": "prod - Mediane",
 					"request": {
 						"method": "GET",
@@ -601,85 +555,12 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "prod - open-data/anmeldungen",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/xml",
-								"type": "default"
-							}
-						],
-						"url": {
-							"raw": "https://mathe-jung-alt.de/mk-gateway/open-data/statistik/anmeldungen",
-							"protocol": "https",
-							"host": [
-								"mathe-jung-alt",
-								"de"
-							],
-							"path": [
-								"mk-gateway",
-								"open-data",
-								"statistik",
-								"anmeldungen"
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		},
 		{
 			"name": "heikeqs",
 			"item": [
-				{
-					"name": "PublicWettbewerbResource Copy 2",
-					"item": [
-						{
-							"name": "heikeqs - Wettbewerbe",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://heikeqs/mk-gateway/wettbewerbe",
-									"protocol": "http",
-									"host": [
-										"heikeqs"
-									],
-									"path": [
-										"mk-gateway",
-										"wettbewerbe"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "heikeqs - Anmeldungen",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://heikeqs/mk-gateway/open-data/statistik/anmeldungen",
-									"protocol": "http",
-									"host": [
-										"heikeqs"
-									],
-									"path": [
-										"mk-gateway",
-										"open-data",
-										"statistik",
-										"anmeldungen"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
 				{
 					"name": "heikeqs - Mediane",
 					"request": {
