@@ -52,6 +52,9 @@ public class AppLifecycleBean {
 	@ConfigProperty(name = "quarkus.rest-client.accesstoken.url")
 	String initAccesstokenUrl;
 
+	@ConfigProperty(name = "auth-app.url")
+	String authAppUrl;
+
 	@ConfigProperty(
 		name = "quarkus.rest-client.token-exchange.url")
 	String tokenExchangeRestClientUrl;
@@ -73,6 +76,7 @@ public class AppLifecycleBean {
 		LOGGER.info(" ===========>  newsletterversandCron={}", newsletterversandCronExpression);
 		LOGGER.info(" ===========>  filescannerUrl={}", filescannerUrl);
 		LOGGER.info(" ===========>  initAccesstokenUrl={}", initAccesstokenUrl);
+		LOGGER.info(" ===========>  authAppUrl={}", authAppUrl);
 		LOGGER.info(" ===========>  tokenExchangeRestClientUrl={}", tokenExchangeRestClientUrl);
 		LOGGER.info(" ===========>  katalogeUrl={}", katalogeUrl);
 		LOGGER.info(" ===========>  jdbcUrl={}", jdbcUrl);

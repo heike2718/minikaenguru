@@ -20,7 +20,7 @@ QUARKUS_HTTP_BODY-HANDLER_UPLOADS-DIRECTORY=/home/heike/git/testdaten/minikaengu
 
 UUID_TESTLEHRER=62f5b221-20e5-4dd0-8992-c7a51b1b826e
 
-AUTH_APP_URL=http://heikedeb:80/auth-app
+AUTH_APP_URL=http://heiketux:80/auth-app
 AUTHPROVIDER_URL=http://localhost:9000/authprovider
 
 MKV-APP_CLIENT-ID=k7AxUVYzr1FBAvD8e99orRqKqx4jBwcr7Dmgn5jdBf8J
@@ -33,8 +33,8 @@ MK-ADMIN-APP_CLIENT-SECRET=start123
 MK-ADMIN-APP_REDIRECT-URL_LOGIN=http://localhost:4200
 
 
-QUARKUS_REST_CLIENT_ACCESSTOKEN_URL=http://heikedeb:9000/authprovider
-QUARKUS_REST_CLIENT_TOKEN_EXCHANGE_URL=http://heikedeb:9000/authprovider
+QUARKUS_REST_CLIENT_ACCESSTOKEN_URL=http://heiketux:9000/authprovider
+QUARKUS_REST_CLIENT_TOKEN_EXCHANGE_URL=http://heiketux:9000/authprovider
 QUARKUS_REST_CLIENT_MK_KATALOGE_URL=http://localhost:9530
 QUARKUS_REST_CLIENT_FILESCANNER_URL=http://localhost:9800
 QUARKUS_REST_CLIENT_MJA_API_URL=http://localhost:9210/mja-api
@@ -52,8 +52,8 @@ QUARKUS_HTTP_ACCESS-LOG_LOG-TO-FILE=false
 
 QUARKUS_LOG_CATEGORY__ORG_JBOSS_RESTEASY_REACTIVE_CLIENT_LOGGING_DEFAULTCLIENTLOGGER__LEVEL=WARN
 
-QUARKUS_HTTP_CORS_ORIGINS=http://heikedeb:9000,http://localhost:9510,http://localhost:9530,http://localhost:4200
-TARGET_ORIGIN=heikedeb,heikedeb:4200,heikedeb:4300,localhost:4200,localhost:4300,heikedeb:9600
+QUARKUS_HTTP_CORS_ORIGINS=http://heiketux:9000,http://localhost:9510,http://localhost:9530,http://localhost:4200
+TARGET_ORIGIN=heiketux,heiketux:4200,heiketux:4300,localhost:4200,localhost:4300,heiketux:9600
 
 PATH_EXTERNAL_FILES=/home/heike/git/testdaten/minikaenguru
 ZIP_MAX__EXPECTED__COMPRESSION__RATIO=100

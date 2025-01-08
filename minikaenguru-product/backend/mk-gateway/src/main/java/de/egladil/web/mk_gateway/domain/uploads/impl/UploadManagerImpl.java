@@ -14,8 +14,8 @@ import java.util.ResourceBundle;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.shiro.util.StringUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -305,7 +305,7 @@ public class UploadManagerImpl implements UploadManager {
 
 		for (String line : lines) {
 
-			String[] tokens = StringUtils.tokenizeToStringArray(line, ";");
+			String[] tokens = StringUtils.splitPreserveAllTokens(line, ";");
 
 			if (tokens.length > 4) {
 
