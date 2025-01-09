@@ -49,15 +49,11 @@ public class AppLifecycleBean {
 	@ConfigProperty(name = "quarkus.rest-client.filescanner.url")
 	String filescannerUrl;
 
-	@ConfigProperty(name = "quarkus.rest-client.accesstoken.url")
-	String initAccesstokenUrl;
+	@ConfigProperty(name = "quarkus.rest-client.authprovider.url")
+	String authproviderUrl;
 
 	@ConfigProperty(name = "auth-app.url")
 	String authAppUrl;
-
-	@ConfigProperty(
-		name = "quarkus.rest-client.token-exchange.url")
-	String tokenExchangeRestClientUrl;
 
 	@ConfigProperty(name = "quarkus.rest-client.mk-kataloge.url")
 	String katalogeUrl;
@@ -75,9 +71,8 @@ public class AppLifecycleBean {
 
 		LOGGER.info(" ===========>  newsletterversandCron={}", newsletterversandCronExpression);
 		LOGGER.info(" ===========>  filescannerUrl={}", filescannerUrl);
-		LOGGER.info(" ===========>  initAccesstokenUrl={}", initAccesstokenUrl);
+		LOGGER.info(" ===========>  authproviderUrl={}", authproviderUrl);
 		LOGGER.info(" ===========>  authAppUrl={}", authAppUrl);
-		LOGGER.info(" ===========>  tokenExchangeRestClientUrl={}", tokenExchangeRestClientUrl);
 		LOGGER.info(" ===========>  katalogeUrl={}", katalogeUrl);
 		LOGGER.info(" ===========>  jdbcUrl={}", jdbcUrl);
 		LOGGER.info(" ===========>  the download dir is {}", getPathDownloadDir());

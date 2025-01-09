@@ -7,9 +7,9 @@ export const environment = {
   production: false,
   assetsUrl: 'http://heikeqs/mkv-app/assets',
   apiUrl: 'http://heikeqs/mk-gateway',
-  profileUrl: 'http://heikeqs/profil-app',
+  profileUrl: 'http://heikeqs/benutzerprofil/',
   storageKeyPrefix: 'mkv_',
-  version: '2.5.3',
+  version: '2.6.0',
   consoleLogActive: true,
   serverLogActive: false,
   loglevel: 1

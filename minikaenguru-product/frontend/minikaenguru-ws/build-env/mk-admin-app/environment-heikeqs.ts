@@ -8,9 +8,9 @@ export const environment = {
         production: false,
         assetsUrl: 'http://mk-admin-app/assets',
         apiUrl: 'http://heikeqs/mk-gateway/admin',
-        profileUrl: 'http://heikeqs/profil-app',
+        profileUrl: 'http://heikeqs/benutzerprofil/',
         storageKeyPrefix: 'mka_',
-        version: '2.5.3',
+        version: '2.6.0',
         consoleLogActive: true,
         serverLogActive: false,
         loglevel: 1

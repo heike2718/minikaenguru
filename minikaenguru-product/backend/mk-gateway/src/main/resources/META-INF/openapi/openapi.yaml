@@ -2,9 +2,9 @@
 openapi: 3.0.3
 info:
   title: mk-gateway-api
-  description: API f�r die Minik�nguru-Anwendungen
+  description: API faer die Minikaenguru-Anwendungen
   contact:
-    name: Heike Winkelvo�
+    name: Heike Winkelvoß
     url: https://mathe-jung-alt.de
     email: info@egladil.de
   license:
