@@ -29,7 +29,8 @@ MK-ADMIN-APP_CLIENT-ID=NBptB82KjFkelkF55Aq4SmQSL3DXZHHurbe7l5W9LT7U
 MK-ADMIN-APP_CLIENT-SECRET=start123
 MK-ADMIN-APP_REDIRECT-URL_LOGIN=http://localhost:4200
 
-TARGET_ORIGIN=heiketux,heiketux:4200,heiketux:4300,localhost:4200,localhost:4300,heiketux:9600
+TARGET_ORIGIN=localhost:4200,localhost:4300,heiketux:9510
+QUARKUS_HTTP_CORS_ORIGINS=http://heiketux:9000,http://localhost:9510,http://localhost:9530,http://localhost:4200
 
 PATH_EXTERNAL_FILES=/home/heike/git/testdaten/minikaenguru
 ZIP_MAX__EXPECTED__COMPRESSION__RATIO=100
@@ -94,7 +95,6 @@ QUARKUS_HIBERNATE_ORM_LOG_SQL=true
 #        logging                                                 #
 #=================================================================#
 QUARKUS_LOG_FILE_ENABLE=false
-QUARKUS_LOG_FILE_PATH=/home/heike/log/quarkus/mk-gateway.log
 QUARKUS_LOG_LEVEL=INFO
 
 QUARKUS_HTTP_ACCESS-LOG_ENABLED=false
@@ -102,7 +102,6 @@ QUARKUS_HTTP_ACCESS-LOG_LOG-TO-FILE=false
 
 QUARKUS_LOG_CATEGORY__ORG_JBOSS_RESTEASY_REACTIVE_CLIENT_LOGGING_DEFAULTCLIENTLOGGER__LEVEL=WARN
 
-QUARKUS_HTTP_CORS_ORIGINS=http://heiketux:9000,http://localhost:9510,http://localhost:9530,http://localhost:4200
 
 _FULL-DB-TEST_MOCK_SESSION=true
 _FULL-DB-TEST_QUARKUS_DATASOURCE_JDBC_URL=jdbc:mariadb://172.31.0.2:3306/mk_wettbewerb
