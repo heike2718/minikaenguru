@@ -28,6 +28,12 @@ public class AppLifecycleBean {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AppLifecycleBean.class);
 
+	@ConfigProperty(name = "quarkus.log.min-level")
+	String logMinLevel;
+
+	@ConfigProperty(name = "quarkus.log.category.\"org.hibernate.orm\".level")
+	String orgHibernateOrmLogLevel;
+
 	@ConfigProperty(name = "path.external.files")
 	String pathExternalFiles;
 
@@ -64,11 +70,14 @@ public class AppLifecycleBean {
 	@ConfigProperty(name = "quarkus.application.version")
 	String version;
 
-	void onStartup(@Observes final StartupEvent ev) {
+	void onStartup(@Observes
+	final StartupEvent ev) {
 
 		LOGGER.info(" ===========> Version {} of the application is starting with profiles {}", version,
 			StringUtils.join(ConfigUtils.getProfiles()));
 
+		LOGGER.info(" ===========>  logMinLevel={}", logMinLevel);
+		LOGGER.info(" ===========>  orgHibernateOrmLogLevel={}", orgHibernateOrmLogLevel);
 		LOGGER.info(" ===========>  newsletterversandCron={}", newsletterversandCronExpression);
 		LOGGER.info(" ===========>  filescannerUrl={}", filescannerUrl);
 		LOGGER.info(" ===========>  authproviderUrl={}", authproviderUrl);
