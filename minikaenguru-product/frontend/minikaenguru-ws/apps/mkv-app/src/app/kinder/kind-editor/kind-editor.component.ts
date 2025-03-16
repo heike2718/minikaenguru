@@ -34,6 +34,8 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 
 	devMode = environment.envName === 'DEV';
 
+	showBtnAddKind = true;
+
 	kindForm!: UntypedFormGroup;
 
 	vornameFormControl!: UntypedFormControl;
@@ -159,8 +161,10 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 					}
 
 					this.editorInitialized = true;
-					if (!this.klasseUuid) {
-						this.klasseUuid = ke.klasseUuid;
+					if(!ke.klasseId) {
+						this.showBtnAddKind = false;
+					} else {
+						this.klasseUuid = ke.klasseId;
 					}
 				}
 			}
@@ -268,7 +272,7 @@ export class KindEditorComponent implements OnInit, OnDestroy {
 		};
 
 		if (this.klasseUuid) {
-			this.kindDaten = { ...this.kindDaten, klasseUuid: this.klasseUuid };
+			this.kindDaten = { ...this.kindDaten, klasseId: this.klasseUuid };
 		}
 
 		this.kinderFacade.pruefeDuplikat(this.selectedKindUUID, this.kindDaten);

@@ -270,7 +270,7 @@ export class KlasseWechselnComponent implements OnInit, OnDestroy {
 			zusatz: this.kind.zusatz ? this.kind.zusatz : '',
 			klassenstufe: this.kind.klassenstufe,
 			sprache: this.kind.sprache,
-			klasseUuid: neueKlasse.uuid
+			klasseId: neueKlasse.uuid
 		};
 	}
 }
