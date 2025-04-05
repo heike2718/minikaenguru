@@ -1,6 +1,0 @@
-12.05.2024 (PROD)
-
-- reverse-proxies einspielen (wegen permanenten redirects)
-- mk-gateway neu deployen (wegen nicht mehr verwendeter API)
-- aus /ver/www/html das Verzeichnis mkod-app löschen
-
