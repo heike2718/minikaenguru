@@ -48,7 +48,7 @@ public class KindEditorModel {
 
 	@JsonProperty
 	@UuidString
-	private String klasseUuid;
+	private String klasseId;
 
 	KindEditorModel() {
 
@@ -66,7 +66,7 @@ public class KindEditorModel {
 	public String toString() {
 
 		return "[vorname=" + vorname + ", nachname=" + nachname + ", zusatz=" + zusatz + ", klassenstufe="
-			+ klassenstufe + ", sprache=" + sprache + ", klasseUuid=" + klasseUuid;
+			+ klassenstufe + ", sprache=" + sprache + ", klasseId=" + klasseId;
 	}
 
 	public String vorname() {
@@ -114,12 +114,12 @@ public class KindEditorModel {
 
 	public String klasseUuid() {
 
-		return klasseUuid;
+		return klasseId;
 	}
 
 	public KindEditorModel withKlasseUuid(final String klasseUuid) {
 
-		this.klasseUuid = klasseUuid;
+		this.klasseId = klasseUuid;
 		return this;
 	}
 
@@ -155,7 +155,7 @@ public class KindEditorModel {
 	public String logData() {
 
 		return "KindEditorModel [vorname=" + StringUtils.abbreviate(vorname, 5) + ", zusatz=" + zusatz + ", klassenstufe="
-			+ klassenstufe + ", sprache=" + sprache + ", klasseUuid=" + klasseUuid + "]";
+			+ klassenstufe + ", sprache=" + sprache + ", klasseUuid=" + klasseId + "]";
 	}
 
 }

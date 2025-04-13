@@ -9,3 +9,5 @@ ObjectStore/
 /quarkus-app-ohne-apache-poi.7z
 
 .env
+/src/main/resources/META-INF/openapi/openapi.json
+/src/main/resources/META-INF/openapi/openapi.yaml
