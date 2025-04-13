@@ -7,12 +7,6 @@ package de.egladil.web.mk_gateway.domain.auth.session.tokens;
 import java.util.Map;
 import java.util.UUID;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.ws.rs.ProcessingException;
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Response;
-
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +18,12 @@ import de.egladil.web.mk_gateway.domain.error.ClientAuthException;
 import de.egladil.web.mk_gateway.domain.error.InaccessableEndpointException;
 import de.egladil.web.mk_gateway.domain.error.LogmessagePrefixes;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
+import de.egladil.web.mk_gateway.infrastructure.restclient.AuthproviderRestClient;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
 
 /**
  * TokenExchangeService
@@ -35,7 +35,7 @@ public class TokenExchangeService {
 
 	@Inject
 	@RestClient
-	TokenExchangeRestClient tokenExchangeRestClient;
+	AuthproviderRestClient authproviderRestClient;
 
 	public String exchangeTheOneTimeToken(final String clientId, final String clientSecret, final String oneTimeToken) {
 
@@ -47,7 +47,7 @@ public class TokenExchangeService {
 
 		try {
 
-			response = tokenExchangeRestClient.exchangeOneTimeTokenWithJwt(oneTimeToken, clientCredentials);
+			response = authproviderRestClient.exchangeOneTimeTokenWithJwt(oneTimeToken, clientCredentials);
 
 			ResponsePayload responsePayload = response.readEntity(ResponsePayload.class);
 

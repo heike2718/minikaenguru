@@ -4,10 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.auth.urls.impl;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.ws.rs.core.Response;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
@@ -17,6 +13,9 @@ import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.auth.urls.AuthLoginSignupUrlService;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Response;
 
 /**
  * VeranstalterUrlService
@@ -66,7 +65,7 @@ public class VeranstalterUrlService implements AuthLoginSignupUrlService {
 			nonce += "-" + abonnieren;
 		}
 
-		String redirectUrl = serviceDelegate.getAuthAppUrl() + "#/signup?accessToken=" + accessToken + "&state=signup&nonce="
+		String redirectUrl = serviceDelegate.getAuthAppUrl() + "/signup?accessToken=" + accessToken + "&state=signup&nonce="
 			+ nonce + "&redirectUrl="
 			+ signupRedirectUrl;
 
@@ -94,7 +93,7 @@ public class VeranstalterUrlService implements AuthLoginSignupUrlService {
 			nonce += "-" + abonnieren;
 		}
 
-		String redirectUrl = serviceDelegate.getAuthAppUrl() + "#/signup?accessToken=" + accessToken + "&state=signup&nonce="
+		String redirectUrl = serviceDelegate.getAuthAppUrl() + "/signup?accessToken=" + accessToken + "&state=signup&nonce="
 			+ nonce + "&redirectUrl="
 			+ signupRedirectUrl;
 

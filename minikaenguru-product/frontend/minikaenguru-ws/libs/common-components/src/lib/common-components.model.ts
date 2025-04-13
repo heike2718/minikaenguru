@@ -98,7 +98,7 @@ export interface KindEditorModel {
 	zusatz: string;
 	klassenstufe: Klassenstufe,
 	sprache: Sprache,
-	klasseUuid?: string;
+	klasseId?: string;
 };
 
 export interface KindRequestData {

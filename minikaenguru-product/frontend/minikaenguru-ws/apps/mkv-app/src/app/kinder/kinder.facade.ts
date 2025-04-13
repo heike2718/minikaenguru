@@ -188,7 +188,7 @@ export class KinderFacade {
 			nachname: selectedKind.nachname ? selectedKind.nachname : '',
 			zusatz: selectedKind.zusatz ? selectedKind.zusatz : '',
 			klassenstufe: selectedKind.klassenstufe,
-			klasseUuid: selectedKind.klasseId,
+			klasseId: selectedKind.klasseId,
 			sprache: selectedKind.sprache
 		};
 
@@ -207,13 +207,13 @@ export class KinderFacade {
 
 	public moveKind(kind: Kind, editorModel: KindEditorModel, schule: Schule): void {
 
-		if (!kind.klasseId || !editorModel.klasseUuid) {
-			this.logger.error('Klassenwechsel nicht möglich - brechen ab: kind.klasseId=' + kind.klasseId + ", editorModel=" + editorModel.klasseUuid);
+		if (!kind.klasseId || !editorModel.klasseId) {
+			this.logger.error('Klassenwechsel nicht möglich - brechen ab: kind.klasseId=' + kind.klasseId + ", editorModel=" + editorModel.klasseId);
 			return;
 		}
 
 		const kindKlasseUUID: string = kind.klasseId;
-		const ediorModelKlasseUUID: string = editorModel.klasseUuid;
+		const ediorModelKlasseUUID: string = editorModel.klasseId;
 
 		this.store.dispatch(KinderActions.startLoading());
 

@@ -1,26 +1,594 @@
 {
-  "openapi" : "3.0.3",
-  "info" : {
-    "title" : "mkbiza-api",
-    "description" : "API für die Statistiken des Minikänguru-Wettbewerbs",
-    "contact" : {
-      "name" : "Heike Winkelvoß",
-      "url" : "https://mathe-jung-alt.de",
-      "email" : "info@egladil.de"
-    },
-    "license" : {
-      "name" : "MIT License",
-      "url" : "https://mit-license.org/"
-    },
-    "version" : "3.0.0"
+  "openapi" : "3.1.0",
+  "components" : {
+    "schemas" : {
+      "AboutDto" : {
+        "description" : "Informationen über die API",
+        "type" : "object",
+        "properties" : {
+          "title" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "beschreibung" : {
+            "type" : "string"
+          },
+          "urls" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "schluesselwoerter" : {
+            "type" : "string"
+          },
+          "keywords" : {
+            "type" : "string"
+          },
+          "version" : {
+            "type" : "string"
+          }
+        }
+      },
+      "AufgabeDetails" : {
+        "description" : "Alle Details zu einer Aufgabe eines Minkänguru-Wettbewerbs",
+        "type" : "object",
+        "properties" : {
+          "nummer" : {
+            "type" : "string",
+            "description" : "Nummer der Aufgabe"
+          },
+          "punkte" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "Punkte für diese Aufgabe."
+          },
+          "strafpunkte" : {
+            "type" : "string",
+            "description" : "Strafpunkte bei falscher Lösung."
+          },
+          "loesungsbuchstabe" : {
+            "type" : "string",
+            "description" : "der korrekte Lösungsbuchstabe"
+          },
+          "quelle" : {
+            "type" : "string",
+            "description" : "Quelle ür eine Zitatsection"
+          },
+          "images" : {
+            "description" : "Images, die angezeigt werden können. Frage und optionale Lösung",
+            "type" : "object",
+            "$ref" : "#/components/schemas/Images"
+          },
+          "anzahlenJeLoesungsbuchstabe" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Gruppierungsitem"
+            },
+            "description" : "Anzahl je Lösungsbuchstabe A-E oder N für nicht gelöst"
+          },
+          "anzahlenJeWertungscode" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Gruppierungsitem"
+            },
+            "description" : "Anzahl je Wertungscode 'falsch', 'richtig', 'nicht gelöst'"
+          },
+          "gradZugehoerigkeitZuAufgabenkategorie" : {
+            "type" : "string",
+            "description" : "Grad der Zugehörigkeit zur gewählten Aufgabenkatedorie"
+          },
+          "passung" : {
+            "description" : "Passung der Aufgabe zu ihrer Kategorie",
+            "type" : "string",
+            "$ref" : "#/components/schemas/Passung"
+          },
+          "prozentRichtigerLoesungen" : {
+            "type" : "string",
+            "description" : "prozentualer Anteil richtiger Lösungen"
+          }
+        }
+      },
+      "ConstraintViolation" : {
+        "type" : "object",
+        "properties" : {
+          "field" : {
+            "type" : "string"
+          },
+          "message" : {
+            "type" : "string"
+          }
+        }
+      },
+      "ConstraintViolationResponse" : {
+        "type" : "object",
+        "properties" : {
+          "title" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "violations" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/ConstraintViolation"
+            }
+          }
+        }
+      },
+      "Gruppierungsitem" : {
+        "type" : "object",
+        "description" : "Gruppierungsitem - label und Anzahl",
+        "properties" : {
+          "name" : {
+            "type" : "string",
+            "description" : "Semantik für die Anzahl, kann so als Text in einer GUI verwendet werden",
+            "example" : "Klasse 1"
+          },
+          "anzahl" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "Anzahl Elemente mit dieser Semantik",
+            "example" : 356
+          }
+        }
+      },
+      "Image" : {
+        "type" : "object",
+        "description" : "base64 encodete Daten eines png sowie Breite und Höhe",
+        "properties" : {
+          "width" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "Breite des Images"
+          },
+          "height" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "Höhe des Images"
+          },
+          "data" : {
+            "type" : "string",
+            "format" : "binary",
+            "description" : "Base64-encodetes png Kann mit einem img src=\"data:image/png;base64- Tag angezeigt werden"
+          }
+        }
+      },
+      "Images" : {
+        "type" : "object",
+        "description" : "Objekt das ein png mit dem Text für die Frage/Quizaufgabe und ein png mit dem Text für die Lösung enthält",
+        "properties" : {
+          "imageFrage" : {
+            "description" : "Das png mit Maßen für die Frage",
+            "type" : "object",
+            "$ref" : "#/components/schemas/Image"
+          },
+          "imageLoesung" : {
+            "description" : "Das png mit Maßen für die Lösung. Es kann null sein.",
+            "type" : "object",
+            "$ref" : "#/components/schemas/Image"
+          }
+        }
+      },
+      "Klassenstufe" : {
+        "type" : "string",
+        "enum" : [ "IKID", "EINS", "ZWEI" ]
+      },
+      "KlassenstufeDetails" : {
+        "title" : "Statistik und Bilder der Wettbewerbsaufgaben einer Klassenstufe.",
+        "description" : "Bei nicht beendeten Wettbewerben ist dies eine Echtzeitstatistik über die Beteiligung an dieser Klassenstufe. Ansonsten auch eine Auswertungsstatistik.",
+        "type" : "object",
+        "properties" : {
+          "wettbewerbsjahr" : {
+            "type" : "string",
+            "description" : "Jahr des Wettbewerbs"
+          },
+          "klassenstufe" : {
+            "type" : "string",
+            "description" : "Klassenstufe in menschenlesbarer Form"
+          },
+          "beendet" : {
+            "type" : "boolean",
+            "description" : "Flag, ob der Wettbewerb beendet ist. Falls ja, sind die Statistiken konstant, falls nicht, kann man sie immer wieder neu laden"
+          },
+          "startguthaben" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "Anzahl Punkte des Startpunktguthabens"
+          },
+          "anzahlKinderGesamt" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "untere Schranke für die Anzahl aller Kinder, die teilgenommen haben",
+            "example" : 16534
+          },
+          "anzahlKinderMitVollerPunktzahl" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "untere Schranke für die Anzahl aller Kinder mit voller Punktzahl",
+            "example" : 16534
+          },
+          "medianUndGesamtpunkte" : {
+            "description" : "fasst den Median dieser Klassenstufe und die maximal erreichtbare Anzahl Punkte zusammen",
+            "type" : "object",
+            "$ref" : "#/components/schemas/MedianDto"
+          },
+          "kinderJeLand" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Gruppierungsitem"
+            },
+            "description" : "Histogramm der Kinder je Land, wobei PRIVAT als ein Land interpretiert wird."
+          },
+          "kinderJeTeilnahmeart" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Gruppierungsitem"
+            },
+            "description" : "Anzahl der teilnehmenden Kinder je Teilnahmeart (PRIVAT/SCHULE - untere Schranke)"
+          },
+          "kinderJeSprache" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Gruppierungsitem"
+            },
+            "description" : "Anzahl der teilnehmenden Kinder je Sprache (de/en - untere Schranke)"
+          },
+          "kinderJePunktintervall" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Gruppierungsitem"
+            },
+            "description" : "Anzahl der teilnehmenden Kinder je Punktzahl (untere Schranke)"
+          },
+          "rohpunkte" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/RohpunktItem"
+            },
+            "description" : "Rohpunktitems der Gesamtstatistik"
+          },
+          "aufgaben" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/AufgabeDetails"
+            },
+            "description" : "die einzelnen Aufgaben mit Lösungen"
+          }
+        }
+      },
+      "MedianDto" : {
+        "type" : "object",
+        "properties" : {
+          "medianMalTausend" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "gesamtpunkte" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }
+      },
+      "MessagePayload" : {
+        "description" : "eine kategorisierte Meldung",
+        "type" : "object",
+        "properties" : {
+          "level" : {
+            "type" : "string",
+            "description" : "Level der Message: INFO | WARN | ERROR"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "die message"
+          }
+        }
+      },
+      "MjaAufgabeDetails" : {
+        "description" : "Details einer Aufgabe eines Minkänguru-Wettbewerbs aus der Archivanwendung",
+        "type" : "object",
+        "properties" : {
+          "nummer" : {
+            "type" : "string",
+            "description" : "Nummer der Aufgabe im Wettbewerb"
+          },
+          "punkte" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "Punkte für diese Aufgabe."
+          },
+          "loesungsbuchstabe" : {
+            "type" : "string",
+            "description" : "der korrekte Lösungsbuchstabe"
+          },
+          "quelle" : {
+            "type" : "string",
+            "description" : "Quelle ür eine Zitatsection"
+          },
+          "images" : {
+            "description" : "Images, die angezeigt werden können. Frage und optionale Lösung",
+            "type" : "object",
+            "$ref" : "#/components/schemas/Images"
+          }
+        }
+      },
+      "MjaAufgabenKlassenstufeDto" : {
+        "description" : "Aufgaben und Lösungen eines Minkänguru-Wettbewerbs für eine gegebene Klassenstufe.",
+        "type" : "object",
+        "properties" : {
+          "wettbewerbsjahr" : {
+            "type" : "string",
+            "description" : "Jahr des Wettbewerbs"
+          },
+          "klassenstufe" : {
+            "type" : "string",
+            "description" : "Klassenstufe in menschenlesbarer Form"
+          },
+          "aufgaben" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MjaAufgabeDetails"
+            },
+            "description" : "die einzelnen Aufgaben mit Lösungen"
+          }
+        }
+      },
+      "MkGatewayStatistikAufgabe" : {
+        "description" : "Statistik zu einer Aufgabe",
+        "type" : "object",
+        "properties" : {
+          "nummer" : {
+            "type" : "string",
+            "description" : "Nummer der Aufgabe im Wettbewerb"
+          },
+          "strafpunkte" : {
+            "type" : "string",
+            "description" : "Strafpunkte bei falscher Lösung."
+          },
+          "anzahlenJeLoesungsbuchstabe" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Gruppierungsitem"
+            },
+            "description" : "Anzahl je Lösungsbuchstabe A-E oder N für nicht gelöst"
+          },
+          "anzahlenJeWertungscode" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Gruppierungsitem"
+            },
+            "description" : "Anzahl je Wertungscode 'falsch', 'richtig', 'nicht gelöst'"
+          }
+        }
+      },
+      "MkGatewayStatistikKlassenstufe" : {
+        "description" : "statistische Daten zu einer Wettbewerbsklassenstufe",
+        "type" : "object",
+        "properties" : {
+          "wettbewerbsjahr" : {
+            "type" : "string",
+            "description" : "Jahr des Wettbewerbs"
+          },
+          "klassenstufe" : {
+            "type" : "string",
+            "description" : "Klassenstufe in menschenlesbarer Form"
+          },
+          "beendet" : {
+            "type" : "boolean",
+            "description" : "Flag, ob der Wettbewerb beendet ist"
+          },
+          "anzahlKinderGesamt" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "Anzahl der Kinder, zu denen Lösungszettel vorliegen"
+          },
+          "anzahlKinderPrivat" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "medianUndGesamtpunkte" : {
+            "description" : "fasst den Median dieser Klassenstufe und die maximal erreichtbare Anzahl Punkte zusammen",
+            "type" : "object",
+            "$ref" : "#/components/schemas/MedianDto"
+          },
+          "kinderJeLand" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Gruppierungsitem"
+            },
+            "description" : "Histogramm der Kinder je Land, wobei PRIVAT als ein Land interpretiert wird."
+          },
+          "kinderJeTeilnahmeart" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Gruppierungsitem"
+            }
+          },
+          "kinderJeSprache" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Gruppierungsitem"
+            }
+          },
+          "kinderJePunktintervall" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Gruppierungsitem"
+            },
+            "description" : "Anzahl Kinder, die in eins der Punktintervalle in der Gesamtstatistik fallen"
+          },
+          "rohpunkte" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/RohpunktItem"
+            },
+            "description" : "Rohpunktitems der Gesamtstatistik"
+          },
+          "aufgabenstatistiken" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MkGatewayStatistikAufgabe"
+            }
+          }
+        }
+      },
+      "Passung" : {
+        "type" : "string",
+        "enum" : [ "ZU_LEICHT", "RICHTIG", "ZU_SCHWER" ]
+      },
+      "RohpunktItem" : {
+        "type" : "object",
+        "title" : "Ein Rohpunktitem für die Gesamtstatistik",
+        "description" : "enthält eine Punktzahl als String mit 2 Nachkommastellen, die Anzahl der Lösungszettel mit dieser Punktzahl sowie den Prozentrang dieser Punktzahl.",
+        "properties" : {
+          "punkte" : {
+            "type" : "string"
+          },
+          "anzahl" : {
+            "type" : "string"
+          },
+          "prozentrang" : {
+            "type" : "string"
+          }
+        }
+      },
+      "StatusWettbewerb" : {
+        "type" : "string",
+        "enum" : [ "ERFASST", "ANMELDUNG", "DOWNLOAD_LEHRER", "DOWNLOAD_PRIVAT", "BEENDET" ]
+      },
+      "Wettbewerb" : {
+        "description" : "Daten eines Wettbewerbs, der ausgewählt werden kann",
+        "type" : "object",
+        "properties" : {
+          "jahr" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "Wettbewerbsjahr",
+            "example" : 2020
+          },
+          "status" : {
+            "description" : "Status des Wettbewerbs",
+            "type" : "string",
+            "example" : "BEENDET",
+            "$ref" : "#/components/schemas/StatusWettbewerb"
+          },
+          "anzahlKinder" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "Anzahl der Kinder (ist eine untere Schranke)",
+            "example" : 12524
+          },
+          "kinderJeKlassenstufe" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Gruppierungsitem"
+            },
+            "description" : "Kinder je Klassenstufe"
+          },
+          "medianeJeKlassenstufe" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Gruppierungsitem"
+            },
+            "description" : "Mediane je Klassenstufe"
+          }
+        }
+      },
+      "WettbewerbDetails" : {
+        "description" : "Stellt die statistischen Details eine Minikänguru-Wettbewerbs zur Verfügung",
+        "type" : "object",
+        "properties" : {
+          "jahr" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "Wettbewerbsjahr",
+            "example" : 2020
+          },
+          "beendet" : {
+            "type" : "boolean",
+            "description" : "Flag, ob dieser Wettbewerb beendet ist"
+          },
+          "anzahlKinderGesamt" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "untere Schranke für die Anzahl aller Kinder, die teilgenommen haben",
+            "example" : 16534
+          },
+          "anzahlPrivatanmeldungen" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "Anzahl aller Privatveranstalter, die sich angemeldet hatten",
+            "example" : 143
+          },
+          "anzahlSchulanmeldungen" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "Anzahl aller Schulen, die sich angemeldet hatten",
+            "example" : 623
+          },
+          "teilnehmendeSchulenGesamt" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "untere Schranke für die Anzahl aller Schulen, die teilgenommen haben",
+            "example" : 423
+          },
+          "klassenstufen" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Klassenstufe"
+            },
+            "description" : "Klassenstufen, zu denen Daten vorliegen"
+          },
+          "schulenJeLand" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Gruppierungsitem"
+            },
+            "description" : "Anzahl der teilnehmenden Schulen je Land (untere Schranke)"
+          },
+          "kinderJeLand" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Gruppierungsitem"
+            },
+            "description" : "Histogramm der Kinder je Land, wobei PRIVAT als ein Land interpretiert wird."
+          },
+          "kinderJeTeilnahmeart" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Gruppierungsitem"
+            },
+            "description" : "Anzahl der teilnehmenden Kinder je Teilnahmeart (PRIVAT/SCHULE - untere Schranke)"
+          },
+          "kinderJeKlassenstufe" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Gruppierungsitem"
+            },
+            "description" : "Anzahl der teilnehmenden Kinder je Klassenstufe (IKID/EINS/ZWEI - untere Schranke)"
+          },
+          "kinderJeSprache" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Gruppierungsitem"
+            },
+            "description" : "Anzahl der teilnehmenden Kinder je Sprache (de/en - untere Schranke)"
+          },
+          "medianeJeKlassenstufe" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Gruppierungsitem"
+            },
+            "description" : "Mediane je Klassenstufe"
+          }
+        }
+      }
+    }
   },
-  "servers" : [ {
-    "url" : "http://localhost:9540",
-    "description" : "Auto generated value"
-  }, {
-    "url" : "http://0.0.0.0:9540",
-    "description" : "Auto generated value"
-  } ],
   "tags" : [ {
     "name" : "About",
     "description" : "Stellt Informationen über diese API zur Verfügung"
@@ -30,9 +598,9 @@
   "paths" : {
     "/mkbiza-api/about" : {
       "get" : {
-        "tags" : [ "About" ],
         "summary" : "Gibt Infos über die API zurück.",
         "operationId" : "getInfos",
+        "tags" : [ "About" ],
         "responses" : {
           "200" : {
             "description" : "OK",
@@ -59,9 +627,9 @@
     },
     "/mkbiza-api/wettbewerbe" : {
       "get" : {
-        "tags" : [ "Wettbewerbe" ],
         "summary" : "Gibt Minikänguru-Wettbewerbe sowie deren Status und Mediane zurück",
         "operationId" : "getWettbewerbe",
+        "tags" : [ "Wettbewerbe" ],
         "responses" : {
           "200" : {
             "description" : "OK",
@@ -101,17 +669,17 @@
     },
     "/mkbiza-api/wettbewerbe/{jahr}" : {
       "get" : {
-        "tags" : [ "Wettbewerbe" ],
         "summary" : "Gibt die Gesamtstatistik eines Wettbewerbs zurück",
         "operationId" : "getStatistikWettbewerb",
+        "tags" : [ "Wettbewerbe" ],
         "parameters" : [ {
-          "name" : "jahr",
-          "in" : "path",
           "description" : "Jahr des Wettbewerbs - 4stellige Jahreszahl",
+          "in" : "path",
+          "name" : "jahr",
           "required" : true,
           "schema" : {
-            "pattern" : "^[\\d]{4}$",
-            "type" : "string"
+            "type" : "string",
+            "pattern" : "^[\\d]{4}$"
           }
         } ],
         "responses" : {
@@ -160,23 +728,23 @@
     },
     "/mkbiza-api/wettbewerbe/{jahr}/{klassenstufe}" : {
       "get" : {
-        "tags" : [ "Wettbewerbe" ],
         "summary" : "Gibt Aufgaben und Statistik der Klassenstufe eines Wettbewerbs zurück",
         "description" : "Aufgaben und Auswertunsgstatistiken werden nur bei beendeten Wettbewerben gliefert. Unverfängliche Statistiken werden auch im laufenden Wettbewerb geliefert.",
         "operationId" : "getStatistikJahrKlassenstufe",
+        "tags" : [ "Wettbewerbe" ],
         "parameters" : [ {
-          "name" : "jahr",
-          "in" : "path",
           "description" : "Jahr des Wettbewerbs",
+          "in" : "path",
+          "name" : "jahr",
           "required" : true,
           "schema" : {
-            "pattern" : "^[\\d]{4}$",
-            "type" : "string"
+            "type" : "string",
+            "pattern" : "^[\\d]{4}$"
           }
         }, {
-          "name" : "klassenstufe",
-          "in" : "path",
           "description" : "Eins von IKID,EINS,ZWEI - die Klassenstufe.",
+          "in" : "path",
+          "name" : "klassenstufe",
           "required" : true,
           "schema" : {
             "$ref" : "#/components/schemas/Klassenstufe"
@@ -213,609 +781,25 @@
       }
     }
   },
-  "components" : {
-    "schemas" : {
-      "AboutDto" : {
-        "description" : "Informationen über die API",
-        "type" : "object",
-        "properties" : {
-          "title" : {
-            "type" : "string"
-          },
-          "description" : {
-            "type" : "string"
-          },
-          "beschreibung" : {
-            "type" : "string"
-          },
-          "urls" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
-            }
-          },
-          "schluesselwoerter" : {
-            "type" : "string"
-          },
-          "keywords" : {
-            "type" : "string"
-          },
-          "version" : {
-            "type" : "string"
-          }
-        }
-      },
-      "AufgabeDetails" : {
-        "description" : "Alle Details zu einer Aufgabe eines Minkänguru-Wettbewerbs",
-        "type" : "object",
-        "properties" : {
-          "nummer" : {
-            "description" : "Nummer der Aufgabe",
-            "type" : "string"
-          },
-          "punkte" : {
-            "format" : "int32",
-            "description" : "Punkte für diese Aufgabe.",
-            "type" : "integer"
-          },
-          "strafpunkte" : {
-            "description" : "Strafpunkte bei falscher Lösung.",
-            "type" : "string"
-          },
-          "loesungsbuchstabe" : {
-            "description" : "der korrekte Lösungsbuchstabe",
-            "type" : "string"
-          },
-          "quelle" : {
-            "description" : "Quelle ür eine Zitatsection",
-            "type" : "string"
-          },
-          "images" : {
-            "description" : "Images, die angezeigt werden können. Frage und optionale Lösung",
-            "type" : "object",
-            "allOf" : [ {
-              "$ref" : "#/components/schemas/Images"
-            } ]
-          },
-          "anzahlenJeLoesungsbuchstabe" : {
-            "description" : "Anzahl je Lösungsbuchstabe A-E oder N für nicht gelöst",
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Gruppierungsitem"
-            }
-          },
-          "anzahlenJeWertungscode" : {
-            "description" : "Anzahl je Wertungscode 'falsch', 'richtig', 'nicht gelöst'",
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Gruppierungsitem"
-            }
-          },
-          "gradZugehoerigkeitZuAufgabenkategorie" : {
-            "description" : "Grad der Zugehörigkeit zur gewählten Aufgabenkatedorie",
-            "type" : "string"
-          },
-          "passung" : {
-            "description" : "Passung der Aufgabe zu ihrer Kategorie",
-            "type" : "string",
-            "allOf" : [ {
-              "$ref" : "#/components/schemas/Passung"
-            } ]
-          },
-          "prozentRichtigerLoesungen" : {
-            "description" : "prozentualer Anteil richtiger Lösungen",
-            "type" : "string"
-          }
-        }
-      },
-      "ConstraintViolation" : {
-        "type" : "object",
-        "properties" : {
-          "field" : {
-            "type" : "string"
-          },
-          "message" : {
-            "type" : "string"
-          }
-        }
-      },
-      "ConstraintViolationResponse" : {
-        "type" : "object",
-        "properties" : {
-          "title" : {
-            "type" : "string"
-          },
-          "status" : {
-            "format" : "int32",
-            "type" : "integer"
-          },
-          "violations" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/ConstraintViolation"
-            }
-          }
-        }
-      },
-      "Gruppierungsitem" : {
-        "description" : "Gruppierungsitem - label und Anzahl",
-        "type" : "object",
-        "properties" : {
-          "name" : {
-            "description" : "Semantik für die Anzahl, kann so als Text in einer GUI verwendet werden",
-            "type" : "string",
-            "example" : "Klasse 1"
-          },
-          "anzahl" : {
-            "format" : "int64",
-            "description" : "Anzahl Elemente mit dieser Semantik",
-            "type" : "integer",
-            "example" : 356
-          }
-        }
-      },
-      "Image" : {
-        "description" : "base64 encodete Daten eines png sowie Breite und Höhe",
-        "type" : "object",
-        "properties" : {
-          "width" : {
-            "format" : "int32",
-            "description" : "Breite des Images",
-            "type" : "integer"
-          },
-          "height" : {
-            "format" : "int32",
-            "description" : "Höhe des Images",
-            "type" : "integer"
-          },
-          "data" : {
-            "format" : "binary",
-            "description" : "Base64-encodetes png Kann mit einem img src=\"data:image/png;base64- Tag angezeigt werden",
-            "type" : "string"
-          }
-        }
-      },
-      "Images" : {
-        "description" : "Objekt das ein png mit dem Text für die Frage/Quizaufgabe und ein png mit dem Text für die Lösung enthält",
-        "type" : "object",
-        "properties" : {
-          "imageFrage" : {
-            "description" : "Das png mit Maßen für die Frage",
-            "type" : "object",
-            "allOf" : [ {
-              "$ref" : "#/components/schemas/Image"
-            } ]
-          },
-          "imageLoesung" : {
-            "description" : "Das png mit Maßen für die Lösung. Es kann null sein.",
-            "type" : "object",
-            "allOf" : [ {
-              "$ref" : "#/components/schemas/Image"
-            } ]
-          }
-        }
-      },
-      "Klassenstufe" : {
-        "enum" : [ "IKID", "EINS", "ZWEI" ],
-        "type" : "string"
-      },
-      "KlassenstufeDetails" : {
-        "title" : "Statistik und Bilder der Wettbewerbsaufgaben einer Klassenstufe.",
-        "description" : "Bei nicht beendeten Wettbewerben ist dies eine Echtzeitstatistik über die Beteiligung an dieser Klassenstufe. Ansonsten auch eine Auswertungsstatistik.",
-        "type" : "object",
-        "properties" : {
-          "wettbewerbsjahr" : {
-            "description" : "Jahr des Wettbewerbs",
-            "type" : "string"
-          },
-          "klassenstufe" : {
-            "description" : "Klassenstufe in menschenlesbarer Form",
-            "type" : "string"
-          },
-          "beendet" : {
-            "description" : "Flag, ob der Wettbewerb beendet ist. Falls ja, sind die Statistiken konstant, falls nicht, kann man sie immer wieder neu laden",
-            "type" : "boolean"
-          },
-          "startguthaben" : {
-            "format" : "int32",
-            "description" : "Anzahl Punkte des Startpunktguthabens",
-            "type" : "integer"
-          },
-          "anzahlKinderGesamt" : {
-            "format" : "int32",
-            "description" : "untere Schranke für die Anzahl aller Kinder, die teilgenommen haben",
-            "type" : "integer",
-            "example" : 16534
-          },
-          "anzahlKinderMitVollerPunktzahl" : {
-            "format" : "int32",
-            "description" : "untere Schranke für die Anzahl aller Kinder mit voller Punktzahl",
-            "type" : "integer",
-            "example" : 16534
-          },
-          "medianUndGesamtpunkte" : {
-            "description" : "fasst den Median dieser Klassenstufe und die maximal erreichtbare Anzahl Punkte zusammen",
-            "type" : "object",
-            "allOf" : [ {
-              "$ref" : "#/components/schemas/MedianDto"
-            } ]
-          },
-          "kinderJeLand" : {
-            "description" : "Histogramm der Kinder je Land, wobei PRIVAT als ein Land interpretiert wird.",
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Gruppierungsitem"
-            }
-          },
-          "kinderJeTeilnahmeart" : {
-            "description" : "Anzahl der teilnehmenden Kinder je Teilnahmeart (PRIVAT/SCHULE - untere Schranke)",
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Gruppierungsitem"
-            }
-          },
-          "kinderJeSprache" : {
-            "description" : "Anzahl der teilnehmenden Kinder je Sprache (de/en - untere Schranke)",
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Gruppierungsitem"
-            }
-          },
-          "kinderJePunktintervall" : {
-            "description" : "Anzahl der teilnehmenden Kinder je Punktzahl (untere Schranke)",
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Gruppierungsitem"
-            }
-          },
-          "rohpunkte" : {
-            "description" : "Rohpunktitems der Gesamtstatistik",
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/RohpunktItem"
-            }
-          },
-          "aufgaben" : {
-            "description" : "die einzelnen Aufgaben mit Lösungen",
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/AufgabeDetails"
-            }
-          }
-        }
-      },
-      "MedianDto" : {
-        "type" : "object",
-        "properties" : {
-          "medianMalTausend" : {
-            "format" : "int32",
-            "type" : "integer"
-          },
-          "gesamtpunkte" : {
-            "format" : "int32",
-            "type" : "integer"
-          }
-        }
-      },
-      "MessagePayload" : {
-        "description" : "eine kategorisierte Meldung",
-        "type" : "object",
-        "properties" : {
-          "level" : {
-            "description" : "Level der Message: INFO | WARN | ERROR",
-            "type" : "string"
-          },
-          "message" : {
-            "description" : "die message",
-            "type" : "string"
-          }
-        }
-      },
-      "MjaAufgabeDetails" : {
-        "description" : "Details einer Aufgabe eines Minkänguru-Wettbewerbs aus der Archivanwendung",
-        "type" : "object",
-        "properties" : {
-          "nummer" : {
-            "description" : "Nummer der Aufgabe im Wettbewerb",
-            "type" : "string"
-          },
-          "punkte" : {
-            "format" : "int32",
-            "description" : "Punkte für diese Aufgabe.",
-            "type" : "integer"
-          },
-          "loesungsbuchstabe" : {
-            "description" : "der korrekte Lösungsbuchstabe",
-            "type" : "string"
-          },
-          "quelle" : {
-            "description" : "Quelle ür eine Zitatsection",
-            "type" : "string"
-          },
-          "images" : {
-            "description" : "Images, die angezeigt werden können. Frage und optionale Lösung",
-            "type" : "object",
-            "allOf" : [ {
-              "$ref" : "#/components/schemas/Images"
-            } ]
-          }
-        }
-      },
-      "MjaAufgabenKlassenstufeDto" : {
-        "description" : "Aufgaben und Lösungen eines Minkänguru-Wettbewerbs für eine gegebene Klassenstufe.",
-        "type" : "object",
-        "properties" : {
-          "wettbewerbsjahr" : {
-            "description" : "Jahr des Wettbewerbs",
-            "type" : "string"
-          },
-          "klassenstufe" : {
-            "description" : "Klassenstufe in menschenlesbarer Form",
-            "type" : "string"
-          },
-          "aufgaben" : {
-            "description" : "die einzelnen Aufgaben mit Lösungen",
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/MjaAufgabeDetails"
-            }
-          }
-        }
-      },
-      "MkGatewayStatistikAufgabe" : {
-        "description" : "Statistik zu einer Aufgabe",
-        "type" : "object",
-        "properties" : {
-          "nummer" : {
-            "description" : "Nummer der Aufgabe im Wettbewerb",
-            "type" : "string"
-          },
-          "strafpunkte" : {
-            "description" : "Strafpunkte bei falscher Lösung.",
-            "type" : "string"
-          },
-          "anzahlenJeLoesungsbuchstabe" : {
-            "description" : "Anzahl je Lösungsbuchstabe A-E oder N für nicht gelöst",
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Gruppierungsitem"
-            }
-          },
-          "anzahlenJeWertungscode" : {
-            "description" : "Anzahl je Wertungscode 'falsch', 'richtig', 'nicht gelöst'",
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Gruppierungsitem"
-            }
-          }
-        }
-      },
-      "MkGatewayStatistikKlassenstufe" : {
-        "description" : "statistische Daten zu einer Wettbewerbsklassenstufe",
-        "type" : "object",
-        "properties" : {
-          "wettbewerbsjahr" : {
-            "description" : "Jahr des Wettbewerbs",
-            "type" : "string"
-          },
-          "klassenstufe" : {
-            "description" : "Klassenstufe in menschenlesbarer Form",
-            "type" : "string"
-          },
-          "beendet" : {
-            "description" : "Flag, ob der Wettbewerb beendet ist",
-            "type" : "boolean"
-          },
-          "anzahlKinderGesamt" : {
-            "format" : "int32",
-            "description" : "Anzahl der Kinder, zu denen Lösungszettel vorliegen",
-            "type" : "integer"
-          },
-          "anzahlKinderPrivat" : {
-            "format" : "int32",
-            "type" : "integer"
-          },
-          "medianUndGesamtpunkte" : {
-            "description" : "fasst den Median dieser Klassenstufe und die maximal erreichtbare Anzahl Punkte zusammen",
-            "type" : "object",
-            "allOf" : [ {
-              "$ref" : "#/components/schemas/MedianDto"
-            } ]
-          },
-          "kinderJeLand" : {
-            "description" : "Histogramm der Kinder je Land, wobei PRIVAT als ein Land interpretiert wird.",
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Gruppierungsitem"
-            }
-          },
-          "kinderJeTeilnahmeart" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Gruppierungsitem"
-            }
-          },
-          "kinderJeSprache" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Gruppierungsitem"
-            }
-          },
-          "kinderJePunktintervall" : {
-            "description" : "Anzahl Kinder, die in eins der Punktintervalle in der Gesamtstatistik fallen",
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Gruppierungsitem"
-            }
-          },
-          "rohpunkte" : {
-            "description" : "Rohpunktitems der Gesamtstatistik",
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/RohpunktItem"
-            }
-          },
-          "aufgabenstatistiken" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/MkGatewayStatistikAufgabe"
-            }
-          }
-        }
-      },
-      "Passung" : {
-        "enum" : [ "ZU_LEICHT", "RICHTIG", "ZU_SCHWER" ],
-        "type" : "string"
-      },
-      "RohpunktItem" : {
-        "title" : "Ein Rohpunktitem für die Gesamtstatistik",
-        "description" : "enthält eine Punktzahl als String mit 2 Nachkommastellen, die Anzahl der Lösungszettel mit dieser Punktzahl sowie den Prozentrang dieser Punktzahl.",
-        "type" : "object",
-        "properties" : {
-          "punkte" : {
-            "type" : "string"
-          },
-          "anzahl" : {
-            "type" : "string"
-          },
-          "prozentrang" : {
-            "type" : "string"
-          }
-        }
-      },
-      "StatusWettbewerb" : {
-        "enum" : [ "ERFASST", "ANMELDUNG", "DOWNLOAD_LEHRER", "DOWNLOAD_PRIVAT", "BEENDET" ],
-        "type" : "string"
-      },
-      "Wettbewerb" : {
-        "description" : "Daten eines Wettbewerbs, der ausgewählt werden kann",
-        "type" : "object",
-        "properties" : {
-          "jahr" : {
-            "format" : "int32",
-            "description" : "Wettbewerbsjahr",
-            "type" : "integer",
-            "example" : 2020
-          },
-          "status" : {
-            "description" : "Status des Wettbewerbs",
-            "type" : "string",
-            "allOf" : [ {
-              "$ref" : "#/components/schemas/StatusWettbewerb"
-            } ],
-            "example" : "BEENDET"
-          },
-          "anzahlKinder" : {
-            "format" : "int64",
-            "description" : "Anzahl der Kinder (ist eine untere Schranke)",
-            "type" : "integer",
-            "example" : 12524
-          },
-          "kinderJeKlassenstufe" : {
-            "description" : "Kinder je Klassenstufe",
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Gruppierungsitem"
-            }
-          },
-          "medianeJeKlassenstufe" : {
-            "description" : "Mediane je Klassenstufe",
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Gruppierungsitem"
-            }
-          }
-        }
-      },
-      "WettbewerbDetails" : {
-        "description" : "Stellt die statistischen Details eine Minikänguru-Wettbewerbs zur Verfügung",
-        "type" : "object",
-        "properties" : {
-          "jahr" : {
-            "format" : "int32",
-            "description" : "Wettbewerbsjahr",
-            "type" : "integer",
-            "example" : 2020
-          },
-          "beendet" : {
-            "description" : "Flag, ob dieser Wettbewerb beendet ist",
-            "type" : "boolean"
-          },
-          "anzahlKinderGesamt" : {
-            "format" : "int32",
-            "description" : "untere Schranke für die Anzahl aller Kinder, die teilgenommen haben",
-            "type" : "integer",
-            "example" : 16534
-          },
-          "anzahlPrivatanmeldungen" : {
-            "format" : "int64",
-            "description" : "Anzahl aller Privatveranstalter, die sich angemeldet hatten",
-            "type" : "integer",
-            "example" : 143
-          },
-          "anzahlSchulanmeldungen" : {
-            "format" : "int64",
-            "description" : "Anzahl aller Schulen, die sich angemeldet hatten",
-            "type" : "integer",
-            "example" : 623
-          },
-          "teilnehmendeSchulenGesamt" : {
-            "format" : "int64",
-            "description" : "untere Schranke für die Anzahl aller Schulen, die teilgenommen haben",
-            "type" : "integer",
-            "example" : 423
-          },
-          "klassenstufen" : {
-            "description" : "Klassenstufen, zu denen Daten vorliegen",
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Klassenstufe"
-            }
-          },
-          "schulenJeLand" : {
-            "description" : "Anzahl der teilnehmenden Schulen je Land (untere Schranke)",
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Gruppierungsitem"
-            }
-          },
-          "kinderJeLand" : {
-            "description" : "Histogramm der Kinder je Land, wobei PRIVAT als ein Land interpretiert wird.",
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Gruppierungsitem"
-            }
-          },
-          "kinderJeTeilnahmeart" : {
-            "description" : "Anzahl der teilnehmenden Kinder je Teilnahmeart (PRIVAT/SCHULE - untere Schranke)",
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Gruppierungsitem"
-            }
-          },
-          "kinderJeKlassenstufe" : {
-            "description" : "Anzahl der teilnehmenden Kinder je Klassenstufe (IKID/EINS/ZWEI - untere Schranke)",
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Gruppierungsitem"
-            }
-          },
-          "kinderJeSprache" : {
-            "description" : "Anzahl der teilnehmenden Kinder je Sprache (de/en - untere Schranke)",
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Gruppierungsitem"
-            }
-          },
-          "medianeJeKlassenstufe" : {
-            "description" : "Mediane je Klassenstufe",
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/Gruppierungsitem"
-            }
-          }
-        }
-      }
+  "info" : {
+    "title" : "mkbiza-api",
+    "version" : "3.0.0",
+    "description" : "API für die Statistiken des Minikänguru-Wettbewerbs",
+    "contact" : {
+      "name" : "Heike Winkelvoß",
+      "email" : "info@egladil.de",
+      "url" : "https://mathe-jung-alt.de"
+    },
+    "license" : {
+      "name" : "MIT License",
+      "url" : "https://mit-license.org/"
     }
-  }
+  },
+  "servers" : [ {
+    "url" : "http://localhost:9540",
+    "description" : "Auto generated value"
+  }, {
+    "url" : "http://0.0.0.0:9540",
+    "description" : "Auto generated value"
+  } ]
 }

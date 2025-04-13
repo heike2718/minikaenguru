@@ -7,11 +7,6 @@ package de.egladil.web.mk_gateway.domain.auth.client;
 import java.util.Map;
 import java.util.UUID;
 
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Response;
-
 import org.eclipse.microprofile.rest.client.RestClientDefinitionException;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
@@ -25,6 +20,11 @@ import de.egladil.web.mk_gateway.domain.error.LogmessagePrefixes;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
+import de.egladil.web.mk_gateway.infrastructure.restclient.AuthproviderRestClient;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
 
 /**
  * ClientAccessTokenService
@@ -36,7 +36,7 @@ public class ClientAccessTokenService implements IClientAccessTokenService {
 
 	@Inject
 	@RestClient
-	InitAccessTokenRestClient initAccessTokenRestClient;
+	AuthproviderRestClient authproviderRestClient;
 
 	@Inject
 	DomainEventHandler domainEventHandler;
@@ -59,7 +59,7 @@ public class ClientAccessTokenService implements IClientAccessTokenService {
 
 		try {
 
-			authResponse = initAccessTokenRestClient.authenticateClient(credentials);
+			authResponse = authproviderRestClient.authenticateClient(credentials);
 
 			ResponsePayload responsePayload = authResponse.readEntity(ResponsePayload.class);
 

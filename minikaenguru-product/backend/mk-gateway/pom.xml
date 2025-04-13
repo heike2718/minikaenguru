@@ -5,19 +5,18 @@
 
 	<groupId>de.egladil.web</groupId>
 	<artifactId>mk-gateway</artifactId>
-	<version>2.5.3</version>
+	<version>2.6.0</version>
 	<packaging>jar</packaging>
 
 
 	<properties>
 		<commons.version>2.0.2</commons.version>
 		<quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
-		<quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-		<quarkus.platform.version>3.10.2</quarkus.platform.version>
-		<compiler-plugin.version>3.12.1</compiler-plugin.version>
+		<quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
+		<quarkus.platform.version>3.21.1</quarkus.platform.version>
 		<surefire-plugin.version>3.1.2</surefire-plugin.version>
-		<dependency-check.version>9.2.0</dependency-check.version>
-		<java.version>17</java.version>
+		<dependency-check.version>12.1.0</dependency-check.version>
+		<java.version>20</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
@@ -158,20 +157,6 @@
 			<artifactId>quarkus-tika</artifactId>
 			<version>2.0.2</version>
 		</dependency>
-
-		<!-- Flyway specific dependencies -->
-		<dependency>
-			<groupId>io.quarkus</groupId>
-			<artifactId>quarkus-flyway</artifactId>
-		</dependency>
-
-		<!-- Flyway MariaDB/MySQL specific dependencies -->
-		<dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-mysql</artifactId>
-		</dependency>
-
-
 		<!-- Quarkus END -->
 
 		<!-- START Test scoped dependencies -->
@@ -217,7 +202,6 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${compiler-plugin.version}</version>
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>

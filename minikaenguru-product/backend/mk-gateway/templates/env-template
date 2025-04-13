@@ -1,0 +1,113 @@
+## DEV .env
+#===================
+
+ENV=dev
+STAGE=dev
+
+DELAY_MILLISECONDS=0
+
+HEARTBEAT_ID=heartbeat
+
+MKGATEWAY_AUTH_HEADER=mk-gateway:changeme
+
+NEWSLETTERVERSAND_CRON_EXPR=0 0/2 * 1/1 * ? *
+
+// zu Beginn jeder Stunde
+#NEWSLETTERVERSAND_CRON_EXPR=0 0 * 1/1 * ? *
+
+PATH_EXTERNAL_FILES=/usr/local/bin/mk-gateway/files
+QUARKUS_HTTP_BODY-HANDLER_UPLOADS-DIRECTORY=/home/heike/git/testdaten/minikaenguru/upload
+
+UUID_TESTLEHRER=62f5b221-20e5-4dd0-8992-c7a51b1b826e
+
+MKV-APP_CLIENT-ID=k7AxUVYzr1FBAvD8e99orRqKqx4jBwcr7Dmgn5jdBf8J
+MKV-APP_CLIENT-SECRET=start123
+MKV-APP_REDIRECT-URL_LOGIN=http://localhost:4200
+MKV-APP_REDIRECT-URL_SIGNUP=http://localhost:4200
+
+MK-ADMIN-APP_CLIENT-ID=NBptB82KjFkelkF55Aq4SmQSL3DXZHHurbe7l5W9LT7U
+MK-ADMIN-APP_CLIENT-SECRET=start123
+MK-ADMIN-APP_REDIRECT-URL_LOGIN=http://localhost:4200
+
+TARGET_ORIGIN=localhost:4200,localhost:4300,heiketux:9510
+QUARKUS_HTTP_CORS_ORIGINS=http://heiketux:9000,http://localhost:9510,http://localhost:9530,http://localhost:4200
+
+PATH_EXTERNAL_FILES=/home/heike/git/testdaten/minikaenguru
+ZIP_MAX__EXPECTED__COMPRESSION__RATIO=100
+
+SYNCTOKEN_VALIDITY_PERIOD_MINUTES=5
+ADMIN_CREATED_URI_PREFIX=http://localhost:9510/mk-gateway/admin
+EMAILS_GROUPSIZE=3
+ADMIN_SECRET=pflaume123
+
+EMAIL_ADMIN=minikaenguru@egladil.de
+EMAILS_TESTEMPFAENGER=heike@egladil.de,info.heike@egladil.de
+EMAILS_GROUPSIZE=20
+EMAILS_MOCKUP=true
+
+EMAIL_HOST=ueberschreiben
+EMAIL_PORT=587
+EMAIL_USER=ueberschreiben
+EMAIL_PASSWORD=ueberschreiben
+EMAIL_TO=ueberschreiben
+
+#=================================================================#
+#    authprovider, Redirect URLs, REST-Client, CORS               #
+#                                                                 #
+# PUBLIC_REDIRECT_URL muss ohne http:// und endenden / in         #
+# CLIENTS.REDIRECT_URLS vorkommen!! Für das korrekte redirect     #
+# sollten sie aber u.U. vorhanden sein.                           #
+#                                                                 #
+#=================================================================#
+# ---- lokale Entwicklung (authprovider in docker, Anwendung läuft mit npm) ----
+AUTH_APP_URL=http://localhost:9000/authprovider/
+PUBLIC_REDIRECT_URL=http://localhost:4200
+QUARKUS_REST_CLIENT_AUTHPROVIDER_URL=http://localhost:9000
+AUTHPROVIDER_URL=http://localhost:9000/authprovider
+QUARKUS_REST_CLIENT_MK_KATALOGE_URL=http://localhost:9530
+QUARKUS_REST_CLIENT_FILESCANNER_URL=http://localhost:9800
+QUARKUS_REST_CLIENT_MJA_API_URL=http://localhost:9210/mja-api
+
+# ---- lokale Entwicklung (alles lokal gestartet) ----
+#AUTH_APP_URL=http://localhost:4300
+#PUBLIC_REDIRECT_URL=http://localhost:4200
+#QUARKUS_REST_CLIENT_AUTHPROVIDER_URL=http://localhost:10000
+#AUTHPROVIDER_URL=http://localhost:10000/authprovider
+#QUARKUS_REST_CLIENT_MK_KATALOGE_URL=http://localhost:9530
+#QUARKUS_REST_CLIENT_FILESCANNER_URL=http://localhost:9800
+#QUARKUS_REST_CLIENT_MJA_API_URL=http://localhost:9210/mja-api
+
+
+#=================================================================#
+#        Database                                                 #
+#=================================================================#
+# falls die IP sich geändert hat, startet Quarkus nicht
+# docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mariadb-all
+QUARKUS_DATASOURCE_JDBC_URL=jdbc:mariadb://172.18.0.2:3306/mk_wettbewerb
+QUARKUS_DATASOURCE_PASSWORD=ueberschreiben
+# ---- man muss auch das MIN-Level auf TRACE setzen, wenn man das SQL von namedQueries sehen will ---
+QUARKUS_LOG_MIN_LEVEL=TRACE
+QUARKUS_HIBERNATE_ORM_LOG_BIND_PARAMETERS=true
+QUARKUS_HIBERNATE_ORM_LOG_SQL=true
+
+
+#=================================================================#
+#        logging                                                 #
+#=================================================================#
+QUARKUS_LOG_FILE_ENABLE=false
+QUARKUS_LOG_LEVEL=INFO
+
+QUARKUS_HTTP_ACCESS-LOG_ENABLED=false
+QUARKUS_HTTP_ACCESS-LOG_LOG-TO-FILE=false
+
+QUARKUS_LOG_CATEGORY__ORG_JBOSS_RESTEASY_REACTIVE_CLIENT_LOGGING_DEFAULTCLIENTLOGGER__LEVEL=WARN
+
+
+_FULL-DB-TEST_MOCK_SESSION=true
+_FULL-DB-TEST_QUARKUS_DATASOURCE_JDBC_URL=jdbc:mariadb://172.31.0.2:3306/mk_wettbewerb
+_FULL-DB-TEST_QUARKUS_HTTP_PORT=9512
+_FULL-DB-TEST_CSRF_ENABLED=false
+_FULL-DB-TEST_QUARKUS_LOG_FILE_ENABLE=false
+_FULL-DB-TEST_QUARKUS_HTTP_ACCESS-LOG_LOG-TO-FILE=false
+_FULL-DB-TEST_AUTHORIZATION_ENABLED=false
+_FULL-DB-TEST_NEWSLETTERVERSAND_CRON_EXPR=0 0/2 * 1/1 * ? *

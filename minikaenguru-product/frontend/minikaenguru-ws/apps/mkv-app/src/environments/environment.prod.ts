@@ -3,9 +3,9 @@ export const environment = {
 	production: true,
 	assetsUrl: 'https://mathe-jung-alt.de/mkv-app/assets',
     apiUrl: 'https://mathe-jung-alt.de/mk-gateway',
-	profileUrl: 'https://mathe-jung-alt.de/profil-app',
+	profileUrl: 'https://mathe-jung-alt.de/benutzerprofil/',
     storageKeyPrefix: 'mkv_',
-	version: '2.5.3',
+	version: '2.6.0',
 	consoleLogActive: false,
 	serverLogActive: true,
 	loglevel: 4
