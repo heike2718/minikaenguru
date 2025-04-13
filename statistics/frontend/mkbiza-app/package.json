@@ -36,6 +36,7 @@
     "material-icons": "^1.13.12",
     "ng2-charts": "^6.0.0",
     "ngrx-store-localstorage": "^17.0.0",
+    "npm": "^11.2.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"
