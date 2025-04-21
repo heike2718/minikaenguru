@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
-import { CommonModule, NgIf } from '@angular/common';
-import { AufgabeGUIModel, Passung, StatistikAufgabeChartData } from '@mkbiza-app/domain-model';
+import { CommonModule } from '@angular/common';
+import { AufgabeGUIModel, StatistikAufgabeChartData } from '@mkbiza-app/domain-model';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { AufgabeImagesComponent } from '../aufgabe-images/aufgabe-images.component';
@@ -11,20 +11,18 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatBadgeModule } from '@angular/material/badge';
 
 @Component({
-  selector: 'mkbiza-aufgabe',
-  standalone: true,
-  imports: [
-    CommonModule,
-    NgIf,
-    CdkAccordionModule,
-    MatExpansionModule,
-    AufgabeImagesComponent,
-    GenericBarChartComponent,
-    GenericPieChartComponent,
-    MatBadgeModule
-  ],
-  templateUrl: './aufgabe-details.component.html',
-  styleUrl: './aufgabe-details.component.scss',
+    selector: 'mkbiza-aufgabe',
+    imports: [
+        CommonModule,
+        CdkAccordionModule,
+        MatExpansionModule,
+        AufgabeImagesComponent,
+        GenericBarChartComponent,
+        GenericPieChartComponent,
+        MatBadgeModule
+    ],
+    templateUrl: './aufgabe-details.component.html',
+    styleUrl: './aufgabe-details.component.scss'
 })
 export class AufgabeDetailsComponent implements OnInit {
 

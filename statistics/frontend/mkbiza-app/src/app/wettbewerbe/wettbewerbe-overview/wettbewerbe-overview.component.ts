@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { CommonModule, NgFor, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { DomainFacade } from '@mkbiza-app/domain-api';
 import { Subscription, combineLatest } from 'rxjs';
 import { ChartData } from "chart.js";
@@ -9,17 +9,14 @@ import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-  selector: 'mkbiza-wettbewerbe',
-  standalone: true,
-  imports: [
-    CommonModule,
-    NgIf,
-    NgFor,
-    GenericBarChartComponent,
-    MatButtonModule
-  ],
-  templateUrl: './wettbewerbe-overview.component.html',
-  styleUrl: './wettbewerbe-overview.component.scss',
+    selector: 'mkbiza-wettbewerbe',
+    imports: [
+        CommonModule,
+        GenericBarChartComponent,
+        MatButtonModule
+    ],
+    templateUrl: './wettbewerbe-overview.component.html',
+    styleUrl: './wettbewerbe-overview.component.scss'
 })
 export class WettbewerbeOverviewComponent implements OnInit, OnDestroy{
 

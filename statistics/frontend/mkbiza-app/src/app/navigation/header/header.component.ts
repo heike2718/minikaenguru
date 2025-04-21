@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output, inject } from '@angular/core';
-import { CommonModule, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar'
@@ -11,20 +11,18 @@ import { DomainFacade } from '@mkbiza-app/domain-api';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'mkbiza-header',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatMenuModule,
-    MatIconModule,
-    MatListModule,
-    MatToolbarModule,
-    MatTooltipModule,
-    NgIf,
-    RouterLinkWithHref
-  ],
-  templateUrl: './header.component.html',
-  styleUrl: './header.component.scss',
+    selector: 'mkbiza-header',
+    imports: [
+        CommonModule,
+        MatMenuModule,
+        MatIconModule,
+        MatListModule,
+        MatToolbarModule,
+        MatTooltipModule,
+        RouterLinkWithHref
+    ],
+    templateUrl: './header.component.html',
+    styleUrl: './header.component.scss'
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 

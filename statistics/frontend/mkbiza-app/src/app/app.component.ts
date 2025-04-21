@@ -9,20 +9,19 @@ import { MessagesUiComponent, LoadingIndicatorComponent } from '@mkbiza-app/mess
 import { DomainFacade } from '@mkbiza-app/domain-api';
 
 @Component({
-  standalone: true,
-  imports: [
-    MatToolbarModule,
-    MatSidenavModule,
-    LayoutComponent,
-    SidenavComponent,
-    HeaderComponent,
-    RouterOutlet,
-    MessagesUiComponent,
-    LoadingIndicatorComponent
-  ],
-  selector: 'mkbiza-root',
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+    imports: [
+        MatToolbarModule,
+        MatSidenavModule,
+        LayoutComponent,
+        SidenavComponent,
+        HeaderComponent,
+        RouterOutlet,
+        MessagesUiComponent,
+        LoadingIndicatorComponent
+    ],
+    selector: 'mkbiza-root',
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
 

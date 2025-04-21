@@ -1,15 +1,14 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild, booleanAttribute, inject } from '@angular/core';
-import { CommonModule, NgIf } from '@angular/common';
+import { Component, Input, OnInit, ViewChild, booleanAttribute, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ChartConfiguration, ChartData } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
-  selector: 'mkbiza-bar-chart',
-  standalone: true,
-  imports: [CommonModule, BaseChartDirective, NgIf],
-  templateUrl: './generic-bar-chart.component.html',
-  styleUrl: './generic-bar-chart.component.scss',
+    selector: 'mkbiza-bar-chart',
+    imports: [CommonModule, BaseChartDirective],
+    templateUrl: './generic-bar-chart.component.html',
+    styleUrl: './generic-bar-chart.component.scss'
 })
 export class GenericBarChartComponent implements OnInit {
 

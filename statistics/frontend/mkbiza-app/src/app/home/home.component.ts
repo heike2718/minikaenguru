@@ -1,18 +1,16 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { WettbewerbeOverviewComponent } from '../wettbewerbe/wettbewerbe-overview/wettbewerbe-overview.component';
 import { Configuration } from '@mkbiza-app/config';
 
 @Component({
-  selector: 'mkbiza-home',
-  standalone: true,
-  imports: [
-    CommonModule,
-    WettbewerbeOverviewComponent,
-    NgIf
-  ],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss',
+    selector: 'mkbiza-home',
+    imports: [
+        CommonModule,
+        WettbewerbeOverviewComponent
+    ],
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.scss'
 })
 export class HomeComponent {
 

@@ -1,15 +1,14 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { CommonModule, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ChartConfiguration, ChartData } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { BreakpointObserver, BreakpointState, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
-  selector: 'mkbiza-pie-chart',
-  standalone: true,
-  imports: [CommonModule, BaseChartDirective, NgIf],
-  templateUrl: './generic-pie-chart.component.html',
-  styleUrl: './generic-pie-chart.component.scss',
+    selector: 'mkbiza-pie-chart',
+    imports: [CommonModule, BaseChartDirective],
+    templateUrl: './generic-pie-chart.component.html',
+    styleUrl: './generic-pie-chart.component.scss'
 })
 export class GenericPieChartComponent implements OnInit, OnDestroy {
 

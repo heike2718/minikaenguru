@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { CommonModule, NgFor, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { DomainFacade } from '@mkbiza-app/domain-api';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,18 +13,15 @@ import { Klassenstufe, StatistikWettbewerbChartData, WettbewerbDetailsGUIModel }
 
 
 @Component({
-  selector: 'mkbiza-wettbewerb',
-  standalone: true,
-  imports: [
-    CommonModule,
-    NgIf,
-    NgFor,
-    GenericBarChartComponent,
-    GenericPieChartComponent,
-    MatButtonModule
-  ],
-  templateUrl: './wettbewerb-details.component.html',
-  styleUrl: './wettbewerb-details.component.scss',
+    selector: 'mkbiza-wettbewerb',
+    imports: [
+        CommonModule,
+        GenericBarChartComponent,
+        GenericPieChartComponent,
+        MatButtonModule
+    ],
+    templateUrl: './wettbewerb-details.component.html',
+    styleUrl: './wettbewerb-details.component.scss'
 })
 export class WettbewerbDetailsComponent implements OnInit, OnDestroy {
 

@@ -4,11 +4,10 @@ import { LoadingService } from '@mkbiza-app/messages-api';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 
 @Component({
-  selector: 'mkbiza-loading-indicator',
-  standalone: true,
-  imports: [CommonModule, MatProgressSpinnerModule],
-  templateUrl: './loading-indicator.component.html',
-  styleUrl: './loading-indicator.component.scss',
+    selector: 'mkbiza-loading-indicator',
+    imports: [CommonModule, MatProgressSpinnerModule],
+    templateUrl: './loading-indicator.component.html',
+    styleUrl: './loading-indicator.component.scss'
 })
 export class LoadingIndicatorComponent {
 

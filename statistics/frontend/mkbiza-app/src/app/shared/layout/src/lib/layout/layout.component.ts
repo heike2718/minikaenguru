@@ -4,11 +4,10 @@ import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/l
 import { tap } from 'rxjs';
 
 @Component({
-  selector: 'mkbiza-layout',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './layout.component.html',
-  styleUrl: './layout.component.scss',
+    selector: 'mkbiza-layout',
+    imports: [CommonModule],
+    templateUrl: './layout.component.html',
+    styleUrl: './layout.component.scss'
 })
 export class LayoutComponent implements OnInit {
 

@@ -1,36 +1,31 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { CommonModule, NgFor, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ChartData } from 'chart.js';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { DomainFacade } from '@mkbiza-app/domain-api';
-import { Klassenstufe, StatistikKlassenstufeChartData, WettbewerbDetails, WettbewerbDetailsGUIModel } from '@mkbiza-app/domain-model';
+import { StatistikKlassenstufeChartData } from '@mkbiza-app/domain-model';
 import { GenericBarChartComponent } from '../../generic-bar-chart/generic-bar-chart.component';
 import { GenericPieChartComponent } from '../../generic-pie-chart/generic-pie-chart.component';
 import { AufgabeDetailsComponent } from '../aufgabe-details/aufgabe-details.component';
 import { MatButtonModule } from '@angular/material/button';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { RohpunktitemComponent } from '../rohpunktitem/rohpunktitem.component';
 
 @Component({
-  selector: 'mkbiza-klassenstufe',
-  standalone: true,
-  imports: [
-    CommonModule,
-    NgIf,
-    NgFor,
-    GenericBarChartComponent,
-    GenericPieChartComponent,
-    AufgabeDetailsComponent,
-    RohpunktitemComponent,
-    MatButtonModule,
-    CdkAccordionModule,
-    MatExpansionModule
-  ],
-  templateUrl: './klassenstufe-details.component.html',
-  styleUrl: './klassenstufe-details.component.scss',
+    selector: 'mkbiza-klassenstufe',
+    imports: [
+        CommonModule,
+        GenericBarChartComponent,
+        GenericPieChartComponent,
+        AufgabeDetailsComponent,
+        MatButtonModule,
+        CdkAccordionModule,
+        MatExpansionModule
+    ],
+    templateUrl: './klassenstufe-details.component.html',
+    styleUrl: './klassenstufe-details.component.scss'
 })
 export class KlassenstufeDetailsComponent implements OnInit, OnDestroy {
 
