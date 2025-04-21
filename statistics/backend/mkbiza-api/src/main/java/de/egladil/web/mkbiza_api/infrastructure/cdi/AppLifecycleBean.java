@@ -22,8 +22,8 @@ public class AppLifecycleBean {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AppLifecycleBean.class);
 
-	@ConfigProperty(name = "quarkus.rest-client.mjaapi.url")
-	String mjaapiRestClientUrl;
+	@ConfigProperty(name = "quarkus.rest-client.raetselbaukasten.url")
+	String raetselbaukastenRestClientUrl;
 
 	@ConfigProperty(name = "quarkus.rest-client.mkgateway.url")
 	String mkgatewayRestClientUrl;
@@ -46,7 +46,7 @@ public class AppLifecycleBean {
 			StringUtils.join(ConfigUtils.getProfiles()));
 
 		LOGGER.info(" ===========> quarkus.http.cors.origins={}", corsAllowedOrigins);
-		LOGGER.info(" ===========> mjaapiRestClientUrl={}", mjaapiRestClientUrl);
+		LOGGER.info(" ===========> raetselbaukasten={}", raetselbaukastenRestClientUrl);
 		LOGGER.info(" ===========> mkgatewayRestClientUrl={}", mkgatewayRestClientUrl);
 		LOGGER.info(" ===========> quarkusRootPath={}", quarkusRootPath);
 		LOGGER.info(" ===========> port={}", port);

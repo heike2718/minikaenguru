@@ -5,7 +5,7 @@ STAGE=dev
 #        RestClients                                                                          #
 #=============================================================================================#
 
-QUARKUS_REST_CLIENT_MJAAPI_URL=http://localhost:9210/mja-api
+QUARKUS_REST_CLIENT_RAETSELBAUKASTEN_URL=http://localhost:9210/raetselbaukasten/api
 QUARKUS_REST_CLIENT_MKGATEWAY_URL=http://localhost:9510/mk-gateway
 
 

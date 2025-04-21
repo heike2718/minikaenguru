@@ -25,7 +25,7 @@ import de.egladil.web.mkbiza_api.domain.auth.BaseAuthHeaderUtils;
 import de.egladil.web.mkbiza_api.domain.auth.MkBiZaAuthConfig;
 import de.egladil.web.mkbiza_api.domain.dto.Gruppierungsitem;
 import de.egladil.web.mkbiza_api.domain.exeptions.MkBiZaCommunicationExcepion;
-import de.egladil.web.mkbiza_api.infrastructure.restclient.MjaApiRestClient;
+import de.egladil.web.mkbiza_api.infrastructure.restclient.RaetselbaukastenRestClient;
 import de.egladil.web.mkbiza_api.infrastructure.restclient.MkGatewayRestClient;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -48,7 +48,7 @@ public class KlassenstufeService {
 
 	@Inject
 	@RestClient
-	MjaApiRestClient mjaApiRestClient;
+	RaetselbaukastenRestClient raetselbaukastenRestClient;
 
 	/**
 	 * Läd alle Aufgaben und statistischen Daten für eine Klassenstufe eines Wettbewerbs.
@@ -196,7 +196,7 @@ public class KlassenstufeService {
 				theKlassenstufe = Klassenstufe.ZWEI;
 			}
 
-			Response response = mjaApiRestClient.getAufgabenMinikaenguruwettbewerb(authConfig.client(), jahr, theKlassenstufe);
+			Response response = raetselbaukastenRestClient.getAufgabenMinikaenguruwettbewerb(authConfig.client(), jahr, theKlassenstufe);
 
 			MjaAufgabenKlassenstufeDto result = response.readEntity(MjaAufgabenKlassenstufeDto.class);
 

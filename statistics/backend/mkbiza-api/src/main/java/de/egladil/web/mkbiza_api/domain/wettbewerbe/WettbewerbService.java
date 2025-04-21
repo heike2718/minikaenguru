@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import de.egladil.web.mkbiza_api.domain.auth.BaseAuthHeaderUtils;
 import de.egladil.web.mkbiza_api.domain.auth.MkBiZaAuthConfig;
 import de.egladil.web.mkbiza_api.domain.exeptions.MkBiZaCommunicationExcepion;
-import de.egladil.web.mkbiza_api.infrastructure.restclient.MjaApiRestClient;
 import de.egladil.web.mkbiza_api.infrastructure.restclient.MkGatewayRestClient;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -35,10 +34,6 @@ public class WettbewerbService {
 	@Inject
 	@RestClient
 	MkGatewayRestClient mkGatewayRestClient;
-
-	@Inject
-	@RestClient
-	MjaApiRestClient mjaApiRestClient;
 
 	/**
 	 * Läd die Wettbewerbsjahre aller beendeter Wettbewerbe.
