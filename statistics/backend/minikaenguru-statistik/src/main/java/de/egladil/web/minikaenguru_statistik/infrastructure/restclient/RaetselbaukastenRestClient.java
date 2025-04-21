@@ -1,0 +1,37 @@
+// =====================================================
+// Project: minikaenguru-statistik
+// (c) Heike Winkelvoß
+// =====================================================
+package de.egladil.web.minikaenguru_statistik.infrastructure.restclient;
+
+import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
+
+import de.egladil.web.minikaenguru_statistik.domain.Klassenstufe;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+
+/**
+ * RaetselbaukastenRestClient
+ */
+@RegisterRestClient(configKey = "raetselbaukasten")
+@Path("public")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
+public interface RaetselbaukastenRestClient {
+
+	// @formatter:off
+		@GET
+		@Path("minikaenguru/{jahr}/{klasse}")
+		Response getAufgabenMinikaenguruwettbewerb(
+			@HeaderParam(value = "X-CLIENT-ID") final String clientId,
+			@PathParam(value = "jahr") final String jahr,
+			@PathParam(value = "klasse") final Klassenstufe klassenstufe);
+	// @formatter:on
+
+}

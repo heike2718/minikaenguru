@@ -1,0 +1,1097 @@
+{
+	"wettbewerbsjahr": "2020",
+	"klassenstufe": "EINS",
+	"beendet": true,
+	"anzahlKinderGesamt": 245,
+	"anzahlKinderPrivat": 0,
+	"medianUndGesamtpunkte": {
+		"medianMalTausend": 20000,
+		"gesamtpunkte": 60
+	},
+	"kinderJeLand": [
+		{
+			"name": "Baden-Württemberg",
+			"anzahl": 4
+		},
+		{
+			"name": "Hamburg",
+			"anzahl": 1
+		},
+		{
+			"name": "Hessen",
+			"anzahl": 9
+		},
+		{
+			"name": "Rheinland-Pfalz",
+			"anzahl": 27
+		},
+		{
+			"name": "Sachsen",
+			"anzahl": 101
+		},
+		{
+			"name": "Sachsen-Anhalt",
+			"anzahl": 97
+		},
+		{
+			"name": "PRIVAT",
+			"anzahl": 1
+		}
+	],
+	"kinderJeTeilnahmeart": [
+		{
+			"name": "PRIVAT",
+			"anzahl": 1
+		},
+		{
+			"name": "SCHULE",
+			"anzahl": 244
+		}
+	],
+	"kinderJeSprache": [
+		{
+			"name": "deutsch",
+			"anzahl": 244
+		},
+		{
+			"name": "englisch",
+			"anzahl": 1
+		}
+	],
+	"kinderJePunktintervall": [
+		{
+			"name": "60,00-60,00",
+			"anzahl": 4
+		},
+		{
+			"name": "55,00-57,00",
+			"anzahl": 1
+		},
+		{
+			"name": "50,00-54,00",
+			"anzahl": 8
+		},
+		{
+			"name": "45,00-49,75",
+			"anzahl": 8
+		},
+		{
+			"name": "40,00-44,75",
+			"anzahl": 16
+		},
+		{
+			"name": "35,00-39,75",
+			"anzahl": 14
+		},
+		{
+			"name": "30,00-34,75",
+			"anzahl": 29
+		},
+		{
+			"name": "25,00-29,75",
+			"anzahl": 24
+		},
+		{
+			"name": "20,00-24,75",
+			"anzahl": 19
+		},
+		{
+			"name": "15,00-19,75",
+			"anzahl": 29
+		},
+		{
+			"name": "10,00-14,75",
+			"anzahl": 60
+		},
+		{
+			"name": "5,00-9,75",
+			"anzahl": 30
+		},
+		{
+			"name": "0-4,75",
+			"anzahl": 3
+		}
+	],
+	"rohpunkte": [
+		{
+			"punkte": "60,00",
+			"anzahl": "4",
+			"prozentrang": "100,0"
+		},
+		{
+			"punkte": "55,00",
+			"anzahl": "1",
+			"prozentrang": "98,37"
+		},
+		{
+			"punkte": "52,00",
+			"anzahl": "1",
+			"prozentrang": "97,96"
+		},
+		{
+			"punkte": "51,25",
+			"anzahl": "2",
+			"prozentrang": "97,55"
+		},
+		{
+			"punkte": "50,75",
+			"anzahl": "2",
+			"prozentrang": "96,73"
+		},
+		{
+			"punkte": "50,00",
+			"anzahl": "3",
+			"prozentrang": "95,92"
+		},
+		{
+			"punkte": "48,75",
+			"anzahl": "2",
+			"prozentrang": "94,69"
+		},
+		{
+			"punkte": "47,50",
+			"anzahl": "1",
+			"prozentrang": "93,88"
+		},
+		{
+			"punkte": "47,00",
+			"anzahl": "2",
+			"prozentrang": "93,47"
+		},
+		{
+			"punkte": "46,75",
+			"anzahl": "2",
+			"prozentrang": "92,65"
+		},
+		{
+			"punkte": "45,00",
+			"anzahl": "1",
+			"prozentrang": "91,84"
+		},
+		{
+			"punkte": "43,75",
+			"anzahl": "4",
+			"prozentrang": "91,43"
+		},
+		{
+			"punkte": "42,50",
+			"anzahl": "2",
+			"prozentrang": "89,8"
+		},
+		{
+			"punkte": "41,25",
+			"anzahl": "1",
+			"prozentrang": "88,98"
+		},
+		{
+			"punkte": "40,00",
+			"anzahl": "9",
+			"prozentrang": "88,57"
+		},
+		{
+			"punkte": "37,50",
+			"anzahl": "2",
+			"prozentrang": "84,9"
+		},
+		{
+			"punkte": "36,75",
+			"anzahl": "2",
+			"prozentrang": "84,08"
+		},
+		{
+			"punkte": "36,25",
+			"anzahl": "4",
+			"prozentrang": "83,27"
+		},
+		{
+			"punkte": "36,00",
+			"anzahl": "2",
+			"prozentrang": "81,63"
+		},
+		{
+			"punkte": "35,00",
+			"anzahl": "4",
+			"prozentrang": "80,82"
+		},
+		{
+			"punkte": "34,50",
+			"anzahl": "4",
+			"prozentrang": "79,18"
+		},
+		{
+			"punkte": "33,75",
+			"anzahl": "4",
+			"prozentrang": "77,55"
+		},
+		{
+			"punkte": "33,50",
+			"anzahl": "2",
+			"prozentrang": "75,92"
+		},
+		{
+			"punkte": "32,50",
+			"anzahl": "3",
+			"prozentrang": "75,1"
+		},
+		{
+			"punkte": "32,25",
+			"anzahl": "4",
+			"prozentrang": "73,88"
+		},
+		{
+			"punkte": "32,00",
+			"anzahl": "1",
+			"prozentrang": "72,24"
+		},
+		{
+			"punkte": "31,25",
+			"anzahl": "4",
+			"prozentrang": "71,84"
+		},
+		{
+			"punkte": "30,50",
+			"anzahl": "2",
+			"prozentrang": "70,2"
+		},
+		{
+			"punkte": "30,00",
+			"anzahl": "5",
+			"prozentrang": "69,39"
+		},
+		{
+			"punkte": "29,50",
+			"anzahl": "2",
+			"prozentrang": "67,35"
+		},
+		{
+			"punkte": "28,75",
+			"anzahl": "7",
+			"prozentrang": "66,53"
+		},
+		{
+			"punkte": "28,00",
+			"anzahl": "2",
+			"prozentrang": "63,67"
+		},
+		{
+			"punkte": "27,50",
+			"anzahl": "2",
+			"prozentrang": "62,86"
+		},
+		{
+			"punkte": "27,00",
+			"anzahl": "4",
+			"prozentrang": "62,04"
+		},
+		{
+			"punkte": "26,25",
+			"anzahl": "4",
+			"prozentrang": "60,41"
+		},
+		{
+			"punkte": "26,00",
+			"anzahl": "1",
+			"prozentrang": "58,78"
+		},
+		{
+			"punkte": "25,75",
+			"anzahl": "2",
+			"prozentrang": "58,37"
+		},
+		{
+			"punkte": "24,75",
+			"anzahl": "1",
+			"prozentrang": "57,55"
+		},
+		{
+			"punkte": "23,25",
+			"anzahl": "4",
+			"prozentrang": "57,14"
+		},
+		{
+			"punkte": "23,00",
+			"anzahl": "1",
+			"prozentrang": "55,51"
+		},
+		{
+			"punkte": "22,75",
+			"anzahl": "2",
+			"prozentrang": "55,1"
+		},
+		{
+			"punkte": "22,50",
+			"anzahl": "1",
+			"prozentrang": "54,29"
+		},
+		{
+			"punkte": "22,00",
+			"anzahl": "3",
+			"prozentrang": "53,88"
+		},
+		{
+			"punkte": "21,25",
+			"anzahl": "2",
+			"prozentrang": "52,65"
+		},
+		{
+			"punkte": "20,75",
+			"anzahl": "3",
+			"prozentrang": "51,84"
+		},
+		{
+			"punkte": "20,00",
+			"anzahl": "2",
+			"prozentrang": "50,61"
+		},
+		{
+			"punkte": "19,75",
+			"anzahl": "1",
+			"prozentrang": "49,8"
+		},
+		{
+			"punkte": "19,50",
+			"anzahl": "1",
+			"prozentrang": "49,39"
+		},
+		{
+			"punkte": "18,75",
+			"anzahl": "3",
+			"prozentrang": "48,98"
+		},
+		{
+			"punkte": "18,50",
+			"anzahl": "3",
+			"prozentrang": "47,76"
+		},
+		{
+			"punkte": "18,25",
+			"anzahl": "1",
+			"prozentrang": "46,53"
+		},
+		{
+			"punkte": "17,25",
+			"anzahl": "1",
+			"prozentrang": "46,12"
+		},
+		{
+			"punkte": "17,00",
+			"anzahl": "3",
+			"prozentrang": "45,71"
+		},
+		{
+			"punkte": "16,00",
+			"anzahl": "5",
+			"prozentrang": "44,49"
+		},
+		{
+			"punkte": "15,75",
+			"anzahl": "8",
+			"prozentrang": "42,45"
+		},
+		{
+			"punkte": "15,00",
+			"anzahl": "3",
+			"prozentrang": "39,18"
+		},
+		{
+			"punkte": "14,75",
+			"anzahl": "2",
+			"prozentrang": "37,96"
+		},
+		{
+			"punkte": "14,50",
+			"anzahl": "2",
+			"prozentrang": "37,14"
+		},
+		{
+			"punkte": "14,00",
+			"anzahl": "1",
+			"prozentrang": "36,33"
+		},
+		{
+			"punkte": "13,75",
+			"anzahl": "3",
+			"prozentrang": "35,92"
+		},
+		{
+			"punkte": "13,50",
+			"anzahl": "2",
+			"prozentrang": "34,69"
+		},
+		{
+			"punkte": "13,25",
+			"anzahl": "1",
+			"prozentrang": "33,88"
+		},
+		{
+			"punkte": "13,00",
+			"anzahl": "3",
+			"prozentrang": "33,47"
+		},
+		{
+			"punkte": "12,75",
+			"anzahl": "2",
+			"prozentrang": "32,24"
+		},
+		{
+			"punkte": "12,50",
+			"anzahl": "2",
+			"prozentrang": "31,43"
+		},
+		{
+			"punkte": "12,00",
+			"anzahl": "10",
+			"prozentrang": "30,61"
+		},
+		{
+			"punkte": "11,75",
+			"anzahl": "1",
+			"prozentrang": "26,53"
+		},
+		{
+			"punkte": "11,50",
+			"anzahl": "2",
+			"prozentrang": "26,12"
+		},
+		{
+			"punkte": "11,25",
+			"anzahl": "8",
+			"prozentrang": "25,31"
+		},
+		{
+			"punkte": "11,00",
+			"anzahl": "1",
+			"prozentrang": "22,04"
+		},
+		{
+			"punkte": "10,75",
+			"anzahl": "16",
+			"prozentrang": "21,63"
+		},
+		{
+			"punkte": "10,50",
+			"anzahl": "3",
+			"prozentrang": "15,1"
+		},
+		{
+			"punkte": "10,00",
+			"anzahl": "1",
+			"prozentrang": "13,88"
+		},
+		{
+			"punkte": "9,75",
+			"anzahl": "4",
+			"prozentrang": "13,47"
+		},
+		{
+			"punkte": "9,50",
+			"anzahl": "3",
+			"prozentrang": "11,84"
+		},
+		{
+			"punkte": "9,00",
+			"anzahl": "1",
+			"prozentrang": "10,61"
+		},
+		{
+			"punkte": "8,75",
+			"anzahl": "1",
+			"prozentrang": "10,2"
+		},
+		{
+			"punkte": "8,50",
+			"anzahl": "3",
+			"prozentrang": "9,8"
+		},
+		{
+			"punkte": "8,25",
+			"anzahl": "4",
+			"prozentrang": "8,57"
+		},
+		{
+			"punkte": "8,00",
+			"anzahl": "1",
+			"prozentrang": "6,94"
+		},
+		{
+			"punkte": "7,75",
+			"anzahl": "2",
+			"prozentrang": "6,53"
+		},
+		{
+			"punkte": "7,50",
+			"anzahl": "1",
+			"prozentrang": "5,71"
+		},
+		{
+			"punkte": "7,25",
+			"anzahl": "1",
+			"prozentrang": "5,31"
+		},
+		{
+			"punkte": "6,75",
+			"anzahl": "1",
+			"prozentrang": "4,9"
+		},
+		{
+			"punkte": "6,50",
+			"anzahl": "1",
+			"prozentrang": "4,49"
+		},
+		{
+			"punkte": "6,25",
+			"anzahl": "3",
+			"prozentrang": "4,08"
+		},
+		{
+			"punkte": "6,00",
+			"anzahl": "1",
+			"prozentrang": "2,86"
+		},
+		{
+			"punkte": "5,00",
+			"anzahl": "3",
+			"prozentrang": "2,45"
+		},
+		{
+			"punkte": "3,75",
+			"anzahl": "2",
+			"prozentrang": "1,22"
+		},
+		{
+			"punkte": ",75",
+			"anzahl": "1",
+			"prozentrang": "0,41"
+		}
+	],
+	"aufgabenstatistiken": [
+		{
+			"nummer": "A-1",
+			"strafpunkte": ",75",
+			"anzahlenJeLoesungsbuchstabe": [
+				{
+					"name": "A",
+					"anzahl": 18
+				},
+				{
+					"name": "B",
+					"anzahl": 3
+				},
+				{
+					"name": "C",
+					"anzahl": 4
+				},
+				{
+					"name": "D",
+					"anzahl": 3
+				},
+				{
+					"name": "E",
+					"anzahl": 13
+				},
+				{
+					"name": "N",
+					"anzahl": 93
+				}
+			],
+			"anzahlenJeWertungscode": [
+				{
+					"name": "falsch gelöst",
+					"anzahl": 44
+				},
+				{
+					"name": "richtig gelöst",
+					"anzahl": 105
+				},
+				{
+					"name": "nicht gelöst",
+					"anzahl": 96
+				}
+			]
+		},
+		{
+			"nummer": "A-2",
+			"strafpunkte": ",75",
+			"anzahlenJeLoesungsbuchstabe": [
+				{
+					"name": "A",
+					"anzahl": 4
+				},
+				{
+					"name": "B",
+					"anzahl": 20
+				},
+				{
+					"name": "C",
+					"anzahl": 7
+				},
+				{
+					"name": "D",
+					"anzahl": 7
+				},
+				{
+					"name": "E",
+					"anzahl": 5
+				},
+				{
+					"name": "N",
+					"anzahl": 91
+				}
+			],
+			"anzahlenJeWertungscode": [
+				{
+					"name": "falsch gelöst",
+					"anzahl": 69
+				},
+				{
+					"name": "richtig gelöst",
+					"anzahl": 85
+				},
+				{
+					"name": "nicht gelöst",
+					"anzahl": 91
+				}
+			]
+		},
+		{
+			"nummer": "B-1",
+			"strafpunkte": "1,00",
+			"anzahlenJeLoesungsbuchstabe": [
+				{
+					"name": "A",
+					"anzahl": 5
+				},
+				{
+					"name": "B",
+					"anzahl": 8
+				},
+				{
+					"name": "C",
+					"anzahl": 10
+				},
+				{
+					"name": "D",
+					"anzahl": 6
+				},
+				{
+					"name": "E",
+					"anzahl": 1
+				},
+				{
+					"name": "N",
+					"anzahl": 104
+				}
+			],
+			"anzahlenJeWertungscode": [
+				{
+					"name": "falsch gelöst",
+					"anzahl": 63
+				},
+				{
+					"name": "richtig gelöst",
+					"anzahl": 73
+				},
+				{
+					"name": "nicht gelöst",
+					"anzahl": 109
+				}
+			]
+		},
+		{
+			"nummer": "C-1",
+			"strafpunkte": "1,25",
+			"anzahlenJeLoesungsbuchstabe": [
+				{
+					"name": "A",
+					"anzahl": 8
+				},
+				{
+					"name": "B",
+					"anzahl": 13
+				},
+				{
+					"name": "C",
+					"anzahl": 12
+				},
+				{
+					"name": "D",
+					"anzahl": 3
+				},
+				{
+					"name": "E",
+					"anzahl": 8
+				},
+				{
+					"name": "N",
+					"anzahl": 90
+				}
+			],
+			"anzahlenJeWertungscode": [
+				{
+					"name": "falsch gelöst",
+					"anzahl": 103
+				},
+				{
+					"name": "richtig gelöst",
+					"anzahl": 45
+				},
+				{
+					"name": "nicht gelöst",
+					"anzahl": 97
+				}
+			]
+		},
+		{
+			"nummer": "A-3",
+			"strafpunkte": ",75",
+			"anzahlenJeLoesungsbuchstabe": [
+				{
+					"name": "A",
+					"anzahl": 6
+				},
+				{
+					"name": "B",
+					"anzahl": 13
+				},
+				{
+					"name": "C",
+					"anzahl": 15
+				},
+				{
+					"name": "D",
+					"anzahl": 3
+				},
+				{
+					"name": "E",
+					"anzahl": 2
+				},
+				{
+					"name": "N",
+					"anzahl": 95
+				}
+			],
+			"anzahlenJeWertungscode": [
+				{
+					"name": "falsch gelöst",
+					"anzahl": 52
+				},
+				{
+					"name": "richtig gelöst",
+					"anzahl": 75
+				},
+				{
+					"name": "nicht gelöst",
+					"anzahl": 118
+				}
+			]
+		},
+		{
+			"nummer": "B-2",
+			"strafpunkte": "1,00",
+			"anzahlenJeLoesungsbuchstabe": [
+				{
+					"name": "A",
+					"anzahl": 6
+				},
+				{
+					"name": "B",
+					"anzahl": 8
+				},
+				{
+					"name": "C",
+					"anzahl": 10
+				},
+				{
+					"name": "D",
+					"anzahl": 8
+				},
+				{
+					"name": "E",
+					"anzahl": 0
+				},
+				{
+					"name": "N",
+					"anzahl": 102
+				}
+			],
+			"anzahlenJeWertungscode": [
+				{
+					"name": "falsch gelöst",
+					"anzahl": 54
+				},
+				{
+					"name": "richtig gelöst",
+					"anzahl": 87
+				},
+				{
+					"name": "nicht gelöst",
+					"anzahl": 104
+				}
+			]
+		},
+		{
+			"nummer": "A-4",
+			"strafpunkte": ",75",
+			"anzahlenJeLoesungsbuchstabe": [
+				{
+					"name": "A",
+					"anzahl": 14
+				},
+				{
+					"name": "B",
+					"anzahl": 10
+				},
+				{
+					"name": "C",
+					"anzahl": 5
+				},
+				{
+					"name": "D",
+					"anzahl": 1
+				},
+				{
+					"name": "E",
+					"anzahl": 2
+				},
+				{
+					"name": "N",
+					"anzahl": 102
+				}
+			],
+			"anzahlenJeWertungscode": [
+				{
+					"name": "falsch gelöst",
+					"anzahl": 40
+				},
+				{
+					"name": "richtig gelöst",
+					"anzahl": 96
+				},
+				{
+					"name": "nicht gelöst",
+					"anzahl": 109
+				}
+			]
+		},
+		{
+			"nummer": "B-3",
+			"strafpunkte": "1,00",
+			"anzahlenJeLoesungsbuchstabe": [
+				{
+					"name": "A",
+					"anzahl": 7
+				},
+				{
+					"name": "B",
+					"anzahl": 15
+				},
+				{
+					"name": "C",
+					"anzahl": 5
+				},
+				{
+					"name": "D",
+					"anzahl": 9
+				},
+				{
+					"name": "E",
+					"anzahl": 3
+				},
+				{
+					"name": "N",
+					"anzahl": 95
+				}
+			],
+			"anzahlenJeWertungscode": [
+				{
+					"name": "falsch gelöst",
+					"anzahl": 83
+				},
+				{
+					"name": "richtig gelöst",
+					"anzahl": 52
+				},
+				{
+					"name": "nicht gelöst",
+					"anzahl": 110
+				}
+			]
+		},
+		{
+			"nummer": "C-3",
+			"strafpunkte": "1,25",
+			"anzahlenJeLoesungsbuchstabe": [
+				{
+					"name": "A",
+					"anzahl": 18
+				},
+				{
+					"name": "B",
+					"anzahl": 14
+				},
+				{
+					"name": "C",
+					"anzahl": 7
+				},
+				{
+					"name": "D",
+					"anzahl": 4
+				},
+				{
+					"name": "E",
+					"anzahl": 10
+				},
+				{
+					"name": "N",
+					"anzahl": 81
+				}
+			],
+			"anzahlenJeWertungscode": [
+				{
+					"name": "falsch gelöst",
+					"anzahl": 68
+				},
+				{
+					"name": "richtig gelöst",
+					"anzahl": 83
+				},
+				{
+					"name": "nicht gelöst",
+					"anzahl": 94
+				}
+			]
+		},
+		{
+			"nummer": "B-4",
+			"strafpunkte": "1,00",
+			"anzahlenJeLoesungsbuchstabe": [
+				{
+					"name": "A",
+					"anzahl": 9
+				},
+				{
+					"name": "B",
+					"anzahl": 9
+				},
+				{
+					"name": "C",
+					"anzahl": 14
+				},
+				{
+					"name": "D",
+					"anzahl": 10
+				},
+				{
+					"name": "E",
+					"anzahl": 6
+				},
+				{
+					"name": "N",
+					"anzahl": 86
+				}
+			],
+			"anzahlenJeWertungscode": [
+				{
+					"name": "falsch gelöst",
+					"anzahl": 102
+				},
+				{
+					"name": "richtig gelöst",
+					"anzahl": 51
+				},
+				{
+					"name": "nicht gelöst",
+					"anzahl": 92
+				}
+			]
+		},
+		{
+			"nummer": "C-2",
+			"strafpunkte": "1,25",
+			"anzahlenJeLoesungsbuchstabe": [
+				{
+					"name": "A",
+					"anzahl": 4
+				},
+				{
+					"name": "B",
+					"anzahl": 16
+				},
+				{
+					"name": "C",
+					"anzahl": 15
+				},
+				{
+					"name": "D",
+					"anzahl": 8
+				},
+				{
+					"name": "E",
+					"anzahl": 1
+				},
+				{
+					"name": "N",
+					"anzahl": 90
+				}
+			],
+			"anzahlenJeWertungscode": [
+				{
+					"name": "falsch gelöst",
+					"anzahl": 44
+				},
+				{
+					"name": "richtig gelöst",
+					"anzahl": 95
+				},
+				{
+					"name": "nicht gelöst",
+					"anzahl": 106
+				}
+			]
+		},
+		{
+			"nummer": "C-4",
+			"strafpunkte": "1,25",
+			"anzahlenJeLoesungsbuchstabe": [
+				{
+					"name": "A",
+					"anzahl": 6
+				},
+				{
+					"name": "B",
+					"anzahl": 6
+				},
+				{
+					"name": "C",
+					"anzahl": 12
+				},
+				{
+					"name": "D",
+					"anzahl": 11
+				},
+				{
+					"name": "E",
+					"anzahl": 25
+				},
+				{
+					"name": "N",
+					"anzahl": 74
+				}
+			],
+			"anzahlenJeWertungscode": [
+				{
+					"name": "falsch gelöst",
+					"anzahl": 88
+				},
+				{
+					"name": "richtig gelöst",
+					"anzahl": 70
+				},
+				{
+					"name": "nicht gelöst",
+					"anzahl": 87
+				}
+			]
+		}
+	]
+}
