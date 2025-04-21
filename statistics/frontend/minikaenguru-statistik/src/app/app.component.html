@@ -1,0 +1,17 @@
+<main>
+    <mks-loading-indicator></mks-loading-indicator>
+    <mks-layout>
+        <mat-sidenav-container>
+            <mat-sidenav #sidenav mode="push" opened="false" role="navigation">
+                <mks-sidenav (sidenavClose)="sidenav.close()"></mks-sidenav>
+            </mat-sidenav>
+            <mat-sidenav-content>
+                <mks-header (sidenavToggle)="sidenav.toggle()"></mks-header>
+                <mks-message></mks-message>
+                <main>
+                    <router-outlet></router-outlet>
+                </main>
+            </mat-sidenav-content>
+        </mat-sidenav-container>
+    </mks-layout>
+</main>

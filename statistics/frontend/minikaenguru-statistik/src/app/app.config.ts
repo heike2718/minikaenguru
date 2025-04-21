@@ -1,0 +1,62 @@
+import { ApplicationConfig, ErrorHandler, LOCALE_ID, enableProdMode } from '@angular/core';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideRouter } from '@angular/router';
+import { appRoutes } from './app.routes';
+import { environment } from 'src/environments/environment';
+import { registerLocaleData } from '@angular/common';
+import { Configuration } from '@mks/config';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { LoadingInterceptor } from '@mks/messages-api';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { ErrorInterceptor, APIHttpInterceptor } from '@mks/http';
+import { ErrorHandlerService } from './error/error-handler.service';
+import { provideStore } from '@ngrx/store';
+import { domainDataProvider } from '@mks/domain-api';
+import { provideCharts, withDefaultRegisterables} from 'ng2-charts';
+
+if (environment.production) {
+  enableProdMode();
+}
+
+registerLocaleData(LOCALE_ID, 'de');
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideRouter(appRoutes),
+    provideAnimations(),
+    /** das muss so gemacht werden, weil ohne den Parameter {} nichts da ist, wohinein man den state hängen könnte */
+    provideStore(
+      {}
+    ),
+    environment.providers,
+    domainDataProvider,
+    provideHttpClient(
+      withInterceptorsFromDi()),
+    {
+      provide: Configuration,
+      useFactory: () =>
+        new Configuration(
+          environment.baseUrl,
+          environment.assetsPath,
+          'minikaenguru-statistik',
+          environment.production
+        ),
+    },
+    provideCharts(withDefaultRegisterables()),
+    // provideCharts({ registerables: [BarController, PieController, Legend, Colors ] }),
+    {
+      provide: MAT_DATE_LOCALE,
+      useValue: 'de-DE',
+    },
+    { provide: LOCALE_ID, useValue: 'de-DE' },
+    { provide: ErrorHandler, useClass: ErrorHandlerService },
+    { provide: HTTP_INTERCEPTORS, multi: true, useClass: LoadingInterceptor },
+    {
+      provide: HTTP_INTERCEPTORS,
+      multi: true,
+      useClass: APIHttpInterceptor,
+    },
+    { provide: HTTP_INTERCEPTORS, multi: true, useClass: ErrorInterceptor }
+  ],
+};
+

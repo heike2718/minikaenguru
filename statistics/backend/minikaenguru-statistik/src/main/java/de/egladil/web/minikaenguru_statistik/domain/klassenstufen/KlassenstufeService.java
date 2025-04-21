@@ -22,9 +22,9 @@ import de.egladil.web.minikaenguru_statistik.domain.aufgaben.AufgabeDetailsCompa
 import de.egladil.web.minikaenguru_statistik.domain.aufgaben.MjaAufgabeDetails;
 import de.egladil.web.minikaenguru_statistik.domain.aufgaben.MkGatewayStatistikAufgabe;
 import de.egladil.web.minikaenguru_statistik.domain.auth.BaseAuthHeaderUtils;
-import de.egladil.web.minikaenguru_statistik.domain.auth.MkBiZaAuthConfig;
+import de.egladil.web.minikaenguru_statistik.domain.auth.MinikaenguruStatistikAuthConfig;
 import de.egladil.web.minikaenguru_statistik.domain.dto.Gruppierungsitem;
-import de.egladil.web.minikaenguru_statistik.domain.exeptions.MkBiZaCommunicationExcepion;
+import de.egladil.web.minikaenguru_statistik.domain.exeptions.MinikaenguruStatistikCommunicationExcepion;
 import de.egladil.web.minikaenguru_statistik.infrastructure.restclient.RaetselbaukastenRestClient;
 import de.egladil.web.minikaenguru_statistik.infrastructure.restclient.MkGatewayRestClient;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -40,7 +40,7 @@ public class KlassenstufeService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(KlassenstufeService.class);
 
 	@Inject
-	MkBiZaAuthConfig authConfig;
+	MinikaenguruStatistikAuthConfig authConfig;
 
 	@Inject
 	@RestClient
@@ -215,7 +215,7 @@ public class KlassenstufeService {
 				}
 			}
 
-			throw new MkBiZaCommunicationExcepion(
+			throw new MinikaenguruStatistikCommunicationExcepion(
 				"Beim Aufruf von mja-api/public/minikaenguru/" + jahr + "/" + klassenstufe + " ist ein Fehler aufgetreten: "
 					+ e.getMessage(),
 				e);
@@ -240,7 +240,7 @@ public class KlassenstufeService {
 			return result;
 		} catch (Exception e) {
 
-			throw new MkBiZaCommunicationExcepion(
+			throw new MinikaenguruStatistikCommunicationExcepion(
 				"Beim Aufruf von mja-api/public/minikaenguru/" + jahr + "/" + klassenstufe + " ist ein Fehler aufgetreten: "
 					+ e.getMessage(),
 				e);

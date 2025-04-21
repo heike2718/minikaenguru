@@ -12,8 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.egladil.web.minikaenguru_statistik.domain.auth.BaseAuthHeaderUtils;
-import de.egladil.web.minikaenguru_statistik.domain.auth.MkBiZaAuthConfig;
-import de.egladil.web.minikaenguru_statistik.domain.exeptions.MkBiZaCommunicationExcepion;
+import de.egladil.web.minikaenguru_statistik.domain.auth.MinikaenguruStatistikAuthConfig;
+import de.egladil.web.minikaenguru_statistik.domain.exeptions.MinikaenguruStatistikCommunicationExcepion;
 import de.egladil.web.minikaenguru_statistik.infrastructure.restclient.MkGatewayRestClient;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -29,7 +29,7 @@ public class WettbewerbService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(WettbewerbService.class);
 
 	@Inject
-	MkBiZaAuthConfig authConfig;
+	MinikaenguruStatistikAuthConfig authConfig;
 
 	@Inject
 	@RestClient
@@ -55,7 +55,7 @@ public class WettbewerbService {
 			return Arrays.asList(result);
 		} catch (Exception e) {
 
-			throw new MkBiZaCommunicationExcepion(
+			throw new MinikaenguruStatistikCommunicationExcepion(
 				"Beim Aufruf von mk-gateway/mkbiza/wettbewerbe ist ein Fehler aufgetreten: " + e.getMessage(), e);
 
 		}
@@ -73,7 +73,7 @@ public class WettbewerbService {
 			return result;
 		} catch (Exception e) {
 
-			throw new MkBiZaCommunicationExcepion(
+			throw new MinikaenguruStatistikCommunicationExcepion(
 				"Beim Aufruf von mk-gateway/mkbiza/wettbewerbe/" + jahr + " ist ein Fehler aufgetreten: " + e.getMessage(), e);
 
 		}

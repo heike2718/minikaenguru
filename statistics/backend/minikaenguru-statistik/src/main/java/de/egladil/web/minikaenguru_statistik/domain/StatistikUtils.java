@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import de.egladil.web.minikaenguru_statistik.domain.dto.Gruppierungsitem;
-import de.egladil.web.minikaenguru_statistik.domain.exeptions.MkBiZaRuntimeException;
+import de.egladil.web.minikaenguru_statistik.domain.exeptions.MinikaenguruStatistikRuntimeException;
 import de.egladil.web.minikaenguru_statistik.domain.klassenstufen.RohpunktItem;
 
 /**
@@ -224,7 +224,7 @@ public class StatistikUtils {
 
 				return Passung.ZU_LEICHT;
 			}
-			throw new MkBiZaRuntimeException("Da gibt es eine selzsame Lücke: aufgabenkategorie=" + aufgabenkategorie
+			throw new MinikaenguruStatistikRuntimeException("Da gibt es eine selzsame Lücke: aufgabenkategorie=" + aufgabenkategorie
 				+ ", membershipDegree=" + prozentRichtigerLoesungen);
 
 		case C:

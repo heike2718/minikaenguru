@@ -11,7 +11,7 @@ import org.jboss.logging.MDC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.egladil.web.minikaenguru_statistik.MkBiZaApplication;
+import de.egladil.web.minikaenguru_statistik.MinikaenguruStatistikApplication;
 import jakarta.annotation.Priority;
 import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.container.ContainerRequestContext;
@@ -84,7 +84,7 @@ public class MDCHeaderFilter implements ContainerRequestFilter, ContainerRespons
 
 	private String getClientId() {
 
-		String clientId = headers.getHeaderString(MkBiZaApplication.X_CLIENT_ID_HEADER_NAME);
+		String clientId = headers.getHeaderString(MinikaenguruStatistikApplication.X_CLIENT_ID_HEADER_NAME);
 
 		if (clientId != null) {
 

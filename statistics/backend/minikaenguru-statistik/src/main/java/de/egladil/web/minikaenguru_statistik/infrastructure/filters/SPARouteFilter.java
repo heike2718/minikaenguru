@@ -21,11 +21,11 @@ public class SPARouteFilter {
 
 	private static final Predicate<String> FILE_NAME_PREDICATE = Pattern.compile(".*[.][a-zA-Z\\d]+").asMatchPredicate();
 
-	private static final String API_PREFIX = "/mkbiza-api/";
+	private static final String API_PREFIX = "/api/";
 
-	private static final String APP_PLUS_API_PREFIX = "/mkbiza-app" + API_PREFIX;
+	private static final String APP_PLUS_API_PREFIX = "/minikaenguru-statistik" + API_PREFIX;
 
-	private static final String DEFAULT_APP = "/mkbiza-app/";
+	private static final String DEFAULT_APP = "/minikaenguru-statistik/";
 
 	private static final String[] PATH_PREFIXES = { DEFAULT_APP };
 
@@ -57,15 +57,15 @@ public class SPARouteFilter {
 
 				if (path.startsWith(DEFAULT_APP)) {
 
-					// I0094: deep-Angular-Router-Links (z.B. /mkbiza-app/aufgabensammlungen/) müssen zur SPA Grund-URL
-					// (/mkbiza-app/) umgeleitet werden. Danach übernimmt wieder das Angular-Routing
+					// I0094: deep-Angular-Router-Links (z.B. /minikaenguru-statistik/aufgabensammlungen/) müssen zur SPA Grund-URL
+					// (/minikaenguru-statistik/) umgeleitet werden. Danach übernimmt wieder das Angular-Routing
 					// Jetzt funktionieren Bookmarking, Back-Button sowie F5 ohne dass es ein 404 gibt.
 					String[] tokens = path.split("/");
 					LOGGER.debug("(6) Anzahl token = {}", tokens.length);
 
 					if (tokens.length > 2) {
 
-						// /mkbiza-app/ => 2 tokens!
+						// /minikaenguru-statistik/ => 2 tokens!
 						String rerouted = "/" + tokens[1] + "/";
 						LOGGER.debug("(7) Umleiten von deep Angular router links: {} nach {} ", path, rerouted);
 						rc.reroute(rerouted);
@@ -95,7 +95,7 @@ public class SPARouteFilter {
 		if (FILE_NAME_PREDICATE.test(path)) {
 
 			LOGGER.debug(
-				"(3-2) kein Umleiten von statischen files aus src/main/resources/META-INF/resources/mkbiza-app/");
+				"(3-2) kein Umleiten von statischen files aus src/main/resources/META-INF/resources/minikaenguru-statistik/");
 			return true;
 		}
 
