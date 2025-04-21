@@ -1,4 +1,4 @@
-import { ApplicationConfig, ErrorHandler, LOCALE_ID, enableProdMode, importProvidersFrom } from '@angular/core';
+import { ApplicationConfig, ErrorHandler, LOCALE_ID, enableProdMode } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { appRoutes } from './app.routes';
@@ -7,13 +7,12 @@ import { registerLocaleData } from '@angular/common';
 import { Configuration } from '@mkbiza-app/config';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { LoadingInterceptor } from '@mkbiza-app/messages-api';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ErrorInterceptor, MkbizaAPIHttpInterceptor } from '@mkbiza-app/http';
 import { ErrorHandlerService } from './error/error-handler.service';
 import { provideStore } from '@ngrx/store';
 import { domainDataProvider } from '@mkbiza-app/domain-api';
 import { provideCharts, withDefaultRegisterables} from 'ng2-charts';
-import { BarController, Colors, Legend, PieController } from 'chart.js';
 
 if (environment.production) {
   enableProdMode();
@@ -31,9 +30,8 @@ export const appConfig: ApplicationConfig = {
     ),
     environment.providers,
     domainDataProvider,
-    importProvidersFrom(
-      HttpClientModule
-    ),
+    provideHttpClient(
+      withInterceptorsFromDi()),
     {
       provide: Configuration,
       useFactory: () =>

@@ -1,11 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import {
-    HttpEvent,
-    HttpHandler,
-    HttpInterceptor,
-    HttpRequest,
-    HttpResponse,
-} from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { LoadingService } from './loading.service';

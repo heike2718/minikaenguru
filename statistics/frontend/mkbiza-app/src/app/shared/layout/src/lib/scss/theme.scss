@@ -90,17 +90,17 @@ $warn-palette: (
   )
 );
 
-$mja-primary: mat.define-palette($primary-palette, 700, 300, 900);
-$mja-accent: mat.define-palette($secondary-palette, 700, 300, 900);
+$mja-primary: mat.m2-define-palette($primary-palette, 700, 300, 900);
+$mja-accent: mat.m2-define-palette($secondary-palette, 700, 300, 900);
 
 // The warn palette is optional (defaults to red).
-$mja-warn: mat.define-palette($warn-palette, 700);
+$mja-warn: mat.m2-define-palette($warn-palette, 700);
 
-$mja-theme: mat.define-light-theme((color: (primary: $mja-primary,
+$mja-theme: mat.m2-define-light-theme((color: (primary: $mja-primary,
         accent: $mja-accent,
         warn: $mja-warn,
       ),
-      typography: mat.define-typography-config(),
+      typography: mat.m2-define-typography-config(),
     ));
 
 @include mat.all-component-themes($mja-theme);
