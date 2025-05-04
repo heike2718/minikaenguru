@@ -6,12 +6,11 @@ package de.egladil.web.mk_gateway.domain.kinder.api;
 
 import java.io.Serializable;
 
-import jakarta.validation.constraints.NotBlank;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_validation.annotations.StringLatin;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * KlasseEditorModel

@@ -4,6 +4,9 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.persistence.entities;
 
+import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,10 +14,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
-
-import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
-import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
-import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 
 /**
  * PersistentesKind

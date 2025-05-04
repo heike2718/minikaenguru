@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.enterprise.context.RequestScoped;
-
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import com.itextpdf.text.Chunk;
@@ -26,6 +24,7 @@ import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
 import de.egladil.web.mk_gateway.domain.pdfutils.PdfMerger;
 import de.egladil.web.mk_gateway.domain.pdfutils.UebersichtFontProvider;
+import jakarta.enterprise.context.RequestScoped;
 
 /**
  * VertragAuftragsverarbeitungPdfGenerator

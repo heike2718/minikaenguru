@@ -6,9 +6,6 @@ package de.egladil.web.mk_gateway.domain.kinder.api;
 
 import java.util.Objects;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,6 +16,8 @@ import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.KlassenstufeAPIMod
 import de.egladil.web.mk_gateway.domain.apimodel.auswertungen.SpracheAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * KindEditorModel

@@ -7,8 +7,6 @@ package de.egladil.web.mk_gateway.domain.unterlagen.impl;
 import java.util.List;
 import java.util.Optional;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikAuspraegung;
 import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikGruppeninfo;
 import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikItem;
@@ -16,6 +14,8 @@ import de.egladil.web.mk_gateway.domain.unterlagen.AdminDownloadsService;
 import de.egladil.web.mk_gateway.domain.unterlagen.DownloadsRepository;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 /**
  * AdminDownloadsService

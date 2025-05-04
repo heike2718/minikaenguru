@@ -7,15 +7,14 @@ package de.egladil.web.mk_gateway.domain;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import jakarta.ws.rs.ProcessingException;
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Response;
-
 import org.slf4j.Logger;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.error.InaccessableEndpointException;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
 
 /**
  * AbstractMkResourceAdapter

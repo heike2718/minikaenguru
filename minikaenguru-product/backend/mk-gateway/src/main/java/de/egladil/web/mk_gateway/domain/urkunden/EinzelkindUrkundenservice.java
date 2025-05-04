@@ -7,10 +7,6 @@ package de.egladil.web.mk_gateway.domain.urkunden;
 import java.util.Optional;
 import java.util.UUID;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.ws.rs.NotFoundException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +40,9 @@ import de.egladil.web.mk_gateway.domain.urkunden.generator.urkunden.FontSizeAndL
 import de.egladil.web.mk_gateway.domain.urkunden.generator.urkunden.SplitSchulnameStrategie;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.NotFoundException;
 
 /**
  * EinzelkindUrkundenservice

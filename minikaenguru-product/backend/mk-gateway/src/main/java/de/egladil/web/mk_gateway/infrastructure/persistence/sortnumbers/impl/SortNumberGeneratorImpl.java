@@ -6,14 +6,13 @@ package de.egladil.web.mk_gateway.infrastructure.persistence.sortnumbers.impl;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
-
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.SortnumberHibernateRepositoryImpl;
 import de.egladil.web.mk_gateway.infrastructure.persistence.sortnumbers.SortNumberGenerator;
 import de.egladil.web.mk_gateway.infrastructure.persistence.sortnumbers.SortedTable;
 import de.egladil.web.mk_gateway.infrastructure.persistence.sortnumbers.SortnumberRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 /**
  * SortNumberGeneratorImpl

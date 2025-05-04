@@ -4,9 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.mail;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +12,8 @@ import de.egladil.web.commons_mailer.DefaultEmailDaten;
 import de.egladil.web.commons_mailer.EmailServiceCredentials;
 import de.egladil.web.commons_mailer.exception.EmailException;
 import de.egladil.web.commons_mailer.exception.InvalidMailAddressException;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 /**
  * AdminMailService

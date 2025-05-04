@@ -6,9 +6,6 @@ package de.egladil.web.mk_gateway.domain.auth.signup;
 
 import java.util.function.Function;
 
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
@@ -29,6 +26,8 @@ import de.egladil.web.mk_gateway.domain.error.LogmessagePrefixes;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 
 /**
  * AuthResultToResourceOwnerMapper

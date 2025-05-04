@@ -4,13 +4,12 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.urkunden.api;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.mk_gateway.domain.urkunden.Farbschema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * UrkundenauftragSchule

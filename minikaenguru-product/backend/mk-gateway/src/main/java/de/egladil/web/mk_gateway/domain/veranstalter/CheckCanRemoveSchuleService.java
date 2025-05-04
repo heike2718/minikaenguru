@@ -4,15 +4,14 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.veranstalter;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
 
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.teilnahmen.SchuleDetailsService;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleDetails;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 /**
  * CheckCanRemoveSchuleService

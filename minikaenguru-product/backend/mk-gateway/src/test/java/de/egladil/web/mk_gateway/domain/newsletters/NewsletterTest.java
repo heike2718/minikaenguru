@@ -16,8 +16,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.newsletters.Newsletter;
-import de.egladil.web.mk_gateway.domain.newsletters.NewsletterAPIModel;
 
 /**
  * NewsletterTest
@@ -31,7 +29,7 @@ public class NewsletterTest {
 		Newsletter newsletter = new Newsletter()
 			.withIdentifier(new Identifier(AbstractDomainServiceTest.NEWSLETTER_TEST_UND_ALLE_UUID))
 			.withBetreff("Wichtige Information")
-			.withText("MjaApiRestClient bla bla blablablabla bla bla");
+			.withText("RaetselbaukastenRestClient bla bla blablablabla bla bla");
 
 		NewsletterAPIModel apiModel = NewsletterAPIModel.createFromNewsletter(newsletter);
 
@@ -40,10 +38,10 @@ public class NewsletterTest {
 
 		System.out.println(serialisierung);
 
-		// {"uuid":"NEWSLETTER_TEST_UND_ALLE_UUID","betreff":"Wichtige Information","text":"MjaApiRestClient bla bla blablablabla bla
+		// {"uuid":"NEWSLETTER_TEST_UND_ALLE_UUID","betreff":"Wichtige Information","text":"RaetselbaukastenRestClient bla bla blablablabla bla
 		// bla","versandinfoIDs":[]}
 		assertEquals(
-			"{\"uuid\":\"NEWSLETTER_TEST_UND_ALLE_UUID\",\"betreff\":\"Wichtige Information\",\"text\":\"MjaApiRestClient bla bla blablablabla bla bla\",\"versandinfoIDs\":[]}",
+			"{\"uuid\":\"NEWSLETTER_TEST_UND_ALLE_UUID\",\"betreff\":\"Wichtige Information\",\"text\":\"RaetselbaukastenRestClient bla bla blablablabla bla bla\",\"versandinfoIDs\":[]}",
 			serialisierung);
 	}
 
@@ -54,7 +52,7 @@ public class NewsletterTest {
 		Newsletter newsletter = new Newsletter()
 			.withIdentifier(new Identifier(Newsletter.KEINE_UUID))
 			.withBetreff("Wichtige Information")
-			.withText("MjaApiRestClient bla bla blablablabla bla bla");
+			.withText("RaetselbaukastenRestClient bla bla blablablabla bla bla");
 
 		NewsletterAPIModel apiModel = NewsletterAPIModel.createFromNewsletter(newsletter);
 
@@ -63,9 +61,9 @@ public class NewsletterTest {
 
 		System.out.println(serialisierung);
 
-		// {"uuid":"neu","betreff":"Wichtige Information","text":"MjaApiRestClient bla bla blablablabla bla bla","versandinfoIDs":[]}
+		// {"uuid":"neu","betreff":"Wichtige Information","text":"RaetselbaukastenRestClient bla bla blablablabla bla bla","versandinfoIDs":[]}
 		assertEquals(
-			"{\"uuid\":\"neu\",\"betreff\":\"Wichtige Information\",\"text\":\"MjaApiRestClient bla bla blablablabla bla bla\",\"versandinfoIDs\":[]}",
+			"{\"uuid\":\"neu\",\"betreff\":\"Wichtige Information\",\"text\":\"RaetselbaukastenRestClient bla bla blablablabla bla bla\",\"versandinfoIDs\":[]}",
 			serialisierung);
 	}
 
@@ -80,7 +78,7 @@ public class NewsletterTest {
 			Newsletter newsletter = new Newsletter()
 				.withIdentifier(new Identifier(AbstractDomainServiceTest.NEWSLETTER_TEST_UND_ALLE_UUID))
 				.withBetreff("Wichtige Information an alle")
-				.withText("MjaApiRestClient bla bla blablablabla bla bla")
+				.withText("RaetselbaukastenRestClient bla bla blablablabla bla bla")
 				.addIdVersandinformation(new Identifier(AbstractDomainServiceTest.VERSANDINFO_ALLE_UUID))
 				.addIdVersandinformation(new Identifier(AbstractDomainServiceTest.VERSANDINFO_TEST_UUID));
 

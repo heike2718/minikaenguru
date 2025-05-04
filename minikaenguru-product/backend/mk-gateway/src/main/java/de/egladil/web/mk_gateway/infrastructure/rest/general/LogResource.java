@@ -4,6 +4,12 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.general;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.egladil.web.commons_validation.LogDelegate;
+import de.egladil.web.commons_validation.payload.LogEntry;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -11,13 +17,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import de.egladil.web.commons_validation.LogDelegate;
-import de.egladil.web.commons_validation.payload.LogEntry;
 
 /**
  * LogResource

@@ -6,13 +6,12 @@ package de.egladil.web.mk_gateway.domain.kinder.api;
 
 import java.util.Objects;
 
-import jakarta.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.annotations.UuidString;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * KindRequestData

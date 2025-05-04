@@ -7,6 +7,13 @@ package de.egladil.web.mk_gateway.infrastructure.rest.admin;
 import java.util.List;
 import java.util.Optional;
 
+import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.teilnahmen.admin.AdminSchulenService;
+import de.egladil.web.mk_gateway.domain.teilnahmen.admin.SchuleAdminOverview;
+import de.egladil.web.mk_gateway.domain.uploadmonitoring.api.UploadMonitoringInfo;
+import de.egladil.web.mk_gateway.domain.uploadmonitoring.api.UploadMonitoringService;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -19,14 +26,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
-
-import de.egladil.web.commons_validation.payload.MessagePayload;
-import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_gateway.domain.teilnahmen.admin.AdminSchulenService;
-import de.egladil.web.mk_gateway.domain.teilnahmen.admin.SchuleAdminOverview;
-import de.egladil.web.mk_gateway.domain.uploadmonitoring.api.UploadMonitoringInfo;
-import de.egladil.web.mk_gateway.domain.uploadmonitoring.api.UploadMonitoringService;
-import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * AdminSchulenResource

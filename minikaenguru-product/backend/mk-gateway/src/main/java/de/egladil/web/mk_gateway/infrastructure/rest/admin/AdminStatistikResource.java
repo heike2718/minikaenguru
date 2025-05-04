@@ -4,6 +4,16 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.admin;
 
+import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.DownloadData;
+import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
+import de.egladil.web.mk_gateway.domain.kinder.AdminKinderService;
+import de.egladil.web.mk_gateway.domain.loesungszettel.AdminLoesungszettelService;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikGruppeninfo;
+import de.egladil.web.mk_gateway.domain.unterlagen.AdminDownloadsService;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
+import de.egladil.web.mk_gateway.infrastructure.rest.general.statistik.PersonalizedStatisticsResourceDelegate;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -15,17 +25,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
-
-import de.egladil.web.commons_validation.payload.MessagePayload;
-import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_gateway.domain.DownloadData;
-import de.egladil.web.mk_gateway.domain.fileutils.MkGatewayFileUtils;
-import de.egladil.web.mk_gateway.domain.kinder.AdminKinderService;
-import de.egladil.web.mk_gateway.domain.loesungszettel.AdminLoesungszettelService;
-import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikGruppeninfo;
-import de.egladil.web.mk_gateway.domain.unterlagen.AdminDownloadsService;
-import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
-import de.egladil.web.mk_gateway.infrastructure.rest.general.statistik.PersonalizedStatisticsResourceDelegate;
 
 /**
  * AdminStatistikResource

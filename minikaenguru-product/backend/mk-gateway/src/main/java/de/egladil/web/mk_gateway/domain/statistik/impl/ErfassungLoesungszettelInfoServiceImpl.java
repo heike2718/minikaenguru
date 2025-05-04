@@ -9,16 +9,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
-
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.statistik.ErfassungLoesungszettelInfoService;
 import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikAuspraegung;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 /**
  * ErfassungLoesungszettelInfoServiceImpl

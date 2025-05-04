@@ -4,6 +4,13 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.admin;
 
+import de.egladil.web.commons_net.utils.CommonHttpUtils;
+import de.egladil.web.mk_gateway.MkGatewayApp;
+import de.egladil.web.mk_gateway.domain.auth.AuthMode;
+import de.egladil.web.mk_gateway.domain.auth.AuthResult;
+import de.egladil.web.mk_gateway.domain.auth.session.loginlogout.LoginLogoutService;
+import de.egladil.web.mk_gateway.domain.auth.urls.AuthLoginUrlService;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -16,14 +23,6 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
-import de.egladil.web.commons_net.utils.CommonHttpUtils;
-import de.egladil.web.mk_gateway.MkGatewayApp;
-import de.egladil.web.mk_gateway.domain.auth.AuthMode;
-import de.egladil.web.mk_gateway.domain.auth.AuthResult;
-import de.egladil.web.mk_gateway.domain.auth.session.loginlogout.LoginLogoutService;
-import de.egladil.web.mk_gateway.domain.auth.urls.AuthLoginUrlService;
-import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * AdminSessionResource ist der Endpoint für mk-admin-app, um sich einzuloggen.

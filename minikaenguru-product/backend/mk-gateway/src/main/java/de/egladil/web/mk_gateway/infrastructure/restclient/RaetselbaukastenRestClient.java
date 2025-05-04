@@ -17,13 +17,13 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 /**
- * MjaApiRestClient
+ * RaetselbaukastenRestClient
  */
-@RegisterRestClient(configKey = "mja-api")
+@RegisterRestClient(configKey = "raetselbaukasten")
 @Path("restricted")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public interface MjaApiRestClient {
+public interface RaetselbaukastenRestClient {
 
 	// @formatter:off
 	@GET

@@ -7,6 +7,7 @@ package de.egladil.web.mk_gateway.domain.urkunden.generator.urkunden;
 import java.io.IOException;
 
 import com.itextpdf.text.Chunk;
+import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.pdf.BaseFont;
 

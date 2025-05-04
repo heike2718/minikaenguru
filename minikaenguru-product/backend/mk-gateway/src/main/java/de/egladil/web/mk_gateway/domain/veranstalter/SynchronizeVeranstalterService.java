@@ -11,10 +11,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
-
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +28,9 @@ import de.egladil.web.mk_gateway.domain.veranstalter.events.LehrerChanged;
 import de.egladil.web.mk_gateway.infrastructure.messaging.HandshakeAck;
 import de.egladil.web.mk_gateway.infrastructure.messaging.LoescheVeranstalterCommand;
 import de.egladil.web.mk_gateway.infrastructure.messaging.SyncHandshake;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 /**
  * SynchronizeVeranstalterService

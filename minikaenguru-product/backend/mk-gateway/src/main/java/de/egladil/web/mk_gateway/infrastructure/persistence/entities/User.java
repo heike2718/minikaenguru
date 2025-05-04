@@ -4,14 +4,13 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.persistence.entities;
 
+import de.egladil.web.mk_gateway.domain.user.Rolle;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
-
-import de.egladil.web.mk_gateway.domain.user.Rolle;
 
 /**
  * User

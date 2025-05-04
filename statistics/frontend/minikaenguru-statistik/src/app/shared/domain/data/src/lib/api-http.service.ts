@@ -10,7 +10,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 export class APIHttpService {
 
     #http = inject(HttpClient);
-    #url = '/api/wettbewerbe/';
+    #url = '/minikaenguru-statistik/api/wettbewerbe/';
 
     loadWettbewerbe(): Observable<WettbewerbOverview[]> {
 

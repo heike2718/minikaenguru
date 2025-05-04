@@ -4,13 +4,12 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.auth.urls.impl;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.ws.rs.core.Response;
-
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import de.egladil.web.mk_gateway.domain.auth.urls.AuthLoginUrlService;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Response;
 
 /**
  * AdminUrlService

@@ -9,10 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jakarta.ws.rs.HttpMethod;
-
 import de.egladil.web.mk_gateway.domain.permissions.PathWithMethod;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
+import jakarta.ws.rs.HttpMethod;
 
 /**
  * PermittedRolesForAdminProvider

@@ -4,12 +4,11 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.veranstalter.admin;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.transaction.Transactional;
-
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 
 /**
  * VeranstalterNewsletterService

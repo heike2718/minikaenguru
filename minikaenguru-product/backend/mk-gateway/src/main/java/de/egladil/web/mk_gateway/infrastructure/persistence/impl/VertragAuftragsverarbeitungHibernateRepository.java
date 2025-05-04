@@ -7,11 +7,6 @@ package de.egladil.web.mk_gateway.infrastructure.persistence.impl;
 import java.util.List;
 import java.util.Optional;
 
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +18,10 @@ import de.egladil.web.mk_gateway.domain.adv.Vertragstext;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterVertragAdv;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterVertragAdvText;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 /**
  * VertragAuftragsverarbeitungHibernateRepository

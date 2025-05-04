@@ -7,11 +7,6 @@ package de.egladil.web.mk_gateway.infrastructure.persistence.impl;
 import java.util.List;
 import java.util.Optional;
 
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -21,6 +16,10 @@ import de.egladil.web.mk_gateway.domain.veranstalter.Kollege;
 import de.egladil.web.mk_gateway.domain.veranstalter.SchulkollegienRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.Schulkollegium;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistentesSchulkollegium;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 
 /**
  * SchulkollegienHibernateRepository

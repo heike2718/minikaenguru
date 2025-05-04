@@ -6,19 +6,18 @@ package de.egladil.web.mk_gateway.domain.statistik.impl;
 
 import java.util.Map;
 
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
-
 import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
+import de.egladil.web.mk_gateway.domain.statistik.AuswertungsmodusInfoService;
 import de.egladil.web.mk_gateway.domain.statistik.Auswertungsquelle;
 import de.egladil.web.mk_gateway.domain.statistik.ErfassungLoesungszettelInfoService;
 import de.egladil.web.mk_gateway.domain.statistik.UploadTypeInfoService;
-import de.egladil.web.mk_gateway.domain.statistik.AuswertungsmodusInfoService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.Auswertungsmodus;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KinderHibernateRepository;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 /**
  * AuswertungsmodusInfoServiceImpl

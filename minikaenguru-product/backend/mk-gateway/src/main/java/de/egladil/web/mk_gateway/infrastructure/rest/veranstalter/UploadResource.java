@@ -4,8 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.rest.veranstalter;
 
-import jakarta.enterprise.context.RequestScoped;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.jboss.resteasy.reactive.server.multipart.MultipartFormDataInput;
 
@@ -27,6 +25,7 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.Consumes;

@@ -6,6 +6,7 @@ package de.egladil.web.mk_gateway.infrastructure.persistence.entities;
 
 import java.io.Serializable;
 
+import de.egladil.web.mk_gateway.domain.mustertexte.Mustertextkategorie;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,8 +15,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
-
-import de.egladil.web.mk_gateway.domain.mustertexte.Mustertextkategorie;
 
 /**
  * PersistenterMustertextShort

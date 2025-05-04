@@ -4,11 +4,10 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.veranstalter.api;
 
-import jakarta.validation.constraints.NotBlank;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_validation.annotations.Kuerzel;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * KuerzelPayload

@@ -4,10 +4,6 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.messaging;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.event.Observes;
-import jakarta.inject.Inject;
-
 import de.egladil.web.mk_gateway.domain.auth.events.LehrerCreated;
 import de.egladil.web.mk_gateway.domain.auth.events.PrivatveranstalterCreated;
 import de.egladil.web.mk_gateway.domain.event.MkGatewayDomainEvent;
@@ -16,6 +12,9 @@ import de.egladil.web.mk_gateway.domain.veranstalter.CreateOrUpdateLehrerCommand
 import de.egladil.web.mk_gateway.domain.veranstalter.CreateOrUpdatePrivatveranstalterCommand;
 import de.egladil.web.mk_gateway.domain.veranstalter.LehrerService;
 import de.egladil.web.mk_gateway.domain.veranstalter.PrivatveranstalterService;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
 
 /**
  * PropagateUserService

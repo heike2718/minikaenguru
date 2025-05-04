@@ -6,11 +6,10 @@ package de.egladil.web.mk_gateway.domain.veranstalter;
 
 import java.util.UUID;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-
 import de.egladil.web.commons_crypto.CryptoService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 /**
  * PrivatteilnahmeKuerzelService

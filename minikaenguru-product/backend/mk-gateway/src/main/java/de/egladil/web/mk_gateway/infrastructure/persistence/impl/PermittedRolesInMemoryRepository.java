@@ -13,9 +13,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.ws.rs.HttpMethod;
-
 import de.egladil.web.mk_gateway.domain.permissions.PathWildcardSum;
 import de.egladil.web.mk_gateway.domain.permissions.PathWithMethod;
 import de.egladil.web.mk_gateway.domain.permissions.PermittedRolesRepository;
@@ -23,6 +20,8 @@ import de.egladil.web.mk_gateway.domain.permissions.TokenizablePath;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.infrastructure.rest.admin.PermittedRolesForAdminProvider;
 import de.egladil.web.mk_gateway.infrastructure.rest.veranstalter.PermittedRolesForVeranstalterProvider;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.HttpMethod;
 
 /**
  * PermittedRolesInMemoryRepository

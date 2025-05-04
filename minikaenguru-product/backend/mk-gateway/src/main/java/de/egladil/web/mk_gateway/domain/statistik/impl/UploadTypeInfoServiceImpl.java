@@ -9,16 +9,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
-
 import de.egladil.web.mk_gateway.domain.statistik.UploadTypeInfoService;
 import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikAuspraegung;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.uploads.UploadRepository;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UploadHibernateRepository;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 /**
  * UploadTypeInfoServiceImpl

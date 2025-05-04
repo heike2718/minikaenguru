@@ -7,9 +7,6 @@ package de.egladil.web.mk_gateway.domain.teilnahmen;
 import java.util.List;
 import java.util.Optional;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
@@ -23,6 +20,8 @@ import de.egladil.web.mk_gateway.domain.veranstalter.Schulkollegium;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleDetails;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 /**
  * SchuleDetailsService

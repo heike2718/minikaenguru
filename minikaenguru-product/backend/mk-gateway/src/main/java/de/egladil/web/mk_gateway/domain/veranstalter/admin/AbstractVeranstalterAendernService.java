@@ -6,13 +6,12 @@ package de.egladil.web.mk_gateway.domain.veranstalter.admin;
 
 import java.util.List;
 
-import jakarta.inject.Inject;
-
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.VeranstalterSuchanfrage;
+import jakarta.inject.Inject;
 
 /**
  * AbstractVeranstalterAendernService

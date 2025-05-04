@@ -8,14 +8,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
-
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.adv.Vertragstext;
 import de.egladil.web.mk_gateway.domain.adv.VertragstextRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterVertragAdvText;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 /**
  * VertragstextHibernateRepository

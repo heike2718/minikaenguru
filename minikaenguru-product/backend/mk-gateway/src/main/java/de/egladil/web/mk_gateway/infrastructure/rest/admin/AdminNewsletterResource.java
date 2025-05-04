@@ -6,6 +6,13 @@ package de.egladil.web.mk_gateway.infrastructure.rest.admin;
 
 import java.util.List;
 
+import de.egladil.web.commons_validation.annotations.UuidString;
+import de.egladil.web.commons_validation.payload.MessagePayload;
+import de.egladil.web.commons_validation.payload.ResponsePayload;
+import de.egladil.web.mk_gateway.domain.Identifier;
+import de.egladil.web.mk_gateway.domain.newsletters.NewsletterAPIModel;
+import de.egladil.web.mk_gateway.domain.newsletters.NewsletterService;
+import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -18,14 +25,6 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
-import de.egladil.web.commons_validation.annotations.UuidString;
-import de.egladil.web.commons_validation.payload.MessagePayload;
-import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.newsletters.NewsletterAPIModel;
-import de.egladil.web.mk_gateway.domain.newsletters.NewsletterService;
-import de.egladil.web.mk_gateway.infrastructure.rest.DevDelayService;
 
 /**
  * AdminNewsletterResource

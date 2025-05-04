@@ -4,15 +4,14 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.veranstalter.api;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_validation.annotations.Hausnummer;
 import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.annotations.Plz;
 import de.egladil.web.commons_validation.annotations.StringLatin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 /**
  * VertragAdvAPIModel

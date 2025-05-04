@@ -4,6 +4,8 @@
 // =====================================================
 package de.egladil.web.mk_gateway.infrastructure.persistence.entities;
 
+import de.egladil.web.mk_gateway.domain.user.Rolle;
+import de.egladil.web.mk_gateway.domain.veranstalter.ZugangUnterlagen;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -13,9 +15,6 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
-import de.egladil.web.mk_gateway.domain.user.Rolle;
-import de.egladil.web.mk_gateway.domain.veranstalter.ZugangUnterlagen;
 
 /**
  * PersistenterVeranstalter

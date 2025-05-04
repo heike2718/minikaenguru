@@ -6,10 +6,6 @@ package de.egladil.web.mk_gateway.domain.auth.signup;
 
 import java.util.Optional;
 
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +21,9 @@ import de.egladil.web.mk_gateway.domain.veranstalter.SynchronizeVeranstalterServ
 import de.egladil.web.mk_gateway.domain.veranstalter.api.CreateUserCommand;
 import de.egladil.web.mk_gateway.infrastructure.messaging.PropagateUserService;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 /**
  * SignUpService

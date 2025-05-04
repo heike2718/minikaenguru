@@ -14,11 +14,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
-import jakarta.ws.rs.NotFoundException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,6 +57,10 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KinderHibernate
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KlassenHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.impl.TeilnahmenHibernateRepository;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.ws.rs.NotFoundException;
 
 /**
  * SchuleUrkundenservice erstellt alle Urkunden einer gegebenen Schule sowie eine Übersichtsseite mit den Kindernamen und

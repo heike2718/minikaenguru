@@ -26,7 +26,7 @@ import de.egladil.web.mk_gateway.domain.veranstalter.Veranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
-import de.egladil.web.mk_gateway.infrastructure.restclient.MjaApiRestClient;
+import de.egladil.web.mk_gateway.infrastructure.restclient.RaetselbaukastenRestClient;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.ProcessingException;
@@ -62,7 +62,7 @@ public class AufgabenVorschauService {
 
 	@RestClient
 	@Inject
-	MjaApiRestClient mjaApiRestClient;
+	RaetselbaukastenRestClient raetselbaukastenRestClient;
 
 	public AufgabenvorschauDto getAufgabenvorschauAktuellerWettbewerb(final Klassenstufe klassenstufe) {
 
@@ -109,11 +109,11 @@ public class AufgabenVorschauService {
 
 			String authHeader = new String(Base64.getEncoder().encode(authConfig.header().getBytes()));
 
-			LOGGER.debug("about to call mja-api with params X-CLIENT-ID={}, auth-header={}, jahr={}, klasse={}",
+			LOGGER.debug("about to call raetselbaukasten/api with params X-CLIENT-ID={}, auth-header={}, jahr={}, klasse={}",
 				authConfig.client(),
 				StringUtils.abbreviate(authHeader, 20), wettbewerb.id().toString(), klassenstufe);
 
-			Response response = mjaApiRestClient.getAufgabenMinikaenguruwettbewerb(authConfig.client(),
+			Response response = raetselbaukastenRestClient.getAufgabenMinikaenguruwettbewerb(authConfig.client(),
 				authHeader,
 				wettbewerb.id().toString(), klassenstufe);
 
@@ -126,7 +126,7 @@ public class AufgabenVorschauService {
 
 		} catch (WebApplicationException | ProcessingException e) {
 
-			LOGGER.error("{} bei Kommunikation mit mja-api: {}", e.getClass().getSimpleName(), e.getMessage());
+			LOGGER.error("{} bei Kommunikation mit raetselbaukasten/api: {}", e.getClass().getSimpleName(), e.getMessage());
 			MessagePayload messagePayload = MessagePayload
 				.error(applicationMessages.getString("aufgabenvorschau.error"));
 			Response response = Response.status(500).entity(ResponsePayload.messageOnly(messagePayload)).build();

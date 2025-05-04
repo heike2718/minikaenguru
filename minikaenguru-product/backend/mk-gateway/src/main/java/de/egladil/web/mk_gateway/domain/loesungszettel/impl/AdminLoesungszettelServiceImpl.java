@@ -7,9 +7,6 @@ package de.egladil.web.mk_gateway.domain.loesungszettel.impl;
 import java.util.List;
 import java.util.Optional;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-
 import de.egladil.web.mk_gateway.domain.loesungszettel.AdminLoesungszettelService;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikAuspraegung;
@@ -17,6 +14,8 @@ import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikGruppeninf
 import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikItem;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 /**
  * AdminLoesungszettelServiceImpl

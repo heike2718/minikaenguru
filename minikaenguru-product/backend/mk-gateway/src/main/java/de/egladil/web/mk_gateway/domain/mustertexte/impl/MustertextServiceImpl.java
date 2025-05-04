@@ -12,10 +12,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.ws.rs.NotFoundException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +26,9 @@ import de.egladil.web.mk_gateway.domain.mustertexte.Mustertextkategorie;
 import de.egladil.web.mk_gateway.domain.mustertexte.api.MustertextAPIModel;
 import de.egladil.web.mk_gateway.domain.mustertexte.events.MustertextDeletedEvent;
 import de.egladil.web.mk_gateway.domain.mustertexte.events.MustertextSavedEvent;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.NotFoundException;
 
 /**
  * MustertextServiceImpl

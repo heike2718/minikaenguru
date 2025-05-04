@@ -10,12 +10,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
-import jakarta.persistence.TypedQuery;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +28,11 @@ import de.egladil.web.mk_gateway.domain.veranstalter.admin.VeranstalterSuchkrite
 import de.egladil.web.mk_gateway.domain.veranstalter.api.VeranstalterSuchanfrage;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterVeranstalter;
 import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterVeranstalterVeranstalterMapper;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 
 /**
  * VeranstalterHibernateRepository
