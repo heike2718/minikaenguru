@@ -13,6 +13,8 @@ import org.jboss.resteasy.reactive.ClientWebApplicationException;
 
 import de.egladil.web.commons_validation.payload.OAuthClientCredentials;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
@@ -45,5 +47,20 @@ public interface AuthproviderRestClient {
 	@Timeout(value = 10, unit = ChronoUnit.SECONDS)
 	public Response exchangeOneTimeTokenWithJwt(@PathParam(value = "oneTimeToken")
 	final String oneTimeToken, final OAuthClientCredentials clientCredentials);
+
+	/**
+	 * Holt die Mailadressen der für den Mailversand gebannten Veranstalter.
+	 *
+	 * @param clientId String (dieser Client)
+	 * @param clientSecretString String (mk-gateway-secret)
+	 * @param nonce String
+	 * @return Response mit BannedEmailsResponseDto als Payload
+	 */
+	@GET
+	@Path("users/banned-emails")
+	public Response getBannedEmails(@HeaderParam(value = "X-CLIENT-ID")
+	String clientId, @HeaderParam(value = "X-CLIENT-SECRET")
+	String clientSecretString, @HeaderParam(value = "X-NONCE")
+	String nonce);
 
 }

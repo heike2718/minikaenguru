@@ -13,6 +13,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -66,8 +67,13 @@ public class NewsletterAuslieferungProcessorTest {
 	@InjectMock
 	DomainEventHandler domainEventHandler;
 
+	@InjectMock
+	BannedEmailsService bannedEmailsService;
+
 	@Inject
 	NewsletterAuslieferungProcessor processor;
+
+
 
 	@Test
 	void should_processNextAuslieferungDoNothing_when_thereIsNoNextAuslieferung() {
@@ -86,6 +92,7 @@ public class NewsletterAuslieferungProcessorTest {
 		verify(auslieferungStatusUpdater, never()).markAuslieferungStarted(any(NewsletterAuslieferung.class));
 		verify(versandauftragStatusUpdater, never()).updateStatusVersandauftrag(any(Versandauftrag.class), any(Integer.class));
 		verify(mailService, never()).sendMail(any(DefaultEmailDaten.class));
+		verify(bannedEmailsService, never()).getBannedEmails();
 	}
 
 	@Test
@@ -119,6 +126,7 @@ public class NewsletterAuslieferungProcessorTest {
 		verify(auslieferungStatusUpdater, never()).markAuslieferungStarted(any(NewsletterAuslieferung.class));
 		verify(versandauftragStatusUpdater, never()).updateStatusVersandauftrag(any(Versandauftrag.class), any(Integer.class));
 		verify(mailService, never()).sendMail(any(DefaultEmailDaten.class));
+		verify(bannedEmailsService, never()).getBannedEmails();
 	}
 
 	@Test
@@ -150,6 +158,7 @@ public class NewsletterAuslieferungProcessorTest {
 		verify(auslieferungStatusUpdater, never()).markAuslieferungStarted(any(NewsletterAuslieferung.class));
 		verify(versandauftragStatusUpdater, never()).updateStatusVersandauftrag(any(Versandauftrag.class), any(Integer.class));
 		verify(mailService, never()).sendMail(any(DefaultEmailDaten.class));
+		verify(bannedEmailsService, never()).getBannedEmails();
 	}
 
 	@Test
@@ -176,6 +185,7 @@ public class NewsletterAuslieferungProcessorTest {
 		verify(auslieferungStatusUpdater, never()).markAuslieferungStarted(any(NewsletterAuslieferung.class));
 		verify(versandauftragStatusUpdater, never()).updateStatusVersandauftrag(any(Versandauftrag.class), any(Integer.class));
 		verify(mailService, never()).sendMail(any(DefaultEmailDaten.class));
+		verify(bannedEmailsService, never()).getBannedEmails();
 	}
 
 	@Test
@@ -192,6 +202,7 @@ public class NewsletterAuslieferungProcessorTest {
 		when(auslieferungPicker.getNextPendingAuslieferung()).thenReturn(auslieferung);
 		when(newsletterAuftraegeService.getVersandauftragAndNewsletterWithVersandauftragID(new Identifier("2")))
 			.thenReturn(versandauftragAndNewsletter);
+		when(bannedEmailsService.getBannedEmails()).thenReturn(new ArrayList<>());
 
 		// Act
 		processor.processNextAuslieferung();
@@ -204,6 +215,7 @@ public class NewsletterAuslieferungProcessorTest {
 		verify(auslieferungStatusUpdater).markAuslieferungCompleted(any(NewsletterAuslieferung.class));
 		verify(auslieferungStatusUpdater).markAuslieferungStarted(any(NewsletterAuslieferung.class));
 		verify(mailService).sendMail(any(DefaultEmailDaten.class));
+		verify(bannedEmailsService).getBannedEmails();
 	}
 
 	@Test
@@ -217,6 +229,7 @@ public class NewsletterAuslieferungProcessorTest {
 		Versandauftrag versandauftrag = new Versandauftrag().withStatus(StatusAuslieferung.IN_PROGRESS);
 		Pair<Versandauftrag, Newsletter> versandauftragAndNewsletter = Pair.of(versandauftrag, new Newsletter());
 
+		when(bannedEmailsService.getBannedEmails()).thenReturn(new ArrayList<>());
 		when(auslieferungPicker.getNextPendingAuslieferung()).thenReturn(auslieferung);
 		when(newsletterAuftraegeService.getVersandauftragAndNewsletterWithVersandauftragID(new Identifier("2")))
 			.thenReturn(versandauftragAndNewsletter);
@@ -232,6 +245,7 @@ public class NewsletterAuslieferungProcessorTest {
 		verify(auslieferungStatusUpdater).markAuslieferungCompleted(any(NewsletterAuslieferung.class));
 		verify(auslieferungStatusUpdater).markAuslieferungStarted(any(NewsletterAuslieferung.class));
 		verify(mailService).sendMail(any(DefaultEmailDaten.class));
+		verify(bannedEmailsService).getBannedEmails();
 	}
 
 	@Test
@@ -245,6 +259,7 @@ public class NewsletterAuslieferungProcessorTest {
 		Versandauftrag versandauftrag = new Versandauftrag().withStatus(StatusAuslieferung.IN_PROGRESS);
 		Pair<Versandauftrag, Newsletter> versandauftragAndNewsletter = Pair.of(versandauftrag, new Newsletter());
 
+		when(bannedEmailsService.getBannedEmails()).thenReturn(new ArrayList<>());
 		when(auslieferungPicker.getNextPendingAuslieferung()).thenReturn(auslieferung);
 		when(newsletterAuftraegeService.getVersandauftragAndNewsletterWithVersandauftragID(new Identifier("2")))
 			.thenReturn(versandauftragAndNewsletter);
@@ -270,6 +285,7 @@ public class NewsletterAuslieferungProcessorTest {
 		verify(auslieferungStatusUpdater).markAuslieferungStarted(any(NewsletterAuslieferung.class));
 		verify(mailService).sendMail(any(DefaultEmailDaten.class));
 		verify(domainEventHandler).handleEvent(any(NewsletterversandFailed.class));
+		verify(bannedEmailsService).getBannedEmails();
 	}
 
 	@Test
@@ -283,6 +299,7 @@ public class NewsletterAuslieferungProcessorTest {
 		Versandauftrag versandauftrag = new Versandauftrag().withStatus(StatusAuslieferung.IN_PROGRESS);
 		Pair<Versandauftrag, Newsletter> versandauftragAndNewsletter = Pair.of(versandauftrag, new Newsletter());
 
+		when(bannedEmailsService.getBannedEmails()).thenReturn(new ArrayList<>());
 		when(auslieferungPicker.getNextPendingAuslieferung()).thenReturn(auslieferung);
 		when(newsletterAuftraegeService.getVersandauftragAndNewsletterWithVersandauftragID(new Identifier("2")))
 			.thenReturn(versandauftragAndNewsletter);
@@ -300,6 +317,7 @@ public class NewsletterAuslieferungProcessorTest {
 		verify(auslieferungStatusUpdater).markAuslieferungStarted(any(NewsletterAuslieferung.class));
 		verify(mailService).sendMail(any(DefaultEmailDaten.class));
 		verify(domainEventHandler, never()).handleEvent(any(NewsletterversandFailed.class));
+		verify(bannedEmailsService).getBannedEmails();
 	}
 
 	@Test
@@ -313,6 +331,7 @@ public class NewsletterAuslieferungProcessorTest {
 		Versandauftrag versandauftrag = new Versandauftrag().withStatus(StatusAuslieferung.IN_PROGRESS);
 		Pair<Versandauftrag, Newsletter> versandauftragAndNewsletter = Pair.of(versandauftrag, new Newsletter());
 
+		when(bannedEmailsService.getBannedEmails()).thenReturn(new ArrayList<>());
 		when(auslieferungPicker.getNextPendingAuslieferung()).thenReturn(auslieferung);
 		when(newsletterAuftraegeService.getVersandauftragAndNewsletterWithVersandauftragID(new Identifier("2")))
 			.thenReturn(versandauftragAndNewsletter);
@@ -330,5 +349,6 @@ public class NewsletterAuslieferungProcessorTest {
 		verify(auslieferungStatusUpdater).markAuslieferungStarted(any(NewsletterAuslieferung.class));
 		verify(mailService).sendMail(any(DefaultEmailDaten.class));
 		verify(domainEventHandler, never()).handleEvent(any(NewsletterversandFailed.class));
+		verify(bannedEmailsService).getBannedEmails();
 	}
 }

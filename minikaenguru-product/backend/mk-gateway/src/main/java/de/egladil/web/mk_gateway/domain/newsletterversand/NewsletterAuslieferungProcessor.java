@@ -8,10 +8,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,10 +56,12 @@ public class NewsletterAuslieferungProcessor {
 	@Inject
 	DomainEventHandler domainEventHandler;
 
+	@Inject
+	BannedEmailsService bannedEmailsService;
+
 	/**
-	 * Prüft, ob es eine wartende Auslieferung gibt. Falls ja, wird
-	 * versendet und der Status dieser Ausliefreung über IN_PROGRESS auf COMPLETED gesetzt. Außerdem wird der Versandauftrag
-	 * aktualisiert.
+	 * Prüft, ob es eine wartende Auslieferung gibt. Falls ja, wird versendet und der Status dieser Ausliefreung über
+	 * IN_PROGRESS auf COMPLETED gesetzt. Außerdem wird der Versandauftrag aktualisiert.
 	 */
 	public void processNextAuslieferung() {
 
@@ -111,17 +115,17 @@ public class NewsletterAuslieferungProcessor {
 
 		try {
 
-			this.sendeMail(versandauftragAndNewsletter.getRight(), empfaenger);
+			List<String> bannedEmails = bannedEmailsService.getBannedEmails();
+			List<String> notBannedEmpfaenger = new MailAddressFilter().getSetDifference(empfaenger, bannedEmails);
+			this.sendeMail(versandauftragAndNewsletter.getRight(), notBannedEmpfaenger);
 
 		} catch (InvalidMailAddressException e) {
 
 			String msg = "Mail konnte nicht an alle Empfänger versendet werden";
 
 			NewsletterversandFailed versandFailedEventPayload = new NewsletterversandFailed()
-				.withUuid(pendingAuslieferung.getIdentifier().identifier())
-				.withInvalidMailaddresses(e.getAllInvalidAdresses())
-				.withMessage(msg)
-				.withValidSentAddresses(e.getAllValidSentAddresses())
+				.withUuid(pendingAuslieferung.getIdentifier().identifier()).withInvalidMailaddresses(e.getAllInvalidAdresses())
+				.withMessage(msg).withValidSentAddresses(e.getAllValidSentAddresses())
 				.withValidUnsentAddresses(e.getAllValidUnsentAddresses());
 
 			domainEventHandler.handleEvent(versandFailedEventPayload);

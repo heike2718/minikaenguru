@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.mail.AdminMailService;
 import de.egladil.web.mk_gateway.domain.newsletterversand.NewsletterVersandauftragService;
 import de.egladil.web.mk_gateway.domain.newsletterversand.VersandauftraegeRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterMailinfoService;
@@ -31,9 +30,6 @@ public class NewsletterService {
 
 	@Inject
 	VeranstalterMailinfoService veranstalterMailinfoService;
-
-	@Inject
-	public AdminMailService mailService;
 
 	@Inject
 	VersandauftraegeRepository versandauftraegeRepo;
