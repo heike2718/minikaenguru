@@ -10,7 +10,7 @@ import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
-import de.egladil.web.mk_gateway.infrastructure.persistence.entities.Pacemaker;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.Pacemaker;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;

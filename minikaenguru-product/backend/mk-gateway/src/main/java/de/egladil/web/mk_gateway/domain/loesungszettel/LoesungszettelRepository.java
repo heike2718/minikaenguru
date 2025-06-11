@@ -16,7 +16,7 @@ import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikAuspraegun
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
-import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterLoesungszettel;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.PersistenterLoesungszettel;
 
 /**
  * LoesungszettelRepository

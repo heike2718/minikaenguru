@@ -43,7 +43,7 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
-import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterLoesungszettel;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.PersistenterLoesungszettel;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
 

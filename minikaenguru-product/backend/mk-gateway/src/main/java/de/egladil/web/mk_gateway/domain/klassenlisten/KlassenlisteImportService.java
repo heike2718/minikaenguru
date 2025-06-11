@@ -9,7 +9,7 @@ import java.util.List;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
-import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.PersistenterUpload;
 
 /**
  * KlassenlisteImportService

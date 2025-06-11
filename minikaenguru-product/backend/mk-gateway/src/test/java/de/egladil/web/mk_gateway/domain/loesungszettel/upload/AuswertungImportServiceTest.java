@@ -40,7 +40,7 @@ import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
-import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.PersistenterUpload;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;

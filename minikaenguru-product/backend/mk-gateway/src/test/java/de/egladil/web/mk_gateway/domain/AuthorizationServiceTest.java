@@ -23,7 +23,7 @@ import de.egladil.web.mk_gateway.domain.user.UserRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.Person;
 import de.egladil.web.mk_gateway.domain.veranstalter.Privatveranstalter;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
-import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.User;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;

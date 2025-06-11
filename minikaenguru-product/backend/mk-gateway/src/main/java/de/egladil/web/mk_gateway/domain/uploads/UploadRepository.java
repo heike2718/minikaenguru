@@ -9,8 +9,8 @@ import java.util.Optional;
 
 import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikAuspraegung;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
-import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
-import de.egladil.web.mk_gateway.infrastructure.persistence.entities.UploadsMonitoringViewItem;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.PersistenterUpload;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.UploadsMonitoringViewItem;
 
 /**
  * UploadRepository

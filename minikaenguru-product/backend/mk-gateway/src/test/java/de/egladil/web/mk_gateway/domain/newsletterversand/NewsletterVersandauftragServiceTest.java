@@ -33,7 +33,7 @@ import de.egladil.web.mk_gateway.domain.newsletters.Newsletter;
 import de.egladil.web.mk_gateway.domain.newsletters.NewsletterService;
 import de.egladil.web.mk_gateway.domain.newsletterversand.api.NewsletterVersandauftrag;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterMailinfoService;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.NewsletterauslieferungenRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao.NewsletterauslieferungenRepository;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;

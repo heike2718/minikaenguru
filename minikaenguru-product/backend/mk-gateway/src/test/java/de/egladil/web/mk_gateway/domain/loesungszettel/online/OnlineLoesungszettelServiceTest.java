@@ -44,7 +44,7 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
-import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterLoesungszettel;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.PersistenterLoesungszettel;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
 

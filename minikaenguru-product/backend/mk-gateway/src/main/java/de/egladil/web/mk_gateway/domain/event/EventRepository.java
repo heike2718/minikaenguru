@@ -7,7 +7,7 @@ package de.egladil.web.mk_gateway.domain.event;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import de.egladil.web.mk_gateway.infrastructure.persistence.entities.StoredEvent;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.StoredEvent;
 
 /**
  * EventRepository

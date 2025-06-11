@@ -31,7 +31,7 @@ import de.egladil.web.mk_gateway.domain.error.LogmessagePrefixes;
 import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.user.UserRepository;
-import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.User;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 

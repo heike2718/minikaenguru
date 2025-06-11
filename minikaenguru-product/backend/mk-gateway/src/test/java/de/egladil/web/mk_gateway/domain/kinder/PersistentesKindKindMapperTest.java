@@ -14,8 +14,8 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Sprache;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
-import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistentesKind;
-import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistentesKindKindMapper;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.PersistentesKind;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.PersistentesKindKindMapper;
 
 /**
  * PersistentesKindKindMapperTest

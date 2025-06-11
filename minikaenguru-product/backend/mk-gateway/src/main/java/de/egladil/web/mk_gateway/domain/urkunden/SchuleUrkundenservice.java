@@ -53,10 +53,10 @@ import de.egladil.web.mk_gateway.domain.urkunden.generator.urkunden.SplitSchulna
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KinderHibernateRepository;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.KlassenHibernateRepository;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.LoesungszettelHibernateRepository;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.TeilnahmenHibernateRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao.KinderHibernateRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao.KlassenHibernateRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao.LoesungszettelHibernateRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao.TeilnahmenHibernateRepository;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;

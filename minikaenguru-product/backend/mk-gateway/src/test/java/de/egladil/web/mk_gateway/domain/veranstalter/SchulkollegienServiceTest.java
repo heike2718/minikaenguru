@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.veranstalter.events.LehrerChanged;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.SchulkollegienHibernateRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao.SchulkollegienHibernateRepository;
 
 /**
  * SchulkollegienServiceTest

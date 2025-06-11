@@ -23,7 +23,7 @@ import de.egladil.web.mk_gateway.domain.newsletters.NewsletterService;
 import de.egladil.web.mk_gateway.domain.newsletterversand.api.NewsletterVersandauftrag;
 import de.egladil.web.mk_gateway.domain.newsletterversand.api.VersandauftragDTO;
 import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterMailinfoService;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.NewsletterauslieferungenRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao.NewsletterauslieferungenRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;

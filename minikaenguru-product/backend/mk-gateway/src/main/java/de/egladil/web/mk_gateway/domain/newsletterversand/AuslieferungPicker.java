@@ -6,7 +6,7 @@ package de.egladil.web.mk_gateway.domain.newsletterversand;
 
 import java.util.List;
 
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.NewsletterauslieferungenRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao.NewsletterauslieferungenRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 

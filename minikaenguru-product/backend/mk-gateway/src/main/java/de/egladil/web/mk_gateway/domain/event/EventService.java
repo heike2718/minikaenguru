@@ -14,7 +14,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 import de.egladil.web.mk_gateway.domain.DownloadData;
-import de.egladil.web.mk_gateway.infrastructure.persistence.entities.StoredEvent;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.StoredEvent;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 

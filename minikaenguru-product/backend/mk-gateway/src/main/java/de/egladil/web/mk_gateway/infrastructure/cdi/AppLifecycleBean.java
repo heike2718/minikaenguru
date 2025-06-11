@@ -49,8 +49,11 @@ public class AppLifecycleBean {
 	@ConfigProperty(name = "quarkus.http.port")
 	String port;
 
-	@ConfigProperty(name = "quarkus.datasource.jdbc.url")
-	String jdbcUrl;
+	@ConfigProperty(name = "quarkus.datasource.wettbewerb.jdbc.url")
+	String wettbewerbJdbcUrl;
+
+	@ConfigProperty(name = "quarkus.datasource.kataloge.jdbc.url")
+	String katalogeJdbcUrl;
 
 	@ConfigProperty(name = "quarkus.rest-client.filescanner.url")
 	String filescannerUrl;
@@ -83,7 +86,8 @@ public class AppLifecycleBean {
 		LOGGER.info(" ===========>  authproviderUrl={}", authproviderUrl);
 		LOGGER.info(" ===========>  authAppUrl={}", authAppUrl);
 		LOGGER.info(" ===========>  katalogeUrl={}", katalogeUrl);
-		LOGGER.info(" ===========>  jdbcUrl={}", jdbcUrl);
+		LOGGER.info(" ===========>  wettbewerbJdbcUrl={}", wettbewerbJdbcUrl);
+		LOGGER.info(" ===========>  katalogeJdbcUrl={}", katalogeJdbcUrl);
 		LOGGER.info(" ===========>  the download dir is {}", getPathDownloadDir());
 		LOGGER.info(" ===========>  the upload dir is {}", quarkusUploadsDir);
 		LOGGER.info(" ===========>  quarkus.http.cors.origins={}", corsAllowedOrigins);

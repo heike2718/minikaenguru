@@ -26,7 +26,7 @@ import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.user.UserRepository;
 import de.egladil.web.mk_gateway.domain.veranstalter.SynchronizeVeranstalterService;
 import de.egladil.web.mk_gateway.infrastructure.messaging.PropagateUserService;
-import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.User;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
 

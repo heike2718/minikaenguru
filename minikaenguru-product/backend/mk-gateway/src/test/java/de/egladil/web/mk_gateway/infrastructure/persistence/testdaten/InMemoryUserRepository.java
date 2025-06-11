@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.domain.user.UserRepository;
-import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.User;
 
 /**
  * InMemoryUserRepository

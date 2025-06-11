@@ -11,8 +11,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.infrastructure.persistence.entities.StoredEvent;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.EventRepositoryHibernate;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao.EventRepositoryHibernate;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.StoredEvent;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;

@@ -51,8 +51,8 @@ import de.egladil.web.mk_gateway.domain.klassenlisten.utils.ImportDublettenPruef
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.uploads.UploadRepository;
 import de.egladil.web.mk_gateway.domain.uploads.UploadStatus;
-import de.egladil.web.mk_gateway.infrastructure.persistence.entities.PersistenterUpload;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UploadHibernateRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao.UploadHibernateRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.PersistenterUpload;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;

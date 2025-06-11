@@ -4,7 +4,7 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.health;
 
-import de.egladil.web.mk_gateway.infrastructure.persistence.entities.Pacemaker;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.Pacemaker;
 
 /**
  * PacemakerRepository

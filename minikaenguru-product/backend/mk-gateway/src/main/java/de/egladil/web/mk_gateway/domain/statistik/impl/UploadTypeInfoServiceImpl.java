@@ -14,7 +14,7 @@ import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikAuspraegun
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.uploads.UploadRepository;
 import de.egladil.web.mk_gateway.domain.uploads.UploadType;
-import de.egladil.web.mk_gateway.infrastructure.persistence.impl.UploadHibernateRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao.UploadHibernateRepository;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;

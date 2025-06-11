@@ -6,7 +6,7 @@ package de.egladil.web.mk_gateway.domain.user;
 
 import java.util.Optional;
 
-import de.egladil.web.mk_gateway.infrastructure.persistence.entities.User;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.User;
 
 /**
  * UserRepository
