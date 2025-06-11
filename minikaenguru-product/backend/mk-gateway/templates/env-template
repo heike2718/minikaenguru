@@ -83,12 +83,18 @@ QUARKUS_REST_CLIENT_MJA_API_URL=http://localhost:9210/mja-api
 #=================================================================#
 # falls die IP sich geändert hat, startet Quarkus nicht
 # docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mariadb-all
-QUARKUS_DATASOURCE_JDBC_URL=jdbc:mariadb://172.18.0.2:3306/mk_wettbewerb
-QUARKUS_DATASOURCE_PASSWORD=ueberschreiben
+QUARKUS_DATASOURCE_WETTBEWERB_JDBC_URL=jdbc:mariadb://172.18.0.2:3306/mk_wettbewerb
+QUARKUS_DATASOURCE_WETTBEWERB_PASSWORD=ueberschreiben
+
+QUARKUS_DATASOURCE_KATALOGE_JDBC_URL=jdbc:mariadb://172.18.0.2:3306/mk_kataloge
+QUARKUS_DATASOURCE_KATALOGE_PASSWORD=ueberschreiben
+
 # ---- man muss auch das MIN-Level auf TRACE setzen, wenn man das SQL von namedQueries sehen will ---
 QUARKUS_LOG_MIN_LEVEL=TRACE
-QUARKUS_HIBERNATE_ORM_LOG_BIND_PARAMETERS=true
-QUARKUS_HIBERNATE_ORM_LOG_SQL=true
+QUARKUS_HIBERNATE_ORM_WETTBEWERB_LOG_BIND_PARAMETERS=true
+QUARKUS_HIBERNATE_ORM_WETTBEWERB_LOG_SQL=true
+QUARKUS_HIBERNATE_ORM_KATALOGE_LOG_BIND_PARAMETERS=true
+QUARKUS_HIBERNATE_ORM_KATALOGE_LOG_SQL=true
 
 
 #=================================================================#
@@ -104,7 +110,8 @@ QUARKUS_LOG_CATEGORY__ORG_JBOSS_RESTEASY_REACTIVE_CLIENT_LOGGING_DEFAULTCLIENTLO
 
 
 _FULL-DB-TEST_MOCK_SESSION=true
-_FULL-DB-TEST_QUARKUS_DATASOURCE_JDBC_URL=jdbc:mariadb://172.31.0.2:3306/mk_wettbewerb
+_FULL-DB-TEST_QUARKUS_DATASOURCE_WETTBEWERB_JDBC_URL=jdbc:mariadb://172.31.0.2:3306/mk_wettbewerb
+_FULL-DB-TEST_QUARKUS_DATASOURCE_KATALOGE_JDBC_URL=jdbc:mariadb://172.30.0.2:3306/mk_kataloge
 _FULL-DB-TEST_QUARKUS_HTTP_PORT=9512
 _FULL-DB-TEST_CSRF_ENABLED=false
 _FULL-DB-TEST_QUARKUS_LOG_FILE_ENABLE=false
