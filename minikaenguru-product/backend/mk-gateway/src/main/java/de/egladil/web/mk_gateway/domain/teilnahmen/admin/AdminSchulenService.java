@@ -45,7 +45,7 @@ public class AdminSchulenService {
 	/**
 	 * Sammelt die Schuldaten mit den Details zusammen.
 	 *
-	 * @param  schulkuerzel
+	 * @param schulkuerzel
 	 * @return
 	 */
 	public Optional<SchuleAdminOverview> ermittleSchuleMitDetails(final String schulkuerzel, final String adminUuid) {
@@ -59,18 +59,18 @@ public class AdminSchulenService {
 
 		}
 
-		Optional<SchuleAPIModel> optSchuleAPIModel = schulkatalogService.findSchuleQuietly(schulkuerzel);
+		Optional<SchuleAPIModel> optSchuleAPIModel = schulkatalogService.findSchule(schulkuerzel);
 
 		SchuleAPIModel data = null;
 
 		if (optSchuleAPIModel.isPresent()) {
 
 			data = optSchuleAPIModel.get().withDetails(schuleDetails)
-				.withAngemeldet(schuleDetails.angemeldetDurch() != null);
+				.withAktuellAngemeldet(schuleDetails.angemeldetDurch() != null);
 		} else {
 
-			data = SchuleAPIModel.withKuerzel(schuleDetails.kuerzel()).withAngemeldet(schuleDetails.angemeldetDurch() != null)
-				.withDetails(schuleDetails);
+			data = new SchuleAPIModel().withKuerzel(schuleDetails.kuerzel())
+				.withAktuellAngemeldet(schuleDetails.angemeldetDurch() != null).withDetails(schuleDetails);
 		}
 
 		List<AnonymisierteTeilnahmeAPIModel> anonymisierteTeilnahmen = anonymisierteTeilnahmenService

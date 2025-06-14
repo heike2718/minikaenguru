@@ -42,7 +42,7 @@ public class VersandauftragStatusUpdater {
 	}
 
 	@Transactional
-	void updateStatusVersandauftrag(final Versandauftrag versandauftrag, final int anzahlEmpfaenger) {
+	public void updateStatusVersandauftrag(final Versandauftrag versandauftrag, final int anzahlEmpfaenger) {
 
 		List<NewsletterAuslieferung> allWithVersandauftrag = newsletterAuslieferungenRepository
 			.findAllWithVersandauftrag(versandauftrag.identifier());

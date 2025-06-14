@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao;
+package de.egladil.web.mk_gateway.profiles;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -14,12 +14,14 @@ import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.kinder.Klasse;
 import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao.KlassenHibernateRepository;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.TestProfile;
 import jakarta.inject.Inject;
 
 /**
  * KlassenHibernateRepositoryTest
  */
 @QuarkusTest
+@TestProfile(FullDatabaseTestProfile.class)
 public class KlassenHibernateRepositoryTest {
 
 	@Inject

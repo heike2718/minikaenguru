@@ -19,21 +19,15 @@ export class AdminSchulkatalogHttpService {
     loadLaender(): Observable<KatalogitemResponseDto[]> {
 
         const url = this.#config.baseUrl + '/kataloge/laender';
-
-        const obs$ = this.#httpClient.get(url).pipe(
-            map(body => body as ResponsePayload),
-            map(payload => payload.data)
-        );
-
+        const obs$ = this.#httpClient.get<KatalogitemResponseDto[]>(url);
         return this.#loadingIndicator.showLoaderUntilCompleted(obs$);
     }
 
     loadOrte(land: Land): Observable<OrteSucheResult> {
 
         const url = this.#config.baseUrl + '/kataloge/laender/' + land.kuerzel + '/orte';
-        const obs$ = this.#httpClient.get(url).pipe(
-            map(body => body as ResponsePayload),
-            map((payload) => this.#toOrtSucheResult(land, payload.data)),
+        const obs$ = this.#httpClient.get<KatalogitemResponseDto[]>(url).pipe(
+            map((payload) => this.#toOrtSucheResult(land, payload)),
         );
 
         return this.#loadingIndicator.showLoaderUntilCompleted(obs$);
@@ -42,9 +36,8 @@ export class AdminSchulkatalogHttpService {
     loadSchulen(ort: Ort): Observable<SchulenSucheResult> {
 
         const url = this.#config.baseUrl + '/kataloge/orte/' + ort.kuerzel + '/schulen';
-        const obs$ = this.#httpClient.get(url).pipe(
-            map(body => body as ResponsePayload),
-            map((payload) => this.#toSchuleSucheResult(ort, payload.data)),
+        const obs$ = this.#httpClient.get<KatalogitemResponseDto[]>(url).pipe(
+            map((payload) => this.#toSchuleSucheResult(ort, payload)),
         );
 
         return this.#loadingIndicator.showLoaderUntilCompleted(obs$);
@@ -69,9 +62,8 @@ export class AdminSchulkatalogHttpService {
         let params = new HttpParams().set('search', suchstring);
         const headers = new HttpHeaders().set('Accept', 'application/json');
 
-        const obs$ = this.#httpClient.get(url, { headers, params }).pipe(
-            map(body => body as ResponsePayload),
-            map((payload) => this.#toOrtSucheResult(land, payload.data))
+        const obs$ = this.#httpClient.get<KatalogitemResponseDto[]>(url, { headers, params }).pipe(
+            map((payload) => this.#toOrtSucheResult(land, payload))
         );
 
         return this.#loadingIndicator.showLoaderUntilCompleted(obs$);
@@ -84,9 +76,8 @@ export class AdminSchulkatalogHttpService {
         let params = new HttpParams().set('search', suchstring);
         const headers = new HttpHeaders().set('Accept', 'application/json');
 
-        const obs$ = this.#httpClient.get(url, { headers, params }).pipe(
-            map(body => body as ResponsePayload),
-            map((payload) => this.#toSchuleSucheResult(ort, payload.data))
+        const obs$ = this.#httpClient.get<KatalogitemResponseDto[]>(url, { headers, params }).pipe(
+           map((payload) => this.#toSchuleSucheResult(ort, payload))
         );
 
         return this.#loadingIndicator.showLoaderUntilCompleted(obs$);
@@ -109,8 +100,7 @@ export class AdminSchulkatalogHttpService {
 
         const url = this.#config.baseUrl + '/kataloge/schulen';
 
-        const obs$ = this.#httpClient.put(url, schulePayload).pipe(
-            map(body => body as ResponsePayload),
+        const obs$ = this.#httpClient.put<ResponsePayload>(url, schulePayload).pipe(
             map(payload => payload.data as SchulePayload)
         );
 
@@ -122,9 +112,8 @@ export class AdminSchulkatalogHttpService {
 
         const url = this.#config.baseUrl + '/kataloge/laender';
 
-        const obs$ = this.#httpClient.put(url, landPayload).pipe(
-            map(body => body as ResponsePayload),
-            map(payload => payload.data as LandPayload)
+        const obs$ = this.#httpClient.put<ResponsePayload>(url, landPayload).pipe(
+           map(payload => payload.data as LandPayload)
         );
 
         return this.#loadingIndicator.showLoaderUntilCompleted(obs$);
@@ -134,8 +123,7 @@ export class AdminSchulkatalogHttpService {
 
         const url = this.#config.baseUrl + '/kataloge/orte';
 
-        const obs$ = this.#httpClient.put(url, ortPayload).pipe(
-            map(body => body as ResponsePayload),
+        const obs$ = this.#httpClient.put<ResponsePayload>(url, ortPayload).pipe(
             map(payload => payload.data as OrtPayload)
         );
 

@@ -27,6 +27,7 @@ import io.quarkus.hibernate.orm.PersistenceUnit;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 /**
  * TeilnahmenHibernateRepository
@@ -120,7 +121,7 @@ public class TeilnahmenHibernateRepository implements TeilnahmenRepository {
 	 * @param  teilnahme
 	 * @return
 	 */
-	PersistenteTeilnahme mapFromTeilnahme(final Teilnahme teilnahme) {
+	public PersistenteTeilnahme mapFromTeilnahme(final Teilnahme teilnahme) {
 
 		PersistenteTeilnahme persistenteTeilnahme = new PersistenteTeilnahme();
 
@@ -137,6 +138,7 @@ public class TeilnahmenHibernateRepository implements TeilnahmenRepository {
 	}
 
 	@Override
+	@Transactional
 	public void changeTeilnahme(final Schulteilnahme teilnahme) throws IllegalStateException {
 
 		List<PersistenteTeilnahme> persistenteTeilnahmen = this.findAllByNummer(teilnahme.teilnahmenummer().identifier());
@@ -169,7 +171,7 @@ public class TeilnahmenHibernateRepository implements TeilnahmenRepository {
 
 	}
 
-	Teilnahme mapToTeilnahme(final PersistenteTeilnahme persistente) {
+	public Teilnahme mapToTeilnahme(final PersistenteTeilnahme persistente) {
 
 		Teilnahme teilnahme = null;
 

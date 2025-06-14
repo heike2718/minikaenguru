@@ -9,12 +9,10 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
-import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
 import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.Pacemaker;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.core.Response;
 
 /**
  * HeartbeatService
@@ -32,9 +30,6 @@ public class HeartbeatService {
 	@Inject
 	PacemakerRepository pacemakerRepository;
 
-	@Inject
-	MkKatalogeResourceAdapter katalogeAdapter;
-
 	public ResponsePayload updatePacemaker() {
 
 		ResponsePayload ownDatabaseResult = checkOwnDatabase();
@@ -42,13 +37,6 @@ public class HeartbeatService {
 		if (!ownDatabaseResult.isOk()) {
 
 			return ownDatabaseResult;
-		}
-
-		ResponsePayload katalogeResult = checkKataloge();
-
-		if (!katalogeResult.isOk()) {
-
-			return katalogeResult;
 		}
 
 		return ResponsePayload
@@ -69,15 +57,5 @@ public class HeartbeatService {
 		pacemakerRepository.change(pacemaker);
 
 		return ResponsePayload.messageOnly(MessagePayload.info(MK_GATEWAY_PACEMAKER_ID + " lebt"));
-	}
-
-	ResponsePayload checkKataloge() {
-
-		Response katalogeResponse = katalogeAdapter.getHeartbeat(expectedHeartbeatId);
-
-		ResponsePayload responsePayload = katalogeResponse.readEntity(ResponsePayload.class);
-
-		return responsePayload;
-
 	}
 }

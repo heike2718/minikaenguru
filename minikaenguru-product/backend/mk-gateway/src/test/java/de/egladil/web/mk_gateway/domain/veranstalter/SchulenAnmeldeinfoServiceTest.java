@@ -4,34 +4,30 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.veranstalter;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import jakarta.inject.Inject;
-import jakarta.ws.rs.core.Response;
-
 import org.junit.jupiter.api.Test;
 
-import de.egladil.web.commons_validation.payload.MessagePayload;
-import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
-import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
-import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
 import de.egladil.web.mk_gateway.domain.statistik.AuswertungsmodusInfoService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.AktuelleTeilnahmeService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.SchuleDetailsService;
@@ -41,8 +37,11 @@ import de.egladil.web.mk_gateway.domain.veranstalter.api.Auswertungsmodus;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleDetails;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
-import io.quarkus.test.junit.QuarkusTest;
+import de.egladil.web.mk_gateway.infrastructure.persistence.kataloge.dao.KatalogeRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.kataloge.entities.Schule;
 import io.quarkus.test.InjectMock;
+import io.quarkus.test.junit.QuarkusTest;
+import jakarta.inject.Inject;
 
 /**
  * SchulenAnmeldeinfoServiceTest
@@ -54,9 +53,6 @@ public class SchulenAnmeldeinfoServiceTest {
 
 	@InjectMock
 	AuthorizationService authorizationService;
-
-	@InjectMock
-	MkKatalogeResourceAdapter katalogeAdapter;
 
 	@InjectMock
 	SchulenOverviewService schulenOverviewService;
@@ -71,79 +67,49 @@ public class SchulenAnmeldeinfoServiceTest {
 	AktuelleTeilnahmeService aktuelleTeilnahmeService;
 
 	@InjectMock
+	KatalogeRepository katalogeRepository;
+
+	@InjectMock
 	LoggableEventDelegate eventDelegate;
 
 	@Inject
 	SchulenAnmeldeinfoService service;
 
 	@Test
-	void should_FindSchulenMitAnmeldeinfoThrowMkGatewayRuntimeException_when_KatalogEndpointNotPresent() {
-
-		// Arrange
-		List<SchuleAPIModel> schulenWettbewerb = new ArrayList<>();
-		schulenWettbewerb.add(SchuleAPIModel.withKuerzel("12345").withAngemeldet(false));
-
-		when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID)))
-			.thenReturn(schulenWettbewerb);
-
-		Response responseKataloge = Response.status(400)
-			.entity(ResponsePayload.messageOnly(MessagePayload.error("Bad Request")))
-			.build();
-
-		when(katalogeAdapter.findSchulen("12345")).thenReturn(responseKataloge);
-
-		// Act
-		try {
-
-			service.findSchulenMitAnmeldeinfo(LEHRER_UUID);
-			fail("keine MkGatewayRuntimeException");
-		} catch (MkGatewayRuntimeException e) {
-
-			assertEquals("Fehler beim Laden der Schulen aus dem Katalog", e.getMessage());
-		}
-
-	}
-
-	@Test
 	void should_FindSchulenMitAnmeldeinfo_work() {
 
 		// Arrange
-		List<Map<String, Object>> dataKataloge = new ArrayList<>();
-
-		{
-
-			Map<String, Object> schuleKatalogeMap = new HashMap<>();
-
-			schuleKatalogeMap.put("kuerzel", "12345");
-			schuleKatalogeMap.put("name", "Schule 12345");
-			schuleKatalogeMap.put("ort", "Darmstadt");
-			schuleKatalogeMap.put("land", "Hessen");
-
-			dataKataloge.add(schuleKatalogeMap);
-		}
-
-		{
-
-			Map<String, Object> schuleKatalogeMap = new HashMap<>();
-
-			schuleKatalogeMap.put("kuerzel", "98765");
-			schuleKatalogeMap.put("name", "Schule 98765");
-			schuleKatalogeMap.put("ort", "Darmstadt");
-			schuleKatalogeMap.put("land", "Hessen");
-
-			dataKataloge.add(schuleKatalogeMap);
-		}
-
 		List<SchuleAPIModel> schulenWettbewerb = new ArrayList<>();
-		schulenWettbewerb.add(SchuleAPIModel.withKuerzel("12345").withAngemeldet(true));
-		schulenWettbewerb.add(SchuleAPIModel.withKuerzel("98765").withAngemeldet(false));
+		schulenWettbewerb.add(new SchuleAPIModel().withKuerzel("12345").withAktuellAngemeldet(true));
+		schulenWettbewerb.add(new SchuleAPIModel().withKuerzel("98765").withAktuellAngemeldet(false));
 
-		when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID)))
-			.thenReturn(schulenWettbewerb);
+		when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID))).thenReturn(schulenWettbewerb);
 
-		Response responseKataloge = Response.ok(new ResponsePayload(MessagePayload.ok(), dataKataloge)).build();
+		List<Schule> schulenAusKatalog = new ArrayList<>();
 
-		when(katalogeAdapter.findSchulen("12345,98765")).thenReturn(responseKataloge);
+		{
+			Schule schule = new Schule();
+			schule.setKuerzel("12345");
+			schule.setLandKuerzel("DE-HE");
+			schule.setLandName("Hessen");
+			schule.setOrtName("Darmstadt");
+			schule.setName("Schule 12345");
+
+			schulenAusKatalog.add(schule);
+		}
+
+		{
+			Schule schule = new Schule();
+			schule.setKuerzel("98765");
+			schule.setLandKuerzel("DE-HE");
+			schule.setLandName("Hessen");
+			schule.setOrtName("Darmstadt");
+			schule.setName("Schule 98765");
+
+			schulenAusKatalog.add(schule);
+		}
+
+		when(katalogeRepository.findSchulenWithKuerzeln(anyList())).thenReturn(schulenAusKatalog);
 
 		// Act
 		List<SchuleAPIModel> result = service.findSchulenMitAnmeldeinfo(LEHRER_UUID);
@@ -153,21 +119,17 @@ public class SchulenAnmeldeinfoServiceTest {
 		{
 
 			SchuleAPIModel schule = result.get(0);
-			assertEquals("12345", schule.kuerzel());
-			assertEquals("Schule 12345", schule.name());
-			assertEquals("Darmstadt", schule.ort());
-			assertEquals("Hessen", schule.land());
-			assertEquals(true, schule.aktuellAngemeldet());
+			assertAll(() -> assertEquals("12345", schule.kuerzel()), () -> assertEquals("Schule 12345", schule.name()),
+				() -> assertEquals("Darmstadt", schule.ort()), () -> assertEquals("Hessen", schule.land()),
+				() -> assertEquals("DE-HE", schule.kuerzelLand()), () -> assertEquals(true, schule.aktuellAngemeldet()));
 		}
 
 		{
 
 			SchuleAPIModel schule = result.get(1);
-			assertEquals("98765", schule.kuerzel());
-			assertEquals("Schule 98765", schule.name());
-			assertEquals("Darmstadt", schule.ort());
-			assertEquals("Hessen", schule.land());
-			assertEquals(false, schule.aktuellAngemeldet());
+			assertAll(() -> assertEquals("98765", schule.kuerzel()), () -> assertEquals("Schule 98765", schule.name()),
+				() -> assertEquals("Darmstadt", schule.ort()), () -> assertEquals("Hessen", schule.land()),
+				() -> assertEquals("DE-HE", schule.kuerzelLand()), () -> assertEquals(false, schule.aktuellAngemeldet()));
 		}
 
 	}
@@ -176,64 +138,14 @@ public class SchulenAnmeldeinfoServiceTest {
 	void should_mergeDataFromSchulenOfLehrer_work_when_passt() {
 
 		List<SchuleAPIModel> schulenWettbewerb = new ArrayList<>();
-
-		{
-
-			Map<String, Object> schuleWettbewerbMap = new HashMap<>();
-
-			schuleWettbewerbMap.put("kuerzel", "12345");
-			schuleWettbewerbMap.put("aktuellAngemeldet", Boolean.TRUE);
-
-			List<Map<String, Object>> data = new ArrayList<>();
-			data.add(schuleWettbewerbMap);
-
-			schulenWettbewerb.add(SchuleAPIModel.withAttributes(schuleWettbewerbMap));
-		}
-
-		{
-
-			Map<String, Object> schuleWettbewerbMap = new HashMap<>();
-
-			schuleWettbewerbMap.put("kuerzel", "98765");
-			schuleWettbewerbMap.put("aktuellAngemeldet", Boolean.FALSE);
-
-			List<Map<String, Object>> data = new ArrayList<>();
-			data.add(schuleWettbewerbMap);
-
-			schulenWettbewerb.add(SchuleAPIModel.withAttributes(schuleWettbewerbMap));
-		}
+		schulenWettbewerb.add(new SchuleAPIModel().withKuerzel("12345").withAktuellAngemeldet(true));
+		schulenWettbewerb.add(new SchuleAPIModel().withKuerzel("98765").withAktuellAngemeldet(false));
 
 		List<SchuleAPIModel> schulenKataloge = new ArrayList<>();
-
-		{
-
-			Map<String, Object> schuleKatalogeMap = new HashMap<>();
-
-			schuleKatalogeMap.put("kuerzel", "12345");
-			schuleKatalogeMap.put("name", "Schule 12345");
-			schuleKatalogeMap.put("ort", "Darmstadt");
-			schuleKatalogeMap.put("land", "Hessen");
-
-			List<Map<String, Object>> data = new ArrayList<>();
-			data.add(schuleKatalogeMap);
-
-			schulenKataloge.add(SchuleAPIModel.withAttributes(schuleKatalogeMap));
-		}
-
-		{
-
-			Map<String, Object> schuleKatalogeMap = new HashMap<>();
-
-			schuleKatalogeMap.put("kuerzel", "98765");
-			schuleKatalogeMap.put("name", "Schule 98765");
-			schuleKatalogeMap.put("ort", "Darmstadt");
-			schuleKatalogeMap.put("land", "Hessen");
-
-			List<Map<String, Object>> data = new ArrayList<>();
-			data.add(schuleKatalogeMap);
-
-			schulenKataloge.add(SchuleAPIModel.withAttributes(schuleKatalogeMap));
-		}
+		schulenKataloge.add(new SchuleAPIModel().withKuerzel("12345").withName("Schule 12345").withOrt("Darmstadt")
+			.withKuerzelLand("DE-HE").withLand("Hessen"));
+		schulenKataloge.add(new SchuleAPIModel().withKuerzel("98765").withName("Schule 98765").withOrt("Darmstadt")
+			.withKuerzelLand("DE-HE").withLand("Hessen"));
 
 		// Act
 		List<SchuleAPIModel> result = service.mergeDataFromSchulenOfLehrer(schulenKataloge, schulenWettbewerb);
@@ -244,21 +156,17 @@ public class SchulenAnmeldeinfoServiceTest {
 		{
 
 			SchuleAPIModel schule = result.get(0);
-			assertEquals("12345", schule.kuerzel());
-			assertEquals("Schule 12345", schule.name());
-			assertEquals("Darmstadt", schule.ort());
-			assertEquals("Hessen", schule.land());
-			assertEquals(true, schule.aktuellAngemeldet());
+			assertAll(() -> assertEquals("12345", schule.kuerzel()), () -> assertEquals("Schule 12345", schule.name()),
+				() -> assertEquals("Darmstadt", schule.ort()), () -> assertEquals("Hessen", schule.land()),
+				() -> assertEquals("DE-HE", schule.kuerzelLand()), () -> assertEquals(true, schule.aktuellAngemeldet()));
 		}
 
 		{
 
 			SchuleAPIModel schule = result.get(1);
-			assertEquals("98765", schule.kuerzel());
-			assertEquals("Schule 98765", schule.name());
-			assertEquals("Darmstadt", schule.ort());
-			assertEquals("Hessen", schule.land());
-			assertEquals(false, schule.aktuellAngemeldet());
+			assertAll(() -> assertEquals("98765", schule.kuerzel()), () -> assertEquals("Schule 98765", schule.name()),
+				() -> assertEquals("Darmstadt", schule.ort()), () -> assertEquals("Hessen", schule.land()),
+				() -> assertEquals("DE-HE", schule.kuerzelLand()), () -> assertEquals(false, schule.aktuellAngemeldet()));
 		}
 
 	}
@@ -267,68 +175,23 @@ public class SchulenAnmeldeinfoServiceTest {
 	void should_mergeDataFromSchulenOfLehrer_work_when_LehrerWenigerSchulen() {
 
 		List<SchuleAPIModel> schulenWettbewerb = new ArrayList<>();
-
-		{
-
-			Map<String, Object> schuleWettbewerbMap = new HashMap<>();
-
-			schuleWettbewerbMap.put("kuerzel", "12345");
-			schuleWettbewerbMap.put("aktuellAngemeldet", Boolean.TRUE);
-
-			List<Map<String, Object>> data = new ArrayList<>();
-			data.add(schuleWettbewerbMap);
-
-			schulenWettbewerb.add(SchuleAPIModel.withAttributes(schuleWettbewerbMap));
-		}
+		schulenWettbewerb.add(new SchuleAPIModel().withKuerzel("12345").withAktuellAngemeldet(true));
 
 		List<SchuleAPIModel> schulenKataloge = new ArrayList<>();
-
-		{
-
-			Map<String, Object> schuleKatalogeMap = new HashMap<>();
-
-			schuleKatalogeMap.put("kuerzel", "12345");
-			schuleKatalogeMap.put("name", "Schule 12345");
-			schuleKatalogeMap.put("ort", "Darmstadt");
-			schuleKatalogeMap.put("land", "Hessen");
-
-			List<Map<String, Object>> data = new ArrayList<>();
-			data.add(schuleKatalogeMap);
-
-			schulenKataloge.add(SchuleAPIModel.withAttributes(schuleKatalogeMap));
-		}
-
-		{
-
-			Map<String, Object> schuleKatalogeMap = new HashMap<>();
-
-			schuleKatalogeMap.put("kuerzel", "98765");
-			schuleKatalogeMap.put("name", "Schule 98765");
-			schuleKatalogeMap.put("ort", "Darmstadt");
-			schuleKatalogeMap.put("land", "Hessen");
-
-			List<Map<String, Object>> data = new ArrayList<>();
-			data.add(schuleKatalogeMap);
-
-			schulenKataloge.add(SchuleAPIModel.withAttributes(schuleKatalogeMap));
-		}
+		schulenKataloge.add(new SchuleAPIModel().withKuerzel("12345").withName("Schule 98765").withOrt("Darmstadt")
+			.withKuerzelLand("DE-HE").withLand("Hessen"));
+		schulenKataloge.add(new SchuleAPIModel().withKuerzel("98765").withName("Schule 98765").withOrt("Darmstadt")
+			.withKuerzelLand("DE-HE").withLand("Hessen"));
 
 		// Act
 		List<SchuleAPIModel> result = service.mergeDataFromSchulenOfLehrer(schulenKataloge, schulenWettbewerb);
 
 		// Assert
 		assertEquals(1, result.size());
-
-		{
-
-			SchuleAPIModel schule = result.get(0);
-			assertEquals("12345", schule.kuerzel());
-			assertEquals("Schule 12345", schule.name());
-			assertEquals("Darmstadt", schule.ort());
-			assertEquals("Hessen", schule.land());
-			assertEquals(true, schule.aktuellAngemeldet());
-		}
-
+		SchuleAPIModel schule = result.get(0);
+		assertAll(() -> assertEquals("12345", schule.kuerzel()), () -> assertEquals("Schule 98765", schule.name()),
+			() -> assertEquals("Darmstadt", schule.ort()), () -> assertEquals("Hessen", schule.land()),
+			() -> assertEquals("DE-HE", schule.kuerzelLand()), () -> assertEquals(true, schule.aktuellAngemeldet()));
 	}
 
 	@Test
@@ -336,48 +199,12 @@ public class SchulenAnmeldeinfoServiceTest {
 
 		List<SchuleAPIModel> schulenWettbewerb = new ArrayList<>();
 
-		{
-
-			Map<String, Object> schuleWettbewerbMap = new HashMap<>();
-
-			schuleWettbewerbMap.put("kuerzel", "12345");
-			schuleWettbewerbMap.put("aktuellAngemeldet", Boolean.TRUE);
-
-			List<Map<String, Object>> data = new ArrayList<>();
-			data.add(schuleWettbewerbMap);
-
-			schulenWettbewerb.add(SchuleAPIModel.withAttributes(schuleWettbewerbMap));
-		}
-
-		{
-
-			Map<String, Object> schuleWettbewerbMap = new HashMap<>();
-
-			schuleWettbewerbMap.put("kuerzel", "98765");
-			schuleWettbewerbMap.put("aktuellAngemeldet", Boolean.FALSE);
-
-			List<Map<String, Object>> data = new ArrayList<>();
-			data.add(schuleWettbewerbMap);
-
-			schulenWettbewerb.add(SchuleAPIModel.withAttributes(schuleWettbewerbMap));
-		}
+		schulenWettbewerb.add(new SchuleAPIModel().withKuerzel("12345").withAktuellAngemeldet(true));
+		schulenWettbewerb.add(new SchuleAPIModel().withKuerzel("98765").withAktuellAngemeldet(false));
 
 		List<SchuleAPIModel> schulenKataloge = new ArrayList<>();
-
-		{
-
-			Map<String, Object> schuleKatalogeMap = new HashMap<>();
-
-			schuleKatalogeMap.put("kuerzel", "98765");
-			schuleKatalogeMap.put("name", "Schule 98765");
-			schuleKatalogeMap.put("ort", "Darmstadt");
-			schuleKatalogeMap.put("land", "Hessen");
-
-			List<Map<String, Object>> data = new ArrayList<>();
-			data.add(schuleKatalogeMap);
-
-			schulenKataloge.add(SchuleAPIModel.withAttributes(schuleKatalogeMap));
-		}
+		schulenKataloge.add(new SchuleAPIModel().withKuerzel("98765").withName("Schule 98765").withOrt("Darmstadt")
+			.withKuerzelLand("DE-HE").withLand("Hessen"));
 
 		// Act
 		List<SchuleAPIModel> result = service.mergeDataFromSchulenOfLehrer(schulenKataloge, schulenWettbewerb);
@@ -388,21 +215,20 @@ public class SchulenAnmeldeinfoServiceTest {
 		{
 
 			SchuleAPIModel schule = result.get(0);
-			assertEquals("98765", schule.kuerzel());
-			assertEquals("Schule 98765", schule.name());
-			assertEquals("Darmstadt", schule.ort());
-			assertEquals("Hessen", schule.land());
-			assertEquals(false, schule.aktuellAngemeldet());
+
+			assertAll(() -> assertEquals("98765", schule.kuerzel()), () -> assertEquals("Schule 98765", schule.name()),
+				() -> assertEquals("Darmstadt", schule.ort()), () -> assertEquals("Hessen", schule.land()),
+				() -> assertEquals("DE-HE", schule.kuerzelLand()), () -> assertEquals(false, schule.aktuellAngemeldet()));
 		}
 
 		{
 
 			SchuleAPIModel schule = result.get(1);
-			assertEquals("12345", schule.kuerzel());
-			assertEquals("unbekannter Schulname", schule.name());
-			assertEquals("unbekannter Ort", schule.ort());
-			assertEquals("unbekanntes Land / Bundesland", schule.land());
-			assertEquals(true, schule.aktuellAngemeldet());
+
+			assertAll(() -> assertEquals("12345", schule.kuerzel()), () -> assertEquals("unbekannter Schulname", schule.name()),
+				() -> assertEquals("unbekannter Ort", schule.ort()),
+				() -> assertEquals("unbekanntes Land / Bundesland", schule.land()),
+				() -> assertEquals(true, schule.aktuellAngemeldet()));
 		}
 
 		verify(eventDelegate).fireDataInconsistencyEvent(any(), any());
@@ -425,18 +251,21 @@ public class SchulenAnmeldeinfoServiceTest {
 		schuleKatalogeMap.put("ort", "Darmstadt");
 		schuleKatalogeMap.put("land", "Hessen");
 
-		Response katalogeResponse = Response
-			.ok(new ResponsePayload(MessagePayload.ok(), Arrays.asList(new Map[] { schuleKatalogeMap }))).build();
+		Schule schuleDB = new Schule();
+		schuleDB.setKuerzel("12345");
+		schuleDB.setLandKuerzel("DE-HE");
+		schuleDB.setLandName("Hessen");
+		schuleDB.setOrtName("Darmstadt");
+		schuleDB.setName("Schule 12345");
 
-		when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID)))
-			.thenReturn(Arrays.asList(new SchuleAPIModel[] { SchuleAPIModel.withKuerzel("12345").withAngemeldet(true) }));
+		List<Schule> schulenAusKatalog = Collections.singletonList(schuleDB);
+
+		when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID))).thenReturn(
+			Arrays.asList(new SchuleAPIModel[] { new SchuleAPIModel().withKuerzel("12345").withAktuellAngemeldet(true) }));
 		when(schuleDetailsService.ermittleSchuldetails(new Identifier("12345"), new Identifier(LEHRER_UUID)))
 			.thenReturn(schuleDetails);
-
-		when(katalogeAdapter.findSchulen("12345")).thenReturn(katalogeResponse);
-
-		when(auswertungsmodusInfoService.ermittleAuswertungsmodusFuerTeilnahme(any()))
-			.thenReturn(Auswertungsmodus.INDIFFERENT);
+		when(katalogeRepository.findSchulenWithKuerzeln(anyList())).thenReturn(schulenAusKatalog);
+		when(auswertungsmodusInfoService.ermittleAuswertungsmodusFuerTeilnahme(any())).thenReturn(Auswertungsmodus.INDIFFERENT);
 
 		when(aktuelleTeilnahmeService.aktuelleTeilnahme("12345")).thenReturn(Optional.of(
 			new Schulteilnahme(new WettbewerbID(2020), new Identifier("12345"), "Irgendein Name", new Identifier(LEHRER_UUID))));
@@ -460,29 +289,6 @@ public class SchulenAnmeldeinfoServiceTest {
 	}
 
 	@Test
-	void should_getSchuleWithWettbewerbsdetailsThrowException_when_KatalogItemsResponseError() {
-
-		// Arrange
-		Response katalogeResponse = Response
-			.status(400).entity(ResponsePayload.messageOnly(MessagePayload.error("bad request"))).build();
-
-		when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID)))
-			.thenReturn(new ArrayList<>());
-		when(katalogeAdapter.findSchulen("12345")).thenReturn(katalogeResponse);
-
-		// Act
-		try {
-
-			service.getSchuleWithWettbewerbsdetails("12345", LEHRER_UUID);
-			fail("keine MkGatewayRuntimeException");
-		} catch (MkGatewayRuntimeException e) {
-
-			assertEquals("Fehler beim Laden der Schulen aus dem Katalog", e.getMessage());
-		}
-
-	}
-
-	@Test
 	void should_getSchuleWithWettbewerbDetailsThrowAccessDeniedException_when_keineBerechtigung() {
 
 		// Arrange
@@ -492,8 +298,7 @@ public class SchulenAnmeldeinfoServiceTest {
 		Identifier teilnahmeId = new Identifier(schulkuerzel);
 
 		when(authorizationService.checkPermissionForTeilnahmenummerAndReturnRolle(lehrerId, teilnahmeId,
-			"[getSchuleDetails - " + schulkuerzel + "]"))
-				.thenThrow(new AccessDeniedException());
+			"[getSchuleDetails - " + schulkuerzel + "]")).thenThrow(new AccessDeniedException());
 
 		// Act
 		try {
@@ -504,9 +309,8 @@ public class SchulenAnmeldeinfoServiceTest {
 
 			// das Event wird vom authorizationService erzeugt.
 			verify(eventDelegate, never()).fireSecurityEvent(any(), any());
-			verify(katalogeAdapter, never()).findSchulen(schulkuerzel);
-			verify(schuleDetailsService, never()).ermittleSchuldetails(teilnahmeId,
-				lehrerId);
+			verify(katalogeRepository, never()).findSchulenWithKuerzeln(anyList());
+			verify(schuleDetailsService, never()).ermittleSchuldetails(teilnahmeId, lehrerId);
 			verify(aktuelleTeilnahmeService, never()).aktuelleTeilnahme(schulkuerzel);
 			verify(auswertungsmodusInfoService, never()).ermittleAuswertungsmodusFuerTeilnahme(any());
 		}
@@ -522,8 +326,8 @@ public class SchulenAnmeldeinfoServiceTest {
 		SchuleDetails schuleDetails = new SchuleDetails("12345").withAngemeldetDurch(new Kollege("ghagdqg", "John Doe"))
 			.withAnzahlTeilnahmen(1).withKollegen(kollegen).withNameUrkunde("Schule 12345");
 
-		when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID)))
-			.thenReturn(Arrays.asList(new SchuleAPIModel[] { SchuleAPIModel.withKuerzel("12345").withAngemeldet(true) }));
+		when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID))).thenReturn(
+			Arrays.asList(new SchuleAPIModel[] { new SchuleAPIModel().withKuerzel("12345").withAktuellAngemeldet(true) }));
 		when(schuleDetailsService.ermittleSchuldetails(new Identifier("12345"), new Identifier(LEHRER_UUID)))
 			.thenReturn(schuleDetails);
 
@@ -536,10 +340,7 @@ public class SchulenAnmeldeinfoServiceTest {
 		schuleKatalogeMap.put("ort", "Darmstadt");
 		schuleKatalogeMap.put("land", "Hessen");
 
-		Response katalogeResponse = Response
-			.ok(new ResponsePayload(MessagePayload.ok(), new ArrayList<>())).build();
-
-		when(katalogeAdapter.findSchulen("12345")).thenReturn(katalogeResponse);
+		when(katalogeRepository.findSchulenWithKuerzeln(anyList())).thenReturn(new ArrayList<>());
 
 		// Act
 		SchuleAPIModel schule = service.getSchuleWithWettbewerbsdetails("12345", LEHRER_UUID);

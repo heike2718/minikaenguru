@@ -127,7 +127,7 @@ public class AdvService {
 			return optVertrag.get().uuid();
 		}
 
-		Optional<SchuleAPIModel> optSchule = this.schulkatalogService.findSchuleQuietly(daten.schulkuerzel());
+		Optional<SchuleAPIModel> optSchule = this.schulkatalogService.findSchule(daten.schulkuerzel());
 
 		PostleitzahlLand plzLand = new PostleitzahlLand(daten.plz(), optSchule);
 

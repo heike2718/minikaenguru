@@ -16,7 +16,7 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 @AggregateRoot
 public class Schulteilnahme extends Teilnahme {
 
-	private final String nameSchule;
+	private String nameSchule;
 
 	private final Identifier angemeldetDurchVeranstalterId;
 
@@ -65,5 +65,9 @@ public class Schulteilnahme extends Teilnahme {
 
 		return this.nameSchule.replaceAll(" ", "-");
 
+	}
+
+	public void setNameSchule(String nameSchule) {
+		this.nameSchule = nameSchule;
 	}
 }

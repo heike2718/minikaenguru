@@ -96,7 +96,7 @@ public class NewsletterVersandauftragService {
 	 * @throws MkGatewayRuntimeException
 	 *                                   wenn eines der Dinge null ist.
 	 */
-	Pair<Versandauftrag, Newsletter> getVersandauftragAndNewsletterWithVersandauftragID(final Identifier versandauftragID) throws MkGatewayRuntimeException {
+	public Pair<Versandauftrag, Newsletter> getVersandauftragAndNewsletterWithVersandauftragID(final Identifier versandauftragID) throws MkGatewayRuntimeException {
 
 		Optional<Versandauftrag> optVersandauftrag = this.versandauftraegeRepo.ofId(versandauftragID);
 

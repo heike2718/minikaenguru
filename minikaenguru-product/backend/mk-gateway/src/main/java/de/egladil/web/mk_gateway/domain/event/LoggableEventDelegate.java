@@ -12,6 +12,7 @@ import jakarta.enterprise.context.RequestScoped;
 @RequestScoped
 public class LoggableEventDelegate {
 
+
 	/**
 	 *
 	 */
@@ -70,4 +71,17 @@ public class LoggableEventDelegate {
 		return securityIncidentRegistered;
 	}
 
+	/**
+	 * Falls eventBus da, dann fire, sonst wird nur geloggt.
+	 * @param event MailNotSent
+	 * @param domainEventHandler DomainEventHandler
+	 */
+	public void fireMailNotSent(MailNotSent event, DomainEventHandler domainEventHandler) {
+
+		if (domainEventHandler != null) {
+			domainEventHandler.handleEvent(event);
+		} else {
+			System.out.println(event.serializeQuietly());
+		}
+	}
 }

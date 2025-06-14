@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao;
+package de.egladil.web.mk_gateway.profiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -12,19 +12,25 @@ import org.junit.jupiter.api.Test;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.veranstalter.Kollege;
 import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao.SchulkollegienHibernateRepository;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.TestProfile;
+import jakarta.inject.Inject;
 
 /**
  * SchulkollegienHibernateRepositoryTest
  */
+@QuarkusTest
+@TestProfile(FullDatabaseTestProfile.class)
 public class SchulkollegienHibernateRepositoryTest {
+
+	@Inject
+	SchulkollegienHibernateRepository repository;
 
 	@Test
 	void should_DeserializeKollegen_work() {
 
 		// Arrange
 		String serialization = "[{\"uuid\":\"gsdgqu\",\"fullName\":\"Herr Bert\"},{\"uuid\":\"bakvsk\",\"fullName\":\"Frau Mann\"}]";
-
-		SchulkollegienHibernateRepository repository = new SchulkollegienHibernateRepository();
 
 		// Act
 		Kollege[] personen = repository.deserializeKollegen(serialization);
@@ -52,8 +58,6 @@ public class SchulkollegienHibernateRepositoryTest {
 
 		// Arrange
 		String serialization = "[{\"uuid\":\"gsdgqu\",\"hallo\":\"Herr Bert\"},{\"uuid\":\"bakvsk\",\"fullName\":\"Frau Mann\"}]";
-
-		SchulkollegienHibernateRepository repository = new SchulkollegienHibernateRepository();
 
 		// Act
 		try {

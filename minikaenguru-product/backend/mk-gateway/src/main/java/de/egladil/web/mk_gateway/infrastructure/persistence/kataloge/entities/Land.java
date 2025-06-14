@@ -16,14 +16,10 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "VW_LAENDER")
-@NamedQueries({
-	@NamedQuery(name = "LAND_QUERY_LOAD_LAENDER", query = "select l from Land l where l.name != :excluded"),
-	@NamedQuery(name = "LAENDER_COUNT_WITH_KUERZEL", query = "select count(l) from Land l where l.kuerzel = :kuerzel"),
-	@NamedQuery(
-		name = "LAND_QUERY_FIND_LAENDER_MIT_NAME",
-		query = "select l from Land l where lower(l.name) like :name and l.name != :excluded"),
-	@NamedQuery(name = "LAND_FIND_BY_KURZEL", query = "select l from Land l where l.kuerzel = :kuerzel")
-})
+@NamedQueries({ @NamedQuery(name = Land.QUERY_LOAD_LAENDER, query = "select l from Land l where l.name != :excluded order by l.name"),
+	@NamedQuery(name = Land.QUERY_COUNT_WITH_KUERZEL, query = "select count(l) from Land l where l.kuerzel = :kuerzel"),
+	@NamedQuery(name = Land.QUERY_FIND_LAENDER_MIT_NAME, query = "select l from Land l where lower(l.name) like :name and l.name != :excluded order by l.name"),
+	@NamedQuery(name = Land.QUERY_FIND_BY_KUEZEL, query = "select l from Land l where l.kuerzel = :kuerzel") })
 public class Land {
 
 	public static final String QUERY_FIND_BY_KUEZEL = "LAND_FIND_BY_KURZEL";

@@ -37,12 +37,12 @@ public class KindRequestDataTest {
 		// Act
 		String serialized = new ObjectMapper().writeValueAsString(kindRequestData);
 
-		// System.out.println(serialized);
+		 System.out.println(serialized);
 
 		// {"uuid":"neu","kuerzelLand":"DE-ST","kind":{"vorname":"Norbert","nachname":"Wiener","zusatz":"blond","klassenstufe":{"klassenstufe":"ZWEI","label":"Klasse
 		// 2"},"sprache":{"sprache":"de","label":"deutsch"},"klasseUuid":"6d57b4f6-61ed-450a-ae17-7ccb3d9d776a"}}
 		assertEquals(
-			"{\"uuid\":\"neu\",\"kuerzelLand\":\"DE-ST\",\"kind\":{\"vorname\":\"Norbert\",\"nachname\":\"Wiener\",\"zusatz\":\"blond\",\"klassenstufe\":{\"klassenstufe\":\"ZWEI\",\"label\":\"Klasse 2\"},\"sprache\":{\"sprache\":\"de\",\"label\":\"deutsch\"},\"klasseUuid\":\"6d57b4f6-61ed-450a-ae17-7ccb3d9d776a\"}}",
+			"{\"uuid\":\"neu\",\"kuerzelLand\":\"DE-ST\",\"kind\":{\"vorname\":\"Norbert\",\"nachname\":\"Wiener\",\"zusatz\":\"blond\",\"klassenstufe\":{\"klassenstufe\":\"ZWEI\",\"label\":\"Klasse 2\"},\"sprache\":{\"sprache\":\"de\",\"label\":\"deutsch\"},\"klasseId\":\"6d57b4f6-61ed-450a-ae17-7ccb3d9d776a\"}}",
 			serialized);
 	}
 }

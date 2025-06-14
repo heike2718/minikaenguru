@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao;
+package de.egladil.web.mk_gateway.profiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -14,12 +14,14 @@ import org.junit.jupiter.api.Test;
 import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikAuspraegung;
 import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao.KinderHibernateRepository;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.TestProfile;
 import jakarta.inject.Inject;
 
 /**
  * KinderHibernateRepositoryTest
  */
 @QuarkusTest
+@TestProfile(FullDatabaseTestProfile.class)
 public class KinderHibernateRepositoryTest {
 
 	@Inject
@@ -42,7 +44,7 @@ public class KinderHibernateRepositoryTest {
 	}
 
 	@Test
-	void should_countAuspraegungenByColumnNameReurnTheAuspraegungen_when_teilnahmeart() {
+	void should_countAuspraegungenByColumnNameReturnTheAuspraegungen_when_teilnahmeart() {
 
 		// Act
 		List<AdminStatistikAuspraegung> auspraegungen = repository.countAuspraegungenByColumnName("TEILNAHMEART");
@@ -58,7 +60,7 @@ public class KinderHibernateRepositoryTest {
 	}
 
 	@Test
-	void should_countAuspraegungenByColumnNameReurnTheAuspraegungen_when_sprache() {
+	void should_countAuspraegungenByColumnNameReturnTheAuspraegungen_when_sprache() {
 
 		// Act
 		List<AdminStatistikAuspraegung> auspraegungen = repository.countAuspraegungenByColumnName("SPRACHE");

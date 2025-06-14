@@ -31,7 +31,7 @@ public class AuslieferungStatusUpdater {
 	}
 
 	@Transactional
-	void markAuslieferungCompleted(final NewsletterAuslieferung auslieferung) {
+	public void markAuslieferungCompleted(final NewsletterAuslieferung auslieferung) {
 
 		newsletterAuslieferungenRepository.updateAuslieferung(auslieferung);
 

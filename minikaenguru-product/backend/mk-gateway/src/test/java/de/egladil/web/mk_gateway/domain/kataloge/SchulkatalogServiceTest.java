@@ -4,34 +4,22 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.kataloge;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-
-import jakarta.inject.Inject;
-import jakarta.ws.rs.core.Response;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
-import de.egladil.web.commons_validation.payload.MessagePayload;
-import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.kataloge.api.SchulePayload;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Schulteilnahme;
+import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.teilnahmen.TeilnahmenRepository;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
@@ -40,8 +28,11 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
-import io.quarkus.test.junit.QuarkusTest;
+import de.egladil.web.mk_gateway.infrastructure.persistence.kataloge.dao.KatalogeRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.kataloge.entities.Schule;
 import io.quarkus.test.InjectMock;
+import io.quarkus.test.junit.QuarkusTest;
+import jakarta.inject.Inject;
 
 /**
  * SchulkatalogServiceTest
@@ -50,7 +41,7 @@ import io.quarkus.test.InjectMock;
 public class SchulkatalogServiceTest {
 
 	@InjectMock
-	private MkKatalogeResourceAdapter katalogeResourceAdapter;
+	KatalogeRepository katalogeRepository;
 
 	@InjectMock
 	WettbewerbService wettbewerbService;
@@ -69,28 +60,19 @@ public class SchulkatalogServiceTest {
 
 			// Arrange
 			String schulkuerzel = "12345";
-			List<Map<String, Object>> data = new ArrayList<>();
 
-			{
+			Schule schule = new Schule();
+			schule.setKuerzel(schulkuerzel);
+			schule.setName("David-Hilbert-Schule");
+			schule.setLandKuerzel("DE-NI");
+			schule.setLandName("Niedersachsen");
+			schule.setOrtName("Göttingen");
 
-				Map<String, Object> schuleWettbewerbMap = new HashMap<>();
+			when(katalogeRepository.findSchuleWithKuerzel(schulkuerzel)).thenReturn(Optional.of(schule));
 
-				schuleWettbewerbMap.put("kuerzel", schulkuerzel);
-				schuleWettbewerbMap.put("name", "David-Hilbert-Schule");
-				schuleWettbewerbMap.put("ort", "Göttingen");
-				schuleWettbewerbMap.put("land", "Niedersachsen");
-				schuleWettbewerbMap.put("kuerzelLand", "DE-NI");
-				schuleWettbewerbMap.put("aktuellAngemeldet", Boolean.FALSE);
-
-				data.add(schuleWettbewerbMap);
-			}
-
-			Response response = Response.ok(new ResponsePayload(MessagePayload.ok(), data)).build();
-
-			Mockito.when(katalogeResourceAdapter.findSchulen(schulkuerzel)).thenReturn(response);
 
 			// Act
-			Optional<SchuleAPIModel> opt = service.findSchuleQuietly(schulkuerzel);
+			Optional<SchuleAPIModel> opt = service.findSchule(schulkuerzel);
 
 			// Assert
 			assertTrue(opt.isPresent());
@@ -102,323 +84,176 @@ public class SchulkatalogServiceTest {
 
 			// Arrange
 			String schulkuerzel = "12345";
-			List<Map<String, Object>> data = new ArrayList<>();
-
-			Response response = Response.ok(new ResponsePayload(MessagePayload.ok(), data)).build();
-
-			Mockito.when(katalogeResourceAdapter.findSchulen(schulkuerzel)).thenReturn(response);
+			when(katalogeRepository.findSchuleWithKuerzel(schulkuerzel)).thenReturn(Optional.empty());
 
 			// Act
-			Optional<SchuleAPIModel> opt = service.findSchuleQuietly(schulkuerzel);
+			Optional<SchuleAPIModel> opt = service.findSchule(schulkuerzel);
 
 			// Assert
 			assertTrue(opt.isEmpty());
 
 		}
-
-		@Test
-		void should_findSchuleQuietlyReturnOptionalEmpty_when_mkKatalogeReturnsThrowsException() {
-
-			// Arrange
-			String schulkuerzel = "12345";
-
-			Mockito.when(katalogeResourceAdapter.findSchulen(schulkuerzel))
-				.thenThrow(new MkGatewayRuntimeException("schlimm schlim schlimm"));
-
-			// Act
-			Optional<SchuleAPIModel> opt = service.findSchuleQuietly(schulkuerzel);
-
-			// Assert
-			assertTrue(opt.isEmpty());
-
-		}
-
 	}
 
 	@Nested
-	class ChangeSchulnameTests {
+	class FindSchulteilnahmeTests {
+
+		Identifier veranstalterId = new Identifier("ajkgkw");
 
 		@Test
-		void should_changeNameNotUpdateTeilnahme_when_aktuellerWettbewerbStatusErfasst() {
+		void should_findSchulteilnahmeReturnNull_when_aktuellerWettbewerbMissing() {
 
-			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2020));
+			// arrange
+			String schulkuerzel = "ABCDEFGH";
+			WettbewerbID wettbewerbId = new WettbewerbID(2025);
 
-			assertEquals(WettbewerbStatus.ERFASST, wettbewerb.status());
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
-
-			String schulkuerzel = "ZHGT5R43";
 			TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE)
-				.withTeilnahmenummer(schulkuerzel).withWettbewerbID(wettbewerb.id());
+				.withTeilnahmenummer(schulkuerzel).withWettbewerbID(wettbewerbId);
 
-			SchulePayload payload = SchulePayload.create(schulkuerzel, "Neuer Name", "KUERZELORT", "Name Ort", "DE-HH", "Hamburg");
+			SchulePayload payload = new SchulePayload().withKuerzel(schulkuerzel);
 
-			when(katalogeResourceAdapter.renameSchule(schulkuerzel, "secret", payload)).thenReturn(Response.ok().build());
-
-			// Act
-			service.renameSchule(schulkuerzel, "secret", payload);
-
-			// Assert
-			verify(teilnahmenRepository, never()).ofTeilnahmeIdentifier(teilnahmeIdentifier);
-			verify(teilnahmenRepository, never()).changeTeilnahme(any());
-
-		}
-
-		@Test
-		void should_changeNameUpdateTeilnahme_when_aktuellerWettbewerbStatusAnmeldung_andTeilnahme_vorhanden() {
-
-			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2020));
-			wettbewerb.naechsterStatus();
-
-			assertEquals(WettbewerbStatus.ANMELDUNG, wettbewerb.status());
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
-
-			String schulkuerzel = "ZHGT5R43";
-			TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE)
-				.withTeilnahmenummer(schulkuerzel).withWettbewerbID(wettbewerb.id());
-
-			String veranstalterId = "qwuiwui-qwuoqo";
-
-			Schulteilnahme teilnahme = new Schulteilnahme(wettbewerb.id(), new Identifier(schulkuerzel), "alter Schulname",
-				new Identifier(veranstalterId));
-
-			when(teilnahmenRepository.ofTeilnahmeIdentifier(teilnahmeIdentifier)).thenReturn(Optional.of(teilnahme));
-			doNothing().when(teilnahmenRepository).changeTeilnahme(any());
-
-			SchulePayload payload = SchulePayload.create(schulkuerzel, "Neuer Name", "KUERZELORT", "Name Ort", "DE-HH", "Hamburg");
-
-			when(katalogeResourceAdapter.renameSchule(schulkuerzel, "secret", payload)).thenReturn(Response.ok().build());
-
-			// Act
-			service.renameSchule(schulkuerzel, "secret", payload);
-
-			// Assert
-			verify(teilnahmenRepository).ofTeilnahmeIdentifier(teilnahmeIdentifier);
-			verify(teilnahmenRepository).changeTeilnahme(any());
-
-		}
-
-		@Test
-		void should_changeNameUpdateTeilnahme_when_aktuellerWettbewerbStatusDownloadLehrer_andTeilnahme_vorhanden() {
-
-			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2020));
-			wettbewerb.naechsterStatus();
-			wettbewerb.naechsterStatus();
-
-			assertEquals(WettbewerbStatus.DOWNLOAD_LEHRER, wettbewerb.status());
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
-
-			String schulkuerzel = "ZHGT5R43";
-			TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE)
-				.withTeilnahmenummer(schulkuerzel).withWettbewerbID(wettbewerb.id());
-
-			String veranstalterId = "qwuiwui-qwuoqo";
-
-			Schulteilnahme teilnahme = new Schulteilnahme(wettbewerb.id(), new Identifier(schulkuerzel), "alter Schulname",
-				new Identifier(veranstalterId));
-
-			when(teilnahmenRepository.ofTeilnahmeIdentifier(teilnahmeIdentifier)).thenReturn(Optional.of(teilnahme));
-			doNothing().when(teilnahmenRepository).changeTeilnahme(any());
-
-			SchulePayload payload = SchulePayload.create(schulkuerzel, "Neuer Name", "KUERZELORT", "Name Ort", "DE-HH", "Hamburg");
-
-			when(katalogeResourceAdapter.renameSchule(schulkuerzel, "secret", payload)).thenReturn(Response.ok().build());
-
-			// Act
-			service.renameSchule(schulkuerzel, "secret", payload);
-
-			// Assert
-			verify(teilnahmenRepository).ofTeilnahmeIdentifier(teilnahmeIdentifier);
-			verify(teilnahmenRepository).changeTeilnahme(any());
-
-		}
-
-		@Test
-		void should_changeNameUpdateTeilnahme_when_aktuellerWettbewerbStatusDownloadPrivat_andTeilnahme_vorhanden() {
-
-			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2020));
-			wettbewerb.naechsterStatus();
-			wettbewerb.naechsterStatus();
-			wettbewerb.naechsterStatus();
-
-			assertEquals(WettbewerbStatus.DOWNLOAD_PRIVAT, wettbewerb.status());
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
-
-			String schulkuerzel = "ZHGT5R43";
-			TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE)
-				.withTeilnahmenummer(schulkuerzel).withWettbewerbID(wettbewerb.id());
-
-			String veranstalterId = "qwuiwui-qwuoqo";
-
-			Schulteilnahme teilnahme = new Schulteilnahme(wettbewerb.id(), new Identifier(schulkuerzel), "alter Schulname",
-				new Identifier(veranstalterId));
-
-			when(teilnahmenRepository.ofTeilnahmeIdentifier(teilnahmeIdentifier)).thenReturn(Optional.of(teilnahme));
-			doNothing().when(teilnahmenRepository).changeTeilnahme(any());
-
-			SchulePayload payload = SchulePayload.create(schulkuerzel, "Neuer Name", "KUERZELORT", "Name Ort", "DE-HH", "Hamburg");
-
-			when(katalogeResourceAdapter.renameSchule(schulkuerzel, "secret", payload)).thenReturn(Response.ok().build());
-
-			// Act
-			service.renameSchule(schulkuerzel, "secret", payload);
-
-			// Assert
-			verify(teilnahmenRepository).ofTeilnahmeIdentifier(teilnahmeIdentifier);
-			verify(teilnahmenRepository).changeTeilnahme(any());
-
-		}
-
-		@Test
-		void should_changeNameNotUpdateTeilnahme_when_aktuellerWettbewerbStatusBeendet() {
-
-			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2020));
-			wettbewerb.naechsterStatus();
-			wettbewerb.naechsterStatus();
-			wettbewerb.naechsterStatus();
-			wettbewerb.naechsterStatus();
-
-			assertEquals(WettbewerbStatus.BEENDET, wettbewerb.status());
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
-
-			String schulkuerzel = "ZHGT5R43";
-			TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE)
-				.withTeilnahmenummer(schulkuerzel).withWettbewerbID(wettbewerb.id());
-
-			SchulePayload payload = SchulePayload.create(schulkuerzel, "Neuer Name", "KUERZELORT", "Name Ort", "DE-HH", "Hamburg");
-
-			when(katalogeResourceAdapter.renameSchule(schulkuerzel, "secret", payload)).thenReturn(Response.ok().build());
-
-			// Act
-			service.renameSchule(schulkuerzel, "secret", payload);
-
-			// Assert
-			verify(teilnahmenRepository, never()).ofTeilnahmeIdentifier(teilnahmeIdentifier);
-			verify(teilnahmenRepository, never()).changeTeilnahme(any());
-
-		}
-
-		@Test
-		void should_changeNameNotUpdateTeilnahme_when_aktuellerWettbewerbStatusAnmeldung_andKeineTeilnahme_vorhanden() {
-
-			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2020));
-			wettbewerb.naechsterStatus();
-
-			assertEquals(WettbewerbStatus.ANMELDUNG, wettbewerb.status());
-			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
-
-			String schulkuerzel = "ZHGT5R43";
-			TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE)
-				.withTeilnahmenummer(schulkuerzel).withWettbewerbID(wettbewerb.id());
-
-			when(teilnahmenRepository.ofTeilnahmeIdentifier(teilnahmeIdentifier)).thenReturn(Optional.empty());
-
-			SchulePayload payload = SchulePayload.create(schulkuerzel, "Neuer Name", "KUERZELORT", "Name Ort", "DE-HH", "Hamburg");
-
-			when(katalogeResourceAdapter.renameSchule(schulkuerzel, "secret", payload)).thenReturn(Response.ok().build());
-
-			// Act
-			service.renameSchule(schulkuerzel, "secret", payload);
-
-			// Assert
-			verify(teilnahmenRepository).ofTeilnahmeIdentifier(teilnahmeIdentifier);
-			verify(teilnahmenRepository, never()).changeTeilnahme(any());
-
-		}
-
-		@Test
-		void should_changeNameNotSearchTelnahme_when_aktuellerWettbewerbMissing() {
-
-			// Arrange
 			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.empty());
 
-			String schulkuerzel = "ZHGT5R43";
+			// act
+			Schulteilnahme result = service.findSchulteilnahme(payload);
 
-			SchulePayload payload = SchulePayload.create(schulkuerzel, "Neuer Name", "KUERZELORT", "Name Ort", "DE-HH", "Hamburg");
-
-			when(katalogeResourceAdapter.renameSchule(schulkuerzel, "secret", payload)).thenReturn(Response.ok().build());
-
-			// Act
-			service.renameSchule(schulkuerzel, "secret", payload);
-
-			// Assert
-			verify(teilnahmenRepository, never()).ofTeilnahmeIdentifier(any());
-			verify(teilnahmenRepository, never()).changeTeilnahme(any());
+			// assert
+			assertNull(result);
+			verify(wettbewerbService).aktuellerWettbewerb();
+			verify(teilnahmenRepository, never()).ofTeilnahmeIdentifier(teilnahmeIdentifier);
 
 		}
 
 		@Test
-		void should_changeNameUpdateTeilnahmeReturnWarning_when_ExceptionOnPersist() {
+		void should_findSchulteilnahmeReturnNull_when_statusWettbewerbErfasst() {
 
-			// Arrange
-			Wettbewerb wettbewerb = new Wettbewerb(new WettbewerbID(2020));
-			wettbewerb.naechsterStatus();
-			wettbewerb.naechsterStatus();
-			wettbewerb.naechsterStatus();
+			// arrange
+			String schulkuerzel = "ABCDEFGH";
+			WettbewerbID wettbewerbId = new WettbewerbID(2025);
+			Wettbewerb wettbewerb = new Wettbewerb(wettbewerbId).withStatus(WettbewerbStatus.ERFASST);
 
-			assertEquals(WettbewerbStatus.DOWNLOAD_PRIVAT, wettbewerb.status());
+			TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE)
+				.withTeilnahmenummer(schulkuerzel).withWettbewerbID(wettbewerbId);
+
+			SchulePayload payload = new SchulePayload().withKuerzel(schulkuerzel);
+
 			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
 
-			String schulkuerzel = "ZHGT5R43";
-			TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE)
-				.withTeilnahmenummer(schulkuerzel).withWettbewerbID(wettbewerb.id());
+			// act
+			Schulteilnahme result = service.findSchulteilnahme(payload);
 
-			String veranstalterId = "qwuiwui-qwuoqo";
-
-			Schulteilnahme teilnahme = new Schulteilnahme(wettbewerb.id(), new Identifier(schulkuerzel), "alter Schulname",
-				new Identifier(veranstalterId));
-
-			when(teilnahmenRepository.ofTeilnahmeIdentifier(teilnahmeIdentifier)).thenReturn(Optional.of(teilnahme));
-			doThrow(RuntimeException.class).when(teilnahmenRepository).changeTeilnahme(any());
-
-			SchulePayload payload = SchulePayload.create(schulkuerzel, "Neuer Name", "KUERZELORT", "Name Ort", "DE-HH", "Hamburg");
-
-			when(katalogeResourceAdapter.renameSchule(schulkuerzel, "secret", payload)).thenReturn(Response.ok().build());
-
-			// Act
-			Response response = service.renameSchule(schulkuerzel, "secret", payload);
-
-			// Assert
-			ResponsePayload responsePayload = (ResponsePayload) response.getEntity();
-
-			assertEquals("WARN", responsePayload.getMessage().getLevel());
-			assertEquals("Umbenennung im Schulkatalog erfolgreich, aber in Schulteilnahme nicht",
-				responsePayload.getMessage().getMessage());
-
-			verify(teilnahmenRepository).ofTeilnahmeIdentifier(teilnahmeIdentifier);
-			verify(teilnahmenRepository).changeTeilnahme(any());
+			// assert
+			assertNull(result);
+			verify(wettbewerbService).aktuellerWettbewerb();
+			verify(teilnahmenRepository, never()).ofTeilnahmeIdentifier(teilnahmeIdentifier);
 
 		}
 
 		@Test
-		void should_changeNameNotCallAnyServices_when_ResponseFromKatalogeNotOk() {
+		void should_findSchulteilnahmeReturnNotNull_when_statusWettbewerbAnmeldung() {
 
-			// Arrange
-			String schulkuerzel = "ZHGT5R43";
+			// arrange
+			String schulkuerzel = "ABCDEFGH";
+			WettbewerbID wettbewerbId = new WettbewerbID(2025);
+			Wettbewerb wettbewerb = new Wettbewerb(wettbewerbId).withStatus(WettbewerbStatus.ANMELDUNG);
 
-			SchulePayload payload = SchulePayload.create(schulkuerzel, "Neuer Name", "KUERZELORT", "Name Ort", "DE-HH", "Hamburg");
+			TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE)
+				.withTeilnahmenummer(schulkuerzel).withWettbewerbID(wettbewerbId);
 
-			when(katalogeResourceAdapter.renameSchule(schulkuerzel, "secret", payload))
-				.thenReturn(Response.status(500).entity(ResponsePayload.messageOnly(MessagePayload.error("schlimm"))).build());
+			SchulePayload payload = new SchulePayload().withKuerzel(schulkuerzel);
+			Teilnahme schulteilnahme = new Schulteilnahme(wettbewerbId, new Identifier(schulkuerzel), "Baumschule", veranstalterId);
 
-			// Act
-			Response response = service.renameSchule(schulkuerzel, "secret", payload);
+			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
+			when(teilnahmenRepository.ofTeilnahmeIdentifier(teilnahmeIdentifier)).thenReturn(Optional.of(schulteilnahme));
 
-			// Assert
-			ResponsePayload responsePayload = (ResponsePayload) response.getEntity();
-			assertEquals("ERROR", responsePayload.getMessage().getLevel());
-			assertEquals("schlimm", responsePayload.getMessage().getMessage());
+			// act
+			Schulteilnahme result = service.findSchulteilnahme(payload);
 
-			verify(wettbewerbService, never()).aktuellerWettbewerb();
-			verify(teilnahmenRepository, never()).ofTeilnahmeIdentifier(any());
-			verify(teilnahmenRepository, never()).changeTeilnahme(any());
+			// assert
+			assertEquals(result, schulteilnahme);
+			verify(wettbewerbService).aktuellerWettbewerb();
+			verify(teilnahmenRepository).ofTeilnahmeIdentifier(teilnahmeIdentifier);
 
 		}
-	}
 
+		@Test
+		void should_findSchulteilnahmeReturnNotNull_when_statusWettbewerbDownloadLehrer() {
+
+			// arrange
+			String schulkuerzel = "ABCDEFGH";
+			WettbewerbID wettbewerbId = new WettbewerbID(2025);
+			Wettbewerb wettbewerb = new Wettbewerb(wettbewerbId).withStatus(WettbewerbStatus.DOWNLOAD_LEHRER);
+
+			TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE)
+				.withTeilnahmenummer(schulkuerzel).withWettbewerbID(wettbewerbId);
+
+			SchulePayload payload = new SchulePayload().withKuerzel(schulkuerzel);
+			Teilnahme schulteilnahme = new Schulteilnahme(wettbewerbId, new Identifier(schulkuerzel), "Baumschule", veranstalterId);
+
+			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
+			when(teilnahmenRepository.ofTeilnahmeIdentifier(teilnahmeIdentifier)).thenReturn(Optional.of(schulteilnahme));
+
+			// act
+			Schulteilnahme result = service.findSchulteilnahme(payload);
+
+			// assert
+			assertEquals(result, schulteilnahme);
+			verify(wettbewerbService).aktuellerWettbewerb();
+			verify(teilnahmenRepository).ofTeilnahmeIdentifier(teilnahmeIdentifier);
+
+		}
+
+		@Test
+		void should_findSchulteilnahmeReturnNotNull_when_statusWettbewerbDownloadPrivat() {
+
+			// arrange
+			String schulkuerzel = "ABCDEFGH";
+			WettbewerbID wettbewerbId = new WettbewerbID(2025);
+			Wettbewerb wettbewerb = new Wettbewerb(wettbewerbId).withStatus(WettbewerbStatus.DOWNLOAD_PRIVAT);
+
+			TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE)
+				.withTeilnahmenummer(schulkuerzel).withWettbewerbID(wettbewerbId);
+
+			SchulePayload payload = new SchulePayload().withKuerzel(schulkuerzel);
+			Teilnahme schulteilnahme = new Schulteilnahme(wettbewerbId, new Identifier(schulkuerzel), "Baumschule", veranstalterId);
+
+			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
+			when(teilnahmenRepository.ofTeilnahmeIdentifier(teilnahmeIdentifier)).thenReturn(Optional.of(schulteilnahme));
+
+			// act
+			Schulteilnahme result = service.findSchulteilnahme(payload);
+
+			// assert
+			assertEquals(result, schulteilnahme);
+			verify(wettbewerbService).aktuellerWettbewerb();
+			verify(teilnahmenRepository).ofTeilnahmeIdentifier(teilnahmeIdentifier);
+
+		}
+
+		@Test
+		void should_findSchulteilnahmeReturnNull_when_statusWettbewerbBeendet() {
+
+			// arrange
+			String schulkuerzel = "ABCDEFGH";
+			WettbewerbID wettbewerbId = new WettbewerbID(2025);
+			Wettbewerb wettbewerb = new Wettbewerb(wettbewerbId).withStatus(WettbewerbStatus.BEENDET);
+
+			TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE)
+				.withTeilnahmenummer(schulkuerzel).withWettbewerbID(wettbewerbId);
+
+			SchulePayload payload = new SchulePayload().withKuerzel(schulkuerzel);
+
+			when(wettbewerbService.aktuellerWettbewerb()).thenReturn(Optional.of(wettbewerb));
+
+			// act
+			Schulteilnahme result = service.findSchulteilnahme(payload);
+
+			// assert
+			assertNull(result);
+			verify(wettbewerbService).aktuellerWettbewerb();
+			verify(teilnahmenRepository, never()).ofTeilnahmeIdentifier(teilnahmeIdentifier);
+
+		}
+
+	}
 }

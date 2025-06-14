@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain;
+package de.egladil.web.mk_gateway.profiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -16,6 +16,8 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
+import de.egladil.web.mk_gateway.domain.AuthorizationService;
+import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
@@ -26,12 +28,14 @@ import de.egladil.web.mk_gateway.domain.veranstalter.VeranstalterRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.User;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.TestProfile;
 import jakarta.inject.Inject;
 
 /**
  * AuthorizationServiceTest
  */
 @QuarkusTest
+@TestProfile(FullDatabaseTestProfile.class)
 public class AuthorizationServiceTest {
 
 	/**

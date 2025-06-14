@@ -4,31 +4,16 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.veranstalter.api;
 
-import java.util.Map;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_validation.annotations.Kuerzel;
-import de.egladil.web.mk_gateway.domain.semantik.ValueObject;
 
 /**
  * SchuleAPIModel
  */
-@ValueObject
 public class SchuleAPIModel {
-
-	private static final String KEY_KUERZEL = "kuerzel";
-
-	private static final String KEY_NAME = "name";
-
-	private static final String KEY_ORT = "ort";
-
-	private static final String KEY_LAND = "land";
-
-	private static final String KEY_KUERZEL_LAND = "kuerzelLand";
-
-	private static final String KEY_ANGEMELDET = "aktuellAngemeldet";
 
 	@JsonProperty
 	@Kuerzel
@@ -55,70 +40,6 @@ public class SchuleAPIModel {
 	@JsonProperty
 	private SchuleDetails details;
 
-	SchuleAPIModel() {
-
-	}
-
-	public static SchuleAPIModel withKuerzelLand(final String kuerzelLand) {
-
-		SchuleAPIModel result = new SchuleAPIModel();
-		result.kuerzelLand = kuerzelLand;
-		return result;
-	}
-
-	public static SchuleAPIModel withKuerzel(final String kuerzel) {
-
-		SchuleAPIModel result = new SchuleAPIModel();
-		result.kuerzel = kuerzel;
-		return result;
-	}
-
-	public static SchuleAPIModel withAttributes(final Map<String, Object> keyValueMap) {
-
-		SchuleAPIModel result = new SchuleAPIModel();
-
-		result.kuerzel = (String) keyValueMap.get(KEY_KUERZEL);
-
-		if (keyValueMap.get(KEY_NAME) != null) {
-
-			result.name = (String) keyValueMap.get(KEY_NAME);
-		}
-
-		if (keyValueMap.get(KEY_ORT) != null) {
-
-			result.ort = (String) keyValueMap.get(KEY_ORT);
-		}
-
-		if (keyValueMap.get(KEY_LAND) != null) {
-
-			result.land = (String) keyValueMap.get(KEY_LAND);
-		}
-
-		if (keyValueMap.get(KEY_KUERZEL_LAND) != null) {
-
-			result.kuerzelLand = (String) keyValueMap.get(KEY_KUERZEL_LAND);
-		}
-
-		if (keyValueMap.get(KEY_ANGEMELDET) != null) {
-
-			result.aktuellAngemeldet = (boolean) keyValueMap.get(KEY_ANGEMELDET);
-		}
-
-		return result;
-	}
-
-	public SchuleAPIModel withAngemeldet(final boolean angemeldet) {
-
-		this.aktuellAngemeldet = angemeldet;
-		return this;
-	}
-
-	public SchuleAPIModel withDetails(final SchuleDetails details) {
-
-		this.details = details;
-		return this;
-	}
-
 	/**
 	 * @param  schuleAusKatalog
 	 * @param  schuleAusWettbewerbAPI
@@ -138,6 +59,8 @@ public class SchuleAPIModel {
 		result.details = schuleAusWettbewerbAPI;
 		return result;
 	}
+
+
 
 	public SchuleAPIModel markKatalogeintragUnknown() {
 
@@ -215,20 +138,64 @@ public class SchuleAPIModel {
 		return "SchuleAPIModel [kuerzel=" + kuerzel + "]";
 	}
 
-	public SchuleAPIModel withLand(final String land) {
-
-		this.land = land;
-		return this;
-	}
-
 	public Auswertungsmodus getAuswertungsmodus() {
 
 		return auswertungsmodus;
 	}
 
-	public SchuleAPIModel withAuswertungsmodus(final Auswertungsmodus auswertungsmodus) {
 
+
+	public SchuleAPIModel withKuerzel(String kuerzel) {
+		this.kuerzel = kuerzel;
+		return this;
+	}
+
+
+
+	public SchuleAPIModel withName(String name) {
+		this.name = name;
+		return this;
+	}
+
+
+
+	public SchuleAPIModel withOrt(String ort) {
+		this.ort = ort;
+		return this;
+	}
+
+
+
+	public SchuleAPIModel withLand(String land) {
+		this.land = land;
+		return this;
+	}
+
+
+
+	public SchuleAPIModel withKuerzelLand(String kuerzelLand) {
+		this.kuerzelLand = kuerzelLand;
+		return this;
+	}
+
+
+
+	public SchuleAPIModel withAktuellAngemeldet(boolean aktuellAngemeldet) {
+		this.aktuellAngemeldet = aktuellAngemeldet;
+		return this;
+	}
+
+
+
+	public SchuleAPIModel withAuswertungsmodus(Auswertungsmodus auswertungsmodus) {
 		this.auswertungsmodus = auswertungsmodus;
+		return this;
+	}
+
+
+
+	public SchuleAPIModel withDetails(SchuleDetails details) {
+		this.details = details;
 		return this;
 	}
 }

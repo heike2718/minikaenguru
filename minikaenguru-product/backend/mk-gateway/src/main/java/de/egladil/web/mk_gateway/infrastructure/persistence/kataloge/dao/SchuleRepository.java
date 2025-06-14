@@ -20,10 +20,10 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 
 /**
- * SchuleHibernateRepository
+ * SchuleRepository
  */
 @RequestScoped
-public class SchuleHibernateRepository {
+public class SchuleRepository {
 
 	@Inject
 	@PersistenceUnit("kataloge")
@@ -33,7 +33,6 @@ public class SchuleHibernateRepository {
 	KatalogeRepository katalogRepository;
 
 	@Transactional
-
 	public boolean addSchule(final Schule schule) {
 
 		if (schule == null) {
@@ -63,18 +62,10 @@ public class SchuleHibernateRepository {
 		return true;
 	}
 
-
 	@Transactional
-	public boolean replaceSchulen(final List<Schule> schulen) {
-
-		for (Schule schule : schulen) {
-
-			em.merge(schule);
-		}
-
-		return true;
+	public void updateSchule(Schule schule) {
+		this.em.merge(schule);
 	}
-
 
 	public Optional<Schule> getSchule(final String kuerzel) {
 
@@ -84,7 +75,6 @@ public class SchuleHibernateRepository {
 		return trefferliste.isEmpty() ? Optional.empty() : Optional.of(trefferliste.get(0));
 	}
 
-
 	public Optional<Ort> getOrt(final String kuerzel) {
 
 		List<Ort> trefferliste = em.createNamedQuery(Ort.QUERY_FIND_ORT_BY_KUERZEL, Ort.class).setParameter("kuerzel", kuerzel)
@@ -93,13 +83,11 @@ public class SchuleHibernateRepository {
 		return trefferliste.isEmpty() ? Optional.empty() : Optional.of(trefferliste.get(0));
 	}
 
-
 	public List<Schule> findSchulenInOrt(final String ortKuerzel) {
 
 		return em.createNamedQuery(Schule.LOAD_SCHULEN_WITH_ORTKUERZEL, Schule.class).setParameter("ortKuerzel", ortKuerzel)
 			.getResultList();
 	}
-
 
 	public List<Ort> findOrteInLand(final String landKuerzel) {
 
@@ -107,18 +95,28 @@ public class SchuleHibernateRepository {
 			.getResultList();
 	}
 
-
 	public List<Schule> findSchulenInLand(final String landKuerzel) {
 
-		return em.createNamedQuery(Schule.LOAD_SCHULEN_WITH_LANDKUERZEL, Schule.class)
-			.setParameter("landKuerzel", landKuerzel)
+		return em.createNamedQuery(Schule.LOAD_SCHULEN_WITH_LANDKUERZEL, Schule.class).setParameter("landKuerzel", landKuerzel)
 			.getResultList();
 	}
-
 
 	public List<Land> loadLaender() {
 
 		return katalogRepository.loadLaender();
+	}
+
+	/**
+	 * Da das Datenmodell ist, wie es ist, müssen die Schulen eines Ortes "umgehängt" werden, also deren Orte umbenannt.
+	 *
+	 * @param schulen
+	 */
+	@Transactional
+	public void replaceSchulen(List<Schule> schulen) {
+
+		for (Schule schule : schulen) {
+			em.merge(schule);
+		}
 	}
 
 }

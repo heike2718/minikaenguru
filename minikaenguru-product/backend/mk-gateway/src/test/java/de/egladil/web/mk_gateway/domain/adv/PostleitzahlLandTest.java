@@ -54,7 +54,7 @@ public class PostleitzahlLandTest {
 
 		// Arrange
 		String plz = "76897 ";
-		SchuleAPIModel schuleAPModel = SchuleAPIModel.withKuerzelLand("DE-TH");
+		SchuleAPIModel schuleAPModel = new SchuleAPIModel().withKuerzelLand("DE-TH");
 		Optional<SchuleAPIModel> optSchule = Optional.of(schuleAPModel);
 
 		// Act
@@ -71,7 +71,7 @@ public class PostleitzahlLandTest {
 
 		// Arrange
 		String plz = "76897 ";
-		SchuleAPIModel schuleAPModel = SchuleAPIModel.withKuerzelLand("CH");
+		SchuleAPIModel schuleAPModel = new SchuleAPIModel().withKuerzelLand("CH");
 		Optional<SchuleAPIModel> optSchule = Optional.of(schuleAPModel);
 
 		// Act
@@ -88,7 +88,7 @@ public class PostleitzahlLandTest {
 
 		// Arrange
 		String plz = "TH-76897 ";
-		SchuleAPIModel schuleAPModel = SchuleAPIModel.withKuerzelLand("CH");
+		SchuleAPIModel schuleAPModel = new SchuleAPIModel().withKuerzelLand("CH");
 		Optional<SchuleAPIModel> optSchule = Optional.of(schuleAPModel);
 
 		// Act
@@ -105,7 +105,7 @@ public class PostleitzahlLandTest {
 
 		// Arrange
 		String plz = " CH -76897 ";
-		SchuleAPIModel schuleAPModel = SchuleAPIModel.withKuerzelLand("CH");
+		SchuleAPIModel schuleAPModel = new SchuleAPIModel().withKuerzelLand("CH");
 		Optional<SchuleAPIModel> optSchule = Optional.of(schuleAPModel);
 
 		// Act

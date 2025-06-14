@@ -5,7 +5,6 @@
 package de.egladil.web.mk_gateway.domain.statistik.mkbiza;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -21,13 +20,11 @@ import org.slf4j.LoggerFactory;
 
 import de.egladil.web.commons_validation.payload.MessagePayload;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.apimodel.StringsAPIModel;
 import de.egladil.web.mk_gateway.domain.auth.s2s.MkGatewayAuthConfig;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayWebApplicationException;
 import de.egladil.web.mk_gateway.domain.kataloge.LandPayloadComparator;
-import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
+import de.egladil.web.mk_gateway.domain.kataloge.SchulkatalogEntitiesMapper;
 import de.egladil.web.mk_gateway.domain.kataloge.api.LandPayload;
-import de.egladil.web.mk_gateway.domain.kataloge.dto.KatalogItem;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
 import de.egladil.web.mk_gateway.domain.statistik.AufgabeErgebnisItem;
@@ -47,11 +44,11 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbRepository;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbeDescendingComparator;
+import de.egladil.web.mk_gateway.infrastructure.persistence.kataloge.dao.KatalogeRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.kataloge.entities.Land;
+import de.egladil.web.mk_gateway.infrastructure.persistence.kataloge.entities.Schule;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.ProcessingException;
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.Response;
 
 /**
@@ -77,7 +74,10 @@ public class MkBiZaStatistikService {
 	LoesungszettelRepository loesungszettelRepository;
 
 	@Inject
-	MkKatalogeResourceAdapter katalogeResourceAdapter;
+	KatalogeRepository katalogeRepository;
+
+//	@Inject
+//	MkKatalogeResourceAdapter katalogeResourceAdapter;
 
 	@Inject
 	TeilnahmenRepository teilnahmenRepository;
@@ -319,75 +319,23 @@ public class MkBiZaStatistikService {
 
 	List<LandPayload> getLaender() {
 
-		try {
+		List<Land> laender = katalogeRepository.loadLaender();
+		List<LandPayload> list = laender.stream().map(l -> LandPayload.create(l.getKuerzel(), l.getName())).toList();
 
-			Response response = katalogeResourceAdapter.loadLaenderV2(authConfig.client(), adminSecret);
-			KatalogItem[] laender = response.readEntity(new GenericType<KatalogItem[]>() {
-			});
+		List<LandPayload> result = new ArrayList<>(list);
+		Collections.sort(result, new LandPayloadComparator());
 
-			List<LandPayload> list = Arrays.stream(laender).map(l -> LandPayload.create(l.getKuerzel(), l.getName())).toList();
-
-			List<LandPayload> result = new ArrayList<>(list);
-			Collections.sort(result, new LandPayloadComparator());
-
-			return list;
-
-		} catch (Exception e) {
-
-			if (e instanceof WebApplicationException) {
-
-				LOGGER.error("WebApplicationException beim Aufruf von [loadLaender]: {}", e.getMessage(), e);
-				// das hier ist ein klarer Fall von ServerError
-				throw new MkGatewayWebApplicationException(Response.serverError().build());
-			}
-
-			if (e instanceof ProcessingException) {
-
-				LOGGER.error("endpoint [loadLaender] ist nicht erreichbar: {}", e.getMessage(), e);
-
-				return new ArrayList<>();
-
-			}
-
-			LOGGER.error("Unerwartete Exception - " + e.getMessage(), e);
-
-			return new ArrayList<>();
-		}
+		return list;
 	}
 
 	List<SchuleAPIModel> getSchulen(final Set<Identifier> teilnahmenummern) {
 
 		List<String> teilnahmenummernList = teilnahmenummern.stream().map(Identifier::identifier).toList();
+		List<Schule> schulenWithKuerzeln = katalogeRepository.findSchulenWithKuerzeln(teilnahmenummernList);
 
-		try {
+		final SchulkatalogEntitiesMapper mapper = new SchulkatalogEntitiesMapper();
 
-			Response response = katalogeResourceAdapter.loadSchulenV2(new StringsAPIModel().withStrings(teilnahmenummernList));
-			SchuleAPIModel[] schulen = response.readEntity(new GenericType<SchuleAPIModel[]>() {
-			});
-
-			return Arrays.asList(schulen);
-
-		} catch (Exception e) {
-
-			if (e instanceof WebApplicationException) {
-
-				LOGGER.error("WebApplicationException beim Aufruf von [findSchulen]: {}", e.getMessage(), e);
-				// das hier ist ein klarer Fall von ServerError
-				throw new MkGatewayWebApplicationException(Response.serverError().build());
-			}
-
-			if (e instanceof ProcessingException) {
-
-				LOGGER.error("endpoint [findSchulen] ist nicht erreichbar: {}", e.getMessage(), e);
-
-				return new ArrayList<>();
-
-			}
-
-			LOGGER.error("Unerwartete Exception - " + e.getMessage(), e);
-
-			return new ArrayList<>();
-		}
+		return schulenWithKuerzeln.stream().map(s -> mapper.mapSchuleToSchuleAPIModel(s)).toList();
 	}
 
 	/**
@@ -656,4 +604,6 @@ public class MkBiZaStatistikService {
 		return null;
 
 	}
+
+
 }

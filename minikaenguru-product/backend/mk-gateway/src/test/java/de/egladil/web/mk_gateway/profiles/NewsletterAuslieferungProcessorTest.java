@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.newsletterversand;
+package de.egladil.web.mk_gateway.profiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -28,8 +28,16 @@ import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.mail.AdminMailService;
 import de.egladil.web.mk_gateway.domain.newsletters.Newsletter;
+import de.egladil.web.mk_gateway.domain.newsletterversand.AuslieferungPicker;
+import de.egladil.web.mk_gateway.domain.newsletterversand.AuslieferungStatusUpdater;
+import de.egladil.web.mk_gateway.domain.newsletterversand.BannedEmailsService;
+import de.egladil.web.mk_gateway.domain.newsletterversand.NewsletterAuslieferung;
+import de.egladil.web.mk_gateway.domain.newsletterversand.NewsletterAuslieferungProcessor;
+import de.egladil.web.mk_gateway.domain.newsletterversand.NewsletterVersandauftragService;
+import de.egladil.web.mk_gateway.domain.newsletterversand.StatusAuslieferung;
+import de.egladil.web.mk_gateway.domain.newsletterversand.Versandauftrag;
+import de.egladil.web.mk_gateway.domain.newsletterversand.VersandauftragStatusUpdater;
 import de.egladil.web.mk_gateway.domain.newsletterversand.event.NewsletterversandFailed;
-import de.egladil.web.mk_gateway.profiles.FullDatabaseTestProfile;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;

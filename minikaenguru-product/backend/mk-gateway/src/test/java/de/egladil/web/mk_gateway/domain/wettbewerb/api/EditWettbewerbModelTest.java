@@ -4,8 +4,8 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.wettbewerb.api;
 
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +15,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.egladil.web.commons_validation.ValidationDelegate;
 import de.egladil.web.commons_validation.exception.InvalidInputException;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_gateway.domain.wettbewerb.api.EditWettbewerbModel;
 
 /**
  * EditWettbewerbModelTest
@@ -36,7 +35,7 @@ public class EditWettbewerbModelTest {
 		System.out.println(serialized);
 
 		assertEquals(
-			"{\"jahr\":2021,\"status\":null,\"wettbewerbsbeginn\":\"11.11.2020\",\"wettbewerbsende\":\"01.08.2021\",\"datumFreischaltungLehrer\":\"06.03.2021\",\"datumFreischaltungPrivat\":\"01.06.2021\",\"loesungsbuchstabenIkids\":null,\"loesungsbuchstabenKlasse1\":null,\"loesungsbuchstabenKlasse2\":null}",
+			"{\"jahr\":2021,\"status\":null,\"wettbewerbsbeginn\":\"11.11.2020\",\"wettbewerbsende\":\"01.08.2021\",\"datumFreischaltungLehrer\":\"06.03.2021\",\"datumFreischaltungPrivat\":\"01.06.2021\",\"loesungsbuchstabenIkids\":null,\"loesungsbuchstabenKlasse1\":null,\"loesungsbuchstabenKlasse2\":null,\"medianIkids\":null,\"medianKlasseEins\":null,\"medianKlasseZwei\":null}",
 			serialized);
 
 	}

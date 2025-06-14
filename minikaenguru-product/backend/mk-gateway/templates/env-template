@@ -40,8 +40,8 @@ ADMIN_CREATED_URI_PREFIX=http://localhost:9510/mk-gateway/admin
 EMAILS_GROUPSIZE=3
 ADMIN_SECRET=pflaume123
 
-EMAIL_ADMIN=minikaenguru@egladil.de
-EMAILS_TESTEMPFAENGER=heike@egladil.de,info.heike@egladil.de
+EMAIL_ADMIN=ueberschreiben
+EMAILS_TESTEMPFAENGER=erste,zweite
 EMAILS_GROUPSIZE=20
 EMAILS_MOCKUP=true
 
@@ -64,7 +64,6 @@ AUTH_APP_URL=http://localhost:9000/authprovider/
 PUBLIC_REDIRECT_URL=http://localhost:4200
 QUARKUS_REST_CLIENT_AUTHPROVIDER_URL=http://localhost:9000
 AUTHPROVIDER_URL=http://localhost:9000/authprovider
-QUARKUS_REST_CLIENT_MK_KATALOGE_URL=http://localhost:9530
 QUARKUS_REST_CLIENT_FILESCANNER_URL=http://localhost:9800
 QUARKUS_REST_CLIENT_MJA_API_URL=http://localhost:9210/mja-api
 
@@ -73,7 +72,6 @@ QUARKUS_REST_CLIENT_MJA_API_URL=http://localhost:9210/mja-api
 #PUBLIC_REDIRECT_URL=http://localhost:4200
 #QUARKUS_REST_CLIENT_AUTHPROVIDER_URL=http://localhost:10000
 #AUTHPROVIDER_URL=http://localhost:10000/authprovider
-#QUARKUS_REST_CLIENT_MK_KATALOGE_URL=http://localhost:9530
 #QUARKUS_REST_CLIENT_FILESCANNER_URL=http://localhost:9800
 #QUARKUS_REST_CLIENT_MJA_API_URL=http://localhost:9210/mja-api
 

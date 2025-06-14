@@ -129,7 +129,7 @@ public class BewertungService {
 
 		for (String kuerzel : schulkuerzel) {
 
-			Optional<SchuleAPIModel> optSchule = schulkatalogService.findSchuleQuietly(kuerzel);
+			Optional<SchuleAPIModel> optSchule = schulkatalogService.findSchule(kuerzel);
 
 			if (optSchule.isPresent()) {
 

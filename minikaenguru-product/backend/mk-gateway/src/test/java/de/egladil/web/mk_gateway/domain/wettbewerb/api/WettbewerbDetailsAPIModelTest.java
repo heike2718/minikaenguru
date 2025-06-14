@@ -4,8 +4,8 @@
 // =====================================================
 package de.egladil.web.mk_gateway.domain.wettbewerb.api;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -18,7 +18,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
-import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbDetailsAPIModel;
 
 /**
  * WettbewerbDetailsAPIModelTest
@@ -34,8 +33,7 @@ public class WettbewerbDetailsAPIModelTest {
 			.withWettbewerbsbeginn(LocalDate.of(jahr, Month.JANUARY, 1))
 			.withDatumFreischaltungLehrer(LocalDate.of(jahr, Month.MARCH, 1))
 			.withDatumFreischaltungPrivat(LocalDate.of(jahr, Month.JUNE, 1))
-			.withWettbewerbsende(LocalDate.of(jahr, Month.AUGUST, 1))
-			.withLoesungsbuchstabenKlasse1("CDAD-ECCC-BCDE")
+			.withWettbewerbsende(LocalDate.of(jahr, Month.AUGUST, 1)).withLoesungsbuchstabenKlasse1("CDAD-ECCC-BCDE")
 			.withLoesungsbuchstabenKlasse2("EACDD-CDCCE-BACBA");
 
 		WettbewerbDetailsAPIModel model = WettbewerbDetailsAPIModel.fromWettbewerb(wettbewerb);
@@ -54,9 +52,8 @@ public class WettbewerbDetailsAPIModelTest {
 		assertEquals("CDAD-ECCC-BCDE", model.getLoesungsbuchstabenKlasse1());
 		assertEquals("EACDD-CDCCE-BACBA", model.getLoesungsbuchstabenKlasse2());
 
-		// {"jahr":2006,"status":"BEENDET","wettbewerbsbeginn":"01.01.2006","wettbewerbsende":"01.08.2006","datumFreischaltungLehrer":"01.03.2006","datumFreischaltungPrivat":"01.06.2006","loesungsbuchstabenIkids":null,"loesungsbuchstabenKlasse1":"CDAD-ECCC-BCDE","loesungsbuchstabenKlasse2":"EACDD-CDCCE-BACBA","teilnahmenuebersicht":null,"completelyLoaded":true}
 		assertEquals(
-			"{\"jahr\":2006,\"status\":\"BEENDET\",\"wettbewerbsbeginn\":\"01.01.2006\",\"wettbewerbsende\":\"01.08.2006\",\"datumFreischaltungLehrer\":\"01.03.2006\",\"datumFreischaltungPrivat\":\"01.06.2006\",\"loesungsbuchstabenIkids\":null,\"loesungsbuchstabenKlasse1\":\"CDAD-ECCC-BCDE\",\"loesungsbuchstabenKlasse2\":\"EACDD-CDCCE-BACBA\",\"teilnahmenuebersicht\":null,\"completelyLoaded\":true}",
+			"{\"jahr\":2006,\"status\":\"BEENDET\",\"wettbewerbsbeginn\":\"01.01.2006\",\"wettbewerbsende\":\"01.08.2006\",\"datumFreischaltungLehrer\":\"01.03.2006\",\"datumFreischaltungPrivat\":\"01.06.2006\",\"loesungsbuchstabenIkids\":null,\"loesungsbuchstabenKlasse1\":\"CDAD-ECCC-BCDE\",\"loesungsbuchstabenKlasse2\":\"EACDD-CDCCE-BACBA\",\"medianIkids\":0,\"medianKlasseEins\":0,\"medianKlasseZwei\":0,\"teilnahmenuebersicht\":null,\"completelyLoaded\":true}",
 			serialized);
 
 		System.out.println(serialized);
@@ -87,9 +84,8 @@ public class WettbewerbDetailsAPIModelTest {
 		assertNull(model.getWettbewerbsbeginn());
 		assertEquals("01.08.2006", model.getWettbewerbsende());
 
-		// {"jahr":2006,"status":"ERFASST","wettbewerbsbeginn":null,"wettbewerbsende":"01.08.2006","datumFreischaltungLehrer":"01.03.2006","datumFreischaltungPrivat":"01.06.2006","loesungsbuchstabenIkids":null,"loesungsbuchstabenKlasse1":null,"loesungsbuchstabenKlasse2":null,"teilnahmenuebersicht":null,"completelyLoaded":true}
 		assertEquals(
-			"{\"jahr\":2006,\"status\":\"ERFASST\",\"wettbewerbsbeginn\":null,\"wettbewerbsende\":\"01.08.2006\",\"datumFreischaltungLehrer\":\"01.03.2006\",\"datumFreischaltungPrivat\":\"01.06.2006\",\"loesungsbuchstabenIkids\":null,\"loesungsbuchstabenKlasse1\":null,\"loesungsbuchstabenKlasse2\":null,\"teilnahmenuebersicht\":null,\"completelyLoaded\":true}",
+			"{\"jahr\":2006,\"status\":\"ERFASST\",\"wettbewerbsbeginn\":null,\"wettbewerbsende\":\"01.08.2006\",\"datumFreischaltungLehrer\":\"01.03.2006\",\"datumFreischaltungPrivat\":\"01.06.2006\",\"loesungsbuchstabenIkids\":null,\"loesungsbuchstabenKlasse1\":null,\"loesungsbuchstabenKlasse2\":null,\"medianIkids\":0,\"medianKlasseEins\":0,\"medianKlasseZwei\":0,\"teilnahmenuebersicht\":null,\"completelyLoaded\":true}",
 			serialized);
 
 		System.out.println(serialized);

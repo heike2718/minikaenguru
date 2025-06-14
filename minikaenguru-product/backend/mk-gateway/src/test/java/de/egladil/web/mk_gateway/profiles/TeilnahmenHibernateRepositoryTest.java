@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao;
+package de.egladil.web.mk_gateway.profiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -18,18 +18,24 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao.TeilnahmenHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.PersistenteTeilnahme;
+import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.TestProfile;
+import jakarta.inject.Inject;
 
 /**
  * TeilnahmenHibernateRepositoryTest
  */
+@QuarkusTest
+@TestProfile(FullDatabaseTestProfile.class)
 public class TeilnahmenHibernateRepositoryTest {
+
+	@Inject
+	TeilnahmenHibernateRepository repo;
 
 	@Test
 	void should_mapToSchulteilnahme_work() {
 
 		// Arrange
-		TeilnahmenHibernateRepository repo = new TeilnahmenHibernateRepository();
-
 		String lehrerUUID = "bsjkhah";
 		String schulkuerzel = "asjhipfpi";
 		String schulname = "HGggdgqu";
@@ -60,8 +66,6 @@ public class TeilnahmenHibernateRepositoryTest {
 	void should_mapToPrivatteilnahme_work() {
 
 		// Arrange
-		TeilnahmenHibernateRepository repo = new TeilnahmenHibernateRepository();
-
 		String teilnahmekuerzel = "asjhipfpi";
 
 		PersistenteTeilnahme persistente = new PersistenteTeilnahme();
@@ -94,7 +98,7 @@ public class TeilnahmenHibernateRepositoryTest {
 		Schulteilnahme teilnahme = new Schulteilnahme(wettbewerb, schuleId, "Christaschule", lehrerId);
 
 		// Act
-		PersistenteTeilnahme persistente = new TeilnahmenHibernateRepository().mapFromTeilnahme(teilnahme);
+		PersistenteTeilnahme persistente = repo.mapFromTeilnahme(teilnahme);
 
 		// Assert
 		assertEquals(Teilnahmeart.SCHULE, persistente.getTeilnahmeart());

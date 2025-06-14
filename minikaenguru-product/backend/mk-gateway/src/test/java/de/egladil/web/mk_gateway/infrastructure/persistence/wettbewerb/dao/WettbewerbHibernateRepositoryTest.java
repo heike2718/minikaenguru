@@ -19,7 +19,6 @@ import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
-import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao.WettbewerbHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.PersistenterWettbewerb;
 
 /**

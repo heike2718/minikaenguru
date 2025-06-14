@@ -7,8 +7,6 @@ package de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -20,7 +18,6 @@ import de.egladil.web.mk_gateway.domain.adv.VertragAuftragsdatenverarbeitung;
 import de.egladil.web.mk_gateway.domain.adv.Vertragstext;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.VertragAdvAPIModel;
-import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao.VertragAuftragsverarbeitungHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.PersistenterVertragAdv;
 import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.PersistenterVertragAdvText;
 
@@ -41,32 +38,18 @@ public class VertragAuftragsverarbeitungHibernateRepositoryTest {
 
 		String schulkuerzel = "ASDERS";
 
-		VertragAdvAPIModel apiModel = new VertragAdvAPIModel()
-			.withHausnummer(hausnummer)
-			.withOrt(ort)
-			.withPlz(plz)
-			.withSchulkuerzel(schulkuerzel)
-			.withSchulname(schulname)
-			.withStrasse(strasse);
+		VertragAdvAPIModel apiModel = new VertragAdvAPIModel().withHausnummer(hausnummer).withOrt(ort).withPlz(plz)
+			.withSchulkuerzel(schulkuerzel).withSchulname(schulname).withStrasse(strasse);
 
-		Map<String, Object> schuleKatalogeMap = new HashMap<>();
-
-		schuleKatalogeMap.put("kuerzel", schulkuerzel);
-		schuleKatalogeMap.put("name", "Schule 98765");
-		schuleKatalogeMap.put("ort", ort);
-		schuleKatalogeMap.put("land", "Hessen");
-		schuleKatalogeMap.put("kuerzelLand", "DE-HE");
-
-		SchuleAPIModel schuleAPIModel = SchuleAPIModel.withAttributes(schuleKatalogeMap);
-
+		SchuleAPIModel schuleAPIModel = new SchuleAPIModel().withKuerzel(schulkuerzel).withName("Schule 98765").withOrt(ort)
+			.withLand("Hessen").withKuerzelLand("DE-HE");
 		Vertragstext vertragstext = new Vertragstext().withIdentifier(new Identifier("gasdgqoug"));
 
 		String lehrerUuid = "GUIguigigzfzfi";
 		String unterzeichnetAm = "11.09.2020 17:29:13";
 
 		VertragAuftragsdatenverarbeitung vertrag = new AdvService().initVertrag(apiModel, lehrerUuid,
-			new PostleitzahlLand(plz, Optional.of(schuleAPIModel)), vertragstext,
-			unterzeichnetAm);
+			new PostleitzahlLand(plz, Optional.of(schuleAPIModel)), vertragstext, unterzeichnetAm);
 
 		PersistenterVertragAdvText persistenterVertragstext = new PersistenterVertragAdvText();
 		persistenterVertragstext.setUuid("AGDUQGUOG");

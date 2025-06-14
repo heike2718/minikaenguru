@@ -91,12 +91,12 @@ public class SchulenOverviewService {
 				Auswertungsmodus auswertungsmodus = auswertungsmodusInfoService
 					.ermittleAuswertungsmodusFuerTeilnahme(optTeilnahme.get().teilnahmeIdentifier());
 
-				items.add(SchuleAPIModel.withKuerzel(schulID.identifier()).withAngemeldet(true)
+				items.add(new SchuleAPIModel().withKuerzel(schulID.identifier()).withAktuellAngemeldet(true)
 					.withAuswertungsmodus(auswertungsmodus));
 
 			} else {
 
-				items.add(SchuleAPIModel.withKuerzel(schulID.identifier())
+				items.add(new SchuleAPIModel().withKuerzel(schulID.identifier())
 					.withAuswertungsmodus(Auswertungsmodus.INDIFFERENT));
 			}
 		}

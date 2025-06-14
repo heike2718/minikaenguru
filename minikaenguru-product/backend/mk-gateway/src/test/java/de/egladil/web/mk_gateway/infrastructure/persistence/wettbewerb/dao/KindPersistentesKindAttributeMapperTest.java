@@ -17,6 +17,8 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifierAktuellerWettbewerb;
 import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao.KindPersistentesKindAttributeMapper;
 import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.PersistentesKind;
+import de.egladil.web.mk_gateway.profiles.FullDatabaseTestProfile;
+import io.quarkus.test.junit.TestProfile;
 
 /**
  * KindPersistentesKindAttributeMapperTest

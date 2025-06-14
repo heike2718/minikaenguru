@@ -17,6 +17,8 @@ import org.junit.jupiter.api.Test;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
 import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao.PermittedRolesInMemoryRepository;
+import de.egladil.web.mk_gateway.profiles.FullDatabaseTestProfile;
+import io.quarkus.test.junit.TestProfile;
 
 /**
  * PermittedRolesInMemoryRepositoryTest

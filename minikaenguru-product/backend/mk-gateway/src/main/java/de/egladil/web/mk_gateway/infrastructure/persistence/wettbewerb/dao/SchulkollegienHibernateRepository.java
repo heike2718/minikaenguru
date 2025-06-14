@@ -79,7 +79,7 @@ public class SchulkollegienHibernateRepository implements SchulkollegienReposito
 
 	}
 
-	Kollege[] deserializeKollegen(final String serializedKollegen) {
+	public Kollege[] deserializeKollegen(final String serializedKollegen) {
 
 		try {
 

@@ -38,7 +38,6 @@ public class KatalogeRepository {
 	@PersistenceUnit("kataloge")
 	EntityManager em;
 
-
 	public List<Land> loadLaender() {
 
 		TypedQuery<Land> query = em.createNamedQuery(Land.QUERY_LOAD_LAENDER, Land.class).setParameter("excluded", UNBEKANNT);
@@ -47,8 +46,8 @@ public class KatalogeRepository {
 	}
 
 	/**
-	 * @param  mapper
-	 * @param  query
+	 * @param mapper
+	 * @param query
 	 * @return
 	 */
 	private List<Land> getLaender(final TypedQuery<Land> query) {
@@ -56,7 +55,6 @@ public class KatalogeRepository {
 		List<Land> trefferliste = query.getResultList();
 		return trefferliste;
 	}
-
 
 	public List<Ort> loadOrteInLand(final String landKuerzel) {
 
@@ -66,26 +64,22 @@ public class KatalogeRepository {
 		return query.getResultList();
 	}
 
-
 	public List<Ort> findOrteInLand(final String landKuerzel, final String searchTerm) {
 
 		TypedQuery<Ort> query = em.createNamedQuery(Ort.QUERY_FIND_ORTE_IN_LAND, Ort.class);
-		query.setParameter("name", searchTerm.toLowerCase() + "%").setParameter("landKuerzel", landKuerzel)
-			.setParameter("excluded", UNBEKANNT);
+		query.setParameter("name", searchTerm.toLowerCase() + "%").setParameter("landKuerzel", landKuerzel).setParameter("excluded",
+			UNBEKANNT);
 
 		return query.getResultList();
 	}
 
-
 	public List<Land> findLander(final String searchTerm) {
 
 		TypedQuery<Land> query = em.createNamedQuery(Land.QUERY_FIND_LAENDER_MIT_NAME, Land.class);
-		query.setParameter("name", searchTerm.toLowerCase() + "%")
-			.setParameter("excluded", UNBEKANNT);
+		query.setParameter("name", searchTerm.toLowerCase() + "%").setParameter("excluded", UNBEKANNT);
 
 		return getLaender(query);
 	}
-
 
 	public List<Schule> findSchulen(final String searchTerm) {
 
@@ -94,7 +88,6 @@ public class KatalogeRepository {
 
 		return query.getResultList();
 	}
-
 
 	@Transactional
 	public List<Ort> findOrte(final String searchTerm) {
@@ -107,12 +100,10 @@ public class KatalogeRepository {
 		return resultList;
 	}
 
-
 	public List<Schule> loadSchulenInOrt(final String ortKuerzel) {
 
 		TypedQuery<Schule> query = em.createNamedQuery(Schule.LOAD_SCHULEN_IN_ORT, Schule.class)
-			.setParameter("ortKuerzel", ortKuerzel)
-			.setParameter("excluded", UNBEKANNT);
+			.setParameter("ortKuerzel", ortKuerzel).setParameter("excluded", UNBEKANNT);
 
 		return query.getResultList();
 	}
@@ -120,13 +111,11 @@ public class KatalogeRepository {
 	public List<Schule> findSchulenInOrt(final String ortKuerzel, final String searchTerm) {
 
 		TypedQuery<Schule> query = em.createNamedQuery(Schule.FIND_SCHULEN_IN_ORT, Schule.class);
-		query.setParameter("name", "%" + searchTerm.toLowerCase() + "%")
-			.setParameter("ortKuerzel", ortKuerzel)
+		query.setParameter("name", "%" + searchTerm.toLowerCase() + "%").setParameter("ortKuerzel", ortKuerzel)
 			.setParameter("excluded", UNBEKANNT);
 
 		return query.getResultList();
 	}
-
 
 	public Optional<Land> findLandWithKuerzel(final String landKuerzel) {
 
@@ -147,13 +136,11 @@ public class KatalogeRepository {
 
 		} catch (PersistenceException e) {
 
-			String msg = "Unerwarteter Fehler beim Suchen der Entity Land mit kuerzel="
-				+ landKuerzel;
+			String msg = "Unerwarteter Fehler beim Suchen der Entity Land mit kuerzel=" + landKuerzel;
 			LOGGER.error("{}: {}", e.getMessage(), e);
 			throw new MkGatewayRuntimeException(msg);
 		}
 	}
-
 
 	public Optional<Ort> findOrtWithKuerzel(final String ortKuerzel) {
 
@@ -174,70 +161,45 @@ public class KatalogeRepository {
 
 		} catch (PersistenceException e) {
 
-			String msg = "Unerwarteter Fehler beim Suchen der Entity Ort mit kuerzel="
-				+ ortKuerzel;
+			String msg = "Unerwarteter Fehler beim Suchen der Entity Ort mit kuerzel=" + ortKuerzel;
 			LOGGER.error("{}: {}", e.getMessage(), e);
 			throw new MkGatewayRuntimeException(msg);
 		}
 	}
-
 
 	public Optional<Schule> findSchuleWithKuerzel(final String schulkuerzel) {
 
-		TypedQuery<Schule> query = em.createNamedQuery(Schule.FIND_BY_KUERZEL, Schule.class).setParameter("kuerzel",
-			schulkuerzel);
+		List<Schule> trefferliste = em.createNamedQuery(Schule.FIND_BY_KUERZEL, Schule.class).setParameter("kuerzel", schulkuerzel)
+			.getResultList();
 
-		try {
-
-			final Schule singleResult = query.getSingleResult();
-			return Optional.of(singleResult);
-		} catch (NoResultException e) {
-
-			LOGGER.debug("nicht gefunden: {} - {}", "Schule", schulkuerzel);
-			return Optional.empty();
-		} catch (NonUniqueResultException e) {
-
-			String msg = "Schulen: Trefferliste zu '" + schulkuerzel + "' nicht eindeutig";
-			throw new MkGatewayRuntimeException(msg);
-
-		} catch (PersistenceException e) {
-
-			String msg = "Unerwarteter Fehler beim Suchen der Entity Schule mit kuerzel="
-				+ schulkuerzel;
-			LOGGER.error("{}: {}", e.getMessage(), e);
-			throw new MkGatewayRuntimeException(msg);
-		}
+		return trefferliste.isEmpty() ? Optional.empty() : Optional.of(trefferliste.get(0));
 	}
-
 
 	public int countSchulenInOrt(final String kuerzel) {
 
-		TypedQuery<Long> query = em.createNamedQuery(Schule.COUNT_IN_ORT, Long.class)
-			.setParameter("kuerzel", kuerzel.trim()).setParameter("excluded", UNBEKANNT);
+		TypedQuery<Long> query = em.createNamedQuery(Schule.COUNT_IN_ORT, Long.class).setParameter("kuerzel", kuerzel.trim())
+			.setParameter("excluded", UNBEKANNT);
 
 		Long result = query.getSingleResult();
 
 		return result.intValue();
 	}
-
 
 	public int countOrteInLand(final String kuerzel) {
 
-		TypedQuery<Long> query = em.createNamedQuery(Ort.QUERY_COUNT_IN_LAND, Long.class)
-			.setParameter("kuerzel", kuerzel.trim()).setParameter("excluded", UNBEKANNT);
+		TypedQuery<Long> query = em.createNamedQuery(Ort.QUERY_COUNT_IN_LAND, Long.class).setParameter("kuerzel", kuerzel.trim())
+			.setParameter("excluded", UNBEKANNT);
 
 		Long result = query.getSingleResult();
 
 		return result.intValue();
 	}
-
 
 	public List<Schule> findSchulenWithKuerzeln(final List<String> schulkuerzel) {
 
 		return em.createNamedQuery(Schule.FIND_SCHULEN_WITH_KUERZELN, Schule.class).setParameter("kuerzeln", schulkuerzel)
 			.getResultList();
 	}
-
 
 	public int countSchulenMitKuerzel(final String kuerzel) {
 
@@ -248,7 +210,6 @@ public class KatalogeRepository {
 		return result.intValue();
 	}
 
-
 	public int countOrteMitKuerzel(final String kuerzel) {
 
 		TypedQuery<Long> query = em.createNamedQuery(Ort.QUERY_COUNT_WITH_KUERZEL, Long.class).setParameter("kuerzel", kuerzel);
@@ -257,7 +218,6 @@ public class KatalogeRepository {
 
 		return result.intValue();
 	}
-
 
 	public int countLaenderMitKuerzel(final String kuerzel) {
 

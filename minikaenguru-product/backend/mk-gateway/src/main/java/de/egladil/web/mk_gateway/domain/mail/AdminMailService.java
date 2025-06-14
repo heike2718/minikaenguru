@@ -12,6 +12,11 @@ import de.egladil.web.commons_mailer.DefaultEmailDaten;
 import de.egladil.web.commons_mailer.EmailServiceCredentials;
 import de.egladil.web.commons_mailer.exception.EmailException;
 import de.egladil.web.commons_mailer.exception.InvalidMailAddressException;
+import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
+import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
+import de.egladil.web.mk_gateway.domain.event.MailNotSent;
+import de.egladil.web.mk_gateway.domain.kataloge.SchuleEingetragenMailtextGenerator;
+import de.egladil.web.mk_gateway.domain.kataloge.api.SchulePayload;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -31,6 +36,12 @@ public class AdminMailService {
 
 	@Inject
 	CommonEmailService commonMailService;
+
+	@Inject
+	LoggableEventDelegate eventDelegate;
+
+	@Inject
+	DomainEventHandler domainEventHandler;
 
 	private boolean mailSent;
 
@@ -71,7 +82,7 @@ public class AdminMailService {
 	/**
 	 * Sendet die Mail.
 	 *
-	 * @param  maildaten
+	 * @param maildaten
 	 * @throws EmailException
 	 * @throws InvalidMailAddressException
 	 */
@@ -93,8 +104,8 @@ public class AdminMailService {
 					new SendFailedExceptionAdapter());
 			}
 
-			LOGGER.info("Mail mit Betreff " + maildaten.getBetreff() + " wurde an "
-				+ maildaten.alleEmpfaengerFuersLog() + " gesendet (TO=" + maildaten.getEmpfaenger() + "):\n" + maildaten.getText());
+			LOGGER.info("Mail mit Betreff " + maildaten.getBetreff() + " wurde an " + maildaten.alleEmpfaengerFuersLog()
+				+ " gesendet (TO=" + maildaten.getEmpfaenger() + "):\n" + maildaten.getText());
 		}
 
 		mailSent = true;
@@ -108,6 +119,39 @@ public class AdminMailService {
 	AdminEmailsConfiguration getMailConfig() {
 
 		return mailConfig;
+	}
+
+	/**
+	 * Sendet eine Mail an den gegebenen Empfänger. Exceptions werden nur geloggt.
+	 *
+	 * @param payload SchulePayload
+	 * @param bccEmpfaenger String
+	 */
+	public void sendSchuleCreatedMailQuietly(SchulePayload payload, String bccEmpfaenger) {
+		try {
+
+			DefaultEmailDaten emailDaten = createMailDaten(payload);
+			emailDaten.addHiddenEmpfaenger(bccEmpfaenger);
+			this.sendMail(emailDaten);
+		} catch (Exception e) {
+
+			String msg = "Die Mail konnte nicht gesendet werden: " + e.getMessage();
+			LOGGER.warn(msg);
+
+			MailNotSent mailNotSentEvent = new MailNotSent(msg);
+			eventDelegate.fireMailNotSent(mailNotSentEvent, domainEventHandler);
+		}
+	}
+
+	private DefaultEmailDaten createMailDaten(SchulePayload payload) {
+
+		DefaultEmailDaten result = new DefaultEmailDaten();
+		result.setBetreff("Minikänguru: Schulkatalog");
+		result.setText(new SchuleEingetragenMailtextGenerator().getSchuleEingetragenText(payload));
+		result.setEmpfaenger(payload.emailAuftraggeber());
+
+
+		return result;
 	}
 
 }

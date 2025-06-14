@@ -6,7 +6,6 @@ package de.egladil.web.mk_gateway.domain.veranstalter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -14,14 +13,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.egladil.web.commons_validation.payload.MessagePayload;
-import de.egladil.web.commons_validation.payload.ResponsePayload;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.Identifier;
-import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.event.DomainEventHandler;
 import de.egladil.web.mk_gateway.domain.event.LoggableEventDelegate;
-import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
+import de.egladil.web.mk_gateway.domain.kataloge.SchulkatalogEntitiesMapper;
 import de.egladil.web.mk_gateway.domain.semantik.DomainService;
 import de.egladil.web.mk_gateway.domain.statistik.AuswertungsmodusInfoService;
 import de.egladil.web.mk_gateway.domain.teilnahmen.AktuelleTeilnahmeService;
@@ -31,9 +27,10 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahme;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.Auswertungsmodus;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleDetails;
+import de.egladil.web.mk_gateway.infrastructure.persistence.kataloge.dao.KatalogeRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.kataloge.entities.Schule;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.core.Response;
 
 /**
  * SchulenAnmeldeinfoService
@@ -42,7 +39,7 @@ import jakarta.ws.rs.core.Response;
 @DomainService
 public class SchulenAnmeldeinfoService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SchulenAnmeldeinfoService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SchulenAnmeldeinfoService.class);
 
 	@Inject
 	AuthorizationService authorizationService;
@@ -60,7 +57,7 @@ public class SchulenAnmeldeinfoService {
 	SchuleDetailsService schuleDetailsService;
 
 	@Inject
-	MkKatalogeResourceAdapter katalogeAdapter;
+	KatalogeRepository katalogeRepository;
 
 	@Inject
 	AuswertungsmodusInfoService auswertungsmodusInfoService;
@@ -79,21 +76,10 @@ public class SchulenAnmeldeinfoService {
 		}
 
 		List<String> kuerzel = schulenOfLehrer.stream().map(s -> s.kuerzel()).collect(Collectors.toList());
+		List<Schule> trefferliste = katalogeRepository.findSchulenWithKuerzeln(kuerzel);
 
-		final String kommaseparierteSchulkuerzel = StringUtils.join(kuerzel, ",");
-
-		Response katalogItemsResponse = katalogeAdapter.findSchulen(kommaseparierteSchulkuerzel);
-
-		if (katalogItemsResponse.getStatus() >= 400) {
-
-			LOG.error("mk-kataloge: Status={}, beim Laden der Schulen - Lehrer-UUID={}",
-				katalogItemsResponse.getStatus(), StringUtils.abbreviate(lehrerUUID, 11));
-
-			throw new MkGatewayRuntimeException("Fehler beim Laden der Schulen aus dem Katalog");
-		}
-
-		final List<SchuleAPIModel> schulenAusKatalg = new SchuleKatalogResponseMapper()
-			.getSchulenFromKatalogeAPI(katalogItemsResponse);
+		final SchulkatalogEntitiesMapper mapper = new SchulkatalogEntitiesMapper();
+		final List<SchuleAPIModel> schulenAusKatalg = trefferliste.stream().map(s -> mapper.mapSchuleToSchuleAPIModel(s)).toList();
 
 		return mergeDataFromSchulenOfLehrer(schulenAusKatalg, schulenOfLehrer);
 	}
@@ -101,42 +87,26 @@ public class SchulenAnmeldeinfoService {
 	/**
 	 * Läd die Details für die Schule des gegebenen Lehrers aus den Katalogen und aus der Wettbewerbe-API.
 	 *
-	 * @param  schulkuerzel
-	 * @param  lehrerId
-	 *                      String UUID eines Lehrers.
-	 * @return              SchuleAPIModel
+	 * @param schulkuerzel
+	 * @param lehrerId String UUID eines Lehrers.
+	 * @return SchuleAPIModel
 	 */
 	public SchuleAPIModel getSchuleWithWettbewerbsdetails(final String schulkuerzel, final String lehrerId) {
 
 		String kontext = "[getSchuleDetails - " + schulkuerzel + "]";
-		authorizationService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(lehrerId),
-			new Identifier(schulkuerzel),
+		authorizationService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(lehrerId), new Identifier(schulkuerzel),
 			kontext);
 
-		Response katalogItemsResponse = katalogeAdapter.findSchulen(schulkuerzel);
-
-		if (katalogItemsResponse.getStatus() >= 400) {
-
-			LOG.error("mk-kataloge: Status={}, beim Laden der Schule - kuerzel={}, Lehrer-UUID={}",
-				katalogItemsResponse.getStatus(), schulkuerzel, StringUtils.abbreviate(lehrerId, 11));
-
-			throw new MkGatewayRuntimeException("Fehler beim Laden der Schulen aus dem Katalog");
-		}
-
-		final List<SchuleAPIModel> schulenAusKatalg = new SchuleKatalogResponseMapper()
-			.getSchulenFromKatalogeAPI(katalogItemsResponse);
+		Optional<Schule> optSchule = katalogeRepository.findSchuleWithKuerzel(schulkuerzel);
 
 		SchuleAPIModel schuleAusKatalog = null;
 
-		if (schulenAusKatalg.isEmpty()) {
-
-			LOG.error("mk-kataloge: Status={}, Kein Katalogeintrag für Schule - kuerzel={}, Lehrer-UUID={}",
-				katalogItemsResponse.getStatus(), schulkuerzel, StringUtils.abbreviate(lehrerId, 11));
-
-			schuleAusKatalog = SchuleAPIModel.withKuerzel(schulkuerzel).markKatalogeintragUnknown();
+		if (optSchule.isEmpty()) {
+			LOGGER.error("Kein Katalogeintrag für Schule - kuerzel={}, Lehrer-UUID={}",
+				schulkuerzel, StringUtils.abbreviate(lehrerId, 11));
+			schuleAusKatalog = new SchuleAPIModel().withKuerzel(schulkuerzel).markKatalogeintragUnknown();
 		} else {
-
-			schuleAusKatalog = schulenAusKatalg.get(0);
+			schuleAusKatalog = new SchulkatalogEntitiesMapper().mapSchuleToSchuleAPIModel(optSchule.get());
 		}
 
 		SchuleDetails schuleDetails = schuleDetailsService.ermittleSchuldetails(new Identifier(schulkuerzel),
@@ -152,27 +122,34 @@ public class SchulenAnmeldeinfoService {
 			Auswertungsmodus auswertungsmodus = auswertungsmodusInfoService
 				.ermittleAuswertungsmodusFuerTeilnahme(teilnahme.teilnahmeIdentifier());
 
-			return result.withAngemeldet(true).withAuswertungsmodus(auswertungsmodus);
+			return result.withAktuellAngemeldet(true).withAuswertungsmodus(auswertungsmodus);
 		}
 
 		return result.withAuswertungsmodus(Auswertungsmodus.INDIFFERENT);
 
 	}
 
-	List<SchuleAPIModel> mergeDataFromSchulenOfLehrer(final List<SchuleAPIModel> schulenAusKatalg, final List<SchuleAPIModel> schulenOfLehrer) {
+	/**
+	 * Führt die Schuldaten aus verschiedenen Quellen zusammen.
+	 *
+	 * @param schulenAusKatalg
+	 * @param schulenOfLehrer
+	 * @return
+	 */
+	List<SchuleAPIModel> mergeDataFromSchulenOfLehrer(final List<SchuleAPIModel> schulenAusKatalg,
+		final List<SchuleAPIModel> schulenOfLehrer) {
 
 		final List<SchuleAPIModel> nurLehrer = schulenAusKatalg.stream().filter(s -> schulenOfLehrer.contains(s))
 			.collect(Collectors.toList());
 
 		nurLehrer.stream().forEach(schule -> {
 
-			Optional<SchuleAPIModel> opt = schulenOfLehrer.stream()
-				.filter(ks -> ks.kuerzel().equals(schule.kuerzel())).findFirst();
+			Optional<SchuleAPIModel> opt = schulenOfLehrer.stream().filter(ks -> ks.kuerzel().equals(schule.kuerzel())).findFirst();
 
 			if (opt.isPresent()) {
 
 				SchuleAPIModel schuleAPIModel = opt.get();
-				schule.withAngemeldet(schuleAPIModel.aktuellAngemeldet())
+				schule.withAktuellAngemeldet(schuleAPIModel.aktuellAngemeldet())
 					.withAuswertungsmodus(schuleAPIModel.getAuswertungsmodus());
 			}
 		});
@@ -182,7 +159,7 @@ public class SchulenAnmeldeinfoService {
 			String msg = "Nicht alle Schulen auf beiden Seiten gefunden: Kataloge: " + schulenAusKatalg.toString() + ", Lehrer: "
 				+ schulenOfLehrer.toString();
 
-			LOG.warn(msg);
+			LOGGER.warn(msg);
 
 			eventDelegate.fireDataInconsistencyEvent(msg, domainEventHandler);
 		}
@@ -200,30 +177,5 @@ public class SchulenAnmeldeinfoService {
 		}
 
 		return nurLehrer;
-	}
-
-	SchuleAPIModel getSchuleAusWettbewerbAPIResponse(final Response response) {
-
-		ResponsePayload responsePayload = response.readEntity(ResponsePayload.class);
-
-		MessagePayload messagePayload = responsePayload.getMessage();
-
-		if (!messagePayload.isOk()) {
-
-			return null;
-		}
-
-		try {
-
-			@SuppressWarnings("unchecked")
-			Map<String, Object> data = (Map<String, Object>) responsePayload.getData();
-
-			return SchuleAPIModel.withAttributes(data);
-		} catch (ClassCastException e) {
-
-			LOG.error(e.getMessage(), e);
-			throw new MkGatewayRuntimeException("Konnte ResponsePayload von mk-wettbewerbe nicht verarbeiten");
-
-		}
 	}
 }

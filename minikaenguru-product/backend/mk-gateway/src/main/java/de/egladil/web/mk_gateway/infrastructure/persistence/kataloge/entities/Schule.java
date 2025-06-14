@@ -32,23 +32,23 @@ import jakarta.persistence.Version;
 		name = Schule.FIND_SCHULEN_MIT_NAME, query = "select s from Schule s where lower(s.name) like :name and s.name != :excluded"),
 	@NamedQuery(
 		name = Schule.LOAD_SCHULEN_IN_ORT,
-		query = "select s from Schule s where s.ortKuerzel = :ortKuerzel and s.name != :excluded"),
+		query = "select s from Schule s where s.ortKuerzel = :ortKuerzel and s.name != :excluded order by s.name"),
 	@NamedQuery(
 		name = Schule.FIND_SCHULEN_IN_ORT,
-		query = "select s from Schule s where s.ortKuerzel = :ortKuerzel and lower(s.name) like :name and s.name != :excluded"),
+		query = "select s from Schule s where s.ortKuerzel = :ortKuerzel and lower(s.name) like :name and s.name != :excluded order by s.name"),
 	@NamedQuery(
 		name = Schule.FIND_SCHULE_IN_ORT_MIT_NAME,
-		query = "select s from Schule s where s.ortKuerzel = :ortKuerzel and lower(s.name) = :name"),
+		query = "select s from Schule s where s.ortKuerzel = :ortKuerzel and lower(s.name) = :name order by s.name"),
 	@NamedQuery(
 		name = Schule.LOAD_SCHULEN_WITH_ORTKUERZEL,
-		query = "select s from Schule s where s.ortKuerzel = :ortKuerzel"),
+		query = "select s from Schule s where s.ortKuerzel = :ortKuerzel order by s.name"),
 	@NamedQuery(
 		name = Schule.LOAD_SCHULEN_WITH_LANDKUERZEL,
-		query = "select s from Schule s where s.landKuerzel = :landKuerzel"),
+		query = "select s from Schule s where s.landKuerzel = :landKuerzel order by s.name"),
 	@NamedQuery(
 		name = Schule.FIND_BY_KUERZEL, query = "select s from Schule s where s.kuerzel = :kuerzel"),
 	@NamedQuery(
-		name = Schule.FIND_SCHULEN_WITH_KUERZELN, query = "select s from Schule s where s.kuerzel IN :kuerzeln"),
+		name = Schule.FIND_SCHULEN_WITH_KUERZELN, query = "select s from Schule s where s.kuerzel IN :kuerzeln order by s.name"),
 	@NamedQuery(
 		name = Schule.COUNT_WITH_KUERZEL, query = "select count(s) from Schule s where s.kuerzel = :kuerzel"),
 	@NamedQuery(

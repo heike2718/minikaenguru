@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.egladil.web.commons_validation.annotations.Kuerzel;
 import de.egladil.web.commons_validation.annotations.StringLatin;
+import de.egladil.web.mk_gateway.infrastructure.persistence.kataloge.entities.Schule;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
@@ -50,15 +51,16 @@ public class SchulePayload {
 	@Email
 	private String emailAuftraggeber;
 
-	public static SchulePayload create(final String kuerzel, final String name, final String kuerzelOrt, final String nameOrt, final String kuerzelLand, final String nameLand) {
+	public static SchulePayload create(final Schule schule) {
 
 		SchulePayload result = new SchulePayload();
-		result.kuerzel = kuerzel;
-		result.name = name;
-		result.kuerzelOrt = kuerzelOrt;
-		result.nameOrt = nameOrt;
-		result.kuerzelLand = kuerzelLand;
-		result.nameLand = nameLand;
+		result.kuerzel = schule.getKuerzel();
+		result.name = schule.getName();
+		result.kuerzelOrt = schule.getOrtKuerzel();
+		result.nameOrt = schule.getOrtName();
+		result.kuerzelLand = schule.getLandKuerzel();
+		result.nameLand = schule.getLandName();
+
 		return result;
 
 	}
@@ -115,5 +117,35 @@ public class SchulePayload {
 	public String kuerzel() {
 
 		return kuerzel;
+	}
+
+	public SchulePayload withKuerzel(String kuerzel) {
+		this.kuerzel = kuerzel;
+		return this;
+	}
+
+	public SchulePayload withName(String name) {
+		this.name = name;
+		return this;
+	}
+
+	public SchulePayload withKuerzelOrt(String kuerzelOrt) {
+		this.kuerzelOrt = kuerzelOrt;
+		return this;
+	}
+
+	public SchulePayload withNameOrt(String nameOrt) {
+		this.nameOrt = nameOrt;
+		return this;
+	}
+
+	public SchulePayload withKuerzelLand(String kuerzelLand) {
+		this.kuerzelLand = kuerzelLand;
+		return this;
+	}
+
+	public SchulePayload withNameLand(String nameLand) {
+		this.nameLand = nameLand;
+		return this;
 	}
 }

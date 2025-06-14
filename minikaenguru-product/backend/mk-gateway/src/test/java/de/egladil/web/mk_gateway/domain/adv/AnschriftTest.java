@@ -6,8 +6,6 @@ package de.egladil.web.mk_gateway.domain.adv;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -32,23 +30,11 @@ public class AnschriftTest {
 
 		String schulkuerzel = "ASDERS";
 
-		VertragAdvAPIModel apiModel = new VertragAdvAPIModel()
-			.withHausnummer(hausnummer)
-			.withOrt(ort)
-			.withPlz(plz)
-			.withSchulkuerzel(schulkuerzel)
-			.withSchulname(schulname)
-			.withStrasse(strasse);
+		VertragAdvAPIModel apiModel = new VertragAdvAPIModel().withHausnummer(hausnummer).withOrt(ort).withPlz(plz)
+			.withSchulkuerzel(schulkuerzel).withSchulname(schulname).withStrasse(strasse);
 
-		Map<String, Object> schuleKatalogeMap = new HashMap<>();
-
-		schuleKatalogeMap.put("kuerzel", schulkuerzel);
-		schuleKatalogeMap.put("name", "Schule 98765");
-		schuleKatalogeMap.put("ort", ort);
-		schuleKatalogeMap.put("land", "Hessen");
-		schuleKatalogeMap.put("kuerzelLand", "DE-HE");
-
-		SchuleAPIModel schuleAPIModel = SchuleAPIModel.withAttributes(schuleKatalogeMap);
+		SchuleAPIModel schuleAPIModel = new SchuleAPIModel().withKuerzel(schulkuerzel).withKuerzelLand("DE-HE").withLand("Hessen")
+			.withOrt(ort).withName("Schule 98765");
 
 		// Act
 		Anschrift anschrift = Anschrift.createFromPayload(apiModel, new PostleitzahlLand(plz, Optional.of(schuleAPIModel)));

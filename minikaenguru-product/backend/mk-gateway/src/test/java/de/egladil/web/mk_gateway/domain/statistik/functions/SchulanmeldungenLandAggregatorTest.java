@@ -40,12 +40,12 @@ public class SchulanmeldungenLandAggregatorTest {
 		// Arrange
 		List<SchuleAPIModel> schulen = new ArrayList<>();
 
-		schulen.add(SchuleAPIModel.withKuerzel("A1").withLand("Hessen"));
-		schulen.add(SchuleAPIModel.withKuerzel("B1").withLand("Brandenburg"));
-		schulen.add(SchuleAPIModel.withKuerzel("A2").withLand("Hessen"));
-		schulen.add(SchuleAPIModel.withKuerzel("A3").withLand("Hessen"));
-		schulen.add(SchuleAPIModel.withKuerzel("B2").withLand("Brandenburg"));
-		schulen.add(SchuleAPIModel.withKuerzel("T1").withLand("Türkei"));
+		schulen.add(new SchuleAPIModel().withKuerzel("A1").withLand("Hessen"));
+		schulen.add(new SchuleAPIModel().withKuerzel("B1").withLand("Brandenburg"));
+		schulen.add(new SchuleAPIModel().withKuerzel("A2").withLand("Hessen"));
+		schulen.add(new SchuleAPIModel().withKuerzel("A3").withLand("Hessen"));
+		schulen.add(new SchuleAPIModel().withKuerzel("B2").withLand("Brandenburg"));
+		schulen.add(new SchuleAPIModel().withKuerzel("T1").withLand("Türkei"));
 
 		// Act
 		Map<String, List<SchuleAPIModel>> result = new SchulanmeldungenLandAggregator().apply(schulen);

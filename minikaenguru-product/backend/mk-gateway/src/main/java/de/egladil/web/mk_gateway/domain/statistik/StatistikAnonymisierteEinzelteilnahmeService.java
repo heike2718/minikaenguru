@@ -46,16 +46,6 @@ public class StatistikAnonymisierteEinzelteilnahmeService {
 	@Inject
 	SchulkatalogService schulkatalogService;
 
-	static StatistikAnonymisierteEinzelteilnahmeService createForTest(final AuthorizationService authService, final LoesungszettelRepository loesungszettelRepository, final SchulkatalogService schulkatalogService, final StatistikWettbewerbService statistikWettbewerbService) {
-
-		StatistikAnonymisierteEinzelteilnahmeService result = new StatistikAnonymisierteEinzelteilnahmeService();
-		result.authorizationService = authService;
-		result.loesungszettelRepository = loesungszettelRepository;
-		result.schulkatalogService = schulkatalogService;
-		result.statistikWettbewerbService = statistikWettbewerbService;
-		return result;
-	}
-
 	/**
 	 * Ertsellt ein PDF-Dokument, das die Auswertungsdaten der gegebenen Einzelteilnahme enthält, sofern der USER diese sehen darf.
 	 *
@@ -92,7 +82,7 @@ public class StatistikAnonymisierteEinzelteilnahmeService {
 
 		case SCHULE:
 
-			Optional<SchuleAPIModel> optSchule = this.schulkatalogService.findSchuleQuietly(teilnahmeIdentifier.teilnahmenummer());
+			Optional<SchuleAPIModel> optSchule = this.schulkatalogService.findSchule(teilnahmeIdentifier.teilnahmenummer());
 
 			return new SchuluebersichtPDFGenerator().generierePdf(wettbewerbID, optSchule, verteilungenNachKlassenstufe,
 				gesamtmediane);

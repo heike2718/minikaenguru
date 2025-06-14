@@ -9,11 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
-
-import jakarta.inject.Inject;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -23,8 +19,9 @@ import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.veranstalter.api.VertragAdvAPIModel;
-import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
+import io.quarkus.test.junit.QuarkusTest;
+import jakarta.inject.Inject;
 
 /**
  * AdvServiceTest
@@ -52,23 +49,11 @@ public class AdvServiceTest {
 
 		String schulkuerzel = "ASDERS";
 
-		VertragAdvAPIModel apiModel = new VertragAdvAPIModel()
-			.withHausnummer(hausnummer)
-			.withOrt(ort)
-			.withPlz(plz)
-			.withSchulkuerzel(schulkuerzel)
-			.withSchulname(schulname)
-			.withStrasse(strasse);
+		VertragAdvAPIModel apiModel = new VertragAdvAPIModel().withHausnummer(hausnummer).withOrt(ort).withPlz(plz)
+			.withSchulkuerzel(schulkuerzel).withSchulname(schulname).withStrasse(strasse);
 
-		Map<String, Object> schuleKatalogeMap = new HashMap<>();
-
-		schuleKatalogeMap.put("kuerzel", schulkuerzel);
-		schuleKatalogeMap.put("name", "Schule 98765");
-		schuleKatalogeMap.put("ort", ort);
-		schuleKatalogeMap.put("land", "Hessen");
-		schuleKatalogeMap.put("kuerzelLand", "DE-HE");
-
-		SchuleAPIModel schuleAPIModel = SchuleAPIModel.withAttributes(schuleKatalogeMap);
+		SchuleAPIModel schuleAPIModel = new SchuleAPIModel().withKuerzel(schulkuerzel).withKuerzelLand("DE-HE").withLand("Hessen").withOrt(ort)
+			.withName("Schule 98765");
 
 		Vertragstext vertragstext = new Vertragstext().withIdentifier(new Identifier("gasdgqoug"));
 
@@ -77,8 +62,7 @@ public class AdvServiceTest {
 
 		// Act
 		VertragAuftragsdatenverarbeitung vertrag = new AdvService().initVertrag(apiModel, lehrerUuid,
-			new PostleitzahlLand(plz, Optional.of(schuleAPIModel)), vertragstext,
-			unterzeichnetAm);
+			new PostleitzahlLand(plz, Optional.of(schuleAPIModel)), vertragstext, unterzeichnetAm);
 
 		// Assert
 		assertEquals(new Identifier(schulkuerzel), vertrag.schulkuerzel());
@@ -108,8 +92,7 @@ public class AdvServiceTest {
 		Identifier teilnahmeId = new Identifier(schulkuerzel);
 
 		when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(lehrerId, teilnahmeId,
-			"[getVertragAuftragsdatenverarbeitung - " + schulkuerzel + "]"))
-				.thenThrow(new AccessDeniedException());
+			"[getVertragAuftragsdatenverarbeitung - " + schulkuerzel + "]")).thenThrow(new AccessDeniedException());
 
 		// Act
 		try {
@@ -135,21 +118,14 @@ public class AdvServiceTest {
 
 		String schulkuerzel = "ASDERS";
 
-		VertragAdvAPIModel apiModel = new VertragAdvAPIModel()
-			.withHausnummer(hausnummer)
-			.withOrt(ort)
-			.withPlz(plz)
-			.withSchulkuerzel(schulkuerzel)
-			.withSchulname(schulname)
-			.withStrasse(strasse);
+		VertragAdvAPIModel apiModel = new VertragAdvAPIModel().withHausnummer(hausnummer).withOrt(ort).withPlz(plz)
+			.withSchulkuerzel(schulkuerzel).withSchulname(schulname).withStrasse(strasse);
 
 		Identifier lehrerId = new Identifier(LEHRER_UUID);
 		Identifier teilnahmeId = new Identifier(schulkuerzel);
 
-		Mockito
-			.when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(lehrerId, teilnahmeId,
-				"[createVertragAuftragsdatenverarbeitung - " + schulkuerzel + "]"))
-			.thenThrow(new AccessDeniedException());
+		Mockito.when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(lehrerId, teilnahmeId,
+			"[createVertragAuftragsdatenverarbeitung - " + schulkuerzel + "]")).thenThrow(new AccessDeniedException());
 
 		// Act
 		try {

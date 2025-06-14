@@ -126,7 +126,7 @@ public class UploadMonitoringServiceImpl implements UploadMonitoringService {
 		if (this.schulkatalogService != null) {
 
 			// kann in einigen Tests null sein
-			Optional<SchuleAPIModel> optSchule = this.schulkatalogService.findSchuleQuietly(viewItem.getTeilnahmenummer());
+			Optional<SchuleAPIModel> optSchule = this.schulkatalogService.findSchule(viewItem.getTeilnahmenummer());
 
 			if (optSchule.isPresent()) {
 

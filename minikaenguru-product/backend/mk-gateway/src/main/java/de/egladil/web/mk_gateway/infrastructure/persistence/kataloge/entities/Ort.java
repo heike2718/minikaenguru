@@ -19,16 +19,16 @@ import jakarta.persistence.Table;
 @NamedQueries({
 	@NamedQuery(
 		name = "ORT_QUERY_LOAD_ORTE_IN_LAND",
-		query = "select o from Ort o where o.landKuerzel = :landKuerzel and o.name != :excluded"),
+		query = "select o from Ort o where o.landKuerzel = :landKuerzel and o.name != :excluded order by o.name"),
 	@NamedQuery(
 		name = "ORT_QUERY_LOAD_ORTE_WITH_LANDKUERZEL",
-		query = "select o from Ort o where o.landKuerzel = :landKuerzel"),
+		query = "select o from Ort o where o.landKuerzel = :landKuerzel order by o.name"),
 	@NamedQuery(
 		name = "ORT_QUERY_FIND_ORTE_IN_LAND",
-		query = "select o from Ort o where o.landKuerzel = :landKuerzel and lower(o.name) like :name and o.name != :excluded"),
+		query = "select o from Ort o where o.landKuerzel = :landKuerzel and lower(o.name) like :name and o.name != :excluded order by o.name"),
 	@NamedQuery(
 		name = "ORT_QUERY_FIND_ORTE_MIT_NAME",
-		query = "select o from Ort o where lower(o.name) like :name and o.name != :excluded"),
+		query = "select o from Ort o where lower(o.name) like :name and o.name != :excluded order by o.name"),
 	@NamedQuery(
 		name = "ORT_FIND_BY_KUERZEL", query = "select o from Ort o where o.kuerzel = :kuerzel"),
 	@NamedQuery(

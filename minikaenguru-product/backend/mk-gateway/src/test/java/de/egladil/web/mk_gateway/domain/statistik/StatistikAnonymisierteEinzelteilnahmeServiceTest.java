@@ -5,31 +5,23 @@
 package de.egladil.web.mk_gateway.domain.statistik;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import jakarta.ws.rs.core.Response;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import de.egladil.web.commons_validation.payload.MessagePayload;
-import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.AuthorizationService;
 import de.egladil.web.mk_gateway.domain.DownloadData;
 import de.egladil.web.mk_gateway.domain.Identifier;
 import de.egladil.web.mk_gateway.domain.auswertungen.StatistikTestUtils;
 import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
-import de.egladil.web.mk_gateway.domain.kataloge.MkKatalogeResourceAdapter;
 import de.egladil.web.mk_gateway.domain.kataloge.SchulkatalogService;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
@@ -37,43 +29,39 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
+import de.egladil.web.mk_gateway.domain.veranstalter.api.SchuleAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import io.quarkus.test.InjectMock;
+import io.quarkus.test.junit.QuarkusTest;
+import jakarta.inject.Inject;
 
 /**
  * StatistikAnonymisierteEinzelteilnahmeServiceTest
  */
-public class StatistikAnonymisierteEinzelteilnahmeServiceTest extends AbstractDomainServiceTest {
+@QuarkusTest
+public class StatistikAnonymisierteEinzelteilnahmeServiceTest {
 
-	private AuthorizationService authService;
+	List<Loesungszettel> wettbewerbLoesungszettel;
 
-	private LoesungszettelRepository loesungszettelRepository;
+	@InjectMock
+	AuthorizationService authService;
 
-	private MkKatalogeResourceAdapter katalogeResourceAdapter;
+	@InjectMock
+	LoesungszettelRepository loesungszettelRepository;
 
+	@InjectMock
+	StatistikWettbewerbService statistikWettbewerbService;
+
+	@InjectMock
+	SchulkatalogService schulkatalogService;
+
+	@Inject
 	private StatistikAnonymisierteEinzelteilnahmeService statistikService;
-
-	private StatistikWettbewerbService statistikWettbewerbService;
-
-	private List<Loesungszettel> wettbewerbLoesungszettel;
-
-	private SchulkatalogService schulkatalogService;
 
 	@BeforeEach
 	public void setUp() {
 
-		authService = Mockito.mock(AuthorizationService.class);
-		loesungszettelRepository = Mockito.mock(LoesungszettelRepository.class);
-		katalogeResourceAdapter = Mockito.mock(MkKatalogeResourceAdapter.class);
-
-		statistikWettbewerbService = StatistikWettbewerbService.createForTest(loesungszettelRepository, getWettbewerbService(),
-			schulkatalogService, getTeilnahmenRepository());
-
-		schulkatalogService = Mockito.mock(SchulkatalogService.class);
-		statistikService = StatistikAnonymisierteEinzelteilnahmeService.createForTest(authService, loesungszettelRepository,
-			SchulkatalogService.createForTest(katalogeResourceAdapter), statistikWettbewerbService);
-
 		try {
-
 			wettbewerbLoesungszettel = StatistikTestUtils.loadTheLoesungszettel(2018);
 		} catch (Exception e) {
 
@@ -95,10 +83,8 @@ public class StatistikAnonymisierteEinzelteilnahmeServiceTest extends AbstractDo
 		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE)
 			.withTeilnahmenummer(teilnahmenummer).withWettbewerbID(new WettbewerbID(2018));
 
-		Mockito
-			.when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(userIdentifier, teilnahmeID,
-				"[erstelleStatistikPDFEinzelteilnahme - " + teilnahmenummer + "]"))
-			.thenThrow(new AccessDeniedException());
+		Mockito.when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(userIdentifier, teilnahmeID,
+			"[erstelleStatistikPDFEinzelteilnahme - " + teilnahmenummer + "]")).thenThrow(new AccessDeniedException());
 
 		// Act
 		try {
@@ -123,29 +109,14 @@ public class StatistikAnonymisierteEinzelteilnahmeServiceTest extends AbstractDo
 			.withTeilnahmenummer(schulkuerzel).withWettbewerbID(new WettbewerbID(2018));
 
 		Mockito
-			.when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(veranstalterUUID), new Identifier(schulkuerzel),
-				"[erstelleStatistikPDFEinzelteilnahme - " + schulkuerzel + "]"))
+			.when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(veranstalterUUID),
+				new Identifier(schulkuerzel), "[erstelleStatistikPDFEinzelteilnahme - " + schulkuerzel + "]"))
 			.thenReturn(Rolle.LEHRER);
 
-		List<Map<String, Object>> data = new ArrayList<>();
+		SchuleAPIModel schule = new SchuleAPIModel().withAktuellAngemeldet(false).withKuerzel(schulkuerzel)
+			.withName("David-Hilbert-Schule").withOrt("Göttingen").withLand("Niedersachsen").withKuerzelLand("DE-NI");
 
-		{
-
-			Map<String, Object> schuleWettbewerbMap = new HashMap<>();
-
-			schuleWettbewerbMap.put("kuerzel", schulkuerzel);
-			schuleWettbewerbMap.put("name", "David-Hilbert-Schule");
-			schuleWettbewerbMap.put("ort", "Göttingen");
-			schuleWettbewerbMap.put("land", "Niedersachsen");
-			schuleWettbewerbMap.put("kuerzelLand", "DE-NI");
-			schuleWettbewerbMap.put("aktuellAngemeldet", Boolean.FALSE);
-
-			data.add(schuleWettbewerbMap);
-		}
-
-		Response response = Response.ok(new ResponsePayload(MessagePayload.ok(), data)).build();
-
-		Mockito.when(katalogeResourceAdapter.findSchulen(schulkuerzel)).thenReturn(response);
+		Mockito.when(schulkatalogService.findSchule(schulkuerzel)).thenReturn(Optional.of(schule));
 		Mockito.when(loesungszettelRepository.loadAll(teilnahmeIdentifier)).thenReturn(wettbewerbLoesungszettel);
 
 		// Act
@@ -170,8 +141,8 @@ public class StatistikAnonymisierteEinzelteilnahmeServiceTest extends AbstractDo
 			.withTeilnahmenummer(schulkuerzel).withWettbewerbID(new WettbewerbID(2018));
 
 		Mockito
-			.when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(veranstalterUUID), new Identifier(schulkuerzel),
-				"[erstelleStatistikPDFEinzelteilnahme - " + schulkuerzel + "]"))
+			.when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(veranstalterUUID),
+				new Identifier(schulkuerzel), "[erstelleStatistikPDFEinzelteilnahme - " + schulkuerzel + "]"))
 			.thenReturn(Rolle.PRIVAT);
 
 		Mockito.when(loesungszettelRepository.loadAll(teilnahmeIdentifier)).thenReturn(wettbewerbLoesungszettel);
