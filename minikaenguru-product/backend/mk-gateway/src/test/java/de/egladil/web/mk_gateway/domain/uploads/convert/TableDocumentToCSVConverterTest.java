@@ -203,7 +203,7 @@ public class TableDocumentToCSVConverterTest extends AbstractConvertFilesTest {
 
 					assertEquals(
 						"Die Datei " + pathExternalFiles
-						+ "/upload/klassenliste.csv zum upload 642cd963-2c8a-49f9-be95-f31a1b7e251a konnte nicht verarbeitet werden: Fehler beim Lesen einer MSOffice-Datei: Cannot find zip signature within the file",
+						+ "/upload/klassenliste.csv zum upload 642cd963-2c8a-49f9-be95-f31a1b7e251a konnte nicht verarbeitet werden: Fehler beim Lesen einer MSOffice-Datei: No valid entries or contents found, this is not a valid OOXML (Office Open XML) file",
 						e.getMessage());
 				}
 

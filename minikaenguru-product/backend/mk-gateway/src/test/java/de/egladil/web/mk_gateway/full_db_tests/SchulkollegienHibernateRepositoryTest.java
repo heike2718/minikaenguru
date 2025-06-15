@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.profiles;
+package de.egladil.web.mk_gateway.full_db_tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayRuntimeException;
 import de.egladil.web.mk_gateway.domain.veranstalter.Kollege;
 import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao.SchulkollegienHibernateRepository;
+import de.egladil.web.mk_gateway.profiles.FullDatabaseTestProfile;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import jakarta.inject.Inject;

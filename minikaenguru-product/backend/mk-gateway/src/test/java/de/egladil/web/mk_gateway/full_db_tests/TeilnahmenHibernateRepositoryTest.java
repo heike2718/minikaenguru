@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.profiles;
+package de.egladil.web.mk_gateway.full_db_tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -18,6 +18,7 @@ import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao.TeilnahmenHibernateRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.PersistenteTeilnahme;
+import de.egladil.web.mk_gateway.profiles.FullDatabaseTestProfile;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import jakarta.inject.Inject;

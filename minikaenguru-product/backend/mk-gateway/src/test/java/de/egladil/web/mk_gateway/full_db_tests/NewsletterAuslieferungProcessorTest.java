@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.profiles;
+package de.egladil.web.mk_gateway.full_db_tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -38,6 +38,7 @@ import de.egladil.web.mk_gateway.domain.newsletterversand.StatusAuslieferung;
 import de.egladil.web.mk_gateway.domain.newsletterversand.Versandauftrag;
 import de.egladil.web.mk_gateway.domain.newsletterversand.VersandauftragStatusUpdater;
 import de.egladil.web.mk_gateway.domain.newsletterversand.event.NewsletterversandFailed;
+import de.egladil.web.mk_gateway.profiles.FullDatabaseTestProfile;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;

@@ -258,13 +258,11 @@ public class SchulenAnmeldeinfoServiceTest {
 		schuleDB.setOrtName("Darmstadt");
 		schuleDB.setName("Schule 12345");
 
-		List<Schule> schulenAusKatalog = Collections.singletonList(schuleDB);
-
 		when(schulenOverviewService.ermittleAnmeldedatenFuerSchulen(new Identifier(LEHRER_UUID))).thenReturn(
 			Arrays.asList(new SchuleAPIModel[] { new SchuleAPIModel().withKuerzel("12345").withAktuellAngemeldet(true) }));
 		when(schuleDetailsService.ermittleSchuldetails(new Identifier("12345"), new Identifier(LEHRER_UUID)))
 			.thenReturn(schuleDetails);
-		when(katalogeRepository.findSchulenWithKuerzeln(anyList())).thenReturn(schulenAusKatalog);
+		when(katalogeRepository.findSchuleWithKuerzel("12345")).thenReturn(Optional.of(schuleDB));
 		when(auswertungsmodusInfoService.ermittleAuswertungsmodusFuerTeilnahme(any())).thenReturn(Auswertungsmodus.INDIFFERENT);
 
 		when(aktuelleTeilnahmeService.aktuelleTeilnahme("12345")).thenReturn(Optional.of(
@@ -340,7 +338,7 @@ public class SchulenAnmeldeinfoServiceTest {
 		schuleKatalogeMap.put("ort", "Darmstadt");
 		schuleKatalogeMap.put("land", "Hessen");
 
-		when(katalogeRepository.findSchulenWithKuerzeln(anyList())).thenReturn(new ArrayList<>());
+		when(katalogeRepository.findSchuleWithKuerzel(any(String.class))).thenReturn(Optional.empty());
 
 		// Act
 		SchuleAPIModel schule = service.getSchuleWithWettbewerbsdetails("12345", LEHRER_UUID);

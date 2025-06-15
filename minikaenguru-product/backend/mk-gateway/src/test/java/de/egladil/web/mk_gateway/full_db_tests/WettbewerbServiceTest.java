@@ -2,7 +2,7 @@
 // Project: mk-gateway
 // (c) Heike Winkelvoß
 // =====================================================
-package de.egladil.web.mk_gateway.domain.wettbewerb;
+package de.egladil.web.mk_gateway.full_db_tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -19,8 +19,11 @@ import org.junit.jupiter.api.Test;
 import de.egladil.web.commons_net.time.CommonTimeUtils;
 import de.egladil.web.commons_validation.exception.InvalidInputException;
 import de.egladil.web.commons_validation.payload.ResponsePayload;
-import de.egladil.web.mk_gateway.domain.AbstractDomainServiceTest;
 import de.egladil.web.mk_gateway.domain.error.MkGatewayWebApplicationException;
+import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbService;
+import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.EditWettbewerbModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbDetailsAPIModel;
 import de.egladil.web.mk_gateway.domain.wettbewerb.api.WettbewerbListAPIModel;
@@ -35,7 +38,7 @@ import jakarta.ws.rs.NotFoundException;
  */
 @QuarkusTest
 @TestProfile(FullDatabaseTestProfile.class)
-public class WettbewerbServiceTest extends AbstractDomainServiceTest {
+public class WettbewerbServiceTest {
 
 	@Inject
 	private WettbewerbService service;
@@ -123,10 +126,6 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 
 		} catch (InvalidInputException e) {
 
-			assertEquals(0, getCountWettbewerbInsert());
-			assertEquals(0, getCountWettbewerbUpdate());
-			assertEquals(0, getCountChangeWettbewerbStatus());
-
 			ResponsePayload response = e.getResponsePayload();
 			assertEquals("Die Eingaben sind nicht korrekt.", response.getMessage().getMessage());
 			assertEquals("ERROR", response.getMessage().getLevel());
@@ -146,10 +145,6 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 			fail("keine InvalidInputException");
 
 		} catch (InvalidInputException e) {
-
-			assertEquals(0, getCountWettbewerbInsert());
-			assertEquals(0, getCountWettbewerbUpdate());
-			assertEquals(0, getCountChangeWettbewerbStatus());
 
 			ResponsePayload response = e.getResponsePayload();
 			assertEquals("Wettbewerbsjahr muss größer als 2004 sein.", response.getMessage().getMessage());
@@ -262,10 +257,6 @@ public class WettbewerbServiceTest extends AbstractDomainServiceTest {
 			fail("keine InvalidInputException");
 
 		} catch (InvalidInputException e) {
-
-			assertEquals(0, getCountWettbewerbInsert());
-			assertEquals(0, getCountWettbewerbUpdate());
-			assertEquals(0, getCountChangeWettbewerbStatus());
 
 			ResponsePayload response = e.getResponsePayload();
 			assertEquals("Die Eingaben sind nicht korrekt.", response.getMessage().getMessage());

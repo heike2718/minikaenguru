@@ -9,16 +9,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
-import jakarta.ws.rs.HttpMethod;
-
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.user.Rolle;
-import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao.PermittedRolesInMemoryRepository;
-import de.egladil.web.mk_gateway.profiles.FullDatabaseTestProfile;
-import io.quarkus.test.junit.TestProfile;
+import jakarta.ws.rs.HttpMethod;
 
 /**
  * PermittedRolesInMemoryRepositoryTest

@@ -169,10 +169,12 @@ public class NewsletterVersandauftragServiceTest {
 			String newsletterId = "hklashl";
 			Empfaengertyp empfaengertyp = Empfaengertyp.LEHRER;
 
-			NewsletterVersandauftrag newsletterVersandauftrag = NewsletterVersandauftrag.create(newsletterId, Empfaengertyp.ALLE,
+			NewsletterVersandauftrag newsletterVersandauftrag = NewsletterVersandauftrag.create(newsletterId, Empfaengertyp.LEHRER,
 				false);
 
 			List<List<String>> empfaengergruppen = getEmpfaengergruppen();
+
+			System.err.println("empfaengergruppen.size()=" + empfaengergruppen.size());
 
 			Versandauftrag auftrag = new Versandauftrag()
 				.withAnzahlAktuellVersendet(12)
@@ -188,7 +190,7 @@ public class NewsletterVersandauftragServiceTest {
 			newsletter.withIdentifier(new Identifier(newsletterId));
 
 			when(newsletterService.findNewsletterWithID(any(Identifier.class))).thenReturn(Optional.of(newsletter));
-			when(veranstalterMailinfoService.getMailempfaengerGroups(empfaengertyp, false)).thenReturn(empfaengergruppen);
+			when(veranstalterMailinfoService.getMailempfaengerGroups(any(Empfaengertyp.class), any(Boolean.class))).thenReturn(empfaengergruppen);
 			when(versandauftraegeRepo.findForNewsletter(any(Identifier.class))).thenReturn(vorhandene);
 			verify(versandauftraegeRepo, never()).saveVersandauftrag(any(Versandauftrag.class));
 			verify(versandauftraegeRepo, never()).delete(any(Versandauftrag.class));
@@ -405,7 +407,7 @@ public class NewsletterVersandauftragServiceTest {
 			newsletter.withIdentifier(new Identifier(newsletterId));
 
 			when(newsletterService.findNewsletterWithID(any(Identifier.class))).thenReturn(Optional.of(newsletter));
-			when(veranstalterMailinfoService.getMailempfaengerGroups(empfaengertyp, false)).thenReturn(empfaengergruppen);
+			when(veranstalterMailinfoService.getMailempfaengerGroups(any(Empfaengertyp.class), any(Boolean.class))).thenReturn(empfaengergruppen);
 			when(versandauftraegeRepo.findForNewsletter(any(Identifier.class))).thenReturn(vorhandene);
 
 			when(versandauftraegeRepo.saveVersandauftrag(any(Versandauftrag.class))).thenReturn(expected);

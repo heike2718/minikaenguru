@@ -7,6 +7,8 @@ package de.egladil.web.mk_gateway.domain.statistik;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Map;
@@ -25,6 +27,8 @@ import de.egladil.web.mk_gateway.domain.error.AccessDeniedException;
 import de.egladil.web.mk_gateway.domain.kataloge.SchulkatalogService;
 import de.egladil.web.mk_gateway.domain.loesungszettel.Loesungszettel;
 import de.egladil.web.mk_gateway.domain.loesungszettel.LoesungszettelRepository;
+import de.egladil.web.mk_gateway.domain.statistik.api.MedianAPIModel;
+import de.egladil.web.mk_gateway.domain.statistik.api.MedianeAPIModel;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Klassenstufe;
 import de.egladil.web.mk_gateway.domain.teilnahmen.Teilnahmeart;
 import de.egladil.web.mk_gateway.domain.teilnahmen.api.TeilnahmeIdentifier;
@@ -108,16 +112,21 @@ public class StatistikAnonymisierteEinzelteilnahmeServiceTest {
 		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.SCHULE)
 			.withTeilnahmenummer(schulkuerzel).withWettbewerbID(new WettbewerbID(2018));
 
-		Mockito
-			.when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(veranstalterUUID),
+		MedianeAPIModel gesamtmediane = new MedianeAPIModel();
+		gesamtmediane.addMedian(new MedianAPIModel(Klassenstufe.IKID, "30,00", 42));
+		gesamtmediane.addMedian(new MedianAPIModel(Klassenstufe.EINS, "24,75", 422));
+		gesamtmediane.addMedian(new MedianAPIModel(Klassenstufe.ZWEI, "22.25", 4242));
+
+		when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(veranstalterUUID),
 				new Identifier(schulkuerzel), "[erstelleStatistikPDFEinzelteilnahme - " + schulkuerzel + "]"))
 			.thenReturn(Rolle.LEHRER);
 
 		SchuleAPIModel schule = new SchuleAPIModel().withAktuellAngemeldet(false).withKuerzel(schulkuerzel)
 			.withName("David-Hilbert-Schule").withOrt("Göttingen").withLand("Niedersachsen").withKuerzelLand("DE-NI");
 
-		Mockito.when(schulkatalogService.findSchule(schulkuerzel)).thenReturn(Optional.of(schule));
-		Mockito.when(loesungszettelRepository.loadAll(teilnahmeIdentifier)).thenReturn(wettbewerbLoesungszettel);
+		when(schulkatalogService.findSchule(schulkuerzel)).thenReturn(Optional.of(schule));
+		when(loesungszettelRepository.loadAll(teilnahmeIdentifier)).thenReturn(wettbewerbLoesungszettel);
+		when(statistikWettbewerbService.berechneGesamtmedianeWettbewerb(any(WettbewerbID.class))).thenReturn(gesamtmediane);
 
 		// Act
 		DownloadData downloadData = statistikService.erstelleStatistikPDFEinzelteilnahme(teilnahmeIdentifier,
@@ -125,7 +134,7 @@ public class StatistikAnonymisierteEinzelteilnahmeServiceTest {
 
 		// Assert
 		assertEquals("minikaenguru_2018_schulstatistik.pdf", downloadData.filename());
-		assertEquals(219034, downloadData.data().length);
+		assertEquals(219405, downloadData.data().length);
 
 		StatistikTestUtils.print(downloadData, true);
 	}
@@ -140,12 +149,17 @@ public class StatistikAnonymisierteEinzelteilnahmeServiceTest {
 		TeilnahmeIdentifier teilnahmeIdentifier = new TeilnahmeIdentifier().withTeilnahmeart(Teilnahmeart.PRIVAT)
 			.withTeilnahmenummer(schulkuerzel).withWettbewerbID(new WettbewerbID(2018));
 
-		Mockito
-			.when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(veranstalterUUID),
-				new Identifier(schulkuerzel), "[erstelleStatistikPDFEinzelteilnahme - " + schulkuerzel + "]"))
-			.thenReturn(Rolle.PRIVAT);
+		MedianeAPIModel gesamtmediane = new MedianeAPIModel();
+		gesamtmediane.addMedian(new MedianAPIModel(Klassenstufe.IKID, "30,00", 42));
+		gesamtmediane.addMedian(new MedianAPIModel(Klassenstufe.EINS, "24,75", 422));
+		gesamtmediane.addMedian(new MedianAPIModel(Klassenstufe.ZWEI, "22.25", 4242));
 
-		Mockito.when(loesungszettelRepository.loadAll(teilnahmeIdentifier)).thenReturn(wettbewerbLoesungszettel);
+		when(authService.checkPermissionForTeilnahmenummerAndReturnRolle(new Identifier(veranstalterUUID),
+			new Identifier(schulkuerzel), "[erstelleStatistikPDFEinzelteilnahme - " + schulkuerzel + "]")).thenReturn(Rolle.PRIVAT);
+
+		when(loesungszettelRepository.loadAll(teilnahmeIdentifier)).thenReturn(wettbewerbLoesungszettel);
+
+		when(statistikWettbewerbService.berechneGesamtmedianeWettbewerb(any(WettbewerbID.class))).thenReturn(gesamtmediane);
 
 		// Act
 		DownloadData downloadData = statistikService.erstelleStatistikPDFEinzelteilnahme(teilnahmeIdentifier,
@@ -153,7 +167,7 @@ public class StatistikAnonymisierteEinzelteilnahmeServiceTest {
 
 		// Assert
 		assertEquals("minikaenguru_2018_statistik.pdf", downloadData.filename());
-		assertEquals(218625, downloadData.data().length);
+		assertEquals(218993, downloadData.data().length);
 
 		StatistikTestUtils.print(downloadData, true);
 	}

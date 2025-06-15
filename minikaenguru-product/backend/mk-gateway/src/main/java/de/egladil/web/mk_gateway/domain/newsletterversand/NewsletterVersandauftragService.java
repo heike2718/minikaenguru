@@ -91,20 +91,19 @@ public class NewsletterVersandauftragService {
 	}
 
 	/**
-	 * @param  versandauftragID
-	 * @return                           Pair - links der Versandauftrag, rechts der Newsletter.
-	 * @throws MkGatewayRuntimeException
-	 *                                   wenn eines der Dinge null ist.
+	 * @param versandauftragID
+	 * @return Pair - links der Versandauftrag, rechts der Newsletter.
+	 * @throws MkGatewayRuntimeException wenn eines der Dinge null ist.
 	 */
-	public Pair<Versandauftrag, Newsletter> getVersandauftragAndNewsletterWithVersandauftragID(final Identifier versandauftragID) throws MkGatewayRuntimeException {
+	public Pair<Versandauftrag, Newsletter> getVersandauftragAndNewsletterWithVersandauftragID(final Identifier versandauftragID)
+		throws MkGatewayRuntimeException {
 
 		Optional<Versandauftrag> optVersandauftrag = this.versandauftraegeRepo.ofId(versandauftragID);
 
 		if (optVersandauftrag.isEmpty()) {
 
 			throw new MkGatewayRuntimeException(
-				"Datenmatsch: es gibt NewsletterAuslieferungen ohne Versandauftrag: VersandauftragID="
-					+ versandauftragID);
+				"Datenmatsch: es gibt NewsletterAuslieferungen ohne Versandauftrag: VersandauftragID=" + versandauftragID);
 		}
 
 		Versandauftrag versandauftrag = optVersandauftrag.get();
@@ -114,8 +113,7 @@ public class NewsletterVersandauftragService {
 		if (optNewsletter.isEmpty()) {
 
 			throw new MkGatewayRuntimeException(
-				"Datenmatsch: es gibt Versandauftraege ohne Newsletter: VersandauftragID="
-					+ versandauftragID);
+				"Datenmatsch: es gibt Versandauftraege ohne Newsletter: VersandauftragID=" + versandauftragID);
 		}
 
 		return Pair.of(versandauftrag, optNewsletter.get());
@@ -124,9 +122,8 @@ public class NewsletterVersandauftragService {
 	/**
 	 * Gibt die VersandauftragDTO mit der UUID zurück.
 	 *
-	 * @param  versandauftragId
-	 *                          String
-	 * @return                  Optional
+	 * @param versandauftragId String
+	 * @return Optional
 	 */
 	public Optional<VersandauftragDTO> getStatusNewsletterVersand(final String versandauftragId) {
 
@@ -145,9 +142,8 @@ public class NewsletterVersandauftragService {
 
 		if (optNewsletter.isEmpty()) {
 
-			throw new MkGatewayRuntimeException(
-				"Datenmatsch: es gibt Versandauftraege ohne Newsletter: VersandauftragID="
-					+ versandauftragDTO.identifier().identifier());
+			throw new MkGatewayRuntimeException("Datenmatsch: es gibt Versandauftraege ohne Newsletter: VersandauftragID="
+				+ versandauftragDTO.identifier().identifier());
 		}
 
 		VersandauftragDTO apiModel = VersandauftragDTO.createFromVersandauftrag(versandauftragDTO);
@@ -159,8 +155,8 @@ public class NewsletterVersandauftragService {
 	/**
 	 * Erzeugt einen neuen Versandauftrag mit zugehörigen Auslieferungen.
 	 *
-	 * @param  auftrag
-	 * @return         ResponsePayload
+	 * @param auftrag
+	 * @return ResponsePayload
 	 */
 	public ResponsePayload createVersandauftrag(final NewsletterVersandauftrag auftrag) {
 
@@ -168,19 +164,17 @@ public class NewsletterVersandauftragService {
 
 		if (optNewsletter.isEmpty()) {
 
-			throw new MkGatewayWebApplicationException(
-				Response.status(404)
-					.entity(ResponsePayload.messageOnly(MessagePayload.error("kein Newsletter mit der ID vorhanden"))).build());
+			throw new MkGatewayWebApplicationException(Response.status(404)
+				.entity(ResponsePayload.messageOnly(MessagePayload.error("kein Newsletter mit der ID vorhanden"))).build());
 		}
 
-		List<List<String>> mailempfaengerGruppen = this.veranstalterMailinfoService
-			.getMailempfaengerGroups(auftrag.emfaengertyp(), auftrag.isNurAngemeldeteVeranstalter());
+		List<List<String>> mailempfaengerGruppen = this.veranstalterMailinfoService.getMailempfaengerGroups(auftrag.emfaengertyp(),
+			auftrag.isNurAngemeldeteVeranstalter());
 
 		if (mailempfaengerGruppen.isEmpty()) {
 
-			throw new MkGatewayWebApplicationException(
-				Response.status(412).entity(ResponsePayload.messageOnly(MessagePayload.warn("keine Empfänger => kein Versand")))
-					.build());
+			throw new MkGatewayWebApplicationException(Response.status(412)
+				.entity(ResponsePayload.messageOnly(MessagePayload.warn("keine Empfänger => kein Versand"))).build());
 		}
 
 		Newsletter newsletter = optNewsletter.get();
@@ -226,9 +220,8 @@ public class NewsletterVersandauftragService {
 			String message = "Beim Anlegen des Versandauftrags ist ein Fehler aufgetreten: anzahl empfänger=" + anzahlEmpfaenger;
 			LOGGER.error("Exception beim Anlegen des Versandauftrags {}: {}", auftrag, e.getMessage(), e);
 
-			throw new MkGatewayWebApplicationException(Response.status(500)
-				.entity(ResponsePayload.messageOnly(MessagePayload.error(message)))
-				.build());
+			throw new MkGatewayWebApplicationException(
+				Response.status(500).entity(ResponsePayload.messageOnly(MessagePayload.error(message))).build());
 		}
 
 	}
@@ -249,12 +242,10 @@ public class NewsletterVersandauftragService {
 
 		if (StatusAuslieferung.COMPLETED == versandauftrag.getStatus() || StatusAuslieferung.ERRORS == versandauftrag.getStatus()) {
 
-			String message = "Newsletter wurde bereits am " + versandauftrag.versandBeendetAm()
-				+ " an " + versandauftrag.anzahlEmpaenger() + " " + versandauftrag.empfaengertyp() + " versendet";
+			String message = "Newsletter wurde bereits am " + versandauftrag.versandBeendetAm() + " an "
+				+ versandauftrag.anzahlEmpaenger() + " " + versandauftrag.empfaengertyp() + " versendet";
 			throw new MkGatewayWebApplicationException(
-				Response.status(409)
-					.entity(ResponsePayload.messageOnly(MessagePayload.warn(message)))
-					.build());
+				Response.status(409).entity(ResponsePayload.messageOnly(MessagePayload.warn(message))).build());
 		}
 
 		String message = "Newsletterversand wurde bereits am " + versandauftrag.getErfasstAm() + " gespeichert. Empfaengertyp="
@@ -263,24 +254,20 @@ public class NewsletterVersandauftragService {
 
 		// Newsletter wurde bereits am 13.01.2024 gespeichert. Empfaengertyp=LEHRER, Status=WAITING
 		throw new MkGatewayWebApplicationException(
-			Response.status(409)
-				.entity(ResponsePayload.messageOnly(MessagePayload.warn(message)))
-				.build());
+			Response.status(409).entity(ResponsePayload.messageOnly(MessagePayload.warn(message))).build());
 	}
 
 	/**
-	 * @param  newsletter
-	 * @param  empfaengertyp
-	 * @param  anzahlEmpfaenger
-	 * @return                  Versandauftrag
+	 * @param newsletter
+	 * @param empfaengertyp
+	 * @param anzahlEmpfaenger
+	 * @return Versandauftrag
 	 */
-	Versandauftrag initVersandauftrag(final Identifier newsletterIdentifier, final Empfaengertyp empfaengertyp, final int anzahlEmpfaenger) {
+	Versandauftrag initVersandauftrag(final Identifier newsletterIdentifier, final Empfaengertyp empfaengertyp,
+		final int anzahlEmpfaenger) {
 
-		return new Versandauftrag()
-			.withEmpfaengertyp(empfaengertyp)
-			.withNewsletterID(newsletterIdentifier)
-			.withAnzahlEmpaenger(anzahlEmpfaenger)
-			.withStatus(StatusAuslieferung.NEW);
+		return new Versandauftrag().withEmpfaengertyp(empfaengertyp).withNewsletterID(newsletterIdentifier)
+			.withAnzahlEmpaenger(anzahlEmpfaenger).withStatus(StatusAuslieferung.NEW);
 	}
 
 	@Transactional
@@ -292,11 +279,8 @@ public class NewsletterVersandauftragService {
 
 		for (List<String> gruppe : gruppen) {
 
-			NewsletterAuslieferung auslieferung = new NewsletterAuslieferung()
-				.withEmpfaenger(gruppe.toArray(new String[0]))
-				.withVersandauftragId(persistierter.identifier())
-				.withStatus(StatusAuslieferung.WAITING)
-				.withSortnummer(sortnr);
+			NewsletterAuslieferung auslieferung = new NewsletterAuslieferung().withEmpfaenger(gruppe.toArray(new String[0]))
+				.withVersandauftragId(persistierter.identifier()).withStatus(StatusAuslieferung.WAITING).withSortnummer(sortnr);
 
 			sortnr++;
 
@@ -317,8 +301,7 @@ public class NewsletterVersandauftragService {
 
 	int anzahlEmpfaenger(final List<List<String>> groups) {
 
-		return (int) groups.stream()
-			.flatMap(List::stream) // flatten the lists
+		return (int) groups.stream().flatMap(List::stream) // flatten the lists
 			.count();
 	}
 }
