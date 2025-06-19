@@ -17,7 +17,8 @@ import {
     StatistikKlassenstufeChartData,
     mapToKlassenstufeMedianChartData,
     Aufgabendetails,
-    AufgabeGUIModel
+    AufgabeGUIModel,
+    mapToChartDataAggregierteWochenteilnahmen
 } from "@mks/domain-model";
 
 export interface DomainState {
@@ -48,7 +49,8 @@ export const domainFeature = createFeature({
             const statistikJahreChartData: StatistikJahreChartData = {
                 chartDataJahreAnzahlKinder: mapToChartDataJahreAnzahlKinder(wettbewerbe),
                 chartDataJahreKinderKlassenstufe: mapToChartDataJahreKinderKlassenstufe(wettbewerbe),
-                chartDataJahreMediane: mapToChartDataJahreMediane(wettbewerbe)
+                chartDataJahreMediane: mapToChartDataJahreMediane(wettbewerbe),
+                chartDataAggregierteWochenteilnahmen: mapToChartDataAggregierteWochenteilnahmen(wettbewerbe)
             }
 
             return {

@@ -14,6 +14,7 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbRepository;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.FarbenWettbewerbe;
 
 /**
  * InMemoryWettbewerbRepository
@@ -62,6 +63,12 @@ public class InMemoryWettbewerbRepository implements WettbewerbRepository {
 			.withWettbewerbsende(LocalDate.of(wettbewerbsjahr, Month.AUGUST, 1));
 
 		return Arrays.asList(new Wettbewerb[] { wettbewerb });
+	}
+
+	@Override
+	public FarbenWettbewerbe findFarbeWithId(String wettbewerbUUID) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

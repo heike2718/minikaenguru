@@ -29,6 +29,7 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemorySc
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryTeilnahmenRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryUserRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.testdaten.InMemoryVeranstalterRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.FarbenWettbewerbe;
 import jakarta.persistence.PersistenceException;
 
 /**
@@ -262,6 +263,12 @@ public abstract class AbstractDomainServiceTest {
 
 				wettbewerbe.add(wettbewerb);
 
+			}
+
+			@Override
+			public FarbenWettbewerbe findFarbeWithId(String wettbewerbUUID) {
+				// TODO Auto-generated method stub
+				return null;
 			}
 		};
 

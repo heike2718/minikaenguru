@@ -14,6 +14,7 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.Wettbewerb;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbID;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbRepository;
 import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.FarbenWettbewerbe;
 import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.PersistenterWettbewerb;
 import io.quarkus.hibernate.orm.PersistenceUnit;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -32,7 +33,7 @@ public class WettbewerbHibernateRepository implements WettbewerbRepository {
 	@PersistenceUnit("wettbewerb")
 	EntityManager em;
 
-	public static WettbewerbHibernateRepository createForIntegrationTest(final EntityManager em) {
+	public static WettbewerbRepository createForIntegrationTest(final EntityManager em) {
 
 		WettbewerbHibernateRepository result = new WettbewerbHibernateRepository();
 		result.em = em;
@@ -65,7 +66,7 @@ public class WettbewerbHibernateRepository implements WettbewerbRepository {
 	}
 
 	/**
-	 * @param  persistenterWettbewerb
+	 * @param persistenterWettbewerb
 	 * @return
 	 */
 	Wettbewerb mapFromPersistenterWettbewerb(final PersistenterWettbewerb persistenterWettbewerb) {
@@ -161,10 +162,12 @@ public class WettbewerbHibernateRepository implements WettbewerbRepository {
 		Integer medianIkids = wettbewerb.medianIkids() == null || wettbewerb.medianIkids().equals(Integer.valueOf(0)) ? null
 			: wettbewerb.medianIkids();
 
-		Integer medianKlasseEins = wettbewerb.medianKlasseEins() == null || wettbewerb.medianKlasseEins().equals(Integer.valueOf(0)) ? null
+		Integer medianKlasseEins = wettbewerb.medianKlasseEins() == null || wettbewerb.medianKlasseEins().equals(Integer.valueOf(0))
+			? null
 			: wettbewerb.medianKlasseEins();
 
-		Integer medianKlasseZwei = wettbewerb.medianKlasseZwei() == null || wettbewerb.medianKlasseZwei().equals(Integer.valueOf(0)) ? null
+		Integer medianKlasseZwei = wettbewerb.medianKlasseZwei() == null || wettbewerb.medianKlasseZwei().equals(Integer.valueOf(0))
+			? null
 			: wettbewerb.medianKlasseZwei();
 
 		persistenterWettbewerb
@@ -179,5 +182,12 @@ public class WettbewerbHibernateRepository implements WettbewerbRepository {
 		persistenterWettbewerb.setMedianIkids(medianIkids);
 		persistenterWettbewerb.setMedianKlasseEins(medianKlasseEins);
 		persistenterWettbewerb.setMedianKlasseZwei(medianKlasseZwei);
+	}
+
+	@Override
+	public FarbenWettbewerbe findFarbeWithId(String wettbewerbUUID) {
+
+		return em.find(FarbenWettbewerbe.class, wettbewerbUUID);
+
 	}
 }

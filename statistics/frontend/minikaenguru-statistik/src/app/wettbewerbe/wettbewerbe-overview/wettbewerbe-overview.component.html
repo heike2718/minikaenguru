@@ -17,7 +17,7 @@
 
     <mks-bar-chart 
         [headline]="'Mediane'"
-        [myCanvasId]="'wettbewerbeOveview.medianeBarChart'"
+        [myCanvasId]="'wettbewerbeOverview.medianeBarChart'"
         [chartData]=chartDataMediane
         [showLegend]="true">
     </mks-bar-chart>
@@ -27,6 +27,13 @@
     <p>Maximal können folgende Punkte erreicht werden: Inklusion - 36, Klasse 1 - 60, Klasse 2 - 75</p>
     <p>Erst seit 2017 gab es für die Klassen 1 und 2 getrennte Aufgaben. Vorher lösten die Erstklässler die Aufgaben für die Klasse 2.</p>
     <p>Im Jahr 2020 lösten die Kinder pandemiebedingt die Aufgaben zu Hause.</p>
+
+    <mks-line-chart
+        [headline]="'Anzahl teilnehmende Kinder'"
+        [myCanvasId]="'aggregierteWochenteilnahmen'"
+        [chartData]=chartDataWochenteilnahmen
+        [showLegend]="true"
+    ></mks-line-chart>
 
     <h2>Zu den Statistiken der einzelnen Wettbwerbe</h2>
 

@@ -19,15 +19,15 @@ import de.egladil.web.minikaenguru_statistik.domain.dto.Gruppierungsitem;
 public class Wettbewerb {
 
 	@JsonProperty
-	@Schema(description = "Wettbewerbsjahr", example = "2020")
+	@Schema(description = "Wettbewerbsjahr", examples = "2020")
 	private int jahr;
 
 	@JsonProperty
-	@Schema(description = "Status des Wettbewerbs", example = "BEENDET")
+	@Schema(description = "Status des Wettbewerbs", examples = "BEENDET")
 	private StatusWettbewerb status;
 
 	@JsonProperty
-	@Schema(description = "Anzahl der Kinder (ist eine untere Schranke)", example = "12524")
+	@Schema(description = "Anzahl der Kinder (ist eine untere Schranke)", examples = "12524")
 	private long anzahlKinder;
 
 	@JsonProperty
@@ -38,4 +38,11 @@ public class Wettbewerb {
 	@Schema(description = "Mediane je Klassenstufe")
 	private List<Gruppierungsitem> medianeJeKlassenstufe;
 
+	@JsonProperty
+	@Schema(description = "Farben, mit denen dieser Wettbewerb in line-Grafik gezeichnet werden soll-")
+	private WettbewerbColors colors;
+
+	@JsonProperty
+	@Schema(description = "Je Wettbewerbswoche wird die Anzahl der Lösungszettel kumuliert, so dass eine monoton wachsende Anzahl an Lösungszetteln für ein Liniendiagramm entsteht.")
+	private List<Gruppierungsitem> kumulierteLoesungszettelJeWoche;
 }

@@ -7,12 +7,14 @@ import { GenericBarChartComponent } from '../generic-bar-chart/generic-bar-chart
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
+import { GenericLineChartComponent } from '../generic-line-chart/generic-line-chart.component';
 
 @Component({
     selector: 'mks-wettbewerbe',
     imports: [
         CommonModule,
         GenericBarChartComponent,
+        GenericLineChartComponent,
         MatButtonModule
     ],
     templateUrl: './wettbewerbe-overview.component.html',
@@ -24,6 +26,8 @@ export class WettbewerbeOverviewComponent implements OnInit, OnDestroy{
   chartDataJahreKinder!: ChartData<'bar'>;
   chartDataKinderKlassenstufen!: ChartData<'bar'>;
   chartDataMediane!: ChartData<'bar'>;
+  chartDataWochenteilnahmen!: ChartData<'line'>;
+  
 
 
   #router = inject(Router);
@@ -35,12 +39,14 @@ export class WettbewerbeOverviewComponent implements OnInit, OnDestroy{
       this.domainFacade.wettbewerbe$,
       this.domainFacade.jahreAnzahlKinder$,
       this.domainFacade.jahreKinderKlassenstufe$,
-      this.domainFacade.jahreMediane$])
+      this.domainFacade.jahreMediane$,
+      this.domainFacade.aggregierteWochenteilnahmen$])
     .subscribe(([
       wettbewerbe,
       chartDataJahreKinder,
       chartDataKinderKlassenstufen,
-      chartDataMediane
+      chartDataMediane,
+      chartDataWochenteilnahmen
     ]) => {
       if (wettbewerbe.length > 0) {  
         
@@ -48,6 +54,7 @@ export class WettbewerbeOverviewComponent implements OnInit, OnDestroy{
         this.chartDataJahreKinder = {...chartDataJahreKinder};
         this.chartDataKinderKlassenstufen = {...chartDataKinderKlassenstufen};
         this.chartDataMediane = {...chartDataMediane};
+        this.chartDataWochenteilnahmen = {...chartDataWochenteilnahmen}        
       }
     });
   }
@@ -65,5 +72,4 @@ export class WettbewerbeOverviewComponent implements OnInit, OnDestroy{
   onWettbewerbClick(id: number): void {
     this.#router.navigate(['/wettbewerbe', id]);
   }
-
 }

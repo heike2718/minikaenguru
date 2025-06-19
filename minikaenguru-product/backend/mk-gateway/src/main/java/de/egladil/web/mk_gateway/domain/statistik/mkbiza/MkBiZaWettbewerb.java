@@ -31,6 +31,12 @@ public class MkBiZaWettbewerb {
 	@JsonProperty
 	private List<MkBiZaGruppierungsitem> medianeJeKlassenstufe = new ArrayList<>();
 
+	@JsonProperty
+	private List<MkBiZaGruppierungsitem> kumulierteLoesungszettelJeWoche = new ArrayList<>();
+
+	@JsonProperty
+	private MkBiZaWettbewerbColors colors;
+
 	public MkBiZaWettbewerb() {
 
 		super();
@@ -89,6 +95,22 @@ public class MkBiZaWettbewerb {
 	public void setKinderJeKlassenstufe(final List<MkBiZaGruppierungsitem> kinderJeKlassenstufe) {
 
 		this.kinderJeKlassenstufe = kinderJeKlassenstufe;
+	}
+
+	public List<MkBiZaGruppierungsitem> getKumulierteLoesungszettelJeWoche() {
+		return kumulierteLoesungszettelJeWoche;
+	}
+
+	public void setKumulierteLoesungszettelJeWoche(List<MkBiZaGruppierungsitem> loesungszettelJeWoche) {
+		this.kumulierteLoesungszettelJeWoche = loesungszettelJeWoche;
+	}
+
+	public MkBiZaWettbewerbColors getColors() {
+		return colors;
+	}
+
+	public void setColors(MkBiZaWettbewerbColors colors) {
+		this.colors = colors;
 	}
 
 }

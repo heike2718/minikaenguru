@@ -21,7 +21,8 @@ export class DomainFacade {
     wettbewerbe$: Observable<WettbewerbOverview[]> = this.#store.select(fromDomain.wettbewerbe);
     jahreAnzahlKinder$: Observable<ChartData<'bar'>> = this.#store.select(fromDomain.jahreAnzahlKinder).pipe(filterDefined);
     jahreMediane$: Observable<ChartData<'bar'>> = this.#store.select(fromDomain.jahreMediane).pipe(filterDefined);
-    jahreKinderKlassenstufe$: Observable<ChartData<'bar'>> = this.#store.select(fromDomain.jahreKinderKlassenstufe).pipe(filterDefined);    
+    aggregierteWochenteilnahmen$: Observable<ChartData<'line'>> = this.#store.select(fromDomain.aggregierteWochenteilnahmen).pipe(filterDefined);
+    jahreKinderKlassenstufe$: Observable<ChartData<'bar'>> = this.#store.select(fromDomain.jahreKinderKlassenstufe).pipe(filterDefined); 
     selectedWettbewewerb$: Observable<WettbewerbDetailsGUIModel> = this.#store.select(fromDomain.selectedWettbewerb).pipe(filterDefined);
     selectedKlassenstufe$: Observable<KlassenstufeGUIModel> = this.#store.select(fromDomain.selectedKlassenstufe).pipe(filterDefined);
 

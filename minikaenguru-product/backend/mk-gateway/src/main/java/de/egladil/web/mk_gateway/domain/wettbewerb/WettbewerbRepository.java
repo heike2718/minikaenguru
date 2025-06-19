@@ -7,6 +7,8 @@ package de.egladil.web.mk_gateway.domain.wettbewerb;
 import java.util.List;
 import java.util.Optional;
 
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.FarbenWettbewerbe;
+
 /**
  * WettbewerbRepository
  */
@@ -51,5 +53,13 @@ public interface WettbewerbRepository {
 	 * @return List
 	 */
 	List<Wettbewerb> loadWettbewerbe();
+
+	/**
+	 * Gibt das Farbschema zum gegebenen Wettbewerb zurück.
+	 *
+	 * @param wettbewerbUUID String der PK
+	 * @return FarbenWettbewerbe oder null.
+	 */
+	FarbenWettbewerbe findFarbeWithId(String wettbewerbUUID);
 
 }

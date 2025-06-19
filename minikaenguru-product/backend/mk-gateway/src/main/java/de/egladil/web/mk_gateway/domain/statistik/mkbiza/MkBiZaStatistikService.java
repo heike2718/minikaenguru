@@ -47,6 +47,9 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbeDescendingComparat
 import de.egladil.web.mk_gateway.infrastructure.persistence.kataloge.dao.KatalogeRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.kataloge.entities.Land;
 import de.egladil.web.mk_gateway.infrastructure.persistence.kataloge.entities.Schule;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao.WochenstatistikRepository;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.FarbenWettbewerbe;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.WochenstatistikItem;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
@@ -61,6 +64,12 @@ public class MkBiZaStatistikService {
 
 	private final AufgabeErgebnisRechner aufgabeErgebnisRechner = new AufgabeErgebnisRechner();
 
+	@ConfigProperty(name = "aufsetzjahr.wochenstatistik")
+	private int aufsetzjahrWochenstatistik;
+
+	@ConfigProperty(name = "wettbewerbswochen")
+	private int anzahlWettbewerbswochen;
+
 	@Inject
 	MkGatewayAuthConfig authConfig;
 
@@ -74,10 +83,10 @@ public class MkBiZaStatistikService {
 	LoesungszettelRepository loesungszettelRepository;
 
 	@Inject
-	KatalogeRepository katalogeRepository;
+	WochenstatistikRepository wochenstatistikRepository;
 
-//	@Inject
-//	MkKatalogeResourceAdapter katalogeResourceAdapter;
+	@Inject
+	KatalogeRepository katalogeRepository;
 
 	@Inject
 	TeilnahmenRepository teilnahmenRepository;
@@ -85,9 +94,8 @@ public class MkBiZaStatistikService {
 	/**
 	 * Gibt die Daten für die Übersicht über die Wettbewerbe zurüclḱ.
 	 *
-	 * @param  status
-	 *                WettbewerbStatus
-	 * @return        List
+	 * @param status WettbewerbStatus
+	 * @return List
 	 */
 	public List<MkBiZaWettbewerb> loadWettbewerbeOverview() {
 
@@ -99,6 +107,8 @@ public class MkBiZaStatistikService {
 			.toList();
 
 		for (MkBiZaWettbewerb wettbewerb : result) {
+
+			String wettbewerbUUID = wettbewerb.getJahr() + "";
 
 			List<Loesungszettel> loesungszettel = loesungszettelRepository
 				.loadAllForWettbewerb(new WettbewerbID(wettbewerb.getJahr()));
@@ -114,6 +124,11 @@ public class MkBiZaStatistikService {
 
 			wettbewerb.setAnzahlKinder(loesungszettel.size());
 			wettbewerb.setKinderJeKlassenstufe(kinderJeKlassenstufe);
+
+			List<MkBiZaGruppierungsitem> aggregierteLoesungszettel = this
+				.loadKumulierteLoesungszettelJeWoche(wettbewerb.getJahr());
+			wettbewerb.setKumulierteLoesungszettelJeWoche(aggregierteLoesungszettel);
+			wettbewerb.setColors(getFarbschema(wettbewerbUUID));
 		}
 
 		return result;
@@ -122,11 +137,9 @@ public class MkBiZaStatistikService {
 	/**
 	 * Aggregiert die Statistikdaten für ein gegebenes Wettbewerbsjahr.
 	 *
-	 * @param  jahr
-	 *                                          Integer das Wettbewerbsjahr
-	 * @return                                  MkBiZaWettbewerbDetails
-	 * @throws MkGatewayWebApplicationException
-	 *                                          wird im MkGatewayExceptionMapper verarbeitet.
+	 * @param jahr Integer das Wettbewerbsjahr
+	 * @return MkBiZaWettbewerbDetails
+	 * @throws MkGatewayWebApplicationException wird im MkGatewayExceptionMapper verarbeitet.
 	 */
 	public MkBiZaWettbewerbDetails getStatistikJahr(final Integer jahr) throws MkGatewayWebApplicationException {
 
@@ -189,8 +202,7 @@ public class MkBiZaStatistikService {
 		for (Sprache sprache : Sprache.values()) {
 
 			long anzahl = alleLoesungszettel.stream().filter(l -> sprache == l.sprache()).count();
-			MkBiZaGruppierungsitem gruppierungsitem = new MkBiZaGruppierungsitem().withName(sprache.getLabel())
-				.withAnzahl(anzahl);
+			MkBiZaGruppierungsitem gruppierungsitem = new MkBiZaGruppierungsitem().withName(sprache.getLabel()).withAnzahl(anzahl);
 			result.addKinderJeSprache(gruppierungsitem);
 		}
 
@@ -235,8 +247,8 @@ public class MkBiZaStatistikService {
 		List<LandPayload> laender = getLaender();
 
 		Set<Identifier> distinctSchuleLoesungszettel = alleLoesungszettel.stream()
-			.filter(l -> Teilnahmeart.SCHULE == l.teilnahmeIdentifier().teilnahmeart())
-			.map(Loesungszettel::getTheTeilnahmenummer).collect(Collectors.toSet());
+			.filter(l -> Teilnahmeart.SCHULE == l.teilnahmeIdentifier().teilnahmeart()).map(Loesungszettel::getTheTeilnahmenummer)
+			.collect(Collectors.toSet());
 
 		List<SchuleAPIModel> schulen = this.getSchulen(distinctSchuleLoesungszettel);
 
@@ -266,8 +278,7 @@ public class MkBiZaStatistikService {
 			if (median != null) {
 
 				result.addMedianeJeKlassenstufe(
-					new MkBiZaGruppierungsitem().withAnzahl(Long.valueOf(median))
-						.withName(klassenstufe.getLabel()));
+					new MkBiZaGruppierungsitem().withAnzahl(Long.valueOf(median)).withName(klassenstufe.getLabel()));
 			}
 		}
 
@@ -284,7 +295,7 @@ public class MkBiZaStatistikService {
 	/**
 	 * Gibt die Anzahl
 	 *
-	 * @param  wettbewerbsjahr
+	 * @param wettbewerbsjahr
 	 * @return
 	 */
 	long getAnzahlLoesungszettel(final Integer wettbewerbsjahr) {
@@ -341,8 +352,8 @@ public class MkBiZaStatistikService {
 	/**
 	 * Berechnet die Statistik zur gegebenen Klassenstufe des Wettbewerbsjahres.
 	 *
-	 * @param  jahr
-	 * @param  klassenstufe
+	 * @param jahr
+	 * @param klassenstufe
 	 * @return
 	 */
 	public MkBiZaStatistikKlassenstufe getStatistikJahrKlassenstufe(final Integer jahr, final Klassenstufe klassenstufe) {
@@ -385,8 +396,7 @@ public class MkBiZaStatistikService {
 
 		if (wettbewerb.isBeendet() && !zettelKlassenstufe.isEmpty()) {
 
-			Map<String, Integer> aufgabennummernWithWertungscodeIndex = klassenstufe
-				.getAufgabennummernWithWertungscodeIndex(jahr);
+			Map<String, Integer> aufgabennummernWithWertungscodeIndex = klassenstufe.getAufgabennummernWithWertungscodeIndex(jahr);
 
 			for (String nummer : aufgabennummernWithWertungscodeIndex.keySet()) {
 
@@ -407,8 +417,7 @@ public class MkBiZaStatistikService {
 					maximalpunktzahlMal100 = 75;
 				}
 
-				result.setMedianUndGesamtpunkte(
-					new MkBiZaMedianDto(median.intValue(), maximalpunktzahlMal100 / 100));
+				result.setMedianUndGesamtpunkte(new MkBiZaMedianDto(median.intValue(), maximalpunktzahlMal100 / 100));
 			}
 
 			GesamtpunktverteilungKlassenstufeDaten daten = new VerteilungRechner().berechne(wettbewerb.id(), klassenstufe,
@@ -429,8 +438,7 @@ public class MkBiZaStatistikService {
 		for (Sprache sprache : Sprache.values()) {
 
 			long anzahl = zettelKlassenstufe.stream().filter(l -> sprache == l.sprache()).count();
-			MkBiZaGruppierungsitem gruppierungsitem = new MkBiZaGruppierungsitem().withName(sprache.getLabel())
-				.withAnzahl(anzahl);
+			MkBiZaGruppierungsitem gruppierungsitem = new MkBiZaGruppierungsitem().withName(sprache.getLabel()).withAnzahl(anzahl);
 			result.addKinderJeSprache(gruppierungsitem);
 		}
 
@@ -438,8 +446,7 @@ public class MkBiZaStatistikService {
 
 		for (Teilnahmeart teilnahmeart : Teilnahmeart.values()) {
 
-			long anzahl = zettelKlassenstufe.stream().filter(l -> l.teilnahmeIdentifier().teilnahmeart() == teilnahmeart)
-				.count();
+			long anzahl = zettelKlassenstufe.stream().filter(l -> l.teilnahmeIdentifier().teilnahmeart() == teilnahmeart).count();
 			MkBiZaGruppierungsitem gruppierungsitem = new MkBiZaGruppierungsitem().withName(teilnahmeart.toString())
 				.withAnzahl(anzahl);
 			result.addKinderJeTeilnahmeart(gruppierungsitem);
@@ -473,7 +480,9 @@ public class MkBiZaStatistikService {
 		return result;
 	}
 
-	MkBiZaStatistikAufgabe berechneStatistikAufgabe(final String nummer, final Map<String, Integer> aufgabennummernWithWertungscodeIndex, final List<Loesungszettel> zettelKlassenstufe, final Klassenstufe klassenstufe) {
+	MkBiZaStatistikAufgabe berechneStatistikAufgabe(final String nummer,
+		final Map<String, Integer> aufgabennummernWithWertungscodeIndex, final List<Loesungszettel> zettelKlassenstufe,
+		final Klassenstufe klassenstufe) {
 
 		Integer index = aufgabennummernWithWertungscodeIndex.get(nummer);
 
@@ -508,7 +517,8 @@ public class MkBiZaStatistikService {
 		return statistikAufgabe;
 	}
 
-	List<MkBiZaGruppierungsitem> berechneAnzahlenJeLoesungsbuchstabe(final List<Loesungszettel> loesungszettels, final Integer index) {
+	List<MkBiZaGruppierungsitem> berechneAnzahlenJeLoesungsbuchstabe(final List<Loesungszettel> loesungszettels,
+		final Integer index) {
 
 		List<MkBiZaGruppierungsitem> result = new ArrayList<>();
 		int anzahlA = 0;
@@ -605,5 +615,39 @@ public class MkBiZaStatistikService {
 
 	}
 
+	/**
+	 * Läd die Wochenstatistik für das gegebene Wettbewerbsjahr.
+	 *
+	 * @param jahr Integer
+	 * @return List
+	 */
+	List<MkBiZaGruppierungsitem> loadKumulierteLoesungszettelJeWoche(final Integer jahr) {
 
+		LoesungszettelJeWocheDelegate delegate = new LoesungszettelJeWocheDelegate();
+
+		List<WochenstatistikItem> persistenteWochenstatistiken = wochenstatistikRepository
+			.loadWochenstatistiken(String.valueOf(jahr));
+
+		List<MkBiZaGruppierungsitem> dtoList = delegate.berechneKumulierteWochenstatistik(persistenteWochenstatistiken,
+			anzahlWettbewerbswochen);
+
+		return dtoList;
+	}
+
+	MkBiZaWettbewerbColors getFarbschema(String wettbwerbUUID) {
+		FarbenWettbewerbe colors = wettbewerbRepository.findFarbeWithId(wettbwerbUUID);
+		if (colors == null) {
+			return null;
+		}
+
+		MkBiZaWettbewerbColors result = new MkBiZaWettbewerbColors();
+		result.setBackgroundColor(colors.getBackgroundColor());
+		result.setBorderColor(colors.getBorderColor());
+		result.setPointBackgroundColor(colors.getPointBackgroundColor());
+		result.setPointBorderColor(colors.getPointBorderColor());
+		result.setPointHoverBackgroundColor(colors.getPointHoverBackgroundColor());
+		result.setPointHoverBorderColor(colors.getPointHoverBorderColor());
+
+		return result;
+	}
 }

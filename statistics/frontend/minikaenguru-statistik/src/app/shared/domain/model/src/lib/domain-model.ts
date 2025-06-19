@@ -43,18 +43,30 @@ export interface Gruppierungsitem {
   readonly anzahl: number
 };
 
+export interface WettbewerbColors {
+  readonly backgroundColor: string;
+  readonly borderColor: string;
+  readonly pointBackgroundColor: string;
+  readonly pointBorderColor: string;
+  readonly pointHoverBackgroundColor: string;
+  readonly pointHoverBorderColor: string;
+}
+
 export interface WettbewerbOverview {
   readonly jahr: number,
+  readonly colors?: WettbewerbColors,
   readonly status: StatusWettbewerb,
   readonly anzahlKinder: number,
   readonly medianeJeKlassenstufe: Gruppierungsitem[]
-  readonly kinderJeKlassenstufe: Gruppierungsitem[]
+  readonly kinderJeKlassenstufe: Gruppierungsitem[];
+  readonly kumulierteLoesungszettelJeWoche: Gruppierungsitem[];
 };
 
 export interface StatistikJahreChartData {
   readonly chartDataJahreAnzahlKinder: ChartData<'bar'> | undefined;
   readonly chartDataJahreKinderKlassenstufe: ChartData<'bar'> | undefined;
   readonly chartDataJahreMediane: ChartData<'bar'> | undefined;
+  readonly chartDataAggregierteWochenteilnahmen: ChartData<'line'> | undefined;
 }
 
 export interface WettbewerbDetails {

@@ -16,7 +16,7 @@ import de.egladil.web.mk_gateway.domain.wettbewerb.WettbewerbStatus;
 /**
  * AnmeldungenAPIModel
  */
-@Schema(name = "teilnahmen")
+@Schema(name = "anmeldungen")
 public class AnmeldungenAPIModel {
 
 	@JsonProperty

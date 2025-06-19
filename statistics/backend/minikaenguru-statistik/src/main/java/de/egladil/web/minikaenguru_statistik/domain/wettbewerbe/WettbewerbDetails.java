@@ -21,7 +21,7 @@ import de.egladil.web.minikaenguru_statistik.domain.dto.Gruppierungsitem;
 public class WettbewerbDetails {
 
 	@JsonProperty
-	@Schema(description = "Wettbewerbsjahr", example = "2020")
+	@Schema(description = "Wettbewerbsjahr", examples = "2020")
 	private int jahr;
 
 	@JsonProperty
@@ -29,19 +29,19 @@ public class WettbewerbDetails {
 	private boolean beendet;
 
 	@JsonProperty
-	@Schema(description = "untere Schranke für die Anzahl aller Kinder, die teilgenommen haben", example = "16534")
+	@Schema(description = "untere Schranke für die Anzahl aller Kinder, die teilgenommen haben", examples = "16534")
 	private int anzahlKinderGesamt;
 
 	@JsonProperty
-	@Schema(description = "Anzahl aller Privatveranstalter, die sich angemeldet hatten", example = "143")
+	@Schema(description = "Anzahl aller Privatveranstalter, die sich angemeldet hatten", examples = "143")
 	private long anzahlPrivatanmeldungen;
 
 	@JsonProperty
-	@Schema(description = "Anzahl aller Schulen, die sich angemeldet hatten", example = "623")
+	@Schema(description = "Anzahl aller Schulen, die sich angemeldet hatten", examples = "623")
 	private long anzahlSchulanmeldungen;
 
 	@JsonProperty
-	@Schema(description = "untere Schranke für die Anzahl aller Schulen, die teilgenommen haben", example = "423")
+	@Schema(description = "untere Schranke für die Anzahl aller Schulen, die teilgenommen haben", examples = "423")
 	private long teilnehmendeSchulenGesamt;
 
 	@JsonProperty

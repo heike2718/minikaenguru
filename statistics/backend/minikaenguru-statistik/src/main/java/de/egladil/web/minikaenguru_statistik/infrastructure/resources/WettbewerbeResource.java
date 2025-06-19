@@ -49,6 +49,7 @@ public class WettbewerbeResource {
 	@Inject
 	KlassenstufeService klassenstufeService;
 
+	// @formatter:off
 	@GET
 	@Operation(
 		operationId = "getWettbewerbe",
@@ -70,6 +71,7 @@ public class WettbewerbeResource {
 		responseCode = "500",
 		content = @Content(schema = @Schema(implementation = MessagePayload.class)))
 	public Response getWettbewerbe() {
+	// @formatter:on
 
 		List<Wettbewerb> wettbewerbe = wettbewerbService.loadWettbewerbe();
 
@@ -77,6 +79,7 @@ public class WettbewerbeResource {
 
 	}
 
+	// @formatter:off
 	@GET
 	@Path("{jahr}")
 	@Operation(
@@ -109,7 +112,6 @@ public class WettbewerbeResource {
 		description = "Serverfehler - Details stehen im server.log",
 		responseCode = "500",
 		content = @Content(schema = @Schema(implementation = MessagePayload.class)))
-	// @formatter:off
 	public Response getStatistikWettbewerb(
 		@Pattern(regexp = MkbizaRegexps.VALID_JAHR, message = MkbizaRegexps.MSG_INVALID_JAHR) @PathParam(value = "jahr") final String jahr) {
 	// @formatter:on
@@ -126,6 +128,7 @@ public class WettbewerbeResource {
 		}
 	}
 
+	// @formatter:off
 	@Path("{jahr}/{klassenstufe}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -164,7 +167,6 @@ public class WettbewerbeResource {
 		description = "Serverfehler",
 		responseCode = "500",
 		content = @Content(schema = @Schema(implementation = MessagePayload.class)))
-	// @formatter:off
 	public Response getStatistikJahrKlassenstufe(
 		@Pattern(regexp = MkbizaRegexps.VALID_JAHR, message = MkbizaRegexps.MSG_INVALID_JAHR) @PathParam(value = "jahr") final String jahr,
 		@PathParam(value = "klassenstufe") final Klassenstufe klassenstufe) {

@@ -47,11 +47,7 @@ export class GenericBarChartComponent implements OnInit {
       plugins: {
         legend: {
           display: this.showLegend,
-        },
-        // datalabels: {
-        //   anchor: 'end',
-        //   align: 'end',
-        // }
+        }
       },
     }
   }

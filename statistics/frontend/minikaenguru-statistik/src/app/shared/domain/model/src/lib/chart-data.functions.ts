@@ -1,5 +1,14 @@
-import { ChartData, ChartDataset } from 'chart.js';
-import { BAR_BACKGROUND_COLOR_BLUE, BAR_BACKGROUND_COLOR_GREENLY, BAR_BACKGROUND_COLOR_YELLOW, Gruppierungsitem, ChartModel, WettbewerbDetails, WettbewerbOverview, BAR_BACKGROUND_COLOR_1, BAR_BACKGROUND_COLOR_2, BAR_BACKGROUND_COLOR_3, MedianUndGesamtpunkte } from './domain-model';
+import { ChartData, ChartDataset, DefaultDataPoint } from 'chart.js';
+import {
+    Gruppierungsitem
+    , ChartModel
+    , WettbewerbDetails
+    , WettbewerbOverview
+    , BAR_BACKGROUND_COLOR_1
+    , BAR_BACKGROUND_COLOR_2
+    , BAR_BACKGROUND_COLOR_3
+    , MedianUndGesamtpunkte
+} from './domain-model';
 
 /*
 
@@ -133,6 +142,38 @@ export function mapToChartDataJahreKinderKlassenstufe(wettbewerbe: WettbewerbOve
 
     return result;
 };
+
+export function mapToChartDataAggregierteWochenteilnahmen(wettbewerbe: WettbewerbOverview[]): ChartData<'line'> | undefined {
+
+    const datasets: ChartDataset<'line'>[] = [];
+
+    wettbewerbe.forEach(w => {
+        if (w.colors) {
+            const aggr: Gruppierungsitem[] = w.kumulierteLoesungszettelJeWoche;
+            const data: number[] = aggr.map(a => a.anzahl);
+
+            const line = {
+                data: data,
+                label: w.jahr + '',
+                backgroundColor: w.colors!.backgroundColor,
+                borderColor: w.colors!.borderColor,
+                pointBackgroundColor: w.colors!.pointBackgroundColor,
+                pointBorderColor: w.colors!.pointBorderColor,
+                pointHoverBackgroundColor: w.colors!.pointHoverBackgroundColor,
+                pointHoverBorderColor: w.colors!.pointHoverBorderColor
+            };
+
+            datasets.push(line);
+        }
+    });
+
+    const result: ChartData<'line'> = {
+        datasets: datasets,
+        labels: wettbewerbe[0].kumulierteLoesungszettelJeWoche.map(a => a.name)
+    };
+
+    return result;
+}
 
 // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //             WettbewerbDetails
@@ -277,7 +318,7 @@ export function mapToKlassenstufeMedianChartData(medianUndGesamtpunkte: MedianUn
             name: 'Gesamtpunktzahl',
             anzahl: medianUndGesamtpunkte.gesamtpunkte
         });
-    }   
+    }
 
     return mapToChartDataSingleDataset(mediane, 'Median');
 
