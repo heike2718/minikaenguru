@@ -19,50 +19,73 @@ import jakarta.persistence.Table;
 @Table(name = "VW_WOCHENSTATISTIK")
 @IdClass(WochenstatistikItemID.class)
 @NamedQueries({
-	@NamedQuery(name = WochenstatistikItem.FIND_WITH_WETTBEWERB_UUID, query = "select w from WochenstatistikItem w where w.wettbewerbUUID = :wettbewerbUUID order by w.woche")
-})
+	@NamedQuery(name = WochenstatistikItem.FIND_WITH_WETTBEWERB_UUID, query = "select w from WochenstatistikItem w where w.jahr = :jahr order by w.woche") })
 public class WochenstatistikItem implements Comparable<WochenstatistikItem> {
 
 	public static final String FIND_WITH_WETTBEWERB_UUID = "WochenstatistikItem.FIND_WITH_WETTBEWERB_UUID";
 
 	@Id
-	@Column(name = "WETTBEWERB_UUID")
-	private String wettbewerbUUID;
+	@Column(name = "JAHR")
+	private int jahr;
 
 	@Id
-	@Column(name = "WOCHE")
-	private Long woche;
+	@Column(name = "KALENDERWOCHE")
+	private int woche;
 
-	@Column(name = "ANZAHL_LOESUNGSZETTEL")
-	private long anzahlLoesungszettel;
+	@Column(name = "ANZAHL")
+	private int anzahlLoesungszettel;
+
+	/**
+	 *
+	 */
+	public WochenstatistikItem() {
+	}
+
+	/**
+	 * Nützlich für Tests. Da spielt die jahr keine Rolle.
+	 *
+	 * @param woche int
+	 * @param anzahlLoesungszettel int
+	 */
+	public WochenstatistikItem(int woche, int anzahlLoesungszettel) {
+		super();
+		this.woche = woche;
+		this.anzahlLoesungszettel = anzahlLoesungszettel;
+	}
 
 	@Override
 	public int compareTo(WochenstatistikItem o) {
-		return this.woche.intValue() - o.getWoche().intValue();
+		return this.woche - o.getWoche();
 	}
 
-	public String getWettbewerbUUID() {
-		return wettbewerbUUID;
+	@Override
+	public String toString() {
+		return "WochenstatistikItem [jahr=" + jahr + ", woche=" + woche + ", anzahlLoesungszettel="
+			+ anzahlLoesungszettel + "]";
 	}
 
-	public void setWettbewerbUUID(String wettbewerbUUID) {
-		this.wettbewerbUUID = wettbewerbUUID;
-	}
-
-	public Long getWoche() {
+	public int getWoche() {
 		return woche;
 	}
 
-	public void setWoche(Long woche) {
+	public void setWoche(int woche) {
 		this.woche = woche;
 	}
 
-	public long getAnzahlLoesungszettel() {
+	public int getAnzahlLoesungszettel() {
 		return anzahlLoesungszettel;
 	}
 
-	public void setAnzahlLoesungszettel(long anzahlLoesungszettel) {
+	public void setAnzahlLoesungszettel(int anzahlLoesungszettel) {
 		this.anzahlLoesungszettel = anzahlLoesungszettel;
+	}
+
+	public int getJahr() {
+		return jahr;
+	}
+
+	public void setJahr(int jahr) {
+		this.jahr = jahr;
 	}
 
 }

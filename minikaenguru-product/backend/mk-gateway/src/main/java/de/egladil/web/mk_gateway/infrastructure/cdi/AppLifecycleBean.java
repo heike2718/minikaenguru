@@ -64,14 +64,14 @@ public class AppLifecycleBean {
 	@ConfigProperty(name = "auth-app.url")
 	String authAppUrl;
 
-	@ConfigProperty(name = "quarkus.rest-client.mk-kataloge.url")
-	String katalogeUrl;
-
 	@ConfigProperty(name = "newsletterversand.cron.expr")
 	String newsletterversandCronExpression;
 
 	@ConfigProperty(name = "quarkus.application.version")
 	String version;
+
+	@ConfigProperty(name = "aufsetzjahr.wochenstatistik")
+	private int aufsetzjahrWochenstatistik;
 
 	void onStartup(@Observes
 	final StartupEvent ev) {
@@ -85,11 +85,11 @@ public class AppLifecycleBean {
 		LOGGER.info(" ===========>  filescannerUrl={}", filescannerUrl);
 		LOGGER.info(" ===========>  authproviderUrl={}", authproviderUrl);
 		LOGGER.info(" ===========>  authAppUrl={}", authAppUrl);
-		LOGGER.info(" ===========>  katalogeUrl={}", katalogeUrl);
 		LOGGER.info(" ===========>  wettbewerbJdbcUrl={}", wettbewerbJdbcUrl);
 		LOGGER.info(" ===========>  katalogeJdbcUrl={}", katalogeJdbcUrl);
 		LOGGER.info(" ===========>  the download dir is {}", getPathDownloadDir());
 		LOGGER.info(" ===========>  the upload dir is {}", quarkusUploadsDir);
+		LOGGER.info(" ===========>  aufsetzjahr.wochenstatistik={}", aufsetzjahrWochenstatistik);
 		LOGGER.info(" ===========>  quarkus.http.cors.origins={}", corsAllowedOrigins);
 		LOGGER.info(" ===========>  quarkus.http.root-path={}", rootPath);
 		LOGGER.info(" ===========>  quarkus.http.port={}", port);

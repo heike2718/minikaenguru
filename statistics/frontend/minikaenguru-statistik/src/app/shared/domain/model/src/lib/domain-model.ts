@@ -83,6 +83,7 @@ export interface WettbewerbDetails {
   readonly kinderJeKlassenstufe: Gruppierungsitem[];
   readonly kinderJeSprache: Gruppierungsitem[];
   readonly medianeJeKlassenstufe: Gruppierungsitem[];
+  readonly anzahlLoesungszettelJeWoche: Gruppierungsitem[];
 };
 
 export interface StatistikWettbewerbChartData {
@@ -93,6 +94,7 @@ export interface StatistikWettbewerbChartData {
   readonly chartModelKinderJeSprache: ChartModel;
   readonly chartDataMediane: ChartData<'bar'>;
   readonly chartDataSchulanmeldungenVersusSchulteilnahmen: ChartData<'bar'>;
+  readonly chartDataAnzahlLoesungszettelJeWoche: ChartData<'bar'>;
 };
 
 export interface WettbewerbDetailsGUIModel {
@@ -166,3 +168,10 @@ export interface KlassenstufeGUIModel {
   readonly chartDataKlassenstufe: StatistikKlassenstufeChartData;
   readonly aufgabenGUIModel: AufgabeGUIModel[];
 };
+
+export function isGruppierungsitemsEmpty(gruppierungsitems: Gruppierungsitem[]) {
+
+  const items: Gruppierungsitem[] = gruppierungsitems.filter(item => item.anzahl > 0);
+
+  return items.length === 0;
+}

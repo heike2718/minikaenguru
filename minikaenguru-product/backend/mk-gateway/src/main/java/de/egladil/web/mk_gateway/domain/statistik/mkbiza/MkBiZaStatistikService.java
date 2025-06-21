@@ -49,6 +49,7 @@ import de.egladil.web.mk_gateway.infrastructure.persistence.kataloge.entities.La
 import de.egladil.web.mk_gateway.infrastructure.persistence.kataloge.entities.Schule;
 import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao.WochenstatistikRepository;
 import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.FarbenWettbewerbe;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.KalenderwochenIntervall;
 import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.entities.WochenstatistikItem;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -66,9 +67,6 @@ public class MkBiZaStatistikService {
 
 	@ConfigProperty(name = "aufsetzjahr.wochenstatistik")
 	private int aufsetzjahrWochenstatistik;
-
-	@ConfigProperty(name = "wettbewerbswochen")
-	private int anzahlWettbewerbswochen;
 
 	@Inject
 	MkGatewayAuthConfig authConfig;
@@ -106,6 +104,8 @@ public class MkBiZaStatistikService {
 			.map(w -> new MkBiZaWettbewerb(w.id().jahr(), w.status(), w.medianIkids(), w.medianKlasseEins(), w.medianKlasseZwei()))
 			.toList();
 
+		KalenderwochenIntervall kalenderwochenIntervall = wochenstatistikRepository.selectKalenderwochenIntervall();
+
 		for (MkBiZaWettbewerb wettbewerb : result) {
 
 			String wettbewerbUUID = wettbewerb.getJahr() + "";
@@ -125,10 +125,13 @@ public class MkBiZaStatistikService {
 			wettbewerb.setAnzahlKinder(loesungszettel.size());
 			wettbewerb.setKinderJeKlassenstufe(kinderJeKlassenstufe);
 
-			List<MkBiZaGruppierungsitem> aggregierteLoesungszettel = this
-				.loadKumulierteLoesungszettelJeWoche(wettbewerb.getJahr());
-			wettbewerb.setKumulierteLoesungszettelJeWoche(aggregierteLoesungszettel);
-			wettbewerb.setColors(getFarbschema(wettbewerbUUID));
+			if (wettbewerb.getJahr() >= aufsetzjahrWochenstatistik && kalenderwochenIntervall != null) {
+
+				List<MkBiZaGruppierungsitem> aggregierteLoesungszettel = this
+					.loadKumulierteLoesungszettelJeWoche(wettbewerb.getJahr(), kalenderwochenIntervall);
+				wettbewerb.setKumulierteLoesungszettelJeWoche(aggregierteLoesungszettel);
+				wettbewerb.setColors(getFarbschema(wettbewerbUUID));
+			}
 		}
 
 		return result;
@@ -288,6 +291,7 @@ public class MkBiZaStatistikService {
 
 		result.addKinderJeLand(gruppierungsitemPrivat);
 		result.setTeilnehmendeSchulenGesamt(anzahlTeilnehmendeSchulen);
+		result.setAnzahlLoesungszettelJeWoche(this.loadLoesungszettelJeWoche(wettbewerb.id().jahr()));
 
 		return result;
 	}
@@ -618,10 +622,11 @@ public class MkBiZaStatistikService {
 	/**
 	 * Läd die Wochenstatistik für das gegebene Wettbewerbsjahr.
 	 *
-	 * @param jahr Integer
+	 * @param jahr int
+	 * @param intervall KalenderwochenIntervall
 	 * @return List
 	 */
-	List<MkBiZaGruppierungsitem> loadKumulierteLoesungszettelJeWoche(final Integer jahr) {
+	List<MkBiZaGruppierungsitem> loadKumulierteLoesungszettelJeWoche(final int jahr, KalenderwochenIntervall intervall) {
 
 		LoesungszettelJeWocheDelegate delegate = new LoesungszettelJeWocheDelegate();
 
@@ -629,9 +634,16 @@ public class MkBiZaStatistikService {
 			.loadWochenstatistiken(String.valueOf(jahr));
 
 		List<MkBiZaGruppierungsitem> dtoList = delegate.berechneKumulierteWochenstatistik(persistenteWochenstatistiken,
-			anzahlWettbewerbswochen);
+			intervall);
 
 		return dtoList;
+	}
+
+	List<MkBiZaGruppierungsitem> loadLoesungszettelJeWoche(final Integer jahr) {
+		List<WochenstatistikItem> persistenteWochenstatistiken = wochenstatistikRepository
+			.loadWochenstatistiken(String.valueOf(jahr));
+
+		return new LoesungszettelJeWocheDelegate().mapFromDB(persistenteWochenstatistiken);
 	}
 
 	MkBiZaWettbewerbColors getFarbschema(String wettbwerbUUID) {

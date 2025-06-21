@@ -58,6 +58,9 @@ public class MkBiZaWettbewerbDetails {
 	@JsonProperty
 	private List<MkBiZaGruppierungsitem> medianeJeKlassenstufe = new ArrayList<>();
 
+	@JsonProperty
+	private List<MkBiZaGruppierungsitem> anzahlLoesungszettelJeWoche = new ArrayList<>();
+
 	public MkBiZaWettbewerbDetails addKlassenstufe(final Klassenstufe klassenstufe) {
 
 		this.klassenstufen.add(klassenstufe);
@@ -185,5 +188,13 @@ public class MkBiZaWettbewerbDetails {
 	public void setBeendet(final boolean beendet) {
 
 		this.beendet = beendet;
+	}
+
+	public List<MkBiZaGruppierungsitem> getAnzahlLoesungszettelJeWoche() {
+		return anzahlLoesungszettelJeWoche;
+	}
+
+	public void setAnzahlLoesungszettelJeWoche(List<MkBiZaGruppierungsitem> anzahlLoesungszettelJeWoche) {
+		this.anzahlLoesungszettelJeWoche = anzahlLoesungszettelJeWoche;
 	}
 }

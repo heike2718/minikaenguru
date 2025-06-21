@@ -8,25 +8,27 @@ import { GenericBarChartComponent } from '../generic-bar-chart/generic-bar-chart
 import { MatButtonModule } from '@angular/material/button';
 import { ChartData } from 'chart.js';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Klassenstufe, StatistikWettbewerbChartData, WettbewerbDetailsGUIModel } from '@mks/domain-model';
+import { Gruppierungsitem, isGruppierungsitemsEmpty, Klassenstufe, StatistikWettbewerbChartData, WettbewerbDetailsGUIModel } from '@mks/domain-model';
 
 
 
 @Component({
-    selector: 'mks-wettbewerb',
-    imports: [
-        CommonModule,
-        GenericBarChartComponent,
-        GenericPieChartComponent,
-        MatButtonModule
-    ],
-    templateUrl: './wettbewerb-details.component.html',
-    styleUrl: './wettbewerb-details.component.scss'
+  selector: 'mks-wettbewerb',
+  imports: [
+    CommonModule,
+    GenericBarChartComponent,
+    GenericPieChartComponent,
+    MatButtonModule
+  ],
+  templateUrl: './wettbewerb-details.component.html',
+  styleUrl: './wettbewerb-details.component.scss'
 })
 export class WettbewerbDetailsComponent implements OnInit, OnDestroy {
 
   domainFacade = inject(DomainFacade);
   statistics!: StatistikWettbewerbChartData;
+
+  showWochenstatistik = true;
 
   chartDataKinderJeKlassenstufe!: ChartData<'pie', number[], string | string[]>;
   chartDataKinderJeTeilnahmeart!: ChartData<'pie', number[], string | string[]>;
@@ -42,19 +44,21 @@ export class WettbewerbDetailsComponent implements OnInit, OnDestroy {
 
   #wettbewerbSusbcription = new Subscription();
 
+
+
   get isHandset(): boolean {
     return this.#breakpointObserver.isMatched(Breakpoints.Handset);
   }
 
   ngOnInit(): void {
     this.#routeSubscription = this.#activatedRoute.params.subscribe(params => {
-      this.#jahr = params['id'];      
+      this.#jahr = params['id'];
     });
 
     this.#wettbewerbSusbcription = this.domainFacade.selectedWettbewewerb$.subscribe((wettbewerb: WettbewerbDetailsGUIModel) => {
 
+      this.showWochenstatistik = !isGruppierungsitemsEmpty(wettbewerb.wettbewerb.anzahlLoesungszettelJeWoche);
       this.#updateButtonlabels(wettbewerb);
-
 
       this.statistics = {
         chartDataSchulanmeldungenVersusSchulteilnahmen: { ...wettbewerb.chartData.chartDataSchulanmeldungenVersusSchulteilnahmen },
@@ -63,7 +67,8 @@ export class WettbewerbDetailsComponent implements OnInit, OnDestroy {
         chartModelKinderJeSprache: { ...wettbewerb.chartData.chartModelKinderJeSprache },
         chartModelKinderJeTeilnahmeart: { ...wettbewerb.chartData.chartModelKinderJeTeilnahmeart },
         chartDataMediane: { ...wettbewerb.chartData.chartDataMediane },
-        chartDataSchulenJeLand: { ...wettbewerb.chartData.chartDataSchulenJeLand }
+        chartDataSchulenJeLand: { ...wettbewerb.chartData.chartDataSchulenJeLand },
+        chartDataAnzahlLoesungszettelJeWoche: { ...wettbewerb.chartData.chartDataAnzahlLoesungszettelJeWoche }
       };
 
       this.chartDataKinderJeKlassenstufe = {
@@ -138,5 +143,4 @@ export class WettbewerbDetailsComponent implements OnInit, OnDestroy {
       }
     }
   }
-
 }

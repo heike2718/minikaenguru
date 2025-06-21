@@ -70,7 +70,8 @@ export const domainFeature = createFeature({
                 chartModelKinderJeSprache: mapToChartModel(wettbewerb.kinderJeSprache),
                 chartModelKinderJeTeilnahmeart: mapToChartModel(wettbewerb.kinderJeTeilnahmeart),
                 chartDataMediane: mapToChartDataMediane(wettbewerb),
-                chartDataSchulenJeLand: mapToChartDataSingleDataset(wettbewerb.schulenJeLand, 'Schulen')
+                chartDataSchulenJeLand: mapToChartDataSingleDataset(wettbewerb.schulenJeLand, 'Schulen'),
+                chartDataAnzahlLoesungszettelJeWoche: mapToChartDataSingleDataset(wettbewerb.anzahlLoesungszettelJeWoche, 'Anzahl Lösungszettel')
             };
 
             const alreadyLoaded = state.wettbewerbdetails.some(w => w.wettbewerb.jahr === wettbewerb.jahr);

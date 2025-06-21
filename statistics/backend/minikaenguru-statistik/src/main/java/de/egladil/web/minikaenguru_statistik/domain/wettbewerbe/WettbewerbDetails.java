@@ -72,4 +72,8 @@ public class WettbewerbDetails {
 	@Schema(description = "Mediane je Klassenstufe")
 	private List<Gruppierungsitem> medianeJeKlassenstufe;
 
+	@JsonProperty
+	@Schema(description = "die Anzahl der Lösungszettel in jeder Wettbwerbswoche. Kann als Säulendiagramm visualisiert werden.")
+	private List<Gruppierungsitem> anzahlLoesungszettelJeWoche;
+
 }

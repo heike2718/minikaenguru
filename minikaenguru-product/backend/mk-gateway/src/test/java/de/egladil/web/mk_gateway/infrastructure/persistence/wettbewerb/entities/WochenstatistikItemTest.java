@@ -23,10 +23,10 @@ public class WochenstatistikItemTest {
 	void should_sortByWoche_test1() {
 
 		WochenstatistikItem item1 = new WochenstatistikItem();
-		item1.setWoche(0L);
+		item1.setWoche(0);
 
 		WochenstatistikItem item2 = new WochenstatistikItem();
-		item2.setWoche(3L);
+		item2.setWoche(3);
 
 		assertTrue(item1.compareTo(item2) < 0);
 
@@ -36,12 +36,12 @@ public class WochenstatistikItemTest {
 	void should_sortByWoche_test2() {
 
 		WochenstatistikItem item1 = new WochenstatistikItem();
-		item1.setWoche(3L);
-		item1.setWettbewerbUUID("2021");
+		item1.setWoche(3);
+		item1.setJahr(2021);
 
 		WochenstatistikItem item2 = new WochenstatistikItem();
-		item2.setWoche(3L);
-		item2.setWettbewerbUUID("2021");
+		item2.setWoche(3);
+		item2.setJahr(2021);
 
 		assertTrue(item1.compareTo(item2) == 0);
 
@@ -51,10 +51,10 @@ public class WochenstatistikItemTest {
 	void should_sortByWoche_test3() {
 
 		WochenstatistikItem item1 = new WochenstatistikItem();
-		item1.setWoche(22L);
+		item1.setWoche(22);
 
 		WochenstatistikItem item2 = new WochenstatistikItem();
-		item2.setWoche(2L);
+		item2.setWoche(2);
 
 		assertTrue(item1.compareTo(item2) > 0);
 	}
@@ -66,19 +66,19 @@ public class WochenstatistikItemTest {
 
 		{
 			WochenstatistikItem item = new WochenstatistikItem();
-			item.setWoche(22L);
+			item.setWoche(22);
 			items.add(item);
 		}
 
 		{
 			WochenstatistikItem item = new WochenstatistikItem();
-			item.setWoche(1L);
+			item.setWoche(1);
 			items.add(item);
 		}
 
 		{
 			WochenstatistikItem item = new WochenstatistikItem();
-			item.setWoche(5L);
+			item.setWoche(5);
 			items.add(item);
 		}
 
