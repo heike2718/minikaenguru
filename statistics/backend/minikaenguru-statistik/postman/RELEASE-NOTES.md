@@ -1,0 +1,544 @@
+{
+	"info": {
+		"_postman_id": "937f4d1f-5f63-4131-aae5-aa9f3af22d87",
+		"name": "mkbiza-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "local",
+			"item": [
+				{
+					"name": "AboutResource",
+					"item": [
+						{
+							"name": "local : about",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "http://localhost:9540/mkbiza-api/about"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "WettbewerbeResource",
+					"item": [
+						{
+							"name": "wettbewerbe",
+							"item": [
+								{
+									"name": "local : wettbewerbe",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "default"
+											}
+										],
+										"url": "http://localhost:9540/mkbiza-api/wettbewerbe"
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "statistik-jahr",
+							"item": [
+								{
+									"name": "local : statistik - jahr - 400",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "default"
+											}
+										],
+										"url": "http://localhost:9540/mkbiza-api/wettbewerbe/hallo"
+									},
+									"response": []
+								},
+								{
+									"name": "local : statistik - jahr 2040 - 404",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "default"
+											}
+										],
+										"url": "http://localhost:9540/mkbiza-api/wettbewerbe/2040"
+									},
+									"response": []
+								},
+								{
+									"name": "local : statistik - jahr - beendet - 200",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "default"
+											}
+										],
+										"url": "http://localhost:9540/mkbiza-api/wettbewerbe/2020"
+									},
+									"response": []
+								},
+								{
+									"name": "local : statistik - jahr - 422 zu 404",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "default"
+											}
+										],
+										"url": "http://localhost:9540/mkbiza-api/wettbewerbe/2000"
+									},
+									"response": []
+								},
+								{
+									"name": "local : statistik - jahr - nicht beendet - 200",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "default"
+											}
+										],
+										"url": "http://localhost:9540/mkbiza-api/wettbewerbe/2022"
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "aufgaben-klasse",
+							"item": [
+								{
+									"name": "local : aufgaben - freigegeben - 200",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "default"
+											}
+										],
+										"url": "http://localhost:9540/mkbiza-api/wettbewerbe/2020/IKID"
+									},
+									"response": []
+								},
+								{
+									"name": "local : aufgaben - nicht erfasst - 404",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "default"
+											}
+										],
+										"url": "http://localhost:9540/mkbiza-api/wettbewerbe/2023/IKID"
+									},
+									"response": []
+								},
+								{
+									"name": "local : aufgaben - nicht freigegeben - 404",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "default"
+											}
+										],
+										"url": "http://localhost:9540/mkbiza-api/wettbewerbe/2024/IKID"
+									},
+									"response": []
+								},
+								{
+									"name": "local : aufgaben - 400",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "default"
+											}
+										],
+										"url": "http://localhost:9540/mkbiza-api/wettbewerbe/hallo/IKID"
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "statistik-aufgabe",
+							"item": [
+								{
+									"name": "local : statistik  - aufgabe 404 wegen nummer",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": "http://localhost:9540/mkbiza-api/wettbewerbe/2017/EINS/aufgaben/A-5"
+									},
+									"response": []
+								},
+								{
+									"name": "local : statistik  - aufgabe 404 wegen wettbewerbstatus",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": "http://localhost:9540/mkbiza-api/wettbewerbe/2024/EINS/aufgaben/A-3"
+									},
+									"response": []
+								},
+								{
+									"name": "local : statistik  - aufgabe 422 zu 404",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": "http://localhost:9540/mkbiza-api/wettbewerbe/2000/EINS/aufgaben/A-5"
+									},
+									"response": []
+								},
+								{
+									"name": "local : statistik  - aufgabe 200",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": "http://localhost:9540/mkbiza-api/wettbewerbe/2020/EINS/aufgaben/B-2"
+									},
+									"response": []
+								},
+								{
+									"name": "local : statistik  - aufgabe 400",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "default"
+											}
+										],
+										"url": "http://localhost:9540/mkbiza-api/wettbewerbe/hallo/ZWEI/aufgaben/D-10"
+									},
+									"response": []
+								},
+								{
+									"name": "local : statistik  - aufgabe 404 wegen klassenstufe",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "default"
+											}
+										],
+										"url": "http://localhost:9540/mkbiza-api/wettbewerbe/2020/DREI/aufgaben/A-2"
+									},
+									"response": []
+								},
+								{
+									"name": "local : statistik  - aufgabe 404 wegen wettbewerbsstatus",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "default"
+											}
+										],
+										"url": "http://localhost:9540/mkbiza-api/wettbewerbe/2022/ZWEI/aufgaben/A-2"
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "prod",
+			"item": [
+				{
+					"name": "AboutResource",
+					"item": [
+						{
+							"name": "prod : about",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "https://mathe-jung-alt.de/mkbiza-api/about"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "WettbewerbeResource",
+					"item": [
+						{
+							"name": "wettbewerbe",
+							"item": [
+								{
+									"name": "prod : wettbewerbe",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "default"
+											}
+										],
+										"url": "https://mathe-jung-alt.de/mkbiza-api/wettbewerbe"
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "statistik-jahr",
+							"item": [
+								{
+									"name": "prod : statistik - jahr - 400",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "default"
+											}
+										],
+										"url": "https://mathe-jung-alt.de/mkbiza-api/wettbewerbe/hallo"
+									},
+									"response": []
+								},
+								{
+									"name": "prod : statistik - jahr 2040 - 404",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "default"
+											}
+										],
+										"url": "https://mathe-jung-alt.de/mkbiza-api/wettbewerbe/2040"
+									},
+									"response": []
+								},
+								{
+									"name": "prod : statistik - jahr - beendet - 200",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "default"
+											}
+										],
+										"url": "https://mathe-jung-alt.de/mkbiza-api/wettbewerbe/2023"
+									},
+									"response": []
+								},
+								{
+									"name": "prod : statistik - jahr - 422 zu 404",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "default"
+											}
+										],
+										"url": "https://mathe-jung-alt.de/mkbiza-api/wettbewerbe/2000"
+									},
+									"response": []
+								},
+								{
+									"name": "prod : statistik - jahr - nicht beendet - 200",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "default"
+											}
+										],
+										"url": "https://mathe-jung-alt.de/mkbiza-api/wettbewerbe/2022"
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "aufgaben-klasse",
+							"item": [
+								{
+									"name": "prod : aufgaben - freigegeben - 200",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "default"
+											}
+										],
+										"url": "https://mathe-jung-alt.de/mkbiza-api/wettbewerbe/2020/IKID"
+									},
+									"response": []
+								},
+								{
+									"name": "prod : aufgaben - nicht freigegeben - 404",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "default"
+											}
+										],
+										"url": "https://mathe-jung-alt.de/mkbiza-api/wettbewerbe/2024/IKID"
+									},
+									"response": []
+								},
+								{
+									"name": "prod : aufgaben - 400",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "default"
+											}
+										],
+										"url": "https://mathe-jung-alt.de/mkbiza-api/wettbewerbe/hallo/IKID"
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "statistik-aufgabe",
+							"item": [
+								{
+									"name": "prod : statistik  - aufgabe 404 wegen nummer",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": "https://mathe-jung-alt.de/mkbiza-api/wettbewerbe/2017/EINS/aufgaben/A-5"
+									},
+									"response": []
+								},
+								{
+									"name": "prod : statistik  - aufgabe 404 wegen wettbewerbstatus",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": "https://mathe-jung-alt.de/mkbiza-api/wettbewerbe/2024/EINS/aufgaben/A-3"
+									},
+									"response": []
+								},
+								{
+									"name": "prod : statistik  - aufgabe 422 zu 404",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": "https://mathe-jung-alt.de/mkbiza-api/wettbewerbe/2000/EINS/aufgaben/A-5"
+									},
+									"response": []
+								},
+								{
+									"name": "prod : statistik  - aufgabe 200",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": "https://mathe-jung-alt.de/mkbiza-api/wettbewerbe/2020/EINS/aufgaben/B-2"
+									},
+									"response": []
+								},
+								{
+									"name": "prod : statistik  - aufgabe 400",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "default"
+											}
+										],
+										"url": "https://mathe-jung-alt.de/mkbiza-api/wettbewerbe/hallo/ZWEI/aufgaben/D-10"
+									},
+									"response": []
+								},
+								{
+									"name": "prod : statistik  - aufgabe 404 wegen klassenstufe",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "default"
+											}
+										],
+										"url": "https://mathe-jung-alt.de/mkbiza-api/wettbewerbe/2020/DREI/aufgaben/A-2"
+									},
+									"response": []
+								},
+								{
+									"name": "prod : statistik  - aufgabe 404 wegen wettbewerbsstatus",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "default"
+											}
+										],
+										"url": "https://mathe-jung-alt.de/mkbiza-api/wettbewerbe/2022/ZWEI/aufgaben/A-2"
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}

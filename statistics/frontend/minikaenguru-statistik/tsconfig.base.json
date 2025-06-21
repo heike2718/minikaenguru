@@ -1,0 +1,29 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2022",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@mks/config": ["src/app/shared/config/src/index.ts"],
+      "@mks/domain-api": ["src/app/shared/domain/api/src/index.ts"],
+      "@mks/domain-data": ["src/app/shared/domain/data/src/index.ts"],
+      "@mks/domain-model": ["src/app/shared/domain/model/src/index.ts"],
+      "@mks/http": ["src/app/shared/http/src/index.ts"],
+      "@mks/layout": ["src/app/shared/layout/src/index.ts"],
+      "@mks/messages-api": ["src/app/shared/messages/api/src/index.ts"],
+      "@mks/messages-ui": ["src/app/shared/messages/ui/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

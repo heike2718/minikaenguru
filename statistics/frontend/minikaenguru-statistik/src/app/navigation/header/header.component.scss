@@ -1,0 +1,49 @@
+mat-toolbar {
+    /** border-radius: 3px;*/
+    background-color: #133d6b;
+    color: white;
+}
+
+.toolbar-spacer {
+    flex: 1 1 auto;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}
+
+a:hover,
+a:active {
+    color: lightgray;
+    cursor: pointer;
+}
+
+#menuWettbewerbe {
+    color: white;
+    font-family: Robo, sans-serif;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.nav-caption {
+    display: inline-block;
+    padding-left: 15px;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.nav-item {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+
+/** ======================   */
+
+@media(max-width: 959px) {
+    mat-toolbar {
+        border-radius: 0px;
+    }
+}

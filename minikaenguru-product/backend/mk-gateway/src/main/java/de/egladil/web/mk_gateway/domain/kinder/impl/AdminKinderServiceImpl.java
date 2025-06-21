@@ -1,0 +1,77 @@
+// =====================================================
+// Project: mk-gateway
+// (c) Heike Winkelvoß
+// =====================================================
+package de.egladil.web.mk_gateway.domain.kinder.impl;
+
+import java.util.List;
+
+import de.egladil.web.mk_gateway.domain.kinder.AdminKinderService;
+import de.egladil.web.mk_gateway.domain.kinder.KinderRepository;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikAuspraegung;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikGruppeninfo;
+import de.egladil.web.mk_gateway.domain.statistik.admin.AdminStatistikItem;
+import de.egladil.web.mk_gateway.infrastructure.persistence.wettbewerb.dao.KinderHibernateRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+
+/**
+ * AdminKinderServiceImpl
+ */
+@ApplicationScoped
+public class AdminKinderServiceImpl implements AdminKinderService {
+
+	@Inject
+	KinderRepository kinderRepository;
+
+	public static AdminKinderServiceImpl createForIntegrationTest(final EntityManager entityManager) {
+
+		AdminKinderServiceImpl result = new AdminKinderServiceImpl();
+		result.kinderRepository = KinderHibernateRepository.createForIntegrationTest(entityManager);
+		return result;
+	}
+
+	@Override
+	public AdminStatistikGruppeninfo createKurzstatistikKinder() {
+
+		AdminStatistikGruppeninfo gruppeninfo = new AdminStatistikGruppeninfo("KINDER");
+
+		for (KinderGruppeninfoAuspraegungsart auspaegungsart : KinderGruppeninfoAuspraegungsart.values()) {
+
+			AdminStatistikItem item = new AdminStatistikItem(auspaegungsart.name);
+			List<AdminStatistikAuspraegung> auspraegungen = kinderRepository.countAuspraegungenByColumnName(auspaegungsart.toString());
+			item.setAuspraegungen(auspraegungen);
+			gruppeninfo.addItem(item);
+
+		}
+
+		if (!gruppeninfo.getGruppenItems().isEmpty()) {
+
+			AdminStatistikItem erstes = gruppeninfo.getGruppenItems().get(0);
+			long anzahlElemente = erstes.getAuspraegungen().stream().mapToLong(auspraegung -> auspraegung.getAnzahl()).sum();
+			gruppeninfo.setAnzahlElemente(anzahlElemente);
+		}
+
+		return gruppeninfo;
+	}
+
+	private enum KinderGruppeninfoAuspraegungsart {
+		KLASSENSTUFE("Klassenstufe"),
+		SPRACHE("Sprache"),
+		TEILNAHMEART("Teilnahmeart"),
+		IMPORTIERT("importiert");
+
+		final String name;
+
+		/**
+		 * @param name
+		 */
+		private KinderGruppeninfoAuspraegungsart(final String name) {
+
+			this.name = name;
+		}
+
+	}
+
+}

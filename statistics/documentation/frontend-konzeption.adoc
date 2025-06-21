@@ -1,0 +1,93 @@
+== Konzeption des Frontends (Seiten, Navigation,...)
+
+=== Startseite
+
+Die Startseite enthält wenige allgemeine Hinweise sowie einen Link zum Minikänguru-Wettbewerb.
+
+*Attribute eines Wettbewerbs in der Übersicht*
+
+- jahr
+- status
+- anzahlKinder (basierend auf den Lösungszetteln)
+- medianeJeKlassenstufe (nur für beendete Wettbewerbe gefüllt)
+- kinderJeKlassenstufe (basierend auf den Lösungszetteln)
+
+Lediglich eingetragene Kinder werden nicht gelistet, da nach dem Ende des laufenden Wettbewerbs diese Daten gelöscht werden.
+
+=== Komponente WettbewerbeOverview
+
+Wird in die Home-Component eingebunden. Sie enthält im oberen Bereich Balkengrafiken mit der Anzahl der Kinder, der Anzahl der Kinder je Klassenstufe sowie den Medianen.
+
+Aktuell ist nur in der mobilen Ansicht darunter eine Button-Liste zur Navigation zu einzelnen Wettbewerbsjahren.
+
+In der Tablett- bzw. PC-Ansicht navigiert man über ein Untermenü "Wettbewerbe".
+
+=== Detailansicht eines Wettbewerbs
+
+In die Detailansicht navigiert man über die URL oder einen Click aus der Übersichtsseite heraus.
+
+Eventuell könnte man auch ein 3-Stufiges Untermenü bauen: 
+
+Wettbewerbe -> Jahr mit den Untermenüpunkten
+
+- Übersicht
+- Inklusion
+- Klasse 1
+- Klasse 2
+
+*Attribute des Wettbewerbs in der Detailansicht*
+
+- jahr
+- beendet (Flag, um das ständige Nachladen von kristallinen Statistiken zu verhindern. Nur die Daten eines nicht beendeten Wettbewerbs sollen bei jeder Navigation neu geladen werden, da sie sich permanent ändern)
+- anzahlKinderGesamt (basierend auf den Lösungszetteln)
+- anzahlPrivatanmeldungen (basierend auf den Teilnahmen)
+- anzahlSchulanmeldungen (basierend auf den Teilnahmen)
+- teilnehmendeSchulenGesamt (kann man als Balkendiagramm oder Tortendiagramm zusammen mit den Anmeldungen darstellen)
+- klassenstufen (daraus kann man Buttons zu den Aufgabenstatistiken bauen)
+- schulenJeLand (wird ein Balkendiagramm)
+- schulkinderJeLand (kann man als Balkendiagramm zusammen mit den privat teilnehmenden Kindern darstellen)
+- kinderJeTeilnahmeart (Tortendiagramm)
+- kinderJeKlassenstufe (Tortendiagramm)
+- kinderJeSprache (Tortendiagramm)
+- medianeJeKlassenstufe (kann man textuell darstellen oder zusammen mit der gesamten erreichbaren Punktzahl in Tortendiagrammen oder einem Balkendiagramm)
+
+Im oberen Bereich befinden sich die diversen Diagramme. Die Klassenstufen werden zu Buttons, um in die Detailansicht der Klassenstufe dieses Wettbewerbs zu navigieren.
+
+Die Anzahl der Kinder ist jeweils bekannt aus "kinderJeKlassenstufe".
+
+==== Komponente WettbewerbDetails
+
+route: /wettbewerb/:id
+
+- [x] Überschrift mit jahr
+- [x] Anzahl Kinder gesamt als Text
+- [] Anzahl teilnehmende Schulen / angemeldete Schulen (pie)
+- [x] Kinder je Teilnahmeart (pie)
+- [x] Kinder je Klassenstufe (pie)
+- [x] Kinder je Sprache (pie)
+- [x] Mediane als Anteil der Gesamtpunktzahl (ein bar mit 3 Abschnitten und je 3 datasets)
+- [] Kinder je Land (bar)
+- [] Schulen je Land (bar)
+- []
+- []
+
+=== Detailansicht einer Klassenstufe eines Wettbewerbsjahres
+
+In diese Ansicht gelangt man über die URL oder einen Click auf einen der "Klasse"-Buttons.
+
+Im oberen Bereich kann die Anzahl der Kinder dieser Klassenstufe angezeigt werden.
+
+Darunter untereinander die Aufgabennummern mit Punkten und Strafpunkten und dem r/f/n-Diagramm in einer Akkordeon-Ansicht. Eventuell kann die Passung zwischen Level und Schwellwerten auch gleich visualisiert werden: hierfür ist die Anzahl r im Vergleich zur Gesamtzahl der Kinder ausreichend. Die Schwellwerte sollten ggf. aus dem backend bezogen werden können.
+
+Den Aufgabentext kann man sich durch Aufklappen der Akkordeonlamellen anzeigen lassen. Dann wird auch der Lösungsbuchstabe angezeigt.
+
+Das Aggregierte JSON ist ein MinikaenguruKlassenstufeDto mit eingebetteten Aufgabe-Elementen. 
+
+==== Komponente KlassenstufeDetails
+
+route: /wettbewerb/:id/klassenstufe/:id
+
+
+
+
+

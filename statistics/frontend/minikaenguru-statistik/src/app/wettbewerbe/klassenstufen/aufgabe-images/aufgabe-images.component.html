@@ -1,0 +1,25 @@
+@if (images.imageFrage) {
+<div class="bordered bg-white">
+    <img src="data:image/png;base64,{{images.imageFrage.data}}" class="mja-image" />
+</div>
+}
+
+@if (images.imageLoesung) {
+
+<div class="mt-1">
+    <mat-accordion>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Lösung (png)
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div class="bordered bg-white">
+                <img src="data:image/png;base64,{{images.imageLoesung.data}}" class="mja-image" />
+            </div>
+        </mat-expansion-panel>
+
+    </mat-accordion>
+</div>
+}

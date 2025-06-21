@@ -1,0 +1,11 @@
+= Minikänguru-Statistiken
+
+:author: Heike Winkelvoß
+:license: MIT
+:version: 1.0.0
+:description: Eine Anwendung, mit der man sich Statistiken des Minikänguru-Wettbewerbs anschauen kann.
+
+include::frontend-konzeption.adoc[]
+include::ideensammlung.adoc[]
+include::logbuch-frontend.adoc[]
+include::troubleshooting.adoc[]

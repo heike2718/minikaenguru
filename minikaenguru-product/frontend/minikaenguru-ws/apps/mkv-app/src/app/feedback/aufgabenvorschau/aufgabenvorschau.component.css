@@ -1,0 +1,13 @@
+@media(max-width: 959px) {
+    .mk-image {
+        max-width: 80%;
+        width: auto;
+        height: auto;
+    }
+}
+
+.mk-image {
+    max-width: 100%;
+    width: auto;
+    height: auto;
+}

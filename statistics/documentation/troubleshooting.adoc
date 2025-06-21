@@ -1,0 +1,80 @@
+== Fehlersituationen und deren Behebung
+
+=== npm install: package corrupted
+
+npm install endet mit fehler
+
+----
+npm WARN tarball tarball data for jest-cli@https://registry.npmjs.org/jest-cli/-/jest-cli-29.7.0.tgz (sha512-OVVobw2IubN/GSYsxETi+gOe7Ka59EFMR/twOU3Jb2GnKKeMGJB5SGUUrEz3SFVmkbizaSUdZUzy83sLNNQ2gZslg==) seems to be corrupted. Trying again.
+npm ERR! code EINTEGRITY
+npm ERR! sha512-OVVobw2IubN/GSYsxETi+gOe7Ka59EFMR/twOU3Jb2GnKKeMGJB5SGUUrEz3SFVmkbizaSUdZUzy83sLNNQ2gZslg== integrity checksum failed when using sha512: wanted sha512-OVVobw2IubN/GSYsxETi+gOe7Ka59EFMR/twOU3Jb2GnKKeMGJB5SGUUrEz3SFVmkbizaSUdZUzy83sLNNQ2gZslg== but got sha512-OVVobw2IubN/GSYsxETi+gOe7Ka59EFMR/twOU3Jb2GnKKeMGJB5SGUUrEz3SFVmJASUdZUzy83sLNNQ2gZslg==. (10087 bytes)
+----
+
+*so gelöst*
+
+[source,cli]
+----
+rm -rf node_modules
+npm update
+npm install
+----
+
+=== Die sidenav toggled nicht, obwohl alle events korrekt 
+
+(das hat mich Stunden gekostet :facepalm)
+
+Muss man BrowserAnimationsModule einbinden!!!!
+
+=== Click auf den Start-Link in der Toolbar (Header) hatte keine Wirkung: HomeComponent wurde nicht angezeigt
+
+Man muss neuerdings RouterLinkWithHref importieren, überall wo man 
+
+[source,html]
+----
+<a mat-button routerLink="...">
+----
+
+verwendet.
+
+=== Nachdem BrowserAnimationsModule eingebunden war, wurde die Start-Komponente nicht mehr automatisch geladen
+
+Irgendwas scheint mit der Version 17.3.0 kaputt zu sein.
+
+Habe jetzt in app.component.ts den Router eingebunden und navigiere in ngOnInit aktiv zur Startkomponente.
+
+*update am 09.04.2024*: nachdem ich eine explizite route 'startseite' eingebaut habe, war das sinnlose Verhalten weg und ich konnte das Navigieren in app.component.ts wieder entfernen. Das ist auch gut so, denn zu den einzelnen Wettbewerben soll auch per URL navigiert werden können, so dass man sie bookmarken kann.
+
+=== Nach einem refactor - move gibt es unerklärliche Fehlermeldungen beim npm start
+
+Es werden zur Beschleunigung der Entwicklung viele Dinge in .nx/cache gecached. Daher hilft es, das cache zu löschen
+
+[source,cli]
+----
+rm -ft .nx/cache
+----
+
+Vermutlich gibt es auch einen CLI- Befehl, der den cache löscht.
+
+
+=== Fehlermeldung NG05100 beim Start der Anwendung
+
+[src,cli]
+----
+NG05100: Providers from the `BrowserModule` have already been loaded. If you need access to common directives such as NgIf and NgFor, import the `CommonModule` instead
+----
+
+_Lösung:_
+
+Siehe https://stackoverflow.com/questions/75403140/how-to-use-animations-in-an-angular-standalone-component[hier]
+
+Aus app.component.ts muss BrowserAnimationsModule entfernt werden. Stattdessen wird animations in app.config.ts wie folgt provided:
+
+[src,typescript]
+----
+import { provideAnimations } from '@angular/platform-browser/animations';
+...
+  providers: [
+    provideRouter(appRoutes),
+    provideAnimations(),
+...
+----

@@ -1,0 +1,25 @@
+.nav-caption {
+    display: inline-block;
+    padding-left: 6px;
+}
+
+.nav-item {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+
+a {
+    text-decoration: none;
+    color: white;
+}
+
+a:hover,
+a:active {
+    color: lightgray;
+}
+
+.version {
+    margin-left: 1em;
+}

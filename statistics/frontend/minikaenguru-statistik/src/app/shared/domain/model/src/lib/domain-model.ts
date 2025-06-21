@@ -1,0 +1,177 @@
+import { ChartData } from "chart.js";
+
+export type StatusWettbewerb = 'ERFASST' | 'ANMELDUNG' | 'DOWNLOAD_LEHRER' | 'DOWNLOAD_PRIVAT' | 'BEENDET';
+export type Klassenstufe = 'IKID' | 'EINS' | 'ZWEI';
+export type Passung = 'ZU_LEICHT' | 'RICHTIG' | 'ZU_SCHWER';
+
+export const BAR_BACKGROUND_COLOR_BLUE = 'rgba(54, 162, 235, 0.5)';
+export const BAR_BACKGROUND_COLOR_YELLOW = 'rgba(255, 229, 169, 1)';
+export const BAR_BACKGROUND_COLOR_GREENLY = 'rgba(165, 223, 222, 1)';
+
+export const BAR_BACKGROUND_COLOR_1 = '#85CAFD';
+export const BAR_BACKGROUND_COLOR_2 = '#FCC692';
+export const BAR_BACKGROUND_COLOR_3 = '#FD9DB2';
+
+// export const BAR_BACKGROUND_COLOR_BLUE = '#059BFF';
+// export const BAR_BACKGROUND_COLOR_YELLOW = '#FFC234';
+// export const BAR_BACKGROUND_COLOR_GREENLY = '#22CFCF';   #FD9DB2
+
+/*
+#059BFF blau
+#22CFCF türkis
+#FFC234 gelb
+*/
+
+export interface ChartModel {
+  readonly labels: string[],
+  readonly data: number[]
+};
+
+export interface Image {
+  readonly width: number;
+  readonly height: number;
+  readonly data: string;
+}
+
+export interface Images {
+  readonly imageFrage: Image | undefined;
+  readonly imageLoesung: Image | undefined;
+};
+
+export interface Gruppierungsitem {
+  readonly name: string,
+  readonly anzahl: number
+};
+
+export interface WettbewerbColors {
+  readonly backgroundColor: string;
+  readonly borderColor: string;
+  readonly pointBackgroundColor: string;
+  readonly pointBorderColor: string;
+  readonly pointHoverBackgroundColor: string;
+  readonly pointHoverBorderColor: string;
+}
+
+export interface WettbewerbOverview {
+  readonly jahr: number,
+  readonly colors?: WettbewerbColors,
+  readonly status: StatusWettbewerb,
+  readonly anzahlKinder: number,
+  readonly medianeJeKlassenstufe: Gruppierungsitem[]
+  readonly kinderJeKlassenstufe: Gruppierungsitem[];
+  readonly kumulierteLoesungszettelJeWoche: Gruppierungsitem[];
+};
+
+export interface StatistikJahreChartData {
+  readonly chartDataJahreAnzahlKinder: ChartData<'bar'> | undefined;
+  readonly chartDataJahreKinderKlassenstufe: ChartData<'bar'> | undefined;
+  readonly chartDataJahreMediane: ChartData<'bar'> | undefined;
+  readonly chartDataAggregierteWochenteilnahmen: ChartData<'line'> | undefined;
+}
+
+export interface WettbewerbDetails {
+  readonly jahr: number;
+  readonly beendet: boolean;
+  readonly anzahlKinderGesamt: number;
+  readonly anzahlPrivatanmeldungen: number;
+  readonly anzahlSchulanmeldungen: number;
+  readonly teilnehmendeSchulenGesamt: number;
+  readonly klassenstufen: Klassenstufe[];
+  readonly schulenJeLand: Gruppierungsitem[];
+  readonly kinderJeLand: Gruppierungsitem[];
+  readonly kinderJeTeilnahmeart: Gruppierungsitem[];
+  readonly kinderJeKlassenstufe: Gruppierungsitem[];
+  readonly kinderJeSprache: Gruppierungsitem[];
+  readonly medianeJeKlassenstufe: Gruppierungsitem[];
+  readonly anzahlLoesungszettelJeWoche: Gruppierungsitem[];
+};
+
+export interface StatistikWettbewerbChartData {
+  readonly chartDataSchulenJeLand: ChartData<'bar'>;
+  readonly chartDataKinderJeLand: ChartData<'bar'>;
+  readonly chartModelKinderJeTeilnahmeart: ChartModel;
+  readonly chartModelKinderJeKlassenstufe: ChartModel;
+  readonly chartModelKinderJeSprache: ChartModel;
+  readonly chartDataMediane: ChartData<'bar'>;
+  readonly chartDataSchulanmeldungenVersusSchulteilnahmen: ChartData<'bar'>;
+  readonly chartDataAnzahlLoesungszettelJeWoche: ChartData<'bar'>;
+};
+
+export interface WettbewerbDetailsGUIModel {
+  readonly wettbewerb: WettbewerbDetails;
+  readonly chartData: StatistikWettbewerbChartData;
+};
+
+
+export interface MedianUndGesamtpunkte {
+  readonly medianMalTausend: number;
+  readonly gesamtpunkte: number;
+};
+
+export interface Rohpunktitem {
+  readonly punkte: string;
+  readonly anzahl: string;
+  readonly prozentrang: string;
+};
+
+export interface Aufgabendetails {
+  readonly nummer: string;
+  readonly punkte: number;
+  readonly strafpunkte: string;
+  readonly loesungsbuchstabe: string | undefined;
+  readonly quelle: string | undefined;
+  readonly images: Images | undefined;
+  readonly gradZugehoerigkeitZuAufgabenkategorie: string | undefined;
+  readonly passung: Passung | undefined;
+  readonly prozentRichtigerLoesungen: string | undefined;
+  readonly anzahlenJeLoesungsbuchstabe: Gruppierungsitem[];
+  readonly anzahlenJeWertungscode: Gruppierungsitem[];
+};
+
+export interface KlassenstufeDetails {
+  readonly wettbewerbsjahr: string;
+  readonly klassenstufe: Klassenstufe;
+  readonly beendet: boolean;
+  readonly startguthaben: number;
+  readonly anzahlKinderGesamt: number;
+  readonly anzahlKinderMitVollerPunktzahl: number;
+  readonly medianUndGesamtpunkte: MedianUndGesamtpunkte | null;
+  readonly kinderJeLand: Gruppierungsitem[];
+  readonly kinderJeTeilnahmeart: Gruppierungsitem[];
+  readonly kinderJeSprache: Gruppierungsitem[];
+  readonly kinderJePunktintervall: Gruppierungsitem[];
+  readonly rohpunkte: Rohpunktitem[];
+  readonly aufgaben: Aufgabendetails[];
+};
+
+export interface StatistikKlassenstufeChartData {
+  readonly chartDataKinderJeLand: ChartData<'bar'>;
+  readonly chartModelKinderJeTeilnahmeart: ChartModel;
+  readonly chartModelKinderJeSprache: ChartModel;
+  readonly chartDataKinderJePunktintervall: ChartData<'bar'>;
+  readonly chartDataMedianUndGesamtpunkte: ChartData<'bar'>;
+}
+
+export interface StatistikAufgabeChartData {
+  readonly chartDataAnzahlenJeLoesungsbuchstabe: ChartData<'bar'> | undefined;
+  readonly chartModelAnzahlenJeWertungscode: ChartModel;
+};
+
+export interface AufgabeGUIModel {
+  readonly aufgabendetails: Aufgabendetails;
+  readonly badgeLabel: string;
+  readonly chartData: StatistikAufgabeChartData;
+};
+
+export interface KlassenstufeGUIModel {
+  readonly klassenstufeDetails: KlassenstufeDetails;
+  readonly chartDataKlassenstufe: StatistikKlassenstufeChartData;
+  readonly aufgabenGUIModel: AufgabeGUIModel[];
+};
+
+export function isGruppierungsitemsEmpty(gruppierungsitems: Gruppierungsitem[]) {
+
+  const items: Gruppierungsitem[] = gruppierungsitems.filter(item => item.anzahl > 0);
+
+  return items.length === 0;
+}

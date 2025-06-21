@@ -1,0 +1,451 @@
+== Aufsetzen der Angular-Anwendung
+
+Hier die Befehle zum Generieren von Dingen für das Frontend
+
+[source,cli]
+----
+npx create-nx-workspace@latest mkbiza-app
+----
+
+Habe mich für ein stanalone project entschieden, weil es ein sehr überschaubares kleines Angular-Projekt ist, von dem ich keinerlei libs irgendwo verwenden werde.
+
+=== scripts hinzugefügt
+
+[source,json,source-file="package.json"]
+----
+  "scripts": {
+    "ng": "nx",
+    "postinstall": "node ./decorate-angular-cli.js",
+    "start": "nx serve mkbiza-app",
+    "build:mkbiza-app:local": "npx nx build mkbiza-app -c local --output-hashing=all --base-href /mkbiza-app/ --skip-nx-cache",
+    "build:mkbiza-app:a300": "npx nx build mkbiza-app -c a300 --output-hashing=all --base-href /mkbiza-app/ --skip-nx-cache",
+    "build:mkbiza-app:prod": "npx nx run mkbiza-app:build:production --output-hashing=all --base-href /mkbiza-app/ --skip-nx-cache",
+    "test": "npx nx test",
+    "test:all": "npx nx run-many --target=test --all",
+    "lint:all": "npx nx run-many --target=lint --all",
+    "full-check": "npx nx run-s lint:all test:all build",
+    "graph": "npx nx graph"
+  },
+
+----
+
+=== buildprofile einrichten
+
+Im root-Verzeichnis des workspaces einen Verzeichnisbaum
+
+----
+mkbiza-ws
+|-- apps
+|-- build-env
+    |-- mkbiza-app
+        |-- environment.a300.ts
+        |-- environment.local.ts
+        |-- index.a300.html
+        |-- index.prod.html
+----
+
+Diese Files werden in project.json verwendet, um die dev-Files zu ersetzen.
+
+Die Profile werden im project.json der app konfiguriert: 
+
+----
+mkbiza-ws
+|-- apps
+    |-- mkbiza-app
+        |-- src
+        |-- project.json
+----
+
+
+[source,json,source-file="project.json"]
+----
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "index": {
+            "input": "build-env/mkbiza-app/index.prod.html",
+            "output": "index.html"
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/mkbiza-app/src/environments/environment.ts",
+              "with": "apps/mkbiza-app/src/environments/environment.prod.ts"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "local": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "fileReplacements": [
+            {
+              "replace": "apps/mkbiza-app/src/environments/environment.ts",
+              "with": "build-env/mkbiza-app/environment.local.ts"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "a300": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "index": {
+            "input": "build-env/mkbiza-app/index.a300.html",
+            "output": "index.html"
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/mkbiza-app/src/environments/environment.ts",
+              "with": "build-env/mkbiza-app/environment.a300.ts"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      }
+----
+
+=== selector prefix configuriert
+
+Nach prefix suchen und dort app  durch das spezifischere prefix ergänzen.
+
+=== npm-Pakete hinzugefügt
+
+[source,cli]
+----
+npm i @ngrx/store @ngrx/router-store @ngrx/store-devtools ngrx-store-localstorage @ngrx/effects
+npm i @ngrx/eslint-plugin -D
+npm i @angular/material material-icons
+npm i angular2-uuid
+npm i ng2-charts
+----
+
+=== Sheriff einbinden
+
+Kleines feines https://angular-camp.de/blog/strategic-design-mit-sheriff-und-standalone/[Tutorial]
+
+Sheriff ist ein tool, das ungewünschte direkte dependencies und damit zyklische Abhänigkeiten verhindert.
+
+[source,cli]
+----
+npm i @softarc/sheriff-core @softarc/eslint-plugin-sheriff -D
+----
+
+Anschließend in .eslint.rc einbinden:
+
+[source,json,source-file=".eslint.rc"]
+----
+{
+  [...],
+  "overrides": [
+    [...]
+    {
+      "files": ["*.ts"],
+      "extends": ["plugin:@softarc/sheriff/default"]
+    }
+  ]
+}
+----
+
+Sheriff-Konfigurationsdatei sheriff.config.ts im root-Verzeichnis anlegen und mit der Kopie aus dem Tutorial füllen.
+
+=== shared-Libs sollen in ein eigenes Unterverzeichnis
+
+[src,cli]
+----
+cd src/app/shared
+mkdir shared 
+----
+
+=== Material-Layout in eine layout-Lib
+
+[src,cli]
+----
+npx nx generate @nx/angular:library --name=layout --directory=src/app/domains/shared/layout --projectNameAndRootFormat=as-provided --style=scss --tags=domain:shared --no-interactive --dry-run 
+----
+
+Dann theme aus mja-ws kopiert.
+
+*Konfiguration:* in project.json:
+
+[src,json,source-file="project.json"]
+----
+...
+        "assets": ["./src/favicon.ico", "./src/assets"],
+        "styles": [
+          "src/app/shared/layout/src/lib/scss/theme.scss",
+          "src/styles.scss",
+          "node_modules/material-icons/iconfont/material-icons.scss"
+        ],
+...
+----
+
+=== Locale konfigurieren in app.config.ts
+
+[src,typescript,source-file="app.config.ts"]
+----
+...
+registerLocaleData(LOCALE_ID, 'de');
+
+...
+
+providers: [
+    ...,
+    {
+      provide: MAT_DATE_LOCALE,
+      useValue: 'de-DE',
+    },
+    { provide: LOCALE_ID, useValue: 'de-DE' },
+]
+----
+
+=== Seitenlayout
+
+==== sidenav
+
+[source,cli]
+----
+npx nx generate @nx/angular:component --name=sidenav --directory=src/app/navigation/sidenav --nameAndDirectoryFormat=as-provided --style=scss --no-interactive 
+----
+
+==== header
+
+[source,cli]
+----
+npx nx generate @nx/angular:component --name=header --directory=src/app/navigation/header --nameAndDirectoryFormat=as-provided --style=scss --no-interactive 
+----
+
+=== HomeComponent
+
+[source,cli]
+----
+npx nx generate @nx/angular:component --name=home --directory=src/app/home --nameAndDirectoryFormat=as-provided --style=scss --no-interactive 
+----
+
+
+
+=== Config-Lib
+
+Soll einen Provider kapseln, der über environmemt initialisiert wird um environment nirgends anders extra importieren zu müssen.
+
+[src,cli]
+----
+npx nx generate @nx/angular:library --name=config --directory=src/app/shared/config --projectNameAndRootFormat=as-provided --skipModule=true --style=scss --no-interactive --dry-run
+----
+
+Dann Configuration in app.config.ts zum Provider machen:
+
+[src,typescript,source-file="app.config.ts"]
+----
+...
+  providers: [
+    ...,
+    {
+      provide: Configuration,
+      useFactory: () =>
+        new Configuration(
+          environment.baseUrl,
+          environment.assetsPath,
+          'mkbiza-app',
+          environment.production
+        ),
+    },
+  ]
+----
+
+=== Messages-Lib
+
+==== messages-api
+
+[src,cli]
+----
+npx nx generate @nx/angular:library --name=messages-api --directory=src/app/shared/messages/api --projectNameAndRootFormat=as-provided --skipModule=true --style=scss --no-interactive --dry-run
+----
+
+==== messages-ui
+
+[src,cli]
+----
+npx nx generate @nx/angular:library --name=messages-ui --directory=src/app/shared/messages/ui --projectNameAndRootFormat=as-provided --skipModule=true --style=scss --selector=mkbiza-message --no-interactive --dry-run
+----
+
+Das generiert eine component messages-ui.component. 
+
+==== Loading indicator
+
+Dann brauchen wir hier noch den loading-indicator
+
+[src,cli]
+----
+npx nx generate @nx/angular:component --name=loading-indicator --directory=src/app/shared/messages/ui/src/lib/loading-indicator --nameAndDirectoryFormat=as-provided --selector=mkbiza-loading-indicator --no-interactive --dry-run
+----
+
+Dieser wird mittels eines LoadingInterceptors mit allen http-Calls aktiviert und deaktviert, es sei denn, man schaltet das aktiv aus, indem man folgenden Context mitgibt:
+
+[src,typescript]
+----
+this.#httpClient.get<XDto>('/mkbiza-api/bla', {context: new HttpContext().set(SILENT_LOAD_CONTEXT, true)})
+----
+
+Der LoadingInterceptor hat Zugriff auf den HttpContext und damit das Flag SILENT_LOAD_CONTEXT. Es startet den LoadingIndicator nur dann, wenn SILENT_LOAD_CONTEXT !== true ist.
+
+
+=== util-lib
+
+[src,cli]
+----
+npx nx generate @nx/angular:library --name=util --directory=src/app/shared/util --projectNameAndRootFormat=as-provided --skipModule=true --style=scss --no-interactive --dry-run
+----
+
+
+=== http-Lib
+
+[src,cli]
+----
+npx nx generate @nx/angular:library --name=http --directory=src/app/shared/http --projectNameAndRootFormat=as-provided --skipModule=true --style=scss --no-interactive --dry-run
+----
+
+=== ErrorHandlerService
+
+ist der Service, bei dem alle ungefangenen Errors landen. Er wird zusammen mit den http-Interceptors in app.config.ts konfiguriert:
+
+=== Domain-Libs
+
+In diesen Libraries kommen das Model und die Services unter, die die Daten für die UI bereitstellen werden.
+
+==== domain/api
+
+[src,cli]
+----
+npx nx generate @nx/js:library --name=domain-api --directory=src/app/shared/domain/api --projectNameAndRootFormat=as-provided --unitTestRunner=jest --no-interactive --dry-run
+----
+
+==== domain/data
+
+[src,cli]
+----
+npx nx generate @nx/js:library --name=domain-data --directory=src/app/shared/domain/data --projectNameAndRootFormat=as-provided --tags=type:data --unitTestRunner=jest --no-interactive --dry-run
+----
+
+==== domain/model
+
+[src,cli]
+----
+npx nx generate @nx/js:library --name=domain-model --directory=src/app/shared/domain/model --projectNameAndRootFormat=as-provided --tags=type:model --no-interactive --dry-run 
+----
+
+
+=== Erste fachliche Komponente mit Anbindung von ngrx
+
+==== WettbewerbeOverviewComponent
+
+Dies ist die Komponente, die eine Gesamtstatistik über alle Wettbewerbe sowie die Liste der Wettbewerbe anzeigt, mit der man in die Details navigieren kann.
+
+Frage: sollen alle Komponenten in eigenen Verzeichnissen liegen? Es gibt aktuell nur die Wettbewerbe. Es ist auch nicht abzusehen,
+dass es mal weitere davon unabhängige fachliche Dinge gibt, über die man Statistiken hätte. Alles dreht sich um die Wettbewerbe.
+
+[src,cli]
+----
+npx nx generate @nx/angular:component --name=wettbewerbe-overview --directory=src/app/wettbewerbe/wettbewerbe-overview --nameAndDirectoryFormat=as-provided --selector=mkbiza-wettbewerbe --no-interactive --dry-run
+----
+
+=== Balkendiagramme
+
+https://valor-software.com/ng2-charts/[hier] sind die Beispiele
+
+==== Generische BarChart-Komponente
+
+[src,cli]
+----
+npx nx generate @nx/angular:component --name=generic-bar-chart --directory=src/app/wettbewerbe/generic-bar-chart --nameAndDirectoryFormat=as-provided --selector=mkbiza-bar-chart --no-interactive --dry-run
+----
+
+Diese löst die 3 anderen Chart-Komponenten ab. Die ChartData und de Überschrift werden als Input übergeben.
+
+Wahrscheinlich wird es nochmal geändert. Z.B. könnten auch die ChartOptions übergeben werden, damit sie nicht überall gleich sind. Oder zumindest die Anzeige der Legende sollte dynamisch konfigurierbar werden.
+
+=== wettbewerb-details-component
+
+[src,cli]
+----
+npx nx generate @nx/angular:component --name=wettbewerb-details --directory=src/app/wettbewerbe/wettbewerb-details/wettbewerb-details --nameAndDirectoryFormat=as-provided --selector=mkbiza-wettbewerb --no-interactive --dry-run
+----
+
+==== Generische PieChart-Komponente
+
+[src,cli]
+----
+npx nx generate @nx/angular:component --name=generic-pie-chart --directory=src/app/wettbewerbe/generic-pie-chart --nameAndDirectoryFormat=as-provided --selector=mkbiza-pie-chart --no-interactive --dry-run
+----
+
+=== klassenstufe-details-component
+
+[src,cli]
+----
+npx nx generate @nx/angular:component --name=klassenstufe-details --directory=src/app/wettbewerbe/klassenstufen/klassenstufe-details --nameAndDirectoryFormat=as-provided --selector=mkbiza-klassenstufe --no-interactive --dry-run
+----
+
+=== aufgabe-details-component
+
+[src,cli]
+----
+npx nx generate @nx/angular:component --name=aufgabe-details --directory=src/app/wettbewerbe/klassenstufen/aufgabe-details --nameAndDirectoryFormat=as-provided --selector=mkbiza-aufgabe --no-interactive --dry-run
+----
+
+=== aufgabe-images-component
+
+[src,cli]
+----
+npx nx generate @nx/angular:component --name=aufgabe-images --directory=src/app/wettbewerbe/klassenstufen/aufgabe-images --nameAndDirectoryFormat=as-provided --selector=mkbiza-aufgabe-images --no-interactive --dry-run
+----
+
+=== error-component
+
+[src,cli]
+----
+npx nx generate @nx/angular:component --name=error --directory=src/app/error --nameAndDirectoryFormat=as-provided --selector=mkbiza-error --no-interactive --dry-run
+----
+
+=== rohpunktitem-component
+
+[src,cli]
+----
+npx nx generate @nx/angular:component --name=rohpunktitem --directory=src/app/wettbewerbe/klassenstufen/rohpunktitem --nameAndDirectoryFormat=as-provided --selector=mkbiza-rohpunktitem --no-interactive --dry-run
+----
