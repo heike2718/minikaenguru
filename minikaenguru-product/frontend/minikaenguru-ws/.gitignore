@@ -7,6 +7,9 @@
 
 # dependencies
 /node_modules
+node_modules.zip
+
+migrations.json
 
 # IDEs and editors
 /.idea
@@ -38,3 +41,4 @@ audit.log
 Thumbs.db
 
 .angular
+/.nx
