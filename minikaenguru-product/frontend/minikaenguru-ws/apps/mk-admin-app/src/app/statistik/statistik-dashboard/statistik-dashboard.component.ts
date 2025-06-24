@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { StatistikFacade } from '../statistik.facade';
 import { StatistikEntity } from '../statistik.model';
+import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'mka-statistik-dashboard',

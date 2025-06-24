@@ -1,31 +1,27 @@
 {
-    "name": "mk-admin-app-e2e",
-    "$schema": "../../node_modules/nx/schemas/project-schema.json",
-    "sourceRoot": "apps/mk-admin-app-e2e/src",
-    "projectType": "application",
-    "targets": {
-      "e2e": {
-        "executor": "@nx/cypress:cypress",
-        "options": {
-          "cypressConfig": "apps/mk-admin-app-e2e/cypress.config.ts",
-          "devServerTarget": "mk-admin-app:serve:development",
-          "testingType": "e2e"
-        },
-        "configurations": {
-          "production": {
-            "devServerTarget": "mk-admin-app:serve:production"
-          }
-        }
+  "name": "mk-admin-app-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/mk-admin-app-e2e/src",
+  "projectType": "application",
+  "targets": {
+    "e2e": {
+      "executor": "@nx/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/mk-admin-app-e2e/cypress.config.ts",
+        "devServerTarget": "mk-admin-app:serve:development",
+        "testingType": "e2e"
       },
-      "lint": {
-        "executor": "@nx/linter:eslint",
-        "outputs": ["{options.outputFile}"],
-        "options": {
-          "lintFilePatterns": ["apps/mk-admin-app-e2e/**/*.{js,ts}"]
+      "configurations": {
+        "production": {
+          "devServerTarget": "mk-admin-app:serve:production"
         }
       }
     },
-    "tags": [],
-    "implicitDependencies": ["mk-admin-app"]
-  }
-  
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    }
+  },
+  "tags": [],
+  "implicitDependencies": ["mk-admin-app"]
+}
