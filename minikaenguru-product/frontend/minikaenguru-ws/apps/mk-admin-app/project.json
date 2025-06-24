@@ -127,6 +127,7 @@
         },
         "development": {
           "buildTarget": "mk-admin-app:build:development"
+
         }
       },
       "defaultConfiguration": "development"
