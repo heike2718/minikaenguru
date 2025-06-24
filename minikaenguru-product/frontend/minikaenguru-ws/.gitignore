@@ -9,6 +9,7 @@
 /node_modules
 node_modules.zip
 
+/.nx
 migrations.json
 
 # IDEs and editors
@@ -40,5 +41,3 @@ audit.log
 .DS_Store
 Thumbs.db
 
-.angular
-/.nx
