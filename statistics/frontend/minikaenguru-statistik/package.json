@@ -52,7 +52,7 @@
     "@angular/compiler-cli": "19.2.7",
     "@angular/language-service": "19.2.7",
     "@ngrx/eslint-plugin": "19.1.0",
-    "@nx/angular": "20.8.0",
+    "@nx/angular": "21.6.2",
     "@nx/cypress": "20.8.0",
     "@nx/eslint": "20.8.0",
     "@nx/eslint-plugin": "20.8.0",
